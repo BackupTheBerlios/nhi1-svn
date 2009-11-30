@@ -1,0 +1,10 @@
+> nothread/libmsgque-3.8/tests/client --all @ mono nothread/libmsgque-3.8/tests/csserver.exe
+C> (client:31252) [2009-11-09:14-34-22] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:31252) [2009-11-09:14-34-22] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.10
+C> (client:31252) [2009-11-09:14-34-23] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.85
+C> (client:31252) [2009-11-09:14-34-25] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.12
+C> (client:31252) [2009-11-09:14-34-28] [0-0-0x61f9a0-statistics]:                  parent create:   30115.08
+C> (client:31252) [2009-11-09:14-34-29] [0-0-0x61f9a0-statistics]:                  parent delete:    2579.47
+C> (client:31252) [2009-11-09:14-34-29] [0-0-0x61f9a0-statistics]:                   child create:     127.86
+C> (client:31252) [2009-11-09:14-34-29] [0-0-0x61f9a0-statistics]:                   child delete:      24.16
+C> (client:31252) [2009-11-09:14-34-29] [0-0-0x61f9a0-main]: end: ----------------------------------------

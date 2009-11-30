@@ -1,0 +1,11 @@
+> mono nothread/libmsgque-3.8/tests/csserver.exe --uds --file ./socket.uds --spawn
+> nothread/libmsgque-3.8/tests/client --all --uds --file ./socket.uds
+C> (client:32180) [2009-11-09:14-34-53] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:32180) [2009-11-09:14-34-53] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.00
+C> (client:32180) [2009-11-09:14-34-53] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      11.16
+C> (client:32180) [2009-11-09:14-34-56] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.49
+C> (client:32180) [2009-11-09:14-34-59] [0-0-0x61f9a0-statistics]:                  parent create:   29787.25
+C> (client:32180) [2009-11-09:14-34-59] [0-0-0x61f9a0-statistics]:                  parent delete:    2785.36
+C> (client:32180) [2009-11-09:14-35-00] [0-0-0x61f9a0-statistics]:                   child create:     130.82
+C> (client:32180) [2009-11-09:14-35-00] [0-0-0x61f9a0-statistics]:                   child delete:      24.64
+C> (client:32180) [2009-11-09:14-35-00] [0-0-0x61f9a0-main]: end: ----------------------------------------

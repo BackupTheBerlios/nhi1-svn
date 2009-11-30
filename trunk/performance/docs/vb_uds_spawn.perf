@@ -1,0 +1,11 @@
+> mono nothread/libmsgque-3.8/tests/vbserver.exe --uds --file ./socket.uds --spawn
+> nothread/libmsgque-3.8/tests/client --all --uds --file ./socket.uds
+C> (client:980) [2009-11-09:14-35-31] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:980) [2009-11-09:14-35-31] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.09
+C> (client:980) [2009-11-09:14-35-31] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      11.26
+C> (client:980) [2009-11-09:14-35-34] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.48
+C> (client:980) [2009-11-09:14-35-37] [0-0-0x61f9a0-statistics]:                  parent create:   29828.93
+C> (client:980) [2009-11-09:14-35-37] [0-0-0x61f9a0-statistics]:                  parent delete:    2896.14
+C> (client:980) [2009-11-09:14-35-38] [0-0-0x61f9a0-statistics]:                   child create:     155.75
+C> (client:980) [2009-11-09:14-35-38] [0-0-0x61f9a0-statistics]:                   child delete:      24.69
+C> (client:980) [2009-11-09:14-35-38] [0-0-0x61f9a0-main]: end: ----------------------------------------

@@ -1,0 +1,11 @@
+> perl nothread/libmsgque-3.8/tests/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/libmsgque-3.8/tests/client --all --tcp --host localhost --port 7794
+C> (client:1428) [2009-11-09:14-36-05] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:1428) [2009-11-09:14-36-05] [0-0-0x61fbc0-statistics]:                      MqSendEND:       8.48
+C> (client:1428) [2009-11-09:14-36-06] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      13.99
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      33.01
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                  parent create:     962.26
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                  parent delete:     874.05
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                   child create:     124.78
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                   child delete:      33.09
+C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-main]: end: ----------------------------------------

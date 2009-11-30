@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="perl"
+	OutputDirectory="$(TOP_BUILD_DIR)\perlmsgque\Net-PerlMsgque\blib\arch\auto\Net\PerlMsgque\PerlMsgque.dll"
+	InheritedPropertySheets="..\..\win\win.vsprops"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="$(PERL_DIR)\lib\CORE"
+		PreprocessorDefinitions="NO_STRICT;HAVE_DES_FCRYPT;USE_SITECUSTOMIZE;PRIVLIB_LAST_IN_INC;PERL_IMPLICIT_CONTEXT;PERL_IMPLICIT_SYS;USE_PERLIO;PERL_MSVCRT_READFIX;HASATTRIBUTE;VERSION=\&quot;$(MQ_VERSION)\&quot;;XS_VERSION=\&quot;$(MQ_VERSION)\&quot;"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="$(PERL_LIB)"
+		OutputFile="..\..\..\perlmsgque\Net-PerlMsgque\blib\arch\auto\Net\PerlMsgque\PerlMsgque.dll"
+	/>
+</VisualStudioPropertySheet>

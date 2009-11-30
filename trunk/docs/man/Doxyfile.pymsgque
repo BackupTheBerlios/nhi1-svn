@@ -1,0 +1,203 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+FILE_PATTERNS	    = *.doc
+
+ENABLED_SECTIONS    += PYTHON
+
+EXAMPLE_PATH	    += $(SRCDIR)/example/python
+
+TAGFILES            += $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
+
+ALIASES		    += "self=pymsgque"
+ALIASES		    += "selftut=pymsgquetut"
+ALIASES		    += "NS{1}=py_\1"
+ALIASES		    += "lang=PYTHON"
+ALIASES		    += "fileextension=py"
+ALIASES		    += "yes=\e True"
+ALIASES		    += "no=\e False"
+ALIASES		    += "package=from pymsgque import *"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "MqS=MqS"
+ALIASES		    += "ObjectCreate=ctx = MqS()"
+ALIASES		    += "ObjectDelete=del ctx"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init = Init()"
+
+ALIASES		    += "config_type_buffersize=PyLong"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=PyLong"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=PyLong"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=PyUnicode"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=PyUnicode"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_isSilent=PyBool"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=PyBool"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_daemon=PyUnicode"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=PyLong"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=PyUnicode"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=PyUnicode"
+ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=PyLong"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=PyBool"
+ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isParent=PyBool"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=MqConfigGetIsParent"
+
+ALIASES		    += "config_type_isSlave=PyBool"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_isConnected=PyBool"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
+
+ALIASES		    += "config_type_master=PyObject"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES		    += "config_type_ctxId=PyLong"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
+
+ALIASES		    += "config_type_token=PyUnicode"
+ALIASES		    += "config_set_token=NO"
+ALIASES		    += "config_get_token=ConfigGetToken"
+
+ALIASES		    += "config_type_IServerSetup=Interface"
+ALIASES             += "config_set_IServerSetup=ConfigSetServerSetup callback"
+ALIASES		    += "config_get_IServerSetup=NO"
+
+ALIASES		    += "config_type_IServerCleanup=Interface"
+ALIASES		    += "config_set_IServerCleanup=ConfigSetServerCleanup callback"
+ALIASES		    += "config_get_IServerCleanup=NO"
+
+ALIASES		    += "config_type_IFilterFTR=Interface"
+ALIASES		    += "config_set_IFilterFTR=ConfigSetFilterFTR callback"
+ALIASES		    += "config_get_IFilterFTR=NO"
+
+ALIASES		    += "config_type_IFilterEOF=Interface"
+ALIASES		    += "config_set_IFilterEOF=ConfigSetFilterEOF callback"
+ALIASES		    += "config_get_IFilterEOF=NO"
+
+ALIASES		    += "config_type_IFactory=Interface"
+ALIASES		    += "config_set_IFactory=ConfigSetFactory"
+ALIASES		    += "config_get_IFactory=NO"
+
+ALIASES             += "config_type_IBgError=Interface"
+ALIASES             += "config_set_IBgError=ConfigSetBgError callback"
+ALIASES             += "config_get_IBgError=NO"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"
+
+
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "Exit=ctx.Exit()"
+
+# SEND DATA
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token,callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendFTR=ctx.SendFTR(?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEOF=ctx.SendEOF(?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "Send_TYPE=ctx.Send[TYPE](value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+
+# READ DATE
+ALIASES		    += "Read_TYPE=ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=ctx.ReadU()"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
+ALIASES		    += "ReadGetNumItems=int: ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=bool: ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START()"
+ALIASES		    += "ReadL_START2=ctx.ReadL_START(buffer)"
+ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,service)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)"
+ALIASES		    += "ProcessEventFlag=MqC.WAIT"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
+
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
+ALIASES		    += "SlaveGet=ctx.SlaveGet(id)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
+ALIASES		    += "BufferGet_TYPE=buffer.Get[TYPE]()"
+ALIASES		    += "BufferType=buffer.GetType()"
+
+# ERROR OBJECT
+ALIASES		    += "ErrorObject=<I>ex=pymsgque.MqSException()</I>"
+ALIASES		    += "ErrorGetText=ex.text or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(prefix,errnum,message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet()"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"

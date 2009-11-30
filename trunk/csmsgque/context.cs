@@ -1,0 +1,45 @@
+/**
+ *  \file       csmsgque/context.cs
+ *  \brief      \$Id: context.cs 507 2009-11-28 15:18:46Z dev1usr $
+ *  
+ *  (C) 2009 - NHI - #1 - Project - Group
+ *  
+ *  \version    \$Rev: 507 $
+ *  \author     EMail: aotto1968 at users.sourceforge.net
+ *  \attention  this software has GPL permissions to copy
+ *              please contact AUTHORS for additional information
+ */
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                context                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+using System;
+using System.Runtime.InteropServices;
+
+namespace csmsgque {
+
+  public partial class MqS
+  {
+
+    private static void ProcessExit (int num)
+    {
+      System.GC.Collect();
+      Environment.Exit (num);
+    }
+
+    private static void ThreadExit (int num)
+    {
+      System.GC.Collect();
+    }
+
+  } // END - class "MqS"
+} // END - namespace "csmsgque"
+
+
+
+
+
+

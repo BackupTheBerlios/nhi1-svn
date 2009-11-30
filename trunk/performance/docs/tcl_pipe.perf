@@ -1,0 +1,10 @@
+> nothread/libmsgque-3.8/tests/client --all @ tclsh nothread/libmsgque-3.8/tests/server.tcl
+C> (client:25694) [2009-11-09:14-31-47] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:25694) [2009-11-09:14-31-47] [0-0-0x61f9a0-statistics]:                      MqSendEND:       6.87
+C> (client:25694) [2009-11-09:14-31-48] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.04
+C> (client:25694) [2009-11-09:14-31-51] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.39
+C> (client:25694) [2009-11-09:14-31-52] [0-0-0x61f9a0-statistics]:                  parent create:   10182.13
+C> (client:25694) [2009-11-09:14-31-52] [0-0-0x61f9a0-statistics]:                  parent delete:     269.96
+C> (client:25694) [2009-11-09:14-31-53] [0-0-0x61f9a0-statistics]:                   child create:     232.77
+C> (client:25694) [2009-11-09:14-31-53] [0-0-0x61f9a0-statistics]:                   child delete:      24.12
+C> (client:25694) [2009-11-09:14-31-53] [0-0-0x61f9a0-main]: end: ----------------------------------------

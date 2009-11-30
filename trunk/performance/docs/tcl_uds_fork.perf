@@ -1,0 +1,11 @@
+> tclsh nothread/libmsgque-3.8/tests/server.tcl --uds --file ./socket.uds --fork
+> nothread/libmsgque-3.8/tests/client --all --uds --file ./socket.uds
+C> (client:26206) [2009-11-09:14-32-18] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:26206) [2009-11-09:14-32-18] [0-0-0x61f9a0-statistics]:                      MqSendEND:       6.52
+C> (client:26206) [2009-11-09:14-32-19] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.33
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.37
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-statistics]:                  parent create:     860.80
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-statistics]:                  parent delete:     320.76
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-statistics]:                   child create:     235.97
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-statistics]:                   child delete:      24.38
+C> (client:26206) [2009-11-09:14-32-22] [0-0-0x61f9a0-main]: end: ----------------------------------------

@@ -1,0 +1,125 @@
+#+
+#§  \file       README
+#§  \brief      \$Id: README 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+libmsgque overview
+==================
+
+The msgque project is an infrastructure to link applications together 
+to act like a single application. To link mean distributing work from 
+one application to an other application an wait or not wait for an 
+answer. 
+The linking is done using network or local sockets and is based on 
+packages send from one application to an other application and back. 
+The libmsgque project is used to handle all the different aspects for 
+setup and maintain the link and is responsible for:
+
+ * starting and stopping the different applications
+ * starting and stopping the communication interface
+ * sending and receiving packages
+ * reading and writing data from or into packages
+ * setup and maintain the event-handling for asynchronous transfers
+ * propagate warnings or errors
+
+
+libmsgque build
+===============
+
+"libmsgque" is a able to build on a UNIX operating system like
+Linux, BSD. For a build on Windows please change into the 
+"win" directory and follow the instructions from the "README.win" 
+file.
+
+The main development system is:
+
+    SuSE Linux 10.3 on "Intel(R) Core(TM)2 CPU 6600 @ 2.40GHz"
+
+The software-build was also tested on:
+
+    Windows XP ServicePack 3  (VirtualBox/Intel)
+    Free BSD 7.1	      (VirtualBox/Intel)
+    SuSE Linux 11	      (VirtualBox/Intel)
+    Debian 5		      (iBook/ppc)
+
+The Build depends on the following tools:
+
+  - Compiler: gcc
+  - Make: make
+  - Configuration: libtool, autoconf-2.62 and automake-1.10
+  - Test: tcl using the "tcltest" package
+  - Documentation: doxygen
+  - Create Binary Distribution: zip
+
+In addition the following software is required for the "build"
+and is used to test the "libmsgque" 
+
+  - tcl from the Tcl Developer Site
+       -> http://www.tcl.tk/
+
+In addition the following software *can* be added but is *not*
+required:
+
+  - java from the JAVA Download Site
+       -> google: java 6 download
+
+  - python - python 3.x is required
+       -> http://www.python.org/download/
+
+  - C# - csharp or mono
+       -> http://www.mono-project.com/Main_Page
+
+To build "libmsgque" please follow the next steps:
+
+Unpack the source distribution in a temporary directory and
+switch into the top directory:
+
+  > tar -xzf libmsgque-X.Y.tar.gz
+  > cd libmsgque-X.Y
+
+To build the software on a system other than the developing system I
+recommend to update your local build tools with:
+
+  > autoreconf -f -i -v
+
+To configure the build run the "configure" script:
+ 
+  # for help
+  > bash ./configure --help
+
+  # do the configuration
+  > bash ./configure ...
+
+To build the software run "make":
+
+  > make
+
+To test the software please follow the steps from:
+
+  > less tests/README.tests
+
+To build the "documentation" the tool "doxygen" is required:
+
+  - create the documentation
+    > make html
+  - read the documentation
+    > firefox html/index.htm
+
+If the build is done on a *new* hardware/os version the binaries
+can be submitted to the community using the following steps:
+
+  - create a binary distribution
+    > bash ./make_binary_dist.sh
+  - the new binary-distribution is created in the directory
+    > binary-dist
+  - contact the maintainer
+    > aotto1968 at users.sourceforge.net
+    

@@ -1,0 +1,28 @@
+#+
+#§  \file       pymsgque/Makefile.am
+#§  \brief      \$Id: Makefile.am 512 2009-11-30 14:52:29Z dev1usr $
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 512 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+pkglib_LTLIBRARIES = pymsgque.la
+
+pymsgque_la_SOURCES = MqS_python.c MqBufferS_python.c \
+  msgque_python.c msgque_python.h misc_python.c send_python.c read_python.c \
+    service_python.c error_python.c config_python.c slave_python.c context_python.c
+
+pymsgque_la_CFLAGS = -I$(top_srcdir)/libmsgque $(PYTHON_CPPFLAGS) -fno-strict-aliasing $(AM_CFLAGS)
+pymsgque_la_LIBADD = ../libmsgque/*.lo $(PYTHON_EXTRA_LIBS)
+
+pymsgque_la_LDFLAGS = -avoid-version -module -no-undefined $(PYTHON_LDFLAGS) $(PYTHON_EXTRA_LDFLAGS)
+
+EXTRA_DIST = setup.py
+
+#CLEANFILES = 
+#html: libtclmsgque.la pkgIndex.tcl
+

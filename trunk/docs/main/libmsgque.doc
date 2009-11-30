@@ -1,0 +1,166 @@
+/** \page libmsgque libmsgque
+
+<CENTER>
+
+\section intro Introduction
+
+The \libmsgque project is an infrastructure to link applications together \n
+to act like a single application. To link mean distributing work from \n
+one application to an other application an wait or not wait for an answer.\n
+The linking is done using network or local sockets and is based on \n
+packages send from one application to an other application and back. \n
+The libmsgque project is used to handle all the different aspects for \n
+setup and maintain the link and is responsible for:\n
+\n
+<TABLE>
+  <TR> <TD>starting and stopping the different applications			</TD></TR>
+  <TR> <TD>starting and stopping the communication interface			</TD></TR>
+  <TR> <TD>sending and receiving packages					</TD></TR>
+  <TR> <TD>reading and writing data from or into packages			</TD></TR>
+  <TR> <TD>setup and maintain the event-handling for asynchronous transfers	</TD></TR>
+  <TR> <TD>propagate warnings or errors						</TD></TR>
+</TABLE>
+
+\section man Documentation Matrix
+<TABLE>
+  <TR>  
+    <TH>documentation</TH> 
+    <TH>C</TH> 
+    <TH>C++</TH> 
+    <TH>C#</TH>     
+    <TH>java</TH>   
+    <TH>python</TH>     
+    <TH>tcl</TH>             
+    <TH>perl</TH> 
+    <TH>VB.NET</TH> 
+  </TR>
+  <TR>  
+    <TD>man pages</TD> 
+    <TD>\ref libmsgque "YES"</TD>
+    <TD>\ref ccmsgque "YES"</TD>
+    <TD>\ref csmsgque "YES"</TD>   
+    <TD>\ref javamsgque "YES"</TD>
+    <TD>\ref pymsgque "YES"</TD>   
+    <TD>\ref tclmsgque "YES"</TD>
+    <TD>\ref perlmsgque "YES"</TD>
+    <TD>\ref vbmsgque "YES"</TD>
+  </TR>
+  <TR>  
+    <TD>Tutorial</TD> 
+    <TD>\ref libmsgquetut "YES"</TD>
+    <TD>\ref ccmsgquetut "YES"</TD>
+    <TD>\ref csmsgquetut "YES"</TD>   
+    <TD>\ref javamsgquetut "YES"</TD>
+    <TD>\ref pymsgquetut "YES"</TD>   
+    <TD>\ref tclmsgquetut "YES"</TD>
+    <TD>\ref perlmsgquetut "YES"</TD>
+    <TD>\ref vbmsgquetut "YES"</TD>
+  </TR>
+  <TR>  
+    <TD>API Doc</TD> 
+    <TD>\ref libmsgque_public "YES"</TD>
+    <TD>\ref ccmsgque_public "YES"</TD>
+    <TD>\ref csmsgque_public "YES"</TD>
+    <TD>\ref javamsgque_public "YES"</TD>
+    <TD>NO</TD>   
+    <TD>NO</TD>
+    <TD>NO</TD>
+    <TD>NO</TD>
+  </TR>
+  <TR>  
+    <TD>SOURCE Doc</TD> 
+    <TD>\ref libmsgque_private "YES"</TD>
+    <TD>NO</TD>
+    <TD>NO</TD>   
+    <TD>\ref javamsgque_private "YES"</TD>
+    <TD>\ref pymsgque_private "YES"</TD>
+    <TD>\ref tclmsgque_private "YES"</TD>
+    <TD>NO</TD>   
+    <TD>NO</TD>   
+  </TR>
+</TABLE>
+
+\section detail Misc Documentation
+  \ref features\n
+  \ref context\n
+  \ref factory\n
+  \ref client_versa_server\n
+  \ref parent_versa_child\n
+  \ref master_versa_slave\n
+  \ref service_call\n
+  \ref shell\n
+  \ref performance\n
+  \ref faq\n
+
+\section main_example1 Example1 Client/Server to multiplicate two double values
+<TABLE>
+  <TR>  
+    <TH>documentation</TH> 
+    <TH>C</TH> 
+    <TH>C++</TH> 
+    <TH>C#</TH>     
+    <TH>java</TH>   
+    <TH>python</TH>     
+    <TH>tcl</TH>             
+    <TH>perl</TH>             
+    <TH>VB.NET</TH>             
+  </TR>
+  <TR>  
+    <TD>server</TD> 
+    <TD>\ref c_e1 "YES"</TD>
+    <TD>\ref cc_e1 "YES"</TD>
+    <TD>\ref cs_e1 "YES"</TD>
+    <TD>\ref java_e1 "YES"</TD>
+    <TD>\ref py_e1 "YES"</TD>
+    <TD>\ref tcl_e1 "YES"</TD>
+    <TD>\ref perl_e1 "YES"</TD>
+    <TD>\ref vb_e1 "YES"</TD>
+  </TR>
+  <TR>  
+    <TD>client</TD> 
+    <TD>\ref c_e2 "YES"</TD>
+    <TD>\ref cc_e2 "YES"</TD>
+    <TD>\ref cs_e2 "YES"</TD>
+    <TD>\ref java_e2 "YES"</TD>
+    <TD>\ref py_e2 "YES"</TD>
+    <TD>\ref tcl_e2 "YES"</TD>
+    <TD>\ref perl_e2 "YES"</TD>
+    <TD>\ref vb_e2 "YES"</TD>
+  </TR>
+</TABLE>
+
+\section main_example2 Example2 Filter to add a "<>" around every column
+<TABLE>
+  <TR>  
+    <TH>documentation</TH> 
+    <TH>C</TH> 
+    <TH>C++</TH> 
+    <TH>C#</TH>     
+    <TH>java</TH>   
+    <TH>python</TH>     
+    <TH>tcl</TH>             
+    <TH>perl</TH>             
+    <TH>VB.NET</TH>             
+  </TR>
+  <TR>  
+    <TD>filter</TD> 
+    <TD>\ref c_e3 "YES"</TD>
+    <TD>\ref cc_e3 "YES"</TD>
+    <TD>\ref cs_e3 "YES"</TD>
+    <TD>\ref java_e3 "YES"</TD>
+    <TD>\ref py_e3 "YES"</TD>
+    <TD>\ref tcl_e3 "YES"</TD>
+    <TD>\ref perl_e3 "YES"</TD>
+    <TD>\ref vb_e3 "YES"</TD>
+  </TR>
+</TABLE>
+
+\section Files
+
+ \ref readme , \ref install, \ref news, \ref changes , <a href="http://sourceforge.net/projects/libmsgque"><B>DOWNLOAD</B></a>
+
+</CENTER>
+
+*/
+
+

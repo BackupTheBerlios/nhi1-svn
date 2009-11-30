@@ -1,0 +1,11 @@
+> perl nothread/libmsgque-3.8/tests/server.pl --uds --file ./socket.uds --spawn
+> nothread/libmsgque-3.8/tests/client --all --uds --file ./socket.uds
+C> (client:2098) [2009-11-09:14-37-03] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:2098) [2009-11-09:14-37-03] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.69
+C> (client:2098) [2009-11-09:14-37-04] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      18.25
+C> (client:2098) [2009-11-09:14-37-07] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      24.56
+C> (client:2098) [2009-11-09:14-37-28] [0-0-0x61f9a0-statistics]:                  parent create:  204062.47
+C> (client:2098) [2009-11-09:14-37-28] [0-0-0x61f9a0-statistics]:                  parent delete:     531.36
+C> (client:2098) [2009-11-09:14-37-28] [0-0-0x61f9a0-statistics]:                   child create:     124.61
+C> (client:2098) [2009-11-09:14-37-28] [0-0-0x61f9a0-statistics]:                   child delete:      24.98
+C> (client:2098) [2009-11-09:14-37-28] [0-0-0x61f9a0-main]: end: ----------------------------------------

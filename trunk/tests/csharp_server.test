@@ -1,0 +1,105 @@
+#+
+#§  \file       tests/csharp_server.test
+#§  \brief      \$Id: csharp_server.test 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint csharp]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C csharp] {
+
+##
+## -----------------------------------------------------------------------
+## tcl_server test
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test csharp-server-1-($I|$B|$C|$S) {csharp.lang.NullReferenceException with own message} \
+    -body	    { EchoL $FH_LAST LANG SendC NullReferenceException-1 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>
+[sS]> (server-0) \[ErrorSet] System.NullReferenceException: myMessage*}
+
+
+test csharp-server-2-($I|$B|$C|$S) {csharp.lang.NullReferenceException with Stack-Trace} \
+    -body	    { EchoL $FH_LAST LANG SendC NullReferenceException-2 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>
+[sS]> (server-0) \[ErrorSet] System.NullReferenceException: *}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+} ; ## false
+
+SetConstraints all
+
+test csharp-server-X1 {start csharp server with --fork} \
+    -body       {
+	Exec {*}[getServer csharp] --tcp --port [FindFreePort] --fork
+    } \
+    -match	glob \
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+
+test csharp-server-X2 {start csharp server with --daemon} \
+    -body       {
+	Exec {*}[getServer csharp] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
+    } \
+    -match	glob \
+   -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden*}
+
+freeTests
+
+

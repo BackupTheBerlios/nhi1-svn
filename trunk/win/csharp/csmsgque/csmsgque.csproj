@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E84EFA07-E56B-4351-A138-16BA28ED3917}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>csmsgque</RootNamespace>
+    <AssemblyName>csmsgque</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;_DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\csmsgque\</OutputPath>
+    <DefineConstants>TRACE;_DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\csmsgque\buffer.cs">
+      <Link>buffer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\bufferL.cs">
+      <Link>bufferL.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\config.cs">
+      <Link>config.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\context.cs">
+      <Link>context.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\csmsgque.cs">
+      <Link>csmsgque.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\error.cs">
+      <Link>error.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\misc.cs">
+      <Link>misc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\pointer.cs">
+      <Link>pointer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\read.cs">
+      <Link>read.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\send.cs">
+      <Link>send.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\service.cs">
+      <Link>service.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\slave.cs">
+      <Link>slave.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\csmsgque\sys.cs">
+      <Link>sys.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

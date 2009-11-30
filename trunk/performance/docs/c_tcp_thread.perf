@@ -1,0 +1,11 @@
+> thread/libmsgque-3.8/tests/server  --tcp --host localhost --port 7778 --thread
+> thread/libmsgque-3.8/tests/client --all --tcp --host localhost --port 7778
+C> (client:24140) [2009-11-09:14-30-41] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:24140) [2009-11-09:14-30-41] [0-0-0x620bc0-statistics]:                      MqSendEND:       3.10
+C> (client:24140) [2009-11-09:14-30-42] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.16
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      24.61
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-statistics]:                  parent create:     215.28
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-statistics]:                  parent delete:     113.75
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-statistics]:                   child create:      80.32
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-statistics]:                   child delete:      34.36
+C> (client:24140) [2009-11-09:14-30-45] [0-0-0x620bc0-main]: end: ----------------------------------------

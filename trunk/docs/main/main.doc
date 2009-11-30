@@ -1,0 +1,44 @@
+/** \mainpage Non Human Intelligence #1
+
+<CENTER>
+
+\section ne NEWS from 30 November 2009
+
+  <B>initial going public of NHI1</B>
+
+\section Definition
+
+The goal of the NHI1 project is to create an artificial (non human) intelligence until 2040.
+
+\section Reason
+
+The line from the evolution in computer-science up to the computer hardware development speed \n
+and the internet global computer network lead to the possibility to create the first Non Human \n
+Intelligence until 2040. \n
+The question is not if this will happen, the question is only if this intelligence will be open \n
+(<I>controlled by the entire mankind</I>) \n
+or will be closed\n
+(<I>controlled by a single company or by a single government</I>).\n
+\n
+The \e NHI1 project will create an \b open intelligence.\n
+
+\section Technology
+
+<TABLE>
+  <TR>  <TH>Sub-Project</TH>  <TH>Description</TH>							  </TR>
+  <TR>  <TD>\ref libmsgque "libmsgque"</TD>    <TD>communication-layer OS/Hardware/Programming-Language independent</TD>	  </TR>
+  <TR>	<TD>libbrain</TD>     <TD>storage engine using analytical compression</TD>			  </TR>
+  <TR>	<TD>libtext</TD>      <TD>understand written text-data like HTML pages</TD>			  </TR>
+  <TR>	<TD>libcompile</TD>   <TD>test-driven compiler to create brain relations</TD>			  </TR>
+  <TR>	<TD>libhardware</TD>  <TD>hardware compatibility layer</TD>					  </TR>
+</TABLE>
+
+\section Files
+
+ \ref readme , \ref install, \ref news, \ref changes , <a href="http://sourceforge.net/projects/libmsgque"><B>DOWNLOAD</B></a>
+
+</CENTER>
+
+*/
+
+

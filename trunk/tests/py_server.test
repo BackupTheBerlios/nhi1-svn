@@ -1,0 +1,114 @@
+#+
+#§  \file       tests/py_server.test
+#§  \brief      \$Id: py_server.test 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2009 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint python]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C python] {
+
+##
+## -----------------------------------------------------------------------
+## py_server test
+##
+
+# startup binary --------------------------
+
+#Setup $I $B $C $S
+
+# tests ----------------------------
+
+# cleanup ---------------------------
+
+#Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+} ; ## false
+
+SetConstraints all
+
+test py-server-X1 {server with defined UDS handle normal startup} \
+    -constraints    {local uds} \
+    -setup	    {   
+	set UDS [FindFreeFile uds]
+	set pyserver [makeFile [subst {
+import sys
+import pymsgque
+def setup (ctx):
+  pass
+srv = pymsgque.MqS()
+try:
+  srv.ConfigSetServerSetup(setup)
+  srv.LinkCreate(sys.argv)
+  srv.ProcessEvent(wait="FOREVER")
+except:
+  ErrorSet()
+finally:
+  srv.Exit()
+	}] pyserver.[pid]]
+	catch {exec $PYTHON $pyserver --debug $env(TS_DEBUG) --uds --file $UDS --spawn >&@stdout &} PID
+	set ctx [tclmsgque MqS]
+    } \
+    -cleanup	{
+	rename $ctx ""
+	catch {exec $::KILL $PID}
+	file delete -force $UDS
+    } \
+    -body       {
+	$ctx LinkCreate --name client --uds --file $UDS
+    } \
+    -result	{}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
