@@ -153,17 +153,17 @@ else
 fi
 AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
 
-AC_CONFIG_FILES([Makefile libmsgque/Makefile tests/Makefile acmds/Makefile tclmsgque/Makefile 
-	    javamsgque/Makefile pymsgque/Makefile javamsgque/Manifest.txt docs/Makefile
+AC_CONFIG_FILES([Makefile theLink/Makefile tests/Makefile acmds/Makefile theLink/tclmsgque/Makefile 
+	    theLink/javamsgque/Makefile theLink/pymsgque/Makefile theLink/javamsgque/Manifest.txt docs/Makefile
 	      example/java/Makefile example/c/Makefile example/tcl/Makefile 
-		example/python/Makefile win/Makefile ccmsgque/Makefile csmsgque/Makefile
+		example/python/Makefile win/Makefile theLink/ccmsgque/Makefile theLink/csmsgque/Makefile
 		  example/csharp/Makefile example/cc/Makefile env.sh env.tcl 
-		    phpmsgque/Makefile example/php/Makefile phpmsgque/php.ini
-		      perlmsgque/Makefile example/perl/Makefile 
+		    theLink/phpmsgque/Makefile example/php/Makefile theLink/phpmsgque/php.ini
+		      theLink/perlmsgque/Makefile example/perl/Makefile 
 			example/vb/Makefile
 			  performance/Makefile performance/env.sh 
-			    libbrain/Makefile ])
+			    theBrain/Makefile ])
 
-AC_CONFIG_SUBDIRS([tokyocabinet])
+AC_CONFIG_SUBDIRS([theBrain/tokyocabinet])
 
 AC_OUTPUT

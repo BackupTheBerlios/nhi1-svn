@@ -10,6 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
+SUBDIRS =
 if USE_CXX
 SUBDIRS += ccmsgque
 endif

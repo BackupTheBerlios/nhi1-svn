@@ -14,11 +14,10 @@ AUTOMAKE_OPTIONS = check-news
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = libmsgque win performance example/c
+SUBDIRS = win performance example/c
 mann_MANS = man/mann/libmsgque.n
 if USE_BRAIN
-SUBDIRS += tokyocabinet libbrain
-mann_MANS += man/mann/libbrain.n
+SUBDIRS += theBrain
 endif
 if USE_CXX
 SUBDIRS += example/cc
