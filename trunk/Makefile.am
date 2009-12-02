@@ -21,37 +21,30 @@ SUBDIRS += tokyocabinet libbrain
 mann_MANS += man/mann/libbrain.n
 endif
 if USE_CXX
-SUBDIRS += ccmsgque
 SUBDIRS += example/cc
 mann_MANS += man/mann/ccmsgque.n
 endif
 if USE_JAVA
-SUBDIRS += javamsgque
 SUBDIRS += example/java
 mann_MANS += man/mann/javamsgque.n
 endif
 if USE_PYTHON
-SUBDIRS += pymsgque
 SUBDIRS += example/python
 mann_MANS += man/mann/pymsgque.n
 endif
 if USE_CSHARP
-SUBDIRS += csmsgque
 SUBDIRS += example/csharp
 mann_MANS += man/mann/csmsgque.n
 endif
 if USE_PHP
-SUBDIRS += phpmsgque
 SUBDIRS += example/php
 mann_MANS += man/mann/phpmsgque.n
 endif
 if USE_PERL
-SUBDIRS += perlmsgque
 SUBDIRS += example/perl
 mann_MANS += man/mann/perlmsgque.n
 endif
 if USE_TCL
-SUBDIRS += tclmsgque
 SUBDIRS += example/tcl
 SUBDIRS += tests
 mann_MANS += man/mann/tclmsgque.n

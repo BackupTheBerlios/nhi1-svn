@@ -10,6 +10,28 @@
 #§              please contact AUTHORS for additional information
 #§
 
+if USE_CXX
+SUBDIRS += ccmsgque
+endif
+if USE_JAVA
+SUBDIRS += javamsgque
+endif
+if USE_PYTHON
+SUBDIRS += pymsgque
+endif
+if USE_CSHARP
+SUBDIRS += csmsgque
+endif
+if USE_PHP
+SUBDIRS += phpmsgque
+endif
+if USE_PERL
+SUBDIRS += perlmsgque
+endif
+if USE_TCL
+SUBDIRS += tclmsgque
+endif
+
 lib_LTLIBRARIES = libmsgque.la
 
 libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
