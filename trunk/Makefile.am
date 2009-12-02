@@ -14,7 +14,7 @@ AUTOMAKE_OPTIONS = check-news
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = win performance example/c
+SUBDIRS = theLink win performance example/c
 mann_MANS = man/mann/libmsgque.n
 if USE_BRAIN
 SUBDIRS += theBrain

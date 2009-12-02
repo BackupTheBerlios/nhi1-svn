@@ -17,12 +17,12 @@ tclmsgque_la_SOURCES =	context_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_t
 			    MqBufferS_tcl.c error_tcl.c
 
 # use this if you want to link again the dynmic libraray libmsgque...
-#tclmsgque_la_CFLAGS = -I$(srcdir)/.. $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS)
+#tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS)
 #tclmsgque_la_LIBADD = ../libmsgque.la
 
 # use this if you want to include the libmsgque files into the tclmsgque libraray
-tclmsgque_la_CFLAGS = -I$(srcdir)/.. $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN
-tclmsgque_la_LIBADD = ../*.lo
+tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN
+tclmsgque_la_LIBADD = ../libmsgque/*.lo
 
 tclmsgque_la_LDFLAGS = -module -avoid-version -no-undefined $(TCL_LIBADD)
 

@@ -18,8 +18,8 @@ EXTRA_DIST = brain
 CLEANFILES =
 
 brain_SOURCES = brain.c 
-#brabrainDD = -lm ../theLink/libmsgque.la
-brain_CFLAGS = -I../theLink -I./tokyocabinet -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-brain_LDADD = -lz -lbz2 -lrt -lm -lc ../theLink/*.lo ./tokyocabinet/libtokyocabinet.a
+#brabrainDD = -lm ../theLink//libmsgque/libmsgque.la
+brain_CFLAGS = -I../theLink/libmsgque -I./tokyocabinet -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+brain_LDADD = -lz -lbz2 -lrt -lm -lc ../theLink/libmsgque/*.lo ./tokyocabinet/libtokyocabinet.a
 #brain_LDFLAGS = -static
 
