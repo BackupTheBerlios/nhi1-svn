@@ -61,7 +61,7 @@ lappend PATH [file nativename [file join $topdir javamsgque .libs]]
 lappend PATH [file nativename [file join $topdir csmsgque]]
 lappend PATH [file nativename [file join $topdir tests]]
 lappend PATH [file nativename [file join $topdir acmds]]
-lappend PATH [file nativename [file join $topdir src .libs]]
+lappend PATH [file nativename [file join $topdir libmsgque .libs]]
 lappend PATH [file nativename [file join $topdir ccmsgque .libs]]
 lappend PATH [file nativename [file join $topdir tclmsgque .libs]]
 lappend PATH [file nativename [file normalize .libs]]
@@ -121,7 +121,7 @@ set env(PERL5LIB) [file nativename [file join $topdir perlmsgque Net-PerlMsgque 
 
 ## setup LIBRARY search path
 set LIBRARY_PATH [list]
-lappend LIBRARY_PATH [file nativename [file join $topdir src .libs]]
+lappend LIBRARY_PATH [file nativename [file join $topdir libmsgque .libs]]
 lappend LIBRARY_PATH [file nativename [file join $topdir javamsgque .libs]]
 lappend LIBRARY_PATH [file nativename [file join $topdir tclmsgque .libs]]
 lappend LIBRARY_PATH [file nativename [file join $topdir tests .libs]]

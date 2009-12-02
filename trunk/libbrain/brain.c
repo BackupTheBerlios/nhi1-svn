@@ -196,7 +196,8 @@ static enum MqErrorE AGET ( ARGS ) {
   MqSendSTART(mqctx);
   while (MqReadItemExists(mqctx)) {
     READ_N (key,klen);
-    DbErrorCheck(val=tcadbget(adb, key, klen, &vlen));
+    val = tcadbget(adb, key, klen, &vlen);
+    DbErrorCheck (val==NULL);
     MqSendN(mqctx, val, vlen);
     free(val);
   }
@@ -244,6 +245,7 @@ static enum MqErrorE AITN ( ARGS ) {
   MqSendSTART(mqctx);
   while (num-- >= 0 && (key=tcadbiternext(adb, &klen)) != NULL) {
     MqSendN(mqctx, key, klen);
+    free(key);
   }
 
 error:
@@ -282,6 +284,7 @@ static enum MqErrorE AITA ( ARGS ) {
     MqSendN(mqctx, key, klen);
     DbErrorCheck(val=tcadbget(adb, key, klen, &vlen));
     MqSendN(mqctx, val, vlen);
+    free(key);
     free(val);
   }
 
