@@ -1,4 +1,0 @@
-can't find package TclMsgque
-    while executing
-"package require TclMsgque"
-    (file "./aexec" line 101)

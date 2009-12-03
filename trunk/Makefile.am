@@ -14,45 +14,36 @@ AUTOMAKE_OPTIONS = check-news
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = theLink win performance example/c
+SUBDIRS = theLink win performance
 mann_MANS = man/mann/libmsgque.n
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
 if USE_CXX
-SUBDIRS += example/cc
 mann_MANS += man/mann/ccmsgque.n
 endif
 if USE_JAVA
-SUBDIRS += example/java
 mann_MANS += man/mann/javamsgque.n
 endif
 if USE_PYTHON
-SUBDIRS += example/python
 mann_MANS += man/mann/pymsgque.n
 endif
 if USE_CSHARP
-SUBDIRS += example/csharp
 mann_MANS += man/mann/csmsgque.n
 endif
 if USE_PHP
-SUBDIRS += example/php
 mann_MANS += man/mann/phpmsgque.n
 endif
 if USE_PERL
-SUBDIRS += example/perl
 mann_MANS += man/mann/perlmsgque.n
 endif
 if USE_TCL
-SUBDIRS += example/tcl
-SUBDIRS += tests
 mann_MANS += man/mann/tclmsgque.n
 endif
 if USE_VB
-SUBDIRS += example/vb
 mann_MANS += man/mann/vbmsgque.n
 endif
-SUBDIRS += acmds docs
+SUBDIRS += docs
 
 CTAGSFLAGS = --c-kinds=+p
 
