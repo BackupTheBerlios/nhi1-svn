@@ -53,7 +53,7 @@ $(MQS_MAIN): $(srcdir)/*.java
 
 if USE_JAVA
 javamsgque.jar: $(MQS_MAIN) Manifest.txt 
-	$(JAR) cfm "$@" Manifest.txt javamsgque
+	$(JAR) cfm "$@" Manifest.txt javamsgque/*.class
 endif
 
 mqsdir = $(pkglibdir)

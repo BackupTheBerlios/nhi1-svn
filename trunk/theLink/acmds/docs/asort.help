@@ -1,0 +1,20 @@
+usage: sort [OPTION]... [ARGUMENT]...
+
+  The sort tool works as a filter between a msgque client and a msgque server
+  using the option '-# TYPE' to identify a column as sort index.
+
+  sort [ARGUMENT]... syntax:
+    aclient [OPTION]... @ sort [OPTION]... @ [ARGUMENT]...
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  sort [OPTION]:
+    -NUM TYPE        the column number(s)  (default: 'empty'
+      NUM            a single column with '0' < NUM < '255'
+      TYPE           the sort type of the column C,I,W,D
+       C             sort as string
+       I,W           sort as I)nt or W)ide integer
+       D             sort as double precision decimal
+    -h, --help       print this help
+
