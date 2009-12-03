@@ -1,11 +1,11 @@
 #+
 #§  \file       Makefile.am
-#§  \brief      \$Id: Makefile.am 512 2009-11-30 14:52:29Z dev1usr $
+#§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 512 $
-#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
@@ -43,7 +43,6 @@ endif
 if USE_VB
 mann_MANS += man/mann/vbmsgque.n
 endif
-SUBDIRS += docs
 
 CTAGSFLAGS = --c-kinds=+p
 

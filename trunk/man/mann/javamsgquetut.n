@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "30 Nov 2009" "Version 0.1" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "3 Dec 2009" "Version 0.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -48,7 +48,7 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 .PP
 .PP
 .nf
-RULE_JAVA_EXE = $(JAVAC) -classpath '$(top_builddir)$(FILE_SEP)javamsgque$(FILE_SEP)javamsgque.jar$(PATH_SEP).' $(JAVA_DEBUG) -d . -Xlint:unchecked '$<'
+RULE_JAVA_EXE = $(JAVAC) -classpath '../../javamsgque/javamsgque.jar$(PATH_SEP).' $(JAVA_DEBUG) -d . -Xlint:unchecked '$<'
 .fi
 .PP
  ... 

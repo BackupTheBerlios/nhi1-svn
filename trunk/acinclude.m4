@@ -1,11 +1,11 @@
 dnl
 dnl  \file       acinclude.m4
-dnl  \brief      \$Id: acinclude.m4 512 2009-11-30 14:52:29Z dev1usr $
+dnl  \brief      \$Id$
 dnl  
 dnl  (C) 2007 - NHI - #1 - Project - Group
 dnl  
-dnl  \version    \$Rev: 512 $
-dnl  \author     EMail: aotto1968 at users.sourceforge.net
+dnl  \version    \$Rev$
+dnl  \author     EMail: aotto1968 at users.berlios.de
 dnl  \attention  this software has GPL permissions to copy
 dnl              please contact AUTHORS for additional information
 dnl

@@ -16,7 +16,7 @@
 
 INPUT		    =	.
 FILE_PATTERNS	    =	*.doc
-EXAMPLE_PATH	    =	$(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $(SRCDIR)/docs/main \
+EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $(SRCDIR)/docs/main \
 			$(SRCDIR)/docs/man $(SRCDIR)/tests $(SRCDIR)/tests/docs \
 			$(SRCDIR)/performance/docs \
 			$(SRCDIR)/example/c \

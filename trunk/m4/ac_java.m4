@@ -1,11 +1,11 @@
 dnl
 dnl  \file       m4/ac_java.m4
-dnl  \brief      \$Id: ac_java.m4 507 2009-11-28 15:18:46Z dev1usr $
+dnl  \brief      \$Id$
 dnl  
 dnl  (C) 2009 - NHI - #1 - Project - Group
 dnl  
-dnl  \version    \$Rev: 507 $
-dnl  \author     EMail: aotto1968 at users.sourceforge.net
+dnl  \version    \$Rev$
+dnl  \author     EMail: aotto1968 at users.berlios.de
 dnl  \attention  this software has GPL permissions to copy
 dnl              please contact AUTHORS for additional information
 dnl

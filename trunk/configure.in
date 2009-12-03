@@ -1,11 +1,11 @@
 #+
 #§  \file       configure.in
-#§  \brief      \$Id: configure.in 512 2009-11-30 14:52:29Z dev1usr $
+#§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 512 $
-#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
@@ -154,7 +154,7 @@ fi
 AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile 
-	docs/Makefile win/Makefile
+	theLink/docs/Makefile win/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
 	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl

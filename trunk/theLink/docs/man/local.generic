@@ -39,11 +39,7 @@ GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css
 GENERATE_MAN	    = YES
 MAN_EXTENSION	    = .n
-MAN_OUTPUT	    = $(SRCDIR)/man
-
-#GENERATE_HTMLHELP   = YES
-#CHM_FILE	    = $(SRCDIR)/$(PROJECT).chm
-#GENERATE_CHI	    = NO
+MAN_OUTPUT	    = $(SRCDIR)/../man
 
 ALIASES		    += "clh{1}=\if C (s. #\1) \endif"
 

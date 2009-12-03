@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## get env
-. $(dirname $0)/../env.sh
+. $(dirname $0)/../../env.sh
 
 export HAVE_DOT=NO
 [[ $1 == "-usedot" && ! -z "$DOT" ]] && {
@@ -34,7 +34,7 @@ export HAVE_DOT=NO
     shift
 
   ## customizing
-    export  SRCDIR="$abs_top_builddir"
+    export  SRCDIR="$abs_top_builddir/theLink"
     export  VERSION="$PACKAGE_VERSION"
     export  PERL_PATH="$DOXYPERL"
     export  DOT_PATH="$(dirname '$DOT')"
@@ -66,7 +66,7 @@ export HAVE_DOT=NO
       echo "#########################################################################"
       echo "start: $F"
       export  PROJECT="$P"
-      export  DOCDIR="$SRCDIR/html/$PROJECT"
+      export  DOCDIR="$abs_top_builddir/html/theLink/$PROJECT"
       rm -fr "$DOCDIR"
       mkdir -p "$DOCDIR"
       cat "$SRCDIR/docs/Doxyfile.generic" $LG "$F" | \
