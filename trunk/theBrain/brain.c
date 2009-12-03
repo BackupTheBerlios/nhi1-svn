@@ -196,8 +196,7 @@ static enum MqErrorE AGET ( ARGS ) {
   MqSendSTART(mqctx);
   while (MqReadItemExists(mqctx)) {
     READ_N (key,klen);
-    val = tcadbget(adb, key, klen, &vlen);
-    DbErrorCheck (val==NULL);
+    DbErrorCheck(val = tcadbget(adb, key, klen, &vlen));
     MqSendN(mqctx, val, vlen);
     free(val);
   }

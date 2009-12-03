@@ -11,7 +11,7 @@
 #§
 
 set TS_SCRIPT [info script]
-source [file join [file dirname [info script]] db.tcl]
+source [file join [file dirname [info script]] library.tcl]
 if {![testConstraint brain]} return
 
 ##

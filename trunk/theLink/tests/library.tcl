@@ -19,10 +19,10 @@
 
 if {![info exists testdir]} {
   set testdir [file normalize [file dirname [info script]]]
-  set topdir  [file dirname $testdir]
+  set linkdir  [file dirname $testdir]
 }
 
-if {[catch {source [file join $topdir .. env.tcl]}]} {
+if {[catch {source [file join $linkdir .. env.tcl]}]} {
   error {unable to find the 'env.tcl' file}
 }
 
@@ -57,13 +57,13 @@ proc Error {args} {
 
 ## setup the path to find the !newly! created executable first
 lappend PATH [file nativename [file dirname [info nameofexecutable]]]
-lappend PATH [file nativename [file join $topdir javamsgque .libs]]
-lappend PATH [file nativename [file join $topdir csmsgque]]
-lappend PATH [file nativename [file join $topdir tests]]
-lappend PATH [file nativename [file join $topdir acmds]]
-lappend PATH [file nativename [file join $topdir libmsgque .libs]]
-lappend PATH [file nativename [file join $topdir ccmsgque .libs]]
-lappend PATH [file nativename [file join $topdir tclmsgque .libs]]
+lappend PATH [file nativename [file join $linkdir javamsgque .libs]]
+lappend PATH [file nativename [file join $linkdir csmsgque]]
+lappend PATH [file nativename [file join $linkdir tests]]
+lappend PATH [file nativename [file join $linkdir acmds]]
+lappend PATH [file nativename [file join $linkdir libmsgque .libs]]
+lappend PATH [file nativename [file join $linkdir ccmsgque .libs]]
+lappend PATH [file nativename [file join $linkdir tclmsgque .libs]]
 lappend PATH [file nativename [file normalize .libs]]
 lappend PATH [file nativename [file normalize .]]
 
@@ -88,44 +88,44 @@ set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
 
 ## setup TCL path
 set TCLLIBPATH [list]
-lappend TCLLIBPATH [file join $topdir tclmsgque .libs]
-lappend auto_path [file join $topdir tclmsgque .libs]
+lappend TCLLIBPATH [file join $linkdir tclmsgque .libs]
+lappend auto_path [file join $linkdir tclmsgque .libs]
 set env(TCLLIBPATH) $TCLLIBPATH
 
 ## setup PYTHON path
 set PYTHONPATH [list]
-lappend PYTHONPATH [file nativename [file join $topdir tests]]
-lappend PYTHONPATH [file nativename [file join $topdir pymsgque]]
-lappend PYTHONPATH [file nativename [file join $topdir pymsgque .libs]]
+lappend PYTHONPATH [file nativename [file join $linkdir tests]]
+lappend PYTHONPATH [file nativename [file join $linkdir pymsgque]]
+lappend PYTHONPATH [file nativename [file join $linkdir pymsgque .libs]]
 set env(PYTHONPATH) [join $PYTHONPATH $PATH_SEP]
 #Print env(PYTHONPATH)
 
 ## setup JAVA classpath
 set CLASSPATH [list]
-lappend CLASSPATH [file nativename [file join $topdir javamsgque javamsgque.jar]]
-lappend CLASSPATH [file nativename [file join $topdir tests]]
-lappend CLASSPATH [file nativename [file join $topdir example java]]
+lappend CLASSPATH [file nativename [file join $linkdir javamsgque javamsgque.jar]]
+lappend CLASSPATH [file nativename [file join $linkdir tests]]
+lappend CLASSPATH [file nativename [file join $linkdir example java]]
 set env(CLASSPATH) [join $CLASSPATH $PATH_SEP]
 #Print env(CLASSPATH)
 
 ## setup C# search path
 set MONO_PATH [list]
-lappend MONO_PATH [file nativename [file join $topdir tests]]
-lappend MONO_PATH [file nativename [file join $topdir csmsgque]]
-lappend MONO_PATH [file nativename [file join $topdir example csharp]]
+lappend MONO_PATH [file nativename [file join $linkdir tests]]
+lappend MONO_PATH [file nativename [file join $linkdir csmsgque]]
+lappend MONO_PATH [file nativename [file join $linkdir example csharp]]
 set env(MONO_PATH) [join $MONO_PATH $PATH_SEP]
 #Print env(MONO_PATH)
 
 ## setup PERL search path
-set env(PERL5LIB) [file nativename [file join $topdir perlmsgque Net-PerlMsgque blib lib]]
+set env(PERL5LIB) [file nativename [file join $linkdir perlmsgque Net-PerlMsgque blib lib]]
 
 ## setup LIBRARY search path
 set LIBRARY_PATH [list]
-lappend LIBRARY_PATH [file nativename [file join $topdir libmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $topdir javamsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $topdir tclmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $topdir tests .libs]]
-lappend LIBRARY_PATH [file nativename [file join $topdir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]]
+lappend LIBRARY_PATH [file nativename [file join $linkdir libmsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkdir javamsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkdir tclmsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkdir tests .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkdir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]]
 set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY_PATH)"
 
 if {$tcl_platform(os) eq "FreeBSD"} {
@@ -345,14 +345,14 @@ proc getExample {srv} {
     }
 
     switch -glob $srv {
-      *.python	{ lappend RET $::PYTHON [file join $::topdir example python [file rootname $srv].py] }
-      *.perl	{ lappend RET $::PERL [file join $::topdir example perl [file rootname $srv].pl] }
+      *.python	{ lappend RET $::PYTHON [file join $::linkdir example python [file rootname $srv].py] }
+      *.perl	{ lappend RET $::PERL [file join $::linkdir example perl [file rootname $srv].pl] }
       *.java	{ lappend RET $::JAVA example.[file rootname $srv] }
-      *.csharp	{ lappend RET {*}$::CLREXEC [file join $::topdir example csharp [file rootname $srv].exe] }
-      *.vb	{ lappend RET {*}$::CLREXEC [file join $::topdir example vb [file rootname $srv].exe] }
-      *.tcl	{ lappend RET $::TCLSH [file join $::topdir example tcl $srv] }
-      *.cc	{ lappend RET [file join $::topdir example cc [file rootname $srv]$::EXEEXT] }
-      *.c	{ lappend RET [file join $::topdir example c [file rootname $srv]$::EXEEXT] }
+      *.csharp	{ lappend RET {*}$::CLREXEC [file join $::linkdir example csharp [file rootname $srv].exe] }
+      *.vb	{ lappend RET {*}$::CLREXEC [file join $::linkdir example vb [file rootname $srv].exe] }
+      *.tcl	{ lappend RET $::TCLSH [file join $::linkdir example tcl $srv] }
+      *.cc	{ lappend RET [file join $::linkdir example cc [file rootname $srv]$::EXEEXT] }
+      *.c	{ lappend RET [file join $::linkdir example c [file rootname $srv]$::EXEEXT] }
       *		{ puts stderr "invalid example: $srv"; exit 1 }
     }
 
@@ -1214,4 +1214,5 @@ proc RET_BG {ctx} {
   RET_add BG-TEXT $ctx ErrorGetText
   $ctx ErrorReset
 }
+
 
