@@ -11,30 +11,16 @@
 #§
 
 
-libmsgque overview
-==================
+NHI1 overview
+=============
 
-The msgque project is an infrastructure to link applications together 
-to act like a single application. To link mean distributing work from 
-one application to an other application an wait or not wait for an 
-answer. 
-The linking is done using network or local sockets and is based on 
-packages send from one application to an other application and back. 
-The libmsgque project is used to handle all the different aspects for 
-setup and maintain the link and is responsible for:
-
- * starting and stopping the different applications
- * starting and stopping the communication interface
- * sending and receiving packages
- * reading and writing data from or into packages
- * setup and maintain the event-handling for asynchronous transfers
- * propagate warnings or errors
+  http://nhi1.berlios.de
 
 
-libmsgque build
+NHI1 build
 ===============
 
-"libmsgque" is a able to build on a UNIX operating system like
+"NHI1" is a able to build on a UNIX operating system like
 Linux, BSD. For a build on Windows please change into the 
 "win" directory and follow the instructions from the "README.win" 
 file.
@@ -60,13 +46,9 @@ The Build depends on the following tools:
   - Create Binary Distribution: zip
 
 In addition the following software is required for the "build"
-and is used to test the "libmsgque" 
 
   - tcl from the Tcl Developer Site
        -> http://www.tcl.tk/
-
-In addition the following software *can* be added but is *not*
-required:
 
   - java from the JAVA Download Site
        -> google: java 6 download
@@ -77,13 +59,16 @@ required:
   - C# - csharp or mono
        -> http://www.mono-project.com/Main_Page
 
-To build "libmsgque" please follow the next steps:
+  - perl from The Perl Programming Language
+       -> http://www.perl.org/
+
+To build "NHI1" please follow the next steps:
 
 Unpack the source distribution in a temporary directory and
 switch into the top directory:
 
-  > tar -xzf libmsgque-X.Y.tar.gz
-  > cd libmsgque-X.Y
+  > tar -xzf NHI1-X.Y.tar.gz
+  > cd NHI1-X.Y
 
 To build the software on a system other than the developing system I
 recommend to update your local build tools with:
@@ -104,7 +89,7 @@ To build the software run "make":
 
 To test the software please follow the steps from:
 
-  > less tests/README.tests
+  > less theLink/tests/README.tests
 
 To build the "documentation" the tool "doxygen" is required:
 
