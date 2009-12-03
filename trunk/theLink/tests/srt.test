@@ -1,0 +1,196 @@
+#+
+#§  \file       tests/srt.test
+#§  \brief      \$Id: srt.test 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+set MAX    [tclmsgque const maxS]
+set MIN    [tclmsgque const minS]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test srt-1-($I|$B|$C|$S) {echo datatype (MQ_INT)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadS SendS $MAX]
+} "int"
+
+test srt-2-($I|$B|$C|$S) {(MQ_WID to MQ_INT) fit max} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendS $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+ 
+test srt-3-($I|$B|$C|$S) {(MQ_WID to MQ_INT) fit min} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendS $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test srt-4-($I|$B|$C|$S) {(MQ_STR to MQ_INT) fit max} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendC $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+
+test srt-5-($I|$B|$C|$S) {(MQ_STR to MQ_INT) fit min} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendC $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test srt-6-($I|$B|$C|$S) {(MQ_STR to MQ_INT) error size} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendC 1234.7} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] size ERROR, can not convert '1234.7' into an 'SRT' object*}
+
+test srt-7-($I|$B|$C|$S) {range error underflow} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendC ${MIN}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] underflow ERROR, can not convert '*' into an 'SRT' object*}
+
+test srt-8-($I|$B|$C|$S) {range error overflow} \
+    -body           {Echo1 $FH_LAST ECOS ReadS SendC ${MAX}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] overflow ERROR, can not convert '*' into an 'SRT' object*}
+ 
+if {$B eq "binary"} {
+    test srt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error WID type} \
+	-body           {Echo1 $FH_LAST ECOS ReadS SendW 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'WID' object into an 'SRT' object*}
+} else {
+    test srt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error INT type} \
+	-body           {Echo1 $FH_LAST ECOS ReadS SendW 1234} \
+	-returnCodes    ok \
+	-result         1234
+}
+
+if {$B eq "binary"} { 
+    test srt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOS ReadS SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'DBL' object into an 'SRT' object*}
+} else {
+    test srt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOS ReadS SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] size ERROR, can not convert '1.2345*e+*03' into an 'SRT' object*}
+}
+ 
+test srt-11-($I|$B|$C|$S) {(MQ_LST to MQ_INT) error LST type} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOS
+      $FH_LAST ReadS
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+[sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'LST' object into an 'SRT' object*}
+
+test srt-12-($I|$B|$C|$S) {set/get context data} \
+    -body           {
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendS $i
+	  $ctx SendEND SETU
+	}
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendEND_AND_WAIT GETU
+	  set ret [$ctx ReadS]
+	  if {$i != $ret} {
+	    error "expect value '$i' but got '$ret'"
+	  }
+	}
+	return OK
+    } \
+    -result	{OK}
+
+## !ACHTUNG! dieser test muss am ende stehen
+test srt-XX-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOS
+      $FH_LAST ReadI
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|213>
+[sS]> (server-0) \[*sReadA2\] request more arguments than available}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+

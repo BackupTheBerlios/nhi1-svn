@@ -1,0 +1,141 @@
+#+
+#§  \file       tests/buf.test
+#§  \brief      \$Id: buf.test 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##  
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+#set tcl_traceExec 1
+#set env(BIN_LST) {no}
+#set env(COM_LST) {tcp}
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## ECHO
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+SetConstraints $I $B $S
+
+# tests ----------------------------
+
+test buf-1-($I|$B|$C|$S) {datatype (binary)} \
+  -constraints	c \
+  -setup    { 
+    set BUF [Echo1 $FH_LAST ECOU ReadU SendB [binary format "i" 1]] 
+  } \
+  -body	    {
+    set RET [list]
+    lappend RET $BUF
+    lappend RET	[tclmsgque print objtype $BUF]
+    lappend RET [$BUF GetType]
+    lappend RET	[tclmsgque print objtype $BUF]
+    set RET
+  } \
+  -cleanup  {
+    rename $BUF ""
+  } \
+  -match    glob \
+  -result   {<MqBufferS-*> unknown B cmdName}
+
+test buf-2-($I|$B|$C|$S) {no data} \
+    -body           {Echo1 $FH_LAST ECOU ReadU} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOU> <Num|213>*}
+
+test buf-3-($I|$B|$C|$S) {multiple buffer} \
+    -constraints    {binary} \
+    -body           {EchoL $FH_LAST BUF2 SendO 0 SendD 1.2 SendC "hhh"} \
+    -result         {O 0 D 1.2 C hhh}
+
+test buf-4-($I|$B|$C|$S) {no data} \
+    -body           {Echo1 $FH_LAST ECOU ReadU SendC "Hallo World"} \
+    -match	    glob \
+    -result         {<MqBufferS-*>}
+
+test buf-5-($I|$B|$C|$S) {invalid buffer, return only last result} \
+    -constraints    {binary} \
+    -body           {EchoL $FH_LAST BUF3 SendY 44 SendI -354367} \
+    -match          glob \
+    -result         {Y 44 -354367 -354367}
+
+test buf-5-($I|$B|$C|$S) {invalid buffer, return only last result} \
+    -constraints    {string} \
+    -body           {EchoL $FH_LAST BUF3 SendY 44 SendI -354367} \
+    -match          glob \
+    -result         {C 44 -354367 -354367}
+
+foreach {T V} {Y -25 O 1 S 4576 I -3984752 F 35638.3710938 W 2738930347 D -23738943.2739 \
+		C Hallo_World B \x23\x23\x77\x77\x26\x82} {
+
+test buf-GetType-$T-($I|$B|$C|$S) {no data} \
+    -constraints    {binary} \
+    -body           "EchoL \$FH_LAST BUF1 Send$T $V" \
+    -match          glob \
+    -result         "$T $V"
+}
+
+
+# cleanup ---------------------------
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+
+
+
+
+
+
+
+
