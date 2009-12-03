@@ -1,0 +1,73 @@
+#+
+#§  \file       example/csharp/Makefile.am
+#§  \brief      \$Id: Makefile.am 507 2009-11-28 15:18:46Z dev1usr $
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 507 $
+#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+#####################################################################################
+## VPATH setup
+
+.vpath_hook:
+	$(VPATH_HOOK)
+
+##
+## ==========================================================================
+## C#
+##
+
+SUFFIXES = *.exe *.cs *.dll
+
+RULE_CS_EXE = $(CSCOMP) -v -nologo $(CSHARP_DEBUG) -reference:../../csmsgque/csmsgque.dll -out:$@ -target:exe "$<"
+
+manfilter.exe: $(srcdir)/manfilter.cs ../../csmsgque/csmsgque.dll 
+	$(RULE_CS_EXE)
+
+mulclient.exe: $(srcdir)/mulclient.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+mulserver.exe: $(srcdir)/mulserver.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+MyServer.exe: $(srcdir)/MyServer.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+MyClient.exe: $(srcdir)/MyClient.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+Filter1.exe: $(srcdir)/Filter1.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+Filter2.exe: $(srcdir)/Filter2.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+testclient.exe: $(srcdir)/testclient.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+testserver.exe: $(srcdir)/testserver.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
+BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
+		  MyClient.exe Filter1.exe Filter2.exe testclient.exe testserver.exe
+
+##
+## ==========================================================================
+## Main
+##
+
+MAINTAINERCLEANFILES = *.exe *.mdb
+EXTRA_DIST = $(srcdir)/*.cs $(srcdir)/*.dll $(BUILT_SOURCES)
+VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
+                  Filter1.exe Filter2.exe testclient.exe testserver.exe csmsgque.dll
+
+distclean-local:
+	$(VPATH_HOOK_CLEANUP)
+
+dist-hook:
+	$(VPATH_HOOK_DIST)
