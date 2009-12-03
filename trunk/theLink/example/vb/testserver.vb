@@ -1,10 +1,10 @@
 REM
-REM  \file       example/vb/testserver.vb
-REM  \brief      \$Id: testserver.vb 507 2009-11-28 15:18:46Z dev1usr $
+REM  \file       theLink/example/vb/testserver.vb
+REM  \brief      \$Id$
 REM  
 REM  (C) 2009 - NHI - #1 - Project - Group
 REM  
-REM  \version    \$Rev: 507 $
+REM  \version    \$Rev$
 REM  \author     EMail: aotto1968 at users.sourceforge.net
 REM  \attention  this software has GPL permissions to copy
 REM              please contact AUTHORS for additional information

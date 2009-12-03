@@ -1,10 +1,10 @@
 /**
- *  \file       pymsgque/msgque_python.h
- *  \brief      \$Id: msgque_python.h 512 2009-11-30 14:52:29Z dev1usr $
+ *  \file       theLink/pymsgque/msgque_python.h
+ *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 512 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.sourceforge.net
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

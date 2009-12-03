@@ -1,10 +1,10 @@
 #+
-#§  \file       libbrain/tests/db.tcl
-#§  \brief      \$Id: db.tcl 511 2009-11-30 08:30:10Z dev1usr $
+#§  \file       theBrain/tests/brain.tcl
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 511 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.sourceforge.net
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

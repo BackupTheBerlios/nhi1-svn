@@ -1,10 +1,10 @@
 /**
- *  \file       libmsgque/swap.c
- *  \brief      \$Id: swap.c 510 2009-11-29 11:24:06Z dev1usr $
+ *  \file       theLink/libmsgque/swap.c
+ *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 510 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.sourceforge.net
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
