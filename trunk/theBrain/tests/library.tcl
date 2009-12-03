@@ -1,10 +1,10 @@
 #+
-#§  \file       theBrain/tests/brain.tcl
-#§  \brief      \$Id: brain.tcl 27 2009-12-03 12:32:23Z aotto1968 $
+#§  \file       theBrain/tests/library.tcl
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 27 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

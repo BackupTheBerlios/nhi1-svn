@@ -1,3 +1,4 @@
+#!/usr/bin/env tclsh
 #+
 #§  \file       bin/svn_ps_svn_ignore.tcl
 #§  \brief      \$Id$
