@@ -1,12 +1,13 @@
-##
-#§  libmsgque - tests/Makefile.am
+#+
+#§  \file       theLink/docs/Makefile.am
+#§  \brief      \$Id$
 #§  
-#§  (C) 2007 - LibMsgque - Project - Group
-#§  ------------------------------------------------------
-#§  EMail: aotto1968 at users.sourceforge.net
-#§  ------------------------------------------------------
-#§  this software has GPL permissions to copy
-#§  please contact AUTHORS for additional information
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
 #§
 
 include list.mk

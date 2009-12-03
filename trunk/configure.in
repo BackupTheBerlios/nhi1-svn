@@ -11,11 +11,11 @@
 #§
 
 # set VERSION information also in:
-# > perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+# > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
 # > win/win/win.vsprops
 # > win/mqconfig.h
 # > win/env.sh
-AC_INIT([NHI1],[0.1],[aotto1968@users.sourceforge.net],[NHI1])
+AC_INIT([NHI1],[0.1],[aotto1968@users.berlios.de],[NHI1])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([mqconfig.h])
