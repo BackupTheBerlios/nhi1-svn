@@ -22,7 +22,7 @@
 ## Java
 ##
 
-RULE_JAVA_EXE = $(JAVAC) -classpath "$(top_builddir)$(FILE_SEP)javamsgque$(FILE_SEP)javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked "$<"
+RULE_JAVA_EXE = $(JAVAC) -classpath "../../javamsgque/javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked "$<"
 
 SUFFIXES = .java .class
 VPATH_FILES = example
