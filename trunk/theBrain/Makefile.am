@@ -10,10 +10,11 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = tokyocabinet
+if USE_TCL
+SUBDIRS += tests
+endif
 
 bin_PROGRAMS = brain
-EXTRA_DIST = brain
 
 CLEANFILES =
 
@@ -22,4 +23,6 @@ brain_SOURCES = brain.c
 brain_CFLAGS = -I../theLink/libmsgque -I./tokyocabinet -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 brain_LDADD = -lz -lbz2 -lrt -lm -lc ../theLink/libmsgque/*.lo ./tokyocabinet/libtokyocabinet.a
 #brain_LDFLAGS = -static
+
+EXTRA_DIST = brain 
 
