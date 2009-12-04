@@ -48,13 +48,12 @@ CTAGSFLAGS = --c-kinds=+p
 
 EXTRA_DIST = make_binary_dist.sh $(mann_MANS)
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-tcl
+DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-tcl --enable-brain --enable-cxx \
+      --enable-java --enable-csharp --enable-python --enable-perl --enable-vb 
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command
 #export DYLD_LIBRARY_PATH = @abs_top_builddir@/libmsgque/.libs
-
-# install SourceForge (SF) data
 
 install-web:
 	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"

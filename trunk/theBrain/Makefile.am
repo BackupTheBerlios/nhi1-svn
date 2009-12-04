@@ -11,7 +11,7 @@
 #§
 
 if USE_TCL
-SUBDIRS += tests
+SUBDIRS = tests
 endif
 
 bin_PROGRAMS = brain
@@ -20,9 +20,13 @@ CLEANFILES =
 
 brain_SOURCES = brain.c 
 #brabrainDD = -lm ../theLink//libmsgque/libmsgque.la
-brain_CFLAGS = -I../theLink/libmsgque -I./tokyocabinet -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-brain_LDADD = -lz -lbz2 -lrt -lm -lc ../theLink/libmsgque/*.lo ./tokyocabinet/libtokyocabinet.a
-#brain_LDFLAGS = -static
+brain_CFLAGS = -I../theLink/libmsgque -I$(BRAIN_HOME)/include -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-EXTRA_DIST = brain 
+if HAS_STATIC
+LIBMSQUE = ../theLink/libmsgque/*.o
+else
+LIBMSQUE = ../theLink/libmsgque/*.lo
+endif
+
+brain_LDADD = -lz -lbz2 -lrt -lm -lc $(LIBMSQUE) $(BRAIN_HOME)/lib/libtokyocabinet.a
 

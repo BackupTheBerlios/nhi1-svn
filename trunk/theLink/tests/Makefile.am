@@ -21,6 +21,14 @@
 ## test tools setup
 ##
 
+if HAS_STATIC
+LIBMSQUE = ../libmsgque/*.o
+CCMSQUE = ../ccmsgque/*.o
+else
+LIBMSQUE = ../libmsgque/*.lo
+CCMSQUE = ../ccmsgque/*.lo
+endif
+
 SUFFIXES =
 BUILT_SOURCES = .vpath_hook
 
@@ -44,11 +52,11 @@ html: $(HTMLFILES)
 
 server_SOURCES = server.c 
 server_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-server_LDADD = -lm ../libmsgque/*.lo
+server_LDADD = -lm $(LIBMSQUE)
 
 client_SOURCES = client.c stat.c stat.h
 client_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-client_LDADD = -lm ../libmsgque/*.lo
+client_LDADD = -lm $(LIBMSQUE)
 
 ##
 ## ==========================================================================
@@ -59,9 +67,7 @@ if USE_CXX
 noinst_PROGRAMS += ccserver$(EXEEXT)
 ccserver_SOURCES = ccserver.cc
 ccserver_CXXFLAGS = -I$(srcdir)/../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-#ccserver_LDFLAGS = -rpath $(abs_top_builddir)/ccmsgque/.libs
-#ccserver_LDADD = ../ccmsgque/libccmsgque.la
-ccserver_LDADD = ../ccmsgque/*.lo
+ccserver_LDADD = $(CCMSGQUE)
 endif
 
 ##

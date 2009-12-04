@@ -13,3 +13,5 @@
 TESTS_ENVIRONMENT = $(TCLSH)
 TESTS = $(srcdir)/all.tcl
 
+EXTRA_DIST = *.tcl *.test *.bash *.env
+

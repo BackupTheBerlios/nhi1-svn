@@ -703,6 +703,13 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
   AC_MSG_CHECKING([for build with BRAIN (only on UNIX)])
   AC_ARG_ENABLE(brain, [  --enable-brain          build with BRAIN database support [[--disable-brain]]], [sc_brain=yes], [sc_brain=no])
   AC_MSG_RESULT($sc_brain)
+  if test x$sc_brain = xyes; then
+    AC_SUBST([BRAIN_HOME], [$(dirname $(dirname $(which tcamgr)))])
+    if !test -f $BRAIN_HOME/include/tcadb.h; then
+      AC_MSG_ERROR([unable to find the include file "tcadb.h"])
+    fi
+    AC_SEARCH_LIBS([tcadbopen], [tokyocabinet])
+  fi
   AC_SUBST([USE_BRAIN], $sc_brain)
   AM_CONDITIONAL([USE_BRAIN], [test x$sc_brain = xyes])
 ])

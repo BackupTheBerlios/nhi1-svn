@@ -37,7 +37,7 @@ Build() {
 
       ../../performance_$BUILD.env ./configure --prefix=$OLDPWD $@ \
 	--enable-java --enable-python --enable-csharp --enable-cxx \
-	  --enable-tcl --enable-perl --enable-vb || exit 1
+	  --enable-tcl --enable-perl --enable-vb --enable-static || exit 1
 
       make || exit 1
 
