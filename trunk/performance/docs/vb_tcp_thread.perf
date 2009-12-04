@@ -1,11 +1,11 @@
-> mono thread/libmsgque-3.8/tests/vbserver.exe --tcp --host localhost --port 7792 --thread
-> thread/libmsgque-3.8/tests/client --all --tcp --host localhost --port 7792
-C> (client:374) [2009-11-09:14-35-09] [0-0-0x620bc0-main]: start: --------------------------------------
-C> (client:374) [2009-11-09:14-35-09] [0-0-0x620bc0-statistics]:                      MqSendEND:       4.09
-C> (client:374) [2009-11-09:14-35-09] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.50
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      26.19
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-statistics]:                  parent create:     403.99
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-statistics]:                  parent delete:     453.23
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-statistics]:                   child create:     233.26
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-statistics]:                   child delete:      34.73
-C> (client:374) [2009-11-09:14-35-13] [0-0-0x620bc0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.1/theLink/tests/vbserver.exe --tcp --host localhost --port 7792 --thread
+> thread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7792
+C> (client:1537) [2009-12-04:13-03-12] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:1537) [2009-12-04:13-03-13] [0-0-0x61fbc0-statistics]:                      MqSendEND:       3.53
+C> (client:1537) [2009-12-04:13-03-13] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:       8.54
+C> (client:1537) [2009-12-04:13-03-16] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      25.34
+C> (client:1537) [2009-12-04:13-03-16] [0-0-0x61fbc0-statistics]:                  parent create:     394.93
+C> (client:1537) [2009-12-04:13-03-16] [0-0-0x61fbc0-statistics]:                  parent delete:     481.46
+C> (client:1537) [2009-12-04:13-03-17] [0-0-0x61fbc0-statistics]:                   child create:     219.07
+C> (client:1537) [2009-12-04:13-03-17] [0-0-0x61fbc0-statistics]:                   child delete:      32.86
+C> (client:1537) [2009-12-04:13-03-17] [0-0-0x61fbc0-main]: end: ----------------------------------------

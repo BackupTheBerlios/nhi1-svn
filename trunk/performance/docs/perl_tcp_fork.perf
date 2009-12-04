@@ -1,11 +1,11 @@
-> perl nothread/libmsgque-3.8/tests/server.pl --tcp --host localhost --port 7794 --fork
-> nothread/libmsgque-3.8/tests/client --all --tcp --host localhost --port 7794
-C> (client:1428) [2009-11-09:14-36-05] [0-0-0x61fbc0-main]: start: --------------------------------------
-C> (client:1428) [2009-11-09:14-36-05] [0-0-0x61fbc0-statistics]:                      MqSendEND:       8.48
-C> (client:1428) [2009-11-09:14-36-06] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      13.99
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      33.01
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                  parent create:     962.26
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                  parent delete:     874.05
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                   child create:     124.78
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-statistics]:                   child delete:      33.09
-C> (client:1428) [2009-11-09:14-36-10] [0-0-0x61fbc0-main]: end: ----------------------------------------
+> perl nothread/NHI1-0.1/theLink/tests/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7794
+C> (client:2662) [2009-12-04:13-04-08] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:2662) [2009-12-04:13-04-09] [0-0-0x61fbc0-statistics]:                      MqSendEND:       7.64
+C> (client:2662) [2009-12-04:13-04-09] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      13.53
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      32.13
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-statistics]:                  parent create:     955.53
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-statistics]:                  parent delete:     825.50
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-statistics]:                   child create:     126.05
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-statistics]:                   child delete:      34.18
+C> (client:2662) [2009-12-04:13-04-13] [0-0-0x61fbc0-main]: end: ----------------------------------------

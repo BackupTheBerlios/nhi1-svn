@@ -19,7 +19,7 @@ performance_nothread.env / performance_thread.env:
     or "thread" enabled language starter for perl, tclsh and python
     -> USER modification REQUIRED
 
-local_nothread.env / local_thread.env:
+local.env:
 
     wrapper to setup language specific environment variables to load
     the language specific modules from the "nothread" or "thread"

@@ -1,9 +1,9 @@
-C> (client:1385) [2009-12-03:13-11-41] [0-0-0x6218a0-main]: start: --------------------------------------
-C> (client:1385) [2009-12-03:13-11-41] [0-0-0x6218a0-statistics]:                      MqSendEND:       4.56
-C> (client:1385) [2009-12-03:13-11-42] [0-0-0x6218a0-statistics]:         MqSendEND_AND_CALLBACK:       9.18
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-statistics]:             MqSendEND_AND_WAIT:      14.29
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-statistics]:                  parent create:     708.40
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-statistics]:                  parent delete:     100.05
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-statistics]:                   child create:      68.94
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-statistics]:                   child delete:      24.89
-C> (client:1385) [2009-12-03:13-11-45] [0-0-0x6218a0-main]: end: ----------------------------------------
+C> (client:3547) [2009-12-04:13-12-30] [0-0-0x6208a0-main]: start: --------------------------------------
+C> (client:3547) [2009-12-04:13-12-31] [0-0-0x6208a0-statistics]:                      MqSendEND:       4.73
+C> (client:3547) [2009-12-04:13-12-31] [0-0-0x6208a0-statistics]:         MqSendEND_AND_CALLBACK:       9.29
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-statistics]:             MqSendEND_AND_WAIT:      14.29
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-statistics]:                  parent create:     701.68
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-statistics]:                  parent delete:      99.34
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-statistics]:                   child create:      68.50
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-statistics]:                   child delete:      25.26
+C> (client:3547) [2009-12-04:13-12-34] [0-0-0x6208a0-main]: end: ----------------------------------------

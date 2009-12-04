@@ -1,11 +1,11 @@
-> python nothread/libmsgque-3.8/tests/server.py --tcp --host localhost --port 7788 --fork
-> nothread/libmsgque-3.8/tests/client --all --tcp --host localhost --port 7788
-C> (client:30731) [2009-11-09:14-33-50] [0-0-0x61fbc0-main]: start: --------------------------------------
-C> (client:30731) [2009-11-09:14-33-50] [0-0-0x61fbc0-statistics]:                      MqSendEND:       4.98
-C> (client:30731) [2009-11-09:14-33-51] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      13.40
-C> (client:30731) [2009-11-09:14-33-54] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      32.34
-C> (client:30731) [2009-11-09:14-33-54] [0-0-0x61fbc0-statistics]:                  parent create:     955.55
-C> (client:30731) [2009-11-09:14-33-55] [0-0-0x61fbc0-statistics]:                  parent delete:    3910.88
-C> (client:30731) [2009-11-09:14-33-55] [0-0-0x61fbc0-statistics]:                   child create:     143.57
-C> (client:30731) [2009-11-09:14-33-55] [0-0-0x61fbc0-statistics]:                   child delete:      35.44
-C> (client:30731) [2009-11-09:14-33-55] [0-0-0x61fbc0-main]: end: ----------------------------------------
+> python nothread/NHI1-0.1/theLink/tests/server.py --tcp --host localhost --port 7788 --fork
+> nothread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7788
+C> (client:31900) [2009-12-04:13-01-54] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:31900) [2009-12-04:13-01-55] [0-0-0x61fbc0-statistics]:                      MqSendEND:       4.65
+C> (client:31900) [2009-12-04:13-01-55] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      12.92
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      31.94
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-statistics]:                  parent create:     906.08
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-statistics]:                  parent delete:    4163.13
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-statistics]:                   child create:     140.10
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-statistics]:                   child delete:      32.78
+C> (client:31900) [2009-12-04:13-01-59] [0-0-0x61fbc0-main]: end: ----------------------------------------

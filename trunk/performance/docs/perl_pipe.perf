@@ -1,10 +1,10 @@
-> nothread/libmsgque-3.8/tests/client --all @ perl nothread/libmsgque-3.8/tests/server.pl
-C> (client:1310) [2009-11-09:14-35-38] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:1310) [2009-11-09:14-35-38] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.35
-C> (client:1310) [2009-11-09:14-35-39] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      17.64
-C> (client:1310) [2009-11-09:14-35-42] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      23.94
-C> (client:1310) [2009-11-09:14-36-03] [0-0-0x61f9a0-statistics]:                  parent create:  203871.66
-C> (client:1310) [2009-11-09:14-36-03] [0-0-0x61f9a0-statistics]:                  parent delete:     549.07
-C> (client:1310) [2009-11-09:14-36-03] [0-0-0x61f9a0-statistics]:                   child create:     113.83
-C> (client:1310) [2009-11-09:14-36-03] [0-0-0x61f9a0-statistics]:                   child delete:      23.67
-C> (client:1310) [2009-11-09:14-36-03] [0-0-0x61f9a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.1/theLink/tests/client --all @ perl nothread/NHI1-0.1/theLink/tests/server.pl
+C> (client:2541) [2009-12-04:13-03-41] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:2541) [2009-12-04:13-03-42] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.76
+C> (client:2541) [2009-12-04:13-03-43] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      17.91
+C> (client:2541) [2009-12-04:13-03-46] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      24.15
+C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                  parent create:  202116.04
+C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                  parent delete:     458.27
+C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                   child create:     118.50
+C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                   child delete:      26.22
+C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-main]: end: ----------------------------------------

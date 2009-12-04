@@ -1,10 +1,10 @@
-> nothread/libmsgque-3.8/tests/client --all @ java example.Server
-C> (client:26597) [2009-11-09:14-32-38] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:26597) [2009-11-09:14-32-38] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.46
-C> (client:26597) [2009-11-09:14-32-38] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      13.99
-C> (client:26597) [2009-11-09:14-32-41] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      19.62
-C> (client:26597) [2009-11-09:14-32-52] [0-0-0x61f9a0-statistics]:                  parent create:  108709.38
-C> (client:26597) [2009-11-09:14-32-53] [0-0-0x61f9a0-statistics]:                  parent delete:    1762.69
-C> (client:26597) [2009-11-09:14-32-53] [0-0-0x61f9a0-statistics]:                   child create:     157.10
-C> (client:26597) [2009-11-09:14-32-53] [0-0-0x61f9a0-statistics]:                   child delete:      24.44
-C> (client:26597) [2009-11-09:14-32-53] [0-0-0x61f9a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.1/theLink/tests/client --all @ java example.Server
+C> (client:27756) [2009-12-04:13-00-43] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:27756) [2009-12-04:13-00-43] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.46
+C> (client:27756) [2009-12-04:13-00-44] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      13.74
+C> (client:27756) [2009-12-04:13-00-47] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      19.56
+C> (client:27756) [2009-12-04:13-00-57] [0-0-0x61f9a0-statistics]:                  parent create:  105015.75
+C> (client:27756) [2009-12-04:13-00-58] [0-0-0x61f9a0-statistics]:                  parent delete:    1636.38
+C> (client:27756) [2009-12-04:13-00-58] [0-0-0x61f9a0-statistics]:                   child create:     168.56
+C> (client:27756) [2009-12-04:13-00-58] [0-0-0x61f9a0-statistics]:                   child delete:      25.23
+C> (client:27756) [2009-12-04:13-00-58] [0-0-0x61f9a0-main]: end: ----------------------------------------

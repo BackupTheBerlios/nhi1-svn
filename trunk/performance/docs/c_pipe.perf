@@ -1,10 +1,10 @@
-> nothread/libmsgque-3.8/tests/client --all @ nothread/libmsgque-3.8/tests/server 
-C> (client:23890) [2009-11-09:14-30-30] [0-0-0x61f8a0-main]: start: --------------------------------------
-C> (client:23890) [2009-11-09:14-30-30] [0-0-0x61f8a0-statistics]:                      MqSendEND:       3.42
-C> (client:23890) [2009-11-09:14-30-30] [0-0-0x61f8a0-statistics]:         MqSendEND_AND_CALLBACK:       9.15
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-statistics]:             MqSendEND_AND_WAIT:      14.49
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-statistics]:                  parent create:     744.77
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-statistics]:                  parent delete:      94.11
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-statistics]:                   child create:      70.18
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-statistics]:                   child delete:      23.82
-C> (client:23890) [2009-11-09:14-30-33] [0-0-0x61f8a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.1/theLink/tests/client --all @ nothread/NHI1-0.1/theLink/tests/server 
+C> (client:25037) [2009-12-04:12-58-36] [0-0-0x61f8a0-main]: start: --------------------------------------
+C> (client:25037) [2009-12-04:12-58-36] [0-0-0x61f8a0-statistics]:                      MqSendEND:       4.63
+C> (client:25037) [2009-12-04:12-58-37] [0-0-0x61f8a0-statistics]:         MqSendEND_AND_CALLBACK:       9.20
+C> (client:25037) [2009-12-04:12-58-39] [0-0-0x61f8a0-statistics]:             MqSendEND_AND_WAIT:      14.38
+C> (client:25037) [2009-12-04:12-58-39] [0-0-0x61f8a0-statistics]:                  parent create:     717.59
+C> (client:25037) [2009-12-04:12-58-39] [0-0-0x61f8a0-statistics]:                  parent delete:      98.90
+C> (client:25037) [2009-12-04:12-58-40] [0-0-0x61f8a0-statistics]:                   child create:      71.54
+C> (client:25037) [2009-12-04:12-58-40] [0-0-0x61f8a0-statistics]:                   child delete:      23.48
+C> (client:25037) [2009-12-04:12-58-40] [0-0-0x61f8a0-main]: end: ----------------------------------------

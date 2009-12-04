@@ -1,10 +1,10 @@
-> nothread/libmsgque-3.8/tests/client --all @ python nothread/libmsgque-3.8/tests/server.py
-C> (client:30613) [2009-11-09:14-33-40] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:30613) [2009-11-09:14-33-40] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.25
-C> (client:30613) [2009-11-09:14-33-41] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.97
-C> (client:30613) [2009-11-09:14-33-44] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.72
-C> (client:30613) [2009-11-09:14-33-47] [0-0-0x61f9a0-statistics]:                  parent create:   29460.66
-C> (client:30613) [2009-11-09:14-33-48] [0-0-0x61f9a0-statistics]:                  parent delete:    2226.39
-C> (client:30613) [2009-11-09:14-33-48] [0-0-0x61f9a0-statistics]:                   child create:     123.88
-C> (client:30613) [2009-11-09:14-33-48] [0-0-0x61f9a0-statistics]:                   child delete:      24.90
-C> (client:30613) [2009-11-09:14-33-48] [0-0-0x61f9a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.1/theLink/tests/client --all @ python nothread/NHI1-0.1/theLink/tests/server.py
+C> (client:31782) [2009-12-04:13-01-45] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:31782) [2009-12-04:13-01-45] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.32
+C> (client:31782) [2009-12-04:13-01-46] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.36
+C> (client:31782) [2009-12-04:13-01-49] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.22
+C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                  parent create:   28921.23
+C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                  parent delete:    2015.21
+C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                   child create:     123.30
+C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                   child delete:      23.25
+C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-main]: end: ----------------------------------------

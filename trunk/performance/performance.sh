@@ -172,7 +172,7 @@ for SRV in $R; do
   case $SRV in
     *thread*)	
       ENV="ENV=thread ./performance_thread.env ./local.env"
-      export TESTDIR="thread/$PACKAGE-$PACKAGE_VERSION/tests"
+      export TESTDIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink/tests"
     ;;
     total)	
       ENV=""
@@ -180,7 +180,7 @@ for SRV in $R; do
     ;;
     *)	
       ENV="ENV=nothread ./performance_nothread.env ./local.env"
-      export TESTDIR="nothread/$PACKAGE-$PACKAGE_VERSION/tests"
+      export TESTDIR="nothread/$PACKAGE-$PACKAGE_VERSION/theLink/tests"
     ;;
   esac
 
