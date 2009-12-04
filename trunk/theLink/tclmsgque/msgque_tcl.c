@@ -438,7 +438,7 @@ Tclmsgque_Init (
   }
 
   // announce my package
-  TclErrorCheck (Tcl_PkgProvide (interp, "TclMsgque", VERSION));
+  TclErrorCheck (Tcl_PkgProvide (interp, "TclMsgque", LIBMSGQUE_VERSION));
 
   // provide "msgque" as only public cammand of the package
   Tcl_CreateObjCommand (interp, "tclmsgque", NS(MsgqueCmd), (ClientData) NULL,

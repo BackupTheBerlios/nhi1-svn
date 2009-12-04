@@ -22,11 +22,11 @@
 ##
 
 if HAS_STATIC
-LIBMSQUE = ../libmsgque/*.o
-CCMSQUE = ../ccmsgque/*.o
+LIBMSGQUE = ../libmsgque/*.o
+CCMSGQUE = ../ccmsgque/*.o
 else
-LIBMSQUE = ../libmsgque/*.lo
-CCMSQUE = ../ccmsgque/*.lo
+LIBMSGQUE = ../libmsgque/*.lo
+CCMSGQUE = ../ccmsgque/*.lo
 endif
 
 SUFFIXES =
@@ -52,11 +52,11 @@ html: $(HTMLFILES)
 
 server_SOURCES = server.c 
 server_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-server_LDADD = -lm $(LIBMSQUE)
+server_LDADD = -lm $(LIBMSGQUE)
 
 client_SOURCES = client.c stat.c stat.h
 client_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-client_LDADD = -lm $(LIBMSQUE)
+client_LDADD = -lm $(LIBMSGQUE)
 
 ##
 ## ==========================================================================

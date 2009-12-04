@@ -10,15 +10,18 @@
 #§              please contact AUTHORS for additional information
 #§
 
-# set VERSION information also in:
-# > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
-# > win/win/win.vsprops
-# > win/mqconfig.h
-# > win/env.sh
 AC_INIT([NHI1],[0.1],[aotto1968@users.berlios.de],[NHI1])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([mqconfig.h])
+
+# set libmsgque VERSION information also in:
+# > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+# > win/win/win.vsprops
+# > win/mqconfig.h
+# > win/env.sh
+AC_SUBST([LIBMSGQUE_VERSION], ["4.0"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["4.0"], [version of the 'libmsgque' package])
 
 #  Updating library version information
 #  ====================================

@@ -36,7 +36,9 @@ if {![info exists env(SRV_LST)]} {
 ## define the directory environment
 if {![info exists testdir]} {
   set testdir [file normalize [file dirname [info script]]]
-  set linkdir [file join [file dirname [info script]] .. .. theLink]
+  set linksrcdir [file join [file dirname [info script]] .. .. theLink]
+  set linkbuilddir  [file normalize [file join [pwd] .. .. theLink] ]
+
 }
 
 ##

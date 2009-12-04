@@ -19,14 +19,14 @@ bin_PROGRAMS = brain
 CLEANFILES =
 
 brain_SOURCES = brain.c 
-#brabrainDD = -lm ../theLink//libmsgque/libmsgque.la
-brain_CFLAGS = -I../theLink/libmsgque -I$(BRAIN_HOME)/include -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+brain_CFLAGS = -I$(srcdir)/../theLink/libmsgque $(BRAIN_CFLAGS) -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
 if HAS_STATIC
-LIBMSQUE = ../theLink/libmsgque/*.o
+LIBMSGQUE = ../theLink/libmsgque/*.o
 else
-LIBMSQUE = ../theLink/libmsgque/*.lo
+LIBMSGQUE = ../theLink/libmsgque/*.lo
 endif
 
-brain_LDADD = -lz -lbz2 -lrt -lm -lc $(LIBMSQUE) $(BRAIN_HOME)/lib/libtokyocabinet.a
+brain_LDADD = $(BRAIN_LDADD) $(LIBMSGQUE)
+#brain_LDFLAGS = -static
 
