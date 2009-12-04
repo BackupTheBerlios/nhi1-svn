@@ -25,6 +25,7 @@ array set LABELUSE {
 }
 
 array set LABELIGNORE {
+    ./bin			{ *.sw* }
     ./html			{ * }
     ./man			{ * }
     ./binary-build		{ * }
@@ -49,22 +50,22 @@ array set LABELIGNORE {
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
     ./theLink/example		{ php}
 
-    ./theLink/libmsgque		{ *.sw* *.lo *.la .libs .deps Makefile.in depcomp Makefile tags }
-    ./theLink/tclmsgque		{ Makefile Makefile.in *.lo *.la .deps .libs tags *.sw* pkgIndex.tcl }
+    ./theLink/libmsgque		{ *.sw* *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
+    ./theLink/tclmsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* pkgIndex.tcl }
     ./theLink/tclmsgque/tmp	{ pkgIndex.tcl }
-    ./theLink/pymsgque		{ Makefile Makefile.in *.lo *.la .deps .libs tags *.sw* .C build }
+    ./theLink/pymsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build }
     ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags}
-    ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.la .deps .libs javamsgque tags *.sw*
+    ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
 				  MqS_Main.h Manifest.txt *.in *.stamp *.jar javamsgque_MqS.h
 				    javamsgque_MqS_WAIT.h javamsgque_MqConfigS.h javamsgque_MqBufferS.h 
 				      .vpath_hook }
-    ./theLink/ccmsgque		{ .libs .deps *.lo *.in Makefile *.la tags *.sw* }
+    ./theLink/ccmsgque		{ .libs .deps *.lo *.o *.in Makefile *.la tags *.sw* }
     ./theLink/csmsgque		{ Makefile *.in tags *.dll *.exe .vimrc .libs .deps libtest* *.mdb 
 				  *.sw* .vpath_hook }
     ./theLink/phpmsgque		{ * }
 
     ./theBrain			    { *.sw* Makefile.in Makefile *.o brain .deps }
-    ./theBrain/tests		    { tags tmp.* }
+    ./theBrain/tests		    { tags tmp.* Makefile.in Makefile }
     ./theBrain/tokyocabinet	    { * }
     ./theBrain/tokyocabinet-1.4.39  { * }
 
@@ -72,7 +73,7 @@ array set LABELIGNORE {
     .			{ aclocal.m4 ltmain.sh libtool.m4 install-sh depcomp Makefile.in 
 			    configure config.guess config.sub .PERSONAL missing autom4te.cache 
 			    config.log mqconfig.h.in libtool config.status stamp-h1 
-			    Makefile mqconfig.h libmsgque-*.tar.gz doxygen.* doxygen-doc 
+			    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
 			    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 			    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
 			    discheck.out phpmsgque *.bak mqconfig.h.in~}
