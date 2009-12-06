@@ -23,9 +23,7 @@ if {![info exists testdir]} {
   set linkbuilddir  [file normalize [file join [pwd] ..] ]
 }
 
-if {[catch {source [file join $linkbuilddir .. env.tcl]}]} {
-  error {unable to find the 'env.tcl' file}
-}
+source [file join $linkbuilddir .. env.tcl]
 
 ## C# using different double format depending on
 ## system language -> we test only the default language
@@ -33,10 +31,6 @@ set env(LANG) C
 
 ## we use the "eval" replacement "{*}"
 package require Tcl 8.5
-
-## switch to test directory
-## test if the start was allready in test directory "make check"
-cd $testdir
 
 ## helper (for debugging)
 proc Print {args} {
