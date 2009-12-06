@@ -243,7 +243,8 @@ test brain-8-($I|$B|$C|$S|$D) {ITERATOR data} \
     -returnCodes    ok \
     -result         {data1 data2 data3}
 
-test brain-9-($I|$B|$C|$S|$D) {forward matching keys} \
+test brain-9-($I|$B|$C|$S|$D) {check transaction statement} \
+    -constraints    {FH||FB||FF} \
     -setup	    {
       Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
     } \
@@ -267,7 +268,26 @@ test brain-9-($I|$B|$C|$S|$D) {forward matching keys} \
     -returnCodes    ok \
     -match	    glob \
     -result         {999 -- {[cC]> (client-0) \[service-call-error] <Tok|AGET> <Num|22>
-[sS]> (server-0) \[AGET] no record found}}
+[sS]> (server-0) \[AGET*] no record found}}
+
+test brain-10-($I|$B|$C|$S|$D) {vanish data} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      set RET [list]
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendC "Andreas Otto" {*}$KEY(3) SendD -6.9
+      Echo0 $FH_LAST AITI
+      lappend RET [llength [EchoL $FH_LAST AITN]]
+      Echo0 $FH_LAST AVAN
+      lappend RET [llength [EchoL $FH_LAST AITN]]
+      set RET
+    } \
+    -returnCodes    ok \
+    -result         {3 0}
 
 
 # cleanup ---------------------------
