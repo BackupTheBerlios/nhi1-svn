@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+AM_LIBTOOLFLAGS = --tag=disable-static
+
 pkglib_LTLIBRARIES = pymsgque.la
 
 pymsgque_la_SOURCES = MqS_python.c MqBufferS_python.c \

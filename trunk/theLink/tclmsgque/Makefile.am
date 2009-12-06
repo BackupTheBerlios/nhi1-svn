@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+AM_LIBTOOLFLAGS = --tag=disable-static
+
 pkglib_LTLIBRARIES = tclmsgque.la
 
 tclmsgque_la_SOURCES =	context_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_tcl.c \

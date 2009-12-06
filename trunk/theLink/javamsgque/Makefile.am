@@ -23,6 +23,8 @@ SUFFIXES = .c .h .class .java .jar
 #####################################################################################
 ## public JNI
 
+AM_LIBTOOLFLAGS = --tag=disable-static
+
 javamsgque_MqS.h: $(MQS_MAIN)
 	$(JAVAH) -classpath . -force -jni javamsgque.MqS
 

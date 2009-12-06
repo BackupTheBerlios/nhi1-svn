@@ -372,6 +372,53 @@ error:
   return MqSendRETURN(mqctx);
 }
 
+static enum MqErrorE AOTM ( ARGS ) {
+  SETUP_brain;
+  MQ_CST params = NULL;
+
+  MqSendSTART(mqctx);
+  if (MqReadItemExists(mqctx)) {
+    MqErrorCheck (MqReadC (mqctx, &params));
+  }
+
+  DbErrorCheck (tcadboptimize(brain->db, params));
+
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE AVAN ( ARGS ) {
+  SETUP_brain;
+  MqSendSTART(mqctx);
+  DbErrorCheck (tcadbvanish(brain->db));
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE ATRB ( ARGS ) {
+  SETUP_brain;
+  MqSendSTART(mqctx);
+  DbErrorCheck (tcadbtranbegin(brain->db));
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE ATRC ( ARGS ) {
+  SETUP_brain;
+  MqSendSTART(mqctx);
+  DbErrorCheck (tcadbtrancommit(brain->db));
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE ATRA ( ARGS ) {
+  SETUP_brain;
+  MqSendSTART(mqctx);
+  DbErrorCheck (tcadbtranabort(brain->db));
+error:
+  return MqSendRETURN(mqctx);
+}
+
 static enum MqErrorE AOPN ( ARGS ) {
   SETUP_brain;
   MQ_CST fname;
@@ -385,6 +432,11 @@ static enum MqErrorE AOPN ( ARGS ) {
   MqErrorCheck (MqServiceDelete (mqctx, "AOPN"));
   MqErrorCheck (MqServiceCreate (mqctx, "ACLO", ACLO, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "AITI", AITI, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "AOTM", AOTM, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "AVAN", AVAN, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "ATRB", ATRB, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "ATRC", ATRC, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "ATRA", ATRA, NULL, NULL));
 
   if (brain->db->omode == ADBOFDB) {
     MqErrorCheck (MqServiceCreate (mqctx, "APUT", APUT_F, NULL, NULL));
