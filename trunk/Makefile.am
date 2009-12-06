@@ -60,6 +60,9 @@ install-web:
 	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
 	rsync -azv --delete html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
 
+install-files:
+	ftp -u ftp://ftp.berlios.de/incoming/NHI1-$(VERSION).tar.gz NHI1-$(VERSION).tar.gz
+
 distclean-local:
 	-rm -rf html
 

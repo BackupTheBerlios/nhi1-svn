@@ -10,6 +10,19 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v 0.1	04 December 2009
+
+- Initial setup of the NHI1 project
+- NHI1::theLink (former libmsgque)
+   > new 'native' data package format able to be stored into
+     external tools like a 'database' or used to integrate with
+     other network transport tools.
+- NHI1::theBrain (former 'Tokyo Cabinet')
+   > add support for persistent data, abel to store data for later use
+
+
+## OLD news from "libmsgque"
+
 v 3.8	09 November 2009
 
 - BUG fix and CODE cleanup release
