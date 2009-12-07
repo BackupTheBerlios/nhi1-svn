@@ -524,7 +524,19 @@ error1:
 	// no MqBufferLDelete(&argv) because the CHILD will cleanup argv;
       }
       break;
-    case 'P':                   // _PEO: the (P)rocess (E)vent (O)k
+    case 'P':
+      curr++;
+      switch (*curr) {
+	  case 'E':		// _PEO: the (P)rocess (E)vent (O)k
+	    break;
+	  case 'I':		// _PIN: the (PIN)G
+	    MqSendSTART (context);
+	    while (MqReadItemExists(context)) {
+	      MqErrorCheck (MqReadProxy (context, context));
+	    }
+	    MqErrorCheck (MqSendRETURN (context));
+	    break;
+      }
       break;
     case 'S':
       curr++;

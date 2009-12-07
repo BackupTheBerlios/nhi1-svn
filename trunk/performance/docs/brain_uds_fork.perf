@@ -1,0 +1,17 @@
+> nothread/NHI1-0.1/theBrain/theBrain/theBrain --uds --file ./socket.uds --fork
+> nothread/NHI1-0.1/theBrain/tests/client --all --uds --file ./socket.uds
+C> (client:17073) [2009-12-07:10-33-20] [0-0-0x61e6d0-main]: start: --------------------------------------
+C> (client:17073) [2009-12-07:10-33-21] [0-0-0x61e6d0-statistics]:             memory hash - PUT:      15.36
+C> (client:17073) [2009-12-07:10-33-21] [0-0-0x61e6d0-statistics]:             memory hash - GET:      15.67
+C> (client:17073) [2009-12-07:10-33-22] [0-0-0x61e6d0-statistics]:            memory btree - PUT:      18.64
+C> (client:17073) [2009-12-07:10-33-23] [0-0-0x61e6d0-statistics]:            memory btree - GET:      19.09
+C> (client:17073) [2009-12-07:10-33-24] [0-0-0x61e6d0-statistics]:               file hash - PUT:      16.77
+C> (client:17073) [2009-12-07:10-33-25] [0-0-0x61e6d0-statistics]:               file hash - GET:      17.32
+C> (client:17073) [2009-12-07:10-33-31] [0-0-0x61e6d0-statistics]:              file btree - PUT:     126.67
+C> (client:17073) [2009-12-07:10-33-39] [0-0-0x61e6d0-statistics]:              file btree - GET:     145.55
+C> (client:17073) [2009-12-07:10-33-39] [0-0-0x61e6d0-main]: end: ----------------------------------------
+
+
+
+
+

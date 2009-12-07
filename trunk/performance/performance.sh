@@ -26,14 +26,23 @@ typeset -i PORT=7777
 NUM=" --num 10 "
 NUM=" "
 
-## setup the TOTAL perf
-FS=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
-FI=" %-20s | %8s %8s %8s %9s %8s %8s %8s\n"
-exec 3>docs/total.perf
+## setup the TOTAL - LINK perf
+FSL=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
+FIL=" %-20s | %8s %8s %8s %9s %8s %8s %8s\n"
+exec 3>docs/total_link.perf
 DATE=$(date +"%Y-%m-%d %H:%M:%S")
-printf "$FS" "   Tests from:    " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
-printf "$FS" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " create  " " delete " " create " " delete " 1>&3
-printf "$FS" -------------------   --------   --------   --------   ---------   --------   --------   --------  1>&3
+printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
+printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " create  " " delete " " create " " delete " 1>&3
+printf "$FSL" -------------------   --------   --------   --------   ---------   --------   --------   --------  1>&3
+
+## setup the TOTAL - BRAIN perf
+FSB=" %-20s | %-8s %-8s\n"
+FIB=" %-20s | %8s %8s\n"
+exec 4>docs/total_brain.perf
+DATE=$(date +"%Y-%m-%d %H:%M:%S")
+printf "$FSB" "   Tests from:    " "        " "        " 1>&4
+printf "$FSB" "$DATE"              "  PUT   " "  GET   " 1>&4
+printf "$FSB" -------------------   --------   --------  1>&4
 
 kill_parent=1
 sig_spec=-9
@@ -64,6 +73,12 @@ function kill_children # pid
     done
 }
 
+function error
+{
+  echo "ERROR: $@"
+  exit 1
+}
+
 c=C
 cc=C++
 csharp=C#
@@ -74,7 +89,7 @@ tcl=Tcl
 vb=VB.NET
 php=PHP
 
-Total() {
+TotalLink() {
   L=$1;
   T=$2;
   F=${L}_${T}
@@ -94,9 +109,41 @@ Total() {
       }
     done
 
-    printf "$FI" "   ${!L}" ${vals[*]} 1>&3
+    printf "$FIL" "   ${!L}" ${vals[*]} 1>&3
   else 
-    printf "$FI" "   ${!L}" na. na. na. na. na. na. na. 1>&3
+    printf "$FIL" "   ${!L}" na. na. na. na. na. na. na. 1>&3
+  fi
+}
+
+TotalBrain() {
+  L=$1;
+  T=$2;
+  F=${L}_${T}
+  local -a vals
+  IFS="
+"
+  IDX=0
+  if test -f docs/$F.perf ; then
+    FLAG=NO
+    for LINE in $(<docs/$F.perf) ; do
+      unset IFS
+      [[ $LINE == *statistics* && $FLAG == "NO" ]] && {
+	set - ${LINE:68}
+	N="$1 $2"
+	V1=$5
+	FLAG=YES
+	continue
+      }
+      [[ $LINE == *statistics* && $FLAG == "YES" ]] && {
+	set - ${LINE:68}
+	[[ $N != "$1 $2" ]] && error FORMAT
+	V2=$5
+	FLAG=NO
+	printf "$FIL" "   $N" $V1 $V2 1>&4
+	continue
+      }
+    done
+
   fi
 }
 
@@ -147,7 +194,14 @@ perl_tcp_thread
 perl_tcp_spawn
 perl_uds_fork
 perl_uds_thread
-perl_uds_spawn"
+perl_uds_spawn
+brain_pipe
+brain_tcp_fork
+brain_tcp_thread
+brain_tcp_spawn
+brain_uds_fork
+brain_uds_thread
+brain_uds_spawn"
 
 [[ $HT == "yes" ]] && {
   echo $ALL
@@ -172,45 +226,61 @@ for SRV in $R; do
   case $SRV in
     *thread*)	
       ENV="ENV=thread ./performance_thread.env ./local.env"
-      export TESTDIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink/tests"
+      export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
+      export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"
     ;;
     total)	
       ENV=""
-      export TESTDIR=""
+      export LINK_DIR=""
+      export BRAIN_DIR=""
     ;;
     *)	
       ENV="ENV=nothread ./performance_nothread.env ./local.env"
-      export TESTDIR="nothread/$PACKAGE-$PACKAGE_VERSION/theLink/tests"
+      export LINK_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theLink"
+      export BRAIN_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theBrain"
     ;;
   esac
 
   case $SRV in
+    *brain*)	
+      SERVER="$BRAIN_DIR/theBrain/theBrain"
+      CLIENT="$BRAIN_DIR/tests/client"
+    ;;
     *python*)	
-      SERVER="python $TESTDIR/server.py"	    
+      SERVER="python $LINK_DIR/tests/server.py"	    
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *csharp*)	
-      SERVER="mono $TESTDIR/csserver.exe"	    
+      SERVER="mono $LINK_DIR/testscsserver.exe"	    
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *vb*)	
-      SERVER="mono $TESTDIR/vbserver.exe"	    
+      SERVER="mono $LINK_DIR/testsvbserver.exe"	    
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     total)	
       SERVER=""	    
+      CLIENT=""
     ;;
     *java*)	
       SERVER="java example.Server" 
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *perl*)	
-      SERVER="perl $TESTDIR/server.pl" 
+      SERVER="perl $LINK_DIR/tests/server.pl" 
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *tcl*)	
-      SERVER="tclsh $TESTDIR/server.tcl" 
+      SERVER="tclsh $LINK_DIR/tests/server.tcl" 
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *cc*)	
-      SERVER="$TESTDIR/ccserver" 
+      SERVER="$LINK_DIR/testsccserver" 
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *c*)	
-      SERVER="$TESTDIR/server "
+      SERVER="$LINK_DIR/tests/server"
+      CLIENT="$LINK_DIR/tests/client"
     ;;
     *)
       echo "ERROR invalid server '$SRV'" 1>&1
@@ -220,7 +290,7 @@ for SRV in $R; do
 
   case $SRV in
     *pipe*)
-      CL="$VG${VG:+ }$TESTDIR/client${NUM}--all @ $SERVER"
+      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $SERVER"
       echo "> $CL" | tee docs/${SRV}.perf
       eval $ENV $CL 2>&1 | tee -a docs/${SRV}.perf
 
@@ -244,7 +314,7 @@ for SRV in $R; do
   esac
 
   SV="$VG${VG:+ }$SERVER $COM_ARGS --$START"
-  CL="$VG${VG:+ }$TESTDIR/client${NUM}--all $COM_ARGS"
+  CL="$VG${VG:+ }$CLIENT${NUM}--all $COM_ARGS"
   echo "> $SV" | tee docs/${SRV}.perf
   echo "> $CL" | tee -a docs/${SRV}.perf
   eval $ENV $SV 1>/dev/null 2>&1 &
@@ -259,7 +329,11 @@ done
 for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
   echo -e "\n $TST:" 1>&3
   for LNG in c cc csharp java perl python tcl vb php; do
-    Total ${LNG} ${TST}
+    TotalLink ${LNG} ${TST}
+  done
+  echo -e "\n $TST:" 1>&4
+  for LNG in brain; do
+    TotalBrain ${LNG} ${TST}
   done
 done
 

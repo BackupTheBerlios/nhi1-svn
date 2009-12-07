@@ -1,0 +1,16 @@
+> nothread/NHI1-0.1/theBrain/tests/client --all @ nothread/NHI1-0.1/theBrain/theBrain/theBrain
+C> (client:16960) [2009-12-07:10-31-36] [0-0-0x61e650-main]: start: --------------------------------------
+C> (client:16960) [2009-12-07:10-31-37] [0-0-0x61e650-statistics]:             memory hash - PUT:      14.90
+C> (client:16960) [2009-12-07:10-31-37] [0-0-0x61e650-statistics]:             memory hash - GET:      15.37
+C> (client:16960) [2009-12-07:10-31-38] [0-0-0x61e650-statistics]:            memory btree - PUT:      18.47
+C> (client:16960) [2009-12-07:10-31-39] [0-0-0x61e650-statistics]:            memory btree - GET:      19.23
+C> (client:16960) [2009-12-07:10-31-40] [0-0-0x61e650-statistics]:               file hash - PUT:      16.77
+C> (client:16960) [2009-12-07:10-31-41] [0-0-0x61e650-statistics]:               file hash - GET:      16.93
+C> (client:16960) [2009-12-07:10-31-47] [0-0-0x61e650-statistics]:              file btree - PUT:     129.42
+C> (client:16960) [2009-12-07:10-31-55] [0-0-0x61e650-statistics]:              file btree - GET:     145.83
+C> (client:16960) [2009-12-07:10-31-55] [0-0-0x61e650-main]: end: ----------------------------------------
+
+
+
+
+

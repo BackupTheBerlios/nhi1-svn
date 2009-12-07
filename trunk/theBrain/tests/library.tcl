@@ -19,7 +19,7 @@ if {![info exists env(LNG_LST)]} {
 ##
 ## define the local server
 array set TS_SERVER [list \
-  db  [file normalize [file join [file dirname [info script]] .. brain]] \
+  db  [file normalize [file join [file dirname [info script]] .. theBrain theBrain]] \
 ]
 
 ##

@@ -10,23 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+SUBDIRS = theBrain
 if USE_TCL
-SUBDIRS = tests
+SUBDIRS += tests
 endif
-
-bin_PROGRAMS = brain
-
-CLEANFILES =
-
-brain_SOURCES = brain.c 
-brain_CFLAGS = -I$(srcdir)/../theLink/libmsgque $(BRAIN_CFLAGS) -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-
-if HAS_STATIC
-LIBMSGQUE = ../theLink/libmsgque/*.o
-else
-LIBMSGQUE = ../theLink/libmsgque/*.lo
-endif
-
-brain_LDADD = $(BRAIN_LDADD) $(LIBMSGQUE)
-#brain_LDFLAGS = -static
 
