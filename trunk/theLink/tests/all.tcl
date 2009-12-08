@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+#lappend argv --only-perl -match "async-F*" --only-pipe
+
 set TS_SCRIPT [info script]
 source [file join [file dirname [info script]] library.tcl]
 

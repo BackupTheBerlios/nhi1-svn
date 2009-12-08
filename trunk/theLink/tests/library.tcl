@@ -632,7 +632,7 @@ if {[info exist argv]} {
 	set env(TS_DEBUG)   [optV argv --debug 0]
     }
     if {![info exists env(TS_TIMEOUT)]} {
-	set env(TS_TIMEOUT) [optV argv --timeout 10]
+	set env(TS_TIMEOUT) [optV argv --timeout 20]
     }
     if {![info exist env(TS_SETUP)]} {
 	set env(TS_SETUP)	    [optB argv --setup]
