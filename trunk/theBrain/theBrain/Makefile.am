@@ -1,10 +1,10 @@
 #+
-#§  \file       theBrain/Makefile.am
-#§  \brief      \$Id: Makefile.am 33 2009-12-04 11:36:05Z aotto1968 $
+#§  \file       theBrain/theBrain/Makefile.am
+#§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 33 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

@@ -10,6 +10,16 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v 0.2
+
+This release is used for deeper integration of the Software "Tokyo Cabinet".
+The software was forked and integrated into "theBrain" subdirectory "librain"
+using "automake/libtool" technology. The project library dependencies were
+changed to "automake convenience libraries". "theBrain" got new token's for
+transaction support and database reorganization and was added into the
+performance testing environment.
+
+
 v 0.1
 
 This is the first public release of "NHI1". The goal is to create the first 

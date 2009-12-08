@@ -10,6 +10,18 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v 0.2   08 December 2009
+
+- NHI1::theLink (former libmsgque)
+   > use "automake convenience libraries" for library dependencies
+   > bug fix in "tests" directory to handle perl startup performance issue
+- NHI1::theBrain (former 'Tokyo Cabinet')
+   > add "Tokyo Cabinet" into the subdirectory "libbrain"
+   > add "automake/autoconf/libtool" build configuration to "libbrain"
+   > add new token to the tool "theBrain" to support database reorganization
+     and transaction support
+
+
 v 0.1	04 December 2009
 
 - Initial setup of the NHI1 project
@@ -18,7 +30,7 @@ v 0.1	04 December 2009
      external tools like a 'database' or used to integrate with
      other network transport tools.
 - NHI1::theBrain (former 'Tokyo Cabinet')
-   > add support for persistent data, abel to store data for later use
+   > add support for persistent data, able to store data for later use
 
 
 ## OLD news from "libmsgque"

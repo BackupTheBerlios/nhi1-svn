@@ -1,5 +1,5 @@
 /**
- *  \file       theBrain/brain.c
+ *  \file       theBrain/theBrain/theBrain.c
  *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group

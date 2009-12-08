@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/tests/client.c
- *  \brief      \$Id: client.c 25 2009-12-03 11:05:46Z aotto1968 $
+ *  \file       theBrain/tests/client.c
+ *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 25 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
