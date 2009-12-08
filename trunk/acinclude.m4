@@ -704,16 +704,47 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
   AC_ARG_ENABLE(brain, [  --enable-brain          build with BRAIN database support [[--disable-brain]]], [sc_brain=yes], [sc_brain=no])
   AC_MSG_RESULT($sc_brain)
   if test x$sc_brain = xyes; then
-    BRAIN_HOME=$(dirname $(dirname $(which tcamgr)))
-    if test -f $BRAIN_HOME/lib/pkgconfig/tokyocabinet.pc; then
-      PKG_CONFIG_PATH=${PKG_CONFIG_PATH=:-}:$BRAIN_HOME/lib/pkgconfig
-      export PKG_CONFIG_PATH
-      AC_SUBST([BRAIN_CFLAGS], [$(pkg-config --cflags tokyocabinet)])
-      AC_SUBST([BRAIN_LDADD], [$(pkg-config --libs --static tokyocabinet)])
-      AC_SEARCH_LIBS([tcadbopen], [tokyocabinet])
+    ## check for thread support
+    if test "$sc_threads" = "yes" ; then
+      AC_CHECK_LIB(rt, main,
+	[BRAIN_LIBADD="$BRAIN_LIBADD -lrt"], 
+	[AC_MSG_FAILURE([realtime library '-lrt' not found])]
+      )
     else
-      AC_MSG_ERROR([unable to find the pkg-config file "tokyocabinet.pc"])
+      BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOPTHREAD"
     fi
+    ## -lm -lc
+    AC_CHECK_LIB(m, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -lm"],
+      [AC_MSG_FAILURE([library '-lm' not found])]
+    )
+    AC_CHECK_LIB(c, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -lc"],
+      [AC_MSG_FAILURE([library '-lc' not found])]
+    )
+    ## check for LZMA
+    AC_CHECK_LIB(lzma, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
+      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYEXLZMA"],
+    )
+    ## check for LZO
+    AC_CHECK_LIB(lzma, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
+      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYEXLZO"],
+    )
+    ## check for bzip
+    ##AC_CHECK_HEADER([bzlib.h]
+    AC_CHECK_LIB(z, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -lz"], 
+      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOBZIP"]
+    )
+    ##AC_CHECK_HEADER([zlib.h]
+    AC_CHECK_LIB(bz2, main,
+      [BRAIN_LIBADD="$BRAIN_LIBADD -lbz2"], 
+      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOZLIB"]
+    )
+    AC_SUBST([BRAIN_CFLAGS])
+    AC_SUBST([BRAIN_LIBADD])
   fi
   AC_SUBST([USE_BRAIN], $sc_brain)
   AM_CONDITIONAL([USE_BRAIN], [test x$sc_brain = xyes])

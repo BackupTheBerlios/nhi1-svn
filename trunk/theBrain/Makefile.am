@@ -10,7 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = theBrain
+SUBDIRS = libbrain
+SUBDIRS += theBrain
 if USE_TCL
 SUBDIRS += tests
 endif

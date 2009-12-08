@@ -15,16 +15,10 @@ TESTS = $(srcdir)/all.tcl
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.bash $(srcdir)/*.env
 
-if HAS_STATIC
-LIBMSGQUE = ../../theLink/libmsgque/*.o
-else
-LIBMSGQUE = ../../theLink/libmsgque/*.lo
-endif
-
 noinst_PROGRAMS = client$(EXEEXT)
 
 client_SOURCES = client.c stat.c stat.h
 client_CFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-client_LDADD = -lm $(LIBMSGQUE)
+client_LDADD = -lm ../../theLink/libmsgque/libtmp.la
 
 

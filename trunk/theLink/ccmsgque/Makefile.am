@@ -10,9 +10,9 @@
 #§              please contact AUTHORS for additional information
 #§
 
-lib_LTLIBRARIES = libccmsgque.la
+noinst_LTLIBRARIES = libtmp.la
 
-libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
+libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     log.cc send.cc swap.cc sys_com.cc \
     token.cc uds_io.cc bufferL.cc error.cc \
     generic_io.cc io.cc msgque.cc read.cc \
@@ -26,8 +26,15 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     generic_io.h main.h msgque_private.h send.h sys_com.h token.h
 
 
-libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
-libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
+libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
+libtmp_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
+
+
+# ordinary libraray
+
+lib_LTLIBRARIES = libccmsgque.la
+
+libccmsgque_la_SOURCES = 
+libccmsgque_la_LIBADD = ./libtmp.la
 
 include_HEADERS = ccmsgque.h
-

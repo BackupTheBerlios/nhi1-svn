@@ -20,7 +20,7 @@ noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilt
 	Filter3$(EXEEXT)
 
 AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-LDADD = ../../ccmsgque/*.lo
+LDADD = ../../ccmsgque/libtmp.la
 
 Filter1_SOURCES = Filter1.cc
 Filter2_SOURCES = Filter2.cc

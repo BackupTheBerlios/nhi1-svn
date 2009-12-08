@@ -21,13 +21,8 @@
 ## test tools setup
 ##
 
-if HAS_STATIC
-LIBMSGQUE = ../libmsgque/*.o
-CCMSGQUE = ../ccmsgque/*.o
-else
-LIBMSGQUE = ../libmsgque/*.lo
-CCMSGQUE = ../ccmsgque/*.lo
-endif
+LIBMSGQUE = ../libmsgque/libtmp.la
+CCMSGQUE = ../ccmsgque/libtmp.la
 
 SUFFIXES =
 BUILT_SOURCES = .vpath_hook

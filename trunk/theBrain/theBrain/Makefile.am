@@ -15,13 +15,7 @@ bin_PROGRAMS = theBrain
 CLEANFILES =
 
 theBrain_SOURCES = theBrain.c 
-theBrain_CFLAGS = -I$(srcdir)/../../theLink/libmsgque $(BRAIN_CFLAGS) -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+theBrain_CFLAGS = -I$(srcdir)/../../theLink/libmsgque -I../libbrain -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-if HAS_STATIC
-LIBMSGQUE = ../../theLink/libmsgque/*.o
-else
-LIBMSGQUE = ../../theLink/libmsgque/*.lo
-endif
-
-theBrain_LDADD = $(BRAIN_LDADD) $(LIBMSGQUE)
+theBrain_LDADD = ../libbrain/libbrain.la ../../theLink/libmsgque/libtmp.la
 

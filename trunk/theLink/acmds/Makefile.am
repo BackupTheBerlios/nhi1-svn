@@ -45,9 +45,7 @@ html: $(HTMLFILES)
 CLEANFILES =
 
 atool_SOURCES = atool.c ajoin.c acut.c asort.c asplit.c optionL.c optionL.h
-#atool_LDADD = -lm ../libmsgque/libmsgque.la
-atool_LDADD = -lm ../libmsgque/*.lo
-#atool_LDFLAGS = -static
+atool_LDADD = -lm ../libmsgque/libtmp.la
 
 AM_CPPFLAGS = -I$(srcdir)/../libmsgque
 
