@@ -1,17 +1,12 @@
 > thread/NHI1-0.1/theBrain/theBrain/theBrain --uds --file ./socket.uds --thread
 > thread/NHI1-0.1/theBrain/tests/client --all --uds --file ./socket.uds
-C> (client:17104) [2009-12-07:10-33-41] [0-0-0x61f6d0-main]: start: --------------------------------------
-C> (client:17104) [2009-12-07:10-33-42] [0-0-0x61f6d0-statistics]:             memory hash - PUT:      16.54
-C> (client:17104) [2009-12-07:10-33-43] [0-0-0x61f6d0-statistics]:             memory hash - GET:      16.78
-C> (client:17104) [2009-12-07:10-33-44] [0-0-0x61f6d0-statistics]:            memory btree - PUT:      19.85
-C> (client:17104) [2009-12-07:10-33-45] [0-0-0x61f6d0-statistics]:            memory btree - GET:      20.35
-C> (client:17104) [2009-12-07:10-33-46] [0-0-0x61f6d0-statistics]:               file hash - PUT:      18.79
-C> (client:17104) [2009-12-07:10-33-47] [0-0-0x61f6d0-statistics]:               file hash - GET:      18.67
-C> (client:17104) [2009-12-07:10-33-55] [0-0-0x61f6d0-statistics]:              file btree - PUT:     158.11
-C> (client:17104) [2009-12-07:10-34-04] [0-0-0x61f6d0-statistics]:              file btree - GET:     181.13
-C> (client:17104) [2009-12-07:10-34-04] [0-0-0x61f6d0-main]: end: ----------------------------------------
-
-
-
-
-
+C> (client:13804) [2009-12-08:12-46-13] [0-0-0x61f6d0-main]: start: --------------------------------------
+C> (client:13804) [2009-12-08:12-46-14] [0-0-0x61f6d0-statistics]:              memory hash - PUT:      16.39
+C> (client:13804) [2009-12-08:12-46-15] [0-0-0x61f6d0-statistics]:              memory hash - GET:      17.65
+C> (client:13804) [2009-12-08:12-46-16] [0-0-0x61f6d0-statistics]:             memory btree - PUT:      20.98
+C> (client:13804) [2009-12-08:12-46-17] [0-0-0x61f6d0-statistics]:             memory btree - GET:      20.94
+C> (client:13804) [2009-12-08:12-46-18] [0-0-0x61f6d0-statistics]:                file hash - PUT:      19.08
+C> (client:13804) [2009-12-08:12-46-19] [0-0-0x61f6d0-statistics]:                file hash - GET:      19.15
+C> (client:13804) [2009-12-08:12-46-33] [0-0-0x61f6d0-statistics]:               file btree - PUT:     275.93
+C> (client:13804) [2009-12-08:12-46-42] [0-0-0x61f6d0-statistics]:               file btree - GET:     187.66
+C> (client:13804) [2009-12-08:12-46-42] [0-0-0x61f6d0-main]: end: ----------------------------------------

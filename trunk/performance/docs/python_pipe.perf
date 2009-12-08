@@ -1,10 +1,10 @@
 > nothread/NHI1-0.1/theLink/tests/client --all @ python nothread/NHI1-0.1/theLink/tests/server.py
-C> (client:31782) [2009-12-04:13-01-45] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:31782) [2009-12-04:13-01-45] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.32
-C> (client:31782) [2009-12-04:13-01-46] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.36
-C> (client:31782) [2009-12-04:13-01-49] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.22
-C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                  parent create:   28921.23
-C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                  parent delete:    2015.21
-C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                   child create:     123.30
-C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-statistics]:                   child delete:      23.25
-C> (client:31782) [2009-12-04:13-01-52] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:9556) [2009-12-08:12-40-19] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:9556) [2009-12-08:12-40-19] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.58
+C> (client:9556) [2009-12-08:12-40-20] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.79
+C> (client:9556) [2009-12-08:12-40-23] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      23.23
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                  parent create:   29980.85
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                  parent delete:    2194.09
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                   child create:     125.06
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                   child delete:      23.76
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-main]: end: ----------------------------------------

@@ -1,11 +1,11 @@
 > tclsh nothread/NHI1-0.1/theLink/tests/server.tcl --tcp --host localhost --port 7783 --fork
 > nothread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7783
-C> (client:26948) [2009-12-04:13-00-01] [0-0-0x61fbc0-main]: start: --------------------------------------
-C> (client:26948) [2009-12-04:13-00-01] [0-0-0x61fbc0-statistics]:                      MqSendEND:       6.40
-C> (client:26948) [2009-12-04:13-00-01] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      12.61
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      31.05
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-statistics]:                  parent create:     955.44
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-statistics]:                  parent delete:     371.87
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-statistics]:                   child create:     256.30
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-statistics]:                   child delete:      33.95
-C> (client:26948) [2009-12-04:13-00-05] [0-0-0x61fbc0-main]: end: ----------------------------------------
+C> (client:4728) [2009-12-08:12-38-34] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:4728) [2009-12-08:12-38-34] [0-0-0x61fbc0-statistics]:                      MqSendEND:       5.71
+C> (client:4728) [2009-12-08:12-38-35] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:      12.49
+C> (client:4728) [2009-12-08:12-38-38] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      31.08
+C> (client:4728) [2009-12-08:12-38-38] [0-0-0x61fbc0-statistics]:                  parent create:     942.66
+C> (client:4728) [2009-12-08:12-38-38] [0-0-0x61fbc0-statistics]:                  parent delete:     344.27
+C> (client:4728) [2009-12-08:12-38-39] [0-0-0x61fbc0-statistics]:                   child create:     244.87
+C> (client:4728) [2009-12-08:12-38-39] [0-0-0x61fbc0-statistics]:                   child delete:      36.05
+C> (client:4728) [2009-12-08:12-38-39] [0-0-0x61fbc0-main]: end: ----------------------------------------

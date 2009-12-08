@@ -27,7 +27,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
 
 
 libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
-libtmp_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
+libtmp_la_LDFLAGS = -no-undefined
 
 
 # ordinary libraray
@@ -36,5 +36,6 @@ lib_LTLIBRARIES = libccmsgque.la
 
 libccmsgque_la_SOURCES = 
 libccmsgque_la_LIBADD = ./libtmp.la
+libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 
 include_HEADERS = ccmsgque.h

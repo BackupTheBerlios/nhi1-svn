@@ -1,11 +1,11 @@
 > thread/NHI1-0.1/theLink/tests/ccserver --tcp --host localhost --port 7781 --thread
 > thread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7781
-C> (client:26178) [2009-12-04:12-59-26] [0-0-0x61fbc0-main]: start: --------------------------------------
-C> (client:26178) [2009-12-04:12-59-26] [0-0-0x61fbc0-statistics]:                      MqSendEND:       3.12
-C> (client:26178) [2009-12-04:12-59-26] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:       7.75
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      24.82
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-statistics]:                  parent create:     215.79
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-statistics]:                  parent delete:      89.72
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-statistics]:                   child create:      84.57
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-statistics]:                   child delete:      32.91
-C> (client:26178) [2009-12-04:12-59-30] [0-0-0x61fbc0-main]: end: ----------------------------------------
+C> (client:3907) [2009-12-08:12-37-59] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:3907) [2009-12-08:12-37-59] [0-0-0x620bc0-statistics]:                      MqSendEND:       3.07
+C> (client:3907) [2009-12-08:12-38-00] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.81
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      24.91
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-statistics]:                  parent create:     221.10
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-statistics]:                  parent delete:      98.66
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-statistics]:                   child create:      85.93
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-statistics]:                   child delete:      33.85
+C> (client:3907) [2009-12-08:12-38-03] [0-0-0x620bc0-main]: end: ----------------------------------------

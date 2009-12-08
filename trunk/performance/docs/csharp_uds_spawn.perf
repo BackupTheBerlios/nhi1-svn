@@ -1,11 +1,11 @@
 > mono nothread/NHI1-0.1/theLink/tests/csserver.exe --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.1/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:878) [2009-12-04:13-02-56] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:878) [2009-12-04:13-02-57] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.05
-C> (client:878) [2009-12-04:13-02-57] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.77
-C> (client:878) [2009-12-04:13-03-00] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.15
-C> (client:878) [2009-12-04:13-03-03] [0-0-0x61f9a0-statistics]:                  parent create:   29004.46
-C> (client:878) [2009-12-04:13-03-03] [0-0-0x61f9a0-statistics]:                  parent delete:    2583.88
-C> (client:878) [2009-12-04:13-03-03] [0-0-0x61f9a0-statistics]:                   child create:     132.01
-C> (client:878) [2009-12-04:13-03-03] [0-0-0x61f9a0-statistics]:                   child delete:      24.22
-C> (client:878) [2009-12-04:13-03-03] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:11121) [2009-12-08:12-41-31] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:11121) [2009-12-08:12-41-31] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.15
+C> (client:11121) [2009-12-08:12-41-32] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      11.06
+C> (client:11121) [2009-12-08:12-41-35] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.40
+C> (client:11121) [2009-12-08:12-41-37] [0-0-0x61f9a0-statistics]:                  parent create:   28732.21
+C> (client:11121) [2009-12-08:12-41-38] [0-0-0x61f9a0-statistics]:                  parent delete:    2559.21
+C> (client:11121) [2009-12-08:12-41-38] [0-0-0x61f9a0-statistics]:                   child create:     130.06
+C> (client:11121) [2009-12-08:12-41-38] [0-0-0x61f9a0-statistics]:                   child delete:      23.93
+C> (client:11121) [2009-12-08:12-41-38] [0-0-0x61f9a0-main]: end: ----------------------------------------

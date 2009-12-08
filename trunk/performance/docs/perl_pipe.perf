@@ -1,10 +1,10 @@
 > nothread/NHI1-0.1/theLink/tests/client --all @ perl nothread/NHI1-0.1/theLink/tests/server.pl
-C> (client:2541) [2009-12-04:13-03-41] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:2541) [2009-12-04:13-03-42] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.76
-C> (client:2541) [2009-12-04:13-03-43] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      17.91
-C> (client:2541) [2009-12-04:13-03-46] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      24.15
-C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                  parent create:  202116.04
-C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                  parent delete:     458.27
-C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                   child create:     118.50
-C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-statistics]:                   child delete:      26.22
-C> (client:2541) [2009-12-04:13-04-06] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:12707) [2009-12-08:12-42-16] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:12707) [2009-12-08:12-42-16] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.91
+C> (client:12707) [2009-12-08:12-42-17] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      18.01
+C> (client:12707) [2009-12-08:12-42-21] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      24.30
+C> (client:12707) [2009-12-08:12-42-41] [0-0-0x61f9a0-statistics]:                  parent create:  202479.54
+C> (client:12707) [2009-12-08:12-42-41] [0-0-0x61f9a0-statistics]:                  parent delete:     464.38
+C> (client:12707) [2009-12-08:12-42-41] [0-0-0x61f9a0-statistics]:                   child create:     116.93
+C> (client:12707) [2009-12-08:12-42-41] [0-0-0x61f9a0-statistics]:                   child delete:      23.41
+C> (client:12707) [2009-12-08:12-42-41] [0-0-0x61f9a0-main]: end: ----------------------------------------

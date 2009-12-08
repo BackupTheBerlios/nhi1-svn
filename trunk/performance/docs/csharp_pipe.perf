@@ -1,10 +1,10 @@
 > nothread/NHI1-0.1/theLink/tests/client --all @ mono nothread/NHI1-0.1/theLink/tests/csserver.exe
-C> (client:32421) [2009-12-04:13-02-26] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:32421) [2009-12-04:13-02-26] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.04
-C> (client:32421) [2009-12-04:13-02-27] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.90
-C> (client:32421) [2009-12-04:13-02-30] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.17
-C> (client:32421) [2009-12-04:13-02-32] [0-0-0x61f9a0-statistics]:                  parent create:   28583.15
-C> (client:32421) [2009-12-04:13-02-33] [0-0-0x61f9a0-statistics]:                  parent delete:    2520.20
-C> (client:32421) [2009-12-04:13-02-33] [0-0-0x61f9a0-statistics]:                   child create:     136.57
-C> (client:32421) [2009-12-04:13-02-33] [0-0-0x61f9a0-statistics]:                   child delete:      24.11
-C> (client:32421) [2009-12-04:13-02-33] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:10198) [2009-12-08:12-41-00] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:10198) [2009-12-08:12-41-01] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.17
+C> (client:10198) [2009-12-08:12-41-01] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.77
+C> (client:10198) [2009-12-08:12-41-04] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.18
+C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                  parent create:   29431.50
+C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                  parent delete:    2615.10
+C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                   child create:     131.57
+C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                   child delete:      24.27
+C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-main]: end: ----------------------------------------

@@ -22,7 +22,7 @@ libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
     io_private.h mq_io.h read.h swap.h tcp_io.h pipe_io.h uds_io.h slave.h
 
 libtmp_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
-libtmp_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
+libtmp_la_LDFLAGS = -no-undefined
 
 html: libtmp.la
 
@@ -32,6 +32,7 @@ lib_LTLIBRARIES = libmsgque.la
 
 libmsgque_la_SOURCES =
 libmsgque_la_LIBADD = ./libtmp.la
+libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 
 include_HEADERS = msgque.h
 

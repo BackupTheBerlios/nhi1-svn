@@ -1,17 +1,12 @@
-> thread/NHI1-0.1/theBrain/theBrain/theBrain --tcp --host localhost --port 7778 --thread
-> thread/NHI1-0.1/theBrain/tests/client --all --tcp --host localhost --port 7778
-C> (client:17011) [2009-12-07:10-32-26] [0-0-0x61f7e0-main]: start: --------------------------------------
-C> (client:17011) [2009-12-07:10-32-27] [0-0-0x61f7e0-statistics]:             memory hash - PUT:      26.00
-C> (client:17011) [2009-12-07:10-32-28] [0-0-0x61f7e0-statistics]:             memory hash - GET:      26.35
-C> (client:17011) [2009-12-07:10-32-30] [0-0-0x61f7e0-statistics]:            memory btree - PUT:      29.24
-C> (client:17011) [2009-12-07:10-32-31] [0-0-0x61f7e0-statistics]:            memory btree - GET:      29.82
-C> (client:17011) [2009-12-07:10-32-33] [0-0-0x61f7e0-statistics]:               file hash - PUT:      28.00
-C> (client:17011) [2009-12-07:10-32-34] [0-0-0x61f7e0-statistics]:               file hash - GET:      28.11
-C> (client:17011) [2009-12-07:10-32-42] [0-0-0x61f7e0-statistics]:              file btree - PUT:     158.50
-C> (client:17011) [2009-12-07:10-32-52] [0-0-0x61f7e0-statistics]:              file btree - GET:     191.97
-C> (client:17011) [2009-12-07:10-32-52] [0-0-0x61f7e0-main]: end: ----------------------------------------
-
-
-
-
-
+> thread/NHI1-0.1/theBrain/theBrain/theBrain --tcp --host localhost --port 7798 --thread
+> thread/NHI1-0.1/theBrain/tests/client --all --tcp --host localhost --port 7798
+C> (client:13657) [2009-12-08:12-44-53] [0-0-0x61f7e0-main]: start: --------------------------------------
+C> (client:13657) [2009-12-08:12-44-54] [0-0-0x61f7e0-statistics]:              memory hash - PUT:      26.07
+C> (client:13657) [2009-12-08:12-44-56] [0-0-0x61f7e0-statistics]:              memory hash - GET:      26.19
+C> (client:13657) [2009-12-08:12-44-57] [0-0-0x61f7e0-statistics]:             memory btree - PUT:      29.65
+C> (client:13657) [2009-12-08:12-44-59] [0-0-0x61f7e0-statistics]:             memory btree - GET:      30.23
+C> (client:13657) [2009-12-08:12-45-00] [0-0-0x61f7e0-statistics]:                file hash - PUT:      28.71
+C> (client:13657) [2009-12-08:12-45-02] [0-0-0x61f7e0-statistics]:                file hash - GET:      28.74
+C> (client:13657) [2009-12-08:12-45-12] [0-0-0x61f7e0-statistics]:               file btree - PUT:     209.08
+C> (client:13657) [2009-12-08:12-45-22] [0-0-0x61f7e0-statistics]:               file btree - GET:     197.25
+C> (client:13657) [2009-12-08:12-45-22] [0-0-0x61f7e0-main]: end: ----------------------------------------

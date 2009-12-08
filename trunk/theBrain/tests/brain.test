@@ -312,5 +312,7 @@ unset -nocomplain I B C S
 ## -----------------------------------------------------------------------
 ## finish
 ##
+
+file delete -force tmp.tch tmp.tcb tmp.tcf tmp.tct 
 freeTests
 

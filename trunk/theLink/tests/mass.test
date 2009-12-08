@@ -48,7 +48,7 @@ set NUM [expr {$env(TS_MAX) == -1 ? $NUM : $env(TS_MAX)}]
 
 test mass-1-($C|$S) "do $NUM parent echo" \
     -setup	    {
-	Setup [list $NUM 10] $B $C $S
+	Setup [list $NUM 10] $B $C $S --timeout 50
     } \
     -body           {
 	foreach n [lsort [array names FH]] {

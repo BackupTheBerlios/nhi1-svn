@@ -1,10 +1,10 @@
 > nothread/NHI1-0.1/theLink/tests/client --all @ nothread/NHI1-0.1/theLink/tests/ccserver
-C> (client:25929) [2009-12-04:12-59-14] [0-0-0x61f8a0-main]: start: --------------------------------------
-C> (client:25929) [2009-12-04:12-59-14] [0-0-0x61f8a0-statistics]:                      MqSendEND:       3.38
-C> (client:25929) [2009-12-04:12-59-15] [0-0-0x61f8a0-statistics]:         MqSendEND_AND_CALLBACK:       9.06
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-statistics]:             MqSendEND_AND_WAIT:      14.29
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-statistics]:                  parent create:    1294.38
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-statistics]:                  parent delete:     181.63
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-statistics]:                   child create:      75.22
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-statistics]:                   child delete:      24.33
-C> (client:25929) [2009-12-04:12-59-18] [0-0-0x61f8a0-main]: end: ----------------------------------------
+C> (client:3644) [2009-12-08:12-37-47] [0-0-0x61f8a0-main]: start: --------------------------------------
+C> (client:3644) [2009-12-08:12-37-48] [0-0-0x61f8a0-statistics]:                      MqSendEND:       3.54
+C> (client:3644) [2009-12-08:12-37-48] [0-0-0x61f8a0-statistics]:         MqSendEND_AND_CALLBACK:       9.23
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-statistics]:             MqSendEND_AND_WAIT:      14.43
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-statistics]:                  parent create:    1314.09
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-statistics]:                  parent delete:     163.27
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-statistics]:                   child create:      73.17
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-statistics]:                   child delete:      26.64
+C> (client:3644) [2009-12-08:12-37-51] [0-0-0x61f8a0-main]: end: ----------------------------------------

@@ -15,7 +15,7 @@ bin_PROGRAMS = theBrain
 CLEANFILES =
 
 theBrain_SOURCES = theBrain.c 
-theBrain_CFLAGS = -I$(srcdir)/../../theLink/libmsgque -I../libbrain -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+theBrain_CFLAGS = -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../libbrain -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
 theBrain_LDADD = ../libbrain/libbrain.la ../../theLink/libmsgque/libtmp.la
 

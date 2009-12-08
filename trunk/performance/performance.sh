@@ -251,11 +251,11 @@ for SRV in $R; do
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *csharp*)	
-      SERVER="mono $LINK_DIR/testscsserver.exe"	    
+      SERVER="mono $LINK_DIR/tests/csserver.exe"	    
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *vb*)	
-      SERVER="mono $LINK_DIR/testsvbserver.exe"	    
+      SERVER="mono $LINK_DIR/tests/vbserver.exe"	    
       CLIENT="$LINK_DIR/tests/client"
     ;;
     total)	
@@ -275,7 +275,7 @@ for SRV in $R; do
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *cc*)	
-      SERVER="$LINK_DIR/testsccserver" 
+      SERVER="$LINK_DIR/tests/ccserver" 
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *c*)	

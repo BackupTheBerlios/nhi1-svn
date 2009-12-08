@@ -1,11 +1,11 @@
 > python nothread/NHI1-0.1/theLink/tests/server.py --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.1/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:32293) [2009-12-04:13-02-18] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:32293) [2009-12-04:13-02-19] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.42
-C> (client:32293) [2009-12-04:13-02-19] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.42
-C> (client:32293) [2009-12-04:13-02-23] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.45
-C> (client:32293) [2009-12-04:13-02-26] [0-0-0x61f9a0-statistics]:                  parent create:   28908.60
-C> (client:32293) [2009-12-04:13-02-26] [0-0-0x61f9a0-statistics]:                  parent delete:    2463.01
-C> (client:32293) [2009-12-04:13-02-26] [0-0-0x61f9a0-statistics]:                   child create:     124.21
-C> (client:32293) [2009-12-04:13-02-26] [0-0-0x61f9a0-statistics]:                   child delete:      23.86
-C> (client:32293) [2009-12-04:13-02-26] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:10070) [2009-12-08:12-40-53] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:10070) [2009-12-08:12-40-53] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.48
+C> (client:10070) [2009-12-08:12-40-54] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.62
+C> (client:10070) [2009-12-08:12-40-57] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.26
+C> (client:10070) [2009-12-08:12-41-00] [0-0-0x61f9a0-statistics]:                  parent create:   29158.70
+C> (client:10070) [2009-12-08:12-41-00] [0-0-0x61f9a0-statistics]:                  parent delete:    2388.00
+C> (client:10070) [2009-12-08:12-41-00] [0-0-0x61f9a0-statistics]:                   child create:     123.79
+C> (client:10070) [2009-12-08:12-41-00] [0-0-0x61f9a0-statistics]:                   child delete:      23.80
+C> (client:10070) [2009-12-08:12-41-00] [0-0-0x61f9a0-main]: end: ----------------------------------------

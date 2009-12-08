@@ -1,11 +1,11 @@
 > thread/NHI1-0.1/theLink/tests/ccserver --uds --file ./socket.uds --thread
 > thread/NHI1-0.1/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:26571) [2009-12-04:12-59-43] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:26571) [2009-12-04:12-59-44] [0-0-0x61f9a0-statistics]:                      MqSendEND:       3.71
-C> (client:26571) [2009-12-04:12-59-44] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:       9.94
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      15.16
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-statistics]:                  parent create:     157.49
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-statistics]:                  parent delete:      69.28
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-statistics]:                   child create:      73.23
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-statistics]:                   child delete:      24.07
-C> (client:26571) [2009-12-04:12-59-47] [0-0-0x61f9a0-main]: end: ----------------------------------------
+C> (client:4348) [2009-12-08:12-38-17] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:4348) [2009-12-08:12-38-17] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.13
+C> (client:4348) [2009-12-08:12-38-18] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:       9.97
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      15.22
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-statistics]:                  parent create:     146.74
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-statistics]:                  parent delete:      77.11
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-statistics]:                   child create:      74.19
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-statistics]:                   child delete:      23.39
+C> (client:4348) [2009-12-08:12-38-20] [0-0-0x6209a0-main]: end: ----------------------------------------
