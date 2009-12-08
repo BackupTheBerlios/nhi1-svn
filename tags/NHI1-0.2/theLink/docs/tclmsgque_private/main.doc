@@ -1,0 +1,14 @@
+/** 
+
+\mainpage tclmsgque \tclmsgque_private_desc
+\anchor tclmsgque_private
+ - \ref tclmsgque "man TclMsggque(n)"
+ .
+
+*/
+
+/**
+\page server_tcl server.tcl
+\verbinclude server.tcl
+**/
+

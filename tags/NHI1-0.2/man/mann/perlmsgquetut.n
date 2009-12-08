@@ -1,0 +1,235 @@
+.TH "perlmsgque Tutorial" n "4 Dec 2009" "Version 0.1" "perlmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+perlmsgque Tutorial \- .SH "INDEX"
+.PP
+\fBINTRODUCTION\fP
+.br
+ \fBBUILD\fP
+.br
+ \fBSERVER\fP
+.br
+ \fBCLIENT\fP
+.br
+ \fBFILTER\fP
+.br
+.SH "INTRODUCTION"
+.PP
+\fBperlmsgque\fP is the perl language binding of the \fBlibmsgque\fP library.
+.br
+ The library was designed to simplify the client/server development using the following design rules:
+.IP "1." 4
+programming language independent
+.IP "2." 4
+operating system independent
+.IP "3." 4
+processor hardware independent
+.PP
+The perl language binding provide the following basic components:
+.IP "\(bu" 2
+abstract class of the \fBperlmsgque\fP object: \fBMqS\fP
+.IP "\(bu" 2
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+.IP "\(bu" 2
+interface: \fBIFilterFTR\fP and or \fBIFilterEOF\fP to add filter functionality
+.IP "\(bu" 2
+interface: \fBIFactory\fP to create a new application instance
+.IP "\(bu" 2
+interface: \fBIBgError\fP to act on asyncrone errors
+.IP "\(bu" 2
+adding and removing \fBservices\fP
+.PP
+.SH "BUILD"
+.PP
+The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
+.SS "UNIX"
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBperlmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/perl/Makefile.am\fP 
+.PP
+\fBno\fP build necessary
+.SS "WINDOWS"
+The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
+.SH "SERVER"
+.PP
+A \fBperlmsgque\fP server requires the following setup:
+.IP "1." 4
+file: \fCexample/perl/MyServer.pl\fP 
+.IP "2." 4
+an instance of the abstract class \fBMqS\fP
+.IP "3." 4
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+.IP "4." 4
+the interface \fBIFactory\fP to create a new application instance
+.PP
+The \fIminimal\fP server looks like:
+.PP
+ 
+.PP
+.nf
+use strict;
+use Net::PerlMsgque;
+
+package MyServer;
+use base qw(Net::PerlMsgque::MqS);
+
+  sub HLWO {
+    my $ctx = shift;
+    $ctx->SendSTART();
+    $ctx->SendC('Hello World');
+    $ctx->SendRETURN();
+  }
+
+  sub ServerSetup {
+    my $ctx = shift;
+    $ctx->ServiceCreate('HLWO',\&HLWO)
+  }
+
+  sub new {
+    my $class = shift;
+    my $ctx = $class->SUPER::new(@_);
+    $ctx->ConfigSetName('MyServer');
+    $ctx->ConfigSetServerSetup(\&ServerSetup);
+    $ctx->ConfigSetFactory(sub {new MyServer()});
+    return $ctx;
+  }
+
+package main;
+
+  our $srv = new MyServer();
+  eval {
+    $srv->LinkCreate(@ARGV);
+    $srv->ProcessEvent({wait => 'FOREVER'});
+  };
+  if ($@) {
+    $srv->ErrorSet($@);
+  }
+  $srv->Exit();
+
+.fi
+.PP
+.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
+.PP
+.PP
+.nf
+
+> perl MyServer.pl --tcp --port 2345 --thread
+.fi
+.PP
+.PP
+If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
+.PP
+.PP
+.nf
+
+> perl MyServer.pl --uds --file /path/to/any/file.uds --thread
+.fi
+.PP
+.PP
+Three things are important:
+.IP "1." 4
+the \fBsend\fP style of functions
+.IP "2." 4
+the \fB$ctx->ServiceCreate(token, callback)\fP function
+.IP "3." 4
+a \fBconnected\fP context of type \fBMqS\fP
+.PP
+Sending data is done using a minimum of 2 steps:
+.IP "1." 4
+First: start a data package with \fB$ctx->SendSTART()\fP
+.IP "2." 4
+Last: submit the a data package to the link target using one of:
+.IP "  \(bu" 4
+\fB$ctx->SendEND(token)\fP
+.IP "  \(bu" 4
+\fB$ctx->SendEND_AND_WAIT(token, timeout=seconds)\fP
+.IP "  \(bu" 4
+\fB$ctx->SendEND_AND_CALLBACK(token, callback)\fP
+.IP "  \(bu" 4
+\fB$ctx->SendRETURN()\fP
+.PP
+
+.PP
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between $ctx->SendSTART() and $ctx->SendEND(token) ... other \fBSEND DATA\fP style commands are available to fill the data package with data.
+.PP
+Services are created with the \fB$ctx->ServiceCreate(token, callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+.PP
+The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
+.SH "CLIENT"
+.PP
+A \fBperlmsgque\fP client requires the following setup:
+.IP "1." 4
+an instance of the abstract class \fBMqS\fP
+.PP
+The \fIminimal\fP client looks like:
+.PP
+ 
+.PP
+.nf
+use strict;
+use Net::PerlMsgque;
+
+package main;
+
+  our $ctx = new Net::PerlMsgque::MqS();
+  eval {
+    $ctx->ConfigSetName('MyClient');
+    $ctx->LinkCreate(@ARGV);
+    $ctx->SendSTART();
+    $ctx->SendEND_AND_WAIT('HLWO');
+    print $ctx->ReadC() . '\n';
+  };
+  if ($@) {
+    $ctx->ErrorSet($@);
+  }
+  $ctx->Exit();
+
+.fi
+.PP
+.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
+.PP
+.PP
+.nf
+
+> perl MyClient.pl --tcp --port 2345
+> Hello World
+.fi
+.PP
+.PP
+To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
+.PP
+.PP
+.nf
+
+> perl MyClient.pl --udp --file /path/to/any/file.uds
+> Hello World
+.fi
+.PP
+.PP
+To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
+.PP
+.PP
+.nf
+
+> perl MyClient.pl @ perl MyServer.pl
+> Hello World
+.fi
+.PP
+.SH "FILTER"
+.PP
+A filter has to implement the \fBIFilterFTR\fP or the \fBIFilterEOF\fP interface which requires the following functions:
+.IP "\(bu" 2
+\fBIFilterFTR\fP, a service function to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send from one filter-command to the following filter-command as \fIFTR\fP service request
+.IP "\(bu" 2
+\fBIFilterEOF\fP, a service function to act on \fIEnd-Of-Filter\fP data. This service is called \fIafter\fP the whole filter data was send. Sometimes the filter data can not be served as filter data rows (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the EOF function is used to continue send filter data rows
+.PP
+The \fIminimal\fP filter looks like:
+.PP
+.IP "\(bu" 2
+\fBfilter example\fP
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for perlmsgque from the source code.

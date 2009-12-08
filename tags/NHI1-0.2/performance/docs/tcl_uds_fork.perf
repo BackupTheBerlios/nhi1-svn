@@ -1,0 +1,11 @@
+> tclsh nothread/NHI1-0.1/theLink/tests/server.tcl --uds --file ./socket.uds --fork
+> nothread/NHI1-0.1/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:5126) [2009-12-08:12-38-56] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:5126) [2009-12-08:12-38-57] [0-0-0x61f9a0-statistics]:                      MqSendEND:       6.52
+C> (client:5126) [2009-12-08:12-38-57] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.38
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      22.36
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-statistics]:                  parent create:     888.86
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-statistics]:                  parent delete:     303.24
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-statistics]:                   child create:     232.56
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-statistics]:                   child delete:      25.60
+C> (client:5126) [2009-12-08:12-39-01] [0-0-0x61f9a0-main]: end: ----------------------------------------

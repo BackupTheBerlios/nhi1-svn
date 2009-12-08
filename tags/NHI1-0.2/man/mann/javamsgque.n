@@ -1,0 +1,665 @@
+.TH "javamsgque" n "4 Dec 2009" "Version 0.1" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque \- The \fBJAVA\fP Application-Server Project
+.SH "SYNOPSIS"
+.PP
+\fBimport \fBjavamsgque\fP.*;\fP
+.SH "INDEX"
+.PP
+\fBOBJECT CREATION AND DELETION\fP
+.br
+ \fBOBJECT CONFIGURATION\fP
+.br
+ \fBLINK CREATION AND DELETION\fP
+.br
+ \fBADDING SERVICES\fP
+.br
+ \fBSEND DATA\fP
+.br
+ \fBREAD DATA\fP
+.br
+ \fBSLAVE OBJECT\fP
+.br
+ \fBBUFFER OBJECT\fP
+.br
+ \fBEXCEPTION OBJECT\fP
+.br
+.SH "INTRODUCTION"
+.PP
+The msgque project is an infrastructure to link software together to act like a single software. To link mean distributing work from one software to an other software an wait or not wait for an answer. The linking is done using unix or inet domain sockets and is based on packages send from one software to an other software and back. The msgque project is used to handle all the different aspects for setup and maintain the link and is responsible for:
+.IP "\(bu" 2
+starting and stopping the server application
+.IP "\(bu" 2
+starting and stopping the communication interface
+.IP "\(bu" 2
+sending and receiving package data
+.IP "\(bu" 2
+reading and writing data from or into a package
+.IP "\(bu" 2
+setup and maintain the event-handling for an asynchronous transfer
+.IP "\(bu" 2
+propagate the error messages from the server to the client
+.PP
+.SH "OBJECT CREATION AND DELETION"
+.PP
+.SS "MqS"
+The \fIobject\fP is the user visible part of a \fBjavamsgque\fP application link.
+.SS "ctx = new MqS()"
+Create an object ready to be used with \fBctx.LinkCreate(String... argv)\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
+.PP
+.PP
+.nf
+final class MyClass extends MqS ... { ... }
+public static void main(String[] args) {
+  MyClass ctx = new MyClass(); ...
+}
+.fi
+.PP
+.SS "deleted by Garbage Collection"
+Delete the entire object including the application link using \fBctx.LinkDelete()\fP. The object can \fBnot\fP be reused.
+.SH "OBJECT CONFIGURATION"
+.PP
+The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
+.SS "static: Init(String... args)"
+Initialize the process startup argument prefix. The startup-prefix have to be the name of the executable found in the \fCPATH\fP and additional arguments like a script name or required startup options. The startup-prefix is used for two different purpose:
+.IP "\(bu" 2
+To start a new entity using the \fB--spawn\fP command-line option
+.IP "\(bu" 2
+To replace the \fBSELF\fP argument after the \fI'@'\fP command-line argument
+.PP
+.PP
+The startup-prefix is \fInot\fP set by default.
+.SS "command-line:  --buffersize"
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBConfigGetBuffersize\fP\fP , \fBset:\fP \fC\fBConfigSetBuffersize\fP\fP
+.PP
+The send and receive buffersize in bytes (default: 4KB)
+.SS "command-line:  --debug"
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBConfigGetDebug\fP\fP , \fBset:\fP \fC\fBConfigSetDebug\fP\fP
+.PP
+Debug a message-queue application. Valid values are 0 <= \fINUM\fP <= 9 using 0 for 'no debugging' and 9 for 'maximum debugging'. (default: 0)
+.SS "command-line:  --timeout"
+\fBtype:\fP \fClong\fP, \fBget:\fP \fC\fBConfigGetTimeout\fP\fP , \fBset:\fP \fC\fBConfigSetTimeout\fP\fP
+.PP
+User defined timeout used for connection setup and data sending (default: 90 seconds)
+.SS "command-line:  --name"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBConfigGetName\fP\fP , \fBset:\fP \fC\fBConfigSetName\fP\fP
+.PP
+Use \fISTRING\fP as basename of the new message-queue object. The name shows up in the debugging output and is used as prefix for the new created command. (default: the name of the executable)
+.SS "command-line:  --srvname"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBConfigGetSrvName\fP\fP , \fBset:\fP \fC\fBConfigSetSrvName\fP\fP
+.PP
+Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "command-line: --silent"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBConfigGetIsSilent\fP\fP , \fBset:\fP \fC\fBConfigSetIsSilent\fP\fP
+.PP
+Write (\fIfalse\fP) or don't write (\fItrue\fP) any output to stdout or stderr. (default: write to stdout or stderr)
+.SS "command-line: --string"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBConfigGetIsString\fP\fP , \fBset:\fP \fC\fBConfigSetIsString\fP\fP
+.PP
+Use (\fItrue\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
+.SS "command-line: --thread --spawn --fork"
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBConfigGetStartAs\fP\fP , \fBset:\fP \fC\fBConfigSetStartAs\fP (startAs)\fP
+.PP
+Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
+.IP "\(bu" 2
+a server-context to start a new instance after a client connection request
+.IP "\(bu" 2
+on a server to create a worker with: \fBctx.SlaveWorker(int id, String... argv)\fP
+.IP "\(bu" 2
+on a client/server together with the \fB'SELF'\fP command-line argument: \fBctx.LinkCreate(String... argv)\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstartAs\fP 0=default, 1=fork, 2=thread and 3=spawn
+.RE
+.PP
+.SS "command-line: --tcp --host --port --myhost --myport"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBConfigGetIoTcpHost\fP/Port/MyHost/MyPort\fP , \fBset:\fP \fC\fBConfigSetIoTcp\fP (host, port, myhost, myport)\fP
+.PP
+Configure a \fItcp\fP socket link. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhost\fP client: name of the remote host (default: localhost)
+.br
+ server: name of the local interface (default: listen on \fIall\fP interfaces) 
+.br
+\fIport\fP client: name of the remote port
+.br
+ server: name of the local port 
+.br
+\fImyhost\fP client: name of the local interface 
+.br
+\fImyport\fP client: name of the local port 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+named ports are supported as well
+.RE
+.PP
+.SS "command-line: --uds --file"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBConfigSetIoUds\fP (file)\fP
+.PP
+Use a \fIuds\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) socket link. The uds communication is usually 50% faster than a local tcp communication but only available on UNIX. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfile\fP the name of the \fIuds\fP file
+.RE
+.PP
+.SS "command-line: --pipe --socket"
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBConfigSetIoPipe\fP (socket)\fP
+.PP
+Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP mode to start a server. The \fIsocket\fP option is special because it is used for internal purpose to submit the socket from the client to the server started as pipe by the client. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsocket\fP the file-descriptor number. The only public usage for this option is to serve as interface for an existing tool like (x)inetd. The (x)inetd tool is a \fIUNIX\fP service to listen on a tcp/ip port and start for every connection the proper entry from the file \fI/etc/\fP(x)inetd.conf with the file-descriptor \fI0\fP as send/recv socket handle.
+.RE
+.PP
+.SS "master"
+\fBtype:\fP \fCMqC\fP, \fBget:\fP \fC\fBConfigGetMaster\fP\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
+.PP
+return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
+.SS "ctxId"
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBConfigGetCtxId\fP\fP , \fBset:\fP \fCNO\fP
+.PP
+return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
+.SS "token"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBConfigGetToken\fP\fP , \fBset:\fP \fCNO\fP
+.PP
+return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBctx.ServiceCreate(String token, IService service)\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
+.SS "isConnected"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBConfigGetIsConnected\fP\fP , \fBset:\fP \fCNO\fP
+.PP
+Is the \fBjavamsgque\fP context connected ? A context is connected if the \fBctx.LinkCreate(String... argv)\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBctx.LinkDelete()\fP
+.SS "isServer"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBConfigGetIsServer\fP\fP , \fBset:\fP \fC\fBIServerSetup\fP or \fBIServerCleanup\fP\fP
+.PP
+True if object is a \fIserver\fP object (default: \fIfalse\fP, be a client)
+.SS "isParent"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBMqConfigGetIsParent\fP\fP , \fBset:\fP \fCNO\fP
+.PP
+True if object is a \fIparent\fP object (default: \fItrue\fP, be a parent)
+.SS "isSlave"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBConfigGetIsSlave\fP\fP , \fBset:\fP \fCNO\fP
+.PP
+True if object is a \fIslave\fP object (default: \fIfalse\fP, not be a slave)
+.SS "IServerSetup"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.IServerSetup\fP\fP
+.PP
+Interface to define a \fIserver\fP \fBjavamsgque\fP object. This Interface define the ServerSetup callback called at \fBctx.LinkCreate(String... argv)\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
+.SS "IServerCleanup"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.IServerCleanup\fP\fP
+.PP
+Interface to define a \fIserver\fP \fBjavamsgque\fP object. This Interface define the ServerCleanup callback called at \fBctx.LinkDelete()\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
+.SS "IFilterFTR"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.IFilterFTR\fP\fP
+.PP
+Interface required to define a \fIfilter\fP data stream object. This Interface define the \fIIFilterFTR\fP callback. The \fIcallback\fP is used to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send from one filter-command to the following filter-command as FTR service request. This interface set the \fBisServer\fP configuration value to \fItrue\fP. (read more at: \fBFILTER MODE\fP)
+.SS "IFilterEOF"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.IFilterEOF\fP\fP
+.PP
+Interface required to define a \fIfilter\fP data stream object. This Interface define the \fIIFilterEOF\fP callback. The callback is used to act on End-Of-Filter data and is called after all \fBIFilterFTR\fP data was send. Sometimes the filter data can not be served as \fBIFilterFTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \fIIFilterEOF\fP callback is used to continue send \fBIFilterFTR\fP data rows. This interface set the \fBisServer\fP configuration value to \fItrue\fP. (read more at: \fBFILTER MODE\fP)
+.SS "IFactory"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.IFactory\fP\fP
+.PP
+The factory pattern is used to create a new application object (read more at: \fBMqSetupS::Factory\fP) Without the \fIFactory\fP pattern only the initial startup context is available to serve incoming requests. In general every server need to provide a \fIFactory\fP pattern.
+.PP
+.PP
+.nf
+final class Server extends MqS implements IFactory, ... {
+  public MqS Factory() {
+    return new Server();
+  }
+  ...
+}
+.fi
+.PP
+.SS "IBgError"
+\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque::IBgError\fP\fP
+.PP
+Define an asyncrone error handler. This handler is used for handle errors send with \fBctx.SendERROR()\fP. Use \fBint ex.GetNum() or ctx.ErrorGetNum()\fP and \fBString ex.GetTxt() or ctx.ErrorGetText()\fP to access the error.
+.SH "LINK CREATION AND DELETION"
+.PP
+To create and to destroy a link is the main purpose of the \fBjavamsgque\fP library. A link is a client/server connection used to perform various tasks.
+.SS "ctx.LinkCreate(String... argv)"
+Create a \fIparent-context\fP using the \fBOBJECT CONFIGURATION\fP. A parent-context is responsible to setup the client/server link:
+.IP "\(bu" 2
+the \fIclient-parent-context\fP create the \fIserver-parent-context\fP 
+.IP "\(bu" 2
+the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connection request
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+.br
+\fIargs\fP command-line arguments including the \fB'@'\fP item for the \fI--pipe\fP setup 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE OBJECT\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBstatic: Init(String... args)\fP.
+.RE
+.PP
+.SS "ctx.LinkCreateChild(MqS parent, String... argv)"
+Create a \fIchild-context\fP from a \fBjavamsgque\fP \fIparent-context\fP and command-line arguments. A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+.br
+\fIparent\fP the parent object 
+.br
+\fIargs\fP all command-line arguments including the \fB'@'\fP token
+.RE
+.PP
+.SS "ctx.LinkDelete()"
+Close the client/server link and delete the underlying communication object. All depending objects will be deleted as well like depending \fIchild-context\fP and \fIslave-context\fP local and on the remote site of the link.
+.SS "ctx.Exit()"
+Shutdown the entire communication and exit the current process or thread.
+.SH "ADDING SERVICES"
+.PP
+To provide a \fIservice\fP is the main purpose of a server. The \fI\fBctx.ServiceCreate(String token, IService service)\fP\fP method is usually added in the \fIServerSetup\fP method of the \fIIServerSetup\fP.
+.PP
+public void ServerSetup() { ServiceCreate ('SRV1', new SRV1()); }
+.SS "TOKEN IDENTIFIER"
+The \fItoken\fP is a 4 byte string and identifies the service. The \fItoken\fP is used in:
+.IP "\(bu" 2
+\fBctx.SendEND(String token)\fP
+.IP "\(bu" 2
+\fBctx.SendEND_AND_WAIT(String token, [int timeout])\fP
+.IP "\(bu" 2
+\fBctx.SendEND_AND_CALLBACK(String token, IService callback)\fP
+.IP "\(bu" 2
+\fBctx.ServiceCreate(String token, IService service)\fP
+.IP "\(bu" 2
+\fBctx.ServiceDelete(String token)\fP
+.PP
+.SS "SERVICE CALLBACK"
+A service is using a callback to act on an incoming service request. The callback is used on a \fIserver\fP using \fBctx.ServiceCreate(String token, IService service)\fP or on a \fIclient\fP using \fBctx.SendEND_AND_CALLBACK(String token, IService callback)\fP.
+.PP
+The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP
+.SS "ctx.ServiceCreate(String token, IService service)"
+Create a new service listen on \fBTOKEN IDENTIFIER\fP and start for every incoming request a \fIservice\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.ServiceDelete(String token)"
+Delete a new service listen on \fBTOKEN IDENTIFIER\fP . (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
+Start the Event-Loop and check for the next event. In \fIclient\fP mode this command is usually used together with \fBctx.SendEND_AND_CALLBACK(String token, IService callback)\fP to process the results. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItimeout\fP don't wait more than TIMEOUT seconds to get an answer from the server. If no answer is available an error is raised. (default: \fBcommand-line: --timeout\fP) 
+.br
+\fI\fBMqS.WAIT\fP\fP use flag value to define the action (default: NO)
+.IP "\(bu" 2
+\fBNO\fP, don't wait for an event do just the check
+.IP "\(bu" 2
+\fBONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event
+.IP "\(bu" 2
+\fBFOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+.PP
+.RE
+.PP
+.SH "SEND DATA"
+.PP
+The \fISend\fP style methods are used to build and send data using the \fBjavamsgque\fP send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other \fBjavamsgque\fP client/server links.
+.PP
+.PP
+.nf
+ctx.SendSTART();
+ctx.SendI(num);
+ctx.SendL_START();
+ ctx.SendD(balance);
+ ctx.SendC('name of the owner');
+ ctx.SendB(signature);
+ctx.SendL_END();
+ctx.SendEND_AND_WAIT('SRV1');
+.fi
+.PP
+.SS "ctx.SendSTART()"
+Initialize a \fBjavamsgque\fP send data package. This method is required.
+.SS "ctx.SendEND(String token)"
+Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireAndForget). (on error return an \fBEXCEPTION OBJECT\fP) 
+.PP
+\fBAttention:\fP
+.RS 4
+if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBctx.SendEND_AND_WAIT(String token, [int timeout])\fP
+.RE
+.PP
+.SS "ctx.SendEND_AND_WAIT(String token, [int timeout])"
+Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for an answer. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.SendEND_AND_CALLBACK(String token, IService callback)"
+Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.SendRETURN()"
+Answer an incoming service-call started with \fBctx.SendEND_AND_WAIT(String token, [int timeout])\fP or \fBctx.SendEND_AND_CALLBACK(String token, IService callback)\fP. The return package is build-up like the previous service call package but with a \fBctx.SendRETURN()\fP as final command. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.SendERROR()"
+Send an asyncrone error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.SendFTR([int timeout])"
+Send a filter stream data package using \fBFILTER MODE\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.SendEOF([int timeout])"
+Send a filter end-of-file data package using \fBFILTER MODE\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.Send[TYPE](TYPE value)"
+Add an item using \fBTYPE IDENTIFIER\fP to the \fBjavamsgque\fP send data package. (example: \fISendY\fP)
+.SS "ctx.SendL_START()"
+Start to send an embedded list item.
+.SS "ctx.SendL_END()"
+Finish to send an embedded list item.
+.SH "READ DATA"
+.PP
+Read data from an incoming \fBjavamsgque\fP read data package:
+.IP "1." 4
+on a server to serve an incoming service-call from the client
+.IP "2." 4
+on a client to process the return-data from a previous service-call
+.PP
+Reading data is a passive task in opposite to sending data which is an active task. Passive mean that the read is triggered by an incoming data-package and not by the software-workflow.
+.PP
+.PP
+.nf
+num = ctx.ReadI();
+ctx.ReadL_START();
+ balance = ctx.ReadD();
+ owner = ctx.ReadC();
+ signature = ctx.ReadB();
+ctx.ReadL_END();
+.fi
+.PP
+.SS "TYPE ctx.Read[TYPE]()"
+return an item using the \fBTYPE IDENTIFIER\fP from the \fBjavamsgque\fP read data package. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "MqBufferS ctx.ReadU()"
+return a temporary \fBBUFFER OBJECT\fP. (on error return an \fBEXCEPTION OBJECT\fP) 
+.PP
+\fBAttention:\fP
+.RS 4
+The object is \fBonly\fP valid until a new \fBjavamsgque\fP read data package has arrived.
+.RE
+.PP
+.SS "ctx.ReadProxy(MqS otherCtx)"
+Link two \fBjavamsgque\fP objects to direct pass a data item from one object to the other. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "int ctx.ReadGetNumItems()"
+return the number of items left in the \fBjavamsgque\fP read data package.
+.SS "boolean ctx.ReadItemExists()"
+Check if are still items in the \fBjavamsgque\fP read data package.
+.SS "ctx.ReadUndo()"
+Undo the \fBlast\fP read operation. This is useful if an error was raised or if a buffer object (returned from \fBMqBufferS ctx.ReadU()\fP) has not the expected type. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.ReadL_START()"
+Start to read an embedded list item. Use the current read package (\fIbuffer\fP = NULL) or a \fIbuffer\fP object. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.ReadL_END()"
+Finish to read an embedded list item.
+.SH "SLAVE OBJECT"
+.PP
+The master/slave link is used to create a mesh of nodes by linking different PARENT context objects together. \fBThe master control the slave.\fP
+.br
+ The link is used to perform the following tasks:
+.IP "\(bu" 2
+report error messages from the slave to the master
+.IP "\(bu" 2
+to create a slave-child-context if a master-child-context is created
+.IP "\(bu" 2
+to delete a slave-context if a master-context is deleted
+.PP
+In difference to the client/server link the master/slave link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the master-msgque-context can be a server because only one server per node is possible.
+.SS "ctx.SlaveWorker(int id, String... argv)"
+Create a worker as \fIslave\fP of the \fIctx\fP object using the image of the \fIctx\fP object self and started as an independent process or thread based on the \fBcommand-line: --thread --spawn --fork\fP argument. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the \fImaster\fP \fBjavamsgque\fP object as SERVER-PARENT without a CHILD 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIargs\fP command-line arguments passed to the \fIworker-client\fP or the \fIworker-server\fP. all arguments prior the first \fB@\fP token are added to the \fIworker-client\fP and the other arguments to the \fIworker-server\fP.
+.RE
+.PP
+\fBexample\fP create a worker with id 7 as thread.
+.PP
+.PP
+.nf
+ctx.SlaveCreate (7, '--thread', '--silent', '@', 'WORKER', '--name', 'MyWorker');
+.fi
+.PP
+.SS "ctx.SlaveCreate(int id, MqS slave)"
+Create a master/slave link between the \fIctx\fP object and the \fIslave\fP object. (on error return an \fBEXCEPTION OBJECT\fP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the \fImaster\fP \fBjavamsgque\fP object as PARENT without a CHILD 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIslave\fP the \fIslave\fP \fBjavamsgque\fP object as CLIENT-PARENT without a CHILD
+.RE
+.PP
+.SS "ctx.SlaveDelete(int id)"
+Delete a \fIslave-context\fP from a former \fBctx.SlaveCreate(int id, MqS slave)\fP command using the same identifier \fIid\fP. By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. In addition \fIonly\fP the \fIparent-slave-context\fP can be deleted explicit. If \fIid\fP is invalid nothing will happen. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "MqS ctx.SlaveGet(int id)"
+return the \fIslave-context\fP from the \fBctx.SlaveCreate(int id, MqS slave)\fP using the same identifier \fIid\fP or \fINULL\fP if the \fIid\fP is not valid or if \fIctx\fP is not a \fImaster\fP.
+.SH "BUFFER OBJECT"
+.PP
+The \fIclass \fBMqBufferS\fP\fP object is created by \fBMqBufferS ctx.ReadU()\fP and id used to save a \fBtypeless temporary data item\fP from the \fBjavamsgque\fP data package. The lifetime of the \fIclass \fBMqBufferS\fP\fP is only the current callback up to the next read operation of the same context.
+.PP
+.PP
+.nf
+MqBufferS buf = ctx.ReadU();
+if (buf.GetType() == 'C')
+  System.out.println(buf.GetC());
+.fi
+.PP
+.SS "TYPE IDENTIFIER"
+A \fBjavamsgque\fP buffer data package is type safe, this mean that every item has a type prefix and every \fBTYPE ctx.Read[TYPE]()\fP or \fBTYPE val=buffer.[TYPE]\fP have to match the previous \fBctx.Send[TYPE](TYPE value)\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+.IP "\(bu" 2
+\fCY\fP : 1 byte signed character
+.IP "\(bu" 2
+\fCO\fP : 1 byte boolean character using \fItrue\fP for yes or true or \fIfalse\fP for no or wrong
+.IP "\(bu" 2
+\fCS\fP : 2 byte signed short
+.IP "\(bu" 2
+\fCI\fP : 4 byte signed integer
+.IP "\(bu" 2
+\fCW\fP : 8 byte signed long long integer
+.IP "\(bu" 2
+\fCF\fP : 4 byte float
+.IP "\(bu" 2
+\fCD\fP : 8 byte double
+.IP "\(bu" 2
+\fCB\fP : unsigned char array used for binary data
+.IP "\(bu" 2
+\fCC\fP : string data using a \fC\\0\fP at the end
+.IP "\(bu" 2
+\fCL\fP : list type able to hold a list of all items from above
+.IP "\(bu" 2
+\fCU\fP : typeless buffer able to hold a single item from above
+.PP
+.SS "TYPE val=buffer.[TYPE]"
+return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "char buffer.Type"
+return the type as single character of the item stored in the buffer object.
+.SH "EXCEPTION OBJECT"
+.PP
+The exception object is used to transport a \fBjavamsgque\fP error using the \fIclass MqSException\fP.
+.PP
+.PP
+.nf
+try {
+ i = ctx.ReadI();
+} catch (Throwable ex) {
+ ctx.ErrorSet(ex);
+ System.out.println(ctx.ErrorGetText());
+ ctx.ErrorReset();
+}
+.fi
+.PP
+.SS "String ex.GetTxt() or ctx.ErrorGetText()"
+return the error message from the error object.
+.SS "int ex.GetNum() or ctx.ErrorGetNum()"
+return the error number from the error object. The number can be used as exit-code.
+.SS "ctx.ErrorC(String prefix, int errnum, String message)"
+create a \fBjavamsgque\fP error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP
+.SS "ctx.ErrorSet(Exception ex)"
+convert a \fIclass MqSException\fP into a \fBjavamsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBctx.LinkDelete()\fP or \fBctx.Exit()\fP after the exception was caught and before the application exit or the object is deleted.
+.SS "ctx.ErrorReset()"
+clear the \fBjavamsgque\fP error object.
+.SS "ctx.ErrorRaise()"
+convert and raise an \fBjavamsgque\fP error object into a JAVA \fBEXCEPTION OBJECT\fP.
+.SS "ctx.ErrorPrint()"
+print an \fBjavamsgque\fP error object to stderr and \fIclear\fP the \fBjavamsgque\fP error
+.SH "FILTER MODE"
+.PP
+The filter mode is related to a special usage of the \fBjavamsgque\fP software called a command pipeline. A command pipeline is well known from the \fBunix\fP shell to link different commands together to act like a single application: 
+.PP
+.nf
+
+    command1 | command2 | command3
+
+.fi
+.PP
+ A command pipeline with \fBjavamsgque\fP queues is using the special token \fB@\fP to link the commands together: 
+.PP
+.nf
+
+    msgcmd1 @ msgcmd2 @ msgcmd3
+
+.fi
+.PP
+ To create a \fBjavamsgque\fP filter use:
+.IP "\(bu" 2
+\fC \fBIFilterFTR\fP \fP
+.IP "\(bu" 2
+\fC \fBIFilterEOF\fP \fP
+.PP
+and to send data to the next filter command use:
+.IP "\(bu" 2
+\fC \fBctx.SendFTR([int timeout])\fP \fP
+.IP "\(bu" 2
+\fC \fBctx.SendEOF([int timeout])\fP \fP
+.PP
+.SH "PORTABILITY ISSUES"
+.PP
+The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc processor or i686 processor from the VritualBox emulator.
+.SH "EXAMPLES"
+.PP
+.SS "1. create a server to multiplicate 2 double values and return the result"
+.PP
+.nf
+
+package example;
+import javamsgque.*;
+final class mulserver extends MqS implements IServerSetup, IFactory {
+  class MMUL implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      SendSTART();
+      SendD(ReadD() * ReadD());
+      SendRETURN();
+    }
+  }
+  public void ServerSetup() throws MqSException {
+    ServiceCreate('MMUL', new MMUL());
+  }
+  public MqS Factory() {
+    return new mulserver();
+  }
+  public static void main(String[] argv) {
+    MqS.Init('java', 'example.mulserver');
+    mulserver srv = new mulserver();
+    try {
+      srv.ConfigSetName('MyMulServer');
+      srv.LinkCreate(argv);
+      srv.ProcessEvent(MqS.WAIT.FOREVER);
+    } catch (Throwable e) {
+      srv.ErrorSet(e);
+    }
+    srv.Exit();
+  }
+}
+.fi
+.PP
+ Start \fImulserver.java\fP using \fITCP\fP port \fI7777\fP and create a \fIthread\fP for every incoming connection 
+.PP
+.nf
+
+> java example.mulserver --tcp --port 7777 --thread
+
+.fi
+.PP
+.SS "2. in a client call the service from 1."
+.PP
+.nf
+
+package example;
+import javamsgque.*;
+class mulclient extends MqS {
+  public static void main(String[] argv) {
+    mulclient ctx = new mulclient();
+    try {
+      ctx.ConfigSetName('MyMul');
+      ctx.LinkCreate(argv);
+      ctx.SendSTART();
+      ctx.SendD(3.67);
+      ctx.SendD(22.3);
+      ctx.SendEND_AND_WAIT('MMUL', 5);
+      System.out.println(ctx.ReadD());
+    } catch (Throwable e) {
+      ctx.ErrorSet(e);
+    }
+    ctx.Exit();
+  }
+}
+.fi
+.PP
+ Use \fImulclient.java\fP to connect to \fImulserver.java\fP using \fITCP\fP port \fI7777\fP: 
+.PP
+.nf
+
+> java example.mulclient --tcp --port 7777
+
+.fi
+.PP
+.SS "3. create a filter to wrap every column in a '<>' pair"
+.PP
+.nf
+
+package example;
+import javamsgque.*;
+class manfilter extends MqS implements IFilterFTR {
+  public void FTR () throws MqSException {
+    SendSTART();
+    while (ReadItemExists()) {
+      SendC('<' + ReadC() + '>');
+    }
+    SendFTR(10);
+  }
+  public static void main(String[] argv) {
+    manfilter srv = new manfilter();
+    try {
+      srv.ConfigSetName('filter');
+      srv.LinkCreate(argv);
+      srv.ProcessEvent(MqS.WAIT.FOREVER);
+    } catch (Throwable e) {
+      srv.ErrorSet(e);
+    }
+    srv.Exit();
+  }
+}
+.fi
+.PP
+ Use \fImanfilter.java\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
+
+.fi
+.PP
+.SH "SEE ALSO"
+.PP
+JAVA, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n)
+.SH "KEYWORDS"
+.PP
+JAVA, unix, socket, message, msgque 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

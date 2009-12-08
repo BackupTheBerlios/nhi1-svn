@@ -1,0 +1,595 @@
+#+
+#§  \file       theLink/tests/error.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server.c server.tcl
+     foreach S [filterGet SRV_LST $C] {
+
+      # what is currently tested
+       SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## start Setup tests
+##
+
+test error-1-($I|$B|$C|$S) {fatal error} \
+    -setup          { 
+      Setup $I $B $C $S --bgerror RET_BG 
+    } \
+    -constraints    { c } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND_AND_WAIT ERR1 
+      RET_end
+    } \
+    -match	    glob \
+    -result         {START BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[PANIC] this is a non recoverable error
+[sS]> (server-0) found in function "Ot_ERR1"} BG-TEXT-CODE:NONE 111-CATCH:1 {111-RET:[cC]> (client-0) \[SysRecv] application EXIT request*} {111-CODE:TCLMSGQUE 215 2 {[cC]> (client-0) \[SysRecv] application EXIT request*}} END}
+
+
+test error-1b-($I|$B|$C|$S) {return value + error} \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { Echo0 $FH_LAST ERR2 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ERR2> <Num|10>
+[sS]> (server-0) \[Ot_ERR2\] some error}
+
+test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
+    -constraints    {local && !csharp && !vb} \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR4 ReadU
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {C> (client-0) \[SysRecv] application EXIT request*}
+
+test error-1b3-($I|$B|$C|$S) {double send after broken file-handle} \
+    -constraints    {local && !csharp && !vb} \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo0 $FH_LAST ERR4 
+      Echo1 $FH_LAST ECOI ReadI SendI 876
+      Echo1 $FH_LAST ECOI ReadI SendI 876
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {C> (client-0) \[SysRecv] application EXIT request*}
+
+test error-1c-($I|$B|$C|$S) {calling a return-service without transaction} \
+    -setup      { Setup $I $B $C $S --bgerror RET_BG } \
+    -cleanup    { Cleanup } \
+    -body       {
+	RET_start
+	RET_add 111 Call $FH_LAST SendEND ECOI SendI 1
+	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_end
+    } \
+    -match      glob \
+    -result     {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:207 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*MqSendRETURN] calling a service with return arguments without transaction, use MqSendEND_AND_WAIT instead of MqSendEND} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+
+test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
+    -constraints    { perl } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR5 ReadI SendI 345
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+[sS]> (server-0) \[ProcError] object is not of type Net::PerlMsgque::MqS at *}
+
+test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
+    -constraints    { perl } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR6 ReadI
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+[sS]> (server-0) \[ProcError] object is not of type Net::PerlMsgque::MqBufferS at *}
+
+test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
+    -constraints    { tcl } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR5 ReadI SendI 345
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> ReadProxy MqS_object ..."*}
+
+test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
+    -constraints    { tcl } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR6 ReadI
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> SendU MqBufferS_obj ..."*}
+
+test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
+    -constraints    { python } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR5 ReadI SendI 345 SendI 456
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
+  File "*", line *, in Error
+    self.ReadProxy(self.ReadU())
+TypeError: must be pymsgque.MqS, not pymsgque.MqBufferS*}
+
+test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
+    -constraints    { python } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR6 ReadI
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
+  File "*", line *, in Error
+    self.SendU(self)
+TypeError: must be pymsgque.MqBufferS, not Server*}
+
+test error-5-($I|$B|$C|$S) {wrong host name) port} \
+    -body           {Setup $I $B $C $S --host 10.10.10.10 --silent --timeout 0 --error} \
+    -cleanup	    { Cleanup } \
+    -returnCodes    error \
+    -constraints    {tcp parent} \
+    -result	    {C> (client-0) [SysConnect] TIMEOUT after '0' sec
+C> (client-0) found in function "GenericConnect" at file "generic_io.c"
+C> (client-0) found in function "TcpConnect" at file "tcp_io.c"
+C> (client-0) found in function "pIoConnect" at file "io.c"
+C> (client-0) found in function "MqLinkCreate" at file "msgque.c"
+C> (client-0) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+
+test error-6-($I|$B|$C|$S) {error in callback} \
+    -setup          {
+	Setup $I $B $C $S
+	proc Callback {ctx} {
+	    puts "in a callback"
+	}
+    } \
+    -body           {
+	$FH_LAST SendSTART
+	$FH_LAST SendI 666
+	$FH_LAST SendEND_AND_CALLBACK ERR2 Callback
+	$FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    { Cleanup } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[callback-error] <Num|10>
+[sS]> (server-0) \[Ot_ERR2] some error
+[cC]> (client-0) found in function "pTokenCheckSystem" at file "token.c"
+[cC]> (client-0) found in function "sMqEventStart" at file "msgque.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "msgque.c"}
+
+test error-7-($I|$B|$C|$S) {double RETURN} \
+    -constraints    {} \
+    -setup          {
+	Setup $I $B $C $S --bgerror RET_BG
+    } \
+    -body           {
+	RET_start
+	RET_add 111 $FH_LAST SendEND_AND_WAIT ERR3
+	#RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_end
+    } \
+    -cleanup	    { Cleanup } \
+    -match	    glob \
+    -result	    {START 111-CATCH:1 {111-RET:[cC]> (client-0) \[pMqSendEND] use first MqSendSTART and than MqSendEND
+*} {111-CODE:TCLMSGQUE 211 2 {[cC]> (client-0) \[pMqSendEND] use first MqSendSTART and than MqSendEND
+*}} END}
+
+##
+## -----------------------------------------------------------------------
+## finish Setup tests
+##
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+test error-2 {low level port} \
+    -body           {Exec {*}[getClient client] --name client --tcp --port 10 --timeout 1 --error} \
+    -constraints    {tcp parent} \
+    -result         {CHILDSTATUS-200-C> (client) [SysConnect] TIMEOUT after '1' sec
+C> (client) found in function "GenericConnect" at file "generic_io.c"
+C> (client) found in function "TcpConnect" at file "tcp_io.c"
+C> (client) found in function "pIoConnect" at file "io.c"
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-3 {low ssh (tcp-22) port} \
+    -body           {Exec {*}[getClient client] --name client --tcp --port 22 --timeout 1 --error} \
+    -constraints    {tcp parent} \
+    -result	    {CHILDSTATUS-204-C> (client) [MqLinkCreate] can not start server 'remote-connect'
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+# socket-type: uds or tcp
+foreach C [envGet COM_LST] {
+  # server-type: server.c server.tcl
+  foreach S [filterGet SRV_LST $C] {
+
+    SetConstraints $S
+
+    test error-4-($C|$S) {delete FiFo's and send} \
+      -constraints  uds \
+      -body         { Exec {*}[getServer $S] --uds --file /some/thing/use/less } \
+      -match	    glob \
+      -result       {CHILDSTATUS-2-S> (server) \[SysBind] can not 'bind' -> ERRNO<2> ERR<No such file or directory>
+S> (server) found in function "GenericBind" at file "generic_io.c*"
+S> (server) found in function "GenericServer" at file "generic_io.c*"
+S> (server) found in function "UdsServer" at file "uds_io.c*"
+S> (server) found in function "pIoCreate" at file "io.c*"
+S> (server) found in function "MqLinkCreate" at file "msgque.c*"
+S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c*"}
+
+    test error-4-($C|$S) {port with wrong service-name} \
+      -constraints  tcp \
+      -body         { Exec {*}[getServer $S] --tcp --port something_useless } \
+      -match	    glob \
+      -result       {CHILDSTATUS-1-S> (server) \[SysGetAddrInfo] getaddrinfo -> ERRNO<-8> ERR<Servname not supported for ai_socktype>
+S> (server) found in function "sTcpCreateAddrInfo" at file "tcp_io.c*"
+S> (server) found in function "TcpCreate" at file "tcp_io.c*"
+S> (server) found in function "pIoCreate" at file "io.c*"
+S> (server) found in function "MqLinkCreate" at file "msgque.c*"
+S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c*"}
+
+  }
+}
+
+##
+## -----------------------------------------------------------------------
+## start executable tests
+##
+
+# what is currently tested
+SetConstraints all
+
+test error-MQ_ERROR_CAN_NOT_START_CLIENT {check error messages} \
+    -body           { exec {*}[getClient client] --name client} \
+    -returnCodes    error \
+    -result         {C> (client) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-tcp {check error message} \
+    -constraints    tcp \
+    -body           { exec {*}[getClient client] --name client --tcp --port [FindFreePort] @ server} \
+    -returnCodes    error \
+    -result         {C> (client) [pIoStartServer] can not start 'TCP' server using '@ server ...' syntax
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-uds {check error message} \
+    -constraints    uds \
+    -body           { exec {*}[getClient client] --name client --uds --file [FindFreeFile] @ server} \
+    -returnCodes    error \
+    -result         {C> (client) [pIoStartServer] can not start 'UDS' server using '@ server ...' syntax
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+foreach o { --debug --srvname --timeout --buffersize --file --port --host --myport --myhost } {
+  test error-MQ_ERROR_OPTION_ARG$o {check error message} \
+      -body           { exec {*}[getClient client] --name client $o} \
+      -returnCodes    error \
+      -match	      glob \
+      -result         [subst -nobackslashes -nocommands {C> (client) \[*sMqCheckArg*\] expect argument for option '$o'
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}]
+}
+
+test error-MQ_ERROR_OPTION_ARG--name {check error message} \
+    -body           { exec {*}[getClient client] --name} \
+    -returnCodes    error \
+    -match	      glob \
+    -result         [subst -nobackslashes -nocommands {C> (client) \[sMqCheckArg\] expect argument for option '--name'
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}]
+
+test error-MQ_ERROR_OPTION_REQUIRED-tcp {check error message} \
+    -constraints    tcp \
+    -body           {exec {*}[getClient client] --name client --tcp} \
+    -returnCodes    error \
+    -result         {C> (client) [TcpCreate] for a 'TCP' setup the option '--port' is required
+C> (client) found in function "pIoCreate" at file "io.c"
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-MQ_ERROR_OPTION_REQUIRED-uds {check error message} \
+    -constraints    uds \
+    -body           {exec {*}[getClient client] --name client --uds} \
+    -returnCodes    error \
+    -result         {C> (client) [UdsCreate] for a 'UDS' setup the option '--file' is required
+C> (client) found in function "pIoCreate" at file "io.c"
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-F7 {tclmsgque help} \
+    -body	    { tclmsgque help } \
+    -result	    {usage: tclmsgque MqS [OPTION]... [ARGUMENT]...
+
+  tclmsgque MqS [ARGUMENT]... syntax:
+    tclmsgque MqS [OPTION]... @ server [OPTION]... [ARGUMENT]
+
+  Create and configure a new msgque using the options from below.
+  The command is part of the 'TclMsgque' package available with:
+      > package require TclMsgque
+  and returns a handle to the new created msgque
+      > set cmd [tclmsgque MqS ...]
+  To delete the msgque and shutdown the communication use:
+      > rename $cmd ""
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  tclmsgque MqS [OPTION]:
+    --parent CMD     create new msgque as child of parent CMD
+    --server         act as a server
+      --config proc    use proc to configure the server
+    --filter         act as a filter (requires --server too)
+      --FTR proc       use proc to serve the filter FTR service
+      --EOF proc       use proc to serve the filter EOF service
+}
+
+test error-F8 {delete uds file} \
+    -setup          { Setup 1 binary uds c.pipe.pipe } \
+    -constraints    {unix local} \
+    -cleanup	    { Cleanup } \
+    -body           {file delete $FILE} \
+    -returnCodes    ok \
+
+test error-tclmsgque-no-arg-config	{no config argument} \
+    -constraints	tcl \
+    -setup		{set ctx [tclmsgque MqS]} \
+    -body		{$ctx LinkCreate} \
+    -cleanup		{rename $ctx ""} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{C> (unknown) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
+
+test error-tclmsgque-wrong-arg-config	{wrong config argument} \
+    -constraints	tcl \
+    -setup		{set ctx [tclmsgque MqS]} \
+    -body		{$ctx LinkCreate kkk} \
+    -cleanup		{ $ctx Delete} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{C> (tclsh*) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
+
+test error-tclmsgque-no-arg-parent	{no parent argument} \
+    -constraints	tcl \
+    -setup		{set ctx [tclmsgque MqS]} \
+    -body		{$ctx LinkCreateChild} \
+    -cleanup		{ $ctx Delete} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "<MqS-*> LinkCreateChild parent ..."}
+
+test error-tclmsgque-wrong-arg-parent	{wrong parent argument} \
+    -constraints	tcl \
+    -setup		{set ctx [tclmsgque MqS]} \
+    -body		{$ctx LinkCreateChild kkk} \
+    -cleanup		{$ctx Delete} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "<MqS-*> LinkCreateChild parent ..."}
+
+test error-tclmsgque-no-config-FTR	{no config FTR argument} \
+    -constraints	tcl \
+    -setup		{set srv [tclmsgque MqS]} \
+    -body		{$srv ConfigSetFilterFTR} \
+    -cleanup		{rename $srv ""} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "<MqS-*> ConfigSetFilterFTR ftrProc ..."}
+
+test error-tclmsgque-wrong-config-FTR	{wrong config FTR argument} \
+    -constraints	tcl \
+    -setup		{set srv [tclmsgque MqS]} \
+    -body		{$srv ConfigSetFilterFTR KK} \
+    -cleanup		{rename $srv ""} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "ConfigSetFilterFTR ftr-proc"}
+
+test error-tclmsgque-no-config-EOF	{no config EOF argument} \
+    -constraints	tcl \
+    -setup		{set srv [tclmsgque MqS]} \
+    -body		{$srv ConfigSetFilterEOF} \
+    -cleanup		{rename $srv ""} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "<MqS-*> ConfigSetFilterEOF eofProc ..."}
+
+test error-tclmsgque-wrong-config-EOF	{wrong config EOF argument} \
+    -constraints	tcl \
+    -setup		{set srv [tclmsgque MqS]} \
+    -body		{$srv ConfigSetFilterEOF KK} \
+    -cleanup		{rename $srv ""} \
+    -returnCodes	error \
+    -match		glob \
+    -result		{wrong # args: should be "ConfigSetFilterEOF eof-proc"}
+
+foreach x {fork} {
+
+test error-10-($x) "'--$x' option in a thread enabled interpreter" \
+    -constraints    {has_thread local tcl fork} \
+    -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --$x} \
+    -match	    glob \
+    -result         "CHILDSTATUS-204-S> (server) \\\[sMqCheckArg] for a 'local' setup the option '--$x' is forbidden
+S> (server) found in function \"MqLinkCreate\" at file \"msgque.c\"
+S> (server) found in function \"MqDefaultLinkCreate\" at file \"msgque.c\"
+C> (client) \\\[MqLinkCreate] can not start server '*'
+C> (client) found in function \"MqLinkCreate\" at file \"msgque.c\"
+C> (client) use '-h' or '--help' for usage"
+
+}
+
+test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
+    -constraints    {has_thread local tcl fork} \
+    -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --daemon} \
+    -match	    glob \
+    -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
+S> (server) found in function "sMqCheckArg" at file "msgque.c"
+S> (server) found in function "MqLinkCreate" at file "msgque.c"
+S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c"
+C> (client) \[MqLinkCreate] can not start server '*'
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+test error-11 "'--thread' option in a NON thread enabled interpreter" \
+    -constraints    {!has_thread local tcl} \
+    -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --thread} \
+    -match	    glob \
+    -result         {CHILDSTATUS-204-error: unable to use '--thread' option with a NON 'thread' enabled tcl
+*
+C> (client) \[MqLinkCreate] can not start server '*'
+C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) use '-h' or '--help' for usage}
+
+
+#####################################################################
+### server test
+
+foreach S [filterGet SRV_LST pipe] {
+
+test error-F9a-$S {startup -> wrong parent option} \
+    -constraints    {local} \
+    -setup	    {
+      set FH1 [tclmsgque MqS]
+      $FH1 ConfigSetDebug $env(TS_DEBUG)
+    } \
+    -body           {$FH1 LinkCreate --name client --srvname server -wrong_option @ {*}[getServer $S.pipe ]} \
+    -cleanup	    { rename $FH1 "" } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {C> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
+C> (client) => -wrong_option
+C> (client) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+
+test error-F9b-S {startup -> wrong child option} \
+    -constraints    {local} \
+    -setup	    {
+	set FH1 [tclmsgque MqS]
+	set FH2 [tclmsgque MqS]
+	$FH1 ConfigSetTimeout $env(TS_TIMEOUT)
+    } \
+    -body           {
+	$FH1 LinkCreate --name client --debug $env(TS_DEBUG) @ {*}[getServer $S.pipe]
+	$FH2 LinkCreateChild $FH1 --name client -wrong_option
+    } \
+    -cleanup	    {
+	catch {rename $FH1 ""}
+	catch {rename $FH2 ""}
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {c> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
+c> (client) => -wrong_option
+c> (client) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+
+}; # SRV_LST
+unset -nocomplain S
+
+foreach S [filterGet SRV_LST uds] {
+
+test error-12-$S {server with UDS startup} \
+    -constraints    {local win} \
+    -body	    {
+        Exec {*}[getServer $S] --uds --file dummy --spawn
+    } \
+    -result     {CHILDSTATUS-222-S> (server) [sIoCheckArg] for a 'win32' setup the option '--uds' is forbidden
+S> (server) found in function "pIoCreate" at file "io.c"
+S> (server) found in function "MqLinkCreate" at file "msgque.c"
+S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+
+}; # SRV_LST
+unset -nocomplain S
+
+foreach S [filterGet SRV_LST] {
+
+  foreach O {debug buffersize} {
+
+test error-13-$O-$S {error core dump protection} \
+    -constraints    {local} \
+    -body	    {
+        Exec {*}[getServer $S] --$O KK
+    } \
+    -match	glob \
+    -result     {CHILDSTATUS-1-S> (server) \[*pBufferGetA4] size ERROR, can not convert 'KK' into an 'INT' object*}
+
+  }; # Option
+
+test error-13-timeout-$S {error core dump protection} \
+    -constraints    {local} \
+    -body	    {
+        Exec {*}[getServer $S] --timeout KK
+    } \
+    -match	glob \
+    -result     {CHILDSTATUS-1-S> (server) \[*pBufferGetA8] size ERROR, can not convert 'KK' into an 'WID' object*}
+
+}; # SRV_LST
+unset -nocomplain S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+

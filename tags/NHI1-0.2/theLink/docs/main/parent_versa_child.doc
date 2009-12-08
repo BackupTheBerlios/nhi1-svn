@@ -1,0 +1,99 @@
+/** 
+\page parent_versa_child WHAT-IS: parent versa child
+
+\section parent_child_toc Table Of Contents
+ - \ref parent_child_definition
+ - \ref parent_detail
+ - \ref child_detail
+ .
+
+\section parent_child_definition Definition
+
+<TABLE>
+    <TR> <TD> \c parent  </TD>  <TD> the first context of a client/server communication </TD> </TR>
+    <TR> <TD> \c child   </TD>  <TD> the second or more context of a client/server communication </TD> </TR>
+</TABLE>
+
+\section parent_detail What is a "parent" Context ?
+
+ - the parent is the first context created 
+ - every new parent-context on the client creates a new communication to a server. 
+ - every new parent-context on the client connect to a new parent-context on the server
+\verbatim
+  !on local host!              !on remote host!
+
+      server1                      server2
+         |                            |
+ parent-context-1             parent-context-2
+         |                            |
+(#MqConfigS::server)   (#MqConfigS::server --fork --tcp --port)
+         |                            |                      server
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+         |                            |                      client
+     (--pipe)               (--tcp --host --port)
+         |                            |
+ parent-context-1             parent-context-2
+         |                            |
+         ^-----------client-----------^
+
+                 !on local host!
+\endverbatim
+ - every new parent-context on the server is using a \b new process image
+ - the parent-context is controlling the socket communication interface
+ - a context is a parent-context if no #MqConfigS::parent configuration is available
+  - \tclmsgque \b Example: connect to a parent on a local host
+\verbatim
+ set Parent1 [tclmsgque MqS -name MyName --pipe @ server];
+\endverbatim
+  - \tclmsgque \b Example: connect to a parent on a network reachable host
+\verbatim
+ set Parent2 [tclmsgque MqS -name MyName --tcp --host RemoteHost --port RemotePort];
+\endverbatim
+ .
+
+\section child_detail What is a "child" Context ?
+
+ - the child-context is the second or more context created 
+ - the child-context is created if the #MqConfigS::parent was added to the \b config argument of #MqLinkCreate
+ - every new \e child-context on the client is creating a new \e child-context on the already started server 
+ - every new \e child-context is totally independent from the \e server-context setup and is able to serve its on services
+ - the \e child-context is using the \e parent-context as a tunnel.
+\verbatim
+  !on local host!                                  !on remote host!
+
+      server1---------x                     x----------server2
+         |            |                     |             |
+         |     child-context-1       child-context-2      |
+         |            |                     |             |                      server
+ parent-context-1-----x                     x-----parent-context-2
+         |                                                |
+(MqConfigS::server)                  (MqConfigS::server --fork --tcp --port)
+         |                                                |
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+         |                                                |
+     (--pipe)                                   (--tcp --host --port)
+         |                                                |
+ parent-context-1-----x                     x-----parent-context-2
+         |            |                     |             |                      client
+         |     child-context-1       child-context-2      |
+         |            |                     |             |
+         x------------x--------client-------x-------------x
+
+                           !on local host!
+\endverbatim
+ - a child-context can be a \e parent of an other child-context. A \e tree like structure is crated.
+ - the \e child-context is using the communication interface from the parent-context\n
+   <B>using \tclmsgque code</B>
+\verbatim
+set Ctx [tclmsgque MqS -name MyName ...]; # I'm a parent
+set Cl1 [tclmsgque MqS -parent $Ctx];     # I'm a child
+set Cl2 [tclmsgque MqS -parent $Ctx];     # I'm an other child
+set Cl3 [tclmsgque MqS -parent $Cl1];     # I'm an other child, even if my '-parent' is a child
+\endverbatim
+ - if a \e context is deleted (parent or child) the \e depending context (parent or child) is deleted too.
+ - if a \e context is deleted the \e depending context-tree is deleted too.
+ .
+
+*/
+
+

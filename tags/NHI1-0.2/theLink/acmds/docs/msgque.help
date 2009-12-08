@@ -1,0 +1,14 @@
+../tests/tcl.env: line 15: ../tests/../env.sh: Datei oder Verzeichnis nicht gefunden
+wrong # args: should be "tclmsgque MqS "
+    while executing
+"tclmsgque MqS $cmd"
+    invoked from within
+"if {$cmd eq "get"} {
+
+  ## this is the "client" part of the command
+
+    if {[llength $argl] != 2} Usage
+    set argl [lindex $argl 1]
+
+    # START-TC..."
+    (file "./aexec" line 116)

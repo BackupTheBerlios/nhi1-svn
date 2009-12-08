@@ -1,0 +1,10 @@
+> nothread/NHI1-0.1/theLink/tests/client --all @ java example.Server
+C> (client:5517) [2009-12-08:12-39-16] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:5517) [2009-12-08:12-39-17] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.44
+C> (client:5517) [2009-12-08:12-39-17] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      13.66
+C> (client:5517) [2009-12-08:12-39-20] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      19.38
+C> (client:5517) [2009-12-08:12-39-31] [0-0-0x61f9a0-statistics]:                  parent create:  106026.30
+C> (client:5517) [2009-12-08:12-39-31] [0-0-0x61f9a0-statistics]:                  parent delete:    1748.48
+C> (client:5517) [2009-12-08:12-39-31] [0-0-0x61f9a0-statistics]:                   child create:     158.34
+C> (client:5517) [2009-12-08:12-39-31] [0-0-0x61f9a0-statistics]:                   child delete:      23.33
+C> (client:5517) [2009-12-08:12-39-31] [0-0-0x61f9a0-main]: end: ----------------------------------------

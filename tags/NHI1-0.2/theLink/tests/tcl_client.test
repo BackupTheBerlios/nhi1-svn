@@ -1,0 +1,536 @@
+#+
+#§  \file       theLink/tests/tcl_client.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint tcl]} return
+
+proc NoArgs {} {}
+proc ToManyArgs {a b} {}
+proc Error {ctx} { error "this is an error" }
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C tcl] {
+
+##
+## -----------------------------------------------------------------------
+## client tests (part 1)
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+SetConstraints $I $B $S
+
+# tests ----------------------------
+
+test tcl-client-1-($I|$B|$C|$S) {send with wrong number of arguments} \
+    -body	    {$FH_LAST} \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {wrong # args: should be "<MqS-*> subcommand ..."}
+
+test tcl-client-2-($I|$B|$C|$S) {send with wrong -timeout} \
+    -body	    {
+      $FH_LAST SendSTART
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI XXXX
+    } \
+    -returnCodes    error \
+    -result	    {expected integer but got "XXXX"}
+
+test tcl-client-3b-($I|$B|$C|$S) {service without argument} \
+    -body           { $FH_LAST ServiceCreate CSV2 NoArgs } \
+    -returnCodes    error \
+    -result         {wrong # args: one argument for procedure "NoArgs" is required}
+
+test tcl-client-3c-($I|$B|$C|$S) {service with more than one argument} \
+    -body           { $FH_LAST ServiceCreate CSV2 ToManyArgs } \
+    -returnCodes    error \
+    -result         {wrong # args: only one argument for procedure "ToManyArgs" is required}
+
+test tcl-client-3d-($I|$B|$C|$S) {"send" with invalid callback} \
+    -body           {
+	$FH_LAST SendSTART
+	$FH_LAST SendI 1
+        $FH_LAST SendEND_AND_CALLBACK ECOI XXX
+	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+    } \
+    -match	    glob \
+    -returnCodes    error \
+    -result         {[cC]> (client-0) \[ErrorSet] invalid command name "XXX"
+    while executing
+"XXX <MqS-*>"*}
+
+test tcl-client-3e-($I|$B|$C|$S) {"send" with invalid callback (no args)} \
+    -body           {
+	$FH_LAST SendSTART
+	$FH_LAST SendI 1
+        $FH_LAST SendEND_AND_CALLBACK ECOI NoArgs
+	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+    } \
+    -match	    glob \
+    -returnCodes    error \
+    -result         {[cC]> (client-0) \[ErrorSet] wrong # args: should be "NoArgs"
+    while executing
+"NoArgs <MqS-*>"*}
+
+test tcl-client-3f-($I|$B|$C|$S) {"send" with invalid callback (to many args)} \
+    -body           {
+	$FH_LAST SendSTART
+	$FH_LAST SendI 1
+        $FH_LAST SendEND_AND_CALLBACK ECOI ToManyArgs
+	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+    } \
+    -match	    glob \
+    -returnCodes    error \
+    -result         {[cC]> (client-0) \[ErrorSet] wrong # args: should be "ToManyArgs a b"
+    while executing
+"ToManyArgs <MqS-*>"*}
+
+test tcl-client-3g-($I|$B|$C|$S) {"send" with error in callback} \
+    -body           {
+	$FH_LAST SendSTART
+	$FH_LAST SendI 1
+        $FH_LAST SendEND_AND_CALLBACK ECOI Error
+	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+    } \
+    -match	    glob \
+    -returnCodes    error \
+    -result         {[cC]> (client-0) \[ErrorSet] this is an error
+    while executing
+"error "this is an error" "
+    (procedure "Error" line 1)
+    invoked from within
+"Error <MqS-*>"*}
+
+test tcl-client-5-($I|$B|$C|$S) {read with wrong option} \
+    -setup	    {
+        proc CSV2_Hdl {ctx} {
+	    $ctx SendSTART
+	    $ctx SendU [$ctx ReadWRONG]
+	    $ctx SendRETURN
+        }
+        $FH_LAST ServiceCreate CSV2 CSV2_Hdl
+    } \
+    -body           {
+	Echo1 $FH_LAST CSV1 ReadI SendI 1
+    } \
+    -cleanup	    {
+        $FH_LAST ServiceDelete CSV2
+	rename CSV2_Hdl ""
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|CSV1> <Num|1>
+[sS]> (server-0) \[service-call-error] <Tok|CSV2> <Num|1>
+[cC]> (client-0) \[ErrorSet] bad subcommand "ReadWRONG": must be *}
+
+#########################################################################
+### ReadGetNumItems
+
+test tcl-client-ReadGetNumItems-0-($I|$B|$C|$S) {ReadGetNumItems ...} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx SendI [$ctx ReadGetNumItems]
+	}
+    } \
+    -result         "0"
+
+test tcl-client-ReadGetNumItems-1-($I|$B|$C|$S) {ReadGetNumItems ...} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx SendI [$ctx ReadGetNumItems]
+	} SendI 234 SendD 34.67
+    } \
+    -result         "2"
+
+test tcl-client-ReadGetNumItems-2-($I|$B|$C|$S) {ReadGetNumItems ...} \
+    -constraints    binary \
+    -body           {
+	EchoL $FH_LAST EVAL SendC {
+	  $ctx SendI [$ctx ReadGetNumItems]
+	  $ctx SendU [$ctx ReadU]
+	  $ctx SendI [$ctx ReadGetNumItems]
+	  $ctx SendU [$ctx ReadU]
+	  $ctx SendI [$ctx ReadGetNumItems]
+	} SendI 234 SendD 34.67
+    } \
+    -result         "2 234 1 34.67 0"
+
+
+#########################################################################
+### ItemExists
+
+test tcl-client-ReadItemExists-0-($I|$B|$C|$S) {ReadItemExists ...} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx SendI [$ctx ReadItemExists]
+	}
+    } \
+    -result         "0"
+
+test tcl-client-ReadItemExists-2-($I|$B|$C|$S) {ReadItemExists ...} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx SendI [$ctx ReadItemExists]
+	} SendI 234 SendD 34.67
+    } \
+    -result         "1"
+
+test tcl-client-ReadItemExists-3-($I|$B|$C|$S) {ReadItemExists ...} \
+    -constraints    c \
+    -body           {
+	EchoL $FH_LAST EVAL SendC {
+	  $ctx SendI [$ctx ReadItemExists]
+	  $ctx SendU [$ctx ReadU]
+	  $ctx SendI [$ctx ReadItemExists]
+	  $ctx SendU [$ctx ReadU]
+	  $ctx SendI [$ctx ReadItemExists]
+	} SendI 234 SendD 34.67
+    } \
+    -result         "1 234 1 34.67 0"
+
+#########################################################################
+### ReadUndo
+
+test tcl-client-ReadUndo-0-($I|$B|$C|$S) {ReadUndo ...} \
+    -body           {
+	EchoL $FH_LAST EVAL SendC {
+	  $ctx ReadUndo
+	  $ctx ReadUndo
+	}
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|224>
+[sS]> (server-0) \[MqReadUndo] maximum undo level reached}
+
+test tcl-client-ReadUndo-1-($I|$B|$C|$S) {ReadUndo ...} \
+    -body           {
+	EchoL $FH_LAST EVAL SendC {
+	  $ctx SendI [$ctx ReadI]
+	  $ctx ReadUndo
+	  $ctx SendI [$ctx ReadI]
+	  $ctx ReadUndo
+	  $ctx SendI [$ctx ReadI]
+	} SendI 234 SendD 34.67
+    } \
+    -result         {234 234 234}
+
+
+test tcl-client-6d-($I|$B|$C|$S) {read -undo ok} \
+    -setup	    {
+        proc CSV2_Hdl {ctx} {
+	    $ctx SendSTART
+	    $ctx ReadI
+	    $ctx ReadUndo
+	    $ctx SendI [$ctx ReadI]
+	    $ctx SendRETURN
+        }
+        $FH_LAST ServiceCreate CSV2 CSV2_Hdl
+    } \
+    -body           {
+	Echo1 $FH_LAST CSV1 ReadI SendI 6
+    } \
+    -cleanup	    {
+        $FH_LAST ServiceDelete CSV2
+	rename CSV2_Hdl ""
+    } \
+    -result         "8"
+
+set TMPL {test tcl-client-wrong-additional-arg-%CMD%-($I|$B|$C|$S) {%CMD% with wrong additional argument} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadC SendC {
+	  $ctx %CMD% kkk
+	}
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> %CMD% "*}}
+
+foreach CMD {	
+    ReadUndo ReadAll ReadItemExists ReadGetNumItems ReadL_END
+    ReadY ReadO ReadS ReadI ReadF ReadW ReadD ReadC ReadB ReadU
+    ConfigGetDebug ConfigGetIsString ConfigGetIsSilent ConfigGetIsServer ConfigGetIsParent
+     ConfigGetToken ConfigGetCtxId ConfigGetName ConfigGetParent ConfigGetIsConnected
+  } {
+  eval [string map [list %CMD% $CMD] $TMPL]
+}
+
+#set TMPL {test tcl-client-get-without-buffer-%CMD%-($I|$B|$C|$S) {%CMD% without buffer argument} \
+#    -body           {
+#	Echo1 $FH_LAST EVAL ReadC SendC {
+#	  $ctx %CMD%
+#	}
+#    } \
+#    -returnCodes    error \
+#    -match	    glob \
+#    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>
+#[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> %CMD% buffer ..."*}}
+#
+#foreach CMD {	
+#    GetY GetO GetS GetI GetF GetW GetD GetC GetB 
+#    GetL_START GetType
+#  } {
+#  eval [string map [list %CMD% $CMD] $TMPL]
+#}
+
+proc dummy {} {}
+
+test tcl-client-15-($I|$B|$C|$S) {ServiceCreate with wrong length of token} \
+    -setup	    {proc dummy {x} {}} \
+    -body           { $FH_LAST ServiceCreate 12345 dummy } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[MqServiceCreate\] expect token as string of size 4 but got '12345'}
+
+test tcl-client-16-($I|$B|$C|$S) {ServiceCreate with additional arg} \
+    -body           {
+	$FH_LAST ServiceCreate 1234 dummy xxxx
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {wrong # args: should be "<MqS-*> ServiceCreate 1234 dummy "}
+
+## need for ServiceCreate
+proc dummy {x} {}
+
+test tcl-client-17-($I|$B|$C|$S) {ServiceDelete with additional arg} \
+    -body           {
+	$FH_LAST ServiceCreate 1234 dummy
+	$FH_LAST ServiceDelete 1234 kkkk
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {wrong # args: should be "<MqS-*> ServiceDelete 1234 "}
+
+test tcl-client-17b-($I|$B|$C|$S) {ServiceCreate with additional arg} \
+    -body           {
+	$FH_LAST ServiceCreate 1234 dummy kkkk
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {wrong # args: should be "<MqS-*> ServiceCreate 1234 dummy "}
+
+test tcl-client-17c-($I|$B|$C|$S) {ServiceCreate with wrong procedure} \
+    -body           {
+	$FH_LAST ServiceCreate 1234 wrong_proc
+    } \
+    -returnCodes    error \
+    -result         {wrong # args: should be "CONTEXT ServiceCreate token tclproc"}
+
+test tcl-client-21-($I|$B|$C|$S) {return error with invalid number} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx SendI "hhh"
+	}
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>
+[sS]> (server-0) \[ErrorSet] expected integer but got "hhh"*}
+
+test tcl-client-23-($I|$B|$C|$S) {return nothing} \
+    -body           {
+	Echo1 $FH_LAST EVAL ReadI SendC {
+	  $ctx ReadI
+	}
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|213>
+[sS]> (server-0) \[sReadA4] request more arguments than available*}
+
+test tcl-client-24-($I|$B|$C|$S) {processEvent with additional arg} \
+    -body           {
+	$FH_LAST ProcessEvent xxx
+    } \
+    -returnCodes    error \
+    -result         {bad option "xxx": must be -timeout or -wait}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # "no"
+
+set ctx [tclmsgque MqS]
+$ctx ConfigSetBgError RET_BG
+
+set tclserver [makeFile {
+    proc Error {ctx} { error "this is an error" }
+    package require TclMsgque
+    set srv [tclmsgque MqS]
+    $srv ConfigSetName server
+    set i 0
+    foreach {k v} $argv {
+      if {![string match ConfigSet* $k]} break
+      incr i 2
+      $srv $k $v
+    }
+    if {[catch {
+      $srv LinkCreate {*}[lrange $argv $i end]
+      $srv ProcessEvent -wait FOREVER
+    }]} {
+      $srv ErrorSet
+    }
+    $srv Exit
+} tclserver.[pid]]
+
+test tcl-client-Y-InitServerSetup "tclmsgque MqS ConfigSetServerSetup -> Error " \
+    -body           {
+      RET_start
+      RET_add 111 $ctx LinkCreate --name client-Y @ \
+	$TCLSH $tclserver ConfigSetName server-Y ConfigSetServerSetup Error
+      RET_end
+    } \
+    -cleanup	    { $ctx LinkDelete } \
+    -match	    glob \
+    -result	    {START BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-Y) \[ErrorSet] this is an error
+*} BG-TEXT-CODE:NONE 111-CATCH:1 {111-RET:[cC]> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'
+*} {111-CODE:TCLMSGQUE 223 2 {[cC]> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'
+*}} END}
+
+test tcl-client-Z-InitFilterFTR "tclmsgque MqS --FTR -> Error " \
+    -setup	    { 
+      $ctx LinkCreate --name client-Z-FTRproc @ \
+	$TCLSH $tclserver ConfigSetName server-Z-FTRproc ConfigSetFilterFTR Error 
+    } \
+    -body           { 
+	$ctx SendSTART
+	$ctx SendFTR 1 
+    } \
+    -cleanup	    { $ctx LinkDelete } \
+    -match	    glob \
+    -returnCodes    error \
+    -result	    {C> (client-Z-FTRproc) \[service-call-error] <Tok|_FTR> <Num|1>*}
+
+test tcl-client-Z2-FTRproc "tclmsgque MqS --FTR -> Error " \
+    -setup	    { 
+      $ctx LinkCreate --name client --debug $env(TS_DEBUG) @ \
+	$TCLSH $tclserver ConfigSetFilterFTR Error 
+    } \
+    -body           { $ctx SendFTR 1 } \
+    -cleanup	    { $ctx LinkDelete } \
+    -match	    glob \
+    -returnCodes    error \
+    -result	    {[cC]> (client) \[pMqSendEND] use first MqSendSTART and than MqSendEND*}
+
+test tcl-client-Z-InitFilterEOF "tclmsgque MqS --EOF -> Error " \
+    -setup	    { 
+      $ctx LinkCreate --name client @ $TCLSH $tclserver ConfigSetFilterEOF Error 
+    } \
+    -body           { $ctx SendEOF 1 } \
+    -cleanup	    { $ctx LinkDelete } \
+    -match	    glob \
+    -returnCodes    error \
+    -result	    {C> (client) \[service-call-error] <Tok|_EOF> <Num|1>*}
+
+test tcl-client-A-0 {rename cmd hdl} \
+    -constraints  {local} \
+    -setup	  { $ctx LinkCreate @ {*}[getServer c.pipe] } \
+    -body	  { $ctx LinkDelete } \
+    -returnCodes  ok
+
+test tcl-client-ProcessEvent-1 {ProcessEvent error with -timeout and NO arg} \
+    -constraints  {local} \
+    -cleanup	  { $ctx LinkDelete } \
+    -body	  {
+	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
+	$ctx ProcessEvent -timeout
+    } \
+    -returnCodes  error \
+    -result	  {no additional argument available for '-timeout'}
+
+test tcl-client-ProcessEvent-2 {ProcessEvent error with -timeout and WRONG arg} \
+    -constraints  {local} \
+    -cleanup	  { $ctx LinkDelete } \
+    -body	  {
+	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
+	$ctx ProcessEvent -timeout KK
+    } \
+    -returnCodes  error \
+    -result	  {expected integer but got "KK"}
+
+test tcl-client-ProcessEvent-3 {ProcessEvent error with -wait and NO arg} \
+    -constraints  {local} \
+    -cleanup	  { $ctx LinkDelete } \
+    -body	  {
+	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
+	$ctx ProcessEvent -wait
+    } \
+    -returnCodes  error \
+    -result	  {no additional argument available for '-wait'}
+
+test tcl-client-ProcessEvent-4 {ProcessEvent error with -wait and WRONG arg} \
+    -constraints  {local} \
+    -cleanup	  { $ctx LinkDelete } \
+    -body	  {
+	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
+	$ctx ProcessEvent -wait KKK
+    } \
+    -returnCodes  error \
+    -result	  {bad -wait "KKK": must be NO, ONCE, or FOREVER}
+
+rename $ctx ""
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+

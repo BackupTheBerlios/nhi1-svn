@@ -1,0 +1,102 @@
+#+
+#§  \file       theLink/tests/asplit.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint c]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+proc myText {s e str} {
+    return [join [lrange [split $str \n] $s $e] \n]
+}
+
+set data1 [makeFile {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46} data1.[pid]]
+
+set data2 [makeFile {vb:0:987654321:7.77
+g:4444:66666666666:0.1} data2.[pid]]
+
+test asplit-1 {split without server} \
+    -body   { Exec cat $data1 | {*}[getATool split] -d : } \
+    -returnCodes ok \
+    -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkCreate" at file "msgque.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+test asplit-1b {split with file arguments and without server} \
+    -body   { Exec {*}[getATool split] -d : $data1 } \
+    -returnCodes ok \
+    -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkCreate" at file "msgque.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+test asplit-2 {split help} \
+    -body   { Exec {*}[getATool split] --help } \
+    -returnCodes ok \
+    -result {NONE--usage: split [OPTION]... [ARGUMENT]... [FILES]...
+
+ The split tool expect input data from stdin or files as argument and send
+ the output data as package to a msgque server. For every line from the input an
+ output package is created by splitting the input line using the the delimiter -d.
+
+  split [ARGUMENT]... syntax:
+    ... | split [OPTION]... @ aserver [OPTION]... [ARGUMENT]
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  split [OPTION]:
+    -d CHAR          the delimiter character                  (default: ' ')
+    -h, --help       print this help
+}
+
+ # start-type: fork, thread or spawn
+  foreach S [envGet START_LST] {
+
+test asplit-3-($S) {simple split and join} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d +} \
+    -returnCodes ok \
+    -result {xa+24+12345678987654321+5.78
+cg+89+98765432123456789+3.46}
+
+test asplit-3b-($S) {simple split and join with file as argument} \
+    -body   { Exec {*}[getATool split] --$S -d : $data1 @ join -d +} \
+    -returnCodes ok \
+    -result {xa+24+12345678987654321+5.78
+cg+89+98765432123456789+3.46}
+
+test asplit-3c-($S) {simple split and join with multiple files as argument} \
+    -body   { Exec {*}[getATool split] --$S -d : $data1 $data2 @ join -d +} \
+    -returnCodes ok \
+    -result {xa+24+12345678987654321+5.78
+cg+89+98765432123456789+3.46
+vb+0+987654321+7.77
+g+4444+66666666666+0.1}
+
+    } ; ## START_LST
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+

@@ -1,0 +1,110 @@
+#+
+#§  \file       README
+#§  \brief      \$Id$
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+NHI1 overview
+=============
+
+  http://nhi1.berlios.de
+
+
+NHI1 build
+===============
+
+"NHI1" is a able to build on a UNIX operating system like
+Linux, BSD. For a build on Windows please change into the 
+"win" directory and follow the instructions from the "README.win" 
+file.
+
+The main development system is:
+
+    SuSE Linux 10.3 on "Intel(R) Core(TM)2 CPU 6600 @ 2.40GHz"
+
+The software-build was also tested on:
+
+    Windows XP ServicePack 3  (VirtualBox/Intel)
+    Free BSD 7.1	      (VirtualBox/Intel)
+    SuSE Linux 11	      (VirtualBox/Intel)
+    Debian 5		      (iBook/ppc)
+
+The Build depends on the following tools:
+
+  - Compiler: gcc
+  - Make: make
+  - Configuration: libtool, autoconf-2.62 and automake-1.10
+  - Test: tcl using the "tcltest" package
+  - Documentation: doxygen
+  - Create Binary Distribution: zip
+
+In addition the following software is required for the "build"
+
+  - tcl from the Tcl Developer Site
+       -> http://www.tcl.tk/
+
+  - java from the JAVA Download Site
+       -> google: java 6 download
+
+  - python - python 3.x is required
+       -> http://www.python.org/download/
+
+  - C# - csharp or mono
+       -> http://www.mono-project.com/Main_Page
+
+  - perl from The Perl Programming Language
+       -> http://www.perl.org/
+
+To build "NHI1" please follow the next steps:
+
+Unpack the source distribution in a temporary directory and
+switch into the top directory:
+
+  > tar -xzf NHI1-X.Y.tar.gz
+  > cd NHI1-X.Y
+
+To build the software on a system other than the developing system I
+recommend to update your local build tools with:
+
+  > autoreconf -f -i -v
+
+To configure the build run the "configure" script:
+ 
+  # for help
+  > bash ./configure --help
+
+  # do the configuration
+  > bash ./configure ...
+
+To build the software run "make":
+
+  > make
+
+To test the software please follow the steps from:
+
+  > less theLink/tests/README.tests
+
+To build the "documentation" the tool "doxygen" is required:
+
+  - create the documentation
+    > make html
+  - read the documentation
+    > firefox html/index.htm
+
+If the build is done on a *new* hardware/os version the binaries
+can be submitted to the community using the following steps:
+
+  - create a binary distribution
+    > bash ./make_binary_dist.sh
+  - the new binary-distribution is created in the directory
+    > binary-dist
+  - contact the maintainer
+    > aotto1968 at users.sourceforge.net
+    

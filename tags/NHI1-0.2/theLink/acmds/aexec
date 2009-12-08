@@ -1,0 +1,191 @@
+#!/bin/sh
+#+
+#§  \file       theLink/acmds/aexec
+#§  \brief      \$Id$
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+# the next line restarts using tclsh \
+exec tclsh "$0" "$@"
+
+proc Usage {} {
+    set CMD [file tail $::argv0]
+    puts stderr "usage: $CMD put \[msgque-options\] @ TOK command args... @ ...
+usage: $CMD get \[msgque-options\] @ TOK args...
+
+  The $CMD tool is used to create a remote-function-call client/server applica-
+  tions using the libmsgque library providing services identified by a unique
+  token 'TOK' as 4 character string.
+
+  The server '$CMD put':
+    The argument after the Token is a 'command' like 'cat' or a 'shell-script'.
+    The server is able to serve multiple services separated by the alfa '@' sepa-
+    rator and is usually started together with the '--fork' option.
+
+  The client '$CMD get':
+    The client is able to call a single service identified by the token 'TOK'.
+    All arguments after the token 'TOK' are passed to stdin of the server 'cmd'
+    separated by newlines.
+
+[tclmsgque help -options]
+  $CMD \[OPTION\]:
+    -h, --help       print this help
+"
+    exit 0
+}
+
+## setup the path to find the !newly! created executable first
+set ROOT    [file dirname [file dirname [file normalize [info script]]]]
+set BUILD   [file dirname [pwd]]
+lappend PATH [file nativename [file join [file dirname [info nameofexecutable]]]]
+lappend PATH [file nativename [file normalize [file join $ROOT acmds]]]
+lappend PATH [file nativename [file normalize [file join $BUILD acmds]]]
+
+set T1 [file nativename [file normalize [file join $ROOT src .libs]]]
+set T2 [file nativename [file normalize [file join $BUILD src .libs]]]
+
+if {$tcl_platform(platform) eq "windows"} {
+    lappend PATH $T1
+    lappend PATH $T2
+} elseif {$tcl_platform(os) eq "Darwin"} {
+    if {$T1 ne $T2} {
+	set T "$T1:$T2"
+    } else {
+	set T "$T1"
+    }
+    set fail no
+    if {[info exists env(DYLD_LIBRARY_PATH)]} {
+	if {[string first $T $env(DYLD_LIBRARY_PATH)] == -1} {
+	    set env(DYLD_LIBRARY_PATH) "$T:$env(DYLD_LIBRARY_PATH)"
+	    set fail yes
+	}
+    } else {
+	set env(DYLD_LIBRARY_PATH) "$T"
+	set fail yes
+    }
+    if {$fail} {
+	exec [info nameofexecutable] $argv0 $argv >@stdout 2>@stderr
+	exit 0
+    }
+    unset fail T
+}
+unset T1 T2
+
+switch -exact $tcl_platform(platform) {
+    windows {
+        lappend PATH {C:\WINDOWS\system32}
+        lappend PATH {C:\cygwin\bin}
+        lappend PATH {C:\cygwin\usr\bin}
+        lappend PATH {C:\cygwin\usr\X11R6\bin}
+        lappend PATH {.}
+        set sep {;}
+    }
+    unix {
+        lappend PATH /bin
+        lappend PATH /usr/bin
+        set sep {:}
+    }
+    default {
+        set sep {:}
+    }
+}
+set env(PATH) [join [concat $PATH $env(PATH)] $sep]
+
+## load the TclMsgque extension
+package require TclMsgque
+
+## read commandline and parse for token
+set cmd	    [lindex $argv 0]
+set argv    [lrange $argv 1 end]
+set argl    [list]
+while {[set IDX [lsearch -ascii -exact $argv @]] != -1} {
+    incr IDX -1
+    lappend argl    [lrange $argv 0 $IDX]
+    incr IDX 2	
+    set argv	    [lrange $argv $IDX end]
+}
+lappend argl $argv
+set argv [lindex $argl 0]
+
+if {$cmd eq "get"} {
+
+  ## this is the "client" part of the command
+
+    if {[llength $argl] != 2} Usage
+    set argl [lindex $argl 1]
+
+    # START-TCL-CLIENT
+    set CTX [tclmsgque MqS]
+    $CTX ConfigSetName [file tail $argv0]
+    $CTX LinkCreate {*}$argv
+    $CTX SendSTART
+    foreach a [lrange $argl 1 end] {
+      $CTX SendC $a
+    }
+    if {![catch {$CTX SendEND_AND_WAIT [lindex $argl 0]} RET]} {
+      set RET [join [$CTX ReadAll] \n]
+    }
+
+    # read all result items
+    puts $RET
+
+    rename $CTX ""
+    # END-TCL-CLIENT
+
+} elseif {$cmd eq "put"} {
+
+  ## this is the "server" part of the command
+
+    if {[llength $argl] <  2} Usage
+    set argl [lrange $argl 1 end]
+
+    ## configure the new created context
+    proc ServerConfig {ctx} {
+	global argl
+	foreach val $argl {
+	    set TOK [lindex $val 0]
+	    set ARG [lrange $val 1 end]
+	    proc Ot_$TOK {ctx} [string map [list %ARG% $ARG] {
+		$ctx SendSTART
+		if {[$ctx ReadGetNumItems] != 0} {
+		    catch {eval exec %ARG% << \"[join [$ctx ReadAll] \n]\n\"} RET
+		} else {
+		    catch {eval exec %ARG%} RET
+		}
+		foreach a [split $RET \n] {
+		  $ctx SendC $a
+		}
+		$ctx SendRETURN
+	    }]
+	    $ctx ServiceCreate $TOK Ot_$TOK
+	}
+    }
+
+    # create the initial context and wait forever for events
+    set srv [tclmsgque MqS]
+    $srv ConfigSetName [file tail $argv0]
+    $srv ConfigSetServerSetup ServerConfig
+    if {[catch {
+      $srv LinkCreate {*}$argv
+      $srv ProcessEvent -wait FOREVER
+    }]} {
+      $srv ErrorSet
+    }
+    $srv Exit
+} elseif {$cmd eq "--help-tclmsgque"} {
+    puts [tclmsgque help]
+} elseif {$cmd eq "--help-msgque"} {
+    puts [tclmsgque MqS $cmd]
+} else {
+    Usage
+}
+
+# this line will never reached in server mode (put)
+exit 0
+

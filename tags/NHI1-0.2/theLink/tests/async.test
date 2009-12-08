@@ -1,0 +1,233 @@
+#+
+#§  \file       theLink/tests/async.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+ 
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+#set tcl_traceExec 3
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+proc Sleep {} {
+  set ::AID [after 300 Sleep]
+  incr ::COUNT
+}
+
+## 
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I {1} {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server.c server.tcl
+     foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## async
+##
+
+test async-1-($I|$B|$C|$S) {handel tcl events} \
+    -setup	    {
+	Setup $I $B $C $S
+	set COUNT 0; 
+	Sleep
+    } \
+    -body           {
+	Echo0 $FH_LAST SLEP SendI 1
+        return "$::COUNT:1"
+    } \
+    -cleanup	    {
+	catch {after cancel $AID}
+	Cleanup
+    } \
+    -result         "4:1"
+
+test async-2-($I|$B|$C|$S) {handel tcl events} \
+    -setup	    {
+	Setup $I $B $C $S
+        proc CSV2_Hdl {ctx} {
+	    $ctx SendSTART
+	    $ctx SendI [expr {[$ctx ReadI]+1}]
+	    $ctx SendRETURN
+        }
+        $FH_LAST ServiceCreate CSV2 CSV2_Hdl
+    } \
+    -body           {
+	Echo1 $FH_LAST CSV1 ReadI SendI 1
+    } \
+    -cleanup	    {
+        if {[info exists $FH_LAST ]} {
+	    $FH_LAST ServiceDelete CSV2
+	}
+	rename CSV2_Hdl ""
+	Cleanup
+    } \
+    -result         "4"
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+    
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+}
+
+##  
+## -----------------------------------------------------------------------
+## 'free' test cases
+##
+
+set WTime [list]
+
+switch -exact $tcl_platform(os) {
+    "Darwin"	{set max 10}
+    "FreeBSD"	{set max 10}
+    default	{set max 50}
+}
+
+set RAND {17382 13924 15308 25223 16932 30573 28977 23176 29716 8731 6728 14247 26901 16481 21926 21098 15737 14867 12671 19669 7741 8557 29180 24585 25386 17911 3167 16679 1708 7710 12278 19090 21635 27586 11545 5799 25391 8655 28975 22339 17386 2936 3819 11519 19417 25745 32618 2386 7845 12521 22056 15586 21078 18468 7403 13696 3611 10570 30375 5319 18281 9885 24409 7148 4703 3186 12947 30094 11841 9154 19666 29227 12090 23485 7979 31507 16462 7829 1126 24307 20350 23182 7125 8660 8882 14528 22356 12493 25099 19964 17812 10612 29849 9453 17760 1785 12639 30707 31879 24481 7093 18777 20940 19184 9494 28919 17923 25957 3980 19049 17496 24330 9463 24622 222 18345 6382 22579 30838 31481 9775 15882 9325 6856 25335 27085 8641 5207 25024 7753 29688 32118 26530 17860 18534 3257 14012 3689 29214 17992 22739 13942 9555 32202 5796 9777 17780 12179 32356 15850 10892 9363 31733 20218 16220 24300 14535 24861 29507 6792 32614 26427 6142 26377 11520 24676 29634 25532 28365 26080 10756 18336 7254 20311 17771 13051 30089 2783 25230 29677 18633 3354 6273 17598 23572 22493 9131 5340 14586 5870 12132 14433 32298 18274 8042 11050 10182 4908 3814 5779}
+
+set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
+
+# transport-type: string or binary
+ foreach B [envGet BIN_LST] {
+
+ # socket-type: uds or tcp
+  foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filterGet SRV_LST $C] {
+
+    ## this test will wait for (num * 0,1) seconds
+    test async-F1-($B|$C|$S) {work on mass background events} \
+	-setup	    {
+	    set RET [list]
+	    proc RSleep {ctx a timeout} {
+		$ctx SendSTART
+		$ctx SendI 1
+		$ctx SendEND_AND_WAIT SLEP $::env(TS_TIMEOUT)
+		lappend ::RET $a
+	    }
+	    Setup [list $max 3] $B $C $S
+	    set MAX [llength [array names FH]]
+	} \
+	-body	    {
+	    set i 0
+	    foreach name [lsort [array names FH]] {
+	      set RD [expr {[lindex $RAND $i]/30}]
+	      after $RD "RSleep $FH($name) $RD $env(TS_TIMEOUT)"
+	      incr i
+	    }
+	    while {[llength $RET] != $MAX} {
+	      $FH_LAST ProcessEvent -timeout $env(TS_TIMEOUT) -wait ONCE
+	    }
+	} \
+	-cleanup    {
+	    Cleanup
+	} \
+	-returnCodes ok
+
+    test async-F1b-($B|$C|$S) {handel callback events} \
+	-setup	    {
+	    set RET [list]
+	    proc Callback {ctx} {
+		lappend ::RET [$ctx ReadI]
+	    }
+	    Setup [list $max 3] $B $C $S
+	    set MAX [llength [array names FH]]
+	} \
+	-body	    {
+	    set i 0
+	    foreach name [lsort [array names FH]] {
+	      set RD [lindex $RAND $i]
+	      $FH($name) SendSTART
+	      $FH($name) SendI [expr {$RD*10}]
+	      $FH($name) SendEND_AND_CALLBACK USLP Callback
+	      if {!($i % 7)} { $FH($name) ProcessEvent }
+	      incr i
+	    }
+	    while {[llength $RET] != $MAX} {
+	      $FH_LAST ProcessEvent -timeout $env(TS_TIMEOUT) -wait ONCE
+	    }
+	} \
+	-cleanup    {
+	    Cleanup
+	} \
+	-returnCodes ok
+
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+    test async-F2-($I|$B|$C|$S) {handel tcl events, rename command} \
+	-setup	    {
+	    Setup $I $B $C $S
+	    $FH(0-0) RenameTo new
+	    proc CSV2_Hdl {ctx} {
+		$ctx SendSTART
+		$ctx SendI [expr {[$ctx ReadI]+1}]
+		$ctx SendRETURN
+	    }
+	    new ServiceCreate CSV2 CSV2_Hdl
+	} \
+	-body           {
+	    Echo1 new CSV1 ReadI SendI 1
+	} \
+	-cleanup	    {
+	    new ServiceDelete CSV2
+	    rename CSV2_Hdl ""
+	    new RenameTo $FH(0-0)
+	    Cleanup
+	} \
+	-result         "4"
+
+ }; # numGet
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+    
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+unset B C S
+    
+##  
+## -----------------------------------------------------------------------
+## finish
+##  
+    
+freeTests
+
+
+
+

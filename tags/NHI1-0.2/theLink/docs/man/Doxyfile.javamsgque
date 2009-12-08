@@ -1,0 +1,198 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+FILE_PATTERNS	    = *.doc
+
+ENABLED_SECTIONS    += JAVA
+
+EXAMPLE_PATH	    += $(SRCDIR)/example/java
+
+TAGFILES            += $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
+TAGFILES            += $(DOCDIR)/../javamsgque_public/javamsgque_public.tag=../javamsgque_public
+
+ALIASES		    += "self=javamsgque"
+ALIASES		    += "selftut=javamsgquetut"
+ALIASES		    += "NS{1}=java_\1"
+ALIASES		    += "lang=JAVA"
+ALIASES		    += "fileextension=java"
+ALIASES		    += "yes=\e true"
+ALIASES		    += "no=\e false"
+ALIASES		    += "package=import javamsgque.*;"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "MqS=MqS"
+ALIASES		    += "ObjectCreate=ctx = new MqS()"
+ALIASES		    += "ObjectDelete=deleted by Garbage Collection"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Init(String... args)"
+
+ALIASES		    += "config_type_buffersize=int"
+ALIASES		    += "config_set_buffersize=#ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=int"
+ALIASES		    += "config_set_debug=#ConfigSetDebug"
+ALIASES		    += "config_get_debug=#ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=long"
+ALIASES		    += "config_set_timeout=#ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=String"
+ALIASES		    += "config_set_name=#ConfigSetName"
+ALIASES		    += "config_get_name=#ConfigGetName"
+
+ALIASES		    += "config_type_srvname=String"
+ALIASES		    += "config_set_srvname=#ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#ConfigGetSrvName"
+
+ALIASES		    += "config_type_isSilent=boolean"
+ALIASES		    += "config_set_isSilent=#ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=boolean"
+ALIASES		    += "config_set_isString=#ConfigSetIsString"
+ALIASES		    += "config_get_isString=#ConfigGetIsString"
+
+ALIASES		    += "config_type_startAs=int"
+ALIASES		    += "config_set_startAs=#ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=String"
+ALIASES		    += "config_set_tcp=#ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=String"
+ALIASES		    += "config_set_uds=#ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=#ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=int"
+ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
+
+
+ALIASES		    += "config_type_isServer=boolean"
+ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_get_isServer=#ConfigGetIsServer"
+
+ALIASES		    += "config_type_isParent=boolean"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=#MqConfigGetIsParent"
+
+ALIASES		    += "config_type_isSlave=boolean"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=#ConfigGetIsSlave"
+
+ALIASES		    += "config_type_isConnected=boolean"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=#ConfigGetIsConnected"
+
+ALIASES		    += "config_type_master=MqC"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=#ConfigGetMaster"
+
+ALIASES		    += "config_type_ctxId=int"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=#ConfigGetCtxId"
+
+ALIASES		    += "config_type_token=String"
+ALIASES		    += "config_set_token=NO"
+ALIASES		    += "config_get_token=#ConfigGetToken"
+
+ALIASES		    += "config_type_IServerSetup=Interface"
+ALIASES             += "config_set_IServerSetup=#javamsgque.IServerSetup"
+ALIASES		    += "config_get_IServerSetup=NO"
+
+ALIASES		    += "config_type_IServerCleanup=Interface"
+ALIASES		    += "config_set_IServerCleanup=#javamsgque.IServerCleanup"
+ALIASES		    += "config_get_IServerCleanup=NO"
+
+ALIASES		    += "config_type_IFilterFTR=Interface"
+ALIASES		    += "config_set_IFilterFTR=#javamsgque.IFilterFTR"
+ALIASES		    += "config_get_IFilterFTR=NO"
+
+ALIASES		    += "config_type_IFilterEOF=Interface"
+ALIASES		    += "config_set_IFilterEOF=#javamsgque.IFilterEOF"
+ALIASES		    += "config_get_IFilterEOF=NO"
+
+ALIASES		    += "config_type_IFactory=Interface"
+ALIASES		    += "config_set_IFactory=#javamsgque.IFactory"
+ALIASES		    += "config_get_IFactory=NO"
+
+ALIASES             += "config_type_IBgError=Interface"
+ALIASES             += "config_set_IBgError=#javamsgque::IBgError"
+ALIASES             += "config_get_IBgError=NO"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(String... argv)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, String... argv)"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "Exit=ctx.Exit()"
+
+# SEND DATA
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(String token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(String token, [int timeout])"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(String token, IService callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendFTR=ctx.SendFTR([int timeout])"
+ALIASES		    += "SendEOF=ctx.SendEOF([int timeout])"
+ALIASES		    += "Send_TYPE=ctx.Send[TYPE](TYPE value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+
+# READ DATE
+ALIASES		    += "Read_TYPE=TYPE ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
+ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=boolean ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START()"
+ALIASES		    += "ReadL_START_BUF=ctx.ReadL_START(MqBufferS buffer)"
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, IService service)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(String token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
+ALIASES		    += "ProcessEventFlag=MqS.WAIT"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, String... argv)"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGet_TYPE=TYPE val=buffer.[TYPE]"
+ALIASES		    += "BufferType=char buffer.Type"
+
+# ERROR OBJECT
+ALIASES		    += "ErrorObject=<I>class MqSException</I>"
+ALIASES		    += "ErrorGetText=String ex.GetTxt() or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=int ex.GetNum() or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(String prefix, int errnum, String message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+

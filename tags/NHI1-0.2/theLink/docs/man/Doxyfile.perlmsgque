@@ -1,0 +1,208 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+FILE_PATTERNS	    = *.doc
+
+ENABLED_SECTIONS    += PERL
+
+EXAMPLE_PATH	    += $(SRCDIR)/example/perl
+
+TAGFILES            +=  $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
+
+ALIASES		    += "self=perlmsgque"
+ALIASES		    += "selftut=perlmsgquetut"
+ALIASES		    += "NS{1}=perl_\1"
+ALIASES		    += "lang=perl"
+ALIASES		    += "fileextension=pl"
+ALIASES		    += "yes=\e 1"
+ALIASES		    += "no=\e 0"
+ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "MqS=MqS"
+ALIASES		    += "ObjectCreate=$ctx = new MqS()"
+ALIASES		    += "ObjectDelete=$ctx->DESTROY()"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Net::PerlMsgque::Init(...)"
+
+ALIASES		    += "config_type_buffersize=integer"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=integer"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=seconds"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=string"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=string"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_isSilent=boolean"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=boolean"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_daemon=string"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=integer"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=string"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=string"
+ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=integer"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=boolean"
+ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isParent=boolean"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=ConfigGetIsParent"
+
+ALIASES		    += "config_type_isSlave=boolean"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_isConnected=boolean"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
+
+ALIASES		    += "config_type_master=MqS"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES		    += "config_type_ctxId=integer"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
+
+ALIASES		    += "config_type_token=string"
+ALIASES		    += "config_set_token=NO"
+ALIASES		    += "config_get_token=ConfigGetToken"
+
+ALIASES		    += "config_type_IServerSetup=Interface"
+ALIASES             += "config_set_IServerSetup=ConfigSetServerSetup"
+ALIASES		    += "config_get_IServerSetup=NO"
+
+ALIASES		    += "config_type_IServerCleanup=Interface"
+ALIASES		    += "config_set_IServerCleanup=ConfigSetServerCleanup"
+ALIASES		    += "config_get_IServerCleanup=NO"
+
+ALIASES		    += "config_type_IFilterFTR=Interface"
+ALIASES		    += "config_set_IFilterFTR=ConfigSetFilterFTR"
+ALIASES		    += "config_get_IFilterFTR=NO"
+
+ALIASES		    += "config_type_IFilterEOF=Interface"
+ALIASES		    += "config_set_IFilterEOF=ConfigSetFilterEOF"
+ALIASES		    += "config_get_IFilterEOF=NO"
+
+ALIASES		    += "config_type_IFactory=Interface"
+ALIASES		    += "config_set_IFactory=ConfigSetFactory"
+ALIASES		    += "config_get_IFactory=NO"
+
+ALIASES             += "config_type_IBgError=Interface"
+ALIASES             += "config_set_IBgError=ConfigSetBgError"
+ALIASES             += "config_get_IBgError=NO"
+
+# LINK CREATION AND DELETION
+ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
+ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(parent, args...)"
+ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
+ALIASES		    += "Exit=$ctx->Exit()"
+
+# SEND DATA
+ALIASES		    += "SendSTART=$ctx->SendSTART()"
+ALIASES		    += "SendEND=$ctx->SendEND(token)"
+ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(token, timeout=seconds)"
+ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(token, callback)"
+ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
+ALIASES		    += "SendERROR=$ctx->SendERROR()"
+ALIASES		    += "SendFTR=$ctx->SendFTR(timeout=seconds)"
+ALIASES		    += "SendEOF=$ctx->SendEOF(timeout=seconds)"
+ALIASES		    += "Send_TYPE=$ctx->Send[TYPE](value)"
+ALIASES		    += "SendL_START=$ctx->SendL_START()"
+ALIASES		    += "SendL_END=$ctx->SendL_END()"
+
+# READ DATE
+ALIASES		    += "Read_TYPE=TYPE $ctx->Read[TYPE]()"
+ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
+ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
+ALIASES		    += "ReadGetNumItems=integer $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=boolean $ctx->ReadItemExists()"
+ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
+ALIASES		    += "ReadL_START=$ctx->ReadL_START(MqBufferS buffer=NULL)"
+ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
+ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(token)"
+ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ONCE|FOREVER)})"
+ALIASES		    += "ProcessEventFlag=wait"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(id, args...)"
+ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(id, slave)"
+ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(id)"
+ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(id)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGet_TYPE=TYPE $buffer->Get[TYPE]()"
+ALIASES		    += "BufferType=char $buffer->GetType()"
+
+# CONTEXT LOCAL STORAGE
+ENABLED_SECTIONS    += DATA
+ALIASES		    += "DictSet=$ctx->DictSet(key, data)"
+ALIASES		    += "DictGet=$ctx->DictGet(key)"
+ALIASES		    += "DictExists=$ctx->DictExists(key)"
+ALIASES		    += "DictUnset=$ctx->DictUnset(key)"
+ALIASES		    += "DictUndef=undef"
+
+# ERROR OBJECT
+ALIASES		    += "ErrorObject=<I>class MqSException ex</I>"
+ALIASES		    += "ErrorGetText=string $ctx->ErrorGetText()"
+ALIASES		    += "ErrorGetNum=integer $ctx->ErrorGetNum()"
+ALIASES		    += "ErrorC=$ctx->ErrorC(string prefix, int num, string what)"
+ALIASES		    += "ErrorSet=$ctx->ErrorSet(ex)"
+ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
+ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
+ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
+
+

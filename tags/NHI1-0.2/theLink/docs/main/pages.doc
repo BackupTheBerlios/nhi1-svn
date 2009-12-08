@@ -1,0 +1,34 @@
+
+/**
+\page readme README
+\verbinclude README
+*/
+
+/**
+\page install INSTALL
+\verbinclude INSTALL
+*/
+
+/**
+\page news NEWS
+\verbinclude NEWS
+*/
+
+/**
+\page changes CHANGES
+\verbinclude ChangeLog
+**/
+
+/**
+\page debug_output debugging output from: client --num 1 --debug 9 @ server
+\verbinclude debug.out
+**/
+
+
+
+
+
+
+
+
+

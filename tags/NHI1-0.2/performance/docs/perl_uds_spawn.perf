@@ -1,0 +1,11 @@
+> perl nothread/NHI1-0.1/theLink/tests/server.pl --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.1/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:13480) [2009-12-08:12-43-40] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:13480) [2009-12-08:12-43-41] [0-0-0x61f9a0-statistics]:                      MqSendEND:       8.59
+C> (client:13480) [2009-12-08:12-43-42] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      18.13
+C> (client:13480) [2009-12-08:12-43-45] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      24.41
+C> (client:13480) [2009-12-08:12-44-05] [0-0-0x61f9a0-statistics]:                  parent create:  203771.71
+C> (client:13480) [2009-12-08:12-44-05] [0-0-0x61f9a0-statistics]:                  parent delete:     498.16
+C> (client:13480) [2009-12-08:12-44-05] [0-0-0x61f9a0-statistics]:                   child create:     117.30
+C> (client:13480) [2009-12-08:12-44-05] [0-0-0x61f9a0-statistics]:                   child delete:      24.73
+C> (client:13480) [2009-12-08:12-44-05] [0-0-0x61f9a0-main]: end: ----------------------------------------

@@ -1,0 +1,204 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+FILE_PATTERNS	    = *.doc
+
+ENABLED_SECTIONS    += C
+
+EXAMPLE_PATH	    += $(SRCDIR)/example/c
+
+TAGFILES            =  $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
+
+ALIASES		    += "self=libmsgque"
+ALIASES		    += "selftut=libmsgquetut"
+ALIASES		    += "NS{1}=c_\1"
+ALIASES		    += "lang=C"
+ALIASES		    += "fileextension=c"
+ALIASES		    += "yes=\e MQ_YES"
+ALIASES		    += "no=\e MQ_NO"
+ALIASES		    += "package=\#include \"msgque.h\""
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "MqS=struct MqS*"
+ALIASES		    += "ObjectCreate=ctx = MqContextCreate(size, template)"
+ALIASES		    += "ObjectDelete=MqContextDelete(&ctx)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+
+ALIASES		    += "config_type_buffersize=#MQ_INT"
+ALIASES		    += "config_set_buffersize=#MqConfigSetBuffersize (ctx, buffersize)"
+ALIASES		    += "config_get_buffersize=#MqConfigGetBuffersize (ctx)"
+
+ALIASES		    += "config_type_debug=#MQ_INT"
+ALIASES		    += "config_set_debug=#MqConfigSetDebug (ctx, debug)"
+ALIASES		    += "config_get_debug=#MqConfigGetDebug (ctx)"
+
+ALIASES		    += "config_type_timeout=#MQ_TIME_T"
+ALIASES		    += "config_set_timeout=#MqConfigSetTimeout (ctx, timeout)"
+ALIASES		    += "config_get_timeout=#MqConfigGetTimeout (ctx)"
+
+ALIASES		    += "config_type_name=#MQ_CST"
+ALIASES		    += "config_set_name=#MqConfigSetName (ctx. name)"
+ALIASES		    += "config_get_name=#MqConfigGetName (ctx)"
+
+ALIASES		    += "config_type_srvname=#MQ_CST"
+ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, srvName)"
+ALIASES		    += "config_get_srvname=#MqConfigGetSrvName (ctx)"
+
+ALIASES		    += "config_type_isSilent=#MQ_BOL"
+ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, isSilent)"
+ALIASES		    += "config_get_isSilent=#MqConfigGetIsSilent (ctx)"
+
+ALIASES		    += "config_type_isString=#MQ_BOL"
+ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, isString)"
+ALIASES		    += "config_get_isString=#MqConfigGetIsString (ctx)"
+
+ALIASES		    += "config_type_daemon=#MQ_CST"
+ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_isServer=#MQ_BOL"
+ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_get_isServer=#MqConfigGetIsServer (ctx)"
+
+ALIASES		    += "config_type_isParent=#MQ_BOL"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=#MqConfigGetIsParent (ctx)"
+
+ALIASES		    += "config_type_isSlave=#MQ_BOL"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=#MqConfigGetIsSlave (ctx)"
+
+ALIASES		    += "config_type_isConnected=#MQ_BOL"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=#MqConfigGetIsConnected (ctx)"
+
+ALIASES		    += "config_type_master=MqC"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=#MqConfigGetMaster (ctx)"
+
+ALIASES		    += "config_type_ctxId=#MQ_SIZE"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=#MqConfigGetCtxId (ctx)"
+
+ALIASES		    += "config_type_startAs=enum #MqStartE"
+ALIASES		    += "config_set_startAs=#MqConfigSetStartAs (ctx, startAS"
+ALIASES		    += "config_get_startAs=#MqConfigGetStartAs (ctx)"
+
+ALIASES		    += "config_type_tcp=#MQ_CST"
+ALIASES		    += "config_set_tcp=#MqConfigSetIoTcp (ctx,host,port,myhost,myport)"
+ALIASES		    += "config_get_tcp=#MqConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=#MQ_CST"
+ALIASES		    += "config_set_uds=#MqConfigSetIoUds (ctx, file)"
+ALIASES		    += "config_get_uds=#MqConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=#MQ_SOCK"
+ALIASES		    += "config_set_pipe=#MqConfigSetIoPipe (ctx, socket)"
+ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_token=#MQ_CST"
+ALIASES		    += "config_set_token=NO"
+ALIASES		    += "config_get_token=#MqConfigGetToken (ctx)"
+
+ALIASES		    += "config_type_IServerSetup=Interface"
+ALIASES             += "config_set_IServerSetup=#MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_get_IServerSetup=NO"
+
+ALIASES		    += "config_type_IServerCleanup=Interface"
+ALIASES		    += "config_set_IServerCleanup=#MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_get_IServerCleanup=NO"
+
+ALIASES		    += "config_type_IFilterFTR=Interface"
+ALIASES		    += "config_set_IFilterFTR=#MqConfigSetFilterFTR (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_get_IFilterFTR=NO"
+
+ALIASES		    += "config_type_IFilterEOF=Interface"
+ALIASES		    += "config_set_IFilterEOF=#MqConfigSetFilterEOF (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_get_IFilterEOF=NO"
+
+ALIASES		    += "config_type_IFactory=Interface"
+ALIASES		    += "config_set_IFactory=#MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
+ALIASES		    += "config_get_IFactory=NO"
+
+ALIASES		    += "config_type_IBgError=Interface"
+ALIASES		    += "config_set_IBgError=#MqConfigSetBgError (ctx, fCreate, Data, fFree, fCopy)"
+ALIASES		    += "config_get_IBgError=NO"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=MqLinkCreate (ctx, args)"
+ALIASES		    += "LinkCreateChild=MqLinkCreateChild (ctx, parent, args)"
+
+
+ALIASES		    += "LinkDelete=MqLinkDelete(ctx)"
+ALIASES		    += "Exit=MqExit(ctx)"
+
+# SEND DATA
+ALIASES		    += "SendSTART=MqSendSTART(ctx)"
+ALIASES		    += "SendEND=MqSendEND(ctx,token)"
+ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,token,?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,token,fCallback,data,fFree)"
+ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
+ALIASES		    += "SendERROR=MqSendERROR(ctx)"
+ALIASES		    += "SendFTR=MqSendFTR(ctx,timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendEOF=MqSendEOF(ctx,timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "Send_TYPE=MqSend[TYPE](ctx,value)"
+ALIASES		    += "SendL_START=MqSendL_START(ctx)"
+ALIASES		    += "SendL_END=MqSendL_END(ctx)"
+
+# READ DATE
+ALIASES		    += "Read_TYPE=MqRead[TYPE](ctx)"
+ALIASES		    += "ReadU=MqReadU(ctx)"
+ALIASES		    += "ReadProxy=MqReadProxy(ctx, otherCtx)"
+ALIASES		    += "ReadGetNumItems=int: MqReadGetNumItems(ctx)"
+ALIASES		    += "ReadItemExists=bool: MqReadItemExists(ctx)"
+ALIASES		    += "ReadUndo=MqReadUndo(ctx)"
+ALIASES		    += "ReadL_START=MqReadL_START(ctx)"
+ALIASES		    += "ReadL_START2=MqReadL_START(ctx,buffer)"
+ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
+
+# ADDING SERVICES
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,fService,data,fFree)"
+ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,token)"
+ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEventFlag=MQ_WAIT"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx,id,argv)"
+ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx,id,slaveCtx)"
+ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx,id)"
+ALIASES		    += "SlaveGet=MqSlaveGet(ctx,id)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "BufferObject=<I>struct MqBufferS*</I>"
+ALIASES		    += "BufferGet_TYPE=MqBufferGet[TYPE](buffer)"
+ALIASES		    += "BufferType=buffer->type"
+
+# ERROR OBJECT
+ALIASES		    += "ErrorObject=<I>ctx</I>"
+ALIASES		    += "ErrorGetText=MQ_CST MqErrorGetText(ctx)"
+ALIASES		    += "ErrorGetNum=MQ_INT MqErrorGetNum(ctx)"
+ALIASES		    += "ErrorC=MqErrorC(ctx,prefix,errnum,message)"
+ALIASES		    += "ErrorSet=MqErrorSet(ctx,errnum,errorcode,message)"
+ALIASES		    += "ErrorReset=MqErrorReset(ctx)"
+ALIASES		    += "ErrorRaise=MqErrorRaise(ctx)"
+ALIASES		    += "ErrorPrint=MqErrorPrint(ctx)"
+
+

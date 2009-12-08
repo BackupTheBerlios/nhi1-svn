@@ -1,0 +1,11 @@
+> mono nothread/NHI1-0.1/theLink/tests/csserver.exe --tcp --host localhost --port 7791 --spawn
+> nothread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7791
+C> (client:10653) [2009-12-08:12-41-16] [0-0-0x61fbc0-main]: start: --------------------------------------
+C> (client:10653) [2009-12-08:12-41-16] [0-0-0x61fbc0-statistics]:                      MqSendEND:       4.16
+C> (client:10653) [2009-12-08:12-41-16] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:       8.71
+C> (client:10653) [2009-12-08:12-41-20] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      26.27
+C> (client:10653) [2009-12-08:12-41-23] [0-0-0x61fbc0-statistics]:                  parent create:   29093.65
+C> (client:10653) [2009-12-08:12-41-23] [0-0-0x61fbc0-statistics]:                  parent delete:    2647.31
+C> (client:10653) [2009-12-08:12-41-23] [0-0-0x61fbc0-statistics]:                   child create:     140.74
+C> (client:10653) [2009-12-08:12-41-23] [0-0-0x61fbc0-statistics]:                   child delete:      33.15
+C> (client:10653) [2009-12-08:12-41-23] [0-0-0x61fbc0-main]: end: ----------------------------------------

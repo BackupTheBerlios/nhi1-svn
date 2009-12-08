@@ -1,0 +1,78 @@
+#+
+#§  \file       theLink/tests/native.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C {^c[.]} ] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test native-2-($I|$B|$C|$S) {(MQ_WID to MQ_INT) fit max} \
+    -body           {
+      EchoL $FH_LAST ECOM SendO yes SendY 5 SendS -15 SendI 6383216 SendW -26273893030 SendC "Andreas Otto"
+    } \
+    -returnCodes    ok \
+    -result         {1 5 -15 6383216 -26273893030 {Andreas Otto}}
+ 
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+

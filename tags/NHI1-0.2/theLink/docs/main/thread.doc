@@ -1,0 +1,28 @@
+/** 
+\page thread using threads
+\section thread_toc Table Of Contents
+ - \ref thread_definition
+ - \ref thread_and_Tcl
+ - \ref thread_and_CSharp
+ - \ref thread_and_C
+ .
+\section thread_definition What are Threads?
+http://www.llnl.gov/computing/tutorials/workshops/workshop/pthreads/MAIN.html
+
+\section thread_and_Tcl threads and Tcl
+the \tclmsgque API is thread-safe
+
+\section thread_and_CSharp threads and CSharp
+the csharplibmsgque API is thread-safe
+
+\section thread_and_C threads and C
+the \libmsgque API is thread-safe if:
+  - a MUTEX lock is available for \ref MqLinkCreate
+  - a MUTEX lock is available for \ref MqLinkDelete
+  .
+*/
+
+
+
+
+

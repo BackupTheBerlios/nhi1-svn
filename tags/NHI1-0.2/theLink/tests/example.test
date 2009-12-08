@@ -1,0 +1,270 @@
+#+
+#§  \file       theLink/tests/example.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+if {$env(USE_REMOTE)} return
+
+SetConstraints all
+
+##
+## -----------------------------------------------------------------------
+## example test:
+##
+
+test example-1 {check the example 1 from the tclmsgque man page} \
+    -constraints    tcl \
+    -setup {
+	set manserver [makeFile {
+	    package require TclMsgque
+	    proc Eval {ctx} {
+	      $ctx SendSTART
+	      $ctx SendC [eval [$ctx ReadC]]
+	      $ctx SendRETURN
+	    }
+	    proc ServerConfig {ctx} {
+	      $ctx ServiceCreate EVAL Eval
+	    }
+	    set srv [tclmsgque MqS]
+	    $srv ConfigSetName MyEval
+	    $srv ConfigSetServerSetup ServerConfig
+	    if {[catch {
+	      $srv LinkCreate {*}$argv
+	      $srv ProcessEvent -wait FOREVER
+	    }]} {
+	      $srv ErrorSet
+	    }
+	    $srv Exit
+	    exit 0
+	} manserver.[pid]]
+	set manclient [makeFile {
+	    package require TclMsgque
+	    set MyCTX [tclmsgque MqS]
+	    $MyCTX LinkCreate @ [info nameofexecutable] [lindex $argv 0]
+	    $MyCTX SendSTART
+	    $MyCTX SendC {info level 1}
+	    $MyCTX SendEND_AND_WAIT EVAL
+	    puts [$MyCTX ReadC]
+	    rename $MyCTX ""
+	    exit 0
+	} manclient.[pid]]
+    } \
+    -body { 
+      Exec $TCLSH $manclient $manserver 
+    } \
+    -match glob \
+    -result {Eval <MqS-*>}
+
+test example-overview-1 {check the example 1 from the overview page} \
+    -constraints    c \
+    -body { Exec echo {hello world with text} | {*}[getATool split] -d " " @ cut -f 0,1 @ join -d : } \
+    -result {hello:world}
+
+test example-overview-1b {check the example 1 from the overview page} \
+    -constraints    c \
+    -body { Exec echo {hello world with text} | {*}[getATool split] -d " " @ {*}[getATool cut] -f 0,1 @ {*}[getATool join] -d : } \
+    -result {hello:world}
+
+test example-overview-1c {check the example 1 from the overview page} \
+    -constraints    c \
+    -body { Exec echo {hello world with text} | {*}[getATool split] -d " " @ {*}[getATool cut] -f 0,1 @ join -d : } \
+    -result {hello:world}
+
+test example-overview-1d {check the example 1 from the overview page} \
+    -constraints    c \
+    -body { Exec echo {hello world with text} | {*}[getATool split] -d " " --debug $env(TS_DEBUG) @ cut -f 0,1 @ {*}[getATool join] -d :} \
+    -result {hello:world}
+
+test example-overview-2 {check the example 2 from the overview page} \
+    -constraints    c \
+    -body { 
+	Exec echo "nobody+10+euro\nmanager+1000+dollar\nworker+100+pound" | \
+	    {*}[getATool split] -d "+" --debug $env(TS_DEBUG) @ sort -1 D @ join -d " : " -0 "position -> %-8s" \
+		-1 "amount = %7.2f" -2 "%s"
+    } \
+    -result {position -> nobody   : amount =   10.00 : euro
+position -> worker   : amount =  100.00 : pound
+position -> manager  : amount = 1000.00 : dollar}
+
+test example-overview-3 {check the example 3 from the overview page} \
+    -constraints    tcl \
+    -setup {
+        set total [makeFile {
+            package require TclMsgque
+	    set total 0
+            proc FTR {ctx} {
+		foreach {position amount currency} [$ctx ReadAll] break
+		switch -exact $currency {
+		    euro    {set exchange 1.3541}
+		    pound   {set exchange 1.9896}
+		    default {set exchange 1}
+		}
+		set amout [expr {$amount * $exchange}]
+		set currency dollar
+		set ::total [expr {$::total + $amout}]
+		$ctx SendSTART
+		$ctx SendC $position
+		$ctx SendD $amout
+		$ctx SendFTR
+            }
+	    proc EOF {ctx} {
+		$ctx SendSTART
+		$ctx SendC total
+		$ctx SendD $::total
+		$ctx SendFTR
+	    }
+	    set srv [tclmsgque MqS]
+	    $srv ConfigSetName total.tcl
+	    $srv ConfigSetFilterFTR FTR
+	    $srv ConfigSetFilterEOF EOF
+	    catch {
+	      $srv LinkCreate {*}$argv
+	      $srv ProcessEvent -wait FOREVER
+	    }
+	    $srv Exit
+        } total.tcl]
+    } \
+    -body { 
+	exec echo "nobody 10 euro\nmanager 1000 dollar\nworker 100 pound" | \
+	    {*}[getATool split] -d " " @ sort -1 D @ $TCLSH $total @ \
+		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"
+    } \
+    -result {nobody   : 13.54$
+worker   : 198.96$
+manager  : 1000.00$
+total    : 1212.50$}
+
+test example-overview-3b {check the example 3 from the overview page with error in tcl code} \
+    -constraints    tcl \
+    -setup {
+        set total [makeFile {
+            package require TclMsgque
+	    set total 0
+            proc FTR {ctx} {
+		foreach {position amount currency} [$ctx ReadAll] break
+		switch -exact $currency {
+		    euro    {set exchange 1.3541}
+		    pound   {set exchange 1.9896}
+		    default {set exchange 1}
+		}
+		set amout [expr {$amoun * $exchange}]
+		set currency dollar
+		set ::total [expr {$::total + $amout}]
+		$ctx SendSTART
+		$ctx SendC $position
+		$ctx SendD $amout
+		$ctx SendFTR
+            }
+	    proc EOF {ctx} {
+		$ctx SendSTART
+		$ctx SendC total
+		$ctx SendD $::total
+		$ctx SendFTR
+	    }
+	    set srv [tclmsgque MqS]
+	    $srv ConfigSetName total.tcl
+	    $srv ConfigSetFilterFTR FTR
+	    $srv ConfigSetFilterEOF EOF
+	    catch {
+	      $srv LinkCreate {*}$argv
+	      $srv ProcessEvent -wait FOREVER
+	    }
+	    $srv Exit
+        } total.tcl]
+    } \
+    -body { 
+	exec echo "nobody 10 euro\nmanager 1000 dollar\nworker 100 pound" | \
+	    {*}[getATool split] --debug $env(TS_DEBUG) -d " " @ sort -1 D @ $TCLSH $total @ \
+		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"
+    } \
+    -returnCodes error \
+    -match glob \
+    -result {C> (split) \[service-call-error] <Tok|_EOF> <Num|1>
+C> (sort) \[service-call-error] <Tok|_FTR> <Num|1>
+S> (total.tcl) \[ErrorSet] can't read "amoun": no such variable*}
+
+  foreach S [envGet SRV_LST] {
+
+test example-hlwo-1-($S) {hello world example} \
+  -body		{Example $S MyClient MyServer} \
+  -result	{Hello World}
+
+  }; # SRV_LST
+
+##
+## -----------------------------------------------------------------------
+## ALL lang's
+##
+
+set data1 [makeFile {1:2:3
+a:b:c} data1.[pid]]
+
+set data2 [makeFile {nobody 10 euro
+manager 1000 dollar
+worker 100 pound} data2.[pid]]
+
+foreach S [envGet SRV_LST] {
+
+test example-e-2-($S) {example from the manpage} \
+  -body		{Example $S mulclient mulserver} \
+  -match	glob \
+  -result	{81*841*}
+
+}; # SRV_LST
+
+foreach L [envGet LNG_LST] {
+
+test example-e-3-($L) {example from the manpage} \
+  -body         {Exec cat $data1 | \
+		    {*}[getATool split] -d : @ {*}[getExample manfilter.$L] @ {*}[getATool join] -d :} \
+  -result       {<1>:<2>:<3>
+<a>:<b>:<c>}
+
+}; # LNG_LST
+
+test example-total-tcl {total.tcl} \
+  -constraints	{tcl} \
+  -body         {Exec cat $data2 | \
+		  {*}[getATool split] -d " " @ sort -1 D @ {*}[getExample total.tcl] @ \
+		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"} \
+  -result       {nobody   : 13.54$
+worker   : 198.96$
+manager  : 1000.00$
+total    : 1212.50$}
+
+## testclient
+
+foreach S [envGet SRV_LST] {
+
+test example-t-1-($S) {testclient} \
+  -body		{Example $S testclient testserver} \
+  -result	{c0+0+-1+s0:
+c00+1+0+s00:
+c01+2+0+s01:
+c000+3+1+s000:
+c1+0+-1+s1:
+c10+1+0+s10:
+c100+2+1+s100:
+c101+3+1+s101:}
+
+}; # SRV_LST
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+

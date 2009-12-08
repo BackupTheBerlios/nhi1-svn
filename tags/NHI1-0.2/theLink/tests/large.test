@@ -1,0 +1,111 @@
+#+
+#§  \file       theLink/tests/large.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+proc Helper {str} {
+    return [join [lsort -unique [split $str {}]] {}]
+}
+set DATC    0
+set DAT0    [string repeat $DATC 1000]
+set DATU0   $DATC
+set DATL0   [string length $DAT0]
+set DAT1    [string repeat $DAT0 10]
+set DAT1    [string repeat $DAT1 10]
+set DAT1    [string range [string repeat $DAT1 10] 0 end-1]
+set DATU1   $DATC
+set DATL1   [string length $DAT1]
+set DAT2    ${DAT1}xy
+set DATU2   ${DATC}xy
+set DATL2   [string length $DAT2]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filterGet SRV_LST $C] {
+ 
+##
+## -----------------------------------------------------------------------
+## very-large-data
+##  
+ 
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test large-0-($I|$B|$C|$S) {large 0 binary data} \
+    -body           {
+        set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT0]
+        list [string length $ret] [Helper $ret]
+    } \
+    -returnCodes    ok \
+    -result         [list $DATL0 $DATU0]
+
+test large-1-($I|$B|$C|$S) {large 1 binary data} \
+    -body           {
+        set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT1]
+        list [string length $ret] [Helper $ret]
+    } \
+    -returnCodes    ok \
+    -result         [list $DATL1 $DATU1]
+
+test large-2-($I|$B|$C|$S) {large 2 binary data} \
+    -body       {
+	set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT2]
+	list [string length $ret] [Helper $ret]
+    } \
+    -returnCodes    ok \
+    -result     [list $DATL2 $DATU2]
+
+# cleanup ---------------------------
+
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+

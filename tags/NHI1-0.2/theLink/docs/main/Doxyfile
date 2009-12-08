@@ -1,0 +1,57 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+INPUT		    =	.
+FILE_PATTERNS	    =	*.doc
+EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $(SRCDIR)/docs/main \
+			$(SRCDIR)/docs/man $(SRCDIR)/tests $(SRCDIR)/tests/docs \
+			$(SRCDIR)/../performance/docs \
+			$(SRCDIR)/example/c \
+			$(SRCDIR)/example/cc \
+			$(SRCDIR)/example/tcl \
+			$(SRCDIR)/example/python \
+			$(SRCDIR)/example/java \
+			$(SRCDIR)/example/csharp \
+			$(SRCDIR)/example/perl \
+			$(SRCDIR)/example/vb \
+
+OUTPUT_DIRECTORY    =	$(DOCDIR)/..
+
+TAGFILES	    =	$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_private \
+			$(DOCDIR)/../libmsgque_public/libmsgque_public.tag=libmsgque_public \
+			$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
+			\
+			$(DOCDIR)/../tclmsgque/tclmsgque.tag=tclmsgque \
+			$(DOCDIR)/../tclmsgque_private/tclmsgque_private.tag=tclmsgque_private \
+			\
+			$(DOCDIR)/../javamsgque/javamsgque.tag=javamsgque \
+			$(DOCDIR)/../javamsgque_public/javamsgque_public.tag=javamsgque_public \
+			$(DOCDIR)/../javamsgque_private/javamsgque_private.tag=javamsgque_private \
+			\
+			$(DOCDIR)/../csmsgque/csmsgque.tag=csmsgque \
+			$(DOCDIR)/../csmsgque_public/csmsgque_public.tag=csmsgque_public \
+			\
+			$(DOCDIR)/../ccmsgque/ccmsgque.tag=ccmsgque \
+			$(DOCDIR)/../ccmsgque_public/ccmsgque_public.tag=ccmsgque_public \
+			\
+			$(DOCDIR)/../pymsgque/pymsgque.tag=pymsgque \
+			$(DOCDIR)/../pymsgque_private/pymsgque_private.tag=pymsgque_private \
+			\
+			$(DOCDIR)/../perlmsgque/perlmsgque.tag=perlmsgque \
+			\
+			$(DOCDIR)/../vbmsgque/vbmsgque.tag=vbmsgque \
+			
+GENERATE_TAGFILE    =

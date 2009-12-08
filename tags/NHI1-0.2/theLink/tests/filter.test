@@ -1,0 +1,73 @@
+#+
+#§  \file       theLink/tests/filter.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+SetConstraints all
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set data1 [makeFile {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46} data1.[pid]]
+
+##
+## -----------------------------------------------------------------------
+## filter test
+##
+
+foreach L [envGet LNG_LST] {
+
+test filter-1-$L {filter + eof ok} \
+    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getExample Filter1.$L] @ {*}[getATool join] -d :} \
+    -result	{<xa>:<24>:<12345678987654321>:<5.78>
+<cg>:<89>:<98765432123456789>:<3.46>}
+
+test filter-2-$L {filter with tcl error} \
+    -body       {Exec cat $data1 | {*}[getATool split] --debug 0 -d : @ {*}[getExample Filter2.$L] @ \
+			{*}[getATool join] -d :} \
+    -match	glob \
+    -result	{CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
+S> (filter) \[*Error*] *my error*}
+
+test filter-3-$L {filter with no config.fFTR} \
+    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getServer $L.pipe ]} \
+    -match	glob \
+    -result	{CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|_FTR> <Num|220>
+S> (server) \[*pTokenCheckSystem] got an '_FTR' system token but no filter was defined*}
+
+test filter-4-$L {filter with default} \
+    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getServer $L.pipe ] @ {*}[getATool join] -d :} \
+    -match      glob \
+    -result     {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46}
+
+
+} ; # end "F"
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+
+

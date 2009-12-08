@@ -1,0 +1,122 @@
+#+
+#§  \file       theLink/tests/init.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+proc MapServer {t} {
+  set RET [list]
+  foreach i [getServer $t] {
+    lappend RET SendC $i
+  }
+  return $RET
+}
+
+
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      switch -glob $S {
+	python*	  { set SRV [MapServer python ] }
+	csharp*	  { set SRV [MapServer csharp ] }
+	java*	  { set SRV [MapServer java   ]	}
+	tcl*	  { set SRV [MapServer tcl    ] }
+	cc*	  { set SRV [MapServer cc     ] }
+	perl*	  { set SRV [MapServer perl   ] }
+	vb*	  { set SRV [MapServer vb     ] }
+	c*	  { set SRV [MapServer c      ] }
+      }
+
+      SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## main
+##
+
+# tests ----------------------------
+
+test init-1-($I|$B|$C|$S) {init $bin_server.exe} \
+    -setup	    {Setup $I $B $C $S} \
+    -body           {
+      Call $FH_LAST SendEND_AND_WAIT INIT {*}$SRV
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC WAIT SendI 0 SendI 333
+      set ret [$FH_LAST ReadI]
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
+      set ret
+    } \
+    -cleanup	    {Cleanup} \
+    -returnCodes    ok \
+    -result         334
+
+test init-3-($I|$B|$C|$S) {init WRONG_SERVER} \
+    -constraints    local \
+    -setup	    {Setup $I $B $C $S} \
+    -body           {
+      Call $FH_LAST SendEND_AND_WAIT INIT {*}[lreplace $SRV 1 1 WRONG_SERVER]
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC WAIT SendI 0 SendI 333
+      set ret [$FH_LAST ReadI]
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
+      set ret
+    } \
+    -cleanup	    {
+	Call $FH_LAST SendEND_AND_WAIT INIT {*}$SRV
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|204>*
+C> (cl-0) \[*] can not start server 'WRONG_SERVER'*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+

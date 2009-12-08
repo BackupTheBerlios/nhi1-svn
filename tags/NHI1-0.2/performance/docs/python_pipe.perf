@@ -1,0 +1,10 @@
+> nothread/NHI1-0.1/theLink/tests/client --all @ python nothread/NHI1-0.1/theLink/tests/server.py
+C> (client:9556) [2009-12-08:12-40-19] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:9556) [2009-12-08:12-40-19] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.58
+C> (client:9556) [2009-12-08:12-40-20] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      16.79
+C> (client:9556) [2009-12-08:12-40-23] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      23.23
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                  parent create:   29980.85
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                  parent delete:    2194.09
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                   child create:     125.06
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-statistics]:                   child delete:      23.76
+C> (client:9556) [2009-12-08:12-40-26] [0-0-0x61f9a0-main]: end: ----------------------------------------
