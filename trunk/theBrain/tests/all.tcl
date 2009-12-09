@@ -1,3 +1,4 @@
+#!/usr/bin/env tclsh
 #+
 #§  \file       theBrain/tests/all.tcl
 #§  \brief      \$Id$
