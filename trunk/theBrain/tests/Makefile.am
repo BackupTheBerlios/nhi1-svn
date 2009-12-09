@@ -10,9 +10,10 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#TESTS = $(srcdir)/all.tcl $(srcdir)/util_test.sh $(srcdir)/hdb_test.sh
+#TESTS = $(srcdir)/all.tcl $(srcdir)/util_test.sh $(srcdir)/hdb_test.sh \
+#	  $(srcdir)/bdb_test.sh
 
-TESTS = $(srcdir)/hdb_test.sh
+TESTS = $(srcdir)/bdb_test.sh
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.bash $(srcdir)/*.env
 
@@ -25,7 +26,8 @@ client_LDADD = -lm ../../theLink/libmsgque/libtmp.la
 ## test data
 
 check_PROGRAMS = tcamgr tcutest tcumttest tcucodec \
-		  tchtest tchmgr tchmttest 
+		  tchmgr tchtest tchmttest \
+		    tcbmgr tcbtest tcbmttest
 
 ## util progs
 tcamgr_SOURCES = tcamgr.c
@@ -58,3 +60,16 @@ tchtest_LDADD = ../libbrain/libbrain.la
 tchmttest_SOURCES = tchmttest.c
 tchmttest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
 tchmttest_LDADD = ../libbrain/libbrain.la
+
+## bdb progs
+tcbmgr_SOURCES = tcbmgr.c
+tcbmgr_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
+tcbmgr_LDADD = ../libbrain/libbrain.la
+
+tcbtest_SOURCES = tcbtest.c
+tcbtest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
+tcbtest_LDADD = ../libbrain/libbrain.la
+
+tcbmttest_SOURCES = tcbmttest.c
+tcbmttest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
+tcbmttest_LDADD = ../libbrain/libbrain.la

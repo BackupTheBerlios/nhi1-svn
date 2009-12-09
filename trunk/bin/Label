@@ -65,7 +65,7 @@ array set LABELIGNORE {
     ./theLink/phpmsgque		{ * }
 
     ./theBrain			{ Makefile.in Makefile }
-    ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc*.c check.* }
+    ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc* check.* }
     ./theBrain/libbrain		{ *.sw* *.c *.h *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
     ./theBrain/theBrain		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags theBrain }
 
