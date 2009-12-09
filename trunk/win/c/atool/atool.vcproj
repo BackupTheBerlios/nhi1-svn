@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\acmds"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\acmds"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
@@ -87,7 +87,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\acmds"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\acmds"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops"
@@ -172,27 +172,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\acut.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\acut.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\ajoin.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\ajoin.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\asort.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\asort.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\asplit.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\asplit.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\atool.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\atool.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\acmds\optionL.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\acmds\optionL.c"
 				>
 			</File>
 		</Filter>
@@ -202,7 +202,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\acmds\optionL.h"
+				RelativePath="..\..\theLink\acmds\optionL.h"
 				>
 			</File>
 		</Filter>

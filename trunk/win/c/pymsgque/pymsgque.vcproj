@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\pymsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\pymsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
@@ -89,7 +89,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\pymsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\pymsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\win.vsprops"
@@ -176,47 +176,47 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\config_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\config_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\context_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\context_python.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\pymsgque\error_python.c"
+				RelativePath="..\..\..\theLink\pymsgque\error_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\misc_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\misc_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\MqBufferS_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\MqBufferS_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\MqS_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\MqS_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\msgque_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\msgque_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\read_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\read_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\send_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\send_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\service_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\service_python.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\slave_python.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\slave_python.c"
 				>
 			</File>
 		</Filter>
@@ -226,7 +226,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\pymsgque\msgque_python.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\msgque_python.h"
 				>
 			</File>
 		</Filter>

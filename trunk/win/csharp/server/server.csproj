@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\tests\</OutputPath>
+    <OutputPath>..\..\..\theLink\tests\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,7 +53,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\tests\csserver.cs">
+    <Compile Include="..\..\..\theLink\tests\csserver.cs">
       <Link>csserver.cs</Link>
     </Compile>
   </ItemGroup>

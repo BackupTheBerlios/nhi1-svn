@@ -32,7 +32,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\example\vb\</OutputPath>
+    <OutputPath>..\..\..\theLink\example\vb\</OutputPath>
     <DocumentationFile>MyServer.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
@@ -66,7 +66,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\example\vb\MyServer.vb">
+    <Compile Include="..\..\..\theLink\example\vb\MyServer.vb">
       <Link>MyServer.vb</Link>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />

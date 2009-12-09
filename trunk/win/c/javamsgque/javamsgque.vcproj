@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\javamsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\javamsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\java.vsprops;..\..\win\wind.vsprops"
@@ -88,7 +88,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\javamsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\javamsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\java.vsprops"
@@ -172,39 +172,39 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\config_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\config_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\context_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\context_java.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\javamsgque\error_java.c"
+				RelativePath="..\..\..\theLink\javamsgque\error_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\misc_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\misc_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\MqBufferS_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\MqBufferS_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\read_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\read_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\send_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\send_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\service_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\service_java.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\slave_java.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\slave_java.c"
 				>
 			</File>
 		</Filter>
@@ -214,23 +214,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\context_java.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\context_java.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\javamsgque_MqBufferS.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqBufferS.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\javamsgque_MqS.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqS.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\javamsgque_MqS_WAIT.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqS_WAIT.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\javamsgque\misc_java.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\misc_java.h"
 				>
 			</File>
 		</Filter>

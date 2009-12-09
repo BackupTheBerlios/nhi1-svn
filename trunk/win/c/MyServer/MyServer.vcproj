@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\c"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
@@ -87,7 +87,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\example\c"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\c"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops"
@@ -172,7 +172,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\example\c\MyServer.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\example\c\MyServer.c"
 				>
 			</File>
 		</Filter>

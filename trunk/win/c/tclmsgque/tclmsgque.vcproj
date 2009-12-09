@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\tclmsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\tclmsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\tclmsgque&quot;"
+				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\theLink\tclmsgque&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;TCLMSGQUE_EXPORTS;MQ_SHARED_IS_DLL;USE_TCL_STUBS"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\tclmsgque\.libs"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\tclmsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\..\win\win.vsprops"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\tclmsgque&quot;"
+				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\theLink\tclmsgque&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;TCLMSGQUE_EXPORTS;MQ_SHARED_IS_DLL;USE_TCL_STUBS"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -179,43 +179,43 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\config_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\config_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\context_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\context_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\error_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\error_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\misc_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\misc_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\MqBufferS_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\MqBufferS_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\msgque_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\msgque_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\read_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\read_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\send_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\send_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\service_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\service_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\slave_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\slave_tcl.c"
 				>
 			</File>
 		</Filter>
@@ -225,7 +225,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\tclmsgque\msgque_tcl.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\msgque_tcl.h"
 				>
 			</File>
 		</Filter>

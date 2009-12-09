@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\csmsgque\</OutputPath>
+    <OutputPath>..\..\..\theLink\csmsgque\</OutputPath>
     <DefineConstants>TRACE;_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,43 +47,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\csmsgque\buffer.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\buffer.cs">
       <Link>buffer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\bufferL.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\bufferL.cs">
       <Link>bufferL.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\config.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\config.cs">
       <Link>config.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\context.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\context.cs">
       <Link>context.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\csmsgque.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\csmsgque.cs">
       <Link>csmsgque.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\error.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\error.cs">
       <Link>error.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\misc.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\misc.cs">
       <Link>misc.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\pointer.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\pointer.cs">
       <Link>pointer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\read.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\read.cs">
       <Link>read.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\send.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\send.cs">
       <Link>send.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\service.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\service.cs">
       <Link>service.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\slave.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\slave.cs">
       <Link>slave.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\csmsgque\sys.cs">
+    <Compile Include="..\..\..\theLink\csmsgque\sys.cs">
       <Link>sys.cs</Link>
     </Compile>
   </ItemGroup>

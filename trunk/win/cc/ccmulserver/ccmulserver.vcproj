@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)/example/cc"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\cc"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops;..\ccmsgque\ccmsgque.vsprops"
@@ -89,7 +89,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\example\cc"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\cc"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\ccmsgque\ccmsgque.vsprops"
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\example\cc\mulserver.cc"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\example\cc\mulserver.cc"
 				>
 			</File>
 		</Filter>
