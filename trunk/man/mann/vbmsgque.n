@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "4 Dec 2009" "Version 0.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "8 Dec 2009" "Version 0.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

@@ -1,4 +1,4 @@
-.TH "ccmsgque Tutorial" n "4 Dec 2009" "Version 0.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque Tutorial" n "8 Dec 2009" "Version 0.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -53,7 +53,7 @@ noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilt
         Filter3$(EXEEXT)
 
 AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-LDADD = ../../ccmsgque/*.lo
+LDADD = ../../ccmsgque/libtmp.la
 .fi
 .PP
  ... 

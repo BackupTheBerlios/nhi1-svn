@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "4 Dec 2009" "Version 0.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "8 Dec 2009" "Version 0.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -58,10 +58,10 @@ noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
 .PP
 .nf
 MyClient_SOURCES = MyClient.c
-MyClient_LDADD = -lm ../../libmsgque/*.lo
+MyClient_LDADD = -lm ../../libmsgque/libtmp.la
 
 MyServer_SOURCES = MyServer.c
-MyServer_LDADD = -lm ../../libmsgque/*.lo
+MyServer_LDADD = -lm ../../libmsgque/libtmp.la
 
 .fi
 .PP

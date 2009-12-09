@@ -26,8 +26,7 @@ noinst_LTLIBRARIES = libbrain.la
 libbrain_la_SOURCES = md5.c md5.h myconf.c  myconf.h  tcadb.c  tcadb.h  tcbdb.c  \
   tcbdb.h  tcfdb.c  tcfdb.h  tchdb.c  tchdb.h  tctdb.c  tctdb.h  tcutil.c  tcutil.h
 
-libbrain_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS) -D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__ \
-			-pedantic -fsigned-char $(BRAIN_CFLAGS)
+libbrain_la_CPPFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(BRAIN_CPPFLAGS)
 libbrain_la_LDFLAGS = -no-undefined
 libbrain_la_LIBADD = $(BRAIN_LIBADD)
 

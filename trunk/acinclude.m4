@@ -123,7 +123,8 @@ AC_DEFUN([SC_SET_VPATH_HOOK], [
 
 AC_DEFUN([SC_ENABLE_SYMBOLS], [
     AC_MSG_CHECKING([for build with symbols])
-    AC_ARG_ENABLE(symbols, [  --enable-symbols        build with debugging symbols [[--disable-symbols]]], [symbol=yes], [symbol=no])
+    AC_ARG_ENABLE(symbols,
+	AC_HELP_STRING([--enable-symbols], [build with debugging support]))
     if test "$symbol" = "yes"; then
       CFLAGS="-g $CFLAGS"
       CXXFLAGS="-g $CXXFLAGS"
@@ -391,9 +392,10 @@ AC_DEFUN([AX_TLS], [
 
 AC_DEFUN([SC_ENABLE_THREADS], [
   AC_MSG_CHECKING([for build with thread])
-  AC_ARG_ENABLE(threads, [  --enable-threads        build with thread support [[--disable-threads]]], [sc_threads=yes], [sc_threads=no])
-  AC_MSG_RESULT($sc_threads)
-  if test "$sc_threads" = "yes"; then
+  AC_ARG_ENABLE(threads,
+    AC_HELP_STRING([--enable-threads], [build with thread support]))
+  AC_MSG_RESULT($enable_threads)
+  if test "$enable_threads" = "yes"; then
     # we use native windows threads
     if test "$build_os" != "cygwin" ; then
       ACX_PTHREAD
@@ -425,9 +427,10 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 
 AC_DEFUN([SC_ENABLE_JAVA], [
   AC_MSG_CHECKING([for build with java])
-  AC_ARG_ENABLE(java, [  --enable-java           build with java support [[--disable-java]]], [sc_java=yes], [sc_java=no])
-  AC_MSG_RESULT($sc_java)
-  if test x$sc_java = xyes; then
+  AC_ARG_ENABLE(java,
+      AC_HELP_STRING([--enable-java], [build theLink with JAVA support]))
+  AC_MSG_RESULT($enable_java)
+  if test x$enable_java = xyes; then
     m4_include([m4/ac_java.m4])
     #------------------------------------
     AC_MSG_CHECKING(get java support);echo
@@ -446,7 +449,7 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     AC_PROG_JAR
     AC_SUBST([JAVA_CPPFLAGS])
   fi
-  AM_CONDITIONAL([USE_JAVA], [test x$sc_java = xyes])
+  AM_CONDITIONAL([USE_JAVA], [test x$enable_java = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -463,9 +466,10 @@ AC_DEFUN([SC_ENABLE_JAVA], [
 
 AC_DEFUN([SC_ENABLE_PYTHON], [
   AC_MSG_CHECKING([for build with python])
-  AC_ARG_ENABLE(python, [  --enable-python         build with python support [[--disable-python]]], [sc_python=yes], [sc_python=no])
-  AC_MSG_RESULT($sc_python)
-  if test x$sc_python = xyes; then
+  AC_ARG_ENABLE(python,
+      AC_HELP_STRING([--enable-python], [build theLink with PYTHON support]))
+  AC_MSG_RESULT($enable_python)
+  if test x$enable_python = xyes; then
     m4_include([m4/ac_python_devel.m4])
     #------------------------------------
     AC_MSG_CHECKING(get python support);echo
@@ -473,7 +477,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
     AC_PYTHON_DEVEL([>= '3.0'])
     #AM_PATH_PYTHON([3.0])
   fi
-  AM_CONDITIONAL([USE_PYTHON], [test x$sc_python = xyes])
+  AM_CONDITIONAL([USE_PYTHON], [test x$enable_python = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -491,9 +495,10 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 AC_DEFUN([SC_ENABLE_CSHARP], [
   AC_PROG_AWK
   AC_MSG_CHECKING([for build with csharp])
-  AC_ARG_ENABLE(csharp, [  --enable-csharp         build with C[#] support [[--disable-csharp]]], [sc_csharp=yes], [sc_csharp=no])
-  AC_MSG_RESULT($sc_csharp)
-  if test x$sc_csharp = xyes; then
+  AC_ARG_ENABLE(csharp,
+      AC_HELP_STRING([--enable-csharp], [build theLink with C[#] support]))
+  AC_MSG_RESULT($enable_csharp)
+  if test x$enable_csharp = xyes; then
     AC_ARG_VAR( [CSCOMP], [C# compiler])
     AC_ARG_VAR( [CLREXEC], [CLR runtime])
     AC_PATH_PROGS( [CSCOMP], [gmcs] )
@@ -508,8 +513,8 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
       AC_MSG_ERROR([mono version have to be >= 2.4])
     fi
   fi
-  AC_SUBST([USE_CSHARP], $sc_csharp)
-  AM_CONDITIONAL([USE_CSHARP], [test x$sc_csharp = xyes])
+  AC_SUBST([USE_CSHARP], $enable_csharp)
+  AM_CONDITIONAL([USE_CSHARP], [test x$enable_csharp = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -526,10 +531,11 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
 
 AC_DEFUN([SC_ENABLE_VB], [
   AC_MSG_CHECKING([for build with VB])
-  AC_ARG_ENABLE(vb, [  --enable-vb             build with VB support [[--disable-vb]]], [sc_vb=yes], [sc_vb=no])
-  AC_MSG_RESULT($sc_vb)
-  if test x$sc_vb = xyes; then
-    if test x$sc_csharp = no ; then
+  AC_ARG_ENABLE(vb,
+      AC_HELP_STRING([--enable-vb], [build theLink with VB support]))
+  AC_MSG_RESULT($enable_vb)
+  if test x$enable_vb = xyes; then
+    if test x$enable_csharp = no ; then
       AC_MSG_ERROR([a VisualBasic build "--enable-vb requires a C+ build "--enable-csharp" too])
     fi
     AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
@@ -538,8 +544,8 @@ AC_DEFUN([SC_ENABLE_VB], [
       AC_MSG_ERROR([unable to find VisualBasic compiler 'vbnc'])
     fi
   fi
-  AC_SUBST([USE_VB], $sc_vb)
-  AM_CONDITIONAL([USE_VB], [test x$sc_vb = xyes])
+  AC_SUBST([USE_VB], $enable_vb)
+  AM_CONDITIONAL([USE_VB], [test x$enable_vb = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -556,13 +562,14 @@ AC_DEFUN([SC_ENABLE_VB], [
 
 AC_DEFUN([SC_ENABLE_CXX], [
   AC_MSG_CHECKING([for build with C++])
-  AC_ARG_ENABLE(cxx, [  --enable-cxx            build with C[++] support [[--disable-cxx]]], [sc_cxx=yes], [sc_cxx=no])
-  AC_MSG_RESULT($sc_cxx)
-  if test x$sc_cxx = xyes; then
+  AC_ARG_ENABLE(cxx,
+      AC_HELP_STRING([--enable-cxx], [build theLink with C[++] support]))
+  AC_MSG_RESULT($enable_cxx)
+  if test x$enable_cxx = xyes; then
     AC_PROG_CXX
   fi
-  AC_SUBST([USE_CXX], $sc_cxx)
-  AM_CONDITIONAL([USE_CXX], [test x$sc_cxx = xyes])
+  AC_SUBST([USE_CXX], $enable_cxx)
+  AM_CONDITIONAL([USE_CXX], [test x$enable_cxx = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -579,9 +586,10 @@ AC_DEFUN([SC_ENABLE_CXX], [
 
 AC_DEFUN([SC_ENABLE_PHP], [
   AC_MSG_CHECKING([for build with PHP])
-  AC_ARG_ENABLE(php, [  --enable-php            build with PHP support [[--disable-php]]], [sc_php=yes], [sc_php=no])
-  AC_MSG_RESULT($sc_php)
-  if test x$sc_php = xyes; then
+  AC_ARG_ENABLE(php,
+      AC_HELP_STRING([--enable-php], [build theLink with PHP support]))
+  AC_MSG_RESULT($enable_php)
+  if test x$enable_php = xyes; then
     AC_MSG_ERROR([Sorry, PHP was !not! able to provide a useable documentataion])
     #AC_PATH_PROGS([PHPSH], [php]) 
     #AC_PATH_PROGS([PHPCONFIG], [php-config]) 
@@ -590,7 +598,7 @@ AC_DEFUN([SC_ENABLE_PHP], [
     #PHP_LDFLAGS=`$PHPCONFIG --ldflags`
     #AC_SUBST([PHP_LDFLAGS])
   fi
-    AM_CONDITIONAL([USE_PHP], [test x$sc_php = xyes])
+    AM_CONDITIONAL([USE_PHP], [test x$enable_php = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -607,13 +615,14 @@ AC_DEFUN([SC_ENABLE_PHP], [
 
 AC_DEFUN([SC_ENABLE_PERL], [
   AC_MSG_CHECKING([for build with PERL])
-  AC_ARG_ENABLE(perl, [  --enable-perl           build with PERL support [[--disable-perl]]], [sc_perl=yes], [sc_perl=no])
-  AC_MSG_RESULT($sc_perl)
-  if test x$sc_perl = xyes; then
+  AC_ARG_ENABLE(perl,
+      AC_HELP_STRING([--enable-perl], [build theLink with PERL support]))
+  AC_MSG_RESULT($enable_perl)
+  if test x$enable_perl = xyes; then
     AC_ARG_VAR([PERL], [perl runtime])
     AC_PATH_PROGS([PERL], [perl]) 
   fi
-  AM_CONDITIONAL([USE_PERL], [test x$sc_perl = xyes])
+  AM_CONDITIONAL([USE_PERL], [test x$enable_perl = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -630,9 +639,10 @@ AC_DEFUN([SC_ENABLE_PERL], [
 
 AC_DEFUN([SC_ENABLE_TCL], [
   AC_MSG_CHECKING([for build with TCL])
-  AC_ARG_ENABLE(tcl, [  --enable-tcl            build with TCL support [[--disable-tcl]]], [sc_tcl=yes], [sc_tcl=no])
-  AC_MSG_RESULT($sc_tcl)
-  if test x$sc_tcl = xyes; then
+  AC_ARG_ENABLE(tcl, 
+      AC_HELP_STRING([--enable-tcl], [build theLink with TCL support]))
+  AC_MSG_RESULT($enable_tcl)
+  if test x$enable_tcl = xyes; then
     AC_ARG_VAR([TCLSH], [tcl runtime])
     AC_PATH_PROGS( [TCLSH], [tclsh85 tclsh85g tclsh8.5 tclsh] ) 
     AC_SUBST([TCLBINDIR], [$(dirname $TCLSH)])
@@ -684,7 +694,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 	AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
     fi
   fi
-  AM_CONDITIONAL([USE_TCL], [test x$sc_tcl = xyes])
+  AM_CONDITIONAL([USE_TCL], [test x$enable_tcl = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -700,18 +710,63 @@ AC_DEFUN([SC_ENABLE_TCL], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_BRAIN], [
-  AC_MSG_CHECKING([for build with BRAIN (only on UNIX)])
-  AC_ARG_ENABLE(brain, [  --enable-brain          build with BRAIN database support [[--disable-brain]]], [sc_brain=yes], [sc_brain=no])
-  AC_MSG_RESULT($sc_brain)
-  if test x$sc_brain = xyes; then
+  AC_MSG_CHECKING([for build with theBrain (only on UNIX)])
+  AC_ARG_ENABLE(brain,
+      AC_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]))
+  AC_MSG_RESULT($enable_brain)
+  if test x$enable_brain = xyes; then
+    BRAIN_CPPFLAGS="-D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__ -pedantic -fsigned-char"
+    ## check endian
+    AC_C_BIGENDIAN(BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYBIGEND")
+    # Fastest mode
+    AC_ARG_ENABLE(fastest,
+      AC_HELP_STRING([--enable-fastest], [build theBrain for fastest run]))
+    if test "$enable_fastest" = "yes"
+    then
+      BRAIN_LIBOBJFILES="tokyocabinet_all.o"
+      BRAIN_CPPFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -fomit-frame-pointer -fforce-addr -minline-all-stringops"
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYFASTEST"
+    fi
+
+    # 64-bit offset mode
+    AC_ARG_ENABLE(off64,
+      AC_HELP_STRING([--enable-off64], [build theBrain with 64-bit file offset on 32-bit system]))
+    if test "$enable_off64" = "yes"
+    then
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_FILE_OFFSET_BITS=64"
+    fi
+
+    # Swapping byte-orders mode
+    AC_ARG_ENABLE(swab,
+      AC_HELP_STRING([--enable-swab], [build theBrain for swapping byte-orders]))
+    if test "$enable_swab" = "yes"
+    then
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYSWAB"
+    fi
+
+    # Micro yield mode
+    AC_ARG_ENABLE(uyield,
+      AC_HELP_STRING([--enable-uyield], [build theBrain for detecting race conditions]))
+    if test "$enable_uyield" = "yes"
+    then
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYMICROYIELD"
+    fi
+    # Disable the unified buffer cache assumption
+    AC_ARG_ENABLE(ubc,
+      AC_HELP_STRING([--disable-ubc], [build theBrain without the unified buffer cache assumption]))
+    if test "$enable_ubc" = "no"
+    then
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOUBC"
+    fi
     ## check for thread support
-    if test "$sc_threads" = "yes" ; then
+    if test "$enable_threads" = "yes" ; then
       AC_CHECK_LIB(rt, main,
 	[BRAIN_LIBADD="$BRAIN_LIBADD -lrt"], 
 	[AC_MSG_FAILURE([realtime library '-lrt' not found])]
       )
     else
-      BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOPTHREAD"
+      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOPTHREAD"
     fi
     ## -lm -lc
     AC_CHECK_LIB(m, main,
@@ -725,31 +780,31 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
     ## check for LZMA
     AC_CHECK_LIB(lzma, main,
       [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
-      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYEXLZMA"],
+      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYEXLZMA"],
     )
     ## check for LZO
     AC_CHECK_LIB(lzma, main,
       [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
-      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYEXLZO"],
+      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYEXLZO"],
     )
     ## check for bzip
-    ##AC_CHECK_HEADER([bzlib.h]
     AC_CHECK_LIB(z, main,
       [BRAIN_LIBADD="$BRAIN_LIBADD -lz"], 
-      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOBZIP"]
+      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOBZIP"]
     )
     ##AC_CHECK_HEADER([zlib.h]
     AC_CHECK_LIB(bz2, main,
       [BRAIN_LIBADD="$BRAIN_LIBADD -lbz2"], 
-      [BRAIN_CFLAGS="$BRAIN_CFLAGS -D_MYNOZLIB"]
+      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOZLIB"]
     )
-    AC_SUBST([BRAIN_CFLAGS])
+    AC_SUBST([BRAIN_CPPFLAGS])
     AC_SUBST([BRAIN_LIBADD])
   fi
-  AC_SUBST([USE_BRAIN], $sc_brain)
-  AM_CONDITIONAL([USE_BRAIN], [test x$sc_brain = xyes])
+  AC_SUBST([USE_BRAIN], $enable_brain)
+  AM_CONDITIONAL([USE_BRAIN], [test x$enable_brain = xyes])
 ])
 
 #------------------------------------------------------------------------
 # include additional macros --
 #------------------------------------------------------------------------
+
