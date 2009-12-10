@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-noinst_LTLIBRARIES = libbrain.la
+noinst_LTLIBRARIES = libtmp.la
 
 # ccache gcc -c -I. -I/home/dev1usr/ext/x86_64-suse-linux/thread/include -I/home/dev1usr/include -I/usr/local/include 
 # -DNDEBUG 
@@ -23,11 +23,11 @@ noinst_LTLIBRARIES = libbrain.la
 # -D_TC_APPLIBS="\"-L/home/dev1usr/ext/x86_64-suse-linux/thread/lib 
 # -ltokyocabinet -lbz2 -lz -lrt -lpthread -lm -lc \"" -g -O2 -std=c99 -Wall -fPIC -pedantic -fsigned-char -g -O0 tcadb.c
 
-libbrain_la_SOURCES = md5.c md5.h myconf.c  myconf.h  tcadb.c  tcadb.h  tcbdb.c  \
+libtmp_la_SOURCES = md5.c md5.h myconf.c  myconf.h  tcadb.c  tcadb.h  tcbdb.c  \
   tcbdb.h  tcfdb.c  tcfdb.h  tchdb.c  tchdb.h  tctdb.c  tctdb.h  tcutil.c  tcutil.h
 
-libbrain_la_CPPFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(BRAIN_CPPFLAGS)
-libbrain_la_LDFLAGS = -no-undefined
-libbrain_la_LIBADD = $(BRAIN_LIBADD)
+libtmp_la_CPPFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(BRAIN_CPPFLAGS)
+libtmp_la_LDFLAGS = -no-undefined
+libtmp_la_LIBADD = $(BRAIN_LIBADD)
 
 #include_HEADERS = tcadb.h  tcbdb.h  tcfdb.h  tchdb.h  tctdb.h  tcutil.h
