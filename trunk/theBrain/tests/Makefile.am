@@ -32,44 +32,44 @@ check_PROGRAMS = tcamgr tcutest tcumttest tcucodec \
 ## util progs
 tcamgr_SOURCES = tcamgr.c
 tcamgr_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcamgr_LDADD = ../libbrain/libbrain.la
+tcamgr_LDADD = ../libbrain/libtmp.la
 
 tcutest_SOURCES = tcutest.c
 tcutest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcutest_LDADD = ../libbrain/libbrain.la
+tcutest_LDADD = ../libbrain/libtmp.la
 
 tcumttest_SOURCES = tcumttest.c
 tcumttest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcumttest_LDADD = ../libbrain/libbrain.la
+tcumttest_LDADD = ../libbrain/libtmp.la
 
 tcucodec_SOURCES = tcucodec.c
 tcucodec_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS) -D_TC_PREFIX="\".\"" -D_TC_INCLUDEDIR="\".\"" \
 		    -D_TC_LIBDIR="\".\"" -D_TC_BINDIR="\".\"" -D_TC_LIBEXECDIR="\".\"" -D_TC_APPINC="\".\"" \
 		      -D_TC_APPLIBS="\".\""
-tcucodec_LDADD = ../libbrain/libbrain.la
+tcucodec_LDADD = ../libbrain/libtmp.la
 
 ## hdb progs
 tchmgr_SOURCES = tchmgr.c
 tchmgr_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tchmgr_LDADD = ../libbrain/libbrain.la
+tchmgr_LDADD = ../libbrain/libtmp.la
 
 tchtest_SOURCES = tchtest.c
 tchtest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tchtest_LDADD = ../libbrain/libbrain.la
+tchtest_LDADD = ../libbrain/libtmp.la
 
 tchmttest_SOURCES = tchmttest.c
 tchmttest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tchmttest_LDADD = ../libbrain/libbrain.la
+tchmttest_LDADD = ../libbrain/libtmp.la
 
 ## bdb progs
 tcbmgr_SOURCES = tcbmgr.c
 tcbmgr_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcbmgr_LDADD = ../libbrain/libbrain.la
+tcbmgr_LDADD = ../libbrain/libtmp.la
 
 tcbtest_SOURCES = tcbtest.c
 tcbtest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcbtest_LDADD = ../libbrain/libbrain.la
+tcbtest_LDADD = ../libbrain/libtmp.la
 
 tcbmttest_SOURCES = tcbmttest.c
 tcbmttest_CPPFLAGS = -I$(srcdir)/../libbrain $(BRAIN_CPPFLAGS)
-tcbmttest_LDADD = ../libbrain/libbrain.la
+tcbmttest_LDADD = ../libbrain/libtmp.la
