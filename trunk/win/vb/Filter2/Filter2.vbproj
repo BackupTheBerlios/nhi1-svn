@@ -39,7 +39,7 @@
   <ItemGroup>
     <Reference Include="csmsgque, Version=3.5.3582.12246, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\csmsgque\csmsgque.dll</HintPath>
+      <HintPath>..\..\..\theLink\csmsgque\csmsgque.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

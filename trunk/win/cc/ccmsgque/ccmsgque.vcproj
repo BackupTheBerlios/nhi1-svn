@@ -177,15 +177,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\buffer.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\buffer.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\bufferL.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\bufferL.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\cache.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\cache.c"
 				>
 			</File>
 			<File
@@ -209,75 +209,75 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\config.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\config.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\error.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\error.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\event.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\event.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\generic_io.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\generic_io.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\io.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\io.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\log.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\log.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\msgque.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\msgque.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\pipe_io.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\pipe_io.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\read.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\read.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\send.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\send.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\slave.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\swap.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\swap.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\sys.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\sys_com.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys_com.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\tcp_io.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\tcp_io.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\token.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\token.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\trans.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\trans.c"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\uds_io.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\uds_io.c"
 				>
 			</File>
 		</Filter>
@@ -287,15 +287,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\buffer.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\buffer.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\bufferL.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\bufferL.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\cache.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\cache.h"
 				>
 			</File>
 			<File
@@ -307,79 +307,79 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\error.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\error.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\event.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\event.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\generic_io.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\generic_io.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\io_private.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\io_private.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\log.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\log.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\main.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\main.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\mq_io.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\mq_io.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\msgque_private.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\msgque_private.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\pipe_io.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\pipe_io.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\read.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\read.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\send.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\send.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\slave.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\swap.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\swap.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\sys.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\sys_com.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys_com.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\tcp_io.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\tcp_io.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\token.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\token.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\trans.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\trans.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\uds_io.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\uds_io.h"
 				>
 			</File>
 		</Filter>

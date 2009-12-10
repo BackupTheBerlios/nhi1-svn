@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="$(TOP_BUILD_DIR)\ccmsgque"
+		AdditionalIncludeDirectories="$(TOP_BUILD_DIR)\theLink\ccmsgque"
 		CallingConvention="2"
 		DisableSpecificWarnings="4290"
 	/>

@@ -7,7 +7,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\src&quot;"
+		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;"
 		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS"
 		RuntimeLibrary="2"
 		CompileAs="1"
@@ -15,7 +15,7 @@
 	<Tool
 		Name="VCLinkerTool"
 		AdditionalDependencies="ws2_32.lib"
-		Version="$(MQ_VERSION)"
+		Version="$(LIBMSGQUE_VERSION)"
 		CLRThreadAttribute="0"
 	/>
 	<UserMacro
@@ -44,7 +44,7 @@
 		Value="C:\Perl\lib\CORE\perl510.lib"
 	/>
 	<UserMacro
-		Name="MQ_VERSION"
-		Value="3.8"
+		Name="LIBMSGQUE_VERSION"
+		Value="4.0"
 	/>
 </VisualStudioPropertySheet>

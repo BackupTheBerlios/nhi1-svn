@@ -85,8 +85,11 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to 1 if you have the `vfork' function. */
+/*  to 1 if you have the `vfork' function. */
 /* #undef HAVE_VFORK */
+
+/* version of the 'libmsgque' package */
+#define LIBMSGQUE_VERSION "4.0"
 
 /* Define to 1 if you have the `_stricmp' function. */
 #define HAVE__STRICMP 1
@@ -111,22 +114,22 @@
 #define MQ_IS_WIN32 /**/
 
 /* Name of package */
-#define PACKAGE "libmsgque"
+#define PACKAGE "NHI1"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "aotto1968@users.sourceforge.net"
+#define PACKAGE_BUGREPORT "aotto1968@users.berlios.de"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "libmsgque"
+#define PACKAGE_NAME "NHI1"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libmsgque 3.8"
+#define PACKAGE_STRING "NHI1 0.2"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "libmsgque"
+#define PACKAGE_TARNAME "NHI1"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.8"
+#define PACKAGE_VERSION "0.2"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -136,7 +139,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "3.8"
+#define VERSION "0.2"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
