@@ -54,6 +54,8 @@
 struct TransCtxS {
   struct MqS	mqctx;	///< \mqctxI
   TCHDB		*db;	///< context specific data
+  MQ_INT	min;
+  MQ_MAX	max;
 };
 
 /*****************************************************************************/
@@ -444,6 +446,8 @@ TransSetup (
   SETUP_trans;
 
   trans->db = tchdbnew();
+  trans->min = 0;
+  trans->max = 0;
   MqErrorCheck (MqServiceCreate (mqctx, "AOPN", AOPN, NULL, NULL));
 
 error:
