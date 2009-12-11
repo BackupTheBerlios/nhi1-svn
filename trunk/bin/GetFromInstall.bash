@@ -1,6 +1,6 @@
 #!/bin/bash
 #+
-#§  \file       theBrain/libbrain/.GET_FROM_INSTALL
+#§  \file       bin/GetFromInstall.bash
 #§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
@@ -16,17 +16,16 @@ Error() {
   exit 1
 }
 
-(( $# != 1 )) && Error "usage: $0 tokyocabinet-dir"
+(( $# != 1 )) && Error "usage: $0 dir"
 D="$1"
 
 test ! -d "$D" && Error "error: \"$D\" is no directory"
-test ! -f "$D/tokyocabinet.idl" && Error "error: \"$D\" does not belongs to \"tokyocabinet\""
 
 for f in *.c *.h ; do
   t="$D/$(basename $f)"
   if test -f "$t" ; then
     cp -v "$t" .
   else
-    echo "warning: file \"$f\" does not belong to \"tokyocabinet\""
+    echo "warning: file \"$f\" does not belong to \"dir\""
   fi
 done

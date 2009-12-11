@@ -16,7 +16,6 @@ set LHOME [file normalize /home/dev1usr/Project/NHI1]
 array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
-    ./theBrain/libbrain		{ .GET_FROM_INSTALL .sh }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./theLink/tests		{ README.tests .sh }
