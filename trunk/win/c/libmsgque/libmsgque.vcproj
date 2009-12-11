@@ -41,11 +41,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
-				DisableLanguageExtensions="false"
-				RuntimeTypeInfo="false"
 				WarningLevel="3"
 				WarnAsError="true"
 				Detect64BitPortabilityProblems="false"
@@ -63,8 +60,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib"
-				LinkIncremental="2"
-				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
