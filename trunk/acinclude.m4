@@ -715,7 +715,8 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
       AC_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]))
   AC_MSG_RESULT($enable_brain)
   if test x$enable_brain = xyes; then
-    BRAIN_CPPFLAGS="-D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__ -pedantic -fsigned-char"
+    BRAIN_CPPFLAGS="-D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__"
+    BRAIN_CFLAGS="-pedantic -fsigned-char"
     ## check endian
     AC_C_BIGENDIAN(BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYBIGEND")
     # Fastest mode
@@ -723,9 +724,8 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
       AC_HELP_STRING([--enable-fastest], [build theBrain for fastest run]))
     if test "$enable_fastest" = "yes"
     then
-      BRAIN_LIBOBJFILES="tokyocabinet_all.o"
-      BRAIN_CPPFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -fomit-frame-pointer -fforce-addr -minline-all-stringops"
+      BRAIN_CFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
+      BRAIN_CFLAGS="$BRAIN_CFLAGS -fomit-frame-pointer -fforce-addr -minline-all-stringops"
       BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYFASTEST"
     fi
 
@@ -798,6 +798,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
       [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOZLIB"]
     )
     AC_SUBST([BRAIN_CPPFLAGS])
+    AC_SUBST([BRAIN_CFLAGS])
     AC_SUBST([BRAIN_LIBADD])
   fi
   AC_SUBST([USE_BRAIN], $enable_brain)

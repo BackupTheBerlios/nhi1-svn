@@ -16,6 +16,7 @@ set LHOME [file normalize /home/dev1usr/Project/NHI1]
 array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
+    ./theBrain/libbrain		{ .GET_FROM_INSTALL .sh }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./theLink/tests		{ README.tests .sh }
@@ -67,7 +68,7 @@ array set LABELIGNORE {
     ./theBrain			{ Makefile.in Makefile }
     ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc* check.* }
     ./theBrain/libbrain		{ *.sw* *.c *.h *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
-    ./theBrain/theBrain		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags theBrain }
+    ./theBrain/abrain		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags abrain }
 
     ./win		{ c cc csharp vb win Makefile.in Makefile win.sln .CHANGE }
     .			{ aclocal.m4 ltmain.sh libtool.m4 install-sh depcomp Makefile.in 

@@ -258,11 +258,10 @@
  *************************************************************************************************/
 
 
-#define sizeof(TC_a)   ((int)sizeof(TC_a))
 #if defined(__GNUC__)
-#define _alignof(TC_a) ((int)__alignof__(TC_a))
+#define _alignof(TC_a) ((size_t)__alignof__(TC_a))
 #else
-#define _alignof(TC_a) ((int)sizeof(TC_a))
+#define _alignof(TC_a) sizeof(TC_a)
 #endif
 #define _issigned(TC_a)  ((TC_a)-1 < 1 ? true : false)
 #define _maxof(TC_a) \

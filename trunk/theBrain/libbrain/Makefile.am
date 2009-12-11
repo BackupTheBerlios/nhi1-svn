@@ -26,8 +26,9 @@ noinst_LTLIBRARIES = libtmp.la
 libtmp_la_SOURCES = md5.c md5.h myconf.c  myconf.h  tcadb.c  tcadb.h  tcbdb.c  \
   tcbdb.h  tcfdb.c  tcfdb.h  tchdb.c  tchdb.h  tctdb.c  tctdb.h  tcutil.c  tcutil.h
 
-libtmp_la_CPPFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(BRAIN_CPPFLAGS)
-libtmp_la_LDFLAGS = -no-undefined
-libtmp_la_LIBADD = $(BRAIN_LIBADD)
+libtmp_la_CPPFLAGS  = $(BRAIN_CPPFLAGS)
+libtmp_la_CFLAGS    = $(BRAIN_CFLAGS)
+libtmp_la_LDFLAGS   = -no-undefined
+libtmp_la_LIBADD    = $(BRAIN_LIBADD)
 
 #include_HEADERS = tcadb.h  tcbdb.h  tcfdb.h  tchdb.h  tctdb.h  tcutil.h

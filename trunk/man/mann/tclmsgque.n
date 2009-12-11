@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "8 Dec 2009" "Version 0.2" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "10 Dec 2009" "Version 0.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

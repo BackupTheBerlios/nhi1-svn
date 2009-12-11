@@ -243,7 +243,7 @@ for SRV in $R; do
 
   case $SRV in
     *brain*)	
-      SERVER="$BRAIN_DIR/theBrain/theBrain"
+      SERVER="$BRAIN_DIR/abrain/abrain"
       CLIENT="$BRAIN_DIR/tests/client"
     ;;
     *python*)	

@@ -1,10 +1,10 @@
 /**
- *  \file       theBrain/theBrain/theBrain.c
- *  \brief      \$Id: theBrain.c 45 2009-12-08 12:12:46Z aotto1968 $
+ *  \file       theBrain/abrain/abrain.c
+ *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 45 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
@@ -74,8 +74,8 @@ BrainHelp (const char * base)
 {
   fprintf(stderr, "usage: %s [OPTION]... [ARGUMENT]...\n", base);
   fputs("\n", stderr);
-  fputs("  This tool is the server part of the performance test toolkit and expect\n", stderr);
-  fputs("  packages from the libmsgque performance test and validation client.\n", stderr);
+  fputs("  This tool is the database server of NHI1. Read more at:\n", stderr);
+  fputs("  http://openfacts2.berlios.de/wikien/index.php/BerliosProject:NHI1_-_TheBrain\n", stderr);
   fputs("\n", stderr);
   fprintf(stderr, "  %s [ARGUMENT]... syntax:\n", base);
   fprintf(stderr, "    aclient [OPTION]... %c %s [OPTION]... [ARGUMENT]\n", MQ_ALFA, base);

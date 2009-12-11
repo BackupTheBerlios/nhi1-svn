@@ -3685,8 +3685,8 @@ typedef unsigned char TCBITMAP;          /* type of a bit map object */
 
 #include <stdio.h>
 
-#define _TC_VERSION    "1.4.39"
-#define _TC_LIBVER     902
+#define _TC_VERSION    "1.4.41"
+#define _TC_LIBVER     904
 #define _TC_FORMATVER  "1.0"
 
 enum {                                   /* enumeration for error codes */

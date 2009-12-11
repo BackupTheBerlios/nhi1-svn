@@ -1,4 +1,4 @@
-.TH "libmsgque" n "8 Dec 2009" "Version 0.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "10 Dec 2009" "Version 0.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

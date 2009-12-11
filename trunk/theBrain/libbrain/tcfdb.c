@@ -56,27 +56,27 @@ typedef struct {                         // type of structure for a duplication 
 
 
 /* private macros */
-#define FDBLOCKMETHOD(TC_fdb, TC_wr) \
+#define FDBLOCKMETHOD(TC_fdb, TC_wr)                            \
   ((TC_fdb)->mmtx ? tcfdblockmethod((TC_fdb), (TC_wr)) : true)
-#define FDBUNLOCKMETHOD(TC_fdb) \
+#define FDBUNLOCKMETHOD(TC_fdb)                         \
   ((TC_fdb)->mmtx ? tcfdbunlockmethod(TC_fdb) : true)
-#define FDBLOCKATTR(TC_fdb) \
+#define FDBLOCKATTR(TC_fdb)                             \
   ((TC_fdb)->mmtx ? tcfdblockattr(TC_fdb) : true)
-#define FDBUNLOCKATTR(TC_fdb) \
+#define FDBUNLOCKATTR(TC_fdb)                           \
   ((TC_fdb)->mmtx ? tcfdbunlockattr(TC_fdb) : true)
-#define FDBLOCKRECORD(TC_fdb, TC_wr, TC_id) \
+#define FDBLOCKRECORD(TC_fdb, TC_wr, TC_id)                             \
   ((TC_fdb)->mmtx ? tcfdblockrecord((TC_fdb), (TC_wr), (TC_id)) : true)
-#define FDBUNLOCKRECORD(TC_fdb, TC_id) \
+#define FDBUNLOCKRECORD(TC_fdb, TC_id)                                  \
   ((TC_fdb)->mmtx ? tcfdbunlockrecord((TC_fdb), (TC_id)) : true)
-#define FDBLOCKALLRECORDS(TC_fdb, TC_wr) \
+#define FDBLOCKALLRECORDS(TC_fdb, TC_wr)                                \
   ((TC_fdb)->mmtx ? tcfdblockallrecords((TC_fdb), (TC_wr)) : true)
-#define FDBUNLOCKALLRECORDS(TC_fdb) \
+#define FDBUNLOCKALLRECORDS(TC_fdb)                             \
   ((TC_fdb)->mmtx ? tcfdbunlockallrecords(TC_fdb) : true)
-#define FDBLOCKWAL(TC_fdb) \
+#define FDBLOCKWAL(TC_fdb)                              \
   ((TC_fdb)->mmtx ? tcfdblockwal(TC_fdb) : true)
-#define FDBUNLOCKWAL(TC_fdb) \
+#define FDBUNLOCKWAL(TC_fdb)                            \
   ((TC_fdb)->mmtx ? tcfdbunlockwal(TC_fdb) : true)
-#define FDBTHREADYIELD(TC_fdb) \
+#define FDBTHREADYIELD(TC_fdb)                          \
   do { if((TC_fdb)->mmtx) sched_yield(); } while(false)
 
 
@@ -244,9 +244,9 @@ bool tcfdbopen(TCFDB *fdb, const char *path, int omode){
   if(!rpath){
     int ecode = TCEOPEN;
     switch(errno){
-    case EACCES: ecode = TCENOPERM; break;
-    case ENOENT: ecode = TCENOFILE; break;
-    case ENOTDIR: ecode = TCENOFILE; break;
+      case EACCES: ecode = TCENOPERM; break;
+      case ENOENT: ecode = TCENOFILE; break;
+      case ENOTDIR: ecode = TCENOFILE; break;
     }
     tcfdbsetecode(fdb, ecode, __FILE__, __LINE__, __func__);
     FDBUNLOCKMETHOD(fdb);
@@ -950,9 +950,9 @@ bool tcfdbtranbegin(TCFDB *fdb){
     if(walfd < 0){
       int ecode = TCEOPEN;
       switch(errno){
-      case EACCES: ecode = TCENOPERM; break;
-      case ENOENT: ecode = TCENOFILE; break;
-      case ENOTDIR: ecode = TCENOFILE; break;
+        case EACCES: ecode = TCENOPERM; break;
+        case ENOENT: ecode = TCENOFILE; break;
+        case ENOTDIR: ecode = TCENOFILE; break;
       }
       tcfdbsetecode(fdb, ecode, __FILE__, __LINE__, __func__);
       FDBUNLOCKMETHOD(fdb);
@@ -1619,9 +1619,9 @@ static int tcfdbwalrestore(TCFDB *fdb, const char *path){
       } else {
         int ecode = TCEOPEN;
         switch(errno){
-        case EACCES: ecode = TCENOPERM; break;
-        case ENOENT: ecode = TCENOFILE; break;
-        case ENOTDIR: ecode = TCENOFILE; break;
+          case EACCES: ecode = TCENOPERM; break;
+          case ENOENT: ecode = TCENOFILE; break;
+          case ENOTDIR: ecode = TCENOFILE; break;
         }
         tcfdbsetecode(fdb, ecode, __FILE__, __LINE__, __func__);
         err = true;
@@ -1741,9 +1741,9 @@ static bool tcfdbopenimpl(TCFDB *fdb, const char *path, int omode){
   if(fd < 0){
     int ecode = TCEOPEN;
     switch(errno){
-    case EACCES: ecode = TCENOPERM; break;
-    case ENOENT: ecode = TCENOFILE; break;
-    case ENOTDIR: ecode = TCENOFILE; break;
+      case EACCES: ecode = TCENOPERM; break;
+      case ENOENT: ecode = TCENOFILE; break;
+      case ENOTDIR: ecode = TCENOFILE; break;
     }
     tcfdbsetecode(fdb, ecode, __FILE__, __LINE__, __func__);
     return false;
@@ -1909,19 +1909,19 @@ static int64_t tcfdbprevid(TCFDB *fdb, int64_t id){
     uint16_t snum;
     uint32_t lnum;
     switch(fdb->wsiz){
-    case 1:
-      osiz = *(rp++);
-      break;
-    case 2:
-      memcpy(&snum, rp, sizeof(snum));
-      osiz = TCITOHS(snum);
-      rp += sizeof(snum);
-      break;
-    default:
-      memcpy(&lnum, rp, sizeof(lnum));
-      osiz = TCITOHL(lnum);
-      rp += sizeof(lnum);
-      break;
+      case 1:
+        osiz = *(rp++);
+        break;
+      case 2:
+        memcpy(&snum, rp, sizeof(snum));
+        osiz = TCITOHS(snum);
+        rp += sizeof(snum);
+        break;
+      default:
+        memcpy(&lnum, rp, sizeof(lnum));
+        osiz = TCITOHL(lnum);
+        rp += sizeof(lnum);
+        break;
     }
     if(osiz > 0 || *rp != 0) return id;
     id--;
@@ -1945,19 +1945,19 @@ static int64_t tcfdbnextid(TCFDB *fdb, int64_t id){
     uint16_t snum;
     uint32_t lnum;
     switch(fdb->wsiz){
-    case 1:
-      osiz = *(rp++);
-      break;
-    case 2:
-      memcpy(&snum, rp, sizeof(snum));
-      osiz = TCITOHS(snum);
-      rp += sizeof(snum);
-      break;
-    default:
-      memcpy(&lnum, rp, sizeof(lnum));
-      osiz = TCITOHL(lnum);
-      rp += sizeof(lnum);
-      break;
+      case 1:
+        osiz = *(rp++);
+        break;
+      case 2:
+        memcpy(&snum, rp, sizeof(snum));
+        osiz = TCITOHS(snum);
+        rp += sizeof(snum);
+        break;
+      default:
+        memcpy(&lnum, rp, sizeof(lnum));
+        osiz = TCITOHL(lnum);
+        rp += sizeof(lnum);
+        break;
     }
     if(osiz > 0 || *rp != 0) return id;
     id++;
@@ -2003,19 +2003,19 @@ static bool tcfdbputimpl(TCFDB *fdb, int64_t id, const void *vbuf, int vsiz, int
       uint16_t snum;
       uint32_t lnum;
       switch(fdb->wsiz){
-      case 1:
-        *(wp++) = vsiz;
-        break;
-      case 2:
-        snum = TCHTOIS(vsiz);
-        memcpy(wp, &snum, sizeof(snum));
-        wp += sizeof(snum);
-        break;
-      default:
-        lnum = TCHTOIL(vsiz);
-        memcpy(wp, &lnum, sizeof(lnum));
-        wp += sizeof(lnum);
-        break;
+        case 1:
+          *(wp++) = vsiz;
+          break;
+        case 2:
+          snum = TCHTOIS(vsiz);
+          memcpy(wp, &snum, sizeof(snum));
+          wp += sizeof(snum);
+          break;
+        default:
+          lnum = TCHTOIL(vsiz);
+          memcpy(wp, &lnum, sizeof(lnum));
+          wp += sizeof(lnum);
+          break;
       }
       if(vsiz > 0){
         memcpy(wp, vbuf, vsiz);
@@ -2036,19 +2036,19 @@ static bool tcfdbputimpl(TCFDB *fdb, int64_t id, const void *vbuf, int vsiz, int
   uint16_t snum;
   uint32_t lnum;
   switch(fdb->wsiz){
-  case 1:
-    osiz = *(rp++);
-    break;
-  case 2:
-    memcpy(&snum, rp, sizeof(snum));
-    osiz = TCITOHS(snum);
-    rp += sizeof(snum);
-    break;
-  default:
-    memcpy(&lnum, rp, sizeof(lnum));
-    osiz = TCITOHL(lnum);
-    rp += sizeof(lnum);
-    break;
+    case 1:
+      osiz = *(rp++);
+      break;
+    case 2:
+      memcpy(&snum, rp, sizeof(snum));
+      osiz = TCITOHS(snum);
+      rp += sizeof(snum);
+      break;
+    default:
+      memcpy(&lnum, rp, sizeof(lnum));
+      osiz = TCITOHL(lnum);
+      rp += sizeof(lnum);
+      break;
   }
   bool miss = osiz == 0 && *rp == 0;
   if(dmode != FDBPDOVER && !miss){
@@ -2062,19 +2062,19 @@ static bool tcfdbputimpl(TCFDB *fdb, int64_t id, const void *vbuf, int vsiz, int
       unsigned char *wp = rec;
       int usiz = osiz + vsiz;
       switch(fdb->wsiz){
-      case 1:
-        *(wp++) = usiz;
-        break;
-      case 2:
-        snum = TCHTOIS(usiz);
-        memcpy(wp, &snum, sizeof(snum));
-        wp += sizeof(snum);
-        break;
-      default:
-        lnum = TCHTOIL(usiz);
-        memcpy(wp, &lnum, sizeof(lnum));
-        wp += sizeof(lnum);
-        break;
+        case 1:
+          *(wp++) = usiz;
+          break;
+        case 2:
+          snum = TCHTOIS(usiz);
+          memcpy(wp, &snum, sizeof(snum));
+          wp += sizeof(snum);
+          break;
+        default:
+          lnum = TCHTOIL(usiz);
+          memcpy(wp, &lnum, sizeof(lnum));
+          wp += sizeof(lnum);
+          break;
       }
       if(usiz > 0){
         memcpy(wp + osiz, vbuf, vsiz);
@@ -2154,19 +2154,19 @@ static bool tcfdbputimpl(TCFDB *fdb, int64_t id, const void *vbuf, int vsiz, int
       if(nvsiz > fdb->width) nvsiz = fdb->width;
       unsigned char *wp = rec;
       switch(fdb->wsiz){
-      case 1:
-        *(wp++) = nvsiz;
-        break;
-      case 2:
-        snum = TCHTOIS(nvsiz);
-        memcpy(wp, &snum, sizeof(snum));
-        wp += sizeof(snum);
-        break;
-      default:
-        lnum = TCHTOIL(nvsiz);
-        memcpy(wp, &lnum, sizeof(lnum));
-        wp += sizeof(lnum);
-        break;
+        case 1:
+          *(wp++) = nvsiz;
+          break;
+        case 2:
+          snum = TCHTOIS(nvsiz);
+          memcpy(wp, &snum, sizeof(snum));
+          wp += sizeof(snum);
+          break;
+        default:
+          lnum = TCHTOIL(nvsiz);
+          memcpy(wp, &lnum, sizeof(lnum));
+          wp += sizeof(lnum);
+          break;
       }
       if(nvsiz > 0){
         memcpy(wp, nvbuf, nvsiz);
@@ -2185,19 +2185,19 @@ static bool tcfdbputimpl(TCFDB *fdb, int64_t id, const void *vbuf, int vsiz, int
   if(fdb->tran && !tcfdbwalwrite(fdb, (char *)rec - fdb->map, fdb->width)) return false;
   unsigned char *wp = rec;
   switch(fdb->wsiz){
-  case 1:
-    *(wp++) = vsiz;
-    break;
-  case 2:
-    snum = TCHTOIS(vsiz);
-    memcpy(wp, &snum, sizeof(snum));
-    wp += sizeof(snum);
-    break;
-  default:
-    lnum = TCHTOIL(vsiz);
-    memcpy(wp, &lnum, sizeof(lnum));
-    wp += sizeof(lnum);
-    break;
+    case 1:
+      *(wp++) = vsiz;
+      break;
+    case 2:
+      snum = TCHTOIS(vsiz);
+      memcpy(wp, &snum, sizeof(snum));
+      wp += sizeof(snum);
+      break;
+    default:
+      lnum = TCHTOIL(vsiz);
+      memcpy(wp, &lnum, sizeof(lnum));
+      wp += sizeof(lnum);
+      break;
   }
   if(vsiz > 0){
     memcpy(wp, vbuf, vsiz);
@@ -2234,19 +2234,19 @@ static bool tcfdboutimpl(TCFDB *fdb, int64_t id){
   uint16_t snum;
   uint32_t lnum;
   switch(fdb->wsiz){
-  case 1:
-    osiz = *(rp++);
-    break;
-  case 2:
-    memcpy(&snum, rp, sizeof(snum));
-    osiz = TCITOHS(snum);
-    rp += sizeof(snum);
-    break;
-  default:
-    memcpy(&lnum, rp, sizeof(lnum));
-    osiz = TCITOHL(lnum);
-    rp += sizeof(lnum);
-    break;
+    case 1:
+      osiz = *(rp++);
+      break;
+    case 2:
+      memcpy(&snum, rp, sizeof(snum));
+      osiz = TCITOHS(snum);
+      rp += sizeof(snum);
+      break;
+    default:
+      memcpy(&lnum, rp, sizeof(lnum));
+      osiz = TCITOHL(lnum);
+      rp += sizeof(lnum);
+      break;
   }
   if(osiz == 0 && *rp == 0){
     tcfdbsetecode(fdb, TCENOREC, __FILE__, __LINE__, __func__);
@@ -2296,19 +2296,19 @@ static const void *tcfdbgetimpl(TCFDB *fdb, int64_t id, int *sp){
   uint16_t snum;
   uint32_t lnum;
   switch(fdb->wsiz){
-  case 1:
-    osiz = *(rp++);
-    break;
-  case 2:
-    memcpy(&snum, rp, sizeof(snum));
-    osiz = TCITOHS(snum);
-    rp += sizeof(snum);
-    break;
-  default:
-    memcpy(&lnum, rp, sizeof(lnum));
-    osiz = TCITOHL(lnum);
-    rp += sizeof(lnum);
-    break;
+    case 1:
+      osiz = *(rp++);
+      break;
+    case 2:
+      memcpy(&snum, rp, sizeof(snum));
+      osiz = TCITOHS(snum);
+      rp += sizeof(snum);
+      break;
+    default:
+      memcpy(&lnum, rp, sizeof(lnum));
+      osiz = TCITOHL(lnum);
+      rp += sizeof(lnum);
+      break;
   }
   if(osiz == 0 && *rp == 0){
     tcfdbsetecode(fdb, TCENOREC, __FILE__, __LINE__, __func__);

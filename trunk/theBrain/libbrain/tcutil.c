@@ -263,91 +263,91 @@ static void tcvxstrprintf(TCXSTR *xstr, const char *format, va_list ap){
       int tlen;
       char *tmp, tbuf[TCNUMBUFSIZ*4];
       switch(*format){
-      case 's':
-        tmp = va_arg(ap, char *);
-        if(!tmp) tmp = "(null)";
-        tcxstrcat2(xstr, tmp);
-        break;
-      case 'd':
-        if(lnum >= 2){
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, long long));
-        } else if(lnum >= 1){
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, long));
-        } else {
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, int));
-        }
-        TCXSTRCAT(xstr, tbuf, tlen);
-        break;
-      case 'o': case 'u': case 'x': case 'X': case 'c':
-        if(lnum >= 2){
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned long long));
-        } else if(lnum >= 1){
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned long));
-        } else {
-          tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned int));
-        }
-        TCXSTRCAT(xstr, tbuf, tlen);
-        break;
-      case 'e': case 'E': case 'f': case 'g': case 'G':
-        if(lnum >= 1){
-          tlen = snprintf(tbuf, sizeof(tbuf), cbuf, va_arg(ap, long double));
-        } else {
-          tlen = snprintf(tbuf, sizeof(tbuf), cbuf, va_arg(ap, double));
-        }
-        if(tlen < 0 || tlen > sizeof(tbuf)){
-          tbuf[sizeof(tbuf)-1] = '*';
-          tlen = sizeof(tbuf);
-        }
-        TCXSTRCAT(xstr, tbuf, tlen);
-        break;
-      case '@':
-        tmp = va_arg(ap, char *);
-        if(!tmp) tmp = "(null)";
-        while(*tmp){
-          switch(*tmp){
-          case '&': TCXSTRCAT(xstr, "&amp;", 5); break;
-          case '<': TCXSTRCAT(xstr, "&lt;", 4); break;
-          case '>': TCXSTRCAT(xstr, "&gt;", 4); break;
-          case '"': TCXSTRCAT(xstr, "&quot;", 6); break;
-          default:
-            if(!((*tmp >= 0 && *tmp <= 0x8) || (*tmp >= 0x0e && *tmp <= 0x1f)))
-              TCXSTRCAT(xstr, tmp, 1);
-            break;
-          }
-          tmp++;
-        }
-        break;
-      case '?':
-        tmp = va_arg(ap, char *);
-        if(!tmp) tmp = "(null)";
-        while(*tmp){
-          unsigned char c = *(unsigned char *)tmp;
-          if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-             (c >= '0' && c <= '9') || (c != '\0' && strchr("_-.", c))){
-            TCXSTRCAT(xstr, tmp, 1);
+        case 's':
+          tmp = va_arg(ap, char *);
+          if(!tmp) tmp = "(null)";
+          tcxstrcat2(xstr, tmp);
+          break;
+        case 'd':
+          if(lnum >= 2){
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, long long));
+          } else if(lnum >= 1){
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, long));
           } else {
-            tlen = sprintf(tbuf, "%%%02X", c);
-            TCXSTRCAT(xstr, tbuf, tlen);
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, int));
           }
-          tmp++;
-        }
-        break;
-      case 'b':
-        if(lnum >= 2){
-          tlen = tcnumtostrbin(va_arg(ap, unsigned long long), tbuf,
-                               tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
-        } else if(lnum >= 1){
-          tlen = tcnumtostrbin(va_arg(ap, unsigned long), tbuf,
-                               tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
-        } else {
-          tlen = tcnumtostrbin(va_arg(ap, unsigned int), tbuf,
-                               tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
-        }
-        TCXSTRCAT(xstr, tbuf, tlen);
-        break;
-      case '%':
-        TCXSTRCAT(xstr, "%", 1);
-        break;
+          TCXSTRCAT(xstr, tbuf, tlen);
+          break;
+        case 'o': case 'u': case 'x': case 'X': case 'c':
+          if(lnum >= 2){
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned long long));
+          } else if(lnum >= 1){
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned long));
+          } else {
+            tlen = sprintf(tbuf, cbuf, va_arg(ap, unsigned int));
+          }
+          TCXSTRCAT(xstr, tbuf, tlen);
+          break;
+        case 'e': case 'E': case 'f': case 'g': case 'G':
+          if(lnum >= 1){
+            tlen = snprintf(tbuf, sizeof(tbuf), cbuf, va_arg(ap, long double));
+          } else {
+            tlen = snprintf(tbuf, sizeof(tbuf), cbuf, va_arg(ap, double));
+          }
+          if(tlen < 0 || tlen > sizeof(tbuf)){
+            tbuf[sizeof(tbuf)-1] = '*';
+            tlen = sizeof(tbuf);
+          }
+          TCXSTRCAT(xstr, tbuf, tlen);
+          break;
+        case '@':
+          tmp = va_arg(ap, char *);
+          if(!tmp) tmp = "(null)";
+          while(*tmp){
+            switch(*tmp){
+              case '&': TCXSTRCAT(xstr, "&amp;", 5); break;
+              case '<': TCXSTRCAT(xstr, "&lt;", 4); break;
+              case '>': TCXSTRCAT(xstr, "&gt;", 4); break;
+              case '"': TCXSTRCAT(xstr, "&quot;", 6); break;
+              default:
+                if(!((*tmp >= 0 && *tmp <= 0x8) || (*tmp >= 0x0e && *tmp <= 0x1f)))
+                  TCXSTRCAT(xstr, tmp, 1);
+                break;
+            }
+            tmp++;
+          }
+          break;
+        case '?':
+          tmp = va_arg(ap, char *);
+          if(!tmp) tmp = "(null)";
+          while(*tmp){
+            unsigned char c = *(unsigned char *)tmp;
+            if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+               (c >= '0' && c <= '9') || (c != '\0' && strchr("_-.", c))){
+              TCXSTRCAT(xstr, tmp, 1);
+            } else {
+              tlen = sprintf(tbuf, "%%%02X", c);
+              TCXSTRCAT(xstr, tbuf, tlen);
+            }
+            tmp++;
+          }
+          break;
+        case 'b':
+          if(lnum >= 2){
+            tlen = tcnumtostrbin(va_arg(ap, unsigned long long), tbuf,
+                                 tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
+          } else if(lnum >= 1){
+            tlen = tcnumtostrbin(va_arg(ap, unsigned long), tbuf,
+                                 tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
+          } else {
+            tlen = tcnumtostrbin(va_arg(ap, unsigned int), tbuf,
+                                 tcatoi(cbuf + 1), (cbuf[1] == '0') ? '0' : ' ');
+          }
+          TCXSTRCAT(xstr, tbuf, tlen);
+          break;
+        case '%':
+          TCXSTRCAT(xstr, "%", 1);
+          break;
       }
     } else {
       TCXSTRCAT(xstr, format, 1);
@@ -961,27 +961,27 @@ void tclistprintf(TCLIST *list, const char *format, ...){
 #define TCMAPTINYBNUM  31                // bucket number of a tiny map
 
 /* get the first hash value */
-#define TCMAPHASH1(TC_res, TC_kbuf, TC_ksiz) \
-  do { \
-    const unsigned char *_TC_p = (const unsigned char *)(TC_kbuf); \
-    int _TC_ksiz = TC_ksiz; \
-    for((TC_res) = 19780211; _TC_ksiz--;){ \
-      (TC_res) = (TC_res) * 37 + *(_TC_p)++; \
-    } \
+#define TCMAPHASH1(TC_res, TC_kbuf, TC_ksiz)                            \
+  do {                                                                  \
+    const unsigned char *_TC_p = (const unsigned char *)(TC_kbuf);      \
+    int _TC_ksiz = TC_ksiz;                                             \
+    for((TC_res) = 19780211; _TC_ksiz--;){                              \
+      (TC_res) = (TC_res) * 37 + *(_TC_p)++;                            \
+    }                                                                   \
   } while(false)
 
 /* get the second hash value */
-#define TCMAPHASH2(TC_res, TC_kbuf, TC_ksiz) \
-  do { \
+#define TCMAPHASH2(TC_res, TC_kbuf, TC_ksiz)                            \
+  do {                                                                  \
     const unsigned char *_TC_p = (const unsigned char *)(TC_kbuf) + TC_ksiz - 1; \
-    int _TC_ksiz = TC_ksiz; \
-    for((TC_res) = 0x13579bdf; _TC_ksiz--;){ \
-      (TC_res) = (TC_res) * 31 + *(_TC_p)--; \
-    } \
+    int _TC_ksiz = TC_ksiz;                                             \
+    for((TC_res) = 0x13579bdf; _TC_ksiz--;){                            \
+      (TC_res) = (TC_res) * 31 + *(_TC_p)--;                            \
+    }                                                                   \
   } while(false)
 
 /* compare two keys */
-#define TCKEYCMP(TC_abuf, TC_asiz, TC_bbuf, TC_bsiz) \
+#define TCKEYCMP(TC_abuf, TC_asiz, TC_bbuf, TC_bsiz)                    \
   ((TC_asiz > TC_bsiz) ? 1 : (TC_asiz < TC_bsiz) ? -1 : memcmp(TC_abuf, TC_bbuf, TC_asiz))
 
 
@@ -3660,14 +3660,14 @@ void tctreeprintf(TCTREE *tree, const char *kstr, const char *format, ...){
 #define TCMDBDEFBNUM   65536             // default bucket number
 
 /* get the first hash value */
-#define TCMDBHASH(TC_res, TC_kbuf, TC_ksiz) \
-  do { \
+#define TCMDBHASH(TC_res, TC_kbuf, TC_ksiz)                             \
+  do {                                                                  \
     const unsigned char *_TC_p = (const unsigned char *)(TC_kbuf) + TC_ksiz - 1; \
-    int _TC_ksiz = TC_ksiz; \
-    for((TC_res) = 0x20071123; _TC_ksiz--;){ \
-      (TC_res) = (TC_res) * 33 + *(_TC_p)--; \
-    } \
-    (TC_res) &= TCMDBMNUM - 1; \
+    int _TC_ksiz = TC_ksiz;                                             \
+    for((TC_res) = 0x20071123; _TC_ksiz--;){                            \
+      (TC_res) = (TC_res) * 33 + *(_TC_p)--;                            \
+    }                                                                   \
+    (TC_res) &= TCMDBMNUM - 1;                                          \
   } while(false)
 
 
@@ -5433,28 +5433,28 @@ void tcdatestrhttp(int64_t t, int jl, char *buf){
   jl /= 60;
   char *wp = buf;
   switch(tcdayofweek(ts.tm_year, ts.tm_mon, ts.tm_mday)){
-  case 0: wp += sprintf(wp, "Sun, "); break;
-  case 1: wp += sprintf(wp, "Mon, "); break;
-  case 2: wp += sprintf(wp, "Tue, "); break;
-  case 3: wp += sprintf(wp, "Wed, "); break;
-  case 4: wp += sprintf(wp, "Thu, "); break;
-  case 5: wp += sprintf(wp, "Fri, "); break;
-  case 6: wp += sprintf(wp, "Sat, "); break;
+    case 0: wp += sprintf(wp, "Sun, "); break;
+    case 1: wp += sprintf(wp, "Mon, "); break;
+    case 2: wp += sprintf(wp, "Tue, "); break;
+    case 3: wp += sprintf(wp, "Wed, "); break;
+    case 4: wp += sprintf(wp, "Thu, "); break;
+    case 5: wp += sprintf(wp, "Fri, "); break;
+    case 6: wp += sprintf(wp, "Sat, "); break;
   }
   wp += sprintf(wp, "%02d ", ts.tm_mday);
   switch(ts.tm_mon){
-  case 1: wp += sprintf(wp, "Jan "); break;
-  case 2: wp += sprintf(wp, "Feb "); break;
-  case 3: wp += sprintf(wp, "Mar "); break;
-  case 4: wp += sprintf(wp, "Apr "); break;
-  case 5: wp += sprintf(wp, "May "); break;
-  case 6: wp += sprintf(wp, "Jun "); break;
-  case 7: wp += sprintf(wp, "Jul "); break;
-  case 8: wp += sprintf(wp, "Aug "); break;
-  case 9: wp += sprintf(wp, "Sep "); break;
-  case 10: wp += sprintf(wp, "Oct "); break;
-  case 11: wp += sprintf(wp, "Nov "); break;
-  case 12: wp += sprintf(wp, "Dec "); break;
+    case 1: wp += sprintf(wp, "Jan "); break;
+    case 2: wp += sprintf(wp, "Feb "); break;
+    case 3: wp += sprintf(wp, "Mar "); break;
+    case 4: wp += sprintf(wp, "Apr "); break;
+    case 5: wp += sprintf(wp, "May "); break;
+    case 6: wp += sprintf(wp, "Jun "); break;
+    case 7: wp += sprintf(wp, "Jul "); break;
+    case 8: wp += sprintf(wp, "Aug "); break;
+    case 9: wp += sprintf(wp, "Sep "); break;
+    case 10: wp += sprintf(wp, "Oct "); break;
+    case 11: wp += sprintf(wp, "Nov "); break;
+    case 12: wp += sprintf(wp, "Dec "); break;
   }
   wp += sprintf(wp, "%04d %02d:%02d:%02d ", ts.tm_year, ts.tm_hour, ts.tm_min, ts.tm_sec);
   if(jl == 0){
@@ -6990,15 +6990,15 @@ TCLIST *tcreadfilelines(const char *path){
   while((rsiz = read(fd, buf, TCIOBUFSIZ)) > 0){
     for(int i = 0; i < rsiz; i++){
       switch(buf[i]){
-      case '\r':
-        break;
-      case '\n':
-        TCLISTPUSH(list, TCXSTRPTR(xstr), TCXSTRSIZE(xstr));
-        tcxstrclear(xstr);
-        break;
-      default:
-        TCXSTRCAT(xstr, buf + i, 1);
-        break;
+        case '\r':
+          break;
+        case '\n':
+          TCLISTPUSH(list, TCXSTRPTR(xstr), TCXSTRSIZE(xstr));
+          tcxstrclear(xstr);
+          break;
+        default:
+          TCXSTRCAT(xstr, buf + i, 1);
+          break;
       }
     }
   }
@@ -7119,12 +7119,12 @@ bool tcwrite(int fd, const void *buf, size_t size){
   do {
     int wb = write(fd, rp, size);
     switch(wb){
-    case -1: if(errno != EINTR) return false;
-    case 0: break;
-    default:
-      rp += wb;
-      size -= wb;
-      break;
+      case -1: if(errno != EINTR) return false;
+      case 0: break;
+      default:
+        rp += wb;
+        size -= wb;
+        break;
     }
   } while(size > 0);
   return true;
@@ -7138,11 +7138,11 @@ bool tcread(int fd, void *buf, size_t size){
   do {
     int rb = read(fd, wp, size);
     switch(rb){
-    case -1: if(errno != EINTR) return false;
-    case 0: return size < 1;
-    default:
-      wp += rb;
-      size -= rb;
+      case -1: if(errno != EINTR) return false;
+      case 0: return size < 1;
+      default:
+        wp += rb;
+        size -= rb;
     }
   } while(size > 0);
   return true;
@@ -7196,13 +7196,13 @@ int tcsystem(const char **args, int anum){
     char *wp = token;
     while(*rp != '\0'){
       switch(*rp){
-      case '"': case '\\': case '$': case '`':
-        *(wp++) = '\\';
-        *(wp++) = *rp;
-        break;
-      default:
-        *(wp++) = *rp;
-        break;
+        case '"': case '\\': case '$': case '`':
+          *(wp++) = '\\';
+          *(wp++) = *rp;
+          break;
+        default:
+          *(wp++) = *rp;
+          break;
       }
       rp++;
     }
@@ -7584,24 +7584,24 @@ char *tcbaseencode(const char *ptr, int size){
   char *wp = buf;
   for(int i = 0; i < size; i += 3){
     switch(size - i){
-    case 1:
-      *wp++ = tbl[obj[0] >> 2];
-      *wp++ = tbl[(obj[0] & 3) << 4];
-      *wp++ = '=';
-      *wp++ = '=';
-      break;
-    case 2:
-      *wp++ = tbl[obj[0] >> 2];
-      *wp++ = tbl[((obj[0] & 3) << 4) + (obj[1] >> 4)];
-      *wp++ = tbl[(obj[1] & 0xf) << 2];
-      *wp++ = '=';
-      break;
-    default:
-      *wp++ = tbl[obj[0] >> 2];
-      *wp++ = tbl[((obj[0] & 3) << 4) + (obj[1] >> 4)];
-      *wp++ = tbl[((obj[1] & 0xf) << 2) + (obj[2] >> 6)];
-      *wp++ = tbl[obj[2] & 0x3f];
-      break;
+      case 1:
+        *wp++ = tbl[obj[0] >> 2];
+        *wp++ = tbl[(obj[0] & 3) << 4];
+        *wp++ = '=';
+        *wp++ = '=';
+        break;
+      case 2:
+        *wp++ = tbl[obj[0] >> 2];
+        *wp++ = tbl[((obj[0] & 3) << 4) + (obj[1] >> 4)];
+        *wp++ = tbl[(obj[1] & 0xf) << 2];
+        *wp++ = '=';
+        break;
+      default:
+        *wp++ = tbl[obj[0] >> 2];
+        *wp++ = tbl[((obj[0] & 3) << 4) + (obj[1] >> 4)];
+        *wp++ = tbl[((obj[1] & 0xf) << 2) + (obj[2] >> 6)];
+        *wp++ = tbl[obj[2] & 0x3f];
+        break;
     }
     obj += 3;
   }
@@ -7647,21 +7647,21 @@ char *tcbasedecode(const char *str, int *sp){
     }
     if(i == 0 && bpos >= len) continue;
     switch(eqcnt){
-    case 0:
-      *wp++ = (bits >> 16) & 0xff;
-      *wp++ = (bits >> 8) & 0xff;
-      *wp++ = bits & 0xff;
-      cnt += 3;
-      break;
-    case 1:
-      *wp++ = (bits >> 16) & 0xff;
-      *wp++ = (bits >> 8) & 0xff;
-      cnt += 2;
-      break;
-    case 2:
-      *wp++ = (bits >> 16) & 0xff;
-      cnt += 1;
-      break;
+      case 0:
+        *wp++ = (bits >> 16) & 0xff;
+        *wp++ = (bits >> 8) & 0xff;
+        *wp++ = bits & 0xff;
+        cnt += 3;
+        break;
+      case 1:
+        *wp++ = (bits >> 16) & 0xff;
+        *wp++ = (bits >> 8) & 0xff;
+        cnt += 2;
+        break;
+      case 2:
+        *wp++ = (bits >> 16) & 0xff;
+        cnt += 1;
+        break;
     }
   }
   obj[cnt] = '\0';
@@ -8213,21 +8213,21 @@ char *tcxmlescape(const char *str){
   int bsiz = 0;
   while(*rp != '\0'){
     switch(*rp){
-    case '&':
-      bsiz += 5;
-      break;
-    case '<':
-      bsiz += 4;
-      break;
-    case '>':
-      bsiz += 4;
-      break;
-    case '"':
-      bsiz += 6;
-      break;
-    default:
-      bsiz++;
-      break;
+      case '&':
+        bsiz += 5;
+        break;
+      case '<':
+        bsiz += 4;
+        break;
+      case '>':
+        bsiz += 4;
+        break;
+      case '"':
+        bsiz += 6;
+        break;
+      default:
+        bsiz++;
+        break;
     }
     rp++;
   }
@@ -8236,25 +8236,25 @@ char *tcxmlescape(const char *str){
   char *wp = buf;
   while(*str != '\0'){
     switch(*str){
-    case '&':
-      memcpy(wp, "&amp;", 5);
-      wp += 5;
-      break;
-    case '<':
-      memcpy(wp, "&lt;", 4);
-      wp += 4;
-      break;
-    case '>':
-      memcpy(wp, "&gt;", 4);
-      wp += 4;
-      break;
-    case '"':
-      memcpy(wp, "&quot;", 6);
-      wp += 6;
-      break;
-    default:
-      *(wp++) = *str;
-      break;
+      case '&':
+        memcpy(wp, "&amp;", 5);
+        wp += 5;
+        break;
+      case '<':
+        memcpy(wp, "&lt;", 4);
+        wp += 4;
+        break;
+      case '>':
+        memcpy(wp, "&gt;", 4);
+        wp += 4;
+        break;
+      case '"':
+        memcpy(wp, "&quot;", 6);
+        wp += 6;
+        break;
+      default:
+        *(wp++) = *str;
+        break;
     }
     str++;
   }
@@ -8607,14 +8607,14 @@ char *tccstrescape(const char *str){
     }
     if(c < ' ' || c == 0x7f || c == '"' || c == '\'' || c == '\\'){
       switch(c){
-      case '\t': wi += sprintf(buf + wi, "\\t"); break;
-      case '\n': wi += sprintf(buf + wi, "\\n"); break;
-      case '\r': wi += sprintf(buf + wi, "\\r"); break;
-      case '\\': wi += sprintf(buf + wi, "\\\\"); break;
-      default:
-        wi += sprintf(buf + wi, "\\x%02X", c);
-        hex = true;
-        break;
+        case '\t': wi += sprintf(buf + wi, "\\t"); break;
+        case '\n': wi += sprintf(buf + wi, "\\n"); break;
+        case '\r': wi += sprintf(buf + wi, "\\r"); break;
+        case '\\': wi += sprintf(buf + wi, "\\\\"); break;
+        default:
+          wi += sprintf(buf + wi, "\\x%02X", c);
+          hex = true;
+          break;
       }
     } else {
       if(hex && ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))){
@@ -8649,13 +8649,13 @@ char *tccstrunescape(const char *str){
       str++;
       int si = wi;
       switch(*str){
-      case 'a': buf[wi++] = '\a'; break;
-      case 'b': buf[wi++] = '\b'; break;
-      case 't': buf[wi++] = '\t'; break;
-      case 'n': buf[wi++] = '\n'; break;
-      case 'v': buf[wi++] = '\v'; break;
-      case 'f': buf[wi++] = '\f'; break;
-      case 'r': buf[wi++] = '\r'; break;
+        case 'a': buf[wi++] = '\a'; break;
+        case 'b': buf[wi++] = '\b'; break;
+        case 't': buf[wi++] = '\t'; break;
+        case 'n': buf[wi++] = '\n'; break;
+        case 'v': buf[wi++] = '\v'; break;
+        case 'f': buf[wi++] = '\f'; break;
+        case 'r': buf[wi++] = '\r'; break;
       }
       if(si == wi){
         c = *str;
@@ -8740,11 +8740,11 @@ char *tcjsonescape(const char *str){
     }
     if(c < ' ' || c == 0x7f || c == '"' || c == '\'' || c == '\\'){
       switch(c){
-      case '\t': wi += sprintf(buf + wi, "\\t"); break;
-      case '\n': wi += sprintf(buf + wi, "\\n"); break;
-      case '\r': wi += sprintf(buf + wi, "\\r"); break;
-      case '\\': wi += sprintf(buf + wi, "\\\\"); break;
-      default: wi += sprintf(buf + wi, "\\u%04X", c); break;
+        case '\t': wi += sprintf(buf + wi, "\\t"); break;
+        case '\n': wi += sprintf(buf + wi, "\\n"); break;
+        case '\r': wi += sprintf(buf + wi, "\\r"); break;
+        case '\\': wi += sprintf(buf + wi, "\\\\"); break;
+        default: wi += sprintf(buf + wi, "\\u%04X", c); break;
       }
     } else {
       buf[wi++] = c;
@@ -9529,30 +9529,30 @@ static int tcgammadecode(const char *ptr, int size, char *obuf);
 /* Get the message string corresponding to an error code. */
 const char *tcerrmsg(int ecode){
   switch(ecode){
-  case TCESUCCESS: return "success";
-  case TCETHREAD: return "threading error";
-  case TCEINVALID: return "invalid operation";
-  case TCENOFILE: return "file not found";
-  case TCENOPERM: return "no permission";
-  case TCEMETA: return "invalid meta data";
-  case TCERHEAD: return "invalid record header";
-  case TCEOPEN: return "open error";
-  case TCECLOSE: return "close error";
-  case TCETRUNC: return "trunc error";
-  case TCESYNC: return "sync error";
-  case TCESTAT: return "stat error";
-  case TCESEEK: return "seek error";
-  case TCEREAD: return "read error";
-  case TCEWRITE: return "write error";
-  case TCEMMAP: return "mmap error";
-  case TCELOCK: return "lock error";
-  case TCEUNLINK: return "unlink error";
-  case TCERENAME: return "rename error";
-  case TCEMKDIR: return "mkdir error";
-  case TCERMDIR: return "rmdir error";
-  case TCEKEEP: return "existing record";
-  case TCENOREC: return "no record found";
-  case TCEMISC: return "miscellaneous error";
+    case TCESUCCESS: return "success";
+    case TCETHREAD: return "threading error";
+    case TCEINVALID: return "invalid operation";
+    case TCENOFILE: return "file not found";
+    case TCENOPERM: return "no permission";
+    case TCEMETA: return "invalid meta data";
+    case TCERHEAD: return "invalid record header";
+    case TCEOPEN: return "open error";
+    case TCECLOSE: return "close error";
+    case TCETRUNC: return "trunc error";
+    case TCESYNC: return "sync error";
+    case TCESTAT: return "stat error";
+    case TCESEEK: return "seek error";
+    case TCEREAD: return "read error";
+    case TCEWRITE: return "write error";
+    case TCEMMAP: return "mmap error";
+    case TCELOCK: return "lock error";
+    case TCEUNLINK: return "unlink error";
+    case TCERENAME: return "rename error";
+    case TCEMKDIR: return "mkdir error";
+    case TCERMDIR: return "rmdir error";
+    case TCEKEEP: return "existing record";
+    case TCENOREC: return "no record found";
+    case TCEMISC: return "miscellaneous error";
   }
   return "unknown error";
 }
