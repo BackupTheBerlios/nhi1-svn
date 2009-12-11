@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = libbrain abrain
+SUBDIRS = libbrain abrain atrans
 if USE_TCL
 SUBDIRS += tests
 endif
