@@ -27,6 +27,6 @@ for f in *.c *.h ; do
   if test -f "$t" ; then
     cp -v "$t" .
   else
-    Error "error: file \"$f\" does not belong to \"tokyocabinet\""
+    echo "warning: file \"$f\" does not belong to \"tokyocabinet\""
   fi
 done

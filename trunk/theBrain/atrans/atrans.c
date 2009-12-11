@@ -55,7 +55,7 @@ struct TransCtxS {
   struct MqS	mqctx;	///< \mqctxI
   TCHDB		*db;	///< context specific data
   MQ_INT	min;
-  MQ_MAX	max;
+  MQ_INT	max;
 };
 
 /*****************************************************************************/

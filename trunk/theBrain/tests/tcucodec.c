@@ -1244,102 +1244,110 @@ static int proctmpl(const char *ibuf, int isiz, TCMAP *vars){
 /* perform conf command */
 static int procconf(int mode){
   switch(mode){
-  case 'v':
-    printf("%s\n", tcversion);
-    break;
-  case 'i':
-    printf("%s\n", _TC_APPINC);
-    break;
-  case 'l':
-    printf("%s\n", _TC_APPLIBS);
-    break;
-  case 'p':
-    printf("%s\n", _TC_BINDIR);
-    break;
-  default:
-    printf("myconf(version): %s\n", tcversion);
-    printf("myconf(sysname): %s\n", TCSYSNAME);
-    printf("myconf(libver): %d\n", _TC_LIBVER);
-    printf("myconf(formatver): %s\n", _TC_FORMATVER);
-    printf("myconf(prefix): %s\n", _TC_PREFIX);
-    printf("myconf(includedir): %s\n", _TC_INCLUDEDIR);
-    printf("myconf(libdir): %s\n", _TC_LIBDIR);
-    printf("myconf(bindir): %s\n", _TC_BINDIR);
-    printf("myconf(libexecdir): %s\n", _TC_LIBEXECDIR);
-    printf("myconf(appinc): %s\n", _TC_APPINC);
-    printf("myconf(applibs): %s\n", _TC_APPLIBS);
-    printf("myconf(bigend): %d\n", TCBIGEND);
-    printf("myconf(usezlib): %d\n", TCUSEZLIB);
-    printf("myconf(usebzip): %d\n", TCUSEBZIP);
-    printf("type(bool): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(bool), _alignof(bool), TCALIGNOF(bool), (unsigned long long)true);
-    printf("type(char): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(char), _alignof(char), TCALIGNOF(char), (unsigned long long)CHAR_MAX);
-    printf("type(short): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(short), _alignof(short), TCALIGNOF(short), (unsigned long long)SHRT_MAX);
-    printf("type(int): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(int), _alignof(int), TCALIGNOF(int), (unsigned long long)INT_MAX);
-    printf("type(long): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(long), _alignof(long), TCALIGNOF(long), (unsigned long long)LONG_MAX);
-    printf("type(long long): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(long long), _alignof(long long), TCALIGNOF(long long),
-           (unsigned long long)LLONG_MAX);
-    printf("type(float): size=%d align=%d offset=%d max=%g\n",
-           sizeof(float), _alignof(float), TCALIGNOF(float), (double)FLT_MAX);
-    printf("type(double): size=%d align=%d offset=%d max=%g\n",
-           sizeof(double), _alignof(double), TCALIGNOF(double), (double)DBL_MAX);
-    printf("type(long double): size=%d align=%d offset=%d max=%Lg\n",
-           sizeof(long double), _alignof(long double), TCALIGNOF(long double),
-           (long double)LDBL_MAX);
-    printf("type(void *): size=%d align=%d offset=%d\n",
-           sizeof(void *), _alignof(void *), TCALIGNOF(void *));
-    printf("type(intptr_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(intptr_t), _alignof(intptr_t), TCALIGNOF(intptr_t),
-           (unsigned long long)INTPTR_MAX);
-    printf("type(size_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(size_t), _alignof(size_t), TCALIGNOF(size_t), (unsigned long long)SIZE_MAX);
-    printf("type(ptrdiff_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(ptrdiff_t), _alignof(ptrdiff_t), TCALIGNOF(ptrdiff_t),
-           (unsigned long long)PTRDIFF_MAX);
-    printf("type(wchar_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(wchar_t), _alignof(wchar_t), TCALIGNOF(wchar_t),
-           (unsigned long long)WCHAR_MAX);
-    printf("type(sig_atomic_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(sig_atomic_t), _alignof(sig_atomic_t), TCALIGNOF(sig_atomic_t),
-           (unsigned long long)SIG_ATOMIC_MAX);
-    printf("type(time_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(time_t), _alignof(time_t), TCALIGNOF(time_t),
-           (unsigned long long)_maxof(time_t));
-    printf("type(off_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(off_t), _alignof(off_t), TCALIGNOF(off_t),
-           (unsigned long long)_maxof(off_t));
-    printf("type(ino_t): size=%d align=%d offset=%d max=%llu\n",
-           sizeof(ino_t), _alignof(ino_t), TCALIGNOF(ino_t),
-           (unsigned long long)_maxof(ino_t));
-    printf("type(tcgeneric_t): size=%d align=%d offset=%d\n",
-           sizeof(tcgeneric_t), _alignof(tcgeneric_t), TCALIGNOF(tcgeneric_t));
-    printf("macro(RAND_MAX): %llu\n", (unsigned long long)RAND_MAX);
-    printf("macro(PATH_MAX): %llu\n", (unsigned long long)PATH_MAX);
-    printf("macro(NAME_MAX): %llu\n", (unsigned long long)NAME_MAX);
-    printf("macro(P_tmpdir): %s\n", P_tmpdir);
-    printf("sysconf(_SC_CLK_TCK): %ld\n", sysconf(_SC_CLK_TCK));
-    printf("sysconf(_SC_OPEN_MAX): %ld\n", sysconf(_SC_OPEN_MAX));
-    printf("sysconf(_SC_PAGESIZE): %ld\n", sysconf(_SC_PAGESIZE));
-    TCMAP *info = tcsysinfo();
-    if(info){
-      tcmapiterinit(info);
-      const char *name;
-      while((name = tcmapiternext2(info)) != NULL){
-        printf("sysinfo(%s): %s\n", name, tcmapiterval2(name));
+    case 'v':
+      printf("%s\n", tcversion);
+      break;
+    case 'i':
+      printf("%s\n", _TC_APPINC);
+      break;
+    case 'l':
+      printf("%s\n", _TC_APPLIBS);
+      break;
+    case 'p':
+      printf("%s\n", _TC_BINDIR);
+      break;
+    default:
+      printf("myconf(version): %s\n", tcversion);
+      printf("myconf(sysname): %s\n", TCSYSNAME);
+      printf("myconf(libver): %d\n", _TC_LIBVER);
+      printf("myconf(formatver): %s\n", _TC_FORMATVER);
+      printf("myconf(prefix): %s\n", _TC_PREFIX);
+      printf("myconf(includedir): %s\n", _TC_INCLUDEDIR);
+      printf("myconf(libdir): %s\n", _TC_LIBDIR);
+      printf("myconf(bindir): %s\n", _TC_BINDIR);
+      printf("myconf(libexecdir): %s\n", _TC_LIBEXECDIR);
+      printf("myconf(appinc): %s\n", _TC_APPINC);
+      printf("myconf(applibs): %s\n", _TC_APPLIBS);
+      printf("myconf(bigend): %d\n", TCBIGEND);
+      printf("myconf(usezlib): %d\n", TCUSEZLIB);
+      printf("myconf(usebzip): %d\n", TCUSEBZIP);
+      printf("type(bool): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(bool), (int)_alignof(bool), TCALIGNOF(bool),
+             (unsigned long long)true);
+      printf("type(char): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(char), (int)_alignof(char), TCALIGNOF(char),
+             (unsigned long long)CHAR_MAX);
+      printf("type(short): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(short), (int)_alignof(short), TCALIGNOF(short),
+             (unsigned long long)SHRT_MAX);
+      printf("type(int): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(int), (int)_alignof(int), TCALIGNOF(int),
+             (unsigned long long)INT_MAX);
+      printf("type(long): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(long), (int)_alignof(long), TCALIGNOF(long),
+             (unsigned long long)LONG_MAX);
+      printf("type(long long): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(long long), (int)_alignof(long long), TCALIGNOF(long long),
+             (unsigned long long)LLONG_MAX);
+      printf("type(float): size=%d align=%d offset=%d max=%g\n",
+             (int)sizeof(float), (int)_alignof(float), TCALIGNOF(float),
+             (double)FLT_MAX);
+      printf("type(double): size=%d align=%d offset=%d max=%g\n",
+             (int)sizeof(double), (int)_alignof(double), TCALIGNOF(double),
+             (double)DBL_MAX);
+      printf("type(long double): size=%d align=%d offset=%d max=%Lg\n",
+             (int)sizeof(long double), (int)_alignof(long double), TCALIGNOF(long double),
+             (long double)LDBL_MAX);
+      printf("type(void *): size=%d align=%d offset=%d\n",
+             (int)sizeof(void *), (int)_alignof(void *), TCALIGNOF(void *));
+      printf("type(intptr_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(intptr_t), (int)_alignof(intptr_t), TCALIGNOF(intptr_t),
+             (unsigned long long)INTPTR_MAX);
+      printf("type(size_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(size_t), (int)_alignof(size_t), TCALIGNOF(size_t),
+             (unsigned long long)SIZE_MAX);
+      printf("type(ptrdiff_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(ptrdiff_t), (int)_alignof(ptrdiff_t), TCALIGNOF(ptrdiff_t),
+             (unsigned long long)PTRDIFF_MAX);
+      printf("type(wchar_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(wchar_t), (int)_alignof(wchar_t), TCALIGNOF(wchar_t),
+             (unsigned long long)WCHAR_MAX);
+      printf("type(sig_atomic_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(sig_atomic_t), (int)_alignof(sig_atomic_t), TCALIGNOF(sig_atomic_t),
+             (unsigned long long)SIG_ATOMIC_MAX);
+      printf("type(time_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(time_t), (int)_alignof(time_t), TCALIGNOF(time_t),
+             (unsigned long long)_maxof(time_t));
+      printf("type(off_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(off_t), (int)_alignof(off_t), TCALIGNOF(off_t),
+             (unsigned long long)_maxof(off_t));
+      printf("type(ino_t): size=%d align=%d offset=%d max=%llu\n",
+             (int)sizeof(ino_t), (int)_alignof(ino_t), TCALIGNOF(ino_t),
+             (unsigned long long)_maxof(ino_t));
+      printf("type(tcgeneric_t): size=%d align=%d offset=%d\n",
+             (int)sizeof(tcgeneric_t), (int)_alignof(tcgeneric_t), TCALIGNOF(tcgeneric_t));
+      printf("macro(RAND_MAX): %llu\n", (unsigned long long)RAND_MAX);
+      printf("macro(PATH_MAX): %llu\n", (unsigned long long)PATH_MAX);
+      printf("macro(NAME_MAX): %llu\n", (unsigned long long)NAME_MAX);
+      printf("macro(P_tmpdir): %s\n", P_tmpdir);
+      printf("sysconf(_SC_CLK_TCK): %ld\n", sysconf(_SC_CLK_TCK));
+      printf("sysconf(_SC_OPEN_MAX): %ld\n", sysconf(_SC_OPEN_MAX));
+      printf("sysconf(_SC_PAGESIZE): %ld\n", sysconf(_SC_PAGESIZE));
+      TCMAP *info = tcsysinfo();
+      if(info){
+        tcmapiterinit(info);
+        const char *name;
+        while((name = tcmapiternext2(info)) != NULL){
+          printf("sysinfo(%s): %s\n", name, tcmapiterval2(name));
+        }
+        tcmapdel(info);
       }
-      tcmapdel(info);
-    }
-    struct stat sbuf;
-    if(stat(MYCDIRSTR, &sbuf) == 0){
-      printf("stat(st_uid): %d\n", (int)sbuf.st_uid);
-      printf("stat(st_gid): %d\n", (int)sbuf.st_gid);
-      printf("stat(st_blksize): %d\n", (int)sbuf.st_blksize);
-    }
+      struct stat sbuf;
+      if(stat(MYCDIRSTR, &sbuf) == 0){
+        printf("stat(st_uid): %d\n", (int)sbuf.st_uid);
+        printf("stat(st_gid): %d\n", (int)sbuf.st_gid);
+        printf("stat(st_blksize): %d\n", (int)sbuf.st_blksize);
+      }
   }
   return 0;
 }

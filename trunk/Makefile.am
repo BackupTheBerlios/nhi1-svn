@@ -18,6 +18,9 @@ SUBDIRS = theLink win performance
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
+if USE_GUARD
+SUBDIRS += theGuard
+endif
 mann_MANS =   man/mann/libmsgque.n \
 	      man/mann/ccmsgque.n \
 	      man/mann/javamsgque.n \
@@ -33,7 +36,7 @@ EXTRA_DIST = make_binary_dist.sh $(mann_MANS)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-brain --enable-cxx \
       --enable-java --enable-csharp --enable-python --enable-perl --enable-vb \
-	--enable-static
+	--enable-static --enable-guard
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command

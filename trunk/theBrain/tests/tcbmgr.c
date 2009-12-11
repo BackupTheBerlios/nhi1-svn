@@ -699,48 +699,48 @@ static int procput(const char *path, const char *kbuf, int ksiz, const char *vbu
   }
   bool err = false;
   switch(dmode){
-  case -1:
-    if(!tcbdbputkeep(bdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  case 1:
-    if(!tcbdbputcat(bdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  case 2:
-    if(!tcbdbputdup(bdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  case 3:
-    if(!tcbdbputdupback(bdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  case 10:
-    if(tcbdbaddint(bdb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  case 11:
-    if(isnan(tcbdbadddouble(bdb, kbuf, ksiz, tcatof(vbuf)))){
-      printerr(bdb);
-      err = true;
-    }
-    break;
-  default:
-    if(!tcbdbput(bdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(bdb);
-      err = true;
-    }
-    break;
+    case -1:
+      if(!tcbdbputkeep(bdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    case 1:
+      if(!tcbdbputcat(bdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    case 2:
+      if(!tcbdbputdup(bdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    case 3:
+      if(!tcbdbputdupback(bdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    case 10:
+      if(tcbdbaddint(bdb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    case 11:
+      if(isnan(tcbdbadddouble(bdb, kbuf, ksiz, tcatof(vbuf)))){
+        printerr(bdb);
+        err = true;
+      }
+      break;
+    default:
+      if(!tcbdbput(bdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(bdb);
+        err = true;
+      }
+      break;
   }
   if(!tcbdbclose(bdb)){
     if(!err) printerr(bdb);

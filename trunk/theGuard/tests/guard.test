@@ -1,0 +1,318 @@
+#+
+#§  \file       theGuard/tests/guard.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+set TS_SCRIPT [info script]
+source [file join [file dirname [info script]] library.tcl]
+if {![testConstraint guard]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+array set DB {
+  MH	  *
+  MB	  +
+  FH	  tmp.tch
+  FB	  tmp.tcb
+  FF	  tmp.tcf
+  FT	  tmp.tct
+}
+  
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## database
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+      # database-type: 
+      foreach D { MH MB FH FB FF } {
+
+	testConstraint $D yes
+
+	if {$D eq "FF"} {
+	  array set KEY {1 {SendW 1}     2 {SendW 2}     3 {SendW 3}}
+	} else {
+	  array set KEY {1 {SendC data1} 2 {SendC data2} 3 {SendC data3}}
+	}
+
+# tests ----------------------------
+
+test guard-1-($I|$B|$C|$S|$D) {AOPN and ACLO using an database} \
+    -body           {
+      # open a datatbase
+      Echo0 $FH_LAST AOPN SendC $DB($D)
+      Echo0 $FH_LAST ACLO
+    } \
+    -returnCodes    ok \
+    -result         ""
+
+test guard-2-($I|$B|$C|$S|$D) {APUT and AGET data} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC $DB($D)
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendD 4.67 {*}$KEY(3) SendC "Hallo World"
+      EchoL $FH_LAST AGET {*}$KEY(1) {*}$KEY(2) {*}$KEY(3)
+    } \
+    -returnCodes    ok \
+    -result         {999 4.67 {Hallo World}}
+
+test guard-3-($I|$B|$C|$S|$D) {APUT and AGET data} \
+    -constraints    { FH||FB||FF||FT } \
+    -setup	    {
+      if {[string match F* $D]} {file delete $DB($D)}
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      # step #1 - put data
+      Echo0 $FH_LAST AOPN SendC $DB($D)
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendD 4.67 {*}$KEY(3) SendC "Hallo World"
+      Echo0 $FH_LAST ACLO
+
+      # step #2 - get data
+      Echo0 $FH_LAST AOPN SendC $DB($D)
+      EchoL $FH_LAST AGET {*}$KEY(1) {*}$KEY(2) {*}$KEY(3)
+    } \
+    -returnCodes    ok \
+    -result         {999 4.67 {Hallo World}}
+
+test guard-4-($I|$B|$C|$S|$D) {KEEP data} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT       {*}$KEY(1) SendI 999
+      Echo1 $FH_LAST AGET ReadI {*}$KEY(1)
+    } \
+    -returnCodes    ok \
+    -result         {999}
+
+test guard-5-($I|$B|$C|$S|$D) {KEEP data} \
+    -constraints    { FH||FB||FF||FT } \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999
+      Echo0 $FH_LAST AKEP {*}$KEY(1) SendI 888
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|AKEP> <Num|21>
+[sS]> (server-0) \[AKEP*] existing record}
+
+test guard-5-($I|$B|$C|$S|$D) {KEEP data} \
+    -constraints    { MH||MB } \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999
+      Echo0 $FH_LAST AKEP {*}$KEY(1) SendI 888
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|AKEP> <Num|1>
+[sS]> (server-0) \[AKEP] failed}
+
+test guard-6-($I|$B|$C|$S|$D) {OUT data} \
+    -constraints    { FH||FB||FF||FT } \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      set RET [list]
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999
+      Echo0 $FH_LAST AOUT {*}$KEY(1)
+      Echo1 $FH_LAST AGET ReadI {*}$KEY(1)
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|AGET> <Num|22>
+[sS]> (server-0) \[AGET*] no record found}
+
+test guard-6-($I|$B|$C|$S|$D) {OUT data} \
+    -constraints    { MH||MB } \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999
+      Echo0 $FH_LAST AOUT {*}$KEY(1)
+      Echo1 $FH_LAST AGET ReadI {*}$KEY(1)
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|AGET> <Num|1>
+[sS]> (server-0) \[AGET] failed}
+
+test guard-7-($I|$B|$C|$S|$D) {SIZE data} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendC "Andreas Otto"
+      EchoL $FH_LAST ASIZ {*}$KEY(1) {*}$KEY(2)
+    } \
+    -returnCodes    ok \
+    -result         {7 24}    ; # value include the package header, I=1+1+4+1 and C=1+1+8+1+Andreas Otto+1
+
+test guard-8-($I|$B|$C|$S|$D) {ITERATOR data} \
+    -constraints    {FF} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendC "Andreas Otto" {*}$KEY(3) SendD -6.9
+      EchoL $FH_LAST AITI
+      EchoL $FH_LAST AITN SendI 999
+    } \
+    -returnCodes    ok \
+    -result         {1 2 3}
+
+test guard-8-($I|$B|$C|$S|$D) {ITERATOR data} \
+    -constraints    {!FF} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendC "Andreas Otto" {*}$KEY(3) SendD -6.9
+      EchoL $FH_LAST AITI
+      EchoL $FH_LAST AITN SendI 999
+    } \
+    -returnCodes    ok \
+    -result         {data1 data2 data3}
+
+test guard-9-($I|$B|$C|$S|$D) {check transaction statement} \
+    -constraints    {FH||FB||FF} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      set RET [list]
+      Echo0 $FH_LAST ATRB
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999
+      Echo0 $FH_LAST ATRC
+      lappend RET [Echo1 $FH_LAST AGET ReadI {*}$KEY(1)]
+      lappend RET --
+      Echo0 $FH_LAST ATRB
+      Echo0 $FH_LAST APUT {*}$KEY(2) SendI 888
+      Echo0 $FH_LAST ATRA
+      catch {Echo1 $FH_LAST AGET ReadI {*}$KEY(2)} ERR
+      lappend RET $ERR
+      set RET
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {999 -- {[cC]> (client-0) \[service-call-error] <Tok|AGET> <Num|22>
+[sS]> (server-0) \[AGET*] no record found}}
+
+test guard-10-($I|$B|$C|$S|$D) {vanish data} \
+    -setup	    {
+      Echo0 $FH_LAST AOPN SendC "$DB($D)#mode=wct"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST ACLO
+    } \
+    -body           {
+      set RET [list]
+      Echo0 $FH_LAST APUT {*}$KEY(1) SendI 999 {*}$KEY(2) SendC "Andreas Otto" {*}$KEY(3) SendD -6.9
+      Echo0 $FH_LAST AITI
+      lappend RET [llength [EchoL $FH_LAST AITN]]
+      Echo0 $FH_LAST AVAN
+      lappend RET [llength [EchoL $FH_LAST AITN]]
+      set RET
+    } \
+    -returnCodes    ok \
+    -result         {3 0}
+
+
+# cleanup ---------------------------
+
+	testConstraint $D no
+     }; # database
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+file delete -force tmp.tch tmp.tcb tmp.tcf tmp.tct 
+freeTests
+

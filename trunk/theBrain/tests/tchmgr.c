@@ -543,10 +543,10 @@ static int procinform(const char *path, int omode){
   printf("path: %s\n", npath);
   const char *type = "(unknown)";
   switch(tchdbtype(hdb)){
-  case TCDBTHASH: type = "hash"; break;
-  case TCDBTBTREE: type = "btree"; break;
-  case TCDBTFIXED: type = "fixed"; break;
-  case TCDBTTABLE: type = "table"; break;
+    case TCDBTHASH: type = "hash"; break;
+    case TCDBTBTREE: type = "btree"; break;
+    case TCDBTFIXED: type = "fixed"; break;
+    case TCDBTTABLE: type = "table"; break;
   }
   printf("database type: %s\n", type);
   uint8_t flags = tchdbflags(hdb);
@@ -595,36 +595,36 @@ static int procput(const char *path, const char *kbuf, int ksiz, const char *vbu
   }
   bool err = false;
   switch(dmode){
-  case -1:
-    if(!tchdbputkeep(hdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(hdb);
-      err = true;
-    }
-    break;
-  case 1:
-    if(!tchdbputcat(hdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(hdb);
-      err = true;
-    }
-    break;
-  case 10:
-    if(tchdbaddint(hdb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
-      printerr(hdb);
-      err = true;
-    }
-    break;
-  case 11:
-    if(isnan(tchdbadddouble(hdb, kbuf, ksiz, tcatof(vbuf)))){
-      printerr(hdb);
-      err = true;
-    }
-    break;
-  default:
-    if(!tchdbput(hdb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(hdb);
-      err = true;
-    }
-    break;
+    case -1:
+      if(!tchdbputkeep(hdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(hdb);
+        err = true;
+      }
+      break;
+    case 1:
+      if(!tchdbputcat(hdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(hdb);
+        err = true;
+      }
+      break;
+    case 10:
+      if(tchdbaddint(hdb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
+        printerr(hdb);
+        err = true;
+      }
+      break;
+    case 11:
+      if(isnan(tchdbadddouble(hdb, kbuf, ksiz, tcatof(vbuf)))){
+        printerr(hdb);
+        err = true;
+      }
+      break;
+    default:
+      if(!tchdbput(hdb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(hdb);
+        err = true;
+      }
+      break;
   }
   if(!tchdbclose(hdb)){
     if(!err) printerr(hdb);

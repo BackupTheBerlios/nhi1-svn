@@ -71,6 +71,10 @@ array set LABELIGNORE {
     ./theBrain/abrain		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags abrain }
     ./theBrain/atrans		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags atrans }
 
+    ./theGuard			{ Makefile.in Makefile }
+    ./theGuard/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client }
+    ./theGuard/aguard		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags aguard }
+
     ./win		{ c cc csharp vb win Makefile.in Makefile win.sln .CHANGE }
     .			{ aclocal.m4 ltmain.sh libtool.m4 install-sh depcomp Makefile.in 
 			    configure config.guess config.sub .PERSONAL missing autom4te.cache 

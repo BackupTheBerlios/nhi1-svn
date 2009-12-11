@@ -806,6 +806,27 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 ])
 
 #------------------------------------------------------------------------
+# SC_ENABLE_GUARD --
+#
+#       Specify if GUARD support is needed
+#
+# Arguments:
+#       none
+#
+# Results:
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_ENABLE_GUARD], [
+  AC_MSG_CHECKING([for build with GUARD])
+  AC_ARG_ENABLE(guard,
+      AC_HELP_STRING([--enable-guard], [build theLink with GUARD support]))
+  AC_MSG_RESULT($enable_guard)
+  AC_SUBST([USE_GUARD], $enable_guard)
+  AM_CONDITIONAL([USE_GUARD], [test x$enable_guard = xyes])
+])
+
+#------------------------------------------------------------------------
 # include additional macros --
 #------------------------------------------------------------------------
 

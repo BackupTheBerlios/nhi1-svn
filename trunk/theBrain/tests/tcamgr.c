@@ -120,13 +120,13 @@ static int sepstrtochr(const char *str){
 
 /* encode a string as a zero separaterd string */
 static char *strtozsv(const char *str, int sep, int *sp){
- int size = strlen(str);
- char *buf = tcmemdup(str, size);
- for(int i = 0; i < size; i++){
-   if(buf[i] == sep) buf[i] = '\0';
- }
- *sp = size;
- return buf;
+  int size = strlen(str);
+  char *buf = tcmemdup(str, size);
+  for(int i = 0; i < size; i++){
+    if(buf[i] == sep) buf[i] = '\0';
+  }
+  *sp = size;
+  return buf;
 }
 
 
@@ -602,14 +602,14 @@ static int procinform(const char *name){
   printf("path: %s\n", path);
   const char *type = "(unknown)";
   switch(tcadbomode(adb)){
-  case ADBOVOID: type = "not opened"; break;
-  case ADBOMDB: type = "on-memory hash database"; break;
-  case ADBONDB: type = "on-memory tree database"; break;
-  case ADBOHDB: type = "hash database"; break;
-  case ADBOBDB: type = "B+ tree database"; break;
-  case ADBOFDB: type = "fixed-length database"; break;
-  case ADBOTDB: type = "table database"; break;
-  case ADBOSKEL: type = "skeleton database"; break;
+    case ADBOVOID: type = "not opened"; break;
+    case ADBOMDB: type = "on-memory hash database"; break;
+    case ADBONDB: type = "on-memory tree database"; break;
+    case ADBOHDB: type = "hash database"; break;
+    case ADBOBDB: type = "B+ tree database"; break;
+    case ADBOFDB: type = "fixed-length database"; break;
+    case ADBOTDB: type = "table database"; break;
+    case ADBOSKEL: type = "skeleton database"; break;
   }
   printf("database type: %s\n", type);
   printf("record number: %llu\n", (unsigned long long)tcadbrnum(adb));
@@ -652,36 +652,36 @@ static int procput(const char *name, const char *kbuf, int ksiz, const char *vbu
   }
   bool err = false;
   switch(dmode){
-  case -1:
-    if(!tcadbputkeep(adb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(adb);
-      err = true;
-    }
-    break;
-  case 1:
-    if(!tcadbputcat(adb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(adb);
-      err = true;
-    }
-    break;
-  case 10:
-    if(tcadbaddint(adb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
-      printerr(adb);
-      err = true;
-    }
-    break;
-  case 11:
-    if(isnan(tcadbadddouble(adb, kbuf, ksiz, tcatof(vbuf)))){
-      printerr(adb);
-      err = true;
-    }
-    break;
-  default:
-    if(!tcadbput(adb, kbuf, ksiz, vbuf, vsiz)){
-      printerr(adb);
-      err = true;
-    }
-    break;
+    case -1:
+      if(!tcadbputkeep(adb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(adb);
+        err = true;
+      }
+      break;
+    case 1:
+      if(!tcadbputcat(adb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(adb);
+        err = true;
+      }
+      break;
+    case 10:
+      if(tcadbaddint(adb, kbuf, ksiz, tcatoi(vbuf)) == INT_MIN){
+        printerr(adb);
+        err = true;
+      }
+      break;
+    case 11:
+      if(isnan(tcadbadddouble(adb, kbuf, ksiz, tcatof(vbuf)))){
+        printerr(adb);
+        err = true;
+      }
+      break;
+    default:
+      if(!tcadbput(adb, kbuf, ksiz, vbuf, vsiz)){
+        printerr(adb);
+        err = true;
+      }
+      break;
   }
   if(!tcadbclose(adb)){
     if(!err) printerr(adb);
