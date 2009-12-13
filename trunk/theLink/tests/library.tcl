@@ -563,39 +563,44 @@ if {[info exists ::tcl_platform(threaded)]} {
 }
 
 # without --enable-java no java
-if {$JAVA eq ""} {
+if {!$USE_JAVA} {
   set env(SRV_LST) [filterGet -not SRV_LST java]
   set env(LNG_LST) [filterGet -not LNG_LST java]
 }
 
 # without --enable-cxx no c++
-if {$USE_CXX eq "no"} {
+if {!$USE_CXX} {
   set env(SRV_LST) [filterGet -not SRV_LST cc]
   set env(LNG_LST) [filterGet -not LNG_LST cc]
 }
 
 # without --enable-python no python
-if {$PYTHON eq ""} {
+if {!$USE_PYTHON} {
   set env(SRV_LST) [filterGet -not SRV_LST python]
   set env(LNG_LST) [filterGet -not LNG_LST python]
 }
 
 # without --enable-perl no perl
-if {$PERL eq ""} {
+if {!$USE_PERL} {
   set env(SRV_LST) [filterGet -not SRV_LST perl]
   set env(LNG_LST) [filterGet -not LNG_LST perl]
 }
 
 # without --enable-csharp no C#
-if {$CLREXEC eq ""} {
+if {!$USE_CSHARP} {
   set env(SRV_LST) [filterGet -not SRV_LST csharp]
   set env(LNG_LST) [filterGet -not LNG_LST csharp]
+}
+
+# without --enable-vb no VB.NET
+if {!$USE_CSHARP} {
   set env(SRV_LST) [filterGet -not SRV_LST vb]
   set env(LNG_LST) [filterGet -not LNG_LST vb]
+  if {$CLREXEC eq "NATIVE"} {
+    set CLREXEC {}
+  }
 }
-if {$CLREXEC eq "NATIVE"} {
-  set CLREXEC {}
-}
+
 
 # try to analyse the "argv" array
 if {[info exist argv]} {

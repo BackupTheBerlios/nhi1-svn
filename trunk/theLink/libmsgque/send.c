@@ -510,13 +510,34 @@ MqSendN (
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    register struct MqBufferS * const buf = context->link.send->buf;
+    register struct MqBufferS * const buf = send->buf;
     register const int len2 = len+1;
     pBufferAddSize (buf, len2);
     memcpy (buf->cur.B, in, len);
     buf->numItems++;
     buf->cursize += len2;
     buf->cur.B += len;
+    return MQ_OK;
+  }
+}
+
+enum MqErrorE
+MqSendBDY (
+  struct MqS * const context,
+  MQ_BUF const in
+)
+{
+  struct MqSendS * const send = context->link.send;
+  if (unlikely(send == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    register struct MqBufferS * const buf = send->buf;
+    register MQ_SIZE const newlen = sizeof(struct HdrS) + in->cursize;
+    pBufferNewSize (buf, newlen);
+    memcpy (buf->data + sizeof(struct HdrS), in->data, in->cursize);
+    buf->numItems = in->numItems;
+    buf->cursize = newlen;
+    buf->cur.B = buf->data + newlen;
     return MQ_OK;
   }
 }

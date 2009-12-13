@@ -27,6 +27,20 @@
 #define TOKEN_LEN (HDR_TOK_LEN+1)
 #define MQ_CONTEXT_S token->context
 
+// can be (*((MQ_INT const *)(bin)))
+static mq_inline MQ_INT pByte2INT (
+  //MQ_BINB const * const bin
+  MQ_CST const bin
+) {
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+  MQ_INT i;
+  memcpy(&i,bin,sizeof(MQ_INT));
+  return i;
+#else
+  return (*((MQ_INT const *)(bin)));
+#endif
+}
+
 #if defined(WORDS_BIGENDIAN)
 #   define pTokenCmpD(s1,s2) (pByte2INT(s1) - pByte2INT(s2))
 #else
@@ -58,13 +72,14 @@ struct pTokenSpaceS {
   struct MqS * context;  ///< link to the error object
   struct pTokenItemS *items;    ///< array of the items
   struct pTokenItemS *lastItem; ///< save the last item
+  struct MqCallbackS all;	///< data of the "+ALL" item
   MQ_SIZE size;                 ///< max possible number of items
   MQ_SIZE used;                 ///< number of used entries in the items
   MQ_INT sorted;		///< is the array sorted ?
 };
 
 struct MqTokenS {
-  struct MqS * context;	///< link to msgque object
+  struct MqS * context;		///< link to msgque object
   MQ_STRB current[TOKEN_LEN];	///< kind the the current action
   struct pTokenSpaceS *loc;     ///< the local handler
 };
@@ -296,20 +311,29 @@ pTokenInvoke (
     space->sorted = 1;
   }
   // ATTENTION: token->lastItem was filled in pTokenCreate
-  if (sTokenCompare2 (&icurrent, space->lastItem) == 0) {
-    item = space->lastItem;
-  }
+  for (;;) {
+    if (sTokenCompare2 (&icurrent, space->lastItem) == 0) {
+      item = space->lastItem;
+      if (item != NULL) break;
+    }
 
-  if (unlikely (item == NULL)) {
-    item = (struct pTokenItemS *) bsearch (&icurrent, space->items,
-	space->used, sizeof (struct pTokenItemS), sTokenCompare2);
-  }
+    // search all items
+    if (space->used != 0) {
+      item = (struct pTokenItemS *) bsearch (&icurrent, space->items,
+	  space->used, sizeof (struct pTokenItemS), sTokenCompare2);
+      if (item != NULL) break;
+    }
 
-  if (likely (item != NULL)) {
-    space->lastItem = item;
-  } else {
+    // search "+ALL" items
+    if (space->all.fFunc != NULL) {
+      return (space->all.fFunc (token->context, space->all.data));
+    }
+
+    // nothing found -> break
     return MqErrorV (token->context, __func__, -1, "token <%s> not found", token->current);
-  }
+  };
+
+  space->lastItem = item;
 
 /*
     MqDLogV(context,1,"current<%s>, currentPtr->proc<%p>, currentPtr->data<%p>\n", 
@@ -330,26 +354,30 @@ pTokenAddHdl (
   register struct pTokenSpaceS * const space = token->loc;
   register struct pTokenItemS *free;
 
-  MQ_INT nameI = pByte2INT(name); 
-
   MqDLogV(context, 4, "HANDEL %s ADD %s: proc<%p>, data<%p>\n",
-          (token == context->link.srvT ? "SERVICE" : "RETURN"), name, callback.fFunc, callback.data);
+    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, callback.fFunc, callback.data);
 
-  if (sTokenSpaceFindItem (space->items, space->items + space->used, nameI))
-    return MqErrorV (context, __func__, -1, "item '%s' already available", name);
+  if (!strncmp (name, "+ALL", 4)) {
+    if (space->all.fFunc != NULL) goto error2;
+    space->all = callback;
+  } else {
+    MQ_INT nameI = pByte2INT(name); 
+    if (sTokenSpaceFindItem (space->items, space->items + space->used, nameI)) goto error2;
+    MqErrorCheck (sTokenSpaceAdd (space, 1));
 
-  MqErrorCheck (sTokenSpaceAdd (space, 1));
+    free = space->items + space->used;
 
-  free = space->items + space->used;
+    space->sorted = 0;
+    space->used += 1;
 
-  space->sorted = 0;
-  space->used += 1;
-
-  free->name = nameI;
-  free->callback = callback;
+    free->name = nameI;
+    free->callback = callback;
+  }
 
 error:
   return MqErrorStack (context);
+error2:
+  return MqErrorV (context, __func__, -1, "item '%s' already available", name);
 }
 
 enum MqErrorE
@@ -359,6 +387,10 @@ pTokenDelHdl (
 )
 {
   MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, token);
+  if (!strncmp (name, "+ALL", 4)) {
+    token->loc->all.fFunc = NULL;
+    return MQ_OK;
+  }
   return sTokenSpaceDelItem (token->loc, name);
 }
 
@@ -455,46 +487,56 @@ pTokenCheckSystem (
 	}
       break;
     }
-    case 'I':                  // _IAA:: SERVER, (I) (A)m (A)vailable
-      // -> client need the rmtCtx pointer from the server
-      // -> server need 'binary mode' and 'endian mode' from the client
-      if (MQ_IS_SERVER_PARENT (context)) {
-	MQ_BOL myendian, mystring;
-	struct MqBufferS * name = NULL;
+    case 'I': 
+      curr++;
+      switch (*curr) {
+	case 'A': {	      // _IAA:: SERVER, (I) (A)m (A)vailable
+	  // -> client need the rmtCtx pointer from the server
+	  // -> server need 'binary mode' and 'endian mode' from the client
+	  if (MQ_IS_SERVER_PARENT (context)) {
+	    MQ_BOL myendian, mystring;
+	    struct MqBufferS * name = NULL;
 
-        MqConfigSetIsString(context, MQ_YES);
+	    MqConfigSetIsString(context, MQ_YES);
 
-	// read the binary mode
-	MqReadO(context, &mystring);
+	    // read the binary mode
+	    MqReadO(context, &mystring);
 
-	// read the other endian and set my context->link.endian
-	MqReadO(context, &myendian);
+	    // read the other endian and set my context->link.endian
+	    MqReadO(context, &myendian);
 # if defined(WORDS_BIGENDIAN)
-	context->link.endian = (myendian ? MQ_NO : MQ_YES);
+	    context->link.endian = (myendian ? MQ_NO : MQ_YES);
 # else
-	context->link.endian = (myendian ? MQ_YES : MQ_NO);
+	    context->link.endian = (myendian ? MQ_YES : MQ_NO);
 # endif
 
-	// read server name
-	MqReadU(context, &name);
-	if (name->cursize > 0) {
-	  MqConfigSetName (context, name->cur.C);
+	    // read server name
+	    MqReadU(context, &name);
+	    if (name->cursize > 0) {
+	      MqConfigSetName (context, name->cur.C);
+	    }
+
+	    // send my endian back
+	    MqSendSTART (context);
+# if defined(WORDS_BIGENDIAN)
+	    MqSendO (context, MQ_YES);
+# else
+	    MqSendO (context, MQ_NO);
+# endif
+	    MqErrorCheck (pSendSYSTEM_RETR (context));
+
+	    // set the binary mode
+	    MqConfigSetIsString(context, mystring);
+	    pReadSetType(context, mystring);
+	  }
+	  break;
 	}
-
-	// send my endian back
-        MqSendSTART (context);
-# if defined(WORDS_BIGENDIAN)
-	MqSendO (context, MQ_YES);
-# else
-        MqSendO (context, MQ_NO);
-# endif
-	MqErrorCheck (pSendSYSTEM_RETR (context));
-
-	// set the binary mode
-	MqConfigSetIsString(context, mystring);
-	pReadSetType(context, mystring);
-
-	break;
+	case 'D': {	      // _IDN:: SERVER, get "ident"
+	  MqSendSTART(context);
+	  MqSendC(context, (context->config.ident != NULL ? context->config.ident : "NULL"));
+	  MqErrorCheck (MqSendRETURN(context));
+	  break;
+	}
       }
       break;
     case 'O':                  // _OKS: SERVER , CHILD statup OK

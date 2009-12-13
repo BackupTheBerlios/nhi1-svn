@@ -35,20 +35,6 @@ sBufferSetA4 ( struct MqBufferS * const, union MqBufferAtomU const, enum MqTypeE
 static struct MqBufferS *
 sBufferSetA8 ( struct MqBufferS * const, union MqBufferAtomU const, enum MqTypeE const);
 
-// can be (*((MQ_INT const *)(bin)))
-MQ_INT pByte2INT (
-  //MQ_BINB const * const bin
-  MQ_CST const bin
-) {
-#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
-  MQ_INT i;
-  memcpy(&i,bin,sizeof(MQ_INT));
-  return i;
-#else
-  return (*((MQ_INT const *)(bin)));
-#endif
-}
-
 // can be ((*buf->cur.A).Y)
 MQ_BYT MqBufU2BYT (
   union MqBufferU buf

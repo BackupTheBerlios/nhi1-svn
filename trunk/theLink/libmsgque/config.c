@@ -295,6 +295,16 @@ MqConfigSetName (
 }
 
 void 
+MqConfigSetIdent (
+  struct MqS * const context,
+  MQ_CST  data
+) {
+  MqSysFree(context->config.ident);
+  context->config.ident = mq_strdup_save(data);
+}
+
+
+void 
 MqConfigSetSrvName (
   struct MqS * const context,
   MQ_CST  data
@@ -706,6 +716,33 @@ MqConfigGetName (
 )
 {
   return context->config.name;
+}
+
+MQ_CST 
+MqConfigGetIdent (
+  struct MqS const * const context
+)
+{
+  return context->config.ident;
+}
+
+MQ_BOL 
+MqConfigCheckIdent (
+  struct MqS * const context,
+  MQ_CST ident
+)
+{
+  struct MqS * const ftrCtx = MQ_IS_CLIENT(context) ? context : MqSlaveGet (context, 0);
+  MQ_CST ftrIdent;
+  if (ftrCtx == NULL) return MQ_NO;
+  MqErrorCheck (MqSendSTART (ftrCtx));
+  MqErrorCheck (MqSendEND_AND_WAIT (ftrCtx, "_IDN", MQ_TIMEOUT_USER));
+  MqErrorCheck (MqReadC (ftrCtx, &ftrIdent));
+  if (strcmp (ident, ftrIdent)) return MQ_NO;
+  return MQ_YES;
+error:
+  MqErrorReset(context);
+  return MQ_NO;
 }
 
 MQ_CST 

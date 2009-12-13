@@ -36,13 +36,13 @@ FINAL_PKG=$TOPDIR/binary-dist/$PKG.zip
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 
 ARGS=""
-test "$JAVA" != ""	    && ARGS="$ARGS --enable-java"
-test "$PYTHON" != ""	    && ARGS="$ARGS --enable-python"
-test "$USE_CSHARP" == "yes" && ARGS="$ARGS --enable-csharp"
-test "$USE_VB" == "yes"	    && ARGS="$ARGS --enable-vb"
-test "$PERL" != ""	    && ARGS="$ARGS --enable-perl"
-test "$TCLSH" != ""	    && ARGS="$ARGS --enable-tcl"
-test "$USE_CXX" == "yes"    && ARGS="$ARGS --enable-cxx"
+test "$USE_JAVA"    == "yes"  && ARGS="$ARGS --enable-java"
+test "$USE_PYTHON"  == "yes"  && ARGS="$ARGS --enable-python"
+test "$USE_CSHARP"  == "yes"  && ARGS="$ARGS --enable-csharp"
+test "$USE_VB"	    == "yes"  && ARGS="$ARGS --enable-vb"
+test "$USE_PERL"    == "yes"  && ARGS="$ARGS --enable-perl"
+test "$USE_TCLSH"   == "yes"  && ARGS="$ARGS --enable-tcl"
+test "$USE_CXX"	    == "yes"  && ARGS="$ARGS --enable-cxx"
 
 bash ./configure --prefix=/usr/local --enable-threads $ARGS || exit 1
 

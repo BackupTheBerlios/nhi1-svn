@@ -38,6 +38,18 @@ struct GuardCtxS {
 /*                                                                           */
 /*****************************************************************************/
 
+static void encrypt (MQ_BIN data, MQ_SIZE size) {
+  while (size--) {
+    *data += size;
+  }
+}
+
+static void decrypt (MQ_BIN data, MQ_SIZE size) {
+  while (size--) {
+    *data -= size;
+  }
+}
+
 /// \brief display help using \b -h or \b --help command-line option
 /// \param base the executable usually: <tt>basename(argv[0])</tt>
 static void __attribute__ ((noreturn))
@@ -60,6 +72,68 @@ GuardHelp (const char * base)
   exit(EXIT_SUCCESS);
 }
 
+static enum MqErrorE
+PkgToGuard (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_BUF  bdy;
+  struct MqBufferS ret;
+  struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
+  //SETUP_guard;
+
+  MqSendSTART (mqctx);
+  MqErrorCheck1 (MqReadBDY (mqctx, &bdy));
+  // do "encryption" of bdy
+  encrypt (bdy->data, bdy->cursize);
+  MqErrorCheck1 (MqSendSTART (ftrCtx));
+  MqErrorCheck1 (MqSendB (ftrCtx, bdy->data, bdy->cursize));
+  MqErrorCheck1 (MqSendI (ftrCtx, bdy->numItems));
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
+  MqErrorCheck1 (MqReadB (ftrCtx, &ret.data, &ret.cursize));
+  MqErrorCheck1 (MqReadI (ftrCtx, &ret.numItems));
+  // do "decryption" of bdy
+  decrypt (ret.data, ret.cursize);
+  MqErrorCheck (MqSendBDY (mqctx, bdy));
+  goto error;
+error1:
+  MqErrorCopy (mqctx, ftrCtx);
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE
+GuardToPkg (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_BUF ret;
+  struct MqBufferS  bdy;
+  struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
+  //SETUP_guard;
+
+  MqSendSTART (mqctx);
+  MqErrorCheck (MqReadB (mqctx, &bdy.data, &bdy.cursize));
+  MqErrorCheck (MqReadI (mqctx, &bdy.numItems));
+  // do "decryption" of dat
+  decrypt (bdy.data, bdy.cursize);
+  MqErrorCheck1	(MqSendSTART (ftrCtx));
+  MqErrorCheck1	(MqSendBDY (ftrCtx, &bdy));
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
+  MqErrorCheck1 (MqReadBDY (ftrCtx, &ret));
+  // do "encrytion" of dat
+  encrypt (ret->data, ret->cursize);
+  MqErrorCheck (MqSendB (mqctx, ret->data, ret->cursize));
+  MqErrorCheck (MqSendI (mqctx, ret->numItems));
+  goto error;
+error1:
+  MqErrorCopy (mqctx, ftrCtx);
+error:
+  return MqSendRETURN(mqctx);
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                context_init                               */
@@ -72,8 +146,6 @@ GuardCleanup (
   MQ_PTR data
 )
 {
-  //SETUP_guard;
-
   return MQ_OK;
 }
 
@@ -83,9 +155,17 @@ GuardSetup (
   MQ_PTR data
 )
 {
-  //SETUP_guard;
+  struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
 
-//error:
+  if (ftrCtx == NULL)
+    return MqErrorC (mqctx, __func__, -1, "use 'aguard' only as filter");
+
+  // depend on "ident" decide to work in encryption (PkgToGuard) or to work in  
+  // decryption (GuardToPkg) modus
+  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", 
+    (MqConfigCheckIdent(mqctx, "+guard") ? PkgToGuard : GuardToPkg), NULL, NULL));
+
+error:
   return MqErrorStack(mqctx);
 }
 
@@ -119,6 +199,7 @@ main (
   mqctx->setup.ServerSetup.fFunc    = GuardSetup;
   mqctx->setup.ServerCleanup.fFunc  = GuardCleanup;
   MqConfigSetDefaultFactory (mqctx);
+  MqConfigSetIdent (mqctx, "+guard");
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

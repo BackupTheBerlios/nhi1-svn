@@ -15,9 +15,6 @@
 
 BEGIN_C_DECLS
 
-//MQ_INT pByte2INT (MQ_BINB const * const bin);
-MQ_INT pByte2INT (MQ_CST const bin);
-
 // can be ((*buf->cur.A).I)
 static mq_inline MQ_INT iBufU2INT (
   union MqBufferU buf

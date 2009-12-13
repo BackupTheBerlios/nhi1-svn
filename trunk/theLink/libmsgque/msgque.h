@@ -682,6 +682,20 @@ MqConfigSetName(context, "myString");
  */
   MQ_STR name;
 
+/** \brief application identifer
+ *  <TABLE>
+ *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>   <TH>application</TH>   <TH>context</TH>   </TR>
+ *  <TR>  <TD>STRING</TD> <TD>NULL</TD>    <TD>inothing</TD> <TD>server</TD>        <TD>parent</TD>    </TR>
+ *  </TABLE>
+ * 
+ *  The application \e identifer is used to modify the client or filter behaviour depending on the server \e identifer.
+ *  The server set the \e identifer using #MqConfigSetIdent and the client ask for the identifer of the
+ *  server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifer
+ *  is \b not changeable by the user, like the \e name configuration option, because this is a "build-in" 
+ *  feature set by the \e programmer.
+ */
+  MQ_STR ident;
+
 /** \brief The human-readable name of the server-context
  *  <TABLE>
  *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>  <TH>application</TH>   <TH>context</TH>   </TR>
@@ -911,6 +925,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDup (
 /// \brief set the #MqConfigS::name value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetName (
+  struct MqS * const context,
+  MQ_CST  data
+);
+
+/// \brief set the #MqConfigS::ident value and cleanup old value
+MQ_EXTERN void
+MQ_DECL MqConfigSetIdent (
   struct MqS * const context,
   MQ_CST  data
 );
@@ -1222,6 +1243,25 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsDupAndThread (
  */
 MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetName (
   struct MqS const * const context
+) __attribute__((nonnull));
+
+/** \brief get the \e ident of the \e context object
+ *  \context
+ *  \return the \c context.config.ident value
+ *  \attention the \e string is owned by \libmsgque -> do not free !!
+ */
+MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetIdent (
+  struct MqS const * const context
+) __attribute__((nonnull));
+
+/** \brief check the \e ident of the \e context object
+ *  \context
+ *  param[in] ident the ident to check for
+ *  \return #MQ_YES or #MQ_NO
+ */
+MQ_EXTERN MQ_BOL  MQ_DECL MqConfigCheckIdent (
+  struct MqS * const context,
+  MQ_CST ident
 ) __attribute__((nonnull));
 
 /** \brief get the \e srvname of the \e context object
@@ -3010,6 +3050,19 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   MQ_SIZE * const len
 );
 
+/// \brief generic function to read the entire \e body from the \e Read-Buffer object
+/// \context
+/// \retval buf body of the data package
+/// \retMqErrorE
+/// \attention the data retured belongs to \libmsgque.
+///
+/// In opposit to #MqReadN all package items are returned.
+/// The native package data can be saved and send later back with #MqSendBODY
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
+  struct MqS * const context,
+  MQ_BUF * const out
+);
+
 /// \brief generic function to read a #MQ_BUF object from the \e Read-Buffer object
 /// \context
 /// \retval out the buffer to return
@@ -3190,12 +3243,20 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
 
 /// \brief append a native package object to the \e Send-Buffer object
 /// \context
-/// \param in the binary data to send, result from the previous #MqReadN operation
+/// \param in the binary data to send, result from the previous #MqReadN call
 /// \param len the size of the binary data to send
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
   struct MqS * const context,
   MQ_BINB const * const in,
   MQ_SIZE const len
+);
+
+/// \brief append an entire package body object to the \e Send-Buffer object
+/// \context
+/// \param in the body package data to send, result from the previous #MqReadBDY call
+MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
+  struct MqS * const context,
+  struct MqBufferS * const in
 );
 
 /// \brief append a #MQ_BUF object to the \e Send-Buffer object
@@ -3551,7 +3612,7 @@ MQ_DECL MqSlaveDelete (
 /// \return the \e slave context or \c NULL if \e id is not valid
 MQ_EXTERN struct MqS *
 MQ_DECL MqSlaveGet (
-  struct MqS * const  context,
+  struct MqS const * const  context,
   MQ_SIZE const id
 );
 

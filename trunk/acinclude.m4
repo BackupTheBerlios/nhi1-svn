@@ -124,10 +124,11 @@ AC_DEFUN([SC_SET_VPATH_HOOK], [
 AC_DEFUN([SC_ENABLE_SYMBOLS], [
     AC_MSG_CHECKING([for build with symbols])
     AC_ARG_ENABLE(symbols,
-	AC_HELP_STRING([--enable-symbols], [build with debugging support]))
-    if test "$symbol" = "yes"; then
+	AC_HELP_STRING([--enable-symbols], [build with debugging support]),
+	enable_symbols=yes, enable_symbols=no
+    )
+    if test "x$enable_symbols" = "xyes"; then
       CFLAGS="-g $CFLAGS"
-      CXXFLAGS="-g $CXXFLAGS"
       CPPFLAGS="-D_DEBUG $CPPFLAGS"
       AC_SUBST([VB_DEBUG], [-debug:full])
       AC_SUBST([JAVA_DEBUG], [-g])
@@ -135,7 +136,7 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
     else
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
     fi
-    AM_CONDITIONAL([DEBUG], [test "$symbol" = "yes"])
+    AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
     AC_MSG_RESULT($symbol)
 ])
 
@@ -393,7 +394,9 @@ AC_DEFUN([AX_TLS], [
 AC_DEFUN([SC_ENABLE_THREADS], [
   AC_MSG_CHECKING([for build with thread])
   AC_ARG_ENABLE(threads,
-    AC_HELP_STRING([--enable-threads], [build with thread support]))
+      AC_HELP_STRING([--enable-threads], [build with thread support]),
+      enable_threads=yes, enable_threads=no
+  )
   AC_MSG_RESULT($enable_threads)
   if test "$enable_threads" = "yes"; then
     # we use native windows threads
@@ -402,7 +405,6 @@ AC_DEFUN([SC_ENABLE_THREADS], [
       if test "$acx_pthread_ok" == "yes" ; then
 	LIBS="$PTHREAD_LIBS $LIBS"
 	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-	CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 	CC="$PTHREAD_CC"
 	#AX_TLS
       fi
@@ -428,7 +430,9 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 AC_DEFUN([SC_ENABLE_JAVA], [
   AC_MSG_CHECKING([for build with java])
   AC_ARG_ENABLE(java,
-      AC_HELP_STRING([--enable-java], [build theLink with JAVA support]))
+      AC_HELP_STRING([--enable-java], [build theLink with JAVA support]),
+      enable_java=yes, enable_java=no
+  )
   AC_MSG_RESULT($enable_java)
   if test x$enable_java = xyes; then
     m4_include([m4/ac_java.m4])
@@ -449,6 +453,7 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     AC_PROG_JAR
     AC_SUBST([JAVA_CPPFLAGS])
   fi
+  AC_SUBST([USE_JAVA], $enable_java)
   AM_CONDITIONAL([USE_JAVA], [test x$enable_java = xyes])
 ])
 
@@ -467,7 +472,9 @@ AC_DEFUN([SC_ENABLE_JAVA], [
 AC_DEFUN([SC_ENABLE_PYTHON], [
   AC_MSG_CHECKING([for build with python])
   AC_ARG_ENABLE(python,
-      AC_HELP_STRING([--enable-python], [build theLink with PYTHON support]))
+      AC_HELP_STRING([--enable-python], [build theLink with PYTHON support]),
+      enable_python=yes, enable_python=no
+  )
   AC_MSG_RESULT($enable_python)
   if test x$enable_python = xyes; then
     m4_include([m4/ac_python_devel.m4])
@@ -477,6 +484,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
     AC_PYTHON_DEVEL([>= '3.0'])
     #AM_PATH_PYTHON([3.0])
   fi
+  AC_SUBST([USE_PYTHON], $enable_python)
   AM_CONDITIONAL([USE_PYTHON], [test x$enable_python = xyes])
 ])
 
@@ -496,7 +504,9 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
   AC_PROG_AWK
   AC_MSG_CHECKING([for build with csharp])
   AC_ARG_ENABLE(csharp,
-      AC_HELP_STRING([--enable-csharp], [build theLink with C[#] support]))
+      AC_HELP_STRING([--enable-csharp], [build theLink with C[#] support]),
+      enable_csharp=yes, enable_csharp=no
+  )
   AC_MSG_RESULT($enable_csharp)
   if test x$enable_csharp = xyes; then
     AC_ARG_VAR( [CSCOMP], [C# compiler])
@@ -532,7 +542,9 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
 AC_DEFUN([SC_ENABLE_VB], [
   AC_MSG_CHECKING([for build with VB])
   AC_ARG_ENABLE(vb,
-      AC_HELP_STRING([--enable-vb], [build theLink with VB support]))
+      AC_HELP_STRING([--enable-vb], [build theLink with VB support]),
+      enable_vb=yes, enable_vb=no
+  )
   AC_MSG_RESULT($enable_vb)
   if test x$enable_vb = xyes; then
     if test x$enable_csharp = no ; then
@@ -549,7 +561,7 @@ AC_DEFUN([SC_ENABLE_VB], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_CC --
+# SC_ENABLE_CXX --
 #
 #       Specify if C++ support is needed
 #
@@ -563,10 +575,18 @@ AC_DEFUN([SC_ENABLE_VB], [
 AC_DEFUN([SC_ENABLE_CXX], [
   AC_MSG_CHECKING([for build with C++])
   AC_ARG_ENABLE(cxx,
-      AC_HELP_STRING([--enable-cxx], [build theLink with C[++] support]))
+      AC_HELP_STRING([--enable-cxx], [build theLink with C[++] support]),
+      enable_cxx=yes, enable_cxx=no
+  )
   AC_MSG_RESULT($enable_cxx)
   if test x$enable_cxx = xyes; then
     AC_PROG_CXX
+    if test "x$enable_symbols" = "xtest" ; then
+      CXXFLAGS="-g $CXXFLAGS"
+    fi
+    if test "x$enable_threads" = "xtest" ; then
+      CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+    fi
   fi
   AC_SUBST([USE_CXX], $enable_cxx)
   AM_CONDITIONAL([USE_CXX], [test x$enable_cxx = xyes])
@@ -587,18 +607,15 @@ AC_DEFUN([SC_ENABLE_CXX], [
 AC_DEFUN([SC_ENABLE_PHP], [
   AC_MSG_CHECKING([for build with PHP])
   AC_ARG_ENABLE(php,
-      AC_HELP_STRING([--enable-php], [build theLink with PHP support]))
+      AC_HELP_STRING([--enable-php], [build theLink with PHP support]),
+      enable_php=yes, enable_php=no
+  )
   AC_MSG_RESULT($enable_php)
   if test x$enable_php = xyes; then
     AC_MSG_ERROR([Sorry, PHP was !not! able to provide a useable documentataion])
-    #AC_PATH_PROGS([PHPSH], [php]) 
-    #AC_PATH_PROGS([PHPCONFIG], [php-config]) 
-    #PHP_INCLUDES=`$PHPCONFIG --includes`
-    #AC_SUBST([PHP_INCLUDES])
-    #PHP_LDFLAGS=`$PHPCONFIG --ldflags`
-    #AC_SUBST([PHP_LDFLAGS])
   fi
-    AM_CONDITIONAL([USE_PHP], [test x$enable_php = xyes])
+  AC_SUBST([USE_PHP], $enable_php)
+  AM_CONDITIONAL([USE_PHP], [test x$enable_php = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -616,12 +633,15 @@ AC_DEFUN([SC_ENABLE_PHP], [
 AC_DEFUN([SC_ENABLE_PERL], [
   AC_MSG_CHECKING([for build with PERL])
   AC_ARG_ENABLE(perl,
-      AC_HELP_STRING([--enable-perl], [build theLink with PERL support]))
+      AC_HELP_STRING([--enable-perl], [build theLink with PERL support]),
+      enable_perl=yes, enable_perl=no
+  )
   AC_MSG_RESULT($enable_perl)
   if test x$enable_perl = xyes; then
     AC_ARG_VAR([PERL], [perl runtime])
     AC_PATH_PROGS([PERL], [perl]) 
   fi
+  AC_SUBST([USE_PERL], $enable_perl)
   AM_CONDITIONAL([USE_PERL], [test x$enable_perl = xyes])
 ])
 
@@ -640,7 +660,9 @@ AC_DEFUN([SC_ENABLE_PERL], [
 AC_DEFUN([SC_ENABLE_TCL], [
   AC_MSG_CHECKING([for build with TCL])
   AC_ARG_ENABLE(tcl, 
-      AC_HELP_STRING([--enable-tcl], [build theLink with TCL support]))
+      AC_HELP_STRING([--enable-tcl], [build theLink with TCL support]),
+      enable_tcl=yes, enable_tcl=no
+  )
   AC_MSG_RESULT($enable_tcl)
   if test x$enable_tcl = xyes; then
     AC_ARG_VAR([TCLSH], [tcl runtime])
@@ -694,6 +716,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 	AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
     fi
   fi
+  AC_SUBST([USE_TCL], $enable_tcl)
   AM_CONDITIONAL([USE_TCL], [test x$enable_tcl = xyes])
 ])
 
@@ -712,7 +735,9 @@ AC_DEFUN([SC_ENABLE_TCL], [
 AC_DEFUN([SC_ENABLE_BRAIN], [
   AC_MSG_CHECKING([for build with theBrain (only on UNIX)])
   AC_ARG_ENABLE(brain,
-      AC_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]))
+      AC_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]),
+      enable_brain=yes, enable_brain=no
+  )
   AC_MSG_RESULT($enable_brain)
   if test x$enable_brain = xyes; then
     BRAIN_CPPFLAGS="-D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__"
@@ -820,7 +845,9 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 AC_DEFUN([SC_ENABLE_GUARD], [
   AC_MSG_CHECKING([for build with GUARD])
   AC_ARG_ENABLE(guard,
-      AC_HELP_STRING([--enable-guard], [build theLink with GUARD support]))
+      AC_HELP_STRING([--enable-guard], [build theLink with GUARD support]),
+      enable_guard=yes, enable_guard=no
+  )
   AC_MSG_RESULT($enable_guard)
   AC_SUBST([USE_GUARD], $enable_guard)
   AM_CONDITIONAL([USE_GUARD], [test x$enable_guard = xyes])

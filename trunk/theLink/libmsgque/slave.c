@@ -339,7 +339,7 @@ MqSlaveDelete (
 
 struct MqS *
 MqSlaveGet (
-  struct MqS * const  context,
+  struct MqS const * const  context,
   MQ_SIZE const id
 )
 {
