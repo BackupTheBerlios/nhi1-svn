@@ -732,12 +732,11 @@ MqConfigCheckIdent (
   MQ_CST ident
 )
 {
-  struct MqS * const ftrCtx = MQ_IS_CLIENT(context) ? context : MqSlaveGet (context, 0);
   MQ_CST ftrIdent;
-  if (ftrCtx == NULL) return MQ_NO;
-  MqErrorCheck (MqSendSTART (ftrCtx));
-  MqErrorCheck (MqSendEND_AND_WAIT (ftrCtx, "_IDN", MQ_TIMEOUT_USER));
-  MqErrorCheck (MqReadC (ftrCtx, &ftrIdent));
+  if (context == NULL) return MQ_NO;
+  MqErrorCheck (MqSendSTART (context));
+  MqErrorCheck (MqSendEND_AND_WAIT (context, "_IDN", MQ_TIMEOUT_USER));
+  MqErrorCheck (MqReadC (context, &ftrIdent));
   if (strcmp (ident, ftrIdent)) return MQ_NO;
   return MQ_YES;
 error:

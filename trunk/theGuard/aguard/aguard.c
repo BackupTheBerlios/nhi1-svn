@@ -87,8 +87,9 @@ PkgToGuard (
   // do "encryption" of bdy
   encrypt (bdy, len);
   MqErrorCheck1 (MqSendSTART (ftrCtx));
+  MqErrorCheck1 (MqSendC (ftrCtx, MqConfigGetToken (mqctx)));
   MqErrorCheck1 (MqSendB (ftrCtx, bdy, len));
-  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, "+GRD", MQ_TIMEOUT_USER));
   MqErrorCheck1 (MqReadB (ftrCtx, &bdy, &len));
   // do "decryption" of bdy
   decrypt (bdy, len);
@@ -106,17 +107,19 @@ GuardToPkg (
   MQ_PTR data
 )
 {
+  MQ_CST token;
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
   //SETUP_guard;
 
   MqSendSTART (mqctx);
+  MqErrorCheck (MqReadC (mqctx, &token));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   // do "decryption" of dat
   decrypt (bdy, len);
   MqErrorCheck1	(MqSendSTART (ftrCtx));
   MqErrorCheck1	(MqSendBDY (ftrCtx, bdy, len));
-  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, token, MQ_TIMEOUT_USER));
   MqErrorCheck1 (MqReadBDY (ftrCtx, &bdy, &len));
   // do "encrytion" of dat
   encrypt (bdy, len);
@@ -149,15 +152,14 @@ GuardSetup (
   MQ_PTR data
 )
 {
-  struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
-
-  if (ftrCtx == NULL)
+  // "aguard" have to be a filter
+  if (MqSlaveGet (mqctx, 0) == NULL)
     return MqErrorC (mqctx, __func__, -1, "use 'aguard' only as filter");
 
-  // depend on "ident" decide to work in encryption (PkgToGuard) or to work in  
-  // decryption (GuardToPkg) modus
-  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", 
-    (MqConfigCheckIdent(mqctx, "+guard") ? PkgToGuard : GuardToPkg), NULL, NULL));
+  // every token (+ALL) have to be "encrypted"
+  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", PkgToGuard, NULL, NULL));
+  // only the "+GRD" token is "decrypted"
+  MqErrorCheck (MqServiceCreate (mqctx, "+GRD", GuardToPkg, NULL, NULL));
 
 error:
   return MqErrorStack(mqctx);
