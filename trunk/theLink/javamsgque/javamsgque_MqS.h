@@ -457,6 +457,22 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetSrvName
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigSetIdent
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIdent
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ConfigCheckIdent
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigCheckIdent
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigSetBuffersize
  * Signature: (I)V
  */
@@ -605,6 +621,14 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetName
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetSrvName
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ConfigGetIdent
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetIdent
   (JNIEnv *, jobject);
 
 /*

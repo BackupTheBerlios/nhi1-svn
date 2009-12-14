@@ -99,6 +99,11 @@ test config-10-($I|$B|$C|$S) {IoPipe} \
 test config-11-($I|$B|$C|$S) {StartAs} \
     -body           {Echo1 $FH_LAST CFG1 ReadI SendC StartAs SendI 3} \
     -result         {3}
+
+test config-12-($I|$B|$C|$S) {Ident} \
+    -setup	    {$FH_LAST ConfigSetIdent otto} \
+    -body           {EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto} \
+    -result         {myident 1}
  
 # cleanup ---------------------------
 

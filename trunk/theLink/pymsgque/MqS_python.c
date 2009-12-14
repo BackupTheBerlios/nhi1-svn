@@ -166,6 +166,8 @@ PyObject* NS(ConfigSetDebug)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIdent)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigCheckIdent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoUds)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoPipe)	      ( PyObject*, PyObject* );
@@ -191,6 +193,7 @@ PyObject* NS(ConfigGetIsConnected)    ( PyObject* );
 PyObject* NS(ConfigGetParent)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
+PyObject* NS(ConfigGetIdent)	      ( PyObject* );
 PyObject* NS(ConfigGetIoUdsFile)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpHost)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpPort)      ( PyObject* );
@@ -209,6 +212,8 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigSetTimeout_DOC	    "[seconds]"
 #define ConfigSetName_DOC	    "[string]"
 #define ConfigSetSrvName_DOC	    "[string]"
+#define ConfigSetIdent_DOC	    "[string]"
+#define ConfigCheckIdent_DOC	    "[string]"
 #define ConfigSetIoUds_DOC	    "[file-name]"
 #define ConfigSetIoTcp_DOC	    "[hots, port, myhost, myport]"
 #define ConfigSetIoPipe_DOC	    "[socket]"
@@ -234,6 +239,7 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetParent_DOC	    "[noARG] return the PyMqS 'parent' object of the 'current' object."
 #define ConfigGetName_DOC	    "[noARG] return the PyMqS 'name' (str) of the object."
 #define ConfigGetSrvName_DOC	    "[noARG] return the PyMqS 'srvname' (str) of the object."
+#define ConfigGetIdent_DOC	    "[noARG] return the PyMqS 'ident' (str) of the object."
 #define ConfigGetIoUdsFile_DOC	    "[noARG] return the PyMqS 'uds-file-name' (str) of the object."
 #define ConfigGetIoTcpHost_DOC	    "[noARG] return the PyMqS 'tcp-host-name' (str) of the object."
 #define ConfigGetIoTcpPort_DOC	    "[noARG] return the PyMqS 'tcp-port-name' (str) of the object."
@@ -327,6 +333,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetTimeout,	METH_O),
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
+    ARG(ConfigSetIdent,		METH_O),
+    ARG(ConfigCheckIdent,	METH_O),
     ARG(ConfigSetIoUds,		METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
     ARG(ConfigSetIoPipe,	METH_O),
@@ -352,6 +360,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetParent,	METH_NOARGS),
     ARG(ConfigGetName,		METH_NOARGS),
     ARG(ConfigGetSrvName,	METH_NOARGS),
+    ARG(ConfigGetIdent,		METH_NOARGS),
     ARG(ConfigGetIoUdsFile,	METH_NOARGS),
     ARG(ConfigGetIoTcpHost,	METH_NOARGS),
     ARG(ConfigGetIoTcpPort,	METH_NOARGS),

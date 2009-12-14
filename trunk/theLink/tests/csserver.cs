@@ -171,6 +171,14 @@ namespace example {
 	ConfigSetSrvName (ReadC());
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
+      } else if (cmd == "Ident") {
+	string old = ConfigGetIdent();
+	ConfigSetIdent (ReadC());
+	bool check = ConfigCheckIdent (ReadC());
+	SendSTART();
+	SendC (ConfigGetIdent());
+	SendO (check);
+	ConfigSetIdent (old);
       } else if (cmd == "IsSilent") {
 	bool old = ConfigGetIsSilent();
 	ConfigSetIsSilent (ReadO());

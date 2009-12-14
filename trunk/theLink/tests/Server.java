@@ -175,6 +175,14 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	ConfigSetSrvName (ReadC());
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
+      } else if (cmd.equals("Ident")) {
+	String old = ConfigGetIdent();
+	ConfigSetIdent (ReadC());
+	boolean check = ConfigCheckIdent (ReadC());
+	SendSTART();
+	SendC (ConfigGetIdent());
+	SendO (check);
+	ConfigSetSrvName (old);
       } else if (cmd.equals("IsSilent")) {
 	boolean old = ConfigGetIsSilent();
 	ConfigSetIsSilent (ReadO());

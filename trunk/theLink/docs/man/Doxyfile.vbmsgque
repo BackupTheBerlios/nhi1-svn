@@ -61,6 +61,11 @@ ALIASES		    += "config_type_srvname=String"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
+ALIASES		    += "config_type_ident=String"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+ALIASES		    += "config_check_ident=ConfigCheckIdent"
+
 ALIASES		    += "config_type_isSilent=Boolean"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
 ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"

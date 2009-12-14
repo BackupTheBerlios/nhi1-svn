@@ -469,7 +469,7 @@ MqSendC (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
     register struct MqBufferS * buf = context->link.send->buf;
-    MQ_SIZE len = strlen(in);
+    MQ_SIZE len = (in?strlen(in):0);
     pBufferAddSize (buf, BUFFER_P2_PRENUM+len);
     buf->cur.B += BUFFER_P2_PRENUM;
     memcpy (buf->cur.C, in, len);

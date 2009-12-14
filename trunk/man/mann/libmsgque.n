@@ -1,4 +1,4 @@
-.TH "libmsgque" n "10 Dec 2009" "Version 0.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "14 Dec 2009" "Version 0.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -107,6 +107,10 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetSrvName\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetSrvName\fP (ctx, srvName)\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "ident"
+\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIdent\fP (struct \fBMqS\fP *ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIdent\fP (struct \fBMqS\fP *ctx, MQ_CST ident)\fP
+.PP
+Use \fBMQ_CST\fP as an application specific identifer set by the programmer and checked with \fC\fBMqConfigCheckIdent\fP\fP (struct \fBMqS\fP *ctx, MQ_CST ident) against the \fIidentifer\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSilent\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsSilent\fP (ctx, isSilent)\fP
 .PP

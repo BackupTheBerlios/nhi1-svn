@@ -452,6 +452,15 @@ MQ_NST
 MqConfigGetSrvName (MqS* context)
 
 void
+MqConfigSetIdent (MqS* context, MQ_NST ident)
+
+MQ_NST
+MqConfigGetIdent (MqS* context)
+
+bool
+MqConfigCheckIdent (MqS* context, MQ_NST ident)
+
+void
 MqConfigSetIoUds (MqS* context, MQ_NST udsfile)
   CODE:
     ErrorMqToPerlWithCheck(MqConfigSetIoUds(context, udsfile))

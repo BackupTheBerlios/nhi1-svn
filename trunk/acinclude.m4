@@ -581,10 +581,10 @@ AC_DEFUN([SC_ENABLE_CXX], [
   AC_MSG_RESULT($enable_cxx)
   if test x$enable_cxx = xyes; then
     AC_PROG_CXX
-    if test "x$enable_symbols" = "xtest" ; then
+    if test "x$enable_symbols" = "xyes" ; then
       CXXFLAGS="-g $CXXFLAGS"
     fi
-    if test "x$enable_threads" = "xtest" ; then
+    if test "x$enable_threads" = "xyes" ; then
       CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
     fi
   fi

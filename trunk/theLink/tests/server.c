@@ -1187,6 +1187,21 @@ Ot_CFG1 (
     CFGTestC(Name)
   } else if (!strncmp (cmd, "SrvName", 7)) {
     CFGTestC(SrvName)
+  } else if (!strncmp (cmd, "Ident", 5)) {
+    MQ_BOL check;
+    CO = MqConfigGetIdent (mqctx);
+    if (CO) CO = mq_strdup(CO);
+    MqErrorCheck (MqReadC (mqctx, &CV));
+    MqConfigSetIdent (mqctx, CV);
+    MqErrorCheck (MqReadC (mqctx, &CV));
+    check = MqConfigCheckIdent(mqctx, CV);
+    // send
+    MqSendSTART(mqctx);
+    MqErrorCheck (MqSendC (mqctx, MqConfigGetIdent (mqctx)));
+    MqErrorCheck (MqSendO (mqctx, check));
+    // clenup
+    MqConfigSetIdent (mqctx, CO);
+    MqSysFree (CO);
   } else if (!strncmp (cmd, "IsSilent", 8)) {
     CFGTest(IsSilent,O)
   } else if (!strncmp (cmd, "IsString", 8)) {

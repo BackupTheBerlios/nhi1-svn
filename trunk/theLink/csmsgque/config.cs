@@ -26,6 +26,12 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSrvName")]
     private static extern void MqConfigSetSrvName([In]IntPtr context, [In]string data);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIdent")]
+    private static extern void MqConfigSetIdent([In]IntPtr context, [In]string data);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigCheckIdent")]
+    private static extern bool MqConfigCheckIdent([In]IntPtr context, [In]string data);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetBuffersize")]
     private static extern void MqConfigSetBuffersize([In]IntPtr context, [In]int data);
 
@@ -110,6 +116,8 @@ namespace csmsgque {
 
     public void   ConfigSetName		(string data) { MqConfigSetName		(context, data); }
     public void   ConfigSetSrvName	(string data) { MqConfigSetSrvName	(context, data); }
+    public void   ConfigSetIdent	(string data) { MqConfigSetIdent	(context, data); }
+    public bool   ConfigCheckIdent	(string data) { return MqConfigCheckIdent (context, data); }
     public void	  ConfigSetBuffersize	(int data)    { MqConfigSetBuffersize	(context, data); }
     public void	  ConfigSetDebug	(int data)    { MqConfigSetDebug	(context, data); }
     public void	  ConfigSetTimeout	(long data)   { MqConfigSetTimeout	(context, data); }
@@ -186,6 +194,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetSrvName")]
     private static extern IntPtr MqConfigGetSrvName([In]IntPtr context);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIdent")]
+    private static extern IntPtr MqConfigGetIdent([In]IntPtr context);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetBuffersize")]
     private static extern int MqConfigGetBuffersize([In]IntPtr context);
 
@@ -221,6 +232,7 @@ namespace csmsgque {
     public bool	    ConfigGetIsConnected()  { return MqConfigGetIsConnected(context); }
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
     public string   ConfigGetSrvName()	    { return Marshal.PtrToStringAnsi(MqConfigGetSrvName(context)); }
+    public string   ConfigGetIdent()	    { return Marshal.PtrToStringAnsi(MqConfigGetIdent(context)); }
     public int	    ConfigGetDebug()	    { return MqConfigGetDebug(context); }
     public long	    ConfigGetTimeout()	    { return MqConfigGetTimeout(context); }
     public int	    ConfigGetBuffersize()   { return MqConfigGetBuffersize(context); }

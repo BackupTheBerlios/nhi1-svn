@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "10 Dec 2009" "Version 0.2" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "14 Dec 2009" "Version 0.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -82,6 +82,10 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetSrvName\fP , \fBset:\fP \fCConfigSetSrvName\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "ident"
+\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
+.PP
+Use string as an application specific identifer set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifer\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP

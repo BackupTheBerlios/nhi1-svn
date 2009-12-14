@@ -60,6 +60,11 @@ ALIASES		    += "config_type_srvname=#MQ_CST"
 ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, srvName)"
 ALIASES		    += "config_get_srvname=#MqConfigGetSrvName (ctx)"
 
+ALIASES		    += "config_type_ident=#MQ_CST"
+ALIASES		    += "config_set_ident=#MqConfigSetIdent (struct MqS *ctx, MQ_CST ident)"
+ALIASES		    += "config_get_ident=#MqConfigGetIdent (struct MqS *ctx)"
+ALIASES		    += "config_check_ident=#MqConfigCheckIdent (struct MqS *ctx, MQ_CST ident)"
+
 ALIASES		    += "config_type_isSilent=#MQ_BOL"
 ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, isSilent)"
 ALIASES		    += "config_get_isSilent=#MqConfigGetIsSilent (ctx)"

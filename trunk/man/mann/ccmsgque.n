@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "10 Dec 2009" "Version 0.2" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "14 Dec 2009" "Version 0.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -108,6 +108,10 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBConfigGetSrvName\fP\fP , \fBset:\fP \fC\fBConfigSetSrvName\fP\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "ident"
+\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBConfigGetIdent\fP\fP , \fBset:\fP \fC\fBConfigSetIdent\fP\fP
+.PP
+Use \fBMQ_CST\fP as an application specific identifer set by the programmer and checked with \fC\fBConfigCheckIdent\fP\fP against the \fIidentifer\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsSilent\fP\fP , \fBset:\fP \fC\fBConfigSetIsSilent\fP\fP
 .PP

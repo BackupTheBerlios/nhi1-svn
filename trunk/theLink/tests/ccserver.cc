@@ -542,6 +542,16 @@ namespace example {
 	  SendC (ConfigGetSrvName());
 	  ConfigSetSrvName (old);
 	  MqSysFree(old);
+	} else if (!strncmp(cmd, "Ident", 5)) {
+	  MQ_CST old = mq_strdup_save(ConfigGetSrvName());
+	  MQ_BOL check;
+	  ConfigSetSrvName (ReadC());
+	  check = ConfigCheckIdent (ReadC());
+	  SendSTART();
+	  SendC (ConfigGetSrvName());
+	  SendO (check);
+	  ConfigSetSrvName (old);
+	  MqSysFree(old);
 	} else if (!strncmp(cmd, "IsSilent", 8)) {
 	  MQ_BOL old = ConfigGetIsSilent();
 	  ConfigSetIsSilent (ReadO());

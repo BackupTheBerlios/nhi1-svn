@@ -291,6 +291,8 @@ namespace ccmsgque {
       inline void ConfigSetTimeout    (MQ_TIME_T data)	    { MqConfigSetTimeout (&context, data); }
       inline void ConfigSetName	      (MQ_CST data)	    { MqConfigSetName (&context, data); }
       inline void ConfigSetSrvName    (MQ_CST data)	    { MqConfigSetSrvName (&context, data); }
+      inline void ConfigSetIdent      (MQ_CST data)	    { MqConfigSetIdent (&context, data); }
+      inline MQ_BOL ConfigCheckIdent  (MQ_CST data)	    { return MqConfigCheckIdent (&context, data); }
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
       inline void ConfigSetIsString   (MQ_BOL data)	    { MqConfigSetIsString (&context, data); }
       inline void ConfigSetIoUds      (MQ_CST data)	    { 
@@ -317,6 +319,7 @@ namespace ccmsgque {
       inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
+      inline MQ_CST ConfigGetIdent ()	    { return context.config.ident; }
       inline MQ_CST ConfigGetToken ()	    { return MqConfigGetToken(&context); }
       inline MQ_INT ConfigGetBuffersize ()  { return context.config.io.buffersize; }
       inline MQ_INT ConfigGetDebug ()	    { return context.config.debug; }

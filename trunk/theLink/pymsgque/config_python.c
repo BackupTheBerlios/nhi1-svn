@@ -118,6 +118,35 @@ PyObject* NS(ConfigSetSrvName) (
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ConfigSetIdent) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  MQ_STR str = PyO2C_START (&arg);
+  if (PyErr_Occurred() != NULL) return NULL;
+  MqConfigSetIdent (CONTEXT, str);
+  PyO2C_STOP (&arg);
+  Py_RETURN_NONE;
+}
+
+PyObject* NS(ConfigCheckIdent) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  MQ_STR str = PyO2C_START (&arg);
+  MQ_BOL check;
+  if (PyErr_Occurred() != NULL) return NULL;
+  check = MqConfigCheckIdent (CONTEXT, str);
+  PyO2C_STOP (&arg);
+  if (check) {
+    Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
+  }
+}
+
 PyObject* NS(ConfigSetIoUds) (
   MqS_Obj    *self,
   PyObject    *arg
@@ -400,6 +429,14 @@ PyObject* NS(ConfigGetSrvName) (
 )
 {
   return PyC2O(MqConfigGetSrvName(&ICONTEXT));
+}
+
+PyObject* NS(ConfigGetIdent) (
+  PyObject    *self,
+  PyObject    *args
+)
+{
+  return PyC2O(MqConfigGetIdent(&ICONTEXT));
 }
 
 PyObject* NS(ConfigGetIoUdsFile) (

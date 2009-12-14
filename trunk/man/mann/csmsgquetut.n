@@ -1,4 +1,4 @@
-.TH "csmsgque Tutorial" n "10 Dec 2009" "Version 0.2" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque Tutorial" n "14 Dec 2009" "Version 0.2" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

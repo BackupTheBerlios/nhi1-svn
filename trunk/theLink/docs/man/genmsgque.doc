@@ -151,6 +151,12 @@ Use \e STRING as a client specific prefix in the server debugging output. This i
 link debugging and error messages on the server to a specific client connection.
 (default: empty)
 
+\configsection{ident}
+Use \config_type_ident as an application specific identifer set by the programmer and checked with
+\c \config_check_ident against the \e identifer of the link target. The goal is to change the behavior 
+of the application depending on the result.
+(default: empty)
+
 \configsection{isSilent,--silent}
 Write (\no) or don't write (\yes) any output to stdout or stderr. (default: write to stdout or stderr)
 

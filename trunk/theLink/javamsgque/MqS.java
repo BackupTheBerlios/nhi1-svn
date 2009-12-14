@@ -250,6 +250,10 @@ public abstract class MqS {
   public native void ConfigSetName	      (String val);
   /// \api #MqConfigSetSrvName
   public native void ConfigSetSrvName	      (String val);
+  /// \api #MqConfigSetIdent
+  public native void ConfigSetIdent	      (String val);
+  /// \api #MqConfigCheckIdent
+  public native boolean ConfigCheckIdent      (String val);
   /// \api #MqConfigSetBuffersize
   public native void ConfigSetBuffersize      (int val);
   /// \api #MqConfigSetDebug
@@ -289,6 +293,8 @@ public abstract class MqS {
   public native String	ConfigGetName	      ();
   /// \api #MqConfigGetSrvName
   public native String	ConfigGetSrvName      ();
+  /// \api #MqConfigGetIdent
+  public native String	ConfigGetIdent	      ();
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
   /// \api #MqConfigGetParent

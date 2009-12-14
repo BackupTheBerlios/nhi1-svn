@@ -1258,6 +1258,9 @@ MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetIdent (
  *  \context
  *  param[in] ident the ident to check for
  *  \return #MQ_YES or #MQ_NO
+ *
+ *  The check is done with an \c _IDN request send to the link target.
+ *  This function is only useful if the link is up and running.
  */
 MQ_EXTERN MQ_BOL  MQ_DECL MqConfigCheckIdent (
   struct MqS * const context,

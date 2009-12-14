@@ -345,6 +345,8 @@ int NS(ConfigSetDebug) (NS_ARGS);
 int NS(ConfigSetTimeout) (NS_ARGS);
 int NS(ConfigSetName) (NS_ARGS);
 int NS(ConfigSetSrvName) (NS_ARGS);
+int NS(ConfigSetIdent) (NS_ARGS);
+int NS(ConfigCheckIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
@@ -371,6 +373,7 @@ int NS(ConfigGetToken) (NS_ARGS);
 int NS(ConfigGetCtxId) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
+int NS(ConfigGetIdent) (NS_ARGS);
 int NS(ConfigGetParent) (NS_ARGS);
 int NS(ConfigGetMaster) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
@@ -461,6 +464,8 @@ int NS(MqS_Cmd) (
     { "ConfigSetTimeout",	  NS(ConfigSetTimeout)	      },
     { "ConfigSetName",		  NS(ConfigSetName)	      },
     { "ConfigSetSrvName",	  NS(ConfigSetSrvName)	      },
+    { "ConfigSetIdent",		  NS(ConfigSetIdent)	      },
+    { "ConfigCheckIdent",	  NS(ConfigCheckIdent)	      },
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
@@ -488,6 +493,7 @@ int NS(MqS_Cmd) (
     { "ConfigGetCtxId",		  NS(ConfigGetCtxId)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
+    { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
     { "ConfigGetParent",	  NS(ConfigGetParent)	      },
     { "ConfigGetMaster",	  NS(ConfigGetMaster)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },

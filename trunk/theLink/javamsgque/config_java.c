@@ -88,11 +88,24 @@ error: \
 
 SetC(ConfigSetName)
 SetC(ConfigSetSrvName)
+SetC(ConfigSetIdent)
 SetI(ConfigSetBuffersize)
 SetI(ConfigSetDebug)
 SetW(ConfigSetTimeout)
 SetO(ConfigSetIsSilent)
 SetO(ConfigSetIsString)
+
+JNIEXPORT jboolean JNICALL NS(ConfigCheckIdent) (
+  JNIEnv    *env,
+  jobject   self,
+  jstring   strO
+)
+{
+  MQ_CST str = JO2C_START(env, strO);
+  jboolean check = MqConfigCheckIdent (CONTEXT, str);
+  JO2C_STOP(env, strO, str); 
+  return check;
+}
 
 JNIEXPORT void JNICALL NS(ConfigSetIoTcp) (
   JNIEnv    *env, 
@@ -159,6 +172,7 @@ GetI(ConfigGetBuffersize)
 GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
+GetC(ConfigGetIdent)
 
 GetI(ConfigGetCtxId)
 GetC(ConfigGetToken)

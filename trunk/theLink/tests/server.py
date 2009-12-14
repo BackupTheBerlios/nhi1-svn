@@ -159,6 +159,14 @@ class Server(MqS):
       self.ConfigSetSrvName (self.ReadC())
       self.SendC (self.ConfigGetSrvName())
       self.ConfigSetSrvName (old)
+    elif cmd == "Ident":
+      old = self.ConfigGetIdent()
+      self.ConfigSetIdent (self.ReadC())
+      check = self.ConfigCheckIdent (self.ReadC())
+      self.SendSTART()
+      self.SendC (self.ConfigGetIdent())
+      self.SendO (check);
+      self.ConfigSetIdent (old)
     elif cmd == "IsSilent":
       old = self.ConfigGetIsSilent()
       self.ConfigSetIsSilent (self.ReadO())

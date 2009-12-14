@@ -490,7 +490,7 @@ if {![info exists env(COM_LST)]} {
   set env(COM_LST) {uds tcp pipe}
 }
 if {![info exists env(LNG_LST)]} {
-  set env(LNG_LST) {c cc tcl python java csharp perl}
+  set env(LNG_LST) {c cc tcl python java csharp perl vb}
 }
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
@@ -593,14 +593,13 @@ if {!$USE_CSHARP} {
 }
 
 # without --enable-vb no VB.NET
-if {!$USE_CSHARP} {
+if {!$USE_VB} {
   set env(SRV_LST) [filterGet -not SRV_LST vb]
   set env(LNG_LST) [filterGet -not LNG_LST vb]
-  if {$CLREXEC eq "NATIVE"} {
-    set CLREXEC {}
-  }
 }
-
+if {$CLREXEC eq "NATIVE"} {
+  set CLREXEC {}
+}
 
 # try to analyse the "argv" array
 if {[info exist argv]} {
@@ -695,6 +694,7 @@ if {[info exist argv]} {
     } elseif {[optB argv --only-tcp]} {
       set env(COM_LST) tcp
     }
+
     set env(SRV_LST) [filterGet SRV_LST "([join $env(COM_LST) |])"]
 
     # filter SRV_LST

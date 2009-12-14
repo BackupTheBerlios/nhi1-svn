@@ -24,6 +24,8 @@
 #include "trans.h"
 #include "cache.h"
 
+BEGIN_C_DECLS
+
 #define TOKEN_LEN (HDR_TOK_LEN+1)
 #define MQ_CONTEXT_S token->context
 
@@ -52,8 +54,6 @@ static mq_inline MQ_INT pByte2INT (
 #else
 #   define pTokenCmpI(i1,i2) (i2 - i1)
 #endif
-
-BEGIN_C_DECLS
 
 /*****************************************************************************/
 /*                                                                           */

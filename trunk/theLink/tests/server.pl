@@ -621,6 +621,15 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->SendC ($ctx->ConfigGetSrvName());
 	$ctx->ConfigSetSrvName ($old);
       }
+      case "Ident" {
+	my $old = $ctx->ConfigGetSrvName();
+	$ctx->ConfigSetSrvName ($ctx->ReadC());
+	my $check = $ctx->ConfigCheckIdent ($ctx->ReadC());
+	$ctx->SendSTART();
+	$ctx->SendC ($ctx->ConfigGetSrvName());
+	$ctx->SendO ($check);
+	$ctx->ConfigSetSrvName ($old);
+      }
       case "IsSilent" {
 	my $old = $ctx->ConfigGetIsSilent();
 	$ctx->ConfigSetIsSilent ($ctx->ReadO());

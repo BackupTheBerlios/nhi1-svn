@@ -527,6 +527,15 @@ proc Ot_CFG1 {ctx} {
       $ctx SendC [$ctx ConfigGetSrvName]
       $ctx ConfigSetSrvName $old
     }
+    "Ident" {
+      set old [$ctx ConfigGetIdent] 
+      $ctx ConfigSetIdent [$ctx ReadC]
+      set check [$ctx ConfigCheckIdent [$ctx ReadC]]
+      $ctx SendSTART
+      $ctx SendC [$ctx ConfigGetIdent]
+      $ctx SendO $check
+      $ctx ConfigSetSrvName $old
+    }
     "IsSilent" {
       set old [$ctx ConfigGetIsSilent] 
       $ctx ConfigSetIsSilent [$ctx ReadO]
