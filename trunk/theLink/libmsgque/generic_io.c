@@ -180,8 +180,8 @@ GenericServer (
 	break;
       }
       case MQ_START_DEFAULT: {
-	// server setup without "--fork,--thread or --spawn", this is just a one-time serve
-	// of an incomming client-connection. Server will shutdown on end of link.
+	// server setup without "--fork,--thread or --spawn", this is just a singel request server.
+	// The server will shutdown on the end of the link.
 	break;
       }
     }

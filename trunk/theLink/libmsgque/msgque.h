@@ -3052,7 +3052,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 
 /// \brief generic function to read the entire \e body from the \e Read-Buffer object
 /// \context
-/// \retval buf body of the data package
+/// \param[out] out body of the data package
+/// \param[out] len size of the body
 /// \retMqErrorE
 /// \attention the data retured belongs to \libmsgque.
 ///
@@ -3060,7 +3061,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// The native package data can be saved and send later back with #MqSendBODY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   struct MqS * const context,
-  MQ_BUF * const out
+  MQ_BIN * const out,
+  MQ_SIZE * const len
 );
 
 /// \brief generic function to read a #MQ_BUF object from the \e Read-Buffer object
@@ -3256,7 +3258,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
 /// \param in the body package data to send, result from the previous #MqReadBDY call
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
   struct MqS * const context,
-  struct MqBufferS * const in
+  MQ_BINB const * const in,
+  MQ_SIZE const len
 );
 
 /// \brief append a #MQ_BUF object to the \e Send-Buffer object

@@ -773,14 +773,16 @@ MqReadN (
 enum MqErrorE
 MqReadBDY (
   struct MqS * const context,
-  MQ_BUF * const out
+  MQ_BIN * const out,
+  MQ_SIZE * const len
 )
 {
   struct MqReadS * const read = context->link.read;
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    *out = read->bdy;
+    *out = read->bdy->data;
+    *len = read->bdy->cursize;
     return MQ_OK;
   }
 }

@@ -78,24 +78,21 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  MQ_BUF  bdy;
-  struct MqBufferS ret;
+  MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
   //SETUP_guard;
 
   MqSendSTART (mqctx);
-  MqErrorCheck1 (MqReadBDY (mqctx, &bdy));
+  MqErrorCheck1 (MqReadBDY (mqctx, &bdy, &len));
   // do "encryption" of bdy
-  encrypt (bdy->data, bdy->cursize);
+  encrypt (bdy, len);
   MqErrorCheck1 (MqSendSTART (ftrCtx));
-  MqErrorCheck1 (MqSendB (ftrCtx, bdy->data, bdy->cursize));
-  MqErrorCheck1 (MqSendI (ftrCtx, bdy->numItems));
+  MqErrorCheck1 (MqSendB (ftrCtx, bdy, len));
   MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
-  MqErrorCheck1 (MqReadB (ftrCtx, &ret.data, &ret.cursize));
-  MqErrorCheck1 (MqReadI (ftrCtx, &ret.numItems));
+  MqErrorCheck1 (MqReadB (ftrCtx, &bdy, &len));
   // do "decryption" of bdy
-  decrypt (ret.data, ret.cursize);
-  MqErrorCheck (MqSendBDY (mqctx, bdy));
+  decrypt (bdy, len);
+  MqErrorCheck (MqSendBDY (mqctx, bdy, len));
   goto error;
 error1:
   MqErrorCopy (mqctx, ftrCtx);
@@ -109,24 +106,21 @@ GuardToPkg (
   MQ_PTR data
 )
 {
-  MQ_BUF ret;
-  struct MqBufferS  bdy;
+  MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
   //SETUP_guard;
 
   MqSendSTART (mqctx);
-  MqErrorCheck (MqReadB (mqctx, &bdy.data, &bdy.cursize));
-  MqErrorCheck (MqReadI (mqctx, &bdy.numItems));
+  MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   // do "decryption" of dat
-  decrypt (bdy.data, bdy.cursize);
+  decrypt (bdy, len);
   MqErrorCheck1	(MqSendSTART (ftrCtx));
-  MqErrorCheck1	(MqSendBDY (ftrCtx, &bdy));
+  MqErrorCheck1	(MqSendBDY (ftrCtx, bdy, len));
   MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, MqConfigGetToken (mqctx), MQ_TIMEOUT_USER));
-  MqErrorCheck1 (MqReadBDY (ftrCtx, &ret));
+  MqErrorCheck1 (MqReadBDY (ftrCtx, &bdy, &len));
   // do "encrytion" of dat
-  encrypt (ret->data, ret->cursize);
-  MqErrorCheck (MqSendB (mqctx, ret->data, ret->cursize));
-  MqErrorCheck (MqSendI (mqctx, ret->numItems));
+  encrypt (bdy, len);
+  MqErrorCheck (MqSendB (mqctx, bdy, len));
   goto error;
 error1:
   MqErrorCopy (mqctx, ftrCtx);

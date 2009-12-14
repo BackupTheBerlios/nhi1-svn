@@ -524,7 +524,8 @@ MqSendN (
 enum MqErrorE
 MqSendBDY (
   struct MqS * const context,
-  MQ_BUF const in
+  MQ_BINB const * const in,
+  MQ_SIZE const len
 )
 {
   struct MqSendS * const send = context->link.send;
@@ -532,10 +533,16 @@ MqSendBDY (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
     register struct MqBufferS * const buf = send->buf;
-    register MQ_SIZE const newlen = sizeof(struct HdrS) + in->cursize;
+    register MQ_SIZE const newlen = sizeof(struct HdrS) + len;
     pBufferNewSize (buf, newlen);
-    memcpy (buf->data + sizeof(struct HdrS), in->data, in->cursize);
-    buf->numItems = in->numItems;
+    memcpy (buf->data + sizeof(struct HdrS), in, len);
+    buf->cur.B = buf->data + sizeof(struct HdrS) + BDY_NumItems_S;
+    // read NumItems -> attention no ENDIAN conversion
+    if (unlikely(context->config.isString)) {
+      buf->numItems = str2int(buf->cur.C,NULL,16);
+    } else {
+      buf->numItems = iBufU2INT(buf->cur);
+    }
     buf->cursize = newlen;
     buf->cur.B = buf->data + newlen;
     return MQ_OK;
