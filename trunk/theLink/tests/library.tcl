@@ -151,13 +151,13 @@ proc optB {_argv opt} {
 }
 
 proc optV {_argv opt {def ""}} {
-    upvar $_argv argv
-    if {[set IDX [lsearch -exact $argv $opt]] != -1} {
-	set IDX2    [expr {$IDX+1}]
-	set def	    [lindex $argv $IDX2]
-	set argv    [lreplace $argv $IDX $IDX2]
-    }
-    return $def
+  upvar $_argv argv
+  if {[set IDX [lsearch -exact $argv $opt]] != -1} {
+    set IDX2    [expr {$IDX+1}]
+    set def	[lindex $argv $IDX2]
+    set argv    [lreplace $argv $IDX $IDX2]
+  }
+  return $def
 }
 
 # delete options
@@ -171,13 +171,13 @@ proc optVD {_argv args} {
 }
 
 proc optSet {_argv opt def} {
-    upvar $_argv argv
-    if {[lsearch -exact $argv $opt] == -1} {
-	if {$def ne ""} { lappend argv $opt $def }
-	return 0
-    } else {
-	return 1
-    }
+  upvar $_argv argv
+  if {[lsearch -exact $argv $opt] == -1} {
+    if {$def ne ""} { lappend argv $opt $def }
+    return 0
+  } else {
+    return 1
+  }
 }
 
 proc envGet {VAR} {
@@ -286,25 +286,33 @@ proc getServer {srv} {
   return $RET
 }
 
+proc getFilter {srv} {
+  return [list {*}[getPrefix $srv] [lindex [split $srv .] 0] {*}[getPostfix $srv]]
+}
+
+proc getServerOnly {srv} {
+  return {*}$::TS_SERVER([lindex [split $srv .] 0])
+}
+
 proc getClient {args} {
-    global env
-    set RET [list]
+  global env
+  set RET [list]
 
-    # prefix (debugger)
-    lappend RET {*}[getPrefix c]
+  # prefix (debugger)
+  lappend RET {*}[getPrefix c]
 
-    # main executable
-    lappend RET {*}$args
+  # main executable
+  lappend RET {*}$args
 
-    # postfix
-    lappend RET {*}[getPostfix c]
+  # postfix
+  lappend RET {*}[getPostfix c]
 
-    # startup
-    if {$env(TS_STARTUP_AS) ne "NO"} {
-      lappend RET {*}$env(TS_STARTUP_AS)
-    }
+  # startup
+  if {$env(TS_STARTUP_AS) ne "NO"} {
+    lappend RET {*}$env(TS_STARTUP_AS)
+  }
 
-    return $RET
+  return $RET
 }
 
 proc getATool {arg} {
@@ -656,6 +664,9 @@ if {[info exist argv]} {
     if {![info exists env(TS_MAX)]} {
 	set env(TS_MAX)   [optV argv --max -1]
     }
+    if {![info exists env(TS_FILTER)]} {
+	set env(TS_FILTER)   [optV argv --filter]
+    }
 
     if {[optB argv --only-string]} {
 	set env(BIN_LST) string
@@ -952,12 +963,13 @@ proc Setup {num mode com server args} {
   set isError	    [optB args --error]
   set setup	    [optV args --setup]
   set setup_parent  [optV args --setup-parent]
-  set name	    [optV args --name]
-  set srvname	    [optV args --srvname]
+  set name	    [optV args --name client-0]
+  set srvname	    [optV args --srvname server-0]
   set bgerror	    [optV args --bgerror]
+  set filter	    [optV args --filter $env(TS_FILTER)]
 
   ## 1. setup variables
-  lappend args --$com
+  lappend comargs --$com
   # replase all FILE, PORT and PID placeholder
   set args [MkUnique $args]
 
@@ -965,52 +977,43 @@ proc Setup {num mode com server args} {
   set PIDFILE [optV args --daemon]
   if {$PIDFILE eq ""} {unset PIDFILE}
 
-  # init client-parent (pargs), client-child (cargs) and server (sargs) arguments
+  # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
   set cargs	[list]
-  set pargs	$args
-  set sargs	$args
+  set sargs	[list]
 
-  # intialize pargs
-  if {$name ne ""} {lappend pargs --name $name}
-  if {$srvname ne ""} {lappend sargs --name $srvname}
+  # intialize cargs
+  lappend cargs --name $name
+  lappend sargs --name $srvname
 
   ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
   if {$com ne "pipe"} {
-    # delete all parent options from the child argument list
-    optVD args --buffersize --timeout 
     ## ...
     switch -exact -- $com {
       tcp	{
 	set PORT    [envGet TS_PORT]
 	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
-	optSet sargs --port $PORT
-	optSet pargs --port $PORT
+	lappend comargs --port [optV args --port $PORT]
 
 	# set host for client and server
-	optSet sargs --host [envGet TS_HOST]
-	optSet pargs --host [envGet TS_HOST]
-
-	# delete all client options from the server argument list
-	optVD sargs --myport --myhost
-
-	# delete all parent options from the child argument list
-	optVD args --port --host --myhost --myport
+	lappend comargs --host [optV args --host [envGet TS_HOST]]
       }
       uds	{
 	set FILE    [envGet TS_FILE]
 	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
-	optSet sargs --file $FILE
-	optSet pargs --file $FILE
-
-	# delete all parent options from the child argument list
-	optVD args --file
+	lappend comargs --file [optV args --file $FILE]
       }
     }
+    lappend sargs {*}$args
+    optVD sargs --buffersize --timeout --myhost --myport
     set sargs [MkUnique $sargs]
     if {$serverSilent} { lappend sargs --silent }
     if {[info exists PIDFILE]} {lappend sargs --daemon $PIDFILE}
     if {!$env(USE_REMOTE)} {
-      set sl [list {*}[getServer $server] {*}$sargs]
+      if {$filter ne ""} {
+	set sl [list {*}[getFilter $filter] --name fs {*}$comargs @ [getServerOnly $server] {*}$sargs]
+      } else {
+	set sl [list {*}[getServer $server] {*}$sargs {*}$comargs]
+      }
       if {$env(TS_SETUP)} {
 	Print sl
       }
@@ -1025,15 +1028,27 @@ proc Setup {num mode com server args} {
   ## 3. create new tclmsgque object
   set FH_LAST	""
 
+  lappend cargs {*}$args
   for {set PNO 0} {$PNO<$numParent} {incr PNO} {
 
     ## prepare parent arguments
-    set cl [list LinkCreate {*}$pargs]
+    if {$filter ne ""} {
+      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter] --name fc @ {*}$comargs]
+    } else {
+      set cl [list LinkCreate {*}$cargs {*}$comargs]
+    }
     if {$com eq "pipe"} { 
+      if {$filter ne ""} {
+	lappend cl @ {*}[getFilter $filter] --name fs {*}$comargs
+	if {$serverSilent} { lappend cl --silent }
+	lappend cl @ [getServerOnly $server] {*}$sargs
+      } else {
 	lappend cl @ {*}[getServer $server] 
 	if {$serverSilent} { lappend cl --silent }
+      }
     }
-    Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
+    #Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
+    Start $mode $isError $PNO-0 $cl
     if {$bgerror ne ""} {
       $FH_LAST ConfigSetBgError $bgerror
     }
@@ -1047,7 +1062,7 @@ proc Setup {num mode com server args} {
     ## start the childs
     for {set CNO 1} {$CNO<$numChild} {incr CNO} {
       ## prepare child arguments
-      set cl [list LinkCreateChild $FH_LAST {*}$cargs]
+      set cl [list LinkCreateChild $FH_LAST]
       ## start the child 
       Start $mode yes $PNO-$CNO $cl 
       if {$bgerror ne ""} {

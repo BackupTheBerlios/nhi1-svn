@@ -666,7 +666,6 @@ MqLinkCreate (
 
       // if we are a "filter" -> YES: we have to start the right site (an Server)
       if (alfa != NULL) {
-
 	struct MqS * myFilter;
 	
 	// this is a typical situation for a server in a middel of an alfa syntax:
@@ -676,12 +675,19 @@ MqLinkCreate (
 	// step 1, append to the !beginning! of alfa the server name
 	MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), 0);
 
-	// setp 2, append "alfa" string on second position
-	MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
+	// step 2, append "alfa" string on second position if the first item is !not! a option
+	if (alfa->data[1]->cur.C[0] != '-')
+	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
 
 	// step 3, create the new context and fill the myFilter
 	myFilter = MqContextCreate(sizeof(struct MqS),context);
-	//memset(&myFilter->setup, 0, sizeof(struct MqSetupS));
+	if (MqErrorCheckI (MqSetupDup (myFilter, context))) {
+	  MqErrorCopy (context, myFilter);
+	  MqContextDelete (&myFilter);
+	  goto error;
+	}
+	
+	myFilter->setup = context->setup;
 
 	myFilter->link.doFactoryCleanup = MQ_YES;
 

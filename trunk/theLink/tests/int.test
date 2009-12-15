@@ -78,21 +78,21 @@ test int-6-($I|$B|$C|$S) {(MQ_STR to MQ_INT) error size} \
     -body           {Echo1 $FH_LAST ECOI ReadI SendC 1234.7} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] size ERROR, can not convert '1234.7' into an 'INT' object*}
 
 test int-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOI ReadI SendC ${MIN_INT}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] underflow ERROR, can not convert '*' into an 'INT' object*}
 
 test int-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOI ReadI SendC ${MAX_INT}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] overflow ERROR, can not convert '*' into an 'INT' object*}
  
 if {$B eq "binary"} {
@@ -100,7 +100,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOI ReadI SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object*}
 } else {
     test int-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error INT type} \
@@ -114,14 +114,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOI ReadI SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 } else {
     test int-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
 	-body           {Echo1 $FH_LAST ECOI ReadI SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] size ERROR, can not convert '1.2345*e+*03' into an 'INT' object*}
 }
  
@@ -136,7 +136,7 @@ test int-11-($I|$B|$C|$S) {(MQ_LST to MQ_INT) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'LST' object into an 'INT' object*}
 
 test int-12-($I|$B|$C|$S) {set/get context data} \
@@ -169,8 +169,8 @@ test int-XX-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|213>
-[sS]> (server-0) \[*sReadA4\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOI> <Num|213>*
+[sS]> (server-0) \[*sReadA4\] request more arguments than available*}
 
 # cleanup ---------------------------
 

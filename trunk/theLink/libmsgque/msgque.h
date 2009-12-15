@@ -158,6 +158,31 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT_USER -2
 #endif
 
+/// \ingroup error_api
+/// \brief panic on error
+///
+/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_PANIC ((struct MqS*)NULL)
+
+/// \ingroup error_api
+/// \brief ignore error and do not generate any error-text (don't fill the error object)
+///
+/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_IGNORE ((struct MqS*)0x1)
+
+/// \ingroup error_api
+/// \brief print error to stderr
+///
+/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_PRINT ((struct MqS*)0x2)
+
+/// \ingroup error_api
+/// \brief check if the error pointer is a \e real pointer or just a flag
+#define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
+
 /*****************************************************************************/
 /*                                                                           */
 /*                          windows conform extern                           */
@@ -682,20 +707,6 @@ MqConfigSetName(context, "myString");
  */
   MQ_STR name;
 
-/** \brief application identifer
- *  <TABLE>
- *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>   <TH>application</TH>   <TH>context</TH>   </TR>
- *  <TR>  <TD>STRING</TD> <TD>NULL</TD>    <TD>inothing</TD> <TD>server</TD>        <TD>parent</TD>    </TR>
- *  </TABLE>
- * 
- *  The application \e identifer is used to modify the client or filter behaviour depending on the server \e identifer.
- *  The server set the \e identifer using #MqConfigSetIdent and the client ask for the identifer of the
- *  server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifer
- *  is \b not changeable by the user, like the \e name configuration option, because this is a "build-in" 
- *  feature set by the \e programmer.
- */
-  MQ_STR ident;
-
 /** \brief The human-readable name of the server-context
  *  <TABLE>
  *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>  <TH>application</TH>   <TH>context</TH>   </TR>
@@ -759,6 +770,15 @@ MqConfigSetSrvName(context, "myString");
 
 /// \brief application-programmer configuration data
 struct MqSetupS {
+
+  /// \brief application identifer
+  ///
+  /// The application \e identifer is used to modify the client or filter behaviour depending on the server \e identifer.
+  /// The server set the \e identifer using #MqConfigSetIdent and the client ask for the identifer of the
+  /// server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifer
+  /// is \b not changeable by the user, like the \e name configuration option, because this is a "build-in" 
+  /// feature set by the \e programmer.
+  MQ_STR ident;
  
   /// \brief setup/cleanup a \e CHILD object
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
@@ -1256,7 +1276,7 @@ MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetIdent (
 
 /** \brief check the \e ident of the \e context object
  *  \context
- *  param[in] ident the ident to check for
+ *  \param[in] ident the ident to check for
  *  \return #MQ_YES or #MQ_NO
  *
  *  The check is done with an \c _IDN request send to the link target.
@@ -1325,6 +1345,13 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
 /// the communication interface (\c msgque->io) of a parent-context is
 /// used by the child-context too.
 MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
+  struct MqS const * const context
+);
+
+/// \brief if currently a transaction is ongoing
+/// \context
+/// \return boolean 1=yes, 0=no
+MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetIsTrans (
   struct MqS const * const context
 );
 
@@ -2384,63 +2411,99 @@ MQ_EXTERN void MQ_DECL MqBufferLAppendL (
 /// \brief append a native typed value to the \b end of a MqBufferLS object
 /// \bufL
 /// \param[in] val the value to append to
-MQ_EXTERN void MQ_DECL MqBufferLAppendY (
+static mq_inline void
+MqBufferLAppendY (
   struct MqBufferLS * const bufL,
   MQ_BYT const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateY (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendO (
+static mq_inline void
+MqBufferLAppendO (
   struct MqBufferLS * const bufL,
   MQ_BOL const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateO (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendS (
+static mq_inline void
+MqBufferLAppendS (
   struct MqBufferLS * const bufL,
   MQ_SRT const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateS (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendI (
+static mq_inline void
+MqBufferLAppendI (
   struct MqBufferLS * const bufL,
   MQ_INT const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateI (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendF (
+static mq_inline void
+MqBufferLAppendF (
   struct MqBufferLS * const bufL,
   MQ_FLT const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateF (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendW (
+static mq_inline void
+MqBufferLAppendW (
   struct MqBufferLS * const bufL,
   MQ_WID const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateW (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \copydoc MqBufferLAppendY
-MQ_EXTERN void MQ_DECL MqBufferLAppendD (
+static mq_inline void
+MqBufferLAppendD (
   struct MqBufferLS * const bufL,
   MQ_DBL const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateD (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \brief append an #MQ_STR object to the \b end of an MqBufferLS object
 /// \bufL
 /// \param val the string for input
-MQ_EXTERN void MQ_DECL MqBufferLAppendC (
+static mq_inline void
+MqBufferLAppendC (
   struct MqBufferLS * const bufL,
   MQ_CST const val
-);
+)
+{
+  MqBufferLAppend (bufL, MqBufferCreateC (MQ_ERROR_PANIC, val), -1);
+}
 
 /// \brief append an #MQ_BUF object to the \b end of an MqBufferLS object
 /// \bufL
 /// \param val the buffer for input
 /// \attention after the insert the buffer is owed by the \e buf object -> do \b not free \e val
-MQ_EXTERN void MQ_DECL MqBufferLAppendU (
+static mq_inline void
+MqBufferLAppendU (
   struct MqBufferLS * const bufL,
   MQ_BUF const val
-);
+)
+{
+  MqBufferLAppend (bufL, val, -1);
+}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -2649,26 +2712,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
  *  has only one \e MqS object.
  *  the \e MqErrorS object is used to collect all data needed to handle an error.
  */
-
-/// \brief panic on error
-///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_PANIC ((struct MqS*)NULL)
-
-/// \brief ignore error and do not generate any error-text (don't fill the error object)
-///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_IGNORE ((struct MqS*)0x1)
-
-/// \brief print error to stderr
-///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_PRINT ((struct MqS*)0x2)
-
-#define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
 
 /// \brief do a \b panic with a vararg argument list
 /// \context
@@ -3061,7 +3104,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \attention the data retured belongs to \libmsgque.
 ///
 /// In opposit to #MqReadN all package items are returned.
-/// The native package data can be saved and send later back with #MqSendBODY
+/// The native package data can be saved and send later back with #MqSendBDY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   struct MqS * const context,
   MQ_BIN * const out,
@@ -3185,7 +3228,7 @@ static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
 /// \brief append a native typed value to the \e Send-Buffer object
 /// \context
 /// \param[in] val the value to send
-///
+/// \retMqErrorE
 /// \attention In \b binary mode the data will be send as binary, in \b string mode as string.
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendY (
   struct MqS * const context,
@@ -3231,6 +3274,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendD (
 /// \brief append a #MQ_STR object to the \e Send-Buffer object
 /// \context
 /// \param in the string data to send
+/// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendC (
   struct MqS * const context,
   MQ_CST const in
@@ -3240,6 +3284,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendC (
 /// \context
 /// \param in the binary data to send
 /// \param len the size of the binary data to send
+/// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
   struct MqS * const context,
   MQ_BINB const * const in,
@@ -3259,6 +3304,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
 /// \brief append an entire package body object to the \e Send-Buffer object
 /// \context
 /// \param in the body package data to send, result from the previous #MqReadBDY call
+/// \param len the size of the binary data to send
+/// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
   struct MqS * const context,
   MQ_BINB const * const in,
@@ -3268,6 +3315,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
 /// \brief append a #MQ_BUF object to the \e Send-Buffer object
 /// \context
 /// \param in the pointer to an #MqBufferS object to send
+/// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendU (
   struct MqS * const context,
   struct MqBufferS * const in
@@ -3276,6 +3324,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendU (
 /// \brief append a \e MqBufferLS object to the \e Send-Buffer object
 /// \context
 /// \param in the pointer to an #MqBufferLS object to send
+/// \retMqErrorE
 /// \attention all items of \e in are appended as single arguments to the call using #MqSendU
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendL (
   struct MqS * const context,

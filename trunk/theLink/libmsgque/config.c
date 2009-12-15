@@ -26,17 +26,19 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-void
-MqContextInit (
-  struct MqS       * const context,
-  MQ_SIZE		   size,
-  struct MqS const * const tmpl
-) {
-  if (size == 0) size = sizeof(*context);
-  memset(context,0,size);
+static void
+pConfigInit (
+  struct MqS * const context
+)
+{
   context->config.io.buffersize = 4096;
   context->config.io.timeout = MQ_TIMEOUT10;
   context->config.io.com = MQ_IO_PIPE;
+  context->config.io.uds.file = NULL;
+  context->config.io.tcp.host = NULL;
+  context->config.io.tcp.port = NULL;
+  context->config.io.tcp.myhost = NULL;
+  context->config.io.tcp.myport = NULL;
   context->config.io.pipe.socks[0] = -1;
   context->config.io.pipe.socks[1] = -1;
 #if !defined(MQ_HAS_THREAD)
@@ -45,6 +47,17 @@ MqContextInit (
 #if !defined(HAVE_FORK)
   context->config.ignoreFork = MQ_YES;
 #endif
+}
+
+void
+MqContextInit (
+  struct MqS       * const context,
+  MQ_SIZE		   size,
+  struct MqS const * const tmpl
+) {
+  if (size == 0) size = sizeof(*context);
+  memset(context,0,size);
+  pConfigInit (context);
   context->temp = MqBufferCreate(context, 250);
   MqConfigDup(context, tmpl);
   pErrorSetup(context);
@@ -141,6 +154,7 @@ MqConfigReset (
   MqSysFree(context->config.name);
   MqSysFree(context->config.srvname);
   memset (&context->config, 0, sizeof(context->config));
+  pConfigInit (context);
   context->statusIs = MQ_STATUS_IS_INITIAL;
 }
 
@@ -160,14 +174,7 @@ MqConfigDup (
   to->config.master = NULL;
   to->config.master_id = 0;
   to->statusIs = MQ_STATUS_IS_DUP;
-  to->config.io.com = MQ_IO_PIPE;
-  to->config.io.uds.file = NULL;
-  to->config.io.tcp.host = NULL;
-  to->config.io.tcp.port = NULL;
-  to->config.io.tcp.myhost = NULL;
-  to->config.io.tcp.myport = NULL;
-  to->config.io.pipe.socks[0] = -1;
-  to->config.io.pipe.socks[1] = -1;
+  pConfigInit (to);
 }
 
 static mq_inline enum MqErrorE
@@ -299,8 +306,8 @@ MqConfigSetIdent (
   struct MqS * const context,
   MQ_CST  data
 ) {
-  MqSysFree(context->config.ident);
-  context->config.ident = mq_strdup_save(data);
+  MqSysFree(context->setup.ident);
+  context->setup.ident = mq_strdup_save(data);
 }
 
 
@@ -723,7 +730,7 @@ MqConfigGetIdent (
   struct MqS const * const context
 )
 {
-  return context->config.ident;
+  return context->setup.ident;
 }
 
 MQ_BOL 
@@ -798,6 +805,14 @@ MqConfigGetCtxId (
 )
 {
   return context->link.ctxId;
+}
+
+int
+MqConfigGetIsTrans (
+  struct MqS const * const context
+)
+{
+  return (context->link._trans != 0);
 }
 
 MQ_CST 

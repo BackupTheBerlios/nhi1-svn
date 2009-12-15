@@ -531,7 +531,7 @@ MqSendBDY (
   struct MqSendS * const send = context->link.send;
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else {
+  } else if (len != 0) {
     register struct MqBufferS * const buf = send->buf;
     register MQ_SIZE const newlen = sizeof(struct HdrS) + len;
     pBufferNewSize (buf, newlen);
@@ -545,8 +545,8 @@ MqSendBDY (
     }
     buf->cursize = newlen;
     buf->cur.B = buf->data + newlen;
-    return MQ_OK;
   }
+  return MQ_OK;
 }
 
 enum MqErrorE
@@ -716,7 +716,7 @@ enum MqErrorE
 pMqSendEND (
   struct MqS * const context,
   MQ_CST const token,
-  const MQ_HDL trans
+  MQ_HDL const trans
 )
 {
   if (context->link.send == NULL) {

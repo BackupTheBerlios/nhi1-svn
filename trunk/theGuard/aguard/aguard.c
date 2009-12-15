@@ -78,6 +78,7 @@ PkgToGuard (
   MQ_PTR data
 )
 {
+  MQ_INT isTrans = MqConfigGetIsTrans (mqctx);
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
   //SETUP_guard;
@@ -88,17 +89,21 @@ PkgToGuard (
   encrypt (bdy, len);
   MqErrorCheck1 (MqSendSTART (ftrCtx));
   MqErrorCheck1 (MqSendC (ftrCtx, MqConfigGetToken (mqctx)));
+  MqErrorCheck1 (MqSendI (ftrCtx, isTrans));
   MqErrorCheck1 (MqSendB (ftrCtx, bdy, len));
   MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, "+GRD", MQ_TIMEOUT_USER));
-  MqErrorCheck1 (MqReadB (ftrCtx, &bdy, &len));
-  // do "decryption" of bdy
-  decrypt (bdy, len);
-  MqErrorCheck (MqSendBDY (mqctx, bdy, len));
-  goto error;
+  if (isTrans) {
+    MqErrorCheck1 (MqReadB (ftrCtx, &bdy, &len));
+    // do "decryption" of bdy
+    decrypt (bdy, len);
+    MqErrorCheck (MqSendBDY (mqctx, bdy, len));
+    return MqSendRETURN(mqctx);
+  }
+  return MqErrorGetCode(mqctx);
 error1:
   MqErrorCopy (mqctx, ftrCtx);
 error:
-  return MqSendRETURN(mqctx);
+  return MqErrorStack(mqctx);
 }
 
 static enum MqErrorE
@@ -107,6 +112,7 @@ GuardToPkg (
   MQ_PTR data
 )
 {
+  MQ_INT isTrans;
   MQ_CST token;
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrCtx = MqSlaveGet (mqctx, 0);
@@ -114,21 +120,26 @@ GuardToPkg (
 
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadC (mqctx, &token));
+  MqErrorCheck (MqReadI (mqctx, &isTrans));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   // do "decryption" of dat
   decrypt (bdy, len);
   MqErrorCheck1	(MqSendSTART (ftrCtx));
   MqErrorCheck1	(MqSendBDY (ftrCtx, bdy, len));
-  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, token, MQ_TIMEOUT_USER));
-  MqErrorCheck1 (MqReadBDY (ftrCtx, &bdy, &len));
-  // do "encrytion" of dat
-  encrypt (bdy, len);
-  MqErrorCheck (MqSendB (mqctx, bdy, len));
-  goto error;
+  if (isTrans) {
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrCtx, token, MQ_TIMEOUT_USER));
+    MqErrorCheck1 (MqReadBDY (ftrCtx, &bdy, &len));
+    // do "encrytion" of dat
+    encrypt (bdy, len);
+    MqErrorCheck (MqSendB (mqctx, bdy, len));
+  } else {
+    MqErrorCheck1 (MqSendEND (ftrCtx, token));
+  }
+  return MqSendRETURN(mqctx);
 error1:
   MqErrorCopy (mqctx, ftrCtx);
 error:
-  return MqSendRETURN(mqctx);
+  return MqErrorStack(mqctx);
 }
 
 /*****************************************************************************/

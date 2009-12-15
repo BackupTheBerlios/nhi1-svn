@@ -533,7 +533,7 @@ pTokenCheckSystem (
 	}
 	case 'D': {	      // _IDN:: SERVER, get "ident"
 	  MqSendSTART(context);
-	  MqSendC(context, (context->config.ident != NULL ? context->config.ident : "NULL"));
+	  MqSendC(context, (context->setup.ident != NULL ? context->setup.ident : "NULL"));
 	  MqErrorCheck (MqSendRETURN(context));
 	  break;
 	}
