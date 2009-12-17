@@ -89,21 +89,21 @@ test bol-6-($I|$B|$C|$S) {(MQ_STR to MQ_BOL) error size} \
     -body           {Echo1 $FH_LAST ECOO ReadO SendC 1x} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '*' into an 'BOL' object*}
 
 test bol-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOO ReadO SendC -1} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] underflow ERROR, can not convert '*' into an 'BOL' object*}
 
 test bol-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOO ReadO SendC 2} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BOL' object*}
  
 if {$B eq "binary"} {
@@ -111,14 +111,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOO ReadO SendW 2} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'WID' object into an 'BOL' object*}
 } else {
     test bol-9-($I|$B|$C|$S) {(MQ_WID to MQ_BOL) error WID type} \
 	-body           {Echo1 $FH_LAST ECOO ReadO SendW 2} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '2' into an 'BOL' object*}
 }
 
@@ -127,14 +127,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOO ReadO SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'DBL' object into an 'BOL' object*}
 } else {
     test bol-10-($I|$B|$C|$S) {(MQ_DBL to MQ_BOL) error DBL type} \
 	-body           {Echo1 $FH_LAST ECOO ReadO SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '1.2345*e+*03' into an 'BOL' object*}
 }
  
@@ -149,7 +149,7 @@ test bol-11-($I|$B|$C|$S) {(MQ_LST to MQ_BOL) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'LST' object into an 'BOL' object*}
 
 test bol-12-($I|$B|$C|$S) {set/get context data} \
@@ -182,8 +182,8 @@ test bol-XX-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|213>
-[sS]> (server-0) \[*sReadA1\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|213>*
+[sS]> (server-0) \[*sReadA1\] request more arguments than available*}
 
 # cleanup ---------------------------
 

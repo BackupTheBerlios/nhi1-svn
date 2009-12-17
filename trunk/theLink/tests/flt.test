@@ -81,28 +81,28 @@ test flt-6-($I|$B|$C|$S) {(MQ_STR to MQ_FLT) error size} \
     -body           {Echo1 $FH_LAST ECOF ReadF SendC 1234a} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] size ERROR, can not convert '1234a' into an 'FLT' object*}
 
 test flt-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOF ReadF SendC ${MIN}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] underflow ERROR, can not convert '*' into an 'FLT' object*}
 
 test flt-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOF ReadF SendC ${MAX}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] overflow ERROR, can not convert '*' into an 'FLT' object*}
 
 test flt-8b-($I|$B|$C|$S) {range error -overflow} \
     -body           {Echo1 $FH_LAST ECOF ReadF SendC -${MAX}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] overflow ERROR, can not convert '*' into an 'FLT' object*}
  
 if {$B eq "binary"} {
@@ -110,7 +110,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOF ReadF SendI 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'INT' object into an 'FLT' object*}
 } else {
     test flt-9-($I|$B|$C|$S) {(MQ_INT to MQ_FLT) error INT type} \
@@ -125,7 +125,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOF ReadF SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'WID' object into an 'FLT' object*}
 } else {
     test flt-10-($I|$B|$C|$S) {(MQ_WID to MQ_FLT) error WID type} \
@@ -146,7 +146,7 @@ test flt-11-($I|$B|$C|$S) {(MQ_LST to MQ_FLT) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'LST' object into an 'FLT' object*}
 
 test flt-12-($I|$B|$C|$S) {no data} \
@@ -157,8 +157,8 @@ test flt-12-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|213>
-[sS]> (server-0) \[*sReadA4\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|213>*
+[sS]> (server-0) \[*sReadA4\] request more arguments than available*}
 
 test flt-13-($I|$B|$C|$S) {set/get context data} \
     -setup	 {

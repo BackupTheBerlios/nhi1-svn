@@ -79,21 +79,21 @@ test byt-6-($I|$B|$C|$S) {(MQ_STR to MQ_INT) error size} \
     -body           {Echo1 $FH_LAST ECOY ReadY SendC 123.7} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '123.7' into an 'BYT' object*}
 
 test byt-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOY ReadY SendC ${MIN}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] underflow ERROR, can not convert '*' into an 'BYT' object*}
 
 test byt-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOY ReadY SendC ${MAX}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BYT' object*}
  
 if {$B eq "binary"} {
@@ -101,14 +101,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOY ReadY SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'WID' object into an 'BYT' object*}
 } else {
     test byt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error WID type} \
 	-body           {Echo1 $FH_LAST ECOY ReadY SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '1234' into an 'BYT' object*}
 }
 
@@ -117,14 +117,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOY ReadY SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'DBL' object into an 'BYT' object*}
 } else {
     test byt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
 	-body           {Echo1 $FH_LAST ECOY ReadY SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '1.2345*e+*03' into an 'BYT' object*}
 }
  
@@ -139,7 +139,7 @@ test byt-11-($I|$B|$C|$S) {(MQ_LST to MQ_INT) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'LST' object into an 'BYT' object*}
 
 test byt-12-($I|$B|$C|$S) {set/get context data} \
@@ -172,8 +172,8 @@ test byt-XX-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|213>
-[sS]> (server-0) \[*sReadA1\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|213>*
+[sS]> (server-0) \[*sReadA1\] request more arguments than available*}
 
 # cleanup ---------------------------
 
@@ -195,10 +195,4 @@ unset I B C S
 ## finish
 ##
 freeTests
-
-
-
-
-
-
 

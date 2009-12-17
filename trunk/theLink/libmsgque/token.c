@@ -475,13 +475,18 @@ pTokenCheckSystem (
 	      MQ_INT errnum;
 	      MqErrorCheck (MqReadI (context, &errnum));
 	      MqErrorCheck (MqReadC (context, &errtext));
-	      MqErrorSet (context, errnum, MQ_ERROR, errtext);
-
-	      if (context->setup.BgError.fFunc != NULL) {
-		MqDLogCL (context, 5, "call BqError\n");
-		MqErrorCheck ((*context->setup.BgError.fFunc) (context, context->setup.BgError.data));
+	      if (context->config.master != NULL) {
+		MqErrorSet (context->config.master, errnum, MQ_ERROR, errtext);
+		MqSendERROR (context->config.master);
+	      } else {
+		MqErrorSet (context, errnum, MQ_ERROR, errtext);
+		if (context->setup.BgError.fFunc != NULL) {
+		  MqDLogCL (context, 5, "call BqError\n");
+		  MqErrorCheck ((*context->setup.BgError.fFunc) (context, context->setup.BgError.data));
+		}
+		// check "error.code" again because "setup.BgError.fFunc" could clean it
+		MqErrorCheck (context->error.code);
 	      }
-	      MqErrorCheck (context->error.code);
 	      break;
 	    }
 	}

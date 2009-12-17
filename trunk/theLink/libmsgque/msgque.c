@@ -676,21 +676,20 @@ MqLinkCreate (
 	MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), 0);
 
 	// step 2, append "alfa" string on second position if the first item is !not! a option
-	if (alfa->data[1]->cur.C[0] != '-')
+	if (alfa->data[1]->cur.C[0] != '-') {
 	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
+	}
 
 	// step 3, create the new context and fill the myFilter
 	myFilter = MqContextCreate(sizeof(struct MqS),context);
-	if (MqErrorCheckI (MqSetupDup (myFilter, context))) {
-	  MqErrorCopy (context, myFilter);
-	  MqContextDelete (&myFilter);
-	  goto error;
-	}
-	
-	myFilter->setup = context->setup;
 
+	// step 4, set the factory
+	MqConfigSetDefaultFactory (myFilter);
+
+	// step 5, delete the entire "context" on delete
 	myFilter->link.doFactoryCleanup = MQ_YES;
 
+	// step 6, link between "myFilter" and "context"
 	MqConfigSetMaster  (myFilter, context, 0);
 
 	if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
@@ -937,17 +936,23 @@ sMqEventStart (
   // ##################### TOKEN Handler #####################
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
-  if (pTokenInvoke (a_context->link.srvT) == MQ_ERROR) {
-    if (a_context->link._trans != 0) {
-      // in a transaction, "MqSendRETURN" will convert the context error 
-      // into an "error" package and send this package back to the client
-      MqErrorCheck (MqSendRETURN (a_context));
-    } else if (pIoCheck (a_context->link.io)) {
-      // outsite of a transaction we have to send a "real" error,
-      // but "only" if the connection "pIoCheck" is still available
-      MqErrorCheck (MqSendERROR (a_context));
+  if (MqErrorCheckI(pTokenInvoke (a_context->link.srvT))) {
+    enum MqErrorE err = MqErrorGetCode(a_context);
+    if (err == MQ_ERROR) {
+      if (a_context->link._trans != 0) {
+	// in a transaction, "MqSendRETURN" will convert the context error 
+	// into an "error" package and send this package back to the client
+	MqErrorCheck (MqSendRETURN (a_context));
+      } else if (pIoCheck (a_context->link.io)) {
+	// outsite of a transaction we have to send a "real" error,
+	// but "only" if the connection "pIoCheck" is still available
+	MqErrorCheck (MqSendERROR (a_context));
+      } else {
+	// report thr error to the top-level
+	goto error;
+      }
     } else {
-      // report thr error to the top-level
+      // MQ_EXIT, MQ_CONTINUE, ...
       goto error;
     }
   }

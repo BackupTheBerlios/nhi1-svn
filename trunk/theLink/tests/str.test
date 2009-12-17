@@ -128,7 +128,7 @@ test str-14-($I|$B|$C|$S) {(LST to STR) fit max} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|1>*
 [sS]> (server-0) \[*MqBufferGetC\] type ERROR, it is not allowed to convert an 'LST' object into an 'STR' object*}
 
 test str-15-($I|$B|$C|$S) {no data} \
@@ -139,8 +139,8 @@ test str-15-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|213>
-[sS]> (server-0) \[*MqReadC\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|213>*
+[sS]> (server-0) \[*MqReadC\] request more arguments than available*}
 
 # cleanup ---------------------------
 

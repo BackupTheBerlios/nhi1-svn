@@ -102,6 +102,7 @@ MqContextFree (
 
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);
+    MqSysFree(context->setup.ident);
   }
 }
 
@@ -211,6 +212,7 @@ MqSetupDup (
 
   // copy "setup" 
   context->setup = from->setup;
+  context->setup.ident = mq_strdup_save(from->setup.ident);
 
   // reinitialize "data" entries which were !not! set by the class constructor
   MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerSetup.data, context->setup.ServerSetup.fCopy, ServerSetup));
@@ -805,14 +807,6 @@ MqConfigGetCtxId (
 )
 {
   return context->link.ctxId;
-}
-
-int
-MqConfigGetIsTrans (
-  struct MqS const * const context
-)
-{
-  return (context->link._trans != 0);
 }
 
 MQ_CST 

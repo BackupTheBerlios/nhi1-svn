@@ -400,10 +400,8 @@ pEventStart (
 	// know the caller object (throught error) and the exit object (eventctx)
 	struct MqS * exitctx  = eventctx->link.exitctx;
 	eventctx->link.exitctx = NULL;
-	// security check (propably not used)
-	if (exitctx == NULL) MqPanicSYS(context);
 	// case 1. delete myself
-	if (context == exitctx)  {
+	if (context == exitctx || exitctx == NULL)  {
 	  // can not delete myself -> upper code have to handle this
 	  return MQ_EXIT;
 	}

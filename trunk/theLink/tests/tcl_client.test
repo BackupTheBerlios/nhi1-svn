@@ -461,7 +461,7 @@ test tcl-client-Z2-FTRproc "tclmsgque MqS --FTR -> Error " \
     -cleanup	    { $ctx LinkDelete } \
     -match	    glob \
     -returnCodes    error \
-    -result	    {[cC]> (client) \[pMqSendEND] use first MqSendSTART and than MqSendEND*}
+    -result	    {[cC]> (client) \[pSendEND] use first MqSendSTART and than MqSendEND*}
 
 test tcl-client-Z-InitFilterEOF "tclmsgque MqS --EOF -> Error " \
     -setup	    { 

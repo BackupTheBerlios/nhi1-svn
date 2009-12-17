@@ -61,12 +61,22 @@ test prt-1-($I|$B|$C|$S) {SEND + WAIT with error} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 222-CATCH:1 {222-RET:[cC]> (client-0) \[*service-call-error] <Tok|ECOI> <Num|1>
-[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object
-*} {222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[*service-call-error] <Tok|ECOI> <Num|1>
-[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object
-*}} END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:1
+222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
+222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
+END}
 
 test prt-1b-($I|$B|$C|$S) {SEND + WAIT without error} \
     -constraints    binary \
@@ -78,8 +88,20 @@ test prt-1b-($I|$B|$C|$S) {SEND + WAIT without error} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET:678 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:678
+222-CODE:NONE
+END}
 
 test prt-2-($I|$B|$C|$S) {SEND + CALLBACK with error} \
     -constraints    binary \
@@ -96,12 +118,28 @@ test prt-2-($I|$B|$C|$S) {SEND + CALLBACK with error} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 333-CATCH:0 333-RET: 333-CODE:NONE 444-CATCH:1 {444-RET:[cC]> (client-0) \[callback-error] <Num|1>
-[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} {444-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[callback-error] <Num|1>
-[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*}} END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+333-CATCH:0
+333-RET:
+333-CODE:NONE
+444-CATCH:1
+444-RET:[cC]> (client-0) \[callback-error] <Num|1>*
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+444-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[callback-error] <Num|1>*
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+END}
 
 test prt-2b-($I|$B|$C|$S) {SEND + CALLBACK without error} \
     -constraints    binary \
@@ -118,8 +156,29 @@ test prt-2b-($I|$B|$C|$S) {SEND + CALLBACK without error} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 333-CATCH:0 333-RET: 333-CODE:NONE cb-CATCH:0 cb-RET:123 cb-CODE:NONE 444-CATCH:0 444-RET: 444-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+333-CATCH:0
+333-RET:
+333-CODE:NONE
+cb-CATCH:0
+cb-RET:123
+cb-CODE:NONE
+444-CATCH:0
+444-RET:
+444-CODE:NONE
+END}
 
 test prt-3-($I|$B|$C|$S) {} \
     -constraints    binary \
@@ -131,8 +190,20 @@ test prt-3-($I|$B|$C|$S) {} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[BGERROR] [sS]> (test-server) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (test-server) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
 
 # cleanup ---------------------------
 

@@ -290,77 +290,6 @@ static int NS(Print) (
   return TCL_OK;
 }
 
-/** \brief create the <B>msgque help</B> subcommand
- *
- *  \tclmsgque_man
- *
- * \param[in] interp current Tcl interpreter
- * \param[in] objc number of objects in \e objv
- * \param[in] objv array of \e Tcl_Obj objects
- * \return Tcl error-code
- */
-static int NS(Help) (
-  Tcl_Interp * interp,
-  int objc,
-  struct Tcl_Obj *const *objv
-)
-{
-  int only_options=0;
-
-  // read the index
-  if (objc != 2 && objc != 3) {
-    goto wrong_args;
-  }
-
-  if (objc == 3) {
-    if (strncmp(Tcl_GetStringFromObj (objv[2],NULL),"-options",8)) {
-	goto wrong_args;
-    } else {
-	only_options=1;
-    }
-  }
-
-  Tcl_ResetResult (interp);
-
-  if (only_options) {
-    Tcl_AppendResult (interp,
-	MqHelp (NULL),
-	"    --help-tclmsgque print tclmsgque specific help\n",
-	NULL);
-  } else {
-    Tcl_AppendResult (interp,
-	"usage: tclmsgque MqS [OPTION]... [ARGUMENT]...\n",
-	"\n",
-	"  tclmsgque MqS [ARGUMENT]... syntax:\n",
-	"    tclmsgque MqS [OPTION]... @ server [OPTION]... [ARGUMENT]\n",
-	"\n",
-	"  Create and configure a new msgque using the options from below.\n",
-	"  The command is part of the 'TclMsgque' package available with:\n",
-	"      > package require TclMsgque\n",
-	"  and returns a handle to the new created msgque\n",
-	"      > set cmd [tclmsgque MqS ...]\n",
-	"  To delete the msgque and shutdown the communication use:\n",
-	"      > rename $cmd \"\"\n",
-	"\n",
-	MqHelp (NULL),
-	"\n",
-	"  tclmsgque MqS [OPTION]:\n",
-	"    --parent CMD     create new msgque as child of parent CMD\n",
-	"    --server         act as a server\n",
-	"      --config proc    use proc to configure the server\n",
-	"    --filter         act as a filter (requires --server too)\n"
-	"      --FTR proc       use proc to serve the filter FTR service\n",
-	"      --EOF proc       use proc to serve the filter EOF service\n",
-	NULL);
-  }
-
-  return TCL_OK;
-
-wrong_args:
-    Tcl_WrongNumArgs (interp, 2, objv, "[-options]");
-    return TCL_ERROR;
-}
-
 static int NS(Main) (
   Tcl_Interp * interp,
   int objc,
@@ -404,8 +333,7 @@ static int NS(MsgqueCmd) (
     { "MqS",	    NS(MqS_Init)	},  
     { "print",      NS(Print)		},  { "Main",       NS(Main)            },
     { "const",	    NS(Const)		},  { "support",    NS(Support)		},
-    { "help",	    NS(Help)		},  { "Init",	    NS(InitCmd)		},
-    { NULL,	    NULL		}
+    { "Init",	    NS(InitCmd)		},  { NULL,	    NULL		}
   };
 
   // read the index

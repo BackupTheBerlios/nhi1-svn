@@ -11,8 +11,8 @@
 #§
 
 LANG="C"
-PATH="$(ls -d ../../theLink/*/ | awk 'BEGIN {ORS=":";} {print $0;}'):../aguard:${PATH:-}"
-export LANG PATH
+. ../../env.sh
+export LANG
 TEE=yes
 
 if [[ ${WINDIR:-} != "" ]] ; then

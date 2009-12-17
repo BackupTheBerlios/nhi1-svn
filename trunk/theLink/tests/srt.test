@@ -79,21 +79,21 @@ test srt-6-($I|$B|$C|$S) {(MQ_STR to MQ_INT) error size} \
     -body           {Echo1 $FH_LAST ECOS ReadS SendC 1234.7} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] size ERROR, can not convert '1234.7' into an 'SRT' object*}
 
 test srt-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOS ReadS SendC ${MIN}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] underflow ERROR, can not convert '*' into an 'SRT' object*}
 
 test srt-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOS ReadS SendC ${MAX}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] overflow ERROR, can not convert '*' into an 'SRT' object*}
  
 if {$B eq "binary"} {
@@ -101,7 +101,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOS ReadS SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'WID' object into an 'SRT' object*}
 } else {
     test srt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error INT type} \
@@ -115,14 +115,14 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOS ReadS SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'DBL' object into an 'SRT' object*}
 } else {
     test srt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
 	-body           {Echo1 $FH_LAST ECOS ReadS SendD 1234.5} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] size ERROR, can not convert '1.2345*e+*03' into an 'SRT' object*}
 }
  
@@ -137,7 +137,7 @@ test srt-11-($I|$B|$C|$S) {(MQ_LST to MQ_INT) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA2\] type ERROR, it is not allowed to convert an 'LST' object into an 'SRT' object*}
 
 test srt-12-($I|$B|$C|$S) {set/get context data} \
@@ -170,8 +170,8 @@ test srt-XX-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|213>
-[sS]> (server-0) \[*sReadA2\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOS> <Num|213>*
+[sS]> (server-0) \[*sReadA2\] request more arguments than available*}
 
 # cleanup ---------------------------
 

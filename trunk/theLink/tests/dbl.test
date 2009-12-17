@@ -77,28 +77,28 @@ test dbl-6-($I|$B|$C|$S) {(MQ_STR to MQ_DBL) error size} \
     -body           {Echo1 $FH_LAST ECOD ReadD SendC 1234a} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] size ERROR, can not convert '1234a' into an 'DBL' object*}
 
 test dbl-7-($I|$B|$C|$S) {range error underflow} \
     -body           {Echo1 $FH_LAST ECOD ReadD SendC ${MIN_DBL}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] underflow ERROR, can not convert '*' into an 'DBL' object*}
 
 test dbl-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOD ReadD SendC ${MAX_DBL}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] overflow ERROR, can not convert '*' into an 'DBL' object*}
 
 test dbl-8b-($I|$B|$C|$S) {range error -overflow} \
     -body           {Echo1 $FH_LAST ECOD ReadD SendC -${MAX_DBL}0} \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] overflow ERROR, can not convert '*' into an 'DBL' object*}
  
 if {$B eq "binary"} {
@@ -106,7 +106,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOD ReadD SendI 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'INT' object into an 'DBL' object*}
 } else {
     test dbl-9-($I|$B|$C|$S) {(MQ_INT to MQ_DBL) error INT type} \
@@ -121,7 +121,7 @@ if {$B eq "binary"} {
 	-body           {Echo1 $FH_LAST ECOD ReadD SendW 1234} \
 	-returnCodes    error \
 	-match          glob \
-	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'WID' object into an 'DBL' object*}
 } else {
     test dbl-10-($I|$B|$C|$S) {(MQ_WID to MQ_DBL) error WID type} \
@@ -142,7 +142,7 @@ test dbl-11-($I|$B|$C|$S) {(MQ_LST to MQ_DBL) error LST type} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'LST' object into an 'DBL' object*}
 
 test dbl-12-($I|$B|$C|$S) {no data} \
@@ -153,8 +153,8 @@ test dbl-12-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|213>
-[sS]> (server-0) \[*sReadA8\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOD> <Num|213>*
+[sS]> (server-0) \[*sReadA8\] request more arguments than available*}
 
 test dbl-13-($I|$B|$C|$S) {set/get context data} \
     -setup	 {

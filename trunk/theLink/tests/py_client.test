@@ -123,7 +123,7 @@ finally:
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
     } \
     -returnCodes  error \
-    -result	  {C> (unknown) [pMqSendEND] the 'msgque' object link is 'not' connected
+    -result	  {C> (unknown) [pSendEND] the 'msgque' object link is 'not' connected
 C> (unknown) found in function "MqProcessEvent" at file "msgque.c"}
 
 test py-client-ErrorSet-5 {no error - without link} \

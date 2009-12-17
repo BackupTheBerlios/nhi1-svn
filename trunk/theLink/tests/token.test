@@ -51,7 +51,7 @@ test token-1-($I|$B|$C|$S) {unknown service token} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|XXXX> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|XXXX> <Num|1>*
 [sS]> (server-0) \[*pTokenInvoke\] token <XXXX> not found}
 
 test token-2-($I|$B|$C|$S) {double service token} \
@@ -94,7 +94,20 @@ test token-5-($I|$B|$C|$S) {token error in async-call} \
 	RET_end
     } \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*pTokenInvoke] token <XXXX> not found} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[pTokenInvoke] token <XXXX> not found
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
 
 test token-6-($I|$B|$C|$S) {get the ConfigToken value} \
     -setup	    { Setup $I $B $C $S } \

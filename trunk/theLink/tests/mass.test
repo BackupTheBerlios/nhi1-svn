@@ -55,7 +55,7 @@ test mass-1-($C|$S) "do $NUM parent echo" \
 	  set RET [Echo1 $FH($n) ECON ReadC SendC $n]
 	  set EXP "$n-server-[lindex [split $n -] 0]"
 	  if {$RET ne $EXP} {
-	    error "expect $n but got $RET"
+	    error "expect $EXP but got $RET"
 	  }
 	}
     } \

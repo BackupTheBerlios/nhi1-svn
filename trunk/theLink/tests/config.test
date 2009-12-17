@@ -79,28 +79,35 @@ test config-8-($I|$B|$C|$S) {IoUds} \
     -body           {Echo1 $FH_LAST CFG1 ReadC SendC IoUds SendC pfile} \
     -returnCodes    error \
     -match	    glob \
-    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>
-[Ss]> (server-0) \[*MqConfigSetIoUds] the 'msgque' object link is 'already' connected}
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>*
+[Ss]> (server-0) \[*MqConfigSetIoUds] the 'msgque' object link is 'already' connected*}
 
 test config-9-($I|$B|$C|$S) {IoTcp} \
     -body           {EchoL $FH_LAST CFG1 SendC IoTcp SendC rHost SendC rPort SendC lHost SendI 4444} \
     -returnCodes    error \
     -match	    glob \
-    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>
-[Ss]> (server-0) \[*MqConfigSetIoTcp] the 'msgque' object link is 'already' connected}
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>*
+[Ss]> (server-0) \[*MqConfigSetIoTcp] the 'msgque' object link is 'already' connected*}
 
 test config-10-($I|$B|$C|$S) {IoPipe} \
     -body           {EchoL $FH_LAST CFG1 SendC IoPipe SendI 9} \
     -returnCodes    error \
     -match	    glob \
-    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>
-[Ss]> (server-0) \[*MqConfigSetIoPipe] the 'msgque' object link is 'already' connected}
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235*>
+[Ss]> (server-0) \[*MqConfigSetIoPipe] the 'msgque' object link is 'already' connected*}
 
 test config-11-($I|$B|$C|$S) {StartAs} \
     -body           {Echo1 $FH_LAST CFG1 ReadI SendC StartAs SendI 3} \
     -result         {3}
 
 test config-12-($I|$B|$C|$S) {Ident} \
+    -constraints    {filter} \
+    -setup	    {$FH_LAST ConfigSetIdent otto} \
+    -body           {EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto} \
+    -result         {myident 0}
+
+test config-12-($I|$B|$C|$S) {Ident} \
+    -constraints    {!filter} \
     -setup	    {$FH_LAST ConfigSetIdent otto} \
     -body           {EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto} \
     -result         {myident 1}

@@ -890,6 +890,109 @@ struct MqSetupS {
   MqHelpF fHelp;
 };
 
+/// \ingroup msgque_api
+/// \brief the main \libmsgque object.
+///
+/// \copydoc msgque_api
+///
+struct MqLinkS {
+
+  // private variables
+  struct MqSendS  * send;	    ///< object for sending a Msgque packet
+  struct MqReadS  * read;	    ///< object for reading a Msgque packet
+  struct MqIoS    * io;		    ///< object for management of the 'socket' infrastructure
+
+  // private variables
+  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+
+  // context-management variables
+  MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
+  struct MqS *ctxIdP;		    ///< the inital (first) context (home of the ctxIdA)
+
+  // private variables
+  struct MqTokenS * srvT;	    ///< identifer for the 'service' token handle
+
+  MQ_BOL onExit;		    ///< is allready an exit ongoing?
+  struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
+  MQ_BOL onCreate;		    ///< is already an "create" ongoing?
+  MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
+  MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
+  MQ_BOL onShutdown;		    ///< is allready a "shutdown" ongoing?
+  MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
+  MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
+
+  struct MqCacheS * readCache;	    ///< cache for MqReadS
+
+  // the next 3 items are !!only!! used in the parent
+  MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
+  MQ_SIZE   ctxIdZ;		    ///< the size of the ctxIdA array
+  struct MqS ** ctxIdA;	    ///< array of struct MqLinkS * pointer's
+
+  // the next 3 items are used to map the transactionID (int) to the transaction pointer
+  struct MqTransS * trans;	    ///< link to the trans object
+  MQ_HDL _trans;		    ///< storage for the Transaktion object from the package header
+
+  // the following lines manage the link between the parent and the child,
+  // to be able to delete all childs if the parent is deleted
+  struct pChildS * childs;	    ///< linked list of childs
+  struct pChildS * self;	    ///< my own child storage
+
+  // master/slave relationship
+  struct MqLinkSlaveS * slave;	    ///< link to the SLAVE object
+  MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
+};
+
+/// \ingroup msgque_api
+/// \brief error-object data type
+struct MqErrorS {
+  struct MqBufferS * text;      ///< the error message
+  enum MqErrorE code;		///< the error code
+  MQ_INT num;	                ///< the error number also used as exit code
+  MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
+};
+
+/// \ingroup msgque_api
+/// \brief signature used in #MqS::signature
+#define MQ_MqS_SIGNATURE 0x212CF91
+
+#if !defined(MQ_PRIVATE_CONFIG_CONST)
+# define MQ_PRIVATE_CONFIG_CONST const
+#endif
+
+/// \ingroup msgque_api
+/// \brief Prototype for a context object
+struct MqS {
+  int signature;		    ///< used to verify object type for typeless languages
+  MQ_PRIVATE_CONFIG_CONST
+    struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
+  struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
+  struct MqErrorS error;	    ///< error object data
+  struct MqLinkS link;		    ///< link object data
+  struct MqBufferS * temp;	    ///< misc temporary \e MqBufferS object
+  enum MqStatusIsE statusIs;	    ///< how the context was created?
+  MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
+  MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
+  MQ_PTR threadData;		    ///< application specific thread data
+  MQ_PTR self;			    ///< link to the managed object
+  MQ_SIZE contextsize;		    ///< alloc-size of the user-defined context struct
+};
+
+#ifndef MQ_PRIVATE
+
+# ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
+
+/// \ingroup msgque_api
+/// \brief the prefix arguments of the starting application
+MQ_EXTERN struct MqBufferLS * MqInitBuf;
+
+/// \ingroup msgque_api
+/// \brief name of a procedure to return \e main like entry-points 
+MQ_EXTERN MqFactorySelectorF MqFactorySelector;
+
+# endif /* MQ_LINK_WITH_OBJECT_FILES */
+
+#endif /* !MQ_PRIVATE */
+
 /*****************************************************************************/
 /*                                                                           */
 /*                           create / delete                                 */
@@ -1185,6 +1288,19 @@ MQ_DECL MqConfigSetDaemon (
   MQ_CST pidfile
 );
 
+/// \brief set the current transaction token
+/// \context
+/// \param[in] trans the transaction token from e previous #MqConfigGetTrans call
+/// \return #MqLinkS::_trans
+static mq_inline void
+MqConfigSetTrans (
+  struct MqS * const context,
+  MQ_HDL const trans
+)
+{
+  context->link._trans = trans;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                   get                                     */
@@ -1348,12 +1464,16 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
   struct MqS const * const context
 );
 
-/// \brief if currently a transaction is ongoing
+/// \brief get the current transaction token
 /// \context
-/// \return boolean 1=yes, 0=no
-MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetIsTrans (
+/// \return #MqLinkS::_trans
+static mq_inline MQ_HDL
+MqConfigGetTrans (
   struct MqS const * const context
-);
+)
+{
+  return context->link._trans;
+}
 
 /// \brief return the current transaction token
 /// \context
@@ -1456,117 +1576,9 @@ MQ_DECL MqConfigGetSelf (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                       private error API                                   */
-/*                                                                           */
-/*****************************************************************************/
-
-struct MqErrorS {
-  struct MqBufferS * text;      ///< the error message
-  enum MqErrorE code;		///< the error code
-  MQ_INT num;	                ///< the error number also used as exit code
-  MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
-};
-
-/*****************************************************************************/
-/*                                                                           */
-/*                           private data struc/union                        */
-/*                                                                           */
-/*****************************************************************************/
-
-/** \brief the main \libmsgque object.
- *
- * \copydoc msgque_api
- */
-struct MqLinkS {
-
-  // private variables
-  struct MqSendS  * send;	    ///< object for sending a Msgque packet
-  struct MqReadS  * read;	    ///< object for reading a Msgque packet
-  struct MqIoS    * io;		    ///< object for management of the 'socket' infrastructure
-
-  // private variables
-  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
-
-  // context-management variables
-  MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
-  struct MqS *ctxIdP;		    ///< the inital (first) context (home of the ctxIdA)
-
-  // private variables
-  struct MqTokenS * srvT;	    ///< identifer for the 'service' token handle
-
-  MQ_BOL onExit;		    ///< is allready an exit ongoing?
-  struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
-  MQ_BOL onCreate;		    ///< is already an "create" ongoing?
-  MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
-  MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
-  MQ_BOL onShutdown;		    ///< is allready a "shutdown" ongoing?
-  MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
-  MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
-
-  struct MqCacheS * readCache;	    ///< cache for MqReadS
-
-  // the next 3 items are !!only!! used in the parent
-  MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
-  MQ_SIZE   ctxIdZ;		    ///< the size of the ctxIdA array
-  struct MqS ** ctxIdA;	    ///< array of struct MqLinkS * pointer's
-
-  // the next 3 items are used to map the transactionID (int) to the transaction pointer
-  struct MqTransS * trans;	    ///< link to the trans object
-  MQ_HDL _trans;		    ///< storage for the Transaktion object from the package header
-
-  // the following lines manage the link between the parent and the child,
-  // to be able to delete all childs if the parent is deleted
-  struct pChildS * childs;	    ///< linked list of childs
-  struct pChildS * self;	    ///< my own child storage
-
-  // master/slave relationship
-  struct MqLinkSlaveS * slave;	    ///< link to the SLAVE object
-  MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
-};
-
-/*****************************************************************************/
-/*                                                                           */
 /*                            msgque/definition                              */
 /*                                                                           */
 /*****************************************************************************/
-
-// \brief signature used in #MqS::signature
-#define MQ_MqS_SIGNATURE 0x212CF91
-
-#if !defined(MQ_PRIVATE_CONFIG_CONST)
-# define MQ_PRIVATE_CONFIG_CONST const
-#endif
-
-/// \brief Prototype for a context object
-struct MqS {
-  int signature;		    ///< used to verify object type for typeless languages
-  MQ_PRIVATE_CONFIG_CONST
-    struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
-  struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
-  struct MqErrorS error;	    ///< error object data
-  struct MqLinkS link;		    ///< link object data
-  struct MqBufferS * temp;	    ///< misc temporary \e MqBufferS object
-  enum MqStatusIsE statusIs;	    ///< how the context was created?
-  MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
-  MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
-  MQ_PTR threadData;		    ///< application specific thread data
-  MQ_PTR self;			    ///< link to the managed object
-  MQ_SIZE contextsize;		    ///< alloc-size of the user-defined context struct
-};
-
-#ifndef MQ_PRIVATE
-
-# ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
-
-/// \brief the prefix arguments of the starting application
-MQ_EXTERN struct MqBufferLS * MqInitBuf;
-
-/// \brief name of a procedure to return \e main like entry-points 
-MQ_EXTERN MqFactorySelectorF MqFactorySelector;
-
-# endif /* MQ_LINK_WITH_OBJECT_FILES */
-
-#endif /* !MQ_PRIVATE */
 
 /** \brief setup and return the \e init object
  *  \return a pointer to the initialization buffer

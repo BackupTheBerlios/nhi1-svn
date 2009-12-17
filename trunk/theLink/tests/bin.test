@@ -103,8 +103,8 @@ test bin-15-($I|$B|$C|$S) {no data} \
     } \
     -returnCodes    error \
     -match          glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOB> <Num|213>
-[sS]> (server-0) \[*MqReadB\] request more arguments than available}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOB> <Num|213>*
+[sS]> (server-0) \[*MqReadB\] request more arguments than available*}
 
 # cleanup ---------------------------
 

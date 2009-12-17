@@ -43,6 +43,7 @@ if {![info exists testdir]} {
   set linksrcdir [file join [file dirname [info script]] .. .. theLink]
   set linkbuilddir  [file normalize [file join [pwd] .. .. theLink] ]
 }
+set linktestdir [file normalize [file join [file dirname [info script]] .. .. theLink tests]]
 
 ##
 ## load the test library

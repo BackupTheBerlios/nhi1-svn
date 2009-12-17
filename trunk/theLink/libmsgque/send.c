@@ -661,6 +661,15 @@ static mq_inline void pSendL_CLEANUP (
   }
 }
 
+static mq_inline void
+pSendSTART_CHECK (
+  struct MqS * const context
+)
+{
+  if (context->link.send->haveStart == MQ_NO) 
+    MqSendSTART(context);
+}
+
 enum MqErrorE
 MqSendSTART (
   struct MqS * const context
@@ -709,11 +718,11 @@ MqSendEND (
 )
 {
   pSendL_CLEANUP (context);
-  return pMqSendEND(context, token, 0);
+  return pSendEND(context, token, 0);
 }
 
 enum MqErrorE
-pMqSendEND (
+pSendEND (
   struct MqS * const context,
   MQ_CST const token,
   MQ_HDL const trans
@@ -799,7 +808,7 @@ MqSendEND_AND_WAIT (
 
   // 2. send the message
   pSendL_CLEANUP (context);
-  switch (pMqSendEND (context, token, transH)) {
+  switch (pSendEND (context, token, transH)) {
     case MQ_OK: 
       break; 
     case MQ_ERROR: 
@@ -891,7 +900,7 @@ MqSendEND_AND_CALLBACK (
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
   MQ_HDL transH = pTransPop (context->link.trans, cb);
   pSendL_CLEANUP (context);
-  MqErrorReturn (pMqSendEND (context, token, transH)); 
+  MqErrorReturn (pSendEND (context, token, transH)); 
 }
 
 enum MqErrorE
@@ -899,7 +908,7 @@ pSendSYSTEM_RETR (
   struct MqS * const context
 )
 {
-  MqErrorReturn (pMqSendEND (context, "_SRT", context->link._trans));
+  MqErrorReturn (pSendEND (context, "_SRT", context->link._trans));
 }
 
 enum MqErrorE
@@ -1112,28 +1121,29 @@ MqSendRETURN (
 )
 {
   if (context->link._trans == 0) {
-    MqErrorDb (MQ_ERROR_RETURN_WITHOUT_TRANSACTION);
-    return MqSendERROR (context);
+    return MqErrorGetCode(context);
+  } else {
+    pSendL_CLEANUP (context);
+    pReadL_CLEANUP (context);
+    switch (MqErrorGetCode (context)) {
+      case MQ_OK: 
+	break;
+      case MQ_ERROR:
+	MqErrorCheck(MqSendSTART (context));
+	MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
+	sSend_RET_START (context, MqErrorGetNum (context), MQ_RETURN_ERROR);
+	MqSendC (context, MqErrorGetText (context));
+	sSend_RET_END (context);
+	MqErrorReset (context);
+	break;
+      case MQ_EXIT:
+	return MQ_EXIT;
+      case MQ_CONTINUE:
+	MqPanicSYS (context);
+    }
+    pSendSTART_CHECK(context);
+    return pSendEND (context, "_RET", context->link._trans);
   }
-  pSendL_CLEANUP (context);
-  pReadL_CLEANUP (context);
-  switch (MqErrorGetCode (context)) {
-    case MQ_OK: 
-      break;
-    case MQ_ERROR:
-      MqErrorCheck(MqSendSTART (context));
-      MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-      sSend_RET_START (context, MqErrorGetNum (context), MQ_RETURN_ERROR);
-      MqSendC (context, MqErrorGetText (context));
-      sSend_RET_END (context);
-      MqErrorReset (context);
-      break;
-    case MQ_EXIT:
-      return MQ_EXIT;
-    case MQ_CONTINUE:
-      MqPanicSYS (context);
-  }
-  return pMqSendEND (context, "_RET", context->link._trans);
 error:
   return MqErrorStack(context);
 }

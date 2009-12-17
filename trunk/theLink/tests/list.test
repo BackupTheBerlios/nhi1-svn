@@ -81,7 +81,7 @@ test list-1b-($I|$B|$C|$S) {read error in double list} \
     -body           { EchoL $FH_LAST ERLR SendL [list SendI 123] } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERLR> <Num|212>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERLR> <Num|212>*
 [sS]> (server-0) \[*MqReadL_START] invalid type, expect 'LST' but got 'INT'}
 
 test list-1c-($I|$B|$C|$S) {send error in double list} \
@@ -94,7 +94,7 @@ test list-2-($I|$B|$C|$S) {list with str} \
     -body           { EchoL $FH_LAST ECLI SendC --incr SendL [list SendW 123] } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[service-call-error] <Tok|ECLI> <Num|1>
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|ECLI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object*}
 
 test list-2-($I|$B|$C|$S) {list with str} \
@@ -169,7 +169,7 @@ test list-16-($I|$B|$C|$S) {read list from non-list} \
     -body           { EchoL $FH_LAST ECOL SendI 1 } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>*
 [sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'INT'}
 
 test list-16-($I|$B|$C|$S) {read list from non-list} \
@@ -177,7 +177,7 @@ test list-16-($I|$B|$C|$S) {read list from non-list} \
     -body           { EchoL $FH_LAST ECOL SendI 1 } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>*
 [sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'STR'}
 
 test list-17-($I|$B|$C|$S) {read list from non-list} \

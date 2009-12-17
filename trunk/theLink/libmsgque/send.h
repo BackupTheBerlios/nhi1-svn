@@ -39,7 +39,7 @@ enum MqErrorE pSendSYSTEM (
   MQ_CST const token
 );
 
-enum MqErrorE pMqSendEND (
+enum MqErrorE pSendEND (
   struct MqS * const context,
   MQ_CST const token,
   const MQ_HDL trans

@@ -242,7 +242,7 @@ test send-X5-($I|$B|$C|$S) {double LinkCreate} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
 [cC]> (cl-0) \[*MqLinkCreate] the 'msgque' object link is 'already' connected}
 
 
@@ -259,7 +259,7 @@ test send-X6-($I|$B|$C|$S) {parent is not connected} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {c> (client-0) \[service-call-error] <Tok|SND1> <Num|235>
+    -result         {c> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
 c> (unknown) \[*MqLinkCreate] the 'parent' object link is 'not' connected}
 
 test send-X7-($I|$B|$C|$S) {master is not connected} \
@@ -275,7 +275,7 @@ test send-X7-($I|$B|$C|$S) {master is not connected} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
 [cC]> (cl-0) \[*MqSlaveWorker] the 'master' object link is 'not' connected}
 
 test send-X8-($I|$B|$C|$S) {master is no server} \
@@ -292,10 +292,8 @@ test send-X8-($I|$B|$C|$S) {master is no server} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|232>
-[cC]> (cl-0) \[*pSlaveCreate] to use the 'slave-worker' feature the configuration 'MqConfigS::isServer = MQ_YES' is required
-[cC]> (cl-0) found in function "*MqLinkCreate" at file "msgque.c*"*
-[cC]> (cl-0) found in function "*MqSlaveWorker" at file "slave.c*"}
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|232>*
+[cC]> (cl-0) \[*pSlaveCreate] to use the 'slave-worker' feature the configuration 'MqConfigS::isServer = MQ_YES' is required*}
 
 test send-X9-($I|$B|$C|$S) {invalid master} \
     -constraints    {child has_thread} \
@@ -310,7 +308,7 @@ test send-X9-($I|$B|$C|$S) {invalid master} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
 C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
 test send-X10-($I|$B|$C|$S) {invalid master} \
@@ -326,7 +324,7 @@ test send-X10-($I|$B|$C|$S) {invalid master} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
 C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
 test send-X11-($I|$B|$C|$S) {master_id to big} \
@@ -342,7 +340,7 @@ test send-X11-($I|$B|$C|$S) {master_id to big} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|231>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|231>*
 S> (server-0) \[*pSlaveChildCreate] 'slave' identifer out of range (0 <= 10000000 <= 1023)*}
 
 test send-X12-($I|$B|$C|$S) {master_id in use} \
@@ -359,7 +357,7 @@ test send-X12-($I|$B|$C|$S) {master_id in use} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|228>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|228>*
 S> (server-0) \[*pSlaveChildCreate] 'slave' identifer '0' is already in use*}
 
 } ; # END - $BLOCK_2

@@ -178,9 +178,9 @@ Ot_ECOI (
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &l));
   MqSendI (mqctx, l);
-  return MqSendRETURN (mqctx);
+
 error:
-  return MQ_ERROR;
+  return MqSendRETURN (mqctx);
 }
 // END-C-SERVICE-PROC
 

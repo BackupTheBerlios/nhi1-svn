@@ -87,7 +87,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>
+*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
 [sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 
 test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
@@ -96,7 +96,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>
+*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
 [sS]> (sv-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
 
 test slave-3-($I|$B|$C|$S) {SendEND with ok} \
@@ -115,8 +115,21 @@ test slave-4a-($I|$B|$C|$S) {SendEND with error} \
 	RET_end
     } \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (sv-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (sv-0) found in function "sReadA4" at file "read.c"
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
 
 test slave-4b-($I|$B|$C|$S) {SendEND with background error} \
     -body           {
@@ -126,7 +139,20 @@ test slave-4b-($I|$B|$C|$S) {SendEND with background error} \
 	RET_end
     } \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (sv-0) \[*pTokenInvoke] token <XXXX> not found} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (sv-0) \[pTokenInvoke] token <XXXX> not found
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
 
 test slave-4c-($I|$B|$C|$S) {SendEND with error} \
     -constraints    binary  \
@@ -139,8 +165,21 @@ test slave-4c-($I|$B|$C|$S) {SendEND with error} \
 	RET_end
     } \
     -match	    glob \
-    -result         {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
-*} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (sv-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (sv-0) found in function "sReadA4" at file "read.c"
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
 
 test slave-5-($I|$B|$C|$S) {SendEND_AND_WAIT with ok} \
     -body           {
@@ -155,7 +194,7 @@ test slave-6-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[callback-error] <Num|1>
+*[cC]> (cl-0) \[callback-error] <Num|1>*
 [sS]> (sv-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
 
 test slave-7-($I|$B|$C|$S) {check ctxId} \
@@ -225,11 +264,8 @@ if $BLOCK_2 {
 	      -cleanup	      { Cleanup } \
 	      -returnCodes    error \
 	      -match	      glob \
-	      -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|222>
-C> (server-0) \[*sMqCheckArg] for a 'local' setup the option '--fork' is forbidden
-C> (server-0) found in function "*MqLinkCreate" at file "msgque.c"
-C> (server-0) found in function "*MqDefaultLinkCreate" at file "msgque.c"
-S> (server-0) found in function "*MqSlaveWorker" at file "slave.c"}
+	      -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|222>*
+C> (server-0) \[*sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
 	} else {
 	  test slave-X0-($I|$B|$C|$S|$T) {check startAs} \
 	      -constraints  c \
@@ -256,7 +292,7 @@ S> (server-0) found in function "*MqSlaveWorker" at file "slave.c"}
 	  -returnCodes    error \
 	  -cleanup	  { Cleanup } \
 	  -match	  glob \
-	  -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|204>
+	  -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|204>*
 C> (cl-err-1) \[*] can not start server 'DUMMY'*}
 
       test slave-X2-($I|$B|$C|$S) {error-2} \
@@ -267,7 +303,7 @@ C> (cl-err-1) \[*] can not start server 'DUMMY'*}
 	  -returnCodes    error \
 	  -cleanup	  { Cleanup } \
 	  -match	  glob \
-	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|227>
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|227>*
 C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
     }; # SRV_LST
@@ -332,7 +368,7 @@ if $BLOCK_3 {
 	  } \
 	  -returnCodes    error \
 	  -match	  glob \
-	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
 s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
 
       test slave-Y-3-($I|$B|$C|$S) {test after delete} \
@@ -391,7 +427,7 @@ if $BLOCK_4 {
 	  -cleanup	  { Cleanup } \
 	  -returnCodes    error \
 	  -match	  glob \
-	  -result         {C> (client-0) \[service-call-error] <Tok|_OKS> <Num|232>
+	  -result         {C> (client-0) \[service-call-error] <Tok|_OKS> <Num|232>*
 C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration 'MqSetupS::Factory.Create.fCall' is required*}
 
       # start the slave
@@ -428,7 +464,7 @@ C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration
 	  } \
 	  -returnCodes    error \
 	  -match	  glob \
-	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
 s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
 
       test slave-Z-3-($I|$B|$C|$S) {test after delete} \

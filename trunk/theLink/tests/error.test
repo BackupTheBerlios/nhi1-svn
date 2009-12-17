@@ -50,9 +50,18 @@ test error-1-($I|$B|$C|$S) {fatal error} \
       RET_end
     } \
     -match	    glob \
-    -result         {START BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[PANIC] this is a non recoverable error
-[sS]> (server-0) found in function "Ot_ERR1"} BG-TEXT-CODE:NONE 111-CATCH:1 {111-RET:[cC]> (client-0) \[SysRecv] application EXIT request*} {111-CODE:TCLMSGQUE 215 2 {[cC]> (client-0) \[SysRecv] application EXIT request*}} END}
-
+    -result         {START
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[PANIC] this is a non recoverable error
+[sS]> (server-0) found in function "Ot_ERR1"
+BG-TEXT-CODE:NONE
+111-CATCH:1
+111-RET:[cC]> * \[SysRecv] application EXIT request*
+111-CODE:TCLMSGQUE 215 2 {[cC]> * \[SysRecv] application EXIT request*}
+END}
 
 test error-1b-($I|$B|$C|$S) {return value + error} \
     -setup          { Setup $I $B $C $S } \
@@ -60,8 +69,8 @@ test error-1b-($I|$B|$C|$S) {return value + error} \
     -body           { Echo0 $FH_LAST ERR2 } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ERR2> <Num|10>
-[sS]> (server-0) \[Ot_ERR2\] some error}
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ERR2> <Num|10>*
+[sS]> (server-0) \[Ot_ERR2\] some error*}
 
 test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
     -constraints    {local && !csharp && !vb} \
@@ -72,7 +81,7 @@ test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {C> (client-0) \[SysRecv] application EXIT request*}
+    -result         {[cC]> * \[SysRecv] application EXIT request*}
 
 test error-1b3-($I|$B|$C|$S) {double send after broken file-handle} \
     -constraints    {local && !csharp && !vb} \
@@ -85,19 +94,7 @@ test error-1b3-($I|$B|$C|$S) {double send after broken file-handle} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {C> (client-0) \[SysRecv] application EXIT request*}
-
-test error-1c-($I|$B|$C|$S) {calling a return-service without transaction} \
-    -setup      { Setup $I $B $C $S --bgerror RET_BG } \
-    -cleanup    { Cleanup } \
-    -body       {
-	RET_start
-	RET_add 111 Call $FH_LAST SendEND ECOI SendI 1
-	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
-	RET_end
-    } \
-    -match      glob \
-    -result     {START 111-CATCH:0 111-RET: 111-CODE:NONE BG-NUM-CATCH:0 BG-NUM-RET:207 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-0) \[*MqSendRETURN] calling a service with return arguments without transaction, use MqSendEND_AND_WAIT instead of MqSendEND} BG-TEXT-CODE:NONE 222-CATCH:0 222-RET: 222-CODE:NONE END}
+    -result         {[cC]> * \[SysRecv] application EXIT request*}
 
 test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     -constraints    { perl } \
@@ -108,7 +105,7 @@ test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
 [sS]> (server-0) \[ProcError] object is not of type Net::PerlMsgque::MqS at *}
 
 test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
@@ -120,7 +117,7 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>*
 [sS]> (server-0) \[ProcError] object is not of type Net::PerlMsgque::MqBufferS at *}
 
 test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
@@ -205,12 +202,8 @@ test error-6-($I|$B|$C|$S) {error in callback} \
     -cleanup	    { Cleanup } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[callback-error] <Num|10>
-[sS]> (server-0) \[Ot_ERR2] some error
-[cC]> (client-0) found in function "pTokenCheckSystem" at file "token.c"
-[cC]> (client-0) found in function "sMqEventStart" at file "msgque.c"
-[cC]> (client-0) found in function "pEventStart" at file "event.c"
-[cC]> (client-0) found in function "MqProcessEvent" at file "msgque.c"}
+    -result	    {[cC]> (client-0) \[callback-error] <Num|10>*
+[sS]> (server-0) \[Ot_ERR2] some error*}
 
 test error-7-($I|$B|$C|$S) {double RETURN} \
     -constraints    {} \
@@ -225,9 +218,13 @@ test error-7-($I|$B|$C|$S) {double RETURN} \
     } \
     -cleanup	    { Cleanup } \
     -match	    glob \
-    -result	    {START 111-CATCH:1 {111-RET:[cC]> (client-0) \[pMqSendEND] use first MqSendSTART and than MqSendEND
-*} {111-CODE:TCLMSGQUE 211 2 {[cC]> (client-0) \[pMqSendEND] use first MqSendSTART and than MqSendEND
-*}} END}
+    -result	    {START
+111-CATCH:1
+111-RET:[cC]> (client-0) \[pSendEND] use first MqSendSTART and than MqSendEND
+[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"
+111-CODE:TCLMSGQUE 211 2 {[cC]> (client-0) \[pSendEND] use first MqSendSTART and than MqSendEND
+[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"}
+END}
 
 ##
 ## -----------------------------------------------------------------------
@@ -356,33 +353,6 @@ test error-MQ_ERROR_OPTION_REQUIRED-uds {check error message} \
 C> (client) found in function "pIoCreate" at file "io.c"
 C> (client) found in function "MqLinkCreate" at file "msgque.c"
 C> (client) use '-h' or '--help' for usage}
-
-test error-F7 {tclmsgque help} \
-    -body	    { tclmsgque help } \
-    -result	    {usage: tclmsgque MqS [OPTION]... [ARGUMENT]...
-
-  tclmsgque MqS [ARGUMENT]... syntax:
-    tclmsgque MqS [OPTION]... @ server [OPTION]... [ARGUMENT]
-
-  Create and configure a new msgque using the options from below.
-  The command is part of the 'TclMsgque' package available with:
-      > package require TclMsgque
-  and returns a handle to the new created msgque
-      > set cmd [tclmsgque MqS ...]
-  To delete the msgque and shutdown the communication use:
-      > rename $cmd ""
-
-  msgque [OPTION]:
-    --help-msgque    print msgque specific help
-
-  tclmsgque MqS [OPTION]:
-    --parent CMD     create new msgque as child of parent CMD
-    --server         act as a server
-      --config proc    use proc to configure the server
-    --filter         act as a filter (requires --server too)
-      --FTR proc       use proc to serve the filter FTR service
-      --EOF proc       use proc to serve the filter EOF service
-}
 
 test error-F8 {delete uds file} \
     -setup          { Setup 1 binary uds c.pipe.pipe } \

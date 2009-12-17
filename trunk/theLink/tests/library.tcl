@@ -291,7 +291,7 @@ proc getFilter {srv} {
 }
 
 proc getServerOnly {srv} {
-  return {*}$::TS_SERVER([lindex [split $srv .] 0])
+  return $::TS_SERVER([lindex [split $srv .] 0])
 }
 
 proc getClient {args} {
@@ -613,10 +613,10 @@ if {$CLREXEC eq "NATIVE"} {
 if {[info exist argv]} {
     set argv [linsert $argv 0 -verbose {start pass body error}]
     if {[optB argv --testing]} {
-	lappend argv --only-pipe --only-binary --only-num 1 --max 5
+	lappend argv --only-pipe --only-binary --max 5 --only-num 1
     }
     if {[optB argv --mem-testing]} {
-	lappend argv --only-binary --max 5 --only-pipe
+	lappend argv --only-pipe --only-binary --max 5 
     }
     if {[optB argv --thread-testing]} {
 	lappend argv --only-binary --max 5 --only-thread --only-tcp
@@ -627,15 +627,8 @@ if {[info exist argv]} {
     if {[optB argv --spawn-testing]} {
 	lappend argv --only-binary --max 5 --only-spawn --only-tcp
     }
-    if {[optB argv --spawn-testing]} {
-	lappend argv --only-binary --max 5 --only-spawn --only-tcp
-    }
-    if {[optB argv --fork-testing]} {
-	lappend argv --only-binary --max 5 --only-fork --only-tcp
-    }
     if {[optB argv --remote-testing]} {
-	lappend argv --only-tcp --port 7777 --only-binary \
-			--use-remote --max 5
+	lappend argv --only-tcp --port 7777 --only-binary --use-remote --max 5
     }
     if {![info exist env(USE_REMOTE)]} {
 	set env(USE_REMOTE) [optB argv --use-remote]
@@ -647,25 +640,25 @@ if {[info exist argv]} {
 	set env(TS_TIMEOUT) [optV argv --timeout 20]
     }
     if {![info exist env(TS_SETUP)]} {
-	set env(TS_SETUP)	    [optB argv --setup]
+	set env(TS_SETUP)   [optB argv --setup]
     }
     if {![info exists env(TS_HOST)]} {
-	set env(TS_HOST)   [optV argv --host localhost]
+	set env(TS_HOST)    [optV argv --host localhost]
     }
     if {![info exists env(TS_PORT)]} {
-	set env(TS_PORT)   [optV argv --port PORT]
+	set env(TS_PORT)    [optV argv --port PORT]
     }
     if {![info exists env(TS_FILE)]} {
-	set env(TS_FILE)   [optV argv --file FILE]
+	set env(TS_FILE)    [optV argv --file FILE]
     }
     if {![info exists env(TS_PID)]} {
-	set env(TS_PID)   [optV argv --pid PID]
+	set env(TS_PID)	    [optV argv --pid PID]
     }
     if {![info exists env(TS_MAX)]} {
-	set env(TS_MAX)   [optV argv --max -1]
+	set env(TS_MAX)	    [optV argv --max -1]
     }
     if {![info exists env(TS_FILTER)]} {
-	set env(TS_FILTER)   [optV argv --filter]
+	set env(TS_FILTER)  [optV argv --filter]
     }
 
     if {[optB argv --only-string]} {
@@ -775,17 +768,19 @@ if {[info exist argv]} {
 	puts "  --pid STR ........ use file as --daemon pid file"
 	puts "  --server LANG.COM(.MODE) ... only use this server"
 	puts "  --setup .......... print additional setup information"
-	puts "  --help-tclmsgque . get tclmsgque specific help"
+	puts "  --filter exec .... use 'exec' as filter"
 	puts "  --help-msgque .... get libmsgque specific help"
 	puts "  --help / -h ...... get help"
 	puts ""
 	puts " compound OPTIONS"
-	puts "  --testing  ....... --only-binary, --only-pipe, --only-c and --only-num 1 --max 5"
+	puts "  --testing  ....... --only-binary --only-pipe --max 5 --only-num 1"
+	puts "  --mem-testing .... --only-binary --only-pipe --max 5"
 	puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
-	puts "  --mem-testing .... --only-binary --max 5 --only-pipe"
+	puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
+	puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
+	puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
 	exit 1
     }
-    set TS_HELP_TCLMSGQUE [optB argv --help-tclmsgque]
     set TS_HELP_MSGQUE [optB argv --help-msgque]
 } ;# no argv
 
@@ -796,6 +791,7 @@ configure {*}$::argv
 ## some basic restrictions
 testConstraint local [expr {$env(USE_REMOTE) ? no : yes}]
 testConstraint use_remote $env(USE_REMOTE)
+testConstraint filter [expr {$env(TS_FILTER) ne ""}]
 
 ##
 ## -----------------------------------------------------------------------
@@ -819,11 +815,6 @@ customMatch expr _expr
 
 ## autoload the package
 package require TclMsgque
-
-if {$TS_HELP_TCLMSGQUE} {
-  puts [tclmsgque help]
-  exit 0
-}
 
 if {$TS_HELP_MSGQUE} {
   puts [tclmsgque MqS --help-msgque]
@@ -855,9 +846,6 @@ foreach l {SRV_LST COM_LST LNG_LST START_LST} {
 ## -----------------------------------------------------------------------
 ## TestFbg
 ##
-
-namespace eval TestFbg {
-}
 
 proc optB {_argv opt} {
     upvar $_argv argv
@@ -983,10 +971,10 @@ proc Setup {num mode com server args} {
 
   # intialize cargs
   lappend cargs --name $name
-  lappend sargs --name $srvname
 
   ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
   if {$com ne "pipe"} {
+    lappend sargs --name $srvname
     ## ...
     switch -exact -- $com {
       tcp	{
@@ -1010,7 +998,7 @@ proc Setup {num mode com server args} {
     if {[info exists PIDFILE]} {lappend sargs --daemon $PIDFILE}
     if {!$env(USE_REMOTE)} {
       if {$filter ne ""} {
-	set sl [list {*}[getFilter $filter] --name fs {*}$comargs @ [getServerOnly $server] {*}$sargs]
+	set sl [list {*}[getFilter $filter] --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs]
       } else {
 	set sl [list {*}[getServer $server] {*}$sargs {*}$comargs]
       }
@@ -1041,11 +1029,12 @@ proc Setup {num mode com server args} {
       if {$filter ne ""} {
 	lappend cl @ {*}[getFilter $filter] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
-	lappend cl @ [getServerOnly $server] {*}$sargs
+	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {
 	lappend cl @ {*}[getServer $server] 
 	if {$serverSilent} { lappend cl --silent }
       }
+      lappend cl --name server-$PNO
     }
     #Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
     Start $mode $isError $PNO-0 $cl
@@ -1213,7 +1202,7 @@ proc RET_start {} {
 proc RET_end {} {
   global RET
   lappend RET END
-  return $RET
+  return [join $RET \n]
 }
 
 proc RET_add {id args} {
