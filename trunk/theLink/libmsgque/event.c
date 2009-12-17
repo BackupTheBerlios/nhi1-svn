@@ -377,15 +377,15 @@ pEventStart (
 	  // case 3. -> a server error have to be reported
 	  // we have an MQ error
 	  // check to be in a transaction or not
-	  if (MqIsTransaction(eventctx) == MQ_NO) {
-	    // no transaction
-	    // return server error from a MqSendEND call asyncrone -> reset the error
-	    MqSendERROR (eventctx);
-	  } else {
+	  if (MqIsTransaction(eventctx)) {
 	    // in a transaction
 	    // return a "server" error using a "_RET" package -> reset the error
 	    MqSendSTART(eventctx);
 	    MqSendRETURN(eventctx);
+	  } else {
+	    // no transaction
+	    // return server error from a MqSendEND call asyncrone -> reset the error
+	    MqSendERROR (eventctx);
 	  }
 	  // error was "reset" and "pEventStart" context is clean
 	  break;

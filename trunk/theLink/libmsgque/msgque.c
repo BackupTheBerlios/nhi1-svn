@@ -572,7 +572,8 @@ MqLinkCreate (
 	MqSendSTART (parent);
 	MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
 	MqSendI (parent, (MQ_INT) context->config.isSilent);
-	MqSendC (parent, (context->config.srvname != NULL ? context->config.srvname : ""));
+	if (context->config.srvname != NULL)
+	  MqSendC (parent, context->config.srvname);
 
 	// !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
 	if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
@@ -615,7 +616,8 @@ MqLinkCreate (
 #     endif
 
 	// send the server name
-	MqSendC (context, (context->config.srvname != NULL ? context->config.srvname : ""));
+	if (context->config.srvname != NULL)
+	  MqSendC (context, (context->config.srvname));
 
 	// send package and wait for the answer
 	MqDLogV(context,4,"send token<%s>\n","_IAA");
@@ -662,42 +664,47 @@ MqLinkCreate (
 	  case MQ_EXIT:	    goto cleanup; 
 	  case MQ_CONTINUE: goto cleanup;
 	}
+
+	// test on "filter" (alfa!=NULL) or a normal "server" (alfa==NULL)
+	if (alfa == NULL) {
+	  // a final "server"
+	  if (context->config.srvname != NULL) 
+	    MqConfigSetName(context, context->config.srvname);
+	} else {
+	  // a "filter", we have to start the right site (an Server)
+	  struct MqS * myFilter;
+	  
+	  // this is a typical situation for a server in a middel of an alfa syntax:
+	  //	    acmd1 @ filter @ acmd3
+	  // filter (this one) is server for acmd1 and client for acmd3
+
+	  // step 1, append to the !beginning! of alfa the server name
+	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), 0);
+
+	  // step 2, append "alfa" string on second position if the first item is !not! a option
+	  if (alfa->data[1]->cur.C[0] != '-') {
+	    MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
+	  }
+
+	  // step 3, create the new context and fill the myFilter
+	  myFilter = MqContextCreate(sizeof(struct MqS),context);
+
+	  // step 4, set the factory
+	  MqConfigSetDefaultFactory (myFilter);
+
+	  // step 5, delete the entire "context" on delete
+	  myFilter->link.doFactoryCleanup = MQ_YES;
+
+	  // step 6, link between "myFilter" and "context"
+	  MqConfigSetMaster  (myFilter, context, 0);
+
+	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
+	    MqErrorCopy (context, myFilter);
+	    MqContextDelete (&myFilter);
+	    goto error;
+	  }
+	}; // END filter startup
       }
-
-      // if we are a "filter" -> YES: we have to start the right site (an Server)
-      if (alfa != NULL) {
-	struct MqS * myFilter;
-	
-	// this is a typical situation for a server in a middel of an alfa syntax:
-	//	    acmd1 @ filter @ acmd3
-	// filter (this one) is server for acmd1 and client for acmd3
-
-	// step 1, append to the !beginning! of alfa the server name
-	MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), 0);
-
-	// step 2, append "alfa" string on second position if the first item is !not! a option
-	if (alfa->data[1]->cur.C[0] != '-') {
-	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
-	}
-
-	// step 3, create the new context and fill the myFilter
-	myFilter = MqContextCreate(sizeof(struct MqS),context);
-
-	// step 4, set the factory
-	MqConfigSetDefaultFactory (myFilter);
-
-	// step 5, delete the entire "context" on delete
-	myFilter->link.doFactoryCleanup = MQ_YES;
-
-	// step 6, link between "myFilter" and "context"
-	MqConfigSetMaster  (myFilter, context, 0);
-
-	if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
-	  MqErrorCopy (context, myFilter);
-	  MqContextDelete (&myFilter);
-	  goto error;
-	}
-      }; // END filter startup
 
       // configure the new server
       if (context->setup.ServerSetup.fFunc != NULL) {
@@ -1081,6 +1088,10 @@ MqProcessEvent (
   const int once = (wait >= MQ_WAIT_ONCE);
   struct mq_timeval tv = {0L, 0L};
   int debugLevel;
+  struct MqS * const master = context->config.master;
+
+  // save master transaction
+  MQ_HDL trans = (master != NULL ? master->link._trans : 0);
 
   // protection code
   MqSetDebugLevel(context);
@@ -1097,6 +1108,7 @@ MqProcessEvent (
     timeout = (timeout == MQ_TIMEOUT_USER ? pIoGetTimeout(context->link.io) : MQ_TIMEOUT);
   }
 
+  // check for an event
   MqDLogCL(context,6,"START\n");
   do {
     // ################ CHECK TO BE READABLE ##################
@@ -1111,17 +1123,21 @@ MqProcessEvent (
     }
 
     // ##################### Process Events #####################
-    ret = pIoSelectStart(context->link.io, &tv, sMqEventStart);
-    MqErrorCheck (ret);
+    MqErrorCheck (ret=pIoSelectStart(context->link.io, &tv, sMqEventStart));
+
     // !! ATTENTION -> context is gone after an server "SHD"
   }
   while (forever && ret == MQ_OK);
 
 end:
+  // restore master transaction
+  if (master != NULL) master->link._trans = trans;
   MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(ret));
   return ret;
 
 error:
+  // restore master transaction
+  if (master != NULL) master->link._trans = trans;
   return MqErrorStack (context);
 }
 
@@ -1167,14 +1183,6 @@ MqCurrentTokenIs(
 )
 {
   return pTokenCheck(context->link.srvT,str);
-}
-
-MQ_BOL
-MqIsTransaction (
-  struct MqS const * const context
-)
-{
-  return ( context->link._trans == 0 ? MQ_NO : MQ_YES ) ;
 }
 
 enum MqErrorE

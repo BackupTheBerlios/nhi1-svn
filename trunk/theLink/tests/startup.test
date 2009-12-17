@@ -87,7 +87,7 @@ if $BLOCK_1 {
 ## -----------------------------------------------------------------------
 ## STARTUP
 ##
-	Setup $I $B $C $S {*}$D --name otto --srvname myserver
+	Setup $I $B $C $S {*}$D
 
 test startup-1.1-($I|$B|$C|$S|$D) {startup} \
     -body           {Echo1 $FH_LAST ECOI ReadI SendI 12345} \

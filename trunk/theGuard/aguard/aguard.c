@@ -78,10 +78,9 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  MQ_HDL trans;
+  int isTrans = MqIsTransaction (mqctx);
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrctx = (struct MqS * const) data;
-  enum MqErrorE ret;
 
   MqErrorCheck1 (MqReadBDY (mqctx, &bdy, &len));
   // do "encryption" of bdy
@@ -90,18 +89,14 @@ PkgToGuard (
   // build "+GRD" package
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendC (ftrctx, MqConfigGetToken (mqctx)));
-  MqErrorCheck1 (MqSendI (ftrctx, MqConfigGetTrans (mqctx)));
+  MqErrorCheck1 (MqSendI (ftrctx, isTrans));
   MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
 
   // use a transaction protection
-  trans = MqConfigGetTrans (mqctx);
-  ret = MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER);
-  MqConfigSetTrans(mqctx, trans);
-
-  MqErrorCheck1 (ret);
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
 
   // continue with the original transaction
-  if (trans != 0) {
+  if (isTrans) {
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
     // do "decryption" of bdy
@@ -123,24 +118,23 @@ GuardToPkg (
   MQ_PTR data
 )
 {
-  MQ_HDL origtrans;
+  MQ_INT isTrans;
   MQ_CST token;
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * const ftrctx = (struct MqS * const) data;
 
   MqErrorCheck (MqReadC (mqctx, &token));
-  MqErrorCheck (MqReadI (mqctx, &origtrans));
+  MqErrorCheck (MqReadI (mqctx, &isTrans));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   // do "decryption" of dat
   decrypt (bdy, len);
   MqErrorCheck1	(MqSendSTART (ftrctx));
   MqErrorCheck1	(MqSendBDY (ftrctx, bdy, len));
-  if (origtrans != 0) {
-    MQ_HDL trans = MqConfigGetTrans (mqctx);
-    enum MqErrorE ret = MqSendEND_AND_WAIT (ftrctx, token, MQ_TIMEOUT_USER);
-    MqConfigSetTrans(mqctx, trans);
+  if (isTrans) {
+    // use a transaction protection
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, token, MQ_TIMEOUT_USER));
+    // send the "answer" back
     MqSendSTART (mqctx);
-    MqErrorCheck1 (ret);
     MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
     // do "encrytion" of dat
     encrypt (bdy, len);

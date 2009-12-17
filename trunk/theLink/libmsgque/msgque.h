@@ -1288,19 +1288,6 @@ MQ_DECL MqConfigSetDaemon (
   MQ_CST pidfile
 );
 
-/// \brief set the current transaction token
-/// \context
-/// \param[in] trans the transaction token from e previous #MqConfigGetTrans call
-/// \return #MqLinkS::_trans
-static mq_inline void
-MqConfigSetTrans (
-  struct MqS * const context,
-  MQ_HDL const trans
-)
-{
-  context->link._trans = trans;
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                   get                                     */
@@ -1463,17 +1450,6 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
 MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
   struct MqS const * const context
 );
-
-/// \brief get the current transaction token
-/// \context
-/// \return #MqLinkS::_trans
-static mq_inline MQ_HDL
-MqConfigGetTrans (
-  struct MqS const * const context
-)
-{
-  return context->link._trans;
-}
 
 /// \brief return the current transaction token
 /// \context
@@ -2273,13 +2249,16 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
  *  \{
  */
 
-/// \brief check if the ongoing service-call belongs to an transaction
-/// \param[in] context the current context
-MQ_EXTERN MQ_BOL
-MQ_DECL MqIsTransaction (
+/// \brief check if the ongoing service-call belongs to a transaction
+/// \context
+/// \return 1=yes, 0=no
+static mq_inline int
+MqIsTransaction (
   struct MqS const * const context
-);
-
+)
+{
+  return context->link._trans != 0;
+}
 
 /// \brief check the current token
 /// \param[in] context the current context
@@ -2932,6 +2911,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
 #define MqErrorCheckI(PROC) (unlikely((PROC) >= MQ_ERROR))
 /// \brief version of #MqErrorCheckI
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
+
 /// \brief process error message
 #define MqErrorSwitch(PROC) switch (PROC) {\
 case MQ_OK: break; case MQ_ERROR: goto error; case MQ_EXIT: return MQ_EXIT; case MQ_CONTINUE: return MQ_CONTINUE;\

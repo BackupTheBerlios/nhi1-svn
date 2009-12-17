@@ -951,8 +951,6 @@ proc Setup {num mode com server args} {
   set isError	    [optB args --error]
   set setup	    [optV args --setup]
   set setup_parent  [optV args --setup-parent]
-  set name	    [optV args --name client-0]
-  set srvname	    [optV args --srvname server-0]
   set bgerror	    [optV args --bgerror]
   set filter	    [optV args --filter $env(TS_FILTER)]
 
@@ -969,12 +967,8 @@ proc Setup {num mode com server args} {
   set cargs	[list]
   set sargs	[list]
 
-  # intialize cargs
-  lappend cargs --name $name
-
   ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
   if {$com ne "pipe"} {
-    lappend sargs --name $srvname
     ## ...
     switch -exact -- $com {
       tcp	{
@@ -1034,10 +1028,8 @@ proc Setup {num mode com server args} {
 	lappend cl @ {*}[getServer $server] 
 	if {$serverSilent} { lappend cl --silent }
       }
-      lappend cl --name server-$PNO
     }
-    #Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
-    Start $mode $isError $PNO-0 $cl
+    Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
     if {$bgerror ne ""} {
       $FH_LAST ConfigSetBgError $bgerror
     }

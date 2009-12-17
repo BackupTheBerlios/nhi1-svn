@@ -356,7 +356,7 @@ int NS(ConfigGetSrvName) (NS_ARGS)
 {
   CHECK_NOARGS
   MQ_CST str = MqConfigGetSrvName(&tclctx->mqctx);
-  Tcl_SetResult(interp, (str ? str : ""), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
   RETURN_TCL
 }
 
@@ -364,7 +364,7 @@ int NS(ConfigGetIdent) (NS_ARGS)
 {
   CHECK_NOARGS
   MQ_CST str = MqConfigGetIdent(&tclctx->mqctx);
-  Tcl_SetResult(interp, (str ? str : ""), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
   RETURN_TCL
 }
 

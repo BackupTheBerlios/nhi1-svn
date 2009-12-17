@@ -500,7 +500,6 @@ pTokenCheckSystem (
 	  // -> server need 'binary mode' and 'endian mode' from the client
 	  if (MQ_IS_SERVER_PARENT (context)) {
 	    MQ_BOL myendian, mystring;
-	    struct MqBufferS * name = NULL;
 
 	    MqConfigSetIsString(context, MQ_YES);
 
@@ -516,9 +515,10 @@ pTokenCheckSystem (
 # endif
 
 	    // read server name
-	    MqReadU(context, &name);
-	    if (name->cursize > 0) {
-	      MqConfigSetName (context, name->cur.C);
+	    if (MqReadItemExists(context)) {
+	      MQ_CST name = NULL;
+	      MqReadC(context, &name);
+	      MqConfigSetSrvName (context, name);
 	    }
 
 	    // send my endian back
@@ -548,7 +548,6 @@ pTokenCheckSystem (
       if (MQ_IS_SERVER (context)) {
 	struct MqS * fcontext;
 	MQ_INT i;
-	MQ_BUF name;
 	// need client-code to handel ContextCreate request
 	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.Factory, &fcontext));
 	MqConfigSetParent (fcontext, context);
@@ -556,9 +555,14 @@ pTokenCheckSystem (
 	if (i != -1) MqConfigSetDebug(fcontext, i);
         MqErrorCheck (MqReadI (context, &i));
 	if (i) MqConfigSetIsSilent(fcontext, MQ_YES);
-	MqErrorCheck (MqReadU (context, &name));
-	if (name->cursize > 0) {
-	  MqConfigSetName (fcontext, name->cur.C);
+	if (MqReadItemExists(context)) {
+	  MQ_CST name;
+	  MqErrorCheck (MqReadC (context, &name));
+	  if (MqSlaveGet(context, 0)) {
+	    MqConfigSetSrvName (fcontext, name);
+	  } else {
+	    MqConfigSetName (fcontext, name);
+	  }
 	}
         if (MqErrorCheckI(MqLinkCreate (fcontext, NULL))) {
 	  // if the error happen !after! fmsgque was created, use this code
