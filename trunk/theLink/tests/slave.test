@@ -202,7 +202,12 @@ test slave-7-($I|$B|$C|$S) {check ctxId} \
     -result         [expr {$I-1}]
 
 test slave-8-($I|$B|$C|$S) {check startAs} \
-    -constraints    {c && parent} \
+    -constraints    {c && parent && filter} \
+    -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
+    -result         {DUP-SPAWN-}
+
+test slave-8-($I|$B|$C|$S) {check startAs} \
+    -constraints    {c && parent && !filter} \
     -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
     -result         $STATUS_IS
 
@@ -255,7 +260,7 @@ if $BLOCK_2 {
 
 	if {$T == "fork" && [string match *thread* $S]} {
 	  test slave-X0-($I|$B|$C|$S|$T) {check startAs} \
-	      -constraints  c \
+	      -constraints  {c && !filter}  \
 	      -body	    {
 		Setup $I $B $C $S --setup-parent "
 		  Call \$FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0 SendC --$T
