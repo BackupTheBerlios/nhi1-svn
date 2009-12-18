@@ -1373,7 +1373,7 @@ MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetName (
  *  \return the \c context.config.ident value
  *  \attention the \e string is owned by \libmsgque -> do not free !!
  */
-MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetIdent (
+MQ_EXTERN MQ_CST MQ_DECL MqConfigGetIdent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -2252,13 +2252,10 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
 /// \brief check if the ongoing service-call belongs to a transaction
 /// \context
 /// \return 1=yes, 0=no
-static mq_inline int
-MqIsTransaction (
+MQ_EXTERN int
+MQ_DECL MqIsTransaction (
   struct MqS const * const context
-)
-{
-  return context->link._trans != 0;
-}
+);
 
 /// \brief check the current token
 /// \param[in] context the current context
@@ -2402,99 +2399,72 @@ MQ_EXTERN void MQ_DECL MqBufferLAppendL (
 /// \brief append a native typed value to the \b end of a MqBufferLS object
 /// \bufL
 /// \param[in] val the value to append to
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendY (
   struct MqBufferLS * const bufL,
   MQ_BYT const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateY (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendO (
   struct MqBufferLS * const bufL,
   MQ_BOL const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateO (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendS (
   struct MqBufferLS * const bufL,
   MQ_SRT const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateS (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendI (
   struct MqBufferLS * const bufL,
   MQ_INT const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateI (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendF (
   struct MqBufferLS * const bufL,
   MQ_FLT const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateF (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendW (
   struct MqBufferLS * const bufL,
   MQ_WID const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateW (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \copydoc MqBufferLAppendY
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendD (
   struct MqBufferLS * const bufL,
   MQ_DBL const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateD (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \brief append an #MQ_STR object to the \b end of an MqBufferLS object
 /// \bufL
 /// \param val the string for input
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendC (
   struct MqBufferLS * const bufL,
   MQ_CST const val
-)
-{
-  MqBufferLAppend (bufL, MqBufferCreateC (MQ_ERROR_PANIC, val), -1);
-}
+);
 
 /// \brief append an #MQ_BUF object to the \b end of an MqBufferLS object
 /// \bufL
 /// \param val the buffer for input
 /// \attention after the insert the buffer is owed by the \e buf object -> do \b not free \e val
-static mq_inline void
+MQ_EXTERN void MQ_DECL
 MqBufferLAppendU (
   struct MqBufferLS * const bufL,
   MQ_BUF const val
-)
-{
-  MqBufferLAppend (bufL, val, -1);
-}
+);
 
 /*****************************************************************************/
 /*                                                                           */

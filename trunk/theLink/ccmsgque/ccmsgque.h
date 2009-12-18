@@ -319,7 +319,7 @@ namespace ccmsgque {
       inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
-      inline MQ_CST ConfigGetIdent ()	    { return context.config.ident; }
+      inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
       inline MQ_CST ConfigGetToken ()	    { return MqConfigGetToken(&context); }
       inline MQ_INT ConfigGetBuffersize ()  { return context.config.io.buffersize; }
       inline MQ_INT ConfigGetDebug ()	    { return context.config.debug; }

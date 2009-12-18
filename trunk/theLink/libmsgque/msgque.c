@@ -1185,6 +1185,14 @@ MqCurrentTokenIs(
   return pTokenCheck(context->link.srvT,str);
 }
 
+int
+MqIsTransaction (
+  struct MqS const * const context
+)
+{
+  return context->link._trans != 0;
+}
+
 enum MqErrorE
 MqCheckForLeftOverArguments (
   struct MqS * const context,
