@@ -56,7 +56,7 @@ test csharp-server-1-($I|$B|$C|$S) {csharp.lang.NullReferenceException with own 
     -body	    { EchoL $FH_LAST LANG SendC NullReferenceException-1 } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>*
 [sS]> (server-0) \[ErrorSet] System.NullReferenceException: myMessage*}
 
 
@@ -64,7 +64,7 @@ test csharp-server-2-($I|$B|$C|$S) {csharp.lang.NullReferenceException with Stac
     -body	    { EchoL $FH_LAST LANG SendC NullReferenceException-2 } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|LANG> <Num|1>*
 [sS]> (server-0) \[ErrorSet] System.NullReferenceException: *}
 
 # cleanup ---------------------------

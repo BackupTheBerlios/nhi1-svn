@@ -156,8 +156,8 @@ test tcl-client-5-($I|$B|$C|$S) {read with wrong option} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|CSV1> <Num|1>
-[sS]> (server-0) \[service-call-error] <Tok|CSV2> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|CSV1> <Num|1>*
+[sS]> (server-0) \[service-call-error] <Tok|CSV2> <Num|1>*
 [cC]> (client-0) \[ErrorSet] bad subcommand "ReadWRONG": must be *}
 
 #########################################################################
@@ -237,7 +237,7 @@ test tcl-client-ReadUndo-0-($I|$B|$C|$S) {ReadUndo ...} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|224>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|224>*
 [sS]> (server-0) \[MqReadUndo] maximum undo level reached}
 
 test tcl-client-ReadUndo-1-($I|$B|$C|$S) {ReadUndo ...} \
@@ -281,7 +281,7 @@ set TMPL {test tcl-client-wrong-additional-arg-%CMD%-($I|$B|$C|$S) {%CMD% with w
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>*
 [sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> %CMD% "*}}
 
 foreach CMD {	
@@ -363,7 +363,7 @@ test tcl-client-21-($I|$B|$C|$S) {return error with invalid number} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>*
 [sS]> (server-0) \[ErrorSet] expected integer but got "hhh"*}
 
 test tcl-client-23-($I|$B|$C|$S) {return nothing} \
@@ -374,7 +374,7 @@ test tcl-client-23-($I|$B|$C|$S) {return nothing} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|213>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|213>*
 [sS]> (server-0) \[sReadA4] request more arguments than available*}
 
 test tcl-client-24-($I|$B|$C|$S) {processEvent with additional arg} \

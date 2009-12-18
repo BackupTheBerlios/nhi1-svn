@@ -56,14 +56,14 @@ test java-server-1-($I|$B|$C|$S) {java.lang.NullPointerException with own messag
     -body	    { EchoL $FH_LAST JAVA SendC NullPointerException-1 } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>*
 [sS]> (server-0) \[Java_javamsgque_MqS_ErrorSet] java.lang.NullPointerException: myMessage*}
 
 test java-server-2-($I|$B|$C|$S) {java.lang.NullPointerException with Stack-Trace} \
     -body	    { EchoL $FH_LAST JAVA SendC NullPointerException-2 } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>*
 [sS]> (server-0) \[Java_javamsgque_MqS_ErrorSet] java.lang.NullPointerException*}
 
 # cleanup ---------------------------

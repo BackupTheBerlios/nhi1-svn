@@ -129,7 +129,7 @@ test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
 [sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> ReadProxy MqS_object ..."*}
 
 test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
@@ -141,7 +141,7 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>*
 [sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> SendU MqBufferS_obj ..."*}
 
 test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
@@ -153,7 +153,7 @@ test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
 [sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
   File "*", line *, in Error
     self.ReadProxy(self.ReadU())
@@ -168,7 +168,7 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>*
 [sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
   File "*", line *, in Error
     self.SendU(self)
