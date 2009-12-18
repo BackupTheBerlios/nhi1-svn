@@ -550,7 +550,7 @@ MqLinkCreate (
     context->link.read = pReadCreate (context);
     if (MqErrorGetCode(context) == MQ_ERROR) goto error;
 
-    MqErrorCheck (pIoCreate   (context, &context->link.io));
+    MqErrorCheck (pIoCreate   (context, alfa, &context->link.io));
     context->link.srvT = pTokenCreate(context);
     MqErrorCheck (pTransCreate (context, &context->link.trans));
 
@@ -589,7 +589,7 @@ MqLinkCreate (
 	MQ_BOL myendian;
 
 	// 0. Start the PIPE server (if necessary)
-	MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, &alfa, NULL));
+	MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, &alfa, NULL, NULL));
 
 	// 1. connect to the server
 	MqErrorCheck (pIoConnect (context->link.io));

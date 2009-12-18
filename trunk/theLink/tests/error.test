@@ -175,10 +175,10 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
 TypeError: must be pymsgque.MqBufferS, not Server*}
 
 test error-5-($I|$B|$C|$S) {wrong host name) port} \
-    -body           {Setup $I $B $C $S --host 10.10.10.10 --silent --timeout 0 --error} \
+    -constraints    {tcp && parent && !filter} \
+    -body           { Setup $I $B $C $S --host 10.10.10.10 --silent --timeout 0 --error} \
     -cleanup	    { Cleanup } \
     -returnCodes    error \
-    -constraints    {tcp parent} \
     -result	    {C> (client-0) [SysConnect] TIMEOUT after '0' sec
 C> (client-0) found in function "GenericConnect" at file "generic_io.c"
 C> (client-0) found in function "TcpConnect" at file "tcp_io.c"

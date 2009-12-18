@@ -130,7 +130,8 @@ enum MqErrorE
 GenericServer (
   struct GenericS * const generiC,	///< the current generic handle
   struct sockaddr * const sockaddr,	///< the address package
-  socklen_t const sockaddrlen		///< the length of the address
+  socklen_t const sockaddrlen,		///< the length of the address
+  struct MqBufferLS * const alfa
 ) {
   struct MqS * const context = MQ_CONTEXT_S;
   MQ_SOCK child_sock;
@@ -164,19 +165,19 @@ GenericServer (
     switch (context->config.startAs) {
       case MQ_START_FORK: {
 #if defined(HAVE_FORK)
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_INLINE_FORK, &child_sock, NULL, &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_INLINE_FORK, &child_sock, NULL, MqBufferLDup(alfa), &id));
 #endif
 	break;
       }
       case MQ_START_THREAD: {
 #if defined(MQ_HAS_THREAD)
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_THREAD, &child_sock, NULL, &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_THREAD, &child_sock, NULL, MqBufferLDup(alfa), &id));
 	// keep the "child_sock" open, because it's still the same process
 #endif
 	break;
       }
       case MQ_START_SPAWN: {
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_SPAWN, &child_sock, NULL, &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_SPAWN, &child_sock, NULL, MqBufferLDup(alfa), &id));
 	break;
       }
       case MQ_START_DEFAULT: {

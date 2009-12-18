@@ -961,7 +961,12 @@ proc Setup {num mode com server args} {
 
   # check for PIDFILE
   set PIDFILE [optV args --daemon]
-  if {$PIDFILE eq ""} {unset PIDFILE}
+  if {$PIDFILE ne ""} {
+    set DAEMON [list --daemon $PIDFILE]
+  } else {
+    set DAEMON [list]
+    unset PIDFILE
+  }
 
   # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
   set cargs	[list]
@@ -989,12 +994,12 @@ proc Setup {num mode com server args} {
     optVD sargs --buffersize --timeout --myhost --myport
     set sargs [MkUnique $sargs]
     if {$serverSilent} { lappend sargs --silent }
-    if {[info exists PIDFILE]} {lappend sargs --daemon $PIDFILE}
     if {!$env(USE_REMOTE)} {
       if {$filter ne ""} {
-	set sl [list {*}[getFilter $filter] --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs]
+	foreach {x t s} [split $server .] break
+	set sl [list {*}[getFilter $filter] {*}$DAEMON --$s --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs]
       } else {
-	set sl [list {*}[getServer $server] {*}$sargs {*}$comargs]
+	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
       }
       if {$env(TS_SETUP)} {
 	Print sl

@@ -45,6 +45,7 @@ extern MqFactorySelectorF MqFactorySelector;
 enum MqErrorE
 pIoCreate (
   struct MqS * const context,
+  struct MqBufferLS * const alfa,
   struct MqIoS ** const out
 )
 {
@@ -95,11 +96,11 @@ pIoCreate (
     switch (io->config->com) {
 #if defined(MQ_IS_POSIX)
       case MQ_IO_UDS:
-        MqErrorCheck (UdsServer (io->iocom.udsSP));
+        MqErrorCheck (UdsServer (alfa, io->iocom.udsSP));
         break;
 #endif
       case MQ_IO_TCP:
-        MqErrorCheck (TcpServer (io->iocom.tcpSP));
+        MqErrorCheck (TcpServer (alfa, io->iocom.tcpSP));
         break;
       case MQ_IO_PIPE:
         MqErrorCheck (PipeServer (io->iocom.pipeSP));
@@ -369,12 +370,13 @@ pIoStartServer (
   enum IoStartServerE startType,
   MQ_SOCK * sockP,
   struct MqBufferLS ** alfaP,
+  struct MqBufferLS * alfa2, // if alfaP!=NULL than alfa2 will be set by alfaP
   struct MqIdS * idP
 ) {
   struct MqS * const context = io->context;
-  struct MqBufferLS *alfa1 = NULL, *alfa2 = NULL;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
   struct MqFactoryS factory = MqFactoryS_NULL;
+  struct MqBufferLS * alfa1 = NULL;
   int start_as_pipe = 0;
 #endif
 #if defined(MQ_HAS_THREAD)
@@ -392,7 +394,6 @@ pIoStartServer (
     alfa1 = *alfaP;
     *alfaP = NULL;
   }
-
 
 /*
 I0

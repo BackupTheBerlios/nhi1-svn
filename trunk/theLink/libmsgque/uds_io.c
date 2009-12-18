@@ -121,6 +121,7 @@ UdsDelete (
 
 enum MqErrorE
 UdsServer (
+  struct MqBufferLS * const alfa,
   register struct UdsS * const uds
 )
 {
@@ -130,8 +131,8 @@ UdsServer (
   MqErrorCheck (SysUnlink(context,uds->config->file->cur.C));
 
   MqDLogV(context, 2, "create UNIX uds socket file<%s>\n", uds->config->file->cur.C);
-  MqErrorCheck (GenericServer
-                (uds->generic, (struct sockaddr *) &uds->sockaddr, sizeof (struct sockaddr_un)));
+  MqErrorCheck (GenericServer (uds->generic, (struct sockaddr *) &uds->sockaddr, 
+		  sizeof (struct sockaddr_un), alfa));
 
   // if it is the !only! server context then cleanup the uds socket file 
   if (context->config.startAs == MQ_START_DEFAULT) {

@@ -23,6 +23,7 @@ BEGIN_C_DECLS
 
 enum MqErrorE pIoCreate (
   struct MqS * const context,
+  struct MqBufferLS * const alfa,
   struct MqIoS ** const out
 ) __attribute__((nonnull));
 
@@ -106,6 +107,7 @@ enum MqErrorE pIoStartServer (
   enum IoStartServerE startType,
   MQ_SOCK * sockP,
   struct MqBufferLS ** alfaP,
+  struct MqBufferLS * alfa2,
   struct MqIdS * idP
 );
 

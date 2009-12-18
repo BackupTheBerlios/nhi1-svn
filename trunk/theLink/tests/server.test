@@ -49,7 +49,7 @@ if {$env(USE_REMOTE)} return
 # tests ----------------------------
 
 test server-1-($I|$B|$C|$S) {create/delete multiple parent using tcp} \
-    -constraints    {tcp} \
+    -constraints    {tcp && !filter} \
     -setup	    {
       Setup $I $B $C $S
       set FX [tclmsgque MqS]
@@ -71,7 +71,7 @@ test server-1-($I|$B|$C|$S) {create/delete multiple parent using tcp} \
     -result         {1234-5678}
 
 test server-2-($I|$B|$C|$S) {create/delete multiple parent using uds} \
-    -constraints    {uds} \
+    -constraints    {uds && !filter} \
     -setup	    {
       Setup $I $B $C $S
       set FX [tclmsgque MqS]
