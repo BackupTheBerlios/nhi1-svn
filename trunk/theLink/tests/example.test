@@ -11,7 +11,7 @@
 #§
 
 set TS_SCRIPT [info script]
-source [file join [file dirname [info script]] library.tcl]
+source [file join . library.tcl]
 
 if {$env(USE_REMOTE)} return
 
@@ -247,6 +247,7 @@ total    : 1212.50$}
 foreach S [envGet SRV_LST] {
 
 test example-t-1-($S) {testclient} \
+  -constraints	{!filter} \
   -body		{Example $S testclient testserver} \
   -result	{c0+0+-1+s0:
 c00+1+0+s00:

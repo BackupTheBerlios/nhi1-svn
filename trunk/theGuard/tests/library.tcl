@@ -10,31 +10,9 @@
 #§              please contact AUTHORS for additional information
 #§
 
-if 0 {
-
 ##
-## define the language list
-if {![info exists env(LNG_LST)]} {
-  set env(LNG_LST) {guard}
-}
-
-##
-## define the local server
-array set TS_SERVER [list \
-  guard  [file normalize [file join [pwd] .. aguard aguard]] \
-]
-
-##
-## define the server list
-if {![info exists env(SRV_LST)]} {
-  set env(SRV_LST) [list \
-    guard.pipe.pipe \
-    guard.tcp.fork guard.tcp.thread guard.tcp.spawn \
-    guard.uds.fork guard.uds.thread guard.uds.spawn \
-  ]
-}
-
-}
+## set filter
+set env(TS_FILTER) aguard
 
 ##
 ## define the directory environment

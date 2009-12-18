@@ -250,15 +250,15 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    csharp  [list {*}$CLREXEC [file join $testdir csserver.exe]]  \
-    vb	    [list {*}$CLREXEC [file join $testdir vbserver.exe]]  \
-    python  [list $PYTHON     [file join $testdir server.py]]	  \
-    java    [list $JAVA	      example.Server]			  \
-    tcl	    [list $TCLSH      [file join $testdir server.tcl]]	  \
-    perl    [list $PERL -w    [file join $testdir server.pl]]	  \
-    jdb	    [list jdb	      Server]				  \
-    cc	    ccserver						  \
-    c	    server						  \
+    csharp  [list {*}$CLREXEC [file join $linksrcdir tests csserver.exe]] \
+    vb	    [list {*}$CLREXEC [file join $linksrcdir tests vbserver.exe]] \
+    python  [list $PYTHON     [file join $linksrcdir tests server.py]]	  \
+    java    [list $JAVA	      example.Server]				  \
+    tcl	    [list $TCLSH      [file join $linksrcdir tests server.tcl]]	  \
+    perl    [list $PERL -w    [file join $linksrcdir tests server.pl]]	  \
+    jdb	    [list jdb	      Server]					  \
+    cc	    ccserver							  \
+    c	    server							  \
   ]
 }
 

@@ -11,7 +11,7 @@
 #§
 
 set TS_SCRIPT [info script]
-source [file join [file dirname [info script]] library.tcl]
+source [file join . library.tcl]
 
 ## 
 ## -----------------------------------------------------------------------
