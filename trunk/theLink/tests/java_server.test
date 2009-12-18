@@ -11,7 +11,12 @@
 #§
 
 set TS_SCRIPT [info script]
-source [file join . library.tcl]
+set TS_LIBRARY  [file join . library.tcl]
+if {[file exists $TS_LIBRARY]} {
+  source $TS_LIBRARY
+} else {
+  source [file join $TS_SCRIPT library.tcl]
+}
 
 SetConstraints all
 
@@ -109,6 +114,7 @@ S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c"}
 ##
 
 freeTests
+
 
 
 

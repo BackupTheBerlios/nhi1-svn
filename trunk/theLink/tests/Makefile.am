@@ -123,9 +123,9 @@ endif
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.py $(srcdir)/*.pl \
 		README.tests $(srcdir)/*.java $(srcdir)/*.cs $(srcdir)/*.vb \
-		  $(srcdir)/*.exe $(srcdir)/*.dll
+		  $(srcdir)/*.exe
 
-VPATH_FILES = vbserver.exe csserver.exe example csmsgque.dll
+VPATH_FILES = vbserver.exe csserver.exe example
 
 MAINTAINERCLEANFILES = vbserver.exe csserver.exe example/*.class
 

@@ -10,8 +10,13 @@
 #§              please contact AUTHORS for additional information
 #§
 
-set TS_SCRIPT [info script]
-source [file join . library.tcl]
+set TS_SCRIPT	[info script]
+set TS_LIBRARY	[file join . library.tcl]
+if {[file exists $TS_LIBRARY]} {
+  source $TS_LIBRARY
+} else {
+  source [file join $TS_SCRIPT library.tcl]
+}
 
 ##
 ## -----------------------------------------------------------------------

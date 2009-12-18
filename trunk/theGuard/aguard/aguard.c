@@ -38,13 +38,13 @@ struct GuardCtxS {
 /*                                                                           */
 /*****************************************************************************/
 
-static void encrypt (MQ_BIN data, MQ_SIZE size) {
+static void guard_encrypt (MQ_BIN data, MQ_SIZE size) {
   while (size--) {
     *data += size;
   }
 }
 
-static void decrypt (MQ_BIN data, MQ_SIZE size) {
+static void guard_decrypt (MQ_BIN data, MQ_SIZE size) {
   while (size--) {
     *data -= size;
   }
@@ -83,8 +83,8 @@ PkgToGuard (
   struct MqS * const ftrctx = (struct MqS * const) data;
 
   MqErrorCheck1 (MqReadBDY (mqctx, &bdy, &len));
-  // do "encryption" of bdy
-  encrypt (bdy, len);
+  // do "guard_encryption" of bdy
+  guard_encrypt (bdy, len);
 
   // build "+GRD" package
   MqErrorCheck1 (MqSendSTART (ftrctx));
@@ -99,8 +99,8 @@ PkgToGuard (
   if (isTrans) {
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
-    // do "decryption" of bdy
-    decrypt (bdy, len);
+    // do "guard_decryption" of bdy
+    guard_decrypt (bdy, len);
     MqErrorCheck (MqSendBDY (mqctx, bdy, len));
   }
 
@@ -126,8 +126,8 @@ GuardToPkg (
   MqErrorCheck (MqReadC (mqctx, &token));
   MqErrorCheck (MqReadI (mqctx, &isTrans));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
-  // do "decryption" of dat
-  decrypt (bdy, len);
+  // do "guard_decryption" of dat
+  guard_decrypt (bdy, len);
   MqErrorCheck1	(MqSendSTART (ftrctx));
   MqErrorCheck1	(MqSendBDY (ftrctx, bdy, len));
   if (isTrans) {
@@ -137,7 +137,7 @@ GuardToPkg (
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
     // do "encrytion" of dat
-    encrypt (bdy, len);
+    guard_encrypt (bdy, len);
     MqErrorCheck (MqSendB (mqctx, bdy, len));
   } else {
     MqErrorCheck1 (MqSendEND (ftrctx, token));
@@ -178,14 +178,14 @@ GuardSetup (
   if (ftrctx == NULL)
     return MqErrorC (mqctx, __func__, -1, "use 'aguard' only as filter");
 
-  // SERVER: every token (+ALL) have to be "encrypted"
+  // SERVER: every token (+ALL) have to be "guard_encrypted"
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", PkgToGuard, ftrctx, NULL));
-  // SERVER: only the "+GRD" token is "decrypted"
+  // SERVER: only the "+GRD" token is "guard_decrypted"
   MqErrorCheck (MqServiceCreate (mqctx, "+GRD", GuardToPkg, ftrctx, NULL));
 
-  // CLIENT: every token (+ALL) have to be "encrypted"
+  // CLIENT: every token (+ALL) have to be "guard_encrypted"
   MqErrorCheck (MqServiceCreate (ftrctx, "+ALL", PkgToGuard, mqctx, NULL));
-  // CLIENT: only the "+GRD" token is "decrypted"
+  // CLIENT: only the "+GRD" token is "guard_decrypted"
   MqErrorCheck (MqServiceCreate (ftrctx, "+GRD", GuardToPkg, mqctx, NULL));
 
 error:

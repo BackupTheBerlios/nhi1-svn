@@ -62,11 +62,11 @@ BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.e
 ##
 
 CLEANFILES = *.mdb
-EXTRA_DIST = $(srcdir)/*.vb $(srcdir)/*.dll $(srcdir)/*.exe
+EXTRA_DIST = $(srcdir)/*.vb $(srcdir)/*.exe
 MAINTAINERCLEANFILES = *.exe
 VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
                   MyClient.exe Filter1.exe Filter2.exe testclient.exe \
-		      testserver.exe csmsgque.dll
+		      testserver.exe
 
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)
