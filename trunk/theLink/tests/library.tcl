@@ -12,6 +12,10 @@
 
 #set tcl_traceExec 1
 
+if {![info exists env(TS_LIBRARY)]} {
+  set env(TS_LIBRARY) [info script]
+}
+
 ##
 ## -----------------------------------------------------------------------
 ## test environment setup

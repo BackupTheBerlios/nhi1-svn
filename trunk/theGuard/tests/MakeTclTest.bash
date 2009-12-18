@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/tests/MakeTclTest.bash
-#§  \brief      \$Id: MakeTclTest.bash 66 2009-12-13 14:59:58Z aotto1968 $
+#§  \file       theGuard/tests/MakeTclTest.bash
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 66 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

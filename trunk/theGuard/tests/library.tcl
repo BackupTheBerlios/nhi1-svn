@@ -12,16 +12,18 @@
 
 ##
 ## set filter
-set env(TS_FILTER) aguard
+set env(TS_FILTER)  aguard
+set env(TS_LIBRARY) [info script]
 
 ##
 ## define the directory environment
 if {![info exists testdir]} {
-  set testdir [file normalize [file join [file dirname [info script]]]]
-  set linksrcdir [file join [file dirname [info script]] .. .. theLink]
-  set linkbuilddir  [file normalize [file join [pwd] .. .. theLink] ]
+  set testdir	      [file normalize [file join [file dirname [info script]]]]
+  set linksrcdir      [file normalize [file join [file dirname [info script]] .. .. theLink]]
+  set linkbuilddir    [file normalize [file join [pwd] .. .. theLink]]
+  set guardsrcdir     [file join [file dirname [info script]] ..]
+  set guardbuilddir   [file dirname [pwd]]
 }
-set linktestdir [file normalize [file join [file dirname [info script]] .. .. theLink tests]]
 
 ##
 ## load the test library
@@ -29,7 +31,7 @@ source [file join [file dirname [info script]] .. .. theLink tests library.tcl]
 
 ##
 ## add guard specific data
-append env(PATH) "$PATH_SEP[file nativename [file join $testdir .. aguard]]"
+append env(PATH) "$PATH_SEP[file nativename [file join $guardbuilddir aguard]]"
 
 ##
 ## check if GUARD is available

@@ -14,14 +14,13 @@ if {![llength $argv]} {
   lappend argv --only-c --only-binary
 }
 
-set TS_SCRIPT [info script]
 source [file join [file dirname [info script]] library.tcl]
 
 singleProcess false
 
 ## switch to test directory
 ## test if the start was allready in test directory "make check"
-testsDirectory $linktestdir
+testsDirectory [file join $linksrcdir tests]
 
 ## set debugging level
 tcltest::verbose {pass body error}

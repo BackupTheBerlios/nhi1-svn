@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+#set argv [list --only-c --testing]
+
 #lappend argv --only-perl -match "async-F*" --only-pipe
 
 set TS_SCRIPT [info script]
