@@ -33,9 +33,9 @@ usage: $CMD get \[msgque-options\] @ TOK args...
     All arguments after the token 'TOK' are passed to stdin of the server 'cmd'
     separated by newlines.
 
-[tclmsgque help -options]
   $CMD \[OPTION\]:
     -h, --help       print this help
+    --help-msgque    print \"msgque\" specific help
 "
     exit 0
 }
@@ -178,10 +178,8 @@ if {$cmd eq "get"} {
       $srv ErrorSet
     }
     $srv Exit
-} elseif {$cmd eq "--help-tclmsgque"} {
-    puts [tclmsgque help]
 } elseif {$cmd eq "--help-msgque"} {
-    puts [tclmsgque MqS $cmd]
+    [tclmsgque MqS] LinkCreate dummy $cmd
 } else {
     Usage
 }

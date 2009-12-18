@@ -514,10 +514,11 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendSTART();
     switch ($s) {
       case "CREATE" {
-	my @LIST = ("--name", "cl-" . $id , "--srvname", "sv-" . $id);
+	my @LIST = ();
 	while ($ctx->ReadItemExists()) {
 	  push (@LIST, $ctx->ReadC());
 	}
+	push (@LIST, "--name", "cl-" . $id , "@", "--name", "sv-" . $id);
 	$ctx->SlaveWorker($id, @LIST);
       } 
       case "CREATE2" {

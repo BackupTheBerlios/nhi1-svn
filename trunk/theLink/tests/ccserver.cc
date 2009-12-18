@@ -403,10 +403,14 @@ namespace example {
 	    char cl[10], sv[10];
 	    sprintf(cl, "cl-%d", id);
 	    sprintf(sv, "sv-%d", id);
-	    MQ_CST v[] = {"--name", cl, "--srvname", sv};
-	    vector<MQ_CST> LIST(v, v+4);
+	    vector<MQ_CST> LIST;
 	    while (ReadItemExists())
 	      LIST.push_back(ReadC());
+	    LIST.push_back("--name");
+	    LIST.push_back(cl);
+	    LIST.push_back("@");
+	    LIST.push_back("--name");
+	    LIST.push_back(sv);
 	    SlaveWorkerVT (id, LIST);
 	  } else if (!strcmp(s,"CREATE2")) {
 	    Client *slv = new Client();

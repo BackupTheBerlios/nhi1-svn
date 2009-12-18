@@ -433,10 +433,22 @@ test tcl-client-Y-InitServerSetup "tclmsgque MqS ConfigSetServerSetup -> Error "
     } \
     -cleanup	    { $ctx LinkDelete } \
     -match	    glob \
-    -result	    {START BG-NUM-CATCH:0 BG-NUM-RET:1 BG-NUM-CODE:NONE BG-TEXT-CATCH:0 {BG-TEXT-RET:[sS]> (server-Y) \[ErrorSet] this is an error
-*} BG-TEXT-CODE:NONE 111-CATCH:1 {111-RET:[cC]> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'
-*} {111-CODE:TCLMSGQUE 223 2 {[cC]> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'
-*}} END}
+    -result	    {START
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:S> (server-Y) \[ErrorSet] this is an error
+    while executing
+"error "this is an error" "
+    (procedure "Error" line 1)
+    invoked from within
+"Error <MqS-*>"*
+BG-TEXT-CODE:NONE
+111-CATCH:1
+111-RET:C> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*
+111-CODE:TCLMSGQUE 223 2 {C> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*}
+END}
 
 test tcl-client-Z-InitFilterFTR "tclmsgque MqS --FTR -> Error " \
     -setup	    { 
@@ -527,10 +539,4 @@ rename $ctx ""
 ##
 
 freeTests
-
-
-
-
-
-
 

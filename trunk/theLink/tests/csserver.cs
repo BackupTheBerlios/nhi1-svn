@@ -379,9 +379,14 @@ namespace example {
 
       SendSTART();
         if (s == "CREATE") {
-          List<string> LIST = new List<string>() {"--name", "cl-" + id, "--srvname", "sv-" + id};
+          List<string> LIST = new List<string>();
           while (ReadItemExists())
-            LIST.Add(ReadC());
+	    LIST.Add(ReadC());
+	  LIST.Add("--name");
+	  LIST.Add("cl-" + id);
+	  LIST.Add("@");
+	  LIST.Add("--name");
+	  LIST.Add("sv-" + id);
           SlaveWorker(id, LIST.ToArray());
         } else if (s == "CREATE2") {
 	  Client c = new Client();

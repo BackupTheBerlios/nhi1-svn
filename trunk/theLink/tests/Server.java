@@ -14,7 +14,7 @@ package example;
 
 import javamsgque.*;
 import java.util.List;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 final class Client extends MqS implements ICallback, IFactory, IBgError {
 
@@ -345,9 +345,14 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       MqS cl = SlaveGet(id);
       SendSTART();
 	if (s.equals("CREATE")) {
-	  List<String> LIST = Arrays.asList("--name", "cl-" + id, "--srvname", "sv-" + id);
+	  List<String> LIST = new ArrayList<String>();
 	  while (ReadItemExists()) 
 	    LIST.add(ReadC());
+	  LIST.add("--name");
+	  LIST.add("cl-" + id);
+	  LIST.add("@");
+	  LIST.add("--name");
+	  LIST.add("sv-" + id);
 	  SlaveWorker(id, LIST.toArray(new String[0]));
 	} else if (s.equals("CREATE2")) {
 	  Client c = new Client();

@@ -45,12 +45,9 @@ usage: aexec get \[msgque-options\] @ TOK args...
     All arguments after the token 'TOK' are passed to stdin of the server 'cmd'
     separated by newlines.
 
-  msgque \[OPTION\]:
-    --help-msgque    print msgque specific help
-    --help-tclmsgque print tclmsgque specific help*
-
   aexec \[OPTION\]:
     -h, --help       print this help
+    --help-msgque    print "msgque" specific help
 }
 
 test aexec-2 {example network tcp first token} \
