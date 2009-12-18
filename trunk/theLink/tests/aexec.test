@@ -15,7 +15,7 @@ set TS_LIBRARY  [file join . library.tcl]
 if {[file exists $TS_LIBRARY]} {
   source $TS_LIBRARY
 } else {
-  source [file join $TS_SCRIPT library.tcl]
+  source [file join [file dirname $TS_SCRIPT] library.tcl]
 }
 
 SetConstraints all
@@ -184,5 +184,6 @@ S> (otto) [pTokenInvoke] token <WROG> not found}
 ## -----------------------------------------------------------------------
 ## finish
 ##
+
 
 

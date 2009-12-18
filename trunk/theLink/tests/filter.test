@@ -15,7 +15,7 @@ set TS_LIBRARY  [file join . library.tcl]
 if {[file exists $TS_LIBRARY]} {
   source $TS_LIBRARY
 } else {
-  source [file join $TS_SCRIPT library.tcl]
+  source [file join [file dirname $TS_SCRIPT] library.tcl]
 }
 
 SetConstraints all
@@ -68,6 +68,7 @@ cg:89:98765432123456789:3.46}
 ##
 
 freeTests
+
 
 
 
