@@ -687,7 +687,7 @@ MqLinkCreate (
 	  }
 
 	  // step 3, create the new context and fill the myFilter
-	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &myFilter));
+	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.Factory, &myFilter));
 
 	  // step 3, link between "myFilter" and "context"
 	  MqConfigSetMaster  (myFilter, context, 0);
@@ -1213,6 +1213,50 @@ MqCheckForLeftOverArguments (
 /*                              service                                      */
 /*                                                                           */
 /*****************************************************************************/
+
+static enum MqErrorE 
+sServiceProxy (
+  struct MqS * const context,
+  MQ_PTR const data
+) {
+  MQ_BIN bdy; MQ_SIZE len;
+  struct MqS * ftrctx;
+
+  MqErrorCheck (MqConfigGetFilter (context, &ftrctx));
+
+  MqErrorCheck1 (MqReadBDY (context, &bdy, &len));
+  MqErrorCheck1 (MqSendSTART (ftrctx));
+  MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
+
+  // continue with the original transaction
+  if (MqConfigGetIsTrans (context)) {
+    // use a transaction protection
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqConfigGetToken(context), MQ_TIMEOUT_USER));
+    // read the answer
+    MqSendSTART (context);
+    MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
+    MqErrorCheck  (MqSendBDY (context, bdy, len));
+  } else {
+    // use a transaction protection
+    MqErrorCheck1 (MqSendEND (ftrctx, MqConfigGetToken(context)));
+  }
+
+error:
+  return MqSendRETURN(context);
+
+error1:
+  MqErrorCopy (context, ftrctx);
+  goto error;
+}
+
+enum MqErrorE 
+MqServiceProxy(
+  struct MqS * const context, 
+  MQ_CST const token
+)
+{
+  return MqServiceCreate (context, token, sServiceProxy, NULL,  NULL);
+}
 
 enum MqErrorE 
 MqServiceCreate(

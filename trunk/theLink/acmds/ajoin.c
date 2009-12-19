@@ -72,7 +72,7 @@ JoinHelp ( const char * base  )
 
 /// \tool_FTR
 static enum MqErrorE
-JoinFilter (
+JoinFTR (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -85,9 +85,9 @@ JoinFilter (
   MQ_STR *format = JOINCTX->format;
   enum MqTypeE *type = JOINCTX->type;
   MQ_SIZE const end = MqReadGetNumItems(mqctx);
+
   MQ_INT i;
-  if (!end)
-    return MQ_OK;
+  if (!end) goto error;
   for (i=0; i<end ; i++, format++, type++) {
     if (*format) {
 	switch (*type) {
@@ -118,10 +118,8 @@ JoinFilter (
     
   }
   fflush(stdout);
-  return MQ_OK;
-
 error:
-  return MqErrorStack (mqctx);
+  return MqSendRETURN (mqctx);
 }
 
 /*****************************************************************************/
@@ -160,6 +158,9 @@ JoinCreate (
 
   // create the Message-Queue
   MqErrorCheck (MqLinkCreate (mqctx, argvP));
+
+  MqErrorCheck (MqServiceCreate (mqctx, "+FTR", JoinFTR, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "+EOF", NULL,    NULL, NULL));
   
   // initial values
   joinctx->delimiter = mq_strdup(" ");
@@ -303,8 +304,8 @@ JoinFactory (
 {
   struct MqS * const mqctx = MqContextCreate(sizeof(struct JoinCtxS), tmpl);
   mqctx->setup.fHelp = JoinHelp;
-  MqConfigSetFilterFTR (mqctx, JoinFilter, NULL, NULL, NULL);
   MqConfigSetName(mqctx, "join");
+  MqConfigSetIsServer(mqctx, MQ_YES);
   mqctx->setup.Parent.fCreate = JoinCreate;
   mqctx->setup.Parent.fDelete = JoinDelete;
   mqctx->setup.Factory.Create.fCall = JoinFactory;
@@ -313,7 +314,4 @@ JoinFactory (
 }
 
 /** \} server */
-
-
-
 

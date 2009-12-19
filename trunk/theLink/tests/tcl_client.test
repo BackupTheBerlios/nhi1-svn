@@ -465,7 +465,7 @@ test tcl-client-Z-InitFilterFTR "tclmsgque MqS --FTR -> Error " \
     -cleanup	    { $ctx LinkDelete } \
     -match	    glob \
     -returnCodes    error \
-    -result	    {C> (client-Z-FTRproc) \[service-call-error] <Tok|_FTR> <Num|1>*}
+    -result	    {C> (client-Z-FTRproc) \[service-call-error] <Tok|+FTR> <Num|1>*}
 
 test tcl-client-Z2-FTRproc "tclmsgque MqS --FTR -> Error " \
     -setup	    { 
@@ -542,6 +542,7 @@ rename $ctx ""
 ##
 
 freeTests
+
 
 
 

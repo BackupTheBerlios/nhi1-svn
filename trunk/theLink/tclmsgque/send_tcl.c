@@ -63,26 +63,6 @@ int NS(SendRETURN) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendFTR) (NS_ARGS)
-{
-  SETUP_mqctx
-  MQ_INT timeout=MQ_TIMEOUT;
-  CHECK_DI(timeout)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqSendFTR(mqctx, timeout));
-  RETURN_TCL
-}
-
-int NS(SendEOF) (NS_ARGS)
-{
-  SETUP_mqctx
-  MQ_INT timeout=MQ_TIMEOUT;
-  CHECK_DI(timeout)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqSendEOF(mqctx, timeout));
-  RETURN_TCL
-}
-
 int NS(SendERROR) (NS_ARGS)
 {
   SETUP_mqctx

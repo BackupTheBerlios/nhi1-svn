@@ -106,13 +106,8 @@ S> (cut) use '-h' or '--help' for usage*}
 test acut-12-($S) {cut: no server} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut -f 0 } \
     -returnCodes ok \
-    -result {CHILDSTATUS-234-C> (split) [service-call-error] <Tok|_FTR> <Num|234>
-S> (cut) [MqSendFTR] 'SendFTR' expected a subsequent filter
-S> (cut) found in function "CutFilter" at file "acut.c"
-C> (split) found in function "MqSendFTR" at file "send.c"
-C> (split) found in function "split" at file "asplit.c"
-C> (split) found in function "SplitCreate" at file "asplit.c"
-C> (split) use '-h' or '--help' for usage}
+    -match glob \
+    -result {CHILDSTATUS-220-S> (cut) \[MqConfigGetFilter] no filter is available*}
 
 test acut-13-($S) {cut: no client} \
     -body   { Exec {*}[getATool cut] -f 0 @ join -d , } \
@@ -123,12 +118,12 @@ S> (cut) found in function "MqLinkCreate" at file "msgque.c"
 S> (cut) found in function "CutCreate" at file "acut.c"
 S> (cut) use '-h' or '--help' for usage}
 
-test acut-14-($S) {cut: forward _FTR error} \
+test acut-14-($S) {cut: forward +FTR error} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut -f 0-1 @ join -0 "id=%-5i" -1 "%-10s" -d "+++"} \
     -returnCodes ok \
     -match  glob \
-    -result {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
-C> (cut) \[service-call-error] <Tok|_FTR> <Num|1>
+    -result {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
+C> (cut) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (join) \[pBufferGetA4] size ERROR, can not convert 'xa' into an 'INT' object*}
 
     } ; ## START_LST
@@ -139,14 +134,4 @@ S> (join) \[pBufferGetA4] size ERROR, can not convert 'xa' into an 'INT' object*
 ##
     
 freeTests
-
-
-
-
-
-
-
-
-
-
 

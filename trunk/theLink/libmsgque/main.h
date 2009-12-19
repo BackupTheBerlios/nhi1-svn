@@ -73,7 +73,7 @@ enum MqMessageNumE {
     /* 17 */ MQ_ERROR_WINSOCK,
     /* 18 */ MQ_ERROR_CREATE_CHILD,
     /* 19 */ MQ_ERROR_INVALID_OPTION,
-    /* 20 */ MQ_ERROR_TOKEN_FTR,
+    /* 20 */ MQ_ERROR_NO_FILTER,
     /* 21 */ MQ_ERROR_OPTION_ARG,
     /* 22 */ MQ_ERROR_OPTION_FORBIDDEN,
     /* 23 */ MQ_ERROR_WAIT_FOR_TOKEN,
@@ -87,7 +87,7 @@ enum MqMessageNumE {
     /* 31 */ MQ_ERROR_ID_OUT_OF_RANGE,
     /* 32 */ MQ_ERROR_CONFIGURATION_REQUIRED, 
     /* 33 */ MQ_ERROR_MASTER_SLAVE_CLIENT,
-    /* 34 */ MQ_ERROR_EXPECT_FILTER,
+    /* 34 */ MQ_FREE_2,
     /* 35 */ MQ_ERROR_CONNECTED,
     /* 36 */ MQ_MESSAGE_END,
 };
@@ -136,8 +136,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"[OKS] can not create CHILD",
     /* MQ_ERROR_INVALID_OPTION */
 	"invalid [OPTION]... found:",
-    /* MQ_ERROR_TOKEN_FTR */
-       "got an '_FTR' system token but no filter was defined",
+    /* MQ_ERROR_NO_FILTER */
+       "no filter is available",
     /* MQ_ERROR_OPTION_ARG */
 	"expect argument for option '%s'",
     /* MQ_ERROR_OPTION_FORBIDDEN */
@@ -164,8 +164,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"to use the '%s' feature the configuration '%s' is required",
     /* MQ_ERROR_MASTER_SLAVE_CLIENT */
 	"the '%s' have to be a 'client' and a 'parent' without 'child' objects",
-    /* MQ_ERROR_EXPECT_FILTER */
-	"'%s' expected a subsequent filter",
+    /* MQ_FREE_2 */
+	"",
     /* MQ_ERROR_CONNECTED */
 	"the '%s' object link is '%s' connected",
     /* MQ_MESSAGE_END */

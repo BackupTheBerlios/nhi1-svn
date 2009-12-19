@@ -42,21 +42,8 @@ test filter-2-$L {filter with tcl error} \
     -body       {Exec cat $data1 | {*}[getATool split] --debug 0 -d : @ {*}[getExample Filter2.$L] @ \
 			{*}[getATool join] -d :} \
     -match	glob \
-    -result	{CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
+    -result	{CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (filter) \[*Error*] *my error*}
-
-test filter-3-$L {filter with no config.fFTR} \
-    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getServer $L.pipe ]} \
-    -match	glob \
-    -result	{CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|_FTR> <Num|220>
-S> (server) \[*pTokenCheckSystem] got an '_FTR' system token but no filter was defined*}
-
-test filter-4-$L {filter with default} \
-    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getServer $L.pipe ] @ {*}[getATool join] -d :} \
-    -match      glob \
-    -result     {xa:24:12345678987654321:5.78
-cg:89:98765432123456789:3.46}
-
 
 } ; # end "F"
 
@@ -66,13 +53,4 @@ cg:89:98765432123456789:3.46}
 ##
 
 freeTests
-
-
-
-
-
-
-
-
-
 

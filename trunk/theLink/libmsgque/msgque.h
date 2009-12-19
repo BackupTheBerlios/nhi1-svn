@@ -478,7 +478,8 @@ enum MqFactoryE {
   MQ_FACTORY_NEW_CHILD	= 1,
   MQ_FACTORY_NEW_SLAVE	= 2,
   MQ_FACTORY_NEW_FORK	= 3,
-  MQ_FACTORY_NEW_THREAD	= 4
+  MQ_FACTORY_NEW_THREAD	= 4,
+  MQ_FACTORY_NEW_FILTER	= 5
 };
 
 /// \brief prototype for a Object-Creation factory function
@@ -788,23 +789,6 @@ struct MqSetupS {
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
   struct MqLinkSetupS Parent;
 
-  /// \brief pointer to the Filter stream-data service
-  ///
-  /// A service function to act on filter data rows. Every filter
-  /// input data is a list of filter data rows and every row is a list of filter data columns.
-  /// Every row is send from one filter-command to the following filter-command as \e FTR service
-  /// request
-  struct MqCallbackS FilterFTR;
-
-  /// \brief pointer to the Filter EndOfFile service
-  ///
-  /// A service function to act on \e End-Of-Filter data. This service is
-  /// called \e after the whole filter data was send. Sometimes the filter data can not be served
-  /// as filter data rows (example: sorting of the input rows need to read all rows before the data
-  /// can be send to the next filter command) and the EOF function is used to continue send filter
-  /// data rows.
-  struct MqCallbackS FilterEOF;
-
   /// \brief pointer to the background error service
   ///
   /// A background error is an error without an link to an workflow. The error happen if an #MqSendEND
@@ -1094,6 +1078,13 @@ MQ_DECL MqConfigSetIsSilent (
   MQ_BOL  data
 );
 
+/// \brief set the #MqConfigS::isServer value
+MQ_EXTERN void
+MQ_DECL MqConfigSetIsServer (
+  struct MqS * const context,
+  MQ_BOL  data
+);
+
 /// \brief set the #MqConfigS::isString value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIsString (
@@ -1182,26 +1173,6 @@ MQ_DECL MqConfigSetSetup (
   MqDeleteF fParentDelete,
   MqExitF   fProcessExit,
   MqExitF   fThreadExit
-);
-
-/// \brief set the #MqSetupS::FilterFTR
-MQ_EXTERN void
-MQ_DECL MqConfigSetFilterFTR (
-  struct MqS * const context,
-  MqTokenF fFunc,
-  MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
-);
-
-/// \brief set the #MqSetupS::FilterEOF
-MQ_EXTERN void
-MQ_DECL MqConfigSetFilterEOF (
-  struct MqS * const context,
-  MqTokenF fFunc,
-  MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
 );
 
 /// \brief set the #MqSetupS::ServerSetup
@@ -1439,16 +1410,19 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/// \brief get the \e filter object of a bidirectional filter pipeline
+/// \brief get the \e filter object from a bidirectional filter pipeline
 /// \context
-/// \return the \e filter object or \c NULL
+/// \param[out] filterP the filter object to return
+/// \retMqErrorE
 ///
-/// If \e context is the \e server, than the \e slave-0 context is returned.
-/// If \e context is the \e client and the \e master is != NULL than the \e master context is returned.
-/// If \e context is the \e client and the \e master is == NULL than the \e slave-0 context is returned.
-/// The function return \e NULL if no \e master and no \e slave-0 context is available.
-MQ_EXTERN struct MqS * MQ_DECL MqConfigGetFilter (
-  struct MqS const * const context
+/// the following order is used to get the filter object:
+/// -# return the \e #MqConfigS::master if non NULL
+/// -# return the \e #MqSlaveGet with \c id=0 if non NULL
+/// -# retunr a "filter not available" error
+/// .
+MQ_EXTERN enum MqErrorE MQ_DECL MqConfigGetFilter (
+  struct MqS  * const context,
+  struct MqS ** const filterP
 ) __attribute__((nonnull));
 
 /// \brief return the context-identification
@@ -1725,6 +1699,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   MqTokenF const proc,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
+);
+
+/// \brief use a proxy to proxy the incomming trafic to the outgoing trafic
+/// \context
+/// \token
+/// \retMqErrorE
+MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
+  struct MqS * const context, 
+  MQ_CST const token
 );
 
 /// \brief delete service handle
@@ -3402,34 +3385,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendRETURN (
  */
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendERROR (
   register struct MqS * const context
-);
-
-/** \brief send a \c _FTR \e filter package
- *  \context
- *  \param[in] timeout timeout used for send data
- *  \retMqErrorE
- *  \attention 
- *   - this function is required on the end of a #MqSetupS::FilterFTR or #MqSetupS::FilterEOF callback method
- *   - this function is \b only allowed in a \b client context <TT>(MqConfigS::isServer == MQ_NO)</TT>
- *   .
- */
-MQ_EXTERN enum MqErrorE MQ_DECL MqSendFTR (
-  struct MqS * const context,
-  MQ_TIME_T const timeout
-);
-
-/** \brief send a \c _EOF \e filter package
- *  \context
- *  \param[in] timeout timeout used for send data
- *  \retMqErrorE
- *  \attention 
- *   - this function is required on the end of a #MqSetupS::FilterFTR or #MqSetupS::FilterEOF callback method
- *   - this function is \b only allowed in a \b client context <TT>(MqConfigS::isServer == MQ_NO)</TT>
- *   .
- */
-MQ_EXTERN enum MqErrorE MQ_DECL MqSendEOF (
-  struct MqS * const context,
-  MQ_TIME_T const timeout
 );
 
 /*****************************************************************************/

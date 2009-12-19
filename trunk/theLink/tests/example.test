@@ -193,7 +193,7 @@ test example-overview-3b {check the example 3 from the overview page with error 
     -returnCodes error \
     -match glob \
     -result {C> (split) \[service-call-error] <Tok|_EOF> <Num|1>
-C> (sort) \[service-call-error] <Tok|_FTR> <Num|1>
+C> (sort) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (total.tcl) \[ErrorSet] can't read "amoun": no such variable*}
 
   foreach S [envGet SRV_LST] {
@@ -278,6 +278,7 @@ c101+3+1+s101:}
 ##
 
 freeTests
+
 
 
 

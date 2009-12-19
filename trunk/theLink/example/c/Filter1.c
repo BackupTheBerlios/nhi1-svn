@@ -24,27 +24,29 @@ static enum MqErrorE FTR_F( struct MqS *ctx, MQ_PTR data) {
   }
   MqBufferLAppendC(myftr, "END");
 error:
-  return MqErrorStack (ctx);
+  return MqSendRETURN (ctx);
 }
 
 static enum MqErrorE EOF_F( struct MqS *ctx, MQ_PTR data) {
   MQ_CST dat;
   MQ_BUF buf = NULL;
-  MqSendSTART(ctx);
+  struct MqS * ftr;
+  MqErrorCheck (MqConfigGetFilter (ctx, &ftr));
+  MqSendSTART(ftr);
   while (myftr->cursize) {
     MqErrorCheck(MqBufferLGetU(ctx, myftr, 0, &buf));
     MqErrorCheck(MqBufferGetC(buf, &dat));
     if (!strncmp(dat, "END", 3)) {
-      MqSendFTR(ctx, 10);
-      MqSendSTART(ctx);
+      MqErrorCheck (MqSendEND_AND_WAIT (ftr, "+FTR", MQ_TIMEOUT_USER));
+      MqSendSTART(ftr);
     } else {
-      MqSendC(ctx, dat);
+      MqSendC(ftr, dat);
     }
   }
   MqBufferDelete (&buf);
-  return MqSendFTR(ctx, 10);
+  MqErrorCheck (MqSendEND_AND_WAIT (ftr, "+EOF", MQ_TIMEOUT_USER));
 error:
-  return MqErrorStack (ctx);
+  return MqSendRETURN (ctx);
 }
 
 int main (int argc, MQ_CST argv[]) 
@@ -53,9 +55,11 @@ int main (int argc, MQ_CST argv[])
   struct MqS * ctx = MqContextCreate(0, NULL);
   myftr = MqBufferLCreate(10);
   MqConfigSetName (ctx, "filter");
-  MqConfigSetFilterFTR (ctx, FTR_F, NULL, NULL, NULL);
-  MqConfigSetFilterEOF (ctx, EOF_F, NULL, NULL, NULL);
+  MqConfigSetIsServer (ctx, MQ_YES);
+  MqConfigSetDefaultFactory (ctx);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
+  MqErrorCheck (MqServiceCreate (ctx, "+FTR", FTR_F, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (ctx, "+EOF", EOF_F, NULL, NULL));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
 error:

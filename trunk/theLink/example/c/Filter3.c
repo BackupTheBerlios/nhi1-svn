@@ -45,9 +45,10 @@ Filter3 (
 )
 {
   MQ_BIN bdy; MQ_SIZE len;
-  struct MqS * const ftrctx = (struct MqS * const) data;
+  struct MqS * ftrctx;
+  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
 
-  MqErrorCheck1 (MqReadBDY (mqctx, &bdy, &len));
+  MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
@@ -93,18 +94,13 @@ ServerSetup (
   MQ_PTR data
 )
 {
-  struct MqS * const ftrctx = MqSlaveGet (mqctx, 0);
+  struct MqS * ftrctx;
+  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
 
-  // test on "filter"
-  if (ftrctx == NULL) {
-    // "Filter3" have to be a filter
-    return MqErrorC (mqctx, __func__, -1, "use 'Filter3' only as filter");
-  } else {
-    // SERVER: every token (+ALL) have to be "guard_encrypted"
-    MqErrorCheck (MqServiceCreate (mqctx, "+ALL", Filter3, ftrctx, NULL));
-    // CLIENT: every token (+ALL) have to be "guard_encrypted"
-    MqErrorCheck (MqServiceCreate (ftrctx, "+ALL", Filter3, mqctx, NULL));
-  }
+  // SERVER: listen on every token (+ALL)
+  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", Filter3, NULL, NULL));
+  // CLIENT: listen on every token (+ALL)
+  MqErrorCheck (MqServiceCreate (ftrctx, "+ALL", Filter3, NULL, NULL));
 
 error:
   return MqErrorStack(mqctx);

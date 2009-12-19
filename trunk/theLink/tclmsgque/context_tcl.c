@@ -324,8 +324,6 @@ int NS(SendEND) (NS_ARGS);
 int NS(SendEND_AND_WAIT) (NS_ARGS);
 int NS(SendEND_AND_CALLBACK) (NS_ARGS);
 int NS(SendRETURN) (NS_ARGS);
-int NS(SendFTR) (NS_ARGS);
-int NS(SendEOF) (NS_ARGS);
 int NS(SendERROR) (NS_ARGS);
 int NS(SendY) (NS_ARGS);
 int NS(SendO) (NS_ARGS);
@@ -356,8 +354,6 @@ int NS(ConfigSetIsString) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
-int NS(ConfigSetFilterFTR) (NS_ARGS);
-int NS(ConfigSetFilterEOF) (NS_ARGS);
 int NS(ConfigSetFactory) (NS_ARGS);
 int NS(ConfigSetIoUds) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
@@ -447,8 +443,6 @@ int NS(MqS_Cmd) (
     { "SendEND_AND_WAIT",     NS(SendEND_AND_WAIT)	},
     { "SendEND_AND_CALLBACK", NS(SendEND_AND_CALLBACK)	},
     { "SendRETURN",	      NS(SendRETURN)		},
-    { "SendFTR",	      NS(SendFTR)		},
-    { "SendEOF",	      NS(SendEOF)		},
     { "SendERROR",	      NS(SendERROR)		},
     { "SendY",		      NS(SendY)			},
     { "SendO",		      NS(SendO)			},
@@ -481,8 +475,6 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
-    { "ConfigSetFilterFTR",	  NS(ConfigSetFilterFTR)      },
-    { "ConfigSetFilterEOF",	  NS(ConfigSetFilterEOF)      },
     { "ConfigSetFactory",	  NS(ConfigSetFactory)	      },
     { "ConfigSetIoUds",		  NS(ConfigSetIoUds)	      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },

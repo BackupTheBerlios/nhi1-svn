@@ -205,10 +205,8 @@ split (
       *cep = '\0';
       MqSendC (mqctx, cur);
     }
-    MqErrorCheck (MqSendFTR (mqctx, MQ_TIMEOUT10));
+    MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "+FTR", MQ_TIMEOUT_USER));
   }
-  MqSysFree (line);
-  return MQ_OK;
 
 error:
   MqSysFree (line);
@@ -252,7 +250,8 @@ SplitCreate (
   }
 
   // finally set the End-Of-File
-  MqErrorCheck (MqSendEOF (ctx, MQ_TIMEOUT10));
+  MqSendSTART(ctx);
+  MqErrorCheck (MqSendEND_AND_WAIT (ctx, "+EOF", MQ_TIMEOUT_USER));
 
   // cleanup
   MqSysFree(delimiter);
@@ -286,6 +285,4 @@ SplitFactory (
 }
 
 /** \} asplit */
-
-
 

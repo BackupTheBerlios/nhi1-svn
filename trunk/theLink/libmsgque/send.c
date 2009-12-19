@@ -911,32 +911,6 @@ pSendSYSTEM_RETR (
   MqErrorReturn (pSendEND (context, "_SRT", context->link._trans));
 }
 
-enum MqErrorE
-MqSendFTR (
-  struct MqS * const context,
-  MQ_TIME_T const timeout
-)
-{
-  struct MqS * const sendctx = context->link.send->context;
-  if (MQ_IS_SERVER(sendctx))
-    return MqErrorDbV(MQ_ERROR_EXPECT_FILTER, "SendFTR");
-  pReadL_CLEANUP (context);
-  MqErrorReturn (MqSendEND_AND_WAIT (sendctx, "_FTR", timeout));
-}
-
-enum MqErrorE
-MqSendEOF (
-  struct MqS * const context,
-  MQ_TIME_T const timeout
-)
-{
-  struct MqS * const sendctx = context->link.send->context;
-  if (MQ_IS_SERVER(sendctx))
-    return MqErrorDbV(MQ_ERROR_EXPECT_FILTER, "SendEOF");
-  MqSendSTART (sendctx);
-  MqErrorReturn (MqSendEND_AND_WAIT (sendctx, "_EOF", timeout));
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                              send_LST                                     */

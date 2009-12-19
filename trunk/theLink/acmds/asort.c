@@ -39,7 +39,7 @@ struct SortCtxS {
   struct MqS mqctx;		///< \msgqueI
   MQ_SIZE	    idx;		///< the column index from: <tt>\b -NUM TYPE</tt>
   enum MqTypeE	    type;		///< type of the column index from: <tt>-NUM \b TYPE</tt>
-  struct SortKeyS   *sort;		///< the array of sort keys filled in #SortFilter
+  struct SortKeyS   *sort;		///< the array of sort keys filled in #SortFTR
   MQ_SIZE	    sort_size;		///< the total amount of the allocated SortKeyS objects in the #sort array
   MQ_SIZE	    sort_cursize;	///< the used number of SortKeyS objects in the #sort array
 };
@@ -116,14 +116,17 @@ SortEOF (
   struct SortCtxS * const sortctx = SORTCTX;
   struct SortKeyS * start = sortctx->sort;
   struct SortKeyS * end   = sortctx->sort + sortctx->sort_cursize;
+  struct MqS * ftr;
+
+  MqErrorCheck (MqConfigGetFilter (mqctx, &ftr));
 
   // sort the data
   qsort(sortctx->sort, sortctx->sort_cursize, sizeof(struct SortKeyS), SortComp);
 
   for (; start < end; start++) {
-    MqSendSTART (mqctx);
-    MqSendL (mqctx, start->line);
-    MqErrorCheck (MqSendFTR (mqctx, MQ_TIMEOUT10));
+    MqSendSTART (ftr);
+    MqSendL (ftr, start->line);
+    MqErrorCheck (MqSendEND_AND_WAIT (ftr, "+FTR", MQ_TIMEOUT_USER));
     MqBufferLDelete (&start->line);
     start->key = NULL;
   }
@@ -131,15 +134,15 @@ SortEOF (
   // cleanup after sending
   sortctx->sort_cursize = 0;
 
-  return MQ_OK;
-
+  MqSendSTART(ftr);
+  MqErrorCheck (MqSendEND_AND_WAIT (ftr, "+EOF", MQ_TIMEOUT_USER));
 error: 
-  return MqErrorStack (mqctx);
+  return MqSendRETURN (mqctx);
 }
 
 /// \tool_FTR
 static enum MqErrorE
-SortFilter (
+SortFTR (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -180,11 +183,8 @@ SortFilter (
   if (key->type != sortctx->type) {
     MqErrorCheck( MqBufferCastTo (key, sortctx->type));
   }
-
-  return MQ_OK;
-
 error:
-  return MqErrorStack (mqctx);
+  return MqSendRETURN (mqctx);
 }
 
 /*****************************************************************************/
@@ -228,6 +228,10 @@ SortCreate (
 
   // create the Message-Queue
   MqErrorCheck (MqLinkCreate (mqctx, argvP));
+
+  // add service
+  MqErrorCheck (MqServiceCreate (mqctx, "+FTR", SortFTR, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "+EOF", SortEOF, NULL, NULL));
 
   // initialize the sort index
   sortctx->sort = (struct SortKeyS *) MqSysMalloc (MQ_ERROR_PANIC, 10 * sizeof(struct SortKeyS));
@@ -285,12 +289,13 @@ SortFactory (
 {
   struct MqS * const mqctx = MqContextCreate(sizeof(struct SortCtxS),tmpl);
   mqctx->setup.fHelp = SortHelp;
-  MqConfigSetFilterFTR (mqctx, SortFilter, NULL, NULL, NULL);
-  MqConfigSetFilterEOF (mqctx, SortEOF, NULL, NULL, NULL);
   MqConfigSetName(mqctx, "sort");
-  mqctx->setup.Parent.fCreate = SortCreate;
-  mqctx->setup.Parent.fDelete = SortDelete;
-  mqctx->setup.Factory.Create.fCall = SortFactory;
+  if (create != MQ_FACTORY_NEW_FILTER) {
+    MqConfigSetIsServer(mqctx, MQ_YES);
+    mqctx->setup.Parent.fCreate = SortCreate;
+    mqctx->setup.Parent.fDelete = SortDelete;
+    mqctx->setup.Factory.Create.fCall = SortFactory;
+  }
   *contextP = mqctx;
   return MQ_OK;
 }

@@ -339,8 +339,12 @@ pTokenInvoke (
     MqDLogV(context,1,"current<%s>, currentPtr->proc<%p>, currentPtr->data<%p>\n", 
 	token->current, currentPtr->callback.fFunc, currentPtr->callback.data);
 */
-
-  return (item->callback.fFunc (token->context, item->callback.data));
+  
+  if (item->callback.fFunc != NULL) {
+    return item->callback.fFunc (token->context, item->callback.data);
+  } else {
+    return MqSendRETURN(token->context);
+  }
 }
 
 enum MqErrorE
@@ -415,61 +419,10 @@ pTokenCheckSystem (
       MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
       break;
     }
-    case 'F': {                // _FTR: SERVER get filter data
-      struct MqSendS * send = context->link.send;
-      struct MqS * const myFilter = MqSlaveGet (context, 0);
-      if (context->setup.FilterFTR.fFunc) {
-	// if a filer follow, use this filter to send data
-	if (myFilter != NULL) {
-	  context->link.send = myFilter->link.send;
-	}
-	(*context->setup.FilterFTR.fFunc) (context, context->setup.FilterFTR.data);
-	context->link.send = send;
-      } else if (myFilter != NULL) {
-	// default filter, just pass the args
-	MQ_BUF buf;
-	context->link.send = myFilter->link.send;
-	MqSendSTART(context);
-	while (MqReadItemExists(context)) {
-	  MqReadU(context, &buf);
-	  MqSendU(context, buf);
-	}
-	MqSendFTR(context, MQ_TIMEOUT_USER);
-	context->link.send = send;
-      } else {
-	MqErrorDb2 (context, MQ_ERROR_TOKEN_FTR);
-      }
-      MqSendSTART (context);
-      MqErrorCheck (MqSendRETURN (context));
-      break;
-    }
     case 'E':
     {   
 	curr++;
 	switch (*curr) {
-	    case 'O': {		// _EOF: SERVER EndOfFile for input stream
-	      struct MqSendS * send = context->link.send;
-	      struct MqS * const myFilter = MqSlaveGet (context, 0);
-	      enum MqErrorE ret = MQ_OK;
-	      if (myFilter != NULL) {
-		MqSendSTART(myFilter);
-	      }
-	      if (context->setup.FilterEOF.fFunc) {
-		// if a filer follow, use this filter to send data
-		if (myFilter != NULL) {
-		  context->link.send = myFilter->link.send;
-		}
-		ret = (*context->setup.FilterEOF.fFunc) (context, context->setup.FilterEOF.data); 
-		context->link.send = send;
-	      } 
-	      if (ret == MQ_OK && myFilter != NULL) {
-		MqSendEOF(myFilter, MQ_TIMEOUT_USER);
-	      }
-	      // default answer
-	      MqSendSTART (context);
-	      MqErrorCheck (MqSendRETURN (context));
-	      break;
-	    }
 	    case 'R': {		// _ERR: CLIENT on error in SERVER
 	      MQ_CST errtext;
 	      MQ_INT errnum;

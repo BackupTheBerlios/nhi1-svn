@@ -64,7 +64,7 @@ CutHelp ( const char * base  )
 
 /// \tool_FTR
 static enum MqErrorE
-CutFilter (
+CutFTR (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -73,19 +73,20 @@ CutFilter (
   struct CutCtxS * const cutctx = CUTCTX;
   MQ_SIZE const end = MqReadGetNumItems(mqctx);
   MQ_INT i;
+  struct MqS * ftr;
+
+  MqErrorCheck (MqConfigGetFilter (mqctx, &ftr));
   
-  MqSendSTART (mqctx);
+  MqSendSTART (ftr);
   for (i=0; i<end ; i++) {
     MqErrorCheck (MqReadU (mqctx, &buf));
     if (cutctx->fields[i]) {
-      MqSendU (mqctx, buf);
+      MqSendU (ftr, buf);
     }
   }
-  MqErrorCheck (MqSendFTR (mqctx, MQ_TIMEOUT10));
-  return MQ_OK;
-
+  MqErrorCheck (MqSendEND_AND_WAIT (ftr, "+FTR", MQ_TIMEOUT_USER));
 error:
-  return MqErrorStack (mqctx);
+  return MqSendRETURN (mqctx);
 }
 
 /*****************************************************************************/
@@ -104,9 +105,17 @@ CutCreate (
   MQ_STR fieldsC=NULL, end, start;
   MQ_INT index, last=-1;
   struct CutCtxS * const cutctx = CUTCTX;
+  struct MqS * ftrctx;
 
   // create the Message-Queue
   MqErrorCheck (MqLinkCreate (mqctx, argvP));
+
+  // add filter service
+  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+
+  // add services
+  MqServiceCreate (mqctx, "+FTR", CutFTR, NULL, NULL);
+  MqServiceProxy  (mqctx, "+EOF");
 
   // get and parse the fields
   fieldsC=NULL;
@@ -183,17 +192,15 @@ CutFactory (
 {
   struct MqS * const mqctx = MqContextCreate(sizeof(struct CutCtxS),tmpl);
   mqctx->setup.fHelp = CutHelp;
-  MqConfigSetFilterFTR (mqctx, CutFilter, NULL, NULL, NULL);
   MqConfigSetName(mqctx, "cut");
-  mqctx->setup.Parent.fCreate = CutCreate;
-  mqctx->setup.Factory.Create.fCall = CutFactory;
+  if (create != MQ_FACTORY_NEW_FILTER) {
+    MqConfigSetIsServer(mqctx, MQ_YES);
+    mqctx->setup.Parent.fCreate = CutCreate;
+    mqctx->setup.Factory.Create.fCall = CutFactory;
+  }
   *contextP = mqctx;
   return MQ_OK;
 }
 
 /** \} acut */
-
-
-
-
 

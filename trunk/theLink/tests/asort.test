@@ -105,7 +105,7 @@ test asort-11-($S) {sort: convertion error } \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -2 I @ join -d , } \
     -returnCodes ok \
     -match glob \
-    -result {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
+    -result {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (sort) \[pBufferGetA4] overflow ERROR, can not convert '12345678987654321' into an 'INT' object*}
 
 test asort-12-($S) {sort: multiple sort columns } \
@@ -127,12 +127,9 @@ S> (sort) use '-h' or '--help' for usage*}
 test asort-14-($S) {sort: no server} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -3 D } \
     -returnCodes ok \
-    -result {CHILDSTATUS-234-C> (split) [service-call-error] <Tok|_EOF> <Num|234>
-S> (sort) [MqSendFTR] 'SendFTR' expected a subsequent filter
-S> (sort) found in function "SortEOF" at file "asort.c"
-C> (split) found in function "MqSendEOF" at file "send.c"
-C> (split) found in function "SplitCreate" at file "asplit.c"
-C> (split) use '-h' or '--help' for usage}
+    -match glob \
+    -result {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|\+EOF> <Num|220>
+S> (sort) \[MqConfigGetFilter] no filter is available*}
 
     } ; ## START_LST
 
@@ -143,6 +140,7 @@ C> (split) use '-h' or '--help' for usage}
 ##
     
 freeTests
+
 
 
 

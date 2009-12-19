@@ -75,12 +75,6 @@ MqContextFree (
     MqLinkDelete(context);
 
     // cleanup setup data entries
-    if (context->setup.FilterFTR.data && context->setup.FilterFTR.fFree) {
-      (*context->setup.FilterFTR.fFree) (context, &context->setup.FilterFTR.data);
-    }
-    if (context->setup.FilterEOF.data && context->setup.FilterEOF.fFree) {
-      (*context->setup.FilterEOF.fFree) (context, &context->setup.FilterEOF.data);
-    }
     if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
       (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
     }
@@ -205,8 +199,6 @@ MqSetupDup (
   MQ_PTR ServerSetup = context->setup.ServerSetup.data;
   MQ_PTR ServerCleanup = context->setup.ServerCleanup.data;
   MQ_PTR BgError = context->setup.BgError.data;
-  MQ_PTR FilterFTR = context->setup.FilterFTR.data;
-  MQ_PTR FilterEOF = context->setup.FilterEOF.data;
   MQ_PTR FactoryC = context->setup.Factory.Create.data;
   MQ_PTR FactoryD = context->setup.Factory.Delete.data;
 
@@ -218,8 +210,6 @@ MqSetupDup (
   MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerSetup.data, context->setup.ServerSetup.fCopy, ServerSetup));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerCleanup.data, context->setup.ServerCleanup.fCopy, ServerCleanup));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.BgError.data, context->setup.BgError.fCopy, BgError));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.FilterFTR.data, context->setup.FilterFTR.fCopy, FilterFTR));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.FilterEOF.data, context->setup.FilterEOF.fCopy, FilterEOF));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.Factory.Create.data, context->setup.Factory.Create.fCopy, FactoryC));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.Factory.Delete.data, context->setup.Factory.Delete.fCopy, FactoryD));
 
@@ -355,6 +345,14 @@ MqConfigSetIsSilent (
 }
 
 void 
+MqConfigSetIsServer (
+  struct MqS * const context,
+  MQ_BOL data
+) {
+  context->setup.isServer = data;
+}
+
+void 
 MqConfigSetIsString (
   struct MqS * const context,
   MQ_BOL data
@@ -463,46 +461,6 @@ MqConfigSetSetup (
   context->setup.Parent.fDelete = fParentDelete;
   context->setup.fProcessExit = fProcessExit;
   context->setup.fThreadExit = fThreadExit;
-}
-
-void
-MqConfigSetFilterFTR (
-  struct MqS * const context,
-  MqTokenF fFunc,
-  MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
-)
-{
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
-  if (context->setup.FilterFTR.data && context->setup.FilterFTR.fFree) {
-    (*context->setup.FilterFTR.fFree) (context, &context->setup.FilterFTR.data);
-  }
-  context->setup.isServer = MQ_YES;
-  context->setup.FilterFTR.fFunc = fFunc;
-  context->setup.FilterFTR.data  = data;
-  context->setup.FilterFTR.fFree = fFree;
-  context->setup.FilterFTR.fCopy = fCopy;
-}
-
-void
-MqConfigSetFilterEOF (
-  struct MqS * const context,
-  MqTokenF fFunc,
-  MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
-)
-{
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
-  if (context->setup.FilterEOF.data && context->setup.FilterEOF.fFree) {
-    (*context->setup.FilterEOF.fFree) (context, &context->setup.FilterEOF.data);
-  }
-  context->setup.isServer        = MQ_YES;
-  context->setup.FilterEOF.fFunc = fFunc;
-  context->setup.FilterEOF.data  = data;
-  context->setup.FilterEOF.fFree = fFree;
-  context->setup.FilterEOF.fCopy = fCopy;
 }
 
 void
@@ -801,12 +759,23 @@ MqConfigGetMaster (
   return context->config.master;
 }
 
-struct MqS *
+enum MqErrorE
 MqConfigGetFilter (
-  struct MqS const * const context
+  struct MqS * const context,
+  struct MqS ** const filterP
 )
 {
-  return (context->config.master != NULL ? context->config.master : MqSlaveGet (context, 0));
+  return (
+    (
+      *filterP = (
+	context->config.master != NULL ? 
+	  context->config.master : 
+	  MqSlaveGet (context, 0)
+      )
+    ) == NULL ? 
+      MqErrorDb(MQ_ERROR_NO_FILTER) : 
+      MQ_OK
+  );
 }
 
 MQ_SIZE

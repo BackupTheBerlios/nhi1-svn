@@ -93,13 +93,13 @@ S> (join) use '-h' or '--help' for usage*}
 test ajoin-14-($S) {split and join with wrong format - convertion error} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%lli)" -3 "dbl-as-hex(%x)"} \
     -match glob \
-    -result {CHILDSTATUS-1-str(xa)=24=wid(12345678987654321)=C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
+    -result {CHILDSTATUS-1-str(xa)=24=wid(12345678987654321)=C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (join) \[pBufferGetA4] size ERROR, can not convert '5.78' into an 'INT' object*}
 
 test ajoin-15-($S) {split and join with wrong format - overflow} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%i)" -3 "dbl(%e)"} \
     -match  glob \
-    -result {CHILDSTATUS-1-str(xa)=24=C> (split) \[service-call-error] <Tok|_FTR> <Num|1>
+    -result {CHILDSTATUS-1-str(xa)=24=C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (join) \[pBufferGetA4] overflow ERROR, can not convert '12345678987654321' into an 'INT' object*}
 
 test ajoin-16-($S) {join help} \
@@ -133,6 +133,7 @@ test ajoin-16-($S) {join help} \
 ##
     
 freeTests
+
 
 
 

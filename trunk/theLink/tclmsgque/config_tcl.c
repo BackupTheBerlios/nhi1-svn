@@ -43,7 +43,9 @@ static enum MqErrorE NS(FactoryCreate) (
   tclctx->dict = NULL;
 
   // copy setup data and initialize data entries
-  MqErrorCheck (MqSetupDup(mqctx, tmpl));
+  if (create != MQ_FACTORY_NEW_FILTER) {
+    MqErrorCheck (MqSetupDup(mqctx, tmpl));
+  }
 
   return MQ_OK;
 
@@ -183,26 +185,6 @@ int NS(ConfigSetBgError) (NS_ARGS)
   CHECK_NOARGS
   Tcl_IncrRefCount(bgerror);
   MqConfigSetBgError (MQCTX, NS(ProcCall), bgerror, NS(ProcFree), NS(ProcCopy));
-  RETURN_TCL
-}
-
-int NS(ConfigSetFilterFTR) (NS_ARGS)
-{
-  Tcl_Obj *ftrProc;
-  CHECK_PROC(ftrProc, "ConfigSetFilterFTR ftr-proc")
-  CHECK_NOARGS
-  Tcl_IncrRefCount (ftrProc);
-  MqConfigSetFilterFTR (MQCTX, NS(ProcCall), ftrProc, NS(ProcFree), NS(ProcCopy));
-  RETURN_TCL
-}
-
-int NS(ConfigSetFilterEOF) (NS_ARGS)
-{
-  Tcl_Obj *eofProc;
-  CHECK_PROC(eofProc, "ConfigSetFilterEOF eof-proc")
-  CHECK_NOARGS
-  Tcl_IncrRefCount (eofProc);
-  MqConfigSetFilterEOF (MQCTX, NS(ProcCall), eofProc, NS(ProcFree), NS(ProcCopy));
   RETURN_TCL
 }
 
@@ -398,12 +380,11 @@ int NS(ConfigGetMaster) (NS_ARGS)
 
 int NS(ConfigGetFilter) (NS_ARGS)
 {
-  struct MqS * const ftr = MqConfigGetFilter(MQCTX);
+  SETUP_mqctx
+  struct MqS * ftr;
   CHECK_NOARGS
-  if (ftr != NULL)
-    Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
-  else
-    Tcl_SetResult(interp, "", TCL_STATIC);
+  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, &ftr));
+  Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
   RETURN_TCL
 }
 
