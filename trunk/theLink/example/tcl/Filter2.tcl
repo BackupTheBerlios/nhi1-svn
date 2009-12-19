@@ -16,6 +16,7 @@ proc FTRcmd {ctx} {
 }
 set srv [tclmsgque MqS]
 $srv ConfigSetName filter
+$srv ConfigSetFactory
 $srv ConfigSetFilterFTR FTRcmd
 if {[catch {
   $srv LinkCreate {*}$argv

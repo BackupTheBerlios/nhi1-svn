@@ -32,14 +32,17 @@ proc EOF {ctx} {
   $ctx SendD $::total
   $ctx SendFTR
 }
-set srv [tclmsgque MqS]
-$srv ConfigSetFilterFTR FTR
-$srv ConfigSetFilterEOF EOF
-if {[catch {
-  $srv LinkCreate {*}$argv
-  $srv ProcessEvent -wait FOREVER
-}]} {
-  $srv ErrorSet
+tclmsgque Main {
+  set srv [tclmsgque MqS]
+  $srv ConfigSetFactory
+  $srv ConfigSetFilterFTR FTR
+  $srv ConfigSetFilterEOF EOF
+  if {[catch {
+    $srv LinkCreate {*}$argv
+    $srv ProcessEvent -wait FOREVER
+  }]} {
+    $srv ErrorSet
+  }
+  $srv Exit
 }
-$srv Exit
 

@@ -308,6 +308,8 @@ int NS(ReadW) (NS_ARGS);
 int NS(ReadD) (NS_ARGS);
 int NS(ReadC) (NS_ARGS);
 int NS(ReadB) (NS_ARGS);
+int NS(ReadN) (NS_ARGS);
+int NS(ReadBDY) (NS_ARGS);
 int NS(ReadU) (NS_ARGS);
 int NS(ReadL_START) (NS_ARGS);
 int NS(ReadL_END) (NS_ARGS);
@@ -334,6 +336,8 @@ int NS(SendW) (NS_ARGS);
 int NS(SendD) (NS_ARGS);
 int NS(SendC) (NS_ARGS);
 int NS(SendB) (NS_ARGS);
+int NS(SendN) (NS_ARGS);
+int NS(SendBDY) (NS_ARGS);
 int NS(SendU) (NS_ARGS);
 int NS(SendL_START) (NS_ARGS);
 int NS(SendL_END) (NS_ARGS);
@@ -370,12 +374,14 @@ int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
 int NS(ConfigGetToken) (NS_ARGS);
+int NS(ConfigGetIsTrans) (NS_ARGS);
 int NS(ConfigGetCtxId) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
 int NS(ConfigGetIdent) (NS_ARGS);
 int NS(ConfigGetParent) (NS_ARGS);
 int NS(ConfigGetMaster) (NS_ARGS);
+int NS(ConfigGetFilter) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
 int NS(ConfigGetIoTcpPort) (NS_ARGS);
@@ -423,6 +429,8 @@ int NS(MqS_Cmd) (
     { "ReadD",		      NS(ReadD)			},
     { "ReadC",		      NS(ReadC)			},
     { "ReadB",		      NS(ReadB)			},
+    { "ReadN",		      NS(ReadN)			},
+    { "ReadBDY",	      NS(ReadBDY)		},
     { "ReadU",		      NS(ReadU)			},
     { "ReadL_START",	      NS(ReadL_START)		},
     { "ReadL_END",	      NS(ReadL_END)		},
@@ -451,6 +459,8 @@ int NS(MqS_Cmd) (
     { "SendD",		      NS(SendD)			},
     { "SendC",		      NS(SendC)			},
     { "SendB",		      NS(SendB)			},
+    { "SendN",		      NS(SendN)			},
+    { "SendBDY",	      NS(SendBDY)		},
     { "SendU",		      NS(SendU)			},
     { "SendL_START",	      NS(SendL_START)		},
     { "SendL_END",	      NS(SendL_END)		},
@@ -490,12 +500,14 @@ int NS(MqS_Cmd) (
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetToken",		  NS(ConfigGetToken)	      },
+    { "ConfigGetIsTrans",	  NS(ConfigGetIsTrans)	      },
     { "ConfigGetCtxId",		  NS(ConfigGetCtxId)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
     { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
     { "ConfigGetParent",	  NS(ConfigGetParent)	      },
     { "ConfigGetMaster",	  NS(ConfigGetMaster)	      },
+    { "ConfigGetFilter",	  NS(ConfigGetFilter)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
     { "ConfigGetIoTcpPort",	  NS(ConfigGetIoTcpPort)      },

@@ -31,6 +31,7 @@ proc EOFcmd {ctx} {
 }
 set srv [tclmsgque MqS]
 $srv ConfigSetName filter
+$srv ConfigSetFactory
 $srv ConfigSetFilterFTR FTRcmd
 $srv ConfigSetFilterEOF EOFcmd
 if {[catch {

@@ -1439,6 +1439,18 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
+/// \brief get the \e filter object of a bidirectional filter pipeline
+/// \context
+/// \return the \e filter object or \c NULL
+///
+/// If \e context is the \e server, than the \e slave-0 context is returned.
+/// If \e context is the \e client and the \e master is != NULL than the \e master context is returned.
+/// If \e context is the \e client and the \e master is == NULL than the \e slave-0 context is returned.
+/// The function return \e NULL if no \e master and no \e slave-0 context is available.
+MQ_EXTERN struct MqS * MQ_DECL MqConfigGetFilter (
+  struct MqS const * const context
+) __attribute__((nonnull));
+
 /// \brief return the context-identification
 /// \context
 /// \return the context-identification number
@@ -1456,6 +1468,14 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
 /// \return the current transaction token as 4 character string
 MQ_EXTERN MQ_CST 
 MQ_DECL MqConfigGetToken (
+  struct MqS const * const context
+);
+
+/// \brief check if the ongoing service-call belongs to a transaction
+/// \context
+/// \return 1=yes, 0=no
+MQ_EXTERN int
+MQ_DECL MqConfigGetIsTrans (
   struct MqS const * const context
 );
 
@@ -2248,14 +2268,6 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
  *  \ingroup msgque_api
  *  \{
  */
-
-/// \brief check if the ongoing service-call belongs to a transaction
-/// \context
-/// \return 1=yes, 0=no
-MQ_EXTERN int
-MQ_DECL MqIsTransaction (
-  struct MqS const * const context
-);
 
 /// \brief check the current token
 /// \param[in] context the current context

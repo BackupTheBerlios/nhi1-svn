@@ -1117,50 +1117,45 @@ proc Example {config client server args} {
   if {$env(TS_SETUP)} {
     Print lng com start client server
   }
-  set serverSilent  [optB args --server-silent]
-  set name	    [optV args --name]
-  set srvname	    [optV args --srvname]
+
+  set filter [optV args --filter $env(TS_FILTER)]
 
   ## 1. setup variables
-  # replase all FILE and PORT placeholder
+  lappend comargs --$com
+  # replase all FILE, PORT and PID placeholder
   set args [MkUnique $args]
 
-  ## 2. init cl/sl
-  set cl [list {*}[getExample $client.$lng] --$com {*}$args]
-  set sl [list {*}[getExample $server.$lng] --$com {*}$args]
-  if {$serverSilent}  {lappend sl --silent}
-  if {$name ne ""}    {lappend cl --name $name}
-  if {$srvname ne ""} {lappend sl --name $srvname}
+  # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
+  set cargs	[list]
+  set sargs	[list]
 
-  ## 3. for NON-PIPE server start the server as --fork/--thread/--spawn once
+  ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
   if {$com ne "pipe"} {
-    lappend sl --$start
-    # the name of the server is srvname
-    set SRVNAME [optV sl --srvname]
-    if {$SRVNAME ne ""} {lappend sl --name $SRVNAME}
     ## ...
     switch -exact -- $com {
       tcp	{
 	set PORT    [envGet TS_PORT]
 	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
-	optSet cl --port $PORT
-	optSet sl --port $PORT
+	lappend comargs --port [optV args --port $PORT]
 
 	# set host for client and server
-	optSet sl --host [envGet TS_HOST]
-	optSet cl --host [envGet TS_HOST]
-
-	# delete all client options from the server argument list
-	optVD sl --myport --myhost
+	lappend comargs --host [optV args --host [envGet TS_HOST]]
       }
       uds	{
 	set FILE    [envGet TS_FILE]
 	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
-	optSet sl --file $FILE
-	optSet cl --file $FILE
+	lappend comargs --file [optV args --file $FILE]
       }
     }
+    lappend sargs {*}$args
+    optVD sargs --buffersize --timeout --myhost --myport
+    set sargs [MkUnique $sargs]
     if {!$env(USE_REMOTE)} {
+      if {$filter ne ""} {
+	set sl [list {*}[getExample $filter.$lng] --$start --name fs {*}$comargs @ {*}[getExample $server.$lng] {*}$sargs]
+      } else {
+	set sl [list {*}[getExample $server.$lng] --$start {*}$sargs {*}$comargs]
+      }
       if {$env(TS_SETUP)} {
 	Print sl
       }
@@ -1173,7 +1168,8 @@ proc Example {config client server args} {
   }
   
   ## 3. start client
-  if {$com eq "pipe"} { lappend cl @ {*}$sl }
+  set cl [list {*}[getExample $client.$lng] {*}$cargs {*}$comargs]
+  if {$com eq "pipe"} { lappend cl @ {*}[getExample $server.$lng] }
   if {$env(TS_SETUP)} { Print cl }
   set RET [Exec {*}$cl]
 

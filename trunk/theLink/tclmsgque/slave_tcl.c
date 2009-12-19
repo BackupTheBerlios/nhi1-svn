@@ -56,9 +56,9 @@ int NS(SlaveGet) (NS_ARGS)
   MQ_SIZE id;
   CHECK_I(id)
   slave = MqSlaveGet(mqctx, id);
-  if (slave == NULL)
+  if (slave == NULL) {
     Tcl_SetResult(interp, "", TCL_STATIC);
-  else {
+  } else {
     Tcl_SetObjResult(interp, (Tcl_Obj*)slave->self);
   }
   RETURN_TCL

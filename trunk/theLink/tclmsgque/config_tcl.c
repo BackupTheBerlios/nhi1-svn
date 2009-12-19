@@ -275,6 +275,13 @@ int NS(ConfigGetToken) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ConfigGetIsTrans) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqConfigGetIsTrans(MQCTX)));
+  RETURN_TCL
+}
+
 int NS(ConfigGetCtxId) (NS_ARGS)
 {
   CHECK_NOARGS
@@ -384,6 +391,17 @@ int NS(ConfigGetMaster) (NS_ARGS)
   CHECK_NOARGS
   if (tclctx->mqctx.config.master != NULL)
     Tcl_SetObjResult(interp, (Tcl_Obj*)tclctx->mqctx.config.master->self);
+  else
+    Tcl_SetResult(interp, "", TCL_STATIC);
+  RETURN_TCL
+}
+
+int NS(ConfigGetFilter) (NS_ARGS)
+{
+  struct MqS * const ftr = MqConfigGetFilter(MQCTX);
+  CHECK_NOARGS
+  if (ftr != NULL)
+    Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
   else
     Tcl_SetResult(interp, "", TCL_STATIC);
   RETURN_TCL

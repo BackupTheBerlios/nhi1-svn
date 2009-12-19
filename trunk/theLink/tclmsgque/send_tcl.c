@@ -182,6 +182,28 @@ int NS(SendB) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(SendN) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_B(val,len)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqSendN(mqctx, val, len));
+  RETURN_TCL
+}
+
+int NS(SendBDY) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_B(val,len)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqSendBDY(mqctx, val, len));
+  RETURN_TCL
+}
+
 int NS(SendU) (NS_ARGS)
 {
   SETUP_mqctx

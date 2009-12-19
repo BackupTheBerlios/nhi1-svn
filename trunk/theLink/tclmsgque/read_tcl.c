@@ -125,6 +125,28 @@ int NS(ReadB) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ReadN) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadN(mqctx, &val, &len));
+  Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(val,len));
+  RETURN_TCL
+}
+
+int NS(ReadBDY) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadBDY(mqctx, &val, &len));
+  Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(val,len));
+  RETURN_TCL
+}
+
 int NS(ReadU) (NS_ARGS)
 {
   SETUP_mqctx

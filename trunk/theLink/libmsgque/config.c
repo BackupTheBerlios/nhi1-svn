@@ -801,6 +801,14 @@ MqConfigGetMaster (
   return context->config.master;
 }
 
+struct MqS *
+MqConfigGetFilter (
+  struct MqS const * const context
+)
+{
+  return (context->config.master != NULL ? context->config.master : MqSlaveGet (context, 0));
+}
+
 MQ_SIZE
 MqConfigGetCtxId (
   struct MqS const * const context
@@ -815,6 +823,14 @@ MqConfigGetToken (
 )
 {
   return (context->link.srvT != NULL? pTokenGetCurrent(context->link.srvT) : NULL);
+}
+
+int
+MqConfigGetIsTrans (
+  struct MqS const * const context
+)
+{
+  return context->link._trans != 0;
 }
 
 MQ_CST

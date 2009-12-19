@@ -687,15 +687,9 @@ MqLinkCreate (
 	  }
 
 	  // step 3, create the new context and fill the myFilter
-	  myFilter = MqContextCreate(sizeof(struct MqS),context);
+	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &myFilter));
 
-	  // step 4, set the factory
-	  MqConfigSetDefaultFactory (myFilter);
-
-	  // step 5, delete the entire "context" on delete
-	  myFilter->link.doFactoryCleanup = MQ_YES;
-
-	  // step 6, link between "myFilter" and "context"
+	  // step 3, link between "myFilter" and "context"
 	  MqConfigSetMaster  (myFilter, context, 0);
 
 	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
@@ -1183,14 +1177,6 @@ MqCurrentTokenIs(
 )
 {
   return pTokenCheck(context->link.srvT,str);
-}
-
-int
-MqIsTransaction (
-  struct MqS const * const context
-)
-{
-  return context->link._trans != 0;
 }
 
 enum MqErrorE

@@ -202,6 +202,10 @@ test example-hlwo-1-($S) {hello world example} \
   -body		{Example $S MyClient MyServer} \
   -result	{Hello World}
 
+test example-hlft-1-($S) {hello world example with Filter3} \
+  -body		{Example $S MyClient MyServer --filter Filter3} \
+  -result	{Hello World}
+
   }; # SRV_LST
 
 ##
@@ -220,6 +224,11 @@ foreach S [envGet SRV_LST] {
 
 test example-e-2-($S) {example from the manpage} \
   -body		{Example $S mulclient mulserver} \
+  -match	glob \
+  -result	{81*841*}
+
+test example-f-2-($S) {example from the manpage with Filter3} \
+  -body		{Example $S mulclient mulserver --filter Filter3} \
   -match	glob \
   -result	{81*841*}
 
