@@ -182,6 +182,40 @@ error:
   return NULL;
 }
 
+JNIEXPORT jbyteArray JNICALL NS(ReadN) (
+  JNIEnv *	env, 
+  jobject	self
+)
+{
+  SETUP_context;
+  MQ_BIN b;
+  MQ_SIZE len;
+  jbyteArray tmp;
+  ErrorMqToJavaWithCheck(MqReadN(context, &b, &len));
+  tmp = (*env)->NewByteArray(env,len);
+  (*env)->SetByteArrayRegion(env,tmp,0,len,(jbyte*)b);
+  return tmp;
+error:
+  return NULL;
+}
+
+JNIEXPORT jbyteArray JNICALL NS(ReadBDY) (
+  JNIEnv *	env, 
+  jobject	self
+)
+{
+  SETUP_context;
+  MQ_BIN b;
+  MQ_SIZE len;
+  jbyteArray tmp;
+  ErrorMqToJavaWithCheck(MqReadBDY(context, &b, &len));
+  tmp = (*env)->NewByteArray(env,len);
+  (*env)->SetByteArrayRegion(env,tmp,0,len,(jbyte*)b);
+  return tmp;
+error:
+  return NULL;
+}
+
 JNIEXPORT jobject JNICALL NS(ReadU) (
   JNIEnv *      env,
   jobject       self

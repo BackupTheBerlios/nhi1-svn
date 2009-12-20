@@ -50,5 +50,32 @@ error:
   return;
 }
 
+JNIEXPORT void JNICALL NS(ServiceProxy__Ljava_lang_String_2) (
+  JNIEnv *  env, 
+  jobject   self, 
+  jstring   token
+)
+{
+  SETUP_context;
+  const char *tokenC = JO2C_START(env, token);
+  ErrorMqToJavaWithCheck(MqServiceProxy(context, tokenC, 0));
+  JO2C_STOP(env, token, tokenC);
+error:
+  return;
+}
 
+JNIEXPORT void JNICALL NS(ServiceProxy__Ljava_lang_String_2I) (
+  JNIEnv *  env, 
+  jobject   self, 
+  jstring   token,
+  jint	    id
+)
+{
+  SETUP_context;
+  const char *tokenC = JO2C_START(env, token);
+  ErrorMqToJavaWithCheck(MqServiceProxy(context, tokenC, id));
+  JO2C_STOP(env, token, tokenC);
+error:
+  return;
+}
 

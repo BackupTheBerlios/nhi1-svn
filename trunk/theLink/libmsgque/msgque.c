@@ -572,8 +572,9 @@ MqLinkCreate (
 	MqSendSTART (parent);
 	MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
 	MqSendI (parent, (MQ_INT) context->config.isSilent);
-	if (context->config.srvname != NULL)
+	if (context->config.srvname != NULL) {
 	  MqSendC (parent, context->config.srvname);
+	}
 
 	// !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
 	if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {

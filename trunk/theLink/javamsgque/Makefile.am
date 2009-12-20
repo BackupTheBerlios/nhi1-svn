@@ -48,9 +48,13 @@ endif
 #####################################################################################
 ## JAR file
 
+JAVA_FILES = $(srcdir)/IBgError.java $(srcdir)/IFactory.java $(srcdir)/IServerSetup.java  \
+    $(srcdir)/MqBufferS.java $(srcdir)/MqS.java $(srcdir)/ICallback.java $(srcdir)/IServerCleanup.java \
+      $(srcdir)/IService.java $(srcdir)/MqSException.java
+
 MQS_MAIN = javamsgque/MqS.class
 
-$(MQS_MAIN): $(srcdir)/*.java
+$(MQS_MAIN): $(JAVA_FILES)
 	$(JAVAC) -classpath "$(top_builddir)$(FILE_SEP)javamsgque$(FILE_SEP)javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir)/*.java 
 
 if USE_JAVA
@@ -66,7 +70,7 @@ mqs_DATA = javamsgque.jar
 
 pkglib_LTLIBRARIES = libjavamsgque.la
 BUILT_SOURCES = .vpath_hook $(mqs_DATA) javamsgque_MqS.h javamsgque_MqBufferS.h
-EXTRA_DIST = $(srcdir)/*.java $(BUILT_SOURCES) javamsgque_MqS_WAIT.h
+EXTRA_DIST = $(JAVA_FILES) $(BUILT_SOURCES) javamsgque_MqS_WAIT.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque/*.class
 VPATH_FILES = javamsgque javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqS_WAIT.h javamsgque.jar
 

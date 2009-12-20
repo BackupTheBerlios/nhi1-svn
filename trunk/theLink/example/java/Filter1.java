@@ -13,26 +13,39 @@ package example;
 import java.util.ArrayList;
 import javamsgque.*;
 
-class Filter1 extends MqS implements IFilterFTR, IFilterEOF {
+class Filter1 extends MqS implements IFactory {
   private ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 
-  // service definition
-  public void FTR () throws MqSException {
-    ArrayList<String> d = new ArrayList<String>();
-    while (ReadGetNumItems() != 0) {
-      d.add("<" + ReadC() + ">");
-    }
-    data.add(d);
+  public MqS Factory() {
+    return new Filter1();
   }
 
   // service definition
-  public void EOF () throws MqSException {
-    for (ArrayList<String> d: data) {
-      SendSTART();
-      for (String s: d) {
-	SendC(s);
+  public static class FTR implements IService {
+    public void Service(MqS ctx) throws MqSException {
+      ArrayList<String> d = new ArrayList<String>();
+      while (ctx.ReadGetNumItems() != 0) {
+	d.add("<" + ctx.ReadC() + ">");
       }
-      SendFTR(10);
+      ((Filter1)ctx).data.add(d);
+      ctx.SendRETURN();
+    }
+  }
+
+  // service definition
+  public static class EOF implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      MqS ftr = ctx.ConfigGetFilter();
+      for (ArrayList<String> d: ((Filter1)ctx).data) {
+	ftr.SendSTART();
+	for (String s: d) {
+	  ftr.SendC(s);
+	}
+	ftr.SendEND_AND_WAIT("+FTR");
+      }
+      ftr.SendSTART();
+      ftr.SendEND_AND_WAIT("+EOF");
+      ctx.SendRETURN();
     }
   }
 
@@ -40,7 +53,10 @@ class Filter1 extends MqS implements IFilterFTR, IFilterEOF {
     Filter1 srv = new Filter1();
     try {
       srv.ConfigSetName("filter");
+      srv.ConfigSetIsServer(true);
       srv.LinkCreate(argv);
+      srv.ServiceCreate("+FTR", new Filter1.FTR()); 
+      srv.ServiceCreate("+EOF", new Filter1.EOF()); 
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {
       srv.ErrorSet(e);

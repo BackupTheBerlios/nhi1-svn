@@ -173,6 +173,8 @@ pSlaveCreate (
       }
       MqConfigSetParent(newctx, slave_parent);
       MqConfigSetMaster(newctx, master, id);
+      if (master->config.srvname)
+	MqConfigSetSrvName(newctx, master->config.srvname);
       // create the child
       if (MqLinkCreate (newctx, NULL) == MQ_ERROR) {
 	MqErrorCopy(context, newctx);

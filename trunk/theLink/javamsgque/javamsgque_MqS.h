@@ -137,6 +137,22 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceCreate
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ServiceProxy
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceProxy
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ServiceDelete
  * Signature: (Ljava/lang/String;)V
  */
@@ -162,9 +178,17 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND
 /*
  * Class:     javamsgque_MqS
  * Method:    SendEND_AND_WAIT
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendEND_AND_WAIT
  * Signature: (Ljava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2I
   (JNIEnv *, jobject, jstring, jint);
 
 /*
@@ -185,27 +209,11 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendRETURN
 
 /*
  * Class:     javamsgque_MqS
- * Method:    SendFTR
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendFTR
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    SendERROR
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendERROR
   (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendEOF
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEOF
-  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     javamsgque_MqS
@@ -277,6 +285,22 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendC
  * Signature: ([B)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendB
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendN
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendN
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendBDY
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendBDY
   (JNIEnv *, jobject, jbyteArray);
 
 /*
@@ -373,6 +397,22 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ReadC
  * Signature: ()[B
  */
 JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadB
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadN
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadN
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadBDY
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadBDY
   (JNIEnv *, jobject);
 
 /*
@@ -501,6 +541,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetTimeout
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIsSilent
+  (JNIEnv *, jobject, jboolean);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ConfigSetIsServer
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIsServer
   (JNIEnv *, jobject, jboolean);
 
 /*
@@ -657,6 +705,22 @@ JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetMaster
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigGetFilter
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetFilter__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ConfigGetFilter
+ * Signature: (I)Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetFilter__I
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigGetCtxId
  * Signature: ()I
  */
@@ -669,6 +733,14 @@ JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetCtxId
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetToken
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ConfigGetIsTrans
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsTrans
   (JNIEnv *, jobject);
 
 /*

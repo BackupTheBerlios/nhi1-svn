@@ -189,6 +189,18 @@ c10+1+0+s10:
 c100+2+1+s100:
 c101+3+1+s101:}
 
+test example-t-2-($S) {testclient} \
+  -constraints	{!filter} \
+  -body		{Example $S testclient testserver --filter Filter3} \
+  -result	{c0+0+-1+s0:
+c00+1+0+s00:
+c01+2+0+s01:
+c000+3+1+s000:
+c1+0+-1+s1:
+c10+1+0+s10:
+c100+2+1+s100:
+c101+3+1+s101:}
+
 }; # SRV_LST
 
 ##
@@ -197,9 +209,4 @@ c101+3+1+s101:}
 ##
 
 freeTests
-
-
-
-
-
 

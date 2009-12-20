@@ -11,19 +11,29 @@
  */
 package example;
 import javamsgque.*;
-class manfilter extends MqS implements IFilterFTR {
-  public void FTR () throws MqSException {
-    SendSTART();
-    while (ReadItemExists()) {
-      SendC("<" + ReadC() + ">");
+class manfilter extends MqS implements IFactory {
+  public MqS Factory() {
+    return new manfilter();
+  }
+  private static class FTR implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      MqS ftr = ctx.ConfigGetFilter();
+      ftr.SendSTART();
+      while (ctx.ReadItemExists()) {
+	ftr.SendC("<" + ctx.ReadC() + ">");
+      }
+      ftr.SendEND_AND_WAIT("+FTR");
+      ctx.SendRETURN();
     }
-    SendFTR(10);
   }
   public static void main(String[] argv) {
     manfilter srv = new manfilter();
     try {
       srv.ConfigSetName("filter");
+      srv.ConfigSetIsServer(true);
       srv.LinkCreate(argv);
+      srv.ServiceCreate("+FTR", new manfilter.FTR()); 
+      srv.ServiceProxy ("+EOF"); 
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {
       srv.ErrorSet(e);

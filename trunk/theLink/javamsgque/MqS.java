@@ -22,8 +22,6 @@ The class is a \e abstract because and requires a top-level class wrapper to imp
 virtual functions like:
  - void #javamsgque::IServerSetup::ServerSetup() throws MqSException
  - void #javamsgque::IServerCleanup::ServerCleanup() throws MqSException
- - void #javamsgque::IFilterFTR::FTR() throws MqSException
- - void #javamsgque::IFilterEOF::EOF() throws MqSException
  - void #javamsgque::IFactory::Factory() throws MqSException
  .
 
@@ -138,6 +136,10 @@ public abstract class MqS {
 ///
   /// \api #MqServiceCreate
   public native void	ServiceCreate	    (String token, IService service)  throws MqSException;
+  /// \api #MqServiceProxy
+  public native void	ServiceProxy	    (String token)  throws MqSException;
+  /// \api #MqServiceProxy
+  public native void	ServiceProxy	    (String token, int id)  throws MqSException;
   /// \api #MqServiceDelete
   public native void	ServiceDelete	    (String token)  throws MqSException;
 
@@ -154,19 +156,15 @@ public abstract class MqS {
   /// \api #MqSendEND
   public native void	SendEND			(String token)	throws MqSException;
   /// \api #MqSendEND_AND_WAIT
+  public native void	SendEND_AND_WAIT	(String token) throws MqSException;
+  /// \api #MqSendEND_AND_WAIT
   public native void	SendEND_AND_WAIT	(String token, int timeout) throws MqSException;
   /// \api #MqSendEND_AND_CALLBACK
   public native void	SendEND_AND_CALLBACK	(String token, ICallback callback)  throws MqSException;
   /// \api #MqSendRETURN
   public native void	SendRETURN		()  throws MqSException;
-  /// \api #MqSendFTR
-  /// \attention only use this function in a #javamsgque.IFilterFTR.FTR service
-  public native void	SendFTR			(int timeout) throws MqSException;
   /// \api #SendERROR
   public native void    SendERROR		() throws MqSException;
-  /// \api #MqSendEOF
-  /// \attention \b not use this function in a #javamsgque.IFilterEOF.EOF service, it is used by default
-  public native void	SendEOF                 (int timeout) throws MqSException;
   /// \api #MqSendY
   public native void	SendY			(byte y)  throws MqSException;
   /// \api #MqSendO
@@ -185,6 +183,10 @@ public abstract class MqS {
   public native void	SendC			(String s)  throws MqSException;
   /// \api #MqSendB
   public native void	SendB			(byte[] b)  throws MqSException;
+  /// \api #MqSendN
+  public native void	SendN			(byte[] b)  throws MqSException;
+  /// \api #MqSendBDY
+  public native void	SendBDY			(byte[] b)  throws MqSException;
   /// \api #MqSendU
   public native void	SendU			(MqBufferS buf)	throws MqSException;
   /// \api #MqSendL_START
@@ -219,6 +221,10 @@ public abstract class MqS {
   public native String	ReadC		    ()	throws MqSException;
   /// \api #MqReadB
   public native byte[]	ReadB		    ()	throws MqSException;
+  /// \api #MqReadN
+  public native byte[]	ReadN		    ()	throws MqSException;
+  /// \api #MqReadBDY
+  public native byte[]	ReadBDY		    ()	throws MqSException;
   /// \api #MqReadU
   public native MqBufferS ReadU		    ()	throws MqSException;
   /// \api #MqReadProxy
@@ -262,6 +268,8 @@ public abstract class MqS {
   public native void ConfigSetTimeout	      (long val);
   /// \api #MqConfigSetIsSilent
   public native void ConfigSetIsSilent	      (boolean val);
+  /// \api #MqConfigSetIsServer
+  public native void ConfigSetIsServer	      (boolean val);
   /// \api #MqConfigSetIsString
   public native void ConfigSetIsString	      (boolean val);
   /// \api #MqConfigSetStartAs
@@ -301,10 +309,16 @@ public abstract class MqS {
   public native MqS	ConfigGetParent	      ();
   /// \api #MqConfigGetMaster
   public native MqS	ConfigGetMaster	      ();
+  /// \api #MqConfigGetFilter
+  public native MqS	ConfigGetFilter	      () throws MqSException;
+  /// \api #MqConfigGetFilter
+  public native MqS	ConfigGetFilter	      (int id) throws MqSException;
   /// \api #MqConfigGetCtxId
   public native int	ConfigGetCtxId	      ();
   /// \api #MqConfigGetToken
   public native String	ConfigGetToken	      ();
+  /// \api #MqConfigGetIsTrans
+  public native boolean	ConfigGetIsTrans      ();
   /// \api #MqConfigGetStartAs
   public native int	ConfigGetStartAs      ();
   /// \api #MqConfigGetIoTcpHost

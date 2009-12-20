@@ -93,6 +93,7 @@ SetI(ConfigSetBuffersize)
 SetI(ConfigSetDebug)
 SetW(ConfigSetTimeout)
 SetO(ConfigSetIsSilent)
+SetO(ConfigSetIsServer)
 SetO(ConfigSetIsString)
 
 JNIEXPORT jboolean JNICALL NS(ConfigCheckIdent) (
@@ -151,6 +152,7 @@ GetO(ConfigGetIsServer)
 GetO(ConfigGetIsParent)
 GetO(ConfigGetIsSlave)
 GetO(ConfigGetIsConnected)
+GetO(ConfigGetIsTrans)
 
 JNIEXPORT jobject JNICALL NS(ConfigGetParent) (
   JNIEnv    *env, 
@@ -166,6 +168,33 @@ JNIEXPORT jobject JNICALL NS(ConfigGetMaster) (
 )
 {
   return (CONTEXT->config.master == NULL ? NULL : ((jobject)CONTEXT->config.master->self));
+}
+
+JNIEXPORT jobject JNICALL NS(ConfigGetFilter__) (
+  JNIEnv    *env, 
+  jobject   self
+)
+{
+  SETUP_context;
+  struct MqS *ftr;
+  ErrorMqToJavaWithCheck (MqConfigGetFilter(context, 0, &ftr));
+  return ((jobject)ftr->self);
+error:
+  return NULL;
+}
+
+JNIEXPORT jobject JNICALL NS(ConfigGetFilter__I) (
+  JNIEnv    *env, 
+  jobject   self,
+  jint	    id
+)
+{
+  SETUP_context;
+  struct MqS *ftr;
+  ErrorMqToJavaWithCheck (MqConfigGetFilter(context, id, &ftr));
+  return ((jobject)ftr->self);
+error:
+  return NULL;
 }
 
 GetI(ConfigGetBuffersize)

@@ -107,7 +107,8 @@ test acut-12-($S) {cut: no server} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut -f 0 } \
     -returnCodes ok \
     -match glob \
-    -result {CHILDSTATUS-220-S> (cut) \[MqConfigGetFilter] no filter is available*}
+    -result {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|+FTR> <Num|220>
+S> (cut) \[MqConfigGetFilter] no filter is available*}
 
 test acut-13-($S) {cut: no client} \
     -body   { Exec {*}[getATool cut] -f 0 @ join -d , } \

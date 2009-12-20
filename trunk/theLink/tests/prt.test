@@ -201,7 +201,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (test-server) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (*server*) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:

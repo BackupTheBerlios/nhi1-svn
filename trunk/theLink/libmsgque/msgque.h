@@ -1023,6 +1023,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDup (
   struct MqS const * const from
 );
 
+/// \brief copy the #MqS::setup data
+MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDupForClient (
+  struct MqS * const to,
+  struct MqS const * const from
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                   init                                    */

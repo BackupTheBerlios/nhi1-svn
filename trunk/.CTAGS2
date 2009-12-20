@@ -80,6 +80,14 @@ cp $D/tags .
     xargs ctags -a $ADD
 }
 
+[[ $PWD == *example/java* ]] && {
+  find $JAVA_HOME/include -name "*.h" | \
+    xargs ctags -a $ADD -I NS
+  ctags -a $ADD ../../javamsgque/*.java ../../javamsgque/*.[ch]
+  ctags -a $ADD *.java
+  DO=no
+}
+
 [[ $(basename $PWD) == "perlmsgque" || $(basename $PWD) == "Net-PerlMsgque" ]] && {
   if [[ ${WINDIR+set} == set ]] ; then
     PERL_HOME=/cygdrive/c/Perl/

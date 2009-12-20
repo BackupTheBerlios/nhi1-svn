@@ -56,6 +56,10 @@ BUILT_SOURCES += example/Filter2.class
 example/Filter2.class: $(srcdir)/Filter2.java ../../javamsgque/javamsgque.jar
 	$(RULE_JAVA_EXE)
 
+BUILT_SOURCES += example/Filter3.class
+example/Filter3.class: $(srcdir)/Filter3.java ../../javamsgque/javamsgque.jar
+	$(RULE_JAVA_EXE)
+
 BUILT_SOURCES += example/testclient.class
 example/testclient.class: $(srcdir)/testclient.java ../../javamsgque/javamsgque.jar
 	$(RULE_JAVA_EXE)

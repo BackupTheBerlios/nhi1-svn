@@ -50,7 +50,22 @@ error:
   return;
 }
 
-JNIEXPORT void JNICALL NS(SendEND_1AND_1WAIT) (
+JNIEXPORT void JNICALL NS(SendEND_1AND_1WAIT__Ljava_lang_String_2) (
+  JNIEnv *	env, 
+  jobject	self,
+  jobject	token
+)
+{
+  const char *str;
+  SETUP_context;
+  str = JO2C_START(env,token);
+  ErrorMqToJavaWithCheck(MqSendEND_AND_WAIT(context,str,-2));
+  JO2C_STOP(env,token,str);
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(SendEND_1AND_1WAIT__Ljava_lang_String_2I) (
   JNIEnv *	env, 
   jobject	self,
   jobject	token,
@@ -93,30 +108,6 @@ JNIEXPORT void JNICALL NS(SendRETURN) (
 {
   SETUP_context;
   ErrorMqToJavaWithCheck(MqSendRETURN(context));
-error:
-  return;
-}
-
-JNIEXPORT void JNICALL NS(SendFTR) (
-  JNIEnv *	env, 
-  jobject	self,
-  jint		timeout
-)
-{
-  SETUP_context;
-  ErrorMqToJavaWithCheck(MqSendFTR(context, timeout));
-error:
-  return;
-}
-
-JNIEXPORT void JNICALL NS(SendEOF) (
-  JNIEnv *	env, 
-  jobject	self,
-  jint		timeout
-)
-{
-  SETUP_context;
-  ErrorMqToJavaWithCheck(MqSendEOF(context, timeout));
 error:
   return;
 }
@@ -252,6 +243,36 @@ JNIEXPORT void JNICALL NS(SendB) (
   SETUP_context;
   tmp = (*env)->GetByteArrayElements(env,b,NULL);
   ErrorMqToJavaWithCheck(MqSendB(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b)));
+  (*env)->ReleaseByteArrayElements(env,b,tmp,0);
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(SendN) (
+  JNIEnv *	env, 
+  jobject	self,
+  jbyteArray	b
+)
+{
+  jbyte * tmp;
+  SETUP_context;
+  tmp = (*env)->GetByteArrayElements(env,b,NULL);
+  ErrorMqToJavaWithCheck(MqSendN(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b)));
+  (*env)->ReleaseByteArrayElements(env,b,tmp,0);
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(SendBDY) (
+  JNIEnv *	env, 
+  jobject	self,
+  jbyteArray	b
+)
+{
+  jbyte * tmp;
+  SETUP_context;
+  tmp = (*env)->GetByteArrayElements(env,b,NULL);
+  ErrorMqToJavaWithCheck(MqSendBDY(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b)));
   (*env)->ReleaseByteArrayElements(env,b,tmp,0);
 error:
   return;

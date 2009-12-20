@@ -43,7 +43,9 @@ static enum MqErrorE NS(FactoryCreate) (
   tclctx->dict = NULL;
 
   // copy setup data and initialize data entries
-  if (create != MQ_FACTORY_NEW_FILTER) {
+  if (create == MQ_FACTORY_NEW_FILTER) {
+    MqErrorCheck (MqSetupDupForClient(mqctx, tmpl));
+  } else {
     MqErrorCheck (MqSetupDup(mqctx, tmpl));
   }
 

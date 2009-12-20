@@ -21,9 +21,8 @@ jclass	    NS(Class_MqS), NS(Class_IServerSetup), NS(Class_IServerCleanup),
 	    NS(Class_Throwable), NS(Class_Class), NS(Class_Object), NS(Class_IService),
 	    NS(Class_NullPointerException), NS(Class_System), NS(Class_RuntimeException),
 	    NS(Class_ICallback), NS(Class_StackTraceElement), NS(Class_StringWriter),
-	    NS(Class_PrintWriter), NS(Class_IFilterFTR), NS(Class_IFilterEOF), 
-	    NS(Class_MqBufferS), NS(Class_MqSException), NS(Class_IFactory),
-	    NS(Class_IBgError);
+	    NS(Class_PrintWriter), NS(Class_MqBufferS), NS(Class_MqSException), 
+	    NS(Class_IFactory), NS(Class_IBgError);
 
 jfieldID    NS(FID_MqBufferS_hdl), NS(FID_MqS_hdl), NS(FID_MqSException_num), 
 	    NS(FID_MqSException_code), NS(FID_MqSException_txt);
@@ -32,9 +31,8 @@ jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService
 	    NS(MID_IServerSetup_ServerSetup), NS(MID_IServerCleanup_ServerCleanup), NS(MID_System_exit),
 	    NS(MID_ICallback_Callback), NS(MID_Throwable_printStackTrace),
 	    NS(MID_StringWriter_INIT), NS(MID_PrintWriter_INIT), NS(MID_StringWriter_toString),
-	    NS(MID_IFilter_FTR), NS(MID_IFilter_EOF), NS(MID_MqSException_INIT),
-	    NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), NS(MID_IFactory_Factory),
-	    NS(MID_IBgError_BgError);
+	    NS(MID_MqSException_INIT), NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), 
+	    NS(MID_IFactory_Factory), NS(MID_IBgError_BgError);
 
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *jvm, void *reserved)
@@ -63,8 +61,6 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkC(NS(Class_IServerSetup),	    "javamsgque/IServerSetup");
   checkC(NS(Class_IServerCleanup),	    "javamsgque/IServerCleanup");
   checkC(NS(Class_ICallback),		    "javamsgque/ICallback");
-  checkC(NS(Class_IFilterFTR),		    "javamsgque/IFilterFTR");
-  checkC(NS(Class_IFilterEOF),		    "javamsgque/IFilterEOF");
   checkC(NS(Class_IFactory),		    "javamsgque/IFactory");
   checkC(NS(Class_IBgError),		    "javamsgque/IBgError");
   checkC(NS(Class_RuntimeException),	    "java/lang/RuntimeException");
@@ -95,8 +91,6 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkM(NS(MID_PrintWriter_INIT),		NS(Class_PrintWriter),	  "<init>",		"(Ljava/io/Writer;)V");
   checkSM(NS(MID_System_exit),			NS(Class_System),	  "exit",		"(I)V");
   checkM(NS(MID_ICallback_Callback),		NS(Class_ICallback),	  "Callback",		"(Ljavamsgque/MqS;)V");
-  checkM(NS(MID_IFilter_FTR),			NS(Class_IFilterFTR),	  "FTR",		"()V");
-  checkM(NS(MID_IFilter_EOF),			NS(Class_IFilterEOF),	  "EOF",		"()V");
   checkM(NS(MID_IFactory_Factory),		NS(Class_IFactory),	  "Factory",		"()Ljavamsgque/MqS;");
   checkM(NS(MID_MqSException_INIT),		NS(Class_MqSException),	  "<init>",		"(IILjava/lang/String;)V");
   checkM(NS(MID_MqBufferS_INIT),		NS(Class_MqBufferS),	  "<init>",		"(J)V");
@@ -128,8 +122,6 @@ JNI_OnUnload(JavaVM *jvm, void *reserved)
   (*env)->DeleteGlobalRef(env, NS(Class_IServerSetup));
   (*env)->DeleteGlobalRef(env, NS(Class_IServerCleanup));
   (*env)->DeleteGlobalRef(env, NS(Class_ICallback));
-  (*env)->DeleteGlobalRef(env, NS(Class_IFilterFTR));
-  (*env)->DeleteGlobalRef(env, NS(Class_IFilterEOF));
   (*env)->DeleteGlobalRef(env, NS(Class_IFactory));
   (*env)->DeleteGlobalRef(env, NS(Class_IBgError));
   (*env)->DeleteGlobalRef(env, NS(Class_Throwable));
@@ -345,16 +337,6 @@ JNIEXPORT void JNICALL NS(ContextCreate) (
   if ((*env)->IsInstanceOf(env, self, NS(Class_IServerCleanup)) == JNI_TRUE) {
     ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IServerCleanup_ServerCleanup), NULL, &call));
     MqConfigSetServerCleanup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
-  }
-
-  // check for Filter
-  if ((*env)->IsInstanceOf(env, self, NS(Class_IFilterFTR)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IFilter_FTR), NULL, &call));
-    MqConfigSetFilterFTR (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
-  }
-  if ((*env)->IsInstanceOf(env, self, NS(Class_IFilterEOF)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IFilter_EOF), NULL, &call));
-    MqConfigSetFilterEOF (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
 
   // check for Factory
