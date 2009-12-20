@@ -42,6 +42,10 @@ namespace csmsgque {
     private static extern MqErrorE MqReadD(IntPtr context, out double outV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadB")]
     private static extern MqErrorE MqReadB(IntPtr context, out IntPtr outV, out int sizeV);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadN")]
+    private static extern MqErrorE MqReadN(IntPtr context, out IntPtr outV, out int sizeV);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadBDY")]
+    private static extern MqErrorE MqReadBDY(IntPtr context, out IntPtr outV, out int sizeV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadU")]
     private static extern MqErrorE MqReadU(IntPtr context, out IntPtr outV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadC")]
@@ -115,6 +119,26 @@ namespace csmsgque {
       IntPtr outV;
       int size;
       ErrorMqToCsWithCheck(MqReadB(context, out outV, out size));
+      byte[] outB = new byte[size];
+      Marshal.Copy(outV,outB,0,size);
+      return outB;
+    }
+
+    /// \api #MqReadN
+    public byte[] ReadN() {
+      IntPtr outV;
+      int size;
+      ErrorMqToCsWithCheck(MqReadN(context, out outV, out size));
+      byte[] outB = new byte[size];
+      Marshal.Copy(outV,outB,0,size);
+      return outB;
+    }
+
+    /// \api #MqReadBDY
+    public byte[] ReadBDY() {
+      IntPtr outV;
+      int size;
+      ErrorMqToCsWithCheck(MqReadBDY(context, out outV, out size));
       byte[] outB = new byte[size];
       Marshal.Copy(outV,outB,0,size);
       return outB;

@@ -38,7 +38,7 @@ array set LABELIGNORE {
 				  .libs *.in *.stamp *.la *.lo docs example .C  *.mdb tmp.* 
 				  .vimrc .kdbgrc.server ccserver *.xml .vpath_hook *.dll .COPY_JAVA }
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
-    ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll}
+    ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }
     ./theLink/example/c		{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
 				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3}
     ./theLink/example/cc	{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile

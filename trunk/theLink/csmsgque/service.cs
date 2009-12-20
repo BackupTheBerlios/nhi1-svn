@@ -30,27 +30,37 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceDelete")]
     private static extern MqErrorE MqServiceDelete([In]IntPtr context, [In]string token);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceProxy")]
+    private static extern MqErrorE MqServiceProxy([In]IntPtr context, [In]string token, [In]int id);
+
     // PUBLIC  #########################################################################
 
     /// \api #MqServiceCreate
     public void ServiceCreate(string token, Callback call) {
-        MqServiceCreate(context, token, fProcCall, (IntPtr) GCHandle.Alloc(new ProcData(call)), fProcFree);
+      ErrorMqToCsWithCheck(MqServiceCreate(context, token, fProcCall, (IntPtr) GCHandle.Alloc(new ProcData(call)), fProcFree));
     }
 
     /// \api #MqServiceCreate
     public void ServiceCreate(string token, IService call) {
-        MqServiceCreate(context, token, fProcCall, (IntPtr) GCHandle.Alloc(new ProcData(call)), fProcFree);
+      ErrorMqToCsWithCheck(MqServiceCreate(context, token, fProcCall, (IntPtr) GCHandle.Alloc(new ProcData(call)), fProcFree));
     }
 
     /// \api #MqServiceDelete
     public void ServiceDelete(string token) {
-      MqServiceDelete(context, token);
+      ErrorMqToCsWithCheck(MqServiceDelete(context, token));
+    }
+
+    /// \api #MqServiceProxy
+    public void ServiceProxy(string token) {
+      ErrorMqToCsWithCheck(MqServiceProxy(context, token, 0));
+    }
+
+    /// \api #MqServiceProxy
+    public void ServiceProxy(string token, int id) {
+      ErrorMqToCsWithCheck(MqServiceProxy(context, token, id));
     }
 
 
   } // END - class "MqS"
 } // END - namespace "csmsgque"
-
-
-
 

@@ -37,10 +37,6 @@ public partial class MqS
 	    MqTokenF callback, IntPtr data, MqTokenDataFreeF datafreeF);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendRETURN")]
   private static extern MqErrorE MqSendRETURN(IntPtr context);
-  [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendFTR")]
-  private static extern MqErrorE MqSendFTR(IntPtr context, long timeout);
-  [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendEOF")]
-  private static extern MqErrorE MqSendEOF(IntPtr context, long timeout);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendERROR")]
   private static extern MqErrorE MqSendERROR(IntPtr context);
 
@@ -60,6 +56,10 @@ public partial class MqS
   private static extern MqErrorE MqSendD(IntPtr context, double val);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendB")]
   private static extern MqErrorE MqSendB(IntPtr context, byte[] val, int size);
+  [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendN")]
+  private static extern MqErrorE MqSendN(IntPtr context, byte[] val, int size);
+  [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendBDY")]
+  private static extern MqErrorE MqSendBDY(IntPtr context, byte[] val, int size);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendU")]
   private static extern MqErrorE MqSendU(IntPtr context, IntPtr val);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendC")]
@@ -109,26 +109,6 @@ public partial class MqS
     ErrorMqToCsWithCheck(MqSendRETURN(context));
   }
 
-  /// \api #MqSendFTR
-  public void SendFTR(long timeout) {
-    ErrorMqToCsWithCheck(MqSendFTR(context, timeout));
-  }
-
-  /// \api #MqSendEOF
-  public void SendEOF(long timeout) {
-    ErrorMqToCsWithCheck(MqSendEOF(context, timeout));
-  }
-
-  /// \api #MqSendFTR
-  public void SendFTR() {
-    ErrorMqToCsWithCheck(MqSendFTR(context, -1));
-  }
-
-  /// \api #MqSendEOF
-  public void SendEOF() {
-    ErrorMqToCsWithCheck(MqSendEOF(context, -1));
-  }
-
   /// \api #MqSendERROR
   public void SendERROR() {
     ErrorMqToCsWithCheck(MqSendERROR(context));
@@ -172,6 +152,16 @@ public partial class MqS
   /// \api #MqSendB
   public void SendB(byte[] val) {
     ErrorMqToCsWithCheck(MqSendB(context, val, val.Length));
+  }
+
+  /// \api #MqSendN
+  public void SendN(byte[] val) {
+    ErrorMqToCsWithCheck(MqSendN(context, val, val.Length));
+  }
+
+  /// \api #MqSendBDY
+  public void SendBDY(byte[] val) {
+    ErrorMqToCsWithCheck(MqSendBDY(context, val, val.Length));
   }
 
   /// \api #MqSendU

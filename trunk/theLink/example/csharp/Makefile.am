@@ -47,6 +47,9 @@ Filter1.exe: $(srcdir)/Filter1.cs ../../csmsgque/csmsgque.dll
 Filter2.exe: $(srcdir)/Filter2.cs ../../csmsgque/csmsgque.dll
 	$(RULE_CS_EXE)
 
+Filter3.exe: $(srcdir)/Filter3.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
 testclient.exe: $(srcdir)/testclient.cs ../../csmsgque/csmsgque.dll
 	$(RULE_CS_EXE)
 
@@ -54,7 +57,7 @@ testserver.exe: $(srcdir)/testserver.cs ../../csmsgque/csmsgque.dll
 	$(RULE_CS_EXE)
 
 BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
-		  MyClient.exe Filter1.exe Filter2.exe testclient.exe testserver.exe
+		  MyClient.exe Filter1.exe Filter2.exe Filter3.exe testclient.exe testserver.exe
 
 ##
 ## ==========================================================================
@@ -64,7 +67,7 @@ BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.e
 MAINTAINERCLEANFILES = *.exe *.mdb
 EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
 VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
-                  Filter1.exe Filter2.exe testclient.exe testserver.exe
+                  Filter1.exe Filter2.exe Filter3.exe testclient.exe testserver.exe
 
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)

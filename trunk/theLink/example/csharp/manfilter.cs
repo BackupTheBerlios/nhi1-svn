@@ -12,19 +12,27 @@
 using System;
 using csmsgque;
 namespace example {
-  sealed class manfilter : MqS, IFilterFTR {
-    void IFilterFTR.Call () {
-      SendSTART();
+  sealed class manfilter : MqS, IFactory {
+    MqS IFactory.Call () {
+      return new manfilter();
+    }
+    void FTR () {
+      MqS ftr = ConfigGetFilter();
+      ftr.SendSTART();
       while (ReadItemExists()) {
-	SendC("<" + ReadC() + ">");
+	ftr.SendC("<" + ReadC() + ">");
       }
-      SendFTR(10);
+      ftr.SendEND_AND_WAIT("+FTR");
+      SendRETURN();
     }
     static void Main(string[] argv) {
       manfilter srv = new manfilter();
       try {
 	srv.ConfigSetName("ManFilter");
+	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv);
+	srv.ServiceCreate("+FTR", srv.FTR);
+	srv.ServiceProxy ("+EOF");
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {
         srv.ErrorSet (ex);

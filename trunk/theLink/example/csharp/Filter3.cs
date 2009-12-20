@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/csharp/Filter1.cs
+ *  \file       theLink/example/csharp/Filter3.cs
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
@@ -14,47 +14,38 @@ using csmsgque;
 using System.Collections.Generic;
 
 namespace example {
-  sealed class Filter1 : MqS, IFactory {
-
-    private List<List<string>> data = new List<List<string>>();
+  sealed class Filter3 : MqS, IFactory, IServerSetup {
 
     MqS IFactory.Call () {
-      return new Filter1();
+      return new Filter3();
     }
 
     // service definition
-    void FTR () {
-      List<string> d = new List<string>();
-      while (ReadItemExists()) {
-	d.Add("<" + ReadC() + ">");
-      }
-      data.Add(d);
-      SendRETURN();
-    }
-
-    // service definition
-    void EOF () {
+    void Filter () {
       MqS ftr = ConfigGetFilter();
-      foreach (List<string> d in data) {
-	ftr.SendSTART();
-	foreach (string s in d) {
-	  ftr.SendC(s);
-	}
-	ftr.SendEND_AND_WAIT("+FTR");
-      }
       ftr.SendSTART();
-      ftr.SendEND_AND_WAIT("+EOF");
+      ftr.SendBDY(ReadBDY());
+      if (ConfigGetIsTrans()) {
+	ftr.SendEND_AND_WAIT(ConfigGetToken());
+	SendSTART();
+	SendBDY(ftr.ReadBDY());
+      } else {
+	ftr.SendEND(ConfigGetToken());
+      }
       SendRETURN();
+    }
+
+    void IServerSetup.Call() {
+      MqS ftr = ConfigGetFilter();
+      ServiceCreate("+ALL", Filter);
+      ftr.ServiceCreate("+ALL", Filter);
     }
 
     public static void Main(string[] argv) {
-      Filter1 srv = new Filter1();
+      Filter3 srv = new Filter3();
       try {
 	srv.ConfigSetName("filter");
-	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv);
-	srv.ServiceCreate("+FTR", srv.FTR);
-	srv.ServiceCreate("+EOF", srv.EOF);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {
         srv.ErrorSet (ex);

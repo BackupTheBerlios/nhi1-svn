@@ -88,16 +88,6 @@ namespace csmsgque {
     void Call();
   }
 
-  /// \api #MqConfigSetFilterFTR 
-  public interface IFilterFTR {
-    void Call();
-  }
-
-  /// \api #MqConfigSetFilterEOF 
-  public interface IFilterEOF {
-    void Call();
-  }
-
   /// \api #MqServiceCreate
   public interface IService {
     void Call(MqS ctx);
@@ -307,16 +297,6 @@ namespace csmsgque {
 	  null,		  IntPtr.Zero,				      null,	  IntPtr.Zero,
 	  fFactoryDelete,  IntPtr.Zero,				      null,	  IntPtr.Zero
 	);
-      }
-
-      if (this is IFilterFTR) {
-	MqConfigSetFilterFTR (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IFilterFTR) this).Call)), fProcFree, IntPtr.Zero);
-      }
-
-      if (this is IFilterEOF) {
-	MqConfigSetFilterEOF (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IFilterEOF) this).Call)), fProcFree, IntPtr.Zero);
       }
 
       if (this is IServerSetup) {

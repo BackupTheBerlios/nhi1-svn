@@ -13,10 +13,14 @@ using System;
 using csmsgque;
 
 namespace example {
-  sealed class Filter2 : MqS, IFilterFTR {
+  sealed class Filter2 : MqS, IFactory {
+
+    MqS IFactory.Call () {
+      return new Filter2();
+    }
 
     // service definition from IFilterFTR
-    void IFilterFTR.Call () {
+    void FTR () {
       throw new ApplicationException("my error");
     }
 
@@ -24,7 +28,10 @@ namespace example {
       Filter2 srv = new Filter2();
       try {
 	srv.ConfigSetName("filter");
+	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv); 
+	srv.ServiceCreate("+FTR", srv.FTR);
+	srv.ServiceProxy ("+EOF");
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {
         srv.ErrorSet (ex);
