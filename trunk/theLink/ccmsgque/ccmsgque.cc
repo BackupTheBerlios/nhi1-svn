@@ -43,22 +43,6 @@ namespace ccmsgque {
     // required -> slave-Z-ERR-1-
     context.setup.Factory.Delete.fCall = FactoryDelete;
 
-    // init the "filter" context
-    IFilterFTR *const iFTR = dynamic_cast<IFilterFTR*const>(this);
-    if (iFTR != NULL) {
-      struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
-      ptr->type = ProcCallS::PC_IFilterFTR;
-      ptr->call.FilterFTR = iFTR;
-      MqConfigSetFilterFTR (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
-    }
-    IFilterEOF *const iEOF = dynamic_cast<IFilterEOF*const>(this);
-    if (iEOF != NULL) {
-      struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
-      ptr->type = ProcCallS::PC_IFilterEOF;
-      ptr->call.FilterEOF = iEOF;
-      MqConfigSetFilterEOF (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
-    }
-
     // init the server interface
     IServerSetup * const iSetup = dynamic_cast<IServerSetup*const>(this);
     if (iSetup != NULL) {

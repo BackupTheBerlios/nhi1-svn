@@ -48,12 +48,6 @@ namespace ccmsgque {
 	case ProcCallS::PC_IService:
 	  (data->call.Service->Service)(GetThis(context));
 	  break;
-	case ProcCallS::PC_IFilterFTR:
-	  (data->call.FilterFTR->fFTR)();
-	  break;
-	case ProcCallS::PC_IFilterEOF:
-	  (data->call.FilterEOF->fEOF)();
-	  break;
 	case ProcCallS::PC_IBgError:
 	  (data->call.BgError->BgError)();
 	  break;

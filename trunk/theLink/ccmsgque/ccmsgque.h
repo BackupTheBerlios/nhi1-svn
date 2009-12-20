@@ -70,18 +70,6 @@ namespace ccmsgque {
       virtual void ServerCleanup () = 0;
   };
 
-  /// \sameas{MqConfigSetFilterFTR}
-  class IFilterFTR {
-    public:
-      virtual void fFTR () = 0;
-  };
-
-  /// \sameas{MqConfigSetFilterEOF}
-  class IFilterEOF {
-    public:
-      virtual void fEOF () = 0;
-  };
-
   /// \sameas{MqConfigSetBgError}
   class IBgError {
     public:
@@ -254,8 +242,6 @@ namespace ccmsgque {
 	enum ProcCallE	{
 	  PC_CallbackF,
 	  PC_IService,
-	  PC_IFilterFTR,
-	  PC_IFilterEOF,
 	  PC_IServerSetup,
 	  PC_IServerCleanup,
 	  PC_IBgError
@@ -263,8 +249,6 @@ namespace ccmsgque {
 	union ProcCallU {
 	  CallbackF	    Callback; 
 	  IService *	    Service;
-	  IFilterFTR *	    FilterFTR;
-	  IFilterEOF *	    FilterEOF;
 	  IServerSetup *    ServerSetup;
 	  IServerCleanup *  ServerCleanup;
 	  IBgError *	    BgError;
@@ -294,6 +278,7 @@ namespace ccmsgque {
       inline void ConfigSetIdent      (MQ_CST data)	    { MqConfigSetIdent (&context, data); }
       inline MQ_BOL ConfigCheckIdent  (MQ_CST data)	    { return MqConfigCheckIdent (&context, data); }
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
+      inline void ConfigSetIsServer   (MQ_BOL data)	    { MqConfigSetIsServer (&context, data); }
       inline void ConfigSetIsString   (MQ_BOL data)	    { MqConfigSetIsString (&context, data); }
       inline void ConfigSetIoUds      (MQ_CST data)	    { 
         ErrorCheck(MqConfigSetIoUds (&context, data)); 
@@ -317,6 +302,7 @@ namespace ccmsgque {
       inline bool ConfigGetIsString ()	    { return context.config.isString == MQ_YES; }
       inline bool ConfigGetIsSilent ()	    { return context.config.isSilent == MQ_YES; }
       inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
+      inline bool ConfigGetIsTrans ()	    { return MqConfigGetIsTrans(&context);}
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
       inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
@@ -326,6 +312,11 @@ namespace ccmsgque {
       inline MQ_TIME_T ConfigGetTimeout ()  { return context.config.io.timeout; }
       inline MqC* ConfigGetParent ()	    { return context.config.parent ? GetThis(context.config.parent) : NULL; }
       inline MqC* ConfigGetMaster ()	    { return context.config.master ? GetThis(context.config.master) : NULL; }
+      inline MqC* ConfigGetFilter (MQ_SIZE id=0) throw(MqCException)  { 
+	struct MqS* val; 
+	ErrorCheck (MqConfigGetFilter(&context, id, &val));
+	return GetThis(val);
+      }
       inline int ConfigGetCtxId ()	    { return MqConfigGetCtxId(&context); };
       inline MQ_CST ConfigGetIoUdsFile ()   { return MqConfigGetIoUdsFile (&context); }
       inline MQ_CST ConfigGetIoTcpHost ()   { return MqConfigGetIoTcpHost (&context); }
@@ -475,6 +466,12 @@ namespace ccmsgque {
 	ErrorCheck (MqReadB(&context, &val, &len)); 
 	return new vector<MQ_BINB> (val, val+len);
       }
+      inline void ReadN(MQ_BIN * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
+	ErrorCheck (MqReadN(&context, valP, lenP)); 
+      }
+      inline void ReadBDY(MQ_BIN * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
+	ErrorCheck (MqReadBDY(&context, valP, lenP)); 
+      }
       inline MQ_BUF ReadU() throw(MqCException) 
 	{ MQ_BUF val; ErrorCheck (MqReadU(&context, &val)); return val; }
       inline void ReadProxy(MqC& ctx) throw(MqCException) 
@@ -506,12 +503,6 @@ namespace ccmsgque {
       inline void SendSTART () throw(MqCException)	  { ErrorCheck(MqSendSTART(&context)); }
       inline void SendRETURN () throw(MqCException)	  { ErrorCheck(MqSendRETURN(&context)); }
       inline void SendERROR () throw(MqCException)	  { ErrorCheck(MqSendERROR(&context)); }
-      inline void SendFTR (int timeout=MQ_TIMEOUT_USER) throw(MqCException) { 
-	ErrorCheck(MqSendFTR(&context, timeout)); 
-      }
-      inline void SendEOF (int timeout=MQ_TIMEOUT_USER) throw(MqCException) { 
-	ErrorCheck(MqSendEOF(&context, timeout)); 
-      }
       inline void SendEND (MQ_CST const token) throw(MqCException) { 
 	ErrorCheck(MqSendEND(&context, token)); 
       }
@@ -532,6 +523,8 @@ namespace ccmsgque {
       inline void SendD (MQ_DBL val) throw(MqCException) { ErrorCheck (MqSendD (&context, val)); }
       inline void SendC (MQ_CST val) throw(MqCException) { ErrorCheck (MqSendC (&context, val)); }
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
+      inline void SendN (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
+      inline void SendBDY (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendBDY (&context, val, len)); }
       inline void SendB (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendB (&context, val, len)); }
       inline void SendB (vector<MQ_BINB>* val) throw(MqCException) { 
 	ErrorCheck (MqSendB (&context, &(*val->begin()) , (int) val->size())); 
@@ -551,6 +544,11 @@ namespace ccmsgque {
 
       /// \sameas{MqServiceDelete}
       MQ_EXTERN void ServiceDelete(MQ_CST const token) throw(MqCException);
+
+      /// \sameas{MqServiceProxy}
+      inline void ServiceProxy (MQ_CST const token, MQ_SIZE id=0) throw(MqCException) { 
+	ErrorCheck (MqServiceProxy (&context, token, id));
+      }
     /// \}
 
     /// \defgroup slave_API Slave? : Create/Get and Delete a Slave

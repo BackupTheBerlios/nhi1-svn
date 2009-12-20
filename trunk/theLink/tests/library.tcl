@@ -1118,7 +1118,7 @@ proc Example {config client server args} {
     Print lng com start client server
   }
 
-  set filter [optV args --filter $env(TS_FILTER)]
+  set filter [optV args --filter]
 
   ## 1. setup variables
   lappend comargs --$com
@@ -1169,7 +1169,13 @@ proc Example {config client server args} {
   
   ## 3. start client
   set cl [list {*}[getExample $client.$lng] {*}$cargs {*}$comargs]
-  if {$com eq "pipe"} { lappend cl @ {*}[getExample $server.$lng] }
+  if {$com eq "pipe"} { 
+    if {$filter ne ""} {
+      lappend cl @ {*}[getExample $filter.$lng] --name fs @ {*}[getExample $server.$lng]
+    } else {
+      lappend cl @ {*}[getExample $server.$lng]
+    }
+  }
   if {$env(TS_SETUP)} { Print cl }
   set RET [Exec {*}$cl]
 

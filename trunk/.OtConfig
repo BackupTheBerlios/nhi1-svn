@@ -12,6 +12,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-guard \
 		    --enable-tcl \
+		    --enable-cxx \
 		    $ARGS $@
 
 #		    --enable-brain \

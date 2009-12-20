@@ -17,9 +17,32 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter3 : public MqC, public IFilterEOF {
-    void fEOF () {
-      throw std::runtime_error("my C++ error");
+class Filter3 : public MqC, public IFactory, public IServerSetup {
+  private:
+    MqC* Factory() const { 
+      return new Filter3(); 
+    }
+    void ServerSetup() {
+      MqC *ftr = ConfigGetFilter();
+      ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
+      ftr->ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
+    }
+    void Filter () {
+      MQ_BIN bdy;
+      MQ_SIZE len;
+      MqC *ftr = ConfigGetFilter();
+      ReadBDY(&bdy, &len);
+      ftr->SendSTART();
+      ftr->SendBDY(bdy, len);
+      if (ConfigGetIsTrans()) {
+	ftr->SendEND_AND_WAIT(ConfigGetToken());
+	SendSTART();
+	ftr->ReadBDY(&bdy, &len);
+	SendBDY(bdy, len);
+      } else {
+	ftr->SendEND(ConfigGetToken());
+      }
+      SendRETURN();
     }
 };
 
@@ -33,6 +56,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
 {
   Filter3 filter;
   try {
+    filter.ConfigSetIsServer(MQ_YES);
     filter.LinkCreateVC (argc, argv);
     filter.ProcessEvent ();
   } catch (const exception& e) {

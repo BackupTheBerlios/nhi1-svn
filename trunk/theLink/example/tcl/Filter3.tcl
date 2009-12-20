@@ -18,7 +18,7 @@ proc Filter {ctx} {
   $ftr SendSTART
   $ftr SendBDY $bdy
   if {[$ctx ConfigGetIsTrans]} {
-    $ftr SendEND_AND_WAIT [$ctx ConfigGetToken] -2
+    $ftr SendEND_AND_WAIT [$ctx ConfigGetToken]
     $ctx SendSTART
     set bdy [$ftr ReadBDY]
     $ctx SendBDY $bdy

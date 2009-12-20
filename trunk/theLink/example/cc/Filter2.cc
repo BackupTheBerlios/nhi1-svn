@@ -17,8 +17,11 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter2 : public MqC, public IFilterFTR {
-
+class Filter2 : public MqC, public IFactory {
+    MqC* Factory() const { 
+      return new Filter2(); 
+    }
+  public:
     void fFTR () {
       throw runtime_error("my error");
     }
@@ -35,7 +38,10 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   Filter2 filter;
   try {
     filter.ConfigSetName("filter");
+    filter.ConfigSetIsServer(MQ_YES);
     filter.LinkCreateVC (argc, argv);
+    filter.ServiceCreate ("+FTR", MqC::CallbackF(&Filter2::fFTR));
+    filter.ServiceProxy  ("+EOF");
     filter.ProcessEvent ();
   } catch (const exception& e) {
     filter.ErrorSet(e);

@@ -16,14 +16,16 @@ using namespace ccmsgque;
 
 class mulserver : public MqC, public IServerSetup, public IFactory {
   private:
+    MqC* Factory() const {
+      return new mulserver();
+    }
+    void ServerSetup () {
+      ServiceCreate("MMUL", CallbackF(&mulserver::MMUL));
+    }
     void MMUL () {
       SendSTART();
       SendD(ReadD() * ReadD());
       SendRETURN();
-    }
-    MqC* Factory() const {return new mulserver();}
-    void ServerSetup () {
-      ServiceCreate("MMUL", CallbackF(&mulserver::MMUL));
     }
 };
 
