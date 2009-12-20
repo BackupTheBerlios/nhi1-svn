@@ -82,7 +82,7 @@ PkgToGuard (
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
 
@@ -90,18 +90,18 @@ PkgToGuard (
   guard_encrypt (bdy, len);
 
   // build "+GRD" package
-  MqErrorCheck (MqSendSTART (ftrctx));
-  MqErrorCheck (MqSendC (ftrctx, MqConfigGetToken (mqctx)));
-  MqErrorCheck (MqSendI (ftrctx, isTrans));
-  MqErrorCheck (MqSendB (ftrctx, bdy, len));
+  MqErrorCheck1 (MqSendSTART (ftrctx));
+  MqErrorCheck1 (MqSendC (ftrctx, MqConfigGetToken (mqctx)));
+  MqErrorCheck1 (MqSendI (ftrctx, isTrans));
+  MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
 
   // use a transaction protection
-  MqErrorCheck (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
+  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
 
   // continue with the original transaction
   if (isTrans) {
     MqSendSTART (mqctx);
-    MqErrorCheck (MqReadB (ftrctx, &bdy, &len));
+    MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
     // do "guard_decryption" of bdy
     guard_decrypt (bdy, len);
     MqErrorCheck (MqSendBDY (mqctx, bdy, len));
@@ -109,6 +109,9 @@ PkgToGuard (
 
 error:
   return MqSendRETURN(mqctx);
+
+error1:
+  return MqErrorCopy(mqctx, ftrctx);
 }
 
 static enum MqErrorE
@@ -122,30 +125,33 @@ GuardToPkg (
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadC (mqctx, &token));
   MqErrorCheck (MqReadI (mqctx, &isTrans));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   // do "guard_decryption" of dat
   guard_decrypt (bdy, len);
-  MqErrorCheck (MqSendSTART (ftrctx));
-  MqErrorCheck (MqSendBDY (ftrctx, bdy, len));
+  MqErrorCheck1 (MqSendSTART (ftrctx));
+  MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
   if (isTrans) {
     // use a transaction protection
-    MqErrorCheck (MqSendEND_AND_WAIT (ftrctx, token, MQ_TIMEOUT_USER));
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, token, MQ_TIMEOUT_USER));
     // send the "answer" back
     MqSendSTART (mqctx);
-    MqErrorCheck (MqReadBDY (ftrctx, &bdy, &len));
+    MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
     // do "encrytion" of dat
     guard_encrypt (bdy, len);
     MqErrorCheck (MqSendB (mqctx, bdy, len));
   } else {
-    MqErrorCheck (MqSendEND (ftrctx, token));
+    MqErrorCheck1 (MqSendEND (ftrctx, token));
   }
 
 error:
   return MqSendRETURN(mqctx);
+
+error1:
+  return MqErrorCopy(mqctx, ftrctx);
 }
 
 /*****************************************************************************/
@@ -172,7 +178,7 @@ GuardSetup (
   struct MqS * ftrctx;
 
   // "aguard" have to be a filter
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
 
   // SERVER: every token (+ALL) have to be "guard_encrypted"
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", PkgToGuard, NULL, NULL));

@@ -14,7 +14,7 @@
 static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
   struct MqS * ftr;
-  MqErrorCheck (MqConfigGetFilter (ctx, &ftr));
+  MqErrorCheck (MqConfigGetFilter (ctx, 0, &ftr));
   MqSendSTART(ftr);
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
@@ -34,7 +34,7 @@ int main (int argc, MQ_CST argv[])
   MqConfigSetIsServer (ctx, MQ_YES);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, "+FTR", FTR, NULL, NULL));
-  MqErrorCheck (MqServiceProxy  (ctx, "+EOF"));
+  MqErrorCheck (MqServiceProxy  (ctx, 0, "+EOF"));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
 error:

@@ -1411,17 +1411,19 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
 ) __attribute__((nonnull));
 
 /// \brief get the \e filter object from a bidirectional filter pipeline
+///  between a \e master context and a \e slave context with \e id.
 /// \context
 /// \param[out] filterP the filter object to return
 /// \retMqErrorE
 ///
 /// the following order is used to get the filter object:
 /// -# return the \e #MqConfigS::master if non NULL
-/// -# return the \e #MqSlaveGet with \c id=0 if non NULL
-/// -# retunr a "filter not available" error
+/// -# return the \e #MqSlaveGet with \e id if non NULL
+/// -# return a "filter not available" error
 /// .
 MQ_EXTERN enum MqErrorE MQ_DECL MqConfigGetFilter (
   struct MqS  * const context,
+  MQ_SIZE const id,
   struct MqS ** const filterP
 ) __attribute__((nonnull));
 
@@ -1705,8 +1707,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
 /// \context
 /// \token
 /// \retMqErrorE
+///
+/// If \e context is a \e master context than the data is send to \e slave with \e id.
+/// If \e context is a \e slave context than the data is send to the \e master of the \e slave.
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   struct MqS * const context, 
+  MQ_SIZE const id,
   MQ_CST const token
 );
 

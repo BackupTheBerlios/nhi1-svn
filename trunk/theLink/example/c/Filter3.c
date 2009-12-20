@@ -46,7 +46,7 @@ Filter3 (
 {
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
@@ -95,7 +95,7 @@ ServerSetup (
 )
 {
   struct MqS * ftrctx;
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", Filter3, NULL, NULL));

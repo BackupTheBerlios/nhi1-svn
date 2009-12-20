@@ -1222,9 +1222,9 @@ sServiceProxy (
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 
-  MqErrorCheck (MqConfigGetFilter (context, &ftrctx));
+  MqErrorCheck (MqConfigGetFilter (context, (int) (long) data, &ftrctx));
 
-  MqErrorCheck1 (MqReadBDY (context, &bdy, &len));
+  MqErrorCheck  (MqReadBDY (context, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
@@ -1252,10 +1252,11 @@ error1:
 enum MqErrorE 
 MqServiceProxy(
   struct MqS * const context, 
+  MQ_SIZE const id,
   MQ_CST const token
 )
 {
-  return MqServiceCreate (context, token, sServiceProxy, NULL,  NULL);
+  return MqServiceCreate (context, token, sServiceProxy, (void*)(long)id,  NULL);
 }
 
 enum MqErrorE 

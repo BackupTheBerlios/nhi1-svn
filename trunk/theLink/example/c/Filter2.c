@@ -30,7 +30,7 @@ int main (int argc, MQ_CST argv[])
   MqConfigSetDefaultFactory (ctx);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, "+FTR", FTR_F, NULL, NULL));
-  MqErrorCheck (MqServiceProxy  (ctx, "+EOF"));
+  MqErrorCheck (MqServiceProxy  (ctx, 0, "+EOF"));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
 error:

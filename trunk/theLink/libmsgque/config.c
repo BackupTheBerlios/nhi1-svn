@@ -762,6 +762,7 @@ MqConfigGetMaster (
 enum MqErrorE
 MqConfigGetFilter (
   struct MqS * const context,
+  MQ_SIZE const id,
   struct MqS ** const filterP
 )
 {
@@ -770,7 +771,7 @@ MqConfigGetFilter (
       *filterP = (
 	context->config.master != NULL ? 
 	  context->config.master : 
-	  MqSlaveGet (context, 0)
+	  MqSlaveGet (context, id)
       )
     ) == NULL ? 
       MqErrorDb(MQ_ERROR_NO_FILTER) : 

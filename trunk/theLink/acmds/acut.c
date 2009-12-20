@@ -75,7 +75,7 @@ CutFTR (
   MQ_INT i;
   struct MqS * ftr;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftr));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftr));
   
   MqSendSTART (ftr);
   for (i=0; i<end ; i++) {
@@ -105,17 +105,13 @@ CutCreate (
   MQ_STR fieldsC=NULL, end, start;
   MQ_INT index, last=-1;
   struct CutCtxS * const cutctx = CUTCTX;
-  struct MqS * ftrctx;
 
   // create the Message-Queue
   MqErrorCheck (MqLinkCreate (mqctx, argvP));
 
-  // add filter service
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftrctx));
-
   // add services
   MqServiceCreate (mqctx, "+FTR", CutFTR, NULL, NULL);
-  MqServiceProxy  (mqctx, "+EOF");
+  MqServiceProxy  (mqctx, 0, "+EOF");
 
   // get and parse the fields
   fieldsC=NULL;

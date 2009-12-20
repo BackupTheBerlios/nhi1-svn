@@ -118,7 +118,7 @@ SortEOF (
   struct SortKeyS * end   = sortctx->sort + sortctx->sort_cursize;
   struct MqS * ftr;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, &ftr));
+  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftr));
 
   // sort the data
   qsort(sortctx->sort, sortctx->sort_cursize, sizeof(struct SortKeyS), SortComp);

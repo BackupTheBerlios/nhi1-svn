@@ -383,7 +383,7 @@ int NS(ConfigGetFilter) (NS_ARGS)
   SETUP_mqctx
   struct MqS * ftr;
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, &ftr));
+  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, 0, &ftr));
   Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
   RETURN_TCL
 }
