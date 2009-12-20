@@ -149,6 +149,15 @@ int NS(ConfigSetIsSilent) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ConfigSetIsServer) (NS_ARGS)
+{
+  MQ_BOL isSilent;
+  CHECK_O(isSilent)
+  CHECK_NOARGS
+  MqConfigSetIsServer (MQCTX, isSilent);
+  RETURN_TCL
+}
+
 int NS(ConfigSetIsString) (NS_ARGS)
 {
   MQ_BOL isString;
@@ -382,8 +391,10 @@ int NS(ConfigGetFilter) (NS_ARGS)
 {
   SETUP_mqctx
   struct MqS * ftr;
+  MQ_SIZE id=0;
+  CHECK_DI(id);
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, 0, &ftr));
+  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, id, &ftr));
   Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
   RETURN_TCL
 }

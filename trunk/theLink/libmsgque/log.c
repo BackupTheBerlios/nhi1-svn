@@ -126,7 +126,7 @@ sLogVL (
     else
       fprintf (channel, "%c> (%s:%i) ", (MQ_IS_CHILD (context) ? 'c' : 'C'), name ,mq_getpid());
     if (proc) fprintf (channel, "%s [%i-%i-%p-%s]: ",
-             sLogTime (time_buf), level, context->link.ctxId, context, proc);
+             sLogTime (time_buf), level, context->link.ctxId, (void*) context, proc);
   } else {
     if (proc) {
       fprintf (channel, "X> %s [%i-%i-%p-%s]: ",
@@ -421,7 +421,7 @@ pLogMqBuffer (
 {
   MqDLogX (context, header, level,
       "pointer<%p> type<%c>, alloc<%s>, size<" MQ_FORMAT_Z ">, cursize<" MQ_FORMAT_Z ">, data<%s>\n",
-      buf, buf->type,
+      (void*) buf, buf->type,
       (buf->alloc == MQ_ALLOC_DYNAMIC	? "DYNAMIC"   : "STATIC"), 
       buf->size, buf->cursize, buf->data);
 }

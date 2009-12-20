@@ -400,42 +400,6 @@ test error-tclmsgque-wrong-arg-parent	{wrong parent argument} \
     -match		glob \
     -result		{wrong # args: should be "<MqS-*> LinkCreateChild parent ..."}
 
-test error-tclmsgque-no-config-FTR	{no config FTR argument} \
-    -constraints	tcl \
-    -setup		{set srv [tclmsgque MqS]} \
-    -body		{$srv ConfigSetFilterFTR} \
-    -cleanup		{rename $srv ""} \
-    -returnCodes	error \
-    -match		glob \
-    -result		{wrong # args: should be "<MqS-*> ConfigSetFilterFTR ftrProc ..."}
-
-test error-tclmsgque-wrong-config-FTR	{wrong config FTR argument} \
-    -constraints	tcl \
-    -setup		{set srv [tclmsgque MqS]} \
-    -body		{$srv ConfigSetFilterFTR KK} \
-    -cleanup		{rename $srv ""} \
-    -returnCodes	error \
-    -match		glob \
-    -result		{wrong # args: should be "ConfigSetFilterFTR ftr-proc"}
-
-test error-tclmsgque-no-config-EOF	{no config EOF argument} \
-    -constraints	tcl \
-    -setup		{set srv [tclmsgque MqS]} \
-    -body		{$srv ConfigSetFilterEOF} \
-    -cleanup		{rename $srv ""} \
-    -returnCodes	error \
-    -match		glob \
-    -result		{wrong # args: should be "<MqS-*> ConfigSetFilterEOF eofProc ..."}
-
-test error-tclmsgque-wrong-config-EOF	{wrong config EOF argument} \
-    -constraints	tcl \
-    -setup		{set srv [tclmsgque MqS]} \
-    -body		{$srv ConfigSetFilterEOF KK} \
-    -cleanup		{rename $srv ""} \
-    -returnCodes	error \
-    -match		glob \
-    -result		{wrong # args: should be "ConfigSetFilterEOF eof-proc"}
-
 foreach x {fork} {
 
 test error-10-($x) "'--$x' option in a thread enabled interpreter" \

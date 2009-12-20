@@ -484,11 +484,11 @@ MqLinkCreate (
     MqErrorCheck (sMqCheckArg (context, argv));
     if (context->config.debug >= 2) {
       if (MQ_IS_SLAVE(context))
-	MqDLogX(context,__func__,2,"START-CREATE-SLAVE: master<%p>\n", context->config.master);
+	MqDLogX(context,__func__,2,"START-CREATE-SLAVE: master<%p>\n", (void*) context->config.master);
       else if (MQ_IS_PARENT(context))
 	MqDLogX(context,__func__,2,"START-CREATE: io->com<%s>\n", pIoLogCom(context->config.io.com));
       else
-	MqDLogX(context,__func__,2,"START-CREATE-CHILD: parent<%p>\n", context->config.parent);
+	MqDLogX(context,__func__,2,"START-CREATE-CHILD: parent<%p>\n", (void*) context->config.parent);
     }
 
     // handle empty MqBufferLS list alfa
@@ -1252,8 +1252,8 @@ error1:
 enum MqErrorE 
 MqServiceProxy(
   struct MqS * const context, 
-  MQ_SIZE const id,
-  MQ_CST const token
+  MQ_CST const token,
+  MQ_SIZE const id
 )
 {
   return MqServiceCreate (context, token, sServiceProxy, (void*)(long)id,  NULL);
@@ -1384,9 +1384,9 @@ MqLogChild (
 {
   struct pChildS * childs;
   MqDLogX(context,prefix,0,"MqLogMsgque >>>>>\n");
-  MqDLogX(context,prefix,0,"server=%s, parent=%p\n", (MQ_IS_SERVER(context)?"yes":"no"), context->config.parent);
+  MqDLogX(context,prefix,0,"server=%s, parent=%p\n", (MQ_IS_SERVER(context)?"yes":"no"), (void*) context->config.parent);
   for(childs = context->link.childs; childs != NULL ; childs = childs->right) {
-    MqDLogX(context,prefix,0,"child: context=%p\n", childs->context);
+    MqDLogX(context,prefix,0,"child: context=%p\n", (void*) childs->context);
   }
   MqDLogX(context,prefix,0,"MqLogMsgque <<<<<\n");
 }

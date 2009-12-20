@@ -1706,14 +1706,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
 /// \brief use a proxy to proxy the incomming trafic to the outgoing trafic
 /// \context
 /// \token
+/// \param[in] id the slave identifer, only used if \e context is a \e master
 /// \retMqErrorE
 ///
 /// If \e context is a \e master context than the data is send to \e slave with \e id.
 /// If \e context is a \e slave context than the data is send to the \e master of the \e slave.
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   struct MqS * const context, 
-  MQ_SIZE const id,
-  MQ_CST const token
+  MQ_CST const token,
+  MQ_SIZE const id
 );
 
 /// \brief delete service handle

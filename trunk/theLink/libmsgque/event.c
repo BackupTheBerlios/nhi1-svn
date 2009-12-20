@@ -465,7 +465,7 @@ pEventCreate (
   if (likely (eventP != NULL))
     *eventP = sysevent;
 
-  MqDLogV(context,4,"TSD-Id<%p>, Thread-Id<0x%lx>\n", sysevent, (long unsigned int)MqThreadSelf());
+  MqDLogV(context,4,"TSD-Id<%p>, Thread-Id<0x%lx>\n", (void*)sysevent, (long unsigned int)MqThreadSelf());
 
 error:
   return MqErrorStack(context);
@@ -594,7 +594,7 @@ void pEventLog (
 {
   struct MqS ** start, ** end;
   if (!context || !event || context->config.isSilent == MQ_YES) return;
-  MqDLogX(context, proc, 0, ">>>>> MqEventS<%p>\n", event);
+  MqDLogX(context, proc, 0, ">>>>> MqEventS<%p>\n", (void*)event);
   MqDLogX(context, proc, 0, "fdmax    = %i\n", event->fdmax);
   MqDLogX(context, proc, 0, "DataLNum = %i\n", event->DataLNum);
   MqDLogX(context, proc, 0, "DataLCur = %i\n", event->DataLCur);
@@ -602,10 +602,10 @@ void pEventLog (
   end = event->DataL + event->DataLCur;
   for (; start < end; start++) {
     struct MqS * mq = *start;
-    MqDLogX(context, proc, 0, " -> context<%p>, server<%s>, sock<%i>\n", mq, 
+    MqDLogX(context, proc, 0, " -> context<%p>, server<%s>, sock<%i>\n", (void*) mq, 
 	(MQ_IS_SERVER(mq)?"yes":"no"), *(mq->link.io->sockP));
   }
-  MqDLogX(context, proc, 0, "<<<<< MqEventS<%p>\n", event);
+  MqDLogX(context, proc, 0, "<<<<< MqEventS<%p>\n", (void*) event);
 }
 #endif /* _DEBUG */
 

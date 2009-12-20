@@ -30,13 +30,8 @@ proc Filter {ctx} {
 
 proc ServerSetup {ctx} {
   set ftr [$ctx ConfigGetFilter]
-  if {$ftr eq ""} {
-    $ctx ErrorC ServerSetup -1 "use 'Filter3' only as filter"
-    $ctx ErrorRaise
-  } else {
-    $ctx ServiceCreate "+ALL" Filter
-    $ftr ServiceCreate "+ALL" Filter
-  }
+  $ctx ServiceCreate "+ALL" Filter
+  $ftr ServiceCreate "+ALL" Filter
 }
 
 tclmsgque Main {

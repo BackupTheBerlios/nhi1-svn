@@ -741,7 +741,7 @@ MqBufferLLog (
     return;
   }
 
-  MqDLogX (context, func, 0, ">>>> MqBufferLS (%p) (" MQ_FORMAT_Z " items)\n", bufL, bufL->cursize);
+  MqDLogX (context, func, 0, ">>>> MqBufferLS (%p) (" MQ_FORMAT_Z " items)\n", (void*) bufL, bufL->cursize);
   for (i = 0; i < bufL->cursize; i++) {
     sprintf (tmp, "# %i ", i);
     MqBufferLog (context, bufL->data[i], tmp);
@@ -766,8 +766,8 @@ MqBufferLLogS (
     MQ_BUF buf = (context ? context->temp : MqBufferCreate (MQ_ERROR_PANIC, 100));
     int i;
     int relsize = bufL->cur - bufL->data;
-    MqDLogX (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, bufL, 
-      bufL->data, bufL->cur, relsize, bufL->cursize, (relsize == bufL->cursize ? "OK" : "CUR-ERROR"));
+    MqDLogX (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
+      (void*) bufL->data, (void*) bufL->cur, relsize, bufL->cursize, (relsize == bufL->cursize ? "OK" : "CUR-ERROR"));
     for (i = 0; i < bufL->cursize; i++) {
       MqBufferSetV(buf, "# %i ", i);
       MqBufferLogS (context, bufL->data[i], buf->cur.C);

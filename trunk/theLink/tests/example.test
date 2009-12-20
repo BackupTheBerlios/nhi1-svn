@@ -99,103 +99,6 @@ test example-overview-2 {check the example 2 from the overview page} \
 position -> worker   : amount =  100.00 : pound
 position -> manager  : amount = 1000.00 : dollar}
 
-test example-overview-3 {check the example 3 from the overview page} \
-    -constraints    tcl \
-    -setup {
-        set total [makeFile {
-            package require TclMsgque
-	    set total 0
-            proc FTR {ctx} {
-		foreach {position amount currency} [$ctx ReadAll] break
-		switch -exact $currency {
-		    euro    {set exchange 1.3541}
-		    pound   {set exchange 1.9896}
-		    default {set exchange 1}
-		}
-		set amout [expr {$amount * $exchange}]
-		set currency dollar
-		set ::total [expr {$::total + $amout}]
-		$ctx SendSTART
-		$ctx SendC $position
-		$ctx SendD $amout
-		$ctx SendFTR
-            }
-	    proc EOF {ctx} {
-		$ctx SendSTART
-		$ctx SendC total
-		$ctx SendD $::total
-		$ctx SendFTR
-	    }
-	    set srv [tclmsgque MqS]
-	    $srv ConfigSetName total.tcl
-	    $srv ConfigSetFilterFTR FTR
-	    $srv ConfigSetFilterEOF EOF
-	    catch {
-	      $srv LinkCreate {*}$argv
-	      $srv ProcessEvent -wait FOREVER
-	    }
-	    $srv Exit
-        } total.tcl]
-    } \
-    -body { 
-	exec echo "nobody 10 euro\nmanager 1000 dollar\nworker 100 pound" | \
-	    {*}[getATool split] -d " " @ sort -1 D @ $TCLSH $total @ \
-		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"
-    } \
-    -result {nobody   : 13.54$
-worker   : 198.96$
-manager  : 1000.00$
-total    : 1212.50$}
-
-test example-overview-3b {check the example 3 from the overview page with error in tcl code} \
-    -constraints    tcl \
-    -setup {
-        set total [makeFile {
-            package require TclMsgque
-	    set total 0
-            proc FTR {ctx} {
-		foreach {position amount currency} [$ctx ReadAll] break
-		switch -exact $currency {
-		    euro    {set exchange 1.3541}
-		    pound   {set exchange 1.9896}
-		    default {set exchange 1}
-		}
-		set amout [expr {$amoun * $exchange}]
-		set currency dollar
-		set ::total [expr {$::total + $amout}]
-		$ctx SendSTART
-		$ctx SendC $position
-		$ctx SendD $amout
-		$ctx SendFTR
-            }
-	    proc EOF {ctx} {
-		$ctx SendSTART
-		$ctx SendC total
-		$ctx SendD $::total
-		$ctx SendFTR
-	    }
-	    set srv [tclmsgque MqS]
-	    $srv ConfigSetName total.tcl
-	    $srv ConfigSetFilterFTR FTR
-	    $srv ConfigSetFilterEOF EOF
-	    catch {
-	      $srv LinkCreate {*}$argv
-	      $srv ProcessEvent -wait FOREVER
-	    }
-	    $srv Exit
-        } total.tcl]
-    } \
-    -body { 
-	exec echo "nobody 10 euro\nmanager 1000 dollar\nworker 100 pound" | \
-	    {*}[getATool split] --debug $env(TS_DEBUG) -d " " @ sort -1 D @ $TCLSH $total @ \
-		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"
-    } \
-    -returnCodes error \
-    -match glob \
-    -result {C> (split) \[service-call-error] <Tok|_EOF> <Num|1>
-C> (sort) \[service-call-error] <Tok|+FTR> <Num|1>
-S> (total.tcl) \[ErrorSet] can't read "amoun": no such variable*}
-
   foreach S [envGet SRV_LST] {
 
 test example-hlwo-1-($S) {hello world example} \
@@ -219,6 +122,10 @@ a:b:c} data1.[pid]]
 set data2 [makeFile {nobody 10 euro
 manager 1000 dollar
 worker 100 pound} data2.[pid]]
+
+set data3 [makeFile {nobody 10
+manager 1000
+worker 100} data3.[pid]]
 
 foreach S [envGet SRV_LST] {
 
@@ -253,6 +160,18 @@ test example-total-tcl {total.tcl} \
 worker   : 198.96$
 manager  : 1000.00$
 total    : 1212.50$}
+
+test example-total-tcl-error {total.tcl with error} \
+  -constraints	{tcl} \
+  -body         {Exec cat $data3 | \
+		  {*}[getATool split] -d " " @ sort -1 D @ {*}[getExample total.tcl] @ \
+		    {*}[getATool join] -d " : " -0 "%-8s" -1 "%5.2f$"} \
+  -match	glob \
+  -result       {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+EOF> <Num|1>
+C> (sort) \[service-call-error] <Tok|+FTR> <Num|1>
+S> (total) \[ErrorSet] invalid currency*
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
 
 ## testclient
 

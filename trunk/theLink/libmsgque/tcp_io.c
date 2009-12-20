@@ -235,7 +235,7 @@ TcpLogAddr (
   struct sockaddr_in * sockaddr_in = (struct sockaddr_in *) addrinfo->ai_addr;
   MQ_CST str;
   MQ_INT port;
-  MqDLogX (context, __func__, 0, ">>>> sockaddr_in (%p)\n", sockaddr_in);
+  MqDLogX (context, __func__, 0, ">>>> sockaddr_in (%p)\n", (void*) sockaddr_in);
   str = (sockaddr_in->sin_family == AF_INET ? "AF_INET" : "WRONG!!");
   MqDLogX (context, __func__, 0, " sin_family = %s(%i)\n", str, sockaddr_in->sin_family);
   SysGetTcpInfo(context,sockaddr_in,&str,&port);

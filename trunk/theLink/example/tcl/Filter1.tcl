@@ -18,24 +18,30 @@ proc FTRcmd {ctx} {
     lappend L "<[$ctx ReadC]>"
   }
   lappend data $L
+  $ctx SendRETURN
 }
 proc EOFcmd {ctx} {
   global data
+  set ftr [$ctx ConfigGetFilter]
   foreach L $data {
-    $ctx SendSTART
+    $ftr SendSTART
     foreach I $L {
-      $ctx SendC $I
+      $ftr SendC $I
     }
-    $ctx SendFTR
+    $ftr SendEND_AND_WAIT "+FTR"
   }
+  $ftr SendSTART
+  $ftr SendEND_AND_WAIT "+EOF"
+  $ctx SendRETURN
 }
 set srv [tclmsgque MqS]
 $srv ConfigSetName filter
+$srv ConfigSetIsServer yes
 $srv ConfigSetFactory
-$srv ConfigSetFilterFTR FTRcmd
-$srv ConfigSetFilterEOF EOFcmd
 if {[catch {
   $srv LinkCreate {*}$argv
+  $srv ServiceCreate "+FTR" FTRcmd
+  $srv ServiceCreate "+EOF" EOFcmd
   $srv ProcessEvent -wait FOREVER
 }]} {
   $srv ErrorSet

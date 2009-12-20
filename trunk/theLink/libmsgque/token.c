@@ -359,7 +359,7 @@ pTokenAddHdl (
   register struct pTokenItemS *free;
 
   MqDLogV(context, 4, "HANDEL %s ADD %s: proc<%p>, data<%p>\n",
-    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, callback.fFunc, callback.data);
+    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, (void*) callback.fFunc, callback.data);
 
   if (!strncmp (name, "+ALL", 4)) {
     if (space->all.fFunc != NULL) goto error2;
@@ -390,7 +390,7 @@ pTokenDelHdl (
   MQ_CST const name
 )
 {
-  MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, token);
+  MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, (void*) token);
   if (!strncmp (name, "+ALL", 4)) {
     token->loc->all.fFunc = NULL;
     return MQ_OK;

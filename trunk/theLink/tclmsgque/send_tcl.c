@@ -34,7 +34,7 @@ int NS(SendEND_AND_WAIT) (NS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
-  MQ_INT timeout=MQ_TIMEOUT;
+  MQ_INT timeout=MQ_TIMEOUT_USER;
   CHECK_C(token)
   CHECK_DI(timeout)
   CHECK_NOARGS

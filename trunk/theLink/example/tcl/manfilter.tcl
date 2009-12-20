@@ -11,17 +11,22 @@
 #§
 package require TclMsgque
 proc FTRcmd {ctx} {
-  $ctx SendSTART
+  set ftr [$ctx ConfigGetFilter]
+  $ftr SendSTART
   while {[$ctx ReadItemExists]} {
-    $ctx SendC "<[$ctx ReadC]>"
+    $ftr SendC "<[$ctx ReadC]>"
   }
-  $ctx SendFTR
+  $ftr SendEND_AND_WAIT "+FTR"
+  $ctx SendRETURN
 }
 set srv [tclmsgque MqS]
 $srv ConfigSetName ManFilter
-$srv ConfigSetFilterFTR FTRcmd
+$srv ConfigSetIsServer yes
+$srv ConfigSetFactory
 if {[catch {
   $srv LinkCreate {*}$argv
+  $srv ServiceCreate "+FTR" FTRcmd
+  $srv ServiceProxy  "+EOF"
   $srv ProcessEvent -wait FOREVER
 }]} {
   $srv ErrorSet

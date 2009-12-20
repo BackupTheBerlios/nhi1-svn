@@ -427,7 +427,7 @@ MqErrorLog (
   MQ_CST const prefix
 )
 {
-  MqDLogX (context, prefix, 0, ">>>> MqErrorS (%p)\n", context);
+  MqDLogX (context, prefix, 0, ">>>> MqErrorS (%p)\n", (void*) context);
   MqDLogX (context, prefix, 0, "status   = <%s>\n", MqLogErrorCode (context->error.code));
   MqDLogX (context, prefix, 0, "num      = <%i>\n", context->error.num);
   MqBufferLog (context, context->error.text, "context->error.text");

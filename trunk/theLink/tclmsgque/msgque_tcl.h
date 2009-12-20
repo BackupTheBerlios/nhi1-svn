@@ -111,6 +111,13 @@ error: \
     skip++; \
   }
 
+#define CHECK_OPTIONAL_PROC(val, err) \
+  if (skip < objc) {\
+    TclErrorCheck2(NS(ProcCheck)(interp,objv[skip], err)); \
+    val = objv[skip]; \
+    skip++; \
+  }
+
 #define CHECK_MQS(val) \
   val = NULL; \
   if (skip < objc && Tcl_GetCommandFromObj(interp, objv[skip])) { \

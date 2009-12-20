@@ -12,33 +12,40 @@
 package require TclMsgque
 set total 0
 proc FTR {ctx} {
+  set ftr [$ctx ConfigGetFilter]
   foreach {position amount currency} [$ctx ReadAll] break
   switch -exact $currency {
     euro    {set exchange 1.3541}
     pound   {set exchange 1.9896}
-    default {set exchange 1}
+    dollar  {set exchange 1}
+    default {error "invalid currency"}
   }
   set amount [expr {$amount * $exchange}]
   set currency dollar
   set ::total [expr {$::total + $amount}]
-  $ctx SendSTART
-  $ctx SendC $position
-  $ctx SendD $amount
-  $ctx SendFTR
+  $ftr SendSTART
+  $ftr SendC $position
+  $ftr SendD $amount
+  $ftr SendEND_AND_WAIT "+FTR"
+  $ctx SendRETURN
 }
 proc EOF {ctx} {
-  $ctx SendSTART
-  $ctx SendC total
-  $ctx SendD $::total
-  $ctx SendFTR
+  set ftr [$ctx ConfigGetFilter]
+  $ftr SendSTART
+  $ftr SendC total
+  $ftr SendD $::total
+  $ftr SendEND_AND_WAIT "+FTR"
+  $ctx SendRETURN
 }
 tclmsgque Main {
   set srv [tclmsgque MqS]
+  $srv ConfigSetName total
+  $srv ConfigSetIsServer yes
   $srv ConfigSetFactory
-  $srv ConfigSetFilterFTR FTR
-  $srv ConfigSetFilterEOF EOF
   if {[catch {
     $srv LinkCreate {*}$argv
+    $srv ServiceCreate "+FTR" FTR
+    $srv ServiceCreate "+EOF" EOF
     $srv ProcessEvent -wait FOREVER
   }]} {
     $srv ErrorSet

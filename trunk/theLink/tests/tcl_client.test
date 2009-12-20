@@ -453,41 +453,6 @@ BG-TEXT-CODE:NONE
 111-CODE:TCLMSGQUE 223 2 {C> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*}
 END}
 
-test tcl-client-Z-InitFilterFTR "tclmsgque MqS --FTR -> Error " \
-    -setup	    { 
-      $ctx LinkCreate --name client-Z-FTRproc @ \
-	$TCLSH $tclserver ConfigSetName server-Z-FTRproc ConfigSetFilterFTR Error 
-    } \
-    -body           { 
-	$ctx SendSTART
-	$ctx SendFTR 1 
-    } \
-    -cleanup	    { $ctx LinkDelete } \
-    -match	    glob \
-    -returnCodes    error \
-    -result	    {C> (client-Z-FTRproc) \[service-call-error] <Tok|+FTR> <Num|1>*}
-
-test tcl-client-Z2-FTRproc "tclmsgque MqS --FTR -> Error " \
-    -setup	    { 
-      $ctx LinkCreate --name client --debug $env(TS_DEBUG) @ \
-	$TCLSH $tclserver ConfigSetFilterFTR Error 
-    } \
-    -body           { $ctx SendFTR 1 } \
-    -cleanup	    { $ctx LinkDelete } \
-    -match	    glob \
-    -returnCodes    error \
-    -result	    {[cC]> (client) \[pSendEND] use first MqSendSTART and than MqSendEND*}
-
-test tcl-client-Z-InitFilterEOF "tclmsgque MqS --EOF -> Error " \
-    -setup	    { 
-      $ctx LinkCreate --name client @ $TCLSH $tclserver ConfigSetFilterEOF Error 
-    } \
-    -body           { $ctx SendEOF 1 } \
-    -cleanup	    { $ctx LinkDelete } \
-    -match	    glob \
-    -returnCodes    error \
-    -result	    {C> (client) \[service-call-error] <Tok|_EOF> <Num|1>*}
-
 test tcl-client-A-0 {rename cmd hdl} \
     -constraints  {local} \
     -setup	  { $ctx LinkCreate @ {*}[getServer c.pipe] } \

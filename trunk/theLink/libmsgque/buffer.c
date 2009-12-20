@@ -1250,7 +1250,7 @@ MqBufferLog (
   // no memory -> no work
   if (!buf) return;
 
-  MqDLogX (context, prefix, 0, ">>>> MqBufferS (%p)\n", buf);
+  MqDLogX (context, prefix, 0, ">>>> MqBufferS (%p)\n", (void*) buf);
 
   MqDLogX (context, prefix, 0, "data     = <%s>\n", MqLogC (tmp,(MQ_STR)buf->data, buf->cursize));
   MqDLogX (context, prefix, 0, "size     = <" MQ_FORMAT_Z ">\n", buf->size);

@@ -350,6 +350,7 @@ int NS(ConfigSetSrvName) (NS_ARGS);
 int NS(ConfigSetIdent) (NS_ARGS);
 int NS(ConfigCheckIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
+int NS(ConfigSetIsServer) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
@@ -386,6 +387,7 @@ int NS(ConfigGetIoTcpMyPort) (NS_ARGS);
 int NS(ConfigGetIoPipeSocket) (NS_ARGS);
 int NS(ConfigGetStartAs) (NS_ARGS);
 
+int NS(ServiceProxy) (NS_ARGS);
 int NS(ServiceCreate) (NS_ARGS);
 int NS(ServiceDelete) (NS_ARGS);
 
@@ -471,6 +473,7 @@ int NS(MqS_Cmd) (
     { "ConfigSetIdent",		  NS(ConfigSetIdent)	      },
     { "ConfigCheckIdent",	  NS(ConfigCheckIdent)	      },
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
+    { "ConfigSetIsServer",	  NS(ConfigSetIsServer)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
@@ -510,6 +513,7 @@ int NS(MqS_Cmd) (
 
 // SERVICE
 
+    { "ServiceProxy",	      NS(ServiceProxy)		},
     { "ServiceCreate",	      NS(ServiceCreate)		},
     { "ServiceDelete",	      NS(ServiceDelete)		},
 

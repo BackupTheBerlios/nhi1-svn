@@ -119,7 +119,7 @@ pSlaveItemDelete (
   if (slave->slaves == NULL || id < 0 || id >= slave->used || slave->slaves[id] == NULL) return;
   // attention !! SLAVE set "slave->slaves[id]" use a teporary variable as work-around
   slave_context = slave->slaves[id];
-  MqDLogV(slave->context, 5, "delete SLAVE <%p>\n", slave_context);
+  MqDLogV(slave->context, 5, "delete SLAVE <%p>\n", (void*) slave_context);
   MqLinkDelete (slave_context);
   slave->slaves[id] = NULL;
 }
@@ -134,7 +134,7 @@ pSlaveItemShutdown (
   if (slave->slaves == NULL || id < 0 || id >= slave->used || slave->slaves[id] == NULL) return;
   // attention !! SLAVE set "slave->slaves[id]" use a teporary variable as work-around
   slave_context = slave->slaves[id];
-  MqDLogV(slave->context, 5, "shutdown SLAVE <%p>\n", slave_context);
+  MqDLogV(slave->context, 5, "shutdown SLAVE <%p>\n", (void*) slave_context);
   pMqShutdown (slave_context);
 }
 

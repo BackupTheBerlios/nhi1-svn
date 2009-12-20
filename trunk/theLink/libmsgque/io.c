@@ -830,7 +830,7 @@ pIoLog (
   MQ_CST proc
 )
 {
-  MqDLogX(io->context, proc, 0, "IO: event<%p>\n", io->event);
+  MqDLogX(io->context, proc, 0, "IO: event<%p>\n", (void*) io->event);
 }
 
 #endif

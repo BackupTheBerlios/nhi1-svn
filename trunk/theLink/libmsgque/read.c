@@ -921,7 +921,7 @@ pReadLog (
 {
   struct MqReadS * read = context->link.read;
 
-  MqDLogX (context, prefix, 0, ">>>> MqReadS (%p)\n", read);
+  MqDLogX (context, prefix, 0, ">>>> MqReadS (%p)\n", (void*) read);
   MqDLogX (context, prefix, 0, "returnCode = " "%c" "\n", read->returnCode);
   MqDLogX (context, prefix, 0, "returnNum  = " MQ_FORMAT_I "\n", read->returnNum);
   MqDLogX (context, prefix, 0, "  >>>> read->hdr\n");

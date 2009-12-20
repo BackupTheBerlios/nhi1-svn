@@ -111,7 +111,7 @@ CutCreate (
 
   // add services
   MqServiceCreate (mqctx, "+FTR", CutFTR, NULL, NULL);
-  MqServiceProxy  (mqctx, 0, "+EOF");
+  MqServiceProxy  (mqctx, "+EOF", 0);
 
   // get and parse the fields
   fieldsC=NULL;
