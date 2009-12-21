@@ -371,7 +371,7 @@ int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
 int NS(ConfigGetToken) (NS_ARGS);
-int NS(ConfigGetIsTrans) (NS_ARGS);
+int NS(ConfigGetIsTransaction) (NS_ARGS);
 int NS(ConfigGetCtxId) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
@@ -495,7 +495,7 @@ int NS(MqS_Cmd) (
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetToken",		  NS(ConfigGetToken)	      },
-    { "ConfigGetIsTrans",	  NS(ConfigGetIsTrans)	      },
+    { "ConfigGetIsTransaction",	  NS(ConfigGetIsTransaction)  },
     { "ConfigGetCtxId",		  NS(ConfigGetCtxId)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },

@@ -317,8 +317,8 @@ public abstract class MqS {
   public native int	ConfigGetCtxId	      ();
   /// \api #MqConfigGetToken
   public native String	ConfigGetToken	      ();
-  /// \api #MqConfigGetIsTrans
-  public native boolean	ConfigGetIsTrans      ();
+  /// \api #MqConfigGetIsTransaction
+  public native boolean	ConfigGetIsTransaction();
   /// \api #MqConfigGetStartAs
   public native int	ConfigGetStartAs      ();
   /// \api #MqConfigGetIoTcpHost

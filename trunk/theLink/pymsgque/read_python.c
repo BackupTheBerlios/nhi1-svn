@@ -157,6 +157,32 @@ error:
   return NULL;
 }
 
+PyObject* NS(ReadN) (
+  PyObject*	self
+)
+{
+  SETUP_context
+  MQ_BIN b;
+  MQ_SIZE len;
+  ErrorMqToPythonWithCheck(MqReadN(context, &b, &len));
+  return PyByteArray_FromStringAndSize((const char*)b, len);
+error:
+  return NULL;
+}
+
+PyObject* NS(ReadBDY) (
+  PyObject*	self
+)
+{
+  SETUP_context
+  MQ_BIN b;
+  MQ_SIZE len;
+  ErrorMqToPythonWithCheck(MqReadBDY(context, &b, &len));
+  return PyByteArray_FromStringAndSize((const char*)b, len);
+error:
+  return NULL;
+}
+
 PyObject* NS(ReadU) (
   PyObject*	self
 )

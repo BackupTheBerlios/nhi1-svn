@@ -12,12 +12,20 @@
 
 import sys
 from pymsgque import *
-def FTRcmd(ctx):
-  raise Exception("my error")
-srv = MqS()
+
+class Filter2(MqS):
+  def __init__(self):
+    self.ConfigSetFactory(lambda: Filter2())
+    self.ConfigSetName("filter")
+    self.ConfigSetServerSetup(self.ServerSetup)
+    MqS.__init__(self)
+  def ServerSetup(self):
+    self.ServiceCreate("+FTR", self.FTRcmd)
+    self.ServiceProxy ("+EOF")
+  def FTRcmd(ctx):
+    raise Exception("my error")
+srv = Filter2()
 try:
-  srv.ConfigSetFilterFTR(FTRcmd)
-  srv.ConfigSetName("filter")
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(wait="FOREVER")
 except:

@@ -737,10 +737,10 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetToken
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetIsTrans
+ * Method:    ConfigGetIsTransaction
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsTrans
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsTransaction
   (JNIEnv *, jobject);
 
 /*

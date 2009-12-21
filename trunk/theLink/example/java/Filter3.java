@@ -23,7 +23,7 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
       MqS ftr = ConfigGetFilter();
       ftr.SendSTART();
       ftr.SendBDY(ReadBDY());
-      if (ConfigGetIsTrans()) {
+      if (ConfigGetIsTransaction()) {
 	ftr.SendEND_AND_WAIT(ConfigGetToken());
 	SendSTART();
 	SendBDY(ftr.ReadBDY());

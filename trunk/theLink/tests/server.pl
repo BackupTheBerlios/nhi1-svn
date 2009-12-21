@@ -9,6 +9,7 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 use strict;
 use Switch;
 use Net::PerlMsgque;

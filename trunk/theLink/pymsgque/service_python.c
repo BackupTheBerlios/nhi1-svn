@@ -38,6 +38,24 @@ error:
   return NULL;
 }
 
+PyObject* NS(ServiceProxy) (
+  PyObject  *self, 
+  PyObject  *args
+)
+{
+  const char *token;
+  int id=0;
+  SETUP_context;
+  if (!PyArg_ParseTuple(args, "s|i:ServiceProxy", &token, &id)) {
+    return NULL;
+  }
+
+  ErrorMqToPythonWithCheck(MqServiceProxy(context, token, id));
+  Py_RETURN_NONE;
+error:
+  return NULL;
+}
+
 PyObject* NS(ServiceDelete) (
   PyObject  *self, 
   PyObject  *args

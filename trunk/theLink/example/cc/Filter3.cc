@@ -34,7 +34,7 @@ class Filter3 : public MqC, public IFactory, public IServerSetup {
       ReadBDY(&bdy, &len);
       ftr->SendSTART();
       ftr->SendBDY(bdy, len);
-      if (ConfigGetIsTrans()) {
+      if (ConfigGetIsTransaction()) {
 	ftr->SendEND_AND_WAIT(ConfigGetToken());
 	SendSTART();
 	ftr->ReadBDY(&bdy, &len);

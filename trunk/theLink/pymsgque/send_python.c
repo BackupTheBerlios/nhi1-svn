@@ -93,34 +93,6 @@ PyObject* NS(SendERROR) (
   SETUP_RETURN
 }
 
-PyObject* NS(SendFTR) (
-  PyObject	*self,
-  PyObject	*args
-)
-{
-  SETUP_context
-  int timeout = -1;
-  if (!PyArg_ParseTuple(args, "|i:SendFTR", &timeout)) {
-    return NULL;
-  }
-  ErrorMqToPythonWithCheck (MqSendFTR(context, timeout));
-  SETUP_RETURN
-}
-
-PyObject* NS(SendEOF) (
-  PyObject	*self,
-  PyObject	*args
-)
-{
-  SETUP_context
-  int timeout = -1;
-  if (!PyArg_ParseTuple(args, "|i:SendEOF", &timeout)) {
-    return NULL;
-  }
-  ErrorMqToPythonWithCheck (MqSendEOF(context, timeout));
-  SETUP_RETURN
-}
-
 PyObject* NS(SendL_START) (
   PyObject	*self ,
   PyObject	*arg
@@ -264,6 +236,34 @@ PyObject* NS(SendB) (
     return NULL;
   }
   ErrorMqToPythonWithCheck (MqSendB(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
+  SETUP_RETURN
+}
+
+PyObject* NS(SendN) (
+  PyObject	*self,
+  PyObject	*args
+)
+{
+  SETUP_context
+  PyObject *o;
+  if (!PyArg_ParseTuple(args, "O!:SendN", &PyByteArray_Type, &o)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck (MqSendN(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
+  SETUP_RETURN
+}
+
+PyObject* NS(SendBDY) (
+  PyObject	*self,
+  PyObject	*args
+)
+{
+  SETUP_context
+  PyObject *o;
+  if (!PyArg_ParseTuple(args, "O!:SendBDY", &PyByteArray_Type, &o)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck (MqSendBDY(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
   SETUP_RETURN
 }
 

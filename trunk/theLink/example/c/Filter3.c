@@ -53,7 +53,7 @@ Filter3 (
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
   // continue with the original transaction
-  if (MqConfigGetIsTrans (mqctx)) {
+  if (MqConfigGetIsTransaction (mqctx)) {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqConfigGetToken(mqctx), MQ_TIMEOUT_USER));
     // read the answer

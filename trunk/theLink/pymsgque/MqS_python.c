@@ -66,8 +66,6 @@ PyObject* NS(SendEND_AND_WAIT)	    ( PyObject*, PyObject*  );
 PyObject* NS(SendEND_AND_CALLBACK)  ( PyObject*, PyObject*  );
 PyObject* NS(SendRETURN)	    ( PyObject*		    );
 PyObject* NS(SendERROR)		    ( PyObject*		    );
-PyObject* NS(SendFTR)		    ( PyObject*, PyObject*  );
-PyObject* NS(SendEOF)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendL_START)	    ( PyObject*		    );
 PyObject* NS(SendL_END)		    ( PyObject*		    );
 PyObject* NS(SendY)		    ( PyObject*, PyObject*  );
@@ -79,6 +77,8 @@ PyObject* NS(SendW)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendD)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendC)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendB)		    ( PyObject*, PyObject*  );
+PyObject* NS(SendN)		    ( PyObject*, PyObject*  );
+PyObject* NS(SendBDY)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 
 #define SendSTART_DOC		  "[noARG] Start to build a SEND package."
@@ -87,8 +87,6 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 #define	SendEND_AND_WAIT_DOC	  "[token, timeout] Send package and wait for an answer."
 #define	SendRETURN_DOC		  "[noARG] Answer a service call."
 #define	SendERROR_DOC		  "[noARG] send an error asyncrone to the link target."
-#define	SendFTR_DOC		  "[[timeout]] Send a line in Filter-Mode."
-#define	SendEOF_DOC		  "[[timeout]] Send a EndOfFile in Filter-Mode."
 #define SendY_DOC		  "[value] Send a int as (1 byte signed char)."
 #define SendO_DOC		  "[value] Send a boolean"
 #define SendS_DOC		  "[value] Send a int as (2 byte short integer)."
@@ -98,6 +96,8 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 #define SendD_DOC		  "[value] Send a double as (8 byte double)."
 #define SendC_DOC		  "[value] Send a utf8 string as (char array with \0 at the end)."
 #define SendB_DOC		  "[value] Send a byte array as (unsigned char array, \0 is allowed)."
+#define SendN_DOC		  "[value] Send a libmsgque package item"
+#define SendBDY_DOC		  "[value] Send a libmsgque package body"
 #define SendU_DOC		  "[value] Send a PyMqS buffer object."
 #define	SendL_START_DOC		  "[noARG] Start to Send an embedded List-Item."
 #define	SendL_END_DOC		  "[noARG] End to Send an embedded List-Item."
@@ -105,9 +105,11 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 // from service_python.c
 
 PyObject* NS(ServiceCreate)	    ( PyObject*, PyObject*  );
+PyObject* NS(ServiceProxy)	    ( PyObject*, PyObject*  );
 PyObject* NS(ServiceDelete)	    ( PyObject*, PyObject*  );
 
 #define ServiceCreate_DOC	  "[token, callable] Create a new service"
+#define ServiceProxy_DOC	  "[token, ?id?] Create a proxy service"
 #define ServiceDelete_DOC	  "[token] Delete a service"
 
 // from slave_python.c
@@ -133,6 +135,8 @@ PyObject* NS(ReadW)		  ( PyObject* );
 PyObject* NS(ReadD)		  ( PyObject* );
 PyObject* NS(ReadC)		  ( PyObject* );
 PyObject* NS(ReadB)		  ( PyObject* );
+PyObject* NS(ReadN)		  ( PyObject* );
+PyObject* NS(ReadBDY)		  ( PyObject* );
 PyObject* NS(ReadU)		  ( PyObject* );
 PyObject* NS(ReadL_START)	  ( PyObject*, PyObject* );
 PyObject* NS(ReadL_END)		  ( PyObject* );
@@ -150,6 +154,8 @@ PyObject* NS(ReadProxy)		  ( PyObject*, PyObject* );
 #define ReadD_DOC		  "[noARG] Read a float (8 byte doubel) from the current PyMqS package."
 #define ReadC_DOC		  "[noARG] Read a a UTF8 string from the current PyMqS package."
 #define ReadB_DOC		  "[noARG] Read a byte array from the current PyMqS package."
+#define ReadN_DOC		  "[noARG] Read a PyMqS package item."
+#define ReadBDY_DOC		  "[noARG] Read the PyMqS package body."
 #define ReadU_DOC		  "[noARG] Read a PyMqS buffer from the current PyMqS package."
 #define ReadL_START_DOC		  "[noARG] Start to read an embedded list item from the current PyMqS package."
 #define ReadL_END_DOC		  "[noARG] End to read an embedded list item from the current PyMqS package."
@@ -173,12 +179,11 @@ PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoPipe)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetStartAs)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetDaemon)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIsSilent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsString)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIsSilent)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIsServer)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetServerSetup)    ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetServerCleanup)  ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetFilterFTR)      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetFilterEOF)      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetBgError)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetFactory)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigGetDebug)	      ( PyObject* );
@@ -190,6 +195,7 @@ PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
 PyObject* NS(ConfigGetIsParent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsSlave)	      ( PyObject* );
 PyObject* NS(ConfigGetIsConnected)    ( PyObject* );
+PyObject* NS(ConfigGetIsTransaction)  ( PyObject* );
 PyObject* NS(ConfigGetParent)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
@@ -205,6 +211,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 PyObject* NS(ConfigGetCtxId)	      ( PyObject* );
 PyObject* NS(ConfigGetToken)	      ( PyObject* );
 PyObject* NS(ConfigGetMaster)	      ( PyObject* );
+PyObject* NS(ConfigGetFilter)	      ( PyObject*, PyObject* );
 
 
 #define ConfigSetBuffersize_DOC	    "[bytes]"
@@ -219,12 +226,11 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigSetIoPipe_DOC	    "[socket]"
 #define ConfigSetStartAs_DOC	    "[integer (0-3)]"
 #define ConfigSetDaemon_DOC	    "[pidfile]"
-#define ConfigSetIsSilent_DOC	    "[boolean]"
 #define ConfigSetIsString_DOC	    "[boolean]"
+#define ConfigSetIsSilent_DOC	    "[boolean]"
+#define ConfigSetIsServer_DOC	    "[boolean]"
 #define ConfigSetServerSetup_DOC    "[callable method]"
 #define ConfigSetServerCleanup_DOC  "[callable method]"
-#define ConfigSetFilterFTR_DOC	    "[callable method]"
-#define ConfigSetFilterEOF_DOC	    "[callable method]"
 #define ConfigSetBgError_DOC	    "[callable method]"
 #define ConfigSetFactory_DOC	    "[callable method]"
 #define ConfigGetIsString_DOC	    "[noARG] boolean, 'True' if the object is using the 'string' configuration."
@@ -233,6 +239,7 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetIsParent_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'parent'."
 #define ConfigGetIsSlave_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'slave'."
 #define ConfigGetIsConnected_DOC    "[noARG] boolean, 'True' if the object-link is up and running'."
+#define ConfigGetIsTransaction_DOC  "[noARG] boolean, 'True' if the service is part of a transaction."
 #define ConfigGetDebug_DOC	    "[noARG] Return the debug level (int from 0 up to 9)."
 #define ConfigGetTimeout_DOC	    "[noARG] Return the user defined timeout is sec."
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
@@ -250,6 +257,7 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
 #define ConfigGetToken_DOC	    "[noARG] return the PyMqS 'token' (str) of the current transaction."
 #define ConfigGetMaster_DOC	    "[noARG] return the PyMqS 'master' object of the 'current' object."
+#define ConfigGetFilter_DOC	    "[noARG] return the PyMqS 'filter' object of the 'current' object."
 
 // from error_python.c
 
@@ -288,8 +296,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(SendEND_AND_CALLBACK, METH_VARARGS),
     ARG(SendRETURN,	      METH_NOARGS),
     ARG(SendERROR,	      METH_NOARGS),
-    ARG(SendFTR,	      METH_VARARGS),
-    ARG(SendEOF,	      METH_VARARGS),
     ARG(SendL_START,	      METH_NOARGS),
     ARG(SendL_END,	      METH_NOARGS),
     ARG(SendY,		      METH_VARARGS),
@@ -301,6 +307,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(SendD,		      METH_VARARGS),
     ARG(SendC,		      METH_VARARGS),
     ARG(SendB,		      METH_VARARGS),
+    ARG(SendN,		      METH_VARARGS),
+    ARG(SendBDY,	      METH_VARARGS),
     ARG(SendU,		      METH_VARARGS),
 
     ARG(ReadL_START,	      METH_VARARGS),
@@ -314,6 +322,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ReadD,		      METH_NOARGS),
     ARG(ReadC,		      METH_NOARGS),
     ARG(ReadB,		      METH_NOARGS),
+    ARG(ReadN,		      METH_NOARGS),
+    ARG(ReadBDY,	      METH_NOARGS),
     ARG(ReadU,		      METH_NOARGS),
     ARG(ReadGetNumItems,      METH_NOARGS),
     ARG(ReadItemExists,	      METH_NOARGS),
@@ -321,6 +331,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ReadProxy,	      METH_VARARGS),
 
     ARG(ServiceCreate,	      METH_VARARGS),
+    ARG(ServiceProxy,	      METH_VARARGS),
     ARG(ServiceDelete,	      METH_VARARGS),
 
     ARG(SlaveWorker,	      METH_VARARGS),
@@ -341,11 +352,10 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetStartAs,	METH_O),
     ARG(ConfigSetDaemon,	METH_O),
     ARG(ConfigSetIsSilent,	METH_O),
+    ARG(ConfigSetIsServer,	METH_O),
     ARG(ConfigSetIsString,	METH_O),
     ARG(ConfigSetServerSetup,	METH_O),
     ARG(ConfigSetServerCleanup, METH_O),
-    ARG(ConfigSetFilterFTR,	METH_O),
-    ARG(ConfigSetFilterEOF,	METH_O),
     ARG(ConfigSetBgError,	METH_O),
     ARG(ConfigSetFactory,	METH_O),
     ARG(ConfigGetIsString,	METH_NOARGS),
@@ -354,6 +364,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIsParent,	METH_NOARGS),
     ARG(ConfigGetIsSlave,	METH_NOARGS),
     ARG(ConfigGetIsConnected,	METH_NOARGS),
+    ARG(ConfigGetIsTransaction,	METH_NOARGS),
     ARG(ConfigGetDebug,		METH_NOARGS),
     ARG(ConfigGetTimeout,	METH_NOARGS),
     ARG(ConfigGetBuffersize,	METH_NOARGS),
@@ -371,6 +382,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetCtxId,		METH_NOARGS),
     ARG(ConfigGetToken,		METH_NOARGS),
     ARG(ConfigGetMaster,	METH_NOARGS),
+    ARG(ConfigGetFilter,	METH_VARARGS),
 
     ARG(ErrorC,		      METH_VARARGS),
     ARG(ErrorSet,	      METH_NOARGS),

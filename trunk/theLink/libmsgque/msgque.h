@@ -1023,12 +1023,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDup (
   struct MqS const * const from
 );
 
-/// \brief copy the #MqS::setup data
-MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDupForClient (
-  struct MqS * const to,
-  struct MqS const * const from
-);
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                   init                                    */
@@ -1457,7 +1451,7 @@ MQ_DECL MqConfigGetToken (
 /// \context
 /// \return 1=yes, 0=no
 MQ_EXTERN int
-MQ_DECL MqConfigGetIsTrans (
+MQ_DECL MqConfigGetIsTransaction (
   struct MqS const * const context
 );
 

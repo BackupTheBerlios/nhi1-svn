@@ -163,8 +163,8 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsConnected")]
     private static extern bool MqConfigGetIsConnected([In]IntPtr context);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsTrans")]
-    private static extern bool MqConfigGetIsTrans([In]IntPtr context);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsTransaction")]
+    private static extern bool MqConfigGetIsTransaction([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetName")]
     private static extern IntPtr MqConfigGetName([In]IntPtr context);
@@ -232,7 +232,7 @@ namespace csmsgque {
     public bool	    ConfigGetIsString()     { return MqConfigGetIsString(context); }
     public bool	    ConfigGetIsSilent()     { return MqConfigGetIsSilent(context); }
     public bool	    ConfigGetIsConnected()  { return MqConfigGetIsConnected(context); }
-    public bool	    ConfigGetIsTrans()	    { return MqConfigGetIsTrans(context); }
+    public bool	    ConfigGetIsTransaction() { return MqConfigGetIsTransaction(context); }
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
     public string   ConfigGetSrvName()	    { return Marshal.PtrToStringAnsi(MqConfigGetSrvName(context)); }
     public string   ConfigGetIdent()	    { return Marshal.PtrToStringAnsi(MqConfigGetIdent(context)); }

@@ -32,7 +32,9 @@ NS(FactoryCreate) (
       MqErrorCheck(MqSetupDup(context, tmpl));
       return MQ_OK;
 error:
-      return MqErrorStack(context);
+      *contextP = NULL;
+      MqErrorCopy (tmpl, context);
+      return MqErrorStack(tmpl);
     }
   }
 }
@@ -214,6 +216,19 @@ PyObject* NS(ConfigSetIsSilent) (
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ConfigSetIsServer) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  if (!PyBool_Check(arg)) {
+    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetIsServer' must be boolean");
+    return NULL;
+  }
+  MqConfigSetIsServer (&self->context, (arg == Py_True));
+  Py_RETURN_NONE;
+}
+
 PyObject* NS(ConfigSetIsString) (
   MqS_Obj    *self,
   PyObject    *arg
@@ -252,34 +267,6 @@ PyObject* NS(ConfigSetServerCleanup) (
   }
   Py_INCREF (arg);
   MqConfigSetServerCleanup (CONTEXT,NS(ProcCall),arg,NS(ProcFree),NS(ProcCopy));
-  Py_RETURN_NONE;
-}
-
-PyObject* NS(ConfigSetFilterFTR) (
-  MqS_Obj    *self,
-  PyObject    *arg
-)
-{
-  if (!PyCallable_Check(arg)) {
-    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetFilterFTR' must be callable");
-    return NULL;
-  }
-  Py_INCREF (arg);
-  MqConfigSetFilterFTR (CONTEXT,NS(ProcCall),arg,NS(ProcFree),NS(ProcCopy));
-  Py_RETURN_NONE;
-}
-
-PyObject* NS(ConfigSetFilterEOF) (
-  MqS_Obj    *self,
-  PyObject    *arg
-)
-{
-  if (!PyCallable_Check(arg)) {
-    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetFilterEOF' must be callable");
-    return NULL;
-  }
-  Py_INCREF (arg);
-  MqConfigSetFilterEOF (CONTEXT,NS(ProcCall),arg,NS(ProcFree),NS(ProcCopy));
   Py_RETURN_NONE;
 }
 
@@ -387,6 +374,17 @@ PyObject* NS(ConfigGetIsConnected) (
     Py_RETURN_FALSE;
   } else {
     Py_RETURN_TRUE;
+  }
+}
+
+PyObject* NS(ConfigGetIsTransaction) (
+  MqS_Obj   *self
+)
+{
+  if (MqConfigGetIsTransaction(CONTEXT)) {
+    Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
   }
 }
 
@@ -535,6 +533,25 @@ PyObject* NS(ConfigGetMaster) (
     Py_INCREF(masterO);
     return masterO;
   }
+}
+
+PyObject* NS(ConfigGetFilter) (
+  PyObject  *self ,
+  PyObject  *args
+)
+{
+  SETUP_context
+  struct MqS *filter;
+  int id = 0;
+  PyObject *filterO = NULL;
+  if (!PyArg_ParseTuple(args, "|i:ConfigGetFilter", &id)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck (MqConfigGetFilter (context, id, &filter));
+  filterO = ((PyObject *)filter->self);
+  Py_INCREF(filterO);
+error:
+  return filterO;
 }
 
 

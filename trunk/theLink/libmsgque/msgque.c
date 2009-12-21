@@ -691,6 +691,9 @@ MqLinkCreate (
 	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.Factory, &myFilter));
 
 	  // step 3, link between "myFilter" and "context"
+	  MqConfigSetServerSetup(myFilter, NULL, NULL, NULL, NULL);
+	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
+	  MqConfigSetIsServer(myFilter, MQ_NO);
 	  MqConfigSetMaster  (myFilter, context, 0);
 
 	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
@@ -1230,7 +1233,7 @@ sServiceProxy (
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
   // continue with the original transaction
-  if (MqConfigGetIsTrans (context)) {
+  if (MqConfigGetIsTransaction (context)) {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqConfigGetToken(context), MQ_TIMEOUT_USER));
     // read the answer

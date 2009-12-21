@@ -43,11 +43,7 @@ static enum MqErrorE NS(FactoryCreate) (
   tclctx->dict = NULL;
 
   // copy setup data and initialize data entries
-  if (create == MQ_FACTORY_NEW_FILTER) {
-    MqErrorCheck (MqSetupDupForClient(mqctx, tmpl));
-  } else {
-    MqErrorCheck (MqSetupDup(mqctx, tmpl));
-  }
+  MqErrorCheck (MqSetupDup(mqctx, tmpl));
 
   return MQ_OK;
 
@@ -268,10 +264,10 @@ int NS(ConfigGetToken) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetIsTrans) (NS_ARGS)
+int NS(ConfigGetIsTransaction) (NS_ARGS)
 {
   CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqConfigGetIsTrans(MQCTX)));
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqConfigGetIsTransaction(MQCTX)));
   RETURN_TCL
 }
 

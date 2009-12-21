@@ -38,7 +38,7 @@ PyObject* NS(ProcessEvent) (
   PyObject    *keywds
 )
 {
-  int timeout=-1;
+  int timeout=MQ_TIMEOUT_USER;
   const char *wait="NO";
   static char *kwlist[] = {"timeout", "wait", NULL};
 

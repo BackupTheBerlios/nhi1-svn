@@ -221,16 +221,9 @@ static enum MqErrorE FactoryCreate (
 	MqS * context = *contextP = get_MqS_NO_ERROR(POPs);
 	if (context != NULL) {
 	  MqConfigDup (context, tmpl);
-	  if (create == MQ_FACTORY_NEW_FILTER) {
-	    if ((ret = MqSetupDupForClient (context, tmpl)) != MQ_OK) {
-	      *contextP = NULL;
-	      ret = MqErrorCopy (tmpl, context);
-	    }
-	  } else {
-	    if ((ret = MqSetupDup (context, tmpl)) != MQ_OK) {
-	      *contextP = NULL;
-	      ret = MqErrorCopy (tmpl, context);
-	    }
+	  if ((ret = MqSetupDup (context, tmpl)) != MQ_OK) {
+	    *contextP = NULL;
+	    ret = MqErrorCopy (tmpl, context);
 	  }
 	} else {
 	  ret = MqErrorC(tmpl, __func__, -1, "factory return is not of type 'Net::PerlMsgque::MqS'");
@@ -552,7 +545,7 @@ bool
 MqConfigGetIsConnected (MqS* context)
 
 bool
-MqConfigGetIsTrans (MqS* context)
+MqConfigGetIsTransaction (MqS* context)
 
 void
 MqConfigSetIsSilent (MqS* context, bool isSilent)

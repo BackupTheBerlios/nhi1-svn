@@ -78,7 +78,7 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  int isTrans = MqConfigGetIsTrans (mqctx);
+  int isTrans = MqConfigGetIsTransaction (mqctx);
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 

@@ -152,7 +152,7 @@ GetO(ConfigGetIsServer)
 GetO(ConfigGetIsParent)
 GetO(ConfigGetIsSlave)
 GetO(ConfigGetIsConnected)
-GetO(ConfigGetIsTrans)
+GetO(ConfigGetIsTransaction)
 
 JNIEXPORT jobject JNICALL NS(ConfigGetParent) (
   JNIEnv    *env, 

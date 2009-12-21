@@ -9,17 +9,29 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 import sys
 from pymsgque import *
-def FTRcmd(ctx):
-  ctx.SendSTART()
-  while ctx.ReadItemExists():
-    ctx.SendC("<" + ctx.ReadC() + ">")
-  ctx.SendFTR()
-srv = MqS()
+
+class manfilter(MqS):
+  def __init__(self):
+    self.ConfigSetFactory(lambda: manfilter())
+    self.ConfigSetName("ManFilter")
+    self.ConfigSetServerSetup(self.ServerSetup)
+    self.data = []
+    MqS.__init__(self)
+  def ServerSetup(self):
+    self.ServiceCreate("+FTR", self.FTRcmd)
+    self.ServiceProxy("+EOF")
+  def FTRcmd(ctx):
+    ftr = ctx.ConfigGetFilter()
+    ftr.SendSTART()
+    while ctx.ReadItemExists():
+      ftr.SendC("<" + ctx.ReadC() + ">")
+    ftr.SendEND_AND_WAIT("+FTR")
+    ctx.SendRETURN()
+srv = manfilter()
 try:
-  srv.ConfigSetFilterFTR(FTRcmd)
-  srv.ConfigSetName("ManFilter")
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(wait="FOREVER")
 except:

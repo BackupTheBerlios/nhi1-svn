@@ -220,39 +220,6 @@ error:
   
 }
 
-enum MqErrorE
-MqSetupDupForClient (
-  struct MqS * const context,
-  struct MqS const * const from
-)
-{
-  struct MqCallbackS null = {NULL, NULL, NULL, NULL};
-
-  // save all "data" entries because these are allready set by the 
-  // Class-Constructor proper
-  MQ_PTR BgError = context->setup.BgError.data;
-  MQ_PTR FactoryC = context->setup.Factory.Create.data;
-  MQ_PTR FactoryD = context->setup.Factory.Delete.data;
-
-  // copy "setup" 
-  context->setup = from->setup;
-  context->setup.ident = mq_strdup_save(from->setup.ident);
-  context->setup.isServer = MQ_NO;
-
-  // reinitialize "data" entries which were !not! set by the class constructor
-  context->setup.ServerSetup = null;
-  context->setup.ServerCleanup = null;
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.BgError.data, context->setup.BgError.fCopy, BgError));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.Factory.Create.data, context->setup.Factory.Create.fCopy, FactoryC));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.Factory.Delete.data, context->setup.Factory.Delete.fCopy, FactoryD));
-
-  return MQ_OK;
-
-error:
-  return MqErrorStack(context);
-  
-}
-
 static enum MqErrorE
 sDefaultFactory (
   struct MqS * const tmpl,
@@ -829,7 +796,7 @@ MqConfigGetToken (
 }
 
 int
-MqConfigGetIsTrans (
+MqConfigGetIsTransaction (
   struct MqS const * const context
 )
 {

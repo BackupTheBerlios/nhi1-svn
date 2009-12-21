@@ -377,7 +377,7 @@ pEventStart (
 	  // case 3. -> a server error have to be reported
 	  // we have an MQ error
 	  // check to be in a transaction or not
-	  if (MqConfigGetIsTrans(eventctx)) {
+	  if (MqConfigGetIsTransaction(eventctx)) {
 	    // in a transaction
 	    // return a "server" error using a "_RET" package -> reset the error
 	    MqSendSTART(eventctx);

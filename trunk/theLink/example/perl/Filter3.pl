@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/example/perl/Filter1.pl
-#§  \brief      \$Id: Filter1.pl 25 2009-12-03 11:05:46Z aotto1968 $
+#§  \file       theLink/example/perl/Filter3.pl
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 25 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -23,7 +23,7 @@ use base qw(Net::PerlMsgque::MqS);
     my $ftr = $ctx->ConfigGetFilter();
     $ftr->SendSTART();
     $ftr->SendBDY($ctx->ReadBDY());
-    if ($ctx->ConfigGetIsTrans()) {
+    if ($ctx->ConfigGetIsTransaction()) {
       $ftr->SendEND_AND_WAIT($ctx->ConfigGetToken());
       $ctx->SendSTART();
       $ctx->SendBDY($ftr->ReadBDY());

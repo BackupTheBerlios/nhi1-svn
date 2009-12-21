@@ -12,23 +12,35 @@
 
 import sys
 from pymsgque import *
-data = []
-def FTRcmd(ctx):
-  L = []
-  while ctx.ReadItemExists():
-    L.append("<" + ctx.ReadC() + ">")
-  data.append(L)
-def EOFcmd(ctx):
-  for L in data:
-    ctx.SendSTART()
-    for I in L:
-      ctx.SendC(I)
-    ctx.SendFTR()
-srv = MqS()
+
+class Filter1(MqS):
+  def __init__(self):
+    self.ConfigSetFactory(lambda: Filter1())
+    self.ConfigSetName("filter")
+    self.ConfigSetServerSetup(self.ServerSetup)
+    self.data = []
+    MqS.__init__(self)
+  def ServerSetup(self):
+    self.ServiceCreate("+FTR", self.FTRcmd)
+    self.ServiceCreate("+EOF", self.EOFcmd)
+  def FTRcmd(ctx):
+    L = []
+    while ctx.ReadItemExists():
+      L.append("<" + ctx.ReadC() + ">")
+    ctx.data.append(L)
+    ctx.SendRETURN()
+  def EOFcmd(ctx):
+    ftr = ctx.ConfigGetFilter()
+    for L in ctx.data:
+      ftr.SendSTART()
+      for I in L:
+        ftr.SendC(I)
+      ftr.SendEND_AND_WAIT("+FTR")
+    ftr.SendSTART()
+    ftr.SendEND_AND_WAIT("+EOF")
+    ctx.SendRETURN()
+srv = Filter1()
 try:
-  srv.ConfigSetFilterFTR(FTRcmd)
-  srv.ConfigSetFilterEOF(EOFcmd)
-  srv.ConfigSetName("filter")
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(wait="FOREVER")
 except:
