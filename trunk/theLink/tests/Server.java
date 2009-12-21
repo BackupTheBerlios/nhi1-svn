@@ -372,7 +372,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	  cl.SendEND(TOK);
 	} else if (s.equals("WAIT")) {
 	  cl.SendSTART();
-	  ReadProxy(cl);
+	  cl.SendN(ReadN());
 	  cl.SendEND_AND_WAIT("ECOI", 5);
 	  SendI(cl.ReadI()+1);
 	} else if (s.equals("CALLBACK")) {

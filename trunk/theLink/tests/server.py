@@ -586,7 +586,7 @@ class Server(MqS):
       cl.SendEND(TOK);
     elif s == "WAIT" :
       cl.SendSTART();
-      cl.SendU(self.ReadU());
+      cl.SendN(self.ReadN());
       cl.SendEND_AND_WAIT("ECOI", 5);
       self.SendI(cl.ReadI()+1);
     elif s == "CALLBACK" :

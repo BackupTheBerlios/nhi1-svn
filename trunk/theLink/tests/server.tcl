@@ -361,7 +361,7 @@ proc Ot_SND2 {ctx} {
     }
     WAIT {
       $cl SendSTART
-      $ctx ReadProxy $cl
+      $cl SendN [$ctx ReadN]
       $cl SendEND_AND_WAIT "ECOI" 5
       $ctx SendI [expr {[$cl ReadI] + 1}]
     }

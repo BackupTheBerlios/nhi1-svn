@@ -429,8 +429,11 @@ namespace example {
 	    ReadProxy(cl);
 	    cl->SendEND(TOK);
 	  } else if (!strcmp(s,"WAIT")) {
+	    MQ_BIN itm;
+	    MQ_SIZE len;
 	    cl->SendSTART();
-	    ReadProxy(cl);
+	    ReadN(&itm, &len);
+	    cl->SendN(itm, len);
 	    cl->SendEND_AND_WAIT("ECOI", 5);
 	    SendI(cl->ReadI()+1);
 	  } else if (!strcmp(s,"CALLBACK")) {

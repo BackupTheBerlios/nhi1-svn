@@ -544,7 +544,7 @@ use base qw(Net::PerlMsgque::MqS);
       } 
       case "WAIT" {
 	$cl->SendSTART();
-	$ctx->ReadProxy($cl);
+	$cl->SendN($ctx->ReadN());
 	$cl->SendEND_AND_WAIT("ECOI", 5);
 	$ctx->SendI($cl->ReadI()+1);
       } 

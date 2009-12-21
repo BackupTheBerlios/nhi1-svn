@@ -987,9 +987,11 @@ Ot_SND2 (
       MqSendU(clmqctx, buf);
       MqErrorCheck(MqSendEND(clmqctx, TOK));
     } else if (!strcmp(s,"WAIT")) {
+      MQ_BIN itm;
+      MQ_SIZE len;
       MqSendSTART(clmqctx);
-      MqErrorCheck(MqReadU(mqctx, &buf));
-      MqSendU(clmqctx, buf);
+      MqErrorCheck(MqReadN(mqctx, &itm, &len));
+      MqSendN(clmqctx, itm, len);
       MqErrorCheck(MqSendEND_AND_WAIT(clmqctx, "ECOI", 5));
       MqErrorCheck(MqReadI(clmqctx, &srvctx->i));
       MqSendI(mqctx, srvctx->i+1);
