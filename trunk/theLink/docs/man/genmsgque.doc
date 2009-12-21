@@ -40,8 +40,8 @@ setup and maintain the link and is responsible for:
 The \e object is the user visible part of a \self application link.
 
 \subsection	\NS{ObjectCreate}			\ObjectCreate
-Create an object ready to be used with \RNS{LinkCreate} to setup an application link.
-Use the \RNS{config_isConnected} to check if a link is already available.
+Create an object ready to be used with \RNSA{LinkCreate} to setup an application link.
+Use the \RNSC{isConnected} to check if a link is already available.
 
 \if CC
 \code
@@ -83,7 +83,7 @@ ctx = MyClass()
 \endif
 
 \subsection	\NS{ObjectDelete}			\ObjectDelete
-Delete the entire object including the application link using \RNS{LinkDelete}. The
+Delete the entire object including the application link using \RNSA{LinkDelete}. The
 object can \b not be reused.
 
 
@@ -96,8 +96,8 @@ Initialize the process startup argument prefix. The startup-prefix have to be th
 name of the executable found in the \c PATH and additional arguments like
 a script name or required startup options. 
 The startup-prefix is used for two different purpose:
- - To start a new entity using the \RNS{config_startAs} "--spawn" command-line option
- - To replace the \RNS{LinkCreate} "SELF" argument after the \e "@" command-line argument
+ - To start a new entity using the \RNSC{startAs} "--spawn" command-line option
+ - To replace the \RNSA{LinkCreate} "SELF" argument after the \e "@" command-line argument
  .
 \if TCL
 The startup-prefix is initially set by \self during package loading.
@@ -152,8 +152,8 @@ link debugging and error messages on the server to a specific client connection.
 (default: empty)
 
 \configsection{ident}
-Use \config_type_ident as an application specific identifer set by the programmer and checked with
-\c \config_check_ident against the \e identifer of the link target. The goal is to change the behavior 
+Use \config_type_ident as an application specific identifier set by the programmer and checked with
+\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
 of the application depending on the result.
 (default: empty)
 
@@ -168,8 +168,8 @@ like integer or double, into a string (sending) and back to native (receiving). 
 Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
 This arguments are used with:
  - a server-context to start a new instance after a client connection request 
- - on a server to create a worker with: \RNS{SlaveWorker}
- - on a client/server together with the \b "SELF" command-line argument: \RNS{LinkCreate}
+ - on a server to create a worker with: \RNSA{SlaveWorker}
+ - on a client/server together with the \b "SELF" command-line argument: \RNSA{LinkCreate}
  .
 \param[in] startAs 0=default, 1=fork, 2=thread and 3=spawn
 
@@ -215,6 +215,13 @@ and start for every connection the proper entry from the file \e /etc/(x)inetd.c
 return the \e master if \e ctx is a slave-context or \e NULL if \e ctx is not a slave-context.
 !Only a SLAVE has a master!
 
+\configsection{filter}
+Get the \e filter object from a filter pipeline using the following order: \throw
+-# return the \e #MqConfigS::master if non NULL
+-# return the \e #MqSlaveGet with \e id if non NULL
+-# return a "filter not available" error
+.
+
 \configsection{ctxId}
 return an identifier as integer and is \e unique per parent-context. The \e parent-context is always \c 0
 and every new \e child-context get a new identifier by adding 1.
@@ -222,13 +229,16 @@ and every new \e child-context get a new identifier by adding 1.
 \configsection{token}
 return the current \RNS{ServiceIdentifier} and is only useful in a service callback.
 This command is needed on the server to implement a generic service
-(A \RNS{ServiceCreate} with different \RNS{ServiceIdentifier} but with the same \e service
+(A \RNSA{ServiceCreate} with different \RNS{ServiceIdentifier} but with the same \e service
 callback).
 
 \configsection{isConnected}
-Is the \self context connected ? A context is connected if the \RNS{LinkCreate} command
+Is the \self context connected ? A context is connected if the \RNSA{LinkCreate} command
 was successful and a context is NOT connected if a) the object has just been created or
-b) the link was deleted with \RNS{LinkDelete}
+b) the link was deleted with \RNSA{LinkDelete}
+
+\configsection{isTransaction}
+Return \yes if a transaction is ongoing. This function is only usefull in a service, read more in \RNS{filter}.
 
 \configsection{isServer}
 True if object is a \e server object (default: \no, be a client)
@@ -241,14 +251,14 @@ True if object is a \e slave object (default: \no, not be a slave)
 
 \configsection{IServerSetup}
 Interface to define a \e server \self object. This Interface define the
-ServerSetup callback called at \RNS{LinkCreate} to define the services 
+ServerSetup callback called at \RNSA{LinkCreate} to define the services 
 or to initialize context specific variables.
-This interface set the \RNS{config_isServer} configuration value to \yes.
+This interface set the \RNSC{isServer} configuration value to \yes.
 
 \configsection{IServerCleanup}
 Interface to define a \e server \self object. This Interface define the
-ServerCleanup callback called at \RNS{LinkDelete} to free context specific variables.
-This interface set the \RNS{config_isServer} configuration value to \yes.
+ServerCleanup callback called at \RNSA{LinkDelete} to free context specific variables.
+This interface set the \RNSC{isServer} configuration value to \yes.
 
 \configsection{IFactory}
 The factory pattern is used to create a new application object (read more at: \ref #MqSetupS::Factory)
@@ -302,8 +312,8 @@ final class Server extends MqS implements IFactory, ... {
 \endif
 
 \configsection{IBgError}
-Define an asyncrone error handler. This handler is used for handle errors send with \RNS{SendERROR}.
-Use \RNS{ErrorGetNum} and \RNS{ErrorGetText} to access the error.
+Define an asynchronous error handler. This handler is used for handle errors send with \RNSA{SendERROR}.
+Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
 
 \section	\NS{link}				LINK CREATION AND DELETION
 To create and to destroy a link is the main purpose of the \self library. A link is a 
@@ -331,7 +341,7 @@ A parent-context is responsible to setup the client/server link:
 \param[in] args command-line arguments including the \b "@" item for the \e --pipe setup
 \attention if the first argument after the \b "@" item is the string \b "SELF" an independent
 server of the current server is started. This is not a \RNS{slave}. The "SELF" argument is
-replaced by an application default setting (if available) or by arguments set with \RNS{Init}.
+replaced by an application default setting (if available) or by arguments set with \RNSA{Init}.
 
 \subsection	  \NS{LinkCreateChild}			\LinkCreateChild
 \if LinkCreateChild2
@@ -419,18 +429,20 @@ UNKNOWN
 
 
 \subsection	  \NS{ServiceIdentifier}			TOKEN IDENTIFIER
-The \e token is a 4 byte string and identifies the service. The \e token is used in:
- - \RNS{SendEND}
- - \RNS{SendEND_AND_WAIT}
- - \RNS{SendEND_AND_CALLBACK}
- - \RNS{ServiceCreate}
- - \RNS{ServiceDelete}
+The \e token identifier is a 4 byte string and identifies the service. The \e token is
+set by the programmer to identify different services. \self is using some special \e token
+for \e internal or \e common usage:
+ - \b _??? - all \e token starting with a \b "_" are for \b internal usage only
+ - \b +ALL - used to listen on \b all services not handled by other \e token more precise
+ - \b _ALL - used in \RNSA{ServiceDelete} to delete \b all token
+ - \b +FTR - used for \RNS{filter-one}
+ - \b +EOF - used for \RNS{filter-one}
  .
 
 \subsection	  \NS{ServiceCallback}			SERVICE CALLBACK
 A service is using a callback to act on an incoming service request. The callback is
-used on a \e server using \RNS{ServiceCreate} or on a \e client using
-\RNS{SendEND_AND_CALLBACK}.
+used on a \e server using \RNSA{ServiceCreate} or on a \e client using
+\RNSA{SendEND_AND_CALLBACK}.
 \if CSHARP
 The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
 using a delegate of type <I>void Callback()</I>.
@@ -460,13 +472,17 @@ UNKNOWN
 \endif
 Create a new service listen on \RNS{ServiceIdentifier} and start for every incoming request a \e service. \throw
 
+\subsection       \NS{ServiceProxy}			\ServiceProxy
+Create a new service listen on \RNS{ServiceIdentifier} and link the incoming package to the outgoing package of
+slave with \e id. Use \e id=0 to link a filter.
+
 \subsection	  \NS{ServiceDelete}			\ServiceDelete
 Delete a new service listen on \RNS{ServiceIdentifier} . \throw
 
 \subsection	  \NS{ProcessEvent}			\ProcessEvent
 Start the Event-Loop and check for the next event.
 In \e client mode this command is usually used together with 
-\RNS{SendEND_AND_CALLBACK} to process the results.
+\RNSA{SendEND_AND_CALLBACK} to process the results. \throw
 \timeout
 \param[in] \ProcessEventFlag use flag value to define the action (default: NO)
  - \b NO, don't wait for an event do just the check
@@ -577,7 +593,7 @@ Initialize a \self send data package. This method is required.
 Send the package using \ServiceIdentifier without expecting an answer (FireAndForget). \throw
 \attention if an \b error is raised on the server during service-processing the
 error is send back as <B>asynchronous event</B> and can be raised sometime in the future.
-To be sure to get the error immediately use \RNS{SendEND_AND_WAIT}
+To be sure to get the error immediately use \RNSA{SendEND_AND_WAIT}. \throw
 
 \subsection	  \NS{SendEND_AND_WAIT}			\SendEND_AND_WAIT
 Send the package using \ServiceIdentifier and wait \e timeout seconds for an answer. \throw
@@ -590,12 +606,13 @@ Send the package using \RNS{ServiceIdentifier} and \b don't wait for an answer. 
 be handled by the \RNS{ServiceCallback}. \throw
 
 \subsection	  \NS{SendRETURN}			\SendRETURN
-Answer an incoming service-call started with \RNS{SendEND_AND_WAIT} or \RNS{SendEND_AND_CALLBACK}. 
+Answer an incoming service-call started with \RNSA{SendEND_AND_WAIT} or 
+\RNSA{SendEND_AND_CALLBACK}. 
 The return package is build-up like the previous service call package but with a \SendRETURN as final
 command. \throw
 
 \subsection	  \NS{SendERROR}			\SendERROR
-Send an asyncrone error to the link target. \throw
+Send an asynchronous error to the link target. \throw
 
 \subsection	  \NS{Send_TYPE}			\Send_TYPE
 Add an item using \RNS{BufferIdentifer} to the \self send data package. (example: \e SendY)
@@ -603,12 +620,12 @@ Add an item using \RNS{BufferIdentifer} to the \self send data package. (example
 \subsection	  \NS{SendN}				\SendN
 Add a \self body \e item to the package. A \e item as is a binary array with a defined \e length
 and including the \e size, \e data-type and the \e native data object as information. The \e item
-is usually read with \RNS{ReadN} and can be used to save the item into an external storage.
+is usually read with \RNSA{ReadN} and can be used to save the item into an external storage.
 
 \subsection	  \NS{SendBDY}				\SendBDY
 Create the entire package \e body from a binary array. A package \e body include information about
 the number of items and the native data items. The \e body package is usually read with
-\RNS{ReadBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
+\RNSA{ReadBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
 
 \subsection	  \NS{SendL_START}			\SendL_START
 Start to send an embedded list item.
@@ -706,12 +723,12 @@ return an item using the \RNS{BufferIdentifer} from the \self read data package.
 \subsection	  \NS{ReadN}				\ReadN
 Read a \self body \e item from the package. A \e item as is a binary array with a defined \e length
 and including the \e size, \e data-type and the \e native data object as information. The \e item
-is usually send with \RNS{SendN} and can be used to save the item into an external storage.
+is usually send with \RNSA{SendN} and can be used to save the item into an external storage.
 
 \subsection	  \NS{ReadBDY}				\ReadBDY
 Read the entire package \e body into a binary array. A package \e body include information about
 the number of items and the native data items. The \e body package is usually send with
-\RNS{SendBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
+\RNSA{SendBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
 
 \subsection	  \NS{ReadU}				\ReadU
 return a temporary \RNS{buffer}. \throw
@@ -728,7 +745,7 @@ Check if are still items in the \self read data package.
 
 \subsection	  \NS{ReadUndo}				\ReadUndo
 Undo the \b last read operation. This is useful if an error was raised or
-if a buffer object (returned from \RNS{ReadU}) has not the expected
+if a buffer object (returned from \RNSA{ReadU}) has not the expected
 type. \throw
 
 \subsection	  \NS{ReadL_START}			\ReadL_START
@@ -772,7 +789,7 @@ can be a server because only one server per node is possible.
 \subsection	  \NS{SlaveWorker6}			\SlaveWorker6
 \endif
 Create a worker as \e slave of the \e ctx object using the image of the \e ctx object self 
-and started as an independent process or thread based on the \RNS{config_startAs} argument.
+and started as an independent process or thread based on the \RNSC{startAs} argument.
 \param[in] ctx the \e master \self object as SERVER-PARENT without a CHILD
 \id
 \param[in] args command-line arguments passed to the \e worker-client or the \e worker-server. all arguments prior the
@@ -824,17 +841,17 @@ Create a master/slave link between the \e ctx object and the \e slave object.  \
 \param[in] slave the \e slave \self object as CLIENT-PARENT without a CHILD
 
 \subsection	  \NS{SlaveDelete}			\SlaveDelete
-Delete a \e slave-context from a former \RNS{SlaveCreate} command using the same identifier \e id.
+Delete a \e slave-context from a former \RNSA{SlaveCreate} command using the same identifier \e id.
 By default the \e slave-context object will be deleted if the \e master-context is deleted.
 In addition \e only the \e parent-slave-context can be deleted explicit.
 If \e id is invalid nothing will happen. \throw
 
 \subsection	  \NS{SlaveGet}				\SlaveGet
-return the \e slave-context from the \RNS{SlaveCreate} using the same identifier \e id or
+return the \e slave-context from the \RNSA{SlaveCreate} using the same identifier \e id or
 \e NULL if the \e id is not valid or if \e ctx is not a \e master.
 
 \section        \NS{buffer}				BUFFER OBJECT
-The \BufferObject object is created by \RNS{ReadU} and id used to save a <B>typeless temporary data item</B> 
+The \BufferObject object is created by \RNSA{ReadU} and id used to save a <B>typeless temporary data item</B> 
 from the \self data package. The lifetime of the \BufferObject is only the current callback up to the next
 read operation of the same context.
 \if CSHARP
@@ -1026,7 +1043,7 @@ create a \self error object but do \b not raise the \RNS{error}
 
 \subsection	\NS{ErrorSet}				\ErrorSet
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
-additional error processing capabilities from \RNS{LinkDelete} or \RNS{Exit} after the exception was
+additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the exception was
 caught and before the application exit or the object is deleted.
 
 \subsection	\NS{ErrorReset}				\ErrorReset
@@ -1065,21 +1082,41 @@ $ctx->DictUnset($key)->DESTROY();
 
 \section	\NS{filter}				FILTER MODE
 The filter mode is related to a special usage of the \self software called a command pipeline.
-A command pipeline is well known from the \b unix shell to link different commands together to act like a single 
-application: \verbatim
+To define a filter create a \e server with \RNSC{isServer} or use \RNSC{IServerSetup}
+and add the required services. 
+
+\section	\NS{filter-one}				ONE-DIRECTIONAL FILTER
+A one-directional filter has a \e data-flow from the \e left to the \e right and is well known from the \b unix shell 
+to link different commands together: \verbatim
     command1 | command2 | command3
 \endverbatim
-A command pipeline with \self queues is using the special token \b @ to link the commands together: 
+A \self command pipeline is created with the special character \b @ instead of \b | : 
 \verbatim
     msgcmd1 @ msgcmd2 @ msgcmd3
 \endverbatim
-To create a \self filter use: 
- - <TT> \RNS{config_IFilterFTR} </TT>
- - <TT> \RNS{config_IFilterEOF} </TT>
+with every command have to use \libmsgque.
+To define a \self filter create a service handle with \RNSA{ServiceCreate} or 
+\RNSA{ServiceProxy} for the both special token: 
+ - \b +FTR : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \b +FTR service request.
+ - \b +EOF : required to act on End-Of-Filter data and is called after all \b +FTR data was send. Sometimes the filter data can not be served as \b +FTR data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \b +EOF token is used to continue send \b +FTR data rows.
  .
-and to send data to the next filter command use:
- - <TT> \RNS{SendFTR} </TT>
- - <TT> \RNS{SendEOF} </TT>
+and send every data item with \RNSA{SendEND_AND_WAIT}.
+
+\section	\NS{filter-bi}				BI-DIRECTIONAL FILTER
+A one-directional filter has a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
+    client ... <--> ... server
+\endverbatim to add an additional feature like a protocol-tunnelling: \verbatim
+    client @ mq2tunnel ... <--> ... tunnel2mq @ server
+\endverbatim or to convert the protocol into an other protocol: \verbatim
+    client @ mq2soap ... <--> ... soap-server
+\endverbatim
+To define a \e bi-directional filter a couple of commands provide support:
+ - \RNSA{ServiceCreate} : use the token \b +ALL to act on \e all services
+ - \RNSA{config_filter,ConfigGetFilter}: to get the filter context (other site)
+ - \RNSA{config_token,ConfigGetToken}: to get the current token
+ - \RNSA{config_isTransaction,ConfigGetIsTransaction} : to check if a transaction is ongoing
+ - \RNSA{ReadBDY} : to read the entire body as binary array
+ - \RNSA{SendBDY} : to send the entire body
  .
 
 \section	\NS{portability}			PORTABILITY ISSUES
