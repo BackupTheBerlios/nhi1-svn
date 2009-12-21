@@ -65,6 +65,7 @@
 #define MVA(f,v,a) printf("%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, a);fflush(stdout);
 
 #define printI(var)	MV(MQ_FORMAT_I,	var)
+#define printY(var)	MV(MQ_FORMAT_Y,	var)
 #define printFo(var)	MV("%o",	var)
 #define printH(var)	MV("%c",	var)
 #define printW(var)	MV(MQ_FORMAT_W, var)

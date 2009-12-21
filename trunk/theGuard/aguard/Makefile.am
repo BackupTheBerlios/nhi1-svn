@@ -14,7 +14,7 @@ bin_PROGRAMS = aguard
 
 CLEANFILES =
 
-aguard_SOURCES = aguard.c 
+aguard_SOURCES = aguard.c key.h
 aguard_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque \
 		      -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES $(BRAIN_CPPFLAGS)
 

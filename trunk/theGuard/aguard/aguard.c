@@ -14,6 +14,7 @@
 
 #include "msgque.h"
 #include "debug.h"
+#include "key.h"
 
 /// link to the MqErrorS object
 #define ARGS  struct MqS * const mqctx, void *data
@@ -38,15 +39,21 @@ struct GuardCtxS {
 /*                                                                           */
 /*****************************************************************************/
 
-static void guard_encrypt (MQ_BIN data, MQ_SIZE size) {
-  while (size--) {
-    *data += size;
-  }
-}
-
-static void guard_decrypt (MQ_BIN data, MQ_SIZE size) {
-  while (size--) {
-    *data -= size;
+#define ENCRYPT MQ_YES
+#define DECRYPT MQ_NO
+static void guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
+  MQ_BIN key = KEY_DATA;
+  const MQ_BIN keyend = KEY_DATA+KEY_LENGTH;
+  const MQ_BIN dataend = data+size;
+  for (;data<dataend; data++,key++) {
+    if (key >= keyend) {
+      key=KEY_DATA;
+    }
+    if (flag) {
+      *data += *key;
+    } else {
+      *data -= *key;
+    }
   }
 }
 
@@ -86,8 +93,7 @@ PkgToGuard (
 
   MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
 
-  // do "guard_encryption" of bdy
-  guard_encrypt (bdy, len);
+  guard_crypt (bdy, len, ENCRYPT);
 
   // build "+GRD" package
   MqErrorCheck1 (MqSendSTART (ftrctx));
@@ -102,8 +108,7 @@ PkgToGuard (
   if (isTrans) {
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
-    // do "guard_decryption" of bdy
-    guard_decrypt (bdy, len);
+    guard_crypt (bdy, len, DECRYPT);
     MqErrorCheck (MqSendBDY (mqctx, bdy, len));
   }
 
@@ -130,8 +135,7 @@ GuardToPkg (
   MqErrorCheck (MqReadC (mqctx, &token));
   MqErrorCheck (MqReadI (mqctx, &isTrans));
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
-  // do "guard_decryption" of dat
-  guard_decrypt (bdy, len);
+  guard_crypt (bdy, len, DECRYPT);
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
   if (isTrans) {
@@ -140,8 +144,7 @@ GuardToPkg (
     // send the "answer" back
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
-    // do "encrytion" of dat
-    guard_encrypt (bdy, len);
+    guard_crypt (bdy, len, ENCRYPT);
     MqErrorCheck (MqSendB (mqctx, bdy, len));
   } else {
     MqErrorCheck1 (MqSendEND (ftrctx, token));
@@ -224,7 +227,6 @@ main (
   mqctx->setup.ServerSetup.fFunc    = GuardSetup;
   mqctx->setup.ServerCleanup.fFunc  = GuardCleanup;
   MqConfigSetDefaultFactory (mqctx);
-  MqConfigSetIdent (mqctx, "+guard");
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));
