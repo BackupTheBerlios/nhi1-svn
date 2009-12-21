@@ -74,7 +74,7 @@ ALIASES		    += "config_set_isString=ConfigSetIsString"
 ALIASES		    += "config_get_isString=ConfigGetIsString"
 
 ALIASES		    += "config_type_isServer=boolean"
-ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
 
 ALIASES		    += "config_type_isParent=boolean"
@@ -128,14 +128,6 @@ ALIASES		    += "config_get_IServerSetup=NO"
 ALIASES		    += "config_type_IServerCleanup=Interface"
 ALIASES		    += "config_set_IServerCleanup=$ctx ConfigSetServerCleanup callback"
 ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFilterFTR=Interface"
-ALIASES		    += "config_set_IFilterFTR=$ctx ConfigSetFilterFTR callback"
-ALIASES		    += "config_get_IFilterFTR=NO"
-
-ALIASES		    += "config_type_IFilterEOF=Interface"
-ALIASES		    += "config_set_IFilterEOF=$ctx ConfigSetFilterEOF callback"
-ALIASES		    += "config_get_IFilterEOF=NO"
 
 ALIASES		    += "config_type_IFactory=Interface"
 ALIASES		    += "config_set_IFactory=$ctx ConfigSetFactory"

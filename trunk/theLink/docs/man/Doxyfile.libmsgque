@@ -78,7 +78,7 @@ ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, pidfile)"
 ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=#MQ_BOL"
-ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_set_isServer=#MqConfigSetIsServer (ctx, isServer)"
 ALIASES		    += "config_get_isServer=#MqConfigGetIsServer (ctx)"
 
 ALIASES		    += "config_type_isParent=#MQ_BOL"
@@ -128,14 +128,6 @@ ALIASES		    += "config_get_IServerSetup=NO"
 ALIASES		    += "config_type_IServerCleanup=Interface"
 ALIASES		    += "config_set_IServerCleanup=#MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
 ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFilterFTR=Interface"
-ALIASES		    += "config_set_IFilterFTR=#MqConfigSetFilterFTR (ctx, fFunc, data, fFree, fCopy)"
-ALIASES		    += "config_get_IFilterFTR=NO"
-
-ALIASES		    += "config_type_IFilterEOF=Interface"
-ALIASES		    += "config_set_IFilterEOF=#MqConfigSetFilterEOF (ctx, fFunc, data, fFree, fCopy)"
-ALIASES		    += "config_get_IFilterEOF=NO"
 
 ALIASES		    += "config_type_IFactory=Interface"
 ALIASES		    += "config_set_IFactory=#MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"

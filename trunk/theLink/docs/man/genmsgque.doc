@@ -250,21 +250,6 @@ Interface to define a \e server \self object. This Interface define the
 ServerCleanup callback called at \RNS{LinkDelete} to free context specific variables.
 This interface set the \RNS{config_isServer} configuration value to \yes.
 
-\configsection{IFilterFTR}
-Interface required to define a \e filter data stream object. This Interface define the
-\e IFilterFTR callback. The \e callback is used to act on filter data rows. Every filter input data 
-is a list of filter data rows and every row is a list of filter data columns. Every row 
-is send from one filter-command to the following filter-command as FTR service request.
-This interface set the \RNS{config_isServer} configuration value to \yes. (read more at: \RNS{filter})
-
-\configsection{IFilterEOF}
-Interface required to define a \e filter data stream object. This Interface define the
-\e IFilterEOF callback. The callback is used to act on End-Of-Filter data and is called after all
-\RNS{config_IFilterFTR} data was send. Sometimes the filter data can not be served as \RNS{config_IFilterFTR} data (example: sorting
-of the input rows need to read all rows before the data can be send to the next filter command)
-and the \e IFilterEOF callback is used to continue send \RNS{config_IFilterFTR} data rows.
-This interface set the \RNS{config_isServer} configuration value to \yes. (read more at: \RNS{filter})
-
 \configsection{IFactory}
 The factory pattern is used to create a new application object (read more at: \ref #MqSetupS::Factory)
 Without the \e Factory pattern only the initial startup context is available to serve
@@ -612,14 +597,18 @@ command. \throw
 \subsection	  \NS{SendERROR}			\SendERROR
 Send an asyncrone error to the link target. \throw
 
-\subsection	  \NS{SendFTR}				\SendFTR
-Send a filter stream data package using \RNS{filter}. \throw
-
-\subsection	  \NS{SendEOF}				\SendEOF
-Send a filter end-of-file data package using \RNS{filter}. \throw
-
 \subsection	  \NS{Send_TYPE}			\Send_TYPE
 Add an item using \RNS{BufferIdentifer} to the \self send data package. (example: \e SendY)
+
+\subsection	  \NS{SendN}				\SendN
+Add a \self body \e item to the package. A \e item as is a binary array with a defined \e length
+and including the \e size, \e data-type and the \e native data object as information. The \e item
+is usually read with \RNS{ReadN} and can be used to save the item into an external storage.
+
+\subsection	  \NS{SendBDY}				\SendBDY
+Create the entire package \e body from a binary array. A package \e body include information about
+the number of items and the native data items. The \e body package is usually read with
+\RNS{ReadBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
 
 \subsection	  \NS{SendL_START}			\SendL_START
 Start to send an embedded list item.
@@ -713,6 +702,16 @@ UNKNOWN
 
 \subsection	  \NS{Read_TYPE}			\Read_TYPE
 return an item using the \RNS{BufferIdentifer} from the \self read data package. \throw
+
+\subsection	  \NS{ReadN}				\ReadN
+Read a \self body \e item from the package. A \e item as is a binary array with a defined \e length
+and including the \e size, \e data-type and the \e native data object as information. The \e item
+is usually send with \RNS{SendN} and can be used to save the item into an external storage.
+
+\subsection	  \NS{ReadBDY}				\ReadBDY
+Read the entire package \e body into a binary array. A package \e body include information about
+the number of items and the native data items. The \e body package is usually send with
+\RNS{SendBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
 
 \subsection	  \NS{ReadU}				\ReadU
 return a temporary \RNS{buffer}. \throw

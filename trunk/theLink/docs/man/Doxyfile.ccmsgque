@@ -95,7 +95,7 @@ ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
 ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_isServer=bool"
-ALIASES		    += "config_set_isServer=\RNS{config_IServerSetup} or \RNS{config_IServerCleanup}"
+ALIASES		    += "config_set_isServer=#ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=#ConfigGetIsServer"
 
 ALIASES		    += "config_type_isParent=bool"
@@ -129,14 +129,6 @@ ALIASES		    += "config_get_IServerSetup=NO"
 ALIASES		    += "config_type_IServerCleanup=Interface"
 ALIASES		    += "config_set_IServerCleanup=#ccmsgque::IServerCleanup"
 ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFilterFTR=Interface"
-ALIASES		    += "config_set_IFilterFTR=#ccmsgque::IFilterFTR"
-ALIASES		    += "config_get_IFilterFTR=NO"
-
-ALIASES		    += "config_type_IFilterEOF=Interface"
-ALIASES		    += "config_set_IFilterEOF=#ccmsgque::IFilterEOF"
-ALIASES		    += "config_get_IFilterEOF=NO"
 
 ALIASES		    += "config_type_IFactory=Interface"
 ALIASES		    += "config_set_IFactory=#ccmsgque::IFactory"
