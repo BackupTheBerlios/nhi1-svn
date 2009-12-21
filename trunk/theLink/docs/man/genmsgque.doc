@@ -618,7 +618,7 @@ Send an asynchronous error to the link target. \throw
 Add an item using \RNS{BufferIdentifer} to the \self send data package. (example: \e SendY)
 
 \subsection	  \NS{SendN}				\SendN
-Add a \self body \e item to the package. A \e item as is a binary array with a defined \e length
+Add a \self body \e item to the package. A \e item is a binary array with a defined \e length
 and including the \e size, \e data-type and the \e native data object as information. The \e item
 is usually read with \RNSA{ReadN} and can be used to save the item into an external storage.
 
@@ -1103,7 +1103,7 @@ To define a \self filter create a service handle with \RNSA{ServiceCreate} or
 and send every data item with \RNSA{SendEND_AND_WAIT}.
 
 \section	\NS{filter-bi}				BI-DIRECTIONAL FILTER
-A one-directional filter has a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
+A bi-directional filter has a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
     client ... <--> ... server
 \endverbatim to add an additional feature like a protocol-tunnelling: \verbatim
     client @ mq2tunnel ... <--> ... tunnel2mq @ server

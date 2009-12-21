@@ -24,7 +24,6 @@ design rules:
 The \lang language binding provide the following basic components:
  - abstract class of the \rself object: \RNS{MqS}
  - interface: \RNS{config_IServerSetup} and or \RNS{config_IServerCleanup} to add server functionality
- - interface: \RNS{config_IFilterFTR} and or \RNS{config_IFilterEOF} to add filter functionality
  - interface: \RNS{config_IFactory} to create a new application instance
  - interface: \RNS{config_IBgError} to act on asyncrone errors
  - adding and removing \RNS{service} "services"
@@ -359,22 +358,65 @@ To call a \e local server started by the client using \e PIPE communication use:
 
 \section \NST{filter} FILTER
 
-A filter has to implement the \RNS{config_IFilterFTR} or the \RNS{config_IFilterEOF} interface which requires the
-following functions:
-  - \RNS{config_IFilterFTR}, a service function to act on filter data rows. Every filter
-    input data is a list of filter data rows and every row is a list of filter data columns. 
-    Every row is send from one filter-command to the following filter-command as \e FTR service 
-    request
-  - \RNS{config_IFilterEOF}, a service function to act on \e End-Of-Filter data. This service is
-    called \e after the whole filter data was send. Sometimes the filter data can not be served 
-    as filter data rows (example: sorting of the input rows need to read all rows before the data 
-    can be send to the next filter command) and the EOF function is used to continue send filter
-    data rows
-  .
-The \e minimal filter looks like:
+The \RNS{filter} is used to define a command pipeline. A \e minimal filter looks like:
 
- - \RNS{e3} "filter example"
- .
+\if PYTHON
+\dontinclude manfilter.py
+\skip import
+\until Exit
+Use \e manfilter.py in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
+\endverbatim
+\elseif JAVA
+\include manfilter.java
+Use \e manfilter.java in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
+\endverbatim
+\elseif CSHARP
+\include manfilter.cs
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif VB
+\dontinclude manfilter.vb
+\skip Imports
+\until End Module
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif TCL
+\dontinclude manfilter.tcl
+\skip TclMsgque
+\until Exit
+Use \e manfilter.tcl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ tclsh manfilter.tcl @ atool join -d :
+\endverbatim
+\elseif PERL
+\dontinclude manfilter.pl
+\skip strict
+\until Exit
+Use \e manfilter.pl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
+\endverbatim
+\elseif C
+\include manfilter.c
+Use \e manfilter.c in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\elseif CC
+\include manfilter.cc
+Use \e manfilter.cc in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\endif
 
 */
 

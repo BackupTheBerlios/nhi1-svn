@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "14 Dec 2009" "Version 0.2" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "21 Dec 2009" "Version 0.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -47,7 +47,7 @@ propagate the error messages from the server to the client
 .SS "MqS"
 The \fIobject\fP is the user visible part of a vbmsgque application link.
 .SS "Dim ctx As New MqS()"
-Create an object ready to be used with \fBctx.LinkCreate(String() argv)\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
+Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
 .PP
 .PP
 .nf
@@ -60,16 +60,16 @@ End Sub
 .fi
 .PP
 .SS "deleted by Garbage Collection"
-Delete the entire object including the application link using \fBctx.LinkDelete()\fP. The object can \fBnot\fP be reused.
+Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
 .SH "OBJECT CONFIGURATION"
 .PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
 .SS "static: Init(String() args)"
 Initialize the process startup argument prefix. The startup-prefix have to be the name of the executable found in the \fCPATH\fP and additional arguments like a script name or required startup options. The startup-prefix is used for two different purpose:
 .IP "\(bu" 2
-To start a new entity using the \fB--spawn\fP command-line option
+To start a new entity using the \fBstartAs\fP '--spawn' command-line option
 .IP "\(bu" 2
-To replace the \fBSELF\fP argument after the \fI'@'\fP command-line argument
+To replace the \fBLinkCreate\fP 'SELF' argument after the \fI'@'\fP command-line argument
 .PP
 .PP
 The startup-prefix is initially set by vbmsgque during package loading.
@@ -96,7 +96,7 @@ Use \fISTRING\fP as a client specific prefix in the server debugging output. Thi
 .SS "ident"
 \fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
 .PP
-Use String as an application specific identifer set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifer\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
+Use String as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
@@ -112,9 +112,9 @@ Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a 
 .IP "\(bu" 2
 a server-context to start a new instance after a client connection request
 .IP "\(bu" 2
-on a server to create a worker with: \fBctx.SlaveWorker(Integer id, String() argv)\fP
+on a server to create a worker with: \fBSlaveWorker\fP
 .IP "\(bu" 2
-on a client/server together with the \fB'SELF'\fP command-line argument: \fBctx.LinkCreate(String() argv)\fP
+on a client/server together with the \fB'SELF'\fP command-line argument: \fBLinkCreate\fP
 .PP
 \fBParameters:\fP
 .RS 4
@@ -170,6 +170,17 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fC\fBMqS\fP\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
+.SS "filter"
+\fBtype:\fP \fC\fBMqS\fP\fP, \fBget:\fP \fCConfigGetFilter\fP , \fBset:\fP \fCNO\fP
+.PP
+Get the \fIfilter\fP object from a filter pipeline using the following order: (on error return an \fBEXCEPTION OBJECT\fP)
+.IP "1." 4
+return the \fI\fBMqConfigS::master\fP\fP if non NULL
+.IP "2." 4
+return the \fI\fBMqSlaveGet\fP\fP with \fIid\fP if non NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
 .SS "ctxId"
 \fBtype:\fP \fCInteger\fP, \fBget:\fP \fCConfigGetCtxId\fP , \fBset:\fP \fCNO\fP
 .PP
@@ -177,13 +188,17 @@ return an identifier as integer and is \fIunique\fP per parent-context. The \fIp
 .SS "token"
 \fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetToken\fP , \fBset:\fP \fCNO\fP
 .PP
-return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBctx.ServiceCreate(String token, AddressOf service)\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
+return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBServiceCreate\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
 .SS "isConnected"
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsConnected\fP , \fBset:\fP \fCNO\fP
 .PP
-Is the vbmsgque context connected ? A context is connected if the \fBctx.LinkCreate(String() argv)\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBctx.LinkDelete()\fP
+Is the vbmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
+.SS "isTransaction"
+\fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsTransaction\fP , \fBset:\fP \fCNO\fP
+.PP
+Return \fItrue\fP if a transaction is ongoing. This function is only usefull in a service, read more in \fBFILTER MODE\fP.
 .SS "isServer"
-\fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fC\fBIServerSetup\fP or \fBIServerCleanup\fP\fP
+\fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
 True if object is a \fIserver\fP object (default: \fIfalse\fP, be a client)
 .SS "isParent"
@@ -197,19 +212,11 @@ True if object is a \fIslave\fP object (default: \fIfalse\fP, not be a slave)
 .SS "IServerSetup"
 \fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IServerSetup.Call\fP\fP
 .PP
-Interface to define a \fIserver\fP vbmsgque object. This Interface define the ServerSetup callback called at \fBctx.LinkCreate(String() argv)\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
+Interface to define a \fIserver\fP vbmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
 .SS "IServerCleanup"
 \fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IServerCleanup.Call\fP\fP
 .PP
-Interface to define a \fIserver\fP vbmsgque object. This Interface define the ServerCleanup callback called at \fBctx.LinkDelete()\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
-.SS "IFilterFTR"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IFilterFTR.Call\fP\fP
-.PP
-Interface required to define a \fIfilter\fP data stream object. This Interface define the \fIIFilterFTR\fP callback. The \fIcallback\fP is used to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send from one filter-command to the following filter-command as FTR service request. This interface set the \fBisServer\fP configuration value to \fItrue\fP. (read more at: \fBFILTER MODE\fP)
-.SS "IFilterEOF"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IFilterEOF.Call\fP\fP
-.PP
-Interface required to define a \fIfilter\fP data stream object. This Interface define the \fIIFilterEOF\fP callback. The callback is used to act on End-Of-Filter data and is called after all \fBIFilterFTR\fP data was send. Sometimes the filter data can not be served as \fBIFilterFTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \fIIFilterEOF\fP callback is used to continue send \fBIFilterFTR\fP data rows. This interface set the \fBisServer\fP configuration value to \fItrue\fP. (read more at: \fBFILTER MODE\fP)
+Interface to define a \fIserver\fP vbmsgque object. This Interface define the ServerCleanup callback called at \fBLinkDelete\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
 .SS "IFactory"
 \fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IFactory.Call\fP\fP
 .PP
@@ -230,7 +237,7 @@ End Class
 .SS "IBgError"
 \fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBcsmsgque.IBgError.Call\fP\fP
 .PP
-Define an asyncrone error handler. This handler is used for handle errors send with \fBctx.SendERROR()\fP. Use \fBInteger ex.num or ctx.ErrorGetNum()\fP and \fBString ex.txt or ctx.ErrorGetText()\fP to access the error.
+Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
 .SH "LINK CREATION AND DELETION"
 .PP
 To create and to destroy a link is the main purpose of the vbmsgque library. A link is a client/server connection used to perform various tasks.
@@ -250,7 +257,7 @@ the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connectio
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE OBJECT\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBstatic: Init(String() args)\fP.
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE OBJECT\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
 .RE
 .PP
 .SS "ctx.LinkCreateChild(MqS parent, String() argv)"
@@ -281,28 +288,30 @@ End Sub
 .fi
 .PP
 .SS "TOKEN IDENTIFIER"
-The \fItoken\fP is a 4 byte string and identifies the service. The \fItoken\fP is used in:
+The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. vbmsgque is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
 .IP "\(bu" 2
-\fBctx.SendEND(String token)\fP
+\fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
-\fBctx.SendEND_AND_WAIT(String token, [Integer timeout])\fP
+\fB+ALL\fP - used to listen on \fBall\fP services not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
-\fBctx.SendEND_AND_CALLBACK(String token, AddressOf callback)\fP
+\fB_ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
 .IP "\(bu" 2
-\fBctx.ServiceCreate(String token, AddressOf service)\fP
+\fB+FTR\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .IP "\(bu" 2
-\fBctx.ServiceDelete(string token)\fP
+\fB+EOF\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .PP
 .SS "SERVICE CALLBACK"
-A service is using a callback to act on an incoming service request. The callback is used on a \fIserver\fP using \fBctx.ServiceCreate(String token, AddressOf service)\fP or on a \fIclient\fP using \fBctx.SendEND_AND_CALLBACK(String token, AddressOf callback)\fP.
+A service is using a callback to act on an incoming service request. The callback is used on a \fIserver\fP using \fBServiceCreate\fP or on a \fIclient\fP using \fBSendEND_AND_CALLBACK\fP.
 .PP
 The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP or using a delegate of type \fISub Callback()\fP.
 .SS "ctx.ServiceCreate(String token, AddressOf service)"
 Create a new service listen on \fBTOKEN IDENTIFIER\fP and start for every incoming request a \fIservice\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "ctx.ServiceProxy(String token, [int id=0])"
+Create a new service listen on \fBTOKEN IDENTIFIER\fP and link the incoming package to the outgoing package of slave with \fIid\fP. Use \fIid=0\fP to link a filter.
 .SS "ctx.ServiceDelete(string token)"
 Delete a new service listen on \fBTOKEN IDENTIFIER\fP . (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.ProcessEvent([Integer timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
-Start the Event-Loop and check for the next event. In \fIclient\fP mode this command is usually used together with \fBctx.SendEND_AND_CALLBACK(String token, AddressOf callback)\fP to process the results. 
+Start the Event-Loop and check for the next event. In \fIclient\fP mode this command is usually used together with \fBSendEND_AND_CALLBACK\fP to process the results. (on error return an \fBEXCEPTION OBJECT\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -341,7 +350,7 @@ Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireA
 .PP
 \fBAttention:\fP
 .RS 4
-if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBctx.SendEND_AND_WAIT(String token, [Integer timeout])\fP
+if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBSendEND_AND_WAIT\fP. (on error return an \fBEXCEPTION OBJECT\fP)
 .RE
 .PP
 .SS "ctx.SendEND_AND_WAIT(String token, [Integer timeout])"
@@ -349,15 +358,15 @@ Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for
 .SS "ctx.SendEND_AND_CALLBACK(String token, AddressOf callback)"
 Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.SendRETURN()"
-Answer an incoming service-call started with \fBctx.SendEND_AND_WAIT(String token, [Integer timeout])\fP or \fBctx.SendEND_AND_CALLBACK(String token, AddressOf callback)\fP. The return package is build-up like the previous service call package but with a ctx.SendRETURN() as final command. (on error return an \fBEXCEPTION OBJECT\fP)
+Answer an incoming service-call started with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP. The return package is build-up like the previous service call package but with a ctx.SendRETURN() as final command. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.SendERROR()"
-Send an asyncrone error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.SendFTR([Integer timeout])"
-Send a filter stream data package using \fBFILTER MODE\fP. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.SendEOF([Integer timeout])"
-Send a filter end-of-file data package using \fBFILTER MODE\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.Send[TYPE](TYPE value)"
 Add an item using \fBTYPE IDENTIFIER\fP to the vbmsgque send data package. (example: \fISendY\fP)
+.SS "ctx.SendN(byte[] value)"
+Add a vbmsgque body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
+.SS "ctx.SendBDY(byte[] value)"
+Create the entire package \fIbody\fP from a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually read with \fBReadBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
 .SS "ctx.SendL_START()"
 Start to send an embedded list item.
 .SS "ctx.SendL_END()"
@@ -384,6 +393,10 @@ ctx.ReadL_END()
 .PP
 .SS "TYPE ctx.Read[TYPE]()"
 return an item using the \fBTYPE IDENTIFIER\fP from the vbmsgque read data package. (on error return an \fBEXCEPTION OBJECT\fP)
+.SS "byte[] ctx.ReadN()"
+Read a vbmsgque body \fIitem\fP from the package. A \fIitem\fP as is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually send with \fBSendN\fP and can be used to save the item into an external storage.
+.SS "byte[] ctx.ReadBDY()"
+Read the entire package \fIbody\fP into a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually send with \fBSendBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
 .SS "MqBufferS ctx.ReadU()"
 return a temporary \fBBUFFER OBJECT\fP. (on error return an \fBEXCEPTION OBJECT\fP) 
 .PP
@@ -399,7 +412,7 @@ return the number of items left in the vbmsgque read data package.
 .SS "Boolean ctx.ReadItemExists()"
 Check if are still items in the vbmsgque read data package.
 .SS "ctx.ReadUndo()"
-Undo the \fBlast\fP read operation. This is useful if an error was raised or if a buffer object (returned from \fBMqBufferS ctx.ReadU()\fP) has not the expected type. (on error return an \fBEXCEPTION OBJECT\fP)
+Undo the \fBlast\fP read operation. This is useful if an error was raised or if a buffer object (returned from \fBReadU\fP) has not the expected type. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.ReadL_START()"
 Start to read an embedded list item. Use the current read package (\fIbuffer\fP = NULL) or a \fIbuffer\fP object. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.ReadL_END()"
@@ -418,7 +431,7 @@ to delete a slave-context if a master-context is deleted
 .PP
 In difference to the client/server link the master/slave link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the master-msgque-context can be a server because only one server per node is possible.
 .SS "ctx.SlaveWorker(Integer id, String() argv)"
-Create a worker as \fIslave\fP of the \fIctx\fP object using the image of the \fIctx\fP object self and started as an independent process or thread based on the \fBcommand-line: --thread --spawn --fork\fP argument. 
+Create a worker as \fIslave\fP of the \fIctx\fP object using the image of the \fIctx\fP object self and started as an independent process or thread based on the \fBstartAs\fP argument. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -449,12 +462,12 @@ Create a master/slave link between the \fIctx\fP object and the \fIslave\fP obje
 .RE
 .PP
 .SS "ctx.SlaveDelete(Integer id)"
-Delete a \fIslave-context\fP from a former \fBctx.SlaveCreate(Integer id, MqS slave)\fP command using the same identifier \fIid\fP. By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. In addition \fIonly\fP the \fIparent-slave-context\fP can be deleted explicit. If \fIid\fP is invalid nothing will happen. (on error return an \fBEXCEPTION OBJECT\fP)
+Delete a \fIslave-context\fP from a former \fBSlaveCreate\fP command using the same identifier \fIid\fP. By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. In addition \fIonly\fP the \fIparent-slave-context\fP can be deleted explicit. If \fIid\fP is invalid nothing will happen. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "MqS ctx.SlaveGet(Integer id)"
-return the \fIslave-context\fP from the \fBctx.SlaveCreate(Integer id, MqS slave)\fP using the same identifier \fIid\fP or \fINULL\fP if the \fIid\fP is not valid or if \fIctx\fP is not a \fImaster\fP.
+return the \fIslave-context\fP from the \fBSlaveCreate\fP using the same identifier \fIid\fP or \fINULL\fP if the \fIid\fP is not valid or if \fIctx\fP is not a \fImaster\fP.
 .SH "BUFFER OBJECT"
 .PP
-The \fIclass \fBMqBufferS\fP\fP object is created by \fBMqBufferS ctx.ReadU()\fP and id used to save a \fBtypeless temporary data item\fP from the vbmsgque data package. The lifetime of the \fIclass \fBMqBufferS\fP\fP is only the current callback up to the next read operation of the same context.
+The \fIclass \fBMqBufferS\fP\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the vbmsgque data package. The lifetime of the \fIclass \fBMqBufferS\fP\fP is only the current callback up to the next read operation of the same context.
 .PP
 .PP
 .nf
@@ -514,7 +527,7 @@ return the error number from the error object. The number can be used as exit-co
 .SS "ctx.ErrorC(String prefix, Integer errnum, String message)"
 create a vbmsgque error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP
 .SS "ctx.ErrorSet(Exception ex)"
-convert a \fIclass MqSException\fP into a vbmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBctx.LinkDelete()\fP or \fBctx.Exit()\fP after the exception was caught and before the application exit or the object is deleted.
+convert a \fIclass MqSException\fP into a vbmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "ctx.ErrorReset()"
 clear the vbmsgque error object.
 .SS "ctx.ErrorRaise()"
@@ -523,7 +536,10 @@ convert and raise an vbmsgque error object into a VB.NET \fBEXCEPTION OBJECT\fP.
 print an vbmsgque error object to stderr and \fIclear\fP the vbmsgque error
 .SH "FILTER MODE"
 .PP
-The filter mode is related to a special usage of the vbmsgque software called a command pipeline. A command pipeline is well known from the \fBunix\fP shell to link different commands together to act like a single application: 
+The filter mode is related to a special usage of the vbmsgque software called a command pipeline. To define a filter create a \fIserver\fP with \fBisServer\fP or use \fBIServerSetup\fP and add the required services.
+.SH "ONE-DIRECTIONAL FILTER"
+.PP
+A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIright\fP and is well known from the \fBunix\fP shell to link different commands together: 
 .PP
 .nf
 
@@ -531,7 +547,7 @@ The filter mode is related to a special usage of the vbmsgque software called a 
 
 .fi
 .PP
- A command pipeline with vbmsgque queues is using the special token \fB@\fP to link the commands together: 
+ A vbmsgque command pipeline is created with the special character \fB@\fP instead of \fB\fP| : 
 .PP
 .nf
 
@@ -539,17 +555,52 @@ The filter mode is related to a special usage of the vbmsgque software called a 
 
 .fi
 .PP
- To create a vbmsgque filter use:
+ with every command have to use \fBlibmsgque\fP. To define a vbmsgque filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
 .IP "\(bu" 2
-\fC \fBIFilterFTR\fP \fP
+\fB+FTR\fP : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \fB+FTR\fP service request.
 .IP "\(bu" 2
-\fC \fBIFilterEOF\fP \fP
+\fB+EOF\fP : required to act on End-Of-Filter data and is called after all \fB+FTR\fP data was send. Sometimes the filter data can not be served as \fB+FTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \fB+EOF\fP token is used to continue send \fB+FTR\fP data rows.
 .PP
-and to send data to the next filter command use:
+and send every data item with \fBSendEND_AND_WAIT\fP.
+.SH "BI-DIRECTIONAL FILTER"
+.PP
+A bi-directional filter has a \fIdata-flow\fP in both directions and is used in a \fIclassical\fP client/server application: 
+.PP
+.nf
+
+    client ... <--> ... server
+
+.fi
+.PP
+ to add an additional feature like a protocol-tunnelling: 
+.PP
+.nf
+
+    client @ mq2tunnel ... <--> ... tunnel2mq @ server
+
+.fi
+.PP
+ or to convert the protocol into an other protocol: 
+.PP
+.nf
+
+    client @ mq2soap ... <--> ... soap-server
+
+.fi
+.PP
+ To define a \fIbi-directional\fP filter a couple of commands provide support:
 .IP "\(bu" 2
-\fC \fBctx.SendFTR([Integer timeout])\fP \fP
+\fBServiceCreate\fP : use the token \fB+ALL\fP to act on \fIall\fP services
 .IP "\(bu" 2
-\fC \fBctx.SendEOF([Integer timeout])\fP \fP
+\fBConfigGetFilter\fP: to get the filter context (other site)
+.IP "\(bu" 2
+\fBConfigGetToken\fP: to get the current token
+.IP "\(bu" 2
+\fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
+.IP "\(bu" 2
+\fBReadBDY\fP : to read the entire body as binary array
+.IP "\(bu" 2
+\fBSendBDY\fP : to send the entire body
 .PP
 .SH "PORTABILITY ISSUES"
 .PP

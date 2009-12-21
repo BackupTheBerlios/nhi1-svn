@@ -1,4 +1,4 @@
-.TH "perlmsgque Tutorial" n "14 Dec 2009" "Version 0.2" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque Tutorial" n "21 Dec 2009" "Version 0.2" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -31,8 +31,6 @@ The perl language binding provide the following basic components:
 abstract class of the \fBperlmsgque\fP object: \fBMqS\fP
 .IP "\(bu" 2
 interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
-.IP "\(bu" 2
-interface: \fBIFilterFTR\fP and or \fBIFilterEOF\fP to add filter functionality
 .IP "\(bu" 2
 interface: \fBIFactory\fP to create a new application instance
 .IP "\(bu" 2
@@ -218,18 +216,53 @@ To call a \fIlocal\fP server started by the client using \fIPIPE\fP communicatio
 .PP
 .SH "FILTER"
 .PP
-A filter has to implement the \fBIFilterFTR\fP or the \fBIFilterEOF\fP interface which requires the following functions:
-.IP "\(bu" 2
-\fBIFilterFTR\fP, a service function to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send from one filter-command to the following filter-command as \fIFTR\fP service request
-.IP "\(bu" 2
-\fBIFilterEOF\fP, a service function to act on \fIEnd-Of-Filter\fP data. This service is called \fIafter\fP the whole filter data was send. Sometimes the filter data can not be served as filter data rows (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the EOF function is used to continue send filter data rows
+The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filter looks like:
 .PP
-The \fIminimal\fP filter looks like:
+ 
 .PP
-.IP "\(bu" 2
-\fBfilter example\fP
-.PP
+.nf
+use strict;
+use Net::PerlMsgque;
 
+sub FTRcmd {
+  my $ctx = shift;
+  my $ftr = $ctx->ConfigGetFilter();
+  $ftr->SendSTART();
+  while ($ctx->ReadItemExists()) {
+    $ftr->SendC('<' . $ctx->ReadC() . '>');
+  }
+  $ftr->SendEND_AND_WAIT('+FTR');
+  $ctx->SendRETURN();
+}
+
+package main;
+
+  our $srv = new Net::PerlMsgque::MqS();
+  eval {
+    $srv->ConfigSetName('ManFilter');
+    $srv->ConfigSetIsServer(1);
+    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
+    $srv->LinkCreate(@ARGV);
+    $srv->ServiceCreate('+FTR', \&FTRcmd);
+    $srv->ServiceProxy('+EOF');
+    $srv->ProcessEvent({wait => 'FOREVER'});
+  };
+  if ($@) {
+    $srv->ErrorSet($@);
+  }
+  $srv->Exit();
+
+.fi
+.PP
+ Use \fImanfilter.pl\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
+
+.fi
+.PP
+ 
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for perlmsgque from the source code.

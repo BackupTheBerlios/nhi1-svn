@@ -110,9 +110,17 @@ ALIASES		    += "config_type_isConnected=bool"
 ALIASES		    += "config_set_isConnected=NO"
 ALIASES		    += "config_get_isConnected=#ConfigGetIsConnected"
 
+ALIASES		    += "config_type_isTransaction=bool"
+ALIASES		    += "config_set_isTransaction=NO"
+ALIASES		    += "config_get_isTransaction=#ConfigGetIsTransaction"
+
 ALIASES		    += "config_type_master=MqC"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=#ConfigGetMaster"
+
+ALIASES		    += "config_type_filter=MqC"
+ALIASES		    += "config_set_filter=NO"
+ALIASES		    += "config_get_filter=#ConfigGetFilter"
 
 ALIASES		    += "config_type_ctxId=#MQ_SIZE"
 ALIASES		    += "config_set_ctxId=NO"
@@ -171,15 +179,17 @@ ALIASES		    += "SendEND_AND_CALLBACK2=ctx.SendEND_AND_CALLBACK(MQ_CST const tok
 ENABLED_SECTIONS    += SendEND_AND_CALLBACK2
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendFTR=ctx.SendFTR(MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
-ALIASES		    += "SendEOF=ctx.SendEOF(MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 ALIASES		    += "Send_TYPE=ctx.Send[TYPE](TYPE value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendB(MQ_BIN value, MQ_SIZE len)"
+ALIASES		    += "SendBDY=ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
 
 # READ DATE
 ALIASES		    += "Read_TYPE=TYPE ctx.Read[TYPE]()"
 ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadN=ctx.ReadN(MQ_BIN &value, MQ_SIZE &len)"
+ALIASES		    += "ReadBDY=ctx.ReadBDY(MQ_BIN &value, MQ_SIZE &len)"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqC otherCtx)"
 ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=bool ctx.ReadItemExists()"
@@ -193,10 +203,11 @@ ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST const token, IService * const service)"
-ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST const token, CallbackF const service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST token, IService * service)"
+ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF service)"
 ENABLED_SECTIONS    += ServiceCreate2
-ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST const token)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
 ALIASES		    += "ProcessEventFlag=MqC.WAIT"
 

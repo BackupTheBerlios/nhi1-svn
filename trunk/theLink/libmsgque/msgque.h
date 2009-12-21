@@ -1036,7 +1036,7 @@ MQ_DECL MqConfigSetName (
   MQ_CST  data
 );
 
-/// \brief set the #MqConfigS::ident value and cleanup old value
+/// \brief set the #MqSetupS::ident value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIdent (
   struct MqS * const context,
@@ -1078,7 +1078,7 @@ MQ_DECL MqConfigSetIsSilent (
   MQ_BOL  data
 );
 
-/// \brief set the #MqConfigS::isServer value
+/// \brief set the #MqSetupS::isServer value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIsServer (
   struct MqS * const context,
@@ -1410,9 +1410,10 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/// \brief get the \e filter object from a bidirectional filter pipeline
+/// \brief get the \e filter object from a filter pipeline
 ///  between a \e master context and a \e slave context with \e id.
 /// \context
+/// \param[in] id the slave identifer, set to \e 0 for a \e filter
 /// \param[out] filterP the filter object to return
 /// \retMqErrorE
 ///
