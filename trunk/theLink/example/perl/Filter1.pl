@@ -22,27 +22,34 @@ sub FTRcmd {
     push(@L, "<" . $ctx->ReadC() . ">");
   }
   push(@data,\@L);
+  $ctx->SendRETURN();
 }
 
 sub EOFcmd {
   my $ctx = shift;
+  my $ftr = $ctx->ConfigGetFilter();
   foreach (@data) {
-    $ctx->SendSTART();
+    $ftr->SendSTART();
     foreach (@$_) {
-      $ctx->SendC($_);
+      $ftr->SendC($_);
     }
-    $ctx->SendFTR();
+    $ftr->SendEND_AND_WAIT("+FTR");
   }
+  $ftr->SendSTART();
+  $ftr->SendEND_AND_WAIT("+EOF");
+  $ctx->SendRETURN();
 }
 
 package main;
 
   our $srv = new Net::PerlMsgque::MqS();
   eval {
-    $srv->ConfigSetFilterFTR(\&FTRcmd);
-    $srv->ConfigSetFilterEOF(\&EOFcmd);
     $srv->ConfigSetName("filter");
+    $srv->ConfigSetIsServer(1);
+    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
     $srv->LinkCreate(@ARGV);
+    $srv->ServiceCreate("+FTR", \&FTRcmd);
+    $srv->ServiceCreate("+EOF", \&EOFcmd);
     $srv->ProcessEvent({wait => "FOREVER"});
   };
   if ($@) {

@@ -15,20 +15,25 @@ use Net::PerlMsgque;
 
 sub FTRcmd {
   my $ctx = shift;
-  $ctx->SendSTART();
+  my $ftr = $ctx->ConfigGetFilter();
+  $ftr->SendSTART();
   while ($ctx->ReadItemExists()) {
-    $ctx->SendC("<" . $ctx->ReadC() . ">");
+    $ftr->SendC("<" . $ctx->ReadC() . ">");
   }
-  $ctx->SendFTR();
+  $ftr->SendEND_AND_WAIT("+FTR");
+  $ctx->SendRETURN();
 }
 
 package main;
 
   our $srv = new Net::PerlMsgque::MqS();
   eval {
-    $srv->ConfigSetFilterFTR(\&FTRcmd);
     $srv->ConfigSetName("ManFilter");
+    $srv->ConfigSetIsServer(1);
+    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
     $srv->LinkCreate(@ARGV);
+    $srv->ServiceCreate("+FTR", \&FTRcmd);
+    $srv->ServiceProxy("+EOF");
     $srv->ProcessEvent({wait => "FOREVER"});
   };
   if ($@) {

@@ -23,9 +23,12 @@ package main;
 
   our $srv = new Net::PerlMsgque::MqS();
   eval {
-    $srv->ConfigSetFilterFTR(\&FTRcmd);
     $srv->ConfigSetName("filter");
+    $srv->ConfigSetIsServer(1);
+    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
     $srv->LinkCreate(@ARGV);
+    $srv->ServiceCreate("+FTR", \&FTRcmd);
+    $srv->ServiceProxy("+EOF");
     $srv->ProcessEvent({wait => "FOREVER"});
   };
   if ($@) {

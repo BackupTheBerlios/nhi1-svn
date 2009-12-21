@@ -169,7 +169,9 @@ ProcCopy (
   MQ_PTR *dataP
 )
 {
-  return MqErrorC(context,__func__,-1,"perl requires that a 'callback'have to be defined in the object constructor");
+  *dataP = newSVsv(*dataP);
+  //return MqErrorC(context,__func__,-1,"perl requires that a 'callback' have to be defined in the object constructor");
+  return MQ_OK;
 }
 
 
@@ -219,8 +221,16 @@ static enum MqErrorE FactoryCreate (
 	MqS * context = *contextP = get_MqS_NO_ERROR(POPs);
 	if (context != NULL) {
 	  MqConfigDup (context, tmpl);
-	  if ((ret = MqSetupDup (context, tmpl)) != MQ_OK) {
-	    ret = MqErrorCopy (tmpl, context);
+	  if (create == MQ_FACTORY_NEW_FILTER) {
+	    if ((ret = MqSetupDupForClient (context, tmpl)) != MQ_OK) {
+	      *contextP = NULL;
+	      ret = MqErrorCopy (tmpl, context);
+	    }
+	  } else {
+	    if ((ret = MqSetupDup (context, tmpl)) != MQ_OK) {
+	      *contextP = NULL;
+	      ret = MqErrorCopy (tmpl, context);
+	    }
 	  }
 	} else {
 	  ret = MqErrorC(tmpl, __func__, -1, "factory return is not of type 'Net::PerlMsgque::MqS'");
@@ -513,6 +523,17 @@ ConfigGetMaster(MqS* context)
     XSRETURN(1);
 
 void
+ConfigGetFilter(MqS* context, ...)
+  PREINIT:
+    MqS* filter;
+    MQ_SIZE id=0;
+  PPCODE:
+    if (items > 1) id = SvIV(ST(1));
+    ErrorMqToPerlWithCheck (MqConfigGetFilter (context, id, &filter));
+    ST(0) = (SV*)filter->self;
+    XSRETURN(1);
+
+void
 ConfigGetParent(MqS* context)
   PREINIT:
     MqS* parent;
@@ -530,6 +551,9 @@ MqConfigGetToken (MqS* context)
 bool
 MqConfigGetIsConnected (MqS* context)
 
+bool
+MqConfigGetIsTrans (MqS* context)
+
 void
 MqConfigSetIsSilent (MqS* context, bool isSilent)
 
@@ -541,6 +565,9 @@ MqConfigSetIsString (MqS* context, bool isString)
 
 bool
 MqConfigGetIsString (MqS* context)
+
+void
+MqConfigSetIsServer (MqS* context, bool isServer)
 
 bool
 MqConfigGetIsServer (MqS* context)
@@ -570,16 +597,6 @@ MqConfigSetFactory (MqS* context, SV* factoryF)
     );
 
 void
-MqConfigSetFilterFTR (MqS* context, SV* ftrF)
-  CODE:
-    MqConfigSetFilterFTR (context, ProcCall, (MQ_PTR) newSVsv(ftrF), ProcFree, ProcCopy);
-
-void
-MqConfigSetFilterEOF (MqS* context, SV* eofF)
-  CODE:
-    MqConfigSetFilterEOF (context, ProcCall, (MQ_PTR) newSVsv(eofF), ProcFree, ProcCopy);
-
-void
 MqConfigSetBgError (MqS* context, SV* bgerrorF)
   CODE:
     MqConfigSetBgError (context, ProcCall, (MQ_PTR) newSVsv(bgerrorF), ProcFree, ProcCopy);
@@ -600,7 +617,7 @@ MqSendSTART (MqS* context)
 void
 MqSendEND_AND_WAIT (MqS* context, MQ_CST token, ...)
   PREINIT:
-    MQ_TIME_T timeout = -2;
+    MQ_TIME_T timeout = MQ_TIMEOUT_USER;
   CODE:
     if (items > 2) timeout = SvIV(ST(2));
     ErrorMqToPerlWithCheck (MqSendEND_AND_WAIT(context, token, timeout));
@@ -614,22 +631,6 @@ void
 MqSendEND (MqS* context, MQ_CST token)
   CODE:
     ErrorMqToPerlWithCheck (MqSendEND(context, token));
-
-void
-MqSendFTR (MqS* context, ...)
-  PREINIT:
-    MQ_TIME_T timeout = -2;
-  CODE:
-    if (items > 1) timeout = SvIV(ST(1));
-    ErrorMqToPerlWithCheck (MqSendFTR(context,timeout));
-
-void
-MqSendEOF (MqS* context, ...)
-  PREINIT:
-    MQ_TIME_T timeout = -2;
-  CODE:
-    if (items > 1) timeout = SvIV(ST(1));
-    ErrorMqToPerlWithCheck (MqSendEOF(context,timeout));
 
 void
 MqSendRETURN (MqS* context)
@@ -770,6 +771,24 @@ MqSendB (MqS* context, SV* binary)
     bin = (MQ_BIN)SvPVbyte (binary, len);
     ErrorMqToPerlWithCheck (MqSendB (context, bin, (MQ_SIZE)len));
 
+void
+MqSendN (MqS* context, SV* binary)
+  INIT:
+    MQ_BIN bin;
+    STRLEN len;
+  CODE:
+    bin = (MQ_BIN)SvPVbyte (binary, len);
+    ErrorMqToPerlWithCheck (MqSendN (context, bin, (MQ_SIZE)len));
+
+void
+MqSendBDY (MqS* context, SV* binary)
+  INIT:
+    MQ_BIN bin;
+    STRLEN len;
+  CODE:
+    bin = (MQ_BIN)SvPVbyte (binary, len);
+    ErrorMqToPerlWithCheck (MqSendBDY (context, bin, (MQ_SIZE)len));
+
 SV*
 MqReadB (MqS* context)
   INIT:
@@ -777,6 +796,28 @@ MqReadB (MqS* context)
     MQ_SIZE len;
   CODE:
     ErrorMqToPerlWithCheck (MqReadB (context, &bin, &len));
+    RETVAL = newSVpvn((MQ_CST)bin, len);
+  OUTPUT:
+    RETVAL
+
+SV*
+MqReadN (MqS* context)
+  INIT:
+    MQ_BIN bin;
+    MQ_SIZE len;
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadN (context, &bin, &len));
+    RETVAL = newSVpvn((MQ_CST)bin, len);
+  OUTPUT:
+    RETVAL
+
+SV*
+MqReadBDY (MqS* context)
+  INIT:
+    MQ_BIN bin;
+    MQ_SIZE len;
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadBDY (context, &bin, &len));
     RETVAL = newSVpvn((MQ_CST)bin, len);
   OUTPUT:
     RETVAL
@@ -800,6 +841,16 @@ void
 MqReadProxy (MqS* context, MqS* target)
   CODE:
     ErrorMqToPerlWithCheck (MqReadProxy (context, target));
+    
+void
+MqServiceProxy (MqS* context, MQ_CST token, ...)
+  PREINIT:
+    MQ_SIZE id=0;
+  CODE:
+    if (items > 2) id = SvIV(ST(2));
+    ErrorMqToPerlWithCheck (
+      MqServiceProxy (context, token, id)
+    );
     
 void
 MqServiceCreate (MqS* context, MQ_CST token, SV* serviceF)
