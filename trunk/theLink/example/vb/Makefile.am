@@ -45,6 +45,9 @@ Filter1.exe: Filter1.vb ../../csmsgque/csmsgque.dll
 Filter2.exe: Filter2.vb ../../csmsgque/csmsgque.dll
 	@echo "WARNING: compile file '$@' on windows"
 
+Filter3.exe: Filter3.vb ../../csmsgque/csmsgque.dll
+	@echo "WARNING: compile file '$@' on windows"
+
 testclient.exe: testclient.vb ../../csmsgque/csmsgque.dll
 	@echo "WARNING: compile file '$@' on windows"
 

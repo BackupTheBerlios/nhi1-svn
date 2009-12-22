@@ -606,10 +606,12 @@ Send the package using \RNS{ServiceIdentifier} and \b don't wait for an answer. 
 be handled by the \RNS{ServiceCallback}. \throw
 
 \subsection	  \NS{SendRETURN}			\SendRETURN
-Answer an incoming service-call started with \RNSA{SendEND_AND_WAIT} or 
-\RNSA{SendEND_AND_CALLBACK}. 
-The return package is build-up like the previous service call package but with a \SendRETURN as final
-command. \throw
+Finish a service-handler and return the data if required:
+- if a transaction is ongoing this function return the answer.
+- if the answer is an empty package no previous #MqSendSTART is required.
+- if no transaction is ongoing this function does just return the error code.
+.
+\throw
 
 \subsection	  \NS{SendERROR}			\SendERROR
 Send an asynchronous error to the link target. \throw
@@ -1085,7 +1087,7 @@ The filter mode is related to a special usage of the \self software called a com
 To define a filter create a \e server with \RNSC{isServer} or use \RNSC{IServerSetup}
 and add the required services. 
 
-\section	\NS{filter-one}				ONE-DIRECTIONAL FILTER
+\subsection	\NS{filter-one}				ONE-DIRECTIONAL FILTER
 A one-directional filter has a \e data-flow from the \e left to the \e right and is well known from the \b unix shell 
 to link different commands together: \verbatim
     command1 | command2 | command3
@@ -1102,7 +1104,7 @@ To define a \self filter create a service handle with \RNSA{ServiceCreate} or
  .
 and send every data item with \RNSA{SendEND_AND_WAIT}.
 
-\section	\NS{filter-bi}				BI-DIRECTIONAL FILTER
+\subsection	\NS{filter-bi}				BI-DIRECTIONAL FILTER
 A bi-directional filter has a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
     client ... <--> ... server
 \endverbatim to add an additional feature like a protocol-tunnelling: \verbatim

@@ -185,7 +185,7 @@ ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
 # ADDING SERVICES
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,fService,data,fFree)"
-ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_CST token, MQ_SIZEid=0)"
+ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_CST token, MQ_SIZE id=0)"
 ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,token)"
 ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
 ALIASES		    += "ProcessEventFlag=MQ_WAIT"

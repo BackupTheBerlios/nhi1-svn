@@ -290,7 +290,11 @@ ALIASES                = \
     "api=\brief implement the \libmsgque API object:" \
     "sameas{1}=\brief same as #\1 but using the #MqS object \e msgque as input" \
     "id=\param[in] id an \e integer used as \e unique identifer for the master/slave link"\
-    "AllLng{1}=(\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"
+    "AllLng{1}=(\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"\
+    "AllLngTxt{1}=\b \1 (\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"\
+    "AllLngTxtC{1}=\b \1 (\ref c_config_\1 \"C\", \ref cc_config_\1 \"C++\", \ref cs_config_\1 \"C#\", \ref java_config_\1 \"Java\", \ref py_config_\1 \"Python\", \ref tcl_config_\1 \"Tcl\", \ref perl_config_\1 \"Perl\", \ref vb_config_\1 \"VB.NET\")"\
+    "AllLngTxt{2}=\b \2 (\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")" \
+    "AllLngTxtC{2}=\b \2 (\ref c_config_\1 \"C\", \ref cc_config_\1 \"C++\", \ref cs_config_\1 \"C#\", \ref java_config_\1 \"Java\", \ref py_config_\1 \"Python\", \ref tcl_config_\1 \"Tcl\", \ref perl_config_\1 \"Perl\", \ref vb_config_\1 \"VB.NET\")"
     
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C 
 # sources only. Doxygen will then generate output that is more tailored for C. 

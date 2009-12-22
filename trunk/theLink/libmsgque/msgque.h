@@ -1440,9 +1440,14 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
   struct MqS const * const context
 );
 
-/// \brief return the current transaction token
+/// \brief get the token from the ongoing service-handler
 /// \context
-/// \return the current transaction token as 4 character string
+/// \return the token as 4 character string
+///
+/// The token is used to identify the server-service to call. If the
+/// server create a generic service-handler using \b +ALL in #MqServiceCreate
+/// the current token is unknown in the ongoing service-handler. This
+/// unknown token can be retrieved with #MqConfigGetToken.
 MQ_EXTERN MQ_CST 
 MQ_DECL MqConfigGetToken (
   struct MqS const * const context
@@ -3373,13 +3378,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
   MqTokenDataFreeF datafreeF
 );
 
-/** \brief send a \e return Msgque packet with data from the current \e MqErrorS object
- * 
- *  Utility function to simplify the \e send task for a \e service handle.
- *
- *  \context
- *  \retMqErrorE
- */
+/// \brief finish a service-handler and return the data if required.
+///
+/// Every service-handler have to use this function on exit:
+/// - if a transaction is ongoing this function return the answer.
+/// - if the answer is an empty package no previous #MqSendSTART is required.
+/// - if no transaction is ongoing this function does just return the error code.
+/// .
+/// \context
+/// \retMqErrorE
+///
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendRETURN (
   struct MqS * const context
 );

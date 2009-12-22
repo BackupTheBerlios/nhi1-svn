@@ -20,7 +20,6 @@ class Filter1 extends MqS implements IFactory {
     return new Filter1();
   }
 
-  // service definition
   public static class FTR implements IService {
     public void Service(MqS ctx) throws MqSException {
       ArrayList<String> d = new ArrayList<String>();
@@ -32,7 +31,6 @@ class Filter1 extends MqS implements IFactory {
     }
   }
 
-  // service definition
   public static class EOF implements IService {
     public void Service (MqS ctx) throws MqSException {
       MqS ftr = ctx.ConfigGetFilter();

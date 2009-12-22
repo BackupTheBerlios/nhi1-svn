@@ -18,6 +18,12 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
     return new Filter3();
   }
 
+  public void ServerSetup() throws MqSException {
+    MqS ftr = ConfigGetFilter();
+    ServiceCreate("+ALL", new Filter()); 
+    ftr.ServiceCreate("+ALL", new Filter());
+  }
+
   public class Filter implements IService {
     public void Service(MqS ctx) throws MqSException {
       MqS ftr = ConfigGetFilter();
@@ -32,12 +38,6 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
       }
       SendRETURN();
     }
-  }
-
-  public void ServerSetup() throws MqSException {
-    MqS ftr = ConfigGetFilter();
-    ServiceCreate("+ALL", new Filter()); 
-    ftr.ServiceCreate("+ALL", new Filter());
   }
 
   public static void main(String[] argv) {

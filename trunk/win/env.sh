@@ -11,7 +11,7 @@
 #§
 
 PACKAGE='libmsgque'
-PACKAGE_VERSION='3.8'
+PACKAGE_VERSION='4.1'
 PYTHON='python.exe'
 JAVA='java.exe'
 TCLSH='tclsh.exe'

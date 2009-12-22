@@ -35,8 +35,10 @@ CTAGSFLAGS = --c-kinds=+p
 EXTRA_DIST = make_binary_dist.sh $(mann_MANS)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
-      --enable-java --enable-csharp --enable-python --enable-perl --enable-vb \
+      --enable-java --enable-csharp --enable-python --enable-perl \
 	--enable-static --enable-guard --enable-brain
+
+#--enable-vb --enable-guard --enable-brain
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command

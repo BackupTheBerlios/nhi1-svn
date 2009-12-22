@@ -1,0 +1,213 @@
+/**
+
+\page filter WHAT-IS: a filter ?
+
+\section filter-intro				  INTRODUCTION
+
+The filter mode is related to a special usage of the \libmsgque software called a command pipeline.
+To define a filter create a \e server with:
+ - \AllLngTxtC{isServer} or \AllLngTxtC{IServerSetup}
+ .
+and add a factory interface:
+ - \AllLngTxtC{IFactory}
+ .
+
+Every filter has \b two context one belongs to the \e left command and one belongs to the \e right command: \verbatim
+ <-- left cmd --> <------- filter -------> <-- right cmd -->
+
+                  <-- left --><- right -->
+                  <- server -><- client ->
+                  <- master -><- slave -->
+                  <-context1-><-context2->
+
+  ... command1   @         filter         @   command2 ...
+\endverbatim
+The \e left context is created on application startup and the \e right context is created as \e slave of the
+\e left context.
+ - if the \b @ argument is followed by an \e normal command (server) a local pipeline is created: \verbatim
+client @ filter @ server
+\endverbatim
+ - if the \b @ argument is followed by an option a non-local pipeline is created: \verbatim
+<------------ host-1 -------------> <-- network --> <---------- host-2 ----------->
+       <---- client arguments ---->                       <--- server arguments -->
+                <-- filter arg. -->
+                  <--- options --->
+
+client @ filter @ --tcp --port 7777   ...........   server --tcp --port 7777 --fork
+\endverbatim
+
+
+\section        filter-bi                          BI-DIRECTIONAL FILTER
+
+A bi-directional filter allow a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
+    client ... <--> ... server
+\endverbatim as a feature enhancement like a protocol-tunnelling: \verbatim
+    client @ mq2tunnel ... <--> ... tunnel2mq @ server
+\endverbatim or to convert the protocol into an other protocol: \verbatim
+    client @ mq2soap ... <--> ... soap-server
+\endverbatim
+To define a \e bi-directional filter a couple of commands provide support:
+ - \AllLngTxt{ServiceCreate}
+  - use the token \b +ALL to add a listener for \e all services. This feature is used
+    for a tunnel to modify the body at all. (example: \c aguard)
+  .
+ - \AllLngTxt{ServiceProxy}
+  - use this function to link the \e left context with the \e right context identified with
+    the slave-identifier \e id (default: 0). No data manipulation is performed.
+  .
+ - \AllLngTxtC{filter,ConfigGetFilter}
+  - in a filter service the current context is used to \e read the data. To \e send the
+    data an other context, belonging to the \e other site of the communication, have to be used.
+    This function return the context of the other site.
+  .
+ - \AllLngTxtC{token,ConfigGetToken}
+  - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
+    token is not known. This function return the current token.
+  .
+ - \AllLngTxtC{isTransaction,ConfigGetIsTransaction}
+  - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
+    transaction-status is not known. This function return the transaction-status as boolean with 
+    \b true (with-transaction) or \b false (without-transaction).
+  - \b with-transaction: the package was send with \AllLngTxt{SendEND_AND_WAIT} or \AllLngTxt{SendEND_AND_CALLBACK}
+  - \b without-transaction: the package was send with \AllLngTxt{SendEND}
+  .
+ - \AllLngTxt{ReadBDY}
+  - read and return the entire body as binary array. Use this array to apply a transformation to the body at all like
+    encryption (example: \c aguard) or to save the body in a persistent storage for later use like transaction support
+    (example: \c atrans)
+  .
+ - \AllLngTxt{SendBDY}
+  - send a binary array, as returned by \b ReadBDY, to the filter target.
+  .
+ .
+The following code is based on the \b JAVA example \c theLink/example/java/Filter3.java:
+
+\dontinclude Filter3.java
+
+\skip example
+\until javamsgque
+
+create the \e class, implement the \e factory and the \e server interface:
+\skip IFactory
+\until }
+
+define the \e ServerSetup function to configure a new connection request and create a \e generic 
+service-handler (\b +ALL) for the \e left and the \e right context:
+\skip ServerSetup
+\until }
+
+define the \e generic service-handler to act on \b +ALL token:
+\skip Filter
+\until MqSException
+
+get the \e right context as send-target:
+\skipline ConfigGetFilter
+
+read the data from the \e left context send the data to the \e right context:
+\until SendBDY
+
+depending on the \e transaction-status decide to use the proper \b Send function:
+\until }
+\until }
+
+finally finish the service-handler:
+\until }
+\until }
+
+define the main function and create the initial context:
+\skip main
+\until filter
+
+process the command-line arguments and start the initial link:
+\skipline LinkCreate
+
+finally start the event-loop and wait for an incoming service-request:
+\skipline ProcessEvent
+
+on exit delete the context and finish the process:
+\until }
+\until }
+\until }
+\until }
+\until }
+
+
+\section        filter-one                         ONE-DIRECTIONAL FILTER
+
+A one-directional filter is a special form of a bi-directional filter and allow a \e data-flow from the \e left to the \e right.
+This filter is well known from the \b unix shell to link different commands together: \verbatim
+    command1 | command2 | command3
+\endverbatim
+A \libmsgque command pipeline is created with the special character \b @ instead of \b | :
+\verbatim
+    msgcmd1 @ msgcmd2 @ msgcmd3
+\endverbatim
+with every command have to use \libmsgque.
+To define a \libmsgque filter create a service handle with \AllLngTxt{ServiceCreate} or
+\AllLngTxt{ServiceProxy} for the both special token:
+ - \b +FTR : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \b +FTR service request.
+ - \b +EOF : required to act on End-Of-Filter data and is called after all \b +FTR data was send. Sometimes the filter data can not be served as \b +FTR data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the\b +EOF token is used to continue send \b +FTR data rows.
+ .
+and send every data item with \AllLngTxt{SendEND_AND_WAIT}.
+
+The following code is based on the \b JAVA example \c theLink/example/java/Filter1.java:
+
+\dontinclude Filter1.java
+
+\skip example
+\until javamsgque
+
+create a \e class and implement the \e factory interface:
+\skip IFactory
+\until }
+
+define a service-handler for the \b +FTR token and collect the data:
+\skip FTR
+\until Filter1
+
+finally finish the service-handler:
+\until }
+\until }
+
+define a service-handler for the \b +EOF token:
+\skip EOF
+\until }
+
+first send the \b +FTR data:
+\until FTR
+\until }
+
+second send the \b +EOF data:
+\skip SendSTART
+\until EOF
+
+finally finish the service-handler:
+\until }
+\until }
+
+define the main function and create the initial context:
+\skip main
+\until filter
+
+define the server setup:
+\skipline ConfigSetIsServer
+
+process the command-line arguments and start the initial link:
+\skipline LinkCreate
+
+define the \b +FTR and the \b +EOF token but only for the \e left context:
+\skip FTR
+\until EOF
+
+finally start the event-loop and wait for an incoming service-request:
+\skipline ProcessEvent
+
+on exit delete the context and finish the process:
+\until }
+\until }
+\until }
+\until }
+\until }
+
+*/
+

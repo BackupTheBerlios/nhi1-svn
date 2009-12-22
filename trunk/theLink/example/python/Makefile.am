@@ -16,5 +16,5 @@
 ##
 
 EXTRA_DIST = manfilter.py mulclient.py mulserver.py MyClient.py MyServer.py \
-		testclient.py testserver.py Filter1.py Filter2.py
+		testclient.py testserver.py Filter1.py Filter2.py Filter3.py
 

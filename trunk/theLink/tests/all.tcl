@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#set argv [list --only-c --testing]
+set argv [list --only-c --testing]
 
 #lappend argv --only-perl -match "async-F*" --only-pipe
 
@@ -27,7 +27,7 @@ testsDirectory $testdir
 tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
-#configure -file s*.test
+#configure -file example.test
 
 tcltest::runAllTests
 
