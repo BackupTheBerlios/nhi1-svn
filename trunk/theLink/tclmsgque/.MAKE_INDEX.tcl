@@ -12,8 +12,8 @@
 
 source ../../env.tcl
 
-set env(PATH)		    "[file join .. src .libs]$PATH_SEP$env(PATH)"
-set env(LD_LIBRARY_PATH)    "[file join .. src .libs]$PATH_SEP$env(LD_LIBRARY_PATH)"
+set env(PATH)		    "[file join .. libmsgque .libs]$PATH_SEP$env(PATH)"
+set env(LD_LIBRARY_PATH)    "[file join .. libmsgque .libs]$PATH_SEP$env(LD_LIBRARY_PATH)"
 
 pkg_mkIndex -verbose ./.libs
 

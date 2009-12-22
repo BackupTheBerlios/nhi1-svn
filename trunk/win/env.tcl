@@ -16,10 +16,22 @@ set TCLSH {tclsh.exe}
 set PERL {perl.exe}
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
-set CSEXEC {NATIVE}
-#set CSEXEC {mono.exe}
+set CLREXEC {NATIVE}
+#set CLREXEC {mono.exe}
 
 set PATH_SEP {;}
 set EXEEXT {.exe}
 set srcdir {.}
+
+
+set USE_TCL {yes}
+set USE_PERL {yes}
+set USE_CSHARP {yes}
+set USE_VB {no}
+set USE_PYTHON {yes}
+set USE_JAVA {yes}
 set USE_CXX {yes}
+set USE_PHP {no}
+set USE_BRAIN {yes}
+set USE_GUARD {yes}
+

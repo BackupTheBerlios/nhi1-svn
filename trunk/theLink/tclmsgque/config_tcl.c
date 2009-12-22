@@ -350,16 +350,18 @@ int NS(ConfigGetName) (NS_ARGS)
 
 int NS(ConfigGetSrvName) (NS_ARGS)
 {
+  MQ_CST str;
   CHECK_NOARGS
-  MQ_CST str = MqConfigGetSrvName(&tclctx->mqctx);
+  str = MqConfigGetSrvName(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
   RETURN_TCL
 }
 
 int NS(ConfigGetIdent) (NS_ARGS)
 {
+  MQ_CST str;
   CHECK_NOARGS
-  MQ_CST str = MqConfigGetIdent(&tclctx->mqctx);
+  str = MqConfigGetIdent(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
   RETURN_TCL
 }

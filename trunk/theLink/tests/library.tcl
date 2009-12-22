@@ -662,7 +662,7 @@ if {[info exist argv]} {
 	set env(TS_MAX)	    [optV argv --max -1]
     }
     if {![info exists env(TS_FILTER)]} {
-	set env(TS_FILTER)  [optV argv --filter]
+	set env(TS_FILTER)  [optV argv --filter NO]
     }
 
     if {[optB argv --only-string]} {
@@ -795,7 +795,7 @@ configure {*}$::argv
 ## some basic restrictions
 testConstraint local [expr {$env(USE_REMOTE) ? no : yes}]
 testConstraint use_remote $env(USE_REMOTE)
-testConstraint filter [expr {$env(TS_FILTER) ne ""}]
+testConstraint filter [expr {$env(TS_FILTER) ne "NO"}]
 
 ##
 ## -----------------------------------------------------------------------
@@ -999,7 +999,7 @@ proc Setup {num mode com server args} {
     set sargs [MkUnique $sargs]
     if {$serverSilent} { lappend sargs --silent }
     if {!$env(USE_REMOTE)} {
-      if {$filter ne ""} {
+      if {$filter ne "NO"} {
 	foreach {x t s} [split $server .] break
 	set sl [list {*}[getFilter $filter] {*}$DAEMON --$s --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs]
       } else {
@@ -1023,13 +1023,13 @@ proc Setup {num mode com server args} {
   for {set PNO 0} {$PNO<$numParent} {incr PNO} {
 
     ## prepare parent arguments
-    if {$filter ne ""} {
+    if {$filter ne "NO"} {
       set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter] --name fc @ {*}$comargs]
     } else {
       set cl [list LinkCreate {*}$cargs {*}$comargs]
     }
     if {$com eq "pipe"} { 
-      if {$filter ne ""} {
+      if {$filter ne "NO"} {
 	lappend cl @ {*}[getFilter $filter] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
@@ -1151,7 +1151,7 @@ proc Example {config client server args} {
     optVD sargs --buffersize --timeout --myhost --myport
     set sargs [MkUnique $sargs]
     if {!$env(USE_REMOTE)} {
-      if {$filter ne ""} {
+      if {$filter ne "NO"} {
 	set sl [list {*}[getExample $filter.$lng] --$start --name fs {*}$comargs @ {*}[getExample $server.$lng] {*}$sargs]
       } else {
 	set sl [list {*}[getExample $server.$lng] --$start {*}$sargs {*}$comargs]
@@ -1170,7 +1170,7 @@ proc Example {config client server args} {
   ## 3. start client
   set cl [list {*}[getExample $client.$lng] {*}$cargs {*}$comargs]
   if {$com eq "pipe"} { 
-    if {$filter ne ""} {
+    if {$filter ne "NO"} {
       lappend cl @ {*}[getExample $filter.$lng] --name fs @ {*}[getExample $server.$lng]
     } else {
       lappend cl @ {*}[getExample $server.$lng]

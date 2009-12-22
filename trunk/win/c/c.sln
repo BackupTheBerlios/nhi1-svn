@@ -33,6 +33,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testserver", "testserver\te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter2", "Filter2\Filter2.vcproj", "{3439F6CB-A9E0-425A-B75F-459299A925A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter3", "Filter3\Filter3.vcproj", "{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aguard", "aguard\aguard.vcproj", "{312AB23D-8303-44C6-ADB9-661389BBA240}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -102,6 +106,14 @@ Global
 		{3439F6CB-A9E0-425A-B75F-459299A925A4}.Debug|Win32.Build.0 = Debug|Win32
 		{3439F6CB-A9E0-425A-B75F-459299A925A4}.Release|Win32.ActiveCfg = Release|Win32
 		{3439F6CB-A9E0-425A-B75F-459299A925A4}.Release|Win32.Build.0 = Release|Win32
+		{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}.Debug|Win32.Build.0 = Debug|Win32
+		{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}.Release|Win32.ActiveCfg = Release|Win32
+		{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}.Release|Win32.Build.0 = Release|Win32
+		{312AB23D-8303-44C6-ADB9-661389BBA240}.Debug|Win32.ActiveCfg = Debug|Win32
+		{312AB23D-8303-44C6-ADB9-661389BBA240}.Debug|Win32.Build.0 = Debug|Win32
+		{312AB23D-8303-44C6-ADB9-661389BBA240}.Release|Win32.ActiveCfg = Release|Win32
+		{312AB23D-8303-44C6-ADB9-661389BBA240}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
