@@ -1,4 +1,4 @@
-.TH "vbmsgque Tutorial" n "21 Dec 2009" "Version 0.2" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque Tutorial" n "22 Dec 2009" "Version 0.3" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

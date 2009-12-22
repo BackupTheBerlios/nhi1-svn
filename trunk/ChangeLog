@@ -10,6 +10,26 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v NHI1-0.3, PLMK-1.2 and libmsgque-4.1    23 December 2009
+
+Major - Feature - Improvement !!
+
+- libmsgque/PLMK: add new technology "bi-directional filter"
+  > the technology is used to extend an existing application without having
+    the application source-code available.
+  * http://nhi1.berlios.de/theLink/filter.htm
+  > add new API functions: MqSendN, MqReadN, MqSendBDY, MqReadBDY,
+    MqConfigSetIsServer, MqConfigGetIsTransaction, MqServiceProxy,
+    MqConfigGetFilter
+  > modify existing API functions: MqSendRETURN
+  > delete old API functions: MqSendFTR, MqSendEOF, MqConfigSetFilterFTR,
+    MqConfigSetFilterEOF
+- NHI: add new tool "theGuard"
+  > "theGuard" is used to protect the data traffic using data encryption
+    and is based on the new bi-directional filter technology of libmsgque.
+  * http://openfacts2.berlios.de/wikien/index.php/BerliosProject:NHI1_-_TheGuard
+
+
 v 0.2   08 December 2009
 
 - NHI1::theLink (former libmsgque)

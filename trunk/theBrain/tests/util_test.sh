@@ -63,4 +63,4 @@ rm -rf casket*
   '@name=[%name%][%IF nick%] nick=[%nick%][%END%][%IF hoge%][%ELSE%].[%END%]' > check.out
 ./tcucodec conf > check.out
 rm -rf casket*
-
+rm -f check.out check.in

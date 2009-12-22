@@ -85,3 +85,4 @@ rm -rf casket*
 ./tcbmgr get casket five > check.out
 ./tcbmgr list -pv casket > check.out
 rm -rf casket*
+rm -f check.out check.in

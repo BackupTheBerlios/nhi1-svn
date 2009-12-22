@@ -1,4 +1,4 @@
-.TH "pymsgque" n "21 Dec 2009" "Version 0.2" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "22 Dec 2009" "Version 0.3" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -367,7 +367,15 @@ Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for
 .SS "ctx.SendEND_AND_CALLBACK(token,callback)"
 Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.SendRETURN()"
-Answer an incoming service-call started with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP. The return package is build-up like the previous service call package but with a ctx.SendRETURN() as final command. (on error return an \fBEXCEPTION OBJECT\fP)
+Finish a service-handler and return the data if required:
+.IP "\(bu" 2
+if a transaction is ongoing this function return the answer.
+.IP "\(bu" 2
+if the answer is an empty package no previous \fBMqSendSTART\fP is required.
+.IP "\(bu" 2
+if no transaction is ongoing this function does just return the error code.
+.PP
+(on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.SendERROR()"
 Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.Send[TYPE](value)"
@@ -546,8 +554,7 @@ print an pymsgque error object to stderr and \fIclear\fP the pymsgque error
 .SH "FILTER MODE"
 .PP
 The filter mode is related to a special usage of the pymsgque software called a command pipeline. To define a filter create a \fIserver\fP with \fBisServer\fP or use \fBIServerSetup\fP and add the required services.
-.SH "ONE-DIRECTIONAL FILTER"
-.PP
+.SS "ONE-DIRECTIONAL FILTER"
 A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIright\fP and is well known from the \fBunix\fP shell to link different commands together: 
 .PP
 .nf
@@ -571,8 +578,7 @@ A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIrig
 \fB+EOF\fP : required to act on End-Of-Filter data and is called after all \fB+FTR\fP data was send. Sometimes the filter data can not be served as \fB+FTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \fB+EOF\fP token is used to continue send \fB+FTR\fP data rows.
 .PP
 and send every data item with \fBSendEND_AND_WAIT\fP.
-.SH "BI-DIRECTIONAL FILTER"
-.PP
+.SS "BI-DIRECTIONAL FILTER"
 A bi-directional filter has a \fIdata-flow\fP in both directions and is used in a \fIclassical\fP client/server application: 
 .PP
 .nf

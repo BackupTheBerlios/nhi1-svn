@@ -69,3 +69,4 @@ rm -rf casket*
 ./tchmgr get casket five > check.out
 ./tchmgr list -pv casket > check.out
 rm -rf casket*
+rm -f check.out check.in
