@@ -44,7 +44,8 @@ test "$USE_PERL"    == "yes"  && ARGS="$ARGS --enable-perl"
 test "$USE_TCLSH"   == "yes"  && ARGS="$ARGS --enable-tcl"
 test "$USE_CXX"	    == "yes"  && ARGS="$ARGS --enable-cxx"
 
-bash ./configure --prefix=/usr/local --enable-threads --enable-brain --enable-guard $ARGS || exit 1
+bash ./configure --prefix=/usr/local --enable-static --enable-threads \
+  --enable-brain --enable-guard $ARGS || exit 1
 
 make || exit 1
 
