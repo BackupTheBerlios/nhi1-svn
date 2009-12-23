@@ -25,13 +25,13 @@ set srcdir {.}
 
 
 set USE_TCL {yes}
-set USE_PERL {yes}
+set USE_PERL {no}
 set USE_CSHARP {yes}
-set USE_VB {no}
+set USE_VB {yes}
 set USE_PYTHON {yes}
 set USE_JAVA {yes}
 set USE_CXX {yes}
 set USE_PHP {no}
-set USE_BRAIN {yes}
+set USE_BRAIN {no}
 set USE_GUARD {yes}
 
