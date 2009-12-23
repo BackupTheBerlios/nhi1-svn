@@ -17,38 +17,50 @@ Imports System.Collections.Generic
 Public Module example
   Private Class Filter1
     Inherits MqS
-    Implements IFilterEOF
-    Implements IFilterFTR
+    Implements IFactory
 
     Private data As New List(Of List(Of String))
 
     ' service definition
-    Public Sub FilterEOF() Implements csmsgque.IFilterEOF.Call
+    Public Sub FilterEOF()
+      Dim ftr As MqS = ConfigGetFilter()
       For Each d As List(Of String) In data
-        SendSTART()
+        ftr.SendSTART()
         For Each s As String In d
-          SendC(s)
+          ftr.SendC(s)
         Next s
-        SendFTR(10)
+        ftr.SendEND_AND_WAIT("+FTR")
       Next d
+      SendSTART()
+      SendEND_AND_WAIT("+EOF")
+      SendRETURN()
     End Sub
 
     ' service definition
-    Public Sub FilterFTR() Implements csmsgque.IFilterFTR.Call
+    Public Sub FilterFTR()
       Dim d As New List(Of String)
       While ReadItemExists()
         d.Add("<" + ReadC() + ">")
       End While
       data.Add(d)
+      SendRETURN()
     End Sub
+
+    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+      Return New Filter1()
+    End Function
+
   End Class
 
   Sub Main(ByVal args() As String)
     Dim srv As New Filter1()
     Try
       srv.ConfigSetName("filter")
+      srv.ConfigSetIsServer(True)
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
+      srv.ServiceCreate("+FTR", AddressOf srv.FilterFTR)
+      srv.ServiceCreate("+EOF", AddressOf srv.FilterEOF)
     Catch ex As Exception
       srv.ErrorSet(ex)
     Finally

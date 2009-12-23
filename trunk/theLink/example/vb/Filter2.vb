@@ -17,21 +17,28 @@ Imports csmsgque
 Public Module example
   Private Class Filter2
     Inherits MqS
-    Implements IFilterFTR
+    Implements IFactory
 
     Private data As New List(Of List(Of String))
 
     ' service definition
-    Public Sub FilterFTR() Implements csmsgque.IFilterFTR.Call
+    Public Sub FilterFTR()
       Throw New ApplicationException("my error")
     End Sub
+
+    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+      Return New Filter2()
+    End Function
   End Class
 
   Sub Main(ByVal args() As String)
     Dim srv As New Filter2()
     Try
       srv.ConfigSetName("filter")
+      srv.ConfigSetIsServer(True)
       srv.LinkCreate(args)
+      srv.ServiceCreate("+FTR", AddressOf srv.FilterFTR)
+      srv.ServiceProxy("+EOF")
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
       srv.ErrorSet(ex)

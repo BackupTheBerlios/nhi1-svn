@@ -21,6 +21,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "testclient", "testclient\te
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Filter2", "Filter2\Filter2.vbproj", "{D19261C3-B081-447F-B925-148B75775F9F}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Filter3", "Filter3\Filter3.vbproj", "{74DA7252-84C1-48A7-8163-7B5BD6BD876E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{D19261C3-B081-447F-B925-148B75775F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D19261C3-B081-447F-B925-148B75775F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D19261C3-B081-447F-B925-148B75775F9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74DA7252-84C1-48A7-8163-7B5BD6BD876E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74DA7252-84C1-48A7-8163-7B5BD6BD876E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74DA7252-84C1-48A7-8163-7B5BD6BD876E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74DA7252-84C1-48A7-8163-7B5BD6BD876E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

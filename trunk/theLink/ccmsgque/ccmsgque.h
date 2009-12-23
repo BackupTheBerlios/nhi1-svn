@@ -302,7 +302,7 @@ namespace ccmsgque {
       inline bool ConfigGetIsString ()	    { return context.config.isString == MQ_YES; }
       inline bool ConfigGetIsSilent ()	    { return context.config.isSilent == MQ_YES; }
       inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
-      inline bool ConfigGetIsTransaction () { return MqConfigGetIsTransaction(&context);}
+      inline bool ConfigGetIsTransaction () { return MqConfigGetIsTransaction(&context) ? true : false;}
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
       inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }

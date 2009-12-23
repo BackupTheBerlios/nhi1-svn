@@ -17,22 +17,31 @@ Imports System.Collections.Generic
 Public Module example
   Private Class manfilter
     Inherits MqS
-    Implements IFilterFTR
+    Implements IFactory
 
-    Public Sub FilterFTR() Implements csmsgque.IFilterFTR.Call
-      SendSTART()
+    Public Sub FilterFTR()
+      Dim ftr As MqS = ConfigGetFilter()
+      ftr.SendSTART()
       While ReadItemExists()
-        SendC("<" + ReadC() + ">")
+        ftr.SendC("<" + ReadC() + ">")
       End While
-      SendFTR(10)
+      ftr.SendEND_AND_WAIT("+FTR")
+      SendRETURN()
     End Sub
+
+    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+      Return New manfilter()
+    End Function
   End Class
 
   Sub Main(ByVal args() As String)
     Dim srv As New manfilter()
     Try
       srv.ConfigSetName("ManFilter")
+      srv.ConfigSetIsServer(True)
       srv.LinkCreate(args)
+      srv.ServiceCreate("+FTR", AddressOf srv.FilterFTR)
+      srv.ServiceProxy("+EOF")
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
       srv.ErrorSet(ex)

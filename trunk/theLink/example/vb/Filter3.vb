@@ -17,16 +17,33 @@ Imports System.Collections.Generic
 Public Module example
   Private Class Filter3
     Inherits MqS
+    Implements IFactory
     Implements IServerSetup
 
     ' service definition
-    Private Sub FilterFTR() Implements csmsgque.IFilterFTR.Call
-      Dim d As New List(Of String)
-      While ReadItemExists()
-        d.Add("<" + ReadC() + ">")
-      End While
-      data.Add(d)
+    Private Sub Filter()
+      Dim ftr As MqS = ConfigGetFilter()
+      ftr.SendSTART()
+      ftr.SendBDY(ReadBDY)
+      If ConfigGetIsTransaction() Then
+        ftr.SendEND_AND_WAIT(ConfigGetToken())
+        SendSTART()
+        SendBDY(ftr.ReadBDY())
+      Else
+        ftr.SendEND(ConfigGetToken())
+      End If
+      SendRETURN()
     End Sub
+
+    Public Sub [Call]() Implements csmsgque.IServerSetup.Call
+      Dim ftr As MqS = ConfigGetFilter()
+      ServiceCreate("+ALL", AddressOf Filter)
+      ftr.ServiceCreate("+ALL", AddressOf Filter)
+    End Sub
+
+    Public Function Call1() As csmsgque.MqS Implements csmsgque.IFactory.Call
+      Return New Filter3()
+    End Function
   End Class
 
   Sub Main(ByVal args() As String)

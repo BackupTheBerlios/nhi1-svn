@@ -1118,7 +1118,7 @@ proc Example {config client server args} {
     Print lng com start client server
   }
 
-  set filter [optV args --filter]
+  set filter [optV args --filter NO]
 
   ## 1. setup variables
   lappend comargs --$com
