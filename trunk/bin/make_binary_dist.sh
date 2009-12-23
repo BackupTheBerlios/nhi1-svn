@@ -43,9 +43,10 @@ test "$USE_VB"	    == "yes"  && ARGS="$ARGS --enable-vb"
 test "$USE_PERL"    == "yes"  && ARGS="$ARGS --enable-perl"
 test "$USE_TCLSH"   == "yes"  && ARGS="$ARGS --enable-tcl"
 test "$USE_CXX"	    == "yes"  && ARGS="$ARGS --enable-cxx"
+test "$USE_BRAIN"   == "yes"  && ARGS="$ARGS --enable-brain"
+test "$USE_GUARD"   == "yes"  && ARGS="$ARGS --enable-guard"
 
-bash ./configure --prefix=/usr/local --enable-static --enable-threads \
-  --enable-brain --enable-guard $ARGS || exit 1
+bash ./configure --prefix=/usr/local --enable-static --enable-threads $ARGS || exit 1
 
 make || exit 1
 
