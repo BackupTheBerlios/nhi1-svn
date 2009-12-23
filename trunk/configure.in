@@ -159,7 +159,7 @@ fi
 AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile 
-	theLink/docs/Makefile win/Makefile
+	theLink/docs/Makefile win/Makefile bin/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
 	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl
@@ -170,8 +170,10 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/example/vb/Makefile
 			    performance/Makefile performance/env.sh 
-			      theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+			      theBrain/Makefile theBrain/abrain/Makefile
 				theBrain/libbrain/Makefile theBrain/tests/Makefile
 				  theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+
+#theBrain/atrans/Makefile
 
 AC_OUTPUT

@@ -1,6 +1,6 @@
 #!/bin/sh
 #+
-#§  \file       make_binary_dist.sh
+#§  \file       bin/make_binary_dist.sh
 #§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
@@ -12,13 +12,13 @@
 #§
 
 
-test ! -f ./env.sh && {
+test ! -f $(dirname $0)/../env.sh && {
   echo "ERROR: you have to run the './configure' script first"
   exit 1
 }
 set -x
-. ./env.sh
-TOPDIR="$PWD"
+. $(dirname $0)/../env.sh
+cd $abs_top_builddir
 
 make dist
 
@@ -31,7 +31,7 @@ tar -xf ../$PACKAGE-$PACKAGE_VERSION.tar.gz
 cd $PACKAGE-$PACKAGE_VERSION
 
 PKG=${PACKAGE}-${PACKAGE_VERSION}-${host}
-FINAL_PKG=$TOPDIR/binary-dist/$PKG.zip
+FINAL_PKG=$abs_top_builddir/binary-dist/$PKG.zip
 
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 
@@ -44,7 +44,7 @@ test "$USE_PERL"    == "yes"  && ARGS="$ARGS --enable-perl"
 test "$USE_TCLSH"   == "yes"  && ARGS="$ARGS --enable-tcl"
 test "$USE_CXX"	    == "yes"  && ARGS="$ARGS --enable-cxx"
 
-bash ./configure --prefix=/usr/local --enable-threads $ARGS || exit 1
+bash ./configure --prefix=/usr/local --enable-threads --enable-brain --enable-guard $ARGS || exit 1
 
 make || exit 1
 

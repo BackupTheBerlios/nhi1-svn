@@ -1,5 +1,5 @@
 #+
-#§  \file       theBrain/Makefile.am
+#§  \file       bin/Makefile.am
 #§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
@@ -10,9 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#SUBDIRS = libbrain abrain atrans
-SUBDIRS = libbrain abrain
-if USE_TCL
-SUBDIRS += tests
-endif
+EXTRA_DIST =  change.tcl FileLib.tcl Label make_binary_dist.sh pkgIndex.tcl StdLib.tcl \
+		dist2svn.bash GetFromInstall.bash LbMain random.tcl svn_ps_svn_ignore.tcl
+ 
 

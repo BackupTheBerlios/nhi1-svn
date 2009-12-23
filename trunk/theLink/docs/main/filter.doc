@@ -84,7 +84,7 @@ The following code is based on the \b JAVA example \c theLink/example/java/Filte
 
 \dontinclude Filter3.java
 
-\skip example
+\skip package example
 \until javamsgque
 
 create the \e class, implement the \e factory and the \e server interface:
@@ -154,7 +154,7 @@ The following code is based on the \b JAVA example \c theLink/example/java/Filte
 
 \dontinclude Filter1.java
 
-\skip example
+\skip package example
 \until javamsgque
 
 create a \e class and implement the \e factory interface:
@@ -173,11 +173,11 @@ define a service-handler for the \b +EOF token:
 \skip EOF
 \until }
 
-first send the \b +FTR data:
+first send the \b +FTR data, line by line:
 \until FTR
 \until }
 
-second send the \b +EOF data:
+second send the \b +EOF data, only once at the end:
 \skip SendSTART
 \until EOF
 

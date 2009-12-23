@@ -14,7 +14,7 @@ AUTOMAKE_OPTIONS = check-news
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = theLink win performance
+SUBDIRS = theLink win performance bin
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
@@ -32,7 +32,7 @@ mann_MANS =   man/mann/libmsgque.n \
 
 CTAGSFLAGS = --c-kinds=+p
 
-EXTRA_DIST = make_binary_dist.sh $(mann_MANS)
+EXTRA_DIST = $(mann_MANS)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
       --enable-java --enable-csharp --enable-python --enable-perl \

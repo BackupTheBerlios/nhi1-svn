@@ -25,7 +25,7 @@ array set LABELUSE {
 }
 
 array set LABELIGNORE {
-    ./bin			{ *.sw* }
+    ./bin			{ *.sw* Makefile Makefile.in }
     ./html			{ * }
     ./man			{ * }
     ./binary-build		{ * }
