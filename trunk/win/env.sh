@@ -28,8 +28,8 @@ PERL5LIB="$TL/perlmsgque/Net-PerlMsgque/blib/lib"
 export PATH LD_LIBRARY_PATH TCLLIBPATH PYTHONPATH CLASSPATH MONO_PATH PERL5LIB
 
 
-PACKAGE='libmsgque'
-PACKAGE_VERSION='4.1'
+PACKAGE='NHI1'
+PACKAGE_VERSION='0.3'
 PYTHON='python.exe'
 JAVA='java.exe'
 TCLSH='tclsh.exe'

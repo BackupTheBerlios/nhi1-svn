@@ -31,6 +31,7 @@ for f in $(find .. -type f | grep -v win) ; do
     [[ "$f" == *depends* ]] && continue
     [[ "$f" == *py* ]] && continue
     case "$f" in
+	*atool.exe)	    cp $f $PKG/bin;;
 	*aguard.exe)	    cp $f $PKG/bin;;
 	*.dll)		    cp $f $PKG/bin;;
 	*.pyd)		    cp $f $PKG/bin;;
