@@ -1,11 +1,11 @@
-> nothread/NHI1-0.1/theBrain/tests/client --all @ nothread/NHI1-0.1/theBrain/theBrain/theBrain
-C> (client:13608) [2009-12-08:12-44-06] [0-0-0x61f650-main]: start: --------------------------------------
-C> (client:13608) [2009-12-08:12-44-06] [0-0-0x61f650-statistics]:              memory hash - PUT:      15.00
-C> (client:13608) [2009-12-08:12-44-07] [0-0-0x61f650-statistics]:              memory hash - GET:      15.50
-C> (client:13608) [2009-12-08:12-44-08] [0-0-0x61f650-statistics]:             memory btree - PUT:      18.76
-C> (client:13608) [2009-12-08:12-44-09] [0-0-0x61f650-statistics]:             memory btree - GET:      19.11
-C> (client:13608) [2009-12-08:12-44-10] [0-0-0x61f650-statistics]:                file hash - PUT:      16.77
-C> (client:13608) [2009-12-08:12-44-11] [0-0-0x61f650-statistics]:                file hash - GET:      17.05
-C> (client:13608) [2009-12-08:12-44-17] [0-0-0x61f650-statistics]:               file btree - PUT:     127.37
-C> (client:13608) [2009-12-08:12-44-25] [0-0-0x61f650-statistics]:               file btree - GET:     150.82
-C> (client:13608) [2009-12-08:12-44-25] [0-0-0x61f650-main]: end: ----------------------------------------
+> nothread/NHI1-0.3/theBrain/tests/client --all @ nothread/NHI1-0.3/theBrain/abrain/abrain
+C> (client:1169) [2009-12-23:13-45-02] [0-0-0x61f650-main]: start: --------------------------------------
+C> (client:1169) [2009-12-23:13-45-03] [0-0-0x61f650-statistics]:              memory hash - PUT:      15.29
+C> (client:1169) [2009-12-23:13-45-04] [0-0-0x61f650-statistics]:              memory hash - GET:      15.41
+C> (client:1169) [2009-12-23:13-45-05] [0-0-0x61f650-statistics]:             memory btree - PUT:      18.57
+C> (client:1169) [2009-12-23:13-45-06] [0-0-0x61f650-statistics]:             memory btree - GET:      19.05
+C> (client:1169) [2009-12-23:13-45-07] [0-0-0x61f650-statistics]:                file hash - PUT:      16.86
+C> (client:1169) [2009-12-23:13-45-07] [0-0-0x61f650-statistics]:                file hash - GET:      16.89
+C> (client:1169) [2009-12-23:13-45-18] [0-0-0x61f650-statistics]:               file btree - PUT:     209.23
+C> (client:1169) [2009-12-23:13-45-25] [0-0-0x61f650-statistics]:               file btree - GET:     148.46
+C> (client:1169) [2009-12-23:13-45-25] [0-0-0x61f650-main]: end: ----------------------------------------

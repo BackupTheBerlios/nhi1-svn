@@ -1,10 +1,10 @@
-> nothread/NHI1-0.1/theLink/tests/client --all @ mono nothread/NHI1-0.1/theLink/tests/csserver.exe
-C> (client:10198) [2009-12-08:12-41-00] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:10198) [2009-12-08:12-41-01] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.17
-C> (client:10198) [2009-12-08:12-41-01] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.77
-C> (client:10198) [2009-12-08:12-41-04] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.18
-C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                  parent create:   29431.50
-C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                  parent delete:    2615.10
-C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                   child create:     131.57
-C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-statistics]:                   child delete:      24.27
-C> (client:10198) [2009-12-08:12-41-07] [0-0-0x61f9a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.3/theLink/tests/client --all @ mono nothread/NHI1-0.3/theLink/tests/csserver.exe
+C> (client:30203) [2009-12-23:13-41-56] [0-0-0x61f9a0-main]: start: --------------------------------------
+C> (client:30203) [2009-12-23:13-41-56] [0-0-0x61f9a0-statistics]:                      MqSendEND:       4.05
+C> (client:30203) [2009-12-23:13-41-57] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      10.83
+C> (client:30203) [2009-12-23:13-41-59] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      16.33
+C> (client:30203) [2009-12-23:13-42-02] [0-0-0x61f9a0-statistics]:                  parent create:   28406.22
+C> (client:30203) [2009-12-23:13-42-02] [0-0-0x61f9a0-statistics]:                  parent delete:    2605.28
+C> (client:30203) [2009-12-23:13-42-03] [0-0-0x61f9a0-statistics]:                   child create:     129.02
+C> (client:30203) [2009-12-23:13-42-03] [0-0-0x61f9a0-statistics]:                   child delete:      24.55
+C> (client:30203) [2009-12-23:13-42-03] [0-0-0x61f9a0-main]: end: ----------------------------------------

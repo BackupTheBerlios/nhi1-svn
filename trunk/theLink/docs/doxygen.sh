@@ -35,7 +35,7 @@ export HAVE_DOT=NO
 
   ## customizing
     export  SRCDIR="$abs_top_builddir/theLink"
-    export  VERSION="$PACKAGE_VERSION"
+    export  VERSION="$LIBMSGQUE_VERSION"
     export  PERL_PATH="$DOXYPERL"
     export  DOT_PATH="$(dirname '$DOT')"
     export  GENERATE_MAN='NO' 

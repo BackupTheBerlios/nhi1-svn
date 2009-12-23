@@ -1,11 +1,11 @@
-> mono thread/NHI1-0.1/theLink/tests/csserver.exe --tcp --host localhost --port 7790 --thread
-> thread/NHI1-0.1/theLink/tests/client --all --tcp --host localhost --port 7790
-C> (client:10520) [2009-12-08:12-41-09] [0-0-0x620bc0-main]: start: --------------------------------------
-C> (client:10520) [2009-12-08:12-41-10] [0-0-0x620bc0-statistics]:                      MqSendEND:       3.52
-C> (client:10520) [2009-12-08:12-41-10] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.83
-C> (client:10520) [2009-12-08:12-41-13] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      26.49
-C> (client:10520) [2009-12-08:12-41-13] [0-0-0x620bc0-statistics]:                  parent create:     356.93
-C> (client:10520) [2009-12-08:12-41-13] [0-0-0x620bc0-statistics]:                  parent delete:     373.62
-C> (client:10520) [2009-12-08:12-41-14] [0-0-0x620bc0-statistics]:                   child create:     211.63
-C> (client:10520) [2009-12-08:12-41-14] [0-0-0x620bc0-statistics]:                   child delete:      32.48
-C> (client:10520) [2009-12-08:12-41-14] [0-0-0x620bc0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.3/theLink/tests/csserver.exe --tcp --host localhost --port 7790 --thread
+> thread/NHI1-0.3/theLink/tests/client --all --tcp --host localhost --port 7790
+C> (client:30525) [2009-12-23:13-42-05] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:30525) [2009-12-23:13-42-05] [0-0-0x620bc0-statistics]:                      MqSendEND:       3.53
+C> (client:30525) [2009-12-23:13-42-05] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.27
+C> (client:30525) [2009-12-23:13-42-08] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      25.55
+C> (client:30525) [2009-12-23:13-42-09] [0-0-0x620bc0-statistics]:                  parent create:     352.37
+C> (client:30525) [2009-12-23:13-42-09] [0-0-0x620bc0-statistics]:                  parent delete:     410.56
+C> (client:30525) [2009-12-23:13-42-09] [0-0-0x620bc0-statistics]:                   child create:     200.02
+C> (client:30525) [2009-12-23:13-42-09] [0-0-0x620bc0-statistics]:                   child delete:      33.74
+C> (client:30525) [2009-12-23:13-42-09] [0-0-0x620bc0-main]: end: ----------------------------------------

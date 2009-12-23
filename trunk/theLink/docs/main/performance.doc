@@ -115,7 +115,7 @@ The following information is important:
 
 \section performance_summary Summary
 
-\verbinclude total.perf
+\verbinclude total_link.perf
 
 \section perf-c Detail C Setup
 

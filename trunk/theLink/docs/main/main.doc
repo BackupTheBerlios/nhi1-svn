@@ -1,6 +1,12 @@
-/** \mainpage Non Human Intelligence #1 - theLink
+/** \mainpage libmsgque, NHI1/theLink
 
 <CENTER>
+
+\section news  News from 23 Dec 2009
+
+This release add the new \ref filter "bi-direction filter" technology\n
+to extend the functionality of an existing client/server application\n
+without implementation details available.
 
 \section intro Introduction
 

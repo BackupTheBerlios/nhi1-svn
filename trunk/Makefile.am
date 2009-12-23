@@ -49,7 +49,9 @@ install-web:
 	rsync -azv --delete html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
 
 install-files:
-	ftp -u ftp://ftp.berlios.de/incoming/NHI1-$(VERSION).tar.gz NHI1-$(VERSION).tar.gz
+	for F in NHI1-$(VERSION)* binary-dist/NHI1-$(VERSION)* ; do \
+	  ftp -u ftp://ftp.berlios.de/incoming/$$(basename $$F) $$F; \
+	done
 
 distclean-local:
 	-rm -rf html
