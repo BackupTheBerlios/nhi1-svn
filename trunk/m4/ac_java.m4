@@ -393,8 +393,15 @@ _JTOPDIR=`echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::'`
 case "$host_os" in
         darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
                         _JINC="$_JTOPDIR/Headers";;
+        freebsd*)       _JTOPDIR=`head -n 1 "/usr/local/etc/javavms" | sed -E 's|[[:space:]]*#.*||' 2>/dev/null`
+			_JTOPDIR=`dirname "${_JTOPDIR}"`
+			_JTOPDIR=`dirname "${_JTOPDIR}"`
+                        _JINC="$_JTOPDIR/include";;
         *)              _JINC="$_JTOPDIR/include";;
 esac
+#echo "host_os<$host_os>"
+#echo "_JTOPDIR<$_JTOPDIR>"
+#echo "_JINC<$_JINC>"
 if test -f "$_JINC/jni.h"; then
         JNI_INCLUDE_DIRS="$JNI_INCLUDE_DIRS $_JINC"
 else

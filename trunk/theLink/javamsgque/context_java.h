@@ -104,15 +104,15 @@ enum MqErrorE         NS(ProcCreate)  ( struct MqS * const, jobject, jclass, jme
     goto error; \
   }
 
-mq_inline MQ_CST JO2C_START(JNIEnv *env, jstring o) {
+static mq_inline MQ_CST JO2C_START(JNIEnv *env, jstring o) {
   return (o?(*env)->GetStringUTFChars(env,o,NULL):NULL);
 }
 
-mq_inline void JO2C_STOP(JNIEnv *env, jstring o, MQ_CST c) {
+static mq_inline void JO2C_STOP(JNIEnv *env, jstring o, MQ_CST c) {
   if (c) (*env)->ReleaseStringUTFChars(env,o,c);
 }
 
-mq_inline jstring JC2O(JNIEnv *env, MQ_CST c) {
+static mq_inline jstring JC2O(JNIEnv *env, MQ_CST c) {
   return (c?(*env)->NewStringUTF(env,c):NULL);
 }
 
