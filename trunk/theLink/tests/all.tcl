@@ -13,7 +13,6 @@
 #set argv [list --only-c --testing]
 #lappend argv --only-perl -match "async-F*" --only-pipe
 
-set TS_SCRIPT [info script]
 source [file join [file dirname [info script]] library.tcl]
 
 singleProcess false

@@ -10,7 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = libmsgque example/c
+#SUBDIRS = libmsgque example/c
+SUBDIRS = libmsgque 
 if USE_CXX
 SUBDIRS += ccmsgque
 SUBDIRS += example/cc
@@ -43,4 +44,5 @@ endif
 if USE_VB
 SUBDIRS += example/vb
 endif
-SUBDIRS += acmds docs
+#SUBDIRS += acmds docs
+SUBDIRS += docs

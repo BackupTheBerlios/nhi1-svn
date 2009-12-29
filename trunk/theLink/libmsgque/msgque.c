@@ -885,16 +885,9 @@ pMqShutdown (
   // -> but only if the server can be achieved -> pIoCheck
   if (pIoCheck (context->link.io)) {
     if (MQ_IS_CLIENT (context)) {
-      //MqEventF fEvent = context->setup.fEvent;
-      // ContextDelete should disable the Event-Handler
-      // here we disable the external EVENT proc
-      //context->setup.fEvent = NULL;
-      // shutdown the server ...  !!ATTENTION!! do not use MqSendEND_AND_WAIT
-      // because an unexpected "answer" will corrupt the buffer
       MqDLogC(context,4,"send token<_SHD>\n");
       MqSendSTART (context);
       MqSendEND_AND_WAIT (context, "_SHD", MQ_TIMEOUT_USER);
-      //context->setup.fEvent = fEvent;
     } else if (MQ_IS_SERVER (context) && context->link._trans != 0 &&
 	pTokenCheck(context->link.srvT,"_SHD")) {
       // return the "_SHD"
@@ -1020,7 +1013,7 @@ pWaitOnEvent (
       pTokenSetCurrent(context->link.srvT,"____");
 
       //MqDLogC(context,7,"call fEvent in<%p>\n", msgque);
-      (*proc) (context);
+      MqErrorCheck ((*proc) (context));
       //MqDLogC(context,7,"finish fEvent in<%p>\n", msgque);
 
       // the fEvent found an event belonging to "context" but does not know

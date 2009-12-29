@@ -1,0 +1,77 @@
+#+
+#§  \file       theBrain/tests/brain.test
+#§  \brief      \$Id: brain.test 81 2009-12-18 13:20:21Z aotto1968 $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 81 $
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+source [file join [file dirname [info script]] libtrans.tcl]
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## database
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+
+# tests ----------------------------
+
+test brain-1-($I|$B|$C|$S|$D) {AOPN and ACLO using an database} \
+    -body           {
+      # open a datatbase
+      Echo0 $FH_LAST DUM1 SendC HALLO
+    } \
+    -returnCodes    ok \
+    -result         ""
+
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+file delete -force tmp.tch tmp.tcb tmp.tcf tmp.tct check.out
+freeTests
+

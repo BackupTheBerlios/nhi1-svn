@@ -171,9 +171,8 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 			  theLink/example/vb/Makefile
 			    performance/Makefile performance/env.sh 
 			      theBrain/Makefile theBrain/abrain/Makefile
-				theBrain/libbrain/Makefile theBrain/tests/Makefile
+				theBrain/libbrain/Makefile theBrain/tests/Makefile theBrain/atrans/Makefile
 				  theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
-#theBrain/atrans/Makefile
 
 AC_OUTPUT

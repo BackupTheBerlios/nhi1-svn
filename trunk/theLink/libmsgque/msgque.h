@@ -296,6 +296,10 @@ typedef MQ_BINB *MQ_BIN;
 typedef MQ_LSTB *MQ_LST;
 /// Buffer pointer data-type
 typedef struct MqBufferS *MQ_BUF;
+/// Buffer-List pointer data-type
+typedef struct MqBufferLS *MQ_BFL;
+/// Context pointer data-type
+typedef struct MqS *MQ_CTX;
 /// \brief data type for a socket handle
 typedef MQ_INT  MQ_SOCK;
 
@@ -459,7 +463,7 @@ typedef enum MqErrorE ( MQ_DECL
 
 /// \brief prototype for a Event-Checking function
 /// \ingroup event_api
-typedef void ( MQ_DECL
+typedef enum MqErrorE ( MQ_DECL
   *MqEventF
 ) (
   struct MqS * const

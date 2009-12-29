@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+set TS_LIBRARY [info script]
+
 ##
 ## define the language list
 if {![info exists env(LNG_LST)]} {

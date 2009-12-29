@@ -54,8 +54,12 @@
 struct TransCtxS {
   struct MqS	mqctx;	///< \mqctxI
   TCHDB		*db;	///< context specific data
-  MQ_INT	min;
-  MQ_INT	max;
+  MQ_BUF	*cacheA;
+  MQ_STR	dbstr;	///< database-connection string
+  MQ_INT	rIdx;
+  MQ_INT	wIdx;
+  MQ_INT	size;
+  MQ_BFL	args;
 };
 
 /*****************************************************************************/
@@ -63,8 +67,6 @@ struct TransCtxS {
 /*                               Request Handler                             */
 /*                                                                           */
 /*****************************************************************************/
-
-static enum MqErrorE ACLO (struct MqS *const, void*);
 
 /// \brief display help using \b -h or \b --help command-line option
 /// \param base the executable usually: <tt>basename(argv[0])</tt>
@@ -103,6 +105,7 @@ DbError(struct TransCtxS *trans, MQ_CST func){
 }
 
 /* Open an abstract database. */
+/*
 static bool tchdbopen2(TCHDB *hdb, const char *name){
   TCLIST *elems = tcstrsplit(name, "#");
   char *path = tclistshift2(elems);
@@ -185,10 +188,13 @@ static bool tchdbopen2(TCHDB *hdb, const char *name){
   TCFREE(path);
   return rv;
 }
+*/
 
 #define READ_W(n) MqErrorCheck(MqReadW(mqctx,&n))
 #define READ_C(n) MqErrorCheck(MqReadC(mqctx,&n))
 #define READ_N(n,l) MqErrorCheck(MqReadN(mqctx,&n,&l))
+
+/*
 
 static enum MqErrorE APUT ( ARGS ) {
   SETUP_HDB;
@@ -414,6 +420,70 @@ static enum MqErrorE ACLO ( ARGS ) {
 error:
   return MqSendRETURN(mqctx);
 }
+*/
+
+static enum MqErrorE TransEvent (
+  struct MqS *mqctx
+)
+{
+  struct MqS * ftr;
+
+  // check if a transaction is in the pipe, if not close the filter after X sec idletime
+
+  // check if the filter is available, if not start the filter
+  switch (MqConfigGetFilter(mqctx, 0, &ftr)) {
+    case MQ_OK:
+      break;
+    case MQ_ERROR:
+      // write error message but ignore the error
+      MqErrorReset(mqctx);
+      goto end;
+    case MQ_EXIT:
+    case MQ_CONTINUE:
+      goto error;
+  }
+
+  // extract the first (oldest) transaction from the store
+
+  // send the transaction to the filter, on error write message but do not stop processing
+
+  // delete the transaction from the store
+
+end:
+  return MQ_OK;
+error:
+  return MqErrorStack(mqctx);
+
+}
+
+static enum MqErrorE TransIn ( ARGS ) {
+  MQ_BIN bdy;
+  MQ_SIZE len;
+  SETUP_trans;
+  MqErrorCheck(MqReadBDY(mqctx, &bdy, &len));
+
+  // add space if space is empty
+  if (trans->rIdx-1==trans->wIdx || (trans->rIdx==0 && trans->wIdx==trans->size-1)) {
+    MQ_SIZE i;
+    MqSysRealloc(MQ_ERROR_PANIC, trans->cacheA, sizeof(MQ_BUF)*trans->size*2);
+    for (i=0;i<trans->rIdx;i++) {
+      trans->cacheA[trans->wIdx++] = trans->cacheA[i];
+      trans->cacheA[i] = NULL;
+    }
+    for (i=trans->wIdx;i<trans->size;i++) {
+      trans->cacheA[i] = NULL;
+    }
+    trans->size*=2;
+  }
+
+  // create storage if NULL
+  if (trans->cacheA[trans->wIdx] == NULL) {
+    trans->cacheA[trans->wIdx] = MqBufferCreate(MQ_ERROR_PANIC, len);
+  }
+  MqBufferSetB(trans->cacheA[trans->wIdx], bdy, len);
+error:
+  return MqSendRETURN(mqctx);
+}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -437,6 +507,8 @@ TransCleanup (
   return MQ_OK;
 }
 
+
+
 static enum MqErrorE
 TransSetup (
   struct MqS * const mqctx,
@@ -445,10 +517,19 @@ TransSetup (
 {
   SETUP_trans;
 
-  trans->db = tchdbnew();
-  trans->min = 0;
-  trans->max = 0;
-  MqErrorCheck (MqServiceCreate (mqctx, "AOPN", AOPN, NULL, NULL));
+  //trans->db = tchdbnew();
+
+  // init the chache
+  trans->cacheA = (MQ_BUF*)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(MQ_BUF));
+  trans->rIdx = 0;
+  trans->wIdx = 0;
+  trans->size = 100;
+
+  // open the database file
+  //DbErrorCheck (tchdbopen2(trans->db, trans->dbstr));
+
+  // SERVER: listen on every token (+ALL)
+  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", TransIn, NULL, NULL));
 
 error:
   return MqErrorStack(mqctx);
@@ -472,9 +553,24 @@ main (
 {
   // the parent-context
   struct MqS * const mqctx = MqContextCreate(sizeof(struct TransCtxS), NULL);
+  struct TransCtxS * const trans = (struct TransCtxS*) mqctx;
 
   // parse the command-line
-  struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
+  MQ_BFL args = MqBufferLCreateArgs (argc, argv);
+
+  // extract the connection items from "args"
+  MQ_BFL ts = trans->args = MqBufferLDup(args);
+  MQ_SIZE num;
+  MQ_SIZE const max = ts->cursize-1;
+  for (num=0; 
+    num<max && *ts->data[num]->cur.C != MQ_ALFA; 
+      num++) {;}
+  MqBufferLDeleteItem (mqctx, ts, 0, num+1, MQ_YES);
+  if (ts->cursize <= 0) {
+    MqErrorC(mqctx, __func__, -1, "unable to extract the connection items from the command-line parameters");
+    goto error;
+  }
+  MqErrorCheck (MqBufferLCheckOptionC (mqctx, args, "--db", &trans->dbstr));
 
   // add config data
   mqctx->setup.Child.fCreate	    = MqDefaultLinkCreate;
@@ -483,6 +579,7 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fFunc    = TransSetup;
   mqctx->setup.ServerCleanup.fFunc  = TransCleanup;
+  mqctx->setup.fEvent		    = TransEvent;
   MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS
@@ -497,5 +594,4 @@ error:
 }
 
 /** \} trans */
-
 
