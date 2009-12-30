@@ -356,6 +356,7 @@ pErrorSetEXIT (
       MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
       return MQ_EXIT;
     } else {
+      MqDLogC(context, 3, "ignore EXIT\n");
       return MQ_CONTINUE;
     }
   } else {

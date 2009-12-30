@@ -471,13 +471,13 @@ static enum MqErrorE TransEvent (
 
     // delete the transaction from the store
     MqBufferReset(itm->data);
+error:
+    return MqErrorStack(mqctx);
 error1:
     MqErrorPrint(ftr);
     MqErrorReset(ftr);
     MqErrorReset(mqctx);
     return MQ_OK;
-error:
-    return MqErrorStack(mqctx);
   }
 end:
   return MQ_OK;

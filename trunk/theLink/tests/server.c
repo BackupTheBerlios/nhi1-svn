@@ -1243,6 +1243,25 @@ error:
   return MqSendRETURN (mqctx);
 }
 
+/// \brief print data from stdin
+/// \service
+static enum MqErrorE
+Ot_PRNT (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  int i=0;
+  MQ_CST str;
+  while (MqReadItemExists(mqctx)) {
+    MqErrorCheck (MqReadC (mqctx, &str));
+    printf ("%2i: %s\n", ++i, str);
+  }
+
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                context_init                               */
@@ -1329,6 +1348,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLR", Ot_ERLR, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
   }
 
 error:

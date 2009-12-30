@@ -585,6 +585,16 @@ proc Ot_CFG1 {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_PRNT {ctx} {
+  set i 0
+  while {[$ctx ReadItemExists]} {
+    puts [format "%2i: %s" [incr i] [$ctx ReadC]]
+  }
+  $ctx SendRETURN
+}
+
+
+
 proc ServerSetup {ctx} {
 
   if {[$ctx ConfigGetIsSlave]} {
@@ -646,6 +656,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERLR Ot_ERLR
     $ctx ServiceCreate ERLS Ot_ERLS
     $ctx ServiceCreate CFG1 Ot_CFG1
+    $ctx ServiceCreate PRNT Ot_PRNT
   }
 }
 

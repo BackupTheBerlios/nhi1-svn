@@ -34,7 +34,7 @@ source [file join [file dirname [info script]] libtrans.tcl]
    foreach C [filterGet -or COM_LST tcp uds] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filterGet SRV_LST $C spawn] {
 
 ##
 ## -----------------------------------------------------------------------
@@ -46,7 +46,7 @@ source [file join [file dirname [info script]] libtrans.tcl]
 
 # tests ----------------------------
 
-test brain-1-($I|$B|$C|$S) {send data} \
+test brain-1-($I|$B|$C|$S) {send data with error} \
     -body           {
       Setup $I $B $C $S --save-server-output
       Echo0 $FH_LAST DUM1 SendC HALLO
@@ -59,6 +59,15 @@ test brain-1-($I|$B|$C|$S) {send data} \
 [Ss]> (server-0) \[pTokenInvoke] token <DUM1> not found
 BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[pTokenInvoke] token <DUM2> not found}
+
+test brain-2-($I|$B|$C|$S) {send valid data} \
+    -body           {
+      Setup $I $B $C $S --save-server-output
+      Echo0 $FH_LAST PRNT SendC HALLO
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -result         { 1: HALLO}
 
 # cleanup ---------------------------
 #Cleanup
