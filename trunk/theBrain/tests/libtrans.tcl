@@ -12,7 +12,7 @@
 
 ##
 ## set filter
-set env(TS_FILTER)  aguard
+set env(TS_FILTER_SERVER)  atrans
 set env(TS_LIBRARY) [info script]
 
 ##

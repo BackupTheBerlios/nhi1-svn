@@ -2,9 +2,9 @@
 
 <CENTER>
 
-\section news  News from 23 Dec 2009
+\section nw  NEWS, from 23 Dec 2009
 
-This release add the new \ref filter "bi-direction filter" technology\n
+This release add the new \ref filter "bi-directional filter" technology\n
 to extend the functionality of an existing client/server application\n
 without implementation details available.
 

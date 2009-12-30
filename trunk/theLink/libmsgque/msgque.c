@@ -879,10 +879,12 @@ pMqShutdown (
   }
 
   // shutdown all slaves
-  pSlaveShutdown (context->link.slave);
+  if (context->setup.ignoreExit == MQ_NO) {
+    pSlaveShutdown (context->link.slave);
+  }
 
   // send message to shutdown the 'server' 
-  // -> but only if the server can be achieved -> pIoCheck
+  // -> but only if the server is available -> pIoCheck
   if (pIoCheck (context->link.io)) {
     if (MQ_IS_CLIENT (context)) {
       MqDLogC(context,4,"send token<_SHD>\n");
@@ -964,6 +966,65 @@ error:
   return MqErrorCopy (context, a_context);
 }
 
+static enum MqErrorE
+sCallEventProc (
+  struct MqS * const context,
+  MqEventF const proc
+)
+{
+  struct MqS * cldCtx;
+  MqEventF cldProc;
+  MQ_INT NUM=1, EXIT=0;
+  struct pChildS * child;
+  switch ((*proc) (context)) {
+    case MQ_OK:
+    case MQ_CONTINUE:
+      break;
+    case MQ_ERROR:
+      goto error;
+    case MQ_EXIT:
+      if (MqErrorGetCode(context) == MQ_EXIT)
+	goto error;
+      else
+	EXIT++;
+      break;
+  }
+  for (child = context->link.childs; child != NULL; child=child->right) {
+    NUM++;
+    cldCtx = child->context;
+    cldProc = cldCtx->setup.fEvent;
+    if (cldProc != NULL && cldCtx != NULL) {
+      switch (sCallEventProc (cldCtx, cldProc)) {
+	case MQ_OK:
+	case MQ_CONTINUE:
+	  break;
+	case MQ_ERROR:
+	  MqErrorCopy(context, cldCtx);
+	  goto error;
+	case MQ_EXIT:
+	  if (MqErrorGetCode(cldCtx) == MQ_EXIT) {
+	    MqErrorCopy(context, cldCtx);
+	    goto error;
+	  } else {
+	    EXIT++;
+	  }
+	  break;
+      }
+    }
+  }
+  if (context->setup.ignoreExit == MQ_YES) {
+    // with "ignoreExit" all "context" have to be on "EXIT" to trigger an exit
+    if (NUM == EXIT) goto exit;
+  } else {
+    // without "ignoreExit" just !one! "EXIT" is required to trigger an exit
+    if (EXIT) goto exit;
+  }
+error:
+  return MqErrorStack(context);
+exit:
+  return MQ_EXIT;
+}
+
 enum MqErrorE
 pWaitOnEvent (
   struct MqS * const context,
@@ -1013,7 +1074,24 @@ pWaitOnEvent (
       pTokenSetCurrent(context->link.srvT,"____");
 
       //MqDLogC(context,7,"call fEvent in<%p>\n", msgque);
-      MqErrorCheck ((*proc) (context));
+      switch (sCallEventProc (context, proc)) {
+	case MQ_OK:
+	case MQ_CONTINUE:
+	  break;
+	case MQ_ERROR:
+	  goto error;
+	case MQ_EXIT:
+	  if (MqErrorGetCode(context) == MQ_EXIT) {
+	    goto error;
+	  } else {
+	    struct pChildS * child;
+	    context->setup.ignoreExit = MQ_NO;
+	    for (child = context->link.childs; child != NULL; child=child->right) {
+	      child->context->setup.ignoreExit = MQ_NO;
+	    }
+	    return pErrorSetEXIT (context, __func__);
+	  }
+      }
       //MqDLogC(context,7,"finish fEvent in<%p>\n", msgque);
 
       // the fEvent found an event belonging to "context" but does not know

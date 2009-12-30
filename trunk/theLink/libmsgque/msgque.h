@@ -837,6 +837,13 @@ struct MqSetupS {
   /// the feeling of a non-blocking application. For Example Tcl using the event-handling to
   /// update the Tk user-interface while the application is waiting for data. The event-handling
   /// is usually a loop to check event-sources from time-to-time and act on incoming events.
+  /// The interface is designed for a very \b short function timeslide. Do only \e one
+  /// action perl function call. This function will be called with a ~10000 usec intervall to garantee
+  /// a parallel like execution.
+  /// \attention do return #MQ_OK if everything is OK. Together with #MqSetupS::ignoreExit this is
+  /// used to process BG tasks. Return #MQ_EXIT (just return without set a persistant exit flag) 
+  /// if the BG task wish to exit the proc. All \e child context have to agree on \e exit .
+  /// example: \c atrans.c function \c TransEvent.
   MqEventF fEvent;
 
   /// \brief function pointers used to create and delete an object or a class instance
@@ -876,6 +883,9 @@ struct MqSetupS {
   /// As a service to the programmer the \libmsgque startup code in #MqLinkCreate checks for the
   /// both options \c -h and \c --help to provide a tool-specific help-page and exit.
   MqHelpF fHelp;
+
+  /// \brief ignore the EXIT
+  MQ_BOL ignoreExit;
 };
 
 /// \ingroup msgque_api

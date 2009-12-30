@@ -49,17 +49,23 @@
     return MqErrorV (mqctx, __func__, -1, "usage: %s (%s)\n", __func__, s); \
   }
 
+struct TransItmS {
+  MQ_STRB token[5];
+  MQ_BOL  isTrans;
+  MQ_BUF  data;
+};
+
 /// \brief the local \b context of the \ref server tool
 /// \mqctx
 struct TransCtxS {
-  struct MqS	mqctx;	///< \mqctxI
-  TCHDB		*db;	///< context specific data
-  MQ_BUF	*cacheA;
-  MQ_STR	dbstr;	///< database-connection string
-  MQ_INT	rIdx;
-  MQ_INT	wIdx;
-  MQ_INT	size;
-  MQ_BFL	args;
+  struct MqS	    mqctx;	///< \mqctxI
+  TCHDB		    *db;	///< context specific data
+  struct TransItmS  **itm;
+  MQ_STR	    dbstr;	///< database-connection string
+  MQ_INT	    rIdx;
+  MQ_INT	    wIdx;
+  MQ_INT	    size;
+  MQ_BFL	    args;
 };
 
 /*****************************************************************************/
@@ -426,61 +432,91 @@ static enum MqErrorE TransEvent (
   struct MqS *mqctx
 )
 {
-  struct MqS * ftr;
+  register SETUP_trans;
 
-  // check if a transaction is in the pipe, if not close the filter after X sec idletime
+  // check if a transaction is available
+  if (trans->rIdx == trans->wIdx) {
+    // no transaction available
+    if (mqctx->link.onShutdown == MQ_YES) {
+      return MQ_EXIT;
+    }
+  } else {
+    struct MqS * ftr;
+    register struct TransItmS * itm;
+    // transaction available
+    // check if the filter is available, if not start the filter
+    switch (MqConfigGetFilter(mqctx, 0, &ftr)) {
+      case MQ_OK:
+	break;
+      case MQ_ERROR:
+	// write error message but ignore the error
+	MqErrorReset(mqctx);
+	goto end;
+      case MQ_EXIT:
+      case MQ_CONTINUE:
+	goto error;
+    }
 
-  // check if the filter is available, if not start the filter
-  switch (MqConfigGetFilter(mqctx, 0, &ftr)) {
-    case MQ_OK:
-      break;
-    case MQ_ERROR:
-      // write error message but ignore the error
-      MqErrorReset(mqctx);
-      goto end;
-    case MQ_EXIT:
-    case MQ_CONTINUE:
-      goto error;
+    // extract the first (oldest) transaction from the store
+    itm = trans->itm[trans->rIdx++];
+
+    // send the transaction to the filter, on error write message but do not stop processing
+    MqErrorCheck1 (MqSendSTART(ftr));
+    MqErrorCheck1 (MqSendBDY(ftr, itm->data->cur.B, itm->data->cursize));
+    MqErrorCheck1 (
+      itm->isTrans ?
+	MqSendEND_AND_WAIT(ftr, itm->token, MQ_TIMEOUT_USER) :
+	  MqSendEND(ftr, itm->token)
+    );
+
+    // delete the transaction from the store
+    MqBufferReset(itm->data);
+error1:
+    MqErrorPrint(ftr);
+    MqErrorReset(ftr);
+    MqErrorReset(mqctx);
+    return MQ_OK;
+error:
+    return MqErrorStack(mqctx);
   }
-
-  // extract the first (oldest) transaction from the store
-
-  // send the transaction to the filter, on error write message but do not stop processing
-
-  // delete the transaction from the store
-
 end:
   return MQ_OK;
-error:
-  return MqErrorStack(mqctx);
-
 }
 
 static enum MqErrorE TransIn ( ARGS ) {
   MQ_BIN bdy;
   MQ_SIZE len;
   SETUP_trans;
+  register struct TransItmS * itm;
   MqErrorCheck(MqReadBDY(mqctx, &bdy, &len));
-
+  
   // add space if space is empty
   if (trans->rIdx-1==trans->wIdx || (trans->rIdx==0 && trans->wIdx==trans->size-1)) {
     MQ_SIZE i;
-    MqSysRealloc(MQ_ERROR_PANIC, trans->cacheA, sizeof(MQ_BUF)*trans->size*2);
+    MqSysRealloc(MQ_ERROR_PANIC, trans->itm, sizeof(struct TransItmS*)*trans->size*2);
     for (i=0;i<trans->rIdx;i++) {
-      trans->cacheA[trans->wIdx++] = trans->cacheA[i];
-      trans->cacheA[i] = NULL;
+      trans->itm[trans->wIdx++] = trans->itm[i];
+      trans->itm[i] = NULL;
     }
     for (i=trans->wIdx;i<trans->size;i++) {
-      trans->cacheA[i] = NULL;
+      trans->itm[i] = NULL;
     }
     trans->size*=2;
   }
 
+  itm = trans->itm[trans->wIdx];
+
   // create storage if NULL
-  if (trans->cacheA[trans->wIdx] == NULL) {
-    trans->cacheA[trans->wIdx] = MqBufferCreate(MQ_ERROR_PANIC, len);
+  if (itm == NULL) {
+    trans->itm[trans->wIdx] = itm = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(struct TransItmS));
   }
-  MqBufferSetB(trans->cacheA[trans->wIdx], bdy, len);
+  if (itm->data == NULL) {
+    itm->data = MqBufferCreate(MQ_ERROR_PANIC, len);
+  }
+  MqBufferSetB(itm->data, bdy, len);
+  strncpy(itm->token, MqConfigGetToken(mqctx), 5);
+  itm->isTrans = MqConfigGetIsTransaction(mqctx);
+  trans->wIdx++;
 error:
   return MqSendRETURN(mqctx);
 }
@@ -497,17 +533,22 @@ TransCleanup (
   MQ_PTR data
 )
 {
+  MQ_SIZE i;
   SETUP_trans;
 
   if (trans->db != NULL) {
     tchdbdel(trans->db);
     trans->db = NULL;
   }
-
+  
+  for (i=0;i<trans->size;i++) {
+    if (trans->itm[i] != NULL) {
+      MqBufferDelete (&trans->itm[i]->data);
+      MqSysFree(trans->itm[i]);
+    }
+  }
   return MQ_OK;
 }
-
-
 
 static enum MqErrorE
 TransSetup (
@@ -515,12 +556,12 @@ TransSetup (
   MQ_PTR data
 )
 {
-  SETUP_trans;
+  register SETUP_trans;
 
   //trans->db = tchdbnew();
 
   // init the chache
-  trans->cacheA = (MQ_BUF*)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(MQ_BUF));
+  trans->itm = (struct TransItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct TransItmS*));
   trans->rIdx = 0;
   trans->wIdx = 0;
   trans->size = 100;
@@ -580,6 +621,7 @@ main (
   mqctx->setup.ServerSetup.fFunc    = TransSetup;
   mqctx->setup.ServerCleanup.fFunc  = TransCleanup;
   mqctx->setup.fEvent		    = TransEvent;
+  mqctx->setup.ignoreExit	    = MQ_YES;
   MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS

@@ -42,12 +42,13 @@ struct LookupKeyword {
 ///
 /// \param[in] tclctx object to work on
 ///
-static void
+static enum MqErrorE
 NS(EventLink) (
   struct MqS * const tclctx
 )
 {
   Tcl_DoOneEvent(TCL_ALL_EVENTS|TCL_DONT_WAIT);
+  return MQ_OK;
 }
 
 /// \brief helper: used to simplify the code

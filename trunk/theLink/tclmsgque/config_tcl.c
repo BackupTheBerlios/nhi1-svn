@@ -44,6 +44,11 @@ static enum MqErrorE NS(FactoryCreate) (
 
   // copy setup data and initialize data entries
   MqErrorCheck (MqSetupDup(mqctx, tmpl));
+  
+  // child does not need an event-handler
+  if (create == MQ_FACTORY_NEW_CHILD) {
+    mqctx->setup.fEvent = NULL;
+  }
 
   return MQ_OK;
 

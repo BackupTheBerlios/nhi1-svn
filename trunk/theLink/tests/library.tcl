@@ -195,22 +195,51 @@ proc envGet {VAR} {
 # this code is needed to filter "VAR" list with "args" regexp
 proc filterGet {VAR args} {
   set NOT no
-  if {$VAR eq "-not"} {
-    set NOT yes
-    set VAR [lindex $args 0]
-    set args [lrange $args 1 end]
-  }
-  set RET [list]
-  foreach e [envGet $VAR] {
-    set FLAG yes
-    foreach f $args {
-      if {![regexp "$f" $e]} {
-	set FLAG no
-	break
+  set OR no
+  while {[string index $VAR 0] == {-}} {
+    switch -- $VAR {
+      -not {
+	set NOT yes
+	set VAR [lindex $args 0]
+	set args [lrange $args 1 end]
+      }
+      -or {
+	set OR yes
+	set VAR [lindex $args 0]
+	set args [lrange $args 1 end]
+      }
+      default {
+	Error "unknown option '$VAR'"
       }
     }
-    if {$NOT ? !$FLAG : $FLAG} {
-      lappend RET $e
+  }
+  set RET [list]
+  set LEN [llength $args]
+  foreach e [envGet $VAR] {
+    set RESULT 0
+    foreach f $args {
+      incr RESULT [regexp "$f" $e]
+    }
+    if {$OR} {
+      if {$NOT} {
+	if {$RESULT == 0} {
+	  lappend RET $e
+	}
+      } else {
+	if {$RESULT != 0} {
+	  lappend RET $e
+	}
+      }
+    } else {
+      if {$NOT} {
+	if {$RESULT != $LEN} {
+	  lappend RET $e
+	}
+      } else {
+	if {$RESULT == $LEN} {
+	  lappend RET $e
+	}
+      }
     }
   }
   if {[llength RET] == 0} {
@@ -661,8 +690,19 @@ if {[info exist argv]} {
     if {![info exists env(TS_MAX)]} {
 	set env(TS_MAX)	    [optV argv --max -1]
     }
-    if {![info exists env(TS_FILTER)]} {
+    if {[info exists env(TS_FILTER)]} {
+	if {$env(TS_FILTER) ne "NO"} {
+	  set env(TS_FILTER_SERVER)  $env(TS_FILTER)
+	  set env(TS_FILTER_CLIENT)  $env(TS_FILTER)
+	}
+    } else {
 	set env(TS_FILTER)  [optV argv --filter NO]
+    }
+    if {![info exists env(TS_FILTER_SERVER)]} {
+	set env(TS_FILTER_SERVER)  [optV argv --filter-server NO]
+    }
+    if {![info exists env(TS_FILTER_CLIENT)]} {
+	set env(TS_FILTER_CLIENT)  [optV argv --filter-client NO]
     }
 
     if {[optB argv --only-string]} {
@@ -941,7 +981,7 @@ proc Start {mode isError id cl {clname ""} {srvname ""}} {
 }
 
 proc Setup {num mode com server args} {
-  global env PID PIDFILE FH FH_LAST PORT FILE
+  global env PID PIDFILE FH FH_LAST PORT FILE SERVER_OUTPUT
   if {[llength $num] == 1} {
     set numParent   1
     set numChild    $num
@@ -956,7 +996,9 @@ proc Setup {num mode com server args} {
   set setup	    [optV args --setup]
   set setup_parent  [optV args --setup-parent]
   set bgerror	    [optV args --bgerror]
-  set filter	    [optV args --filter $env(TS_FILTER)]
+  set filter_server [optV args --filter $env(TS_FILTER_SERVER)]
+  set filter_client [optV args --filter $env(TS_FILTER_CLIENT)]
+  set so	    [optB args --save-server-output]
 
   ## 1. setup variables
   lappend comargs --$com
@@ -999,18 +1041,25 @@ proc Setup {num mode com server args} {
     set sargs [MkUnique $sargs]
     if {$serverSilent} { lappend sargs --silent }
     if {!$env(USE_REMOTE)} {
-      if {$filter ne "NO"} {
+      if {$filter_server ne "NO"} {
 	foreach {x t s} [split $server .] break
-	set sl [list {*}[getFilter $filter] {*}$DAEMON --$s --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs]
+	set sl [list {*}[getFilter $filter_server] {*}$DAEMON]
+	if {!$so} { lappend sl --$s }
+	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
 	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
       }
       if {$env(TS_SETUP)} {
 	Print sl
       }
-      if {[catch {exec {*}$sl >&@stdout &} PID]} {
-	puts $PID
-	exit 1
+      if {$so} {
+	set SERVER_OUTPUT [open [list | {*}$sl 2>@1] r]
+      } else {
+	unset SERVER_OUTPUT
+	if {[catch {exec {*}$sl >&@stdout &} PID]} {
+	  puts $PID
+	  exit 1
+	}
       }
       after $::WAIT
     }
@@ -1023,14 +1072,14 @@ proc Setup {num mode com server args} {
   for {set PNO 0} {$PNO<$numParent} {incr PNO} {
 
     ## prepare parent arguments
-    if {$filter ne "NO"} {
-      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter] --name fc @ {*}$comargs]
+    if {$filter_client ne "NO"} {
+      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client] --name fc @ {*}$comargs]
     } else {
       set cl [list LinkCreate {*}$cargs {*}$comargs]
     }
     if {$com eq "pipe"} { 
-      if {$filter ne "NO"} {
-	lappend cl @ {*}[getFilter $filter] --name fs {*}$comargs
+      if {$filter_server ne "NO"} {
+	lappend cl @ {*}[getFilter $filter_server] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {
@@ -1067,39 +1116,53 @@ proc Setup {num mode com server args} {
 
 proc Cleanup {args} {
 #Print args
-  global PID PIDFILE FH FH_LAST env
+  global PID PIDFILE FH FH_LAST env SERVER_OUTPUT
 
   array set OPT {-wait 0}
   array set OPT $args
 
-  ## 2. close all tclmsgque objects
-    foreach num [lsort [array names FH {*-0}]] {
-      if {$env(TS_SETUP)} { Print num }
-      $FH($num) LinkDelete
-    }
-    foreach num [lsort [array names FH]] {
-      $FH($num) ConfigReset
-    }
-    unset -nocomplain FH_LAST
-  ## 3. if a separate server was startet (NON-PIPE communication) kill this server
-    if {!$::env(USE_REMOTE)} {
-      if {[info exists PIDFILE]} {
-	if {[file exists $PIDFILE]} {
-	  set FP [open $PIDFILE r]
-	  set PID [read $FP]
-	  close $FP
-	}
-	unset PIDFILE
+## 2. close all tclmsgque objects
+  foreach num [lsort [array names FH {*-0}]] {
+    if {$env(TS_SETUP)} { Print num }
+    $FH($num) LinkDelete
+  }
+  foreach num [lsort [array names FH]] {
+    $FH($num) ConfigReset
+  }
+  unset -nocomplain FH_LAST
+## 3. if a separate server was startet (NON-PIPE communication) kill this server
+  if {!$::env(USE_REMOTE)} {
+    if {[info exists PIDFILE]} {
+      if {[file exists $PIDFILE]} {
+	set FP [open $PIDFILE r]
+	set PID [read $FP]
+	close $FP
       }
-      if {[info exists PID]} {
-	after $OPT(-wait)
-	catch {exec $::KILL $PID}
-	unset PID
-      }
-      if {[llength $::CLEANUP_FILES]} {
-	file delete -force {*}$::CLEANUP_FILES
-      }
+      unset PIDFILE
     }
+    if {[info exists PID]} {
+      after $OPT(-wait)
+      catch {exec $::KILL $PID}
+      unset PID
+    }
+    if {[llength $::CLEANUP_FILES]} {
+      file delete -force {*}$::CLEANUP_FILES
+    }
+  }
+## 4. check for server-output file
+  if {[info exists SERVER_OUTPUT]} {
+    ## wait for file exit
+    set RET [list]
+    while {1} {
+      set line [gets $SERVER_OUTPUT]
+      if {[eof $SERVER_OUTPUT]} {
+	close $SERVER_OUTPUT
+	break
+      }
+      lappend RET $line
+    }
+    return [join $RET \n]
+  }
 }
 
 proc freeTests {} {
@@ -1117,7 +1180,6 @@ proc Example {config client server args} {
   if {$env(TS_SETUP)} {
     Print lng com start client server
   }
-
   set filter [optV args --filter NO]
 
   ## 1. setup variables

@@ -488,7 +488,7 @@ pEventShutdown (
   if (	    
         !context ||			// no "msgque" data
         !context->link.io ||		// no "io" data
-        !context->link.io->event ||   // no "event" data
+        !context->link.io->event ||	// no "event" data
         MQ_IS_CHILD(context )		// we only delete PARENT from the event-list
      ) return;
 

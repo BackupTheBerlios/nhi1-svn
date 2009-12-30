@@ -31,7 +31,7 @@ source [file join [file dirname [info script]] libtrans.tcl]
   foreach B [filterGet BIN_LST binary] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [filterGet -or COM_LST tcp uds] {
 
     # server-type: server server.tcl
     foreach S [filterGet SRV_LST $C] {
@@ -42,19 +42,26 @@ source [file join [file dirname [info script]] libtrans.tcl]
 ##
 
 # startup binary --------------------------
-Setup $I $B $C $S
-
+#Setup $I $B $C $S
 
 # tests ----------------------------
 
-test brain-1-($I|$B|$C|$S|$D) {AOPN and ACLO using an database} \
+test brain-1-($I|$B|$C|$S) {send data} \
     -body           {
-      # open a datatbase
+      Setup $I $B $C $S --save-server-output
       Echo0 $FH_LAST DUM1 SendC HALLO
+      Echo0 $FH_LAST DUM2 SendC OTTO
+      Cleanup
     } \
     -returnCodes    ok \
-    -result         ""
+    -match	    glob \
+    -result         {BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
+[Ss]> (server-0) \[pTokenInvoke] token <DUM1> not found
+BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
+[Ss]> (server-0) \[pTokenInvoke] token <DUM2> not found}
 
+# cleanup ---------------------------
+#Cleanup
 
 ##  
 ## -----------------------------------------------------------------------

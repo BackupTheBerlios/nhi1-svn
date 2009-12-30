@@ -11,14 +11,8 @@
 #§
 
 LANG="C"
-PATH="../acmds:../tests:../example/*/:${PATH:-}"
-LD_LIBRARY_PATH="../src/.libs:../tclmsgque/.libs:../pymsgque/.libs:../javamsgque/.libs:../ccmsgque/.libs:../perlmsgque/Net-PerlMsgque/blib/arch/auto/Net/PerlMsgque:${LD_LIBRARY_PATH:-}"
-TCLLIBPATH="../tclmsgque/.libs"
-PYTHONPATH="../pymsgque/.libs"
-CLASSPATH=".:../javamsgque/javamsgque.jar:../example/java"
-MONO_PATH=".:../csmsgque:../example/csharp"
-PERL5LIB="../perlmsgque/Net-PerlMsgque/blib/lib"
-export LANG PATH LD_LIBRARY_PATH PYTHONPATH TCLLIBPATH CLASSPATH MONO_PATH PERL5LIB
+. ../../env.sh
+export LANG
 TEE=yes
 
 if [[ ${WINDIR:-} != "" ]] ; then

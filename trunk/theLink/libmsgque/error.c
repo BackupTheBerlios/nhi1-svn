@@ -351,9 +351,13 @@ pErrorSetEXIT (
 {
   // only a server return an exit
   if (MQ_IS_SERVER(context)) {
-    pMqGetFirstParent(context)->link.exitctx = context;
-    MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
-    return MQ_EXIT;
+    if (context->setup.ignoreExit == MQ_NO) {
+      pMqGetFirstParent(context)->link.exitctx = context;
+      MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
+      return MQ_EXIT;
+    } else {
+      return MQ_CONTINUE;
+    }
   } else {
     MqErrorSGenV(context, prefix, MQ_ERROR, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
     return MQ_ERROR;

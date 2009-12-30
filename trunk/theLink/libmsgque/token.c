@@ -361,7 +361,7 @@ pTokenAddHdl (
   MqDLogV(context, 4, "HANDEL %s ADD %s: proc<%p>, data<%p>\n",
     (token == context->link.srvT ? "SERVICE" : "RETURN"), name, (void*) callback.fFunc, callback.data);
 
-  if (!strncmp (name, "+ALL", 4)) {
+  if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
     if (space->all.fFunc != NULL) goto error2;
     space->all = callback;
   } else {
@@ -391,7 +391,7 @@ pTokenDelHdl (
 )
 {
   MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, (void*) token);
-  if (!strncmp (name, "+ALL", 4)) {
+  if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
     token->loc->all.fFunc = NULL;
     return MQ_OK;
   }
