@@ -241,6 +241,7 @@ void  NS(MqS_Free)	    ( ClientData );
 // from config_tcl.c
 
 void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, MQ_PTR );
+enum MqErrorE NS(EventLink) ( struct MqS * const , MQ_PTR const );
 
 // from MqBufferS_tcl.c
 

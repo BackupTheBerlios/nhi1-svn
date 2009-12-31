@@ -693,6 +693,7 @@ MqLinkCreate (
 	  // step 3, link between "myFilter" and "context"
 	  MqConfigSetServerSetup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
+	  MqConfigSetEvent(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetIsServer(myFilter, MQ_NO);
 	  MqConfigSetMaster  (myFilter, context, 0);
 
@@ -968,15 +969,13 @@ error:
 
 static enum MqErrorE
 sCallEventProc (
-  struct MqS * const context,
-  MqEventF const proc
+  struct MqS * const context
 )
 {
   struct MqS * cldCtx;
-  MqEventF cldProc;
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
-  switch ((*proc) (context)) {
+  switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
     case MQ_OK:
       break;
     case MQ_CONTINUE:
@@ -991,9 +990,8 @@ sCallEventProc (
   for (child = context->link.childs; child != NULL; child=child->right) {
     NUM++;
     cldCtx = child->context;
-    cldProc = cldCtx->setup.fEvent;
-    if (cldProc != NULL && cldCtx != NULL) {
-      switch (sCallEventProc (cldCtx, cldProc)) {
+    if (cldCtx != NULL && cldCtx->setup.Event.fFunc != NULL) {
+      switch (sCallEventProc (cldCtx)) {
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE:
@@ -1013,7 +1011,9 @@ sCallEventProc (
   if (context->setup.ignoreExit != MQ_YES || NUM != CONTINUE) {
     MqErrorReset(context);
   }
+  return MqErrorGetCode(context);
 error:
+  context->setup.ignoreExit = MQ_NO;
   return MqErrorStack(context);
 }
 
@@ -1025,14 +1025,13 @@ pWaitOnEvent (
 )
 {
   const MQ_TIME_T startT = time (NULL);
-  const MqEventF proc = context->setup.fEvent;
   register MQ_TIME_T nowT;
 
   struct timeval tv;
   const int MqSetDebugLevel(context);
 
   // set initial timeout
-  if (proc) {
+  if (context->setup.Event.fFunc != NULL) {
     // we have an extern event-handlig procedure (proc) ... give this code the chance 
     // to do somethig usefull
     tv.tv_sec = 0L;
@@ -1056,7 +1055,7 @@ pWaitOnEvent (
     }
 
     // 2. call external event-proc
-    if (proc != NULL && context != NULL) {
+    if (context != NULL && context->setup.Event.fFunc != NULL) {
       // this guarding with "____" is important to detect and break-out-of "nested" event calls
       // pWaitOnEvent
       //   -> guard 
@@ -1066,7 +1065,7 @@ pWaitOnEvent (
       pTokenSetCurrent(context->link.srvT,"____");
 
       //MqDLogC(context,7,"call fEvent in<%p>\n", msgque);
-      switch (sCallEventProc (context, proc)) {
+      switch (sCallEventProc (context)) {
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE: {
@@ -1116,13 +1115,12 @@ pUSleep (
   long const usec
 )
 {
-  if (context->setup.fEvent != NULL && context != NULL) {
-    const MqEventF proc = context->setup.fEvent;
+  if (context != NULL && context->setup.Event.fFunc != NULL) {
     struct mq_timeval start;
     struct mq_timeval now;
     MqErrorCheck (SysGetTimeOfDay (context, &start, NULL));
     do {
-      (*proc) (context);
+      MqErrorCheck (sCallEventProc (context));
       MqErrorCheck (MqSysUSleep (context, 99999L));
       MqErrorCheck (SysGetTimeOfDay (context, &now, NULL));
     }

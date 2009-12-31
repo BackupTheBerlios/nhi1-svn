@@ -461,14 +461,6 @@ typedef enum MqErrorE ( MQ_DECL
   MQ_PTR *dataP
 );
 
-/// \brief prototype for a Event-Checking function
-/// \ingroup event_api
-typedef enum MqErrorE ( MQ_DECL
-  *MqEventF
-) (
-  struct MqS * const
-);
-
 /// \brief application specific help function type
 typedef void ( MQ_DECL
   *MqHelpF
@@ -838,13 +830,15 @@ struct MqSetupS {
   /// update the Tk user-interface while the application is waiting for data. The event-handling
   /// is usually a loop to check event-sources from time-to-time and act on incoming events.
   /// The interface is designed for a very \b short function timeslide. Do only \e one
-  /// action perl function call. This function will be called with a ~10000 usec intervall to garantee
+  /// action per function call. This function will be called with a ~10000 usec intervall to garantee
   /// a parallel like execution.
-  /// \attention do return #MQ_OK if everything is OK. Together with #MqSetupS::ignoreExit this is
-  /// used to process BG tasks. Return #MQ_EXIT (just return without set a persistant exit flag) 
-  /// if the BG task wish to exit the proc. All \e child context have to agree on \e exit .
-  /// example: \c atrans.c function \c TransEvent.
-  MqEventF fEvent;
+  /// \return do return #MQ_OK if everything is OK. 
+  /// \attention Together with #MqSetupS::ignoreExit this function is used to implement a persistent transaction
+  /// handler. Use <TT>return #MqErrorSetContinue</TT> if the background task has nothing to do. 
+  /// If \b all \e child context return with #MqErrorSetContinue too 
+  /// and the context itself is on shutdown (#MqLinkS::onShutdown == MQ_YES) the process will \b exit.
+  /// example: <TT>theLink/example/c/Filter4.c</TT>
+  struct MqCallbackS Event;
 
   /// \brief function pointers used to create and delete an object or a class instance
   /// <TABLE>
@@ -884,7 +878,13 @@ struct MqSetupS {
   /// both options \c -h and \c --help to provide a tool-specific help-page and exit.
   MqHelpF fHelp;
 
-  /// \brief ignore the EXIT
+  /// \brief ignore the server EXIT
+  ///
+  /// By default the \e server exit if the \e client close the connection. If <TT>ignoreExit = #MQ_YES</TT>
+  /// is set the \e server will continue to work. Without \e client connection only
+  /// the internal event function (#MqSetupS::Event, set with #MqConfigSetEvent) is available to work on tasks.
+  /// if \e all (parent and child) event function return with #MqErrorSetCONTINUE (nothing to do) the last
+  /// task-worker is gone and the process exit.
   MQ_BOL ignoreExit;
 };
 
@@ -1106,6 +1106,13 @@ MQ_DECL MqConfigSetIsString (
   MQ_BOL  data
 );
 
+/// \brief set the #MqSetupS::ignoreExit value
+MQ_EXTERN void
+MQ_DECL MqConfigSetIgnoreExit (
+  struct MqS * const context,
+  MQ_BOL  data
+);
+
 /// \brief set the #MqConfigS::parent value
 MQ_EXTERN void
 MQ_DECL MqConfigSetParent (
@@ -1187,6 +1194,16 @@ MQ_DECL MqConfigSetSetup (
   MqDeleteF fParentDelete,
   MqExitF   fProcessExit,
   MqExitF   fThreadExit
+);
+
+/// \brief set the #MqSetupS::Event
+MQ_EXTERN void
+MQ_DECL MqConfigSetEvent (
+  struct MqS * const context,
+  MqTokenF fFunc,
+  MQ_PTR data,
+  MqTokenDataFreeF fFree,
+  MqTokenDataCopyF fCopy
 );
 
 /// \brief set the #MqSetupS::ServerSetup

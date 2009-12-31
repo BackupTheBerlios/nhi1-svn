@@ -429,7 +429,8 @@ error:
 */
 
 static enum MqErrorE TransEvent (
-  struct MqS *mqctx
+  struct MqS * const mqctx,
+  MQ_PTR const data
 )
 {
   register SETUP_trans;
@@ -620,9 +621,9 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fFunc    = TransSetup;
   mqctx->setup.ServerCleanup.fFunc  = TransCleanup;
-  mqctx->setup.fEvent		    = TransEvent;
   mqctx->setup.ignoreExit	    = MQ_YES;
   MqConfigSetDefaultFactory (mqctx);
+  MqConfigSetEvent (mqctx, TransEvent, NULL, NULL, NULL);
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

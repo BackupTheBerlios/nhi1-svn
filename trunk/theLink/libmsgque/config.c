@@ -75,6 +75,9 @@ MqContextFree (
     MqLinkDelete(context);
 
     // cleanup setup data entries
+    if (context->setup.Event.data && context->setup.Event.fFree) {
+      (*context->setup.Event.fFree) (context, &context->setup.Event.data);
+    }
     if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
       (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
     }
@@ -196,6 +199,7 @@ MqSetupDup (
 {
   // save all "data" entries because these are allready set by the 
   // Class-Constructor proper
+  MQ_PTR Event = context->setup.Event.data;
   MQ_PTR ServerSetup = context->setup.ServerSetup.data;
   MQ_PTR ServerCleanup = context->setup.ServerCleanup.data;
   MQ_PTR BgError = context->setup.BgError.data;
@@ -207,6 +211,7 @@ MqSetupDup (
   context->setup.ident = mq_strdup_save(from->setup.ident);
 
   // reinitialize "data" entries which were !not! set by the class constructor
+  MqErrorCheck (sSetupDupHelper (context, &context->setup.Event.data, context->setup.Event.fCopy, Event));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerSetup.data, context->setup.ServerSetup.fCopy, ServerSetup));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerCleanup.data, context->setup.ServerCleanup.fCopy, ServerCleanup));
   MqErrorCheck (sSetupDupHelper (context, &context->setup.BgError.data, context->setup.BgError.fCopy, BgError));
@@ -361,6 +366,14 @@ MqConfigSetIsString (
 }
 
 void 
+MqConfigSetIgnoreExit (
+  struct MqS * const context,
+  MQ_BOL data
+) {
+  context->setup.ignoreExit = data;
+}
+
+void 
 MqConfigSetParent (
   struct MqS * const context,
   struct MqS * const parent
@@ -481,6 +494,24 @@ MqConfigSetServerSetup (
   context->setup.ServerSetup.data  = data;
   context->setup.ServerSetup.fFree = fFree;
   context->setup.ServerSetup.fCopy = fCopy;
+}
+
+void
+MqConfigSetEvent (
+  struct MqS * const context,
+  MqTokenF fTok,
+  MQ_PTR data,
+  MqTokenDataFreeF fFree,
+  MqTokenDataCopyF fCopy
+)
+{
+  if (context->setup.Event.data && context->setup.Event.fFree) {
+    (*context->setup.Event.fFree) (context, &context->setup.Event.data);
+  }
+  context->setup.Event.fFunc = fTok;
+  context->setup.Event.data  = data;
+  context->setup.Event.fFree = fFree;
+  context->setup.Event.fCopy = fCopy;
 }
 
 void

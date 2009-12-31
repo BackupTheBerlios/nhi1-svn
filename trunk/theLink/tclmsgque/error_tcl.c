@@ -62,6 +62,14 @@ int NS(ErrorSet) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ErrorSetCONTINUE) (NS_ARGS)
+{
+  SETUP_mqctx
+  CHECK_NOARGS
+  MqErrorSetCONTINUE(mqctx);
+  RETURN_TCL
+}
+
 int NS(ErrorReset) (NS_ARGS)
 {
   CHECK_NOARGS

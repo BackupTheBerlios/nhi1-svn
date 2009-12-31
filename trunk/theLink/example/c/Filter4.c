@@ -50,7 +50,8 @@ struct FilterCtxS {
 /*****************************************************************************/
 
 static enum MqErrorE FilterEvent (
-  struct MqS *mqctx
+  struct MqS * const mqctx,
+  MQ_PTR const data
 )
 {
   register SETUP_ctx;
@@ -58,7 +59,7 @@ static enum MqErrorE FilterEvent (
   // check if a ctxaction is available
   if (ctx->rIdx == ctx->wIdx) {
     // no transaction available
-    return MqErrorSetCONTINUE(ctx);
+    return MqErrorSetCONTINUE(mqctx);
   } else {
     struct MqS * ftr;
     register struct FilterItmS * itm;
@@ -225,9 +226,10 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fFunc    = FilterSetup;
   mqctx->setup.ServerCleanup.fFunc  = FilterCleanup;
-  mqctx->setup.fEvent		    = FilterEvent;
   mqctx->setup.ignoreExit	    = MQ_YES;
+
   MqConfigSetDefaultFactory (mqctx);
+  MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

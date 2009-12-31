@@ -1053,7 +1053,7 @@ proc Setup {num mode com server args} {
     if {!$env(USE_REMOTE)} {
       if {$filter_server ne "NO"} {
 	foreach {x t s} [split $server .] break
-	set sl [list {*}[getFilter $filter_server] {*}$DAEMON]
+	set sl [list {*}[getFilter $filter_server.$x] {*}$DAEMON]
 	if {!$so} { lappend sl --$s }
 	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
@@ -1089,7 +1089,7 @@ proc Setup {num mode com server args} {
     }
     if {$com eq "pipe"} { 
       if {$filter_server ne "NO"} {
-	lappend cl @ {*}[getFilter $filter_server] --name fs {*}$comargs
+	lappend cl @ {*}[getFilter $filter_server.$x] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {

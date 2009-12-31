@@ -26,6 +26,7 @@ source [file join [file dirname [info script]] library.tcl]
 
 rename getFilter ""
 rename getExample getFilter
+set env(TS_FILTER_SERVER)  Filter4
 
 ##
 ## -----------------------------------------------------------------------
@@ -45,8 +46,6 @@ rename getExample getFilter
     foreach S [filterGet SRV_LST $C spawn] {
 
 # tests ----------------------------
-
-set env(TS_FILTER_SERVER)  Filter4.[lindex [split $S .] 0]
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
     -body           {

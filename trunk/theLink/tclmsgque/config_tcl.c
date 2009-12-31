@@ -14,6 +14,15 @@
 
 #define MQ_CONTEXT_S MQCTX
 
+enum MqErrorE NS(EventLink) (
+  struct MqS * const mqctx,
+  MQ_PTR const data
+)
+{
+  Tcl_DoOneEvent(TCL_ALL_EVENTS|TCL_DONT_WAIT);
+  return data == NULL ? MQ_OK : NS(ProcCall) (mqctx, data);
+}
+
 static enum MqErrorE NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
@@ -44,12 +53,12 @@ static enum MqErrorE NS(FactoryCreate) (
 
   // copy setup data and initialize data entries
   MqErrorCheck (MqSetupDup(mqctx, tmpl));
-  
-  // child does not need an event-handler
-  if (create == MQ_FACTORY_NEW_CHILD) {
-    mqctx->setup.fEvent = NULL;
-  }
 
+  // child does not need an event-handler if not user supplied
+  if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
+    mqctx->setup.Event.fFunc = NULL;
+  }
+  
   return MQ_OK;
 
 error:
@@ -170,6 +179,15 @@ int NS(ConfigSetIsString) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ConfigSetIgnoreExit) (NS_ARGS)
+{
+  MQ_BOL ignoreExit;
+  CHECK_O(ignoreExit)
+  CHECK_NOARGS
+  MqConfigSetIgnoreExit (MQCTX, ignoreExit);
+  RETURN_TCL
+}
+
 int NS(ConfigSetServerSetup) (NS_ARGS)
 {
   Tcl_Obj *srvSetup;
@@ -177,6 +195,16 @@ int NS(ConfigSetServerSetup) (NS_ARGS)
   CHECK_NOARGS
   Tcl_IncrRefCount(srvSetup);
   MqConfigSetServerSetup (MQCTX, NS(ProcCall), srvSetup, NS(ProcFree), NS(ProcCopy));
+  RETURN_TCL
+}
+
+int NS(ConfigSetEvent) (NS_ARGS)
+{
+  Tcl_Obj *event;
+  CHECK_PROC(event, "ConfigSetEvent event-proc")
+  CHECK_NOARGS
+  Tcl_IncrRefCount(event);
+  MqConfigSetEvent (MQCTX, NS(EventLink), event, NS(ProcFree), NS(ProcCopy));
   RETURN_TCL
 }
 

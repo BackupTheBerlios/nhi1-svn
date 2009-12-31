@@ -35,22 +35,6 @@ struct LookupKeyword {
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief link \e Tcl event-queue with \libmsgque event-queue
-///
-/// \libmsgque using the \e -fevent option to get a 'C' procedure for calling an
-/// external event-queue.
-///
-/// \param[in] tclctx object to work on
-///
-static enum MqErrorE
-NS(EventLink) (
-  struct MqS * const tclctx
-)
-{
-  Tcl_DoOneEvent(TCL_ALL_EVENTS|TCL_DONT_WAIT);
-  return MQ_OK;
-}
-
 /// \brief helper: used to simplify the code
 #define CheckForAdditionalArg(txt) \
     objc--; objv++; \
@@ -236,12 +220,12 @@ static int NS(Delete) (NS_ARGS)
 
 static int NS(dict) (NS_ARGS)
 {
-  enum commandE { SET, GET, UNSET, EXISTS };
-  static MQ_CST commandA[] = { "set", "get", "unset", "exists", NULL };
+  enum commandE { SET, GET, UNSET, EXISTS, LAPPEND };
+  static MQ_CST commandA[] = { "set", "get", "unset", "exists", "lappend", NULL };
   int index;
 
   if (objc < 4) {
-    Tcl_WrongNumArgs (interp, 2, objv, "set|get|unset|exists key ...");
+    Tcl_WrongNumArgs (interp, 2, objv, "set|get|unset|exists|lappend key ...");
     return TCL_ERROR;
   }
 
@@ -265,7 +249,7 @@ static int NS(dict) (NS_ARGS)
     }
     case SET: {
       if (objc < 5) {
-	Tcl_WrongNumArgs (interp, 2, objv, "set key value");
+	Tcl_WrongNumArgs (interp, 2, objv, "set key... value");
 	return TCL_ERROR;
       }
       if (objc > 5) {
@@ -273,6 +257,31 @@ static int NS(dict) (NS_ARGS)
 	Tcl_SetObjResult (interp, objv[objc-1]);
       } else { // objc == 5
 	TclErrorCheck (Tcl_DictObjPut (interp, tclctx->dict, objv[3], objv[4]));
+	Tcl_SetObjResult (interp, objv[4]);
+      }
+      break;
+    }
+    case LAPPEND: {
+      Tcl_Obj *dict = tclctx->dict;
+      int idx;
+      if (objc < 5) {
+	Tcl_WrongNumArgs (interp, 2, objv, "lappend key... value");
+	return TCL_ERROR;
+      }
+      for (idx = 3; idx < objc-1; idx++) {
+	TclErrorCheck (Tcl_DictObjGet (interp, dict, objv[3], &dict));
+      }
+      if (dict == NULL) {
+	dict = objv[idx];
+      } else {
+	dict = Tcl_DuplicateObj(dict);
+	TclErrorCheck (Tcl_ListObjAppendElement (interp, dict, objv[idx]));
+      }
+      if (objc > 5) {
+	TclErrorCheck (Tcl_DictObjPutKeyList (interp, tclctx->dict, objc-4, objv+3, dict));
+	Tcl_SetObjResult (interp, objv[objc-1]);
+      } else { // objc == 5
+	TclErrorCheck (Tcl_DictObjPut (interp, tclctx->dict, objv[3], dict));
 	Tcl_SetObjResult (interp, objv[4]);
       }
       break;
@@ -353,6 +362,8 @@ int NS(ConfigCheckIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
 int NS(ConfigSetIsServer) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
+int NS(ConfigSetIgnoreExit) (NS_ARGS);
+int NS(ConfigSetEvent) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
@@ -394,6 +405,7 @@ int NS(ServiceDelete) (NS_ARGS);
 
 int NS(ErrorC) (NS_ARGS);
 int NS(ErrorSet) (NS_ARGS);
+int NS(ErrorSetCONTINUE) (NS_ARGS);
 int NS(ErrorGetText) (NS_ARGS);
 int NS(ErrorGetNum) (NS_ARGS);
 int NS(ErrorGetCode) (NS_ARGS);
@@ -476,6 +488,8 @@ int NS(MqS_Cmd) (
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
     { "ConfigSetIsServer",	  NS(ConfigSetIsServer)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
+    { "ConfigSetIgnoreExit",	  NS(ConfigSetIgnoreExit)     },
+    { "ConfigSetEvent",		  NS(ConfigSetEvent)	      },
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
@@ -533,6 +547,7 @@ int NS(MqS_Cmd) (
 
     { "ErrorC",		      NS(ErrorC)		},
     { "ErrorSet",	      NS(ErrorSet)		},
+    { "ErrorSetCONTINUE",     NS(ErrorSetCONTINUE)	},
     { "ErrorGetText",	      NS(ErrorGetText)		},
     { "ErrorGetNum",	      NS(ErrorGetNum)		},
     { "ErrorGetCode",	      NS(ErrorGetCode)		},
@@ -574,7 +589,7 @@ NS(MqS_Free) (
     Tcl_Obj* dict = tclctx->dict;
     // we delete the command using "Tcl_DeleteObjCommand" the "Factory" is useless -> delete
     mqctx->setup.Factory.Delete.fCall = NULL;
-    mqctx->setup.fEvent = NULL;
+    mqctx->setup.Event.fFunc = NULL;
     // delete the context
     MqContextDelete(&mqctx);
     if (self != NULL)  Tcl_DecrRefCount(self);
@@ -611,7 +626,8 @@ NS(MqS_Init) (
   tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
   tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
   tclctx->mqctx.setup.Factory.Delete.fCall = NS(FactoryDelete);
-  tclctx->mqctx.setup.fEvent	      = NS(EventLink);
+
+  MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
 
   if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
     MqConfigSetIgnoreFork (&tclctx->mqctx, MQ_YES);
