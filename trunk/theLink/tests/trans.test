@@ -21,6 +21,14 @@ source [file join [file dirname [info script]] library.tcl]
 
 ##
 ## -----------------------------------------------------------------------
+## define filter
+##
+
+rename getFilter ""
+rename getExample getFilter
+
+##
+## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
@@ -36,16 +44,9 @@ source [file join [file dirname [info script]] library.tcl]
     # server-type: server server.tcl
     foreach S [filterGet SRV_LST $C spawn] {
 
-##
-## -----------------------------------------------------------------------
-## define filter
-##
-
-rename getFilter ""
-rename getExample getFilter
-set env(TS_FILTER_SERVER)  Filter4.[lindex [split $S .] 0]
-
 # tests ----------------------------
+
+set env(TS_FILTER_SERVER)  Filter4.[lindex [split $S .] 0]
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
     -body           {

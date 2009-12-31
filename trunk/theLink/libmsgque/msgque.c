@@ -1010,14 +1010,11 @@ sCallEventProc (
     }
   }
   // with "ignoreExit" all "context" have to be on "CONTINUE" to trigger an exit
-  if (context->setup.ignoreExit == MQ_YES && NUM == CONTINUE) {
-    goto exit;
+  if (context->setup.ignoreExit != MQ_YES || NUM != CONTINUE) {
+    MqErrorReset(context);
   }
 error:
   return MqErrorStack(context);
-exit:
-  context->setup.ignoreExit = MQ_NO;
-  return pErrorSetEXIT(context, __func__);
 }
 
 enum MqErrorE
@@ -1071,14 +1068,8 @@ pWaitOnEvent (
       //MqDLogC(context,7,"call fEvent in<%p>\n", msgque);
       switch (sCallEventProc (context, proc)) {
 	case MQ_OK:
-	case MQ_CONTINUE:
 	  break;
-	case MQ_ERROR:
-	  goto error;
-	case MQ_EXIT:
-	  if (MqErrorGetCode(context) == MQ_EXIT) {
-	    goto error;
-	  } else {
+	case MQ_CONTINUE: {
 	    struct pChildS * child;
 	    context->setup.ignoreExit = MQ_NO;
 	    for (child = context->link.childs; child != NULL; child=child->right) {
@@ -1086,6 +1077,10 @@ pWaitOnEvent (
 	    }
 	    return pErrorSetEXIT (context, __func__);
 	  }
+	  break;
+	case MQ_ERROR:
+	case MQ_EXIT:
+	  goto error;
       }
       //MqDLogC(context,7,"finish fEvent in<%p>\n", msgque);
 
