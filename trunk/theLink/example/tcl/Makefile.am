@@ -16,5 +16,5 @@
 ##
 
 EXTRA_DIST = manfilter.tcl mulclient.tcl mulserver.tcl total.tcl MyClient.tcl MyServer.tcl \
-		testclient.tcl testserver.tcl Filter1.tcl Filter2.tcl Filter3.tcl
+		testclient.tcl testserver.tcl Filter1.tcl Filter2.tcl Filter3.tcl Filter4.tcl
 

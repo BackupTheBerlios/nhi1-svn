@@ -974,20 +974,19 @@ sCallEventProc (
 {
   struct MqS * cldCtx;
   MqEventF cldProc;
-  MQ_INT NUM=1, EXIT=0;
+  MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
   switch ((*proc) (context)) {
     case MQ_OK:
+      break;
     case MQ_CONTINUE:
+      if (context->link.onShutdown == MQ_YES) {
+	CONTINUE++;
+      }
       break;
     case MQ_ERROR:
-      goto error;
     case MQ_EXIT:
-      if (MqErrorGetCode(context) == MQ_EXIT)
-	goto error;
-      else
-	EXIT++;
-      break;
+      goto error;
   }
   for (child = context->link.childs; child != NULL; child=child->right) {
     NUM++;
@@ -996,33 +995,29 @@ sCallEventProc (
     if (cldProc != NULL && cldCtx != NULL) {
       switch (sCallEventProc (cldCtx, cldProc)) {
 	case MQ_OK:
+	  break;
 	case MQ_CONTINUE:
+	  if (cldCtx->link.onShutdown == MQ_YES) {
+	    CONTINUE++;
+	  }
 	  break;
 	case MQ_ERROR:
+	case MQ_EXIT:
 	  MqErrorCopy(context, cldCtx);
 	  goto error;
-	case MQ_EXIT:
-	  if (MqErrorGetCode(cldCtx) == MQ_EXIT) {
-	    MqErrorCopy(context, cldCtx);
-	    goto error;
-	  } else {
-	    EXIT++;
-	  }
 	  break;
       }
     }
   }
-  if (context->setup.ignoreExit == MQ_YES) {
-    // with "ignoreExit" all "context" have to be on "EXIT" to trigger an exit
-    if (NUM == EXIT) goto exit;
-  } else {
-    // without "ignoreExit" just !one! "EXIT" is required to trigger an exit
-    if (EXIT) goto exit;
+  // with "ignoreExit" all "context" have to be on "CONTINUE" to trigger an exit
+  if (context->setup.ignoreExit == MQ_YES && NUM == CONTINUE) {
+    goto exit;
   }
 error:
   return MqErrorStack(context);
 exit:
-  return MQ_EXIT;
+  context->setup.ignoreExit = MQ_NO;
+  return pErrorSetEXIT(context, __func__);
 }
 
 enum MqErrorE

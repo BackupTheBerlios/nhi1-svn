@@ -1,10 +1,10 @@
 #+
-#§  \file       theGuard/tests/library.tcl
-#§  \brief      \$Id: library.tcl 83 2009-12-18 15:16:28Z aotto1968 $
+#§  \file       theBrain/tests/libtrans.tcl
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 83 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

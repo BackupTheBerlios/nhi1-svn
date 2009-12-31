@@ -40,7 +40,7 @@ array set LABELIGNORE {
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
     ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }
     ./theLink/example/c		{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
-				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3}
+				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3 Filter4}
     ./theLink/example/cc	{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
 				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3}
     ./theLink/example/java	{ example *.stamp *.sw* Makefile Makefile.in .vpath_hook tags}
@@ -83,7 +83,7 @@ array set LABELIGNORE {
 			    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
 			    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 			    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
-			    discheck.out phpmsgque *.bak mqconfig.h.in~}
+			    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log}
 }
 
 array set env [list \

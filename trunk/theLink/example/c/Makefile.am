@@ -13,7 +13,7 @@
 noinst_PROGRAMS = mulclient mulserver manfilter \
 		    testclient testserver \
 		      MyClient MyServer \
-			Filter1 Filter2 Filter3
+			Filter1 Filter2 Filter3 Filter4
 
 mulclient_SOURCES = mulclient.c
 mulclient_LDADD = -lm ../../libmsgque/libtmp.la
@@ -44,6 +44,9 @@ Filter2_LDADD = -lm ../../libmsgque/libtmp.la
 
 Filter3_SOURCES = Filter3.c
 Filter3_LDADD = -lm ../../libmsgque/libtmp.la
+
+Filter4_SOURCES = Filter4.c
+Filter4_LDADD = -lm ../../libmsgque/libtmp.la
 
 INCLUDES = -I$(srcdir)/../../libmsgque
 

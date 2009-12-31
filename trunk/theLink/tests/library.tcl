@@ -320,7 +320,7 @@ proc getServer {srv} {
 }
 
 proc getFilter {srv} {
-  return [list {*}[getPrefix $srv] [lindex [split $srv .] 0] {*}[getPostfix $srv]]
+  return [list {*}[getPrefix $srv] [file rootname $srv] {*}[getPostfix $srv]]
 }
 
 proc getServerOnly {srv} {
@@ -371,14 +371,9 @@ proc getATool {arg} {
     return $RET
 }
 
-proc getExample {srv} {
+proc getExampleExecutable {srv} {
     global env
     set RET [list]
-
-    # prefix (debugger)
-    if {[string match -nocase "*client*" $srv]} {
-      lappend RET {*}[getPrefix $srv]
-    }
 
     switch -glob $srv {
       *.python	{ lappend RET $::PYTHON [file join $::linksrcdir example python [file rootname $srv].py] }
@@ -389,8 +384,23 @@ proc getExample {srv} {
       *.tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
       *.cc	{ lappend RET [file join $::linkbuilddir example cc [file rootname $srv]$::EXEEXT] }
       *.c	{ lappend RET [file join $::linkbuilddir example c [file rootname $srv]$::EXEEXT] }
-      *		{ puts stderr "invalid example: $srv"; exit 1 }
+      *		{ Error "invalid example: $srv" }
     }
+
+    return $RET
+}
+
+proc getExample {srv} {
+    global env
+    set RET [list]
+
+    # prefix (debugger)
+    if {[string match -nocase "*client*" $srv]} {
+      lappend RET {*}[getPrefix $srv]
+    }
+
+    # get executable
+    lappend RET {*}[getExampleExecutable $srv]
 
     # postfix
     lappend RET {*}[getPostfix $srv]

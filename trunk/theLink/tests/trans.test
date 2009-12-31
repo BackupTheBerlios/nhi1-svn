@@ -1,5 +1,5 @@
 #+
-#§  \file       theBrain/tests/trans.test
+#§  \file       theLink/tests/trans.test
 #§  \brief      \$Id$
 #§  
 #§  (C) 2002 - NHI - #1 - Project - Group
@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-source [file join [file dirname [info script]] libtrans.tcl]
+source [file join [file dirname [info script]] library.tcl]
 
 ##
 ## -----------------------------------------------------------------------
@@ -38,15 +38,16 @@ source [file join [file dirname [info script]] libtrans.tcl]
 
 ##
 ## -----------------------------------------------------------------------
-## database
+## define filter
 ##
 
-# startup binary --------------------------
-#Setup $I $B $C $S
+rename getFilter ""
+rename getExample getFilter
+set env(TS_FILTER_SERVER)  Filter4.[lindex [split $S .] 0]
 
 # tests ----------------------------
 
-test brain-1-($I|$B|$C|$S) {send data with error} \
+test trans-1-($I|$B|$C|$S) {send data with error} \
     -body           {
       Setup $I $B $C $S --save-server-output
       Echo0 $FH_LAST DUM1 SendC HALLO
@@ -60,7 +61,7 @@ test brain-1-($I|$B|$C|$S) {send data with error} \
 BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[pTokenInvoke] token <DUM2> not found}
 
-test brain-2-($I|$B|$C|$S) {send valid data} \
+test trans-2-($I|$B|$C|$S) {send valid data} \
     -body           {
       Setup $I $B $C $S --save-server-output
       Echo0 $FH_LAST PRNT SendC HALLO

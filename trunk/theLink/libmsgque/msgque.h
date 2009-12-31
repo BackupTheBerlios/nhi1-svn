@@ -2892,6 +2892,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
   MQ_CST const message
 );
 
+/// \brief set the error-code of the \e MqErrorS object to #MQ_CONTINUE
+/// \context
+/// \return #MQ_CONTINUE
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
+  struct MqS * const context
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              error_is/check                               */

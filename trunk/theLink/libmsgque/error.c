@@ -325,7 +325,6 @@ MqErrorPrint (
   MqErrorReset(context);
 }
 
-
 enum MqErrorE
 MqErrorSet (
   struct MqS * const context,
@@ -341,6 +340,14 @@ MqErrorSet (
   if (context->config.master != NULL)
     pErrorSync(context->config.master, context);
   return code;
+}
+
+enum MqErrorE
+MqErrorSetCONTINUE (
+  struct MqS * const context
+)
+{
+  return (context->error.code = MQ_CONTINUE);
 }
 
 enum MqErrorE
