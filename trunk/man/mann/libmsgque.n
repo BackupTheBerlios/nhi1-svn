@@ -1,4 +1,4 @@
-.TH "libmsgque" n "23 Dec 2009" "Version 0.3" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "1 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -112,13 +112,19 @@ Use \fISTRING\fP as a client specific prefix in the server debugging output. Thi
 .PP
 Use \fBMQ_CST\fP as an application specific identifier set by the programmer and checked with \fC\fBMqConfigCheckIdent\fP\fP (struct \fBMqS\fP *ctx, MQ_CST ident) against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSilent\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsSilent\fP (ctx, isSilent)\fP
+\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSilent\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsSilent\fP (ctx, bool)\fP
 .PP
 Write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any output to stdout or stderr. (default: write to stdout or stderr)
 .SS "command-line: --string"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsString\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsString\fP (ctx, isString)\fP
+\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsString\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsString\fP (ctx, bool)\fP
 .PP
 Use (\fIMQ_YES\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
+.SS "ignoreExit"
+\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBMqConfigSetIgnoreExit\fP (ctx, bool)\fP
+.PP
+ignore the server EXIT 
+.PP
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If \fCignoreExit = \fBMQ_YES\fP\fP is set the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (\fBMqSetupS::Event\fP, set with \fBMqConfigSetEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event function return with \fBMqErrorSetCONTINUE\fP (nothing to do) the last task-worker is gone and the process exit. 
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCenum \fBMqStartE\fP\fP, \fBget:\fP \fC\fBMqConfigGetStartAs\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetStartAs\fP (ctx, startAS\fP
 .PP
@@ -311,9 +317,9 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 .IP "\(bu" 2
 \fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
-\fB+ALL\fP - used to listen on \fBall\fP services not handled by other \fItoken\fP more precise
+\fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
-\fB_ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
+\fB-ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
 .IP "\(bu" 2
 \fB+FTR\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .IP "\(bu" 2

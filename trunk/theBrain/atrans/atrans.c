@@ -420,7 +420,7 @@ static enum MqErrorE ACLO ( ARGS ) {
   DbErrorCheck (tchdbclose(trans->db));
 
   // add/remove services
-  MqErrorCheck (MqServiceDelete (mqctx, "_ALL"));
+  MqErrorCheck (MqServiceDelete (mqctx, "-ALL"));
   MqErrorCheck (MqServiceCreate (mqctx, "AOPN", AOPN, NULL, NULL));
 
 error:

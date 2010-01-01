@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "23 Dec 2009" "Version 0.3" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "1 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -49,7 +49,7 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 noinst_PROGRAMS = mulclient mulserver manfilter \
                     testclient testserver \
                       MyClient MyServer \
-                        Filter1 Filter2 Filter3
+                        Filter1 Filter2 Filter3 Filter4
 .fi
 .PP
  ... 

@@ -202,7 +202,7 @@ sTokenSpaceFree (
   if (unlikely(spaceP == NULL || *spaceP == NULL)) {
     return;
   } else {
-    sTokenSpaceDelItem ((*spaceP), "_ALL");
+    sTokenSpaceDelItem ((*spaceP), "-ALL");
     MqSysFree ((*spaceP)->items);
     MqSysFree (*spaceP);
   }
@@ -229,7 +229,7 @@ sTokenSpaceDelItem (
   register struct pTokenItemS * start = space->items;
            struct pTokenItemS * end = start + space->used;
 
-  if (strncmp (name, "_ALL", HDR_TOK_LEN)) {
+  if (strncmp (name, "-ALL", HDR_TOK_LEN)) {
     start = sTokenSpaceFindItem (start, end, pByte2INT(name));
 
     if (unlikely (start == NULL))

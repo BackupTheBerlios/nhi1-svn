@@ -10,6 +10,18 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v NHI1-0.4, PLMK-1.3 and libmsgque-4.2
+
+ - 1 jan 2010
+  + switch the special token to delete "all" token in MqServiceDelete from
+    "_ALL" to "-ALL". 
+    -> Reason: the "_???" syntax is for internal use only.
+  + update documentation, add structure, add man pager for public libmsgque
+    C-API and start to merge "man" documentation strings with "libmsgque"
+    documentation strings:
+    -> Reason: keep only "one" source of documentation up-to-date.
+
+
 v NHI1-0.3, PLMK-1.2 and libmsgque-4.1    23 December 2009
 
 Major - Feature - Improvement !!

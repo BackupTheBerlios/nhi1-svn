@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "23 Dec 2009" "Version 0.3" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -94,6 +94,12 @@ Write (\fIno\fP) or don't write (\fIyes\fP) any output to stdout or stderr. (def
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fIyes\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
+.SS "ignoreExit"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
+.PP
+ignore the server EXIT 
+.PP
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If \fCignoreExit = \fBMQ_YES\fP\fP is set the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (\fBMqSetupS::Event\fP, set with \fBMqConfigSetEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event function return with \fBMqErrorSetCONTINUE\fP (nothing to do) the last task-worker is gone and the process exit. 
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs startAs\fP
 .PP
@@ -283,9 +289,9 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 .IP "\(bu" 2
 \fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
-\fB+ALL\fP - used to listen on \fBall\fP services not handled by other \fItoken\fP more precise
+\fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
-\fB_ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
+\fB-ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
 .IP "\(bu" 2
 \fB+FTR\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .IP "\(bu" 2

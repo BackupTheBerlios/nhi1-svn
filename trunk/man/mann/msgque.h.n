@@ -1,0 +1,1501 @@
+.TH "msgque.h" n "1 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+msgque.h \- $Id: \fBmsgque.h\fP 117 2009-12-31 18:00:13Z aotto1968 $  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio.h>\fP
+.br
+\fC#include <stdarg.h>\fP
+.br
+\fC#include <time.h>\fP
+.br
+\fC#include <limits.h>\fP
+.br
+\fC#include <unistd.h>\fP
+.br
+\fC#include <string.h>\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqFactoryCreateS\fP"
+.br
+.I "function pointer to \fIcreate\fP an object "
+.ti -1c
+.RI "struct \fBMqFactoryDeleteS\fP"
+.br
+.I "function pointer to \fIdelete\fP an object "
+.ti -1c
+.RI "struct \fBMqFactoryS\fP"
+.br
+.I "used for factory function pointer management "
+.ti -1c
+.RI "struct \fBMqCallbackS\fP"
+.br
+.I "used for callback function pointer management "
+.ti -1c
+.RI "struct \fBMqLinkSetupS\fP"
+.br
+.I "used to Create/Delete of object "
+.ti -1c
+.RI "struct \fBMqIoUdsConfigS\fP"
+.br
+.I "configuration data which belong to \fIMqIoS\fP uds setup "
+.ti -1c
+.RI "struct \fBMqIoTcpConfigS\fP"
+.br
+.I "configuration data which belong to \fIMqIoS\fP tcp setup "
+.ti -1c
+.RI "struct \fBMqIoPipeConfigS\fP"
+.br
+.I "configuration data which belong to \fIMqIoS\fP pipe setup "
+.ti -1c
+.RI "struct \fBMqIoConfigS\fP"
+.br
+.I "configuration data which belong to \fIMqIoS\fP "
+.ti -1c
+.RI "struct \fBMqConfigS\fP"
+.br
+.I "end-user configuration data, also available as command-line options "
+.ti -1c
+.RI "struct \fBMqSetupS\fP"
+.br
+.I "application-programmer configuration data "
+.ti -1c
+.RI "struct \fBMqLinkS\fP"
+.br
+.I "object responsible to manage client/server link data "
+.ti -1c
+.RI "struct \fBMqErrorS\fP"
+.br
+.I "error-object data type "
+.ti -1c
+.RI "struct \fBMqS\fP"
+.br
+.I "Prototype for a context object. "
+.ti -1c
+.RI "union \fBMqBufferAtomU\fP"
+.br
+.I "union used to set or modify native data from an \fBMqBufferS\fP object "
+.ti -1c
+.RI "union \fBMqBufferU\fP"
+.br
+.I "a union for all data items supported by \fBMqBufferS\fP. "
+.ti -1c
+.RI "struct \fBMqBufferS\fP"
+.br
+.I "defines an object to store generic (e.g mixed typed) data. "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP"
+.br
+.I "the object to manage an array of \fI\fBMqBufferS\fP\fP items. "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBmq_strtoll\fP   strtoll"
+.br
+.ti -1c
+.RI "#define \fBmq_strdup\fP(v)   strdup(v)"
+.br
+.ti -1c
+.RI "#define \fBmq_getpid\fP   getpid"
+.br
+.ti -1c
+.RI "#define \fBmq_unlink\fP   unlink"
+.br
+.ti -1c
+.RI "#define \fBmq_snprintf\fP   snprintf"
+.br
+.ti -1c
+.RI "#define \fBMQ_CLRCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_STDCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_CDECL\fP"
+.br
+.ti -1c
+.RI "#define \fBmq_inline\fP   inline"
+.br
+.ti -1c
+.RI "#define \fBMQ_DECL\fP   MQ_CDECL"
+.br
+.ti -1c
+.RI "#define \fBBEGIN_C_DECLS\fP"
+.br
+.ti -1c
+.RI "#define \fBEND_C_DECLS\fP"
+.br
+.ti -1c
+.RI "#define \fBlikely\fP(x)   __builtin_expect((x),1)"
+.br
+.I "gcc jump optimization "
+.ti -1c
+.RI "#define \fBunlikely\fP(x)   __builtin_expect((x),0)"
+.br
+.I "gcc jump optimization "
+.ti -1c
+.RI "#define \fBmq_timeval\fP   timeval"
+.br
+.ti -1c
+.RI "#define \fBmq_timezone\fP   timezone"
+.br
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT\fP   900"
+.br
+.I "maximum timeout in sec (900 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT5\fP   (MQ_TIMEOUT/5)"
+.br
+.I "long timeout in sec (180 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT10\fP   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
+.br
+.I "normal timeout in sec (90 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT45\fP   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
+.br
+.I "short timeout in sec (20 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT90\fP   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
+.br
+.I "shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT180\fP   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
+.br
+.I "very short timeout in sec (5 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT_USER\fP   -2"
+.br
+.I "request the user defined timeout value from the argument of the \fC--timeout\fP option "
+.ti -1c
+.RI "#define \fBMQ_ERROR_PANIC\fP   ((struct \fBMqS\fP*)NULL)"
+.br
+.I "panic on error "
+.ti -1c
+.RI "#define \fBMQ_ERROR_IGNORE\fP   ((struct \fBMqS\fP*)0x1)"
+.br
+.I "ignore error and do not generate any error-text (don't fill the error object) "
+.ti -1c
+.RI "#define \fBMQ_ERROR_PRINT\fP   ((struct \fBMqS\fP*)0x2)"
+.br
+.I "print error to stderr "
+.ti -1c
+.RI "#define \fBMQ_ERROR_IS_POINTER\fP(e)   (e>MQ_ERROR_PRINT)"
+.br
+.I "check if the error pointer is a \fIreal\fP pointer or just a flag "
+.ti -1c
+.RI "#define \fBMQ_EXTERN\fP"
+.br
+.I "define the external binding "
+.ti -1c
+.RI "#define \fBMQ_CPPXSTR\fP(s)   MQ_CPPSTR(s)"
+.br
+.I "connecting of expressions, step 1 "
+.ti -1c
+.RI "#define \fBMQ_CPPSTR\fP(s)   #s"
+.br
+.I "connecting of expressions, step 2 "
+.ti -1c
+.RI "#define \fBMQ_ALFA\fP   '@'"
+.br
+.I "MQ_ALFA the command-line separator between server and client. "
+.ti -1c
+.RI "#define \fBMQ_ALFA_STR\fP   '@'"
+.br
+.I "MQ_ALFA the command-line separator as string. "
+.ti -1c
+.RI "#define \fBMQ_NO\fP   0"
+.br
+.I "boolean NO "
+.ti -1c
+.RI "#define \fBMQ_YES\fP   1"
+.br
+.I "boolean YES "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_1_BYTE\fP   (1<<0)"
+.br
+.I "the type is native and has a size of 1 byte "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_2_BYTE\fP   (1<<1)"
+.br
+.I "the type is native and has a size of 2 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_4_BYTE\fP   (1<<2)"
+.br
+.I "the type is native and has a size of 4 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_8_BYTE\fP   (1<<3)"
+.br
+.I "the type is native and has a size of 8 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_NATIVE\fP"
+.br
+.I "the type is native "
+.ti -1c
+.RI "#define \fBMqFactoryS_NULL\fP   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
+.br
+.I "initialize a \fBMqFactoryS\fP object to \fCNULL\fP "
+.ti -1c
+.RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
+.br
+.I "signature used in \fBMqS::signature\fP "
+.ti -1c
+.RI "#define \fBMQ_PRIVATE_CONFIG_CONST\fP   const"
+.br
+.ti -1c
+.RI "#define \fBMQ_BLS_SIZE\fP   50"
+.br
+.I "initial size of the \fBMqBufferS\fP:bls object "
+.ti -1c
+.RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
+.br
+.ti -1c
+.RI "#define \fBMqPanicC\fP(context, prefix, errnum, string)   MqPanicV(context,prefix,errnum,'%s',string);"
+.br
+.I "do a \fBpanic\fP with \fIstring\fP as argument "
+.ti -1c
+.RI "#define \fBMqPanicSYS\fP(context)"
+.br
+.I "do a \fBpanic\fP with a \fBsystem\fP error message "
+.ti -1c
+.RI "#define \fBMqErrorV\fP(error, prefix, errnum, format,...)   MqErrorSGenV(error,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)"
+.br
+.I "customized edition of \fBMqErrorSGenV\fP "
+.ti -1c
+.RI "#define \fBMqErrorSAppendC\fP(error, str)   MqErrorSAppendV(error,'%s',str);"
+.br
+.I "append a string to a \fI\fBMqErrorS\fP\fP "
+.ti -1c
+.RI "#define \fBMqErrorStack\fP(error)   MqErrorStackP(error, __func__, __FILE__)"
+.br
+.I "convenience wrapper for \fBMqErrorStackP\fP "
+.ti -1c
+.RI "#define \fBMqErrorCheckI\fP(PROC)   (unlikely((PROC) >= MQ_ERROR))"
+.br
+.I "check on error "
+.ti -1c
+.RI "#define \fBMqErrorCheck\fP(PROC)   if (MqErrorCheckI(PROC)) goto error"
+.br
+.I "version of \fBMqErrorCheckI\fP "
+.ti -1c
+.RI "#define \fBMqErrorSwitch\fP(PROC)"
+.br
+.I "process error message "
+.ti -1c
+.RI "#define \fBMqErrorReturn\fP(PROC)"
+.br
+.I "process error message "
+.ti -1c
+.RI "#define \fBMqErrorCheck1\fP(PROC)   if (MqErrorCheckI(PROC)) goto error1"
+.br
+.I "check on error and goto label \fIerror1\fP "
+.ti -1c
+.RI "#define \fBMqErrorCheck2\fP(PROC, JUMP)   if (MqErrorCheckI(PROC)) goto JUMP"
+.br
+.I "check on error and goto label \fIJUMP\fP "
+.ti -1c
+.RI "#define \fBMQ_SLAVE_MAX\fP   1024"
+.br
+.I "the maximum number of slave objects per master "
+.ti -1c
+.RI "#define \fBMqSysFree\fP(tgt)"
+.br
+.I "'free' system call macro "
+.ti -1c
+.RI "#define \fBMqSetDebugLevel\fP(context)   debugLevel = context->config.debug"
+.br
+.I "define a variable \fIdebugLevel\fP valid only in the current context "
+.ti -1c
+.RI "#define \fBMqDLogC\fP(context, level, str)   if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)"
+.br
+.I "log a plain string "
+.ti -1c
+.RI "#define \fBMqDLogCL\fP(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
+.br
+.I "log a plain string using the \fBMqSetDebugLevel\fP definition "
+.ti -1c
+.RI "#define \fBMqDLogV\fP(context, level, fmt,...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.br
+.I "log a vararg string using formatting and checking for logging level "
+.ti -1c
+.RI "#define \fBMqDLogVL\fP(context, level, fmt,...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.br
+.I "log a vararg string using formatting and checking for logging level using the \fBMqSetDebugLevel\fP definition "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef signed char \fBMQ_BYT\fP"
+.br
+.I "1 byte \fBbyte\fP data-type "
+.ti -1c
+.RI "typedef signed char \fBMQ_BOL\fP"
+.br
+.I "1 byte \fBboolean\fP data-type "
+.ti -1c
+.RI "typedef short \fBMQ_SRT\fP"
+.br
+.I "2 byte \fBshort\fP data-type "
+.ti -1c
+.RI "typedef int \fBMQ_INT\fP"
+.br
+.I "4 byte \fBinteger\fP data-type "
+.ti -1c
+.RI "typedef float \fBMQ_FLT\fP"
+.br
+.I "4 byte \fBfloat\fP data-type "
+.ti -1c
+.RI "typedef long long int \fBMQ_WID\fP"
+.br
+.I "8 byte \fBwide\fP integer data-type "
+.ti -1c
+.RI "typedef double \fBMQ_DBL\fP"
+.br
+.I "8 byte \fBdouble\fP data-type "
+.ti -1c
+.RI "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
+.br
+.I "8 byte \fBatom\fP data-type "
+.ti -1c
+.RI "typedef int \fBMQ_SIZE\fP"
+.br
+.I "array size data-type "
+.ti -1c
+.RI "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
+.br
+.I "OS wide MQ_TIME_T. "
+.ti -1c
+.RI "typedef int \fBMQ_HDL\fP"
+.br
+.I "handle data-type "
+.ti -1c
+.RI "typedef void \fBMQ_PTRB\fP"
+.br
+.I "pointer basic data-type "
+.ti -1c
+.RI "typedef char \fBMQ_STRB\fP"
+.br
+.I "string basic data-type "
+.ti -1c
+.RI "typedef unsigned char \fBMQ_BINB\fP"
+.br
+.I "binary basic data-type "
+.ti -1c
+.RI "typedef unsigned char \fBMQ_LSTB\fP"
+.br
+.I "list basic data-type "
+.ti -1c
+.RI "typedef \fBMQ_PTRB\fP * \fBMQ_PTR\fP"
+.br
+.I "generic pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_STRB\fP * \fBMQ_STR\fP"
+.br
+.I "string pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_STRB\fP const * \fBMQ_CST\fP"
+.br
+.I "const string pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
+.br
+.I "binary pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
+.br
+.I "list pointer data-type "
+.ti -1c
+.RI "typedef struct \fBMqBufferS\fP * \fBMQ_BUF\fP"
+.br
+.I "Buffer pointer data-type. "
+.ti -1c
+.RI "typedef struct \fBMqBufferLS\fP * \fBMQ_BFL\fP"
+.br
+.I "Buffer-List pointer data-type. "
+.ti -1c
+.RI "typedef struct \fBMqS\fP * \fBMQ_CTX\fP"
+.br
+.I "Context pointer data-type. "
+.ti -1c
+.RI "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
+.br
+.I "data type for a socket handle "
+.ti -1c
+.RI "typedef pid_t(* \fBMqForkF\fP )(void)"
+.br
+.I "prototype for the \fCfork\fP syscall "
+.ti -1c
+.RI "typedef pid_t(* \fBMqVForkF\fP )(void)"
+.br
+.I "prototype for the \fCvfork\fP syscall "
+.ti -1c
+.RI "typedef void(* \fBMqDeleteF\fP )(struct \fBMqS\fP *const context)"
+.br
+.I "the prototype for a ContextDelete function "
+.ti -1c
+.RI "typedef void(* \fBMqTokenDataFreeF\fP )(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
+.br
+.I "prototype for a free additional token data function "
+.ti -1c
+.RI "typedef void(* \fBMqHelpF\fP )(\fBMQ_CST\fP)"
+.br
+.I "application specific help function type "
+.ti -1c
+.RI "typedef void(* \fBMqFactoryDeleteF\fP )(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
+.br
+.I "prototype for a Object-Delete factory function "
+.ti -1c
+.RI "typedef void(* \fBMqExitF\fP )(int num)"
+.br
+.I "prototype for exit a process or thread "
+.ti -1c
+.RI "typedef void(* \fBMqSetupF\fP )(struct \fBMqS\fP *const )"
+.br
+.I "used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqIoSelectE\fP { \fBMQ_SELECT_RECV\fP =  (1 << 0), \fBMQ_SELECT_SEND\fP =  (1 << 1) }"
+.br
+.I "'select' type for reading or writing "
+.ti -1c
+.RI "enum \fBMqWaitOnEventE\fP { \fBMQ_WAIT_NO\fP =  0, \fBMQ_WAIT_ONCE\fP =  1, \fBMQ_WAIT_FOREVER\fP =  2 }"
+.br
+.I "wait for an event? "
+.ti -1c
+.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
+.br
+.I "a enum for all data types supported by \fBMqBufferS\fP "
+.ti -1c
+.RI "enum \fBMqAllocE\fP { \fBMQ_ALLOC_STATIC\fP =  0, \fBMQ_ALLOC_DYNAMIC\fP =  1 }"
+.br
+.I "allocation style used for the data-segment in \fBMqBufferS\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2, \fBMQ_EXIT\fP =  3 }"
+.br
+.I "collection for the different error-codes "
+.ti -1c
+.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
+.br
+.I "the \fIfactory\fP is called to create an object for ... "
+.ti -1c
+.RI "enum \fBMqStatusIsE\fP { \fBMQ_STATUS_IS_INITIAL\fP =  0, \fBMQ_STATUS_IS_DUP\fP =  1<<0, \fBMQ_STATUS_IS_THREAD\fP =  1<<1, \fBMQ_STATUS_IS_FORK\fP =  1<<2, \fBMQ_STATUS_IS_SPAWN\fP =  1<<3 }"
+.br
+.I "Information about how the \fIcontext\fP was created. "
+.ti -1c
+.RI "enum \fBMqStartE\fP { \fBMQ_START_DEFAULT\fP =  0, \fBMQ_START_FORK\fP =  1, \fBMQ_START_THREAD\fP =  2, \fBMQ_START_SPAWN\fP =  3 }"
+.br
+.I "User preferences on HOWTO start a new entity. "
+.ti -1c
+.RI "enum \fBMqIoComE\fP { \fBMQ_IO_UDS\fP, \fBMQ_IO_TCP\fP, \fBMQ_IO_PIPE\fP }"
+.br
+.I "what kind of socket interface to use? "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "MQ_EXTERN void \fBMqContextInit\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
+.br
+.I "initialize the \fBMqS\fP object related data but do \fInot\fP create the object self "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqContextFree\fP (struct \fBMqS\fP *const context)"
+.br
+.I "free the \fBMqS\fP object related data but do \fInot\fP free the object self "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqContextCreate\fP (\fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
+.br
+.I "create the \fBMqS\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqContextDelete\fP (struct \fBMqS\fP **contextP)"
+.br
+.I "delete the entire \fBMqS\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigReset\fP (struct \fBMqS\fP *const context)"
+.br
+.I "clean the \fBMqS::config\fP data "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigDup\fP (struct \fBMqS\fP *const to, struct \fBMqS\fP const *const from)"
+.br
+.I "copy the \fBMqS::config\fP data "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSetupDup\fP (struct \fBMqS\fP *const to, struct \fBMqS\fP const *const from)"
+.br
+.I "copy the \fBMqS::setup\fP data "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetName\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
+.br
+.I "set the \fBMqConfigS::name\fP value and cleanup old value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIdent\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
+.br
+.I "set the \fBMqSetupS::ident\fP value and cleanup old value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetSrvName\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
+.br
+.I "set the \fBMqConfigS::srvname\fP value and cleanup old value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetBuffersize\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP data)"
+.br
+.I "set the \fBMqIoConfigS::buffersize\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetDebug\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP data)"
+.br
+.I "set the \fBMqConfigS::debug\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetTimeout\fP (struct \fBMqS\fP *const context, \fBMQ_TIME_T\fP data)"
+.br
+.I "set the \fBMqIoConfigS::timeout\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIsSilent\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqConfigS::isSilent\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIsServer\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqSetupS::isServer\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIsString\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqConfigS::isString\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIgnoreExit\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqSetupS::ignoreExit\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetParent\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent)"
+.br
+.I "set the \fBMqConfigS::parent\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetMaster\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const master, int master_id)"
+.br
+.I "set the \fBMqConfigS::master\fP and \fBMqConfigS::master_id\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetFactory\fP (struct \fBMqS\fP *const context, \fBMqFactoryCreateF\fP fCreate, \fBMQ_PTR\fP CreateData, \fBMqTokenDataFreeF\fP fCreateFree, \fBMqTokenDataCopyF\fP fCreateCopy, \fBMqFactoryDeleteF\fP fDelete, \fBMQ_PTR\fP DeleteData, \fBMqTokenDataFreeF\fP fDeleteFree, \fBMqTokenDataCopyF\fP fDeleteCopy)"
+.br
+.I "setup the \fIfactory\fP pattern "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetDefaultFactory\fP (struct \fBMqS\fP *const context)"
+.br
+.I "setup the \fIfactory\fP pattern "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIgnoreFork\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqConfigS::ignoreFork\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetIgnoreThread\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
+.br
+.I "set the \fBMqConfigS::ignoreThread\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetStartAs\fP (struct \fBMqS\fP *const context, enum \fBMqStartE\fP data)"
+.br
+.I "set the \fBMqConfigS::startAs\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetSetup\fP (struct \fBMqS\fP *const context, \fBMqCreateF\fP fChildCreate, \fBMqDeleteF\fP fChildDelete, \fBMqCreateF\fP fParentCreate, \fBMqDeleteF\fP fParentDelete, \fBMqExitF\fP fProcessExit, \fBMqExitF\fP fThreadExit)"
+.br
+.I "set various attributes from \fBMqConfigS\fP struct "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetEvent\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.br
+.I "set the \fBMqSetupS::Event\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetServerSetup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.br
+.I "set the \fBMqSetupS::ServerSetup\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetServerCleanup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.br
+.I "set the \fBMqSetupS::ServerCleanup\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetBgError\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.br
+.I "set the \fBMqSetupS::BgError\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqConfigSetIoUds\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP file)"
+.br
+.I "set the \fBMqIoUdsConfigS::file\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqConfigSetIoTcp\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP host, \fBMQ_CST\fP port, \fBMQ_CST\fP myhost, \fBMQ_CST\fP myport)"
+.br
+.I "set the \fBMqIoTcpConfigS\fP data "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqConfigSetIoPipe\fP (struct \fBMqS\fP *const context, \fBMQ_SOCK\fP socket)"
+.br
+.I "set the \fIpipe\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqConfigSetDaemon\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
+.br
+.I "start the server in daemon mode "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is a \fIserver\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsParent\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is a \fIparent\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsSlave\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is a \fIslave\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is a \fIstring\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is \fIsilent\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsConnected\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is \fIconnected\fP ? "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetName\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fIname\fP of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIdent\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fIident\fP of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqConfigCheckIdent\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP ident)"
+.br
+.I "check the \fIident\fP of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetSrvName\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fIsrvname\fP of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_INT\fP \fBMqConfigGetBuffersize\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the minimum of the \fIread/send\fP \fIbuffersize\fP value of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_INT\fP \fBMqConfigGetDebug\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fIdebug\fP value of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_TIME_T\fP \fBMqConfigGetTimeout\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fItimeout\fP value of the \fIcontext\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqConfigGetParent\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fIparent\fP value of the \fIconfig\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqConfigGetMaster\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fImaster\fP value of the \fIconfig\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqConfigGetFilter\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filterP)"
+.br
+.I "get the \fIfilter\fP object from a filter pipeline between a \fImaster\fP context and a \fIslave\fP context with \fIid\fP. "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqConfigGetCtxId\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "return the context-identification "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetToken\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the token from the ongoing service-handler "
+.ti -1c
+.RI "MQ_EXTERN int \fBMqConfigGetIsTransaction\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "check if the ongoing service-call belongs to a transaction "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
+.br
+.I "return the \fBMqIoUdsConfigS::file\fP value "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIoTcpHost\fP (struct \fBMqS\fP *const context)"
+.br
+.I "get the \fBMqIoTcpConfigS::host\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIoTcpPort\fP (struct \fBMqS\fP *const context)"
+.br
+.I "get the \fBMqIoTcpConfigS::port\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIoTcpMyHost\fP (struct \fBMqS\fP *const context)"
+.br
+.I "get the \fBMqIoTcpConfigS::myhost\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqConfigGetIoTcpMyPort\fP (struct \fBMqS\fP *const context)"
+.br
+.I "get the \fBMqIoTcpConfigS::myport\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SOCK\fP \fBMqConfigGetIoPipeSocket\fP (struct \fBMqS\fP *const context)"
+.br
+.I "get the \fIpipe\fP configuration data "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqStartE\fP \fBMqConfigGetStartAs\fP (struct \fBMqS\fP *const context)"
+.br
+.I "return the \fBMqConfigS::startAs\fP value "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqConfigSetSelf\fP (struct \fBMqS\fP *const context, void *self)"
+.br
+.I "set the \fBMqS::self\fP value "
+.ti -1c
+.RI "MQ_EXTERN void * \fBMqConfigGetSelf\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the \fBMqS::self\fP value "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqInitCreate\fP (void)"
+.br
+.I "setup and return the \fIinit\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqInitSysAPI\fP (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.br
+.I "create a parent \fBlibmsgque\fP object link "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **argsP)"
+.br
+.I "create a child \fBlibmsgque\fP object link "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.br
+.I "wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqLinkDelete\fP (struct \fBMqS\fP *const context)"
+.br
+.I "delete a \fBlibmsgque\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqExit\fP (struct \fBMqS\fP *context)"
+.br
+.I "exit the current process or thread "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_STR\fP \fBMqHelp\fP (\fBMQ_CST\fP tool)"
+.br
+.I "write \fBlibmsgque\fP specific user-help to stderr "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.br
+.I "create a service handle "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
+.br
+.I "use a proxy to proxy the incomming trafic to the outgoing trafic "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const token)"
+.br
+.I "delete service handle "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_BYT\fP \fBMqBufU2BYT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_BYT from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqBufU2BOL\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_BOL from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SRT\fP \fBMqBufU2SRT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_SRT from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_INT\fP \fBMqBufU2INT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_INT from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_FLT\fP \fBMqBufU2FLT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_FLT from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_WID\fP \fBMqBufU2WID\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_WID from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_DBL\fP \fBMqBufU2DBL\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_DBL from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_ATO\fP \fBMqBufU2ATO\fP (union \fBMqBufferU\fP bufU)"
+.br
+.I "extract a MQ_ATO from a \fI\fBMqBufferS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
+.br
+.I "create a new \fI\fBMqBufferS\fP\fP with \fIsize\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferDelete\fP (struct \fBMqBufferS\fP **const bufP)"
+.br
+.I "delete a new \fI\fBMqBufferS\fP\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferReset\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.I "reset a \fI\fBMqBufferS\fP\fP to the length zero "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCopy\fP (register struct \fBMqBufferS\fP *const dest, register struct \fBMqBufferS\fP const *const srce)"
+.br
+.I "copy the \fI\fBMqBufferS\fP\fP from \fIsrce\fP to \fIdest\fP "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferDup\fP (struct \fBMqBufferS\fP const *const srce)"
+.br
+.I "create an new object as duplication of an existing object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP const val)"
+.br
+.I "create and initialize a new \fBMqBufferS\fP object using native typed value "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const val)"
+.br
+.I "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_STR\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const val, \fBMQ_SIZE\fP const len)"
+.br
+.I "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferCreateU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP const *const val)"
+.br
+.I "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetY\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BYT\fP *const valP)"
+.br
+.I "read native typed value from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetO\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BOL\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetS\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_SRT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetI\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_INT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetF\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_FLT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetW\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_WID\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetD\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_DBL\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const size)"
+.br
+.I "function to read an \fBMQ_BIN\fP from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferGetC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP *const out)"
+.br
+.I "function to read an \fBMQ_STR\fP from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.I "return the type from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.I "return the \fC\fBMqErrorS\fP\fP object from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetY\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BYT\fP const val)"
+.br
+.I "set the \fBMqBufferS\fP object with a native typed value "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetO\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetS\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetI\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetF\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetW\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetD\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const in)"
+.br
+.I "set the \fBMqBufferS\fP object with an \fBMQ_STR\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.br
+.I "set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetU\fP (struct \fBMqBufferS\fP *const buf, struct \fBMqBufferS\fP const *const in)"
+.br
+.I "set the \fBMqBufferS\fP object with an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferS\fP * \fBMqBufferSetV\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "set the \fBMqBufferS\fP to a vararg \fIstring\fP with \fIformat\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferCastTo\fP (struct \fBMqBufferS\fP *const buf, enum \fBMqTypeE\fP const type)"
+.br
+.I "change the type of an \fBMqBufferS\fP object to \fItype\fP "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferAppendC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.I "append a single \fIstring\fP to a \fI\fBMqBufferS\fP\fP "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferAppendVL\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.I "append a single string with \fIformat\fP and \fIvar_list\fP arguments to a \fBMqBufferS\fP "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferAppendV\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "append a single string with \fIformat\fP and \fI\fP... arguments to a \fBMqBufferS\fP "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferPush\fP (register struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.I "add \fIstr\fP to the \fI\fBMqBufferS\fP\fP "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferPop\fP (register struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.I "delete \fIstr\fP from the \fI\fBMqBufferS\fP\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLog\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferS\fP const *const buf, \fBMQ_CST\fP const prefix)"
+.br
+.I "log the whole \fI\fBMqBufferS\fP\fP object to the stderr device "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLogS\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferS\fP const *const buf, \fBMQ_CST\fP const prefix)"
+.br
+.I "log the short \fI\fBMqBufferS\fP\fP object data to the stderr device "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqCurrentTokenIs\fP (struct \fBMqS\fP const *const context, char const *const token)"
+.br
+.I "check the current token "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLCreate\fP (\fBMQ_SIZE\fP const size)"
+.br
+.I "create and initialize a \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgs\fP (int const argc, \fBMQ_CST\fP argv[])"
+.br
+.I "create and initialize a \fBMqBufferLS\fP object with argc/argv data "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVA\fP (struct \fBMqS\fP *const context, va_list ap)"
+.br
+.I "create and return a \fC\fBMqBufferLS\fP\fP object using a \fIva_list\fP argument "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsV\fP (struct \fBMqS\fP *const context,...)"
+.br
+.I "create and return a \fC\fBMqBufferLS\fP\fP object using \fIvarargs\fP arguments end with \fCNULL\fP "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVC\fP (struct \fBMqS\fP *const context, int const argc, \fBMQ_CST\fP argv[])"
+.br
+.I "create and return a a \fC\fBMqBufferLS\fP\fP object using \fImain\fP startup arguments "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqBufferLDup\fP (struct \fBMqBufferLS\fP const *const in)"
+.br
+.I "create an \fBMqBufferLS\fP object as copy from an existing \fI\fBMqBufferLS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLDelete\fP (struct \fBMqBufferLS\fP **bufP)"
+.br
+.I "delete a dynamically created \fI\fBMqBufferLS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppend\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferS\fP *const in, \fBMQ_SIZE\fP const position)"
+.br
+.I "append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendL\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferLS\fP *const in, \fBMQ_SIZE\fP position)"
+.br
+.I "copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendY\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BYT\fP const val)"
+.br
+.I "append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendO\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendS\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendI\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendF\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendW\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendD\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendC\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const val)"
+.br
+.I "append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLAppendU\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BUF\fP const val)"
+.br
+.I "append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionO\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BOL\fP *const var)"
+.br
+.I "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value for 'found' = \fBMQ_YES\fP and 'not found' = \fBMQ_NO\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionY\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BYT\fP *const valP)"
+.br
+.I "search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionS\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_SRT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionI\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_INT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionF\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_FLT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionW\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_WID\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionD\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_DBL\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionC\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_STR\fP *const var)"
+.br
+.I "search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLCheckOptionU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BUF\fP *const var)"
+.br
+.I "search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLMove\fP (struct \fBMqBufferLS\fP *const to, struct \fBMqBufferLS\fP **fromP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLDeleteItem\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, const \fBMQ_SIZE\fP index, const \fBMQ_SIZE\fP numitems, const \fBMQ_BOL\fP doDelete)"
+.br
+.I "delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqBufferLSearchC\fP (struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const str, \fBMQ_SIZE\fP const len, \fBMQ_SIZE\fP const startindex)"
+.br
+.I "search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLLog\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func)"
+.br
+.I "output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqBufferLLogS\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func, \fBMQ_CST\fP const varname)"
+.br
+.I "\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqBufferLGetU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_SIZE\fP const index, struct \fBMqBufferS\fP **const var)"
+.br
+.I "get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqPanicVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.I "do a \fBpanic\fP with a vararg argument list "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqPanicV\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "do a \fBpanic\fP with vararg arguments "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqErrorReset\fP (struct \fBMqS\fP *const context)"
+.br
+.I "reset a \fI\fBMqErrorS\fP\fP object, change error code to \fBMQ_OK\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSGenVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, enum \fBMqErrorE\fP const errorcode, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.I "set an error-code in \fI\fBMqErrorS\fP\fP with vararg list argument "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSGenV\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, enum \fBMqErrorE\fP const errorcode, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "set a error-code in \fI\fBMqErrorS\fP\fP with vararg string argument "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
+.br
+.I "customized edition of \fBMqErrorSGenV\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSAppendV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "append a vararg string to a \fI\fBMqErrorS\fP\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorStackP\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const func, \fBMQ_CST\fP const file)"
+.br
+.I "append a function and filename to the error-buffer "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorGetCode\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "return the value of \fI\fBMqErrorS\fP\fP code member "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSetCode\fP (struct \fBMqS\fP *const context, enum \fBMqErrorE\fP code)"
+.br
+.I "set the value of \fI\fBMqErrorS\fP\fP code member "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqErrorGetText\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "return the value of \fI\fBMqErrorS\fP\fP text member "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqErrorPrint\fP (struct \fBMqS\fP *const context)"
+.br
+.I "return the value of \fI\fBMqErrorS\fP\fP num member "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_INT\fP \fBMqErrorGetNum\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "brint an error to stderr and clear the error after "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, int num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
+.br
+.I "set the value of the \fI\fBMqErrorS\fP\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorSetCONTINUE\fP (struct \fBMqS\fP *const context)"
+.br
+.I "set the error-code of the \fI\fBMqErrorS\fP\fP object to \fBMQ_CONTINUE\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
+.br
+.I "log the \fI\fBMqErrorS\fP\fP for debugging "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqErrorCopy\fP (struct \fBMqS\fP *const out, struct \fBMqS\fP *const in)"
+.br
+.I "copy a \fI\fBMqErrorS\fP\fP from \fIin\fP to \fIout\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP buf)"
+.br
+.I "creating a \fILST\fP reference for reading the list items "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const context)"
+.br
+.I "deleting a \fILST\fP reference after reading the list items was finished "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP *const valP)"
+.br
+.I "read a native typed value from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP *const valP)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP *const out)"
+.br
+.I "generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadB\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.br
+.I "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.br
+.I "generic function to read a \fBnative\fP package object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.br
+.I "generic function to read the entire \fIbody\fP from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP *const out)"
+.br
+.I "generic function to read a \fBMQ_BUF\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
+.br
+.I "read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const readctx, struct \fBMqS\fP *const sendctx)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const context)"
+.br
+.I "undo the \fBlast\fP MqReadX operation "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "get the number of items left in the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "does an additional item exits in the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
+.br
+.I "append a native typed value to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const context, const \fBMQ_BOL\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const context, const \fBMQ_SRT\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const context, const \fBMQ_INT\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const context, const \fBMQ_FLT\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const context, const \fBMQ_WID\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const context, const \fBMQ_DBL\fP val)"
+.br
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const in)"
+.br
+.I "append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.br
+.I "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.br
+.I "append a native package object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.br
+.I "append an entire package body object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
+.br
+.I "append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP const *const in)"
+.br
+.I "append a \fI\fBMqBufferLS\fP\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendV\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "append a vararg string to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.I "append a vararg string as va_list to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const context)"
+.br
+.I "initialize the \fISend-Buffer\fP object and start to create a Msgque package "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token)"
+.br
+.I "finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.br
+.I "send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.br
+.I "send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const context)"
+.br
+.I "finish a service-handler and return the data if required. "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const context)"
+.br
+.I "send a msgque error from a server to a client "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const context)"
+.br
+.I "start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const context)"
+.br
+.I "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **argsP)"
+.br
+.I "create a \fImaster/slave\fP link using the same object as \fIcontext\fP "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
+.br
+.I "create a \fImaster/slave\fP link between the current context object and a slave context object "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id)"
+.br
+.I "delete a \fImaster/slave\fP "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const context, \fBMQ_SIZE\fP const id)"
+.br
+.I "get the slave context "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqProcessEvent\fP (struct \fBMqS\fP *const context, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)"
+.br
+.I "Waiting for an incoming packet on all open msgque objects. "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
+.br
+.I "'calloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysMalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
+.br
+.I "'malloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysRealloc\fP (struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
+.br
+.I "'realloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqSysFreeP\fP (\fBMQ_PTR\fP ptr)"
+.br
+.I "'free' system call wrapper of libmsgque "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSysUSleep\fP (struct \fBMqS\fP *const context, unsigned int const usec)"
+.br
+.I "'usleep' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSysSleep\fP (struct \fBMqS\fP *const context, unsigned int const sec)"
+.br
+.I "'sleep' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_STR\fP \fBMqSysBasename\fP (char const *const in, \fBMQ_BOL\fP includeExtension)"
+.br
+.I "'basename' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
+.br
+.I "'gettimeofday' system call with error handling feature "
+.ti -1c
+.RI "static mq_inline \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
+.br
+.I "the function \fIstrdup\fP which allows the argument \fCNULL\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqLog\fP (FILE *channel, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "log vararg string without formatting to \fIchannel\fP "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqDLogX\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "log vararg string using formatting "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqDLogEVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.I "log a vararg error list using formatting "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqDLogEV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt,...)"
+.br
+.I "log a vararg error string using formatting "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqLogErrorCode\fP (enum \fBMqErrorE\fP code)"
+.br
+.I "convert a \fBMqErrorE\fP into a human readable string "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqLogTypeName\fP (const enum \fBMqTypeE\fP type)"
+.br
+.I "get the \fItype\fP member from an MqTypeE object in human readable form "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqLogServerOrClient\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "convert a MqContextS server member into a human readable string "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_CST\fP \fBMqLogParentOrChild\fP (struct \fBMqS\fP const *const context)"
+.br
+.I "convert a MqContextS parent member into a human readable string "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_STR\fP \fBMqLogC\fP (\fBMQ_STR\fP buf, \fBMQ_STR\fP str, \fBMQ_SIZE\fP size)"
+.br
+.I "convert a raw \fBMQ_STR\fP into a human readable string. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBMqCreateF\fP )(struct \fBMqS\fP *, struct \fBMqBufferLS\fP **)"
+.br
+.I "the prototype for a ContextCreate function "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBMqTokenF\fP )(struct \fBMqS\fP *const context, \fBMQ_PTR\fP const data)"
+.br
+.I "prototype for an object method function "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBMqTokenDataCopyF\fP )(struct \fBMqS\fP *const context, \fBMQ_PTR\fP *dataP)"
+.br
+.I "prototype for a copy additional token data function "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBMqFactoryCreateF\fP )(struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, \fBMQ_PTR\fP data, struct \fBMqS\fP **contextP)"
+.br
+.I "prototype for a Object-Creation factory function "
+.ti -1c
+.RI "struct \fBMqFactoryS\fP(* \fBMqFactorySelectorF\fP )(\fBMQ_CST\fP name)"
+.br
+.I "Return a \fImain\fP factory function found by \fIname\fP. "
+.ti -1c
+.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqInitBuf\fP"
+.br
+.I "the prefix arguments of the starting application "
+.ti -1c
+.RI "MQ_EXTERN \fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
+.br
+.I "name of a procedure to return \fImain\fP like entry-points "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBEventCreateF\fP )(struct \fBMqS\fP *const )"
+.br
+.I "prototype for a Event-Check function "
+.in -1c
+.SH "Detailed Description"
+.PP 
+$Id: \fBmsgque.h\fP 117 2009-12-31 18:00:13Z aotto1968 $ 
+
+(C) 2004 - NHI - #1 - Project - Group
+.PP
+\fBVersion:\fP
+.RS 4
+$Rev: 117 $ 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+EMail: aotto1968 at users.berlios.de 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+this software has GPL permissions to copy please contact AUTHORS for additional information 
+.RE
+.PP
+
+.PP
+Definition in file \fBmsgque.h\fP.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for msgque from the source code.

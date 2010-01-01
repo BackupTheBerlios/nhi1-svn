@@ -1,0 +1,63 @@
+.TH "MqFactoryDeleteS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqFactoryDeleteS \- function pointer to \fIdelete\fP an object  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBMqFactoryDeleteF\fP \fBfCall\fP"
+.br
+.I "delete the object created with \fBMqFactoryCreateS\fP "
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBdata\fP"
+.br
+.I "additional data pointer for the fCreate "
+.ti -1c
+.RI "\fBMqTokenDataFreeF\fP \fBfFree\fP"
+.br
+.I "free additional data pointer "
+.ti -1c
+.RI "\fBMqTokenDataCopyF\fP \fBfCopy\fP"
+.br
+.I "copy additional data pointer "
+.in -1c
+.SH "Detailed Description"
+.PP 
+function pointer to \fIdelete\fP an object 
+.PP
+Definition at line 525 of file msgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "\fBMQ_PTR\fP \fBMqFactoryDeleteS::data\fP"
+.PP
+additional data pointer for the fCreate 
+.PP
+Definition at line 527 of file msgque.h.
+.SS "\fBMqFactoryDeleteF\fP \fBMqFactoryDeleteS::fCall\fP"
+.PP
+delete the object created with \fBMqFactoryCreateS\fP 
+.PP
+Definition at line 526 of file msgque.h.
+.SS "\fBMqTokenDataCopyF\fP \fBMqFactoryDeleteS::fCopy\fP"
+.PP
+copy additional data pointer 
+.PP
+Definition at line 529 of file msgque.h.
+.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryDeleteS::fFree\fP"
+.PP
+free additional data pointer 
+.PP
+Definition at line 528 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for tclmsgque from the source code.

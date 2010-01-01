@@ -1,0 +1,39 @@
+.TH "MqFactoryS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqFactoryS \- used for factory function pointer management  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqFactoryCreateS\fP \fBCreate\fP"
+.br
+.ti -1c
+.RI "struct \fBMqFactoryDeleteS\fP \fBDelete\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+used for factory function pointer management 
+.PP
+Definition at line 533 of file msgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS::Create\fP\fC [read]\fP"
+.PP
+Definition at line 534 of file msgque.h.
+.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS::Delete\fP\fC [read]\fP"
+.PP
+Definition at line 535 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for tclmsgque from the source code.

@@ -14,11 +14,13 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-
 TAGFILES            = 
-INPUT		    = .
-FILE_PATTERNS	    = 
+INPUT               = $(SRCDIR)/libmsgque .
+FILE_PATTERNS       = msgque.h *.doc
 EXAMPLE_PATH	    = $(SRCDIR)/tests
+STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque
+STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
+SHOW_FILES	    = NO
 
 ALIASES		    += "tclmsgque=\e tclmsgque"
 ALIASES		    += "pymsgque=\e pymsgque"
@@ -37,6 +39,7 @@ ALIASES		    += "RNSC{1}=\ref \NS{config_\1} \"\1\""
 ALIASES		    += "NST{1}=\NS{tut_\1}"
 ALIASES		    += "RNST{1}=\ref \NST{\1}"
 ALIASES		    += "rself=\ref \self"
+ALIASES		    += "libmsgque=\b libmsgque"
 
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css

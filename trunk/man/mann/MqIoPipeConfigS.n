@@ -1,0 +1,36 @@
+.TH "MqIoPipeConfigS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIoPipeConfigS \- configuration data which belong to \fIMqIoS\fP pipe setup  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_SOCK\fP \fBsocks\fP [2]"
+.br
+.I "the result from socketpair "
+.in -1c
+.SH "Detailed Description"
+.PP 
+configuration data which belong to \fIMqIoS\fP pipe setup 
+.PP
+Definition at line 606 of file msgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS::socks\fP[2]"
+.PP
+the result from socketpair 
+.PP
+Definition at line 607 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for tclmsgque from the source code.

@@ -1,0 +1,63 @@
+.TH "MqIoTcpConfigS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBhost\fP"
+.br
+.I "host name "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBport\fP"
+.br
+.I "port name "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBmyhost\fP"
+.br
+.I "CLIENT: my host name. "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBmyport\fP"
+.br
+.I "CLIENT: my port name. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+configuration data which belong to \fIMqIoS\fP tcp setup 
+.PP
+Definition at line 598 of file msgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::host\fP\fC [read]\fP"
+.PP
+host name 
+.PP
+Definition at line 599 of file msgque.h.
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myhost\fP\fC [read]\fP"
+.PP
+CLIENT: my host name. 
+.PP
+Definition at line 601 of file msgque.h.
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myport\fP\fC [read]\fP"
+.PP
+CLIENT: my port name. 
+.PP
+Definition at line 602 of file msgque.h.
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::port\fP\fC [read]\fP"
+.PP
+port name 
+.PP
+Definition at line 600 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for tclmsgque from the source code.

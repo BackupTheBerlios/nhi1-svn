@@ -164,6 +164,9 @@ Write (\no) or don't write (\yes) any output to stdout or stderr. (default: writ
 Use (\yes), as much as possible, strings in the data-package. Convert any native data-type,
 like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
 
+\configsection{ignoreExit}
+\copydoc MqSetupS::ignoreExit
+
 \configsection{startAs,--thread --spawn --fork}
 Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
 This arguments are used with:
@@ -433,8 +436,8 @@ The \e token identifier is a 4 byte string and identifies the service. The \e to
 set by the programmer to identify different services. \self is using some special \e token
 for \e internal or \e common usage:
  - \b _??? - all \e token starting with a \b "_" are for \b internal usage only
- - \b +ALL - used to listen on \b all services not handled by other \e token more precise
- - \b _ALL - used in \RNSA{ServiceDelete} to delete \b all token
+ - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to listen on \b all token not handled by other \e token more precise
+ - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
  - \b +FTR - used for \RNS{filter-one}
  - \b +EOF - used for \RNS{filter-one}
  .

@@ -14,14 +14,8 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-
-FILE_PATTERNS	    = *.doc
-
 ENABLED_SECTIONS    += C
-
 EXAMPLE_PATH	    += $(SRCDIR)/example/c
-
-TAGFILES            =  $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
 
 ALIASES		    += "self=libmsgque"
 ALIASES		    += "selftut=libmsgquetut"
@@ -66,12 +60,16 @@ ALIASES		    += "config_get_ident=#MqConfigGetIdent (struct MqS *ctx)"
 ALIASES		    += "config_check_ident=#MqConfigCheckIdent (struct MqS *ctx, MQ_CST ident)"
 
 ALIASES		    += "config_type_isSilent=#MQ_BOL"
-ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, isSilent)"
+ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, bool)"
 ALIASES		    += "config_get_isSilent=#MqConfigGetIsSilent (ctx)"
 
 ALIASES		    += "config_type_isString=#MQ_BOL"
-ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, isString)"
+ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, bool)"
 ALIASES		    += "config_get_isString=#MqConfigGetIsString (ctx)"
+
+ALIASES		    += "config_type_ignoreExit=#MQ_BOL"
+ALIASES		    += "config_set_ignoreExit=#MqConfigSetIgnoreExit (ctx, bool)"
+ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_daemon=#MQ_CST"
 ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, pidfile)"

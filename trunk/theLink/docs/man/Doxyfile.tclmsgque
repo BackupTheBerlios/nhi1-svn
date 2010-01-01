@@ -14,14 +14,8 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-
-FILE_PATTERNS	    = *.doc
-
 ENABLED_SECTIONS    += TCL
-
 EXAMPLE_PATH	    += $(SRCDIR)/example/tcl
-
-TAGFILES            =  $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
 
 ALIASES		    += "self=tclmsgque"
 ALIASES		    += "selftut=tclmsgquetut"
@@ -72,6 +66,10 @@ ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
 ALIASES		    += "config_type_isString=boolean"
 ALIASES		    += "config_set_isString=ConfigSetIsString"
 ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=boolean"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_isServer=boolean"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"

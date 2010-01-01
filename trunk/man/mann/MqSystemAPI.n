@@ -1,0 +1,231 @@
+.TH "MqSystemAPI" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqSystemAPI \- Access to native system functions including \fBlibmsgque\fP error handling.  
+
+.PP
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMqSysFree\fP(tgt)"
+.br
+.I "'free' system call macro "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
+.br
+.I "'calloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysMalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
+.br
+.I "'malloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_PTR\fP \fBMqSysRealloc\fP (struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
+.br
+.I "'realloc' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN void \fBMqSysFreeP\fP (\fBMQ_PTR\fP ptr)"
+.br
+.I "'free' system call wrapper of libmsgque "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSysUSleep\fP (struct \fBMqS\fP *const context, unsigned int const usec)"
+.br
+.I "'usleep' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSysSleep\fP (struct \fBMqS\fP *const context, unsigned int const sec)"
+.br
+.I "'sleep' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN \fBMQ_STR\fP \fBMqSysBasename\fP (char const *const in, \fBMQ_BOL\fP includeExtension)"
+.br
+.I "'basename' system call with error handling feature "
+.ti -1c
+.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
+.br
+.I "'gettimeofday' system call with error handling feature "
+.ti -1c
+.RI "static mq_inline \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
+.br
+.I "the function \fIstrdup\fP which allows the argument \fCNULL\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Access to native system functions including \fBlibmsgque\fP error handling. 
+.SH "Define Documentation"
+.PP 
+.SS "#define MqSysFree(tgt)"
+.PP
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if ( likely((tgt) != (NULL)) ) { \
+            MqSysFreeP((MQ_PTR)tgt); \
+            (tgt) = (NULL); \
+        } \
+    } while (0)
+.fi
+'free' system call macro 
+.PP
+\fBReturn values:\fP
+.RS 4
+\fItgt\fP the memory block to delete and set to NULL 
+.RE
+.PP
+
+.PP
+Definition at line 3705 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "static mq_inline \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
+.PP
+the function \fIstrdup\fP which allows the argument \fCNULL\fP 
+.PP
+Definition at line 3754 of file msgque.h.
+.PP
+References mq_strdup.
+.SS "MQ_EXTERN \fBMQ_STR\fP MqSysBasename (char const *const  in, \fBMQ_BOL\fP includeExtension)"
+.PP
+'basename' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIin\fP name of the string to extract the basename from (value of \fIin\fP will not be changed) 
+.br
+\fIincludeExtension\fP add extension like '.exe' to the filename (\fBMQ_YES\fP or \fBMQ_NO\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the basename of \fIin\fP (it is save to modify the basename for additional needs) 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the memory of the basename string returned is owned by the caller and have to be freed 
+.RE
+.PP
+
+.SS "MQ_EXTERN \fBMQ_PTR\fP MqSysCalloc (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
+.PP
+'calloc' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fInmemb\fP the number of members in the memory block 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block initialized with '0' 
+.RE
+.PP
+
+.SS "MQ_EXTERN void MqSysFreeP (\fBMQ_PTR\fP ptr)"
+.PP
+'free' system call wrapper of libmsgque 
+.PP
+.SS "MQ_EXTERN \fBMQ_PTR\fP MqSysMalloc (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size)"
+.PP
+'malloc' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block 
+.RE
+.PP
+
+.SS "MQ_EXTERN \fBMQ_PTR\fP MqSysRealloc (struct \fBMqS\fP *const  context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
+.PP
+'realloc' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbuf\fP the \fBold\fP memory block to extend 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block 
+.RE
+.PP
+
+.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSysSleep (struct \fBMqS\fP *const  context, unsigned int const  sec)"
+.PP
+'sleep' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsec\fP the seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSysUSleep (struct \fBMqS\fP *const  context, unsigned int const  usec)"
+.PP
+'usleep' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIusec\fP the micro (10^-6) seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "MQ_EXTERN enum \fBMqErrorE\fP SysGetTimeOfDay (struct \fBMqS\fP *const  context, struct mq_timeval * tv, struct mq_timezone * tz)"
+.PP
+'gettimeofday' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fItv\fP the timeval object 
+.br
+\fItz\fP the timezone object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for tclmsgque from the source code.

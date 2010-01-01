@@ -13,6 +13,23 @@
 #ifndef MQ_MSGQUE_H
 #define MQ_MSGQUE_H
 
+/** \defgroup MqPublicAPI PUBLIC:
+ *  \{
+ *  \brief public libmsgque API
+ */
+
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                      M S G Q U E - A P I                        ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/** \defgroup MqTypeAPI MqTypeAPI
+ *  \{
+ *  \brief a collection of common used definitions
+ */
+
 #if defined(_MSC_VER)
 
 /* ####################################################################### */
@@ -64,19 +81,6 @@
 #else
 # define MQ_DECL MQ_CDECL
 #endif
-
-
-/* ####################################################################### */
-/* ###                                                                 ### */
-/* ###                      M S G Q U E - A P I                        ### */
-/* ###                                                                 ### */
-/* ####################################################################### */
-
-/** \defgroup type_API PUBLIC: type definition
- *  \ingroup lib
- *  \{
- *  \brief a collection of common used definitions
- */
 
 /* BEGIN_C_DECLS should be used at the beginning of your declarations,
   so that C++ compilers don't mangle their names.  Use END_C_DECLS at
@@ -158,28 +162,28 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT_USER -2
 #endif
 
-/// \ingroup error_api
+/// \ingroup MqErrorAPI
 /// \brief panic on error
 ///
 /// This item is used as special meaning for the \c struct \c MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PANIC ((struct MqS*)NULL)
 
-/// \ingroup error_api
+/// \ingroup MqErrorAPI
 /// \brief ignore error and do not generate any error-text (don't fill the error object)
 ///
 /// This item is used as special meaning for the \c struct \c MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_IGNORE ((struct MqS*)0x1)
 
-/// \ingroup error_api
+/// \ingroup MqErrorAPI
 /// \brief print error to stderr
 ///
 /// This item is used as special meaning for the \c struct \c MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PRINT ((struct MqS*)0x2)
 
-/// \ingroup error_api
+/// \ingroup MqErrorAPI
 /// \brief check if the error pointer is a \e real pointer or just a flag
 #define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
 
@@ -225,6 +229,7 @@ BEGIN_C_DECLS
 
 /// \brief MQ_ALFA the command-line separator between server and client
 #define MQ_ALFA '@'
+/// \brief MQ_ALFA the command-line separator as string
 #define MQ_ALFA_STR "@"
 
 struct MqTransS;
@@ -264,7 +269,7 @@ typedef double MQ_DBL;
 /// 8 byte \b atom data-type
 typedef union MqBufferAtomU MQ_ATO;
 
-/// array size data-type
+/// \brief array size data-type
 /// \attention -> need signed integer in pReadWord
 ///            -> need int because of pSwapI in pReadHDR
 typedef int MQ_SIZE;
@@ -309,22 +314,22 @@ typedef MQ_INT  MQ_SOCK;
 /*                                                                           */
 /*****************************************************************************/
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief 'select' type for reading or writing
 enum MqIoSelectE {
   MQ_SELECT_RECV = (1 << 0),    ///< 'select' for reading
   MQ_SELECT_SEND = (1 << 1),	///< 'select' for writing
 };
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief boolean NO
 #define MQ_NO  0
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief boolean YES
 #define MQ_YES 1
 
-/// \ingroup event_api
+/// \ingroup MqEventAPI
 /// \brief wait for an event?
 enum MqWaitOnEventE {
   MQ_WAIT_NO      = 0,	///< just do the check
@@ -332,28 +337,28 @@ enum MqWaitOnEventE {
   MQ_WAIT_FOREVER = 2,	///< wait forever
 };
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief the type is native and has a size of 1 byte
 #define MQ_TYPE_IS_1_BYTE   (1<<0)
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief the type is native and has a size of 2 bytes
 #define MQ_TYPE_IS_2_BYTE   (1<<1)
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief the type is native and has a size of 4 bytes
 #define MQ_TYPE_IS_4_BYTE   (1<<2)
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief the type is native and has a size of 8 bytes
 #define MQ_TYPE_IS_8_BYTE   (1<<3)
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief the type is native
 #define MQ_TYPE_IS_NATIVE   (	MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |	    \
 				MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE	)
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief a enum for all data types supported by #MqBufferS
 ///
 /// The type is a one byte character with the following syntax:
@@ -376,14 +381,14 @@ enum MqTypeE {
   MQ_RETT = (11<<4                   )   ///< R: return object type
 };
 
-/// \ingroup buffer_api
+/// \ingroup MqBufferAPI
 /// \brief allocation style used for the data-segment in #MqBufferS.
 enum MqAllocE {
   MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
   MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. MqSysMalloc, ...)
 };
 
-/// \ingroup error_api
+/// \ingroup MqErrorAPI
 /// \brief collection for the different error-codes
 enum MqErrorE {
   MQ_OK		= 0,		///< everything is OK, no error available (persistent)
@@ -392,7 +397,7 @@ enum MqErrorE {
   MQ_EXIT	= 3		///< exit parent context
 };
 
-/** \} type_api */
+/** \} MqTypeAPI */
 
 /*****************************************************************************/
 /*                                                                           */
@@ -400,8 +405,7 @@ enum MqErrorE {
 /*                                                                           */
 /*****************************************************************************/
 
-/** \defgroup config_api PUBLIC: object configuration
- *  \ingroup lib_api
+/** \defgroup MqConfigAPI MqConfigAPI
  *  \{
  *  \brief Configuration data of the #MqS object
  */
@@ -509,24 +513,29 @@ typedef struct MqFactoryS ( MQ_DECL
     MQ_CST name
 );
 
-/// \brief used for factory function pointer management
-struct MqFactoryS {
-  /// \brief function pointer to \e create an object
-  struct MqFactoryCreateS {
-    MqFactoryCreateF	fCall;	    ///< create a new object
-    MQ_PTR		data;	    ///< additional data pointer for the fCall
-    MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-    MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
-  } Create;
-  /// \brief function pointer to \e delete an object
-  struct MqFactoryDeleteS {
-    MqFactoryDeleteF	fCall;	    ///< delete the object created with #MqFactoryS::MqFactoryCreateS
-    MQ_PTR		data;	    ///< additional data pointer for the fCreate
-    MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-    MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
-  } Delete;
+/// \brief function pointer to \e create an object
+struct MqFactoryCreateS {
+  MqFactoryCreateF	fCall;	    ///< create a new object
+  MQ_PTR		data;	    ///< additional data pointer for the fCall
+  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+  MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
 };
 
+/// \brief function pointer to \e delete an object
+struct MqFactoryDeleteS {
+  MqFactoryDeleteF	fCall;	    ///< delete the object created with #MqFactoryCreateS
+  MQ_PTR		data;	    ///< additional data pointer for the fCreate
+  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+  MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
+};
+
+/// \brief used for factory function pointer management
+struct MqFactoryS {
+  struct MqFactoryCreateS Create;
+  struct MqFactoryDeleteS Delete;
+};
+
+/// \brief initialize a #MqFactoryS object to \c NULL
 #define MqFactoryS_NULL { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
 
 /// \brief prototype for exit a process or thread
@@ -580,10 +589,12 @@ enum MqIoComE {
     MQ_IO_PIPE 
 };
 
+/// configuration data which belong to \e MqIoS uds setup
 struct MqIoUdsConfigS {
   MQ_BUF file;
 };
 
+/// configuration data which belong to \e MqIoS tcp setup
 struct MqIoTcpConfigS {
   struct MqBufferS * host;	    ///< host name
   struct MqBufferS * port;	    ///< port name
@@ -591,10 +602,13 @@ struct MqIoTcpConfigS {
   struct MqBufferS * myport;	    ///< CLIENT: my port name
 };
 
+/// configuration data which belong to \e MqIoS pipe setup
 struct MqIoPipeConfigS {
   MQ_SOCK socks[2] ;		    ///< the result from socketpair
 };
 
+/// \brief 
+/// configuration data which belong to \e MqIoS
 struct MqIoConfigS {
 
   /// \brief The timeout is used for all kind of low-level socket operations like \c send, \c recv and \c connect
@@ -834,8 +848,8 @@ struct MqSetupS {
   /// a parallel like execution.
   /// \return do return #MQ_OK if everything is OK. 
   /// \attention Together with #MqSetupS::ignoreExit this function is used to implement a persistent transaction
-  /// handler. Use <TT>return #MqErrorSetContinue</TT> if the background task has nothing to do. 
-  /// If \b all \e child context return with #MqErrorSetContinue too 
+  /// handler. Use <TT>return #MqErrorSetCONTINUE</TT> if the background task has nothing to do. 
+  /// If \b all \e child context return with #MqErrorSetCONTINUE too 
   /// and the context itself is on shutdown (#MqLinkS::onShutdown == MQ_YES) the process will \b exit.
   /// example: <TT>theLink/example/c/Filter4.c</TT>
   struct MqCallbackS Event;
@@ -888,11 +902,8 @@ struct MqSetupS {
   MQ_BOL ignoreExit;
 };
 
-/// \ingroup msgque_api
-/// \brief the main \libmsgque object.
-///
-/// \copydoc msgque_api
-///
+/// \ingroup MqMsgqueAPI
+/// \brief object responsible to manage client/server link data
 struct MqLinkS {
 
   // private variables
@@ -940,7 +951,7 @@ struct MqLinkS {
   MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
 };
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief error-object data type
 struct MqErrorS {
   struct MqBufferS * text;      ///< the error message
@@ -949,7 +960,7 @@ struct MqErrorS {
   MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
 };
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief signature used in #MqS::signature
 #define MQ_MqS_SIGNATURE 0x212CF91
 
@@ -957,7 +968,7 @@ struct MqErrorS {
 # define MQ_PRIVATE_CONFIG_CONST const
 #endif
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief Prototype for a context object
 struct MqS {
   int signature;		    ///< used to verify object type for typeless languages
@@ -979,11 +990,11 @@ struct MqS {
 
 # ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief the prefix arguments of the starting application
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 
-/// \ingroup msgque_api
+/// \ingroup MqMsgqueAPI
 /// \brief name of a procedure to return \e main like entry-points 
 MQ_EXTERN MqFactorySelectorF MqFactorySelector;
 
@@ -1130,12 +1141,12 @@ MQ_DECL MqConfigSetMaster (
 
 /// \brief setup the \e factory pattern
 /// \context
-/// \param[in] fCreate set the #MqSetupS::Factory - #MqFactoryS::MqFactoryCreateS::fCall value
-/// \param[in] CreateData set the #MqSetupS::Factory - #MqFactoryS::MqFactoryCreateS::data value
+/// \param[in] fCreate set the #MqSetupS::Factory - #MqFactoryCreateS::fCall value
+/// \param[in] CreateData set the #MqSetupS::Factory - #MqFactoryCreateS::data value
 /// \param[in] fCreateFree free the \e CreateData
 /// \param[in] fCreateCopy copy the \e CreateData
-/// \param[in] fDelete set the #MqSetupS::Factory - #MqFactoryS::MqFactoryDeleteS::fCall value
-/// \param[in] DeleteData set the #MqSetupS::Factory - #MqFactoryS::MqFactoryDeleteS::data value
+/// \param[in] fDelete set the #MqSetupS::Factory - #MqFactoryDeleteS::fCall value
+/// \param[in] DeleteData set the #MqSetupS::Factory - #MqFactoryDeleteS::data value
 /// \param[in] fDeleteFree delete the \e DeleteData
 /// \param[in] fDeleteCopy copy the \e DeleteData
 MQ_EXTERN void 
@@ -1312,7 +1323,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsParent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \ingroup config_api
+/** \ingroup MqConfigAPI
  *  \brief does the \e context object is a \e slave ?
  *  \context
  *  \return the <TT>(context->config.master != NULL)</TT> value
@@ -1570,8 +1581,7 @@ MQ_DECL MqConfigGetSelf (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup msgque_api PUBLIC: struct MqLinkS
- *  \ingroup lib
+/** \defgroup MqMsgqueAPI MqMsgqueAPI
  *  \{
  *  \brief the <EM>MqS API</EM> is used as \libmsgque object.
  *
@@ -1771,8 +1781,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup buffer_api PUBLIC: struct MqBufferS
- *  \ingroup msgque_api
+/** \defgroup MqBufferAPI MqBufferAPI
  *  \{
  *  \brief the <EM>Msgque Buffer API</EM> is used to manage dynamic, generic, mixed typed data.
  *
@@ -1803,13 +1812,13 @@ union MqBufferAtomU {
   MQ_BINB   B1[1];		///< 1 byte ARRAY used for copy
 };
 
-/** \brief a union for all data items supported by \e MqBufferS.
+/** \brief a union for all data items supported by #MqBufferS.
  * 
- * A \libmsgque data package is a collection of items of type \e MqBufferU
+ * A \libmsgque data package is a collection of items of type #MqBufferU
  * with variable length data of type: #MQ_BIN, #MQ_STR and MQ_LST or a
  * a fixed length data of type #MQ_ATO.
- * The \ref MqBufferS object is using a \ref MqBufferU union 
- * and a \ref MqTypeE enum to define an item.
+ * The #MqBufferS object is using a #MqBufferU union 
+ * and a #MqTypeE enum to define an item.
  **/
 union MqBufferU {
   MQ_ATO *A;			///< atom for native data-types
@@ -2291,11 +2300,7 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
 /*                                                                           */
 /*****************************************************************************/
 
-/**
- *  \ingroup msgque_api
- *  \{
- */
-
+/// \ingroup MqMsgqueAPI
 /// \brief check the current token
 /// \param[in] context the current context
 /// \param[in] token the token to compare with
@@ -2305,8 +2310,6 @@ MQ_DECL MqCurrentTokenIs (
   char const * const token
 );
 
-/** \} */
-
 /* ####################################################################### */
 /* ###                                                                 ### */
 /* ###                 B U F F E R - L I S T - A P I                   ### */
@@ -2314,8 +2317,7 @@ MQ_DECL MqCurrentTokenIs (
 /* ####################################################################### */
 
 
-/** \defgroup buffer_list_api PUBLIC: struct MqBufferLS
- *  \ingroup msgque_api
+/** \defgroup MqBufferListAPI MqBufferListAPI
  *  \{
  *  \brief the <EM>Msgque Buffer List API</EM> is used to manage a list of \e MqBufferS objects.
  *
@@ -2702,8 +2704,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup error_api PUBLIC: struct MqErrorS
- *  \ingroup msgque_api
+/** \defgroup MqErrorAPI MqErrorAPI
  *  \{
  *  \brief the <EM>MqErrorS API</EM> is used to manage error messages.
  *
@@ -2963,7 +2964,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
   struct MqS * const in
 );
 
-/** \} error_api */
+/** \} MqErrorAPI */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -2971,8 +2972,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \ingroup msgque_api
- *  \defgroup read_api PUBLIC: Read-Buffer object
+/** \defgroup MqReadAPI MqReadAPI
  *  \{
  *  \brief Read and split a \libmsgque package into several items.
  *
@@ -3179,7 +3179,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
   struct MqS const * const context
 );
 
-/** \} read_api */
+/** \} MqReadAPI */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3187,8 +3187,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \ingroup msgque_api
- *  \defgroup send_api PUBLIC: Send-Buffer object
+/** \defgroup MqSendAPI MqSendAPI
  *  \{
  *  \brief Collect and send data using a LibMsgque package
  *
@@ -3470,71 +3469,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
   struct MqS * const context
 );
 
-/** \} send_api */
-
-/* ####################################################################### */
-/* ###                                                                 ### */
-/* ###                     E V E N T - A P I                           ### */
-/* ###                                                                 ### */
-/* ####################################################################### */
-
-/** \defgroup event_api PUBLIC: event interface functions
- *  \ingroup lib
- *  \{
- *  \brief handle different aspects of the \e MqS event-queue
- *
- *  the event-queue have to be linked into an existing event-processing infrastructure. 
- *  the linking is done by defining prototypes for two independent functions:
- *  - \b MqEventF is used to call an external event processing function (e.g. \c Tcl_DoOneEvent)
- *  - \b EventCreateF is used to add events, created by the file-handles owned by the \e MqS objects, 
- *       into the external event-queue (e.g. \c Tcl_QueueEvent)
- *  .
- */
-
-/// \brief prototype for a Event-Check function
-///
-/// This function is called by the \libmsgque event-loop as idle-task in #MqProcessEvent
-typedef enum MqErrorE (
-  *EventCreateF
-) (
-  struct MqS * const
-);
-
-/** \brief Waiting for an incoming packet on all open msgque objects.
- * 
- *  This function is used to wait for (e.g. #MQ_WAIT_ONCE) or check (e.g. #MQ_WAIT_NO) for an 
- *  incoming event. If an event occurs the header of the Msgque packet is parsed and
- *  the according service-handle is called. if #MQ_WAIT_FOREVER is set the function
- *  will never return, accept for an error or on exit. This function is usually used
- *  on a server to enter the event-loop and wait for incoming service requests.
- * 
- *  \context
- *  \param_timeout_with_default
- *  \param wait should the code wait forever (e.g. #MQ_WAIT_FOREVER), just wait for the next event (e.g. #MQ_WAIT_ONCE) or just return after one single test (#MQ_WAIT_NO)"
- *  \retMqErrorE
- *
- *  \attention The \e timeout argument is only used if #MQ_WAIT_ONCE is set.
- *
- *  A typical server looks like:
-\code
-...
-MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
-...
-MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
-...
-MqLinkDelete(ctx);
-...
-\endcode
-
- **/
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
-  struct MqS * const context,
-  MQ_TIME_T timeout,
-  enum MqWaitOnEventE const wait
-);
-
-/** \} */
+/** \} MqSendAPI */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3542,8 +3477,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup slave_api PUBLIC: struct MqLinkSlaveS
- *  \ingroup msgque_api
+/** \defgroup MqSlaveAPI MqSlaveAPI
  *  \{
  *  \brief Access to the master / slave feature
 
@@ -3658,12 +3592,74 @@ MQ_DECL MqSlaveGet (
 
 /* ####################################################################### */
 /* ###                                                                 ### */
+/* ###                     E V E N T - A P I                           ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/** \defgroup MqEventAPI MqEventAPI
+ *  \{
+ *  \brief handle different aspects of the \e MqS event-queue
+ *
+ *  the event-queue have to be linked into an existing event-processing infrastructure. 
+ *  the linking is done by defining prototypes for two independent functions:
+ *  - \b MqEventF is used to call an external event processing function (e.g. \c Tcl_DoOneEvent)
+ *  - \b EventCreateF is used to add events, created by the file-handles owned by the \e MqS objects, 
+ *       into the external event-queue (e.g. \c Tcl_QueueEvent)
+ *  .
+ */
+
+/// \brief prototype for a Event-Check function
+///
+/// This function is called by the \libmsgque event-loop as idle-task in #MqProcessEvent
+typedef enum MqErrorE (
+  *EventCreateF
+) (
+  struct MqS * const
+);
+
+/** \brief Waiting for an incoming packet on all open msgque objects.
+ * 
+ *  This function is used to wait for (e.g. #MQ_WAIT_ONCE) or check (e.g. #MQ_WAIT_NO) for an 
+ *  incoming event. If an event occurs the header of the Msgque packet is parsed and
+ *  the according service-handle is called. if #MQ_WAIT_FOREVER is set the function
+ *  will never return, accept for an error or on exit. This function is usually used
+ *  on a server to enter the event-loop and wait for incoming service requests.
+ * 
+ *  \context
+ *  \param_timeout_with_default
+ *  \param wait should the code wait forever (e.g. #MQ_WAIT_FOREVER), just wait for the next event (e.g. #MQ_WAIT_ONCE) or just return after one single test (#MQ_WAIT_NO)"
+ *  \retMqErrorE
+ *
+ *  \attention The \e timeout argument is only used if #MQ_WAIT_ONCE is set.
+ *
+ *  A typical server looks like:
+\code
+...
+MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
+...
+MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+...
+MqLinkDelete(ctx);
+...
+\endcode
+
+ **/
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
+  struct MqS * const context,
+  MQ_TIME_T timeout,
+  enum MqWaitOnEventE const wait
+);
+
+/** \} MqEventAPI */
+
+/* ####################################################################### */
+/* ###                                                                 ### */
 /* ###                     S Y S T E M - A P I                         ### */
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup system_api PUBLIC: system interface functions
- *  \ingroup lib
+/** \defgroup MqSystemAPI MqSystemAPI
  *  \{
  *  \brief Access to native system functions including \libmsgque error handling
  **/
@@ -3761,10 +3757,9 @@ static mq_inline MQ_STR mq_strdup_save (
   return v != NULL ? mq_strdup(v) : NULL;
 }
 
-/** \} system api */
+/** \} MqSystemAPI */
 
-/** \defgroup log_api PUBLIC: logging interface functions
- *  \ingroup lib
+/** \defgroup MqLogAPI MqLogAPI
  *  \{
  *  \brief logging information on stderr with a common format.
  */
@@ -3804,16 +3799,21 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 #   define MqDLogV(context,level,fmt,MQ_VAR_ARGS)
 #else
 
+/// \brief define a variable \e debugLevel valid only in the current context
 #define MqSetDebugLevel(context) debugLevel = context->config.debug
 
 /// \brief log a plain string 
 /// \context
 /// \param level debug level 0 <= level <= 9
 /// \param str string to log
-#   define MqDLogC(context, level,str) \
+#   define MqDLogC(context,level,str) \
       if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)
 
-#   define MqDLogCL(context, level,str) \
+/// \brief log a plain string using the #MqSetDebugLevel definition
+/// \context
+/// \param level debug level 0 <= level <= 9
+/// \param str string to log
+#   define MqDLogCL(context,level,str) \
       if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)
 
 /// \brief log a vararg string using formatting and checking for logging level
@@ -3825,6 +3825,12 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 #   define MqDLogV(context, level,fmt,...) \
       if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)
 
+/// \brief log a vararg string using formatting and checking for logging level using the #MqSetDebugLevel definition
+/// \context
+/// \param level debug level 0 <= level <= 9
+/// \format
+/// \param ... vararg string argument
+/// \attention the prefix string is the calling function name
 #   define MqDLogVL(context, level,fmt,...) \
       if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)
 
@@ -3901,6 +3907,8 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
 );
 
 /// \}
+
+/// \}   // public
 
 //end c++ save definition
 END_C_DECLS
