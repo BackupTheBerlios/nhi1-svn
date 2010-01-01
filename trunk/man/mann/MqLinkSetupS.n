@@ -16,29 +16,29 @@ MqLinkSetupS \- used to Create/Delete of object
 .ti -1c
 .RI "\fBMqCreateF\fP \fBfCreate\fP"
 .br
-.I "create a new object "
+.R "create a new object "
 .ti -1c
 .RI "\fBMqDeleteF\fP \fBfDelete\fP"
 .br
-.I "delete a object "
+.R "delete a object "
 .in -1c
 .SH "Detailed Description"
 .PP 
 used to Create/Delete of object 
 .PP
-Definition at line 578 of file msgque.h.
+Definition at line 571 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMqCreateF\fP \fBMqLinkSetupS::fCreate\fP"
 .PP
 create a new object 
 .PP
-Definition at line 579 of file msgque.h.
+Definition at line 572 of file msgque.h.
 .SS "\fBMqDeleteF\fP \fBMqLinkSetupS::fDelete\fP"
 .PP
 delete a object 
 .PP
-Definition at line 580 of file msgque.h.
+Definition at line 573 of file msgque.h.
 
 .SH "Author"
 .PP 

@@ -11,84 +11,77 @@ PUBLIC: \- public libmsgque API
 .ti -1c
 .RI "\fBMqTypeAPI\fP"
 .br
-.I "a collection of common used definitions "
+.R "a collection of common used data types and definitions "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqConfigAPI\fP"
 .br
-.I "Configuration data of the \fBMqS\fP object. "
+.R "configuration of the \fBMqS\fP object "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqMsgqueAPI\fP"
 .br
-.I "the \fI\fBMqS\fP API\fP is used as \fBlibmsgque\fP object. "
+.R "the toplevel \fBlibmsgque\fP object: \fBMqS\fP "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqBufferAPI\fP"
 .br
-.I "the \fIMsgque Buffer API\fP is used to manage dynamic, generic, mixed typed data. "
+.R "create and manage dynamic, generic, mixed typed data. "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqBufferListAPI\fP"
 .br
-.I "the \fIMsgque Buffer List API\fP is used to manage a list of \fI\fBMqBufferS\fP\fP objects. "
+.R "create and manage a list of \fBMqBufferS\fP objects. "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqErrorAPI\fP"
 .br
-.I "the \fI\fBMqErrorS\fP API\fP is used to manage error messages. "
+.R "create and manage error messages. "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqReadAPI\fP"
 .br
-.I "Read and split a \fBlibmsgque\fP package into several items. "
+.R "extract items from a data package. "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqSendAPI\fP"
 .br
-.I "Collect and send data using a LibMsgque package. "
+.R "add items into a data package. "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqSlaveAPI\fP"
 .br
-.I "Access to the master / slave feature. "
-.PP
-.in +1c
-
-.ti -1c
-.RI "\fBMqEventAPI\fP"
-.br
-.I "handle different aspects of the \fI\fBMqS\fP\fP event-queue "
+.R "create and manage a slave context "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqSystemAPI\fP"
 .br
-.I "Access to native system functions including \fBlibmsgque\fP error handling. "
+.R "access to native system functions with error handling "
 .PP
 .in +1c
 
 .ti -1c
 .RI "\fBMqLogAPI\fP"
 .br
-.I "logging information on stderr with a common format. "
+.R "log information to stderr with a common format. "
 .PP
 
 .in -1c

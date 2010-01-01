@@ -2,7 +2,7 @@
 .ad l
 .nh
 .SH NAME
-MqSlaveAPI \- Access to the master / slave feature.  
+MqSlaveAPI \- create and manage a slave context  
 
 .PP
 .SS "Defines"
@@ -11,31 +11,31 @@ MqSlaveAPI \- Access to the master / slave feature.
 .ti -1c
 .RI "#define \fBMQ_SLAVE_MAX\fP   1024"
 .br
-.I "the maximum number of slave objects per master "
+.R "the maximum number of slave objects per master "
 .in -1c
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **argsP)"
 .br
-.I "create a \fImaster/slave\fP link using the same object as \fIcontext\fP "
+.R "create a \fImaster/slave\fP link using the same object as \fIcontext\fP "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
 .br
-.I "create a \fImaster/slave\fP link between the current context object and a slave context object "
+.R "create a \fImaster/slave\fP link between the current context object and a slave context object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id)"
 .br
-.I "delete a \fImaster/slave\fP "
+.R "delete a \fImaster/slave\fP "
 .ti -1c
-.RI "MQ_EXTERN struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const context, \fBMQ_SIZE\fP const id)"
+.RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const context, \fBMQ_SIZE\fP const id)"
 .br
-.I "get the slave context "
+.R "get the slave context "
 .in -1c
 .SH "Detailed Description"
 .PP 
-Access to the master / slave feature. 
+create and manage a slave context 
 
 The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
 .PP
@@ -83,10 +83,10 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3521 of file msgque.h.
+Definition at line 3522 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
+.SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
 .PP
 create a \fImaster/slave\fP link between the current context object and a slave context object 
 .PP
@@ -118,7 +118,7 @@ after \fIMqSlaveCreate\fP the entire \fIslave\fP object blongs to \fIcontext\fP 
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id)"
+.SS "enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id)"
 .PP
 delete a \fImaster/slave\fP 
 .PP
@@ -142,7 +142,7 @@ it is still possible to delete a \fIchild-slave-context\fP using \fBMqLinkDelete
 .RE
 .PP
 
-.SS "MQ_EXTERN struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  context, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
+.SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  context, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
 .PP
 get the slave context 
 .PP
@@ -159,7 +159,7 @@ the \fIslave\fP context or \fCNULL\fP if \fIid\fP is not valid
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** argsP)"
+.SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** argsP)"
 .PP
 create a \fImaster/slave\fP link using the same object as \fIcontext\fP 
 .PP

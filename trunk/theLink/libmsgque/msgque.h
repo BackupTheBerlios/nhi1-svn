@@ -27,7 +27,7 @@
 
 /** \defgroup MqTypeAPI MqTypeAPI
  *  \{
- *  \brief a collection of common used definitions
+ *  \brief a collection of common used data types and definitions
  */
 
 #if defined(_MSC_VER)
@@ -165,21 +165,21 @@ BEGIN_C_DECLS
 /// \ingroup MqErrorAPI
 /// \brief panic on error
 ///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PANIC ((struct MqS*)NULL)
 
 /// \ingroup MqErrorAPI
 /// \brief ignore error and do not generate any error-text (don't fill the error object)
 ///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_IGNORE ((struct MqS*)0x1)
 
 /// \ingroup MqErrorAPI
 /// \brief print error to stderr
 ///
-/// This item is used as special meaning for the \c struct \c MqErrorS 
+/// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PRINT ((struct MqS*)0x2)
 
@@ -314,18 +314,11 @@ typedef MQ_INT  MQ_SOCK;
 /*                                                                           */
 /*****************************************************************************/
 
-/// \ingroup MqMsgqueAPI
-/// \brief 'select' type for reading or writing
-enum MqIoSelectE {
-  MQ_SELECT_RECV = (1 << 0),    ///< 'select' for reading
-  MQ_SELECT_SEND = (1 << 1),	///< 'select' for writing
-};
-
-/// \ingroup MqMsgqueAPI
+/// \ingroup MqTypeAPI
 /// \brief boolean NO
 #define MQ_NO  0
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup MqTypeAPI
 /// \brief boolean YES
 #define MQ_YES 1
 
@@ -407,7 +400,7 @@ enum MqErrorE {
 
 /** \defgroup MqConfigAPI MqConfigAPI
  *  \{
- *  \brief Configuration data of the #MqS object
+ *  \brief configuration of the #MqS object
  */
 
 /// \brief prototype for the \c fork syscall
@@ -977,7 +970,7 @@ struct MqS {
   struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
   struct MqErrorS error;	    ///< error object data
   struct MqLinkS link;		    ///< link object data
-  struct MqBufferS * temp;	    ///< misc temporary \e MqBufferS object
+  struct MqBufferS * temp;	    ///< misc temporary #MqBufferS object
   enum MqStatusIsE statusIs;	    ///< how the context was created?
   MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
   MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
@@ -1164,7 +1157,7 @@ MQ_DECL MqConfigSetFactory (
   MqTokenDataCopyF  fDeleteCopy
 );
 
-/// \brief setup the \e factory pattern
+/// \brief setup the default \e factory pattern
 /// \context
 ///
 /// The \e default factory is just a wrapper for #MqContextCreate with additional error management code.
@@ -1583,14 +1576,21 @@ MQ_DECL MqConfigGetSelf (
 
 /** \defgroup MqMsgqueAPI MqMsgqueAPI
  *  \{
- *  \brief the <EM>MqS API</EM> is used as \libmsgque object.
+ *  \brief the toplevel \libmsgque object: #MqS
  *
- *  the \e MqS object is created just after the \e MqContextS object usually
- *  in the function \c ContextCreate. every external \e MqContextS object has
- *  only one \e MqS object and every \e MqS object has only one \e MqContextS
- *  object. the \e MqS object will be created with the \c MqLinkCreate and will be deleted 
- *  with the \c MqLinkDelete function. during creation of a \e MqS object additional
- *  objects will be created too:
+ *  Every user defined context object has a #MqS object as first parameter:
+\code
+struct MyCtx {
+  struct MqS  mqctx;
+  int	      mydata;
+  ...
+}
+\endcode
+ *  The #MqS object is created with the #MqContextCreate function and is
+ *  used as toplevel \libmsgque context and handle. Near every \libmsgque
+ *  function uses this handle as first argument. The handle is delete with
+ *  #MqContextDelete.
+ * 
  */
 
 /*****************************************************************************/
@@ -1617,7 +1617,8 @@ MqBufferLAppendC(initB, "myExecArgument_1");
  */
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 
-// \brief set the \c fork syscall
+/// \brief helper to set the application specific \c fork functions
+/// \attention by default the OS specific functions are used
 MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
 
 /** \brief create a parent \libmsgque object link
@@ -1783,7 +1784,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
 
 /** \defgroup MqBufferAPI MqBufferAPI
  *  \{
- *  \brief the <EM>Msgque Buffer API</EM> is used to manage dynamic, generic, mixed typed data.
+ *  \brief create and manage dynamic, generic, mixed typed data.
  *
  *  The MqBufferS struct is used to store and manage #MqTypeE typed data in a
  *  MqBufferU storage. If \libmsgque is working on any kind of data it is working on
@@ -1828,7 +1829,7 @@ union MqBufferU {
   MQ_LST  R;			///< return object type data
 };
 
-/// \brief initial size of the #MqBufferS:bls object
+/// \brief initial size of the #MqBufferS::bls object
 #define MQ_BLS_SIZE 50
 
 // \brief signature used in #MqBufferS::signature
@@ -1836,7 +1837,7 @@ union MqBufferU {
 
 /** \brief defines an object to store generic (e.g mixed typed) data.
  *
- * an \e MqBufferS object is used for 3 different purposes:
+ * an #MqBufferS object is used for 3 different purposes:
  * - store generic typed single data value
  * - build a Msgque packet by appending items to an existing object
  * - read a single item from an existing Msgque packet 
@@ -1868,32 +1869,32 @@ struct MqBufferS {
   MQ_BINB bls[MQ_BLS_SIZE+1];
 };
 
-/// \brief extract a MQ_BYT from a \e MqBufferS object
+/// \brief extract a MQ_BYT from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_BYT MQ_DECL MqBufU2BYT ( union MqBufferU bufU );
-/// \brief extract a MQ_BOL from a \e MqBufferS object
+/// \brief extract a MQ_BOL from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_BOL MQ_DECL MqBufU2BOL ( union MqBufferU bufU );
-/// \brief extract a MQ_SRT from a \e MqBufferS object
+/// \brief extract a MQ_SRT from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_SRT MQ_DECL MqBufU2SRT ( union MqBufferU bufU );
-/// \brief extract a MQ_INT from a \e MqBufferS object
+/// \brief extract a MQ_INT from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_INT MQ_DECL MqBufU2INT ( union MqBufferU bufU );
-/// \brief extract a MQ_FLT from a \e MqBufferS object
+/// \brief extract a MQ_FLT from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_FLT MQ_DECL MqBufU2FLT ( union MqBufferU bufU );
-/// \brief extract a MQ_WID from a \e MqBufferS object
+/// \brief extract a MQ_WID from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_WID MQ_DECL MqBufU2WID ( union MqBufferU bufU );
-/// \brief extract a MQ_DBL from a \e MqBufferS object
+/// \brief extract a MQ_DBL from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_DBL MQ_DECL MqBufU2DBL ( union MqBufferU bufU );
-/// \brief extract a MQ_ATO from a \e MqBufferS object
+/// \brief extract a MQ_ATO from a #MqBufferS object
 /// \bufU
 MQ_EXTERN MQ_ATO MQ_DECL MqBufU2ATO ( union MqBufferU bufU );
 
-/// \brief create a new \e MqBufferS with \a size
+/// \brief create a new #MqBufferS with \a size
 /// \context
 /// \param size initial size of the buffer, if \e size = 0 the initial size is set to an default value
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreate (
@@ -1901,20 +1902,20 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreate (
   MQ_SIZE size
 );
 
-/// \brief delete a new \e MqBufferS 
+/// \brief delete a new #MqBufferS 
 /// \param bufP a pointer to an struct MqBufferS * object
 /// \attention \attDelete
 MQ_EXTERN void MQ_DECL MqBufferDelete (
   struct MqBufferS ** const bufP
 );
 
-/// \brief reset a \e MqBufferS to the length zero
+/// \brief reset a #MqBufferS to the length zero
 /// \buf
 MQ_EXTERN void MQ_DECL MqBufferReset (
   struct MqBufferS * const buf
 );
 
-/// \brief copy the \e MqBufferS from \a srce to \a dest
+/// \brief copy the #MqBufferS from \a srce to \a dest
 /// \param dest target of the copy
 /// \param srce source of the copy
 /// \retval the \e dest object
@@ -2099,9 +2100,9 @@ MQ_EXTERN char MQ_DECL MqBufferGetType (
   struct MqBufferS * const buf
 );
 
-/// \brief return the \c MqErrorS object from a #MQ_BUF object
+/// \brief return the #MqErrorS object from a #MQ_BUF object
 /// \buf
-/// \return the \c MqErrorS object
+/// \return the #MqErrorS object
 MQ_EXTERN struct MqS * MQ_DECL MqBufferGetContext (
   struct MqBufferS * const buf
 );
@@ -2212,7 +2213,7 @@ MQ_DECL MqBufferCastTo (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief append a single \a string to a \e MqBufferS
+/// \brief append a single \a string to a #MqBufferS
 /// \buf
 /// \param string the text to append to \e buf
 /// \retval the size of the string appended to the MqBufferS object
@@ -2248,7 +2249,7 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqBufferAppendV (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief add \a str to the \e MqBufferS
+/// \brief add \a str to the #MqBufferS
 /// \buf
 /// \param string the text to append to \e buf
 /// \retval the size of the string appended to the MqBufferS object
@@ -2257,7 +2258,7 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqBufferPush (
   MQ_CST const string
 );
 
-/// \brief delete \a str from the \e MqBufferS
+/// \brief delete \a str from the #MqBufferS
 /// \buf
 /// \param string the text to remove from \e buf
 /// \retval the size of the string removed from the MqBufferS object
@@ -2272,7 +2273,7 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqBufferPop (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief log the whole \e MqBufferS object to the stderr device
+/// \brief log the whole #MqBufferS object to the stderr device
 /// \context
 /// \buf
 /// \param prefix item to identify the output
@@ -2282,7 +2283,7 @@ MQ_EXTERN void MQ_DECL MqBufferLog (
   MQ_CST const prefix
 );
 
-/// \brief log the short \e MqBufferS object data to the stderr device
+/// \brief log the short #MqBufferS object data to the stderr device
 /// \context
 /// \buf
 /// \param prefix item to identify the output
@@ -2319,7 +2320,7 @@ MQ_DECL MqCurrentTokenIs (
 
 /** \defgroup MqBufferListAPI MqBufferListAPI
  *  \{
- *  \brief the <EM>Msgque Buffer List API</EM> is used to manage a list of \e MqBufferS objects.
+ *  \brief create and manage a list of #MqBufferS objects.
  *
  *  the memory is allocated and extended dynamically. 
  */
@@ -2330,11 +2331,11 @@ MQ_DECL MqCurrentTokenIs (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief the object to manage an array of \e MqBufferS items.
+/// \brief the object to manage an array of #MqBufferS items.
 ///
-/// every \e MqBufferLS is able to store a infinite number of \e MqBufferS objects
-/// using dynamic allocation. the \e MqBufferS objects are stored in a flat
-/// array of \e MqBufferS object pointers. to access an object only the \a data 
+/// every #MqBufferLS is able to store a infinite number of #MqBufferS objects
+/// using dynamic allocation. the #MqBufferS objects are stored in a flat
+/// array of #MqBufferS object pointers. to access an object only the \a data 
 /// or the \a cur member is used (e.g. \b \c data[index]). in difference to the
 /// \a data member the \a cur member has a floating position to implement an
 /// increment/decrement like behaviour
@@ -2376,33 +2377,33 @@ MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreateArgs (
   MQ_CST argv[]
 );
 
-/// \brief create and return a \c MqBufferLS object using a \e va_list argument
+/// \brief create and return a #MqBufferLS object using a \e va_list argument
 MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreateArgsVA (
   struct MqS * const context,
   va_list ap
 );
 
-/// \brief create and return a \c MqBufferLS object using \e varargs arguments end with \c NULL
+/// \brief create and return a #MqBufferLS object using \e varargs arguments end with \c NULL
 MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreateArgsV (
   struct MqS * const context,
   ...
 );
 
-/// \brief create and return a a \c MqBufferLS object using \e main startup arguments
+/// \brief create and return a a #MqBufferLS object using \e main startup arguments
 MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreateArgsVC (
   struct MqS * const context,
   int const   argc,
   MQ_CST      argv[]
 );
 
-/// \brief create an #MqBufferLS object as copy from an existing \e MqBufferLS object
-/// \param in the \e MqBufferLS object to copy from
-/// \return out the \e MqBufferLS object to create
+/// \brief create an #MqBufferLS object as copy from an existing #MqBufferLS object
+/// \param in the #MqBufferLS object to copy from
+/// \return out the #MqBufferLS object to create
 MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLDup (
   struct MqBufferLS const * const in
 );
 
-/// \brief delete a dynamically created \e MqBufferLS object
+/// \brief delete a dynamically created #MqBufferLS object
 /// \param bufP the pointer to an struct MqBufferLS * object
 /// \attDelete
 MQ_EXTERN void MQ_DECL MqBufferLDelete (
@@ -2628,7 +2629,7 @@ MQ_EXTERN void MQ_DECL MqBufferLMove (
 /// \bufL
 /// \param index the index'th object from the MqBufferLS object starting with 0
 /// \param numitems delete number of items
-/// \param doDelete if \e delete != 0 delete the \e MqBufferS object, associated with the index, too
+/// \param doDelete if \e delete != 0 delete the #MqBufferS object, associated with the index, too
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLDeleteItem (
   struct MqS * const context,
@@ -2643,7 +2644,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLDeleteItem (
 /// \param str the string to search for
 /// \param len the length of \e str
 /// \param startindex start searching in \e buf from index \e startindex
-/// \return The index of the \e str found or -1 if not found. The return value can be used as startindex of following calls to \e MqBufferLSearchC
+/// \return The index of the \e str found or -1 if not found. The return value can be used as startindex of following calls to #MqBufferLSearchC
 ///
 /// a typical usage for this code is parsing an MqBufferLS object for multiple occurrences of a string
 /// \code
@@ -2706,12 +2707,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
 
 /** \defgroup MqErrorAPI MqErrorAPI
  *  \{
- *  \brief the <EM>MqErrorS API</EM> is used to manage error messages.
+ *  \brief create and manage error messages.
  *
- *  the management is done with a \e MqErrorS object created by \c MgCreate.
- *  every \e MqS object has only one \e MqErrorS object and every \e MqErrorS object 
- *  has only one \e MqS object.
- *  the \e MqErrorS object is used to collect all data needed to handle an error.
+ *  the management is done with a #MqErrorS object created by #MqContextCreate.
+ *  every #MqS object is linked with only one #MqErrorS object and every #MqErrorS 
+ *  object is linked with only one #MqS object.
+ *  the #MqErrorS object is used to collect all data needed to handle an error.
  */
 
 /// \brief do a \b panic with a vararg argument list
@@ -2757,7 +2758,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
 #define MqPanicSYS(context) MqPanicV(context,__func__,-1,\
 	"internal ERROR in function '%s', please contact your local support", __func__);
 
-/// \brief reset a \e MqErrorS object, change error code to #MQ_OK 
+/// \brief reset a #MqErrorS object, change error code to #MQ_OK 
 /// \context
 MQ_EXTERN void MQ_DECL MqErrorReset (
   struct MqS * const context
@@ -2769,7 +2770,7 @@ MQ_EXTERN void MQ_DECL MqErrorReset (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief set an error-code in \e MqErrorS with vararg list argument
+/// \brief set an error-code in #MqErrorS with vararg list argument
 /// \context
 /// \prefix
 /// \param errorcode identify the code
@@ -2786,7 +2787,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSGenVL (
   va_list var_list
 );
 
-/// \brief set a error-code in \e MqErrorS with vararg string argument
+/// \brief set a error-code in #MqErrorS with vararg string argument
 /// \context
 /// \prefix
 /// \param errorcode identify the code
@@ -2825,7 +2826,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorC (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief append a vararg string to a \e MqErrorS
+/// \brief append a vararg string to a #MqErrorS
 /// \context
 /// \format
 /// \retMqErrorE
@@ -2835,7 +2836,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSAppendV (
   ...
 ) __attribute__ ((format (printf, 2, 3)));
 
-/// \brief append a string to a \e MqErrorS
+/// \brief append a string to a #MqErrorS
 #define MqErrorSAppendC(error,str)        MqErrorSAppendV(error,"%s",str);
 
 /// \brief append a function and filename to the error-buffer
@@ -2866,13 +2867,13 @@ MQ_DECL MqErrorStackP (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief return the value of \e MqErrorS code member
+/// \brief return the value of #MqErrorS code member
 /// \context
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorGetCode (
   struct MqS const * const context
 );
 
-/// \brief set the value of \e MqErrorS code member
+/// \brief set the value of #MqErrorS code member
 /// \context
 /// \param code the \e code to set for \e error
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCode (
@@ -2880,13 +2881,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCode (
   enum MqErrorE code
 );
 
-/// \brief return the value of \e MqErrorS text member
+/// \brief return the value of #MqErrorS text member
 /// \context
 MQ_EXTERN MQ_CST MQ_DECL MqErrorGetText (
   struct MqS const * const context
 );
 
-/// \brief return the value of \e MqErrorS num member
+/// \brief return the value of #MqErrorS num member
 MQ_EXTERN void MQ_DECL MqErrorPrint (
   struct MqS * const context
 );
@@ -2897,7 +2898,7 @@ MQ_EXTERN MQ_INT MQ_DECL MqErrorGetNum (
   struct MqS const * const context
 );
 
-/// \brief set the value of the \e MqErrorS object
+/// \brief set the value of the #MqErrorS object
 /// \context
 /// \param[in] num the error number to set
 /// \param[in] code the error code to set
@@ -2910,7 +2911,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
   MQ_CST const message
 );
 
-/// \brief set the error-code of the \e MqErrorS object to #MQ_CONTINUE
+/// \brief set the error-code of the #MqErrorS object to #MQ_CONTINUE
 /// \context
 /// \return #MQ_CONTINUE
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
@@ -2948,7 +2949,7 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_EXIT: ca
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief log the \e MqErrorS for debugging
+/// \brief log the #MqErrorS for debugging
 /// \context
 /// \prefix
 MQ_EXTERN void MQ_DECL MqErrorLog (
@@ -2956,7 +2957,7 @@ MQ_EXTERN void MQ_DECL MqErrorLog (
   MQ_CST const prefix
 );
 
-/// \brief copy a \e MqErrorS from \a in to \a out
+/// \brief copy a #MqErrorS from \a in to \a out
 /// \param out the #MqS::error object created by #MqLinkCreate
 /// \param in  the #MqS::error object created by #MqLinkCreate
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
@@ -2974,7 +2975,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /** \defgroup MqReadAPI MqReadAPI
  *  \{
- *  \brief Read and split a \libmsgque package into several items.
+ *  \brief extract items from a data package.
  *
  *  The reading is done by an \e Read-Buffer object using an \e MqIoS object for 
  *  doing the socket io. Every \e MqS object has only \b one \e Read-Buffer object 
@@ -3189,7 +3190,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
 
 /** \defgroup MqSendAPI MqSendAPI
  *  \{
- *  \brief Collect and send data using a LibMsgque package
+ *  \brief add items into a data package.
  *
  *  the management is done by a \e Send-Buffer object using an \e Io object for 
  *  doing the socket io. Every \e msgque object has only \b one \e Send-Buffer object 
@@ -3328,7 +3329,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendU (
   struct MqBufferS * const in
 );
 
-/// \brief append a \e MqBufferLS object to the \e Send-Buffer object
+/// \brief append a #MqBufferLS object to the \e Send-Buffer object
 /// \context
 /// \param in the pointer to an #MqBufferLS object to send
 /// \retMqErrorE
@@ -3479,7 +3480,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
 
 /** \defgroup MqSlaveAPI MqSlaveAPI
  *  \{
- *  \brief Access to the master / slave feature
+ *  \brief create and manage a slave context
 
 The master/slave link is used to create a mesh of nodes and
 to link different \e PARENT context objects together.
@@ -3590,34 +3591,8 @@ MQ_DECL MqSlaveGet (
 
 /** \} slave api */
 
-/* ####################################################################### */
-/* ###                                                                 ### */
-/* ###                     E V E N T - A P I                           ### */
-/* ###                                                                 ### */
-/* ####################################################################### */
-
-/** \defgroup MqEventAPI MqEventAPI
- *  \{
- *  \brief handle different aspects of the \e MqS event-queue
- *
- *  the event-queue have to be linked into an existing event-processing infrastructure. 
- *  the linking is done by defining prototypes for two independent functions:
- *  - \b MqEventF is used to call an external event processing function (e.g. \c Tcl_DoOneEvent)
- *  - \b EventCreateF is used to add events, created by the file-handles owned by the \e MqS objects, 
- *       into the external event-queue (e.g. \c Tcl_QueueEvent)
- *  .
- */
-
-/// \brief prototype for a Event-Check function
-///
-/// This function is called by the \libmsgque event-loop as idle-task in #MqProcessEvent
-typedef enum MqErrorE (
-  *EventCreateF
-) (
-  struct MqS * const
-);
-
-/** \brief Waiting for an incoming packet on all open msgque objects.
+/** \ingroup MqMsgqueAPI
+ *  \brief Waiting for an incoming packet on all open msgque object links.
  * 
  *  This function is used to wait for (e.g. #MQ_WAIT_ONCE) or check (e.g. #MQ_WAIT_NO) for an 
  *  incoming event. If an event occurs the header of the Msgque packet is parsed and
@@ -3642,7 +3617,6 @@ MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
 MqLinkDelete(ctx);
 ...
 \endcode
-
  **/
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
@@ -3650,8 +3624,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
   MQ_TIME_T timeout,
   enum MqWaitOnEventE const wait
 );
-
-/** \} MqEventAPI */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3661,7 +3633,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 
 /** \defgroup MqSystemAPI MqSystemAPI
  *  \{
- *  \brief Access to native system functions including \libmsgque error handling
+ *  \brief access to native system functions with error handling
  **/
 
 /// \brief 'calloc' system call with error handling feature
@@ -3759,9 +3731,15 @@ static mq_inline MQ_STR mq_strdup_save (
 
 /** \} MqSystemAPI */
 
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                        L O G - A P I                            ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
 /** \defgroup MqLogAPI MqLogAPI
  *  \{
- *  \brief logging information on stderr with a common format.
+ *  \brief log information to stderr with a common format.
  */
 
 /*****************************************************************************/
@@ -3906,9 +3884,9 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
   MQ_SIZE size
 );
 
-/// \}
+/** \}	  MqLogAPI */
 
-/// \}   // public
+/** \}	  MqPublicAPI */
 
 //end c++ save definition
 END_C_DECLS

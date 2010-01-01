@@ -24,15 +24,15 @@ MqFactoryS \- used for factory function pointer management
 .PP 
 used for factory function pointer management 
 .PP
-Definition at line 533 of file msgque.h.
+Definition at line 526 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS::Create\fP\fC [read]\fP"
 .PP
-Definition at line 534 of file msgque.h.
+Definition at line 527 of file msgque.h.
 .SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS::Delete\fP\fC [read]\fP"
 .PP
-Definition at line 535 of file msgque.h.
+Definition at line 528 of file msgque.h.
 
 .SH "Author"
 .PP 

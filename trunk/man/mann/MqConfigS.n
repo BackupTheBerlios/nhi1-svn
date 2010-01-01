@@ -16,61 +16,61 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisSilent\fP"
 .br
-.I "Suppress logging output. "
+.R "Suppress logging output. "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisString\fP"
 .br
-.I "Use \fIstring\fP mode, send as many data as possible as string. "
+.R "Use \fIstring\fP mode, send as many data as possible as string. "
 .ti -1c
 .RI "enum \fBMqStartE\fP \fBstartAs\fP"
 .br
-.I "User preferences on HOWTO start a new entity. "
+.R "User preferences on HOWTO start a new entity. "
 .ti -1c
 .RI "\fBMQ_STR\fP \fBname\fP"
 .br
-.I "The human-readable name of context. "
+.R "The human-readable name of context. "
 .ti -1c
 .RI "\fBMQ_STR\fP \fBsrvname\fP"
 .br
-.I "The human-readable name of the server-context. "
+.R "The human-readable name of the server-context. "
 .ti -1c
 .RI "\fBMQ_INT\fP \fBdebug\fP"
 .br
-.I "Send additional debugging output to stderr. "
+.R "Send additional debugging output to stderr. "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBparent\fP"
 .br
-.I "Create a child-context. "
+.R "Create a child-context. "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBmaster\fP"
 .br
-.I "SLAVE: a pointer to the master object or \fCNULL\fP. "
+.R "SLAVE: a pointer to the master object or \fCNULL\fP. "
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBmaster_id\fP"
 .br
-.I "SLAVE: the ID in the master SLAVES array or \fCO\fP. "
+.R "SLAVE: the ID in the master SLAVES array or \fCO\fP. "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBignoreThread\fP"
 .br
-.I "do not allow the usage of \fIthreads\fP "
+.R "do not allow the usage of \fIthreads\fP "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBignoreSpawn\fP"
 .br
-.I "do not allow the usage of \fIspawn\fP "
+.R "do not allow the usage of \fIspawn\fP "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBignoreFork\fP"
 .br
-.I "do not allow the usage of \fIfork\fP "
+.R "do not allow the usage of \fIfork\fP "
 .ti -1c
 .RI "struct \fBMqIoConfigS\fP \fBio\fP"
 .br
-.I "Global configuration data belonging to 'io'. "
+.R "Global configuration data belonging to 'io'. "
 .in -1c
 .SH "Detailed Description"
 .PP 
 end-user configuration data, also available as command-line options 
 .PP
-Definition at line 642 of file msgque.h.
+Definition at line 635 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_INT\fP \fBMqConfigS::debug\fP"
@@ -86,34 +86,34 @@ Using pipe (e.g. --pipe) the \fIserver\fP get the \fIdebug\fP flag from the \fIc
 .PP
 
 .PP
-Definition at line 752 of file msgque.h.
+Definition at line 745 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreFork\fP"
 .PP
 do not allow the usage of \fIfork\fP 
 .PP
-Definition at line 776 of file msgque.h.
+Definition at line 769 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreSpawn\fP"
 .PP
 do not allow the usage of \fIspawn\fP 
 .PP
-Definition at line 773 of file msgque.h.
+Definition at line 766 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreThread\fP"
 .PP
 do not allow the usage of \fIthreads\fP 
 .PP
-Definition at line 770 of file msgque.h.
+Definition at line 763 of file msgque.h.
 .SS "struct \fBMqIoConfigS\fP \fBMqConfigS::io\fP\fC [read]\fP"
 .PP
 Global configuration data belonging to 'io'. 
 .PP
-Definition at line 779 of file msgque.h.
+Definition at line 772 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isSilent\fP"
 .PP
 Suppress logging output. 
 .PP
 type default option application context  BOOL NO --silent server/client parent/child  
 .PP
-Definition at line 649 of file msgque.h.
+Definition at line 642 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isString\fP"
 .PP
 Use \fIstring\fP mode, send as many data as possible as string. 
@@ -122,17 +122,17 @@ type default option application context  BOOL NO --string client parent
 .PP
 \fBlibmsgque\fP distinguish between a \fIstring\fP based (option: \fC--string\fP) and a \fIbinary\fP based (this is the default) data packages. The items is a \fBlibmsgque\fP data package are of type \fBMqBufferU\fP including OS specific native data of type \fBMQ_ATO\fP. The native data can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast). \fIstring\fP is used for debugging purpose or if the binary data model is different between client and server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require using the \fC--string\fP option. The options is only available for the \fIclient-parent\fP setup. 
 .PP
-Definition at line 665 of file msgque.h.
+Definition at line 658 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS::master\fP\fC [read]\fP"
 .PP
 SLAVE: a pointer to the master object or \fCNULL\fP. 
 .PP
-Definition at line 764 of file msgque.h.
+Definition at line 757 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqConfigS::master_id\fP"
 .PP
 SLAVE: the ID in the master SLAVES array or \fCO\fP. 
 .PP
-Definition at line 767 of file msgque.h.
+Definition at line 760 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS::name\fP"
 .PP
 The human-readable name of context. 
@@ -177,7 +177,7 @@ MqConfigSetName(context, 'myString');
 .PP
 
 .PP
-Definition at line 719 of file msgque.h.
+Definition at line 712 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS::parent\fP\fC [read]\fP"
 .PP
 Create a child-context. 
@@ -186,7 +186,7 @@ type default option application context  POINTER NULL NO client parent
 .PP
 Read more in: \fCWHAT-IS: parent versa child\fP 
 .PP
-Definition at line 761 of file msgque.h.
+Definition at line 754 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS::srvname\fP"
 .PP
 The human-readable name of the server-context. 
@@ -227,7 +227,7 @@ MqConfigSetSrvName(context, 'myString');
 .PP
 
 .PP
-Definition at line 744 of file msgque.h.
+Definition at line 737 of file msgque.h.
 .SS "enum \fBMqStartE\fP \fBMqConfigS::startAs\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -261,7 +261,7 @@ The \fC--fork\fP option require the \fBfork\fP system-call and is \fBnot\fP comp
 .PP
 
 .PP
-Definition at line 691 of file msgque.h.
+Definition at line 684 of file msgque.h.
 
 .SH "Author"
 .PP 

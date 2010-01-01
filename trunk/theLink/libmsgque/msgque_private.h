@@ -79,6 +79,20 @@ struct MqIdS {
   union MqIdSU val;
 };
 
+/// \brief 'select' type for reading or writing
+enum MqIoSelectE {
+  MQ_SELECT_RECV = (1 << 0),    ///< 'select' for reading
+  MQ_SELECT_SEND = (1 << 1),	///< 'select' for writing
+} ;
+
+/// \brief prototype for a Event-Check function
+///
+/// This function is called by the \libmsgque event-loop as idle-task in #MqProcessEvent
+typedef enum MqErrorE (
+  *MqEventCreateF
+) (
+  struct MqS * const
+);
 
 /*****************************************************************************/
 /*                                                                           */

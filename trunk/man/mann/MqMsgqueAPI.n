@@ -2,7 +2,7 @@
 .ad l
 .nh
 .SH NAME
-MqMsgqueAPI \- the \fI\fBMqS\fP API\fP is used as \fBlibmsgque\fP object.  
+MqMsgqueAPI \- the toplevel \fBlibmsgque\fP object: \fBMqS\fP  
 
 .PP
 .SS "Data Structures"
@@ -11,147 +11,121 @@ MqMsgqueAPI \- the \fI\fBMqS\fP API\fP is used as \fBlibmsgque\fP object.
 .ti -1c
 .RI "struct \fBMqLinkS\fP"
 .br
-.I "object responsible to manage client/server link data "
+.R "object responsible to manage client/server link data "
 .ti -1c
 .RI "struct \fBMqErrorS\fP"
 .br
-.I "error-object data type "
+.R "error-object data type "
 .ti -1c
 .RI "struct \fBMqS\fP"
 .br
-.I "Prototype for a context object. "
+.R "Prototype for a context object. "
 .in -1c
 .SS "Defines"
 
 .in +1c
 .ti -1c
-.RI "#define \fBMQ_NO\fP   0"
-.br
-.I "boolean NO "
-.ti -1c
-.RI "#define \fBMQ_YES\fP   1"
-.br
-.I "boolean YES "
-.ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
-.I "signature used in \fBMqS::signature\fP "
-.in -1c
-.SS "Enumerations"
-
-.in +1c
-.ti -1c
-.RI "enum \fBMqIoSelectE\fP { \fBMQ_SELECT_RECV\fP =  (1 << 0), \fBMQ_SELECT_SEND\fP =  (1 << 1) }"
-.br
-.I "'select' type for reading or writing "
+.R "signature used in \fBMqS::signature\fP "
 .in -1c
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqInitCreate\fP (void)"
+.RI "struct \fBMqBufferLS\fP * \fBMqInitCreate\fP (void)"
 .br
-.I "setup and return the \fIinit\fP object "
+.R "setup and return the \fIinit\fP object "
 .ti -1c
-.RI "MQ_EXTERN void \fBMqInitSysAPI\fP (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
+.RI "void \fBMqInitSysAPI\fP (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
+.br
+.R "helper to set the application specific \fCfork\fP functions "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.br
+.R "create a parent \fBlibmsgque\fP object link "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **argsP)"
+.br
+.R "create a child \fBlibmsgque\fP object link "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.br
+.R "wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check "
+.ti -1c
+.RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const context)"
+.br
+.R "delete a \fBlibmsgque\fP object "
+.ti -1c
+.RI "void \fBMqExit\fP (struct \fBMqS\fP *context)"
+.br
+.R "exit the current process or thread "
+.ti -1c
+.RI "\fBMQ_STR\fP \fBMqHelp\fP (\fBMQ_CST\fP tool)"
+.br
+.R "write \fBlibmsgque\fP specific user-help to stderr "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.I "create a parent \fBlibmsgque\fP object link "
+.R "create a service handle "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
 .br
-.I "create a child \fBlibmsgque\fP object link "
+.R "use a proxy to proxy the incomming trafic to the outgoing trafic "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const token)"
 .br
-.I "wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check "
+.R "delete service handle "
 .ti -1c
-.RI "MQ_EXTERN void \fBMqLinkDelete\fP (struct \fBMqS\fP *const context)"
+.RI "\fBMQ_BOL\fP \fBMqCurrentTokenIs\fP (struct \fBMqS\fP const *const context, char const *const token)"
 .br
-.I "delete a \fBlibmsgque\fP object "
+.R "check the current token "
 .ti -1c
-.RI "MQ_EXTERN void \fBMqExit\fP (struct \fBMqS\fP *context)"
+.RI "enum \fBMqErrorE\fP \fBMqProcessEvent\fP (struct \fBMqS\fP *const context, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)"
 .br
-.I "exit the current process or thread "
-.ti -1c
-.RI "MQ_EXTERN \fBMQ_STR\fP \fBMqHelp\fP (\fBMQ_CST\fP tool)"
-.br
-.I "write \fBlibmsgque\fP specific user-help to stderr "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
-.br
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
-.br
-.I "create a service handle "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
-.br
-.I "use a proxy to proxy the incomming trafic to the outgoing trafic "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const token)"
-.br
-.I "delete service handle "
-.ti -1c
-.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqCurrentTokenIs\fP (struct \fBMqS\fP const *const context, char const *const token)"
-.br
-.I "check the current token "
+.R "Waiting for an incoming packet on all open msgque object links. "
 .in -1c
 .SS "Variables"
 
 .in +1c
 .ti -1c
-.RI "MQ_EXTERN struct \fBMqBufferLS\fP * \fBMqInitBuf\fP"
+.RI "struct \fBMqBufferLS\fP * \fBMqInitBuf\fP"
 .br
-.I "the prefix arguments of the starting application "
+.R "the prefix arguments of the starting application "
 .ti -1c
-.RI "MQ_EXTERN \fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
+.RI "\fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
 .br
-.I "name of a procedure to return \fImain\fP like entry-points "
+.R "name of a procedure to return \fImain\fP like entry-points "
 .in -1c
 .SH "Detailed Description"
 .PP 
-the \fI\fBMqS\fP API\fP is used as \fBlibmsgque\fP object. 
+the toplevel \fBlibmsgque\fP object: \fBMqS\fP 
 
-the \fI\fBMqS\fP\fP object is created just after the \fIMqContextS\fP object usually in the function \fCContextCreate\fP. every external \fIMqContextS\fP object has only one \fI\fBMqS\fP\fP object and every \fI\fBMqS\fP\fP object has only one \fIMqContextS\fP object. the \fI\fBMqS\fP\fP object will be created with the \fCMqLinkCreate\fP and will be deleted with the \fCMqLinkDelete\fP function. during creation of a \fI\fBMqS\fP\fP object additional objects will be created too: 
+Every user defined context object has a \fBMqS\fP object as first parameter: 
+.PP
+.nf
+struct MyCtx {
+  struct MqS  mqctx;
+  int         mydata;
+  ...
+}
+
+.fi
+.PP
+ The \fBMqS\fP object is created with the \fBMqContextCreate\fP function and is used as toplevel \fBlibmsgque\fP context and handle. Near every \fBlibmsgque\fP function uses this handle as first argument. The handle is delete with \fBMqContextDelete\fP. 
 .SH "Define Documentation"
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
 signature used in \fBMqS::signature\fP 
 .PP
-Definition at line 965 of file msgque.h.
-.SS "#define MQ_NO   0"
-.PP
-boolean NO 
-.PP
-Definition at line 326 of file msgque.h.
-.SS "#define MQ_YES   1"
-.PP
-boolean YES 
-.PP
-Definition at line 330 of file msgque.h.
-.SH "Enumeration Type Documentation"
-.PP 
-.SS "enum \fBMqIoSelectE\fP"
-.PP
-'select' type for reading or writing 
-.PP
-\fBEnumerator: \fP
-.in +1c
-.TP
-\fB\fIMQ_SELECT_RECV \fP\fP
-'select' for reading 
-.TP
-\fB\fIMQ_SELECT_SEND \fP\fP
-'select' for writing 
-.PP
-Definition at line 319 of file msgque.h.
+Definition at line 958 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
+.SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
 .PP
 check for left over arguments from parameter \fIargv\fP of \fBMqLinkCreate\fP 
 .PP
@@ -168,7 +142,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 This code is not part of \fBMqLinkCreate\fP because sometimes it is necessary to check for left over arguments \fBafter\fP \fBMqLinkCreate\fP was called and after the calling function was able to process function specific arguments. By Default \fBMqLinkCreate\fP will delete \fBall\fP arguments belonging to \fBlibmsgque\fP from the \fIargv\fP object. If the calling function does \fBnot\fP expect additional arguments or arguments were added with spelling errors, a call to \fBMqCheckForLeftOverArguments\fP will detect this. 
-.SS "MQ_EXTERN \fBMQ_BOL\fP MqCurrentTokenIs (struct \fBMqS\fP const *const  context, char const *const  token)"
+.SS "\fBMQ_BOL\fP MqCurrentTokenIs (struct \fBMqS\fP const *const  context, char const *const  token)"
 .PP
 check the current token 
 .PP
@@ -180,7 +154,7 @@ check the current token
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqDefaultLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
+.SS "enum \fBMqErrorE\fP MqDefaultLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
 .PP
 wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check 
 .PP
@@ -199,7 +173,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN void MqExit (struct \fBMqS\fP * context)"
+.SS "void MqExit (struct \fBMqS\fP * context)"
 .PP
 exit the current process or thread 
 .PP
@@ -223,7 +197,7 @@ final call \fCSysExit\fP to exit the process
 It is an Panic error if \fBMqExit\fP is called twice for the same object
 .PP
 
-.SS "MQ_EXTERN \fBMQ_STR\fP MqHelp (\fBMQ_CST\fP tool)"
+.SS "\fBMQ_STR\fP MqHelp (\fBMQ_CST\fP tool)"
 .PP
 write \fBlibmsgque\fP specific user-help to stderr 
 .PP
@@ -246,7 +220,7 @@ If \fItool\fP != NULL, the function will display a header like:
 .fi
 .PP
  on the help page. 
-.SS "MQ_EXTERN struct \fBMqBufferLS\fP* MqInitCreate (void)\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqInitCreate (void)\fC [read]\fP"
 .PP
 setup and return the \fIinit\fP object 
 .PP
@@ -276,9 +250,17 @@ MqBufferLAppendC(initB, 'myExecArgument_1');
 .RE
 .PP
 
-.SS "MQ_EXTERN void MqInitSysAPI (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
+.SS "void MqInitSysAPI (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
 .PP
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
+helper to set the application specific \fCfork\fP functions 
+.PP
+\fBAttention:\fP
+.RS 4
+by default the OS specific functions are used 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
 .PP
 create a parent \fBlibmsgque\fP object link 
 .PP
@@ -295,7 +277,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqLinkCreateChild (struct \fBMqS\fP *const  context, struct \fBMqS\fP *const  parent, struct \fBMqBufferLS\fP ** argsP)"
+.SS "enum \fBMqErrorE\fP MqLinkCreateChild (struct \fBMqS\fP *const  context, struct \fBMqS\fP *const  parent, struct \fBMqBufferLS\fP ** argsP)"
 .PP
 create a child \fBlibmsgque\fP object link 
 .PP
@@ -314,7 +296,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN void MqLinkDelete (struct \fBMqS\fP *const  context)"
+.SS "void MqLinkDelete (struct \fBMqS\fP *const  context)"
 .PP
 delete a \fBlibmsgque\fP object 
 .PP
@@ -324,7 +306,46 @@ delete a \fBlibmsgque\fP object
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqServiceCreate (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  context, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"
+.PP
+Waiting for an incoming packet on all open msgque object links. 
+.PP
+This function is used to wait for (e.g. \fBMQ_WAIT_ONCE\fP) or check (e.g. \fBMQ_WAIT_NO\fP) for an incoming event. If an event occurs the header of the Msgque packet is parsed and the according service-handle is called. if \fBMQ_WAIT_FOREVER\fP is set the function will never return, accept for an error or on exit. This function is usually used on a server to enter the event-loop and wait for incoming service requests.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fItimeout\fP \fBtime_t\fP type value for timeout in seconds. A value of \fC-1\fP is used as \fIdefault\fP using \fBMQ_TIMEOUT\fP seconds. 
+.br
+\fIwait\fP should the code wait forever (e.g. \fBMQ_WAIT_FOREVER\fP), just wait for the next event (e.g. \fBMQ_WAIT_ONCE\fP) or just return after one single test (\fBMQ_WAIT_NO\fP)' 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+The \fItimeout\fP argument is only used if \fBMQ_WAIT_ONCE\fP is set.
+.RE
+.PP
+A typical server looks like: 
+.PP
+.nf
+...
+MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
+...
+MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+...
+MqLinkDelete(ctx);
+...
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqServiceCreate (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .PP
 create a service handle 
 .PP
@@ -347,7 +368,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqServiceDelete (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  token)"
+.SS "enum \fBMqErrorE\fP MqServiceDelete (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  token)"
 .PP
 delete service handle 
 .PP
@@ -364,7 +385,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqServiceProxy (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMQ_SIZE\fP const  id)"
+.SS "enum \fBMqErrorE\fP MqServiceProxy (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMQ_SIZE\fP const  id)"
 .PP
 use a proxy to proxy the incomming trafic to the outgoing trafic 
 .PP
@@ -385,16 +406,16 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 If \fIcontext\fP is a \fImaster\fP context than the data is send to \fIslave\fP with \fIid\fP. If \fIcontext\fP is a \fIslave\fP context than the data is send to the \fImaster\fP of the \fIslave\fP. 
 .SH "Variable Documentation"
 .PP 
-.SS "MQ_EXTERN \fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
+.SS "\fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 999 of file msgque.h.
-.SS "MQ_EXTERN struct \fBMqBufferLS\fP* \fBMqInitBuf\fP"
+Definition at line 992 of file msgque.h.
+.SS "struct \fBMqBufferLS\fP* \fBMqInitBuf\fP"
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 995 of file msgque.h.
+Definition at line 988 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for tclmsgque from the source code.

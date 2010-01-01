@@ -2,102 +2,102 @@
 .ad l
 .nh
 .SH NAME
-MqSendAPI \- Collect and send data using a LibMsgque package.  
+MqSendAPI \- add items into a data package.  
 
 .PP
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
 .br
-.I "append a native typed value to the \fISend-Buffer\fP object "
+.R "append a native typed value to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const context, const \fBMQ_BOL\fP val)"
-.br
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const context, const \fBMQ_SRT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const context, const \fBMQ_BOL\fP val)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const context, const \fBMQ_INT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const context, const \fBMQ_SRT\fP val)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const context, const \fBMQ_FLT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const context, const \fBMQ_INT\fP val)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const context, const \fBMQ_WID\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const context, const \fBMQ_FLT\fP val)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const context, const \fBMQ_DBL\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const context, const \fBMQ_WID\fP val)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const in)"
+.RI "enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const context, const \fBMQ_DBL\fP val)"
 .br
-.I "append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const in)"
 .br
-.I "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
+.R "append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
 .br
-.I "append a native package object to the \fISend-Buffer\fP object "
+.R "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
 .br
-.I "append an entire package body object to the \fISend-Buffer\fP object "
+.R "append a native package object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
+.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
 .br
-.I "append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object "
+.R "append an entire package body object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP const *const in)"
+.RI "enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
 .br
-.I "append a \fI\fBMqBufferLS\fP\fP object to the \fISend-Buffer\fP object "
+.R "append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendV\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt,...)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP const *const in)"
 .br
-.I "append a vararg string to the \fISend-Buffer\fP object "
+.R "append a \fBMqBufferLS\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt, va_list var_list)"
+.RI "enum \fBMqErrorE\fP \fBMqSendV\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt,...)"
 .br
-.I "append a vararg string as va_list to the \fISend-Buffer\fP object "
+.R "append a vararg string to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
-.I "initialize the \fISend-Buffer\fP object and start to create a Msgque package "
+.R "append a vararg string as va_list to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const context)"
 .br
-.I "finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP "
+.R "initialize the \fISend-Buffer\fP object and start to create a Msgque package "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token)"
 .br
-.I "send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP "
+.R "finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
 .br
-.I "send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined "
+.R "send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.I "finish a service-handler and return the data if required. "
+.R "send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const context)"
 .br
-.I "send a msgque error from a server to a client "
+.R "finish a service-handler and return the data if required. "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const context)"
 .br
-.I "start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "send a msgque error from a server to a client "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const context)"
 .br
-.I "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const context)"
+.br
+.R "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
 .in -1c
 .SH "Detailed Description"
 .PP 
-Collect and send data using a LibMsgque package. 
+add items into a data package. 
 
 the management is done by a \fISend-Buffer\fP object using an \fIIo\fP object for doing the socket io. Every \fImsgque\fP object has only \fBone\fP \fISend-Buffer\fP object and every \fISend-Buffer\fP object has only \fBone\fP link to a \fI\fBMqS\fP\fP object.
 .PP
@@ -139,7 +139,7 @@ static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
  
 .SH "Function Documentation"
 .PP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
 .PP
 append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object 
 .PP
@@ -158,7 +158,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
 .PP
 append an entire package body object to the \fISend-Buffer\fP object 
 .PP
@@ -177,7 +177,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  in)"
+.SS "enum \fBMqErrorE\fP MqSendC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  in)"
 .PP
 append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object 
 .PP
@@ -194,7 +194,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendD (struct \fBMqS\fP *const  context, const \fBMQ_DBL\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendD (struct \fBMqS\fP *const  context, const \fBMQ_DBL\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -216,7 +216,7 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token)"
+.SS "enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token)"
 .PP
 finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP 
 .PP
@@ -235,7 +235,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .PP
 send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined 
 .PP
@@ -265,7 +265,7 @@ This function will \fInever\fP block.
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
 .PP
 send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP 
 .PP
@@ -286,7 +286,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendERROR (register struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendERROR (register struct \fBMqS\fP *const  context)"
 .PP
 send a msgque error from a server to a client 
 .PP
@@ -303,7 +303,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendF (struct \fBMqS\fP *const  context, const \fBMQ_FLT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendF (struct \fBMqS\fP *const  context, const \fBMQ_FLT\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -325,7 +325,7 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendI (struct \fBMqS\fP *const  context, const \fBMQ_INT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendI (struct \fBMqS\fP *const  context, const \fBMQ_INT\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -347,9 +347,9 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendL (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP const *const  in)"
+.SS "enum \fBMqErrorE\fP MqSendL (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP const *const  in)"
 .PP
-append a \fI\fBMqBufferLS\fP\fP object to the \fISend-Buffer\fP object 
+append a \fBMqBufferLS\fP object to the \fISend-Buffer\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -369,7 +369,7 @@ all items of \fIin\fP are appended as single arguments to the call using \fBMqSe
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendL_END (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendL_END (struct \fBMqS\fP *const  context)"
 .PP
 end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object 
 .PP
@@ -379,7 +379,7 @@ end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendL_START (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendL_START (struct \fBMqS\fP *const  context)"
 .PP
 start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object 
 .PP
@@ -400,7 +400,7 @@ MqSendL_END(send);       // finish a LST item
 .fi
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
 .PP
 append a native package object to the \fISend-Buffer\fP object 
 .PP
@@ -414,7 +414,7 @@ append a native package object to the \fISend-Buffer\fP object
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendO (struct \fBMqS\fP *const  context, const \fBMQ_BOL\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendO (struct \fBMqS\fP *const  context, const \fBMQ_BOL\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -436,7 +436,7 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendRETURN (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendRETURN (struct \fBMqS\fP *const  context)"
 .PP
 finish a service-handler and return the data if required. 
 .PP
@@ -459,7 +459,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendS (struct \fBMqS\fP *const  context, const \fBMQ_SRT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendS (struct \fBMqS\fP *const  context, const \fBMQ_SRT\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -481,7 +481,7 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendSTART (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendSTART (struct \fBMqS\fP *const  context)"
 .PP
 initialize the \fISend-Buffer\fP object and start to create a Msgque package 
 .PP
@@ -491,7 +491,7 @@ initialize the \fISend-Buffer\fP object and start to create a Msgque package
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendU (struct \fBMqS\fP *const  context, struct \fBMqBufferS\fP *const  in)"
+.SS "enum \fBMqErrorE\fP MqSendU (struct \fBMqS\fP *const  context, struct \fBMqBufferS\fP *const  in)"
 .PP
 append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object 
 .PP
@@ -508,7 +508,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendV (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  fmt,  ...)"
+.SS "enum \fBMqErrorE\fP MqSendV (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  fmt,  ...)"
 .PP
 append a vararg string to the \fISend-Buffer\fP object 
 .PP
@@ -520,7 +520,7 @@ append a vararg string to the \fISend-Buffer\fP object
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendVL (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  fmt, va_list var_list)"
+.SS "enum \fBMqErrorE\fP MqSendVL (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  fmt, va_list var_list)"
 .PP
 append a vararg string as va_list to the \fISend-Buffer\fP object 
 .PP
@@ -534,7 +534,7 @@ append a vararg string as va_list to the \fISend-Buffer\fP object
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendW (struct \fBMqS\fP *const  context, const \fBMQ_WID\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendW (struct \fBMqS\fP *const  context, const \fBMQ_WID\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP
@@ -556,7 +556,7 @@ In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as st
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqSendY (struct \fBMqS\fP *const  context, const \fBMQ_BYT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendY (struct \fBMqS\fP *const  context, const \fBMQ_BYT\fP val)"
 .PP
 append a native typed value to the \fISend-Buffer\fP object 
 .PP

@@ -20,7 +20,12 @@ FILE_PATTERNS       = msgque.h *.doc
 EXAMPLE_PATH	    = $(SRCDIR)/tests
 STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque
 STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
+SHOW_USED_FILES	    = NO
 SHOW_FILES	    = NO
+#REFERENCED_BY_RELATION = NO
+#REFERENCES_RELATION = NO
+
+PREDEFINED	    += MQ_EXTERN
 
 ALIASES		    += "tclmsgque=\e tclmsgque"
 ALIASES		    += "pymsgque=\e pymsgque"

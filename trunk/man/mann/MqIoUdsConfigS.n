@@ -21,12 +21,12 @@ MqIoUdsConfigS \- configuration data which belong to \fIMqIoS\fP uds setup
 .PP 
 configuration data which belong to \fIMqIoS\fP uds setup 
 .PP
-Definition at line 593 of file msgque.h.
+Definition at line 586 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS::file\fP"
 .PP
-Definition at line 594 of file msgque.h.
+Definition at line 587 of file msgque.h.
 
 .SH "Author"
 .PP 

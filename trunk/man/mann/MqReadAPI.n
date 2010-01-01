@@ -2,90 +2,90 @@
 .ad l
 .nh
 .SH NAME
-MqReadAPI \- Read and split a \fBlibmsgque\fP package into several items.  
+MqReadAPI \- extract items from a data package.  
 
 .PP
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP buf)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP buf)"
 .br
-.I "creating a \fILST\fP reference for reading the list items "
+.R "creating a \fILST\fP reference for reading the list items "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const context)"
 .br
-.I "deleting a \fILST\fP reference after reading the list items was finished "
+.R "deleting a \fILST\fP reference after reading the list items was finished "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP *const valP)"
 .br
-.I "read a native typed value from the \fIRead-Buffer\fP object "
+.R "read a native typed value from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP *const valP)"
-.br
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP *const out)"
-.br
-.I "generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadB\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
-.br
-.I "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
-.br
-.I "generic function to read a \fBnative\fP package object from the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
-.br
-.I "generic function to read the entire \fIbody\fP from the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP *const out)"
-.br
-.I "generic function to read a \fBMQ_BUF\fP object from the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
-.br
-.I "read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object "
-.ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const readctx, struct \fBMqS\fP *const sendctx)"
+.RI "enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP *const valP)"
 .br
 .ti -1c
-.RI "MQ_EXTERN enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP *const out)"
 .br
-.I "undo the \fBlast\fP MqReadX operation "
+.R "generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN \fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadB\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
 .br
-.I "get the number of items left in the \fIRead-Buffer\fP object "
+.R "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "MQ_EXTERN \fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
 .br
-.I "does an additional item exits in the \fIRead-Buffer\fP object "
+.R "generic function to read a \fBnative\fP package object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.br
+.R "generic function to read the entire \fIbody\fP from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP *const out)"
+.br
+.R "generic function to read a \fBMQ_BUF\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
+.br
+.R "read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const readctx, struct \fBMqS\fP *const sendctx)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const context)"
+.br
+.R "undo the \fBlast\fP MqReadX operation "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const context)"
+.br
+.R "get the number of items left in the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const context)"
+.br
+.R "does an additional item exits in the \fIRead-Buffer\fP object "
 .in -1c
 .SH "Detailed Description"
 .PP 
-Read and split a \fBlibmsgque\fP package into several items. 
+extract items from a data package. 
 
 The reading is done by an \fIRead-Buffer\fP object using an \fIMqIoS\fP object for doing the socket io. Every \fI\fBMqS\fP\fP object has only \fBone\fP \fIRead-Buffer\fP object and every \fIRead-Buffer\fP object has only \fBone\fP \fI\fBMqS\fP\fP object. The interface is used to extract the different \fBMqTypeE\fP data-types from the package doing the casting from one type to an other type if necessary. 
 .SH "Function Documentation"
 .PP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadB (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
+.SS "enum \fBMqErrorE\fP MqReadB (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
 .PP
 generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object 
 .PP
@@ -107,7 +107,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadBDY (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
+.SS "enum \fBMqErrorE\fP MqReadBDY (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
 .PP
 generic function to read the entire \fIbody\fP from the \fIRead-Buffer\fP object 
 .PP
@@ -131,7 +131,7 @@ the data retured belongs to \fBlibmsgque\fP.
 .RE
 .PP
 In opposit to \fBMqReadN\fP all package items are returned. The native package data can be saved and send later back with \fBMqSendBDY\fP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP *const  out)"
+.SS "enum \fBMqErrorE\fP MqReadC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP *const  out)"
 .PP
 generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object 
 .PP
@@ -156,7 +156,7 @@ the string returned has \fIstatic\fP allocation and have to be duplicated for lo
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadD (struct \fBMqS\fP *const  context, \fBMQ_DBL\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadD (struct \fBMqS\fP *const  context, \fBMQ_DBL\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -173,7 +173,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadF (struct \fBMqS\fP *const  context, \fBMQ_FLT\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadF (struct \fBMqS\fP *const  context, \fBMQ_FLT\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -190,7 +190,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN \fBMQ_SIZE\fP MqReadGetNumItems (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_SIZE\fP MqReadGetNumItems (struct \fBMqS\fP const *const  context)"
 .PP
 get the number of items left in the \fIRead-Buffer\fP object 
 .PP
@@ -205,7 +205,7 @@ the number of items
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadI (struct \fBMqS\fP *const  context, \fBMQ_INT\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadI (struct \fBMqS\fP *const  context, \fBMQ_INT\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -222,7 +222,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN \fBMQ_BOL\fP MqReadItemExists (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_BOL\fP MqReadItemExists (struct \fBMqS\fP const *const  context)"
 .PP
 does an additional item exits in the \fIRead-Buffer\fP object 
 .PP
@@ -237,7 +237,7 @@ the number of items
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadL (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP **const  out)"
+.SS "enum \fBMqErrorE\fP MqReadL (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP **const  out)"
 .PP
 read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object 
 .PP
@@ -254,7 +254,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadL_END (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqReadL_END (struct \fBMqS\fP *const  context)"
 .PP
 deleting a \fILST\fP reference after reading the list items was finished 
 .PP
@@ -269,7 +269,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadL_START (struct \fBMqS\fP *const  context, \fBMQ_BUF\fP buf)"
+.SS "enum \fBMqErrorE\fP MqReadL_START (struct \fBMqS\fP *const  context, \fBMQ_BUF\fP buf)"
 .PP
 creating a \fILST\fP reference for reading the list items 
 .PP
@@ -298,7 +298,7 @@ Example:
 .fi
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadN (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
+.SS "enum \fBMqErrorE\fP MqReadN (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
 .PP
 generic function to read a \fBnative\fP package object from the \fIRead-Buffer\fP object 
 .PP
@@ -325,7 +325,7 @@ the data retured belongs to \fBlibmsgque\fP.
 .RE
 .PP
 The native package data can be saved and send later back with \fBMqSendN\fP 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadO (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadO (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -342,9 +342,9 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadProxy (struct \fBMqS\fP *const  readctx, struct \fBMqS\fP *const  sendctx)"
+.SS "enum \fBMqErrorE\fP MqReadProxy (struct \fBMqS\fP *const  readctx, struct \fBMqS\fP *const  sendctx)"
 .PP
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadS (struct \fBMqS\fP *const  context, \fBMQ_SRT\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadS (struct \fBMqS\fP *const  context, \fBMQ_SRT\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -361,7 +361,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  context, \fBMQ_BUF\fP *const  out)"
+.SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  context, \fBMQ_BUF\fP *const  out)"
 .PP
 generic function to read a \fBMQ_BUF\fP object from the \fIRead-Buffer\fP object 
 .PP
@@ -393,7 +393,7 @@ the object returned \fIout\fP is owned by \fIRead-Buffer\fP object and is \fBonl
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadUndo (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqReadUndo (struct \fBMqS\fP *const  context)"
 .PP
 undo the \fBlast\fP MqReadX operation 
 .PP
@@ -413,7 +413,7 @@ Can \fBundo\fP only the \fBlast\fP MqReadX operation, multiple \fBundo\fP will \
 .RE
 .PP
 
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadW (struct \fBMqS\fP *const  context, \fBMQ_WID\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadW (struct \fBMqS\fP *const  context, \fBMQ_WID\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP
@@ -430,7 +430,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
  
-.SS "MQ_EXTERN enum \fBMqErrorE\fP MqReadY (struct \fBMqS\fP *const  context, \fBMQ_BYT\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqReadY (struct \fBMqS\fP *const  context, \fBMQ_BYT\fP *const  valP)"
 .PP
 read a native typed value from the \fIRead-Buffer\fP object 
 .PP

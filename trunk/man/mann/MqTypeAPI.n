@@ -2,7 +2,7 @@
 .ad l
 .nh
 .SH NAME
-MqTypeAPI \- a collection of common used definitions  
+MqTypeAPI \- a collection of common used data types and definitions  
 
 .PP
 .SS "Defines"
@@ -47,11 +47,11 @@ MqTypeAPI \- a collection of common used definitions
 .ti -1c
 .RI "#define \fBlikely\fP(x)   __builtin_expect((x),1)"
 .br
-.I "gcc jump optimization "
+.R "gcc jump optimization "
 .ti -1c
 .RI "#define \fBunlikely\fP(x)   __builtin_expect((x),0)"
 .br
-.I "gcc jump optimization "
+.R "gcc jump optimization "
 .ti -1c
 .RI "#define \fBmq_timeval\fP   timeval"
 .br
@@ -61,51 +61,59 @@ MqTypeAPI \- a collection of common used definitions
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT\fP   900"
 .br
-.I "maximum timeout in sec (900 sec) "
+.R "maximum timeout in sec (900 sec) "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT5\fP   (MQ_TIMEOUT/5)"
 .br
-.I "long timeout in sec (180 sec) "
+.R "long timeout in sec (180 sec) "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT10\fP   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
 .br
-.I "normal timeout in sec (90 sec) "
+.R "normal timeout in sec (90 sec) "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT45\fP   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
 .br
-.I "short timeout in sec (20 sec) "
+.R "short timeout in sec (20 sec) "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT90\fP   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
 .br
-.I "shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' "
+.R "shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT180\fP   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
 .br
-.I "very short timeout in sec (5 sec) "
+.R "very short timeout in sec (5 sec) "
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_USER\fP   -2"
 .br
-.I "request the user defined timeout value from the argument of the \fC--timeout\fP option "
+.R "request the user defined timeout value from the argument of the \fC--timeout\fP option "
 .ti -1c
 .RI "#define \fBMQ_EXTERN\fP"
 .br
-.I "define the external binding "
+.R "define the external binding "
 .ti -1c
 .RI "#define \fBMQ_CPPXSTR\fP(s)   MQ_CPPSTR(s)"
 .br
-.I "connecting of expressions, step 1 "
+.R "connecting of expressions, step 1 "
 .ti -1c
 .RI "#define \fBMQ_CPPSTR\fP(s)   #s"
 .br
-.I "connecting of expressions, step 2 "
+.R "connecting of expressions, step 2 "
 .ti -1c
 .RI "#define \fBMQ_ALFA\fP   '@'"
 .br
-.I "MQ_ALFA the command-line separator between server and client. "
+.R "MQ_ALFA the command-line separator between server and client. "
 .ti -1c
 .RI "#define \fBMQ_ALFA_STR\fP   '@'"
 .br
-.I "MQ_ALFA the command-line separator as string. "
+.R "MQ_ALFA the command-line separator as string. "
+.ti -1c
+.RI "#define \fBMQ_NO\fP   0"
+.br
+.R "boolean NO "
+.ti -1c
+.RI "#define \fBMQ_YES\fP   1"
+.br
+.R "boolean YES "
 .in -1c
 .SS "Typedefs"
 
@@ -113,103 +121,111 @@ MqTypeAPI \- a collection of common used definitions
 .ti -1c
 .RI "typedef signed char \fBMQ_BYT\fP"
 .br
-.I "1 byte \fBbyte\fP data-type "
+.R "1 byte \fBbyte\fP data-type "
 .ti -1c
 .RI "typedef signed char \fBMQ_BOL\fP"
 .br
-.I "1 byte \fBboolean\fP data-type "
+.R "1 byte \fBboolean\fP data-type "
 .ti -1c
 .RI "typedef short \fBMQ_SRT\fP"
 .br
-.I "2 byte \fBshort\fP data-type "
+.R "2 byte \fBshort\fP data-type "
 .ti -1c
 .RI "typedef int \fBMQ_INT\fP"
 .br
-.I "4 byte \fBinteger\fP data-type "
+.R "4 byte \fBinteger\fP data-type "
 .ti -1c
 .RI "typedef float \fBMQ_FLT\fP"
 .br
-.I "4 byte \fBfloat\fP data-type "
+.R "4 byte \fBfloat\fP data-type "
 .ti -1c
 .RI "typedef long long int \fBMQ_WID\fP"
 .br
-.I "8 byte \fBwide\fP integer data-type "
+.R "8 byte \fBwide\fP integer data-type "
 .ti -1c
 .RI "typedef double \fBMQ_DBL\fP"
 .br
-.I "8 byte \fBdouble\fP data-type "
+.R "8 byte \fBdouble\fP data-type "
 .ti -1c
 .RI "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
 .br
-.I "8 byte \fBatom\fP data-type "
+.R "8 byte \fBatom\fP data-type "
 .ti -1c
 .RI "typedef int \fBMQ_SIZE\fP"
 .br
-.I "array size data-type "
+.R "array size data-type "
 .ti -1c
 .RI "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
 .br
-.I "OS wide MQ_TIME_T. "
+.R "OS wide MQ_TIME_T. "
 .ti -1c
 .RI "typedef int \fBMQ_HDL\fP"
 .br
-.I "handle data-type "
+.R "handle data-type "
 .ti -1c
 .RI "typedef void \fBMQ_PTRB\fP"
 .br
-.I "pointer basic data-type "
+.R "pointer basic data-type "
 .ti -1c
 .RI "typedef char \fBMQ_STRB\fP"
 .br
-.I "string basic data-type "
+.R "string basic data-type "
 .ti -1c
 .RI "typedef unsigned char \fBMQ_BINB\fP"
 .br
-.I "binary basic data-type "
+.R "binary basic data-type "
 .ti -1c
 .RI "typedef unsigned char \fBMQ_LSTB\fP"
 .br
-.I "list basic data-type "
+.R "list basic data-type "
 .ti -1c
 .RI "typedef \fBMQ_PTRB\fP * \fBMQ_PTR\fP"
 .br
-.I "generic pointer data-type "
+.R "generic pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_STRB\fP * \fBMQ_STR\fP"
 .br
-.I "string pointer data-type "
+.R "string pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_STRB\fP const * \fBMQ_CST\fP"
 .br
-.I "const string pointer data-type "
+.R "const string pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
 .br
-.I "binary pointer data-type "
+.R "binary pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
 .br
-.I "list pointer data-type "
+.R "list pointer data-type "
 .ti -1c
 .RI "typedef struct \fBMqBufferS\fP * \fBMQ_BUF\fP"
 .br
-.I "Buffer pointer data-type. "
+.R "Buffer pointer data-type. "
 .ti -1c
 .RI "typedef struct \fBMqBufferLS\fP * \fBMQ_BFL\fP"
 .br
-.I "Buffer-List pointer data-type. "
+.R "Buffer-List pointer data-type. "
 .ti -1c
 .RI "typedef struct \fBMqS\fP * \fBMQ_CTX\fP"
 .br
-.I "Context pointer data-type. "
+.R "Context pointer data-type. "
 .ti -1c
 .RI "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
 .br
-.I "data type for a socket handle "
+.R "data type for a socket handle "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqWaitOnEventE\fP { \fBMQ_WAIT_NO\fP =  0, \fBMQ_WAIT_ONCE\fP =  1, \fBMQ_WAIT_FOREVER\fP =  2 }"
+.br
+.R "wait for an event? "
 .in -1c
 .SH "Detailed Description"
 .PP 
-a collection of common used definitions 
+a collection of common used data types and definitions 
 .SH "Define Documentation"
 .PP 
 .SS "#define BEGIN_C_DECLS"
@@ -263,6 +279,11 @@ Definition at line 66 of file msgque.h.
 .SS "#define mq_inline   inline"
 .PP
 Definition at line 72 of file msgque.h.
+.SS "#define MQ_NO   0"
+.PP
+boolean NO 
+.PP
+Definition at line 319 of file msgque.h.
 .SS "#define mq_snprintf   snprintf"
 .PP
 Definition at line 68 of file msgque.h.
@@ -321,6 +342,11 @@ Definition at line 138 of file msgque.h.
 .SS "#define mq_unlink   unlink"
 .PP
 Definition at line 67 of file msgque.h.
+.SS "#define MQ_YES   1"
+.PP
+boolean YES 
+.PP
+Definition at line 323 of file msgque.h.
 .SS "#define unlikely(x)   __builtin_expect((x),0)"
 .PP
 gcc jump optimization 
@@ -455,6 +481,25 @@ Definition at line 278 of file msgque.h.
 8 byte \fBwide\fP integer data-type 
 .PP
 Definition at line 265 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqWaitOnEventE\fP"
+.PP
+wait for an event? 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_WAIT_NO \fP\fP
+just do the check 
+.TP
+\fB\fIMQ_WAIT_ONCE \fP\fP
+wait for one new event 
+.TP
+\fB\fIMQ_WAIT_FOREVER \fP\fP
+wait forever 
+.PP
+Definition at line 327 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for tclmsgque from the source code.

@@ -16,119 +16,119 @@ MqBufferAtomU \- union used to set or modify native data from an \fBMqBufferS\fP
 .ti -1c
 .RI "\fBMQ_BYT\fP \fBY\fP"
 .br
-.I "1 byte byte data "
+.R "1 byte byte data "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBO\fP"
 .br
-.I "1 byte boolean data "
+.R "1 byte boolean data "
 .ti -1c
 .RI "\fBMQ_SRT\fP \fBS\fP"
 .br
-.I "2 byte short data "
+.R "2 byte short data "
 .ti -1c
 .RI "\fBMQ_INT\fP \fBI\fP"
 .br
-.I "4 byte integer data "
+.R "4 byte integer data "
 .ti -1c
 .RI "\fBMQ_FLT\fP \fBF\fP"
 .br
-.I "4 byte float data "
+.R "4 byte float data "
 .ti -1c
 .RI "\fBMQ_WID\fP \fBW\fP"
 .br
-.I "8 byte integer data "
+.R "8 byte integer data "
 .ti -1c
 .RI "\fBMQ_DBL\fP \fBD\fP"
 .br
-.I "8 byte double data "
+.R "8 byte double data "
 .ti -1c
 .RI "\fBMQ_BINB\fP \fBB\fP [8]"
 .br
-.I "8 byte ARRAY used for copy "
+.R "8 byte ARRAY used for copy "
 .ti -1c
 .RI "\fBMQ_BINB\fP \fBB8\fP [8]"
 .br
-.I "8 byte ARRAY used for copy "
+.R "8 byte ARRAY used for copy "
 .ti -1c
 .RI "\fBMQ_BINB\fP \fBB4\fP [4]"
 .br
-.I "4 byte ARRAY used for copy "
+.R "4 byte ARRAY used for copy "
 .ti -1c
 .RI "\fBMQ_BINB\fP \fBB2\fP [2]"
 .br
-.I "2 byte ARRAY used for copy "
+.R "2 byte ARRAY used for copy "
 .ti -1c
 .RI "\fBMQ_BINB\fP \fBB1\fP [1]"
 .br
-.I "1 byte ARRAY used for copy "
+.R "1 byte ARRAY used for copy "
 .in -1c
 .SH "Detailed Description"
 .PP 
 union used to set or modify native data from an \fBMqBufferS\fP object 
 .PP
-Definition at line 1800 of file msgque.h.
+Definition at line 1801 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 1808 of file msgque.h.
+Definition at line 1809 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B1\fP[1]"
 .PP
 1 byte ARRAY used for copy 
 .PP
-Definition at line 1812 of file msgque.h.
+Definition at line 1813 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B2\fP[2]"
 .PP
 2 byte ARRAY used for copy 
 .PP
-Definition at line 1811 of file msgque.h.
+Definition at line 1812 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B4\fP[4]"
 .PP
 4 byte ARRAY used for copy 
 .PP
-Definition at line 1810 of file msgque.h.
+Definition at line 1811 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B8\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 1809 of file msgque.h.
+Definition at line 1810 of file msgque.h.
 .SS "\fBMQ_DBL\fP \fBMqBufferAtomU::D\fP"
 .PP
 8 byte double data 
 .PP
-Definition at line 1807 of file msgque.h.
+Definition at line 1808 of file msgque.h.
 .SS "\fBMQ_FLT\fP \fBMqBufferAtomU::F\fP"
 .PP
 4 byte float data 
 .PP
-Definition at line 1805 of file msgque.h.
+Definition at line 1806 of file msgque.h.
 .SS "\fBMQ_INT\fP \fBMqBufferAtomU::I\fP"
 .PP
 4 byte integer data 
 .PP
-Definition at line 1804 of file msgque.h.
+Definition at line 1805 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqBufferAtomU::O\fP"
 .PP
 1 byte boolean data 
 .PP
-Definition at line 1802 of file msgque.h.
+Definition at line 1803 of file msgque.h.
 .SS "\fBMQ_SRT\fP \fBMqBufferAtomU::S\fP"
 .PP
 2 byte short data 
 .PP
-Definition at line 1803 of file msgque.h.
+Definition at line 1804 of file msgque.h.
 .SS "\fBMQ_WID\fP \fBMqBufferAtomU::W\fP"
 .PP
 8 byte integer data 
 .PP
-Definition at line 1806 of file msgque.h.
+Definition at line 1807 of file msgque.h.
 .SS "\fBMQ_BYT\fP \fBMqBufferAtomU::Y\fP"
 .PP
 1 byte byte data 
 .PP
-Definition at line 1801 of file msgque.h.
+Definition at line 1802 of file msgque.h.
 
 .SH "Author"
 .PP 

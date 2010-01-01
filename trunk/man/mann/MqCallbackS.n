@@ -16,47 +16,47 @@ MqCallbackS \- used for callback function pointer management
 .ti -1c
 .RI "\fBMqTokenF\fP \fBfFunc\fP"
 .br
-.I "callback method "
+.R "callback method "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBdata\fP"
 .br
-.I "additional data for the callback function "
+.R "additional data for the callback function "
 .ti -1c
 .RI "\fBMqTokenDataFreeF\fP \fBfFree\fP"
 .br
-.I "free additional data pointer "
+.R "free additional data pointer "
 .ti -1c
 .RI "\fBMqTokenDataCopyF\fP \fBfCopy\fP"
 .br
-.I "copy additional data pointer, used in a \fBMqSetupDup\fP "
+.R "copy additional data pointer, used in a \fBMqSetupDup\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
 used for callback function pointer management 
 .PP
-Definition at line 570 of file msgque.h.
+Definition at line 563 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_PTR\fP \fBMqCallbackS::data\fP"
 .PP
 additional data for the callback function 
 .PP
-Definition at line 572 of file msgque.h.
+Definition at line 565 of file msgque.h.
 .SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS::fCopy\fP"
 .PP
 copy additional data pointer, used in a \fBMqSetupDup\fP 
 .PP
-Definition at line 574 of file msgque.h.
+Definition at line 567 of file msgque.h.
 .SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS::fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 573 of file msgque.h.
+Definition at line 566 of file msgque.h.
 .SS "\fBMqTokenF\fP \fBMqCallbackS::fFunc\fP"
 .PP
 callback method 
 .PP
-Definition at line 571 of file msgque.h.
+Definition at line 564 of file msgque.h.
 
 .SH "Author"
 .PP 

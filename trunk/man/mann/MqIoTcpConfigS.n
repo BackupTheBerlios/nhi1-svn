@@ -16,47 +16,47 @@ MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBhost\fP"
 .br
-.I "host name "
+.R "host name "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBport\fP"
 .br
-.I "port name "
+.R "port name "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBmyhost\fP"
 .br
-.I "CLIENT: my host name. "
+.R "CLIENT: my host name. "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBmyport\fP"
 .br
-.I "CLIENT: my port name. "
+.R "CLIENT: my port name. "
 .in -1c
 .SH "Detailed Description"
 .PP 
 configuration data which belong to \fIMqIoS\fP tcp setup 
 .PP
-Definition at line 598 of file msgque.h.
+Definition at line 591 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::host\fP\fC [read]\fP"
 .PP
 host name 
 .PP
-Definition at line 599 of file msgque.h.
+Definition at line 592 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myhost\fP\fC [read]\fP"
 .PP
 CLIENT: my host name. 
 .PP
-Definition at line 601 of file msgque.h.
+Definition at line 594 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myport\fP\fC [read]\fP"
 .PP
 CLIENT: my port name. 
 .PP
-Definition at line 602 of file msgque.h.
+Definition at line 595 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::port\fP\fC [read]\fP"
 .PP
 port name 
 .PP
-Definition at line 600 of file msgque.h.
+Definition at line 593 of file msgque.h.
 
 .SH "Author"
 .PP 
