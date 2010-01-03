@@ -280,6 +280,7 @@ namespace ccmsgque {
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
       inline void ConfigSetIsServer   (MQ_BOL data)	    { MqConfigSetIsServer (&context, data); }
       inline void ConfigSetIsString   (MQ_BOL data)	    { MqConfigSetIsString (&context, data); }
+      inline void ConfigSetIgnoreExit (MQ_BOL data)	    { MqConfigSetIgnoreExit (&context, data); }
       inline void ConfigSetIoUds      (MQ_CST data)	    { 
         ErrorCheck(MqConfigSetIoUds (&context, data)); 
       }

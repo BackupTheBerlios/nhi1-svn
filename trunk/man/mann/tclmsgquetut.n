@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "3 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -35,6 +35,8 @@ interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server function
 interface: \fBIFactory\fP to create a new application instance
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
+.IP "\(bu" 2
+interface: \fBIEvent\fP to process background events
 .IP "\(bu" 2
 adding and removing \fBservices\fP
 .PP

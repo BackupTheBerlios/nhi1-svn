@@ -23,9 +23,10 @@ design rules:
 
 The \lang language binding provide the following basic components:
  - abstract class of the \rself object: \RNS{MqS}
- - interface: \RNS{config_IServerSetup} and or \RNS{config_IServerCleanup} to add server functionality
- - interface: \RNS{config_IFactory} to create a new application instance
- - interface: \RNS{config_IBgError} to act on asyncrone errors
+ - interface: \RNSC{IServerSetup} and or \RNSC{IServerCleanup} to add server functionality
+ - interface: \RNSC{IFactory} to create a new application instance
+ - interface: \RNSC{IBgError} to act on asyncrone errors
+ - interface: \RNSC{IEvent} to process background events
  - adding and removing \RNS{service} "services"
  .
 
@@ -92,8 +93,8 @@ The \b VisualExpress build environment is located in the directory \c win.
 A \rself server requires the following setup:
  -# file: \c example/\lang/MyServer.\fileextension
  -# an instance of the abstract class \RNS{MqS}
- -# the interface \RNS{config_IServerSetup} and or \RNS{config_IServerCleanup}
- -# the interface \RNS{config_IFactory} to create a new application instance
+ -# the interface \RNSC{IServerSetup} and or \RNSC{IServerCleanup}
+ -# the interface \RNSC{IFactory} to create a new application instance
  .
 The \e minimal server looks like:
 \if CSHARP

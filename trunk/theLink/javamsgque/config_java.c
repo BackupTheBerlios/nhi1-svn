@@ -95,6 +95,7 @@ SetW(ConfigSetTimeout)
 SetO(ConfigSetIsSilent)
 SetO(ConfigSetIsServer)
 SetO(ConfigSetIsString)
+SetO(ConfigSetIgnoreString)
 
 JNIEXPORT jboolean JNICALL NS(ConfigCheckIdent) (
   JNIEnv    *env,

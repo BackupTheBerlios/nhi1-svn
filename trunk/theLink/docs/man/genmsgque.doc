@@ -165,7 +165,7 @@ Use (\yes), as much as possible, strings in the data-package. Convert any native
 like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
 
 \configsection{ignoreExit}
-\copydoc MqSetupS::ignoreExit
+\copydetails MqSetupS::ignoreExit
 
 \configsection{startAs,--thread --spawn --fork}
 Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
@@ -252,18 +252,18 @@ True if object is a \e parent object (default: \yes, be a parent)
 \configsection{isSlave}
 True if object is a \e slave object (default: \no, not be a slave)
 
-\configsection{IServerSetup}
+\interface{IServerSetup}
 Interface to define a \e server \self object. This Interface define the
 ServerSetup callback called at \RNSA{LinkCreate} to define the services 
 or to initialize context specific variables.
 This interface set the \RNSC{isServer} configuration value to \yes.
 
-\configsection{IServerCleanup}
+\interface{IServerCleanup}
 Interface to define a \e server \self object. This Interface define the
 ServerCleanup callback called at \RNSA{LinkDelete} to free context specific variables.
 This interface set the \RNSC{isServer} configuration value to \yes.
 
-\configsection{IFactory}
+\interface{IFactory}
 The factory pattern is used to create a new application object (read more at: \ref #MqSetupS::Factory)
 Without the \e Factory pattern only the initial startup context is available to serve
 incoming requests. In general every server need to provide a \e Factory pattern.
@@ -314,9 +314,12 @@ final class Server extends MqS implements IFactory, ... {
 \endcode
 \endif
 
-\configsection{IBgError}
+\interface{IBgError}
 Define an asynchronous error handler. This handler is used for handle errors send with \RNSA{SendERROR}.
 Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
+
+\interface{IEvent}
+\copydetails #MqSetupS::Event
 
 \section	\NS{link}				LINK CREATION AND DELETION
 To create and to destroy a link is the main purpose of the \self library. A link is a 
@@ -639,119 +642,32 @@ Start to send an embedded list item.
 Finish to send an embedded list item.
 
 \section	\NS{read}				READ DATA
-Read data from an incoming \self read data package:
- -# on a server to serve an incoming service-call from the client
- -# on a client to process the return-data from a previous service-call
- .
-Reading data is a passive task in opposite to sending data which is an active task.
-Passive mean that the read is triggered by an incoming data-package and not by the
-software-workflow.
-\if CSHARP
-\code
-num = ctx.ReadI();
-ctx.ReadL_START();
- balance = ctx.ReadD();
- owner = ctx.ReadC();
- signature = ctx.ReadB();
-ctx.ReadL_END();
-\endcode
-\elseif VB
-\code
-num = ctx.ReadI()
-ctx.ReadL_START()
- balance = ctx.ReadD()
- owner = ctx.ReadC()
- signature = ctx.ReadB()
-ctx.ReadL_END()
-\endcode
-\elseif JAVA
-\code
-num = ctx.ReadI();
-ctx.ReadL_START();
- balance = ctx.ReadD();
- owner = ctx.ReadC();
- signature = ctx.ReadB();
-ctx.ReadL_END();
-\endcode
-\elseif PYTHON
-\code
-num = ctx.ReadI()
-ctx.ReadL_START()
- balance = ctx.ReadD()
- owner = ctx.ReadC()
- signature = ctx.ReadB()
-ctx.ReadL_END()
-\endcode
-\elseif TCL
-\code
-set num [$ctx ReadI]
-$ctx ReadL_START
- set balance [$ctx ReadD]
- set owner [$ctx ReadC]
- set signature [$ctx ReadB]
-$ctx ReadL_END
-\endcode
-\elseif PERL
-\code
-$num = $ctx->ReadI();
-$ctx->ReadL_START();
- $balance = $ctx->ReadD();
- $owner = $ctx->ReadC();
- $signature = $ctx->ReadB();
-$ctx->ReadL_END();
-\endcode
-\elseif CC
-\code
-num = ctx.ReadI();
-ctx.ReadL_START();
- balance = ctx.ReadD();
- owner = ctx.ReadC();
- signature = ctx.ReadB();
-ctx.ReadL_END();
-\endcode
-\elseif C
-\code
-MqErrorCheck(MqReadI(ctx, &i));
-MqErrorCheck(MqReadL_START(ctx, NULL));
- MqErrorCheck(MqReadD(ctx, &balance));
- MqErrorCheck(MqReadC(ctx, &owner));
- MqErrorCheck(MqReadB(ctx, &signature));
-MqReadL_END(ctx);
-\endcode
-\else
-UNKNOWN
-\endif
+\copydoc MqReadAPI
+\b Example: read an integer and a list of double, string and a binary array: \read_example
 
 \subsection	  \NS{Read_TYPE}			\Read_TYPE
-return an item using the \RNS{BufferIdentifer} from the \self read data package. \throw
+\copydoc MqReadY
 
 \subsection	  \NS{ReadN}				\ReadN
-Read a \self body \e item from the package. A \e item as is a binary array with a defined \e length
-and including the \e size, \e data-type and the \e native data object as information. The \e item
-is usually send with \RNSA{SendN} and can be used to save the item into an external storage.
+\copydoc MqReadN
 
 \subsection	  \NS{ReadBDY}				\ReadBDY
-Read the entire package \e body into a binary array. A package \e body include information about
-the number of items and the native data items. The \e body package is usually send with
-\RNSA{SendBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
+\copydoc MqReadBDY
 
 \subsection	  \NS{ReadU}				\ReadU
-return a temporary \RNS{buffer}. \throw
-\attention The object is \b only valid until a new \self read data package has arrived.
+\copydoc MqReadU
 
 \subsection	  \NS{ReadProxy}			\ReadProxy
-Link two \self objects to direct pass a data item from one object to the other. \throw
+\copydoc MqReadProxy
 
 \subsection	  \NS{ReadGetNumItems}			\ReadGetNumItems
-return the number of items left in the \self read data package.
+\copydoc MqReadGetNumItems
 
 \subsection	  \NS{ReadItemExists}			\ReadItemExists
-Check if are still items in the \self read data package.
+\copydoc MqReadItemExists
 
 \subsection	  \NS{ReadUndo}				\ReadUndo
-Undo the \b last read operation. This is useful if an error was raised or
-if a buffer object (returned from \RNSA{ReadU}) has not the expected
-type. \throw
+\copydoc MqReadUndo
 
 \subsection	  \NS{ReadL_START}			\ReadL_START
 \if ReadL_START2
@@ -760,22 +676,13 @@ type. \throw
 \if ReadL_START3
 \subsection	  \NS{ReadL_START3}			\ReadL_START3
 \endif
-Start to read an embedded list item. Use the current read package (\e buffer = NULL) or a \e buffer object. \throw
+\copydoc MqReadL_START
 
 \subsection	  \NS{ReadL_END}			\ReadL_END
-Finish to read an embedded list item.
+\copydoc MqReadL_END
 
 \section        \NS{slave}				SLAVE OBJECT
-The master/slave link is used to create a mesh of nodes by linking different PARENT context objects together. 
-<B>The master control the slave.</B>\n
-The link is used to perform the following tasks:
-- report error messages from the slave to the master
-- to create a slave-child-context if a master-child-context is created
-- to delete a slave-context if a master-context is deleted
-.
-In difference to the client/server link the master/slave link connect two independent msgque-context 
-in the same process or thread (e.g. node). This leads to the restriction that only the master-msgque-context 
-can be a server because only one server per node is possible.
+\copydetails MqSlaveAPI
 
 \subsection	  \NS{SlaveWorker}			\SlaveWorker
 \if LinkCreate2
@@ -793,67 +700,19 @@ can be a server because only one server per node is possible.
 \if LinkCreate6
 \subsection	  \NS{SlaveWorker6}			\SlaveWorker6
 \endif
-Create a worker as \e slave of the \e ctx object using the image of the \e ctx object self 
-and started as an independent process or thread based on the \RNSC{startAs} argument.
-\param[in] ctx the \e master \self object as SERVER-PARENT without a CHILD
-\id
-\param[in] args command-line arguments passed to the \e worker-client or the \e worker-server. all arguments prior the
-first \b @ token are added to the \e worker-client and the other arguments to the \e worker-server.
+\copydoc MqSlaveWorker
 
-\b example create a worker with id 7 as thread.
-\if CSHARP
-\code
-ctx.SlaveCreate (7, "--thread", "--silent", "@", "WORKER", "--name", "MyWorker");
-\endcode
-\elseif VB
-\code
-ctx.SlaveCreate (7, "--thread", "--silent", "@", "WORKER", "--name", "MyWorker");
-\endcode
-\elseif JAVA
-\code
-ctx.SlaveCreate (7, "--thread", "--silent", "@", "WORKER", "--name", "MyWorker");
-\endcode
-\elseif PYTHON
-\code
-ctx.SlaveCreate (7, ["--thread", "--silent", "@", "WORKER", "--name", "MyWorker"]);
-\endcode
-\elseif TCL
-\code
-$ctx SlaveWorker 7 "--thread" "--silent" "@" "WORKER" "--name" "MyWorker"
-\endcode
-\elseif PERL
-\code
-$ctx->SlaveWorker(7,"--thread","--silent","@","WORKER","--name","MyWorker");
-\endcode
-\elseif CC
-\code
-ctx.SlaveWorkerV (7, "--thread", "--silent", "@", "WORKER", "--name", "MyWorker", NULL);
-\endcode
-\elseif C
-\code
-MqErrorCheck(MqSlaveWorker (ctx, 7, 
-  MqBufferLCreateArgsV(ctx, "--thread", "--silent", "@", "--name", "MyWorker", NULL)
-);
-\endcode
-\else
-UNKNOWN
-\endif
+\b example create a worker with id 7 and name "MyWorker" as thread.
+\SlaveWorker_example
 
 \subsection	  \NS{SlaveCreate}			\SlaveCreate
-Create a master/slave link between the \e ctx object and the \e slave object.  \throw
-\param[in] ctx the \e master \self object as PARENT without a CHILD
-\id
-\param[in] slave the \e slave \self object as CLIENT-PARENT without a CHILD
+\copydoc MqSlaveCreate
 
 \subsection	  \NS{SlaveDelete}			\SlaveDelete
-Delete a \e slave-context from a former \RNSA{SlaveCreate} command using the same identifier \e id.
-By default the \e slave-context object will be deleted if the \e master-context is deleted.
-In addition \e only the \e parent-slave-context can be deleted explicit.
-If \e id is invalid nothing will happen. \throw
+\copydoc MqSlaveDelete
 
 \subsection	  \NS{SlaveGet}				\SlaveGet
-return the \e slave-context from the \RNSA{SlaveCreate} using the same identifier \e id or
-\e NULL if the \e id is not valid or if \e ctx is not a \e master.
+\copydoc MqSlaveGet
 
 \section        \NS{buffer}				BUFFER OBJECT
 The \BufferObject object is created by \RNSA{ReadU} and id used to save a <B>typeless temporary data item</B> 
@@ -1050,6 +909,9 @@ create a \self error object but do \b not raise the \RNS{error}
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
 additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the exception was
 caught and before the application exit or the object is deleted.
+
+\subsection	\NS{ErrorSetCONTINUE}			\ErrorSetCONTINUE
+\copybrief MqErrorSetCONTINUE
 
 \subsection	\NS{ErrorReset}				\ErrorReset
 clear the \self error object.

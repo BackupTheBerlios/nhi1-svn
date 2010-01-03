@@ -16,3 +16,17 @@
 
 FILE_PATTERNS       = msgque.h
 SHOW_FILES	    = YES
+
+ALIASES		    += "yes=\e MQ_YES"
+ALIASES		    += "no=\e MQ_NO"
+ALIASES		    += "lang=C"
+
+ALIASES             += "RNS{1}=\\1"
+ALIASES             += "RNSA{1}=\\1"
+ALIASES             += "RNSC{1}=\config_\1"
+
+ALIASES		    += "config_ignoreExit=#MqSetupS::ignoreExit"
+ALIASES		    += "config_startAs=#MqConfigS::startAs"
+ALIASES		    += "ErrorSetCONTINUE=#MqErrorSetCONTINUE"
+ALIASES		    += "config_IEvent=#MqConfigSetEvent"
+

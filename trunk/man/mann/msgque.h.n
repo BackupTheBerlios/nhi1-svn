@@ -1,8 +1,8 @@
-.TH "msgque.h" n "1 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "3 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -1170,13 +1170,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $
 .br
 .R "brint an error to stderr and clear the error after "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, int num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
 .br
 .R "set the value of the \fBMqErrorS\fP object "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSetCONTINUE\fP (struct \fBMqS\fP *const context)"
 .br
-.R "set the error-code of the \fBMqErrorS\fP object to \fBMQ_CONTINUE\fP "
+.R "set \fBMqErrorS::code\fP to \fBMQ_CONTINUE\fP and return the value "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -1186,34 +1186,34 @@ msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $
 .br
 .R "copy a \fBMqErrorS\fP from \fIin\fP to \fIout\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP buf)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
 .br
-.R "creating a \fILST\fP reference for reading the list items "
+.R "start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "deleting a \fILST\fP reference after reading the list items was finished "
+.R "finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BYT\fP *const val)"
 .br
-.R "read a native typed value from the \fIRead-Buffer\fP object "
+.R "read a \\11 from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP *const valP)"
-.br
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const ctx, \fBMQ_BOL\fP *const val)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const ctx, \fBMQ_SRT\fP *const val)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const ctx, \fBMQ_INT\fP *const val)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const ctx, \fBMQ_FLT\fP *const val)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP *const valP)"
+.RI "enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const ctx, \fBMQ_WID\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const ctx, \fBMQ_DBL\fP *const val)"
 .br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP *const out)"
@@ -1224,36 +1224,37 @@ msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $
 .br
 .R "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
-.R "generic function to read a \fBnative\fP package object from the \fIRead-Buffer\fP object "
+.R "extract a \fIbody-item\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
-.R "generic function to read the entire \fIbody\fP from the \fIRead-Buffer\fP object "
+.R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const context, \fBMQ_BUF\fP *const out)"
+.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
 .br
-.R "generic function to read a \fBMQ_BUF\fP object from the \fIRead-Buffer\fP object "
+.R "extract a \fBtemporary\fP \\11 from the \fIread-data-package\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
 .br
 .R "read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const readctx, struct \fBMqS\fP *const sendctx)"
+.RI "enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const otherCtx)"
 .br
+.R "link two \fIcontext-objects\fP to direct pass a data item from one object to the other. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "undo the \fBlast\fP MqReadX operation "
+.R "undo the last \\11 function call "
 .ti -1c
-.RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "get the number of items left in the \fIRead-Buffer\fP object "
+.R "get the number of items left in the \fIread-data-package\fP "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "does an additional item exits in the \fIRead-Buffer\fP object "
+.R "check if an item exists in the \fIread-data-package\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
 .br
@@ -1341,19 +1342,19 @@ msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $
 .br
 .R "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **args)"
 .br
-.R "create a \fImaster/slave\fP link using the same object as \fIcontext\fP "
+.R "create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
 .br
-.R "create a \fImaster/slave\fP link between the current context object and a slave context object "
+.R "create a \fImaster/slave\fP link between the master-context object and the slave-context object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "delete a \fImaster/slave\fP "
+.R "Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. "
 .ti -1c
-.RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const context, \fBMQ_SIZE\fP const id)"
+.RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const ctx, \fBMQ_SIZE\fP const id)"
 .br
 .R "get the slave context "
 .ti -1c
@@ -1467,13 +1468,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 118 2010-01-01 13:40:20Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 118 $ 
+$Rev: 119 $ 
 .RE
 .PP
 \fBAuthor:\fP

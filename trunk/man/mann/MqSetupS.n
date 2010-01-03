@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -72,7 +72,7 @@ MqSetupS \- application-programmer configuration data
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBignoreExit\fP"
 .br
-.R "ignore the server EXIT "
+.R "ignore the server EXIT, set with \fBMqConfigSetIgnoreExit\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -104,23 +104,16 @@ Definition at line 789 of file msgque.h.
 .PP
 Create a link to the calling tool event-handling queue. 
 .PP
-type default option application context  POINTER NULL NO server/client parent  
-.PP
-Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For Example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event-handling is usually a loop to check event-sources from time-to-time and act on incoming events. The interface is designed for a very \fBshort\fP function timeslide. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec intervall to garantee a parallel like execution. 
-.PP
-\fBReturns:\fP
-.RS 4
-do return \fBMQ_OK\fP if everything is OK. 
-.RE
+Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec intervall to garantee a parallel like execution. 
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBMqSetupS::ignoreExit\fP this function is used to implement a persistent transaction handler. Use \fCreturn \fBMqErrorSetCONTINUE\fP\fP if the background task has nothing to do. If \fBall\fP \fIchild\fP context return with \fBMqErrorSetCONTINUE\fP too and the context itself is on shutdown (\fBMqLinkS::onShutdown\fP == MQ_YES) the process will \fBexit\fP. example: \fCtheLink/example/c/Filter4.c\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background prcessing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/VB.NET/Filter4\fP.VB.NET 
 .RE
 .PP
 
 .PP
-Definition at line 848 of file msgque.h.
+Definition at line 844 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP \fBMqSetupS::Factory\fP\fC [read]\fP"
 .PP
 function pointers used to create and delete an object or a class instance 
@@ -143,12 +136,12 @@ create a \fIfilter-parent\fP object using the \fI--fork\fP or \fI--thread\fP sta
 .PP
 
 .PP
-Definition at line 864 of file msgque.h.
+Definition at line 860 of file msgque.h.
 .SS "\fBMqSetupF\fP \fBMqSetupS::fForkInit\fP"
 .PP
 setup and initialize a fork-process befor a new fork-process is created by \fBlibmsgque\fP 
 .PP
-Definition at line 870 of file msgque.h.
+Definition at line 866 of file msgque.h.
 .SS "\fBMqHelpF\fP \fBMqSetupS::fHelp\fP"
 .PP
 Create a link to the calling tool \fIhelp\fP function. 
@@ -157,22 +150,22 @@ type default option application context  POINTER NULL NO server/client parent
 .PP
 As a service to the programmer the \fBlibmsgque\fP startup code in \fBMqLinkCreate\fP checks for the both options \fC-h\fP and \fC--help\fP to provide a tool-specific help-page and exit. 
 .PP
-Definition at line 886 of file msgque.h.
+Definition at line 882 of file msgque.h.
 .SS "\fBMqExitF\fP \fBMqSetupS::fProcessExit\fP"
 .PP
 exit/cleanup a process 
 .PP
-Definition at line 873 of file msgque.h.
+Definition at line 869 of file msgque.h.
 .SS "\fBMqExitF\fP \fBMqSetupS::fThreadExit\fP"
 .PP
 exit/cleanup a thread 
 .PP
-Definition at line 876 of file msgque.h.
+Definition at line 872 of file msgque.h.
 .SS "\fBMqSetupF\fP \fBMqSetupS::fThreadInit\fP"
 .PP
 setup and initialize a thread befor a new thread is created by \fBlibmsgque\fP 
 .PP
-Definition at line 867 of file msgque.h.
+Definition at line 863 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqSetupS::ident\fP"
 .PP
 application identifer 
@@ -182,11 +175,11 @@ The application \fIidentifer\fP is used to modify the client or filter behaviour
 Definition at line 785 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS::ignoreExit\fP"
 .PP
-ignore the server EXIT 
+ignore the server EXIT, set with \fBMqConfigSetIgnoreExit\fP 
 .PP
-By default the \fIserver\fP exit if the \fIclient\fP close the connection. If \fCignoreExit = \fBMQ_YES\fP\fP is set the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (\fBMqSetupS::Event\fP, set with \fBMqConfigSetEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event function return with \fBMqErrorSetCONTINUE\fP (nothing to do) the last task-worker is gone and the process exit. 
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .PP
-Definition at line 895 of file msgque.h.
+Definition at line 891 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS::isServer\fP"
 .PP
 Create a \fIserver\fP context. 
@@ -225,4 +218,4 @@ Definition at line 819 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

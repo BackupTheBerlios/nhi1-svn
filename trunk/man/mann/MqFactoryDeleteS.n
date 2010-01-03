@@ -1,4 +1,4 @@
-.TH "MqFactoryDeleteS" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqFactoryDeleteS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -60,4 +60,4 @@ Definition at line 521 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

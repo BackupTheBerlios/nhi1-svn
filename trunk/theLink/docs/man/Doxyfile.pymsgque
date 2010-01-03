@@ -15,13 +15,8 @@
 #---------------------------------------------------------------------------
 
 
-FILE_PATTERNS	    = *.doc
-
 ENABLED_SECTIONS    += PYTHON
-
 EXAMPLE_PATH	    += $(SRCDIR)/example/python
-
-TAGFILES            += $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
 
 ALIASES		    += "self=pymsgque"
 ALIASES		    += "selftut=pymsgquetut"
@@ -72,6 +67,14 @@ ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
 ALIASES		    += "config_type_isString=PyBool"
 ALIASES		    += "config_set_isString=ConfigSetIsString"
 ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=PyBool"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_ignoreExit=PyBool"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_daemon=PyUnicode"
 ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
@@ -169,17 +172,16 @@ ALIASES		    += "SendN=ctx.SendN(value)"
 ALIASES		    += "SendBDY=ctx.SendBDY(value)"
 
 # READ DATE
-ALIASES		    += "Read_TYPE=ctx.Read[TYPE]()"
-ALIASES		    += "ReadU=ctx.ReadU()"
-ALIASES		    += "ReadN=ctx.ReadN()"
-ALIASES		    += "ReadBDY=ctx.ReadBDY()"
+ALIASES		    += "read_example=\code num = ctx.ReadI()\nctx.ReadL_START()\nbalance = ctx.ReadD()\nowner = ctx.ReadC()\nsignature = ctx.ReadB()\nctx.ReadL_END()\endcode"
+ALIASES		    += "Read_TYPE=val = ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=val = ctx.ReadU()"
+ALIASES		    += "ReadN=val = ctx.ReadN()"
+ALIASES		    += "ReadBDY=val = ctx.ReadBDY()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=int: ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=bool: ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=val = ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=val = ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
-ALIASES		    += "ReadL_START=ctx.ReadL_START()"
-ALIASES		    += "ReadL_START2=ctx.ReadL_START(buffer)"
-ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
@@ -192,7 +194,7 @@ ALIASES		    += "ProcessEventFlag=MqC.WAIT"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
-
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
 ALIASES		    += "SlaveGet=ctx.SlaveGet(id)"

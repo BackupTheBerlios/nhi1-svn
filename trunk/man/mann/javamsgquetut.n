@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "23 Dec 2009" "Version 0.3" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "3 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -35,6 +35,8 @@ interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server function
 interface: \fBIFactory\fP to create a new application instance
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
+.IP "\(bu" 2
+interface: \fBIEvent\fP to process background events
 .IP "\(bu" 2
 adding and removing \fBservices\fP
 .PP

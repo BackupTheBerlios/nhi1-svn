@@ -1,11 +1,11 @@
-.TH "csmsgque" n "23 Dec 2009" "Version 0.3" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "3 Jan 2010" "Version 4.1" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 csmsgque \- The \fBC#\fP Application-Server Project
 .SH "SYNOPSIS"
 .PP
-\fBusing csmsgque;\fP
+\fBusing \fBcsmsgque\fP;\fP
 .SH "INDEX"
 .PP
 \fBOBJECT CREATION AND DELETION\fP
@@ -45,7 +45,7 @@ propagate the error messages from the server to the client
 .SH "OBJECT CREATION AND DELETION"
 .PP
 .SS "MqS ctx"
-The \fIobject\fP is the user visible part of a csmsgque application link.
+The \fIobject\fP is the user visible part of a \fBcsmsgque\fP application link.
 .SS "ctx = new MqS()"
 Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
 .PP
@@ -70,7 +70,7 @@ To start a new entity using the \fBstartAs\fP '--spawn' command-line option
 To replace the \fBLinkCreate\fP 'SELF' argument after the \fI'@'\fP command-line argument
 .PP
 .PP
-The startup-prefix is initially set by csmsgque during package loading.
+The startup-prefix is initially set by \fBcsmsgque\fP during package loading.
 .SS "command-line:  --buffersize"
 \fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetBuffersize\fP , \fBset:\fP \fCConfigSetBuffersize\fP
 .PP
@@ -103,6 +103,10 @@ Write (\fIfalse\fP) or don't write (\fItrue\fP) any output to stdout or stderr. 
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fItrue\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
+.SS "ignoreExit"
+\fBtype:\fP \fCbool\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
+.PP
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
 .PP
@@ -190,7 +194,7 @@ return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callba
 .SS "isConnected"
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsConnected\fP , \fBset:\fP \fCNO\fP
 .PP
-Is the csmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
+Is the \fBcsmsgque\fP context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
 .SS "isTransaction"
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsTransaction\fP , \fBset:\fP \fCNO\fP
 .PP
@@ -207,17 +211,11 @@ True if object is a \fIparent\fP object (default: \fItrue\fP, be a parent)
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIfalse\fP, not be a slave)
-.SS "IServerSetup"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCcsmsgque.IServerSetup.Call\fP
-.PP
-Interface to define a \fIserver\fP csmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
-.SS "IServerCleanup"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCcsmsgque.IServerCleanup.Call\fP
-.PP
-Interface to define a \fIserver\fP csmsgque object. This Interface define the ServerCleanup callback called at \fBLinkDelete\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
-.SS "IFactory"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCcsmsgque.IFactory.Call\fP
-.PP
+.SS "interface: \\config_IServerSetup"
+Interface to define a \fIserver\fP \fBcsmsgque\fP object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
+.SS "interface: \\config_IServerCleanup"
+Interface to define a \fIserver\fP \fBcsmsgque\fP object. This Interface define the ServerCleanup callback called at \fBLinkDelete\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
+.SS "interface: \\config_IFactory"
 The factory pattern is used to create a new application object (read more at: \fBMqSetupS::Factory\fP) Without the \fIFactory\fP pattern only the initial startup context is available to serve incoming requests. In general every server need to provide a \fIFactory\fP pattern.
 .PP
 .PP
@@ -230,13 +228,19 @@ sealed class Server : MqS, IFactory ... {
 }
 .fi
 .PP
-.SS "IBgError"
-\fBtype:\fP \fCInterface\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCcsmsgque.IBgError.Call\fP
-.PP
+.SS "interface: \\config_IBgError"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
+.SS "interface: \\config_IEvent"
+Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec intervall to garantee a parallel like execution. 
+.PP
+\fBAttention:\fP
+.RS 4
+Together with \fBignoreExit\fP the Event-Handler is used to start background prcessing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C#/Filter4\fP.C# 
+.RE
+.PP
 .SH "LINK CREATION AND DELETION"
 .PP
-To create and to destroy a link is the main purpose of the csmsgque library. A link is a client/server connection used to perform various tasks.
+To create and to destroy a link is the main purpose of the \fBcsmsgque\fP library. A link is a client/server connection used to perform various tasks.
 .SS "ctx.LinkCreate(params string[] argv)"
 Create a \fIparent-context\fP using the \fBOBJECT CONFIGURATION\fP. A parent-context is responsible to setup the client/server link:
 .IP "\(bu" 2
@@ -257,7 +261,7 @@ if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an ind
 .RE
 .PP
 .SS "ctx.LinkCreateChild(MqS parent, params string[] argv)"
-Create a \fIchild-context\fP from a csmsgque \fIparent-context\fP and command-line arguments. A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
+Create a \fIchild-context\fP from a \fBcsmsgque\fP \fIparent-context\fP and command-line arguments. A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -284,13 +288,13 @@ public void IServerSetup.ServerSetup() {
 .fi
 .PP
 .SS "TOKEN IDENTIFIER"
-The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. csmsgque is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
+The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. \fBcsmsgque\fP is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
 .IP "\(bu" 2
 \fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
-\fB+ALL\fP - used to listen on \fBall\fP services not handled by other \fItoken\fP more precise
+\fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
-\fB_ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
+\fB-ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
 .IP "\(bu" 2
 \fB+FTR\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .IP "\(bu" 2
@@ -325,7 +329,7 @@ Start the Event-Loop and check for the next event. In \fIclient\fP mode this com
 .PP
 .SH "SEND DATA"
 .PP
-The \fISend\fP style methods are used to build and send data using the csmsgque send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other csmsgque client/server links.
+The \fISend\fP style methods are used to build and send data using the \fBcsmsgque\fP send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other \fBcsmsgque\fP client/server links.
 .PP
 .PP
 .nf
@@ -340,7 +344,7 @@ ctx.SendEND_AND_WAIT('SRV1');
 .fi
 .PP
 .SS "ctx.SendSTART()"
-Initialize a csmsgque send data package. This method is required.
+Initialize a \fBcsmsgque\fP send data package. This method is required.
 .SS "ctx.SendEND(string token)"
 Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireAndForget). (on error return an \fBEXCEPTION OBJECT\fP) 
 .PP
@@ -366,9 +370,9 @@ if no transaction is ongoing this function does just return the error code.
 .SS "ctx.SendERROR()"
 Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "ctx.Send[TYPE](TYPE value)"
-Add an item using \fBTYPE IDENTIFIER\fP to the csmsgque send data package. (example: \fISendY\fP)
+Add an item using \fBTYPE IDENTIFIER\fP to the \fBcsmsgque\fP send data package. (example: \fISendY\fP)
 .SS "ctx.SendN(byte[] value)"
-Add a csmsgque body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
+Add a \fBcsmsgque\fP body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
 .SS "ctx.SendBDY(byte[] value)"
 Create the entire package \fIbody\fP from a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually read with \fBReadBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
 .SS "ctx.SendL_START()"
@@ -377,101 +381,307 @@ Start to send an embedded list item.
 Finish to send an embedded list item.
 .SH "READ DATA"
 .PP
-Read data from an incoming csmsgque read data package:
-.IP "1." 4
-on a server to serve an incoming service-call from the client
-.IP "2." 4
-on a client to process the return-data from a previous service-call
+read data from an incoming \fIread-data-package\fP. 
 .PP
-Reading data is a passive task in opposite to sending data which is an active task. Passive mean that the read is triggered by an incoming data-package and not by the software-workflow.
-.PP
-.PP
-.nf
-num = ctx.ReadI();
-ctx.ReadL_START();
- balance = ctx.ReadD();
- owner = ctx.ReadC();
- signature = ctx.ReadB();
-ctx.ReadL_END();
-.fi
-.PP
-.SS "TYPE ctx.Read[TYPE]()"
-return an item using the \fBTYPE IDENTIFIER\fP from the csmsgque read data package. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "byte[] ctx.ReadN()"
-Read a csmsgque body \fIitem\fP from the package. A \fIitem\fP as is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually send with \fBSendN\fP and can be used to save the item into an external storage.
-.SS "byte[] ctx.ReadBDY()"
-Read the entire package \fIbody\fP into a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually send with \fBSendBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
-.SS "MqBufferS ctx.ReadU()"
-return a temporary \fBBUFFER OBJECT\fP. (on error return an \fBEXCEPTION OBJECT\fP) 
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-The object is \fBonly\fP valid until a new csmsgque read data package has arrived.
+Reading data is an atomic task and should not be split. Only one read-package is always in duty. As basic rule read first all data and start the processing afterwards. 
+.RE
+.PP
+ \fBExample:\fP read an integer and a list of double, string and a binary array: 
+.PP
+.nf
+ num = ctx.ReadI();
+ ctx.ReadL_START();
+   balance = ctx.ReadD();
+   owner = ctx.ReadC();
+   signature = ctx.ReadB();
+ ctx.ReadL_END();
+
+.fi
+.PP
+.SS "TYPE val = ctx.Read[TYPE]()"
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "byte[] val = ctx.ReadN()"
+extract a \fIbody-item\fP from the \fIread-data-package\fP 
+.PP
+A \fIbody-item\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.br
+\fIval\fP the \fIbody-item\fP as binary-array 
+.br
+\fIlen\fP the binary-array-length of the \fIval\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "byte[] val = ctx.ReadBDY()"
+extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
+.PP
+A \fIbody\fP is a binary array with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.br
+\fIval\fP the \fIbody\fP as binary-array 
+.br
+\fIlen\fP the binary-array-length of the \fIval\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "MqBufferS val = ctx.ReadU()"
+extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP 
+.PP
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD DATA\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.br
+\fIval\fP the buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadProxy(MqS otherCtx)"
-Link two csmsgque objects to direct pass a data item from one object to the other. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "int ctx.ReadGetNumItems()"
-return the number of items left in the csmsgque read data package.
-.SS "bool ctx.ReadItemExists()"
-Check if are still items in the csmsgque read data package.
-.SS "ctx.ReadUndo()"
-Undo the \fBlast\fP read operation. This is useful if an error was raised or if a buffer object (returned from \fBReadU\fP) has not the expected type. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.ReadL_START()"
-Start to read an embedded list item. Use the current read package (\fIbuffer\fP = NULL) or a \fIbuffer\fP object. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.ReadL_END()"
-Finish to read an embedded list item.
-.SH "SLAVE OBJECT"
-.PP
-The master/slave link is used to create a mesh of nodes by linking different PARENT context objects together. \fBThe master control the slave.\fP
-.br
- The link is used to perform the following tasks:
-.IP "\(bu" 2
-report error messages from the slave to the master
-.IP "\(bu" 2
-to create a slave-child-context if a master-child-context is created
-.IP "\(bu" 2
-to delete a slave-context if a master-context is deleted
-.PP
-In difference to the client/server link the master/slave link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the master-msgque-context can be a server because only one server per node is possible.
-.SS "ctx.SlaveWorker(int id, params string[] argv)"
-Create a worker as \fIslave\fP of the \fIctx\fP object using the image of the \fIctx\fP object self and started as an independent process or thread based on the \fBstartAs\fP argument. 
+link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the \fImaster\fP csmsgque object as SERVER-PARENT without a CHILD 
+\fIctx\fP the context returned by \fBctx = new MqS()\fP and the source of the copy 
 .br
-\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
-.br
-\fIargs\fP command-line arguments passed to the \fIworker-client\fP or the \fIworker-server\fP. all arguments prior the first \fB@\fP token are added to the \fIworker-client\fP and the other arguments to the \fIworker-server\fP.
+\fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
 .RE
 .PP
-\fBexample\fP create a worker with id 7 as thread.
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "int val = ctx.ReadGetNumItems()"
+get the number of items left in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of items as integer 
+.RE
+.PP
+.SS "bool val = ctx.ReadItemExists()"
+check if an item exists in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+boolean, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+.SS "ctx.ReadUndo()"
+undo the last \fBREAD DATA\fP function call 
+.PP
+Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ReadL_START()"
+.SS "ctx.ReadL_START(MqBufferS buffer)"
+start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+Itialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.br
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS val = ctx.ReadU()\fP call or  to use the next item from the \fIread-data-package\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ReadL_END()"
+finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SH "SLAVE OBJECT"
+.PP
+The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
+.PP
+The \fIlink\fP is used to perform the following tasks:
+.IP "\(bu" 2
+report error messages from the \fIslave\fP to the \fImaster\fP 
+.IP "\(bu" 2
+to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
+.IP "\(bu" 2
+to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
+.PP
+In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-msgque-context\fP can be a \fIserver\fP because only \fIon\fP server per node is possible.
 .PP
 .PP
 .nf
-ctx.SlaveCreate (7, '--thread', '--silent', '@', 'WORKER', '--name', 'MyWorker');
+
+    node-0   |           node-1          |   node-2
+===================================================================
+
+| <- client/server link -> | <- client/server link -> |
+
+             | <-- master/slave link --> |
+
+                           |- client1-0 -|- server2-0 ...
+                           |
+             |- server1-0 -|             |- server2-1 ...
+             |             |- client1-1 -|- server2-2 ...
+  client0-0 -|                           |- server2-3
+             |
+             |- server1-1 -|- client1-2 -|- server2-4 ...
 .fi
 .PP
-.SS "ctx.SlaveCreate(int id, MqS slave)"
-Create a master/slave link between the \fIctx\fP object and the \fIslave\fP object. (on error return an \fBEXCEPTION OBJECT\fP) 
+ 
+.SS "ctx.SlaveWorker(int id, params string[] argv)"
+create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
+.PP
+The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the \fImaster\fP csmsgque object as PARENT without a CHILD 
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIslave\fP the \fIslave\fP csmsgque object as CLIENT-PARENT without a CHILD
+\fIargs\fP command-line arguments passed to the \fIworker-client\fP or the \fIworker-server\fP. all arguments prior the first \fB@\fP token are added to the \fIworker-client\fP and the other arguments to the \fIworker-server\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.PP
+\fBexample\fP create a worker with id 7 and name 'MyWorker' as thread. 
+.PP
+.nf
+ ctx.SlaveCreate (7, '--thread', '--silent', '@', 'WORKER', '--name', 'MyWorker'); 
+
+.fi
+.PP
+.SS "ctx.SlaveCreate(int id, MqS slave)"
+create a \fImaster/slave\fP link between the master-context object and the slave-context object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIslave\fP the \fIslave\fP context object as CLIENT-PARENT without a CHILD 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no other external references should be used and the \fIslave-context\fP will be deleted if the \fImaster-context\fP is be deleted. 
 .RE
 .PP
 .SS "ctx.SlaveDelete(int id)"
-Delete a \fIslave-context\fP from a former \fBSlaveCreate\fP command using the same identifier \fIid\fP. By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. In addition \fIonly\fP the \fIparent-slave-context\fP can be deleted explicit. If \fIid\fP is invalid nothing will happen. (on error return an \fBEXCEPTION OBJECT\fP)
+Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
+.PP
+By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this functionto delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
+.RE
+.PP
 .SS "MqS ctx.SlaveGet(int id)"
-return the \fIslave-context\fP from the \fBSlaveCreate\fP using the same identifier \fIid\fP or \fINULL\fP if the \fIid\fP is not valid or if \fIctx\fP is not a \fImaster\fP.
+get the slave context 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
+.RE
+.PP
 .SH "BUFFER OBJECT"
 .PP
-The \fIclass \fBMqBufferS\fP\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the csmsgque data package. The lifetime of the \fIclass \fBMqBufferS\fP\fP is only the current callback up to the next read operation of the same context.
+The \fIclass \fBMqBufferS\fP\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the \fBcsmsgque\fP data package. The lifetime of the \fIclass \fBMqBufferS\fP\fP is only the current callback up to the next read operation of the same context.
 .PP
 .PP
 .nf
@@ -481,7 +691,7 @@ if (buf.Type == 'C')
 .fi
 .PP
 .SS "TYPE IDENTIFIER"
-A csmsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBTYPE ctx.Read[TYPE]()\fP or \fBTYPE val=buffer.[TYPE]\fP have to match the previous \fBctx.Send[TYPE](TYPE value)\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+A \fBcsmsgque\fP buffer data package is type safe, this mean that every item has a type prefix and every \fBTYPE val = ctx.Read[TYPE]()\fP or \fBTYPE val=buffer.[TYPE]\fP have to match the previous \fBctx.Send[TYPE](TYPE value)\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character
 .IP "\(bu" 2
@@ -511,7 +721,7 @@ return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error retur
 return the type as single character of the item stored in the buffer object.
 .SH "EXCEPTION OBJECT"
 .PP
-The exception object is used to transport a csmsgque error using the \fIclass MqSException\fP.
+The exception object is used to transport a \fBcsmsgque\fP error using the \fIclass MqSException\fP.
 .PP
 .PP
 .nf
@@ -529,18 +739,20 @@ return the error message from the error object.
 .SS "int ex.num or ctx.ErrorGetNum()"
 return the error number from the error object. The number can be used as exit-code.
 .SS "ctx.ErrorC(string prefix, int errnum, string message)"
-create a csmsgque error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP
+create a \fBcsmsgque\fP error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP
 .SS "ctx.ErrorSet(Exception ex)"
-convert a \fIclass MqSException\fP into a csmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
+convert a \fIclass MqSException\fP into a \fBcsmsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
+.SS "\\ErrorSetCONTINUE"
+set \fBMqErrorS::code\fP to \fBMQ_CONTINUE\fP and return the value 
 .SS "ctx.ErrorReset()"
-clear the csmsgque error object.
+clear the \fBcsmsgque\fP error object.
 .SS "ctx.ErrorRaise()"
-convert and raise an csmsgque error object into a C# \fBEXCEPTION OBJECT\fP.
+convert and raise an \fBcsmsgque\fP error object into a C# \fBEXCEPTION OBJECT\fP.
 .SS "ctx.ErrorPrint()"
-print an csmsgque error object to stderr and \fIclear\fP the csmsgque error
+print an \fBcsmsgque\fP error object to stderr and \fIclear\fP the \fBcsmsgque\fP error
 .SH "FILTER MODE"
 .PP
-The filter mode is related to a special usage of the csmsgque software called a command pipeline. To define a filter create a \fIserver\fP with \fBisServer\fP or use \fBIServerSetup\fP and add the required services.
+The filter mode is related to a special usage of the \fBcsmsgque\fP software called a command pipeline. To define a filter create a \fIserver\fP with \fBisServer\fP or use \fBIServerSetup\fP and add the required services.
 .SS "ONE-DIRECTIONAL FILTER"
 A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIright\fP and is well known from the \fBunix\fP shell to link different commands together: 
 .PP
@@ -550,7 +762,7 @@ A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIrig
 
 .fi
 .PP
- A csmsgque command pipeline is created with the special character \fB@\fP instead of \fB\fP| : 
+ A \fBcsmsgque\fP command pipeline is created with the special character \fB@\fP instead of \fB\fP| : 
 .PP
 .nf
 
@@ -558,7 +770,7 @@ A one-directional filter has a \fIdata-flow\fP from the \fIleft\fP to the \fIrig
 
 .fi
 .PP
- with every command have to use \fBlibmsgque\fP. To define a csmsgque filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
+ with every command have to use \fBlibmsgque\fP. To define a \fBcsmsgque\fP filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
 .IP "\(bu" 2
 \fB+FTR\fP : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \fB+FTR\fP service request.
 .IP "\(bu" 2

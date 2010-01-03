@@ -22,6 +22,7 @@ ALIASES		    += "selftut=tclmsgquetut"
 ALIASES		    += "NS{1}=tcl_\1"
 ALIASES		    += "lang=TCL"
 ALIASES		    += "fileextension=tcl"
+ALIASES		    += "null=\e empty"
 ALIASES		    += "yes=\e yes"
 ALIASES		    += "no=\e no"
 ALIASES		    += "package=package require TclMsgque"
@@ -127,21 +128,11 @@ ALIASES		    += "config_type_pipe=integer"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipe socket"
 ALIASES		    += "config_get_pipe=ConfigGetIoPipe"
 
-ALIASES		    += "config_type_IServerSetup=Interface"
-ALIASES             += "config_set_IServerSetup=$ctx ConfigSetServerSetup callback"
-ALIASES		    += "config_get_IServerSetup=NO"
-
-ALIASES		    += "config_type_IServerCleanup=Interface"
-ALIASES		    += "config_set_IServerCleanup=$ctx ConfigSetServerCleanup callback"
-ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFactory=Interface"
-ALIASES		    += "config_set_IFactory=$ctx ConfigSetFactory"
-ALIASES		    += "config_get_IFactory=NO"
-
-ALIASES             += "config_type_IBgError=Interface"
-ALIASES             += "config_set_IBgError=$ctx ConfigSetBgError callback"
-ALIASES             += "config_get_IBgError=NO"
+ALIASES             += "config_IServerSetup=$ctx ConfigSetServerSetup callback"
+ALIASES		    += "config_IServerCleanup=$ctx ConfigSetServerCleanup callback"
+ALIASES		    += "config_IFactory=$ctx ConfigSetFactory"
+ALIASES             += "config_IBgError=$ctx ConfigSetBgError callback"
+ALIASES		    += "config_IEvent=$ctx ConfigSetEvent fFunc Data fFree fCopy"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=$ctx LinkCreate ..."
@@ -163,17 +154,16 @@ ALIASES		    += "SendN=$ctx SendN ByteArray"
 ALIASES		    += "SendBDY=$ctx SendBDY ByteArray"
 
 # READ DATE
-ALIASES		    += "Read_TYPE=$ctx Read[TYPE]"
-ALIASES		    += "ReadU=$ctx ReadU"
-ALIASES		    += "ReadN=$ctx ReadN"
-ALIASES		    += "ReadBDY=$ctx ReadBDY"
+ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
+ALIASES		    += "Read_TYPE=set val [$ctx Read<TYPE>]"
+ALIASES		    += "ReadU=set val [$ctx ReadU]"
+ALIASES		    += "ReadN=set val [$ctx ReadN]"
+ALIASES		    += "ReadBDY=set val [$ctx ReadBDY]"
 ALIASES		    += "ReadProxy=$ctx ReadProxy otherCtx"
-ALIASES		    += "ReadGetNumItems=int: $ctx ReadGetNumItems"
-ALIASES		    += "ReadItemExists=bool: $ctx ReadItemExists"
+ALIASES		    += "ReadGetNumItems=set val [$ctx ReadGetNumItems]"
+ALIASES		    += "ReadItemExists=set val [$ctx ReadItemExists]"
 ALIASES		    += "ReadUndo=$ctx ReadUndo()"
-ALIASES		    += "ReadL_START=$ctx ReadL_START"
-ALIASES		    += "ReadL_START2=$ctx ReadL_START buffer"
-ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
 ALIASES		    += "ReadL_END=$ctx ReadL_END"
 
 # ADDING SERVICES
@@ -186,6 +176,8 @@ ALIASES		    += "ProcessEventFlag=MqC.WAIT"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."
+ALIASES		    += "SlaveWorker_example=\code$ctx SlaveWorker 7 --thread --silent @ WORKER --name MyWorker\endcode"
+
 
 ALIASES		    += "SlaveCreate=$ctx SlaveCreate id slave"
 ALIASES		    += "SlaveDelete=$ctx SlaveDelete id"
@@ -210,6 +202,7 @@ ALIASES		    += "ErrorGetText=[lindex $errorCode 3] or $ctx ErrorGetText"
 ALIASES		    += "ErrorGetNum=[lindex $errorCode 1] or $ctx ErrorGetNum"
 ALIASES		    += "ErrorC=$ctx ErrorC prefix errnum message"
 ALIASES		    += "ErrorSet=$ctx ErrorSet"
+ALIASES		    += "ErrorSetCONTINUE=$ctx ErrorSetCONTINUE"
 ALIASES		    += "ErrorReset=$ctx ErrorReset"
 ALIASES		    += "ErrorRaise=$ctx ErrorRaise"
 ALIASES		    += "ErrorPrint=$ctx ErrorPrint"

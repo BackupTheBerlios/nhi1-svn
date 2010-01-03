@@ -272,6 +272,8 @@ public abstract class MqS {
   public native void ConfigSetIsServer	      (boolean val);
   /// \api #MqConfigSetIsString
   public native void ConfigSetIsString	      (boolean val);
+  /// \api #MqConfigSetIgnoreExit
+  public native void ConfigSetIgnoreExit      (boolean val);
   /// \api #MqConfigSetStartAs
   public native void ConfigSetStartAs	      (int val);
   /// \api #MqConfigSetIoTcp

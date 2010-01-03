@@ -15,13 +15,9 @@
 #---------------------------------------------------------------------------
 
 
-FILE_PATTERNS	    = *.doc
-
 ENABLED_SECTIONS    += VB
-
 EXAMPLE_PATH	    += $(SRCDIR)/example/vb
 
-TAGFILES            += $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
 TAGFILES            += $(DOCDIR)/../csmsgque_public/csmsgque_public.tag=../csmsgque_public
 
 ALIASES		    += "self=vbmsgque"
@@ -73,6 +69,10 @@ ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
 ALIASES		    += "config_type_isString=Boolean"
 ALIASES		    += "config_set_isString=ConfigSetIsString"
 ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=Boolean"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_startAs=Integer"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
@@ -164,16 +164,16 @@ ALIASES		    += "SendN=ctx.SendN(byte[] value)"
 ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
 
 # READ DATE
-ALIASES		    += "Read_TYPE=TYPE ctx.Read[TYPE]()"
-ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
-ALIASES		    += "ReadN=byte[] ctx.ReadN()"
-ALIASES		    += "ReadBDY=byte[] ctx.ReadBDY()"
+ALIASES		    += "read_example=\code num = ctx.ReadI()\nctx.ReadL_START()\n  balance = ctx.ReadD()\n  owner = ctx.ReadC()\n  signature = ctx.ReadB()\nctx.ReadL_END()\endcode"
+ALIASES		    += "Read_TYPE=TYPE val = ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=MqBufferS val = ctx.ReadU()"
+ALIASES		    += "ReadN=byte[] val = ctx.ReadN()"
+ALIASES		    += "ReadBDY=byte[] val = ctx.ReadBDY()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
-ALIASES		    += "ReadGetNumItems=Integer ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=Boolean ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=Integer val = ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=Boolean val = ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
-ALIASES		    += "ReadL_START=ctx.ReadL_START()"
-ALIASES		    += "ReadL_START_BUF=ctx.ReadL_START(MqBufferS buffer)"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?MqBufferS buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
@@ -186,6 +186,7 @@ ALIASES		    += "ProcessEventFlag=MqS.WAIT"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(Integer id, String() argv)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(Integer id, MqS slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(Integer id)"
 ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(Integer id)"

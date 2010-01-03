@@ -1,4 +1,4 @@
-.TH "PUBLIC:" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "PUBLIC:" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -53,7 +53,7 @@ PUBLIC: \- public libmsgque API
 .ti -1c
 .RI "\fBMqReadAPI\fP"
 .br
-.R "extract items from a data package. "
+.R "read data from an incoming \fIread-data-package\fP. "
 .PP
 .in +1c
 
@@ -90,4 +90,4 @@ PUBLIC: \- public libmsgque API
 public libmsgque API 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

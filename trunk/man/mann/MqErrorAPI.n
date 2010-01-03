@@ -1,4 +1,4 @@
-.TH "MqErrorAPI" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqErrorAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -133,13 +133,13 @@ MqErrorAPI \- create and manage error messages.
 .br
 .R "brint an error to stderr and clear the error after "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, int num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
 .br
 .R "set the value of the \fBMqErrorS\fP object "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSetCONTINUE\fP (struct \fBMqS\fP *const context)"
 .br
-.R "set the error-code of the \fBMqErrorS\fP object to \fBMQ_CONTINUE\fP "
+.R "set \fBMqErrorS::code\fP to \fBMQ_CONTINUE\fP and return the value "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -186,17 +186,17 @@ Definition at line 184 of file msgque.h.
 .PP
 version of \fBMqErrorCheckI\fP 
 .PP
-Definition at line 2931 of file msgque.h.
+Definition at line 2927 of file msgque.h.
 .SS "#define MqErrorCheck1(PROC)   if (MqErrorCheckI(PROC)) goto error1"
 .PP
 check on error and goto label \fIerror1\fP 
 .PP
-Definition at line 2942 of file msgque.h.
+Definition at line 2938 of file msgque.h.
 .SS "#define MqErrorCheck2(PROC, JUMP)   if (MqErrorCheckI(PROC)) goto JUMP"
 .PP
 check on error and goto label \fIJUMP\fP 
 .PP
-Definition at line 2944 of file msgque.h.
+Definition at line 2940 of file msgque.h.
 .SS "#define MqErrorCheckI(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .PP
 check on error 
@@ -208,7 +208,7 @@ check on error
 .PP
 
 .PP
-Definition at line 2929 of file msgque.h.
+Definition at line 2925 of file msgque.h.
 .SS "#define MqErrorReturn(PROC)"
 .PP
 \fBValue:\fP
@@ -220,17 +220,17 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_EXIT: ca
 .fi
 process error message 
 .PP
-Definition at line 2938 of file msgque.h.
+Definition at line 2934 of file msgque.h.
 .SS "#define MqErrorSAppendC(error, str)   MqErrorSAppendV(error,'%s',str);"
 .PP
 append a string to a \fBMqErrorS\fP 
 .PP
-Definition at line 2840 of file msgque.h.
+Definition at line 2836 of file msgque.h.
 .SS "#define MqErrorStack(error)   MqErrorStackP(error, __func__, __FILE__)"
 .PP
 convenience wrapper for \fBMqErrorStackP\fP 
 .PP
-Definition at line 2855 of file msgque.h.
+Definition at line 2851 of file msgque.h.
 .SS "#define MqErrorSwitch(PROC)"
 .PP
 \fBValue:\fP
@@ -242,12 +242,12 @@ case MQ_OK: break; case MQ_ERROR: goto error; case MQ_EXIT: return MQ_EXIT; case
 .fi
 process error message 
 .PP
-Definition at line 2934 of file msgque.h.
+Definition at line 2930 of file msgque.h.
 .SS "#define MqErrorV(error, prefix, errnum, format,  ...)   MqErrorSGenV(error,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)"
 .PP
 customized edition of \fBMqErrorSGenV\fP 
 .PP
-Definition at line 2820 of file msgque.h.
+Definition at line 2816 of file msgque.h.
 .SS "#define MqPanicC(context, prefix, errnum, string)   MqPanicV(context,prefix,errnum,'%s',string);"
 .PP
 do a \fBpanic\fP with \fIstring\fP as argument 
@@ -270,7 +270,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2753 of file msgque.h.
+Definition at line 2749 of file msgque.h.
 .SS "#define MqPanicSYS(context)"
 .PP
 \fBValue:\fP
@@ -293,7 +293,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2758 of file msgque.h.
+Definition at line 2754 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP"
@@ -424,7 +424,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqErrorSet (struct \fBMqS\fP *const  context, int num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const  message)"
+.SS "enum \fBMqErrorE\fP MqErrorSet (struct \fBMqS\fP *const  context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const  message)"
 .PP
 set the value of the \fBMqErrorS\fP object 
 .PP
@@ -459,7 +459,7 @@ set the value of \fBMqErrorS\fP code member
 
 .SS "enum \fBMqErrorE\fP MqErrorSetCONTINUE (struct \fBMqS\fP *const  context)"
 .PP
-set the error-code of the \fBMqErrorS\fP object to \fBMQ_CONTINUE\fP 
+set \fBMqErrorS::code\fP to \fBMQ_CONTINUE\fP and return the value 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -585,4 +585,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

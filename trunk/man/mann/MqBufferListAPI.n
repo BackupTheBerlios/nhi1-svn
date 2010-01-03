@@ -1,4 +1,4 @@
-.TH "MqBufferListAPI" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqBufferListAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -753,4 +753,4 @@ The size of \fIstr\fP have to be at least 4 bytes
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

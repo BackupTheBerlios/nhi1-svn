@@ -827,24 +827,20 @@ struct MqSetupS {
   // misc
 
   /// \brief Create a link to the calling tool event-handling queue
-  /// <TABLE>
-  /// <TR>  <TH>type</TH>    <TH>default</TH> <TH>option</TH> <TH>application</TH>   <TH>context</TH>  </TR>
-  /// <TR>  <TD>POINTER</TD> <TD>NULL</TD>    <TD>NO</TD>     <TD>server/client</TD> <TD>parent</TD>   </TR>
-  /// </TABLE>
   ///
   /// Event-Handling is used to process instructions in the \e background to give the tool-user
-  /// the feeling of a non-blocking application. For Example Tcl using the event-handling to
-  /// update the Tk user-interface while the application is waiting for data. The event-handling
-  /// is usually a loop to check event-sources from time-to-time and act on incoming events.
-  /// The interface is designed for a very \b short function timeslide. Do only \e one
+  /// the feeling of a non-blocking application. For example Tcl using the event-handling to
+  /// update the Tk user-interface while the application is waiting for data. 
+  /// The event handling function is called on idle and
+  /// is designed for a very \b short function execution time. Do only \e one
   /// action per function call. This function will be called with a ~10000 usec intervall to garantee
   /// a parallel like execution.
-  /// \return do return #MQ_OK if everything is OK. 
-  /// \attention Together with #MqSetupS::ignoreExit this function is used to implement a persistent transaction
-  /// handler. Use <TT>return #MqErrorSetCONTINUE</TT> if the background task has nothing to do. 
-  /// If \b all \e child context return with #MqErrorSetCONTINUE too 
-  /// and the context itself is on shutdown (#MqLinkS::onShutdown == MQ_YES) the process will \b exit.
-  /// example: <TT>theLink/example/c/Filter4.c</TT>
+  /// \attention Together with \RNSC{ignoreExit} the Event-Handler is used to start background prcessing
+  /// of tasks. Return the Event-Handler with \RNSA{ErrorSetCONTINUE} to signal that all tasks are finished 
+  /// and the process/thread is ready to exit.
+  /// If \b all \e child context Event-Handler return with \RNSA{ErrorSetCONTINUE} too
+  /// and the client/server links is already shutdown the process/thread will \b exit.
+  /// example: \c theLink/example/\lang/Filter4.\lang
   struct MqCallbackS Event;
 
   /// \brief function pointers used to create and delete an object or a class instance
@@ -885,13 +881,13 @@ struct MqSetupS {
   /// both options \c -h and \c --help to provide a tool-specific help-page and exit.
   MqHelpF fHelp;
 
-  /// \brief ignore the server EXIT
+  /// \brief ignore the server EXIT, set with #MqConfigSetIgnoreExit
   ///
-  /// By default the \e server exit if the \e client close the connection. If <TT>ignoreExit = #MQ_YES</TT>
-  /// is set the \e server will continue to work. Without \e client connection only
-  /// the internal event function (#MqSetupS::Event, set with #MqConfigSetEvent) is available to work on tasks.
-  /// if \e all (parent and child) event function return with #MqErrorSetCONTINUE (nothing to do) the last
-  /// task-worker is gone and the process exit.
+  /// By default the \e server exit if the \e client close the connection. If the boolean value is \yes
+  /// the \e server will continue to work. Without \e client connection only
+  /// the internal event function (set with \RNSC{IEvent}) is available to work on tasks.
+  /// if \e all (parent and child) event functions return with \RNSA{ErrorSetCONTINUE} (nothing to do) the process
+  /// exit.
   MQ_BOL ignoreExit;
 };
 
@@ -2906,12 +2902,12 @@ MQ_EXTERN MQ_INT MQ_DECL MqErrorGetNum (
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
   struct MqS * const context,
-  int num,
+  MQ_INT num,
   enum MqErrorE code,
   MQ_CST const message
 );
 
-/// \brief set the error-code of the #MqErrorS object to #MQ_CONTINUE
+/// \brief set #MqErrorS::code to #MQ_CONTINUE and return the value
 /// \context
 /// \return #MQ_CONTINUE
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
@@ -2975,13 +2971,14 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /** \defgroup MqReadAPI MqReadAPI
  *  \{
- *  \brief extract items from a data package.
+ *  \brief read data from an incoming \e read-data-package.
  *
- *  The reading is done by an \e Read-Buffer object using an \e MqIoS object for 
- *  doing the socket io. Every \e MqS object has only \b one \e Read-Buffer object 
- *  and every \e Read-Buffer object has only \b one \e MqS object. The interface is
- *  used to extract the different #MqTypeE data-types from the package doing
- *  the casting from one type to an other type if necessary.
+ *  \e Reading data is a passive task and the opposite of \e sending data which is an active task.
+ *  Passive mean that the \e read is triggered by an incoming data-package and not by the
+ *  software-work-flow or the user. There is one \e read function for every basic type
+ *  defined in \RNS{BufferIdentifer} plus help functions.
+ *  \attention Reading data is an atomic task and should not be split. Only one read-package 
+ *  is always in duty. As basic rule read first all data and start the processing afterwards.
  */
 
 /*****************************************************************************/
@@ -2990,33 +2987,25 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief creating a \e LST reference for reading the list items
-/// \context
-/// \param[in] buf the buffer object to read the LST object data from or \c NULL to
-///   use new data from the \e Read-Buffer object. The object \e buf is the return value
-///   #MqReadU
-/// \retMqErrorE
+/// \brief start to extract a \e list-items from the \e read-data-package.
 ///
-/// Example:
-/// \code
-/// MQ_BUF buf = MqReadU(read);
-/// ...
-/// MqRead_LST_START(read,buf);
-/// MQ_INT myInt = MqReadI(read);
-/// ...
-/// MqRead_LST_END(read);
-/// \endcode
+/// Itialize the read with the current \e body-item or an optional \e buffer-object.
+/// This command requires a final \RNS{ReadL_END} to finish the read.
+/// \ctx
+/// \param[in] buffer an optional \e buffer-object as result from a previous \RNS{ReadU} call or \null to
+///   use the next item from the \e read-data-package.
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_START (
-  struct MqS * const context,
-  MQ_BUF buf
-) __attribute__((nonnull(1)));
+  struct MqS * const ctx,
+  MQ_BUF buffer
+);
 
-/// \brief deleting a \e LST reference after reading the list items was finished
-/// \context
-/// \retMqErrorE
+/// \brief finish start to extract a \e list-items from the \e read-data-package.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
-  struct MqS * const context
-) __attribute__((nonnull));
+  struct MqS * const ctx
+);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3024,49 +3013,49 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief read a native typed value from the \e Read-Buffer object
-/// \context
-/// \param[out] valP a pointer of the value to read
-/// \retMqErrorE
+/// \brief read a \RNS{BufferIdentifer} from the \e read-data-package
+/// \ctx
+/// \param[out] val the value to read
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadY (
-  struct MqS * const context,
-  MQ_BYT * const valP
+  struct MqS * const ctx,
+  MQ_BYT * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadO (
-  struct MqS * const context,
-  MQ_BOL * const valP
+  struct MqS * const ctx,
+  MQ_BOL * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadS (
-  struct MqS * const context,
-  MQ_SRT * const valP
+  struct MqS * const ctx,
+  MQ_SRT * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadI (
-  struct MqS * const context,
-  MQ_INT * const valP
+  struct MqS * const ctx,
+  MQ_INT * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadF (
-  struct MqS * const context,
-  MQ_FLT * const valP
+  struct MqS * const ctx,
+  MQ_FLT * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadW (
-  struct MqS * const context,
-  MQ_WID * const valP
+  struct MqS * const ctx,
+  MQ_WID * const val
 );
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
-  struct MqS * const context,
-  MQ_DBL * const valP
+  struct MqS * const ctx,
+  MQ_DBL * const val
 );
 
 /// \brief generic function to read an #MQ_STR object from the \e Read-Buffer object
@@ -3091,48 +3080,47 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
   MQ_SIZE * const len
 );
 
-/// \brief generic function to read a \b native package object from the \e Read-Buffer object
-/// \context
-/// \retval out the binary data to return
-/// \retval len the length of the binary data
-/// \retMqErrorE
-/// \attention the data retured belongs to \libmsgque.
+/// \brief extract a \e body-item from the \e read-data-package
 ///
-/// The native package data can be saved and send later back with #MqSendN
+/// A \e body-item is a binary array with a defined \e length and including the \e size, 
+/// \e data-type and the \e native data object as information. The \e item extracted
+/// can be saved into an external storage and be send later using \RNSA{SendN}.
+/// \ctx
+/// \param[out] val the \e body-item as binary-array
+/// \param[out] len the binary-array-length of the \e val
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
-  struct MqS * const context,
-  MQ_BIN * const out,
+  struct MqS * const ctx,
+  MQ_BIN * const val,
   MQ_SIZE * const len
 );
 
-/// \brief generic function to read the entire \e body from the \e Read-Buffer object
-/// \context
-/// \param[out] out body of the data package
-/// \param[out] len size of the body
-/// \retMqErrorE
-/// \attention the data retured belongs to \libmsgque.
+/// \brief extract the entire \e body-package from the \e read-data-package
 ///
-/// In opposit to #MqReadN all package items are returned.
-/// The native package data can be saved and send later back with #MqSendBDY
+/// A \e body is a binary array with a defined \e length and including the \e number-of-items
+/// and the \e body-items as information. The \e body extracted can be saved into an external storage 
+/// or be used in a software tunnel (example: the \e agurad tool) and be send later using \RNSA{SendBDY}.
+/// \ctx
+/// \param[out] val the \e body as binary-array
+/// \param[out] len the binary-array-length of the \e val
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
-  struct MqS * const context,
-  MQ_BIN * const out,
+  struct MqS * const ctx,
+  MQ_BIN * const val,
   MQ_SIZE * const len
 );
 
-/// \brief generic function to read a #MQ_BUF object from the \e Read-Buffer object
-/// \context
-/// \retval out the buffer to return
-/// \retMqErrorE
-/// \attention the object returned \e out is owned by \e Read-Buffer object and is \b only valid
-/// up to the next call to any \e MqRead? function. If a long-term object is required
-/// use the #MqBufferDup function.
-/// \code
-/// MQ_BUF buf = MqBufferDup(MqReadU(read);
-/// \endcode
+/// \brief extract a \b temporary \RNS{buffer} from the \e read-data-package
+///
+/// The object returned is owned by the \e read-data-package and is \b only valid
+/// up to the next call of any \RNS{read} function. If a long-term object is required
+/// use the C-API function: #MqBufferDup.
+/// \ctx
+/// \param[out] val the buffer
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
-  struct MqS * const context,
-  MQ_BUF * const out
+  struct MqS * const ctx,
+  MQ_BUF * const val
 );
 
 /// \brief read an MqBufferLS object from all items of the \e Read-Buffer object
@@ -3146,9 +3134,14 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
   struct MqBufferLS ** const out
 );
 
+
+/// \brief link two \e context-objects to direct pass a data item from one object to the other.
+/// \ctx and the source of the copy
+/// \param[in] otherCtx the \e other-context-object and the target of the copy
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
-  struct MqS * const readctx,
-  struct MqS * const sendctx
+  struct MqS * const ctx,
+  struct MqS * const otherCtx
 );
 
 /*****************************************************************************/
@@ -3157,27 +3150,29 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief undo the \b last MqReadX operation
-/// \context
-/// \retMqErrorE
-/// \attention Can \b undo only the \b last MqReadX operation, multiple \b undo
-/// will \b corrupt the memory.
+/// \brief undo the last \RNS{read} function call
+///
+/// Put the internal position-pointer to the start of the last read \e body-item.
+/// The next read function call will extract the same item again. Only \b one
+/// undo level is supported.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadUndo (
-  struct MqS * const context
+  struct MqS * const ctx
 );
 
-/// \brief get the number of items left in the \e Read-Buffer object
-/// \context
-/// \return the number of items
+/// \brief get the number of items left in the \e read-data-package
+/// \ctx
+/// \return the number of items as integer
 MQ_EXTERN MQ_SIZE MQ_DECL MqReadGetNumItems (
-  struct MqS const * const context
+  struct MqS const * const ctx
 );
 
-/// \brief does an additional item exits in the \e Read-Buffer object
-/// \context
-/// \return the number of items
+/// \brief check if an item exists in the \e read-data-package
+/// \ctx
+/// \return boolean, \yes or \no
 MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
-  struct MqS const * const context
+  struct MqS const * const ctx
 );
 
 /** \} MqReadAPI */
@@ -3501,9 +3496,9 @@ a \e server because only \e on server per node is possible.
     node-0   |           node-1          |   node-2
 ===================================================================
 
-| ** client/server link ** | ** client/server link ** |
+| <- client/server link -> | <- client/server link -> |
 
-             | *** master/slave link *** |
+             | <-- master/slave link --> |
 
                            |- client1-0 -|- server2-0 ...
                            |
@@ -3512,80 +3507,68 @@ a \e server because only \e on server per node is possible.
   client0-0 -|                           |- server2-3
              |
              |- server1-1 -|- client1-2 -|- server2-4 ...
-
 \endverbatim
-
  **/
 
 /// \brief the maximum number of slave objects per master
 /// \attention this number can be changed but \libmsgque have to be recompiled after
 #define MQ_SLAVE_MAX 1024
 
-/// \brief create a \e master/slave link using the same object as \e context
+/// \brief create a \e master/slave link using the image of the \e ctx object self.
 ///
-/// \e context have to be a \e SERVER-PARENT context without \e CHILD_CONTEXT
-/// available
-///
-/// \context
-/// \param[in] id an integer used as unique identifier for the master/slave link 
-/// \param[in] argsP command-line arguments passed to the \e worker-client or the \e worker-server. all arguments prior the
-///                 first \b @ token are added to the \e worker-client and the other arguments to the \e worker-server.
-///                 the memory is freed after use.
-/// \retMqErrorE
+/// The slave-context is started as an independent process or thread based on the \RNSC{startAs} argument.
+/// \param[in] ctx the \e master context object as PARENT without a CHILD
+/// \id
+/// \param[in] args command-line arguments passed to the \e worker-client or the \e worker-server. all arguments prior the
+/// first \b @ token are added to the \e worker-client and the other arguments to the \e worker-server.
+/// \retException
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqSlaveWorker (
-  struct MqS * const  context,
+  struct MqS * const  ctx,
   MQ_SIZE const	      id,
-  struct MqBufferLS ** argsP
+  struct MqBufferLS ** args
 );
 
-/// \brief create a \e master/slave link between the current context object and a slave 
-/// context object
+/// \brief create a \e master/slave link between the master-context object and the slave-context object
 ///
-/// The link has the following requirements:
-///  - the \e context object have to be a \e PARENT without a \e CHILD
-///  - the \e slave object have to be a \e CLIENT-PARENT without a \e CHILD
-///  - the \e id have to be unique
-///  .
-///
-/// \context
+/// \param[in] ctx the \e master context object as PARENT without a CHILD
 /// \id
-/// \param[in] slave a \e slave context object created by #MqLinkCreate
-/// \retMqErrorE
-/// \attention after \e MqSlaveCreate the entire \e slave object blongs to \e context 
-/// including the inital context. This mean no other external reference should be 
-/// used for object cleanup.
+/// \param[in] slave the \e slave context object as CLIENT-PARENT without a CHILD
+/// \retException
+/// \attention The \e slave-context is owned by the \e master-context.
+/// This mean that no other external references should be used and the \e slave-context 
+/// will be deleted if the \e master-context is be deleted.
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqSlaveCreate (
-  struct MqS * const  context,
+  struct MqS * const  ctx,
   MQ_SIZE const       id,
   struct MqS * const  slave
 );
 
-/// \brief delete a \e master/slave
+/// \brief Delete a \e slave object from a \e master/slave link identified by \e id.
 ///
-/// By default the \e slave context will be deleted if the \e master context is deleted.
-/// In addition the \e parent-slave-context can be deleted explicit.
-/// It is an \e error to delete a \e child-slave-context.
-/// \context
+/// By default the \e slave-context object will be deleted if the \e master-context is deleted.
+/// Use this functionto delete the \e parent-slave-context explicit and brake the \e master/slave
+/// link.  If \e id is invalid nothing will happen.  It is an \e error to delete a \e child-slave-context.
+/// \param[in] ctx the \e master context object as PARENT without a CHILD
 /// \id
-/// \retMqErrorE
-/// \attention it is still possible to delete a \e child-slave-context using #MqLinkDelete but
-/// this will break the internal master/slave order
+/// \retException
+/// \attention it is still possible to delete a \e child-slave-context using \RNSA{LinkDelete} but
+/// this will break the internal master/slave order.
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqSlaveDelete (
-  struct MqS * const  context,
+  struct MqS * const  ctx,
   MQ_SIZE const id
 );
 
 /// \brief get the slave context
 ///
-/// \context
+/// \param[in] ctx the \e master context object as PARENT without a CHILD
 /// \id
-/// \return the \e slave context or \c NULL if \e id is not valid
+/// \return the \e slave-context or \c NULL if \e id is not valid or \e ctx is not a \e master-context.
 MQ_EXTERN struct MqS *
 MQ_DECL MqSlaveGet (
-  struct MqS const * const  context,
+  struct MqS const * const  ctx,
   MQ_SIZE const id
 );
 

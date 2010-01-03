@@ -1,4 +1,4 @@
-.TH "MqSlaveAPI" n "1 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqSlaveAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,19 +17,19 @@ MqSlaveAPI \- create and manage a slave context
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **argsP)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **args)"
 .br
-.R "create a \fImaster/slave\fP link using the same object as \fIcontext\fP "
+.R "create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
 .br
-.R "create a \fImaster/slave\fP link between the current context object and a slave context object "
+.R "create a \fImaster/slave\fP link between the master-context object and the slave-context object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id)"
+.RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "delete a \fImaster/slave\fP "
+.R "Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. "
 .ti -1c
-.RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const context, \fBMQ_SIZE\fP const id)"
+.RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const ctx, \fBMQ_SIZE\fP const id)"
 .br
 .R "get the slave context "
 .in -1c
@@ -55,9 +55,9 @@ In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connec
     node-0   |           node-1          |   node-2
 ===================================================================
 
-| ** client/server link ** | ** client/server link ** |
+| <- client/server link -> | <- client/server link -> |
 
-             | *** master/slave link *** |
+             | <-- master/slave link --> |
 
                            |- client1-0 -|- server2-0 ...
                            |
@@ -66,7 +66,6 @@ In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connec
   client0-0 -|                           |- server2-3
              |
              |- server1-1 -|- client1-2 -|- server2-4 ...
-
 .fi
 .PP
  
@@ -83,103 +82,95 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3522 of file msgque.h.
+Definition at line 3515 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
+.SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
 .PP
-create a \fImaster/slave\fP link between the current context object and a slave context object 
-.PP
-The link has the following requirements:
-.IP "\(bu" 2
-the \fIcontext\fP object have to be a \fIPARENT\fP without a \fICHILD\fP 
-.IP "\(bu" 2
-the \fIslave\fP object have to be a \fICLIENT-PARENT\fP without a \fICHILD\fP 
-.IP "\(bu" 2
-the \fIid\fP have to be unique
+create a \fImaster/slave\fP link between the master-context object and the slave-context object 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIslave\fP a \fIslave\fP context object created by \fBMqLinkCreate\fP 
+\fIslave\fP the \fIslave\fP context object as CLIENT-PARENT without a CHILD 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
 .RS 4
-after \fIMqSlaveCreate\fP the entire \fIslave\fP object blongs to \fIcontext\fP including the inital context. This mean no other external reference should be used for object cleanup. 
+The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no other external references should be used and the \fIslave-context\fP will be deleted if the \fImaster-context\fP is be deleted. 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id)"
+.SS "enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id)"
 .PP
-delete a \fImaster/slave\fP 
+Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
 .PP
-By default the \fIslave\fP context will be deleted if the \fImaster\fP context is deleted. In addition the \fIparent-slave-context\fP can be deleted explicit. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
+By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this functionto delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
 .RS 4
-it is still possible to delete a \fIchild-slave-context\fP using \fBMqLinkDelete\fP but this will break the internal master/slave order 
+it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
 
-.SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  context, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
+.SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  ctx, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
 .PP
 get the slave context 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIslave\fP context or \fCNULL\fP if \fIid\fP is not valid 
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** argsP)"
+.SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
 .PP
-create a \fImaster/slave\fP link using the same object as \fIcontext\fP 
+create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
 .PP
-\fIcontext\fP have to be a \fISERVER-PARENT\fP context without \fICHILD_CONTEXT\fP available
+The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
-\fIid\fP an integer used as unique identifier for the master/slave link 
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIargsP\fP command-line arguments passed to the \fIworker-client\fP or the \fIworker-server\fP. all arguments prior the first \fB@\fP token are added to the \fIworker-client\fP and the other arguments to the \fIworker-server\fP. the memory is freed after use. 
+\fIargs\fP command-line arguments passed to the \fIworker-client\fP or the \fIworker-server\fP. all arguments prior the first \fB@\fP token are added to the \fIworker-client\fP and the other arguments to the \fIworker-server\fP. 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

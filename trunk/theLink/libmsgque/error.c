@@ -328,7 +328,7 @@ MqErrorPrint (
 enum MqErrorE
 MqErrorSet (
   struct MqS * const context,
-  int num,
+  MQ_INT num,
   enum MqErrorE code,
   MQ_CST const message
 )

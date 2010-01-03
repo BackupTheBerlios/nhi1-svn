@@ -27,6 +27,12 @@ export HAVE_DOT=NO
   for D
   do
     echo "======================================================================="
+    if test -f $D ; then
+      FN=$(basename $D)
+      D=$(dirname $D)
+    else
+      FN="Doxyfile*"
+    fi
     pushd $D || {
       echo ERROR: $1 is no directory
       exit 2
@@ -59,7 +65,7 @@ export HAVE_DOT=NO
     fi
 
   ## search and generate the files
-    for F in Doxyfile* ; do
+    for F in $FN ; do
       test ! -f $F && continue
       P="${F##*.}"
       test "$F" == "$P" && P="$(basename $PWD)"
@@ -69,8 +75,8 @@ export HAVE_DOT=NO
       export  DOCDIR="$abs_top_builddir/html/theLink/$PROJECT"
       rm -fr "$DOCDIR"
       mkdir -p "$DOCDIR"
-      cat "$SRCDIR/docs/Doxyfile.generic" $LG "$F" | \
-	"$DOXYGEN" - 2>&1
+      echo "cat $SRCDIR/docs/Doxyfile.generic $LG $F | $DOXYGEN"
+      cat "$SRCDIR/docs/Doxyfile.generic" $LG "$F" | "$DOXYGEN" - 2>&1
     done
 
     popd
