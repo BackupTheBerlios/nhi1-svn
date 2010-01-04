@@ -411,7 +411,7 @@ pEventStart (
 	    pMqGetFirstParent(context)->link.deleteProtection = MQ_YES;
 	    MqLinkDelete(exitctx);
 	    pMqGetFirstParent(context)->link.deleteProtection = MQ_NO;
-	    return MqErrorGetCode(context);
+	    return iErrorGetCode(context);
 	  } else {
 	    // case 3. there is only one server
 	    // context != exitctx && exitctx == SERVER+PARENT

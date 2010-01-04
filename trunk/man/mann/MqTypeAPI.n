@@ -1,4 +1,4 @@
-.TH "MqTypeAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqTypeAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -173,7 +173,7 @@ MqTypeAPI \- a collection of common used data types and definitions
 .ti -1c
 .RI "typedef unsigned char \fBMQ_BINB\fP"
 .br
-.R "binary basic data-type "
+.R "\fIbyte-array\fP basic data-type "
 .ti -1c
 .RI "typedef unsigned char \fBMQ_LSTB\fP"
 .br
@@ -193,7 +193,7 @@ MqTypeAPI \- a collection of common used data types and definitions
 .ti -1c
 .RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
 .br
-.R "binary pointer data-type "
+.R "\fIbyte-array\fP pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
 .br
@@ -366,12 +366,12 @@ Buffer-List pointer data-type.
 Definition at line 305 of file msgque.h.
 .SS "typedef \fBMQ_BINB\fP* \fBMQ_BIN\fP"
 .PP
-binary pointer data-type 
+\fIbyte-array\fP pointer data-type 
 .PP
 Definition at line 299 of file msgque.h.
 .SS "typedef unsigned char \fBMQ_BINB\fP"
 .PP
-binary basic data-type 
+\fIbyte-array\fP basic data-type 
 .PP
 Definition at line 288 of file msgque.h.
 .SS "typedef signed char \fBMQ_BOL\fP"
@@ -502,4 +502,4 @@ wait forever
 Definition at line 327 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

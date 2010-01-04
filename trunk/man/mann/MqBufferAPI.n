@@ -1,4 +1,4 @@
-.TH "MqBufferAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -273,10 +273,10 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS::bls\fP object 
 .PP
-Definition at line 1829 of file msgque.h.
+Definition at line 1881 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 1832 of file msgque.h.
+Definition at line 1884 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
@@ -367,7 +367,7 @@ W: 8 byte 'long long int' type.
 D: 8 byte 'double' type. 
 .TP
 \fB\fIMQ_BINT \fP\fP
-B: binary array type. 
+B: \fIbyte-array\fP type. 
 .TP
 \fB\fIMQ_STRT \fP\fP
 C: character array type (e.g. with a \\0 at the end). 
@@ -964,9 +964,9 @@ set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object
 .RS 4
 \fIbuf\fP the \fBMqBufferS\fP object to work on 
 .br
-\fIin\fP the binary to set the buffer 
+\fIin\fP the \fIbyte-array\fP to set the buffer 
 .br
-\fIlen\fP the length of the binary data 
+\fIlen\fP the length of the \fIbyte-array\fP data 
 .RE
 .PP
 \fBReturns:\fP
@@ -1227,4 +1227,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

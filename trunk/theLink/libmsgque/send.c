@@ -1078,15 +1078,19 @@ MqSendERROR (
   register struct MqS * const context
 )
 {
-  pSendL_CLEANUP (context);
-  pReadL_CLEANUP (context);
-  MqErrorCheck(MqSendSTART (context));
-  MqSendI (context, MqErrorGetNum (context));
-  MqSendC (context, MqErrorGetText (context));
-  MqErrorReset (context);
-  return MqSendEND (context, "_ERR");
+  if (iErrorGetCode(context) == MQ_ERROR) {
+    pSendL_CLEANUP (context);
+    pReadL_CLEANUP (context);
+    MqErrorCheck(MqSendSTART (context));
+    MqSendI (context, MqErrorGetNum (context));
+    MqSendC (context, MqErrorGetText (context));
+    MqErrorReset (context);
+    return MqSendEND (context, "_ERR");
 error:
-  return MqErrorStack(context);
+    return MqErrorStack(context);
+  } else {
+    return MQ_OK;
+  }
 }
 
 enum MqErrorE
@@ -1095,11 +1099,11 @@ MqSendRETURN (
 )
 {
   if (context->link._trans == 0) {
-    return MqErrorGetCode(context);
+    return iErrorGetCode(context);
   } else {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    switch (MqErrorGetCode (context)) {
+    switch (iErrorGetCode (context)) {
       case MQ_OK: 
 	break;
       case MQ_ERROR:

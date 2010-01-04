@@ -23,6 +23,7 @@ ALIASES		    += "selftut=pymsgquetut"
 ALIASES		    += "NS{1}=py_\1"
 ALIASES		    += "lang=PYTHON"
 ALIASES		    += "fileextension=py"
+ALIASES		    += "null=\e None"
 ALIASES		    += "yes=\e True"
 ALIASES		    += "no=\e False"
 ALIASES		    += "package=from pymsgque import *"
@@ -157,6 +158,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\")" \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
@@ -172,7 +174,15 @@ ALIASES		    += "SendN=ctx.SendN(value)"
 ALIASES		    += "SendBDY=ctx.SendBDY(value)"
 
 # READ DATE
-ALIASES		    += "read_example=\code num = ctx.ReadI()\nctx.ReadL_START()\nbalance = ctx.ReadD()\nowner = ctx.ReadC()\nsignature = ctx.ReadB()\nctx.ReadL_END()\endcode"
+ALIASES		    += "read_example=\code \
+num = ctx.ReadI()\n\
+ctx.ReadL_START()\n\
+balance = ctx.ReadD()\n\
+owner = ctx.ReadC()\n\
+signature = ctx.ReadB()\n\
+ctx.ReadL_END()\n\
+\endcode"
+
 ALIASES		    += "Read_TYPE=val = ctx.Read[TYPE]()"
 ALIASES		    += "ReadU=val = ctx.ReadU()"
 ALIASES		    += "ReadN=val = ctx.ReadN()"
@@ -185,8 +195,12 @@ ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+def ServerSetup(ctx): \n\
+  ctx.ServiceCreate (\"SRV1\", SRV1) \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)"

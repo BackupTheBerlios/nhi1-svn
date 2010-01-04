@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,13 +21,13 @@ MqIoUdsConfigS \- configuration data which belong to \fIMqIoS\fP uds setup
 .PP 
 configuration data which belong to \fIMqIoS\fP uds setup 
 .PP
-Definition at line 586 of file msgque.h.
+Definition at line 585 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS::file\fP"
 .PP
-Definition at line 587 of file msgque.h.
+Definition at line 586 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

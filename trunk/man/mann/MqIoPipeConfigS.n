@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -22,15 +22,15 @@ MqIoPipeConfigS \- configuration data which belong to \fIMqIoS\fP pipe setup
 .PP 
 configuration data which belong to \fIMqIoS\fP pipe setup 
 .PP
-Definition at line 599 of file msgque.h.
+Definition at line 598 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS::socks\fP[2]"
 .PP
 the result from socketpair 
 .PP
-Definition at line 600 of file msgque.h.
+Definition at line 599 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

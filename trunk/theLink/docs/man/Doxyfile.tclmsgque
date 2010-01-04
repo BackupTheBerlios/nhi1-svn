@@ -141,17 +141,18 @@ ALIASES		    += "LinkDelete=$ctx LinkDelete"
 ALIASES		    += "Exit=$ctx Exit"
 
 # SEND DATA
+ALIASES		    += "send_example=\code $ctx SendSTART\n$ctx SendI $num\n$ctx SendL_START\n  $ctx SendD $balance\n  $ctx SendC \"name of the owner\"\n  $ctx SendB $signature\n$ctx SendL_END\n$ctx SendEND_AND_WAIT \"SRV1\"\endcode"
 ALIASES		    += "SendSTART=$ctx SendSTART"
 ALIASES		    += "SendEND=$ctx SendEND token"
 ALIASES		    += "SendEND_AND_WAIT=$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOUT_USER?"
 ALIASES		    += "SendEND_AND_CALLBACK=$ctx SendEND_AND_CALLBACK token callback"
 ALIASES		    += "SendRETURN=$ctx SendRETURN"
 ALIASES		    += "SendERROR=$ctx SendERROR"
-ALIASES		    += "Send_TYPE=$ctx Send[TYPE] value"
+ALIASES		    += "Send_TYPE=$ctx Send<TYPE> value"
 ALIASES		    += "SendL_START=$ctx SendL_START"
 ALIASES		    += "SendL_END=$ctx SendL_END"
-ALIASES		    += "SendN=$ctx SendN ByteArray"
-ALIASES		    += "SendBDY=$ctx SendBDY ByteArray"
+ALIASES		    += "SendN=$ctx SendN value"
+ALIASES		    += "SendBDY=$ctx SendBDY value"
 
 # READ DATE
 ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
@@ -167,12 +168,19 @@ ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
 ALIASES		    += "ReadL_END=$ctx ReadL_END"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+proc ServerSetup {ctx} { \n\
+  $ctx ServiceCreate \"SRV1\" serviceF \n\
+} \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=$ctx ServiceCreate token service"
+ALIASES		    += "ServiceCreate=$ctx ServiceCreate token callback"
 ALIASES		    += "ServiceProxy=$ctx ServiceProxy token ?id=0?"
 ALIASES		    += "ServiceDelete=$ctx ServiceDelete token"
 ALIASES		    += "ProcessEvent=$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?"
-ALIASES		    += "ProcessEventFlag=MqC.WAIT"
+ALIASES		    += "MQ_WAIT_NO=\c NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."

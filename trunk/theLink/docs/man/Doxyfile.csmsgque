@@ -25,6 +25,7 @@ ALIASES		    += "selftut=csmsgquetut"
 ALIASES		    += "NS{1}=cs_\1"
 ALIASES		    += "lang=C#"
 ALIASES		    += "fileextension=cs"
+ALIASES		    += "null=\e null"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=using csmsgque;"
@@ -149,6 +150,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(string token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(string token, [int timeout])"
@@ -179,8 +181,13 @@ ENABLED_SECTIONS    += ReadL_START2
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void IServerSetup.ServerSetup() { \n\
+  ServiceCreate (\"SRV1\", srv1); \n\
+} \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(string token, IService service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(string token, IService callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(string token, [int id=0])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"

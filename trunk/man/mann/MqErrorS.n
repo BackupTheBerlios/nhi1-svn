@@ -1,4 +1,4 @@
-.TH "MqErrorS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqErrorS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,30 +34,30 @@ MqErrorS \- error-object data type
 .PP 
 error-object data type 
 .PP
-Definition at line 945 of file msgque.h.
+Definition at line 944 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_BOL\fP \fBMqErrorS::append\fP"
 .PP
 allow to append? MQ_YES or MQ_NO 
 .PP
-Definition at line 949 of file msgque.h.
+Definition at line 948 of file msgque.h.
 .SS "enum \fBMqErrorE\fP \fBMqErrorS::code\fP"
 .PP
 the error code 
 .PP
-Definition at line 947 of file msgque.h.
+Definition at line 946 of file msgque.h.
 .SS "\fBMQ_INT\fP \fBMqErrorS::num\fP"
 .PP
 the error number also used as exit code 
 .PP
-Definition at line 948 of file msgque.h.
+Definition at line 947 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqErrorS::text\fP\fC [read]\fP"
 .PP
 the error message 
 .PP
-Definition at line 946 of file msgque.h.
+Definition at line 945 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

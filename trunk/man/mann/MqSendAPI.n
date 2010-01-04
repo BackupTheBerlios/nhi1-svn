@@ -1,51 +1,50 @@
-.TH "MqSendAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqSendAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqSendAPI \- add items into a data package.  
+MqSendAPI \- construct an outgoing \fIsend-data-package\fP.  
 
 .PP
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BYT\fP value)"
 .br
-.R "append a native typed value to the \fISend-Buffer\fP object "
+.R "append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const context, const \fBMQ_BOL\fP val)"
-.br
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const context, const \fBMQ_SRT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BOL\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const context, const \fBMQ_INT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const ctx, const \fBMQ_SRT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const context, const \fBMQ_FLT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const ctx, const \fBMQ_INT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const context, const \fBMQ_WID\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const ctx, const \fBMQ_FLT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const context, const \fBMQ_DBL\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const ctx, const \fBMQ_WID\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const in)"
+.RI "enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const ctx, const \fBMQ_DBL\fP value)"
 .br
-.R "append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const value)"
+.br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
 .br
-.R "append a native package object to the \fISend-Buffer\fP object "
+.R "append a \fIbody-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
 .br
-.R "append an entire package body object to the \fISend-Buffer\fP object "
+.R "append the \fIentire-body\fP to the \fIsend-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
 .br
@@ -63,80 +62,50 @@ MqSendAPI \- add items into a data package.
 .br
 .R "append a vararg string as va_list to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "initialize the \fISend-Buffer\fP object and start to create a Msgque package "
+.R "initialize the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token)"
 .br
-.R "finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
 .br
-.R "send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.R "send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "finish a service-handler and return the data if required. "
+.R "finish the \fIsend-data-block\fP on the server and optional return the results. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const ctx)"
 .br
-.R "send a msgque error from a server to a client "
+.R "send the data from the \fBEXCEPTION OBJECT\fP to the link target . "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
 .in -1c
 .SH "Detailed Description"
 .PP 
-add items into a data package. 
+construct an outgoing \fIsend-data-package\fP. 
 
-the management is done by a \fISend-Buffer\fP object using an \fIIo\fP object for doing the socket io. Every \fImsgque\fP object has only \fBone\fP \fISend-Buffer\fP object and every \fISend-Buffer\fP object has only \fBone\fP link to a \fI\fBMqS\fP\fP object.
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
-example 1: in the client, calling the \fIservice\fP and wait for an answer 
+\fBAttention:\fP
+.RS 4
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+.RE
 .PP
-.nf
-void MyServiceCall(struct MqS * const context) { // the libmsgque object
-    ...
-    MqSendSTART(context);                          // init the Send-Buffer object
-    MqSendI(context,int_value);                    // 1. argument: a MQ_INT value
-    MqSendV(context,'num:%x',num);                 // 2. argument: a vararg string value
-    MqSendB(context,mypicture,size);               // 3. argument: a binary picture of size length
-    // call service 'SRV1' and wait maximum 60 seconds for the results
-    MqErrorCheck(MqSendEND_AND_WAIT(context,'SRV1',60);
-    // ... get the results
-    MqErrorCheck(MqReadI(context, ???);
-    ...
-}
 
-.fi
-.PP
-.PP
-example 2: in the server, answer the \fIservice\fP call 
-.PP
-.nf
-static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
-  // ... do some int work
-    MqSendSTART(context);                       // init the Send-Buffer object
-    MqErrorCheck(MqReadI(context,&myInt);       // read a MQ_INT value
-    MqErrorCheck(MqReadC(context,&myStr);       // read a MQ_STR value
-    MqErrorCheck(MqReadU(context,&myPic);       // read a MqBufferS object to store the picture data
-  // ... do some processing
-  error:                                        // something is wrong, error back
-    return MqSendRETURN(context);               // send the package as an answer of a previous service-call
-}
-
-.fi
-.PP
- 
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSendB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
@@ -147,203 +116,185 @@ append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIin\fP the binary data to send 
+\fIin\fP the \fIbyte-array\fP data to send 
 .br
-\fIlen\fP the size of the binary data to send 
+\fIlen\fP the size of the \fIbyte-array\fP data to send 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  ctx, \fBMQ_BINB\fP const *const  value, \fBMQ_SIZE\fP const  len)"
 .PP
-append an entire package body object to the \fISend-Buffer\fP object 
+append the \fIentire-body\fP to the \fIsend-data-package\fP. 
+.PP
+The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBset val [$ctx ReadBDY]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIin\fP the body package data to send, result from the previous \fBMqReadBDY\fP call 
+\fIvalue\fP the \fIentire-body\fP for appending 
 .br
-\fIlen\fP the size of the binary data to send 
+\fIlen\fP the size of the \fIentire-body-byte-array\fP (C-API only) 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  in)"
+.SS "enum \fBMqErrorE\fP MqSendC (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  value)"
 .PP
-append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object 
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIin\fP the string data to send 
+\fIvalue\fP the value for appending 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendD (struct \fBMqS\fP *const  context, const \fBMQ_DBL\fP val)"
-.PP
-append a native typed value to the \fISend-Buffer\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIval\fP the value to send 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token)"
+.SS "enum \fBMqErrorE\fP MqSendD (struct \fBMqS\fP *const  ctx, const \fBMQ_DBL\fP value)"
 .PP
-finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP 
-.PP
-This function is used to call a \fIremote\fP service or answer a \fIservice-call\fP. 
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fItoken\fP a 4 byte string used to identify the remote service 
+\fIvalue\fP the value for appending 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
-.PP
-send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined 
-.PP
-This function is used to call a \fIremote\fP service and \fIdon't\fP wait for an answer. The answer will be processed asynchronous in \fBMqProcessEvent\fP. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fItoken\fP a 4 byte string used to identify the remote service 
-.br
-\fIproc\fP A service procedure called with the results of the transaction 
-.br
-\fIdata\fP A user defined additional data 
-.br
-\fIdatafreeF\fP A function to free \fIdata\fP after use 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP (without \fBMQ_CONTINUE\fP) 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-This function will \fInever\fP block. 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
-.PP
-send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP 
-.PP
-This function is used to call a \fIremote\fP service and wait for an answer. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fItoken\fP a 4 byte string used to identify the remote service 
-.br
-\fItimeout\fP \fBtime_t\fP type value for timeout in seconds 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP (without \fBMQ_CONTINUE\fP) 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendERROR (register struct \fBMqS\fP *const  context)"
-.PP
-send a msgque error from a server to a client 
-.PP
-Utility function to simplify the \fIsend\fP task for a \fIservice\fP handle.
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendF (struct \fBMqS\fP *const  context, const \fBMQ_FLT\fP val)"
-.PP
-append a native typed value to the \fISend-Buffer\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIval\fP the value to send 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendI (struct \fBMqS\fP *const  context, const \fBMQ_INT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token)"
 .PP
-append a native typed value to the \fISend-Buffer\fP object 
+finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the error is send back as \fIasynchronous-error-event\fP and will be raised during the next enter into the event-loop. Use \fBIBgError\fP to control the \fIasynchronous-error-event\fP processing. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the value to send 
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-\fBAttention:\fP
+
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.PP
+finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
+.PP
+This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for proceesing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
+.PP
+\fBParameters:\fP
 .RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the function to process the \fIservice-call\fP results 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
+.PP
+finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediatly. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendERROR (register struct \fBMqS\fP *const  ctx)"
+.PP
+send the data from the \fBEXCEPTION OBJECT\fP to the link target . 
+.PP
+If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendF (struct \fBMqS\fP *const  ctx, const \fBMQ_FLT\fP value)"
+.PP
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the value for appending 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqSendI (struct \fBMqS\fP *const  ctx, const \fBMQ_INT\fP value)"
+.PP
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the value for appending 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
@@ -369,78 +320,79 @@ all items of \fIin\fP are appended as single arguments to the call using \fBMqSe
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendL_END (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendL_END (struct \fBMqS\fP *const  ctx)"
 .PP
-end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendL_START (struct \fBMqS\fP *const  context)"
-.PP
-start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object 
+finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP
-.RE
-.PP
-example: create a \fIlist\fP item 
-.PP
-.nf
-MqSendL_START(send);     // start a LST item
-MqSendI(send,myInt);        // first LST sub-item
-MqSendC(send,'myString');   // second LST sub-item
-// ... do additional MqSend?
-MqSendL_END(send);       // finish a LST item
-
-.fi
-.PP
- 
-.SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
-.PP
-append a native package object to the \fISend-Buffer\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIin\fP the binary data to send, result from the previous \fBMqReadN\fP call 
-.br
-\fIlen\fP the size of the binary data to send 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqSendO (struct \fBMqS\fP *const  context, const \fBMQ_BOL\fP val)"
-.PP
-append a native typed value to the \fISend-Buffer\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIval\fP the value to send 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-\fBAttention:\fP
+
+.SS "enum \fBMqErrorE\fP MqSendL_START (struct \fBMqS\fP *const  ctx)"
+.PP
+start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
 .RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  ctx, \fBMQ_BINB\fP const *const  value, \fBMQ_SIZE\fP const  len)"
+.PP
+append a \fIbody-item\fP to the \fIsend-data-package\fP. 
+.PP
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBset val [$ctx ReadN]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the \fIbody-item\fP for appending 
+.br
+\fIlen\fP the size of the \fIbody-item-byte-array\fP (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendO (struct \fBMqS\fP *const  ctx, const \fBMQ_BOL\fP value)"
+.PP
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the value for appending 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendRETURN (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendRETURN (struct \fBMqS\fP *const  ctx)"
 .PP
-finish a service-handler and return the data if required. 
+finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
-Every service-handler have to use this function on exit:
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fB$ctx SendEND token\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -450,44 +402,46 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendS (struct \fBMqS\fP *const  context, const \fBMQ_SRT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendS (struct \fBMqS\fP *const  ctx, const \fBMQ_SRT\fP value)"
 .PP
-append a native typed value to the \fISend-Buffer\fP object 
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the value to send 
+\fIvalue\fP the value for appending 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendSTART (struct \fBMqS\fP *const  context)"
+.SS "enum \fBMqErrorE\fP MqSendSTART (struct \fBMqS\fP *const  ctx)"
 .PP
-initialize the \fISend-Buffer\fP object and start to create a Msgque package 
+initialize the \fIsend-data-package\fP. 
+.PP
+This function have to be the first statement in a \fIsend-data-block\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
@@ -534,50 +488,40 @@ append a vararg string as va_list to the \fISend-Buffer\fP object
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendW (struct \fBMqS\fP *const  context, const \fBMQ_WID\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendW (struct \fBMqS\fP *const  ctx, const \fBMQ_WID\fP value)"
 .PP
-append a native typed value to the \fISend-Buffer\fP object 
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the value to send 
+\fIvalue\fP the value for appending 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendY (struct \fBMqS\fP *const  context, const \fBMQ_BYT\fP val)"
+.SS "enum \fBMqErrorE\fP MqSendY (struct \fBMqS\fP *const  ctx, const \fBMQ_BYT\fP value)"
 .PP
-append a native typed value to the \fISend-Buffer\fP object 
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the value to send 
+\fIvalue\fP the value for appending 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-In \fBbinary\fP mode the data will be send as binary, in \fBstring\fP mode as string. 
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

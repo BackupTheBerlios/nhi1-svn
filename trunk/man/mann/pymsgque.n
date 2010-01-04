@@ -1,4 +1,4 @@
-.TH "pymsgque" n "3 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "4 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -18,7 +18,7 @@ pymsgque \- The \fBPYTHON\fP Application-Server Project
 .br
  \fBSEND DATA\fP
 .br
- \fBREAD DATA\fP
+ \fBpy_read\fP
 .br
  \fBSLAVE OBJECT\fP
 .br
@@ -292,18 +292,20 @@ Close the client/server link and delete the underlying communication object. All
 Shutdown the entire communication and exit the current process or thread.
 .SH "ADDING SERVICES"
 .PP
-To provide a \fIservice\fP is the main purpose of a server. The \fIctx.ServiceCreate(token,service)\fP method is usually added in the \fIServerSetup\fP method of the \fIIServerSetup\fP.
+create and manage services 
 .PP
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implecite on \fIlink-delete\fP or explicite with the \fBServiceDelete\fP function.  \fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
 .nf
-def ServerSetup(ctx):
-  ctx.ServiceCreate ('SRV1', SRV1)
+ def ServerSetup(ctx): 
+   ctx.ServiceCreate ('SRV1', SRV1) 
+
 .fi
 .PP
 .SS "TOKEN IDENTIFIER"
 The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. pymsgque is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
 .IP "\(bu" 2
-\fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
+\fB_???\fP - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
 \fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
@@ -342,71 +344,66 @@ Start the Event-Loop and check for the next event. In \fIclient\fP mode this com
 .PP
 .SH "SEND DATA"
 .PP
-The \fISend\fP style methods are used to build and send data using the pymsgque send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other pymsgque client/server links.
+construct an outgoing \fIsend-data-package\fP. 
 .PP
-.PP
-.nf
-ctx.SendSTART()
-ctx.SendI(num)
-ctx.SendL_START()
- ctx.SendD(balance)
- ctx.SendC('name of the owner')
- ctx.SendB(signature)
-ctx.SendL_END()
-ctx.SendEND_AND_WAIT('SRV1')
-.fi
-.PP
-.SS "ctx.SendSTART()"
-Initialize a pymsgque send data package. This method is required.
-.SS "ctx.SendEND(token)"
-Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireAndForget). (on error return an \fBEXCEPTION OBJECT\fP) 
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBSendEND_AND_WAIT\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
-.SS "ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
-Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for an answer. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.SendEND_AND_CALLBACK(token,callback)"
-Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.SendRETURN()"
-Finish a service-handler and return the data if required:
-.IP "\(bu" 2
-if a transaction is ongoing this function return the answer.
-.IP "\(bu" 2
-if the answer is an empty package no previous \fBMqSendSTART\fP is required.
-.IP "\(bu" 2
-if no transaction is ongoing this function does just return the error code.
-.PP
-(on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.SendERROR()"
-Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.Send[TYPE](value)"
-Add an item using \fBTYPE IDENTIFIER\fP to the pymsgque send data package. (example: \fISendY\fP)
-.SS "ctx.SendN(value)"
-Add a pymsgque body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
-.SS "ctx.SendBDY(value)"
-Create the entire package \fIbody\fP from a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually read with \fBReadBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
-.SS "ctx.SendL_START()"
-Start to send an embedded list item.
-.SS "ctx.SendL_END()"
-Finish to send an embedded list item.
-.SH "READ DATA"
-.PP
-read data from an incoming \fIread-data-package\fP. 
-.PP
-\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus help functions. 
-.PP
-\fBAttention:\fP
-.RS 4
-Reading data is an atomic task and should not be split. Only one read-package is always in duty. As basic rule read first all data and start the processing afterwards. 
-.RE
-.PP
- \fBExample:\fP read an integer and a list of double, string and a binary array: 
+ \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
 .PP
 .nf
- num = ctx.ReadI()
+ ctx.SendSTART()
+ ctx.SendI(num)
+ ctx.SendL_START()
+   ctx.SendD(balance)
+   ctx.SendC('name of the owner')
+   ctx.SendB(signature)
+ ctx.SendL_END()
+ ctx.SendEND_AND_WAIT('SRV1')
+
+\subsection       py_SendSTART                  ctx.SendSTART()
+\copydoc MqSendSTART
+
+\subsection       py_SendEND                            ctx.SendEND(token)
+\copydoc MqSendEND
+
+\subsection       py_SendEND_AND_WAIT                   ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)
+\copydoc MqSendEND_AND_WAIT
+
+\subsection       py_SendEND_AND_CALLBACK               ctx.SendEND_AND_CALLBACK(token,callback)
+\if SendEND_AND_CALLBACK2
+\subsection       py_SendEND_AND_CALLBACK2              \SendEND_AND_CALLBACK2
+\endif
+\copydoc MqSendEND_AND_CALLBACK
+
+\subsection       py_SendRETURN                 ctx.SendRETURN()
+\copydoc MqSendRETURN
+
+\subsection       py_SendERROR                  ctx.SendERROR()
+\copydoc MqSendERROR
+
+\subsection       py_Send_TYPE                  ctx.Send[TYPE](value)
+\copydoc MqSendY
+
+\subsection       py_SendN                              ctx.SendN(value)
+\copydoc MqSendN
+
+\subsection       py_SendBDY                            ctx.SendBDY(value)
+\copydoc MqSendBDY
+
+\subsection       py_SendL_START                        ctx.SendL_START()
+\copydoc MqSendL_START
+
+\subsection       py_SendL_END                  ctx.SendL_END()
+\copydoc MqSendL_END
+
+\section        py_read                         READ DATA
+\copydoc MqReadAPI
+\b Example: read an integer and a list of double, string and a \e byte-array: \code num = ctx.ReadI()
  ctx.ReadL_START()
  balance = ctx.ReadD()
  owner = ctx.ReadC()
@@ -433,15 +430,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "val = ctx.ReadN()"
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody-item\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBctx = MqS()\fP 
 .br
-\fIval\fP the \fIbody-item\fP as binary-array 
+\fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -452,15 +449,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "val = ctx.ReadBDY()"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a binary array with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBctx = MqS()\fP 
 .br
-\fIval\fP the \fIbody\fP as binary-array 
+\fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -471,7 +468,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "val = ctx.ReadU()"
 extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP 
 .PP
-The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD DATA\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBpy_read\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -527,7 +524,7 @@ boolean, \fITrue\fP or \fIFalse\fP
 .RE
 .PP
 .SS "ctx.ReadUndo()"
-undo the last \fBREAD DATA\fP function call 
+undo the last \fBpy_read\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
 .PP
@@ -550,7 +547,7 @@ Itialize the read with the current \fIbody-item\fP or an optional \fIbuffer-obje
 .RS 4
 \fIctx\fP the context returned by \fBctx = MqS()\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBval = ctx.ReadU()\fP call or  to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBval = ctx.ReadU()\fP call or \fINone\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -703,7 +700,7 @@ if buf.GetType() == 'C' :
 .fi
 .PP
 .SS "TYPE IDENTIFIER"
-A pymsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBval = ctx.Read[TYPE]()\fP or \fBbuffer.Get[TYPE]()\fP have to match the previous \fBctx.Send[TYPE](value)\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+A pymsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBval = ctx.Read[TYPE]()\fP or \fBbuffer.Get[TYPE]()\fP have to match the previous \fBpy_Send_TYPE\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character
 .IP "\(bu" 2
@@ -823,7 +820,7 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
-\fBReadBDY\fP : to read the entire body as binary array
+\fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
 \fBSendBDY\fP : to send the entire body
 .PP

@@ -25,6 +25,7 @@ ALIASES		    += "selftut=vbmsgquetut"
 ALIASES		    += "NS{1}=vb_\1"
 ALIASES		    += "lang=VB.NET"
 ALIASES		    += "fileextension=vb"
+ALIASES		    += "null=\e Nothing"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=Imports csmsgque"
@@ -149,6 +150,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(String token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(String token, [Integer timeout])"
@@ -177,8 +179,13 @@ ALIASES		    += "ReadL_START=ctx.ReadL_START(?MqBufferS buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call \n\
+  ServiceCreate (\"SRV1\", AddressOf srv2); \n\
+End Sub \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, AddressOf service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, AddressOf callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(String token, [int id=0])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([Integer timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"

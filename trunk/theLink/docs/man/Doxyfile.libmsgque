@@ -22,6 +22,7 @@ ALIASES		    += "selftut=libmsgquetut"
 ALIASES		    += "NS{1}=c_\1"
 ALIASES		    += "lang=C"
 ALIASES		    += "fileextension=c"
+ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"msgque.h\""
@@ -142,6 +143,7 @@ ALIASES		    += "LinkDelete=MqLinkDelete(ctx)"
 ALIASES		    += "Exit=MqExit(ctx)"
 
 # SEND DATA
+ALIASES		    += "send_example=\code SendSTART(ctx);\nMqSendI(ctx,num);\nMqSendL_START(ctx);\n  MqSendD(ctx,balance);\n  MqSendC(ctx,\"name of the owner\");\n  MqSendB(ctx,signature);\nMqSendL_END(ctx);\nMqErrorCheck(MqSendEND_AND_WAIT(ctx,\"SRV1\",MQ_TIMEOUT_USER));\endcode"
 ALIASES		    += "SendSTART=MqSendSTART(ctx)"
 ALIASES		    += "SendEND=MqSendEND(ctx,MQ_CST token)"
 ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,token,?timeout=MQ_TIMEOUT_USER?)"
@@ -170,8 +172,16 @@ ALIASES		    += "ReadL_START=MqReadL_START(ctx, struct MqBufferS buffer=NULL)"
 ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+enum MqErrorE ServerSetup(struct MqS * msgque) { \n\
+  MqErrorCheck(MqServiceCreate(msgque, \"SRV1\", SRV1, NULL, NULL)); \n\
+  return MQ_OK; \n\
+error: \n\
+  return MqErrorStack(msgque->error); \n\
+} \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,fService,data,fFree)"
+ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,callback,data,fFree)"
 ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_CST token, MQ_SIZE id=0)"
 ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,token)"
 ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVER))"

@@ -1,4 +1,4 @@
-.TH "MqIoConfigS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoConfigS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -39,7 +39,7 @@ MqIoConfigS \- configuration data which belong to \fIMqIoS\fP
 .PP 
 configuration data which belong to \fIMqIoS\fP 
 .PP
-Definition at line 605 of file msgque.h.
+Definition at line 604 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_INT\fP \fBMqIoConfigS::buffersize\fP"
@@ -48,20 +48,20 @@ OS specific value for read socket operation buffer.
 .PP
 type default option application context  INTEGER (byte) 4096 --buffersize server/client parent  
 .PP
-Definition at line 620 of file msgque.h.
+Definition at line 619 of file msgque.h.
 .SS "enum \fBMqIoComE\fP \fBMqIoConfigS::com\fP"
 .PP
 what kind of socket interface to use? 
 .PP
 type default option application context  INTEGER (enum) IO_PIPE --tcp/--uds/--pipe server parent  
 .PP
-Definition at line 627 of file msgque.h.
+Definition at line 626 of file msgque.h.
 .SS "struct \fBMqIoPipeConfigS\fP \fBMqIoConfigS::pipe\fP\fC [read]\fP"
 .PP
-Definition at line 631 of file msgque.h.
+Definition at line 630 of file msgque.h.
 .SS "struct \fBMqIoTcpConfigS\fP \fBMqIoConfigS::tcp\fP\fC [read]\fP"
 .PP
-Definition at line 630 of file msgque.h.
+Definition at line 629 of file msgque.h.
 .SS "\fBMQ_TIME_T\fP \fBMqIoConfigS::timeout\fP"
 .PP
 The timeout is used for all kind of low-level socket operations like \fCsend\fP, \fCrecv\fP and \fCconnect\fP. 
@@ -75,11 +75,11 @@ This \fCtimeout\fP is independent of the per transaction timeout of \fBMqSendEND
 .PP
 
 .PP
-Definition at line 613 of file msgque.h.
+Definition at line 612 of file msgque.h.
 .SS "struct \fBMqIoUdsConfigS\fP \fBMqIoConfigS::uds\fP\fC [read]\fP"
 .PP
-Definition at line 629 of file msgque.h.
+Definition at line 628 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

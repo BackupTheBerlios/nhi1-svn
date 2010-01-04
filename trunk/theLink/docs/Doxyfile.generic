@@ -216,7 +216,7 @@ ALIASES                = "libmsgque=\ref libmsgque_public \"libmsgque\"" \
                          "server_java_desc=- java-part of the performance test and validation toolkit" \
                          "client_desc=- part of the performance test and validation toolkit" \
                          "tclmsgque_man=Use the \tclmsgque for usage informations. " \
-                         "token=\param[in] token a 4 byte string used to identify the remote service" \
+                         "token=\param[in] token the \RNS{ServiceIdentifier} to identify the service" \
                          "header=\param header an data object oy type #MQ_STR " \
                          "valueI=\param value the #MQ_INT argument to send " \
                          "valueW=\param value the #MQ_WID argument to send " \
@@ -263,8 +263,8 @@ ALIASES                = "libmsgque=\ref libmsgque_public \"libmsgque\"" \
                          "config=\param[in] config a pointer to the configuration object" \
                          "attTemp=The return string is using the #MqS::temp as temporary storage " \
                          "attGotoError=The code will \b goto to the \b error label if the convertion is failing " \
-                         "param_timeout=\param timeout \b time_t type value for timeout in seconds " \
-                         "param_timeout_with_default=\param timeout \b time_t type value for timeout in seconds. A value of \c -1 is used as \e default using #MQ_TIMEOUT seconds." \
+                         "param_timeout=\param[in] timeout seconds until a \e timeout-error is raised" \
+                         "param_timeout_with_default=\param_timeout (default: \RNS{config_timeout} value)" \
                          "atom_out=\param[out] ato the pointer to the MqBufferAtomU union as return " \
                          "atom_in=\param[in] in the MqBufferAtomU union as input " \
                          "atom_type=\param[in] type the type of the MqBufferAtomU union " \

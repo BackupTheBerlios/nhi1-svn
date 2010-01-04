@@ -1,8 +1,8 @@
-.TH "msgque.h" n "3 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "4 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -391,7 +391,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $
 .ti -1c
 .RI "typedef unsigned char \fBMQ_BINB\fP"
 .br
-.R "binary basic data-type "
+.R "\fIbyte-array\fP basic data-type "
 .ti -1c
 .RI "typedef unsigned char \fBMQ_LSTB\fP"
 .br
@@ -411,7 +411,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $
 .ti -1c
 .RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
 .br
-.R "binary pointer data-type "
+.R "\fIbyte-array\fP pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
 .br
@@ -1256,43 +1256,42 @@ msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $
 .br
 .R "check if an item exists in the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const context, const \fBMQ_BYT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BYT\fP value)"
 .br
-.R "append a native typed value to the \fISend-Buffer\fP object "
+.R "append a native \\11 value to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const context, const \fBMQ_BOL\fP val)"
-.br
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const context, const \fBMQ_SRT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BOL\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const context, const \fBMQ_INT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendS\fP (struct \fBMqS\fP *const ctx, const \fBMQ_SRT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const context, const \fBMQ_FLT\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendI\fP (struct \fBMqS\fP *const ctx, const \fBMQ_INT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const context, const \fBMQ_WID\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendF\fP (struct \fBMqS\fP *const ctx, const \fBMQ_FLT\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const context, const \fBMQ_DBL\fP val)"
+.RI "enum \fBMqErrorE\fP \fBMqSendW\fP (struct \fBMqS\fP *const ctx, const \fBMQ_WID\fP value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const in)"
+.RI "enum \fBMqErrorE\fP \fBMqSendD\fP (struct \fBMqS\fP *const ctx, const \fBMQ_DBL\fP value)"
 .br
-.R "append a \fBMQ_STR\fP object to the \fISend-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const value)"
+.br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
 .br
-.R "append a native package object to the \fISend-Buffer\fP object "
+.R "append a \fIbody-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
 .br
-.R "append an entire package body object to the \fISend-Buffer\fP object "
+.R "append the \fIentire-body\fP to the \fIsend-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
 .br
@@ -1310,37 +1309,37 @@ msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $
 .br
 .R "append a vararg string as va_list to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendSTART\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "initialize the \fISend-Buffer\fP object and start to create a Msgque package "
+.R "initialize the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token)"
 .br
-.R "finish and send a \fIservice\fP Msgque packet without waiting on \fIreturn\fP "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
 .br
-.R "send a \fIservice\fP Msgque packet and waiting on \fIreturn\fP "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.R "send a \fIservice\fP Msgque packet with a \fIcallback\fP function defined "
+.R "finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendRETURN\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "finish a service-handler and return the data if required. "
+.R "finish the \fIsend-data-block\fP on the server and optional return the results. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const ctx)"
 .br
-.R "send a msgque error from a server to a client "
+.R "send the data from the \\11 to the link target . "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "start to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "end to append an embedded \fIlist\fP item to the \fISend-Buffer\fP object "
+.R "finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **args)"
 .br
@@ -1468,13 +1467,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 119 2010-01-01 17:56:24Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 119 $ 
+$Rev: 120 $ 
 .RE
 .PP
 \fBAuthor:\fP

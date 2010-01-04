@@ -25,6 +25,7 @@ ALIASES		    += "selftut=javamsgquetut"
 ALIASES		    += "NS{1}=java_\1"
 ALIASES		    += "lang=JAVA"
 ALIASES		    += "fileextension=java"
+ALIASES		    += "null=\e null"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import javamsgque.*;"
@@ -150,6 +151,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(String token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(String token, [int timeout])"
@@ -178,8 +180,13 @@ ENABLED_SECTIONS    += ReadL_START2
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void ServerSetup() { \n\
+  ServiceCreate (\"SRV1\", new SRV1()); \n\
+} \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, IService service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, IService callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(String token, [int id=0])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(String token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"

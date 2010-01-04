@@ -1,4 +1,4 @@
-.TH "pymsgque Tutorial" n "3 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque Tutorial" n "4 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -115,17 +115,17 @@ a \fBconnected\fP context of type \fBMqS\fP
 .PP
 Sending data is done using a minimum of 2 steps:
 .IP "1." 4
-First: start a data package with \fBctx.SendSTART()\fP
+First: start a data package with \fBpy_SendSTART\fP
 .IP "2." 4
 Last: submit the a data package to the link target using one of:
 .IP "  \(bu" 4
-\fBctx.SendEND(token)\fP
+\fBpy_SendEND\fP
 .IP "  \(bu" 4
-\fBctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)\fP
+\fBpy_SendEND_AND_WAIT\fP
 .IP "  \(bu" 4
-\fBctx.SendEND_AND_CALLBACK(token,callback)\fP
+\fBpy_SendEND_AND_CALLBACK\fP
 .IP "  \(bu" 4
-\fBctx.SendRETURN()\fP
+\fBpy_SendRETURN\fP
 .PP
 
 .PP

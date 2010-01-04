@@ -23,6 +23,7 @@ ALIASES		    += "selftut=perlmsgquetut"
 ALIASES		    += "NS{1}=perl_\1"
 ALIASES		    += "lang=perl"
 ALIASES		    += "fileextension=pl"
+ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e 1"
 ALIASES		    += "no=\e 0"
 ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
@@ -151,6 +152,7 @@ ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
 ALIASES		    += "Exit=$ctx->Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code $ctx->SendSTART();\n$ctx->SendI($num);\n$ctx->SendL_START();\n  $ctx->SendD($balance);\n  $ctx->SendC(\"name of the owner\");\n  $ctx->SendB($signature);\n$ctx->SendL_END();\n$ctx->SendEND_AND_WAIT(\"SRV1\"); \endcode"
 ALIASES		    += "SendSTART=$ctx->SendSTART()"
 ALIASES		    += "SendEND=$ctx->SendEND(token)"
 ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(token, timeout=seconds)"
@@ -177,6 +179,12 @@ ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
 ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+sub ServerSetup { \n\
+  my $ctx = shift; \n\
+  $ctx->ServiceCreate(\"SRV1\",serviceF); \n\
+} \n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(token, id=0)"

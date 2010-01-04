@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -70,7 +70,7 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .PP 
 end-user configuration data, also available as command-line options 
 .PP
-Definition at line 635 of file msgque.h.
+Definition at line 634 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_INT\fP \fBMqConfigS::debug\fP"
@@ -86,34 +86,34 @@ Using pipe (e.g. --pipe) the \fIserver\fP get the \fIdebug\fP flag from the \fIc
 .PP
 
 .PP
-Definition at line 745 of file msgque.h.
+Definition at line 744 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreFork\fP"
 .PP
 do not allow the usage of \fIfork\fP 
 .PP
-Definition at line 769 of file msgque.h.
+Definition at line 768 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreSpawn\fP"
 .PP
 do not allow the usage of \fIspawn\fP 
 .PP
-Definition at line 766 of file msgque.h.
+Definition at line 765 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreThread\fP"
 .PP
 do not allow the usage of \fIthreads\fP 
 .PP
-Definition at line 763 of file msgque.h.
+Definition at line 762 of file msgque.h.
 .SS "struct \fBMqIoConfigS\fP \fBMqConfigS::io\fP\fC [read]\fP"
 .PP
 Global configuration data belonging to 'io'. 
 .PP
-Definition at line 772 of file msgque.h.
+Definition at line 771 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isSilent\fP"
 .PP
 Suppress logging output. 
 .PP
 type default option application context  BOOL NO --silent server/client parent/child  
 .PP
-Definition at line 642 of file msgque.h.
+Definition at line 641 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isString\fP"
 .PP
 Use \fIstring\fP mode, send as many data as possible as string. 
@@ -122,17 +122,17 @@ type default option application context  BOOL NO --string client parent
 .PP
 \fBlibmsgque\fP distinguish between a \fIstring\fP based (option: \fC--string\fP) and a \fIbinary\fP based (this is the default) data packages. The items is a \fBlibmsgque\fP data package are of type \fBMqBufferU\fP including OS specific native data of type \fBMQ_ATO\fP. The native data can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast). \fIstring\fP is used for debugging purpose or if the binary data model is different between client and server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require using the \fC--string\fP option. The options is only available for the \fIclient-parent\fP setup. 
 .PP
-Definition at line 658 of file msgque.h.
+Definition at line 657 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS::master\fP\fC [read]\fP"
 .PP
 SLAVE: a pointer to the master object or \fCNULL\fP. 
 .PP
-Definition at line 757 of file msgque.h.
+Definition at line 756 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqConfigS::master_id\fP"
 .PP
 SLAVE: the ID in the master SLAVES array or \fCO\fP. 
 .PP
-Definition at line 760 of file msgque.h.
+Definition at line 759 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS::name\fP"
 .PP
 The human-readable name of context. 
@@ -177,7 +177,7 @@ MqConfigSetName(context, 'myString');
 .PP
 
 .PP
-Definition at line 712 of file msgque.h.
+Definition at line 711 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS::parent\fP\fC [read]\fP"
 .PP
 Create a child-context. 
@@ -186,7 +186,7 @@ type default option application context  POINTER NULL NO client parent
 .PP
 Read more in: \fCWHAT-IS: parent versa child\fP 
 .PP
-Definition at line 754 of file msgque.h.
+Definition at line 753 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS::srvname\fP"
 .PP
 The human-readable name of the server-context. 
@@ -227,7 +227,7 @@ MqConfigSetSrvName(context, 'myString');
 .PP
 
 .PP
-Definition at line 737 of file msgque.h.
+Definition at line 736 of file msgque.h.
 .SS "enum \fBMqStartE\fP \fBMqConfigS::startAs\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -261,8 +261,8 @@ The \fC--fork\fP option require the \fBfork\fP system-call and is \fBnot\fP comp
 .PP
 
 .PP
-Definition at line 684 of file msgque.h.
+Definition at line 683 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

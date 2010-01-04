@@ -85,11 +85,9 @@ enum MqIoSelectE {
   MQ_SELECT_SEND = (1 << 1),	///< 'select' for writing
 } ;
 
-/// \brief prototype for a Event-Check function
-///
-/// This function is called by the \libmsgque event-loop as idle-task in #MqProcessEvent
+/// \brief prototype for an Event-Callback function
 typedef enum MqErrorE (
-  *MqEventCreateF
+  *EventCreateF
 ) (
   struct MqS * const
 );

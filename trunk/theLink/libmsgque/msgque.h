@@ -284,7 +284,7 @@ typedef int MQ_HDL;
 typedef void MQ_PTRB;
 /// string basic data-type
 typedef char MQ_STRB;
-/// binary basic data-type
+/// \e byte-array basic data-type
 typedef unsigned char MQ_BINB;
 /// list basic data-type
 typedef unsigned char MQ_LSTB;
@@ -295,7 +295,7 @@ typedef MQ_PTRB *MQ_PTR;
 typedef MQ_STRB *MQ_STR;
 /// const string pointer data-type
 typedef MQ_STRB const * MQ_CST;
-/// binary pointer data-type
+/// \e byte-array pointer data-type
 typedef MQ_BINB *MQ_BIN;
 /// list pointer data-type
 typedef MQ_LSTB *MQ_LST;
@@ -368,7 +368,7 @@ enum MqTypeE {
   MQ_FLTT = (5<<4 | MQ_TYPE_IS_4_BYTE),  ///< F: 4 byte 'float' type
   MQ_WIDT = (6<<4 | MQ_TYPE_IS_8_BYTE),  ///< W: 8 byte 'long long int' type
   MQ_DBLT = (7<<4 | MQ_TYPE_IS_8_BYTE),  ///< D: 8 byte 'double' type
-  MQ_BINT = (8<<4                    ),  ///< B: binary array type
+  MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
   MQ_STRT = (9<<4                    ),  ///< C: character array type (e.g. with a \\0 at the end)
   MQ_LSTT = (10<<4                   ),  ///< L: list object type
   MQ_RETT = (11<<4                   )   ///< R: return object type
@@ -398,15 +398,14 @@ enum MqErrorE {
 /*                                                                           */
 /*****************************************************************************/
 
-/** \defgroup MqConfigAPI MqConfigAPI
- *  \{
- *  \brief configuration of the #MqS object
- */
+/// \defgroup MqConfigAPI MqConfigAPI
+/// \{
+/// \brief configuration of the #MqS object
 
-/// \brief prototype for the \c fork syscall
+/// \brief prototype for the \c fork sys-call
 typedef pid_t (MQ_DECL *MqForkF) (void);
 
-/// \brief prototype for the \c vfork syscall
+/// \brief prototype for the \c vfork sys-call
 typedef pid_t (MQ_DECL *MqVForkF) (void);
 
 /// \brief the prototype for a ContextCreate function
@@ -775,11 +774,11 @@ MqConfigSetSrvName(context, "myString");
 /// \brief application-programmer configuration data
 struct MqSetupS {
 
-  /// \brief application identifer
+  /// \brief application identifier
   ///
-  /// The application \e identifer is used to modify the client or filter behaviour depending on the server \e identifer.
-  /// The server set the \e identifer using #MqConfigSetIdent and the client ask for the identifer of the
-  /// server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifer
+  /// The application \e identifier is used to modify the client or filter behaviour depending on the server \e identifier.
+  /// The server set the \e identifier using #MqConfigSetIdent and the client ask for the identifier of the
+  /// server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifier
   /// is \b not changeable by the user, like the \e name configuration option, because this is a "build-in" 
   /// feature set by the \e programmer.
   MQ_STR ident;
@@ -795,8 +794,8 @@ struct MqSetupS {
   /// \brief pointer to the background error service
   ///
   /// A background error is an error without an link to an workflow. The error happen if an #MqSendEND
-  /// call fails or if an othe asyncrone task fails. if the callback is \b not specified the error
-  /// is printed to stderr but no error if left in the context. if the callback is defiend the
+  /// call fails or if an other asynchronous task fails. if the callback is \b not specified the error
+  /// is printed to stderr but no error if left in the context. if the callback is defined the
   /// context is set to the error and the callback is called to process this error. On the callback
   /// the error can be cleared up with #MqErrorReset.
   struct MqCallbackS BgError;
@@ -815,7 +814,7 @@ struct MqSetupS {
   ///
   /// This Server-Setup function is used to configure a new server-link and act like a
   /// constructor. This function is called on the end of #MqLinkCreate. A server-context-link is created 
-  /// for every new incomming connection request and is used to provide context specific services .
+  /// for every new incoming connection request and is used to provide context specific services .
   struct MqCallbackS ServerSetup;
 
   /// \brief pointer to the Server-Cleanup function
@@ -833,9 +832,9 @@ struct MqSetupS {
   /// update the Tk user-interface while the application is waiting for data. 
   /// The event handling function is called on idle and
   /// is designed for a very \b short function execution time. Do only \e one
-  /// action per function call. This function will be called with a ~10000 usec intervall to garantee
+  /// action per function call. This function will be called with a ~10000 usec interval to guarantee
   /// a parallel like execution.
-  /// \attention Together with \RNSC{ignoreExit} the Event-Handler is used to start background prcessing
+  /// \attention Together with \RNSC{ignoreExit} the Event-Handler is used to start background processing
   /// of tasks. Return the Event-Handler with \RNSA{ErrorSetCONTINUE} to signal that all tasks are finished 
   /// and the process/thread is ready to exit.
   /// If \b all \e child context Event-Handler return with \RNSA{ErrorSetCONTINUE} too
@@ -859,10 +858,10 @@ struct MqSetupS {
   ///  .
   struct MqFactoryS Factory;
 
-  /// \brief setup and initialize a thread befor a new thread is created by \libmsgque
+  /// \brief setup and initialize a thread before a new thread is created by \libmsgque
   MqSetupF fThreadInit;
 
-  /// \brief setup and initialize a fork-process befor a new fork-process is created by \libmsgque
+  /// \brief setup and initialize a fork-process before a new fork-process is created by \libmsgque
   MqSetupF fForkInit;
 
   /// \brief exit/cleanup a process
@@ -905,17 +904,17 @@ struct MqLinkS {
 
   // context-management variables
   MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
-  struct MqS *ctxIdP;		    ///< the inital (first) context (home of the ctxIdA)
+  struct MqS *ctxIdP;		    ///< the initial (first) context (home of the ctxIdA)
 
   // private variables
-  struct MqTokenS * srvT;	    ///< identifer for the 'service' token handle
+  struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
 
-  MQ_BOL onExit;		    ///< is allready an exit ongoing?
+  MQ_BOL onExit;		    ///< is already an exit ongoing?
   struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
   MQ_BOL onCreate;		    ///< is already an "create" ongoing?
   MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
   MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
-  MQ_BOL onShutdown;		    ///< is allready a "shutdown" ongoing?
+  MQ_BOL onShutdown;		    ///< is already a "shutdown" ongoing?
   MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
   MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
 
@@ -928,11 +927,11 @@ struct MqLinkS {
 
   // the next 3 items are used to map the transactionID (int) to the transaction pointer
   struct MqTransS * trans;	    ///< link to the trans object
-  MQ_HDL _trans;		    ///< storage for the Transaktion object from the package header
+  MQ_HDL _trans;		    ///< storage for the Transaction object from the package header
 
   // the following lines manage the link between the parent and the child,
-  // to be able to delete all childs if the parent is deleted
-  struct pChildS * childs;	    ///< linked list of childs
+  // to be able to delete all child's if the parent is deleted
+  struct pChildS * childs;	    ///< linked list of child's
   struct pChildS * self;	    ///< my own child storage
 
   // master/slave relationship
@@ -972,7 +971,7 @@ struct MqS {
   MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object
-  MQ_SIZE contextsize;		    ///< alloc-size of the user-defined context struct
+  MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
 };
 
 #ifndef MQ_PRIVATE
@@ -1269,7 +1268,7 @@ MQ_DECL MqConfigSetIoTcp (
 /// \param[in] socket the name of the known socket
 /// \retMqErrorE
 ///
-/// This is configuration option is only usefull for a \e (x)inetd setup
+/// This is configuration option is only useful for a \e (x)inetd setup
 /// to use the stdin (socket=0) as send/recv communication socket
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqConfigSetIoPipe (
@@ -1444,7 +1443,7 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
 /// \brief get the \e filter object from a filter pipeline
 ///  between a \e master context and a \e slave context with \e id.
 /// \context
-/// \param[in] id the slave identifer, set to \e 0 for a \e filter
+/// \param[in] id the slave identifier, set to \e 0 for a \e filter
 /// \param[out] filterP the filter object to return
 /// \retMqErrorE
 ///
@@ -1478,7 +1477,7 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
 /// The token is used to identify the server-service to call. If the
 /// server create a generic service-handler using \b +ALL in #MqServiceCreate
 /// the current token is unknown in the ongoing service-handler. This
-/// unknown token can be retrieved with #MqConfigGetToken.
+/// unknown token can be retrieved with this function.
 MQ_EXTERN MQ_CST 
 MQ_DECL MqConfigGetToken (
   struct MqS const * const context
@@ -1572,7 +1571,7 @@ MQ_DECL MqConfigGetSelf (
 
 /** \defgroup MqMsgqueAPI MqMsgqueAPI
  *  \{
- *  \brief the toplevel \libmsgque object: #MqS
+ *  \brief the top-level \libmsgque object: #MqS
  *
  *  Every user defined context object has a #MqS object as first parameter:
 \code
@@ -1583,7 +1582,7 @@ struct MyCtx {
 }
 \endcode
  *  The #MqS object is created with the #MqContextCreate function and is
- *  used as toplevel \libmsgque context and handle. Near every \libmsgque
+ *  used as top-level \libmsgque context and handle. Near every \libmsgque
  *  function uses this handle as first argument. The handle is delete with
  *  #MqContextDelete.
  * 
@@ -1726,51 +1725,104 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 );
 #endif // _DEBUG
 
-/*****************************************************************************/
-/*                                                                           */
-/*                                misc                                       */
-/*                                                                           */
-/*****************************************************************************/
+/** \} MqMsgqueAPI */
 
-/// \brief create a service handle
-/// \context
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                    S E R V I C E - A P I                        ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup MqServiceAPI MqServiceAPI
+/// \{
+/// \brief create and manage services
+///
+/// To provide a \e service is the main purpose of a server and the main-purpose
+/// of a \e client/server connection is to call a service and to process the results.
+/// A service have to be defined on a server during \e link-setup (\RNSC{IServerSetup})
+/// with the \RNSA{ServiceCreate} function. The cleanup is done implicit on 
+/// \e link-delete or explicit with the \RNSA{ServiceDelete} function.
+///
+
+/// \brief create a link between a \RNS{ServiceIdentifier} and a \RNS{ServiceCallback}
+/// \ctx
 /// \token
-/// \param proc an external (non libmsgque) function to provide the service
-/// \param data an external (non libmsgque) pointer to a data structure linked to the #MqTokenF function
-/// \param datafreeF function to free \e data pointer
-/// \retMqErrorE
+/// \param[in] callback the function to process the incoming \e service-request
+/// \param[in] data a user defined additional \e data-argument for the \e callback function (C-API only)
+/// \param[in] datafreeF the function to free the \e data-argument after use (C-API only)
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
-  struct MqS * const context, 
+  struct MqS * const ctx, 
   MQ_CST const token,
-  MqTokenF const proc,
+  MqTokenF const callback,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
 );
 
-/// \brief use a proxy to proxy the incomming trafic to the outgoing trafic
-/// \context
+/// \brief create a service to link a \e master-context with a \e slave-context.
+/// \details This function is used to create a \e proxy-service to forward the 
+/// \e body-data from the \e read-data-package of the \e master to the \e send-data-package
+/// of the slave. The data is \e not changed. This function support the \e reverse-operation
+/// also. If the \e ctx is a \e master-context than the data is send to \e slave identified by \e id.
+/// If the \e ctx is a \e slave-context than the data is send to the \e master of the \e slave.
+/// Use \e id=0 to send that data to the \e filter-context.
+/// \ctx
 /// \token
-/// \param[in] id the slave identifer, only used if \e context is a \e master
-/// \retMqErrorE
-///
-/// If \e context is a \e master context than the data is send to \e slave with \e id.
-/// If \e context is a \e slave context than the data is send to the \e master of the \e slave.
+/// \param[in] id the slave identifier, only used if \e ctx is a \e master-context
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
-  struct MqS * const context, 
+  struct MqS * const ctx, 
   MQ_CST const token,
   MQ_SIZE const id
 );
 
-/// \brief delete service handle
-/// \context
+/// \brief delete a service.
+/// \ctx
 /// \token
-/// \retMqErrorE
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
-  struct MqS const * const context, 
+  struct MqS const * const ctx, 
   MQ_CST const token
 );
 
-/** \} */
+/** \brief enter the \e event-loop and wait for an incoming \e service-request.
+ * 
+ *  To specify the the \e time-interval three modes are supported:
+ *  - \b \MQ_WAIT_NO, don't wait for an event do just the check and comeback
+ *  - \b \MQ_WAIT_ONCE, use \e timeout seconds to wait for exact \e one event or raise
+ *    an \e timeout error if no event was found
+ *  - \b \MQ_WAIT_FOREVER, wait forever and only come back on \e error or on \e exit
+ *  .
+ *  This function is usually used on a server to enter the \e event-loop and wait 
+ *  for incoming service requests or after the \RNSA{SendEND_AND_CALLBACK} function 
+ *  to wait for the \e service-result.
+ * 
+ *  \ctx
+ *  \param_timeout_with_default, only used if \e wait = \MQ_WAIT_ONCE
+ *  \param[in] wait chose the \e time-interval to wait for a new event.
+ *  \retException
+ *
+\ifnot MAN
+example: A typical server looks like:
+\code
+...
+MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
+...
+MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+...
+MqLinkDelete(ctx);
+...
+\endcode
+\endif
+ **/
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
+  struct MqS * const ctx,
+  MQ_TIME_T timeout,
+  enum MqWaitOnEventE const wait
+);
+
+/** \} MqServiceAPI */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -1819,7 +1871,7 @@ union MqBufferAtomU {
  **/
 union MqBufferU {
   MQ_ATO *A;			///< atom for native data-types
-  MQ_BIN  B;			///< arbitrary binary data
+  MQ_BIN  B;			///< arbitrary \e byte-array data
   MQ_STR  C;			///< C string like data (e.g. with a \\0 at the end)
   MQ_LST  L;			///< list object type data
   MQ_LST  R;			///< return object type data
@@ -1847,7 +1899,7 @@ union MqBufferU {
  **/
 
 struct MqBufferS {
-  int signature;		///< signature to provide type-safty for non-typed languages
+  int signature;		///< signature to provide type-safety for non-typed languages
   struct MqS *context;		///< error object of the related msgque
   MQ_BIN data;                  ///< always point to the beginning of the data-segment
   MQ_SIZE size;                 ///< the size of the data-segment
@@ -2165,8 +2217,8 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetC (
 
 /// \brief set the #MqBufferS object with an #MQ_BIN object
 /// \buf
-/// \param in the binary to set the buffer
-/// \param len the length of the binary data
+/// \param in the \e byte-array to set the buffer
+/// \param len the length of the \e byte-array data
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetB (
   struct MqBufferS * const buf,
@@ -2888,7 +2940,7 @@ MQ_EXTERN void MQ_DECL MqErrorPrint (
   struct MqS * const context
 );
 
-/// \brief brint an error to stderr and clear the error after
+/// \brief print an error to stderr and clear the error after
 /// \context
 MQ_EXTERN MQ_INT MQ_DECL MqErrorGetNum (
   struct MqS const * const context
@@ -2971,13 +3023,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /** \defgroup MqReadAPI MqReadAPI
  *  \{
- *  \brief read data from an incoming \e read-data-package.
+ *  \brief extract data from an incoming \e read-data-package.
  *
  *  \e Reading data is a passive task and the opposite of \e sending data which is an active task.
  *  Passive mean that the \e read is triggered by an incoming data-package and not by the
  *  software-work-flow or the user. There is one \e read function for every basic type
- *  defined in \RNS{BufferIdentifer} plus help functions.
- *  \attention Reading data is an atomic task and should not be split. Only one read-package 
+ *  defined in \RNS{BufferIdentifer} plus a couple of help functions.
+ *  \attention Reading data is an atomic task and should not be split. Only one \e read-data-package 
  *  is always in duty. As basic rule read first all data and start the processing afterwards.
  */
 
@@ -2989,7 +3041,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /// \brief start to extract a \e list-items from the \e read-data-package.
 ///
-/// Itialize the read with the current \e body-item or an optional \e buffer-object.
+/// Initialize the read with the current \e body-item or an optional \e buffer-object.
 /// This command requires a final \RNS{ReadL_END} to finish the read.
 /// \ctx
 /// \param[in] buffer an optional \e buffer-object as result from a previous \RNS{ReadU} call or \null to
@@ -3071,8 +3123,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
 
 /// \brief generic function to read an #MQ_BIN object from the \e Read-Buffer object
 /// \context
-/// \retval out the binary data to return
-/// \retval len the length of the binary data
+/// \retval out the \e byte-array data to return
+/// \retval len the length of the \e byte-array data
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
   struct MqS * const context,
@@ -3082,12 +3134,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
 
 /// \brief extract a \e body-item from the \e read-data-package
 ///
-/// A \e body-item is a binary array with a defined \e length and including the \e size, 
+/// A \e body-item is a \e byte-array with a defined \e length and including the \e size, 
 /// \e data-type and the \e native data object as information. The \e item extracted
 /// can be saved into an external storage and be send later using \RNSA{SendN}.
 /// \ctx
-/// \param[out] val the \e body-item as binary-array
-/// \param[out] len the binary-array-length of the \e val
+/// \param[out] val the \e body-item as \e byte-array
+/// \param[out] len the \e byte-array-length of the \e val
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   struct MqS * const ctx,
@@ -3097,12 +3149,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 
 /// \brief extract the entire \e body-package from the \e read-data-package
 ///
-/// A \e body is a binary array with a defined \e length and including the \e number-of-items
+/// A \e body is a \e byte-array with a defined \e length and including the \e number-of-items
 /// and the \e body-items as information. The \e body extracted can be saved into an external storage 
 /// or be used in a software tunnel (example: the \e agurad tool) and be send later using \RNSA{SendBDY}.
 /// \ctx
-/// \param[out] val the \e body as binary-array
-/// \param[out] len the binary-array-length of the \e val
+/// \param[out] val the \e body as \e byte-array
+/// \param[out] len the \e byte-array-length of the \e val
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   struct MqS * const ctx,
@@ -3185,30 +3237,36 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
 
 /** \defgroup MqSendAPI MqSendAPI
  *  \{
- *  \brief add items into a data package.
+ *  \brief construct an outgoing \e send-data-package.
  *
- *  the management is done by a \e Send-Buffer object using an \e Io object for 
- *  doing the socket io. Every \e msgque object has only \b one \e Send-Buffer object 
- *  and every \e Send-Buffer object has only \b one link to a \e MqS object.
+ *  \e Sending data is an active task and the opposite of \e reading data which is an passive task.
+ *  Active mean that the \e send is triggered by the
+ *  software-work-flow or the user. There is one \e send function for every basic type
+ *  defined in \RNS{BufferIdentifer} plus a couple of help functions.
+ *  \attention Sending data is an atomic task and should not be split. Only one \e send-data-package 
+ *  is always in duty. As basic rule do the processing first and send all the data afterwards.
+ *  If the function \RNSA{SendEND_AND_WAIT} is used the application enter the event-loop and is still 
+ *  able to work on other client/server links.
  *
- *  example 1: in the client, calling the \e service and wait for an answer
- *  \code
+\ifnot MAN
+example 1: in the client, calling the \e service and wait for an answer
+\code
 void MyServiceCall(struct MqS * const context) { // the libmsgque object
     ...
     MqSendSTART(context);                          // init the Send-Buffer object
     MqSendI(context,int_value);                    // 1. argument: a MQ_INT value
     MqSendV(context,"num:%x",num);                 // 2. argument: a vararg string value
-    MqSendB(context,mypicture,size);               // 3. argument: a binary picture of size length
+    MqSendB(context,mypicture,size);               // 3. argument: a \e byte-array picture of size length
     // call service "SRV1" and wait maximum 60 seconds for the results
     MqErrorCheck(MqSendEND_AND_WAIT(context,"SRV1",60);
     // ... get the results
     MqErrorCheck(MqReadI(context, ???);
     ...
 }
- *  \endcode
- *
- *  example 2: in the server, answer the \e service call
- *  \code
+\endcode
+
+example 2: in the server, answer the \e service call
+\code
 static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
   // ... do some int work
     MqSendSTART(context);                       // init the Send-Buffer object
@@ -3219,7 +3277,8 @@ static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
   error:                                        // something is wrong, error back
     return MqSendRETURN(context);		// send the package as an answer of a previous service-call
 }
- *  \endcode
+\endcode
+\endif
  **/
 
 /*****************************************************************************/
@@ -3228,90 +3287,97 @@ static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief append a native typed value to the \e Send-Buffer object
-/// \context
-/// \param[in] val the value to send
-/// \retMqErrorE
-/// \attention In \b binary mode the data will be send as binary, in \b string mode as string.
+/// \brief append a native \RNS{BufferIdentifer} value to the \e send-data-package.
+/// \ctx
+/// \param[in] value the value for appending
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendY (
-  struct MqS * const context,
-  const MQ_BYT val
+  struct MqS * const ctx,
+  const MQ_BYT value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendO (
-  struct MqS * const context,
-  const MQ_BOL val
+  struct MqS * const ctx,
+  const MQ_BOL value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendS (
-  struct MqS * const context,
-  const MQ_SRT val
+  struct MqS * const ctx,
+  const MQ_SRT value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendI (
-  struct MqS * const context,
-  const MQ_INT val
+  struct MqS * const ctx,
+  const MQ_INT value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendF (
-  struct MqS * const context,
-  const MQ_FLT val
+  struct MqS * const ctx,
+  const MQ_FLT value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendW (
-  struct MqS * const context,
-  const MQ_WID val
+  struct MqS * const ctx,
+  const MQ_WID value
 );
 
 /// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendD (
-  struct MqS * const context,
-  const MQ_DBL val
+  struct MqS * const ctx,
+  const MQ_DBL value
 );
 
-/// \brief append a #MQ_STR object to the \e Send-Buffer object
-/// \context
-/// \param in the string data to send
-/// \retMqErrorE
+/// \copydoc MqSendY
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendC (
-  struct MqS * const context,
-  MQ_CST const in
+  struct MqS * const ctx,
+  MQ_CST const value
 );
 
 /// \brief append a #MQ_BIN object to the \e Send-Buffer object
 /// \context
-/// \param in the binary data to send
-/// \param len the size of the binary data to send
-/// \retMqErrorE
+/// \param in the \e byte-array data to send
+/// \param len the size of the \e byte-array data to send
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
   struct MqS * const context,
   MQ_BINB const * const in,
   MQ_SIZE const len
 );
 
-/// \brief append a native package object to the \e Send-Buffer object
-/// \context
-/// \param in the binary data to send, result from the previous #MqReadN call
-/// \param len the size of the binary data to send
+/// \brief append a \e body-item to the \e send-data-package.
+/// \details A \e body-item is a \e byte-array and including the \e item-size, 
+/// \e item-type and the \e item-data as value.
+/// The \e body-item is the result of a previous \RNS{ReadN} function call and can 
+/// be used for saving into an external storage or for an additional operation like 
+/// encryption.
+/// \ctx
+/// \param[in] value the \e body-item for appending
+/// \param[in] len the size of the \e body-item-byte-array (C-API only)
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
-  struct MqS * const context,
-  MQ_BINB const * const in,
+  struct MqS * const ctx,
+  MQ_BINB const * const value,
   MQ_SIZE const len
 );
 
-/// \brief append an entire package body object to the \e Send-Buffer object
-/// \context
-/// \param in the body package data to send, result from the previous #MqReadBDY call
-/// \param len the size of the binary data to send
-/// \retMqErrorE
+/// \brief append the \e entire-body to the \e send-data-package.
+/// \details The \e entire-body is a \e byte-array and including the \e number-of-items 
+/// and the \e body-items as value.
+/// The \e entire-body is the result of a previous \RNS{ReadBDY} function call and can 
+/// be used for saving into an external storage or for an additional operation like 
+/// encryption.
+/// \ctx
+/// \param[in] value the \e entire-body for appending
+/// \param[in] len the size of the \e entire-body-byte-array (C-API only)
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
-  struct MqS * const context,
-  MQ_BINB const * const in,
+  struct MqS * const ctx,
+  MQ_BINB const * const value,
   MQ_SIZE const len
 );
 
@@ -3359,81 +3425,80 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendVL (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief initialize the \e Send-Buffer object and start to create a Msgque package
-/// \context
+/// \brief initialize the \e send-data-package.
+/// \details This function have to be the first statement in a \e send-data-block.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendSTART (
-  struct MqS * const context
+  struct MqS * const ctx
 );
 
-/** \brief finish and send a \e service Msgque packet without waiting on \e return
- * 
- * This function is used to call a \e remote service or answer a \e service-call.
- * \context
- * \token
- * \retMqErrorE
- */
+/// \brief finish the \e send-data-block, call the remote service and do \e not expect a return.
+/// \details If an \b error is raised on the server during the service-processing the
+/// error is send back as \e asynchronous-error-event and will be raised during the next enter into the
+/// event-loop. Use \RNSC{IBgError} to control the \e asynchronous-error-event processing.
+/// \ctx
+/// \token
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST const token
 );
 
-/** \brief send a \e service Msgque packet and waiting on \e return
- *
- * This function is used to call a \e remote service and wait for an answer.
- * \context
- * \token
- * \param_timeout
- * \retMqErrorE (without #MQ_CONTINUE)
- */
+/// \brief finish the \e send-data-block, call the remote service and do \e wait for return.
+/// \details If an \b error is raised on the server during the service-processing the function
+/// will return this error immediately. During waiting for the return the \e event-loop is used
+/// to process other events. Use \RNSC{IEvent} to add your tasks into the event loop.
+/// \ctx
+/// \token
+/// \param_timeout
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_WAIT (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST const token,
   MQ_TIME_T const timeout
 );
 
-/** \brief send a \e service Msgque packet with a \e callback function defined
- *
- * This function is used to call a \e remote service and \e don't wait for an answer.
- * The answer will be processed asynchronous in #MqProcessEvent.
- * \context
- * \token
- * \param[in] proc A service procedure called with the results of the transaction
- * \param[in] data A user defined additional data
- * \param[in] datafreeF A function to free \e data after use
- * \retMqErrorE (without #MQ_CONTINUE)
- * \attention This function will \e never block.
- */
+/// \brief finish the \e send-data-block, call the remote service and do \e not-wait for return.
+/// \details This function will \e never block and return immediately. If \e return-data or an
+/// error is available the \e callback-function is called for processing. Use \RNS{ProcessEvent}
+/// to enter the \e event-loop.
+/// \ctx
+/// \token
+/// \param[in] callback the function to process the \e service-call results
+/// \param[in] data a user defined additional \e data-argument for the \e callback function (C-API only)
+/// \param[in] datafreeF the function to free the \e data-argument after use (C-API only)
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST const token,
-  MqTokenF const proc,
+  MqTokenF const callback,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
 );
 
-/// \brief finish a service-handler and return the data if required.
-///
-/// Every service-handler have to use this function on exit:
+/// \brief finish the \e send-data-block on the server and optional return the results.
+/// \details Every \e service-handler have to use this function at the end to return the
+/// results or the error. If an \e error is returned the local \e error-object is reset.
+/// If no results have to be returned (\RNS{SendEND})
 /// - if a transaction is ongoing this function return the answer.
 /// - if the answer is an empty package no previous #MqSendSTART is required.
 /// - if no transaction is ongoing this function does just return the error code.
 /// .
-/// \context
-/// \retMqErrorE
-///
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendRETURN (
-  struct MqS * const context
+  struct MqS * const ctx
 );
 
-/** \brief send a msgque error from a server to a client
- * 
- *  Utility function to simplify the \e send task for a \e service handle.
- *
- *  \context
- *  \retMqErrorE
- */
+/// \brief send the data from the \RNS{error} to the link target .
+/// \details If an error is available the \e error-number and the \e error-text
+/// is send to the link target. After send the error is reset. This function
+/// only raise an error if the sending self fails.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendERROR (
-  register struct MqS * const context
+  register struct MqS * const ctx
 );
 
 /*****************************************************************************/
@@ -3442,27 +3507,30 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendERROR (
 /*                                                                           */
 /*****************************************************************************/
 
-/** \brief start to append an embedded \e list item to the \e Send-Buffer object
- *  \context
+/** \brief start to append an embedded \e body-list-item to the \e send-data-package.
+ *  \ctx
+ *  \retException
  *
- *  example: create a \e list item
- *  \code
-MqSendL_START(send);     // start a LST item
-MqSendI(send,myInt);        // first LST sub-item
-MqSendC(send,"myString");   // second LST sub-item
+\ifnot MAN
+example: create a \e body-list-item
+\code
+MqSendL_START(send);	    // start a list-item
+MqSendI(send,myInt);        // first list-sub-item
+MqSendC(send,"myString");   // second list- sub-item
 // ... do additional MqSend?
-MqSendL_END(send);       // finish a LST item
- *  \endcode
+MqSendL_END(send);	    // finish a list-item
+\endcode
+\endif
  */
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_START (
-  struct MqS * const context
+  struct MqS * const ctx
 );
 
-/** \brief end to append an embedded \e list item to the \e Send-Buffer object
- *  \context
- */
+/// \brief finish to append an embedded \e body-list-item to the \e send-data-package.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
-  struct MqS * const context
+  struct MqS * const ctx
 );
 
 /** \} MqSendAPI */
@@ -3548,7 +3616,7 @@ MQ_DECL MqSlaveCreate (
 /// \brief Delete a \e slave object from a \e master/slave link identified by \e id.
 ///
 /// By default the \e slave-context object will be deleted if the \e master-context is deleted.
-/// Use this functionto delete the \e parent-slave-context explicit and brake the \e master/slave
+/// Use this function to delete the \e parent-slave-context explicit and brake the \e master/slave
 /// link.  If \e id is invalid nothing will happen.  It is an \e error to delete a \e child-slave-context.
 /// \param[in] ctx the \e master context object as PARENT without a CHILD
 /// \id
@@ -3573,40 +3641,6 @@ MQ_DECL MqSlaveGet (
 );
 
 /** \} slave api */
-
-/** \ingroup MqMsgqueAPI
- *  \brief Waiting for an incoming packet on all open msgque object links.
- * 
- *  This function is used to wait for (e.g. #MQ_WAIT_ONCE) or check (e.g. #MQ_WAIT_NO) for an 
- *  incoming event. If an event occurs the header of the Msgque packet is parsed and
- *  the according service-handle is called. if #MQ_WAIT_FOREVER is set the function
- *  will never return, accept for an error or on exit. This function is usually used
- *  on a server to enter the event-loop and wait for incoming service requests.
- * 
- *  \context
- *  \param_timeout_with_default
- *  \param wait should the code wait forever (e.g. #MQ_WAIT_FOREVER), just wait for the next event (e.g. #MQ_WAIT_ONCE) or just return after one single test (#MQ_WAIT_NO)"
- *  \retMqErrorE
- *
- *  \attention The \e timeout argument is only used if #MQ_WAIT_ONCE is set.
- *
- *  A typical server looks like:
-\code
-...
-MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
-...
-MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
-...
-MqLinkDelete(ctx);
-...
-\endcode
- **/
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
-  struct MqS * const context,
-  MQ_TIME_T timeout,
-  enum MqWaitOnEventE const wait
-);
 
 /* ####################################################################### */
 /* ###                                                                 ### */

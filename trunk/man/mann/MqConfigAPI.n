@@ -1,4 +1,4 @@
-.TH "MqConfigAPI" n "3 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -415,12 +415,12 @@ configuration of the \fBMqS\fP object
 .PP 
 .SS "#define MQ_PRIVATE_CONFIG_CONST   const"
 .PP
-Definition at line 957 of file msgque.h.
+Definition at line 956 of file msgque.h.
 .SS "#define MqFactoryS_NULL   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
 .PP
-Definition at line 532 of file msgque.h.
+Definition at line 531 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef void( * \fBMqDeleteF\fP)(struct \fBMqS\fP *const context)"
@@ -435,42 +435,42 @@ delete a \fIparent\fP context as the thread exit point
 .PP
 
 .PP
-Definition at line 433 of file msgque.h.
+Definition at line 432 of file msgque.h.
 .SS "typedef void( * \fBMqExitF\fP)(int num)"
 .PP
 prototype for exit a process or thread 
 .PP
-Definition at line 537 of file msgque.h.
+Definition at line 536 of file msgque.h.
 .SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .PP
 prototype for a Object-Delete factory function 
 .PP
-Definition at line 491 of file msgque.h.
+Definition at line 490 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
 prototype for the \fCfork\fP syscall 
 .PP
-Definition at line 407 of file msgque.h.
+Definition at line 406 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
 .PP
 application specific help function type 
 .PP
-Definition at line 464 of file msgque.h.
+Definition at line 463 of file msgque.h.
 .SS "typedef void( * \fBMqSetupF\fP)(struct \fBMqS\fP *const )"
 .PP
 used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands 
 .PP
-Definition at line 543 of file msgque.h.
+Definition at line 542 of file msgque.h.
 .SS "typedef void( * \fBMqTokenDataFreeF\fP)(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a free additional token data function 
 .PP
-Definition at line 448 of file msgque.h.
+Definition at line 447 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
 prototype for the \fCvfork\fP syscall 
 .PP
-Definition at line 410 of file msgque.h.
+Definition at line 409 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqFactoryE\fP"
@@ -493,7 +493,7 @@ the \fIfactory\fP is called to create an object for ...
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 469 of file msgque.h.
+Definition at line 468 of file msgque.h.
 .SS "enum \fBMqIoComE\fP"
 .PP
 what kind of socket interface to use? 
@@ -508,7 +508,7 @@ what kind of socket interface to use?
 \fB\fIMQ_IO_PIPE \fP\fP
 
 .PP
-Definition at line 577 of file msgque.h.
+Definition at line 576 of file msgque.h.
 .SS "enum \fBMqStartE\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -528,7 +528,7 @@ create entity as \fIthread\fP
 \fB\fIMQ_START_SPAWN \fP\fP
 create entity as \fIspawn\fP process 
 .PP
-Definition at line 555 of file msgque.h.
+Definition at line 554 of file msgque.h.
 .SS "enum \fBMqStatusIsE\fP"
 .PP
 Information about how the \fIcontext\fP was created. 
@@ -551,7 +551,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 546 of file msgque.h.
+Definition at line 545 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_BOL\fP MqConfigCheckIdent (struct \fBMqS\fP *const  context, \fBMQ_CST\fP ident)"
@@ -935,7 +935,7 @@ get the token from the ongoing service-handler
 the token as 4 character string
 .RE
 .PP
-The token is used to identify the server-service to call. If the server create a generic service-handler using \fB+ALL\fP in \fBMqServiceCreate\fP the current token is unknown in the ongoing service-handler. This unknown token can be retrieved with \fBMqConfigGetToken\fP. 
+The token is used to identify the server-service to call. If the server create a generic service-handler using \fB+ALL\fP in \fBMqServiceCreate\fP the current token is unknown in the ongoing service-handler. This unknown token can be retrieved with this function. 
 .SS "void MqConfigReset (struct \fBMqS\fP *const  context)"
 .PP
 clean the \fBMqS::config\fP data 
@@ -1195,4 +1195,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

@@ -378,67 +378,15 @@ and \e slave-context local and on the remote site of the link.
 Shutdown the entire communication and exit the current process or thread.
 
 \section	\NS{service}				ADDING SERVICES
-To provide a \e service is the main purpose of a server. The \e \ServiceCreate method
-is usually added in the \e ServerSetup method of the \e IServerSetup.
-\if CSHARP
-\code
-public void IServerSetup.ServerSetup() {
-  ServiceCreate ("SRV1", srv1);
-}
-\endcode
-\elseif VB
-\code
-Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
-  ServiceCreate ("SRV1", AddressOf srv1);
-End Sub
-\endcode
-\elseif JAVA
-public void ServerSetup() {
-  ServiceCreate ("SRV1", new SRV1());
-}
-\elseif PYTHON
-\code
-def ServerSetup(ctx):
-  ctx.ServiceCreate ("SRV1", SRV1)
-\endcode
-\elseif TCL
-\code
-proc ServerSetup {ctx} {
-  $ctx ServiceCreate "SRV1" serviceF
-}
-\endcode
-\elseif PERL
-\code
-sub ServerSetup {
-  my $ctx = shift;
-  $ctx->ServiceCreate("SRV1",serviceF);
-}
-\endcode
-\elseif CC
-\code
-public void ServerSetup() {
-  ServiceCreate ("SRV1", CallbackF(&MyServer::SRV1));
-}
-\endcode
-\elseif C
-\code
-enum MqErrorE ServerSetup(struct MqS * msgque) {
-  MqErrorCheck(MqServiceCreate(msgque, "SRV1", SRV1, NULL, NULL));
-  return MQ_OK;
-error:
-  return MqErrorStack(msgque->error);
-}
-\endcode
-\else
-UNKNOWN
-\endif
+\copydoc MqServiceAPI
 
+\b Example: define the service \e SRV1 on the \e server-link-setup: \service_example
 
 \subsection	  \NS{ServiceIdentifier}			TOKEN IDENTIFIER
 The \e token identifier is a 4 byte string and identifies the service. The \e token is
 set by the programmer to identify different services. \self is using some special \e token
 for \e internal or \e common usage:
- - \b _??? - all \e token starting with a \b "_" are for \b internal usage only
+ - <B>_???</B> - all \e token starting with a \b "_" are for \b internal usage only
  - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to listen on \b all token not handled by other \e token more precise
  - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
  - \b +FTR - used for \RNS{filter-one}
@@ -447,8 +395,8 @@ for \e internal or \e common usage:
 
 \subsection	  \NS{ServiceCallback}			SERVICE CALLBACK
 A service is using a callback to act on an incoming service request. The callback is
-used on a \e server using \RNSA{ServiceCreate} or on a \e client using
-\RNSA{SendEND_AND_CALLBACK}.
+linked to a \RNS{ServiceIdentifier} with \RNSA{ServiceCreate} or as argument to the
+\RNSA{SendEND_AND_CALLBACK} function.
 \if CSHARP
 The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
 using a delegate of type <I>void Callback()</I>.
@@ -476,174 +424,60 @@ UNKNOWN
 \if ServiceCreate2
 \subsection	  \NS{ServiceCreate2}			\ServiceCreate2
 \endif
-Create a new service listen on \RNS{ServiceIdentifier} and start for every incoming request a \e service. \throw
+\copydoc MqServiceCreate
 
 \subsection       \NS{ServiceProxy}			\ServiceProxy
-Create a new service listen on \RNS{ServiceIdentifier} and link the incoming package to the outgoing package of
-slave with \e id. Use \e id=0 to link a filter.
+\copydoc MqServiceProxy
 
 \subsection	  \NS{ServiceDelete}			\ServiceDelete
-Delete a new service listen on \RNS{ServiceIdentifier} . \throw
+\copydoc MqServiceDelete
 
 \subsection	  \NS{ProcessEvent}			\ProcessEvent
-Start the Event-Loop and check for the next event.
-In \e client mode this command is usually used together with 
-\RNSA{SendEND_AND_CALLBACK} to process the results. \throw
-\timeout
-\param[in] \ProcessEventFlag use flag value to define the action (default: NO)
- - \b NO, don't wait for an event do just the check
- - \b ONCE, use \e timeout seconds to wait for exact \e one event 
- - \b FOREVER, wait forever and only come back on \e error or on \e exit
- .
+\copydoc MqProcessEvent
 
 \section	\NS{send}				SEND DATA
-The \e Send style methods are used to build and send data using the \self send data package.
-The data is typed using the \RNS{BufferIdentifer} and the methods can wait or not for an answer.
-During waiting the the application is still able to work on events like other \self client/server links.
-\if CSHARP
-\code
-ctx.SendSTART();
-ctx.SendI(num);
-ctx.SendL_START();
- ctx.SendD(balance);
- ctx.SendC("name of the owner");
- ctx.SendB(signature);
-ctx.SendL_END();
-ctx.SendEND_AND_WAIT("SRV1");
-\endcode
-\elseif VB
-\code
-ctx.SendSTART()
-ctx.SendI(num)
-ctx.SendL_START()
- ctx.SendD(balance)
- ctx.SendC("name of the owner")
- ctx.SendB(signature)
-ctx.SendL_END()
-ctx.SendEND_AND_WAIT("SRV1")
-\endcode
-\elseif JAVA
-\code
-ctx.SendSTART();
-ctx.SendI(num);
-ctx.SendL_START();
- ctx.SendD(balance);
- ctx.SendC("name of the owner");
- ctx.SendB(signature);
-ctx.SendL_END();
-ctx.SendEND_AND_WAIT("SRV1");
-\endcode
-\elseif PYTHON
-\code
-ctx.SendSTART()
-ctx.SendI(num)
-ctx.SendL_START()
- ctx.SendD(balance)
- ctx.SendC("name of the owner")
- ctx.SendB(signature)
-ctx.SendL_END()
-ctx.SendEND_AND_WAIT("SRV1")
-\endcode
-\elseif TCL
-\code
-$ctx SendSTART
-$ctx SendI $num
-$ctx SendL_START
- $ctx SendD $balance
- $ctx SendC "name of the owner"
- $ctx SendB $signature
-$ctx SendL_END
-$ctx SendEND_AND_WAIT "SRV1"
-\endcode
-\elseif PERL
-\code
-$ctx->SendSTART();
-$ctx->SendI($num);
-$ctx->SendL_START();
- $ctx->SendD($balance);
- $ctx->SendC("name of the owner");
- $ctx->SendB($signature);
-$ctx->SendL_END();
-$ctx->SendEND_AND_WAIT("SRV1");
-\endcode
-\elseif CC
-\code
-ctx.SendSTART();
-ctx.SendI(num);
-ctx.SendL_START();
- ctx.SendD(balance);
- ctx.SendC("name of the owner");
- ctx.SendB(signature);
-ctx.SendL_END();
-ctx.SendEND_AND_WAIT("SRV1")
-\endcode
-\elseif C
-\code
-SendSTART(ctx);
-MqSendI(ctx,num);
-MqSendL_START(ctx);
- MqSendD(ctx,balance);
- MqSendC(ctx,"name of the owner");
- MqSendB(ctx,signature);
-MqSendL_END(ctx);
-MqErrorCheck(MqSendEND_AND_WAIT(ctx,"SRV1",MQ_TIMEOUT_USER))
-\endcode
-\else
-UNKNOWN
-\endif
+\copydoc MqSendAPI
+\b Example: send an integer and a list of double, string and a \e byte-array: \send_example
 
 \subsection	  \NS{SendSTART}			\SendSTART
-Initialize a \self send data package. This method is required.
+\copydoc MqSendSTART
 
 \subsection	  \NS{SendEND}				\SendEND
-Send the package using \ServiceIdentifier without expecting an answer (FireAndForget). \throw
-\attention if an \b error is raised on the server during service-processing the
-error is send back as <B>asynchronous event</B> and can be raised sometime in the future.
-To be sure to get the error immediately use \RNSA{SendEND_AND_WAIT}. \throw
+\copydoc MqSendEND
 
 \subsection	  \NS{SendEND_AND_WAIT}			\SendEND_AND_WAIT
-Send the package using \ServiceIdentifier and wait \e timeout seconds for an answer. \throw
+\copydoc MqSendEND_AND_WAIT
 
 \subsection	  \NS{SendEND_AND_CALLBACK}		\SendEND_AND_CALLBACK
 \if SendEND_AND_CALLBACK2
 \subsection	  \NS{SendEND_AND_CALLBACK2}		\SendEND_AND_CALLBACK2
 \endif
-Send the package using \RNS{ServiceIdentifier} and \b don't wait for an answer. The answer will
-be handled by the \RNS{ServiceCallback}. \throw
+\copydoc MqSendEND_AND_CALLBACK
 
 \subsection	  \NS{SendRETURN}			\SendRETURN
-Finish a service-handler and return the data if required:
-- if a transaction is ongoing this function return the answer.
-- if the answer is an empty package no previous #MqSendSTART is required.
-- if no transaction is ongoing this function does just return the error code.
-.
-\throw
+\copydoc MqSendRETURN
 
 \subsection	  \NS{SendERROR}			\SendERROR
-Send an asynchronous error to the link target. \throw
+\copydoc MqSendERROR
 
 \subsection	  \NS{Send_TYPE}			\Send_TYPE
-Add an item using \RNS{BufferIdentifer} to the \self send data package. (example: \e SendY)
+\copydoc MqSendY
 
 \subsection	  \NS{SendN}				\SendN
-Add a \self body \e item to the package. A \e item is a binary array with a defined \e length
-and including the \e size, \e data-type and the \e native data object as information. The \e item
-is usually read with \RNSA{ReadN} and can be used to save the item into an external storage.
+\copydoc MqSendN
 
 \subsection	  \NS{SendBDY}				\SendBDY
-Create the entire package \e body from a binary array. A package \e body include information about
-the number of items and the native data items. The \e body package is usually read with
-\RNSA{ReadBDY} and is used to \e tunnel the entire package data. (example: \e agurad tool)
+\copydoc MqSendBDY
 
 \subsection	  \NS{SendL_START}			\SendL_START
-Start to send an embedded list item.
+\copydoc MqSendL_START
 
 \subsection	  \NS{SendL_END}			\SendL_END
-Finish to send an embedded list item.
+\copydoc MqSendL_END
 
 \section	\NS{read}				READ DATA
 \copydoc MqReadAPI
-\b Example: read an integer and a list of double, string and a binary array: \read_example
+\b Example: read an integer and a list of double, string and a \e byte-array: \read_example
 
 \subsection	  \NS{Read_TYPE}			\Read_TYPE
 \copydoc MqReadY
@@ -982,7 +816,7 @@ To define a \e bi-directional filter a couple of commands provide support:
  - \RNSA{config_filter,ConfigGetFilter}: to get the filter context (other site)
  - \RNSA{config_token,ConfigGetToken}: to get the current token
  - \RNSA{config_isTransaction,ConfigGetIsTransaction} : to check if a transaction is ongoing
- - \RNSA{ReadBDY} : to read the entire body as binary array
+ - \RNSA{ReadBDY} : to read the entire body as \e byte-array
  - \RNSA{SendBDY} : to send the entire body
  .
 

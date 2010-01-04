@@ -15,6 +15,7 @@
 #---------------------------------------------------------------------------
 
 TAGFILES            = 
+ENABLED_SECTIONS    += MAN
 INPUT               = $(SRCDIR)/libmsgque .
 FILE_PATTERNS       = msgque.h *.doc
 EXAMPLE_PATH	    = $(SRCDIR)/tests

@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "3 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -273,19 +273,23 @@ Close the client/server link and delete the underlying communication object. All
 Shutdown the entire communication and exit the current process or thread.
 .SH "ADDING SERVICES"
 .PP
-To provide a \fIservice\fP is the main purpose of a server. The \fI$ctx\fP ServiceCreate token service method is usually added in the \fIServerSetup\fP method of the \fIIServerSetup\fP.
+create and manage services 
 .PP
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implecite on \fIlink-delete\fP or explicite with the \fBServiceDelete\fP function. 
+.PP
+\fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
 .nf
-proc ServerSetup {ctx} {
-  $ctx ServiceCreate 'SRV1' serviceF
-}
+ proc ServerSetup {ctx} { 
+   $ctx ServiceCreate 'SRV1' serviceF 
+ } 
+
 .fi
 .PP
 .SS "TOKEN IDENTIFIER"
 The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. tclmsgque is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
 .IP "\(bu" 2
-\fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
+\fB_???\fP - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
 \fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
@@ -296,64 +300,194 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 \fB+EOF\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .PP
 .SS "SERVICE CALLBACK"
-A service is using a callback to act on an incoming service request. The callback is used on a \fIserver\fP using \fBServiceCreate\fP or on a \fIclient\fP using \fBSendEND_AND_CALLBACK\fP.
+A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented as TCL procedure using \fIService {ctx}\fP
-.SS "$ctx ServiceCreate token service"
-Create a new service listen on \fBTOKEN IDENTIFIER\fP and start for every incoming request a \fIservice\fP. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "$ctx ServiceProxy token ?id=0?"
-Create a new service listen on \fBTOKEN IDENTIFIER\fP and link the incoming package to the outgoing package of slave with \fIid\fP. Use \fIid=0\fP to link a filter.
-.SS "$ctx ServiceDelete token"
-Delete a new service listen on \fBTOKEN IDENTIFIER\fP . (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?"
-Start the Event-Loop and check for the next event. In \fIclient\fP mode this command is usually used together with \fBSendEND_AND_CALLBACK\fP to process the results. (on error return an \fBEXCEPTION OBJECT\fP) 
+.SS "$ctx ServiceCreate token callback"
+create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
 \fBParameters:\fP
 .RS 4
-\fItimeout\fP don't wait more than TIMEOUT seconds to get an answer from the server. If no answer is available an error is raised. (default: \fBcommand-line: --timeout\fP) 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIMqC.WAIT\fP use flag value to define the action (default: NO)
-.IP "\(bu" 2
-\fBNO\fP, don't wait for an event do just the check
-.IP "\(bu" 2
-\fBONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event
-.IP "\(bu" 2
-\fBFOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the function to process the incomming \fIservice-request\fP 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
 .PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx ServiceProxy token ?id=0?"
+create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
+.PP
+This function is used to create a \fIproxy-service\fP to forward the \fIbody-data\fP from the \fIread-data-package\fP of the \fImaster\fP to the \fIsend-data-package\fP of the slave. The data is \fInot\fP changed. This function support the \fIreverse-operation\fP also. If the \fIctx\fP is a \fImaster-context\fP than the data is send to \fIslave\fP identified by \fIid\fP. If the \fIctx\fP is a \fIslave-context\fP than the data is send to the \fImaster\fP of the \fIslave\fP. Use \fIid=0\fP to send that data to the \fIfilter-context\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIid\fP the slave identifer, only used if \fIctx\fP is a \fImaster-context\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx ServiceDelete token"
+delete a service. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?"
+enter the \fIevent-loop\fP and wait for an incomming \fIservice-request\fP. 
+.PP
+To specify the the \fItime-interval\fP three modes are supported:
+.IP "\(bu" 2
+\fB\fCNO\fP,\fP don't wait for an event do just the check and comeback
+.IP "\(bu" 2
+\fB\fCONCE\fP,\fP use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+.IP "\(bu" 2
+\fB\fCFOREVER\fP,\fP wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+.PP
+This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = \fCONCE\fP 
+.br
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SH "SEND DATA"
 .PP
-The \fISend\fP style methods are used to build and send data using the tclmsgque send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other tclmsgque client/server links.
+construct an outgoing \fIsend-data-package\fP. 
 .PP
-.PP
-.nf
-$ctx SendSTART
-$ctx SendI $num
-$ctx SendL_START
- $ctx SendD $balance
- $ctx SendC 'name of the owner'
- $ctx SendB $signature
-$ctx SendL_END
-$ctx SendEND_AND_WAIT 'SRV1'
-.fi
-.PP
-.SS "$ctx SendSTART"
-Initialize a tclmsgque send data package. This method is required.
-.SS "$ctx SendEND token"
-Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireAndForget). (on error return an \fBEXCEPTION OBJECT\fP) 
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBSendEND_AND_WAIT\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+.RE
+.PP
+ \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
+.PP
+.nf
+ $ctx SendSTART
+ $ctx SendI $num
+ $ctx SendL_START
+   $ctx SendD $balance
+   $ctx SendC 'name of the owner'
+   $ctx SendB $signature
+ $ctx SendL_END
+ $ctx SendEND_AND_WAIT 'SRV1'
+
+.fi
+.PP
+.SS "$ctx SendSTART"
+initialize the \fIsend-data-package\fP. 
+.PP
+This function have to be the first statement in a \fIsend-data-block\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx SendEND token"
+finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the error is send back as \fIasynchronous-error-event\fP and will be raised during the next enter into the event-loop. Use \fBIBgError\fP to control the \fIasynchronous-error-event\fP processing. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOUT_USER?"
-Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for an answer. (on error return an \fBEXCEPTION OBJECT\fP)
+finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediatly. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx SendEND_AND_CALLBACK token callback"
-Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
+.PP
+This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for proceesing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the function to process the \fIservice-call\fP results 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx SendRETURN"
-Finish a service-handler and return the data if required:
+finish the \fIsend-data-block\fP on the server and optional return the results. 
+.PP
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fB$ctx SendEND token\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -361,31 +495,122 @@ if the answer is an empty package no previous \fBMqSendSTART\fP is required.
 .IP "\(bu" 2
 if no transaction is ongoing this function does just return the error code.
 .PP
-(on error return an \fBEXCEPTION OBJECT\fP)
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx SendERROR"
-Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "$ctx Send[TYPE] value"
-Add an item using \fBTYPE IDENTIFIER\fP to the tclmsgque send data package. (example: \fISendY\fP)
-.SS "$ctx SendN ByteArray"
-Add a tclmsgque body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
-.SS "$ctx SendBDY ByteArray"
-Create the entire package \fIbody\fP from a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually read with \fBReadBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
+send the data from the \fBEXCEPTION OBJECT\fP to the link target . 
+.PP
+If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx Send<TYPE> value"
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the value for appending 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx SendN value"
+append a \fIbody-item\fP to the \fIsend-data-package\fP. 
+.PP
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBset val [$ctx ReadN]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the \fIbody-item\fP for appending 
+.br
+\fIlen\fP the size of the \fIbody-item-byte-array\fP (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx SendBDY value"
+append the \fIentire-body\fP to the \fIsend-data-package\fP. 
+.PP
+The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBset val [$ctx ReadBDY]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIvalue\fP the \fIentire-body\fP for appending 
+.br
+\fIlen\fP the size of the \fIentire-body-byte-array\fP (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx SendL_START"
-Start to send an embedded list item.
+start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx SendL_END"
-Finish to send an embedded list item.
+finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SH "READ DATA"
 .PP
-read data from an incoming \fIread-data-package\fP. 
+extract data from an incoming \fIread-data-package\fP. 
 .PP
-\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus help functions. 
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-Reading data is an atomic task and should not be split. Only one read-package is always in duty. As basic rule read first all data and start the processing afterwards. 
+Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an integer and a list of double, string and a binary array: 
+ \fBExample:\fP read an integer and a list of double, string and a \fIbyte-array\fP: 
 .PP
 .nf
  set num [$ctx ReadI]
@@ -415,15 +640,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "set val [$ctx ReadN]"
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody-item\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the \fIbody-item\fP as binary-array 
+\fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -434,15 +659,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "set val [$ctx ReadBDY]"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a binary array with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIval\fP the \fIbody\fP as binary-array 
+\fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -686,7 +911,7 @@ if {[$buf GetType] == 'C'} {
 .fi
 .PP
 .SS "TYPE IDENTIFIER"
-A tclmsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBset val [$ctx Read<TYPE>]\fP or \fB$buffer Get[TYPE]\fP have to match the previous \fB$ctx Send[TYPE] value\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+A tclmsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBset val [$ctx Read<TYPE>]\fP or \fB$buffer Get[TYPE]\fP have to match the previous \fB$ctx Send<TYPE> value\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character
 .IP "\(bu" 2
@@ -818,7 +1043,7 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
-\fBReadBDY\fP : to read the entire body as binary array
+\fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
 \fBSendBDY\fP : to send the entire body
 .PP

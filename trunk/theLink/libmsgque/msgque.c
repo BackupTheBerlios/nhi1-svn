@@ -548,7 +548,7 @@ MqLinkCreate (
 
     // pReadCreate have to fit into the 'CacheCF' function
     context->link.read = pReadCreate (context);
-    if (MqErrorGetCode(context) == MQ_ERROR) goto error;
+    if (iErrorGetCode(context) == MQ_ERROR) goto error;
 
     MqErrorCheck (pIoCreate   (context, alfa, &context->link.io));
     context->link.srvT = pTokenCreate(context);
@@ -938,7 +938,7 @@ sMqEventStart (
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
   if (MqErrorCheckI(pTokenInvoke (a_context->link.srvT))) {
-    enum MqErrorE err = MqErrorGetCode(a_context);
+    enum MqErrorE err = iErrorGetCode(a_context);
     if (err == MQ_ERROR) {
       if (a_context->link._trans != 0) {
 	// in a transaction, "MqSendRETURN" will convert the context error 
@@ -1011,7 +1011,7 @@ sCallEventProc (
   if (context->setup.ignoreExit != MQ_YES || NUM != CONTINUE) {
     MqErrorReset(context);
   }
-  return MqErrorGetCode(context);
+  return iErrorGetCode(context);
 error:
   context->setup.ignoreExit = MQ_NO;
   return MqErrorStack(context);
@@ -1268,7 +1268,7 @@ MqCheckForLeftOverArguments (
        MqErrorSAppendV (context, "=> %s", str);
   }
   MqBufferLDelete(argvP);
-  return MqErrorGetCode(context);
+  return iErrorGetCode(context);
 }
 
 /*****************************************************************************/

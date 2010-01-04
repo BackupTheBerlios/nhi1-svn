@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "3 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -317,19 +317,21 @@ Close the client/server link and delete the underlying communication object. All
 Shutdown the entire communication and exit the current process or thread.
 .SH "ADDING SERVICES"
 .PP
-To provide a \fIservice\fP is the main purpose of a server. The \fI\fBctx.ServiceCreate(MQ_CST token, IService * service)\fP\fP method is usually added in the \fIServerSetup\fP method of the \fIIServerSetup\fP.
+create and manage services 
 .PP
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implecite on \fIlink-delete\fP or explicite with the \fBServiceDelete\fP function.  \fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
 .nf
-public void ServerSetup() {
-  ServiceCreate ('SRV1', CallbackF(&MyServer::SRV1));
-}
+ public void ServerSetup() {
+   ServiceCreate ('SRV1', CallbackF(&MyServer::SRV1));
+ }
+
 .fi
 .PP
 .SS "TOKEN IDENTIFIER"
 The \fItoken\fP identifier is a 4 byte string and identifies the service. The \fItoken\fP is set by the programmer to identify different services. \fBccmsgque\fP is using some special \fItoken\fP for \fIinternal\fP or \fIcommon\fP usage:
 .IP "\(bu" 2
-\fB_\fP??? - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
+\fB_???\fP - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
 \fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
@@ -369,37 +371,108 @@ Start the Event-Loop and check for the next event. In \fIclient\fP mode this com
 .PP
 .SH "SEND DATA"
 .PP
-The \fISend\fP style methods are used to build and send data using the \fBccmsgque\fP send data package. The data is typed using the \fBTYPE IDENTIFIER\fP and the methods can wait or not for an answer. During waiting the the application is still able to work on events like other \fBccmsgque\fP client/server links.
+construct an outgoing \fIsend-data-package\fP. 
 .PP
-.PP
-.nf
-ctx.SendSTART();
-ctx.SendI(num);
-ctx.SendL_START();
- ctx.SendD(balance);
- ctx.SendC('name of the owner');
- ctx.SendB(signature);
-ctx.SendL_END();
-ctx.SendEND_AND_WAIT('SRV1')
-.fi
-.PP
-.SS "ctx.SendSTART()"
-Initialize a \fBccmsgque\fP send data package. This method is required.
-.SS "ctx.SendEND(MQ_CST const token)"
-Send the package using \fBTOKEN IDENTIFIER\fP without expecting an answer (FireAndForget). (on error return an \fBEXCEPTION OBJECT\fP) 
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-if an \fBerror\fP is raised on the server during service-processing the error is send back as \fBasynchronous event\fP and can be raised sometime in the future. To be sure to get the error immediately use \fBSendEND_AND_WAIT\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+.RE
+.PP
+ \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
+.PP
+.nf
+ ctx.SendSTART();
+ ctx.SendI(num);
+   ctx.SendL_START();
+   ctx.SendD(balance);
+   ctx.SendC('name of the owner');
+   ctx.SendB(signature);
+ ctx.SendL_END();
+ ctx.SendEND_AND_WAIT('SRV1') 
+
+.fi
+.PP
+.SS "ctx.SendSTART()"
+initialize the \fIsend-data-package\fP. 
+.PP
+This function have to be the first statement in a \fIsend-data-block\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.SendEND(MQ_CST const token)"
+finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the error is send back as \fIasynchronous-error-event\fP and will be raised during the next enter into the event-loop. Use \fBIBgError\fP to control the \fIasynchronous-error-event\fP processing. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
-Send the package using \fBTOKEN IDENTIFIER\fP and wait \fItimeout\fP seconds for an answer. (on error return an \fBEXCEPTION OBJECT\fP)
+finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
+.PP
+If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediatly. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendEND_AND_CALLBACK(MQ_CST const token, IService * const callback)"
 .SS "ctx.SendEND_AND_CALLBACK(MQ_CST const token, CallbackF const callback)"
-Send the package using \fBTOKEN IDENTIFIER\fP and \fBdon't\fP wait for an answer. The answer will be handled by the \fBSERVICE CALLBACK\fP. (on error return an \fBEXCEPTION OBJECT\fP)
+finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
+.PP
+This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for proceesing. Use \fBctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the service procedure called to process the results 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP usied in the \fIcallback\fP (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendRETURN()"
-Finish a service-handler and return the data if required:
+finish the \fIsend-data-block\fP on the server and optional return the results. 
+.PP
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(MQ_CST const token)\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -407,31 +480,122 @@ if the answer is an empty package no previous \fBMqSendSTART\fP is required.
 .IP "\(bu" 2
 if no transaction is ongoing this function does just return the error code.
 .PP
-(on error return an \fBEXCEPTION OBJECT\fP)
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendERROR()"
-Send an asynchronous error to the link target. (on error return an \fBEXCEPTION OBJECT\fP)
+send the data from the \fBEXCEPTION OBJECT\fP to the link target . 
+.PP
+If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.Send[TYPE](TYPE value)"
-Add an item using \fBTYPE IDENTIFIER\fP to the \fBccmsgque\fP send data package. (example: \fISendY\fP)
+append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fIvalue\fP the value for appending 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendB(MQ_BIN value, MQ_SIZE len)"
-Add a \fBccmsgque\fP body \fIitem\fP to the package. A \fIitem\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP is usually read with \fBReadN\fP and can be used to save the item into an external storage.
+append a \fIbody-item\fP to the \fIsend-data-package\fP. 
+.PP
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBctx.ReadN(MQ_BIN &value, MQ_SIZE &len)\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fIvalue\fP the \fIbody-item\fP for appending 
+.br
+\fIlen\fP the size of the \fIbody-item-byte-array\fP (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
-Create the entire package \fIbody\fP from a binary array. A package \fIbody\fP include information about the number of items and the native data items. The \fIbody\fP package is usually read with \fBReadBDY\fP and is used to \fItunnel\fP the entire package data. (example: \fIagurad\fP tool)
+append the \fIentire-body\fP to the \fIsend-data-package\fP. 
+.PP
+The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBctx.ReadBDY(MQ_BIN &value, MQ_SIZE &len)\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fIvalue\fP the \fIentire-body\fP for appending 
+.br
+\fIlen\fP the size of the \fIentire-body-byte-array\fP (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendL_START()"
-Start to send an embedded list item.
+start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.SendL_END()"
-Finish to send an embedded list item.
+finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SH "READ DATA"
 .PP
-read data from an incoming \fIread-data-package\fP. 
+extract data from an incoming \fIread-data-package\fP. 
 .PP
-\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus help functions. 
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
 .PP
 \fBAttention:\fP
 .RS 4
-Reading data is an atomic task and should not be split. Only one read-package is always in duty. As basic rule read first all data and start the processing afterwards. 
+Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an integer and a list of double, string and a binary array: 
+ \fBExample:\fP read an integer and a list of double, string and a \fIbyte-array\fP: 
 .PP
 .nf
 num = ctx.ReadI();
@@ -460,15 +624,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ReadN(MQ_BIN &value, MQ_SIZE &len)"
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody-item\fP is a binary array with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBctx = new MqC()\fP 
 .br
-\fIval\fP the \fIbody-item\fP as binary-array 
+\fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -479,15 +643,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ReadBDY(MQ_BIN &value, MQ_SIZE &len)"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a binary array with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBctx = new MqC()\fP 
 .br
-\fIval\fP the \fIbody\fP as binary-array 
+\fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
-\fIlen\fP the binary-array-length of the \fIval\fP 
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -579,7 +743,7 @@ Itialize the read with the current \fIbody-item\fP or an optional \fIbuffer-obje
 .RS 4
 \fIctx\fP the context returned by \fBctx = new MqC()\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS val = ctx.ReadU()\fP call or  to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS val = ctx.ReadU()\fP call or \fINULL\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -882,7 +1046,7 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
-\fBReadBDY\fP : to read the entire body as binary array
+\fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
 \fBSendBDY\fP : to send the entire body
 .PP

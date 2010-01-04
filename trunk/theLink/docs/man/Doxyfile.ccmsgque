@@ -25,6 +25,7 @@ ALIASES		    += "selftut=ccmsgquetut"
 ALIASES		    += "NS{1}=cc_\1"
 ALIASES		    += "lang=C++"
 ALIASES		    += "fileextension=cc"
+ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
@@ -171,6 +172,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\n  ctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(MQ_CST const token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
@@ -203,9 +205,14 @@ ENABLED_SECTIONS    += ReadL_START3
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 
 # ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void ServerSetup() {\n\
+  ServiceCreate (\"SRV1\", CallbackF(&MyServer::SRV1));\n\
+}\n\
+\endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST token, IService * service)"
-ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF service)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST token, IService * callback)"
+ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF callback)"
 ENABLED_SECTIONS    += ServiceCreate2
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
