@@ -205,6 +205,15 @@ ALIASES		    += "DictUnset=$ctx dict unset key..."
 ALIASES		    += "DictUndef=nothing"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+if {[catch { \n\
+ i = $ctx ReadI(); \n\
+}]} { \n\
+ $ctx ErrorSet \n\
+ puts [$ctx ErrorGetText] \n\
+ $ctx ErrorReset \n\
+} \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>TCLMSGQUE errorCode</I>"
 ALIASES		    += "ErrorGetText=[lindex $errorCode 3] or $ctx ErrorGetText"
 ALIASES		    += "ErrorGetNum=[lindex $errorCode 1] or $ctx ErrorGetNum"

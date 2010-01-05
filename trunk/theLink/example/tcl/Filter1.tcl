@@ -22,7 +22,7 @@ proc FTRcmd {ctx} {
 }
 proc EOFcmd {ctx} {
   global data
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   foreach L $data {
     $ftr SendSTART
     foreach I $L {
@@ -47,4 +47,5 @@ if {[catch {
   $srv ErrorSet
 }
 $srv Exit
+
 

@@ -264,7 +264,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ctx.SendC(ctx.ConfigGetName());
       ctx.SendI(ctx.ConfigGetDebug());
       ctx.SendI(ctx.ConfigGetCtxId());
-      ctx.SendC(ctx.ConfigGetToken());
+      ctx.SendC(ctx.ServiceGetToken());
       ctx.SendRETURN();
     }
   }
@@ -466,7 +466,7 @@ class GTCX implements IService {
 class GTTO implements IService {
   public void Service (MqS ctx) throws MqSException {
     ctx.SendSTART();
-    ctx.SendC(ctx.ConfigGetToken());
+    ctx.SendC(ctx.ServiceGetToken());
     ctx.SendRETURN();
   }
 }
@@ -828,4 +828,5 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
+
 

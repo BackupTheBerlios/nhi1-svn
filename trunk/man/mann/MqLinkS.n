@@ -1,4 +1,4 @@
-.TH "MqLinkS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqLinkS" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -36,15 +36,15 @@ MqLinkS \- object responsible to manage client/server link data
 .ti -1c
 .RI "struct \fBMqS\fP * \fBctxIdP\fP"
 .br
-.R "the inital (first) context (home of the ctxIdA) "
+.R "the initial (first) context (home of the ctxIdA) "
 .ti -1c
 .RI "struct MqTokenS * \fBsrvT\fP"
 .br
-.R "identifer for the 'service' token handle "
+.R "identifier for the 'service' token handle "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBonExit\fP"
 .br
-.R "is allready an exit ongoing? "
+.R "is already an exit ongoing? "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBexitctx\fP"
 .br
@@ -64,7 +64,7 @@ MqLinkS \- object responsible to manage client/server link data
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBonShutdown\fP"
 .br
-.R "is allready a 'shutdown' ongoing? "
+.R "is already a 'shutdown' ongoing? "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBdoFactoryCleanup\fP"
 .br
@@ -96,11 +96,11 @@ MqLinkS \- object responsible to manage client/server link data
 .ti -1c
 .RI "\fBMQ_HDL\fP \fB_trans\fP"
 .br
-.R "storage for the Transaktion object from the package header "
+.R "storage for the Transaction object from the package header "
 .ti -1c
 .RI "struct pChildS * \fBchilds\fP"
 .br
-.R "linked list of childs "
+.R "linked list of child's "
 .ti -1c
 .RI "struct pChildS * \fBself\fP"
 .br
@@ -123,12 +123,12 @@ Definition at line 895 of file msgque.h.
 .PP 
 .SS "\fBMQ_HDL\fP \fBMqLinkS::_trans\fP"
 .PP
-storage for the Transaktion object from the package header 
+storage for the Transaction object from the package header 
 .PP
 Definition at line 930 of file msgque.h.
 .SS "struct pChildS* \fBMqLinkS::childs\fP\fC [read]\fP"
 .PP
-linked list of childs 
+linked list of child's 
 .PP
 Definition at line 934 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxId\fP"
@@ -143,7 +143,7 @@ array of struct \fBMqLinkS\fP * pointer's
 Definition at line 926 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqLinkS::ctxIdP\fP\fC [read]\fP"
 .PP
-the inital (first) context (home of the ctxIdA) 
+the initial (first) context (home of the ctxIdA) 
 .PP
 Definition at line 907 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxIdR\fP"
@@ -203,12 +203,12 @@ is already an 'create' ongoing?
 Definition at line 914 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::onExit\fP"
 .PP
-is allready an exit ongoing? 
+is already an exit ongoing? 
 .PP
 Definition at line 912 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::onShutdown\fP"
 .PP
-is allready a 'shutdown' ongoing? 
+is already a 'shutdown' ongoing? 
 .PP
 Definition at line 917 of file msgque.h.
 .SS "struct MqReadS* \fBMqLinkS::read\fP\fC [read]\fP"
@@ -238,7 +238,7 @@ link to the SLAVE object
 Definition at line 938 of file msgque.h.
 .SS "struct MqTokenS* \fBMqLinkS::srvT\fP\fC [read]\fP"
 .PP
-identifer for the 'service' token handle 
+identifier for the 'service' token handle 
 .PP
 Definition at line 910 of file msgque.h.
 .SS "struct MqTransS* \fBMqLinkS::trans\fP\fC [read]\fP"
@@ -249,4 +249,4 @@ Definition at line 929 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

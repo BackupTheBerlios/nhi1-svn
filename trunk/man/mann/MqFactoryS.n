@@ -1,4 +1,4 @@
-.TH "MqFactoryS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqFactoryS" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -36,4 +36,4 @@ Definition at line 527 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

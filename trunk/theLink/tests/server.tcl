@@ -45,7 +45,7 @@ proc Ot_ECUL {ctx} {
 
 proc Ot_ECHO {ctx} {
   $ctx SendSTART
-  switch -exact [$ctx ConfigGetToken] {
+  switch -exact [$ctx ServiceGetToken] {
     ECOY  { $ctx SendY [$ctx ReadY] }
     ECOO  { $ctx SendO [$ctx ReadO] }
     ECOS  { $ctx SendS [$ctx ReadS] }
@@ -63,7 +63,7 @@ proc Ot_ECHO {ctx} {
 
 proc Ot_Error {ctx} {
   $ctx SendSTART
-  switch -exact [$ctx ConfigGetToken] {
+  switch -exact [$ctx ServiceGetToken] {
     ERR2  {
       $ctx ErrorC Ot_ERR2 10 "some error"
     }
@@ -119,7 +119,7 @@ proc Ot_GTCX {ctx} {
 
 proc Ot_GTTO {ctx} {
   $ctx SendSTART
-  $ctx SendC [$ctx ConfigGetToken]
+  $ctx SendC [$ctx ServiceGetToken]
   $ctx SendRETURN
 }
 
@@ -471,7 +471,7 @@ proc Ot_CNFG {ctx} {
   $ctx SendC [$ctx ConfigGetName]
   $ctx SendI [$ctx ConfigGetDebug]
   $ctx SendI [$ctx ConfigGetCtxId]
-  $ctx SendC [$ctx ConfigGetToken]
+  $ctx SendC [$ctx ServiceGetToken]
   $ctx SendRETURN 
 }
 
@@ -690,5 +690,6 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
+
 
 

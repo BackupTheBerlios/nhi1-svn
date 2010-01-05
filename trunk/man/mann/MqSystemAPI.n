@@ -1,4 +1,4 @@
-.TH "MqSystemAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqSystemAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -79,14 +79,14 @@ do { \
 .PP
 
 .PP
-Definition at line 3694 of file msgque.h.
+Definition at line 3688 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static mq_inline \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
 .PP
 the function \fIstrdup\fP which allows the argument \fCNULL\fP 
 .PP
-Definition at line 3743 of file msgque.h.
+Definition at line 3737 of file msgque.h.
 .PP
 References mq_strdup.
 .SS "\fBMQ_STR\fP MqSysBasename (char const *const  in, \fBMQ_BOL\fP includeExtension)"
@@ -228,4 +228,4 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

@@ -13,7 +13,7 @@
 package require TclMsgque
 
 proc FilterIn {ctx} {
-  $ctx dict lappend Itms [list [$ctx ReadBDY] [$ctx ConfigGetToken] [$ctx ConfigGetIsTransaction]]
+  $ctx dict lappend Itms [list [$ctx ReadBDY] [$ctx ServiceGetToken] [$ctx ServiceIsTransaction]]
   $ctx SendRETURN
 }
 
@@ -29,7 +29,7 @@ proc FilterCleanup {ctx} {
 proc FilterEvent {ctx} {
   set Itms [$ctx dict get Itms]
   if {[llength $Itms]} {
-    set ftr [$ctx ConfigGetFilter]
+    set ftr [$ctx ServiceGetFilter]
     foreach {data token isTran} [lindex $Itms 0] break
     if {[catch {
       $ftr SendSTART
@@ -66,4 +66,7 @@ tclmsgque Main {
   }
   $srv Exit
 }
+
+
+
 

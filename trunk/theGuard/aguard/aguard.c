@@ -85,11 +85,11 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  int isTrans = MqConfigGetIsTransaction (mqctx);
+  int isTrans = MqServiceIsTransaction (mqctx);
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
 
@@ -97,7 +97,7 @@ PkgToGuard (
 
   // build "+GRD" package
   MqErrorCheck1 (MqSendSTART (ftrctx));
-  MqErrorCheck1 (MqSendC (ftrctx, MqConfigGetToken (mqctx)));
+  MqErrorCheck1 (MqSendC (ftrctx, MqServiceGetToken (mqctx)));
   MqErrorCheck1 (MqSendI (ftrctx, isTrans));
   MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
 
@@ -130,7 +130,7 @@ GuardToPkg (
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadC (mqctx, &token));
   MqErrorCheck (MqReadI (mqctx, &isTrans));
@@ -181,7 +181,7 @@ GuardSetup (
   struct MqS * ftrctx;
 
   // "aguard" have to be a filter
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   // SERVER: every token (+ALL) have to be "guard_encrypted"
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", PkgToGuard, NULL, NULL));

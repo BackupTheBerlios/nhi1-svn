@@ -1440,24 +1440,6 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/// \brief get the \e filter object from a filter pipeline
-///  between a \e master context and a \e slave context with \e id.
-/// \context
-/// \param[in] id the slave identifier, set to \e 0 for a \e filter
-/// \param[out] filterP the filter object to return
-/// \retMqErrorE
-///
-/// the following order is used to get the filter object:
-/// -# return the \e #MqConfigS::master if non NULL
-/// -# return the \e #MqSlaveGet with \e id if non NULL
-/// -# return a "filter not available" error
-/// .
-MQ_EXTERN enum MqErrorE MQ_DECL MqConfigGetFilter (
-  struct MqS  * const context,
-  MQ_SIZE const id,
-  struct MqS ** const filterP
-) __attribute__((nonnull));
-
 /// \brief return the context-identification
 /// \context
 /// \return the context-identification number
@@ -1467,27 +1449,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqConfigGetFilter (
 /// the communication interface (\c msgque->io) of a parent-context is
 /// used by the child-context too.
 MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
-  struct MqS const * const context
-);
-
-/// \brief get the token from the ongoing service-handler
-/// \context
-/// \return the token as 4 character string
-///
-/// The token is used to identify the server-service to call. If the
-/// server create a generic service-handler using \b +ALL in #MqServiceCreate
-/// the current token is unknown in the ongoing service-handler. This
-/// unknown token can be retrieved with this function.
-MQ_EXTERN MQ_CST 
-MQ_DECL MqConfigGetToken (
-  struct MqS const * const context
-);
-
-/// \brief check if the ongoing service-call belongs to a transaction
-/// \context
-/// \return 1=yes, 0=no
-MQ_EXTERN int
-MQ_DECL MqConfigGetIsTransaction (
   struct MqS const * const context
 );
 
@@ -1744,7 +1705,56 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \e link-delete or explicit with the \RNSA{ServiceDelete} function.
 ///
 
+/// \brief get the \e filter object from a filter pipeline
+///  between a \e master context and a \e slave context with \e id.
+/// \context
+/// \param[in] id the slave identifier, set to \e 0 for a \e filter
+/// \param[out] filterP the filter object to return
+/// \retMqErrorE
+///
+/// the following order is used to get the filter object:
+/// -# return the \e #MqConfigS::master if non NULL
+/// -# return the \e #MqSlaveGet with \e id if non NULL
+/// -# return a "filter not available" error
+/// .
+MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
+  struct MqS  * const context,
+  MQ_SIZE const id,
+  struct MqS ** const filterP
+) __attribute__((nonnull(1)));
+
+/// \brief check if the \e ongoing-service-call belongs to a transaction
+/// \context
+/// \return a boolean valus, \yes or \no
+MQ_EXTERN int
+MQ_DECL MqServiceIsTransaction (
+  struct MqS const * const context
+) __attribute__((nonnull(1)));
+
+/// \brief get the \RNS{ServiceIdentifier} from an \e ongoing-service-call
+///
+/// This function is needed on the server to process a \e service-request
+/// defined as \e +ALL or as an \e alias to extract the \e current \RNS{ServiceIdentifier}.
+/// \ctx
+/// \return the \RNS{ServiceIdentifier}
+MQ_EXTERN MQ_CST 
+MQ_DECL MqServiceGetToken (
+  struct MqS const * const ctx
+) __attribute__((nonnull(1)));
+
+/// \brief in an \e ongoing-service-call compare the \RNS{ServiceIdentifier} with \e token on equity
+/// \ctx
+/// \token
+/// \return a boolean value, \yes or \no
+MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
+  struct MqS const * const ctx,
+  char const * const token
+) __attribute__((nonnull(1)));
+
 /// \brief create a link between a \RNS{ServiceIdentifier} and a \RNS{ServiceCallback}
+///
+/// The \e token have to be unique but the \e callback not, this is called an \e alias. 
+/// Use \RNS{ServiceGetToken} to get the current token in an \e incomming-service-call.
 /// \ctx
 /// \token
 /// \param[in] callback the function to process the incoming \e service-request
@@ -1757,7 +1767,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   MqTokenF const callback,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
-);
+) __attribute__((nonnull(1)));
 
 /// \brief create a service to link a \e master-context with a \e slave-context.
 /// \details This function is used to create a \e proxy-service to forward the 
@@ -1774,7 +1784,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   struct MqS * const ctx, 
   MQ_CST const token,
   MQ_SIZE const id
-);
+) __attribute__((nonnull(1)));
 
 /// \brief delete a service.
 /// \ctx
@@ -1783,7 +1793,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
   struct MqS const * const ctx, 
   MQ_CST const token
-);
+) __attribute__((nonnull(1)));
 
 /** \brief enter the \e event-loop and wait for an incoming \e service-request.
  * 
@@ -1799,7 +1809,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
  * 
  *  \ctx
  *  \param_timeout_with_default, only used if \e wait = \MQ_WAIT_ONCE
- *  \param[in] wait chose the \e time-interval to wait for a new event.
+ *  \param[in] wait chose the \e time-interval to wait for a new event (default: \MQ_WAIT_NO)
  *  \retException
  *
 \ifnot MAN
@@ -1820,7 +1830,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
   struct MqS * const ctx,
   MQ_TIME_T timeout,
   enum MqWaitOnEventE const wait
-);
+) __attribute__((nonnull(1)));
 
 /** \} MqServiceAPI */
 
@@ -2342,22 +2352,6 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
 );
 
 /** \} */
-
-/*****************************************************************************/
-/*                                                                           */
-/*                    transactions (require MqBufferAtomU)                   */
-/*                                                                           */
-/*****************************************************************************/
-
-/// \ingroup MqMsgqueAPI
-/// \brief check the current token
-/// \param[in] context the current context
-/// \param[in] token the token to compare with
-MQ_EXTERN MQ_BOL
-MQ_DECL MqCurrentTokenIs (
-  struct MqS const * const context,
-  char const * const token
-);
 
 /* ####################################################################### */
 /* ###                                                                 ### */

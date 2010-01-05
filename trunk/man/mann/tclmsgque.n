@@ -226,11 +226,11 @@ The factory pattern is used to create a new application object (read more at: \f
 .SS "interface: $ctx ConfigSetBgError callback"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
 .SS "interface: $ctx ConfigSetEvent fFunc Data fFree fCopy"
-Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec intervall to garantee a parallel like execution. 
+Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background prcessing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/TCL/Filter4.TCL\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/TCL/Filter4.TCL\fP 
 .RE
 .PP
 .SH "LINK CREATION AND DELETION"
@@ -275,7 +275,7 @@ Shutdown the entire communication and exit the current process or thread.
 .PP
 create and manage services 
 .PP
-To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implecite on \fIlink-delete\fP or explicite with the \fBServiceDelete\fP function. 
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function. 
 .PP
 \fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
@@ -312,7 +312,7 @@ create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
-\fIcallback\fP the function to process the incomming \fIservice-request\fP 
+\fIcallback\fP the function to process the incoming \fIservice-request\fP 
 .br
 \fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
 .br
@@ -335,7 +335,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
-\fIid\fP the slave identifer, only used if \fIctx\fP is a \fImaster-context\fP 
+\fIid\fP the slave identifier, only used if \fIctx\fP is a \fImaster-context\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -359,7 +359,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?"
-enter the \fIevent-loop\fP and wait for an incomming \fIservice-request\fP. 
+enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 To specify the the \fItime-interval\fP three modes are supported:
 .IP "\(bu" 2
@@ -377,7 +377,7 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 .br
 \fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = \fCONCE\fP 
 .br
-\fIwait\fP chose the \fItime-interval\fP to wait for a new event. 
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: \fCNO\fP) 
 .RE
 .PP
 \fBReturns:\fP
@@ -445,7 +445,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOUT_USER?"
 finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP
-If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediatly. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
+If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediately. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -464,7 +464,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx SendEND_AND_CALLBACK token callback"
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for proceesing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -751,7 +751,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx ReadL_START ?buffer?"
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
-Itialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx ReadL_END\fP to finish the read. 
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx ReadL_END\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -864,7 +864,7 @@ The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no 
 .SS "$ctx SlaveDelete id"
 Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
 .PP
-By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this functionto delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
+By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this function to delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -943,15 +943,17 @@ return the type as single character of the item stored in the buffer object.
 .PP
 The exception object is used to transport a tclmsgque error using the \fITCLMSGQUE errorCode\fP.
 .PP
+\fBExample:\fP catch an error and write the message to stdout: 
 .PP
 .nf
-if {[catch {
- i = $ctx ReadI();
-}]} {
- $ctx ErrorSet 
- puts [$ctx ErrorGetText]
- $ctx ErrorReset
-}
+ if {[catch { 
+  i = $ctx ReadI(); 
+ }]} { 
+  $ctx ErrorSet 
+  puts [$ctx ErrorGetText] 
+  $ctx ErrorReset 
+ } 
+
 .fi
 .PP
 .SS "[lindex $errorCode 3] or $ctx ErrorGetText"

@@ -185,7 +185,9 @@ ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,callback,data,fFree)"
 ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_CST token, MQ_SIZE id=0)"
 ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,token)"
 ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEventFlag=MQ_WAIT"
+ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx,id,argv)"
@@ -200,6 +202,12 @@ ALIASES		    += "BufferGet_TYPE=MqBufferGet[TYPE](buffer)"
 ALIASES		    += "BufferType=buffer->type"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+if (MqErrorCheckI(MqReadI(ctx, &i))) { \n\
+ printf(MqErrorGetText(ctx)); \n\
+ MqErrorReset(ctx); \n\
+} \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>ctx</I>"
 ALIASES		    += "ErrorGetText=MQ_CST MqErrorGetText(ctx)"
 ALIASES		    += "ErrorGetNum=MQ_INT MqErrorGetNum(ctx)"

@@ -1,4 +1,4 @@
-.TH "MqS" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqS" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -60,7 +60,7 @@ MqS \- Prototype for a context object.
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBcontextsize\fP"
 .br
-.R "alloc-size of the user-defined context struct "
+.R "ALLOC-size of the user-defined context struct. "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -76,7 +76,7 @@ the configuration data is used for 'end-user' configuration
 Definition at line 964 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqS::contextsize\fP"
 .PP
-alloc-size of the user-defined context struct 
+ALLOC-size of the user-defined context struct. 
 .PP
 Definition at line 974 of file msgque.h.
 .SS "struct \fBMqErrorS\fP \fBMqS::error\fP\fC [read]\fP"
@@ -132,4 +132,4 @@ Definition at line 972 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

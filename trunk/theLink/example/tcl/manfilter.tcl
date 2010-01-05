@@ -11,7 +11,7 @@
 #§
 package require TclMsgque
 proc FTRcmd {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ftr SendSTART
   while {[$ctx ReadItemExists]} {
     $ftr SendC "<[$ctx ReadC]>"
@@ -32,4 +32,5 @@ if {[catch {
   $srv ErrorSet
 }
 $srv Exit
+
 

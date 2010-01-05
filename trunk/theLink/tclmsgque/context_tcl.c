@@ -31,20 +31,6 @@ struct LookupKeyword {
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                 helper                                    */
-/*                                                                           */
-/*****************************************************************************/
-
-/// \brief helper: used to simplify the code
-#define CheckForAdditionalArg(txt) \
-    objc--; objv++; \
-    if (objc<1) { \
-	Tcl_SetResult(interp, "no additional argument available for '" #txt "'", TCL_STATIC); \
-	return TCL_ERROR; \
-    }
-
-/*****************************************************************************/
-/*                                                                           */
 /*                                 subcommands                               */
 /*                                                                           */
 /*****************************************************************************/
@@ -83,40 +69,6 @@ int NS(LinkDelete) (NS_ARGS)
 {
   CHECK_NOARGS
   MqLinkDelete (MQCTX);
-  RETURN_TCL
-}
-
-static
-int NS(ProcessEvent) (NS_ARGS)
-{
-  SETUP_mqctx
-  int timeout = -2;
-  int FLAGS = MQ_WAIT_NO;
-  int iA;
-  static const char *optA[] = { "-timeout", "-wait", NULL };
-  static const char *optB[] = { "NO", "ONCE", "FOREVER", NULL };
-  enum optE { TIMEOUT, WAIT };
-
-  // look for options
-  objc -= skip;
-  objv += skip;
-  while (objc) {
-    TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optA, "option", 0, &iA));
-    switch ((enum optE) iA) {
-      case WAIT:
-        CheckForAdditionalArg (-wait);
-	TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optB, "-wait", 0, &FLAGS));
-	objv++;objc--;
-	break;
-      case TIMEOUT:
-        CheckForAdditionalArg (-timeout);
-        TclErrorCheck (Tcl_GetIntFromObj (interp, objv[0], &timeout));
-	objv++;objc--;
-        break;
-    }
-  }
-
-  ErrorMqToTclWithCheck (MqProcessEvent (mqctx, timeout, FLAGS));
   RETURN_TCL
 }
 
@@ -382,15 +334,12 @@ int NS(ConfigGetIsConnected) (NS_ARGS);
 int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
-int NS(ConfigGetToken) (NS_ARGS);
-int NS(ConfigGetIsTransaction) (NS_ARGS);
 int NS(ConfigGetCtxId) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
 int NS(ConfigGetIdent) (NS_ARGS);
 int NS(ConfigGetParent) (NS_ARGS);
 int NS(ConfigGetMaster) (NS_ARGS);
-int NS(ConfigGetFilter) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
 int NS(ConfigGetIoTcpPort) (NS_ARGS);
@@ -399,9 +348,13 @@ int NS(ConfigGetIoTcpMyPort) (NS_ARGS);
 int NS(ConfigGetIoPipeSocket) (NS_ARGS);
 int NS(ConfigGetStartAs) (NS_ARGS);
 
+int NS(ServiceGetToken) (NS_ARGS);
+int NS(ServiceIsTransaction) (NS_ARGS);
+int NS(ServiceGetFilter) (NS_ARGS);
 int NS(ServiceProxy) (NS_ARGS);
 int NS(ServiceCreate) (NS_ARGS);
 int NS(ServiceDelete) (NS_ARGS);
+int NS(ProcessEvent) (NS_ARGS);
 
 int NS(ErrorC) (NS_ARGS);
 int NS(ErrorSet) (NS_ARGS);
@@ -509,15 +462,12 @@ int NS(MqS_Cmd) (
     { "ConfigGetBuffersize",	  NS(ConfigGetBuffersize)     },
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
-    { "ConfigGetToken",		  NS(ConfigGetToken)	      },
-    { "ConfigGetIsTransaction",	  NS(ConfigGetIsTransaction)  },
     { "ConfigGetCtxId",		  NS(ConfigGetCtxId)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
     { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
     { "ConfigGetParent",	  NS(ConfigGetParent)	      },
     { "ConfigGetMaster",	  NS(ConfigGetMaster)	      },
-    { "ConfigGetFilter",	  NS(ConfigGetFilter)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
     { "ConfigGetIoTcpPort",	  NS(ConfigGetIoTcpPort)      },
@@ -528,13 +478,16 @@ int NS(MqS_Cmd) (
 
 // SERVICE
 
-    { "ServiceProxy",	      NS(ServiceProxy)		},
-    { "ServiceCreate",	      NS(ServiceCreate)		},
-    { "ServiceDelete",	      NS(ServiceDelete)		},
+    { "ServiceGetFilter",	  NS(ServiceGetFilter)	      },
+    { "ServiceIsTransaction",	  NS(ServiceIsTransaction)    },
+    { "ServiceGetToken",	  NS(ServiceGetToken)	      },
+    { "ServiceProxy",		  NS(ServiceProxy)	      },
+    { "ServiceCreate",		  NS(ServiceCreate)	      },
+    { "ServiceDelete",		  NS(ServiceDelete)	      },
+    { "ProcessEvent",		  NS(ProcessEvent)	      },
 
 // CONTEXT
 
-    { "ProcessEvent",	      NS(ProcessEvent)		},
     { "RenameTo",	      NS(RenameTo)		},
     { "LinkCreate",	      NS(LinkCreate)		},
     { "LinkCreateChild",      NS(LinkCreateChild)	},

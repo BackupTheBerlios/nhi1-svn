@@ -78,6 +78,13 @@ error: \
 /*                                                                           */
 /*****************************************************************************/
 
+#define CheckForAdditionalArg(txt) \
+  objc--; objv++; \
+  if (objc<1) { \
+    Tcl_SetResult(interp, "no additional argument available for '" #txt "'", TCL_STATIC); \
+    return TCL_ERROR; \
+  }
+
 #define CHECK_NOARGS \
   if (skip != objc) {\
     Tcl_WrongNumArgs(interp, skip, objv, "");\

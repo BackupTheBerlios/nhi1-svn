@@ -127,10 +127,6 @@ ALIASES		    += "config_type_ctxId=#MQ_SIZE"
 ALIASES		    += "config_set_ctxId=NO"
 ALIASES		    += "config_get_ctxId=#ConfigGetCtxId"
 
-ALIASES		    += "config_type_token=#MQ_CST"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=#ConfigGetToken"
-
 ALIASES		    += "config_type_IServerSetup=Interface"
 ALIASES             += "config_set_IServerSetup=#ccmsgque::IServerSetup"
 ALIASES		    += "config_get_IServerSetup=NO"
@@ -217,7 +213,10 @@ ENABLED_SECTIONS    += ServiceCreate2
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
-ALIASES		    += "ProcessEventFlag=MqC.WAIT"
+ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "ServiceGetToken=token = ctx.ServiceGetToken()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(const int id, struct MqBufferLS * args = NULL)"
@@ -241,6 +240,15 @@ ALIASES		    += "BufferGet_TYPE=TYPE val=buffer.Get[TYPE]("
 ALIASES		    += "BufferType=enum MqTypeE buffer.GetType()"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try { \n\
+ i = ctx.ReadI(); \n\
+} catch (const exception& ex) { \n\
+ ctx.ErrorSet(ex); \n\
+ cout << ctx.ErrorGetText() << endl; \n\
+ ctx.ErrorReset(); \n\
+} \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>class MqCException ex</I>"
 ALIASES		    += "ErrorGetText=string ex.what() or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=int ex.num() or ctx.ErrorGetNum()"

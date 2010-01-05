@@ -13,23 +13,23 @@
 package require TclMsgque
 
 proc Filter {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   set bdy [$ctx ReadBDY]
   $ftr SendSTART
   $ftr SendBDY $bdy
-  if {[$ctx ConfigGetIsTrans]} {
-    $ftr SendEND_AND_WAIT [$ctx ConfigGetToken]
+  if {[$ctx ServiceIsTransaction]} {
+    $ftr SendEND_AND_WAIT [$ctx ServiceGetToken]
     $ctx SendSTART
     set bdy [$ftr ReadBDY]
     $ctx SendBDY $bdy
   } else {
-    $ftr SendEND [$ctx ConfigGetToken]
+    $ftr SendEND [$ctx ServiceGetToken]
   }
   $ctx SendRETURN
 }
 
 proc ServerSetup {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ctx ServiceCreate "+ALL" Filter
   $ftr ServiceCreate "+ALL" Filter
 }
@@ -47,4 +47,6 @@ tclmsgque Main {
   }
   $srv Exit
 }
+
+
 

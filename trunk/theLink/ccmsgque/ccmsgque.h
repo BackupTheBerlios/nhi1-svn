@@ -307,7 +307,6 @@ namespace ccmsgque {
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
       inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
-      inline MQ_CST ConfigGetToken ()	    { return MqConfigGetToken(&context); }
       inline MQ_INT ConfigGetBuffersize ()  { return context.config.io.buffersize; }
       inline MQ_INT ConfigGetDebug ()	    { return context.config.debug; }
       inline MQ_TIME_T ConfigGetTimeout ()  { return context.config.io.timeout; }
@@ -436,7 +435,7 @@ namespace ccmsgque {
       /// \sameas{MqProcessEvent}
       MQ_EXTERN void ProcessEvent (
 	MQ_TIME_T		    timeout   = MQ_TIMEOUT_USER,
-	enum MqWaitOnEventE const   wait      = MQ_WAIT_FOREVER
+	enum MqWaitOnEventE const   wait      = MQ_WAIT_ONCE
       ) throw(MqCException);
 
       inline MQ_BUF GetTempBuffer() { return context.temp; }
@@ -537,6 +536,9 @@ namespace ccmsgque {
     /// \defgroup service_API Service? : Create and Delete a Service
     /// \{
     public:
+      /// \sameas{MqServiceGetToken}
+      inline MQ_CST ServiceGetToken ()	    { return MqServiceGetToken(&context); }
+
       /// \sameas{MqServiceCreate}
       MQ_EXTERN void ServiceCreate(MQ_CST const token, CallbackF const callback) throw(MqCException);
 

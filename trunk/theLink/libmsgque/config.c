@@ -790,48 +790,12 @@ MqConfigGetMaster (
   return context->config.master;
 }
 
-enum MqErrorE
-MqConfigGetFilter (
-  struct MqS * const context,
-  MQ_SIZE const id,
-  struct MqS ** const filterP
-)
-{
-  return (
-    (
-      *filterP = (
-	context->config.master != NULL ? 
-	  context->config.master : 
-	  MqSlaveGet (context, id)
-      )
-    ) == NULL ? 
-      MqErrorDb(MQ_ERROR_NO_FILTER) : 
-      MQ_OK
-  );
-}
-
 MQ_SIZE
 MqConfigGetCtxId (
   struct MqS const * const context
 )
 {
   return context->link.ctxId;
-}
-
-MQ_CST 
-MqConfigGetToken (
-  struct MqS const * const context
-)
-{
-  return (context->link.srvT != NULL? pTokenGetCurrent(context->link.srvT) : NULL);
-}
-
-int
-MqConfigGetIsTransaction (
-  struct MqS const * const context
-)
-{
-  return context->link._trans != 0;
 }
 
 MQ_CST

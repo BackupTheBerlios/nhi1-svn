@@ -247,7 +247,7 @@ use base qw(Net::PerlMsgque::MqS);
   sub GTTO {
     my $ctx = shift;
     $ctx->SendSTART();
-    $ctx->SendC ($ctx->ConfigGetToken());
+    $ctx->SendC ($ctx->ServiceGetToken());
     $ctx->SendRETURN();
   }
 
@@ -395,7 +395,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendC($ctx->ConfigGetName());
     $ctx->SendI($ctx->ConfigGetDebug());
     $ctx->SendI($ctx->ConfigGetCtxId());
-    $ctx->SendC($ctx->ConfigGetToken());
+    $ctx->SendC($ctx->ServiceGetToken());
     $ctx->SendRETURN();
   }
 
@@ -784,3 +784,4 @@ package main;
   $srv->Exit();
 
 1;
+

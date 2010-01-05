@@ -561,6 +561,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIsString
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigSetIgnoreExit
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIgnoreExit
+  (JNIEnv *, jobject, jboolean);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigSetStartAs
  * Signature: (I)V
  */

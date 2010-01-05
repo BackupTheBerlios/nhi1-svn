@@ -236,7 +236,7 @@ class Server(MqS):
     self.SendC(self.ConfigGetName());
     self.SendI(self.ConfigGetDebug());
     self.SendI(self.ConfigGetCtxId());
-    self.SendC(self.ConfigGetToken());
+    self.SendC(self.ServiceGetToken());
     self.SendRETURN();
 
   def INIT(self):
@@ -360,7 +360,7 @@ class Server(MqS):
     self.SendRETURN()
 
   def Error(self):
-    t = self.ConfigGetToken()
+    t = self.ServiceGetToken()
     self.SendSTART()
     if t == "ERR2" :
       self.SendC("some data")
@@ -418,7 +418,7 @@ class Server(MqS):
 
   def GTTO(self):
     self.SendSTART()
-    self.SendC(self.ConfigGetToken())
+    self.SendC(self.ServiceGetToken())
     self.SendRETURN()
 
   def ECOS(self):
@@ -639,4 +639,5 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
 

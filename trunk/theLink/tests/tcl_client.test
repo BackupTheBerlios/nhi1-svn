@@ -291,7 +291,7 @@ foreach CMD {
     ReadUndo ReadAll ReadItemExists ReadGetNumItems ReadL_END
     ReadY ReadO ReadS ReadI ReadF ReadW ReadD ReadC ReadB ReadU
     ConfigGetDebug ConfigGetIsString ConfigGetIsSilent ConfigGetIsServer ConfigGetIsParent
-     ConfigGetToken ConfigGetCtxId ConfigGetName ConfigGetParent ConfigGetIsConnected
+     ServiceGetToken ConfigGetCtxId ConfigGetName ConfigGetParent ConfigGetIsConnected
   } {
   eval [string map [list %CMD% $CMD] $TMPL]
 }
@@ -507,6 +507,7 @@ rename $ctx ""
 ##
 
 freeTests
+
 
 
 

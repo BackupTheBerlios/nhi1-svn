@@ -189,7 +189,9 @@ ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, AddressOf callbac
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(String token, [int id=0])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([Integer timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
-ALIASES		    += "ProcessEventFlag=MqS.WAIT"
+ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(Integer id, String() argv)"
@@ -204,6 +206,15 @@ ALIASES		    += "BufferGet_TYPE=TYPE val=buffer.[TYPE]"
 ALIASES		    += "BufferType=Char buffer.Type"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+Try \n\
+ i = ctx.ReadI() \n\
+Catch ex As Exception \n\
+ ctx.ErrorSet(ex) \n\
+ Console.WriteLine(ctx.ErrorGetText()) \n\
+ ctx.ErrorReset() \n\
+End Try \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>class MqSException</I>"
 ALIASES		    += "ErrorGetText=String ex.txt or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=Integer ex.num or ctx.ErrorGetNum()"

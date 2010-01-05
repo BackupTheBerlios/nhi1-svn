@@ -265,13 +265,13 @@ Public Module example
       SendC(ConfigGetName())
       SendI(ConfigGetDebug())
       SendI(ConfigGetCtxId())
-      SendC(ConfigGetToken())
+      SendC(ServiceGetToken())
       SendRETURN()
     End Sub
 
     Private Sub GTTO()
       SendSTART()
-      SendC(ConfigGetToken())
+      SendC(ServiceGetToken())
       SendRETURN()
     End Sub
 
@@ -711,4 +711,5 @@ Public Module example
     End Try
   End Sub
 End Module
+
 

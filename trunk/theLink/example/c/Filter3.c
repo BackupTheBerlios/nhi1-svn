@@ -46,23 +46,23 @@ Filter3 (
 {
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
   // continue with the original transaction
-  if (MqConfigGetIsTransaction (mqctx)) {
+  if (MqServiceIsTransaction (mqctx)) {
     // use a transaction protection
-    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqConfigGetToken(mqctx), MQ_TIMEOUT_USER));
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqServiceGetToken(mqctx), MQ_TIMEOUT_USER));
     // read the answer
     MqSendSTART (mqctx);
     MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
     MqErrorCheck  (MqSendBDY (mqctx, bdy, len));
   } else {
     // use a transaction protection
-    MqErrorCheck1 (MqSendEND (ftrctx, MqConfigGetToken(mqctx)));
+    MqErrorCheck1 (MqSendEND (ftrctx, MqServiceGetToken(mqctx)));
   }
 
 error:
@@ -95,7 +95,7 @@ ServerSetup (
 )
 {
   struct MqS * ftrctx;
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", Filter3, NULL, NULL));

@@ -130,7 +130,7 @@ namespace example {
 	SendRETURN(); 
       }
       void ECOU () { SendSTART(); ReadProxy(this); SendRETURN(); }
-      void GTTO () { SendSTART(); SendC(ConfigGetToken()); SendRETURN(); }
+      void GTTO () { SendSTART(); SendC(ServiceGetToken()); SendRETURN(); }
 
       void ECON () { 
 	string str = ReadC();
@@ -496,7 +496,7 @@ namespace example {
 	SendC(ConfigGetName());
 	SendI(ConfigGetDebug());
 	SendI(ConfigGetCtxId());
-	SendC(ConfigGetToken());
+	SendC(ServiceGetToken());
 	SendRETURN();
       }
 
@@ -707,6 +707,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server.Exit ();
 }
+
 
 
 

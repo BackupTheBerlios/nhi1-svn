@@ -190,7 +190,9 @@ ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(token, id=0)"
 ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(token)"
 ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ONCE|FOREVER)})"
-ALIASES		    += "ProcessEventFlag=wait"
+ALIASES		    += "MQ_WAIT_NO=\c NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(id, args...)"
@@ -213,6 +215,16 @@ ALIASES		    += "DictUnset=$ctx->DictUnset(key)"
 ALIASES		    += "DictUndef=undef"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+eval { \n\
+ i = $ctx->ReadI(); \n\
+} \n\
+if ($@) { \n\
+ $ctx->ErrorSet($@); \n\
+ print $ctx->ErrorGetText(); \n\
+ $ctx->ErrorReset(); \n\
+} \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>class MqSException ex</I>"
 ALIASES		    += "ErrorGetText=string $ctx->ErrorGetText()"
 ALIASES		    += "ErrorGetNum=integer $ctx->ErrorGetNum()"

@@ -580,7 +580,7 @@ Ot_GTTO (
 )
 {
   MqSendSTART (mqctx);
-  MqSendC (mqctx, MqConfigGetToken(mqctx));
+  MqSendC (mqctx, MqServiceGetToken(mqctx));
   return MqSendRETURN (mqctx);
 }
 
@@ -1078,7 +1078,7 @@ Ot_CNFG (
   MqSendC(mqctx,mqctx->config.name);
   MqSendI(mqctx,mqctx->config.debug);
   MqSendI(mqctx,MqConfigGetCtxId(mqctx));
-  MqSendC(mqctx,MqConfigGetToken(mqctx));
+  MqSendC(mqctx,MqServiceGetToken(mqctx));
 
   return MqSendRETURN (mqctx);
 }

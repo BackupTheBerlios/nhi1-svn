@@ -2,7 +2,7 @@
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -435,11 +435,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $
 .ti -1c
 .RI "typedef pid_t(* \fBMqForkF\fP )(void)"
 .br
-.R "prototype for the \fCfork\fP syscall "
+.R "prototype for the \fCfork\fP sys-call "
 .ti -1c
 .RI "typedef pid_t(* \fBMqVForkF\fP )(void)"
 .br
-.R "prototype for the \fCvfork\fP syscall "
+.R "prototype for the \fCvfork\fP sys-call "
 .ti -1c
 .RI "typedef void(* \fBMqDeleteF\fP )(struct \fBMqS\fP *const context)"
 .br
@@ -788,17 +788,21 @@ msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMqTokenF\fP const proc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.R "create a service handle "
+.R "create a link between a \\11 and a \\11 "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
 .br
-.R "use a proxy to proxy the incomming trafic to the outgoing trafic "
+.R "create a service to link a \fImaster-context\fP with a \fIslave-context\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const token)"
 .br
-.R "delete service handle "
+.R "delete a service. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqProcessEvent\fP (struct \fBMqS\fP *const ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)"
+.br
+.R "enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. "
 .ti -1c
 .RI "\fBMQ_BYT\fP \fBMqBufU2BYT\fP (union \fBMqBufferU\fP bufU)"
 .br
@@ -1168,7 +1172,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $
 .ti -1c
 .RI "\fBMQ_INT\fP \fBMqErrorGetNum\fP (struct \fBMqS\fP const *const context)"
 .br
-.R "brint an error to stderr and clear the error after "
+.R "print an error to stderr and clear the error after "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
 .br
@@ -1357,10 +1361,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $
 .br
 .R "get the slave context "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqProcessEvent\fP (struct \fBMqS\fP *const context, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)"
-.br
-.R "Waiting for an incoming packet on all open msgque object links. "
-.ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
 .R "'calloc' system call with error handling feature "
@@ -1467,13 +1467,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 120 2010-01-03 13:31:09Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 120 $ 
+$Rev: 121 $ 
 .RE
 .PP
 \fBAuthor:\fP

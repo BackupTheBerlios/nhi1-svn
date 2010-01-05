@@ -254,7 +254,7 @@ namespace example {
       SendC(ConfigGetName());
       SendI(ConfigGetDebug());
       SendI(ConfigGetCtxId());
-      SendC(ConfigGetToken());
+      SendC(ServiceGetToken());
       SendRETURN();
     }
 
@@ -284,7 +284,7 @@ namespace example {
 
     public void GTTO () {
       SendSTART();
-      SendC(ConfigGetToken());
+      SendC(ServiceGetToken());
       SendRETURN();
     }
 
@@ -704,3 +704,4 @@ namespace example {
   }
 
 } // finish namespace "example"
+

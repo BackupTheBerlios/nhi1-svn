@@ -12,7 +12,7 @@
 package require TclMsgque
 set total 0
 proc FTR {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   foreach {position amount currency} [$ctx ReadAll] break
   switch -exact $currency {
     euro    {set exchange 1.3541}
@@ -30,7 +30,7 @@ proc FTR {ctx} {
   $ctx SendRETURN
 }
 proc EOF {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ftr SendSTART
   $ftr SendC total
   $ftr SendD $::total
@@ -52,4 +52,5 @@ tclmsgque Main {
   }
   $srv Exit
 }
+
 

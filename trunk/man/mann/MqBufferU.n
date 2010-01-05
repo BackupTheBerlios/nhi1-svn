@@ -1,4 +1,4 @@
-.TH "MqBufferU" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqBufferU" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -40,35 +40,35 @@ a union for all data items supported by \fBMqBufferS\fP.
 
 A \fBlibmsgque\fP data package is a collection of items of type \fBMqBufferU\fP with variable length data of type: \fBMQ_BIN\fP, \fBMQ_STR\fP and MQ_LST or a a fixed length data of type \fBMQ_ATO\fP. The \fBMqBufferS\fP object is using a \fBMqBufferU\fP union and a \fBMqTypeE\fP enum to define an item. 
 .PP
-Definition at line 1872 of file msgque.h.
+Definition at line 1882 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_ATO\fP* \fBMqBufferU::A\fP"
 .PP
 atom for native data-types 
 .PP
-Definition at line 1873 of file msgque.h.
+Definition at line 1883 of file msgque.h.
 .SS "\fBMQ_BIN\fP \fBMqBufferU::B\fP"
 .PP
 arbitrary \fIbyte-array\fP data 
 .PP
-Definition at line 1874 of file msgque.h.
+Definition at line 1884 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqBufferU::C\fP"
 .PP
 C string like data (e.g. with a \\0 at the end). 
 .PP
-Definition at line 1875 of file msgque.h.
+Definition at line 1885 of file msgque.h.
 .SS "\fBMQ_LST\fP \fBMqBufferU::L\fP"
 .PP
 list object type data 
 .PP
-Definition at line 1876 of file msgque.h.
+Definition at line 1886 of file msgque.h.
 .SS "\fBMQ_LST\fP \fBMqBufferU::R\fP"
 .PP
 return object type data 
 .PP
-Definition at line 1877 of file msgque.h.
+Definition at line 1887 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

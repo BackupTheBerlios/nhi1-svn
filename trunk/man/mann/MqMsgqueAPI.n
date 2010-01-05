@@ -1,8 +1,8 @@
-.TH "MqMsgqueAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqMsgqueAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqMsgqueAPI \- the toplevel \fBlibmsgque\fP object: \fBMqS\fP  
+MqMsgqueAPI \- the top-level \fBlibmsgque\fP object: \fBMqS\fP  
 
 .PP
 .SS "Data Structures"
@@ -67,10 +67,6 @@ MqMsgqueAPI \- the toplevel \fBlibmsgque\fP object: \fBMqS\fP
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
-.ti -1c
-.RI "\fBMQ_BOL\fP \fBMqCurrentTokenIs\fP (struct \fBMqS\fP const *const context, char const *const token)"
-.br
-.R "check the current token "
 .in -1c
 .SS "Variables"
 
@@ -86,7 +82,7 @@ MqMsgqueAPI \- the toplevel \fBlibmsgque\fP object: \fBMqS\fP
 .in -1c
 .SH "Detailed Description"
 .PP 
-the toplevel \fBlibmsgque\fP object: \fBMqS\fP 
+the top-level \fBlibmsgque\fP object: \fBMqS\fP 
 
 Every user defined context object has a \fBMqS\fP object as first parameter: 
 .PP
@@ -99,7 +95,7 @@ struct MyCtx {
 
 .fi
 .PP
- The \fBMqS\fP object is created with the \fBMqContextCreate\fP function and is used as toplevel \fBlibmsgque\fP context and handle. Near every \fBlibmsgque\fP function uses this handle as first argument. The handle is delete with \fBMqContextDelete\fP. 
+ The \fBMqS\fP object is created with the \fBMqContextCreate\fP function and is used as top-level \fBlibmsgque\fP context and handle. Near every \fBlibmsgque\fP function uses this handle as first argument. The handle is delete with \fBMqContextDelete\fP. 
 .SH "Define Documentation"
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
@@ -126,18 +122,6 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 This code is not part of \fBMqLinkCreate\fP because sometimes it is necessary to check for left over arguments \fBafter\fP \fBMqLinkCreate\fP was called and after the calling function was able to process function specific arguments. By Default \fBMqLinkCreate\fP will delete \fBall\fP arguments belonging to \fBlibmsgque\fP from the \fIargv\fP object. If the calling function does \fBnot\fP expect additional arguments or arguments were added with spelling errors, a call to \fBMqCheckForLeftOverArguments\fP will detect this. 
-.SS "\fBMQ_BOL\fP MqCurrentTokenIs (struct \fBMqS\fP const *const  context, char const *const  token)"
-.PP
-check the current token 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the current context 
-.br
-\fItoken\fP the token to compare with 
-.RE
-.PP
-
 .SS "enum \fBMqErrorE\fP MqDefaultLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
 .PP
 wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check 
@@ -304,4 +288,4 @@ the prefix arguments of the starting application
 Definition at line 983 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

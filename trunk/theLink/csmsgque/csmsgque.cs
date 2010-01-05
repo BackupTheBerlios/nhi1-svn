@@ -199,11 +199,11 @@ namespace csmsgque {
     }
     /// \api #MqProcessEvent, wait application default time
     public void ProcessEvent (WAIT wait) {
-      ErrorMqToCsWithCheck(MqProcessEvent(context, -1, (int)wait));
+      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)wait));
     }
     /// \api #MqProcessEvent, don't wait just check for an event
     public void ProcessEvent () {
-      ErrorMqToCsWithCheck(MqProcessEvent(context, -1, (int)WAIT.NO));
+      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)WAIT.NO));
     }
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLogData")]

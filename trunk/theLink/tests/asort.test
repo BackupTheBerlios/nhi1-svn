@@ -129,7 +129,7 @@ test asort-14-($S) {sort: no server} \
     -returnCodes ok \
     -match glob \
     -result {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|\+EOF> <Num|220>
-S> (sort) \[MqConfigGetFilter] no filter is available*}
+S> (sort) \[MqServiceGetFilter] no filter is available*}
 
     } ; ## START_LST
 
@@ -140,6 +140,7 @@ S> (sort) \[MqConfigGetFilter] no filter is available*}
 ##
     
 freeTests
+
 
 
 

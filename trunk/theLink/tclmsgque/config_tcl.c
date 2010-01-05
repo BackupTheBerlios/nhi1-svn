@@ -290,20 +290,6 @@ int NS(ConfigSetDaemon) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetToken) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetResult(interp, (char *)MqConfigGetToken(MQCTX), TCL_VOLATILE);
-  RETURN_TCL
-}
-
-int NS(ConfigGetIsTransaction) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqConfigGetIsTransaction(MQCTX)));
-  RETURN_TCL
-}
-
 int NS(ConfigGetCtxId) (NS_ARGS)
 {
   CHECK_NOARGS
@@ -417,18 +403,6 @@ int NS(ConfigGetMaster) (NS_ARGS)
     Tcl_SetObjResult(interp, (Tcl_Obj*)tclctx->mqctx.config.master->self);
   else
     Tcl_SetResult(interp, "", TCL_STATIC);
-  RETURN_TCL
-}
-
-int NS(ConfigGetFilter) (NS_ARGS)
-{
-  SETUP_mqctx
-  struct MqS * ftr;
-  MQ_SIZE id=0;
-  CHECK_DI(id);
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqConfigGetFilter(mqctx, id, &ftr));
-  Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
   RETURN_TCL
 }
 

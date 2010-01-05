@@ -12,6 +12,32 @@
 
 #include "msgque_tcl.h"
 
+int NS(ServiceGetFilter) (NS_ARGS)
+{
+  SETUP_mqctx
+  struct MqS * ftr;
+  MQ_SIZE id=0;
+  CHECK_DI(id);
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqServiceGetFilter(mqctx, id, &ftr));
+  Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
+  RETURN_TCL
+}
+
+int NS(ServiceGetToken) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetResult(interp, (char *)MqServiceGetToken(MQCTX), TCL_VOLATILE);
+  RETURN_TCL
+}
+
+int NS(ServiceIsTransaction) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqServiceIsTransaction(MQCTX)));
+  RETURN_TCL
+}
+
 int NS(ServiceCreate) (NS_ARGS)
 {
   SETUP_mqctx
@@ -48,5 +74,38 @@ int NS(ServiceProxy) (NS_ARGS)
   CHECK_DI(id)
   CHECK_NOARGS
   ErrorMqToTclWithCheck (MqServiceProxy (mqctx, token, id));
+  RETURN_TCL
+}
+
+int NS(ProcessEvent) (NS_ARGS)
+{
+  SETUP_mqctx
+  int timeout = -2;
+  int FLAGS = MQ_WAIT_NO;
+  int iA;
+  static const char *optA[] = { "-timeout", "-wait", NULL };
+  static const char *optB[] = { "NO", "ONCE", "FOREVER", NULL };
+  enum optE { TIMEOUT, WAIT };
+
+  // look for options
+  objc -= skip;
+  objv += skip;
+  while (objc) {
+    TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optA, "option", 0, &iA));
+    switch ((enum optE) iA) {
+      case WAIT:
+        CheckForAdditionalArg (-wait);
+	TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optB, "-wait", 0, &FLAGS));
+	objv++;objc--;
+	break;
+      case TIMEOUT:
+        CheckForAdditionalArg (-timeout);
+        TclErrorCheck (Tcl_GetIntFromObj (interp, objv[0], &timeout));
+	objv++;objc--;
+        break;
+    }
+  }
+
+  ErrorMqToTclWithCheck (MqProcessEvent (mqctx, timeout, FLAGS));
   RETURN_TCL
 }

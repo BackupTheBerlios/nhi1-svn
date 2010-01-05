@@ -219,10 +219,6 @@ return a 'filter not available' error
 \fBtype:\fP \fC\fBMQ_SIZE\fP\fP, \fBget:\fP \fC\fBConfigGetCtxId\fP\fP , \fBset:\fP \fCNO\fP
 .PP
 return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
-.SS "token"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBConfigGetToken\fP\fP , \fBset:\fP \fCNO\fP
-.PP
-return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBServiceCreate\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
 .SS "isConnected"
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsConnected\fP\fP , \fBset:\fP \fCNO\fP
 .PP
@@ -262,11 +258,11 @@ class Server: public MqC, public IFactory, ... {
 .SS "interface: \\config_IBgError"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
 .SS "interface: \\config_IEvent"
-Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec intervall to garantee a parallel like execution. 
+Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background prcessing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C++/Filter4\fP.C++ 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C++/Filter4\fP.C++ 
 .RE
 .PP
 .SH "LINK CREATION AND DELETION"
@@ -319,7 +315,9 @@ Shutdown the entire communication and exit the current process or thread.
 .PP
 create and manage services 
 .PP
-To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implecite on \fIlink-delete\fP or explicite with the \fBServiceDelete\fP function.  \fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function. 
+.PP
+\fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
 .nf
  public void ServerSetup() {
@@ -342,31 +340,107 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 \fB+EOF\fP - used for \fBONE-DIRECTIONAL FILTER\fP
 .PP
 .SS "SERVICE CALLBACK"
-A service is using a callback to act on an incoming service request. The callback is used on a \fIserver\fP using \fBServiceCreate\fP or on a \fIclient\fP using \fBSendEND_AND_CALLBACK\fP.
+A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP or using t type \fIvoid CallbackF()\fP.
-.SS "ctx.ServiceCreate(MQ_CST token, IService * service)"
-.SS "ctx.ServiceCreate(MQ_CST token, CallbackF service)"
-Create a new service listen on \fBTOKEN IDENTIFIER\fP and start for every incoming request a \fIservice\fP. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
-Create a new service listen on \fBTOKEN IDENTIFIER\fP and link the incoming package to the outgoing package of slave with \fIid\fP. Use \fIid=0\fP to link a filter.
-.SS "ctx.ServiceDelete(MQ_CST token)"
-Delete a new service listen on \fBTOKEN IDENTIFIER\fP . (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
-Start the Event-Loop and check for the next event. In \fIclient\fP mode this command is usually used together with \fBSendEND_AND_CALLBACK\fP to process the results. (on error return an \fBEXCEPTION OBJECT\fP) 
+.SS "token = ctx.ServiceGetToken()"
+get the \fBTOKEN IDENTIFIER\fP from an \fIincomming-service-call\fP 
+.PP
+This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fItimeout\fP don't wait more than TIMEOUT seconds to get an answer from the server. If no answer is available an error is raised. (default: \fBcommand-line: --timeout\fP) 
-.br
-\fIMqC.WAIT\fP use flag value to define the action (default: NO)
-.IP "\(bu" 2
-\fBNO\fP, don't wait for an event do just the check
-.IP "\(bu" 2
-\fBONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event
-.IP "\(bu" 2
-\fBFOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
 .PP
+\fBReturns:\fP
+.RS 4
+the \fBTOKEN IDENTIFIER\fP 
+.RE
+.PP
+.SS "ctx.ServiceCreate(MQ_CST token, IService * callback)"
+.SS "ctx.ServiceCreate(MQ_CST token, CallbackF callback)"
+create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
+.PP
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBtoken = ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the function to process the incoming \fIservice-request\fP 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
+create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
+.PP
+This function is used to create a \fIproxy-service\fP to forward the \fIbody-data\fP from the \fIread-data-package\fP of the \fImaster\fP to the \fIsend-data-package\fP of the slave. The data is \fInot\fP changed. This function support the \fIreverse-operation\fP also. If the \fIctx\fP is a \fImaster-context\fP than the data is send to \fIslave\fP identified by \fIid\fP. If the \fIctx\fP is a \fIslave-context\fP than the data is send to the \fImaster\fP of the \fIslave\fP. Use \fIid=0\fP to send that data to the \fIfilter-context\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIid\fP the slave identifier, only used if \fIctx\fP is a \fImaster-context\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ServiceDelete(MQ_CST token)"
+delete a service. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
+enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
+.PP
+To specify the the \fItime-interval\fP three modes are supported:
+.IP "\(bu" 2
+\fB\fBMQ_WAIT_NO\fP\fP, don't wait for an event do just the check and comeback
+.IP "\(bu" 2
+\fB\fBMQ_WAIT_ONCE\fP\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+.IP "\(bu" 2
+\fB\fBMQ_WAIT_FOREVER\fP\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+.PP
+This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = \fBMQ_WAIT_ONCE\fP 
+.br
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: \fBMQ_WAIT_NO\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SH "SEND DATA"
@@ -429,7 +503,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP
-If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediatly. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
+If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediately. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -449,7 +523,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.SendEND_AND_CALLBACK(MQ_CST const token, CallbackF const callback)"
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for proceesing. Use \fBctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -457,9 +531,9 @@ This function will \fInever\fP block and return immediatly. If \fIreturn-data\fP
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
-\fIcallback\fP the service procedure called to process the results 
+\fIcallback\fP the function to process the \fIservice-call\fP results 
 .br
-\fIdata\fP a user defined additional \fIdata-argument\fP usied in the \fIcallback\fP (C-API only) 
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
 .br
 \fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
 .RE
@@ -737,7 +811,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ReadL_START(MqBufferC * const buffer)"
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
-Itialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -854,7 +928,7 @@ The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no 
 .SS "ctx.SlaveDelete(const int id)"
 Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
 .PP
-By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this functionto delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
+By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this function to delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -957,15 +1031,17 @@ return the type as single character of the item stored in the buffer object.
 .PP
 The exception object is used to transport a \fBccmsgque\fP error using the \fIclass MqCException ex\fP.
 .PP
+\fBExample:\fP catch an error and write the message to stdout: 
 .PP
 .nf
-try {
- i = ctx.ReadI();
-} catch (const exception& ex) {
- ctx.ErrorSet(ex);
- cout << ctx.ErrorGetText() << endl;
- ctx.ErrorReset();
-}
+ try { 
+  i = ctx.ReadI(); 
+ } catch (const exception& ex) { 
+  ctx.ErrorSet(ex); 
+  cout << ctx.ErrorGetText() << endl; 
+  ctx.ErrorReset(); 
+ } 
+
 .fi
 .PP
 .SS "string ex.what() or ctx.ErrorGetText()"
@@ -1042,7 +1118,7 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBConfigGetFilter\fP: to get the filter context (other site)
 .IP "\(bu" 2
-\fBConfigGetToken\fP: to get the current token
+\fBServiceGetToken\fP: to get the current token
 .IP "\(bu" 2
 \fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2

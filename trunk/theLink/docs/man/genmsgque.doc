@@ -229,12 +229,6 @@ Get the \e filter object from a filter pipeline using the following order: \thro
 return an identifier as integer and is \e unique per parent-context. The \e parent-context is always \c 0
 and every new \e child-context get a new identifier by adding 1.
 
-\configsection{token}
-return the current \RNS{ServiceIdentifier} and is only useful in a service callback.
-This command is needed on the server to implement a generic service
-(A \RNSA{ServiceCreate} with different \RNS{ServiceIdentifier} but with the same \e service
-callback).
-
 \configsection{isConnected}
 Is the \self context connected ? A context is connected if the \RNSA{LinkCreate} command
 was successful and a context is NOT connected if a) the object has just been created or
@@ -419,6 +413,9 @@ The callback is implemented as a set of functions and data suitable for #MqCallb
 \else
 UNKNOWN
 \endif
+
+\subsection	  \NS{ServiceGetToken}			\ServiceGetToken
+\copydoc MqServiceGetToken
 
 \subsection	  \NS{ServiceCreate}			\ServiceCreate
 \if ServiceCreate2
@@ -650,85 +647,8 @@ return the type as single character of the item stored in the buffer object.
 \section	\NS{error}				EXCEPTION OBJECT
 
 The exception object is used to transport a \self error using the \ErrorObject.
-\if CSHARP
-\code
-try {
- i = ctx.ReadI();
-} catch (Exception ex) {
- ErrorSet(ex);
- Console.WriteLine(ErrorGetText());
- ErrorReset();
-}
-\endcode
-\elseif VB
-\code
-Try 
- i = ctx.ReadI()
-Catch ex As Exception
- ErrorSet(ex)
- Console.WriteLine(ErrorGetText())
- ErrorReset()
-End Try
-\endcode
-\elseif JAVA
-\code
-try {
- i = ctx.ReadI();
-} catch (Throwable ex) {
- ctx.ErrorSet(ex);
- System.out.println(ctx.ErrorGetText());
- ctx.ErrorReset();
-}
-\endcode
-\elseif PYTHON
-\code
-try:
- i = ctx.ReadI()
-except:
- ctx.ErrorSet()
- print(ctx.ErrorGetText())
- ctx.ErrorReset()
-\endcode
-\elseif TCL
-\code
-if {[catch {
- i = $ctx ReadI();
-}]} {
- $ctx ErrorSet 
- puts [$ctx ErrorGetText]
- $ctx ErrorReset
-}
-\endcode
-\elseif PERL
-\code
-eval {
- i = $ctx->ReadI();
-}
-if ($@) {
- $ctx->ErrorSet($@);
- print $ctx->ErrorGetText();
- $ctx->ErrorReset();
-}
-\endcode
-\elseif CC
-\code
-try {
- i = ctx.ReadI();
-} catch (const exception& ex) {
- ctx.ErrorSet(ex);
- cout << ctx.ErrorGetText() << endl;
- ctx.ErrorReset();
-}
-\endcode
-\elseif C
-\code
-if (MqErrorCheckI(MqReadI(ctx, &i))) {
- printf(MqErrorGetText(ctx));
-}
-\endcode
-\else
-UNKNOWN
-\endif
+
+\b Example: catch an error and write the message to stdout: \error_example
 
 \subsection	\NS{ErrorGetText}			\ErrorGetText
 return the error message from the error object.
@@ -814,7 +734,7 @@ A bi-directional filter has a \e data-flow in both directions and is used in a \
 To define a \e bi-directional filter a couple of commands provide support:
  - \RNSA{ServiceCreate} : use the token \b +ALL to act on \e all services
  - \RNSA{config_filter,ConfigGetFilter}: to get the filter context (other site)
- - \RNSA{config_token,ConfigGetToken}: to get the current token
+ - \RNSA{ServiceGetToken,ServiceGetToken}: to get the current token
  - \RNSA{config_isTransaction,ConfigGetIsTransaction} : to check if a transaction is ongoing
  - \RNSA{ReadBDY} : to read the entire body as \e byte-array
  - \RNSA{SendBDY} : to send the entire body

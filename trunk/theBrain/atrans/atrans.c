@@ -446,7 +446,7 @@ static enum MqErrorE TransEvent (
     register struct TransItmS * itm;
     // transaction available
     // check if the filter is available, if not start the filter
-    switch (MqConfigGetFilter(mqctx, 0, &ftr)) {
+    switch (MqServiceGetFilter(mqctx, 0, &ftr)) {
       case MQ_OK:
 	break;
       case MQ_ERROR:
@@ -515,8 +515,8 @@ static enum MqErrorE TransIn ( ARGS ) {
     itm->data = MqBufferCreate(MQ_ERROR_PANIC, len);
   }
   MqBufferSetB(itm->data, bdy, len);
-  strncpy(itm->token, MqConfigGetToken(mqctx), 5);
-  itm->isTrans = MqConfigGetIsTransaction(mqctx);
+  strncpy(itm->token, MqServiceGetToken(mqctx), 5);
+  itm->isTrans = MqServiceIsTransaction(mqctx);
   trans->wIdx++;
 error:
   return MqSendRETURN(mqctx);

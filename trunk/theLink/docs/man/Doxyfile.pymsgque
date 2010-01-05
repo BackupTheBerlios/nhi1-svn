@@ -158,7 +158,7 @@ ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
-ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\")" \endcode"
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
@@ -204,7 +204,9 @@ ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)"
-ALIASES		    += "ProcessEventFlag=MqC.WAIT"
+ALIASES		    += "MQ_WAIT_NO=NO"
+ALIASES		    += "MQ_WAIT_ONCE=ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=FOREVER"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
@@ -219,6 +221,14 @@ ALIASES		    += "BufferGet_TYPE=buffer.Get[TYPE]()"
 ALIASES		    += "BufferType=buffer.GetType()"
 
 # ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try: \n\
+ i = ctx.ReadI() \n\
+except: \n\
+ ctx.ErrorSet() \n\
+ print(ctx.ErrorGetText()) \n\
+ ctx.ErrorReset() \n\
+\endcode"
 ALIASES		    += "ErrorObject=<I>ex=pymsgque.MqSException()</I>"
 ALIASES		    += "ErrorGetText=ex.text or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"

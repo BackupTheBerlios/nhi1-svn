@@ -1,4 +1,4 @@
-.TH "MqConfigAPI" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqConfigAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -82,11 +82,11 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .ti -1c
 .RI "typedef pid_t(* \fBMqForkF\fP )(void)"
 .br
-.R "prototype for the \fCfork\fP syscall "
+.R "prototype for the \fCfork\fP sys-call "
 .ti -1c
 .RI "typedef pid_t(* \fBMqVForkF\fP )(void)"
 .br
-.R "prototype for the \fCvfork\fP syscall "
+.R "prototype for the \fCvfork\fP sys-call "
 .ti -1c
 .RI "typedef void(* \fBMqDeleteF\fP )(struct \fBMqS\fP *const context)"
 .br
@@ -340,10 +340,6 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .br
 .R "return the context-identification "
 .ti -1c
-.RI "\fBMQ_CST\fP \fBMqConfigGetToken\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "get the token from the ongoing service-handler "
-.ti -1c
 .RI "int \fBMqConfigGetIsTransaction\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "check if the ongoing service-call belongs to a transaction "
@@ -448,7 +444,7 @@ prototype for a Object-Delete factory function
 Definition at line 490 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
-prototype for the \fCfork\fP syscall 
+prototype for the \fCfork\fP sys-call 
 .PP
 Definition at line 406 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
@@ -468,7 +464,7 @@ prototype for a free additional token data function
 Definition at line 447 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
-prototype for the \fCvfork\fP syscall 
+prototype for the \fCvfork\fP sys-call 
 .PP
 Definition at line 409 of file msgque.h.
 .SH "Enumeration Type Documentation"
@@ -628,7 +624,7 @@ get the \fIfilter\fP object from a filter pipeline between a \fImaster\fP contex
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIid\fP the slave identifer, set to \fI0\fP for a \fIfilter\fP 
+\fIid\fP the slave identifier, set to \fI0\fP for a \fIfilter\fP 
 .br
 \fIfilterP\fP the filter object to return 
 .RE
@@ -921,21 +917,6 @@ the \fCcontext.config.timeout\fP value
 .RE
 .PP
 
-.SS "\fBMQ_CST\fP MqConfigGetToken (struct \fBMqS\fP const *const  context)"
-.PP
-get the token from the ongoing service-handler 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the token as 4 character string
-.RE
-.PP
-The token is used to identify the server-service to call. If the server create a generic service-handler using \fB+ALL\fP in \fBMqServiceCreate\fP the current token is unknown in the ongoing service-handler. This unknown token can be retrieved with this function. 
 .SS "void MqConfigReset (struct \fBMqS\fP *const  context)"
 .PP
 clean the \fBMqS::config\fP data 
@@ -1041,7 +1022,7 @@ set the \fIpipe\fP configuration data
 the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP
 .RE
 .PP
-This is configuration option is only usefull for a \fI\fP(x)inetd setup to use the stdin (socket=0) as send/recv communication socket 
+This is configuration option is only useful for a \fI\fP(x)inetd setup to use the stdin (socket=0) as send/recv communication socket 
 .SS "enum \fBMqErrorE\fP MqConfigSetIoTcp (struct \fBMqS\fP *const  context, \fBMQ_CST\fP host, \fBMQ_CST\fP port, \fBMQ_CST\fP myhost, \fBMQ_CST\fP myport)"
 .PP
 set the \fBMqIoTcpConfigS\fP data 
@@ -1195,4 +1176,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for ccmsgque from the source code.

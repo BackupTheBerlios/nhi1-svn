@@ -75,7 +75,7 @@ CutFTR (
   MQ_INT i;
   struct MqS * ftr;
 
-  MqErrorCheck (MqConfigGetFilter (mqctx, 0, &ftr));
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftr));
   
   MqSendSTART (ftr);
   for (i=0; i<end ; i++) {
@@ -199,4 +199,5 @@ CutFactory (
 }
 
 /** \} acut */
+
 

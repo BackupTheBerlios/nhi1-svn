@@ -1065,7 +1065,7 @@ proc Setup {num mode com server args} {
       if {$so} {
 	set SERVER_OUTPUT [open [list | {*}$sl 2>@1] r]
       } else {
-	unset SERVER_OUTPUT
+	unset -nocomplain SERVER_OUTPUT
 	if {[catch {exec {*}$sl >&@stdout &} PID]} {
 	  puts $PID
 	  exit 1
