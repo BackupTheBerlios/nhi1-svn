@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "4 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "5 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -236,7 +236,7 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
 static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
   struct MqS * ftr;
-  MqErrorCheck (MqConfigGetFilter (ctx, 0, &ftr));
+  MqErrorCheck (MqServiceGetFilter (ctx, 0, &ftr));
   MqSendSTART(ftr);
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));

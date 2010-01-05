@@ -43,7 +43,7 @@ class Filter1 : public MqC, public IFactory {
 
     // service definition
     void fEOF () {
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       MQ_TAB::iterator row;
       MQ_ROW::iterator itm;
       for (row = data.begin(); row < data.end(); row++ ) {
@@ -74,9 +74,10 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     filter.LinkCreateVC (argc, argv);
     filter.ServiceCreate ("+FTR", MqC::CallbackF(&Filter1::fFTR));
     filter.ServiceCreate ("+EOF", MqC::CallbackF(&Filter1::fEOF));
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
   filter.Exit ();
 }
+

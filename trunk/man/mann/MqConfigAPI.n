@@ -1,4 +1,4 @@
-.TH "MqConfigAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "MqConfigAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -332,17 +332,9 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .br
 .R "get the \fImaster\fP value of the \fIconfig\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqConfigGetFilter\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filterP)"
-.br
-.R "get the \fIfilter\fP object from a filter pipeline between a \fImaster\fP context and a \fIslave\fP context with \fIid\fP. "
-.ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqConfigGetCtxId\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "return the context-identification "
-.ti -1c
-.RI "int \fBMqConfigGetIsTransaction\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "check if the ongoing service-call belongs to a transaction "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
@@ -616,33 +608,6 @@ the \fCcontext.config.debug\fP value
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqConfigGetFilter (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP **const  filterP)"
-.PP
-get the \fIfilter\fP object from a filter pipeline between a \fImaster\fP context and a \fIslave\fP context with \fIid\fP. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIid\fP the slave identifier, set to \fI0\fP for a \fIfilter\fP 
-.br
-\fIfilterP\fP the filter object to return 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP
-.RE
-.PP
-the following order is used to get the filter object:
-.IP "1." 4
-return the \fI\fBMqConfigS::master\fP\fP if non NULL
-.IP "2." 4
-return the \fI\fBMqSlaveGet\fP\fP with \fIid\fP if non NULL
-.IP "3." 4
-return a 'filter not available' error
-.PP
-
 .SS "\fBMQ_CST\fP MqConfigGetIdent (struct \fBMqS\fP const *const  context)"
 .PP
 get the \fIident\fP of the \fIcontext\fP object 
@@ -800,21 +765,6 @@ does the \fIcontext\fP object is a \fIstring\fP ?
 \fBReturns:\fP
 .RS 4
 the \fC(context->config.isString == MQ_YES)\fP value 
-.RE
-.PP
-
-.SS "int MqConfigGetIsTransaction (struct \fBMqS\fP const *const  context)"
-.PP
-check if the ongoing service-call belongs to a transaction 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-1=yes, 0=no 
 .RE
 .PP
 
@@ -1176,4 +1126,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for ccmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

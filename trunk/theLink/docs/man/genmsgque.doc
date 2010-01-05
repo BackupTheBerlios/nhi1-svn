@@ -1,7 +1,7 @@
 /**
 \defgroup \self \self
 
-The \b \lang Application-Server Project
+The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Project
 
 \section \NS{syn} SYNOPSIS
 <B>\package</B>
@@ -218,12 +218,6 @@ and start for every connection the proper entry from the file \e /etc/(x)inetd.c
 return the \e master if \e ctx is a slave-context or \e NULL if \e ctx is not a slave-context.
 !Only a SLAVE has a master!
 
-\configsection{filter}
-Get the \e filter object from a filter pipeline using the following order: \throw
--# return the \e #MqConfigS::master if non NULL
--# return the \e #MqSlaveGet with \e id if non NULL
--# return a "filter not available" error
-.
 
 \configsection{ctxId}
 return an identifier as integer and is \e unique per parent-context. The \e parent-context is always \c 0
@@ -233,9 +227,6 @@ and every new \e child-context get a new identifier by adding 1.
 Is the \self context connected ? A context is connected if the \RNSA{LinkCreate} command
 was successful and a context is NOT connected if a) the object has just been created or
 b) the link was deleted with \RNSA{LinkDelete}
-
-\configsection{isTransaction}
-Return \yes if a transaction is ongoing. This function is only usefull in a service, read more in \RNS{filter}.
 
 \configsection{isServer}
 True if object is a \e server object (default: \no, be a client)
@@ -416,6 +407,12 @@ UNKNOWN
 
 \subsection	  \NS{ServiceGetToken}			\ServiceGetToken
 \copydoc MqServiceGetToken
+
+\subsection	  \NS{ServiceIsTransaction}		\ServiceIsTransaction
+\copydoc MqServiceIsTransaction
+
+\subsection	  \NS{ServiceGetFilter}			\ServiceGetFilter
+\copydoc MqServiceGetFilter
 
 \subsection	  \NS{ServiceCreate}			\ServiceCreate
 \if ServiceCreate2
@@ -733,9 +730,9 @@ A bi-directional filter has a \e data-flow in both directions and is used in a \
 \endverbatim
 To define a \e bi-directional filter a couple of commands provide support:
  - \RNSA{ServiceCreate} : use the token \b +ALL to act on \e all services
- - \RNSA{config_filter,ConfigGetFilter}: to get the filter context (other site)
- - \RNSA{ServiceGetToken,ServiceGetToken}: to get the current token
- - \RNSA{config_isTransaction,ConfigGetIsTransaction} : to check if a transaction is ongoing
+ - \RNSA{ServiceGetFilter}: to get the filter context (other site)
+ - \RNSA{ServiceGetToken}: to get the current token
+ - \RNSA{ServiceIsTransaction} : to check if a transaction is ongoing
  - \RNSA{ReadBDY} : to read the entire body as \e byte-array
  - \RNSA{SendBDY} : to send the entire body
  .

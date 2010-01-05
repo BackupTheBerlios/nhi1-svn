@@ -1,4 +1,4 @@
-.TH "MqBufferAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "MqBufferAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -273,10 +273,10 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS::bls\fP object 
 .PP
-Definition at line 1891 of file msgque.h.
+Definition at line 1899 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 1894 of file msgque.h.
+Definition at line 1902 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
@@ -1227,4 +1227,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for ccmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

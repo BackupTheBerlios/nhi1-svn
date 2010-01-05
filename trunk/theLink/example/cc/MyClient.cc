@@ -21,7 +21,7 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   try {
     c.LinkCreateVC(argc, argv);
     c.SendSTART();
-    c.SendEND_AND_WAIT("HLWO", MQ_TIMEOUT_USER);
+    c.SendEND_AND_WAIT("HLWO");
     cout << c.ReadC() << endl;
   } catch (const exception& e) {
     c.ErrorSet(e);

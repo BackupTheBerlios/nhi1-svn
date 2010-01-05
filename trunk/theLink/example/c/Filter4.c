@@ -20,7 +20,6 @@
 
 #define ARGS  struct MqS * const mqctx, void *data
 #define TRANSCTX ((struct FilterCtxS*const)mqctx)
-#define MQCTX ((struct MqS*const)ctx)
 #define MQ_CONTEXT_S mqctx
 #define SETUP_ctx struct FilterCtxS*const ctx = TRANSCTX
 #define CHECK_ARGS(s) \
@@ -40,7 +39,6 @@ struct FilterCtxS {
   MQ_INT	    rIdx;
   MQ_INT	    wIdx;
   MQ_INT	    size;
-  MQ_BFL	    args;
 };
 
 /*****************************************************************************/
@@ -56,20 +54,19 @@ static enum MqErrorE FilterEvent (
 {
   register SETUP_ctx;
 
-  // check if a ctxaction is available
+  // check if an item is available
   if (ctx->rIdx == ctx->wIdx) {
     // no transaction available
     return MqErrorSetCONTINUE(mqctx);
   } else {
     struct MqS * ftr;
     register struct FilterItmS * itm;
-    // ctxaction available
-    // check if the ctx is available, if not start the ctx
+    // is an item available?
     switch (MqServiceGetFilter(mqctx, 0, &ftr)) {
       case MQ_OK:
 	break;
       case MQ_ERROR:
-	// write error message but ignore the error
+	// ignore the error
 	MqErrorReset(mqctx);
 	goto end;
       case MQ_EXIT:
@@ -77,7 +74,7 @@ static enum MqErrorE FilterEvent (
 	goto error;
     }
 
-    // extract the first (oldest) ctxaction from the store
+    // extract the first (oldest) item from the store
     itm = ctx->itm[ctx->rIdx++];
 
     // send the ctxaction to the ctx, on error write message but do not stop processing
@@ -89,7 +86,7 @@ static enum MqErrorE FilterEvent (
 	  MqSendEND(ftr, itm->token)
     );
 
-    // delete the ctxaction from the store
+    // reset the item-storage
     MqBufferReset(itm->data);
 error:
     return MqErrorStack(mqctx);
@@ -107,7 +104,7 @@ static enum MqErrorE FilterIn ( ARGS ) {
   MQ_BIN bdy;
   MQ_SIZE len;
   SETUP_ctx;
-  register struct FilterItmS * itm;
+  register struct FilterItmS * it;
   MqErrorCheck(MqReadBDY(mqctx, &bdy, &len));
   
   // add space if space is empty
@@ -124,18 +121,18 @@ static enum MqErrorE FilterIn ( ARGS ) {
     ctx->size*=2;
   }
 
-  itm = ctx->itm[ctx->wIdx];
+  it = ctx->itm[ctx->wIdx];
 
   // create storage if NULL
-  if (itm == NULL) {
-    ctx->itm[ctx->wIdx] = itm = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(struct FilterItmS));
+  if (it == NULL) {
+    ctx->itm[ctx->wIdx] = it = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(struct FilterItmS));
   }
-  if (itm->data == NULL) {
-    itm->data = MqBufferCreate(MQ_ERROR_PANIC, len);
+  if (it->data == NULL) {
+    it->data = MqBufferCreate(MQ_ERROR_PANIC, len);
   }
-  MqBufferSetB(itm->data, bdy, len);
-  strncpy(itm->token, MqServiceGetToken(mqctx), 5);
-  itm->isFilter = MqServiceIsTransaction(mqctx);
+  MqBufferSetB(it->data, bdy, len);
+  strncpy(it->token, MqServiceGetToken(mqctx), 5);
+  it->isFilter = MqServiceIsTransaction(mqctx);
   ctx->wIdx++;
 error:
   return MqSendRETURN(mqctx);
@@ -173,8 +170,6 @@ FilterSetup (
 {
   register SETUP_ctx;
 
-  //ctx->db = tchdbnew();
-
   // init the chache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
   ctx->rIdx = 0;
@@ -202,23 +197,9 @@ main (
 {
   // the parent-context
   struct MqS * const mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);
-  struct FilterCtxS * const ctx = (struct FilterCtxS*) mqctx;
 
   // parse the command-line
   MQ_BFL args = MqBufferLCreateArgs (argc, argv);
-
-  // extract the connection items from "args"
-  MQ_BFL ts = ctx->args = MqBufferLDup(args);
-  MQ_SIZE num;
-  MQ_SIZE const max = ts->cursize-1;
-  for (num=0; 
-    num<max && *ts->data[num]->cur.C != MQ_ALFA; 
-      num++) {;}
-  MqBufferLDeleteItem (mqctx, ts, 0, num+1, MQ_YES);
-  if (ts->cursize <= 0) {
-    MqErrorC(mqctx, __func__, -1, "unable to extract the connection items from the command-line parameters");
-    goto error;
-  }
 
   // add config data
   mqctx->setup.Child.fCreate	    = MqDefaultLinkCreate;

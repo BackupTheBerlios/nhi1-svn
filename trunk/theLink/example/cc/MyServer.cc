@@ -36,7 +36,7 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   MyServer srv;
   try {
     srv.LinkCreateVC(argc, argv);
-    srv.ProcessEvent();
+    srv.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     srv.ErrorSet(e);
   }

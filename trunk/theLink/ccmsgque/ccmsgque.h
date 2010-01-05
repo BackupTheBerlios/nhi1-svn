@@ -23,7 +23,6 @@
 # define MQ_COMPILE_AS_CC
 #endif
 #include "msgque.h"
-#include "debug.h"
 
 namespace ccmsgque {
 
@@ -74,6 +73,12 @@ namespace ccmsgque {
   class IBgError {
     public:
       virtual void BgError () = 0;
+  };
+
+  /// \sameas{MqConfigSetEvent}
+  class IEvent {
+    public:
+      virtual void Event () = 0;
   };
 
   /// \brief a C++ error class wrapper for the \e MqErrorS struct
@@ -202,7 +207,7 @@ namespace ccmsgque {
   /// \brief main ccmsgque class
   class MqC {
 
-    private:
+    protected:
       /// \brief link between MqC and MqS
       struct MqS context;
 
@@ -242,6 +247,7 @@ namespace ccmsgque {
 	enum ProcCallE	{
 	  PC_CallbackF,
 	  PC_IService,
+	  PC_IEvent,
 	  PC_IServerSetup,
 	  PC_IServerCleanup,
 	  PC_IBgError
@@ -249,6 +255,7 @@ namespace ccmsgque {
 	union ProcCallU {
 	  CallbackF	    Callback; 
 	  IService *	    Service;
+	  IEvent *	    Event;
 	  IServerSetup *    ServerSetup;
 	  IServerCleanup *  ServerCleanup;
 	  IBgError *	    BgError;
@@ -303,7 +310,6 @@ namespace ccmsgque {
       inline bool ConfigGetIsString ()	    { return context.config.isString == MQ_YES; }
       inline bool ConfigGetIsSilent ()	    { return context.config.isSilent == MQ_YES; }
       inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
-      inline bool ConfigGetIsTransaction () { return MqConfigGetIsTransaction(&context) ? true : false;}
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
       inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
@@ -312,11 +318,6 @@ namespace ccmsgque {
       inline MQ_TIME_T ConfigGetTimeout ()  { return context.config.io.timeout; }
       inline MqC* ConfigGetParent ()	    { return context.config.parent ? GetThis(context.config.parent) : NULL; }
       inline MqC* ConfigGetMaster ()	    { return context.config.master ? GetThis(context.config.master) : NULL; }
-      inline MqC* ConfigGetFilter (MQ_SIZE id=0) throw(MqCException)  { 
-	struct MqS* val; 
-	ErrorCheck (MqConfigGetFilter(&context, id, &val));
-	return GetThis(val);
-      }
       inline int ConfigGetCtxId ()	    { return MqConfigGetCtxId(&context); };
       inline MQ_CST ConfigGetIoUdsFile ()   { return MqConfigGetIoUdsFile (&context); }
       inline MQ_CST ConfigGetIoTcpHost ()   { return MqConfigGetIoTcpHost (&context); }
@@ -360,6 +361,10 @@ namespace ccmsgque {
 
       inline void ErrorPrint () {
 	MqErrorPrint (&context);
+      }
+
+      inline void ErrorSetCONTINUE () {
+	MqErrorSetCONTINUE (&context);
       }
 
       inline int ErrorGetNum () {
@@ -431,13 +436,6 @@ namespace ccmsgque {
     /// \defgroup misc_API Misc
     /// \{
     public:
-
-      /// \sameas{MqProcessEvent}
-      MQ_EXTERN void ProcessEvent (
-	MQ_TIME_T		    timeout   = MQ_TIMEOUT_USER,
-	enum MqWaitOnEventE const   wait      = MQ_WAIT_ONCE
-      ) throw(MqCException);
-
       inline MQ_BUF GetTempBuffer() { return context.temp; }
       inline void Exit () __attribute__((noreturn)) { MqExit (&context); } 
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
@@ -536,6 +534,16 @@ namespace ccmsgque {
     /// \defgroup service_API Service? : Create and Delete a Service
     /// \{
     public:
+      /// \sameas{MqServiceIsTransaction}
+      inline bool ServiceIsTransaction () { return MqServiceIsTransaction(&context) ? true : false;}
+
+      /// \sameas{MqServiceGetFilter}
+      inline MqC* ServiceGetFilter (MQ_SIZE id=0) throw(MqCException)  { 
+	struct MqS* val; 
+	ErrorCheck (MqServiceGetFilter(&context, id, &val));
+	return GetThis(val);
+      }
+
       /// \sameas{MqServiceGetToken}
       inline MQ_CST ServiceGetToken ()	    { return MqServiceGetToken(&context); }
 
@@ -552,6 +560,22 @@ namespace ccmsgque {
       inline void ServiceProxy (MQ_CST const token, MQ_SIZE id=0) throw(MqCException) { 
 	ErrorCheck (MqServiceProxy (&context, token, id));
       }
+
+      /// \sameas{MqProcessEvent}
+      inline void ProcessEvent (
+	MQ_TIME_T		    timeout,
+	enum MqWaitOnEventE const   wait
+      ) throw(MqCException)
+      {
+	ErrorCheck(MqProcessEvent(&context, timeout, wait));
+      }
+      inline void ProcessEvent (
+	enum MqWaitOnEventE const   wait      = MQ_WAIT_ONCE
+      ) throw(MqCException)
+      {
+	ErrorCheck(MqProcessEvent(&context, MQ_TIMEOUT_USER, wait));
+      }
+
     /// \}
 
     /// \defgroup slave_API Slave? : Create/Get and Delete a Slave

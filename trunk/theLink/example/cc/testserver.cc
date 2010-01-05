@@ -42,7 +42,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   try {
     ctx.ConfigSetName ("testserver");
     ctx.LinkCreateVC(argc, argv);
-    ctx.ProcessEvent ();
+    ctx.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     ctx.ErrorSet(e);
   }

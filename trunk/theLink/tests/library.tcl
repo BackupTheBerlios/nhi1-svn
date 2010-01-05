@@ -1009,6 +1009,7 @@ proc Setup {num mode com server args} {
   set filter_server [optV args --filter $env(TS_FILTER_SERVER)]
   set filter_client [optV args --filter $env(TS_FILTER_CLIENT)]
   set so	    [optB args --save-server-output]
+  unset -nocomplain SERVER_OUTPUT
 
   ## 1. setup variables
   lappend comargs --$com
@@ -1065,7 +1066,6 @@ proc Setup {num mode com server args} {
       if {$so} {
 	set SERVER_OUTPUT [open [list | {*}$sl 2>@1] r]
       } else {
-	unset -nocomplain SERVER_OUTPUT
 	if {[catch {exec {*}$sl >&@stdout &} PID]} {
 	  puts $PID
 	  exit 1
@@ -1169,7 +1169,14 @@ proc Cleanup {args} {
 	close $SERVER_OUTPUT
 	break
       }
-      lappend RET $line
+      if {$env(TS_DEBUG)} {
+	puts $line
+	if {![string match {[sScC]> *} $line]} {
+	  lappend RET $line
+	}
+      } else {
+	lappend RET $line
+      }
     }
     return [join $RET \n]
   }

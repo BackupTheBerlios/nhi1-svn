@@ -516,7 +516,6 @@ namespace example {
 	SendRETURN();
       }
 
-
       void CFG1 () {
 	MQ_CST cmd = ReadC();
 
@@ -612,6 +611,14 @@ namespace example {
 	SendRETURN();
       }
 
+      void PRNT () {
+	int i=0;
+	while (ReadItemExists()) {
+	  printf ("%2i: %s\n", ++i, ReadC());
+	}
+	SendRETURN();
+      }
+
     private:
       // factory  used to create server object instances
       MqC* Factory() const { return new Server(); }
@@ -680,6 +687,7 @@ namespace example {
 	  ServiceCreate("ERLR", CallbackF(&Server::ERLR));
 	  ServiceCreate("ERLS", CallbackF(&Server::ERLS));
 	  ServiceCreate("CFG1", CallbackF(&Server::CFG1));
+	  ServiceCreate("PRNT", CallbackF(&Server::PRNT));
 	}
       }
   };
@@ -699,7 +707,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   try {
     server.ConfigSetName ("server");
     server.LinkCreateVC (argc, argv);
-    server.ProcessEvent (MQ_TIMEOUT, MQ_WAIT_FOREVER);  
+    server.ProcessEvent (MQ_WAIT_FOREVER);  
   } catch (const exception& e) {
     // Convert the "exception" object in an "MqCException" object, "Exit" will report the error to the client
     server.ErrorSet (e);
@@ -707,7 +715,4 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server.Exit ();
 }
-
-
-
 

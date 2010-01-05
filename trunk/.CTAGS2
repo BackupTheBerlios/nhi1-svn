@@ -11,6 +11,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+. $(dirname $0)/env.sh
+
 set -x
 
 if [[ $HOSTTYPE == "FreeBSD" ]] ; then
@@ -41,6 +43,10 @@ cp $D/tags .
 
 [[ $(basename $PWD) = "c" ]] && {
     ctags -a $ADD *.[ch]
+}
+
+[[ $(basename $PWD) = "cc" ]] && {
+    ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
 }
 
 [[ $(basename $PWD) = "ccmsgque" ]] && {

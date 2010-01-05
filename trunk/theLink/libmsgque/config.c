@@ -183,9 +183,11 @@ sSetupDupHelper (
   MQ_PTR	      oldData
 )
 {
-  if (oldData) {
+  if (oldData != NULL) {
+    // if set in "Step 1", do nothing
     *dataToSet = oldData;
   } else if (*dataToSet != NULL && copyData != NULL) {
+    // if set in "Step 2", do copy
     return (*copyData) (context, dataToSet);
   }
   return MQ_OK;
@@ -197,7 +199,7 @@ MqSetupDup (
   struct MqS const * const from
 )
 {
-  // save all "data" entries because these are allready set by the 
+  // Step 1, save all "data" entries because these are already set by the 
   // Class-Constructor proper
   MQ_PTR Event = context->setup.Event.data;
   MQ_PTR ServerSetup = context->setup.ServerSetup.data;
@@ -206,7 +208,7 @@ MqSetupDup (
   MQ_PTR FactoryC = context->setup.Factory.Create.data;
   MQ_PTR FactoryD = context->setup.Factory.Delete.data;
 
-  // copy "setup" 
+  // Step 1,  copy "setup" 
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
 

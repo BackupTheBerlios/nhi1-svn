@@ -67,6 +67,15 @@ namespace ccmsgque {
       ptr->call.BgError = iBgError;
       MqConfigSetBgError (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
     }
+
+    // init the event interface
+    IEvent * const iEvent = dynamic_cast<IEvent*const>(this);
+    if (iEvent != NULL) {
+      struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
+      ptr->type = ProcCallS::PC_IEvent;
+      ptr->call.Event = iEvent;
+      MqConfigSetEvent (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
+    }
   }
 
   void MqC::LinkCreate (

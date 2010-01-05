@@ -22,6 +22,8 @@
 
 #include "ccmsgque_private.h"
 
+#define MQ_CONTEXT_S context
+
 namespace ccmsgque {
 
   using namespace std;
@@ -48,6 +50,9 @@ namespace ccmsgque {
 	case ProcCallS::PC_IService:
 	  (data->call.Service->Service)(GetThis(context));
 	  break;
+	case ProcCallS::PC_IEvent:
+	  (data->call.Event->Event)();
+	  break;
 	case ProcCallS::PC_IBgError:
 	  (data->call.BgError->BgError)();
 	  break;
@@ -67,7 +72,7 @@ namespace ccmsgque {
     }
 
     // everything is OK
-    return MQ_OK;
+    return MqErrorGetCode(context);
   }
 
 } // END - namespace "ccmsgque"

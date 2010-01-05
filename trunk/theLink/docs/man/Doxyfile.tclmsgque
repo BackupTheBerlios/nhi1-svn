@@ -84,29 +84,17 @@ ALIASES		    += "config_type_isSlave=boolean"
 ALIASES		    += "config_set_isSlave=NO"
 ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
 
-ALIASES		    += "config_type_isConnected=boolean"
-ALIASES		    += "config_set_isConnected=NO"
-ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
-
-ALIASES		    += "config_type_isTransaction=boolean"
-ALIASES		    += "config_set_isTransaction=NO"
-ALIASES		    += "config_get_isTransaction=ConfigGetIsTransaction"
+ALIASES             += "config_type_isConnected=boolean"
+ALIASES             += "config_set_isConnected=NO"
+ALIASES             += "config_get_isConnected=ConfigGetIsConnected"
 
 ALIASES		    += "config_type_master=Command-Object"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=ConfigGetMaster"
 
-ALIASES		    += "config_type_filter=Command-Object"
-ALIASES		    += "config_set_filter=NO"
-ALIASES		    += "config_get_filter=ConfigGetFilter"
-
 ALIASES		    += "config_type_ctxId=int"
 ALIASES		    += "config_set_ctxId=NO"
 ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
-
-ALIASES		    += "config_type_token=string"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=ConfigGetToken"
 
 ALIASES		    += "config_type_startAs=integer"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs startAs"
@@ -132,7 +120,7 @@ ALIASES             += "config_IServerSetup=$ctx ConfigSetServerSetup callback"
 ALIASES		    += "config_IServerCleanup=$ctx ConfigSetServerCleanup callback"
 ALIASES		    += "config_IFactory=$ctx ConfigSetFactory"
 ALIASES             += "config_IBgError=$ctx ConfigSetBgError callback"
-ALIASES		    += "config_IEvent=$ctx ConfigSetEvent fFunc Data fFree fCopy"
+ALIASES		    += "config_IEvent=$ctx ConfigSetEvent callback"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=$ctx LinkCreate ..."
@@ -181,6 +169,9 @@ ALIASES		    += "ProcessEvent=$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|F
 ALIASES		    += "MQ_WAIT_NO=\c NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
+ALIASES		    += "ServiceGetFilter=$ctx ServiceGetFilter ?id=0?"
+ALIASES		    += "ServiceIsTransaction=$ctx ServiceIsTransaction"
+ALIASES		    += "ServiceGetToken=$ctx ServiceGetToken"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."

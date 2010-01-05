@@ -92,17 +92,9 @@ ALIASES		    += "config_type_isConnected=#MQ_BOL"
 ALIASES		    += "config_set_isConnected=NO"
 ALIASES		    += "config_get_isConnected=#MqConfigGetIsConnected (ctx)"
 
-ALIASES		    += "config_type_isTransaction=#MQ_BOL"
-ALIASES		    += "config_set_isTransaction=NO"
-ALIASES		    += "config_get_isTransaction=#MqConfigGetIsTransaction (ctx)"
-
 ALIASES		    += "config_type_master=struct MqS*"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=#MqConfigGetMaster (ctx)"
-
-ALIASES		    += "config_type_filter=struct MqS*"
-ALIASES		    += "config_set_filter=NO"
-ALIASES		    += "config_get_filter=#MqConfigGetFilter (ctx, MQ_SIZE id)"
 
 ALIASES		    += "config_type_ctxId=#MQ_SIZE"
 ALIASES		    += "config_set_ctxId=NO"
@@ -124,15 +116,11 @@ ALIASES		    += "config_type_pipe=#MQ_SOCK"
 ALIASES		    += "config_set_pipe=#MqConfigSetIoPipe (ctx, socket)"
 ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
 
-ALIASES		    += "config_type_token=#MQ_CST"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=#MqConfigGetToken (ctx)"
-
-ALIASES             += "config_IServerSetup=#MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
-ALIASES		    += "config_IServerCleanup=#MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
-ALIASES		    += "config_IFactory=#MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
-ALIASES		    += "config_IBgError=#MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
-ALIASES		    += "config_IEvent=#MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
+ALIASES             += "config_IServerSetup=MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_IServerCleanup=MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_IFactory=MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
+ALIASES		    += "config_IBgError=MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
+ALIASES		    += "config_IEvent=MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=MqLinkCreate (ctx, args)"
@@ -188,6 +176,9 @@ ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVE
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "ServiceGetFilter=ServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+ALIASES		    += "ServiceIsTransaction=ServiceIsTransaction (ctx)"
+ALIASES		    += "ServiceGetToken=ServiceGetToken (ctx)"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx,id,argv)"

@@ -249,11 +249,7 @@ struct HdrSendS {
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE pWaitOnEvent (
-  struct MqS * const context,
-  enum MqIoSelectE const what,
-  MQ_TIME_T const timeout
-);
+enum MqErrorE pWaitOnEvent (struct MqS * const, const enum MqIoSelectE, const MQ_TIME_T);
 
 enum MqErrorE pUSleep (
   struct MqS * const context,

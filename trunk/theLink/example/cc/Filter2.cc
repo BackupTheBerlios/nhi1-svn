@@ -42,7 +42,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     filter.LinkCreateVC (argc, argv);
     filter.ServiceCreate ("+FTR", MqC::CallbackF(&Filter2::fFTR));
     filter.ServiceProxy  ("+EOF");
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }

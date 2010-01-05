@@ -815,6 +815,8 @@ struct MqSetupS {
   /// This Server-Setup function is used to configure a new server-link and act like a
   /// constructor. This function is called on the end of #MqLinkCreate. A server-context-link is created 
   /// for every new incoming connection request and is used to provide context specific services .
+  /// \attention if a \e child-context s used this function together with #FactoryCreate
+  /// is required to configure the new created \e child-context.
   struct MqCallbackS ServerSetup;
 
   /// \brief pointer to the Server-Cleanup function
@@ -1705,30 +1707,38 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \e link-delete or explicit with the \RNSA{ServiceDelete} function.
 ///
 
-/// \brief get the \e filter object from a filter pipeline
-///  between a \e master context and a \e slave context with \e id.
-/// \context
-/// \param[in] id the slave identifier, set to \e 0 for a \e filter
-/// \param[out] filterP the filter object to return
-/// \retMqErrorE
+/// \brief get the \e filter-context or the \e master-context
 ///
-/// the following order is used to get the filter object:
-/// -# return the \e #MqConfigS::master if non NULL
-/// -# return the \e #MqSlaveGet with \e id if non NULL
+/// A \e filter-pipeline has two context, one on the left and one on the right.
+/// The \e left-context is linked with the \e master-context and the \e right-context
+/// is linked to the \e slave-context.
+/// This function extract the \e other-context related to the initial \e ctx argument 
+/// using the following order:
+/// -# return the \e master-context if not NULL
+/// -# return the \e slave-context using \e id if not NULL
 /// -# return a "filter not available" error
 /// .
+/// 
+/// \ctx
+/// \id
+/// \param[out] filter the \e other-context or \null on error
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
-  struct MqS  * const context,
+  struct MqS  * const ctx,
   MQ_SIZE const id,
-  struct MqS ** const filterP
+  struct MqS ** const filter
 ) __attribute__((nonnull(1)));
 
 /// \brief check if the \e ongoing-service-call belongs to a transaction
-/// \context
-/// \return a boolean valus, \yes or \no
+///
+/// A \e service-call can be \e with-transaction (return \yes if the package was send with 
+/// \RNSA{SendEND_AND_WAIT} or \RNSA{SendEND_AND_CALLBACK}) 
+/// or can be \e without-transaction (return \no if the package was send with \RNSA{SendEND})
+/// \ctx
+/// \return a boolean value, \yes or \no
 MQ_EXTERN int
 MQ_DECL MqServiceIsTransaction (
-  struct MqS const * const context
+  struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
 
 /// \brief get the \RNS{ServiceIdentifier} from an \e ongoing-service-call

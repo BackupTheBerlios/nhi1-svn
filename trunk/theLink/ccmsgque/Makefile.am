@@ -17,6 +17,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     token.cc uds_io.cc bufferL.cc error.cc \
     generic_io.cc io.cc msgque.cc read.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
+    service.cc \
     \
     ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc \
     \

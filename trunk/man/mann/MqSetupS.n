@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -108,7 +108,7 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C++/Filter4\fP.C++ 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/TCL/Filter4.TCL\fP 
 .RE
 .PP
 
@@ -177,7 +177,7 @@ Definition at line 784 of file msgque.h.
 .PP
 ignore the server EXIT, set with \fBMqConfigSetIgnoreExit\fP 
 .PP
-By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIyes\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .PP
 Definition at line 890 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS::isServer\fP"
@@ -218,4 +218,4 @@ Definition at line 818 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for ccmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

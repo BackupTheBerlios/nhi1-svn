@@ -241,8 +241,6 @@ MqProcessEvent (
 
     // ##################### Process Events #####################
     MqErrorCheck (ret=pIoSelectStart(context->link.io, &tv, sMqEventStart));
-
-    // !! ATTENTION -> context is gone after an server "SHD"
   }
   while (forever && ret == MQ_OK);
 

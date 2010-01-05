@@ -1,8 +1,8 @@
-.TH "libmsgque" n "4 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "5 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-libmsgque \- The \fBC\fP Application-Server Project
+libmsgque \- The \fBC\fP Application-Server Project and Programming-Language-Micro-Kernel
 .SH "SYNOPSIS"
 .PP
 \fB#include 'msgque.h'\fP
@@ -203,33 +203,14 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fCstruct MqS*\fP, \fBget:\fP \fC\fBMqConfigGetMaster\fP (ctx)\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "filter"
-\fBtype:\fP \fCstruct MqS*\fP, \fBget:\fP \fC\fBMqConfigGetFilter\fP (ctx, MQ_SIZE id)\fP , \fBset:\fP \fCNO\fP
-.PP
-Get the \fIfilter\fP object from a filter pipeline using the following order: (on error return an \fBEXCEPTION OBJECT\fP)
-.IP "1." 4
-return the \fI\fBMqConfigS::master\fP\fP if non NULL
-.IP "2." 4
-return the \fI\fBMqSlaveGet\fP\fP with \fIid\fP if non NULL
-.IP "3." 4
-return a 'filter not available' error
-.PP
 .SS "ctxId"
 \fBtype:\fP \fC\fBMQ_SIZE\fP\fP, \fBget:\fP \fC\fBMqConfigGetCtxId\fP (ctx)\fP , \fBset:\fP \fCNO\fP
 .PP
 return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
-.SS "token"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetToken\fP (ctx)\fP , \fBset:\fP \fCNO\fP
-.PP
-return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBServiceCreate\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
 .SS "isConnected"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsConnected\fP (ctx)\fP , \fBset:\fP \fCNO\fP
 .PP
 Is the libmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
-.SS "isTransaction"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsTransaction\fP (ctx)\fP , \fBset:\fP \fCNO\fP
-.PP
-Return \fIMQ_YES\fP if a transaction is ongoing. This function is only usefull in a service, read more in \fBFILTER MODE\fP.
 .SS "isServer"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsServer\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsServer\fP (ctx, isServer)\fP
 .PP
@@ -242,15 +223,15 @@ True if object is a \fIparent\fP object (default: \fIMQ_YES\fP, be a parent)
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSlave\fP (ctx)\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIMQ_NO\fP, not be a slave)
-.SS "interface: #MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
+.SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 Interface to define a \fIserver\fP libmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fIMQ_YES\fP.
-.SS "interface: #MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
+.SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
 Interface to define a \fIserver\fP libmsgque object. This Interface define the ServerCleanup callback called at \fBLinkDelete\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fIMQ_YES\fP.
-.SS "interface: #MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
+.SS "interface: MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 The factory pattern is used to create a new application object (read more at: \fBMqSetupS::Factory\fP) Without the \fIFactory\fP pattern only the initial startup context is available to serve incoming requests. In general every server need to provide a \fIFactory\fP pattern.
-.SS "interface: #MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
+.SS "interface: MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
-.SS "interface: #MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
+.SS "interface: MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
@@ -331,8 +312,65 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented as a set of functions and data suitable for \fBMqCallbackS\fP.
+.SS "ServiceGetToken (ctx)"
+get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
+.PP
+This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBTOKEN IDENTIFIER\fP 
+.RE
+.PP
+.SS "ServiceIsTransaction (ctx)"
+check if the \fIongoing-service-call\fP belongs to a transaction 
+.PP
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBSendEND\fP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "ServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+get the \fIfilter-context\fP or the \fImaster-context\fP 
+.PP
+A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
+.IP "1." 4
+return the \fImaster-context\fP if not NULL
+.IP "2." 4
+return the \fIslave-context\fP using \fIid\fP if not NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIfilter\fP the \fIother-context\fP or \fINULL\fP on error 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "MqServiceCreate(ctx,token,callback,data,fFree)"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
+.PP
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBServiceGetToken (ctx)\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1054,11 +1092,11 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBServiceCreate\fP : use the token \fB+ALL\fP to act on \fIall\fP services
 .IP "\(bu" 2
-\fBConfigGetFilter\fP: to get the filter context (other site)
+\fBServiceGetFilter\fP: to get the filter context (other site)
 .IP "\(bu" 2
-\fBConfigGetToken\fP: to get the current token
+\fBServiceGetToken\fP: to get the current token
 .IP "\(bu" 2
-\fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
+\fBServiceIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
 \fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
@@ -1152,7 +1190,7 @@ error:
 static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
   struct MqS * ftr;
-  MqErrorCheck (MqConfigGetFilter (ctx, 0, &ftr));
+  MqErrorCheck (MqServiceGetFilter (ctx, 0, &ftr));
   MqSendSTART(ftr);
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));

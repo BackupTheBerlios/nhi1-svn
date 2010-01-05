@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -199,7 +199,7 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
 .nf
 package require TclMsgque
 proc FTRcmd {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ftr SendSTART
   while {[$ctx ReadItemExists]} {
     $ftr SendC '<[$ctx ReadC]>'

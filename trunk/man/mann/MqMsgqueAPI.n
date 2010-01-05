@@ -1,4 +1,4 @@
-.TH "MqMsgqueAPI" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "MqMsgqueAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -288,4 +288,4 @@ the prefix arguments of the starting application
 Definition at line 983 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for ccmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

@@ -23,24 +23,24 @@ class Filter3 : public MqC, public IFactory, public IServerSetup {
       return new Filter3(); 
     }
     void ServerSetup() {
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
       ftr->ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
     }
     void Filter () {
       MQ_BIN bdy;
       MQ_SIZE len;
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       ReadBDY(&bdy, &len);
       ftr->SendSTART();
       ftr->SendBDY(bdy, len);
-      if (ConfigGetIsTransaction()) {
-	ftr->SendEND_AND_WAIT(ConfigGetToken());
+      if (ServiceIsTransaction()) {
+	ftr->SendEND_AND_WAIT(ServiceGetToken());
 	SendSTART();
 	ftr->ReadBDY(&bdy, &len);
 	SendBDY(bdy, len);
       } else {
-	ftr->SendEND(ConfigGetToken());
+	ftr->SendEND(ServiceGetToken());
       }
       SendRETURN();
     }
@@ -58,7 +58,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   try {
     filter.ConfigSetIsServer(MQ_YES);
     filter.LinkCreateVC (argc, argv);
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }

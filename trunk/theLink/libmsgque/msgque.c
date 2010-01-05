@@ -924,18 +924,19 @@ sCallEventProc (
   struct MqS * cldCtx;
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
+  // call my own event-proc
   switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
     case MQ_OK:
       break;
     case MQ_CONTINUE:
-      if (context->link.onShutdown == MQ_YES) {
+      if (context->link.onShutdown == MQ_YES)
 	CONTINUE++;
-      }
       break;
     case MQ_ERROR:
     case MQ_EXIT:
       goto error;
   }
+  // call the event-proc's of my child's
   for (child = context->link.childs; child != NULL; child=child->right) {
     NUM++;
     cldCtx = child->context;
@@ -944,9 +945,8 @@ sCallEventProc (
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE:
-	  if (cldCtx->link.onShutdown == MQ_YES) {
+	  if (cldCtx->link.onShutdown == MQ_YES)
 	    CONTINUE++;
-	  }
 	  break;
 	case MQ_ERROR:
 	case MQ_EXIT:
@@ -957,7 +957,7 @@ sCallEventProc (
     }
   }
   // with "ignoreExit" all "context" have to be on "CONTINUE" to trigger an exit
-  if (context->setup.ignoreExit != MQ_YES || NUM != CONTINUE) {
+  if (context->setup.ignoreExit == MQ_NO || NUM != CONTINUE) {
     MqErrorReset(context);
   }
   return iErrorGetCode(context);
@@ -973,6 +973,7 @@ pWaitOnEvent (
   const MQ_TIME_T timeout
 )
 {
+  struct MqS * const parent = pMqGetFirstParent (context);
   const MQ_TIME_T startT = time (NULL);
   register MQ_TIME_T nowT;
 
@@ -1014,20 +1015,15 @@ pWaitOnEvent (
       pTokenSetCurrent(context->link.srvT,"____");
 
       //MqDLogC(context,7,"call fEvent in<%p>\n", msgque);
-      switch (sCallEventProc (context)) {
+      switch (sCallEventProc (parent)) {
 	case MQ_OK:
 	  break;
-	case MQ_CONTINUE: {
-	    struct pChildS * child;
-	    context->setup.ignoreExit = MQ_NO;
-	    for (child = context->link.childs; child != NULL; child=child->right) {
-	      child->context->setup.ignoreExit = MQ_NO;
-	    }
-	    return pErrorSetEXIT (context, __func__);
-	  }
-	  break;
+	case MQ_CONTINUE:
+	  context->setup.ignoreExit = MQ_NO;
+	  return pErrorSetEXIT (context, __func__);
 	case MQ_ERROR:
 	case MQ_EXIT:
+	  MqErrorCopy (context, parent);
 	  goto error;
       }
       //MqDLogC(context,7,"finish fEvent in<%p>\n", msgque);
@@ -1065,11 +1061,15 @@ pUSleep (
 )
 {
   if (context != NULL && context->setup.Event.fFunc != NULL) {
+    struct MqS * const parent = pMqGetFirstParent (context);
     struct mq_timeval start;
     struct mq_timeval now;
     MqErrorCheck (SysGetTimeOfDay (context, &start, NULL));
     do {
-      MqErrorCheck (sCallEventProc (context));
+      if (MqErrorCheckI (sCallEventProc (parent))) {
+	MqErrorCopy (context, parent);
+	goto error;
+      }
       MqErrorCheck (MqSysUSleep (context, 99999L));
       MqErrorCheck (SysGetTimeOfDay (context, &now, NULL));
     }

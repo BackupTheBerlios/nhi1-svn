@@ -1,8 +1,8 @@
-.TH "tclmsgque" n "4 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-tclmsgque \- The \fBTCL\fP Application-Server Project
+tclmsgque \- The \fBTCL\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
 \fBpackage require TclMsgque\fP
@@ -178,33 +178,14 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fCCommand-Object\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "filter"
-\fBtype:\fP \fCCommand-Object\fP, \fBget:\fP \fCConfigGetFilter\fP , \fBset:\fP \fCNO\fP
-.PP
-Get the \fIfilter\fP object from a filter pipeline using the following order: (on error return an \fBEXCEPTION OBJECT\fP)
-.IP "1." 4
-return the \fI\fBMqConfigS::master\fP\fP if non NULL
-.IP "2." 4
-return the \fI\fBMqSlaveGet\fP\fP with \fIid\fP if non NULL
-.IP "3." 4
-return a 'filter not available' error
-.PP
 .SS "ctxId"
 \fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetCtxId\fP , \fBset:\fP \fCNO\fP
 .PP
 return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
-.SS "token"
-\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetToken\fP , \fBset:\fP \fCNO\fP
-.PP
-return the current \fBTOKEN IDENTIFIER\fP and is only useful in a service callback. This command is needed on the server to implement a generic service (A \fBServiceCreate\fP with different \fBTOKEN IDENTIFIER\fP but with the same \fIservice\fP callback).
 .SS "isConnected"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsConnected\fP , \fBset:\fP \fCNO\fP
 .PP
 Is the tclmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
-.SS "isTransaction"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsTransaction\fP , \fBset:\fP \fCNO\fP
-.PP
-Return \fIyes\fP if a transaction is ongoing. This function is only usefull in a service, read more in \fBFILTER MODE\fP.
 .SS "isServer"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
@@ -225,7 +206,7 @@ Interface to define a \fIserver\fP tclmsgque object. This Interface define the S
 The factory pattern is used to create a new application object (read more at: \fBMqSetupS::Factory\fP) Without the \fIFactory\fP pattern only the initial startup context is available to serve incoming requests. In general every server need to provide a \fIFactory\fP pattern.
 .SS "interface: $ctx ConfigSetBgError callback"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
-.SS "interface: $ctx ConfigSetEvent fFunc Data fFree fCopy"
+.SS "interface: $ctx ConfigSetEvent callback"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
@@ -303,8 +284,65 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented as TCL procedure using \fIService {ctx}\fP
+.SS "$ctx ServiceGetToken"
+get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
+.PP
+This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBTOKEN IDENTIFIER\fP 
+.RE
+.PP
+.SS "$ctx ServiceIsTransaction"
+check if the \fIongoing-service-call\fP belongs to a transaction 
+.PP
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIyes\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIno\fP if the package was send with \fBSendEND\fP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIyes\fP or \fIno\fP 
+.RE
+.PP
+.SS "$ctx ServiceGetFilter ?id=0?"
+get the \fIfilter-context\fP or the \fImaster-context\fP 
+.PP
+A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
+.IP "1." 4
+return the \fImaster-context\fP if not NULL
+.IP "2." 4
+return the \fIslave-context\fP using \fIid\fP if not NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIfilter\fP the \fIother-context\fP or \fIempty\fP on error 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx ServiceCreate token callback"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
+.PP
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fB$ctx ServiceGetToken\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1039,11 +1077,11 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBServiceCreate\fP : use the token \fB+ALL\fP to act on \fIall\fP services
 .IP "\(bu" 2
-\fBConfigGetFilter\fP: to get the filter context (other site)
+\fBServiceGetFilter\fP: to get the filter context (other site)
 .IP "\(bu" 2
-\fBConfigGetToken\fP: to get the current token
+\fBServiceGetToken\fP: to get the current token
 .IP "\(bu" 2
-\fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
+\fBServiceIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
 \fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
@@ -1121,7 +1159,7 @@ $ctx Exit
 .nf
 package require TclMsgque
 proc FTRcmd {ctx} {
-  set ftr [$ctx ConfigGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ftr SendSTART
   while {[$ctx ReadItemExists]} {
     $ftr SendC '<[$ctx ReadC]>'

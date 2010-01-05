@@ -19,14 +19,6 @@
 #include "ccmsgque_private.h"
 
 namespace ccmsgque {
-
-  void MqC::ProcessEvent (
-    MQ_TIME_T			timeout,
-    enum MqWaitOnEventE const   wait
-  ) throw(MqCException)
-  {
-    ErrorCheck(MqProcessEvent(&context, timeout, wait));
-  }
   
   enum MqErrorE MqC::FactoryCreate (
     struct MqS * const tmpl,
@@ -39,6 +31,7 @@ namespace ccmsgque {
       struct MqS * const context = *contextP = &(static_cast<IFactory*const>(data))->Factory()->context;
       MqConfigDup(context, tmpl);
       GetThis(context)->Init();
+      MqSetupDup(context, tmpl);
     } catch (exception& ex) {
       return GetThis(tmpl)->ErrorSet(ex);
     } catch (...) {

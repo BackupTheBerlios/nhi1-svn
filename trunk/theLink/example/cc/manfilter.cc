@@ -21,7 +21,7 @@ class manfilter : public MqC, public IFactory {
     }
   public:
     void fFTR () {
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       MQ_BUF temp = GetTempBuffer();
       ftr->SendSTART();
       while (ReadItemExists()) {
@@ -41,9 +41,10 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     filter.LinkCreateVC(argc, argv);
     filter.ServiceCreate("+FTR", MqC::CallbackF(&manfilter::fFTR));
     filter.ServiceProxy ("+EOF");
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
   filter.Exit();
 }
+

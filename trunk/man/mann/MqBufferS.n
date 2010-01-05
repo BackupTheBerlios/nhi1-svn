@@ -1,4 +1,4 @@
-.TH "MqBufferS" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "MqBufferS" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -67,62 +67,62 @@ read a single item from an existing Msgque packet
 .PP
 'reading from' and 'appending to' an existing Msgque packet is done by incrementing the \fIcur.B\fP pointer to a new position. a \fBMqBufferS\fP object is using a \fBMqBufferU\fP union and a \fBMqTypeE\fP enum to define an item. The object is public to give the developer the opportunity to direct access saved data. 
 .PP
-Definition at line 1911 of file msgque.h.
+Definition at line 1919 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP \fBMqBufferS::alloc\fP"
 .PP
 allocation style, MQ_DYNAMIC or MQ_STATIC 
 .PP
-Definition at line 1920 of file msgque.h.
+Definition at line 1928 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferS::bls\fP[MQ_BLS_SIZE+1]"
 .PP
 B)uffer L)ocal S)torage used in \fBMqBufferGetC\fP to get a string from a MQ_ATO data. 
 .PP
 +1 to allow strings with MQ_BLS_SIZE=strlen(str) fit into the buffer with an additional '\\0' at the end 
 .PP
-Definition at line 1927 of file msgque.h.
+Definition at line 1935 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqBufferS::context\fP\fC [read]\fP"
 .PP
 error object of the related msgque 
 .PP
-Definition at line 1913 of file msgque.h.
+Definition at line 1921 of file msgque.h.
 .SS "union \fBMqBufferU\fP \fBMqBufferS::cur\fP\fC [write]\fP"
 .PP
 point to current position, used for 'appending to' or 'reading from' a package (always: data <= cur.B <= data+cursize) 
 .PP
-Definition at line 1918 of file msgque.h.
+Definition at line 1926 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS::cursize\fP"
 .PP
 currently used size (always: \fIcursize\fP < \fIsize\fP) 
 .PP
-Definition at line 1916 of file msgque.h.
+Definition at line 1924 of file msgque.h.
 .SS "\fBMQ_BIN\fP \fBMqBufferS::data\fP"
 .PP
 always point to the beginning of the data-segment 
 .PP
-Definition at line 1914 of file msgque.h.
+Definition at line 1922 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS::numItems\fP"
 .PP
 the number of items in the data-segment (only if it is a package) 
 .PP
-Definition at line 1917 of file msgque.h.
+Definition at line 1925 of file msgque.h.
 .SS "int \fBMqBufferS::signature\fP"
 .PP
 signature to provide type-safety for non-typed languages 
 .PP
-Definition at line 1912 of file msgque.h.
+Definition at line 1920 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS::size\fP"
 .PP
 the size of the data-segment 
 .PP
-Definition at line 1915 of file msgque.h.
+Definition at line 1923 of file msgque.h.
 .SS "enum \fBMqTypeE\fP \fBMqBufferS::type\fP"
 .PP
 type of the item stored into the data-segment 
 .PP
-Definition at line 1921 of file msgque.h.
+Definition at line 1929 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for ccmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.
