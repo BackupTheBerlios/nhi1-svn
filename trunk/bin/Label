@@ -42,7 +42,7 @@ array set LABELIGNORE {
     ./theLink/example/c		{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
 				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3 Filter4}
     ./theLink/example/cc	{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
-				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3}
+				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3 Filter4}
     ./theLink/example/java	{ example *.stamp *.sw* Makefile Makefile.in .vpath_hook tags}
     ./theLink/example/tcl	{ *.sw* Makefile.in Makefile}
     ./theLink/example/python	{ *.sw* Makefile.in Makefile}
