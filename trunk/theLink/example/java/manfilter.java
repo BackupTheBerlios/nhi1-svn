@@ -17,7 +17,7 @@ class manfilter extends MqS implements IFactory {
   }
   private static class FTR implements IService {
     public void Service (MqS ctx) throws MqSException {
-      MqS ftr = ctx.ConfigGetFilter();
+      MqS ftr = ctx.ServiceGetFilter();
       ftr.SendSTART();
       while (ctx.ReadItemExists()) {
 	ftr.SendC("<" + ctx.ReadC() + ">");
@@ -41,3 +41,4 @@ class manfilter extends MqS implements IFactory {
     srv.Exit();
   }
 }
+

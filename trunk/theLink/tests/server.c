@@ -981,27 +981,27 @@ Ot_SND2 (
       MqSendC (mqctx, MqSlaveGet(mqctx, clid) == NULL ? "OK" : "ERROR");
     } else if (!strcmp(s,"SEND")) {
       MQ_CST TOK;
-      MqSendSTART(clmqctx);
+      MqErrorCheck(MqSendSTART(clmqctx));
       MqErrorCheck(MqReadC(mqctx, &TOK));
       MqErrorCheck(MqReadU(mqctx, &buf));
-      MqSendU(clmqctx, buf);
+      MqErrorCheck(MqSendU(clmqctx, buf));
       MqErrorCheck(MqSendEND(clmqctx, TOK));
     } else if (!strcmp(s,"WAIT")) {
       MQ_BIN itm;
       MQ_SIZE len;
-      MqSendSTART(clmqctx);
+      MqErrorCheck(MqSendSTART(clmqctx));
       MqErrorCheck(MqReadN(mqctx, &itm, &len));
-      MqSendN(clmqctx, itm, len);
+      MqErrorCheck(MqSendN(clmqctx, itm, len));
       MqErrorCheck(MqSendEND_AND_WAIT(clmqctx, "ECOI", 5));
       MqErrorCheck(MqReadI(clmqctx, &srvctx->i));
       MqSendI(mqctx, srvctx->i+1);
     } else if (!strcmp(s,"MqSendEND_AND_WAIT")) {
       MQ_CST token;
       MqErrorCheck(MqReadC(mqctx, &token));
-      MqSendSTART(clmqctx);
+      MqErrorCheck(MqSendSTART(clmqctx));
       while (MqReadItemExists(mqctx)) {
 	MqErrorCheck(MqReadU(mqctx, &buf));
-	MqSendU(clmqctx, buf);
+	MqErrorCheck(MqSendU(clmqctx, buf));
       }
       MqErrorCheck(MqSendEND_AND_WAIT(clmqctx, token, 5));
       while (MqReadItemExists(clmqctx)) {
@@ -1011,18 +1011,18 @@ Ot_SND2 (
     } else if (!strcmp(s,"MqSendEND")) {
       MQ_CST token;
       MqErrorCheck(MqReadC(mqctx, &token));
-      MqSendSTART(clmqctx);
+      MqErrorCheck(MqSendSTART(clmqctx));
       while (MqReadItemExists(mqctx)) {
 	MqErrorCheck(MqReadU(mqctx, &buf));
-	MqSendU(clmqctx, buf);
+	MqErrorCheck(MqSendU(clmqctx, buf));
       }
       MqErrorCheck(MqSendEND(clmqctx, token));
       return MQ_OK;
     } else if (!strcmp(s,"CALLBACK")) {
       srvctx->i = -1;
-      MqSendSTART(clmqctx);
+      MqErrorCheck(MqSendSTART(clmqctx));
       MqErrorCheck(MqReadU(mqctx, &buf));
-      MqSendU(clmqctx, buf);
+      MqErrorCheck(MqSendU(clmqctx, buf));
       MqErrorCheck(MqSendEND_AND_CALLBACK(clmqctx, "ECOI", Callback2, NULL, NULL));
       MqErrorCheck(MqProcessEvent(clmqctx, 10, MQ_WAIT_ONCE));
       MqSendI(mqctx, CLIENTCTX(clmqctx)->i+1);
@@ -1031,15 +1031,14 @@ Ot_SND2 (
       struct MqBufferLS * args = MqBufferLCreateArgsV(clmqctx, "cl-err-1", "@", "DUMMY", NULL);
       clmqctx = MqContextCreate (sizeof(struct ClientCtxS), NULL);
       MqConfigSetMaster(clmqctx, master, clid);
+      MqConfigSetDebug(clmqctx, MqConfigGetDebug(mqctx));
       if (MqErrorCheckI(MqLinkCreate(clmqctx, &args))) {
-	MqErrorCopy (mqctx, clmqctx);
 	MqContextDelete (&clmqctx);
       }
       MqBufferLDelete(&args);
     } else if (!strcmp(s,"isSlave")) {
       MqSendO(mqctx, MqConfigGetIsSlave(clmqctx));
     }
-
 error:
   return MqSendRETURN (mqctx);
 }

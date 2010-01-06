@@ -42,7 +42,7 @@ int NS(pErrorFromMq) (
   Tcl_Obj *objv[4];
   objv[0] = Tcl_NewStringObj ("TCLMSGQUE", -1);
   objv[1] = Tcl_NewIntObj (MqErrorGetNum(mqctx));
-  objv[2] = Tcl_NewIntObj (MqErrorGetCode(mqctx));
+  objv[2] = Tcl_NewIntObj (MqErrorGetCodeI(mqctx));
   objv[3] = Tcl_NewStringObj (MqErrorGetText(mqctx), -1);
   Tcl_SetObjErrorCode (interp, Tcl_NewListObj (4, objv));
   Tcl_SetResult(interp, (MQ_STR) MqErrorGetText(mqctx), TCL_VOLATILE);
@@ -119,7 +119,7 @@ enum MqErrorE NS(ProcCall) (
   Tcl_DecrRefCount(lobjv[1]);
   Tcl_DecrRefCount(lobjv[0]);
 
-  return ret == TCL_OK ? Tcl_ResetResult(interp),MqErrorGetCode(mqctx) : NS(ProcError) (tclctx, "ErrorSet");
+  return ret == TCL_OK ? Tcl_ResetResult(interp),MqErrorGetCodeI(mqctx) : NS(ProcError) (tclctx, "ErrorSet");
 }
 
 void NS(ProcFree) (

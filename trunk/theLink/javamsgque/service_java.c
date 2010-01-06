@@ -16,6 +16,36 @@ extern jfieldID	    NS(FID_MqS_hdl);
 extern jmethodID    NS(MID_IService_Service);
 extern jclass	    NS(Class_NullPointerException);
 
+GetC(ServiceGetToken)
+GetO(ServiceIsTransaction)
+
+JNIEXPORT jobject JNICALL NS(ServiceGetFilter__) (
+  JNIEnv    *env, 
+  jobject   self
+)
+{
+  SETUP_context;
+  struct MqS *ftr;
+  ErrorMqToJavaWithCheck (MqServiceGetFilter(context, 0, &ftr));
+  return ((jobject)ftr->self);
+error:
+  return NULL;
+}
+
+JNIEXPORT jobject JNICALL NS(ServiceGetFilter__I) (
+  JNIEnv    *env, 
+  jobject   self,
+  jint	    id
+)
+{
+  SETUP_context;
+  struct MqS *ftr;
+  ErrorMqToJavaWithCheck (MqServiceGetFilter(context, id, &ftr));
+  return ((jobject)ftr->self);
+error:
+  return NULL;
+}
+
 JNIEXPORT void JNICALL NS(ServiceCreate) (
   JNIEnv *  env, 
   jobject   self, 

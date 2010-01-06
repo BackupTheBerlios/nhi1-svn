@@ -1078,7 +1078,7 @@ MqSendERROR (
   register struct MqS * const context
 )
 {
-  if (iErrorGetCode(context) == MQ_ERROR) {
+  if (MqErrorGetCodeI(context) == MQ_ERROR) {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
     MqErrorCheck(MqSendSTART (context));
@@ -1099,11 +1099,11 @@ MqSendRETURN (
 )
 {
   if (context->link._trans == 0) {
-    return iErrorGetCode(context);
+    return MqErrorGetCodeI(context);
   } else {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    switch (iErrorGetCode (context)) {
+    switch (MqErrorGetCodeI (context)) {
       case MQ_OK: 
 	break;
       case MQ_ERROR:
@@ -1127,5 +1127,4 @@ error:
 }
 
 END_C_DECLS
-
 

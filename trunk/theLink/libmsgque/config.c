@@ -241,7 +241,7 @@ sDefaultFactory (
 error:
   MqErrorCopy(tmpl, *contextP);
   MqContextDelete(contextP);
-  return iErrorGetCode (tmpl);
+  return MqErrorGetCodeI (tmpl);
 }
 
 enum MqErrorE 
@@ -272,7 +272,7 @@ error:
     MqErrorCopy(tmpl, *contextP);
     MqContextDelete(contextP);
   }
-  return iErrorGetCode (tmpl);
+  return MqErrorGetCodeI (tmpl);
 }
 
 /*****************************************************************************/
@@ -893,5 +893,6 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
 
 

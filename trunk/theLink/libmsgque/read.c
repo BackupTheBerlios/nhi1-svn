@@ -830,7 +830,7 @@ MqReadProxy (
   }
   return MQ_OK;
 error:
-  return iErrorGetCode(readctx);
+  return MqErrorGetCodeI(readctx);
 }
 
 /*****************************************************************************/
@@ -936,6 +936,7 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
 
 
 

@@ -246,6 +246,14 @@ sTokenSpaceDelItem (
     // set the last item to zero
     memset(start+space->used, '\0', sizeof(struct pTokenItemS));
   } else {
+    // delete the "+ALL" token
+    if (space->all.fFunc != NULL) {
+      space->all.fFunc = NULL;
+      if (space->all.data && space->all.fFree) {
+	(*space->all.fFree) (space->context, &space->all.data);
+      }
+    }
+    // delete the other token
     while (start < end--) {
       if (end->callback.data && end->callback.fFree) {
 	(*end->callback.fFree) (space->context, &end->callback.data);
@@ -391,11 +399,16 @@ pTokenDelHdl (
 )
 {
   MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, (void*) token);
-  if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
-    token->loc->all.fFunc = NULL;
+  if (strncmp (name, "+ALL", HDR_TOK_LEN)) {
+    return sTokenSpaceDelItem (token->loc, name);
+  } else {
+    struct pTokenSpaceS * const loc = token->loc;
+    loc->all.fFunc = NULL;
+    if (loc->all.data && loc->all.fFree) {
+      (*loc->all.fFree) (token->context, &loc->all.data);
+    }
     return MQ_OK;
   }
-  return sTokenSpaceDelItem (token->loc, name);
 }
 
 enum MqErrorE

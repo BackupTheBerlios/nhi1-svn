@@ -2925,6 +2925,14 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorGetCode (
   struct MqS const * const context
 );
 
+/// \copydoc MqErrorGetCode
+static inline enum MqErrorE MqErrorGetCodeI (
+  struct MqS const * const context
+)
+{
+  return context->error.code;
+}
+
 /// \brief set the value of #MqErrorS code member
 /// \context
 /// \param code the \e code to set for \e error

@@ -352,7 +352,7 @@ namespace ccmsgque {
       }
 
       inline void ErrorRaise () throw(MqCException) {
-	ErrorCheck (MqErrorGetCode (&context));
+	ErrorCheck (MqErrorGetCodeI (&context));
       }
 
       inline void ErrorReset () {

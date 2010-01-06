@@ -22,7 +22,7 @@ jclass	    NS(Class_MqS), NS(Class_IServerSetup), NS(Class_IServerCleanup),
 	    NS(Class_NullPointerException), NS(Class_System), NS(Class_RuntimeException),
 	    NS(Class_ICallback), NS(Class_StackTraceElement), NS(Class_StringWriter),
 	    NS(Class_PrintWriter), NS(Class_MqBufferS), NS(Class_MqSException), 
-	    NS(Class_IFactory), NS(Class_IBgError);
+	    NS(Class_IFactory), NS(Class_IBgError), NS(Class_IEvent);
 
 jfieldID    NS(FID_MqBufferS_hdl), NS(FID_MqS_hdl), NS(FID_MqSException_num), 
 	    NS(FID_MqSException_code), NS(FID_MqSException_txt);
@@ -32,7 +32,7 @@ jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService
 	    NS(MID_ICallback_Callback), NS(MID_Throwable_printStackTrace),
 	    NS(MID_StringWriter_INIT), NS(MID_PrintWriter_INIT), NS(MID_StringWriter_toString),
 	    NS(MID_MqSException_INIT), NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), 
-	    NS(MID_IFactory_Factory), NS(MID_IBgError_BgError);
+	    NS(MID_IFactory_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event);
 
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *jvm, void *reserved)
@@ -63,6 +63,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkC(NS(Class_ICallback),		    "javamsgque/ICallback");
   checkC(NS(Class_IFactory),		    "javamsgque/IFactory");
   checkC(NS(Class_IBgError),		    "javamsgque/IBgError");
+  checkC(NS(Class_IEvent),		    "javamsgque/IEvent");
   checkC(NS(Class_RuntimeException),	    "java/lang/RuntimeException");
   checkC(NS(Class_NullPointerException),    "java/lang/NullPointerException");
   checkC(NS(Class_Throwable),		    "java/lang/Throwable");
@@ -96,6 +97,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkM(NS(MID_MqBufferS_INIT),		NS(Class_MqBufferS),	  "<init>",		"(J)V");
   checkM(NS(MID_MqS_ErrorSet),			NS(Class_MqS),		  "ErrorSet",		"(Ljava/lang/Throwable;)V");
   checkM(NS(MID_IBgError_BgError),		NS(Class_IBgError),	  "BgError",		"()V");
+  checkM(NS(MID_IEvent_Event),			NS(Class_IEvent),	  "Event",		"()V");
 
 #undef check
 #undef checkC
@@ -123,7 +125,7 @@ JNI_OnUnload(JavaVM *jvm, void *reserved)
   (*env)->DeleteGlobalRef(env, NS(Class_IServerCleanup));
   (*env)->DeleteGlobalRef(env, NS(Class_ICallback));
   (*env)->DeleteGlobalRef(env, NS(Class_IFactory));
-  (*env)->DeleteGlobalRef(env, NS(Class_IBgError));
+  (*env)->DeleteGlobalRef(env, NS(Class_IEvent));
   (*env)->DeleteGlobalRef(env, NS(Class_Throwable));
   (*env)->DeleteGlobalRef(env, NS(Class_Class));
   (*env)->DeleteGlobalRef(env, NS(Class_Object));
@@ -174,6 +176,7 @@ static enum MqErrorE MQ_DECL NS(FactoryCreate) (
   }
 
   MqConfigDup (*contextP, tmpl);
+  MqSetupDup (*contextP, tmpl);
   return MQ_OK;
 }
 
@@ -351,6 +354,12 @@ JNIEXPORT void JNICALL NS(ContextCreate) (
     MqConfigSetBgError (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
 
+  // check for Event
+  if ((*env)->IsInstanceOf(env, self, NS(Class_IEvent)) == JNI_TRUE) {
+    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IEvent_Event), NULL, &call));
+    MqConfigSetEvent (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
+  }
+
   SET_context(context);
   return;
 
@@ -375,6 +384,4 @@ JNIEXPORT void JNICALL NS(ContextDelete) (
     if (self != NULL) (*env)->DeleteGlobalRef(env, self);
   }
 }
-
-
 

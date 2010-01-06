@@ -33,7 +33,7 @@ class Filter1 extends MqS implements IFactory {
 
   public static class EOF implements IService {
     public void Service (MqS ctx) throws MqSException {
-      MqS ftr = ctx.ConfigGetFilter();
+      MqS ftr = ctx.ServiceGetFilter();
       for (ArrayList<String> d: ((Filter1)ctx).data) {
 	ftr.SendSTART();
 	for (String s: d) {
@@ -63,3 +63,4 @@ class Filter1 extends MqS implements IFactory {
     }
   }
 }
+

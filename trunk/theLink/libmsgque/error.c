@@ -274,7 +274,7 @@ MqErrorGetCode (
   struct MqS const * const context
 )
 {
-  return context->error.code;
+  return MqErrorGetCodeI(context);
 }
 
 enum MqErrorE
@@ -294,8 +294,9 @@ MqErrorGetText (
   return (MQ_STR) context->error.text->data;
 }
 
+/// error-reset without master cleanup
 void
-MqErrorReset (
+pErrorReset (
   struct MqS * const context
 )
 {
@@ -303,8 +304,17 @@ MqErrorReset (
   context->error.code = MQ_OK;
   context->error.append = MQ_YES;
   context->error.num = EXIT_SUCCESS;
-  //if (context->config.master != NULL)
-  //  MqErrorReset(context->config.master);
+}
+
+/// error-reset with master cleanup
+void
+MqErrorReset (
+  struct MqS * const context
+)
+{
+  pErrorReset(context);
+  if (context->config.master != NULL)
+    MqErrorReset(context->config.master);
 }
 
 MQ_INT
@@ -378,6 +388,7 @@ pErrorSync (
   struct MqS * const in
 )
 {
+  if (unlikely(in == out)) return;
   MqBufferCopy (out->error.text, in->error.text);
   out->error.code = in->error.code;
   out->error.num = in->error.num;
@@ -394,8 +405,10 @@ MqErrorCopy (
     if (in->error.code == MQ_OK) {
       MqErrorReset(out);
       return MQ_OK;
-    } else {
+    } else if (out != in->config.master) {
       pErrorSync (out, in);
+      if (out->config.master != NULL)
+	pErrorSync(out->config.master, out);
       MqErrorReset(in);
     }
   }
@@ -423,7 +436,7 @@ pErrorReport(
   } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
     MqLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
   }
-  MqErrorReset(context);
+  pErrorReset(context);
 }
 
 /*****************************************************************************/

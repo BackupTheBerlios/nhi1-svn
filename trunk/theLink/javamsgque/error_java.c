@@ -48,7 +48,7 @@ JNIEXPORT void JNICALL NS(ErrorRaise) (
 )
 {
   SETUP_context;
-  ErrorMqToJavaWithCheck(MqErrorGetCode(context));
+  ErrorMqToJavaWithCheck(MqErrorGetCodeI(context));
 error:
   return;
 }
@@ -60,6 +60,14 @@ JNIEXPORT void JNICALL NS(ErrorReset) (
 {
   SETUP_context;
   MqErrorReset(context);
+}
+
+JNIEXPORT void JNICALL NS(ErrorSetCONTINUE) (
+  JNIEnv    *env,
+  jobject   self
+)
+{
+  MqErrorSetCONTINUE(CONTEXT);
 }
 
 JNIEXPORT void JNICALL NS(ErrorSet) (

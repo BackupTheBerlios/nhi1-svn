@@ -65,14 +65,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_Init
 
 /*
  * Class:     javamsgque_MqS
- * Method:    pProcessEvent
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_pProcessEvent
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ErrorC
  * Signature: (Ljava/lang/String;ILjava/lang/String;)V
  */
@@ -105,6 +97,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSet
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ErrorSetCONTINUE
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetCONTINUE
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ErrorGetNum
  * Signature: ()I
  */
@@ -125,6 +125,38 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ErrorGetText
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorPrint
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetToken
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ServiceGetToken
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetFilter
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetFilter
+ * Signature: (I)Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__I
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceIsTransaction
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ServiceIsTransaction
   (JNIEnv *, jobject);
 
 /*
@@ -158,6 +190,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceDelete
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    pProcessEvent
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_pProcessEvent
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     javamsgque_MqS
@@ -713,42 +753,10 @@ JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetMaster
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetFilter
- * Signature: ()Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetFilter__
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetFilter
- * Signature: (I)Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetFilter__I
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigGetCtxId
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetCtxId
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetToken
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetToken
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetIsTransaction
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsTransaction
   (JNIEnv *, jobject);
 
 /*

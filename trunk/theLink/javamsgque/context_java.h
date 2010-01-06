@@ -116,6 +116,26 @@ static mq_inline jstring JC2O(JNIEnv *env, MQ_CST c) {
   return (c?(*env)->NewStringUTF(env,c):NULL);
 }
 
+#define GetC(V) JNIEXPORT jstring JNICALL NS(V) ( \
+  JNIEnv    *env, \
+  jobject   self  \
+) \
+{ \
+  return JC2O(env,Mq ## V (CONTEXT)); \
+}
+
+#define GetT(T,V) JNIEXPORT T JNICALL NS(V) ( \
+  JNIEnv    *env, \
+  jobject   self  \
+) \
+{ \
+  return Mq ## V (CONTEXT); \
+}
+
+#define GetI(V) GetT(jint,     V)
+#define GetW(V) GetT(jlong,    V)
+#define GetO(V) GetT(jboolean, V)
+
 #endif /* CONTEXT_JAVA__H */
 
 

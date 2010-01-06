@@ -66,26 +66,6 @@ error: \
 #define SetW(V)	  SetT(jlong,    V)
 #define SetO(V)	  SetT(jboolean, V)
 
-#define GetC(V) JNIEXPORT jstring JNICALL NS(V) ( \
-  JNIEnv    *env, \
-  jobject   self  \
-) \
-{ \
-  return JC2O(env,Mq ## V (CONTEXT)); \
-}
-
-#define GetT(T,V) JNIEXPORT T JNICALL NS(V) ( \
-  JNIEnv    *env, \
-  jobject   self  \
-) \
-{ \
-  return Mq ## V (CONTEXT); \
-}
-
-#define GetI(V) GetT(jint,     V)
-#define GetW(V) GetT(jlong,    V)
-#define GetO(V) GetT(jboolean, V)
-
 SetC(ConfigSetName)
 SetC(ConfigSetSrvName)
 SetC(ConfigSetIdent)
@@ -153,7 +133,6 @@ GetO(ConfigGetIsServer)
 GetO(ConfigGetIsParent)
 GetO(ConfigGetIsSlave)
 GetO(ConfigGetIsConnected)
-GetO(ConfigGetIsTransaction)
 
 JNIEXPORT jobject JNICALL NS(ConfigGetParent) (
   JNIEnv    *env, 
@@ -171,39 +150,10 @@ JNIEXPORT jobject JNICALL NS(ConfigGetMaster) (
   return (CONTEXT->config.master == NULL ? NULL : ((jobject)CONTEXT->config.master->self));
 }
 
-JNIEXPORT jobject JNICALL NS(ConfigGetFilter__) (
-  JNIEnv    *env, 
-  jobject   self
-)
-{
-  SETUP_context;
-  struct MqS *ftr;
-  ErrorMqToJavaWithCheck (MqConfigGetFilter(context, 0, &ftr));
-  return ((jobject)ftr->self);
-error:
-  return NULL;
-}
-
-JNIEXPORT jobject JNICALL NS(ConfigGetFilter__I) (
-  JNIEnv    *env, 
-  jobject   self,
-  jint	    id
-)
-{
-  SETUP_context;
-  struct MqS *ftr;
-  ErrorMqToJavaWithCheck (MqConfigGetFilter(context, id, &ftr));
-  return ((jobject)ftr->self);
-error:
-  return NULL;
-}
-
 GetI(ConfigGetBuffersize)
 GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
 GetC(ConfigGetIdent)
-
 GetI(ConfigGetCtxId)
-GetC(ConfigGetToken)
 

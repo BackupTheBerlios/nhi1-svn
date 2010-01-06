@@ -240,7 +240,7 @@ pTransSetResult (
 	MqErrorV (context, "callback-error", pReadGetReturnNum (context),
 		"<Num|%i>\n", pReadGetReturnNum (context));
 	// write ERROR-STACK
-	while (MqReadGetNumItems (context)) {
+	while (MqReadItemExists (context)) {
 	  MqErrorCheck1 (MqReadC (context, &msg));
 	  pErrorAppendC (context, msg);
 	}

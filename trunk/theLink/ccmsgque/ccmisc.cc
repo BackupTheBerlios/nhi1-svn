@@ -72,7 +72,7 @@ namespace ccmsgque {
     }
 
     // everything is OK
-    return MqErrorGetCode(context);
+    return MqErrorGetCodeI(context);
   }
 
 } // END - namespace "ccmsgque"

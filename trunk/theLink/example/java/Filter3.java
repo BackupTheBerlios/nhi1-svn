@@ -19,22 +19,22 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
   }
 
   public void ServerSetup() throws MqSException {
-    MqS ftr = ConfigGetFilter();
+    MqS ftr = ServiceGetFilter();
     ServiceCreate("+ALL", new Filter()); 
     ftr.ServiceCreate("+ALL", new Filter());
   }
 
   public class Filter implements IService {
     public void Service(MqS ctx) throws MqSException {
-      MqS ftr = ConfigGetFilter();
+      MqS ftr = ServiceGetFilter();
       ftr.SendSTART();
       ftr.SendBDY(ReadBDY());
-      if (ConfigGetIsTransaction()) {
-	ftr.SendEND_AND_WAIT(ConfigGetToken());
+      if (ServiceIsTransaction()) {
+	ftr.SendEND_AND_WAIT(ServiceGetToken());
 	SendSTART();
 	SendBDY(ftr.ReadBDY());
       } else {
-	ftr.SendEND(ConfigGetToken());
+	ftr.SendEND(ServiceGetToken());
       }
       SendRETURN();
     }
@@ -54,3 +54,6 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
     }
   }
 }
+
+
+

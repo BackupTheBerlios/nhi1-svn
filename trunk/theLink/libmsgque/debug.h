@@ -59,6 +59,7 @@
 #define XI0(x) IX(x,0000000000000000)
 #define XI1(x) IX(x,1111111111111111)
 #define XI2(x) IX(x,2222222222222222)
+#define XIB(x) IX(x,BBBBBBBBBBBBBBBB)
 #define XIE(x) IX(x,EEEEEEEEEEEEEEEE)
 
 #define MV(f,v) printf("%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stdout);

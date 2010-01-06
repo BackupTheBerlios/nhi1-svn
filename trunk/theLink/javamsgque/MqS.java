@@ -94,28 +94,15 @@ public abstract class MqS {
     }
   }
 
-  private native void	pProcessEvent	    (int timeout, int flags)  throws MqSException;
-
-  /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
-  public void ProcessEvent (int timeout, WAIT flags) throws MqSException {
-    pProcessEvent(timeout,flags.GetFlag());
-  }
-  /// \api #MqProcessEvent, wait application user default time
-  public void ProcessEvent (WAIT flags) throws MqSException {
-    pProcessEvent(-2,flags.GetFlag());
-  }
-  /// \api #MqProcessEvent, don't wait just check for an event
-  public void ProcessEvent () throws MqSException {
-    pProcessEvent(-2,WAIT.NO.GetFlag());
-  }
-
   /// \api #MqErrorC
   public native void    ErrorC              (String func, int num, String message);
   public native void    ErrorRaise          ()  throws MqSException;
   public native void    ErrorReset          ();
 
-  /// \api #MqErrorC
+  /// \api #MqErrorSet
   public native void    ErrorSet            (Throwable ex);
+  /// \api #MqErrorSetCONTINUE
+  public native void    ErrorSetCONTINUE    ();
 
   /// \api #MqErrorC
   public native int     ErrorGetNum         ();
@@ -134,6 +121,17 @@ public abstract class MqS {
 /// A service is usually defined on a server (interface #javamsgque.IServerSetup)
 /// in the #javamsgque.IServerSetup.ServerSetup function.
 ///
+
+  /// \api #MqConfigGetToken
+  public native String	ServiceGetToken	    ();
+  /// \api #MqServiceGetFilter
+  public native MqS	ServiceGetFilter    () throws MqSException;
+  /// \api #MqServiceGetFilter
+  public native MqS	ServiceGetFilter    (int id) throws MqSException;
+  /// \api #MqServiceIsTransaction
+  public native boolean	ServiceIsTransaction();
+
+
   /// \api #MqServiceCreate
   public native void	ServiceCreate	    (String token, IService service)  throws MqSException;
   /// \api #MqServiceProxy
@@ -142,6 +140,21 @@ public abstract class MqS {
   public native void	ServiceProxy	    (String token, int id)  throws MqSException;
   /// \api #MqServiceDelete
   public native void	ServiceDelete	    (String token)  throws MqSException;
+
+  private native void	pProcessEvent	    (int timeout, int flags)  throws MqSException;
+
+  /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
+  public void ProcessEvent (int timeout, WAIT flags) throws MqSException {
+    pProcessEvent(timeout,flags.GetFlag());
+  }
+  /// \api #MqProcessEvent, wait application user default time
+  public void ProcessEvent (WAIT flags) throws MqSException {
+    pProcessEvent(-2,flags.GetFlag());
+  }
+  /// \api #MqProcessEvent, don't wait just check for an event
+  public void ProcessEvent () throws MqSException {
+    pProcessEvent(-2,WAIT.NO.GetFlag());
+  }
 
 /// \}
 //
@@ -311,16 +324,8 @@ public abstract class MqS {
   public native MqS	ConfigGetParent	      ();
   /// \api #MqConfigGetMaster
   public native MqS	ConfigGetMaster	      ();
-  /// \api #MqConfigGetFilter
-  public native MqS	ConfigGetFilter	      () throws MqSException;
-  /// \api #MqConfigGetFilter
-  public native MqS	ConfigGetFilter	      (int id) throws MqSException;
   /// \api #MqConfigGetCtxId
   public native int	ConfigGetCtxId	      ();
-  /// \api #MqConfigGetToken
-  public native String	ConfigGetToken	      ();
-  /// \api #MqConfigGetIsTransaction
-  public native boolean	ConfigGetIsTransaction();
   /// \api #MqConfigGetStartAs
   public native int	ConfigGetStartAs      ();
   /// \api #MqConfigGetIoTcpHost

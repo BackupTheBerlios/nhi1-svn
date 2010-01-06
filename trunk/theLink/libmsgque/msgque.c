@@ -548,7 +548,7 @@ MqLinkCreate (
 
     // pReadCreate have to fit into the 'CacheCF' function
     context->link.read = pReadCreate (context);
-    if (iErrorGetCode(context) == MQ_ERROR) goto error;
+    if (MqErrorGetCodeI(context) == MQ_ERROR) goto error;
 
     MqErrorCheck (pIoCreate   (context, alfa, &context->link.io));
     context->link.srvT = pTokenCreate(context);
@@ -904,7 +904,7 @@ pMqShutdown (
   pIoShutdown (context->link.io);
 
   // cleanup error
-  MqErrorReset(context);
+  pErrorReset(context);
 
   MqDLogC(context,4,"END shutdown\n");
   return;
@@ -960,7 +960,7 @@ sCallEventProc (
   if (context->setup.ignoreExit == MQ_NO || NUM != CONTINUE) {
     MqErrorReset(context);
   }
-  return iErrorGetCode(context);
+  return MqErrorGetCodeI(context);
 error:
   context->setup.ignoreExit = MQ_NO;
   return MqErrorStack(context);
@@ -1143,7 +1143,7 @@ MqCheckForLeftOverArguments (
        MqErrorSAppendV (context, "=> %s", str);
   }
   MqBufferLDelete(argvP);
-  return iErrorGetCode(context);
+  return MqErrorGetCodeI(context);
 }
 
 /*****************************************************************************/
@@ -1295,3 +1295,4 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+

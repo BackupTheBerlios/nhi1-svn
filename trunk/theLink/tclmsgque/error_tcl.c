@@ -31,7 +31,7 @@ int NS(ErrorGetNum) (NS_ARGS)
 int NS(ErrorGetCode) (NS_ARGS)
 {
   CHECK_NOARGS
-  Tcl_SetObjResult (interp, Tcl_NewIntObj((int)MqErrorGetCode(MQCTX)));
+  Tcl_SetObjResult (interp, Tcl_NewIntObj((int)MqErrorGetCodeI(MQCTX)));
   RETURN_TCL
 }
 
@@ -51,7 +51,7 @@ int NS(ErrorC) (NS_ARGS)
 int NS(ErrorRaise) (NS_ARGS)
 {
   SETUP_mqctx
-  ErrorMqToTclWithCheck(MqErrorGetCode(mqctx));
+  ErrorMqToTclWithCheck(MqErrorGetCodeI(mqctx));
   RETURN_TCL
 }
 

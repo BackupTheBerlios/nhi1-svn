@@ -143,6 +143,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ServiceCreate("ERLR", new ERLR());
       ServiceCreate("ERLS", new ERLS());
       ServiceCreate("CFG1", new CFG1());
+      ServiceCreate("PRNT", new PRNT());
     }
   }
 
@@ -227,6 +228,16 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	ConfigSetStartAs (old);
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);
+      }
+      SendRETURN();
+    }
+  }
+
+  class PRNT implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      int i=0;
+      while (ReadItemExists()) {
+	System.out.printf("%2d: %s\n", ++i, ReadC());
       }
       SendRETURN();
     }

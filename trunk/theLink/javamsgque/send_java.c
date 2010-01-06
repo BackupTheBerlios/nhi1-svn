@@ -42,10 +42,12 @@ JNIEXPORT void JNICALL NS(SendEND) (
 )
 {
   const char *str;
+  enum MqErrorE ret;
   SETUP_context;
   str = JO2C_START(env,token);
-  ErrorMqToJavaWithCheck(MqSendEND(context,str));
+  ret = MqSendEND(context,str);
   JO2C_STOP(env,token,str);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
@@ -57,10 +59,12 @@ JNIEXPORT void JNICALL NS(SendEND_1AND_1WAIT__Ljava_lang_String_2) (
 )
 {
   const char *str;
+  enum MqErrorE ret;
   SETUP_context;
   str = JO2C_START(env,token);
-  ErrorMqToJavaWithCheck(MqSendEND_AND_WAIT(context,str,-2));
+  ret = MqSendEND_AND_WAIT(context,str,MQ_TIMEOUT_USER);
   JO2C_STOP(env,token,str);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
@@ -73,10 +77,12 @@ JNIEXPORT void JNICALL NS(SendEND_1AND_1WAIT__Ljava_lang_String_2I) (
 )
 {
   const char *str;
+  enum MqErrorE ret;
   SETUP_context;
   str = JO2C_START(env,token);
-  ErrorMqToJavaWithCheck(MqSendEND_AND_WAIT(context,str,timeout));
+  ret = MqSendEND_AND_WAIT(context,str,timeout);
   JO2C_STOP(env,token,str);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
@@ -89,15 +95,17 @@ JNIEXPORT void JNICALL NS(SendEND_1AND_1CALLBACK) (
 )
 {
   const char *str;
+  enum MqErrorE ret;
   jobject obj;
   MQ_PTR call;
   SETUP_context;
-  str = JO2C_START(env,token);
   JavaErrorCheckNULL(obj = (*env)->NewGlobalRef(env, callback));
   ErrorMqToJavaWithCheck(NS(ProcCreate)(context, obj, NULL, NS(MID_ICallback_Callback), self, &call));
-  ErrorMqToJavaWithCheck(MqSendEND_AND_CALLBACK(context, str, NS(ProcCall), call, NS(ProcFree)));
-error:
+  str = JO2C_START(env,token);
+  ret = MqSendEND_AND_CALLBACK(context, str, NS(ProcCall), call, NS(ProcFree));
   JO2C_STOP(env,token,str);
+  ErrorMqToJavaWithCheck(ret);
+error:
   return;
 }
 
@@ -225,10 +233,12 @@ JNIEXPORT void JNICALL NS(SendC) (
 )
 {
   const char * str;
+  enum MqErrorE ret;
   SETUP_context;
   str = JO2C_START(env,s);
-  ErrorMqToJavaWithCheck(MqSendC(context,str));
+  ret = MqSendC(context,str);
   JO2C_STOP(env,s,str);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }

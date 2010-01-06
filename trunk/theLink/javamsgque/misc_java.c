@@ -114,15 +114,12 @@ NS(ProcCall) (
   }
 
   // check on error
-  if((*env)->ExceptionCheck(env) == JNI_FALSE) {
-    // no error return OK
-    return MQ_OK;
-  } else {
+  if((*env)->ExceptionCheck(env) != JNI_FALSE) {
     // is the EROOR from "java" or "javamsgque"
     (*env)->CallVoidMethod(env, context->self, NS(MID_MqS_ErrorSet), (*env)->ExceptionOccurred(env));
     (*env)->ExceptionClear(env);
-    return MqErrorGetCode(context);
   }
+  return MqErrorGetCodeI(context);
 }
 
 // create a JAVA error from a string
@@ -152,7 +149,7 @@ void NS(pErrorFromMq) (
 )
 {
   jthrowable ex = (jthrowable) (*env)->NewObject(env, NS(Class_MqSException), 
-    NS(MID_MqSException_INIT), (jint) MqErrorGetNum(error), (jint) MqErrorGetCode(error), 
+    NS(MID_MqSException_INIT), (jint) MqErrorGetNum(error), (jint) MqErrorGetCodeI(error), 
       JC2O(env, MqErrorGetText(error)));
   (*env)->Throw(env, ex);
   MqErrorReset(error);

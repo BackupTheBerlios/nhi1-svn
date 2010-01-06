@@ -164,7 +164,7 @@ sMqEventStart (
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
   if (MqErrorCheckI(pTokenInvoke (a_context->link.srvT))) {
-    enum MqErrorE err = iErrorGetCode(a_context);
+    enum MqErrorE err = MqErrorGetCodeI(a_context);
     if (err == MQ_ERROR) {
       if (a_context->link._trans != 0) {
 	// in a transaction, "MqSendRETURN" will convert the context error 
@@ -257,4 +257,5 @@ error:
 }
 
 END_C_DECLS
+
 

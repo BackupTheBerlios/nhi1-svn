@@ -52,13 +52,7 @@ pErrorSync (
   struct MqS * const in
 );
 
-static mq_inline enum MqErrorE
-iErrorGetCode (
-  struct MqS const * const context
-)
-{
-  return context->error.code;
-};
+void pErrorReset (struct MqS * const);
 
 #define MqErrorDb(item) \
     MqErrorSGenV(MQ_CONTEXT_S,__func__,MQ_ERROR,(item+200),MqMessageText[item])
@@ -75,5 +69,6 @@ iErrorGetCode (
 END_C_DECLS
 
 #endif /* ERROR_H */
+
 
 

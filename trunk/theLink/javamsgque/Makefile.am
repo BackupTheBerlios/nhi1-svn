@@ -50,7 +50,7 @@ endif
 
 JAVA_FILES = $(srcdir)/IBgError.java $(srcdir)/IFactory.java $(srcdir)/IServerSetup.java  \
     $(srcdir)/MqBufferS.java $(srcdir)/MqS.java $(srcdir)/ICallback.java $(srcdir)/IServerCleanup.java \
-      $(srcdir)/IService.java $(srcdir)/MqSException.java
+      $(srcdir)/IService.java $(srcdir)/MqSException.java $(srcdir)/IEvent.java
 
 MQS_MAIN = javamsgque/MqS.class
 
