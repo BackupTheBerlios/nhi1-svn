@@ -685,6 +685,15 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub PRNT {
+    my $ctx = shift;
+    my $i=0;
+    while ($ctx->ReadItemExists()) {
+      printf("%2d: %s\n", ++$i, $ctx->ReadC());
+    }
+    $ctx->SendRETURN();
+  }
+
   sub ServerCleanup {
     my $ctx = shift;
     my $i;
@@ -753,6 +762,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("REDI", \&REDI);
       $ctx->ServiceCreate("GTCX", \&GTCX);
       $ctx->ServiceCreate("CFG1", \&CFG1);
+      $ctx->ServiceCreate("PRNT", \&PRNT);
     }
   }
 

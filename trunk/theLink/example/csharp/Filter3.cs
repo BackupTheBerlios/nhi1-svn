@@ -22,21 +22,21 @@ namespace example {
 
     // service definition
     void Filter () {
-      MqS ftr = ConfigGetFilter();
+      MqS ftr = ServiceGetFilter();
       ftr.SendSTART();
       ftr.SendBDY(ReadBDY());
-      if (ConfigGetIsTransaction()) {
-	ftr.SendEND_AND_WAIT(ConfigGetToken());
+      if (ServiceIsTransaction()) {
+	ftr.SendEND_AND_WAIT(ServiceGetToken());
 	SendSTART();
 	SendBDY(ftr.ReadBDY());
       } else {
-	ftr.SendEND(ConfigGetToken());
+	ftr.SendEND(ServiceGetToken());
       }
       SendRETURN();
     }
 
     void IServerSetup.Call() {
-      MqS ftr = ConfigGetFilter();
+      MqS ftr = ServiceGetFilter();
       ServiceCreate("+ALL", Filter);
       ftr.ServiceCreate("+ALL", Filter);
     }
@@ -54,3 +54,6 @@ namespace example {
     }
   }
 }
+
+
+

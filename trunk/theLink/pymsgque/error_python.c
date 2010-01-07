@@ -34,7 +34,7 @@ PyObject* NS(ErrorRaise) (
 )
 {
   SETUP_context;
-  ErrorMqToPythonWithCheck(MqErrorGetCode(context));
+  ErrorMqToPythonWithCheck(MqErrorGetCodeI(context));
   SETUP_RETURN
 }
 
@@ -66,6 +66,14 @@ PyObject* NS(ErrorGetText) (
 )
 {
   return PyC2O(MqErrorGetText(CONTEXT));
+}
+
+PyObject* NS(ErrorSetCONTINUE)(
+  PyObject  *self
+)
+{
+  MqErrorSetCONTINUE(CONTEXT);
+  Py_RETURN_NONE;
 }
 
 PyObject* NS(ErrorSet)(
@@ -129,7 +137,7 @@ end2:
 	Py_XDECREF(utf8);
 	Py_XDECREF(strO);
       }
-      if (MqErrorGetCode(context) != MQ_ERROR)
+      if (MqErrorGetCodeI(context) != MQ_ERROR)
 	MqErrorV(context, __func__, -1, "%s: python error", PyExceptionClass_Name(typeO));
     }
   }

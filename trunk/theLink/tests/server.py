@@ -128,6 +128,14 @@ class Server(MqS):
       self.ServiceCreate("ERLR", self.ERLR)
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
+      self.ServiceCreate("PRNT", self.PRNT)
+
+  def PRNT(self):
+    i=0
+    while (self.ReadItemExists()):
+      i+=1
+      print("%2d: %s" % (i, self.ReadC()))      
+    self.SendRETURN()
 
   def CFG1(self):
     cmd = self.ReadC()

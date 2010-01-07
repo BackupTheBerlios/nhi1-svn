@@ -1,8 +1,8 @@
-.TH "msgque.h" n "4 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "7 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -701,21 +701,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $
 .br
 .R "get the \fImaster\fP value of the \fIconfig\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqConfigGetFilter\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filterP)"
-.br
-.R "get the \fIfilter\fP object from a filter pipeline between a \fImaster\fP context and a \fIslave\fP context with \fIid\fP. "
-.ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqConfigGetCtxId\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "return the context-identification "
-.ti -1c
-.RI "\fBMQ_CST\fP \fBMqConfigGetToken\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "get the token from the ongoing service-handler "
-.ti -1c
-.RI "int \fBMqConfigGetIsTransaction\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "check if the ongoing service-call belongs to a transaction "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
@@ -787,6 +775,22 @@ msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filter)"
+.br
+.R "get the \fIfilter-context\fP or the \fImaster-context\fP "
+.ti -1c
+.RI "int \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "check if the \fIongoing-service-call\fP belongs to a transaction "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqServiceGetToken\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the \\11 from an \fIongoing-service-call\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqServiceCheckToken\fP (struct \fBMqS\fP const *const ctx, char const *const token)"
+.br
+.R "in an \fIongoing-service-call\fP compare the \\11 with \fItoken\fP on equity "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
@@ -998,10 +1002,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $
 .br
 .R "log the short \fBMqBufferS\fP object data to the stderr device "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqCurrentTokenIs\fP (struct \fBMqS\fP const *const context, char const *const token)"
-.br
-.R "check the current token "
-.ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreate\fP (\fBMQ_SIZE\fP const size)"
 .br
 .R "create and initialize a \fBMqBufferLS\fP object "
@@ -1157,6 +1157,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $
 .RI "enum \fBMqErrorE\fP \fBMqErrorGetCode\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "return the value of \fBMqErrorS\fP code member "
+.ti -1c
+.RI "static enum \fBMqErrorE\fP \fBMqErrorGetCodeI\fP (struct \fBMqS\fP const *const context)"
+.br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSetCode\fP (struct \fBMqS\fP *const context, enum \fBMqErrorE\fP code)"
 .br
@@ -1467,13 +1470,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 121 2010-01-04 14:28:57Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 121 $ 
+$Rev: 125 $ 
 .RE
 .PP
 \fBAuthor:\fP

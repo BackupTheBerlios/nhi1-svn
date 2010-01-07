@@ -104,13 +104,19 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 
 // from service_python.c
 
-PyObject* NS(ServiceCreate)	    ( PyObject*, PyObject*  );
-PyObject* NS(ServiceProxy)	    ( PyObject*, PyObject*  );
-PyObject* NS(ServiceDelete)	    ( PyObject*, PyObject*  );
+PyObject* NS(ServiceCreate)	      ( PyObject*, PyObject*  );
+PyObject* NS(ServiceProxy)	      ( PyObject*, PyObject*  );
+PyObject* NS(ServiceDelete)	      ( PyObject*, PyObject*  );
+PyObject* NS(ServiceGetToken)	      ( PyObject* );
+PyObject* NS(ServiceIsTransaction)    ( PyObject* );
+PyObject* NS(ServiceGetFilter)	      ( PyObject*, PyObject* );
 
-#define ServiceCreate_DOC	  "[token, callable] Create a new service"
-#define ServiceProxy_DOC	  "[token, ?id?] Create a proxy service"
-#define ServiceDelete_DOC	  "[token] Delete a service"
+#define ServiceCreate_DOC	      "[token, callable] Create a new service"
+#define ServiceProxy_DOC	      "[token, ?id?] Create a proxy service"
+#define ServiceDelete_DOC	      "[token] Delete a service"
+#define ServiceIsTransaction_DOC      "[noARG] boolean, 'True' if the service is part of a transaction."
+#define ServiceGetToken_DOC	      "[noARG] return the PyMqS 'token' (str) of the current transaction."
+#define ServiceGetFilter_DOC	      "[noARG] return the PyMqS 'filter' object of the 'current' object."
 
 // from slave_python.c
 
@@ -180,11 +186,13 @@ PyObject* NS(ConfigSetIoPipe)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetStartAs)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetDaemon)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsString)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIgnoreExit)     ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsSilent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsServer)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetServerSetup)    ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetServerCleanup)  ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetBgError)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetEvent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetFactory)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigGetDebug)	      ( PyObject* );
 PyObject* NS(ConfigGetTimeout)	      ( PyObject* );
@@ -195,7 +203,6 @@ PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
 PyObject* NS(ConfigGetIsParent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsSlave)	      ( PyObject* );
 PyObject* NS(ConfigGetIsConnected)    ( PyObject* );
-PyObject* NS(ConfigGetIsTransaction)  ( PyObject* );
 PyObject* NS(ConfigGetParent)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
@@ -209,9 +216,7 @@ PyObject* NS(ConfigGetIoPipeSocket)   ( PyObject* );
 PyObject* NS(ConfigGetStartAs)	      ( PyObject* );
 PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 PyObject* NS(ConfigGetCtxId)	      ( PyObject* );
-PyObject* NS(ConfigGetToken)	      ( PyObject* );
 PyObject* NS(ConfigGetMaster)	      ( PyObject* );
-PyObject* NS(ConfigGetFilter)	      ( PyObject*, PyObject* );
 
 
 #define ConfigSetBuffersize_DOC	    "[bytes]"
@@ -227,11 +232,13 @@ PyObject* NS(ConfigGetFilter)	      ( PyObject*, PyObject* );
 #define ConfigSetStartAs_DOC	    "[integer (0-3)]"
 #define ConfigSetDaemon_DOC	    "[pidfile]"
 #define ConfigSetIsString_DOC	    "[boolean]"
+#define ConfigSetIgnoreExit_DOC	    "[boolean]"
 #define ConfigSetIsSilent_DOC	    "[boolean]"
 #define ConfigSetIsServer_DOC	    "[boolean]"
 #define ConfigSetServerSetup_DOC    "[callable method]"
 #define ConfigSetServerCleanup_DOC  "[callable method]"
 #define ConfigSetBgError_DOC	    "[callable method]"
+#define ConfigSetEvent_DOC	    "[callable method]"
 #define ConfigSetFactory_DOC	    "[callable method]"
 #define ConfigGetIsString_DOC	    "[noARG] boolean, 'True' if the object is using the 'string' configuration."
 #define ConfigGetIsSilent_DOC	    "[noARG] boolean, 'True' if the object is using the 'silent' configuration."
@@ -239,7 +246,6 @@ PyObject* NS(ConfigGetFilter)	      ( PyObject*, PyObject* );
 #define ConfigGetIsParent_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'parent'."
 #define ConfigGetIsSlave_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'slave'."
 #define ConfigGetIsConnected_DOC    "[noARG] boolean, 'True' if the object-link is up and running'."
-#define ConfigGetIsTransaction_DOC  "[noARG] boolean, 'True' if the service is part of a transaction."
 #define ConfigGetDebug_DOC	    "[noARG] Return the debug level (int from 0 up to 9)."
 #define ConfigGetTimeout_DOC	    "[noARG] Return the user defined timeout is sec."
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
@@ -255,14 +261,13 @@ PyObject* NS(ConfigGetFilter)	      ( PyObject*, PyObject* );
 #define ConfigGetIoPipeSocket_DOC   "[noARG] return the PyMqS 'pipe-socket-file-descriptor' (int) of the object."
 #define ConfigGetStartAs_DOC	    "[noARG] return the PyMqS 'start-kind-value' (int) of the object."
 #define ConfigGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
-#define ConfigGetToken_DOC	    "[noARG] return the PyMqS 'token' (str) of the current transaction."
 #define ConfigGetMaster_DOC	    "[noARG] return the PyMqS 'master' object of the 'current' object."
-#define ConfigGetFilter_DOC	    "[noARG] return the PyMqS 'filter' object of the 'current' object."
 
 // from error_python.c
 
 PyObject* NS(ErrorC)		    ( PyObject*, PyObject*  );
 PyObject* NS(ErrorSet)		    ( PyObject*		    );
+PyObject* NS(ErrorSetCONTINUE)	    ( PyObject*		    );
 PyObject* NS(ErrorRaise)	    ( PyObject*		    );
 PyObject* NS(ErrorReset)	    ( PyObject*		    );
 PyObject* NS(ErrorPrint)	    ( PyObject*		    );
@@ -271,6 +276,7 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 
 #define ErrorC_DOC		    "[function-name, error-number, error-message] (testing only) create a PyMqS error"
 #define ErrorSet_DOC		    "set a 'libmsgque' error from a python 'MqSException' error"
+#define ErrorSetCONTINUE_DOC	    "signal that the event-function has finished the work"
 #define ErrorRaise_DOC		    "convert and raise an error from 'pymsgque' into 'python'"
 #define ErrorReset_DOC		    "clear a 'pymsgque' error"
 #define ErrorPrint_DOC		    "print a 'pymsgque' error to stderr"
@@ -283,61 +289,64 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
 static PyMethodDef NS(MqS_Methods)[] = {
 
-    ARG(ProcessEvent,	      METH_VARARGS | METH_KEYWORDS),
-    ARG(Delete,		      METH_NOARGS),
-    ARG(LinkCreate,	      METH_VARARGS),
-    ARG(LinkCreateChild,      METH_VARARGS),
-    ARG(LinkDelete,	      METH_NOARGS),
-    ARG(Exit,		      METH_NOARGS),
+    ARG(ProcessEvent,		METH_VARARGS | METH_KEYWORDS),
+    ARG(Delete,			METH_NOARGS),
+    ARG(LinkCreate,		METH_VARARGS),
+    ARG(LinkCreateChild,	METH_VARARGS),
+    ARG(LinkDelete,		METH_NOARGS),
+    ARG(Exit,			METH_NOARGS),
 
-    ARG(SendSTART,	      METH_NOARGS),
-    ARG(SendEND,	      METH_VARARGS),
-    ARG(SendEND_AND_WAIT,     METH_VARARGS),
-    ARG(SendEND_AND_CALLBACK, METH_VARARGS),
-    ARG(SendRETURN,	      METH_NOARGS),
-    ARG(SendERROR,	      METH_NOARGS),
-    ARG(SendL_START,	      METH_NOARGS),
-    ARG(SendL_END,	      METH_NOARGS),
-    ARG(SendY,		      METH_VARARGS),
-    ARG(SendO,		      METH_VARARGS),
-    ARG(SendS,		      METH_VARARGS),
-    ARG(SendI,		      METH_VARARGS),
-    ARG(SendF,		      METH_VARARGS),
-    ARG(SendW,		      METH_VARARGS),
-    ARG(SendD,		      METH_VARARGS),
-    ARG(SendC,		      METH_VARARGS),
-    ARG(SendB,		      METH_VARARGS),
-    ARG(SendN,		      METH_VARARGS),
-    ARG(SendBDY,	      METH_VARARGS),
-    ARG(SendU,		      METH_VARARGS),
+    ARG(SendSTART,		METH_NOARGS),
+    ARG(SendEND,		METH_VARARGS),
+    ARG(SendEND_AND_WAIT,	METH_VARARGS),
+    ARG(SendEND_AND_CALLBACK,	METH_VARARGS),
+    ARG(SendRETURN,		METH_NOARGS),
+    ARG(SendERROR,		METH_NOARGS),
+    ARG(SendL_START,		METH_NOARGS),
+    ARG(SendL_END,		METH_NOARGS),
+    ARG(SendY,			METH_VARARGS),
+    ARG(SendO,			METH_VARARGS),
+    ARG(SendS,			METH_VARARGS),
+    ARG(SendI,			METH_VARARGS),
+    ARG(SendF,			METH_VARARGS),
+    ARG(SendW,			METH_VARARGS),
+    ARG(SendD,			METH_VARARGS),
+    ARG(SendC,			METH_VARARGS),
+    ARG(SendB,			METH_VARARGS),
+    ARG(SendN,			METH_VARARGS),
+    ARG(SendBDY,		METH_VARARGS),
+    ARG(SendU,			METH_VARARGS),
 
-    ARG(ReadL_START,	      METH_VARARGS),
-    ARG(ReadL_END,	      METH_NOARGS),
-    ARG(ReadY,		      METH_NOARGS),
-    ARG(ReadO,		      METH_NOARGS),
-    ARG(ReadS,		      METH_NOARGS),
-    ARG(ReadI,		      METH_NOARGS),
-    ARG(ReadF,		      METH_NOARGS),
-    ARG(ReadW,		      METH_NOARGS),
-    ARG(ReadD,		      METH_NOARGS),
-    ARG(ReadC,		      METH_NOARGS),
-    ARG(ReadB,		      METH_NOARGS),
-    ARG(ReadN,		      METH_NOARGS),
-    ARG(ReadBDY,	      METH_NOARGS),
-    ARG(ReadU,		      METH_NOARGS),
-    ARG(ReadGetNumItems,      METH_NOARGS),
-    ARG(ReadItemExists,	      METH_NOARGS),
-    ARG(ReadUndo,	      METH_NOARGS),
-    ARG(ReadProxy,	      METH_VARARGS),
+    ARG(ReadL_START,		METH_VARARGS),
+    ARG(ReadL_END,		METH_NOARGS),
+    ARG(ReadY,			METH_NOARGS),
+    ARG(ReadO,			METH_NOARGS),
+    ARG(ReadS,			METH_NOARGS),
+    ARG(ReadI,			METH_NOARGS),
+    ARG(ReadF,			METH_NOARGS),
+    ARG(ReadW,			METH_NOARGS),
+    ARG(ReadD,			METH_NOARGS),
+    ARG(ReadC,			METH_NOARGS),
+    ARG(ReadB,			METH_NOARGS),
+    ARG(ReadN,			METH_NOARGS),
+    ARG(ReadBDY,		METH_NOARGS),
+    ARG(ReadU,			METH_NOARGS),
+    ARG(ReadGetNumItems,	METH_NOARGS),
+    ARG(ReadItemExists,		METH_NOARGS),
+    ARG(ReadUndo,		METH_NOARGS),
+    ARG(ReadProxy,		METH_VARARGS),
 
-    ARG(ServiceCreate,	      METH_VARARGS),
-    ARG(ServiceProxy,	      METH_VARARGS),
-    ARG(ServiceDelete,	      METH_VARARGS),
+    ARG(ServiceCreate,		METH_VARARGS),
+    ARG(ServiceProxy,		METH_VARARGS),
+    ARG(ServiceDelete,		METH_VARARGS),
+    ARG(ServiceGetToken,	METH_NOARGS),
+    ARG(ServiceGetFilter,	METH_VARARGS),
+    ARG(ServiceIsTransaction,	METH_NOARGS),
 
-    ARG(SlaveWorker,	      METH_VARARGS),
-    ARG(SlaveCreate,	      METH_VARARGS),
-    ARG(SlaveDelete,	      METH_VARARGS),
-    ARG(SlaveGet,	      METH_VARARGS),
+    ARG(SlaveWorker,		METH_VARARGS),
+    ARG(SlaveCreate,		METH_VARARGS),
+    ARG(SlaveDelete,		METH_VARARGS),
+    ARG(SlaveGet,		METH_VARARGS),
 
     ARG(ConfigSetBuffersize,	METH_O),
     ARG(ConfigSetDebug,		METH_O),
@@ -354,9 +363,11 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetIsSilent,	METH_O),
     ARG(ConfigSetIsServer,	METH_O),
     ARG(ConfigSetIsString,	METH_O),
+    ARG(ConfigSetIgnoreExit,	METH_O),
     ARG(ConfigSetServerSetup,	METH_O),
     ARG(ConfigSetServerCleanup, METH_O),
     ARG(ConfigSetBgError,	METH_O),
+    ARG(ConfigSetEvent,		METH_O),
     ARG(ConfigSetFactory,	METH_O),
     ARG(ConfigGetIsString,	METH_NOARGS),
     ARG(ConfigGetIsSilent,	METH_NOARGS),
@@ -364,7 +375,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIsParent,	METH_NOARGS),
     ARG(ConfigGetIsSlave,	METH_NOARGS),
     ARG(ConfigGetIsConnected,	METH_NOARGS),
-    ARG(ConfigGetIsTransaction,	METH_NOARGS),
     ARG(ConfigGetDebug,		METH_NOARGS),
     ARG(ConfigGetTimeout,	METH_NOARGS),
     ARG(ConfigGetBuffersize,	METH_NOARGS),
@@ -380,17 +390,16 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIoPipeSocket,	METH_NOARGS),
     ARG(ConfigGetStartAs,	METH_NOARGS),
     ARG(ConfigGetCtxId,		METH_NOARGS),
-    ARG(ConfigGetToken,		METH_NOARGS),
     ARG(ConfigGetMaster,	METH_NOARGS),
-    ARG(ConfigGetFilter,	METH_VARARGS),
 
-    ARG(ErrorC,		      METH_VARARGS),
-    ARG(ErrorSet,	      METH_NOARGS),
-    ARG(ErrorRaise,	      METH_NOARGS),
-    ARG(ErrorReset,	      METH_NOARGS),
-    ARG(ErrorPrint,	      METH_NOARGS),
-    ARG(ErrorGetNum,	      METH_NOARGS),
-    ARG(ErrorGetText,	      METH_NOARGS),
+    ARG(ErrorC,			METH_VARARGS),
+    ARG(ErrorSet,		METH_NOARGS),
+    ARG(ErrorSetCONTINUE,	METH_NOARGS),
+    ARG(ErrorRaise,		METH_NOARGS),
+    ARG(ErrorReset,		METH_NOARGS),
+    ARG(ErrorPrint,		METH_NOARGS),
+    ARG(ErrorGetNum,		METH_NOARGS),
+    ARG(ErrorGetText,		METH_NOARGS),
     
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

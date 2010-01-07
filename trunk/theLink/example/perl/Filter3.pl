@@ -20,22 +20,22 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub Filter {
     my $ctx = shift;
-    my $ftr = $ctx->ConfigGetFilter();
+    my $ftr = $ctx->ServiceGetFilter();
     $ftr->SendSTART();
     $ftr->SendBDY($ctx->ReadBDY());
-    if ($ctx->ConfigGetIsTransaction()) {
-      $ftr->SendEND_AND_WAIT($ctx->ConfigGetToken());
+    if ($ctx->ServiceIsTransaction()) {
+      $ftr->SendEND_AND_WAIT($ctx->ServiceGetToken());
       $ctx->SendSTART();
       $ctx->SendBDY($ftr->ReadBDY());
     } else {
-      $ftr->SendEND($ctx->ConfigGetToken());
+      $ftr->SendEND($ctx->ServiceGetToken());
     }
     $ctx->SendRETURN();
   }
 
   sub ServerSetup {
     my $ctx = shift;
-    my $ftr = $ctx->ConfigGetFilter();
+    my $ftr = $ctx->ServiceGetFilter();
     $ctx->ServiceCreate("+ALL", \&Filter);
     $ftr->ServiceCreate("+ALL", \&Filter);
   }
@@ -63,4 +63,7 @@ package main;
   $srv->Exit();
 
 1;
+
+
+
 

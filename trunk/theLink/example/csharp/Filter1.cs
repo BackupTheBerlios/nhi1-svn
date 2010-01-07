@@ -34,7 +34,7 @@ namespace example {
 
     // service definition
     void EOF () {
-      MqS ftr = ConfigGetFilter();
+      MqS ftr = ServiceGetFilter();
       foreach (List<string> d in data) {
 	ftr.SendSTART();
 	foreach (string s in d) {
@@ -63,3 +63,4 @@ namespace example {
     }
   }
 }
+

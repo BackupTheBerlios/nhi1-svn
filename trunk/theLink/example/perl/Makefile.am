@@ -16,5 +16,6 @@
 ##
 
 EXTRA_DIST = manfilter.pl  mulclient.pl  mulserver.pl  MyClient.pl  MyServer.pl \
-		testclient.pl  testserver.pl Filter1.pl Filter2.pl Filter3.pl
+		testclient.pl  testserver.pl \
+		    Filter1.pl Filter2.pl Filter3.pl Filter4.pl
 

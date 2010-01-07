@@ -1,4 +1,4 @@
-.TH "MqMsgqueAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqMsgqueAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -102,7 +102,7 @@ struct MyCtx {
 .PP
 signature used in \fBMqS::signature\fP 
 .PP
-Definition at line 953 of file msgque.h.
+Definition at line 955 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
@@ -280,12 +280,12 @@ delete a \fBlibmsgque\fP object
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 987 of file msgque.h.
+Definition at line 989 of file msgque.h.
 .SS "struct \fBMqBufferLS\fP* \fBMqInitBuf\fP"
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 983 of file msgque.h.
+Definition at line 985 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

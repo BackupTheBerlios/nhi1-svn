@@ -87,7 +87,7 @@ Delete the entire object including the application link using \RNSA{LinkDelete}.
 object can \b not be reused.
 
 
-\section	\NS{config}				OBJECT CONFIGURATION
+\section	\NS{config}				CONFIG API
 The configuration of an object is done using the functions starting with \c MqConfig...
 or by using command-line arguments.
 
@@ -306,7 +306,7 @@ Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
 \interface{IEvent}
 \copydetails #MqSetupS::Event
 
-\section	\NS{link}				LINK CREATION AND DELETION
+\section	\NS{link}				LINK API
 To create and to destroy a link is the main purpose of the \self library. A link is a 
 client/server connection used to perform various tasks.
 
@@ -362,7 +362,7 @@ and \e slave-context local and on the remote site of the link.
 \subsection	  \NS{Exit}				\Exit
 Shutdown the entire communication and exit the current process or thread.
 
-\section	\NS{service}				ADDING SERVICES
+\section	\NS{service}				SERVICE API
 \copydoc MqServiceAPI
 
 \b Example: define the service \e SRV1 on the \e server-link-setup: \service_example
@@ -429,7 +429,7 @@ UNKNOWN
 \subsection	  \NS{ProcessEvent}			\ProcessEvent
 \copydoc MqProcessEvent
 
-\section	\NS{send}				SEND DATA
+\section	\NS{send}				SEND API
 \copydoc MqSendAPI
 \b Example: send an integer and a list of double, string and a \e byte-array: \send_example
 
@@ -469,7 +469,7 @@ UNKNOWN
 \subsection	  \NS{SendL_END}			\SendL_END
 \copydoc MqSendL_END
 
-\section	\NS{read}				READ DATA
+\section	\NS{read}				READ API
 \copydoc MqReadAPI
 \b Example: read an integer and a list of double, string and a \e byte-array: \read_example
 
@@ -509,7 +509,7 @@ UNKNOWN
 \subsection	  \NS{ReadL_END}			\ReadL_END
 \copydoc MqReadL_END
 
-\section        \NS{slave}				SLAVE OBJECT
+\section        \NS{slave}				SLAVE API
 \copydetails MqSlaveAPI
 
 \subsection	  \NS{SlaveWorker}			\SlaveWorker
@@ -542,7 +542,7 @@ UNKNOWN
 \subsection	  \NS{SlaveGet}				\SlaveGet
 \copydoc MqSlaveGet
 
-\section        \NS{buffer}				BUFFER OBJECT
+\section        \NS{buffer}				BUFFER API
 The \BufferObject object is created by \RNSA{ReadU} and id used to save a <B>typeless temporary data item</B> 
 from the \self data package. The lifetime of the \BufferObject is only the current callback up to the next
 read operation of the same context.
@@ -675,7 +675,7 @@ print an \self error object to stderr and \e clear the \self error
 
 \if DATA
 
-\section	\NS{data}				CONTEXT LOCAL STORAGE
+\section	\NS{data}				CONTEXT LOCAL STORAGE API
 The CONTEXT LOCAL STORAGE is required to bind user data to the \self context
 
 \subsection	\NS{DictSet}				\DictSet
@@ -923,7 +923,7 @@ Use \e manfilter.cc in a LibMsgque command pipeline:
 
 \section	\NS{also}				SEE ALSO
 \lang, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), 
-TCL: tclmsgque(n), PERL: perlmsgque(n)
+TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
 
 \section	\NS{keywords}				KEYWORDS
 \lang, unix, socket, message, msgque

@@ -20,19 +20,19 @@ class Filter3(MqS):
     self.ConfigSetServerSetup(self.ServerSetup)
     MqS.__init__(self)
   def ServerSetup(ctx):
-    ftr =ctx.ConfigGetFilter()
+    ftr =ctx.ServiceGetFilter()
     ctx.ServiceCreate("+ALL", ctx.Filter)
     ftr.ServiceCreate("+ALL", ctx.Filter)
   def Filter(ctx):
-    ftr = ctx.ConfigGetFilter()
+    ftr = ctx.ServiceGetFilter()
     ftr.SendSTART()
     ftr.SendBDY(ctx.ReadBDY())
-    if (ctx.ConfigGetIsTransaction()):
-      ftr.SendEND_AND_WAIT(ctx.ConfigGetToken())
+    if (ctx.ServiceIsTransaction()):
+      ftr.SendEND_AND_WAIT(ctx.ServiceGetToken())
       ctx.SendSTART()
       ctx.SendBDY(ftr.ReadBDY())
     else:
-      ftr.SendEND(ctx.ConfigGetToken())
+      ftr.SendEND(ctx.ServiceGetToken())
     ctx.SendRETURN()
 srv = Filter3()
 try:
@@ -42,4 +42,7 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
+
+
+
 

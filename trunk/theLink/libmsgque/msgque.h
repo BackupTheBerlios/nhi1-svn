@@ -815,8 +815,8 @@ struct MqSetupS {
   /// This Server-Setup function is used to configure a new server-link and act like a
   /// constructor. This function is called on the end of #MqLinkCreate. A server-context-link is created 
   /// for every new incoming connection request and is used to provide context specific services .
-  /// \attention if a \e child-context s used this function together with #FactoryCreate
-  /// is required to configure the new created \e child-context.
+  /// \attention if a \e child-context is created, use this function together with #MqFactoryCreateS
+  /// is required to configure the new \e child-context.
   struct MqCallbackS ServerSetup;
 
   /// \brief pointer to the Server-Cleanup function

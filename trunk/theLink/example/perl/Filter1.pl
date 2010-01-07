@@ -27,7 +27,7 @@ sub FTRcmd {
 
 sub EOFcmd {
   my $ctx = shift;
-  my $ftr = $ctx->ConfigGetFilter();
+  my $ftr = $ctx->ServiceGetFilter();
   foreach (@data) {
     $ftr->SendSTART();
     foreach (@$_) {
@@ -56,6 +56,7 @@ package main;
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

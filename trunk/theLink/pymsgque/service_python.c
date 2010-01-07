@@ -12,6 +12,44 @@
 
 #include "msgque_python.h"
 
+PyObject* NS(ServiceGetToken) (
+  PyObject    *self,
+  PyObject    *args
+)
+{
+  return PyC2O(MqServiceGetToken(CONTEXT));
+}
+
+PyObject* NS(ServiceGetFilter) (
+  PyObject  *self ,
+  PyObject  *args
+)
+{
+  SETUP_context
+  struct MqS *filter;
+  int id = 0;
+  PyObject *filterO = NULL;
+  if (!PyArg_ParseTuple(args, "|i:ServiceGetFilter", &id)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck (MqServiceGetFilter (context, id, &filter));
+  filterO = ((PyObject *)filter->self);
+  Py_INCREF(filterO);
+error:
+  return filterO;
+}
+
+PyObject* NS(ServiceIsTransaction) (
+  MqS_Obj   *self
+)
+{
+  if (MqServiceIsTransaction(CONTEXT)) {
+    Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
+  }
+}
+
 PyObject* NS(ServiceCreate) (
   PyObject  *self, 
   PyObject  *args

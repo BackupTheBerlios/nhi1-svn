@@ -127,7 +127,7 @@ finally:
     } \
     -returnCodes  error \
     -result	  {C> (unknown) [pSendEND] the 'msgque' object link is 'not' connected
-C> (unknown) found in function "MqProcessEvent" at file "msgque.c"}
+C> (unknown) found in function "MqProcessEvent" at file "service.c"}
 
 test py-client-ErrorSet-5 {no error - without link} \
     -constraints  {local} \

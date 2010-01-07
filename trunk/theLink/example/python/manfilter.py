@@ -24,7 +24,7 @@ class manfilter(MqS):
     self.ServiceCreate("+FTR", self.FTRcmd)
     self.ServiceProxy("+EOF")
   def FTRcmd(ctx):
-    ftr = ctx.ConfigGetFilter()
+    ftr = ctx.ServiceGetFilter()
     ftr.SendSTART()
     while ctx.ReadItemExists():
       ftr.SendC("<" + ctx.ReadC() + ">")
@@ -38,4 +38,5 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
+
 

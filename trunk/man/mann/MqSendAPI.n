@@ -1,4 +1,4 @@
-.TH "MqSendAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqSendAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -131,11 +131,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 append the \fIentire-body\fP to the \fIsend-data-package\fP. 
 .PP
-The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBset val [$ctx ReadBDY]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBbyte[] val = ctx.ReadBDY()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the \fIentire-body\fP for appending 
 .br
@@ -154,7 +154,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -171,7 +171,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -190,7 +190,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -205,11 +205,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([Integer timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -234,7 +234,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -255,7 +255,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -270,7 +270,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -287,7 +287,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -326,7 +326,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -341,7 +341,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -354,11 +354,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBset val [$ctx ReadN]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBbyte[] val = ctx.ReadN()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the \fIbody-item\fP for appending 
 .br
@@ -377,7 +377,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -392,7 +392,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
-Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fB$ctx SendEND token\fP)
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(String token)\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -402,7 +402,7 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -417,7 +417,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -436,7 +436,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -494,7 +494,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -511,7 +511,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -524,4 +524,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

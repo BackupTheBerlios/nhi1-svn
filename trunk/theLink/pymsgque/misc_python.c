@@ -32,7 +32,6 @@ NS(ProcCall) (
   PyObject * const self = (PyObject*) SELF;
   PyObject * selfarg = self;
   PyObject * const callable = (PyObject*) dataP;
-  enum MqErrorE ret = MQ_OK;
 
   //MqDLogX (context,"11111",0,"thread<%p>, state<%p>\n", pthread_self(), PyThreadState_Get());
   PyErr_Clear();
@@ -49,14 +48,13 @@ NS(ProcCall) (
   // no error return OK
   if (result == NULL) {
     NS(ErrorSet) (self);
-    ret = MqErrorGetCode(context);
   } else {
     Py_DECREF(result);
   }
 
   //MqDLogX (context,"33333",0,"thread<%p>, state<%p>\n", pthread_self(), PyThreadState_Get());
 
-  return ret;
+  return MqErrorGetCodeI(context);
 }
 
 void
@@ -93,7 +91,7 @@ void NS(pErrorFromMq) (
   PyErr_SetString(NS(MqSException), MqErrorGetText(context));
   PyObject_SetAttrString(NS(MqSException), "text", PyC2O(MqErrorGetText(context)));
   PyObject_SetAttrString(NS(MqSException), "num", PyLong_FromLong(MqErrorGetNum(context)));
-  PyObject_SetAttrString(NS(MqSException), "code", PyLong_FromLong(MqErrorGetCode(context)));
+  PyObject_SetAttrString(NS(MqSException), "code", PyLong_FromLong(MqErrorGetCodeI(context)));
   MqErrorReset(context);
 }
 

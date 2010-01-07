@@ -1,4 +1,4 @@
-.TH "MqReadAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqReadAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -57,7 +57,7 @@ MqReadAPI \- extract data from an incoming \fIread-data-package\fP.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
 .br
-.R "extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP "
+.R "extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
 .br
@@ -69,7 +69,7 @@ MqReadAPI \- extract data from an incoming \fIread-data-package\fP.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "undo the last \fBREAD DATA\fP function call "
+.R "undo the last \fBREAD API\fP function call "
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const ctx)"
 .br
@@ -123,7 +123,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
@@ -167,7 +167,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -184,7 +184,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -201,7 +201,7 @@ get the number of items left in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -216,7 +216,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -233,12 +233,12 @@ check if an item exists in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-boolean, \fIyes\fP or \fIno\fP 
+boolean, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
@@ -265,7 +265,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -278,13 +278,13 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
-Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx ReadL_END\fP to finish the read. 
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBset val [$ctx ReadU]\fP call or \fIempty\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS val = ctx.ReadU()\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -301,7 +301,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
@@ -320,7 +320,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -337,7 +337,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP and the source of the copy 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP and the source of the copy 
 .br
 \fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
 .RE
@@ -354,7 +354,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -367,13 +367,13 @@ an \fBEXCEPTION OBJECT\fP on error
  
 .SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP *const  val)"
 .PP
-extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP 
+extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP
-The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD DATA\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the buffer 
 .RE
@@ -386,13 +386,13 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SS "enum \fBMqErrorE\fP MqReadUndo (struct \fBMqS\fP *const  ctx)"
 .PP
-undo the last \fBREAD DATA\fP function call 
+undo the last \fBREAD API\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -407,7 +407,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -424,7 +424,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -437,4 +437,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

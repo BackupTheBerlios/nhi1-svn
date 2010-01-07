@@ -11,7 +11,7 @@
     SV* errsv = get_sv("@", TRUE); \
     MqSException *ex = (MqSException*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*ex)); \
     ex->num = MqErrorGetNum(context); \
-    ex->code = MqErrorGetCode(context); \
+    ex->code = MqErrorGetCodeI(context); \
     ex->text = mq_strdup(MqErrorGetText(context)); \
     sv_setref_pv(errsv, "Net::PerlMsgque::MqSException", (void*)ex); \
     MqErrorReset(context); \
@@ -24,7 +24,7 @@
     struct MqS * const context = buffer->context; \
     MqSException *ex = (MqSException*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*ex)); \
     ex->num = MqErrorGetNum(context); \
-    ex->code = MqErrorGetCode(context); \
+    ex->code = MqErrorGetCodeI(context); \
     ex->text = mq_strdup(MqErrorGetText(context)); \
     sv_setref_pv(errsv, "Net::PerlMsgque::MqSException", (void*)ex); \
     MqErrorReset(context); \
@@ -112,19 +112,17 @@ static MqBufferS* get_MqBufferS(pTHX_ SV* sv)
 static enum MqErrorE
 ProcError (pTHX_ MqS * context, SV* err)
 {
-  enum MqErrorE ret = context->error.code;
-
   if (SvTRUE(err)) {
     if (sv_isobject(err) && sv_derived_from(err, "Net::PerlMsgque::MqSException")) {
       MqSException *ex = INT2PTR(MqSException*, SvIV(SvRV(err)));
-      ret = MqErrorSet (context, ex->num, ex->code, ex->text);
+      MqErrorSet (context, ex->num, ex->code, ex->text);
       MqSysFree (ex->text);
       MqSysFree(ex);
     } else {
-      ret = MqErrorC (context, __func__, -1, SvPV_nolen(err));
+      MqErrorC (context, __func__, -1, SvPV_nolen(err));
     }
   }
-  return ret;
+  return MqErrorGetCodeI(context);
 }
 
 static enum MqErrorE
@@ -135,7 +133,6 @@ ProcCall (
 {
   dSP;
   SV * method = (SV*) data;
-  enum MqErrorE ret = MQ_OK;
 
   ENTER;
   SAVETMPS;
@@ -145,13 +142,13 @@ ProcCall (
     XPUSHs((SV*)context->self);
     PUTBACK;
     call_sv (method, G_SCALAR|G_DISCARD|G_EVAL);
-    ret = ProcError (aTHX_ context, ERRSV);
+    ProcError (aTHX_ context, ERRSV);
   }
 
   FREETMPS;
   LEAVE;
 
-  return ret;
+  return MqErrorGetCodeI(context);
 }
 
 static void
@@ -335,6 +332,9 @@ MqErrorSet(MqS* context, SV* err)
     ProcError (aTHX_ context, err);
 
 void
+MqErrorSetCONTINUE(MqS* context)
+
+void
 MqErrorPrint(MqS* context)
 
 void
@@ -343,7 +343,7 @@ MqErrorReset(MqS* context)
 void
 MqErrorRaise(MqS* context)
   CODE:
-    ErrorMqToPerlWithCheck(MqErrorGetCode(context))
+    ErrorMqToPerlWithCheck(MqErrorGetCodeI(context))
 
 void
 MqErrorC (MqS* context, MQ_CST prefix, MQ_INT error_number, MQ_CST error_text)
@@ -516,17 +516,6 @@ ConfigGetMaster(MqS* context)
     XSRETURN(1);
 
 void
-ConfigGetFilter(MqS* context, ...)
-  PREINIT:
-    MqS* filter;
-    MQ_SIZE id=0;
-  PPCODE:
-    if (items > 1) id = SvIV(ST(1));
-    ErrorMqToPerlWithCheck (MqConfigGetFilter (context, id, &filter));
-    ST(0) = (SV*)filter->self;
-    XSRETURN(1);
-
-void
 ConfigGetParent(MqS* context)
   PREINIT:
     MqS* parent;
@@ -538,14 +527,8 @@ ConfigGetParent(MqS* context)
 int
 MqConfigGetCtxId (MqS* context)
 
-MQ_NST
-MqConfigGetToken (MqS* context)
-
 bool
 MqConfigGetIsConnected (MqS* context)
-
-bool
-MqConfigGetIsTransaction (MqS* context)
 
 void
 MqConfigSetIsSilent (MqS* context, bool isSilent)
@@ -555,6 +538,9 @@ MqConfigGetIsSilent (MqS* context)
 
 void
 MqConfigSetIsString (MqS* context, bool isString)
+
+void
+MqConfigSetIgnoreExit (MqS* context, bool ignoreExit)
 
 bool
 MqConfigGetIsString (MqS* context)
@@ -593,6 +579,11 @@ void
 MqConfigSetBgError (MqS* context, SV* bgerrorF)
   CODE:
     MqConfigSetBgError (context, ProcCall, (MQ_PTR) newSVsv(bgerrorF), ProcFree, ProcCopy);
+
+void
+MqConfigSetEvent (MqS* context, SV* eventF)
+  CODE:
+    MqConfigSetEvent (context, ProcCall, (MQ_PTR) newSVsv(eventF), ProcFree, ProcCopy);
 
 
 
@@ -834,6 +825,23 @@ void
 MqReadProxy (MqS* context, MqS* target)
   CODE:
     ErrorMqToPerlWithCheck (MqReadProxy (context, target));
+
+MQ_NST
+MqServiceGetToken (MqS* context)
+
+void
+MqServiceGetFilter(MqS* context, ...)
+  PREINIT:
+    MqS* filter;
+    MQ_SIZE id=0;
+  PPCODE:
+    if (items > 1) id = SvIV(ST(1));
+    ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
+    ST(0) = (SV*)filter->self;
+    XSRETURN(1);
+
+bool
+MqServiceIsTransaction (MqS* context)
     
 void
 MqServiceProxy (MqS* context, MQ_CST token, ...)

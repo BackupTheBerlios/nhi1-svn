@@ -1,4 +1,4 @@
-.TH "MqServiceAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqServiceAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -54,21 +54,21 @@ enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP.
 .PP
 To specify the the \fItime-interval\fP three modes are supported:
 .IP "\(bu" 2
-\fB\fCNO\fP,\fP don't wait for an event do just the check and comeback
+\fBMqS.WAIT.NO\fP, don't wait for an event do just the check and comeback
 .IP "\(bu" 2
-\fB\fCONCE\fP,\fP use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+\fBMqS.WAIT.ONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
 .IP "\(bu" 2
-\fB\fCFOREVER\fP,\fP wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
 .PP
 This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
-\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = \fCONCE\fP 
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = MqS.WAIT.ONCE 
 .br
-\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: \fCNO\fP) 
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: MqS.WAIT.NO) 
 .RE
 .PP
 \fBReturns:\fP
@@ -83,14 +83,14 @@ in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoke
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIyes\fP or \fIno\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
@@ -98,11 +98,11 @@ a boolean value, \fIyes\fP or \fIno\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fB$ctx ServiceGetToken\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBDim val As String = ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -125,7 +125,7 @@ delete a service.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -150,11 +150,11 @@ return a 'filter not available' error
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fIempty\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
 .RE
 .PP
 \fBReturns:\fP
@@ -171,7 +171,7 @@ This function is needed on the server to process a \fIservice-request\fP defined
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -184,16 +184,16 @@ the \fBTOKEN IDENTIFIER\fP
 .PP
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
-A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIyes\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIno\fP if the package was send with \fBSendEND\fP) 
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIfalse\fP if the package was send with \fBSendEND\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIyes\fP or \fIno\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
@@ -205,7 +205,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -220,4 +220,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

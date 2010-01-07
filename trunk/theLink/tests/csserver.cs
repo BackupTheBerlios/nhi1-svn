@@ -136,10 +136,19 @@ namespace example {
 	ServiceCreate("ERLR", ERLR);
 	ServiceCreate("ERLS", ERLS);
 	ServiceCreate("CFG1", CFG1);
+	ServiceCreate("PRNT", PRNT);
       }
     }
 
   // ########################################################################
+
+    private void PRNT () {
+      int i=0;
+      while (ReadItemExists()) {
+	Console.WriteLine("{0,2}: " + ReadC(), ++i);
+      }
+      SendRETURN();
+    }
 
     private void CFG1 () {
       String cmd = ReadC();

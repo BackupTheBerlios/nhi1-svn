@@ -30,7 +30,7 @@ class Filter1(MqS):
     ctx.data.append(L)
     ctx.SendRETURN()
   def EOFcmd(ctx):
-    ftr = ctx.ConfigGetFilter()
+    ftr = ctx.ServiceGetFilter()
     for L in ctx.data:
       ftr.SendSTART()
       for I in L:
@@ -47,4 +47,5 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
+
 

@@ -108,41 +108,19 @@ ALIASES		    += "config_type_isConnected=boolean"
 ALIASES		    += "config_set_isConnected=NO"
 ALIASES		    += "config_get_isConnected=#ConfigGetIsConnected"
 
-ALIASES		    += "config_type_isTransaction=boolean"
-ALIASES		    += "config_set_isTransaction=NO"
-ALIASES		    += "config_get_isTransaction=#ConfigGetIsTransaction"
-
 ALIASES		    += "config_type_master=MqC"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=#ConfigGetMaster"
-
-ALIASES		    += "config_type_filter=MqC"
-ALIASES		    += "config_set_filter=NO"
-ALIASES		    += "config_get_filter=#ConfigGetFilter"
 
 ALIASES		    += "config_type_ctxId=int"
 ALIASES		    += "config_set_ctxId=NO"
 ALIASES		    += "config_get_ctxId=#ConfigGetCtxId"
 
-ALIASES		    += "config_type_token=String"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=#ConfigGetToken"
-
-ALIASES		    += "config_type_IServerSetup=Interface"
-ALIASES             += "config_set_IServerSetup=#javamsgque.IServerSetup"
-ALIASES		    += "config_get_IServerSetup=NO"
-
-ALIASES		    += "config_type_IServerCleanup=Interface"
-ALIASES		    += "config_set_IServerCleanup=#javamsgque.IServerCleanup"
-ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFactory=Interface"
-ALIASES		    += "config_set_IFactory=#javamsgque.IFactory"
-ALIASES		    += "config_get_IFactory=NO"
-
-ALIASES             += "config_type_IBgError=Interface"
-ALIASES             += "config_set_IBgError=#javamsgque::IBgError"
-ALIASES             += "config_get_IBgError=NO"
+ALIASES             += "config_IServerSetup=IServerSetup.ServerSetup()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup.ServerCleanup()"
+ALIASES		    += "config_IFactory=MqS val=IFactory.Factory()"
+ALIASES             += "config_IBgError=IBgError.BgError()"
+ALIASES             += "config_IEvent=IEvent.Event()"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(String... argv)"
@@ -193,6 +171,9 @@ ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE
 ALIASES		    += "MQ_WAIT_NO=#MqS.WAIT.NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MqS.WAIT.ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MqS.WAIT.FOREVER"
+ALIASES		    += "ServiceGetToken=String val=ServiceGetToken()"
+ALIASES		    += "ServiceIsTransaction=Boolean val=ServiceIsTransaction()"
+ALIASES		    += "ServiceGetFilter=MqS filter=ServiceGetFilter([int id=0])"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, String... argv)"
@@ -224,4 +205,5 @@ ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 

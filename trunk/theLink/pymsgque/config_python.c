@@ -242,6 +242,19 @@ PyObject* NS(ConfigSetIsString) (
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ConfigSetIgnoreExit) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  if (!PyBool_Check(arg)) {
+    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetIgnoreExit' must be boolean");
+    return NULL;
+  }
+  MqConfigSetIgnoreExit (&self->context, (arg == Py_True));
+  Py_RETURN_NONE;
+}
+
 PyObject* NS(ConfigSetServerSetup) (
   MqS_Obj    *self,
   PyObject    *arg
@@ -281,6 +294,20 @@ PyObject* NS(ConfigSetBgError) (
   }
   Py_INCREF (arg);
   MqConfigSetBgError (CONTEXT,NS(ProcCall),arg,NS(ProcFree),NS(ProcCopy));
+  Py_RETURN_NONE;
+}
+
+PyObject* NS(ConfigSetEvent) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  if (!PyCallable_Check(arg)) {
+    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetEvent' must be callable");
+    return NULL;
+  }
+  Py_INCREF (arg);
+  MqConfigSetEvent (CONTEXT,NS(ProcCall),arg,NS(ProcFree),NS(ProcCopy));
   Py_RETURN_NONE;
 }
 
@@ -374,17 +401,6 @@ PyObject* NS(ConfigGetIsConnected) (
     Py_RETURN_FALSE;
   } else {
     Py_RETURN_TRUE;
-  }
-}
-
-PyObject* NS(ConfigGetIsTransaction) (
-  MqS_Obj   *self
-)
-{
-  if (MqConfigGetIsTransaction(CONTEXT)) {
-    Py_RETURN_TRUE;
-  } else {
-    Py_RETURN_FALSE;
   }
 }
 
@@ -514,14 +530,6 @@ PyObject* NS(ConfigGetCtxId) (
   return PyLong_FromLong(MqConfigGetCtxId(CONTEXT));
 }
 
-PyObject* NS(ConfigGetToken) (
-  PyObject    *self,
-  PyObject    *args
-)
-{
-  return PyC2O(MqConfigGetToken(CONTEXT));
-}
-
 PyObject* NS(ConfigGetMaster) (
   PyObject  *self 
 )
@@ -533,25 +541,6 @@ PyObject* NS(ConfigGetMaster) (
     Py_INCREF(masterO);
     return masterO;
   }
-}
-
-PyObject* NS(ConfigGetFilter) (
-  PyObject  *self ,
-  PyObject  *args
-)
-{
-  SETUP_context
-  struct MqS *filter;
-  int id = 0;
-  PyObject *filterO = NULL;
-  if (!PyArg_ParseTuple(args, "|i:ConfigGetFilter", &id)) {
-    return NULL;
-  }
-  ErrorMqToPythonWithCheck (MqConfigGetFilter (context, id, &filter));
-  filterO = ((PyObject *)filter->self);
-  Py_INCREF(filterO);
-error:
-  return filterO;
 }
 
 

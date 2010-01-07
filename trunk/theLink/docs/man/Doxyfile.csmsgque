@@ -107,41 +107,19 @@ ALIASES		    += "config_type_isConnected=bool"
 ALIASES		    += "config_set_isConnected=NO"
 ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
 
-ALIASES		    += "config_type_isTransaction=bool"
-ALIASES		    += "config_set_isTransaction=NO"
-ALIASES		    += "config_get_isTransaction=ConfigGetIsTransaction"
-
 ALIASES		    += "config_type_master=MqS"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=ConfigGetMaster"
-
-ALIASES		    += "config_type_filter=MqS"
-ALIASES		    += "config_set_filter=NO"
-ALIASES		    += "config_get_filter=ConfigGetFilter"
 
 ALIASES		    += "config_type_ctxId=int"
 ALIASES		    += "config_set_ctxId=NO"
 ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
 
-ALIASES		    += "config_type_token=string"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=ConfigGetToken"
-
-ALIASES		    += "config_type_IServerSetup=Interface"
-ALIASES             += "config_set_IServerSetup=csmsgque.IServerSetup.Call"
-ALIASES		    += "config_get_IServerSetup=NO"
-
-ALIASES		    += "config_type_IServerCleanup=Interface"
-ALIASES		    += "config_set_IServerCleanup=csmsgque.IServerCleanup.Call"
-ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFactory=Interface"
-ALIASES		    += "config_set_IFactory=csmsgque.IFactory.Call"
-ALIASES		    += "config_get_IFactory=NO"
-
-ALIASES             += "config_type_IBgError=Interface"
-ALIASES             += "config_set_IBgError=csmsgque.IBgError.Call"
-ALIASES             += "config_get_IBgError=NO"
+ALIASES             += "config_IServerSetup=IServerSetup.Call()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup.Call()"
+ALIASES		    += "config_IFactory=MqS val=IFactory.Call()"
+ALIASES             += "config_IBgError=IBgError.Call()"
+ALIASES             += "config_IEvent=IEvent.Call()"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(params string[] argv)"
@@ -167,13 +145,13 @@ ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
 
 # READ DATE
 ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
-ALIASES		    += "Read_TYPE=TYPE val = ctx.Read[TYPE]()"
-ALIASES		    += "ReadU=MqBufferS val = ctx.ReadU()"
-ALIASES		    += "ReadN=byte[] val = ctx.ReadN()"
-ALIASES		    += "ReadBDY=byte[] val = ctx.ReadBDY()"
+ALIASES		    += "Read_TYPE=TYPE val=ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=MqBufferS val=ctx.ReadU()"
+ALIASES		    += "ReadN=byte[] val=ctx.ReadN()"
+ALIASES		    += "ReadBDY=byte[] val=ctx.ReadBDY()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
-ALIASES		    += "ReadGetNumItems=int val = ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=bool val = ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=int val=ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=bool val=ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START()"
 ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
@@ -194,18 +172,21 @@ ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE
 ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
 ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
+ALIASES		    += "ServiceGetToken=string val=ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=MqS filter=ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceIsTransaction=bool val=ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, params string[] argv)"
 ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
-ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+ALIASES		    += "SlaveGet=MqS val=ctx.SlaveGet(int id)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGet_TYPE=TYPE val=buffer.[TYPE]"
-ALIASES		    += "BufferType=char buffer.Type"
+ALIASES		    += "BufferType=char val=buffer.Type"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -222,6 +203,7 @@ ALIASES		    += "ErrorGetText=string ex.txt or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=int ex.num or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"

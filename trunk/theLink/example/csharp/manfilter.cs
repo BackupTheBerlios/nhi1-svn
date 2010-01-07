@@ -17,7 +17,7 @@ namespace example {
       return new manfilter();
     }
     void FTR () {
-      MqS ftr = ConfigGetFilter();
+      MqS ftr = ServiceGetFilter();
       ftr.SendSTART();
       while (ReadItemExists()) {
 	ftr.SendC("<" + ReadC() + ">");
@@ -41,3 +41,4 @@ namespace example {
     }
   }
 }
+

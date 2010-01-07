@@ -55,7 +55,7 @@ namespace csmsgque {
       }
 
       // everything is OK
-      return MqErrorE.MQ_OK;
+      return MqErrorGetCode(context);
     }
 
     private static void ProcFree (IntPtr context, ref IntPtr data) {

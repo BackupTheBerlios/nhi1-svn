@@ -15,7 +15,7 @@ use Net::PerlMsgque;
 
 sub FTRcmd {
   my $ctx = shift;
-  my $ftr = $ctx->ConfigGetFilter();
+  my $ftr = $ctx->ServiceGetFilter();
   $ftr->SendSTART();
   while ($ctx->ReadItemExists()) {
     $ftr->SendC("<" . $ctx->ReadC() . ">");
@@ -40,6 +40,7 @@ package main;
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

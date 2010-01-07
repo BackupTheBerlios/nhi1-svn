@@ -1,4 +1,4 @@
-.TH "MqConfigAPI" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqConfigAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -403,7 +403,7 @@ configuration of the \fBMqS\fP object
 .PP 
 .SS "#define MQ_PRIVATE_CONFIG_CONST   const"
 .PP
-Definition at line 956 of file msgque.h.
+Definition at line 958 of file msgque.h.
 .SS "#define MqFactoryS_NULL   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
@@ -1126,4 +1126,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

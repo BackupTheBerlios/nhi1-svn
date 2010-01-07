@@ -1,4 +1,4 @@
-.TH "ccmsgque Tutorial" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque Tutorial" n "7 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -50,7 +50,7 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 .nf
 noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilter$(EXEEXT) \
       testserver$(EXEEXT) testclient$(EXEEXT) MyClient$(EXEEXT)  MyServer$(EXEEXT) Filter2$(EXEEXT) \
-        Filter3$(EXEEXT)
+        Filter3$(EXEEXT) Filter4$(EXEEXT)
 
 AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 LDADD = ../../ccmsgque/libtmp.la
@@ -109,7 +109,7 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   MyServer srv;
   try {
     srv.LinkCreateVC(argc, argv);
-    srv.ProcessEvent();
+    srv.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     srv.ErrorSet(e);
   }
@@ -160,7 +160,7 @@ Last: submit the a data package to the link target using one of:
 .PP
 
 .PP
-The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between \fBctx.SendSTART()\fP and \fBctx.SendEND(MQ_CST const token)\fP ... other \fBSEND DATA\fP style commands are available to fill the data package with data.
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between \fBctx.SendSTART()\fP and \fBctx.SendEND(MQ_CST const token)\fP ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
 Services are created with the \fBctx.ServiceCreate(MQ_CST token, IService * callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
@@ -187,7 +187,7 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   try {
     c.LinkCreateVC(argc, argv);
     c.SendSTART();
-    c.SendEND_AND_WAIT('HLWO', MQ_TIMEOUT_USER);
+    c.SendEND_AND_WAIT('HLWO');
     cout << c.ReadC() << endl;
   } catch (const exception& e) {
     c.ErrorSet(e);
@@ -244,7 +244,7 @@ class manfilter : public MqC, public IFactory {
     }
   public:
     void fFTR () {
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       MQ_BUF temp = GetTempBuffer();
       ftr->SendSTART();
       while (ReadItemExists()) {
@@ -264,12 +264,13 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     filter.LinkCreateVC(argc, argv);
     filter.ServiceCreate('+FTR', MqC::CallbackF(&manfilter::fFTR));
     filter.ServiceProxy ('+EOF');
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
   filter.Exit();
 }
+
 .fi
 .PP
  Use \fImanfilter.cc\fP in a LibMsgque command pipeline: 

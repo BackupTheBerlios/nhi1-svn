@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "4 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "7 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -170,7 +170,7 @@ Last: submit the a data package to the link target using one of:
 .PP
 
 .PP
-The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between \fBctx.SendSTART()\fP and \fBctx.SendEND(String token)\fP ... other \fBSEND DATA\fP style commands are available to fill the data package with data.
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between \fBctx.SendSTART()\fP and \fBctx.SendEND(String token)\fP ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
 Services are created with the \fBctx.ServiceCreate(String token, IService callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
@@ -249,7 +249,7 @@ class manfilter extends MqS implements IFactory {
   }
   private static class FTR implements IService {
     public void Service (MqS ctx) throws MqSException {
-      MqS ftr = ctx.ConfigGetFilter();
+      MqS ftr = ctx.ServiceGetFilter();
       ftr.SendSTART();
       while (ctx.ReadItemExists()) {
         ftr.SendC('<' + ctx.ReadC() + '>');
@@ -273,6 +273,7 @@ class manfilter extends MqS implements IFactory {
     srv.Exit();
   }
 }
+
 .fi
 .PP
  Use \fImanfilter.java\fP in a LibMsgque command pipeline: 

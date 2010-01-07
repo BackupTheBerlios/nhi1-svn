@@ -113,47 +113,23 @@ ALIASES		    += "config_type_isConnected=PyBool"
 ALIASES		    += "config_set_isConnected=NO"
 ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
 
-ALIASES		    += "config_type_isTransaction=PyBool"
-ALIASES		    += "config_set_isTransaction=NO"
-ALIASES		    += "config_get_isTransaction=ConfigGetIsTransaction"
-
 ALIASES		    += "config_type_master=PyObject"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=ConfigGetMaster"
-
-ALIASES		    += "config_type_filter=PyObject"
-ALIASES		    += "config_set_filter=NO"
-ALIASES		    += "config_get_filter=ConfigGetFilter"
 
 ALIASES		    += "config_type_ctxId=PyLong"
 ALIASES		    += "config_set_ctxId=NO"
 ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
 
-ALIASES		    += "config_type_token=PyUnicode"
-ALIASES		    += "config_set_token=NO"
-ALIASES		    += "config_get_token=ConfigGetToken"
-
-ALIASES		    += "config_type_IServerSetup=Interface"
-ALIASES             += "config_set_IServerSetup=ConfigSetServerSetup callback"
-ALIASES		    += "config_get_IServerSetup=NO"
-
-ALIASES		    += "config_type_IServerCleanup=Interface"
-ALIASES		    += "config_set_IServerCleanup=ConfigSetServerCleanup callback"
-ALIASES		    += "config_get_IServerCleanup=NO"
-
-ALIASES		    += "config_type_IFactory=Interface"
-ALIASES		    += "config_set_IFactory=ConfigSetFactory"
-ALIASES		    += "config_get_IFactory=NO"
-
-ALIASES             += "config_type_IBgError=Interface"
-ALIASES             += "config_set_IBgError=ConfigSetBgError callback"
-ALIASES             += "config_get_IBgError=NO"
+ALIASES             += "config_IServerSetup=ConfigSetServerSetup(callback)"
+ALIASES		    += "config_IServerCleanup=ConfigSetServerCleanup(callback)"
+ALIASES		    += "config_IFactory=ConfigSetFactory(callback)"
+ALIASES             += "config_IBgError=ConfigSetBgError(callback)"
+ALIASES             += "config_IEvent=ConfigSetEvent(callback)"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"
-
-
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "Exit=ctx.Exit()"
 
@@ -183,13 +159,13 @@ signature = ctx.ReadB()\n\
 ctx.ReadL_END()\n\
 \endcode"
 
-ALIASES		    += "Read_TYPE=val = ctx.Read[TYPE]()"
-ALIASES		    += "ReadU=val = ctx.ReadU()"
-ALIASES		    += "ReadN=val = ctx.ReadN()"
-ALIASES		    += "ReadBDY=val = ctx.ReadBDY()"
+ALIASES		    += "Read_TYPE=val=ctx.Read[TYPE]()"
+ALIASES		    += "ReadU=val=ctx.ReadU()"
+ALIASES		    += "ReadN=val=ctx.ReadN()"
+ALIASES		    += "ReadBDY=val=ctx.ReadBDY()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=val = ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=val = ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=val=ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=val=ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
@@ -207,18 +183,21 @@ ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FORE
 ALIASES		    += "MQ_WAIT_NO=NO"
 ALIASES		    += "MQ_WAIT_ONCE=ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=FOREVER"
+ALIASES		    += "ServiceGetToken=val=ctx.ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=filter=ctx.ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceIsTransaction=val=ctx.ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
 ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
-ALIASES		    += "SlaveGet=ctx.SlaveGet(id)"
+ALIASES		    += "SlaveGet=val=ctx.SlaveGet(id)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
-ALIASES		    += "BufferGet_TYPE=buffer.Get[TYPE]()"
-ALIASES		    += "BufferType=buffer.GetType()"
+ALIASES		    += "BufferGet_TYPE=val=buffer.Get[TYPE]()"
+ALIASES		    += "BufferType=val=buffer.GetType()"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -234,6 +213,7 @@ ALIASES		    += "ErrorGetText=ex.text or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(prefix,errnum,message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet()"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"

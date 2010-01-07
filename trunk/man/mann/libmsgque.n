@@ -1,8 +1,8 @@
-.TH "libmsgque" n "5 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "7 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-libmsgque \- The \fBC\fP Application-Server Project and Programming-Language-Micro-Kernel
+libmsgque \- The \fBC\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
 \fB#include 'msgque.h'\fP
@@ -10,19 +10,19 @@ libmsgque \- The \fBC\fP Application-Server Project and Programming-Language-Mic
 .PP
 \fBOBJECT CREATION AND DELETION\fP
 .br
- \fBOBJECT CONFIGURATION\fP
+ \fBCONFIG API\fP
 .br
- \fBLINK CREATION AND DELETION\fP
+ \fBLINK API\fP
 .br
- \fBADDING SERVICES\fP
+ \fBSERVICE API\fP
 .br
- \fBSEND DATA\fP
+ \fBSEND API\fP
 .br
- \fBREAD DATA\fP
+ \fBREAD API\fP
 .br
- \fBSLAVE OBJECT\fP
+ \fBSLAVE API\fP
 .br
- \fBBUFFER OBJECT\fP
+ \fBBUFFER API\fP
 .br
  \fBEXCEPTION OBJECT\fP
 .br
@@ -50,7 +50,7 @@ The \fIobject\fP is the user visible part of a libmsgque application link.
 Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
 .SS "MqContextDelete(&ctx)"
 Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
-.SH "OBJECT CONFIGURATION"
+.SH "CONFIG API"
 .PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
 .SS "static: struct MqBufferLS * init = MqInitCreate()"
@@ -200,7 +200,7 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 .RE
 .PP
 .SS "master"
-\fBtype:\fP \fCstruct MqS*\fP, \fBget:\fP \fC\fBMqConfigGetMaster\fP (ctx)\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
+\fBtype:\fP \fCstruct MqS*\fP, \fBget:\fP \fC\fBMqConfigGetMaster\fP (ctx)\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
 .SS "ctxId"
@@ -239,11 +239,11 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C/Filter4.C\fP 
 .RE
 .PP
-.SH "LINK CREATION AND DELETION"
+.SH "LINK API"
 .PP
 To create and to destroy a link is the main purpose of the libmsgque library. A link is a client/server connection used to perform various tasks.
 .SS "MqLinkCreate (ctx, args)"
-Create a \fIparent-context\fP using the \fBOBJECT CONFIGURATION\fP. A parent-context is responsible to setup the client/server link:
+Create a \fIparent-context\fP using the \fBCONFIG API\fP. A parent-context is responsible to setup the client/server link:
 .IP "\(bu" 2
 the \fIclient-parent-context\fP create the \fIserver-parent-context\fP 
 .IP "\(bu" 2
@@ -258,7 +258,7 @@ the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connectio
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE OBJECT\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
 .RE
 .PP
 .SS "MqLinkCreateChild (ctx, parent, args)"
@@ -277,7 +277,7 @@ Create a \fIchild-context\fP from a libmsgque \fIparent-context\fP and command-l
 Close the client/server link and delete the underlying communication object. All depending objects will be deleted as well like depending \fIchild-context\fP and \fIslave-context\fP local and on the remote site of the link.
 .SS "MqExit(ctx)"
 Shutdown the entire communication and exit the current process or thread.
-.SH "ADDING SERVICES"
+.SH "SERVICE API"
 .PP
 create and manage services 
 .PP
@@ -451,7 +451,7 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "SEND DATA"
+.SH "SEND API"
 .PP
 construct an outgoing \fIsend-data-package\fP. 
 .PP
@@ -665,7 +665,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "READ DATA"
+.SH "READ API"
 .PP
 extract data from an incoming \fIread-data-package\fP. 
 .PP
@@ -742,9 +742,9 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SS "MqReadU(ctx)"
-extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP 
+extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP
-The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD DATA\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -800,7 +800,7 @@ boolean, \fIMQ_YES\fP or \fIMQ_NO\fP
 .RE
 .PP
 .SS "MqReadUndo(ctx)"
-undo the last \fBREAD DATA\fP function call 
+undo the last \fBREAD API\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
 .PP
@@ -844,7 +844,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "SLAVE OBJECT"
+.SH "SLAVE API"
 .PP
 The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
 .PP
@@ -966,7 +966,7 @@ get the slave context
 the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
 .RE
 .PP
-.SH "BUFFER OBJECT"
+.SH "BUFFER API"
 .PP
 The \fIstruct MqBufferS*\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the libmsgque data package. The lifetime of the \fIstruct MqBufferS*\fP is only the current callback up to the next read operation of the same context.
 .PP
@@ -1228,7 +1228,7 @@ error:
 .PP
 .SH "SEE ALSO"
 .PP
-C, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n)
+C, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
 .SH "KEYWORDS"
 .PP
 C, unix, socket, message, msgque 

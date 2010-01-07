@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "5 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -108,12 +108,12 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/TCL/Filter4.TCL\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/VB.NET/Filter4\fP.VB.NET 
 .RE
 .PP
 
 .PP
-Definition at line 843 of file msgque.h.
+Definition at line 845 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP \fBMqSetupS::Factory\fP\fC [read]\fP"
 .PP
 function pointers used to create and delete an object or a class instance 
@@ -136,12 +136,12 @@ create a \fIfilter-parent\fP object using the \fI--fork\fP or \fI--thread\fP sta
 .PP
 
 .PP
-Definition at line 859 of file msgque.h.
+Definition at line 861 of file msgque.h.
 .SS "\fBMqSetupF\fP \fBMqSetupS::fForkInit\fP"
 .PP
 setup and initialize a fork-process before a new fork-process is created by \fBlibmsgque\fP 
 .PP
-Definition at line 865 of file msgque.h.
+Definition at line 867 of file msgque.h.
 .SS "\fBMqHelpF\fP \fBMqSetupS::fHelp\fP"
 .PP
 Create a link to the calling tool \fIhelp\fP function. 
@@ -150,22 +150,22 @@ type default option application context  POINTER NULL NO server/client parent
 .PP
 As a service to the programmer the \fBlibmsgque\fP startup code in \fBMqLinkCreate\fP checks for the both options \fC-h\fP and \fC--help\fP to provide a tool-specific help-page and exit. 
 .PP
-Definition at line 881 of file msgque.h.
+Definition at line 883 of file msgque.h.
 .SS "\fBMqExitF\fP \fBMqSetupS::fProcessExit\fP"
 .PP
 exit/cleanup a process 
 .PP
-Definition at line 868 of file msgque.h.
+Definition at line 870 of file msgque.h.
 .SS "\fBMqExitF\fP \fBMqSetupS::fThreadExit\fP"
 .PP
 exit/cleanup a thread 
 .PP
-Definition at line 871 of file msgque.h.
+Definition at line 873 of file msgque.h.
 .SS "\fBMqSetupF\fP \fBMqSetupS::fThreadInit\fP"
 .PP
 setup and initialize a thread before a new thread is created by \fBlibmsgque\fP 
 .PP
-Definition at line 862 of file msgque.h.
+Definition at line 864 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqSetupS::ident\fP"
 .PP
 application identifier 
@@ -177,9 +177,9 @@ Definition at line 784 of file msgque.h.
 .PP
 ignore the server EXIT, set with \fBMqConfigSetIgnoreExit\fP 
 .PP
-By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIyes\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .PP
-Definition at line 890 of file msgque.h.
+Definition at line 892 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS::isServer\fP"
 .PP
 Create a \fIserver\fP context. 
@@ -207,15 +207,22 @@ pointer to the Server-Cleanup function
 .PP
 This Server-Cleanup function is used to cleanup a server-context-link and act like a destructor. The function is called on the begin of \fBMqLinkDelete\fP. 
 .PP
-Definition at line 824 of file msgque.h.
+Definition at line 826 of file msgque.h.
 .SS "struct \fBMqCallbackS\fP \fBMqSetupS::ServerSetup\fP\fC [read]\fP"
 .PP
 pointer to the Server-Setup function 
 .PP
 This Server-Setup function is used to configure a new server-link and act like a constructor. This function is called on the end of \fBMqLinkCreate\fP. A server-context-link is created for every new incoming connection request and is used to provide context specific services . 
 .PP
-Definition at line 818 of file msgque.h.
+\fBAttention:\fP
+.RS 4
+if a \fIchild-context\fP is created, use this function together with \fBMqFactoryCreateS\fP is required to configure the new \fIchild-context\fP. 
+.RE
+.PP
+
+.PP
+Definition at line 820 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

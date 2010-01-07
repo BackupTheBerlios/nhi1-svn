@@ -1,8 +1,8 @@
-.TH "ccmsgque" n "4 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "7 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque \- The \fBC++\fP Application-Server Project
+ccmsgque \- The \fBC++\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
 \fB#include 'ccmsgque.h'
@@ -12,19 +12,19 @@ using namespace \fBccmsgque\fP;\fP
 .PP
 \fBOBJECT CREATION AND DELETION\fP
 .br
- \fBOBJECT CONFIGURATION\fP
+ \fBCONFIG API\fP
 .br
- \fBLINK CREATION AND DELETION\fP
+ \fBLINK API\fP
 .br
- \fBADDING SERVICES\fP
+ \fBSERVICE API\fP
 .br
- \fBSEND DATA\fP
+ \fBSEND API\fP
 .br
- \fBREAD DATA\fP
+ \fBREAD API\fP
 .br
- \fBSLAVE OBJECT\fP
+ \fBSLAVE API\fP
 .br
- \fBBUFFER OBJECT\fP
+ \fBBUFFER API\fP
 .br
  \fBEXCEPTION OBJECT\fP
 .br
@@ -61,7 +61,7 @@ int main (int argc, MQ_CST argv[]) {
 .PP
 .SS "delete(ctx)"
 Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
-.SH "OBJECT CONFIGURATION"
+.SH "CONFIG API"
 .PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
 .SS "static: struct MqBufferLS * init = MqInitCreate()"
@@ -201,20 +201,9 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 .RE
 .PP
 .SS "master"
-\fBtype:\fP \fCMqC\fP, \fBget:\fP \fC\fBConfigGetMaster\fP\fP , \fBset:\fP \fC\fBSLAVE OBJECT\fP\fP
+\fBtype:\fP \fCMqC\fP, \fBget:\fP \fC\fBConfigGetMaster\fP\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "filter"
-\fBtype:\fP \fCMqC\fP, \fBget:\fP \fC\fBConfigGetFilter\fP\fP , \fBset:\fP \fCNO\fP
-.PP
-Get the \fIfilter\fP object from a filter pipeline using the following order: (on error return an \fBEXCEPTION OBJECT\fP)
-.IP "1." 4
-return the \fI\fBMqConfigS::master\fP\fP if non NULL
-.IP "2." 4
-return the \fI\fBMqSlaveGet\fP\fP with \fIid\fP if non NULL
-.IP "3." 4
-return a 'filter not available' error
-.PP
 .SS "ctxId"
 \fBtype:\fP \fC\fBMQ_SIZE\fP\fP, \fBget:\fP \fC\fBConfigGetCtxId\fP\fP , \fBset:\fP \fCNO\fP
 .PP
@@ -223,10 +212,6 @@ return an identifier as integer and is \fIunique\fP per parent-context. The \fIp
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsConnected\fP\fP , \fBset:\fP \fCNO\fP
 .PP
 Is the \fBccmsgque\fP context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
-.SS "isTransaction"
-\fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsTransaction\fP\fP , \fBset:\fP \fCNO\fP
-.PP
-Return \fIMQ_YES\fP if a transaction is ongoing. This function is only usefull in a service, read more in \fBFILTER MODE\fP.
 .SS "isServer"
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsServer\fP\fP , \fBset:\fP \fC\fBConfigSetIsServer\fP\fP
 .PP
@@ -239,11 +224,11 @@ True if object is a \fIparent\fP object (default: \fIMQ_YES\fP, be a parent)
 \fBtype:\fP \fCbool\fP, \fBget:\fP \fC\fBConfigGetIsSlave\fP\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIMQ_NO\fP, not be a slave)
-.SS "interface: \\config_IServerSetup"
+.SS "interface: IServerSetup::ServerSetup()"
 Interface to define a \fIserver\fP \fBccmsgque\fP object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fIMQ_YES\fP.
-.SS "interface: \\config_IServerCleanup"
+.SS "interface: IServerCleanup::ServerCleanup()"
 Interface to define a \fIserver\fP \fBccmsgque\fP object. This Interface define the ServerCleanup callback called at \fBLinkDelete\fP to free context specific variables. This interface set the \fBisServer\fP configuration value to \fIMQ_YES\fP.
-.SS "interface: \\config_IFactory"
+.SS "interface: MqC *val=IFactory::Factory()"
 The factory pattern is used to create a new application object (read more at: \fBMqSetupS::Factory\fP) Without the \fIFactory\fP pattern only the initial startup context is available to serve incoming requests. In general every server need to provide a \fIFactory\fP pattern.
 .PP
 .PP
@@ -255,9 +240,9 @@ class Server: public MqC, public IFactory, ... {
 }
 .fi
 .PP
-.SS "interface: \\config_IBgError"
+.SS "interface: IBgError::BgError()"
 Define an asynchronous error handler. This handler is used for handle errors send with \fBSendERROR\fP. Use \fBErrorGetNum\fP and \fBErrorGetText\fP to access the error.
-.SS "interface: \\config_IEvent"
+.SS "interface: IEvent::Event()"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
@@ -265,7 +250,7 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/C++/Filter4\fP.C++ 
 .RE
 .PP
-.SH "LINK CREATION AND DELETION"
+.SH "LINK API"
 .PP
 To create and to destroy a link is the main purpose of the \fBccmsgque\fP library. A link is a client/server connection used to perform various tasks.
 .SS "ctx.LinkCreate(struct MqBufferLS * args)"
@@ -273,7 +258,7 @@ To create and to destroy a link is the main purpose of the \fBccmsgque\fP librar
 .SS "ctx.LinkCreateV(MQ_CST ..., NULL)"
 .SS "ctx.LinkCreateVT(const std::vector<MQ_CST>& args)"
 .SS "ctx.LinkCreateVC(int const argc, MQ_CST *args)"
-Create a \fIparent-context\fP using the \fBOBJECT CONFIGURATION\fP. A parent-context is responsible to setup the client/server link:
+Create a \fIparent-context\fP using the \fBCONFIG API\fP. A parent-context is responsible to setup the client/server link:
 .IP "\(bu" 2
 the \fIclient-parent-context\fP create the \fIserver-parent-context\fP 
 .IP "\(bu" 2
@@ -288,7 +273,7 @@ the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connectio
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE OBJECT\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
 .RE
 .PP
 .SS "ctx.LinkCreateChild(const MqC& parent, struct MqBufferLS * args)"
@@ -311,7 +296,7 @@ Create a \fIchild-context\fP from a \fBccmsgque\fP \fIparent-context\fP and comm
 Close the client/server link and delete the underlying communication object. All depending objects will be deleted as well like depending \fIchild-context\fP and \fIslave-context\fP local and on the remote site of the link.
 .SS "ctx.Exit()"
 Shutdown the entire communication and exit the current process or thread.
-.SH "ADDING SERVICES"
+.SH "SERVICE API"
 .PP
 create and manage services 
 .PP
@@ -343,8 +328,8 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP or using t type \fIvoid CallbackF()\fP.
-.SS "token = ctx.ServiceGetToken()"
-get the \fBTOKEN IDENTIFIER\fP from an \fIincomming-service-call\fP 
+.SS "token = MQ_CST token=ctx.ServiceGetToken()"
+get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
 This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
 .PP
@@ -358,11 +343,51 @@ This function is needed on the server to process a \fIservice-request\fP defined
 the \fBTOKEN IDENTIFIER\fP 
 .RE
 .PP
+.SS "bool val=ServiceIsTransaction()"
+check if the \fIongoing-service-call\fP belongs to a transaction 
+.PP
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBSendEND\fP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "MqC *filter=ServiceGetFilter([int id=0])"
+get the \fIfilter-context\fP or the \fImaster-context\fP 
+.PP
+A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
+.IP "1." 4
+return the \fImaster-context\fP if not NULL
+.IP "2." 4
+return the \fIslave-context\fP using \fIid\fP if not NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx = new MqC()\fP 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIfilter\fP the \fIother-context\fP or \fINULL\fP on error 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "ctx.ServiceCreate(MQ_CST token, IService * callback)"
 .SS "ctx.ServiceCreate(MQ_CST token, CallbackF callback)"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBtoken = ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBtoken = MQ_CST token=ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -443,7 +468,7 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "SEND DATA"
+.SH "SEND API"
 .PP
 construct an outgoing \fIsend-data-package\fP. 
 .PP
@@ -658,7 +683,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "READ DATA"
+.SH "READ API"
 .PP
 extract data from an incoming \fIread-data-package\fP. 
 .PP
@@ -734,9 +759,9 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SS "MqBufferS val = ctx.ReadU()"
-extract a \fBtemporary\fP \fBBUFFER OBJECT\fP from the \fIread-data-package\fP 
+extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP
-The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD DATA\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -792,7 +817,7 @@ boolean, \fIMQ_YES\fP or \fIMQ_NO\fP
 .RE
 .PP
 .SS "ctx.ReadUndo()"
-undo the last \fBREAD DATA\fP function call 
+undo the last \fBREAD API\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
 .PP
@@ -838,7 +863,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SH "SLAVE OBJECT"
+.SH "SLAVE API"
 .PP
 The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
 .PP
@@ -962,7 +987,7 @@ get the slave context
 the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
 .RE
 .PP
-.SH "BUFFER OBJECT"
+.SH "BUFFER API"
 .PP
 The \fIclass MqBufferC\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the \fBccmsgque\fP data package. The lifetime of the \fIclass MqBufferC\fP is only the current callback up to the next read operation of the same context.
 .PP
@@ -1052,7 +1077,7 @@ return the error number from the error object. The number can be used as exit-co
 create a \fBccmsgque\fP error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP
 .SS "ctx.ErrorSet(const exception& ex)"
 convert a \fIclass MqCException ex\fP into a \fBccmsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
-.SS "\\ErrorSetCONTINUE"
+.SS "ctx.ErrorSetCONTINUE()"
 set \fBMqErrorS::code\fP to \fBMQ_CONTINUE\fP and return the value 
 .SS "ctx.ErrorReset()"
 clear the \fBccmsgque\fP error object.
@@ -1116,11 +1141,11 @@ A bi-directional filter has a \fIdata-flow\fP in both directions and is used in 
 .IP "\(bu" 2
 \fBServiceCreate\fP : use the token \fB+ALL\fP to act on \fIall\fP services
 .IP "\(bu" 2
-\fBConfigGetFilter\fP: to get the filter context (other site)
+\fBServiceGetFilter\fP: to get the filter context (other site)
 .IP "\(bu" 2
 \fBServiceGetToken\fP: to get the current token
 .IP "\(bu" 2
-\fBConfigGetIsTransaction\fP : to check if a transaction is ongoing
+\fBServiceIsTransaction\fP : to check if a transaction is ongoing
 .IP "\(bu" 2
 \fBReadBDY\fP : to read the entire body as \fIbyte-array\fP 
 .IP "\(bu" 2
@@ -1160,7 +1185,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   try {
     ctx.ConfigSetName ('MyMulServer');
     ctx.LinkCreateVC (argc, argv);
-    ctx.ProcessEvent ();
+    ctx.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     ctx.ErrorSet(e);
   }
@@ -1227,7 +1252,7 @@ class manfilter : public MqC, public IFactory {
     }
   public:
     void fFTR () {
-      MqC *ftr = ConfigGetFilter();
+      MqC *ftr = ServiceGetFilter();
       MQ_BUF temp = GetTempBuffer();
       ftr->SendSTART();
       while (ReadItemExists()) {
@@ -1247,12 +1272,13 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     filter.LinkCreateVC(argc, argv);
     filter.ServiceCreate('+FTR', MqC::CallbackF(&manfilter::fFTR));
     filter.ServiceProxy ('+EOF');
-    filter.ProcessEvent ();
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
   filter.Exit();
 }
+
 .fi
 .PP
  Use \fImanfilter.cc\fP in a LibMsgque command pipeline: 
@@ -1265,7 +1291,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
 .PP
 .SH "SEE ALSO"
 .PP
-C++, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n)
+C++, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
 .SH "KEYWORDS"
 .PP
 C++, unix, socket, message, msgque 

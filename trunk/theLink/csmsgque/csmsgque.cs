@@ -26,7 +26,7 @@ using System.Security.Permissions;
 [assembly:AssemblyTrademarkAttribute("")]
 [assembly:AssemblyCultureAttribute("")]
 
-[assembly:AssemblyVersionAttribute("3.5.*")]
+[assembly:AssemblyVersionAttribute("4.1.*")]
 [assembly:ComVisible(false)]
 [assembly:CLSCompliantAttribute(true)]
 [assembly:SecurityPermission(SecurityAction.RequestMinimum, UnmanagedCode = true)]
@@ -88,6 +88,11 @@ namespace csmsgque {
     void Call();
   }
 
+  /// \api #MqConfigSetEvent 
+  public interface IEvent {
+    void Call();
+  }
+
   /// \api #MqServiceCreate
   public interface IService {
     void Call(MqS ctx);
@@ -105,7 +110,8 @@ namespace csmsgque {
     MQ_FACTORY_NEW_CHILD,
     MQ_FACTORY_NEW_SLAVE,
     MQ_FACTORY_NEW_FORK,
-    MQ_FACTORY_NEW_THREAD
+    MQ_FACTORY_NEW_THREAD,
+    MQ_FACTORY_NEW_FILTER
   };
 
   internal enum MQ_BOL :byte {
@@ -264,6 +270,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigDup")]
     private static extern MqErrorE MqConfigDup([In]IntPtr context, [In]IntPtr tmpl);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSetupDup")]
+    private static extern MqErrorE MqSetupDup([In]IntPtr context, [In]IntPtr tmpl);
+
     static private MqErrorE FactoryCreate (IntPtr tmpl, MqFactoryE create, IntPtr data, ref IntPtr contextP) {
       try {
 	contextP = ((IFactory)GCHandle.FromIntPtr(data).Target).Call().context;
@@ -271,6 +280,7 @@ namespace csmsgque {
 	return MqErrorSet2 (tmpl, ex);
       }
       MqConfigDup (contextP, tmpl);
+      MqSetupDup (contextP, tmpl);
       return MqErrorE.MQ_OK;
     }
 
@@ -312,6 +322,11 @@ namespace csmsgque {
       if (this is IBgError) {
 	MqConfigSetBgError (context, fProcCall, (IntPtr) GCHandle.Alloc(
 	  new ProcData((Callback)((IBgError) this).Call)), fProcFree, IntPtr.Zero);
+      }
+
+      if (this is IEvent) {
+	MqConfigSetEvent (context, fProcCall, (IntPtr) GCHandle.Alloc(
+	  new ProcData((Callback)((IEvent) this).Call)), fProcFree, IntPtr.Zero);
       }
     }
 
