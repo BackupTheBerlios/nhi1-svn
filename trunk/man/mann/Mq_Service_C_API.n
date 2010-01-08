@@ -1,8 +1,8 @@
-.TH "MqServiceAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqServiceAPI \- create and manage services  
+Mq_Service_C_API \- create and manage services  
 
 .PP
 .SS "Functions"
@@ -98,7 +98,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBDim val As String = ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4

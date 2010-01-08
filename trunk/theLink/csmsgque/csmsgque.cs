@@ -152,7 +152,6 @@ namespace csmsgque {
     static private MqExitF	    fThreadExit		= ThreadExit;
     static private MqTokenF	    fProcCall		= ProcCall;
     static private MqTokenDataFreeF fProcFree		= ProcFree;
-    static private MqCreateF	    fDefaultLinkCreate  = MqDefaultLinkCreate;
     static private MqFactoryCreateF fFactoryCreate	= FactoryCreate;
     static private MqFactoryDeleteF fFactoryDelete	= FactoryDelete;
 
@@ -181,18 +180,6 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextDelete")]
     private static extern void MqContextDelete([In,Out]ref IntPtr context);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkCreate")]
-    private static extern MqErrorE MqLinkCreate([In]IntPtr context, [In,Out]ref IntPtr argv);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkCreateChild")]
-    private static extern MqErrorE MqLinkCreateChild([In]IntPtr context, [In]IntPtr parent, [In,Out]ref IntPtr argv);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqDefaultLinkCreate")]
-    private static extern MqErrorE MqDefaultLinkCreate([In]IntPtr context, [In,Out]ref IntPtr argv);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkDelete")]
-    private static extern void MqLinkDelete([In]IntPtr context);
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExit")]
     private static extern void MqExit([In]IntPtr context);
 
@@ -217,45 +204,6 @@ namespace csmsgque {
 
     public void LogData (string prefix) {
       MqLogData (context, prefix);
-    }
-
-    /// \brief constructor used to create a \e parent object
-    public void LinkCreate(params string[] argv) {
-
-      // fill the argv/alfa
-      IntPtr largv = IntPtr.Zero;
-      if (argv.Length != 0) {
-	largv = MqBufferLCreate(argv.Length+1);
-	MqBufferLAppendC(largv, APP);
-	foreach (string a in argv) {
-	  MqBufferLAppendC(largv, a);
-	}
-      }
-
-      // 7. create Context
-      ErrorMqToCsWithCheck (MqLinkCreate(context, ref largv));
-    }
-
-    /// \brief constructor used to create a \e child object
-    public void LinkCreateChild(MqS parent, params string[] argv) {
-
-      // fill the argv/alfa
-      IntPtr largv = IntPtr.Zero;
-      if (argv.Length != 0) {
-	largv = MqBufferLCreate(argv.Length+1);
-	MqBufferLAppendC(largv, APP);
-	foreach (string a in argv) {
-	  MqBufferLAppendC(largv, a);
-	}
-      }
-
-      // 7. create Context
-      ErrorMqToCsWithCheck (MqLinkCreateChild(context, parent.context, ref largv));
-    }
-
-    /// \api #MqLinkDelete
-    public void LinkDelete() {
-      MqLinkDelete (context);
     }
 
     /// \api #MqExit

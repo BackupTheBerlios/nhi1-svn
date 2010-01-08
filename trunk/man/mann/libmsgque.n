@@ -1,4 +1,4 @@
-.TH "libmsgque" n "7 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "8 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -8,7 +8,7 @@ libmsgque \- The \fBC\fP \fBApplication-Server\fP and \fBProgramming-Language-Mi
 \fB#include 'msgque.h'\fP
 .SH "INDEX"
 .PP
-\fBOBJECT CREATION AND DELETION\fP
+\fBCONTEXT API\fP
 .br
  \fBCONFIG API\fP
 .br
@@ -42,14 +42,24 @@ setup and maintain the event-handling for an asynchronous transfer
 .IP "\(bu" 2
 propagate the error messages from the server to the client
 .PP
-.SH "OBJECT CREATION AND DELETION"
+.SH "CONTEXT API"
 .PP
 .SS "struct MqS*"
 The \fIobject\fP is the user visible part of a libmsgque application link.
-.SS "ctx = MqContextCreate(size, template)"
-Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
+.SS "struct MqS *ctx=MqContextCreate(size, template)"
+Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBMQ_BOL MqLinkIsConnected (struct MqS *ctx)\fP to check if a link is already available.
+.PP
+\fBExample:\fP definition of a context: 
+.PP
+.nf
+ struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxS), NULL); 
+
+.fi
+.PP
 .SS "MqContextDelete(&ctx)"
 Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
+.SS "MqExit(ctx)"
+Shutdown the entire communication and exit the current process or thread.
 .SH "CONFIG API"
 .PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
@@ -107,10 +117,6 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetSrvName\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetSrvName\fP (ctx, srvName)\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
-.SS "ident"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIdent\fP (struct \fBMqS\fP *ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIdent\fP (struct \fBMqS\fP *ctx, MQ_CST ident)\fP
-.PP
-Use \fBMQ_CST\fP as an application specific identifier set by the programmer and checked with \fC\fBMqConfigCheckIdent\fP\fP (struct \fBMqS\fP *ctx, MQ_CST ident) against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSilent\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsSilent\fP (ctx, bool)\fP
 .PP
@@ -119,10 +125,6 @@ Write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any output to stdout or stderr
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsString\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsString\fP (ctx, bool)\fP
 .PP
 Use (\fIMQ_YES\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
-.SS "ignoreExit"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBMqConfigSetIgnoreExit\fP (ctx, bool)\fP
-.PP
-By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCenum \fBMqStartE\fP\fP, \fBget:\fP \fC\fBMqConfigGetStartAs\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetStartAs\fP (ctx, startAS\fP
 .PP
@@ -203,26 +205,22 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fCstruct MqS*\fP, \fBget:\fP \fC\fBMqConfigGetMaster\fP (ctx)\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "ctxId"
-\fBtype:\fP \fC\fBMQ_SIZE\fP\fP, \fBget:\fP \fC\fBMqConfigGetCtxId\fP (ctx)\fP , \fBset:\fP \fCNO\fP
-.PP
-return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
-.SS "isConnected"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsConnected\fP (ctx)\fP , \fBset:\fP \fCNO\fP
-.PP
-Is the libmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
 .SS "isServer"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsServer\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsServer\fP (ctx, isServer)\fP
 .PP
 True if object is a \fIserver\fP object (default: \fIMQ_NO\fP, be a client)
-.SS "isParent"
-\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsParent\fP (ctx)\fP , \fBset:\fP \fCNO\fP
-.PP
-True if object is a \fIparent\fP object (default: \fIMQ_YES\fP, be a parent)
 .SS "isSlave"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSlave\fP (ctx)\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIMQ_NO\fP, not be a slave)
+.SS "ignoreExit"
+\fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBMqConfigSetIgnoreExit\fP (ctx, bool)\fP
+.PP
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
+.SS "ident"
+\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIdent\fP (struct \fBMqS\fP *ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIdent\fP (struct \fBMqS\fP *ctx, MQ_CST ident)\fP
+.PP
+Use \fBMQ_CST\fP as an application specific identifier set by the programmer and checked with \fC\fBMqConfigCheckIdent\fP\fP (struct \fBMqS\fP *ctx, MQ_CST ident) against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 Interface to define a \fIserver\fP libmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fIMQ_YES\fP.
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
@@ -241,43 +239,157 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .PP
 .SH "LINK API"
 .PP
-To create and to destroy a link is the main purpose of the libmsgque library. A link is a client/server connection used to perform various tasks.
-.SS "MqLinkCreate (ctx, args)"
-Create a \fIparent-context\fP using the \fBCONFIG API\fP. A parent-context is responsible to setup the client/server link:
+\fBLinkCreate\fP
+.br
+ \fBLinkCreateChild\fP
+.br
+ \fBLinkGetParent\fP
+.br
+ \fBLinkIsParent\fP
+.br
+ \fBLinkGetCtxId\fP
+.br
+ \fBLinkIsConnected\fP
+.br
+.PP
+setup and manage a \fIclient-server-link\fP 
+.PP
+To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library. 
+.SS "MqLinkCreate (struct MqS *ctx, struct MqBufferLS ** args)"
+make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
+.PP
+A \fIparent-context\fP is responsible to setup the \fIclient-server-link\fP 
 .IP "\(bu" 2
-the \fIclient-parent-context\fP create the \fIserver-parent-context\fP 
+the \fIclient-parent-context\fP start a new \fIclient-server-link\fP 
 .IP "\(bu" 2
 the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connection request
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
-\fIargs\fP command-line arguments including the \fB'@'\fP item for the \fI--pipe\fP setup 
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-commandline-arguments\fP for the \fI--pipe\fP setup.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP 
 .RE
 .PP
-.SS "MqLinkCreateChild (ctx, parent, args)"
-Create a \fIchild-context\fP from a libmsgque \fIparent-context\fP and command-line arguments. A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
+.SS "MqLinkCreateChild (struct MqS *ctx, struct MqS *parent, struct MqBufferLS ** args)"
+make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP 
+.PP
+A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
-\fIparent\fP the parent object 
+\fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
 .br
-\fIargs\fP all command-line arguments including the \fB'@'\fP token
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
 .RE
 .PP
-.SS "MqLinkDelete(ctx)"
-Close the client/server link and delete the underlying communication object. All depending objects will be deleted as well like depending \fIchild-context\fP and \fIslave-context\fP local and on the remote site of the link.
-.SS "MqExit(ctx)"
-Shutdown the entire communication and exit the current process or thread.
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "MqLinkDelete(struct MqS *ctx)"
+close the \fIclient-server-link\fP 
+.PP
+On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIMQ_NO\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fIMQ_YES\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+.SS "struct MqS* MqLinkGetParent (struct MqS *ctx)"
+get the \fIparent-context\fP from a client/server link 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fIparent-context\fP or \fINULL\fP if not a \fIchild-context\fP 
+.RE
+.PP
+.SS "MQ_SIZE MqLinkGetCtxId (struct MqS *ctx)"
+get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
+.PP
+The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the identifier as number 
+.RE
+.PP
+.SS "MQ_BOL MqLinkIsParent (struct MqS *ctx)"
+is the \fIcontext\fP a \fIparent-context\fP? 
+.PP
+A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
+is the context connected? 
+.PP
+A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
+.IP "\(bu" 2
+the context has just been created and not connected
+.IP "\(bu" 2
+the link was deleted with \fBLinkDelete\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
 .SH "SERVICE API"
+.PP
+\fBServiceIdentifier\fP
+.br
+ \fBServiceCallback\fP
+.br
+ \fBServiceGetToken\fP
+.br
+ \fBServiceIsTransaction\fP
+.br
+ \fBServiceGetFilter\fP
+.br
+ \fBServiceCreate\fP
+.br
+ \fBServiceDelete\fP
+.br
+ \fBProcessEvent\fP
+.br
 .PP
 create and manage services 
 .PP
@@ -312,14 +424,14 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented as a set of functions and data suitable for \fBMqCallbackS\fP.
-.SS "ServiceGetToken (ctx)"
+.SS "MQ_CST ServiceGetToken (ctx)"
 get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
 This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -327,14 +439,14 @@ This function is needed on the server to process a \fIservice-request\fP defined
 the \fBTOKEN IDENTIFIER\fP 
 .RE
 .PP
-.SS "ServiceIsTransaction (ctx)"
+.SS "int ServiceIsTransaction (ctx)"
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
 A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBSendEND\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -342,7 +454,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the p
 a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
 .RE
 .PP
-.SS "ServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+.SS "struct MqS* ServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
 get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
 A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
@@ -355,7 +467,7 @@ return a 'filter not available' error
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
@@ -370,11 +482,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "MqServiceCreate(ctx,token,callback,data,fFree)"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBServiceGetToken (ctx)\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBMQ_CST ServiceGetToken (ctx)\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -397,7 +509,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -414,7 +526,7 @@ delete a service.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -439,7 +551,7 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = \fBMQ_WAIT_ONCE\fP 
 .br
@@ -452,6 +564,29 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SH "SEND API"
+.PP
+\fBSendSTART\fP
+.br
+ \fBSendEND\fP
+.br
+ \fBSendEND_AND_WAIT\fP
+.br
+ \fBSendEND_AND_CALLBACK\fP
+.br
+ \fBSendRETURN\fP
+.br
+ \fBSendERROR\fP
+.br
+ \fBSendTYPE\fP
+.br
+ \fBSendN\fP
+.br
+ \fBSendBDY\fP
+.br
+ \fBSendL_START\fP
+.br
+ \fBSendL_END\fP
+.br
 .PP
 construct an outgoing \fIsend-data-package\fP. 
 .PP
@@ -483,7 +618,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -498,7 +633,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -515,7 +650,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -534,7 +669,7 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -563,7 +698,7 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -578,7 +713,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -586,12 +721,12 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "MqSend[TYPE](ctx,value)"
+.SS "MqSendTYPE(ctx,value)"
 append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -608,7 +743,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIvalue\fP the \fIbody-item\fP for appending 
 .br
@@ -627,7 +762,7 @@ The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIvalue\fP the \fIentire-body\fP for appending 
 .br
@@ -644,7 +779,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -657,7 +792,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -666,6 +801,27 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SH "READ API"
+.PP
+\fBReadTYPE\fP
+.br
+ \fBReadN\fP
+.br
+ \fBReadBDY\fP
+.br
+ \fBReadU\fP
+.br
+ \fBReadL_START\fP
+.br
+ \fBReadL_END\fP
+.br
+ \fBReadProxy\fP
+.br
+ \fBReadGetNumItems\fP
+.br
+ \fBReadItemExists\fP
+.br
+ \fBReadUndo\fP
+.br
 .PP
 extract data from an incoming \fIread-data-package\fP. 
 .PP
@@ -688,12 +844,12 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
 
 .fi
 .PP
-.SS "MqRead[TYPE](ctx, [TYPE] *val)"
+.SS "MqReadTYPE(ctx, TYPE *val)"
 read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -710,7 +866,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
@@ -729,7 +885,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
@@ -748,65 +904,9 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIval\fP the buffer 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-an \fBEXCEPTION OBJECT\fP on error 
-.RE
-.PP
-.SS "MqReadProxy(ctx, otherCtx)"
-link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP and the source of the copy 
-.br
-\fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-an \fBEXCEPTION OBJECT\fP on error 
-.RE
-.PP
-.SS "MQ_SIZE val = MqReadGetNumItems(ctx)"
-get the number of items left in the \fIread-data-package\fP 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the number of items as integer 
-.RE
-.PP
-.SS "MQ_BOL val = MqReadItemExists(ctx)"
-check if an item exists in the \fIread-data-package\fP 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-boolean, \fIMQ_YES\fP or \fIMQ_NO\fP 
-.RE
-.PP
-.SS "MqReadUndo(ctx)"
-undo the last \fBREAD API\fP function call 
-.PP
-Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -821,7 +921,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .br
 \fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqReadU(ctx)\fP call or \fINULL\fP to use the next item from the \fIread-data-package\fP. 
 .RE
@@ -836,7 +936,63 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBctx = MqContextCreate(size, template)\fP 
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "MqReadProxy(ctx, otherCtx)"
+link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP and the source of the copy 
+.br
+\fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "MQ_SIZE MqReadGetNumItems(ctx)"
+get the number of items left in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of items as integer 
+.RE
+.PP
+.SS "MQ_BOL MqReadItemExists(ctx)"
+check if an item exists in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+boolean, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "MqReadUndo(ctx)"
+undo the last \fBREAD API\fP function call 
+.PP
+Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBstruct MqS *ctx=MqContextCreate(size, template)\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -968,45 +1124,75 @@ the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is n
 .PP
 .SH "BUFFER API"
 .PP
-The \fIstruct MqBufferS*\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the libmsgque data package. The lifetime of the \fIstruct MqBufferS*\fP is only the current callback up to the next read operation of the same context.
+\fBBufferIdentifer\fP
+.br
+ \fBBufferGetTYPE\fP
+.br
+ \fBBufferType\fP
+.br
 .PP
+a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP 
+.PP
+The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
+.PP
+\fBExample:\fP read a \fIbuffer-object\fP and check for \fIstring-type\fP. 
 .PP
 .nf
-MQ_BUF buf = MqReadU(ctx);
-if (buf->type == MQ_STRT)
-  printf(buf->cur.C);
+ MQ_BUF buf = MqReadU(ctx); 
+ if (buf->type == MQ_STRT) 
+   printf(buf->cur.C); 
+
 .fi
 .PP
 .SS "TYPE IDENTIFIER"
-A libmsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBMqRead[TYPE](ctx, [TYPE] *val)\fP or \fBMqBufferGet[TYPE](buffer)\fP have to match the previous \fBMqSend[TYPE](ctx,value)\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+a collection of all \fInative-data-types\fP supported 
+.PP
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the \fBMQ_CST\fP datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character
+\fCY\fP : 1 byte signed character (\fBMQ_BYT\fP)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean character using \fIMQ_YES\fP for yes or true or \fIMQ_NO\fP for no or wrong
+\fCO\fP : 1 byte boolean value using \fIMQ_YES\fP or \fIMQ_NO\fP (\fBMQ_BOL\fP)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short
+\fCS\fP : 2 byte signed short (\fBMQ_SRT\fP)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer
+\fCI\fP : 4 byte signed integer (\fBMQ_INT\fP)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer
+\fCW\fP : 8 byte signed long long integer (\fBMQ_WID\fP)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float
+\fCF\fP : 4 byte float (\fBMQ_FLT\fP)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double
+\fCD\fP : 8 byte double (\fBMQ_DBL\fP)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data
+\fCB\fP : unsigned char array used for binary data (\fBMQ_BIN\fP)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end
+\fCC\fP : string data using a \fC\\0\fP at the end (\fBMQ_CST\fP)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above
+\fCU\fP : typeless buffer able to hold a single item from above (\fBMQ_BUF\fP)
 .PP
-.SS "MqBufferGet[TYPE](buffer)"
+.SS "TYPE MqBufferGetTYPE(MQ_BUF buffer)"
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "buffer->type"
 return the type as single character of the item stored in the buffer object.
 .SH "EXCEPTION OBJECT"
+.PP
+\fBErrorGetText\fP
+.br
+ \fBErrorGetNum\fP
+.br
+ \fBErrorC\fP
+.br
+ \fBErrorSet\fP
+.br
+ \fBErrorSetCONTINUE\fP
+.br
+ \fBErrorReset\fP
+.br
+ \fBErrorRaise\fP
+.br
+ \fBErrorPrint\fP
+.br
 .PP
 The exception object is used to transport a libmsgque error using the \fIctx\fP.
 .PP

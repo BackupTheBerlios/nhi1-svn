@@ -1,8 +1,8 @@
-.TH "MqMsgqueAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Msgque_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqMsgqueAPI \- the top-level \fBlibmsgque\fP object: \fBMqS\fP  
+Mq_Msgque_C_API \- the top-level \fBlibmsgque\fP object: \fBMqS\fP  
 
 .PP
 .SS "Data Structures"
@@ -40,22 +40,6 @@ MqMsgqueAPI \- the top-level \fBlibmsgque\fP object: \fBMqS\fP
 .RI "void \fBMqInitSysAPI\fP (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
 .br
 .R "helper to set the application specific \fCfork\fP functions "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "create a parent \fBlibmsgque\fP object link "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "create a child \fBlibmsgque\fP object link "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check "
-.ti -1c
-.RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const context)"
-.br
-.R "delete a \fBlibmsgque\fP object "
 .ti -1c
 .RI "void \fBMqExit\fP (struct \fBMqS\fP *context)"
 .br
@@ -102,7 +86,7 @@ struct MyCtx {
 .PP
 signature used in \fBMqS::signature\fP 
 .PP
-Definition at line 955 of file msgque.h.
+Definition at line 986 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
@@ -122,25 +106,6 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .RE
 .PP
 This code is not part of \fBMqLinkCreate\fP because sometimes it is necessary to check for left over arguments \fBafter\fP \fBMqLinkCreate\fP was called and after the calling function was able to process function specific arguments. By Default \fBMqLinkCreate\fP will delete \fBall\fP arguments belonging to \fBlibmsgque\fP from the \fIargv\fP object. If the calling function does \fBnot\fP expect additional arguments or arguments were added with spelling errors, a call to \fBMqCheckForLeftOverArguments\fP will detect this. 
-.SS "enum \fBMqErrorE\fP MqDefaultLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
-.PP
-wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check 
-.PP
-create a parent \fBlibmsgque\fP object link 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIargsP\fP command-line arguments will be freed and set to \fCNULL\fP on error 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
- 
 .SS "void MqExit (struct \fBMqS\fP * context)"
 .PP
 exit the current process or thread 
@@ -228,64 +193,18 @@ by default the OS specific functions are used
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqLinkCreate (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argsP)"
-.PP
-create a parent \fBlibmsgque\fP object link 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIargsP\fP command-line arguments will be freed and set to \fCNULL\fP on error 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP MqLinkCreateChild (struct \fBMqS\fP *const  context, struct \fBMqS\fP *const  parent, struct \fBMqBufferLS\fP ** argsP)"
-.PP
-create a child \fBlibmsgque\fP object link 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIparent\fP the parent object link 
-.br
-\fIargsP\fP command-line arguments will be freed and set to \fCNULL\fP on error 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "void MqLinkDelete (struct \fBMqS\fP *const  context)"
-.PP
-delete a \fBlibmsgque\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-
 .SH "Variable Documentation"
 .PP 
 .SS "\fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 989 of file msgque.h.
+Definition at line 1020 of file msgque.h.
 .SS "struct \fBMqBufferLS\fP* \fBMqInitBuf\fP"
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 985 of file msgque.h.
+Definition at line 1016 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

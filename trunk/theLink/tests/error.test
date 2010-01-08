@@ -186,8 +186,8 @@ test error-5-($I|$B|$C|$S) {wrong host name) port} \
 C> (client-0) found in function "GenericConnect" at file "generic_io.c"
 C> (client-0) found in function "TcpConnect" at file "tcp_io.c"
 C> (client-0) found in function "pIoConnect" at file "io.c"
-C> (client-0) found in function "MqLinkCreate" at file "msgque.c"
-C> (client-0) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+C> (client-0) found in function "MqLinkCreate" at file "link.c"
+C> (client-0) found in function "MqDefaultLinkCreate" at file "link.c"}
 
 test error-6-($I|$B|$C|$S) {error in callback} \
     -setup          {
@@ -247,14 +247,14 @@ test error-2 {low level port} \
 C> (client) found in function "GenericConnect" at file "generic_io.c"
 C> (client) found in function "TcpConnect" at file "tcp_io.c"
 C> (client) found in function "pIoConnect" at file "io.c"
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-3 {low ssh (tcp-22) port} \
     -body           {Exec {*}[getClient client] --name client --tcp --port 22 --timeout 1 --error} \
     -constraints    {tcp parent} \
     -result	    {CHILDSTATUS-204-C> (client) [MqLinkCreate] can not start server 'remote-connect'
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 # socket-type: uds or tcp
@@ -302,7 +302,7 @@ test error-MQ_ERROR_CAN_NOT_START_CLIENT {check error messages} \
     -body           { exec {*}[getClient client] --name client} \
     -returnCodes    error \
     -result         {C> (client) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-tcp {check error message} \
@@ -310,7 +310,7 @@ test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-tcp {check error message} \
     -body           { exec {*}[getClient client] --name client --tcp --port [FindFreePort] @ server} \
     -returnCodes    error \
     -result         {C> (client) [pIoStartServer] can not start 'TCP' server using '@ server ...' syntax
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-uds {check error message} \
@@ -318,7 +318,7 @@ test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-uds {check error message} \
     -body           { exec {*}[getClient client] --name client --uds --file [FindFreeFile] @ server} \
     -returnCodes    error \
     -result         {C> (client) [pIoStartServer] can not start 'UDS' server using '@ server ...' syntax
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 foreach o { --debug --srvname --timeout --buffersize --file --port --host --myport --myhost } {
@@ -327,7 +327,7 @@ foreach o { --debug --srvname --timeout --buffersize --file --port --host --mypo
       -returnCodes    error \
       -match	      glob \
       -result         [subst -nobackslashes -nocommands {C> (client) \[*sMqCheckArg*\] expect argument for option '$o'
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}]
 }
 
@@ -336,7 +336,7 @@ test error-MQ_ERROR_OPTION_ARG--name {check error message} \
     -returnCodes    error \
     -match	      glob \
     -result         [subst -nobackslashes -nocommands {C> (client) \[sMqCheckArg\] expect argument for option '--name'
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}]
 
 test error-MQ_ERROR_OPTION_REQUIRED-tcp {check error message} \
@@ -345,7 +345,7 @@ test error-MQ_ERROR_OPTION_REQUIRED-tcp {check error message} \
     -returnCodes    error \
     -result         {C> (client) [TcpCreate] for a 'TCP' setup the option '--port' is required
 C> (client) found in function "pIoCreate" at file "io.c"
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-MQ_ERROR_OPTION_REQUIRED-uds {check error message} \
@@ -354,7 +354,7 @@ test error-MQ_ERROR_OPTION_REQUIRED-uds {check error message} \
     -returnCodes    error \
     -result         {C> (client) [UdsCreate] for a 'UDS' setup the option '--file' is required
 C> (client) found in function "pIoCreate" at file "io.c"
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-F8 {delete uds file} \
@@ -421,10 +421,10 @@ test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
     -match	    glob \
     -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "msgque.c"
-S> (server) found in function "MqLinkCreate" at file "msgque.c"
-S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c"
+S> (server) found in function "MqLinkCreate" at file "link.c"
+S> (server) found in function "MqDefaultLinkCreate" at file "link.c"
 C> (client) \[MqLinkCreate] can not start server '*'
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-11 "'--thread' option in a NON thread enabled interpreter" \
@@ -434,7 +434,7 @@ test error-11 "'--thread' option in a NON thread enabled interpreter" \
     -result         {CHILDSTATUS-204-error: unable to use '--thread' option with a NON 'thread' enabled tcl
 *
 C> (client) \[MqLinkCreate] can not start server '*'
-C> (client) found in function "MqLinkCreate" at file "msgque.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 
@@ -455,7 +455,7 @@ test error-F9a-$S {startup -> wrong parent option} \
     -match          glob \
     -result         {C> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
 C> (client) => -wrong_option
-C> (client) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+C> (client) found in function "MqDefaultLinkCreate" at file "link.c"}
 
 test error-F9b-S {startup -> wrong child option} \
     -constraints    {local} \
@@ -476,7 +476,7 @@ test error-F9b-S {startup -> wrong child option} \
     -match          glob \
     -result         {c> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
 c> (client) => -wrong_option
-c> (client) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+c> (client) found in function "MqDefaultLinkCreate" at file "link.c"}
 
 }; # SRV_LST
 unset -nocomplain S
@@ -490,8 +490,8 @@ test error-12-$S {server with UDS startup} \
     } \
     -result     {CHILDSTATUS-222-S> (server) [sIoCheckArg] for a 'win32' setup the option '--uds' is forbidden
 S> (server) found in function "pIoCreate" at file "io.c"
-S> (server) found in function "MqLinkCreate" at file "msgque.c"
-S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c"}
+S> (server) found in function "MqLinkCreate" at file "link.c"
+S> (server) found in function "MqDefaultLinkCreate" at file "link.c"}
 
 }; # SRV_LST
 unset -nocomplain S

@@ -1370,6 +1370,7 @@ PREDEFINED             = DOXYGEN_SHOULD_SKIP_THIS \
                          __attribute__(dummy)= \
                          NS(val)=val \
                          MQ_DECL= \
+			 mq_inline=inline \
                          ((packed))
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 

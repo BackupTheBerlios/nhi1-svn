@@ -169,8 +169,8 @@ C> (client:*) \[*] \[4-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[
 C> (client:*) \[*] \[4-0-*-pIoStartServer]: finish start server 'server' as 'spawn' with ID '*'
 C> (client:*) \[*] \[4-0-*-pEventAdd]: sock<*> DataLCur<1>
 C> (client:*) \[*] \[4-0-*-MqLinkCreate]: send token<_IAA>
-C> (client:*) \[*] \[4-0-*-pWaitForToken]: wait for token<_PEO>
-C> (client:*) \[*] \[4-0-*-pWaitForToken]: got token<_PEO>
+C> (client:*) \[*] \[4-0-*-sWaitForToken]: wait for token<_PEO>
+C> (client:*) \[*] \[4-0-*-sWaitForToken]: got token<_PEO>
 C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<4>, endian<0>
 *
 C> (client:*) \[*] \[3-0-*-MqExit]: EXIT
@@ -247,5 +247,6 @@ C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkC
 ##
     
 freeTests
+
 
 

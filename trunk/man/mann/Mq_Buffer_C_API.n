@@ -1,8 +1,8 @@
-.TH "MqBufferAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqBufferAPI \- create and manage dynamic, generic, mixed typed data.  
+Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.  
 
 .PP
 .SS "Data Structures"
@@ -19,7 +19,7 @@ MqBufferAPI \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "struct \fBMqBufferS\fP"
 .br
-.R "defines an object to store generic (e.g mixed typed) data. "
+.R "a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP "
 .in -1c
 .SS "Defines"
 
@@ -58,7 +58,7 @@ MqBufferAPI \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
 .br
-.R "a enum for all data types supported by \fBMqBufferS\fP "
+.R "a collection of all \fInative-data-types\fP supported "
 .ti -1c
 .RI "enum \fBMqAllocE\fP { \fBMQ_ALLOC_STATIC\fP =  0, \fBMQ_ALLOC_DYNAMIC\fP =  1 }"
 .br
@@ -273,30 +273,30 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS::bls\fP object 
 .PP
-Definition at line 1901 of file msgque.h.
+Definition at line 2005 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 1904 of file msgque.h.
+Definition at line 2008 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 335 of file msgque.h.
+Definition at line 346 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 339 of file msgque.h.
+Definition at line 350 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 343 of file msgque.h.
+Definition at line 354 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 347 of file msgque.h.
+Definition at line 358 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -307,7 +307,7 @@ Definition at line 347 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 351 of file msgque.h.
+Definition at line 362 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -323,22 +323,34 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 379 of file msgque.h.
+Definition at line 410 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
-a enum for all data types supported by \fBMqBufferS\fP 
+a collection of all \fInative-data-types\fP supported 
 .PP
-The type is a one byte character with the following syntax:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-bit 1 up to 4 has the size of the native type
+\fCY\fP : 1 byte signed character (Byte)
 .IP "\(bu" 2
-bit 5 up to 8 has the type, up to 16 types are allowed
-.PP
-.PP
-\fBAttention:\fP
-.RS 4
-In the package the space for the type is only \fIone\fP char. If additional space is needed the protocol have to be adjusted 
-.RE
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (Boolean)
+.IP "\(bu" 2
+\fCS\fP : 2 byte signed short (Short)
+.IP "\(bu" 2
+\fCI\fP : 4 byte signed integer (Integer)
+.IP "\(bu" 2
+\fCW\fP : 8 byte signed long long integer (Long)
+.IP "\(bu" 2
+\fCF\fP : 4 byte float (Float)
+.IP "\(bu" 2
+\fCD\fP : 8 byte double (Double)
+.IP "\(bu" 2
+\fCB\fP : unsigned char array used for binary data (Byte())
+.IP "\(bu" 2
+\fCC\fP : string data using a \fC\\0\fP at the end (String)
+.IP "\(bu" 2
+\fCL\fP : list type able to hold a list of all items from above
+.IP "\(bu" 2
+\fCU\fP : typeless buffer able to hold a single item from above (\fBMqBufferS\fP)
 .PP
 
 .PP
@@ -370,7 +382,7 @@ D: 8 byte 'double' type.
 B: \fIbyte-array\fP type. 
 .TP
 \fB\fIMQ_STRT \fP\fP
-C: character array type (e.g. with a \\0 at the end). 
+C: \fIstring\fP type (e.g. with a \\0 at the end). 
 .TP
 \fB\fIMQ_LSTT \fP\fP
 L: list object type. 
@@ -378,7 +390,7 @@ L: list object type.
 \fB\fIMQ_RETT \fP\fP
 R: return object type. 
 .PP
-Definition at line 363 of file msgque.h.
+Definition at line 394 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"

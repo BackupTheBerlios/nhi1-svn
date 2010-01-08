@@ -255,14 +255,14 @@ namespace example {
     public void CNFG () {
       SendSTART();
       SendO(ConfigGetIsServer());
-      SendO(ConfigGetIsParent());
+      SendO(LinkIsParent());
       SendO(ConfigGetIsSlave());
       SendO(ConfigGetIsString());
       SendO(ConfigGetIsSilent());
-      SendO(ConfigGetIsConnected());
+      SendO(LinkIsConnected());
       SendC(ConfigGetName());
       SendI(ConfigGetDebug());
-      SendI(ConfigGetCtxId());
+      SendI(LinkGetCtxId());
       SendC(ServiceGetToken());
       SendRETURN();
     }
@@ -307,7 +307,7 @@ namespace example {
 
     public void GTCX () {
       SendSTART();
-      SendI(ConfigGetCtxId());
+      SendI(LinkGetCtxId());
       SendRETURN();
     }
 
@@ -321,8 +321,8 @@ namespace example {
 
       SendSTART();
         if (s == "START") {
-	  Server parent = (Server) ConfigGetParent();
-          if (parent != null && parent.cl[id].ConfigGetIsConnected()) {
+	  Server parent = (Server) LinkGetParent();
+          if (parent != null && parent.cl[id].LinkIsConnected()) {
             cl[id].LinkCreateChild(parent.cl[id]);
           } else {
             cl[id].LinkCreate(ConfigGetDebug());
@@ -462,7 +462,7 @@ namespace example {
       SendC ("sOc");
       SendC (ConfigGetIsServer() ? "SERVER" : "CLIENT");
       SendC ("pOc");
-      SendC (ConfigGetIsParent() ? "PARENT" : "CHILD");
+      SendC (LinkIsParent() ? "PARENT" : "CHILD");
       SendRETURN();
     }
 

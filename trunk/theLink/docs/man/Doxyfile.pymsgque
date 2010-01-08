@@ -29,8 +29,15 @@ ALIASES		    += "no=\e False"
 ALIASES		    += "package=from pymsgque import *"
 
 # OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+class MyClass(MqS): \n\
+  ... \n\
+ctx = MyClass() \n\
+... \n\
+\endcode"
+
 ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=ctx = MqS()"
+ALIASES		    += "ObjectCreate=ctx=MqS()"
 ALIASES		    += "ObjectDelete=del ctx"
 
 # OBJECT CONFIGURATION
@@ -143,7 +150,7 @@ ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
 ALIASES		    += "SendFTR=ctx.SendFTR(?timeout=MQ_TIMEOUT_USER?)"
 ALIASES		    += "SendEOF=ctx.SendEOF(?timeout=MQ_TIMEOUT_USER?)"
-ALIASES		    += "Send_TYPE=ctx.Send[TYPE](value)"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value)"
@@ -159,13 +166,13 @@ signature = ctx.ReadB()\n\
 ctx.ReadL_END()\n\
 \endcode"
 
-ALIASES		    += "Read_TYPE=val=ctx.Read[TYPE]()"
-ALIASES		    += "ReadU=val=ctx.ReadU()"
-ALIASES		    += "ReadN=val=ctx.ReadN()"
-ALIASES		    += "ReadBDY=val=ctx.ReadBDY()"
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadN=ByteArray ctx.ReadN()"
+ALIASES		    += "ReadBDY=ByteArray ctx.ReadBDY()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=val=ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=val=ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=PyLong ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=PyBool ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
@@ -183,21 +190,26 @@ ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FORE
 ALIASES		    += "MQ_WAIT_NO=NO"
 ALIASES		    += "MQ_WAIT_ONCE=ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=FOREVER"
-ALIASES		    += "ServiceGetToken=val=ctx.ServiceGetToken()"
-ALIASES		    += "ServiceGetFilter=filter=ctx.ServiceGetFilter([id=0])"
-ALIASES		    += "ServiceIsTransaction=val=ctx.ServiceIsTransaction()"
+ALIASES		    += "ServiceGetToken=PyUnicode ctx.ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=MqS ctx.ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceIsTransaction=PyBool ctx.ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
 ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
-ALIASES		    += "SlaveGet=val=ctx.SlaveGet(id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"
 
 # THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+buf = ctx.ReadU() \n\
+if buf.GetType() == 'C' : \n\
+  print(buf.GetC()) \n\
+\endcode"
 ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
-ALIASES		    += "BufferGet_TYPE=val=buffer.Get[TYPE]()"
-ALIASES		    += "BufferType=val=buffer.GetType()"
+ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
+ALIASES		    += "BufferType=PyUnicode buffer.GetType()"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

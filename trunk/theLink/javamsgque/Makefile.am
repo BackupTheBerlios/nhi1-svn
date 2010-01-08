@@ -34,7 +34,7 @@ javamsgque_MqBufferS.h: $(MQS_MAIN)
 libjavamsgque_la_SOURCES =  context_java.c context_java.h \
 			    read_java.c send_java.c service_java.c \
 			    misc_java.c config_java.c slave_java.c \
-			    MqBufferS_java.c error_java.c
+			    MqBufferS_java.c error_java.c link_java.c
 
 # use this if you want to link again the dynmic library libmsgque...
 libjavamsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(JAVA_CPPFLAGS) $(AM_CFLAGS) 

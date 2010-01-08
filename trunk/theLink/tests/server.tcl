@@ -107,13 +107,13 @@ proc Ot_MSQT {ctx} {
   $ctx SendC "sOc"
   $ctx SendC [expr {[$ctx ConfigGetIsServer] ? "SERVER" : "CLIENT"}]
   $ctx SendC "pOc"
-  $ctx SendC [expr {[$ctx ConfigGetIsParent] ? "PARENT" : "CHILD"}]
+  $ctx SendC [expr {[$ctx LinkIsParent] ? "PARENT" : "CHILD"}]
   $ctx SendRETURN
 }
 
 proc Ot_GTCX {ctx} {
   $ctx SendSTART
-  $ctx SendI [$ctx ConfigGetCtxId]
+  $ctx SendI [$ctx LinkGetCtxId]
   $ctx SendRETURN
 }
 
@@ -263,8 +263,8 @@ proc Ot_SND1 {ctx} {
   $ctx SendSTART
   switch -exact $cmd {
     START {
-      set parent  [$ctx ConfigGetParent]
-      if {$parent ne "" && [[$parent dict get $id] ConfigGetIsConnected]} {
+      set parent  [$ctx LinkGetParent]
+      if {$parent ne "" && [[$parent dict get $id] LinkIsConnected]} {
 	ClientCreateChild $cl [$parent dict get $id]
       } else {
 	ClientCreateParent $cl [$ctx ConfigGetDebug]
@@ -463,14 +463,14 @@ proc Ot_LST2 {ctx} {
 proc Ot_CNFG {ctx} {
   $ctx SendSTART
   $ctx SendO [$ctx ConfigGetIsServer]
-  $ctx SendO [$ctx ConfigGetIsParent]
+  $ctx SendO [$ctx LinkIsParent]
   $ctx SendO [$ctx ConfigGetIsSlave]
   $ctx SendO [$ctx ConfigGetIsString]
   $ctx SendO [$ctx ConfigGetIsSilent]
-  $ctx SendO [$ctx ConfigGetIsConnected]
+  $ctx SendO [$ctx LinkIsConnected]
   $ctx SendC [$ctx ConfigGetName]
   $ctx SendI [$ctx ConfigGetDebug]
-  $ctx SendI [$ctx ConfigGetCtxId]
+  $ctx SendI [$ctx LinkGetCtxId]
   $ctx SendC [$ctx ServiceGetToken]
   $ctx SendRETURN 
 }
@@ -690,6 +690,10 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
+
+
+
+
 
 
 

@@ -34,57 +34,24 @@ setup and maintain the link and is responsible for:
   .
 
 
-\section	\NS{object}				OBJECT CREATION AND DELETION
+\section	\NS{object}				CONTEXT API
 
 \subsection     \NS{MqS}				\MqS
 The \e object is the user visible part of a \self application link.
 
 \subsection	\NS{ObjectCreate}			\ObjectCreate
 Create an object ready to be used with \RNSA{LinkCreate} to setup an application link.
-Use the \RNSC{isConnected} to check if a link is already available.
+Use the \RNSA{LinkIsConnected} to check if a link is already available.
 
-\if CC
-\code
-class MyClass : public MqC ... { ... }
-int main (int argc, MQ_CST argv[]) {
-  MyClass ctx; ...
-}
-\endcode
-\elseif JAVA
-\code
-final class MyClass extends MqS ... { ... }
-public static void main(String[] args) {
-  MyClass ctx = new MyClass(); ...
-}
-\endcode
-\elseif CSHARP
-\code
-sealed class MyClass : MqS ... { ... }
-static void Main(string[] args)
-  MyClass ctx = new MyClass(); ...
-}
-\endcode
-\elseif VB
-\code
-Private NotInheritable Class MyClass
-  Inherits MqS
-End Class
-Sub Main(ByVal args() As String)
-  Dim ctx AS New MyClass()
-End Sub
-\endcode
-\elseif PYTHON
-\code
-class MyClass(MqS):
-  ...
-ctx = MyClass()
-...
-\endcode
-\endif
+\b Example: definition of a context:
+\object_example
 
 \subsection	\NS{ObjectDelete}			\ObjectDelete
 Delete the entire object including the application link using \RNSA{LinkDelete}. The
 object can \b not be reused.
+
+\subsection	\NS{Exit}				\Exit
+Shutdown the entire communication and exit the current process or thread.
 
 
 \section	\NS{config}				CONFIG API
@@ -151,21 +118,12 @@ Use \e STRING as a client specific prefix in the server debugging output. This i
 link debugging and error messages on the server to a specific client connection.
 (default: empty)
 
-\configsection{ident}
-Use \config_type_ident as an application specific identifier set by the programmer and checked with
-\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
-of the application depending on the result.
-(default: empty)
-
 \configsection{isSilent,--silent}
 Write (\no) or don't write (\yes) any output to stdout or stderr. (default: write to stdout or stderr)
 
 \configsection{isString,--string}
 Use (\yes), as much as possible, strings in the data-package. Convert any native data-type,
 like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
-
-\configsection{ignoreExit}
-\copydetails MqSetupS::ignoreExit
 
 \configsection{startAs,--thread --spawn --fork}
 Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
@@ -218,24 +176,20 @@ and start for every connection the proper entry from the file \e /etc/(x)inetd.c
 return the \e master if \e ctx is a slave-context or \e NULL if \e ctx is not a slave-context.
 !Only a SLAVE has a master!
 
-
-\configsection{ctxId}
-return an identifier as integer and is \e unique per parent-context. The \e parent-context is always \c 0
-and every new \e child-context get a new identifier by adding 1.
-
-\configsection{isConnected}
-Is the \self context connected ? A context is connected if the \RNSA{LinkCreate} command
-was successful and a context is NOT connected if a) the object has just been created or
-b) the link was deleted with \RNSA{LinkDelete}
-
 \configsection{isServer}
 True if object is a \e server object (default: \no, be a client)
 
-\configsection{isParent}
-True if object is a \e parent object (default: \yes, be a parent)
-
 \configsection{isSlave}
 True if object is a \e slave object (default: \no, not be a slave)
+
+\configsection{ignoreExit}
+\copydetails MqSetupS::ignoreExit
+
+\configsection{ident}
+Use \config_type_ident as an application specific identifier set by the programmer and checked with
+\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
+of the application depending on the result.
+(default: empty)
 
 \interface{IServerSetup}
 Interface to define a \e server \self object. This Interface define the
@@ -307,8 +261,14 @@ Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
 \copydetails #MqSetupS::Event
 
 \section	\NS{link}				LINK API
-To create and to destroy a link is the main purpose of the \self library. A link is a 
-client/server connection used to perform various tasks.
+\RNSA{LinkCreate}\n
+\RNSA{LinkCreateChild}\n
+\RNSA{LinkGetParent}\n
+\RNSA{LinkIsParent}\n
+\RNSA{LinkGetCtxId}\n
+\RNSA{LinkIsConnected}\n
+
+\copydoc Mq_Link_C_API
 
 \subsection	  \NS{LinkCreate}			\LinkCreate
 \if LinkCreate2
@@ -323,16 +283,7 @@ client/server connection used to perform various tasks.
 \if LinkCreate5
 \subsection	  \NS{LinkCreate5}			\LinkCreate5
 \endif
-Create a \e parent-context using the \RNS{config}. 
-A parent-context is responsible to setup the client/server link:
- - the \e client-parent-context create the \e server-parent-context
- - the \e server-parent-context wait for a \e client-parent-context connection request
- .
-\param[in] ctx the object from \RNS{object}
-\param[in] args command-line arguments including the \b "@" item for the \e --pipe setup
-\attention if the first argument after the \b "@" item is the string \b "SELF" an independent
-server of the current server is started. This is not a \RNS{slave}. The "SELF" argument is
-replaced by an application default setting (if available) or by arguments set with \RNSA{Init}.
+\copydoc MqLinkCreate
 
 \subsection	  \NS{LinkCreateChild}			\LinkCreateChild
 \if LinkCreateChild2
@@ -347,23 +298,34 @@ replaced by an application default setting (if available) or by arguments set wi
 \if LinkCreateChild5
 \subsection	  \NS{LinkCreateChild5}			\LinkCreateChild5
 \endif
-Create a \e child-context from a \self \e parent-context and command-line arguments. 
-A child is using the same process or thread as the parent but a different namespace. With a 
-different namespace a child is able to act on different services on the shared server.
-\param[in] ctx the object from \RNS{object}
-\param[in] parent the parent object
-\param[in] args all command-line arguments including the \b "@" token
+\copydoc MqLinkCreateChild
 
 \subsection	  \NS{LinkDelete}			\LinkDelete
-Close the client/server link and delete the underlying communication object.
-All depending objects will be deleted as well like depending \e child-context
-and \e slave-context local and on the remote site of the link.
+\copydoc MqLinkDelete
 
-\subsection	  \NS{Exit}				\Exit
-Shutdown the entire communication and exit the current process or thread.
+\subsection	  \NS{LinkGetParent}			\LinkGetParent
+\copydoc MqLinkGetParent
+
+\subsection	  \NS{LinkGetCtxId}			\LinkGetCtxId
+\copydoc MqLinkGetCtxId
+
+\subsection	  \NS{LinkIsParent}			\LinkIsParent
+\copydoc MqLinkIsParent
+
+\subsection	  \NS{LinkIsConnected}			\LinkIsConnected
+\copydoc MqLinkIsConnected
 
 \section	\NS{service}				SERVICE API
-\copydoc MqServiceAPI
+\RNSA{ServiceIdentifier}\n
+\RNSA{ServiceCallback}\n
+\RNSA{ServiceGetToken}\n
+\RNSA{ServiceIsTransaction}\n
+\RNSA{ServiceGetFilter}\n
+\RNSA{ServiceCreate}\n
+\RNSA{ServiceDelete}\n
+\RNSA{ProcessEvent}\n
+
+\copydoc Mq_Service_C_API
 
 \b Example: define the service \e SRV1 on the \e server-link-setup: \service_example
 
@@ -430,7 +392,19 @@ UNKNOWN
 \copydoc MqProcessEvent
 
 \section	\NS{send}				SEND API
-\copydoc MqSendAPI
+\RNSA{SendSTART}\n
+\RNSA{SendEND}\n
+\RNSA{SendEND_AND_WAIT}\n
+\RNSA{SendEND_AND_CALLBACK}\n
+\RNSA{SendRETURN}\n
+\RNSA{SendERROR}\n
+\RNSA{SendTYPE}\n
+\RNSA{SendN}\n
+\RNSA{SendBDY}\n
+\RNSA{SendL_START}\n
+\RNSA{SendL_END}\n
+
+\copydoc Mq_Send_C_API
 \b Example: send an integer and a list of double, string and a \e byte-array: \send_example
 
 \subsection	  \NS{SendSTART}			\SendSTART
@@ -454,7 +428,7 @@ UNKNOWN
 \subsection	  \NS{SendERROR}			\SendERROR
 \copydoc MqSendERROR
 
-\subsection	  \NS{Send_TYPE}			\Send_TYPE
+\subsection	  \NS{SendTYPE}			\SendTYPE
 \copydoc MqSendY
 
 \subsection	  \NS{SendN}				\SendN
@@ -469,11 +443,22 @@ UNKNOWN
 \subsection	  \NS{SendL_END}			\SendL_END
 \copydoc MqSendL_END
 
-\section	\NS{read}				READ API
-\copydoc MqReadAPI
+\section	  \NS{read}				READ API
+\RNSA{ReadTYPE}\n
+\RNSA{ReadN}\n
+\RNSA{ReadBDY}\n
+\RNSA{ReadU}\n
+\RNSA{ReadL_START}\n
+\RNSA{ReadL_END}\n
+\RNSA{ReadProxy}\n
+\RNSA{ReadGetNumItems}\n
+\RNSA{ReadItemExists}\n
+\RNSA{ReadUndo}\n
+
+\copydoc Mq_Read_C_API
 \b Example: read an integer and a list of double, string and a \e byte-array: \read_example
 
-\subsection	  \NS{Read_TYPE}			\Read_TYPE
+\subsection	  \NS{ReadTYPE}				\ReadTYPE
 \copydoc MqReadY
 
 \subsection	  \NS{ReadN}				\ReadN
@@ -484,18 +469,6 @@ UNKNOWN
 
 \subsection	  \NS{ReadU}				\ReadU
 \copydoc MqReadU
-
-\subsection	  \NS{ReadProxy}			\ReadProxy
-\copydoc MqReadProxy
-
-\subsection	  \NS{ReadGetNumItems}			\ReadGetNumItems
-\copydoc MqReadGetNumItems
-
-\subsection	  \NS{ReadItemExists}			\ReadItemExists
-\copydoc MqReadItemExists
-
-\subsection	  \NS{ReadUndo}				\ReadUndo
-\copydoc MqReadUndo
 
 \subsection	  \NS{ReadL_START}			\ReadL_START
 \if ReadL_START2
@@ -509,8 +482,20 @@ UNKNOWN
 \subsection	  \NS{ReadL_END}			\ReadL_END
 \copydoc MqReadL_END
 
+\subsection	  \NS{ReadProxy}			\ReadProxy
+\copydoc MqReadProxy
+
+\subsection	  \NS{ReadGetNumItems}			\ReadGetNumItems
+\copydoc MqReadGetNumItems
+
+\subsection	  \NS{ReadItemExists}			\ReadItemExists
+\copydoc MqReadItemExists
+
+\subsection	  \NS{ReadUndo}				\ReadUndo
+\copydoc MqReadUndo
+
 \section        \NS{slave}				SLAVE API
-\copydetails MqSlaveAPI
+\copydetails Mq_Slave_C_API
 
 \subsection	  \NS{SlaveWorker}			\SlaveWorker
 \if LinkCreate2
@@ -543,98 +528,19 @@ UNKNOWN
 \copydoc MqSlaveGet
 
 \section        \NS{buffer}				BUFFER API
-The \BufferObject object is created by \RNSA{ReadU} and id used to save a <B>typeless temporary data item</B> 
-from the \self data package. The lifetime of the \BufferObject is only the current callback up to the next
-read operation of the same context.
-\if CSHARP
-\code
-MqBufferS buf = ctx.ReadU();
-if (buf.Type == 'C')
-  Console.WriteLine(buf.C);
-\endcode
-\elseif VB
-\code
-Dim buf As MqBufferS = ctx.ReadU()
-If buf.Type == "C"c
-  Console.WriteLine(buf.C)
-\endcode
-\elseif JAVA
-\code
-MqBufferS buf = ctx.ReadU();
-if (buf.GetType() == 'C')
-  System.out.println(buf.GetC());
-\endcode
-\elseif PYTHON
-\code
-buf = ctx.ReadU()
-if buf.GetType() == 'C' :
-  print(buf.GetC())
-\endcode
-\elseif TCL
-\code
-set buf [$ctx ReadU]
-if {[$buf GetType] == 'C'} {
-  puts [$buf GetC]
-}
-\endcode
-\elseif PERL
-\code
-$buf = $ctx->ReadU();
-if {$buf->GetType() eq 'C'} {
-  print $buf->GetC();
-}
-\endcode
-\elseif CC
-\self support 2 different buffer objects:
- -# the \e libmsgque original buffer called #MQ_BUF or #MqBufferS
- -# a \self wrapper called \c MqBufferC
- .
-Both objects are linked:
-\code
-MqBufferC buf = ctx.ReadU();
-MQ_BUF buf2 = buf.GetU();
-\endcode
-1. Example:
-\code
-MqBufferC buf = ctx.ReadU();
-if (buf.GetType() == MQ_STRT)
-  printf(buf.GetC());
-\endcode
-2. Example:
-\code
-MQ_BUF buf = ctx.ReadU();
-if (buf->type == MQ_STRT)
-  printf(buf->cur.C);
-\endcode
-\elseif C
-\code
-MQ_BUF buf = MqReadU(ctx);
-if (buf->type == MQ_STRT)
-  printf(buf->cur.C);
-\endcode
-\else
-UNKNOWN
-\endif
+\RNSA{BufferIdentifer}\n
+\RNSA{BufferGetTYPE}\n
+\RNSA{BufferType}\n
+
+\copydoc MqBufferS
+
+\b Example: read a \e buffer-object and check for \e string-type. 
+\buffer_example
 
 \subsection	  \NS{BufferIdentifer}			TYPE IDENTIFIER
-A \self buffer data package is type safe, this mean that every item has a type prefix and every
-\RNS{Read_TYPE} or \RNS{BufferGet_TYPE} have to match the previous \RNS{Send_TYPE} with the same \e TYPE.
-One exception, the cast from and to string (TYPE=C) is allowed. 
-The following type identifier's are available:
- - \c Y : 1 byte signed character 
- - \c O : 1 byte boolean character using \yes for yes or true or \no for no or wrong
- - \c S : 2 byte signed short
- - \c I : 4 byte signed integer
- - \c W : 8 byte signed long long integer
- - \c F : 4 byte float
- - \c D : 8 byte double
- - \c B : unsigned char array used for binary data
- - \c C : string data using a \c \\0 at the end
- - \c L : list type able to hold a list of all items from above
- - \c U : typeless buffer able to hold a single item from above
- .
+\copydoc MqTypeE
 
-\subsection	  \NS{BufferGet_TYPE}			\BufferGet_TYPE
+\subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
 return the data form the buffer using the \RNS{BufferIdentifer}. \throw
 
 \subsection	  \NS{BufferType}			\BufferType
@@ -642,6 +548,14 @@ return the type as single character of the item stored in the buffer object.
 
 
 \section	\NS{error}				EXCEPTION OBJECT
+\RNSA{ErrorGetText}\n
+\RNSA{ErrorGetNum}\n
+\RNSA{ErrorC}\n
+\RNSA{ErrorSet}\n
+\RNSA{ErrorSetCONTINUE}\n
+\RNSA{ErrorReset}\n
+\RNSA{ErrorRaise}\n
+\RNSA{ErrorPrint}\n
 
 The exception object is used to transport a \self error using the \ErrorObject.
 

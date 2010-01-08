@@ -567,7 +567,7 @@ Ot_GTCX (
 )
 {
   MqSendSTART (mqctx);
-  MqSendI (mqctx, MqConfigGetCtxId(mqctx));
+  MqSendI (mqctx, MqLinkGetCtxId(mqctx));
   return MqSendRETURN (mqctx);
 }
 
@@ -888,7 +888,7 @@ Ot_SND1 (
     if (!strcmp(s,"START")) {
       struct MqS * const parent = mqctx->config.parent;
       struct ServerCtxS * parentCtx = (struct ServerCtxS *) parent;
-      if (parentCtx != NULL && MqConfigGetIsConnected(parentCtx->cl[clid])) {
+      if (parentCtx != NULL && MqLinkIsConnected(parentCtx->cl[clid])) {
 	MqErrorCheck (ClientCreateChild(mqctx, srvctx->cl[clid], parentCtx->cl[clid]));
       } else {
 	MqErrorCheck (ClientCreateParent(mqctx, srvctx->cl[clid], mqctx->config.debug));
@@ -1068,7 +1068,7 @@ Ot_CNFG (
   MqSendSTART(mqctx);
 
   MqSendO(mqctx,mqctx->setup.isServer);
-  MqSendO(mqctx,MqConfigGetIsParent(mqctx));
+  MqSendO(mqctx,MqLinkIsParent(mqctx));
   MqSendO(mqctx,MqConfigGetIsSlave(mqctx));
   MqSendO(mqctx,mqctx->config.isString);
   MqSendO(mqctx,mqctx->config.isSilent);
@@ -1076,7 +1076,7 @@ Ot_CNFG (
 
   MqSendC(mqctx,mqctx->config.name);
   MqSendI(mqctx,mqctx->config.debug);
-  MqSendI(mqctx,MqConfigGetCtxId(mqctx));
+  MqSendI(mqctx,MqLinkGetCtxId(mqctx));
   MqSendC(mqctx,MqServiceGetToken(mqctx));
 
   return MqSendRETURN (mqctx);
@@ -1397,5 +1397,8 @@ error:
 }
 
 /** \} server */
+
+
+
 
 

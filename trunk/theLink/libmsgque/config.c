@@ -653,14 +653,6 @@ MqConfigGetIsServer (
 }
 
 int
-MqConfigGetIsParent (
-  struct MqS const * const context
-)
-{
-  return MQ_IS_PARENT(context);
-}
-
-int
 MqConfigGetIsSlave (
   struct MqS const * const context
 )
@@ -682,14 +674,6 @@ MqConfigGetIsSilent (
 )
 {
   return (context->config.isSilent == MQ_YES);
-}
-
-int
-MqConfigGetIsConnected (
-  struct MqS const * const context
-)
-{
-  return (context->link.onCreate == MQ_YES);
 }
 
 /*
@@ -777,27 +761,11 @@ MqConfigGetTimeout (
 }
 
 struct MqS *
-MqConfigGetParent (
-  struct MqS const * const context
-)
-{
-  return context->config.parent;
-}
-
-struct MqS *
 MqConfigGetMaster (
   struct MqS const * const context
 )
 {
   return context->config.master;
-}
-
-MQ_SIZE
-MqConfigGetCtxId (
-  struct MqS const * const context
-)
-{
-  return context->link.ctxId;
 }
 
 MQ_CST

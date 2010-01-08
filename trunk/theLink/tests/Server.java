@@ -267,14 +267,14 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
     public void Service (MqS ctx) throws MqSException {
       ctx.SendSTART();
       ctx.SendO(ctx.ConfigGetIsServer());
-      ctx.SendO(ctx.ConfigGetIsParent());
+      ctx.SendO(ctx.LinkIsParent());
       ctx.SendO(ctx.ConfigGetIsSlave());
       ctx.SendO(ctx.ConfigGetIsString());
       ctx.SendO(ctx.ConfigGetIsSilent());
-      ctx.SendO(ctx.ConfigGetIsConnected());
+      ctx.SendO(ctx.LinkIsConnected());
       ctx.SendC(ctx.ConfigGetName());
       ctx.SendI(ctx.ConfigGetDebug());
-      ctx.SendI(ctx.ConfigGetCtxId());
+      ctx.SendI(ctx.LinkGetCtxId());
       ctx.SendC(ctx.ServiceGetToken());
       ctx.SendRETURN();
     }
@@ -287,8 +287,8 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       int id = ReadI();
       SendSTART();
 	if (s.equals("START")) {
-	  Server parent = (Server) ConfigGetParent();
-	  if (parent != null && parent.cl[id].ConfigGetIsConnected()) {
+	  Server parent = (Server) LinkGetParent();
+	  if (parent != null && parent.cl[id].LinkIsConnected()) {
 	    cl[id].LinkCreateChild(parent.cl[id]);
 	  } else {
 	    cl[id].LinkCreate(ConfigGetDebug());
@@ -469,7 +469,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 class GTCX implements IService {
   public void Service (MqS ctx) throws MqSException {
     ctx.SendSTART();
-    ctx.SendI(ctx.ConfigGetCtxId());
+    ctx.SendI(ctx.LinkGetCtxId());
     ctx.SendRETURN();
   }
 }
@@ -772,7 +772,7 @@ class MSQT implements IService {
     ctx.SendC ("sOc");
     ctx.SendC (ctx.ConfigGetIsServer() ? "SERVER" : "CLIENT");
     ctx.SendC ("pOc");
-    ctx.SendC (ctx.ConfigGetIsParent() ? "PARENT" : "CHILD");
+    ctx.SendC (ctx.LinkIsParent() ? "PARENT" : "CHILD");
     ctx.SendRETURN();
   }
 }
@@ -839,5 +839,9 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
+
+
+
+
 
 

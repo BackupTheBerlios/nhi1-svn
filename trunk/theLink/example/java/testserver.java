@@ -21,12 +21,12 @@ final class testserver extends MqS implements IServerSetup, IFactory {
   class GTCX implements IService {
     public void Service (MqS ctx) throws MqSException {
       SendSTART();
-      SendI(ConfigGetCtxId());
+      SendI(LinkGetCtxId());
       SendC("+");
-      if (ConfigGetIsParent()) {
+      if (LinkIsParent()) {
 	SendI(-1);
       } else {
-	SendI(ConfigGetParent().ConfigGetCtxId());
+	SendI(LinkGetParent().LinkGetCtxId());
       }
       SendC("+");
       SendC(ConfigGetName());
@@ -53,3 +53,6 @@ final class testserver extends MqS implements IServerSetup, IFactory {
     }
   }
 }
+
+
+

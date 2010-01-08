@@ -227,8 +227,8 @@ namespace example {
 
 	SendSTART();
 	  if (!strcmp(s,"START")) {
-	    Server *parent = static_cast<Server*>(ConfigGetParent());
-	    if (parent != NULL && parent->cl[id]->ConfigGetIsConnected()) {
+	    Server *parent = static_cast<Server*>(LinkGetParent());
+	    if (parent != NULL && parent->cl[id]->LinkIsConnected()) {
 	      cl[id]->LinkCreateChild(*parent->cl[id]);
 	    } else {
 	      cl[id]->LinkCreate(ConfigGetDebug());
@@ -286,7 +286,7 @@ namespace example {
 
       void GTCX () {
 	SendSTART();
-	SendI(ConfigGetCtxId());
+	SendI(LinkGetCtxId());
 	SendRETURN();
       }
 
@@ -337,7 +337,7 @@ namespace example {
 	SendC ("sOc");
 	SendC (ConfigGetIsServer() ? "SERVER" : "CLIENT");
 	SendC ("pOc");
-	SendC (ConfigGetIsParent() ? "PARENT" : "CHILD");
+	SendC (LinkIsParent() ? "PARENT" : "CHILD");
 	SendRETURN();
       }
 
@@ -488,14 +488,14 @@ namespace example {
       void CNFG () {
 	SendSTART();
 	SendO(ConfigGetIsServer());
-	SendO(ConfigGetIsParent());
+	SendO(LinkIsParent());
 	SendO(ConfigGetIsSlave());
 	SendO(ConfigGetIsString());
 	SendO(ConfigGetIsSilent());
-	SendO(ConfigGetIsConnected());
+	SendO(LinkIsConnected());
 	SendC(ConfigGetName());
 	SendI(ConfigGetDebug());
-	SendI(ConfigGetCtxId());
+	SendI(LinkGetCtxId());
 	SendC(ServiceGetToken());
 	SendRETURN();
       }

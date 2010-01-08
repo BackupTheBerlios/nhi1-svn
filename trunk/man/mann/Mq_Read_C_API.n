@@ -1,8 +1,8 @@
-.TH "MqReadAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqReadAPI \- extract data from an incoming \fIread-data-package\fP.  
+Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.  
 
 .PP
 .SS "Functions"
@@ -284,7 +284,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS val = ctx.ReadU()\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBctx.ReadU() As ReadU=MqBufferS\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP

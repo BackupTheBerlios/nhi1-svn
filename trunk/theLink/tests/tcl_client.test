@@ -290,8 +290,8 @@ set TMPL {test tcl-client-wrong-additional-arg-%CMD%-($I|$B|$C|$S) {%CMD% with w
 foreach CMD {	
     ReadUndo ReadAll ReadItemExists ReadGetNumItems ReadL_END
     ReadY ReadO ReadS ReadI ReadF ReadW ReadD ReadC ReadB ReadU
-    ConfigGetDebug ConfigGetIsString ConfigGetIsSilent ConfigGetIsServer ConfigGetIsParent
-     ServiceGetToken ConfigGetCtxId ConfigGetName ConfigGetParent ConfigGetIsConnected
+    ConfigGetDebug ConfigGetIsString ConfigGetIsSilent ConfigGetIsServer LinkIsParent
+     ServiceGetToken LinkGetCtxId ConfigGetName LinkGetParent LinkIsConnected
   } {
   eval [string map [list %CMD% $CMD] $TMPL]
 }
@@ -449,8 +449,8 @@ BG-TEXT-RET:S> (server-Y) \[ErrorSet] this is an error
 "Error <MqS-*>"*
 BG-TEXT-CODE:NONE
 111-CATCH:1
-111-RET:C> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*
-111-CODE:TCLMSGQUE 223 2 {C> (client-Y) \[pWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*}
+111-RET:C> (client-Y) \[sWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*
+111-CODE:TCLMSGQUE 223 2 {C> (client-Y) \[sWaitForToken] TIMEOUT: wait '0' sec for token '_PEO' but got only token '_ERR'*}
 END}
 
 test tcl-client-A-0 {rename cmd hdl} \
@@ -507,6 +507,11 @@ rename $ctx ""
 ##
 
 freeTests
+
+
+
+
+
 
 
 

@@ -1,13 +1,46 @@
-.TH "MqSystemAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqSystemAPI \- access to native system functions with error handling  
+Mq_System_C_API \- access to native system functions with error handling  
 
 .PP
 .SS "Defines"
 
 .in +1c
+.ti -1c
+.RI "#define \fBmq_strtoll\fP   strtoll"
+.br
+.ti -1c
+.RI "#define \fBmq_strdup\fP(v)   strdup(v)"
+.br
+.ti -1c
+.RI "#define \fBmq_getpid\fP   getpid"
+.br
+.ti -1c
+.RI "#define \fBmq_unlink\fP   unlink"
+.br
+.ti -1c
+.RI "#define \fBmq_snprintf\fP   snprintf"
+.br
+.ti -1c
+.RI "#define \fBMQ_CLRCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_STDCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_CDECL\fP"
+.br
+.ti -1c
+.RI "#define \fBmq_inline\fP   inline"
+.br
+.ti -1c
+.RI "#define \fBmq_timeval\fP   timeval"
+.br
+.ti -1c
+.RI "#define \fBmq_timezone\fP   timezone"
+.br
 .ti -1c
 .RI "#define \fBMqSysFree\fP(tgt)"
 .br
@@ -45,19 +78,54 @@ MqSystemAPI \- access to native system functions with error handling
 .br
 .R "'basename' system call with error handling feature "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
+.RI "enum \fBMqErrorE\fP \fBMqSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
 .br
 .R "'gettimeofday' system call with error handling feature "
 .ti -1c
-.RI "static mq_inline \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
+.RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
 .br
-.R "the function \fIstrdup\fP which allows the argument \fCNULL\fP "
+.R "duplicate a string, the argument \fCNULL\fP is allowd "
 .in -1c
 .SH "Detailed Description"
 .PP 
 access to native system functions with error handling 
 .SH "Define Documentation"
 .PP 
+.SS "#define MQ_CDECL"
+.PP
+Definition at line 79 of file msgque.h.
+.SS "#define MQ_CLRCALL"
+.PP
+Definition at line 75 of file msgque.h.
+.SS "#define mq_getpid   getpid"
+.PP
+Definition at line 69 of file msgque.h.
+.SS "#define mq_inline   inline"
+.PP
+Definition at line 81 of file msgque.h.
+.SS "#define mq_snprintf   snprintf"
+.PP
+Definition at line 73 of file msgque.h.
+.SS "#define MQ_STDCALL"
+.PP
+Definition at line 77 of file msgque.h.
+.SS "#define mq_strdup(v)   strdup(v)"
+.PP
+Definition at line 67 of file msgque.h.
+.PP
+Referenced by mq_strdup_save().
+.SS "#define mq_strtoll   strtoll"
+.PP
+Definition at line 65 of file msgque.h.
+.SS "#define mq_timeval   timeval"
+.PP
+Definition at line 147 of file msgque.h.
+.SS "#define mq_timezone   timezone"
+.PP
+Definition at line 149 of file msgque.h.
+.SS "#define mq_unlink   unlink"
+.PP
+Definition at line 71 of file msgque.h.
 .SS "#define MqSysFree(tgt)"
 .PP
 \fBValue:\fP
@@ -79,14 +147,26 @@ do { \
 .PP
 
 .PP
-Definition at line 3706 of file msgque.h.
+Definition at line 3795 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "static mq_inline \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
+.SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [inline, static]\fP"
 .PP
-the function \fIstrdup\fP which allows the argument \fCNULL\fP 
+duplicate a string, the argument \fCNULL\fP is allowd 
 .PP
-Definition at line 3755 of file msgque.h.
+\fBParameters:\fP
+.RS 4
+\fIv\fP the string to duplicate 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new string or \fCNULL\fP 
+.RE
+.PP
+
+.PP
+Definition at line 3846 of file msgque.h.
 .PP
 References mq_strdup.
 .SS "\fBMQ_STR\fP MqSysBasename (char const *const  in, \fBMQ_BOL\fP includeExtension)"
@@ -134,6 +214,28 @@ a pointer to the new memory block initialized with '0'
 .PP
 'free' system call wrapper of libmsgque 
 .PP
+.SS "enum \fBMqErrorE\fP MqSysGetTimeOfDay (struct \fBMqS\fP *const  context, struct mq_timeval * tv, struct mq_timezone * tz)"
+.PP
+'gettimeofday' system call with error handling feature 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fItv\fP the timeval object 
+.br
+\fItz\fP the timezone object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
 .SS "\fBMQ_PTR\fP MqSysMalloc (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size)"
 .PP
 'malloc' system call with error handling feature 
@@ -196,28 +298,6 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
 \fIusec\fP the micro (10^-6) seconds to sleep 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
-.RE
-.PP
-
-.SS "enum \fBMqErrorE\fP SysGetTimeOfDay (struct \fBMqS\fP *const  context, struct mq_timeval * tv, struct mq_timezone * tz)"
-.PP
-'gettimeofday' system call with error handling feature 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturn values:\fP
-.RS 4
-\fItv\fP the timeval object 
-.br
-\fItz\fP the timezone object 
 .RE
 .PP
 \fBReturns:\fP

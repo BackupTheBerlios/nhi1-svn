@@ -14,12 +14,12 @@
 #include "msgque.h"
 static enum MqErrorE  GTCX( struct MqS *ctx, MQ_PTR data) {
   MqErrorCheck(MqSendSTART(ctx));
-  MqSendI(ctx, MqConfigGetCtxId(ctx));
+  MqSendI(ctx, MqLinkGetCtxId(ctx));
   MqSendC(ctx, "+");
-  if (MqConfigGetIsParent(ctx)) {
+  if (MqLinkIsParent(ctx)) {
     MqSendI(ctx, -1);
   } else {
-    MqSendI(ctx, MqConfigGetCtxId(MqConfigGetParent(ctx)));
+    MqSendI(ctx, MqLinkGetCtxId(MqLinkGetParent(ctx)));
   }
   MqSendC(ctx, "+");
   MqSendC(ctx, MqConfigGetName(ctx));
@@ -46,3 +46,6 @@ int main (int argc, MQ_CST argv[])
 error:
   MqExit(ctx);
 }
+
+
+

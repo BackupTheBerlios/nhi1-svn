@@ -29,8 +29,16 @@ ALIASES		    += "no=\e 0"
 ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
 
 # OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+package MyClass; \n\
+use base qw(Net::PerlMsgque::MqS); \n\
+... \n\
+package main; \n\
+  our $ctx = new MyClass(); \n\
+\endcode"
+
 ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=$ctx = new MqS()"
+ALIASES		    += "ObjectCreate=our $ctx=new MqS()"
 ALIASES		    += "ObjectDelete=$ctx->DESTROY()"
 
 # OBJECT CONFIGURATION
@@ -137,7 +145,7 @@ ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(token, timeout=seconds)
 ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(token, callback)"
 ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
 ALIASES		    += "SendERROR=$ctx->SendERROR()"
-ALIASES		    += "Send_TYPE=$ctx->Send[TYPE](value)"
+ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
 ALIASES		    += "SendL_START=$ctx->SendL_START()"
 ALIASES		    += "SendL_END=$ctx->SendL_END()"
 ALIASES		    += "SendN=$ctx->SendN(value)"
@@ -145,13 +153,13 @@ ALIASES		    += "SendBDY=$ctx->SendBDY(value)"
 
 # READ DATE
 ALIASES		    += "read_example=\code$num = $ctx->ReadI();\n$ctx->ReadL_START();\n  $balance = $ctx->ReadD();\n  $owner = $ctx->ReadC();\n  $signature = $ctx->ReadB();\n$ctx->ReadL_END();\endcode"
-ALIASES		    += "Read_TYPE=val = $ctx->Read[TYPE]()"
-ALIASES		    += "ReadU=val = $ctx->ReadU()"
-ALIASES		    += "ReadN=val = $ctx->ReadN()"
-ALIASES		    += "ReadBDY=val = $ctx->ReadBDY()"
+ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
+ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
+ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
 ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=val = $ctx->ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=val = $ctx->ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=int $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=boolean $ctx->ReadItemExists()"
 ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
 ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
 ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
@@ -171,9 +179,9 @@ ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ON
 ALIASES		    += "MQ_WAIT_NO=\c NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
-ALIASES		    += "ServiceGetToken=$val=$ctx->ServiceGetToken()"
-ALIASES		    += "ServiceGetFilter=$filter=$ctx->ServiceGetFilter()"
-ALIASES		    += "ServiceIsTransaction=$val=$ctx->ServiceIsTransaction()"
+ALIASES		    += "ServiceGetToken=string $ctx->ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=$filter=MqS $ctx->ServiceGetFilter()"
+ALIASES		    += "ServiceIsTransaction=boolean $ctx->ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(id, args...)"
@@ -183,8 +191,15 @@ ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(id)"
 ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(id)"
 
 # THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+$buf = $ctx->ReadU(); \n\
+if {$buf->GetType() eq 'C'} { \n\
+  print $buf->GetC(); \n\
+} \n\
+\endcode"
+
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
-ALIASES		    += "BufferGet_TYPE=TYPE $buffer->Get[TYPE]()"
+ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
 ALIASES		    += "BufferType=char $buffer->GetType()"
 
 # CONTEXT LOCAL STORAGE

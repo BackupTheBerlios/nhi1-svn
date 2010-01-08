@@ -64,14 +64,6 @@ int NS(RenameTo) (NS_ARGS)
   RETURN_TCL
 }
 
-static
-int NS(LinkDelete) (NS_ARGS)
-{
-  CHECK_NOARGS
-  MqLinkDelete (MQCTX);
-  RETURN_TCL
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                              tclctx_basic                                */
@@ -92,62 +84,6 @@ NS(ThreadExit) (
 )
 {
   Tcl_FinalizeThread();
-}
-
-static 
-int NS(LinkCreate) (NS_ARGS)
-{
-  SETUP_mqctx
-  struct MqBufferLS * args = NULL;
-
-  // command-line arguments to MqBufferLS
-  if (objc-skip > 0) {
-    int i;
-    args = MqBufferLCreate (objc-skip+1);
-    MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
-    for (i = skip; i < objc; i++) {
-      MqBufferLAppendC (args, Tcl_GetString (objv[i]));
-    }
-  }
-
-  // create Context
-  ErrorMqToTclWithCheck (MqLinkCreate(mqctx, &args));
-  RETURN_TCL
-}
-
-static 
-int NS(LinkCreateChild) (NS_ARGS)
-{
-  // check for connected
-  struct MqS * parent;
-
-  // get the parent tclctx
-  if (objc < 3 || NS(GetClientData) (interp, objv[skip], (MQ_PTR*) &parent) == TCL_ERROR) {
-    Tcl_WrongNumArgs (interp, 2, objv, "parent ...");
-    return TCL_ERROR;
-  } else {
-    SETUP_mqctx
-    struct MqBufferLS *args = NULL;
-    int i;
-
-    skip++;
-
-    // copy data entries
-    MqErrorCheck (MqSetupDup (mqctx, parent));
-
-    // command-line arguments to MqBufferLS
-    if (objc-skip > 0) {
-      args = MqBufferLCreate (objc-skip+1);
-      MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
-      for (i = skip; i < objc; i++) {
-	MqBufferLAppendC (args, Tcl_GetString (objv[i]));
-      }
-    }
-
-    // create Context
-    ErrorMqToTclWithCheck (MqLinkCreateChild(mqctx, parent, &args));
-    RETURN_TCL
-  }
 }
 
 /*****************************************************************************/
@@ -328,17 +264,13 @@ int NS(ConfigSetDaemon) (NS_ARGS);
 int NS(ConfigGetIsString) (NS_ARGS);
 int NS(ConfigGetIsSilent) (NS_ARGS);
 int NS(ConfigGetIsServer) (NS_ARGS);
-int NS(ConfigGetIsParent) (NS_ARGS);
 int NS(ConfigGetIsSlave) (NS_ARGS);
-int NS(ConfigGetIsConnected) (NS_ARGS);
 int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
-int NS(ConfigGetCtxId) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
 int NS(ConfigGetIdent) (NS_ARGS);
-int NS(ConfigGetParent) (NS_ARGS);
 int NS(ConfigGetMaster) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
@@ -347,6 +279,14 @@ int NS(ConfigGetIoTcpMyHost) (NS_ARGS);
 int NS(ConfigGetIoTcpMyPort) (NS_ARGS);
 int NS(ConfigGetIoPipeSocket) (NS_ARGS);
 int NS(ConfigGetStartAs) (NS_ARGS);
+
+int NS(LinkIsParent) (NS_ARGS);
+int NS(LinkIsConnected) (NS_ARGS);
+int NS(LinkGetCtxId) (NS_ARGS);
+int NS(LinkGetParent) (NS_ARGS);
+int NS(LinkCreate) (NS_ARGS);
+int NS(LinkCreateChild) (NS_ARGS);
+int NS(LinkDelete) (NS_ARGS);
 
 int NS(ServiceGetToken) (NS_ARGS);
 int NS(ServiceIsTransaction) (NS_ARGS);
@@ -455,18 +395,14 @@ int NS(MqS_Cmd) (
     { "ConfigGetIsString",	  NS(ConfigGetIsString)	      },
     { "ConfigGetIsSilent",	  NS(ConfigGetIsSilent)	      },
     { "ConfigGetIsServer",	  NS(ConfigGetIsServer)	      },
-    { "ConfigGetIsParent",	  NS(ConfigGetIsParent)	      },
     { "ConfigGetIsSlave",	  NS(ConfigGetIsSlave)	      },
-    { "ConfigGetIsConnected",	  NS(ConfigGetIsConnected)    },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetBuffersize",	  NS(ConfigGetBuffersize)     },
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
-    { "ConfigGetCtxId",		  NS(ConfigGetCtxId)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
     { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
-    { "ConfigGetParent",	  NS(ConfigGetParent)	      },
     { "ConfigGetMaster",	  NS(ConfigGetMaster)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
@@ -488,13 +424,20 @@ int NS(MqS_Cmd) (
 
 // CONTEXT
 
-    { "RenameTo",	      NS(RenameTo)		},
-    { "LinkCreate",	      NS(LinkCreate)		},
-    { "LinkCreateChild",      NS(LinkCreateChild)	},
-    { "LinkDelete",	      NS(LinkDelete)		},
-    { "Exit",		      NS(Exit)			},
-    { "Delete",		      NS(Delete)		},
-    { "dict",		      NS(dict)			},
+    { "RenameTo",		  NS(RenameTo)		      },
+    { "Exit",			  NS(Exit)		      },
+    { "Delete",			  NS(Delete)		      },
+    { "dict",			  NS(dict)		      },
+
+// Link
+
+    { "LinkIsParent",		  NS(LinkIsParent)	      },
+    { "LinkIsConnected",	  NS(LinkIsConnected)	      },
+    { "LinkGetCtxId",		  NS(LinkGetCtxId)	      },
+    { "LinkGetParent",		  NS(LinkGetParent)	      },
+    { "LinkCreate",		  NS(LinkCreate)	      },
+    { "LinkCreateChild",	  NS(LinkCreateChild)	      },
+    { "LinkDelete",		  NS(LinkDelete)	      },
 
 // ERROR
 
@@ -588,4 +531,8 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
+
+
+
+
 

@@ -305,20 +305,16 @@ namespace ccmsgque {
       // GET configuration data
 
       inline bool ConfigGetIsServer ()	    { return MqConfigGetIsServer(&context) != 0; }
-      inline bool ConfigGetIsParent ()	    { return MqConfigGetIsParent(&context) != 0; }
       inline bool ConfigGetIsSlave ()	    { return MqConfigGetIsSlave(&context) != 0; }
       inline bool ConfigGetIsString ()	    { return context.config.isString == MQ_YES; }
       inline bool ConfigGetIsSilent ()	    { return context.config.isSilent == MQ_YES; }
-      inline bool ConfigGetIsConnected ()   { return (context.link.onCreate == MQ_YES); }
       inline MQ_CST ConfigGetName ()	    { return context.config.name; }
       inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
       inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
       inline MQ_INT ConfigGetBuffersize ()  { return context.config.io.buffersize; }
       inline MQ_INT ConfigGetDebug ()	    { return context.config.debug; }
       inline MQ_TIME_T ConfigGetTimeout ()  { return context.config.io.timeout; }
-      inline MqC* ConfigGetParent ()	    { return context.config.parent ? GetThis(context.config.parent) : NULL; }
       inline MqC* ConfigGetMaster ()	    { return context.config.master ? GetThis(context.config.master) : NULL; }
-      inline int ConfigGetCtxId ()	    { return MqConfigGetCtxId(&context); };
       inline MQ_CST ConfigGetIoUdsFile ()   { return MqConfigGetIoUdsFile (&context); }
       inline MQ_CST ConfigGetIoTcpHost ()   { return MqConfigGetIoTcpHost (&context); }
       inline MQ_CST ConfigGetIoTcpPort ()   { return MqConfigGetIoTcpPort (&context); }
@@ -380,52 +376,72 @@ namespace ccmsgque {
 
     /// \}
 
-    /// \defgroup setup_API Link? : Create and Delete a Link
+    /// \defgroup Mq_Link_CC_API Mq_Link_CC_API
     /// \{
     public:
 
-    // PARENT
-
-      /// create a \e parent object
+      /// \copydoc MqLinkCreate
       void LinkCreateVC (int const argc, MQ_CST argv[]) {
 	LinkCreate (MqBufferLCreateArgs (argc, argv));
       }
-      /// create a \e parent object from \e vector
+      /// \copydoc MqLinkCreate
       inline void LinkCreateVT ( const std::vector<MQ_CST>& args) {
 	LinkCreateVC ((int const) args.size(), (MQ_CST*) &(*args.begin()));
       }
-      /// create a \e parent object from \e var_arg
+      /// \copydoc MqLinkCreate
       void LinkCreateVA (va_list ap) {
 	LinkCreate (MqBufferLCreateArgsVA (&context, ap));
       }
-      /// create a \e parent object from \e var_arg
+      /// \copydoc MqLinkCreate
       MQ_EXTERN void _LinkCreateV (int dummy, ...);
+      /// \copydoc MqLinkCreate
 #     define LinkCreateV(...) _LinkCreateV(0, __VA_ARGS__)
-      /// \sameas{MqLinkCreate} -> create a \e parent object from \e #MqBufferLS
+      /// \copydoc MqLinkCreate
       MQ_EXTERN void LinkCreate (struct MqBufferLS * argv);
 
-    // CHILD
-
-      /// create a \e child object
+      /// \copydoc MqLinkCreateChild
       void LinkCreateChildVC (MqC& parent, int const argc, MQ_CST *argv ) {
 	LinkCreateChild(parent, MqBufferLCreateArgs (argc, argv));
       }
-      /// create a \e child object from \e var_arg
+      /// \copydoc MqLinkCreateChild
       void LinkCreateChildVA (MqC& parent, va_list ap) {
 	LinkCreateChild(parent, MqBufferLCreateArgsVA(&context, ap));
       }
-      /// create a \e child object from \e var_arg
+      /// \copydoc MqLinkCreateChild
       MQ_EXTERN void _LinkCreateChildV (MqC& parent, int dummy, ...); 
+      /// \copydoc MqLinkCreateChild
 #     define LinkCreateChildV(parent,...) _LinkCreateChildV(parent,0, __VA_ARGS__)
-      /// create a \e child object from \e #MqBufferLS
+      /// \copydoc MqLinkCreateChild
       MQ_EXTERN void LinkCreateChild (MqC& parent, struct MqBufferLS * argv); 
-      /// create a \e child object from \e vector
+      /// \copydoc MqLinkCreateChild
       inline void LinkCreateChildVT ( MqC& parent, std::vector<MQ_CST>& args ) {
 	LinkCreateChildVC (parent, (int const ) args.size(), (MQ_CST*) &(*args.begin()));
       }
 
+      /// \copydoc MqLinkDelete
       void LinkDelete () {
 	MqLinkDelete (&context);
+      }
+
+      /// \copydoc MqLinkGetParent 
+      inline MqC* LinkGetParent ()	    { 
+	struct MqS * const parent = MqLinkGetParentI(&context);
+	return parent != NULL ? GetThis(parent) : NULL; 
+      }
+
+      /// \copydoc MqLinkIsParent
+      inline bool LinkIsParent ()	    { 
+	return MqLinkIsParentI(&context); 
+      }
+
+      /// \copydoc MqLinkIsConnected
+      inline bool LinkIsConnected ()   { 
+	return MqLinkIsConnectedI(&context); 
+      }
+
+      /// \copydoc MqLinkGetCtxId
+      inline MQ_SIZE LinkGetCtxId ()  { 
+	return MqLinkGetCtxIdI(&context); 
       }
 
     /// \}

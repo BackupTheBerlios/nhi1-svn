@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "7 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "8 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -8,7 +8,7 @@ tclmsgque \- The \fBTCL\fP \fBApplication-Server\fP and \fBProgramming-Language-
 \fBpackage require TclMsgque\fP
 .SH "INDEX"
 .PP
-\fBOBJECT CREATION AND DELETION\fP
+\fBCONTEXT API\fP
 .br
  \fBCONFIG API\fP
 .br
@@ -43,14 +43,24 @@ setup and maintain the event-handling for an asynchronous transfer
 .IP "\(bu" 2
 propagate the error messages from the server to the client
 .PP
-.SH "OBJECT CREATION AND DELETION"
+.SH "CONTEXT API"
 .PP
 .SS "MqS"
 The \fIobject\fP is the user visible part of a tclmsgque application link.
 .SS "set ctx [tclmsgque MqS]"
-Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBisConnected\fP to check if a link is already available.
+Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fB$ctx LinkIsConnected\fP to check if a link is already available.
+.PP
+\fBExample:\fP definition of a context: 
+.PP
+.nf
+ set ctx [tclmsgque MqS] 
+
+.fi
+.PP
 .SS "rename $ctx ''"
 Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
+.SS "$ctx Exit"
+Shutdown the entire communication and exit the current process or thread.
 .SH "CONFIG API"
 .PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
@@ -82,10 +92,6 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetSrvName\fP , \fBset:\fP \fCConfigSetSrvName\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
-.SS "ident"
-\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
-.PP
-Use string as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
@@ -94,10 +100,6 @@ Write (\fIno\fP) or don't write (\fIyes\fP) any output to stdout or stderr. (def
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fIyes\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
-.SS "ignoreExit"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
-.PP
-By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIyes\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs startAs\fP
 .PP
@@ -178,26 +180,22 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fCCommand-Object\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "ctxId"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetCtxId\fP , \fBset:\fP \fCNO\fP
-.PP
-return an identifier as integer and is \fIunique\fP per parent-context. The \fIparent-context\fP is always \fC0\fP and every new \fIchild-context\fP get a new identifier by adding 1.
-.SS "isConnected"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsConnected\fP , \fBset:\fP \fCNO\fP
-.PP
-Is the tclmsgque context connected ? A context is connected if the \fBLinkCreate\fP command was successful and a context is NOT connected if a) the object has just been created or b) the link was deleted with \fBLinkDelete\fP
 .SS "isServer"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
 True if object is a \fIserver\fP object (default: \fIno\fP, be a client)
-.SS "isParent"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsParent\fP , \fBset:\fP \fCNO\fP
-.PP
-True if object is a \fIparent\fP object (default: \fIyes\fP, be a parent)
 .SS "isSlave"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIno\fP, not be a slave)
+.SS "ignoreExit"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
+.PP
+By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fIyes\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
+.SS "ident"
+\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
+.PP
+Use string as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "interface: $ctx ConfigSetServerSetup callback"
 Interface to define a \fIserver\fP tclmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fIyes\fP.
 .SS "interface: $ctx ConfigSetServerCleanup callback"
@@ -216,43 +214,157 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .PP
 .SH "LINK API"
 .PP
-To create and to destroy a link is the main purpose of the tclmsgque library. A link is a client/server connection used to perform various tasks.
-.SS "$ctx LinkCreate ..."
-Create a \fIparent-context\fP using the \fBCONFIG API\fP. A parent-context is responsible to setup the client/server link:
+\fBLinkCreate\fP
+.br
+ \fBLinkCreateChild\fP
+.br
+ \fBLinkGetParent\fP
+.br
+ \fBLinkIsParent\fP
+.br
+ \fBLinkGetCtxId\fP
+.br
+ \fBLinkIsConnected\fP
+.br
+.PP
+setup and manage a \fIclient-server-link\fP 
+.PP
+To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library. 
+.SS "$ctx LinkCreate args..."
+make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
+.PP
+A \fIparent-context\fP is responsible to setup the \fIclient-server-link\fP 
 .IP "\(bu" 2
-the \fIclient-parent-context\fP create the \fIserver-parent-context\fP 
+the \fIclient-parent-context\fP start a new \fIclient-server-link\fP 
 .IP "\(bu" 2
 the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connection request
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIargs\fP command-line arguments including the \fB'@'\fP item for the \fI--pipe\fP setup 
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-commandline-arguments\fP for the \fI--pipe\fP setup.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP.
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP 
 .RE
 .PP
-.SS "$ctx LinkCreateChild $parent ..."
-Create a \fIchild-context\fP from a tclmsgque \fIparent-context\fP and command-line arguments. A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
+.SS "$ctx LinkCreateChild parent args..."
+make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP 
+.PP
+A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the object from \fBOBJECT CREATION AND DELETION\fP 
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIparent\fP the parent object 
+\fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
 .br
-\fIargs\fP all command-line arguments including the \fB'@'\fP token
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "$ctx LinkDelete"
-Close the client/server link and delete the underlying communication object. All depending objects will be deleted as well like depending \fIchild-context\fP and \fIslave-context\fP local and on the remote site of the link.
-.SS "$ctx Exit"
-Shutdown the entire communication and exit the current process or thread.
+close the \fIclient-server-link\fP 
+.PP
+On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIno\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fIyes\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+.SS "$ctx LinkGetParent"
+get the \fIparent-context\fP from a client/server link 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fIparent-context\fP or \fIempty\fP if not a \fIchild-context\fP 
+.RE
+.PP
+.SS "$ctx LinkGetCtxId"
+get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
+.PP
+The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the identifier as number 
+.RE
+.PP
+.SS "$ctx LinkIsParent"
+is the \fIcontext\fP a \fIparent-context\fP? 
+.PP
+A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIyes\fP or \fIno\fP 
+.RE
+.PP
+.SS "$ctx LinkIsConnected"
+is the context connected? 
+.PP
+A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
+.IP "\(bu" 2
+the context has just been created and not connected
+.IP "\(bu" 2
+the link was deleted with \fBLinkDelete\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIyes\fP or \fIno\fP 
+.RE
+.PP
 .SH "SERVICE API"
+.PP
+\fBServiceIdentifier\fP
+.br
+ \fBServiceCallback\fP
+.br
+ \fBServiceGetToken\fP
+.br
+ \fBServiceIsTransaction\fP
+.br
+ \fBServiceGetFilter\fP
+.br
+ \fBServiceCreate\fP
+.br
+ \fBServiceDelete\fP
+.br
+ \fBProcessEvent\fP
+.br
 .PP
 create and manage services 
 .PP
@@ -425,6 +537,29 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "SEND API"
 .PP
+\fBSendSTART\fP
+.br
+ \fBSendEND\fP
+.br
+ \fBSendEND_AND_WAIT\fP
+.br
+ \fBSendEND_AND_CALLBACK\fP
+.br
+ \fBSendRETURN\fP
+.br
+ \fBSendERROR\fP
+.br
+ \fBSendTYPE\fP
+.br
+ \fBSendN\fP
+.br
+ \fBSendBDY\fP
+.br
+ \fBSendL_START\fP
+.br
+ \fBSendL_END\fP
+.br
+.PP
 construct an outgoing \fIsend-data-package\fP. 
 .PP
 \fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
@@ -558,7 +693,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "$ctx Send<TYPE> value"
+.SS "$ctx SendTYPE value"
 append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
@@ -639,6 +774,27 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "READ API"
 .PP
+\fBReadTYPE\fP
+.br
+ \fBReadN\fP
+.br
+ \fBReadBDY\fP
+.br
+ \fBReadU\fP
+.br
+ \fBReadL_START\fP
+.br
+ \fBReadL_END\fP
+.br
+ \fBReadProxy\fP
+.br
+ \fBReadGetNumItems\fP
+.br
+ \fBReadItemExists\fP
+.br
+ \fBReadUndo\fP
+.br
+.PP
 extract data from an incoming \fIread-data-package\fP. 
 .PP
 \fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
@@ -660,7 +816,7 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
 
 .fi
 .PP
-.SS "set val [$ctx Read<TYPE>]"
+.SS "set val [$ctx ReadTYPE]"
 read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -730,6 +886,36 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
+.SS "$ctx ReadL_START ?buffer?"
+start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx ReadL_END\fP to finish the read. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.br
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBset val [$ctx ReadU]\fP call or \fIempty\fP to use the next item from the \fIread-data-package\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "$ctx ReadL_END"
+finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "$ctx ReadProxy otherCtx"
 link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
 .PP
@@ -775,36 +961,6 @@ boolean, \fIyes\fP or \fIno\fP
 undo the last \fBREAD API\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-an \fBEXCEPTION OBJECT\fP on error 
-.RE
-.PP
-.SS "$ctx ReadL_START ?buffer?"
-start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
-.PP
-Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx ReadL_END\fP to finish the read. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
-.br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBset val [$ctx ReadU]\fP call or \fIempty\fP to use the next item from the \fIread-data-package\fP. 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-an \fBEXCEPTION OBJECT\fP on error 
-.RE
-.PP
-.SS "$ctx ReadL_END"
-finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -938,46 +1094,76 @@ the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is n
 .PP
 .SH "BUFFER API"
 .PP
-The \fIclass MqBufferC\fP object is created by \fBReadU\fP and id used to save a \fBtypeless temporary data item\fP from the tclmsgque data package. The lifetime of the \fIclass MqBufferC\fP is only the current callback up to the next read operation of the same context.
+\fBBufferIdentifer\fP
+.br
+ \fBBufferGetTYPE\fP
+.br
+ \fBBufferType\fP
+.br
 .PP
+a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP 
+.PP
+The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
+.PP
+\fBExample:\fP read a \fIbuffer-object\fP and check for \fIstring-type\fP. 
 .PP
 .nf
-set buf [$ctx ReadU]
-if {[$buf GetType] == 'C'} {
-  puts [$buf GetC]
-}
+ set buf [$ctx ReadU] 
+ if {[$buf GetType] == 'C'} { 
+   puts [$buf GetC] 
+ } 
+
 .fi
 .PP
 .SS "TYPE IDENTIFIER"
-A tclmsgque buffer data package is type safe, this mean that every item has a type prefix and every \fBset val [$ctx Read<TYPE>]\fP or \fB$buffer Get[TYPE]\fP have to match the previous \fB$ctx Send<TYPE> value\fP with the same \fITYPE\fP. One exception, the cast from and to string (TYPE=C) is allowed. The following type identifier's are available:
+a collection of all \fInative-data-types\fP supported 
+.PP
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the StringObj datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character
+\fCY\fP : 1 byte signed character (IntObj)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean character using \fIyes\fP for yes or true or \fIno\fP for no or wrong
+\fCO\fP : 1 byte boolean value using \fIyes\fP or \fIno\fP (BooleanObj)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short
+\fCS\fP : 2 byte signed short (IntObj)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer
+\fCI\fP : 4 byte signed integer (InitObj)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer
+\fCW\fP : 8 byte signed long long integer (WideIntObj)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float
+\fCF\fP : 4 byte float (DoubleObj)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double
+\fCD\fP : 8 byte double (DoubleObj)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data
+\fCB\fP : unsigned char array used for binary data (ByteArrayObj)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end
+\fCC\fP : string data using a \fC\\0\fP at the end (StringObj)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above
+\fCU\fP : typeless buffer able to hold a single item from above (CmdObj)
 .PP
-.SS "$buffer Get[TYPE]"
+.SS "$buffer GetTYPE"
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)
 .SS "$buffer GetType"
 return the type as single character of the item stored in the buffer object.
 .SH "EXCEPTION OBJECT"
+.PP
+\fBErrorGetText\fP
+.br
+ \fBErrorGetNum\fP
+.br
+ \fBErrorC\fP
+.br
+ \fBErrorSet\fP
+.br
+ \fBErrorSetCONTINUE\fP
+.br
+ \fBErrorReset\fP
+.br
+ \fBErrorRaise\fP
+.br
+ \fBErrorPrint\fP
+.br
 .PP
 The exception object is used to transport a tclmsgque error using the \fITCLMSGQUE errorCode\fP.
 .PP

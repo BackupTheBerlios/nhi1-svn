@@ -1,40 +1,13 @@
-.TH "MqTypeAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqTypeAPI \- a collection of common used data types and definitions  
+Mq_Type_C_API \- a collection of common used data types and definitions  
 
 .PP
 .SS "Defines"
 
 .in +1c
-.ti -1c
-.RI "#define \fBmq_strtoll\fP   strtoll"
-.br
-.ti -1c
-.RI "#define \fBmq_strdup\fP(v)   strdup(v)"
-.br
-.ti -1c
-.RI "#define \fBmq_getpid\fP   getpid"
-.br
-.ti -1c
-.RI "#define \fBmq_unlink\fP   unlink"
-.br
-.ti -1c
-.RI "#define \fBmq_snprintf\fP   snprintf"
-.br
-.ti -1c
-.RI "#define \fBMQ_CLRCALL\fP"
-.br
-.ti -1c
-.RI "#define \fBMQ_STDCALL\fP"
-.br
-.ti -1c
-.RI "#define \fBMQ_CDECL\fP"
-.br
-.ti -1c
-.RI "#define \fBmq_inline\fP   inline"
-.br
 .ti -1c
 .RI "#define \fBMQ_DECL\fP   MQ_CDECL"
 .br
@@ -52,12 +25,6 @@ MqTypeAPI \- a collection of common used data types and definitions
 .RI "#define \fBunlikely\fP(x)   __builtin_expect((x),0)"
 .br
 .R "gcc jump optimization "
-.ti -1c
-.RI "#define \fBmq_timeval\fP   timeval"
-.br
-.ti -1c
-.RI "#define \fBmq_timezone\fP   timezone"
-.br
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT\fP   900"
 .br
@@ -230,215 +197,182 @@ a collection of common used data types and definitions
 .PP 
 .SS "#define BEGIN_C_DECLS"
 .PP
-Definition at line 98 of file msgque.h.
+Definition at line 107 of file msgque.h.
 .SS "#define END_C_DECLS"
 .PP
-Definition at line 99 of file msgque.h.
+Definition at line 108 of file msgque.h.
 .SS "#define likely(x)   __builtin_expect((x),1)"
 .PP
 gcc jump optimization 
 .PP
-Definition at line 112 of file msgque.h.
+Definition at line 121 of file msgque.h.
 .SS "#define MQ_ALFA   '@'"
 .PP
 MQ_ALFA the command-line separator between server and client. 
 .PP
-Definition at line 231 of file msgque.h.
+Definition at line 242 of file msgque.h.
 .SS "#define MQ_ALFA_STR   '@'"
 .PP
 MQ_ALFA the command-line separator as string. 
 .PP
-Definition at line 233 of file msgque.h.
-.SS "#define MQ_CDECL"
-.PP
-Definition at line 71 of file msgque.h.
-.SS "#define MQ_CLRCALL"
-.PP
-Definition at line 69 of file msgque.h.
+Definition at line 244 of file msgque.h.
 .SS "#define MQ_CPPSTR(s)   #s"
 .PP
 connecting of expressions, step 2 
 .PP
-Definition at line 228 of file msgque.h.
+Definition at line 239 of file msgque.h.
 .SS "#define MQ_CPPXSTR(s)   MQ_CPPSTR(s)"
 .PP
 connecting of expressions, step 1 
 .PP
-Definition at line 226 of file msgque.h.
+Definition at line 237 of file msgque.h.
 .SS "#define MQ_DECL   MQ_CDECL"
 .PP
-Definition at line 82 of file msgque.h.
+Definition at line 91 of file msgque.h.
 .SS "#define MQ_EXTERN"
 .PP
 define the external binding 
 .PP
-Definition at line 216 of file msgque.h.
-.SS "#define mq_getpid   getpid"
-.PP
-Definition at line 66 of file msgque.h.
-.SS "#define mq_inline   inline"
-.PP
-Definition at line 72 of file msgque.h.
+Definition at line 227 of file msgque.h.
 .SS "#define MQ_NO   0"
 .PP
 boolean NO 
 .PP
-Definition at line 319 of file msgque.h.
-.SS "#define mq_snprintf   snprintf"
-.PP
-Definition at line 68 of file msgque.h.
-.SS "#define MQ_STDCALL"
-.PP
-Definition at line 70 of file msgque.h.
-.SS "#define mq_strdup(v)   strdup(v)"
-.PP
-Definition at line 65 of file msgque.h.
-.PP
-Referenced by mq_strdup_save().
-.SS "#define mq_strtoll   strtoll"
-.PP
-Definition at line 64 of file msgque.h.
+Definition at line 330 of file msgque.h.
 .SS "#define MQ_TIMEOUT   900"
 .PP
 maximum timeout in sec (900 sec) 
 .PP
-Definition at line 149 of file msgque.h.
+Definition at line 160 of file msgque.h.
 .SS "#define MQ_TIMEOUT10   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
 .PP
 normal timeout in sec (90 sec) 
 .PP
-Definition at line 153 of file msgque.h.
+Definition at line 164 of file msgque.h.
 .SS "#define MQ_TIMEOUT180   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
 .PP
 very short timeout in sec (5 sec) 
 .PP
-Definition at line 160 of file msgque.h.
+Definition at line 171 of file msgque.h.
 .SS "#define MQ_TIMEOUT45   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
 .PP
 short timeout in sec (20 sec) 
 .PP
-Definition at line 155 of file msgque.h.
+Definition at line 166 of file msgque.h.
 .SS "#define MQ_TIMEOUT5   (MQ_TIMEOUT/5)"
 .PP
 long timeout in sec (180 sec) 
 .PP
-Definition at line 151 of file msgque.h.
+Definition at line 162 of file msgque.h.
 .SS "#define MQ_TIMEOUT90   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
 .PP
 shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' 
 .PP
-Definition at line 158 of file msgque.h.
+Definition at line 169 of file msgque.h.
 .SS "#define MQ_TIMEOUT_USER   -2"
 .PP
 request the user defined timeout value from the argument of the \fC--timeout\fP option 
 .PP
-Definition at line 162 of file msgque.h.
-.SS "#define mq_timeval   timeval"
-.PP
-Definition at line 137 of file msgque.h.
-.SS "#define mq_timezone   timezone"
-.PP
-Definition at line 138 of file msgque.h.
-.SS "#define mq_unlink   unlink"
-.PP
-Definition at line 67 of file msgque.h.
+Definition at line 173 of file msgque.h.
 .SS "#define MQ_YES   1"
 .PP
 boolean YES 
 .PP
-Definition at line 323 of file msgque.h.
+Definition at line 334 of file msgque.h.
+.PP
+Referenced by MqLinkIsConnectedI().
 .SS "#define unlikely(x)   __builtin_expect((x),0)"
 .PP
 gcc jump optimization 
 .PP
-Definition at line 115 of file msgque.h.
+Definition at line 124 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
 .PP
 8 byte \fBatom\fP data-type 
 .PP
-Definition at line 270 of file msgque.h.
+Definition at line 281 of file msgque.h.
 .SS "typedef struct \fBMqBufferLS\fP* \fBMQ_BFL\fP"
 .PP
 Buffer-List pointer data-type. 
 .PP
-Definition at line 305 of file msgque.h.
+Definition at line 316 of file msgque.h.
 .SS "typedef \fBMQ_BINB\fP* \fBMQ_BIN\fP"
 .PP
 \fIbyte-array\fP pointer data-type 
 .PP
-Definition at line 299 of file msgque.h.
+Definition at line 310 of file msgque.h.
 .SS "typedef unsigned char \fBMQ_BINB\fP"
 .PP
 \fIbyte-array\fP basic data-type 
 .PP
-Definition at line 288 of file msgque.h.
+Definition at line 299 of file msgque.h.
 .SS "typedef signed char \fBMQ_BOL\fP"
 .PP
 1 byte \fBboolean\fP data-type 
 .PP
-Definition at line 254 of file msgque.h.
+Definition at line 265 of file msgque.h.
 .SS "typedef struct \fBMqBufferS\fP* \fBMQ_BUF\fP"
 .PP
 Buffer pointer data-type. 
 .PP
-Definition at line 303 of file msgque.h.
+Definition at line 314 of file msgque.h.
 .SS "typedef signed char \fBMQ_BYT\fP"
 .PP
 1 byte \fBbyte\fP data-type 
 .PP
-Definition at line 243 of file msgque.h.
+Definition at line 254 of file msgque.h.
 .SS "typedef \fBMQ_STRB\fP const* \fBMQ_CST\fP"
 .PP
 const string pointer data-type 
 .PP
-Definition at line 297 of file msgque.h.
+Definition at line 308 of file msgque.h.
 .SS "typedef struct \fBMqS\fP* \fBMQ_CTX\fP"
 .PP
 Context pointer data-type. 
 .PP
-Definition at line 307 of file msgque.h.
+Definition at line 318 of file msgque.h.
 .SS "typedef double \fBMQ_DBL\fP"
 .PP
 8 byte \fBdouble\fP data-type 
 .PP
-Definition at line 268 of file msgque.h.
+Definition at line 279 of file msgque.h.
 .SS "typedef float \fBMQ_FLT\fP"
 .PP
 4 byte \fBfloat\fP data-type 
 .PP
-Definition at line 260 of file msgque.h.
+Definition at line 271 of file msgque.h.
 .SS "typedef int \fBMQ_HDL\fP"
 .PP
 handle data-type 
 .PP
-Definition at line 281 of file msgque.h.
+Definition at line 292 of file msgque.h.
 .SS "typedef int \fBMQ_INT\fP"
 .PP
 4 byte \fBinteger\fP data-type 
 .PP
-Definition at line 258 of file msgque.h.
+Definition at line 269 of file msgque.h.
 .SS "typedef \fBMQ_LSTB\fP* \fBMQ_LST\fP"
 .PP
 list pointer data-type 
 .PP
-Definition at line 301 of file msgque.h.
+Definition at line 312 of file msgque.h.
 .SS "typedef unsigned char \fBMQ_LSTB\fP"
 .PP
 list basic data-type 
 .PP
-Definition at line 290 of file msgque.h.
+Definition at line 301 of file msgque.h.
 .SS "typedef \fBMQ_PTRB\fP* \fBMQ_PTR\fP"
 .PP
 generic pointer data-type 
 .PP
-Definition at line 293 of file msgque.h.
+Definition at line 304 of file msgque.h.
 .SS "typedef void \fBMQ_PTRB\fP"
 .PP
 pointer basic data-type 
 .PP
-Definition at line 284 of file msgque.h.
+Definition at line 295 of file msgque.h.
 .SS "typedef int \fBMQ_SIZE\fP"
 .PP
 array size data-type 
@@ -450,37 +384,37 @@ array size data-type
 .PP
 
 .PP
-Definition at line 275 of file msgque.h.
+Definition at line 286 of file msgque.h.
 .SS "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
 .PP
 data type for a socket handle 
 .PP
-Definition at line 309 of file msgque.h.
+Definition at line 320 of file msgque.h.
 .SS "typedef short \fBMQ_SRT\fP"
 .PP
 2 byte \fBshort\fP data-type 
 .PP
-Definition at line 256 of file msgque.h.
+Definition at line 267 of file msgque.h.
 .SS "typedef \fBMQ_STRB\fP* \fBMQ_STR\fP"
 .PP
 string pointer data-type 
 .PP
-Definition at line 295 of file msgque.h.
+Definition at line 306 of file msgque.h.
 .SS "typedef char \fBMQ_STRB\fP"
 .PP
 string basic data-type 
 .PP
-Definition at line 286 of file msgque.h.
+Definition at line 297 of file msgque.h.
 .SS "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
 .PP
 OS wide MQ_TIME_T. 
 .PP
-Definition at line 278 of file msgque.h.
+Definition at line 289 of file msgque.h.
 .SS "typedef long long int \fBMQ_WID\fP"
 .PP
 8 byte \fBwide\fP integer data-type 
 .PP
-Definition at line 265 of file msgque.h.
+Definition at line 276 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqWaitOnEventE\fP"
@@ -499,7 +433,7 @@ wait for one new event
 \fB\fIMQ_WAIT_FOREVER \fP\fP
 wait forever 
 .PP
-Definition at line 327 of file msgque.h.
+Definition at line 338 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

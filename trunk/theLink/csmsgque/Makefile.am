@@ -24,9 +24,13 @@
 
 SUFFIXES = .cs .dll .exe
 
+CSHARP_FILES = $(srcdir)/buffer.cs $(srcdir)/config.cs $(srcdir)/csmsgque.cs $(srcdir)/link.cs $(srcdir)/pointer.cs \
+	$(srcdir)/send.cs $(srcdir)/slave.cs $(srcdir)/bufferL.cs $(srcdir)/context.cs $(srcdir)/error.cs \
+	$(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs $(srcdir)/sys.cs
+
 if USE_CSHARP
-csmsgque.dll: $(srcdir)/*.cs .vpath_hook
-	$(CSCOMP) -v -nologo $(CSHARP_DEBUG) -out:$@ -target:library $(srcdir)/*.cs
+csmsgque.dll: $(CSHARP_FILES) .vpath_hook
+	$(CSCOMP) -v -nologo $(CSHARP_DEBUG) -out:$@ -target:library $(CSHARP_FILES)
 endif
 
 csharpdir = $(pkglibdir)
@@ -36,7 +40,7 @@ BUILT_SOURCES = .vpath_hook csmsgque.dll
 
 VPATH_FILES = csmsgque.dll
 
-EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
+EXTRA_DIST = $(CSHARP_FILES) $(BUILT_SOURCES)
 
 MAINTAINERCLEANFILES = $(VPATH_FILES)
 

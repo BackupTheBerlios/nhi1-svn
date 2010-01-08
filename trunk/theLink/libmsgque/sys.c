@@ -387,7 +387,7 @@ int gettimeofday(
 #endif /* ! _MSC_VER */
 
 enum MqErrorE
-SysGetTimeOfDay (
+MqSysGetTimeOfDay (
   struct MqS * const context,
   struct mq_timeval * tv,
   struct mq_timezone * tz

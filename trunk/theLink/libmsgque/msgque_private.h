@@ -260,10 +260,6 @@ struct MqS * pMqGetFirstParent(
   struct MqS * const context
 );
 
-void pMqShutdown (
-  struct MqS * const context
-);
-
 enum MqErrorE MQ_DECL pCallFactory (
   struct MqS * const context,
   enum MqFactoryE create,

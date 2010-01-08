@@ -46,16 +46,32 @@ public abstract class MqS {
 
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javamisc_api Misc Functions
+/// \defgroup Mq_Java_API
 /// \{
-/// \brief A collection of Misc Functions
+/// \copydoc Mq_Link_C_API
 
-  /// \brief constructor used to create a \e parent object
-  public native void LinkCreate(String... args) throws MqSException;
+  /// \copydoc MqLinkCreate
+  public native void LinkCreate (String... args) throws MqSException;
 
-  /// \brief constructor used to create a \e child object
-  public native void LinkCreateChild(MqS parent, String... args) throws MqSException;
+  /// \copydoc MqLinkCreateChild
+  public native void LinkCreateChild (MqS parent, String... args) throws MqSException;
+
+  /// \copydoc MqLinkDelete
+  public native void LinkDelete ();
+
+  /// \copydoc MqLinkGetParent
+  public native MqS LinkGetParent ();
+
+  /// \copydoc MqLinkIsParent
+  public native boolean	LinkIsParent ();
+
+  /// \copydoc MqLinkIsConnected
+  public native boolean	LinkIsConnected ();
+
+  /// \copydoc MqLinkGetCtxId
+  public native int LinkGetCtxId ();
+
+/// \}
 
   private native void ContextCreate();
   private native void ContextDelete();
@@ -69,9 +85,6 @@ public abstract class MqS {
   protected void finalize() {
     ContextDelete();
   } 
-
-  /// \api #MqLinkDelete
-  public native void LinkDelete ();
 
   /// \api #MqExit
   public native void Exit ();
@@ -108,8 +121,6 @@ public abstract class MqS {
   public native int     ErrorGetNum         ();
   public native String  ErrorGetText        ();
   public native void    ErrorPrint          ();
-
-/// \}
 
 //
 // ========================================================================
@@ -298,16 +309,12 @@ public abstract class MqS {
 
   /// \api #MqConfigGetIsServer
   public native boolean	ConfigGetIsServer     ();
-  /// \api #MqConfigGetIsParent
-  public native boolean	ConfigGetIsParent     ();
   /// \api #MqConfigGetIsSlave
   public native boolean	ConfigGetIsSlave      ();
   /// \api #MqConfigGetIsString
   public native boolean	ConfigGetIsString     ();
   /// \api #MqConfigGetIsSilent
   public native boolean	ConfigGetIsSilent     ();
-  /// \api #MqConfigGetIsConnected
-  public native boolean	ConfigGetIsConnected  ();
   /// \api #MqConfigGetBuffersize
   public native int	ConfigGetBuffersize   ();
   /// \api #MqConfigGetTimeout
@@ -320,12 +327,8 @@ public abstract class MqS {
   public native String	ConfigGetIdent	      ();
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
-  /// \api #MqConfigGetParent
-  public native MqS	ConfigGetParent	      ();
   /// \api #MqConfigGetMaster
   public native MqS	ConfigGetMaster	      ();
-  /// \api #MqConfigGetCtxId
-  public native int	ConfigGetCtxId	      ();
   /// \api #MqConfigGetStartAs
   public native int	ConfigGetStartAs      ();
   /// \api #MqConfigGetIoTcpHost

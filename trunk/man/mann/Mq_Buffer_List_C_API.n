@@ -1,8 +1,8 @@
-.TH "MqBufferListAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqBufferListAPI \- create and manage a list of \fBMqBufferS\fP objects.  
+Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.  
 
 .PP
 .SS "Data Structures"

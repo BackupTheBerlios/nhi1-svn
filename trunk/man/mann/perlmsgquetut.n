@@ -1,4 +1,4 @@
-.TH "perlmsgque Tutorial" n "7 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque Tutorial" n "8 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

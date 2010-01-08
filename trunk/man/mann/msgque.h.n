@@ -1,8 +1,8 @@
-.TH "msgque.h" n "7 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "8 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 126 2010-01-07 15:56:50Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -91,7 +91,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqBufferS\fP"
 .br
-.R "defines an object to store generic (e.g mixed typed) data. "
+.R "a single object to store a \fInative-type-data-item\fP defined by \\11 "
 .ti -1c
 .RI "struct \fBMqBufferLS\fP"
 .br
@@ -475,7 +475,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
 .br
-.R "a enum for all data types supported by \fBMqBufferS\fP "
+.R "a collection of all \fInative-data-types\fP supported "
 .ti -1c
 .RI "enum \fBMqAllocE\fP { \fBMQ_ALLOC_STATIC\fP =  0, \fBMQ_ALLOC_DYNAMIC\fP =  1 }"
 .br
@@ -641,10 +641,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsParent\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "does the \fIcontext\fP object is a \fIparent\fP ? "
-.ti -1c
 .RI "int \fBMqConfigGetIsSlave\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIslave\fP ? "
@@ -656,10 +652,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .RI "int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIsilent\fP ? "
-.ti -1c
-.RI "int \fBMqConfigGetIsConnected\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "does the \fIcontext\fP object is \fIconnected\fP ? "
 .ti -1c
 .RI "int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
 .br
@@ -693,17 +685,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .br
 .R "get the \fItimeout\fP value of the \fIcontext\fP object "
 .ti -1c
-.RI "struct \fBMqS\fP * \fBMqConfigGetParent\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "get the \fIparent\fP value of the \fIconfig\fP object "
-.ti -1c
 .RI "struct \fBMqS\fP * \fBMqConfigGetMaster\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "get the \fImaster\fP value of the \fIconfig\fP object "
-.ti -1c
-.RI "\fBMQ_SIZE\fP \fBMqConfigGetCtxId\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "return the context-identification "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
@@ -749,22 +733,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .br
 .R "helper to set the application specific \fCfork\fP functions "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "create a parent \fBlibmsgque\fP object link "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const context, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "create a child \fBlibmsgque\fP object link "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argsP)"
-.br
-.R "wrapper for \fBMqLinkCreate\fP with \fIargv\fP error check "
-.ti -1c
-.RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const context)"
-.br
-.R "delete a \fBlibmsgque\fP object "
-.ti -1c
 .RI "void \fBMqExit\fP (struct \fBMqS\fP *context)"
 .br
 .R "exit the current process or thread "
@@ -774,6 +742,50 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .R "write \fBlibmsgque\fP specific user-help to stderr "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
+.br
+.R "make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
+.br
+.R "make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
+.br
+.R "helper: wrapper for \fBMqLinkCreate\fP with additional \fIerror-check\fP "
+.ti -1c
+.RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "close the \fIclient-server-link\fP "
+.ti -1c
+.RI "int \fBMqLinkIsConnected\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "is the context connected? "
+.ti -1c
+.RI "static int \fBMqLinkIsConnectedI\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.ti -1c
+.RI "struct \fBMqS\fP * \fBMqLinkGetParent\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the \fIparent-context\fP from a client/server link "
+.ti -1c
+.RI "static struct \fBMqS\fP * \fBMqLinkGetParentI\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.ti -1c
+.RI "int \fBMqLinkIsParent\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "is the \fIcontext\fP a \fIparent-context\fP? "
+.ti -1c
+.RI "static int \fBMqLinkIsParentI\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqLinkGetCtxId\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP "
+.ti -1c
+.RI "static \fBMQ_SIZE\fP \fBMqLinkGetCtxIdI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filter)"
@@ -1392,13 +1404,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .br
 .R "'basename' system call with error handling feature "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
+.RI "enum \fBMqErrorE\fP \fBMqSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
 .br
 .R "'gettimeofday' system call with error handling feature "
 .ti -1c
-.RI "static mq_inline \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
+.RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
 .br
-.R "the function \fIstrdup\fP which allows the argument \fCNULL\fP "
+.R "duplicate a string, the argument \fCNULL\fP is allowd "
 .ti -1c
 .RI "void \fBMqLog\fP (FILE *channel, \fBMQ_CST\fP const fmt,...)"
 .br
@@ -1470,13 +1482,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 125 2010-01-06 15:24:29Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 126 2010-01-07 15:56:50Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 125 $ 
+$Rev: 126 $ 
 .RE
 .PP
 \fBAuthor:\fP

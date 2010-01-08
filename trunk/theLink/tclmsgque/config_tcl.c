@@ -290,13 +290,6 @@ int NS(ConfigSetDaemon) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetCtxId) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetCtxId(MQCTX)));
-  RETURN_TCL
-}
-
 int NS(ConfigGetDebug) (NS_ARGS)
 {
   CHECK_NOARGS
@@ -339,24 +332,10 @@ int NS(ConfigGetIsServer) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetIsParent) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.config.parent == NULL));
-  RETURN_TCL
-}
-
 int NS(ConfigGetIsSlave) (NS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.config.master != NULL));
-  RETURN_TCL
-}
-
-int NS(ConfigGetIsConnected) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.link.read != NULL));
   RETURN_TCL
 }
 
@@ -382,17 +361,6 @@ int NS(ConfigGetIdent) (NS_ARGS)
   CHECK_NOARGS
   str = MqConfigGetIdent(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
-  RETURN_TCL
-}
-
-int NS(ConfigGetParent) (NS_ARGS)
-{
-  CHECK_NOARGS
-  if (tclctx->mqctx.config.parent != NULL) {
-    Tcl_SetObjResult(interp,(Tcl_Obj*)tclctx->mqctx.config.parent->self);
-  } else {
-    Tcl_SetResult(interp,"", TCL_STATIC);
-  }
   RETURN_TCL
 }
 

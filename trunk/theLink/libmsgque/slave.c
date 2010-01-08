@@ -14,6 +14,7 @@
 #include "slave.h"
 #include "error.h"
 #include "bufferL.h"
+#include "link.h"
 
 #define MQ_CONTEXT_S context
 

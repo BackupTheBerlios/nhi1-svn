@@ -1,8 +1,8 @@
-.TH "MqConfigAPI" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqConfigAPI \- configuration of the \fBMqS\fP object  
+Mq_Config_C_API \- configuration of the \fBMqS\fP object  
 
 .PP
 .SS "Data Structures"
@@ -272,10 +272,6 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsParent\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "does the \fIcontext\fP object is a \fIparent\fP ? "
-.ti -1c
 .RI "int \fBMqConfigGetIsSlave\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIslave\fP ? "
@@ -287,10 +283,6 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .RI "int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIsilent\fP ? "
-.ti -1c
-.RI "int \fBMqConfigGetIsConnected\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "does the \fIcontext\fP object is \fIconnected\fP ? "
 .ti -1c
 .RI "int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
 .br
@@ -324,17 +316,9 @@ MqConfigAPI \- configuration of the \fBMqS\fP object
 .br
 .R "get the \fItimeout\fP value of the \fIcontext\fP object "
 .ti -1c
-.RI "struct \fBMqS\fP * \fBMqConfigGetParent\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "get the \fIparent\fP value of the \fIconfig\fP object "
-.ti -1c
 .RI "struct \fBMqS\fP * \fBMqConfigGetMaster\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "get the \fImaster\fP value of the \fIconfig\fP object "
-.ti -1c
-.RI "\fBMQ_SIZE\fP \fBMqConfigGetCtxId\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "return the context-identification "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
@@ -403,12 +387,12 @@ configuration of the \fBMqS\fP object
 .PP 
 .SS "#define MQ_PRIVATE_CONFIG_CONST   const"
 .PP
-Definition at line 958 of file msgque.h.
+Definition at line 989 of file msgque.h.
 .SS "#define MqFactoryS_NULL   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
 .PP
-Definition at line 531 of file msgque.h.
+Definition at line 562 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef void( * \fBMqDeleteF\fP)(struct \fBMqS\fP *const context)"
@@ -423,42 +407,42 @@ delete a \fIparent\fP context as the thread exit point
 .PP
 
 .PP
-Definition at line 432 of file msgque.h.
+Definition at line 463 of file msgque.h.
 .SS "typedef void( * \fBMqExitF\fP)(int num)"
 .PP
 prototype for exit a process or thread 
 .PP
-Definition at line 536 of file msgque.h.
+Definition at line 567 of file msgque.h.
 .SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .PP
 prototype for a Object-Delete factory function 
 .PP
-Definition at line 490 of file msgque.h.
+Definition at line 521 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
 prototype for the \fCfork\fP sys-call 
 .PP
-Definition at line 406 of file msgque.h.
+Definition at line 437 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
 .PP
 application specific help function type 
 .PP
-Definition at line 463 of file msgque.h.
+Definition at line 494 of file msgque.h.
 .SS "typedef void( * \fBMqSetupF\fP)(struct \fBMqS\fP *const )"
 .PP
 used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands 
 .PP
-Definition at line 542 of file msgque.h.
+Definition at line 573 of file msgque.h.
 .SS "typedef void( * \fBMqTokenDataFreeF\fP)(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a free additional token data function 
 .PP
-Definition at line 447 of file msgque.h.
+Definition at line 478 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
 prototype for the \fCvfork\fP sys-call 
 .PP
-Definition at line 409 of file msgque.h.
+Definition at line 440 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqFactoryE\fP"
@@ -481,7 +465,7 @@ the \fIfactory\fP is called to create an object for ...
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 468 of file msgque.h.
+Definition at line 499 of file msgque.h.
 .SS "enum \fBMqIoComE\fP"
 .PP
 what kind of socket interface to use? 
@@ -496,7 +480,7 @@ what kind of socket interface to use?
 \fB\fIMQ_IO_PIPE \fP\fP
 
 .PP
-Definition at line 576 of file msgque.h.
+Definition at line 607 of file msgque.h.
 .SS "enum \fBMqStartE\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -516,7 +500,7 @@ create entity as \fIthread\fP
 \fB\fIMQ_START_SPAWN \fP\fP
 create entity as \fIspawn\fP process 
 .PP
-Definition at line 554 of file msgque.h.
+Definition at line 585 of file msgque.h.
 .SS "enum \fBMqStatusIsE\fP"
 .PP
 Information about how the \fIcontext\fP was created. 
@@ -539,7 +523,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 545 of file msgque.h.
+Definition at line 576 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_BOL\fP MqConfigCheckIdent (struct \fBMqS\fP *const  context, \fBMQ_CST\fP ident)"
@@ -578,21 +562,6 @@ the \fCcontext.config.buffersize\fP(R/S) value
 .RE
 .PP
 
-.SS "\fBMQ_SIZE\fP MqConfigGetCtxId (struct \fBMqS\fP const *const  context)"
-.PP
-return the context-identification 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the context-identification number
-.RE
-.PP
-The context-identification is a number and is used in the protocol to link a data-package to a context-pointer. This is necessary because the communication interface (\fCmsgque->io\fP) of a parent-context is used by the child-context too. 
 .SS "\fBMQ_INT\fP MqConfigGetDebug (struct \fBMqS\fP const *const  context)"
 .PP
 get the \fIdebug\fP value of the \fIcontext\fP object 
@@ -663,21 +632,6 @@ get the \fBMqIoTcpConfigS::port\fP configuration data
 .PP
 return the \fBMqIoUdsConfigS::file\fP value 
 .PP
-.SS "int MqConfigGetIsConnected (struct \fBMqS\fP const *const  context)"
-.PP
-does the \fIcontext\fP object is \fIconnected\fP ? 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fC(context->link != NULL)\fP value 
-.RE
-.PP
-
 .SS "int MqConfigGetIsDupAndThread (struct \fBMqS\fP const *const  context)"
 .PP
 does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? 
@@ -690,21 +644,6 @@ does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ?
 \fBReturns:\fP
 .RS 4
 the \fC((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_IS_THREAD))\fP value 
-.RE
-.PP
-
-.SS "int MqConfigGetIsParent (struct \fBMqS\fP const *const  context)"
-.PP
-does the \fIcontext\fP object is a \fIparent\fP ? 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fC(context->config.parent == NULL)\fP value 
 .RE
 .PP
 
@@ -800,21 +739,6 @@ the \fCcontext.config.name\fP value
 \fBAttention:\fP
 .RS 4
 the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
-.RE
-.PP
-
-.SS "struct \fBMqS\fP* MqConfigGetParent (struct \fBMqS\fP const *const  context)\fC [read]\fP"
-.PP
-get the \fIparent\fP value of the \fIconfig\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqConfigS::parent\fP value 
 .RE
 .PP
 

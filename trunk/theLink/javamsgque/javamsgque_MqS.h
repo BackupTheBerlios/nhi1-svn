@@ -25,6 +25,46 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkCreateChild
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    LinkDelete
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkDelete
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkGetParent
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_LinkGetParent
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkIsParent
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsParent
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkIsConnected
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsConnected
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkGetCtxId
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_LinkGetCtxId
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ContextCreate
  * Signature: ()V
  */
@@ -37,14 +77,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextDelete
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkDelete
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkDelete
   (JNIEnv *, jobject);
 
 /*
@@ -649,14 +681,6 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsServer
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetIsParent
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsParent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigGetIsSlave
  * Signature: ()Z
  */
@@ -677,14 +701,6 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsString
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsSilent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetIsConnected
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsConnected
   (JNIEnv *, jobject);
 
 /*
@@ -737,26 +753,10 @@ JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetDebug
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetParent
- * Signature: ()Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetParent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigGetMaster
  * Signature: ()Ljavamsgque/MqS;
  */
 JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetMaster
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetCtxId
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetCtxId
   (JNIEnv *, jobject);
 
 /*

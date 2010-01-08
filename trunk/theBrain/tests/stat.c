@@ -73,7 +73,7 @@ StatInit (
   StatTimerSP timer
 )
 {
-  return SysGetTimeOfDay (timer->mqctx, &timer->tv, &timer->tz);
+  return MqSysGetTimeOfDay (timer->mqctx, &timer->tv, &timer->tz);
 }
 
 /// \brief initialize a statistic timer object #StatTimerS with a given date/time
@@ -215,7 +215,7 @@ StatCtxCalc (
 
   if (!timer->tv.tv_sec) return;
 
-  SysGetTimeOfDay (NULL, &tv, &tz);
+  MqSysGetTimeOfDay (NULL, &tv, &tz);
 
   dsec = tv.tv_sec - timer->tv.tv_sec;
   dusec = tv.tv_usec - timer->tv.tv_usec;

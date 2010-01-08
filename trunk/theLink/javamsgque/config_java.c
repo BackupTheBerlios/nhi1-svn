@@ -130,17 +130,7 @@ GetI(ConfigGetDebug)
 GetO(ConfigGetIsString)
 GetO(ConfigGetIsSilent)
 GetO(ConfigGetIsServer)
-GetO(ConfigGetIsParent)
 GetO(ConfigGetIsSlave)
-GetO(ConfigGetIsConnected)
-
-JNIEXPORT jobject JNICALL NS(ConfigGetParent) (
-  JNIEnv    *env, 
-  jobject   self
-)
-{
-  return (CONTEXT->config.parent == NULL ? NULL : ((jobject)CONTEXT->config.parent->self));
-}
 
 JNIEXPORT jobject JNICALL NS(ConfigGetMaster) (
   JNIEnv    *env, 
@@ -155,5 +145,4 @@ GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
 GetC(ConfigGetIdent)
-GetI(ConfigGetCtxId)
 

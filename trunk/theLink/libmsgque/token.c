@@ -23,6 +23,7 @@
 #include "log.h"
 #include "trans.h"
 #include "cache.h"
+#include "link.h"
 
 BEGIN_C_DECLS
 

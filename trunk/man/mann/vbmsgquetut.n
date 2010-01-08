@@ -1,4 +1,4 @@
-.TH "vbmsgque Tutorial" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque Tutorial" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -132,7 +132,7 @@ Three things are important:
 .IP "1." 4
 the \fBsend\fP style of functions
 .IP "2." 4
-the \fBctx.ServiceCreate(String token, AddressOf callback)\fP function
+the \fBctx.ServiceCreate(token As String, AddressOf callback)\fP function
 .IP "3." 4
 a \fBconnected\fP context of type \fBMqS\fP
 .PP
@@ -142,19 +142,19 @@ First: start a data package with \fBctx.SendSTART()\fP
 .IP "2." 4
 Last: submit the a data package to the link target using one of:
 .IP "  \(bu" 4
-\fBctx.SendEND(String token)\fP
+\fBctx.SendEND(token As String)\fP
 .IP "  \(bu" 4
-\fBctx.SendEND_AND_WAIT(String token, [Integer timeout])\fP
+\fBctx.SendEND_AND_WAIT(token As String, [timeout As Integer])\fP
 .IP "  \(bu" 4
-\fBctx.SendEND_AND_CALLBACK(String token, AddressOf callback)\fP
+\fBctx.SendEND_AND_CALLBACK(token As String, AddressOf callback)\fP
 .IP "  \(bu" 4
 \fBctx.SendRETURN()\fP
 .PP
 
 .PP
-The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(String token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(token As String) ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
-Services are created with the \fBctx.ServiceCreate(String token, AddressOf callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+Services are created with the \fBctx.ServiceCreate(token As String, AddressOf callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
 The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
 .SH "CLIENT"

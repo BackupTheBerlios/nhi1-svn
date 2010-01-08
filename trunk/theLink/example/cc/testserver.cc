@@ -18,12 +18,12 @@ class testserver : public MqC, public IServerSetup, public IFactory {
   private:
     void GTCX () {
       SendSTART();
-      SendI(ConfigGetCtxId());
+      SendI(LinkGetCtxId());
       SendC("+");
-      if (ConfigGetIsParent()) {
+      if (LinkIsParent()) {
 	SendI(-1);
       } else {
-	SendI(ConfigGetParent()->ConfigGetCtxId());
+	SendI(LinkGetParent()->LinkGetCtxId());
       }
       SendC("+");
       SendC(ConfigGetName());
@@ -48,3 +48,6 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   }
   ctx.Exit ();
 }
+
+
+

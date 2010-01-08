@@ -28,6 +28,10 @@ ALIASES		    += "no=\e no"
 ALIASES		    += "package=package require TclMsgque"
 
 # OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+set ctx [tclmsgque MqS] \n\
+\endcode"
+
 ALIASES		    += "MqS=MqS"
 ALIASES		    += "ObjectCreate=set ctx [tclmsgque MqS]"
 ALIASES		    += "ObjectDelete=rename $ctx \"\""
@@ -76,25 +80,13 @@ ALIASES		    += "config_type_isServer=boolean"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
 
-ALIASES		    += "config_type_isParent=boolean"
-ALIASES		    += "config_set_isParent=NO"
-ALIASES		    += "config_get_isParent=ConfigGetIsParent"
-
 ALIASES		    += "config_type_isSlave=boolean"
 ALIASES		    += "config_set_isSlave=NO"
 ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
 
-ALIASES             += "config_type_isConnected=boolean"
-ALIASES             += "config_set_isConnected=NO"
-ALIASES             += "config_get_isConnected=ConfigGetIsConnected"
-
 ALIASES		    += "config_type_master=Command-Object"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=ConfigGetMaster"
-
-ALIASES		    += "config_type_ctxId=int"
-ALIASES		    += "config_set_ctxId=NO"
-ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
 
 ALIASES		    += "config_type_startAs=integer"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs startAs"
@@ -123,9 +115,13 @@ ALIASES             += "config_IBgError=$ctx ConfigSetBgError callback"
 ALIASES		    += "config_IEvent=$ctx ConfigSetEvent callback"
 
 # LINK CREATION AND DELETION
-ALIASES		    += "LinkCreate=$ctx LinkCreate ..."
-ALIASES		    += "LinkCreateChild=$ctx LinkCreateChild $parent ..."
+ALIASES		    += "LinkCreate=$ctx LinkCreate args..."
+ALIASES		    += "LinkCreateChild=$ctx LinkCreateChild parent args..."
 ALIASES		    += "LinkDelete=$ctx LinkDelete"
+ALIASES		    += "LinkGetParent=$ctx LinkGetParent"
+ALIASES		    += "LinkGetCtxId=$ctx LinkGetCtxId"
+ALIASES		    += "LinkIsParent=$ctx LinkIsParent"
+ALIASES		    += "LinkIsConnected=$ctx LinkIsConnected"
 ALIASES		    += "Exit=$ctx Exit"
 
 # SEND DATA
@@ -136,7 +132,7 @@ ALIASES		    += "SendEND_AND_WAIT=$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOU
 ALIASES		    += "SendEND_AND_CALLBACK=$ctx SendEND_AND_CALLBACK token callback"
 ALIASES		    += "SendRETURN=$ctx SendRETURN"
 ALIASES		    += "SendERROR=$ctx SendERROR"
-ALIASES		    += "Send_TYPE=$ctx Send<TYPE> value"
+ALIASES		    += "SendTYPE=$ctx SendTYPE value"
 ALIASES		    += "SendL_START=$ctx SendL_START"
 ALIASES		    += "SendL_END=$ctx SendL_END"
 ALIASES		    += "SendN=$ctx SendN value"
@@ -144,7 +140,7 @@ ALIASES		    += "SendBDY=$ctx SendBDY value"
 
 # READ DATE
 ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
-ALIASES		    += "Read_TYPE=set val [$ctx Read<TYPE>]"
+ALIASES		    += "ReadTYPE=set val [$ctx ReadTYPE]"
 ALIASES		    += "ReadU=set val [$ctx ReadU]"
 ALIASES		    += "ReadN=set val [$ctx ReadN]"
 ALIASES		    += "ReadBDY=set val [$ctx ReadBDY]"
@@ -183,9 +179,27 @@ ALIASES		    += "SlaveDelete=$ctx SlaveDelete id"
 ALIASES		    += "SlaveGet=$ctx SlaveGet id"
 
 # THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+set buf [$ctx ReadU] \n\
+if {[$buf GetType] == 'C'} { \n\
+  puts [$buf GetC] \n\
+} \n\
+\endcode"
+
 ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
-ALIASES		    += "BufferGet_TYPE=$buffer Get[TYPE]"
+ALIASES		    += "BufferGetTYPE=$buffer GetTYPE"
 ALIASES		    += "BufferType=$buffer GetType"
+
+ALIASES		    += "Y=IntObj"
+ALIASES		    += "O=BooleanObj"
+ALIASES		    += "S=IntObj"
+ALIASES		    += "I=InitObj"
+ALIASES		    += "F=DoubleObj"
+ALIASES		    += "W=WideIntObj"
+ALIASES		    += "D=DoubleObj"
+ALIASES		    += "C=StringObj"
+ALIASES		    += "B=ByteArrayObj"
+ALIASES		    += "U=CmdObj"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA

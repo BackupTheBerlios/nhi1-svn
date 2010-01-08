@@ -13,7 +13,7 @@
 #ifndef MQ_MSGQUE_H
 #define MQ_MSGQUE_H
 
-/** \defgroup MqPublicAPI PUBLIC:
+/** \defgroup Mq_C_API Mq_C_API
  *  \{
  *  \brief public libmsgque API
  */
@@ -25,7 +25,7 @@
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqTypeAPI MqTypeAPI
+/** \defgroup Mq_Type_C_API Mq_Type_C_API
  *  \{
  *  \brief a collection of common used data types and definitions
  */
@@ -61,14 +61,23 @@
 /* ###                                                                 ### */
 /* ####################################################################### */
 
+/// \ingroup Mq_System_C_API
 # define mq_strtoll strtoll
+/// \ingroup Mq_System_C_API
 # define mq_strdup(v) strdup(v)
+/// \ingroup Mq_System_C_API
 # define mq_getpid getpid
+/// \ingroup Mq_System_C_API
 # define mq_unlink unlink
+/// \ingroup Mq_System_C_API
 # define mq_snprintf snprintf
+/// \ingroup Mq_System_C_API
 # define MQ_CLRCALL
+/// \ingroup Mq_System_C_API
 # define MQ_STDCALL
+/// \ingroup Mq_System_C_API
 # define MQ_CDECL
+/// \ingroup Mq_System_C_API
 # define mq_inline inline
 
 #endif
@@ -134,7 +143,9 @@ struct mq_timezone {
   int  tz_dsttime;          ///< type of dst correction
 };
 #else
+/// \ingroup Mq_System_C_API
 #define mq_timeval timeval
+/// \ingroup Mq_System_C_API
 #define mq_timezone timezone
 struct mq_timeval;
 struct mq_timezone;
@@ -162,28 +173,28 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT_USER -2
 #endif
 
-/// \ingroup MqErrorAPI
+/// \ingroup Mq_Error_C_API
 /// \brief panic on error
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PANIC ((struct MqS*)NULL)
 
-/// \ingroup MqErrorAPI
+/// \ingroup Mq_Error_C_API
 /// \brief ignore error and do not generate any error-text (don't fill the error object)
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_IGNORE ((struct MqS*)0x1)
 
-/// \ingroup MqErrorAPI
+/// \ingroup Mq_Error_C_API
 /// \brief print error to stderr
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
 #define MQ_ERROR_PRINT ((struct MqS*)0x2)
 
-/// \ingroup MqErrorAPI
+/// \ingroup Mq_Error_C_API
 /// \brief check if the error pointer is a \e real pointer or just a flag
 #define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
 
@@ -314,11 +325,11 @@ typedef MQ_INT  MQ_SOCK;
 /*                                                                           */
 /*****************************************************************************/
 
-/// \ingroup MqTypeAPI
+/// \ingroup Mq_Type_C_API
 /// \brief boolean NO
 #define MQ_NO  0
 
-/// \ingroup MqTypeAPI
+/// \ingroup Mq_Type_C_API
 /// \brief boolean YES
 #define MQ_YES 1
 
@@ -330,36 +341,56 @@ enum MqWaitOnEventE {
   MQ_WAIT_FOREVER = 2,	///< wait forever
 };
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief the type is native and has a size of 1 byte
 #define MQ_TYPE_IS_1_BYTE   (1<<0)
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief the type is native and has a size of 2 bytes
 #define MQ_TYPE_IS_2_BYTE   (1<<1)
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief the type is native and has a size of 4 bytes
 #define MQ_TYPE_IS_4_BYTE   (1<<2)
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief the type is native and has a size of 8 bytes
 #define MQ_TYPE_IS_8_BYTE   (1<<3)
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief the type is native
 #define MQ_TYPE_IS_NATIVE   (	MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |	    \
 				MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE	)
 
-/// \ingroup MqBufferAPI
-/// \brief a enum for all data types supported by #MqBufferS
+/// \ingroup Mq_Buffer_C_API
+/// \brief a collection of all \e native-data-types supported
 ///
+/// The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
+/// \e native-data-type supported.
+/// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
+/// \RNSA{ReadTYPE} or \RNSA{BufferGetTYPE} have to match the previous \RNSA{SendTYPE} with the same 
+/// \e TYPE. One exception is allowed, the cast from and to the \C datatype (TYPE=C) is allowed.
+/// The following type identifier's are available:
+///  - \c Y : 1 byte signed character (\Y) 
+///  - \c O : 1 byte boolean value using \yes or \no (\O)
+///  - \c S : 2 byte signed short (\S)
+///  - \c I : 4 byte signed integer (\I)
+///  - \c W : 8 byte signed long long integer (\W)
+///  - \c F : 4 byte float (\F)
+///  - \c D : 8 byte double (\D)
+///  - \c B : unsigned char array used for binary data (\B)
+///  - \c C : string data using a \c \\0 at the end (\C)
+///  - \c L : list type able to hold a list of all items from above
+///  - \c U : typeless buffer able to hold a single item from above (\U)
+///  .
+/// \ifnot MAN
 /// The type is a one byte character with the following syntax:
 /// - bit 1 up to 4 has the size of the native type
 /// - bit 5 up to 8 has the type, up to 16 types are allowed
-///
-/// \attention In the package the space for the type is only \e one char. If additional
+/// .
+/// \attention In the package the space for the type is only \e on char. If additional
 /// space is needed the protocol have to be adjusted
+/// \endif
 enum MqTypeE {
   MQ_BYTT = (1<<4 | MQ_TYPE_IS_1_BYTE),  ///< Y: 1 byte 'byte' type
   MQ_BOLT = (2<<4 | MQ_TYPE_IS_1_BYTE),  ///< O: 1 byte 'boolean' type
@@ -369,19 +400,19 @@ enum MqTypeE {
   MQ_WIDT = (6<<4 | MQ_TYPE_IS_8_BYTE),  ///< W: 8 byte 'long long int' type
   MQ_DBLT = (7<<4 | MQ_TYPE_IS_8_BYTE),  ///< D: 8 byte 'double' type
   MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
-  MQ_STRT = (9<<4                    ),  ///< C: character array type (e.g. with a \\0 at the end)
+  MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
   MQ_LSTT = (10<<4                   ),  ///< L: list object type
   MQ_RETT = (11<<4                   )   ///< R: return object type
 };
 
-/// \ingroup MqBufferAPI
+/// \ingroup Mq_Buffer_C_API
 /// \brief allocation style used for the data-segment in #MqBufferS.
 enum MqAllocE {
   MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
   MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. MqSysMalloc, ...)
 };
 
-/// \ingroup MqErrorAPI
+/// \ingroup Mq_Error_C_API
 /// \brief collection for the different error-codes
 enum MqErrorE {
   MQ_OK		= 0,		///< everything is OK, no error available (persistent)
@@ -390,7 +421,7 @@ enum MqErrorE {
   MQ_EXIT	= 3		///< exit parent context
 };
 
-/** \} MqTypeAPI */
+/** \} Mq_Type_C_API */
 
 /*****************************************************************************/
 /*                                                                           */
@@ -398,7 +429,7 @@ enum MqErrorE {
 /*                                                                           */
 /*****************************************************************************/
 
-/// \defgroup MqConfigAPI MqConfigAPI
+/// \defgroup Mq_Config_C_API Mq_Config_C_API
 /// \{
 /// \brief configuration of the #MqS object
 
@@ -892,7 +923,7 @@ struct MqSetupS {
   MQ_BOL ignoreExit;
 };
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief object responsible to manage client/server link data
 struct MqLinkS {
 
@@ -941,7 +972,7 @@ struct MqLinkS {
   MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
 };
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief error-object data type
 struct MqErrorS {
   struct MqBufferS * text;      ///< the error message
@@ -950,7 +981,7 @@ struct MqErrorS {
   MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
 };
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief signature used in #MqS::signature
 #define MQ_MqS_SIGNATURE 0x212CF91
 
@@ -958,7 +989,7 @@ struct MqErrorS {
 # define MQ_PRIVATE_CONFIG_CONST const
 #endif
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief Prototype for a context object
 struct MqS {
   int signature;		    ///< used to verify object type for typeless languages
@@ -980,11 +1011,11 @@ struct MqS {
 
 # ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief the prefix arguments of the starting application
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 
-/// \ingroup MqMsgqueAPI
+/// \ingroup Mq_Msgque_C_API
 /// \brief name of a procedure to return \e main like entry-points 
 MQ_EXTERN MqFactorySelectorF MqFactorySelector;
 
@@ -1305,15 +1336,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \brief does the \e context object is a \e parent ?
- *  \context
- *  \return the <TT>(context->config.parent == NULL)</TT> value
- */
-MQ_EXTERN int MQ_DECL MqConfigGetIsParent (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
-/** \ingroup MqConfigAPI
+/** \ingroup Mq_Config_C_API
  *  \brief does the \e context object is a \e slave ?
  *  \context
  *  \return the <TT>(context->config.master != NULL)</TT> value
@@ -1337,14 +1360,6 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsString (
 MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
   struct MqS const * const context
 ) __attribute__((nonnull));
-
-/** \brief does the \e context object is \e connected ?
- *  \context
- *  \return the <TT>(context->link != NULL)</TT> value
- */
-MQ_EXTERN int MQ_DECL MqConfigGetIsConnected (
-  struct MqS const * const context
-);
 
 /* \brief does the \e context object was created by \libmsgque
  *  \context
@@ -1426,14 +1441,6 @@ MQ_EXTERN MQ_TIME_T MQ_DECL MqConfigGetTimeout (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \brief get the \e parent value of the \e config object
- *  \context
- *  \return the #MqConfigS::parent value
- */
-MQ_EXTERN struct MqS * MQ_DECL MqConfigGetParent (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
 /** \brief get the \e master value of the \e config object
  *  \context
  *  \return the #MqConfigS::master value
@@ -1441,18 +1448,6 @@ MQ_EXTERN struct MqS * MQ_DECL MqConfigGetParent (
 MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
-
-/// \brief return the context-identification
-/// \context
-/// \return the context-identification number
-///
-/// The context-identification is a number and is used in the protocol to
-/// link a data-package to a context-pointer. This is necessary because
-/// the communication interface (\c msgque->io) of a parent-context is
-/// used by the child-context too.
-MQ_EXTERN MQ_SIZE MQ_DECL MqConfigGetCtxId (
-  struct MqS const * const context
-);
 
 /// \brief return the #MqIoUdsConfigS::file value
 MQ_EXTERN MQ_CST
@@ -1532,7 +1527,7 @@ MQ_DECL MqConfigGetSelf (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqMsgqueAPI MqMsgqueAPI
+/** \defgroup Mq_Msgque_C_API Mq_Msgque_C_API
  *  \{
  *  \brief the top-level \libmsgque object: #MqS
  *
@@ -1578,43 +1573,6 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 /// \brief helper to set the application specific \c fork functions
 /// \attention by default the OS specific functions are used
 MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
-
-/** \brief create a parent \libmsgque object link
- *  \context
- *  \param[in] argsP  command-line arguments will be freed and set to \c NULL on error
- *  \retMqErrorE
- */
-MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
-  struct MqS  * const context,
-  struct MqBufferLS ** argsP
-);
-
-/** \brief create a child \libmsgque object link
- *  \context
- *  \param[in] parent the parent object link
- *  \param[in] argsP  command-line arguments will be freed and set to \c NULL on error
- *  \retMqErrorE
- */
-MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
-  struct MqS * const context,
-  struct MqS * const parent,
-  struct MqBufferLS ** argsP
-);
-
-/// \brief wrapper for #MqLinkCreate with \e argv error check
-/// \copydoc MqLinkCreate
-MQ_EXTERN enum MqErrorE MQ_DECL MqDefaultLinkCreate (
-  struct MqS  * const context,
-  struct MqBufferLS ** argsP
-);
-
-/** \brief delete a \libmsgque object
- *  \context
- */
-
-MQ_EXTERN void MQ_DECL MqLinkDelete (
-  struct MqS * const context
-);
 
 /** \brief exit the current process or thread
  *  \context
@@ -1664,12 +1622,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqCheckForLeftOverArguments (
   struct MqBufferLS ** argvP
 );
 
-/*****************************************************************************/
-/*                                                                           */
-/*                               logging                                     */
-/*                                                                           */
-/*****************************************************************************/
-
 #ifdef _DEBUG
 /// \brief convenience function to log \e MqS configuration data
 /// \context
@@ -1688,7 +1640,159 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 );
 #endif // _DEBUG
 
-/** \} MqMsgqueAPI */
+/** \} Mq_Msgque_C_API */
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                       L I N K - A P I                           ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Link_C_API Mq_Link_C_API
+/// \{
+/// \brief setup and manage a \e client-server-link
+///
+/// To create, destroy and manage a \e client-server-link is the main purpose of the library.
+
+/// \brief make a \e context to a \e parent-context and setup a new \e client-server-link
+/// \details A \e parent-context is responsible to setup the \e client-server-link
+/// - the \e client-parent-context start a new \e client-server-link
+/// - the \e server-parent-context wait for a \e client-parent-context connection request
+/// .
+/// \ctx
+/// \param[in] args  \e command-line-arguments to configure the \e client-server-link
+///                  including the \b "@" item to add \e server-commandline-arguments
+///		     for the \e --pipe setup.
+/// \ifnot MAN
+///                  (only C-API: the memory of known arguments will be freed and 
+///		      \e args will be set to \c NULL on error)
+/// \endif
+/// \retException
+/// \attention if the first argument after the \b "@" item is the string \b "SELF" an independent
+/// server of the current server is started. This is not a \RNS{slave}. The "SELF" argument is
+/// replaced by an application default setting (if available) or by arguments set with \RNSA{Init}
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
+  struct MqS  * const ctx,
+  struct MqBufferLS ** args
+);
+
+/// \brief make a \e context to a \e child-context ontop of an existing \e parent-client-server-link
+/// \details A child is using the same process or thread as the parent but a different 
+/// namespace. With a different namespace a child is able to act on different services 
+/// on the shared server.
+/// \ctx
+/// \param[in] parent the \e parent-context defined with \RNSA{LinkCreate}
+/// \param[in] args  \e command-line-arguments to configure the \e client-server-link
+///                  without the \b "@" item.
+/// \ifnot MAN
+///                  (only C-API: the memory of known arguments will be freed and 
+///		      \e args will be set to \c NULL on error)
+/// \endif
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
+  struct MqS * const ctx,
+  struct MqS * const parent,
+  struct MqBufferLS ** args
+);
+
+/// \brief helper: wrapper for #MqLinkCreate with additional \e error-check
+/// \details This function return an \e error if an unknown \e command-line-argument
+/// was found
+/// \ctx
+/// \param[in] args  \e command-line-arguments to configure the \e client-server-link
+///                  without the \b "@" item.
+/// \ifnot MAN
+///                  (only C-API: the memory of known arguments will be freed and 
+///		      \e args will be set to \c NULL on error)
+/// \endif
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqDefaultLinkCreate (
+  struct MqS  * const ctx,
+  struct MqBufferLS ** args
+);
+
+/// \brief close the \e client-server-link
+/// \details On a client the \e context will be set to \e not-connected and
+/// the function \RNSA{LinkIsConnected} will return \no. On a server the
+/// \e context will be deleted but only if \RNSC{ignoreExit} is \e not
+/// set to \yes. If the \e link is already \e not-connected nothing will happen.
+/// \ctx
+MQ_EXTERN void MQ_DECL MqLinkDelete (
+  struct MqS * const ctx
+);
+
+/// \brief is the context connected?
+/// \details A context is connected if the \RNSA{LinkCreate} command
+/// was successful. A context is \e not connected if:
+/// - the context has just been created and not connected
+/// - the link was deleted with \RNSA{LinkDelete}
+/// .
+/// \ctx
+/// \return a boolean value, \yes or \no
+MQ_EXTERN int MQ_DECL MqLinkIsConnected (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqLinkIsConnected
+static mq_inline int MqLinkIsConnectedI (
+  struct MqS const * const ctx
+)
+{
+  return (ctx->link.onCreate == MQ_YES);
+};
+
+/// \brief get the \e parent-context from a client/server link
+/// \ctx
+/// \return the \e parent-context or \null if not a \e child-context
+MQ_EXTERN struct MqS * MQ_DECL MqLinkGetParent (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqLinkGetParent
+static mq_inline struct MqS * MqLinkGetParentI (
+  struct MqS const * const ctx
+)
+{
+  return ctx->config.parent;
+};
+
+/// \brief is the \e context a \e parent-context?
+/// \details A \e context is a \e parent-context if it was created with \RNSA{LinkCreate}
+/// \ctx
+/// \return a boolean value, \yes or \no
+MQ_EXTERN int MQ_DECL MqLinkIsParent (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqLinkIsParent
+static mq_inline int MqLinkIsParentI (
+  struct MqS const * const ctx
+)
+{
+  return ctx->config.parent == NULL;
+};
+
+/// \brief get an identifier which is \e unique per \e parent-or-child-context
+///
+/// The \e context-identifier is a number and is used in the protocol to link 
+/// a \e data-package to a \e context-pointer. This is necessary because the 
+/// communication interface is shared between the \e parent-context and the
+/// \e child-context. This number is \e unique.
+/// \ctx
+/// \return the identifier as number
+MQ_EXTERN MQ_SIZE MQ_DECL MqLinkGetCtxId (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqLinkGetCtxId
+static mq_inline MQ_SIZE MqLinkGetCtxIdI (
+  struct MqS const * const ctx
+)
+{
+  return ctx->link.ctxId;
+};
+
+/// \} Mq_Link_C_API
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -1696,7 +1800,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/// \defgroup MqServiceAPI MqServiceAPI
+/// \defgroup Mq_Service_C_API Mq_Service_C_API
 /// \{
 /// \brief create and manage services
 ///
@@ -1842,7 +1946,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
   enum MqWaitOnEventE const wait
 ) __attribute__((nonnull(1)));
 
-/** \} MqServiceAPI */
+/** \} Mq_Service_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -1850,7 +1954,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqBufferAPI MqBufferAPI
+/** \defgroup Mq_Buffer_C_API Mq_Buffer_C_API
  *  \{
  *  \brief create and manage dynamic, generic, mixed typed data.
  *
@@ -1903,21 +2007,12 @@ union MqBufferU {
 // \brief signature used in #MqBufferS::signature
 #define MQ_MqBufferS_SIGNATURE 0x6021139
 
-/** \brief defines an object to store generic (e.g mixed typed) data.
- *
- * an #MqBufferS object is used for 3 different purposes:
- * - store generic typed single data value
- * - build a Msgque packet by appending items to an existing object
- * - read a single item from an existing Msgque packet 
- * .
- * 'reading from' and 'appending to' an existing Msgque packet is done by incrementing
- * the \a cur.B pointer to a new position.
- * a \ref MqBufferS object is using a \ref MqBufferU union 
- * and a \ref MqTypeE enum to define an item.
- * The object is public to give the developer the opportunity to direct access
- * saved data.
- **/
-
+/// \brief a single object to store a \e native-type-data-item defined by \RNS{BufferIdentifer}
+///
+/// The \e buffer-object is returned by \RNSA{ReadU} and is used to save a 
+/// \e typeless-temporary-data-item from the \e read-data-package. 
+/// The lifetime of the \e buffer-object is only the current callback up to the next
+/// read operation in the same \e parent-context.
 struct MqBufferS {
   int signature;		///< signature to provide type-safety for non-typed languages
   struct MqS *context;		///< error object of the related msgque
@@ -2370,7 +2465,7 @@ MQ_EXTERN void MQ_DECL MqBufferLogS (
 /* ####################################################################### */
 
 
-/** \defgroup MqBufferListAPI MqBufferListAPI
+/** \defgroup Mq_Buffer_List_C_API Mq_Buffer_List_C_API
  *  \{
  *  \brief create and manage a list of #MqBufferS objects.
  *
@@ -2757,7 +2852,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqErrorAPI MqErrorAPI
+/** \defgroup Mq_Error_C_API Mq_Error_C_API
  *  \{
  *  \brief create and manage error messages.
  *
@@ -2909,12 +3004,6 @@ MQ_DECL MqErrorStackP (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                              error_append                                 */
-/*                                                                           */
-/*****************************************************************************/
-
-/*****************************************************************************/
-/*                                                                           */
 /*                              error_set/get                                */
 /*                                                                           */
 /*****************************************************************************/
@@ -2926,7 +3015,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorGetCode (
 );
 
 /// \copydoc MqErrorGetCode
-static inline enum MqErrorE MqErrorGetCodeI (
+static mq_inline enum MqErrorE MqErrorGetCodeI (
   struct MqS const * const context
 )
 {
@@ -3025,7 +3114,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
   struct MqS * const in
 );
 
-/** \} MqErrorAPI */
+/** \} Mq_Error_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3033,7 +3122,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqReadAPI MqReadAPI
+/** \defgroup Mq_Read_C_API Mq_Read_C_API
  *  \{
  *  \brief extract data from an incoming \e read-data-package.
  *
@@ -3239,7 +3328,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
   struct MqS const * const ctx
 );
 
-/** \} MqReadAPI */
+/** \} Mq_Read_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3247,7 +3336,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqSendAPI MqSendAPI
+/** \defgroup Mq_Send_C_API Mq_Send_C_API
  *  \{
  *  \brief construct an outgoing \e send-data-package.
  *
@@ -3545,7 +3634,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
   struct MqS * const ctx
 );
 
-/** \} MqSendAPI */
+/** \} Mq_Send_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3553,7 +3642,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqSlaveAPI MqSlaveAPI
+/** \defgroup Mq_Slave_C_API Mq_Slave_C_API
  *  \{
  *  \brief create and manage a slave context
 
@@ -3660,7 +3749,7 @@ MQ_DECL MqSlaveGet (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqSystemAPI MqSystemAPI
+/** \defgroup Mq_System_C_API Mq_System_C_API
  *  \{
  *  \brief access to native system functions with error handling
  **/
@@ -3744,21 +3833,23 @@ MQ_EXTERN MQ_STR MQ_DECL MqSysBasename (
 /// \retval tv the timeval object
 /// \retval tz the timezone object
 /// \retMqErrorE
-MQ_EXTERN enum MqErrorE MQ_DECL SysGetTimeOfDay (
+MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
   struct MqS * const context,
   struct mq_timeval * tv,
   struct mq_timezone * tz
 );
 
   
-/// \brief the function \e strdup which allows the argument \c NULL
+/// \brief duplicate a string, the argument \c NULL is allowd
+/// \param[in] v the string to duplicate
+/// \return the new string or \c NULL
 static mq_inline MQ_STR mq_strdup_save (
   MQ_CST v
 ) {
   return v != NULL ? mq_strdup(v) : NULL;
 }
 
-/** \} MqSystemAPI */
+/** \} Mq_System_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3766,7 +3857,7 @@ static mq_inline MQ_STR mq_strdup_save (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup MqLogAPI MqLogAPI
+/** \defgroup Mq_Log_C_API Mq_Log_C_API
  *  \{
  *  \brief log information to stderr with a common format.
  */
@@ -3913,18 +4004,12 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
   MQ_SIZE size
 );
 
-/** \}	  MqLogAPI */
+/** \}	  Mq_Log_C_API */
 
-/** \}	  MqPublicAPI */
+/** \}	  Mq-C-API */
 
 //end c++ save definition
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
-
-
-
-
 

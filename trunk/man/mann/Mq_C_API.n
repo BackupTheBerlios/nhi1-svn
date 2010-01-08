@@ -1,92 +1,99 @@
-.TH "PUBLIC:" n "7 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-PUBLIC: \- public libmsgque API  
+Mq_C_API \- public libmsgque API  
 
 .PP
 .SS "Modules"
 
 .in +1c
 .ti -1c
-.RI "\fBMqTypeAPI\fP"
+.RI "\fBMq_Type_C_API\fP"
 .br
 .R "a collection of common used data types and definitions "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqConfigAPI\fP"
+.RI "\fBMq_Config_C_API\fP"
 .br
 .R "configuration of the \fBMqS\fP object "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqMsgqueAPI\fP"
+.RI "\fBMq_Msgque_C_API\fP"
 .br
 .R "the top-level \fBlibmsgque\fP object: \fBMqS\fP "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqServiceAPI\fP"
+.RI "\fBMq_Link_C_API\fP"
+.br
+.R "setup and manage a \fIclient-server-link\fP "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Service_C_API\fP"
 .br
 .R "create and manage services "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqBufferAPI\fP"
+.RI "\fBMq_Buffer_C_API\fP"
 .br
 .R "create and manage dynamic, generic, mixed typed data. "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqBufferListAPI\fP"
+.RI "\fBMq_Buffer_List_C_API\fP"
 .br
 .R "create and manage a list of \fBMqBufferS\fP objects. "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqErrorAPI\fP"
+.RI "\fBMq_Error_C_API\fP"
 .br
 .R "create and manage error messages. "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqReadAPI\fP"
+.RI "\fBMq_Read_C_API\fP"
 .br
 .R "extract data from an incoming \fIread-data-package\fP. "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqSendAPI\fP"
+.RI "\fBMq_Send_C_API\fP"
 .br
 .R "construct an outgoing \fIsend-data-package\fP. "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqSlaveAPI\fP"
+.RI "\fBMq_Slave_C_API\fP"
 .br
 .R "create and manage a slave context "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqSystemAPI\fP"
+.RI "\fBMq_System_C_API\fP"
 .br
 .R "access to native system functions with error handling "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMqLogAPI\fP"
+.RI "\fBMq_Log_C_API\fP"
 .br
 .R "log information to stderr with a common format. "
 .PP
