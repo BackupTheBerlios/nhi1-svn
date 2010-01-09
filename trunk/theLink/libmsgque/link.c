@@ -24,6 +24,7 @@
 #include "trans.h"
 #include "cache.h"
 #include "slave.h"
+#include "config.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>
@@ -451,7 +452,7 @@ MqLinkCreateChild (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "parent", "not");
   }
   MqConfigDup(context, parent);
-  MqConfigSetParent(context, parent);
+  pConfigSetParent(context, parent);
   return MqLinkCreate (context, argvP);
 }
 
@@ -720,7 +721,7 @@ MqLinkCreate (
 	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetEvent(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetIsServer(myFilter, MQ_NO);
-	  MqConfigSetMaster  (myFilter, context, 0);
+	  pConfigSetMaster(myFilter, context, 0);
 
 	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
 	    MqErrorCopy (context, myFilter);
@@ -758,7 +759,7 @@ MqLinkCreate (
 }
 
 enum MqErrorE
-MqDefaultLinkCreate (
+MqLinkDefault (
   struct MqS * const context,
   struct MqBufferLS ** argsP
 )
@@ -931,3 +932,4 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+

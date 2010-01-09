@@ -371,33 +371,11 @@ PyObject* NS(ConfigGetIsServer) (
   }
 }
 
-PyObject* NS(ConfigGetIsParent) (
-  PyObject    *self
-)
-{
-  if (ICONTEXT.config.parent == NULL) {
-    Py_RETURN_TRUE;
-  } else {
-    Py_RETURN_FALSE;
-  }
-}
-
 PyObject* NS(ConfigGetIsSlave) (
   PyObject    *self
 )
 {
   if (ICONTEXT.config.master == NULL) {
-    Py_RETURN_FALSE;
-  } else {
-    Py_RETURN_TRUE;
-  }
-}
-
-PyObject* NS(ConfigGetIsConnected) (
-  MqS_Obj   *self
-)
-{
-  if (ICONTEXT.link.onCreate == MQ_NO) {
     Py_RETURN_FALSE;
   } else {
     Py_RETURN_TRUE;
@@ -412,20 +390,6 @@ PyObject* NS(ConfigGetIsSilent) (
     Py_RETURN_TRUE;
   } else {
     Py_RETURN_FALSE;
-  }
-}
-
-PyObject* NS(ConfigGetParent) (
-  PyObject    *self,
-  PyObject    *args
-)
-{
-  if (ICONTEXT.config.parent == NULL) {
-    Py_RETURN_NONE;
-  } else {
-    PyObject *parent = ((PyObject *)ICONTEXT.config.parent->self);
-    Py_INCREF(parent);
-    return parent;
   }
 }
 
@@ -522,14 +486,6 @@ error:
   return NULL;
 }
 
-PyObject* NS(ConfigGetCtxId) (
-  PyObject    *self,
-  PyObject    *args
-)
-{
-  return PyLong_FromLong(MqConfigGetCtxId(CONTEXT));
-}
-
 PyObject* NS(ConfigGetMaster) (
   PyObject  *self 
 )
@@ -542,5 +498,4 @@ PyObject* NS(ConfigGetMaster) (
     return masterO;
   }
 }
-
 

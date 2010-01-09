@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -273,41 +273,41 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS::bls\fP object 
 .PP
-Definition at line 2005 of file msgque.h.
+Definition at line 1982 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 2008 of file msgque.h.
+Definition at line 1985 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 346 of file msgque.h.
+Definition at line 1886 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 350 of file msgque.h.
+Definition at line 1889 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 354 of file msgque.h.
+Definition at line 1892 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 358 of file msgque.h.
+Definition at line 1895 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
 .PP
 .nf
-(  MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |     \
+(      MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |     \
                                 MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE   )
 .fi
 the type is native 
 .PP
-Definition at line 362 of file msgque.h.
+Definition at line 1898 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -323,7 +323,7 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 410 of file msgque.h.
+Definition at line 1976 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
@@ -390,7 +390,7 @@ L: list object type.
 \fB\fIMQ_RETT \fP\fP
 R: return object type. 
 .PP
-Definition at line 394 of file msgque.h.
+Definition at line 1929 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"

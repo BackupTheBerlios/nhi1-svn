@@ -376,7 +376,7 @@ MqConfigSetIgnoreExit (
 }
 
 void 
-MqConfigSetParent (
+pConfigSetParent (
   struct MqS * const context,
   struct MqS * const parent
 ) {
@@ -384,7 +384,7 @@ MqConfigSetParent (
 }
 
 void 
-MqConfigSetMaster (
+pConfigSetMaster (
   struct MqS * const context,
   struct MqS * const master,
   int master_id

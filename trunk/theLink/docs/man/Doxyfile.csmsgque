@@ -32,17 +32,24 @@ ALIASES		    += "package=using csmsgque;"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-sealed class MyClass : MqS ... { ... } \n\
+sealed class MyClass : MqS { \n\
+  private int mydata; \n\
+  ... \n\
+} \n\
 static void Main(string[] args) \n\
   MyClass ctx = new MyClass(); ... \n\
 } \n\
 \endcode"
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=MqS ctx=new MqS()"
-ALIASES		    += "ObjectDelete=deleted by Garbage Collection"
+
+ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=Init(params string[] args)"
+ALIASES		    += "Init=MqS.Init(params string[] args)"
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
+\endcode"
 
 ALIASES		    += "config_type_buffersize=int"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
@@ -96,6 +103,10 @@ ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 ALIASES		    += "config_type_pipe=int"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
 ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=bool"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
@@ -171,7 +182,7 @@ ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
 ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
 ALIASES		    += "ServiceGetToken=string ServiceGetToken()"
-ALIASES		    += "ServiceGetFilter=MqS filter=ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceGetFilter=MqS ServiceGetFilter([int id=0])"
 ALIASES		    += "ServiceIsTransaction=bool ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
@@ -222,4 +233,6 @@ ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+
 

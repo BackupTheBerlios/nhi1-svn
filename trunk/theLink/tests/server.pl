@@ -387,14 +387,14 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = shift;
     $ctx->SendSTART();
     $ctx->SendO($ctx->ConfigGetIsServer());
-    $ctx->SendO($ctx->ConfigGetIsParent());
+    $ctx->SendO($ctx->LinkIsParent());
     $ctx->SendO($ctx->ConfigGetIsSlave());
     $ctx->SendO($ctx->ConfigGetIsString());
     $ctx->SendO($ctx->ConfigGetIsSilent());
-    $ctx->SendO($ctx->ConfigGetIsConnected());
+    $ctx->SendO($ctx->LinkIsConnected());
     $ctx->SendC($ctx->ConfigGetName());
     $ctx->SendI($ctx->ConfigGetDebug());
-    $ctx->SendI($ctx->ConfigGetCtxId());
+    $ctx->SendI($ctx->LinkGetCtxId());
     $ctx->SendC($ctx->ServiceGetToken());
     $ctx->SendRETURN();
   }
@@ -415,7 +415,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendC ("sOc");
     $ctx->SendC ($ctx->ConfigGetIsServer() ? "SERVER" : "CLIENT");
     $ctx->SendC ("pOc");
-    $ctx->SendC ($ctx->ConfigGetIsParent() ? "PARENT" : "CHILD");
+    $ctx->SendC ($ctx->LinkIsParent() ? "PARENT" : "CHILD");
     $ctx->SendRETURN();
   }
 
@@ -427,7 +427,7 @@ use base qw(Net::PerlMsgque::MqS);
   sub GTCX {
     my $ctx = shift;
     $ctx->SendSTART();
-    $ctx->SendI($ctx->ConfigGetCtxId());
+    $ctx->SendI($ctx->LinkGetCtxId());
     $ctx->SendRETURN();
   }
 
@@ -440,8 +440,8 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendSTART();
       switch ($s) {
 	case "START" {
-	  my $parent = $ctx->ConfigGetParent();
-	  if (defined($parent) && $parent->DictGet($id)->ConfigGetIsConnected()) {
+	  my $parent = $ctx->LinkGetParent();
+	  if (defined($parent) && $parent->DictGet($id)->LinkIsConnected()) {
 	    $cl->LinkCreateChild($parent->DictGet($id));
 	  } else {
 	    $cl->LinkCreate($ctx->ConfigGetDebug());
@@ -794,4 +794,8 @@ package main;
   $srv->Exit();
 
 1;
+
+
+
+
 

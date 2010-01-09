@@ -23,8 +23,8 @@ STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque
 STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
 SHOW_USED_FILES	    = NO
 SHOW_FILES	    = NO
-#REFERENCED_BY_RELATION = NO
-#REFERENCES_RELATION = NO
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION = NO
 
 PREDEFINED	    += MQ_EXTERN
 
@@ -47,7 +47,7 @@ ALIASES		    += "NST{1}=\NS{tut_\1}"
 ALIASES		    += "RNST{1}=\ref \NST{\1}"
 ALIASES		    += "rself=\ref \self"
 ALIASES		    += "libmsgque=\b libmsgque"
-ALIASES		    += "ctx=\param[in] ctx the context returned by \RNS{ObjectCreate}"
+ALIASES		    += "ctx=\param[in] ctx the context returned by \RNS{ContextCreate}"
 ALIASES		    += "retException=\return an \RNS{error} on error"
 
 ALIASES		    += "example=\xrefitem examples \"Example\" \"Example List\""
@@ -60,4 +60,5 @@ MAN_EXTENSION	    = .n
 MAN_OUTPUT	    = $(SRCDIR)/../man
 
 ALIASES		    += "clh{1}=\if C (s. #\1) \endif"
+
 

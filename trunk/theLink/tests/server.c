@@ -788,7 +788,7 @@ BgError (
 {
   struct MqS * const master = MqConfigGetMaster(mqctx);
   if (master) {
-    MqErrorC (master, "BGERROR", MqErrorGetNum(mqctx), MqErrorGetText(mqctx));
+    MqErrorC (master, "BGERROR", MqErrorGetNumI(mqctx), MqErrorGetText(mqctx));
     MqSendERROR (master);
   }
   return MqErrorGetCode(mqctx);
@@ -838,8 +838,7 @@ ClientCreateChild (
 )
 {
   MqConfigDup(mqctx, parent);
-  MqConfigSetParent (mqctx, parent);
-  MqLinkCreate(mqctx,NULL);
+  MqLinkCreateChild(mqctx, parent, NULL);
   return MqErrorCopy (errorctx, mqctx);
 }
 
@@ -939,7 +938,7 @@ Ot_SND1 (
       MqErrorCheck(MqReadProxy(mqctx, clmqctx));
       if (MqErrorCheckI(MqSendEND_AND_WAIT(clmqctx, "ECOI", 5))) {
 	MqErrorCopy(mqctx, clmqctx); \
-	MqSendI(mqctx, MqErrorGetNum(mqctx));
+	MqSendI(mqctx, MqErrorGetNumI(mqctx));
 	MqSendC(mqctx, MqErrorGetText(mqctx));
 	MqErrorReset(mqctx);
       }
@@ -1027,10 +1026,8 @@ Ot_SND2 (
       MqErrorCheck(MqProcessEvent(clmqctx, 10, MQ_WAIT_ONCE));
       MqSendI(mqctx, CLIENTCTX(clmqctx)->i+1);
     } else if (!strcmp(s,"ERR-1")) {
-      struct MqS * master = mqctx;
       struct MqBufferLS * args = MqBufferLCreateArgsV(clmqctx, "cl-err-1", "@", "DUMMY", NULL);
       clmqctx = MqContextCreate (sizeof(struct ClientCtxS), NULL);
-      MqConfigSetMaster(clmqctx, master, clid);
       MqConfigSetDebug(clmqctx, MqConfigGetDebug(mqctx));
       if (MqErrorCheckI(MqLinkCreate(clmqctx, &args))) {
 	MqContextDelete (&clmqctx);
@@ -1377,8 +1374,8 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // add config data
-  mqctx->setup.Child.fCreate	    = MqDefaultLinkCreate;
-  mqctx->setup.Parent.fCreate	    = MqDefaultLinkCreate;
+  mqctx->setup.Child.fCreate	    = MqLinkDefault;
+  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.fHelp		    = ServerHelp;
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fFunc    = ServerSetup;
@@ -1397,6 +1394,7 @@ error:
 }
 
 /** \} server */
+
 
 
 

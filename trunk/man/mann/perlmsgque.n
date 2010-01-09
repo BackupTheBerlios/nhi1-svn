@@ -1,4 +1,4 @@
-.TH "perlmsgque" n "8 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque" n "9 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,6 +33,8 @@ use base qw(Net::PerlMsgque::MqS);\fP
  \fBCONTEXT LOCAL STORAGE API\fP
 .SH "INTRODUCTION"
 .PP
+public libmsgque API 
+.PP
 The msgque project is an infrastructure to link software together to act like a single software. To link mean distributing work from one software to an other software an wait or not wait for an answer. The linking is done using unix or inet domain sockets and is based on packages send from one software to an other software and back. The msgque project is used to handle all the different aspects for setup and maintain the link and is responsible for:
 .IP "\(bu" 2
 starting and stopping the server application
@@ -49,16 +51,59 @@ propagate the error messages from the server to the client
 .PP
 .SH "CONTEXT API"
 .PP
-.SS "MqS"
-The \fIobject\fP is the user visible part of a perlmsgque application link.
-.SS "our $ctx=new MqS()"
-Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fB\\LinkIsConnected\fP to check if a link is already available.
+\fBContextCreate\fP
+.br
+ \fBContextDelete\fP
+.br
+ \fBExit\fP
+.br
 .PP
-\fBExample:\fP definition of a context: 
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+.PP
+The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+.PP
+.nf
+ struct MyCtxDataS {
+   struct MqS  mqctx;   // libmsgque-specific-data
+   int         mydata;  // application-specific-data
+   ...                  // application-specific-data
+ };
+
+.fi
+.PP
+ The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
+.br
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP.
+.PP
+The \fIprogramming-language\fP Tcl or Perl does \fBnot\fP providing a concept for the \fIapplication-specific-data\fP. The \fBCONTEXT LOCAL STORAGE API\fP is available to create amd manipulate this data. 
+.SS "our $ctx=new MqS()"
+create a new context and initialize the default configuration data 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
+.br
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIout-of-memory-error\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP create an \fIapplication-context\fP with \fImydata\fP as \fIapplication-specific-data\fP: 
 .PP
 .nf
  package MyClass; 
  use base qw(Net::PerlMsgque::MqS); 
+ ... 
+ sub new { 
+   my $class = shift; 
+   my $ctx = $class->SUPER::new(@_); 
+   $ctx->DictSet('mydata', 0); 
+   return $ctx; 
+ } 
  ... 
  package main; 
    our $ctx = new MyClass(); 
@@ -71,16 +116,42 @@ Delete the entire object including the application link using \fBLinkDelete\fP. 
 Shutdown the entire communication and exit the current process or thread.
 .SH "CONFIG API"
 .PP
+\fBInit\fP
+.br
+ \fBbuffersize\fP, \fBdebug\fP, \fBtimeout\fP
+.br
+ \fBname\fP, \fBsrvname\fP, \fBident\fP
+.br
+ \fBisSilent\fP, \fBisString\fP, \fBisServer\fP
+.br
+ \fBtcp\fP, \fBuds\fP, \fBpipe\fP
+.br
+ \fBstartAs\fP, \fBdaemon\fP, \fBignoreExit\fP
+.br
+ \fBIServerSetup\fP, \fBIServerCleanup\fP
+.br
+ \fBIFactory\fP, \fBIBgError\fP, \fBIEvent\fP
+.br
+.PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
 .SS "static: Net::PerlMsgque::Init(...)"
-Initialize the process startup argument prefix. The startup-prefix have to be the name of the executable found in the \fCPATH\fP and additional arguments like a script name or required startup options. The startup-prefix is used for two different purpose:
-.IP "\(bu" 2
-To start a new entity using the \fBstartAs\fP '--spawn' command-line option
-.IP "\(bu" 2
-To replace the \fBLinkCreate\fP 'SELF' argument after the \fI'@'\fP command-line argument
+Initialize the process \fIstartup-prefix\fP argument. 
 .PP
+The \fIstartup-prefix\fP have to be the name of the executablei, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
+.IP "\(bu" 2
+To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
+.IP "\(bu" 2
+To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBLinkCreate\fP.
 .PP
-The startup-prefix is initially set by perlmsgque during package loading.
+Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBLinkCreate\fP and have \fBnot\fP to be initialized again. 
+.PP
+\fBExample:\fP initialize the \fIstratup-prefix\fP with \fImyExecutable\fP and \fImyFirstArgument\fP 
+.PP
+.nf
+ Net::PerlMsgque::Init('perl', 'myExecutable.pl', 'myFirstArgument'); 
+
+.fi
+.PP
 .SS "command-line:  --buffersize"
 \fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetBuffersize\fP , \fBset:\fP \fCConfigSetBuffersize\fP
 .PP
@@ -101,6 +172,10 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetSrvName\fP , \fBset:\fP \fCConfigSetSrvName\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "ident"
+\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
+.PP
+Use string as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
@@ -109,37 +184,10 @@ Write (\fI0\fP) or don't write (\fI1\fP) any output to stdout or stderr. (defaul
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fI1\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
-.SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
+.SS "isServer"
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
-Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
-.IP "\(bu" 2
-a server-context to start a new instance after a client connection request
-.IP "\(bu" 2
-on a server to create a worker with: \fBSlaveWorker\fP
-.IP "\(bu" 2
-on a client/server together with the \fB'SELF'\fP command-line argument: \fBLinkCreate\fP
-.PP
-\fBParameters:\fP
-.RS 4
-\fIstartAs\fP 0=default, 1=fork, 2=thread and 3=spawn
-.RE
-.PP
-.SS "command-line:  --daemon"
-\fBtype:\fP \fCstring\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetDeamon (pidfile)\fP
-.PP
-Close all default IO (e.g stdout, stdin, stderr) and fork the server into the background. (default: no daemon) 
-.PP
-\fBAttention:\fP
-.RS 4
-this option require the \fBfork\fP system-call and is \fBnot\fP compatible with threads. 
-.RE
-.PP
-\fBParameters:\fP
-.RS 4
-\fIpidfile\fP the name of the file to write the PID into
-.RE
-.PP
+True if object is a \fIserver\fP object (default: \fI0\fP, be a client)
 .SS "command-line: --tcp --host --port --myhost --myport"
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIoTcpHost/Port/MyHost/MyPort\fP , \fBset:\fP \fCConfigSetIoTcp (host, port, myhost, myport)\fP
 .PP
@@ -189,22 +237,45 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fC\fBMqS\fP\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "isServer"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
-.PP
-True if object is a \fIserver\fP object (default: \fI0\fP, be a client)
 .SS "isSlave"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fI0\fP, not be a slave)
+.SS "command-line: --thread --spawn --fork"
+\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
+.PP
+Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
+.IP "\(bu" 2
+a server-context to start a new instance after a client connection request
+.IP "\(bu" 2
+on a server to create a worker with: \fBSlaveWorker\fP
+.IP "\(bu" 2
+on a client/server together with the \fB'SELF'\fP command-line argument: \fBLinkCreate\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstartAs\fP 0=default, 1=fork, 2=thread and 3=spawn
+.RE
+.PP
+.SS "command-line:  --daemon"
+\fBtype:\fP \fCstring\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetDeamon (pidfile)\fP
+.PP
+Close all default IO (e.g stdout, stdin, stderr) and fork the server into the background. (default: no daemon) 
+.PP
+\fBAttention:\fP
+.RS 4
+this option require the \fBfork\fP system-call and is \fBnot\fP compatible with threads. 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpidfile\fP the name of the file to write the PID into
+.RE
+.PP
 .SS "ignoreExit"
 \fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
 .PP
 By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fI1\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
-.SS "ident"
-\fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
-.PP
-Use string as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "interface: $ctx->ConfigSetServerSetup(callback)"
 Interface to define a \fIserver\fP perlmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fI1\fP.
 .SS "interface: $ctx->ConfigSetServerCleanup(callback)"
@@ -294,7 +365,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fIctx\fP the context returned by \fBour $ctx=new MqS()\fP 
 .RE
 .PP
-.SS "\\LinkGetParent"
+.SS "MqS $ctx->LinkGetParent()"
 get the \fIparent-context\fP from a client/server link 
 .PP
 \fBParameters:\fP
@@ -307,7 +378,7 @@ get the \fIparent-context\fP from a client/server link
 the \fIparent-context\fP or \fIundef\fP if not a \fIchild-context\fP 
 .RE
 .PP
-.SS "\\LinkGetCtxId"
+.SS "integer $ctx->LinkGetCtxId()"
 get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
 .PP
 The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
@@ -322,7 +393,7 @@ The \fIcontext-identifier\fP is a number and is used in the protocol to link a \
 the identifier as number 
 .RE
 .PP
-.SS "\\LinkIsParent"
+.SS "boolean $ctx->LinkIsParent()"
 is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
 A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
@@ -337,7 +408,7 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 a boolean value, \fI1\fP or \fI0\fP 
 .RE
 .PP
-.SS "\\LinkIsConnected"
+.SS "boolean $ctx->LinkIsConnected()"
 is the context connected? 
 .PP
 A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
@@ -521,13 +592,13 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ONCE|FOREVER)})"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
-To specify the the \fItime-interval\fP three modes are supported:
+This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
 .IP "\(bu" 2
-\fB\fCNO\fP,\fP don't wait for an event do just the check and comeback
+\fB\fCNO\fP,\fP don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-\fB\fCONCE\fP,\fP use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+\fB\fCONCE\fP,\fP wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
 .IP "\(bu" 2
-\fB\fCFOREVER\fP,\fP wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fB\fCFOREVER\fP,\fP wait forever and only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP
@@ -941,7 +1012,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "int $ctx->ReadGetNumItems()"
+.SS "integer $ctx->ReadGetNumItems()"
 get the number of items left in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -983,6 +1054,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SH "SLAVE API"
+.PP
+\fBSlaveWorker\fP
+.br
+ \fBSlaveCreate\fP
+.br
+ \fBSlaveDelete\fP
+.br
+ \fBSlaveGet\fP
+.br
 .PP
 The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
 .PP
@@ -1128,29 +1208,29 @@ The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItype
 .SS "TYPE IDENTIFIER"
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the  datatype (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the T_PV datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character ()
+\fCY\fP : 1 byte signed character (T_CHAR)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fI1\fP or \fI0\fP ()
+\fCO\fP : 1 byte boolean value using \fI1\fP or \fI0\fP (T_BOOL)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short ()
+\fCS\fP : 2 byte signed short (T_IV)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer ()
+\fCI\fP : 4 byte signed integer (T_IV)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer ()
+\fCW\fP : 8 byte signed long long integer (T_IV)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float ()
+\fCF\fP : 4 byte float (T_FLOAT)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double ()
+\fCD\fP : 8 byte double (T_DOUBLE)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data ()
+\fCB\fP : unsigned char array used for binary data (T_PV)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end ()
+\fCC\fP : string data using a \fC\\0\fP at the end (T_PV)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above ()
+\fCU\fP : typeless buffer able to hold a single item from above (T_MqBufferS)
 .PP
 .SS "TYPE $buffer->GetTYPE()"
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)

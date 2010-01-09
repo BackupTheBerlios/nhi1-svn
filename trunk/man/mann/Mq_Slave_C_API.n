@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -82,7 +82,7 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3684 of file msgque.h.
+Definition at line 3690 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"

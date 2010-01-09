@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,9 +23,9 @@ Mq_C_API \- public libmsgque API
 .in +1c
 
 .ti -1c
-.RI "\fBMq_Msgque_C_API\fP"
+.RI "\fBMq_Context_C_API\fP"
 .br
-.R "the top-level \fBlibmsgque\fP object: \fBMqS\fP "
+.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP "
 .PP
 .in +1c
 
@@ -102,6 +102,22 @@ Mq_C_API \- public libmsgque API
 .SH "Detailed Description"
 .PP 
 public libmsgque API 
+
+The msgque project is an infrastructure to link software together to act like a single software. To link mean distributing work from one software to an other software an wait or not wait for an answer. The linking is done using unix or inet domain sockets and is based on packages send from one software to an other software and back. The msgque project is used to handle all the different aspects for setup and maintain the link and is responsible for:
+.IP "\(bu" 2
+starting and stopping the server application
+.IP "\(bu" 2
+starting and stopping the communication interface
+.IP "\(bu" 2
+sending and receiving package data
+.IP "\(bu" 2
+reading and writing data from or into a package
+.IP "\(bu" 2
+setup and maintain the event-handling for an asynchronous transfer
+.IP "\(bu" 2
+propagate the error messages from the server to the client
+.PP
+
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

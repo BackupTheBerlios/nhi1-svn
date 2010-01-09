@@ -236,14 +236,14 @@ class Server(MqS):
   def CNFG (self):
     self.SendSTART();
     self.SendO(self.ConfigGetIsServer());
-    self.SendO(self.ConfigGetIsParent());
+    self.SendO(self.LinkIsParent());
     self.SendO(self.ConfigGetIsSlave());
     self.SendO(self.ConfigGetIsString());
     self.SendO(self.ConfigGetIsSilent());
-    self.SendO(self.ConfigGetIsConnected());
+    self.SendO(self.LinkIsConnected());
     self.SendC(self.ConfigGetName());
     self.SendI(self.ConfigGetDebug());
-    self.SendI(self.ConfigGetCtxId());
+    self.SendI(self.LinkGetCtxId());
     self.SendC(self.ServiceGetToken());
     self.SendRETURN();
 
@@ -421,7 +421,7 @@ class Server(MqS):
 
   def GTCX(self):
     self.SendSTART()
-    self.SendI(self.ConfigGetCtxId())
+    self.SendI(self.LinkGetCtxId())
     self.SendRETURN()
 
   def GTTO(self):
@@ -485,7 +485,7 @@ class Server(MqS):
     else:
       self.SendC("CLIENT")
     self.SendC ("pOc");
-    if self.ConfigGetIsParent():
+    if self.LinkIsParent():
       self.SendC("PARENT")
     else:
       self.SendC("CHILD")
@@ -509,9 +509,9 @@ class Server(MqS):
     #print("SND1 -> act = ", s, ", id = ", id); sys.stdout.flush()
     self.SendSTART()
     if s == "START" :
-      parent = self.ConfigGetParent();
+      parent = self.LinkGetParent();
       #print("START -> self = ", self, ", cl = ", self.cl[id], ", type = ", type(self.cl[id])); sys.stdout.flush()
-      if parent != None and parent.cl[id].ConfigGetIsConnected()  :
+      if parent != None and parent.cl[id].LinkIsConnected()  :
         #print("CHILD");sys.stdout.flush()
         self.cl[id].LinkCreateChild(parent.cl[id]);
       else:
@@ -647,5 +647,9 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
+
+
+
 
 

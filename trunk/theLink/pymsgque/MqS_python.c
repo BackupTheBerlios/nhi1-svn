@@ -22,8 +22,8 @@ NS(MqS_new)(PyTypeObject *type, PyObject *args, PyObject *kwds)
   Py_INCREF(self);
 //MqDLogX(&self->context,__func__,0,"self<%p>, refCount<%li>\n", self, ((PyObject*)self)->ob_refcnt);
   MqConfigSetSelf (&self->context, self);
-  self->context.setup.Child.fCreate  = MqDefaultLinkCreate;
-  self->context.setup.Parent.fCreate = MqDefaultLinkCreate;
+  self->context.setup.Child.fCreate  = MqLinkDefault;
+  self->context.setup.Parent.fCreate = MqLinkDefault;
   self->context.setup.fProcessExit = NS(ProcessExit);
   MqConfigSetIgnoreThread (&self->context, MQ_YES);
   return (PyObject *)self;
@@ -46,17 +46,29 @@ NS(MqS_dealloc)(MqS_Obj* self)
 
 PyObject* NS(ProcessEvent)	    ( PyObject*, PyObject*, PyObject* );
 PyObject* NS(Delete)		    ( PyObject*		   );
-PyObject* NS(LinkCreate)	    ( PyObject*, PyObject* );
-PyObject* NS(LinkCreateChild)	    ( PyObject*, PyObject* );
-PyObject* NS(LinkDelete)	    ( PyObject*            );
 PyObject* NS(Exit)		    ( PyObject*            );
 
 #define ProcessEvent_DOC	    "[[timeout(sec),wait(bool)[,forever(bool)]]]\nStart the eventloop and wait for incomming messages."
 #define Delete_DOC		    "[noARG] Delete the LibMsgque object, but keep the PyMqS object alive."
+#define Exit_DOC		    "exit the application or thread"
+
+// from link_python.c
+
+PyObject* NS(LinkCreate)	    ( PyObject*, PyObject* );
+PyObject* NS(LinkCreateChild)	    ( PyObject*, PyObject* );
+PyObject* NS(LinkDelete)	    ( PyObject*            );
+PyObject* NS(LinkIsParent)	    ( PyObject* );
+PyObject* NS(LinkIsConnected)	    ( PyObject* );
+PyObject* NS(LinkGetParent)	    ( PyObject* );
+PyObject* NS(LinkGetCtxId)	    ( PyObject* );
+
 #define LinkCreate_DOC		    "[config, args] create a new parent-object-link"
 #define LinkCreateChild_DOC	    "[parent, args] create a new child-object-link"
 #define LinkDelete_DOC		    "delete the object-link"
-#define Exit_DOC		    "exit the application or thread"
+#define LinkIsParent_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'parent'."
+#define LinkIsConnected_DOC	    "[noARG] boolean, 'True' if the object-link is up and running'."
+#define LinkGetParent_DOC	    "[noARG] return the PyMqS 'parent' object of the 'current' object."
+#define LinkGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
 
 // from send_python.c
 
@@ -200,10 +212,7 @@ PyObject* NS(ConfigGetBuffersize)     ( PyObject* );
 PyObject* NS(ConfigGetIsString)	      ( PyObject* );
 PyObject* NS(ConfigGetIsSilent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
-PyObject* NS(ConfigGetIsParent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsSlave)	      ( PyObject* );
-PyObject* NS(ConfigGetIsConnected)    ( PyObject* );
-PyObject* NS(ConfigGetParent)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
 PyObject* NS(ConfigGetIdent)	      ( PyObject* );
@@ -215,7 +224,6 @@ PyObject* NS(ConfigGetIoTcpMyPort)    ( PyObject* );
 PyObject* NS(ConfigGetIoPipeSocket)   ( PyObject* );
 PyObject* NS(ConfigGetStartAs)	      ( PyObject* );
 PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
-PyObject* NS(ConfigGetCtxId)	      ( PyObject* );
 PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 
 
@@ -243,13 +251,10 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetIsString_DOC	    "[noARG] boolean, 'True' if the object is using the 'string' configuration."
 #define ConfigGetIsSilent_DOC	    "[noARG] boolean, 'True' if the object is using the 'silent' configuration."
 #define ConfigGetIsServer_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'server'."
-#define ConfigGetIsParent_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'parent'."
 #define ConfigGetIsSlave_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'slave'."
-#define ConfigGetIsConnected_DOC    "[noARG] boolean, 'True' if the object-link is up and running'."
 #define ConfigGetDebug_DOC	    "[noARG] Return the debug level (int from 0 up to 9)."
 #define ConfigGetTimeout_DOC	    "[noARG] Return the user defined timeout is sec."
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
-#define ConfigGetParent_DOC	    "[noARG] return the PyMqS 'parent' object of the 'current' object."
 #define ConfigGetName_DOC	    "[noARG] return the PyMqS 'name' (str) of the object."
 #define ConfigGetSrvName_DOC	    "[noARG] return the PyMqS 'srvname' (str) of the object."
 #define ConfigGetIdent_DOC	    "[noARG] return the PyMqS 'ident' (str) of the object."
@@ -260,7 +265,6 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetIoTcpMyPort_DOC    "[noARG] return the PyMqS 'tcp-myport-name' (str) of the object."
 #define ConfigGetIoPipeSocket_DOC   "[noARG] return the PyMqS 'pipe-socket-file-descriptor' (int) of the object."
 #define ConfigGetStartAs_DOC	    "[noARG] return the PyMqS 'start-kind-value' (int) of the object."
-#define ConfigGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
 #define ConfigGetMaster_DOC	    "[noARG] return the PyMqS 'master' object of the 'current' object."
 
 // from error_python.c
@@ -291,10 +295,15 @@ static PyMethodDef NS(MqS_Methods)[] = {
 
     ARG(ProcessEvent,		METH_VARARGS | METH_KEYWORDS),
     ARG(Delete,			METH_NOARGS),
+    ARG(Exit,			METH_NOARGS),
+
     ARG(LinkCreate,		METH_VARARGS),
     ARG(LinkCreateChild,	METH_VARARGS),
     ARG(LinkDelete,		METH_NOARGS),
-    ARG(Exit,			METH_NOARGS),
+    ARG(LinkIsParent,		METH_NOARGS),
+    ARG(LinkIsConnected,	METH_NOARGS),
+    ARG(LinkGetParent,		METH_NOARGS),
+    ARG(LinkGetCtxId,		METH_NOARGS),
 
     ARG(SendSTART,		METH_NOARGS),
     ARG(SendEND,		METH_VARARGS),
@@ -372,13 +381,10 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIsString,	METH_NOARGS),
     ARG(ConfigGetIsSilent,	METH_NOARGS),
     ARG(ConfigGetIsServer,	METH_NOARGS),
-    ARG(ConfigGetIsParent,	METH_NOARGS),
     ARG(ConfigGetIsSlave,	METH_NOARGS),
-    ARG(ConfigGetIsConnected,	METH_NOARGS),
     ARG(ConfigGetDebug,		METH_NOARGS),
     ARG(ConfigGetTimeout,	METH_NOARGS),
     ARG(ConfigGetBuffersize,	METH_NOARGS),
-    ARG(ConfigGetParent,	METH_NOARGS),
     ARG(ConfigGetName,		METH_NOARGS),
     ARG(ConfigGetSrvName,	METH_NOARGS),
     ARG(ConfigGetIdent,		METH_NOARGS),
@@ -389,7 +395,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIoTcpMyPort,	METH_NOARGS),
     ARG(ConfigGetIoPipeSocket,	METH_NOARGS),
     ARG(ConfigGetStartAs,	METH_NOARGS),
-    ARG(ConfigGetCtxId,		METH_NOARGS),
     ARG(ConfigGetMaster,	METH_NOARGS),
 
     ARG(ErrorC,			METH_VARARGS),
@@ -463,5 +468,10 @@ PyTypeObject NS(MqS) = {
   0,				  /* tp_alloc */
   NS(MqS_new),			  /* tp_new */
 };
+
+
+
+
+
 
 

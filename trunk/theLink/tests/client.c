@@ -417,8 +417,7 @@ ClientMain (
       StatInit (itemT);
       for (n=0; n<lnum; n++) {
 	contextA[n] = MqContextCreate(0,template);
-	MqConfigSetParent (contextA[n], mqctx);
-	if (MqLinkCreate (contextA[n], NULL) == MQ_ERROR) {
+	if (MqLinkCreateChild (contextA[n], mqctx, NULL) == MQ_ERROR) {
 	  MqErrorCopy(mqctx,contextA[n]);
 	  goto error;
 	}

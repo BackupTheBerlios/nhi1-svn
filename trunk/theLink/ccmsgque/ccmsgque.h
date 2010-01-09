@@ -239,7 +239,7 @@ namespace ccmsgque {
 
       static void FactoryDelete (
 	struct MqS * ctx,
-      MQ_BOL doFactoryCleanup,
+	MQ_BOL doFactoryCleanup,
 	MQ_PTR data
       );
 
@@ -364,7 +364,7 @@ namespace ccmsgque {
       }
 
       inline int ErrorGetNum () {
-	return MqErrorGetNum (&context);
+	return MqErrorGetNumI (&context);
       }
 
       inline MQ_CST ErrorGetText () {

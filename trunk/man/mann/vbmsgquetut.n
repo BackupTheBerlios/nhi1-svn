@@ -1,4 +1,4 @@
-.TH "vbmsgque Tutorial" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque Tutorial" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -28,7 +28,7 @@ processor hardware independent
 .PP
 The VB.NET language binding provide the following basic components:
 .IP "\(bu" 2
-abstract class of the \fBvbmsgque\fP object: \fBMqS\fP
+abstract class of the \fBvbmsgque\fP object: \fBDim ctx As New MqS()\fP
 .IP "\(bu" 2
 interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
@@ -55,7 +55,7 @@ A \fBvbmsgque\fP server requires the following setup:
 .IP "1." 4
 file: \fCexample/VB.NET/MyServer\fP.vb
 .IP "2." 4
-an instance of the abstract class \fBMqS\fP
+an instance of the abstract class \fBDim ctx As New MqS()\fP
 .IP "3." 4
 the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .IP "4." 4
@@ -134,7 +134,7 @@ the \fBsend\fP style of functions
 .IP "2." 4
 the \fBctx.ServiceCreate(token As String, AddressOf callback)\fP function
 .IP "3." 4
-a \fBconnected\fP context of type \fBMqS\fP
+a \fBconnected\fP context of type \fBDim ctx As New MqS()\fP
 .PP
 Sending data is done using a minimum of 2 steps:
 .IP "1." 4
@@ -156,12 +156,12 @@ The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote servi
 .PP
 Services are created with the \fBctx.ServiceCreate(token As String, AddressOf callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
-The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
+The \fBSERVICE CALLBACK\fP function has one parameter of type \fBDim ctx As New MqS()\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBDim ctx As New MqS()\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
 .SH "CLIENT"
 .PP
 A \fBvbmsgque\fP client requires the following setup:
 .IP "1." 4
-an instance of the abstract class \fBMqS\fP
+an instance of the abstract class \fBDim ctx As New MqS()\fP
 .PP
 The \fIminimal\fP client looks like:
 .PP

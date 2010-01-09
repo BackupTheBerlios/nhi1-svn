@@ -34,6 +34,7 @@ ALIASES		    += "package=Imports csmsgque"
 ALIASES		    += "object_example=\code \n\
 Private NotInheritable Class MyClass \n\
   Inherits MqS \n\
+  Private mydata As Integer \n\
   ... \n\
 End Class \n\
 Sub Main(ByVal args() As String) \n\
@@ -42,12 +43,15 @@ Sub Main(ByVal args() As String) \n\
 End Sub \n\
 \endcode"
 
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=Dim ctx As New MqS()"
-ALIASES		    += "ObjectDelete=deleted by Garbage Collection"
+ALIASES		    += "ContextCreate=Dim ctx As New MqS()"
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
+\endcode"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=Init(ByVal args() As String)"
+ALIASES		    += "Init=Init(ByVal ParamArray args As String())"
 
 ALIASES		    += "config_type_buffersize=Integer"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
@@ -102,6 +106,10 @@ ALIASES		    += "config_type_pipe=Integer"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
 ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
 
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
+
 ALIASES		    += "config_type_isServer=Boolean"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
@@ -121,8 +129,8 @@ ALIASES             += "config_IBgError=IBgError.Call()"
 ALIASES             += "config_IEvent=IEvent.Call()"
 
 # LINK CREATION AND DELETION
-ALIASES		    += "LinkCreate=ctx.LinkCreate(BqVal args() As String)"
-ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent As MqS, ByVal args() As String)"
+ALIASES		    += "LinkCreate=ctx.LinkCreate(BqVal ParamArray args As String())"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent As MqS, ByVal ParamArray args As String())"
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "LinkGetParent=ctx.LinkGetParent() As MqS"
 ALIASES		    += "LinkIsParent=ctx.LinkIsParent() As Boolean"
@@ -176,7 +184,7 @@ ALIASES		    += "ServiceGetFilter=ctx.ServiceGetFilter([id=0]) As MqS"
 ALIASES		    += "ServiceIsTransaction=ctx.ServiceIsTransaction() As Boolean"
 
 # SLAVE CREATION AND DELETION
-ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id As Integer, ByVal args() As String)"
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id As Integer, ByVal ParamArray args As String())"
 ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id As Integer, slave As MqS)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id As Integer)"
@@ -222,4 +230,6 @@ ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+
 

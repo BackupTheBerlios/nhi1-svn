@@ -322,7 +322,7 @@ MqErrorGetNum (
   struct MqS const * const context
 )
 {
-  return context->error.num;
+  return MqErrorGetNumI(context);
 }
 
 void

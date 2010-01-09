@@ -24,6 +24,7 @@
 #include "trans.h"
 #include "cache.h"
 #include "link.h"
+#include "config.h"
 
 BEGIN_C_DECLS
 
@@ -517,7 +518,7 @@ pTokenCheckSystem (
 	MQ_INT i;
 	// need client-code to handel ContextCreate request
 	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.Factory, &fcontext));
-	MqConfigSetParent (fcontext, context);
+	pConfigSetParent (fcontext, context);
         MqErrorCheck (MqReadI (context, &i));
 	if (i != -1) MqConfigSetDebug(fcontext, i);
         MqErrorCheck (MqReadI (context, &i));

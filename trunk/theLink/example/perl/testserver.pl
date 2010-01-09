@@ -19,12 +19,12 @@ use base qw(Net::PerlMsgque::MqS);
   sub GTCX {
     my $ctx = shift;
     $ctx->SendSTART();
-    $ctx->SendI($ctx->ConfigGetCtxId());
+    $ctx->SendI($ctx->LinkGetCtxId());
     $ctx->SendC("+");
-    if ($ctx->ConfigGetIsParent()) {
+    if ($ctx->LinkIsParent()) {
       $ctx->SendI(-1);
     } else {
-      $ctx->SendI($ctx->ConfigGetParent()->ConfigGetCtxId());
+      $ctx->SendI($ctx->LinkGetParent()->LinkGetCtxId());
     }
     $ctx->SendC("+");
     $ctx->SendC($ctx->ConfigGetName());
@@ -57,6 +57,9 @@ package main;
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
+
+
 
 
 

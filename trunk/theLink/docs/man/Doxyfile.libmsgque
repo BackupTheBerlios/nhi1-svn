@@ -15,6 +15,7 @@
 #---------------------------------------------------------------------------
 
 ENABLED_SECTIONS    += C
+ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/c
 
 ALIASES		    += "self=libmsgque"
@@ -29,15 +30,25 @@ ALIASES		    += "package=\#include \"msgque.h\""
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxS), NULL); \n\
+struct MyCtxDataS { \n\
+  struct MqS mqctx; \n\
+  int mydata; \n\
+}; \n\
+struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
 \endcode"
 
-ALIASES		    += "MqS=struct MqS*"
-ALIASES		    += "ObjectCreate=struct MqS *ctx=MqContextCreate(size, template)"
-ALIASES		    += "ObjectDelete=MqContextDelete(&ctx)"
+ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
+ALIASES		    += "ContextDelete=MqContextDelete(&ctx)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "init_example=\
+\code \n\
+struct MqBufferLS * init = MqInitCreate(); \n\
+MqBufferLAppendC(init, \"myExecutable\"); \n\
+MqBufferLAppendC(init, \"myFirstArgument\"); \n\
+\endcode \n\
+The memory is owned by the library -> <B>do not free the memory</B>"
 
 ALIASES		    += "config_type_buffersize=#MQ_INT"
 ALIASES		    += "config_set_buffersize=#MqConfigSetBuffersize (ctx, buffersize)"
@@ -233,5 +244,7 @@ ALIASES		    += "ErrorSetCONTINUE=MqErrorSetCONTINUE(ctx)"
 ALIASES		    += "ErrorReset=MqErrorReset(ctx)"
 ALIASES		    += "ErrorRaise=MqErrorRaise(ctx)"
 ALIASES		    += "ErrorPrint=MqErrorPrint(ctx)"
+
+
 
 

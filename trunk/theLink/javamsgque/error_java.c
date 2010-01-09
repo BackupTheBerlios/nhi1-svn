@@ -125,7 +125,7 @@ JNIEXPORT jint JNICALL NS(ErrorGetNum) (
   jobject     self
 )
 {
-  return MqErrorGetNum(CONTEXT);
+  return MqErrorGetNumI(CONTEXT);
 }
 
 JNIEXPORT jstring JNICALL NS(ErrorGetText) (

@@ -8,7 +8,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \section \NS{idx} INDEX
 
-\RNS{object}\n
+\RNS{context}\n
 \RNS{config}\n
 \RNS{link}\n
 \RNS{service}\n
@@ -20,33 +20,22 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \if DATA \RNS{data} \endif
 
 \section	\NS{desc}				INTRODUCTION
-The msgque project is an infrastructure to link software together to act like a single software. 
-To link mean distributing work from one software to an other software an wait or not wait for an 
-answer. The linking is done using unix or inet domain sockets and is based on packages send from one software 
-to an other software and back. The msgque project is used to handle all the different aspects for 
-setup and maintain the link and is responsible for:
-  - starting and stopping the server application
-  - starting and stopping the communication interface
-  - sending and receiving package data
-  - reading and writing data from or into a package
-  - setup and maintain the event-handling for an asynchronous transfer
-  - propagate the error messages from the server to the client
-  .
+\copydoc Mq_C_API
 
+\section	\NS{context}				CONTEXT API
+\RNSA{ContextCreate}\n
+\RNSA{ContextDelete}\n
+\RNSA{Exit}\n
 
-\section	\NS{object}				CONTEXT API
+\copydoc Mq_Context_C_API
 
-\subsection     \NS{MqS}				\MqS
-The \e object is the user visible part of a \self application link.
+\subsection	\NS{ContextCreate}			\ContextCreate
+\copydoc MqContextCreate
 
-\subsection	\NS{ObjectCreate}			\ObjectCreate
-Create an object ready to be used with \RNSA{LinkCreate} to setup an application link.
-Use the \RNSA{LinkIsConnected} to check if a link is already available.
-
-\b Example: definition of a context:
+\b Example: create an \e application-context with \e mydata as \e application-specific-data:
 \object_example
 
-\subsection	\NS{ObjectDelete}			\ObjectDelete
+\subsection	\NS{ContextDelete}			\ContextDelete
 Delete the entire object including the application link using \RNSA{LinkDelete}. The
 object can \b not be reused.
 
@@ -55,49 +44,22 @@ Shutdown the entire communication and exit the current process or thread.
 
 
 \section	\NS{config}				CONFIG API
+\RNSA{Init}\n
+\RNSC{buffersize}, \RNSC{debug}, \RNSC{timeout}\n
+\RNSC{name}, \RNSC{srvname}, \RNSC{ident}\n
+\RNSC{isSilent}, \RNSC{isString}, \RNSC{isServer}\n
+\RNSC{tcp}, \RNSC{uds}, \RNSC{pipe}\n
+\RNSC{startAs}, \RNSC{daemon}, \RNSC{ignoreExit}\n
+\RNSC{IServerSetup}, \RNSC{IServerCleanup}\n
+\RNSC{IFactory}, \RNSC{IBgError}, \RNSC{IEvent}\n
+
 The configuration of an object is done using the functions starting with \c MqConfig...
 or by using command-line arguments.
 
 \subsection \NS{Init} static: \Init
-Initialize the process startup argument prefix. The startup-prefix have to be the
-name of the executable found in the \c PATH and additional arguments like
-a script name or required startup options. 
-The startup-prefix is used for two different purpose:
- - To start a new entity using the \RNSC{startAs} "--spawn" command-line option
- - To replace the \RNSA{LinkCreate} "SELF" argument after the \e "@" command-line argument
- .
-\if TCL
-The startup-prefix is initially set by \self during package loading.
-\elseif PERL
-The startup-prefix is initially set by \self during package loading.
-\elseif PYTHON
-The startup-prefix is initially set by \self during package loading.
-\elseif CSHARP
-The startup-prefix is initially set by \self during package loading.
-\elseif VB
-The startup-prefix is initially set by \self during package loading.
-\elseif CC
-The startup-prefix is initially set by \self during package loading.
-\code
-struct MqBufferLS * init = MqInitCreate();
-MqBufferLAppendC(init, "myExecutable");
-MqBufferLAppendC(init, "myFirstArgument");
-\endcode
-\attention the memory is owned by \self -> do \e not free the memory
-\elseif C
-\return a pointer to the init object.
-\attention the prefix have to fit to the underlying programming language
+\copydoc MqInitCreate
 
-To initialize the startup-prefix the following code have to be used:
-\code
-struct MqBufferLS * init = MqInitCreate();
-MqBufferLAppendC(init, "myExecutable");
-MqBufferLAppendC(init, "myFirstArgument");
-\endcode
-\attention the memory is owned by \self -> do \e not free the memory
-\elseif JAVA
-The startup-prefix is \e not set by default.
-\endif
+\b Example: initialize the \e stratup-prefix with \e myExecutable and \e myFirstArgument \init_example
 
 \configsection{buffersize, --buffersize}
 The send and receive buffersize in bytes (default: 4KB)
@@ -118,6 +80,12 @@ Use \e STRING as a client specific prefix in the server debugging output. This i
 link debugging and error messages on the server to a specific client connection.
 (default: empty)
 
+\configsection{ident}
+Use \config_type_ident as an application specific identifier set by the programmer and checked with
+\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
+of the application depending on the result.
+(default: empty)
+
 \configsection{isSilent,--silent}
 Write (\no) or don't write (\yes) any output to stdout or stderr. (default: write to stdout or stderr)
 
@@ -125,25 +93,8 @@ Write (\no) or don't write (\yes) any output to stdout or stderr. (default: writ
 Use (\yes), as much as possible, strings in the data-package. Convert any native data-type,
 like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
 
-\configsection{startAs,--thread --spawn --fork}
-Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
-This arguments are used with:
- - a server-context to start a new instance after a client connection request 
- - on a server to create a worker with: \RNSA{SlaveWorker}
- - on a client/server together with the \b "SELF" command-line argument: \RNSA{LinkCreate}
- .
-\param[in] startAs 0=default, 1=fork, 2=thread and 3=spawn
-
-\ifnot JAVA
-\ifnot CSHARP
-\ifnot VB
-\configsection{daemon, --daemon}
-Close all default IO (e.g stdout, stdin, stderr) and fork the server into the background. (default: no daemon)
-\attention this option require the \b fork system-call and is \b not compatible with threads.
-\param[in] pidfile the name of the file to write the PID into
-\endif
-\endif
-\endif
+\configsection{isServer}
+True if object is a \e server object (default: \no, be a client)
 
 \configsection{tcp,--tcp --host --port --myhost --myport}
 Configure a \e tcp socket link.
@@ -176,20 +127,29 @@ and start for every connection the proper entry from the file \e /etc/(x)inetd.c
 return the \e master if \e ctx is a slave-context or \e NULL if \e ctx is not a slave-context.
 !Only a SLAVE has a master!
 
-\configsection{isServer}
-True if object is a \e server object (default: \no, be a client)
-
 \configsection{isSlave}
 True if object is a \e slave object (default: \no, not be a slave)
 
+\configsection{startAs,--thread --spawn --fork}
+Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
+This arguments are used with:
+ - a server-context to start a new instance after a client connection request 
+ - on a server to create a worker with: \RNSA{SlaveWorker}
+ - on a client/server together with the \b "SELF" command-line argument: \RNSA{LinkCreate}
+ .
+\param[in] startAs 0=default, 1=fork, 2=thread and 3=spawn
+
+\configsection{daemon, --daemon}
+\if DAEMON
+Close all default IO (e.g stdout, stdin, stderr) and fork the server into the background. (default: no daemon)
+\attention this option require the \b fork system-call and is \b not compatible with threads.
+\param[in] pidfile the name of the file to write the PID into
+\else
+This configuration is \b not available for \self.
+\endif
+
 \configsection{ignoreExit}
 \copydetails MqSetupS::ignoreExit
-
-\configsection{ident}
-Use \config_type_ident as an application specific identifier set by the programmer and checked with
-\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
-of the application depending on the result.
-(default: empty)
 
 \interface{IServerSetup}
 Interface to define a \e server \self object. This Interface define the
@@ -495,6 +455,11 @@ UNKNOWN
 \copydoc MqReadUndo
 
 \section        \NS{slave}				SLAVE API
+\RNSA{SlaveWorker}\n
+\RNSA{SlaveCreate}\n
+\RNSA{SlaveDelete}\n
+\RNSA{SlaveGet}\n
+
 \copydetails Mq_Slave_C_API
 
 \subsection	  \NS{SlaveWorker}			\SlaveWorker
@@ -844,5 +809,7 @@ TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
 
 
 */
+
+
 
 

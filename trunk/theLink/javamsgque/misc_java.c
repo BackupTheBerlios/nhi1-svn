@@ -149,7 +149,7 @@ void NS(pErrorFromMq) (
 )
 {
   jthrowable ex = (jthrowable) (*env)->NewObject(env, NS(Class_MqSException), 
-    NS(MID_MqSException_INIT), (jint) MqErrorGetNum(error), (jint) MqErrorGetCodeI(error), 
+    NS(MID_MqSException_INIT), (jint) MqErrorGetNumI(error), (jint) MqErrorGetCodeI(error), 
       JC2O(env, MqErrorGetText(error)));
   (*env)->Throw(env, ex);
   MqErrorReset(error);

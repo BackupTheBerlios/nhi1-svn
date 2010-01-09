@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -93,39 +93,37 @@ access to native system functions with error handling
 .PP 
 .SS "#define MQ_CDECL"
 .PP
-Definition at line 79 of file msgque.h.
+Definition at line 90 of file msgque.h.
 .SS "#define MQ_CLRCALL"
 .PP
-Definition at line 75 of file msgque.h.
+Definition at line 86 of file msgque.h.
 .SS "#define mq_getpid   getpid"
 .PP
-Definition at line 69 of file msgque.h.
+Definition at line 80 of file msgque.h.
 .SS "#define mq_inline   inline"
 .PP
-Definition at line 81 of file msgque.h.
+Definition at line 92 of file msgque.h.
 .SS "#define mq_snprintf   snprintf"
 .PP
-Definition at line 73 of file msgque.h.
+Definition at line 84 of file msgque.h.
 .SS "#define MQ_STDCALL"
 .PP
-Definition at line 77 of file msgque.h.
+Definition at line 88 of file msgque.h.
 .SS "#define mq_strdup(v)   strdup(v)"
 .PP
-Definition at line 67 of file msgque.h.
-.PP
-Referenced by mq_strdup_save().
+Definition at line 78 of file msgque.h.
 .SS "#define mq_strtoll   strtoll"
 .PP
-Definition at line 65 of file msgque.h.
+Definition at line 76 of file msgque.h.
 .SS "#define mq_timeval   timeval"
 .PP
-Definition at line 147 of file msgque.h.
+Definition at line 158 of file msgque.h.
 .SS "#define mq_timezone   timezone"
 .PP
-Definition at line 149 of file msgque.h.
+Definition at line 160 of file msgque.h.
 .SS "#define mq_unlink   unlink"
 .PP
-Definition at line 71 of file msgque.h.
+Definition at line 82 of file msgque.h.
 .SS "#define MqSysFree(tgt)"
 .PP
 \fBValue:\fP
@@ -147,7 +145,7 @@ do { \
 .PP
 
 .PP
-Definition at line 3795 of file msgque.h.
+Definition at line 3802 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [inline, static]\fP"
@@ -166,9 +164,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 3846 of file msgque.h.
-.PP
-References mq_strdup.
+Definition at line 3854 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (char const *const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 'basename' system call with error handling feature 

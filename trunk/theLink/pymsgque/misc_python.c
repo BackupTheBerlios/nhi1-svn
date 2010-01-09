@@ -90,7 +90,7 @@ void NS(pErrorFromMq) (
 {
   PyErr_SetString(NS(MqSException), MqErrorGetText(context));
   PyObject_SetAttrString(NS(MqSException), "text", PyC2O(MqErrorGetText(context)));
-  PyObject_SetAttrString(NS(MqSException), "num", PyLong_FromLong(MqErrorGetNum(context)));
+  PyObject_SetAttrString(NS(MqSException), "num", PyLong_FromLong(MqErrorGetNumI(context)));
   PyObject_SetAttrString(NS(MqSException), "code", PyLong_FromLong(MqErrorGetCodeI(context)));
   MqErrorReset(context);
 }

@@ -58,7 +58,7 @@ PyObject* NS(ErrorGetNum) (
   PyObject  *self
 )
 {
-  return PyLong_FromLong(MqErrorGetNum(CONTEXT));
+  return PyLong_FromLong(MqErrorGetNumI(CONTEXT));
 }
 
 PyObject* NS(ErrorGetText) (

@@ -15,6 +15,7 @@
 #include "error.h"
 #include "bufferL.h"
 #include "link.h"
+#include "config.h"
 
 #define MQ_CONTEXT_S context
 
@@ -83,7 +84,7 @@ pSlaveChildCreate (
   }
 
   slave->slaves[id] = slave_context;
-  MqConfigSetMaster (slave_context, context, id);
+  pConfigSetMaster (slave_context, context, id);
   // set background error handler
   if (slave_context->setup.BgError.fFunc == NULL)
     MqConfigSetBgError (slave_context, pSlaveBqError, NULL, NULL, NULL);
@@ -172,8 +173,8 @@ pSlaveCreate (
 	MqErrorCopy (context, slave_parent);
 	goto error;
       }
-      MqConfigSetParent(newctx, slave_parent);
-      MqConfigSetMaster(newctx, master, id);
+      pConfigSetParent(newctx, slave_parent);
+      pConfigSetMaster(newctx, master, id);
       if (master->config.srvname)
 	MqConfigSetSrvName(newctx, master->config.srvname);
       // create the child
@@ -196,7 +197,7 @@ pSlaveCreate (
       struct MqS * const master = context->config.master;
 
       // set to NULL to avoid "double" use
-      MqConfigSetMaster (context, NULL, context->config.master_id);
+      pConfigSetMaster (context, NULL, context->config.master_id);
 
       MqDLogC (context,3,"START-CREATE-SLAVE-WORKER\n");
 
@@ -256,7 +257,7 @@ pSlaveDelete (
   if (context->config.master != NULL) {
     if (context->config.master_id < context->config.master->link.slave->used) 
       context->config.master->link.slave->slaves[context->config.master_id] = NULL;
-    MqConfigSetMaster (context, NULL, 0);
+    pConfigSetMaster (context, NULL, 0);
   }
 
   // delete the slave object
@@ -284,7 +285,7 @@ MqSlaveWorker (
     // argv is noe "owend" by "MqSlaveWorker"
     if (argvP != NULL) *argvP = NULL;
     MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &newctx));
-    MqConfigSetMaster(newctx, context, id);
+    pConfigSetMaster(newctx, context, id);
     if (argv == NULL) {
       argv = MqBufferLCreateArgsV(context, "worker-client", MQ_ALFA_STR, "WORKER", NULL);
     } else {

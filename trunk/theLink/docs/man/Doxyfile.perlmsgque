@@ -16,6 +16,7 @@
 
 
 ENABLED_SECTIONS    += PERL
+ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/perl
 
 ALIASES		    += "self=perlmsgque"
@@ -33,16 +34,26 @@ ALIASES		    += "object_example=\code \n\
 package MyClass; \n\
 use base qw(Net::PerlMsgque::MqS); \n\
 ... \n\
+sub new { \n\
+  my $class = shift; \n\
+  my $ctx = $class->SUPER::new(@_); \n\
+  $ctx->DictSet(\"mydata\", 0); \n\
+  return $ctx; \n\
+} \n\
+... \n\
 package main; \n\
   our $ctx = new MyClass(); \n\
 \endcode"
 
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=our $ctx=new MqS()"
-ALIASES		    += "ObjectDelete=$ctx->DESTROY()"
+ALIASES		    += "ContextCreate=our $ctx=new MqS()"
+ALIASES		    += "ContextDelete=$ctx->DESTROY()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=Net::PerlMsgque::Init(...)"
+ALIASES		    += "init_example=\
+\code \n\
+Net::PerlMsgque::Init(\"perl\", \"myExecutable.pl\", \"myFirstArgument\"); \n\
+\endcode"
 
 ALIASES		    += "config_type_buffersize=integer"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
@@ -105,25 +116,13 @@ ALIASES		    += "config_type_isServer=boolean"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
 
-ALIASES		    += "config_type_isParent=boolean"
-ALIASES		    += "config_set_isParent=NO"
-ALIASES		    += "config_get_isParent=ConfigGetIsParent"
-
 ALIASES		    += "config_type_isSlave=boolean"
 ALIASES		    += "config_set_isSlave=NO"
 ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
 
-ALIASES		    += "config_type_isConnected=boolean"
-ALIASES		    += "config_set_isConnected=NO"
-ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
-
 ALIASES		    += "config_type_master=MqS"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
 ALIASES		    += "config_get_master=ConfigGetMaster"
-
-ALIASES		    += "config_type_ctxId=integer"
-ALIASES		    += "config_set_ctxId=NO"
-ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
 
 ALIASES             += "config_IServerSetup=$ctx->ConfigSetServerSetup(callback)"
 ALIASES		    += "config_IServerCleanup=$ctx->ConfigSetServerCleanup(callback)"
@@ -135,6 +134,10 @@ ALIASES             += "config_IEvent=$ctx->ConfigSetEvent(callback)"
 ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
 ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(parent, args...)"
 ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS $ctx->LinkGetParent()"
+ALIASES		    += "LinkIsParent=boolean $ctx->LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=integer $ctx->LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=boolean $ctx->LinkIsConnected()"
 ALIASES		    += "Exit=$ctx->Exit()"
 
 # SEND DATA
@@ -158,7 +161,7 @@ ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
 ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
 ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
 ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=int $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadGetNumItems=integer $ctx->ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=boolean $ctx->ReadItemExists()"
 ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
 ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
@@ -202,6 +205,17 @@ ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
 ALIASES		    += "BufferType=char $buffer->GetType()"
 
+ALIASES		    += "Y=T_CHAR"
+ALIASES		    += "O=T_BOOL"
+ALIASES		    += "S=T_IV"
+ALIASES		    += "I=T_IV"
+ALIASES		    += "F=T_FLOAT"
+ALIASES		    += "W=T_IV"
+ALIASES		    += "D=T_DOUBLE"
+ALIASES		    += "C=T_PV"
+ALIASES		    += "B=T_PV"
+ALIASES		    += "U=T_MqBufferS"
+
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
 ALIASES		    += "DictSet=$ctx->DictSet(key, data)"
@@ -230,5 +244,7 @@ ALIASES		    += "ErrorSetCONTINUE=$ctx->ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
 ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
 ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
+
+
 
 

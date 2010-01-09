@@ -517,8 +517,8 @@ NS(MqS_Init) (
   Tcl_SetObjResult (interp, SELF);
 
   // set configuration data
-  tclctx->mqctx.setup.Child.fCreate   = MqDefaultLinkCreate;
-  tclctx->mqctx.setup.Parent.fCreate  = MqDefaultLinkCreate;
+  tclctx->mqctx.setup.Child.fCreate   = MqLinkDefault;
+  tclctx->mqctx.setup.Parent.fCreate  = MqLinkDefault;
   tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
   tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
   tclctx->mqctx.setup.Factory.Delete.fCall = NS(FactoryDelete);
@@ -531,6 +531,7 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
+
 
 
 

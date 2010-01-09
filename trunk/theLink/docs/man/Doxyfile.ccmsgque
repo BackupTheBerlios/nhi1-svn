@@ -16,6 +16,7 @@
 
 
 ENABLED_SECTIONS    += CC
+ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/cc
 
 TAGFILES            += $(DOCDIR)/../ccmsgque_public/ccmsgque_public.tag=../ccmsgque_public
@@ -32,18 +33,27 @@ ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-class MyClass : public MqC ... { ... } \n\
-int main (int argc, MQ_CST argv[]) { \n\
+class MyClass : public MqC { \n\
+  private int mydata; \n\
+  ... \n\
+}; \n\
+int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
   MyClass ctx; ... \n\
 } \n\
 \endcode"
 
-ALIASES		    += "MqS=MqC*"
-ALIASES		    += "ObjectCreate=MqC *ctx=new MqC()"
-ALIASES		    += "ObjectDelete=delete(ctx)"
+ALIASES		    += "ContextCreate=MqC *ctx=new MqC()"
+ALIASES		    += "ContextDelete=delete(ctx)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "init_example=\
+\code \n\
+struct MqBufferLS * init = MqInitCreate(); \n\
+MqBufferLAppendC(init, \"myExecutable\"); \n\
+MqBufferLAppendC(init, \"myFirstArgument\"); \n\
+\endcode \n\
+The memory is owned by the library -> <B>do not free the memory</B>"
 
 ALIASES		    += "config_type_buffersize=#MQ_INT"
 ALIASES		    += "config_set_buffersize=#ConfigSetBuffersize"
@@ -273,4 +283,6 @@ ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+
+
 

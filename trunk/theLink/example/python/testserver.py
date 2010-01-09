@@ -14,12 +14,12 @@ from pymsgque import *
 class testserver(MqS):
   def GTCX(ctx):
     ctx.SendSTART()
-    ctx.SendI(ctx.ConfigGetCtxId())
+    ctx.SendI(ctx.LinkGetCtxId())
     ctx.SendC("+")
-    if (ctx.ConfigGetIsParent()):
+    if (ctx.LinkIsParent()):
       ctx.SendI(-1)
     else:
-      ctx.SendI(ctx.ConfigGetParent().ConfigGetCtxId())
+      ctx.SendI(ctx.LinkGetParent().LinkGetCtxId())
     ctx.SendC("+");
     ctx.SendC(ctx.ConfigGetName());
     ctx.SendC(":")
@@ -39,4 +39,7 @@ if __name__ == "__main__":
     srv.ErrorSet()
   finally:
     srv.Exit()
+
+
+
 

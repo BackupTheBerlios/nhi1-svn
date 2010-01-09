@@ -16,6 +16,7 @@
 
 
 ENABLED_SECTIONS    += PYTHON
+ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/python
 
 ALIASES		    += "self=pymsgque"
@@ -32,16 +33,23 @@ ALIASES		    += "package=from pymsgque import *"
 ALIASES		    += "object_example=\code \n\
 class MyClass(MqS): \n\
   ... \n\
+  def __init__(self): \n\
+    self.mydata = None \n\
+    MqS.__init__(self) \n\
+  ... \n\
 ctx = MyClass() \n\
 ... \n\
 \endcode"
 
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=ctx=MqS()"
-ALIASES		    += "ObjectDelete=del ctx"
+ALIASES		    += "ContextCreate=ctx=MqS()"
+ALIASES		    += "ContextDelete=del ctx"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init = Init()"
+ALIASES		    += "Init=Init()"
+ALIASES		    += "init_example=\
+\code \n\
+Init(\"python\", \"myExecutable.py\", \"myFirstArgument\"); \n\
+\endcode"
 
 ALIASES		    += "config_type_buffersize=PyLong"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
@@ -138,6 +146,10 @@ ALIASES             += "config_IEvent=ConfigSetEvent(callback)"
 ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=PyBool ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=PyLong ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=PyLong ctx.LinkIsConnected()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
@@ -211,6 +223,17 @@ ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
 ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
 ALIASES		    += "BufferType=PyUnicode buffer.GetType()"
 
+ALIASES		    += "Y=PyLong"
+ALIASES		    += "O=PyBool"
+ALIASES		    += "S=PyLong"
+ALIASES		    += "I=PyLong"
+ALIASES		    += "F=PyFloat"
+ALIASES		    += "W=PyLong"
+ALIASES		    += "D=PyFloat"
+ALIASES		    += "C=PyUnicode"
+ALIASES		    += "B=PyByteArray"
+ALIASES		    += "U=MqBufferS"
+
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
 try: \n\
@@ -229,3 +252,5 @@ ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+

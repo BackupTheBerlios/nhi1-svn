@@ -389,6 +389,24 @@ MqProcessEvent(MqS* context, HV* hashArgs)
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
 void
+LinkGetParent(MqS* context)
+  PREINIT:
+    MqS* parent;
+  PPCODE:
+    parent = (MqS*) MqLinkGetParent(context);
+    ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
+    XSRETURN(1);
+
+bool
+MqLinkIsConnected (MqS* context)
+
+bool
+MqLinkIsParent (MqS* context)
+
+int
+MqLinkGetCtxId (MqS* context)
+
+void
 MqLinkCreate(MqS * context, ...)
   PREINIT:
     struct MqBufferLS * args = NULL;
@@ -516,21 +534,6 @@ ConfigGetMaster(MqS* context)
     XSRETURN(1);
 
 void
-ConfigGetParent(MqS* context)
-  PREINIT:
-    MqS* parent;
-  PPCODE:
-    parent = (MqS*) MqConfigGetParent(context);
-    ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
-    XSRETURN(1);
-
-int
-MqConfigGetCtxId (MqS* context)
-
-bool
-MqConfigGetIsConnected (MqS* context)
-
-void
 MqConfigSetIsSilent (MqS* context, bool isSilent)
 
 bool
@@ -550,9 +553,6 @@ MqConfigSetIsServer (MqS* context, bool isServer)
 
 bool
 MqConfigGetIsServer (MqS* context)
-
-bool
-MqConfigGetIsParent (MqS* context)
 
 bool
 MqConfigGetIsSlave (MqS* context)

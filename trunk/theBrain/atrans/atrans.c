@@ -615,8 +615,8 @@ main (
   MqErrorCheck (MqBufferLCheckOptionC (mqctx, args, "--db", &trans->dbstr));
 
   // add config data
-  mqctx->setup.Child.fCreate	    = MqDefaultLinkCreate;
-  mqctx->setup.Parent.fCreate	    = MqDefaultLinkCreate;
+  mqctx->setup.Child.fCreate	    = MqLinkDefault;
+  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.fHelp		    = TransHelp;
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fFunc    = TransSetup;
@@ -637,4 +637,5 @@ error:
 }
 
 /** \} trans */
+
 

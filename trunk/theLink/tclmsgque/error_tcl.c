@@ -24,7 +24,7 @@ int NS(ErrorGetText) (NS_ARGS)
 int NS(ErrorGetNum) (NS_ARGS)
 {
   CHECK_NOARGS
-  Tcl_SetObjResult (interp, Tcl_NewIntObj(MqErrorGetNum(MQCTX)));
+  Tcl_SetObjResult (interp, Tcl_NewIntObj(MqErrorGetNumI(MQCTX)));
   RETURN_TCL
 }
 

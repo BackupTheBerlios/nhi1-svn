@@ -41,7 +41,7 @@ int NS(pErrorFromMq) (
 {
   Tcl_Obj *objv[4];
   objv[0] = Tcl_NewStringObj ("TCLMSGQUE", -1);
-  objv[1] = Tcl_NewIntObj (MqErrorGetNum(mqctx));
+  objv[1] = Tcl_NewIntObj (MqErrorGetNumI(mqctx));
   objv[2] = Tcl_NewIntObj (MqErrorGetCodeI(mqctx));
   objv[3] = Tcl_NewStringObj (MqErrorGetText(mqctx), -1);
   Tcl_SetObjErrorCode (interp, Tcl_NewListObj (4, objv));

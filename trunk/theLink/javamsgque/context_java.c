@@ -255,8 +255,8 @@ JNIEXPORT void JNICALL NS(ContextCreate) (
 
   context->threadData		 = (MQ_PTR) env;
   MqConfigSetIgnoreFork (context, MQ_YES);
-  context->setup.Parent.fCreate  = MqDefaultLinkCreate;
-  context->setup.Child.fCreate   = MqDefaultLinkCreate;
+  context->setup.Parent.fCreate  = MqLinkDefault;
+  context->setup.Child.fCreate   = MqLinkDefault;
   context->setup.fProcessExit    = NS(ProcessExit);
   context->setup.fThreadExit	 = NS(ThreadExit);
 
@@ -312,4 +312,5 @@ JNIEXPORT void JNICALL NS(ContextDelete) (
     if (self != NULL) (*env)->DeleteGlobalRef(env, self);
   }
 }
+
 

@@ -15,6 +15,7 @@
 #---------------------------------------------------------------------------
 
 ENABLED_SECTIONS    += TCL
+ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/tcl
 
 ALIASES		    += "self=tclmsgque"
@@ -30,14 +31,18 @@ ALIASES		    += "package=package require TclMsgque"
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
 set ctx [tclmsgque MqS] \n\
+$ctx dict set mydata 0 \n\
 \endcode"
 
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=set ctx [tclmsgque MqS]"
-ALIASES		    += "ObjectDelete=rename $ctx \"\""
+ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS]"
+ALIASES		    += "ContextDelete=rename $ctx \"\""
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=tclmsgque Init ...args"
+ALIASES		    += "init_example=\
+\code \n\
+tclmsgque Init tclsh myExecutable.tcl myFirstArgument \n\
+\endcode"
 
 ALIASES		    += "config_type_buffersize=int"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"

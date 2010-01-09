@@ -21,7 +21,7 @@ export HAVE_DOT=NO
     exit 1
 }
 [[ $1 == "ALL" ]] && {
-    set libmsgque* ccmsgque* tclmsgque* pymsgque* javamsgque* csmsgque* man main
+    set man libmsgque* ccmsgque* tclmsgque* pymsgque* javamsgque* csmsgque* main
 }
 (
   for D

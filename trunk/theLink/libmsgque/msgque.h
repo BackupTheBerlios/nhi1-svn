@@ -13,11 +13,22 @@
 #ifndef MQ_MSGQUE_H
 #define MQ_MSGQUE_H
 
-/** \defgroup Mq_C_API Mq_C_API
- *  \{
- *  \brief public libmsgque API
- */
-
+/// \defgroup Mq_C_API Mq_C_API
+/// \{
+/// \brief public libmsgque API
+///
+/// The msgque project is an infrastructure to link software together to act like a single software.
+/// To link mean distributing work from one software to an other software an wait or not wait for an
+/// answer. The linking is done using unix or inet domain sockets and is based on packages send from one software
+/// to an other software and back. The msgque project is used to handle all the different aspects for
+/// setup and maintain the link and is responsible for:
+///   - starting and stopping the server application
+///   - starting and stopping the communication interface
+///   - sending and receiving package data
+///   - reading and writing data from or into a package
+///   - setup and maintain the event-handling for an asynchronous transfer
+///   - propagate the error messages from the server to the client
+///   .
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -173,31 +184,6 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT_USER -2
 #endif
 
-/// \ingroup Mq_Error_C_API
-/// \brief panic on error
-///
-/// This item is used as special meaning for the \c struct #MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_PANIC ((struct MqS*)NULL)
-
-/// \ingroup Mq_Error_C_API
-/// \brief ignore error and do not generate any error-text (don't fill the error object)
-///
-/// This item is used as special meaning for the \c struct #MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_IGNORE ((struct MqS*)0x1)
-
-/// \ingroup Mq_Error_C_API
-/// \brief print error to stderr
-///
-/// This item is used as special meaning for the \c struct #MqErrorS 
-/// argument of error-functions
-#define MQ_ERROR_PRINT ((struct MqS*)0x2)
-
-/// \ingroup Mq_Error_C_API
-/// \brief check if the error pointer is a \e real pointer or just a flag
-#define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
-
 /*****************************************************************************/
 /*                                                                           */
 /*                          windows conform extern                           */
@@ -325,92 +311,11 @@ typedef MQ_INT  MQ_SOCK;
 /*                                                                           */
 /*****************************************************************************/
 
-/// \ingroup Mq_Type_C_API
 /// \brief boolean NO
 #define MQ_NO  0
 
-/// \ingroup Mq_Type_C_API
 /// \brief boolean YES
 #define MQ_YES 1
-
-/// \ingroup MqEventAPI
-/// \brief wait for an event?
-enum MqWaitOnEventE {
-  MQ_WAIT_NO      = 0,	///< just do the check
-  MQ_WAIT_ONCE    = 1,	///< wait for one new event
-  MQ_WAIT_FOREVER = 2,	///< wait forever
-};
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief the type is native and has a size of 1 byte
-#define MQ_TYPE_IS_1_BYTE   (1<<0)
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief the type is native and has a size of 2 bytes
-#define MQ_TYPE_IS_2_BYTE   (1<<1)
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief the type is native and has a size of 4 bytes
-#define MQ_TYPE_IS_4_BYTE   (1<<2)
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief the type is native and has a size of 8 bytes
-#define MQ_TYPE_IS_8_BYTE   (1<<3)
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief the type is native
-#define MQ_TYPE_IS_NATIVE   (	MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |	    \
-				MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE	)
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief a collection of all \e native-data-types supported
-///
-/// The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
-/// \e native-data-type supported.
-/// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
-/// \RNSA{ReadTYPE} or \RNSA{BufferGetTYPE} have to match the previous \RNSA{SendTYPE} with the same 
-/// \e TYPE. One exception is allowed, the cast from and to the \C datatype (TYPE=C) is allowed.
-/// The following type identifier's are available:
-///  - \c Y : 1 byte signed character (\Y) 
-///  - \c O : 1 byte boolean value using \yes or \no (\O)
-///  - \c S : 2 byte signed short (\S)
-///  - \c I : 4 byte signed integer (\I)
-///  - \c W : 8 byte signed long long integer (\W)
-///  - \c F : 4 byte float (\F)
-///  - \c D : 8 byte double (\D)
-///  - \c B : unsigned char array used for binary data (\B)
-///  - \c C : string data using a \c \\0 at the end (\C)
-///  - \c L : list type able to hold a list of all items from above
-///  - \c U : typeless buffer able to hold a single item from above (\U)
-///  .
-/// \ifnot MAN
-/// The type is a one byte character with the following syntax:
-/// - bit 1 up to 4 has the size of the native type
-/// - bit 5 up to 8 has the type, up to 16 types are allowed
-/// .
-/// \attention In the package the space for the type is only \e on char. If additional
-/// space is needed the protocol have to be adjusted
-/// \endif
-enum MqTypeE {
-  MQ_BYTT = (1<<4 | MQ_TYPE_IS_1_BYTE),  ///< Y: 1 byte 'byte' type
-  MQ_BOLT = (2<<4 | MQ_TYPE_IS_1_BYTE),  ///< O: 1 byte 'boolean' type
-  MQ_SRTT = (3<<4 | MQ_TYPE_IS_2_BYTE),  ///< S: 2 byte 'short' type
-  MQ_INTT = (4<<4 | MQ_TYPE_IS_4_BYTE),  ///< I: 4 byte 'int' type
-  MQ_FLTT = (5<<4 | MQ_TYPE_IS_4_BYTE),  ///< F: 4 byte 'float' type
-  MQ_WIDT = (6<<4 | MQ_TYPE_IS_8_BYTE),  ///< W: 8 byte 'long long int' type
-  MQ_DBLT = (7<<4 | MQ_TYPE_IS_8_BYTE),  ///< D: 8 byte 'double' type
-  MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
-  MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
-  MQ_LSTT = (10<<4                   ),  ///< L: list object type
-  MQ_RETT = (11<<4                   )   ///< R: return object type
-};
-
-/// \ingroup Mq_Buffer_C_API
-/// \brief allocation style used for the data-segment in #MqBufferS.
-enum MqAllocE {
-  MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
-  MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. MqSysMalloc, ...)
-};
 
 /// \ingroup Mq_Error_C_API
 /// \brief collection for the different error-codes
@@ -419,6 +324,64 @@ enum MqErrorE {
   MQ_CONTINUE	= 1,            ///< continue with upper code
   MQ_ERROR	= 2,            ///< exit upper code with an error (persistent)
   MQ_EXIT	= 3		///< exit parent context
+};
+
+/// \ingroup Mq_Link_C_API
+/// \brief object responsible to manage a client/server link data
+struct MqLinkS {
+
+  // private variables
+  struct MqSendS  * send;	    ///< object for sending a Msgque packet
+  struct MqReadS  * read;	    ///< object for reading a Msgque packet
+  struct MqIoS    * io;		    ///< object for management of the 'socket' infrastructure
+
+  // private variables
+  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+
+  // context-management variables
+  MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
+  struct MqS *ctxIdP;		    ///< the initial (first) context (home of the ctxIdA)
+
+  // private variables
+  struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
+
+  MQ_BOL onExit;		    ///< is already an exit ongoing?
+  struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
+  MQ_BOL onCreate;		    ///< is already an "create" ongoing?
+  MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
+  MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
+  MQ_BOL onShutdown;		    ///< is already a "shutdown" ongoing?
+  MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
+  MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
+
+  struct MqCacheS * readCache;	    ///< cache for MqReadS
+
+  // the next 3 items are !!only!! used in the parent
+  MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
+  MQ_SIZE   ctxIdZ;		    ///< the size of the ctxIdA array
+  struct MqS ** ctxIdA;	    ///< array of struct MqLinkS * pointer's
+
+  // the next 3 items are used to map the transactionID (int) to the transaction pointer
+  struct MqTransS * trans;	    ///< link to the trans object
+  MQ_HDL _trans;		    ///< storage for the Transaction object from the package header
+
+  // the following lines manage the link between the parent and the child,
+  // to be able to delete all child's if the parent is deleted
+  struct pChildS * childs;	    ///< linked list of child's
+  struct pChildS * self;	    ///< my own child storage
+
+  // master/slave relationship
+  struct MqLinkSlaveS * slave;	    ///< link to the SLAVE object
+  MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
+};
+
+/// \ingroup Mq_Error_C_API
+/// \brief error-object data type
+struct MqErrorS {
+  struct MqBufferS * text;      ///< the error message
+  enum MqErrorE code;		///< the error code
+  MQ_INT num;	                ///< the error number also used as exit code
+  MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
 };
 
 /** \} Mq_Type_C_API */
@@ -561,6 +524,7 @@ struct MqFactoryS {
 /// \brief initialize a #MqFactoryS object to \c NULL
 #define MqFactoryS_NULL { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
 
+/// \ingroup Mq_Type_C_API
 /// \brief prototype for exit a process or thread
 typedef void ( MQ_DECL
   *MqExitF
@@ -568,18 +532,10 @@ typedef void ( MQ_DECL
   int num
 );
 
+/// \ingroup Mq_Type_C_API
 /// \brief used to setup (initialize) a new thread/fork/process created by \libmsgque
 ///        using the \c SysServer? style commands
 typedef void (MQ_DECL *MqSetupF) ( struct MqS * const );
-
-/// \brief Information about how the \e context was created
-enum MqStatusIsE {
-  MQ_STATUS_IS_INITIAL = 0,	    ///< context is the \e first context
-  MQ_STATUS_IS_DUP     = 1<<0,	    ///< context is created as a duplicate of an other context
-  MQ_STATUS_IS_THREAD  = 1<<1,	    ///< context is created as a thread
-  MQ_STATUS_IS_FORK    = 1<<2,	    ///< context is created as a fork
-  MQ_STATUS_IS_SPAWN   = 1<<3,	    ///< context is created as a spawn
-};
 
 /// \brief User preferences on HOWTO start a new entity
 enum MqStartE {
@@ -629,9 +585,8 @@ struct MqIoTcpConfigS {
 struct MqIoPipeConfigS {
   MQ_SOCK socks[2] ;		    ///< the result from socketpair
 };
-
-/// \brief 
-/// configuration data which belong to \e MqIoS
+ 
+/// \brief configuration data which belong to \e MqIoS
 struct MqIoConfigS {
 
   /// \brief The timeout is used for all kind of low-level socket operations like \c send, \c recv and \c connect
@@ -923,99 +878,13 @@ struct MqSetupS {
   MQ_BOL ignoreExit;
 };
 
-/// \ingroup Mq_Msgque_C_API
-/// \brief object responsible to manage client/server link data
-struct MqLinkS {
-
-  // private variables
-  struct MqSendS  * send;	    ///< object for sending a Msgque packet
-  struct MqReadS  * read;	    ///< object for reading a Msgque packet
-  struct MqIoS    * io;		    ///< object for management of the 'socket' infrastructure
-
-  // private variables
-  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
-
-  // context-management variables
-  MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
-  struct MqS *ctxIdP;		    ///< the initial (first) context (home of the ctxIdA)
-
-  // private variables
-  struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
-
-  MQ_BOL onExit;		    ///< is already an exit ongoing?
-  struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
-  MQ_BOL onCreate;		    ///< is already an "create" ongoing?
-  MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
-  MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
-  MQ_BOL onShutdown;		    ///< is already a "shutdown" ongoing?
-  MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
-  MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
-
-  struct MqCacheS * readCache;	    ///< cache for MqReadS
-
-  // the next 3 items are !!only!! used in the parent
-  MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
-  MQ_SIZE   ctxIdZ;		    ///< the size of the ctxIdA array
-  struct MqS ** ctxIdA;	    ///< array of struct MqLinkS * pointer's
-
-  // the next 3 items are used to map the transactionID (int) to the transaction pointer
-  struct MqTransS * trans;	    ///< link to the trans object
-  MQ_HDL _trans;		    ///< storage for the Transaction object from the package header
-
-  // the following lines manage the link between the parent and the child,
-  // to be able to delete all child's if the parent is deleted
-  struct pChildS * childs;	    ///< linked list of child's
-  struct pChildS * self;	    ///< my own child storage
-
-  // master/slave relationship
-  struct MqLinkSlaveS * slave;	    ///< link to the SLAVE object
-  MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
-};
-
-/// \ingroup Mq_Msgque_C_API
-/// \brief error-object data type
-struct MqErrorS {
-  struct MqBufferS * text;      ///< the error message
-  enum MqErrorE code;		///< the error code
-  MQ_INT num;	                ///< the error number also used as exit code
-  MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
-};
-
-/// \ingroup Mq_Msgque_C_API
-/// \brief signature used in #MqS::signature
-#define MQ_MqS_SIGNATURE 0x212CF91
-
-#if !defined(MQ_PRIVATE_CONFIG_CONST)
-# define MQ_PRIVATE_CONFIG_CONST const
-#endif
-
-/// \ingroup Mq_Msgque_C_API
-/// \brief Prototype for a context object
-struct MqS {
-  int signature;		    ///< used to verify object type for typeless languages
-  MQ_PRIVATE_CONFIG_CONST
-    struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
-  struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
-  struct MqErrorS error;	    ///< error object data
-  struct MqLinkS link;		    ///< link object data
-  struct MqBufferS * temp;	    ///< misc temporary #MqBufferS object
-  enum MqStatusIsE statusIs;	    ///< how the context was created?
-  MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
-  MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
-  MQ_PTR threadData;		    ///< application specific thread data
-  MQ_PTR self;			    ///< link to the managed object
-  MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
-};
-
 #ifndef MQ_PRIVATE
 
 # ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-/// \ingroup Mq_Msgque_C_API
 /// \brief the prefix arguments of the starting application
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 
-/// \ingroup Mq_Msgque_C_API
 /// \brief name of a procedure to return \e main like entry-points 
 MQ_EXTERN MqFactorySelectorF MqFactorySelector;
 
@@ -1028,29 +897,6 @@ MQ_EXTERN MqFactorySelectorF MqFactorySelector;
 /*                           create / delete                                 */
 /*                                                                           */
 /*****************************************************************************/
-
-/// \brief initialize the #MqS object related data but do \e not create the object self
-MQ_EXTERN void MQ_DECL MqContextInit (
-  struct MqS       * const context,
-  MQ_SIZE		   size,
-  struct MqS const * const tmpl
-);
-
-/// \brief free the #MqS object related data but do \e not free the object self
-MQ_EXTERN void MQ_DECL MqContextFree (
-  struct MqS       * const context
-);
-
-/// \brief create the #MqS object
-MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
-  MQ_SIZE size,
-  struct MqS const * const tmpl
-);
-
-/// \brief delete the entire #MqS object
-MQ_EXTERN void MQ_DECL MqContextDelete (
-  struct MqS ** contextP
-) __attribute__((nonnull));
 
 /// \brief clean the #MqS::config data
 MQ_EXTERN void MQ_DECL MqConfigReset (
@@ -1143,21 +989,6 @@ MQ_EXTERN void
 MQ_DECL MqConfigSetIgnoreExit (
   struct MqS * const context,
   MQ_BOL  data
-);
-
-/// \brief set the #MqConfigS::parent value
-MQ_EXTERN void
-MQ_DECL MqConfigSetParent (
-  struct MqS * const context,
-  struct MqS * const parent
-);
-
-/// \brief set the #MqConfigS::master and #MqConfigS::master_id value
-MQ_EXTERN void
-MQ_DECL MqConfigSetMaster (
-  struct MqS * const context,
-  struct MqS * const master,
-  int master_id
 );
 
 /// \brief setup the \e factory pattern
@@ -1336,8 +1167,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \ingroup Mq_Config_C_API
- *  \brief does the \e context object is a \e slave ?
+/** \brief does the \e context object is a \e slave ?
  *  \context
  *  \return the <TT>(context->config.master != NULL)</TT> value
  */
@@ -1517,62 +1347,133 @@ MQ_DECL MqConfigGetSelf (
   struct MqS const * const context
 );
 
-/**
- * \}
- */
-
-/* ####################################################################### */
-/* ###                                                                 ### */
-/* ###                    M S G Q U E - A P I                          ### */
-/* ###                                                                 ### */
-/* ####################################################################### */
-
-/** \defgroup Mq_Msgque_C_API Mq_Msgque_C_API
- *  \{
- *  \brief the top-level \libmsgque object: #MqS
+/** \brief Initialize the process \e startup-prefix argument
  *
- *  Every user defined context object has a #MqS object as first parameter:
-\code
-struct MyCtx {
-  struct MqS  mqctx;
-  int	      mydata;
-  ...
-}
-\endcode
- *  The #MqS object is created with the #MqContextCreate function and is
- *  used as top-level \libmsgque context and handle. Near every \libmsgque
- *  function uses this handle as first argument. The handle is delete with
- *  #MqContextDelete.
- * 
- */
-
-/*****************************************************************************/
-/*                                                                           */
-/*                            msgque/definition                              */
-/*                                                                           */
-/*****************************************************************************/
-
-/** \brief setup and return the \e init object
- *  \return a pointer to the initialization buffer
- *  \attention 
- *  - every usage of this function will free the data of the previous \e init object
- *  - the data have to fit to the underlying programming language
+ * The \e startup-prefix have to be the name of the executablei, found in the 
+ * \c PATH environment variable, and additional arguments like the script name or 
+ * the required startup options. The \e startup-prefix is used for two different purpose:
+ *  - To start a new entity using the \RNSC{startAs} "--spawn" command-line option.
+ *  - To replace the \e command-line-argument <TT>"... @ SELF ..."</TT> with <TT>"... @ startup-prefix ..."</TT> at \RNSA{LinkCreate}.
  *  .
- *
- *  The data is used as prefix to setup the argument vector for \e spawn.
- *  The following example demonstrate the usage of #MqInitCreate:
+ * Every use of this function will free the data of the previous \e startup-prefix.
+ * By default the \e startup-prefix is set during package loading or during \RNSA{LinkCreate}
+ * and have \b not to be initialized again.
+\ifnot MAN
+\return a pointer to the initialization buffer (Only C-API)
+\endif
+\ifnot MAN
 \code
-struct MqBufferLS * initB = MqInitCreate();
-MqBufferLAppendC(initB, "myExec");
-MqBufferLAppendC(initB, "myExecArgument_1");
+struct MqBufferLS * args = MqInitCreate();
+MqBufferLAppendC(args, "myExec");
+MqBufferLAppendC(args, "myExecArgument_1");
 ...
 \endcode
+\endif
  */
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 
 /// \brief helper to set the application specific \c fork functions
 /// \attention by default the OS specific functions are used
 MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
+
+/// \} Mq_Config_C_API
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                    C O N T E X T - A P I                        ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Context_C_API Mq_Context_C_API
+/// \{
+/// \brief \e context, the top-level data structure and \e application-handle
+///
+/// The \e context-data-structure has a \e libmsgque-specific-part and an
+/// \e application-specific-part. Both parts are linked together.
+/// The \e libmsgque-specific-part has all data required to manage a
+/// \e client-server-link. The \e application-specific-part as all data
+/// required by the application. The following C-API example demonstrate
+/// the layout of the \e context-data-structure.
+/// \code
+/// struct MyCtxDataS {
+///   struct MqS  mqctx;   // libmsgque-specific-data
+///   int         mydata;  // application-specific-data
+///   ...                  // application-specific-data
+/// };
+/// \endcode
+/// The \e libmsgque-specific-data have to be the \e first data entry in the structure.\n
+/// A \e high-level-programming-language like JAVA, C#, C++, Perl, Python, Tcl or VB-NET
+/// is using a wrapper arround this \e data-structure as \e application-handle.
+///
+/// \if DATA 
+/// The \e programming-language Tcl or Perl does \b not providing a concept for
+/// the \e application-specific-data. The \RNS{data} is available to create amd manipulate 
+/// this data. 
+/// \else 
+/// The \e programming-language JAVA, C#, C++, Python or VB-NET does providing a concept 
+/// for the \e application-specific-data defined as \e class-member-data.
+/// \endif
+
+/// \brief Information about how the \e context was created
+enum MqStatusIsE {
+  MQ_STATUS_IS_INITIAL = 0,	    ///< context is the \e first context
+  MQ_STATUS_IS_DUP     = 1<<0,	    ///< context is created as a duplicate of an other context
+  MQ_STATUS_IS_THREAD  = 1<<1,	    ///< context is created as a thread
+  MQ_STATUS_IS_FORK    = 1<<2,	    ///< context is created as a fork
+  MQ_STATUS_IS_SPAWN   = 1<<3,	    ///< context is created as a spawn
+};
+
+/// \brief signature marker used in #MqS::signature
+#define MQ_MqS_SIGNATURE 0x212CF91
+
+#if !defined(MQ_PRIVATE_CONFIG_CONST)
+# define MQ_PRIVATE_CONFIG_CONST const
+#endif
+
+/// \brief data structure for the \e libmsgque-specific-data
+struct MqS {
+  int signature;		    ///< used to verify the \e pointer-data-type in a type-less programming languages
+  MQ_PRIVATE_CONFIG_CONST
+    struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
+  struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
+  struct MqErrorS error;	    ///< error object data
+  struct MqLinkS link;		    ///< link object data
+  struct MqBufferS * temp;	    ///< misc temporary #MqBufferS object
+  enum MqStatusIsE statusIs;	    ///< how the context was created?
+  MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
+  MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
+  MQ_PTR threadData;		    ///< application specific thread data
+  MQ_PTR self;			    ///< link to the managed object
+  MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
+};
+
+/// \brief initialize the #MqS object related data but do \e not create the object self
+MQ_EXTERN void MQ_DECL MqContextInit (
+  struct MqS       * const context,
+  MQ_SIZE		   size,
+  struct MqS const * const tmpl
+);
+
+/// \brief free the #MqS object related data but do \e not free the object self
+MQ_EXTERN void MQ_DECL MqContextFree (
+  struct MqS       * const context
+);
+
+/// \brief create a new context and initialize the default configuration data
+/// \param[in] size (C-API) the number of bytes in the \e context-data-structure as returned by <TT>sizeof(struct MyCtxDataS)</TT>
+///                  (default: \e 0, use only \e libmsgque-specific-data and no \e application-specific-data)
+/// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the data. This template is used
+///             for a \e child to get the configuration data from the \e parent. (default: \e NULL, create an initial context)
+/// \return the new \e context, no error return because this function \e panic on \e out-of-memory-error
+MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
+  MQ_SIZE size,
+  struct MqS const * const tmpl
+);
+
+/// \brief delete the entire #MqS object
+MQ_EXTERN void MQ_DECL MqContextDelete (
+  struct MqS ** contextP
+) __attribute__((nonnull));
 
 /** \brief exit the current process or thread
  *  \context
@@ -1640,7 +1541,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 );
 #endif // _DEBUG
 
-/** \} Mq_Msgque_C_API */
+/** \} Mq_Context_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -1695,18 +1596,19 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
   struct MqBufferLS ** args
 );
 
-/// \brief helper: wrapper for #MqLinkCreate with additional \e error-check
-/// \details This function return an \e error if an unknown \e command-line-argument
-/// was found
+/// \brief helper: wrapper for #MqLinkCreate or ##MqLinkCreateChild with additional \e error-check code
+/// \details The function have to be used as argument to #MqSetupS::Child,
+/// #MqSetupS::Parent or #MqConfigSetSetup as default \e context-create function.
+/// Return an \e error if an unknown \e command-line-argument was found.
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
-///                  without the \b "@" item.
+///                  with or without the \b "@" item.
 /// \ifnot MAN
 ///                  (only C-API: the memory of known arguments will be freed and 
 ///		      \e args will be set to \c NULL on error)
 /// \endif
 /// \retException
-MQ_EXTERN enum MqErrorE MQ_DECL MqDefaultLinkCreate (
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkDefault (
   struct MqS  * const ctx,
   struct MqBufferLS ** args
 );
@@ -1811,6 +1713,13 @@ static mq_inline MQ_SIZE MqLinkGetCtxIdI (
 /// \e link-delete or explicit with the \RNSA{ServiceDelete} function.
 ///
 
+/// \brief wait for an event?
+enum MqWaitOnEventE {
+  MQ_WAIT_NO      = 0,	///< just do the check
+  MQ_WAIT_ONCE    = 1,	///< wait for one new event
+  MQ_WAIT_FOREVER = 2,	///< wait forever
+};
+
 /// \brief get the \e filter-context or the \e master-context
 ///
 /// A \e filter-pipeline has two context, one on the left and one on the right.
@@ -1911,11 +1820,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
 
 /** \brief enter the \e event-loop and wait for an incoming \e service-request.
  * 
- *  To specify the the \e time-interval three modes are supported:
- *  - \b \MQ_WAIT_NO, don't wait for an event do just the check and comeback
- *  - \b \MQ_WAIT_ONCE, use \e timeout seconds to wait for exact \e one event or raise
- *    an \e timeout error if no event was found
- *  - \b \MQ_WAIT_FOREVER, wait forever and only come back on \e error or on \e exit
+ *  This function is used to enter the \e event-loop and start listen on open
+ *  \e file-handles and to call \RNSC{IEvent} on idle. The third argument \e wait
+ *  support three modes to define the \e operation-mode:
+ *  - \b \MQ_WAIT_NO, don't wait for an event just do the check and comeback. if an
+ *       Event is available process the event, but only one. If no Event is available
+ *       return with #MQ_CONTINUE.
+ *  - \b \MQ_WAIT_ONCE, wait maximum \e timeout seconds for only \e one event or raise
+ *    a \e timeout error if no event was found.
+ *  - \b \MQ_WAIT_FOREVER, wait forever and only come back on \e error or on \e exit.
  *  .
  *  This function is usually used on a server to enter the \e event-loop and wait 
  *  for incoming service requests or after the \RNSA{SendEND_AND_CALLBACK} function 
@@ -1969,6 +1882,64 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief the type is native and has a size of 1 byte
+#define MQ_TYPE_IS_1_BYTE   (1<<0)
+
+/// \brief the type is native and has a size of 2 bytes
+#define MQ_TYPE_IS_2_BYTE   (1<<1)
+
+/// \brief the type is native and has a size of 4 bytes
+#define MQ_TYPE_IS_4_BYTE   (1<<2)
+
+/// \brief the type is native and has a size of 8 bytes
+#define MQ_TYPE_IS_8_BYTE   (1<<3)
+
+/// \brief the type is native
+#define MQ_TYPE_IS_NATIVE   (	MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |	    \
+				MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE	)
+
+/// \brief a collection of all \e native-data-types supported
+///
+/// The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
+/// \e native-data-type supported.
+/// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
+/// \RNSA{ReadTYPE} or \RNSA{BufferGetTYPE} have to match the previous \RNSA{SendTYPE} with the same 
+/// \e TYPE. One exception is allowed, the cast from and to the \C datatype (TYPE=C) is allowed.
+/// The following type identifier's are available:
+///  - \c Y : 1 byte signed character (\Y) 
+///  - \c O : 1 byte boolean value using \yes or \no (\O)
+///  - \c S : 2 byte signed short (\S)
+///  - \c I : 4 byte signed integer (\I)
+///  - \c W : 8 byte signed long long integer (\W)
+///  - \c F : 4 byte float (\F)
+///  - \c D : 8 byte double (\D)
+///  - \c B : unsigned char array used for binary data (\B)
+///  - \c C : string data using a \c \\0 at the end (\C)
+///  - \c L : list type able to hold a list of all items from above
+///  - \c U : typeless buffer able to hold a single item from above (\U)
+///  .
+/// \ifnot MAN
+/// The type is a one byte character with the following syntax:
+/// - bit 1 up to 4 has the size of the native type
+/// - bit 5 up to 8 has the type, up to 16 types are allowed
+/// .
+/// \attention In the package the space for the type is only \e on char. If additional
+/// space is needed the protocol have to be adjusted
+/// \endif
+enum MqTypeE {
+  MQ_BYTT = (1<<4 | MQ_TYPE_IS_1_BYTE),  ///< Y: 1 byte 'byte' type
+  MQ_BOLT = (2<<4 | MQ_TYPE_IS_1_BYTE),  ///< O: 1 byte 'boolean' type
+  MQ_SRTT = (3<<4 | MQ_TYPE_IS_2_BYTE),  ///< S: 2 byte 'short' type
+  MQ_INTT = (4<<4 | MQ_TYPE_IS_4_BYTE),  ///< I: 4 byte 'int' type
+  MQ_FLTT = (5<<4 | MQ_TYPE_IS_4_BYTE),  ///< F: 4 byte 'float' type
+  MQ_WIDT = (6<<4 | MQ_TYPE_IS_8_BYTE),  ///< W: 8 byte 'long long int' type
+  MQ_DBLT = (7<<4 | MQ_TYPE_IS_8_BYTE),  ///< D: 8 byte 'double' type
+  MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
+  MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
+  MQ_LSTT = (10<<4                   ),  ///< L: list object type
+  MQ_RETT = (11<<4                   )   ///< R: return object type
+};
+
 /// \brief union used to set or modify native data from an MqBufferS object
 union MqBufferAtomU {
   MQ_BYT    Y;			///< 1 byte byte data
@@ -2001,6 +1972,12 @@ union MqBufferU {
   MQ_LST  R;			///< return object type data
 };
 
+/// \brief allocation style used for the data-segment in #MqBufferS.
+enum MqAllocE {
+  MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
+  MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. MqSysMalloc, ...)
+};
+
 /// \brief initial size of the #MqBufferS::bls object
 #define MQ_BLS_SIZE 50
 
@@ -2014,7 +1991,7 @@ union MqBufferU {
 /// The lifetime of the \e buffer-object is only the current callback up to the next
 /// read operation in the same \e parent-context.
 struct MqBufferS {
-  int signature;		///< signature to provide type-safety for non-typed languages
+  int signature;		///< used to verify the \e pointer-data-type in a type-less programming languages
   struct MqS *context;		///< error object of the related msgque
   MQ_BIN data;                  ///< always point to the beginning of the data-segment
   MQ_SIZE size;                 ///< the size of the data-segment
@@ -2862,6 +2839,27 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
  *  the #MqErrorS object is used to collect all data needed to handle an error.
  */
 
+/// \brief panic on error
+///
+/// This item is used as special meaning for the \c struct #MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_PANIC ((struct MqS*)NULL)
+
+/// \brief ignore error and do not generate any error-text (don't fill the error object)
+///
+/// This item is used as special meaning for the \c struct #MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_IGNORE ((struct MqS*)0x1)
+
+/// \brief print error to stderr
+///
+/// This item is used as special meaning for the \c struct #MqErrorS 
+/// argument of error-functions
+#define MQ_ERROR_PRINT ((struct MqS*)0x2)
+
+/// \brief check if the error pointer is a \e real pointer or just a flag
+#define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)
+
 /// \brief do a \b panic with a vararg argument list
 /// \context
 /// \prefix
@@ -3046,6 +3044,14 @@ MQ_EXTERN void MQ_DECL MqErrorPrint (
 MQ_EXTERN MQ_INT MQ_DECL MqErrorGetNum (
   struct MqS const * const context
 );
+
+/// \copydoc MqErrorGetNum
+static mq_inline MQ_INT MqErrorGetNumI (
+  struct MqS const * const context
+)
+{
+  return context->error.num;
+}
 
 /// \brief set the value of the #MqErrorS object
 /// \context
@@ -3749,12 +3755,13 @@ MQ_DECL MqSlaveGet (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_System_C_API Mq_System_C_API
- *  \{
- *  \brief access to native system functions with error handling
- **/
+/// \defgroup Mq_System_C_API Mq_System_C_API
+/// \{
+/// \brief access to native system functions with error handling
+///
 
 /// \brief 'calloc' system call with error handling feature
+///
 /// \context
 /// \param nmemb the number of members in the memory block
 /// \param size the size of the new memory block
@@ -3819,6 +3826,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysSleep (
 );
 
 /// \brief 'basename' system call with error handling feature
+///
 /// \param[in] in name of the string to extract the basename from (value of \e in will not be changed)
 /// \param[in] includeExtension add extension like '.exe' to the filename (#MQ_YES or #MQ_NO)
 /// \return the basename of \e in (it is save to modify the basename for additional needs)
@@ -3849,7 +3857,7 @@ static mq_inline MQ_STR mq_strdup_save (
   return v != NULL ? mq_strdup(v) : NULL;
 }
 
-/** \} Mq_System_C_API */
+/// \} Mq_System_C_API
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -3857,16 +3865,10 @@ static mq_inline MQ_STR mq_strdup_save (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_Log_C_API Mq_Log_C_API
- *  \{
- *  \brief log information to stderr with a common format.
- */
-
-/*****************************************************************************/
-/*                                                                           */
-/*                               log_basic                                   */
-/*                                                                           */
-/*****************************************************************************/
+/// \defgroup Mq_Log_C_API Mq_Log_C_API
+/// \{
+/// \brief log information to stderr with a common format.
+///
 
 /// \brief log vararg string without formatting to \e channel
 /// \param channel the file-handle to report the message on
@@ -4004,12 +4006,13 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
   MQ_SIZE size
 );
 
-/** \}	  Mq_Log_C_API */
+/// \}	  Mq_Log_C_API
 
-/** \}	  Mq-C-API */
+/// \}	  Mq-C-API
 
-//end c++ save definition
+// end c++ save definition
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 

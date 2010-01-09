@@ -39,13 +39,14 @@ int main (int argc, MQ_CST argv[])
   MqConfigSetName (ctx, "testserver");
   MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
   MqConfigSetDefaultFactory (ctx);
-  ctx->setup.Parent.fCreate = MqDefaultLinkCreate;
-  ctx->setup.Child.fCreate = MqDefaultLinkCreate;
+  ctx->setup.Parent.fCreate = MqLinkDefault;
+  ctx->setup.Child.fCreate = MqLinkDefault;
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
 error:
   MqExit(ctx);
 }
+
 
 
 

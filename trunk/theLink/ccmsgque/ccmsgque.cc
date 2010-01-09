@@ -31,8 +31,8 @@ namespace ccmsgque {
     // use "context.setup.Parent.fCreate" to ckeck in context was initialized
     if (context.setup.Parent.fCreate) return;
 
-    context.setup.Parent.fCreate = MqDefaultLinkCreate;
-    context.setup.Child.fCreate = MqDefaultLinkCreate;
+    context.setup.Parent.fCreate = MqLinkDefault;
+    context.setup.Child.fCreate = MqLinkDefault;
 
     // init the "factory" interface
     IFactory *const iFactory = dynamic_cast<IFactory*const>(this);
@@ -125,7 +125,7 @@ namespace ccmsgque {
 
   MqCException::MqCException(struct MqS *const context) {
     p_message = mq_strdup(MqErrorGetText(context)); 
-    p_num = MqErrorGetNum(context);
+    p_num = MqErrorGetNumI(context);
     p_code = MqErrorGetCodeI(context);
     MqErrorReset (context);
   }
@@ -157,3 +157,4 @@ namespace ccmsgque {
   }
 
 } // END - namespace "ccmsgque"
+

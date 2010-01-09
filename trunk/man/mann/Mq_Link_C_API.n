@@ -1,10 +1,18 @@
-.TH "Mq_Link_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Link_C_API \- setup and manage a \fIclient-server-link\fP  
 
 .PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqLinkS\fP"
+.br
+.R "object responsible to manage a client/server link data "
+.in -1c
 .SS "Functions"
 
 .in +1c
@@ -17,9 +25,9 @@ Mq_Link_C_API \- setup and manage a \fIclient-server-link\fP
 .br
 .R "make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqDefaultLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
+.RI "enum \fBMqErrorE\fP \fBMqLinkDefault\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
-.R "helper: wrapper for \fBMqLinkCreate\fP with additional \fIerror-check\fP "
+.R "helper: wrapper for \fBMqLinkCreate\fP or #\fBMqLinkCreateChild\fP with additional \fIerror-check\fP code "
 .ti -1c
 .RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const ctx)"
 .br
@@ -60,25 +68,6 @@ setup and manage a \fIclient-server-link\fP
 To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library. 
 .SH "Function Documentation"
 .PP 
-.SS "enum \fBMqErrorE\fP MqDefaultLinkCreate (struct \fBMqS\fP *const  ctx, struct \fBMqBufferLS\fP ** args)"
-.PP
-helper: wrapper for \fBMqLinkCreate\fP with additional \fIerror-check\fP 
-.PP
-This function return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
-.br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-an \fBEXCEPTION OBJECT\fP on error 
-.RE
-.PP
-
 .SS "enum \fBMqErrorE\fP MqLinkCreate (struct \fBMqS\fP *const  ctx, struct \fBMqBufferLS\fP ** args)"
 .PP
 make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
@@ -120,6 +109,25 @@ A child is using the same process or thread as the parent but a different namesp
 \fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
 .br
 \fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqLinkDefault (struct \fBMqS\fP *const  ctx, struct \fBMqBufferLS\fP ** args)"
+.PP
+helper: wrapper for \fBMqLinkCreate\fP or #\fBMqLinkCreateChild\fP with additional \fIerror-check\fP code 
+.PP
+The function have to be used as argument to \fBMqSetupS::Child\fP, \fBMqSetupS::Parent\fP or \fBMqConfigSetSetup\fP as default \fIcontext-create\fP function. Return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+.br
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP with or without the \fB'@'\fP item.
 .RE
 .PP
 \fBReturns:\fP
@@ -175,9 +183,7 @@ the identifier as number
 .PP
  
 .PP
-Definition at line 1788 of file msgque.h.
-.PP
-References MqLinkS::ctxId, and MqS::link.
+Definition at line 1690 of file msgque.h.
 .SS "struct \fBMqS\fP* MqLinkGetParent (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
 .PP
 get the \fIparent-context\fP from a client/server link 
@@ -209,9 +215,7 @@ the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP
 .PP
  
 .PP
-Definition at line 1752 of file msgque.h.
-.PP
-References MqS::config, and MqConfigS::parent.
+Definition at line 1654 of file msgque.h.
 .SS "int MqLinkIsConnected (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the context connected? 
@@ -255,9 +259,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 1737 of file msgque.h.
-.PP
-References MqS::link, MQ_YES, and MqLinkS::onCreate.
+Definition at line 1639 of file msgque.h.
 .SS "int MqLinkIsParent (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIparent-context\fP? 
@@ -293,9 +295,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 1768 of file msgque.h.
-.PP
-References MqS::config, and MqConfigS::parent.
+Definition at line 1670 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

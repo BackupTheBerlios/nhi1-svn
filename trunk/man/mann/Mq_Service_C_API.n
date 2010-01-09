@@ -1,10 +1,18 @@
-.TH "Mq_Service_C_API" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Service_C_API \- create and manage services  
 
 .PP
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqWaitOnEventE\fP { \fBMQ_WAIT_NO\fP =  0, \fBMQ_WAIT_ONCE\fP =  1, \fBMQ_WAIT_FOREVER\fP =  2 }"
+.br
+.R "wait for an event? "
+.in -1c
 .SS "Functions"
 
 .in +1c
@@ -46,19 +54,38 @@ Mq_Service_C_API \- create and manage services
 create and manage services 
 
 To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqWaitOnEventE\fP"
+.PP
+wait for an event? 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_WAIT_NO \fP\fP
+just do the check 
+.TP
+\fB\fIMQ_WAIT_ONCE \fP\fP
+wait for one new event 
+.TP
+\fB\fIMQ_WAIT_FOREVER \fP\fP
+wait forever 
+.PP
+Definition at line 1717 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"
 .PP
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
-To specify the the \fItime-interval\fP three modes are supported:
+This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
 .IP "\(bu" 2
-\fBMqS.WAIT.NO\fP, don't wait for an event do just the check and comeback
+\fBMqS.WAIT.NO\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-\fBMqS.WAIT.ONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+\fBMqS.WAIT.ONCE\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
 .IP "\(bu" 2
-\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP

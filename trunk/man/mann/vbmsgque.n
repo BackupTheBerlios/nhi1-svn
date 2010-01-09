@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "8 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -28,6 +28,8 @@ vbmsgque \- The \fBVB.NET\fP \fBApplication-Server\fP and \fBProgramming-Languag
 .br
 .SH "INTRODUCTION"
 .PP
+public libmsgque API 
+.PP
 The msgque project is an infrastructure to link software together to act like a single software. To link mean distributing work from one software to an other software an wait or not wait for an answer. The linking is done using unix or inet domain sockets and is based on packages send from one software to an other software and back. The msgque project is used to handle all the different aspects for setup and maintain the link and is responsible for:
 .IP "\(bu" 2
 starting and stopping the server application
@@ -44,16 +46,53 @@ propagate the error messages from the server to the client
 .PP
 .SH "CONTEXT API"
 .PP
-.SS "MqS"
-The \fIobject\fP is the user visible part of a vbmsgque application link.
-.SS "Dim ctx As New MqS()"
-Create an object ready to be used with \fBLinkCreate\fP to setup an application link. Use the \fBLinkIsConnected\fP to check if a link is already available.
+\fBContextCreate\fP
+.br
+ \fBContextDelete\fP
+.br
+ \fBExit\fP
+.br
 .PP
-\fBExample:\fP definition of a context: 
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+.PP
+The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+.PP
+.nf
+ struct MyCtxDataS {
+   struct MqS  mqctx;   // libmsgque-specific-data
+   int         mydata;  // application-specific-data
+   ...                  // application-specific-data
+ };
+
+.fi
+.PP
+ The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
+.br
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP.
+.PP
+The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a concept for the \fIapplication-specific-data\fP defined as \fIclass-member-data\fP. 
+.SS "Dim ctx As New MqS()"
+create a new context and initialize the default configuration data 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
+.br
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIout-of-memory-error\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP create an \fIapplication-context\fP with \fImydata\fP as \fIapplication-specific-data\fP: 
 .PP
 .nf
  Private NotInheritable Class MyClass 
    Inherits MqS 
+   Private mydata As Integer 
    ... 
  End Class 
  Sub Main(ByVal args() As String) 
@@ -69,16 +108,42 @@ Delete the entire object including the application link using \fBLinkDelete\fP. 
 Shutdown the entire communication and exit the current process or thread.
 .SH "CONFIG API"
 .PP
+\fBInit\fP
+.br
+ \fBbuffersize\fP, \fBdebug\fP, \fBtimeout\fP
+.br
+ \fBname\fP, \fBsrvname\fP, \fBident\fP
+.br
+ \fBisSilent\fP, \fBisString\fP, \fBisServer\fP
+.br
+ \fBtcp\fP, \fBuds\fP, \fBpipe\fP
+.br
+ \fBstartAs\fP, \fBdaemon\fP, \fBignoreExit\fP
+.br
+ \fBIServerSetup\fP, \fBIServerCleanup\fP
+.br
+ \fBIFactory\fP, \fBIBgError\fP, \fBIEvent\fP
+.br
+.PP
 The configuration of an object is done using the functions starting with \fCMqConfig\fP... or by using command-line arguments.
-.SS "static: Init(ByVal args() As String)"
-Initialize the process startup argument prefix. The startup-prefix have to be the name of the executable found in the \fCPATH\fP and additional arguments like a script name or required startup options. The startup-prefix is used for two different purpose:
-.IP "\(bu" 2
-To start a new entity using the \fBstartAs\fP '--spawn' command-line option
-.IP "\(bu" 2
-To replace the \fBLinkCreate\fP 'SELF' argument after the \fI'@'\fP command-line argument
+.SS "static: Init(ByVal ParamArray args As String())"
+Initialize the process \fIstartup-prefix\fP argument. 
 .PP
+The \fIstartup-prefix\fP have to be the name of the executablei, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
+.IP "\(bu" 2
+To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
+.IP "\(bu" 2
+To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBLinkCreate\fP.
 .PP
-The startup-prefix is initially set by vbmsgque during package loading.
+Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBLinkCreate\fP and have \fBnot\fP to be initialized again. 
+.PP
+\fBExample:\fP initialize the \fIstratup-prefix\fP with \fImyExecutable\fP and \fImyFirstArgument\fP 
+.PP
+.nf
+ MqS.Init('myExecutable.exe', 'myFirstArgument'); 
+
+.fi
+.PP
 .SS "command-line:  --buffersize"
 \fBtype:\fP \fCInteger\fP, \fBget:\fP \fCConfigGetBuffersize\fP , \fBset:\fP \fCConfigSetBuffersize\fP
 .PP
@@ -99,6 +164,10 @@ Use \fISTRING\fP as basename of the new message-queue object. The name shows up 
 \fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetSrvName\fP , \fBset:\fP \fCConfigSetSrvName\fP
 .PP
 Use \fISTRING\fP as a client specific prefix in the server debugging output. This is used to link debugging and error messages on the server to a specific client connection. (default: empty)
+.SS "ident"
+\fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
+.PP
+Use String as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
@@ -107,22 +176,10 @@ Write (\fIfalse\fP) or don't write (\fItrue\fP) any output to stdout or stderr. 
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fItrue\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
-.SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCInteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
+.SS "isServer"
+\fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
-Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
-.IP "\(bu" 2
-a server-context to start a new instance after a client connection request
-.IP "\(bu" 2
-on a server to create a worker with: \fBSlaveWorker\fP
-.IP "\(bu" 2
-on a client/server together with the \fB'SELF'\fP command-line argument: \fBLinkCreate\fP
-.PP
-\fBParameters:\fP
-.RS 4
-\fIstartAs\fP 0=default, 1=fork, 2=thread and 3=spawn
-.RE
-.PP
+True if object is a \fIserver\fP object (default: \fIfalse\fP, be a client)
 .SS "command-line: --tcp --host --port --myhost --myport"
 \fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetIoTcpHost/Port/MyHost/MyPort\fP , \fBset:\fP \fCConfigSetIoTcp (host, port, myhost, myport)\fP
 .PP
@@ -172,22 +229,34 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fBtype:\fP \fC\fBMqS\fP\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
 .PP
 return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "isServer"
-\fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
-.PP
-True if object is a \fIserver\fP object (default: \fIfalse\fP, be a client)
 .SS "isSlave"
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
 .PP
 True if object is a \fIslave\fP object (default: \fIfalse\fP, not be a slave)
+.SS "command-line: --thread --spawn --fork"
+\fBtype:\fP \fCInteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
+.PP
+Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
+.IP "\(bu" 2
+a server-context to start a new instance after a client connection request
+.IP "\(bu" 2
+on a server to create a worker with: \fBSlaveWorker\fP
+.IP "\(bu" 2
+on a client/server together with the \fB'SELF'\fP command-line argument: \fBLinkCreate\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstartAs\fP 0=default, 1=fork, 2=thread and 3=spawn
+.RE
+.PP
+.SS "command-line:  --daemon"
+\fBtype:\fP \fCNO\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCNO\fP
+.PP
+This configuration is \fBnot\fP available for vbmsgque.
 .SS "ignoreExit"
 \fBtype:\fP \fCBoolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
 .PP
 By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
-.SS "ident"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
-.PP
-Use String as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "interface: IServerSetup.Call()"
 Interface to define a \fIserver\fP vbmsgque object. This Interface define the ServerSetup callback called at \fBLinkCreate\fP to define the services or to initialize context specific variables. This interface set the \fBisServer\fP configuration value to \fItrue\fP.
 .SS "interface: IServerCleanup.Call()"
@@ -235,7 +304,7 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 setup and manage a \fIclient-server-link\fP 
 .PP
 To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library. 
-.SS "ctx.LinkCreate(BqVal args() As String)"
+.SS "ctx.LinkCreate(BqVal ParamArray args As String())"
 make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 A \fIparent-context\fP is responsible to setup the \fIclient-server-link\fP 
@@ -261,7 +330,7 @@ an \fBEXCEPTION OBJECT\fP on error
 if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP 
 .RE
 .PP
-.SS "ctx.LinkCreateChild(parent As MqS, ByVal args() As String)"
+.SS "ctx.LinkCreateChild(parent As MqS, ByVal ParamArray args As String())"
 make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP 
 .PP
 A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
@@ -516,13 +585,13 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
-To specify the the \fItime-interval\fP three modes are supported:
+This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
 .IP "\(bu" 2
-\fBMqS.WAIT.NO\fP, don't wait for an event do just the check and comeback
+\fBMqS.WAIT.NO\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-\fBMqS.WAIT.ONCE\fP, use \fItimeout\fP seconds to wait for exact \fIone\fP event or raise an \fItimeout\fP error if no event was found
+\fBMqS.WAIT.ONCE\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
 .IP "\(bu" 2
-\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP 
+\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP
@@ -979,6 +1048,15 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "SLAVE API"
 .PP
+\fBSlaveWorker\fP
+.br
+ \fBSlaveCreate\fP
+.br
+ \fBSlaveDelete\fP
+.br
+ \fBSlaveGet\fP
+.br
+.PP
 The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
 .PP
 The \fIlink\fP is used to perform the following tasks:
@@ -1011,7 +1089,7 @@ In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connec
 .fi
 .PP
  
-.SS "ctx.SlaveWorker(id As Integer, ByVal args() As String)"
+.SS "ctx.SlaveWorker(id As Integer, ByVal ParamArray args As String())"
 create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
 .PP
 The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 

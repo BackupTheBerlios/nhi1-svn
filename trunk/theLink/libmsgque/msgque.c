@@ -329,7 +329,7 @@ MqExit (
   }
 
   // save context data because the next section will delete it
-  num = MqErrorGetNum(context);
+  num = MqErrorGetNumI(context);
 
   // MQ_ERROR_EXIT is a "normal" exit 
   if (num == (200+MQ_ERROR_EXIT)) num = EXIT_SUCCESS;

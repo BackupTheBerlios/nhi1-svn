@@ -16,6 +16,8 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-cxx \
 		    --enable-java \
 		    --enable-csharp \
+		    --enable-perl \
+		    --enable-python \
 		    $ARGS $@
 
 #		    --enable-brain \

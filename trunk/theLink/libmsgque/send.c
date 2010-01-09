@@ -1082,7 +1082,7 @@ MqSendERROR (
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
     MqErrorCheck(MqSendSTART (context));
-    MqSendI (context, MqErrorGetNum (context));
+    MqSendI (context, MqErrorGetNumI (context));
     MqSendC (context, MqErrorGetText (context));
     MqErrorReset (context);
     return MqSendEND (context, "_ERR");
@@ -1109,7 +1109,7 @@ MqSendRETURN (
       case MQ_ERROR:
 	MqErrorCheck(MqSendSTART (context));
 	MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-	sSend_RET_START (context, MqErrorGetNum (context), MQ_RETURN_ERROR);
+	sSend_RET_START (context, MqErrorGetNumI (context), MQ_RETURN_ERROR);
 	MqSendC (context, MqErrorGetText (context));
 	sSend_RET_END (context);
 	MqErrorReset (context);

@@ -32,18 +32,26 @@ ALIASES		    += "package=import javamsgque.*;"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-final class MyClass extends MqS ... { ... } \n\
+final class MyClass extends MqS { \n\
+  private int mydata; \n\
+  ... \n\
+} \n\
 public static void main(String[] args) { \n\
   MyClass ctx = new MyClass(); ... \n\
 } \n\
 \endcode"
 
-ALIASES		    += "MqS=MqS"
-ALIASES		    += "ObjectCreate=MqS ctx=new MqS()"
-ALIASES		    += "ObjectDelete=deleted by Garbage Collection"
+ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=Init(String... args)"
+ALIASES		    += "Init=MqS.Init(String... args)"
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"java\", \"myExecutable\", \"myFirstArgument\"); \n\
+\endcode \n\
+\attention It is not possible to initialize the \e startup-prefix during \n\
+\e package-loading. -> This <B>have to be used</B> to use the features from above."
 
 ALIASES		    += "config_type_buffersize=int"
 ALIASES		    += "config_set_buffersize=#ConfigSetBuffersize"
@@ -98,6 +106,13 @@ ALIASES		    += "config_type_pipe=int"
 ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
 ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
 
+ALIASES		    += "config_type_pipe=int"
+ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=boolean"
 ALIASES		    += "config_set_isServer=#ConfigSetIsServer"
@@ -223,4 +238,6 @@ ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+
+
 
