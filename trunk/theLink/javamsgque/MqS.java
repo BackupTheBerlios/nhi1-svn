@@ -10,32 +10,15 @@
  *              please contact AUTHORS for additional information
  */
 
-///\brief The \javamsgque MqS Package
+/// \defgroup Mq_Java_API Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_C_API
+/// \copydoc Mq_C_API
+
+/// \brief The \b JavaMsgque Package
 package javamsgque;
 
-/** \defgroup javamain_api MqS Class
-\{
-\brief Java-Msgque Super-Class
-
-The #javamsgque.MqS class ist used as super-class for a \javamsgque based application.
-The class is a \e abstract because and requires a top-level class wrapper to implement
-virtual functions like:
- - void #javamsgque::IServerSetup::ServerSetup() throws MqSException
- - void #javamsgque::IServerCleanup::ServerCleanup() throws MqSException
- - void #javamsgque::IFactory::Factory() throws MqSException
- .
-
-This is an example for a valid application class:
-\code
-import javamsgque.*;
-class MyApplication extends MqS implements IServerSetup {
-....
-}
-\endcode
-*/
-
-
-///\brief Java-Msgque Super-Class
+/// \brief \api #MqS
 public abstract class MqS {
 
   static {
@@ -46,42 +29,99 @@ public abstract class MqS {
 
 //
 // ========================================================================
-/// \defgroup Mq_Java_API
+/// \defgroup Mq_Config_Java_API Mq_Config_Java_API
+/// \ingroup Mq_Java_API
 /// \{
-/// \copydoc Mq_Link_C_API
+/// \brief \copybrief Mq_Config_C_API
+/// \copydoc Mq_Config_C_API
+//
 
-  /// \copydoc MqLinkCreate
-  public native void LinkCreate (String... args) throws MqSException;
+  /// \api #MqInitCreate
+  protected static native void	Init	      (String... argv);
 
-  /// \copydoc MqLinkCreateChild
-  public native void LinkCreateChild (MqS parent, String... args) throws MqSException;
+  /// \api #MqConfigSetName
+  public native void ConfigSetName	      (String val);
+  /// \api #MqConfigSetSrvName
+  public native void ConfigSetSrvName	      (String val);
+  /// \api #MqConfigSetIdent
+  public native void ConfigSetIdent	      (String val);
+  /// \api #MqConfigCheckIdent
+  public native boolean ConfigCheckIdent      (String val);
+  /// \api #MqConfigSetBuffersize
+  public native void ConfigSetBuffersize      (int val);
+  /// \api #MqConfigSetDebug
+  public native void ConfigSetDebug	      (int val);
+  /// \api #MqConfigSetTimeout
+  public native void ConfigSetTimeout	      (long val);
+  /// \api #MqConfigSetIsSilent
+  public native void ConfigSetIsSilent	      (boolean val);
+  /// \api #MqConfigSetIsServer
+  public native void ConfigSetIsServer	      (boolean val);
+  /// \api #MqConfigSetIsString
+  public native void ConfigSetIsString	      (boolean val);
+  /// \api #MqConfigSetIgnoreExit
+  public native void ConfigSetIgnoreExit      (boolean val);
+  /// \api #MqConfigSetStartAs
+  public native void ConfigSetStartAs	      (int val);
+  /// \api #MqConfigSetIoTcp
+  public native void ConfigSetIoTcp	      (String host, String port, String myhost, String myport);
+  /// \api #MqConfigSetIoUds
+  public native void ConfigSetIoUds	      (String file);
+  /// \api #MqConfigSetIoPipe
+  public native void ConfigSetIoPipe	      (int socket);
 
-  /// \copydoc MqLinkDelete
-  public native void LinkDelete ();
+  /// \api #MqConfigGetIsServer
+  public native boolean	ConfigGetIsServer     ();
+  /// \api #MqConfigGetIsString
+  public native boolean	ConfigGetIsString     ();
+  /// \api #MqConfigGetIsSilent
+  public native boolean	ConfigGetIsSilent     ();
+  /// \api #MqConfigGetBuffersize
+  public native int	ConfigGetBuffersize   ();
+  /// \api #MqConfigGetTimeout
+  public native long	ConfigGetTimeout      ();
+  /// \api #MqConfigGetName
+  public native String	ConfigGetName	      ();
+  /// \api #MqConfigGetSrvName
+  public native String	ConfigGetSrvName      ();
+  /// \api #MqConfigGetIdent
+  public native String	ConfigGetIdent	      ();
+  /// \api #MqConfigGetDebug
+  public native int	ConfigGetDebug	      ();
+  /// \api #MqConfigGetStartAs
+  public native int	ConfigGetStartAs      ();
+  /// \api #MqConfigGetIoTcpHost
+  public native String ConfigGetIoTcpHost     ();
+  /// \api #MqConfigGetIoTcpPort
+  public native String ConfigGetIoTcpPort     ();
+  /// \api #MqConfigGetIoTcpMyHost
+  public native String ConfigGetIoTcpMyHost   ();
+  /// \api #MqConfigGetIoTcpMyPort
+  public native String ConfigGetIoTcpMyPort   ();
+  /// \api #MqConfigGetIoUdsFile
+  public native String ConfigGetIoUdsFile     ();
+  /// \api #MqConfigGetIoPipeSocket
+  public native int ConfigGetIoPipeSocket     ();
 
-  /// \copydoc MqLinkGetParent
-  public native MqS LinkGetParent ();
+/// \} Mq_Config_Java_API
 
-  /// \copydoc MqLinkIsParent
-  public native boolean	LinkIsParent ();
-
-  /// \copydoc MqLinkIsConnected
-  public native boolean	LinkIsConnected ();
-
-  /// \copydoc MqLinkGetCtxId
-  public native int LinkGetCtxId ();
-
-/// \}
+//
+// ========================================================================
+/// \defgroup Mq_Context_Java_API Mq_Context_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_Context_C_API
+/// \copydoc Mq_Context_C_API
 
   private native void ContextCreate();
   private native void ContextDelete();
 
-  /// \brief default constructor used for the object factory
+  /// \api #MqContextCreate
   protected MqS() {
     ContextCreate();
   }
 
-  /// \brief if the object is connected (hdl != 0) -> disconnect it
+  /// \api #MqContextDelete
   protected void finalize() {
     ContextDelete();
   } 
@@ -89,8 +129,49 @@ public abstract class MqS {
   /// \api #MqExit
   public native void Exit ();
 
-  protected static native void	Init	    (String... argv);
+/// \} Mq_Context_Java_API
 
+//
+// ========================================================================
+/// \defgroup Mq_Link_Java_API Mq_Link_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_Link_C_API
+/// \copydoc Mq_Link_C_API
+
+  /// \api #MqLinkCreate
+  public native void LinkCreate (String... args) throws MqSException;
+
+  /// \api #MqLinkCreateChild
+  public native void LinkCreateChild (MqS parent, String... args) throws MqSException;
+
+  /// \api #MqLinkDelete
+  public native void LinkDelete ();
+
+  /// \api #MqLinkGetParent
+  public native MqS LinkGetParent ();
+
+  /// \api #MqLinkIsParent
+  public native boolean	LinkIsParent ();
+
+  /// \api #MqLinkIsConnected
+  public native boolean	LinkIsConnected ();
+
+  /// \api #MqLinkGetCtxId
+  public native int LinkGetCtxId ();
+
+/// \} Mq_Link_java_API
+
+//
+// ========================================================================
+/// \defgroup Mq_Service_Java_API Mq_Service_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_Service_C_API
+/// \copydoc Mq_Service_C_API
+///
+
+  /// \api #MqWaitOnEventE
   public enum WAIT {
     NO(0), ONCE(1), FOREVER(2);
 
@@ -107,33 +188,7 @@ public abstract class MqS {
     }
   }
 
-  /// \api #MqErrorC
-  public native void    ErrorC              (String func, int num, String message);
-  public native void    ErrorRaise          ()  throws MqSException;
-  public native void    ErrorReset          ();
-
-  /// \api #MqErrorSet
-  public native void    ErrorSet            (Throwable ex);
-  /// \api #MqErrorSetCONTINUE
-  public native void    ErrorSetCONTINUE    ();
-
-  /// \api #MqErrorC
-  public native int     ErrorGetNum         ();
-  public native String  ErrorGetText        ();
-  public native void    ErrorPrint          ();
-
-//
-// ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javaservice_api Service Management
-/// \{
-/// \brief Setup and delete services
-///
-/// A service is usually defined on a server (interface #javamsgque.IServerSetup)
-/// in the #javamsgque.IServerSetup.ServerSetup function.
-///
-
-  /// \api #MqConfigGetToken
+  /// \api #MqServiceGetToken
   public native String	ServiceGetToken	    ();
   /// \api #MqServiceGetFilter
   public native MqS	ServiceGetFilter    () throws MqSException;
@@ -141,7 +196,6 @@ public abstract class MqS {
   public native MqS	ServiceGetFilter    (int id) throws MqSException;
   /// \api #MqServiceIsTransaction
   public native boolean	ServiceIsTransaction();
-
 
   /// \api #MqServiceCreate
   public native void	ServiceCreate	    (String token, IService service)  throws MqSException;
@@ -154,77 +208,58 @@ public abstract class MqS {
 
   private native void	pProcessEvent	    (int timeout, int flags)  throws MqSException;
 
-  /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
+  /// \api #MqProcessEvent
   public void ProcessEvent (int timeout, WAIT flags) throws MqSException {
     pProcessEvent(timeout,flags.GetFlag());
   }
-  /// \api #MqProcessEvent, wait application user default time
+  /// \api #MqProcessEvent
   public void ProcessEvent (WAIT flags) throws MqSException {
     pProcessEvent(-2,flags.GetFlag());
   }
-  /// \api #MqProcessEvent, don't wait just check for an event
+  /// \api #MqProcessEvent
   public void ProcessEvent () throws MqSException {
     pProcessEvent(-2,WAIT.NO.GetFlag());
   }
 
-/// \}
+/// \} Mq_Service_Java_API
+
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javasend_api Send Data
+/// \defgroup Mq_Error_Java_API Mq_Error_Java_API
+/// \ingroup Mq_Java_API
 /// \{
-/// \brief Collect and send data using a LibMsgque package
+/// \brief \copybrief Mq_Error_C_API
+/// \copydoc Mq_Error_C_API
+//
 
-  /// \api #MqSendSTART
-  public native void	SendSTART		();
-  /// \api #MqSendEND
-  public native void	SendEND			(String token)	throws MqSException;
-  /// \api #MqSendEND_AND_WAIT
-  public native void	SendEND_AND_WAIT	(String token) throws MqSException;
-  /// \api #MqSendEND_AND_WAIT
-  public native void	SendEND_AND_WAIT	(String token, int timeout) throws MqSException;
-  /// \api #MqSendEND_AND_CALLBACK
-  public native void	SendEND_AND_CALLBACK	(String token, ICallback callback)  throws MqSException;
-  /// \api #MqSendRETURN
-  public native void	SendRETURN		()  throws MqSException;
-  /// \api #SendERROR
-  public native void    SendERROR		() throws MqSException;
-  /// \api #MqSendY
-  public native void	SendY			(byte y)  throws MqSException;
-  /// \api #MqSendO
-  public native void	SendO			(boolean o) throws MqSException;
-  /// \api #MqSendS
-  public native void	SendS			(short s) throws MqSException;
-  /// \api #MqSendI
-  public native void	SendI			(int i)	throws MqSException;
-  /// \api #MqSendF
-  public native void	SendF			(float f) throws MqSException;
-  /// \api #MqSendW
-  public native void	SendW			(long w)  throws MqSException;
-  /// \api #MqSendD
-  public native void	SendD			(double l)  throws MqSException;
-  /// \api #MqSendC
-  public native void	SendC			(String s)  throws MqSException;
-  /// \api #MqSendB
-  public native void	SendB			(byte[] b)  throws MqSException;
-  /// \api #MqSendN
-  public native void	SendN			(byte[] b)  throws MqSException;
-  /// \api #MqSendBDY
-  public native void	SendBDY			(byte[] b)  throws MqSException;
-  /// \api #MqSendU
-  public native void	SendU			(MqBufferS buf)	throws MqSException;
-  /// \api #MqSendL_START
-  public native void	SendL_START		()  throws MqSException;
-  /// \api #MqSendL_END
-  public native void	SendL_END		()  throws MqSException;
+  /// \api #MqErrorC
+  public native void    ErrorC              (String func, int num, String message);
+  /// \brief throw an exception with the data from #MqErrorS
+  public native void    ErrorRaise          ()  throws MqSException;
+  /// \api #MqErrorReset
+  public native void    ErrorReset          ();
 
-/// \}
+  /// \api #MqErrorSet
+  public native void    ErrorSet            (Throwable ex);
+  /// \api #MqErrorSetCONTINUE
+  public native void    ErrorSetCONTINUE    ();
+
+  /// \api #MqErrorGetNum
+  public native int     ErrorGetNum         ();
+  /// \api #MqErrorGetText
+  public native String  ErrorGetText        ();
+  /// \api #MqErrorPrint
+  public native void    ErrorPrint          ();
+
+/// \} Mq_Error_Java_API
+
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javaread_api Read Data
+/// \defgroup Mq_Read_Java_API Mq_Read_Java_API
+/// \ingroup Mq_Java_API
 /// \{
-/// \brief Read and split a \libmsgque package into several items
+/// \brief \copybrief Mq_Read_C_API
+/// \copydoc Mq_Read_C_API
 //
 
   /// \api #MqReadI
@@ -270,89 +305,67 @@ public abstract class MqS {
 
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javaconfig_api Access To Configuration Data
+/// \defgroup Mq_Send_Java_API Mq_Send_Java_API
+/// \ingroup Mq_Java_API
 /// \{
-/// \brief Configuration data of the \javamsgque object
-//
+/// \brief \copybrief Mq_Send_C_API
+/// \copydoc Mq_Send_C_API
 
-  /// \api #MqConfigSetName
-  public native void ConfigSetName	      (String val);
-  /// \api #MqConfigSetSrvName
-  public native void ConfigSetSrvName	      (String val);
-  /// \api #MqConfigSetIdent
-  public native void ConfigSetIdent	      (String val);
-  /// \api #MqConfigCheckIdent
-  public native boolean ConfigCheckIdent      (String val);
-  /// \api #MqConfigSetBuffersize
-  public native void ConfigSetBuffersize      (int val);
-  /// \api #MqConfigSetDebug
-  public native void ConfigSetDebug	      (int val);
-  /// \api #MqConfigSetTimeout
-  public native void ConfigSetTimeout	      (long val);
-  /// \api #MqConfigSetIsSilent
-  public native void ConfigSetIsSilent	      (boolean val);
-  /// \api #MqConfigSetIsServer
-  public native void ConfigSetIsServer	      (boolean val);
-  /// \api #MqConfigSetIsString
-  public native void ConfigSetIsString	      (boolean val);
-  /// \api #MqConfigSetIgnoreExit
-  public native void ConfigSetIgnoreExit      (boolean val);
-  /// \api #MqConfigSetStartAs
-  public native void ConfigSetStartAs	      (int val);
-  /// \api #MqConfigSetIoTcp
-  public native void ConfigSetIoTcp	      (String host, String port, String myhost, String myport);
-  /// \api #MqConfigSetIoUds
-  public native void ConfigSetIoUds	      (String file);
-  /// \api #MqConfigSetIoPipe
-  public native void ConfigSetIoPipe	      (int socket);
+  /// \api #MqSendSTART
+  public native void	SendSTART		();
+  /// \api #MqSendEND
+  public native void	SendEND			(String token)	throws MqSException;
+  /// \api #MqSendEND_AND_WAIT
+  public native void	SendEND_AND_WAIT	(String token) throws MqSException;
+  /// \api #MqSendEND_AND_WAIT
+  public native void	SendEND_AND_WAIT	(String token, int timeout) throws MqSException;
+  /// \api #MqSendEND_AND_CALLBACK
+  public native void	SendEND_AND_CALLBACK	(String token, ICallback callback)  throws MqSException;
+  /// \api #MqSendRETURN
+  public native void	SendRETURN		()  throws MqSException;
+  /// \api #MqSendERROR
+  public native void    SendERROR		() throws MqSException;
+  /// \api #MqSendY
+  public native void	SendY			(byte y)  throws MqSException;
+  /// \api #MqSendO
+  public native void	SendO			(boolean o) throws MqSException;
+  /// \api #MqSendS
+  public native void	SendS			(short s) throws MqSException;
+  /// \api #MqSendI
+  public native void	SendI			(int i)	throws MqSException;
+  /// \api #MqSendF
+  public native void	SendF			(float f) throws MqSException;
+  /// \api #MqSendW
+  public native void	SendW			(long w)  throws MqSException;
+  /// \api #MqSendD
+  public native void	SendD			(double l)  throws MqSException;
+  /// \api #MqSendC
+  public native void	SendC			(String s)  throws MqSException;
+  /// \api #MqSendB
+  public native void	SendB			(byte[] b)  throws MqSException;
+  /// \api #MqSendN
+  public native void	SendN			(byte[] b)  throws MqSException;
+  /// \api #MqSendBDY
+  public native void	SendBDY			(byte[] b)  throws MqSException;
+  /// \api #MqSendU
+  public native void	SendU			(MqBufferS buf)	throws MqSException;
+  /// \api #MqSendL_START
+  public native void	SendL_START		()  throws MqSException;
+  /// \api #MqSendL_END
+  public native void	SendL_END		()  throws MqSException;
 
-  /// \api #MqConfigGetIsServer
-  public native boolean	ConfigGetIsServer     ();
-  /// \api #MqConfigGetIsSlave
-  public native boolean	ConfigGetIsSlave      ();
-  /// \api #MqConfigGetIsString
-  public native boolean	ConfigGetIsString     ();
-  /// \api #MqConfigGetIsSilent
-  public native boolean	ConfigGetIsSilent     ();
-  /// \api #MqConfigGetBuffersize
-  public native int	ConfigGetBuffersize   ();
-  /// \api #MqConfigGetTimeout
-  public native long	ConfigGetTimeout      ();
-  /// \api #MqConfigGetName
-  public native String	ConfigGetName	      ();
-  /// \api #MqConfigGetSrvName
-  public native String	ConfigGetSrvName      ();
-  /// \api #MqConfigGetIdent
-  public native String	ConfigGetIdent	      ();
-  /// \api #MqConfigGetDebug
-  public native int	ConfigGetDebug	      ();
-  /// \api #MqConfigGetMaster
-  public native MqS	ConfigGetMaster	      ();
-  /// \api #MqConfigGetStartAs
-  public native int	ConfigGetStartAs      ();
-  /// \api #MqConfigGetIoTcpHost
-  public native String ConfigGetIoTcpHost     ();
-  /// \api #MqConfigGetIoTcpPort
-  public native String ConfigGetIoTcpPort     ();
-  /// \api #MqConfigGetIoTcpMyHost
-  public native String ConfigGetIoTcpMyHost   ();
-  /// \api #MqConfigGetIoTcpMyPort
-  public native String ConfigGetIoTcpMyPort   ();
-  /// \api #MqConfigGetIoUdsFile
-  public native String ConfigGetIoUdsFile     ();
-  /// \api #MqConfigGetIoPipeSocket
-  public native int ConfigGetIoPipeSocket     ();
+/// \} Mq_Send_Java_API
 
-/// \}
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup javaslave_api Manage Slave Objects
+/// \defgroup Mq_Slave_Java_API Mq_Slave_Java_API
+/// \ingroup Mq_Java_API
 /// \{
-/// \brief Configuration data of the \javamsgque object
+/// \brief \copybrief Mq_Slave_C_API
+/// \copydoc Mq_Slave_C_API
 //
 
+  /// \api #MqSlaveWorker
   public native void	SlaveWorker	    (int id, String... args)  throws MqSException;
   /// \api #MqSlaveCreate
   public native void	SlaveCreate	    (int id, MqS slave)	      throws MqSException;
@@ -360,9 +373,13 @@ public abstract class MqS {
   public native void	SlaveDelete	    (int id)		      throws MqSException;
   /// \api #MqSlaveGet
   public native MqS	SlaveGet	    (int id);
+  /// \api #MqSlaveGetMaster
+  public native MqS	SlaveGetMaster	    ();
+  /// \api #MqSlaveIs
+  public native boolean	SlaveIs		    ();
 
-/// \}
+/// \} Mq_Slave_Java_API
 }
 
-/// \}   end MqS
+/// \} Mq_Java_API
 

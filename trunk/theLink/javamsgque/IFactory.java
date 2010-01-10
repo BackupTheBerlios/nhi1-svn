@@ -12,9 +12,9 @@
 
 package javamsgque;
 
-/// \brief Interface required to create new application objects
+/// \ingroup Mq_Config_Java_API
+/// \api #MqConfigSetFactory
 public interface IFactory {
-  /// \brief function to create the application object
   public MqS Factory ();
 }
 

@@ -1167,14 +1167,6 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \brief does the \e context object is a \e slave ?
- *  \context
- *  \return the <TT>(context->config.master != NULL)</TT> value
- */
-MQ_EXTERN int MQ_DECL MqConfigGetIsSlave (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
 /** \brief does the \e context object is a \e string ?
  *  \context
  *  \return the <TT>(context->config.isString == MQ_YES)</TT> value
@@ -1268,14 +1260,6 @@ MQ_EXTERN MQ_INT MQ_DECL MqConfigGetDebug (
  *  \return the \c context.config.timeout value
  */
 MQ_EXTERN MQ_TIME_T MQ_DECL MqConfigGetTimeout (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
-/** \brief get the \e master value of the \e config object
- *  \context
- *  \return the #MqConfigS::master value
- */
-MQ_EXTERN struct MqS * MQ_DECL MqConfigGetMaster (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1462,32 +1446,36 @@ MQ_EXTERN void MQ_DECL MqContextFree (
 /// \brief create a new context and initialize the default configuration data
 /// \param[in] size (C-API) the number of bytes in the \e context-data-structure as returned by <TT>sizeof(struct MyCtxDataS)</TT>
 ///                  (default: \e 0, use only \e libmsgque-specific-data and no \e application-specific-data)
-/// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the data. This template is used
-///             for a \e child to get the configuration data from the \e parent. (default: \e NULL, create an initial context)
+/// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the configuration data. 
+///                  This template is used for a \e child to get the configuration data from the \e parent. 
+///                  (default: \e NULL, create an initial context)
 /// \return the new \e context, no error return because this function \e panic on \e out-of-memory-error
 MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
   MQ_SIZE size,
   struct MqS const * const tmpl
 );
 
-/// \brief delete the entire #MqS object
+/// \brief delete the \e context
+/// \details Shutdown the \e client-server-link, free the memory and set the \e ctx to \null. 
+/// The \e context can \b not be reused.
+/// \ctx
 MQ_EXTERN void MQ_DECL MqContextDelete (
-  struct MqS ** contextP
+  struct MqS ** ctx
 ) __attribute__((nonnull));
 
-/** \brief exit the current process or thread
- *  \context
- *  \attention this function will never return
- *
- *  -# Delete the context object using: #MqLinkDelete
- *  -# If available call the context specific exit handler \c --fParentExit
- *  -# final call \c SysExit to exit the process
- *  -# It is an Panic error if #MqExit is called twice for the same object
- *  .
- */
-
+/// \brief delete the \e context and exit the current process or thread
+/// \details This function will never return.
+/// \ifnot MAN
+/// The following steps are performed:
+/// -# delete the \e client-server-link using: #MqLinkDelete
+/// -# if available call the \e context-specific-exit-handler: #MqSetupS::fProcessExit
+/// -# or call \e application-default-exit-handler
+/// -# it is a \e panic-error to call #MqExit twice for the same object
+/// .
+/// \endif
+/// \ctx
 MQ_EXTERN void MQ_DECL MqExit (
-  struct MqS * context
+  struct MqS * ctx
 ) __attribute__ ((noreturn));
 
 /** \brief write \libmsgque specific user-help to stderr
@@ -3652,36 +3640,34 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
  *  \{
  *  \brief create and manage a slave context
 
-The master/slave link is used to create a mesh of nodes and
-to link different \e PARENT context objects together.
+The \e master-slave-link is used to create a mesh of nodes defined by
+different \e parent-context.
 <B>The master control the slave.</B>
 
-The \e link is used to perform the following tasks:
- - report error messages from the \e slave to the \e master
+The \e master-slave-link is used to perform the following tasks:
+ - report error messages from the \e slave-context to the \e master-context
  - to create a \e slave-child-context if a \e master-child-context is created
  - to delete a \e slave-context if a \e master-context is deleted
  .
 
-In difference to the \e client/server link the \e master/slave link connect
-two independent msgque-context in the same process or thread (e.g. node).
-This leads to the restriction that only the \e master-msgque-context can be
-a \e server because only \e on server per node is possible.
+In difference to the \e client-server-link the \e master-slave-link connect
+two independent \e parent-context in the same process or thread (e.g. node).
+This leads to the restriction that only the \e master-context can be
+a \e server-context because only one \e server-context per node is possible.
 
 \verbatim
-    node-0   |           node-1          |   node-2
+    node-0   |           node-1/2        |   node-3/4/5
 ===================================================================
 
 | <- client/server link -> | <- client/server link -> |
 
              | <-- master/slave link --> |
 
-                           |- client1-0 -|- server2-0 ...
-                           |
-             |- server1-0 -|             |- server2-1 ...
-             |             |- client1-1 -|- server2-2 ...
-  client0-0 -|                           |- server2-3
-             |
-             |- server1-1 -|- client1-2 -|- server2-4 ...
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
 \endverbatim
  **/
 
@@ -3736,16 +3722,45 @@ MQ_DECL MqSlaveDelete (
   MQ_SIZE const id
 );
 
-/// \brief get the slave context
+/// \brief get the \e slave-context from a \e master-context
 ///
 /// \param[in] ctx the \e master context object as PARENT without a CHILD
 /// \id
-/// \return the \e slave-context or \c NULL if \e id is not valid or \e ctx is not a \e master-context.
+/// \return the \e slave-context or \c NULL if \e id is not valid or \e context is not a \e master-context.
 MQ_EXTERN struct MqS *
 MQ_DECL MqSlaveGet (
   struct MqS const * const  ctx,
   MQ_SIZE const id
 );
+
+/// \brief get the \e master-context from the \e slave-context
+/// \ctx
+/// \return the \e master-context or \null if the \e context is no \e slave-context
+MQ_EXTERN struct MqS * MQ_DECL MqSlaveGetMaster (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqSlaveGetMaster
+static mq_inline struct MqS* MqSlaveGetMasterI (
+  struct MqS const * const ctx
+) {
+  return ctx->config.master;
+}
+
+/// \brief is the \e context a \e slave-context ?
+/// \ctx
+/// \return a boolean value, \yes or \no
+MQ_EXTERN int MQ_DECL MqSlaveIs (
+  struct MqS const * const ctx
+) __attribute__((nonnull));
+
+/// \copydoc MqSlaveIs
+static mq_inline int MqSlaveIsI (
+  struct MqS const * const ctx
+)
+{
+  return (ctx->config.master != NULL);
+}
 
 /** \} slave api */
 

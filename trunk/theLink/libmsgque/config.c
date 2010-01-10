@@ -653,14 +653,6 @@ MqConfigGetIsServer (
 }
 
 int
-MqConfigGetIsSlave (
-  struct MqS const * const context
-)
-{
-  return (context->config.master != NULL);
-}
-
-int
 MqConfigGetIsString (
   struct MqS const * const context
 )
@@ -758,14 +750,6 @@ MqConfigGetTimeout (
 )
 {
   return context->config.io.timeout;
-}
-
-struct MqS *
-MqConfigGetMaster (
-  struct MqS const * const context
-)
-{
-  return context->config.master;
 }
 
 MQ_CST

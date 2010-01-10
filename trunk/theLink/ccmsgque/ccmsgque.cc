@@ -152,7 +152,6 @@ namespace ccmsgque {
     args = MqBufferLCreateArgsVA(&context, ap);
     va_end (ap);
 
-    // create Context
     SlaveWorker (master_id, args);
   }
 

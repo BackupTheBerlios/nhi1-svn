@@ -14,10 +14,9 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-INPUT		    = $(SRCDIR)/ccmsgque .
-FILE_PATTERNS	    = ccmsgque.h *.doc
-EXAMPLE_PATH	    = $(SRCDIR)/tests
-EXAMPLE_PATH	    += $(SRCDIR)/example/cc
-
-TAGFILES            += $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
+INPUT			= $(SRCDIR)/ccmsgque .
+FILE_PATTERNS		= *.doc ccmsgque.h msgque.h
+EXAMPLE_PATH		= . $(SRCDIR)/tests $(SRCDIR)/example/cc
+STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/ccmsgque
+STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque $(SRCDIR)/ccmsgque 
 

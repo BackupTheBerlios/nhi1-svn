@@ -9,6 +9,30 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqS
+ * Method:    ContextCreate
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ContextDelete
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextDelete
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    Exit
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    LinkCreate
  * Signature: ([Ljava/lang/String;)V
  */
@@ -62,38 +86,6 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsConnected
  */
 JNIEXPORT jint JNICALL Java_javamsgque_MqS_LinkGetCtxId
   (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ContextCreate
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ContextDelete
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextDelete
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    Exit
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    Init
- * Signature: ([Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_Init
-  (JNIEnv *, jclass, jobjectArray);
 
 /*
  * Class:     javamsgque_MqS
@@ -553,6 +545,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadUndo
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    Init
+ * Signature: ([Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_Init
+  (JNIEnv *, jclass, jobjectArray);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigSetName
  * Signature: (Ljava/lang/String;)V
  */
@@ -681,14 +681,6 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsServer
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetIsSlave
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigGetIsSlave
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigGetIsString
  * Signature: ()Z
  */
@@ -749,14 +741,6 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetIdent
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetDebug
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetMaster
- * Signature: ()Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ConfigGetMaster
   (JNIEnv *, jobject);
 
 /*
@@ -846,6 +830,22 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SlaveDelete
  */
 JNIEXPORT jobject JNICALL Java_javamsgque_MqS_SlaveGet
   (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SlaveGetMaster
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_SlaveGetMaster
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SlaveIs
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_SlaveIs
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }

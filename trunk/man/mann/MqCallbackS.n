@@ -1,4 +1,4 @@
-.TH "MqCallbackS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqCallbackS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqCallbackS \- used for callback function pointer management
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -35,24 +35,24 @@ MqCallbackS \- used for callback function pointer management
 used for callback function pointer management 
 .PP
 Definition at line 549 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqCallbackS::data\fP"
+.SS "\fBMQ_PTR\fP \fBMqCallbackS.data\fP"
 .PP
 additional data for the callback function 
 .PP
 Definition at line 551 of file msgque.h.
-.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS::fCopy\fP"
+.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS.fCopy\fP"
 .PP
 copy additional data pointer, used in a \fBMqSetupDup\fP 
 .PP
 Definition at line 553 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS::fFree\fP"
+.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
 Definition at line 552 of file msgque.h.
-.SS "\fBMqTokenF\fP \fBMqCallbackS::fFunc\fP"
+.SS "\fBMqTokenF\fP \fBMqCallbackS.fFunc\fP"
 .PP
 callback method 
 .PP
@@ -60,4 +60,4 @@ Definition at line 550 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

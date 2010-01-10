@@ -350,5 +350,21 @@ MqSlaveGet (
   return (id < 0 || id >= context->link.slave->used ? NULL : context->link.slave->slaves[id]);
 }
 
+struct MqS *
+MqSlaveGetMaster (
+  struct MqS const * const context
+)
+{
+  return MqSlaveGetMasterI(context);
+}
+
+int
+MqSlaveIs (
+  struct MqS const * const context
+)
+{
+  return MqSlaveIs(context);
+}
+
 END_C_DECLS
 

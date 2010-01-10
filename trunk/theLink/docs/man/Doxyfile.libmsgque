@@ -38,7 +38,8 @@ struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
-ALIASES		    += "ContextDelete=MqContextDelete(&ctx)"
+ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
+ALIASES		    += "Exit=MqExit(struct MqS* ctx)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
@@ -95,18 +96,6 @@ ALIASES		    += "config_type_isServer=#MQ_BOL"
 ALIASES		    += "config_set_isServer=#MqConfigSetIsServer (ctx, isServer)"
 ALIASES		    += "config_get_isServer=#MqConfigGetIsServer (ctx)"
 
-ALIASES		    += "config_type_isSlave=#MQ_BOL"
-ALIASES		    += "config_set_isSlave=NO"
-ALIASES		    += "config_get_isSlave=#MqConfigGetIsSlave (ctx)"
-
-ALIASES		    += "config_type_master=struct MqS*"
-ALIASES		    += "config_set_master=\ref \NS{slave}"
-ALIASES		    += "config_get_master=#MqConfigGetMaster (ctx)"
-
-ALIASES		    += "config_type_ctxId=#MQ_SIZE"
-ALIASES		    += "config_set_ctxId=NO"
-ALIASES		    += "config_get_ctxId=#MqConfigGetCtxId (ctx)"
-
 ALIASES		    += "config_type_startAs=enum #MqStartE"
 ALIASES		    += "config_set_startAs=#MqConfigSetStartAs (ctx, startAS"
 ALIASES		    += "config_get_startAs=#MqConfigGetStartAs (ctx)"
@@ -138,7 +127,6 @@ ALIASES		    += "LinkGetCtxId=MQ_SIZE MqLinkGetCtxId (struct MqS *ctx)"
 ALIASES		    += "LinkIsParent=MQ_BOL MqLinkIsParent (struct MqS *ctx)"
 ALIASES		    += "LinkIsConnected=MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
 ALIASES		    += "LinkDelete=MqLinkDelete(struct MqS *ctx)"
-ALIASES		    += "Exit=MqExit(ctx)"
 
 # SEND DATA
 ALIASES		    += "send_example=\code \n\
@@ -171,7 +159,7 @@ ALIASES		    += "ReadTYPE=MqReadTYPE(ctx, TYPE *val)"
 ALIASES		    += "ReadN=MqReadN(ctx,MQ_BIN *value, MQ_SIZE *len)"
 ALIASES		    += "ReadBDY=MqReadBDY(ctx,MQ_BIN *value, MQ_SIZE *len)"
 ALIASES		    += "ReadU=MqReadU(ctx)"
-ALIASES		    += "ReadProxy=MqReadProxy(ctx, otherCtx)"
+ALIASES		    += "ReadProxy=MqReadProxy(ctx, struct MqS *otherCtx)"
 ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"
 ALIASES		    += "ReadItemExists=MQ_BOL MqReadItemExists(ctx)"
 ALIASES		    += "ReadUndo=MqReadUndo(ctx)"
@@ -190,8 +178,8 @@ error: \n\
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,token,callback,data,fFree)"
 ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_CST token, MQ_SIZE id=0)"
-ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,token)"
-ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,MQ_CST token)"
+ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
@@ -200,11 +188,13 @@ ALIASES		    += "ServiceIsTransaction=int ServiceIsTransaction (ctx)"
 ALIASES		    += "ServiceGetToken=MQ_CST ServiceGetToken (ctx)"
 
 # SLAVE CREATION AND DELETION
-ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx,id,argv)"
+ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"
 ALIASES		    += "SlaveWorker_example=\code \nMqErrorCheck(MqSlaveWorker (ctx, 7,\n   MqBufferLCreateArgsV(ctx, \"--thread\", \"--silent\", \"@\", \"--name\", \"MyWorker\", NULL)\n);\endcode"
-ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx,id,slaveCtx)"
-ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx,id)"
-ALIASES		    += "SlaveGet=MqSlaveGet(ctx,id)"
+ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
+ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGet=MqSlaveGet(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGetMaster=MqSlaveGetMaster(ctx)"
+ALIASES		    += "SlaveIs=MqSlaveIs(ctx)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -244,7 +234,4 @@ ALIASES		    += "ErrorSetCONTINUE=MqErrorSetCONTINUE(ctx)"
 ALIASES		    += "ErrorReset=MqErrorReset(ctx)"
 ALIASES		    += "ErrorRaise=MqErrorRaise(ctx)"
 ALIASES		    += "ErrorPrint=MqErrorPrint(ctx)"
-
-
-
 

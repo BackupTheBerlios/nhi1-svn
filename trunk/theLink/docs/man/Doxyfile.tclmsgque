@@ -85,14 +85,6 @@ ALIASES		    += "config_type_isServer=boolean"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
 
-ALIASES		    += "config_type_isSlave=boolean"
-ALIASES		    += "config_set_isSlave=NO"
-ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
-
-ALIASES		    += "config_type_master=Command-Object"
-ALIASES		    += "config_set_master=\ref \NS{slave}"
-ALIASES		    += "config_get_master=ConfigGetMaster"
-
 ALIASES		    += "config_type_startAs=integer"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs startAs"
 ALIASES		    += "config_get_startAs=ConfigGetStartAs"
@@ -123,10 +115,10 @@ ALIASES		    += "config_IEvent=$ctx ConfigSetEvent callback"
 ALIASES		    += "LinkCreate=$ctx LinkCreate args..."
 ALIASES		    += "LinkCreateChild=$ctx LinkCreateChild parent args..."
 ALIASES		    += "LinkDelete=$ctx LinkDelete"
-ALIASES		    += "LinkGetParent=$ctx LinkGetParent"
-ALIASES		    += "LinkGetCtxId=$ctx LinkGetCtxId"
-ALIASES		    += "LinkIsParent=$ctx LinkIsParent"
-ALIASES		    += "LinkIsConnected=$ctx LinkIsConnected"
+ALIASES		    += "LinkGetParent=MqS [$ctx LinkGetParent]"
+ALIASES		    += "LinkGetCtxId=\I [$ctx LinkGetCtxId]"
+ALIASES		    += "LinkIsParent=\O [$ctx LinkIsParent]"
+ALIASES		    += "LinkIsConnected=\O [$ctx LinkIsConnected]"
 ALIASES		    += "Exit=$ctx Exit"
 
 # SEND DATA
@@ -145,13 +137,13 @@ ALIASES		    += "SendBDY=$ctx SendBDY value"
 
 # READ DATE
 ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
-ALIASES		    += "ReadTYPE=set val [$ctx ReadTYPE]"
-ALIASES		    += "ReadU=set val [$ctx ReadU]"
-ALIASES		    += "ReadN=set val [$ctx ReadN]"
-ALIASES		    += "ReadBDY=set val [$ctx ReadBDY]"
+ALIASES		    += "ReadTYPE=TYPE [$ctx ReadTYPE]"
+ALIASES		    += "ReadU=\U [$ctx ReadU]"
+ALIASES		    += "ReadN=\B [$ctx ReadN]"
+ALIASES		    += "ReadBDY=\B [$ctx ReadBDY]"
 ALIASES		    += "ReadProxy=$ctx ReadProxy otherCtx"
-ALIASES		    += "ReadGetNumItems=set val [$ctx ReadGetNumItems]"
-ALIASES		    += "ReadItemExists=set val [$ctx ReadItemExists]"
+ALIASES		    += "ReadGetNumItems=\I [$ctx ReadGetNumItems]"
+ALIASES		    += "ReadItemExists=\O [$ctx ReadItemExists]"
 ALIASES		    += "ReadUndo=$ctx ReadUndo()"
 ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
 ALIASES		    += "ReadL_END=$ctx ReadL_END"
@@ -170,18 +162,19 @@ ALIASES		    += "ProcessEvent=$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|F
 ALIASES		    += "MQ_WAIT_NO=\c NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
-ALIASES		    += "ServiceGetFilter=$ctx ServiceGetFilter ?id=0?"
-ALIASES		    += "ServiceIsTransaction=$ctx ServiceIsTransaction"
-ALIASES		    += "ServiceGetToken=$ctx ServiceGetToken"
+ALIASES		    += "ServiceGetFilter=MqS [$ctx ServiceGetFilter ?id=0?]"
+ALIASES		    += "ServiceIsTransaction=\O [$ctx ServiceIsTransaction]"
+ALIASES		    += "ServiceGetToken=\C [$ctx ServiceGetToken]"
 
 # SLAVE CREATION AND DELETION
-ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."
 ALIASES		    += "SlaveWorker_example=\code$ctx SlaveWorker 7 --thread --silent @ WORKER --name MyWorker\endcode"
 
-
+ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."
 ALIASES		    += "SlaveCreate=$ctx SlaveCreate id slave"
 ALIASES		    += "SlaveDelete=$ctx SlaveDelete id"
-ALIASES		    += "SlaveGet=$ctx SlaveGet id"
+ALIASES		    += "SlaveGet=MqS [$ctx SlaveGet id]"
+ALIASES		    += "SlaveGetMaster=MqS [$ctx SlaveGetMaster]"
+ALIASES		    += "SlaveIs=\O [$ctx SlaveIs]"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -192,13 +185,13 @@ if {[$buf GetType] == 'C'} { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
-ALIASES		    += "BufferGetTYPE=$buffer GetTYPE"
-ALIASES		    += "BufferType=$buffer GetType"
+ALIASES		    += "BufferGetTYPE=TYPE [$buffer GetTYPE]"
+ALIASES		    += "BufferType=\C [$buffer GetType]"
 
 ALIASES		    += "Y=IntObj"
 ALIASES		    += "O=BooleanObj"
 ALIASES		    += "S=IntObj"
-ALIASES		    += "I=InitObj"
+ALIASES		    += "I=IntObj"
 ALIASES		    += "F=DoubleObj"
 ALIASES		    += "W=WideIntObj"
 ALIASES		    += "D=DoubleObj"

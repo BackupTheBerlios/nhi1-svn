@@ -19,8 +19,6 @@ ENABLED_SECTIONS    += CC
 ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/cc
 
-TAGFILES            += $(DOCDIR)/../ccmsgque_public/ccmsgque_public.tag=../ccmsgque_public
-
 ALIASES		    += "self=ccmsgque"
 ALIASES		    += "selftut=ccmsgquetut"
 ALIASES		    += "NS{1}=cc_\1"
@@ -56,8 +54,8 @@ MqBufferLAppendC(init, \"myFirstArgument\"); \n\
 The memory is owned by the library -> <B>do not free the memory</B>"
 
 ALIASES		    += "config_type_buffersize=#MQ_INT"
-ALIASES		    += "config_set_buffersize=#ConfigSetBuffersize"
-ALIASES		    += "config_get_buffersize=#ConfigGetBuffersize"
+ALIASES		    += "config_set_buffersize=#ccmsgque::MqS::ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#ccmsgque::MqS::ConfigGetBuffersize"
 
 ALIASES		    += "config_type_debug=#MQ_INT"
 ALIASES		    += "config_set_debug=#ConfigSetDebug"
@@ -115,14 +113,6 @@ ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
 ALIASES		    += "config_type_isServer=bool"
 ALIASES		    += "config_set_isServer=#ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=#ConfigGetIsServer"
-
-ALIASES		    += "config_type_isSlave=bool"
-ALIASES		    += "config_set_isSlave=NO"
-ALIASES		    += "config_get_isSlave=#ConfigGetIsSlave"
-
-ALIASES		    += "config_type_master=MqC"
-ALIASES		    += "config_set_master=\ref \NS{slave}"
-ALIASES		    += "config_get_master=#ConfigGetMaster"
 
 ALIASES             += "config_IServerSetup=IServerSetup::ServerSetup()"
 ALIASES		    += "config_IServerCleanup=IServerCleanup::ServerCleanup()"
@@ -225,7 +215,9 @@ ALIASES             += "SlaveWorker_example=\code ctx.SlaveWorkerV (7, \"--threa
 
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(const int id, MqC *const slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(const int id)"
-ALIASES		    += "SlaveGet=MqC ctx.SlaveGet(const int id)"
+ALIASES		    += "SlaveGet=MqC* ctx.SlaveGet(const int id)"
+ALIASES		    += "SlaveGetMaster=MqC* ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=bool ctx.SlaveIs()"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\self support 2 different buffer objects: \n\

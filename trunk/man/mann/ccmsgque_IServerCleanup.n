@@ -1,0 +1,33 @@
+.TH "ccmsgque::IServerCleanup" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::IServerCleanup \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual void \fBServerCleanup\fP ()=0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP 
+.PP
+Definition at line 59 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual void ccmsgque::IServerCleanup::ServerCleanup ()\fC [pure virtual]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

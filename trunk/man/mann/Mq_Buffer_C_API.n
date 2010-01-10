@@ -1,11 +1,11 @@
-.TH "Mq_Buffer_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.  
 
 .PP
-.SS "Data Structures"
+.SS "Classes"
 
 .in +1c
 .ti -1c
@@ -47,7 +47,7 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "#define \fBMQ_BLS_SIZE\fP   50"
 .br
-.R "initial size of the \fBMqBufferS::bls\fP object "
+.R "initial size of the \fBMqBufferS.bls\fP object "
 .ti -1c
 .RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
 .br
@@ -271,32 +271,32 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP 
 .SS "#define MQ_BLS_SIZE   50"
 .PP
-initial size of the \fBMqBufferS::bls\fP object 
+initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 1982 of file msgque.h.
+Definition at line 1970 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 1985 of file msgque.h.
+Definition at line 1973 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 1886 of file msgque.h.
+Definition at line 1874 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 1889 of file msgque.h.
+Definition at line 1877 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 1892 of file msgque.h.
+Definition at line 1880 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 1895 of file msgque.h.
+Definition at line 1883 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -307,7 +307,7 @@ Definition at line 1895 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 1898 of file msgque.h.
+Definition at line 1886 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -323,28 +323,28 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 1976 of file msgque.h.
+Definition at line 1964 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
 .PP
 The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (Byte)
+\fCY\fP : 1 byte signed character (byte)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (Boolean)
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (boolean)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (Short)
+\fCS\fP : 2 byte signed short (short)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (Integer)
+\fCI\fP : 4 byte signed integer (int)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (Long)
+\fCW\fP : 8 byte signed long long integer (long)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (Float)
+\fCF\fP : 4 byte float (float)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (Double)
+\fCD\fP : 8 byte double (double)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (Byte())
+\fCB\fP : unsigned char array used for binary data (byte[])
 .IP "\(bu" 2
 \fCC\fP : string data using a \fC\\0\fP at the end (String)
 .IP "\(bu" 2
@@ -390,7 +390,7 @@ L: list object type.
 \fB\fIMQ_RETT \fP\fP
 R: return object type. 
 .PP
-Definition at line 1929 of file msgque.h.
+Definition at line 1917 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
@@ -454,7 +454,7 @@ change the type of an \fBMqBufferS\fP object to \fItype\fP
 .RS 4
 \fIbuf\fP the \fBMqBufferS\fP object to work on 
 .br
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1239,4 +1239,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

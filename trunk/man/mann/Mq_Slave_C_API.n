@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -31,41 +31,53 @@ Mq_Slave_C_API \- create and manage a slave context
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "get the slave context "
+.R "get the \fIslave-context\fP from a \fImaster-context\fP "
+.ti -1c
+.RI "struct \fBMqS\fP * \fBMqSlaveGetMaster\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the \fImaster-context\fP from the \fIslave-context\fP "
+.ti -1c
+.RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.ti -1c
+.RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "is the \fIcontext\fP a \fIslave-context\fP ? "
+.ti -1c
+.RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
+.br
 .in -1c
 .SH "Detailed Description"
 .PP 
 create and manage a slave context 
 
-The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
-The \fIlink\fP is used to perform the following tasks:
+The \fImaster-slave-link\fP is used to perform the following tasks:
 .IP "\(bu" 2
-report error messages from the \fIslave\fP to the \fImaster\fP 
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
 .IP "\(bu" 2
 to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
 .IP "\(bu" 2
 to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
 .PP
-In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-msgque-context\fP can be a \fIserver\fP because only \fIon\fP server per node is possible.
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
 .PP
 .PP
 .nf
 
-    node-0   |           node-1          |   node-2
+    node-0   |           node-1/2        |   node-3/4/5
 ===================================================================
 
 | <- client/server link -> | <- client/server link -> |
 
              | <-- master/slave link --> |
 
-                           |- client1-0 -|- server2-0 ...
-                           |
-             |- server1-0 -|             |- server2-1 ...
-             |             |- client1-1 -|- server2-2 ...
-  client0-0 -|                           |- server2-3
-             |
-             |- server1-1 -|- client1-2 -|- server2-4 ...
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
 .fi
 .PP
  
@@ -82,7 +94,7 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3690 of file msgque.h.
+Definition at line 3676 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
@@ -135,7 +147,7 @@ it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\f
 
 .SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  ctx, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
 .PP
-get the slave context 
+get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -146,10 +158,74 @@ get the slave context
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
 .RE
 .PP
 
+.SS "struct \fBMqS\fP* MqSlaveGetMaster (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
+.PP
+get the \fImaster-context\fP from the \fIslave-context\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fImaster-context\fP or \fInull\fP if the \fIcontext\fP is no \fIslave-context\fP 
+.RE
+.PP
+
+.SS "static struct \fBMqS\fP* MqSlaveGetMasterI (struct \fBMqS\fP const *const  ctx)\fC [static, read]\fP"
+.PP
+get the \fImaster-context\fP from the \fIslave-context\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fImaster-context\fP or \fInull\fP if the \fIcontext\fP is no \fIslave-context\fP 
+.RE
+.PP
+ 
+.PP
+Definition at line 3744 of file msgque.h.
+.SS "int MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
+.PP
+is the \fIcontext\fP a \fIslave-context\fP ? 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+
+.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
+.PP
+is the \fIcontext\fP a \fIslave-context\fP ? 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+ 
+.PP
+Definition at line 3758 of file msgque.h.
 .SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
 .PP
 create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
@@ -173,4 +249,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

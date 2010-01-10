@@ -1,4 +1,4 @@
-.TH "MqFactoryS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqFactoryS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqFactoryS \- used for factory function pointer management
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -25,15 +25,15 @@ MqFactoryS \- used for factory function pointer management
 used for factory function pointer management 
 .PP
 Definition at line 519 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS::Create\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS.Create\fP\fC [read]\fP"
 .PP
 Definition at line 520 of file msgque.h.
-.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS::Delete\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS.Delete\fP\fC [read]\fP"
 .PP
 Definition at line 521 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

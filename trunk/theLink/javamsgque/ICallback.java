@@ -12,12 +12,9 @@
 
 package javamsgque;
 
-/// \brief Interface required to setup a callback
-///
-/// The callback is required by the the second parameter from 
-/// #javamsgque.MqS.SendEND_AND_CALLBACK
+/// \ingroup Mq_Config_Java_API
+/// \api #MqCallbackS
 public interface ICallback {
-  /// \brief function to handle the callback request
   void Callback (MqS ctx) throws MqSException;
 }
 

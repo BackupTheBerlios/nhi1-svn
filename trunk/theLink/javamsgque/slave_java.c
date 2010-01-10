@@ -84,6 +84,14 @@ JNIEXPORT jobject JNICALL NS(SlaveGet) (
   return (slave == NULL ? NULL : (jobject)slave->self);
 }
 
+JNIEXPORT jobject JNICALL NS(SlaveGetMaster) (
+  JNIEnv    *env, 
+  jobject   self
+)
+{
+  struct MqS * const master = MqSlaveGetMaster(CONTEXT);
+  return (master == NULL ? NULL : ((jobject)master->self));
+}
 
-
+GetO(SlaveIs)
 

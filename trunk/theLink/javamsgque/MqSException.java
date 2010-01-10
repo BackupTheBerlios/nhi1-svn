@@ -10,10 +10,18 @@
  *              please contact AUTHORS for additional information
  */
 
-///\brief The \javamsgque MqS Package
 package javamsgque;
 
-///\brief Java-Msgque Super-Class
+//
+// ========================================================================
+/// \defgroup Mq_Error_Java_API Mq_Error_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \copydoc Mq_Error_C_API
+//
+
+/// \ingroup Mq_Java_Error_API
+/// \api #MqErrorS
 public class MqSException extends Exception {
 
   private int p_num;
@@ -35,3 +43,5 @@ public class MqSException extends Exception {
     return p_txt;
   }
 }
+
+/// \} Mq_Error_Java_API

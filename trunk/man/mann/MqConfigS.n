@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -71,9 +71,9 @@ MqConfigS \- end-user configuration data, also available as command-line options
 end-user configuration data, also available as command-line options 
 .PP
 Definition at line 620 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_INT\fP \fBMqConfigS::debug\fP"
+.SS "\fBMQ_INT\fP \fBMqConfigS.debug\fP"
 .PP
 Send additional debugging output to stderr. 
 .PP
@@ -87,34 +87,34 @@ Using pipe (e.g. --pipe) the \fIserver\fP get the \fIdebug\fP flag from the \fIc
 
 .PP
 Definition at line 730 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreFork\fP"
+.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreFork\fP"
 .PP
 do not allow the usage of \fIfork\fP 
 .PP
 Definition at line 754 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreSpawn\fP"
+.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreSpawn\fP"
 .PP
 do not allow the usage of \fIspawn\fP 
 .PP
 Definition at line 751 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreThread\fP"
+.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreThread\fP"
 .PP
 do not allow the usage of \fIthreads\fP 
 .PP
 Definition at line 748 of file msgque.h.
-.SS "struct \fBMqIoConfigS\fP \fBMqConfigS::io\fP\fC [read]\fP"
+.SS "struct \fBMqIoConfigS\fP \fBMqConfigS.io\fP\fC [read]\fP"
 .PP
 Global configuration data belonging to 'io'. 
 .PP
 Definition at line 757 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS::isSilent\fP"
+.SS "\fBMQ_BOL\fP \fBMqConfigS.isSilent\fP"
 .PP
 Suppress logging output. 
 .PP
 type default option application context  BOOL NO --silent server/client parent/child  
 .PP
 Definition at line 627 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS::isString\fP"
+.SS "\fBMQ_BOL\fP \fBMqConfigS.isString\fP"
 .PP
 Use \fIstring\fP mode, send as many data as possible as string. 
 .PP
@@ -123,17 +123,17 @@ type default option application context  BOOL NO --string client parent
 \fBlibmsgque\fP distinguish between a \fIstring\fP based (option: \fC--string\fP) and a \fIbinary\fP based (this is the default) data packages. The items is a \fBlibmsgque\fP data package are of type \fBMqBufferU\fP including OS specific native data of type \fBMQ_ATO\fP. The native data can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast). \fIstring\fP is used for debugging purpose or if the binary data model is different between client and server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require using the \fC--string\fP option. The options is only available for the \fIclient-parent\fP setup. 
 .PP
 Definition at line 643 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqConfigS::master\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqConfigS.master\fP\fC [read]\fP"
 .PP
 SLAVE: a pointer to the master object or \fCNULL\fP. 
 .PP
 Definition at line 742 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqConfigS::master_id\fP"
+.SS "\fBMQ_SIZE\fP \fBMqConfigS.master_id\fP"
 .PP
 SLAVE: the ID in the master SLAVES array or \fCO\fP. 
 .PP
 Definition at line 745 of file msgque.h.
-.SS "\fBMQ_STR\fP \fBMqConfigS::name\fP"
+.SS "\fBMQ_STR\fP \fBMqConfigS.name\fP"
 .PP
 The human-readable name of context. 
 .PP
@@ -153,7 +153,7 @@ initial set to \fIunknown\fP
 .IP "\(bu" 2
 the argument of the \fC--name\fP option in \fIargv\fP 
 .IP "\(bu" 2
-the \fBMqConfigS::name\fP entry from the related configuration object
+the \fBMqConfigS.name\fP entry from the related configuration object
 .IP "\(bu" 2
 the basename of the first option in \fIargv\fP 
 .PP
@@ -178,7 +178,7 @@ MqConfigSetName(context, 'myString');
 
 .PP
 Definition at line 697 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqConfigS::parent\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqConfigS.parent\fP\fC [read]\fP"
 .PP
 Create a child-context. 
 .PP
@@ -187,7 +187,7 @@ type default option application context  POINTER NULL NO client parent
 Read more in: \fCWHAT-IS: parent versa child\fP 
 .PP
 Definition at line 739 of file msgque.h.
-.SS "\fBMQ_STR\fP \fBMqConfigS::srvname\fP"
+.SS "\fBMQ_STR\fP \fBMqConfigS.srvname\fP"
 .PP
 The human-readable name of the server-context. 
 .PP
@@ -207,7 +207,7 @@ initial set to \fIunknown\fP
 .IP "\(bu" 2
 the argument of the \fC--srvname\fP option in \fIargv\fP 
 .IP "\(bu" 2
-the \fBMqConfigS::srvname\fP entry from the related configuration object
+the \fBMqConfigS.srvname\fP entry from the related configuration object
 .PP
 \fBAttention:\fP
 .RS 4
@@ -228,7 +228,7 @@ MqConfigSetSrvName(context, 'myString');
 
 .PP
 Definition at line 722 of file msgque.h.
-.SS "enum \fBMqStartE\fP \fBMqConfigS::startAs\fP"
+.SS "enum \fBMqStartE\fP \fBMqConfigS.startAs\fP"
 .PP
 User preferences on HOWTO start a new entity. 
 .PP
@@ -254,7 +254,7 @@ The \fBMQ_START_DEFAULT\fP depend on the application-context:
 .PP
 \fBAttention:\fP
 .RS 4
-In \fIserver\fP mode the \fC--fork\fP , \fC--thread\fP and the \fC--spawn\fP options require the \fBMqSetupS::Parent\fP - \fBMqLinkSetupS::fCreate\fP and \fBMqSetupS::Parent\fP - \fBMqLinkSetupS::fDelete\fP value to provide an entry-point after the new entity was created. In addition the option \fBMqSetupS::fProcessExit\fP or \fBMqSetupS::fThreadExit\fP is used to exit the entity. 
+In \fIserver\fP mode the \fC--fork\fP , \fC--thread\fP and the \fC--spawn\fP options require the \fBMqSetupS.Parent\fP - \fBMqLinkSetupS.fCreate\fP and \fBMqSetupS.Parent\fP - \fBMqLinkSetupS.fDelete\fP value to provide an entry-point after the new entity was created. In addition the option \fBMqSetupS.fProcessExit\fP or \fBMqSetupS.fThreadExit\fP is used to exit the entity. 
 .PP
 The \fC--fork\fP option require the \fBfork\fP system-call and is \fBnot\fP compatible with threads. 
 .RE
@@ -265,4 +265,4 @@ Definition at line 669 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

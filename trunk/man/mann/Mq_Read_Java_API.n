@@ -1,0 +1,182 @@
+.TH "Mq_Read_Java_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Read_Java_API \- extract data from an incoming \fIread-data-package\fP.   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "native byte \fBjavamsgque::MqS.ReadY\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native boolean \fBjavamsgque::MqS.ReadO\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native short \fBjavamsgque::MqS.ReadS\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native int \fBjavamsgque::MqS.ReadI\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native float \fBjavamsgque::MqS.ReadF\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadF\fP "
+.ti -1c
+.RI "native long \fBjavamsgque::MqS.ReadW\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadW\fP "
+.ti -1c
+.RI "native double \fBjavamsgque::MqS.ReadD\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadD\fP "
+.ti -1c
+.RI "native String \fBjavamsgque::MqS.ReadC\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadC\fP "
+.ti -1c
+.RI "native byte[] \fBjavamsgque::MqS.ReadB\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.ti -1c
+.RI "native byte[] \fBjavamsgque::MqS.ReadN\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
+.ti -1c
+.RI "native byte[] \fBjavamsgque::MqS.ReadBDY\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
+.ti -1c
+.RI "native \fBMqBufferS\fP \fBjavamsgque::MqS.ReadU\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadU\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadProxy\fP (\fBMqS\fP hdl)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadL_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadL_START\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadL_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.ti -1c
+.RI "native int \fBjavamsgque::MqS.ReadGetNumItems\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
+.ti -1c
+.RI "native boolean \fBjavamsgque::MqS.ReadItemExists\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadUndo\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+extract data from an incoming \fIread-data-package\fP.  
+
+extract data from an incoming \fIread-data-package\fP. 
+.PP
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
+.PP
+\fBAttention:\fP
+.RS 4
+Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
+.RE
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "native byte [] javamsgque.MqS.ReadB ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadB\fP 
+.PP
+.SS "native byte [] javamsgque.MqS.ReadBDY ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP 
+.PP
+.SS "native String javamsgque.MqS.ReadC ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadC\fP 
+.PP
+.SS "native double javamsgque.MqS.ReadD ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadD\fP 
+.PP
+.SS "native float javamsgque.MqS.ReadF ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadF\fP 
+.PP
+.SS "native int javamsgque.MqS.ReadGetNumItems ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP 
+.PP
+.SS "native int javamsgque.MqS.ReadI ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+.SS "native boolean javamsgque.MqS.ReadItemExists ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadL_END ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadL_START (\fBMqBufferS\fP buf)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadL_START ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
+.PP
+.SS "native byte [] javamsgque.MqS.ReadN ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadN\fP 
+.PP
+.SS "native boolean javamsgque.MqS.ReadO ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadProxy (\fBMqS\fP hdl)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP 
+.PP
+.SS "native short javamsgque.MqS.ReadS ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+.SS "native \fBMqBufferS\fP javamsgque.MqS.ReadU ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadU\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadUndo ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP 
+.PP
+.SS "native long javamsgque.MqS.ReadW ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadW\fP 
+.PP
+.SS "native byte javamsgque.MqS.ReadY ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

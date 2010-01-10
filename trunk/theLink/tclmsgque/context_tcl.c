@@ -264,14 +264,12 @@ int NS(ConfigSetDaemon) (NS_ARGS);
 int NS(ConfigGetIsString) (NS_ARGS);
 int NS(ConfigGetIsSilent) (NS_ARGS);
 int NS(ConfigGetIsServer) (NS_ARGS);
-int NS(ConfigGetIsSlave) (NS_ARGS);
 int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
 int NS(ConfigGetIdent) (NS_ARGS);
-int NS(ConfigGetMaster) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
 int NS(ConfigGetIoTcpPort) (NS_ARGS);
@@ -309,6 +307,8 @@ int NS(SlaveWorker) (NS_ARGS);
 int NS(SlaveCreate) (NS_ARGS);
 int NS(SlaveDelete) (NS_ARGS);
 int NS(SlaveGet) (NS_ARGS);
+int NS(SlaveGetMaster) (NS_ARGS);
+int NS(SlaveIs) (NS_ARGS);
 
 int NS(MqS_Cmd) (
   ClientData clientData,
@@ -395,7 +395,6 @@ int NS(MqS_Cmd) (
     { "ConfigGetIsString",	  NS(ConfigGetIsString)	      },
     { "ConfigGetIsSilent",	  NS(ConfigGetIsSilent)	      },
     { "ConfigGetIsServer",	  NS(ConfigGetIsServer)	      },
-    { "ConfigGetIsSlave",	  NS(ConfigGetIsSlave)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetBuffersize",	  NS(ConfigGetBuffersize)     },
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
@@ -403,7 +402,6 @@ int NS(MqS_Cmd) (
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
     { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
-    { "ConfigGetMaster",	  NS(ConfigGetMaster)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
     { "ConfigGetIoTcpPort",	  NS(ConfigGetIoTcpPort)      },
@@ -441,23 +439,25 @@ int NS(MqS_Cmd) (
 
 // ERROR
 
-    { "ErrorC",		      NS(ErrorC)		},
-    { "ErrorSet",	      NS(ErrorSet)		},
-    { "ErrorSetCONTINUE",     NS(ErrorSetCONTINUE)	},
-    { "ErrorGetText",	      NS(ErrorGetText)		},
-    { "ErrorGetNum",	      NS(ErrorGetNum)		},
-    { "ErrorGetCode",	      NS(ErrorGetCode)		},
-    { "ErrorReset",	      NS(ErrorReset)		},
-    { "ErrorPrint",	      NS(ErrorPrint)		},
+    { "ErrorC",			  NS(ErrorC)		      },
+    { "ErrorSet",		  NS(ErrorSet)		      },
+    { "ErrorSetCONTINUE",	  NS(ErrorSetCONTINUE)	      },
+    { "ErrorGetText",		  NS(ErrorGetText)	      },
+    { "ErrorGetNum",		  NS(ErrorGetNum)	      },
+    { "ErrorGetCode",		  NS(ErrorGetCode)	      },
+    { "ErrorReset",		  NS(ErrorReset)	      },
+    { "ErrorPrint",		  NS(ErrorPrint)	      },
 
 // SLAVE
 
-    { "SlaveWorker",	      NS(SlaveWorker)		},
-    { "SlaveCreate",	      NS(SlaveCreate)		},
-    { "SlaveDelete",	      NS(SlaveDelete)		},
-    { "SlaveGet",	      NS(SlaveGet)		},
+    { "SlaveWorker",		  NS(SlaveWorker)	      },
+    { "SlaveCreate",		  NS(SlaveCreate)	      },
+    { "SlaveDelete",		  NS(SlaveDelete)	      },
+    { "SlaveGet",		  NS(SlaveGet)		      },
+    { "SlaveGetMaster",		  NS(SlaveGetMaster)	      },
+    { "SlaveIs",		  NS(SlaveIs)		      },
 
-    { NULL,		      NULL			}
+    { NULL,			  NULL			      }
   };
 
   if (objc < 2) {

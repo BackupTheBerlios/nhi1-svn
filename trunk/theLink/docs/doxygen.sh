@@ -3,6 +3,11 @@
 ## get env
 . $(dirname $0)/../../env.sh
 
+## template definition
+man=local.generic
+javamsgque=../javamsgque_public/Doxyfile
+ccmsgque=../ccmsgque_public/Doxyfile
+
 export HAVE_DOT=NO
 [[ $1 == "-usedot" && ! -z "$DOT" ]] && {
     HAVE_DOT=YES
@@ -57,13 +62,6 @@ export HAVE_DOT=NO
       export  HTML_FOOTER=""
     fi
 
-  ## is a local Doxyfile available ?
-    if [[ -f local.generic ]] ; then
-      LG="local.generic"
-    else
-      LG=""
-    fi
-
   ## search and generate the files
     for F in $FN ; do
       test ! -f $F && continue
@@ -75,8 +73,8 @@ export HAVE_DOT=NO
       export  DOCDIR="$abs_top_builddir/html/theLink/$PROJECT"
       rm -fr "$DOCDIR"
       mkdir -p "$DOCDIR"
-      echo "cat $SRCDIR/docs/Doxyfile.generic $LG $F | $DOXYGEN"
-      cat "$SRCDIR/docs/Doxyfile.generic" $LG "$F" | "$DOXYGEN" - 2>&1
+      echo "cat $SRCDIR/docs/Doxyfile.generic ${!D} ${!P} $F | $DOXYGEN"
+      cat "$SRCDIR/docs/Doxyfile.generic" ${!D} ${!P} "$F" | "$DOXYGEN" - 2>&1
     done
 
     popd

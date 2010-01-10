@@ -14,7 +14,8 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-FILE_PATTERNS       = msgque.h
+INPUT		    += $(SRCDIR)/libmsgque
+FILE_PATTERNS       += msgque.h
 SHOW_FILES	    = YES
 
 ALIASES		    += "null=\e NULL"

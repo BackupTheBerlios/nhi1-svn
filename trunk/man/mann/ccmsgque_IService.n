@@ -1,0 +1,33 @@
+.TH "ccmsgque::IService" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::IService \- Callback for a Service.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual void \fBService\fP (\fBMqC\fP *const ctx)=0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Callback for a Service. 
+.PP
+Definition at line 40 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual void ccmsgque::IService::Service (\fBMqC\fP *const  ctx)\fC [pure virtual]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

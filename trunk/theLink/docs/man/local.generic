@@ -16,10 +16,10 @@
 
 TAGFILES            = 
 ENABLED_SECTIONS    += MAN
-INPUT               = $(SRCDIR)/libmsgque .
-FILE_PATTERNS       = msgque.h *.doc
+INPUT               = .
+FILE_PATTERNS       = *.doc
 EXAMPLE_PATH	    = $(SRCDIR)/tests
-STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque
+STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque 
 STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
 SHOW_USED_FILES	    = NO
 SHOW_FILES	    = NO

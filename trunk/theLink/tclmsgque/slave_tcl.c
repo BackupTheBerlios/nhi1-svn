@@ -63,3 +63,21 @@ int NS(SlaveGet) (NS_ARGS)
   }
   RETURN_TCL
 }
+
+int NS(SlaveGetMaster) (NS_ARGS)
+{
+  struct MqS * const master = MqSlaveGetMasterI(MQCTX);
+  CHECK_NOARGS
+  if (master != NULL)
+    Tcl_SetObjResult(interp, (Tcl_Obj*)master->self);
+  else
+    Tcl_SetResult(interp, "", TCL_STATIC);
+  RETURN_TCL
+}
+
+int NS(SlaveIs) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqSlaveIs(MQCTX)));
+  RETURN_TCL
+}

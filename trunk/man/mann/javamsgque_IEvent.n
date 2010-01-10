@@ -1,0 +1,31 @@
+.TH "javamsgque::IEvent" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::IEvent \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Package Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBEvent\fP ()  throws MqSException"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP 
+.PP
+Definition at line 17 of file IEvent.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "void javamsgque.IEvent.Event ()  throws \fBMqSException\fP\fC [package]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

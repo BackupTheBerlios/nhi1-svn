@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "9 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -170,11 +170,11 @@ Last: submit the a data package to the link target using one of:
 .PP
 
 .PP
-The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between \fBctx.SendSTART()\fP and \fBctx.SendEND(String token)\fP ... other \fBSEND API\fP style commands are available to fill the data package with data.
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(String token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
 Services are created with the \fBctx.ServiceCreate(String token, IService callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
-The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS ctx=new MqS()\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS ctx=new MqS()\fP object class, the both statements \fB\fBSendSTART()\fP\fP and \fBctx.sendSTART()\fP are identical.
+The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS ctx=new MqS()\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS ctx=new MqS()\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
 .SH "CLIENT"
 .PP
 A \fBjavamsgque\fP client requires the following setup:

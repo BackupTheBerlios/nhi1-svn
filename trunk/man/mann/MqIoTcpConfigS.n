@@ -1,4 +1,4 @@
-.TH "MqIoTcpConfigS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoTcpConfigS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -35,24 +35,24 @@ MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup
 configuration data which belong to \fIMqIoS\fP tcp setup 
 .PP
 Definition at line 577 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::host\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.host\fP\fC [read]\fP"
 .PP
 host name 
 .PP
 Definition at line 578 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myhost\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myhost\fP\fC [read]\fP"
 .PP
 CLIENT: my host name. 
 .PP
 Definition at line 580 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myport\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myport\fP\fC [read]\fP"
 .PP
 CLIENT: my port name. 
 .PP
 Definition at line 581 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::port\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.port\fP\fC [read]\fP"
 .PP
 port name 
 .PP
@@ -60,4 +60,4 @@ Definition at line 579 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

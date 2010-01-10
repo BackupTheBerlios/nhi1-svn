@@ -12,6 +12,8 @@
 
 package javamsgque;
 
+/// \ingroup Mq_Config_Java_API
+/// \api #MqConfigSetEvent
 public interface IEvent {
   void Event () throws MqSException;
 }

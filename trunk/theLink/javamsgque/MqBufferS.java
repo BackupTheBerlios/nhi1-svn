@@ -14,10 +14,11 @@ package javamsgque;
 
 //
 // ========================================================================
-/// \ingroup javamain_api
-/// \defgroup java_MqBufferS_api MqBufferS
+/// \ingroup Mq_Java_API
+/// \defgroup Mq_Buffer_Java_API Mq_Buffer_Java_API
+/// \brief \copybrief Mq_Buffer_C_API
+/// \copydoc Mq_Buffer_C_API
 /// \{
-/// \brief \api #MqBufferS
 //
 
 ///\brief \api #MqBufferS
@@ -33,44 +34,35 @@ public class MqBufferS {
 
   // PUBLIC
 
-  /// \api #MqBufferGetType
-  ///
-  /// Use the following sequence to check and extract typeless data
-  /// \code
-  /// MqBufferS buf = ctx.ReadU();
-  /// if (buf.GetType() == 'I') {
-  ///   int i = buf.GetI();
-  ///   ...
-  /// }
-  /// \endcode
+  /// \copybrief MqBufferGetType
   public native char GetType ();
 
-  /// \api #MqBufferGetY
+  /// \copybrief MqBufferGetY
   public native byte GetY ();
 
-  /// \api #MqBufferGetO
+  /// \copybrief MqBufferGetY
   public native boolean GetO ();
 
-  /// \api #MqBufferGetS
+  /// \copybrief MqBufferGetY
   public native short GetS ();
 
-  /// \api #MqBufferGetI
+  /// \copybrief MqBufferGetY
   public native int GetI ();
 
-  /// \api #MqBufferGetF
+  /// \copybrief MqBufferGetY
   public native float GetF ();
 
-  /// \api #MqBufferGetW
+  /// \copybrief MqBufferGetY
   public native long GetW ();
 
-  /// \api #MqBufferGetD
+  /// \copybrief MqBufferGetY
   public native double GetD ();
 
-  /// \api #MqBufferGetB
+  /// \copybrief MqBufferGetY
   public native byte[] GetB ();
 
-  /// \api #MqBufferGetC
+  /// \copybrief MqBufferGetY
   public native String GetC ();
 }
 
-/// \}
+/// \} Mq_Buffer_Java_API

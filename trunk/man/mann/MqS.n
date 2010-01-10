@@ -1,4 +1,4 @@
-.TH "MqS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -66,70 +66,70 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP 
 data structure for the \fIlibmsgque-specific-data\fP 
 .PP
-Definition at line 1434 of file msgque.h.
-.SH "Field Documentation"
+Definition at line 1418 of file msgque.h.
+.SH "Member Data Documentation"
 .PP 
-.SS "struct \fBMqConfigS\fP \fBMqS::config\fP\fC [read]\fP"
+.SS "struct \fBMqConfigS\fP \fBMqS.config\fP\fC [read]\fP"
 .PP
 the configuration data is used for 'end-user' configuration 
 .PP
-Definition at line 1437 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqS::contextsize\fP"
+Definition at line 1421 of file msgque.h.
+.SS "\fBMQ_SIZE\fP \fBMqS.contextsize\fP"
 .PP
 ALLOC-size of the user-defined context struct. 
 .PP
-Definition at line 1447 of file msgque.h.
-.SS "struct \fBMqErrorS\fP \fBMqS::error\fP\fC [read]\fP"
+Definition at line 1431 of file msgque.h.
+.SS "struct \fBMqErrorS\fP \fBMqS.error\fP\fC [read]\fP"
 .PP
 error object data 
 .PP
-Definition at line 1439 of file msgque.h.
-.SS "struct \fBMqLinkS\fP \fBMqS::link\fP\fC [read]\fP"
+Definition at line 1423 of file msgque.h.
+.SS "struct \fBMqLinkS\fP \fBMqS.link\fP\fC [read]\fP"
 .PP
 link object data 
 .PP
-Definition at line 1440 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS::MqContextDelete_LOCK\fP"
+Definition at line 1424 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqS.MqContextDelete_LOCK\fP"
 .PP
 protect MqContextDelete 
 .PP
-Definition at line 1443 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS::MqContextFree_LOCK\fP"
+Definition at line 1427 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqS.MqContextFree_LOCK\fP"
 .PP
 protect MqContextFree 
 .PP
-Definition at line 1444 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS::self\fP"
+Definition at line 1428 of file msgque.h.
+.SS "\fBMQ_PTR\fP \fBMqS.self\fP"
 .PP
 link to the managed object 
 .PP
-Definition at line 1446 of file msgque.h.
-.SS "struct \fBMqSetupS\fP \fBMqS::setup\fP\fC [read]\fP"
+Definition at line 1430 of file msgque.h.
+.SS "struct \fBMqSetupS\fP \fBMqS.setup\fP\fC [read]\fP"
 .PP
 the setup data is used to link the object with the user application 
 .PP
-Definition at line 1438 of file msgque.h.
-.SS "int \fBMqS::signature\fP"
+Definition at line 1422 of file msgque.h.
+.SS "int \fBMqS.signature\fP"
 .PP
 used to verify the \fIpointer-data-type\fP in a type-less programming languages 
 .PP
-Definition at line 1435 of file msgque.h.
-.SS "enum \fBMqStatusIsE\fP \fBMqS::statusIs\fP"
+Definition at line 1419 of file msgque.h.
+.SS "enum \fBMqStatusIsE\fP \fBMqS.statusIs\fP"
 .PP
 how the context was created? 
 .PP
-Definition at line 1442 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqS::temp\fP\fC [read]\fP"
+Definition at line 1426 of file msgque.h.
+.SS "struct \fBMqBufferS\fP* \fBMqS.temp\fP\fC [read]\fP"
 .PP
 misc temporary \fBMqBufferS\fP object 
 .PP
-Definition at line 1441 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS::threadData\fP"
+Definition at line 1425 of file msgque.h.
+.SS "\fBMQ_PTR\fP \fBMqS.threadData\fP"
 .PP
 application specific thread data 
 .PP
-Definition at line 1445 of file msgque.h.
+Definition at line 1429 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

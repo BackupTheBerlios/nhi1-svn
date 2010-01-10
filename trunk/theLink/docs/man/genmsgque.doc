@@ -36,11 +36,10 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \object_example
 
 \subsection	\NS{ContextDelete}			\ContextDelete
-Delete the entire object including the application link using \RNSA{LinkDelete}. The
-object can \b not be reused.
+\copydoc MqContextDelete
 
 \subsection	\NS{Exit}				\Exit
-Shutdown the entire communication and exit the current process or thread.
+\copydoc MqExit
 
 
 \section	\NS{config}				CONFIG API
@@ -122,13 +121,6 @@ client to the server started as pipe by the client.
 interface for an existing tool like (x)inetd. The (x)inetd tool is a \e UNIX service to listen on a tcp/ip port
 and start for every connection the proper entry from the file \e /etc/(x)inetd.conf with the file-descriptor
 \e 0 as send/recv socket handle.
-
-\configsection{master}
-return the \e master if \e ctx is a slave-context or \e NULL if \e ctx is not a slave-context.
-!Only a SLAVE has a master!
-
-\configsection{isSlave}
-True if object is a \e slave object (default: \no, not be a slave)
 
 \configsection{startAs,--thread --spawn --fork}
 Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
@@ -459,6 +451,8 @@ UNKNOWN
 \RNSA{SlaveCreate}\n
 \RNSA{SlaveDelete}\n
 \RNSA{SlaveGet}\n
+\RNSA{SlaveGetMaster}\n
+\RNSA{SlaveIs}\n
 
 \copydetails Mq_Slave_C_API
 
@@ -491,6 +485,12 @@ UNKNOWN
 
 \subsection	  \NS{SlaveGet}				\SlaveGet
 \copydoc MqSlaveGet
+
+\subsection	  \NS{SlaveGetMaster}			\SlaveGetMaster
+\copydoc MqSlaveGetMaster
+
+\subsection	  \NS{SlaveIs}				\SlaveIs
+\copydoc MqSlaveIs
 
 \section        \NS{buffer}				BUFFER API
 \RNSA{BufferIdentifer}\n

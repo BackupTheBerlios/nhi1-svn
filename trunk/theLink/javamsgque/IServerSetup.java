@@ -12,7 +12,8 @@
 
 package javamsgque;
 
-/// \sameas{#MqConfigSetServerSetup}
+/// \ingroup Mq_Config_Java_API
+/// \api #MqConfigSetServerSetup
 public interface IServerSetup {
   void ServerSetup () throws MqSException ;
 }

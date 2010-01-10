@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "9 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIoPipeConfigS \- configuration data which belong to \fIMqIoS\fP pipe setup
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -23,9 +23,9 @@ MqIoPipeConfigS \- configuration data which belong to \fIMqIoS\fP pipe setup
 configuration data which belong to \fIMqIoS\fP pipe setup 
 .PP
 Definition at line 585 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS::socks\fP[2]"
+.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS.socks\fP[2]"
 .PP
 the result from socketpair 
 .PP
@@ -33,4 +33,4 @@ Definition at line 586 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

@@ -12,9 +12,9 @@
 
 package javamsgque;
 
-/// \brief Interface required to setup a service
+/// \ingroup Mq_Service_Java_API
+/// \brief \api #MqTokenF
 public interface IService {
-  /// \brief function to handle the service request
   void Service (MqS ctx) throws MqSException;
 }
 

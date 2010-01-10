@@ -332,13 +332,6 @@ int NS(ConfigGetIsServer) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetIsSlave) (NS_ARGS)
-{
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.config.master != NULL));
-  RETURN_TCL
-}
-
 int NS(ConfigGetName) (NS_ARGS)
 {
   CHECK_NOARGS
@@ -361,16 +354,6 @@ int NS(ConfigGetIdent) (NS_ARGS)
   CHECK_NOARGS
   str = MqConfigGetIdent(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
-  RETURN_TCL
-}
-
-int NS(ConfigGetMaster) (NS_ARGS)
-{
-  CHECK_NOARGS
-  if (tclctx->mqctx.config.master != NULL)
-    Tcl_SetObjResult(interp, (Tcl_Obj*)tclctx->mqctx.config.master->self);
-  else
-    Tcl_SetResult(interp, "", TCL_STATIC);
   RETURN_TCL
 }
 

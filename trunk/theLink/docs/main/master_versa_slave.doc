@@ -24,22 +24,14 @@ can be a \server_context because only one server per node is possible.
              | ** master/slave link ** |
 
 
-    node-0   |          node-1         |      node-3
+    node-0   |          node-1/2       |      node-3/4/5
 ============ | ======================= | ========================
 
                          |- client1-0 -|- server3 ...
-                         |
-                         |                    node-4/5/6 ...
-             |- server1 -|               ========================
-             |           |
-             |           |             |- server4 ...
-  client0-0 -|           |- client1-1 -|- server5 ...
-             |                         |- server6
+             |- server1 -|
+  client0-0 -|           |- client1-1 -|- server4 ...
              |
-             |          node-2                node-7
-             | ======================= | ========================
-             |
-             |- server2 -|- client2-0 -|- server7 ...
+             |- server2 -|- client2-0 -|- server5 ...
 \endverbatim
 
 \section master_detail What is a "master" context ?

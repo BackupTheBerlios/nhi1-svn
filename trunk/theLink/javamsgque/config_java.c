@@ -130,15 +130,6 @@ GetI(ConfigGetDebug)
 GetO(ConfigGetIsString)
 GetO(ConfigGetIsSilent)
 GetO(ConfigGetIsServer)
-GetO(ConfigGetIsSlave)
-
-JNIEXPORT jobject JNICALL NS(ConfigGetMaster) (
-  JNIEnv    *env, 
-  jobject   self
-)
-{
-  return (CONTEXT->config.master == NULL ? NULL : ((jobject)CONTEXT->config.master->self));
-}
 
 GetI(ConfigGetBuffersize)
 GetW(ConfigGetTimeout)

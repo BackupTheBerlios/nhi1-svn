@@ -12,7 +12,8 @@
 
 package javamsgque;
 
-/// \sameas{#MqConfigSetServerCleanup}
+/// \ingroup Mq_Config_Java_API
+/// \api #MqConfigSetServerCleanup
 public interface IServerCleanup {
   void ServerCleanup () throws MqSException ;
 }

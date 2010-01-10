@@ -1,0 +1,141 @@
+.TH "Mq_Slave_CC_API" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Slave_CC_API \- create and manage a slave context   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "MqC * \fBccmsgque::MqC::SlaveGet\fP (const int id)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.ti -1c
+.RI "MqC * \fBccmsgque::MqC::SlaveGetMaster\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.ti -1c
+.RI "bool \fBccmsgque::MqC::SlaveIs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveCreate\fP (const int id, MqC *const slave)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveWorker\fP (const int id, struct \fBMqBufferLS\fP *args=NULL)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveWorkerVC\fP (const int id, int const argc, \fBMQ_CST\fP *argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveWorkerVA\fP (const int id, va_list ap)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveWorkerV\fP (const int id,...)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveWorkerVT\fP (const int id, vector< \fBMQ_CST\fP > &args)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SlaveDelete\fP (const int id)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage a slave context  
+
+create and manage a slave context 
+.PP
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
+.PP
+The \fImaster-slave-link\fP is used to perform the following tasks:
+.IP "\(bu" 2
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
+.IP "\(bu" 2
+to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
+.IP "\(bu" 2
+to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
+.PP
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
+.PP
+.PP
+.nf
+
+    node-0   |           node-1/2        |   node-3/4/5
+===================================================================
+
+| <- client/server link -> | <- client/server link -> |
+
+             | <-- master/slave link --> |
+
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
+.fi
+.PP
+  
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqC::SlaveCreate (const int id, \fBMqC\fP *const  slave)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
+.PP
+Definition at line 719 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SlaveDelete (const int id)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
+.PP
+Definition at line 748 of file ccmsgque.h.
+.SS "MqC* ccmsgque::MqC::SlaveGet (const int id)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
+.PP
+Definition at line 702 of file ccmsgque.h.
+.SS "MqC* ccmsgque::MqC::SlaveGetMaster ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP 
+.PP
+Definition at line 708 of file ccmsgque.h.
+.SS "bool ccmsgque::MqC::SlaveIs ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
+.PP
+Definition at line 714 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SlaveWorker (const int id, struct \fBMqBufferLS\fP * args = \fCNULL\fP)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
+.PP
+Definition at line 725 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SlaveWorkerV (const int id,  ...)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
+.PP
+.SS "void ccmsgque::MqC::SlaveWorkerVA (const int id, va_list ap)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
+.PP
+Definition at line 735 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SlaveWorkerVC (const int id, int const  argc, \fBMQ_CST\fP * argv)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
+.PP
+Definition at line 730 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SlaveWorkerVT (const int id, vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
+.PP
+Definition at line 743 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

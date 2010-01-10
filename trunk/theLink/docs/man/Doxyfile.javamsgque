@@ -18,8 +18,6 @@
 ENABLED_SECTIONS    += JAVA
 EXAMPLE_PATH	    += $(SRCDIR)/example/java
 
-TAGFILES            += $(DOCDIR)/../javamsgque_public/javamsgque_public.tag=../javamsgque_public
-
 ALIASES		    += "self=javamsgque"
 ALIASES		    += "selftut=javamsgquetut"
 ALIASES		    += "NS{1}=java_\1"
@@ -54,92 +52,92 @@ MqS.Init(\"java\", \"myExecutable\", \"myFirstArgument\"); \n\
 \e package-loading. -> This <B>have to be used</B> to use the features from above."
 
 ALIASES		    += "config_type_buffersize=int"
-ALIASES		    += "config_set_buffersize=#ConfigSetBuffersize"
-ALIASES		    += "config_get_buffersize=#ConfigGetBuffersize"
+ALIASES		    += "config_set_buffersize=#javamsgque.MqS.ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#javamsgque.MqS.ConfigGetBuffersize"
 
 ALIASES		    += "config_type_debug=int"
-ALIASES		    += "config_set_debug=#ConfigSetDebug"
-ALIASES		    += "config_get_debug=#ConfigGetDebug"
+ALIASES		    += "config_set_debug=#javamsgque.MqS.ConfigSetDebug"
+ALIASES		    += "config_get_debug=#javamsgque.MqS.ConfigGetDebug"
 
 ALIASES		    += "config_type_timeout=long"
-ALIASES		    += "config_set_timeout=#ConfigSetTimeout"
-ALIASES		    += "config_get_timeout=#ConfigGetTimeout"
+ALIASES		    += "config_set_timeout=#javamsgque.MqS.ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#javamsgque.MqS.ConfigGetTimeout"
 
 ALIASES		    += "config_type_name=String"
-ALIASES		    += "config_set_name=#ConfigSetName"
-ALIASES		    += "config_get_name=#ConfigGetName"
+ALIASES		    += "config_set_name=#javamsgque.MqS.ConfigSetName"
+ALIASES		    += "config_get_name=#javamsgque.MqS.ConfigGetName"
 
 ALIASES		    += "config_type_srvname=String"
-ALIASES		    += "config_set_srvname=#ConfigSetSrvName"
-ALIASES		    += "config_get_srvname=#ConfigGetSrvName"
+ALIASES		    += "config_set_srvname=#javamsgque.MqS.ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#javamsgque.MqS.ConfigGetSrvName"
 
 ALIASES		    += "config_type_ident=String"
-ALIASES		    += "config_set_ident=#ConfigSetIdent"
-ALIASES		    += "config_get_ident=#ConfigGetIdent"
-ALIASES		    += "config_check_ident=#ConfigCheckIdent"
+ALIASES		    += "config_set_ident=#javamsgque.MqS.ConfigSetIdent"
+ALIASES		    += "config_get_ident=#javamsgque.MqS.ConfigGetIdent"
+ALIASES		    += "config_check_ident=#javamsgque.MqS.ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=boolean"
-ALIASES		    += "config_set_isSilent=#ConfigSetIsSilent"
-ALIASES		    += "config_get_isSilent=#ConfigGetIsSilent"
+ALIASES		    += "config_set_isSilent=#javamsgque.MqS.ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#javamsgque.MqS.ConfigGetIsSilent"
 
 ALIASES		    += "config_type_isString=boolean"
-ALIASES		    += "config_set_isString=#ConfigSetIsString"
-ALIASES		    += "config_get_isString=#ConfigGetIsString"
+ALIASES		    += "config_set_isString=#javamsgque.MqS.ConfigSetIsString"
+ALIASES		    += "config_get_isString=#javamsgque.MqS.ConfigGetIsString"
 
 ALIASES		    += "config_type_ignoreExit=boolean"
-ALIASES		    += "config_set_ignoreExit=#ConfigSetIgnoreExit"
+ALIASES		    += "config_set_ignoreExit=#javamsgque.MqS.ConfigSetIgnoreExit"
 ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_startAs=int"
-ALIASES		    += "config_set_startAs=#ConfigSetStartAs (startAs)"
-ALIASES		    += "config_get_startAs=#ConfigGetStartAs"
+ALIASES		    += "config_set_startAs=#javamsgque.MqS.ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#javamsgque.MqS.ConfigGetStartAs"
 
 ALIASES		    += "config_type_tcp=String"
-ALIASES		    += "config_set_tcp=#ConfigSetIoTcp (host, port, myhost, myport)"
-ALIASES		    += "config_get_tcp=#ConfigGetIoTcpHost/Port/MyHost/MyPort"
+ALIASES		    += "config_set_tcp=#javamsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#javamsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=String"
-ALIASES		    += "config_set_uds=#ConfigSetIoUds (file)"
-ALIASES		    += "config_get_uds=#ConfigGetIoUdsFile"
+ALIASES		    += "config_set_uds=#javamsgque.MqS.ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=#javamsgque.MqS.ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=#ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
 ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=boolean"
-ALIASES		    += "config_set_isServer=#ConfigSetIsServer"
-ALIASES		    += "config_get_isServer=#ConfigGetIsServer"
+ALIASES		    += "config_set_isServer=#javamsgque.MqS.ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=#javamsgque.MqS.ConfigGetIsServer"
 
 ALIASES		    += "config_type_isSlave=boolean"
 ALIASES		    += "config_set_isSlave=NO"
-ALIASES		    += "config_get_isSlave=#ConfigGetIsSlave"
+ALIASES		    += "config_get_isSlave=#javamsgque.MqS.ConfigGetIsSlave"
 
 ALIASES		    += "config_type_master=MqC"
 ALIASES		    += "config_set_master=\ref \NS{slave}"
-ALIASES		    += "config_get_master=#ConfigGetMaster"
+ALIASES		    += "config_get_master=#javamsgque.MqS.ConfigGetMaster"
 
-ALIASES             += "config_IServerSetup=IServerSetup.ServerSetup()"
-ALIASES		    += "config_IServerCleanup=IServerCleanup.ServerCleanup()"
-ALIASES		    += "config_IFactory=MqS IFactory.Factory()"
-ALIASES             += "config_IBgError=IBgError.BgError()"
-ALIASES             += "config_IEvent=IEvent.Event()"
+ALIASES             += "config_IServerSetup=#javamsgque.IServerSetup.ServerSetup()"
+ALIASES		    += "config_IServerCleanup=#javamsgque.IServerCleanup.ServerCleanup()"
+ALIASES		    += "config_IFactory=MqS #javamsgque.IFactory.Factory()"
+ALIASES             += "config_IBgError=#javamsgque.IBgError.BgError()"
+ALIASES             += "config_IEvent=#javamsgque.IEvent.Event()"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(String... args)"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, String... args)"
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
-ALIASES		    += "LinkIsParent=boolean ctx.LinkIsParent()"
-ALIASES		    += "LinkIsConnected=boolean ctx.LinkIsConnected()"
-ALIASES		    += "LinkGetCtxId=int ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsParent=\O ctx.LinkIsParent()"
+ALIASES		    += "LinkIsConnected=\O ctx.LinkIsConnected()"
+ALIASES		    += "LinkGetCtxId=\I ctx.LinkGetCtxId()"
 ALIASES		    += "Exit=ctx.Exit()"
 
 # SEND DATA
@@ -159,13 +157,13 @@ ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
 # READ DATE
 ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
 
-ALIASES		    += "ReadTYPE=byte ctx.ReadTYPE()"
-ALIASES		    += "ReadN=byte[] ctx.ReadN()"
-ALIASES		    += "ReadBDY=byte[] ctx.ReadBDY()"
-ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadN=\B ctx.ReadN()"
+ALIASES		    += "ReadBDY=\B ctx.ReadBDY()"
+ALIASES		    += "ReadU=\U ctx.ReadU()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
-ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=boolean ctx.ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=\I ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=\O ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START()"
 ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
@@ -183,11 +181,11 @@ ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, IService callback
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(String token, [int id=0])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(String token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
-ALIASES		    += "MQ_WAIT_NO=#MqS.WAIT.NO"
-ALIASES		    += "MQ_WAIT_ONCE=#MqS.WAIT.ONCE"
-ALIASES		    += "MQ_WAIT_FOREVER=#MqS.WAIT.FOREVER"
-ALIASES		    += "ServiceGetToken=String ctx.ServiceGetToken()"
-ALIASES		    += "ServiceIsTransaction=boolean ctx.ServiceIsTransaction()"
+ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
+ALIASES		    += "ServiceGetToken=\C ctx.ServiceGetToken()"
+ALIASES		    += "ServiceIsTransaction=\O ctx.ServiceIsTransaction()"
 ALIASES		    += "ServiceGetFilter=MqS ctx.ServiceGetFilter([int id=0])"
 
 # SLAVE CREATION AND DELETION
@@ -196,6 +194,8 @@ ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"-
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
 ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=\O ctx.SlaveIs()"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
