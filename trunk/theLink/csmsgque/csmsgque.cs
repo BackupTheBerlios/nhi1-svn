@@ -31,8 +31,10 @@ using System.Security.Permissions;
 [assembly:CLSCompliantAttribute(true)]
 [assembly:SecurityPermission(SecurityAction.RequestMinimum, UnmanagedCode = true)]
 
-
-/// \brief \libmsgque interface for C#
+/// \defgroup Mq_Cs_API Mq_Cs_API
+/// \brief \copybrief Mq_C_API
+/// \details \copydetails Mq_C_API
+/// \{
 namespace csmsgque {
 
 #if _DEBUG
@@ -68,36 +70,6 @@ namespace csmsgque {
   }
 #endif // _DEBUG
 
-  /// \api #MqConfigSetServerSetup 
-  public interface IServerSetup {
-    void Call();
-  }
-
-  /// \api #MqConfigSetServerCleanup 
-  public interface IServerCleanup {
-    void Call();
-  }
-
-  /// \api #MqConfigSetFactory 
-  public interface IFactory {
-    MqS Call();
-  }
-
-  /// \api #MqConfigSetBgError 
-  public interface IBgError {
-    void Call();
-  }
-
-  /// \api #MqConfigSetEvent 
-  public interface IEvent {
-    void Call();
-  }
-
-  /// \api #MqServiceCreate
-  public interface IService {
-    void Call(MqS ctx);
-  }
-
   internal enum MqErrorE :int {
     MQ_OK,
     MQ_CONTINUE,
@@ -119,33 +91,20 @@ namespace csmsgque {
     MQ_YES    = 1
   };
 
-  /// Main \libmsgque class
+  /// \ingroup Mq_Context_Cs_API
+  /// \api #MqS
   public partial class MqS
   {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqInitCreate")]
     private static extern IntPtr MqInitCreate();
 
-    /// \api #MqInitCreate
-    protected static void Init(params string[] argv) {
-      IntPtr initB = MqInitCreate();
-      foreach (string s in argv) {
-	MqBufferLAppendC(initB, s);
-      }
-    }
-
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
     private const string MSGQUE_DLL = "libmsgque";
     private static string APP = Assembly.GetEntryAssembly().Location;
 
-    static MqS() {
-      IntPtr initB = MqInitCreate();
-      if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
-      MqBufferLAppendC(initB, APP);
-    }
-
-     private IntPtr context;
+    private IntPtr context;
 
     /// save delegate to protect again deleting
     static private MqExitF	    fProcessExit	= ProcessExit;
@@ -157,59 +116,9 @@ namespace csmsgque {
 
   /*****************************************************************************/
   /*                                                                           */
-  /*                         default enums and types                           */
-  /*                                                                           */
-  /*****************************************************************************/
-
-    /// \api #MqWaitOnEventE flags for #MqProcessEvent
-    public enum WAIT {
-      NO      = 0,
-      ONCE    = 1,
-      FOREVER = 2,
-    };
-
-  /*****************************************************************************/
-  /*                                                                           */
   /*                            context management                             */
   /*                                                                           */
   /*****************************************************************************/
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextCreate")]
-    private static extern IntPtr MqContextCreate([In]int size, [In]IntPtr tmpl);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextDelete")]
-    private static extern void MqContextDelete([In,Out]ref IntPtr context);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExit")]
-    private static extern void MqExit([In]IntPtr context);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqProcessEvent")]
-    private static extern MqErrorE MqProcessEvent([In]IntPtr context, [In]long timeout, [In]int flag);
-
-    /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
-    public void ProcessEvent ( long timeout, WAIT wait) {
-      ErrorMqToCsWithCheck(MqProcessEvent(context, timeout, (int)wait));
-    }
-    /// \api #MqProcessEvent, wait application default time
-    public void ProcessEvent (WAIT wait) {
-      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)wait));
-    }
-    /// \api #MqProcessEvent, don't wait just check for an event
-    public void ProcessEvent () {
-      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)WAIT.NO));
-    }
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLogData")]
-    private static extern void MqLogData([In]IntPtr context, [In]string prefix);
-
-    public void LogData (string prefix) {
-      MqLogData (context, prefix);
-    }
-
-    /// \api #MqExit
-    public void Exit() {
-      MqExit (context);
-    }
 
     static private MqS GetSelf (IntPtr context) {
       return ((MqS)GCHandle.FromIntPtr(MqConfigGetSelf(context)).Target);
@@ -237,54 +146,9 @@ namespace csmsgque {
       MqContextDelete (ref GetSelf(context).context);
       GCHandle.FromIntPtr(self).Free();
     }
-
-    /// \brief default constructor used for the object factory
-    public MqS() {
-      context = MqContextCreate(0, IntPtr.Zero);
-    //DEBUG.P("context", context);
-      MqConfigSetSelf(context, (IntPtr) GCHandle.Alloc(this));
-      MqConfigSetIgnoreFork(context, MQ_BOL.MQ_YES);
-      MqConfigSetSetup(context, fDefaultLinkCreate, null, fDefaultLinkCreate, null, fProcessExit, fThreadExit);
-
-      if (this is IFactory) {
-	MqConfigSetFactory (context, 
-	  fFactoryCreate,  (IntPtr) GCHandle.Alloc(((IFactory) this)), fProcFree,  IntPtr.Zero,
-	  fFactoryDelete,  IntPtr.Zero,				      null,	  IntPtr.Zero);
-      } else {
-	MqConfigSetFactory (context, 
-	  null,		  IntPtr.Zero,				      null,	  IntPtr.Zero,
-	  fFactoryDelete,  IntPtr.Zero,				      null,	  IntPtr.Zero
-	);
-      }
-
-      if (this is IServerSetup) {
-	MqConfigSetServerSetup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerSetup) this).Call)), fProcFree, IntPtr.Zero);
-      }
-
-      if (this is IServerCleanup) {
-	MqConfigSetServerCleanup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerCleanup) this).Call)), fProcFree, IntPtr.Zero);
-      }
-
-      if (this is IBgError) {
-	MqConfigSetBgError (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IBgError) this).Call)), fProcFree, IntPtr.Zero);
-      }
-
-      if (this is IEvent) {
-	MqConfigSetEvent (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IEvent) this).Call)), fProcFree, IntPtr.Zero);
-      }
-    }
-
-    /// \brief default destructor
-    ~MqS() {
-//DEBUG.P("context", context);
-      MqContextDelete(ref context);
-    }
   } // END - class "MqS"
 } // END - namespace "csmsgque"
 
+/// \}
 
 

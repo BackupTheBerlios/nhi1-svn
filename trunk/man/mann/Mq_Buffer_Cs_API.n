@@ -1,0 +1,119 @@
+.TH "Mq_Buffer_Cs_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Buffer_Cs_API \- create and manage dynamic, generic, mixed typed data.   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBcsmsgque.MqBufferS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "char \fBcsmsgque::MqBufferS.Type\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetType\fP "
+.ti -1c
+.RI "byte \fBcsmsgque::MqBufferS.Y\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqBufferS.O\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP "
+.ti -1c
+.RI "short \fBcsmsgque::MqBufferS.S\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqBufferS.I\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP "
+.ti -1c
+.RI "float \fBcsmsgque::MqBufferS.F\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP "
+.ti -1c
+.RI "long \fBcsmsgque::MqBufferS.W\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP "
+.ti -1c
+.RI "double \fBcsmsgque::MqBufferS.D\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP "
+.ti -1c
+.RI "byte[] \fBcsmsgque::MqBufferS.B\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqBufferS.C\fP\fC [get]\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage dynamic, generic, mixed typed data.  
+
+The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data in a \fBMqBufferU\fP storage. If \fBlibmsgque\fP is working on any kind of data it is working on \fBMqBufferS\fP objects or on a list of \fBMqBufferS\fP objects called \fBMqBufferLS\fP.  
+.SH "Properties"
+.PP 
+.SS "byte [] csmsgque.MqBufferS.B\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP 
+.PP
+Definition at line 157 of file buffer.cs.
+.SS "string csmsgque.MqBufferS.C\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP 
+.PP
+Definition at line 167 of file buffer.cs.
+.SS "double csmsgque.MqBufferS.D\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP 
+.PP
+Definition at line 150 of file buffer.cs.
+.SS "float csmsgque.MqBufferS.F\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP 
+.PP
+Definition at line 136 of file buffer.cs.
+.SS "int csmsgque.MqBufferS.I\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP 
+.PP
+Definition at line 129 of file buffer.cs.
+.SS "bool csmsgque.MqBufferS.O\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP 
+.PP
+Definition at line 115 of file buffer.cs.
+.SS "short csmsgque.MqBufferS.S\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP 
+.PP
+Definition at line 122 of file buffer.cs.
+.SS "char csmsgque.MqBufferS.Type\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetType\fP 
+.PP
+Definition at line 103 of file buffer.cs.
+.SS "long csmsgque.MqBufferS.W\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP 
+.PP
+Definition at line 143 of file buffer.cs.
+.SS "byte csmsgque.MqBufferS.Y\fC [get, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP 
+.PP
+Definition at line 108 of file buffer.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

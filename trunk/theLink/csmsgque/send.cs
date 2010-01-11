@@ -24,6 +24,12 @@ namespace csmsgque {
 public partial class MqS
 {
 
+/// \defgroup Mq_Send_Cs_API Mq_Send_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Send_C_API
+/// \details \copydetails Mq_Send_C_API
+/// \{
+
   // PRIVAT
 
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendSTART")]
@@ -183,20 +189,12 @@ public partial class MqS
   public void SendL_END() {
     ErrorMqToCsWithCheck(MqSendL_END(context));
   }
+
+/// \} Mq_Send_Cs_API
+
+// END - Class MqS
 }
 
 // END - NameSpace csmsgque
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

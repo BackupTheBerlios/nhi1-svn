@@ -12,7 +12,7 @@
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                   read                                    */
+/*                                  buffer                                   */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -21,9 +21,25 @@ using System.Runtime.InteropServices;
 
 namespace csmsgque {
 
+  public partial class MqS
+  {
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferLCreate")]
+    private static extern IntPtr MqBufferLCreate([In]int num);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferLAppendC")]
+    private static extern void MqBufferLAppendC([In]IntPtr bufL, [In,MarshalAs(UnmanagedType.LPStr)]string val);
+  }
+
+  /// \ingroup Mq_Buffer_Cs_API
   /// \api #MqBufferS
   public class MqBufferS
   {
+
+/// \defgroup Mq_Buffer_Cs_API Mq_Buffer_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Buffer_C_API
+/// \details \copydetails Mq_Buffer_C_API
+/// \{
+
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
     private const string MSGQUE_DLL = "libmsgque";
@@ -154,7 +170,8 @@ namespace csmsgque {
       return Marshal.PtrToStringAnsi(outV);
     }}
 
+/// \} Mq_Buffer_Cs_API
+
   } // END - class "MqBufferS"
 } // END - namespace "csmsgque"
-
 

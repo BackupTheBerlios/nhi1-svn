@@ -363,7 +363,7 @@ MqSlaveIs (
   struct MqS const * const context
 )
 {
-  return MqSlaveIs(context);
+  return MqSlaveIsI(context);
 }
 
 END_C_DECLS

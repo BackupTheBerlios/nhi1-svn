@@ -22,7 +22,8 @@ using System.Runtime.Serialization;
 
 namespace csmsgque {
 
-  /// \brief a C# error class wrapper for the \e MqErrorS struct
+  /// \ingroup Mq_Error_Cs_API
+  /// \api #MqErrorS
   public class MqSException : Exception
   {
     private int		  p_num;
@@ -67,6 +68,13 @@ namespace csmsgque {
 
   public partial class MqS
   {
+
+/// \defgroup Mq_Error_Cs_API Mq_Error_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Error_C_API
+/// \details \copydetails Mq_Error_C_API
+/// \{
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorGetText")]
     private static extern IntPtr MqErrorGetText(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorGetNum")]
@@ -95,30 +103,37 @@ namespace csmsgque {
       throw ex;
     }
 
+    /// \api #MqErrorC
     public void ErrorC(string proc, int num, string message) {
       MqErrorC(context, proc, num, message);
     }
 
+    /// \api #MqErrorSetCONTINUE
     public void ErrorSetCONTINUE() {
       MqErrorSetCONTINUE(context);
     }
 
+    /// throw an #csmsgque.MqSException with the data from #MqErrorS
     public void ErrorRaise() {
       ErrorMqToCsWithCheck(MqErrorGetCode(context));
     }
 
+    /// \api #MqErrorReset
     public void ErrorReset() {
       MqErrorReset(context);
     }
 
+    /// \api #MqErrorPrint
     public void ErrorPrint() {
       MqErrorPrint (context);
     }
 
+    /// \api #MqErrorGetNum
     public int ErrorGetNum() {
       return MqErrorGetNum(context);
     }
 
+    /// \api #MqErrorGetText
     public string ErrorGetText() {
       return Marshal.PtrToStringAnsi(MqErrorGetText(context));
     }
@@ -133,12 +148,12 @@ namespace csmsgque {
       return MqErrorGetCode (context);
     }
 
+    /// \api #MqErrorSet
     public void ErrorSet(Exception ex) {
       MqErrorSet2 (context, ex);
     }
+
+/// \} Mq_Error_Cs_API
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
-
-
-
-

@@ -132,15 +132,19 @@ PyObject* NS(ServiceGetFilter)	      ( PyObject*, PyObject* );
 
 // from slave_python.c
 
-PyObject* NS(SlaveWorker)	    ( PyObject*, PyObject*  );
-PyObject* NS(SlaveCreate)	    ( PyObject*, PyObject*  );
-PyObject* NS(SlaveDelete)	    ( PyObject*, PyObject*  );
-PyObject* NS(SlaveGet)		    ( PyObject*, PyObject*  );
+PyObject* NS(SlaveWorker)	      ( PyObject*, PyObject*  );
+PyObject* NS(SlaveCreate)	      ( PyObject*, PyObject*  );
+PyObject* NS(SlaveDelete)	      ( PyObject*, PyObject*  );
+PyObject* NS(SlaveGet)		      ( PyObject*, PyObject*  );
+PyObject* NS(SlaveIs)		      ( PyObject* );
+PyObject* NS(SlaveGetMaster)	      ( PyObject* );
 
-#define SlaveWorker_DOC	    "[id, worker arguments] Create a new worker using arguments"
-#define SlaveCreate_DOC	    "[id, slave-context] Create a new master/slave link"
-#define SlaveDelete_DOC	    "[id] Delete slave of id"
-#define SlaveGet_DOC	    "[id] Return slave-context of id"
+#define SlaveWorker_DOC		      "[id, worker arguments] Create a new worker using arguments"
+#define SlaveCreate_DOC		      "[id, slave-context] Create a new master/slave link"
+#define SlaveDelete_DOC		      "[id] Delete slave of id"
+#define SlaveGet_DOC		      "[id] Return slave-context of id"
+#define SlaveIs_DOC		      "[noARG] boolean, 'True' if the object belongs to a 'slave'."
+#define SlaveGetMaster_DOC	      "[noARG] return the PyMqS 'master' object of the 'current' object."
 
 // from service_python.c
 
@@ -212,7 +216,6 @@ PyObject* NS(ConfigGetBuffersize)     ( PyObject* );
 PyObject* NS(ConfigGetIsString)	      ( PyObject* );
 PyObject* NS(ConfigGetIsSilent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
-PyObject* NS(ConfigGetIsSlave)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
 PyObject* NS(ConfigGetIdent)	      ( PyObject* );
@@ -224,7 +227,6 @@ PyObject* NS(ConfigGetIoTcpMyPort)    ( PyObject* );
 PyObject* NS(ConfigGetIoPipeSocket)   ( PyObject* );
 PyObject* NS(ConfigGetStartAs)	      ( PyObject* );
 PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
-PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 
 
 #define ConfigSetBuffersize_DOC	    "[bytes]"
@@ -251,7 +253,6 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetIsString_DOC	    "[noARG] boolean, 'True' if the object is using the 'string' configuration."
 #define ConfigGetIsSilent_DOC	    "[noARG] boolean, 'True' if the object is using the 'silent' configuration."
 #define ConfigGetIsServer_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'server'."
-#define ConfigGetIsSlave_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'slave'."
 #define ConfigGetDebug_DOC	    "[noARG] Return the debug level (int from 0 up to 9)."
 #define ConfigGetTimeout_DOC	    "[noARG] Return the user defined timeout is sec."
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
@@ -265,7 +266,6 @@ PyObject* NS(ConfigGetMaster)	      ( PyObject* );
 #define ConfigGetIoTcpMyPort_DOC    "[noARG] return the PyMqS 'tcp-myport-name' (str) of the object."
 #define ConfigGetIoPipeSocket_DOC   "[noARG] return the PyMqS 'pipe-socket-file-descriptor' (int) of the object."
 #define ConfigGetStartAs_DOC	    "[noARG] return the PyMqS 'start-kind-value' (int) of the object."
-#define ConfigGetMaster_DOC	    "[noARG] return the PyMqS 'master' object of the 'current' object."
 
 // from error_python.c
 
@@ -381,7 +381,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIsString,	METH_NOARGS),
     ARG(ConfigGetIsSilent,	METH_NOARGS),
     ARG(ConfigGetIsServer,	METH_NOARGS),
-    ARG(ConfigGetIsSlave,	METH_NOARGS),
+    ARG(SlaveIs,	METH_NOARGS),
     ARG(ConfigGetDebug,		METH_NOARGS),
     ARG(ConfigGetTimeout,	METH_NOARGS),
     ARG(ConfigGetBuffersize,	METH_NOARGS),
@@ -395,7 +395,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIoTcpMyPort,	METH_NOARGS),
     ARG(ConfigGetIoPipeSocket,	METH_NOARGS),
     ARG(ConfigGetStartAs,	METH_NOARGS),
-    ARG(ConfigGetMaster,	METH_NOARGS),
+    ARG(SlaveGetMaster,	METH_NOARGS),
 
     ARG(ErrorC,			METH_VARARGS),
     ARG(ErrorSet,		METH_NOARGS),
@@ -468,6 +468,8 @@ PyTypeObject NS(MqS) = {
   0,				  /* tp_alloc */
   NS(MqS_new),			  /* tp_new */
 };
+
+
 
 
 

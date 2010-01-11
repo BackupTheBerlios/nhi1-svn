@@ -754,6 +754,7 @@ MqLinkCreate (
     // alfa is allways owned by MqLinkCreate
     if (alfa != NULL) MqBufferLDelete(&alfa);
     MqSysFree(serverexec);
+    if (argv != NULL && argv->cursize == 0) MqBufferLDelete(argvP);
     return ret;
   }
 }

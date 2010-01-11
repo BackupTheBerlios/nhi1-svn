@@ -64,19 +64,19 @@ setup and maintain the link and is responsible for:\n
   </TR>
   <TR>  
     <TD>API Doc</TD> 
-    <TD>\ref libmsgque_public "YES"</TD>
-    <TD>\ref ccmsgque_public "YES"</TD>
-    <TD>\ref csmsgque_public "YES"</TD>
-    <TD>\ref javamsgque_public "YES"</TD>
+    <TD>\ref Mq_C_API "YES"</TD>
+    <TD>\ref Mq_CC_API "YES"</TD>
+    <TD>\ref Mq_Cs_API "YES"</TD>
+    <TD>\ref Mq_Java_API "YES"</TD>
     <TD>NO</TD>   
     <TD>NO</TD>
     <TD>NO</TD>
-    <TD>NO</TD>
+    <TD>\ref Mq_Cs_API "YES"</TD>
   </TR>
   <TR>  
     <TD>SOURCE Doc</TD> 
     <TD>\ref libmsgque_private "YES"</TD>
-    <TD>NO</TD>
+    <TD>\ref ccmsgque_private "YES"</TD>
     <TD>NO</TD>   
     <TD>\ref javamsgque_private "YES"</TD>
     <TD>\ref pymsgque_private "YES"</TD>

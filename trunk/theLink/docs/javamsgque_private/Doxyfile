@@ -15,12 +15,12 @@
 #---------------------------------------------------------------------------
 
 
-TAGFILES		=   $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque \
-			    $(DOCDIR)/../javamsgque/javamsgque.tag=javamsgque \
-			    $(DOCDIR)/../javamsgque_public/javamsgque_public.tag=javamsgque_public
-INPUT			= $(SRCDIR)/javamsgque .
-FILE_PATTERNS		= *.[ch] *.doc 
+INPUT			+= $(SRCDIR)/javamsgque .
+FILE_PATTERNS		+= *.doc *.java $(SRCDIR)/javamsgque/*.[ch]
 EXAMPLE_PATH		= . $(SRCDIR)/tests
+OPTIMIZE_OUTPUT_JAVA	= NO
 OPTIMIZE_OUTPUT_FOR_C	= YES
+STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/javamsgque
+STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque
 
-ALIASES		    += "javamsgque_private=\e javamsgque_private"
+ALIASES			+= "libmsgque=\ref Mq_C_API \"libmsgque\""

@@ -1,4 +1,4 @@
-.TH "Mq_Type_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -437,4 +437,4 @@ used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP 
 Definition at line 538 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

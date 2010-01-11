@@ -24,6 +24,12 @@ namespace csmsgque {
   public partial class MqS
   {
 
+/// \defgroup Mq_Slave_Cs_API Mq_Slave_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Slave_C_API
+/// \details \copydetails Mq_Slave_C_API
+/// \{
+
     // PRIVAT
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveWorker")]
@@ -34,10 +40,14 @@ namespace csmsgque {
     private  static extern MqErrorE MqSlaveDelete([In]IntPtr context, [In]int id);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveGet")]
     private  static extern IntPtr MqSlaveGet([In]IntPtr context, [In]int id);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveIs")]
+    private static extern bool MqSlaveIs([In]IntPtr context);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveGetMaster")]
+    private static extern IntPtr MqSlaveGetMaster([In]IntPtr context);
 
     // PUBLIC
 
-    /// \brief constructor used to create a \e worker object
+    /// \api MqSlaveWorker
     public void SlaveWorker(int master_id, params string[] argv) {
 
       // fill the argv/alfa
@@ -68,9 +78,19 @@ namespace csmsgque {
       return (slaveP == IntPtr.Zero ? null : GetSelf(slaveP));
     }
 
+    /// \api #MqSlaveIs
+    public bool	    SlaveIs()	    { 
+      return MqSlaveIs(context); 
+    }
+
+    /// \api #MqSlaveGetMaster
+    public MqS	    SlaveGetMaster()	    {
+      IntPtr masterP = MqSlaveGetMaster(context);
+      return (masterP == IntPtr.Zero ? null : GetSelf(masterP));
+    }
+
+/// \} Mq_Slave_Cs_API
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
-
-
-
 

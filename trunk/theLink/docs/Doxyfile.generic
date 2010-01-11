@@ -179,18 +179,15 @@ TAB_SIZE               = 8
 # will result in a user-defined paragraph with heading "Side Effects:". 
 # You can put \n's in the value part of an alias to insert newlines.
 
-ALIASES                = "libmsgque=\ref libmsgque_public \"libmsgque\"" \
-                         "libmsgque_public_desc=- The LibMsgque C-API Documentation" \
+ALIASES                = "libmsgque=\ref libmsgque" \
                          "libmsgque_private_desc=- The LibMsgque Source-Code Documentation" \
-                         "ccmsgque=\ref ccmsgque_public \"ccmsgque\"" \
-                         "ccmsgque_public_desc=- The CcMsgque C++-API Documentation" \
+                         "ccmsgque=\ref ccmsgque" \
                          "ccmsgque_private_desc=- The CcMsgque Source-Code Documentation" \
                          "tclmsgque=\ref tclmsgque" \
                          "tclmsgque_private_desc=- The Tclmsgque C-API Documentation" \
-                         "javamsgque=\ref javamsgque_public \"javamsgque\" " \
-                         "javamsgque_public_desc=- The LibMsgque Java-API Documentation" \
+                         "javamsgque=\ref javamsgque" \
                          "javamsgque_private_desc=- The JavaMsgque C-API Documentation" \
-                         "csmsgque=\ref csmsgque_public \"csmsgque\" " \
+                         "csmsgque=\ref csmsgque" \
                          "csmsgque_public_desc=- The LibMsgque C#-API Documentation" \
                          "pymsgque=\ref pymsgque" \
                          "pymsgque_private_desc=- The PyMsgque C-API Documentation" \

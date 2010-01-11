@@ -18,8 +18,6 @@
 ENABLED_SECTIONS    += CSHARP
 EXAMPLE_PATH	    += $(SRCDIR)/example/csharp
 
-TAGFILES            += $(DOCDIR)/../csmsgque_public/csmsgque_public.tag=../csmsgque_public
-
 ALIASES		    += "self=csmsgque"
 ALIASES		    += "selftut=csmsgquetut"
 ALIASES		    += "NS{1}=cs_\1"
@@ -52,73 +50,65 @@ MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
 \endcode"
 
 ALIASES		    += "config_type_buffersize=int"
-ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
-ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+ALIASES		    += "config_set_buffersize=#csmsgque.MqS.ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#csmsgque.MqS.ConfigGetBuffersize"
 
 ALIASES		    += "config_type_debug=int"
-ALIASES		    += "config_set_debug=ConfigSetDebug"
-ALIASES		    += "config_get_debug=ConfigGetDebug"
+ALIASES		    += "config_set_debug=#csmsgque.MqS.ConfigSetDebug"
+ALIASES		    += "config_get_debug=#csmsgque.MqS.ConfigGetDebug"
 
 ALIASES		    += "config_type_timeout=int"
-ALIASES		    += "config_set_timeout=ConfigSetTimeout"
-ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+ALIASES		    += "config_set_timeout=#csmsgque.MqS.ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#csmsgque.MqS.ConfigGetTimeout"
 
 ALIASES		    += "config_type_name=string"
-ALIASES		    += "config_set_name=ConfigSetName"
-ALIASES		    += "config_get_name=ConfigGetName"
+ALIASES		    += "config_set_name=#csmsgque.MqS.ConfigSetName"
+ALIASES		    += "config_get_name=#csmsgque.MqS.ConfigGetName"
 
 ALIASES		    += "config_type_srvname=string"
-ALIASES		    += "config_set_srvname=ConfigSetSrvName"
-ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+ALIASES		    += "config_set_srvname=#csmsgque.MqS.ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#csmsgque.MqS.ConfigGetSrvName"
 
 ALIASES		    += "config_type_ident=string"
-ALIASES		    += "config_set_ident=ConfigSetIdent"
-ALIASES		    += "config_get_ident=ConfigGetIdent"
-ALIASES		    += "config_check_ident=ConfigCheckIdent"
+ALIASES		    += "config_set_ident=#csmsgque.MqS.ConfigSetIdent"
+ALIASES		    += "config_get_ident=#csmsgque.MqS.ConfigGetIdent"
+ALIASES		    += "config_check_ident=#csmsgque.MqS.ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=bool"
-ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
-ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+ALIASES		    += "config_set_isSilent=#csmsgque.MqS.ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#csmsgque.MqS.ConfigGetIsSilent"
 
 ALIASES		    += "config_type_isString=bool"
-ALIASES		    += "config_set_isString=ConfigSetIsString"
-ALIASES		    += "config_get_isString=ConfigGetIsString"
+ALIASES		    += "config_set_isString=#csmsgque.MqS.ConfigSetIsString"
+ALIASES		    += "config_get_isString=#csmsgque.MqS.ConfigGetIsString"
 
 ALIASES		    += "config_type_ignoreExit=bool"
-ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_set_ignoreExit=#csmsgque.MqS.ConfigSetIgnoreExit"
 ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_startAs=int"
-ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
-ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "config_set_startAs=#csmsgque.MqS.ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#csmsgque.MqS.ConfigGetStartAs"
 
 ALIASES		    += "config_type_tcp=string"
-ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
-ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+ALIASES		    += "config_set_tcp=#csmsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#csmsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=string"
-ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
-ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+ALIASES		    += "config_set_uds=#csmsgque.MqS.ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=#csmsgque.MqS.ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#csmsgque.MqS.ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#csmsgque.MqS.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
 ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=bool"
-ALIASES		    += "config_set_isServer=ConfigSetIsServer"
-ALIASES		    += "config_get_isServer=ConfigGetIsServer"
-
-ALIASES		    += "config_type_isSlave=bool"
-ALIASES		    += "config_set_isSlave=NO"
-ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
-
-ALIASES		    += "config_type_master=MqS"
-ALIASES		    += "config_set_master=\ref \NS{slave}"
-ALIASES		    += "config_get_master=ConfigGetMaster"
+ALIASES		    += "config_set_isServer=#csmsgque.MqS.ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=#csmsgque.MqS.ConfigGetIsServer"
 
 ALIASES             += "config_IServerSetup=IServerSetup.Call()"
 ALIASES		    += "config_IServerCleanup=IServerCleanup.Call()"
@@ -191,6 +181,8 @@ ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"-
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
 ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=MqS ctx.SlaveIs()"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\

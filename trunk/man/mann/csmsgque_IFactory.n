@@ -1,0 +1,31 @@
+.TH "csmsgque::IFactory" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::IFactory \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqS\fP \fBCall\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP 
+.PP
+Definition at line 29 of file config.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBMqS\fP csmsgque.IFactory.Call ()"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

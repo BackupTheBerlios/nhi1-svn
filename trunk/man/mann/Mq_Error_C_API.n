@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -81,7 +81,7 @@ Mq_Error_C_API \- create and manage error messages.
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2, \fBMQ_EXIT\fP =  3 }"
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP, \fBMQ_CONTINUE\fP, \fBMQ_ERROR\fP, \fBMQ_EXIT\fP, \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2, \fBMQ_EXIT\fP =  3 }"
 .br
 .R "collection for the different error-codes "
 .in -1c
@@ -316,6 +316,14 @@ collection for the different error-codes
 .PP
 \fBEnumerator: \fP
 .in +1c
+.TP
+\fB\fIMQ_OK \fP\fP
+.TP
+\fB\fIMQ_CONTINUE \fP\fP
+.TP
+\fB\fIMQ_ERROR \fP\fP
+.TP
+\fB\fIMQ_EXIT \fP\fP
 .TP
 \fB\fIMQ_OK \fP\fP
 everything is OK, no error available (persistent) 
@@ -623,4 +631,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

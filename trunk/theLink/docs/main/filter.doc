@@ -55,16 +55,16 @@ To define a \e bi-directional filter a couple of commands provide support:
   - use this function to link the \e left context with the \e right context identified with
     the slave-identifier \e id (default: 0). No data manipulation is performed.
   .
- - \AllLngTxtC{filter,ConfigGetFilter}
+ - \AllLngTxt{ServiceGetFilter}
   - in a filter service the current context is used to \e read the data. To \e send the
     data an other context, belonging to the \e other site of the communication, have to be used.
     This function return the context of the other site.
   .
- - \AllLngTxtC{token,ConfigGetToken}
+ - \AllLngTxt{ServiceGetToken}
   - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
     token is not known. This function return the current token.
   .
- - \AllLngTxtC{isTransaction,ConfigGetIsTransaction}
+ - \AllLngTxt{ServiceIsTransaction}
   - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
     transaction-status is not known. This function return the transaction-status as boolean with 
     \b true (with-transaction) or \b false (without-transaction).

@@ -15,10 +15,11 @@
 #---------------------------------------------------------------------------
 
 
-TAGFILES		= $(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public
-INPUT			= $(SRCDIR)/csmsgque .
-FILE_PATTERNS		= *.doc *.cs
+INPUT			= $(SRCDIR)/csmsgque $(SRCDIR)/libmsgque .
+FILE_PATTERNS		= *.doc *.cs msgque.h
 EXAMPLE_PATH		= . $(SRCDIR)/tests $(SRCDIR)/example/csharp
 OPTIMIZE_OUTPUT_JAVA	= YES
 OPTIMIZE_OUTPUT_FOR_C	= NO
+STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/csmsgque
+STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque
 

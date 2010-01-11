@@ -1,0 +1,62 @@
+.TH "Mq_Context_Cs_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Context_Cs_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBcsmsgque.MqS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBcsmsgque::MqS.Exit\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "\fBcsmsgque::MqS.MqS\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
+
+The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+.PP
+.nf
+ struct MyCtxDataS {
+   struct MqS  mqctx;   // libmsgque-specific-data
+   int         mydata;  // application-specific-data
+   ...                  // application-specific-data
+ };
+
+.fi
+.PP
+ The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
+.br
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP.
+.PP
+The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a concept for the \fIapplication-specific-data\fP defined as \fIclass-member-data\fP.  
+.SH "Function Documentation"
+.PP 
+.SS "void csmsgque.MqS.Exit ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
+.PP
+Definition at line 68 of file context.cs.
+.SS "csmsgque.MqS.MqS ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
+.PP
+Definition at line 73 of file context.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

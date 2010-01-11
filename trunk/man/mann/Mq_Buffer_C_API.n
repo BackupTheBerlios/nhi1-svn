@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -330,21 +330,21 @@ a collection of all \fInative-data-types\fP supported
 .PP
 The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (byte)
+\fCY\fP : 1 byte signed character (Byte)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (boolean)
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (Boolean)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (short)
+\fCS\fP : 2 byte signed short (Short)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (int)
+\fCI\fP : 4 byte signed integer (Integer)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (long)
+\fCW\fP : 8 byte signed long long integer (Long)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (float)
+\fCF\fP : 4 byte float (Float)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (double)
+\fCD\fP : 8 byte double (Double)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (byte[])
+\fCB\fP : unsigned char array used for binary data (Byte())
 .IP "\(bu" 2
 \fCC\fP : string data using a \fC\\0\fP at the end (String)
 .IP "\(bu" 2
@@ -1239,4 +1239,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

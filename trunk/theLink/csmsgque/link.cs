@@ -13,18 +13,20 @@
 using System;
 using System.Runtime.InteropServices;
 
-/// \defgroup Mq_Link_Cs_API Mq_Link_Cs_API
-/// \{
-/// \copydoc Mq_Link_C_API
-
 namespace csmsgque {
 
   public partial class MqS
   {
+
+/// \defgroup Mq_Link_Cs_API Mq_Link_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Link_C_API
+/// \details \copydetails Mq_Link_C_API
+/// \{
   
   // PRIVATE
 
-    static private MqCreateF	    fDefaultLinkCreate  = MqDefaultLinkCreate;
+    static private MqCreateF	    fDefaultLinkCreate  = MqLinkDefault;
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkIsParent")]
     private static extern bool MqLinkIsParent([In]IntPtr context);
@@ -44,36 +46,36 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkCreateChild")]
     private static extern MqErrorE MqLinkCreateChild([In]IntPtr context, [In]IntPtr parent, [In,Out]ref IntPtr argv);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqDefaultLinkCreate")]
-    private static extern MqErrorE MqDefaultLinkCreate([In]IntPtr context, [In,Out]ref IntPtr argv);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkDefault")]
+    private static extern MqErrorE MqLinkDefault([In]IntPtr context, [In,Out]ref IntPtr argv);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkDelete")]
     private static extern void MqLinkDelete([In]IntPtr context);
 
   // PUBLIC
 
-    /// \copydoc MqLinkIsParent
+    /// \api #LinkIsParent
     public bool	    LinkIsParent()	    { 
       return MqLinkIsParent(context); 
     }
 
-    /// \copydoc MqLinkIsConnected
+    /// \api #LinkIsConnected
     public bool	    LinkIsConnected()	    { 
       return MqLinkIsConnected(context); 
     }
 
-    /// \copydoc MqLinkGetCtxId
+    /// \api #LinkGetCtxId
     public int	    LinkGetCtxId()	    { 
       return MqLinkGetCtxId(context); 
     }
 
-    /// \copydoc MqLinkGetParent
+    /// \api #LinkGetParent
     public MqS	    LinkGetParent()	    { 
       IntPtr parentP = MqLinkGetParent(context);
       return (parentP == IntPtr.Zero ? null : GetSelf(parentP));
     }
 
-    /// \copydoc MqLinkCreate
+    /// \api #LinkCreate
     public void LinkCreate(params string[] argv) {
 
       // fill the argv/alfa
@@ -90,7 +92,7 @@ namespace csmsgque {
       ErrorMqToCsWithCheck (MqLinkCreate(context, ref largv));
     }
 
-    /// \copydoc MqLinkCreateChild
+    /// \api #LinkCreateChild
     public void LinkCreateChild(MqS parent, params string[] argv) {
 
       // fill the argv/alfa
@@ -107,13 +109,14 @@ namespace csmsgque {
       ErrorMqToCsWithCheck (MqLinkCreateChild(context, parent.context, ref largv));
     }
 
-    /// \copydoc MqLinkDelete
+    /// \api #LinkDelete
     public void LinkDelete() {
       MqLinkDelete (context);
     }
 
+/// \} Mq_Link_Cs_API
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
 
-/// \} Mq_Link_Cs_API
 

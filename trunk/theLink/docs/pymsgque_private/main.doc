@@ -2,13 +2,6 @@
 
 \mainpage pymsgque \pymsgque_private_desc
 \anchor pymsgque_private
- - \ref pymsgque "man pymsgque(n)"
- .
 
 */
-
-/**
-\page server_py server.py
-\verbinclude server.py
-**/
 

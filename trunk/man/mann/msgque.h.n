@@ -1,8 +1,8 @@
-.TH "msgque.h" n "9 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "11 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -614,10 +614,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsSlave\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "does the \fIcontext\fP object is a \fIslave\fP ? "
-.ti -1c
 .RI "int \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIstring\fP ? "
@@ -657,10 +653,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .RI "\fBMQ_TIME_T\fP \fBMqConfigGetTimeout\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "get the \fItimeout\fP value of the \fIcontext\fP object "
-.ti -1c
-.RI "struct \fBMqS\fP * \fBMqConfigGetMaster\fP (struct \fBMqS\fP const *const context)"
-.br
-.R "get the \fImaster\fP value of the \fIconfig\fP object "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
@@ -718,13 +710,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .br
 .R "create a new context and initialize the default configuration data "
 .ti -1c
-.RI "void \fBMqContextDelete\fP (struct \fBMqS\fP **contextP)"
+.RI "void \fBMqContextDelete\fP (struct \fBMqS\fP **ctx)"
 .br
-.R "delete the entire \fBMqS\fP object "
+.R "delete the \fIcontext\fP "
 .ti -1c
-.RI "void \fBMqExit\fP (struct \fBMqS\fP *context)"
+.RI "void \fBMqExit\fP (struct \fBMqS\fP *ctx)"
 .br
-.R "exit the current process or thread "
+.R "delete the \fIcontext\fP and exit the current process or thread "
 .ti -1c
 .RI "\fBMQ_STR\fP \fBMqHelp\fP (\fBMQ_CST\fP tool)"
 .br
@@ -743,7 +735,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkDefault\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
-.R "helper: wrapper for \fBMqLinkCreate\fP or #\fBMqLinkCreateChild\fP with additional \fIerror-check\fP code "
+.R "helper: wrapper for \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP with additional \fIerror-check\fP code "
 .ti -1c
 .RI "void \fBMqLinkDelete\fP (struct \fBMqS\fP *const ctx)"
 .br
@@ -1366,7 +1358,21 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "get the slave context "
+.R "get the \fIslave-context\fP from a \fImaster-context\fP "
+.ti -1c
+.RI "struct \fBMqS\fP * \fBMqSlaveGetMaster\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the \fImaster-context\fP from the \fIslave-context\fP "
+.ti -1c
+.RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.ti -1c
+.RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "is the \fIcontext\fP a \fIslave-context\fP ? "
+.ti -1c
+.RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
+.br
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
@@ -1474,13 +1480,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 127 2010-01-08 15:34:29Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 127 $ 
+$Rev: 129 $ 
 .RE
 .PP
 \fBAuthor:\fP

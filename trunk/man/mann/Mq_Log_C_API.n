@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -303,4 +303,4 @@ the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

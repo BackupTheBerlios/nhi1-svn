@@ -371,17 +371,6 @@ PyObject* NS(ConfigGetIsServer) (
   }
 }
 
-PyObject* NS(ConfigGetIsSlave) (
-  PyObject    *self
-)
-{
-  if (ICONTEXT.config.master == NULL) {
-    Py_RETURN_FALSE;
-  } else {
-    Py_RETURN_TRUE;
-  }
-}
-
 PyObject* NS(ConfigGetIsSilent) (
   PyObject    *self
 )
@@ -485,17 +474,3 @@ PyObject* NS(ConfigSetDaemon) (
 error:
   return NULL;
 }
-
-PyObject* NS(ConfigGetMaster) (
-  PyObject  *self 
-)
-{
-  if (ICONTEXT.config.master == NULL) {
-    Py_RETURN_NONE;
-  } else {
-    PyObject *masterO = ((PyObject *)ICONTEXT.config.master->self);
-    Py_INCREF(masterO);
-    return masterO;
-  }
-}
-

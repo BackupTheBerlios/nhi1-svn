@@ -16,8 +16,8 @@
 
 TAGFILES            = 
 ENABLED_SECTIONS    += MAN
-INPUT               = .
-FILE_PATTERNS       = *.doc
+INPUT               =
+FILE_PATTERNS       = 
 EXAMPLE_PATH	    = $(SRCDIR)/tests
 STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque 
 STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque

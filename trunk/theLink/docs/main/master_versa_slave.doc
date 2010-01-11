@@ -37,7 +37,7 @@ can be a \server_context because only one server per node is possible.
 \section master_detail What is a "master" context ?
 
  - the \e master-context is a \parent_context without a \child_context available.
- - the \e master-context is a \client_context or a \ref \server_context.
+ - the \e master-context is a \client_context or a \server_context.
  - the \e master-context is responsible to create or delete the \child_context of the \e slave.
  - the \e master-context is responsible to delete the \parent_context of the \e slave.
  - the \e link between the \master_context and the \slave_context is done using the \libmsgque

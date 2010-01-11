@@ -33,7 +33,7 @@ namespace example {
 	return new Client();
       }
       virtual void BgError () {
-	MqC *master = ConfigGetMaster();
+	MqC *master = SlaveGetMaster();
 	if (master != NULL) {
 	  master->ErrorC ("BGERROR", ErrorGetNum(), ErrorGetText());
 	  master->SendERROR();
@@ -462,7 +462,7 @@ namespace example {
 	    ClientERR2 *slv = new ClientERR2();
 	    slv->LinkCreate(ConfigGetDebug());
 	  } else if (!strcmp(s,"isSlave")) {
-	    SendO(cl->ConfigGetIsSlave());
+	    SendO(cl->SlaveIs());
 	  }
 	SendRETURN();
       }
@@ -489,7 +489,7 @@ namespace example {
 	SendSTART();
 	SendO(ConfigGetIsServer());
 	SendO(LinkIsParent());
-	SendO(ConfigGetIsSlave());
+	SendO(SlaveIs());
 	SendO(ConfigGetIsString());
 	SendO(ConfigGetIsSilent());
 	SendO(LinkIsConnected());
@@ -634,7 +634,7 @@ namespace example {
       }
 
       void ServerSetup() {
-	if (ConfigGetIsSlave()) {
+	if (SlaveIs()) {
 	  // add "slave" services here
 	} else {
 	  MQ_BUF buf = GetTempBuffer();
@@ -715,4 +715,6 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server.Exit ();
 }
+
+
 

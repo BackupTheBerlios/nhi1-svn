@@ -31,21 +31,18 @@ EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $
 OUTPUT_DIRECTORY    =	$(DOCDIR)/..
 
 TAGFILES	    =	$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_private \
-			$(DOCDIR)/../libmsgque_public/libmsgque_public.tag=libmsgque_public \
 			$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 			\
 			$(DOCDIR)/../tclmsgque/tclmsgque.tag=tclmsgque \
 			$(DOCDIR)/../tclmsgque_private/tclmsgque_private.tag=tclmsgque_private \
 			\
 			$(DOCDIR)/../javamsgque/javamsgque.tag=javamsgque \
-			$(DOCDIR)/../javamsgque_public/javamsgque_public.tag=javamsgque_public \
 			$(DOCDIR)/../javamsgque_private/javamsgque_private.tag=javamsgque_private \
 			\
 			$(DOCDIR)/../csmsgque/csmsgque.tag=csmsgque \
-			$(DOCDIR)/../csmsgque_public/csmsgque_public.tag=csmsgque_public \
 			\
 			$(DOCDIR)/../ccmsgque/ccmsgque.tag=ccmsgque \
-			$(DOCDIR)/../ccmsgque_public/ccmsgque_public.tag=ccmsgque_public \
+			$(DOCDIR)/../ccmsgque_private/ccmsgque_private.tag=ccmsgque_private \
 			\
 			$(DOCDIR)/../pymsgque/pymsgque.tag=pymsgque \
 			$(DOCDIR)/../pymsgque_private/pymsgque_private.tag=pymsgque_private \
@@ -53,5 +50,6 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_pr
 			$(DOCDIR)/../perlmsgque/perlmsgque.tag=perlmsgque \
 			\
 			$(DOCDIR)/../vbmsgque/vbmsgque.tag=vbmsgque \
+
 			
 GENERATE_TAGFILE    =

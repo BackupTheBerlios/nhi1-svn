@@ -15,8 +15,58 @@ using System.Runtime.InteropServices;
 
 namespace csmsgque {
 
+  /// \api #MqConfigSetServerSetup 
+  public interface IServerSetup {
+    void Call();
+  }
+
+  /// \api #MqConfigSetServerCleanup 
+  public interface IServerCleanup {
+    void Call();
+  }
+
+  /// \api #MqConfigSetFactory 
+  public interface IFactory {
+    MqS Call();
+  }
+
+  /// \api #MqConfigSetBgError 
+  public interface IBgError {
+    void Call();
+  }
+
+  /// \api #MqConfigSetEvent 
+  public interface IEvent {
+    void Call();
+  }
+
+  /// \api #MqServiceCreate
+  public interface IService {
+    void Call(MqS ctx);
+  }
+
   public partial class MqS
   {
+
+/// \defgroup Mq_Config_Cs_API Mq_Config_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Config_C_API
+/// \details \copydetails Mq_Config_C_API
+/// \{
+
+    static MqS() {
+      IntPtr initB = MqInitCreate();
+      if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
+      MqBufferLAppendC(initB, APP);
+    }
+
+    /// \api #MqInitCreate
+    protected static void Init(params string[] argv) {
+      IntPtr initB = MqInitCreate();
+      foreach (string s in argv) {
+	MqBufferLAppendC(initB, s);
+      }
+    }
   
   // SET - PRIVATE
 
@@ -102,38 +152,47 @@ namespace csmsgque {
 
   // PUBLIC
 
+    /// \api #MqConfigSetName
     public void   ConfigSetName		(string data) { MqConfigSetName		(context, data); }
+    /// \api #MqConfigSetSrvName
     public void   ConfigSetSrvName	(string data) { MqConfigSetSrvName	(context, data); }
+    /// \api #MqConfigSetIdent
     public void   ConfigSetIdent	(string data) { MqConfigSetIdent	(context, data); }
+    /// \api #MqConfigCheckIdent
     public bool   ConfigCheckIdent	(string data) { return MqConfigCheckIdent (context, data); }
+    /// \api #MqConfigSetBuffersize
     public void	  ConfigSetBuffersize	(int data)    { MqConfigSetBuffersize	(context, data); }
+    /// \api #MqConfigSetDebug
     public void	  ConfigSetDebug	(int data)    { MqConfigSetDebug	(context, data); }
+    /// \api #MqConfigSetTimeout
     public void	  ConfigSetTimeout	(long data)   { MqConfigSetTimeout	(context, data); }
+    /// \api #MqConfigSetIsSilent
     public void	  ConfigSetIsSilent	(bool data)   { MqConfigSetIsSilent	(context, data?MQ_BOL.MQ_YES:MQ_BOL.MQ_NO); }
+    /// \api #MqConfigSetIsServer
     public void	  ConfigSetIsServer	(bool data)   { MqConfigSetIsServer	(context, data?MQ_BOL.MQ_YES:MQ_BOL.MQ_NO); }
+    /// \api #MqConfigSetIsString
     public void	  ConfigSetIsString	(bool data)   { MqConfigSetIsString	(context, data?MQ_BOL.MQ_YES:MQ_BOL.MQ_NO); }
+    /// \api #MqConfigSetIgnoreExit
     public void	  ConfigSetIgnoreExit	(bool data)   { MqConfigSetIgnoreExit	(context, data?MQ_BOL.MQ_YES:MQ_BOL.MQ_NO); }
+    /// \api #MqConfigSetIoTcp
     public void   ConfigSetIoTcp	(string host, string port, string myhost, string myport) { 
       ErrorMqToCsWithCheck (MqConfigSetIoTcp (context, host, port, myhost, myport)); 
     }
+    /// \api #MqConfigSetIoUds
     public void   ConfigSetIoUds	(string data) { 
       ErrorMqToCsWithCheck (MqConfigSetIoUds (context, data));
     }
+    /// \api #MqConfigSetIoPipe
     public void   ConfigSetIoPipe	(int data)    { 
       ErrorMqToCsWithCheck (MqConfigSetIoPipe (context, data)); 
     }
+    /// \api #MqConfigSetStartAs
     public void   ConfigSetStartAs	(int data)    { MqConfigSetStartAs	(context, data); }
 
   // PRIVATE
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsServer")]
     private static extern bool MqConfigGetIsServer([In]IntPtr context);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsFilter")]
-    private static extern bool MqConfigGetIsFilter([In]IntPtr context);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsSlave")]
-    private static extern bool MqConfigGetIsSlave([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsString")]
     private static extern bool MqConfigGetIsString([In]IntPtr context);
@@ -146,9 +205,6 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetDebug")]
     private static extern int MqConfigGetDebug([In]IntPtr context);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetMaster")]
-    private static extern IntPtr MqConfigGetMaster([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetSelf")]
     private static extern IntPtr MqConfigGetSelf([In]IntPtr context);
@@ -188,34 +244,41 @@ namespace csmsgque {
 
   // PUBLIC
 
+    /// \api #MqConfigGetIsServer
     public bool	    ConfigGetIsServer()	    { return MqConfigGetIsServer(context); }
-    public bool	    ConfigGetIsFilter()     { return MqConfigGetIsFilter(context); }
-    public bool	    ConfigGetIsSlave()	    { return MqConfigGetIsSlave(context); }
+    /// \api #MqConfigGetIsString
     public bool	    ConfigGetIsString()     { return MqConfigGetIsString(context); }
+    /// \api #MqConfigGetIsSilent
     public bool	    ConfigGetIsSilent()     { return MqConfigGetIsSilent(context); }
+    /// \api #MqConfigGetName
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
+    /// \api #MqConfigGetSrvName
     public string   ConfigGetSrvName()	    { return Marshal.PtrToStringAnsi(MqConfigGetSrvName(context)); }
+    /// \api #MqConfigGetIdent
     public string   ConfigGetIdent()	    { return Marshal.PtrToStringAnsi(MqConfigGetIdent(context)); }
+    /// \api #MqConfigGetDebug
     public int	    ConfigGetDebug()	    { return MqConfigGetDebug(context); }
+    /// \api #MqConfigGetTimeout
     public long	    ConfigGetTimeout()	    { return MqConfigGetTimeout(context); }
+    /// \api #MqConfigGetBuffersize
     public int	    ConfigGetBuffersize()   { return MqConfigGetBuffersize(context); }
+    /// \api #MqConfigGetIoTcpHost
     public string   ConfigGetIoTcpHost()    { return Marshal.PtrToStringAnsi(MqConfigGetIoTcpHost(context)); }
+    /// \api #MqConfigGetIoTcpPort
     public string   ConfigGetIoTcpPort()    { return Marshal.PtrToStringAnsi(MqConfigGetIoTcpPort(context)); }
+    /// \api #MqConfigGetIoTcpMyHost
     public string   ConfigGetIoTcpMyHost()  { return Marshal.PtrToStringAnsi(MqConfigGetIoTcpMyHost(context)); }
+    /// \api #MqConfigGetIoTcpMyPort
     public string   ConfigGetIoTcpMyPort()  { return Marshal.PtrToStringAnsi(MqConfigGetIoTcpMyPort(context)); }
+    /// \api #MqConfigGetIoUdsFile
     public string   ConfigGetIoUdsFile()    { return Marshal.PtrToStringAnsi(MqConfigGetIoUdsFile(context)); }
+    /// \api #MqConfigGetIoPipeSocket
     public int	    ConfigGetIoPipeSocket() { return MqConfigGetIoPipeSocket(context); }
+    /// \api #MqConfigGetStartAs
     public int	    ConfigGetStartAs()	    { return MqConfigGetStartAs(context); }
 
-    public MqS	    ConfigGetMaster()	    {
-      IntPtr masterP = MqConfigGetMaster(context);
-      return (masterP == IntPtr.Zero ? null : GetSelf(masterP));
-    }
+/// \}
 
   } // END - class "MqS"
 } // END - namespace "csmsgque"
-
-
-
-
 

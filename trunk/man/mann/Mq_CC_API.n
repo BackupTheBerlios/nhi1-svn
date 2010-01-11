@@ -1,4 +1,4 @@
-.TH "Mq_CC_API" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,10 +9,20 @@ Mq_CC_API \-
 .ti -1c
 .RI "namespace \fBccmsgque\fP"
 .br
+.R "The CcMsgque Libraray. "
+.PP
+
 .in -1c
 .SS "Modules"
 
 .in +1c
+.ti -1c
+.RI "\fBMq_Buffer_CC_API\fP"
+.br
+.R "create and manage dynamic, generic, mixed typed data.  "
+.PP
+.in +1c
+
 .ti -1c
 .RI "\fBMq_Config_CC_API\fP"
 .br

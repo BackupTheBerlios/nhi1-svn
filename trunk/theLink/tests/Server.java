@@ -25,7 +25,7 @@ final class Client extends MqS implements ICallback, IFactory, IBgError {
   }
 
   public void BgError () throws MqSException {
-    MqS master = ConfigGetMaster();
+    MqS master = SlaveGetMaster();
     if (master != null) {
       master.ErrorC ("BGERROR", ErrorGetNum(), ErrorGetText());
       master.SendERROR ();
@@ -90,7 +90,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
   }
 
   public void ServerSetup() throws MqSException {
-    if (ConfigGetIsSlave()) {
+    if (SlaveIs()) {
       // add "slave" services here
     } else {
       // setup data
@@ -268,7 +268,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ctx.SendSTART();
       ctx.SendO(ctx.ConfigGetIsServer());
       ctx.SendO(ctx.LinkIsParent());
-      ctx.SendO(ctx.ConfigGetIsSlave());
+      ctx.SendO(ctx.SlaveIs());
       ctx.SendO(ctx.ConfigGetIsString());
       ctx.SendO(ctx.ConfigGetIsSilent());
       ctx.SendO(ctx.LinkIsConnected());
@@ -347,7 +347,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 
   class SND2 implements IService, ICallback {
     public void Callback (MqS ctx) throws MqSException {
-      Server master = (Server) ctx.ConfigGetMaster();
+      Server master = (Server) ctx.SlaveGetMaster();
       master.myInt = ctx.ReadI();
     }
     public void Service (MqS ctx) throws MqSException {
@@ -412,7 +412,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	  ClientERR2 c = new ClientERR2();
 	  c.LinkCreate(ConfigGetDebug());
 	} else if (s.equals("isSlave")) {
-	  SendO(cl.ConfigGetIsSlave());
+	  SendO(cl.SlaveIs());
 	}
       SendRETURN();
     }
@@ -839,6 +839,8 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
+
+
 
 
 

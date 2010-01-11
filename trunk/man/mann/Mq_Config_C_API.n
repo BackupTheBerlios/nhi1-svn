@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -93,7 +93,7 @@ Mq_Config_C_API \- configuration of the \fBMqS\fP object
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
+.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP, \fBMQ_FACTORY_NEW_CHILD\fP, \fBMQ_FACTORY_NEW_SLAVE\fP, \fBMQ_FACTORY_NEW_FORK\fP, \fBMQ_FACTORY_NEW_THREAD\fP, \fBMQ_FACTORY_NEW_FILTER\fP, \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
 .br
 .R "the \fIfactory\fP is called to create an object for ... "
 .ti -1c
@@ -395,6 +395,18 @@ the \fIfactory\fP is called to create an object for ...
 .PP
 \fBEnumerator: \fP
 .in +1c
+.TP
+\fB\fIMQ_FACTORY_NEW_INIT \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_CHILD \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_SLAVE \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_FORK \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 .TP
 \fB\fIMQ_FACTORY_NEW_INIT \fP\fP
 .TP
@@ -948,4 +960,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

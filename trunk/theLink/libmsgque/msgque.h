@@ -1554,7 +1554,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 ///		     for the \e --pipe setup.
 /// \ifnot MAN
 ///                  (only C-API: the memory of known arguments will be freed and 
-///		      \e args will be set to \c NULL on error)
+///		      \e args will be set to \c NULL on error or if list is empty)
 /// \endif
 /// \retException
 /// \attention if the first argument after the \b "@" item is the string \b "SELF" an independent
@@ -1575,7 +1575,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
 ///                  without the \b "@" item.
 /// \ifnot MAN
 ///                  (only C-API: the memory of known arguments will be freed and 
-///		      \e args will be set to \c NULL on error)
+///		      \e args will be set to \c NULL on error or if list is empty)
 /// \endif
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
@@ -1584,7 +1584,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
   struct MqBufferLS ** args
 );
 
-/// \brief helper: wrapper for #MqLinkCreate or ##MqLinkCreateChild with additional \e error-check code
+/// \brief helper: wrapper for #MqLinkCreate or #MqLinkCreateChild with additional \e error-check code
 /// \details The function have to be used as argument to #MqSetupS::Child,
 /// #MqSetupS::Parent or #MqConfigSetSetup as default \e context-create function.
 /// Return an \e error if an unknown \e command-line-argument was found.

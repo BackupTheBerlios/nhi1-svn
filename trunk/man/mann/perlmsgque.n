@@ -1,4 +1,4 @@
-.TH "perlmsgque" n "9 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque" n "11 Jan 2010" "Version 4.1" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -83,7 +83,7 @@ create a new context and initialize the default configuration data
 .RS 4
 \fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
 .br
-\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the configuration data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
 .RE
 .PP
 \fBReturns:\fP
@@ -111,9 +111,25 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .fi
 .PP
 .SS "$ctx->DESTROY()"
-Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
+delete the \fIcontext\fP 
+.PP
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fIundef\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBour $ctx=new MqS()\fP 
+.RE
+.PP
 .SS "$ctx->Exit()"
-Shutdown the entire communication and exit the current process or thread.
+delete the \fIcontext\fP and exit the current process or thread 
+.PP
+This function will never return.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBour $ctx=new MqS()\fP 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBInit\fP
@@ -153,11 +169,11 @@ Every use of this function will free the data of the previous \fIstartup-prefix\
 .fi
 .PP
 .SS "command-line:  --buffersize"
-\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetBuffersize\fP , \fBset:\fP \fCConfigSetBuffersize\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetBuffersize\fP , \fBset:\fP \fCConfigSetBuffersize\fP
 .PP
 The send and receive buffersize in bytes (default: 4KB)
 .SS "command-line:  --debug"
-\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetDebug\fP , \fBset:\fP \fCConfigSetDebug\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetDebug\fP , \fBset:\fP \fCConfigSetDebug\fP
 .PP
 Debug a message-queue application. Valid values are 0 <= \fINUM\fP <= 9 using 0 for 'no debugging' and 9 for 'maximum debugging'. (default: 0)
 .SS "command-line:  --timeout"
@@ -177,15 +193,15 @@ Use \fISTRING\fP as a client specific prefix in the server debugging output. Thi
 .PP
 Use string as an application specific identifier set by the programmer and checked with \fCConfigCheckIdent\fP against the \fIidentifier\fP of the link target. The goal is to change the behavior of the application depending on the result. (default: empty)
 .SS "command-line: --silent"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
+\fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
 Write (\fI0\fP) or don't write (\fI1\fP) any output to stdout or stderr. (default: write to stdout or stderr)
 .SS "command-line: --string"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
+\fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsString\fP , \fBset:\fP \fCConfigSetIsString\fP
 .PP
 Use (\fI1\fP), as much as possible, strings in the data-package. Convert any native data-type, like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
 .SS "isServer"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
+\fBtype:\fP \fCbool\fP, \fBget:\fP \fCConfigGetIsServer\fP , \fBset:\fP \fCConfigSetIsServer\fP
 .PP
 True if object is a \fIserver\fP object (default: \fI0\fP, be a client)
 .SS "command-line: --tcp --host --port --myhost --myport"
@@ -224,7 +240,7 @@ Use a \fIuds\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) socket link. T
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetIoPipeSocket\fP , \fBset:\fP \fCConfigSetIoPipe (socket)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetIoPipeSocket\fP , \fBset:\fP \fCConfigSetIoPipe (socket)\fP
 .PP
 Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP mode to start a server. The \fIsocket\fP option is special because it is used for internal purpose to submit the socket from the client to the server started as pipe by the client. 
 .PP
@@ -233,16 +249,8 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fIsocket\fP the file-descriptor number. The only public usage for this option is to serve as interface for an existing tool like (x)inetd. The (x)inetd tool is a \fIUNIX\fP service to listen on a tcp/ip port and start for every connection the proper entry from the file \fI/etc/\fP(x)inetd.conf with the file-descriptor \fI0\fP as send/recv socket handle.
 .RE
 .PP
-.SS "master"
-\fBtype:\fP \fC\fBMqS\fP\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
-.PP
-return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "isSlave"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
-.PP
-True if object is a \fIslave\fP object (default: \fI0\fP, not be a slave)
 .SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
 .PP
 Start a new server as \fIthread\fP or \fIspawn\fP a new process or \fIfork\fP a new process. This arguments are used with:
 .IP "\(bu" 2
@@ -273,7 +281,7 @@ this option require the \fBfork\fP system-call and is \fBnot\fP compatible with 
 .RE
 .PP
 .SS "ignoreExit"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
+\fBtype:\fP \fCbool\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCConfigSetIgnoreExit\fP
 .PP
 By default the \fIserver\fP exit if the \fIclient\fP close the connection. If the boolean value is \fI1\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process exit. 
 .SS "interface: $ctx->ConfigSetServerSetup(callback)"
@@ -378,7 +386,7 @@ get the \fIparent-context\fP from a client/server link
 the \fIparent-context\fP or \fIundef\fP if not a \fIchild-context\fP 
 .RE
 .PP
-.SS "integer $ctx->LinkGetCtxId()"
+.SS "int $ctx->LinkGetCtxId()"
 get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
 .PP
 The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
@@ -393,7 +401,7 @@ The \fIcontext-identifier\fP is a number and is used in the protocol to link a \
 the identifier as number 
 .RE
 .PP
-.SS "boolean $ctx->LinkIsParent()"
+.SS "bool $ctx->LinkIsParent()"
 is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
 A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
@@ -408,7 +416,7 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 a boolean value, \fI1\fP or \fI0\fP 
 .RE
 .PP
-.SS "boolean $ctx->LinkIsConnected()"
+.SS "bool $ctx->LinkIsConnected()"
 is the context connected? 
 .PP
 A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
@@ -492,7 +500,7 @@ This function is needed on the server to process a \fIservice-request\fP defined
 the \fBTOKEN IDENTIFIER\fP 
 .RE
 .PP
-.SS "boolean $ctx->ServiceIsTransaction()"
+.SS "bool $ctx->ServiceIsTransaction()"
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
 A \fIservice-call\fP can be \fIwith-transaction\fP (return \fI1\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fI0\fP if the package was send with \fBSendEND\fP) 
@@ -1012,7 +1020,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "integer $ctx->ReadGetNumItems()"
+.SS "int $ctx->ReadGetNumItems()"
 get the number of items left in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -1025,7 +1033,7 @@ get the number of items left in the \fIread-data-package\fP
 the number of items as integer 
 .RE
 .PP
-.SS "boolean $ctx->ReadItemExists()"
+.SS "bool $ctx->ReadItemExists()"
 check if an item exists in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -1063,36 +1071,38 @@ an \fBEXCEPTION OBJECT\fP on error
 .br
  \fBSlaveGet\fP
 .br
+ \fBSlaveGetMaster\fP
+.br
+ \fBSlaveIs\fP
+.br
 .PP
-The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
-The \fIlink\fP is used to perform the following tasks:
+The \fImaster-slave-link\fP is used to perform the following tasks:
 .IP "\(bu" 2
-report error messages from the \fIslave\fP to the \fImaster\fP 
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
 .IP "\(bu" 2
 to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
 .IP "\(bu" 2
 to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
 .PP
-In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-msgque-context\fP can be a \fIserver\fP because only \fIon\fP server per node is possible.
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
 .PP
 .PP
 .nf
 
-    node-0   |           node-1          |   node-2
+    node-0   |           node-1/2        |   node-3/4/5
 ===================================================================
 
 | <- client/server link -> | <- client/server link -> |
 
              | <-- master/slave link --> |
 
-                           |- client1-0 -|- server2-0 ...
-                           |
-             |- server1-0 -|             |- server2-1 ...
-             |             |- client1-1 -|- server2-2 ...
-  client0-0 -|                           |- server2-3
-             |
-             |- server1-1 -|- client1-2 -|- server2-4 ...
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
 .fi
 .PP
  
@@ -1168,7 +1178,7 @@ it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\f
 .RE
 .PP
 .SS "MqS $ctx->SlaveGet(id)"
-get the slave context 
+get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1179,7 +1189,33 @@ get the slave context
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
+.RE
+.PP
+.SS "MqS $ctx->SlaveGetMaster()"
+get the \fImaster-context\fP from the \fIslave-context\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBour $ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fImaster-context\fP or \fIundef\fP if the \fIcontext\fP is no \fIslave-context\fP 
+.RE
+.PP
+.SS "bool $ctx->SlaveIs()"
+is the \fIcontext\fP a \fIslave-context\fP ? 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBour $ctx=new MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fI1\fP or \fI0\fP 
 .RE
 .PP
 .SH "BUFFER API"
@@ -1208,29 +1244,29 @@ The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItype
 .SS "TYPE IDENTIFIER"
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the T_PV datatype (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (T_CHAR)
+\fCY\fP : 1 byte signed character (char)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fI1\fP or \fI0\fP (T_BOOL)
+\fCO\fP : 1 byte boolean value using \fI1\fP or \fI0\fP (bool)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (T_IV)
+\fCS\fP : 2 byte signed short (short)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (T_IV)
+\fCI\fP : 4 byte signed integer (int)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (T_IV)
+\fCW\fP : 8 byte signed long long integer (long)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (T_FLOAT)
+\fCF\fP : 4 byte float (float)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (T_DOUBLE)
+\fCD\fP : 8 byte double (double)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (T_PV)
+\fCB\fP : unsigned char array used for binary data (byteArray)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end (T_PV)
+\fCC\fP : string data using a \fC\\0\fP at the end (string)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above (T_MqBufferS)
+\fCU\fP : typeless buffer able to hold a single item from above (\fBMqBufferS\fP)
 .PP
 .SS "TYPE $buffer->GetTYPE()"
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)
@@ -1273,7 +1309,7 @@ The exception object is used to transport a perlmsgque error using the \fIclass 
 .PP
 .SS "string $ctx->ErrorGetText()"
 return the error message from the error object.
-.SS "integer $ctx->ErrorGetNum()"
+.SS "int $ctx->ErrorGetNum()"
 return the error number from the error object. The number can be used as exit-code.
 .SS "$ctx->ErrorC(string prefix, int num, string what)"
 create a perlmsgque error object but do \fBnot\fP raise the \fBEXCEPTION OBJECT\fP

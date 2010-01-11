@@ -23,6 +23,13 @@ namespace csmsgque {
 
   public partial class MqS
   {
+
+/// \defgroup Mq_Service_Cs_API Mq_Service_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Service_C_API
+/// \details \copydetails Mq_Service_C_API
+/// \{
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceCreate")]
     private static extern MqErrorE MqServiceCreate([In]IntPtr context, [In]string token, 
 	[In]MqTokenF srvcall, [In]IntPtr data, [In]MqTokenDataFreeF srvfree);
@@ -41,6 +48,9 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceGetFilter")]
     private static extern MqErrorE MqServiceGetFilter([In]IntPtr context, [In]int id, [Out]out IntPtr filter);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqProcessEvent")]
+    private static extern MqErrorE MqProcessEvent([In]IntPtr context, [In]long timeout, [In]int flag);
 
     // PUBLIC  #########################################################################
 
@@ -86,6 +96,27 @@ namespace csmsgque {
       ErrorMqToCsWithCheck(MqServiceProxy(context, token, id));
     }
 
+    /// \api #MqWaitOnEventE
+    public enum WAIT {
+      NO      = 0,
+      ONCE    = 1,
+      FOREVER = 2,
+    };
+
+    /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
+    public void ProcessEvent ( long timeout, WAIT wait) {
+      ErrorMqToCsWithCheck(MqProcessEvent(context, timeout, (int)wait));
+    }
+    /// \api #MqProcessEvent, wait application default time
+    public void ProcessEvent (WAIT wait) {
+      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)wait));
+    }
+    /// \api #MqProcessEvent, don't wait just check for an event
+    public void ProcessEvent () {
+      ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)WAIT.NO));
+    }
+
+/// \} Mq_Service_Cs_API
 
   } // END - class "MqS"
 } // END - namespace "csmsgque"

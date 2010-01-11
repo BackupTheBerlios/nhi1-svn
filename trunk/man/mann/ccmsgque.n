@@ -1,8 +1,10 @@
-.TH "ccmsgque" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque \- 
+ccmsgque \- The CcMsgque Libraray.  
+
+.PP
 .SH SYNOPSIS
 .br
 .PP
@@ -40,12 +42,15 @@ ccmsgque \-
 .ti -1c
 .RI "class \fBMqBufferC\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
 .ti -1c
 .RI "class \fBMqC\fP"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
 .in -1c
+.SH "Detailed Description"
+.PP 
+The CcMsgque Libraray. 
+.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

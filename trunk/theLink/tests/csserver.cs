@@ -21,7 +21,7 @@ namespace example {
     public int i;
 
     void IBgError.Call () {
-      MqS master = ConfigGetMaster();
+      MqS master = SlaveGetMaster();
       if (master != null) {
 	master.ErrorC ("BGERROR", ErrorGetNum(), ErrorGetText());
 	master.SendERROR ();
@@ -87,7 +87,7 @@ namespace example {
     }
 
     void IServerSetup.Call () {
-      if (ConfigGetIsSlave()) {
+      if (SlaveIs()) {
 	// add "slave" services here
       } else {
 	for (int i=0;i<3;i++) {
@@ -256,7 +256,7 @@ namespace example {
       SendSTART();
       SendO(ConfigGetIsServer());
       SendO(LinkIsParent());
-      SendO(ConfigGetIsSlave());
+      SendO(SlaveIs());
       SendO(ConfigGetIsString());
       SendO(ConfigGetIsSilent());
       SendO(LinkIsConnected());
@@ -378,7 +378,7 @@ namespace example {
 
     int myInt = -1;
     private void SetMyInt () {
-     ((Server) ConfigGetMaster()).myInt = ReadI();
+     ((Server) SlaveGetMaster()).myInt = ReadI();
     }
 
     public void SND2 () {
@@ -444,7 +444,7 @@ namespace example {
 	  ClientERR2 c = new ClientERR2();
 	  c.LinkCreate(ConfigGetDebug());
         } else if (s == "isSlave") {
-          SendO(cl.ConfigGetIsSlave());
+          SendO(cl.SlaveIs());
         }
       SendRETURN();
     }
@@ -713,4 +713,6 @@ namespace example {
   }
 
 } // finish namespace "example"
+
+
 

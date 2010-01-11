@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "9 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "11 Jan 2010" "Version 4.1" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -79,7 +79,7 @@ create a new context and initialize the default configuration data
 .RS 4
 \fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
 .br
-\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the configuration data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
 .RE
 .PP
 \fBReturns:\fP
@@ -97,9 +97,25 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .fi
 .PP
 .SS "rename $ctx ''"
-Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
+delete the \fIcontext\fP 
+.PP
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fIempty\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
 .SS "$ctx Exit"
-Shutdown the entire communication and exit the current process or thread.
+delete the \fIcontext\fP and exit the current process or thread 
+.PP
+This function will never return.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBInit\fP
@@ -219,14 +235,6 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fIsocket\fP the file-descriptor number. The only public usage for this option is to serve as interface for an existing tool like (x)inetd. The (x)inetd tool is a \fIUNIX\fP service to listen on a tcp/ip port and start for every connection the proper entry from the file \fI/etc/\fP(x)inetd.conf with the file-descriptor \fI0\fP as send/recv socket handle.
 .RE
 .PP
-.SS "master"
-\fBtype:\fP \fCCommand-Object\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
-.PP
-return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "isSlave"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
-.PP
-True if object is a \fIslave\fP object (default: \fIno\fP, not be a slave)
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCinteger\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs startAs\fP
 .PP
@@ -351,7 +359,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .RE
 .PP
-.SS "$ctx LinkGetParent"
+.SS "MqS [$ctx LinkGetParent]"
 get the \fIparent-context\fP from a client/server link 
 .PP
 \fBParameters:\fP
@@ -364,7 +372,7 @@ get the \fIparent-context\fP from a client/server link
 the \fIparent-context\fP or \fIempty\fP if not a \fIchild-context\fP 
 .RE
 .PP
-.SS "$ctx LinkGetCtxId"
+.SS "IntObj [$ctx LinkGetCtxId]"
 get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
 .PP
 The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
@@ -379,7 +387,7 @@ The \fIcontext-identifier\fP is a number and is used in the protocol to link a \
 the identifier as number 
 .RE
 .PP
-.SS "$ctx LinkIsParent"
+.SS "BooleanObj [$ctx LinkIsParent]"
 is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
 A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
@@ -394,7 +402,7 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
-.SS "$ctx LinkIsConnected"
+.SS "BooleanObj [$ctx LinkIsConnected]"
 is the context connected? 
 .PP
 A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
@@ -462,7 +470,7 @@ The \fItoken\fP identifier is a 4 byte string and identifies the service. The \f
 A service is using a callback to act on an incoming service request. The callback is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or as argument to the \fBSendEND_AND_CALLBACK\fP function.
 .PP
 The callback is implemented as TCL procedure using \fIService {ctx}\fP
-.SS "$ctx ServiceGetToken"
+.SS "StringObj [$ctx ServiceGetToken]"
 get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
 This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
@@ -477,7 +485,7 @@ This function is needed on the server to process a \fIservice-request\fP defined
 the \fBTOKEN IDENTIFIER\fP 
 .RE
 .PP
-.SS "$ctx ServiceIsTransaction"
+.SS "BooleanObj [$ctx ServiceIsTransaction]"
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
 A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIyes\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIno\fP if the package was send with \fBSendEND\fP) 
@@ -492,7 +500,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIyes\fP if the pack
 a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
-.SS "$ctx ServiceGetFilter ?id=0?"
+.SS "MqS [$ctx ServiceGetFilter ?id=0?]"
 get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
 A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
@@ -520,7 +528,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx ServiceCreate token callback"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fB$ctx ServiceGetToken\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBStringObj [$ctx ServiceGetToken]\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -777,7 +785,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx SendN value"
 append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBset val [$ctx ReadN]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBByteArrayObj [$ctx ReadN]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -796,7 +804,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "$ctx SendBDY value"
 append the \fIentire-body\fP to the \fIsend-data-package\fP. 
 .PP
-The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBset val [$ctx ReadBDY]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBByteArrayObj [$ctx ReadBDY]\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -882,7 +890,7 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
 
 .fi
 .PP
-.SS "set val [$ctx ReadTYPE]"
+.SS "TYPE [$ctx ReadTYPE]"
 read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -897,7 +905,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "set val [$ctx ReadN]"
+.SS "ByteArrayObj [$ctx ReadN]"
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
 A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
@@ -916,7 +924,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "set val [$ctx ReadBDY]"
+.SS "ByteArrayObj [$ctx ReadBDY]"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
 A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
@@ -935,7 +943,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "set val [$ctx ReadU]"
+.SS "CmdObj [$ctx ReadU]"
 extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP
 The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
@@ -961,7 +969,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBset val [$ctx ReadU]\fP call or \fIempty\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBCmdObj [$ctx ReadU]\fP call or \fIempty\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -997,7 +1005,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
-.SS "set val [$ctx ReadGetNumItems]"
+.SS "IntObj [$ctx ReadGetNumItems]"
 get the number of items left in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -1010,7 +1018,7 @@ get the number of items left in the \fIread-data-package\fP
 the number of items as integer 
 .RE
 .PP
-.SS "set val [$ctx ReadItemExists]"
+.SS "BooleanObj [$ctx ReadItemExists]"
 check if an item exists in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
@@ -1048,36 +1056,38 @@ an \fBEXCEPTION OBJECT\fP on error
 .br
  \fBSlaveGet\fP
 .br
+ \fBSlaveGetMaster\fP
+.br
+ \fBSlaveIs\fP
+.br
 .PP
-The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
-The \fIlink\fP is used to perform the following tasks:
+The \fImaster-slave-link\fP is used to perform the following tasks:
 .IP "\(bu" 2
-report error messages from the \fIslave\fP to the \fImaster\fP 
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
 .IP "\(bu" 2
 to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
 .IP "\(bu" 2
 to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
 .PP
-In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-msgque-context\fP can be a \fIserver\fP because only \fIon\fP server per node is possible.
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
 .PP
 .PP
 .nf
 
-    node-0   |           node-1          |   node-2
+    node-0   |           node-1/2        |   node-3/4/5
 ===================================================================
 
 | <- client/server link -> | <- client/server link -> |
 
              | <-- master/slave link --> |
 
-                           |- client1-0 -|- server2-0 ...
-                           |
-             |- server1-0 -|             |- server2-1 ...
-             |             |- client1-1 -|- server2-2 ...
-  client0-0 -|                           |- server2-3
-             |
-             |- server1-1 -|- client1-2 -|- server2-4 ...
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
 .fi
 .PP
  
@@ -1152,8 +1162,8 @@ an \fBEXCEPTION OBJECT\fP on error
 it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
-.SS "$ctx SlaveGet id"
-get the slave context 
+.SS "MqS [$ctx SlaveGet id]"
+get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1164,7 +1174,33 @@ get the slave context
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
+.RE
+.PP
+.SS "MqS [$ctx SlaveGetMaster]"
+get the \fImaster-context\fP from the \fIslave-context\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fImaster-context\fP or \fIempty\fP if the \fIcontext\fP is no \fIslave-context\fP 
+.RE
+.PP
+.SS "BooleanObj [$ctx SlaveIs]"
+is the \fIcontext\fP a \fIslave-context\fP ? 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBset ctx [tclmsgque MqS]\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
 .SH "BUFFER API"
@@ -1201,7 +1237,7 @@ The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B
 .IP "\(bu" 2
 \fCS\fP : 2 byte signed short (IntObj)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (InitObj)
+\fCI\fP : 4 byte signed integer (IntObj)
 .IP "\(bu" 2
 \fCW\fP : 8 byte signed long long integer (WideIntObj)
 .IP "\(bu" 2
@@ -1217,9 +1253,9 @@ The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B
 .IP "\(bu" 2
 \fCU\fP : typeless buffer able to hold a single item from above (CmdObj)
 .PP
-.SS "$buffer GetTYPE"
+.SS "TYPE [$buffer GetTYPE]"
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP. (on error return an \fBEXCEPTION OBJECT\fP)
-.SS "$buffer GetType"
+.SS "StringObj [$buffer GetType]"
 return the type as single character of the item stored in the buffer object.
 .SH "EXCEPTION OBJECT"
 .PP

@@ -1,4 +1,4 @@
-.TH "ccmsgque::IEvent" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IEvent" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,7 +21,7 @@ ccmsgque::IEvent \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetEven
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP 
 .PP
-Definition at line 71 of file ccmsgque.h.
+Definition at line 72 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "virtual void ccmsgque::IEvent::Event ()\fC [pure virtual]\fP"

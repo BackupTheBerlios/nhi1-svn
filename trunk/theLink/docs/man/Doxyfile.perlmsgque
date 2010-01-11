@@ -55,11 +55,11 @@ ALIASES		    += "init_example=\
 Net::PerlMsgque::Init(\"perl\", \"myExecutable.pl\", \"myFirstArgument\"); \n\
 \endcode"
 
-ALIASES		    += "config_type_buffersize=integer"
+ALIASES		    += "config_type_buffersize=\I"
 ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
 ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
 
-ALIASES		    += "config_type_debug=integer"
+ALIASES		    += "config_type_debug=\I"
 ALIASES		    += "config_set_debug=ConfigSetDebug"
 ALIASES		    += "config_get_debug=ConfigGetDebug"
 
@@ -67,56 +67,56 @@ ALIASES		    += "config_type_timeout=seconds"
 ALIASES		    += "config_set_timeout=ConfigSetTimeout"
 ALIASES		    += "config_get_timeout=ConfigGetTimeout"
 
-ALIASES		    += "config_type_name=string"
+ALIASES		    += "config_type_name=\C"
 ALIASES		    += "config_set_name=ConfigSetName"
 ALIASES		    += "config_get_name=ConfigGetName"
 
-ALIASES		    += "config_type_srvname=string"
+ALIASES		    += "config_type_srvname=\C"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
-ALIASES		    += "config_type_ident=string"
+ALIASES		    += "config_type_ident=\C"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
 ALIASES		    += "config_check_ident=ConfigCheckIdent"
 
-ALIASES		    += "config_type_isSilent=boolean"
+ALIASES		    += "config_type_isSilent=\O"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
 ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
 
-ALIASES		    += "config_type_isString=boolean"
+ALIASES		    += "config_type_isString=\O"
 ALIASES		    += "config_set_isString=ConfigSetIsString"
 ALIASES		    += "config_get_isString=ConfigGetIsString"
 
-ALIASES		    += "config_type_ignoreExit=boolean"
+ALIASES		    += "config_type_ignoreExit=\O"
 ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
 ALIASES		    += "config_get_ignoreExit=NO"
 
-ALIASES		    += "config_type_daemon=string"
+ALIASES		    += "config_type_daemon=\C"
 ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
 ALIASES		    += "config_get_daemon=NO"
 
-ALIASES		    += "config_type_startAs=integer"
+ALIASES		    += "config_type_startAs=\I"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
 ALIASES		    += "config_get_startAs=ConfigGetStartAs"
 
-ALIASES		    += "config_type_tcp=string"
+ALIASES		    += "config_type_tcp=\C"
 ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
 ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
-ALIASES		    += "config_type_uds=string"
+ALIASES		    += "config_type_uds=\C"
 ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
 ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 
-ALIASES		    += "config_type_pipe=integer"
+ALIASES		    += "config_type_pipe=\I"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
 ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
 
-ALIASES		    += "config_type_isServer=boolean"
+ALIASES		    += "config_type_isServer=\O"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ConfigGetIsServer"
 
-ALIASES		    += "config_type_isSlave=boolean"
+ALIASES		    += "config_type_isSlave=\O"
 ALIASES		    += "config_set_isSlave=NO"
 ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
 
@@ -135,9 +135,9 @@ ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
 ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(parent, args...)"
 ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
 ALIASES		    += "LinkGetParent=MqS $ctx->LinkGetParent()"
-ALIASES		    += "LinkIsParent=boolean $ctx->LinkIsParent()"
-ALIASES		    += "LinkGetCtxId=integer $ctx->LinkGetCtxId()"
-ALIASES		    += "LinkIsConnected=boolean $ctx->LinkIsConnected()"
+ALIASES		    += "LinkIsParent=\O $ctx->LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=\I $ctx->LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=\O $ctx->LinkIsConnected()"
 ALIASES		    += "Exit=$ctx->Exit()"
 
 # SEND DATA
@@ -161,8 +161,8 @@ ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
 ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
 ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
 ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
-ALIASES		    += "ReadGetNumItems=integer $ctx->ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=boolean $ctx->ReadItemExists()"
+ALIASES		    += "ReadGetNumItems=\I $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=\O $ctx->ReadItemExists()"
 ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
 ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
 ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
@@ -182,9 +182,9 @@ ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ON
 ALIASES		    += "MQ_WAIT_NO=\c NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
-ALIASES		    += "ServiceGetToken=string $ctx->ServiceGetToken()"
+ALIASES		    += "ServiceGetToken=\C $ctx->ServiceGetToken()"
 ALIASES		    += "ServiceGetFilter=$filter=MqS $ctx->ServiceGetFilter()"
-ALIASES		    += "ServiceIsTransaction=boolean $ctx->ServiceIsTransaction()"
+ALIASES		    += "ServiceIsTransaction=\O $ctx->ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(id, args...)"
@@ -192,6 +192,8 @@ ALIASES		    += "SlaveWorker_example=\code $ctx->SlaveWorker(7,\"--thread\",\"--
 ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(id, slave)"
 ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(id)"
 ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(id)"
+ALIASES		    += "SlaveGetMaster=MqS $ctx->SlaveGetMaster()"
+ALIASES		    += "SlaveIs=\O $ctx->SlaveIs()"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -205,16 +207,16 @@ ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
 ALIASES		    += "BufferType=char $buffer->GetType()"
 
-ALIASES		    += "Y=T_CHAR"
-ALIASES		    += "O=T_BOOL"
-ALIASES		    += "S=T_IV"
-ALIASES		    += "I=T_IV"
-ALIASES		    += "F=T_FLOAT"
-ALIASES		    += "W=T_IV"
-ALIASES		    += "D=T_DOUBLE"
-ALIASES		    += "C=T_PV"
-ALIASES		    += "B=T_PV"
-ALIASES		    += "U=T_MqBufferS"
+ALIASES		    += "Y=char"
+ALIASES		    += "O=bool"
+ALIASES		    += "S=short"
+ALIASES		    += "I=int"
+ALIASES		    += "F=float"
+ALIASES		    += "W=long"
+ALIASES		    += "D=double"
+ALIASES		    += "C=string"
+ALIASES		    += "B=byteArray"
+ALIASES		    += "U=MqBufferS"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
@@ -236,15 +238,12 @@ if ($@) { \n\
 } \n\
 \endcode"
 ALIASES		    += "ErrorObject=<I>class MqSException ex</I>"
-ALIASES		    += "ErrorGetText=string $ctx->ErrorGetText()"
-ALIASES		    += "ErrorGetNum=integer $ctx->ErrorGetNum()"
-ALIASES		    += "ErrorC=$ctx->ErrorC(string prefix, int num, string what)"
+ALIASES		    += "ErrorGetText=\C $ctx->ErrorGetText()"
+ALIASES		    += "ErrorGetNum=\I $ctx->ErrorGetNum()"
+ALIASES		    += "ErrorC=$ctx->ErrorC(\C prefix, int num, \C what)"
 ALIASES		    += "ErrorSet=$ctx->ErrorSet($ex)"
 ALIASES		    += "ErrorSetCONTINUE=$ctx->ErrorSetCONTINUE()"
 ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
 ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
 ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
-
-
-
 

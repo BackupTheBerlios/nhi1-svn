@@ -105,7 +105,7 @@ finally:
     -match	  glob \
     -result	  {C> (unknown) \[pIoStartServer\] can not start PIPE client without '@ server ...' as argument
 C> (unknown) found in function "MqLinkCreate" at file "link.c"
-C> (unknown) found in function "MqDefaultLinkCreate" at file "link.c"*}
+C> (unknown) found in function "MqLinkDefault" at file "link.c"*}
 
 test py-client-ErrorSet-4 {error without LINK} \
     -constraints  {local} \
@@ -171,6 +171,7 @@ srv.Exit()
 ##
 
 freeTests
+
 
 
 

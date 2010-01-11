@@ -1,4 +1,4 @@
-.TH "Mq_Slave_CC_API" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -91,32 +91,32 @@ In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connec
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
 .PP
-Definition at line 719 of file ccmsgque.h.
+Definition at line 727 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveDelete (const int id)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
 .PP
-Definition at line 748 of file ccmsgque.h.
+Definition at line 756 of file ccmsgque.h.
 .SS "MqC* ccmsgque::MqC::SlaveGet (const int id)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
 .PP
-Definition at line 702 of file ccmsgque.h.
+Definition at line 710 of file ccmsgque.h.
 .SS "MqC* ccmsgque::MqC::SlaveGetMaster ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP 
 .PP
-Definition at line 708 of file ccmsgque.h.
+Definition at line 716 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::SlaveIs ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
 .PP
-Definition at line 714 of file ccmsgque.h.
+Definition at line 722 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorker (const int id, struct \fBMqBufferLS\fP * args = \fCNULL\fP)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 725 of file ccmsgque.h.
+Definition at line 733 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerV (const int id,  ...)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
@@ -125,17 +125,17 @@ implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 735 of file ccmsgque.h.
+Definition at line 743 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerVC (const int id, int const  argc, \fBMQ_CST\fP * argv)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 730 of file ccmsgque.h.
+Definition at line 738 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerVT (const int id, vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 743 of file ccmsgque.h.
+Definition at line 751 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

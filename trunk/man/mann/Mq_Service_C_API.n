@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -91,7 +91,7 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBcommand-line: --timeout\fP value), only used if \fIwait\fP = MqS.WAIT.ONCE 
 .br
@@ -110,7 +110,7 @@ in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoke
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -125,11 +125,11 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBString ctx.ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -152,7 +152,7 @@ delete a service.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -177,11 +177,11 @@ return a 'filter not available' error
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fInull\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
 .RE
 .PP
 \fBReturns:\fP
@@ -198,7 +198,7 @@ This function is needed on the server to process a \fIservice-request\fP defined
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -215,7 +215,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the pac
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -232,7 +232,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqS ctx=new MqS()\fP 
+\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -247,4 +247,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

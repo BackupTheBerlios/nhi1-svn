@@ -15,7 +15,9 @@
 #---------------------------------------------------------------------------
 
 INPUT		    += $(SRCDIR)/libmsgque
-FILE_PATTERNS       += msgque.h
+FILE_PATTERNS       += $(SRCDIR)/libmsgque/msgque.h
+STRIP_FROM_PATH	    += $(SRCDIR)/libmsgque
+STRIP_FROM_INC_PATH += $(SRCDIR)/libmsgque
 SHOW_FILES	    = YES
 
 ALIASES		    += "null=\e NULL"
@@ -36,6 +38,8 @@ ALIASES		    += "config_IServerSetup=#MqConfigSetServerSetup"
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "ctx=\param[in] ctx the context returned by \RNS{ContextCreate}"
+ALIASES		    += "retException=\return an \RNS{error} on error"
 
 ALIASES		    += "Y=#MQ_BYT"
 ALIASES		    += "O=#MQ_BOL"

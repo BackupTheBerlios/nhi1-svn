@@ -219,7 +219,7 @@ proc Callback {ctx} {
 }
 
 proc BgError {ctx} {
-  set master [$ctx ConfigGetMaster]
+  set master [$ctx SlaveGetMaster]
   if {$master ne ""} {
     $master ErrorC "BGERROR" [$ctx ErrorGetNum] [$ctx ErrorGetText]
     $master SendERROR
@@ -398,7 +398,7 @@ proc Ot_SND2 {ctx} {
       ClientERR2CreateParent $c [$ctx ConfigGetDebug]
     }
     isSlave {
-      $ctx SendO [$cl ConfigGetIsSlave]
+      $ctx SendO [$cl SlaveIs]
     }
   }
   $ctx SendRETURN
@@ -464,7 +464,7 @@ proc Ot_CNFG {ctx} {
   $ctx SendSTART
   $ctx SendO [$ctx ConfigGetIsServer]
   $ctx SendO [$ctx LinkIsParent]
-  $ctx SendO [$ctx ConfigGetIsSlave]
+  $ctx SendO [$ctx SlaveIs]
   $ctx SendO [$ctx ConfigGetIsString]
   $ctx SendO [$ctx ConfigGetIsSilent]
   $ctx SendO [$ctx LinkIsConnected]
@@ -597,7 +597,7 @@ proc Ot_PRNT {ctx} {
 
 proc ServerSetup {ctx} {
 
-  if {[$ctx ConfigGetIsSlave]} {
+  if {[$ctx SlaveIs]} {
     # setup "slave"
   } else {
 
@@ -661,7 +661,7 @@ proc ServerSetup {ctx} {
 }
 
 proc ServerCleanup {ctx} {
-  if {[$ctx ConfigGetIsSlave]} {
+  if {[$ctx SlaveIs]} {
     # cleanup "slave"
   } else {
     [$ctx dict get 0] Delete
@@ -690,6 +690,8 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
+
+
 
 
 

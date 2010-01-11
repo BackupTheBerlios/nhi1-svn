@@ -5,8 +5,20 @@
 
 ## template definition
 man=local.generic
+libmsgque_private=../man/Doxyfile.msgque
+ccmsgque_private=../man/Doxyfile.msgque
+javamsgque_private=../man/Doxyfile.msgque
+pymsgque_private=../man/Doxyfile.msgque
+tclmsgque_private=../man/Doxyfile.msgque
+
+libmsgque=../libmsgque_public/Doxyfile
 javamsgque=../javamsgque_public/Doxyfile
 ccmsgque=../ccmsgque_public/Doxyfile
+csmsgque=../csmsgque_public/Doxyfile
+vbmsgque=../csmsgque_public/Doxyfile
+perlmsgque=../libmsgque_public/Doxyfile
+pymsgque=../libmsgque_public/Doxyfile
+tclmsgque=../libmsgque_public/Doxyfile
 
 export HAVE_DOT=NO
 [[ $1 == "-usedot" && ! -z "$DOT" ]] && {
@@ -26,7 +38,7 @@ export HAVE_DOT=NO
     exit 1
 }
 [[ $1 == "ALL" ]] && {
-    set man libmsgque* ccmsgque* tclmsgque* pymsgque* javamsgque* csmsgque* main
+    set man *_private main
 }
 (
   for D

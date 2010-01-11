@@ -1,4 +1,4 @@
-.TH "ccmsgque::IFactory" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IFactory" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -22,7 +22,7 @@ ccmsgque::IFactory \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetFa
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP 
 .PP
-Definition at line 46 of file ccmsgque.h.
+Definition at line 47 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "virtual \fBMqC\fP* ccmsgque::IFactory::Factory () const\fC [pure virtual]\fP"

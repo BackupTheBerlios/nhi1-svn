@@ -1,10 +1,8 @@
-.TH "ccmsgque::MqBufferC" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqBufferC" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque::MqBufferC \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP  
-
-.PP
+ccmsgque::MqBufferC \- 
 .SH SYNOPSIS
 .br
 .PP
@@ -61,58 +59,56 @@ ccmsgque::MqBufferC \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP
 .in -1c
 .SH "Detailed Description"
 .PP 
-implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP 
-.PP
-Definition at line 109 of file ccmsgque.h.
+Definition at line 115 of file ccmsgque.h.
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "ccmsgque::MqBufferC::MqBufferC (struct \fBMqBufferS\fP * bufP)\fC [inline]\fP"
 .PP
-Definition at line 119 of file ccmsgque.h.
+Definition at line 125 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "void ccmsgque::MqBufferC::AppendC (\fBMQ_CST\fP str) const\fC [inline]\fP"
 .PP
-Definition at line 190 of file ccmsgque.h.
+Definition at line 196 of file ccmsgque.h.
 .SS "vector<\fBMQ_BINB\fP>* ccmsgque::MqBufferC::GetB () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 183 of file ccmsgque.h.
+Definition at line 189 of file ccmsgque.h.
 .SS "void ccmsgque::MqBufferC::GetB (\fBMQ_BIN\fP * outP, \fBMQ_SIZE\fP * sizeP) const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 179 of file ccmsgque.h.
+Definition at line 185 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqBufferC::GetC () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 169 of file ccmsgque.h.
+Definition at line 175 of file ccmsgque.h.
 .SS "\fBMQ_DBL\fP ccmsgque::MqBufferC::GetD () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 163 of file ccmsgque.h.
+Definition at line 169 of file ccmsgque.h.
 .SS "\fBMQ_FLT\fP ccmsgque::MqBufferC::GetF () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 151 of file ccmsgque.h.
+Definition at line 157 of file ccmsgque.h.
 .SS "\fBMQ_INT\fP ccmsgque::MqBufferC::GetI () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 145 of file ccmsgque.h.
+Definition at line 151 of file ccmsgque.h.
 .SS "\fBMQ_BOL\fP ccmsgque::MqBufferC::GetO () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 133 of file ccmsgque.h.
+Definition at line 139 of file ccmsgque.h.
 .SS "\fBMQ_SRT\fP ccmsgque::MqBufferC::GetS () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 139 of file ccmsgque.h.
+Definition at line 145 of file ccmsgque.h.
 .SS "enum \fBMqTypeE\fP ccmsgque::MqBufferC::GetType () const\fC [inline]\fP"
 .PP
-Definition at line 123 of file ccmsgque.h.
+Definition at line 129 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqBufferC::GetU () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 175 of file ccmsgque.h.
+Definition at line 181 of file ccmsgque.h.
 .SS "\fBMQ_WID\fP ccmsgque::MqBufferC::GetW () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 157 of file ccmsgque.h.
+Definition at line 163 of file ccmsgque.h.
 .SS "\fBMQ_BYT\fP ccmsgque::MqBufferC::GetY () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 127 of file ccmsgque.h.
+Definition at line 133 of file ccmsgque.h.
 .SS "void ccmsgque::MqBufferC::Reset () const  throw (\fBMqCException\fP)\fC [inline]\fP"
 .PP
-Definition at line 194 of file ccmsgque.h.
+Definition at line 200 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

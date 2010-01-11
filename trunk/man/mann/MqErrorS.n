@@ -1,4 +1,4 @@
-.TH "MqErrorS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "MqErrorS" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -60,4 +60,4 @@ Definition at line 381 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

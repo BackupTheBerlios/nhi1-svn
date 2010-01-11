@@ -212,6 +212,8 @@ ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
 ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster(id)"
+ALIASES		    += "SlaveIs=\O ctx.SlaveIs(id)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\

@@ -14,6 +14,8 @@
 #include "msgque.h"
 #include "debug.h"
 
+#define MQ_CONTEXT_S ctx
+
 static const char * Get (
   struct MqS * const ctx
 )
@@ -45,31 +47,29 @@ int main (int argc, MQ_CST argv[])
   struct MqS *ctx=NULL, *c0=NULL, *c00=NULL, *c01=NULL, *c000=NULL, *c1=NULL, *c10=NULL, *c100=NULL, *c101=NULL;
   struct MqBufferLS *bs0 = MqBufferLCreateArgsV(NULL, "c0", "@", "../example/c/testserver", NULL);
   const char *debug = getenv("TS_DEBUG");
+  struct MqBufferLS *args;
 
   ctx = MqContextCreate(0, NULL);
   MqConfigSetName(ctx, "c0");
   MqConfigSetSrvName(ctx, "s0");
   MqConfigSetDebug(ctx, debug != NULL ? atoi(debug) : 0);
-  MqErrorCheck (MqLinkCreateChild (ctx, c10, &bs0));
+  MqErrorCheck (MqLinkCreate(ctx, &bs0));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx,&bs0));
   c0 = ctx;
 
-  ctx = MqContextCreate(0, c0);
-  MqConfigSetName(ctx, "c00");
-  MqConfigSetSrvName(ctx, "s00");
-  MqErrorCheck (MqLinkCreateChild (ctx, c0, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c00", "--srvname", "s00", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c0, &args));
   c00 = ctx;
 
-  ctx = MqContextCreate(0, c0);
-  MqConfigSetName(ctx, "c01");
-  MqConfigSetSrvName(ctx, "s01");
-  MqErrorCheck (MqLinkCreateChild (ctx, c0, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c01", "--srvname", "s01", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c0, &args));
   c01 = ctx;
 
-  ctx = MqContextCreate(0, c00);
-  MqConfigSetName(ctx, "c000");
-  MqConfigSetSrvName(ctx, "s000");
-  MqErrorCheck (MqLinkCreateChild (ctx, c00, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c000", "--srvname", "s000", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c00, &args));
   c000 = ctx;
 
   ctx = MqContextCreate(0, NULL);
@@ -80,22 +80,19 @@ int main (int argc, MQ_CST argv[])
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   c1 = ctx;
 
-  ctx = MqContextCreate(0, c1);
-  MqConfigSetName(ctx, "c10");
-  MqConfigSetSrvName(ctx, "s10");
-  MqErrorCheck (MqLinkCreateChild (ctx, c1, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c10", "--srvname", "s10", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c1, &args));
   c10 = ctx;
 
-  ctx = MqContextCreate(0, c10);
-  MqConfigSetName(ctx, "c100");
-  MqConfigSetSrvName(ctx, "s100");
-  MqErrorCheck (MqLinkCreateChild (ctx, c10, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c100", "--srvname", "s100", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c10, &args));
   c100 = ctx;
 
-  ctx = MqContextCreate(0, c10);
-  MqConfigSetName(ctx, "c101");
-  MqConfigSetSrvName(ctx, "s101");
-  MqErrorCheck (MqLinkCreateChild (ctx, c10, NULL));
+  ctx = MqContextCreate(0, NULL);
+  args = MqBufferLCreateArgsV (ctx, "xx", "--name", "c101", "--srvname", "s101", NULL);
+  MqErrorCheck (MqLinkCreateChild (ctx, c10, &args));
   c101 = ctx;
 
   // do the tests

@@ -9,542 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqS
- * Method:    ContextCreate
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ContextDelete
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextDelete
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    Exit
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkCreate
- * Signature: ([Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkCreate
-  (JNIEnv *, jobject, jobjectArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkCreateChild
- * Signature: (Ljavamsgque/MqS;[Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkCreateChild
-  (JNIEnv *, jobject, jobject, jobjectArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkDelete
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkDelete
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkGetParent
- * Signature: ()Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_LinkGetParent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkIsParent
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsParent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkIsConnected
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsConnected
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    LinkGetCtxId
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_LinkGetCtxId
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorC
- * Signature: (Ljava/lang/String;ILjava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorC
-  (JNIEnv *, jobject, jstring, jint, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorRaise
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorRaise
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorReset
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorReset
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorSet
- * Signature: (Ljava/lang/Throwable;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSet
-  (JNIEnv *, jobject, jthrowable);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorSetCONTINUE
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetCONTINUE
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorGetNum
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_ErrorGetNum
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorGetText
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ErrorGetText
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ErrorPrint
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorPrint
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceGetToken
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ServiceGetToken
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceGetFilter
- * Signature: ()Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceGetFilter
- * Signature: (I)Ljavamsgque/MqS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__I
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceIsTransaction
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ServiceIsTransaction
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceCreate
- * Signature: (Ljava/lang/String;Ljavamsgque/IService;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceCreate
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceProxy
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceProxy
- * Signature: (Ljava/lang/String;I)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
-  (JNIEnv *, jobject, jstring, jint);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ServiceDelete
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceDelete
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    pProcessEvent
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_pProcessEvent
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendSTART
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendSTART
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendEND
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendEND_AND_WAIT
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendEND_AND_WAIT
- * Signature: (Ljava/lang/String;I)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2I
-  (JNIEnv *, jobject, jstring, jint);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendEND_AND_CALLBACK
- * Signature: (Ljava/lang/String;Ljavamsgque/ICallback;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1CALLBACK
-  (JNIEnv *, jobject, jstring, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendRETURN
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendRETURN
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendERROR
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendERROR
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendY
- * Signature: (B)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendY
-  (JNIEnv *, jobject, jbyte);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendO
- * Signature: (Z)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendO
-  (JNIEnv *, jobject, jboolean);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendS
- * Signature: (S)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendS
-  (JNIEnv *, jobject, jshort);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendI
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendI
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendF
- * Signature: (F)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendF
-  (JNIEnv *, jobject, jfloat);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendW
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendW
-  (JNIEnv *, jobject, jlong);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendD
- * Signature: (D)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendD
-  (JNIEnv *, jobject, jdouble);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendC
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendC
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendB
- * Signature: ([B)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendB
-  (JNIEnv *, jobject, jbyteArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendN
- * Signature: ([B)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendN
-  (JNIEnv *, jobject, jbyteArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendBDY
- * Signature: ([B)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendBDY
-  (JNIEnv *, jobject, jbyteArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendU
- * Signature: (Ljavamsgque/MqBufferS;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendU
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendL_START
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1START
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendL_END
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1END
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadY
- * Signature: ()B
- */
-JNIEXPORT jbyte JNICALL Java_javamsgque_MqS_ReadY
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadO
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ReadO
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadS
- * Signature: ()S
- */
-JNIEXPORT jshort JNICALL Java_javamsgque_MqS_ReadS
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadI
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_ReadI
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadF
- * Signature: ()F
- */
-JNIEXPORT jfloat JNICALL Java_javamsgque_MqS_ReadF
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadW
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_javamsgque_MqS_ReadW
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadD
- * Signature: ()D
- */
-JNIEXPORT jdouble JNICALL Java_javamsgque_MqS_ReadD
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadC
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ReadC
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadB
- * Signature: ()[B
- */
-JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadB
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadN
- * Signature: ()[B
- */
-JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadN
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadBDY
- * Signature: ()[B
- */
-JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadBDY
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadU
- * Signature: ()Ljavamsgque/MqBufferS;
- */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ReadU
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadProxy
- * Signature: (Ljavamsgque/MqS;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadProxy
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadL_START
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1START__
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadL_START
- * Signature: (Ljavamsgque/MqBufferS;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1START__Ljavamsgque_MqBufferS_2
-  (JNIEnv *, jobject, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadL_END
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1END
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadGetNumItems
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_ReadGetNumItems
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadItemExists
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ReadItemExists
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadUndo
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadUndo
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    Init
  * Signature: ([Ljava/lang/String;)V
  */
@@ -797,6 +261,542 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetIoUdsFile
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetIoPipeSocket
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ContextCreate
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ContextDelete
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextDelete
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    Exit
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkCreate
+ * Signature: ([Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkCreate
+  (JNIEnv *, jobject, jobjectArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkCreateChild
+ * Signature: (Ljavamsgque/MqS;[Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkCreateChild
+  (JNIEnv *, jobject, jobject, jobjectArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkDelete
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkDelete
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkGetParent
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_LinkGetParent
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkIsParent
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsParent
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkIsConnected
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_LinkIsConnected
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkGetCtxId
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_LinkGetCtxId
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetToken
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ServiceGetToken
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetFilter
+ * Signature: ()Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceGetFilter
+ * Signature: (I)Ljavamsgque/MqS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ServiceGetFilter__I
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceIsTransaction
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ServiceIsTransaction
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceCreate
+ * Signature: (Ljava/lang/String;Ljavamsgque/IService;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceCreate
+  (JNIEnv *, jobject, jstring, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceProxy
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceProxy
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceDelete
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceDelete
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    pProcessEvent
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_pProcessEvent
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorC
+ * Signature: (Ljava/lang/String;ILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorC
+  (JNIEnv *, jobject, jstring, jint, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorRaise
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorRaise
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorReset
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorReset
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorSet
+ * Signature: (Ljava/lang/Throwable;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSet
+  (JNIEnv *, jobject, jthrowable);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorSetCONTINUE
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetCONTINUE
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorGetNum
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_ErrorGetNum
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorGetText
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ErrorGetText
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorPrint
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorPrint
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadY
+ * Signature: ()B
+ */
+JNIEXPORT jbyte JNICALL Java_javamsgque_MqS_ReadY
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadO
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ReadO
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadS
+ * Signature: ()S
+ */
+JNIEXPORT jshort JNICALL Java_javamsgque_MqS_ReadS
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadI
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_ReadI
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadF
+ * Signature: ()F
+ */
+JNIEXPORT jfloat JNICALL Java_javamsgque_MqS_ReadF
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadW
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_ReadW
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadD
+ * Signature: ()D
+ */
+JNIEXPORT jdouble JNICALL Java_javamsgque_MqS_ReadD
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadC
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ReadC
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadB
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadB
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadN
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadN
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadBDY
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadBDY
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadU
+ * Signature: ()Ljavamsgque/MqBufferS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ReadU
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadProxy
+ * Signature: (Ljavamsgque/MqS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadProxy
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadL_START
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1START__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadL_START
+ * Signature: (Ljavamsgque/MqBufferS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1START__Ljavamsgque_MqBufferS_2
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadL_END
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1END
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadGetNumItems
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_ReadGetNumItems
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadItemExists
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ReadItemExists
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadUndo
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadUndo
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendSTART
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendSTART
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendEND
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendEND_AND_WAIT
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendEND_AND_WAIT
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1WAIT__Ljava_lang_String_2I
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendEND_AND_CALLBACK
+ * Signature: (Ljava/lang/String;Ljavamsgque/ICallback;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendEND_1AND_1CALLBACK
+  (JNIEnv *, jobject, jstring, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendRETURN
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendRETURN
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendERROR
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendERROR
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendY
+ * Signature: (B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendY
+  (JNIEnv *, jobject, jbyte);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendO
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendO
+  (JNIEnv *, jobject, jboolean);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendS
+ * Signature: (S)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendS
+  (JNIEnv *, jobject, jshort);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendI
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendI
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendF
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendF
+  (JNIEnv *, jobject, jfloat);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendW
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendW
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendD
+ * Signature: (D)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendD
+  (JNIEnv *, jobject, jdouble);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendC
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendC
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendB
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendB
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendN
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendN
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendBDY
+ * Signature: ([B)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendBDY
+  (JNIEnv *, jobject, jbyteArray);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendU
+ * Signature: (Ljavamsgque/MqBufferS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendU
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendL_START
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1START
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendL_END
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1END
   (JNIEnv *, jobject);
 
 /*

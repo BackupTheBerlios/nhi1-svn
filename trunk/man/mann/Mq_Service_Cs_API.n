@@ -1,0 +1,145 @@
+.TH "Mq_Service_Cs_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Service_Cs_API \- create and manage services   
+
+.PP
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBcsmsgque::MqS.WAIT\fP { \fBcsmsgque::MqS.NO\fP =  0, \fBcsmsgque::MqS.ONCE\fP =  1, \fBcsmsgque::MqS.FOREVER\fP =  2 }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ServiceGetToken\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.ServiceIsTransaction\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.ti -1c
+.RI "\fBMqS\fP \fBcsmsgque::MqS.ServiceGetFilter\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ServiceCreate\fP (string token, Callback call)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ServiceCreate\fP (string token, IService call)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ServiceDelete\fP (string token)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ServiceProxy\fP (string token)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ServiceProxy\fP (string token, int id)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ProcessEvent\fP (long timeout, WAIT wait)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ProcessEvent\fP (WAIT wait)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ProcessEvent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage services  
+
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function.  
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcsmsgque::MqS::WAIT\fP\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fINO \fP\fP
+.TP
+\fB\fIONCE \fP\fP
+.TP
+\fB\fIFOREVER \fP\fP
+
+.PP
+Definition at line 100 of file service.cs.
+.SH "Function Documentation"
+.PP 
+.SS "void csmsgque.MqS.ProcessEvent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event 
+.PP
+Definition at line 115 of file service.cs.
+.SS "void csmsgque.MqS.ProcessEvent (\fBWAIT\fP wait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time 
+.PP
+Definition at line 111 of file service.cs.
+.SS "void csmsgque.MqS.ProcessEvent (long timeout, \fBWAIT\fP wait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error 
+.PP
+Definition at line 107 of file service.cs.
+.SS "void csmsgque.MqS.ServiceCreate (string token, \fBIService\fP call)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+Definition at line 80 of file service.cs.
+.SS "void csmsgque.MqS.ServiceCreate (string token, Callback call)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+Definition at line 75 of file service.cs.
+.SS "void csmsgque.MqS.ServiceDelete (string token)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP 
+.PP
+Definition at line 85 of file service.cs.
+.SS "\fBMqS\fP csmsgque.MqS.ServiceGetFilter ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP 
+.PP
+Definition at line 68 of file service.cs.
+.SS "string csmsgque.MqS.ServiceGetToken ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP 
+.PP
+Definition at line 58 of file service.cs.
+.SS "bool csmsgque.MqS.ServiceIsTransaction ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP 
+.PP
+Definition at line 63 of file service.cs.
+.SS "void csmsgque.MqS.ServiceProxy (string token, int id)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+Definition at line 95 of file service.cs.
+.SS "void csmsgque.MqS.ServiceProxy (string token)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+Definition at line 90 of file service.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -1,4 +1,4 @@
-.TH "pymsgque" n "9 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "11 Jan 2010" "Version 4.1" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -78,7 +78,7 @@ create a new context and initialize the default configuration data
 .RS 4
 \fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
 .br
-\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the configuration data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
 .RE
 .PP
 \fBReturns:\fP
@@ -102,9 +102,25 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .fi
 .PP
 .SS "del ctx"
-Delete the entire object including the application link using \fBLinkDelete\fP. The object can \fBnot\fP be reused.
+delete the \fIcontext\fP 
+.PP
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINone\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx=MqS()\fP 
+.RE
+.PP
 .SS "ctx.Exit()"
-Shutdown the entire communication and exit the current process or thread.
+delete the \fIcontext\fP and exit the current process or thread 
+.PP
+This function will never return.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx=MqS()\fP 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBInit\fP
@@ -224,14 +240,6 @@ Start a \fIpipe\fP server to listen on \fIsocket\fP. This is the \fBdefault\fP m
 \fIsocket\fP the file-descriptor number. The only public usage for this option is to serve as interface for an existing tool like (x)inetd. The (x)inetd tool is a \fIUNIX\fP service to listen on a tcp/ip port and start for every connection the proper entry from the file \fI/etc/\fP(x)inetd.conf with the file-descriptor \fI0\fP as send/recv socket handle.
 .RE
 .PP
-.SS "master"
-\fBtype:\fP \fCPyObject\fP, \fBget:\fP \fCConfigGetMaster\fP , \fBset:\fP \fC\fBSLAVE API\fP\fP
-.PP
-return the \fImaster\fP if \fIctx\fP is a slave-context or \fINULL\fP if \fIctx\fP is not a slave-context. !Only a SLAVE has a master!
-.SS "isSlave"
-\fBtype:\fP \fCPyBool\fP, \fBget:\fP \fCConfigGetIsSlave\fP , \fBset:\fP \fCNO\fP
-.PP
-True if object is a \fIslave\fP object (default: \fIFalse\fP, not be a slave)
 .SS "command-line: --thread --spawn --fork"
 \fBtype:\fP \fCPyLong\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs (startAs)\fP
 .PP
@@ -1062,36 +1070,38 @@ an \fBEXCEPTION OBJECT\fP on error
 .br
  \fBSlaveGet\fP
 .br
+ \fBSlaveGetMaster\fP
+.br
+ \fBSlaveIs\fP
+.br
 .PP
-The master/slave link is used to create a mesh of nodes and to link different \fIPARENT\fP context objects together. \fBThe master control the slave.\fP
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
-The \fIlink\fP is used to perform the following tasks:
+The \fImaster-slave-link\fP is used to perform the following tasks:
 .IP "\(bu" 2
-report error messages from the \fIslave\fP to the \fImaster\fP 
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
 .IP "\(bu" 2
 to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
 .IP "\(bu" 2
 to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
 .PP
-In difference to the \fIclient/server\fP link the \fImaster/slave\fP link connect two independent msgque-context in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-msgque-context\fP can be a \fIserver\fP because only \fIon\fP server per node is possible.
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
 .PP
 .PP
 .nf
 
-    node-0   |           node-1          |   node-2
+    node-0   |           node-1/2        |   node-3/4/5
 ===================================================================
 
 | <- client/server link -> | <- client/server link -> |
 
              | <-- master/slave link --> |
 
-                           |- client1-0 -|- server2-0 ...
-                           |
-             |- server1-0 -|             |- server2-1 ...
-             |             |- client1-1 -|- server2-2 ...
-  client0-0 -|                           |- server2-3
-             |
-             |- server1-1 -|- client1-2 -|- server2-4 ...
+                           |- client1-0 -|- server3 ...
+             |-  server1  -|             
+             |             |- client1-1 -|- server4 ...
+  client0-0 -|                           
+             |-  server2  -|- client1-2 -|- server5 ...
 .fi
 .PP
  
@@ -1167,7 +1177,7 @@ it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\f
 .RE
 .PP
 .SS "MqS ctx.SlaveGet(id)"
-get the slave context 
+get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1178,7 +1188,33 @@ get the slave context
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIctx\fP is not a \fImaster-context\fP. 
+the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
+.RE
+.PP
+.SS "MqS ctx.SlaveGetMaster(id)"
+get the \fImaster-context\fP from the \fIslave-context\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx=MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fImaster-context\fP or \fINone\fP if the \fIcontext\fP is no \fIslave-context\fP 
+.RE
+.PP
+.SS "PyBool ctx.SlaveIs(id)"
+is the \fIcontext\fP a \fIslave-context\fP ? 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBctx=MqS()\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 .SH "BUFFER API"

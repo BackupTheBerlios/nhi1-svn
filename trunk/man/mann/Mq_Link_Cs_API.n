@@ -1,0 +1,84 @@
+.TH "Mq_Link_Cs_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Link_Cs_API \- setup and manage a \fIclient-server-link\fP   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.LinkIsParent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkIsParent\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.LinkIsConnected\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkIsConnected\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqS.LinkGetCtxId\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkGetCtxId\fP "
+.ti -1c
+.RI "\fBMqS\fP \fBcsmsgque::MqS.LinkGetParent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkGetParent\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.LinkCreate\fP (params string[] argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkCreate\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.LinkCreateChild\fP (\fBMqS\fP parent, params string[] argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkCreateChild\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.LinkDelete\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkDelete\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+setup and manage a \fIclient-server-link\fP  
+
+To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library.  
+.SH "Function Documentation"
+.PP 
+.SS "void csmsgque.MqS.LinkCreate (params string[] argv)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkCreate\fP 
+.PP
+Definition at line 79 of file link.cs.
+.SS "void csmsgque.MqS.LinkCreateChild (\fBMqS\fP parent, params string[] argv)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkCreateChild\fP 
+.PP
+Definition at line 96 of file link.cs.
+.SS "void csmsgque.MqS.LinkDelete ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkDelete\fP 
+.PP
+Definition at line 113 of file link.cs.
+.SS "int csmsgque.MqS.LinkGetCtxId ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkGetCtxId\fP 
+.PP
+Definition at line 68 of file link.cs.
+.SS "\fBMqS\fP csmsgque.MqS.LinkGetParent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkGetParent\fP 
+.PP
+Definition at line 73 of file link.cs.
+.SS "bool csmsgque.MqS.LinkIsConnected ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkIsConnected\fP 
+.PP
+Definition at line 63 of file link.cs.
+.SS "bool csmsgque.MqS.LinkIsParent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBLinkIsParent\fP 
+.PP
+Definition at line 58 of file link.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

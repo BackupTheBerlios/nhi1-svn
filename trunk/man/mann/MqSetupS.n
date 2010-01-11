@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "10 Jan 2010" "Version 4.1" "javamsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -108,7 +108,7 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/JAVA/Filter4.JAVA\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/VB.NET/Filter4\fP.VB.NET 
 .RE
 .PP
 
@@ -225,4 +225,4 @@ Definition at line 806 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

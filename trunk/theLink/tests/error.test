@@ -187,7 +187,7 @@ C> (client-0) found in function "GenericConnect" at file "generic_io.c"
 C> (client-0) found in function "TcpConnect" at file "tcp_io.c"
 C> (client-0) found in function "pIoConnect" at file "io.c"
 C> (client-0) found in function "MqLinkCreate" at file "link.c"
-C> (client-0) found in function "MqDefaultLinkCreate" at file "link.c"}
+C> (client-0) found in function "MqLinkDefault" at file "link.c"}
 
 test error-6-($I|$B|$C|$S) {error in callback} \
     -setup          {
@@ -274,7 +274,7 @@ S> (server) found in function "GenericServer" at file "generic_io.c*"
 S> (server) found in function "UdsServer" at file "uds_io.c*"
 S> (server) found in function "pIoCreate" at file "io.c*"
 S> (server) found in function "MqLinkCreate" at file "msgque.c*"
-S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c*"}
+S> (server) found in function "MqLinkDefault" at file "msgque.c*"}
 
     test error-4-($C|$S) {port with wrong service-name} \
       -constraints  tcp \
@@ -285,7 +285,7 @@ S> (server) found in function "sTcpCreateAddrInfo" at file "tcp_io.c*"
 S> (server) found in function "TcpCreate" at file "tcp_io.c*"
 S> (server) found in function "pIoCreate" at file "io.c*"
 S> (server) found in function "MqLinkCreate" at file "msgque.c*"
-S> (server) found in function "MqDefaultLinkCreate" at file "msgque.c*"}
+S> (server) found in function "MqLinkDefault" at file "msgque.c*"}
 
   }
 }
@@ -408,7 +408,7 @@ test error-10-($x) "'--$x' option in a thread enabled interpreter" \
     -match	    glob \
     -result         "CHILDSTATUS-204-S> (server) \\\[sMqCheckArg] for a 'local' setup the option '--$x' is forbidden
 S> (server) found in function \"MqLinkCreate\" at file \"msgque.c\"
-S> (server) found in function \"MqDefaultLinkCreate\" at file \"msgque.c\"
+S> (server) found in function \"MqLinkDefault\" at file \"msgque.c\"
 C> (client) \\\[MqLinkCreate] can not start server '*'
 C> (client) found in function \"MqLinkCreate\" at file \"msgque.c\"
 C> (client) use '-h' or '--help' for usage"
@@ -422,7 +422,7 @@ test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
     -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "msgque.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"
-S> (server) found in function "MqDefaultLinkCreate" at file "link.c"
+S> (server) found in function "MqLinkDefault" at file "link.c"
 C> (client) \[MqLinkCreate] can not start server '*'
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
@@ -455,7 +455,7 @@ test error-F9a-$S {startup -> wrong parent option} \
     -match          glob \
     -result         {C> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
 C> (client) => -wrong_option
-C> (client) found in function "MqDefaultLinkCreate" at file "link.c"}
+C> (client) found in function "MqLinkDefault" at file "link.c"}
 
 test error-F9b-S {startup -> wrong child option} \
     -constraints    {local} \
@@ -476,7 +476,7 @@ test error-F9b-S {startup -> wrong child option} \
     -match          glob \
     -result         {c> (client) \[MqCheckForLeftOverArguments\] invalid \[OPTION\]... found:
 c> (client) => -wrong_option
-c> (client) found in function "MqDefaultLinkCreate" at file "link.c"}
+c> (client) found in function "MqLinkDefault" at file "link.c"}
 
 }; # SRV_LST
 unset -nocomplain S
@@ -491,7 +491,7 @@ test error-12-$S {server with UDS startup} \
     -result     {CHILDSTATUS-222-S> (server) [sIoCheckArg] for a 'win32' setup the option '--uds' is forbidden
 S> (server) found in function "pIoCreate" at file "io.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"
-S> (server) found in function "MqDefaultLinkCreate" at file "link.c"}
+S> (server) found in function "MqLinkDefault" at file "link.c"}
 
 }; # SRV_LST
 unset -nocomplain S
@@ -527,6 +527,7 @@ unset -nocomplain S
 ##
 
 freeTests
+
 
 
 

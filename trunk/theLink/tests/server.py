@@ -28,7 +28,7 @@ class Client(MqS):
     super().LinkCreate(["client", "@", "SELF"])
 
   def BgError(self):
-    master = self.ConfigGetMaster();
+    master = self.SlaveGetMaster();
     if (master != None):
       master.ErrorC ("BGERROR", self.ErrorGetNum(), self.ErrorGetText());
       master.SendERROR();
@@ -74,10 +74,7 @@ class Server(MqS):
 
   def ServerSetup(self):
     #print("ServerSetup ----------- ", self)
-    if self.ConfigGetIsSlave():
-      # add "slave" services here
-      nope
-    else:
+    if (self.SlaveIs() == False):
       # initialize objects
       self.cl = [Client(), Client(), Client()]
       for i in range(3):
@@ -237,7 +234,7 @@ class Server(MqS):
     self.SendSTART();
     self.SendO(self.ConfigGetIsServer());
     self.SendO(self.LinkIsParent());
-    self.SendO(self.ConfigGetIsSlave());
+    self.SendO(self.SlaveIs());
     self.SendO(self.ConfigGetIsString());
     self.SendO(self.ConfigGetIsSilent());
     self.SendO(self.LinkIsConnected());
@@ -560,7 +557,7 @@ class Server(MqS):
     self.SendRETURN()
 
   def Callback2 (self, ctx):
-    ctx.ConfigGetMaster().i = ctx.ReadI();
+    ctx.SlaveGetMaster().i = ctx.ReadI();
 
   def SND2 (self):
     s = self.ReadC()
@@ -623,7 +620,7 @@ class Server(MqS):
       slv = ClientERR2()
       slv.LinkCreate(self.ConfigGetDebug())
     elif s == "isSlave" :
-      self.SendO(cl.ConfigGetIsSlave());
+      self.SendO(cl.SlaveIs());
       
     self.SendRETURN()
 
@@ -647,6 +644,8 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
+
 
 
 

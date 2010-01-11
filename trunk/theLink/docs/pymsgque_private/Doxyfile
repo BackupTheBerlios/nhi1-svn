@@ -15,10 +15,11 @@
 #---------------------------------------------------------------------------
 
 
-TAGFILES            =	$(DOCDIR)/../libmsgque_public/libmsgque_public.tag=../libmsgque_public \
-			$(DOCDIR)/../pymsgque/pymsgque.tag=../pymsgque
-INPUT		    = $(SRCDIR)/pymsgque .
-FILE_PATTERNS	    = *.[ch] *.doc
-EXAMPLE_PATH	    = $(SRCDIR)/tests
+INPUT			+= $(SRCDIR)/pymsgque .
+FILE_PATTERNS		+= *.doc $(SRCDIR)/pymsgque/*.[ch]
+EXAMPLE_PATH		= $(SRCDIR)/tests
+OPTIMIZE_OUTPUT_JAVA	= NO
+OPTIMIZE_OUTPUT_FOR_C	= YES
+STRIP_FROM_PATH		+= $(SRCDIR)/pymsgque
 
-ALIASES		    +=	"pymsgque=\e pymsgque"
+ALIASES			+= "libmsgque=\ref Mq_C_API \"libmsgque\""

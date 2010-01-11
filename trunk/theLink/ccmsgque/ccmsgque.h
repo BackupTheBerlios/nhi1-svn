@@ -28,6 +28,7 @@
 /// \copydoc Mq_C_API
 /// \{
 
+/// \brief The CcMsgque Libraray
 namespace ccmsgque {
 
   using namespace std;
@@ -73,6 +74,7 @@ namespace ccmsgque {
       virtual void Event () = 0;
   };
 
+  /// \ingroup Mq_Error_CC_API
   /// \api #MqErrorS
   class MqCException : public exception
   {
@@ -104,8 +106,12 @@ namespace ccmsgque {
 	return p_code;
       }
   };
-
-  /// \api #MqBufferS
+ 
+  /// \defgroup Mq_Buffer_CC_API Mq_Buffer_CC_API
+  /// \ingroup Mq_CC_API
+  /// \brief \copybrief Mq_Buffer_C_API
+  /// \details \copydetails Mq_Buffer_C_API
+  /// \{
   class MqBufferC {
     private:
       struct MqBufferS * hdl;
@@ -195,7 +201,9 @@ namespace ccmsgque {
 	MqBufferReset (hdl);
       }
   };
+  /// \} Mq_Buffer_CC_API
 
+  /// \ingroup Mq_Config_CC_API
   /// \api #MqS
   class MqC {
 
@@ -466,7 +474,7 @@ namespace ccmsgque {
 	va_end (ap);
       }
 
-      /// \brief throw an #javamsgque.MqCException using the data from #MqErrorS
+      /// \brief throw an #ccmsgque::MqCException using the data from #MqErrorS
       inline void ErrorRaise () throw(MqCException) {
 	ErrorCheck (MqErrorGetCodeI (&context));
       }

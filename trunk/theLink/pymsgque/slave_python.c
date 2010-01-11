@@ -88,3 +88,28 @@ PyObject* NS(SlaveGet) (
   return retO;
 }
 
+PyObject* NS(SlaveIs) (
+  PyObject    *self
+)
+{
+  if (MqSlaveIsI(CONTEXT)) {
+    Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
+  }
+}
+
+PyObject* NS(SlaveGetMaster) (
+  PyObject  *self 
+)
+{
+  struct MqS * const master = MqSlaveGetMasterI(CONTEXT);
+  if (master == NULL) {
+    Py_RETURN_NONE;
+  } else {
+    PyObject *masterO = ((PyObject *)master->self);
+    Py_INCREF(masterO);
+    return masterO;
+  }
+}
+

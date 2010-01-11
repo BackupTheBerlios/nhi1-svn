@@ -1,4 +1,4 @@
-.TH "Mq_Context_CC_API" n "10 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,20 +86,20 @@ The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a 
 .PP 
 .SS "void ccmsgque::MqC::Exit ()\fC [inline, inherited]\fP"
 .PP
-Definition at line 361 of file ccmsgque.h.
+Definition at line 369 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqC::GetTempBuffer ()\fC [inline, inherited]\fP"
 .PP
-Definition at line 360 of file ccmsgque.h.
+Definition at line 368 of file ccmsgque.h.
 .SS "ccmsgque::MqC::MqC ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
 .SS "void ccmsgque::MqC::Sleep (unsigned int const  sec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
-Definition at line 362 of file ccmsgque.h.
+Definition at line 370 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::USleep (unsigned int const  usec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
-Definition at line 363 of file ccmsgque.h.
+Definition at line 371 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqC::~MqC ()\fC [virtual, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
@@ -110,7 +110,7 @@ implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP
 .PP
 link between \fBMqC\fP and \fBMqS\fP 
 .PP
-Definition at line 296 of file ccmsgque.h.
+Definition at line 304 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

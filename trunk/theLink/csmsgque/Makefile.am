@@ -25,8 +25,8 @@
 SUFFIXES = .cs .dll .exe
 
 CSHARP_FILES = $(srcdir)/buffer.cs $(srcdir)/config.cs $(srcdir)/csmsgque.cs $(srcdir)/link.cs $(srcdir)/pointer.cs \
-	$(srcdir)/send.cs $(srcdir)/slave.cs $(srcdir)/bufferL.cs $(srcdir)/context.cs $(srcdir)/error.cs \
-	$(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs $(srcdir)/sys.cs
+	$(srcdir)/send.cs $(srcdir)/slave.cs $(srcdir)/context.cs $(srcdir)/error.cs \
+	$(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs
 
 if USE_CSHARP
 csmsgque.dll: $(CSHARP_FILES) .vpath_hook

@@ -250,13 +250,6 @@ static void FactoryDelete (
   }
 }
 
-/****************************************************************************************
- *
- *			      XS - C O D E
- *
- ****************************************************************************************/
-
-
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque
 
 void
@@ -289,8 +282,8 @@ new(SV* MqS_class)
       ST(0) = sv_newmortal();
       sv_setref_pv(ST(0), SvPV_nolen(MqS_class), (void*)context);
       context->self			  = SvREFCNT_inc(ST(0));
-      context->setup.Child.fCreate	  = MqDefaultLinkCreate;
-      context->setup.Parent.fCreate	  = MqDefaultLinkCreate;
+      context->setup.Child.fCreate	  = MqLinkDefault;
+      context->setup.Parent.fCreate	  = MqLinkDefault;
       context->setup.fProcessExit	  = ProcessExit;
       context->setup.fThreadExit	  = ThreadExit;
       context->setup.Factory.Delete.fCall = FactoryDelete;
@@ -523,16 +516,6 @@ MqConfigGetStartAs (MqS* context)
 void
 MqConfigSetDaemon (MqS* context, MQ_CST pidfile)
 
-
-void
-ConfigGetMaster(MqS* context)
-  PREINIT:
-    MqS* master;
-  PPCODE:
-    master = (MqS*) MqConfigGetMaster(context);
-    ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
-    XSRETURN(1);
-
 void
 MqConfigSetIsSilent (MqS* context, bool isSilent)
 
@@ -553,9 +536,6 @@ MqConfigSetIsServer (MqS* context, bool isServer)
 
 bool
 MqConfigGetIsServer (MqS* context)
-
-bool
-MqConfigGetIsSlave (MqS* context)
 
 void
 MqConfigSetServerSetup (MqS* context, SV* setupF)
@@ -991,21 +971,21 @@ MqSlaveGet (MqS* context, MQ_SIZE id)
     XSRETURN(1);
 
 void
+SlaveGetMaster(MqS* context)
+  PREINIT:
+    MqS* master;
+  PPCODE:
+    master = (MqS*) MqSlaveGetMaster(context);
+    ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
+    XSRETURN(1);
+
+bool
+MqSlaveIs (MqS* context)
+
+void
 MqLog (MqS* context, MQ_CST prefix, MQ_INT level, MQ_CST str)
   CODE:
     if (context->config.debug >= level) MqDLogX(context,prefix,level,str);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqBufferS
@@ -1096,3 +1076,4 @@ GetB (MqBufferS *buffer)
     RETVAL = newSVpvn((MQ_CST)bin, len);
   OUTPUT:
     RETVAL
+

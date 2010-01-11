@@ -786,7 +786,7 @@ BgError (
   MQ_PTR data
 )
 {
-  struct MqS * const master = MqConfigGetMaster(mqctx);
+  struct MqS * const master = MqSlaveGetMaster(mqctx);
   if (master) {
     MqErrorC (master, "BGERROR", MqErrorGetNumI(mqctx), MqErrorGetText(mqctx));
     MqSendERROR (master);
@@ -1030,11 +1030,12 @@ Ot_SND2 (
       clmqctx = MqContextCreate (sizeof(struct ClientCtxS), NULL);
       MqConfigSetDebug(clmqctx, MqConfigGetDebug(mqctx));
       if (MqErrorCheckI(MqLinkCreate(clmqctx, &args))) {
+	MqErrorCopy(mqctx, clmqctx);
 	MqContextDelete (&clmqctx);
       }
       MqBufferLDelete(&args);
     } else if (!strcmp(s,"isSlave")) {
-      MqSendO(mqctx, MqConfigGetIsSlave(clmqctx));
+      MqSendO(mqctx, MqSlaveIs(clmqctx));
     }
 error:
   return MqSendRETURN (mqctx);
@@ -1066,7 +1067,7 @@ Ot_CNFG (
 
   MqSendO(mqctx,mqctx->setup.isServer);
   MqSendO(mqctx,MqLinkIsParent(mqctx));
-  MqSendO(mqctx,MqConfigGetIsSlave(mqctx));
+  MqSendO(mqctx,MqSlaveIs(mqctx));
   MqSendO(mqctx,mqctx->config.isString);
   MqSendO(mqctx,mqctx->config.isSilent);
   MqSendO(mqctx,MQ_YES);
@@ -1285,7 +1286,7 @@ ServerSetup (
   MQ_PTR data
 )
 {
-  if (MqConfigGetIsSlave(mqctx)) {
+  if (MqSlaveIs(mqctx)) {
     // add "slave" services here
   } else {
     // create the context data
@@ -1299,7 +1300,7 @@ ServerSetup (
       MqBufferSetV(buf, "sv-%i", i);
       MqConfigSetSrvName(srvctx->cl[i], buf->cur.C);
     }
-      // add "master" services here
+    // add "master" services here
     MqErrorCheck (MqServiceCreate (mqctx, "CSV1", Ot_CSV1, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR1", Ot_ERR1, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR2", Ot_ERR2, NULL, NULL));
@@ -1394,9 +1395,4 @@ error:
 }
 
 /** \} server */
-
-
-
-
-
 

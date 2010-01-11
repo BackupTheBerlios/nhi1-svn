@@ -24,6 +24,12 @@ namespace csmsgque {
   public partial class MqS
   {
 
+/// \defgroup Mq_Read_Cs_API Mq_Read_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Read_C_API
+/// \details \copydetails Mq_Read_C_API
+/// \{
+
     // PRIVAT
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadY")]
@@ -193,8 +199,8 @@ namespace csmsgque {
       ErrorMqToCsWithCheck(MqReadUndo(context));
     }
 
+/// \} Mq_Read_Cs_API
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
-
-
 

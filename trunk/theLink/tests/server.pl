@@ -33,7 +33,7 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub BgError {
     my $ctx = shift;
-    my $master = $ctx->ConfigGetMaster();
+    my $master = $ctx->SlaveGetMaster();
     if (defined($master)) {
       $master->ErrorC ("BGERROR", $ctx->ErrorGetNum(), $ctx->ErrorGetText());
       $master->SendERROR ();
@@ -388,7 +388,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendSTART();
     $ctx->SendO($ctx->ConfigGetIsServer());
     $ctx->SendO($ctx->LinkIsParent());
-    $ctx->SendO($ctx->ConfigGetIsSlave());
+    $ctx->SendO($ctx->SlaveIs());
     $ctx->SendO($ctx->ConfigGetIsString());
     $ctx->SendO($ctx->ConfigGetIsSilent());
     $ctx->SendO($ctx->LinkIsConnected());
@@ -581,7 +581,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$c->LinkCreate($ctx->ConfigGetDebug());
       } 
       case "isSlave" {
-	$ctx->SendO($cl->ConfigGetIsSlave());
+	$ctx->SendO($cl->SlaveIs());
       }
     }
     $ctx->SendRETURN();
@@ -709,7 +709,7 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub ServerSetup {
     my $ctx = shift;
-    if ($ctx->ConfigGetIsSlave()) {
+    if ($ctx->SlaveIs()) {
       # add "slave" services here
     } else {
       #$ctx->Log("ServerSetup", 0, "22222222222222222\n");
@@ -794,8 +794,5 @@ package main;
   $srv->Exit();
 
 1;
-
-
-
 
 

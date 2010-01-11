@@ -21,7 +21,7 @@
 namespace ccmsgque {
 
   void MqC::ServiceCreate(
-    char const * const	  token,
+    MQ_CST const	  token,
     CallbackF const	  callback
   ) throw(MqCException)
   {
@@ -32,7 +32,7 @@ namespace ccmsgque {
   }
 
   void MqC::ServiceCreate(
-    char const * const	  token,
+    MQ_CST const	  token,
     IService * const	  service
   ) throw(MqCException)
   {
@@ -43,7 +43,7 @@ namespace ccmsgque {
   }
 
   void MqC::ServiceDelete(
-    char const * const	  token
+    MQ_CST const	  token
   ) throw(MqCException)
   {
     ErrorCheck (MqServiceDelete(&context, token));
