@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -66,15 +66,15 @@ Mq_Send_C_API \- construct an outgoing \fIsend-data-package\fP.
 .br
 .R "initialize the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_TIME_T\fP const timeout)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMqServiceCallbackF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. "
 .ti -1c
@@ -182,7 +182,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token)"
+.SS "enum \fBMqErrorE\fP MqSendEND (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token)"
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
 .PP
@@ -201,7 +201,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token, \fBMqTokenF\fP const  callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token, \fBMqServiceCallbackF\fP const  callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
@@ -226,7 +226,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
+.SS "enum \fBMqErrorE\fP MqSendEND_AND_WAIT (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token, \fBMQ_TIME_T\fP const  timeout)"
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP

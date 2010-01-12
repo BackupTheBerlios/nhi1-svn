@@ -186,7 +186,7 @@ port:
 \endif
 
 Three things are important:
- -# the \RNS{send} "send" style of functions
+ -# the \RNS{SendData} "send" style of functions
  -# the \RNS{ServiceCreate} function
  -# a \RNS{LinkCreate} "connected" context of type \RNS{ContextCreate}
  .
@@ -201,7 +201,7 @@ Sending data is done using a minimum of 2 steps:
 
 The first three \b SendEND... functions are used to \b call a remote service and
 the last one is used to answer an incoming service call. In-between \SendSTART
-and \SendEND ... other \RNS{send} style commands are available to fill the data 
+and \SendEND ... other \RNS{SendData} style commands are available to fill the data 
 package with data.
 
 Services are created with the \RNS{ServiceCreate} function. The first

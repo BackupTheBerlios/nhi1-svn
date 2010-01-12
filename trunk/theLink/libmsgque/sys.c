@@ -735,7 +735,7 @@ MqSysSleep (
 #if defined(_MSC_VER)
 MQ_STR
 MqSysBasename (
-  char const * const in,
+  MQ_CST const in,
   MQ_BOL includeExtension
 )
 {
@@ -753,7 +753,7 @@ MqSysBasename (
 #else
 MQ_STR
 MqSysBasename (
-  char const * const in,
+  MQ_CST const in,
   MQ_BOL includeExtension
 )
 {
@@ -931,4 +931,5 @@ void SysAbort (
 }
 
 END_C_DECLS
+
 

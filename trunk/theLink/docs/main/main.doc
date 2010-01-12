@@ -42,45 +42,45 @@ setup and maintain the link and is responsible for:\n
   </TR>
   <TR>  
     <TD>man pages</TD> 
-    <TD>\ref libmsgque "YES"</TD>
-    <TD>\ref ccmsgque "YES"</TD>
-    <TD>\ref csmsgque "YES"</TD>   
-    <TD>\ref javamsgque "YES"</TD>
-    <TD>\ref pymsgque "YES"</TD>   
-    <TD>\ref tclmsgque "YES"</TD>
-    <TD>\ref perlmsgque "YES"</TD>
-    <TD>\ref vbmsgque "YES"</TD>
+    <TD>\man{lib,YES}</TD>
+    <TD>\man{cc,YES}</TD>
+    <TD>\man{cs,YES}</TD>
+    <TD>\man{java,YES}</TD>
+    <TD>\man{py,YES}</TD>
+    <TD>\man{tcl,YES}</TD>
+    <TD>\man{perl,YES}</TD>
+    <TD>\man{vb,YES}</TD>
   </TR>
   <TR>  
     <TD>Tutorial</TD> 
-    <TD>\ref libmsgquetut "YES"</TD>
-    <TD>\ref ccmsgquetut "YES"</TD>
-    <TD>\ref csmsgquetut "YES"</TD>   
-    <TD>\ref javamsgquetut "YES"</TD>
-    <TD>\ref pymsgquetut "YES"</TD>   
-    <TD>\ref tclmsgquetut "YES"</TD>
-    <TD>\ref perlmsgquetut "YES"</TD>
-    <TD>\ref vbmsgquetut "YES"</TD>
+    <TD>\tut{lib,YES}</TD>
+    <TD>\tut{cc,YES}</TD>
+    <TD>\tut{cs,YES}</TD>
+    <TD>\tut{java,YES}</TD>
+    <TD>\tut{py,YES}</TD>
+    <TD>\tut{tcl,YES}</TD>
+    <TD>\tut{perl,YES}</TD>
+    <TD>\tut{vb,YES}</TD>
   </TR>
   <TR>  
     <TD>API Doc</TD> 
-    <TD>\ref Mq_C_API "YES"</TD>
-    <TD>\ref Mq_CC_API "YES"</TD>
-    <TD>\ref Mq_Cs_API "YES"</TD>
-    <TD>\ref Mq_Java_API "YES"</TD>
+    <TD>\apiref{lib,C,YES}</TD>
+    <TD>\apiref{cc,CC,YES}</TD>
+    <TD>\apiref{cs,Cs,YES}</TD>
+    <TD>\apiref{java,Java,YES}</TD>
     <TD>NO</TD>   
     <TD>NO</TD>
     <TD>NO</TD>
-    <TD>\ref Mq_Cs_API "YES"</TD>
+    <TD>\apiref{cs,Cs,YES}</TD>
   </TR>
   <TR>  
     <TD>SOURCE Doc</TD> 
-    <TD>\ref libmsgque_private "YES"</TD>
-    <TD>\ref ccmsgque_private "YES"</TD>
+    <TD>\private{lib,YES}</TD>
+    <TD>\private{cc,YES}</TD>
     <TD>NO</TD>   
-    <TD>\ref javamsgque_private "YES"</TD>
-    <TD>\ref pymsgque_private "YES"</TD>
-    <TD>\ref tclmsgque_private "YES"</TD>
+    <TD>\private{java,YES}</TD>
+    <TD>\private{py,YES}</TD>
+    <TD>\private{tcl,YES}</TD>
     <TD>NO</TD>   
     <TD>NO</TD>   
   </TR>
@@ -91,7 +91,6 @@ setup and maintain the link and is responsible for:\n
   \ref context\n
   \ref factory\n
   \ref client_versa_server\n
-  \ref parent_versa_child\n
   \ref master_versa_slave\n
   \ref filter\n
   \ref service_call\n

@@ -1,18 +1,10 @@
-.TH "Mq_Config_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Config_CC_API" n "12 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Config_CC_API \- configuration of the \fBMqS\fP object   
 
 .PP
-.SS "Data Structures"
-
-.in +1c
-.ti -1c
-.RI "class \fBccmsgque::MqC\fP"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
-.in -1c
 .SS "Functions"
 
 .in +1c
@@ -156,162 +148,162 @@ configuration of the \fBMqS\fP object
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP 
 .PP
-Definition at line 232 of file ccmsgque.h.
+Definition at line 248 of file ccmsgque.h.
 .SS "\fBMQ_INT\fP ccmsgque::MqC::ConfigGetBuffersize ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP 
 .PP
-Definition at line 275 of file ccmsgque.h.
+Definition at line 291 of file ccmsgque.h.
 .SS "\fBMQ_INT\fP ccmsgque::MqC::ConfigGetDebug ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP 
 .PP
-Definition at line 277 of file ccmsgque.h.
+Definition at line 293 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIdent ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP 
 .PP
-Definition at line 273 of file ccmsgque.h.
+Definition at line 289 of file ccmsgque.h.
 .SS "\fBMQ_SOCK\fP ccmsgque::MqC::ConfigGetIoPipeSocket ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP 
 .PP
-Definition at line 291 of file ccmsgque.h.
+Definition at line 307 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIoTcpHost ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP 
 .PP
-Definition at line 283 of file ccmsgque.h.
+Definition at line 299 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIoTcpMyHost ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP 
 .PP
-Definition at line 287 of file ccmsgque.h.
+Definition at line 303 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIoTcpMyPort ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP 
 .PP
-Definition at line 289 of file ccmsgque.h.
+Definition at line 305 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIoTcpPort ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP 
 .PP
-Definition at line 285 of file ccmsgque.h.
+Definition at line 301 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetIoUdsFile ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP 
 .PP
-Definition at line 281 of file ccmsgque.h.
+Definition at line 297 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::ConfigGetIsServer ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP 
 .PP
-Definition at line 263 of file ccmsgque.h.
+Definition at line 279 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::ConfigGetIsSilent ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP 
 .PP
-Definition at line 267 of file ccmsgque.h.
+Definition at line 283 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::ConfigGetIsString ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP 
 .PP
-Definition at line 265 of file ccmsgque.h.
+Definition at line 281 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetName ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP 
 .PP
-Definition at line 269 of file ccmsgque.h.
+Definition at line 285 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ConfigGetSrvName ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP 
 .PP
-Definition at line 271 of file ccmsgque.h.
+Definition at line 287 of file ccmsgque.h.
 .SS "enum \fBMqStartE\fP ccmsgque::MqC::ConfigGetStartAs ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP 
 .PP
-Definition at line 293 of file ccmsgque.h.
+Definition at line 309 of file ccmsgque.h.
 .SS "\fBMQ_TIME_T\fP ccmsgque::MqC::ConfigGetTimeout ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP 
 .PP
-Definition at line 279 of file ccmsgque.h.
+Definition at line 295 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetBuffersize (\fBMQ_INT\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP 
 .PP
-Definition at line 220 of file ccmsgque.h.
+Definition at line 236 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetDaemon (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetDaemon\fP 
 .PP
-Definition at line 256 of file ccmsgque.h.
+Definition at line 272 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetDebug (\fBMQ_INT\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP 
 .PP
-Definition at line 222 of file ccmsgque.h.
+Definition at line 238 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIdent (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP 
 .PP
-Definition at line 230 of file ccmsgque.h.
+Definition at line 246 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIgnoreExit (\fBMQ_BOL\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP 
 .PP
-Definition at line 240 of file ccmsgque.h.
+Definition at line 256 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIoPipe (\fBMQ_SOCK\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP 
 .PP
-Definition at line 250 of file ccmsgque.h.
+Definition at line 266 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIoTcp (\fBMQ_CST\fP host, \fBMQ_CST\fP port, \fBMQ_CST\fP myhost, \fBMQ_CST\fP myport)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP 
 .PP
-Definition at line 246 of file ccmsgque.h.
+Definition at line 262 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIoUds (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP 
 .PP
-Definition at line 242 of file ccmsgque.h.
+Definition at line 258 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIsServer (\fBMQ_BOL\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP 
 .PP
-Definition at line 236 of file ccmsgque.h.
+Definition at line 252 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIsSilent (\fBMQ_BOL\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP 
 .PP
-Definition at line 234 of file ccmsgque.h.
+Definition at line 250 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetIsString (\fBMQ_BOL\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP 
 .PP
-Definition at line 238 of file ccmsgque.h.
+Definition at line 254 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetName (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP 
 .PP
-Definition at line 226 of file ccmsgque.h.
+Definition at line 242 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetSrvName (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP 
 .PP
-Definition at line 228 of file ccmsgque.h.
+Definition at line 244 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetStartAs (enum \fBMqStartE\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP 
 .PP
-Definition at line 254 of file ccmsgque.h.
+Definition at line 270 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ConfigSetTimeout (\fBMQ_TIME_T\fP data)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP 
 .PP
-Definition at line 224 of file ccmsgque.h.
+Definition at line 240 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

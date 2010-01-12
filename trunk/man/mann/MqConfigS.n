@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

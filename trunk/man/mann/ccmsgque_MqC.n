@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "12 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -169,15 +169,19 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "\fBMQ_BUF\fP \fBGetTempBuffer\fP ()"
 .br
+.R "get access to an internal buffer "
 .ti -1c
 .RI "void \fBExit\fP ()"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
 .ti -1c
 .RI "void \fBSleep\fP (unsigned int const sec)  throw (MqCException)"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
 .ti -1c
 .RI "void \fBUSleep\fP (unsigned int const usec)  throw (MqCException)"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
 .ti -1c
 .RI "void \fBLinkCreateVC\fP (int const argc, \fBMQ_CST\fP argv[])"
 .br
@@ -539,7 +543,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqS\fP 
 .PP
-Definition at line 208 of file ccmsgque.h.
+Definition at line 224 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

@@ -73,7 +73,7 @@ union MqIdSU {
 
 /// \brief data type for process/thread identification
 ///  
-/// The values of \e pid_t and #mqthread_t have to fit into this storage
+/// The values of \e pid_t and \e mqthread_t have to fit into this storage
 struct MqIdS {
   enum MqIdSE type;
   union MqIdSU val;
@@ -126,7 +126,7 @@ BODY_DATA_TYPE+BODY_DATA_SIZE+BODY_DATA
 
 with BODY_DATA_SIZE as the number of bytes in BODY_DATA.
 
-If RETURNCODE == #MQ_RETURN_ERROR (defined in #MqReturnE) the \e last BODYITEM is defined 
+If RETURNCODE == \e MQ_RETURN_ERROR (defined in \e MqReturnE) the \e last BODYITEM is defined 
 as RETURNITEM with a RETURNITEM_HEADER:
 
 \verbatim

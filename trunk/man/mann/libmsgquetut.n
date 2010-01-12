@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "11 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "12 Jan 2010" "Version 4.1" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -139,7 +139,7 @@ Three things are important:
 .IP "1." 4
 the \fBsend\fP style of functions
 .IP "2." 4
-the \fBMqServiceCreate(ctx,token,callback,data,fFree)\fP function
+the \fBMqServiceCreate(ctx,MQ_TOK token,callback,data,fFree)\fP function
 .IP "3." 4
 a \fBconnected\fP context of type \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP
 .PP
@@ -149,19 +149,19 @@ First: start a data package with \fBMqSendSTART(ctx)\fP
 .IP "2." 4
 Last: submit the a data package to the link target using one of:
 .IP "  \(bu" 4
-\fBMqSendEND(ctx,MQ_CST token)\fP
+\fBMqSendEND(ctx,MQ_TOK token)\fP
 .IP "  \(bu" 4
-\fBMqSendEND_AND_WAIT(ctx,token,?timeout=MQ_TIMEOUT_USER?)\fP
+\fBMqSendEND_AND_WAIT(ctx,MQ_TOK token,?timeout=MQ_TIMEOUT_USER?)\fP
 .IP "  \(bu" 4
-\fBMqSendEND_AND_CALLBACK(ctx,token,fCallback,data,fFree)\fP
+\fBMqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)\fP
 .IP "  \(bu" 4
 \fBMqSendRETURN(ctx)\fP
 .PP
 
 .PP
-The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between MqSendSTART(ctx) and MqSendEND(ctx,MQ_CST token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between MqSendSTART(ctx) and MqSendEND(ctx,MQ_TOK token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
-Services are created with the \fBMqServiceCreate(ctx,token,callback,data,fFree)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+Services are created with the \fBMqServiceCreate(ctx,MQ_TOK token,callback,data,fFree)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
 The \fBSERVICE CALLBACK\fP function has one parameter of type \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
 .SH "CLIENT"

@@ -1,4 +1,4 @@
-.TH "Mq_Context_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "12 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -8,6 +8,10 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .SS "Data Structures"
 
 .in +1c
+.ti -1c
+.RI "class \fBccmsgque::MqC\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
 .ti -1c
 .RI "struct \fBccmsgque::MqC::MqC::ProcCallS\fP"
 .br
@@ -36,15 +40,19 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .ti -1c
 .RI "\fBMQ_BUF\fP \fBccmsgque::MqC::GetTempBuffer\fP ()"
 .br
+.R "get access to an internal buffer "
 .ti -1c
 .RI "void \fBccmsgque::MqC::Exit\fP ()"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
 .ti -1c
 .RI "void \fBccmsgque::MqC::Sleep\fP (unsigned int const sec)  throw (MqCException)"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
 .ti -1c
 .RI "void \fBccmsgque::MqC::USleep\fP (unsigned int const usec)  throw (MqCException)"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
 .in -1c
 .SS "Variables"
 
@@ -86,20 +94,28 @@ The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a 
 .PP 
 .SS "void ccmsgque::MqC::Exit ()\fC [inline, inherited]\fP"
 .PP
-Definition at line 369 of file ccmsgque.h.
+implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
+.PP
+Definition at line 387 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqC::GetTempBuffer ()\fC [inline, inherited]\fP"
 .PP
-Definition at line 368 of file ccmsgque.h.
+get access to an internal buffer 
+.PP
+Definition at line 385 of file ccmsgque.h.
 .SS "ccmsgque::MqC::MqC ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
 .SS "void ccmsgque::MqC::Sleep (unsigned int const  sec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
-Definition at line 370 of file ccmsgque.h.
+implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP 
+.PP
+Definition at line 389 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::USleep (unsigned int const  usec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
-Definition at line 371 of file ccmsgque.h.
+implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP 
+.PP
+Definition at line 391 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqC::~MqC ()\fC [virtual, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
@@ -110,7 +126,7 @@ implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP
 .PP
 link between \fBMqC\fP and \fBMqS\fP 
 .PP
-Definition at line 304 of file ccmsgque.h.
+Definition at line 320 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

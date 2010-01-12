@@ -1,4 +1,4 @@
-.TH "Mq_Link_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,7 +19,7 @@ Mq_Link_C_API \- setup and manage a \fIclient-server-link\fP
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
-.R "make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP "
+.R "make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
 .br
@@ -65,18 +65,114 @@ Mq_Link_C_API \- setup and manage a \fIclient-server-link\fP
 .PP 
 setup and manage a \fIclient-server-link\fP 
 
-To create, destroy and manage a \fIclient-server-link\fP is the main purpose of the library. 
+The \fIclient-server-link\fP has two endpoints, a \fIclient-parent-context\fP and a \fIserver-parent-context\fP. Ontop the \fIparent-context\fP multiple \fIchild-context\fP are allowed. 
+.PP
+.nf
+
+     !on local host!                                  !on remote host!
+   
+         server1---------x                     x----------server2
+            |            |                     |             |
+            |     child-context-1       child-context-2      |
+            |            |                     |             |                      server
+    parent-context-1-----x                     x-----parent-context-2
+            |                                                |
+   (MqConfigS::server)                  (MqConfigS::server --fork --tcp --port)
+            |                                                |
+   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            |                                                |
+        (--pipe)                                   (--tcp --host --port)
+            |                                                |
+    parent-context-1-----x                     x-----parent-context-2
+            |            |                     |             |                      client
+            |     child-context-1       child-context-2      |
+            |            |                     |             |
+            x------------x--------client-------x-------------x
+   
+                              !on local host!  
+.fi
+.PP
+.PP
+\fBDefinition of a 'client-context'\fP
+.br
+.IP "\(bu" 2
+every new \fIclient-parent-context\fP create a new \fIclient-server-link\fP and perform the \fIconnect\fP system-call.
+.IP "\(bu" 2
+every new \fIclient-server-link\fP start a new \fIserver-instance\fP and creating a new \fIserver-parent-context\fP 
+.IP "\(bu" 2
+every deletion of the \fIclient-parent-context\fP stop the previous started \fIserver-instance\fP and delete the server-parent-context
+.IP "\(bu" 2
+the \fIclient-context\fP get all the error/warning/info messages from the \fIserver-context\fP 
+.PP
+\fBDefinition of a 'server-context'\fP
+.br
+.IP "\(bu" 2
+every new \fIserver-parent-context\fP is created by request from the \fIclient-parent-context\fP:
+.IP "\(bu" 2
+in remote mode every new \fIserver-parent-context\fP wait for a \fItcp\fP or \fIuds\fP connection request using the \fIaccept\fP system-call. 
+.PP
+.nf
+
+   client --tcp --hots REMOTE_HOST --port REMOTE_PORT ...    or
+   client --uds --file MYFILE ...
+.fi
+.PP
+
+.IP "\(bu" 2
+in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent-context\fP as \fIpipe:\fP 
+.PP
+.nf
+
+   client @ server 
+.fi
+.PP
+
+.IP "\(bu" 2
+a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
+.IP "\(bu" 2
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incomming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS.WAIT.FOREVER.
+.PP
+.PP
+\fBDefinition of a 'parent-context'\fP
+.br
+.PP
+.IP "\(bu" 2
+the parent is the first context created and is created with \fBLinkCreate\fP
+.IP "\(bu" 2
+every new \fIparent-context\fP on the client create a new communication to a server.
+.IP "\(bu" 2
+every new \fIparent-context\fP on the client connect to a new \fIparent-context\fP on the server
+.IP "\(bu" 2
+every new \fIparent-context\fP on the server is using a new \fIserver-instance\fP 
+.IP "\(bu" 2
+the \fIparent-context\fP control the socket communication interface
+.PP
+\fBDefinition of a 'child-context'\fP
+.br
+.PP
+.IP "\(bu" 2
+the \fIchild-context\fP is the second or more context and is created with \fBLinkCreateChild\fP.
+.IP "\(bu" 2
+every new \fIchild-context\fP on the client create a new \fIchild-context\fP on the server.
+.IP "\(bu" 2
+every new \fIchild-context\fP is totally independent from the \fIparent-context\fP setup and is able to serve its own services.
+.IP "\(bu" 2
+the \fIchild-context\fP is using the \fIparent-context\fP as a tunnel.
+.IP "\(bu" 2
+the parent of a \fIchild-context\fP can be a \fIparent-context\fP or an other \fIchild-context\fP. A tree like structure is created.
+.IP "\(bu" 2
+the \fIchild-context\fP is using the communication interface from the parent-context.
+.IP "\(bu" 2
+if a \fIcontext\fP is deleted (parent or child) the \fIdepending\fP context (parent or child) is deleted too.
+.IP "\(bu" 2
+if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
+.PP
+
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqLinkCreate (struct \fBMqS\fP *const  ctx, struct \fBMqBufferLS\fP ** args)"
 .PP
-make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
-.PP
-A \fIparent-context\fP is responsible to setup the \fIclient-server-link\fP 
-.IP "\(bu" 2
-the \fIclient-parent-context\fP start a new \fIclient-server-link\fP 
-.IP "\(bu" 2
-the \fIserver-parent-context\fP wait for a \fIclient-parent-context\fP connection request
+make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -183,7 +279,7 @@ the identifier as number
 .PP
  
 .PP
-Definition at line 1678 of file msgque.h.
+Definition at line 1748 of file msgque.h.
 .SS "struct \fBMqS\fP* MqLinkGetParent (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
 .PP
 get the \fIparent-context\fP from a client/server link 
@@ -215,7 +311,7 @@ the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP
 .PP
  
 .PP
-Definition at line 1642 of file msgque.h.
+Definition at line 1712 of file msgque.h.
 .SS "int MqLinkIsConnected (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the context connected? 
@@ -259,7 +355,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 1627 of file msgque.h.
+Definition at line 1697 of file msgque.h.
 .SS "int MqLinkIsParent (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIparent-context\fP? 
@@ -295,7 +391,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 1658 of file msgque.h.
+Definition at line 1728 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

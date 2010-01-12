@@ -1,62 +1,6 @@
 /** 
 \page master_versa_slave WHAT-IS: master versa slave
 
-\section master_slave_toc Table Of Contents
- - \ref master_slave_definition
- - \ref master_detail
- - \ref slave_detail
- - \ref worker_detail
- .
+\copydetails Mq_Slave_C_API
 
-\section master_slave_definition Definition
-
-<TABLE>
-    <TR> <TD> \c master  </TD>  <TD> the \e leading context, <B>the \e master control the \e slave</B></TD> </TR>
-    <TR> <TD> \c slave   </TD>  <TD> the \e dependent context</TD> </TR>
-</TABLE>
-
-In difference to the client/server link the master/slave link connect two independent \parent_context 
-in the same process or thread (e.g. node). This leading to the restriction that only one \master_context 
-can be a \server_context because only one server per node is possible.
-\verbatim
-| ** client/server link ** | ** client/server link ** |
-
-             | ** master/slave link ** |
-
-
-    node-0   |          node-1/2       |      node-3/4/5
-============ | ======================= | ========================
-
-                         |- client1-0 -|- server3 ...
-             |- server1 -|
-  client0-0 -|           |- client1-1 -|- server4 ...
-             |
-             |- server2 -|- client2-0 -|- server5 ...
-\endverbatim
-
-\section master_detail What is a "master" context ?
-
- - the \e master-context is a \parent_context without a \child_context available.
- - the \e master-context is a \client_context or a \server_context.
- - the \e master-context is responsible to create or delete the \child_context of the \e slave.
- - the \e master-context is responsible to delete the \parent_context of the \e slave.
- - the \e link between the \master_context and the \slave_context is done using the \libmsgque
-   slave API: \AllLng{SlaveWorker}
- .
-
-\section slave_detail What is a "slave" context ?
- 
- - the \e slave-context is a \parent_context without a \child_context available.
- - the \e slave-context is a \client_context.
- - the \e slave-context lifetime is controlled by the \master_context.
- - the \e slave-context report all error-messages to the \master_context.
- - a special form of a \slave_context is a \worker_context
- .
-
-\section worker_detail What is a "worker" context ?
- - the \e worker-context is a \slave_context using the image of the \master_context self.
- - the \master_context have to be a \server_context.
- - the \e worker-context is create with its own constructor: \AllLng{SlaveWorker}
- - the \e worker-context is identified by a \e unique integer starting with \c 0.
- .
 */

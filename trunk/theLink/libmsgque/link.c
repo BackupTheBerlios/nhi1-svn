@@ -919,7 +919,7 @@ MqLinkGetCtxId (
 void
 MqLogChild (
   struct MqS const * const context,
-  char const * const prefix
+  MQ_CST const prefix
 )
 {
   struct pChildS * childs;
@@ -933,4 +933,5 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 

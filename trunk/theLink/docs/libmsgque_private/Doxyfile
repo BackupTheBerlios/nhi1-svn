@@ -14,7 +14,14 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-INPUT		    = $(SRCDIR)/libmsgque .
-FILE_PATTERNS	    = *.c *.h *.doc
-PREDEFINED	    += MQ_PRIVATE
-ALIASES		    += "libmsgque=\ref libmsgque_private" \
+#PREDEFINED	    += MQ_PRIVATE
+#ALIASES		    += "libmsgque=\ref libmsgque_private" \
+
+INPUT			= $(SRCDIR)/libmsgque .
+FILE_PATTERNS		= *.doc msgque.h *.c *.h
+EXAMPLE_PATH		= $(SRCDIR)/tests $(SRCDIR)/example/c
+OPTIMIZE_OUTPUT_JAVA	= NO
+OPTIMIZE_OUTPUT_FOR_C	= YES
+STRIP_FROM_PATH		= $(SRCDIR)/libmsgque
+STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque
+

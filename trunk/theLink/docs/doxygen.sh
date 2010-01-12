@@ -10,6 +10,7 @@ ccmsgque_private=../man/Doxyfile.msgque
 javamsgque_private=../man/Doxyfile.msgque
 pymsgque_private=../man/Doxyfile.msgque
 tclmsgque_private=../man/Doxyfile.msgque
+main=../man/Doxyfile.msgque
 
 libmsgque=../libmsgque_public/Doxyfile
 javamsgque=../javamsgque_public/Doxyfile
@@ -79,10 +80,13 @@ export HAVE_DOT=NO
       test ! -f $F && continue
       P="${F##*.}"
       test "$F" == "$P" && P="$(basename $PWD)"
+      test "$D" == "$P" && D=dummy
       echo "#########################################################################"
       echo "start: $F"
       export  PROJECT="$P"
       export  DOCDIR="$abs_top_builddir/html/theLink/$PROJECT"
+      echo "PROJECT: $PROJECT"
+      echo "DOCDIR: $DOCDIR"
       rm -fr "$DOCDIR"
       mkdir -p "$DOCDIR"
       echo "cat $SRCDIR/docs/Doxyfile.generic ${!D} ${!P} $F | $DOXYGEN"

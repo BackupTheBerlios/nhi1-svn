@@ -1,4 +1,4 @@
-.TH "Mq_Slave_CC_API" n "11 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_CC_API" n "12 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -65,58 +65,95 @@ to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
 .IP "\(bu" 2
 to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
 .PP
-In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible.
-.PP
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible. 
 .PP
 .nf
 
-    node-0   |           node-1/2        |   node-3/4/5
-===================================================================
-
-| <- client/server link -> | <- client/server link -> |
-
-             | <-- master/slave link --> |
-
-                           |- client1-0 -|- server3 ...
-             |-  server1  -|             
-             |             |- client1-1 -|- server4 ...
-  client0-0 -|                           
-             |-  server2  -|- client1-2 -|- server5 ...
+       node-0   |           node-1/2        |   node-3/4/5
+   ===================================================================
+   
+   | <- client/server link -> | <- client/server link -> |
+   
+                | <-- master/slave link --> |
+   
+                              |- client1-0 -|- server3 ...
+                |-  server1  -|             
+                |             |- client1-1 -|- server4 ...
+     client0-0 -|                           
+                |-  server2  -|- client1-2 -|- server5 ...  
 .fi
 .PP
-  
+.PP
+\fBDefinition of a 'master-context'\fP
+.br
+.IP "\(bu" 2
+the \fImaster-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+.IP "\(bu" 2
+the \fImaster-context\fP is a \fBclient-context\fP or a \fBserver-context\fP.
+.IP "\(bu" 2
+the \fImaster-context\fP is responsible to create or delete the \fBchild-context\fP of the \fIslave\fP.
+.IP "\(bu" 2
+the \fImaster-context\fP is responsible to delete the \fBparent-context\fP of the \fIslave\fP.
+.IP "\(bu" 2
+the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBSlaveWorker\fP
+.PP
+\fBDefinition of a 'slave-context'\fP
+.br
+.IP "\(bu" 2
+the \fIslave-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+.IP "\(bu" 2
+the \fIslave-context\fP is a \fBclient-context\fP.
+.IP "\(bu" 2
+the \fIslave-context\fP lifetime is controlled by the \fImaster-context\fP.
+.IP "\(bu" 2
+the \fIslave-context\fP report all error-messages to the \fImaster-context\fP.
+.IP "\(bu" 2
+a special form of a \fIslave-context\fP is a \fIworker-context\fP 
+.PP
+\fBDefinition of a 'worker-context'\fP
+.br
+.IP "\(bu" 2
+the \fIworker-context\fP is a \fIslave-context\fP using the image of the \fImaster-context\fP self.
+.IP "\(bu" 2
+the \fImaster-context\fP have to be a \fBserver-context\fP.
+.IP "\(bu" 2
+the \fIworker-context\fP is created using \fBSlaveWorker\fP
+.IP "\(bu" 2
+the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \fC0\fP.
+.PP
+ 
 .SH "Function Documentation"
 .PP 
 .SS "void ccmsgque::MqC::SlaveCreate (const int id, \fBMqC\fP *const  slave)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
 .PP
-Definition at line 727 of file ccmsgque.h.
+Definition at line 747 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveDelete (const int id)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
 .PP
-Definition at line 756 of file ccmsgque.h.
+Definition at line 776 of file ccmsgque.h.
 .SS "MqC* ccmsgque::MqC::SlaveGet (const int id)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
 .PP
-Definition at line 710 of file ccmsgque.h.
+Definition at line 730 of file ccmsgque.h.
 .SS "MqC* ccmsgque::MqC::SlaveGetMaster ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP 
 .PP
-Definition at line 716 of file ccmsgque.h.
+Definition at line 736 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::SlaveIs ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
 .PP
-Definition at line 722 of file ccmsgque.h.
+Definition at line 742 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorker (const int id, struct \fBMqBufferLS\fP * args = \fCNULL\fP)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 733 of file ccmsgque.h.
+Definition at line 753 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerV (const int id,  ...)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
@@ -125,17 +162,17 @@ implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 743 of file ccmsgque.h.
+Definition at line 763 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerVC (const int id, int const  argc, \fBMQ_CST\fP * argv)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 738 of file ccmsgque.h.
+Definition at line 758 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SlaveWorkerVT (const int id, vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
-Definition at line 751 of file ccmsgque.h.
+Definition at line 771 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

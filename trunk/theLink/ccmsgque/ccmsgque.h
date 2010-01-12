@@ -107,12 +107,14 @@ namespace ccmsgque {
       }
   };
  
-  /// \defgroup Mq_Buffer_CC_API Mq_Buffer_CC_API
-  /// \ingroup Mq_CC_API
-  /// \brief \copybrief Mq_Buffer_C_API
-  /// \details \copydetails Mq_Buffer_C_API
-  /// \{
+  /// \ingroup Mq_Buffer_CC_API
+  /// \api #MqBufferS
   class MqBufferC {
+    /// \defgroup Mq_Buffer_CC_API Mq_Buffer_CC_API
+    /// \ingroup Mq_CC_API
+    /// \brief \copybrief Mq_Buffer_C_API
+    /// \details \copydetails Mq_Buffer_C_API
+    /// \{
     private:
       struct MqBufferS * hdl;
 
@@ -126,66 +128,78 @@ namespace ccmsgque {
 	hdl = bufP;
       }
 
+      /// \api #MqBufferS::type
       inline enum MqTypeE GetType () const {
 	return hdl->type;
       }
 
+      /// \api #MqBufferGetY
       inline MQ_BYT GetY () const throw(MqCException) {
 	MQ_BYT out;
 	ErrorCheck (MqBufferGetY (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetO
       inline MQ_BOL GetO () const throw(MqCException) {
 	MQ_BOL out;
 	ErrorCheck (MqBufferGetO (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetS
       inline MQ_SRT GetS () const throw(MqCException) {
 	MQ_SRT out;
 	ErrorCheck (MqBufferGetS (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetI
       inline MQ_INT GetI () const throw(MqCException) {
 	MQ_INT out;
 	ErrorCheck (MqBufferGetI (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetF
       inline MQ_FLT GetF () const throw(MqCException) {
 	MQ_FLT out;
 	ErrorCheck (MqBufferGetF (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetW
       inline MQ_WID GetW () const throw(MqCException) {
 	MQ_WID out;
 	ErrorCheck (MqBufferGetW (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetD
       inline MQ_DBL GetD () const throw(MqCException) {
 	MQ_DBL out;
 	ErrorCheck (MqBufferGetD (hdl, &out));
 	return out;
       }
 
+      /// \api #MqBufferGetC
       inline MQ_CST GetC () const throw(MqCException) {
 	MQ_CST out;
 	ErrorCheck (MqBufferGetC (hdl, &out));
 	return out;
       }
 
+      /// \return handle
       inline MQ_BUF GetU () const throw(MqCException) {
 	return hdl;
       }
 
+      /// \api #MqBufferGetB
       inline void GetB (MQ_BIN *outP, MQ_SIZE *sizeP) const throw(MqCException) {
 	ErrorCheck (MqBufferGetB (hdl, outP, sizeP));
       }
 
+      /// \api #MqBufferGetB
       inline vector<MQ_BINB>* GetB () const throw(MqCException) {
 	MQ_BIN out;
 	MQ_SIZE size;
@@ -193,17 +207,19 @@ namespace ccmsgque {
 	return new vector<MQ_BINB> (out, out+size);
       }
 
+      /// \api #MqBufferAppendC
       inline void AppendC (MQ_CST str) const {
 	MqBufferAppendC (hdl, str);
       }
 
+      /// \api #MqBufferReset
       inline void Reset () const throw(MqCException) {
 	MqBufferReset (hdl);
       }
+    /// \} Mq_Buffer_CC_API
   };
-  /// \} Mq_Buffer_CC_API
 
-  /// \ingroup Mq_Config_CC_API
+  /// \ingroup Mq_Context_CC_API
   /// \api #MqS
   class MqC {
 
@@ -365,9 +381,13 @@ namespace ccmsgque {
       );
 
     public:
+      /// \brief get access to an internal buffer
       inline MQ_BUF GetTempBuffer() { return context.temp; }
+      /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit (&context); } 
+      /// \api #MqSysSleep
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
+      /// \api #MqSysUSleep
       inline void USleep (unsigned int const usec) throw(MqCException) { ErrorCheck (MqSysUSleep(&context, usec)); }
 
     /// \} Mq_Context_CC_API

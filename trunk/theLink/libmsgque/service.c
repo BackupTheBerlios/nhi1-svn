@@ -65,7 +65,7 @@ MqServiceGetToken (
 MQ_BOL
 MqServiceCheckToken(
   struct MqS const * const context,
-  char const * const token
+  MQ_TOK const token
 )
 {
   return pTokenCheck(context->link.srvT,token);
@@ -109,7 +109,7 @@ error1:
 enum MqErrorE 
 MqServiceProxy(
   struct MqS * const context, 
-  MQ_CST const token,
+  MQ_TOK const token,
   MQ_SIZE const id
 )
 {
@@ -119,7 +119,7 @@ MqServiceProxy(
 enum MqErrorE 
 MqServiceCreate(
   struct MqS * const context, 
-  MQ_CST const token,
+  MQ_TOK const token,
   MqTokenF const proc,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
@@ -136,7 +136,7 @@ MqServiceCreate(
 enum MqErrorE 
 MqServiceDelete(
   struct MqS const * const context, 
-  MQ_CST const token
+  MQ_TOK const token
 )
 {
   return (pTokenDelHdl (context->link.srvT, token));
@@ -257,5 +257,7 @@ error:
 }
 
 END_C_DECLS
+
+
 
 

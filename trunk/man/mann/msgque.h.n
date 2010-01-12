@@ -1,8 +1,8 @@
-.TH "msgque.h" n "11 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "12 Jan 2010" "Version 4.1" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 130 2010-01-11 15:58:51Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -91,7 +91,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqBufferS\fP"
 .br
-.R "a single object to store a \fInative-type-data-item\fP defined by \\11 "
+.R "a single object to store a \fInative-type-data-item\fP defined by \fBMqBufferIdentifer\fP "
 .ti -1c
 .RI "struct \fBMqBufferLS\fP"
 .br
@@ -461,6 +461,14 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .RI "typedef void(* \fBMqSetupF\fP )(struct \fBMqS\fP *const )"
 .br
 .R "used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands "
+.ti -1c
+.RI "typedef \fBMQ_CST\fP \fBMQ_TOK\fP"
+.br
+.R "a 4 byte string to identify different services "
+.ti -1c
+.RI "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
+.br
+.R "function used as \fIservice-handle\fP "
 .in -1c
 .SS "Enumerations"
 
@@ -727,7 +735,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
-.R "make a \fIcontext\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP "
+.R "make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
 .br
@@ -777,23 +785,23 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .br
 .R "check if the \fIongoing-service-call\fP belongs to a transaction "
 .ti -1c
-.RI "\fBMQ_CST\fP \fBMqServiceGetToken\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_TOK\fP \fBMqServiceGetToken\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "get the \\11 from an \fIongoing-service-call\fP "
+.R "get the \fBMqServiceIdentifier\fP from an \fIongoing-service-call\fP "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqServiceCheckToken\fP (struct \fBMqS\fP const *const ctx, char const *const token)"
+.RI "\fBMQ_BOL\fP \fBMqServiceCheckToken\fP (struct \fBMqS\fP const *const ctx, \fBMQ_TOK\fP const token)"
 .br
-.R "in an \fIongoing-service-call\fP compare the \\11 with \fItoken\fP on equity "
+.R "in an \fIongoing-service-call\fP compare the \fBMqServiceIdentifier\fP with \fItoken\fP on equity "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMqServiceCallbackF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
-.R "create a link between a \\11 and a \\11 "
+.R "create a link between a \fBMqServiceIdentifier\fP and a \fBMqServiceCallback\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_SIZE\fP const id)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_SIZE\fP const id)"
 .br
 .R "create a service to link a \fImaster-context\fP with a \fIslave-context\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const ctx, \fBMQ_TOK\fP const token)"
 .br
 .R "delete a service. "
 .ti -1c
@@ -1063,7 +1071,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionO\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BOL\fP *const var)"
 .br
-.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value for 'found' = \fBMQ_YES\fP and 'not found' = \fBMQ_NO\fP "
+.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionY\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BYT\fP *const valP)"
 .br
@@ -1199,7 +1207,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BYT\fP *const val)"
 .br
-.R "read a \\11 from the \fIread-data-package\fP "
+.R "read a \fBMqBufferIdentifer\fP from the \fIread-data-package\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const ctx, \fBMQ_BOL\fP *const val)"
 .br
@@ -1237,7 +1245,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
 .br
-.R "extract a \fBtemporary\fP \\11 from the \fIread-data-package\fP "
+.R "extract a \fBtemporary\fP \fBMqBufferObject\fP from the \fIread-data-package\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
 .br
@@ -1249,7 +1257,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "undo the last \\11 function call "
+.R "undo the last \fBMqReadData\fP function call "
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const ctx)"
 .br
@@ -1261,7 +1269,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendY\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BYT\fP value)"
 .br
-.R "append a native \\11 value to the \fIsend-data-package\fP. "
+.R "append a native \fBMqBufferIdentifer\fP value to the \fIsend-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendO\fP (struct \fBMqS\fP *const ctx, const \fBMQ_BOL\fP value)"
 .br
@@ -1316,15 +1324,15 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .br
 .R "initialize the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_TIME_T\fP const timeout)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const token, \fBMqTokenF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_CALLBACK\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMqServiceCallbackF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. "
 .ti -1c
@@ -1334,7 +1342,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const ctx)"
 .br
-.R "send the data from the \\11 to the link target . "
+.R "send the data from the \fBMqErrorObject\fP to the link target . "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const ctx)"
 .br
@@ -1398,7 +1406,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .br
 .R "'sleep' system call with error handling feature "
 .ti -1c
-.RI "\fBMQ_STR\fP \fBMqSysBasename\fP (char const *const in, \fBMQ_BOL\fP includeExtension)"
+.RI "\fBMQ_STR\fP \fBMqSysBasename\fP (\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .br
 .R "'basename' system call with error handling feature "
 .ti -1c
@@ -1480,13 +1488,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 129 2010-01-10 16:01:31Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 130 2010-01-11 15:58:51Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 129 $ 
+$Rev: 130 $ 
 .RE
 .PP
 \fBAuthor:\fP

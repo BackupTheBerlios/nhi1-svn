@@ -36,12 +36,12 @@ void pSendDelete (
 
 enum MqErrorE pSendSYSTEM (
   struct MqS * const context,
-  MQ_CST const token
+  MQ_TOK const token
 );
 
 enum MqErrorE pSendEND (
   struct MqS * const context,
-  MQ_CST const token,
+  MQ_TOK const token,
   const MQ_HDL trans
 );
 
@@ -52,6 +52,7 @@ enum MqErrorE pSendSYSTEM_RETR (
 END_C_DECLS
 
 #endif /* SEND_H */
+
 
 
 

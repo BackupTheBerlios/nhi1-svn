@@ -132,7 +132,7 @@ and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
  .
 
 \section _7 7. It's not clear to me how many instances of a server might exist
- - \ref client_versa_server
+ - \RNS{ClientServerLink}
  - every \e client-parent-context start its own \e server
  - every started \e server is totally independent from the other \e server might exist
   - advantage: easy load balancing because every server process is able to use an other processor
@@ -145,7 +145,7 @@ and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
 
 \section _8 8. It's not clear where the state for a service resides
  - DEFINITION: <EM>The "state" ought to be the totality of everything that can make two identical sequences of \libmsgque library commands return different results. A typical case could be if one wants to wrap a Tcl shell up as a \libmsgque service; this then has an internal state (values of variables, commands defined, etc.), and it would have to be part of the total state of the service. </EM>
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - every client creating a new parent-context is creating a new parent-context on the server.
  - a new parent context on the server is in fact a struct able to store every per-context data.
  - For \tclmsgque the new context struct is a command and every new Server-Parent-Context is a new interpreter.
@@ -186,7 +186,7 @@ and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
  .
 
 \section _9a 9.a One interpretation is that multiple clients connect to the same server. The server might have a common resource (e.g. a database) that the clients want to share. How does one go ahead with that?
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - DEFINITION \b server:
    - <EM>a \b server is an application which can handle multiple client connections and serve some kind of services, with the help of a \e server-API, to the client (example: Sybase/Oracle/Db2/... database, Ars, SAP, PeopleSoft, ... infinite long ...)</EM>
    - <EM>a \libmsgque - server is a wrapper around the \e server-API form 1. to disconnect the \e client from the \e server-API</EM>
@@ -245,7 +245,7 @@ libmsgque-API:   ->   |         |              |         |                    *
  .
 
 \section _10 10. Are services supposed to be re-entrant or serially reusable
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - DEFINITION: <EM>Re-entrant means that the same body of code can be used by multiple threads of control at once, provided that each thread supplies its own data segment for the code to use.</EM>
  - Every Context (\parent_context and \child_context) has its own services and data.
  - DEFINITION: <EM>Serially reusable means that the same body of code can be used by multiple threads of control, provided that execution of the code is allowed to complete before another thread can use the shared body of code.</EM>
@@ -254,7 +254,7 @@ libmsgque-API:   ->   |         |              |         |                    *
  .
 
 \section _10a 10.a Can an already started server be reused for new requests?
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - Every server has exact \b one \parent_context but multiple \child_context.
  - Every \parent_context is a process or a thread.
  - If a \parent_context is closed all \child_context are closed too and the server is shut down.
@@ -297,20 +297,21 @@ the example needs \b 23 seconds to finish and \b not 10
  .
 
 \section _11a 11.a How does a 'service' detect different 'context' requests''
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - The \parent_context of the \client_context is linked with the  \parent_context of the \server_context.
  - Every data package is identified with the according Context (#HdrS::ctxId) of the communication partner.
  - More information is available in: \ref protocol
  .
 
 \section _12 12. How do they signal success or failure
- - INTRO: \ref client_versa_server
+ - INTRO: \RNS{ClientServerLink}
  - Every \e transaction submit a return-code \c MQ_RETURN_OK or \c MQ_RETURN_ERROR to the caller.
  - The return-code is part of the package header (#HdrS::code) and is processed in
    the #MqSendEND_AND_WAIT function.
  - The function #MqSendEND_AND_WAIT will return an error of type #MqErrorE if the return-code is \c MQ_RETURN_ERROR.
  .
 */
+
 
 
 

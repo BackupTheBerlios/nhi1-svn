@@ -1,4 +1,4 @@
-.TH "MqS" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -66,69 +66,69 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP 
 data structure for the \fIlibmsgque-specific-data\fP 
 .PP
-Definition at line 1418 of file msgque.h.
+Definition at line 1420 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "struct \fBMqConfigS\fP \fBMqS.config\fP\fC [read]\fP"
 .PP
 the configuration data is used for 'end-user' configuration 
 .PP
-Definition at line 1421 of file msgque.h.
+Definition at line 1423 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqS.contextsize\fP"
 .PP
 ALLOC-size of the user-defined context struct. 
 .PP
-Definition at line 1431 of file msgque.h.
+Definition at line 1433 of file msgque.h.
 .SS "struct \fBMqErrorS\fP \fBMqS.error\fP\fC [read]\fP"
 .PP
 error object data 
 .PP
-Definition at line 1423 of file msgque.h.
+Definition at line 1425 of file msgque.h.
 .SS "struct \fBMqLinkS\fP \fBMqS.link\fP\fC [read]\fP"
 .PP
 link object data 
 .PP
-Definition at line 1424 of file msgque.h.
+Definition at line 1426 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqS.MqContextDelete_LOCK\fP"
 .PP
 protect MqContextDelete 
 .PP
-Definition at line 1427 of file msgque.h.
+Definition at line 1429 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqS.MqContextFree_LOCK\fP"
 .PP
 protect MqContextFree 
 .PP
-Definition at line 1428 of file msgque.h.
+Definition at line 1430 of file msgque.h.
 .SS "\fBMQ_PTR\fP \fBMqS.self\fP"
 .PP
 link to the managed object 
 .PP
-Definition at line 1430 of file msgque.h.
+Definition at line 1432 of file msgque.h.
 .SS "struct \fBMqSetupS\fP \fBMqS.setup\fP\fC [read]\fP"
 .PP
 the setup data is used to link the object with the user application 
 .PP
-Definition at line 1422 of file msgque.h.
+Definition at line 1424 of file msgque.h.
 .SS "int \fBMqS.signature\fP"
 .PP
 used to verify the \fIpointer-data-type\fP in a type-less programming languages 
 .PP
-Definition at line 1419 of file msgque.h.
+Definition at line 1421 of file msgque.h.
 .SS "enum \fBMqStatusIsE\fP \fBMqS.statusIs\fP"
 .PP
 how the context was created? 
 .PP
-Definition at line 1426 of file msgque.h.
+Definition at line 1428 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqS.temp\fP\fC [read]\fP"
 .PP
 misc temporary \fBMqBufferS\fP object 
 .PP
-Definition at line 1425 of file msgque.h.
+Definition at line 1427 of file msgque.h.
 .SS "\fBMQ_PTR\fP \fBMqS.threadData\fP"
 .PP
 application specific thread data 
 .PP
-Definition at line 1429 of file msgque.h.
+Definition at line 1431 of file msgque.h.
 
 .SH "Author"
 .PP 

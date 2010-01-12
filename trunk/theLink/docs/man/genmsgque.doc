@@ -10,13 +10,13 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \RNS{context}\n
 \RNS{config}\n
-\RNS{link}\n
+\RNS{ClientServerLink}\n
 \RNS{service}\n
-\RNS{send}\n
-\RNS{read}\n
-\RNS{slave}\n
-\RNS{buffer}\n
-\RNS{error}\n
+\RNS{SendData}\n
+\RNS{ReadData}\n
+\RNS{SlaveContext}\n
+\RNS{BufferObject}\n
+\RNS{ErrorObject}\n
 \if DATA \RNS{data} \endif
 
 \section	\NS{desc}				INTRODUCTION
@@ -212,7 +212,7 @@ Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
 \interface{IEvent}
 \copydetails #MqSetupS::Event
 
-\section	\NS{link}				LINK API
+\section	\NS{ClientServerLink}			LINK API
 \RNSA{LinkCreate}\n
 \RNSA{LinkCreateChild}\n
 \RNSA{LinkGetParent}\n
@@ -281,21 +281,11 @@ Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
 
 \b Example: define the service \e SRV1 on the \e server-link-setup: \service_example
 
-\subsection	  \NS{ServiceIdentifier}			TOKEN IDENTIFIER
-The \e token identifier is a 4 byte string and identifies the service. The \e token is
-set by the programmer to identify different services. \self is using some special \e token
-for \e internal or \e common usage:
- - <B>_???</B> - all \e token starting with a \b "_" are for \b internal usage only
- - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to listen on \b all token not handled by other \e token more precise
- - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
- - \b +FTR - used for \RNS{filter-one}
- - \b +EOF - used for \RNS{filter-one}
- .
+\subsection	  \NS{ServiceIdentifier}		TOKEN IDENTIFIER
+\copydoc MQ_TOK
 
 \subsection	  \NS{ServiceCallback}			SERVICE CALLBACK
-A service is using a callback to act on an incoming service request. The callback is
-linked to a \RNS{ServiceIdentifier} with \RNSA{ServiceCreate} or as argument to the
-\RNSA{SendEND_AND_CALLBACK} function.
+\copydoc MqServiceCallbackF
 \if CSHARP
 The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
 using a delegate of type <I>void Callback()</I>.
@@ -307,12 +297,12 @@ The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</
 \elseif PYTHON
 The callback is implemented using \ServiceInterface method <I>Service(ctx)</I>
 \elseif TCL
-The callback is implemented as TCL procedure using <I>Service {ctx}</I>
+The callback is implemented as callback using <I>proc Service {ctx} ...</I>
 \elseif PERL
-The callback is implemented as \self \e sub reference
+The callback is implemented as callback using <I>sub Service {my ctx = shift;...}</I>
 \elseif CC
-The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
-using t type <I>void CallbackF()</I>.
+The callback is implemented using \ServiceInterface method <I>Service(MqC ctx)</I> or
+as callback using <I>void CallbackF()</I>.
 \elseif C
 The callback is implemented as a set of functions and data suitable for #MqCallbackS.
 \else
@@ -343,7 +333,7 @@ UNKNOWN
 \subsection	  \NS{ProcessEvent}			\ProcessEvent
 \copydoc MqProcessEvent
 
-\section	\NS{send}				SEND API
+\section	\NS{SendData}				SEND API
 \RNSA{SendSTART}\n
 \RNSA{SendEND}\n
 \RNSA{SendEND_AND_WAIT}\n
@@ -395,7 +385,7 @@ UNKNOWN
 \subsection	  \NS{SendL_END}			\SendL_END
 \copydoc MqSendL_END
 
-\section	  \NS{read}				READ API
+\section	  \NS{ReadData}				READ API
 \RNSA{ReadTYPE}\n
 \RNSA{ReadN}\n
 \RNSA{ReadBDY}\n
@@ -446,7 +436,7 @@ UNKNOWN
 \subsection	  \NS{ReadUndo}				\ReadUndo
 \copydoc MqReadUndo
 
-\section        \NS{slave}				SLAVE API
+\section        \NS{SlaveContext}			SLAVE API
 \RNSA{SlaveWorker}\n
 \RNSA{SlaveCreate}\n
 \RNSA{SlaveDelete}\n
@@ -492,7 +482,7 @@ UNKNOWN
 \subsection	  \NS{SlaveIs}				\SlaveIs
 \copydoc MqSlaveIs
 
-\section        \NS{buffer}				BUFFER API
+\section        \NS{BufferObject}			BUFFER API
 \RNSA{BufferIdentifer}\n
 \RNSA{BufferGetTYPE}\n
 \RNSA{BufferType}\n
@@ -506,13 +496,13 @@ UNKNOWN
 \copydoc MqTypeE
 
 \subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
-return the data form the buffer using the \RNS{BufferIdentifer}. \throw
+return the data form the buffer using the \RNS{BufferIdentifer}.
 
 \subsection	  \NS{BufferType}			\BufferType
 return the type as single character of the item stored in the buffer object.
 
 
-\section	\NS{error}				EXCEPTION OBJECT
+\section	\NS{ErrorObject}			EXCEPTION OBJECT
 \RNSA{ErrorGetText}\n
 \RNSA{ErrorGetNum}\n
 \RNSA{ErrorC}\n
@@ -533,7 +523,7 @@ return the error message from the error object.
 return the error number from the error object. The number can be used as exit-code.
 
 \subsection	\NS{ErrorC}				\ErrorC
-create a \self error object but do \b not raise the \RNS{error}
+create a \self error object but do \b not raise the \RNS{ErrorObject}
 
 \subsection	\NS{ErrorSet}				\ErrorSet
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
@@ -547,7 +537,7 @@ caught and before the application exit or the object is deleted.
 clear the \self error object.
 
 \subsection	\NS{ErrorRaise}				\ErrorRaise
-convert and raise an \self error object into a \lang \RNS{error}.
+convert and raise an \self error object into a \lang \RNS{ErrorObject}.
 
 \subsection	\NS{ErrorPrint}				\ErrorPrint
 print an \self error object to stderr and \e clear the \self error
@@ -809,7 +799,4 @@ TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
 
 
 */
-
-
-
 

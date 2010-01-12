@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_List_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -85,7 +85,7 @@ Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionO\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BOL\fP *const var)"
 .br
-.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value for 'found' = \fBMQ_YES\fP and 'not found' = \fBMQ_NO\fP "
+.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionY\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BYT\fP *const valP)"
 .br
@@ -405,7 +405,7 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
  
 .SS "enum \fBMqErrorE\fP MqBufferLCheckOptionO (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BOL\fP *const  var)"
 .PP
-search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value for 'found' = \fBMQ_YES\fP and 'not found' = \fBMQ_NO\fP 
+search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -418,7 +418,7 @@ search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with
 .PP
 \fBReturn values:\fP
 .RS 4
-\fIvar\fP if \fIoption\fP string is found set \fIvar\fP with \fIdef\fP 
+\fIvar\fP if \fIopt\fP is found set \fIvar\fP to \fBMQ_YES\fP otherwiese \fBMQ_NO\fP 
 .RE
 .PP
 \fBReturns:\fP

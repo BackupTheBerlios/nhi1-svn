@@ -1,69 +1,7 @@
 /** 
-\page client_versa_server WHAT-IS: client versa server
-\section client_server_toc Table Of Contents
- - \ref client_server_definition
- - \ref client_detail
- - \ref server_detail
- .
+\page client_versa_server WHAT-IS: client/server versa parent/child
 
-\section client_server_definition Definition
-
-<TABLE>
-    <TR> <TD> \c client  </TD>  <TD> the part of the software doing the \e connect system-call </TD> </TR>
-    <TR> <TD> \c server  </TD>  <TD> the part of the software doing the \e accept system-call (e.g. service) </TD> </TR>
-</TABLE>
-
-\section client_detail What is a "client" ?
-
- - every new \e client-parent-context start a new server and creating a \e server-parent-context
-  - client: \AllLng{e2}
-  - server: \AllLng{e1}
-  .
- - every deletion of the \e client-parent-context stop the previous started server \n
- - every client application is able to connect to multiple server, 
-there is a 1:N relationship between client and server.\n
-In local mode the client start and connect to the server using a PIPE:
-\verbatim
-client @ server
-\endverbatim
- - in remote mode the client connect to the server is using \e --tcp or \e --uds for communication setup:
-\verbatim
-client --tcp --hots REMOTE_HOST --port REMOTE_PORT ...    or
-client --uds --file MYFILE ...
-\endverbatim
- - the client gets all the error/warning/info messages from the server 
- .
-
-\section server_detail What is a "server" ?
-
-In general the server is serving services and is started by the client:
- - option \e --pipe
- .
-(this is called the \e local mode and is the DEFAULT)\n
-or as a standalone:
- - option \e --tcp or \e --uds together with \e --fork, \e --thread or \e --spawn
- .
-(this is called the \e remote mode)
-
-and is defined if the \b IServerSetup interface is available \AllLng{config_IServerSetup}
-
-In \e local mode the client is using everything after the first \b @ command-line argument as server:
-\verbatim
-client @ server
-\endverbatim
-
-but only if the client is using the command-line arguments to configure the #MqLinkCreate call:
-
-In \e remote mode the server is started as standalone with \e tcp sockets:
-\verbatim
-server --fork --tcp --port 7777
-\endverbatim
-
-or \e uds sockets:
-
-\verbatim
-server --fork --uds --file /tmp/myservice_file
-\endverbatim
+\copydoc Mq_Link_C_API
 
 */
 

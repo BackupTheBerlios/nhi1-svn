@@ -714,7 +714,7 @@ MqSendSTART (
 enum MqErrorE
 MqSendEND (
   struct MqS * const context,
-  MQ_CST const token
+  MQ_TOK const token
 )
 {
   pSendL_CLEANUP (context);
@@ -724,7 +724,7 @@ MqSendEND (
 enum MqErrorE
 pSendEND (
   struct MqS * const context,
-  MQ_CST const token,
+  MQ_TOK const token,
   MQ_HDL const trans
 )
 {
@@ -794,7 +794,7 @@ pSendEND (
 enum MqErrorE
 MqSendEND_AND_WAIT (
   struct MqS * const context,
-  MQ_CST const token,
+  MQ_TOK const token,
   MQ_TIME_T const timeout
 )
 {
@@ -890,7 +890,7 @@ error:
 enum MqErrorE
 MqSendEND_AND_CALLBACK (
   struct MqS * const context,
-  MQ_CST const token,
+  MQ_TOK const token,
   MqTokenF const proc,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF

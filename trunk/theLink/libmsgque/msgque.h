@@ -1331,29 +1331,31 @@ MQ_DECL MqConfigGetSelf (
   struct MqS const * const context
 );
 
-/** \brief Initialize the process \e startup-prefix argument
- *
- * The \e startup-prefix have to be the name of the executablei, found in the 
- * \c PATH environment variable, and additional arguments like the script name or 
- * the required startup options. The \e startup-prefix is used for two different purpose:
- *  - To start a new entity using the \RNSC{startAs} "--spawn" command-line option.
- *  - To replace the \e command-line-argument <TT>"... @ SELF ..."</TT> with <TT>"... @ startup-prefix ..."</TT> at \RNSA{LinkCreate}.
- *  .
- * Every use of this function will free the data of the previous \e startup-prefix.
- * By default the \e startup-prefix is set during package loading or during \RNSA{LinkCreate}
- * and have \b not to be initialized again.
-\ifnot MAN
-\return a pointer to the initialization buffer (Only C-API)
-\endif
-\ifnot MAN
-\code
-struct MqBufferLS * args = MqInitCreate();
-MqBufferLAppendC(args, "myExec");
-MqBufferLAppendC(args, "myExecArgument_1");
-...
-\endcode
-\endif
- */
+/// \brief Initialize the process \e startup-prefix argument
+///
+/// The \e startup-prefix have to be the name of the executablei, found in the 
+/// \c PATH environment variable, and additional arguments like the script name or 
+/// the required startup options. The \e startup-prefix is used for two different purpose:
+///  - To start a new entity using the \RNSC{startAs} "--spawn" command-line option.
+///  - To replace the \e command-line-argument <TT>"... @ SELF ..."</TT> with <TT>"... @ startup-prefix ..."</TT> at \RNSA{LinkCreate}.
+///  .
+/// Every use of this function will free the data of the previous \e startup-prefix.
+/// By default the \e startup-prefix is set during package loading or during \RNSA{LinkCreate}
+/// and have \b not to be initialized again.
+///\ifnot MAN
+///\return a pointer to the initialization buffer (Only C-API)
+///\endif
+///\ifnot MAN
+///\code
+///struct MqBufferLS * args = MqInitCreate();
+///MqBufferLAppendC(args, "myExec");
+///MqBufferLAppendC(args, "myExecArgument_1");
+///...
+///\endcode
+///\endif
+/// \if MSGQUE
+/// \anchor \NS{Init}
+/// \endif
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 
 /// \brief helper to set the application specific \c fork functions
@@ -1525,7 +1527,7 @@ MQ_EXTERN void MQ_DECL MqLogData (
 /// \param prefix used to identify the data logged to the stderr
 MQ_EXTERN void MQ_DECL MqLogChild (
   struct MqS const * const context,
-  char const * const prefix
+  MQ_CST const prefix
 );
 #endif // _DEBUG
 
@@ -1541,13 +1543,81 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \{
 /// \brief setup and manage a \e client-server-link
 ///
-/// To create, destroy and manage a \e client-server-link is the main purpose of the library.
-
-/// \brief make a \e context to a \e parent-context and setup a new \e client-server-link
-/// \details A \e parent-context is responsible to setup the \e client-server-link
-/// - the \e client-parent-context start a new \e client-server-link
-/// - the \e server-parent-context wait for a \e client-parent-context connection request
+/// The \e client-server-link has two endpoints, a \e client-parent-context and a \e server-parent-context.
+/// Ontop the \e parent-context multiple \e child-context are allowed.
+///\verbatim
+///  !on local host!                                  !on remote host!
+///
+///      server1---------x                     x----------server2
+///         |            |                     |             |
+///         |     child-context-1       child-context-2      |
+///         |            |                     |             |                      server
+/// parent-context-1-----x                     x-----parent-context-2
+///         |                                                |
+///(MqConfigS::server)                  (MqConfigS::server --fork --tcp --port)
+///         |                                                |
+///- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+///         |                                                |
+///     (--pipe)                                   (--tcp --host --port)
+///         |                                                |
+/// parent-context-1-----x                     x-----parent-context-2
+///         |            |                     |             |                      client
+///         |     child-context-1       child-context-2      |
+///         |            |                     |             |
+///         x------------x--------client-------x-------------x
+///
+///                           !on local host!  \endverbatim
+///
+/// <B>Definition of a "client-context"</B>\n
+/// - every new \e client-parent-context create a new \e client-server-link and perform the \e connect system-call.
+/// - every new \e client-server-link start a new \e server-instance and creating a new \e server-parent-context
+/// - every deletion of the \e client-parent-context stop the previous started \e server-instance and delete the server-parent-context
+/// - the \e client-context get all the error/warning/info messages from the \e server-context
 /// .
+/// <B>Definition of a "server-context"</B>\n
+/// - every new \e server-parent-context is created by request from the \e client-parent-context:
+/// - in remote mode every new \e server-parent-context wait for a \e tcp or \e uds connection request using the \e accept system-call.
+///\verbatim
+///client --tcp --hots REMOTE_HOST --port REMOTE_PORT ...    or
+///client --uds --file MYFILE ...\endverbatim
+/// - in local mode new \e server-parent-context is started by the \e client-parent-context as \e pipe:
+///\verbatim
+///client @ server \endverbatim
+/// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNSC{IFactory} interface.
+/// - a \e server-context have to enter the \e event-loop and wait for incomming \e service-request using
+///   \RNSA{ProcessEvent} together with the \MQ_WAIT_FOREVER.
+/// .
+/// \if MSGQUE
+/// \anchor \NS{ClientServerLink}
+/// \endif
+///
+/// <B>Definition of a "parent-context"</B>\n
+/// 
+///  - the parent is the first context created and is created with \RNSA{LinkCreate}
+///  - every new \e parent-context on the client create a new communication to a server.
+///  - every new \e parent-context on the client connect to a new \e parent-context on the server
+///  - every new \e parent-context on the server is using a new \e server-instance
+///  - the \e parent-context control the socket communication interface
+///  .
+/// <B>Definition of a "child-context"</B>\n
+/// 
+///  - the \e child-context is the second or more context and is created with \RNSA{LinkCreateChild}.
+///  - every new \e child-context on the client create a new \e child-context on the server.
+///  - every new \e child-context is totally independent from the \e parent-context setup and is able 
+///     to serve its own services.
+///  - the \e child-context is using the \e parent-context as a tunnel.
+///  - the parent of a \e child-context can be a \e parent-context or an other \e child-context. 
+///     A tree like structure is created.
+///  - the \e child-context is using the communication interface from the parent-context.
+///  - if a \e context is deleted (parent or child) the \e depending context (parent or child) is deleted too.
+///  - if a \e context is deleted the \e depending context-tree is deleted too.
+///  .
+
+
+
+
+
+/// \brief make \e ctx to a \e client-parent-context and setup a new \e client-server-link
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
 ///                  including the \b "@" item to add \e server-commandline-arguments
@@ -1558,7 +1628,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \endif
 /// \retException
 /// \attention if the first argument after the \b "@" item is the string \b "SELF" an independent
-/// server of the current server is started. This is not a \RNS{slave}. The "SELF" argument is
+/// server of the current server is started. This is not a \RNS{SlaveContext}. The "SELF" argument is
 /// replaced by an application default setting (if available) or by arguments set with \RNSA{Init}
 MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
   struct MqS  * const ctx,
@@ -1701,6 +1771,30 @@ static mq_inline MQ_SIZE MqLinkGetCtxIdI (
 /// \e link-delete or explicit with the \RNSA{ServiceDelete} function.
 ///
 
+/// \brief a 4 byte string to identify different services
+/// \brief The \e token-identifier is defined by the programmer using \RNSA{ServiceCreate}
+/// to link a \e service-handler with an \e identifier. The \e identifier is part of the
+/// \RNSA{SendEND}, \RNSA{SendEND_AND_WAIT} or \RNSA{SendEND_AND_CALLBACK} function-call 
+/// to access the services.\n
+/// For internal purpose some special \e token are predefined:
+///  - <B>_???</B> - all \e token starting with a \b "_" are for \b internal usage only
+///  - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to listen on \b all token not handled by other \e token more precise
+///  - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
+///  - \b +FTR and \b +EOF - used for \e one-directional-filter
+/// \if MSGQUE
+/// \anchor \NS{ServiceIdentifier}
+/// \endif
+typedef MQ_CST MQ_TOK;
+
+/// \brief function used as \e service-handle
+/// \details A service is using a \e callback to act on an incoming \e service-request. 
+/// The \e callback is linked to a \RNS{ServiceIdentifier} with \RNSA{ServiceCreate} or 
+/// is used as argument to the \RNSA{SendEND_AND_CALLBACK} function.
+/// \if MSGQUE
+/// \anchor \NS{ServiceCallback}
+/// \endif
+typedef MqTokenF MqServiceCallbackF;
+
 /// \brief wait for an event?
 enum MqWaitOnEventE {
   MQ_WAIT_NO      = 0,	///< just do the check
@@ -1748,7 +1842,7 @@ MQ_DECL MqServiceIsTransaction (
 /// defined as \e +ALL or as an \e alias to extract the \e current \RNS{ServiceIdentifier}.
 /// \ctx
 /// \return the \RNS{ServiceIdentifier}
-MQ_EXTERN MQ_CST 
+MQ_EXTERN MQ_TOK 
 MQ_DECL MqServiceGetToken (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
@@ -1759,7 +1853,7 @@ MQ_DECL MqServiceGetToken (
 /// \return a boolean value, \yes or \no
 MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
   struct MqS const * const ctx,
-  char const * const token
+  MQ_TOK const token
 ) __attribute__((nonnull(1)));
 
 /// \brief create a link between a \RNS{ServiceIdentifier} and a \RNS{ServiceCallback}
@@ -1774,8 +1868,8 @@ MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   struct MqS * const ctx, 
-  MQ_CST const token,
-  MqTokenF const callback,
+  MQ_TOK const token,
+  MqServiceCallbackF const callback,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
 ) __attribute__((nonnull(1)));
@@ -1793,7 +1887,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   struct MqS * const ctx, 
-  MQ_CST const token,
+  MQ_TOK const token,
   MQ_SIZE const id
 ) __attribute__((nonnull(1)));
 
@@ -1803,7 +1897,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
   struct MqS const * const ctx, 
-  MQ_CST const token
+  MQ_TOK const token
 ) __attribute__((nonnull(1)));
 
 /** \brief enter the \e event-loop and wait for an incoming \e service-request.
@@ -1855,20 +1949,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_Buffer_C_API Mq_Buffer_C_API
- *  \{
- *  \brief create and manage dynamic, generic, mixed typed data.
- *
- *  The MqBufferS struct is used to store and manage #MqTypeE typed data in a
- *  MqBufferU storage. If \libmsgque is working on any kind of data it is working on
- *  MqBufferS objects or on a list of MqBufferS objects called MqBufferLS.
- */
-
-/*****************************************************************************/
-/*                                                                           */
-/*                              buffer_init                                  */
-/*                                                                           */
-/*****************************************************************************/
+/// \defgroup Mq_Buffer_C_API Mq_Buffer_C_API
+/// \if MSGQUE
+/// \anchor \NS{BufferObject}
+/// \endif
+/// \{
+/// \brief create and manage dynamic, generic, mixed typed data.
+///
+/// The MqBufferS struct is used to store and manage #MqTypeE typed data in a
+/// MqBufferU storage. If \libmsgque is working on any kind of data it is working on
+/// MqBufferS objects or on a list of MqBufferS objects called MqBufferLS.
 
 /// \brief the type is native and has a size of 1 byte
 #define MQ_TYPE_IS_1_BYTE   (1<<0)
@@ -1913,6 +2003,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /// .
 /// \attention In the package the space for the type is only \e on char. If additional
 /// space is needed the protocol have to be adjusted
+/// \endif
+/// \if MSGQUE
+/// \anchor \NS{BufferIdentifer}
 /// \endif
 enum MqTypeE {
   MQ_BYTT = (1<<4 | MQ_TYPE_IS_1_BYTE),  ///< Y: 1 byte 'byte' type
@@ -2149,6 +2242,9 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateU (
 /// \buf
 /// \param[out] valP a pointer of the value to read
 /// \retMqErrorE
+/// \if MSGQUE
+/// \anchor \NS{BufferGetTYPE}
+/// \endif
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqBufferGetY (
   struct MqBufferS * const buf,
@@ -2627,11 +2723,10 @@ MqBufferLAppendU (
 /*****************************************************************************/
 
 /// \brief search for boolean \e option in MqBufferLS list and fill \e var with #MQ_BOL value 
-/// for "found" = #MQ_YES and "not found" = #MQ_NO
 /// \context
 /// \bufL0
 /// \optionL
-/// \retval var if \e option string is found set \e var with \e def
+/// \retval var if \e opt is found set \e var to #MQ_YES otherwiese #MQ_NO
 /// \retMqErrorE
 /// \attention if \e option is found the entry is deleted from the MqBufferLS object
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLCheckOptionO (
@@ -2817,15 +2912,17 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_Error_C_API Mq_Error_C_API
- *  \{
- *  \brief create and manage error messages.
- *
- *  the management is done with a #MqErrorS object created by #MqContextCreate.
- *  every #MqS object is linked with only one #MqErrorS object and every #MqErrorS 
- *  object is linked with only one #MqS object.
- *  the #MqErrorS object is used to collect all data needed to handle an error.
- */
+/// \defgroup Mq_Error_C_API Mq_Error_C_API
+/// \if MSGQUE
+/// \anchor \NS{ErrorObject}
+/// \endif
+/// \{
+/// \brief create and manage error messages.
+///
+/// the management is done with a #MqErrorS object created by #MqContextCreate.
+/// every #MqS object is linked with only one #MqErrorS object and every #MqErrorS 
+/// object is linked with only one #MqS object.
+/// the #MqErrorS object is used to collect all data needed to handle an error.
 
 /// \brief panic on error
 ///
@@ -3116,17 +3213,19 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_Read_C_API Mq_Read_C_API
- *  \{
- *  \brief extract data from an incoming \e read-data-package.
- *
- *  \e Reading data is a passive task and the opposite of \e sending data which is an active task.
- *  Passive mean that the \e read is triggered by an incoming data-package and not by the
- *  software-work-flow or the user. There is one \e read function for every basic type
- *  defined in \RNS{BufferIdentifer} plus a couple of help functions.
- *  \attention Reading data is an atomic task and should not be split. Only one \e read-data-package 
- *  is always in duty. As basic rule read first all data and start the processing afterwards.
- */
+/// \defgroup Mq_Read_C_API Mq_Read_C_API
+/// \if MSGQUE
+/// \anchor \NS{ReadData}
+/// \endif
+/// \{
+/// \brief extract data from an incoming \e read-data-package.
+///
+/// \e Reading data is a passive task and the opposite of \e sending data which is an active task.
+/// Passive mean that the \e read is triggered by an incoming data-package and not by the
+/// software-work-flow or the user. There is one \e read function for every basic type
+/// defined in \RNS{BufferIdentifer} plus a couple of help functions.
+/// \attention Reading data is an atomic task and should not be split. Only one \e read-data-package 
+/// is always in duty. As basic rule read first all data and start the processing afterwards.
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3164,6 +3263,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
 /// \ctx
 /// \param[out] val the value to read
 /// \retException
+/// \if MSGQUE
+/// \anchor \NS{ReadTYPE}
+/// \endif
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadY (
   struct MqS * const ctx,
   MQ_BYT * const val
@@ -3257,10 +3359,10 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   MQ_SIZE * const len
 );
 
-/// \brief extract a \b temporary \RNS{buffer} from the \e read-data-package
+/// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
 /// The object returned is owned by the \e read-data-package and is \b only valid
-/// up to the next call of any \RNS{read} function. If a long-term object is required
+/// up to the next call of any \RNS{ReadData} function. If a long-term object is required
 /// use the C-API function: #MqBufferDup.
 /// \ctx
 /// \param[out] val the buffer
@@ -3297,7 +3399,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief undo the last \RNS{read} function call
+/// \brief undo the last \RNS{ReadData} function call
 ///
 /// Put the internal position-pointer to the start of the last read \e body-item.
 /// The next read function call will extract the same item again. Only \b one
@@ -3386,6 +3488,9 @@ static MqErrorE Ot_WAR1(struct MqS * const context, MQ_PTR data) {
 /// \ctx
 /// \param[in] value the value for appending
 /// \retException
+/// \if MSGQUE
+/// \anchor \NS{SendTYPE}
+/// \endif
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendY (
   struct MqS * const ctx,
   const MQ_BYT value
@@ -3537,7 +3642,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendSTART (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND (
   struct MqS * const ctx,
-  MQ_CST const token
+  MQ_TOK const token
 );
 
 /// \brief finish the \e send-data-block, call the remote service and do \e wait for return.
@@ -3550,7 +3655,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_WAIT (
   struct MqS * const ctx,
-  MQ_CST const token,
+  MQ_TOK const token,
   MQ_TIME_T const timeout
 );
 
@@ -3566,8 +3671,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_WAIT (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
   struct MqS * const ctx,
-  MQ_CST const token,
-  MqTokenF const callback,
+  MQ_TOK const token,
+  MqServiceCallbackF const callback,
   MQ_PTR data,
   MqTokenDataFreeF datafreeF
 );
@@ -3586,7 +3691,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendRETURN (
   struct MqS * const ctx
 );
 
-/// \brief send the data from the \RNS{error} to the link target .
+/// \brief send the data from the \RNS{ErrorObject} to the link target .
 /// \details If an error is available the \e error-number and the \e error-text
 /// is send to the link target. After send the error is reset. This function
 /// only raise an error if the sending self fails.
@@ -3636,40 +3741,61 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/** \defgroup Mq_Slave_C_API Mq_Slave_C_API
- *  \{
- *  \brief create and manage a slave context
-
-The \e master-slave-link is used to create a mesh of nodes defined by
-different \e parent-context.
-<B>The master control the slave.</B>
-
-The \e master-slave-link is used to perform the following tasks:
- - report error messages from the \e slave-context to the \e master-context
- - to create a \e slave-child-context if a \e master-child-context is created
- - to delete a \e slave-context if a \e master-context is deleted
- .
-
-In difference to the \e client-server-link the \e master-slave-link connect
-two independent \e parent-context in the same process or thread (e.g. node).
-This leads to the restriction that only the \e master-context can be
-a \e server-context because only one \e server-context per node is possible.
-
-\verbatim
-    node-0   |           node-1/2        |   node-3/4/5
-===================================================================
-
-| <- client/server link -> | <- client/server link -> |
-
-             | <-- master/slave link --> |
-
-                           |- client1-0 -|- server3 ...
-             |-  server1  -|             
-             |             |- client1-1 -|- server4 ...
-  client0-0 -|                           
-             |-  server2  -|- client1-2 -|- server5 ...
-\endverbatim
- **/
+/// \defgroup Mq_Slave_C_API Mq_Slave_C_API
+/// \{
+/// \brief create and manage a slave context
+/// 
+/// The \e master-slave-link is used to create a mesh of nodes defined by
+/// different \e parent-context.  <B>The master control the slave.</B>
+///
+/// The \e master-slave-link is used to perform the following tasks:
+///  - report error messages from the \e slave-context to the \e master-context
+///  - to create a \e slave-child-context if a \e master-child-context is created
+///  - to delete a \e slave-context if a \e master-context is deleted
+///  .
+/// In difference to the \e client-server-link the \e master-slave-link connect
+/// two independent \e parent-context in the same process or thread (e.g. node).
+/// This leads to the restriction that only the \e master-context can be
+/// a \e server-context because only one \e server-context per node is possible.
+///\verbatim
+///    node-0   |           node-1/2        |   node-3/4/5
+///===================================================================
+///
+///| <- client/server link -> | <- client/server link -> |
+///
+///             | <-- master/slave link --> |
+///
+///                           |- client1-0 -|- server3 ...
+///             |-  server1  -|             
+///             |             |- client1-1 -|- server4 ...
+///  client0-0 -|                           
+///             |-  server2  -|- client1-2 -|- server5 ...  \endverbatim
+///
+/// <B>Definition of a "master-context"</B>\n
+///  - the \e master-context is a \parent_context without a \child_context available.
+///  - the \e master-context is a \client_context or a \server_context.
+///  - the \e master-context is responsible to create or delete the \child_context of the \e slave.
+///  - the \e master-context is responsible to delete the \parent_context of the \e slave.
+///  - the \e link between the \e master-context and the \e slave-context is done using \RNSA{SlaveWorker}
+///  .
+/// 
+/// <B>Definition of a "slave-context"</B>\n
+///  - the \e slave-context is a \parent_context without a \child_context available.
+///  - the \e slave-context is a \client_context.
+///  - the \e slave-context lifetime is controlled by the \e master-context.
+///  - the \e slave-context report all error-messages to the \e master-context.
+///  - a special form of a \e slave-context is a \e worker-context
+///  .
+/// 
+/// <B>Definition of a "worker-context"</B>\n
+///  - the \e worker-context is a \e slave-context using the image of the \e master-context self.
+///  - the \e master-context have to be a \server_context.
+///  - the \e worker-context is created using \RNSA{SlaveWorker}
+///  - the \e worker-context is identified by a \e unique integer starting with \c 0.
+///  .
+/// \if MSGQUE
+/// \anchor \NS{SlaveContext}
+/// \endif
 
 /// \brief the maximum number of slave objects per master
 /// \attention this number can be changed but \libmsgque have to be recompiled after
@@ -3847,7 +3973,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysSleep (
 /// \return the basename of \e in (it is save to modify the basename for additional needs)
 /// \attention the memory of the basename string returned is owned by the caller and have to be freed
 MQ_EXTERN MQ_STR MQ_DECL MqSysBasename (
-  char const * const in, 
+  MQ_CST const in, 
   MQ_BOL includeExtension
 );
 
@@ -4029,5 +4155,7 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 
 

@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -74,7 +74,7 @@ Mq_System_C_API \- access to native system functions with error handling
 .br
 .R "'sleep' system call with error handling feature "
 .ti -1c
-.RI "\fBMQ_STR\fP \fBMqSysBasename\fP (char const *const in, \fBMQ_BOL\fP includeExtension)"
+.RI "\fBMQ_STR\fP \fBMqSysBasename\fP (\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .br
 .R "'basename' system call with error handling feature "
 .ti -1c
@@ -145,7 +145,7 @@ do { \
 .PP
 
 .PP
-Definition at line 3817 of file msgque.h.
+Definition at line 3943 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
@@ -164,8 +164,8 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 3869 of file msgque.h.
-.SS "\fBMQ_STR\fP MqSysBasename (char const *const  in, \fBMQ_BOL\fP includeExtension)"
+Definition at line 3995 of file msgque.h.
+.SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 'basename' system call with error handling feature 
 .PP

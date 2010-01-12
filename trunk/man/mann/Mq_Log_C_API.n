@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "11 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -89,7 +89,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 3924 of file msgque.h.
+Definition at line 4050 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
 .PP
 log a plain string using the \fBMqSetDebugLevel\fP definition 
@@ -105,7 +105,7 @@ log a plain string using the \fBMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 3931 of file msgque.h.
+Definition at line 4057 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -128,7 +128,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 3940 of file msgque.h.
+Definition at line 4066 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fBMqSetDebugLevel\fP definition 
@@ -151,12 +151,12 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 3949 of file msgque.h.
+Definition at line 4075 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 3918 of file msgque.h.
+Definition at line 4044 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqDLogEV (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_CST\fP const  fmt,  ...)"
