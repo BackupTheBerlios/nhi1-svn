@@ -1,7 +1,7 @@
 /** 
 \page client_versa_server WHAT-IS: client/server versa parent/child
 
-\copydoc Mq_Link_C_API
+\copydetails Mq_Link_C_API
 
 */
 

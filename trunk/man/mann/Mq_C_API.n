@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -18,7 +18,7 @@ Mq_C_API \- public libmsgque API
 .ti -1c
 .RI "\fBMq_Config_C_API\fP"
 .br
-.R "configuration of the \fBMqS\fP object "
+.R "configuration of a context "
 .PP
 .in +1c
 
@@ -96,6 +96,13 @@ Mq_C_API \- public libmsgque API
 .RI "\fBMq_Log_C_API\fP"
 .br
 .R "log information to stderr with a common format. "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Filter_C_API\fP"
+.br
+.R "modify data using filter technology "
 .PP
 
 .in -1c

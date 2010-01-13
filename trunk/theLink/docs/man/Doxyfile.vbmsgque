@@ -126,6 +126,17 @@ ALIASES		    += "config_IFactory=IFactory.Call()"
 ALIASES             += "config_IBgError=IBgError.Call()"
 ALIASES             += "config_IEvent=IEvent.Call()"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+Private NotInheritable Class Server \n\
+  Inherits MqS \n\
+  Implements IFactory \n\
+  Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call \n\
+    Return New Server() \n\
+  End Function \n\
+  ... \n\
+End Class \n\
+\endcode"
+
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(BqVal ParamArray args As String())"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent As MqS, ByVal ParamArray args As String())"

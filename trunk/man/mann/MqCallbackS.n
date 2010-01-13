@@ -1,4 +1,4 @@
-.TH "MqCallbackS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqCallbackS" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,29 +34,29 @@ MqCallbackS \- used for callback function pointer management
 .PP 
 used for callback function pointer management 
 .PP
-Definition at line 549 of file msgque.h.
+Definition at line 552 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_PTR\fP \fBMqCallbackS.data\fP"
 .PP
 additional data for the callback function 
 .PP
-Definition at line 551 of file msgque.h.
+Definition at line 554 of file msgque.h.
 .SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS.fCopy\fP"
 .PP
 copy additional data pointer, used in a \fBMqSetupDup\fP 
 .PP
-Definition at line 553 of file msgque.h.
+Definition at line 556 of file msgque.h.
 .SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 552 of file msgque.h.
+Definition at line 555 of file msgque.h.
 .SS "\fBMqTokenF\fP \fBMqCallbackS.fFunc\fP"
 .PP
 callback method 
 .PP
-Definition at line 550 of file msgque.h.
+Definition at line 553 of file msgque.h.
 
 .SH "Author"
 .PP 

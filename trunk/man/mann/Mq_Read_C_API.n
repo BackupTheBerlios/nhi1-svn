@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -123,7 +123,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
@@ -167,7 +167,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -184,7 +184,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -201,7 +201,7 @@ get the number of items left in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -216,7 +216,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -233,7 +233,7 @@ check if an item exists in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -265,7 +265,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -282,7 +282,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBctx.ReadU() As ReadU=MqBufferS\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
@@ -301,7 +301,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
@@ -320,7 +320,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -337,7 +337,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP and the source of the copy 
+\fIctx\fP the context returned by \fBContextCreate\fP and the source of the copy 
 .br
 \fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
 .RE
@@ -354,7 +354,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -373,7 +373,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the buffer 
 .RE
@@ -392,7 +392,7 @@ Put the internal position-pointer to the start of the last read \fIbody-item\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -407,7 +407,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -424,7 +424,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE

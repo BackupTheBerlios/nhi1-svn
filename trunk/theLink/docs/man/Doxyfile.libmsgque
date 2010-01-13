@@ -52,23 +52,23 @@ MqBufferLAppendC(init, \"myFirstArgument\"); \n\
 The memory is owned by the library -> <B>do not free the memory</B>"
 
 ALIASES		    += "config_type_buffersize=#MQ_INT"
-ALIASES		    += "config_set_buffersize=#MqConfigSetBuffersize (ctx, buffersize)"
+ALIASES		    += "config_set_buffersize=#MqConfigSetBuffersize (ctx, MQ_INT buffersize)"
 ALIASES		    += "config_get_buffersize=#MqConfigGetBuffersize (ctx)"
 
 ALIASES		    += "config_type_debug=#MQ_INT"
-ALIASES		    += "config_set_debug=#MqConfigSetDebug (ctx, debug)"
+ALIASES		    += "config_set_debug=#MqConfigSetDebug (ctx, MQ_INT debug)"
 ALIASES		    += "config_get_debug=#MqConfigGetDebug (ctx)"
 
 ALIASES		    += "config_type_timeout=#MQ_TIME_T"
-ALIASES		    += "config_set_timeout=#MqConfigSetTimeout (ctx, timeout)"
+ALIASES		    += "config_set_timeout=#MqConfigSetTimeout (ctx, MQ_TIME_T timeout)"
 ALIASES		    += "config_get_timeout=#MqConfigGetTimeout (ctx)"
 
 ALIASES		    += "config_type_name=#MQ_CST"
-ALIASES		    += "config_set_name=#MqConfigSetName (ctx. name)"
+ALIASES		    += "config_set_name=#MqConfigSetName (ctx. MQ_CST name)"
 ALIASES		    += "config_get_name=#MqConfigGetName (ctx)"
 
 ALIASES		    += "config_type_srvname=#MQ_CST"
-ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, srvName)"
+ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, MQ_CST srvName)"
 ALIASES		    += "config_get_srvname=#MqConfigGetSrvName (ctx)"
 
 ALIASES		    += "config_type_ident=#MQ_CST"
@@ -77,39 +77,39 @@ ALIASES		    += "config_get_ident=#MqConfigGetIdent (struct MqS *ctx)"
 ALIASES		    += "config_check_ident=#MqConfigCheckIdent (struct MqS *ctx, MQ_CST ident)"
 
 ALIASES		    += "config_type_isSilent=#MQ_BOL"
-ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, bool)"
+ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, MQ_BOL bool)"
 ALIASES		    += "config_get_isSilent=#MqConfigGetIsSilent (ctx)"
 
 ALIASES		    += "config_type_isString=#MQ_BOL"
-ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, bool)"
+ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, MQ_BOL bool)"
 ALIASES		    += "config_get_isString=#MqConfigGetIsString (ctx)"
 
 ALIASES		    += "config_type_ignoreExit=#MQ_BOL"
-ALIASES		    += "config_set_ignoreExit=#MqConfigSetIgnoreExit (ctx, bool)"
+ALIASES		    += "config_set_ignoreExit=#MqConfigSetIgnoreExit (ctx, MQ_BOL bool)"
 ALIASES		    += "config_get_ignoreExit=NO"
 
 ALIASES		    += "config_type_daemon=#MQ_CST"
-ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, pidfile)"
+ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, MQ_CST pidfile)"
 ALIASES		    += "config_get_daemon=NO"
 
 ALIASES		    += "config_type_isServer=#MQ_BOL"
-ALIASES		    += "config_set_isServer=#MqConfigSetIsServer (ctx, isServer)"
+ALIASES		    += "config_set_isServer=#MqConfigSetIsServer (ctx, MQ_BOL isServer)"
 ALIASES		    += "config_get_isServer=#MqConfigGetIsServer (ctx)"
 
 ALIASES		    += "config_type_startAs=enum #MqStartE"
-ALIASES		    += "config_set_startAs=#MqConfigSetStartAs (ctx, startAS"
+ALIASES		    += "config_set_startAs=#MqConfigSetStartAs (ctx, enum #MqStartE startAS)"
 ALIASES		    += "config_get_startAs=#MqConfigGetStartAs (ctx)"
 
 ALIASES		    += "config_type_tcp=#MQ_CST"
-ALIASES		    += "config_set_tcp=#MqConfigSetIoTcp (ctx,host,port,myhost,myport)"
+ALIASES		    += "config_set_tcp=#MqConfigSetIoTcp (ctx,MQ_CST host, MQ_INT port, MQ_CST myhost, MQ_INT myport)"
 ALIASES		    += "config_get_tcp=#MqConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=#MQ_CST"
-ALIASES		    += "config_set_uds=#MqConfigSetIoUds (ctx, file)"
+ALIASES		    += "config_set_uds=#MqConfigSetIoUds (ctx, MQ_CST file)"
 ALIASES		    += "config_get_uds=#MqConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=#MQ_SOCK"
-ALIASES		    += "config_set_pipe=#MqConfigSetIoPipe (ctx, socket)"
+ALIASES		    += "config_set_pipe=#MqConfigSetIoPipe (ctx, MQ_INT socket)"
 ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
 
 ALIASES             += "config_IServerSetup=MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
@@ -117,6 +117,10 @@ ALIASES		    += "config_IServerCleanup=MqConfigSetServerCleanup (ctx, fFunc, dat
 ALIASES		    += "config_IFactory=MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 ALIASES		    += "config_IBgError=MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
 ALIASES		    += "config_IEvent=MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+MqConfigSetDefaultFactory (ctx); \n\
+\endcode"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=MqLinkCreate (struct MqS *ctx, struct MqBufferLS ** args)"

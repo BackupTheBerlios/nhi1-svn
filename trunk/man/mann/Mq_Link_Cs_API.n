@@ -1,4 +1,4 @@
-.TH "Mq_Link_Cs_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_Cs_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -41,7 +41,7 @@ Mq_Link_Cs_API \- setup and manage a \fIclient-server-link\fP
 .PP 
 setup and manage a \fIclient-server-link\fP  
 
-The \fIclient-server-link\fP has two endpoints, a \fIclient-parent-context\fP and a \fIserver-parent-context\fP. Ontop the \fIparent-context\fP multiple \fIchild-context\fP are allowed. 
+The \fIclient-server-link\fP connect two \fIcontext\fP, a \fIclient-parent-context\fP and a \fIserver-parent-context\fP. The \fIlink\fP can be \fIlocal\fP (connect two \fIcontext\fP on the same host) or can be \fIremote\fP (connect two \fIcontext\fP on different hosts). OnTop the \fIparent-context\fP multiple \fIchild-context\fP are allowed. 
 .PP
 .nf
 

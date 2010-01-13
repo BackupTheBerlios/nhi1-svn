@@ -1,4 +1,4 @@
-.TH "MqFactoryCreateS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqFactoryCreateS" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,29 +34,29 @@ MqFactoryCreateS \- function pointer to \fIcreate\fP an object
 .PP 
 function pointer to \fIcreate\fP an object 
 .PP
-Definition at line 503 of file msgque.h.
+Definition at line 506 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_PTR\fP \fBMqFactoryCreateS.data\fP"
 .PP
 additional data pointer for the fCall 
 .PP
-Definition at line 505 of file msgque.h.
+Definition at line 508 of file msgque.h.
 .SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS.fCall\fP"
 .PP
 create a new object 
 .PP
-Definition at line 504 of file msgque.h.
+Definition at line 507 of file msgque.h.
 .SS "\fBMqTokenDataCopyF\fP \fBMqFactoryCreateS.fCopy\fP"
 .PP
 copy additional data pointer 
 .PP
-Definition at line 507 of file msgque.h.
+Definition at line 510 of file msgque.h.
 .SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 506 of file msgque.h.
+Definition at line 509 of file msgque.h.
 
 .SH "Author"
 .PP 

@@ -142,6 +142,14 @@ ALIASES		    += "config_IFactory=ConfigSetFactory(callback)"
 ALIASES             += "config_IBgError=ConfigSetBgError(callback)"
 ALIASES             += "config_IEvent=ConfigSetEvent(callback)"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+class Server(MqS): \n\
+  def __init__(self): \n\
+    self.ConfigSetFactory(lambda: Server()) \n\
+    ... \n\
+... \n\
+\endcode"
+
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"

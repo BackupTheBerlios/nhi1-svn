@@ -39,8 +39,8 @@ pConfigInit (
   context->config.io.tcp.port = NULL;
   context->config.io.tcp.myhost = NULL;
   context->config.io.tcp.myport = NULL;
-  context->config.io.pipe.socks[0] = -1;
-  context->config.io.pipe.socks[1] = -1;
+  context->config.io.pipe.socket[0] = -1;
+  context->config.io.pipe.socket[1] = -1;
 #if !defined(MQ_HAS_THREAD)
   context->config.ignoreThread = MQ_YES;
 #endif
@@ -613,7 +613,7 @@ MqConfigSetIoPipe (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "already");
   }
   context->config.io.com = MQ_IO_PIPE;
-  context->config.io.pipe.socks[1] = socket;
+  context->config.io.pipe.socket[1] = socket;
   return MQ_OK;
 }
 
@@ -812,7 +812,7 @@ MqConfigGetIoPipeSocket (
   struct MqS * const context
 )
 {
-  return context->config.io.pipe.socks[1];
+  return context->config.io.pipe.socket[1];
 }
 
 enum MqStartE

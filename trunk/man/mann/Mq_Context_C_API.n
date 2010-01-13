@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,7 +86,7 @@ The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a 
 .PP
 signature marker used in \fBMqS.signature\fP 
 .PP
-Definition at line 1413 of file msgque.h.
+Definition at line 1383 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -111,7 +111,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1404 of file msgque.h.
+Definition at line 1374 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
@@ -156,7 +156,7 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 
@@ -176,7 +176,7 @@ This function will never return.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 

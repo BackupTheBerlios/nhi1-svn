@@ -394,7 +394,10 @@ struct MqErrorS {
 
 /// \defgroup Mq_Config_C_API Mq_Config_C_API
 /// \{
-/// \brief configuration of the #MqS object
+/// \brief configuration of a context
+///
+/// The configuration is done persistent using \e config-api functions or
+/// on link-setup using \e command-line-arguments.
 
 /// \brief prototype for the \c fork sys-call
 typedef pid_t (MQ_DECL *MqForkF) (void);
@@ -568,40 +571,52 @@ enum MqIoComE {
     MQ_IO_PIPE 
 };
 
-/// configuration data which belong to \e MqIoS uds setup
+/// \brief configure a context to use a \e uds-client-server-link
+///
+/// The \e uds-socket (http://en.wikipedia.org/wiki/Unix_domain_socket) is usually 
+/// 50% faster than a local tcp communication but only available on UNIX.
+/// \param[in] file name of a \e uds-socket-file (default: \null)
 struct MqIoUdsConfigS {
   MQ_BUF file;
 };
 
-/// configuration data which belong to \e MqIoS tcp setup
+/// \brief configure a context to use a \e tcp-client-server-link
+///
+/// \param[in] host
+///  client: name of the remote interface (default: localhost)\n
+///  server: name of the local interface (default: listen on \e all interfaces)
+/// \param[in] port
+///  client: name of the remote port\n
+///  server: name of the local port
+/// \param[in] myhost client: name of the local interface
+/// \param[in] myport client: name of the local port
 struct MqIoTcpConfigS {
-  struct MqBufferS * host;	    ///< host name
-  struct MqBufferS * port;	    ///< port name
-  struct MqBufferS * myhost;	    ///< CLIENT: my host name
-  struct MqBufferS * myport;	    ///< CLIENT: my port name
+  struct MqBufferS * host;
+  struct MqBufferS * port;
+  struct MqBufferS * myhost;
+  struct MqBufferS * myport;
 };
 
-/// configuration data which belong to \e MqIoS pipe setup
+/// \brief configure a context to use a \e pipe-client-server-link
+///
+/// The \e socket option is special because it is used only for internal purpose to submit the socket from the
+/// client to the server started as pipe by the client.
+/// The only public usage for this option is to serve as
+/// interface for an existing tool like (x)inetd. The (x)inetd tool is a \e UNIX service to listen on a tcp/ip port
+/// and start for every connection the proper entry from the file \e /etc/(x)inetd.conf with the file-descriptor
+/// \e 0 as send/recv socket handle.
+/// \param[in] socket the \e file-descriptor-number (default: not set)
 struct MqIoPipeConfigS {
-  MQ_SOCK socks[2] ;		    ///< the result from socketpair
+  MQ_SOCK socket[2] ; ///< result from a \e socketpair function-call, [0] for the \e client-socket and [1] for the \e server-socket
 };
  
 /// \brief configuration data which belong to \e MqIoS
 struct MqIoConfigS {
 
-  /// \brief The timeout is used for all kind of low-level socket operations like \c send, \c recv and \c connect
-  /// <TABLE>
-  /// <TR>  <TH>type</TH>          <TH>default</TH>       <TH>option</TH>    <TH>application</TH>   <TH>context</TH>  </TR>
-  /// <TR>  <TD>INTEGER (sec)</TD> <TD>MQ_TIMEOUT180</TD> <TD>--timeout</TD> <TD>server/client</TD> <TD>parent</TD>   </TR>
-  /// </TABLE>
-  /// \attention This \c timeout is independent of the per transaction timeout of #MqSendEND_AND_WAIT.
+  /// \brief user defined timeout to terminate a blocking function call (default: 90 sec)
   MQ_TIME_T timeout;
 
-  /// \brief OS specific value for read socket operation buffer
-  /// <TABLE>
-  /// <TR>  <TH>type</TH>           <TH>default</TH> <TH>option</TH>       <TH>application</TH>   <TH>context</TH>  </TR>
-  /// <TR>  <TD>INTEGER (byte)</TD> <TD>4096</TD>    <TD>--buffersize</TD> <TD>server/client</TD> <TD>parent</TD>   </TR>
-  /// </TABLE>
+  /// \brief set the OS specific value for the \e socket-operation-buffer (default: OS sepecific)
   MQ_INT buffersize;
 
   /// \brief what kind of socket interface to use?
@@ -611,122 +626,84 @@ struct MqIoConfigS {
   /// </TABLE>
   enum MqIoComE com;
 
+  /// \brief set \e uds configration-data
   struct MqIoUdsConfigS	  uds;
+
+  /// \brief set \e tcp configration-data
   struct MqIoTcpConfigS	  tcp;
+
+  /// \brief set \e pipe configration-data
   struct MqIoPipeConfigS  pipe;
 };
 
 /// \brief end-user configuration data, also available as command-line options
 struct MqConfigS {
 
-  /// \brief Suppress logging output
-  /// <TABLE>
-  /// <TR>  <TH>type</TH> <TH>default</TH> <TH>option</TH>    <TH>application</TH>   <TH>context</TH>        </TR>
-  /// <TR>  <TD>BOOL</TD> <TD>NO</TD>      <TD>--silent</TD>  <TD>server/client</TD> <TD>parent/child</TD>   </TR>
-  /// </TABLE>
+  /// \brief write (\no) or don't write (\yes) any massages to stdout or stderr (default: \no)
   MQ_BOL isSilent;
 
-  /// \brief Use \e string mode, send as many data as possible as string
-  /// <TABLE>
-  /// <TR>  <TH>type</TH> <TH>default</TH> <TH>option</TH>    <TH>application</TH>   <TH>context</TH>        </TR>
-  /// <TR>  <TD>BOOL</TD> <TD>NO</TD>      <TD>--string</TD>  <TD>client</TD>        <TD>parent</TD>         </TR>
-  /// </TABLE>
+  /// \brief use the string-mode (\yes) or the binary-mode (\no) to send \e native-data
   ///
-  /// \libmsgque distinguish between a \e string based (option: \c --string) and a
-  /// \e binary based (this is the default) data packages. The items is a \libmsgque data
-  /// package are of type #MqBufferU including OS specific native data of type #MQ_ATO.
-  /// The native data can be transmitted as \e string (slow) or as \e binary (fast).
-  /// \e string is used for debugging purpose or if the binary data model is different
-  /// between client and server. The difference in endianness (http://en.wikipedia.org/wiki/Endian)
-  /// is handled by \libmsgque and does not require using the \c --string option.
-  /// The options is only available for the \e client-parent setup.
+  /// The items in a \e data-package are defined as \RNS{BufferIdentifer} and can 
+  /// be transmitted as \e string (slow) or as \e binary (fast) data.
+  /// The \e string-mode is used for debugging purpose or if the \e binary-data-model is different
+  /// between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian)
+  /// is handled by \libmsgque and does not require the \e string-mode.
+  /// The option is only available for the \e client-parent-context. (default: binary-mode)
   MQ_BOL isString;
 
-  /// \brief User preferences on HOWTO start a new entity
-  /// <TABLE>
-  /// <TR>  <TH>type</TH> <TH>default</TH>	     <TH>option</TH>   <TH>application</TH>   <TH>context</TH> </TR>
-  /// <TR>  <TD>ENUM</TD> <TD>#MQ_START_DEFAULT</TD> <TD>NO</TD>       <TD>client/server</TD> <TD>parent</TD>  </TR>
-  /// <TR>  <TD>ENUM</TD> <TD>#MQ_START_FORK</TD>    <TD>--fork</TD>   <TD>client/server</TD> <TD>parent</TD>  </TR>
-  /// <TR>  <TD>ENUM</TD> <TD>#MQ_START_THREAD</TD>  <TD>--thread</TD> <TD>client/server</TD> <TD>parent</TD>  </TR>
-  /// <TR>  <TD>ENUM</TD> <TD>#MQ_START_SPAWN</TD>   <TD>--spawn</TD>  <TD>client/server</TD> <TD>parent</TD>  </TR>
-  /// </TABLE>
+  /// \brief create a new \e application-context as thread, spawn or fork
   ///
-  /// The #MQ_START_DEFAULT depend on the application-context:
-  /// - <I>server setup</I>\n Start a \e UDP or \e TCP server 
-  ///   capable to serve \b one incoming \e client connection.
-  /// - <I>client setup</I>\n Start a \e PIPE server using the following order:
-  ///   - \e fork   (if the \c fork system-call is available)
-  ///   - \e thread (if \libmsgque was compiled with \c --enable-threads)
-  ///   - \e spawn  (this always works)
-  ///   .
+  /// A new \e application-context is created if:
+  /// - a \e tcp-uds-server listen on socket and get a \e connection-request from a client.
+  ///   This require: \RNSC{IFactory} and \RNSC{IServerSetup} 
+  /// - a \e filter-context create a new \e filter-instance
+  /// - a \e server-context create a new \e worker-context using \RNSA{SlaveWorker}
+  /// - a \e server-context start a new \e client-server-link using \e SELF as 
+  ///	    executable-name using \RNSA{LinkCreate}
   /// .
-  /// \attention In \e server mode the \c --fork , \c --thread and the \c --spawn options require the 
-  ///   #MqSetupS::Parent - #MqLinkSetupS::fCreate and #MqSetupS::Parent - #MqLinkSetupS::fDelete value to 
-  ///   provide an entry-point after the new entity was created. In addition the option 
-  ///   #MqSetupS::fProcessExit or #MqSetupS::fThreadExit is used to exit the entity.
-  /// \attention The \c --fork option require the \b fork system-call and is \b not compatible with
-  ///   threads.
+  /// (default: do not create a new application-context)
   enum MqStartE startAs;
 
-/** \brief The human-readable name of context
- *  <TABLE>
- *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>  <TH>application</TH>   <TH>context</TH>   </TR>
- *  <TR>  <TD>STRING</TD> <TD>unknown</TD> <TD>--name</TD>  <TD>server/client</TD> <TD>parent</TD>    </TR>
- *  </TABLE>
- * 
- *  The name is used as prefix for application specific log and error messages:
-\verbatim
-C> (NAME) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE
-\endverbatim
- *  and is created using the following steps:
- *  - initial set to \e unknown
- *  - the argument of the \c --name option in \e argv
- *  - the #MqConfigS::name entry from the related configuration object
- *  - the basename of the first option in \e argv
- *  .
- *  \attention 
- *     - the memory of the \e name data-entry is managed by \libmsgque and freed during
- *       deleting of the #MqS object. A Value of \c NULL is allowed. 
- *     - the \e name data-entry will be replaced by the argument of the \c --srvname command-line
- *       option of the client.
- *     - to initialize this value with a static string use: \code
-MqConfigSetName(context, "myString");
-\endcode
- *     .
- */
+/// \brief set the human-readable name of the \e local-context
+///
+/// Use the \e name as a prefix in the local debug/error/log output:
+/// \verbatim C> (name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE \endverbatim
+/// The value is define using the following order:
+/// -# initial set to \e unknown
+/// -# the \RNSC{name} \e configuration-option
+/// -# use the basename of the \e first entry from the \e command-line-arguments, usually the \e executable-name
+/// -# use the \e --name argument from the \e command-line-arguments
+/// .
+/// \ifnot MAN
+/// \attention 
+///   - the memory of the \e name-data-entry is managed by \libmsgque and freed during
+///     deleting of the #MqS object. A Value of \c NULL is allowed. 
+///   - the \e name-data-entry on the \e server will be replaced by the \RNSC{srvname} 
+///     configuration option of the client.
+///   - to initialize this value with a static string use: \code MqConfigSetName(context, "myString"); \endcode
+///   .
+/// \endif
   MQ_STR name;
 
-/** \brief The human-readable name of the server-context
- *  <TABLE>
- *  <TR>  <TH>type</TH>   <TH>default</TH> <TH>option</TH>  <TH>application</TH>   <TH>context</TH>   </TR>
- *  <TR>  <TD>STRING</TD> <TD>unknown</TD> <TD>--srvname</TD>  <TD>client</TD> <TD>parent/child</TD>    </TR>
- *  </TABLE>
- * 
- *  The srvname is used as prefix for the server-application specific log and error messages:
-\verbatim
-C> (NAME) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE
-\endverbatim
- *  and is created using the following steps:
- *  - initial set to \e unknown
- *  - the argument of the \c --srvname option in \e argv
- *  - the #MqConfigS::srvname entry from the related configuration object
- *  .
- *  \attention 
- *     - the memory of the \e srvname data-entry is managed by \libmsgque and freed during
- *       deleting of the #MqS object. A Value of \c NULL is allowed.
- *     - to initialize this value with a static string use: \code
-MqConfigSetSrvName(context, "myString");
-\endcode
- *     .
- */
+/// \brief set the human-readable name of the \e server-context
+///
+/// Use the \e server-name as a client specific prefix in the server debug/error/log output to
+/// link \e server-messages to a specific \e client-connection.
+/// \verbatim C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE \endverbatim
+/// If the \e server-name is not defined on the \e client the \e server is using \RNSC{name} to
+/// create a useable name.  (default: \null)
+/// \ifnot MAN
+/// \attention 
+///   - the memory of the \e server-name-data-entry is managed by \libmsgque and freed with
+///     \RNSA{LinkDelete}. A Value of \c NULL is allowed.
+///   - to initialize this value with a static string use: \code MqConfigSetSrvName(context, "myString"); \endcode
+///   .
+/// \endif
   MQ_STR srvname;
 
-  /// \brief Send additional debugging output to stderr
-  /// <TABLE>
-  /// <TR>  <TH>type</TH>          <TH>default</TH> <TH>option</TH>  <TH>application</TH>   <TH>context</TH>        </TR>
-  /// <TR>  <TD>INTEGER (0-9)</TD> <TD>0</TD>       <TD>--debug</TD> <TD>server/client</TD> <TD>parent/child</TD>   </TR>
-  /// </TABLE>
-  /// \attention Using pipe (e.g. --pipe) the \e server get the \e debug flag from the \e client.
+  /// \brief set the \e debug-level of the \e context
+  /// \details Valid values are 0 <= \e debug-level <= 9 using 0 for \e no-debug and 9 for \e maximum-debug. (default: 0)
   MQ_INT debug;
 
   /// \brief Create a child-context
@@ -735,7 +712,6 @@ MqConfigSetSrvName(context, "myString");
   /// <TR>  <TD>POINTER</TD> <TD>NULL</TD>    <TD>NO</TD>       <TD>client</TD>       <TD>parent</TD>   </TR>
   /// </TABLE>
   ///
-  /// Read more in: \main_cspc
   struct MqS * parent;
 
   /// \brief SLAVE: a  pointer to the master object or \c NULL
@@ -760,13 +736,13 @@ MqConfigSetSrvName(context, "myString");
 /// \brief application-programmer configuration data
 struct MqSetupS {
 
-  /// \brief application identifier
+  /// \brief set the application identifier
   ///
-  /// The application \e identifier is used to modify the client or filter behaviour depending on the server \e identifier.
-  /// The server set the \e identifier using #MqConfigSetIdent and the client ask for the identifier of the
-  /// server using \e #MqConfigGetIdent usually used in the client configuration setup code. The \e identifier
-  /// is \b not changeable by the user, like the \e name configuration option, because this is a "build-in" 
+  /// The \e application-identifier is used to modify the client or filter behaviour depending on the \e identifier-value of
+  /// the \e remote-context.
+  /// The \e identifier is \b not changeable by the user, like the \RNSC{name} configuration option, because this is a "build-in" 
   /// feature set by the \e programmer.
+  /// (default: \null)
   MQ_STR ident;
  
   /// \brief setup/cleanup a \e CHILD object
@@ -777,38 +753,35 @@ struct MqSetupS {
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
   struct MqLinkSetupS Parent;
 
-  /// \brief pointer to the background error service
+  /// \brief define the \e background-error-interface
   ///
-  /// A background error is an error without an link to an workflow. The error happen if an #MqSendEND
-  /// call fails or if an other asynchronous task fails. if the callback is \b not specified the error
-  /// is printed to stderr but no error if left in the context. if the callback is defined the
-  /// context is set to the error and the callback is called to process this error. On the callback
-  /// the error can be cleared up with #MqErrorReset.
+  /// A background error is an error without a link to an \e application-context and happen if an \RNSA{SendEND}
+  /// call fails or if an other asynchronous task fails. if the interface is \e not defined the error
+  /// is printed to stderr and the aplication continue to work. if the interface is defined the
+  /// context is set to error and the callback is called to process this error. Inside the callback
+  /// the error is available using \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} and can be cleared using \RNSA{ErrorReset}.
   struct MqCallbackS BgError;
 
-  /// \brief Create a \e server context
-  /// <TABLE>
-  /// <TR>  <TH>type</TH> <TH>default</TH> <TH>option</TH> <TH>application</TH>   <TH>context</TH>        </TR>
-  /// <TR>  <TD>BOOL</TD> <TD>NO</TD>      <TD>NO</TD>     <TD>server</TD>        <TD>parent</TD>         </TR>
-  /// </TABLE>
+  /// \brief change the context to act as \e server-context (\yes) or not (\no)
   ///
-  /// If the \e server option is available the #MqLinkCreate will create an \libmsgque object usable
-  /// as a server. For detail information read: \main_cspc
+  /// A \e server-context is responsible to answer \e service-requests. This options is also set as 
+  /// side-effect in a \RNSC{IServerSetup} or \RNSC{IServerCleanup} function-call. (default: \no)
   MQ_BOL isServer;
 
-  /// \brief pointer to the Server-Setup function
+  /// \brief define the \e server-setup-interface
   ///
-  /// This Server-Setup function is used to configure a new server-link and act like a
-  /// constructor. This function is called on the end of #MqLinkCreate. A server-context-link is created 
-  /// for every new incoming connection request and is used to provide context specific services .
-  /// \attention if a \e child-context is created, use this function together with #MqFactoryCreateS
-  /// is required to configure the new \e child-context.
+  /// This interface is used to configure a new \e server-context-link, like a
+  /// constructor, and is called at the end of \RNSA{LinkCreate} or \RNSA{LinkCreateChild}. 
+  /// This interface is called for every new incoming connection request and is used to define 
+  /// context specific services using \RNSA{ServiceCreate} or to initialize \e context-specific
+  /// variables. As side-effect this interface set \RNSC{isServer} to \yes.
   struct MqCallbackS ServerSetup;
 
-  /// \brief pointer to the Server-Cleanup function
+  /// \brief define the \e server-cleanup-interface
   ///
-  /// This Server-Cleanup function is used to cleanup a server-context-link and act like a
-  /// destructor. The function is called on the begin of #MqLinkDelete.
+  /// This interface is used to cleanup an onl \e server-context-link, like a
+  /// destructor, and is called at the end of \RNSA{LinkDelete} to free \e context-specific 
+  /// variables. As side-effect this interface set \RNSC{isServer} to \yes.
   struct MqCallbackS ServerCleanup;
 
   // misc
@@ -827,22 +800,21 @@ struct MqSetupS {
   /// and the process/thread is ready to exit.
   /// If \b all \e child context Event-Handler return with \RNSA{ErrorSetCONTINUE} too
   /// and the client/server links is already shutdown the process/thread will \b exit.
-  /// example: \c theLink/example/\lang/Filter4.\lang
+  /// example: \c theLink/example/LANG/Filter4.EXT
   struct MqCallbackS Event;
 
-  /// \brief function pointers used to create and delete an object or a class instance
-  /// <TABLE>
-  /// <TR>  <TH>type</TH> <TH>default</TH> <TH>option</TH> <TH>application</TH>   <TH>context</TH>  </TR>
-  /// <TR>  <TD>DATA</TD> <TD>NULL</TD>    <TD>NO</TD>     <TD>server/client</TD> <TD>parent</TD>   </TR>
-  /// </TABLE>
+  /// \brief define the \e server-cleanup-interface
   ///
-  /// The \e factory pattern is used to:
-  ///  - create a new object (C, TCL) or a new class instance (C++, C#, JAVA, PYTHON, PERL, VB.NET)
-  ///  - create a \e server-child object
-  ///  - create a \e server-parent object using the \e --thread startup qualification
-  ///  - create a \e slave-worker-parent object
-  ///  - create a \e slave-child object
-  ///  - create a \e filter-parent object using the \e --fork or \e --thread startup qualification
+  /// The \e factory-interface is used to create a new \e server-context.
+  /// Without the \e factory-interface only the initial \e startup-context is available to serve
+  /// incoming requests. In general every \e server need to provide a \e factory-interface.
+  ///
+  /// The \e factory-interface is used to create a new:
+  ///  - \e application-context (C, TCL) or a new \e class-instance (C++, C#, JAVA, PYTHON, PERL, VB.NET)
+  ///  - \e server-child-context or \e slave-child-context using \RNSA{LinkCreateChild}
+  ///  - \e server-parent-context using the \RNSC{startAs} option \e --thread
+  ///  - \e slave-worker-context using \RNSA{SlaveWorker}
+  ///  - \e filter-parent-context using the \RNSC{startAs} option \e --fork or \e --thread
   ///  .
   struct MqFactoryS Factory;
 
@@ -868,13 +840,14 @@ struct MqSetupS {
   /// both options \c -h and \c --help to provide a tool-specific help-page and exit.
   MqHelpF fHelp;
 
-  /// \brief ignore the server EXIT, set with #MqConfigSetIgnoreExit
+  /// \brief do not delete the \e server-context on \e client-server-link shutdown
   ///
-  /// By default the \e server exit if the \e client close the connection. If the boolean value is \yes
+  /// By default the \e server-context is deleted and the \e server-process ot \e server-thread exit 
+  /// if the \e client close the connection. If this option is set to \yes
   /// the \e server will continue to work. Without \e client connection only
   /// the internal event function (set with \RNSC{IEvent}) is available to work on tasks.
-  /// if \e all (parent and child) event functions return with \RNSA{ErrorSetCONTINUE} (nothing to do) the process
-  /// exit.
+  /// if \e all (parent and child) event functions return with \RNSA{ErrorSetCONTINUE} (nothing to do) 
+  /// the process finally exit. (default: \no)
   MQ_BOL ignoreExit;
 };
 
@@ -1099,28 +1072,23 @@ MQ_DECL MqConfigSetBgError (
   MqTokenDataCopyF fCopy
 );
 
-/// \brief set the #MqIoUdsConfigS::file
+/// \brief \copybrief MqIoUdsConfigS
+/// \details \copydetails MqIoUdsConfigS
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqConfigSetIoUds (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST file
 );
 
-/// \brief set the #MqIoTcpConfigS data
-/// \context
-/// \param[in] host 
-///   client: the remote host name\n
-///   server: the local interface name
-/// \param[in] port
-///   client: the remote port name\n
-///   server: the local port name
-/// \param[in] myhost client: the local host name
-/// \param[in] myport client: the local port name
-/// \retMqErrorE
-/// \attention use a string value for a \e port to support named ports as well
+/// \brief \copybrief MqIoTcpConfigS
+/// \details \copydetails MqIoTcpConfigS
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqConfigSetIoTcp (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST host,
   MQ_CST port,
   MQ_CST myhost,
@@ -1140,16 +1108,18 @@ MQ_DECL MqConfigSetIoPipe (
   MQ_SOCK socket
 );
 
-/// \brief start the server in daemon mode
-/// \context
-/// \param[in] pidfile write the PID of the daemon into this file
-/// \retMqErrorE
+/// \brief start the \e server-context as daemon
 ///
-/// A \e daemon is a background process without any link to the
-/// starting process and the stdin/stdout/stderr closed.
+/// A \e daemon is a \e server-process without any link to the \e parent-process.
+/// A \e daemon-process has closed all default IO (e.g stdout, stdin, stderr) and forked
+/// into the background. (default: no daemon)
+/// \attention this option require the \b fork system-call and is \b not compatible with threads.
+/// \ctx
+/// \param[in] pidfile write the PID of the daemon into this file (default: NULL, do not start as daemon)
+/// \retException
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqConfigSetDaemon (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST pidfile
 );
 
@@ -1543,8 +1513,9 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \{
 /// \brief setup and manage a \e client-server-link
 ///
-/// The \e client-server-link has two endpoints, a \e client-parent-context and a \e server-parent-context.
-/// Ontop the \e parent-context multiple \e child-context are allowed.
+/// The \e client-server-link connect two \e context, a \e client-parent-context and a \e server-parent-context. 
+/// The \e link can be \e local (connect two \e context on the same host) or can be \e remote 
+/// (connect two \e context on different hosts). OnTop the \e parent-context multiple \e child-context are allowed.
 ///\verbatim
 ///  !on local host!                                  !on remote host!
 ///
@@ -1612,8 +1583,6 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 ///  - if a \e context is deleted (parent or child) the \e depending context (parent or child) is deleted too.
 ///  - if a \e context is deleted the \e depending context-tree is deleted too.
 ///  .
-
-
 
 
 
@@ -2083,7 +2052,7 @@ struct MqBufferS {
   enum MqAllocE alloc;		///< allocation style, MQ_DYNAMIC or MQ_STATIC
   enum MqTypeE type;            ///< type of the item stored into the data-segment
 
-  /// \brief B)uffer L)ocal S)torage used in #MqBufferGetC to get a string from a MQ_ATO data
+  /// \brief B)uffer L)ocal S)torage used in #MqBufferGetC to get a string from a #MQ_ATO data
   ///
   /// +1 to allow strings with MQ_BLS_SIZE=strlen(str) fit into the buffer with an additional
   /// '\\0' at the end
@@ -2988,8 +2957,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
 #define MqPanicSYS(context) MqPanicV(context,__func__,-1,\
 	"internal ERROR in function '%s', please contact your local support", __func__);
 
-/// \brief reset a #MqErrorS object, change error code to #MQ_OK 
-/// \context
+/// \brief clear the \e error and reset the \e contex
 MQ_EXTERN void MQ_DECL MqErrorReset (
   struct MqS * const context
 );
@@ -3033,14 +3001,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSGenV (
   ...
 ) __attribute__ ((format (printf, 5, 6)));
 
-/// \brief customized edition of #MqErrorSGenV
-/// \context
-/// \prefix
-/// \param errnum the error number
-/// \param[in] message string message to set
-/// \retMqErrorE
+/// \brief set the \e context to an \e error but do \b not raise an \RNS{ErrorObject}
+/// \ctx
+/// \param[in] prefix the error-location like the current function-call or operation
+/// \param[in] errnum the error-number
+/// \param[in] message the error-message
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorC (
-  struct MqS * const context,
+  struct MqS * const ctx,
   MQ_CST const prefix,
   MQ_INT const errnum,
   MQ_CST const message
@@ -3113,26 +3080,24 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCode (
   enum MqErrorE code
 );
 
-/// \brief return the value of #MqErrorS text member
-/// \context
+/// \return the \e error-message from the \e exception-object
 MQ_EXTERN MQ_CST MQ_DECL MqErrorGetText (
-  struct MqS const * const context
+  struct MqS const * const ctx
 );
 
-/// \brief return the value of #MqErrorS num member
+/// \brief print the \e error from the \e context to stderr and clear the \e error afterwards
 MQ_EXTERN void MQ_DECL MqErrorPrint (
   struct MqS * const context
 );
 
-/// \brief print an error to stderr and clear the error after
-/// \context
+/// \return the \e error-number from the \e exception-object. The number can be used as exit-code.
 MQ_EXTERN MQ_INT MQ_DECL MqErrorGetNum (
-  struct MqS const * const context
+  struct MqS const * const ctx
 );
 
 /// \copydoc MqErrorGetNum
 static mq_inline MQ_INT MqErrorGetNumI (
-  struct MqS const * const context
+  struct MqS const * const ctx
 )
 {
   return context->error.num;
@@ -3151,9 +3116,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
   MQ_CST const message
 );
 
-/// \brief set #MqErrorS::code to #MQ_CONTINUE and return the value
-/// \context
-/// \return #MQ_CONTINUE
+/// \brief signal end of processing in an \RNSC{IEvent} callback
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
   struct MqS * const context
 );
@@ -3165,9 +3128,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 /*****************************************************************************/
 
 /// \brief check on error
-/// \return #MQ_OK and #MQ_CONTINUE are \e good statues and #MQ_ERROR and #MQ_EXIT are \e bad statues
+/// \return on #MQ_OK and #MQ_CONTINUE return \b 1 and an #MQ_ERROR and #MQ_EXIT return \b 0
 #define MqErrorCheckI(PROC) (unlikely((PROC) >= MQ_ERROR))
-/// \brief version of #MqErrorCheckI
+/// \brief check \e return-code and <I>goto error</I> on error
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
 
 /// \brief process error message
@@ -4050,7 +4013,7 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 #   define MqDLogC(context,level,str) \
       if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)
 
-/// \brief log a plain string using the #MqSetDebugLevel definition
+/// \brief log a plain string using the \e MqSetDebugLevel definition
 /// \context
 /// \param level debug level 0 <= level <= 9
 /// \param str string to log
@@ -4066,7 +4029,7 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 #   define MqDLogV(context, level,fmt,...) \
       if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)
 
-/// \brief log a vararg string using formatting and checking for logging level using the #MqSetDebugLevel definition
+/// \brief log a vararg string using formatting and checking for logging level using the \e MqSetDebugLevel definition
 /// \context
 /// \param level debug level 0 <= level <= 9
 /// \format
@@ -4148,6 +4111,116 @@ MQ_EXTERN MQ_STR MQ_DECL MqLogC (
 );
 
 /// \}	  Mq_Log_C_API
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                     F I L T E R - A P I                         ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/**
+
+\ingroup Mq_C_API
+\defgroup Mq_Filter_C_API Mq_Filter_C_API
+\brief modify data using filter technology
+
+The filter mode is related to a special usage of the \libmsgque software called a command pipeline.
+To define a filter create a \e server with:
+ - \RNSC{isServer} or \RNSC{IServerSetup}
+ .
+and add a factory interface:
+ - \RNSC{IFactory}
+ .
+
+Every filter has \b two context one belongs to the \e left command and one belongs to the \e right command: \verbatim
+ <-- left cmd --> <------- filter -------> <-- right cmd -->
+
+                  <-- left --><- right -->
+                  <- server -><- client ->
+                  <- master -><- slave -->
+                  <-context1-><-context2->
+
+  ... command1   @         filter         @   command2 ...
+\endverbatim
+The \e left context is created on application startup and the \e right context is created as \e slave of the
+\e left context.
+ - if the \b @ argument is followed by an \e normal command (server) a local pipeline is created: \verbatim
+client @ filter @ server
+\endverbatim
+ - if the \b @ argument is followed by an option a non-local pipeline is created: \verbatim
+<------------ host-1 -------------> <-- network --> <---------- host-2 ----------->
+       <---- client arguments ---->                       <--- server arguments -->
+                <-- filter arg. -->
+                  <--- options --->
+
+client @ filter @ --tcp --port 7777   ...........   server --tcp --port 7777 --fork
+\endverbatim
+
+<B>BI-DIRECTIONAL FILTER</B>\n
+
+A bi-directional filter allow a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
+    client ... <--> ... server
+\endverbatim as a feature enhancement like a protocol-tunnelling: \verbatim
+    client @ mq2tunnel ... <--> ... tunnel2mq @ server
+\endverbatim or to convert the protocol into an other protocol: \verbatim
+    client @ mq2soap ... <--> ... soap-server
+\endverbatim
+To define a \e bi-directional filter a couple of commands provide support:
+ - \RNSA{ServiceCreate}
+  - use the token \b +ALL to add a listener for \e all services. This feature is used
+    for a tunnel to modify the body at all. (example: \c aguard)
+  .
+ - \RNSA{ServiceProxy}
+  - use this function to link the \e left context with the \e right context identified with
+    the slave-identifier \e id (default: 0). No data manipulation is performed.
+  .
+ - \RNSA{ServiceGetFilter}
+  - in a filter service the current context is used to \e read the data. To \e send the
+    data an other context, belonging to the \e other site of the communication, have to be used.
+    This function return the context of the other site.
+  .
+ - \RNSA{ServiceGetToken}
+  - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
+    token is not known. This function return the current token.
+  .
+ - \RNSA{ServiceIsTransaction}
+  - if the token \b +ALL is used in \b ServiceCreate to add a \e generic service handler the current
+    transaction-status is not known. This function return the transaction-status as boolean with
+    \b true (with-transaction) or \b false (without-transaction).
+  - \b with-transaction: the package was send with \RNSA{SendEND_AND_WAIT} or \RNSA{SendEND_AND_CALLBACK}
+  - \b without-transaction: the package was send with \RNSA{SendEND}
+  .
+ - \RNSA{ReadBDY}
+  - read and return the entire body as binary array. Use this array to apply a transformation to the body at all like
+    encryption (example: \c aguard) or to save the body in a persistent storage for later use like transaction support
+    (example: \c atrans)
+  .
+ - \RNSA{SendBDY}
+  - send a binary array, as returned by \b ReadBDY, to the filter target.
+  .
+ .
+
+<B>ONE-DIRECTIONAL FILTER</B>\n
+
+A one-directional filter is a special form of a bi-directional filter and allow a \e data-flow from the \e left to the \e right.
+This filter is well known from the \b unix shell to link different commands together: \verbatim
+    command1 | command2 | command3
+\endverbatim
+A \libmsgque command pipeline is created with the special character \b @ instead of \b | :
+\verbatim
+    msgcmd1 @ msgcmd2 @ msgcmd3
+\endverbatim
+with every command have to use \libmsgque.
+To define a \libmsgque filter create a service handle with \RNSA{ServiceCreate} or
+\RNSA{ServiceProxy} for the both special token:
+ - \b +FTR : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \b +FTR service request.
+ - \b +EOF : required to act on End-Of-Filter data and is called after all \b +FTR data was send. Sometimes the filter data can not be served as \b +FTR data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the\b +EOF token is used to continue send \b +FTR data rows.
+ .
+and send every data item with \RNSA{SendEND_AND_WAIT}.
+
+\}
+
+**/
 
 /// \}	  Mq-C-API
 

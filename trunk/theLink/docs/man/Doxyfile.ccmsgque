@@ -120,6 +120,15 @@ ALIASES		    += "config_IFactory=MqC* IFactory::Factory()"
 ALIASES             += "config_IBgError=IBgError::BgError()"
 ALIASES             += "config_IEvent=IEvent::Event()"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+class Server: public MqC, public IFactory, ... { \n\
+  private: \n\
+    MqC* Factory() const { return new Server(); } \n\
+  ... \n\
+} \n\
+\endcode"
+
+
 # LINK CREATION AND DELETION
 ALIASES             += "LinkCreate=ctx.LinkCreate(struct MqBufferLS * args)"
 ALIASES             += "LinkCreate2=ctx.LinkCreateVA(va_list args)"
@@ -269,7 +278,7 @@ try { \n\
 ALIASES		    += "ErrorObject=<I>class MqCException ex</I>"
 ALIASES		    += "ErrorGetText=string ex.what() or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=int ex.num() or ctx.ErrorGetNum()"
-ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int num, string what)"
+ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(const exception& ex)"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"

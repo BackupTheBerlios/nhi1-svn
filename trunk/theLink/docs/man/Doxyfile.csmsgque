@@ -116,6 +116,15 @@ ALIASES		    += "config_IFactory=MqS IFactory.Call()"
 ALIASES             += "config_IBgError=IBgError.Call()"
 ALIASES             += "config_IEvent=IEvent.Call()"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+sealed class Server : MqS, IFactory ... { \n\
+  MqS IFactory.Call () { \n\
+    return new Server(); \n\
+  } \n\
+  ... \n\
+} \n\
+\endcode"
+
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(params string[] args)"
 ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, params string[] args)"

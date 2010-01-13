@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -59,7 +59,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "#define \fBMqErrorCheck\fP(PROC)   if (MqErrorCheckI(PROC)) goto error"
 .br
-.R "version of \fBMqErrorCheckI\fP "
+.R "check \fIreturn-code\fP and \fIgoto error\fP on error "
 .ti -1c
 .RI "#define \fBMqErrorSwitch\fP(PROC)"
 .br
@@ -99,7 +99,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "void \fBMqErrorReset\fP (struct \fBMqS\fP *const context)"
 .br
-.R "reset a \fBMqErrorS\fP object, change error code to \fBMQ_OK\fP "
+.R "clear the \fIerror\fP and reset the \fIcontex\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSGenVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, enum \fBMqErrorE\fP const errorcode, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
@@ -109,9 +109,9 @@ Mq_Error_C_API \- create and manage error messages.
 .br
 .R "set a error-code in \fBMqErrorS\fP with vararg string argument "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqErrorC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorC\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
 .br
-.R "customized edition of \fBMqErrorSGenV\fP "
+.R "set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION OBJECT\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSAppendV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const fmt,...)"
 .br
@@ -132,19 +132,17 @@ Mq_Error_C_API \- create and manage error messages.
 .br
 .R "set the value of \fBMqErrorS\fP code member "
 .ti -1c
-.RI "\fBMQ_CST\fP \fBMqErrorGetText\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_CST\fP \fBMqErrorGetText\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "return the value of \fBMqErrorS\fP text member "
 .ti -1c
 .RI "void \fBMqErrorPrint\fP (struct \fBMqS\fP *const context)"
 .br
-.R "return the value of \fBMqErrorS\fP num member "
+.R "print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards "
 .ti -1c
-.RI "\fBMQ_INT\fP \fBMqErrorGetNum\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_INT\fP \fBMqErrorGetNum\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "print an error to stderr and clear the error after "
 .ti -1c
-.RI "static \fBMQ_INT\fP \fBMqErrorGetNumI\fP (struct \fBMqS\fP const *const context)"
+.RI "static \fBMQ_INT\fP \fBMqErrorGetNumI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
@@ -153,7 +151,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSetCONTINUE\fP (struct \fBMqS\fP *const context)"
 .br
-.R "set \fBMqErrorS.code\fP to \fBMQ_CONTINUE\fP and return the value "
+.R "signal end of processing in an \fBIEvent\fP callback "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -176,53 +174,53 @@ ignore error and do not generate any error-text (don't fill the error object)
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2937 of file msgque.h.
+Definition at line 2906 of file msgque.h.
 .SS "#define MQ_ERROR_IS_POINTER(e)   (e>MQ_ERROR_PRINT)"
 .PP
 check if the error pointer is a \fIreal\fP pointer or just a flag 
 .PP
-Definition at line 2946 of file msgque.h.
+Definition at line 2915 of file msgque.h.
 .SS "#define MQ_ERROR_PANIC   ((struct \fBMqS\fP*)NULL)"
 .PP
 panic on error 
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2931 of file msgque.h.
+Definition at line 2900 of file msgque.h.
 .SS "#define MQ_ERROR_PRINT   ((struct \fBMqS\fP*)0x2)"
 .PP
 print error to stderr 
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2943 of file msgque.h.
+Definition at line 2912 of file msgque.h.
 .SS "#define MqErrorCheck(PROC)   if (MqErrorCheckI(PROC)) goto error"
 .PP
-version of \fBMqErrorCheckI\fP 
+check \fIreturn-code\fP and \fIgoto error\fP on error 
 .PP
-Definition at line 3171 of file msgque.h.
+Definition at line 3134 of file msgque.h.
 .SS "#define MqErrorCheck1(PROC)   if (MqErrorCheckI(PROC)) goto error1"
 .PP
 check on error and goto label \fIerror1\fP 
 .PP
-Definition at line 3182 of file msgque.h.
+Definition at line 3145 of file msgque.h.
 .SS "#define MqErrorCheck2(PROC, JUMP)   if (MqErrorCheckI(PROC)) goto JUMP"
 .PP
 check on error and goto label \fIJUMP\fP 
 .PP
-Definition at line 3184 of file msgque.h.
+Definition at line 3147 of file msgque.h.
 .SS "#define MqErrorCheckI(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .PP
 check on error 
 .PP
 \fBReturns:\fP
 .RS 4
-\fBMQ_OK\fP and \fBMQ_CONTINUE\fP are \fIgood\fP statues and \fBMQ_ERROR\fP and \fBMQ_EXIT\fP are \fIbad\fP statues 
+on \fBMQ_OK\fP and \fBMQ_CONTINUE\fP return \fB1\fP and an \fBMQ_ERROR\fP and \fBMQ_EXIT\fP return \fB0\fP 
 .RE
 .PP
 
 .PP
-Definition at line 3169 of file msgque.h.
+Definition at line 3132 of file msgque.h.
 .SS "#define MqErrorReturn(PROC)"
 .PP
 \fBValue:\fP
@@ -234,17 +232,17 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_EXIT: ca
 .fi
 process error message 
 .PP
-Definition at line 3178 of file msgque.h.
+Definition at line 3141 of file msgque.h.
 .SS "#define MqErrorSAppendC(error, str)   MqErrorSAppendV(error,'%s',str);"
 .PP
 append a string to a \fBMqErrorS\fP 
 .PP
-Definition at line 3070 of file msgque.h.
+Definition at line 3037 of file msgque.h.
 .SS "#define MqErrorStack(error)   MqErrorStackP(error, __func__, __FILE__)"
 .PP
 convenience wrapper for \fBMqErrorStackP\fP 
 .PP
-Definition at line 3085 of file msgque.h.
+Definition at line 3052 of file msgque.h.
 .SS "#define MqErrorSwitch(PROC)"
 .PP
 \fBValue:\fP
@@ -256,12 +254,12 @@ case MQ_OK: break; case MQ_ERROR: goto error; case MQ_EXIT: return MQ_EXIT; case
 .fi
 process error message 
 .PP
-Definition at line 3174 of file msgque.h.
+Definition at line 3137 of file msgque.h.
 .SS "#define MqErrorV(error, prefix, errnum, format,  ...)   MqErrorSGenV(error,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)"
 .PP
 customized edition of \fBMqErrorSGenV\fP 
 .PP
-Definition at line 3050 of file msgque.h.
+Definition at line 3017 of file msgque.h.
 .SS "#define MqPanicC(context, prefix, errnum, string)   MqPanicV(context,prefix,errnum,'%s',string);"
 .PP
 do a \fBpanic\fP with \fIstring\fP as argument 
@@ -284,7 +282,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2983 of file msgque.h.
+Definition at line 2952 of file msgque.h.
 .SS "#define MqPanicSYS(context)"
 .PP
 \fBValue:\fP
@@ -307,7 +305,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2988 of file msgque.h.
+Definition at line 2957 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP"
@@ -340,24 +338,19 @@ exit parent context
 Definition at line 322 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "enum \fBMqErrorE\fP MqErrorC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  message)"
+.SS "enum \fBMqErrorE\fP MqErrorC (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  message)"
 .PP
-customized edition of \fBMqErrorSGenV\fP 
+set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION OBJECT\fP 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP the error-location like the current function-call or operation 
 .br
-\fIerrnum\fP the error number 
+\fIerrnum\fP the error-number 
 .br
-\fImessage\fP string message to set 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+\fImessage\fP the error-message 
 .RE
 .PP
 
@@ -394,36 +387,30 @@ return the value of \fBMqErrorS\fP code member
 .PP
  
 .PP
-Definition at line 3101 of file msgque.h.
-.SS "\fBMQ_INT\fP MqErrorGetNum (struct \fBMqS\fP const *const  context)"
+Definition at line 3068 of file msgque.h.
+.SS "\fBMQ_INT\fP MqErrorGetNum (struct \fBMqS\fP const *const  ctx)"
 .PP
-print an error to stderr and clear the error after 
-.PP
-\fBParameters:\fP
+\fBReturns:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+the \fIerror-number\fP from the \fIexception-object\fP. The number can be used as exit-code. 
 .RE
 .PP
 
-.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  context)\fC [static]\fP"
+.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
 .PP
-print an error to stderr and clear the error after 
-.PP
-\fBParameters:\fP
+\fBReturns:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+the \fIerror-number\fP from the \fIexception-object\fP. The number can be used as exit-code. 
 .RE
 .PP
  
 .PP
-Definition at line 3134 of file msgque.h.
-.SS "\fBMQ_CST\fP MqErrorGetText (struct \fBMqS\fP const *const  context)"
+Definition at line 3099 of file msgque.h.
+.SS "\fBMQ_CST\fP MqErrorGetText (struct \fBMqS\fP const *const  ctx)"
 .PP
-return the value of \fBMqErrorS\fP text member 
-.PP
-\fBParameters:\fP
+\fBReturns:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+the \fIerror-message\fP from the \fIexception-object\fP 
 .RE
 .PP
 
@@ -441,18 +428,12 @@ log the \fBMqErrorS\fP for debugging
 
 .SS "void MqErrorPrint (struct \fBMqS\fP *const  context)"
 .PP
-return the value of \fBMqErrorS\fP num member 
+print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .PP
 .SS "void MqErrorReset (struct \fBMqS\fP *const  context)"
 .PP
-reset a \fBMqErrorS\fP object, change error code to \fBMQ_OK\fP 
+clear the \fIerror\fP and reset the \fIcontex\fP 
 .PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-
 .SS "enum \fBMqErrorE\fP MqErrorSAppendV (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  fmt,  ...)"
 .PP
 append a vararg string to a \fBMqErrorS\fP 
@@ -505,19 +486,8 @@ set the value of \fBMqErrorS\fP code member
 
 .SS "enum \fBMqErrorE\fP MqErrorSetCONTINUE (struct \fBMqS\fP *const  context)"
 .PP
-set \fBMqErrorS.code\fP to \fBMQ_CONTINUE\fP and return the value 
+signal end of processing in an \fBIEvent\fP callback 
 .PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-\fBMQ_CONTINUE\fP 
-.RE
-.PP
-
 .SS "enum \fBMqErrorE\fP MqErrorSGenV (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  prefix, enum \fBMqErrorE\fP const  errorcode, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  fmt,  ...)"
 .PP
 set a error-code in \fBMqErrorS\fP with vararg string argument 

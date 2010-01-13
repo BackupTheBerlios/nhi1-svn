@@ -70,14 +70,14 @@ PipeCreate (
 
   if (MQ_IS_CLIENT (context)) {
     // create the socketpair
-    MqErrorCheck (SysSocketPair (context, pipe->config->socks));
-    MqDLogV(context,4,"create SOCKETPAIR -> sock[0]<%i>, sock[1]<%i>\n", pipe->config->socks[0], pipe->config->socks[1]);
+    MqErrorCheck (SysSocketPair (context, pipe->config->socket));
+    MqDLogV(context,4,"create SOCKETPAIR -> sock[0]<%i>, sock[1]<%i>\n", pipe->config->socket[0], pipe->config->socket[1]);
   } else {
-    if (pipe->config->socks[1] < 0)
+    if (pipe->config->socket[1] < 0)
       return MqErrorDb (MQ_ERROR_NOT_A_CLIENT);
-    // close the "client" socket of the socketpair -> who set socks[0] ?
-    //MqErrorCheck(SysCloseSocket(context,MQ_NO,&pipe->config->socks[0]));
-    MqDLogV(context,4,"get SOCKET -> %i\n", pipe->config->socks[1]);
+    // close the "client" socket of the socketpair -> who set socket[0] ?
+    //MqErrorCheck(SysCloseSocket(context,MQ_NO,&pipe->config->socket[0]));
+    MqDLogV(context,4,"get SOCKET -> %i\n", pipe->config->socket[1]);
   }
 
 error:
@@ -90,7 +90,7 @@ void PipeDelete (
 {
   struct PipeS * pipe = *pipeP;
   if (unlikely(pipe == NULL)) return;
-  SysCloseSocket (MQ_CONTEXT_S, __func__, MQ_YES, (MQ_IS_CLIENT(MQ_CONTEXT_S) ?  &pipe->config->socks[0] : &pipe->config->socks[1]));
+  SysCloseSocket (MQ_CONTEXT_S, __func__, MQ_YES, (MQ_IS_CLIENT(MQ_CONTEXT_S) ?  &pipe->config->socket[0] : &pipe->config->socket[1]));
   MqSysFree(*pipeP);
 }
 
@@ -106,7 +106,7 @@ PipeServer (
 )
 {
   // listen for events on the "server" socket of the socketpair
-  return pIoEventAdd(pipe->io, &pipe->config->socks[1]);
+  return pIoEventAdd(pipe->io, &pipe->config->socket[1]);
 }
 
 enum MqErrorE
@@ -115,7 +115,7 @@ PipeConnect (
 )
 {
   // listen for event on the "client" socket of the socketpair
-  return pIoEventAdd(pipe->io, &pipe->config->socks[0]);
+  return pIoEventAdd(pipe->io, &pipe->config->socket[0]);
 }
 
 /*****************************************************************************/
@@ -138,7 +138,7 @@ MQ_SOCK*
 PipeGetServerSocket (
   struct PipeS * const pipe
 ) {
-  return &pipe->config->socks[1];
+  return &pipe->config->socket[1];
 }
 
 END_C_DECLS

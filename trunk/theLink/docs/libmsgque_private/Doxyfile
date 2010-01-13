@@ -15,7 +15,6 @@
 #---------------------------------------------------------------------------
 
 #PREDEFINED	    += MQ_PRIVATE
-#ALIASES		    += "libmsgque=\ref libmsgque_private" \
 
 INPUT			= $(SRCDIR)/libmsgque .
 FILE_PATTERNS		= *.doc msgque.h *.c *.h
@@ -25,3 +24,4 @@ OPTIMIZE_OUTPUT_FOR_C	= YES
 STRIP_FROM_PATH		= $(SRCDIR)/libmsgque
 STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque
 
+ALIASES			+= "libmsgque=\ref libmsgque_private"

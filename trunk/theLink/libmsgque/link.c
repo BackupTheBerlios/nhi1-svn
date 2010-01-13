@@ -218,7 +218,7 @@ sMqCheckArg (
 	  } else if (!strncmp(argC, "socket", 6)) {
 	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
 	    if (idx >= argv->cursize) return MqErrorDbV (MQ_ERROR_OPTION_ARG, "--socket");
-	    MqErrorCheck (MqBufferGetI(argv->data[idx], &context->config.io.pipe.socks[1]));
+	    MqErrorCheck (MqBufferGetI(argv->data[idx], &context->config.io.pipe.socket[1]));
 	  } else {
 	    continue;
 	  }

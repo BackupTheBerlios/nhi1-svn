@@ -1,8 +1,8 @@
-.TH "MqIoTcpConfigS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoTcpConfigS" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup  
+MqIoTcpConfigS \- configure a context to use a \fItcp-client-server-link\fP  
 
 .PP
 .SH SYNOPSIS
@@ -16,47 +16,52 @@ MqIoTcpConfigS \- configuration data which belong to \fIMqIoS\fP tcp setup
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBhost\fP"
 .br
-.R "host name "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBport\fP"
 .br
-.R "port name "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBmyhost\fP"
 .br
-.R "CLIENT: my host name. "
 .ti -1c
 .RI "struct \fBMqBufferS\fP * \fBmyport\fP"
 .br
-.R "CLIENT: my port name. "
 .in -1c
 .SH "Detailed Description"
 .PP 
-configuration data which belong to \fIMqIoS\fP tcp setup 
+configure a context to use a \fItcp-client-server-link\fP 
+
+\fBParameters:\fP
+.RS 4
+\fIhost\fP client: name of the remote interface (default: localhost)
+.br
+ server: name of the local interface (default: listen on \fIall\fP interfaces) 
+.br
+\fIport\fP client: name of the remote port
+.br
+ server: name of the local port 
+.br
+\fImyhost\fP client: name of the local interface 
+.br
+\fImyport\fP client: name of the local port 
+.RE
 .PP
-Definition at line 577 of file msgque.h.
+
+.PP
+Definition at line 593 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.host\fP\fC [read]\fP"
 .PP
-host name 
-.PP
-Definition at line 578 of file msgque.h.
+Definition at line 594 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myhost\fP\fC [read]\fP"
 .PP
-CLIENT: my host name. 
-.PP
-Definition at line 580 of file msgque.h.
+Definition at line 596 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myport\fP\fC [read]\fP"
 .PP
-CLIENT: my port name. 
-.PP
-Definition at line 581 of file msgque.h.
+Definition at line 597 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.port\fP\fC [read]\fP"
 .PP
-port name 
-.PP
-Definition at line 579 of file msgque.h.
+Definition at line 595 of file msgque.h.
 
 .SH "Author"
 .PP 

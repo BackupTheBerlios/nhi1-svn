@@ -111,6 +111,16 @@ ALIASES		    += "config_IFactory=$ctx ConfigSetFactory"
 ALIASES             += "config_IBgError=$ctx ConfigSetBgError callback"
 ALIASES		    += "config_IEvent=$ctx ConfigSetEvent callback"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+tclmsgque Main { \n\
+  set srv [tclmsgque MqS] \n\
+  ... \n\
+  $srv ConfigSetFactory \n\
+  ... \n\
+} \n\
+\endcode"
+
+
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=$ctx LinkCreate args..."
 ALIASES		    += "LinkCreateChild=$ctx LinkCreateChild parent args..."

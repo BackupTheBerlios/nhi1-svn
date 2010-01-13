@@ -1,4 +1,4 @@
-.TH "Mq_Type_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -429,12 +429,12 @@ Definition at line 262 of file msgque.h.
 .PP
 prototype for exit a process or thread 
 .PP
-Definition at line 531 of file msgque.h.
+Definition at line 534 of file msgque.h.
 .SS "typedef void( * \fBMqSetupF\fP)(struct \fBMqS\fP *const )"
 .PP
 used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands 
 .PP
-Definition at line 538 of file msgque.h.
+Definition at line 541 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

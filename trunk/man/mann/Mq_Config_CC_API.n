@@ -1,8 +1,8 @@
-.TH "Mq_Config_CC_API" n "12 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Config_CC_API" n "13 Jan 2010" "Version 4.1" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Config_CC_API \- configuration of the \fBMqS\fP object   
+Mq_Config_CC_API \- configuration of a context   
 
 .PP
 .SS "Functions"
@@ -139,9 +139,11 @@ Mq_Config_CC_API \- configuration of the \fBMqS\fP object
 .in -1c
 .SH "Detailed Description"
 .PP 
-configuration of the \fBMqS\fP object  
+configuration of a context  
 
-configuration of the \fBMqS\fP object  
+configuration of a context 
+.PP
+The configuration is done persistent using \fIconfig-api\fP functions or on link-setup using \fIcommand-line-arguments\fP.  
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_BOL\fP ccmsgque::MqC::ConfigCheckIdent (\fBMQ_CST\fP data)\fC [inline, inherited]\fP"

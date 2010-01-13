@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -135,7 +135,7 @@ The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the \fIentire-body\fP for appending 
 .br
@@ -154,7 +154,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -171,7 +171,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -190,7 +190,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -209,7 +209,7 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -234,7 +234,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -255,7 +255,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -270,7 +270,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -287,7 +287,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -326,7 +326,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -341,7 +341,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -358,7 +358,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the \fIbody-item\fP for appending 
 .br
@@ -377,7 +377,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -402,7 +402,7 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -417,7 +417,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -436,7 +436,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -494,7 +494,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -511,7 +511,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBDim ctx As New MqS()\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE

@@ -53,7 +53,20 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 #			$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_private \
 			
 ALIASES		    +=	"private{2}=<A HREF=\"\1msgque_private\">\2</A>"
-ALIASES		    +=	"man{2}=\ref \1msgque \"\2\""
+ALIASES		    +=	"man{2}=\ref \1msgqueref \"\2\""
 ALIASES		    +=	"tut{2}=\ref \1msgquetut \"\2\""
 ALIASES		    +=	"apiref{3}=\ref Mq_\2_API \"\3\""
+
+ALIASES             +=  "AllLng{1}=(\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"
+ALIASES             +=  "AllLngTxt{1}=\b \1 (\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"
+ALIASES             +=  "AllLngTxtC{1}=\b \1 (\ref c_config_\1 \"C\", \ref cc_config_\1 \"C++\", \ref cs_config_\1 \"C#\", \ref java_config_\1 \"Java\", \ref py_config_\1 \"Python\", \ref tcl_config_\1 \"Tcl\", \ref perl_config_\1 \"Perl\", \ref vb_config_\1 \"VB.NET\")"
+ALIASES             +=  "AllLngTxt{2}=\b \2 (\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"
+ALIASES             +=  "AllLngTxtC{2}=\b \2 (\ref c_config_\1 \"C\", \ref cc_config_\1 \"C++\", \ref cs_config_\1 \"C#\", \ref java_config_\1 \"Java\", \ref py_config_\1 \"Python\", \ref tcl_config_\1 \"Tcl\", \ref perl_config_\1 \"Perl\", \ref vb_config_\1 \"VB.NET\")"
+
+ALIASES             += "NS{1}=\1"
+ALIASES             += "RNS{1}=\AllLngTxt{\1}"
+ALIASES             += "RNSA{1}=\AllLngTxt{\1}"
+ALIASES             += "RNSA{2}=\AllLngTxt{\1,\2}"
+ALIASES             += "RNSC{1}=\AllLngTxtC{\1}"
+ALIASES             += "RNSC{2}=\AllLngTxtC{\1,\2}"
 

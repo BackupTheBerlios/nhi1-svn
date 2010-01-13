@@ -1,8 +1,8 @@
-.TH "MqIoUdsConfigS" n "12 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqIoUdsConfigS \- configuration data which belong to \fIMqIoS\fP uds setup  
+MqIoUdsConfigS \- configure a context to use a \fIuds-client-server-link\fP  
 
 .PP
 .SH SYNOPSIS
@@ -19,14 +19,23 @@ MqIoUdsConfigS \- configuration data which belong to \fIMqIoS\fP uds setup
 .in -1c
 .SH "Detailed Description"
 .PP 
-configuration data which belong to \fIMqIoS\fP uds setup 
+configure a context to use a \fIuds-client-server-link\fP 
+
+The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usually 50% faster than a local tcp communication but only available on UNIX. 
 .PP
-Definition at line 572 of file msgque.h.
+\fBParameters:\fP
+.RS 4
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINothing\fP) 
+.RE
+.PP
+
+.PP
+Definition at line 579 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS.file\fP"
 .PP
-Definition at line 573 of file msgque.h.
+Definition at line 580 of file msgque.h.
 
 .SH "Author"
 .PP 

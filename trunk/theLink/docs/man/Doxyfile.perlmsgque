@@ -130,6 +130,21 @@ ALIASES		    += "config_IFactory=$ctx->ConfigSetFactory(callback)"
 ALIASES             += "config_IBgError=$ctx->ConfigSetBgError(callback)"
 ALIASES             += "config_IEvent=$ctx->ConfigSetEvent(callback)"
 
+ALIASES		    += "config_IFactory_example=\code \n\
+package Server; \n\
+use base qw(Net::PerlMsgque::MqS); \n\
+... \n\
+sub new { \n\
+  my $class = shift; \n\
+  my $ctx = $class->SUPER::new(@_); \n\
+  ... \n\
+  $ctx->ConfigSetFactory( sub { new Server() } ); \n\
+  return $ctx; \n\
+} \n\
+... \n\
+\endcode"
+
+
 # LINK CREATION AND DELETION
 ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
 ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(parent, args...)"

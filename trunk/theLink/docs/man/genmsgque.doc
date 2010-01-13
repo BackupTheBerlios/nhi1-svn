@@ -1,5 +1,5 @@
 /**
-\defgroup \self \self
+\defgroup \self\ext \self
 
 The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Project
 
@@ -17,6 +17,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNS{SlaveContext}\n
 \RNS{BufferObject}\n
 \RNS{ErrorObject}\n
+\RNS{filter}\n
 \if DATA \RNS{data} \endif
 
 \section	\NS{desc}				INTRODUCTION
@@ -52,8 +53,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNSC{IServerSetup}, \RNSC{IServerCleanup}\n
 \RNSC{IFactory}, \RNSC{IBgError}, \RNSC{IEvent}\n
 
-The configuration of an object is done using the functions starting with \c MqConfig...
-or by using command-line arguments.
+\copydoc Mq_Config_C_API
 
 \subsection \NS{Init} static: \Init
 \copydoc MqInitCreate
@@ -61,156 +61,72 @@ or by using command-line arguments.
 \b Example: initialize the \e stratup-prefix with \e myExecutable and \e myFirstArgument \init_example
 
 \configsection{buffersize, --buffersize}
-The send and receive buffersize in bytes (default: 4KB)
+\copydoc MqIoConfigS::buffersize
 
 \configsection{debug, --debug}
-Debug a message-queue application. Valid values are 0 <= \e NUM <= 9 using 0 for "no
-debugging" and 9 for "maximum debugging". (default: 0)
+\copydoc MqConfigS::debug
 
 \configsection{timeout, --timeout}
-User defined timeout used for connection setup and data sending (default: 90 seconds)
+\copydoc MqIoConfigS::timeout
 
 \configsection{name, --name}
-Use \e STRING as basename of the new message-queue object. The name shows up in the debugging output
-and is used as prefix for the new created command. (default: the name of the executable)
+\copydoc MqConfigS::name
 
 \configsection{srvname, --srvname}
-Use \e STRING as a client specific prefix in the server debugging output. This is used to
-link debugging and error messages on the server to a specific client connection.
-(default: empty)
+\copydoc MqConfigS::srvname
 
 \configsection{ident}
-Use \config_type_ident as an application specific identifier set by the programmer and checked with
-\c \config_check_ident against the \e identifier of the link target. The goal is to change the behavior 
-of the application depending on the result.
-(default: empty)
+\copydoc MqSetupS::ident
 
 \configsection{isSilent,--silent}
-Write (\no) or don't write (\yes) any output to stdout or stderr. (default: write to stdout or stderr)
+\copydoc MqConfigS::isSilent
 
 \configsection{isString,--string}
-Use (\yes), as much as possible, strings in the data-package. Convert any native data-type,
-like integer or double, into a string (sending) and back to native (receiving). (default: use binary)
+\copydoc MqConfigS::isString
 
 \configsection{isServer}
-True if object is a \e server object (default: \no, be a client)
+\copydoc MqSetupS::isServer
 
 \configsection{tcp,--tcp --host --port --myhost --myport}
-Configure a \e tcp socket link.
-\param host 
- client: name of the remote host (default: localhost)\n
- server: name of the local interface (default: listen on \e all interfaces)
-\param port
- client: name of the remote port\n
- server: name of the local port
-\param myhost client: name of the local interface
-\param myport client: name of the local port
-\attention named ports are supported as well
+\copydoc MqIoTcpConfigS
+\retException
 
 \configsection{uds,--uds --file}
-Use a \e uds (http://en.wikipedia.org/wiki/Unix_domain_socket) socket link. 
-The uds communication is usually 50% faster than a local tcp communication but
-only available on UNIX.
-\param[in] file the name of the \e uds file
+\copydoc MqIoUdsConfigS
+\retException
 
 \configsection{pipe,--pipe --socket}
-Start a \e pipe server to listen on \e socket. This is the \b default mode to start a server.
-The \e socket option is special because it is used for internal purpose to submit the socket from the 
-client to the server started as pipe by the client. 
-\param[in] socket the file-descriptor number. The only public usage for this option is to serve as
-interface for an existing tool like (x)inetd. The (x)inetd tool is a \e UNIX service to listen on a tcp/ip port
-and start for every connection the proper entry from the file \e /etc/(x)inetd.conf with the file-descriptor
-\e 0 as send/recv socket handle.
+\copydoc MqIoPipeConfigS
+\retException
 
 \configsection{startAs,--thread --spawn --fork}
-Start a new server as \e thread or \e spawn a new process or \e fork a new process. 
-This arguments are used with:
- - a server-context to start a new instance after a client connection request 
- - on a server to create a worker with: \RNSA{SlaveWorker}
- - on a client/server together with the \b "SELF" command-line argument: \RNSA{LinkCreate}
- .
-\param[in] startAs 0=default, 1=fork, 2=thread and 3=spawn
+\copydoc MqConfigS::startAs
 
 \configsection{daemon, --daemon}
 \if DAEMON
-Close all default IO (e.g stdout, stdin, stderr) and fork the server into the background. (default: no daemon)
-\attention this option require the \b fork system-call and is \b not compatible with threads.
-\param[in] pidfile the name of the file to write the PID into
+\copydoc MqConfigSetDaemon
 \else
-This configuration is \b not available for \self.
+This option is \b not available for \self.
 \endif
 
 \configsection{ignoreExit}
-\copydetails MqSetupS::ignoreExit
+\copydoc MqSetupS::ignoreExit
 
 \interface{IServerSetup}
-Interface to define a \e server \self object. This Interface define the
-ServerSetup callback called at \RNSA{LinkCreate} to define the services 
-or to initialize context specific variables.
-This interface set the \RNSC{isServer} configuration value to \yes.
+\copydetails MqSetupS::ServerSetup
 
 \interface{IServerCleanup}
-Interface to define a \e server \self object. This Interface define the
-ServerCleanup callback called at \RNSA{LinkDelete} to free context specific variables.
-This interface set the \RNSC{isServer} configuration value to \yes.
+\copydetails MqSetupS::ServerCleanup
 
 \interface{IFactory}
-The factory pattern is used to create a new application object (read more at: \ref #MqSetupS::Factory)
-Without the \e Factory pattern only the initial startup context is available to serve
-incoming requests. In general every server need to provide a \e Factory pattern.
-\if PYTHON
-\code
-class Server(MqS):
-  def __init__(self):
-    self.ConfigSetName("server")
-    self.ConfigSetFactory(lambda: Server())
-...
-\endcode
-\elseif CC
-\code
-class Server: public MqC, public IFactory, ... {
-  private:
-    MqC* Factory() const { return new Server(); }
-  ...
-}
-\endcode
-\elseif CSHARP
-\code
-sealed class Server : MqS, IFactory ... {
-  MqS IFactory.Call () {
-    return new Server();
-  }
-  ...
-}
-\endcode
-\elseif VB
-\code
-Private NotInheritable Class Server
-  Inherits MqS
-  Implements IFactory
-  Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
-    Return New Server()
-  End Function
-  ...
-End Class
-\endcode
-\elseif JAVA
-\code
-final class Server extends MqS implements IFactory, ... {
-  public MqS Factory() {
-    return new Server();
-  }
-  ...
-}
-\endcode
-\endif
+\copydetails MqSetupS::Factory
+\b Example: \config_IFactory_example
 
 \interface{IBgError}
-Define an asynchronous error handler. This handler is used for handle errors send with \RNSA{SendERROR}.
-Use \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} to access the error.
+\copydetails MqSetupS::BgError
 
 \interface{IEvent}
-\copydetails #MqSetupS::Event
+\copydetails MqSetupS::Event
 
 \section	\NS{ClientServerLink}			LINK API
 \RNSA{LinkCreate}\n
@@ -512,18 +428,19 @@ return the type as single character of the item stored in the buffer object.
 \RNSA{ErrorRaise}\n
 \RNSA{ErrorPrint}\n
 
-The exception object is used to transport a \self error using the \ErrorObject.
+The \e exception-object (\ErrorObject) is used to transport the \e error from the
+\libmsgque context using the \e programming-language error-handling-code.
 
 \b Example: catch an error and write the message to stdout: \error_example
 
 \subsection	\NS{ErrorGetText}			\ErrorGetText
-return the error message from the error object.
+\copydoc MqErrorGetText
 
 \subsection	\NS{ErrorGetNum}			\ErrorGetNum
-return the error number from the error object. The number can be used as exit-code.
+\copydoc MqErrorGetNum
 
 \subsection	\NS{ErrorC}				\ErrorC
-create a \self error object but do \b not raise the \RNS{ErrorObject}
+\copydoc MqErrorC
 
 \subsection	\NS{ErrorSet}				\ErrorSet
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
@@ -534,13 +451,13 @@ caught and before the application exit or the object is deleted.
 \copybrief MqErrorSetCONTINUE
 
 \subsection	\NS{ErrorReset}				\ErrorReset
-clear the \self error object.
+\copydoc MqErrorReset
 
 \subsection	\NS{ErrorRaise}				\ErrorRaise
-convert and raise an \self error object into a \lang \RNS{ErrorObject}.
+convert the error from an \e context into an \RNS{ErrorObject} and raise the object.
 
 \subsection	\NS{ErrorPrint}				\ErrorPrint
-print an \self error object to stderr and \e clear the \self error
+\copydoc MqErrorPrint
 
 \if DATA
 
@@ -568,46 +485,10 @@ $ctx->DictUnset($key)->DESTROY();
 \endif
 
 \section	\NS{filter}				FILTER MODE
-The filter mode is related to a special usage of the \self software called a command pipeline.
-To define a filter create a \e server with \RNSC{isServer} or use \RNSC{IServerSetup}
-and add the required services. 
-
-\subsection	\NS{filter-one}				ONE-DIRECTIONAL FILTER
-A one-directional filter has a \e data-flow from the \e left to the \e right and is well known from the \b unix shell 
-to link different commands together: \verbatim
-    command1 | command2 | command3
-\endverbatim
-A \self command pipeline is created with the special character \b @ instead of \b | : 
-\verbatim
-    msgcmd1 @ msgcmd2 @ msgcmd3
-\endverbatim
-with every command have to use \libmsgque.
-To define a \self filter create a service handle with \RNSA{ServiceCreate} or 
-\RNSA{ServiceProxy} for the both special token: 
- - \b +FTR : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \b +FTR service request.
- - \b +EOF : required to act on End-Of-Filter data and is called after all \b +FTR data was send. Sometimes the filter data can not be served as \b +FTR data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the \b +EOF token is used to continue send \b +FTR data rows.
- .
-and send every data item with \RNSA{SendEND_AND_WAIT}.
-
-\subsection	\NS{filter-bi}				BI-DIRECTIONAL FILTER
-A bi-directional filter has a \e data-flow in both directions and is used in a \e classical client/server application: \verbatim
-    client ... <--> ... server
-\endverbatim to add an additional feature like a protocol-tunnelling: \verbatim
-    client @ mq2tunnel ... <--> ... tunnel2mq @ server
-\endverbatim or to convert the protocol into an other protocol: \verbatim
-    client @ mq2soap ... <--> ... soap-server
-\endverbatim
-To define a \e bi-directional filter a couple of commands provide support:
- - \RNSA{ServiceCreate} : use the token \b +ALL to act on \e all services
- - \RNSA{ServiceGetFilter}: to get the filter context (other site)
- - \RNSA{ServiceGetToken}: to get the current token
- - \RNSA{ServiceIsTransaction} : to check if a transaction is ongoing
- - \RNSA{ReadBDY} : to read the entire body as \e byte-array
- - \RNSA{SendBDY} : to send the entire body
- .
+\copydoc Mq_Filter_C_API
 
 \section	\NS{portability}			PORTABILITY ISSUES
-The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc processor
+The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc
 or i686 processor from the VritualBox emulator.
 
 \section	\NS{example}				EXAMPLES
