@@ -13,7 +13,7 @@ using System;
 using csmsgque;
 namespace example {
   sealed class mulserver : MqS, IServerSetup, IFactory {
-    MqS IFactory.Call() {
+    MqS IFactory.Factory() {
       return new mulserver();
     }
     public void MMUL () {
@@ -21,7 +21,7 @@ namespace example {
       SendD(ReadD() * ReadD());
       SendRETURN();
     }
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate("MMUL", MMUL);
     }
     static void Main(string[] argv) {

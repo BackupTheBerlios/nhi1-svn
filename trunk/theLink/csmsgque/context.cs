@@ -90,22 +90,22 @@ namespace csmsgque {
 
       if (this is IServerSetup) {
 	MqConfigSetServerSetup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerSetup) this).Call)), fProcFree, IntPtr.Zero);
+	  new ProcData((Callback)((IServerSetup) this).ServerSetup)), fProcFree, IntPtr.Zero);
       }
 
       if (this is IServerCleanup) {
 	MqConfigSetServerCleanup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerCleanup) this).Call)), fProcFree, IntPtr.Zero);
+	  new ProcData((Callback)((IServerCleanup) this).ServerCleanup)), fProcFree, IntPtr.Zero);
       }
 
       if (this is IBgError) {
 	MqConfigSetBgError (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IBgError) this).Call)), fProcFree, IntPtr.Zero);
+	  new ProcData((Callback)((IBgError) this).BgError)), fProcFree, IntPtr.Zero);
       }
 
       if (this is IEvent) {
 	MqConfigSetEvent (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IEvent) this).Call)), fProcFree, IntPtr.Zero);
+	  new ProcData((Callback)((IEvent) this).Event)), fProcFree, IntPtr.Zero);
       }
     }
 

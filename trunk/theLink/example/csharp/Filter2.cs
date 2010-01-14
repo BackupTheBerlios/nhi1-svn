@@ -15,7 +15,7 @@ using csmsgque;
 namespace example {
   sealed class Filter2 : MqS, IFactory {
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Filter2();
     }
 

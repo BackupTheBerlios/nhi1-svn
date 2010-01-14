@@ -47,7 +47,7 @@ namespace csmsgque {
 	if (dataC.callC != null) {
 	  dataC.callC();
 	} else {
-	  dataC.callI.Call(GetSelf(context));
+	  dataC.callI.Service(GetSelf(context));
 	}
       } catch (Exception ex) {
 

@@ -17,7 +17,7 @@ namespace example {
   sealed class MyServer : MqS, IServerSetup, IFactory {
 
     // create new intances
-    MqS IFactory.Call() {
+    MqS IFactory.Factory() {
       return new MyServer();
     }
 
@@ -29,7 +29,7 @@ namespace example {
     }
 
     // define a service as link between the token "HLWO" and the callback "MyFirstService"
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate("HLWO", MyFirstService);
     }
 

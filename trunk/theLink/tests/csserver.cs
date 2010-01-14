@@ -20,7 +20,7 @@ namespace example {
 
     public int i;
 
-    void IBgError.Call () {
+    void IBgError.BgError () {
       MqS master = SlaveGetMaster();
       if (master != null) {
 	master.ErrorC ("BGERROR", ErrorGetNum(), ErrorGetText());
@@ -28,7 +28,7 @@ namespace example {
       }
     }
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Client();
     }
 
@@ -74,11 +74,11 @@ namespace example {
 
   // ########################################################################
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Server();
     }
 
-    void IServerCleanup.Call () {
+    void IServerCleanup.ServerCleanup () {
       for (int i=0;i<3;i++) {
 	if (cl[i] == null) continue;
 	cl[i].LinkDelete();
@@ -86,7 +86,7 @@ namespace example {
       }
     }
 
-    void IServerSetup.Call () {
+    void IServerSetup.ServerSetup () {
       if (SlaveIs()) {
 	// add "slave" services here
       } else {
@@ -705,7 +705,7 @@ namespace example {
   } // finish class "server"
 
   public class ECOW : IService {
-    void IService.Call (MqS ctx) {
+    void IService.Service (MqS ctx) {
       ctx.SendSTART();
       ctx.SendW(ctx.ReadW());
       ctx.SendRETURN();

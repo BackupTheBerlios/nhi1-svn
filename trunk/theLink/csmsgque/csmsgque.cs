@@ -132,7 +132,7 @@ namespace csmsgque {
 
     static private MqErrorE FactoryCreate (IntPtr tmpl, MqFactoryE create, IntPtr data, ref IntPtr contextP) {
       try {
-	contextP = ((IFactory)GCHandle.FromIntPtr(data).Target).Call().context;
+	contextP = ((IFactory)GCHandle.FromIntPtr(data).Target).Factory().context;
       } catch (Exception ex) {
 	return MqErrorSet2 (tmpl, ex);
       }

@@ -17,32 +17,32 @@ namespace csmsgque {
 
   /// \api #MqConfigSetServerSetup 
   public interface IServerSetup {
-    void Call();
+    void ServerSetup();
   }
 
   /// \api #MqConfigSetServerCleanup 
   public interface IServerCleanup {
-    void Call();
+    void ServerCleanup();
   }
 
   /// \api #MqConfigSetFactory 
   public interface IFactory {
-    MqS Call();
+    MqS Factory();
   }
 
   /// \api #MqConfigSetBgError 
   public interface IBgError {
-    void Call();
+    void BgError();
   }
 
   /// \api #MqConfigSetEvent 
   public interface IEvent {
-    void Call();
+    void Event();
   }
 
   /// \api #MqServiceCreate
   public interface IService {
-    void Call(MqS ctx);
+    void Service(MqS ctx);
   }
 
   public partial class MqS

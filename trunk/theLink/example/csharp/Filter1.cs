@@ -18,7 +18,7 @@ namespace example {
 
     private List<List<string>> data = new List<List<string>>();
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Filter1();
     }
 

@@ -16,7 +16,7 @@ using System.Collections.Generic;
 namespace example {
   sealed class Filter3 : MqS, IFactory, IServerSetup {
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Filter3();
     }
 
@@ -35,7 +35,7 @@ namespace example {
       SendRETURN();
     }
 
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       MqS ftr = ServiceGetFilter();
       ServiceCreate("+ALL", Filter);
       ftr.ServiceCreate("+ALL", Filter);

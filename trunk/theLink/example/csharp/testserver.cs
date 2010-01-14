@@ -16,7 +16,7 @@ namespace example {
 
   sealed class testserver : MqS, IServerSetup, IFactory {
 
-    MqS IFactory.Call() {
+    MqS IFactory.Factory() {
       return new testserver();
     }
 
@@ -35,7 +35,7 @@ namespace example {
       SendRETURN();
     }
 
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate("GTCX", GTCX);
     }
 

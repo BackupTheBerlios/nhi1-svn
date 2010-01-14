@@ -13,7 +13,7 @@ using System;
 using csmsgque;
 namespace example {
   sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new manfilter();
     }
     void FTR () {

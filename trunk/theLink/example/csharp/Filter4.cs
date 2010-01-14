@@ -23,11 +23,11 @@ namespace example {
     }
     Queue<FilterItmS> itms = new Queue<FilterItmS>();
 
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new Filter4();
     }
 
-    void IService.Call (MqS ctx) {
+    void IService.Service (MqS ctx) {
       FilterItmS it;
       it.token = ServiceGetToken();
       it.isTransaction = ServiceIsTransaction();
@@ -36,7 +36,7 @@ namespace example {
       SendRETURN();
     }
 
-    void IEvent.Call () {
+    void IEvent.Event () {
       if (itms.Count > 0) {
 	FilterItmS it = itms.Peek();
 	try  {
@@ -60,7 +60,7 @@ namespace example {
       }
     }
 
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate("+ALL", this);
     }
 
