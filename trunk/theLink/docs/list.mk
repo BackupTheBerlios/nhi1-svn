@@ -23,6 +23,7 @@ main/context.doc \
 main/factory.doc \
 main/faq.doc \
 main/features.doc \
+main/filter.doc \
 main/main.doc \
 main/master_versa_slave.doc \
 main/pages.doc \
@@ -35,11 +36,15 @@ man/Doxyfile.ccmsgque \
 man/Doxyfile.csmsgque \
 man/Doxyfile.javamsgque \
 man/Doxyfile.libmsgque \
+man/Doxyfile.msgque \
+man/Doxyfile.perlmsgque \
 man/Doxyfile.pymsgque \
 man/Doxyfile.tclmsgque \
+man/Doxyfile.vbmsgque \
 man/customdoxygen.css \
 man/genmsgque.doc \
 man/local.generic \
+man/tutorial.doc \
 pymsgque_private/Doxyfile \
 pymsgque_private/main.doc \
 tclmsgque_private/Doxyfile \

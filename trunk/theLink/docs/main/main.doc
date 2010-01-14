@@ -88,11 +88,9 @@ setup and maintain the link and is responsible for:\n
 
 \section detail Misc Documentation
   \ref features\n
-  \ref client_versa_server\n
-  \ref master_versa_slave\n
+  \ref context \n
   \ref filter\n
   \ref service_call\n
-  \ref shell\n
   \ref performance\n
   \ref faq\n
 

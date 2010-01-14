@@ -18,7 +18,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNS{BufferObject}\n
 \RNS{ErrorObject}\n
 \RNS{filter}\n
-\if DATA \RNS{data} \endif
+\RNS{ContextLocalStorage}
 
 \section	\NS{desc}				INTRODUCTION
 \copydoc Mq_C_API
@@ -459,9 +459,8 @@ convert the error from an \e context into an \RNS{ErrorObject} and raise the obj
 \subsection	\NS{ErrorPrint}				\ErrorPrint
 \copydoc MqErrorPrint
 
+\section	\NS{ContextLocalStorage}		CONTEXT LOCAL STORAGE API
 \if DATA
-
-\section	\NS{data}				CONTEXT LOCAL STORAGE API
 The CONTEXT LOCAL STORAGE is required to bind user data to the \self context
 
 \subsection	\NS{DictSet}				\DictSet
@@ -481,6 +480,8 @@ The following code is valid for an object reference:
 $ctx->DictUnset($key)->DESTROY();
 \endcode
 \endif
+\else
+The storage is available as \e class-data-member.
 
 \endif
 

@@ -50,8 +50,6 @@
 \section _3 3. How does one service do to understand the data another service is sending to it?
  - DEFINITION: <EM>\b understand means knowing the exact definition of the procedure called.</EM>
  - \e client and \e server using the same protocol as part of \libmsgque
-   - \ref protocol
-   .
    and this protocol include the service called together with the arguments provided in a
    \libmsgque package. The type of a argument can be \e string, \e binary, \e list or \e native. 
    The \e native type is defined in #MqBufferAtomU. The type \e string is casted into \e native
@@ -118,7 +116,8 @@ and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
  .
 
 \section _4 4. It is likely that libmsgque will similarly need a common basic format?
- - have a look to: \ref protocol
+ - yes, the \e data-package-format is defined and \libmsgque is used on the both
+   endpoints of the communication to read this format.
  .
 
 \section _5 5. What does libmsgque not do?
@@ -298,23 +297,15 @@ the example needs \b 23 seconds to finish and \b not 10
 
 \section _11a 11.a How does a 'service' detect different 'context' requests''
  - INTRO: \RNS{ClientServerLink}
- - The \parent_context of the \client_context is linked with the  \parent_context of the \server_context.
- - Every data package is identified with the according Context (#HdrS::ctxId) of the communication partner.
- - More information is available in: \ref protocol
+ - The \e client-parent-context is linked with the \e server-parent-context.
+ - The \e data-package-format has an \e data-entry for the context in duty (\e HdrS::ctxId).
  .
 
 \section _12 12. How do they signal success or failure
  - INTRO: \RNS{ClientServerLink}
  - Every \e transaction submit a return-code \c MQ_RETURN_OK or \c MQ_RETURN_ERROR to the caller.
- - The return-code is part of the package header (#HdrS::code) and is processed in
+ - The return-code is part of the package header (\e HdrS::code) and is processed in
    the #MqSendEND_AND_WAIT function.
  - The function #MqSendEND_AND_WAIT will return an error of type #MqErrorE if the return-code is \c MQ_RETURN_ERROR.
  .
 */
-
-
-
-
-
-
-

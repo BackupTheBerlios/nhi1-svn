@@ -70,3 +70,4 @@ ALIASES             += "RNSA{2}=\AllLngTxt{\1,\2}"
 ALIASES             += "RNSC{1}=\AllLngTxtC{\1}"
 ALIASES             += "RNSC{2}=\AllLngTxtC{\1,\2}"
 
+ENABLED_SECTIONS    += Data
