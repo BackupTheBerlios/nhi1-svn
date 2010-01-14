@@ -648,9 +648,6 @@ if {!$USE_VB} {
   set env(SRV_LST) [filterGet -not SRV_LST vb]
   set env(LNG_LST) [filterGet -not LNG_LST vb]
 }
-if {$CLREXEC eq "NATIVE"} {
-  set CLREXEC {}
-}
 
 # try to analyse the "argv" array
 if {[info exist argv]} {

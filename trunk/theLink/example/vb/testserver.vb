@@ -25,12 +25,12 @@ Public Module example
 
     Private Sub GTCX()
       SendSTART()
-      SendI(ConfigGetCtxId())
+      SendI(LinkGetCtxId())
       SendC("+")
-      If ConfigGetIsParent()
+      If LinkIsParent() Then
         SendI(-1)
       Else
-        SendI(ConfigGetParent().ConfigGetCtxId())
+        SendI(LinkGetParent().LinkGetCtxId())
       End If
       SendC("+")
       SendC(ConfigGetName())

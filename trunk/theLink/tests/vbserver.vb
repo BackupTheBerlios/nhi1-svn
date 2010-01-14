@@ -28,7 +28,7 @@ Public Module example
     End Function
 
     Public Sub BgError() Implements csmsgque.IBgError.Call
-      Dim master As MqS = ConfigGetMaster()
+      Dim master As MqS = SlaveGetMaster()
       If master IsNot Nothing Then
         master.ErrorC("BGERROR", ErrorGetNum(), ErrorGetText())
         master.SendERROR()
@@ -102,7 +102,7 @@ Public Module example
     End Sub
 
     Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
-      If ConfigGetIsSlave() Then
+      If SlaveIs() Then
         'add "slave" services here
       Else
         For i As Integer = 0 To 2
@@ -249,7 +249,7 @@ Public Module example
       SendC("sOc")
       If ConfigGetIsServer() Then SendC("SERVER") Else SendC("CLIENT")
       SendC("pOc")
-      If ConfigGetIsParent() Then SendC("PARENT") Else SendC("CHILD")
+      If LinkIsParent() Then SendC("PARENT") Else SendC("CHILD")
       SendRETURN()
     End Sub
 
@@ -257,14 +257,14 @@ Public Module example
     Private Sub CNFG()
       SendSTART()
       SendO(ConfigGetIsServer())
-      SendO(ConfigGetIsParent())
-      SendO(ConfigGetIsSlave())
+      SendO(LinkIsParent())
+      SendO(SlaveIs())
       SendO(ConfigGetIsString())
       SendO(ConfigGetIsSilent())
-      SendO(ConfigGetIsConnected())
+      SendO(LinkIsConnected())
       SendC(ConfigGetName())
       SendI(ConfigGetDebug())
-      SendI(ConfigGetCtxId())
+      SendI(LinkGetCtxId())
       SendC(ServiceGetToken())
       SendRETURN()
     End Sub
@@ -285,7 +285,7 @@ Public Module example
 
     Private Sub GTCX()
       SendSTART()
-      SendI(ConfigGetCtxId())
+      SendI(LinkGetCtxId())
       SendRETURN()
     End Sub
 
@@ -297,7 +297,7 @@ Public Module example
     Dim myInt As Integer = -1
 
     Private Sub SetMyInt()
-      CType(ConfigGetMaster(), Server).myInt = ReadI()
+      CType(SlaveGetMaster(), Server).myInt = ReadI()
     End Sub
 
     Private Sub SND2()
@@ -372,7 +372,7 @@ Public Module example
           Dim c As New ClientERR2()
           c.LinkCreate(ConfigGetDebug())
         Case "isSlave"
-          SendO(cl.ConfigGetIsSlave())
+          SendO(cl.SlaveIs())
       End Select
       SendRETURN()
     End Sub
@@ -467,8 +467,8 @@ Public Module example
 
       Select Case s
         Case "START"
-          Dim parent As Server = CType(ConfigGetParent(), Server)
-          If parent IsNot Nothing AndAlso parent.cl(id).ConfigGetIsConnected() Then
+          Dim parent As Server = CType(LinkGetParent(), Server)
+          If parent IsNot Nothing AndAlso parent.cl(id).LinkIsConnected() Then
             cl(id).LinkCreateChild(parent.cl(id))
           Else
             cl(id).LinkCreate(ConfigGetDebug())

@@ -23,7 +23,7 @@ Public Module example
 
     ' service definition
     Public Sub FilterEOF()
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       For Each d As List(Of String) In data
         ftr.SendSTART()
         For Each s As String In d

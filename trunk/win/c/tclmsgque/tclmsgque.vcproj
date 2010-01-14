@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\tclmsgque\link_tcl.c"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\misc_tcl.c"
 				>
 			</File>

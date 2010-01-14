@@ -16,7 +16,7 @@ set TCLSH {tclsh.exe}
 set PERL {perl.exe}
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
-set CLREXEC {NATIVE}
+set CLREXEC {}
 #set CLREXEC {mono.exe}
 
 set PATH_SEP {;}

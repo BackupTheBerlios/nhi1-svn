@@ -36,7 +36,7 @@ TCLSH='tclsh.exe'
 PERL='perl.exe'
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
-#set CSEXEC {NATIVE}
+#set CSEXEC ''
 CSEXEC='mono.exe'
 
 PATH_SEP=';'

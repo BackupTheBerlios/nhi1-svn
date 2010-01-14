@@ -450,17 +450,17 @@ namespace ccmsgque {
 
       /// \api #MqLinkIsParent
       inline bool LinkIsParent ()	    { 
-	return MqLinkIsParentI(&context); 
+        return MqLinkIsParentI(&context) != 0 ? true : false; 
       }
 
       /// \api #MqLinkIsConnected
       inline bool LinkIsConnected ()   { 
-	return MqLinkIsConnectedI(&context); 
+        return MqLinkIsConnectedI(&context) != 0 ? true : false; 
       }
 
       /// \api #MqLinkGetCtxId
       inline MQ_SIZE LinkGetCtxId ()  { 
-	return MqLinkGetCtxIdI(&context); 
+        return MqLinkGetCtxIdI(&context); 
       }
 
     /// \} Mq_Link_CC_API
@@ -740,7 +740,7 @@ namespace ccmsgque {
 
       /// \api #MqSlaveIs
       inline bool SlaveIs ()	    { 
-	return MqSlaveIs(&context); 
+        return MqSlaveIs(&context) != 0 ? true : false; 
       }
 
       /// \api #MqSlaveCreate

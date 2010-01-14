@@ -22,21 +22,21 @@ Public Module example
 
     ' service definition
     Private Sub Filter()
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       ftr.SendSTART()
       ftr.SendBDY(ReadBDY)
-      If ConfigGetIsTransaction() Then
-        ftr.SendEND_AND_WAIT(ConfigGetToken())
+      If ServiceIsTransaction() Then
+        ftr.SendEND_AND_WAIT(ServiceGetToken())
         SendSTART()
         SendBDY(ftr.ReadBDY())
       Else
-        ftr.SendEND(ConfigGetToken())
+        ftr.SendEND(ServiceGetToken())
       End If
       SendRETURN()
     End Sub
 
     Public Sub [Call]() Implements csmsgque.IServerSetup.Call
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       ServiceCreate("+ALL", AddressOf Filter)
       ftr.ServiceCreate("+ALL", AddressOf Filter)
     End Sub

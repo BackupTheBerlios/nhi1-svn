@@ -20,7 +20,7 @@ Public Module example
     Implements IFactory
 
     Public Sub FilterFTR()
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       ftr.SendSTART()
       While ReadItemExists()
         ftr.SendC("<" + ReadC() + ">")

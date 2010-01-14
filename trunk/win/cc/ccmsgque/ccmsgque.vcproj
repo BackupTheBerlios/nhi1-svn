@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\libmsgque\link.c"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\log.c"
 				>
 			</File>
@@ -246,6 +250,10 @@
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\send.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\libmsgque\service.c"
 				>
 			</File>
 			<File
@@ -320,6 +328,10 @@
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\io_private.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\libmsgque\link.h"
 				>
 			</File>
 			<File

@@ -57,9 +57,9 @@ test trans-1-($I|$B|$C|$S) {send data with error} \
     -returnCodes    ok \
     -match	    glob \
     -result         {BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
-[Ss]> (server-0) \[pTokenInvoke] token <DUM1> not found
+[Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
 BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
-[Ss]> (server-0) \[pTokenInvoke] token <DUM2> not found}
+[Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -body           {

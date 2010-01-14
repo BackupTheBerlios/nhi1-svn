@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter3", "Filter3\Filter3.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aguard", "aguard\aguard.vcproj", "{312AB23D-8303-44C6-ADB9-661389BBA240}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter4", "Filter4\Filter4.vcproj", "{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -114,6 +116,10 @@ Global
 		{312AB23D-8303-44C6-ADB9-661389BBA240}.Debug|Win32.Build.0 = Debug|Win32
 		{312AB23D-8303-44C6-ADB9-661389BBA240}.Release|Win32.ActiveCfg = Release|Win32
 		{312AB23D-8303-44C6-ADB9-661389BBA240}.Release|Win32.Build.0 = Release|Win32
+		{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}.Debug|Win32.Build.0 = Debug|Win32
+		{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}.Release|Win32.ActiveCfg = Release|Win32
+		{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

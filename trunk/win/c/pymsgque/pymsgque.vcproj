@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\pymsgque\link_python.c"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\pymsgque\misc_python.c"
 				>
 			</File>
