@@ -20,7 +20,7 @@ Public Module example
     Implements IFactory
 
     ' service definition
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Factory
       Return New MyServer()
     End Function
 
@@ -32,7 +32,7 @@ Public Module example
     End Sub
 
     ' define a service as link between the token "HLWO" and the callback "MyFirstService"
-    Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
+    Public Sub ServerSetup() Implements csmsgque.IServerSetup.ServerSetup
       ServiceCreate("HLWO", AddressOf MyFirstService)
     End Sub
   End Class

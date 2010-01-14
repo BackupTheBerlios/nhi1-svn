@@ -26,7 +26,7 @@ Public Module example
       Throw New ApplicationException("my error")
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New Filter2()
     End Function
   End Class

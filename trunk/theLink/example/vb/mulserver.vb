@@ -19,7 +19,7 @@ Public Module example
     Implements IServerSetup
     Implements IFactory
 
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New mulserver()
     End Function
 
@@ -29,7 +29,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
+    Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       ServiceCreate("MMUL", AddressOf MMUL)
     End Sub
   End Class

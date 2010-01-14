@@ -35,13 +35,13 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Sub [Call]() Implements csmsgque.IServerSetup.Call
+    Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       Dim ftr As MqS = ServiceGetFilter()
       ServiceCreate("+ALL", AddressOf Filter)
       ftr.ServiceCreate("+ALL", AddressOf Filter)
     End Sub
 
-    Public Function Call1() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New Filter3()
     End Function
   End Class

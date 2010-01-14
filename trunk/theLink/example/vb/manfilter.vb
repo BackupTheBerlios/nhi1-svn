@@ -29,7 +29,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function [Call]() As csmsgque.MqS Implements IFactory.Factory
       Return New manfilter()
     End Function
   End Class

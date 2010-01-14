@@ -105,7 +105,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[pTokenInvoke] token <XXXX> not found
+BG-TEXT-RET:[sS]> (server-0) \[*pTokenInvoke] token <XXXX> not found
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:

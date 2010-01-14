@@ -23,11 +23,11 @@ Public Module example
     Public i As Integer
 
 
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Factory
       Return New Client()
     End Function
 
-    Public Sub BgError() Implements csmsgque.IBgError.Call
+    Public Sub BgError() Implements csmsgque.IBgError.BgError
       Dim master As MqS = SlaveGetMaster()
       If master IsNot Nothing Then
         master.ErrorC("BGERROR", ErrorGetNum(), ErrorGetText())
@@ -87,11 +87,11 @@ Public Module example
     Private cl(3) As Client
     Private buf As MqBufferS
 
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New Server()
     End Function
 
-    Public Sub ServerCleanup() Implements csmsgque.IServerCleanup.Call
+    Private Sub ServerCleanup() Implements IServerCleanup.ServerCleanup
       For i As Integer = 0 To 2
         If cl(i) Is Nothing Then
           Continue For
@@ -101,7 +101,7 @@ Public Module example
       Next i
     End Sub
 
-    Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
+    Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       If SlaveIs() Then
         'add "slave" services here
       Else
@@ -155,8 +155,18 @@ Public Module example
         ServiceCreate("CNFG", AddressOf CNFG)
         ServiceCreate("MSQT", AddressOf MSQT)
         ServiceCreate("CFG1", AddressOf CFG1)
+        ServiceCreate("PRNT", AddressOf PRNT)
 
       End If
+    End Sub
+
+    Private Sub PRNT()
+      Dim i As Integer = 0
+      While (ReadItemExists())
+        i += 1
+        Console.WriteLine("{0,2}: " + ReadC(), i)
+      End While
+      SendRETURN()
     End Sub
 
     Private Sub CFG1()

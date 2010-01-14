@@ -72,13 +72,13 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 222-CATCH:1
 222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
 222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
 END}
 
 test prt-1b-($I|$B|$C|$S) {SEND + WAIT without error} \
@@ -99,7 +99,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:678
@@ -132,16 +132,16 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 333-CATCH:0
 333-RET:
 333-CODE:NONE
 444-CATCH:1
 444-RET:[cC]> (client-0) \[callback-error] <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 444-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[callback-error] <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 END}
 
 test prt-2b-($I|$B|$C|$S) {SEND + CALLBACK without error} \
@@ -170,7 +170,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 333-CATCH:0
 333-RET:
@@ -201,7 +201,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (*server*) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-RET:[sS]> (*server*) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:
