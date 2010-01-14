@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -28,6 +28,7 @@ vbmsgque \- The \fBVB.NET\fP \fBApplication-Server\fP and \fBProgramming-Languag
 .br
  \fBFILTER MODE\fP
 .br
+ \fBCONTEXT LOCAL STORAGE API\fP
 .SH "INTRODUCTION"
 .PP
 public libmsgque API 
@@ -57,7 +58,7 @@ propagate the error messages from the server to the client
 .PP
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 .PP
-The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
 .nf
  struct MyCtxDataS {
@@ -70,9 +71,7 @@ The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIa
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP.
-.PP
-The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a concept for the \fIapplication-specific-data\fP defined as \fIclass-member-data\fP. 
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
 .SS "Dim ctx As New MqS()"
 create a new context and initialize the default configuration data 
 .PP
@@ -1542,6 +1541,8 @@ clear the \fIerror\fP and reset the \fIcontex\fP
 convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise the object.
 .SS "ctx.ErrorPrint()"
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
+.SH "CONTEXT LOCAL STORAGE API"
+.PP
 .SH "FILTER MODE"
 .PP
 modify data using filter technology 

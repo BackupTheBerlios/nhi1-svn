@@ -1344,7 +1344,8 @@ MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
 /// \{
 /// \brief \e context, the top-level data structure and \e application-handle
 ///
-/// The \e context-data-structure has a \e libmsgque-specific-part and an
+/// The \e context-data-structure is created with \RNSA{ContextCreate} and 
+/// deleted with \RNSA{ContextDelete}. The structure has a \e libmsgque-specific-part and an
 /// \e application-specific-part. Both parts are linked together.
 /// The \e libmsgque-specific-part has all data required to manage a
 /// \e client-server-link. The \e application-specific-part as all data
@@ -1360,14 +1361,9 @@ MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
 /// The \e libmsgque-specific-data have to be the \e first data entry in the structure.\n
 /// A \e high-level-programming-language like JAVA, C#, C++, Perl, Python, Tcl or VB-NET
 /// is using a wrapper arround this \e data-structure as \e application-handle.
-///
-/// \if DATA 
-/// The \e programming-language Tcl or Perl does \b not providing a concept for
-/// the \e application-specific-data. The \RNS{data} is available to create amd manipulate 
-/// this data. 
-/// \else 
-/// The \e programming-language JAVA, C#, C++, Python or VB-NET does providing a concept 
-/// for the \e application-specific-data defined as \e class-member-data.
+/// The \e application-specific-data is available as \RNS{ContextLocalStorage}
+/// \if MSGQUE
+/// \anchor \NS{ContextLocalStorage}
 /// \endif
 
 /// \brief Information about how the \e context was created
@@ -3100,7 +3096,7 @@ static mq_inline MQ_INT MqErrorGetNumI (
   struct MqS const * const ctx
 )
 {
-  return context->error.num;
+  return ctx->error.num;
 }
 
 /// \brief set the value of the #MqErrorS object

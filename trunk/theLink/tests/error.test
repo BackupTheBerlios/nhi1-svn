@@ -273,8 +273,8 @@ S> (server) found in function "GenericBind" at file "generic_io.c*"
 S> (server) found in function "GenericServer" at file "generic_io.c*"
 S> (server) found in function "UdsServer" at file "uds_io.c*"
 S> (server) found in function "pIoCreate" at file "io.c*"
-S> (server) found in function "MqLinkCreate" at file "msgque.c*"
-S> (server) found in function "MqLinkDefault" at file "msgque.c*"}
+S> (server) found in function "MqLinkCreate" at file "link.c*"
+S> (server) found in function "MqLinkDefault" at file "link.c*"}
 
     test error-4-($C|$S) {port with wrong service-name} \
       -constraints  tcp \
@@ -284,8 +284,8 @@ S> (server) found in function "MqLinkDefault" at file "msgque.c*"}
 S> (server) found in function "sTcpCreateAddrInfo" at file "tcp_io.c*"
 S> (server) found in function "TcpCreate" at file "tcp_io.c*"
 S> (server) found in function "pIoCreate" at file "io.c*"
-S> (server) found in function "MqLinkCreate" at file "msgque.c*"
-S> (server) found in function "MqLinkDefault" at file "msgque.c*"}
+S> (server) found in function "MqLinkCreate" at file "link.c*"
+S> (server) found in function "MqLinkDefault" at file "link.c*"}
 
   }
 }
@@ -410,7 +410,7 @@ test error-10-($x) "'--$x' option in a thread enabled interpreter" \
 S> (server) found in function \"MqLinkCreate\" at file \"msgque.c\"
 S> (server) found in function \"MqLinkDefault\" at file \"msgque.c\"
 C> (client) \\\[MqLinkCreate] can not start server '*'
-C> (client) found in function \"MqLinkCreate\" at file \"msgque.c\"
+C> (client) found in function \"MqLinkCreate\" at file \"link.c\"
 C> (client) use '-h' or '--help' for usage"
 
 }
@@ -420,7 +420,7 @@ test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
     -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --daemon} \
     -match	    glob \
     -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
-S> (server) found in function "sMqCheckArg" at file "msgque.c"
+S> (server) found in function "sMqCheckArg" at file "link.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"
 S> (server) found in function "MqLinkDefault" at file "link.c"
 C> (client) \[MqLinkCreate] can not start server '*'

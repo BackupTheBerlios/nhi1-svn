@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "13 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -64,7 +64,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .PP 
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 
-The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
 .nf
  struct MyCtxDataS {
@@ -77,16 +77,14 @@ The \fIcontext-data-structure\fP has a \fIlibmsgque-specific-part\fP and an \fIa
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP.
-.PP
-The \fIprogramming-language\fP JAVA, C#, C++, Python or VB-NET does providing a concept for the \fIapplication-specific-data\fP defined as \fIclass-member-data\fP. 
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
 .SH "Define Documentation"
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
 signature marker used in \fBMqS.signature\fP 
 .PP
-Definition at line 1383 of file msgque.h.
+Definition at line 1379 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -111,7 +109,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1374 of file msgque.h.
+Definition at line 1370 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"

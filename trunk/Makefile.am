@@ -21,18 +21,11 @@ endif
 if USE_GUARD
 SUBDIRS += theGuard
 endif
-mann_MANS =   man/mann/libmsgque.n \
-	      man/mann/ccmsgque.n \
-	      man/mann/javamsgque.n \
-	      man/mann/pymsgque.n \
-	      man/mann/csmsgque.n \
-	      man/mann/perlmsgque.n \
-	      man/mann/tclmsgque.n \
-	      man/mann/vbmsgque.n
+mann_MANS =   man/mann/*.n
 
 CTAGSFLAGS = --c-kinds=+p
 
-EXTRA_DIST = $(mann_MANS)
+EXTRA_DIST = $(mann_MANS) html
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
       --enable-java --enable-csharp --enable-python --enable-perl \

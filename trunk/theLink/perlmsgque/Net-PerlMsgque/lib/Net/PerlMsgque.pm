@@ -26,7 +26,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '4.1';
+our $VERSION = '4.2';
 
 require XSLoader;
 XSLoader::load('Net::PerlMsgque', $VERSION);
