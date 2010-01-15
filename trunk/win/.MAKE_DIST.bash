@@ -44,6 +44,8 @@ for f in $(find .. -type f | grep -v win) ; do
     esac
 done
 
+cp -pr ../html $PKG
+
 zip -r $FINAL_PKG $PKG
 
 
