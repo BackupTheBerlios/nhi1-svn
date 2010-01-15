@@ -1,4 +1,4 @@
-.TH "csmsgque::IEvent" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IEvent" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ csmsgque::IEvent \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetEven
 
 .in +1c
 .ti -1c
-.RI "void \fBCall\fP ()"
+.RI "void \fBEvent\fP ()"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -22,7 +22,7 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP
 Definition at line 39 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
-.SS "void csmsgque.IEvent.Call ()"
+.SS "void csmsgque.IEvent.Event ()"
 .PP
 
 

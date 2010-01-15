@@ -21,11 +21,15 @@ endif
 if USE_GUARD
 SUBDIRS += theGuard
 endif
-mann_MANS =   man/mann/*.n
+mann_MANS =  $(srcdir)/man/mann/*.n
 
 CTAGSFLAGS = --c-kinds=+p
 
-EXTRA_DIST = $(mann_MANS) html
+EXTRA_DIST = $(mann_MANS)
+
+dist-hook:
+	mkdir $(distdir)/html
+	cp -pr $(srcdir)/html $(distdir)/html
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
       --enable-java --enable-csharp --enable-python --enable-perl \

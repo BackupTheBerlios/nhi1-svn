@@ -13,7 +13,7 @@
 # set NHI1 VERSION information also in:
 # > win/mqconfig.h
 # > win/env.sh
-AC_INIT([NHI1],[0.3],[aotto1968@users.berlios.de],[NHI1])
+AC_INIT([NHI1],[0.4],[aotto1968@users.berlios.de],[NHI1])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([mqconfig.h])

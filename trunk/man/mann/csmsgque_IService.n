@@ -1,4 +1,4 @@
-.TH "csmsgque::IService" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IService" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ csmsgque::IService \- implement the \fBlibmsgque\fP API object: \fBMqServiceCrea
 
 .in +1c
 .ti -1c
-.RI "void \fBCall\fP (\fBMqS\fP ctx)"
+.RI "void \fBService\fP (\fBMqS\fP ctx)"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -22,7 +22,7 @@ implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP
 Definition at line 44 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
-.SS "void csmsgque.IService.Call (\fBMqS\fP ctx)"
+.SS "void csmsgque.IService.Service (\fBMqS\fP ctx)"
 .PP
 
 

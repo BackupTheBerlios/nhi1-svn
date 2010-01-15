@@ -10,15 +10,15 @@ fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
-		    --enable-tcl \
 		    --enable-brain \
 		    --enable-guard \
 		    --enable-tcl \
 		    --enable-cxx \
 		    --enable-java \
 		    --enable-csharp \
-		    --enable-perl \
 		    --enable-python \
+		    --enable-perl \
+		    --enable-vb \
 		    $ARGS $@
 
 #		    --enable-brain \

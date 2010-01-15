@@ -40,63 +40,68 @@ OptLCreate (
   struct OptLS ** const out
 )
 {
-  MQ_SIZE  size    = 10;
-  MQ_SIZE  cursize = 0;
-  OptLSP option  = MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof(OptLS));
-  OptLASP data   = MqSysCalloc (MQ_ERROR_PANIC, size, sizeof(OptLAS));
+  *out = NULL;
+  if (argv == NULL) {
+    return MQ_OK;
+  } else {
+    MQ_SIZE  size    = 10;
+    MQ_SIZE  cursize = 0;
+    OptLSP option  = MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof(OptLS));
+    OptLASP data   = MqSysCalloc (MQ_ERROR_PANIC, size, sizeof(OptLAS));
 
-  // check for the sort key
-  MQ_STR key, cur, end;
-  long idx;
+    // check for the sort key
+    MQ_STR key, cur, end;
+    long idx;
 
-  while (argv->cursize) {
-    key = cur = (MQ_STR) (*argv->data)->data;
-    if (*cur++ != '-') {
-      MqErrorC (mqctx, __func__, 1, "expect column option of form '-NUM' with 0 <= NUM <= 255");
-      goto error;
+    while (argv->cursize) {
+      key = cur = (MQ_STR) (*argv->data)->data;
+      if (*cur++ != '-') {
+	MqErrorC (mqctx, __func__, 1, "expect column option of form '-NUM' with 0 <= NUM <= 255");
+	goto error;
+      }
+      errno=idx=0;
+      idx = strtol (cur, &end, 10);
+      if (idx < 0 || idx > 255 || (idx == 0 && errno != 0) || (end-cur) != strlen (cur)) {
+	MqErrorV (mqctx, __func__, errno, "number out of range or invalid, unable to convert option '%s' into a column number", key);
+	goto error;
+      }
+      if (argv->cursize==1) {
+	MqErrorV (mqctx, __func__, 1, "expect argument for option '%s'", key);
+	goto error;
+      }
+      MqBufferLDeleteItem (mqctx, argv, 0, 1, MQ_YES);
+
+      // check if array has enough space
+      if (cursize >= size) {
+	  size = (size+size/3);
+	  data = MqSysRealloc (MQ_ERROR_PANIC, data, size * sizeof(OptLAS));
+      }
+    
+      // save the data in the array  
+      data[cursize].idx = idx;
+      data[cursize].val = *argv->data;
+      cursize++;
+
+      // cleanup
+      MqBufferLDeleteItem (mqctx, argv, 0, 1, MQ_NO);
     }
-    errno=idx=0;
-    idx = strtol (cur, &end, 10);
-    if (idx < 0 || idx > 255 || (idx == 0 && errno != 0) || (end-cur) != strlen (cur)) {
-      MqErrorV (mqctx, __func__, errno, "number out of range or invalid, unable to convert option '%s' into a column number", key);
-      goto error;
-    }
-    if (argv->cursize==1) {
-      MqErrorV (mqctx, __func__, 1, "expect argument for option '%s'", key);
-      goto error;
-    }
-    MqBufferLDeleteItem (mqctx, argv, 0, 1, MQ_YES);
 
-    // check if array has enough space
-    if (cursize >= size) {
-	size = (size+size/3);
-	data = MqSysRealloc (MQ_ERROR_PANIC, data, size * sizeof(OptLAS));
-    }
-  
-    // save the data in the array  
-    data[cursize].idx = idx;
-    data[cursize].val = *argv->data;
-    cursize++;
+    // the data back
+    option->data = data;
+    option->cursize = cursize;
+    option->size = size;
+    *out = option;
 
-    // cleanup
-    MqBufferLDeleteItem (mqctx, argv, 0, 1, MQ_NO);
-  }
-
-  // the data back
-  option->data = data;
-  option->cursize = cursize;
-  option->size = size;
-  *out = option;
-
-  // everything is OK
-  return MQ_OK;
+    // everything is OK
+    return MQ_OK;
 
 error:
-  option->data = data;
-  option->cursize = cursize;
-  option->size = size;
-  OptLDelete (&option);
-  return MQ_ERROR;
+    option->data = data;
+    option->cursize = cursize;
+    option->size = size;
+    OptLDelete (&option);
+    return MQ_ERROR;
+  }
 }
 
 /// \brief delete an OptLSP array created by #OptLCreate
@@ -107,17 +112,20 @@ OptLDelete (
   OptLSP *out
 )
 {
-    OptLSP opt = *out;
+  OptLSP opt = *out;
+  if (opt == NULL) {
+    return;
+  } else {
     OptLASP start;
     OptLASP end;
-    if (!opt) return;
     start = opt->data;
     end = opt->data + opt->cursize ;
     for (; start < end; start++) {
-	MqBufferDelete (&(start->val));
+      MqBufferDelete (&(start->val));
     }
     free (opt->data);
     MqSysFree (*out);
+  }
 }
 
 /** \} optionL_api */

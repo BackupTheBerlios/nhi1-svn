@@ -239,7 +239,7 @@ SortCreate (
 
   // check for the sort key
   MqErrorCheck ( OptLCreate (mqctx, *argvP, &sortcols));
-  if (sortcols->cursize != 1) {
+  if (sortcols == NULL || sortcols->cursize != 1) {
     OptLDelete (&sortcols);
     MqErrorC (mqctx, __func__, -1,
 		"expect exact 'one' sort-column of format '-NUM TYPE'");

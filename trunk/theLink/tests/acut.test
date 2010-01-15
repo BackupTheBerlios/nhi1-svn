@@ -115,7 +115,7 @@ test acut-13-($S) {cut: no client} \
     -returnCodes ok \
     -result {CHILDSTATUS-201-S> (cut) [PipeCreate] it is not allowed to use a server in a client context
 S> (cut) found in function "pIoCreate" at file "io.c"
-S> (cut) found in function "MqLinkCreate" at file "msgque.c"
+S> (cut) found in function "MqLinkCreate" at file "link.c"
 S> (cut) found in function "CutCreate" at file "acut.c"
 S> (cut) use '-h' or '--help' for usage}
 

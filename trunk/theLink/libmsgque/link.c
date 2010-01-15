@@ -748,6 +748,7 @@ MqLinkCreate (
 
   error:
     MqBufferLDelete (argvP);
+    argv = NULL;
     ret = MqErrorStack (context);
 
   cleanup:

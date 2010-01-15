@@ -1,4 +1,4 @@
-.TH "csmsgque" n "14 Jan 2010" "Version 4.1" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "14 Jan 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1709,7 +1709,7 @@ using System;
 using csmsgque;
 namespace example {
   sealed class mulserver : MqS, IServerSetup, IFactory {
-    MqS IFactory.Call() {
+    MqS IFactory.Factory() {
       return new mulserver();
     }
     public void MMUL () {
@@ -1717,7 +1717,7 @@ namespace example {
       SendD(ReadD() * ReadD());
       SendRETURN();
     }
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate('MMUL', MMUL);
     }
     static void Main(string[] argv) {
@@ -1786,7 +1786,7 @@ using System;
 using csmsgque;
 namespace example {
   sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new manfilter();
     }
     void FTR () {

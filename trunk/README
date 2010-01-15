@@ -40,12 +40,12 @@ The Build depends on the following tools:
 
   - Compiler: gcc
   - Make: make
-  - Configuration: libtool, autoconf-2.62 and automake-1.10
-  - Test: tcl using the "tcltest" package
+  - Configuration: libtool-2.2.6, autoconf-2.63 and automake-1.10.1
+  - Test: tclsh-8.5.6 using the "tcltest" package
   - Documentation: doxygen
   - Create Binary Distribution: zip
 
-In addition the following software is required for the "build"
+In addition the following software is also supported:
 
   - tcl from the Tcl Developer Site
        -> http://www.tcl.tk/
@@ -96,15 +96,15 @@ To build the "documentation" the tool "doxygen" is required:
   - create the documentation
     > make html
   - read the documentation
-    > firefox html/index.htm
+    > firefox html/theLink/index.htm
 
 If the build is done on a *new* hardware/os version the binaries
 can be submitted to the community using the following steps:
 
   - create a binary distribution
-    > bash ./make_binary_dist.sh
+    > bash ./bin/make_binary_dist.sh
   - the new binary-distribution is created in the directory
     > binary-dist
   - contact the maintainer
-    > aotto1968 at users.sourceforge.net
+    > aotto1968 at users.berlios.de
     

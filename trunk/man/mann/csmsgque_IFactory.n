@@ -1,4 +1,4 @@
-.TH "csmsgque::IFactory" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IFactory" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ csmsgque::IFactory \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetFa
 
 .in +1c
 .ti -1c
-.RI "\fBMqS\fP \fBCall\fP ()"
+.RI "\fBMqS\fP \fBFactory\fP ()"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -22,7 +22,7 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP
 Definition at line 29 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
-.SS "\fBMqS\fP csmsgque.IFactory.Call ()"
+.SS "\fBMqS\fP csmsgque.IFactory.Factory ()"
 .PP
 
 

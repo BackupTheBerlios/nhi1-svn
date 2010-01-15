@@ -1,4 +1,4 @@
-.TH "csmsgque Tutorial" n "14 Jan 2010" "Version 4.1" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque Tutorial" n "14 Jan 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -94,7 +94,7 @@ namespace example {
   sealed class MyServer : MqS, IServerSetup, IFactory {
 
     // create new intances
-    MqS IFactory.Call() {
+    MqS IFactory.Factory() {
       return new MyServer();
     }
 
@@ -106,7 +106,7 @@ namespace example {
     }
 
     // define a service as link between the token 'HLWO' and the callback 'MyFirstService'
-    void IServerSetup.Call() {
+    void IServerSetup.ServerSetup() {
       ServiceCreate('HLWO', MyFirstService);
     }
 
@@ -247,7 +247,7 @@ using System;
 using csmsgque;
 namespace example {
   sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Call () {
+    MqS IFactory.Factory () {
       return new manfilter();
     }
     void FTR () {

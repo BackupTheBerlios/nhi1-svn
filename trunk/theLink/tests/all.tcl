@@ -25,7 +25,7 @@ testsDirectory $testdir
 tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
-#configure -file example.test
+#configure -file trans.test
 
 tcltest::runAllTests
 

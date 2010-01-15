@@ -10,6 +10,42 @@
 #§              please contact AUTHORS for additional information
 #§
 
+v NHI1-0.4, PLMK-1.3 and libmsgque-4.2
+
+The is a 'maintenance' and 'reorganization' release to prepare the
+environment for the new 'milestone' release coming soon
+
+ - 15 Jan 2010
+  + API reorganisation:
+      MqConfigGetFilter -> MqServiceGetFilter
+      MqConfigGetIsTransaction -> MqServiceIsTransaction
+      MqConfigGetToken -> MqServiceGetToken
+      MqConfigGetParent -> MqLinkGetParent
+      MqConfigGetCtxId -> MqLinkGetCtxId
+      MqConfigGetIsConnected -> MqLinkIsConnected
+      MqConfigGetMaster -> MqSlaveGetMaster
+      MqConfigGetIsSlave -> MqSlaveIs
+  + update documentation, reorganize the structure
+      MAN: the API reference is now called with an "ref" postfix
+	> man (lib|cc|cs|java|py|perl|vb|tcl)msgqueref
+      LINK: the file 'theLink/libmsgque/msgque.h' is now root source
+        of documentation data and used to feed the MAN and the HTML docs
+      HTML: centralize the 'context' documentation
+  + add new 'public' API 'IEvent' or 'MqConfigSetEvent' to provide a function
+    to be called on idle. Together with the new API functions
+    'MqConfigSetIgnoreExit' and 'MqErrorSetCONTINUE' the server is now able
+    to 'ignore' an application 'exit' and continue to work on events.
+    The 'IEvent-API' get significant more power in future releases.
+    Check out the example: 'theLink/example/LANG/Filter4.EXT'
+ - 5 Jan 2010
+  + change default value for 'wait' in ccmsgque function MqC::ProcessEvent
+    from MQ_WAIT_ONCE to MQ_WAIT_FOREVER
+ - 1 Jan 2010
+  + switch the special token to delete 'all' token in MqServiceDelete from
+    '_ALL' to '-ALL'. 
+    -> Reason: the '_???' syntax is for internal use only.
+
+
 v NHI1-0.3, PLMK-1.2 and libmsgque-4.1
 
 Major - Feature - Improvement !!

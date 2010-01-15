@@ -1,4 +1,4 @@
-.TH "vbmsgque Tutorial" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque Tutorial" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -76,7 +76,7 @@ Public Module example
     Implements IFactory
 
     ' service definition
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Factory
       Return New MyServer()
     End Function
 
@@ -88,7 +88,7 @@ Public Module example
     End Sub
 
     ' define a service as link between the token 'HLWO' and the callback 'MyFirstService'
-    Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
+    Public Sub ServerSetup() Implements csmsgque.IServerSetup.ServerSetup
       ServiceCreate('HLWO', AddressOf MyFirstService)
     End Sub
   End Class
@@ -236,7 +236,7 @@ Public Module example
     Implements IFactory
 
     Public Sub FilterFTR()
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       ftr.SendSTART()
       While ReadItemExists()
         ftr.SendC('<' + ReadC() + '>')
@@ -245,7 +245,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function [Call]() As csmsgque.MqS Implements IFactory.Factory
       Return New manfilter()
     End Function
   End Class

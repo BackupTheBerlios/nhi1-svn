@@ -407,8 +407,8 @@ test error-10-($x) "'--$x' option in a thread enabled interpreter" \
     -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --$x} \
     -match	    glob \
     -result         "CHILDSTATUS-204-S> (server) \\\[sMqCheckArg] for a 'local' setup the option '--$x' is forbidden
-S> (server) found in function \"MqLinkCreate\" at file \"msgque.c\"
-S> (server) found in function \"MqLinkDefault\" at file \"msgque.c\"
+S> (server) found in function \"MqLinkCreate\" at file \"link.c\"
+S> (server) found in function \"MqLinkDefault\" at file \"link.c\"
 C> (client) \\\[MqLinkCreate] can not start server '*'
 C> (client) found in function \"MqLinkCreate\" at file \"link.c\"
 C> (client) use '-h' or '--help' for usage"

@@ -17,7 +17,7 @@ singleProcess false
 
 ## switch to test directory
 ## test if the start was allready in test directory "make check"
-testsDirectory [file join $linksrcdir tests]
+testsDirectory $testdir
 
 tcltest::verbose {pass body error}
 

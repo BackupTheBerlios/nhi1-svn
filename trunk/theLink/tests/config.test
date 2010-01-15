@@ -15,11 +15,6 @@ if {[info exists env(TS_LIBRARY)]} {
 } else {
   source [file join [file dirname [info script]] library.tcl]
 }
-if {[info exists env(TS_LIBRARY)]} {
-  source $env(TS_LIBRARY)
-} else {
-  source [file join [file dirname [info script]] library.tcl]
-}
 
 ##
 ## -----------------------------------------------------------------------

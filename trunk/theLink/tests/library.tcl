@@ -1086,6 +1086,7 @@ proc Setup {num mode com server args} {
     }
     if {$com eq "pipe"} { 
       if {$filter_server ne "NO"} {
+	foreach {x t s} [split $server .] break
 	lappend cl @ {*}[getFilter $filter_server.$x] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
@@ -1262,11 +1263,14 @@ proc Example {config client server args} {
 }
 
 proc Exec {args} {
-    if {[catch {exec {*}$args} ERR]} {
-	return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
-    } else {
-	return "$ERR"
-    }
+  if {$::env(TS_SETUP)} {
+    Print args
+  }
+  if {[catch {exec {*}$args} ERR]} {
+    return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
+  } else {
+    return "$ERR"
+  }
 }
 
 proc ExecLines {start end args} {

@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1717,7 +1717,7 @@ Public Module example
     Implements IServerSetup
     Implements IFactory
 
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New mulserver()
     End Function
 
@@ -1727,7 +1727,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call
+    Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       ServiceCreate('MMUL', AddressOf MMUL)
     End Sub
   End Class
@@ -1805,7 +1805,7 @@ Public Module example
     Implements IFactory
 
     Public Sub FilterFTR()
-      Dim ftr As MqS = ConfigGetFilter()
+      Dim ftr As MqS = ServiceGetFilter()
       ftr.SendSTART()
       While ReadItemExists()
         ftr.SendC('<' + ReadC() + '>')
@@ -1814,7 +1814,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements csmsgque.IFactory.Call
+    Public Function [Call]() As csmsgque.MqS Implements IFactory.Factory
       Return New manfilter()
     End Function
   End Class

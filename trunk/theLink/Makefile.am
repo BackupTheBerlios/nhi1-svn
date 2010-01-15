@@ -44,5 +44,5 @@ endif
 if USE_VB
 SUBDIRS += example/vb
 endif
-#SUBDIRS += acmds docs
-SUBDIRS += docs
+SUBDIRS += acmds docs
+#SUBDIRS += docs

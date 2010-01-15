@@ -10,7 +10,11 @@
 #§              please contact AUTHORS for additional information
 #§
 
-source [file join [file dirname [info script]] library.tcl]
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
 
 ##
 ## -----------------------------------------------------------------------
@@ -27,6 +31,7 @@ source [file join [file dirname [info script]] library.tcl]
 rename getFilter ""
 rename getExample getFilter
 set env(TS_FILTER_SERVER)  Filter4
+set env(TS_FILTER_CLIENT)  NO
 
 ##
 ## -----------------------------------------------------------------------

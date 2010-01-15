@@ -1,4 +1,4 @@
-.TH "csmsgque::IServerSetup" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IServerSetup" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ csmsgque::IServerSetup \- implement the \fBlibmsgque\fP API object: \fBMqConfigS
 
 .in +1c
 .ti -1c
-.RI "void \fBCall\fP ()"
+.RI "void \fBServerSetup\fP ()"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -22,7 +22,7 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP
 Definition at line 19 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
-.SS "void csmsgque.IServerSetup.Call ()"
+.SS "void csmsgque.IServerSetup.ServerSetup ()"
 .PP
 
 

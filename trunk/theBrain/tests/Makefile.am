@@ -13,8 +13,6 @@
 TESTS = $(srcdir)/all.sh $(srcdir)/util_test.sh $(srcdir)/hdb_test.sh \
 	  $(srcdir)/bdb_test.sh
 
-#TESTS = $(srcdir)/all.sh
-
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.bash $(srcdir)/*.env
 
 noinst_PROGRAMS = client

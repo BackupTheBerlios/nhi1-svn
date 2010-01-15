@@ -1,4 +1,4 @@
-.TH "csmsgque::IBgError" n "14 Jan 2010" "Version 4.1" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IBgError" n "14 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ csmsgque::IBgError \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetBg
 
 .in +1c
 .ti -1c
-.RI "void \fBCall\fP ()"
+.RI "void \fBBgError\fP ()"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -22,7 +22,7 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP
 Definition at line 34 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
-.SS "void csmsgque.IBgError.Call ()"
+.SS "void csmsgque.IBgError.BgError ()"
 .PP
 
 
