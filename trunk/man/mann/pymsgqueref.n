@@ -1,4 +1,4 @@
-.TH "pymsgque" n "14 Jan 2010" "Version 4.2" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "15 Jan 2010" "Version 4.2" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

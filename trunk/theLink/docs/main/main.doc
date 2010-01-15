@@ -2,11 +2,14 @@
 
 <CENTER>
 
-\section nw  NEWS, from 23 Dec 2009
+\section nw  NEWS, from 15 Jan 2010
 
-This release add the new \ref filter "bi-directional filter" technology\n
-to extend the functionality of an existing client/server application\n
-without implementation details available.
+This is a \b maintenance and \b reorganization release to prepare the\n
+environment for the new \b milestone release coming soon.\n
+The highlights are: API reorganisation\n
+documentation update and reorganization\n
+new public API - \RNSC{IEvent}\n
+
 
 \section intro Introduction
 

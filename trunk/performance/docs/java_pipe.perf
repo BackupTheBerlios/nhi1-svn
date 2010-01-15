@@ -1,10 +1,10 @@
-> nothread/NHI1-0.3/theLink/tests/client --all @ java example.Server
-C> (client:25533) [2009-12-23:13-40-11] [0-0-0x61f9a0-main]: start: --------------------------------------
-C> (client:25533) [2009-12-23:13-40-12] [0-0-0x61f9a0-statistics]:                      MqSendEND:       5.37
-C> (client:25533) [2009-12-23:13-40-12] [0-0-0x61f9a0-statistics]:         MqSendEND_AND_CALLBACK:      13.66
-C> (client:25533) [2009-12-23:13-40-15] [0-0-0x61f9a0-statistics]:             MqSendEND_AND_WAIT:      19.48
-C> (client:25533) [2009-12-23:13-40-26] [0-0-0x61f9a0-statistics]:                  parent create:  109752.13
-C> (client:25533) [2009-12-23:13-40-27] [0-0-0x61f9a0-statistics]:                  parent delete:    1928.20
-C> (client:25533) [2009-12-23:13-40-27] [0-0-0x61f9a0-statistics]:                   child create:     166.07
-C> (client:25533) [2009-12-23:13-40-27] [0-0-0x61f9a0-statistics]:                   child delete:      24.61
-C> (client:25533) [2009-12-23:13-40-27] [0-0-0x61f9a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.4/theLink/tests/client --all @ java example.Server
+C> (client:9802) [2010-01-15:10-00-19] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:9802) [2010-01-15:10-00-20] [0-0-0x6209a0-statistics]:                      MqSendEND:       5.52
+C> (client:9802) [2010-01-15:10-00-20] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      13.71
+C> (client:9802) [2010-01-15:10-00-23] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      19.54
+C> (client:9802) [2010-01-15:10-00-34] [0-0-0x6209a0-statistics]:                  parent create:  106881.83
+C> (client:9802) [2010-01-15:10-00-34] [0-0-0x6209a0-statistics]:                  parent delete:    1742.88
+C> (client:9802) [2010-01-15:10-00-34] [0-0-0x6209a0-statistics]:                   child create:     169.17
+C> (client:9802) [2010-01-15:10-00-34] [0-0-0x6209a0-statistics]:                   child delete:      26.17
+C> (client:9802) [2010-01-15:10-00-34] [0-0-0x6209a0-main]: end: ----------------------------------------

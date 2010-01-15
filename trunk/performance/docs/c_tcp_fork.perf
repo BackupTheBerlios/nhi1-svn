@@ -1,11 +1,11 @@
-> nothread/NHI1-0.3/theLink/tests/server --tcp --host localhost --port 7777 --fork
-> nothread/NHI1-0.3/theLink/tests/client --all --tcp --host localhost --port 7777
-C> (client:22929) [2009-12-23:13-38-09] [0-0-0x61fbc0-main]: start: --------------------------------------
-C> (client:22929) [2009-12-23:13-38-09] [0-0-0x61fbc0-statistics]:                      MqSendEND:       3.19
-C> (client:22929) [2009-12-23:13-38-10] [0-0-0x61fbc0-statistics]:         MqSendEND_AND_CALLBACK:       7.21
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-statistics]:             MqSendEND_AND_WAIT:      25.15
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-statistics]:                  parent create:     352.89
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-statistics]:                  parent delete:     153.43
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-statistics]:                   child create:      80.69
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-statistics]:                   child delete:      34.09
-C> (client:22929) [2009-12-23:13-38-13] [0-0-0x61fbc0-main]: end: ----------------------------------------
+> nothread/NHI1-0.4/theLink/tests/server --tcp --host localhost --port 7777 --fork
+> nothread/NHI1-0.4/theLink/tests/client --all --tcp --host localhost --port 7777
+C> (client:7176) [2010-01-15:09-58-17] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:7176) [2010-01-15:09-58-18] [0-0-0x620bc0-statistics]:                      MqSendEND:       2.86
+C> (client:7176) [2010-01-15:09-58-18] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       6.85
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      23.93
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-statistics]:                  parent create:     382.36
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-statistics]:                  parent delete:     144.78
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-statistics]:                   child create:      79.91
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-statistics]:                   child delete:      35.05
+C> (client:7176) [2010-01-15:09-58-21] [0-0-0x620bc0-main]: end: ----------------------------------------
