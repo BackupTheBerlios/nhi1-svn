@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if (( $# == 0 )) ; then
+  ALL="linux-d2k6 xp01 fb01 debian01"
+else
+  ALL="$@"
+fi
+
+set -x
+
+for h in $ALL ; do
+  rsync -av html/* dev1usr@$h:$PWD/html/
+done
+
