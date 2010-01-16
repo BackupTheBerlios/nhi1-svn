@@ -1,0 +1,11 @@
+> thread/NHI1-0.4/theLink/tests/ccserver --uds --file ./socket.uds --thread
+> thread/NHI1-0.4/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:8617) [2010-01-15:09-59-19] [0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:8617) [2010-01-15:09-59-20] [0-0-0x6219a0-statistics]:                      MqSendEND:       3.80
+C> (client:8617) [2010-01-15:09-59-20] [0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:       9.91
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      15.47
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-statistics]:                  parent create:     156.59
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-statistics]:                  parent delete:      70.95
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-statistics]:                   child create:      74.70
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-statistics]:                   child delete:      25.28
+C> (client:8617) [2010-01-15:09-59-23] [0-0-0x6219a0-main]: end: ----------------------------------------

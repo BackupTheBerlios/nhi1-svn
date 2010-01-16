@@ -1,0 +1,11 @@
+> nothread/NHI1-0.4/theBrain/tests/client --all @ nothread/NHI1-0.4/theBrain/abrain/abrain
+C> (client:17864) [2010-01-15:10-05-10] [0-0-0x61f650-main]: start: --------------------------------------
+C> (client:17864) [2010-01-15:10-05-10] [0-0-0x61f650-statistics]:              memory hash - PUT:      15.26
+C> (client:17864) [2010-01-15:10-05-11] [0-0-0x61f650-statistics]:              memory hash - GET:      15.69
+C> (client:17864) [2010-01-15:10-05-12] [0-0-0x61f650-statistics]:             memory btree - PUT:      18.92
+C> (client:17864) [2010-01-15:10-05-13] [0-0-0x61f650-statistics]:             memory btree - GET:      19.49
+C> (client:17864) [2010-01-15:10-05-14] [0-0-0x61f650-statistics]:                file hash - PUT:      16.88
+C> (client:17864) [2010-01-15:10-05-15] [0-0-0x61f650-statistics]:                file hash - GET:      17.24
+C> (client:17864) [2010-01-15:10-05-22] [0-0-0x61f650-statistics]:               file btree - PUT:     132.03
+C> (client:17864) [2010-01-15:10-05-29] [0-0-0x61f650-statistics]:               file btree - GET:     150.77
+C> (client:17864) [2010-01-15:10-05-30] [0-0-0x61f650-main]: end: ----------------------------------------

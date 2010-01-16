@@ -1,0 +1,122 @@
+#+
+#§  \file       theLink/tests/java_server.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint java]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C java] {
+
+##
+## -----------------------------------------------------------------------
+## tcl_server test
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test java-server-1-($I|$B|$C|$S) {java.lang.NullPointerException with own message} \
+    -body	    { EchoL $FH_LAST JAVA SendC NullPointerException-1 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>*
+[sS]> (server-0) \[Java_javamsgque_MqS_ErrorSet] java.lang.NullPointerException: myMessage*}
+
+test java-server-2-($I|$B|$C|$S) {java.lang.NullPointerException with Stack-Trace} \
+    -body	    { EchoL $FH_LAST JAVA SendC NullPointerException-2 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|JAVA> <Num|1>*
+[sS]> (server-0) \[Java_javamsgque_MqS_ErrorSet] java.lang.NullPointerException*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+} ; ## false
+
+SetConstraints all
+
+test java-server-X1 {start java server with --fork} \
+    -body       {
+	Exec {*}[getServer java] --tcp --port [FindFreePort] --fork
+    } \
+    -match	glob \
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden
+S> (server) found in function "MqLinkCreate" at file "link.c"
+S> (server) found in function "MqLinkDefault" at file "link.c"}
+
+test java-server-X2 {start java server with --daemon} \
+    -body       {
+	Exec {*}[getServer java] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
+    } \
+    -result	{CHILDSTATUS-222-S> (server) [MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
+S> (server) found in function "sMqCheckArg" at file "link.c"
+S> (server) found in function "MqLinkCreate" at file "link.c"
+S> (server) found in function "MqLinkDefault" at file "link.c"}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+
+

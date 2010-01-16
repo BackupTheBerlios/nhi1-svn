@@ -1,0 +1,45 @@
+.TH "MqIoPipeConfigS" n "15 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIoPipeConfigS \- configure a context to use a \fIpipe-client-server-link\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_SOCK\fP \fBsocket\fP [2]"
+.br
+.R "result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+configure a context to use a \fIpipe-client-server-link\fP 
+
+The \fIsocket\fP option is special because it is used only for internal purpose to submit the socket from the client to the server started as pipe by the client. The only public usage for this option is to serve as interface for an existing tool like (x)inetd. The (x)inetd tool is a \fIUNIX\fP service to listen on a tcp/ip port and start for every connection the proper entry from the file \fI/etc/\fP(x)inetd.conf with the file-descriptor \fI0\fP as send/recv socket handle. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsocket\fP the \fIfile-descriptor-number\fP (default: not set) 
+.RE
+.PP
+
+.PP
+Definition at line 609 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS.socket\fP[2]"
+.PP
+result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP 
+.PP
+Definition at line 610 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

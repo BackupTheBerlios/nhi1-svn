@@ -1,0 +1,10 @@
+> nothread/NHI1-0.4/theLink/tests/client --all @ mono nothread/NHI1-0.4/theLink/tests/csserver.exe
+C> (client:14457) [2010-01-15:10-02-03] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:14457) [2010-01-15:10-02-03] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.08
+C> (client:14457) [2010-01-15:10-02-04] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      10.86
+C> (client:14457) [2010-01-15:10-02-07] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      16.35
+C> (client:14457) [2010-01-15:10-02-09] [0-0-0x6209a0-statistics]:                  parent create:   28673.32
+C> (client:14457) [2010-01-15:10-02-10] [0-0-0x6209a0-statistics]:                  parent delete:    2556.20
+C> (client:14457) [2010-01-15:10-02-10] [0-0-0x6209a0-statistics]:                   child create:     131.57
+C> (client:14457) [2010-01-15:10-02-10] [0-0-0x6209a0-statistics]:                   child delete:      25.20
+C> (client:14457) [2010-01-15:10-02-10] [0-0-0x6209a0-main]: end: ----------------------------------------

@@ -1,0 +1,11 @@
+> perl nothread/NHI1-0.4/theLink/tests/server.pl --tcp --host localhost --port 7796 --spawn
+> nothread/NHI1-0.4/theLink/tests/client --all --tcp --host localhost --port 7796
+C> (client:17343) [2010-01-15:10-04-01] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:17343) [2010-01-15:10-04-02] [0-0-0x620bc0-statistics]:                      MqSendEND:       8.38
+C> (client:17343) [2010-01-15:10-04-02] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.65
+C> (client:17343) [2010-01-15:10-04-06] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      32.45
+C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                  parent create:  207232.68
+C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                  parent delete:     537.87
+C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                   child create:     127.85
+C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                   child delete:      33.59
+C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-main]: end: ----------------------------------------

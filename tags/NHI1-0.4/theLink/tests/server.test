@@ -1,0 +1,174 @@
+#+
+#§  \file       theLink/tests/server.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+if {$env(USE_REMOTE)} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# tests ----------------------------
+
+test server-1-($I|$B|$C|$S) {create/delete multiple parent using tcp} \
+    -constraints    {tcp && !filter} \
+    -setup	    {
+      Setup $I $B $C $S
+      set FX [tclmsgque MqS]
+    } \
+    -body           {
+      $FX LinkCreate --tcp --port $PORT
+      set R1 [Echo1 $FX ECOI ReadI SendI 1234]
+      $FX LinkDelete
+      $FX LinkCreate --tcp --port $PORT
+      set R2 [Echo1 $FX ECOI ReadI SendI 5678]
+      $FX LinkDelete
+      return "$R1-$R2"
+    } \
+    -cleanup	    {
+      rename $FX ""
+      Cleanup
+    } \
+    -returnCodes    return \
+    -result         {1234-5678}
+
+test server-2-($I|$B|$C|$S) {create/delete multiple parent using uds} \
+    -constraints    {uds && !filter} \
+    -setup	    {
+      Setup $I $B $C $S
+      set FX [tclmsgque MqS]
+    } \
+    -body           {
+      $FX LinkCreate --uds --file $FILE
+      set R1 [Echo1 $FX ECOI ReadI SendI 1234]
+      $FX LinkDelete
+      $FX LinkCreate --uds --file $FILE
+      set R2 [Echo1 $FX ECOI ReadI SendI 5678]
+      $FX LinkDelete
+      return "$R1-$R2"
+    } \
+    -cleanup	    {
+      rename $FX ""
+      Cleanup
+    } \
+    -returnCodes    return \
+    -result         {1234-5678}
+
+test server-3-($I|$B|$C|$S) {create/delete multiple child} \
+    -setup	    {
+      Setup $I $B $C $S
+    } \
+    -body           {
+      set FX [tclmsgque MqS]
+      $FX LinkCreateChild $FH_LAST
+      set R1 [Echo1 $FX ECOI ReadI SendI 1234]
+      $FX LinkDelete
+      $FX LinkCreateChild $FH_LAST
+      set R2 [Echo1 $FX ECOI ReadI SendI 5678]
+      $FX LinkDelete
+      rename "$FX" ""
+      return "$R1-$R2"
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -returnCodes    return \
+    -result         {1234-5678}
+
+test server-4-($I|$B|$C|$S) {start server as child} \
+    -constraints    {pipe && parent && binary} \
+    -body           { Exec {*}[getServer $S] --name server} \
+    -match	    glob \
+    -result         {CHILDSTATUS-201-S> (server) \[*PipeCreate] it is not allowed to use a server in a client context*}
+
+test server-5-($I|$B|$C|$S) {get server configuration data} \
+    -constraints    {parent string} \
+    -setup	    { Setup $I $B $C $S } \
+    -body           { EchoL $FH_LAST CNFG } \
+    -cleanup	    { Cleanup } \
+    -result         {1 1 0 1 0 1 server-0 0 0 CNFG}
+
+test server-5-($I|$B|$C|$S) {get server configuration data} \
+    -constraints    {child string} \
+    -setup	    { Setup $I $B $C $S } \
+    -body           { EchoL $FH_LAST CNFG } \
+    -cleanup	    { Cleanup } \
+    -result         {1 0 0 1 0 1 server-0 0 1 CNFG}
+
+test server-5-($I|$B|$C|$S) {get server configuration data} \
+    -constraints    {parent binary} \
+    -setup	    { Setup $I $B $C $S } \
+    -body           { EchoL $FH_LAST CNFG } \
+    -cleanup	    { Cleanup } \
+    -result         {1 1 0 0 0 1 server-0 0 0 CNFG}
+
+test server-5-($I|$B|$C|$S) {get server configuration data} \
+    -constraints    {child binary} \
+    -setup	    { Setup $I $B $C $S } \
+    -body           { EchoL $FH_LAST CNFG } \
+    -cleanup	    { Cleanup } \
+    -result         {1 0 0 0 0 1 server-0 0 1 CNFG}
+
+# cleanup ---------------------------
+
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+
+

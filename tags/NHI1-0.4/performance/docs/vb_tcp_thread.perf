@@ -1,0 +1,11 @@
+> mono thread/NHI1-0.4/theLink/tests/vbserver.exe --tcp --host localhost --port 7792 --thread
+> thread/NHI1-0.4/theLink/tests/client --all --tcp --host localhost --port 7792
+C> (client:16032) [2010-01-15:10-02-49] [0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:16032) [2010-01-15:10-02-50] [0-0-0x621bc0-statistics]:                      MqSendEND:       3.55
+C> (client:16032) [2010-01-15:10-02-50] [0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.59
+C> (client:16032) [2010-01-15:10-02-53] [0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      25.65
+C> (client:16032) [2010-01-15:10-02-53] [0-0-0x621bc0-statistics]:                  parent create:     392.90
+C> (client:16032) [2010-01-15:10-02-53] [0-0-0x621bc0-statistics]:                  parent delete:     430.64
+C> (client:16032) [2010-01-15:10-02-54] [0-0-0x621bc0-statistics]:                   child create:     230.63
+C> (client:16032) [2010-01-15:10-02-54] [0-0-0x621bc0-statistics]:                   child delete:      34.97
+C> (client:16032) [2010-01-15:10-02-54] [0-0-0x621bc0-main]: end: ----------------------------------------

@@ -1,0 +1,289 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += CC
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/cc
+
+ALIASES		    += "self=ccmsgque"
+ALIASES		    += "selftut=ccmsgquetut"
+ALIASES		    += "NS{1}=cc_\1"
+ALIASES		    += "lang=C++"
+ALIASES		    += "fileextension=cc"
+ALIASES		    += "null=\e NULL"
+ALIASES		    += "yes=\e MQ_YES"
+ALIASES		    += "no=\e MQ_NO"
+ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+class MyClass : public MqC { \n\
+  private int mydata; \n\
+  ... \n\
+}; \n\
+int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
+  MyClass ctx; ... \n\
+} \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=MqC *ctx=new MqC()"
+ALIASES		    += "ContextDelete=delete(ctx)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "init_example=\
+\code \n\
+struct MqBufferLS * init = MqInitCreate(); \n\
+MqBufferLAppendC(init, \"myExecutable\"); \n\
+MqBufferLAppendC(init, \"myFirstArgument\"); \n\
+\endcode \n\
+The memory is owned by the library -> <B>do not free the memory</B>"
+
+ALIASES		    += "config_type_buffersize=#MQ_INT"
+ALIASES		    += "config_set_buffersize=#ccmsgque::MqC::ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#ccmsgque::MqC::ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=#MQ_INT"
+ALIASES		    += "config_set_debug=#ccmsgque::MqC::ConfigSetDebug"
+ALIASES		    += "config_get_debug=#ccmsgque::MqC::ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=#MQ_TIME_T"
+ALIASES		    += "config_set_timeout=#ccmsgque::MqC::ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#ccmsgque::MqC::ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=#MQ_CST"
+ALIASES		    += "config_set_name=#ccmsgque::MqC::ConfigSetName"
+ALIASES		    += "config_get_name=#ccmsgque::MqC::ConfigGetName"
+
+ALIASES		    += "config_type_srvname=#MQ_CST"
+ALIASES		    += "config_set_srvname=#ccmsgque::MqC::ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#ccmsgque::MqC::ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=#MQ_CST"
+ALIASES		    += "config_set_ident=#ccmsgque::MqC::ConfigSetIdent"
+ALIASES		    += "config_get_ident=#ccmsgque::MqC::ConfigGetIdent"
+ALIASES		    += "config_check_ident=#ccmsgque::MqC::ConfigCheckIdent"
+
+ALIASES		    += "config_type_isSilent=bool"
+ALIASES		    += "config_set_isSilent=#ccmsgque::MqC::ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#ccmsgque::MqC::ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=bool"
+ALIASES		    += "config_set_isString=#ccmsgque::MqC::ConfigSetIsString"
+ALIASES		    += "config_get_isString=#ccmsgque::MqC::ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=bool"
+ALIASES		    += "config_set_ignoreExit=#ccmsgque::MqC::ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_startAs=enum MqStartE"
+ALIASES		    += "config_set_startAs=#ccmsgque::MqC::ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#ccmsgque::MqC::ConfigGetStartAs"
+
+ALIASES		    += "config_type_daemon=MQ_CST"
+ALIASES		    += "config_set_daemon=#ccmsgque::MqC::ConfigSetDaemon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_tcp=MQ_CST"
+ALIASES		    += "config_set_tcp=#ccmsgque::MqC::ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#ccmsgque::MqC::ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=MQ_CST"
+ALIASES		    += "config_set_uds=#ccmsgque::MqC::ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=#ccmsgque::MqC::ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=MQ_SOCK"
+ALIASES		    += "config_set_pipe=#ccmsgque::MqC::ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#ccmsgque::MqC::ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=bool"
+ALIASES		    += "config_set_isServer=#ccmsgque::MqC::ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=#ccmsgque::MqC::ConfigGetIsServer"
+
+ALIASES             += "config_IServerSetup=IServerSetup::ServerSetup()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup::ServerCleanup()"
+ALIASES		    += "config_IFactory=MqC* IFactory::Factory()"
+ALIASES             += "config_IBgError=IBgError::BgError()"
+ALIASES             += "config_IEvent=IEvent::Event()"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+class Server: public MqC, public IFactory, ... { \n\
+  private: \n\
+    MqC* Factory() const { return new Server(); } \n\
+  ... \n\
+} \n\
+\endcode"
+
+
+# LINK CREATION AND DELETION
+ALIASES             += "LinkCreate=ctx.LinkCreate(struct MqBufferLS * args)"
+ALIASES             += "LinkCreate2=ctx.LinkCreateVA(va_list args)"
+ENABLED_SECTIONS    += LinkCreate2
+ALIASES             += "LinkCreate3=ctx.LinkCreateV(MQ_CST ..., NULL)"
+ENABLED_SECTIONS    += LinkCreate3
+ALIASES             += "LinkCreate4=ctx.LinkCreateVT(const std::vector<MQ_CST>& args)"
+ENABLED_SECTIONS    += LinkCreate4
+ALIASES             += "LinkCreate5=ctx.LinkCreateVC(int const argc, MQ_CST *args)"
+ENABLED_SECTIONS    += LinkCreate5
+
+ALIASES             += "LinkCreateChild=ctx.LinkCreateChild(const MqC& parent, struct MqBufferLS * args)"
+ALIASES             += "LinkCreateChild2=ctx.LinkCreateChildVA(const MqC& parent, va_list args)"
+ENABLED_SECTIONS    += LinkCreateChild2
+ALIASES             += "LinkCreateChild3=ctx.LinkCreateChildV(const MqC& parent, MQ_CST ..., NULL)"
+ENABLED_SECTIONS    += LinkCreateChild3
+ALIASES             += "LinkCreateChild4=ctx.LinkCreateChildVT(const MqC& parent, const std::vector<MQ_CST>& args)"
+ENABLED_SECTIONS    += LinkCreateChild4
+ALIASES             += "LinkCreateChild5=ctx.LinkCreateChildVS(const MqC& parent, int const argc, MQ_CST *args)"
+ENABLED_SECTIONS    += LinkCreateChild5
+
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqC* ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=bool ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=MQ_SIZE ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=bool ctx.LinkIsConnected()"
+ALIASES		    += "Exit=ctx.Exit()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\n  ctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(MQ_CST const token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(MQ_CST const token, IService * const callback)"
+ALIASES		    += "SendEND_AND_CALLBACK2=ctx.SendEND_AND_CALLBACK(MQ_CST const token, CallbackF const callback)"
+ENABLED_SECTIONS    += SendEND_AND_CALLBACK2
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendB(MQ_BIN value, MQ_SIZE len)"
+ALIASES		    += "SendBDY=ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
+
+# READ DATE
+ALIASES		    += "read_example=\verbatim num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endverbatim"
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadN=ctx.ReadN(MQ_BIN &value, MQ_SIZE &len)"
+ALIASES		    += "ReadBDY=ctx.ReadBDY(MQ_BIN &value, MQ_SIZE &len)"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(MqC otherCtx)"
+ALIASES		    += "ReadGetNumItems=MQ_SIZE ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=MQ_BOL ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(MQ_BUF buffer=NULL)"
+ALIASES		    += "ReadL_START2=ctx.ReadL_START(const MqBufferC& buffer)"
+ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_START3=ctx.ReadL_START(MqBufferC * const buffer)"
+ENABLED_SECTIONS    += ReadL_START3
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void ServerSetup() {\n\
+  ServiceCreate (\"SRV1\", CallbackF(&MyServer::SRV1));\n\
+}\n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST token, IService * callback)"
+ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF callback)"
+ENABLED_SECTIONS    += ServiceCreate2
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
+ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "ServiceGetToken=MQ_CST ctx.ServiceGetToken()"
+ALIASES		    += "ServiceIsTransaction=bool ctx.ServiceIsTransaction()"
+ALIASES		    += "ServiceGetFilter=MqC* ctx.ServiceGetFilter([int id=0])"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(const int id, struct MqBufferLS * args = NULL)"
+ALIASES		    += "SlaveWorker2=ctx.SlaveWorkerVA(const int id, va_list args)"
+ENABLED_SECTIONS    += SlaveWorker2
+ALIASES		    += "SlaveWorker3=ctx.SlaveWorkerV(const int id, MQ_CST ... , NULL)"
+ENABLED_SECTIONS    += SlaveWorker3
+ALIASES		    += "SlaveWorker4=ctx.SlaveWorkerVT(const int id, vector<MQ_CST>& args)"
+ENABLED_SECTIONS    += SlaveWorker4
+ALIASES		    += "SlaveWorker5=ctx.SlaveWorkerVC(const int id, int const argc, MQ_CST args[])"
+ENABLED_SECTIONS    += SlaveWorker5
+ALIASES             += "SlaveWorker_example=\code ctx.SlaveWorkerV (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\", NULL); \endcode"
+
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(const int id, MqC *const slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(const int id)"
+ALIASES		    += "SlaveGet=MqC* ctx.SlaveGet(const int id)"
+ALIASES		    += "SlaveGetMaster=MqC* ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=bool ctx.SlaveIs()"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\self support 2 different buffer objects: \n\
+ -# the \e libmsgque original buffer called #MQ_BUF or #MqBufferS \n\
+ -# a \self wrapper called \c MqBufferC \n\
+ . \n\
+Both objects are linked: \n\
+\code \n\
+MqBufferC buf = ctx.ReadU(); \n\
+MQ_BUF buf2 = buf.GetU(); \n\
+\endcode \n\
+1. Example: \n\
+\code \n\
+MqBufferC buf = ctx.ReadU(); \n\
+if (buf.GetType() == MQ_STRT) \n\
+  printf(buf.GetC()); \n\
+\endcode \n\
+2. Example: \n\
+\code \n\
+MQ_BUF buf = ctx.ReadU(); \n\
+if (buf->type == MQ_STRT) \n\
+  printf(buf->cur.C); \n\
+\endcode"
+ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
+ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE("
+ALIASES		    += "BufferType=enum MqTypeE buffer.GetType()"
+
+ALIASES		    += "Y=#MQ_BYT"
+ALIASES		    += "O=#MQ_BOL"
+ALIASES		    += "S=#MQ_SRT"
+ALIASES		    += "I=#MQ_INT"
+ALIASES		    += "F=#MQ_FLT"
+ALIASES		    += "W=#MQ_WID"
+ALIASES		    += "D=#MQ_DBL"
+ALIASES		    += "C=#MQ_CST"
+ALIASES		    += "B=#MQ_BIN"
+ALIASES		    += "U=#MQ_BUF"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try { \n\
+ i = ctx.ReadI(); \n\
+} catch (const exception& ex) { \n\
+ ctx.ErrorSet(ex); \n\
+ cout << ctx.ErrorGetText() << endl; \n\
+ ctx.ErrorReset(); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqCException ex</I>"
+ALIASES		    += "ErrorGetText=string ex.what() or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=int ex.num() or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(const exception& ex)"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+
+
+

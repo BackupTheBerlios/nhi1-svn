@@ -1,0 +1,217 @@
+.TH "MqSetupS" n "15 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqSetupS \- application-programmer configuration data  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_STR\fP \fBident\fP"
+.br
+.R "set the application identifier "
+.ti -1c
+.RI "struct \fBMqLinkSetupS\fP \fBChild\fP"
+.br
+.R "setup/cleanup a \fICHILD\fP object "
+.ti -1c
+.RI "struct \fBMqLinkSetupS\fP \fBParent\fP"
+.br
+.R "setup/cleanup a \fIPARENT\fP object "
+.ti -1c
+.RI "struct \fBMqCallbackS\fP \fBBgError\fP"
+.br
+.R "define the \fIbackground-error-interface\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBisServer\fP"
+.br
+.R "change the context to act as \fIserver-context\fP (\fItrue\fP) or not (\fIfalse\fP) "
+.ti -1c
+.RI "struct \fBMqCallbackS\fP \fBServerSetup\fP"
+.br
+.R "define the \fIserver-setup-interface\fP "
+.ti -1c
+.RI "struct \fBMqCallbackS\fP \fBServerCleanup\fP"
+.br
+.R "define the \fIserver-cleanup-interface\fP "
+.ti -1c
+.RI "struct \fBMqCallbackS\fP \fBEvent\fP"
+.br
+.R "Create a link to the calling tool event-handling queue. "
+.ti -1c
+.RI "struct \fBMqFactoryS\fP \fBFactory\fP"
+.br
+.R "define the \fIserver-cleanup-interface\fP "
+.ti -1c
+.RI "\fBMqSetupF\fP \fBfThreadInit\fP"
+.br
+.R "setup and initialize a thread before a new thread is created by \fBlibmsgque\fP "
+.ti -1c
+.RI "\fBMqSetupF\fP \fBfForkInit\fP"
+.br
+.R "setup and initialize a fork-process before a new fork-process is created by \fBlibmsgque\fP "
+.ti -1c
+.RI "\fBMqExitF\fP \fBfProcessExit\fP"
+.br
+.R "exit/cleanup a process "
+.ti -1c
+.RI "\fBMqExitF\fP \fBfThreadExit\fP"
+.br
+.R "exit/cleanup a thread "
+.ti -1c
+.RI "\fBMqHelpF\fP \fBfHelp\fP"
+.br
+.R "Create a link to the calling tool \fIhelp\fP function. "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBignoreExit\fP"
+.br
+.R "do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown "
+.in -1c
+.SH "Detailed Description"
+.PP 
+application-programmer configuration data 
+.PP
+Definition at line 737 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "struct \fBMqCallbackS\fP \fBMqSetupS.BgError\fP\fC [read]\fP"
+.PP
+define the \fIbackground-error-interface\fP 
+.PP
+A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the aplication continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP. 
+.PP
+Definition at line 763 of file msgque.h.
+.SS "struct \fBMqLinkSetupS\fP \fBMqSetupS.Child\fP\fC [read]\fP"
+.PP
+setup/cleanup a \fICHILD\fP object 
+.PP
+\fBAttention:\fP
+.RS 4
+always call this functions using \fBMqLinkCreate\fP and \fBMqLinkDelete\fP 
+.RE
+.PP
+
+.PP
+Definition at line 750 of file msgque.h.
+.SS "struct \fBMqCallbackS\fP \fBMqSetupS.Event\fP\fC [read]\fP"
+.PP
+Create a link to the calling tool event-handling queue. 
+.PP
+Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
+.PP
+\fBAttention:\fP
+.RS 4
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
+.RE
+.PP
+
+.PP
+Definition at line 804 of file msgque.h.
+.SS "struct \fBMqFactoryS\fP \fBMqSetupS.Factory\fP\fC [read]\fP"
+.PP
+define the \fIserver-cleanup-interface\fP 
+.PP
+The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
+.PP
+The \fIfactory-interface\fP is used to create a new:
+.IP "\(bu" 2
+\fIapplication-context\fP (C, TCL) or a new \fIclass-instance\fP (C++, C#, JAVA, PYTHON, PERL, VB.NET)
+.IP "\(bu" 2
+\fIserver-child-context\fP or \fIslave-child-context\fP using \fBLinkCreateChild\fP
+.IP "\(bu" 2
+\fIserver-parent-context\fP using the \fBstartAs\fP option \fI--thread\fP 
+.IP "\(bu" 2
+\fIslave-worker-context\fP using \fBSlaveWorker\fP
+.IP "\(bu" 2
+\fIfilter-parent-context\fP using the \fBstartAs\fP option \fI--fork\fP or \fI--thread\fP 
+.PP
+
+.PP
+Definition at line 819 of file msgque.h.
+.SS "\fBMqSetupF\fP \fBMqSetupS.fForkInit\fP"
+.PP
+setup and initialize a fork-process before a new fork-process is created by \fBlibmsgque\fP 
+.PP
+Definition at line 825 of file msgque.h.
+.SS "\fBMqHelpF\fP \fBMqSetupS.fHelp\fP"
+.PP
+Create a link to the calling tool \fIhelp\fP function. 
+.PP
+type default option application context  POINTER NULL NO server/client parent  
+.PP
+As a service to the programmer the \fBlibmsgque\fP startup code in \fBMqLinkCreate\fP checks for the both options \fC-h\fP and \fC--help\fP to provide a tool-specific help-page and exit. 
+.PP
+Definition at line 841 of file msgque.h.
+.SS "\fBMqExitF\fP \fBMqSetupS.fProcessExit\fP"
+.PP
+exit/cleanup a process 
+.PP
+Definition at line 828 of file msgque.h.
+.SS "\fBMqExitF\fP \fBMqSetupS.fThreadExit\fP"
+.PP
+exit/cleanup a thread 
+.PP
+Definition at line 831 of file msgque.h.
+.SS "\fBMqSetupF\fP \fBMqSetupS.fThreadInit\fP"
+.PP
+setup and initialize a thread before a new thread is created by \fBlibmsgque\fP 
+.PP
+Definition at line 822 of file msgque.h.
+.SS "\fBMQ_STR\fP \fBMqSetupS.ident\fP"
+.PP
+set the application identifier 
+.PP
+The \fIapplication-identifier\fP is used to modify the client or filter behaviour depending on the \fIidentifier-value\fP of the \fIremote-context\fP. The \fIidentifier\fP is \fBnot\fP changeable by the user, like the \fBname\fP configuration option, because this is a 'build-in' feature set by the \fIprogrammer\fP. (default: \fINothing\fP) 
+.PP
+Definition at line 746 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqSetupS.ignoreExit\fP"
+.PP
+do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
+.PP
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIfalse\fP) 
+.PP
+Definition at line 851 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqSetupS.isServer\fP"
+.PP
+change the context to act as \fIserver-context\fP (\fItrue\fP) or not (\fIfalse\fP) 
+.PP
+A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIfalse\fP) 
+.PP
+Definition at line 769 of file msgque.h.
+.SS "struct \fBMqLinkSetupS\fP \fBMqSetupS.Parent\fP\fC [read]\fP"
+.PP
+setup/cleanup a \fIPARENT\fP object 
+.PP
+\fBAttention:\fP
+.RS 4
+always call this functions using \fBMqLinkCreate\fP and \fBMqLinkDelete\fP 
+.RE
+.PP
+
+.PP
+Definition at line 754 of file msgque.h.
+.SS "struct \fBMqCallbackS\fP \fBMqSetupS.ServerCleanup\fP\fC [read]\fP"
+.PP
+define the \fIserver-cleanup-interface\fP 
+.PP
+This interface is used to cleanup an onl \fIserver-context-link\fP, like a destructor, and is called at the end of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fItrue\fP. 
+.PP
+Definition at line 785 of file msgque.h.
+.SS "struct \fBMqCallbackS\fP \fBMqSetupS.ServerSetup\fP\fC [read]\fP"
+.PP
+define the \fIserver-setup-interface\fP 
+.PP
+This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fItrue\fP. 
+.PP
+Definition at line 778 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

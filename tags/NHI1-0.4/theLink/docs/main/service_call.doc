@@ -1,0 +1,292 @@
+/** 
+
+\page service_call HOWTO Do A Service Call ?
+
+\section service_call_send HOWTO "send" the data
+
+A data-package is \e send in two different scenarios:
+  -# on a \e client to call a service on the server
+  -# on a \e server to answer a service call from the client
+
+Sending data is an \b active task. Active mean, that the sending have to be triggered by 
+the software-workflow.
+
+Sending data is a sequence of commands to prepare a data-package and one command
+to send this package.
+
+ - using \libmsgque code:
+  - on a client \code
+MqSendSTART (ctx);
+MqSendI (ctx, myInteger);
+MqSendC (ctx, "myString");
+MqErrorCheck (MqSendEND (ctx, "IDNT", NULL));
+\endcode
+  - on a server \code
+MqSendSTART (ctx);
+MqSendI (ctx, myInteger);
+MqSendC (ctx, "myString");
+MqErrorCheck (MqSendRETURN (ctx));
+\endcode
+  .
+ - using \javamsgque, \csmsgque, and \ccmsgque code: 
+  - on the client: \verbatim
+ctx.SendSTART();
+ctx.SendI(myInteger);
+ctx.sendC(myString);
+ctx.SendEND("IDNT");
+\endverbatim
+  - on the server: \verbatim
+ctx.SendSTART();
+ctx.SendI(myInteger);
+ctx.sendC(myString);
+ctx.SendRETURN();
+\endverbatim
+ - using \pymsgque and \vbmsgque code: 
+  - on the client: \verbatim
+ctx.SendSTART()
+ctx.SendI(myInteger)
+ctx.sendC(myString)
+ctx.SendEND("IDNT")
+\endverbatim
+  - on the server: \verbatim
+ctx.SendSTART()
+ctx.SendI(myInteger)
+ctx.sendC(myString)
+ctx.SendRETURN()
+\endverbatim
+ - using \tclmsgque code: 
+  - on the client: \verbatim
+$ctx SendSTART
+$ctx SendI myInteger
+$ctx sendC myString
+$ctx SendEND IDNT
+\endverbatim
+  - on the server: \verbatim
+$ctx SendSTART
+$ctx SendI myInteger
+$ctx sendC myString
+$ctx SendRETURN
+\endverbatim
+ - using \perlmsgque code: 
+  - on the client: \verbatim
+$ctx->SendSTART
+$ctx->SendI myInteger
+$ctx->sendC myString
+$ctx->SendEND IDNT
+\endverbatim
+  - on the server: \verbatim
+$ctx->SendSTART
+$ctx->SendI myInteger
+$ctx->sendC myString
+$ctx->SendRETURN
+\endverbatim
+ .
+
+Important in the code from above is the last command #MqSendEND because this
+is just one of three possibilities:
+<TABLE>
+  <TR>
+    <TH>command</TH>
+    <TH>description</TH>
+    <TH>C</TH>
+    <TH>C++</TH>
+    <TH>C#</TH>
+    <TH>java</TH>
+    <TH>python</TH>
+    <TH>tcl</TH>
+    <TH>perl</TH>
+    <TH>VB.NET</TH>
+  </TR>
+  <TR>
+    <TD>#MqSendEND</TD>
+    <TD>Do a service-call without return data</TD>
+    <TD>\ref c_SendEND "YES"</TD>
+    <TD>\ref cc_SendEND "YES"</TD>
+    <TD>\ref cs_SendEND "YES"</TD>
+    <TD>\ref java_SendEND "YES"</TD>
+    <TD>\ref py_SendEND "YES"</TD>
+    <TD>\ref tcl_SendEND "YES"</TD>
+    <TD>\ref perl_SendEND "YES"</TD>
+    <TD>\ref vb_SendEND "YES"</TD>
+  </TR>
+  <TR>
+    <TD>#MqSendEND_AND_WAIT</TD>
+    <TD>Do a synchronous service-call with return data</TD>
+    <TD>\ref c_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref cc_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref cs_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref java_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref py_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref tcl_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref perl_SendEND_AND_WAIT "YES"</TD>
+    <TD>\ref vb_SendEND_AND_WAIT "YES"</TD>
+  </TR>
+  <TR>
+    <TD>#MqSendEND_AND_CALLBACK</TD>
+    <TD>Do a asynchronous service-call with return data</TD>
+    <TD>\ref c_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref cc_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref cs_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref java_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref py_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref tcl_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref perl_SendEND_AND_CALLBACK "YES"</TD>
+    <TD>\ref vb_SendEND_AND_CALLBACK "YES"</TD>
+  </TR>
+</TABLE>
+
+To send a data-package is one task, to send it to the \e right receiver is an other one.
+The \e right receiver is identified with the \e token parameter argument.
+This parameter have to be a \b 4 character string. 
+You'll probably ask "why 4?" the answer is that this string have should be "human" readable
+and easy to "compare". As solution this string is mapped to a 4 byte
+integer used to find the proper key/value entry in the service-hash-table on the server.
+(in short: to search an \e integer is much faster as to search a \e string)
+
+
+\section service_call_recv HOWTO "read" the data
+
+A data-package is \e read in two different scenarios:
+  -# on a \e server to serve an incoming service-call from the client
+  -# on a \e client to process the return-data from a previous service-call 
+  .
+Reading data is a \b passive task in opposite to sending data which is an \b active task.
+Passive mean that the \e read is triggered by an incoming data-package and not by the
+software-workflow.
+
+To setup a \e passive task two requirements are necessary:
+  -# adding the service
+  -# start the event-loop to listen on the incoming packages
+  .
+
+To add a service the following code is necessary:
+
+ - using \libmsgque code: 
+  - on a server: \code 
+MqErrorCheck (MqServiceCreate (ctx, "ECUL", Ot_ECUL, NULL, NULL)) ;
+\endcode
+  - on a client: \code
+MqErrorCheck (MqSendEND_AND_CALLBACK(ctx, "ECUL", RET_ECUL, NULL, NULL));
+\endcode
+  .
+ - using \ccmsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", CallbackF(&MyClass::CNFG)); or
+ctx.ServiceCreate("ECUL", static_cast<IService*>(MyObject));
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", CallbackF(&MyClass::RET_ECUL())); or
+ctx.SendEND_AND_CALLBACK("ECUL", static_cast<IService*>(MyObject));
+\endcode
+  .
+ - using \csmsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", new Ot_ECUL()); or
+ctx.ServiceCreate("ECUL", Ot_ECUL_delegeate));
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", new RET_ECUL()); or
+ctx.SendEND_AND_CALLBACK("ECUL", RET_ECUL_delegate);
+\endcode
+  .
+ - using \javamsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", new Ot_ECUL());
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", new RET_ECUL());
+\endcode
+  .
+ - using \pymsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", Ot_ECUL) 
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", RET_ECUL)
+\endcode
+  .
+ - using \tclmsgque code: 
+  - on a server: \verbatim 
+$ctx ServiceCreate ECUL Ot_ECUL 
+\endverbatim
+  - on a client: \verbatim
+$ctx SendEndAndCallback ECUL RET_ECUL
+\endverbatim
+  .
+ - using \perlmsgque code: 
+  - on a server: \code 
+$ctx->ServiceCreate("ECUL", Ot_ECUL);
+\endcode
+  - on a client: \code
+$ctx->SendEND_AND_CALLBACK("ECUL", \&RET_ECUL);
+\endcode
+  .
+ - using \vbmsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", AddressOf Ot_ECUL) 
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", AddressOf RET_ECUL)
+\endcode
+  .
+ .
+
+To start the event-loop and wait for 10 seconds for the return message
+the following code is used:
+
+ - using \libmsgque code: \code
+MqErrorCheck (MqProcessEvent (msgque, 10, MQ_WAIT | MQ_WAIT_FOREVER));
+\endcode
+ - using \ccmsgque code: \code
+ctx.ProcessEvent(10, MQ_WAIT_FOREVER);
+\endcode
+ - using \csmsgque code: \code
+ctx.ProcessEvent(10, MqS.WAIT.FOREVER);
+\endcode
+ - using \javamsgque code: \code
+ctx.ProcessEvent(10, MqS.WAIT.FOREVER);
+\endcode
+ - using \pymsgque code: \code
+ctx.ProcessEvent(timeout=10, wait="FOREVER")
+\endcode
+ - using \tclmsgque code: \code
+$ctx ProcessEvent -timeout 10 -wait FOREVER
+\endcode
+ - using \perlmsgque code: \code
+$ctx->ProcessEvent({timeout => 10, wait => "FOREVER"});
+\endcode
+ - using \tclmsgque code: \code
+ctx.ProcessEvent(10, MqS.WAIT.FOREVER)
+\endcode
+ .
+
+Finally to \e read the package-data the following code is necessary:
+
+ - using \libmsgque code: \code
+MqErrorCheck (MqReadI (ctx, &myInteger));
+MqErrorCheck (MqReadC (ctx, &myString));
+\endcode
+ - using \javamsgque, \csmsgque, and \ccmsgque code: \code
+myInteger = ctx.ReadI();
+myString = ctx.ReadC();
+\endcode
+ - using \pymsgque and \vbmsgque code: \code
+myInteger = ctx.ReadI()
+myString = ctx.ReadC()
+\endcode
+ - using \tclmsgque code: \code
+set myInteger [$ctx ReadI]
+set myString [$ctx ReadC]
+\endcode
+ - using \perlmsgque code: \code
+myInteger = $ctx->ReadI();
+myString = $ctx->ReadC();
+\endcode
+ .
+
+The \libmsgque API is type-save and create an \e error if the requested
+type like \c MqReadI is not compatible with the next available type in the 
+data-package.
+
+
+*/

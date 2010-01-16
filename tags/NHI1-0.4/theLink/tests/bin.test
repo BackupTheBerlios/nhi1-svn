@@ -1,0 +1,141 @@
+#+
+#§  \file       theLink/tests/bin.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set MAX_INT    [tclmsgque const maxI]
+set MIN_INT    [tclmsgque const minI]
+set MAX_WID    [tclmsgque const maxW]
+set MIN_WID    [tclmsgque const minW]
+set MAX_DBL    [tclmsgque const maxD]
+set MIN_DBL    [tclmsgque const minD]
+
+set WID	[expr { $tcl_platform(byteOrder) eq "bigEndian" ? "W" : "w"}]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test bin-1-($I|$B|$C|$S) {echo datatype (BIN)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadB SendB [binary format w 7810179016327718216]]
+} "bytearray"
+
+test bin-2-($I|$B|$C|$S) {echo binary data} \
+    -body           {Echo1 $FH_LAST ECOB ReadB SendB [binary format w 7810179016327718216]} \
+    -result         HelloTcl
+
+test bin-4-($I|$B|$C|$S) {echo wid data} \
+    -body           {
+	binary scan [Echo1 $FH_LAST ECOB ReadB SendB [binary format ${WID}1 $MAX_WID]] ${WID}1 str
+	set str
+    } \
+    -result         $MAX_WID
+
+test bin-5-($I|$B|$C|$S) {echo dbl data} \
+    -body           {
+	binary scan [Echo1 $FH_LAST ECOB ReadB SendB [binary format d1 $MAX_DBL]] d1 str
+	set str
+    } \
+    -result         $MAX_DBL
+
+test bin-7-($I|$B|$C|$S) {echo wid data} \
+    -body           {
+	binary scan [Echo1 $FH_LAST ECOB ReadB SendB [binary format ${WID}1 $MIN_WID]] ${WID}1 str
+	set str
+    } \
+    -result         $MIN_WID
+
+test bin-8-($I|$B|$C|$S) {echo dbl data} \
+    -body           {
+	binary scan [Echo1 $FH_LAST ECOB ReadB SendB [binary format d1 $MIN_DBL]] d1 str
+	set str
+    } \
+    -result         $MIN_DBL
+
+test bin-9-($I|$B|$C|$S) {echo str data} \
+    -body           {Echo1 $FH_LAST ECOB ReadB SendC "123456789"} \
+    -result         123456789
+
+test bin-15-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOB
+      $FH_LAST ReadB
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOB> <Num|213>*
+[sS]> (server-0) \[*MqReadB\] request more arguments than available*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+    
+
+
+
+
+
+
+
+

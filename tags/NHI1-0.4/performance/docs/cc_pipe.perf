@@ -1,0 +1,10 @@
+> nothread/NHI1-0.4/theLink/tests/client --all @ nothread/NHI1-0.4/theLink/tests/ccserver
+C> (client:7975) [2010-01-15:09-58-50] [0-0-0x6208a0-main]: start: --------------------------------------
+C> (client:7975) [2010-01-15:09-58-50] [0-0-0x6208a0-statistics]:                      MqSendEND:       4.26
+C> (client:7975) [2010-01-15:09-58-51] [0-0-0x6208a0-statistics]:         MqSendEND_AND_CALLBACK:       9.22
+C> (client:7975) [2010-01-15:09-58-53] [0-0-0x6208a0-statistics]:             MqSendEND_AND_WAIT:      14.36
+C> (client:7975) [2010-01-15:09-58-54] [0-0-0x6208a0-statistics]:                  parent create:    1288.10
+C> (client:7975) [2010-01-15:09-58-54] [0-0-0x6208a0-statistics]:                  parent delete:     168.47
+C> (client:7975) [2010-01-15:09-58-54] [0-0-0x6208a0-statistics]:                   child create:      74.53
+C> (client:7975) [2010-01-15:09-58-54] [0-0-0x6208a0-statistics]:                   child delete:      24.81
+C> (client:7975) [2010-01-15:09-58-54] [0-0-0x6208a0-main]: end: ----------------------------------------

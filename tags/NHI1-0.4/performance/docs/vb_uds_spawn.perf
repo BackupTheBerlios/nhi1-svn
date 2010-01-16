@@ -1,0 +1,11 @@
+> mono nothread/NHI1-0.4/theLink/tests/vbserver.exe --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.4/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:16633) [2010-01-15:10-03-11] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:16633) [2010-01-15:10-03-11] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.05
+C> (client:16633) [2010-01-15:10-03-12] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      11.22
+C> (client:16633) [2010-01-15:10-03-15] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      16.76
+C> (client:16633) [2010-01-15:10-03-18] [0-0-0x6209a0-statistics]:                  parent create:   28958.83
+C> (client:16633) [2010-01-15:10-03-18] [0-0-0x6209a0-statistics]:                  parent delete:    2750.37
+C> (client:16633) [2010-01-15:10-03-18] [0-0-0x6209a0-statistics]:                   child create:     164.10
+C> (client:16633) [2010-01-15:10-03-18] [0-0-0x6209a0-statistics]:                   child delete:      25.46
+C> (client:16633) [2010-01-15:10-03-18] [0-0-0x6209a0-main]: end: ----------------------------------------

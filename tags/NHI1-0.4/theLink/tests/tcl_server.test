@@ -1,0 +1,263 @@
+#+
+#§  \file       theLink/tests/tcl_server.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint tcl]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set BLOCK_1 true
+#set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if $BLOCK_1 {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C tcl] {
+
+##
+## -----------------------------------------------------------------------
+## tcl_server test
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test tcl-server-1-($I|$B|$C|$S) {nothing return} \
+    -body	  {
+      EchoL $FH_LAST EVAL SendC {}
+    } \
+    -match	  glob \
+    -result	  {}
+
+test tcl-server-2-($I|$B|$C|$S) {ErrorC without prefix} \
+    -body	  {
+      EchoL $FH_LAST EVAL SendC {
+	$ctx ErrorC
+      }
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>*
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> ErrorC prefix ..."*}
+
+test tcl-server-3-($I|$B|$C|$S) {ErrorC without errnum} \
+    -body	  {
+      EchoL $FH_LAST EVAL SendC {
+	$ctx ErrorC myprefix
+      }
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>*
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> ErrorC myprefix errnum ..."*}
+
+test tcl-server-4-($I|$B|$C|$S) {ErrorC without string} \
+    -body	  {
+      EchoL $FH_LAST EVAL SendC {
+	$ctx ErrorC myprefix 9
+      }
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|1>*
+[sS]> (server-0) \[ErrorSet] wrong # args: should be "<MqS-*> ErrorC myprefix 9 error_message ..."*}
+
+test tcl-server-5-($I|$B|$C|$S) {ErrorC without string} \
+    -body	  {
+      EchoL $FH_LAST EVAL SendC {
+	$ctx ErrorC myprefix 9 "this is an error"
+      }
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|9>*
+[sS]> (server-0) \[myprefix] this is an error}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+} ; ## false
+
+if $BLOCK_2 {
+
+SetConstraints all
+
+set tclserver [makeFile {
+  package require TclMsgque
+  proc ServerSetup {ctx} {}
+  set srv [tclmsgque MqS]
+  $srv ConfigSetName server
+  $srv ConfigSetDebug $env(TS_DEBUG)
+  $srv ConfigSetServerSetup ServerSetup
+  if {[catch {
+    $srv LinkCreate {*}$argv
+    $srv ProcessEvent -wait FOREVER
+  }]} {
+    $srv ErrorSet
+  }
+  $srv Exit
+} tclserver.[pid]]
+
+
+test tcl-server-X3 {server with defined UDS handle normal startup} \
+    -constraints    {local uds} \
+    -setup	    {   
+	set UDS [FindFreeFile uds]
+	catch {exec $TCLSH $tclserver --uds --file $UDS --spawn >&@stdout &} PID
+	set ctx [tclmsgque MqS]
+    } \
+    -cleanup	{
+	$ctx Delete
+	catch {exec $::KILL $PID}
+	file delete -force $UDS
+    } \
+    -body       {
+	$ctx LinkCreate --name client --uds --file $UDS --debug $env(TS_DEBUG)
+    } \
+    -match	glob \
+    -result	{}
+
+test tcl-server-X4 {server with defined UDS handle problem startup} \
+    -constraints    {local uds} \
+    -setup	{
+	set UDS [FindFreeFile uds]
+	set tclsubserver [makeFile [subst {
+	  package require TclMsgque
+	  proc ServerSetup {ctx} {}
+	  tclmsgque Main {
+	    set srv \[tclmsgque MqS]
+	    \$srv ConfigSetName server
+	    \$srv ConfigSetDebug $env(TS_DEBUG)
+	    \$srv ConfigSetServerSetup ServerSetup
+	    if {\[catch {
+	      \$srv LinkCreate --uds --file $UDS --spawn {*}\$argv
+	      \$srv ProcessEvent -wait FOREVER
+	    }]} {
+	      \$srv ErrorSet
+	    }
+	    \$srv Exit
+	  }
+	}] tclsubserver.[pid]]
+	catch {exec $TCLSH $tclsubserver >&@stdout &} PID
+	set ctx [tclmsgque MqS]
+    } \
+    -cleanup	{
+	$ctx Delete
+	catch {exec $::KILL $PID}
+	file delete -force $UDS
+    } \
+    -body       {
+	$ctx LinkCreate --name client --uds --file $UDS --debug $env(TS_DEBUG) --timeout $env(TS_TIMEOUT)
+    } \
+    -match	glob \
+    -result	{}
+
+test tcl-server-X5 {server with defined TCP handle problem startup} \
+    -constraints    {local tcp} \
+    -setup	{
+	set PORT [FindFreePort]
+	set tclsubserver [makeFile [subst {
+	  package require TclMsgque
+	  proc ServerSetup {ctx} {}
+	  set srv \[tclmsgque MqS]
+	  \$srv ConfigSetName server
+	  \$srv ConfigSetDebug $env(TS_DEBUG)
+	  \$srv ConfigSetServerSetup ServerSetup
+	  if {\[catch {
+	    \$srv LinkCreate --tcp --port $PORT --spawn {*}\$argv
+	    \$srv ProcessEvent -wait FOREVER
+	  }]} {
+	    \$srv ErrorSet
+	  }
+	  \$srv Exit
+	}] tclsubserver.[pid]]
+	catch {exec $TCLSH $tclsubserver >&@stdout &} PID
+	set ctx [tclmsgque MqS]
+    } \
+    -cleanup	{
+	catch {$ctx Delete}
+	catch {exec $::KILL $PID}
+    } \
+    -body       {
+	$ctx LinkCreate --name client --tcp --port $PORT --debug $env(TS_DEBUG)
+    } \
+    -match	glob \
+    -result	{}
+
+test tcl-server-X6 {start tcl server with --fork on thread enabled tcl} \
+    -constraints    {thread} \
+    -body       {
+	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --fork
+    } \
+    -match	glob \
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+
+test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
+    -constraints    {thread} \
+    -body       {
+	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
+    } \
+    -match	glob \
+    -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden*}
+}
+
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+

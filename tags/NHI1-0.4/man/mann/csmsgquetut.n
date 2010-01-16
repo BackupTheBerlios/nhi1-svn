@@ -1,0 +1,292 @@
+.TH "csmsgque Tutorial" n "15 Jan 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque Tutorial \- .SH "INDEX"
+.PP
+\fBINTRODUCTION\fP
+.br
+ \fBBUILD\fP
+.br
+ \fBSERVER\fP
+.br
+ \fBCLIENT\fP
+.br
+ \fBFILTER\fP
+.br
+.SH "INTRODUCTION"
+.PP
+\fBcsmsgque\fP is the C# language binding of the \fBlibmsgque\fP library.
+.br
+ The library was designed to simplify the client/server development using the following design rules:
+.IP "1." 4
+programming language independent
+.IP "2." 4
+operating system independent
+.IP "3." 4
+processor hardware independent
+.PP
+The C# language binding provide the following basic components:
+.IP "\(bu" 2
+abstract class of the \fBcsmsgque\fP object: \fBMqS ctx=new MqS()\fP
+.IP "\(bu" 2
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+.IP "\(bu" 2
+interface: \fBIFactory\fP to create a new application instance
+.IP "\(bu" 2
+interface: \fBIBgError\fP to act on asyncrone errors
+.IP "\(bu" 2
+interface: \fBIEvent\fP to process background events
+.IP "\(bu" 2
+adding and removing \fBservices\fP
+.PP
+.SH "BUILD"
+.PP
+The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
+.SS "UNIX"
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBcsmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/C#/Makefile\fP.am 
+.PP
+.PP
+.nf
+RULE_CS_EXE = $(CSCOMP) -v -nologo $(CSHARP_DEBUG) -reference:../../csmsgque/csmsgque.dll -out:$@ -target:exe '$<'
+.fi
+.PP
+ ... 
+.PP
+.nf
+MyServer.exe: $(srcdir)/MyServer.cs ../../csmsgque/csmsgque.dll
+        $(RULE_CS_EXE)
+
+.fi
+.PP
+ ... 
+.PP
+.nf
+MyClient.exe: $(srcdir)/MyClient.cs ../../csmsgque/csmsgque.dll
+        $(RULE_CS_EXE)
+
+.fi
+.PP
+.SS "WINDOWS"
+The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
+.SH "SERVER"
+.PP
+A \fBcsmsgque\fP server requires the following setup:
+.IP "1." 4
+file: \fCexample/C#/MyServer\fP.cs
+.IP "2." 4
+an instance of the abstract class \fBMqS ctx=new MqS()\fP
+.IP "3." 4
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+.IP "4." 4
+the interface \fBIFactory\fP to create a new application instance
+.PP
+The \fIminimal\fP server looks like:
+.PP
+.PP
+.nf
+
+using System;
+using csmsgque;
+
+namespace example {
+
+  sealed class MyServer : MqS, IServerSetup, IFactory {
+
+    // create new intances
+    MqS IFactory.Factory() {
+      return new MyServer();
+    }
+
+    // service to serve all incomming requests for token 'HLWO'
+    public void MyFirstService () {
+      SendSTART();
+      SendC('Hello World');
+      SendRETURN();
+    }
+
+    // define a service as link between the token 'HLWO' and the callback 'MyFirstService'
+    void IServerSetup.ServerSetup() {
+      ServiceCreate('HLWO', MyFirstService);
+    }
+
+    static void Main(string[] argv) {
+      MyServer srv = new MyServer();
+      try {
+        srv.LinkCreate(argv);
+        srv.ProcessEvent(MqS.WAIT.FOREVER);
+      } catch (Exception ex) {
+        srv.ErrorSet (ex);
+      }
+      srv.Exit();
+    }
+  }
+}
+.fi
+.PP
+.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
+.PP
+.PP
+.nf
+
+> mono MyServer.exe --tcp --port 2345 --thread
+.fi
+.PP
+.PP
+If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
+.PP
+.PP
+.nf
+
+> mono MyServer.exe --uds --file /path/to/any/file.uds --thread
+.fi
+.PP
+.PP
+Three things are important:
+.IP "1." 4
+the \fBsend\fP style of functions
+.IP "2." 4
+the \fBctx.ServiceCreate(string token, IService callback)\fP function
+.IP "3." 4
+a \fBconnected\fP context of type \fBMqS ctx=new MqS()\fP
+.PP
+Sending data is done using a minimum of 2 steps:
+.IP "1." 4
+First: start a data package with \fBctx.SendSTART()\fP
+.IP "2." 4
+Last: submit the a data package to the link target using one of:
+.IP "  \(bu" 4
+\fBctx.SendEND(string token)\fP
+.IP "  \(bu" 4
+\fBctx.SendEND_AND_WAIT(string token, [int timeout])\fP
+.IP "  \(bu" 4
+\fBctx.SendEND_AND_CALLBACK(string token, IService callback)\fP
+.IP "  \(bu" 4
+\fBctx.SendRETURN()\fP
+.PP
+
+.PP
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(string token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
+.PP
+Services are created with the \fBctx.ServiceCreate(string token, IService callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+.PP
+The \fBSERVICE CALLBACK\fP function has one parameter of type \fBMqS ctx=new MqS()\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBMqS ctx=new MqS()\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
+.SH "CLIENT"
+.PP
+A \fBcsmsgque\fP client requires the following setup:
+.IP "1." 4
+an instance of the abstract class \fBMqS ctx=new MqS()\fP
+.PP
+The \fIminimal\fP client looks like:
+.PP
+.PP
+.nf
+
+using System;
+using csmsgque;
+
+namespace example {
+
+  sealed class MyClient : MqS {
+
+    static void Main(string[] argv) {
+      MyClient c = new MyClient();
+      try {
+        c.LinkCreate(argv);
+        c.SendSTART();
+        c.SendEND_AND_WAIT('HLWO', 5);
+        Console.WriteLine(c.ReadC());
+      } catch (Exception ex) {
+        c.ErrorSet (ex);
+      }
+      c.Exit();
+    }
+  }
+}
+.fi
+.PP
+.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
+.PP
+.PP
+.nf
+
+> mono MyClient.exe --tcp --port 2345
+> Hello World
+.fi
+.PP
+.PP
+To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
+.PP
+.PP
+.nf
+
+> mono MyClient.exe --udp --file /path/to/any/file.uds
+> Hello World
+.fi
+.PP
+.PP
+To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
+.PP
+.PP
+.nf
+
+> mono MyClient.exe @ mono MyServer.exe
+> Hello World
+.fi
+.PP
+.SH "FILTER"
+.PP
+The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filter looks like:
+.PP
+.PP
+.nf
+
+using System;
+using csmsgque;
+namespace example {
+  sealed class manfilter : MqS, IFactory {
+    MqS IFactory.Factory () {
+      return new manfilter();
+    }
+    void FTR () {
+      MqS ftr = ServiceGetFilter();
+      ftr.SendSTART();
+      while (ReadItemExists()) {
+        ftr.SendC('<' + ReadC() + '>');
+      }
+      ftr.SendEND_AND_WAIT('+FTR');
+      SendRETURN();
+    }
+    static void Main(string[] argv) {
+      manfilter srv = new manfilter();
+      try {
+        srv.ConfigSetName('ManFilter');
+        srv.ConfigSetIsServer(true);
+        srv.LinkCreate(argv);
+        srv.ServiceCreate('+FTR', srv.FTR);
+        srv.ServiceProxy ('+EOF');
+        srv.ProcessEvent(MqS.WAIT.FOREVER);
+      } catch (Exception ex) {
+        srv.ErrorSet (ex);
+      }
+      srv.Exit();
+    }
+  }
+}
+
+.fi
+.PP
+ Use \fImanfilter.exe\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+
+.fi
+.PP
+ 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for csmsgque from the source code.

@@ -1,0 +1,10 @@
+> nothread/NHI1-0.4/theLink/tests/client --all @ perl nothread/NHI1-0.4/theLink/tests/server.pl
+C> (client:16963) [2010-01-15:10-03-19] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:16963) [2010-01-15:10-03-19] [0-0-0x6209a0-statistics]:                      MqSendEND:       8.66
+C> (client:16963) [2010-01-15:10-03-20] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      17.94
+C> (client:16963) [2010-01-15:10-03-23] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      24.10
+C> (client:16963) [2010-01-15:10-03-44] [0-0-0x6209a0-statistics]:                  parent create:  208319.58
+C> (client:16963) [2010-01-15:10-03-44] [0-0-0x6209a0-statistics]:                  parent delete:     463.26
+C> (client:16963) [2010-01-15:10-03-44] [0-0-0x6209a0-statistics]:                   child create:     115.45
+C> (client:16963) [2010-01-15:10-03-44] [0-0-0x6209a0-statistics]:                   child delete:      24.44
+C> (client:16963) [2010-01-15:10-03-44] [0-0-0x6209a0-main]: end: ----------------------------------------

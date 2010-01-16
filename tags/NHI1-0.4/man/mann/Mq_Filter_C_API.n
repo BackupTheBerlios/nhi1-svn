@@ -1,0 +1,164 @@
+.TH "Mq_Filter_C_API" n "15 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Filter_C_API \- modify data using filter technology  
+
+.PP
+modify data using filter technology 
+
+The filter mode is related to a special usage of the \fBlibmsgque\fP software called a command pipeline. To define a filter create a \fIserver\fP with:
+.IP "\(bu" 2
+\fBisServer\fP or \fBIServerSetup\fP
+.PP
+and add a factory interface:
+.IP "\(bu" 2
+\fBIFactory\fP
+.PP
+Every filter has \fBtwo\fP context one belongs to the \fIleft\fP command and one belongs to the \fIright\fP command: 
+.PP
+.nf
+
+ <-- left cmd --> <------- filter -------> <-- right cmd -->
+
+                  <-- left --><- right -->
+                  <- server -><- client ->
+                  <- master -><- slave -->
+                  <-context1-><-context2->
+
+  ... command1   @         filter         @   command2 ...
+
+.fi
+.PP
+ The \fIleft\fP context is created on application startup and the \fIright\fP context is created as \fIslave\fP of the \fIleft\fP context.
+.IP "\(bu" 2
+if the \fB@\fP argument is followed by an \fInormal\fP command (server) a local pipeline is created: 
+.PP
+.nf
+
+client @ filter @ server
+
+.fi
+.PP
+
+.IP "\(bu" 2
+if the \fB@\fP argument is followed by an option a non-local pipeline is created: 
+.PP
+.nf
+
+<------------ host-1 -------------> <-- network --> <---------- host-2 ----------->
+       <---- client arguments ---->                       <--- server arguments -->
+                <-- filter arg. -->
+                  <--- options --->
+
+client @ filter @ --tcp --port 7777   ...........   server --tcp --port 7777 --fork
+
+.fi
+.PP
+
+.PP
+.PP
+\fBBI-DIRECTIONAL FILTER\fP
+.br
+.PP
+A bi-directional filter allow a \fIdata-flow\fP in both directions and is used in a \fIclassical\fP client/server application: 
+.PP
+.nf
+
+    client ... <--> ... server
+
+.fi
+.PP
+ as a feature enhancement like a protocol-tunnelling: 
+.PP
+.nf
+
+    client @ mq2tunnel ... <--> ... tunnel2mq @ server
+
+.fi
+.PP
+ or to convert the protocol into an other protocol: 
+.PP
+.nf
+
+    client @ mq2soap ... <--> ... soap-server
+
+.fi
+.PP
+ To define a \fIbi-directional\fP filter a couple of commands provide support:
+.IP "\(bu" 2
+\fBServiceCreate\fP
+.IP "  \(bu" 4
+use the token \fB+ALL\fP to add a listener for \fIall\fP services. This feature is used for a tunnel to modify the body at all. (example: \fCaguard\fP)
+.PP
+
+.IP "\(bu" 2
+\fBServiceProxy\fP
+.IP "  \(bu" 4
+use this function to link the \fIleft\fP context with the \fIright\fP context identified with the slave-identifier \fIid\fP (default: 0). No data manipulation is performed.
+.PP
+
+.IP "\(bu" 2
+\fBServiceGetFilter\fP
+.IP "  \(bu" 4
+in a filter service the current context is used to \fIread\fP the data. To \fIsend\fP the data an other context, belonging to the \fIother\fP site of the communication, have to be used. This function return the context of the other site.
+.PP
+
+.IP "\(bu" 2
+\fBServiceGetToken\fP
+.IP "  \(bu" 4
+if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current token is not known. This function return the current token.
+.PP
+
+.IP "\(bu" 2
+\fBServiceIsTransaction\fP
+.IP "  \(bu" 4
+if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current transaction-status is not known. This function return the transaction-status as boolean with \fBtrue\fP (with-transaction) or \fBfalse\fP (without-transaction).
+.IP "  \(bu" 4
+\fBwith-transaction\fP: the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
+.IP "  \(bu" 4
+\fBwithout-transaction\fP: the package was send with \fBSendEND\fP
+.PP
+
+.IP "\(bu" 2
+\fBReadBDY\fP
+.IP "  \(bu" 4
+read and return the entire body as binary array. Use this array to apply a transformation to the body at all like encryption (example: \fCaguard\fP) or to save the body in a persistent storage for later use like transaction support (example: \fCatrans\fP)
+.PP
+
+.IP "\(bu" 2
+\fBSendBDY\fP
+.IP "  \(bu" 4
+send a binary array, as returned by \fBReadBDY\fP, to the filter target.
+.PP
+
+.PP
+\fBONE-DIRECTIONAL FILTER\fP
+.br
+.PP
+A one-directional filter is a special form of a bi-directional filter and allow a \fIdata-flow\fP from the \fIleft\fP to the \fIright\fP. This filter is well known from the \fBunix\fP shell to link different commands together: 
+.PP
+.nf
+
+    command1 | command2 | command3
+
+.fi
+.PP
+ A \fBlibmsgque\fP command pipeline is created with the special character \fB@\fP instead of \fB\fP| : 
+.PP
+.nf
+
+    msgcmd1 @ msgcmd2 @ msgcmd3
+
+.fi
+.PP
+ with every command have to use \fBlibmsgque\fP. To define a \fBlibmsgque\fP filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
+.IP "\(bu" 2
+\fB+FTR\fP : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \fB+FTR\fP service request.
+.IP "\(bu" 2
+\fB+EOF\fP : required to act on End-Of-Filter data and is called after all \fB+FTR\fP data was send. Sometimes the filter data can not be served as \fB+FTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the\fB+EOF\fP token is used to continue send \fB+FTR\fP data rows.
+.PP
+and send every data item with \fBSendEND_AND_WAIT\fP. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

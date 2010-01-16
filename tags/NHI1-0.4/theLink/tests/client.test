@@ -1,0 +1,252 @@
+#+
+#§  \file       theLink/tests/client.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+if {$env(USE_REMOTE)} return
+
+##
+## -----------------------------------------------------------------------
+## tests
+##
+
+SetConstraints all
+
+test client-1 {client/server uds link} \
+    -constraints  c \
+    -body       { Exec {*}[getClient client] --name client @ {*}[getServer c.pipe ] --name server } \
+    -match	glob \
+    -result	{NONE--C> (client:*) \[*\] \[0-0-*-main\]: start: ---*
+C> (client:*) \[*\] \[0-0-*-statistics\]:*MqSendEND_AND_WAIT:*
+C> (client:*) \[*\] \[0-0-*-main\]: end: ---*}
+
+test client-2 {client/server uds link} \
+    -constraints {c uds} \
+    -setup	{ 
+	set file [FindFreeFile]
+	Exec {*}[getServer c] --uds --file $file >&@stdout &
+    } \
+    -body       { Exec {*}[getClient client] --name client --uds --file $file } \
+    -match	glob \
+    -result	{NONE--C> (client:*) \[*\] \[0-0-*-main\]: start: ---*
+C> (client:*) \[*\] \[0-0-*-statistics\]:*MqSendEND_AND_WAIT:*
+C> (client:*) \[*\] \[0-0-*-main\]: end: ---*}
+
+test client-3 {client/server tcp link} \
+    -constraints {c tcp} \
+    -setup	{ 
+	set port [FindFreePort]
+	Exec {*}[getServer c] --tcp --port $port >&@stdout &
+    } \
+    -body       { Exec {*}[getClient client] --name client --tcp --port $port } \
+    -match	glob \
+    -result	{NONE--C> (client:*) \[*\] \[0-0-*-main\]: start: ---*
+C> (client:*) \[*\] \[0-0-*-statistics\]:*MqSendEND_AND_WAIT:*
+C> (client:*) \[*\] \[0-0-*-main\]: end: ---*}
+
+test client-4 {client help} \
+    -constraints  c \
+    -body       { Exec {*}[getClient client] --name client --help } \
+    -match	glob \
+    -result	{NONE--usage: *client \[OPTION\]... \[ARGUMENT\]...*
+  --all*
+  --send-perf*
+  --send-and-wait-perf*
+  --send-and-callback-perf*
+  --parent-perf*
+  --child-perf*
+
+  *client \[ARGUMENT\]... syntax:
+    *client \[OPTION\]... @ server \[OPTION\]... \[ARGUMENT\]
+
+  msgque \[OPTION\]:
+    --help-msgque    print msgque specific help
+
+  *client \[OPTION\]:
+    --num NUMBER     number of transactions
+    -h, --help       print this help
+}
+
+test client-4b {libmsgque help} \
+    -constraints  c \
+    -body       { Exec {*}[getClient client] --name client --help-msgque } \
+    -match	glob \
+    -result	{NONE--
+'--help-msgque' summarize:
+
+These are the options for the 'libmsgque' library passed by
+the second argument (argv) of 'MqLinkCreate'
+
+ msgque wrapper \[OPTION]:
+  --name str         the display name of the msgque      (default: executable)
+  --srvname str      the display name of the server      (default: executable)
+  --string           use string based protocol           (default: no=binary)
+  --silent           use silent mode                     (default: no)
+  --debug #          use debug level (0-9)               (default: 0)
+  --daemon pidfile   start as daemon and save the pid    (default: no)
+
+ generic tcp/uds io \[OPTION]:
+  --timeout #        timeout for connect                 (default: 10 sec)
+  --buffersize #     buffer size in bytes                (default: 4096)
+
+ create a new entity as \[OPTION]:
+  --fork             new process using 'fork'            (default: no)
+  --thread           new thread                          (default: no)
+  --spawn            new process using 'spawn'           (default: no)
+
+ tcp specific \[OPTION]:
+  --tcp              use a Tcp Sockets                   (default: no)
+   --host str        use 'str' as remote host name       (default: empty)
+   --port str        use 'str' as remote port name       (default: empty)
+   --myhost str      use 'str' as local host name        (default: empty)
+   --myport str      use 'str' as local port name        (default: empty)
+
+ uds specific \[OPTION]:
+  --uds              use Unix Domain Sockets             (default: no)
+   --file str        use 'str' as filename               (default: empty)
+
+ pipe specific \[OPTION]:
+  --pipe             use Socket-Pair Sockets             (default: yes)
+}
+
+test client-5 {server help} \
+    -constraints  c \
+    -body       { Exec {*}[getServer c] --help } \
+    -match	glob \
+    -result	{NONE--usage: *server \[OPTION]... \[ARGUMENT]...
+
+  This tool is the server part of the performance test toolkit and expect
+  packages from the libmsgque performance test and validation client.
+
+  *server \[ARGUMENT]... syntax:
+    aclient \[OPTION]... @ *server \[OPTION]... \[ARGUMENT]
+
+  msgque \[OPTION]:
+    --help-msgque    print msgque specific help
+
+  *server \[OPTION]:
+    -h, --help       print this help
+}
+
+test client-6a {client/server debug -2- message} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name client --debug 2 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -match   glob \
+    -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (server:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>*}
+
+test client-6b {client/server debug -3- message} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name client --debug 3 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -match   glob \
+    -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (server:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<3>, endian<0>
+C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<3>, endian<0>*}
+
+test client-6c {client/server debug -4- message} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name client --debug 4 --num 1 @ {*}[getServer c.pipe ] --name server --silent} \
+    -match   glob \
+    -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+C> (client:*) \[*] \[4-0-*-pEventCreate]: TSD-Id<*>, Thread-Id<*>
+C> (client:*) \[*] \[4-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[1]<*>
+C> (client:*) \[*] \[4-0-*-pIoStartServer]: finish start server 'server' as 'spawn' with ID '*'
+C> (client:*) \[*] \[4-0-*-pEventAdd]: sock<*> DataLCur<1>
+C> (client:*) \[*] \[4-0-*-MqLinkCreate]: send token<_IAA>
+C> (client:*) \[*] \[4-0-*-sWaitForToken]: wait for token<_PEO>
+C> (client:*) \[*] \[4-0-*-sWaitForToken]: got token<_PEO>
+C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<4>, endian<0>
+*
+C> (client:*) \[*] \[3-0-*-MqExit]: EXIT
+C> (client:*) \[*] \[4-0-*-pMqShutdown]: START shutdown
+C> (client:*) \[*] \[4-0-*-pMqShutdown]: send token<_SHD>
+C> (client:*) \[*] \[4-0-*-pEventShutdown]: sock<*> DataLCur<0>
+C> (client:*) \[*] \[4-0-*-pMqShutdown]: END shutdown
+C> (client:*) \[*] \[2-0-*-MqLinkDelete]: DELETE }
+
+test client-6d {client/server debug -2- message with long names} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -match   glob \
+    -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: start: --------------------------------------
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-statistics]:             MqSendEND_AND_WAIT:*
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: end: ----------------------------------------*}
+
+test client-6e {client/server debug -2- message with 50c names} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name ssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -match   glob \
+    -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START-CREATE: io->com<PIPE>
+S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: start: --------------------------------------
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-statistics]:             MqSendEND_AND_WAIT:*
+C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: end: ----------------------------------------*}
+
+
+test client-6f {client/server debug -2- message with 51c names} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name ccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -match   glob \
+    -result  {NONE--C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkCreate\]: START-CREATE: io->com<PIPE>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*\] \[2-0-*-MqLinkCreate\]: START-CREATE: io->com<PIPE>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*\] \[2-0-*-MqLinkCreate\]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkCreate\]: END-CREATE string<no>, silent<no>, debug<2>, endian<0>
+*}
+
+
+# server-type: server server.tcl
+ foreach S [envGet SRV_LST] {
+
+    SetConstraints 1 binary $S
+
+	test client-7-($S) {check startup error} \
+	    -constraints    {tcp} \
+	    -body       {Exec {*}[getServer $S] --name server --tcp} \
+	    -match	glob \
+	    -result	{CHILDSTATUS-205-S> (server) \[*TcpCreate] for a 'TCP' setup the option '--port' is required*}
+
+	test client-7-($S) {check startup error} \
+	    -constraints    {uds} \
+	    -body       {Exec {*}[getServer $S] --name server --uds} \
+	    -match	glob \
+	    -result	{CHILDSTATUS-205-S> (server) \[*UdsCreate] for a 'UDS' setup the option '--file' is required*}
+
+	test client-7-($S) {check startup error} \
+	    -constraints    {pipe} \
+	    -body       {Exec {*}[getServer $S] --name server --pipe} \
+	    -match	glob \
+	    -result	{CHILDSTATUS-201-S> (server) \[*PipeCreate] it is not allowed to use a server in a client context*}
+
+}; # SRV_LST
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+
+
+

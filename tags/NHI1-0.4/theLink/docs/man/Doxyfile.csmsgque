@@ -1,0 +1,239 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += CSHARP
+EXAMPLE_PATH	    += $(SRCDIR)/example/csharp
+
+ALIASES		    += "self=csmsgque"
+ALIASES		    += "selftut=csmsgquetut"
+ALIASES		    += "NS{1}=cs_\1"
+ALIASES		    += "lang=C#"
+ALIASES		    += "fileextension=cs"
+ALIASES		    += "null=\e null"
+ALIASES		    += "yes=\e true"
+ALIASES		    += "no=\e false"
+ALIASES		    += "package=using csmsgque;"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+sealed class MyClass : MqS { \n\
+  private int mydata; \n\
+  ... \n\
+} \n\
+static void Main(string[] args) \n\
+  MyClass ctx = new MyClass(); ... \n\
+} \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=MqS.Init(params string[] args)"
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=int"
+ALIASES		    += "config_set_buffersize=#csmsgque.MqS.ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#csmsgque.MqS.ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=int"
+ALIASES		    += "config_set_debug=#csmsgque.MqS.ConfigSetDebug"
+ALIASES		    += "config_get_debug=#csmsgque.MqS.ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=int"
+ALIASES		    += "config_set_timeout=#csmsgque.MqS.ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#csmsgque.MqS.ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=string"
+ALIASES		    += "config_set_name=#csmsgque.MqS.ConfigSetName"
+ALIASES		    += "config_get_name=#csmsgque.MqS.ConfigGetName"
+
+ALIASES		    += "config_type_srvname=string"
+ALIASES		    += "config_set_srvname=#csmsgque.MqS.ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#csmsgque.MqS.ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=string"
+ALIASES		    += "config_set_ident=#csmsgque.MqS.ConfigSetIdent"
+ALIASES		    += "config_get_ident=#csmsgque.MqS.ConfigGetIdent"
+ALIASES		    += "config_check_ident=#csmsgque.MqS.ConfigCheckIdent"
+
+ALIASES		    += "config_type_isSilent=bool"
+ALIASES		    += "config_set_isSilent=#csmsgque.MqS.ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#csmsgque.MqS.ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=bool"
+ALIASES		    += "config_set_isString=#csmsgque.MqS.ConfigSetIsString"
+ALIASES		    += "config_get_isString=#csmsgque.MqS.ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=bool"
+ALIASES		    += "config_set_ignoreExit=#csmsgque.MqS.ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_startAs=int"
+ALIASES		    += "config_set_startAs=#csmsgque.MqS.ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#csmsgque.MqS.ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=string"
+ALIASES		    += "config_set_tcp=#csmsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#csmsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=string"
+ALIASES		    += "config_set_uds=#csmsgque.MqS.ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=#csmsgque.MqS.ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=int"
+ALIASES		    += "config_set_pipe=#csmsgque.MqS.ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=#csmsgque.MqS.ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_isServer=bool"
+ALIASES		    += "config_set_isServer=#csmsgque.MqS.ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=#csmsgque.MqS.ConfigGetIsServer"
+
+ALIASES             += "config_IServerSetup=IServerSetup.Call()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup.Call()"
+ALIASES		    += "config_IFactory=MqS IFactory.Call()"
+ALIASES             += "config_IBgError=IBgError.Call()"
+ALIASES             += "config_IEvent=IEvent.Call()"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+sealed class Server : MqS, IFactory ... { \n\
+  MqS IFactory.Call () { \n\
+    return new Server(); \n\
+  } \n\
+  ... \n\
+} \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(params string[] args)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, params string[] args)"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqC ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=bool ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=bool ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=bool ctx.LinkIsConnected()"
+ALIASES		    += "Exit=ctx.Exit()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(string token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(string token, [int timeout])"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(string token, IService callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendFTR=ctx.SendFTR([int timeout])"
+ALIASES		    += "SendEOF=ctx.SendEOF([int timeout])"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendN(byte[] value)"
+ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
+
+# READ DATE
+ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadN=byte[] ctx.ReadN()"
+ALIASES		    += "ReadBDY=byte[] ctx.ReadBDY()"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
+ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=bool ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START()"
+ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
+ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void IServerSetup.ServerSetup() { \n\
+  ServiceCreate (\"SRV1\", srv1); \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(string token, IService callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(string token, [int id=0])"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
+ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
+ALIASES		    += "ServiceGetToken=string ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=MqS ServiceGetFilter([int id=0])"
+ALIASES		    += "ServiceIsTransaction=bool ServiceIsTransaction()"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, params string[] args)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=MqS ctx.SlaveIs()"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+MqBufferS buf = ctx.ReadU();\n\
+if (buf.Type == 'C')\n\
+  Console.WriteLine(buf.C);\n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGetTYPE=TYPE buffer.TYPE"
+ALIASES		    += "BufferType=char buffer.Type"
+
+ALIASES		    += "Y=byte"
+ALIASES		    += "O=bool"
+ALIASES		    += "S=short"
+ALIASES		    += "I=int"
+ALIASES		    += "F=float"
+ALIASES		    += "W=long"
+ALIASES		    += "D=double"
+ALIASES		    += "C=string"
+ALIASES		    += "B=byte[]"
+ALIASES		    += "U=MqBufferS"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try { \n\
+ i = ctx.ReadI(); \n\
+} catch (Exception ex) { \n\
+ ctx.ErrorSet(ex); \n\
+ Console.WriteLine(ctx.ErrorGetText()); \n\
+ ctx.ErrorReset(); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqSException</I>"
+ALIASES		    += "ErrorGetText=string ex.txt or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=int ex.num or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+
+
