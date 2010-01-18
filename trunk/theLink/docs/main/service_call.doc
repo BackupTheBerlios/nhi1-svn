@@ -231,32 +231,32 @@ ctx.SendEND_AND_CALLBACK("ECUL", AddressOf RET_ECUL)
   .
  .
 
-To start the event-loop and wait for 10 seconds for the return message
+To start the event-loop and wait \b forever for an incomming package,
 the following code is used:
 
  - using \libmsgque code: \code
-MqErrorCheck (MqProcessEvent (msgque, 10, MQ_WAIT | MQ_WAIT_FOREVER));
+MqErrorCheck (MqProcessEvent (msgque, MQ_TIMEOUT, MQ_WAIT_FOREVER));
 \endcode
  - using \ccmsgque code: \code
-ctx.ProcessEvent(10, MQ_WAIT_FOREVER);
+ctx.ProcessEvent(MQ_WAIT_FOREVER);
 \endcode
  - using \csmsgque code: \code
-ctx.ProcessEvent(10, MqS.WAIT.FOREVER);
+ctx.ProcessEvent(MqS.WAIT.FOREVER);
 \endcode
  - using \javamsgque code: \code
-ctx.ProcessEvent(10, MqS.WAIT.FOREVER);
+ctx.ProcessEvent(MqS.WAIT.FOREVER);
 \endcode
  - using \pymsgque code: \code
-ctx.ProcessEvent(timeout=10, wait="FOREVER")
+ctx.ProcessEvent(wait="FOREVER")
 \endcode
  - using \tclmsgque code: \code
-$ctx ProcessEvent -timeout 10 -wait FOREVER
+$ctx ProcessEvent -wait FOREVER
 \endcode
  - using \perlmsgque code: \code
-$ctx->ProcessEvent({timeout => 10, wait => "FOREVER"});
+$ctx->ProcessEvent({wait => "FOREVER"});
 \endcode
- - using \tclmsgque code: \code
-ctx.ProcessEvent(10, MqS.WAIT.FOREVER)
+ - using \vbmsgque code: \code
+ctx.ProcessEvent(MqS.WAIT.FOREVER)
 \endcode
  .
 

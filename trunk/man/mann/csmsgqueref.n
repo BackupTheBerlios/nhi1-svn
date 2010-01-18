@@ -1,4 +1,4 @@
-.TH "csmsgque" n "15 Jan 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "17 Jan 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1540,6 +1540,7 @@ convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
+The storage is available as \fIclass-data-member\fP.
 .SH "FILTER MODE"
 .PP
 modify data using filter technology 

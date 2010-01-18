@@ -16,7 +16,7 @@ The is a 'maintenance' and 'reorganization' release to prepare the
 environment for the new 'milestone' release coming soon
 
  - 15 Jan 2010
-  + API reorganisation:
+  + API reorganization:
       MqConfigGetFilter -> MqServiceGetFilter
       MqConfigGetIsTransaction -> MqServiceIsTransaction
       MqConfigGetToken -> MqServiceGetToken

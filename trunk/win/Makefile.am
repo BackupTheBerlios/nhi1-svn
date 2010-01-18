@@ -10,20 +10,4 @@
 #§              please contact AUTHORS for additional information
 #§
 
-EXTRA_DIST = \
-.MAKE_DIST.bash \
-Makefile.am \
-Makefile.in \
-README.win \
-mqconfig.h \
-env.sh \
-env.tcl \
-c \
-cc \
-csharp \
-vb \
-win \
-win.sln
-
-dist-hook:
-	find $(distdir) -type d -name ".svn" -exec rm -fr "{}" ';' 2>/dev/null; true
+EXTRA_DIST = README.win

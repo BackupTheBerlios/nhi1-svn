@@ -964,7 +964,7 @@ MqSendL_END (
     MQ_INT bodyLen;
     MQ_BIN pos;
     MQ_BOL const isString = context->config.isString;
-    
+
     if (unlikely(save == NULL)) return MQ_OK;
 
     // set numItems

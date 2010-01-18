@@ -45,7 +45,6 @@ extern MqFactorySelectorF MqFactorySelector;
 enum MqErrorE
 pIoCreate (
   struct MqS * const context,
-  struct MqBufferLS * const alfa,
   struct MqIoS ** const out
 )
 {
@@ -96,11 +95,11 @@ pIoCreate (
     switch (io->config->com) {
 #if defined(MQ_IS_POSIX)
       case MQ_IO_UDS:
-        MqErrorCheck (UdsServer (alfa, io->iocom.udsSP));
+        MqErrorCheck (UdsServer (io->iocom.udsSP));
         break;
 #endif
       case MQ_IO_TCP:
-        MqErrorCheck (TcpServer (alfa, io->iocom.tcpSP));
+        MqErrorCheck (TcpServer (io->iocom.tcpSP));
         break;
       case MQ_IO_PIPE:
         MqErrorCheck (PipeServer (io->iocom.pipeSP));

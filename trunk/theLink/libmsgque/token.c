@@ -467,6 +467,7 @@ pTokenCheckSystem (
 	  // -> client need the rmtCtx pointer from the server
 	  // -> server need 'binary mode' and 'endian mode' from the client
 	  if (MQ_IS_SERVER_PARENT (context)) {
+	    MQ_CST name = NULL;
 	    MQ_BOL myendian, mystring;
 
 	    MqConfigSetIsString(context, MQ_YES);
@@ -482,12 +483,13 @@ pTokenCheckSystem (
 	    context->link.endian = (myendian ? MQ_YES : MQ_NO);
 # endif
 
+	    // read the other endian and set my context->link.endian
+	    MqReadC(context, &name);
+	    context->link.targetIdent = mq_strdup(name);
+
 	    // read server name
-	    if (MqReadItemExists(context)) {
-	      MQ_CST name = NULL;
-	      MqReadC(context, &name);
-	      MqConfigSetSrvName (context, name);
-	    }
+	    MqReadC(context, &name);
+	    if (*name != '\0') MqConfigSetSrvName (context, name);
 
 	    // send my endian back
 	    MqSendSTART (context);
@@ -496,18 +498,13 @@ pTokenCheckSystem (
 # else
 	    MqSendO (context, MQ_NO);
 # endif
+	    MqSendC (context, context->setup.ident);
 	    MqErrorCheck (pSendSYSTEM_RETR (context));
 
 	    // set the binary mode
 	    MqConfigSetIsString(context, mystring);
 	    pReadSetType(context, mystring);
 	  }
-	  break;
-	}
-	case 'D': {	      // _IDN:: SERVER, get "ident"
-	  MqSendSTART(context);
-	  MqSendC(context, (context->setup.ident != NULL ? context->setup.ident : "NULL"));
-	  MqErrorCheck (MqSendRETURN(context));
 	  break;
 	}
       }

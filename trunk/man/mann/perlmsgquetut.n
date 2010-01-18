@@ -1,4 +1,4 @@
-.TH "perlmsgque Tutorial" n "15 Jan 2010" "Version 4.2" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque Tutorial" n "17 Jan 2010" "Version 4.2" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -202,7 +202,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> perl MyClient.pl --udp --file /path/to/any/file.uds
+> perl MyClient.pl --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

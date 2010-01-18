@@ -41,9 +41,13 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
 # BSD make does !not! support the 'export' command
 #export DYLD_LIBRARY_PATH = @abs_top_builddir@/libmsgque/.libs
 
+#install-web:
+#	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
+#	rsync -azv --delete html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
+
 install-web:
 	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
-	rsync -azv --delete html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
+	rsync -azv --delete html/ aotto1968,libmsgque@web.sourceforge.net:htdocs/
 
 install-files:
 	for F in NHI1-$(VERSION)* binary-dist/NHI1-$(VERSION)* ; do \

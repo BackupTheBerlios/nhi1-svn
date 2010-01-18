@@ -285,37 +285,37 @@ To call a network visible \e TCP server listen on \e PORT 2345 use:
 To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds use:
 \if CSHARP
 \verbatim
-> mono MyClient.exe --udp --file /path/to/any/file.uds
+> mono MyClient.exe --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \elseif VB
 \verbatim
-> mono MyClient.exe --udp --file /path/to/any/file.uds
+> mono MyClient.exe --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \elseif JAVA
 \verbatim
-> java example.MyClient --udp --file /path/to/any/file.uds
+> java example.MyClient --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \elseif TCL
 \verbatim
-> tclsh MyClient.tcl --udp --file /path/to/any/file.uds
+> tclsh MyClient.tcl --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \elseif PERL
 \verbatim
-> perl MyClient.pl --udp --file /path/to/any/file.uds
+> perl MyClient.pl --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \elseif PYTHON
 \verbatim
-> python MyClient.py --udp --file /path/to/any/file.uds
+> python MyClient.py --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \else
 \verbatim
-> MyClient --udp --file /path/to/any/file.uds
+> MyClient --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
 \endif

@@ -20,20 +20,19 @@ NHI1 overview
 NHI1 build
 ===============
 
-"NHI1" is a able to build on a UNIX operating system like
-Linux, BSD. For a build on Windows please change into the 
-"win" directory and follow the instructions from the "README.win" 
-file.
+"NHI1" is able to build on a UNIX operating system like Linux, 
+BSD. For a build on Windows please change into the "win" directory 
+and follow the instructions from the "README.win" file.
 
 The main development system is:
 
-    SuSE Linux 10.3 on "Intel(R) Core(TM)2 CPU 6600 @ 2.40GHz"
+    SuSE Linux 11 (64bit) on "Intel(R) Core(TM)2 CPU 6600 @ 2.40GHz"
 
 The software-build was also tested on:
 
     Windows XP ServicePack 3  (VirtualBox/Intel)
     Free BSD 7.1	      (VirtualBox/Intel)
-    SuSE Linux 11	      (VirtualBox/Intel)
+    SuSE Linux 11 (32bit)     (VirtualBox/Intel)
     Debian 5		      (iBook/ppc)
 
 The Build depends on the following tools:

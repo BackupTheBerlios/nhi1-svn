@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "15 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "17 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -176,7 +176,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> tclsh MyClient.tcl --udp --file /path/to/any/file.uds
+> tclsh MyClient.tcl --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

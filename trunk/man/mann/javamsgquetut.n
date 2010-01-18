@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "15 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "17 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -220,7 +220,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> java example.MyClient --udp --file /path/to/any/file.uds
+> java example.MyClient --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

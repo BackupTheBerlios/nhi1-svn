@@ -47,6 +47,13 @@ int NS(LinkGetParent) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(LinkGetTargetIdent) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewStringObj(MqLinkGetTargetIdent (MQCTX), -1));
+  RETURN_TCL
+}
+
 int NS(LinkDelete) (NS_ARGS)
 {
   CHECK_NOARGS

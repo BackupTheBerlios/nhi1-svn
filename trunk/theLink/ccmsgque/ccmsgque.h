@@ -244,8 +244,6 @@ namespace ccmsgque {
       inline void ConfigSetSrvName    (MQ_CST data)	    { MqConfigSetSrvName (&context, data); }
       /// \api #MqConfigSetIdent
       inline void ConfigSetIdent      (MQ_CST data)	    { MqConfigSetIdent (&context, data); }
-      /// \api #MqConfigCheckIdent
-      inline MQ_BOL ConfigCheckIdent  (MQ_CST data)	    { return MqConfigCheckIdent (&context, data); }
       /// \api #MqConfigSetIsSilent
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
       /// \api #MqConfigSetIsServer
@@ -437,6 +435,12 @@ namespace ccmsgque {
 	LinkCreateChildVC (parent, (int const ) args.size(), (MQ_CST*) &(*args.begin()));
       }
 
+      /// \api #MqLinkPrepare
+      void LinkPrepareVC (int const argc, MQ_CST argv[]) {
+	struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
+	ErrorCheck (MqLinkPrepare (&context, &args));
+      }
+
       /// \api #MqLinkDelete
       void LinkDelete () {
 	MqLinkDelete (&context);
@@ -461,6 +465,11 @@ namespace ccmsgque {
       /// \api #MqLinkGetCtxId
       inline MQ_SIZE LinkGetCtxId ()  { 
         return MqLinkGetCtxIdI(&context); 
+      }
+
+      /// \api #MqLinkGetRemoteIdent
+      inline MQ_CST LinkGetTargetIdent () { 
+	return MqLinkGetTargetIdent (&context);
       }
 
     /// \} Mq_Link_CC_API

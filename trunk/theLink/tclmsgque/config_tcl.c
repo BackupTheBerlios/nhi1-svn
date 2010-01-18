@@ -143,15 +143,6 @@ int NS(ConfigSetIdent) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigCheckIdent) (NS_ARGS)
-{
-  MQ_CST ident;
-  CHECK_C(ident)
-  CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj(MqConfigCheckIdent (MQCTX, ident)));
-  RETURN_TCL
-}
-
 int NS(ConfigSetIsSilent) (NS_ARGS)
 {
   MQ_BOL isSilent;

@@ -26,7 +26,7 @@ testsDirectory [file join $linksrcdir tests]
 tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
-#configure -file s*.test
+#configure -file int.test
 
 tcltest::runAllTests
 

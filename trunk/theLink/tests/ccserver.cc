@@ -552,7 +552,7 @@ namespace example {
 	  MQ_CST old = mq_strdup_save(ConfigGetSrvName());
 	  MQ_BOL check;
 	  ConfigSetSrvName (ReadC());
-	  check = ConfigCheckIdent (ReadC());
+	  check = !strcmp(LinkGetTargetIdent(), ReadC());
 	  SendSTART();
 	  SendC (ConfigGetSrvName());
 	  SendO (check);

@@ -176,11 +176,10 @@ TcpDelete (
 
 enum MqErrorE
 TcpServer (
-  struct MqBufferLS * const alfa,
   register struct TcpS * const tcp
 )
 {
-  GenericServer (tcp->generiC, tcp->remoteaddr->ai_addr, tcp->remoteaddr->ai_addrlen, alfa);
+  GenericServer (tcp->generiC, tcp->remoteaddr->ai_addr, tcp->remoteaddr->ai_addrlen);
   return MqErrorStack (MQ_CONTEXT_S);
 }
 

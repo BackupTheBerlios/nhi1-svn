@@ -23,7 +23,6 @@ BEGIN_C_DECLS
 
 enum MqErrorE pIoCreate (
   struct MqS * const context,
-  struct MqBufferLS * const alfa,
   struct MqIoS ** const out
 ) __attribute__((nonnull));
 

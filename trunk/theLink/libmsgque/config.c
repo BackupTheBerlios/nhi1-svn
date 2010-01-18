@@ -209,6 +209,7 @@ MqSetupDup (
   MQ_PTR FactoryD = context->setup.Factory.Delete.data;
 
   // Step 1,  copy "setup" 
+  MqSysFree(context->setup.ident);
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
 
@@ -308,7 +309,6 @@ MqConfigSetIdent (
   MqSysFree(context->setup.ident);
   context->setup.ident = mq_strdup_save(data);
 }
-
 
 void 
 MqConfigSetSrvName (
@@ -700,24 +700,6 @@ MqConfigGetIdent (
 )
 {
   return context->setup.ident;
-}
-
-MQ_BOL 
-MqConfigCheckIdent (
-  struct MqS * const context,
-  MQ_CST ident
-)
-{
-  MQ_CST ftrIdent;
-  if (context == NULL) return MQ_NO;
-  MqErrorCheck (MqSendSTART (context));
-  MqErrorCheck (MqSendEND_AND_WAIT (context, "_IDN", MQ_TIMEOUT_USER));
-  MqErrorCheck (MqReadC (context, &ftrIdent));
-  if (strcmp (ident, ftrIdent)) return MQ_NO;
-  return MQ_YES;
-error:
-  MqErrorReset(context);
-  return MQ_NO;
 }
 
 MQ_CST 

@@ -6,7 +6,7 @@
 
 This is a \b maintenance and \b reorganization release to prepare the\n
 environment for the new \b milestone release coming soon.\n
-The highlights are: API reorganisation\n
+The highlights are: API reorganization\n
 documentation update and reorganization\n
 new public API - \RNSC{IEvent}\n
 

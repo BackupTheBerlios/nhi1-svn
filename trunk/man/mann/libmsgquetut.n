@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "15 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "17 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -210,7 +210,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> MyClient --udp --file /path/to/any/file.uds
+> MyClient --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

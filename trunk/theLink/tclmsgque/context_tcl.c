@@ -246,7 +246,6 @@ int NS(ConfigSetTimeout) (NS_ARGS);
 int NS(ConfigSetName) (NS_ARGS);
 int NS(ConfigSetSrvName) (NS_ARGS);
 int NS(ConfigSetIdent) (NS_ARGS);
-int NS(ConfigCheckIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
 int NS(ConfigSetIsServer) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
@@ -282,6 +281,7 @@ int NS(LinkIsParent) (NS_ARGS);
 int NS(LinkIsConnected) (NS_ARGS);
 int NS(LinkGetCtxId) (NS_ARGS);
 int NS(LinkGetParent) (NS_ARGS);
+int NS(LinkGetTargetIdent) (NS_ARGS);
 int NS(LinkCreate) (NS_ARGS);
 int NS(LinkCreateChild) (NS_ARGS);
 int NS(LinkDelete) (NS_ARGS);
@@ -377,7 +377,6 @@ int NS(MqS_Cmd) (
     { "ConfigSetName",		  NS(ConfigSetName)	      },
     { "ConfigSetSrvName",	  NS(ConfigSetSrvName)	      },
     { "ConfigSetIdent",		  NS(ConfigSetIdent)	      },
-    { "ConfigCheckIdent",	  NS(ConfigCheckIdent)	      },
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
     { "ConfigSetIsServer",	  NS(ConfigSetIsServer)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
@@ -433,6 +432,7 @@ int NS(MqS_Cmd) (
     { "LinkIsConnected",	  NS(LinkIsConnected)	      },
     { "LinkGetCtxId",		  NS(LinkGetCtxId)	      },
     { "LinkGetParent",		  NS(LinkGetParent)	      },
+    { "LinkGetTargetIdent",	  NS(LinkGetTargetIdent)      },
     { "LinkCreate",		  NS(LinkCreate)	      },
     { "LinkCreateChild",	  NS(LinkCreateChild)	      },
     { "LinkDelete",		  NS(LinkDelete)	      },

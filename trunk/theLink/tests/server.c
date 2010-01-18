@@ -1193,7 +1193,7 @@ Ot_CFG1 (
     MqErrorCheck (MqReadC (mqctx, &CV));
     MqConfigSetIdent (mqctx, CV);
     MqErrorCheck (MqReadC (mqctx, &CV));
-    check = MqConfigCheckIdent(mqctx, CV);
+    check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
     MqSendSTART(mqctx);
     MqErrorCheck (MqSendC (mqctx, MqConfigGetIdent (mqctx)));

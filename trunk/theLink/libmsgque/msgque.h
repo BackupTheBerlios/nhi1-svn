@@ -331,12 +331,10 @@ enum MqErrorE {
 struct MqLinkS {
 
   // private variables
-  struct MqSendS  * send;	    ///< object for sending a Msgque packet
-  struct MqReadS  * read;	    ///< object for reading a Msgque packet
-  struct MqIoS    * io;		    ///< object for management of the 'socket' infrastructure
-
-  // private variables
-  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+  struct MqSendS    * send;	    ///< object for sending a Msgque packet
+  struct MqReadS    * read;	    ///< object for reading a Msgque packet
+  struct MqIoS	    * io;	    ///< object for management of the 'socket' infrastructure
+  struct MqBufferLS * alfa;	    ///< the command-line arguments for the server
 
   // context-management variables
   MQ_SIZE   ctxId;		    ///< the ctxId of this MqS object
@@ -344,6 +342,8 @@ struct MqLinkS {
 
   // private variables
   struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
+  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+  MQ_CST targetIdent;		    ///< 'ident' of the link target
 
   MQ_BOL onExit;		    ///< is already an exit ongoing?
   struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
@@ -351,6 +351,7 @@ struct MqLinkS {
   MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
   MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
   MQ_BOL onShutdown;		    ///< is already a "shutdown" ongoing?
+  MQ_BOL prepareDone;		    ///< was a prepare already done ?
   MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
   MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
 
@@ -359,7 +360,7 @@ struct MqLinkS {
   // the next 3 items are !!only!! used in the parent
   MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
   MQ_SIZE   ctxIdZ;		    ///< the size of the ctxIdA array
-  struct MqS ** ctxIdA;	    ///< array of struct MqLinkS * pointer's
+  struct MqS ** ctxIdA;		    ///< array of struct MqLinkS * pointer's
 
   // the next 3 items are used to map the transactionID (int) to the transaction pointer
   struct MqTransS * trans;	    ///< link to the trans object
@@ -1187,19 +1188,6 @@ MQ_EXTERN MQ_CST MQ_DECL MqConfigGetIdent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/** \brief check the \e ident of the \e context object
- *  \context
- *  \param[in] ident the ident to check for
- *  \return #MQ_YES or #MQ_NO
- *
- *  The check is done with an \c _IDN request send to the link target.
- *  This function is only useful if the link is up and running.
- */
-MQ_EXTERN MQ_BOL  MQ_DECL MqConfigCheckIdent (
-  struct MqS * const context,
-  MQ_CST ident
-) __attribute__((nonnull));
-
 /** \brief get the \e srvname of the \e context object
  *  \context
  *  \return the \c context.config.srvname value
@@ -1582,7 +1570,15 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 
 
 
-/// \brief make \e ctx to a \e client-parent-context and setup a new \e client-server-link
+/// \brief TODO
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkPrepare (
+  struct MqS  * const ctx,
+  struct MqBufferLS ** args
+);
+
+
+
+/// \brief make \e ctx to a \e parent-context and setup a new \e client-server-link
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
 ///                  including the \b "@" item to add \e server-commandline-arguments
@@ -1716,6 +1712,15 @@ static mq_inline MQ_SIZE MqLinkGetCtxIdI (
 {
   return ctx->link.ctxId;
 };
+
+/// \brief get the \e ident of the \e link-target
+///
+/// This function is only useful if the link is up and running.
+/// \ctx
+/// \return get the \e ident of the \e link-target or \c NULL if not connected
+MQ_EXTERN MQ_CST MQ_DECL MqLinkGetTargetIdent (
+  struct MqS * const ctx
+) __attribute__((nonnull));
 
 /// \} Mq_Link_C_API
 

@@ -957,7 +957,7 @@ proc EchoL { ctx token args } {
 ##
 
 proc Start {mode isError id cl {clname ""} {srvname ""}} {
-  global env FH FH_LAST
+  global env FH FH_LAST Start_PREFIX
   if {$env(TS_SETUP)} { Print id cl }
   if {[info exists FH($id)]} {
     $FH($id) ConfigReset
@@ -974,6 +974,9 @@ proc Start {mode isError id cl {clname ""} {srvname ""}} {
     $FH($id) ConfigSetSrvName $srvname
   }
   set FH_LAST $FH($id)
+  if {[info exists Start_PREFIX]} {
+    eval $Start_PREFIX
+  }
   if {$isError} {
     if {[catch {$FH_LAST {*}$cl} ERROR]} { error $ERROR }
   } else {

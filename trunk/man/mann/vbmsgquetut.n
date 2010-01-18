@@ -1,4 +1,4 @@
-.TH "vbmsgque Tutorial" n "15 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque Tutorial" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -205,7 +205,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> mono MyClient.exe --udp --file /path/to/any/file.uds
+> mono MyClient.exe --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

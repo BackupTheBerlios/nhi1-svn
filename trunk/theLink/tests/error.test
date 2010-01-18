@@ -327,6 +327,7 @@ foreach o { --debug --srvname --timeout --buffersize --file --port --host --mypo
       -returnCodes    error \
       -match	      glob \
       -result         [subst -nobackslashes -nocommands {C> (client) \[*sMqCheckArg*\] expect argument for option '$o'
+C> (client) found in function "MqLinkPrepare" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}]
 }
@@ -336,6 +337,7 @@ test error-MQ_ERROR_OPTION_ARG--name {check error message} \
     -returnCodes    error \
     -match	      glob \
     -result         [subst -nobackslashes -nocommands {C> (client) \[sMqCheckArg\] expect argument for option '--name'
+C> (client) found in function "MqLinkPrepare" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}]
 

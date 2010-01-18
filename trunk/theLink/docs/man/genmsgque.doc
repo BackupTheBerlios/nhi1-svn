@@ -474,15 +474,14 @@ return \yes if \e key exists or \no if not.
 
 \subsection	\NS{DictUnset}				\DictUnset
 Remove the \e key and the associated \e data from the local storage.
+\else
+The storage is available as \e class-data-member.
+\endif
 \if PERL
 The following code is valid for an object reference:
 \code
 $ctx->DictUnset($key)->DESTROY();
 \endcode
-\endif
-\else
-The storage is available as \e class-data-member.
-
 \endif
 
 \section	\NS{filter}				FILTER MODE

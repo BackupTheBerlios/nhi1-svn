@@ -14,9 +14,8 @@ bin_PROGRAMS = atrans
 
 CLEANFILES =
 
-atrans_SOURCES = atrans.c 
-atrans_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../libbrain \
-		      -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES $(BRAIN_CPPFLAGS)
+atrans_SOURCES = atrans.cc
+atrans_CPPFLAGS = -I$(srcdir)/../../theLink/ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
-atrans_LDADD = ../libbrain/libtmp.la ../../theLink/libmsgque/libtmp.la
+atrans_LDADD = ../../theLink/ccmsgque/libtmp.la
 

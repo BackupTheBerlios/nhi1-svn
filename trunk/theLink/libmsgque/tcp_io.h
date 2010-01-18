@@ -35,7 +35,6 @@ void TcpDelete (
 ) __attribute__((nonnull));
 
 enum MqErrorE TcpServer (
-  struct MqBufferLS * const alfa,
   register struct TcpS * const tcp
 );
 

@@ -1,4 +1,4 @@
-.TH "pymsgque Tutorial" n "15 Jan 2010" "Version 4.2" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque Tutorial" n "17 Jan 2010" "Version 4.2" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -177,7 +177,7 @@ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/fil
 .PP
 .nf
 
-> python MyClient.py --udp --file /path/to/any/file.uds
+> python MyClient.py --uds --file /path/to/any/file.uds
 > Hello World
 .fi
 .PP

@@ -65,8 +65,7 @@ enum MqErrorE GenericCreateSocket (
 enum MqErrorE GenericServer (
   struct GenericS * const generiC,	///< the current generic handle
   struct sockaddr * const sockaddr,	///< the address package
-  socklen_t const sockaddrle,		///< the length of the address
-  struct MqBufferLS * const alfa	///< additional server to start in a pipe
+  socklen_t const sockaddrle		///< the length of the address
 );
 
 enum MqErrorE GenericConnect (
