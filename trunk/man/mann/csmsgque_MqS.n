@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -41,7 +41,7 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "bool \fBConfigCheckIdent\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP "
+.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "void \fBConfigSetBuffersize\fP (int data)"
 .br

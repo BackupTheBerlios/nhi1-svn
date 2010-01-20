@@ -83,12 +83,8 @@ GenericCreate (
   struct MqS * const context = io->context;
 
   // ok we have an TCP style communication
-  register struct GenericS * const generiC = (struct GenericS *const) 
-       MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*generiC));
-
-  // set the generic return
-  if (likely (out != NULL))
-    *out = generiC;
+  register struct GenericS * const generiC = *out ? *out :
+    (*out = (struct GenericS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*generiC)));
 
   generiC->io = io;
   generiC->context = context;
@@ -164,22 +160,19 @@ GenericServer (
     switch (context->config.startAs) {
       case MQ_START_FORK: {
 #if defined(HAVE_FORK)
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_INLINE_FORK, &child_sock, NULL, 
-	  MqBufferLDup(context->link.alfa), &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_INLINE_FORK, &child_sock, &id));
 #endif
 	break;
       }
       case MQ_START_THREAD: {
 #if defined(MQ_HAS_THREAD)
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_THREAD, &child_sock, NULL, 
-	  MqBufferLDup(context->link.alfa), &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_THREAD, &child_sock, &id));
 	// keep the "child_sock" open, because it's still the same process
 #endif
 	break;
       }
       case MQ_START_SPAWN: {
-	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_SPAWN, &child_sock, NULL, 
-	  MqBufferLDup(context->link.alfa), &id));
+	MqErrorCheck (pIoStartServer(context->link.io,MQ_START_SERVER_AS_SPAWN, &child_sock, &id));
 	break;
       }
       case MQ_START_DEFAULT: {

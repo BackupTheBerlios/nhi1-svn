@@ -277,7 +277,7 @@ MqSlaveWorker (
   struct MqBufferLS ** argvP
 )
 {
-  if (unlikely(context->link.onCreate == MQ_NO)) {
+  if (unlikely(context->link.bits.onCreate == MQ_NO)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "master", "not");
   } else {
     struct MqS * newctx;
@@ -321,7 +321,7 @@ MqSlaveCreate (
 {
   // the slave object now belongs to 'context'.
   // using the following line:
-  slave_context->link.doFactoryCleanup = MQ_YES;
+  slave_context->link.bits.doFactoryCleanup = MQ_YES;
   // the initial object will be delete by libmsgque even if it
   // was created outsite
   return pSlaveParentCreate(context->link.slave, id, slave_context);
@@ -367,4 +367,6 @@ MqSlaveIs (
 }
 
 END_C_DECLS
+
+
 

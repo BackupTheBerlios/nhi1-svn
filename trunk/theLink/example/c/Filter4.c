@@ -27,13 +27,13 @@
 
 struct FilterItmS {
   MQ_STRB token[5];
-  MQ_BOL  isFilter;
+  MQ_BOL  isTransaction;
   MQ_BUF  data;
 };
 
 struct FilterCtxS {
-  struct MqS	    mqctx;	///< \mqctxI
-  struct FilterItmS  **itm;
+  struct MqS	    mqctx;
+  struct FilterItmS **itm;
   MQ_INT	    rIdx;
   MQ_INT	    wIdx;
   MQ_INT	    size;
@@ -51,50 +51,58 @@ static enum MqErrorE FilterEvent (
 )
 {
   register SETUP_ctx;
+  struct MqS * const ftr = MqServiceGetFilter(mqctx, 0);
 
   // check if an item is available
   if (ctx->rIdx == ctx->wIdx) {
     // no transaction available
     return MqErrorSetCONTINUE(mqctx);
   } else {
-    struct MqS * ftr;
     register struct FilterItmS * itm;
-    // is an item available?
-    switch (MqServiceGetFilter(mqctx, 0, &ftr)) {
-      case MQ_OK:
-	break;
-      case MQ_ERROR:
-	// ignore the error
-	MqErrorReset(mqctx);
-	goto end;
-      case MQ_EXIT:
-      case MQ_CONTINUE:
-	goto error;
+
+    if (ftr == NULL) {
+      return MQ_OK;
+    }
+
+    // try to connect the link
+    if (!MqLinkIsConnected(ftr)) {
+      switch (MqLinkConnect (ftr)) {
+	case MQ_OK:	  break;
+	case MQ_CONTINUE: return MQ_OK;
+	case MQ_EXIT:	  goto exit;
+	case MQ_ERROR:	  goto exit;
+      }
     }
 
     // extract the first (oldest) item from the store
-    itm = ctx->itm[ctx->rIdx++];
+    itm = ctx->itm[ctx->rIdx];
 
     // send the ctxaction to the ctx, on error write message but do not stop processing
     MqErrorCheck1 (MqSendSTART(ftr));
     MqErrorCheck1 (MqSendBDY(ftr, itm->data->cur.B, itm->data->cursize));
-    MqErrorCheck1 (
-      itm->isFilter ?
-	MqSendEND_AND_WAIT(ftr, itm->token, MQ_TIMEOUT_USER) :
-	  MqSendEND(ftr, itm->token)
-    );
-
+    switch ( itm->isTransaction ?
+      MqSendEND_AND_WAIT(ftr, itm->token, MQ_TIMEOUT_USER) :
+	MqSendEND(ftr, itm->token)
+    ) {
+      case MQ_OK:	  break;
+      case MQ_ERROR:	  goto error1;
+      case MQ_EXIT:	  goto exit;
+      case MQ_CONTINUE:	  return MQ_OK;
+    }
     // reset the item-storage
     MqBufferReset(itm->data);
-error:
-    return MqErrorStack(mqctx);
+    ctx->rIdx++;
+    return MQ_OK;
 error1:
     MqErrorPrint(ftr);
     MqErrorReset(ftr);
     MqErrorReset(mqctx);
     return MQ_OK;
+exit:
+    MqErrorPrint (ftr);
+    MqErrorReset (mqctx);
+    return MQ_OK;
   }
-end:
   return MQ_OK;
 }
 
@@ -130,7 +138,7 @@ static enum MqErrorE FilterIn ( ARGS ) {
   }
   MqBufferSetB(it->data, bdy, len);
   strncpy(it->token, MqServiceGetToken(mqctx), 5);
-  it->isFilter = MqServiceIsTransaction(mqctx);
+  it->isTransaction = MqServiceIsTransaction(mqctx);
   ctx->wIdx++;
 error:
   return MqSendRETURN(mqctx);
@@ -168,7 +176,7 @@ FilterSetup (
 {
   register SETUP_ctx;
 
-  // init the chache
+  // init the cache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
   ctx->rIdx = 0;
   ctx->wIdx = 0;
@@ -176,6 +184,8 @@ FilterSetup (
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
+
+  MqConfigSetIgnoreExit (MqServiceGetFilter(mqctx, 0), MQ_YES);
 
 error:
   return MqErrorStack(mqctx);
@@ -210,7 +220,7 @@ main (
   MqConfigSetDefaultFactory (mqctx);
   MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
 
-  // create the ServerCtxS
+  // create the link
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // start event-loop and wait forever
@@ -220,5 +230,4 @@ main (
 error:
   MqExit (mqctx);
 }
-
 

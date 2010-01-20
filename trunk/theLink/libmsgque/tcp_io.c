@@ -98,7 +98,8 @@ TcpCreate (
   MQ_INT port;
 
   // ok we have an TCP style communication
-  register struct TcpS * const tcp = *tcpPtr = (struct TcpS * const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*tcp));
+  register struct TcpS * const tcp = *tcpPtr ? *tcpPtr : 
+    (*tcpPtr = (struct TcpS * const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*tcp)));
 
   // init
   tcp->io = io;
@@ -120,12 +121,14 @@ TcpCreate (
   MqErrorCheck (GenericCreate (io, &tcp->generiC));
 
   // fill remote address
-  MqErrorCheck (sTcpCreateAddrInfo (tcp, tcp->config->host, tcp->config->port, &tcp->remoteaddr));
+  if (tcp->remoteaddr == NULL)
+    MqErrorCheck (sTcpCreateAddrInfo (tcp, tcp->config->host, tcp->config->port, &tcp->remoteaddr));
 
   // fill my address
   if (tcp->config->myhost || tcp->config->myport) {
     if (MQ_IS_CLIENT (context)) {
-      MqErrorCheck (sTcpCreateAddrInfo (tcp, tcp->config->myhost, tcp->config->myport, &tcp->localaddr));
+      if (tcp->localaddr == NULL)
+	MqErrorCheck (sTcpCreateAddrInfo (tcp, tcp->config->myhost, tcp->config->myport, &tcp->localaddr));
     } else if(tcp->config->myhost) {
       return MqErrorDbV2 (context, MQ_ERROR_OPTION_WRONG,"server","--myhost");
     } else if(tcp->config->myport) {

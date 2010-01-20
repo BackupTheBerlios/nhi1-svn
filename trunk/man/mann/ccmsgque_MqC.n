@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "17 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "20 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -54,10 +54,6 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBConfigSetIdent\fP (\fBMQ_CST\fP data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
-.ti -1c
-.RI "\fBMQ_BOL\fP \fBConfigCheckIdent\fP (\fBMQ_CST\fP data)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP "
 .ti -1c
 .RI "void \fBConfigSetIsSilent\fP (\fBMQ_BOL\fP data)"
 .br
@@ -223,6 +219,10 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP "
 .ti -1c
+.RI "void \fBLinkPrepareVC\fP (int const argc, \fBMQ_CST\fP argv[])"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkPrepare\fP "
+.ti -1c
 .RI "void \fBLinkDelete\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
@@ -242,6 +242,10 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "\fBMQ_SIZE\fP \fBLinkGetCtxId\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBLinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqLinkGetRemoteIdent "
 .ti -1c
 .RI "void \fBErrorC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
 .br

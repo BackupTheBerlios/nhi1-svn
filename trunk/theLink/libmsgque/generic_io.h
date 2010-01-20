@@ -29,7 +29,7 @@ BEGIN_C_DECLS
 /// \brief everything \e Generic needs for local storage
 struct GenericS {
   struct MqIoS * io;		///< link to 'io' object
-  struct MqS * context;  ///< my MqErrorS
+  struct MqS * context;		///< my MqErrorS
   MQ_SOCK sock;                 ///< the socket
   char stringbuffer[20];	///< context temporar memory
 };

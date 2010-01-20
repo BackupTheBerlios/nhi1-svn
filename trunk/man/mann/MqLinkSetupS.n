@@ -1,4 +1,4 @@
-.TH "MqLinkSetupS" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqLinkSetupS" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -26,19 +26,19 @@ MqLinkSetupS \- used to Create/Delete of object
 .PP 
 used to Create/Delete of object 
 .PP
-Definition at line 560 of file msgque.h.
+Definition at line 564 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMqCreateF\fP \fBMqLinkSetupS.fCreate\fP"
 .PP
 create a new object 
 .PP
-Definition at line 561 of file msgque.h.
+Definition at line 565 of file msgque.h.
 .SS "\fBMqDeleteF\fP \fBMqLinkSetupS.fDelete\fP"
 .PP
 delete a object 
 .PP
-Definition at line 562 of file msgque.h.
+Definition at line 566 of file msgque.h.
 
 .SH "Author"
 .PP 

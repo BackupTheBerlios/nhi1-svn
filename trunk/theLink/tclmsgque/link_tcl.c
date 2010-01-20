@@ -31,7 +31,7 @@ int NS(LinkIsParent) (NS_ARGS)
 int NS(LinkIsConnected) (NS_ARGS)
 {
   CHECK_NOARGS
-  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqLinkIsConnectedI(MQCTX)));
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqLinkIsConnected(MQCTX)));
   RETURN_TCL
 }
 

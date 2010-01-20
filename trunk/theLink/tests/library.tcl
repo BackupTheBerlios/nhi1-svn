@@ -296,7 +296,6 @@ if {![array exists TS_SERVER]} {
 }
 
 proc getServer {srv} {
-  global env
   set RET [list]
 
   # prefix (debugger)
@@ -320,7 +319,26 @@ proc getServer {srv} {
 }
 
 proc getFilter {srv} {
-  return [list {*}[getPrefix $srv] [file rootname $srv] {*}[getPostfix $srv]]
+  set RET [list]
+
+  # prefix (debugger)
+  lappend RET {*}[getPrefix $srv]
+
+  # setup args
+  foreach {exe lng io start} [split $srv .] break
+
+  # main executable
+  lappend RET {*}[getExampleExecutable $exe.$lng]
+
+  # postfix
+  lappend RET {*}[getPostfix $srv]
+
+  # startup
+  if {$start ne ""} {
+    lappend RET --$start
+  }
+
+  return $RET
 }
 
 proc getServerOnly {srv} {
@@ -1274,6 +1292,60 @@ proc Exec {args} {
   } else {
     return "$ERR"
   }
+}
+
+proc Bg {args} {
+  if {$::env(TS_SETUP)} {
+    Print args
+  }
+  return [exec {*}$args >&@stdout &]
+}
+
+proc BgAct {ch cmd} {
+  if {[eof $ch]} {
+    close $ch
+  } else {
+    $cmd $ch
+  }
+}
+
+proc BgProc {p args} {
+  if {$::env(TS_SETUP)} {
+    Print args
+  }
+  set OUTPUT [open [list | {*}$args 2>@stderr] r]
+  fconfigure $OUTPUT -buffering line -blocking yes
+  fileevent $OUTPUT readable [list BgAct $OUTPUT $p]
+  return $OUTPUT
+}
+
+proc WaitMSec {msec} {
+  global done
+  set done 1
+  after $msec {set ::done 0}
+  while {$done} {
+    update
+  }
+}
+
+proc WaitEOF {fh} {
+  catch {
+    while {![eof $fh]} {
+      update
+    }
+  }
+}
+
+proc Kill {{P NULL}} {
+  if {$P eq "NULL"} {
+    global PID
+    if {[info exists PID]} {
+      set P $PID
+    } else {
+      return
+    }
+  }
+  catch {exec $::KILL $P}
 }
 
 proc ExecLines {start end args} {

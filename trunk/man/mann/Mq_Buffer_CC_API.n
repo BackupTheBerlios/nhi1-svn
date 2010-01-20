@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_CC_API" n "17 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_CC_API" n "20 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -84,7 +84,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
 signature marker used in \fBMqS.signature\fP 
 .PP
-Definition at line 1379 of file msgque.h.
+Definition at line 1370 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -109,7 +109,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1370 of file msgque.h.
+Definition at line 1361 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"

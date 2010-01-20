@@ -105,14 +105,18 @@ enum MqErrorE pIoStartServer (
   struct MqIoS * const io,
   enum IoStartServerE startType,
   MQ_SOCK * sockP,
-  struct MqBufferLS ** alfaP,
-  struct MqBufferLS * alfa2,
   struct MqIdS * idP
 );
 
 /// \brief check if communication is possible
 MQ_BOL
 pIoCheck (
+  struct MqIoS * const io
+);
+
+/// \brief check if communication is in "initial" state
+MQ_BOL
+pIoCheckInitial (
   struct MqIoS * const io
 );
 

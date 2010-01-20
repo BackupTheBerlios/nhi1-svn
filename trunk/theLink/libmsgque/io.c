@@ -48,7 +48,8 @@ pIoCreate (
   struct MqIoS ** const out
 )
 {
-  struct MqIoS * const io = *out = (struct MqIoS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*io));
+  register struct MqIoS * const io = *out ? *out : 
+    (*out = (struct MqIoS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*io)));
 
   io->context = context;
   // parent and child get both this initial value
@@ -368,14 +369,13 @@ pIoStartServer (
   struct MqIoS * const io,
   enum IoStartServerE startType,
   MQ_SOCK * sockP,
-  struct MqBufferLS ** alfaP,
-  struct MqBufferLS * alfa2, // if alfaP!=NULL than alfa2 will be set by alfaP
   struct MqIdS * idP
 ) {
   struct MqS * const context = io->context;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
   struct MqFactoryS factory = MqFactoryS_NULL;
   struct MqBufferLS * alfa1 = NULL;
+  struct MqBufferLS * alfa2 = NULL;
   int start_as_pipe = 0;
 #endif
 #if defined(MQ_HAS_THREAD)
@@ -388,24 +388,14 @@ pIoStartServer (
 
   MQ_CST  name = NULL;
 
-  // alfa is now owned by "pIoStartServer"
-  if (alfaP != NULL) {
-    alfa1 = *alfaP;
-    *alfaP = NULL;
-  }
-
-/*
-I0
-printULS(alfa1)
-printLP(alfa1->data)
-printLP(alfa1->cur)
-*/
-
   // select the code
 rescan:
   switch (startType) {
     case MQ_START_SERVER_AS_PIPE: {
 	start_as_pipe = 1;
+	// alfa is owned by this proc
+	alfa1 = context->link.alfa;
+	context->link.alfa = NULL;
 //printLC("MQ_START_SERVER_AS_PIPE:")
 	// case 2: this is used if the function is called from MqLinkCreate. The
 	// context->alfa argument has the startup arguments of the MQ_IO_PIPE server.
@@ -434,7 +424,7 @@ rescan:
 //printLC(name)
 
 	// check if we use the "WORKER" keyword
-	if (context->link.isWORKER) {
+	if (context->link.bits.isWORKER) {
 	  // replace "WORKER" with "MqInitBuf" data
 	  name = MqInitBuf->data[0]->cur.C;
 	  // replace "WORKER" itself on position "0"
@@ -462,8 +452,8 @@ rescan:
 		context->config.startAs == MQ_START_FORK)) {
 //printLC("fork")
 	    startType = MQ_START_SERVER_AS_FORK;
-	    // if isWORKER than the startup is like a "GenericServer" and not like a "pipe"
-	    if (context->link.isWORKER == MQ_YES) {
+	    // if bits.isWORKER than the startup is like a "GenericServer" and not like a "pipe"
+	    if (context->link.bits.isWORKER == MQ_YES) {
 	      MqBufferLAppend(alfa1, MqBufferCreateC(MQ_ERROR_PANIC, name), 0);
 	    }
 	    goto rescan;
@@ -476,8 +466,8 @@ rescan:
 		context->config.startAs == MQ_START_THREAD)) {
 //printLC("thread")
 	    startType = MQ_START_SERVER_AS_THREAD;
-	    // if isWORKER than the startup is like a "GenericServer" and not like a "pipe"
-	    if (context->link.isWORKER == MQ_YES) {
+	    // if bits.isWORKER than the startup is like a "GenericServer" and not like a "pipe"
+	    if (context->link.bits.isWORKER == MQ_YES) {
 	      MqBufferLAppend(alfa1, MqBufferCreateC(MQ_ERROR_PANIC, name), 0);
 	    }
 #if defined(HAVE_PTHREAD)
@@ -504,6 +494,8 @@ rescan:
 #if defined(MQ_HAS_THREAD)
     case MQ_START_SERVER_AS_THREAD: {
 //printLC("MQ_START_SERVER_AS_THREAD:")
+	if (alfa2 == NULL)
+	  alfa2 = MqBufferLDup (context->link.alfa);
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
 	  factory = context->setup.Factory;
@@ -541,6 +533,8 @@ MqBufferLLogS(context, alfa2, "alfa2");
 #if defined(HAVE_FORK)
     case MQ_START_SERVER_AS_FORK: {
 //printLC("MQ_START_SERVER_AS_FORK:")
+	if (alfa2 == NULL)
+	  alfa2 = MqBufferLDup (context->link.alfa);
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
 	  factory = context->setup.Factory;
@@ -574,6 +568,8 @@ MqBufferLLogS(context, alfa2, "alfa2");
     case MQ_START_SERVER_AS_SPAWN: {
 //printLC("MQ_START_SERVER_AS_SPAWN:")
 	char **argV, **arg;
+	if (alfa2 == NULL)
+	  alfa2 = MqBufferLDup (context->link.alfa);
 	// add 20 item's as additional space
 	argV = arg = (char **) MqSysMalloc (context, sizeof(*alfa1) * (
 	    (alfa1 != NULL ? alfa1->cursize : 0) + (alfa2 ? alfa2->cursize : 0) + 20 
@@ -613,7 +609,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
         {
 int i;
 char ** xarg = argV;
-printLC(name)
+//printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
   MqDLogX (context, __func__, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }
@@ -676,6 +672,13 @@ pIoCheck (
   struct MqIoS * const io
 ) {
   return (io && io->sockP ? (*(io->sockP) >= 0) : MQ_NO);
+}
+
+MQ_BOL
+pIoCheckInitial (
+  struct MqIoS * const io
+) {
+  return (io && io->sockP ? (*(io->sockP) == -1) : MQ_NO);
 }
 
 MQ_CST
@@ -835,5 +838,4 @@ pIoLog (
 #endif
 
 END_C_DECLS
-
 

@@ -19,7 +19,7 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define MX(s) printf("%s(%s:%d) -> %s \n", __func__, __FILE__, __LINE__, #s);fflush(stdout);
+#define MX(s) fprintf(stderr, "%s(%s:%d) -> %s \n", __func__, __FILE__, __LINE__, #s);fflush(stderr);
 
 #define M0 MX(00000000000000000)
 #define M1 MX(11111111111111111)
@@ -62,8 +62,8 @@
 #define XIB(x) IX(x,BBBBBBBBBBBBBBBB)
 #define XIE(x) IX(x,EEEEEEEEEEEEEEEE)
 
-#define MV(f,v) printf("%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stdout);
-#define MVA(f,v,a) printf("%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, a);fflush(stdout);
+#define MV(f,v) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stderr);
+#define MVA(f,v,a) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, a);fflush(stderr);
 
 #define printI(var)	MV(MQ_FORMAT_I,	var)
 #define printY(var)	MV(MQ_FORMAT_Y,	var)
@@ -97,11 +97,11 @@
 #define printXLO(x,var)	  MLV(x, MQ_FORMAT_C, var == MQ_YES ? "yes" : "no" )
 #define printXR(x,var)	  MLV2(x, MQ_FORMAT_C, "RET", MqLogErrorCode(ret))
 
-#define printC2(var,len)  printf( "%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(var,len));fflush(stdout);
-#define printC3(buf) printf( "%s->" #buf " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(MqBufferGetC(buf),buf->cursize));fflush(stdout);
-#define printX2(var) printf( "%s->" #var " = <" "%hx"     ">\n", __func__, var);fflush(stdout);
-#define printT(var)  printf( "%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogTypeName(var));fflush(stdout);
-#define printPy(var) printf( "%s->" #var "(%p) = <", __func__, var); PyObject_Print(var,stdout,0); printf(">\n");fflush(stdout);
+#define printC2(var,len)  fprintf(stderr,"%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(var,len));fflush(stderr);
+#define printC3(buf) fprintf(stderr, "%s->" #buf " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(MqBufferGetC(buf),buf->cursize));fflush(stderr);
+#define printX2(var) fprintf(stderr, "%s->" #var " = <" "%hx"     ">\n", __func__, var);fflush(stderr);
+#define printT(var)  fprintf(stderr, "%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogTypeName(var));fflush(stderr);
+#define printPy(var) fprintf(stderr, "%s->" #var "(%p) = <", __func__, var); PyObject_Print(var,stderr,0); fprintf(stderr,">\n");fflush(stderr);
 
 #define CL(code) if (MQ_IS_CLIENT(MQ_CONTEXT_S)) {code}
 
@@ -111,7 +111,7 @@
     system(buf);\
 }
 
-#define printMI(msgque,var)  printLog(msgque,#var " = <" MQ_FORMAT_I  ">\n", var);fflush(stdout);
+#define printMI(msgque,var)  printLog(msgque,#var " = <" MQ_FORMAT_I  ">\n", var);fflush(stderr);
 
 #define printM(mq) MqDLogX(mq,__func__,0,"(%s:%d) -> <" #mq ">\n", __FILE__, __LINE__);
 #define printU(var) MqBufferLog(MQ_CONTEXT_S, var, #var);
@@ -120,19 +120,19 @@
 #define printXULS(x,var) MqBufferLLogS(x, var, __func__ , #var);
 #define printULS(var) printXULS(MQ_CONTEXT_S, var);
 #define printV(var,ap) \
-    printf( "%s->" #var " = <", __func__);\
+    fprintf(stderr, "%s->" #var " = <", __func__);\
     vprintf( var,ap);\
-    printf( ">\n");\
-    fflush(stdout);
+    fprintf(stderr, ">\n");\
+    fflush(stderr);
 
-#define printThread(str) printf("%s(%s:%d) -> pid<%i>, id<%li> -> " #str "\n", __func__, __FILE__, __LINE__,\
-      mq_getpid(), pthread_self());fflush(stdout);
+#define printThread(str) fprintf(stderr,"%s(%s:%d) -> pid<%i>, id<%li> -> " #str "\n", __func__, __FILE__, __LINE__,\
+      mq_getpid(), pthread_self());fflush(stderr);
 
-#define PRT(id) printf("%s(%s:%d) -> " #id " - pid<%i>, thread<%p>\n", __func__, __FILE__, __LINE__, getpid(), \
-			    (void*)pthread_self());fflush(stdout);
+#define PRT(id) fprintf(stderr,"%s(%s:%d) -> " #id " - pid<%i>, thread<%p>\n", __func__, __FILE__, __LINE__, getpid(), \
+			    (void*)pthread_self());fflush(stderr);
 
-#define PRT1(id,ptr) printf("%s(%s:%d) -> " #id " - pid<%i>, thread<%p>, " #ptr "<%p>\n", \
-  __func__, __FILE__, __LINE__, getpid(), (void*)pthread_self(), (void*)ptr);fflush(stdout);
+#define PRT1(id,ptr) fprintf(stderr,"%s(%s:%d) -> " #id " - pid<%i>, thread<%p>, " #ptr "<%p>\n", \
+  __func__, __FILE__, __LINE__, getpid(), (void*)pthread_self(), (void*)ptr);fflush(stderr);
 
 /*****************************************************************************/
 /*                                                                           */

@@ -19,8 +19,12 @@ int NS(ServiceGetFilter) (NS_ARGS)
   MQ_SIZE id=0;
   CHECK_DI(id);
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqServiceGetFilter(mqctx, id, &ftr));
-  Tcl_SetObjResult(interp, (Tcl_Obj*)ftr->self);
+  ftr = MqServiceGetFilter(mqctx, id);
+  if (ftr != NULL) {
+    Tcl_SetObjResult(interp,(Tcl_Obj*)ftr->self);
+  } else {
+    Tcl_SetResult(interp,"", TCL_STATIC);
+  }
   RETURN_TCL
 }
 

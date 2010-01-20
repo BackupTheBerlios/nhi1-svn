@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "17 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "20 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -510,7 +510,7 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .SS "ctx.LinkCreateV(MQ_CST ..., NULL)"
 .SS "ctx.LinkCreateVT(const std::vector<MQ_CST>& args)"
 .SS "ctx.LinkCreateVC(int const argc, MQ_CST *args)"
-make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP 
+make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 \fBParameters:\fP
 .RS 4

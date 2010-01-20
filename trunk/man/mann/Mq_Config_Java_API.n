@@ -1,4 +1,4 @@
-.TH "Mq_Config_Java_API" n "17 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_Java_API" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -55,7 +55,7 @@ Mq_Config_Java_API \- configuration of a context
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.ConfigCheckIdent\fP (String val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP "
+.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetBuffersize\fP (int val)"
 .br
@@ -176,7 +176,7 @@ The configuration is done persistent using \fIconfig-api\fP functions or on link
 .PP 
 .SS "native boolean javamsgque.MqS.ConfigCheckIdent (String val)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP 
+implement the \fBlibmsgque\fP API object: MqConfigCheckIdent 
 .PP
 .SS "native int javamsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"
 .PP

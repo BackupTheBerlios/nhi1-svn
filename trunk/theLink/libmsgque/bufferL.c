@@ -712,10 +712,13 @@ pBufferLSetError (
   struct MqS * const context
 )
 {
-  MQ_SIZE i;
-  if (unlikely(bufL == NULL)) return;
-  for (i=0; i<bufL->cursize; i++) {
-    bufL->data[i]->context = context;
+  if (unlikely(bufL == NULL)) {
+    return;
+  } else {
+    MQ_SIZE i;
+    for (i=0; i<bufL->cursize; i++) {
+      bufL->data[i]->context = context;
+    }
   }
 }
 

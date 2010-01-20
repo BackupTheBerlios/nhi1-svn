@@ -113,13 +113,13 @@ MqContextDelete (
     return;
   } else if (context->setup.Factory.Delete.fCall) {
     MqFactoryDeleteF fCall = context->setup.Factory.Delete.fCall;
-    MQ_BOL doFactoryCleanup = context->link.doFactoryCleanup;
-    context->link.doFactoryCleanup = MQ_NO;
+    MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;
+    context->link.bits.doFactoryCleanup = MQ_NO;
     context->setup.Factory.Delete.fCall = NULL;
     (*fCall) (context, doFactoryCleanup, context->setup.Factory.Delete.data);
   } else {
     // set this because "setup.Factory.Delete.fCall" is !not! required
-    context->link.doFactoryCleanup = MQ_NO;
+    context->link.bits.doFactoryCleanup = MQ_NO;
     context->MqContextDelete_LOCK = MQ_YES;
     MqContextFree (context);
     if (context->contextsize > 0) {
@@ -207,11 +207,13 @@ MqSetupDup (
   MQ_PTR BgError = context->setup.BgError.data;
   MQ_PTR FactoryC = context->setup.Factory.Create.data;
   MQ_PTR FactoryD = context->setup.Factory.Delete.data;
+  enum MqFactoryE FactoryType = context->setup.Factory.type;
 
   // Step 1,  copy "setup" 
   MqSysFree(context->setup.ident);
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
+  context->setup.Factory.type = FactoryType;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   MqErrorCheck (sSetupDupHelper (context, &context->setup.Event.data, context->setup.Event.fCopy, Event));
@@ -264,7 +266,8 @@ pCallFactory (
   MqErrorCheck((factory.Create.fCall)(tmpl, create, factory.Create.data, contextP));
 
   // set the factory
-  (*contextP)->link.doFactoryCleanup = MQ_YES;
+  (*contextP)->link.bits.doFactoryCleanup = MQ_YES;
+  (*contextP)->setup.Factory.type = create;
 
   return MQ_OK;
 
@@ -668,16 +671,6 @@ MqConfigGetIsSilent (
   return (context->config.isSilent == MQ_YES);
 }
 
-/*
-int
-MqConfigGetDoFactoryCleanup (
-  struct MqS const * const context
-)
-{
-  return (context->link.doFactoryCleanup == MQ_YES);
-}
-*/
-
 int
 MqConfigGetIsDupAndThread (
   struct MqS const * const context
@@ -827,6 +820,7 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
 
 
 

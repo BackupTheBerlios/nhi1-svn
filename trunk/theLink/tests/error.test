@@ -63,7 +63,7 @@ BG-TEXT-RET:[sS]> (server-0) \[PANIC] this is a non recoverable error
 BG-TEXT-CODE:NONE
 111-CATCH:1
 111-RET:[cC]> * \[SysRecv] application EXIT request*
-111-CODE:TCLMSGQUE 215 2 {[cC]> * \[SysRecv] application EXIT request*}
+111-CODE:TCLMSGQUE 215 3 {[cC]> * \[SysRecv] application EXIT request*}
 END}
 
 test error-1b-($I|$B|$C|$S) {return value + error} \

@@ -75,7 +75,8 @@ UdsCreate (
   struct MqS * const context = io->context;
 
   // ok we have an UDS style communication
-  register struct UdsS * const uds = *udsPtr =(struct UdsS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*uds));
+  register struct UdsS * const uds = *udsPtr ? *udsPtr : 
+    (*udsPtr = (struct UdsS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*uds)));
 
   // init uds data
   uds->io   = io;

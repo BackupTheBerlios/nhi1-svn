@@ -1,4 +1,4 @@
-.TH "Mq_Link_CC_API" n "17 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Link_CC_API" n "20 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -61,6 +61,10 @@ Mq_Link_CC_API \- setup and manage a \fIclient-server-link\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP "
 .ti -1c
+.RI "void \fBccmsgque::MqC::LinkPrepareVC\fP (int const argc, \fBMQ_CST\fP argv[])"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkPrepare\fP "
+.ti -1c
 .RI "void \fBccmsgque::MqC::LinkDelete\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
@@ -80,6 +84,10 @@ Mq_Link_CC_API \- setup and manage a \fIclient-server-link\fP
 .RI "\fBMQ_SIZE\fP \fBccmsgque::MqC::LinkGetCtxId\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBccmsgque::MqC::LinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqLinkGetRemoteIdent "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -196,12 +204,12 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 
 .PP
-Definition at line 432 of file ccmsgque.h.
+Definition at line 430 of file ccmsgque.h.
 .SS "#define LinkCreateV( ...)   _LinkCreateV(0, __VA_ARGS__)"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
 .PP
-Definition at line 417 of file ccmsgque.h.
+Definition at line 415 of file ccmsgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void ccmsgque::MqC::_LinkCreateChildV (\fBMqC\fP & parent, int dummy,  ...)\fC [inherited]\fP"
@@ -224,57 +232,67 @@ implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 
 .PP
-Definition at line 426 of file ccmsgque.h.
+Definition at line 424 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkCreateChildVC (\fBMqC\fP & parent, int const  argc, \fBMQ_CST\fP * argv)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 
 .PP
-Definition at line 422 of file ccmsgque.h.
+Definition at line 420 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkCreateChildVT (\fBMqC\fP & parent, std::vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 
 .PP
-Definition at line 436 of file ccmsgque.h.
+Definition at line 434 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkCreateVA (va_list ap)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
 .PP
-Definition at line 411 of file ccmsgque.h.
+Definition at line 409 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkCreateVC (int const  argc, \fBMQ_CST\fP argv[])\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
 .PP
-Definition at line 403 of file ccmsgque.h.
+Definition at line 401 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkCreateVT (const std::vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
 .PP
-Definition at line 407 of file ccmsgque.h.
+Definition at line 405 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LinkDelete ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP 
 .PP
-Definition at line 441 of file ccmsgque.h.
+Definition at line 445 of file ccmsgque.h.
 .SS "\fBMQ_SIZE\fP ccmsgque::MqC::LinkGetCtxId ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP 
 .PP
-Definition at line 462 of file ccmsgque.h.
+Definition at line 466 of file ccmsgque.h.
 .SS "MqC* ccmsgque::MqC::LinkGetParent ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP 
 .PP
-Definition at line 446 of file ccmsgque.h.
+Definition at line 450 of file ccmsgque.h.
+.SS "\fBMQ_CST\fP ccmsgque::MqC::LinkGetTargetIdent ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: MqLinkGetRemoteIdent 
+.PP
+Definition at line 471 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::LinkIsConnected ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkIsConnected\fP 
 .PP
-Definition at line 457 of file ccmsgque.h.
+Definition at line 461 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::LinkIsParent ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkIsParent\fP 
 .PP
-Definition at line 452 of file ccmsgque.h.
+Definition at line 456 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::LinkPrepareVC (int const  argc, \fBMQ_CST\fP argv[])\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLinkPrepare\fP 
+.PP
+Definition at line 439 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

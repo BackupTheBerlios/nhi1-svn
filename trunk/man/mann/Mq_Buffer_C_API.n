@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -273,30 +273,30 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 2028 of file msgque.h.
+Definition at line 2036 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 2031 of file msgque.h.
+Definition at line 2039 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 1929 of file msgque.h.
+Definition at line 1937 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 1932 of file msgque.h.
+Definition at line 1940 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 1935 of file msgque.h.
+Definition at line 1943 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 1938 of file msgque.h.
+Definition at line 1946 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -307,7 +307,7 @@ Definition at line 1938 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 1941 of file msgque.h.
+Definition at line 1949 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -323,7 +323,7 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 2022 of file msgque.h.
+Definition at line 2030 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
@@ -390,7 +390,7 @@ L: list object type.
 \fB\fIMQ_RETT \fP\fP
 R: return object type. 
 .PP
-Definition at line 1975 of file msgque.h.
+Definition at line 1983 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"

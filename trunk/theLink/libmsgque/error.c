@@ -300,6 +300,9 @@ pErrorReset (
   struct MqS * const context
 )
 {
+  if (context->error.code == MQ_EXIT) {
+    pMqGetFirstParent(context)->link.exitctx = NULL;
+  }
   MqBufferReset (context->error.text);
   context->error.code = MQ_OK;
   context->error.append = MQ_YES;
@@ -366,19 +369,13 @@ pErrorSetEXIT (
   MQ_CST prefix
 )
 {
-  // only a server return an exit
-  if (MQ_IS_SERVER(context)) {
-    if (context->setup.ignoreExit == MQ_NO) {
-      pMqGetFirstParent(context)->link.exitctx = context;
-      MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
-      return MQ_EXIT;
-    } else {
-      MqDLogC(context, 3, "ignore EXIT\n");
-      return MQ_CONTINUE;
-    }
+  if (context->setup.ignoreExit == MQ_YES) {
+    MqDLogC(context, 3, "ignore EXIT\n");
+    return MQ_CONTINUE;
   } else {
-    MqErrorSGenV(context, prefix, MQ_ERROR, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
-    return MQ_ERROR;
+    pMqGetFirstParent(context)->link.exitctx = context;
+    MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
+    return MQ_EXIT;
   }
 }
 

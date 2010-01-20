@@ -331,7 +331,7 @@ pReadHDR (
     ctxId  = cur->ctxId.B;
     size   = cur->size.B;
     // 3.b fix byte-order
-    if (context->link.endian) {
+    if (context->link.bits.endian) {
       pSwap4 (&ctxId);
       pSwap4 (&size);
     }
@@ -387,7 +387,7 @@ pReadHDR (
     if (unlikely(string)) {
       bdy->numItems = str2int(bdy->cur.C,NULL,16);
     } else {
-      if (context->link.endian) {
+      if (context->link.bits.endian) {
 	pSwapBDY(bdy->data);
       }
       bdy->numItems = iBufU2INT(bdy->cur);
@@ -936,6 +936,7 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
 
 
 

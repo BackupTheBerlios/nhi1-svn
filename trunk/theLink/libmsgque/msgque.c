@@ -79,7 +79,7 @@ pDeleteProtectionCreate (
   struct MqS * const context
 )
 {
-  context->link.deleteProtection = MQ_YES;
+  context->link.bits.deleteProtection = MQ_YES;
 }
 
 /*****************************************************************************/
@@ -101,7 +101,7 @@ sCallEventProc (
     case MQ_OK:
       break;
     case MQ_CONTINUE:
-      if (context->link.onShutdown == MQ_YES)
+      if (context->link.bits.onShutdown == MQ_YES)
 	CONTINUE++;
       break;
     case MQ_ERROR:
@@ -117,7 +117,7 @@ sCallEventProc (
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE:
-	  if (cldCtx->link.onShutdown == MQ_YES)
+	  if (cldCtx->link.bits.onShutdown == MQ_YES)
 	    CONTINUE++;
 	  break;
 	case MQ_ERROR:
@@ -295,14 +295,6 @@ MqCheckForLeftOverArguments (
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqS *
-pMqGetFirstParent(
-  struct MqS * const context
-)
-{
-  return context->link.ctxIdP;
-}
-
 void
 MqExit (
   struct MqS * context
@@ -315,8 +307,8 @@ MqExit (
   // exit on empty context
   if (context == NULL) SysExit (0,0);
   // no double invovation of MqExit
-  if (context->link.onExit == MQ_YES) MqPanicSYS(context);
-  context->link.onExit = MQ_YES;
+  if (context->link.bits.onExit == MQ_YES) MqPanicSYS(context);
+  context->link.bits.onExit = MQ_YES;
   MqDLogC(context,3,"EXIT\n");
 
   // switch to parent
@@ -324,7 +316,7 @@ MqExit (
     struct MqS * parent = pMqGetFirstParent(context);
     MqErrorCopy (parent, context);
     context = parent;
-    context->link.onExit = MQ_YES;
+    context->link.bits.onExit = MQ_YES;
     MqDLogC(context,3,"switch to PARENT\n");
   }
 
@@ -421,4 +413,8 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
+
+
+
 

@@ -1,4 +1,4 @@
-.TH "MqIoTcpConfigS" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoTcpConfigS" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -47,21 +47,21 @@ configure a context to use a \fItcp-client-server-link\fP
 .PP
 
 .PP
-Definition at line 593 of file msgque.h.
+Definition at line 597 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.host\fP\fC [read]\fP"
 .PP
-Definition at line 594 of file msgque.h.
+Definition at line 598 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myhost\fP\fC [read]\fP"
 .PP
-Definition at line 596 of file msgque.h.
+Definition at line 600 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myport\fP\fC [read]\fP"
 .PP
-Definition at line 597 of file msgque.h.
+Definition at line 601 of file msgque.h.
 .SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.port\fP\fC [read]\fP"
 .PP
-Definition at line 595 of file msgque.h.
+Definition at line 599 of file msgque.h.
 
 .SH "Author"
 .PP 

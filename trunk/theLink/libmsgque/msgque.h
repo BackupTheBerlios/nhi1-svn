@@ -248,7 +248,7 @@ struct MqFactoryS;
 /// 1 byte \b byte data-type
 typedef signed char MQ_BYT;
 /// 1 byte \b boolean data-type
-typedef signed char MQ_BOL;
+typedef unsigned char MQ_BOL;
 /// 2 byte \b short data-type
 typedef short MQ_SRT;
 /// 4 byte \b integer data-type
@@ -342,20 +342,23 @@ struct MqLinkS {
 
   // private variables
   struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
-  MQ_BOL endian;		    ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
   MQ_CST targetIdent;		    ///< 'ident' of the link target
-
-  MQ_BOL onExit;		    ///< is already an exit ongoing?
   struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
-  MQ_BOL onCreate;		    ///< is already an "create" ongoing?
-  MQ_BOL MqLinkDelete_LOCK;	    ///< is already a "delete" ongoing?
-  MQ_BOL deleteProtection;	    ///< object in use -> delete is not allowed
-  MQ_BOL onShutdown;		    ///< is already a "shutdown" ongoing?
-  MQ_BOL prepareDone;		    ///< was a prepare already done ?
-  MQ_BOL doFactoryCleanup;	    ///< was the context create by a 'Factory'
-  MQ_BOL flagServerSetup;	    ///< setup.ServerSetup.fFunc was called ?
-
   struct MqCacheS * readCache;	    ///< cache for MqReadS
+
+  /// \brief bitfield to represent the boolean values
+  struct {
+    MQ_BOL endian	      : 1 ; ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+    MQ_BOL onExit	      : 1 ; ///< is already an "exit" ongoing?
+    MQ_BOL onCreate	      : 1 ; ///< is already an "create" ongoing?
+    MQ_BOL onDelete	      :	1 ; ///< is already a "delete" ongoing?
+    MQ_BOL onShutdown	      :	1 ; ///< is already a "shutdown" ongoing?
+    MQ_BOL deleteProtection   :	1 ; ///< object in use -> delete is not allowed
+    MQ_BOL prepareDone	      :	1 ; ///< was a prepare already done ?
+    MQ_BOL doFactoryCleanup   :	1 ; ///< was the context create by a 'Factory'
+    MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fFunc was called ?
+    MQ_BOL isWORKER	      :	1 ; ///< is alfa[0] set to "WORKER"
+  } bits;
 
   // the next 3 items are !!only!! used in the parent
   MQ_SIZE   ctxIdR;		    ///< the largest currently used ctxId number
@@ -373,7 +376,6 @@ struct MqLinkS {
 
   // master/slave relationship
   struct MqLinkSlaveS * slave;	    ///< link to the SLAVE object
-  MQ_BOL  isWORKER;		    ///< is alfa[0] is "WORKER"
 };
 
 /// \ingroup Mq_Error_C_API
@@ -521,12 +523,13 @@ struct MqFactoryDeleteS {
 
 /// \brief used for factory function pointer management
 struct MqFactoryS {
+  enum MqFactoryE type;		    ///< set during factory create to save the "reason"
   struct MqFactoryCreateS Create;
   struct MqFactoryDeleteS Delete;
 };
 
 /// \brief initialize a #MqFactoryS object to \c NULL
-#define MqFactoryS_NULL { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
+#define MqFactoryS_NULL { MQ_FACTORY_NEW_INIT, {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
 
 /// \ingroup Mq_Type_C_API
 /// \brief prototype for exit a process or thread
@@ -1596,6 +1599,10 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
   struct MqBufferLS ** args
 );
 
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkConnect (
+  struct MqS  * const ctx
+);
+
 /// \brief make a \e context to a \e child-context ontop of an existing \e parent-client-server-link
 /// \details A child is using the same process or thread as the parent but a different 
 /// namespace. With a different namespace a child is able to act on different services 
@@ -1653,14 +1660,6 @@ MQ_EXTERN void MQ_DECL MqLinkDelete (
 MQ_EXTERN int MQ_DECL MqLinkIsConnected (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
-
-/// \copydoc MqLinkIsConnected
-static mq_inline int MqLinkIsConnectedI (
-  struct MqS const * const ctx
-)
-{
-  return (ctx->link.onCreate == MQ_YES);
-};
 
 /// \brief get the \e parent-context from a client/server link
 /// \ctx
@@ -1788,10 +1787,9 @@ enum MqWaitOnEventE {
 /// \id
 /// \param[out] filter the \e other-context or \null on error
 /// \retException
-MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
+MQ_EXTERN struct MqS* MQ_DECL MqServiceGetFilter (
   struct MqS  * const ctx,
-  MQ_SIZE const id,
-  struct MqS ** const filter
+  MQ_SIZE const id
 ) __attribute__((nonnull(1)));
 
 /// \brief check if the \e ongoing-service-call belongs to a transaction
@@ -4229,6 +4227,8 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 
 
 

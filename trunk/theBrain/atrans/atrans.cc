@@ -30,7 +30,6 @@ class atrans : public MqC, public IFactory, public IServerSetup,
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;
-    MQ_CST targetIdent;
 
     MqC* Factory() const { 
       return new atrans(); 
@@ -99,8 +98,6 @@ class atrans : public MqC, public IFactory, public IServerSetup,
     }
 
     void ServerSetup() {
-      targetIdent = mq_strdup(LinkGetTargetIdent());
-      // SERVER: listen on every token (+ALL)
       ServiceCreate ("+ALL", this);
     }
 };

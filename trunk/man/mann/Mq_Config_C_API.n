@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -57,7 +57,7 @@ Mq_Config_C_API \- configuration of a context
 
 .in +1c
 .ti -1c
-.RI "#define \fBMqFactoryS_NULL\fP   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
+.RI "#define \fBMqFactoryS_NULL\fP   { MQ_FACTORY_NEW_INIT, {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .br
 .R "initialize a \fBMqFactoryS\fP object to \fCNULL\fP "
 .in -1c
@@ -241,10 +241,6 @@ Mq_Config_C_API \- configuration of a context
 .br
 .R "get the \fIident\fP of the \fIcontext\fP object "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigCheckIdent\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP ident)"
-.br
-.R "check the \fIident\fP of the \fIcontext\fP object "
-.ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetSrvName\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "get the \fIsrvname\fP of the \fIcontext\fP object "
@@ -344,11 +340,11 @@ configuration of a context
 The configuration is done persistent using \fIconfig-api\fP functions or on link-setup using \fIcommand-line-arguments\fP. 
 .SH "Define Documentation"
 .PP 
-.SS "#define MqFactoryS_NULL   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
+.SS "#define MqFactoryS_NULL   { MQ_FACTORY_NEW_INIT, {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
 .PP
-Definition at line 528 of file msgque.h.
+Definition at line 532 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef void( * \fBMqDeleteF\fP)(struct \fBMqS\fP *const context)"
@@ -363,32 +359,32 @@ delete a \fIparent\fP context as the thread exit point
 .PP
 
 .PP
-Definition at line 429 of file msgque.h.
+Definition at line 432 of file msgque.h.
 .SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .PP
 prototype for a Object-Delete factory function 
 .PP
-Definition at line 487 of file msgque.h.
+Definition at line 490 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
 prototype for the \fCfork\fP sys-call 
 .PP
-Definition at line 403 of file msgque.h.
+Definition at line 406 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
 .PP
 application specific help function type 
 .PP
-Definition at line 460 of file msgque.h.
+Definition at line 463 of file msgque.h.
 .SS "typedef void( * \fBMqTokenDataFreeF\fP)(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a free additional token data function 
 .PP
-Definition at line 444 of file msgque.h.
+Definition at line 447 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
 prototype for the \fCvfork\fP sys-call 
 .PP
-Definition at line 406 of file msgque.h.
+Definition at line 409 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqFactoryE\fP"
@@ -423,7 +419,7 @@ the \fIfactory\fP is called to create an object for ...
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 465 of file msgque.h.
+Definition at line 468 of file msgque.h.
 .SS "enum \fBMqIoComE\fP"
 .PP
 what kind of socket interface to use? 
@@ -438,7 +434,7 @@ what kind of socket interface to use?
 \fB\fIMQ_IO_PIPE \fP\fP
 
 .PP
-Definition at line 566 of file msgque.h.
+Definition at line 570 of file msgque.h.
 .SS "enum \fBMqStartE\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -458,26 +454,9 @@ create entity as \fIthread\fP
 \fB\fIMQ_START_SPAWN \fP\fP
 create entity as \fIspawn\fP process 
 .PP
-Definition at line 544 of file msgque.h.
+Definition at line 548 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "\fBMQ_BOL\fP MqConfigCheckIdent (struct \fBMqS\fP *const  context, \fBMQ_CST\fP ident)"
-.PP
-check the \fIident\fP of the \fIcontext\fP object 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIident\fP the ident to check for 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-\fBMQ_YES\fP or \fBMQ_NO\fP
-.RE
-.PP
-The check is done with an \fC_IDN\fP request send to the link target. This function is only useful if the link is up and running. 
 .SS "void MqConfigDup (struct \fBMqS\fP *const  to, struct \fBMqS\fP const *const  from)"
 .PP
 copy the \fBMqS.config\fP data 
@@ -963,7 +942,7 @@ prototype for a Object-Creation factory function
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 862 of file msgque.h.
+Definition at line 866 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP( * \fBMqFactorySelectorF\fP)(\fBMQ_CST\fP name)"
 .PP
 Return a \fImain\fP factory function found by \fIname\fP. 
@@ -978,7 +957,7 @@ This function have to be defined in the target tool (example: \fCatool.c\fP) and
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 859 of file msgque.h.
+Definition at line 863 of file msgque.h.
 .SS "enum \fBMqErrorE\fP( * \fBMqTokenDataCopyF\fP)(struct \fBMqS\fP *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a copy additional token data function 

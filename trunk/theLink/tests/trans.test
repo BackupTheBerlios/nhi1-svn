@@ -28,8 +28,6 @@ if {[info exists env(TS_LIBRARY)]} {
 ## define filter
 ##
 
-rename getFilter ""
-rename getExample getFilter
 set env(TS_FILTER_SERVER)  Filter4
 set env(TS_FILTER_CLIENT)  NO
 
@@ -75,6 +73,19 @@ test trans-2-($I|$B|$C|$S) {send valid data} \
     -returnCodes    ok \
     -result         { 1: HALLO}
 
+test trans-3-($I|$B|$C|$S) {send error + valid data} \
+    -body           {
+      Setup $I $B $C $S --save-server-output
+      Echo0 $FH_LAST DUM1 SendC HALLO
+      Echo0 $FH_LAST PRNT SendC HALLO
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {BACKGROUND ERROR: [cC]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
+[sS]> (server-0) \[pTokenInvoke] token <DUM1> not found
+ 1: HALLO}
+
 # cleanup ---------------------------
 #Cleanup
 
@@ -89,11 +100,84 @@ test trans-2-($I|$B|$C|$S) {send valid data} \
  }; # Master/Child  
 unset -nocomplain I B C S
 
+##  
+## -----------------------------------------------------------------------
+## additional tests
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+  # server-type: server server.tcl
+  foreach S [list {*}[filterGet SRV_LST tcp fork] {*}[filterGet SRV_LST tcp spawn]] {
+
+proc BgAct {ch sig} {
+  gets $ch line
+  if {[string first $sig $line] != -1} {
+    set ::done yes
+    close $ch
+  }
+}
+
+test trans-X1-($I|$B|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      set RET	[list]
+      set PORT1	[FindFreePort]
+      set PORT2	[FindFreePort]
+      set SRV	[list {*}[getServer $S] --tcp --port $PORT2]
+      set FTR	[list {*}[getFilter Filter4.$S] --tcp --port $PORT1 @ --tcp --port $PORT2]
+      set CTX	[tclmsgque MqS]
+      $CTX	ConfigSetName	  "client"
+      $CTX	ConfigSetDebug	  $env(TS_DEBUG)
+      $CTX	ConfigSetTimeout  1
+      $CTX	ConfigSetIoTcp	  "" $PORT1 "" ""
+    } \
+    -body           {
+      set SrvPID [Bg {*}$SRV]
+      set FtrPID [Bg {*}$FTR]
+      $CTX LinkCreate
+
+      Echo0 $CTX PRN2 SendC $TMP SendC T1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRN2 SendC $TMP SendC T2
+      Echo0 $CTX PRN2 SendC $TMP SendC T3
+      rename $CTX ""
+
+      set done no
+      set FH [open $TMP r]
+      fconfigure $FH -buffering line -blocking yes
+      fileevent $FH readable [list BgAct $FH T3]
+      while {!$done} {
+	update
+      }
+      set FH [open $TMP r]
+      read -nonewline $FH
+    } \
+    -cleanup	    {
+      close $FH
+      catch {Kill $SrvPID}
+      catch {Kill $FtrPID}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+ 1: T1
+ 1: T2
+ 1: T3}
+
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
 ##
 ## -----------------------------------------------------------------------
 ## finish
 ##
 
-file delete -force tmp.tch tmp.tcb tmp.tcf tmp.tct check.out
 freeTests
 

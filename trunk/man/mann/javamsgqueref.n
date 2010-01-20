@@ -1,4 +1,4 @@
-.TH "javamsgque" n "17 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -489,7 +489,7 @@ if a \fIcontext\fP is deleted (parent or child) the \fIdepending\fP context (par
 if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP
 .SS "ctx.LinkCreate(String... args)"
-make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP 
+make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 \fBParameters:\fP
 .RS 4

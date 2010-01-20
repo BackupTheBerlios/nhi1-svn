@@ -10,9 +10,9 @@
  *              please contact AUTHORS for additional information
  */
 
-//#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "msgque.h"
 #include "debug.h"
 
@@ -1240,7 +1240,7 @@ error:
   return MqSendRETURN (mqctx);
 }
 
-/// \brief print data from stdin
+/// \brief print data to stdout
 /// \service
 static enum MqErrorE
 Ot_PRNT (
@@ -1256,6 +1256,30 @@ Ot_PRNT (
   }
 
 error:
+  return MqSendRETURN (mqctx);
+}
+
+/// \brief print data to file
+/// \service
+static enum MqErrorE
+Ot_PRN2 (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  FILE *FH=NULL;
+  int i=0;
+  MQ_CST str, file;
+  MqErrorCheck (MqReadC (mqctx, &file));
+  FH = fopen (file, "a");
+  
+  while (MqReadItemExists(mqctx)) {
+    MqErrorCheck (MqReadC (mqctx, &str));
+    fprintf (FH, "%2i: %s\n", ++i, str);
+  }
+
+error:
+  fclose (FH);
   return MqSendRETURN (mqctx);
 }
 
@@ -1346,6 +1370,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "PRN2", Ot_PRN2, NULL, NULL));
   }
 
 error:

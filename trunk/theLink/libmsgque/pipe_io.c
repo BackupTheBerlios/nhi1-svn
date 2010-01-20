@@ -62,7 +62,8 @@ PipeCreate (
   struct MqS * const context = io->context;
 
   // ok we have an PIPE style communication
-  register struct PipeS * const pipe = *pipePtr = (struct PipeS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*pipe));
+  register struct PipeS * const pipe = *pipePtr ? *pipePtr : 
+    (*pipePtr = (struct PipeS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*pipe)));
 
   // init
   pipe->io = io;

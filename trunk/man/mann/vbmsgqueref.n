@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -486,7 +486,7 @@ if a \fIcontext\fP is deleted (parent or child) the \fIdepending\fP context (par
 if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP
 .SS "ctx.LinkCreate(BqVal ParamArray args As String())"
-make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP 
+make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 \fBParameters:\fP
 .RS 4

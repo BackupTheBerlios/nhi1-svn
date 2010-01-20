@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "17 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,7 +34,7 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "native boolean \fBConfigCheckIdent\fP (String val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP "
+.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "native void \fBConfigSetBuffersize\fP (int val)"
 .br

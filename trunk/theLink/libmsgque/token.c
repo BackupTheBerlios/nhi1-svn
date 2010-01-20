@@ -475,15 +475,15 @@ pTokenCheckSystem (
 	    // read the binary mode
 	    MqReadO(context, &mystring);
 
-	    // read the other endian and set my context->link.endian
+	    // read the other endian and set my context->link.bits.endian
 	    MqReadO(context, &myendian);
 # if defined(WORDS_BIGENDIAN)
-	    context->link.endian = (myendian ? MQ_NO : MQ_YES);
+	    context->link.bits.endian = (myendian ? MQ_NO : MQ_YES);
 # else
-	    context->link.endian = (myendian ? MQ_YES : MQ_NO);
+	    context->link.bits.endian = (myendian ? MQ_YES : MQ_NO);
 # endif
 
-	    // read the other endian and set my context->link.endian
+	    // read the other endian and set my context->link.bits.endian
 	    MqReadC(context, &name);
 	    context->link.targetIdent = mq_strdup(name);
 
@@ -614,4 +614,5 @@ pTokenCheck (
 }
 
 END_C_DECLS
+
 

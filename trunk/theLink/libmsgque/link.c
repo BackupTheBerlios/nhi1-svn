@@ -146,7 +146,7 @@ sMqCheckArg (
 
   // check to force CHILD requirements
   if (MQ_IS_CHILD(context)) {
-    context->link.endian = context->config.parent->link.endian;
+    context->link.bits.endian = context->config.parent->link.bits.endian;
     MqSysFree (context->link.targetIdent);
     context->link.targetIdent = mq_strdup_save(context->config.parent->link.targetIdent);
   }
@@ -391,8 +391,8 @@ pMqShutdown (
 )
 {
   struct pChildS * child;
-  if (!MQ_ERROR_IS_POINTER(context) || context->link.onShutdown == MQ_YES) return;
-  context->link.onShutdown = MQ_YES;
+  if (!MQ_ERROR_IS_POINTER(context) || context->link.bits.onShutdown == MQ_YES) return;
+  context->link.bits.onShutdown = MQ_YES;
 
   MqDLogC(context,4,"START shutdown\n");
 
@@ -466,15 +466,14 @@ MqLinkPrepare (
 )
 {
   // only prepare once
-  if (context->link.prepareDone == MQ_YES) {
+  if (context->link.bits.prepareDone == MQ_YES) {
     return MQ_OK;
   } else {
-    struct MqBufferLS *argv;
-    context->link.prepareDone = MQ_YES;
+    struct MqBufferLS *argv = (argvP != NULL ? *argvP : NULL);
+    context->link.bits.prepareDone = MQ_YES;
 
-    // pointers are now owned by MqLinkCreate
-    pBufferLSplitAlfa (argvP, &context->link.alfa);
-    argv = (argvP != NULL ? *argvP : NULL);
+    // pointers are now owned by MqLinkS
+    pBufferLSplitAlfa (&argv, &context->link.alfa);
 
     // 1. set the error object of the arguments
     pBufferLSetError(argv, context);
@@ -482,9 +481,18 @@ MqLinkPrepare (
 
     // 2. parse arguments
     if (MqErrorCheckI (sMqCheckArg (context, argv))) {
-      MqBufferLDelete (argvP);
-      argv = NULL;
+      MqBufferLDelete (&argv);
     }
+
+    // 3. cleanup the pointer's
+    if (argv != NULL && argv->cursize == 0) {
+      MqBufferLDelete(&argv);
+      if (argvP != NULL) *argvP = NULL;
+    } else if (argv == NULL) {
+      if (argvP != NULL) *argvP = NULL;
+    }
+
+    // 4. send message
     if (context->config.debug >= 2) {
       if (MQ_IS_SLAVE(context))
 	MqDLogX(context,__func__,2,"PREPARE-SLAVE: master<%p>\n", (void*) context->config.master);
@@ -493,12 +501,118 @@ MqLinkPrepare (
       else
 	MqDLogX(context,__func__,2,"PREPARE-CHILD: parent<%p>\n", (void*) context->config.parent);
     }
-
-    if (argv != NULL && argv->cursize == 0) MqBufferLDelete(argvP);
     return MqErrorStack(context);
   }
 }
 
+enum MqErrorE
+MqLinkConnect (
+  struct MqS * const context
+)
+{
+  // initialize IO
+  if (pIoCheckInitial(context->link.io) == MQ_NO) 
+    MqErrorCheck (pIoCreate (context, &context->link.io));
+
+  if (MQ_IS_CHILD (context)) {
+  // this is a CHILD
+    register struct MqS * const parent = context->config.parent;
+
+    // PARENT, sending using the DATA of the CHILD as argument
+    MqSendSTART (parent);
+    MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
+    MqSendI (parent, (MQ_INT) context->config.isSilent);
+    if (context->config.srvname != NULL) {
+      MqSendC (parent, context->config.srvname);
+    }
+
+    // !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
+    if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
+      MqErrorCopy (context, parent);
+      pIoCloseSocket (context->link.io, __func__);
+      goto error;
+    }
+
+  } else {
+  // this is a PARENT
+
+    MQ_CST ident;
+    MQ_BOL mystring;
+    MQ_BOL myendian;
+
+    // 0. Start the PIPE server (if necessary)
+    MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, NULL));
+
+    // 1. connect to the server
+    MqErrorCheck (pIoConnect (context->link.io));
+
+    // 2. exchange startup messages
+    //      - allways send as string
+
+    // save my original binary-mode
+    mystring = context->config.isString;
+
+    // for '_IAA' we only use 'string' mode
+    MqConfigSetIsString (context, MQ_YES);
+
+    MqSendSTART (context);
+
+    // send the binary mode
+    MqSendO (context, mystring);
+
+    // send my endian
+#     if defined(WORDS_BIGENDIAN)
+      MqSendO (context, MQ_YES);
+#     else
+      MqSendO (context, MQ_NO);
+#     endif
+
+    /// send my ident
+    MqSendC (context, context->setup.ident);
+
+    // send the server name
+    MqSendC (context, context->config.srvname);
+
+    // send package and wait for the answer
+    MqDLogV(context,4,"send token<%s>\n","_IAA");
+    if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
+      MQ_CST serverexec = "unknown";
+      if (pIoIsRemote(context->link.io) == MQ_YES) {
+	serverexec = "remote-connect";
+      } else {
+	if (context->link.alfa != NULL)
+	  serverexec = context->link.alfa->data[0]->cur.C;
+	if (serverexec == NULL)
+	  serverexec = sInitGetFirst();
+      }
+      MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
+      goto error;
+    }
+
+    // read the other endian and set my context->link.bits.endian
+    MqReadO(context, &myendian);
+
+    // read the target ident
+    MqReadC(context, &ident);
+    MqSysFree(context->link.targetIdent);
+    context->link.targetIdent = mq_strdup(ident);
+
+#     if defined(WORDS_BIGENDIAN)
+      context->link.bits.endian = (myendian ? MQ_NO : MQ_YES);
+#     else
+      context->link.bits.endian = (myendian ? MQ_YES : MQ_NO);
+#     endif
+
+    // restore the binary mode
+    MqConfigSetIsString (context, mystring);
+
+    // wait until the server is able to process events (and send _PEO)
+    MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_PEO"));
+  }; // END PARENT
+
+error:
+  return MqErrorStack(context);
+}
 
 enum MqErrorE
 MqLinkCreate (
@@ -518,15 +632,15 @@ MqLinkCreate (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "parent", "not");
   }
 
-  // 'master' not connected
+  // 'master' not connected, error if MQ_FACTORY_NEW_FILTER is not set
   if (unlikely(context->config.master != NULL && context->config.master->link.read == NULL)) {
     MqBufferLDelete (argvP);
     return MqErrorDbV(MQ_ERROR_CONNECTED, "master", "not");
   }
 
-  // Try to invoke the "CreateHandler" first
-  if (context->link.onCreate == MQ_NO) {
-    context->link.onCreate = MQ_YES;
+  // try to invoke the "CreateHandler" first
+  if (context->link.bits.onCreate == MQ_NO) {
+    context->link.bits.onCreate = MQ_YES;
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       return (*context->setup.Child.fCreate) (context, argvP);
     } else if (context->config.parent == NULL && context->setup.Parent.fCreate != NULL) {
@@ -536,8 +650,6 @@ MqLinkCreate (
 
   // just create the client/server link now.
   {
-    struct MqBufferLS * alfa = NULL;
-    MQ_STR serverexec = NULL;
     MqErrorReset(context);
 
     // 2. parse the command-line arguments
@@ -553,22 +665,19 @@ MqLinkCreate (
 
     // handle empty MqBufferLS list alfa
     // after this line "alfa" pointer is NULL (-> no data) or "alfa" ponter != NULL (-> has data)
-    alfa = MqBufferLDup(context->link.alfa);
-    if (alfa != NULL) {
+    if (context->link.alfa != NULL) {
       // we have a "master", a "worker" have to be created
-      if (alfa->cursize == 0) {
-	MqBufferLDelete (&alfa);
+      if (context->link.alfa->cursize == 0) {
+	MqBufferLDelete (&context->link.alfa);
       } else {
-	if (!strncmp(alfa->data[0]->cur.C, "SELF", 4)) {
-	  MqBufferLDeleteItem (MQ_ERROR_PANIC, alfa, 0, 1, MQ_YES);
-	  MqBufferLAppendL(alfa,MqInitBuf,0);
-	} else if (!strncmp(alfa->data[0]->cur.C, "WORKER", 6)) {
-	  context->link.isWORKER = MQ_YES;
+	if (!strncmp(context->link.alfa->data[0]->cur.C, "SELF", 4)) {
+	  MqBufferLDeleteItem (MQ_ERROR_PANIC, context->link.alfa, 0, 1, MQ_YES);
+	  MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
+	} else if (!strncmp(context->link.alfa->data[0]->cur.C, "WORKER", 6)) {
+	  context->link.bits.isWORKER = MQ_YES;
 	}
-	serverexec = mq_strdup(alfa->data[0]->cur.C);
       }
     }
-    if (serverexec == NULL) serverexec = mq_strdup(sInitGetFirst());
 
     // create my ctxId's
     if (MQ_IS_PARENT (context)) {
@@ -623,97 +732,10 @@ MqLinkCreate (
 
     // context specific initialization
     if (MQ_IS_CLIENT (context)) {
-    // this is a CLIENT
 
-      if (MQ_IS_CHILD (context)) {
-      // this is a CHILD
-	register struct MqS * const parent = context->config.parent;
+      MqErrorCheck (MqLinkConnect (context));
 
-	// PARENT, sending using the DATA of the CHILD as argument
-	MqSendSTART (parent);
-	MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
-	MqSendI (parent, (MQ_INT) context->config.isSilent);
-	if (context->config.srvname != NULL) {
-	  MqSendC (parent, context->config.srvname);
-	}
-
-	// !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
-	if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
-	  MqErrorCopy (context, parent);
-	  pIoCloseSocket (context->link.io, __func__);
-	  goto error;
-	}
-
-      } else {
-      // this is a PARENT
-
-	MQ_CST ident;
-	MQ_BOL mystring;
-	MQ_BOL myendian;
-
-	// 0. Start the PIPE server (if necessary)
-	MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, &alfa, NULL, NULL));
-
-	// 1. connect to the server
-	MqErrorCheck (pIoConnect (context->link.io));
-
-	// 2. exchange startup messages
-	//      - allways send as string
-
-	// save my original binary-mode
-	mystring = context->config.isString;
-
-	// for '_IAA' we only use 'string' mode
-	MqConfigSetIsString (context, MQ_YES);
-
-	MqSendSTART (context);
-
-	// send the binary mode
-	MqSendO (context, mystring);
-
-	// send my endian
-#     if defined(WORDS_BIGENDIAN)
-	  MqSendO (context, MQ_YES);
-#     else
-	  MqSendO (context, MQ_NO);
-#     endif
-
-	/// send my ident
-	MqSendC (context, context->setup.ident);
-
-	// send the server name
-	MqSendC (context, context->config.srvname);
-
-	// send package and wait for the answer
-	MqDLogV(context,4,"send token<%s>\n","_IAA");
-	if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
-	  MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, 
-	    (pIoIsRemote(context->link.io) == MQ_NO ? serverexec : "remote-connect"));
-	  goto error;
-	}
-
-	// read the other endian and set my context->link.endian
-	MqReadO(context, &myendian);
-
-	// read the target ident
-	MqReadC(context, &ident);
-	MqSysFree(context->link.targetIdent);
-	context->link.targetIdent = mq_strdup(ident);
-
-#     if defined(WORDS_BIGENDIAN)
-	  context->link.endian = (myendian ? MQ_NO : MQ_YES);
-#     else
-	  context->link.endian = (myendian ? MQ_YES : MQ_NO);
-#     endif
-
-	// restore the binary mode
-	MqConfigSetIsString (context, mystring);
-
-	// wait until the server is able to process events (and send _PEO)
-	MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_PEO"));
-      }; // END PARENT
-
-    } else { // this is a SERVER
+    } else {
 
       // we have to wait for the "_IAA" message of the "client" to set "context->config.debug" proper
       if (MQ_IS_PARENT (context)) {
@@ -724,47 +746,53 @@ MqLinkCreate (
 	MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_IAA"));
 
 	// test on "filter" (alfa!=NULL) or a normal "server" (alfa==NULL)
-	if (alfa == NULL) {
-	  // a final "server"
+	if (context->link.alfa == NULL) {
+	  // a "server"
 	  if (context->config.srvname != NULL) 
 	    MqConfigSetName(context, context->config.srvname);
 	} else {
 	  // a "filter", we have to start the right site (an Server)
 	  struct MqS * myFilter;
+	  struct MqBufferLS *alfa = MqBufferLCreate(context->link.alfa->cursize+2);
 	  
 	  // this is a typical situation for a server in a middel of an alfa syntax:
 	  //	    acmd1 @ filter @ acmd3
 	  // filter (this one) is server for acmd1 and client for acmd3
 
 	  // step 1, append to the !beginning! of alfa the server name
-	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), 0);
+	  MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, context->config.name), -1);
 
 	  // step 2, append "alfa" string on second position if the first item is !not! a option
-	  if (alfa->data[1]->cur.C[0] != '-') {
-	    MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), 1);
+	  if (context->link.alfa->data[0]->cur.C[0] != '-') {
+	    MqBufferLAppend (alfa, MqBufferCreateC (MQ_ERROR_PANIC, MQ_ALFA_STR), -1);
 	  }
 
-	  // step 3, create the new context and fill the myFilter
+	  // step 3, append the "context->link.alfa" data
+	  MqBufferLAppendL (alfa, context->link.alfa, -1);
+
+	  // step 4, create the new context and fill the myFilter
 	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.Factory, &myFilter));
 
-	  // step 3, link between "myFilter" and "context"
+	  // step 5, configure "myFilter"
 	  MqConfigSetServerSetup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetEvent(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetIsServer(myFilter, MQ_NO);
 	  pConfigSetMaster(myFilter, context, 0);
 
+	  // step 6, create the link
 	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
 	    MqErrorCopy (context, myFilter);
 	    MqContextDelete (&myFilter);
 	    goto error;
 	  }
+	  MqBufferLDelete(&alfa);
 	}; // END filter startup
       }
 
       // configure the new server
       if (context->setup.ServerSetup.fFunc != NULL) {
-	context->link.flagServerSetup = MQ_YES;
+	context->link.bits.flagServerSetup = MQ_YES;
 	MqErrorCheck((*context->setup.ServerSetup.fFunc) (context, context->setup.ServerSetup.data));
       }
 
@@ -772,12 +800,9 @@ MqLinkCreate (
 
     MqDLogV(context,2,"END-CREATE string<%s>, silent<%s>, debug<%i>, endian<%i>\n",
 	  (context->config.isString?"yes":"no"), (context->config.isSilent?"yes":"no"), 
-	      context->config.debug, context->link.endian);
+	      context->config.debug, context->link.bits.endian);
 
   error:
-    // alfa is allways owned by MqLinkCreate
-    MqBufferLDelete(&alfa);
-    MqSysFree(serverexec);
     return MqErrorStack(context);
   }
 }
@@ -808,19 +833,19 @@ MqLinkDelete (
   // report error if available
   pErrorReport(context);
 
-  if (unlikely(context->link.onCreate == MQ_NO)) {
+  if (unlikely(context->link.bits.onCreate == MQ_NO)) {
     return;
   } else {
-    // check on "deleteProtection"
-    if (context->link.ctxIdP != NULL && context->link.ctxIdP->link.deleteProtection == MQ_YES) {
+    // check on "bits.deleteProtection"
+    if (context->link.ctxIdP != NULL && context->link.ctxIdP->link.bits.deleteProtection == MQ_YES) {
       MqDLogC(context,3,"DELETE protection\n");
       pErrorSetEXIT (context, __func__);
       return;
     }
 
     // Try to invoke the "DeleteHandler" first
-    if (context->link.MqLinkDelete_LOCK == MQ_NO) {
-      context->link.MqLinkDelete_LOCK = MQ_YES;
+    if (context->link.bits.onDelete == MQ_NO) {
+      context->link.bits.onDelete = MQ_YES;
       if (MQ_IS_CHILD(context) && context->setup.Child.fDelete) {
 	(*context->setup.Child.fDelete) (context);
 	return;
@@ -831,7 +856,7 @@ MqLinkDelete (
     }
 
     // cleanup the server
-    if (context->link.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fFunc != NULL) {
+    if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fFunc != NULL) {
       (*context->setup.ServerCleanup.fFunc) (context, context->setup.ServerCleanup.data);
     }
 
@@ -884,22 +909,20 @@ MqLinkDelete (
     pSendDelete  (&context->link.send);
 
     // cleanup link-specific data
-    context->link.prepareDone = MQ_NO;
+    context->link.bits.prepareDone = MQ_NO;
     MqBufferLDelete (&context->link.alfa);
     MqSysFree (context->link.targetIdent);
 
     // last chance to write a log message
-    {
-      MqDLogV(context,2,"DELETE %s\n", (context->link.doFactoryCleanup == MQ_YES ? "with FACTORY" : ""));
+    MqDLogV(context,2,"DELETE %s\n", (context->link.bits.doFactoryCleanup == MQ_YES ? "with FACTORY" : ""));
 
-      // cleanup the factory object ?
-      if (context->link.doFactoryCleanup == MQ_YES) {
-	context->link.onCreate = MQ_NO;
-	MqContextDelete((struct MqS **)&context);
-      } else {
-	// initialize "msgque" object to "NULL"
-	memset(&context->link,0,sizeof(struct MqLinkS));
-      }
+    // cleanup the factory object ?
+    if (context->link.bits.doFactoryCleanup == MQ_YES) {
+      context->link.bits.onCreate = MQ_NO;
+      MqContextDelete((struct MqS **)&context);
+    } else {
+      // initialize "msgque" object to "NULL"
+      memset(&context->link,0,sizeof(struct MqLinkS));
     }
     return;
   }
@@ -910,7 +933,7 @@ MqLinkIsConnected (
   struct MqS const * const context
 )
 {
-  return MqLinkIsConnectedI(context);
+  return pIoCheck (context->link.io);
 }
 
 struct MqS *
@@ -969,5 +992,15 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
+
+
+
+
+
+
+
+
 
 

@@ -26,24 +26,13 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE
+struct MqS*
 MqServiceGetFilter (
   struct MqS * const context,
-  MQ_SIZE const id,
-  struct MqS ** const filterP
+  MQ_SIZE const id
 )
 {
-  return (
-    (
-      *filterP = (
-	context->config.master != NULL ? 
-	  context->config.master : 
-	  MqSlaveGet (context, id)
-      )
-    ) == NULL ? 
-      MqErrorDb(MQ_ERROR_NO_FILTER) : 
-      MQ_OK
-  );
+  return (context->config.master != NULL ? context->config.master : MqSlaveGet (context, id));
 }
 
 int
@@ -77,9 +66,7 @@ sServiceProxy (
   MQ_PTR const data
 ) {
   MQ_BIN bdy; MQ_SIZE len;
-  struct MqS * ftrctx;
-
-  MqErrorCheck (MqServiceGetFilter (context, (int) (long) data, &ftrctx));
+  struct MqS * ftrctx = MqServiceGetFilter (context, (int) (long) data);
 
   MqErrorCheck  (MqReadBDY (context, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
@@ -253,7 +240,7 @@ end:
 error:
   // restore master transaction
   if (master != NULL) master->link._trans = trans;
-  return MqErrorStack (context);
+ return MqErrorStack (context);
 }
 
 END_C_DECLS

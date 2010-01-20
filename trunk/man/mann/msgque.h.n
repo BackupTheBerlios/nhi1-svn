@@ -1,8 +1,8 @@
-.TH "msgque.h" n "17 Jan 2010" "Version 4.2" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "20 Jan 2010" "Version 4.2" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -207,7 +207,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .br
 .R "boolean YES "
 .ti -1c
-.RI "#define \fBMqFactoryS_NULL\fP   { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
+.RI "#define \fBMqFactoryS_NULL\fP   { MQ_FACTORY_NEW_INIT, {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }"
 .br
 .R "initialize a \fBMqFactoryS\fP object to \fCNULL\fP "
 .ti -1c
@@ -338,7 +338,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .br
 .R "1 byte \fBbyte\fP data-type "
 .ti -1c
-.RI "typedef signed char \fBMQ_BOL\fP"
+.RI "typedef unsigned char \fBMQ_BOL\fP"
 .br
 .R "1 byte \fBboolean\fP data-type "
 .ti -1c
@@ -642,10 +642,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .br
 .R "get the \fIident\fP of the \fIcontext\fP object "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigCheckIdent\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP ident)"
-.br
-.R "check the \fIident\fP of the \fIcontext\fP object "
-.ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetSrvName\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "get the \fIsrvname\fP of the \fIcontext\fP object "
@@ -733,9 +729,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
 .ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkPrepare\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
+.br
+.R "TODO. "
+.ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
-.R "make \fIctx\fP to a \fIclient-parent-context\fP and setup a new \fIclient-server-link\fP "
+.R "make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
 .br
@@ -776,6 +776,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .ti -1c
 .RI "static \fBMQ_SIZE\fP \fBMqLinkGetCtxIdI\fP (struct \fBMqS\fP const *const ctx)"
 .br
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqLinkGetTargetIdent\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "get the \fIident\fP of the \fIlink-target\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filter)"
 .br
@@ -1486,13 +1490,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 134 2010-01-14 09:03:21Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 134 $ 
+$Rev: 144 $ 
 .RE
 .PP
 \fBAuthor:\fP

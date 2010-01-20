@@ -1,4 +1,4 @@
-.TH "Mq_Config_Cs_API" n "17 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_Cs_API" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,7 +27,7 @@ Mq_Config_Cs_API \- configuration of a context
 .ti -1c
 .RI "bool \fBcsmsgque::MqS.ConfigCheckIdent\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP "
+.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ConfigSetBuffersize\fP (int data)"
 .br
@@ -146,7 +146,7 @@ The configuration is done persistent using \fIconfig-api\fP functions or on link
 .PP 
 .SS "bool csmsgque.MqS.ConfigCheckIdent (string data)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqConfigCheckIdent\fP 
+implement the \fBlibmsgque\fP API object: MqConfigCheckIdent 
 .PP
 Definition at line 162 of file config.cs.
 .SS "int csmsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"

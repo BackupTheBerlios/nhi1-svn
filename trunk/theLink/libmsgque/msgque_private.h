@@ -256,10 +256,6 @@ enum MqErrorE pUSleep (
   long const usec
 );
 
-struct MqS * pMqGetFirstParent(
-  struct MqS * const context
-);
-
 enum MqErrorE MQ_DECL pCallFactory (
   struct MqS * const context,
   enum MqFactoryE create,
@@ -271,6 +267,13 @@ void pConfigSetName (
   struct MqS * const context,
   MQ_STR  data
 );
+
+static mq_inline struct MqS* pMqGetFirstParent(
+  struct MqS * const context
+)
+{
+  return context->link.ctxIdP;
+}
 
 #if (HDR_TOK_LEN+1) == 5
 #define ppTokenCopy(i1,i2) memcpy(i1,i2,5);

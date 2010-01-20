@@ -408,9 +408,9 @@ pEventStart (
 	if (MQ_IS_SERVER(exitctx)) {
 	  if (MQ_IS_CHILD(exitctx)) {
 	    // case 2. exitctx is a server-child and not in use
-	    pMqGetFirstParent(context)->link.deleteProtection = MQ_YES;
+	    pMqGetFirstParent(context)->link.bits.deleteProtection = MQ_YES;
 	    MqLinkDelete(exitctx);
-	    pMqGetFirstParent(context)->link.deleteProtection = MQ_NO;
+	    pMqGetFirstParent(context)->link.bits.deleteProtection = MQ_NO;
 	    return MqErrorGetCodeI(context);
 	  } else {
 	    // case 3. there is only one server
@@ -610,6 +610,7 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

@@ -100,7 +100,7 @@ test bol-7-($I|$B|$C|$S) {range error underflow} \
     -returnCodes    error \
     -match          glob \
     -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
-[sS]> (server-0) \[*pBufferGetA1\] underflow ERROR, can not convert '*' into an 'BOL' object*}
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BOL' object*}
 
 test bol-8-($I|$B|$C|$S) {range error overflow} \
     -body           {Echo1 $FH_LAST ECOO ReadO SendC 2} \
