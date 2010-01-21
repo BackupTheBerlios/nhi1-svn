@@ -271,6 +271,9 @@ pCallFactory (
   // set the factory
   (*contextP)->link.bits.doFactoryCleanup = MQ_YES;
   (*contextP)->setup.Factory.type = create;
+  // child inherit "ignoreExit" from "template"
+  if (tmpl != NULL && create == MQ_FACTORY_NEW_CHILD)
+    (*contextP)->setup.ignoreExit = tmpl->setup.ignoreExit;
 
   return MQ_OK;
 

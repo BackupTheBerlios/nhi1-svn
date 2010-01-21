@@ -122,7 +122,6 @@ sCallEventProc (
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE:
-	  if (cldCtx->link.bits.onShutdown == MQ_YES)
 	    CONTINUE++;
 	  break;
 	case MQ_ERROR:

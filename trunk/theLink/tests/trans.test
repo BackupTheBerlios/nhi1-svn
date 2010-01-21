@@ -37,7 +37,7 @@ set env(TS_FILTER_CLIENT)  NO
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 1] {
+ foreach I [numGet 3] {
 
  # transport-type: string or binary
   foreach B [filterGet BIN_LST binary] {
@@ -46,7 +46,7 @@ set env(TS_FILTER_CLIENT)  NO
    foreach C [filterGet -or COM_LST tcp uds] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C spawn] {
+    foreach S [list {*}[filterGet SRV_LST $C spawn] {*}[filterGet SRV_LST $C fork]] {
 
 # tests ----------------------------
 

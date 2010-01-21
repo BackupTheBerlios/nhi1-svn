@@ -1219,10 +1219,7 @@ proc Cleanup {args} {
 }
 
 proc freeTests {} {
-  global FH
-  foreach num [array names FH] {
-    rename $FH($num) ""
-  }
+  Cleanup
   uplevel cleanupTests
 }
 
