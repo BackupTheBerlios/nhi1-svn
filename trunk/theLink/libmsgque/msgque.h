@@ -1383,8 +1383,11 @@ struct MqS {
   struct MqLinkS link;		    ///< link object data
   struct MqBufferS * temp;	    ///< misc temporary #MqBufferS object
   enum MqStatusIsE statusIs;	    ///< how the context was created?
-  MQ_BOL MqContextDelete_LOCK;	    ///< protect MqContextDelete
-  MQ_BOL MqContextFree_LOCK;	    ///< protect MqContextFree
+  struct {
+    MQ_BOL MqContextDelete_LOCK :1; ///< protect MqContextDelete against double-call
+    MQ_BOL MqContextFree_LOCK	:1; ///< protect MqContextFree against double-call
+    MQ_BOL EventProc_LOCK	:1; ///< protect sCallEventProc against double-call
+  } bits;			    ///< boolean bit-fields
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object
   MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct

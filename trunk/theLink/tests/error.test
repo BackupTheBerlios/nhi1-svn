@@ -321,6 +321,7 @@ test error-MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER-uds {check error message} \
     -body           { exec {*}[getClient client] --name client --uds --file [FindFreeFile] @ server} \
     -returnCodes    error \
     -result         {C> (client) [pIoStartServer] can not start 'UDS' server using '@ server ...' syntax
+C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 

@@ -587,6 +587,7 @@ MqLinkConnect (
     // send package and wait for the answer
     MqDLogV(context,4,"send token<%s>\n","_IAA");
     if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
+      MqErrorReset(context);
       MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
       goto error;
     }

@@ -1026,7 +1026,7 @@ proc Start {mode isError id cl {clname ""} {srvname ""}} {
 }
 
 proc Setup {num mode com server args} {
-  global env PID PIDFILE FH FH_LAST PORT FILE SERVER_OUTPUT
+  global env PIDFILE FH FH_LAST PORT FILE SERVER_OUTPUT
   if {[llength $num] == 1} {
     set numParent   1
     set numChild    $num
@@ -1101,10 +1101,7 @@ proc Setup {num mode com server args} {
       if {$so} {
 	set SERVER_OUTPUT [open [list | {*}$sl 2>@1] r]
       } else {
-	if {[catch {exec {*}$sl >&@stdout &} PID]} {
-	  puts $PID
-	  exit 1
-	}
+	Bg {*}$sl
       }
       after $::WAIT
     }
@@ -1162,7 +1159,7 @@ proc Setup {num mode com server args} {
 
 proc Cleanup {args} {
 #Print args
-  global PID PIDFILE FH FH_LAST env SERVER_OUTPUT
+  global CLEANUP_PID CLEANUP_FILES PIDFILE FH FH_LAST env SERVER_OUTPUT
 
   array set OPT {-wait 0}
   array set OPT $args
@@ -1181,18 +1178,20 @@ proc Cleanup {args} {
     if {[info exists PIDFILE]} {
       if {[file exists $PIDFILE]} {
 	set FP [open $PIDFILE r]
-	set PID [read $FP]
+	lappend CLEANUP_PID [read $FP]
 	close $FP
       }
       unset PIDFILE
     }
-    if {[info exists PID]} {
+    if {[info exists CLEANUP_PID]} {
       after $OPT(-wait)
-      catch {exec $::KILL $PID}
-      unset PID
+      foreach PID $CLEANUP_PID {
+	Kill $PID
+      }
+      unset CLEANUP_PID
     }
-    if {[llength $::CLEANUP_FILES]} {
-      file delete -force {*}$::CLEANUP_FILES
+    if {[info exists CLEANUP_FILES] && [llength $CLEANUP_FILES]} {
+      file delete -force {*}$CLEANUP_FILES
     }
   }
 ## 4. check for server-output file
@@ -1214,6 +1213,7 @@ proc Cleanup {args} {
 	lappend RET $line
       }
     }
+    unset SERVER_OUTPUT
     return [join $RET \n]
   }
 }
@@ -1227,8 +1227,8 @@ proc freeTests {} {
 }
 
 proc Example {config client server args} {
-  global env PID PIDFILE FH FH_LAST
-  unset -nocomplain PID PIDFILE FH FH_LAST
+  global env CLEANUP_PID PIDFILE FH FH_LAST
+  unset -nocomplain CLEANUP_PID PIDFILE FH FH_LAST
   foreach {lng com start} [split $config .] break
   if {$env(TS_SETUP)} {
     Print lng com start client server
@@ -1274,10 +1274,7 @@ proc Example {config client server args} {
       if {$env(TS_SETUP)} {
 	Print sl
       }
-      if {[catch {exec {*}$sl >&@stdout &} PID]} {
-	puts $PID
-	exit 1
-      }
+      Bg {*}$sl
       after $::WAIT
     }
   }
@@ -1315,7 +1312,7 @@ proc Bg {args} {
   if {$::env(TS_SETUP)} {
     Print args
   }
-  return [exec {*}$args >&@stdout &]
+  lappend ::CLEANUP_PID [exec {*}$args >&@stdout &]
 }
 
 proc BgAct {ch cmd} {
@@ -1376,15 +1373,7 @@ proc WaitOnFileToken {file token} {
   return $RET
 }
 
-proc Kill {{P NULL}} {
-  if {$P eq "NULL"} {
-    global PID
-    if {[info exists PID]} {
-      set P $PID
-    } else {
-      return
-    }
-  }
+proc Kill {P} {
   catch {exec $::KILL $P}
 }
 

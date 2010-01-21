@@ -37,7 +37,7 @@ set env(TS_FILTER_CLIENT)  NO
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [numGet 1] {
 
  # transport-type: string or binary
   foreach B [filterGet BIN_LST binary] {
@@ -106,7 +106,7 @@ unset -nocomplain I B C S
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [numGet 1] {
 
  # transport-type: string or binary
   foreach B [filterGet BIN_LST binary] {
@@ -117,7 +117,6 @@ unset -nocomplain I B C S
 test trans-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
       set TMP	[makeFile "START" tmp.txt]
-      set RET	[list]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -127,24 +126,57 @@ test trans-X1-($I|$B|$S) {send error + valid data} \
       $CTX	ConfigSetDebug	  $env(TS_DEBUG)
     } \
     -body           {
-      set SrvPID [Bg {*}$SRV]
-      set FtrPID [Bg {*}$FTR]
+      Bg {*}$SRV
+      Bg {*}$FTR
       $CTX LinkCreate {*}$CON1
 
       Echo0 $CTX PRN2 SendC $TMP SendC T1
       Call  $CTX SendEND ERR4
       Echo0 $CTX PRN2 SendC $TMP SendC T2
       Echo0 $CTX PRN2 SendC $TMP SendC T3
-      rename $CTX ""
+      $CTX Delete
 
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
-      catch {Kill $SrvPID}
-      catch {Kill $FtrPID}
-      foreach F [glob -nocomplain *.uds] {
-        file delete $F
-      }
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+ 1: T1
+ 1: T2
+ 1: T3}
+
+test trans-X2-($I|$B|$S) {send multiple error + valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
+      set FTR	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
+      set CTX	[tclmsgque MqS]
+      $CTX	ConfigSetName	  "client"
+      $CTX	ConfigSetTimeout  $env(TS_TIMEOUT)
+      $CTX	ConfigSetDebug	  $env(TS_DEBUG)
+    } \
+    -body           {
+      Bg {*}$SRV
+      Bg {*}$FTR
+      $CTX LinkCreate {*}$CON1
+
+      Echo0 $CTX PRN2 SendC $TMP SendC T1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRN2 SendC $TMP SendC T2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRN2 SendC $TMP SendC T3
+      Call  $CTX SendEND ERR4
+      $CTX Delete
+
+      WaitOnFileToken $TMP T3
+    } \
+    -cleanup	    {
+      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \

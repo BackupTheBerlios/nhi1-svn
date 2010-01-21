@@ -97,16 +97,21 @@ sCallEventProc (
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
   // call my own event-proc
-  switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
-    case MQ_OK:
-      break;
-    case MQ_CONTINUE:
-      if (context->link.bits.onShutdown == MQ_YES)
-	CONTINUE++;
-      break;
-    case MQ_ERROR:
-    case MQ_EXIT:
-      goto error;
+  if (context->bits.EventProc_LOCK == MQ_NO) {
+    context->bits.EventProc_LOCK = MQ_YES;
+    switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
+      case MQ_OK:
+	break;
+      case MQ_CONTINUE:
+	if (context->link.bits.onShutdown == MQ_YES)
+	  CONTINUE++;
+	break;
+      case MQ_ERROR:
+      case MQ_EXIT:
+	context->bits.EventProc_LOCK = MQ_NO;
+	goto error;
+    }
+    context->bits.EventProc_LOCK = MQ_NO;
   }
   // call the event-proc's of my child's
   for (child = context->link.childs; child != NULL; child=child->right) {
@@ -413,6 +418,7 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
 
 
 

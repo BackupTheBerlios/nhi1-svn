@@ -31,8 +31,10 @@ pConfigInit (
   struct MqS * const context
 )
 {
-  context->config.io.buffersize = 4096;
-  context->config.io.timeout = MQ_TIMEOUT10;
+  if (context->config.io.buffersize == 0) 
+    context->config.io.buffersize = 4096;
+  if (context->config.io.timeout == 0) 
+    context->config.io.timeout = MQ_TIMEOUT10;
   context->config.io.com = MQ_IO_PIPE;
   context->config.io.uds.file = NULL;
   context->config.io.tcp.host = NULL;
@@ -68,10 +70,10 @@ MqContextFree (
   struct MqS * const context
 )
 {
-  if (context == NULL || context->MqContextFree_LOCK == MQ_YES) {
+  if (context == NULL || context->bits.MqContextFree_LOCK == MQ_YES) {
     return;
   } else {
-    context->MqContextFree_LOCK = MQ_YES;
+    context->bits.MqContextFree_LOCK = MQ_YES;
     MqLinkDelete(context);
 
     // cleanup setup data entries
@@ -109,7 +111,7 @@ MqContextDelete (
 ) {
   struct MqS * context = *contextP;
   *contextP = NULL;
-  if (context == NULL || context->MqContextDelete_LOCK == MQ_YES) {
+  if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) {
     return;
   } else if (context->setup.Factory.Delete.fCall) {
     MqFactoryDeleteF fCall = context->setup.Factory.Delete.fCall;
@@ -120,7 +122,7 @@ MqContextDelete (
   } else {
     // set this because "setup.Factory.Delete.fCall" is !not! required
     context->link.bits.doFactoryCleanup = MQ_NO;
-    context->MqContextDelete_LOCK = MQ_YES;
+    context->bits.MqContextDelete_LOCK = MQ_YES;
     MqContextFree (context);
     if (context->contextsize > 0) {
       context->signature = 0;
@@ -214,6 +216,7 @@ MqSetupDup (
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
   context->setup.Factory.type = FactoryType;
+  context->setup.ignoreExit = MQ_NO;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   MqErrorCheck (sSetupDupHelper (context, &context->setup.Event.data, context->setup.Event.fCopy, Event));
@@ -820,6 +823,8 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
+
 
 
 

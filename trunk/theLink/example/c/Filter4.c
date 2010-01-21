@@ -60,11 +60,6 @@ static enum MqErrorE FilterEvent (
     return MqErrorSetCONTINUE(mqctx);
   } else {
     register struct FilterItmS * itm;
-
-    if (ftr == NULL) {
-      return MQ_OK;
-    }
-
     // try to connect the link
     if (!MqLinkIsConnected(ftr)) {
       switch (MqLinkConnect (ftr)) {
@@ -87,20 +82,21 @@ static enum MqErrorE FilterEvent (
     ) {
       case MQ_OK:	  break;
       case MQ_CONTINUE:	  return MQ_OK;
-      case MQ_ERROR:	  goto error2;
-      case MQ_EXIT:	  goto error1;
+      case MQ_ERROR:
+	MqErrorPrint(ftr);
+	MqErrorReset(mqctx);
+	goto end;
+      case MQ_EXIT:
+	MqErrorReset(mqctx);
+	MqErrorReset(ftr);
+	return MQ_OK;
     }
     // reset the item-storage
+end:
     MqBufferReset(itm->data);
     ctx->rIdx++;
     return MQ_OK;
 error1:
-    MqErrorPrint(ftr);
-    MqErrorReset(mqctx);
-    return MQ_OK;
-error2:
-    MqBufferReset(itm->data);
-    ctx->rIdx++;
     MqErrorPrint(ftr);
     MqErrorReset(mqctx);
     return MQ_OK;
@@ -178,8 +174,6 @@ FilterSetup (
 )
 {
   register SETUP_ctx;
-  struct MqS * ftr;
-  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
   // init the cache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
@@ -189,8 +183,6 @@ FilterSetup (
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
-
-  MqConfigSetIgnoreExit (ftr, MQ_YES);
 
 error:
   return MqErrorStack(mqctx);
@@ -229,7 +221,7 @@ main (
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // start event-loop and wait forever
-  MqProcessEvent (mqctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+  MqProcessEvent (mqctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
 
   // finish and exit
 error:

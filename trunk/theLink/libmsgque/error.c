@@ -386,6 +386,7 @@ pErrorSync (
 )
 {
   if (unlikely(in == out)) return;
+  if (in->error.code == MQ_EXIT && out->setup.ignoreExit == MQ_YES) return;
   MqBufferCopy (out->error.text, in->error.text);
   out->error.code = in->error.code;
   out->error.num = in->error.num;

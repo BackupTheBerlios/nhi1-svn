@@ -455,7 +455,7 @@ pEventCreate (
     // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
     for (; start < end; start++) {
       // block all "open" context
-      (*start)->MqContextDelete_LOCK = MQ_YES;
+      (*start)->bits.MqContextDelete_LOCK = MQ_YES;
     }
     // now reset the event data
     sEventReset(sysevent);
@@ -610,6 +610,7 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

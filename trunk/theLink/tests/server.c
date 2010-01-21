@@ -1412,7 +1412,7 @@ main (
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // start event-loop and wait forever
-  MqProcessEvent (mqctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+  MqProcessEvent (mqctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
 
   // finish and exit
 error:

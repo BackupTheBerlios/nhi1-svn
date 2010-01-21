@@ -485,7 +485,7 @@ SysServerFork (
     // the MqProcessEvent is necessary becasue "ParentCreate" have to come back
     // ifNot: java create object will fail
     if (newctx->setup.isServer == MQ_YES)
-      MqProcessEvent(newctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+      MqProcessEvent(newctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
 error1:
     MqExit(newctx);
   }
@@ -539,7 +539,7 @@ static mqthread_ret_t mqthread_stdcall sSysServerThreadCreate (
   // the MqProcessEvent is necessary because "ParentCreate" have to come back
   // ifNot: java create object will fail
   if (newctx->setup.isServer == MQ_YES) {
-    MqProcessEvent(newctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
+    MqProcessEvent(newctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
   }
 error:
   MqBufferLDelete (&argv);
