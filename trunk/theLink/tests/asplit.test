@@ -39,6 +39,7 @@ test asplit-1 {split without server} \
     -body   { Exec cat $data1 | {*}[getATool split] -d : } \
     -returnCodes ok \
     -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkConnect" at file "link.c"
 C> (split) found in function "MqLinkCreate" at file "link.c"
 C> (split) found in function "SplitCreate" at file "asplit.c"
 C> (split) use '-h' or '--help' for usage}
@@ -47,6 +48,7 @@ test asplit-1b {split with file arguments and without server} \
     -body   { Exec {*}[getATool split] -d : $data1 } \
     -returnCodes ok \
     -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkConnect" at file "link.c"
 C> (split) found in function "MqLinkCreate" at file "link.c"
 C> (split) found in function "SplitCreate" at file "asplit.c"
 C> (split) use '-h' or '--help' for usage}

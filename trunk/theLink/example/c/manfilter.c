@@ -13,7 +13,8 @@
 #include "msgque.h"
 static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
-  struct MqS * ftr = MqServiceGetFilter (ctx, 0);
+  struct MqS * ftr;
+  MqErrorCheck (MqServiceGetFilter (ctx, 0, &ftr));
   MqSendSTART(ftr);
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));

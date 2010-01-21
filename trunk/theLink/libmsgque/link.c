@@ -510,6 +510,8 @@ MqLinkConnect (
   struct MqS * const context
 )
 {
+  MQ_STR serverexec = NULL;
+
   // initialize IO
   if (pIoCheckInitial(context->link.io) == MQ_NO) 
     MqErrorCheck (pIoCreate (context, &context->link.io));
@@ -539,6 +541,15 @@ MqLinkConnect (
     MQ_CST ident;
     MQ_BOL mystring;
     MQ_BOL myendian;
+
+    if (pIoIsRemote(context->link.io) == MQ_YES) {
+      serverexec = mq_strdup_save("remote-connect");
+    } else {
+      if (context->link.alfa != NULL)
+	serverexec = mq_strdup_save(context->link.alfa->data[0]->cur.C);
+      if (serverexec == NULL)
+	serverexec = mq_strdup_save(sInitGetFirst());
+    }
 
     // 0. Start the PIPE server (if necessary)
     MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, NULL));
@@ -576,15 +587,6 @@ MqLinkConnect (
     // send package and wait for the answer
     MqDLogV(context,4,"send token<%s>\n","_IAA");
     if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
-      MQ_CST serverexec = "unknown";
-      if (pIoIsRemote(context->link.io) == MQ_YES) {
-	serverexec = "remote-connect";
-      } else {
-	if (context->link.alfa != NULL)
-	  serverexec = context->link.alfa->data[0]->cur.C;
-	if (serverexec == NULL)
-	  serverexec = sInitGetFirst();
-      }
       MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
       goto error;
     }
@@ -611,6 +613,7 @@ MqLinkConnect (
   }; // END PARENT
 
 error:
+  MqSysFree (serverexec);
   return MqErrorStack(context);
 }
 

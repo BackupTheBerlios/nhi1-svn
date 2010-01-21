@@ -50,6 +50,7 @@ S> ($server) use '-h' or '--help' for usage}]
 test acmd-3-asplit {error: to few arguments} \
     -body           { Exec {*}[getATool split] } \
     -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkConnect" at file "link.c"
 C> (split) found in function "MqLinkCreate" at file "link.c"
 C> (split) found in function "SplitCreate" at file "asplit.c"
 C> (split) use '-h' or '--help' for usage}

@@ -73,7 +73,8 @@ CutFTR (
   struct CutCtxS * const cutctx = CUTCTX;
   MQ_SIZE const end = MqReadGetNumItems(mqctx);
   MQ_INT i;
-  struct MqS * ftr = MqServiceGetFilter (mqctx, 0);
+  struct MqS * ftr;
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftr));
   
   MqSendSTART (ftr);
   for (i=0; i<end ; i++) {

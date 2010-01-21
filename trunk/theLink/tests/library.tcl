@@ -484,6 +484,23 @@ proc FindFreeFile {{ext uds}} {
   return $FILE
 }
 
+proc FindFreeConnection {srv} {
+  set RET [list]
+  foreach {lng con sta} [split $srv .] break
+  switch $con {
+    pipe  {
+      lappend RET --pipe
+    }
+    tcp	  {
+      lappend RET --tcp --port [FindFreePort]
+    }
+    uds	  {
+      lappend RET --uds --file [FindFreeFile]
+    }
+  }
+  return $RET
+}
+
 proc MkUnique {list} {
   set D [list]
   foreach d $list {
@@ -1334,6 +1351,29 @@ proc WaitEOF {fh} {
       update
     }
   }
+}
+
+proc WaitOnFileToken_Proc {ch sig} {
+  gets $ch line
+  if {[string first $sig $line] != -1} {
+    set ::WaitOnFileToken_Flag yes
+    close $ch
+  }
+}
+
+proc WaitOnFileToken {file token} {
+  global WaitOnFileToken_Flag
+  set WaitOnFileToken_Flag no
+  set fh [open $file r]
+  fconfigure $fh -buffering line -blocking yes
+  fileevent $fh readable [list WaitOnFileToken_Proc $fh T3]
+  while {!$WaitOnFileToken_Flag} {
+    update
+  }
+  set fh [open $file r]
+  set RET [read -nonewline $fh]
+  close $fh
+  return $RET
 }
 
 proc Kill {{P NULL}} {

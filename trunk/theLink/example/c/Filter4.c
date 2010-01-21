@@ -51,7 +51,8 @@ static enum MqErrorE FilterEvent (
 )
 {
   register SETUP_ctx;
-  struct MqS * const ftr = MqServiceGetFilter(mqctx, 0);
+  struct MqS * ftr;
+  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
   // check if an item is available
   if (ctx->rIdx == ctx->wIdx) {
@@ -69,8 +70,8 @@ static enum MqErrorE FilterEvent (
       switch (MqLinkConnect (ftr)) {
 	case MQ_OK:	  break;
 	case MQ_CONTINUE: return MQ_OK;
-	case MQ_EXIT:	  goto exit;
-	case MQ_ERROR:	  goto exit;
+	case MQ_EXIT:	  goto error1;
+	case MQ_ERROR:	  goto error1;
       }
     }
 
@@ -85,9 +86,9 @@ static enum MqErrorE FilterEvent (
 	MqSendEND(ftr, itm->token)
     ) {
       case MQ_OK:	  break;
-      case MQ_ERROR:	  goto error1;
-      case MQ_EXIT:	  goto exit;
       case MQ_CONTINUE:	  return MQ_OK;
+      case MQ_ERROR:	  goto error2;
+      case MQ_EXIT:	  goto error1;
     }
     // reset the item-storage
     MqBufferReset(itm->data);
@@ -95,15 +96,17 @@ static enum MqErrorE FilterEvent (
     return MQ_OK;
 error1:
     MqErrorPrint(ftr);
-    MqErrorReset(ftr);
     MqErrorReset(mqctx);
     return MQ_OK;
-exit:
-    MqErrorPrint (ftr);
-    MqErrorReset (mqctx);
+error2:
+    MqBufferReset(itm->data);
+    ctx->rIdx++;
+    MqErrorPrint(ftr);
+    MqErrorReset(mqctx);
     return MQ_OK;
   }
-  return MQ_OK;
+error:
+  return MqErrorStack(mqctx);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
@@ -175,6 +178,8 @@ FilterSetup (
 )
 {
   register SETUP_ctx;
+  struct MqS * ftr;
+  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
   // init the cache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
@@ -185,7 +190,7 @@ FilterSetup (
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
 
-  MqConfigSetIgnoreExit (MqServiceGetFilter(mqctx, 0), MQ_YES);
+  MqConfigSetIgnoreExit (ftr, MQ_YES);
 
 error:
   return MqErrorStack(mqctx);
