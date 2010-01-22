@@ -511,10 +511,27 @@ MqLinkConnect (
 )
 {
   MQ_STR serverexec = NULL;
+  struct pChildS *child;
+  struct MqS *cldCtx;
+  MQ_INT MqSetDebugLevel(context);
 
   // initialize IO
-  if (pIoCheckInitial(context->link.io) == MQ_NO) 
-    MqErrorCheck (pIoCreate (context, &context->link.io));
+  if (pIoCheck(context->link.io) == MQ_NO) {
+    if (MQ_IS_PARENT(context)) {
+      // I'm a parent and the "io" have to be created
+      MqErrorCheck (pIoCreate (context, &context->link.io));
+    } else {
+      // if entry-point is the "child" and the "initial-parent"
+      // (reponsible for the data communication) is not available
+      // start this parent and the child will be available too
+      if (MqErrorCheckI (MqLinkConnect (context->link.ctxIdP))) {
+	return MqErrorCopy (context, context->link.ctxIdP);
+      }
+      return MqErrorGetCodeI(context);
+    }
+  }
+
+  MqDLogCL(context,4,"START\n");
 
   if (MQ_IS_CHILD (context)) {
   // this is a CHILD
@@ -529,6 +546,7 @@ MqLinkConnect (
     }
 
     // !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
+    MqDLogCL(context,4,"send token<_OKS>\n");
     if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
       MqErrorCopy (context, parent);
       pIoCloseSocket (context->link.io, __func__);
@@ -585,7 +603,7 @@ MqLinkConnect (
     MqSendC (context, context->config.srvname);
 
     // send package and wait for the answer
-    MqDLogV(context,4,"send token<%s>\n","_IAA");
+    MqDLogCL(context,4,"send token<_IAA>\n");
     if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
       MqErrorReset(context);
       MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
@@ -613,7 +631,24 @@ MqLinkConnect (
     MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_PEO"));
   }; // END PARENT
 
+  // connect child's
+  for (child = context->link.childs; child != NULL; child=child->right) {
+    cldCtx = child->context;
+    switch (MqLinkConnect (cldCtx)) {
+      case MQ_OK:
+	break;
+      case MQ_CONTINUE:
+	break;
+      case MQ_ERROR:
+      case MQ_EXIT:
+	MqErrorCopy(context, cldCtx);
+	goto error;
+	break;
+    }
+  }
+
 error:
+  MqDLogCL(context,4,"END\n");
   MqSysFree (serverexec);
   return MqErrorStack(context);
 }
@@ -996,15 +1031,4 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
 

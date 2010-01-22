@@ -21,6 +21,23 @@
 
 BEGIN_C_DECLS
 
+/// \brief everything \e io need for local storage
+struct MqIoS {
+  struct MqS * context;             ///< link to the 'msgque' object
+  union {
+#if defined(MQ_IS_POSIX)
+    struct UdsS *   udsSP;          ///< UDS object pointer
+#endif
+    struct TcpS *   tcpSP;          ///< TCP object pointer
+    struct PipeS *  pipeSP;         ///< PIPE object pointer
+  } iocom;                          ///< link to 'iocom' object
+  fd_set fdset;                     ///< select need this
+  MQ_SOCK *sockP;                   ///< pointer to the current socket
+  struct MqIdS id;                  ///< (pid_t/mqthread_t) id of the server in "pipe" mode
+  struct MqEventS * event;          ///< link to the according Event structure
+  struct MqIoConfigS * config;      ///< "Io" part of the global configuration data
+};
+
 enum MqErrorE pIoCreate (
   struct MqS * const context,
   struct MqIoS ** const out
@@ -108,18 +125,6 @@ enum MqErrorE pIoStartServer (
   struct MqIdS * idP
 );
 
-/// \brief check if communication is possible
-MQ_BOL
-pIoCheck (
-  struct MqIoS * const io
-);
-
-/// \brief check if communication is in "initial" state
-MQ_BOL
-pIoCheckInitial (
-  struct MqIoS * const io
-);
-
 /// \brief helper to convert #IoStartServerE into a human readable string
 MQ_CST pIoLogStartType (
   enum IoStartServerE startType
@@ -141,16 +146,25 @@ enum MqErrorE pIoEventAdd (
   MQ_SOCK * sockP
 );
 
-MQ_TIME_T pIoGetTimeout(
-  struct MqIoS * const io
-);
-
 struct MqS const * pIoGetMsgqueFromSocket (
   struct MqIoS * const	io,
   MQ_SOCK sock
 );
 
 MQ_BOL pIoIsRemote (struct MqIoS * const);
+
+static mq_inline MQ_BOL pIoCheck (
+  struct MqIoS * const io
+) {
+  return (io && io->sockP ? (*(io->sockP) >= 0) : MQ_NO);
+};
+
+static mq_inline MQ_TIME_T pIoGetTimeout (
+  struct MqIoS * const io
+)
+{
+  return io->config->timeout;
+};
 
 #if _DEBUG
 void

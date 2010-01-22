@@ -12,7 +12,7 @@
 
 #include "main.h"
 #include "pipe_io.h"
-#include "io_private.h"
+#include "mq_io.h"
 #include "error.h"
 #include "sys_com.h"
 

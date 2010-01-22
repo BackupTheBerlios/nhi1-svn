@@ -15,7 +15,7 @@
 #if defined(MQ_IS_POSIX)
 
 #include "uds_io.h"
-#include "io_private.h"
+#include "mq_io.h"
 #include "error.h"
 
 /*###########################################################################*/

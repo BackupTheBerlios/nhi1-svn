@@ -1374,6 +1374,24 @@ proc Kill {P} {
   catch {exec $::KILL $P}
 }
 
+proc Create {I CON} {
+  global env
+  for {set i 0} {$i < $I} {incr i} {
+    set FH_CUR [tclmsgque MqS]
+    if {$i == 0} {
+      set FH_FIRST $FH_CUR
+      $FH_FIRST ConfigSetName     "client"
+      $FH_FIRST ConfigSetTimeout  $env(TS_TIMEOUT)
+      $FH_FIRST ConfigSetDebug    $env(TS_DEBUG)
+      $FH_FIRST LinkCreate	  {*}$CON
+    } else {
+      $FH_CUR LinkCreateChild $FH_LAST
+    }
+    set FH_LAST $FH_CUR
+  }
+  return [list $FH_FIRST $FH_LAST]
+}
+
 proc ExecLines {start end args} {
     catch {uplevel $args} MSG
     return [join [lrange [split $MSG \n] $start $end ] \n]

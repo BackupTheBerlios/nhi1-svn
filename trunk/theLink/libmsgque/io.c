@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-#include "io_private.h"
+#include "mq_io.h"
 #include "error.h"
 #include "buffer.h"
 #include "bufferL.h"
@@ -667,20 +667,6 @@ error:
   return MqErrorStack (context);
 }
 
-MQ_BOL
-pIoCheck (
-  struct MqIoS * const io
-) {
-  return (io && io->sockP ? (*(io->sockP) >= 0) : MQ_NO);
-}
-
-MQ_BOL
-pIoCheckInitial (
-  struct MqIoS * const io
-) {
-  return (io && io->sockP ? (*(io->sockP) == -1) : MQ_NO);
-}
-
 MQ_CST
 pIoLogStartType (
   enum IoStartServerE startType
@@ -789,14 +775,6 @@ pIoEventAdd(
 
 error:
   return MqErrorStack(context);
-}
-
-MQ_TIME_T
-pIoGetTimeout(
-  struct MqIoS * const io	///< [in] io interface data
-)
-{
-  return io->config->timeout;
 }
 
 struct MqS const *

@@ -13,7 +13,7 @@
 #include "main.h"
 #include "tcp_io.h"
 #include "generic_io.h"
-#include "io_private.h"
+#include "mq_io.h"
 #include "error.h"
 #include "log.h"
 #include "sys.h"

@@ -1,10 +1,10 @@
 REM
-REM  \file       theLink/example/vb/Filter3.vb
-REM  \brief      \$Id: Filter3.vb 110 2009-12-23 12:24:26Z aotto1968 $
+REM  \file       theLink/example/vb/Filter4.vb
+REM  \brief      \$Id$
 REM  
 REM  (C) 2009 - NHI - #1 - Project - Group
 REM  
-REM  \version    \$Rev: 110 $
+REM  \version    \$Rev$
 REM  \author     EMail: aotto1968 at users.berlios.de
 REM  \attention  this software has GPL permissions to copy
 REM              please contact AUTHORS for additional information

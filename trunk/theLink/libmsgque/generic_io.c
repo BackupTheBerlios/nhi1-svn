@@ -13,7 +13,7 @@
 #include "main.h"
 
 #include "generic_io.h"
-#include "io_private.h"
+#include "mq_io.h"
 #include "buffer.h"
 #include "bufferL.h"
 #include "error.h"

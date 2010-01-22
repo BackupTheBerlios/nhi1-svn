@@ -105,48 +105,51 @@ unset -nocomplain I B C S
 ## additional tests
 ##
 
-# 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 1] {
+  # 1,2, ... tclmsgque (parent/child)
+   foreach I [numGet 3] {
+    set J [expr {$I-1}]
 
- # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+   # transport-type: string or binary
+    foreach B [filterGet BIN_LST binary] {
 
-  # server-type: server server.tcl
-  foreach S [filterGet -or SRV_LST spawn fork] {
+    # server-type: server server.tcl
+    foreach S [filterGet -or SRV_LST spawn fork] {
 
-test trans-X1-($I|$B|$S) {send error + valid data} \
+  test trans-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
       set TMP	[makeFile "START" tmp.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
       set FTR	[list {*}[getFilter Filter4.$S] {*}$CON1 @ {*}$CON2]
-      set CTX	[tclmsgque MqS]
-      $CTX	ConfigSetName	  "client"
-      $CTX	ConfigSetDebug	  $env(TS_DEBUG)
     } \
     -body           {
       Bg {*}$SRV
       Bg {*}$FTR
-      $CTX LinkCreate {*}$CON1
+      foreach {FIRST CTX} [Create $I $CON1] break
 
-      Echo0 $CTX PRN2 SendC $TMP SendC T1
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T1
+      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC T2
-      Echo0 $CTX PRN2 SendC $TMP SendC T3
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T2
+      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T3
       $CTX Delete
 
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
       Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START
- 1: T1
- 1: T2
- 1: T3}
+    -result         "START
+T1
+$J
+T2
+$J
+T3"
 
 test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     -setup	    {
@@ -155,35 +158,38 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
       set FTR	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
-      set CTX	[tclmsgque MqS]
-      $CTX	ConfigSetName	  "client"
-      $CTX	ConfigSetTimeout  $env(TS_TIMEOUT)
-      $CTX	ConfigSetDebug	  $env(TS_DEBUG)
     } \
     -body           {
       Bg {*}$SRV
       Bg {*}$FTR
-      $CTX LinkCreate {*}$CON1
+      foreach {FIRST CTX} [Create $I $CON1] break
 
-      Echo0 $CTX PRN2 SendC $TMP SendC T1
+      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC T2
+      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC T3
+      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
+      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T3
       Call  $CTX SendEND ERR4
       $CTX Delete
 
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
       Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {START
- 1: T1
- 1: T2
- 1: T3}
+    -result         "START
+$J
+T1
+$J
+T2
+$J
+T3"
 
    }; # SRV_LST
   }; # BIN_LST

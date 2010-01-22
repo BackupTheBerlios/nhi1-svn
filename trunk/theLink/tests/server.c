@@ -1267,15 +1267,20 @@ Ot_PRN2 (
   MQ_PTR data
 )
 {
+  MQ_CST id;
   FILE *FH=NULL;
-  int i=0;
   MQ_CST str, file;
   MqErrorCheck (MqReadC (mqctx, &file));
   FH = fopen (file, "a");
-  
-  while (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadC (mqctx, &str));
-    fprintf (FH, "%2i: %s\n", ++i, str);
+  MqErrorCheck (MqReadC (mqctx, &id));
+
+  if (!strncmp (id, "PRINT", 5)) {
+    while (MqReadItemExists(mqctx)) {
+      MqErrorCheck (MqReadC (mqctx, &str));
+      fprintf (FH, "%s\n", str);
+    }
+  } else if (!strncmp (id, "CTXID", 5)) {
+    fprintf (FH, "%d\n", MqLinkGetCtxIdI(mqctx));
   }
 
 error:

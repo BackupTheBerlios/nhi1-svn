@@ -60,8 +60,9 @@ static enum MqErrorE FilterEvent (
     return MqErrorSetCONTINUE(mqctx);
   } else {
     register struct FilterItmS * itm;
-    // try to connect the link
-    if (!MqLinkIsConnected(ftr)) {
+
+    // if connection is down -> connect again
+    if (MqLinkIsConnected(ftr) == MQ_NO) {
       switch (MqLinkConnect (ftr)) {
 	case MQ_OK:	  break;
 	case MQ_CONTINUE: return MQ_OK;

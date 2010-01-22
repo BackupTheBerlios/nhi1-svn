@@ -48,7 +48,7 @@ array set LABELIGNORE {
     ./theLink/example/python	{ *.sw* Makefile.in Makefile}
     ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
-    ./theLink/example		{ php}
+    ./theLink/example		{ php tags }
 
     ./theLink/libmsgque		{ *.sw* *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
     ./theLink/tclmsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* pkgIndex.tcl }
@@ -83,7 +83,7 @@ array set LABELIGNORE {
 			    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
 			    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 			    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
-			    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log}
+			    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML}
 }
 
 array set env [list \

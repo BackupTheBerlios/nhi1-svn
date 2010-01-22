@@ -14,7 +14,7 @@
 #include "event.h"
 #include "sys.h"
 #include "sys_com.h"
-#include "io_private.h"
+#include "mq_io.h"
 
 #define MQ_CONTEXT_S context
 
