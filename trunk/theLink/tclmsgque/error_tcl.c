@@ -70,6 +70,13 @@ int NS(ErrorSetCONTINUE) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ErrorIsEXIT) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqErrorIsEXIT(MQCTX)));
+  RETURN_TCL
+}
+
 int NS(ErrorReset) (NS_ARGS)
 {
   CHECK_NOARGS

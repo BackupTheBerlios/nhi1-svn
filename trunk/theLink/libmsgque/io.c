@@ -24,6 +24,7 @@
 #include "log.h"
 #include "send.h"
 #include "event.h"
+#include "link.h"
 
 BEGIN_C_DECLS
 
@@ -61,8 +62,9 @@ pIoCreate (
   // search for communication type
   if (MQ_IS_PARENT (context)) {
 
-    // init parent
+    // init parent and set to "non-connected"
     io->sockP = (MQ_SOCK *)&sockUndef;
+    context->link.bits.isConnected = MQ_NO; // just to be sure
 
     // create event-structure
     MqErrorCheck (pEventCreate (context, &io->event));
@@ -127,9 +129,15 @@ pIoCloseSocket (
   MQ_CST const caller
 )
 {
-  if (unlikely(io == NULL)) return;
-  pIoShutdown (io);
-  SysCloseSocket (io->context, caller, MQ_YES, io->sockP);
+  if (unlikely(io == NULL)) {
+    return;
+  } else {
+    struct MqS * const context = io->context;
+    pEventShutdown (context);
+    SysCloseSocket (context, caller, MQ_YES, io->sockP);
+    // set "initial" parent and all child to "NO"
+    pLinkDisConnect (context->link.ctxIdP);
+  }
 }
 
 void

@@ -285,6 +285,7 @@ int NS(LinkGetTargetIdent) (NS_ARGS);
 int NS(LinkCreate) (NS_ARGS);
 int NS(LinkCreateChild) (NS_ARGS);
 int NS(LinkDelete) (NS_ARGS);
+int NS(LinkConnect) (NS_ARGS);
 
 int NS(ServiceGetToken) (NS_ARGS);
 int NS(ServiceIsTransaction) (NS_ARGS);
@@ -297,6 +298,7 @@ int NS(ProcessEvent) (NS_ARGS);
 int NS(ErrorC) (NS_ARGS);
 int NS(ErrorSet) (NS_ARGS);
 int NS(ErrorSetCONTINUE) (NS_ARGS);
+int NS(ErrorIsEXIT) (NS_ARGS);
 int NS(ErrorGetText) (NS_ARGS);
 int NS(ErrorGetNum) (NS_ARGS);
 int NS(ErrorGetCode) (NS_ARGS);
@@ -436,12 +438,14 @@ int NS(MqS_Cmd) (
     { "LinkCreate",		  NS(LinkCreate)	      },
     { "LinkCreateChild",	  NS(LinkCreateChild)	      },
     { "LinkDelete",		  NS(LinkDelete)	      },
+    { "LinkConnect",		  NS(LinkConnect)	      },
 
 // ERROR
 
     { "ErrorC",			  NS(ErrorC)		      },
     { "ErrorSet",		  NS(ErrorSet)		      },
     { "ErrorSetCONTINUE",	  NS(ErrorSetCONTINUE)	      },
+    { "ErrorIsEXIT",		  NS(ErrorIsEXIT)	      },
     { "ErrorGetText",		  NS(ErrorGetText)	      },
     { "ErrorGetNum",		  NS(ErrorGetNum)	      },
     { "ErrorGetCode",		  NS(ErrorGetCode)	      },

@@ -76,6 +76,17 @@ PyObject* NS(ErrorSetCONTINUE)(
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ErrorIsEXIT)(
+  PyObject  *self
+)
+{
+  if (MqErrorIsEXIT(CONTEXT)) {
+    Py_RETURN_FALSE;
+  } else {
+    Py_RETURN_TRUE;
+  }
+}
+
 PyObject* NS(ErrorSet)(
   PyObject  *self
 )

@@ -24,10 +24,17 @@ class Filter4(MqS):
   def ServerSetup(ctx):
     ctx.ServiceCreate("+ALL", ctx.FilterIn)
   def Event(ctx):
-    if (len(ctx.itms) > 0):
+    if (len(ctx.itms) == 0):
+      ctx.ErrorSetCONTINUE()
+    else:
       (token, isTransaction, bdy) = ctx.itms.pop(0)
+      ftr = ctx.ServiceGetFilter()
       try:
-        ftr = ctx.ServiceGetFilter()
+        ftr.LinkConnect()
+      except:
+        ftr.ErrorPrint()
+        return
+      try:
         ftr.SendSTART()
         ftr.SendBDY(bdy)
         if (isTransaction):
@@ -35,11 +42,12 @@ class Filter4(MqS):
         else:
           ftr.SendEND(token)
       except:
-        ctx.ErrorSet()
-        ctx.ErrorPrint()
-        ctx.ErrorReset()
-    else:
-      ctx.ErrorSetCONTINUE()
+        ftr.ErrorSet()
+        if ftr.ErrorIsEXIT():
+          ftr.ErrorReset()
+          return
+        else:
+          ftr.ErrorPrint()
   def FilterIn(ctx):
     ctx.itms.append([ctx.ServiceGetToken(), ctx.ServiceIsTransaction(), ctx.ReadBDY()])
     ctx.SendRETURN()

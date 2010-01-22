@@ -131,6 +131,8 @@ This option is \b not available for \self.
 \section	\NS{ClientServerLink}			LINK API
 \RNSA{LinkCreate}\n
 \RNSA{LinkCreateChild}\n
+\RNSA{LinkDelete}\n
+\RNSA{LinkConnect}\n
 \RNSA{LinkGetParent}\n
 \RNSA{LinkIsParent}\n
 \RNSA{LinkGetCtxId}\n
@@ -170,6 +172,9 @@ This option is \b not available for \self.
 
 \subsection	  \NS{LinkDelete}			\LinkDelete
 \copydoc MqLinkDelete
+
+\subsection	  \NS{LinkConnect}			\LinkConnect
+\copydoc MqLinkConnect
 
 \subsection	  \NS{LinkGetParent}			\LinkGetParent
 \copydoc MqLinkGetParent
@@ -424,6 +429,7 @@ return the type as single character of the item stored in the buffer object.
 \RNSA{ErrorC}\n
 \RNSA{ErrorSet}\n
 \RNSA{ErrorSetCONTINUE}\n
+\RNSA{ErrorIsEXIT}\n
 \RNSA{ErrorReset}\n
 \RNSA{ErrorRaise}\n
 \RNSA{ErrorPrint}\n
@@ -449,6 +455,9 @@ caught and before the application exit or the object is deleted.
 
 \subsection	\NS{ErrorSetCONTINUE}			\ErrorSetCONTINUE
 \copybrief MqErrorSetCONTINUE
+
+\subsection	\NS{ErrorIsEXIT}			\ErrorIsEXIT
+\copybrief MqErrorIsEXIT
 
 \subsection	\NS{ErrorReset}				\ErrorReset
 \copydoc MqErrorReset

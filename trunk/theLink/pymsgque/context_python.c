@@ -14,7 +14,6 @@
 
 #define MQ_CONTEXT_S context
 
-extern PyTypeObject NS(MqS);
 extern PyObject * NS(MqSException);
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -68,55 +67,6 @@ PyObject* NS(Delete) (
 {
   MqContextFree (CONTEXT);
   Py_DECREF(self);
-  Py_RETURN_NONE;
-}
-
-PyObject* NS(LinkCreate)(
-  MqS_Obj   *self, 
-  PyObject  *args
-)
-{
-  PyObject *argsO = NULL;
-
-  if (!PyArg_ParseTuple(args, "|O!:LinkCreate", &PyList_Type, &argsO)) {
-    return NULL;
-  } else {
-    SETUP_context 
-    struct MqBufferLS * largv = NULL;
-    MqErrorCheck (ListToMqBufferLS (context, argsO, &largv));
-    SETUP_CHECK_RETURN (MqLinkCreate(context, &largv));
-  }
-}
-
-PyObject* NS(LinkCreateChild)(
-  MqS_Obj   *self, 
-  PyObject  *args
-)
-{
-  MqS_Obj *parentO = NULL;
-  PyObject *argsO = NULL;
-
-  if (!PyArg_ParseTuple(args, "O!|O!:LinkCreateChild", 
-	&NS(MqS),		&parentO,
-	&PyList_Type,		&argsO
-    )) {
-    return NULL;
-  } else {
-    SETUP_context
-    struct MqS * const parent = &parentO->context;
-    struct MqBufferLS * largv = NULL;
-
-    MqErrorCheck (MqSetupDup(context, parent));
-    MqErrorCheck (ListToMqBufferLS (context, argsO, &largv));
-    SETUP_CHECK_RETURN (MqLinkCreateChild(context, parent, &largv));
-  }
-}
-
-PyObject* NS(LinkDelete)(
-  PyObject  *self 
-)
-{
-  MqLinkDelete (CONTEXT);
   Py_RETURN_NONE;
 }
 

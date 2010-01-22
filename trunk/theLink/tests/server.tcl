@@ -593,7 +593,21 @@ proc Ot_PRNT {ctx} {
   $ctx SendRETURN
 }
 
-
+proc Ot_PRN2 {ctx} {
+  set FH  [open [$ctx ReadC] a]
+  switch -exact [$ctx ReadC] {
+    PRINT {
+      while {[$ctx ReadItemExists]} {
+	puts $FH [$ctx ReadC]
+      }
+    }
+    CTXID {
+      puts $FH [$ctx LinkGetCtxId]
+    }
+  }
+  close $FH
+  $ctx SendRETURN
+}
 
 proc ServerSetup {ctx} {
 
@@ -657,6 +671,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERLS Ot_ERLS
     $ctx ServiceCreate CFG1 Ot_CFG1
     $ctx ServiceCreate PRNT Ot_PRNT
+    $ctx ServiceCreate PRN2 Ot_PRN2
   }
 }
 
@@ -690,12 +705,4 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
-
-
-
-
-
-
-
-
 

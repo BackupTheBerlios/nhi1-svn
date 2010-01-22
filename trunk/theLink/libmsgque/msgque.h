@@ -358,6 +358,7 @@ struct MqLinkS {
     MQ_BOL doFactoryCleanup   :	1 ; ///< was the context create by a 'Factory'
     MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fFunc was called ?
     MQ_BOL isWORKER	      :	1 ; ///< is alfa[0] set to "WORKER"
+    MQ_BOL isConnected	      : 1 ; ///< is the socket connected?
   } bits;
 
   // the next 3 items are !!only!! used in the parent
@@ -1602,6 +1603,14 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
   struct MqBufferLS ** args
 );
 
+/// \brief re-connect a \e client-server-link after a server crash or a network downtime
+///
+/// Do nothing if the \e client-server-link is already connected.
+/// This function is only useful in an \e event-function (\RNSC{IEvent}) if the \e link-disconnect
+/// (\RNSA{ErrorIsEXIT}) is ignored (\RNSA{ErrorReset}). 
+/// Read more in the: <TT>/theLink/example/LNG/Filter4.EXT</TT> example.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqLinkConnect (
   struct MqS  * const ctx
 );
@@ -3121,6 +3130,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
 
 /// \brief signal end of processing in an \RNSC{IEvent} callback
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
+  struct MqS * const context
+);
+
+/// \brief check if context is on \e exit, return \yes or \no
+MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );
 

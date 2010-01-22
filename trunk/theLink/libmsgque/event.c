@@ -486,7 +486,7 @@ pEventShutdown (
 
   // filter to check if work is available
   if (	    
-        !context ||			// no "msgque" data
+        !context ||			// no "context" data
         !context->link.io ||		// no "io" data
         !context->link.io->event ||	// no "event" data
         MQ_IS_CHILD(context )		// we only delete PARENT from the event-list
@@ -610,16 +610,3 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
-

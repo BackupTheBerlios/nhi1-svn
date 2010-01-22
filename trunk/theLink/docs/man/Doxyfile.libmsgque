@@ -131,6 +131,7 @@ ALIASES		    += "LinkGetCtxId=MQ_SIZE MqLinkGetCtxId (struct MqS *ctx)"
 ALIASES		    += "LinkIsParent=MQ_BOL MqLinkIsParent (struct MqS *ctx)"
 ALIASES		    += "LinkIsConnected=MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
 ALIASES		    += "LinkDelete=MqLinkDelete(struct MqS *ctx)"
+ALIASES		    += "LinkConnect=MqLinkConnect(struct MqS *ctx)"
 
 # SEND DATA
 ALIASES		    += "send_example=\code \n\
@@ -196,9 +197,9 @@ ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **
 ALIASES		    += "SlaveWorker_example=\code \nMqErrorCheck(MqSlaveWorker (ctx, 7,\n   MqBufferLCreateArgsV(ctx, \"--thread\", \"--silent\", \"@\", \"--name\", \"MyWorker\", NULL)\n);\endcode"
 ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
 ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx, MQ_SIZE id)"
-ALIASES		    += "SlaveGet=MqSlaveGet(ctx, MQ_SIZE id)"
-ALIASES		    += "SlaveGetMaster=MqSlaveGetMaster(ctx)"
-ALIASES		    += "SlaveIs=MqSlaveIs(ctx)"
+ALIASES		    += "SlaveGet=struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGetMaster=struct MqS* MqSlaveGetMaster(ctx)"
+ALIASES		    += "SlaveIs=MQ_BOL MqSlaveIs(ctx)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -235,6 +236,7 @@ ALIASES		    += "ErrorGetNum=MQ_INT MqErrorGetNum(ctx)"
 ALIASES		    += "ErrorC=MqErrorC(ctx,MQ_CST prefix, MQ_INT errnum, MQ_CST message)"
 ALIASES		    += "ErrorSet=MqErrorSet(ctx,MQ_INT errnum,enum MqErrorE errorcode,MQ_CST message)"
 ALIASES		    += "ErrorSetCONTINUE=MqErrorSetCONTINUE(ctx)"
+ALIASES		    += "ErrorIsEXIT=MQ_BOL MqErrorIsEXIT(ctx)"
 ALIASES		    += "ErrorReset=MqErrorReset(ctx)"
 ALIASES		    += "ErrorRaise=MqErrorRaise(ctx)"
 ALIASES		    += "ErrorPrint=MqErrorPrint(ctx)"

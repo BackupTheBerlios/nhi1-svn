@@ -510,147 +510,153 @@ MqLinkConnect (
   struct MqS * const context
 )
 {
-  MQ_STR serverexec = NULL;
-  struct pChildS *child;
-  struct MqS *cldCtx;
-  MQ_INT MqSetDebugLevel(context);
-
-  // initialize IO
-  if (pIoCheck(context->link.io) == MQ_NO) {
-    if (MQ_IS_PARENT(context)) {
-      // I'm a parent and the "io" have to be created
-      MqErrorCheck (pIoCreate (context, &context->link.io));
-    } else {
-      // if entry-point is the "child" and the "initial-parent"
-      // (reponsible for the data communication) is not available
-      // start this parent and the child will be available too
-      if (MqErrorCheckI (MqLinkConnect (context->link.ctxIdP))) {
-	return MqErrorCopy (context, context->link.ctxIdP);
-      }
-      return MqErrorGetCodeI(context);
-    }
-  }
-
-  MqDLogCL(context,4,"START\n");
-
-  if (MQ_IS_CHILD (context)) {
-  // this is a CHILD
-    register struct MqS * const parent = context->config.parent;
-
-    // PARENT, sending using the DATA of the CHILD as argument
-    MqSendSTART (parent);
-    MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
-    MqSendI (parent, (MQ_INT) context->config.isSilent);
-    if (context->config.srvname != NULL) {
-      MqSendC (parent, context->config.srvname);
-    }
-
-    // !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
-    MqDLogCL(context,4,"send token<_OKS>\n");
-    if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
-      MqErrorCopy (context, parent);
-      pIoCloseSocket (context->link.io, __func__);
-      goto error;
-    }
-
+  if (context->link.bits.isConnected == MQ_YES) {
+    return MQ_OK;
   } else {
-  // this is a PARENT
+    MQ_STR serverexec = NULL;
+    struct pChildS *child;
+    MQ_INT MqSetDebugLevel(context);
 
-    MQ_CST ident;
-    MQ_BOL mystring;
-    MQ_BOL myendian;
-
-    if (pIoIsRemote(context->link.io) == MQ_YES) {
-      serverexec = mq_strdup_save("remote-connect");
-    } else {
-      if (context->link.alfa != NULL)
-	serverexec = mq_strdup_save(context->link.alfa->data[0]->cur.C);
-      if (serverexec == NULL)
-	serverexec = mq_strdup_save(sInitGetFirst());
+    // initialize IO
+    if (pIoCheck(context->link.io) == MQ_NO) {
+      if (MQ_IS_PARENT(context)) {
+	// I'm a parent and the "io" have to be created
+	MqErrorCheck (pIoCreate (context, &context->link.io));
+      } else {
+	// if entry-point is the "child" and the "initial-parent"
+	// (reponsible for the data communication) is not available
+	// start this parent and the child will be available too
+	if (MqErrorCheckI (MqLinkConnect (context->link.ctxIdP))) {
+	  return MqErrorCopy (context, context->link.ctxIdP);
+	}
+	return MqErrorGetCodeI(context);
+      }
     }
 
-    // 0. Start the PIPE server (if necessary)
-    MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, NULL));
+    MqDLogCL(context,4,"START\n");
 
-    // 1. connect to the server
-    MqErrorCheck (pIoConnect (context->link.io));
+    if (MQ_IS_CHILD (context)) {
+    // this is a CHILD
+      register struct MqS * const parent = context->config.parent;
 
-    // 2. exchange startup messages
-    //      - allways send as string
+      // PARENT, sending using the DATA of the CHILD as argument
+      MqSendSTART (parent);
+      MqSendI (parent, (context->config.debug == 0 ? -1 : context->config.debug));
+      MqSendI (parent, (MQ_INT) context->config.isSilent);
+      if (context->config.srvname != NULL) {
+	MqSendC (parent, context->config.srvname);
+      }
 
-    // save my original binary-mode
-    mystring = context->config.isString;
-
-    // for '_IAA' we only use 'string' mode
-    MqConfigSetIsString (context, MQ_YES);
-
-    MqSendSTART (context);
-
-    // send the binary mode
-    MqSendO (context, mystring);
-
-    // send my endian
-#     if defined(WORDS_BIGENDIAN)
-      MqSendO (context, MQ_YES);
-#     else
-      MqSendO (context, MQ_NO);
-#     endif
-
-    /// send my ident
-    MqSendC (context, context->setup.ident);
-
-    // send the server name
-    MqSendC (context, context->config.srvname);
-
-    // send package and wait for the answer
-    MqDLogCL(context,4,"send token<_IAA>\n");
-    if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
-      MqErrorReset(context);
-      MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
-      goto error;
-    }
-
-    // read the other endian and set my context->link.bits.endian
-    MqReadO(context, &myendian);
-
-    // read the target ident
-    MqReadC(context, &ident);
-    MqSysFree(context->link.targetIdent);
-    context->link.targetIdent = mq_strdup(ident);
-
-#     if defined(WORDS_BIGENDIAN)
-      context->link.bits.endian = (myendian ? MQ_NO : MQ_YES);
-#     else
-      context->link.bits.endian = (myendian ? MQ_YES : MQ_NO);
-#     endif
-
-    // restore the binary mode
-    MqConfigSetIsString (context, mystring);
-
-    // wait until the server is able to process events (and send _PEO)
-    MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_PEO"));
-  }; // END PARENT
-
-  // connect child's
-  for (child = context->link.childs; child != NULL; child=child->right) {
-    cldCtx = child->context;
-    switch (MqLinkConnect (cldCtx)) {
-      case MQ_OK:
-	break;
-      case MQ_CONTINUE:
-	break;
-      case MQ_ERROR:
-      case MQ_EXIT:
-	MqErrorCopy(context, cldCtx);
+      // !!Attention wrong error (from the PARENT because the PARENT starts the CHILD on the SERVER)
+      MqDLogCL(context,4,"send token<_OKS>\n");
+      if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
+	MqErrorCopy (context, parent);
+	pIoCloseSocket (context->link.io, __func__);
 	goto error;
-	break;
+      }
+
+    } else {
+    // this is a PARENT
+
+      MQ_CST ident;
+      MQ_BOL mystring;
+      MQ_BOL myendian;
+
+      if (pIoIsRemote(context->link.io) == MQ_YES) {
+	serverexec = mq_strdup_save("remote-connect");
+      } else {
+	if (context->link.alfa != NULL)
+	  serverexec = mq_strdup_save(context->link.alfa->data[0]->cur.C);
+	if (serverexec == NULL)
+	  serverexec = mq_strdup_save(sInitGetFirst());
+      }
+
+      // 0. Start the PIPE server (if necessary)
+      MqErrorCheck (pIoStartServer(context->link.io, MQ_START_SERVER_AS_PIPE, NULL, NULL));
+
+      // 1. connect to the server
+      MqErrorCheck (pIoConnect (context->link.io));
+
+      // 2. exchange startup messages
+      //      - allways send as string
+
+      // save my original binary-mode
+      mystring = context->config.isString;
+
+      // for '_IAA' we only use 'string' mode
+      MqConfigSetIsString (context, MQ_YES);
+
+      MqSendSTART (context);
+
+      // send the binary mode
+      MqSendO (context, mystring);
+
+      // send my endian
+#     if defined(WORDS_BIGENDIAN)
+	MqSendO (context, MQ_YES);
+#     else
+	MqSendO (context, MQ_NO);
+#     endif
+
+      /// send my ident
+      MqSendC (context, context->setup.ident);
+
+      // send the server name
+      MqSendC (context, context->config.srvname);
+
+      // send package and wait for the answer
+      MqDLogCL(context,4,"send token<_IAA>\n");
+      if (MqErrorCheckI(MqSendEND_AND_WAIT (context, "_IAA", MQ_TIMEOUT_USER))) {
+	MqErrorReset(context);
+	MqErrorDbV2 (context,MQ_ERROR_CAN_NOT_START_SERVER, serverexec);
+	goto error;
+      }
+
+      // read the other endian and set my context->link.bits.endian
+      MqReadO(context, &myendian);
+
+      // read the target ident
+      MqReadC(context, &ident);
+      MqSysFree(context->link.targetIdent);
+      context->link.targetIdent = mq_strdup(ident);
+
+#     if defined(WORDS_BIGENDIAN)
+	context->link.bits.endian = (myendian ? MQ_NO : MQ_YES);
+#     else
+	context->link.bits.endian = (myendian ? MQ_YES : MQ_NO);
+#     endif
+
+      // restore the binary mode
+      MqConfigSetIsString (context, mystring);
+
+      // wait until the server is able to process events (and send _PEO)
+      MqErrorCheck (sWaitForToken (context, MQ_TIMEOUT_USER, "_PEO"));
+    }; // END PARENT
+
+    // connect child's
+    for (child = context->link.childs; child != NULL; child=child->right) {
+      struct MqS *cldCtx = child->context;
+      switch (MqLinkConnect (cldCtx)) {
+	case MQ_OK:
+	  break;
+	case MQ_CONTINUE:
+	  break;
+	case MQ_ERROR:
+	case MQ_EXIT:
+	  MqErrorCopy(context, cldCtx);
+	  goto error;
+	  break;
+      }
     }
-  }
+
+    // change into "connected"
+    context->link.bits.isConnected = MQ_YES;
 
 error:
-  MqDLogCL(context,4,"END\n");
-  MqSysFree (serverexec);
-  return MqErrorStack(context);
+    MqDLogCL(context,4,"END\n");
+    MqSysFree (serverexec);
+    return MqErrorStack(context);
+  }
 }
 
 enum MqErrorE
@@ -1005,6 +1011,16 @@ MqLinkGetTargetIdent (
 )
 {
   return context->link.targetIdent;
+}
+
+void pLinkDisConnect (
+  struct MqS * const context
+) {
+  struct pChildS *child;
+  context->link.bits.isConnected = MQ_NO;
+  for (child = context->link.childs; child != NULL; child=child->right) {
+    pLinkDisConnect (child->context);
+  }
 }
 
 /*****************************************************************************/

@@ -12,6 +12,8 @@
 
 #include "msgque_python.h"
 
+extern PyTypeObject NS(MqS);
+
 PyObject* NS(LinkIsParent) (
   PyObject    *self
 )
@@ -27,7 +29,7 @@ PyObject* NS(LinkIsConnected) (
   MqS_Obj   *self
 )
 {
-  if (ICONTEXT.link.onCreate == MQ_NO) {
+  if (MqLinkIsConnected(CONTEXT)) {
     Py_RETURN_FALSE;
   } else {
     Py_RETURN_TRUE;
@@ -56,3 +58,59 @@ PyObject* NS(LinkGetCtxId) (
   return PyLong_FromLong(MqLinkGetCtxId(CONTEXT));
 }
 
+PyObject* NS(LinkCreate)(
+  MqS_Obj   *self, 
+  PyObject  *args
+)
+{
+  PyObject *argsO = NULL;
+
+  if (!PyArg_ParseTuple(args, "|O!:LinkCreate", &PyList_Type, &argsO)) {
+    return NULL;
+  } else {
+    SETUP_context 
+    struct MqBufferLS * largv = NULL;
+    MqErrorCheck (ListToMqBufferLS (context, argsO, &largv));
+    SETUP_CHECK_RETURN (MqLinkCreate(context, &largv));
+  }
+}
+
+PyObject* NS(LinkCreateChild)(
+  MqS_Obj   *self, 
+  PyObject  *args
+)
+{
+  MqS_Obj *parentO = NULL;
+  PyObject *argsO = NULL;
+
+  if (!PyArg_ParseTuple(args, "O!|O!:LinkCreateChild", 
+	&NS(MqS),		&parentO,
+	&PyList_Type,		&argsO
+    )) {
+    return NULL;
+  } else {
+    SETUP_context
+    struct MqS * const parent = &parentO->context;
+    struct MqBufferLS * largv = NULL;
+
+    MqErrorCheck (MqSetupDup(context, parent));
+    MqErrorCheck (ListToMqBufferLS (context, argsO, &largv));
+    SETUP_CHECK_RETURN (MqLinkCreateChild(context, parent, &largv));
+  }
+}
+
+PyObject* NS(LinkDelete)(
+  PyObject  *self 
+)
+{
+  MqLinkDelete (CONTEXT);
+  Py_RETURN_NONE;
+}
+
+PyObject* NS(LinkConnect)(
+  PyObject  *self 
+)
+{
+  SETUP_context
+  SETUP_CHECK_RETURN (MqLinkConnect (CONTEXT));
+}

@@ -61,6 +61,7 @@ PyObject* NS(LinkIsParent)	    ( PyObject* );
 PyObject* NS(LinkIsConnected)	    ( PyObject* );
 PyObject* NS(LinkGetParent)	    ( PyObject* );
 PyObject* NS(LinkGetCtxId)	    ( PyObject* );
+PyObject* NS(LinkConnect)	    ( PyObject* );
 
 #define LinkCreate_DOC		    "[config, args] create a new parent-object-link"
 #define LinkCreateChild_DOC	    "[parent, args] create a new child-object-link"
@@ -69,6 +70,7 @@ PyObject* NS(LinkGetCtxId)	    ( PyObject* );
 #define LinkIsConnected_DOC	    "[noARG] boolean, 'True' if the object-link is up and running'."
 #define LinkGetParent_DOC	    "[noARG] return the PyMqS 'parent' object of the 'current' object."
 #define LinkGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
+#define LinkConnect_DOC		    "[noARG] re-connect a client-server-link after a server crash or a network downtime"
 
 // from send_python.c
 
@@ -195,7 +197,6 @@ PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIdent)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigCheckIdent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoUds)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoPipe)	      ( PyObject*, PyObject* );
@@ -235,7 +236,6 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigSetName_DOC	    "[string]"
 #define ConfigSetSrvName_DOC	    "[string]"
 #define ConfigSetIdent_DOC	    "[string]"
-#define ConfigCheckIdent_DOC	    "[string]"
 #define ConfigSetIoUds_DOC	    "[file-name]"
 #define ConfigSetIoTcp_DOC	    "[hots, port, myhost, myport]"
 #define ConfigSetIoPipe_DOC	    "[socket]"
@@ -272,6 +272,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 PyObject* NS(ErrorC)		    ( PyObject*, PyObject*  );
 PyObject* NS(ErrorSet)		    ( PyObject*		    );
 PyObject* NS(ErrorSetCONTINUE)	    ( PyObject*		    );
+PyObject* NS(ErrorIsEXIT)	    ( PyObject*		    );
 PyObject* NS(ErrorRaise)	    ( PyObject*		    );
 PyObject* NS(ErrorReset)	    ( PyObject*		    );
 PyObject* NS(ErrorPrint)	    ( PyObject*		    );
@@ -281,6 +282,7 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ErrorC_DOC		    "[function-name, error-number, error-message] (testing only) create a PyMqS error"
 #define ErrorSet_DOC		    "set a 'libmsgque' error from a python 'MqSException' error"
 #define ErrorSetCONTINUE_DOC	    "signal that the event-function has finished the work"
+#define ErrorIsEXIT_DOC		    "check if context is on exit, return True or False"
 #define ErrorRaise_DOC		    "convert and raise an error from 'pymsgque' into 'python'"
 #define ErrorReset_DOC		    "clear a 'pymsgque' error"
 #define ErrorPrint_DOC		    "print a 'pymsgque' error to stderr"
@@ -304,6 +306,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(LinkIsConnected,	METH_NOARGS),
     ARG(LinkGetParent,		METH_NOARGS),
     ARG(LinkGetCtxId,		METH_NOARGS),
+    ARG(LinkConnect,		METH_NOARGS),
 
     ARG(SendSTART,		METH_NOARGS),
     ARG(SendEND,		METH_VARARGS),
@@ -363,7 +366,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
     ARG(ConfigSetIdent,		METH_O),
-    ARG(ConfigCheckIdent,	METH_O),
     ARG(ConfigSetIoUds,		METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
     ARG(ConfigSetIoPipe,	METH_O),
@@ -400,6 +402,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ErrorC,			METH_VARARGS),
     ARG(ErrorSet,		METH_NOARGS),
     ARG(ErrorSetCONTINUE,	METH_NOARGS),
+    ARG(ErrorIsEXIT,		METH_NOARGS),
     ARG(ErrorRaise,		METH_NOARGS),
     ARG(ErrorReset,		METH_NOARGS),
     ARG(ErrorPrint,		METH_NOARGS),

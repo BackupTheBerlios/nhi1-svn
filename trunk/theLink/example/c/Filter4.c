@@ -51,8 +51,6 @@ static enum MqErrorE FilterEvent (
 )
 {
   register SETUP_ctx;
-  struct MqS * ftr;
-  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
   // check if an item is available
   if (ctx->rIdx == ctx->wIdx) {
@@ -60,15 +58,15 @@ static enum MqErrorE FilterEvent (
     return MqErrorSetCONTINUE(mqctx);
   } else {
     register struct FilterItmS * itm;
+    struct MqS * ftr;
+    MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
     // if connection is down -> connect again
-    if (MqLinkIsConnected(ftr) == MQ_NO) {
-      switch (MqLinkConnect (ftr)) {
-	case MQ_OK:	  break;
-	case MQ_CONTINUE: return MQ_OK;
-	case MQ_EXIT:	  goto error1;
-	case MQ_ERROR:	  goto error1;
-      }
+    switch (MqLinkConnect (ftr)) {
+      case MQ_OK:	  break;
+      case MQ_CONTINUE:	  return MQ_OK;
+      case MQ_EXIT:	  goto error1;
+      case MQ_ERROR:	  goto error1;
     }
 
     // extract the first (oldest) item from the store
@@ -85,10 +83,8 @@ static enum MqErrorE FilterEvent (
       case MQ_CONTINUE:	  return MQ_OK;
       case MQ_ERROR:
 	MqErrorPrint(ftr);
-	MqErrorReset(mqctx);
 	goto end;
       case MQ_EXIT:
-	MqErrorReset(mqctx);
 	MqErrorReset(ftr);
 	return MQ_OK;
     }
@@ -99,7 +95,6 @@ end:
     return MQ_OK;
 error1:
     MqErrorPrint(ftr);
-    MqErrorReset(mqctx);
     return MQ_OK;
   }
 error:
@@ -165,6 +160,7 @@ FilterCleanup (
       MqSysFree(ctx->itm[i]);
     }
   }
+  MqSysFree (ctx->itm);
   return MQ_OK;
 }
 

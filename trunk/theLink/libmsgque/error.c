@@ -363,6 +363,14 @@ MqErrorSetCONTINUE (
   return (context->error.code = MQ_CONTINUE);
 }
 
+int
+MqErrorIsEXIT (
+  struct MqS * const context
+)
+{
+  return (context->error.code == MQ_EXIT);
+}
+
 enum MqErrorE
 pErrorSetEXIT (
   struct MqS * const context,

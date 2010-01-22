@@ -412,8 +412,7 @@ SysCloseSocket (
   MQ_SOCK * hdlP
 )
 {
-  MQ_CST  msg="";
-
+  enum MqErrorE ret = MQ_OK;
   if (*hdlP < 0) return MQ_OK;
   if (doShutdown) {
     MqDLogV(context,5,"%s - shutdown socket<%i>\n", caller, *hdlP);
@@ -424,7 +423,7 @@ SysCloseSocket (
 	case WIN32_WSA (EINVAL):
 	  break;
 	default:
-	  msg="shutdown (socket)";
+	  ret = sSysMqErrorMsg (context, __func__, "shutdown (socket)");
 	  goto error;
       }
     }
@@ -432,16 +431,13 @@ SysCloseSocket (
 
   MqDLogV(context,5,"%s - close socket<%i>\n", caller, *hdlP);
   if (unlikely (WIN32_socket (close) (*hdlP) == SOCKET_ERROR)) {
-    msg="close (socket)";
+    ret = sSysMqErrorMsg (context, __func__, "close (socket)");
     goto error;
   }
 
-  *hdlP *= -1;
-  return MQ_OK;
-
 error:
   *hdlP *= -1;
-  return sSysMqErrorMsg (context, __func__, msg);
+  return ret;
 }
 
 enum MqErrorE

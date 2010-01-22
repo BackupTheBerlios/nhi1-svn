@@ -126,6 +126,18 @@ class Server(MqS):
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
       self.ServiceCreate("PRNT", self.PRNT)
+      self.ServiceCreate("PRN2", self.PRN2)
+
+  def PRN2(self):
+    FH = open(self.ReadC(), mode='a')
+    id = self.ReadC()
+    if id == "PRINT":
+      while (self.Read>temExists()):
+        print(self.ReadC(), file=FH)
+    elif ID == "CTXID":
+      print(self.LinkGetCtxId(), file=FH)
+    close(FH)
+    self.SendRETURN()
 
   def PRNT(self):
     i=0
@@ -644,11 +656,3 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
-
-
-
-
-
-
-
-

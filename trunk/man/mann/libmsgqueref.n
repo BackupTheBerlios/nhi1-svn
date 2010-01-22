@@ -1,4 +1,4 @@
-.TH "libmsgque" n "20 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -384,6 +384,10 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .br
  \fBLinkCreateChild\fP
 .br
+ \fBLinkDelete\fP
+.br
+ \fBLinkConnect\fP
+.br
  \fBLinkGetParent\fP
 .br
  \fBLinkIsParent\fP
@@ -544,6 +548,21 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+.SS "MqLinkConnect(struct MqS *ctx)"
+re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
+.PP
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "struct MqS* MqLinkGetParent (struct MqS *ctx)"
@@ -1394,7 +1413,7 @@ an \fBEXCEPTION OBJECT\fP on error
 it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
-.SS "MqSlaveGet(ctx, MQ_SIZE id)"
+.SS "struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
 get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
@@ -1409,7 +1428,7 @@ get the \fIslave-context\fP from a \fImaster-context\fP
 the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
 .RE
 .PP
-.SS "MqSlaveGetMaster(ctx)"
+.SS "struct MqS* MqSlaveGetMaster(ctx)"
 get the \fImaster-context\fP from the \fIslave-context\fP 
 .PP
 \fBParameters:\fP
@@ -1422,7 +1441,7 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 the \fImaster-context\fP or \fINULL\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
-.SS "MqSlaveIs(ctx)"
+.SS "MQ_BOL MqSlaveIs(ctx)"
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
 \fBParameters:\fP
@@ -1500,6 +1519,8 @@ return the type as single character of the item stored in the buffer object.
 .br
  \fBErrorSetCONTINUE\fP
 .br
+ \fBErrorIsEXIT\fP
+.br
  \fBErrorReset\fP
 .br
  \fBErrorRaise\fP
@@ -1549,6 +1570,8 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 convert a \fIctx\fP into a libmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "MqErrorSetCONTINUE(ctx)"
 signal end of processing in an \fBIEvent\fP callback 
+.SS "MQ_BOL MqErrorIsEXIT(ctx)"
+check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
 .SS "MqErrorReset(ctx)"
 clear the \fIerror\fP and reset the \fIcontex\fP 
 .SS "MqErrorRaise(ctx)"

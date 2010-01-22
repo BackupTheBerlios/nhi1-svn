@@ -1,4 +1,4 @@
-.TH "MqCallbackS" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqCallbackS" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqCallbackS \- used for callback function pointer management
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -34,30 +34,30 @@ MqCallbackS \- used for callback function pointer management
 .PP 
 used for callback function pointer management 
 .PP
-Definition at line 556 of file msgque.h.
-.SH "Member Data Documentation"
+Definition at line 557 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqCallbackS.data\fP"
+.SS "\fBMQ_PTR\fP \fBMqCallbackS::data\fP"
 .PP
 additional data for the callback function 
 .PP
-Definition at line 558 of file msgque.h.
-.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS.fCopy\fP"
+Definition at line 559 of file msgque.h.
+.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS::fCopy\fP"
 .PP
 copy additional data pointer, used in a \fBMqSetupDup\fP 
 .PP
-Definition at line 560 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS.fFree\fP"
+Definition at line 561 of file msgque.h.
+.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS::fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 559 of file msgque.h.
-.SS "\fBMqTokenF\fP \fBMqCallbackS.fFunc\fP"
+Definition at line 560 of file msgque.h.
+.SS "\fBMqTokenF\fP \fBMqCallbackS::fFunc\fP"
 .PP
 callback method 
 .PP
-Definition at line 557 of file msgque.h.
+Definition at line 558 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

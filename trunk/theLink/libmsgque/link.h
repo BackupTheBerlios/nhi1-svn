@@ -25,6 +25,10 @@ void pMqShutdown (
   struct MqS * const context
 );
 
+void pLinkDisConnect (
+  struct MqS * const context
+);
+
 END_C_DECLS
 
 #endif /* MQ_LINK_H */

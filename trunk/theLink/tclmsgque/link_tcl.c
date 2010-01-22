@@ -61,6 +61,14 @@ int NS(LinkDelete) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(LinkConnect) (NS_ARGS)
+{
+  SETUP_mqctx
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqLinkConnect (mqctx));
+  RETURN_TCL
+}
+
 int NS(LinkCreate) (NS_ARGS)
 {
   SETUP_mqctx

@@ -28,10 +28,17 @@ proc FilterCleanup {ctx} {
 
 proc FilterEvent {ctx} {
   set Itms [$ctx dict get Itms]
-  if {[llength $Itms]} {
-    set ftr [$ctx ServiceGetFilter]
+  if {[llength $Itms] == 0} {
+    # no data -> nothing to do
+    $ctx ErrorSetCONTINUE
+  } else {
+    # with data -> try to send
     foreach {data token isTran} [lindex $Itms 0] break
+    set ftr [$ctx ServiceGetFilter]
     if {[catch {
+      # try to connect if not already connected
+      $ftr LinkConnect
+      # send data
       $ftr SendSTART
       $ftr SendBDY $data
       if {$isTran} {
@@ -40,13 +47,19 @@ proc FilterEvent {ctx} {
 	$ftr SendEND $token
       }
     }]} {
-	$ftr ErrorPrint
+      # on "error" do the following:
+      $ftr ErrorSet
+      if {[$ftr ErrorIsEXIT]} {
+	# on "exit-error" -> ignore and return
 	$ftr ErrorReset
-	$ctx ErrorReset
+	return
+      } else {
+	# on "normal-error" -> write message to stderr and ignore
+	$ftr ErrorPrint
+      }
     }
+    # on "success" or on "normal-error" delete item from list
     $ctx dict set Itms [lrange $Itms 1 end]
-  } else {
-    $ctx ErrorSetCONTINUE
   }
 }
 
@@ -66,7 +79,4 @@ tclmsgque Main {
   }
   $srv Exit
 }
-
-
-
 
