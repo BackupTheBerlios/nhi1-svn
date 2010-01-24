@@ -1240,29 +1240,10 @@ error:
   return MqSendRETURN (mqctx);
 }
 
-/// \brief print data to stdout
-/// \service
-static enum MqErrorE
-Ot_PRNT (
-  struct MqS * const mqctx,
-  MQ_PTR data
-)
-{
-  int i=0;
-  MQ_CST str;
-  while (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadC (mqctx, &str));
-    printf ("%2i: %s\n", ++i, str);
-  }
-
-error:
-  return MqSendRETURN (mqctx);
-}
-
 /// \brief print data to file
 /// \service
 static enum MqErrorE
-Ot_PRN2 (
+Ot_PRNT (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -1272,15 +1253,10 @@ Ot_PRN2 (
   MQ_CST str, file;
   MqErrorCheck (MqReadC (mqctx, &file));
   FH = fopen (file, "a");
-  MqErrorCheck (MqReadC (mqctx, &id));
 
-  if (!strncmp (id, "PRINT", 5)) {
-    while (MqReadItemExists(mqctx)) {
-      MqErrorCheck (MqReadC (mqctx, &str));
-      fprintf (FH, "%s\n", str);
-    }
-  } else if (!strncmp (id, "CTXID", 5)) {
-    fprintf (FH, "%d\n", MqLinkGetCtxIdI(mqctx));
+  while (MqReadItemExists(mqctx)) {
+    MqErrorCheck (MqReadC (mqctx, &str));
+    fprintf (FH, "%d - %s\n", MqLinkGetCtxIdI(mqctx), str);
   }
 
 error:
@@ -1375,7 +1351,6 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
-    MqErrorCheck (MqServiceCreate (mqctx, "PRN2", Ot_PRN2, NULL, NULL));
   }
 
 error:

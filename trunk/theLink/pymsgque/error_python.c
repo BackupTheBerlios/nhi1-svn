@@ -50,7 +50,7 @@ PyObject* NS(ErrorPrint) (
   PyObject  *self
 )
 {
-  MqErrorPrint(CONTEXT);
+  MqErrorPrint(CONTEXT, NULL);
   Py_RETURN_NONE;
 }
 

@@ -108,6 +108,15 @@ pTransDelete (
 
   if (unlikely(trans == NULL)) return;
 
+  // free "old" transactions not closed
+  if (trans->transIdZ != 0) {
+    MQ_HDL i;
+    for (i=0; i<=trans->transIdR; i++) {
+      if (trans->transIdA[i] != NULL)
+	pTransPush (trans, i);
+    }
+  }
+
   pCacheDelete (&trans->transCache);
 
   MqSysFree (trans->transIdA);
@@ -131,6 +140,9 @@ pTransPop (
 
   trans->transIdA[item->transId] = item;
 
+//if (!strncmp(trans->context->config.name,"fs",2))
+//  MqDLogX(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, item->transId);
+
   return item->transId;
 }
 
@@ -140,6 +152,9 @@ pTransPush (
   MQ_HDL transId
 )
 {
+//if (!strncmp(trans->context->config.name,"fs",2))
+//  MqDLogX(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, transId);
+
   struct MqTransItemS * const item = trans->transIdA[transId];
   if (unlikely(item == NULL)) return;
   if (item->callback.data && item->callback.fFree)

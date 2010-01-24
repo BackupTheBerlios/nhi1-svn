@@ -358,7 +358,7 @@ struct MqLinkS {
     MQ_BOL doFactoryCleanup   :	1 ; ///< was the context create by a 'Factory'
     MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fFunc was called ?
     MQ_BOL isWORKER	      :	1 ; ///< is alfa[0] set to "WORKER"
-    MQ_BOL isConnected	      : 1 ; ///< is the socket connected?
+    MQ_BOL isConnected	      : 1 ; ///< is the "client-link" is "connected" ?
   } bits;
 
   // the next 3 items are !!only!! used in the parent
@@ -3099,7 +3099,8 @@ MQ_EXTERN MQ_CST MQ_DECL MqErrorGetText (
 
 /// \brief print the \e error from the \e context to stderr and clear the \e error afterwards
 MQ_EXTERN void MQ_DECL MqErrorPrint (
-  struct MqS * const context
+  struct MqS * const context,
+  FILE *FH
 );
 
 /// \return the \e error-number from the \e exception-object. The number can be used as exit-code.

@@ -88,7 +88,7 @@ int NS(ErrorReset) (NS_ARGS)
 int NS(ErrorPrint) (NS_ARGS)
 {
   CHECK_NOARGS
-  MqErrorPrint (MQCTX);
+  MqErrorPrint (MQCTX, NULL);
   RETURN_TCL
 }
 

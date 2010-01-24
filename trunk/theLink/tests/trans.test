@@ -38,6 +38,7 @@ set env(TS_FILTER_CLIENT)  NO
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [numGet 3] {
+   set J [expr {$I-1}]
 
  # transport-type: string or binary
   foreach B [filterGet BIN_LST binary] {
@@ -51,40 +52,63 @@ set env(TS_FILTER_CLIENT)  NO
 # tests ----------------------------
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      Setup $I $B $C $S
+      Echo0 $FH_LAST LOGF SendC $TMP
+    } \
     -body           {
-      Setup $I $B $C $S --save-server-output
       Echo0 $FH_LAST DUM1 SendC HALLO
       Echo0 $FH_LAST DUM2 SendC OTTO
+      WaitOnFileToken $TMP "<DUM2>"
+    } \
+    -cleanup	    {
       Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
+    -result         {START
+BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
 BACKGROUND ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
 test trans-2-($I|$B|$C|$S) {send valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      Setup $I $B $C $S
+    } \
     -body           {
-      Setup $I $B $C $S --save-server-output
-      Echo0 $FH_LAST PRNT SendC HALLO
+      Echo0 $FH_LAST PRNT SendC $TMP SendC HALLO
+      WaitOnFileToken $TMP HALLO
+    } \
+    -cleanup	    {
       Cleanup
     } \
     -returnCodes    ok \
-    -result         { 1: HALLO}
+    -result         "START
+$J - HALLO"
 
 test trans-3-($I|$B|$C|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      Setup $I $B $C $S
+      Echo0 $FH_LAST LOGF SendC $TMP
+    } \
     -body           {
-      Setup $I $B $C $S --save-server-output
-      Echo0 $FH_LAST DUM1 SendC HALLO
-      Echo0 $FH_LAST PRNT SendC HALLO
+      Echo0 $FH_LAST DUM1 SendC ERR
+      Echo0 $FH_LAST PRNT SendC $TMP SendC HALLO
+      WaitOnFileToken $TMP HALLO
+    } \
+    -cleanup	    {
       Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result         {BACKGROUND ERROR: [cC]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
-[sS]> (server-0) \[pTokenInvoke] token <DUM1> not found
- 1: HALLO}
+    -result         "START
+BACKGROUND ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
+\[sS]> (server-0) \\\[pTokenInvoke] token <DUM1> not found
+$J - HALLO"
 
 # cleanup ---------------------------
 #Cleanup
@@ -105,12 +129,12 @@ unset -nocomplain I B C S
 ## additional tests
 ##
 
-  # 1,2, ... tclmsgque (parent/child)
-   foreach I [numGet 3] {
-    set J [expr {$I-1}]
+# 1,2, ... tclmsgque (parent/child)
+foreach I [numGet 3] {
+  set J [expr {$I-1}]
 
-   # transport-type: string or binary
-    foreach B [filterGet BIN_LST binary] {
+  # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
 
     # server-type: server server.tcl
     foreach S [filterGet -or SRV_LST spawn fork] {
@@ -128,12 +152,10 @@ unset -nocomplain I B C S
       Bg {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
 
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T1
-      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
+      Echo0 $CTX PRNT SendC $TMP SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T2
-      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T3
+      Echo0 $CTX PRNT SendC $TMP SendC T2
+      Echo0 $CTX PRNT SendC $TMP SendC T3
       $CTX Delete
 
       WaitOnFileToken $TMP T3
@@ -145,11 +167,9 @@ unset -nocomplain I B C S
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-T1
-$J
-T2
-$J
-T3"
+$J - T1
+$J - T2
+$J - T3"
 
 test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     -setup	    {
@@ -164,14 +184,11 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
       Bg {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
 
-      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T1
+      Echo0 $CTX PRNT SendC $TMP SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T2
+      Echo0 $CTX PRNT SendC $TMP SendC T2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRN2 SendC $TMP SendC CTXID
-      Echo0 $CTX PRN2 SendC $TMP SendC PRINT SendC T3
+      Echo0 $CTX PRNT SendC $TMP SendC T3
       Call  $CTX SendEND ERR4
       $CTX Delete
 
@@ -184,12 +201,9 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J
-T1
-$J
-T2
-$J
-T3"
+$J - T1
+$J - T2
+$J - T3"
 
    }; # SRV_LST
   }; # BIN_LST

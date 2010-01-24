@@ -37,6 +37,7 @@ struct FilterCtxS {
   MQ_INT	    rIdx;
   MQ_INT	    wIdx;
   MQ_INT	    size;
+  MQ_CST	    file;
 };
 
 /*****************************************************************************/
@@ -72,17 +73,22 @@ static enum MqErrorE FilterEvent (
     // extract the first (oldest) item from the store
     itm = ctx->itm[ctx->rIdx];
 
-    // send the ctxaction to the ctx, on error write message but do not stop processing
+    // send the data to the "filter", on error write message but do not stop processing
     MqErrorCheck1 (MqSendSTART(ftr));
     MqErrorCheck1 (MqSendBDY(ftr, itm->data->cur.B, itm->data->cursize));
     switch ( itm->isTransaction ?
       MqSendEND_AND_WAIT(ftr, itm->token, MQ_TIMEOUT_USER) :
 	MqSendEND(ftr, itm->token)
     ) {
-      case MQ_OK:	  break;
-      case MQ_CONTINUE:	  return MQ_OK;
-      case MQ_ERROR:
-	MqErrorPrint(ftr);
+      case MQ_OK:	  
+	break;
+      case MQ_CONTINUE:	  
+	return MQ_OK;
+      case MQ_ERROR:	  {
+	  FILE *FH=fopen (ctx->file, "a");
+	  MqErrorPrint (ftr, FH);
+	  fclose (FH);
+	}
 	goto end;
       case MQ_EXIT:
 	MqErrorReset(ftr);
@@ -94,11 +100,20 @@ end:
     ctx->rIdx++;
     return MQ_OK;
 error1:
-    MqErrorPrint(ftr);
+    MqErrorPrint(ftr, NULL);
     return MQ_OK;
   }
 error:
   return MqErrorStack(mqctx);
+}
+
+static enum MqErrorE SetLogFile ( ARGS ) {
+  SETUP_ctx;
+  MQ_CST f;
+  MqErrorCheck (MqReadC (mqctx, &f));
+  ctx->file = mq_strdup_save(f);
+error:
+  return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
@@ -161,6 +176,7 @@ FilterCleanup (
     }
   }
   MqSysFree (ctx->itm);
+  MqSysFree (ctx->file);
   return MQ_OK;
 }
 
@@ -179,6 +195,7 @@ FilterSetup (
   ctx->size = 100;
 
   // SERVER: listen on every token (+ALL)
+  MqErrorCheck (MqServiceCreate (mqctx, "LOGF", SetLogFile, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
 
 error:

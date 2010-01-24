@@ -1043,7 +1043,6 @@ proc Setup {num mode com server args} {
   set bgerror	    [optV args --bgerror]
   set filter_server [optV args --filter $env(TS_FILTER_SERVER)]
   set filter_client [optV args --filter $env(TS_FILTER_CLIENT)]
-  set so	    [optB args --save-server-output]
   unset -nocomplain SERVER_OUTPUT
 
   ## 1. setup variables
@@ -1090,7 +1089,6 @@ proc Setup {num mode com server args} {
       if {$filter_server ne "NO"} {
 	foreach {x t s} [split $server .] break
 	set sl [list {*}[getFilter $filter_server.$x] {*}$DAEMON]
-	if {!$so} { lappend sl --$s }
 	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
 	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
@@ -1098,11 +1096,7 @@ proc Setup {num mode com server args} {
       if {$env(TS_SETUP)} {
 	Print sl
       }
-      if {$so} {
-	set SERVER_OUTPUT [open [list | {*}$sl 2>@1] r]
-      } else {
-	Bg {*}$sl
-      }
+      Bg {*}$sl
       after $::WAIT
     }
   }
@@ -1193,28 +1187,6 @@ proc Cleanup {args} {
     if {[info exists CLEANUP_FILES] && [llength $CLEANUP_FILES]} {
       file delete -force {*}$CLEANUP_FILES
     }
-  }
-## 4. check for server-output file
-  if {[info exists SERVER_OUTPUT]} {
-    ## wait for file exit
-    set RET [list]
-    while {1} {
-      set line [gets $SERVER_OUTPUT]
-      if {[eof $SERVER_OUTPUT]} {
-	close $SERVER_OUTPUT
-	break
-      }
-      if {$env(TS_DEBUG)} {
-	puts $line
-	if {![string match {[sScC]> *} $line]} {
-	  lappend RET $line
-	}
-      } else {
-	lappend RET $line
-      }
-    }
-    unset SERVER_OUTPUT
-    return [join $RET \n]
   }
 }
 
@@ -1347,27 +1319,19 @@ proc WaitEOF {fh} {
   }
 }
 
-proc WaitOnFileToken_Proc {ch sig} {
-  gets $ch line
-  if {[string first $sig $line] != -1} {
-    set ::WaitOnFileToken_Flag yes
-    close $ch
-  }
-}
-
 proc WaitOnFileToken {file token} {
-  global WaitOnFileToken_Flag
-  set WaitOnFileToken_Flag no
-  set fh [open $file r]
-  fconfigure $fh -buffering line -blocking yes
-  fileevent $fh readable [list WaitOnFileToken_Proc $fh T3]
-  while {!$WaitOnFileToken_Flag} {
-    update
+  while {true} {
+    set RET [list]
+    set fh [open $file r]
+    while {![eof $fh]} {
+      gets $fh line
+      lappend RET $line
+      if {[string first $token $line] != -1} {
+	return [join $RET \n]
+      }
+    }
+    close $fh
   }
-  set fh [open $file r]
-  set RET [read -nonewline $fh]
-  close $fh
-  return $RET
 }
 
 proc Kill {P} {

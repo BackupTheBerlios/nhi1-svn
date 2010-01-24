@@ -510,29 +510,27 @@ MqLinkConnect (
   struct MqS * const context
 )
 {
-  if (context->link.bits.isConnected == MQ_YES) {
+  MQ_BOL check = pIoCheck(context->link.io);
+  if (check == MQ_YES && context->link.bits.isConnected == MQ_YES) {
     return MQ_OK;
   } else {
     MQ_STR serverexec = NULL;
     struct pChildS *child;
     MQ_INT MqSetDebugLevel(context);
 
-    // initialize IO
-    if (pIoCheck(context->link.io) == MQ_NO) {
-      if (MQ_IS_PARENT(context)) {
-	// I'm a parent and the "io" have to be created
-	MqErrorCheck (pIoCreate (context, &context->link.io));
-      } else {
-	// if entry-point is the "child" and the "initial-parent"
-	// (reponsible for the data communication) is not available
-	// start this parent and the child will be available too
-	if (MqErrorCheckI (MqLinkConnect (context->link.ctxIdP))) {
-	  return MqErrorCopy (context, context->link.ctxIdP);
-	}
-	return MqErrorGetCodeI(context);
+    // do a "re-connect" starting with the "initial-parent"
+    if (context->link.io != NULL && check == MQ_NO && MQ_IS_CHILD (context)) {
+      // if entry-point is the "child" and the "initial-parent"
+      // (reponsible for the data communication) is not available
+      // "connect" the parent and the child will be available too
+      if (MqErrorCheckI (MqLinkConnect (context->link.ctxIdP))) {
+	return MqErrorCopy (context, context->link.ctxIdP);
       }
+      return MqErrorGetCodeI(context);
     }
 
+    // create the "io"
+    MqErrorCheck (pIoCreate (context, &context->link.io));
     MqDLogCL(context,4,"START\n");
 
     if (MQ_IS_CHILD (context)) {
@@ -765,7 +763,6 @@ MqLinkCreate (
     context->link.read = pReadCreate (context);
     if (MqErrorGetCodeI(context) == MQ_ERROR) goto error;
 
-    MqErrorCheck (pIoCreate   (context, &context->link.io));
     context->link.srvT = pTokenCreate(context);
     MqErrorCheck (pTransCreate (context, &context->link.trans));
 
@@ -778,9 +775,13 @@ MqLinkCreate (
     // context specific initialization
     if (MQ_IS_CLIENT (context)) {
 
+      // client "connect" to the "server"
       MqErrorCheck (MqLinkConnect (context));
 
     } else {
+
+      // create the communication
+      MqErrorCheck (pIoCreate   (context, &context->link.io));
 
       // we have to wait for the "_IAA" message of the "client" to set "context->config.debug" proper
       if (MQ_IS_PARENT (context)) {
@@ -978,7 +979,7 @@ MqLinkIsConnected (
   struct MqS const * const context
 )
 {
-  return pIoCheck (context->link.io);
+  return pIoCheck (context->link.io) && context->link.bits.isConnected == MQ_YES;
 }
 
 struct MqS *
