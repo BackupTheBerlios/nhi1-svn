@@ -378,9 +378,10 @@ pErrorSetEXIT (
 )
 {
   if (context->setup.ignoreExit == MQ_YES) {
-    MqDLogC(context, 3, "ignore EXIT\n");
+    MqDLogV(context, 3, "%s - ignore EXIT\n", prefix);
     return MQ_CONTINUE;
   } else {
+    MqDLogV(context, 3, "%s - set EXIT\n", prefix);
     pMqGetFirstParent(context)->link.exitctx = context;
     MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
     return MQ_EXIT;

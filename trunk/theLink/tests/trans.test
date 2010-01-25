@@ -205,6 +205,72 @@ $J - T1
 $J - T2
 $J - T3"
 
+test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set CON3	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON3 --timeout $env(TS_TIMEOUT)]
+      set FT1	[list {*}[getFilter Filter4.$S] {*}$CON2 --timeout $env(TS_TIMEOUT) @ {*}$CON3]
+      set FT2	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
+    } \
+    -body           {
+      Bg {*}$SRV
+      Bg {*}$FT1
+      Bg {*}$FT2
+      foreach {FIRST CTX} [Create $I $CON1] break
+
+      Echo0 $CTX PRNT SendC $TMP SendC T1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC $TMP SendC T2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC $TMP SendC T3
+      $CTX Delete
+
+      WaitOnFileToken $TMP T3
+    } \
+    -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1
+$J - T2
+$J - T3"
+
+test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set CON3	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON3 --timeout $env(TS_TIMEOUT)]
+      set FT1	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) --name FT2 @ {*}$CON2]
+      set FT2	[list {*}[getFilter Filter4.$S] {*}$CON2 --timeout $env(TS_TIMEOUT) --name FT1 @ {*}$CON3]
+    } \
+    -body           {
+      Bg {*}$SRV
+      Bg {*}$FT1
+      Bg {*}$FT2
+      foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX PRNT SendC $TMP SendC T1
+      WaitOnFileToken $TMP T1
+      Call  $CTX SendEND EXIT
+      $CTX Delete
+      WaitOnFileToken $TMP T1
+    } \
+    -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1"
+
    }; # SRV_LST
   }; # BIN_LST
  }; # Master/Child  

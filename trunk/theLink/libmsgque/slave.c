@@ -277,7 +277,7 @@ MqSlaveWorker (
   struct MqBufferLS ** argvP
 )
 {
-  if (unlikely(context->link.bits.onCreate == MQ_NO)) {
+  if (unlikely(context->link.bits.onCreateEnd == MQ_NO)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "master", "not");
   } else {
     struct MqS * newctx;

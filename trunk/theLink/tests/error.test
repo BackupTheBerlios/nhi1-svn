@@ -351,6 +351,7 @@ test error-MQ_ERROR_OPTION_REQUIRED-tcp {check error message} \
     -returnCodes    error \
     -result         {C> (client) [TcpCreate] for a 'TCP' setup the option '--port' is required
 C> (client) found in function "pIoCreate" at file "io.c"
+C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
@@ -360,6 +361,7 @@ test error-MQ_ERROR_OPTION_REQUIRED-uds {check error message} \
     -returnCodes    error \
     -result         {C> (client) [UdsCreate] for a 'UDS' setup the option '--file' is required
 C> (client) found in function "pIoCreate" at file "io.c"
+C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 

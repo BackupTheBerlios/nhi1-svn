@@ -25,8 +25,8 @@ struct MqEventS {
   fd_set fdset;			///< used in 'select'
   int fdmax;			///< the maximum file-handle in \e fdset
   struct MqS ** DataL;		///< list of #MqS objects
-  int DataLNum;			///< size of \e DataL
-  int DataLCur;			///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
+  MQ_SIZE DataLNum;		///< size of \e DataL
+  MQ_SIZE DataLCur;		///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
 #if defined (MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD)
   pthread_t thread;		///< the thread event link to
@@ -52,30 +52,23 @@ sEventDeleteAllClient (
   struct MqEventS * const event
 )
 {
-  // process the results
-  struct MqS *context;
-  struct MqS **start, **end;
-
   // are sockets available? if not do nothing
   if (event == NULL || event->fdmax < 0) return;
 
   // attention, every delete on a parent-client change the event->DataL too (as side-effect)
   while (event->DataLCur) {
-    start = event->DataL;
-    end   = event->DataL + event->DataLCur;
-    for (; start < end; start++) {
-      context = *start;
-      if (MQ_IS_CLIENT(context)) {
+    MQ_SIZE i;
+    for (i=0; i<event->DataLCur; i++) {
+      struct MqS *context = event->DataL[i];
+      if (MQ_IS_CLIENT(context) ) {
 	MqDLogC(context,4,"FORCE delete\n");
-	//MqLogMsgque(context,__func__);
-	//MqLinkDelete(context);
 	MqContextDelete (&context);
 	// exit "for" loop to accept new "start" and "end"
 	break;
       }
     }
     // list has no CLIENT ... exit "while" loop
-    if (start == end) break;
+    if (i >= event->DataLCur) break;
   }
 }
 
@@ -496,7 +489,7 @@ pEventShutdown (
   start = event->DataL;
   end = event->DataL + event->DataLCur;
 
-//pEventLog(msgque, event, "pEventDelete-1");
+//pEventLog(context, event, "pEventDelete-1");
 
   // find + clear
 rescan:

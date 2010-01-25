@@ -350,7 +350,8 @@ struct MqLinkS {
   struct {
     MQ_BOL endian	      : 1 ; ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
     MQ_BOL onExit	      : 1 ; ///< is already an "exit" ongoing?
-    MQ_BOL onCreate	      : 1 ; ///< is already an "create" ongoing?
+    MQ_BOL onCreateStart      : 1 ; ///< Start "MqLinkCreate"
+    MQ_BOL onCreateEnd	      : 1 ; ///< End "MqLinkCreate"
     MQ_BOL onDelete	      :	1 ; ///< is already a "delete" ongoing?
     MQ_BOL onShutdown	      :	1 ; ///< is already a "shutdown" ongoing?
     MQ_BOL deleteProtection   :	1 ; ///< object in use -> delete is not allowed

@@ -119,7 +119,7 @@ error:
   return MqErrorStack(mqctx);
 }
 
-static enum MqErrorE SetLogFile ( ARGS ) {
+static enum MqErrorE LOGF ( ARGS ) {
   SETUP_ctx;
   MQ_CST f;
   MqErrorCheck (MqReadC (mqctx, &f));
@@ -133,6 +133,10 @@ static enum MqErrorE SetLogFile ( ARGS ) {
   }
 error:
   return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE EXIT ( ARGS ) {
+  abort();
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
@@ -214,7 +218,8 @@ FilterSetup (
   ctx->size = 100;
 
   // SERVER: listen on every token (+ALL)
-  MqErrorCheck (MqServiceCreate (mqctx, "LOGF", SetLogFile, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "LOGF", LOGF, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "EXIT", EXIT, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
 
 error:

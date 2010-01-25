@@ -97,14 +97,15 @@ sCallEventProc (
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
   // call my own event-proc
-  if (context->bits.EventProc_LOCK == MQ_NO) {
+  if (context->bits.EventProc_LOCK == MQ_NO && context->link.bits.onCreateEnd == MQ_YES) {
     context->bits.EventProc_LOCK = MQ_YES;
     switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
       case MQ_OK:
 	break;
       case MQ_CONTINUE:
-	if (context->link.bits.onShutdown == MQ_YES)
+	if (context->link.bits.onShutdown == MQ_YES || context->link.bits.isConnected == MQ_NO) {
 	  CONTINUE++;
+	}
 	break;
       case MQ_ERROR:
       case MQ_EXIT:
@@ -181,7 +182,7 @@ pWaitOnEvent (
     }
 
     // 2. call external event-proc
-    if (context != NULL && context->setup.Event.fFunc != NULL) {
+    if (context->setup.Event.fFunc != NULL) {
       // this guarding with "____" is important to detect and break-out-of "nested" event calls
       // pWaitOnEvent
       //   -> guard 

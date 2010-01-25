@@ -682,8 +682,9 @@ MqLinkCreate (
   }
 
   // try to invoke the "CreateHandler" first
-  if (context->link.bits.onCreate == MQ_NO) {
-    context->link.bits.onCreate = MQ_YES;
+  if (context->link.bits.onCreateStart == MQ_NO) {
+    context->link.bits.onCreateStart = MQ_YES;
+    context->link.bits.onCreateEnd = MQ_NO;
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       return (*context->setup.Child.fCreate) (context, argvP);
     } else if (context->config.parent == NULL && context->setup.Parent.fCreate != NULL) {
@@ -699,11 +700,11 @@ MqLinkCreate (
     MqErrorCheck (MqLinkPrepare (context, argvP));
     if (context->config.debug >= 2) {
       if (MQ_IS_SLAVE(context))
-	MqDLogX(context,__func__,2,"START-CREATE-SLAVE: master<%p>\n", (void*) context->config.master);
+	MqDLogX(context,__func__,2,"START-SLAVE: master<%p>\n", (void*) context->config.master);
       else if (MQ_IS_PARENT(context))
-	MqDLogX(context,__func__,2,"START-CREATE: io->com<%s>\n", pIoLogCom(context->config.io.com));
+	MqDLogX(context,__func__,2,"START: io->com<%s>\n", pIoLogCom(context->config.io.com));
       else
-	MqDLogX(context,__func__,2,"START-CREATE-CHILD: parent<%p>\n", (void*) context->config.parent);
+	MqDLogX(context,__func__,2,"START-CHILD: parent<%p>\n", (void*) context->config.parent);
     }
 
     // handle empty MqBufferLS list alfa
@@ -842,11 +843,16 @@ MqLinkCreate (
 	MqErrorCheck((*context->setup.ServerSetup.fFunc) (context, context->setup.ServerSetup.data));
       }
 
+      // change into "connected"
+      context->link.bits.isConnected = MQ_YES;
+
     }; // END SERVER
 
-    MqDLogV(context,2,"END-CREATE string<%s>, silent<%s>, debug<%i>, endian<%i>\n",
-	  (context->config.isString?"yes":"no"), (context->config.isSilent?"yes":"no"), 
-	      context->config.debug, context->link.bits.endian);
+    MqDLogV(context,2,"END string<%s>, silent<%s>, debug<%i>, endian<%i>\n",
+         (context->config.isString?"yes":"no"), (context->config.isSilent?"yes":"no"),
+             context->config.debug, context->link.bits.endian);
+
+    context->link.bits.onCreateEnd = MQ_YES;
 
   error:
     return MqErrorStack(context);
@@ -879,7 +885,7 @@ MqLinkDelete (
   // report error if available
   pErrorReport(context);
 
-  if (unlikely(context->link.bits.onCreate == MQ_NO)) {
+  if (unlikely(context->link.bits.onCreateStart == MQ_NO)) {
     return;
   } else {
     // check on "bits.deleteProtection"
@@ -964,7 +970,7 @@ MqLinkDelete (
 
     // cleanup the factory object ?
     if (context->link.bits.doFactoryCleanup == MQ_YES) {
-      context->link.bits.onCreate = MQ_NO;
+      context->link.bits.onCreateEnd = MQ_NO;
       MqContextDelete((struct MqS **)&context);
     } else {
       // initialize "msgque" object to "NULL"
