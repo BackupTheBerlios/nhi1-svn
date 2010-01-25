@@ -46,6 +46,21 @@ struct FilterCtxS {
 /*                                                                           */
 /*****************************************************************************/
 
+static void ErrorWrite (
+  struct MqS *mqctx,
+  MQ_CST file
+)
+{
+  if (file != NULL) {
+    FILE *FH=fopen (file, "a");
+    fprintf(FH, "ERROR: %s\n", MqErrorGetText(mqctx));
+    fclose (FH);
+    MqErrorReset (mqctx);
+  } else {
+    MqErrorPrint (mqctx);
+  }
+}
+
 static enum MqErrorE FilterEvent (
   struct MqS * const mqctx,
   MQ_PTR const data
@@ -84,11 +99,8 @@ static enum MqErrorE FilterEvent (
 	break;
       case MQ_CONTINUE:	  
 	return MQ_OK;
-      case MQ_ERROR:	  {
-	  FILE *FH=fopen (ctx->file, "a");
-	  MqErrorPrint (ftr, FH);
-	  fclose (FH);
-	}
+      case MQ_ERROR:
+	ErrorWrite (mqctx, ctx->file);
 	goto end;
       case MQ_EXIT:
 	MqErrorReset(ftr);
@@ -100,7 +112,7 @@ end:
     ctx->rIdx++;
     return MQ_OK;
 error1:
-    MqErrorPrint(ftr, NULL);
+    ErrorWrite (ftr, ctx->file);
     return MQ_OK;
   }
 error:
@@ -112,6 +124,13 @@ static enum MqErrorE SetLogFile ( ARGS ) {
   MQ_CST f;
   MqErrorCheck (MqReadC (mqctx, &f));
   ctx->file = mq_strdup_save(f);
+  if (!strcmp(MqLinkGetTargetIdent (mqctx),"transFilter")) {
+    struct MqS * ftr;
+    MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
+    MqErrorCheck (MqSendSTART(ftr));
+    MqErrorCheck (MqSendC(ftr, f));
+    MqErrorCheck (MqSendEND_AND_WAIT(ftr, "LOGF", MQ_TIMEOUT_USER));
+  }
 error:
   return MqSendRETURN(mqctx);
 }
@@ -230,6 +249,7 @@ main (
 
   MqConfigSetDefaultFactory (mqctx);
   MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
+  MqConfigSetIdent (mqctx, "transFilter");
 
   // create the link
   MqErrorCheck(MqLinkCreate (mqctx, &args));

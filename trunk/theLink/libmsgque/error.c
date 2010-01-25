@@ -330,13 +330,11 @@ MqErrorGetNum (
 
 void
 MqErrorPrint (
-  struct MqS * const context,
-  FILE *FH
+  struct MqS * const context
 )
 {
-  if (FH == NULL) FH=stderr;
-  fprintf(FH, "BACKGROUND ERROR: %s\n", (MQ_STR) context->error.text->data);
-  fflush(FH);
+  fprintf(stderr, "BACKGROUND ERROR: %s\n", (MQ_STR) context->error.text->data);
+  fflush(stderr);
   MqErrorReset(context);
 }
 

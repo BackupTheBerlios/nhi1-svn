@@ -3099,8 +3099,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqErrorGetText (
 
 /// \brief print the \e error from the \e context to stderr and clear the \e error afterwards
 MQ_EXTERN void MQ_DECL MqErrorPrint (
-  struct MqS * const context,
-  FILE *FH
+  struct MqS * const context
 );
 
 /// \return the \e error-number from the \e exception-object. The number can be used as exit-code.

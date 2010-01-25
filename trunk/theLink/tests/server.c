@@ -1248,7 +1248,6 @@ Ot_PRNT (
   MQ_PTR data
 )
 {
-  MQ_CST id;
   FILE *FH=NULL;
   MQ_CST str, file;
   MqErrorCheck (MqReadC (mqctx, &file));
