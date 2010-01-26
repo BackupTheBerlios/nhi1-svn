@@ -527,6 +527,12 @@ rescan:
 	  MqBufferLAppendC(alfa1, name);
 	}
 
+	// if started from "GenericServer" get the "name" from the "inital-server"
+	if (start_as_pipe == 0) {
+	  MqBufferLAppendC(alfa1, "--name");
+	  MqBufferLAppendC(alfa1, context->config.name);
+	}
+
 	// fill arg with system-arguments
 	sIoFillArgvU(io,*sockP,alfa1,"--thread");
 	// start the server
@@ -564,6 +570,12 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	if (alfa1 == NULL) {
 	  alfa1 = MqBufferLCreate(20);
 	  MqBufferLAppendC(alfa1, name);
+	}
+
+	// if started from "GenericServer" get the "name" from the "inital-server"
+	if (start_as_pipe == 0) {
+	  MqBufferLAppendC(alfa1, "--name");
+	  MqBufferLAppendC(alfa1, context->config.name);
 	}
 
 	// fill arg with system-arguments
@@ -612,6 +624,12 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	  }
 	}
 
+	// if started from "GenericServer" get the "name" from the "inital-server"
+	if (start_as_pipe == 0) {
+	  *arg++ = mq_strdup("--name");
+	  *arg++ = mq_strdup(context->config.name);
+	}
+
 	// fill arg with system-arguments
 	sIoFillArgvC(io, alfa2, *sockP, arg, "--spawn");
 	// start the server
@@ -638,10 +656,12 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 #if defined(HAVE_FORK)
     case MQ_START_SERVER_AS_INLINE_FORK: {
 //printLC("MQ_START_SERVER_AS_INLINE_FORK:")
-	if (name == NULL && MqInitBuf != NULL) {
-	  name = MqInitBuf->data[0]->cur.C;
-	} else {
-	  return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	if (name == NULL) {
+	  if (MqInitBuf == NULL) {
+	    return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	  } else {
+	    name = MqInitBuf->data[0]->cur.C;
+	  }
 	}
 	// case: the function GenericServer is listen on a "tcl" or "uds" connection
 	// and start for every incomming connection a new process with "fork". !no!

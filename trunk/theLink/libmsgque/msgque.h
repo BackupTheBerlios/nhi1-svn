@@ -785,8 +785,8 @@ struct MqSetupS {
 
   /// \brief define the \e server-cleanup-interface
   ///
-  /// This interface is used to cleanup an onl \e server-context-link, like a
-  /// destructor, and is called at the end of \RNSA{LinkDelete} to free \e context-specific 
+  /// This interface is used to cleanup an old \e server-context-link, like a
+  /// destructor, and is called at the beginning of \RNSA{LinkDelete} to free \e context-specific 
   /// variables. As side-effect this interface set \RNSC{isServer} to \yes.
   struct MqCallbackS ServerCleanup;
 

@@ -530,7 +530,7 @@ proc Ot_CFG1 {ctx} {
     "Ident" {
       set old [$ctx ConfigGetIdent] 
       $ctx ConfigSetIdent [$ctx ReadC]
-      set check [$ctx ConfigCheckIdent [$ctx ReadC]]
+      set check [expr {[$ctx LinkGetTargetIdent] eq [$ctx ReadC]}]
       $ctx SendSTART
       $ctx SendC [$ctx ConfigGetIdent]
       $ctx SendO $check
@@ -586,24 +586,9 @@ proc Ot_CFG1 {ctx} {
 }
 
 proc Ot_PRNT {ctx} {
-  set i 0
-  while {[$ctx ReadItemExists]} {
-    puts [format "%2i: %s" [incr i] [$ctx ReadC]]
-  }
-  $ctx SendRETURN
-}
-
-proc Ot_PRN2 {ctx} {
   set FH  [open [$ctx ReadC] a]
-  switch -exact [$ctx ReadC] {
-    PRINT {
-      while {[$ctx ReadItemExists]} {
-	puts $FH [$ctx ReadC]
-      }
-    }
-    CTXID {
-      puts $FH [$ctx LinkGetCtxId]
-    }
+  while {[$ctx ReadItemExists]} {
+    puts $FH "[$ctx LinkGetCtxId] - [$ctx ReadC]"
   }
   close $FH
   $ctx SendRETURN
@@ -671,7 +656,6 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERLS Ot_ERLS
     $ctx ServiceCreate CFG1 Ot_CFG1
     $ctx ServiceCreate PRNT Ot_PRNT
-    $ctx ServiceCreate PRN2 Ot_PRN2
   }
 }
 

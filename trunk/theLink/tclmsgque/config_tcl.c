@@ -75,6 +75,7 @@ void NS(FactoryDelete) (
   struct TclContextS * tclctx = (struct TclContextS *) ctx;
   enum MqStatusIsE statusIs = tclctx->mqctx.statusIs;
   SETUP_interp;
+
   Tcl_DeleteCommandFromToken (interp, tclctx->command);
   // the "thread" have to delete the interpreter
   if (statusIs & MQ_STATUS_IS_THREAD) {

@@ -492,8 +492,12 @@ NS(MqS_Free) (
     mqctx->setup.Event.fFunc = NULL;
     // delete the context
     MqContextDelete(&mqctx);
-    if (self != NULL)  Tcl_DecrRefCount(self);
-    if (dict != NULL)  Tcl_DecrRefCount(dict);
+    if (self != NULL && Tcl_IsShared(self)) {
+      Tcl_DecrRefCount(self);
+    }
+    if (dict != NULL && Tcl_IsShared(self))  {
+      Tcl_DecrRefCount(dict);
+    }
   }
 }
 
@@ -535,9 +539,5 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
-
-
-
-
 
 

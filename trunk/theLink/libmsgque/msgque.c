@@ -97,7 +97,9 @@ sCallEventProc (
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
   // call my own event-proc
-  if (context->bits.EventProc_LOCK == MQ_NO && context->link.bits.onCreateEnd == MQ_YES) {
+  if (context->bits.EventProc_LOCK == MQ_NO && 
+	context->link.bits.onCreateEnd == MQ_YES &&
+	  context->setup.Event.fFunc != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
     switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
       case MQ_OK:

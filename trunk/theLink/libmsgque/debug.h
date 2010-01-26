@@ -38,6 +38,25 @@
 #define ME MX(EEEEEEEEEEEEEEEEE)
 #define MF MX(FFFFFFFFFFFFFFFFF)
 
+#define MXI(s,i) fprintf(stderr, "%s(%s:%d) -> %s - %s\n", __func__, __FILE__, __LINE__, #s, i);fflush(stderr);
+
+#define M0I(i) MXI(00000000000000000,i)
+#define M1I(i) MXI(11111111111111111,i)
+#define M2I(i) MXI(22222222222222222,i)
+#define M3I(i) MXI(33333333333333333,i)
+#define M4I(i) MXI(44444444444444444,i)
+#define M5I(i) MXI(55555555555555555,i)
+#define M6I(i) MXI(66666666666666666,i)
+#define M7I(i) MXI(77777777777777777,i)
+#define M8I(i) MXI(88888888888888888,i)
+#define M9I(i) MXI(99999999999999999,i)
+#define MAI(i) MXI(AAAAAAAAAAAAAAAAA,i)
+#define MBI(i) MXI(BBBBBBBBBBBBBBBBB,i)
+#define MCI(i) MXI(CCCCCCCCCCCCCCCCC,i)
+#define MDI(i) MXI(DDDDDDDDDDDDDDDDD,i)
+#define MEI(i) MXI(EEEEEEEEEEEEEEEEE,i)
+#define MFI(i) MXI(FFFFFFFFFFFFFFFFF,i)
+
 #define IX(x,s) MqDLogX(x,__func__,0,"(%s:%d) -> " #x "<" #s ">\n", __FILE__, __LINE__);
 
 #define I0 IX(MQ_CONTEXT_S,0000000000000000)

@@ -12,6 +12,34 @@
 
 package require TclMsgque
 
+proc ErrorWrite {ctx} {
+  set f [$ctx dict get File]
+  if {$f ne ""} {
+    set FH [open $f a]
+    puts $FH "ERROR: [$ctx ErrorGetText]"
+    close $FH
+    $ctx ErrorReset
+  } else {
+    $ctx ErrorPrint
+  }
+}
+
+proc LOGF {ctx} {
+  set ftr [$ctx ServiceGetFilter]
+  set f [$ctx ReadC]
+  $ftr dict set File $f
+  if {[$ftr LinkGetTargetIdent] == "transFilter"} {
+    $ftr SendSTART
+    $ftr SendC $f
+    $ftr SendEND_AND_WAIT "LOGF"
+  }
+  $ctx SendRETURN
+}
+
+proc EXIT {ctx} {
+  exit 0
+}
+
 proc FilterIn {ctx} {
   $ctx dict lappend Itms [list [$ctx ReadBDY] [$ctx ServiceGetToken] [$ctx ServiceIsTransaction]]
   $ctx SendRETURN
@@ -19,11 +47,14 @@ proc FilterIn {ctx} {
 
 proc FilterSetup {ctx} {
   $ctx dict set Itms [list]
+  $ctx ServiceCreate "LOGF" LOGF
+  $ctx ServiceCreate "EXIT" EXIT
   $ctx ServiceCreate "+ALL" FilterIn
 }
 
 proc FilterCleanup {ctx} {
-  $ctx dict inset Itms
+  $ctx dict unset Itms
+  [$ctx ServiceGetFilter] dict unset File
 }
 
 proc FilterEvent {ctx} {
@@ -54,12 +85,12 @@ proc FilterEvent {ctx} {
 	$ftr ErrorReset
 	return
       } else {
-	# on "normal-error" -> write message to stderr and ignore
-	$ftr ErrorPrint
+	# on "normal-error" -> write message to file and ignore
+	ErrorWrite $ftr
       }
     }
     # on "success" or on "normal-error" delete item from list
-    $ctx dict set Itms [lrange $Itms 1 end]
+    $ctx dict set Itms [lrange [$ctx dict get Itms] 1 end]
   }
 }
 
@@ -69,6 +100,7 @@ tclmsgque Main {
   $srv ConfigSetServerSetup FilterSetup
   $srv ConfigSetServerCleanup FilterCleanup
   $srv ConfigSetEvent FilterEvent
+  $srv ConfigSetIdent "transFilter"
   $srv ConfigSetIgnoreExit yes
   $srv ConfigSetFactory
   if {[catch {
