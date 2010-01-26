@@ -119,8 +119,11 @@ pIoShutdown (
   struct MqIoS * const io
 )
 {
-  if (unlikely(io == NULL)) return;
-  pEventShutdown (io->context);
+  if (unlikely(io == NULL)) {
+    return;
+  } else {
+    pEventShutdown (io->context);
+  }
 }
 
 void

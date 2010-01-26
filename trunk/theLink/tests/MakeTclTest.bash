@@ -28,6 +28,7 @@ USAGE() {
   echo "usage $0 ?-ur? ?-vg|-gdb|-lc|-sr|-sp|-st? args..."
   echo "   ur:  use-remote"
   echo "   st:  strace"
+  echo "   sp:  valgrind: --gen-suppressions"
   exit 1
 }
 

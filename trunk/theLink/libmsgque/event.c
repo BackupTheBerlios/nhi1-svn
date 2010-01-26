@@ -564,8 +564,12 @@ pEventDelete (
 )
 {
   // if SERVER delete all CLIENT too
-  if (MQ_IS_SERVER_PARENT(context)) {
-    sEventDeleteAllClient(context->link.io->event);
+  if (MQ_IS_PARENT(context)) {
+    if (MQ_IS_SERVER(context)) {
+      sEventDeleteAllClient(context->link.io->event);
+    } else {
+      pEventShutdown (context);
+    }
   }
 
   // free memory 

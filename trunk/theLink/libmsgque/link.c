@@ -648,10 +648,14 @@ MqLinkConnect (
     }
 
     // change into "connected"
+    MqDLogCL(context,4,"END\n");
     context->link.bits.isConnected = MQ_YES;
+    goto end;
 
 error:
-    MqDLogCL(context,4,"END\n");
+    pIoDelete (&context->link.io);
+
+end:
     MqSysFree (serverexec);
     return MqErrorStack(context);
   }
@@ -970,7 +974,8 @@ MqLinkDelete (
 
     // cleanup the factory object ?
     if (context->link.bits.doFactoryCleanup == MQ_YES) {
-      context->link.bits.onCreateEnd = MQ_NO;
+      // do not call "MqLinkDelete" again
+      context->link.bits.onCreateStart = MQ_NO;
       MqContextDelete((struct MqS **)&context);
     } else {
       // initialize "msgque" object to "NULL"
