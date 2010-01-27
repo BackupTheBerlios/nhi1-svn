@@ -16,25 +16,43 @@ from pymsgque import *
 class Filter4(MqS):
   def __init__(ctx):
     ctx.ConfigSetIgnoreExit(True)
+    ctx.ConfigSetIdent("transFilter")
     ctx.ConfigSetFactory(lambda: Filter4())
     ctx.ConfigSetServerSetup(ctx.ServerSetup)
     ctx.ConfigSetEvent(ctx.Event)
     ctx.itms = []
+    ctx.file = None
     MqS.__init__(ctx)
   def ServerSetup(ctx):
+    ctx.ServiceCreate("LOGF", ctx.LOGF)
+    ctx.ServiceCreate("EXIT", ctx.EXIT)
     ctx.ServiceCreate("+ALL", ctx.FilterIn)
+  def ErrorWrite(ctx):
+    if ctx.file is None:
+      ctx.ErrorPrint()
+    else:
+      FH = open(ctx.file, "a")
+      FH.write("ERROR: " + ctx.ErrorGetText() + "\n")
+      FH.close
+  def LOGF(ctx):
+    ftr = ctx.ServiceGetFilter()
+    ftr.file = ctx.ReadC()
+    if (ftr.LinkGetTargetIdent() == "transFilter"):
+      ftr.SendSTART()
+      ftr.SendC(ftr.file)
+      ftr.SendEND_AND_WAIT("LOGF")
+    ctx.SendRETURN()
+  def EXIT(ctx):
+    sys.exit();
   def Event(ctx):
     if (len(ctx.itms) == 0):
       ctx.ErrorSetCONTINUE()
     else:
-      (token, isTransaction, bdy) = ctx.itms.pop(0)
+      (token, isTransaction, bdy) = ctx.itms[0]
+      sys.stdout.flush()
       ftr = ctx.ServiceGetFilter()
       try:
         ftr.LinkConnect()
-      except:
-        ftr.ErrorPrint()
-        return
-      try:
         ftr.SendSTART()
         ftr.SendBDY(bdy)
         if (isTransaction):
@@ -42,17 +60,16 @@ class Filter4(MqS):
         else:
           ftr.SendEND(token)
       except:
-        ftr.ErrorSet()
         if ftr.ErrorIsEXIT():
-          ftr.ErrorReset()
           return
         else:
-          ftr.ErrorPrint()
+          ftr.ErrorWrite()
+      ctx.itms.pop(0)
   def FilterIn(ctx):
     ctx.itms.append([ctx.ServiceGetToken(), ctx.ServiceIsTransaction(), ctx.ReadBDY()])
     ctx.SendRETURN()
-srv = Filter4()
 try:
+  srv = Filter4()
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(wait="FOREVER")
 except:

@@ -12,6 +12,8 @@
 
 #include "msgque_python.h"
 
+#define MQ_CONTEXT_S CONTEXT
+
 static enum MqErrorE
 NS(FactoryCreate) (
   struct MqS * const tmpl,

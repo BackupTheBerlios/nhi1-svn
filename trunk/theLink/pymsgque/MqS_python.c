@@ -61,6 +61,7 @@ PyObject* NS(LinkIsParent)	    ( PyObject* );
 PyObject* NS(LinkIsConnected)	    ( PyObject* );
 PyObject* NS(LinkGetParent)	    ( PyObject* );
 PyObject* NS(LinkGetCtxId)	    ( PyObject* );
+PyObject* NS(LinkGetTargetIdent)    ( PyObject* );
 PyObject* NS(LinkConnect)	    ( PyObject* );
 
 #define LinkCreate_DOC		    "[config, args] create a new parent-object-link"
@@ -70,6 +71,7 @@ PyObject* NS(LinkConnect)	    ( PyObject* );
 #define LinkIsConnected_DOC	    "[noARG] boolean, 'True' if the object-link is up and running'."
 #define LinkGetParent_DOC	    "[noARG] return the PyMqS 'parent' object of the 'current' object."
 #define LinkGetCtxId_DOC	    "[noARG] return the PyMqS 'identifer' (int) of the object."
+#define LinkGetTargetIdent_DOC	    "[noARG] return the 'ident' (string) of the link-target-object."
 #define LinkConnect_DOC		    "[noARG] re-connect a client-server-link after a server crash or a network downtime"
 
 // from send_python.c
@@ -306,6 +308,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(LinkIsConnected,	METH_NOARGS),
     ARG(LinkGetParent,		METH_NOARGS),
     ARG(LinkGetCtxId,		METH_NOARGS),
+    ARG(LinkGetTargetIdent,	METH_NOARGS),
     ARG(LinkConnect,		METH_NOARGS),
 
     ARG(SendSTART,		METH_NOARGS),

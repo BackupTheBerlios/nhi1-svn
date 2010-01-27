@@ -26,7 +26,7 @@ if {$env(USE_REMOTE) || ![testConstraint tcl]} return
 ##
 
 set BLOCK_1 true
-set BLOCK_1 false
+#set BLOCK_1 false
 set BLOCK_2 true
 #set BLOCK_2 false
 

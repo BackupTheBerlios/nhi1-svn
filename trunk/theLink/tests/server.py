@@ -126,24 +126,12 @@ class Server(MqS):
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
       self.ServiceCreate("PRNT", self.PRNT)
-      self.ServiceCreate("PRN2", self.PRN2)
-
-  def PRN2(self):
-    FH = open(self.ReadC(), mode='a')
-    id = self.ReadC()
-    if id == "PRINT":
-      while (self.Read>temExists()):
-        print(self.ReadC(), file=FH)
-    elif ID == "CTXID":
-      print(self.LinkGetCtxId(), file=FH)
-    close(FH)
-    self.SendRETURN()
 
   def PRNT(self):
-    i=0
+    FH = open(self.ReadC(), "a")
     while (self.ReadItemExists()):
-      i+=1
-      print("%2d: %s" % (i, self.ReadC()))      
+      FH.write(str(self.LinkGetCtxId()) + " - " + self.ReadC() + "\n")
+    FH.close()
     self.SendRETURN()
 
   def CFG1(self):
@@ -179,7 +167,7 @@ class Server(MqS):
     elif cmd == "Ident":
       old = self.ConfigGetIdent()
       self.ConfigSetIdent (self.ReadC())
-      check = self.ConfigCheckIdent (self.ReadC())
+      check = self.LinkGetTargetIdent() == self.ReadC()
       self.SendSTART()
       self.SendC (self.ConfigGetIdent())
       self.SendO (check);

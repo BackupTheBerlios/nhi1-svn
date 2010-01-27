@@ -12,6 +12,8 @@
 
 #include "msgque_python.h"
 
+#define MQ_CONTEXT_S context
+
 extern PyObject * NS(MqSException);
 
 PyObject* NS(ErrorC) (
@@ -81,9 +83,9 @@ PyObject* NS(ErrorIsEXIT)(
 )
 {
   if (MqErrorIsEXIT(CONTEXT)) {
-    Py_RETURN_FALSE;
-  } else {
     Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
   }
 }
 
@@ -117,6 +119,7 @@ PyObject* NS(ErrorSet)(
       MqErrorC (context, __func__, -1, "No active exception to reraise");
 
     } else if (PyErr_GivenExceptionMatches(typeO,NS(MqSException))) {
+
       MqErrorSet (context, 
        (MQ_INT) PyLong_AsLong(PyObject_GetAttrString(typeO,"num")),
        (enum MqErrorE) PyLong_AsLong(PyObject_GetAttrString(typeO,"code")),

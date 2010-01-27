@@ -30,9 +30,9 @@ PyObject* NS(LinkIsConnected) (
 )
 {
   if (MqLinkIsConnected(CONTEXT)) {
-    Py_RETURN_FALSE;
-  } else {
     Py_RETURN_TRUE;
+  } else {
+    Py_RETURN_FALSE;
   }
 }
 
@@ -56,6 +56,14 @@ PyObject* NS(LinkGetCtxId) (
 )
 {
   return PyLong_FromLong(MqLinkGetCtxId(CONTEXT));
+}
+
+PyObject* NS(LinkGetTargetIdent) (
+  PyObject    *self,
+  PyObject    *args
+)
+{
+  return PyC2O(MqLinkGetTargetIdent(CONTEXT));
 }
 
 PyObject* NS(LinkCreate)(
