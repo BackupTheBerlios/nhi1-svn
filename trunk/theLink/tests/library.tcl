@@ -693,6 +693,9 @@ if {[info exist argv]} {
     if {[optB argv --mem-testing]} {
 	lappend argv --only-pipe --only-binary --max 5 
     }
+    if {[optB argv --full-testing]} {
+	lappend argv --only-binary --max 5 
+    }
     if {[optB argv --thread-testing]} {
 	lappend argv --only-binary --max 5 --only-thread --only-tcp
     }

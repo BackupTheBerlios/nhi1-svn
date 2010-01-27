@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -217,19 +217,19 @@ Mq_Config_C_API \- configuration of a context
 .br
 .R "start the \fIserver-context\fP as daemon "
 .ti -1c
-.RI "int \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIstring\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIsilent\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? "
 .ti -1c
@@ -344,7 +344,7 @@ The configuration is done persistent using \fIconfig-api\fP functions or on link
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
 .PP
-Definition at line 533 of file msgque.h.
+Definition at line 534 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef void( * \fBMqDeleteF\fP)(struct \fBMqS\fP *const context)"
@@ -359,32 +359,32 @@ delete a \fIparent\fP context as the thread exit point
 .PP
 
 .PP
-Definition at line 433 of file msgque.h.
+Definition at line 434 of file msgque.h.
 .SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .PP
 prototype for a Object-Delete factory function 
 .PP
-Definition at line 491 of file msgque.h.
+Definition at line 492 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
 prototype for the \fCfork\fP sys-call 
 .PP
-Definition at line 407 of file msgque.h.
+Definition at line 408 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
 .PP
 application specific help function type 
 .PP
-Definition at line 464 of file msgque.h.
+Definition at line 465 of file msgque.h.
 .SS "typedef void( * \fBMqTokenDataFreeF\fP)(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a free additional token data function 
 .PP
-Definition at line 448 of file msgque.h.
+Definition at line 449 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
 prototype for the \fCvfork\fP sys-call 
 .PP
-Definition at line 410 of file msgque.h.
+Definition at line 411 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqFactoryE\fP"
@@ -407,7 +407,7 @@ the \fIfactory\fP is called to create an object for ...
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 469 of file msgque.h.
+Definition at line 470 of file msgque.h.
 .SS "enum \fBMqIoComE\fP"
 .PP
 what kind of socket interface to use? 
@@ -422,7 +422,7 @@ what kind of socket interface to use?
 \fB\fIMQ_IO_PIPE \fP\fP
 
 .PP
-Definition at line 571 of file msgque.h.
+Definition at line 572 of file msgque.h.
 .SS "enum \fBMqStartE\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -442,7 +442,7 @@ create entity as \fIthread\fP
 \fB\fIMQ_START_SPAWN \fP\fP
 create entity as \fIspawn\fP process 
 .PP
-Definition at line 549 of file msgque.h.
+Definition at line 550 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqConfigDup (struct \fBMqS\fP *const  to, struct \fBMqS\fP const *const  from)"
@@ -534,7 +534,7 @@ get the \fBMqIoTcpConfigS::port\fP configuration data
 .PP
 return the \fBMqIoUdsConfigS::file\fP value 
 .PP
-.SS "int MqConfigGetIsDupAndThread (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_BOL\fP MqConfigGetIsDupAndThread (struct \fBMqS\fP const *const  context)"
 .PP
 does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? 
 .PP
@@ -549,7 +549,7 @@ the \fC((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_I
 .RE
 .PP
 
-.SS "int MqConfigGetIsServer (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_BOL\fP MqConfigGetIsServer (struct \fBMqS\fP const *const  context)"
 .PP
 does the \fIcontext\fP object is a \fIserver\fP ? 
 .PP
@@ -564,7 +564,7 @@ the \fC(context->setup.isServer == MQ_YES)\fP value
 .RE
 .PP
 
-.SS "int MqConfigGetIsSilent (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_BOL\fP MqConfigGetIsSilent (struct \fBMqS\fP const *const  context)"
 .PP
 does the \fIcontext\fP object is \fIsilent\fP ? 
 .PP
@@ -579,7 +579,7 @@ the \fC(context->config.isSilent == MQ_YES)\fP value
 .RE
 .PP
 
-.SS "int MqConfigGetIsString (struct \fBMqS\fP const *const  context)"
+.SS "\fBMQ_BOL\fP MqConfigGetIsString (struct \fBMqS\fP const *const  context)"
 .PP
 does the \fIcontext\fP object is a \fIstring\fP ? 
 .PP
@@ -816,7 +816,7 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fIempty\fP) 
 .RE
 .PP
  
@@ -930,7 +930,7 @@ prototype for a Object-Creation factory function
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 867 of file msgque.h.
+Definition at line 876 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP( * \fBMqFactorySelectorF\fP)(\fBMQ_CST\fP name)"
 .PP
 Return a \fImain\fP factory function found by \fIname\fP. 
@@ -945,7 +945,7 @@ This function have to be defined in the target tool (example: \fCatool.c\fP) and
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 864 of file msgque.h.
+Definition at line 873 of file msgque.h.
 .SS "enum \fBMqErrorE\fP( * \fBMqTokenDataCopyF\fP)(struct \fBMqS\fP *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a copy additional token data function 
@@ -956,4 +956,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

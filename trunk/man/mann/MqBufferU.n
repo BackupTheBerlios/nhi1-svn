@@ -1,4 +1,4 @@
-.TH "MqBufferU" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "MqBufferU" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,4 +71,4 @@ Definition at line 2034 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

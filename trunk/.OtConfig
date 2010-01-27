@@ -13,6 +13,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-brain \
 		    --enable-tcl \
 		    --enable-python \
+		    --enable-cxx \
 		    $ARGS $@
 
 #		    --enable-brain \

@@ -14,6 +14,7 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 #include "ccmsgque.h"
 #include "debug.h"
@@ -612,10 +613,11 @@ namespace example {
       }
 
       void PRNT () {
-	int i=0;
+	ofstream FH(ReadC(), ios::out | ios::app);
 	while (ReadItemExists()) {
-	  printf ("%2i: %s\n", ++i, ReadC());
+	  FH << LinkGetCtxId() << " - " << ReadC() << endl;
 	}
+	FH.close();
 	SendRETURN();
       }
 
@@ -715,6 +717,4 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server.Exit ();
 }
-
-
 

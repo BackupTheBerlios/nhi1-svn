@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -153,9 +153,9 @@ Mq_Error_C_API \- create and manage error messages.
 .br
 .R "signal end of processing in an \fBIEvent\fP callback "
 .ti -1c
-.RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
+.RI "\fBMQ_BOL\fP \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
+.R "check if context is on \fIexit\fP, return \fIyes\fP or \fIno\fP "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -410,9 +410,9 @@ the \fIerror-message\fP from the \fIexception-object\fP
 .RE
 .PP
 
-.SS "int MqErrorIsEXIT (struct \fBMqS\fP *const  context)"
+.SS "\fBMQ_BOL\fP MqErrorIsEXIT (struct \fBMqS\fP *const  context)"
 .PP
-check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
+check if context is on \fIexit\fP, return \fIyes\fP or \fIno\fP 
 .PP
 .SS "void MqErrorLog (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  prefix)"
 .PP
@@ -601,4 +601,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

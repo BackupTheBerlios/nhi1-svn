@@ -1,4 +1,4 @@
-.TH "MqLinkS" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "MqLinkS" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -65,9 +65,13 @@ MqLinkS \- object responsible to manage a client/server link data
 .br
 .R "is already an 'exit' ongoing? "
 .ti -1c
-.RI "   \fBMQ_BOL\fP \fBonCreate\fP: 1"
+.RI "   \fBMQ_BOL\fP \fBonCreateStart\fP: 1"
 .br
-.R "is already an 'create' ongoing? "
+.R "Start 'MqLinkCreate'. "
+.ti -1c
+.RI "   \fBMQ_BOL\fP \fBonCreateEnd\fP: 1"
+.br
+.R "End 'MqLinkCreate'. "
 .ti -1c
 .RI "   \fBMQ_BOL\fP \fBonDelete\fP: 1"
 .br
@@ -99,7 +103,7 @@ MqLinkS \- object responsible to manage a client/server link data
 .ti -1c
 .RI "   \fBMQ_BOL\fP \fBisConnected\fP: 1"
 .br
-.R "is the socket connected? "
+.R "is the 'client-link' is 'connected' ? "
 .ti -1c
 .RI "} \fBbits\fP"
 .br
@@ -148,7 +152,7 @@ Definition at line 331 of file msgque.h.
 .PP
 storage for the Transaction object from the package header 
 .PP
-Definition at line 371 of file msgque.h.
+Definition at line 372 of file msgque.h.
 .SS "struct \fBMqBufferLS\fP* \fBMqLinkS::alfa\fP\fC [read]\fP"
 .PP
 the command-line arguments for the server 
@@ -162,7 +166,7 @@ bitfield to represent the boolean values
 .PP
 linked list of child's 
 .PP
-Definition at line 375 of file msgque.h.
+Definition at line 376 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxId\fP"
 .PP
 the ctxId of this \fBMqS\fP object 
@@ -172,7 +176,7 @@ Definition at line 340 of file msgque.h.
 .PP
 array of struct \fBMqLinkS\fP * pointer's 
 .PP
-Definition at line 367 of file msgque.h.
+Definition at line 368 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqLinkS::ctxIdP\fP\fC [read]\fP"
 .PP
 the initial (first) context (home of the ctxIdA) 
@@ -182,22 +186,22 @@ Definition at line 341 of file msgque.h.
 .PP
 the largest currently used ctxId number 
 .PP
-Definition at line 365 of file msgque.h.
+Definition at line 366 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxIdZ\fP"
 .PP
 the size of the ctxIdA array 
 .PP
-Definition at line 366 of file msgque.h.
+Definition at line 367 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::deleteProtection\fP"
 .PP
 object in use -> delete is not allowed 
 .PP
-Definition at line 356 of file msgque.h.
+Definition at line 357 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::doFactoryCleanup\fP"
 .PP
 was the context create by a 'Factory' 
 .PP
-Definition at line 358 of file msgque.h.
+Definition at line 359 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::endian\fP"
 .PP
 a endian switch have to be done? (boolean: MQ_YES or MQ_NO) 
@@ -212,7 +216,7 @@ Definition at line 346 of file msgque.h.
 .PP
 setup.ServerSetup.fFunc was called ? 
 .PP
-Definition at line 359 of file msgque.h.
+Definition at line 360 of file msgque.h.
 .SS "struct MqIoS* \fBMqLinkS::io\fP\fC [read]\fP"
 .PP
 object for management of the 'socket' infrastructure 
@@ -220,24 +224,29 @@ object for management of the 'socket' infrastructure
 Definition at line 336 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::isConnected\fP"
 .PP
-is the socket connected? 
+is the 'client-link' is 'connected' ? 
 .PP
-Definition at line 361 of file msgque.h.
+Definition at line 362 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::isWORKER\fP"
 .PP
 is alfa[0] set to 'WORKER' 
 .PP
-Definition at line 360 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onCreate\fP"
+Definition at line 361 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqLinkS::onCreateEnd\fP"
 .PP
-is already an 'create' ongoing? 
+End 'MqLinkCreate'. 
+.PP
+Definition at line 354 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqLinkS::onCreateStart\fP"
+.PP
+Start 'MqLinkCreate'. 
 .PP
 Definition at line 353 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::onDelete\fP"
 .PP
 is already a 'delete' ongoing? 
 .PP
-Definition at line 354 of file msgque.h.
+Definition at line 355 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::onExit\fP"
 .PP
 is already an 'exit' ongoing? 
@@ -247,12 +256,12 @@ Definition at line 352 of file msgque.h.
 .PP
 is already a 'shutdown' ongoing? 
 .PP
-Definition at line 355 of file msgque.h.
+Definition at line 356 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS::prepareDone\fP"
 .PP
 was a prepare already done ? 
 .PP
-Definition at line 357 of file msgque.h.
+Definition at line 358 of file msgque.h.
 .SS "struct MqReadS* \fBMqLinkS::read\fP\fC [read]\fP"
 .PP
 object for reading a Msgque packet 
@@ -267,7 +276,7 @@ Definition at line 347 of file msgque.h.
 .PP
 my own child storage 
 .PP
-Definition at line 376 of file msgque.h.
+Definition at line 377 of file msgque.h.
 .SS "struct MqSendS* \fBMqLinkS::send\fP\fC [read]\fP"
 .PP
 object for sending a Msgque packet 
@@ -277,7 +286,7 @@ Definition at line 334 of file msgque.h.
 .PP
 link to the SLAVE object 
 .PP
-Definition at line 379 of file msgque.h.
+Definition at line 380 of file msgque.h.
 .SS "struct MqTokenS* \fBMqLinkS::srvT\fP\fC [read]\fP"
 .PP
 identifier for the 'service' token handle 
@@ -292,8 +301,8 @@ Definition at line 345 of file msgque.h.
 .PP
 link to the trans object 
 .PP
-Definition at line 370 of file msgque.h.
+Definition at line 371 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

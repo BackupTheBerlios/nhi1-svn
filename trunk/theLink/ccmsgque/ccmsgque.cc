@@ -29,7 +29,7 @@ namespace ccmsgque {
 
   void MqC::Init () {
     // use "context.setup.Parent.fCreate" to ckeck in context was initialized
-    if (context.setup.Parent.fCreate) return;
+    if (context.setup.Parent.fCreate != NULL) return;
 
     context.setup.Parent.fCreate = MqLinkDefault;
     context.setup.Child.fCreate = MqLinkDefault;

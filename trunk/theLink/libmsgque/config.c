@@ -140,7 +140,7 @@ MqContextCreate (
   if (size == 0) size = (tmpl != NULL ? tmpl->contextsize : sizeof(struct MqS));
   context = (struct MqS *) MqSysMalloc(MQ_ERROR_PANIC,size);
   MqContextInit (context, size, tmpl);
-  context->statusIs = MQ_STATUS_IS_INITIAL;
+  context->statusIs = (tmpl == NULL ? MQ_STATUS_IS_INITIAL : MQ_STATUS_IS_DUP);
   context->contextsize = size;
   context->signature = MQ_MqS_SIGNATURE;
   return context;
@@ -653,7 +653,7 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
-int
+MQ_BOL
 MqConfigGetIsServer (
   struct MqS const * const context
 )
@@ -661,7 +661,7 @@ MqConfigGetIsServer (
   return MQ_IS_SERVER(context);
 }
 
-int
+MQ_BOL
 MqConfigGetIsString (
   struct MqS const * const context
 )
@@ -669,7 +669,7 @@ MqConfigGetIsString (
   return (context->config.isString == MQ_YES);
 }
 
-int
+MQ_BOL
 MqConfigGetIsSilent (
   struct MqS const * const context
 )
@@ -677,7 +677,7 @@ MqConfigGetIsSilent (
   return (context->config.isSilent == MQ_YES);
 }
 
-int
+MQ_BOL
 MqConfigGetIsDupAndThread (
   struct MqS const * const context
 )

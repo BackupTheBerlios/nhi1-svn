@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -40,11 +40,11 @@ Mq_Slave_C_API \- create and manage a slave context
 .RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the \fIcontext\fP a \fIslave-context\fP ? "
 .ti -1c
-.RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
+.RI "static \fBMQ_BOL\fP \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .in -1c
 .SH "Detailed Description"
@@ -210,7 +210,7 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINULL\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fIempty\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
 
@@ -225,13 +225,13 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINULL\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fIempty\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
  
 .PP
 Definition at line 3850 of file msgque.h.
-.SS "int MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
+.SS "\fBMQ_BOL\fP MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
@@ -242,11 +242,11 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
 
-.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
+.SS "static \fBMQ_BOL\fP MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
@@ -257,7 +257,7 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
  
@@ -286,4 +286,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

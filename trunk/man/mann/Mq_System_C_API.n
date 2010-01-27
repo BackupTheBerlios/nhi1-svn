@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -304,4 +304,4 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

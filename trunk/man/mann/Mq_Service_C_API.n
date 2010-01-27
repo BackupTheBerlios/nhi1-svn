@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,7 +33,7 @@ Mq_Service_C_API \- create and manage services
 .br
 .R "get the \fIfilter-context\fP or the \fImaster-context\fP "
 .ti -1c
-.RI "int \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "check if the \fIongoing-service-call\fP belongs to a transaction "
 .ti -1c
@@ -121,11 +121,11 @@ enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP.
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
 .IP "\(bu" 2
-\fB\fBMQ_WAIT_NO\fP\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+\fB\fCNO\fP,\fP don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-\fB\fBMQ_WAIT_ONCE\fP\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
+\fB\fCONCE\fP,\fP wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
 .IP "\(bu" 2
-\fB\fBMQ_WAIT_FOREVER\fP\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
+\fB\fCFOREVER\fP,\fP wait forever and only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP
@@ -133,9 +133,9 @@ This function is usually used on a server to enter the \fIevent-loop\fP and wait
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBtimeout\fP value), only used if \fIwait\fP = \fBMQ_WAIT_ONCE\fP 
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBtimeout\fP value), only used if \fIwait\fP = \fCONCE\fP 
 .br
-\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: \fBMQ_WAIT_NO\fP) 
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: \fCNO\fP) 
 .RE
 .PP
 \fBReturns:\fP
@@ -157,7 +157,7 @@ in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoke
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
 
@@ -165,7 +165,7 @@ a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBMQ_CST ServiceGetToken (ctx)\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBStringObj [$ctx ServiceGetToken]\fP to get the current token in an \fIincomming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -221,7 +221,7 @@ return a 'filter not available' error
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fINULL\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fIempty\fP on error 
 .RE
 .PP
 \fBReturns:\fP
@@ -247,11 +247,11 @@ the \fBTOKEN IDENTIFIER\fP
 .RE
 .PP
 
-.SS "int MqServiceIsTransaction (struct \fBMqS\fP const *const  ctx)"
+.SS "\fBMQ_BOL\fP MqServiceIsTransaction (struct \fBMqS\fP const *const  ctx)"
 .PP
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
-A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBSendEND\fP) 
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIyes\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIno\fP if the package was send with \fBSendEND\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -260,7 +260,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the p
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fIyes\fP or \fIno\fP 
 .RE
 .PP
 
@@ -287,4 +287,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

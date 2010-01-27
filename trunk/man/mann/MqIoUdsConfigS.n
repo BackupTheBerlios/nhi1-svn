@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,18 +25,18 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fIempty\fP) 
 .RE
 .PP
 
 .PP
-Definition at line 584 of file msgque.h.
+Definition at line 585 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS::file\fP"
 .PP
-Definition at line 585 of file msgque.h.
+Definition at line 586 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

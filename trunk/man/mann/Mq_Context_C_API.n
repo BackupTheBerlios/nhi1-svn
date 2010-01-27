@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -84,7 +84,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
 signature marker used in \fBMqS::signature\fP 
 .PP
-Definition at line 1371 of file msgque.h.
+Definition at line 1380 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -109,7 +109,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1362 of file msgque.h.
+Definition at line 1371 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
@@ -150,7 +150,7 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .PP
 delete the \fIcontext\fP 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINULL\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fIempty\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -203,4 +203,4 @@ If \fItool\fP != NULL, the function will display a header like:
  on the help page. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

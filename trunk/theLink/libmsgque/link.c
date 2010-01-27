@@ -154,7 +154,6 @@ sMqCheckArg (
 
   // parse "my" arguments
   if (argv != NULL && argv->cursize > 0) {
-
     struct MqBufferS *arg = NULL;
     MQ_CST strV, argC;
     MQ_INT intV;
@@ -342,6 +341,8 @@ sMqCheckArg (
 	case '-': {
 	  if (!strncmp(argC, "-duplicate", 10)) {
 	    context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_DUP);
+	    context->config.startAs = MQ_START_DEFAULT;
+	    context->config.io.com = MQ_IO_PIPE;
 	  } else {
 	    continue;
 	  }
@@ -376,10 +377,6 @@ sMqCheckArg (
     // will be used to identify the socket if no '--name' option is available
     MqConfigSetName (context, "unknown");
   }
-
-  // POST validation
-  if (context->statusIs & MQ_STATUS_IS_DUP)
-    context->config.io.com = MQ_IO_PIPE;
 
 error:
   return MqErrorStack(context);
@@ -459,7 +456,7 @@ MqLinkCreateChild (
   return MqLinkCreate (context, argvP);
 }
 
-enum MqErrorE
+static enum MqErrorE
 MqLinkPrepare (
   struct MqS * const context,
   struct MqBufferLS ** argvP
@@ -985,7 +982,7 @@ MqLinkDelete (
   }
 }
 
-int
+MQ_BOL
 MqLinkIsConnected (
   struct MqS const * const context
 )
@@ -1001,7 +998,7 @@ MqLinkGetParent (
   return MqLinkGetParentI(context);
 }
 
-int
+MQ_BOL
 MqLinkIsParent (
   struct MqS const * const context
 )

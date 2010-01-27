@@ -570,11 +570,11 @@ struct MqLinkSetupS {
 
 /// \brief what kind of socket interface to use?
 enum MqIoComE { 
+    MQ_IO_PIPE,
 #if defined(MQ_IS_POSIX)
     MQ_IO_UDS, 
 #endif
-    MQ_IO_TCP, 
-    MQ_IO_PIPE 
+    MQ_IO_TCP
 };
 
 /// \brief configure a context to use a \e uds-client-server-link
@@ -668,6 +668,14 @@ struct MqConfigS {
   /// - a \e server-context start a new \e client-server-link using \e SELF as 
   ///	    executable-name using \RNSA{LinkCreate}
   /// .
+  /// \if MAN
+  /// The allowed integer values are:
+  /// - \b 0 = #MQ_START_DEFAULT, use application-context default entity creation
+  /// - \b 1 = #MQ_START_FORK, create entity as \e fork
+  /// - \b 2 = #MQ_START_THREAD, create entity as \e thread
+  /// - \b 3 = #MQ_START_SPAWN, create entity as \e spawn process
+  /// .
+  /// \endif
   /// (default: do not create a new application-context)
   enum MqStartE startAs;
 
@@ -1139,7 +1147,7 @@ MQ_DECL MqConfigSetDaemon (
  *  \context
  *  \return the <TT>(context->setup.isServer == MQ_YES)</TT> value
  */
-MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1147,7 +1155,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
  *  \context
  *  \return the <TT>(context->config.isString == MQ_YES)</TT> value
  */
-MQ_EXTERN int MQ_DECL MqConfigGetIsString (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsString (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1155,7 +1163,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsString (
  *  \context
  *  \return the <TT>(context->config.isSilent == MQ_YES)</TT> value
  */
-MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsSilent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1171,7 +1179,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetDoFactoryCleanup (
  *  \context
  *  \return the <TT>((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_IS_THREAD))</TT> value
  */
-MQ_EXTERN int MQ_DECL MqConfigGetIsDupAndThread (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsDupAndThread (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1377,7 +1385,7 @@ enum MqStatusIsE {
 
 /// \brief data structure for the \e libmsgque-specific-data
 struct MqS {
-  int signature;		    ///< used to verify the \e pointer-data-type in a type-less programming languages
+  MQ_INT signature;		    ///< used to verify the \e pointer-data-type in a type-less programming languages
   MQ_PRIVATE_CONFIG_CONST
     struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
   struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
@@ -1577,15 +1585,6 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 ///  .
 
 
-
-/// \brief TODO
-MQ_EXTERN enum MqErrorE MQ_DECL MqLinkPrepare (
-  struct MqS  * const ctx,
-  struct MqBufferLS ** args
-);
-
-
-
 /// \brief make \e ctx to a \e parent-context and setup a new \e client-server-link
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
@@ -1670,7 +1669,7 @@ MQ_EXTERN void MQ_DECL MqLinkDelete (
 /// .
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN int MQ_DECL MqLinkIsConnected (
+MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsConnected (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
@@ -1693,12 +1692,12 @@ static mq_inline struct MqS * MqLinkGetParentI (
 /// \details A \e context is a \e parent-context if it was created with \RNSA{LinkCreate}
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN int MQ_DECL MqLinkIsParent (
+MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsParent (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
 /// \copydoc MqLinkIsParent
-static mq_inline int MqLinkIsParentI (
+static mq_inline MQ_BOL MqLinkIsParentI (
   struct MqS const * const ctx
 )
 {
@@ -1813,7 +1812,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
 /// or can be \e without-transaction (return \no if the package was send with \RNSA{SendEND})
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN int
+MQ_EXTERN MQ_BOL
 MQ_DECL MqServiceIsTransaction (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
@@ -2054,7 +2053,7 @@ enum MqAllocE {
 /// The lifetime of the \e buffer-object is only the current callback up to the next
 /// read operation in the same \e parent-context.
 struct MqBufferS {
-  int signature;		///< used to verify the \e pointer-data-type in a type-less programming languages
+  MQ_INT signature;		///< used to verify the \e pointer-data-type in a type-less programming languages
   struct MqS *context;		///< error object of the related msgque
   MQ_BIN data;                  ///< always point to the beginning of the data-segment
   MQ_SIZE size;                 ///< the size of the data-segment
@@ -3135,7 +3134,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 );
 
 /// \brief check if context is on \e exit, return \yes or \no
-MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
+MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );
 
@@ -3857,12 +3856,12 @@ static mq_inline struct MqS* MqSlaveGetMasterI (
 /// \brief is the \e context a \e slave-context ?
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN int MQ_DECL MqSlaveIs (
+MQ_EXTERN MQ_BOL MQ_DECL MqSlaveIs (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
 /// \copydoc MqSlaveIs
-static mq_inline int MqSlaveIsI (
+static mq_inline MQ_BOL MqSlaveIsI (
   struct MqS const * const ctx
 )
 {

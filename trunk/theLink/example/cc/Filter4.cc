@@ -14,6 +14,7 @@
 
 #include <queue>
 #include <stdexcept>
+#include <fstream> 
 #include "ccmsgque.h"
 #include "debug.h"
 
@@ -30,9 +31,21 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;
+    MQ_CST file;
 
     MqC* Factory() const { 
       return new Filter4(); 
+    }
+
+    void ErrorWrite () {
+      if (file != NULL) {
+	ofstream FH(file, ios::out | ios::app);
+	FH << "ERROR: " << ErrorGetText() << endl;
+	FH.close();
+	ErrorReset ();
+      } else {
+	ErrorPrint ();
+      }
     }
 
     void Event () {
@@ -41,33 +54,30 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 	// no transaction available
 	ErrorSetCONTINUE();
       } else {
-	MqC *ftr;
-	register struct FilterItmS it;
+	// extract the first (oldest) item from the store
+	struct FilterItmS it = itms.front();
 
 	// is an item available?
 	try {
-	  ftr = ServiceGetFilter();
-	} catch (...) {
-	  ErrorReset();
-	  return;
-	}
-
-	// extract the first (oldest) item from the store
-	it = itms.front();
-
-	// send the ctxaction to the ctx, on error write message but do not stop processing
-	ftr->SendSTART();
-	ftr->SendBDY(it.bdy, it.len);
-	try {
-	  if (ServiceIsTransaction()) {
+	  Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
+	  // reconnect or do nothing if already connected
+	  ftr->LinkConnect();
+	  // send the ctxaction to the ctx, on error write message but do not stop processing
+	  ftr->SendSTART();
+	  ftr->SendBDY(it.bdy, it.len);
+	  if (it.isTransaction) {
 	    ftr->SendEND_AND_WAIT(it.token);
 	  } else {
 	    ftr->SendEND(it.token);
 	  }
 	} catch (const exception& e) {
-	  ftr->ErrorSet (e);
-	  ftr->ErrorPrint();
-	  ftr->ErrorReset();
+	  ErrorSet (e);
+	  if (ErrorIsEXIT()) {
+	    ErrorReset();
+	    return;
+	  } else {
+	    ErrorWrite();
+	  }
 	}
 
 	// reset the item-storage
@@ -95,8 +105,29 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       SendRETURN();
     }
 
+    void LOGF () {
+      try {
+	MqC *ftr = ServiceGetFilter(0);
+	file = mq_strdup_save(ReadC());
+	if (!strcmp(ftr->LinkGetTargetIdent (),"transFilter")) {
+	  ftr->SendSTART();
+	  ftr->SendC(file);
+	  ftr->SendEND_AND_WAIT("LOGF");
+	}
+      } catch (const exception& e) {
+	ErrorSet (e);
+      }
+      return SendRETURN();
+    }
+
+    void EXIT () {
+      abort();
+    }
+
     void ServerSetup() {
       // SERVER: listen on every token (+ALL)
+      ServiceCreate ("LOGF", CallbackF(&Filter4::LOGF));
+      ServiceCreate ("EXIT", CallbackF(&Filter4::EXIT));
       ServiceCreate ("+ALL", this);
     }
 };
@@ -112,6 +143,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   Filter4 filter;
   try {
     filter.ConfigSetIgnoreExit(true);
+    filter.ConfigSetIdent("transFilter");
     filter.LinkCreateVC (argc, argv);
     filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
@@ -119,6 +151,4 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   }
   filter.Exit();
 }
-
-
 

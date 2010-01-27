@@ -274,23 +274,23 @@ namespace ccmsgque {
       // GET configuration data
 
       /// \api #MqConfigGetIsServer
-      inline bool ConfigGetIsServer ()	    { return MqConfigGetIsServer(&context) != 0; }
+      inline bool ConfigGetIsServer ()	    { return MqConfigGetIsServer(&context) == MQ_YES; }
       /// \api #MqConfigGetIsString
-      inline bool ConfigGetIsString ()	    { return context.config.isString == MQ_YES; }
+      inline bool ConfigGetIsString ()	    { return MqConfigGetIsString(&context) == MQ_YES; }
       /// \api #MqConfigGetIsSilent
-      inline bool ConfigGetIsSilent ()	    { return context.config.isSilent == MQ_YES; }
+      inline bool ConfigGetIsSilent ()	    { return MqConfigGetIsSilent(&context) == MQ_YES; }
       /// \api #MqConfigGetName
-      inline MQ_CST ConfigGetName ()	    { return context.config.name; }
+      inline MQ_CST ConfigGetName ()	    { return MqConfigGetName(&context); }
       /// \api #MqConfigGetSrvName
-      inline MQ_CST ConfigGetSrvName ()	    { return context.config.srvname; }
+      inline MQ_CST ConfigGetSrvName ()	    { return MqConfigGetSrvName(&context); }
       /// \api #MqConfigGetIdent
-      inline MQ_CST ConfigGetIdent ()	    { return context.setup.ident; }
+      inline MQ_CST ConfigGetIdent ()	    { return MqConfigGetIdent(&context); }
       /// \api #MqConfigGetBuffersize
-      inline MQ_INT ConfigGetBuffersize ()  { return context.config.io.buffersize; }
+      inline MQ_INT ConfigGetBuffersize ()  { return MqConfigGetBuffersize(&context); }
       /// \api #MqConfigGetDebug
-      inline MQ_INT ConfigGetDebug ()	    { return context.config.debug; }
+      inline MQ_INT ConfigGetDebug ()	    { return MqConfigGetDebug(&context); }
       /// \api #MqConfigGetTimeout
-      inline MQ_TIME_T ConfigGetTimeout ()  { return context.config.io.timeout; }
+      inline MQ_TIME_T ConfigGetTimeout ()  { return MqConfigGetTimeout(&context); }
       /// \api #MqConfigGetIoUdsFile
       inline MQ_CST ConfigGetIoUdsFile ()   { return MqConfigGetIoUdsFile (&context); }
       /// \api #MqConfigGetIoTcpHost
@@ -435,15 +435,14 @@ namespace ccmsgque {
 	LinkCreateChildVC (parent, (int const ) args.size(), (MQ_CST*) &(*args.begin()));
       }
 
-      /// \api #MqLinkPrepare
-      void LinkPrepareVC (int const argc, MQ_CST argv[]) {
-	struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
-	ErrorCheck (MqLinkPrepare (&context, &args));
-      }
-
       /// \api #MqLinkDelete
       void LinkDelete () {
 	MqLinkDelete (&context);
+      }
+
+      /// \api #MqLinkConnect
+      void LinkConnect () {
+	ErrorCheck (MqLinkConnect (&context));
       }
 
       /// \api #MqLinkGetParent 
@@ -454,12 +453,12 @@ namespace ccmsgque {
 
       /// \api #MqLinkIsParent
       inline bool LinkIsParent ()	    { 
-        return MqLinkIsParentI(&context) != 0 ? true : false; 
+        return MqLinkIsParentI(&context) == MQ_YES;
       }
 
       /// \api #MqLinkIsConnected
       inline bool LinkIsConnected ()   { 
-        return MqLinkIsConnectedI(&context) != 0 ? true : false; 
+        return MqLinkIsConnected(&context) == MQ_YES;
       }
 
       /// \api #MqLinkGetCtxId
@@ -535,6 +534,11 @@ namespace ccmsgque {
 
       /// \api #MqErrorSet
       MQ_EXTERN enum MqErrorE ErrorSet (const exception& e);
+
+      /// \api #MqErrorIsEXIT
+      inline bool ErrorIsEXIT () {
+	return MqErrorIsEXIT (&context) == MQ_YES;
+      }
 
     /// \}
 
@@ -684,7 +688,7 @@ namespace ccmsgque {
     /// \{
     public:
       /// \api #MqServiceIsTransaction
-      inline bool ServiceIsTransaction () { return MqServiceIsTransaction(&context) ? true : false;}
+      inline bool ServiceIsTransaction () { return MqServiceIsTransaction(&context) == MQ_YES;}
 
       /// \api #MqServiceGetFilter
       inline MqC* ServiceGetFilter (MQ_SIZE id=0) throw(MqCException)  { 
@@ -749,7 +753,7 @@ namespace ccmsgque {
 
       /// \api #MqSlaveIs
       inline bool SlaveIs ()	    { 
-        return MqSlaveIs(&context) != 0 ? true : false; 
+        return MqSlaveIs(&context) == MQ_YES;
       }
 
       /// \api #MqSlaveCreate

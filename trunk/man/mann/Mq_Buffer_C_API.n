@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -328,29 +328,29 @@ Definition at line 2038 of file msgque.h.
 .PP
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the \fBMQ_CST\fP datatype (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the StringObj datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (\fBMQ_BYT\fP)
+\fCY\fP : 1 byte signed character (IntObj)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fIMQ_YES\fP or \fIMQ_NO\fP (\fBMQ_BOL\fP)
+\fCO\fP : 1 byte boolean value using \fIyes\fP or \fIno\fP (BooleanObj)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (\fBMQ_SRT\fP)
+\fCS\fP : 2 byte signed short (IntObj)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (\fBMQ_INT\fP)
+\fCI\fP : 4 byte signed integer (IntObj)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (\fBMQ_WID\fP)
+\fCW\fP : 8 byte signed long long integer (WideIntObj)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (\fBMQ_FLT\fP)
+\fCF\fP : 4 byte float (DoubleObj)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (\fBMQ_DBL\fP)
+\fCD\fP : 8 byte double (DoubleObj)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (\fBMQ_BIN\fP)
+\fCB\fP : unsigned char array used for binary data (ByteArrayObj)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end (\fBMQ_CST\fP)
+\fCC\fP : string data using a \fC\\0\fP at the end (StringObj)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above (\fBMQ_BUF\fP)
+\fCU\fP : typeless buffer able to hold a single item from above (CmdObj)
 .PP
 
 .PP
@@ -1239,4 +1239,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for tclmsgque from the source code.

@@ -113,7 +113,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   atrans filter;
   try {
     filter.ConfigSetIgnoreExit(true);
-    filter.LinkPrepareVC (argc, argv);
+    filter.LinkCreateVC (argc, argv);
     filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);

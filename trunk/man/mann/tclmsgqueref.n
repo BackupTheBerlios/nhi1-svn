@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "20 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -305,6 +305,16 @@ a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
 .IP "\(bu" 2
 a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
 .PP
+The allowed integer values are:
+.IP "\(bu" 2
+\fB0\fP = \fBMQ_START_DEFAULT\fP, use application-context default entity creation
+.IP "\(bu" 2
+\fB1\fP = \fBMQ_START_FORK\fP, create entity as \fIfork\fP 
+.IP "\(bu" 2
+\fB2\fP = \fBMQ_START_THREAD\fP, create entity as \fIthread\fP 
+.IP "\(bu" 2
+\fB3\fP = \fBMQ_START_SPAWN\fP, create entity as \fIspawn\fP process
+.PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fCConfigGetStartAs\fP , \fBset:\fP \fCConfigSetStartAs pidfile\fP
@@ -339,7 +349,7 @@ By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \
 .SS "interface: $ctx ConfigSetServerSetup callback"
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIyes\fP. 
 .SS "interface: $ctx ConfigSetServerCleanup callback"
-This interface is used to cleanup an onl \fIserver-context-link\fP, like a destructor, and is called at the end of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIyes\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIyes\fP. 
 .SS "interface: $ctx ConfigSetFactory"
 The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
 .PP
@@ -382,6 +392,10 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 \fBLinkCreate\fP
 .br
  \fBLinkCreateChild\fP
+.br
+ \fBLinkDelete\fP
+.br
+ \fBLinkConnect\fP
 .br
  \fBLinkGetParent\fP
 .br
@@ -543,6 +557,21 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+.SS "\\LinkConnect"
+re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
+.PP
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
 .SS "MqS [$ctx LinkGetParent]"
@@ -1495,6 +1524,8 @@ return the type as single character of the item stored in the buffer object.
 .br
  \fBErrorSetCONTINUE\fP
 .br
+ \fBErrorIsEXIT\fP
+.br
  \fBErrorReset\fP
 .br
  \fBErrorRaise\fP
@@ -1547,6 +1578,8 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 convert a \fITCLMSGQUE errorCode\fP into a tclmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "$ctx ErrorSetCONTINUE"
 signal end of processing in an \fBIEvent\fP callback 
+.SS "\\ErrorIsEXIT"
+check if context is on \fIexit\fP, return \fIyes\fP or \fIno\fP 
 .SS "$ctx ErrorReset"
 clear the \fIerror\fP and reset the \fIcontex\fP 
 .SS "$ctx ErrorRaise"

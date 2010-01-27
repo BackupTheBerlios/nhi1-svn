@@ -368,7 +368,7 @@ MqErrorSetCONTINUE (
   return (context->error.code = MQ_CONTINUE);
 }
 
-int
+MQ_BOL
 MqErrorIsEXIT (
   struct MqS * const context
 )
