@@ -19,48 +19,58 @@ class Filter4(MqS):
     ctx.ConfigSetIdent("transFilter")
     ctx.ConfigSetFactory(lambda: Filter4())
     ctx.ConfigSetServerSetup(ctx.ServerSetup)
+    ctx.ConfigSetServerCleanup(ctx.ServerCleanup)
     ctx.ConfigSetEvent(ctx.Event)
     ctx.itms = []
-    ctx.file = None
+    ctx.FH = None
     MqS.__init__(ctx)
+  def ServerCleanup(ctx):
+    ftr = ctx.ServiceGetFilter()
+    if ftr.FH != None:
+      close (ftr.FH)
   def ServerSetup(ctx):
+    ftr = ctx.ServiceGetFilter()
     ctx.ServiceCreate("LOGF", ctx.LOGF)
     ctx.ServiceCreate("EXIT", ctx.EXIT)
     ctx.ServiceCreate("+ALL", ctx.FilterIn)
-  def ErrorWrite(ctx):
-    if ctx.file is None:
-      ctx.ErrorPrint()
-    else:
-      FH = open(ctx.file, "a")
-      FH.write("ERROR: " + ctx.ErrorGetText() + "\n")
-      FH.close
+    ftr.ServiceCreate("WRIT", ftr.WRIT)
+  def ErrorWrite(ftr):
+    ftr.FH.write("ERROR: " + ftr.ErrorGetText() + "\n")
+    ftr.FH.flush()
+    ftr.ErrorReset()
   def LOGF(ctx):
     ftr = ctx.ServiceGetFilter()
-    ftr.file = ctx.ReadC()
-    if (ftr.LinkGetTargetIdent() == "transFilter"):
+    if ftr.LinkGetTargetIdent() == "transFilter":
       ftr.SendSTART()
-      ftr.SendC(ftr.file)
+      ftr.SendC(ctx.ReadC())
       ftr.SendEND_AND_WAIT("LOGF")
+    else:
+      ftr.FH = open(ctx.ReadC(), "a")
     ctx.SendRETURN()
+  def WRIT(ftr):
+    ftr.FH.write(ftr.ReadC() + "\n")
+    ftr.FH.flush()
+    ftr.SendRETURN()
   def EXIT(ctx):
     sys.exit();
   def Event(ctx):
-    if (len(ctx.itms) == 0):
+    if len(ctx.itms) == 0:
       ctx.ErrorSetCONTINUE()
     else:
       (token, isTransaction, bdy) = ctx.itms[0]
-      sys.stdout.flush()
       ftr = ctx.ServiceGetFilter()
       try:
         ftr.LinkConnect()
         ftr.SendSTART()
         ftr.SendBDY(bdy)
-        if (isTransaction):
+        if isTransaction:
           ftr.SendEND_AND_WAIT(token)
         else:
           ftr.SendEND(token)
       except:
+        ftr.ErrorSet()
         if ftr.ErrorIsEXIT():
+          ftr.ErrorReset()
           return
         else:
           ftr.ErrorWrite()

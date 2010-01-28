@@ -613,11 +613,9 @@ namespace example {
       }
 
       void PRNT () {
-	ofstream FH(ReadC(), ios::out | ios::app);
-	while (ReadItemExists()) {
-	  FH << LinkGetCtxId() << " - " << ReadC() << endl;
-	}
-	FH.close();
+	SendSTART();
+	SendV("%d - %s", LinkGetCtxId(), ReadC());
+	SendEND_AND_WAIT("WRIT");
 	SendRETURN();
       }
 

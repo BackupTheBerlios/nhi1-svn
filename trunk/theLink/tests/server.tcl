@@ -586,11 +586,9 @@ proc Ot_CFG1 {ctx} {
 }
 
 proc Ot_PRNT {ctx} {
-  set FH  [open [$ctx ReadC] a]
-  while {[$ctx ReadItemExists]} {
-    puts $FH "[$ctx LinkGetCtxId] - [$ctx ReadC]"
-  }
-  close $FH
+  $ctx SendSTART
+  $ctx SendC "[$ctx LinkGetCtxId] - [$ctx ReadC]"
+  $ctx SendEND_AND_WAIT WRIT
   $ctx SendRETURN
 }
 

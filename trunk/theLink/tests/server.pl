@@ -687,11 +687,9 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub PRNT {
     my $ctx = shift;
-    open(FH, ">>" . $ctx->ReadC());
-    while ($ctx->ReadItemExists()) {
-      print(FH $ctx->LinkGetCtxId() . " - " . $ctx->ReadC() . "\n");
-    }
-    close(FH);
+    $ctx->SendSTART();
+    $ctx->SendC($ctx->LinkGetCtxId() . " - " . $ctx->ReadC());
+    $ctx->SendEND_AND_WAIT("WRIT");
     $ctx->SendRETURN();
   }
 

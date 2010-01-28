@@ -12,6 +12,7 @@
 
 use strict;
 use Net::PerlMsgque;
+use FileHandle;
 
 $| = 1;
 
@@ -19,16 +20,17 @@ package Filter4;
 use base qw(Net::PerlMsgque::MqS);
 
   sub ErrorWrite {
-    my $ctx = shift;
-    my $file = $ctx->DictGet("file");
-    if ($file ne "") {
-      open(FH,">>$file");
-      print(FH "ERROR: " . $ctx->ErrorGetText() . "\n");
-      close(FH);
-      $ctx->ErrorReset();
-    } else {
-      $ctx->ErrorPrint();
-    }
+    my $ftr = shift;
+    my $FH = $ftr->DictGet("FH");
+    print($FH "ERROR: " . $ftr->ErrorGetText() . "\n");
+    $ftr->ErrorReset();
+  }
+
+  sub WRIT {
+    my $ftr = shift;
+    my $FH = $ftr->DictGet("FH");
+    print($FH $ftr->ReadC() . "\n");
+    $ftr->SendRETURN();
   }
 
   sub EXIT {
@@ -39,11 +41,14 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = shift;
     my $ftr = $ctx->ServiceGetFilter();
     my $file = $ctx->ReadC();
-    $ctx->DictSet("file", $file);
     if ($ftr->LinkGetTargetIdent() eq "transFilter") {
       $ftr->SendSTART();
       $ftr->SendC($file);
       $ftr->SendEND_AND_WAIT("LOGF");
+    } else {
+      open(my $FH, ">>", $file);
+      $FH->autoflush(1);
+      $ftr->DictSet("FH", $FH);
     }
     $ctx->SendRETURN();
   }
@@ -55,8 +60,8 @@ use base qw(Net::PerlMsgque::MqS);
     if (!defined($it)) {
       $ctx->ErrorSetCONTINUE();
     } else {
+      my $ftr = $ctx->ServiceGetFilter();
       eval {
-	my $ftr = $ctx->ServiceGetFilter();
 	my ($token,$isTransaction,$bdy) = @{$it};
 	$ftr->LinkConnect();
 	$ftr->SendSTART();
@@ -68,12 +73,12 @@ use base qw(Net::PerlMsgque::MqS);
 	}
       };
       if ($@) {
-	$ctx->ErrorSet($@);
-	if ($ctx->ErrorIsEXIT) {
-	  $ctx->ErrorReset();
+	$ftr->ErrorSet($@);
+	if ($ftr->ErrorIsEXIT) {
+	  $ftr->ErrorReset();
 	  return;
 	} else {
-	  $ctx->ErrorWrite();
+	  $ftr->ErrorWrite();
 	}
       }
       shift(@{$itms});
@@ -87,13 +92,22 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub ServerCleanup {
+    my $ctx = shift;
+    my $FH = $ctx->DictGet("FH");
+    if (defined($FH)) {
+      close($FH);
+    }
+  }
+
   sub ServerSetup {
     my $ctx = shift;
     $ctx->ServiceCreate("+ALL", \&FilterIn);
     $ctx->ServiceCreate("LOGF", \&LOGF);
     $ctx->ServiceCreate("EXIT", \&EXIT);
+    $ctx->ServiceGetFilter()->ServiceCreate("WRIT", \&WRIT);
     $ctx->DictSet("itms", []);
-    $ctx->DictSet("file", "");
+    $ctx->DictSet("FH", undef);
   }
 
   sub new {
@@ -102,6 +116,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->ConfigSetIgnoreExit(1);
     $ctx->ConfigSetIdent("transFilter");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
+    $ctx->ConfigSetServerCleanup(\&ServerCleanup);
     $ctx->ConfigSetEvent(\&Event);
     $ctx->ConfigSetFactory(sub {new Filter4()});
     return $ctx;

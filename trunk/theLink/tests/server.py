@@ -128,10 +128,9 @@ class Server(MqS):
       self.ServiceCreate("PRNT", self.PRNT)
 
   def PRNT(self):
-    FH = open(self.ReadC(), "a")
-    while (self.ReadItemExists()):
-      FH.write(str(self.LinkGetCtxId()) + " - " + self.ReadC() + "\n")
-    FH.close()
+    self.SendSTART()
+    self.SendC(str(self.LinkGetCtxId()) + " - " + self.ReadC())
+    self.SendEND_AND_WAIT("WRIT");
     self.SendRETURN()
 
   def CFG1(self):

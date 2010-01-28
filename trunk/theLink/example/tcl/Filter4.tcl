@@ -12,32 +12,35 @@
 
 package require TclMsgque
 
-proc ErrorWrite {ctx} {
-  set f [$ctx dict get File]
-  if {$f ne ""} {
-    set FH [open $f a]
-    puts $FH "ERROR: [$ctx ErrorGetText]"
-    close $FH
-    $ctx ErrorReset
-  } else {
-    $ctx ErrorPrint
-  }
+proc ErrorWrite {ftr} {
+  set FH [$ftr dict get FH]
+  puts $FH "ERROR: [$ftr ErrorGetText]"
+  flush $FH
+  $ftr ErrorReset
 }
 
 proc LOGF {ctx} {
   set ftr [$ctx ServiceGetFilter]
-  set f [$ctx ReadC]
-  $ftr dict set File $f
+  set file [$ctx ReadC]
   if {[$ftr LinkGetTargetIdent] == "transFilter"} {
     $ftr SendSTART
-    $ftr SendC $f
+    $ftr SendC $file
     $ftr SendEND_AND_WAIT "LOGF"
+  } else {
+    $ftr dict set FH [open $file a]
   }
   $ctx SendRETURN
 }
 
 proc EXIT {ctx} {
   exit 0
+}
+
+proc WRIT {ftr} {
+  set FH [$ftr dict get FH]
+  puts $FH [$ftr ReadC]
+  flush $FH
+  $ftr SendRETURN
 }
 
 proc FilterIn {ctx} {
@@ -47,14 +50,16 @@ proc FilterIn {ctx} {
 
 proc FilterSetup {ctx} {
   $ctx dict set Itms [list]
+  $ctx dict set FH ""
   $ctx ServiceCreate "LOGF" LOGF
   $ctx ServiceCreate "EXIT" EXIT
   $ctx ServiceCreate "+ALL" FilterIn
+  [$ctx ServiceGetFilter] ServiceCreate "WRIT" WRIT
 }
 
 proc FilterCleanup {ctx} {
   $ctx dict unset Itms
-  [$ctx ServiceGetFilter] dict unset File
+  close [$ctx ServiceGetFilter] dict unset FH]
 }
 
 proc FilterEvent {ctx} {

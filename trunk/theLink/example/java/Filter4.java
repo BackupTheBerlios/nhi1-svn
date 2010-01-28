@@ -75,17 +75,13 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
   }
 
   private void ErrorWrite() {
-    if (FH == null) {
-      ErrorPrint();
-    } else {
-      try {
-	FH.write("ERROR: " + ErrorGetText() + "\n");
-	FH.flush();
-      } catch (Throwable ex) {
-	ErrorPrint(ex);
-      } finally {
-	ErrorReset();
-      }
+    try {
+      FH.write("ERROR: " + ErrorGetText() + "\n");
+      FH.flush();
+    } catch (Throwable ex) {
+      ErrorPrint(ex);
+    } finally {
+      ErrorReset();
     }
   }
 

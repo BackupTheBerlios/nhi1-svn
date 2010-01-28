@@ -662,6 +662,15 @@ namespace ccmsgque {
       inline void SendD (MQ_DBL val) throw(MqCException) { ErrorCheck (MqSendD (&context, val)); }
       /// \api #MqSendC
       inline void SendC (MQ_CST val) throw(MqCException) { ErrorCheck (MqSendC (&context, val)); }
+      /// \api #MqSendC
+      inline void SendV (MQ_CST fmt, ...) throw(MqCException) { 
+	enum MqErrorE ret;
+	va_list ap;
+	va_start(ap, fmt);
+	ret = MqSendVL (&context, fmt, ap); 
+	va_end(ap);
+	ErrorCheck (ret);
+      }
       /// \api #MqSendU
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
       /// \api #MqSendN

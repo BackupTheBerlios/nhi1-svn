@@ -14,7 +14,7 @@
 
 #include <queue>
 #include <stdexcept>
-#include <fstream> 
+#include <stdlib.h>
 #include "ccmsgque.h"
 #include "debug.h"
 
@@ -22,7 +22,7 @@ using namespace std;
 using namespace ccmsgque;
 
 class Filter4 : public MqC, public IFactory, public IServerSetup,
-		  public IEvent, public IService {
+		  public IServerCleanup, public IEvent, public IService {
   private:
     struct FilterItmS {
       MQ_STRB token[5];
@@ -31,21 +31,16 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;
-    MQ_CST file;
+    FILE *FH;
 
     MqC* Factory() const { 
       return new Filter4(); 
     }
 
     void ErrorWrite () {
-      if (file != NULL) {
-	ofstream FH(file, ios::out | ios::app);
-	FH << "ERROR: " << ErrorGetText() << endl;
-	FH.close();
-	ErrorReset ();
-      } else {
-	ErrorPrint ();
-      }
+      fprintf(FH, "ERROR: %s\n", ErrorGetText());
+      fflush(FH);
+      ErrorReset ();
     }
 
     void Event () {
@@ -56,10 +51,9 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       } else {
 	// extract the first (oldest) item from the store
 	struct FilterItmS it = itms.front();
-
+	Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
 	// is an item available?
 	try {
-	  Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
 	  // reconnect or do nothing if already connected
 	  ftr->LinkConnect();
 	  // send the ctxaction to the ctx, on error write message but do not stop processing
@@ -71,15 +65,14 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 	    ftr->SendEND(it.token);
 	  }
 	} catch (const exception& e) {
-	  ErrorSet (e);
-	  if (ErrorIsEXIT()) {
-	    ErrorReset();
+	  ftr->ErrorSet (e);
+	  if (ftr->ErrorIsEXIT()) {
+	    ftr->ErrorReset();
 	    return;
 	  } else {
-	    ErrorWrite();
+	    ftr->ErrorWrite();
 	  }
 	}
-
 	// reset the item-storage
 	MqSysFree(it.bdy);
 	itms.pop();
@@ -106,29 +99,40 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void LOGF () {
-      try {
-	MqC *ftr = ServiceGetFilter(0);
-	file = mq_strdup_save(ReadC());
-	if (!strcmp(ftr->LinkGetTargetIdent (),"transFilter")) {
-	  ftr->SendSTART();
-	  ftr->SendC(file);
-	  ftr->SendEND_AND_WAIT("LOGF");
-	}
-      } catch (const exception& e) {
-	ErrorSet (e);
+      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
+      if (!strcmp(ftr->LinkGetTargetIdent (),"transFilter")) {
+	ftr->SendSTART();
+	ftr->SendC(ReadC());
+	ftr->SendEND_AND_WAIT("LOGF");
+      } else {
+	ftr->FH = fopen (ReadC(), "a");
       }
-      return SendRETURN();
+      SendRETURN();
+    }
+
+    void WRIT () {
+      fprintf (FH, "%s\n", ReadC());
+      fflush (FH);
+      SendRETURN();
     }
 
     void EXIT () {
       abort();
     }
 
+    void ServerCleanup() {
+      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter(0));
+      if (ftr->FH != NULL)
+	fclose (ftr->FH);
+    }
+
     void ServerSetup() {
+      MqC *ftr = ServiceGetFilter(0);
       // SERVER: listen on every token (+ALL)
       ServiceCreate ("LOGF", CallbackF(&Filter4::LOGF));
       ServiceCreate ("EXIT", CallbackF(&Filter4::EXIT));
       ServiceCreate ("+ALL", this);
+      ftr->ServiceCreate ("WRIT", CallbackF(&Filter4::WRIT));
     }
 };
 

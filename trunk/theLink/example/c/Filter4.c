@@ -51,13 +51,9 @@ static void ErrorWrite (
 )
 {
   SETUP_ctx;
-  if (ctx->FH != NULL) {
-    fprintf(ctx->FH, "ERROR: %s\n", MqErrorGetText(mqctx));
-    fflush(ctx->FH);
-    MqErrorReset (mqctx);
-  } else {
-    MqErrorPrint (mqctx);
-  }
+  fprintf(ctx->FH, "ERROR: %s\n", MqErrorGetText(mqctx));
+  fflush(ctx->FH);
+  MqErrorReset (mqctx);
 }
 
 static enum MqErrorE FilterEvent (
@@ -203,7 +199,7 @@ FilterCleanup (
   MQ_SIZE i;
   SETUP_ctx;
   struct MqS * ftr;
-  MqServiceGetFilter(mqctx, 0, &ftr);
+  struct FilterCtxS *ftrctx;
 
   for (i=0;i<ctx->size;i++) {
     if (ctx->itm[i] != NULL) {
@@ -212,11 +208,13 @@ FilterCleanup (
     }
   }
   MqSysFree (ctx->itm);
-  if (ftr != NULL) {
-    struct FilterCtxS *ftrctx = (struct FilterCtxS*const)ftr;
-    if (ftrctx->FH != NULL) fclose(ftrctx->FH);
-  }
-  return MQ_OK;
+
+  MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
+  ftrctx = (struct FilterCtxS*const)ftr;
+  if (ftrctx->FH != NULL) fclose(ftrctx->FH);
+
+error:
+  return MqErrorStack(mqctx);
 }
 
 static enum MqErrorE
