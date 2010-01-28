@@ -346,13 +346,17 @@ MqErrorSet (
   MQ_CST const message
 )
 {
-  context->error.num = num;
-  context->error.code = code;
-  context->error.append = MQ_YES;
-  MqBufferSetC(context->error.text, message);
-  if (context->config.master != NULL)
-    pErrorSync(context->config.master, context);
-  return code;
+  if (code == MQ_EXIT && context->setup.ignoreExit == MQ_YES) {
+    return MQ_OK;
+  } else {
+    context->error.num = num;
+    context->error.code = code;
+    context->error.append = MQ_YES;
+    MqBufferSetC(context->error.text, message);
+    if (context->config.master != NULL)
+      pErrorSync(context->config.master, context);
+    return code;
+  }
 }
 
 enum MqErrorE

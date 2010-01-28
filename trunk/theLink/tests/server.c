@@ -1248,18 +1248,12 @@ Ot_PRNT (
   MQ_PTR data
 )
 {
-  FILE *FH=NULL;
-  MQ_CST str, file;
-  MqErrorCheck (MqReadC (mqctx, &file));
-  FH = fopen (file, "a");
-
-  while (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadC (mqctx, &str));
-    fprintf (FH, "%d - %s\n", MqLinkGetCtxIdI(mqctx), str);
-  }
-
+  MQ_CST str;
+  MqErrorCheck (MqSendSTART(mqctx));
+  MqErrorCheck (MqReadC(mqctx, &str));
+  MqErrorCheck (MqSendV(mqctx, "%d - %s", MqLinkGetCtxId(mqctx), str));
+  MqErrorCheck (MqSendEND_AND_WAIT(mqctx, "WRIT", MQ_TIMEOUT_USER));
 error:
-  fclose (FH);
   return MqSendRETURN (mqctx);
 }
 

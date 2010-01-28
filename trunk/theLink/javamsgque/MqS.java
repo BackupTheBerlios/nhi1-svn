@@ -259,6 +259,11 @@ public abstract class MqS {
   public native String  ErrorGetText        ();
   /// \api #MqErrorPrint
   public native void    ErrorPrint          ();
+  /// \api #MqErrorPrint
+  public void ErrorPrint (Throwable ex) {
+    ErrorSet (ex);
+    ErrorPrint ();
+  }
 
 /// \} Mq_Error_Java_API
 

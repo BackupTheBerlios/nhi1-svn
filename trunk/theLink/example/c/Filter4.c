@@ -37,7 +37,7 @@ struct FilterCtxS {
   MQ_INT	    rIdx;
   MQ_INT	    wIdx;
   MQ_INT	    size;
-  MQ_CST	    file;
+  FILE		    *FH;
 };
 
 /*****************************************************************************/
@@ -51,10 +51,9 @@ static void ErrorWrite (
 )
 {
   SETUP_ctx;
-  if (ctx->file != NULL) {
-    FILE *FH=fopen (ctx->file, "a");
-    fprintf(FH, "ERROR: %s\n", MqErrorGetText(mqctx));
-    fclose (FH);
+  if (ctx->FH != NULL) {
+    fprintf(ctx->FH, "ERROR: %s\n", MqErrorGetText(mqctx));
+    fflush(ctx->FH);
     MqErrorReset (mqctx);
   } else {
     MqErrorPrint (mqctx);
@@ -120,18 +119,29 @@ error:
 }
 
 static enum MqErrorE LOGF ( ARGS ) {
-  MQ_CST f;
+  MQ_CST file;
   struct MqS * ftr;
   struct FilterCtxS *ftrctx;
   MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
   ftrctx = (struct FilterCtxS*const)ftr;
-  MqErrorCheck (MqReadC (mqctx, &f));
-  ftrctx->file = mq_strdup_save(f);
+  MqErrorCheck (MqReadC (mqctx, &file));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
     MqErrorCheck (MqSendSTART(ftr));
-    MqErrorCheck (MqSendC(ftr, f));
+    MqErrorCheck (MqSendC(ftr, file));
     MqErrorCheck (MqSendEND_AND_WAIT(ftr, "LOGF", MQ_TIMEOUT_USER));
+  } else {
+    ftrctx->FH = fopen (file, "a");
   }
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE WRIT ( ARGS ) {
+  MQ_CST str;
+  SETUP_ctx;
+  MqErrorCheck (MqReadC (mqctx, &str));
+  fprintf(ctx->FH, "%s\n", str);
+  fflush(ctx->FH);
 error:
   return MqSendRETURN(mqctx);
 }
@@ -204,7 +214,7 @@ FilterCleanup (
   MqSysFree (ctx->itm);
   if (ftr != NULL) {
     struct FilterCtxS *ftrctx = (struct FilterCtxS*const)ftr;
-    MqSysFree (ftrctx->file);
+    if (ftrctx->FH != NULL) fclose(ftrctx->FH);
   }
   return MQ_OK;
 }
@@ -216,6 +226,8 @@ FilterSetup (
 )
 {
   register SETUP_ctx;
+  struct MqS *ftr;
+  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftr));
 
   // init the cache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
@@ -227,6 +239,7 @@ FilterSetup (
   MqErrorCheck (MqServiceCreate (mqctx, "LOGF", LOGF, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "EXIT", EXIT, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (ftr,   "WRIT", WRIT, NULL, NULL));
 
 error:
   return MqErrorStack(mqctx);
