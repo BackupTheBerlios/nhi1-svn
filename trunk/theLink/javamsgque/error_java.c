@@ -155,5 +155,4 @@ error:
   return;
 }
 
-
-
+GetO(ErrorIsEXIT)

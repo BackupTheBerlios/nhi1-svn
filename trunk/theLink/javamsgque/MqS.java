@@ -45,8 +45,6 @@ public abstract class MqS {
   public native void ConfigSetSrvName	      (String val);
   /// \api #MqConfigSetIdent
   public native void ConfigSetIdent	      (String val);
-  /// \api #MqConfigCheckIdent
-  public native boolean ConfigCheckIdent      (String val);
   /// \api #MqConfigSetBuffersize
   public native void ConfigSetBuffersize      (int val);
   /// \api #MqConfigSetDebug
@@ -129,6 +127,9 @@ public abstract class MqS {
   /// \api #MqExit
   public native void Exit ();
 
+  /// \api #MqDLogC
+  public native void DLogC (int level, String text);
+
 /// \} Mq_Context_Java_API
 
 //
@@ -148,8 +149,14 @@ public abstract class MqS {
   /// \api #MqLinkDelete
   public native void LinkDelete ();
 
+  /// \api #MqLinkConnect
+  public native void LinkConnect ();
+
   /// \api #MqLinkGetParent
   public native MqS LinkGetParent ();
+
+  /// \api #MqLinkGetTargetIdent
+  public native String LinkGetTargetIdent ();
 
   /// \api #MqLinkIsParent
   public native boolean	LinkIsParent ();
@@ -243,6 +250,8 @@ public abstract class MqS {
   public native void    ErrorSet            (Throwable ex);
   /// \api #MqErrorSetCONTINUE
   public native void    ErrorSetCONTINUE    ();
+  /// \api #MqErrorIsEXIT
+  public native boolean	ErrorIsEXIT	    ();
 
   /// \api #MqErrorGetNum
   public native int     ErrorGetNum         ();

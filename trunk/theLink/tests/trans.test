@@ -77,9 +77,10 @@ test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
       set TMP	[makeFile "START" tmp.txt]
       Setup $I $B $C $S
+      Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
-      Echo0 $FH_LAST PRNT SendC $TMP SendC HALLO
+      Echo0 $FH_LAST PRNT SendC HALLO
       WaitOnFileToken $TMP HALLO
     } \
     -cleanup	    {
@@ -97,7 +98,7 @@ test trans-3-($I|$B|$C|$S) {send error + valid data} \
     } \
     -body           {
       Echo0 $FH_LAST DUM1 SendC ERR
-      Echo0 $FH_LAST PRNT SendC $TMP SendC HALLO
+      Echo0 $FH_LAST PRNT SendC HALLO
       WaitOnFileToken $TMP HALLO
     } \
     -cleanup	    {
@@ -151,11 +152,12 @@ foreach I [numGet 3] {
       Bg {*}$SRV
       Bg {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC $TMP SendC T1
+      Echo0 $CTX PRNT SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC $TMP SendC T2
-      Echo0 $CTX PRNT SendC $TMP SendC T3
+      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC T3
       $CTX Delete
 
       WaitOnFileToken $TMP T3
@@ -183,12 +185,13 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
       Bg {*}$SRV
       Bg {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC $TMP SendC T1
+      Echo0 $CTX PRNT SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC $TMP SendC T2
+      Echo0 $CTX PRNT SendC T2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC $TMP SendC T3
+      Echo0 $CTX PRNT SendC T3
       Call  $CTX SendEND ERR4
       $CTX Delete
 
@@ -220,12 +223,13 @@ test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
       Bg {*}$FT1
       Bg {*}$FT2
       foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC $TMP SendC T1
+      Echo0 $CTX PRNT SendC T1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC $TMP SendC T2
+      Echo0 $CTX PRNT SendC T2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC $TMP SendC T3
+      Echo0 $CTX PRNT SendC T3
       $CTX Delete
 
       WaitOnFileToken $TMP T3
@@ -256,7 +260,8 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
       Bg {*}$FT1
       Bg {*}$FT2
       foreach {FIRST CTX} [Create $I $CON1] break
-      Echo0 $CTX PRNT SendC $TMP SendC T1
+      Echo0 $CTX LOGF SendC $TMP
+      Echo0 $CTX PRNT SendC T1
       WaitOnFileToken $TMP T1
       Call  $CTX SendEND EXIT
       $CTX Delete

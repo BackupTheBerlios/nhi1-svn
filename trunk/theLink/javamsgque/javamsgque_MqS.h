@@ -41,14 +41,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIdent
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigCheckIdent
- * Signature: (Ljava/lang/String;)Z
- */
-JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ConfigCheckIdent
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigSetBuffersize
  * Signature: (I)V
  */
@@ -289,6 +281,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    DLogC
+ * Signature: (ILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_DLogC
+  (JNIEnv *, jobject, jint, jstring);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    LinkCreate
  * Signature: ([Ljava/lang/String;)V
  */
@@ -313,10 +313,26 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkDelete
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    LinkConnect
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LinkConnect
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    LinkGetParent
  * Signature: ()Ljavamsgque/MqS;
  */
 JNIEXPORT jobject JNICALL Java_javamsgque_MqS_LinkGetParent
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    LinkGetTargetIdent
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_LinkGetTargetIdent
   (JNIEnv *, jobject);
 
 /*
@@ -453,6 +469,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSet
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetCONTINUE
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ErrorIsEXIT
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_ErrorIsEXIT
   (JNIEnv *, jobject);
 
 /*

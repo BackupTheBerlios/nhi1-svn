@@ -179,7 +179,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       } else if (cmd.equals("Ident")) {
 	String old = ConfigGetIdent();
 	ConfigSetIdent (ReadC());
-	boolean check = ConfigCheckIdent (ReadC());
+	boolean check = LinkGetTargetIdent().equals(ReadC());
 	SendSTART();
 	SendC (ConfigGetIdent());
 	SendO (check);
@@ -235,10 +235,9 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 
   class PRNT implements IService {
     public void Service (MqS ctx) throws MqSException {
-      int i=0;
-      while (ReadItemExists()) {
-	System.out.printf("%2d: %s\n", ++i, ReadC());
-      }
+      SendSTART();
+      SendC(LinkGetCtxId() + " - " + ReadC());
+      SendEND_AND_WAIT("WRIT");
       SendRETURN();
     }
   }

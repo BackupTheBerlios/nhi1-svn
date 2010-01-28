@@ -14,6 +14,7 @@ package example;
 import javamsgque.*;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.io.FileWriter;
 
 class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
 
@@ -23,6 +24,7 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
     public byte[] bdy;
   }
   private Queue<FilterItmS> itms = new LinkedList<FilterItmS>();
+  private String File = null;
 
   public MqS Factory() {
     return new Filter4();
@@ -30,6 +32,9 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
 
   public void ServerSetup() throws MqSException {
     ServiceCreate("+ALL", this); 
+    ServiceCreate("LOGF", new LOGF()); 
+    ServiceCreate("EXIT", new EXIT()); 
+    ServiceGetFilter().ServiceCreate("WRIT", new WRIT());
   }
 
   public void Event() throws MqSException {
@@ -37,8 +42,9 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
     if (it == null) {
       ErrorSetCONTINUE();
     } else {
+      MqS ftr = ServiceGetFilter();
       try {
-	MqS ftr = ServiceGetFilter();
+	ftr.LinkConnect();
 	ftr.SendSTART();
 	ftr.SendBDY(it.bdy);
 	if (it.isTransaction) {
@@ -48,11 +54,65 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
 	}
       } catch (Throwable ex) {
 	ErrorSet(ex);
-	ErrorPrint();
-	ErrorReset();
-      } finally {
-	itms.remove();
+	if (ErrorIsEXIT()) {
+	  ErrorReset();
+	  return;
+	} else {
+	  ErrorWrite();
+	}
       }
+      itms.remove();
+    }
+  }
+
+  private void ErrorWrite() {
+    if (File == null) {
+      ErrorPrint();
+    } else {
+      try {
+	FileWriter FH = new FileWriter(File, true);
+	FH.write("ERROR: " + ErrorGetText() + "\n");
+	FH.close();
+      } catch (Throwable ex) {
+	ErrorSet(ex);
+	ErrorPrint();
+      } finally {
+	ErrorReset();
+      }
+    }
+  }
+
+  private class WRIT implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      MqS ftr = ServiceGetFilter();
+      ftr.SendRETURN();
+      try {
+	FileWriter FH = new FileWriter(File, true);
+	FH.write(ftr.ReadC() + "\n");
+	FH.close();
+      } catch (Throwable ex) {
+	ErrorSet(ex);
+	ErrorPrint();
+      }
+    }
+  }
+
+  private class LOGF implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      MqS ftr = ServiceGetFilter();
+      File = ReadC();
+      if (ftr.LinkGetTargetIdent().equals("transFilter")) {
+	ftr.SendSTART();
+	ftr.SendC(File);
+	ftr.SendEND_AND_WAIT("LOGF");
+      }
+      SendRETURN();
+    }
+  }
+
+  private class EXIT implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      System.exit(0);
     }
   }
 
@@ -70,6 +130,8 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
     Filter4 srv = new Filter4();
     try {
       srv.ConfigSetIgnoreExit(true);
+      srv.ConfigSetIdent("transFilter");
+      srv.ConfigSetName("Filter4");
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {
@@ -79,6 +141,4 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IEvent, IService {
     }
   }
 }
-
-
 

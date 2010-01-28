@@ -77,18 +77,6 @@ SetO(ConfigSetIsServer)
 SetO(ConfigSetIsString)
 SetO(ConfigSetIgnoreExit)
 
-JNIEXPORT jboolean JNICALL NS(ConfigCheckIdent) (
-  JNIEnv    *env,
-  jobject   self,
-  jstring   strO
-)
-{
-  MQ_CST str = JO2C_START(env, strO);
-  jboolean check = MqConfigCheckIdent (CONTEXT, str);
-  JO2C_STOP(env, strO, str); 
-  return check;
-}
-
 JNIEXPORT void JNICALL NS(ConfigSetIoTcp) (
   JNIEnv    *env, 
   jobject   self,

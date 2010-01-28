@@ -99,8 +99,16 @@ JNIEXPORT void JNICALL NS(LinkDelete) (
   MqLinkDelete(CONTEXT);
 }
 
+JNIEXPORT void JNICALL NS(LinkConnect) (
+  JNIEnv *	env, 
+  jobject	self 
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck (MqLinkConnect(context));
+error:
+  return;
+}
 
-
-
-
+GetC(LinkGetTargetIdent)
 
