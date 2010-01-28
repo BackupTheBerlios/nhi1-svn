@@ -46,7 +46,7 @@ package main; \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=our $ctx=new MqS()"
-ALIASES		    += "ContextDelete=$ctx->DESTROY()"
+ALIASES		    += "ContextDelete=undef $ctx"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=Net::PerlMsgque::Init(...)"

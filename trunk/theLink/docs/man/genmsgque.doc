@@ -489,7 +489,7 @@ The storage is available as \e class-data-member.
 \if PERL
 The following code is valid for an object reference:
 \code
-$ctx->DictUnset($key)->DESTROY();
+undef $ctx->DictUnset($key);
 \endcode
 \endif
 

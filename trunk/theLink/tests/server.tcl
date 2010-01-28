@@ -337,7 +337,7 @@ proc Ot_SND2 {ctx} {
   $ctx SendSTART
   switch -exact $cmd {
     CREATE {
-      $ctx SlaveWorker $id {*}[$ctx ReadAll] --name cl-$id @ --name sv-$id
+      $ctx SlaveWorker $id {*}[$ctx ReadAll] --name wk-cl-$id @ --name wk-sv-$id
     }
     CREATE2 {
       set c [tclmsgque MqS]

@@ -18,14 +18,47 @@ $| = 1;
 package Filter4;
 use base qw(Net::PerlMsgque::MqS);
 
+  sub ErrorWrite {
+    my $ctx = shift;
+    my $file = $ctx->DictGet("file");
+    if ($file ne "") {
+      open(FH,">>$file");
+      print(FH "ERROR: " . $ctx->ErrorGetText() . "\n");
+      close(FH);
+      $ctx->ErrorReset();
+    } else {
+      $ctx->ErrorPrint();
+    }
+  }
+
+  sub EXIT {
+    exit(0);
+  }
+
+  sub LOGF {
+    my $ctx = shift;
+    my $ftr = $ctx->ServiceGetFilter();
+    my $file = $ctx->ReadC();
+    $ctx->DictSet("file", $file);
+    if ($ftr->LinkGetTargetIdent() eq "transFilter") {
+      $ftr->SendSTART();
+      $ftr->SendC($file);
+      $ftr->SendEND_AND_WAIT("LOGF");
+    }
+    $ctx->SendRETURN();
+  }
+
   sub Event {
     my $ctx = shift;
     my $itms = $ctx->DictGet("itms");
-    my $it = shift(@{$itms});
-    if (defined($it)) {
+    my $it = @{$itms}[0];
+    if (!defined($it)) {
+      $ctx->ErrorSetCONTINUE();
+    } else {
       eval {
 	my $ftr = $ctx->ServiceGetFilter();
 	my ($token,$isTransaction,$bdy) = @{$it};
+	$ftr->LinkConnect();
 	$ftr->SendSTART();
 	$ftr->SendBDY($bdy);
 	if ($isTransaction) {
@@ -36,11 +69,14 @@ use base qw(Net::PerlMsgque::MqS);
       };
       if ($@) {
 	$ctx->ErrorSet($@);
-	$ctx->ErrorPrint();
-	$ctx->ErrorReset();
+	if ($ctx->ErrorIsEXIT) {
+	  $ctx->ErrorReset();
+	  return;
+	} else {
+	  $ctx->ErrorWrite();
+	}
       }
-    } else {
-      $ctx->ErrorSetCONTINUE();
+      shift(@{$itms});
     }
   }
 
@@ -54,13 +90,17 @@ use base qw(Net::PerlMsgque::MqS);
   sub ServerSetup {
     my $ctx = shift;
     $ctx->ServiceCreate("+ALL", \&FilterIn);
+    $ctx->ServiceCreate("LOGF", \&LOGF);
+    $ctx->ServiceCreate("EXIT", \&EXIT);
     $ctx->DictSet("itms", []);
+    $ctx->DictSet("file", "");
   }
 
   sub new {
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetIgnoreExit(1);
+    $ctx->ConfigSetIdent("transFilter");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetEvent(\&Event);
     $ctx->ConfigSetFactory(sub {new Filter4()});

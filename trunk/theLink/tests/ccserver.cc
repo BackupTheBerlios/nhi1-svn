@@ -402,8 +402,8 @@ namespace example {
 	SendSTART();
 	  if (!strcmp(s,"CREATE")) {
 	    char cl[10], sv[10];
-	    sprintf(cl, "cl-%d", id);
-	    sprintf(sv, "sv-%d", id);
+	    sprintf(cl, "wk-cl-%d", id);
+	    sprintf(sv, "wk-sv-%d", id);
 	    vector<MQ_CST> LIST;
 	    while (ReadItemExists())
 	      LIST.push_back(ReadC());

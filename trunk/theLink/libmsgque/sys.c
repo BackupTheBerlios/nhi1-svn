@@ -469,6 +469,11 @@ SysServerFork (
   MqErrorCheck(SysFork(context,idP));
   if ((*idP).val.process == 0) {
     struct MqS * newctx;
+    // prevent the "client-context" from deleting in the new process
+    // reason: perl has a garbage collection, after fork this "context" is in the
+    // new process but with an invalid "event-link" (pIoCreate was done but pIoconnect not)
+    // and "pEventCreate" can not set the "MqContextDelete_LOCK"
+    context->bits.MqContextDelete_LOCK = MQ_YES;
     // create the new context
     MqErrorCheck1(pCallFactory (context, MQ_FACTORY_NEW_FORK, factory, &newctx));
     // add my configuration

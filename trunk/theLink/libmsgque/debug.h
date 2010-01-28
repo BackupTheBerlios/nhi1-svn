@@ -13,13 +13,18 @@
 #ifndef MQ_DEBUG_H
 #define MQ_DEBUG_H
 
+#if defined(_MSC_VER)
+// need for "getpid"
+#  include <process.h>
+#endif
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              msgque/types                                 */
 /*                                                                           */
 /*****************************************************************************/
 
-#define MX(s) fprintf(stderr, "%s(%s:%d) -> %s \n", __func__, __FILE__, __LINE__, #s);fflush(stderr);
+#define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
 
 #define M0 MX(00000000000000000)
 #define M1 MX(11111111111111111)
@@ -57,7 +62,7 @@
 #define MEI(i) MXI(EEEEEEEEEEEEEEEEE,i)
 #define MFI(i) MXI(FFFFFFFFFFFFFFFFF,i)
 
-#define IX(x,s) MqDLogX(x,__func__,0,"(%s:%d) -> " #x "<" #s ">\n", __FILE__, __LINE__);
+#define IX(x,s) MqDLogX(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
 
 #define I0 IX(MQ_CONTEXT_S,0000000000000000)
 #define I1 IX(MQ_CONTEXT_S,1111111111111111)

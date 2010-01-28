@@ -90,7 +90,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+*[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 
 test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
@@ -99,7 +99,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+*[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
 
 test slave-3-($I|$B|$C|$S) {SendEND with ok} \
@@ -197,7 +197,7 @@ test slave-6-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
-*[cC]> (cl-0) \[callback-error] <Num|1>*
+*[cC]> (wk-cl-0) \[callback-error] <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
 
 test slave-7-($I|$B|$C|$S) {check ctxId} \
@@ -312,7 +312,7 @@ C> (cl-err-1) \[*] can not start server 'DUMMY'*}
 	  -cleanup	  { Cleanup } \
 	  -match	  glob \
 	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|227>*
-C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
     }; # SRV_LST
    }; # COM_LST

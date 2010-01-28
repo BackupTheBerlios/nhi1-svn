@@ -36,6 +36,8 @@
 
 #define printID(x) MqDLogX(x,__func__,0,"PERL_GET_CONTEXT<%p> context->threadData<%p>\n", PERL_GET_CONTEXT, x?x->threadData:NULL);
 
+#define MQ_CONTEXT_S context
+
 typedef MQ_CST MQ_NST;
 
 struct MqSException {
@@ -302,11 +304,11 @@ DESTROY(SV *sv)
     // well "perl_clone" clone everything including the "perl" objects
     // from the orignal interpreter. These objects get an "DESTROY" if
     // "perl_clone" interpreter is destroyed with "perl_destruct"
-    // -> this is not good because the accourding struct MqS* is freed even
-    //    if the object in the original interpreter is still avtive
+    // -> this is not good because the according struct MqS* is freed even
+    //    if the object in the original interpreter is still active
     // -> do NOT delete the struct MqS* if the object was !not! created in
     //	  current interpreter
-    if (context != NULL && PERL_GET_CONTEXT == (PerlInterpreter*)context->threadData) {
+    if (context != NULL && SvREFCNT(sv) == 1 && PERL_GET_CONTEXT == (PerlInterpreter*)context->threadData) {
       HV* hash = PERL_DATA;
       // the "Factory" is useless -> delete
       context->setup.Factory.Delete.fCall = NULL;
@@ -326,6 +328,9 @@ MqErrorSet(MqS* context, SV* err)
 
 void
 MqErrorSetCONTINUE(MqS* context)
+
+bool
+MqErrorIsEXIT(MqS* context)
 
 void
 MqErrorPrint(MqS* context)
@@ -390,6 +395,9 @@ LinkGetParent(MqS* context)
     ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
     XSRETURN(1);
 
+MQ_CST
+MqLinkGetTargetIdent (MqS* context)
+
 bool
 MqLinkIsConnected (MqS* context)
 
@@ -433,6 +441,11 @@ void
 MqLinkDelete(MqS *context)
 
 void
+MqLinkConnect (MqS* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqLinkConnect (context));
+
+void
 MqExit(MqS * context)
 
 void
@@ -470,9 +483,6 @@ MqConfigSetIdent (MqS* context, MQ_NST ident)
 
 MQ_NST
 MqConfigGetIdent (MqS* context)
-
-bool
-MqConfigCheckIdent (MqS* context, MQ_NST ident)
 
 void
 MqConfigSetIoUds (MqS* context, MQ_NST udsfile)

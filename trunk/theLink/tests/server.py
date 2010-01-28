@@ -568,7 +568,7 @@ class Server(MqS):
       args = []
       while self.ReadItemExists() :
         args.append(self.ReadC())
-      args.extend(["--name", "cl-" + str(id), "@", "--name", "sv-" + str(id)])
+      args.extend(["--name", "wk-cl-" + str(id), "@", "--name", "wk-sv-" + str(id)])
       self.SlaveWorker(id, args)
     elif s == "CREATE2" :
       slv = Client()

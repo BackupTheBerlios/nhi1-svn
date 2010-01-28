@@ -211,38 +211,38 @@ pEventAdd (
 )
 {
   const MQ_SOCK sock = *sockP;
-  register struct MqEventS * event = context->link.io->event;
 
   // filter to check if work is available
-  if (	    
-        !context ||              // no msgque no data
-        MQ_IS_CHILD(context)     // we only add PARENT to the event-list
-     ) return;
+  if (context == NULL || MQ_IS_CHILD(context)) {
+    return;
+  } else {
+    register struct MqEventS * event = context->link.io->event;
 
-  // check if enough space is available
-  if (event->DataLCur >= event->DataLNum) {
-    event->DataLNum += 10;
-    event->DataL = (struct MqS **) MqSysRealloc (MQ_ERROR_PANIC, event->DataL, 
-        sizeof (*event->DataL) * event->DataLNum);
-  }
-  // ATTENTION: we don't check on double insert !!
-  event->DataL[event->DataLCur] = context;
+    // check if enough space is available
+    if (event->DataLCur >= event->DataLNum) {
+      event->DataLNum += 10;
+      event->DataL = (struct MqS **) MqSysRealloc (MQ_ERROR_PANIC, event->DataL, 
+	  sizeof (*event->DataL) * event->DataLNum);
+    }
+    // ATTENTION: we don't check on double insert !!
+    event->DataL[event->DataLCur] = context;
 
-  if (sock > event->fdmax)
-    event->fdmax = sock;
+    if (sock > event->fdmax)
+      event->fdmax = sock;
 
-  if (sock >= 0) {
-    FD_SET (sock, &event->fdset);
+    if (sock >= 0) {
+      FD_SET (sock, &event->fdset);
 
-    // add the link between "io" and the current socket handle
-    context->link.io->sockP = sockP;
-  }
+      // add the link between "io" and the current socket handle
+      context->link.io->sockP = sockP;
+    }
 
-  event->DataLCur++;
+    event->DataLCur++;
 
-  MqDLogV(context,4,"sock<%i> DataLCur<%i>\n", sock, event->DataLCur);
+    MqDLogV(context,4,"event<%p> sock<%i> DataLCur<%i>\n", event, sock, event->DataLCur);
 
 //pEventLog(msgque, event, __func__);
+  }
 }
 
 /// brief delete all events

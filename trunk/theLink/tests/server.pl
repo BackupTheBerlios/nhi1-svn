@@ -519,7 +519,7 @@ use base qw(Net::PerlMsgque::MqS);
 	while ($ctx->ReadItemExists()) {
 	  push (@LIST, $ctx->ReadC());
 	}
-	push (@LIST, "--name", "cl-" . $id , "@", "--name", "sv-" . $id);
+	push (@LIST, "--name", "wk-cl-" . $id , "@", "--name", "wk-sv-" . $id);
 	$ctx->SlaveWorker($id, @LIST);
       } 
       case "CREATE2" {
@@ -626,7 +626,7 @@ use base qw(Net::PerlMsgque::MqS);
       case "Ident" {
 	my $old = $ctx->ConfigGetSrvName();
 	$ctx->ConfigSetSrvName ($ctx->ReadC());
-	my $check = $ctx->ConfigCheckIdent ($ctx->ReadC());
+	my $check = ($ctx->LinkGetTargetIdent eq $ctx->ReadC());
 	$ctx->SendSTART();
 	$ctx->SendC ($ctx->ConfigGetSrvName());
 	$ctx->SendO ($check);
@@ -687,10 +687,11 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub PRNT {
     my $ctx = shift;
-    my $i=0;
+    open(FH, ">>" . $ctx->ReadC());
     while ($ctx->ReadItemExists()) {
-      printf("%2d: %s\n", ++$i, $ctx->ReadC());
+      print(FH $ctx->LinkGetCtxId() . " - " . $ctx->ReadC() . "\n");
     }
+    close(FH);
     $ctx->SendRETURN();
   }
 
@@ -701,7 +702,7 @@ use base qw(Net::PerlMsgque::MqS);
     for ($i=0;$i<3;$i++) {
       if ($ctx->DictExists($i)) {
 	#$ctx->Log("ServerCleanup", 0, ">>>>> cl-$i=" . $ctx->DictGet ($i) . "\n");
-	$ctx->DictUnset($i)->DESTROY();
+	undef $ctx->DictUnset($i);
 	#$ctx->Log("ServerCleanup", 0, "<<<<<\n");
       }
     }

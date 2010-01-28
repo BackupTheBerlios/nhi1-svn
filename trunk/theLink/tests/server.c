@@ -852,10 +852,10 @@ CreateWorker (
   struct MqBufferLS * argv = MqBufferLCreate(5+MqReadGetNumItems(master));
   MqErrorCheck (MqReadL (master, &argv));
   MqBufferLAppendC(argv, "--name");
-  MqBufferLAppendU(argv, MqBufferSetV(MqBufferCreate(MQ_ERROR_PANIC,20), "cl-%d", master_id));
+  MqBufferLAppendU(argv, MqBufferSetV(MqBufferCreate(MQ_ERROR_PANIC,20), "wk-cl-%d", master_id));
   MqBufferLAppendC(argv, "@");
   MqBufferLAppendC(argv, "--name");
-  MqBufferLAppendU(argv, MqBufferSetV(MqBufferCreate(MQ_ERROR_PANIC,20), "sv-%d", master_id));
+  MqBufferLAppendU(argv, MqBufferSetV(MqBufferCreate(MQ_ERROR_PANIC,20), "wk-sv-%d", master_id));
   MqSlaveWorker (master, master_id, &argv);
 error:
   MqBufferLDelete(&argv);
