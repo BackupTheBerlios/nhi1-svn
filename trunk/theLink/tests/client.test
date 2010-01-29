@@ -166,11 +166,13 @@ test client-6c {client/server debug -4- message} \
     -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 C> (client:*) \[*] \[4-0-*-pEventCreate]: TSD-Id<*>, Thread-Id<*>
 C> (client:*) \[*] \[4-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[1]<*>
+C> (client:*) \[*] \[4-0-*-MqLinkConnect]: START
 C> (client:*) \[*] \[4-0-*-pIoStartServer]: finish start server 'server' as 'spawn' with ID '*'
-C> (client:*) \[*] \[4-0-*-pEventAdd]: sock<*> DataLCur<1>
+C> (client:*) \[*] \[4-0-*-pEventAdd]: event<*> sock<*> DataLCur<1>
 C> (client:*) \[*] \[4-0-*-MqLinkConnect]: send token<_IAA>
 C> (client:*) \[*] \[4-0-*-sWaitForToken]: wait for token<_PEO>
 C> (client:*) \[*] \[4-0-*-sWaitForToken]: got token<_PEO>
+C> (client:*) \[*] \[4-0-*-MqLinkConnect]: END
 C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<4>, endian<0>
 *
 C> (client:*) \[*] \[3-0-*-MqExit]: EXIT
@@ -178,6 +180,7 @@ C> (client:*) \[*] \[4-0-*-pMqShutdown]: START shutdown
 C> (client:*) \[*] \[4-0-*-pMqShutdown]: send token<_SHD>
 C> (client:*) \[*] \[4-0-*-pEventShutdown]: sock<*> DataLCur<0>
 C> (client:*) \[*] \[4-0-*-pMqShutdown]: END shutdown
+C> (client:*) \[*] \[4-0-*-pEventShutdown]: sock<-1> DataLCur<0>
 C> (client:*) \[*] \[2-0-*-MqLinkDelete]: DELETE }
 
 test client-6d {client/server debug -2- message with long names} \

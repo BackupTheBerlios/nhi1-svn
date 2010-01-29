@@ -247,9 +247,9 @@ namespace example {
 	  } else if (!strcmp(s,"START5")) {
 	    // the 'master' have to be a 'parent' without 'child' objects
 	    // 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	    char cl[10], sv[10];
-	    sprintf(cl,"cl-%d",id);
-	    sprintf(sv,"sv-%d",id);
+	    char cl[13], sv[13];
+	    sprintf(cl,"wk-cl-%d",id);
+	    sprintf(sv,"wk-sv-%d",id);
 	    SlaveWorkerV(id, "--name", cl, "--srvname", sv, "--thread", NULL);
 	  } else if (!strcmp(s,"STOP")) {
 	    cl[id]->LinkDelete();

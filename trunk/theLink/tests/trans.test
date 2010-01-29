@@ -281,6 +281,76 @@ $J - T1"
  }; # Master/Child  
 unset -nocomplain I B C S
 
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [numGet 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST pipe] {
+
+  test trans-X5-($I|$B|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+    } \
+    -body           {
+      foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter4.$S] @ {*}[getServer $S]]] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC T3
+      $CTX Delete
+
+      WaitOnFileToken $TMP T3
+    } \
+    -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1
+$J - T2
+$J - T3"
+
+  test trans-X6-($I|$B|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[makeFile "START" tmp.txt]
+    } \
+    -body           {
+      foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter4.$S] @ {*}[getServer $S]]] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC T1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC T2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC T3
+      $CTX Delete
+
+      WaitOnFileToken $TMP T3
+    } \
+    -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
+      Cleanup
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1
+$J - T2
+$J - T3"
+
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
 ##
 ## -----------------------------------------------------------------------
 ## finish

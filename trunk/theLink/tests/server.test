@@ -56,6 +56,8 @@ test server-1-($I|$B|$C|$S) {create/delete multiple parent using tcp} \
     -setup	    {
       Setup $I $B $C $S
       set FX [tclmsgque MqS]
+      $FX ConfigSetDebug $env(TS_DEBUG)
+      $FX ConfigSetTimeout $env(TS_TIMEOUT)
     } \
     -body           {
       $FX LinkCreate --tcp --port $PORT

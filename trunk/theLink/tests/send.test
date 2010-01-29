@@ -312,7 +312,7 @@ test send-X9-($I|$B|$C|$S) {invalid master} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
-C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
 test send-X10-($I|$B|$C|$S) {invalid master} \
     -constraints    {child has_thread} \
@@ -328,7 +328,7 @@ test send-X10-($I|$B|$C|$S) {invalid master} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
-C> (cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
 
 test send-X11-($I|$B|$C|$S) {master_id to big} \
     -constraints    {parent has_thread} \

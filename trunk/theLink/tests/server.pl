@@ -464,7 +464,7 @@ use base qw(Net::PerlMsgque::MqS);
 	case "START5" {
 	  # the 'master' have to be a 'parent' without 'child' objects
 	  # 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	  $ctx->SlaveWorker($id, "--name", "cl-$id", "--srvname", "sv-$id", "--pipe");
+	  $ctx->SlaveWorker($id, "--name", "wk-cl-$id", "--srvname", "wk-sv-$id", "--pipe");
 	}
 	case "STOP" {
 	  $cl->LinkDelete();

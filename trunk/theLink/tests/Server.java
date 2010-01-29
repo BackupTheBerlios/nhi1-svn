@@ -306,7 +306,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	} else if (s.equals("START5")) {
 	  // the 'master' have to be a 'parent' without 'child' objects
 	  // 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	  SlaveWorker(id, "--name", "cl-" + id, "--srvname", "sv-" + id, "--thread");
+	  SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id, "--thread");
 	} else if (s.equals("STOP")) {
 	  cl[id].LinkDelete();
 	} else if (s.equals("SEND")) {

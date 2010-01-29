@@ -340,7 +340,7 @@ namespace example {
         } else if (s == "START5") {
           // the 'master' have to be a 'parent' without 'child' objects
 	  // 'slave' identifer out of range (0 <= 10000000 <= 1023)
-          SlaveWorker(id, "--name", "cl-" + id, "--srvname", "sv-" + id, "--thread");
+          SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id, "--thread");
         } else if (s == "STOP") {
           cl[id].LinkDelete();
         } else if (s == "SEND") {
@@ -391,10 +391,10 @@ namespace example {
           while (ReadItemExists())
 	    LIST.Add(ReadC());
 	  LIST.Add("--name");
-	  LIST.Add("cl-" + id);
+	  LIST.Add("wk-cl-" + id);
 	  LIST.Add("@");
 	  LIST.Add("--name");
-	  LIST.Add("sv-" + id);
+	  LIST.Add("wk-sv-" + id);
           SlaveWorker(id, LIST.ToArray());
         } else if (s == "CREATE2") {
 	  Client c = new Client();

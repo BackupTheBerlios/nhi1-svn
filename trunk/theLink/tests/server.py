@@ -522,7 +522,7 @@ class Server(MqS):
     elif s == "START4" :
       self.cl[id].SlaveWorker(0);
     elif s == "START5" :
-      self.SlaveWorker(id, ["--name", "cl-" + str(id), "--srvname", "sv-" + str(id), "--fork"]);
+      self.SlaveWorker(id, ["--name", "wk-cl-" + str(id), "--srvname", "wk-sv-" + str(id), "--fork"]);
     elif s == "STOP" :
       #print("STOP -> self = ", self, ", cl = ", self.cl[id], ", type = ", type(self.cl[id]))
       self.cl[id].LinkDelete();
