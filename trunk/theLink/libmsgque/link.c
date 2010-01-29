@@ -99,7 +99,7 @@ sHelp (void)
 static enum MqErrorE
 sWaitForToken (
   struct MqS * const context,
-  MQ_TIME_T const timeout,
+  MQ_TIME_T timeout,
   MQ_CST const str
 )
 {
@@ -108,6 +108,11 @@ sWaitForToken (
   // 1. check if the token is already available
   if (pTokenCheck(context->link.srvT,str)) 
     return MQ_OK;
+
+  // set the default for timeout
+  if (timeout < 0) {
+    timeout = (timeout == MQ_TIMEOUT_USER ? pIoGetTimeout(context->link.io) : MQ_TIMEOUT);
+  }
 
   // 2. wait for the token
   do {

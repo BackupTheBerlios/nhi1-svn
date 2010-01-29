@@ -10,11 +10,12 @@
  *              please contact AUTHORS for additional information
  */
 using System;
-using csmsgque;
+using System.IO;
 using System.Collections.Generic;
+using csmsgque;
 
 namespace example {
-  sealed class Filter4 : MqS, IFactory, IServerSetup, IEvent, IService {
+  sealed class Filter4 : MqS, IFactory, IServerSetup, IServerCleanup, IEvent, IService {
 
     struct FilterItmS {
       public string token;
@@ -22,6 +23,7 @@ namespace example {
       public byte[] bdy;
     }
     Queue<FilterItmS> itms = new Queue<FilterItmS>();
+    StreamWriter FH = null;
 
     MqS IFactory.Factory () {
       return new Filter4();
@@ -37,10 +39,13 @@ namespace example {
     }
 
     void IEvent.Event () {
-      if (itms.Count > 0) {
+      if (itms.Count <= 0) {
+	ErrorSetCONTINUE();
+      } else {
 	FilterItmS it = itms.Peek();
+	Filter4 ftr = (Filter4) ServiceGetFilter();
 	try  {
-	  MqS ftr = ServiceGetFilter();
+	  ftr.LinkConnect();
 	  ftr.SendSTART();
 	  ftr.SendBDY(it.bdy);
 	  if (it.isTransaction) {
@@ -49,25 +54,66 @@ namespace example {
 	    ftr.SendEND(it.token);
 	  }
 	} catch (Exception ex) {
-	  ErrorSet (ex);
-	  ErrorPrint();
-	  ErrorReset();
-	} finally {
-	  itms.Dequeue();
+	  ftr.ErrorSet (ex);
+	  if (ftr.ErrorIsEXIT()) {
+	    ftr.ErrorReset();
+	    return;
+	  } else {
+	    ftr.ErrorWrite();
+	  }
 	}
-      } else {
-	ErrorSetCONTINUE();
+	itms.Dequeue();
       }
     }
 
+    void LOGF () {
+      Filter4 ftr = (Filter4) ServiceGetFilter();
+      if (ftr.LinkGetTargetIdent() == "transFilter") {
+        ftr.SendSTART();
+        ftr.SendC(ReadC());
+        ftr.SendEND_AND_WAIT("LOGF");
+      } else {
+	ftr.FH = File.AppendText(ReadC());
+      }
+      SendRETURN();
+    }
+
+    void EXIT () {
+      Environment.Exit (0);
+    }
+
+    void WRIT () {
+      FH.WriteLine(ReadC());
+      FH.Flush();
+      SendRETURN();
+    }
+
+    void ErrorWrite () {
+      FH.WriteLine("ERROR: " + ErrorGetText());
+      FH.Flush();
+      ErrorReset();
+    }
+
+    void IServerCleanup.ServerCleanup() {
+      Filter4 ftr = (Filter4)ServiceGetFilter();
+      if (ftr.FH != null)
+	ftr.FH.Close();
+    }
+
     void IServerSetup.ServerSetup() {
+      Filter4 ftr = (Filter4) ServiceGetFilter();
+      ServiceCreate("LOGF", LOGF);
+      ServiceCreate("EXIT", EXIT);
       ServiceCreate("+ALL", this);
+      ftr.ServiceCreate("WRIT", ftr.WRIT);
     }
 
     public static void Main(string[] argv) {
       Filter4 srv = new Filter4();
       try {
 	srv.ConfigSetIgnoreExit(true);
+	srv.ConfigSetIdent("transFilter");
+	srv.ConfigSetName("Filter4");
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {

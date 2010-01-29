@@ -52,7 +52,18 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkDelete")]
     private static extern void MqLinkDelete([In]IntPtr context);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkConnect")]
+    private static extern MqErrorE MqLinkConnect([In]IntPtr context);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkGetTargetIdent")]
+    private static extern IntPtr MqLinkGetTargetIdent([In]IntPtr context);
+
   // PUBLIC
+
+    /// \api #MqLinkGetTargetIdent
+    public string LinkGetTargetIdent()	    { 
+      return Marshal.PtrToStringAnsi(MqLinkGetTargetIdent(context)); 
+    }
 
     /// \api #LinkIsParent
     public bool	    LinkIsParent()	    { 
@@ -112,6 +123,11 @@ namespace csmsgque {
     /// \api #LinkDelete
     public void LinkDelete() {
       MqLinkDelete (context);
+    }
+
+    /// \api #LinkConnect
+    public void LinkConnect() {
+      ErrorMqToCsWithCheck (MqLinkConnect (context));
     }
 
 /// \} Mq_Link_Cs_API

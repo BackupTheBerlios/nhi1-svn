@@ -91,6 +91,8 @@ namespace csmsgque {
     private static extern void MqErrorSet(IntPtr context, int num, MqErrorE code, string message);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSetCONTINUE")]
     private static extern void MqErrorSetCONTINUE(IntPtr context);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorIsEXIT")]
+    private static extern bool MqErrorIsEXIT(IntPtr context);
 
     private void ErrorMqToCsWithCheck(MqErrorE err) {
       if (err <= MqErrorE.MQ_CONTINUE) return;
@@ -111,6 +113,11 @@ namespace csmsgque {
     /// \api #MqErrorSetCONTINUE
     public void ErrorSetCONTINUE() {
       MqErrorSetCONTINUE(context);
+    }
+
+    /// \api #MqErrorIsEXIT
+    public bool ErrorIsEXIT() {
+      return MqErrorIsEXIT(context);
     }
 
     /// throw an #csmsgque.MqSException with the data from #MqErrorS

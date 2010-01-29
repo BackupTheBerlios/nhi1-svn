@@ -79,9 +79,6 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIdent")]
     private static extern void MqConfigSetIdent([In]IntPtr context, [In]string data);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigCheckIdent")]
-    private static extern bool MqConfigCheckIdent([In]IntPtr context, [In]string data);
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetBuffersize")]
     private static extern void MqConfigSetBuffersize([In]IntPtr context, [In]int data);
 
@@ -158,8 +155,6 @@ namespace csmsgque {
     public void   ConfigSetSrvName	(string data) { MqConfigSetSrvName	(context, data); }
     /// \api #MqConfigSetIdent
     public void   ConfigSetIdent	(string data) { MqConfigSetIdent	(context, data); }
-    /// \api #MqConfigCheckIdent
-    public bool   ConfigCheckIdent	(string data) { return MqConfigCheckIdent (context, data); }
     /// \api #MqConfigSetBuffersize
     public void	  ConfigSetBuffersize	(int data)    { MqConfigSetBuffersize	(context, data); }
     /// \api #MqConfigSetDebug

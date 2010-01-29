@@ -143,10 +143,9 @@ namespace example {
   // ########################################################################
 
     private void PRNT () {
-      int i=0;
-      while (ReadItemExists()) {
-	Console.WriteLine("{0,2}: " + ReadC(), ++i);
-      }
+      SendSTART();
+      SendC(LinkGetCtxId() + " - " + ReadC());
+      SendEND_AND_WAIT("WRIT");
       SendRETURN();
     }
 
@@ -183,7 +182,7 @@ namespace example {
       } else if (cmd == "Ident") {
 	string old = ConfigGetIdent();
 	ConfigSetIdent (ReadC());
-	bool check = ConfigCheckIdent (ReadC());
+	bool check = LinkGetTargetIdent() == ReadC();
 	SendSTART();
 	SendC (ConfigGetIdent());
 	SendO (check);

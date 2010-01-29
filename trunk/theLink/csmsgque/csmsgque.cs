@@ -146,6 +146,17 @@ namespace csmsgque {
       MqContextDelete (ref GetSelf(context).context);
       GCHandle.FromIntPtr(self).Free();
     }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqDLogX")]
+    private static extern void MqDLogX([In]IntPtr context, [In]string prefix, [In]int level, [In]string fmt, [In]string val );
+
+    public void DLogC (int level, string val) {
+      System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
+      MqDLogX (context, sf.GetMethod().Name, level, "%s", val);
+    }
+
+
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
 
