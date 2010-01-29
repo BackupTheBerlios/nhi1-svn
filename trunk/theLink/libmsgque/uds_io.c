@@ -108,7 +108,6 @@ UdsDelete (
   if (unlikely(!uds)) return MQ_OK;   // nothing to do
 
   GenericDelete (&uds->generic);
-  MqBufferDelete (&uds->config->file);
   MqSysFree (*udsP);
 
   return MQ_OK;

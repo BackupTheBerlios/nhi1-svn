@@ -1322,7 +1322,8 @@ proc WaitEOF {fh} {
   }
 }
 
-proc WaitOnFileToken {file token} {
+proc WaitOnFileToken {file token {timeout 10}} {
+  set end [expr {[clock seconds] + $timeout}]
   while {true} {
     set RET [list]
     set fh [open $file r]
@@ -1330,6 +1331,10 @@ proc WaitOnFileToken {file token} {
       gets $fh line
       lappend RET $line
       if {[string first $token $line] != -1} {
+	return [join $RET \n]
+      } 
+      if {[clock seconds] >= $end} {
+	lappend RET "timeout ($timeout sec)"
 	return [join $RET \n]
       }
     }

@@ -102,6 +102,12 @@ MqContextFree (
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);
     MqSysFree(context->setup.ident);
+
+    MqBufferDelete (&context->config.io.tcp.host);
+    MqBufferDelete (&context->config.io.tcp.port);
+    MqBufferDelete (&context->config.io.tcp.myhost);
+    MqBufferDelete (&context->config.io.tcp.myport);
+    MqBufferDelete (&context->config.io.uds.file);
   }
 }
 

@@ -163,11 +163,6 @@ TcpDelete (
   SysFreeAddrInfo(&tcp->remoteaddr);
   SysFreeAddrInfo(&tcp->localaddr);
 
-  MqBufferDelete (&tcp->config->host);
-  MqBufferDelete (&tcp->config->port);
-  MqBufferDelete (&tcp->config->myhost);
-  MqBufferDelete (&tcp->config->myport);
-
   MqSysFree (*tcpP);
 }
 
