@@ -780,12 +780,12 @@ MqLinkCreate (
     MqErrorCheck (pSlaveCreate (context, &context->link.slave));
 
     // context specific initialization
-    if (MQ_IS_CLIENT (context)) {
+    if (MQ_IS_CLIENT (context)) {   // CLIENT
 
       // client "connect" to the "server"
       MqErrorCheck (MqLinkConnect (context));
 
-    } else {
+    } else {			    // SERVER
 
       // create the communication
       MqErrorCheck (pIoCreate   (context, &context->link.io));

@@ -405,8 +405,7 @@ rescan:
     case MQ_START_SERVER_AS_PIPE: {
 	start_as_pipe = 1;
 	// alfa is owned by this proc
-	alfa1 = context->link.alfa;
-	context->link.alfa = NULL;
+	alfa1 = MqBufferLDup(context->link.alfa);
 //printLC("MQ_START_SERVER_AS_PIPE:")
 	// case 2: this is used if the function is called from MqLinkCreate. The
 	// context->alfa argument has the startup arguments of the MQ_IO_PIPE server.
@@ -505,8 +504,9 @@ rescan:
 #if defined(MQ_HAS_THREAD)
     case MQ_START_SERVER_AS_THREAD: {
 //printLC("MQ_START_SERVER_AS_THREAD:")
-	if (alfa2 == NULL)
+	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
+
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
 	  factory = context->setup.Factory;
@@ -535,14 +535,17 @@ rescan:
 
 	// fill arg with system-arguments
 	sIoFillArgvU(io,*sockP,alfa1,"--thread");
-	// start the server
 
+	// special in "thread" mode, the server socket now belongs to the "new-thread"
+	// and not the "current-thread"
+	*sockP = sockUndef;
 /*
 I2
 MqBufferLLogS(context, alfa1, "alfa1");
 MqBufferLLogS(context, alfa2, "alfa2");
 */
 
+	// start the server
 	MqErrorCheck (SysServerThread (context, factory, &alfa1, &alfa2, name, thread_status, idP));
       }
       break;
@@ -550,7 +553,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
 #if defined(HAVE_FORK)
     case MQ_START_SERVER_AS_FORK: {
 //printLC("MQ_START_SERVER_AS_FORK:")
-	if (alfa2 == NULL)
+	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
@@ -591,7 +594,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
     case MQ_START_SERVER_AS_SPAWN: {
 //printLC("MQ_START_SERVER_AS_SPAWN:")
 	char **argV, **arg;
-	if (alfa2 == NULL)
+	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
 	// add 20 item's as additional space
 	argV = arg = (char **) MqSysMalloc (context, sizeof(*alfa1) * (
@@ -691,10 +694,10 @@ for (i=0; *xarg != NULL; xarg++, i++) {
   }
 
   // cleanup alfa1/2
+error:
   MqBufferLDelete (&alfa1);
   MqBufferLDelete (&alfa2);
 
-error:
   return MqErrorStack (context);
 }
 

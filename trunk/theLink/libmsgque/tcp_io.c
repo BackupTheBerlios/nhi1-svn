@@ -186,8 +186,6 @@ TcpConnect (
   register struct TcpS * const tcp
 ) {
   struct MqS * const context = MQ_CONTEXT_S;
-  MQ_CST host;
-  MQ_INT port;
   struct sockaddr_in  addr;
   socklen_t	      addrLen;
 
@@ -205,12 +203,12 @@ TcpConnect (
   MqErrorCheck (GenericGetSockName (tcp->generiC, (struct sockaddr*) &addr, &addrLen));
 
   // finaly get tcp->config->host and tcp->config->port
-  MqErrorCheck(SysGetTcpInfo(context,&addr,&host,&port));
-  if (context->config.io.tcp.myhost == NULL) context->config.io.tcp.myhost = MqBufferCreate(context,0);
-  if (context->config.io.tcp.myport == NULL) context->config.io.tcp.myport = MqBufferCreate(context,0);
-  MqBufferSetC(context->config.io.tcp.myhost,host);
-  MqBufferSetI(context->config.io.tcp.myport,port);
-  MqDLogV(context, 4, "local socket host<%s> and port<%u>\n", host, port);
+  if (unlikely(context->config.debug >= 4)) {
+    MQ_CST host;
+    MQ_INT port;
+    MqErrorCheck(SysGetTcpInfo(context,&addr,&host,&port));
+    MqDLogX(context, __func__, 4, "local socket host<%s> and port<%u>\n", host, port);
+  }
 
 error:
   return MqErrorStack (context);

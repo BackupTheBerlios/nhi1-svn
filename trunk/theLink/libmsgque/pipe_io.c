@@ -91,7 +91,8 @@ void PipeDelete (
 {
   struct PipeS * pipe = *pipeP;
   if (unlikely(pipe == NULL)) return;
-  SysCloseSocket (MQ_CONTEXT_S, __func__, MQ_YES, (MQ_IS_CLIENT(MQ_CONTEXT_S) ?  &pipe->config->socket[0] : &pipe->config->socket[1]));
+  SysCloseSocket (MQ_CONTEXT_S, __func__, MQ_YES, &pipe->config->socket[0]);
+  SysCloseSocket (MQ_CONTEXT_S, __func__, MQ_YES, &pipe->config->socket[1]);
   MqSysFree(*pipeP);
 }
 

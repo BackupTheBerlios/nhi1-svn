@@ -135,6 +135,7 @@ MqBufferLDup (
     *retP = MqBufferDup(*inP);
   }  
   ret->cursize = in->cursize;
+  ret->cur = ret->data + ret->cursize;
   return ret;
 }
 
@@ -772,7 +773,7 @@ MqBufferLLogS (
     MqDLogX (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
       (void*) bufL->data, (void*) bufL->cur, relsize, bufL->cursize, (relsize == bufL->cursize ? "OK" : "CUR-ERROR"));
     for (i = 0; i < bufL->cursize; i++) {
-      MqBufferSetV(buf, "# %i ", i);
+      MqBufferSetV(buf, "# %i (%p)", i, bufL->data[i]);
       MqBufferLogS (context, bufL->data[i], buf->cur.C);
     }
     MqDLogX (context, func, 0, "<<<< MqBufferLS <<<<\n");

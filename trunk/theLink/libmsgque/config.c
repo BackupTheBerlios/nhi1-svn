@@ -159,6 +159,11 @@ MqConfigReset (
 {
   MqSysFree(context->config.name);
   MqSysFree(context->config.srvname);
+  MqBufferDelete (&context->config.io.tcp.host);
+  MqBufferDelete (&context->config.io.tcp.port);
+  MqBufferDelete (&context->config.io.tcp.myhost);
+  MqBufferDelete (&context->config.io.tcp.myport);
+  MqBufferDelete (&context->config.io.uds.file);
   memset (&context->config, 0, sizeof(context->config));
   pConfigInit (context);
   context->statusIs = MQ_STATUS_IS_INITIAL;
@@ -173,6 +178,11 @@ MqConfigDup (
   if (from == NULL) return;
   MqSysFree(to->config.name);
   MqSysFree(to->config.srvname);
+  MqBufferDelete (&to->config.io.tcp.host);
+  MqBufferDelete (&to->config.io.tcp.port);
+  MqBufferDelete (&to->config.io.tcp.myhost);
+  MqBufferDelete (&to->config.io.tcp.myport);
+  MqBufferDelete (&to->config.io.uds.file);
   to->config = from->config;
   to->config.name    = mq_strdup_save(from->config.name);
   to->config.srvname = mq_strdup_save(from->config.srvname);
