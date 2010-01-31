@@ -41,6 +41,7 @@ static void Main(string[] args) \n\
 
 ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "Exit=ctx.Exit()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=MqS.Init(params string[] args)"
@@ -72,7 +73,6 @@ ALIASES		    += "config_get_srvname=#csmsgque.MqS.ConfigGetSrvName"
 ALIASES		    += "config_type_ident=string"
 ALIASES		    += "config_set_ident=#csmsgque.MqS.ConfigSetIdent"
 ALIASES		    += "config_get_ident=#csmsgque.MqS.ConfigGetIdent"
-ALIASES		    += "config_check_ident=#csmsgque.MqS.ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=bool"
 ALIASES		    += "config_set_isSilent=#csmsgque.MqS.ConfigSetIsSilent"
@@ -133,7 +133,8 @@ ALIASES		    += "LinkGetParent=MqC ctx.LinkGetParent()"
 ALIASES		    += "LinkIsParent=bool ctx.LinkIsParent()"
 ALIASES		    += "LinkGetCtxId=bool ctx.LinkGetCtxId()"
 ALIASES		    += "LinkIsConnected=bool ctx.LinkIsConnected()"
-ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 
 # SEND DATA
 ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
@@ -231,9 +232,17 @@ ALIASES		    += "ErrorGetNum=int ex.num or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 
-
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try { \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\"); \n\
+} catch (Exception e) { \n\
+  ctx.ErrorSet(e); \n\
+  if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
+} \n\
+\endcode"
 

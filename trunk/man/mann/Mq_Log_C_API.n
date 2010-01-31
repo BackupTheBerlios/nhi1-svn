@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -89,7 +89,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 4030 of file msgque.h.
+Definition at line 4049 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
 .PP
 log a plain string using the \fIMqSetDebugLevel\fP definition 
@@ -105,7 +105,7 @@ log a plain string using the \fIMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 4037 of file msgque.h.
+Definition at line 4056 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -128,7 +128,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4046 of file msgque.h.
+Definition at line 4065 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
@@ -151,12 +151,12 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4055 of file msgque.h.
+Definition at line 4074 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 4024 of file msgque.h.
+Definition at line 4043 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqDLogEV (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_CST\fP const  fmt,  ...)"
@@ -292,7 +292,7 @@ get the \fItype\fP member from an MqTypeE object in human readable form
 .PP
 \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -303,4 +303,4 @@ the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

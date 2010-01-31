@@ -1,4 +1,4 @@
-.TH "libmsgque" n "22 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "31 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -311,6 +311,16 @@ a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
 .IP "\(bu" 2
 a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
 .PP
+The allowed integer values are:
+.IP "\(bu" 2
+\fB0\fP = \fBMQ_START_DEFAULT\fP, use application-context default entity creation
+.IP "\(bu" 2
+\fB1\fP = \fBMQ_START_FORK\fP, create entity as \fIfork\fP 
+.IP "\(bu" 2
+\fB2\fP = \fBMQ_START_THREAD\fP, create entity as \fIthread\fP 
+.IP "\(bu" 2
+\fB3\fP = \fBMQ_START_SPAWN\fP, create entity as \fIspawn\fP process
+.PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
 \fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBMqConfigSetDaemon\fP (ctx, MQ_CST pidfile)\fP
@@ -345,7 +355,7 @@ By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \
 .SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
-This interface is used to cleanup an onl \fIserver-context-link\fP, like a destructor, and is called at the end of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
 .PP
@@ -395,6 +405,8 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
  \fBLinkGetCtxId\fP
 .br
  \fBLinkIsConnected\fP
+.br
+ \fBLinkGetTargetIdent\fP
 .br
 .PP
 setup and manage a \fIclient-server-link\fP 
@@ -625,6 +637,21 @@ the link was deleted with \fBLinkDelete\fP
 \fBReturns:\fP
 .RS 4
 a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "MQ_CST MqLinkGetTargetIdent (struct MqS *ctx)"
+get the \fIident\fP of the \fIlink-target\fP 
+.PP
+This function is only useful if the link is up and running. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+get the \fIident\fP of the \fIlink-target\fP or \fINULL\fP if not connected 
 .RE
 .PP
 .SH "SERVICE API"
@@ -1572,6 +1599,20 @@ convert a \fIctx\fP into a libmsgque conform error using the \fIctx\fP object. T
 signal end of processing in an \fBIEvent\fP callback 
 .SS "MQ_BOL MqErrorIsEXIT(ctx)"
 check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
+.PP
+An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+.br
+ 
+.PP
+\fBExample:\fP catch and ignore an EXIT return-code: 
+.PP
+.nf
+ if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, 'TOKS', MQ_TIMEOUT_USER))) { 
+   if (MqErrorIsEXIT (ctx)) MqErrorReset (ctx); 
+ } 
+
+.fi
+.PP
 .SS "MqErrorReset(ctx)"
 clear the \fIerror\fP and reset the \fIcontex\fP 
 .SS "MqErrorRaise(ctx)"
@@ -1580,7 +1621,7 @@ convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
-The storage is available as \fIclass-data-member\fP.
+The \fIapplication-specific-data\fP is available as \fIclass-data-member\fP.
 .SH "FILTER MODE"
 .PP
 modify data using filter technology 

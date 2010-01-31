@@ -1,4 +1,4 @@
-.TH "Mq_Service_Java_API" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Service_Java_API" n "31 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -92,24 +92,24 @@ implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP
 \fB\fIFOREVER \fP\fP
 
 .PP
-Definition at line 175 of file MqS.java.
+Definition at line 182 of file MqS.java.
 .SH "Function Documentation"
 .PP 
 .SS "void javamsgque.MqS.ProcessEvent ()  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 220 of file MqS.java.
+Definition at line 227 of file MqS.java.
 .SS "void javamsgque.MqS.ProcessEvent (\fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 216 of file MqS.java.
+Definition at line 223 of file MqS.java.
 .SS "void javamsgque.MqS.ProcessEvent (int timeout, \fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 212 of file MqS.java.
+Definition at line 219 of file MqS.java.
 .SS "native void javamsgque.MqS.ServiceCreate (String token, \fBIService\fP service)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 

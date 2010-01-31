@@ -137,6 +137,7 @@ This option is \b not available for \self.
 \RNSA{LinkIsParent}\n
 \RNSA{LinkGetCtxId}\n
 \RNSA{LinkIsConnected}\n
+\RNSA{LinkGetTargetIdent}\n
 
 \copydoc Mq_Link_C_API
 
@@ -187,6 +188,9 @@ This option is \b not available for \self.
 
 \subsection	  \NS{LinkIsConnected}			\LinkIsConnected
 \copydoc MqLinkIsConnected
+
+\subsection	  \NS{LinkGetTargetIdent}		\LinkGetTargetIdent
+\copydoc MqLinkGetTargetIdent
 
 \section	\NS{service}				SERVICE API
 \RNSA{ServiceIdentifier}\n
@@ -457,7 +461,9 @@ caught and before the application exit or the object is deleted.
 \copybrief MqErrorSetCONTINUE
 
 \subsection	\NS{ErrorIsEXIT}			\ErrorIsEXIT
-\copybrief MqErrorIsEXIT
+\copydoc MqErrorIsEXIT
+
+\b Example: catch and ignore an EXIT return-code: \ErrorIsEXIT_example
 
 \subsection	\NS{ErrorReset}				\ErrorReset
 \copydoc MqErrorReset
@@ -470,7 +476,7 @@ convert the error from an \e context into an \RNS{ErrorObject} and raise the obj
 
 \section	\NS{ContextLocalStorage}		CONTEXT LOCAL STORAGE API
 \if DATA
-The CONTEXT LOCAL STORAGE is required to bind user data to the \self context
+The CONTEXT LOCAL STORAGE is required to bind the \e application-specific-data to the \self context
 
 \subsection	\NS{DictSet}				\DictSet
 Add \e data using \e key into the local storage and return the \e data afterwards.
@@ -484,7 +490,7 @@ return \yes if \e key exists or \no if not.
 \subsection	\NS{DictUnset}				\DictUnset
 Remove the \e key and the associated \e data from the local storage.
 \else
-The storage is available as \e class-data-member.
+The \e application-specific-data is available as \e class-data-member.
 \endif
 \if PERL
 The following code is valid for an object reference:

@@ -1728,7 +1728,7 @@ static mq_inline MQ_SIZE MqLinkGetCtxIdI (
 ///
 /// This function is only useful if the link is up and running.
 /// \ctx
-/// \return get the \e ident of the \e link-target or \c NULL if not connected
+/// \return get the \e ident of the \e link-target or \null if not connected
 MQ_EXTERN MQ_CST MQ_DECL MqLinkGetTargetIdent (
   struct MqS * const ctx
 ) __attribute__((nonnull));
@@ -3134,6 +3134,25 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 );
 
 /// \brief check if context is on \e exit, return \yes or \no
+/// \details An \e EXIT-return-code is set to signal a fatal error
+/// which require an \e application-exit. The \e only source
+/// of this kind of error is a \e link-target-abnormal-exit like a server
+/// or a network crash. This \e return-code can only happen for
+/// functions doing a network-request like:
+/// \RNSA{LinkCreate}, \RNSA{LinkCreateChild}, \RNSA{LinkConnect}, 
+/// \RNSA{SendEND}, \RNSA{SendEND_AND_WAIT} or \RNSA{ProcessEvent}.
+/// The goal of this function is to act on this \e return-code
+/// and is used to igore this error using \RNSA{ErrorReset} and
+/// later do a reconnect using \RNSA{LinkConnect}.\n
+/// \ifnot MAN
+/// \b Example: catch and ignore an EXIT return-code
+/// \code
+/// if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, "TOKS", MQ_TIMEOUT_USER))) { 
+///   if (MqErrorIsEXIT (ctx)) MqErrorReset (ctx); 
+/// } 
+/// \endcode
+/// \endif
+
 MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );

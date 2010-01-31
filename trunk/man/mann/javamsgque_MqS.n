@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "31 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -31,10 +31,6 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "native void \fBConfigSetIdent\fP (String val)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
-.ti -1c
-.RI "native boolean \fBConfigCheckIdent\fP (String val)"
-.br
-.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "native void \fBConfigSetBuffersize\fP (int val)"
 .br
@@ -148,6 +144,10 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
 .ti -1c
+.RI "native void \fBDLogC\fP (int level, String text)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqDLogC\fP "
+.ti -1c
 .RI "native void \fBLinkCreate\fP (String...args)  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP "
@@ -160,9 +160,17 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
 .ti -1c
+.RI "native void \fBLinkConnect\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP "
+.ti -1c
 .RI "native \fBMqS\fP \fBLinkGetParent\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP "
+.ti -1c
+.RI "native String \fBLinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
 .ti -1c
 .RI "native boolean \fBLinkIsParent\fP ()"
 .br
@@ -240,6 +248,10 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
 .ti -1c
+.RI "native boolean \fBErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.ti -1c
 .RI "native int \fBErrorGetNum\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
@@ -249,6 +261,10 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
 .ti -1c
 .RI "native void \fBErrorPrint\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "void \fBErrorPrint\fP (Throwable ex)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
 .ti -1c

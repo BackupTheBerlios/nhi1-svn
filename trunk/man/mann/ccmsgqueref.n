@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "20 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "31 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -74,7 +74,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
  A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
-.SS "MqC *ctx=new MqC()"
+.SS "MqC ctx; MqC *ctx=new MqC()"
 create a new context and initialize the default configuration data 
 .PP
 \fBParameters:\fP
@@ -315,6 +315,16 @@ a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
 .IP "\(bu" 2
 a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
 .PP
+The allowed integer values are:
+.IP "\(bu" 2
+\fB0\fP = \fBMQ_START_DEFAULT\fP, use application-context default entity creation
+.IP "\(bu" 2
+\fB1\fP = \fBMQ_START_FORK\fP, create entity as \fIfork\fP 
+.IP "\(bu" 2
+\fB2\fP = \fBMQ_START_THREAD\fP, create entity as \fIthread\fP 
+.IP "\(bu" 2
+\fB3\fP = \fBMQ_START_SPAWN\fP, create entity as \fIspawn\fP process
+.PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
 \fBtype:\fP \fCMQ_CST\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBccmsgque::MqC::ConfigSetDaemon\fP (pidfile)\fP
@@ -349,7 +359,7 @@ By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \
 .SS "interface: IServerSetup::ServerSetup()"
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: IServerCleanup::ServerCleanup()"
-This interface is used to cleanup an onl \fIserver-context-link\fP, like a destructor, and is called at the end of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqC* IFactory::Factory()"
 The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
 .PP
@@ -392,6 +402,10 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .br
  \fBLinkCreateChild\fP
 .br
+ \fBLinkDelete\fP
+.br
+ \fBLinkConnect\fP
+.br
  \fBLinkGetParent\fP
 .br
  \fBLinkIsParent\fP
@@ -399,6 +413,8 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
  \fBLinkGetCtxId\fP
 .br
  \fBLinkIsConnected\fP
+.br
+ \fBLinkGetTargetIdent\fP
 .br
 .PP
 setup and manage a \fIclient-server-link\fP 
@@ -562,6 +578,21 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
+.SS "ctx.LinkConnect()"
+re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
+.PP
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SS "MqC* ctx.LinkGetParent()"
 get the \fIparent-context\fP from a client/server link 
 .PP
@@ -622,6 +653,21 @@ the link was deleted with \fBLinkDelete\fP
 \fBReturns:\fP
 .RS 4
 a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+.RE
+.PP
+.SS "MQ_CST ctx.LinkGetTargetIdent()"
+get the \fIident\fP of the \fIlink-target\fP 
+.PP
+This function is only useful if the link is up and running. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+get the \fIident\fP of the \fIlink-target\fP or \fINULL\fP if not connected 
 .RE
 .PP
 .SH "SERVICE API"
@@ -856,12 +902,12 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 .nf
  ctx.SendSTART();
  ctx.SendI(num);
-   ctx.SendL_START();
-   ctx.SendD(balance);
-   ctx.SendC('name of the owner');
-   ctx.SendB(signature);
- ctx.SendL_END();
- ctx.SendEND_AND_WAIT('SRV1') 
+   ctx->SendL_START();
+   ctx->SendD(balance);
+   ctx->SendC('name of the owner');
+   ctx->SendB(signature);
+ ctx->SendL_END();
+ ctx->SendEND_AND_WAIT('SRV1') 
 
 .fi
 .PP
@@ -1092,10 +1138,10 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
 .nf
 num = ctx.ReadI();
  ctx.ReadL_START();
-   balance = ctx.ReadD();
-   owner = ctx.ReadC();
-   signature = ctx.ReadB();
- ctx.ReadL_END();
+   balance = ctx->ReadD();
+   owner = ctx->ReadC();
+   signature = ctx->ReadB();
+ ctx->ReadL_END();
 .fi
 .PP
 .SS "TYPE ctx.ReadTYPE()"
@@ -1541,6 +1587,8 @@ return the type as single character of the item stored in the buffer object.
 .br
  \fBErrorSetCONTINUE\fP
 .br
+ \fBErrorIsEXIT\fP
+.br
  \fBErrorReset\fP
 .br
  \fBErrorRaise\fP
@@ -1593,6 +1641,25 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 convert a \fIclass MqCException ex\fP into a \fBccmsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "ctx.ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
+.SS "bool ctx.ErrorIsEXIT()"
+check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
+.PP
+An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+.br
+ 
+.PP
+\fBExample:\fP catch and ignore an EXIT return-code: 
+.PP
+.nf
+ try { 
+   ctx.SendEND_AND_WAIT('TOKS'); 
+ } catch (const exception& e) { 
+   ctx.ErrorSet (e); 
+   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); 
+ } 
+
+.fi
+.PP
 .SS "ctx.ErrorReset()"
 clear the \fIerror\fP and reset the \fIcontex\fP 
 .SS "ctx.ErrorRaise()"
@@ -1601,7 +1668,7 @@ convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
-The storage is available as \fIclass-data-member\fP.
+The \fIapplication-specific-data\fP is available as \fIclass-data-member\fP.
 .SH "FILTER MODE"
 .PP
 modify data using filter technology 

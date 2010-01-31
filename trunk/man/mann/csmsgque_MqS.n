@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "20 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -38,10 +38,6 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBConfigSetIdent\fP (string data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
-.ti -1c
-.RI "bool \fBConfigCheckIdent\fP (string data)"
-.br
-.R "implement the \fBlibmsgque\fP API object: MqConfigCheckIdent "
 .ti -1c
 .RI "void \fBConfigSetBuffersize\fP (int data)"
 .br
@@ -159,6 +155,9 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
 .ti -1c
+.RI "void \fBDLogC\fP (int level, string val)"
+.br
+.ti -1c
 .RI "void \fBErrorC\fP (string proc, int num, string message)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP "
@@ -166,6 +165,10 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBErrorSetCONTINUE\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "bool \fBErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
 .ti -1c
 .RI "void \fBErrorRaise\fP ()"
 .br
@@ -190,6 +193,10 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBErrorSet\fP (Exception ex)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP "
+.ti -1c
+.RI "string \fBLinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
 .ti -1c
 .RI "bool \fBLinkIsParent\fP ()"
 .br
@@ -218,6 +225,10 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBLinkDelete\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBLinkDelete\fP "
+.ti -1c
+.RI "void \fBLinkConnect\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBLinkConnect\fP "
 .ti -1c
 .RI "delegate void \fBCallback\fP ()"
 .br
@@ -474,7 +485,9 @@ Definition at line 24 of file buffer.cs.
 .PP
 implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP 
 .PP
-
+.SS "void csmsgque.MqS.DLogC (int level, string val)"
+.PP
+Definition at line 153 of file csmsgque.cs.
 
 .SH "Author"
 .PP 

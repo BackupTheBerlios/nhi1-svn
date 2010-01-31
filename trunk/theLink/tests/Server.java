@@ -359,10 +359,10 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	  while (ReadItemExists()) 
 	    LIST.add(ReadC());
 	  LIST.add("--name");
-	  LIST.add("cl-" + id);
+	  LIST.add("wk-cl-" + id);
 	  LIST.add("@");
 	  LIST.add("--name");
-	  LIST.add("sv-" + id);
+	  LIST.add("wk-sv-" + id);
 	  SlaveWorker(id, LIST.toArray(new String[0]));
 	} else if (s.equals("CREATE2")) {
 	  Client c = new Client();

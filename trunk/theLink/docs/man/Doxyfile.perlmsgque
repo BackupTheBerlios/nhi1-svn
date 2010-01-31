@@ -47,6 +47,7 @@ package main; \n\
 
 ALIASES		    += "ContextCreate=our $ctx=new MqS()"
 ALIASES		    += "ContextDelete=undef $ctx"
+ALIASES		    += "Exit=$ctx->Exit()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=Net::PerlMsgque::Init(...)"
@@ -78,7 +79,6 @@ ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 ALIASES		    += "config_type_ident=\C"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
-ALIASES		    += "config_check_ident=ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=\O"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
@@ -153,7 +153,8 @@ ALIASES		    += "LinkGetParent=MqS $ctx->LinkGetParent()"
 ALIASES		    += "LinkIsParent=\O $ctx->LinkIsParent()"
 ALIASES		    += "LinkGetCtxId=\I $ctx->LinkGetCtxId()"
 ALIASES		    += "LinkIsConnected=\O $ctx->LinkIsConnected()"
-ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "LinkGetTargetIdent=\C $ctx->LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=$ctx->LinkConnect()"
 
 # SEND DATA
 ALIASES		    += "send_example=\code $ctx->SendSTART();\n$ctx->SendI($num);\n$ctx->SendL_START();\n  $ctx->SendD($balance);\n  $ctx->SendC(\"name of the owner\");\n  $ctx->SendB($signature);\n$ctx->SendL_END();\n$ctx->SendEND_AND_WAIT(\"SRV1\"); \endcode"
@@ -258,7 +259,18 @@ ALIASES		    += "ErrorGetNum=\I $ctx->ErrorGetNum()"
 ALIASES		    += "ErrorC=$ctx->ErrorC(\C prefix, int num, \C what)"
 ALIASES		    += "ErrorSet=$ctx->ErrorSet($ex)"
 ALIASES		    += "ErrorSetCONTINUE=$ctx->ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O $ctx->ErrorIsEXIT()"
 ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
 ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
 ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+eval { \n\
+  $ctx->SendEND_AND_WAIT(\"TOKS\"); \n\
+} \n\
+if ($@) { \n\
+  $ctx->ErrorSet($@); \n\
+  if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
+} \n\
+\endcode"
 

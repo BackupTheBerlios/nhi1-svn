@@ -1,4 +1,4 @@
-.TH "Mq_Error_Java_API" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Error_Java_API" n "31 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -37,6 +37,10 @@ Mq_Error_Java_API \- create and manage error messages.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
 .ti -1c
+.RI "native boolean \fBjavamsgque::MqS.ErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.ti -1c
 .RI "native int \fBjavamsgque::MqS.ErrorGetNum\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
@@ -46,6 +50,10 @@ Mq_Error_Java_API \- create and manage error messages.
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ErrorPrint\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "void \fBjavamsgque::MqS.ErrorPrint\fP (Throwable ex)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
 .in -1c
@@ -74,6 +82,15 @@ implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP 
 .PP
+.SS "native boolean javamsgque.MqS.ErrorIsEXIT ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP 
+.PP
+.SS "void javamsgque.MqS.ErrorPrint (Throwable ex)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
+.PP
+Definition at line 263 of file MqS.java.
 .SS "native void javamsgque.MqS.ErrorPrint ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 

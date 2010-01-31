@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIoPipeConfigS \- configure a context to use a \fIpipe-client-server-link\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -32,9 +32,9 @@ The \fIsocket\fP option is special because it is used only for internal purpose 
 
 .PP
 Definition at line 615 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS::socket\fP[2]"
+.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS.socket\fP[2]"
 .PP
 result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP 
 .PP
@@ -42,4 +42,4 @@ Definition at line 616 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

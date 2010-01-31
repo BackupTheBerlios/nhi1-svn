@@ -1,4 +1,4 @@
-.TH "MqLinkS" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "MqLinkS" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqLinkS \- object responsible to manage a client/server link data
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -146,158 +146,158 @@ MqLinkS \- object responsible to manage a client/server link data
 object responsible to manage a client/server link data 
 .PP
 Definition at line 331 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_HDL\fP \fBMqLinkS::_trans\fP"
+.SS "\fBMQ_HDL\fP \fBMqLinkS._trans\fP"
 .PP
 storage for the Transaction object from the package header 
 .PP
 Definition at line 372 of file msgque.h.
-.SS "struct \fBMqBufferLS\fP* \fBMqLinkS::alfa\fP\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* \fBMqLinkS.alfa\fP\fC [read]\fP"
 .PP
 the command-line arguments for the server 
 .PP
 Definition at line 337 of file msgque.h.
-.SS "struct { ... }   \fBMqLinkS::bits\fP"
+.SS "struct { ... }   \fBMqLinkS.bits\fP"
 .PP
 bitfield to represent the boolean values 
 .PP
-.SS "struct pChildS* \fBMqLinkS::childs\fP\fC [read]\fP"
+.SS "struct pChildS* \fBMqLinkS.childs\fP\fC [read]\fP"
 .PP
 linked list of child's 
 .PP
 Definition at line 376 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxId\fP"
+.SS "\fBMQ_SIZE\fP \fBMqLinkS.ctxId\fP"
 .PP
 the ctxId of this \fBMqS\fP object 
 .PP
 Definition at line 340 of file msgque.h.
-.SS "struct \fBMqS\fP** \fBMqLinkS::ctxIdA\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP** \fBMqLinkS.ctxIdA\fP\fC [read]\fP"
 .PP
 array of struct \fBMqLinkS\fP * pointer's 
 .PP
 Definition at line 368 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqLinkS::ctxIdP\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqLinkS.ctxIdP\fP\fC [read]\fP"
 .PP
 the initial (first) context (home of the ctxIdA) 
 .PP
 Definition at line 341 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxIdR\fP"
+.SS "\fBMQ_SIZE\fP \fBMqLinkS.ctxIdR\fP"
 .PP
 the largest currently used ctxId number 
 .PP
 Definition at line 366 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqLinkS::ctxIdZ\fP"
+.SS "\fBMQ_SIZE\fP \fBMqLinkS.ctxIdZ\fP"
 .PP
 the size of the ctxIdA array 
 .PP
 Definition at line 367 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::deleteProtection\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.deleteProtection\fP"
 .PP
 object in use -> delete is not allowed 
 .PP
 Definition at line 357 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::doFactoryCleanup\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.doFactoryCleanup\fP"
 .PP
 was the context create by a 'Factory' 
 .PP
 Definition at line 359 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::endian\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.endian\fP"
 .PP
 a endian switch have to be done? (boolean: MQ_YES or MQ_NO) 
 .PP
 Definition at line 351 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqLinkS::exitctx\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqLinkS.exitctx\fP\fC [read]\fP"
 .PP
 msgque object got and '_SHD' request (only used at the parent) 
 .PP
 Definition at line 346 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::flagServerSetup\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.flagServerSetup\fP"
 .PP
 setup.ServerSetup.fFunc was called ? 
 .PP
 Definition at line 360 of file msgque.h.
-.SS "struct MqIoS* \fBMqLinkS::io\fP\fC [read]\fP"
+.SS "struct MqIoS* \fBMqLinkS.io\fP\fC [read]\fP"
 .PP
 object for management of the 'socket' infrastructure 
 .PP
 Definition at line 336 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::isConnected\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.isConnected\fP"
 .PP
 is the 'client-link' is 'connected' ? 
 .PP
 Definition at line 362 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::isWORKER\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.isWORKER\fP"
 .PP
 is alfa[0] set to 'WORKER' 
 .PP
 Definition at line 361 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onCreateEnd\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.onCreateEnd\fP"
 .PP
 End 'MqLinkCreate'. 
 .PP
 Definition at line 354 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onCreateStart\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.onCreateStart\fP"
 .PP
 Start 'MqLinkCreate'. 
 .PP
 Definition at line 353 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onDelete\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.onDelete\fP"
 .PP
 is already a 'delete' ongoing? 
 .PP
 Definition at line 355 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onExit\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.onExit\fP"
 .PP
 is already an 'exit' ongoing? 
 .PP
 Definition at line 352 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::onShutdown\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.onShutdown\fP"
 .PP
 is already a 'shutdown' ongoing? 
 .PP
 Definition at line 356 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqLinkS::prepareDone\fP"
+.SS "\fBMQ_BOL\fP \fBMqLinkS.prepareDone\fP"
 .PP
 was a prepare already done ? 
 .PP
 Definition at line 358 of file msgque.h.
-.SS "struct MqReadS* \fBMqLinkS::read\fP\fC [read]\fP"
+.SS "struct MqReadS* \fBMqLinkS.read\fP\fC [read]\fP"
 .PP
 object for reading a Msgque packet 
 .PP
 Definition at line 335 of file msgque.h.
-.SS "struct MqCacheS* \fBMqLinkS::readCache\fP\fC [read]\fP"
+.SS "struct MqCacheS* \fBMqLinkS.readCache\fP\fC [read]\fP"
 .PP
 cache for MqReadS 
 .PP
 Definition at line 347 of file msgque.h.
-.SS "struct pChildS* \fBMqLinkS::self\fP\fC [read]\fP"
+.SS "struct pChildS* \fBMqLinkS.self\fP\fC [read]\fP"
 .PP
 my own child storage 
 .PP
 Definition at line 377 of file msgque.h.
-.SS "struct MqSendS* \fBMqLinkS::send\fP\fC [read]\fP"
+.SS "struct MqSendS* \fBMqLinkS.send\fP\fC [read]\fP"
 .PP
 object for sending a Msgque packet 
 .PP
 Definition at line 334 of file msgque.h.
-.SS "struct MqLinkSlaveS* \fBMqLinkS::slave\fP\fC [read]\fP"
+.SS "struct MqLinkSlaveS* \fBMqLinkS.slave\fP\fC [read]\fP"
 .PP
 link to the SLAVE object 
 .PP
 Definition at line 380 of file msgque.h.
-.SS "struct MqTokenS* \fBMqLinkS::srvT\fP\fC [read]\fP"
+.SS "struct MqTokenS* \fBMqLinkS.srvT\fP\fC [read]\fP"
 .PP
 identifier for the 'service' token handle 
 .PP
 Definition at line 344 of file msgque.h.
-.SS "\fBMQ_CST\fP \fBMqLinkS::targetIdent\fP"
+.SS "\fBMQ_CST\fP \fBMqLinkS.targetIdent\fP"
 .PP
 'ident' of the link target 
 .PP
 Definition at line 345 of file msgque.h.
-.SS "struct MqTransS* \fBMqLinkS::trans\fP\fC [read]\fP"
+.SS "struct MqTransS* \fBMqLinkS.trans\fP\fC [read]\fP"
 .PP
 link to the trans object 
 .PP
@@ -305,4 +305,4 @@ Definition at line 371 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

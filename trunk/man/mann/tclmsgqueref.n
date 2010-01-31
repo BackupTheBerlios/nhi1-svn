@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "31 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -405,6 +405,8 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .br
  \fBLinkIsConnected\fP
 .br
+ \fBLinkGetTargetIdent\fP
+.br
 .PP
 setup and manage a \fIclient-server-link\fP 
 .PP
@@ -559,7 +561,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
-.SS "\\LinkConnect"
+.SS "$ctx LinkConnect"
 re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
 Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
@@ -634,6 +636,21 @@ the link was deleted with \fBLinkDelete\fP
 \fBReturns:\fP
 .RS 4
 a boolean value, \fIyes\fP or \fIno\fP 
+.RE
+.PP
+.SS "StringObj [$ctx LinkGetTargetIdent]"
+get the \fIident\fP of the \fIlink-target\fP 
+.PP
+This function is only useful if the link is up and running. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+get the \fIident\fP of the \fIlink-target\fP or \fIempty\fP if not connected 
 .RE
 .PP
 .SH "SERVICE API"
@@ -1578,8 +1595,27 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 convert a \fITCLMSGQUE errorCode\fP into a tclmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "$ctx ErrorSetCONTINUE"
 signal end of processing in an \fBIEvent\fP callback 
-.SS "\\ErrorIsEXIT"
+.SS "$ctx ErrorIsEXIT"
 check if context is on \fIexit\fP, return \fIyes\fP or \fIno\fP 
+.PP
+An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+.br
+ 
+.PP
+\fBExample:\fP catch and ignore an EXIT return-code: 
+.PP
+.nf
+ if {[catch { 
+   $ctx SendEND_AND_WAIT 'TOKS' 
+ }]} { 
+   $ctx ErrorSet 
+   if {[$ctx ErrorIsEXIT]} {
+     $ctx ErrorReset 
+   } 
+ } 
+
+.fi
+.PP
 .SS "$ctx ErrorReset"
 clear the \fIerror\fP and reset the \fIcontex\fP 
 .SS "$ctx ErrorRaise"
@@ -1588,7 +1624,7 @@ convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
-The CONTEXT LOCAL STORAGE is required to bind user data to the tclmsgque context
+The CONTEXT LOCAL STORAGE is required to bind the \fIapplication-specific-data\fP to the tclmsgque context
 .SS "$ctx dict set key... data"
 Add \fIdata\fP using \fIkey\fP into the local storage and return the \fIdata\fP afterwards.
 .SS "$ctx dict get key..."

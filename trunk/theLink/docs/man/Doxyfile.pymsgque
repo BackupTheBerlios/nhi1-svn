@@ -43,6 +43,7 @@ ctx = MyClass() \n\
 
 ALIASES		    += "ContextCreate=ctx=MqS()"
 ALIASES		    += "ContextDelete=del ctx"
+ALIASES		    += "Exit=ctx.Exit()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=Init()"
@@ -74,7 +75,6 @@ ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 ALIASES		    += "config_type_ident=PyUnicode"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
-ALIASES		    += "config_check_ident=ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=PyBool"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
@@ -158,7 +158,8 @@ ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
 ALIASES		    += "LinkIsParent=PyBool ctx.LinkIsParent()"
 ALIASES		    += "LinkGetCtxId=PyLong ctx.LinkGetCtxId()"
 ALIASES		    += "LinkIsConnected=PyLong ctx.LinkIsConnected()"
-ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 
 # SEND DATA
 ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
@@ -259,8 +260,17 @@ ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(prefix,errnum,message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet()"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try: \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\") \n\
+except: \n\
+  ctx.ErrorSet() \n\
+  if ctx.ErrorIsEXIT(): \n\
+    ctx.ErrorReset() \n\
+\endcode"
 

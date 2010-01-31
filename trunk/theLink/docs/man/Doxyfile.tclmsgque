@@ -36,6 +36,7 @@ $ctx dict set mydata 0 \n\
 
 ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS]"
 ALIASES		    += "ContextDelete=rename $ctx \"\""
+ALIASES		    += "Exit=$ctx Exit"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=tclmsgque Init ...args"
@@ -67,7 +68,6 @@ ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 ALIASES		    += "config_type_ident=string"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
-ALIASES		    += "config_check_ident=ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=boolean"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
@@ -129,7 +129,8 @@ ALIASES		    += "LinkGetParent=MqS [$ctx LinkGetParent]"
 ALIASES		    += "LinkGetCtxId=\I [$ctx LinkGetCtxId]"
 ALIASES		    += "LinkIsParent=\O [$ctx LinkIsParent]"
 ALIASES		    += "LinkIsConnected=\O [$ctx LinkIsConnected]"
-ALIASES		    += "Exit=$ctx Exit"
+ALIASES		    += "LinkGetTargetIdent=\C [$ctx LinkGetTargetIdent]"
+ALIASES		    += "LinkConnect=$ctx LinkConnect"
 
 # SEND DATA
 ALIASES		    += "send_example=\code $ctx SendSTART\n$ctx SendI $num\n$ctx SendL_START\n  $ctx SendD $balance\n  $ctx SendC \"name of the owner\"\n  $ctx SendB $signature\n$ctx SendL_END\n$ctx SendEND_AND_WAIT \"SRV1\"\endcode"
@@ -233,7 +234,19 @@ ALIASES		    += "ErrorGetNum=[lindex $errorCode 1] or $ctx ErrorGetNum"
 ALIASES		    += "ErrorC=$ctx ErrorC prefix errnum message"
 ALIASES		    += "ErrorSet=$ctx ErrorSet"
 ALIASES		    += "ErrorSetCONTINUE=$ctx ErrorSetCONTINUE"
+ALIASES		    += "ErrorIsEXIT=$ctx ErrorIsEXIT"
 ALIASES		    += "ErrorReset=$ctx ErrorReset"
 ALIASES		    += "ErrorRaise=$ctx ErrorRaise"
 ALIASES		    += "ErrorPrint=$ctx ErrorPrint"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+if {[catch { \n\
+  $ctx SendEND_AND_WAIT \"TOKS\" \n\
+}]} { \n\
+  $ctx ErrorSet \n\
+  if {[$ctx ErrorIsEXIT]} {\n\
+    $ctx ErrorReset \n\
+  } \n\
+} \n\
+\endcode"
 

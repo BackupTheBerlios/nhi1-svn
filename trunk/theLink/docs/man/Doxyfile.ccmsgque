@@ -40,8 +40,9 @@ int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=MqC *ctx=new MqC()"
+ALIASES		    += "ContextCreate=MqC ctx; MqC *ctx=new MqC()"
 ALIASES		    += "ContextDelete=delete(ctx)"
+ALIASES		    += "Exit=ctx.Exit()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
@@ -76,7 +77,6 @@ ALIASES		    += "config_get_srvname=#ccmsgque::MqC::ConfigGetSrvName"
 ALIASES		    += "config_type_ident=#MQ_CST"
 ALIASES		    += "config_set_ident=#ccmsgque::MqC::ConfigSetIdent"
 ALIASES		    += "config_get_ident=#ccmsgque::MqC::ConfigGetIdent"
-ALIASES		    += "config_check_ident=#ccmsgque::MqC::ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=bool"
 ALIASES		    += "config_set_isSilent=#ccmsgque::MqC::ConfigSetIsSilent"
@@ -155,10 +155,11 @@ ALIASES		    += "LinkGetParent=MqC* ctx.LinkGetParent()"
 ALIASES		    += "LinkIsParent=bool ctx.LinkIsParent()"
 ALIASES		    += "LinkGetCtxId=MQ_SIZE ctx.LinkGetCtxId()"
 ALIASES		    += "LinkIsConnected=bool ctx.LinkIsConnected()"
-ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LinkGetTargetIdent=MQ_CST ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 
 # SEND DATA
-ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\n  ctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\n  ctx->SendL_START();\n  ctx->SendD(balance);\n  ctx->SendC(\"name of the owner\");\n  ctx->SendB(signature);\nctx->SendL_END();\nctx->SendEND_AND_WAIT(\"SRV1\") \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(MQ_CST const token)"
 ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
@@ -174,7 +175,7 @@ ALIASES		    += "SendN=ctx.SendB(MQ_BIN value, MQ_SIZE len)"
 ALIASES		    += "SendBDY=ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
 
 # READ DATE
-ALIASES		    += "read_example=\verbatim num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endverbatim"
+ALIASES		    += "read_example=\verbatim num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx->ReadD();\n  owner = ctx->ReadC();\n  signature = ctx->ReadB();\nctx->ReadL_END();\endverbatim"
 ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
 ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
 ALIASES		    += "ReadN=ctx.ReadN(MQ_BIN &value, MQ_SIZE &len)"
@@ -280,10 +281,18 @@ ALIASES		    += "ErrorGetText=string ex.what() or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=int ex.num() or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(const exception& ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=bool ctx.ErrorIsEXIT()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
-ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 
-
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try { \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\"); \n\
+} catch (const exception& e) { \n\
+  ctx.ErrorSet (e); \n\
+  if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
+} \n\
+\endcode"
 

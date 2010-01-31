@@ -43,6 +43,8 @@ End Sub \n\
 
 ALIASES		    += "ContextCreate=Dim ctx As New MqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "Exit=ctx.Exit()"
+
 ALIASES		    += "init_example=\
 \code \n\
 MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
@@ -74,7 +76,6 @@ ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 ALIASES		    += "config_type_ident=String"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
-ALIASES		    += "config_check_ident=ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=Boolean"
 ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
@@ -145,7 +146,8 @@ ALIASES		    += "LinkGetParent=ctx.LinkGetParent() As MqS"
 ALIASES		    += "LinkIsParent=ctx.LinkIsParent() As Boolean"
 ALIASES		    += "LinkGetCtxId=ctx.LinkGetCtxId() As Integer"
 ALIASES		    += "LinkIsConnected=ctx.LinkIsConnected() As Boolean"
-ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LinkGetTargetIdent=ctx.LinkGetTargetIdent() As \C"
+ALIASES		    += "LinkConnect=ctx.LinkConnect() As \C"
 
 # SEND DATA
 ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
@@ -238,9 +240,19 @@ ALIASES		    += "ErrorGetNum=Integer ex.num or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(prefix As String, errnum As Integer, message As String)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=ctx.ErrorIsEXIT() As \O"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 
-
+ALIASES		    += "ErrorIsEXIT_example=\code \
+Try \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\") \n\
+Catch e As Exception \n\
+  ctx.ErrorSet(e) \n\
+  If (ctx.ErrorIsEXIT()) Then \n\
+    ctx.ErrorReset() \n\
+  End If \n\
+End Try \n\
+\endcode"
 

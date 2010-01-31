@@ -1,4 +1,4 @@
-.TH "Mq_Context_Java_API" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Context_Java_API" n "31 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -20,6 +20,10 @@ Mq_Context_Java_API \- \fIcontext\fP, the top-level data structure and \fIapplic
 .RI "native void \fBjavamsgque::MqS.Exit\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.DLogC\fP (int level, String text)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqDLogC\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -43,6 +47,10 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
  A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
 .SH "Function Documentation"
 .PP 
+.SS "native void javamsgque.MqS.DLogC (int level, String text)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqDLogC\fP 
+.PP
 .SS "native void javamsgque.MqS.Exit ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
@@ -51,12 +59,12 @@ implement the \fBlibmsgque\fP API object: \fBMqExit\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
 .PP
-Definition at line 125 of file MqS.java.
+Definition at line 123 of file MqS.java.
 .SS "javamsgque.MqS.MqS ()\fC [protected, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
-Definition at line 120 of file MqS.java.
+Definition at line 118 of file MqS.java.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for javamsgque from the source code.

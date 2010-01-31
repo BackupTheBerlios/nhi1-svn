@@ -466,7 +466,7 @@ namespace ccmsgque {
         return MqLinkGetCtxIdI(&context); 
       }
 
-      /// \api #MqLinkGetRemoteIdent
+      /// \api #MqLinkGetTargetIdent
       inline MQ_CST LinkGetTargetIdent () { 
 	return MqLinkGetTargetIdent (&context);
       }

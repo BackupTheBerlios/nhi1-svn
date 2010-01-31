@@ -1,8 +1,8 @@
-.TH "msgque.h" n "20 Jan 2010" "Version 4.2" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "31 Jan 2010" "Version 4.2" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 156 2010-01-27 11:22:58Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -486,7 +486,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .br
 .R "User preferences on HOWTO start a new entity. "
 .ti -1c
-.RI "enum \fBMqIoComE\fP { \fBMQ_IO_UDS\fP, \fBMQ_IO_TCP\fP, \fBMQ_IO_PIPE\fP }"
+.RI "enum \fBMqIoComE\fP { \fBMQ_IO_PIPE\fP, \fBMQ_IO_UDS\fP, \fBMQ_IO_TCP\fP }"
 .br
 .R "what kind of socket interface to use? "
 .ti -1c
@@ -618,19 +618,19 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .br
 .R "start the \fIserver-context\fP as daemon "
 .ti -1c
-.RI "int \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIstring\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIsilent\fP ? "
 .ti -1c
-.RI "int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
+.RI "\fBMQ_BOL\fP \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? "
 .ti -1c
@@ -729,13 +729,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqLinkPrepare\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
-.br
-.R "TODO. "
-.ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
 .R "make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqLinkConnect\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "re-connect a \fIclient-server-link\fP after a server crash or a network downtime "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
 .br
@@ -749,12 +749,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .br
 .R "close the \fIclient-server-link\fP "
 .ti -1c
-.RI "int \fBMqLinkIsConnected\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqLinkIsConnected\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the context connected? "
-.ti -1c
-.RI "static int \fBMqLinkIsConnectedI\fP (struct \fBMqS\fP const *const ctx)"
-.br
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqLinkGetParent\fP (struct \fBMqS\fP const *const ctx)"
 .br
@@ -763,11 +760,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .RI "static struct \fBMqS\fP * \fBMqLinkGetParentI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "int \fBMqLinkIsParent\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqLinkIsParent\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the \fIcontext\fP a \fIparent-context\fP? "
 .ti -1c
-.RI "static int \fBMqLinkIsParentI\fP (struct \fBMqS\fP const *const ctx)"
+.RI "static \fBMQ_BOL\fP \fBMqLinkIsParentI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqLinkGetCtxId\fP (struct \fBMqS\fP const *const ctx)"
@@ -785,7 +782,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .br
 .R "get the \fIfilter-context\fP or the \fImaster-context\fP "
 .ti -1c
-.RI "int \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "check if the \fIongoing-service-call\fP belongs to a transaction "
 .ti -1c
@@ -1191,6 +1188,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .br
 .R "signal end of processing in an \fBMqConfigSetEvent\fP callback "
 .ti -1c
+.RI "\fBMQ_BOL\fP \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
+.br
+.R "check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
+.ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
 .R "log the \fBMqErrorS\fP for debugging "
@@ -1377,11 +1378,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
+.RI "\fBMQ_BOL\fP \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the \fIcontext\fP a \fIslave-context\fP ? "
 .ti -1c
-.RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
+.RI "static \fBMQ_BOL\fP \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
@@ -1490,13 +1491,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 144 2010-01-18 17:01:50Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 156 2010-01-27 11:22:58Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 144 $ 
+$Rev: 156 $ 
 .RE
 .PP
 \fBAuthor:\fP

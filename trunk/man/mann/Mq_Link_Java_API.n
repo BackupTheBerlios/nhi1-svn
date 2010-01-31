@@ -1,4 +1,4 @@
-.TH "Mq_Link_Java_API" n "20 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Link_Java_API" n "31 Jan 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,9 +21,17 @@ Mq_Link_Java_API \- setup and manage a \fIclient-server-link\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
 .ti -1c
+.RI "native void \fBjavamsgque::MqS.LinkConnect\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP "
+.ti -1c
 .RI "native \fBMqS\fP \fBjavamsgque::MqS.LinkGetParent\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP "
+.ti -1c
+.RI "native String \fBjavamsgque::MqS.LinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.LinkIsParent\fP ()"
 .br
@@ -148,6 +156,10 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
  
 .SH "Function Documentation"
 .PP 
+.SS "native void javamsgque.MqS.LinkConnect ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP 
+.PP
 .SS "native void javamsgque.MqS.LinkCreate (String... args)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
@@ -167,6 +179,10 @@ implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP
 .SS "native \fBMqS\fP javamsgque.MqS.LinkGetParent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP 
+.PP
+.SS "native String javamsgque.MqS.LinkGetTargetIdent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP 
 .PP
 .SS "native boolean javamsgque.MqS.LinkIsConnected ()\fC [inherited]\fP"
 .PP

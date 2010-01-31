@@ -41,6 +41,7 @@ public static void main(String[] args) { \n\
 
 ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "Exit=ctx.Exit()"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=MqS.Init(String... args)"
@@ -74,7 +75,6 @@ ALIASES		    += "config_get_srvname=#javamsgque.MqS.ConfigGetSrvName"
 ALIASES		    += "config_type_ident=String"
 ALIASES		    += "config_set_ident=#javamsgque.MqS.ConfigSetIdent"
 ALIASES		    += "config_get_ident=#javamsgque.MqS.ConfigGetIdent"
-ALIASES		    += "config_check_ident=#javamsgque.MqS.ConfigCheckIdent"
 
 ALIASES		    += "config_type_isSilent=boolean"
 ALIASES		    += "config_set_isSilent=#javamsgque.MqS.ConfigSetIsSilent"
@@ -145,9 +145,10 @@ ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, String... args)
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
 ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
 ALIASES		    += "LinkIsParent=\O ctx.LinkIsParent()"
-ALIASES		    += "LinkIsConnected=\O ctx.LinkIsConnected()"
 ALIASES		    += "LinkGetCtxId=\I ctx.LinkGetCtxId()"
-ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LinkIsConnected=\O ctx.LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 
 # SEND DATA
 ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
@@ -243,10 +244,19 @@ ALIASES		    += "ErrorGetText=String ex.GetTxt() or ctx.ErrorGetText()"
 ALIASES		    += "ErrorGetNum=int ex.GetNum() or ctx.ErrorGetNum()"
 ALIASES		    += "ErrorC=ctx.ErrorC(String prefix, int errnum, String message)"
 ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
+ALIASES		    += "ErrorGetTargetIdent=ctx.ErrorGetTargetIdent()"
 ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
-ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 
-
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try { \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\"); \n\
+} catch (Throwable e) { \n\
+  ctx.ErrorSet (e); \n\
+  if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
+} \n\
+\endcode"
 

@@ -1,11 +1,11 @@
-.TH "Mq_Buffer_List_C_API" n "27 Jan 2010" "Version 4.2" "tclmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.  
 
 .PP
-.SS "Data Structures"
+.SS "Classes"
 
 .in +1c
 .ti -1c
@@ -753,4 +753,4 @@ The size of \fIstr\fP have to be at least 4 bytes
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for tclmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.
