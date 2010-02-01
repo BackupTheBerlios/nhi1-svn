@@ -1097,7 +1097,7 @@ proc Setup {num mode com server args} {
 	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
       }
       if {$env(TS_SETUP)} {
-	Print sl
+	puts "Setup: start server"
       }
       Bg {*}$sl
       after $::WAIT

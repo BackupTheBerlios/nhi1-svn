@@ -142,8 +142,6 @@ TcpCreate (
 
   // get socket data
   MqErrorCheck(SysGetTcpInfo(context,(struct sockaddr_in*)tcp->remoteaddr->ai_addr,&host,&port));
-  MqBufferSetC (tcp->config->host, host);
-  MqBufferSetI (tcp->config->port, port);
   MqDLogV(context, 4, "%s socket host<%s> and port<%u>\n", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
 
 error:

@@ -483,9 +483,7 @@ pBufferGetA1 (
     } else {
       // MQ_BOLT
       (*ato).O = ((*buf->cur.C)-48);   // 48 is the ascii value from '0'
-      if (unlikely ((*ato).O < 0)) {
-	return RANGE_E (underflow, BOL);
-      } else if (unlikely ((*ato).O > 1)) {
+      if (unlikely ((*ato).O > 1)) {
 	return RANGE_E (overflow, BOL);
       } else if (unlikely (buf->cursize != 1)) {
 	return RANGE_E (size, BOL);

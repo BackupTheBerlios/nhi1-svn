@@ -772,12 +772,17 @@ pIoEventAdd(
   struct MqS * const context = MQ_CONTEXT_S;
   MQ_INT const buffersize = io->config->buffersize;
   const MQ_SOCK sock = *sockP;
-  MQ_INT current;
+  MQ_INT current = 0;
   socklen_t len;
+
+//MqDLogX(context,__func__,0,"1. buffersize<%d>, current<%d>\n", buffersize, current);
 
   // 1. set the send-buffersize
   len = sizeof (MQ_INT);
   MqErrorCheck (SysGetSockOpt (context, sock, SOL_SOCKET, SO_SNDBUF, (MQ_sockopt_optval_T) &current, &len));
+
+//MqDLogX(context,__func__,0,"2. buffersize<%d>, current<%d>\n", buffersize, current);
+
   if (current < buffersize) {
     len = sizeof (MQ_INT);
     MqErrorCheck (SysSetSockOpt (context, sock, SOL_SOCKET, SO_SNDBUF, (MQ_sockopt_optval_T) &buffersize, len));
@@ -790,12 +795,18 @@ pIoEventAdd(
   // 2. set the send-buffersize
   len = sizeof (MQ_INT);
   MqErrorCheck (SysGetSockOpt (context, sock, SOL_SOCKET, SO_RCVBUF, (MQ_sockopt_optval_T) &current, &len));
+
+//MqDLogX(context,__func__,0,"3. buffersize<%d>, current<%d>\n", buffersize, current);
+
   if (current < buffersize) {
     len = sizeof (MQ_INT);
     MqErrorCheck (SysSetSockOpt (context, sock, SOL_SOCKET, SO_RCVBUF, (MQ_sockopt_optval_T) &buffersize, len));
     MqErrorCheck (SysGetSockOpt (context, sock, SOL_SOCKET, SO_RCVBUF, (MQ_sockopt_optval_T) &current, &len));
     MqDLogV (context, 5, "set SO_RCVBUF to '%d'\n", current);
   }
+
+//MqDLogX(context,__func__,0,"4. buffersize<%d>, current<%d>\n", buffersize, current);
+
 
   if (current < io->config->buffersize) {
     io->config->buffersize = current;
