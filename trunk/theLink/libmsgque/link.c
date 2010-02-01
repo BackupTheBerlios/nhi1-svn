@@ -433,7 +433,6 @@ pMqShutdown (
 
   // cleanup error
   pErrorReset(context);
-
   MqDLogC(context,4,"END shutdown\n");
   return;
 }

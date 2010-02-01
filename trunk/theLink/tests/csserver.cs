@@ -143,6 +143,7 @@ namespace example {
   // ########################################################################
 
     private void PRNT () {
+
       SendSTART();
       SendC(LinkGetCtxId() + " - " + ReadC());
       SendEND_AND_WAIT("WRIT");

@@ -11,6 +11,7 @@ REM              please contact AUTHORS for additional information
 REM
 
 Imports System
+Imports System.IO
 Imports csmsgque
 Imports System.Collections.Generic
 
@@ -29,6 +30,7 @@ Public Module example
     End Structure
 
     Dim itms As New Queue(Of FilterItmS)
+    Dim FH As StreamWriter = Nothing
 
     Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New Filter4()
@@ -49,15 +51,48 @@ Public Module example
       SendRETURN()
     End Sub
 
+    Private Sub LOGF()
+      Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
+      If (ftr.LinkGetTargetIdent() = "transFilter") Then
+        ftr.SendSTART()
+        ftr.SendC(ReadC())
+        ftr.SendEND_AND_WAIT("LOGF")
+      Else
+        ftr.FH = File.AppendText(ReadC())
+      End If
+      SendRETURN()
+    End Sub
+
+    Private Sub EXI2()
+      Me.Exit()
+    End Sub
+
+    Private Sub WRIT()
+      FH.WriteLine(ReadC())
+      FH.Flush()
+      SendRETURN()
+    End Sub
+
+    Private Sub ErrorWrite()
+      FH.WriteLine("ERROR: " + ErrorGetText())
+      FH.Flush()
+      ErrorReset()
+    End Sub
+
     Private Sub ServerSetup() Implements IServerSetup.ServerSetup
+      Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
       ServiceCreate("+ALL", Me)
+      ServiceCreate("EXIT", AddressOf EXI2)
+      ServiceCreate("LOGF", AddressOf LOGF)
+      ftr.ServiceCreate("WRIT", AddressOf ftr.WRIT)
     End Sub
 
     Private Sub EventF() Implements IEvent.Event
       If (itms.Count > 0) Then
         Dim it As FilterItmS = itms.Peek()
+        Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
         Try
-          Dim ftr As MqS = ServiceGetFilter()
+          ftr.LinkConnect()
           ftr.SendSTART()
           ftr.SendBDY(it.bdy)
           If (it.isTransaction) Then
@@ -66,12 +101,15 @@ Public Module example
             ftr.SendEND(it.token)
           End If
         Catch ex As Exception
-          ErrorSet(ex)
-          ErrorPrint()
-          ErrorReset()
-        Finally
-          itms.Dequeue()
+          ftr.ErrorSet(ex)
+          If (ftr.ErrorIsEXIT()) Then
+            ftr.ErrorReset()
+            Return
+          Else
+            ftr.ErrorWrite()
+          End If
         End Try
+        itms.Dequeue()
       Else
         ErrorSetCONTINUE()
       End If
@@ -91,6 +129,8 @@ Public Module example
     Dim srv As New Filter4()
     Try
       srv.ConfigSetIgnoreExit(True)
+      srv.ConfigSetName("Filter4")
+      srv.ConfigSetIdent("transFilter")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception

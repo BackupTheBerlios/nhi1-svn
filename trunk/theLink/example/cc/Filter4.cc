@@ -117,22 +117,23 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void EXIT () {
-      abort();
+      exit(0);
     }
 
     void ServerCleanup() {
-      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter(0));
+      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
       if (ftr->FH != NULL)
 	fclose (ftr->FH);
     }
 
     void ServerSetup() {
-      MqC *ftr = ServiceGetFilter(0);
+      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
       // SERVER: listen on every token (+ALL)
       ServiceCreate ("LOGF", CallbackF(&Filter4::LOGF));
       ServiceCreate ("EXIT", CallbackF(&Filter4::EXIT));
       ServiceCreate ("+ALL", this);
       ftr->ServiceCreate ("WRIT", CallbackF(&Filter4::WRIT));
+      ftr->FH = NULL;
     }
 };
 

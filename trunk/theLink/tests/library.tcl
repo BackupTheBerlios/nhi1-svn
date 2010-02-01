@@ -1280,6 +1280,20 @@ proc Exec {args} {
   }
 }
 
+proc MakeFile {init name} {
+  set timeout [expr {[clock seconds] + $::env(TS_TIMEOUT)}]
+  set RET ""
+  while {[clock seconds] < $timeout} {
+    if {[catch {makeFile $init $name} RET]} {
+      puts "MakeFile: $RET, try again"
+      after 500
+    } else {
+      break
+    }
+  }
+  return $RET
+}
+
 proc Bg {args} {
   if {$::env(TS_SETUP)} {
     Print args
@@ -1322,8 +1336,8 @@ proc WaitEOF {fh} {
   }
 }
 
-proc WaitOnFileToken {file token {timeout 10}} {
-  set end [expr {[clock seconds] + $timeout}]
+proc WaitOnFileToken {file token} {
+  set end [expr {[clock seconds] + $::env(TS_TIMEOUT)}]
   while {true} {
     set RET [list]
     set fh [open $file r]
@@ -1334,7 +1348,7 @@ proc WaitOnFileToken {file token {timeout 10}} {
 	return [join $RET \n]
       } 
       if {[clock seconds] >= $end} {
-	lappend RET "timeout ($timeout sec)"
+	lappend RET "timeout ($::env(TS_TIMEOUT) sec)"
 	return [join $RET \n]
       }
     }

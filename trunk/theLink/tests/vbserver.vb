@@ -161,11 +161,9 @@ Public Module example
     End Sub
 
     Private Sub PRNT()
-      Dim i As Integer = 0
-      While (ReadItemExists())
-        i += 1
-        Console.WriteLine("{0,2}: " + ReadC(), i)
-      End While
+      SendSTART()
+      SendC(CStr(LinkGetCtxId()) + " - " + ReadC())
+      SendEND_AND_WAIT("WRIT")
       SendRETURN()
     End Sub
 
@@ -200,6 +198,14 @@ Public Module example
           ConfigSetSrvName(ReadC())
           SendC(ConfigGetSrvName())
           ConfigSetSrvName(old)
+        Case "Ident"
+          Dim old As String = ConfigGetIdent()
+          ConfigSetIdent(ReadC())
+          Dim check As Boolean = LinkGetTargetIdent() = ReadC()
+          SendSTART()
+          SendC(ConfigGetIdent())
+          SendO(check)
+          ConfigSetIdent(old)
         Case "IsSilent"
           Dim old As Boolean = ConfigGetIsSilent()
           ConfigSetIsSilent(ReadO())
@@ -321,9 +327,10 @@ Public Module example
         Case "CREATE"
           Dim LIST As New List(Of String)
           LIST.Add("--name")
-          LIST.Add("cl-" + CStr(id))
-          LIST.Add("--srvname")
-          LIST.Add("sv-" + CStr(id))
+          LIST.Add("wk-cl-" + CStr(id))
+          LIST.Add("@")
+          LIST.Add("--name")
+          LIST.Add("wk-sv-" + CStr(id))
           While ReadItemExists()
             LIST.Add(ReadC())
           End While
@@ -497,7 +504,7 @@ Public Module example
         Case "START5"
           ' the 'master' have to be a 'parent' without 'child' objects
           ' 'slave' identifer out of range (0 <= 10000000 <= 1023)
-          SlaveWorker(id, "--name", "cl-" + CStr(id), "--srvname", "sv-" + CStr(id), "--thread")
+          SlaveWorker(id, "--name", "wk-cl-" + CStr(id), "--srvname", "wk-sv-" + CStr(id), "--thread")
         Case "STOP"
           cl(id).LinkDelete()
         Case "SEND"

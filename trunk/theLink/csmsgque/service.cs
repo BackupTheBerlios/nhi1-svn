@@ -44,7 +44,7 @@ namespace csmsgque {
     private static extern IntPtr MqServiceGetToken([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceIsTransaction")]
-    private static extern bool MqServiceIsTransaction([In]IntPtr context);
+    private static extern MQ_BOL MqServiceIsTransaction([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceGetFilter")]
     private static extern MqErrorE MqServiceGetFilter([In]IntPtr context, [In]int id, [Out]out IntPtr filter);
@@ -61,7 +61,7 @@ namespace csmsgque {
 
     /// \api #MqServiceIsTransaction
     public bool	    ServiceIsTransaction() { 
-      return MqServiceIsTransaction(context); 
+      return MqServiceIsTransaction(context) == MQ_BOL.MQ_YES; 
     }
 
     /// \api #MqServiceGetFilter

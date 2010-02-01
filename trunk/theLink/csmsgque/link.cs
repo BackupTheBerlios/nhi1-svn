@@ -29,10 +29,10 @@ namespace csmsgque {
     static private MqCreateF	    fDefaultLinkCreate  = MqLinkDefault;
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkIsParent")]
-    private static extern bool MqLinkIsParent([In]IntPtr context);
+    private static extern MQ_BOL MqLinkIsParent([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkIsConnected")]
-    private static extern bool MqLinkIsConnected([In]IntPtr context);
+    private static extern MQ_BOL MqLinkIsConnected([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLinkGetParent")]
     private static extern IntPtr MqLinkGetParent([In]IntPtr context);
@@ -67,12 +67,12 @@ namespace csmsgque {
 
     /// \api #LinkIsParent
     public bool	    LinkIsParent()	    { 
-      return MqLinkIsParent(context); 
+      return MqLinkIsParent(context) == MQ_BOL.MQ_YES; 
     }
 
     /// \api #LinkIsConnected
     public bool	    LinkIsConnected()	    { 
-      return MqLinkIsConnected(context); 
+      return MqLinkIsConnected(context) == MQ_BOL.MQ_YES; 
     }
 
     /// \api #LinkGetCtxId

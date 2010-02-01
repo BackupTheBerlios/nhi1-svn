@@ -41,7 +41,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveGet")]
     private  static extern IntPtr MqSlaveGet([In]IntPtr context, [In]int id);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveIs")]
-    private static extern bool MqSlaveIs([In]IntPtr context);
+    private static extern MQ_BOL MqSlaveIs([In]IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSlaveGetMaster")]
     private static extern IntPtr MqSlaveGetMaster([In]IntPtr context);
 
@@ -80,7 +80,7 @@ namespace csmsgque {
 
     /// \api #MqSlaveIs
     public bool	    SlaveIs()	    { 
-      return MqSlaveIs(context); 
+      return MqSlaveIs(context) == MQ_BOL.MQ_YES; 
     }
 
     /// \api #MqSlaveGetMaster

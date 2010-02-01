@@ -137,6 +137,7 @@ SysWSACleanup (
 {
   int err;
   if ((err = WSACleanup ()) != 0) {
+  printI(err)
     return MqErrorDbV (MQ_ERROR_WINSOCK, "WSACleanup", WSAGetLastError());
   }
   return MQ_OK;
@@ -456,10 +457,9 @@ SysSend (
   // send data from buf
   do {
     ldata = send (hdl, (const MQ_buf_T) buf, numBytes, flags);
-
     // check for errors
     if (unlikely (ldata == -1)) {
-//MqDLogX(context,__func__,0,"ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, errno, strerror(errno));
+//MqDLogX(context,__func__,0,"ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
       switch (sSysGetErrorNum) {
 	case WIN32_WSA (EWOULDBLOCK): {
 	  // waiting for "send" is buggy -> just use 0.01 sec and try send again on "timeout" (MQ_CONTINUE)

@@ -143,7 +143,7 @@ error:
 }
 
 static enum MqErrorE EXIT ( ARGS ) {
-  abort();
+  exit(0);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
@@ -238,6 +238,8 @@ FilterSetup (
   MqErrorCheck (MqServiceCreate (mqctx, "EXIT", EXIT, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
   MqErrorCheck (MqServiceCreate (ftr,   "WRIT", WRIT, NULL, NULL));
+
+  ctx->FH = NULL;
 
 error:
   return MqErrorStack(mqctx);

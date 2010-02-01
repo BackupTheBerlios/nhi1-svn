@@ -187,13 +187,13 @@ namespace csmsgque {
   // PRIVATE
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsServer")]
-    private static extern bool MqConfigGetIsServer([In]IntPtr context);
+    private static extern MQ_BOL MqConfigGetIsServer([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsString")]
-    private static extern bool MqConfigGetIsString([In]IntPtr context);
+    private static extern MQ_BOL MqConfigGetIsString([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIsSilent")]
-    private static extern bool MqConfigGetIsSilent([In]IntPtr context);
+    private static extern MQ_BOL MqConfigGetIsSilent([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetName")]
     private static extern IntPtr MqConfigGetName([In]IntPtr context);
@@ -240,11 +240,11 @@ namespace csmsgque {
   // PUBLIC
 
     /// \api #MqConfigGetIsServer
-    public bool	    ConfigGetIsServer()	    { return MqConfigGetIsServer(context); }
+    public bool	    ConfigGetIsServer()	    { return MqConfigGetIsServer(context) == MQ_BOL.MQ_YES; }
     /// \api #MqConfigGetIsString
-    public bool	    ConfigGetIsString()     { return MqConfigGetIsString(context); }
+    public bool	    ConfigGetIsString()     { return MqConfigGetIsString(context) == MQ_BOL.MQ_YES; }
     /// \api #MqConfigGetIsSilent
-    public bool	    ConfigGetIsSilent()     { return MqConfigGetIsSilent(context); }
+    public bool	    ConfigGetIsSilent()     { return MqConfigGetIsSilent(context) == MQ_BOL.MQ_YES; }
     /// \api #MqConfigGetName
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
     /// \api #MqConfigGetSrvName

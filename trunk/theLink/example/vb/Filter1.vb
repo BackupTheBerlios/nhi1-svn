@@ -31,8 +31,8 @@ Public Module example
         Next s
         ftr.SendEND_AND_WAIT("+FTR")
       Next d
-      SendSTART()
-      SendEND_AND_WAIT("+EOF")
+      ftr.SendSTART()
+      ftr.SendEND_AND_WAIT("+EOF")
       SendRETURN()
     End Sub
 
@@ -46,7 +46,7 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements IFactory.Factory
+    Public Function Factory() As csmsgque.MqS Implements IFactory.Factory
       Return New Filter1()
     End Function
 
@@ -58,9 +58,9 @@ Public Module example
       srv.ConfigSetName("filter")
       srv.ConfigSetIsServer(True)
       srv.LinkCreate(args)
-      srv.ProcessEvent(MqS.WAIT.FOREVER)
       srv.ServiceCreate("+FTR", AddressOf srv.FilterFTR)
       srv.ServiceCreate("+EOF", AddressOf srv.FilterEOF)
+      srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
       srv.ErrorSet(ex)
     Finally

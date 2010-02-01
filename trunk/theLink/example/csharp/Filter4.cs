@@ -79,7 +79,7 @@ namespace example {
     }
 
     void EXIT () {
-      Environment.Exit (0);
+      Exit();
     }
 
     void WRIT () {
