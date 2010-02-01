@@ -27,6 +27,11 @@ CTAGSFLAGS = --c-kinds=+p
 
 EXTRA_DIST = $(mann_MANS)
 
+install-data-local:
+	rm -fr $(DESTDIR)$(datarootdir)/html/theLink
+	mkdir -p $(DESTDIR)$(datarootdir)
+	cp -pr $(srcdir)/html/theLink $(DESTDIR)$(datarootdir)/html
+
 dist-hook:
 	mkdir $(distdir)/html
 	cp -pr $(srcdir)/html $(distdir)/html
