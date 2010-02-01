@@ -21,7 +21,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     \
     ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
-    buffer.h ccmsgque.h error.h io_private.h mq_io.h pipe_io.h \
+    buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
     log.h msgque.h read.h swap.h tcp_io.h uds_io.h cache.h debug.h \
     generic_io.h main.h msgque_private.h send.h sys_com.h token.h \

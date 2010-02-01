@@ -1,4 +1,4 @@
-.TH "libmsgque" n "31 Jan 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "1 Feb 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -49,16 +49,16 @@ propagate the error messages from the server to the client
 .PP
 .SH "CONTEXT API"
 .PP
-\fBContextCreate\fP
+\fBMqContextCreate\fP
 .br
- \fBContextDelete\fP
+ \fBMqContextDelete\fP
 .br
- \fBExit\fP
+ \fBMqExit\fP
 .br
 .PP
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 .PP
-The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+The \fIcontext-data-structure\fP is created with \fBMqContextCreate\fP and deleted with \fBMqContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
 .nf
  struct MyCtxDataS {
@@ -106,22 +106,22 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 .SS "MqExit(struct MqS* ctx)"
 delete the \fIcontext\fP and exit the current process or thread 
 .PP
-This function will never return.
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. The problem is \fBwindows\fP using the \fIwinsock\fP implementation. For some kind of reason after an 'exit' function-call the sockets stop working. This is no problem because the second step (\fIsocket-exit\fP) is enougth to signal a \fIlink-down\fP. The problem is the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. To make it short use \fBMqExit\fP to exit your application.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 .SH "CONFIG API"
 .PP
-\fBInit\fP
+\fBMqInit\fP
 .br
  \fBbuffersize\fP, \fBdebug\fP, \fBtimeout\fP
 .br
@@ -148,9 +148,9 @@ The \fIstartup-prefix\fP have to be the name of the executablei, found in the \f
 .IP "\(bu" 2
 To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
 .IP "\(bu" 2
-To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBLinkCreate\fP.
+To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBMqLinkCreate\fP.
 .PP
-Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBLinkCreate\fP and have \fBnot\fP to be initialized again. 
+Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBMqLinkCreate\fP and have \fBnot\fP to be initialized again. 
 .PP
 \fBExample:\fP initialize the \fIstratup-prefix\fP with \fImyExecutable\fP and \fImyFirstArgument\fP 
 .PP
@@ -307,9 +307,9 @@ a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from 
 .IP "\(bu" 2
 a \fIfilter-context\fP create a new \fIfilter-instance\fP 
 .IP "\(bu" 2
-a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
+a \fIserver-context\fP create a new \fIworker-context\fP using \fBMqSlaveWorker\fP
 .IP "\(bu" 2
-a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
+a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBMqLinkCreate\fP
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
@@ -336,7 +336,7 @@ this option require the \fBfork\fP system-call and is \fBnot\fP compatible with 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIpidfile\fP write the PID of the daemon into this file (default: NULL, do not start as daemon) 
 .RE
@@ -351,11 +351,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
-By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBMqErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
 .SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
-This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
-This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBMqLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
 .PP
@@ -363,11 +363,11 @@ The \fIfactory-interface\fP is used to create a new:
 .IP "\(bu" 2
 \fIapplication-context\fP (C, TCL) or a new \fIclass-instance\fP (C++, C#, JAVA, PYTHON, PERL, VB.NET)
 .IP "\(bu" 2
-\fIserver-child-context\fP or \fIslave-child-context\fP using \fBLinkCreateChild\fP
+\fIserver-child-context\fP or \fIslave-child-context\fP using \fBMqLinkCreateChild\fP
 .IP "\(bu" 2
 \fIserver-parent-context\fP using the \fBstartAs\fP option \fI--thread\fP 
 .IP "\(bu" 2
-\fIslave-worker-context\fP using \fBSlaveWorker\fP
+\fIslave-worker-context\fP using \fBMqSlaveWorker\fP
 .IP "\(bu" 2
 \fIfilter-parent-context\fP using the \fBstartAs\fP option \fI--fork\fP or \fI--thread\fP 
 .PP
@@ -379,34 +379,34 @@ The \fIfactory-interface\fP is used to create a new:
 .fi
 .PP
 .SS "interface: MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
-A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the aplication continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP. 
+A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBMqSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the aplication continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBMqErrorGetNum\fP and \fBMqErrorGetText\fP and can be cleared using \fBMqErrorReset\fP. 
 .SS "interface: MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBMqErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBMqErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
 .RE
 .PP
 .SH "LINK API"
 .PP
-\fBLinkCreate\fP
+\fBMqLinkCreate\fP
 .br
- \fBLinkCreateChild\fP
+ \fBMqLinkCreateChild\fP
 .br
- \fBLinkDelete\fP
+ \fBMqLinkDelete\fP
 .br
- \fBLinkConnect\fP
+ \fBMqLinkConnect\fP
 .br
- \fBLinkGetParent\fP
+ \fBMqLinkGetParent\fP
 .br
- \fBLinkIsParent\fP
+ \fBMqLinkIsParent\fP
 .br
- \fBLinkGetCtxId\fP
+ \fBMqLinkGetCtxId\fP
 .br
- \fBLinkIsConnected\fP
+ \fBMqLinkIsConnected\fP
 .br
- \fBLinkGetTargetIdent\fP
+ \fBMqLinkGetTargetIdent\fP
 .br
 .PP
 setup and manage a \fIclient-server-link\fP 
@@ -476,14 +476,14 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incomming \fIservice-request\fP using \fBProcessEvent\fP together with the \fBMQ_WAIT_FOREVER\fP.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incomming \fIservice-request\fP using \fBMqProcessEvent\fP together with the \fBMQ_WAIT_FOREVER\fP.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
 .br
 .PP
 .IP "\(bu" 2
-the parent is the first context created and is created with \fBLinkCreate\fP
+the parent is the first context created and is created with \fBMqLinkCreate\fP
 .IP "\(bu" 2
 every new \fIparent-context\fP on the client create a new communication to a server.
 .IP "\(bu" 2
@@ -497,7 +497,7 @@ the \fIparent-context\fP control the socket communication interface
 .br
 .PP
 .IP "\(bu" 2
-the \fIchild-context\fP is the second or more context and is created with \fBLinkCreateChild\fP.
+the \fIchild-context\fP is the second or more context and is created with \fBMqLinkCreateChild\fP.
 .IP "\(bu" 2
 every new \fIchild-context\fP on the client create a new \fIchild-context\fP on the server.
 .IP "\(bu" 2
@@ -518,7 +518,7 @@ make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\f
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-commandline-arguments\fP for the \fI--pipe\fP setup.
 .RE
@@ -530,7 +530,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 \fBAttention:\fP
 .RS 4
-if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBInit\fP 
+if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an independent server of the current server is started. This is not a \fBSLAVE API\fP. The 'SELF' argument is replaced by an application default setting (if available) or by arguments set with \fBMqInit\fP 
 .RE
 .PP
 .SS "MqLinkCreateChild (struct MqS *ctx, struct MqS *parent, struct MqBufferLS ** args)"
@@ -540,9 +540,9 @@ A child is using the same process or thread as the parent but a different namesp
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
-\fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
+\fIparent\fP the \fIparent-context\fP defined with \fBMqLinkCreate\fP 
 .br
 \fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
 .RE
@@ -555,21 +555,21 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "MqLinkDelete(struct MqS *ctx)"
 close the \fIclient-server-link\fP 
 .PP
-On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIMQ_NO\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fIMQ_YES\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
+On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBMqLinkIsConnected\fP will return \fIMQ_NO\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fIMQ_YES\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 .SS "MqLinkConnect(struct MqS *ctx)"
 re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBMqErrorIsEXIT\fP) is ignored (\fBMqErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -582,7 +582,7 @@ get the \fIparent-context\fP from a client/server link
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -597,7 +597,7 @@ The \fIcontext-identifier\fP is a number and is used in the protocol to link a \
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -608,11 +608,11 @@ the identifier as number
 .SS "MQ_BOL MqLinkIsParent (struct MqS *ctx)"
 is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
-A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
+A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBMqLinkCreate\fP 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -623,15 +623,15 @@ a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP
 .SS "MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
 is the context connected? 
 .PP
-A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
+A context is connected if the \fBMqLinkCreate\fP command was successful. A context is \fInot\fP connected if:
 .IP "\(bu" 2
 the context has just been created and not connected
 .IP "\(bu" 2
-the link was deleted with \fBLinkDelete\fP
+the link was deleted with \fBMqLinkDelete\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -646,7 +646,7 @@ This function is only useful if the link is up and running.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -656,26 +656,26 @@ get the \fIident\fP of the \fIlink-target\fP or \fINULL\fP if not connected
 .PP
 .SH "SERVICE API"
 .PP
-\fBServiceIdentifier\fP
+\fBMqServiceIdentifier\fP
 .br
- \fBServiceCallback\fP
+ \fBMqServiceCallback\fP
 .br
- \fBServiceGetToken\fP
+ \fBMqServiceGetToken\fP
 .br
- \fBServiceIsTransaction\fP
+ \fBMqServiceIsTransaction\fP
 .br
- \fBServiceGetFilter\fP
+ \fBMqServiceGetFilter\fP
 .br
- \fBServiceCreate\fP
+ \fBMqServiceCreate\fP
 .br
- \fBServiceDelete\fP
+ \fBMqServiceDelete\fP
 .br
- \fBProcessEvent\fP
+ \fBMqProcessEvent\fP
 .br
 .PP
 create and manage services 
 .PP
-To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function. 
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBMqServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBMqServiceDelete\fP function. 
 .PP
 \fBExample:\fP define the service \fISRV1\fP on the \fIserver-link-setup\fP: 
 .PP
@@ -692,22 +692,22 @@ To provide a \fIservice\fP is the main purpose of a server and the main-purpose 
 .SS "TOKEN IDENTIFIER"
 a 4 byte string to identify different services 
 .PP
-The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\fP to link a \fIservice-handler\fP with an \fIidentifier\fP. The \fIidentifier\fP is part of the \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP function-call to access the services.
+The \fItoken-identifier\fP is defined by the programmer using \fBMqServiceCreate\fP to link a \fIservice-handler\fP with an \fIidentifier\fP. The \fIidentifier\fP is part of the \fBMqSendEND\fP, \fBMqSendEND_AND_WAIT\fP or \fBMqSendEND_AND_CALLBACK\fP function-call to access the services.
 .br
  For internal purpose some special \fItoken\fP are predefined:
 .IP "\(bu" 2
 \fB_???\fP - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
 .IP "\(bu" 2
-\fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
+\fB+ALL\fP - used in \fBMqServiceCreate\fP and \fBMqServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
 .IP "\(bu" 2
-\fB-ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
+\fB-ALL\fP - used in \fBMqServiceDelete\fP to delete \fBall\fP token
 .IP "\(bu" 2
 \fB+FTR\fP and \fB+EOF\fP - used for \fIone-directional-filter\fP 
 .PP
 .SS "SERVICE CALLBACK"
 function used as \fIservice-handle\fP 
 .PP
-A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
+A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBMqServiceCreate\fP or is used as argument to the \fBMqSendEND_AND_CALLBACK\fP function. 
 .PP
 The callback is implemented as a set of functions and data suitable for \fBMqCallbackS\fP.
 .SS "MQ_CST ServiceGetToken (ctx)"
@@ -717,7 +717,7 @@ This function is needed on the server to process a \fIservice-request\fP defined
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -728,11 +728,11 @@ the \fBTOKEN IDENTIFIER\fP
 .SS "int ServiceIsTransaction (ctx)"
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
-A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBSendEND\fP) 
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fIMQ_YES\fP if the package was send with \fBMqSendEND_AND_WAIT\fP or \fBMqSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIMQ_NO\fP if the package was send with \fBMqSendEND\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -753,7 +753,7 @@ return a 'filter not available' error
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
@@ -772,7 +772,7 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -795,7 +795,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -812,7 +812,7 @@ delete a service.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -833,11 +833,11 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB\fBMQ_WAIT_FOREVER\fP\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
 .PP
-This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
+This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBMqSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBtimeout\fP value), only used if \fIwait\fP = \fBMQ_WAIT_ONCE\fP 
 .br
@@ -851,27 +851,27 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "SEND API"
 .PP
-\fBSendSTART\fP
+\fBMqSendSTART\fP
 .br
- \fBSendEND\fP
+ \fBMqSendEND\fP
 .br
- \fBSendEND_AND_WAIT\fP
+ \fBMqSendEND_AND_WAIT\fP
 .br
- \fBSendEND_AND_CALLBACK\fP
+ \fBMqSendEND_AND_CALLBACK\fP
 .br
- \fBSendRETURN\fP
+ \fBMqSendRETURN\fP
 .br
- \fBSendERROR\fP
+ \fBMqSendERROR\fP
 .br
- \fBSendTYPE\fP
+ \fBMqSendTYPE\fP
 .br
- \fBSendN\fP
+ \fBMqSendN\fP
 .br
- \fBSendBDY\fP
+ \fBMqSendBDY\fP
 .br
- \fBSendL_START\fP
+ \fBMqSendL_START\fP
 .br
- \fBSendL_END\fP
+ \fBMqSendL_END\fP
 .br
 .PP
 construct an outgoing \fIsend-data-package\fP. 
@@ -880,7 +880,7 @@ construct an outgoing \fIsend-data-package\fP.
 .PP
 \fBAttention:\fP
 .RS 4
-Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBMqSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
  \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
@@ -904,7 +904,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -919,7 +919,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -936,7 +936,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -955,7 +955,7 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -984,7 +984,7 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -999,7 +999,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1012,7 +1012,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -1029,7 +1029,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the \fIbody-item\fP for appending 
 .br
@@ -1048,7 +1048,7 @@ The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the \fIentire-body\fP for appending 
 .br
@@ -1065,7 +1065,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1078,7 +1078,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1088,25 +1088,25 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "READ API"
 .PP
-\fBReadTYPE\fP
+\fBMqReadTYPE\fP
 .br
- \fBReadN\fP
+ \fBMqReadN\fP
 .br
- \fBReadBDY\fP
+ \fBMqReadBDY\fP
 .br
- \fBReadU\fP
+ \fBMqReadU\fP
 .br
- \fBReadL_START\fP
+ \fBMqReadL_START\fP
 .br
- \fBReadL_END\fP
+ \fBMqReadL_END\fP
 .br
- \fBReadProxy\fP
+ \fBMqReadProxy\fP
 .br
- \fBReadGetNumItems\fP
+ \fBMqReadGetNumItems\fP
 .br
- \fBReadItemExists\fP
+ \fBMqReadItemExists\fP
 .br
- \fBReadUndo\fP
+ \fBMqReadUndo\fP
 .br
 .PP
 extract data from an incoming \fIread-data-package\fP. 
@@ -1135,7 +1135,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -1148,11 +1148,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "MqReadN(ctx,MQ_BIN *value, MQ_SIZE *len)"
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBMqSendN\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
@@ -1167,11 +1167,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "MqReadBDY(ctx,MQ_BIN *value, MQ_SIZE *len)"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBMqSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
@@ -1190,7 +1190,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the buffer 
 .RE
@@ -1207,7 +1207,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqReadU(ctx)\fP call or \fINULL\fP to use the next item from the \fIread-data-package\fP. 
 .RE
@@ -1222,7 +1222,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1235,7 +1235,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP and the source of the copy 
+\fIctx\fP the context returned by \fBMqContextCreate\fP and the source of the copy 
 .br
 \fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
 .RE
@@ -1250,7 +1250,7 @@ get the number of items left in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1263,7 +1263,7 @@ check if an item exists in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1278,7 +1278,7 @@ Put the internal position-pointer to the start of the last read \fIbody-item\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1288,17 +1288,17 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 .SH "SLAVE API"
 .PP
-\fBSlaveWorker\fP
+\fBMqSlaveWorker\fP
 .br
- \fBSlaveCreate\fP
+ \fBMqSlaveCreate\fP
 .br
- \fBSlaveDelete\fP
+ \fBMqSlaveDelete\fP
 .br
- \fBSlaveGet\fP
+ \fBMqSlaveGet\fP
 .br
- \fBSlaveGetMaster\fP
+ \fBMqSlaveGetMaster\fP
 .br
- \fBSlaveIs\fP
+ \fBMqSlaveIs\fP
 .br
 .PP
 The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
@@ -1333,22 +1333,22 @@ In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connec
 \fBDefinition of a 'master-context'\fP
 .br
 .IP "\(bu" 2
-the \fImaster-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+the \fImaster-context\fP is a \fBMqparent-context\fP without a \fBMqchild-context\fP available.
 .IP "\(bu" 2
-the \fImaster-context\fP is a \fBclient-context\fP or a \fBserver-context\fP.
+the \fImaster-context\fP is a \fBMqclient-context\fP or a \fBMqserver-context\fP.
 .IP "\(bu" 2
-the \fImaster-context\fP is responsible to create or delete the \fBchild-context\fP of the \fIslave\fP.
+the \fImaster-context\fP is responsible to create or delete the \fBMqchild-context\fP of the \fIslave\fP.
 .IP "\(bu" 2
-the \fImaster-context\fP is responsible to delete the \fBparent-context\fP of the \fIslave\fP.
+the \fImaster-context\fP is responsible to delete the \fBMqparent-context\fP of the \fIslave\fP.
 .IP "\(bu" 2
-the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBSlaveWorker\fP
+the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBMqSlaveWorker\fP
 .PP
 \fBDefinition of a 'slave-context'\fP
 .br
 .IP "\(bu" 2
-the \fIslave-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+the \fIslave-context\fP is a \fBMqparent-context\fP without a \fBMqchild-context\fP available.
 .IP "\(bu" 2
-the \fIslave-context\fP is a \fBclient-context\fP.
+the \fIslave-context\fP is a \fBMqclient-context\fP.
 .IP "\(bu" 2
 the \fIslave-context\fP lifetime is controlled by the \fImaster-context\fP.
 .IP "\(bu" 2
@@ -1361,9 +1361,9 @@ a special form of a \fIslave-context\fP is a \fIworker-context\fP
 .IP "\(bu" 2
 the \fIworker-context\fP is a \fIslave-context\fP using the image of the \fImaster-context\fP self.
 .IP "\(bu" 2
-the \fImaster-context\fP have to be a \fBserver-context\fP.
+the \fImaster-context\fP have to be a \fBMqserver-context\fP.
 .IP "\(bu" 2
-the \fIworker-context\fP is created using \fBSlaveWorker\fP
+the \fIworker-context\fP is created using \fBMqSlaveWorker\fP
 .IP "\(bu" 2
 the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \fC0\fP.
 .PP
@@ -1437,7 +1437,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 \fBAttention:\fP
 .RS 4
-it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
+it is still possible to delete a \fIchild-slave-context\fP using \fBMqLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
 .SS "struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
@@ -1460,7 +1460,7 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1473,7 +1473,7 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1483,16 +1483,16 @@ a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP
 .PP
 .SH "BUFFER API"
 .PP
-\fBBufferIdentifer\fP
+\fBMqBufferIdentifer\fP
 .br
- \fBBufferGetTYPE\fP
+ \fBMqBufferGetTYPE\fP
 .br
- \fBBufferType\fP
+ \fBMqBufferType\fP
 .br
 .PP
 a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP 
 .PP
-The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
+The \fIbuffer-object\fP is returned by \fBMqReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
 .PP
 \fBExample:\fP read a \fIbuffer-object\fP and check for \fIstring-type\fP. 
 .PP
@@ -1506,7 +1506,7 @@ The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItype
 .SS "TYPE IDENTIFIER"
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the \fBMQ_CST\fP datatype (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBMqReadTYPE\fP or \fBMqBufferGetTYPE\fP have to match the previous \fBMqSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the \fBMQ_CST\fP datatype (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character (\fBMQ_BYT\fP)
 .IP "\(bu" 2
@@ -1536,23 +1536,23 @@ return the data form the buffer using the \fBTYPE IDENTIFIER\fP.
 return the type as single character of the item stored in the buffer object.
 .SH "EXCEPTION OBJECT"
 .PP
-\fBErrorGetText\fP
+\fBMqErrorGetText\fP
 .br
- \fBErrorGetNum\fP
+ \fBMqErrorGetNum\fP
 .br
- \fBErrorC\fP
+ \fBMqErrorC\fP
 .br
- \fBErrorSet\fP
+ \fBMqErrorSet\fP
 .br
- \fBErrorSetCONTINUE\fP
+ \fBMqErrorSetCONTINUE\fP
 .br
- \fBErrorIsEXIT\fP
+ \fBMqErrorIsEXIT\fP
 .br
- \fBErrorReset\fP
+ \fBMqErrorReset\fP
 .br
- \fBErrorRaise\fP
+ \fBMqErrorRaise\fP
 .br
- \fBErrorPrint\fP
+ \fBMqErrorPrint\fP
 .br
 .PP
 The \fIexception-object\fP (\fIctx\fP) is used to transport the \fIerror\fP from the \fBlibmsgque\fP context using the \fIprogramming-language\fP error-handling-code.
@@ -1584,7 +1584,7 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIprefix\fP the error-location like the current function-call or operation 
 .br
@@ -1594,13 +1594,13 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 .RE
 .PP
 .SS "MqErrorSet(ctx,MQ_INT errnum,enum MqErrorE errorcode,MQ_CST message)"
-convert a \fIctx\fP into a libmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
+convert a \fIctx\fP into a libmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBMqLinkDelete\fP or \fBMqExit\fP after the exception was caught and before the application exit or the object is deleted.
 .SS "MqErrorSetCONTINUE(ctx)"
 signal end of processing in an \fBIEvent\fP callback 
 .SS "MQ_BOL MqErrorIsEXIT(ctx)"
 check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
 .PP
-An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBMqLinkCreate\fP, \fBMqLinkCreateChild\fP, \fBMqLinkConnect\fP, \fBMqSendEND\fP, \fBMqSendEND_AND_WAIT\fP or \fBMqProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBMqErrorReset\fP and later do a reconnect using \fBMqLinkConnect\fP.
 .br
  
 .PP
@@ -1706,47 +1706,47 @@ A bi-directional filter allow a \fIdata-flow\fP in both directions and is used i
 .PP
  To define a \fIbi-directional\fP filter a couple of commands provide support:
 .IP "\(bu" 2
-\fBServiceCreate\fP
+\fBMqServiceCreate\fP
 .IP "  \(bu" 4
 use the token \fB+ALL\fP to add a listener for \fIall\fP services. This feature is used for a tunnel to modify the body at all. (example: \fCaguard\fP)
 .PP
 
 .IP "\(bu" 2
-\fBServiceProxy\fP
+\fBMqServiceProxy\fP
 .IP "  \(bu" 4
 use this function to link the \fIleft\fP context with the \fIright\fP context identified with the slave-identifier \fIid\fP (default: 0). No data manipulation is performed.
 .PP
 
 .IP "\(bu" 2
-\fBServiceGetFilter\fP
+\fBMqServiceGetFilter\fP
 .IP "  \(bu" 4
 in a filter service the current context is used to \fIread\fP the data. To \fIsend\fP the data an other context, belonging to the \fIother\fP site of the communication, have to be used. This function return the context of the other site.
 .PP
 
 .IP "\(bu" 2
-\fBServiceGetToken\fP
+\fBMqServiceGetToken\fP
 .IP "  \(bu" 4
 if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current token is not known. This function return the current token.
 .PP
 
 .IP "\(bu" 2
-\fBServiceIsTransaction\fP
+\fBMqServiceIsTransaction\fP
 .IP "  \(bu" 4
 if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current transaction-status is not known. This function return the transaction-status as boolean with \fBtrue\fP (with-transaction) or \fBfalse\fP (without-transaction).
 .IP "  \(bu" 4
-\fBwith-transaction\fP: the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
+\fBwith-transaction\fP: the package was send with \fBMqSendEND_AND_WAIT\fP or \fBMqSendEND_AND_CALLBACK\fP
 .IP "  \(bu" 4
-\fBwithout-transaction\fP: the package was send with \fBSendEND\fP
+\fBwithout-transaction\fP: the package was send with \fBMqSendEND\fP
 .PP
 
 .IP "\(bu" 2
-\fBReadBDY\fP
+\fBMqReadBDY\fP
 .IP "  \(bu" 4
 read and return the entire body as binary array. Use this array to apply a transformation to the body at all like encryption (example: \fCaguard\fP) or to save the body in a persistent storage for later use like transaction support (example: \fCatrans\fP)
 .PP
 
 .IP "\(bu" 2
-\fBSendBDY\fP
+\fBMqSendBDY\fP
 .IP "  \(bu" 4
 send a binary array, as returned by \fBReadBDY\fP, to the filter target.
 .PP
@@ -1771,13 +1771,13 @@ A one-directional filter is a special form of a bi-directional filter and allow 
 
 .fi
 .PP
- with every command have to use \fBlibmsgque\fP. To define a \fBlibmsgque\fP filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
+ with every command have to use \fBlibmsgque\fP. To define a \fBlibmsgque\fP filter create a service handle with \fBMqServiceCreate\fP or \fBMqServiceProxy\fP for the both special token:
 .IP "\(bu" 2
 \fB+FTR\fP : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \fB+FTR\fP service request.
 .IP "\(bu" 2
 \fB+EOF\fP : required to act on End-Of-Filter data and is called after all \fB+FTR\fP data was send. Sometimes the filter data can not be served as \fB+FTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the\fB+EOF\fP token is used to continue send \fB+FTR\fP data rows.
 .PP
-and send every data item with \fBSendEND_AND_WAIT\fP. 
+and send every data item with \fBMqSendEND_AND_WAIT\fP. 
 .SH "PORTABILITY ISSUES"
 .PP
 The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc or i686 processor from the VritualBox emulator.

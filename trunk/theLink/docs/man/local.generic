@@ -36,9 +36,10 @@ ALIASES		    += "configsection{2}=\subsection \NS{config_\1} command-line: \2\n\
 ALIASES		    += "configsection{1}=\subsection \NS{config_\1} \1\n\b type: <TT>\config_type_\1</TT>, \b get: <TT>\config_get_\1</TT>\n, \b set: <TT>\config_set_\1</TT>\n"
 ALIASES		    += "interface{1}=\subsection \NS{config_\1} interface: \config_\1"
 
+ALIASES		    += "RNS_PREFIX{1}=\1"
 ALIASES		    += "RNS{1}=\ref \NS{\1}"
-ALIASES             += "RNSA{1}=\ref \NS{\1} \"\1\""
-ALIASES             += "RNSA{2}=\ref \NS{\1} \"\2\""
+ALIASES             += "RNSA{1}=\ref \NS{\1} \"\RNS_PREFIX{\1}\""
+ALIASES             += "RNSA{2}=\ref \NS{\1} \"\RNS_PREFIX{\2}\""
 ALIASES             += "RNSC{1}=\ref \NS{config_\1} \"\1\""
 ALIASES		    += "NST{1}=\NS{tut_\1}"
 ALIASES		    += "RNST{1}=\ref \NST{\1}"

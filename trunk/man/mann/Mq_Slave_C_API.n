@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -131,7 +131,7 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3801 of file msgque.h.
+Definition at line 3809 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
@@ -230,7 +230,7 @@ the \fImaster-context\fP or \fINothing\fP if the \fIcontext\fP is no \fIslave-co
 .PP
  
 .PP
-Definition at line 3869 of file msgque.h.
+Definition at line 3877 of file msgque.h.
 .SS "\fBMQ_BOL\fP MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
@@ -262,7 +262,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 3883 of file msgque.h.
+Definition at line 3891 of file msgque.h.
 .SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
 .PP
 create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 

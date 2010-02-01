@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "31 Jan 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "1 Feb 2010" "Version 4.2" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -116,7 +116,7 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .SS "ctx.Exit()"
 delete the \fIcontext\fP and exit the current process or thread 
 .PP
-This function will never return.
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. The problem is \fBwindows\fP using the \fIwinsock\fP implementation. For some kind of reason after an 'exit' function-call the sockets stop working. This is no problem because the second step (\fIsocket-exit\fP) is enougth to signal a \fIlink-down\fP. The problem is the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. To make it short use \fBExit\fP to exit your application.
 .PP
 \fBParameters:\fP
 .RS 4

@@ -1,8 +1,8 @@
-.TH "msgque.h" n "31 Jan 2010" "Version 4.2" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "1 Feb 2010" "Version 4.2" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 156 2010-01-27 11:22:58Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 166 2010-01-31 11:18:47Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -1491,13 +1491,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 156 2010-01-27 11:22:58Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 156 2010-01-27 11:22:58Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 166 2010-01-31 11:18:47Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 156 $ 
+$Rev: 166 $ 
 .RE
 .PP
 \fBAuthor:\fP

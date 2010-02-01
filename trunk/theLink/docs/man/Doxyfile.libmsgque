@@ -27,6 +27,7 @@ ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"msgque.h\""
+ALIASES		    += "RNS_PREFIX{1}=Mq\1"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

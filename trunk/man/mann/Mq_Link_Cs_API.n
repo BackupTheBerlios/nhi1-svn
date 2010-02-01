@@ -1,4 +1,4 @@
-.TH "Mq_Link_Cs_API" n "31 Jan 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_Cs_API" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

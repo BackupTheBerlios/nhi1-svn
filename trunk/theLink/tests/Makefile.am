@@ -136,7 +136,7 @@ dist-hook: example/Server.class
 	$(VPATH_HOOK_DIST)
 	mkdir $(distdir)/example
 	chmod u+w $(distdir)/example
-	cp example/*.class $(distdir)/example
+	cp $(srcdir)/example/*.class $(distdir)/example
 	chmod u+w $(distdir)/example/*.class
 
 TESTS_ENVIRONMENT = $(TCLSH)
