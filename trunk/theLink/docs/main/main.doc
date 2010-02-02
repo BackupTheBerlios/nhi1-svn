@@ -2,14 +2,16 @@
 
 <CENTER>
 
-\section nw  NEWS, from 15 Jan 2010
+\section nw  NEWS, from 02 Feb 2010
 
-This is a \b maintenance and \b reorganization release to prepare the\n
-environment for the new \b milestone release coming soon.\n
-The highlights are: API reorganization\n
-documentation update and reorganization\n
-new public API - \RNSC{IEvent}\n
-
+This is a \ref changelog "feature-release" to prepare the environment\n
+for the new \b milestone-release coming soon. \n
+1. FEATURE: Recover from a Server or a Network downtime \n
++ NEW: \RNSA{LinkConnect} +\n
++ NEW: \RNSA{ErrorIsEXIT} +\n
+2. FEATURE: Identify the link-target \n
++ NEW: \RNSC{ident} +\n
++ NEW: \RNSA{LinkGetTargetIdent} +\n
 
 \section intro Introduction
 

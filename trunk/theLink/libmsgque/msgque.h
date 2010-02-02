@@ -856,7 +856,7 @@ struct MqSetupS {
 
   /// \brief do not delete the \e server-context on \e client-server-link shutdown
   ///
-  /// By default the \e server-context is deleted and the \e server-process ot \e server-thread exit 
+  /// By default the \e server-context is deleted and the \e server-process or \e server-thread exit 
   /// if the \e client close the connection. If this option is set to \yes
   /// the \e server will continue to work. Without \e client connection only
   /// the internal event function (set with \RNSC{IEvent}) is available to work on tasks.

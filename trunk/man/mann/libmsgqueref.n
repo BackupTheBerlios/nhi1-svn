@@ -1,4 +1,4 @@
-.TH "libmsgque" n "2 Feb 2010" "Version 4.2" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "2 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -351,7 +351,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
-By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBMqErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBMqErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
 .SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"

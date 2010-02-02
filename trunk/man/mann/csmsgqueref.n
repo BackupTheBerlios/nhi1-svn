@@ -1,4 +1,4 @@
-.TH "csmsgque" n "2 Feb 2010" "Version 4.2" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "2 Feb 2010" "Version 4.3" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -330,7 +330,7 @@ This option is \fBnot\fP available for \fBcsmsgque\fP.
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
-By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIfalse\fP) 
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIfalse\fP) 
 .SS "interface: IServerSetup.Call()"
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fItrue\fP. 
 .SS "interface: IServerCleanup.Call()"

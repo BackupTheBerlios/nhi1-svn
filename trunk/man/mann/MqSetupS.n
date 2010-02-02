@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -175,7 +175,7 @@ Definition at line 760 of file msgque.h.
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
-By default the \fIserver-context\fP is deleted and the \fIserver-process\fP ot \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIfalse\fP) 
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fItrue\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIfalse\fP) 
 .PP
 Definition at line 865 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS.isServer\fP"

@@ -23,8 +23,8 @@ AC_CONFIG_HEADER([mqconfig.h])
 # > win/mqconfig.h
 # > theLink/csmsgque/csmsgque.cs
 # > win/win/win.vsprops
-AC_SUBST([LIBMSGQUE_VERSION], ["4.2"])
-AC_DEFINE([LIBMSGQUE_VERSION], ["4.2"], [version of the 'libmsgque' package])
+AC_SUBST([LIBMSGQUE_VERSION], ["4.3"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["4.3"], [version of the 'libmsgque' package])
 
 #  Updating library version information
 #  ====================================
