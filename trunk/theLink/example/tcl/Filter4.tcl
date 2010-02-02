@@ -33,7 +33,7 @@ proc LOGF {ctx} {
 }
 
 proc EXIT {ctx} {
-  exit 0
+  $ctx Exit
 }
 
 proc WRIT {ftr} {

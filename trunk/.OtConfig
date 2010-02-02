@@ -10,6 +10,8 @@ fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
+		    --enable-brain \
+		    --enable-guard \
 		    --enable-tcl \
 		    --enable-cxx \
 		    --enable-java \

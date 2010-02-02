@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -145,7 +145,7 @@ do { \
 .PP
 
 .PP
-Definition at line 3950 of file msgque.h.
+Definition at line 3953 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
@@ -164,7 +164,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 4002 of file msgque.h.
+Definition at line 4005 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 'basename' system call with error handling feature 

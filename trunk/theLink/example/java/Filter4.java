@@ -118,7 +118,8 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
 
   private class EXIT implements IService {
     public void Service (MqS ctx) throws MqSException {
-      System.exit(0);
+      Exit();
+      SendRETURN();
     }
   }
 

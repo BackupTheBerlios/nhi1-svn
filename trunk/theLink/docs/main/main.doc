@@ -96,6 +96,7 @@ setup and maintain the link and is responsible for:\n
   \ref service_call\n
   \ref performance\n
   \ref faq\n
+  \ref changelog\n
 
 \section main_example1 Example1 Client/Server to multiplicate two double values
 <TABLE>

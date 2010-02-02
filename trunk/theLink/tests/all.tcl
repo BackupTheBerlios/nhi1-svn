@@ -10,8 +10,9 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#set argv [list --only-c --testing]
-#lappend argv --only-perl -match "async-F*" --only-pipe
+if {![llength $argv]} {
+  lappend argv --only-c --only-binary
+}
 
 source [file join [file dirname [info script]] library.tcl]
 
@@ -25,7 +26,7 @@ testsDirectory $testdir
 tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
-#configure -file trans.test
+#configure -file int.test
 
 tcltest::runAllTests
 

@@ -52,7 +52,7 @@ class Filter4(MqS):
     ftr.FH.flush()
     ftr.SendRETURN()
   def EXIT(ctx):
-    sys.exit();
+    ctx.Exit()
   def Event(ctx):
     if len(ctx.itms) == 0:
       ctx.ErrorSetCONTINUE()

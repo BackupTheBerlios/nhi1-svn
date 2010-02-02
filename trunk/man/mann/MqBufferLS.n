@@ -1,4 +1,4 @@
-.TH "MqBufferLS" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferLS" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -36,29 +36,29 @@ the object to manage an array of \fBMqBufferS\fP items.
 
 every \fBMqBufferLS\fP is able to store a infinite number of \fBMqBufferS\fP objects using dynamic allocation. the \fBMqBufferS\fP objects are stored in a flat array of \fBMqBufferS\fP object pointers. to access an object only the \fIdata\fP or the \fIcur\fP member is used (e.g. \fB\fCdata\fP[index\fP]). in difference to the \fIdata\fP member the \fIcur\fP member has a floating position to implement an increment/decrement like behaviour 
 .PP
-Definition at line 2539 of file msgque.h.
+Definition at line 2542 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "struct \fBMqBufferS\fP** \fBMqBufferLS.cur\fP\fC [read]\fP"
 .PP
 pointer to the current position (e.g. data <= cur <= data+cursize, floating position) 
 .PP
-Definition at line 2543 of file msgque.h.
+Definition at line 2546 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferLS.cursize\fP"
 .PP
 the currently used size (e.g. 0 <= cursize <= size) 
 .PP
-Definition at line 2541 of file msgque.h.
+Definition at line 2544 of file msgque.h.
 .SS "struct \fBMqBufferS\fP** \fBMqBufferLS.data\fP\fC [read]\fP"
 .PP
 pointer to the allocated memory (fixed position) 
 .PP
-Definition at line 2542 of file msgque.h.
+Definition at line 2545 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferLS.size\fP"
 .PP
 the total allocated size 
 .PP
-Definition at line 2540 of file msgque.h.
+Definition at line 2543 of file msgque.h.
 
 .SH "Author"
 .PP 

@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,14 +86,14 @@ The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\f
 .PP
 
 .PP
-Definition at line 1776 of file msgque.h.
+Definition at line 1779 of file msgque.h.
 .SS "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
 .PP
 function used as \fIservice-handle\fP 
 .PP
 A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
 .PP
-Definition at line 1785 of file msgque.h.
+Definition at line 1788 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqWaitOnEventE\fP"
@@ -112,7 +112,7 @@ wait for one new event
 \fB\fIMQ_WAIT_FOREVER \fP\fP
 wait forever 
 .PP
-Definition at line 1788 of file msgque.h.
+Definition at line 1791 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"

@@ -1,4 +1,4 @@
-.TH "Mq_Link_C_API" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -301,7 +301,7 @@ the identifier as number
 .PP
  
 .PP
-Definition at line 1728 of file msgque.h.
+Definition at line 1731 of file msgque.h.
 .SS "struct \fBMqS\fP* MqLinkGetParent (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
 .PP
 get the \fIparent-context\fP from a client/server link 
@@ -333,7 +333,7 @@ the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP
 .PP
  
 .PP
-Definition at line 1692 of file msgque.h.
+Definition at line 1695 of file msgque.h.
 .SS "\fBMQ_CST\fP MqLinkGetTargetIdent (struct \fBMqS\fP *const  ctx)"
 .PP
 get the \fIident\fP of the \fIlink-target\fP 
@@ -407,7 +407,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
  
 .PP
-Definition at line 1708 of file msgque.h.
+Definition at line 1711 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

@@ -319,16 +319,17 @@ proc getServer {srv} {
 }
 
 proc getFilter {srv} {
+
   set RET [list]
 
   # prefix (debugger)
   lappend RET {*}[getPrefix $srv]
 
   # setup args
-  foreach {exe lng io start} [split $srv .] break
+  regexp {^(.+)\.(\w+)\.(\w+)\.(\w+)$} $srv all path lng io start
 
   # main executable
-  lappend RET {*}[getExampleExecutable $exe.$lng]
+  lappend RET {*}[getExampleExecutable $path.$lng]
 
   # postfix
   lappend RET {*}[getPostfix $srv]
@@ -390,22 +391,27 @@ proc getATool {arg} {
 }
 
 proc getExampleExecutable {srv} {
-    global env
-    set RET [list]
+  global env
+  set RET [list]
 
-    switch -glob $srv {
-      *.python	{ lappend RET $::PYTHON [file join $::linksrcdir example python [file rootname $srv].py] }
-      *.perl	{ lappend RET $::PERL [file join $::linksrcdir example perl [file rootname $srv].pl] }
-      *.java	{ lappend RET $::JAVA example.[file rootname $srv] }
-      *.csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp [file rootname $srv].exe] }
-      *.vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb [file rootname $srv].exe] }
-      *.tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
-      *.cc	{ lappend RET [file join $::linkbuilddir example cc [file rootname $srv]$::EXEEXT] }
-      *.c	{ lappend RET [file join $::linkbuilddir example c [file rootname $srv]$::EXEEXT] }
+  regexp {^(.+)\.(\w+)$} $srv all path lng
+
+  if {[file exists $path]} {
+    set RET $path
+  } else {
+    switch $lng {
+      python	{ lappend RET $::PYTHON [file join $::linksrcdir example python $path.py] }
+      perl	{ lappend RET $::PERL [file join $::linksrcdir example perl $path.pl] }
+      java	{ lappend RET $::JAVA example.$path }
+      csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
+      vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
+      tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
+      cc	{ lappend RET [file join $::linkbuilddir example cc $path$::EXEEXT] }
+      c		{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }
       *		{ Error "invalid example: $srv" }
     }
-
-    return $RET
+  }
+  return $RET
 }
 
 proc getExample {srv} {
@@ -1090,8 +1096,7 @@ proc Setup {num mode com server args} {
     if {$serverSilent} { lappend sargs --silent }
     if {!$env(USE_REMOTE)} {
       if {$filter_server ne "NO"} {
-	foreach {x t s} [split $server .] break
-	set sl [list {*}[getFilter $filter_server.$x] {*}$DAEMON]
+	set sl [list {*}[getFilter $filter_server.$server] {*}$DAEMON]
 	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
 	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
@@ -1112,14 +1117,13 @@ proc Setup {num mode com server args} {
 
     ## prepare parent arguments
     if {$filter_client ne "NO"} {
-      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client] --name fc @ {*}$comargs]
+      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client.$server] --name fc @ {*}$comargs]
     } else {
       set cl [list LinkCreate {*}$cargs {*}$comargs]
     }
     if {$com eq "pipe"} { 
       if {$filter_server ne "NO"} {
-	foreach {x t s} [split $server .] break
-	lappend cl @ {*}[getFilter $filter_server.$x] --name fs {*}$comargs
+	lappend cl @ {*}[getFilter $filter_server.$server] --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {

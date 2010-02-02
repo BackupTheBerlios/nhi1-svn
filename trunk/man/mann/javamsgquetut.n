@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "1 Feb 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "2 Feb 2010" "Version 4.2" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

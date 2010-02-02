@@ -143,7 +143,7 @@ error:
 }
 
 static enum MqErrorE EXIT ( ARGS ) {
-  exit(0);
+  MqExit(mqctx);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {

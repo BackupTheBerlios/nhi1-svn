@@ -514,6 +514,8 @@ MqLinkConnect (
   MQ_BOL check = pIoCheck(context->link.io);
   if (check == MQ_YES && context->link.bits.isConnected == MQ_YES) {
     return MQ_OK;
+  } else if (context->link.bits.onCreateStart == MQ_NO) {
+    return MqErrorDb(MQ_ERROR_LINK_CREATE);
   } else {
     MQ_STR serverexec = NULL;
     struct pChildS *child;

@@ -44,19 +44,20 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void Event () {
-      // check if an item is available
+      // check if data is available
       if (itms.empty()) {
-	// no transaction available
+	// no data available, set error-code to CONTINUE
 	ErrorSetCONTINUE();
       } else {
 	// extract the first (oldest) item from the store
 	struct FilterItmS it = itms.front();
+	// get the filter-context
 	Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
-	// is an item available?
+	// an item is available, try to send the data
 	try {
-	  // reconnect or do nothing if already connected
+	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
-	  // send the ctxaction to the ctx, on error write message but do not stop processing
+	  // send the data
 	  ftr->SendSTART();
 	  ftr->SendBDY(it.bdy, it.len);
 	  if (it.isTransaction) {
@@ -64,17 +65,21 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 	  } else {
 	    ftr->SendEND(it.token);
 	  }
+	// on error, check if an "exit" happen
 	} catch (const exception& e) {
 	  ftr->ErrorSet (e);
 	  if (ftr->ErrorIsEXIT()) {
+	    // on exit ignore the error but do !not! forget the data
 	    ftr->ErrorReset();
 	    return;
 	  } else {
+	    // on error write the error-text and "forget" the data
 	    ftr->ErrorWrite();
 	  }
 	}
 	// reset the item-storage
 	MqSysFree(it.bdy);
+	// delete the data, will contine with next item
 	itms.pop();
       }
     }
@@ -99,12 +104,16 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void LOGF () {
+      // get the "link-target"
       Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
+      // check "Ident" from the "link-target"
       if (!strcmp(ftr->LinkGetTargetIdent (),"transFilter")) {
+	// if "Ident" is "transFilter" send the data to the "link-target"
 	ftr->SendSTART();
 	ftr->SendC(ReadC());
 	ftr->SendEND_AND_WAIT("LOGF");
       } else {
+	// if "Ident" is not "transFilter" use the data as file-name to open a file 
 	ftr->FH = fopen (ReadC(), "a");
       }
       SendRETURN();
@@ -117,7 +126,7 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void EXIT () {
-      exit(0);
+      Exit();
     }
 
     void ServerCleanup() {

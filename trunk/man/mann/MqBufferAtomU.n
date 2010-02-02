@@ -1,4 +1,4 @@
-.TH "MqBufferAtomU" n "1 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferAtomU" n "2 Feb 2010" "Version 4.2" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -66,69 +66,69 @@ MqBufferAtomU \- union used to set or modify native data from an \fBMqBufferS\fP
 .PP 
 union used to set or modify native data from an \fBMqBufferS\fP object 
 .PP
-Definition at line 2014 of file msgque.h.
+Definition at line 2017 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 2022 of file msgque.h.
+Definition at line 2025 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B1\fP[1]"
 .PP
 1 byte ARRAY used for copy 
 .PP
-Definition at line 2026 of file msgque.h.
+Definition at line 2029 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B2\fP[2]"
 .PP
 2 byte ARRAY used for copy 
 .PP
-Definition at line 2025 of file msgque.h.
+Definition at line 2028 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B4\fP[4]"
 .PP
 4 byte ARRAY used for copy 
 .PP
-Definition at line 2024 of file msgque.h.
+Definition at line 2027 of file msgque.h.
 .SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B8\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 2023 of file msgque.h.
+Definition at line 2026 of file msgque.h.
 .SS "\fBMQ_DBL\fP \fBMqBufferAtomU.D\fP"
 .PP
 8 byte double data 
 .PP
-Definition at line 2021 of file msgque.h.
+Definition at line 2024 of file msgque.h.
 .SS "\fBMQ_FLT\fP \fBMqBufferAtomU.F\fP"
 .PP
 4 byte float data 
 .PP
-Definition at line 2019 of file msgque.h.
+Definition at line 2022 of file msgque.h.
 .SS "\fBMQ_INT\fP \fBMqBufferAtomU.I\fP"
 .PP
 4 byte integer data 
 .PP
-Definition at line 2018 of file msgque.h.
+Definition at line 2021 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqBufferAtomU.O\fP"
 .PP
 1 byte boolean data 
 .PP
-Definition at line 2016 of file msgque.h.
+Definition at line 2019 of file msgque.h.
 .SS "\fBMQ_SRT\fP \fBMqBufferAtomU.S\fP"
 .PP
 2 byte short data 
 .PP
-Definition at line 2017 of file msgque.h.
+Definition at line 2020 of file msgque.h.
 .SS "\fBMQ_WID\fP \fBMqBufferAtomU.W\fP"
 .PP
 8 byte integer data 
 .PP
-Definition at line 2020 of file msgque.h.
+Definition at line 2023 of file msgque.h.
 .SS "\fBMQ_BYT\fP \fBMqBufferAtomU.Y\fP"
 .PP
 1 byte byte data 
 .PP
-Definition at line 2015 of file msgque.h.
+Definition at line 2018 of file msgque.h.
 
 .SH "Author"
 .PP 

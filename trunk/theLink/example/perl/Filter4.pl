@@ -34,7 +34,8 @@ use base qw(Net::PerlMsgque::MqS);
   }
 
   sub EXIT {
-    exit(0);
+    my $ctx = shift;
+    $ctx->Exit;
   }
 
   sub LOGF {

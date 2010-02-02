@@ -10,6 +10,22 @@
 #§              please contact AUTHORS for additional information
 #§
 
+02 Feb 2010: v NHI1-0.5, PLMK-1.4 and libmsgque-4.3
+
+This is a 'feature-release' to prepare the environment for the new 
+'milestone-release' coming soon
+
+ - theLink (libmsgque)
+  + new feature - Recover from a Server or a Network downtime
+      read more: html/theLink/changelog.htm
+  + API addition:
+      MqLinkGetTargetIdent ... identify the link-target
+      MqLinkConnect .......... reconnect a broken client-server-link
+      MqErrorIsEXIT .......... catch application-exit
+  + update documentation and fix missing information
+  + extend the test file: theLink/tests/trans.test
+
+
 v NHI1-0.4, PLMK-1.3 and libmsgque-4.2
 
 This is a 'maintenance' and 'reorganization' release to prepare the

@@ -87,7 +87,7 @@ enum MqMessageNumE {
     /* 31 */ MQ_ERROR_ID_OUT_OF_RANGE,
     /* 32 */ MQ_ERROR_CONFIGURATION_REQUIRED, 
     /* 33 */ MQ_ERROR_MASTER_SLAVE_CLIENT,
-    /* 34 */ MQ_FREE_2,
+    /* 34 */ MQ_ERROR_LINK_CREATE,
     /* 35 */ MQ_ERROR_CONNECTED,
     /* 36 */ MQ_MESSAGE_END,
 };
@@ -164,8 +164,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"to use the '%s' feature the configuration '%s' is required",
     /* MQ_ERROR_MASTER_SLAVE_CLIENT */
 	"the '%s' have to be a 'client' and a 'parent' without 'child' objects",
-    /* MQ_FREE_2 */
-	"",
+    /* MQ_ERROR_LINK_CREATE */
+	"the 'client-server-link' was not created",
     /* MQ_ERROR_CONNECTED */
 	"the '%s' object link is '%s' connected",
     /* MQ_MESSAGE_END */

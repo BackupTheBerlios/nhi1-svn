@@ -28,13 +28,18 @@ CTAGSFLAGS = --c-kinds=+p
 EXTRA_DIST = $(mann_MANS)
 
 install-data-local:
+	echo $$(pwd)
 	rm -fr $(DESTDIR)$(datarootdir)/html/theLink
-	mkdir -p $(DESTDIR)$(datarootdir)
-	cp -pr $(srcdir)/html/theLink $(DESTDIR)$(datarootdir)/html
+	mkdir -p $(DESTDIR)$(datarootdir)/html
+	cp -pr $(srcdir)/html/theLink $(DESTDIR)$(datarootdir)/html/theLink
+
+uninstall-local:
+	chmod -R u+rwx $(DESTDIR)$(datarootdir)/html/theLink
+	rm -fr $(DESTDIR)$(datarootdir)/html/theLink
 
 dist-hook:
-	mkdir $(distdir)/html
-	cp -pr $(srcdir)/html $(distdir)/html
+	rm -fr $(distdir)/html
+	cp -pr $(srcdir)/html $(distdir)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-tcl --enable-cxx \
       --enable-java --enable-csharp --enable-python --enable-perl \

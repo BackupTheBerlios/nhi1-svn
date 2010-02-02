@@ -11,11 +11,6 @@
 #§
 
 ##
-## set filter
-set env(TS_FILTER)  aguard
-set env(TS_LIBRARY) [info script]
-
-##
 ## define the directory environment
 if {![info exists testdir]} {
   set testdir	      [file normalize [file join [file dirname [info script]]]]
@@ -24,6 +19,11 @@ if {![info exists testdir]} {
   set guardsrcdir     [file join [file dirname [info script]] ..]
   set guardbuilddir   [file dirname [pwd]]
 }
+
+##
+## set filter
+set env(TS_FILTER)  [file join $guardbuilddir aguard aguard]
+set env(TS_LIBRARY) [info script]
 
 ##
 ## load the test library

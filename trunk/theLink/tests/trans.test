@@ -245,6 +245,21 @@ $J - T1
 $J - T2
 $J - T3"
 
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [numGet 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filterGet BIN_LST binary] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet -not SRV_LST pipe] {
+
 test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
@@ -350,6 +365,19 @@ $J - T3"
   }; # BIN_LST
  }; # Master/Child  
 unset -nocomplain I B C S
+
+test trans-Y1 {try to connect a "not-created" link} \
+  -setup	    {
+    set CTX   [tclmsgque MqS]
+  } \
+  -body           {
+    $CTX  LinkConnect
+  } \
+  -cleanup	    {
+    $CTX Delete
+  } \
+  -returnCodes    error \
+  -result         {C> (unknown) [MqLinkConnect] the 'client-server-link' was not created}
 
 ##
 ## -----------------------------------------------------------------------

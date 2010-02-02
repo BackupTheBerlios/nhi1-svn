@@ -1439,11 +1439,14 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// \details To delete an application is a difficult task because the \e link-target
 /// have to be informed. This information is send as \e shutdown-event and 
 /// finally as \e socket-exit after \e application-exit. This library tries to perform this two 
-/// steps even if the default \b exit function is called. The problem is \b windows using the \e winsock implementation.
-/// For some kind of reason after an "exit" function-call the sockets stop working.
+/// steps even if the default \b exit function is called. 
 /// This is no problem because the second step (\e socket-exit) is enougth to signal a \e link-down.
-/// The problem is the \e pipe-link on windows. The client can not exit and create a \e socket-exit
+/// It is \b not secure to depend only on \e socket-exit for application exit
+/// because sometimes the sockets stop working or the \e link-target does not get a \e socket-exit.
+/// For example the \e pipe-link on windows. The client can not exit and create a \e socket-exit
 /// error on the \e server because the \e server is still running without receiving a \e shutdown-event.
+/// A second argument for using the \RNSA{Exit} function is, that it can be used for process \b and 
+/// thread exit. A thread, started by \libmsgque, does exit but the process continue to work.
 /// To make it short use \RNSA{Exit} to exit your application.
 /// \ifnot MAN
 /// The following steps are performed:
