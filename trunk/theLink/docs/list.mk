@@ -16,6 +16,7 @@ libmsgque_private/main.doc \
 libmsgque_public/Doxyfile \
 list.mk \
 main/Doxyfile \
+main/changes.doc \
 main/context.doc \
 main/faq.doc \
 main/features.doc \
@@ -40,6 +41,7 @@ man/local.generic \
 man/tutorial.doc \
 pymsgque_private/Doxyfile \
 pymsgque_private/main.doc \
+stylesheet.css \
 tclmsgque_private/Doxyfile \
 tclmsgque_private/main.doc \
 doxygen.sh
