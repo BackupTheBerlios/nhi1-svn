@@ -1,11 +1,11 @@
-> tclsh thread/NHI1-0.4/theLink/tests/server.tcl --tcp --host localhost --port 7784 --thread
-> thread/NHI1-0.4/theLink/tests/client --all --tcp --host localhost --port 7784
-C> (client:9126) [2010-01-15:09-59-44] [0-0-0x621bc0-main]: start: --------------------------------------
-C> (client:9126) [2010-01-15:09-59-44] [0-0-0x621bc0-statistics]:                      MqSendEND:       6.01
-C> (client:9126) [2010-01-15:09-59-45] [0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.43
-C> (client:9126) [2010-01-15:09-59-48] [0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      31.84
-C> (client:9126) [2010-01-15:09-59-49] [0-0-0x621bc0-statistics]:                  parent create:    8463.43
-C> (client:9126) [2010-01-15:09-59-49] [0-0-0x621bc0-statistics]:                  parent delete:     536.42
-C> (client:9126) [2010-01-15:09-59-49] [0-0-0x621bc0-statistics]:                   child create:     246.50
-C> (client:9126) [2010-01-15:09-59-49] [0-0-0x621bc0-statistics]:                   child delete:      33.68
-C> (client:9126) [2010-01-15:09-59-49] [0-0-0x621bc0-main]: end: ----------------------------------------
+> tclsh thread/NHI1-0.5/theLink/tests/server.tcl --tcp --host localhost --port 7784 --thread
+> thread/NHI1-0.5/theLink/tests/client --all --tcp --host localhost --port 7784
+C> (client:5652) [2010-02-02:13-21-58] [0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:5652) [2010-02-02:13-21-59] [0-0-0x621bc0-statistics]:                      MqSendEND:       6.71
+C> (client:5652) [2010-02-02:13-21-59] [0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.37
+C> (client:5652) [2010-02-02:13-22-03] [0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      32.32
+C> (client:5652) [2010-02-02:13-22-04] [0-0-0x621bc0-statistics]:                  parent create:    8625.57
+C> (client:5652) [2010-02-02:13-22-04] [0-0-0x621bc0-statistics]:                  parent delete:     536.31
+C> (client:5652) [2010-02-02:13-22-04] [0-0-0x621bc0-statistics]:                   child create:     248.19
+C> (client:5652) [2010-02-02:13-22-04] [0-0-0x621bc0-statistics]:                   child delete:      34.06
+C> (client:5652) [2010-02-02:13-22-04] [0-0-0x621bc0-main]: end: ----------------------------------------

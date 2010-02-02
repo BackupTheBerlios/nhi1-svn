@@ -1,11 +1,11 @@
-> nothread/NHI1-0.4/theLink/tests/ccserver --uds --file ./socket.uds --fork
-> nothread/NHI1-0.4/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:8486) [2010-01-15:09-59-14] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:8486) [2010-01-15:09-59-14] [0-0-0x6209a0-statistics]:                      MqSendEND:       3.78
-C> (client:8486) [2010-01-15:09-59-14] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:       9.40
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      14.55
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-statistics]:                  parent create:     321.11
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-statistics]:                  parent delete:     221.50
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-statistics]:                   child create:      72.72
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-statistics]:                   child delete:      24.76
-C> (client:8486) [2010-01-15:09-59-17] [0-0-0x6209a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.5/theLink/tests/ccserver --uds --file ./socket.uds --fork
+> nothread/NHI1-0.5/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:5011) [2010-02-02:13-21-28] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:5011) [2010-02-02:13-21-29] [0-0-0x6209a0-statistics]:                      MqSendEND:       3.47
+C> (client:5011) [2010-02-02:13-21-29] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:       9.41
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      13.75
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-statistics]:                  parent create:     344.53
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-statistics]:                  parent delete:     201.60
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-statistics]:                   child create:      74.53
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-statistics]:                   child delete:      23.81
+C> (client:5011) [2010-02-02:13-21-32] [0-0-0x6209a0-main]: end: ----------------------------------------

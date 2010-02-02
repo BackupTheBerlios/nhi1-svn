@@ -1,11 +1,11 @@
-> perl nothread/NHI1-0.4/theLink/tests/server.pl --tcp --host localhost --port 7796 --spawn
-> nothread/NHI1-0.4/theLink/tests/client --all --tcp --host localhost --port 7796
-C> (client:17343) [2010-01-15:10-04-01] [0-0-0x620bc0-main]: start: --------------------------------------
-C> (client:17343) [2010-01-15:10-04-02] [0-0-0x620bc0-statistics]:                      MqSendEND:       8.38
-C> (client:17343) [2010-01-15:10-04-02] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.65
-C> (client:17343) [2010-01-15:10-04-06] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      32.45
-C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                  parent create:  207232.68
-C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                  parent delete:     537.87
-C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                   child create:     127.85
-C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-statistics]:                   child delete:      33.59
-C> (client:17343) [2010-01-15:10-04-27] [0-0-0x620bc0-main]: end: ----------------------------------------
+> perl nothread/NHI1-0.5/theLink/tests/server.pl --tcp --host localhost --port 7796 --spawn
+> nothread/NHI1-0.5/theLink/tests/client --all --tcp --host localhost --port 7796
+C> (client:13875) [2010-02-02:13-26-18] [0-0-0x620bc0-main]: start: --------------------------------------
+C> (client:13875) [2010-02-02:13-26-18] [0-0-0x620bc0-statistics]:                      MqSendEND:       8.45
+C> (client:13875) [2010-02-02:13-26-19] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.49
+C> (client:13875) [2010-02-02:13-26-23] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      32.40
+C> (client:13875) [2010-02-02:13-26-44] [0-0-0x620bc0-statistics]:                  parent create:  209664.69
+C> (client:13875) [2010-02-02:13-26-44] [0-0-0x620bc0-statistics]:                  parent delete:     515.38
+C> (client:13875) [2010-02-02:13-26-44] [0-0-0x620bc0-statistics]:                   child create:     129.29
+C> (client:13875) [2010-02-02:13-26-44] [0-0-0x620bc0-statistics]:                   child delete:      35.90
+C> (client:13875) [2010-02-02:13-26-44] [0-0-0x620bc0-main]: end: ----------------------------------------
