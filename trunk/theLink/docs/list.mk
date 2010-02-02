@@ -25,7 +25,6 @@ main/main.doc \
 main/pages.doc \
 main/performance.doc \
 main/service_call.doc \
-main/thread.doc \
 man/Doxyfile.ccmsgque \
 man/Doxyfile.csmsgque \
 man/Doxyfile.javamsgque \
