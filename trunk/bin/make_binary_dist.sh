@@ -58,6 +58,6 @@ test -f $FINAL_PKG && rm $FINAL_PKG
 
 (cd /tmp; zip -r $FINAL_PKG $PKG)
 
-make uninstall
+make DESTDIR=/tmp/$PKG/ uninstall
 
 test -d /tmp/$PKG && rm -fr /tmp/$PKG
