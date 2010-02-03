@@ -1,0 +1,12 @@
+> nothread/NHI1-0.5/theBrain/abrain/abrain --uds --file ./socket.uds --fork
+> nothread/NHI1-0.5/theBrain/tests/client --all --uds --file ./socket.uds
+C> (client:14527) [2010-02-02:13-29-55] [0-0-0x6206d0-main]: start: --------------------------------------
+C> (client:14527) [2010-02-02:13-29-56] [0-0-0x6206d0-statistics]:              memory hash - PUT:      15.79
+C> (client:14527) [2010-02-02:13-29-56] [0-0-0x6206d0-statistics]:              memory hash - GET:      16.06
+C> (client:14527) [2010-02-02:13-29-57] [0-0-0x6206d0-statistics]:             memory btree - PUT:      19.43
+C> (client:14527) [2010-02-02:13-29-58] [0-0-0x6206d0-statistics]:             memory btree - GET:      19.83
+C> (client:14527) [2010-02-02:13-29-59] [0-0-0x6206d0-statistics]:                file hash - PUT:      17.46
+C> (client:14527) [2010-02-02:13-30-00] [0-0-0x6206d0-statistics]:                file hash - GET:      17.80
+C> (client:14527) [2010-02-02:13-30-10] [0-0-0x6206d0-statistics]:               file btree - PUT:     187.26
+C> (client:14527) [2010-02-02:13-30-21] [0-0-0x6206d0-statistics]:               file btree - GET:     218.85
+C> (client:14527) [2010-02-02:13-30-21] [0-0-0x6206d0-main]: end: ----------------------------------------

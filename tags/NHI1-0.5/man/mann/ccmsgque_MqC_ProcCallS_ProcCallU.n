@@ -1,0 +1,59 @@
+.TH "ccmsgque::MqC::ProcCallS::ProcCallU" n "2 Feb 2010" "Version 4.3" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::MqC::ProcCallS::ProcCallU \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBCallbackF\fP \fBCallback\fP"
+.br
+.ti -1c
+.RI "\fBIService\fP * \fBService\fP"
+.br
+.ti -1c
+.RI "\fBIEvent\fP * \fBEvent\fP"
+.br
+.ti -1c
+.RI "\fBIServerSetup\fP * \fBServerSetup\fP"
+.br
+.ti -1c
+.RI "\fBIServerCleanup\fP * \fBServerCleanup\fP"
+.br
+.ti -1c
+.RI "\fBIBgError\fP * \fBBgError\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 361 of file ccmsgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "\fBIBgError\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::BgError"
+.PP
+Definition at line 367 of file ccmsgque.h.
+.SS "\fBCallbackF\fP ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Callback"
+.PP
+Definition at line 362 of file ccmsgque.h.
+.SS "\fBIEvent\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Event"
+.PP
+Definition at line 364 of file ccmsgque.h.
+.SS "\fBIServerCleanup\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::ServerCleanup"
+.PP
+Definition at line 366 of file ccmsgque.h.
+.SS "\fBIServerSetup\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::ServerSetup"
+.PP
+Definition at line 365 of file ccmsgque.h.
+.SS "\fBIService\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Service"
+.PP
+Definition at line 363 of file ccmsgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

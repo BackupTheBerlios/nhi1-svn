@@ -1,0 +1,306 @@
+.TH "Mq_Log_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Log_C_API \- log information to stderr with a common format.  
+
+.PP
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMqSetDebugLevel\fP(context)   debugLevel = context->config.debug"
+.br
+.R "define a variable \fIdebugLevel\fP valid only in the current context "
+.ti -1c
+.RI "#define \fBMqDLogC\fP(context, level, str)   if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)"
+.br
+.R "log a plain string "
+.ti -1c
+.RI "#define \fBMqDLogCL\fP(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
+.br
+.R "log a plain string using the \fIMqSetDebugLevel\fP definition "
+.ti -1c
+.RI "#define \fBMqDLogV\fP(context, level, fmt,...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.br
+.R "log a vararg string using formatting and checking for logging level "
+.ti -1c
+.RI "#define \fBMqDLogVL\fP(context, level, fmt,...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.br
+.R "log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBMqLog\fP (FILE *channel, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "log vararg string without formatting to \fIchannel\fP "
+.ti -1c
+.RI "void \fBMqDLogX\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "log vararg string using formatting "
+.ti -1c
+.RI "void \fBMqDLogEVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.R "log a vararg error list using formatting "
+.ti -1c
+.RI "void \fBMqDLogEV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "log a vararg error string using formatting "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqLogErrorCode\fP (enum \fBMqErrorE\fP code)"
+.br
+.R "convert a \fBMqErrorE\fP into a human readable string "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqLogTypeName\fP (const enum \fBMqTypeE\fP type)"
+.br
+.R "get the \fItype\fP member from an MqTypeE object in human readable form "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqLogServerOrClient\fP (struct \fBMqS\fP const *const context)"
+.br
+.R "convert a MqContextS server member into a human readable string "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqLogParentOrChild\fP (struct \fBMqS\fP const *const context)"
+.br
+.R "convert a MqContextS parent member into a human readable string "
+.ti -1c
+.RI "\fBMQ_STR\fP \fBMqLogC\fP (\fBMQ_STR\fP buf, \fBMQ_STR\fP str, \fBMQ_SIZE\fP size)"
+.br
+.R "convert a raw \fBMQ_STR\fP into a human readable string. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+log information to stderr with a common format. 
+.SH "Define Documentation"
+.PP 
+.SS "#define MqDLogC(context, level, str)   if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)"
+.PP
+log a plain string 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIlevel\fP debug level 0 <= level <= 9 
+.br
+\fIstr\fP string to log 
+.RE
+.PP
+
+.PP
+Definition at line 4060 of file msgque.h.
+.SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
+.PP
+log a plain string using the \fIMqSetDebugLevel\fP definition 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIlevel\fP debug level 0 <= level <= 9 
+.br
+\fIstr\fP string to log 
+.RE
+.PP
+
+.PP
+Definition at line 4067 of file msgque.h.
+.SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.PP
+log a vararg string using formatting and checking for logging level 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIlevel\fP debug level 0 <= level <= 9 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.br
+\fI...\fP vararg string argument 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the prefix string is the calling function name 
+.RE
+.PP
+
+.PP
+Definition at line 4076 of file msgque.h.
+.SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.PP
+log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIlevel\fP debug level 0 <= level <= 9 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.br
+\fI...\fP vararg string argument 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the prefix string is the calling function name 
+.RE
+.PP
+
+.PP
+Definition at line 4085 of file msgque.h.
+.SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
+.PP
+define a variable \fIdebugLevel\fP valid only in the current context 
+.PP
+Definition at line 4054 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "void MqDLogEV (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_CST\fP const  fmt,  ...)"
+.PP
+log a vararg error string using formatting 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.RE
+.PP
+
+.SS "void MqDLogEVL (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_CST\fP const  fmt, va_list var_list)"
+.PP
+log a vararg error list using formatting 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.br
+\fIvar_list\fP a variable argument list object 
+.RE
+.PP
+
+.SS "void MqDLogX (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)"
+.PP
+log vararg string using formatting 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+.br
+\fIlevel\fP debug level: 0 <= level <= 9 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if the \fB-silent\fP option is set nothing will be reported 
+.RE
+.PP
+
+.SS "void MqLog (FILE * channel, \fBMQ_CST\fP const  fmt,  ...)"
+.PP
+log vararg string without formatting to \fIchannel\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchannel\fP the file-handle to report the message on 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.RE
+.PP
+
+.SS "\fBMQ_STR\fP MqLogC (\fBMQ_STR\fP buf, \fBMQ_STR\fP str, \fBMQ_SIZE\fP size)"
+.PP
+convert a raw \fBMQ_STR\fP into a human readable string. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP buffer of size \fIsize+1\fP able to store the temporary string representation of \fIstr\fP 
+.br
+\fIstr\fP the input string 
+.br
+\fIsize\fP the size of \fIstr\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the string
+.RE
+.PP
+replace non ASCII characters with '?' or 'o' (NULL) 
+.SS "\fBMQ_CST\fP MqLogErrorCode (enum \fBMqErrorE\fP code)"
+.PP
+convert a \fBMqErrorE\fP into a human readable string 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcode\fP a value from \fBMqErrorE\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the string 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqLogParentOrChild (struct \fBMqS\fP const *const  context)"
+.PP
+convert a MqContextS parent member into a human readable string 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the string \fIPARENT\fP or \fICHILD\fP 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqLogServerOrClient (struct \fBMqS\fP const *const  context)"
+.PP
+convert a MqContextS server member into a human readable string 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the string \fISERVER\fP or \fICLIENT\fP 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqLogTypeName (const enum \fBMqTypeE\fP type)"
+.PP
+get the \fItype\fP member from an MqTypeE object in human readable form 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the \fC'T'\fP postfix 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

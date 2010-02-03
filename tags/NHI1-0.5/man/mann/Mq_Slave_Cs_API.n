@@ -1,0 +1,141 @@
+.TH "Mq_Slave_Cs_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Slave_Cs_API \- create and manage a slave context   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBcsmsgque::MqS.SlaveWorker\fP (int master_id, params string[] argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqSlaveWorker "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.SlaveCreate\fP (int id, \fBMqS\fP slave)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.SlaveDelete\fP (int id)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.ti -1c
+.RI "\fBMqS\fP \fBcsmsgque::MqS.SlaveGet\fP (int id)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.SlaveIs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.ti -1c
+.RI "\fBMqS\fP \fBcsmsgque::MqS.SlaveGetMaster\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage a slave context  
+
+The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
+.PP
+The \fImaster-slave-link\fP is used to perform the following tasks:
+.IP "\(bu" 2
+report error messages from the \fIslave-context\fP to the \fImaster-context\fP 
+.IP "\(bu" 2
+to create a \fIslave-child-context\fP if a \fImaster-child-context\fP is created
+.IP "\(bu" 2
+to delete a \fIslave-context\fP if a \fImaster-context\fP is deleted
+.PP
+In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connect two independent \fIparent-context\fP in the same process or thread (e.g. node). This leads to the restriction that only the \fImaster-context\fP can be a \fIserver-context\fP because only one \fIserver-context\fP per node is possible. 
+.PP
+.nf
+
+       node-0   |           node-1/2        |   node-3/4/5
+   ===================================================================
+   
+   | <- client/server link -> | <- client/server link -> |
+   
+                | <-- master/slave link --> |
+   
+                              |- client1-0 -|- server3 ...
+                |-  server1  -|             
+                |             |- client1-1 -|- server4 ...
+     client0-0 -|                           
+                |-  server2  -|- client1-2 -|- server5 ...  
+.fi
+.PP
+.PP
+\fBDefinition of a 'master-context'\fP
+.br
+.IP "\(bu" 2
+the \fImaster-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+.IP "\(bu" 2
+the \fImaster-context\fP is a \fBclient-context\fP or a \fBserver-context\fP.
+.IP "\(bu" 2
+the \fImaster-context\fP is responsible to create or delete the \fBchild-context\fP of the \fIslave\fP.
+.IP "\(bu" 2
+the \fImaster-context\fP is responsible to delete the \fBparent-context\fP of the \fIslave\fP.
+.IP "\(bu" 2
+the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBSlaveWorker\fP
+.PP
+\fBDefinition of a 'slave-context'\fP
+.br
+.IP "\(bu" 2
+the \fIslave-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
+.IP "\(bu" 2
+the \fIslave-context\fP is a \fBclient-context\fP.
+.IP "\(bu" 2
+the \fIslave-context\fP lifetime is controlled by the \fImaster-context\fP.
+.IP "\(bu" 2
+the \fIslave-context\fP report all error-messages to the \fImaster-context\fP.
+.IP "\(bu" 2
+a special form of a \fIslave-context\fP is a \fIworker-context\fP 
+.PP
+\fBDefinition of a 'worker-context'\fP
+.br
+.IP "\(bu" 2
+the \fIworker-context\fP is a \fIslave-context\fP using the image of the \fImaster-context\fP self.
+.IP "\(bu" 2
+the \fImaster-context\fP have to be a \fBserver-context\fP.
+.IP "\(bu" 2
+the \fIworker-context\fP is created using \fBSlaveWorker\fP
+.IP "\(bu" 2
+the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \fC0\fP.
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "void csmsgque.MqS.SlaveCreate (int id, \fBMqS\fP slave)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
+.PP
+Definition at line 66 of file slave.cs.
+.SS "void csmsgque.MqS.SlaveDelete (int id)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
+.PP
+Definition at line 71 of file slave.cs.
+.SS "\fBMqS\fP csmsgque.MqS.SlaveGet (int id)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
+.PP
+Definition at line 76 of file slave.cs.
+.SS "\fBMqS\fP csmsgque.MqS.SlaveGetMaster ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP 
+.PP
+Definition at line 87 of file slave.cs.
+.SS "bool csmsgque.MqS.SlaveIs ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
+.PP
+Definition at line 82 of file slave.cs.
+.SS "void csmsgque.MqS.SlaveWorker (int master_id, params string[] argv)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: MqSlaveWorker 
+.PP
+Definition at line 51 of file slave.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

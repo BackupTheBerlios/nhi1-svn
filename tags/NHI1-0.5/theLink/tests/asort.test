@@ -1,0 +1,149 @@
+#+
+#§  \file       theLink/tests/asort.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint c]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set data1 [makeFile {xa:24:12345678987654321:-5.78
+cg:-89:98765432123456789:3.46
+aa:456:-3333333333333333:26262783.88
+} data1.[pid]]
+
+ # start-type: fork, thread or spawn
+  foreach S [envGet START_LST] {
+
+test asort-4-($S) {simple cut} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort @ join -d , } \
+    -returnCodes ok \
+    -match glob \
+    -result {CHILDSTATUS-1-S> (sort) \[SortCreate] expect exact 'one' sort-column of format '-NUM TYPE'
+S> (sort) found in function "SortCreate" at file "asort.c"
+S> (sort) use '-h' or '--help' for usage*}
+
+test asort-5-($S) {sort: help} \
+    -body   { Exec {*}[getATool sort] --help } \
+    -returnCodes ok \
+    -result {NONE--usage: sort [OPTION]... [ARGUMENT]...
+
+  The sort tool works as a filter between a msgque client and a msgque server
+  using the option '-# TYPE' to identify a column as sort index.
+
+  sort [ARGUMENT]... syntax:
+    aclient [OPTION]... @ sort [OPTION]... @ [ARGUMENT]...
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  sort [OPTION]:
+    -NUM TYPE        the column number(s)  (default: 'empty'
+      NUM            a single column with '0' < NUM < '255'
+      TYPE           the sort type of the column C,I,W,D
+       C             sort as string
+       I,W           sort as I)nt or W)ide integer
+       D             sort as double precision decimal
+    -h, --help       print this help
+}
+
+test asort-6-($S) {sort: plain output } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , } \
+    -returnCodes ok \
+    -result {xa,24,12345678987654321,-5.78
+cg,-89,98765432123456789,3.46
+aa,456,-3333333333333333,26262783.88}
+
+test asort-7-($S) {sort: string } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -0 C @ join -d , } \
+    -returnCodes ok \
+    -result {aa,456,-3333333333333333,26262783.88
+cg,-89,98765432123456789,3.46
+xa,24,12345678987654321,-5.78}
+
+test asort-8-($S) {sort: int } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -1 I @ join -d , } \
+    -returnCodes ok \
+    -result {cg,-89,98765432123456789,3.46
+xa,24,12345678987654321,-5.78
+aa,456,-3333333333333333,26262783.88}
+
+test asort-9-($S) {sort: wid } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -2 W @ join -d , } \
+    -returnCodes ok \
+    -result {aa,456,-3333333333333333,26262783.88
+xa,24,12345678987654321,-5.78
+cg,-89,98765432123456789,3.46}
+
+test asort-10-($S) {sort: dbl } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -3 D @ join -d , } \
+    -returnCodes ok \
+    -match glob \
+    -result {xa,24,12345678987654321,-5.78000000000e+*00
+cg,-89,98765432123456789,3.46000000000e+*00
+aa,456,-3333333333333333,2.62627838800e+*07}
+
+test asort-11-($S) {sort: convertion error } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -2 I @ join -d , } \
+    -returnCodes ok \
+    -match glob \
+    -result {CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
+S> (sort) \[pBufferGetA4] overflow ERROR, can not convert '12345678987654321' into an 'INT' object*}
+
+test asort-12-($S) {sort: multiple sort columns } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -3 D -1 I @ join -d , } \
+    -returnCodes ok \
+    -match glob \
+    -result {CHILDSTATUS-1-S> (sort) \[SortCreate] expect exact 'one' sort-column of format '-NUM TYPE'
+S> (sort) found in function "SortCreate" at file "asort.c"
+S> (sort) use '-h' or '--help' for usage*}
+
+test asort-13-($S) {sort: invalid type } \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -3 Z @ join -d , } \
+    -returnCodes ok \
+    -match glob \
+    -result {CHILDSTATUS-1-S> (sort) \[SortCreate] invalid type 'Z', expect 'C,I,W or D'
+S> (sort) found in function "SortCreate" at file "asort.c"
+S> (sort) use '-h' or '--help' for usage*}
+
+test asort-14-($S) {sort: no server} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort -3 D } \
+    -returnCodes ok \
+    -match glob \
+    -result {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|\+EOF> <Num|220>
+S> (sort) \[MqServiceGetFilter] no filter is available*}
+
+    } ; ## START_LST
+
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+
+
+
+
+
+
+

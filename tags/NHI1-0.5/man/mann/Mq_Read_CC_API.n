@@ -1,0 +1,228 @@
+.TH "Mq_Read_CC_API" n "2 Feb 2010" "Version 4.3" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Read_CC_API \- extract data from an incoming \fIread-data-package\fP.   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_BYT\fP \fBccmsgque::MqC::ReadY\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadY\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBccmsgque::MqC::ReadO\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadO\fP "
+.ti -1c
+.RI "\fBMQ_SRT\fP \fBccmsgque::MqC::ReadS\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadS\fP "
+.ti -1c
+.RI "\fBMQ_INT\fP \fBccmsgque::MqC::ReadI\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "\fBMQ_FLT\fP \fBccmsgque::MqC::ReadF\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadF\fP "
+.ti -1c
+.RI "\fBMQ_WID\fP \fBccmsgque::MqC::ReadW\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadW\fP "
+.ti -1c
+.RI "\fBMQ_DBL\fP \fBccmsgque::MqC::ReadD\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadD\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBccmsgque::MqC::ReadC\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadB\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.ti -1c
+.RI "vector< \fBMQ_BINB\fP > * \fBccmsgque::MqC::ReadB\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadN\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadBDY\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBccmsgque::MqC::ReadU\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadU\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadProxy\fP (MqC &ctx)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadProxy\fP (MqC *const ctx)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadL_START\fP (\fBMQ_BUF\fP buf=NULL)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadL_START\fP (const MqBufferC &buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadL_START\fP (MqBufferC *const buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadL_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBccmsgque::MqC::ReadItemExists\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBccmsgque::MqC::ReadGetNumItems\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadUndo\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+extract data from an incoming \fIread-data-package\fP.  
+
+extract data from an incoming \fIread-data-package\fP. 
+.PP
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
+.PP
+\fBAttention:\fP
+.RS 4
+Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
+.RE
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "vector<\fBMQ_BINB\fP>* ccmsgque::MqC::ReadB ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadB\fP 
+.PP
+Definition at line 574 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadB (\fBMQ_BIN\fP *const  valP, \fBMQ_SIZE\fP *const  lenP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadB\fP 
+.PP
+Definition at line 570 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadBDY (\fBMQ_BIN\fP *const  valP, \fBMQ_SIZE\fP *const  lenP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP 
+.PP
+Definition at line 585 of file ccmsgque.h.
+.SS "\fBMQ_CST\fP ccmsgque::MqC::ReadC ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadC\fP 
+.PP
+Definition at line 566 of file ccmsgque.h.
+.SS "\fBMQ_DBL\fP ccmsgque::MqC::ReadD ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadD\fP 
+.PP
+Definition at line 564 of file ccmsgque.h.
+.SS "\fBMQ_FLT\fP ccmsgque::MqC::ReadF ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadF\fP 
+.PP
+Definition at line 560 of file ccmsgque.h.
+.SS "\fBMQ_SIZE\fP ccmsgque::MqC::ReadGetNumItems ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP 
+.PP
+Definition at line 615 of file ccmsgque.h.
+.SS "\fBMQ_INT\fP ccmsgque::MqC::ReadI ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+Definition at line 558 of file ccmsgque.h.
+.SS "\fBMQ_BOL\fP ccmsgque::MqC::ReadItemExists ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP 
+.PP
+Definition at line 612 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadL_END ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP 
+.PP
+Definition at line 608 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadL_START (\fBMqBufferC\fP *const  buf)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
+.PP
+Definition at line 605 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadL_START (const \fBMqBufferC\fP & buf)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
+.PP
+Definition at line 602 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadL_START (\fBMQ_BUF\fP buf = \fCNULL\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
+.PP
+Definition at line 599 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadN (\fBMQ_BIN\fP *const  valP, \fBMQ_SIZE\fP *const  lenP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadN\fP 
+.PP
+Definition at line 581 of file ccmsgque.h.
+.SS "\fBMQ_BOL\fP ccmsgque::MqC::ReadO ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadO\fP 
+.PP
+Definition at line 554 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadProxy (\fBMqC\fP *const  ctx)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP 
+.PP
+Definition at line 595 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadProxy (\fBMqC\fP & ctx)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP 
+.PP
+Definition at line 592 of file ccmsgque.h.
+.SS "\fBMQ_SRT\fP ccmsgque::MqC::ReadS ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadS\fP 
+.PP
+Definition at line 556 of file ccmsgque.h.
+.SS "\fBMQ_BUF\fP ccmsgque::MqC::ReadU ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadU\fP 
+.PP
+Definition at line 589 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadUndo ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP 
+.PP
+Definition at line 618 of file ccmsgque.h.
+.SS "\fBMQ_WID\fP ccmsgque::MqC::ReadW ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadW\fP 
+.PP
+Definition at line 562 of file ccmsgque.h.
+.SS "\fBMQ_BYT\fP ccmsgque::MqC::ReadY ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadY\fP 
+.PP
+Definition at line 552 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

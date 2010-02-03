@@ -1,0 +1,81 @@
+.TH "ccmsgque::MqCException" n "2 Feb 2010" "Version 4.3" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::MqCException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqCException\fP (struct \fBMqS\fP *const context)"
+.br
+.ti -1c
+.RI "\fBMqCException\fP (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP mytxt)"
+.br
+.ti -1c
+.RI "\fBMqCException\fP (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_STR\fP mytxt)"
+.br
+.ti -1c
+.RI "\fBMqCException\fP (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP myfunc, \fBMQ_CST\fP myfile, const int myline, \fBMQ_CST\fP mytxt)"
+.br
+.ti -1c
+.RI "\fBMqCException\fP (const \fBMqCException\fP &e)"
+.br
+.ti -1c
+.RI "virtual \fB~MqCException\fP ()  throw ()"
+.br
+.ti -1c
+.RI "virtual \fBMQ_CST\fP \fBwhat\fP () const   throw ()"
+.br
+.ti -1c
+.RI "virtual \fBMQ_INT\fP \fBnum\fP () const   throw ()"
+.br
+.ti -1c
+.RI "virtual enum \fBMqErrorE\fP \fBcode\fP () const   throw ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP 
+.PP
+Definition at line 79 of file ccmsgque.h.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "ccmsgque::MqCException::MqCException (struct \fBMqS\fP *const  context)"
+.PP
+.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP mytxt)\fC [inline]\fP"
+.PP
+Definition at line 88 of file ccmsgque.h.
+.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_STR\fP mytxt)\fC [inline]\fP"
+.PP
+Definition at line 90 of file ccmsgque.h.
+.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP myfunc, \fBMQ_CST\fP myfile, const int myline, \fBMQ_CST\fP mytxt)"
+.PP
+.SS "ccmsgque::MqCException::MqCException (const \fBMqCException\fP & e)\fC [inline]\fP"
+.PP
+Definition at line 94 of file ccmsgque.h.
+.SS "virtual ccmsgque::MqCException::~MqCException ()  throw ()\fC [inline, virtual]\fP"
+.PP
+Definition at line 96 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual enum \fBMqErrorE\fP ccmsgque::MqCException::code () const  throw ()\fC [inline, virtual]\fP"
+.PP
+Definition at line 105 of file ccmsgque.h.
+.SS "virtual \fBMQ_INT\fP ccmsgque::MqCException::num () const  throw ()\fC [inline, virtual]\fP"
+.PP
+Definition at line 102 of file ccmsgque.h.
+.SS "virtual \fBMQ_CST\fP ccmsgque::MqCException::what () const  throw ()\fC [inline, virtual]\fP"
+.PP
+Definition at line 99 of file ccmsgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

@@ -1,0 +1,11 @@
+> perl thread/NHI1-0.5/theLink/tests/server.pl --tcp --host localhost --port 7795 --thread
+> thread/NHI1-0.5/theLink/tests/client --all --tcp --host localhost --port 7795
+C> (client:13741) [2010-02-02:13-26-10] [0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:13741) [2010-02-02:13-26-10] [0-0-0x621bc0-statistics]:                      MqSendEND:       9.47
+C> (client:13741) [2010-02-02:13-26-11] [0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      16.60
+C> (client:13741) [2010-02-02:13-26-15] [0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      36.55
+C> (client:13741) [2010-02-02:13-26-15] [0-0-0x621bc0-statistics]:                  parent create:    5402.20
+C> (client:13741) [2010-02-02:13-26-15] [0-0-0x621bc0-statistics]:                  parent delete:     292.97
+C> (client:13741) [2010-02-02:13-26-16] [0-0-0x621bc0-statistics]:                   child create:     138.54
+C> (client:13741) [2010-02-02:13-26-16] [0-0-0x621bc0-statistics]:                   child delete:      34.23
+C> (client:13741) [2010-02-02:13-26-16] [0-0-0x621bc0-main]: end: ----------------------------------------

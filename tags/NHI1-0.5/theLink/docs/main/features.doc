@@ -1,0 +1,149 @@
+/** 
+
+\page features Features of the libmsgque Framework
+
+\section features_basic Basic Force behind the Framework
+
+\libmsgque helps you to split your code from one single process into
+multiple processes.
+ - The question is: <b>Why you should do this ?</b>
+ .
+To answer this question have a look to the following examples:
+ - You are a developer of a portal (perhaps Java) and want to integrate
+   legacy code (perhaps C/C++/Fortran...) into it. Well Java provide
+   you with an interface to the C language called \e JNI. Well you
+   are done but what happen ?\n
+   The world is bad and the programmer of the legacy code has already 
+   retired and from time to time this code crashes and your wonderful 
+   java portal will fail and hundreds of users will ask you \b Why? 
+   .... not good\n
+   - <b>Let \libmsgque keep your legacy code away from your application code</b>
+   .
+ - You are a developer of a wonderful piece of Code, perhaps a library.
+   Well developing code is one task, to convince others to use this
+   library is an other.
+   The problem is that every \e other has his own view to the world and
+   he believes that his \e view is the best. It is very common that this \e view
+   is linked to a specific programming language like java or python.\n
+   Question: how does you integrate your wonderful library into the
+   programming language the users request ?\n
+   - <b> Let \libmsgque do the job for you. You only have to write on interface
+   to \libmsgque and all programming languages are supported as well.</b>
+   .
+ - You are a developer and you have an inspiration to create a wonderful
+   new application, probably a client server application. You are very
+   familiar with one programming language and you want to focus on your
+   application code but don't want to spend time on all the \e surrounding 
+   code necessary to make your application interact with your client
+   or even with other applications you depend on. You don't want to spend
+   time to define a protocol and to do all of the \e connection-management.\n
+   - <b> Let \libmsgque do the setup for you and focus on your application.</b>
+   .
+ .
+
+\section features_solve HOWTO solve this problem
+
+To solve the problem \libmsgque is using \e sockets to link the different parts of
+your application into a single application. "sockets" have the advantage that they
+are \e independent of the operations-system and \e independent of the programming
+language used. For \libmsgque every single task is using it's own process
+(argument \c --fork or \c --spawn) or thread (argument \c --thread) and \libmsgque
+is responsible to make this happen.
+
+\section features_design What is the design specification of LibMsgque ?
+
+\subsection features_design_gd guaranteed delivery
+\libmsgque was designed to support \e guaranteed \e delivery. This mean that
+the data you put into a \libmsgque package is exactly the same data the remote
+site read from the package. If this can not be guaranteed an error is reported to the
+sender. The data-types supported for \e guaranteed \e delivery are available at #MqTypeE.
+
+\subsection features_design_nt network wide transaction
+\libmsgque was designed to support network wide transaction. This mean that a transaction
+started with #MqSendEND_AND_WAIT or #MqSendEND_AND_CALLBACK is designed to finish
+successfully or to report an error even if the error-source is not local.
+
+\subsection features_design_er network wide error reporting
+\libmsgque was designed to control the whole grid of network nodes. This mean that the 
+client get all errors reported local or remote. Remote include not only the direct
+neighbour it include all network nodes of the grid.
+
+
+\section features_server Examples to setup a server
+
+Start a server listen to port \e MyPort on your alias interface \e MyHost 
+and \c --fork , \c --thread or \c --spawn for every incoming connection a new server.
+
+\verbatim
+server --tcp --fork --host MyHost --port MyPort
+\endverbatim
+
+Start a server listen to port \e MyPort on your alias interface \e MyHost
+and exit after the first connection.
+
+\verbatim
+server --tcp --host MyHost --port MyPort
+\endverbatim
+
+If \e (x)inetd is required to start the server use the following line
+in the \e (x)inetd.conf file
+
+\verbatim
+server --pipe --socket 0
+\endverbatim
+
+Start a server listen to file \e LocalFile and fork for every incoming 
+connection a new server.
+
+\verbatim
+server --uds --fork --file LocalFile
+\endverbatim
+
+Start a server listen to file \e LocalFile and exit after the first
+connection.
+
+\verbatim
+server --uds --file LocalFile
+\endverbatim
+
+
+\section features_client Examples to use a client
+
+Use a client to connect to \e RemoteHost using \e RemotePort
+
+\verbatim
+client --tcp --host RemoteHost --port RemotePort
+\endverbatim
+
+Use the setup from above but use my local Interface \e LocalHost
+
+\verbatim
+client --tcp --host RemoteHost --myhost LocalHost --port RemotePort
+\endverbatim
+
+Use a client to connect to a local server listen to file \e LocalFile
+
+\verbatim
+client --uds --file LocalFile
+\endverbatim
+
+Use a client start the server using \e pipe communication
+
+\verbatim
+client @ server
+\endverbatim
+
+Setup a command-pipeline using multiple filter
+
+\verbatim
+client @ filter1 @ filter2 @ ...
+\endverbatim
+
+Setup a command-pipeline using multiple filter, start each filter in an thread
+
+\verbatim
+client --thread @ filter1 @ filter2 @ ...
+\endverbatim
+
+*/
+

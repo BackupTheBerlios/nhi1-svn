@@ -1,0 +1,165 @@
+.TH "Mq_Buffer_CC_API" n "2 Feb 2010" "Version 4.3" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Buffer_CC_API \- create and manage dynamic, generic, mixed typed data.   
+
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fBccmsgque::MqBufferC\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBccmsgque::MqBufferC::MqBufferC\fP (struct \fBMqBufferS\fP *bufP)"
+.br
+.ti -1c
+.RI "enum \fBMqTypeE\fP \fBccmsgque::MqBufferC::GetType\fP () const "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS::type\fP "
+.ti -1c
+.RI "\fBMQ_BYT\fP \fBccmsgque::MqBufferC::GetY\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBccmsgque::MqBufferC::GetO\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP "
+.ti -1c
+.RI "\fBMQ_SRT\fP \fBccmsgque::MqBufferC::GetS\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP "
+.ti -1c
+.RI "\fBMQ_INT\fP \fBccmsgque::MqBufferC::GetI\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP "
+.ti -1c
+.RI "\fBMQ_FLT\fP \fBccmsgque::MqBufferC::GetF\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP "
+.ti -1c
+.RI "\fBMQ_WID\fP \fBccmsgque::MqBufferC::GetW\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP "
+.ti -1c
+.RI "\fBMQ_DBL\fP \fBccmsgque::MqBufferC::GetD\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBccmsgque::MqBufferC::GetC\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP "
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBccmsgque::MqBufferC::GetU\fP () const   throw (MqCException)"
+.br
+.ti -1c
+.RI "void \fBccmsgque::MqBufferC::GetB\fP (\fBMQ_BIN\fP *outP, \fBMQ_SIZE\fP *sizeP) const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
+.ti -1c
+.RI "vector< \fBMQ_BINB\fP > * \fBccmsgque::MqBufferC::GetB\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqBufferC::AppendC\fP (\fBMQ_CST\fP str) const "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferAppendC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqBufferC::Reset\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferReset\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage dynamic, generic, mixed typed data.  
+
+The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data in a \fBMqBufferU\fP storage. If \fBlibmsgque\fP is working on any kind of data it is working on \fBMqBufferS\fP objects or on a list of \fBMqBufferS\fP objects called \fBMqBufferLS\fP.  
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqBufferC::AppendC (\fBMQ_CST\fP str) const\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferAppendC\fP 
+.PP
+Definition at line 211 of file ccmsgque.h.
+.SS "vector<\fBMQ_BINB\fP>* ccmsgque::MqBufferC::GetB () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP 
+.PP
+Definition at line 203 of file ccmsgque.h.
+.SS "void ccmsgque::MqBufferC::GetB (\fBMQ_BIN\fP * outP, \fBMQ_SIZE\fP * sizeP) const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP 
+.PP
+Definition at line 198 of file ccmsgque.h.
+.SS "\fBMQ_CST\fP ccmsgque::MqBufferC::GetC () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP 
+.PP
+Definition at line 186 of file ccmsgque.h.
+.SS "\fBMQ_DBL\fP ccmsgque::MqBufferC::GetD () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP 
+.PP
+Definition at line 179 of file ccmsgque.h.
+.SS "\fBMQ_FLT\fP ccmsgque::MqBufferC::GetF () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP 
+.PP
+Definition at line 165 of file ccmsgque.h.
+.SS "\fBMQ_INT\fP ccmsgque::MqBufferC::GetI () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP 
+.PP
+Definition at line 158 of file ccmsgque.h.
+.SS "\fBMQ_BOL\fP ccmsgque::MqBufferC::GetO () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP 
+.PP
+Definition at line 144 of file ccmsgque.h.
+.SS "\fBMQ_SRT\fP ccmsgque::MqBufferC::GetS () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP 
+.PP
+Definition at line 151 of file ccmsgque.h.
+.SS "enum \fBMqTypeE\fP ccmsgque::MqBufferC::GetType () const\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferS::type\fP 
+.PP
+Definition at line 132 of file ccmsgque.h.
+.SS "\fBMQ_BUF\fP ccmsgque::MqBufferC::GetU () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+\fBReturns:\fP
+.RS 4
+handle 
+.RE
+.PP
+
+.PP
+Definition at line 193 of file ccmsgque.h.
+.SS "\fBMQ_WID\fP ccmsgque::MqBufferC::GetW () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP 
+.PP
+Definition at line 172 of file ccmsgque.h.
+.SS "\fBMQ_BYT\fP ccmsgque::MqBufferC::GetY () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP 
+.PP
+Definition at line 137 of file ccmsgque.h.
+.SS "ccmsgque::MqBufferC::MqBufferC (struct \fBMqBufferS\fP * bufP)\fC [inline, inherited]\fP"
+.PP
+Definition at line 127 of file ccmsgque.h.
+.SS "void ccmsgque::MqBufferC::Reset () const  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqBufferReset\fP 
+.PP
+Definition at line 216 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

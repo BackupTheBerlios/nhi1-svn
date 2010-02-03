@@ -1,0 +1,41 @@
+usage: client [OPTION]... [ARGUMENT]...
+
+  This tool is the client part of the performance test toolkit and expect
+  the libmsgque performance test and validation 'server' as argument.
+  The following test are defined:
+
+  --all
+    Do all the following tests.
+
+  --send-perf
+    Creation of '--num' (default: 50000) transactions.
+    The data is send from the client to the server using four different
+    kind of packages:
+
+      1. an MQ_INT integer between INT_MIN and INT_MAX
+      2. an MQ_WID integer between WID_MIN and WID_MAX
+      3. a  MQ_DBL double  between DBL_MIN and DBL_MAX
+      4. a  MQ_BIN binary  of size between 1 and 1000 bytes
+
+  --send-and-wait-perf  (this is the DEFAULT)
+    Same as '--send-perf' but use 'MqSendEND_AND_WAIT'
+
+  --send-and-callback-perf
+    Same as '--send-perf' but use 'MqSendEND_AND_CALLBACK'
+
+  --parent-perf
+    Creation of '--num' (default: 100) parent-context
+
+  --child-perf
+    Creation of '--num' (default: 1000) child-context
+
+  client [ARGUMENT]... syntax:
+    client [OPTION]... @ server [OPTION]... [ARGUMENT]
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  client [OPTION]:
+    --num NUMBER     number of transactions
+    -h, --help       print this help
+

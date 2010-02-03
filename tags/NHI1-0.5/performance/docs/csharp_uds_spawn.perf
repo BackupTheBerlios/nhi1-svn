@@ -1,0 +1,11 @@
+> mono nothread/NHI1-0.5/theLink/tests/csserver.exe --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.5/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:11888) [2010-02-02:13-24-49] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:11888) [2010-02-02:13-24-50] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.10
+C> (client:11888) [2010-02-02:13-24-50] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      11.14
+C> (client:11888) [2010-02-02:13-24-53] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      16.59
+C> (client:11888) [2010-02-02:13-24-56] [0-0-0x6209a0-statistics]:                  parent create:   29349.89
+C> (client:11888) [2010-02-02:13-24-56] [0-0-0x6209a0-statistics]:                  parent delete:    2637.80
+C> (client:11888) [2010-02-02:13-24-56] [0-0-0x6209a0-statistics]:                   child create:     132.22
+C> (client:11888) [2010-02-02:13-24-56] [0-0-0x6209a0-statistics]:                   child delete:      25.23
+C> (client:11888) [2010-02-02:13-24-56] [0-0-0x6209a0-main]: end: ----------------------------------------

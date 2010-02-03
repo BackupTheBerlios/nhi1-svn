@@ -1,0 +1,290 @@
+.TH "Mq_Service_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Service_C_API \- create and manage services  
+
+.PP
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBMQ_CST\fP \fBMQ_TOK\fP"
+.br
+.R "a 4 byte string to identify different services "
+.ti -1c
+.RI "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
+.br
+.R "function used as \fIservice-handle\fP "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqWaitOnEventE\fP { \fBMQ_WAIT_NO\fP =  0, \fBMQ_WAIT_ONCE\fP =  1, \fBMQ_WAIT_FOREVER\fP =  2 }"
+.br
+.R "wait for an event? "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filter)"
+.br
+.R "get the \fIfilter-context\fP or the \fImaster-context\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "check if the \fIongoing-service-call\fP belongs to a transaction "
+.ti -1c
+.RI "\fBMQ_TOK\fP \fBMqServiceGetToken\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqServiceCheckToken\fP (struct \fBMqS\fP const *const ctx, \fBMQ_TOK\fP const token)"
+.br
+.R "in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoken\fP on equity "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqServiceCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMqServiceCallbackF\fP const callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.br
+.R "create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqServiceProxy\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_SIZE\fP const id)"
+.br
+.R "create a service to link a \fImaster-context\fP with a \fIslave-context\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const ctx, \fBMQ_TOK\fP const token)"
+.br
+.R "delete a service. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqProcessEvent\fP (struct \fBMqS\fP *const ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)"
+.br
+.R "enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage services 
+
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function. 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef \fBMQ_CST\fP \fBMQ_TOK\fP"
+.PP
+a 4 byte string to identify different services 
+.PP
+The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\fP to link a \fIservice-handler\fP with an \fIidentifier\fP. The \fIidentifier\fP is part of the \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP function-call to access the services.
+.br
+ For internal purpose some special \fItoken\fP are predefined:
+.IP "\(bu" 2
+\fB_???\fP - all \fItoken\fP starting with a \fB'_'\fP are for \fBinternal\fP usage only
+.IP "\(bu" 2
+\fB+ALL\fP - used in \fBServiceCreate\fP and \fBServiceDelete\fP to listen on \fBall\fP token not handled by other \fItoken\fP more precise
+.IP "\(bu" 2
+\fB-ALL\fP - used in \fBServiceDelete\fP to delete \fBall\fP token
+.IP "\(bu" 2
+\fB+FTR\fP and \fB+EOF\fP - used for \fIone-directional-filter\fP 
+.PP
+
+.PP
+Definition at line 1779 of file msgque.h.
+.SS "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
+.PP
+function used as \fIservice-handle\fP 
+.PP
+A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
+.PP
+Definition at line 1788 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqWaitOnEventE\fP"
+.PP
+wait for an event? 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_WAIT_NO \fP\fP
+just do the check 
+.TP
+\fB\fIMQ_WAIT_ONCE \fP\fP
+wait for one new event 
+.TP
+\fB\fIMQ_WAIT_FOREVER \fP\fP
+wait forever 
+.PP
+Definition at line 1791 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"
+.PP
+enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
+.PP
+This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
+.IP "\(bu" 2
+\fBMqS.WAIT.NO\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+.IP "\(bu" 2
+\fBMqS.WAIT.ONCE\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
+.IP "\(bu" 2
+\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
+.PP
+This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBtimeout\fP value), only used if \fIwait\fP = MqS.WAIT.ONCE 
+.br
+\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: MqS.WAIT.NO) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "\fBMQ_BOL\fP MqServiceCheckToken (struct \fBMqS\fP const *const  ctx, \fBMQ_TOK\fP const  token)"
+.PP
+in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoken\fP on equity 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqServiceCreate (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token, \fBMqServiceCallbackF\fP const  callback, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP datafreeF)"
+.PP
+create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
+.PP
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincomming-service-call\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIcallback\fP the function to process the incoming \fIservice-request\fP 
+.br
+\fIdata\fP a user defined additional \fIdata-argument\fP for the \fIcallback\fP function (C-API only) 
+.br
+\fIdatafreeF\fP the function to free the \fIdata-argument\fP after use (C-API only) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqServiceDelete (struct \fBMqS\fP const *const  ctx, \fBMQ_TOK\fP const  token)"
+.PP
+delete a service. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqServiceGetFilter (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP **const  filter)"
+.PP
+get the \fIfilter-context\fP or the \fImaster-context\fP 
+.PP
+A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
+.IP "1." 4
+return the \fImaster-context\fP if not NULL
+.IP "2." 4
+return the \fIslave-context\fP using \fIid\fP if not NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "\fBMQ_TOK\fP MqServiceGetToken (struct \fBMqS\fP const *const  ctx)"
+.PP
+get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
+.PP
+This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBTOKEN IDENTIFIER\fP 
+.RE
+.PP
+
+.SS "\fBMQ_BOL\fP MqServiceIsTransaction (struct \fBMqS\fP const *const  ctx)"
+.PP
+check if the \fIongoing-service-call\fP belongs to a transaction 
+.PP
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIfalse\fP if the package was send with \fBSendEND\fP) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a boolean value, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqServiceProxy (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token, \fBMQ_SIZE\fP const  id)"
+.PP
+create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
+.PP
+This function is used to create a \fIproxy-service\fP to forward the \fIbody-data\fP from the \fIread-data-package\fP of the \fImaster\fP to the \fIsend-data-package\fP of the slave. The data is \fInot\fP changed. This function support the \fIreverse-operation\fP also. If the \fIctx\fP is a \fImaster-context\fP than the data is send to \fIslave\fP identified by \fIid\fP. If the \fIctx\fP is a \fIslave-context\fP than the data is send to the \fImaster\fP of the \fIslave\fP. Use \fIid=0\fP to send that data to the \fIfilter-context\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
+.br
+\fIid\fP the slave identifier, only used if \fIctx\fP is a \fImaster-context\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

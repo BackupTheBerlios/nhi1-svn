@@ -1,0 +1,25 @@
+.TH "Mq_Buffer_Java_API" n "2 Feb 2010" "Version 4.3" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Buffer_Java_API \- create and manage dynamic, generic, mixed typed data.   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBjavamsgque.MqBufferS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage dynamic, generic, mixed typed data.  
+
+create and manage dynamic, generic, mixed typed data. 
+.PP
+The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data in a \fBMqBufferU\fP storage. If \fBlibmsgque\fP is working on any kind of data it is working on \fBMqBufferS\fP objects or on a list of \fBMqBufferS\fP objects called \fBMqBufferLS\fP.  
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

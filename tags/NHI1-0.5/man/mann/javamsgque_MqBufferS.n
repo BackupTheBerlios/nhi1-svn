@@ -1,0 +1,106 @@
+.TH "javamsgque::MqBufferS" n "2 Feb 2010" "Version 4.3" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::MqBufferS \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "native char \fBGetType\fP ()"
+.br
+.R "return the type from a \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native byte \fBGetY\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native boolean \fBGetO\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native short \fBGetS\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native int \fBGetI\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native float \fBGetF\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native long \fBGetW\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native double \fBGetD\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native byte[] \fBGetB\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.ti -1c
+.RI "native String \fBGetC\fP ()"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object  "
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP 
+.PP
+Definition at line 25 of file MqBufferS.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "native byte [] javamsgque.MqBufferS.GetB ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native String javamsgque.MqBufferS.GetC ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native double javamsgque.MqBufferS.GetD ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native float javamsgque.MqBufferS.GetF ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native int javamsgque.MqBufferS.GetI ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native boolean javamsgque.MqBufferS.GetO ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native short javamsgque.MqBufferS.GetS ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native char javamsgque.MqBufferS.GetType ()"
+.PP
+return the type from a \fBMQ_BUF\fP object  
+.PP
+.SS "native long javamsgque.MqBufferS.GetW ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+.SS "native byte javamsgque.MqBufferS.GetY ()"
+.PP
+read native typed value from an \fBMQ_BUF\fP object  
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

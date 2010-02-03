@@ -1,0 +1,11 @@
+> nothread/NHI1-0.5/theLink/tests/server --uds --file ./socket.uds --fork
+> nothread/NHI1-0.5/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:4033) [2010-02-02:13-20-50] [0-0-0x6209a0-main]: start: --------------------------------------
+C> (client:4033) [2010-02-02:13-20-50] [0-0-0x6209a0-statistics]:                      MqSendEND:       3.87
+C> (client:4033) [2010-02-02:13-20-51] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:       9.26
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      14.44
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                  parent create:     293.23
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                  parent delete:     118.27
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                   child create:      70.16
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                   child delete:      24.39
+C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-main]: end: ----------------------------------------

@@ -1,0 +1,423 @@
+/** 
+
+\defgroup \selftut \self Tutorial
+
+\section \NST{idx} INDEX
+
+\RNST{intro}\n
+\RNST{build}\n
+\RNST{server}\n
+\RNST{client}\n
+\RNST{filter}\n
+
+
+\section \NST{intro} INTRODUCTION
+
+\rself is the \lang language binding of the \libmsgque library.\n
+The library was designed to simplify the client/server development using the following
+design rules:
+ -# programming language independent
+ -# operating system independent
+ -# processor hardware independent
+ .
+
+The \lang language binding provide the following basic components:
+ - abstract class of the \rself object: \RNS{ContextCreate}
+ - interface: \RNSC{IServerSetup} and or \RNSC{IServerCleanup} to add server functionality
+ - interface: \RNSC{IFactory} to create a new application instance
+ - interface: \RNSC{IBgError} to act on asyncrone errors
+ - interface: \RNSC{IEvent} to process background events
+ - adding and removing \RNS{service} "services"
+ .
+
+\section \NST{build} BUILD
+
+The build is different between \e UNIX and \e WINDOWS. On \e UNIX the \b automake (info automake)
+build environment is used and on \e WINDOWS the \b VisualExpress tools from \e Microsoft are
+used. The \b automake build on \e WINDOWS is possible but not supported.
+
+\subsection \NST{build_unix} UNIX
+
+The example from the tutorial is using the \b automake build-environment from the \rself tool. 
+An example \b automake configuration file is available in: \c example/\lang/Makefile.am
+\dontinclude Makefile.am
+\if C
+\skip	noinst_PROGRAMS
+\until	Filter
+...
+\skip	MyClient_SOURCES
+\until	MyServer_LDADD
+...
+\skip	INCLUDES
+\until	INCLUDES
+\elseif CC
+\skip	noinst_PROGRAMS
+\until	LDADD
+...
+\skip	MyClient_SOURCES
+\until	MyServer_SOURCES
+\elseif CSHARP
+\skip	RULE_CS_EXE
+\until	RULE_CS_EXE
+...
+\skip	MyServer.exe
+\until	RULE_CS_EXE
+...
+\skip	MyClient.exe
+\until	RULE_CS_EXE
+\elseif JAVA
+\skip	RULE_JAVA_EXE
+\until	RULE_JAVA_EXE
+...
+\skip	MyClient.class
+\until	RULE_JAVA_EXE
+...
+\skip	MyServer.class
+\until	RULE_JAVA_EXE
+\elseif TCL
+\b no build necessary
+\elseif PERL
+\b no build necessary
+\elseif PYTHON
+\b no build necessary
+\elseif VB
+\b no UNIX build possible, mono tool \b vbnc is still in development
+\endif
+
+\subsection \NST{build_windows} WINDOWS
+
+The \b VisualExpress build environment is located in the directory \c win.
+
+\section \NST{server} SERVER
+
+A \rself server requires the following setup:
+ -# file: \c example/\lang/MyServer.\fileextension
+ -# an instance of the abstract class \RNS{ContextCreate}
+ -# the interface \RNSC{IServerSetup} and or \RNSC{IServerCleanup}
+ -# the interface \RNSC{IFactory} to create a new application instance
+ .
+The \e minimal server looks like:
+\if CSHARP
+\include MyServer.\fileextension
+\elseif VB
+\dontinclude MyServer.\fileextension
+\skip Imports
+\until End Module
+\elseif JAVA
+\include MyServer.\fileextension
+\elseif TCL
+\dontinclude MyServer.\fileextension
+\skip package
+\until Exit
+\elseif PERL
+\dontinclude MyServer.\fileextension
+\skip use strict
+\until Exit
+\elseif PYTHON
+\dontinclude MyServer.\fileextension
+\skip import
+\until Exit
+\else
+\include MyServer.\fileextension
+\endif
+
+The server is started as network visible \e TCP server listen on \e PORT 2345 using a \e THREAD for every 
+new connection request:
+\if CSHARP
+\verbatim
+> mono MyServer.exe --tcp --port 2345 --thread
+\endverbatim
+\elseif VB
+\verbatim
+> mono MyServer.exe --tcp --port 2345 --thread
+\endverbatim
+\elseif JAVA
+\verbatim
+> java example.MyServer --tcp --port 2345 --thread
+\endverbatim
+\elseif TCL
+\verbatim
+> tclsh MyServer.tcl --tcp --port 2345 --thread
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyServer.pl --tcp --port 2345 --thread
+\endverbatim
+\elseif PYTHON
+\verbatim
+> python MyServer.py --tcp --port 2345 --thread
+\endverbatim
+\else
+\verbatim
+> MyServer --tcp --port 2345 --thread
+\endverbatim
+\endif
+If you are using \e UNIX and if you want to setup a high-performance local server then use the build-in
+\e UDS (Unix-Domain-Sockets) capability to listen on the \e FILE /path/to/any/file.uds instead on a network
+port:
+\if CSHARP
+\verbatim
+> mono MyServer.exe --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif vb
+\verbatim
+> mono MyServer.exe --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif JAVA
+\verbatim
+> java example.MyServer --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif TCL
+\verbatim
+> tclsh MyServer.tcl --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyServer.pl --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif PYTHON
+\verbatim
+> python MyServer.py --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\else
+\verbatim
+> MyServer --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\endif
+
+Three things are important:
+ -# the \RNS{SendData} "send" style of functions
+ -# the \RNS{ServiceCreate} function
+ -# a \RNS{LinkCreate} "connected" context of type \RNS{ContextCreate}
+ .
+Sending data is done using a minimum of 2 steps:
+ -# First: start a data package with \RNS{SendSTART}
+ -# Last: submit the a data package to the link target using one of:
+  - \RNS{SendEND}
+  - \RNS{SendEND_AND_WAIT}
+  - \RNS{SendEND_AND_CALLBACK}
+  - \RNS{SendRETURN}
+ .
+
+The first three \b SendEND... functions are used to \b call a remote service and
+the last one is used to answer an incoming service call. In-between \SendSTART
+and \SendEND ... other \RNS{SendData} style commands are available to fill the data 
+package with data.
+
+Services are created with the \RNS{ServiceCreate} function. The first
+parameter is a \b 4 byte Token as public name. 4 byte is required because this
+string is mapped to a 4 byte integer for speed reason. The second parameter
+is an object providing the \RNS{ServiceCallback} interface.
+
+The \RNS{ServiceCallback} function has one parameter of type \RNS{ContextCreate}. This
+parameter refer to the original object (in our case \e MyServer). If
+the service object (in our case \e MyFirstService) is a subclass of
+the original \RNS{ContextCreate} object class, the both statements \b SendSTART() and
+\b ctx.sendSTART() are identical.
+
+\section \NST{client} CLIENT
+
+A \rself client requires the following setup:
+ -# an instance of the abstract class \RNS{ContextCreate}
+ .
+The \e minimal client looks like:
+\if CSHARP
+\include MyClient.\fileextension
+\elseif VB
+\dontinclude MyClient.\fileextension
+\skip Imports
+\until End Module
+\elseif JAVA
+\include MyClient.\fileextension
+\elseif TCL
+\dontinclude MyClient.\fileextension
+\skip package
+\until Exit
+\elseif PERL
+\dontinclude MyClient.\fileextension
+\skip use strict
+\until Exit
+\elseif PYTHON
+\dontinclude MyClient.\fileextension
+\skip import
+\until Exit
+\else
+\include MyClient.\fileextension
+\endif
+
+To call a network visible \e TCP server listen on \e PORT 2345 use:
+\if CSHARP
+\verbatim
+> mono MyClient.exe --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif VB
+\verbatim
+> mono MyClient.exe --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif JAVA
+\verbatim
+> java example.MyClient --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif TCL
+\verbatim
+> tclsh MyClient.tcl --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyClient.pl --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif PYTHON
+\verbatim
+> python MyClient.py --tcp --port 2345
+> Hello World
+\endverbatim
+\else
+\verbatim
+> MyClient --tcp --port 2345
+> Hello World
+\endverbatim
+\endif
+To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds use:
+\if CSHARP
+\verbatim
+> mono MyClient.exe --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\elseif VB
+\verbatim
+> mono MyClient.exe --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\elseif JAVA
+\verbatim
+> java example.MyClient --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\elseif TCL
+\verbatim
+> tclsh MyClient.tcl --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyClient.pl --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\elseif PYTHON
+\verbatim
+> python MyClient.py --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\else
+\verbatim
+> MyClient --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
+\endif
+To call a \e local server started by the client using \e PIPE communication use:
+\if CSHARP
+\verbatim
+> mono MyClient.exe @ mono MyServer.exe
+> Hello World
+\endverbatim
+\elseif VB
+\verbatim
+> mono MyClient.exe @ mono MyServer.exe
+> Hello World
+\endverbatim
+\elseif JAVA
+\verbatim
+> java example.MyClient @ java example.MyServer
+> Hello World
+\endverbatim
+\elseif TCL
+\verbatim
+> tclsh MyClient.tcl @ tclsh MyServer.tcl
+> Hello World
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyClient.pl @ perl MyServer.pl
+> Hello World
+\endverbatim
+\elseif PYTHON
+\verbatim
+> python MyClient.py @ python MyServer.py
+> Hello World
+\endverbatim
+\else
+\verbatim
+> MyClient @ MyServer
+> Hello World
+\endverbatim
+\endif
+
+\section \NST{filter} FILTER
+
+The \RNS{filter} is used to define a command pipeline. A \e minimal filter looks like:
+
+\if PYTHON
+\dontinclude manfilter.py
+\skip import
+\until Exit
+Use \e manfilter.py in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
+\endverbatim
+\elseif JAVA
+\include manfilter.java
+Use \e manfilter.java in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
+\endverbatim
+\elseif CSHARP
+\include manfilter.cs
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif VB
+\dontinclude manfilter.vb
+\skip Imports
+\until End Module
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif TCL
+\dontinclude manfilter.tcl
+\skip TclMsgque
+\until Exit
+Use \e manfilter.tcl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ tclsh manfilter.tcl @ atool join -d :
+\endverbatim
+\elseif PERL
+\dontinclude manfilter.pl
+\skip strict
+\until Exit
+Use \e manfilter.pl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
+\endverbatim
+\elseif C
+\include manfilter.c
+Use \e manfilter.c in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\elseif CC
+\include manfilter.cc
+Use \e manfilter.cc in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\endif
+
+*/
+

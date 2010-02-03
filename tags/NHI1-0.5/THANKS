@@ -1,0 +1,38 @@
+#+
+#§  \file       THANKS
+#§  \brief      \$Id$
+#§  
+#§  (C) 2009 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+Thanks to the GNU maintainers to provide all
+the tools to build and maintain the software.
+
+Thanks to the Linux maintainers to provide such a
+nice OS used as main development environment.
+
+Thanks to the SuSE Linux maintainers to create
+such a powerful distribution.
+
+Thanks to the valgrind maintainers -> this is a
+have-to for "C" software development.
+
+Thanks to the TCL maintainers to provide such a 
+nice language used for testing and as a language
+interface example.
+
+Thanks to the "autoconf macro archive"
+  -> http://autoconf-archive.cryp.to/
+for setup the autoconf configuration.
+
+Thanks to "virtualbox" providing me with the
+possible to do multi-os progrmming on a single
+host.
+
+Thanks to the users who helped to improve the 
+software.
