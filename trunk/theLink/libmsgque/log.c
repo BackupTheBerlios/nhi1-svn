@@ -109,32 +109,29 @@ MqLog (
 static void
 sLogVL (
   struct MqS const * const context,
-  MQ_CST const proc,
+  MQ_CST proc,
   MQ_INT level,
   MQ_CST const fmt,
   va_list ap,
   FILE *channel
 ) {
-  char time_buf[50];
+  char	time_buf[50];
+  char	header[400];
 
   if (channel == NULL) return;
+  if (proc == NULL) proc = "UNKNOWN";
   if (MQ_ERROR_IS_POINTER(context)) {
+    char t;
     MQ_STR name = context->config.name;
     if (context->config.isSilent) return;
-    if (MQ_IS_SERVER (context))
-      fprintf (channel, "%c> (%s:%i) ", (MQ_IS_CHILD (context) ? 's' : 'S'), name ,mq_getpid());
-    else
-      fprintf (channel, "%c> (%s:%i) ", (MQ_IS_CHILD (context) ? 'c' : 'C'), name ,mq_getpid());
-    if (proc) fprintf (channel, "%s [%i-%i-%p-%s]: ",
-             sLogTime (time_buf), level, context->link.ctxId, (void*) context, proc);
+    t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
+    snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%p-%s]: %s", t, name, mq_getpid(),
+	sLogTime (time_buf), level, context->link.ctxId, (void*) context, proc, fmt);
   } else {
-    if (proc) {
-      fprintf (channel, "X> %s [%i-%i-%p-%s]: ",
-		 sLogTime (time_buf), level, 0, (void*)NULL, proc);
-    }
+    snprintf (header, 400, "X> %s [%i-%i-%p-%s]: %s", sLogTime (time_buf), level, 0, (void*)NULL, proc, fmt);
   }
 
-  vfprintf (channel, fmt, ap);
+  vfprintf (channel, header, ap);
   fflush (channel);
 }
 
@@ -198,11 +195,10 @@ sLogDynList (
   const MQ_INT level,
   struct MqBufferS * space
 ) {
-  // init
-  MqBufferPush (space, "   ");
+  // set binary or string
+  dyn->type = MQ_STRING_TYPE(context->config.isString);
 
   // read numItems
-  dyn->type = MQ_STRING_TYPE(context->config.isString);
   dyn->cur.B = dyn->data;
   dyn->numItems = (dyn->type==MQ_BINT ? MqBufU2INT(dyn->cur) : str2int(dyn->cur.C,NULL,16));
   dyn->cur.B += (HDR_INT_LEN + 1);
@@ -211,45 +207,10 @@ sLogDynList (
   if (likely (!context->config.isSilent))
     MqLog (stderr, "numItems<" MQ_FORMAT_Z ">\n", dyn->numItems);
 
-  // print item
-  sLogDynItem (context, dyn, prefix, level, space);
-
-  // cleanup readRef
-  MqBufferPop (space, "   ");
-
-  return;
-}
-
-static void
-sLogRET (
-  struct MqS * const context,
-  struct MqBufferS * const dyn,
-  MQ_CST prefix,
-  const MQ_INT level,
-  struct MqBufferS * space
-)
-{
-  MQ_INT retNum;
-
-  // set binary or string
-  dyn->type = MQ_STRING_TYPE(context->config.isString);
-
-  // read numItems
-  SEEK (dyn, 0);
-  retNum = (dyn->type==MQ_BINT ? MqBufU2INT(dyn->cur) : str2int(dyn->cur.C,NULL,16));
-  SEEK (dyn, RET_NumItems_S);
-  dyn->numItems = (dyn->type==MQ_BINT ? MqBufU2INT(dyn->cur) : str2int(dyn->cur.C,NULL,16));
-  SEEK (dyn, RET_SIZE);
-
-  // Message
-  if (likely (!context->config.isSilent))
-      MqLog (stderr, "code<%c> retNum<%i> numItems<" MQ_FORMAT_Z ">\n", 
-	  pReadGetReturnCode(context), retNum, dyn->numItems);
-
-  // print item's
-  MqBufferPush (space, "   ");
-  sLogDynItem (context, dyn, prefix, level, space);
-  MqBufferPop (space, "   ");
+  // print item-list
+  MqBufferPush	(space, "   ");
+  sLogDynItem	(context, dyn, prefix, level, space);
+  MqBufferPop	(space, "   ");
 
   return;
 }
@@ -265,50 +226,67 @@ sLogDynItem (
 {
   struct MqBufferS * hd = pBufferCreateRef (dyn);
   register enum MqTypeE type;
+  int num, size=400;
+  char buf[400];
+  char *ptr = buf;
+
+  if (context->config.isSilent) return;
 
   while (dyn->numItems) {
     MqErrorCheck (pReadWord (context, dyn, hd));
     type = hd->type;
-    MqDLogX (context, prefix, level, "%s%7i : %s : ", space->data, 
-	hd->cursize, MqLogTypeName(hd->type));
-    if (context->config.isSilent)
-      continue;
+
+    num	  =  snprintf(buf, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
+    ptr	  += num;
+    size  -= num;
+
     switch (type) {
       case MQ_STRT:
-        MqLog (stderr, "%s\n", hd->data);
+	snprintf(ptr, size, "%s", hd->data);
         break;
       case MQ_BYTT:
-        MqLog (stderr, MQ_FORMAT_Y "\n", MqBufU2BYT(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_Y, MqBufU2BYT(hd->cur));
         break;
       case MQ_BOLT:
-        MqLog (stderr, MQ_FORMAT_O "\n", MqBufU2BOL(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_O, MqBufU2BOL(hd->cur));
         break;
       case MQ_SRTT:
-        MqLog (stderr, MQ_FORMAT_S "\n", MqBufU2SRT(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_S, MqBufU2SRT(hd->cur));
         break;
       case MQ_INTT:
-        MqLog (stderr, MQ_FORMAT_I "\n", MqBufU2INT(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_I, MqBufU2INT(hd->cur));
         break;
       case MQ_FLTT:
-        MqLog (stderr, MQ_FORMAT_F "\n", MqBufU2FLT(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_F, MqBufU2FLT(hd->cur));
         break;
       case MQ_WIDT:
-        MqLog (stderr, MQ_FORMAT_W "\n", MqBufU2WID(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
         break;
       case MQ_DBLT:
-        MqLog (stderr, MQ_FORMAT_D "\n", MqBufU2DBL(hd->cur));
+        snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
         break;
       case MQ_LSTT:
-        MqLog (stderr, ">>>> ");
+        snprintf(ptr, size, ">>>> ");
+        break;
+      case MQ_RETT:
+        snprintf(ptr, size, ">>>> code<%c> ", pReadGetReturnCode(context));
+        break;
+      case MQ_BINT: 
+        snprintf(ptr, size, "%s", "?binary?");
+        break;
+    }
+    
+    MqDLogX (context, prefix, level, "%s\n", buf);
+
+    switch (type) {
+      case MQ_LSTT:
         sLogDynList (context, hd, prefix, level, space);
         break;
       case MQ_RETT:
-        MqLog (stderr, ">>>> ");
-        sLogRET (context, hd, prefix, level, space);
+        sLogDynList (context, hd, prefix, level, space);
         break;
-      case MQ_BINT: 
-        MqLog (stderr, "?binary?\n");
-        break;
+      default:
+	break;
     }
   }
 

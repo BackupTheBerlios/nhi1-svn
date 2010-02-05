@@ -444,10 +444,10 @@ pTokenCheckSystem (
 	      MqErrorCheck (MqReadI (context, &errnum));
 	      MqErrorCheck (MqReadC (context, &errtext));
 	      if (context->config.master != NULL) {
-		MqErrorSet (context->config.master, errnum, MQ_ERROR, errtext);
+		MqErrorSet (context->config.master, errnum, MQ_ERROR, errtext, NULL);
 		MqSendERROR (context->config.master);
 	      } else {
-		MqErrorSet (context, errnum, MQ_ERROR, errtext);
+		MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
 		if (context->setup.BgError.fFunc != NULL) {
 		  MqDLogCL (context, 5, "call BqError\n");
 		  MqErrorCheck ((*context->setup.BgError.fFunc) (context, context->setup.BgError.data));
@@ -558,10 +558,13 @@ error1:
       curr++;
       switch (*curr) {
         case 'H':		// _SHD: SERVER shutdown request from remote Mq
-	  // shutdown all dependenig objects
-	  pMqShutdown(context);
-	  // the deletion will be handled in "pEventStart"
-	  return pErrorSetEXIT (context, __func__);
+	  // ignore _SHD is already on EXIT
+	  if (pMqGetFirstParent(context)->link.bits.onExit == MQ_NO) {
+	    // shutdown all dependenig objects
+	    pMqShutdown(context);
+	    // the deletion will be handled in "pEventStart"
+	    return pErrorSetEXIT (context, __func__);
+	  }
         case 'R':              // _SRT: System return
           pTransSetResult (context->link.trans, MQ_TRANS_END, NULL);
           break;

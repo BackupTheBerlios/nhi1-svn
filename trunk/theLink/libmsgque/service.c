@@ -15,6 +15,7 @@
 #include "token.h"
 #include "read.h"
 #include "mq_io.h"
+#include <limits.h>
 
 #define MQ_CONTEXT_S context
 
@@ -220,8 +221,10 @@ MqProcessEvent (
   }
 
   // set the default for timeout
-  if (timeout < 0) {
-    timeout = (timeout == MQ_TIMEOUT_USER ? pIoGetTimeout(context->link.io) : MQ_TIMEOUT);
+  if (timeout == MQ_TIMEOUT_USER) {
+    timeout = forever ? LONG_MAX : pIoGetTimeout(context->link.io);
+  } else if (timeout < 0) {
+    timeout = MQ_TIMEOUT;
   }
 
   // check for an event
@@ -234,12 +237,28 @@ MqProcessEvent (
         case MQ_OK:	  break;
         case MQ_CONTINUE: ret = MQ_OK; continue;
         case MQ_ERROR:	  goto error;
-        case MQ_EXIT:	  goto end;
+        case MQ_EXIT:	  {
+	  // we check for toplevel "server-forever-loop"
+	  if (forever) {
+	    // on "toplevel"
+	  } else {
+	    // not on "toplevel"
+	  }
+	  goto error;
+	}
       }
     }
 
     // ##################### Process Events #####################
-    MqErrorCheck (ret=pIoSelectStart(context->link.io, &tv, sMqEventStart));
+    ret=pMqSelectStart(context, &tv, sMqEventStart);
+    switch (ret) {
+      case MQ_OK:	  break;
+      case MQ_CONTINUE:	  ret = MQ_OK; continue;
+      case MQ_ERROR:	  goto error;
+      case MQ_EXIT:	  {
+	goto error;
+      }
+    }
   }
   while (forever && ret == MQ_OK);
 
@@ -251,8 +270,10 @@ end:
 
 error:
   // restore master transaction
-  if (master != NULL) master->link._trans = trans;
- return MqErrorStack (context);
+//I0
+//printP(master)
+  if (context->config.master != NULL) context->config.master->link._trans = trans;
+  return MqErrorStack (context);
 }
 
 END_C_DECLS

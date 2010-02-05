@@ -159,15 +159,8 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
  *	Body-Prefix
  */
 
-#define BDY_NumItems_S	    (3				    + 1)    ///< 4  : "BDY" string[3]
-#define BDY_SIZE	    (BDY_NumItems_S + HDR_INT_LEN   + 1)    ///< 13 : "BODY_ITEM_SIZE" integer
-
-/*
- *      Return-Header (RET)
- */
-
-#define RET_NumItems_S     (0              + HDR_INT_LEN   + 1)	    ///< 9  : "RETURN_NUMBER" integer
-#define RET_SIZE           (RET_NumItems_S + HDR_INT_LEN   + 1)	    ///< 18 : "RETURN_MASSAGE_SIZE" integer
+#define BDY_NumItems_S	    (3				    + 1)	    ///< 4  : "BDY" string[3]
+#define BDY_SIZE	    (BDY_NumItems_S + HDR_INT_LEN   + 1)	    ///< 13 : "BODY_ITEM_SIZE" integer
 
 /*
  *      Body-Object-Header (BOH)

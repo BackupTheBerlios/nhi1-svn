@@ -62,7 +62,7 @@ MqContextInit (
   pConfigInit (context);
   context->temp = MqBufferCreate(context, 250);
   MqConfigDup(context, tmpl);
-  pErrorSetup(context);
+  pErrorReset(context);
 }
 
 void

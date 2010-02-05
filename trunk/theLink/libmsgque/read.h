@@ -23,8 +23,9 @@ BEGIN_C_DECLS
 
 /// \brief Return-Codes used in #sSend_RET_START function
 enum MqReturnE {
-    MQ_RETURN_OK	= 'O',		///< return an \b ok package
-    MQ_RETURN_ERROR	= 'E',		///< return an \b error package
+    MQ_RETURN_OK	  = 'O',  ///< return a \b ok package
+    MQ_RETURN_ERROR	  = 'E',  ///< return an \b error package
+    MQ_RETURN_TRANSACTION = 'T',  ///< return an \b error package
 };
 
 /*****************************************************************************/
@@ -102,8 +103,10 @@ enum MqErrorE pRead_RET_START (
 ) __attribute__((nonnull));
 
 /// \brief deleting a \e RET reference after reading the return items was finished
-/// \param read a pointer to an MqReadS object
-#define pRead_RET_END(read) MqReadL_END(read)
+/// \context
+void pRead_RET_END (
+  struct MqS * const context
+) __attribute__((nonnull));
 
 /*****************************************************************************/
 /*                                                                           */

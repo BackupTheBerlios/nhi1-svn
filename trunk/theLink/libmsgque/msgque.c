@@ -74,14 +74,6 @@ MqInitCreate ()
   return MqInitBuf;
 }
 
-void
-pDeleteProtectionCreate (
-  struct MqS * const context
-)
-{
-  context->link.bits.deleteProtection = MQ_YES;
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                context/event                               */
@@ -179,8 +171,8 @@ pWaitOnEvent (
     switch (pIoSelectAll (context->link.io, what, &tv)) {
       case MQ_CONTINUE:	break;		  // nothing found wait for next event
       case MQ_OK:	goto end;	  // found event
-      case MQ_ERROR:	goto error;	  // something wrong happen
-      case MQ_EXIT:	return MQ_EXIT;	  // something unexpected happen
+      case MQ_ERROR:			  // something wrong happen
+      case MQ_EXIT:	goto error;	  // something unexpected happen
     }
 
     // 2. call external event-proc
@@ -307,49 +299,54 @@ MqExit (
   struct MqS * context
 )
 {
-  int num;
-  MqExitF exitF;
-  MQ_BOL isThread;
+  if (context == NULL) {
+    // exit on empty context
+    SysExit (0,0);
+  } else if (context->link.bits.onExit == MQ_YES) {
+    // no double invovation of MqExit
+    MqPanicSYS(context);
+  } else {
+    // do the exit
+    int num;
+    MqExitF exitF;
+    MQ_BOL isThread;
 
-  // exit on empty context
-  if (context == NULL) SysExit (0,0);
-  // no double invovation of MqExit
-  if (context->link.bits.onExit == MQ_YES) MqPanicSYS(context);
-  context->link.bits.onExit = MQ_YES;
-  MqDLogC(context,3,"EXIT\n");
-
-  // switch to parent
-  if (MQ_IS_CHILD(context)) {
-    struct MqS * parent = pMqGetFirstParent(context);
-    MqErrorCopy (parent, context);
-    context = parent;
     context->link.bits.onExit = MQ_YES;
-    MqDLogC(context,3,"switch to PARENT\n");
+    MqDLogC(context,3,"EXIT\n");
+
+    // switch to parent
+    if (MQ_IS_CHILD(context)) {
+      struct MqS * parent = pMqGetFirstParent(context);
+      MqErrorCopy (parent, context);
+      context = parent;
+      context->link.bits.onExit = MQ_YES;
+      MqDLogC(context,3,"switch to PARENT\n");
+    }
+
+    // save context data because the next section will delete it
+    num = MqErrorGetNumI(context);
+
+    // MQ_ERROR_EXIT is a "normal" exit 
+    if (num == (200+MQ_ERROR_EXIT)) num = EXIT_SUCCESS;
+
+    // if context was started as thread?
+    isThread = ((context->statusIs & MQ_STATUS_IS_THREAD) != 0);
+
+    // get the right application specific exit function
+    exitF = (isThread ? context->setup.fThreadExit : context->setup.fProcessExit);
+
+    // 1. delete the main Link and all depending links also
+    MqLinkDelete (context);
+
+    // 2. delete all other parent context from current thread or process
+    sEventFree();
+
+    // 3. call application specific exit function
+    if (exitF) (*exitF) (num);
+
+    // 4. finally call libmsgque exit function
+    SysExit(isThread, num);
   }
-
-  // save context data because the next section will delete it
-  num = MqErrorGetNumI(context);
-
-  // MQ_ERROR_EXIT is a "normal" exit 
-  if (num == (200+MQ_ERROR_EXIT)) num = EXIT_SUCCESS;
-
-  // if context was started as thread?
-  isThread = ((context->statusIs & MQ_STATUS_IS_THREAD) != 0);
-
-  // get the right application specific exit function
-  exitF = (isThread ? context->setup.fThreadExit : context->setup.fProcessExit);
-
-  // 1. delete the main Link and all depending links also
-  MqLinkDelete (context);
-
-  // 2. delete all other parent context from current thread or process
-  sEventFree();
-
-  // 3. call application specific exit function
-  if (exitF) (*exitF) (num);
-
-  // 4. finally call libmsgque exit function
-  SysExit(isThread, num);
 }
 
 /*****************************************************************************/

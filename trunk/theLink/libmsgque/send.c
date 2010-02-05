@@ -881,6 +881,8 @@ MqSendEND_AND_WAIT (
       pRead_RET_END (context);
       return MQ_ERROR;
     }
+    case MQ_RETURN_TRANSACTION:
+      MqPanicSYS (context);
   }
 
 error:
@@ -913,9 +915,68 @@ pSendSYSTEM_RETR (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                              send_LST                                     */
+/*                              SendList                                     */
 /*                                                                           */
 /*****************************************************************************/
+
+static void
+pSendListStart (
+  struct MqS * const context
+)
+{
+  register struct MqSendS * const send = context->link.send;
+  register struct MqBufferS * const buf = send->buf;
+  register struct SendSaveS * save;
+
+  pBufferAddSize (buf, (BUFFER_P2_PRENUM + HDR_INT_LEN + 1));
+// MK1
+  buf->cursize += BUFFER_P2_PRENUM;
+  buf->cur.B += BUFFER_P2_PRENUM;
+
+  // zustand sichern !
+  save = (struct SendSaveS*) pCachePop (send->cache);
+  save->save = send->save;
+  save->numItems = buf->numItems;
+  save->cursize = buf->cursize;
+
+  send->save = save;
+
+  // Init
+  buf->numItems = 0;
+  buf->cur.B += HDR_INT_LEN+1;
+  buf->cursize += HDR_INT_LEN+1;
+}
+
+static void
+pSendListEnd (
+  struct MqS * const context,
+  enum MqTypeE const type
+)
+{
+  register struct MqSendS * const send = context->link.send;
+  register struct SendSaveS * const save = send->save;
+  if (save != NULL) {
+    register struct MqBufferS * const buf = send->buf;
+    register MQ_BIN ist = (buf->data + save->cursize);
+    MQ_BOL const isString = context->config.isString;
+    MQ_INT const bodyLen = (MQ_INT) (buf->cursize - save->cursize);
+
+    // set numItems
+    SEND_I (isString, ist, buf->numItems);
+
+    // restore "save" 
+    send->save = save->save;
+    buf->numItems = save->numItems;
+    buf->cursize = save->cursize;
+    buf->cur.B = buf->data + buf->cursize;
+
+    // master setzen
+    sSendLen (buf, bodyLen, type, isString);
+
+    // free memory /ATTENTION send->save will be set ABOVE
+    pCachePush (send->cache, save);
+  }
+}
 
 enum MqErrorE
 MqSendL_START (
@@ -925,27 +986,7 @@ MqSendL_START (
   if (context->link.send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    register struct MqSendS * const send = context->link.send;
-    register struct MqBufferS * const buf = send->buf;
-    register struct SendSaveS * save;
-
-    pBufferAddSize (buf, (BUFFER_P2_PRENUM + HDR_INT_LEN + 1));
-  // MK1
-    buf->cursize += BUFFER_P2_PRENUM;
-    buf->cur.B += BUFFER_P2_PRENUM;
-
-    // zustand sichern !
-    save = (struct SendSaveS*) pCachePop (send->cache);
-    save->save = send->save;
-    save->numItems = buf->numItems;
-    save->cursize = buf->cursize;
-
-    send->save = save;
-
-    // Init
-    buf->numItems = 0;
-    buf->cur.B += HDR_INT_LEN+1;
-    buf->cursize += HDR_INT_LEN+1;
+    pSendListStart (context);
     return MQ_OK;
   }
 }
@@ -958,31 +999,7 @@ MqSendL_END (
   if (context->link.send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    register struct MqSendS * const send = context->link.send;
-    register struct MqBufferS * const buf = send->buf;
-    register struct SendSaveS * const save = send->save;
-    MQ_INT bodyLen;
-    MQ_BIN pos;
-    MQ_BOL const isString = context->config.isString;
-
-    if (unlikely(save == NULL)) return MQ_OK;
-
-    // set numItems
-    bodyLen = (MQ_INT) (buf->cursize - save->cursize);
-    pos = buf->data + save->cursize;
-    SEND_I (isString, pos, buf->numItems);
-
-    // restore "save" 
-    send->save = save->save;
-    buf->numItems = save->numItems;
-    buf->cursize = save->cursize;
-    buf->cur.B = buf->data + buf->cursize;
-
-    // master setzen
-    sSendLen (buf, bodyLen, MQ_LSTT, isString);
-
-    // free memory /ATTENTION send->save will be set ABOVE
-    pCachePush (send->cache, save);
+    pSendListEnd (context, MQ_LSTT);
     return MQ_OK;
   }
 }
@@ -992,86 +1009,6 @@ MqSendL_END (
 /*                              send_RET                                     */
 /*                                                                           */
 /*****************************************************************************/
-
-static void
-sSend_RET_START (
-  struct MqS * const context,
-  MQ_INT const num,
-  enum MqReturnE const code
-)
-{
-  register struct MqSendS * const send = context->link.send;
-  register struct MqBufferS * const buf = send->buf;
-  register struct SendSaveS * const save = (struct SendSaveS*) pCachePop (send->cache);
-  register MQ_BIN ist;
-
-  // reset body
-  MqSendSTART (context);
-
-  pBufferAddSize (buf, BUFFER_P2_PRENUM + RET_SIZE);
-  buf->cursize += BUFFER_P2_PRENUM;
-  buf->cur.B += BUFFER_P2_PRENUM;
-
-  // save the state !
-  save->save = send->save;
-  save->numItems = buf->numItems;
-  save->cursize = buf->cursize;
-  send->save = save;
-
-  // init
-  buf->numItems = 0;
-
-  // set the Return-Code
-  *(buf->data+HDR_Code_S) = (char) code;
-
-#ifdef MQ_SAVE
-  strcpy (ist, "xxxxxxxxxx" BUFFER_CHAR_S);
-#endif
-
-  // set the Return-Num
-  ist = buf->cur.B;
-  SEND_I (context->config.isString, ist, num);
-  *ist++ = BUFFER_CHAR;
-  ist += HDR_INT_LEN+1;
-
-  // the new total length
-  buf->cursize = (ist - buf->data);
-  buf->cur.B = ist;
-}
-
-static void
-sSend_RET_END (
-  struct MqS * const context
-)
-{
-  register struct MqSendS * const send = context->link.send;
-  struct SendSaveS * const save = send->save;
-  register struct MqBufferS * const buf = send->buf;
-  register MQ_BIN ist = (buf->data + save->cursize + RET_NumItems_S);
-  MQ_BOL const isString = context->config.isString;
-  MQ_INT const bodyLen = (MQ_INT) (buf->cursize - save->cursize);
-
-  // set numItems
-
-#ifdef MQ_SAVE
-  strcpy (ist, "xxxxxxxxxx");
-#endif
-
-  SEND_I (isString, ist, buf->numItems);
-  *ist = BUFFER_CHAR;
-
-  // restore "save"
-  send->save = save->save;
-  buf->numItems = save->numItems;
-  buf->cursize = save->cursize;
-  buf->cur.B = buf->data + buf->cursize;
-
-  // master setzen
-  sSendLen (buf, bodyLen, MQ_RETT, isString);
-
-  // free memory
-  pCachePush (send->cache, save);
-}
 
 enum MqErrorE
 MqSendERROR (
@@ -1109,9 +1046,11 @@ MqSendRETURN (
       case MQ_ERROR:
 	MqErrorCheck(MqSendSTART (context));
 	MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-	sSend_RET_START (context, MqErrorGetNumI (context), MQ_RETURN_ERROR);
+	*(context->link.send->buf->data+HDR_Code_S) = (char) MQ_RETURN_ERROR;
+	pSendListStart (context);
+	MqSendI (context, MqErrorGetNumI (context));
 	MqSendC (context, MqErrorGetText (context));
-	sSend_RET_END (context);
+	pSendListEnd (context, MQ_RETT);
 	MqErrorReset (context);
 	break;
       case MQ_EXIT:
@@ -1121,9 +1060,9 @@ MqSendRETURN (
     }
     pSendSTART_CHECK(context);
     return pSendEND (context, "_RET", context->link._trans);
-  }
 error:
-  return MqErrorStack(context);
+    return MqErrorStack(context);
+  }
 }
 
 END_C_DECLS

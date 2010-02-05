@@ -135,6 +135,42 @@ pReadDelete (
   MqSysFree (*readP);
 }
 
+static void
+sReadListStart (
+  struct MqS * const context,
+  MQ_BUF buf
+)
+{
+  register struct MqReadS * const read = context->link.read;
+  register struct ReadSaveS * const save = (struct ReadSaveS *) pCachePop (read->saveCache);
+  register struct MqBufferS * const bdy = read->bdy;
+
+  save->save = read->save;
+  save->bdy  = *bdy;
+  read->save = save;
+
+  bdy->type = read->type;
+  bdy->data = bdy->cur.B = buf->data;
+  bdy->size = buf->size;
+  bdy->cursize = buf->cursize;
+  bdy->numItems = (read->type==MQ_BINT ? iBufU2INT(bdy->cur) : str2int(bdy->cur.C,NULL,16));
+  bdy->cur.B += (HDR_INT_LEN + 1);
+}
+
+static void
+sReadListEnd (
+  struct MqS * const context
+)
+{
+  register struct MqReadS * const read = context->link.read;
+  struct ReadSaveS * const save = read->save;
+  if (unlikely(save == NULL)) return;
+  read->save = save->save;
+  *read->bdy = save->bdy;
+//MqDLogV(context,0,"read<%p>, save<%p>\n", read, save);
+  pCachePush (read->saveCache, save);
+}
+
 enum MqErrorE
 MqReadL_START (
   struct MqS * const context,
@@ -144,33 +180,13 @@ MqReadL_START (
   register struct MqReadS * const read = context->link.read;
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else {
-    struct ReadSaveS * save;
-    register struct MqBufferS * const bdy = read->bdy;
-
-    // get the buffer
-    if (buf == NULL)
-      MqErrorCheck(MqReadU(context,&buf));
-
-    // check buffer type
-    if (buf->type != MQ_LSTT)
-      return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_LSTT), MqLogTypeName(buf->type));
-
-    save = (struct ReadSaveS *) pCachePop (read->saveCache);
-    
-    save->save = read->save;
-    save->bdy  = *bdy;
-    read->save = save;
-
-    bdy->type = read->type;
-    bdy->data = bdy->cur.B = buf->data;
-    bdy->size = buf->size;
-    bdy->cursize = buf->cursize;
-    bdy->numItems = (read->type==MQ_BINT ? iBufU2INT(bdy->cur) : str2int(bdy->cur.C,NULL,16));
-    bdy->cur.B += (HDR_INT_LEN + 1);
-
-error:
+  } else if (buf == NULL && MqErrorCheckI(MqReadU(context,&buf))) {
     return MqErrorStack(context);
+  } else if (buf->type != MQ_LSTT) {
+    return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_LSTT), MqLogTypeName(buf->type));
+  } else {
+    sReadListStart (context, buf);
+    return MQ_OK;
   }
 }
 
@@ -183,14 +199,7 @@ MqReadL_END (
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct ReadSaveS * save = read->save;
-    if (unlikely(save == NULL)) return MQ_OK;
-
-    read->save = save->save;
-    *read->bdy = save->bdy;
-
-//MqDLogV(context,0,"read<%p>, save<%p>\n", read, save);
-    pCachePush (read->saveCache, save);
+    sReadListEnd (context);
     return MQ_OK;
   }
 }
@@ -209,48 +218,25 @@ pRead_RET_START (
   struct MqS * const context
 )
 {
-  register struct MqReadS * read = context->link.read;
-  register struct MqBufferS * const bdy = read->bdy;
-  struct MqBufferS * buf = NULL;
-  struct ReadSaveS * save;
-
-  MqErrorCheck (MqReadU (context, &buf));
-
-  // check buffer type
-  if (buf->type != MQ_RETT)
+  register struct MqReadS * const read = context->link.read;
+  MQ_BUF buf = NULL;
+  if (MqErrorCheckI(MqReadU(context,&buf))) {
+    return MqErrorStack(context);
+  } else if (buf->type != MQ_RETT) {
     return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_RETT), MqLogTypeName(buf->type));
-
-  save = (struct ReadSaveS *) pCachePop (read->saveCache);
-  
-//MqDLogV(context,0,"read<%p>, save<%p>\n", read, save);
-
-  save->save = read->save;
-  save->bdy  = *bdy;
-  read->save = save;
-
-  // get -> returnNum
-  if (likely (read->returnCode == MQ_RETURN_OK)) {
-    read->returnNum = -1;
   } else {
-    read->returnNum = (read->type==MQ_BINT ? iBufU2INT(buf->cur) : str2int(buf->cur.C,NULL,16));
-    buf->cur.B += (HDR_INT_LEN + 1);
-    buf->cursize -= (HDR_INT_LEN + 1);
+    sReadListStart (context, buf);
+    if (MqErrorCheckI (MqReadI (context, &read->returnNum)))
+      return MqErrorStack(context);
+    return MQ_OK;
   }
-
-  // 3. fix ret
-  bdy->type = read->type;
-  bdy->data = bdy->cur.B = buf->cur.B;
-  bdy->size = buf->size;
-  bdy->cursize = buf->cursize;
-  bdy->numItems = (read->type==MQ_BINT ? iBufU2INT(bdy->cur) : str2int(bdy->cur.C,NULL,16));
-  bdy->cur.B += (HDR_INT_LEN + 1);
-  return MQ_OK;
-
-error:
-  return MqErrorStack(context);
 }
 
-// \attention "pRead_RET_END" is a #define
+void pRead_RET_END (
+  struct MqS * const context
+) {
+  sReadListEnd (context);
+}
 
 /*****************************************************************************/
 /*                                                                           */

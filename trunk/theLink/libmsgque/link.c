@@ -392,49 +392,51 @@ pMqShutdown (
   struct MqS * const context
 )
 {
-  struct pChildS * child;
-  if (!MQ_ERROR_IS_POINTER(context) || context->link.bits.onShutdown == MQ_YES) return;
-  context->link.bits.onShutdown = MQ_YES;
+  if (context->link.bits.onShutdown == MQ_YES) {
+    return;
+  } else {
+    struct pChildS * child;
 
-  MqDLogC(context,4,"START shutdown\n");
+    MqDLogC(context,4,"START shutdown\n");
+    context->link.bits.onShutdown = MQ_YES;
 
-  // shutdown all childs
-  for (child = context->link.childs; child != NULL; child = child->right ) {
-    // the next line is necessary because the item "context->link.childs->context" and
-    // "context->link.childs->context->link.self->context" are identical. The last one is 
-    // free'd during the following "MqLinkDelete" too and a double-free error
-    // will happen
-    pMqShutdown (child->context);
-  }
-
-  // shutdown all slaves
-  if (context->setup.ignoreExit == MQ_NO) {
-    pSlaveShutdown (context->link.slave);
-  }
-
-  // send message to shutdown the 'server' 
-  // -> but only if the server is available -> pIoCheck
-  if (pIoCheck (context->link.io)) {
-    if (MQ_IS_CLIENT (context)) {
-      MqDLogC(context,4,"send token<_SHD>\n");
-      MqSendSTART (context);
-      MqSendEND_AND_WAIT (context, "_SHD", MQ_TIMEOUT_USER);
-    } else if (MQ_IS_SERVER (context) && context->link._trans != 0 &&
-	pTokenCheck(context->link.srvT,"_SHD")) {
-      // return the "_SHD"
-      MqSendSTART(context);
-      MqSendC(context, "dummy");
-      MqSendRETURN(context);
+    // shutdown all childs
+    for (child = context->link.childs; child != NULL; child = child->right ) {
+      // the next line is necessary because the item "context->link.childs->context" and
+      // "context->link.childs->context->link.self->context" are identical. The last one is 
+      // free'd during the following "MqLinkDelete" too and a double-free error
+      // will happen
+      pMqShutdown (child->context);
     }
+
+    // shutdown all slaves
+    if (context->setup.ignoreExit == MQ_NO) {
+      pSlaveShutdown (context->link.slave);
+    }
+
+    // send message to shutdown the 'server' 
+    // -> but only if the server is available -> pIoCheck
+    if (pIoCheck (context->link.io)) {
+      if (MQ_IS_CLIENT (context)) {
+	MqDLogC(context,4,"send token<_SHD>\n");
+	MqSendSTART (context);
+	MqSendEND_AND_WAIT (context, "_SHD", MQ_TIMEOUT_USER);
+      } else if (MQ_IS_SERVER (context) && context->link._trans != 0 &&
+	  pTokenCheck(context->link.srvT,"_SHD")) {
+	// return the "_SHD"
+	MqSendSTART(context);
+	MqSendRETURN(context);
+      }
+    }
+
+    // shutdown the io
+    pIoShutdown (context->link.io);
+
+    // cleanup error
+    pErrorReset(context);
+    MqDLogC(context,4,"END shutdown\n");
+    return;
   }
-
-  // shutdown the io
-  pIoShutdown (context->link.io);
-
-  // cleanup error
-  pErrorReset(context);
-  MqDLogC(context,4,"END shutdown\n");
-  return;
 }
 
 /*****************************************************************************/

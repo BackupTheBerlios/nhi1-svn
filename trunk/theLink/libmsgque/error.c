@@ -30,14 +30,19 @@ BEGIN_C_DECLS
 /*****************************************************************************/
 
 void
-pErrorSetup (
+pErrorReset (
   struct MqS * const context
 )
 {
   context->error.code = MQ_OK;
   context->error.num = EXIT_SUCCESS;
-  context->error.text = MqBufferCreate (MQ_ERROR_PANIC, 1000);
+  if (context->error.text == NULL) {
+    context->error.text = MqBufferCreate (MQ_ERROR_PANIC, 1000);
+  } else {
+    MqBufferReset (context->error.text);
+  }
   context->error.append = MQ_YES;
+  context->error.errctx = context;
 }
 
 void
@@ -63,8 +68,7 @@ MqPanicVL (
   va_list ap
 )
 {
-  if (context == MQ_ERROR_IGNORE) return;
-  if (context == MQ_ERROR_PANIC) {
+  if (!MQ_ERROR_IS_POINTER(context)) {
     struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
     MqBufferSetV (buf, "PANIC: %s\n", fmt);
     MqDLogEVL (NULL, prefix, buf->cur.C, ap);
@@ -90,7 +94,6 @@ MqPanicV (
 )
 {
   va_list ap;
-  if (context == MQ_ERROR_IGNORE) return;
   va_start (ap, fmt);
   MqPanicVL (context, prefix, errnum, fmt, ap);
   va_end (ap);
@@ -136,20 +139,21 @@ MqErrorSGenVL (
     struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
     MqBufferSetV (buf, "#(" MQ_FORMAT_I ") -> %s\n", errnum, fmt);
     if (errcode == MQ_ERROR) {
-      MqPanicVL (NULL, prefix, errnum, (MQ_STR) buf->data, ap);
+      MqPanicVL (MQ_ERROR_PANIC, prefix, errnum, (MQ_STR) buf->data, ap);
     } else {
-      MqDLogEVL (NULL, prefix, (MQ_STR) buf->data, ap);
+      MqDLogEVL (MQ_ERROR_PANIC, prefix, (MQ_STR) buf->data, ap);
     }
     MqBufferDelete (&buf);
   } else if (context == MQ_ERROR_PRINT) {
     struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
     MqBufferSetV (buf, "#(" MQ_FORMAT_I ") -> %s\n", errnum, fmt);
-    MqDLogEVL (NULL, prefix, (MQ_STR) buf->data, ap);
+    MqDLogEVL (MQ_ERROR_PANIC, prefix, (MQ_STR) buf->data, ap);
     MqBufferDelete (&buf);
   } else {
     struct MqBufferS * const text = context->error.text;
     context->error.code = errcode;
     context->error.num = (errnum > 0 ? errnum : EXIT_FAILURE);
+    context->error.errctx = context;
     MqBufferReset (text);
     if (prefix) {
       if (context) {
@@ -294,21 +298,6 @@ MqErrorGetText (
   return (MQ_STR) context->error.text->data;
 }
 
-/// error-reset without master cleanup
-void
-pErrorReset (
-  struct MqS * const context
-)
-{
-  if (context->error.code == MQ_EXIT) {
-    pMqGetFirstParent(context)->link.exitctx = NULL;
-  }
-  MqBufferReset (context->error.text);
-  context->error.code = MQ_OK;
-  context->error.append = MQ_YES;
-  context->error.num = EXIT_SUCCESS;
-}
-
 /// error-reset with master cleanup
 void
 MqErrorReset (
@@ -343,20 +332,18 @@ MqErrorSet (
   struct MqS * const context,
   MQ_INT num,
   enum MqErrorE code,
-  MQ_CST const message
+  MQ_CST const message,
+  struct MqS *const errctx
 )
 {
-  if (code == MQ_EXIT && context->setup.ignoreExit == MQ_YES) {
-    return MQ_OK;
-  } else {
-    context->error.num = num;
-    context->error.code = code;
-    context->error.append = MQ_YES;
-    MqBufferSetC(context->error.text, message);
-    if (context->config.master != NULL)
-      pErrorSync(context->config.master, context);
-    return code;
-  }
+  context->error.num = num;
+  context->error.code = code;
+  context->error.append = MQ_YES;
+  context->error.errctx = errctx == NULL ? context : errctx;
+  MqBufferSetC(context->error.text, message);
+  if (context->config.master != NULL)
+    pErrorSync(context->config.master, context);
+  return code;
 }
 
 enum MqErrorE
@@ -365,7 +352,9 @@ MqErrorSetCONTINUE (
 )
 {
   MqDLogC(context,4,"set CONTINUE\n");
-  return (context->error.code = MQ_CONTINUE);
+  context->error.code = MQ_CONTINUE;
+  context->error.errctx = context;
+  return MQ_CONTINUE;
 }
 
 MQ_BOL
@@ -373,7 +362,7 @@ MqErrorIsEXIT (
   struct MqS * const context
 )
 {
-  return (context->error.code == MQ_EXIT);
+  return (context->error.code == MQ_EXIT && context->error.errctx == context);
 }
 
 enum MqErrorE
@@ -387,8 +376,9 @@ pErrorSetEXIT (
     return MQ_CONTINUE;
   } else {
     MqDLogV(context, 3, "%s - set EXIT\n", prefix);
-    pMqGetFirstParent(context)->link.exitctx = context;
     MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
+    context->link.bits.requestExit = MQ_YES;
+    pGcAdd(context);
     return MQ_EXIT;
   }
 }
@@ -400,11 +390,11 @@ pErrorSync (
 )
 {
   if (unlikely(in == out)) return;
-  if (in->error.code == MQ_EXIT && out->setup.ignoreExit == MQ_YES) return;
   MqBufferCopy (out->error.text, in->error.text);
   out->error.code = in->error.code;
   out->error.num = in->error.num;
   out->error.append = in->error.append;
+  out->error.errctx = in->error.errctx;
 }
 
 enum MqErrorE
@@ -434,19 +424,21 @@ pErrorReport(
   struct MqS * const context
 )
 {
-  if (!MQ_ERROR_IS_POINTER(context) || MQ_IS_CHILD (context) || context->error.code != MQ_ERROR) return;
-  if (MQ_IS_SERVER (context) && pIoCheck (context->link.io)) {
-    // save the original context
-    MQ_BUF err = MqBufferDup (context->error.text);
-    // send the context to the client
-    if (MqSendERROR (context) == MQ_ERROR) {
-      if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-	MqLog (stderr, "%s\n", (MQ_STR) err->data);
+  if (!MQ_ERROR_IS_POINTER(context)) return;
+  if (MQ_IS_PARENT (context) && context->error.code == MQ_ERROR) {
+    if (MQ_IS_SERVER (context) && pIoCheck (context->link.io)) {
+      // save the original context
+      MQ_BUF err = MqBufferDup (context->error.text);
+      // send the context to the client
+      if (MqSendERROR (context) == MQ_ERROR) {
+	if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
+	  MqLog (stderr, "%s\n", (MQ_STR) err->data);
+	}
       }
+      MqBufferDelete (&err);
+    } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
+      MqLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
     }
-    MqBufferDelete (&err);
-  } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-    MqLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
   }
   pErrorReset(context);
 }
@@ -473,4 +465,5 @@ MqErrorLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 

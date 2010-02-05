@@ -263,6 +263,8 @@ error1:
 	pRead_RET_END (context);
 	return MQ_ERROR;
       }
+      case MQ_RETURN_TRANSACTION:
+	MqPanicSYS(context);
     }
   } else if (result) {
     item->result = result;
@@ -276,6 +278,4 @@ error:
 }
 
 END_C_DECLS
-
-
 

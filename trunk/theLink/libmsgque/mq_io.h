@@ -89,8 +89,8 @@ enum MqErrorE pIoSelectAll (
   struct timeval * const timeout
 );
 
-enum MqErrorE pIoSelectStart (
-  struct MqIoS * const io,
+enum MqErrorE pMqSelectStart (
+  struct MqS * const context,
   struct timeval const * const timeout,
   EventCreateF const proc
 );

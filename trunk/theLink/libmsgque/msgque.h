@@ -343,12 +343,12 @@ struct MqLinkS {
   // private variables
   struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
-  struct MqS * exitctx;		    ///< msgque object got and "_SHD" request (only used at the parent)
   struct MqCacheS * readCache;	    ///< cache for MqReadS
 
-  /// \brief bitfield to represent the boolean values
+  /// \brief bit-field to represent the boolean values
   struct {
     MQ_BOL endian	      : 1 ; ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
+    MQ_BOL requestExit	      : 1 ; ///< an exit was requested.
     MQ_BOL onExit	      : 1 ; ///< is already an "exit" ongoing?
     MQ_BOL onCreateStart      : 1 ; ///< Start "MqLinkCreate"
     MQ_BOL onCreateEnd	      : 1 ; ///< End "MqLinkCreate"
@@ -383,10 +383,11 @@ struct MqLinkS {
 /// \ingroup Mq_Error_C_API
 /// \brief error-object data type
 struct MqErrorS {
-  struct MqBufferS * text;      ///< the error message
   enum MqErrorE code;		///< the error code
+  struct MqBufferS * text;      ///< the error message
   MQ_INT num;	                ///< the error number also used as exit code
   MQ_BOL append;		///< allow to append? MQ_YES or MQ_NO
+  struct MqS * errctx;		///< source of the error, NULL = current context
 };
 
 /** \} Mq_Type_C_API */
@@ -622,7 +623,7 @@ struct MqIoConfigS {
   /// \brief user defined timeout to terminate a blocking function call (default: 90 sec)
   MQ_TIME_T timeout;
 
-  /// \brief set the OS specific value for the \e socket-operation-buffer (default: OS sepecific)
+  /// \brief set the OS specific value for the \e socket-operation-buffer (default: OS specific)
   MQ_INT buffersize;
 
   /// \brief what kind of socket interface to use?
@@ -632,13 +633,13 @@ struct MqIoConfigS {
   /// </TABLE>
   enum MqIoComE com;
 
-  /// \brief set \e uds configration-data
+  /// \brief set \e uds configuration-data
   struct MqIoUdsConfigS	  uds;
 
-  /// \brief set \e tcp configration-data
+  /// \brief set \e tcp configuration-data
   struct MqIoTcpConfigS	  tcp;
 
-  /// \brief set \e pipe configration-data
+  /// \brief set \e pipe configuration-data
   struct MqIoPipeConfigS  pipe;
 };
 
@@ -706,7 +707,7 @@ struct MqConfigS {
 /// link \e server-messages to a specific \e client-connection.
 /// \verbatim C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE \endverbatim
 /// If the \e server-name is not defined on the \e client the \e server is using \RNSC{name} to
-/// create a useable name.  (default: \null)
+/// create a usable name.  (default: \null)
 /// \ifnot MAN
 /// \attention 
 ///   - the memory of the \e server-name-data-entry is managed by \libmsgque and freed with
@@ -771,7 +772,7 @@ struct MqSetupS {
   ///
   /// A background error is an error without a link to an \e application-context and happen if an \RNSA{SendEND}
   /// call fails or if an other asynchronous task fails. if the interface is \e not defined the error
-  /// is printed to stderr and the aplication continue to work. if the interface is defined the
+  /// is printed to stderr and the application continue to work. if the interface is defined the
   /// context is set to error and the callback is called to process this error. Inside the callback
   /// the error is available using \RNSA{ErrorGetNum} and \RNSA{ErrorGetText} and can be cleared using \RNSA{ErrorReset}.
   struct MqCallbackS BgError;
@@ -1304,7 +1305,7 @@ MQ_DECL MqConfigGetSelf (
 
 /// \brief Initialize the process \e startup-prefix argument
 ///
-/// The \e startup-prefix have to be the name of the executablei, found in the 
+/// The \e startup-prefix have to be the name of the executable, found in the 
 /// \c PATH environment variable, and additional arguments like the script name or 
 /// the required startup options. The \e startup-prefix is used for two different purpose:
 ///  - To start a new entity using the \RNSC{startAs} "--spawn" command-line option.
@@ -1361,7 +1362,7 @@ MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
 /// \endcode
 /// The \e libmsgque-specific-data have to be the \e first data entry in the structure.\n
 /// A \e high-level-programming-language like JAVA, C#, C++, Perl, Python, Tcl or VB-NET
-/// is using a wrapper arround this \e data-structure as \e application-handle.
+/// is using a wrapper around this \e data-structure as \e application-handle.
 /// The \e application-specific-data is available as \RNS{ContextLocalStorage}
 /// \if MSGQUE
 /// \anchor \NS{ContextLocalStorage}
@@ -1440,7 +1441,7 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// have to be informed. This information is send as \e shutdown-event and 
 /// finally as \e socket-exit after \e application-exit. This library tries to perform this two 
 /// steps even if the default \b exit function is called. 
-/// This is no problem because the second step (\e socket-exit) is enougth to signal a \e link-down.
+/// This is no problem because the second step (\e socket-exit) is enough to signal a \e link-down.
 /// It is \b not secure to depend only on \e socket-exit for application exit
 /// because sometimes the sockets stop working or the \e link-target does not get a \e socket-exit.
 /// For example the \e pipe-link on windows. The client can not exit and create a \e socket-exit
@@ -1526,7 +1527,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 ///
 /// The \e client-server-link connect two \e context, a \e client-parent-context and a \e server-parent-context. 
 /// The \e link can be \e local (connect two \e context on the same host) or can be \e remote 
-/// (connect two \e context on different hosts). OnTop the \e parent-context multiple \e child-context are allowed.
+/// (connect two \e context on different hosts). On-Top the \e parent-context multiple \e child-context are allowed.
 ///\verbatim
 ///  !on local host!                                  !on remote host!
 ///
@@ -1566,7 +1567,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 ///\verbatim
 ///client @ server \endverbatim
 /// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNSC{IFactory} interface.
-/// - a \e server-context have to enter the \e event-loop and wait for incomming \e service-request using
+/// - a \e server-context have to enter the \e event-loop and wait for incoming \e service-request using
 ///   \RNSA{ProcessEvent} together with the \MQ_WAIT_FOREVER.
 /// .
 /// \if MSGQUE
@@ -1599,7 +1600,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \brief make \e ctx to a \e parent-context and setup a new \e client-server-link
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
-///                  including the \b "@" item to add \e server-commandline-arguments
+///                  including the \b "@" item to add \e server-command-line-arguments
 ///		     for the \e --pipe setup.
 /// \ifnot MAN
 ///                  (only C-API: the memory of known arguments will be freed and 
@@ -1626,7 +1627,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkConnect (
   struct MqS  * const ctx
 );
 
-/// \brief make a \e context to a \e child-context ontop of an existing \e parent-client-server-link
+/// \brief make a \e context to a \e child-context on-top of an existing \e parent-client-server-link
 /// \details A child is using the same process or thread as the parent but a different 
 /// namespace. With a different namespace a child is able to act on different services 
 /// on the shared server.
@@ -1851,7 +1852,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
 /// \brief create a link between a \RNS{ServiceIdentifier} and a \RNS{ServiceCallback}
 ///
 /// The \e token have to be unique but the \e callback not, this is called an \e alias. 
-/// Use \RNS{ServiceGetToken} to get the current token in an \e incomming-service-call.
+/// Use \RNS{ServiceGetToken} to get the current token in an \e incoming-service-call.
 /// \ctx
 /// \token
 /// \param[in] callback the function to process the incoming \e service-request
@@ -1898,18 +1899,22 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
  *  \e file-handles and to call \RNSC{IEvent} on idle. The third argument \e wait
  *  support three modes to define the \e operation-mode:
  *  - \b \MQ_WAIT_NO, don't wait for an event just do the check and comeback. if an
- *       Event is available process the event, but only one. If no Event is available
- *       return with #MQ_CONTINUE.
+ *      Event is available process the event, but only one. If no Event is available
+ *      return with #MQ_CONTINUE.
  *  - \b \MQ_WAIT_ONCE, wait maximum \e timeout seconds for only \e one event or raise
- *    a \e timeout error if no event was found.
- *  - \b \MQ_WAIT_FOREVER, wait forever and only come back on \e error or on \e exit.
+ *      a \e timeout-error if no event was found.
+ *  - \b \MQ_WAIT_FOREVER, wait maximum \e timeout seconds for a event. If an event was found
+ *      process the event. If no event was found, raise a \e timeout-error. After the event was
+ *      processed continue to listen for a the new event. If timeout is #MQ_TIMEOUT_USER
+ *      (-2, the default) set \e timeout to infinite. The function will only come back 
+ *      on \e error or on \e exit.
  *  .
  *  This function is usually used on a server to enter the \e event-loop and wait 
  *  for incoming service requests or after the \RNSA{SendEND_AND_CALLBACK} function 
  *  to wait for the \e service-result.
  * 
  *  \ctx
- *  \param_timeout_with_default, only used if \e wait = \MQ_WAIT_ONCE
+ *  \param_timeout_with_default
  *  \param[in] wait chose the \e time-interval to wait for a new event (default: \MQ_WAIT_NO)
  *  \retException
  *
@@ -1974,7 +1979,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /// \e native-data-type supported.
 /// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
 /// \RNSA{ReadTYPE} or \RNSA{BufferGetTYPE} have to match the previous \RNSA{SendTYPE} with the same 
-/// \e TYPE. One exception is allowed, the cast from and to the \C datatype (TYPE=C) is allowed.
+/// \e TYPE. One exception is allowed, the cast from and to the \C data-type (TYPE=C) is allowed.
 /// The following type identifier's are available:
 ///  - \c Y : 1 byte signed character (\Y) 
 ///  - \c O : 1 byte boolean value using \yes or \no (\O)
@@ -2718,7 +2723,7 @@ MqBufferLAppendU (
 /// \context
 /// \bufL0
 /// \optionL
-/// \retval var if \e opt is found set \e var to #MQ_YES otherwiese #MQ_NO
+/// \retval var if \e opt is found set \e var to #MQ_YES otherwise #MQ_NO
 /// \retMqErrorE
 /// \attention if \e option is found the entry is deleted from the MqBufferLS object
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLCheckOptionO (
@@ -2950,7 +2955,7 @@ MQ_EXTERN void MQ_DECL MqPanicVL (
   MQ_INT const errnum,
   MQ_CST const fmt,
   va_list var_list
-);
+) __attribute__ ((noreturn));
 
 /// \brief do a \b panic with vararg arguments
 /// \context
@@ -2964,7 +2969,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
   MQ_INT const errnum,
   MQ_CST const fmt,
   ...
-) __attribute__ ((format (printf, 4, 5)));
+) __attribute__ ((noreturn, format (printf, 4, 5)));
 
 /// \brief do a \b panic with \e string as argument
 /// \context
@@ -2980,7 +2985,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
 #define MqPanicSYS(context) MqPanicV(context,__func__,-1,\
 	"internal ERROR in function '%s', please contact your local support", __func__);
 
-/// \brief clear the \e error and reset the \e contex
+/// \brief clear the \e error and reset the \e context
 MQ_EXTERN void MQ_DECL MqErrorReset (
   struct MqS * const context
 );
@@ -3131,12 +3136,14 @@ static mq_inline MQ_INT MqErrorGetNumI (
 /// \param[in] num the error number to set
 /// \param[in] code the error code to set
 /// \param[in] message the error message to set
+/// \param[in] errctx original source of the error
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSet (
   struct MqS * const context,
   MQ_INT num,
   enum MqErrorE code,
-  MQ_CST const message
+  MQ_CST const message,
+  struct MqS *const errctx
 );
 
 /// \brief signal end of processing in an \RNSC{IEvent} callback
@@ -3153,7 +3160,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 /// \RNSA{LinkCreate}, \RNSA{LinkCreateChild}, \RNSA{LinkConnect}, 
 /// \RNSA{SendEND}, \RNSA{SendEND_AND_WAIT} or \RNSA{ProcessEvent}.
 /// The goal of this function is to act on this \e return-code
-/// and is used to igore this error using \RNSA{ErrorReset} and
+/// and is used to ignore this error using \RNSA{ErrorReset} and
 /// later do a reconnect using \RNSA{LinkConnect}.\n
 /// \ifnot MAN
 /// \b Example: catch and ignore an EXIT return-code
@@ -3999,7 +4006,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 );
 
   
-/// \brief duplicate a string, the argument \c NULL is allowd
+/// \brief duplicate a string, the argument \c NULL is allowed
 /// \param[in] v the string to duplicate
 /// \return the new string or \c NULL
 static mq_inline MQ_STR mq_strdup_save (
@@ -4275,6 +4282,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 
