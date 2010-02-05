@@ -1,3 +1,9 @@
-C> (client:3644) [2010-01-31:17-45-11] [0-0-003734C8-main]: start: --------------------------------------
-C> (client:3644) [2010-01-31:17-45-13] [0-0-003734C8-statistics]:                      MqSendEND:      34.65
-C> (client:3644) [2010-01-31:17-45-17] [0-0-003734C8-statistics]:         MqSendEND_AND_CALLBACK:      75.51
+C> (client:2140) [2010-02-02:15-16-49] [0-0-0x6228a0-main]: start: --------------------------------------
+C> (client:2140) [2010-02-02:15-16-49] [0-0-0x6228a0-statistics]:                      MqSendEND:       5.38
+C> (client:2140) [2010-02-02:15-16-49] [0-0-0x6228a0-statistics]:         MqSendEND_AND_CALLBACK:      10.18
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-statistics]:             MqSendEND_AND_WAIT:      13.53
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-statistics]:                  parent create:    1016.91
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-statistics]:                  parent delete:     122.21
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-statistics]:                   child create:      88.77
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-statistics]:                   child delete:      26.75
+C> (client:2140) [2010-02-02:15-16-52] [0-0-0x6228a0-main]: end: ----------------------------------------

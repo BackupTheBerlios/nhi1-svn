@@ -40,12 +40,6 @@ pErrorReport(
   struct MqS * const context
 );
 
-enum MqErrorE
-pErrorSetEXIT (
-  struct MqS * const context,
-  MQ_CST prefix
-);
-
 void
 pErrorSync (
   struct MqS * const out,
@@ -55,16 +49,16 @@ pErrorSync (
 void pErrorReset (struct MqS * const);
 
 #define MqErrorDb(item) \
-    MqErrorSGenV(MQ_CONTEXT_S,__func__,MQ_ERROR,(item+200),MqMessageText[item])
+    MqErrorSGenV(MQ_CONTEXT_S,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item])
 
 #define MqErrorDb2(context,item) \
-    MqErrorSGenV(context,__func__,MQ_ERROR,(item+200),MqMessageText[item])
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item])
 
 #define MqErrorDbV(item, ...) \
-    MqErrorSGenV(MQ_CONTEXT_S,__func__,MQ_ERROR,(item+200),MqMessageText[item], __VA_ARGS__)
+    MqErrorSGenV(MQ_CONTEXT_S,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item], __VA_ARGS__)
 
 #define MqErrorDbV2(context,item, ...) \
-    MqErrorSGenV(context,__func__,MQ_ERROR,(item+200),MqMessageText[item], __VA_ARGS__)
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item], __VA_ARGS__)
 
 END_C_DECLS
 

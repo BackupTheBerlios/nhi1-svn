@@ -183,7 +183,6 @@ MqErrorSGenV (
 {
   va_list ap;
   if (context != MQ_ERROR_IGNORE) {
-    if (MQ_ERROR_IS_POINTER(context) && context->error.code == MQ_EXIT) return errcode;
     va_start (ap, fmt);
     MqErrorSGenVL (context, prefix, errcode, errnum, fmt, ap);
     va_end (ap);
@@ -213,7 +212,8 @@ MqErrorStackP(
   if (MQ_ERROR_IS_POINTER(context)) {
     if (MqErrorCheckI(context->error.code)) {
       MQ_STR basename = MqSysBasename(file, MQ_YES);
-      MqDLogX (context, func, 5, "detect %s in file '%s'\n", MqLogErrorCode(context->error.code), basename);
+      MQ_STR type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
+      MqDLogX (context, func, 5, "detect %s in file '%s'\n", type, basename);
       MqErrorSAppendV(context, "found in function \"%s\" at file \"%s\"", func, basename);
       free(basename);
     }
@@ -299,7 +299,7 @@ MqErrorGetText (
 }
 
 /// error-reset with master cleanup
-void
+enum MqErrorE
 MqErrorReset (
   struct MqS * const context
 )
@@ -307,6 +307,7 @@ MqErrorReset (
   pErrorReset(context);
   if (context->config.master != NULL)
     MqErrorReset(context->config.master);
+  return MQ_OK;
 }
 
 MQ_INT
@@ -357,16 +358,8 @@ MqErrorSetCONTINUE (
   return MQ_CONTINUE;
 }
 
-MQ_BOL
-MqErrorIsEXIT (
-  struct MqS * const context
-)
-{
-  return (context->error.code == MQ_EXIT && context->error.errctx == context);
-}
-
 enum MqErrorE
-pErrorSetEXIT (
+MqErrorCreateEXIT (
   struct MqS * const context,
   MQ_CST prefix
 )
@@ -375,12 +368,21 @@ pErrorSetEXIT (
     MqDLogV(context, 3, "%s - ignore EXIT\n", prefix);
     return MQ_CONTINUE;
   } else {
-    MqDLogV(context, 3, "%s - set EXIT\n", prefix);
-    MqErrorSGenV(context, prefix, MQ_EXIT, (MQ_ERROR_EXIT+200), MqMessageText[MQ_ERROR_EXIT]);
+    MqDLogV(context, 3, "called from %s\n", prefix);
     context->link.bits.requestExit = MQ_YES;
-    pGcAdd(context);
-    return MQ_EXIT;
+    //pGcCreate(context);
+    return MqErrorSGenV(context, prefix, MQ_ERROR, MqMessageNum(MQ_ERROR_EXIT), MqMessageText[MQ_ERROR_EXIT]);
   }
+}
+
+enum MqErrorE
+MqErrorDeleteEXIT(
+  struct MqS * const context
+)
+{
+  context->link.bits.requestExit = MQ_NO;
+  //pGcDelete(context);
+  return MqErrorReset(context);
 }
 
 void

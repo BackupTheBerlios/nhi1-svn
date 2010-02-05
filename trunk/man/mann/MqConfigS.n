@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,17 +10,17 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisSilent\fP"
 .br
-.R "write (\fIfalse\fP) or don't write (\fItrue\fP) any massages to stdout or stderr (default: \fIfalse\fP) "
+.R "write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any massages to stdout or stderr (default: \fIMQ_NO\fP) "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisString\fP"
 .br
-.R "use the string-mode (\fItrue\fP) or the binary-mode (\fIfalse\fP) to send \fInative-data\fP "
+.R "use the string-mode (\fIMQ_YES\fP) or the binary-mode (\fIMQ_NO\fP) to send \fInative-data\fP "
 .ti -1c
 .RI "enum \fBMqStartE\fP \fBstartAs\fP"
 .br
@@ -70,59 +70,59 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .PP 
 end-user configuration data, also available as command-line options 
 .PP
-Definition at line 646 of file msgque.h.
-.SH "Member Data Documentation"
+Definition at line 650 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "\fBMQ_INT\fP \fBMqConfigS.debug\fP"
+.SS "\fBMQ_INT\fP \fBMqConfigS::debug\fP"
 .PP
 set the \fIdebug-level\fP of the \fIcontext\fP 
 .PP
 Valid values are 0 <= \fIdebug-level\fP <= 9 using 0 for \fIno-debug\fP and 9 for \fImaximum-debug\fP. (default: 0) 
 .PP
-Definition at line 721 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreFork\fP"
+Definition at line 725 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreFork\fP"
 .PP
 do not allow the usage of \fIfork\fP 
 .PP
-Definition at line 744 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreSpawn\fP"
+Definition at line 748 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreSpawn\fP"
 .PP
 do not allow the usage of \fIspawn\fP 
 .PP
-Definition at line 741 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreThread\fP"
+Definition at line 745 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqConfigS::ignoreThread\fP"
 .PP
 do not allow the usage of \fIthreads\fP 
 .PP
-Definition at line 738 of file msgque.h.
-.SS "struct \fBMqIoConfigS\fP \fBMqConfigS.io\fP\fC [read]\fP"
+Definition at line 742 of file msgque.h.
+.SS "struct \fBMqIoConfigS\fP \fBMqConfigS::io\fP\fC [read]\fP"
 .PP
 Global configuration data belonging to 'io'. 
 .PP
-Definition at line 747 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS.isSilent\fP"
+Definition at line 751 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqConfigS::isSilent\fP"
 .PP
-write (\fIfalse\fP) or don't write (\fItrue\fP) any massages to stdout or stderr (default: \fIfalse\fP) 
+write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any massages to stdout or stderr (default: \fIMQ_NO\fP) 
 .PP
-Definition at line 649 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqConfigS.isString\fP"
+Definition at line 653 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqConfigS::isString\fP"
 .PP
-use the string-mode (\fItrue\fP) or the binary-mode (\fIfalse\fP) to send \fInative-data\fP 
+use the string-mode (\fIMQ_YES\fP) or the binary-mode (\fIMQ_NO\fP) to send \fInative-data\fP 
 .PP
 The items in a \fIdata-package\fP are defined as \fBTYPE IDENTIFIER\fP and can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast) data. The \fIstring-mode\fP is used for debugging purpose or if the \fIbinary-data-model\fP is different between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require the \fIstring-mode\fP. The option is only available for the \fIclient-parent-context\fP. (default: binary-mode) 
 .PP
-Definition at line 659 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqConfigS.master\fP\fC [read]\fP"
+Definition at line 663 of file msgque.h.
+.SS "struct \fBMqS\fP* \fBMqConfigS::master\fP\fC [read]\fP"
 .PP
 SLAVE: a pointer to the master object or \fCNULL\fP. 
 .PP
-Definition at line 732 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqConfigS.master_id\fP"
+Definition at line 736 of file msgque.h.
+.SS "\fBMQ_SIZE\fP \fBMqConfigS::master_id\fP"
 .PP
 SLAVE: the ID in the master SLAVES array or \fCO\fP. 
 .PP
-Definition at line 735 of file msgque.h.
-.SS "\fBMQ_STR\fP \fBMqConfigS.name\fP"
+Definition at line 739 of file msgque.h.
+.SS "\fBMQ_STR\fP \fBMqConfigS::name\fP"
 .PP
 set the human-readable name of the \fIlocal-context\fP 
 .PP
@@ -144,15 +144,15 @@ use the \fI--name\fP argument from the \fIcommand-line-arguments\fP
 .PP
 
 .PP
-Definition at line 701 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqConfigS.parent\fP\fC [read]\fP"
+Definition at line 705 of file msgque.h.
+.SS "struct \fBMqS\fP* \fBMqConfigS::parent\fP\fC [read]\fP"
 .PP
 Create a child-context. 
 .PP
 type default option application context  POINTER NULL NO client parent  
 .PP
-Definition at line 729 of file msgque.h.
-.SS "\fBMQ_STR\fP \fBMqConfigS.srvname\fP"
+Definition at line 733 of file msgque.h.
+.SS "\fBMQ_STR\fP \fBMqConfigS::srvname\fP"
 .PP
 set the human-readable name of the \fIserver-context\fP 
 .PP
@@ -162,10 +162,10 @@ Use the \fIserver-name\fP as a client specific prefix in the server debug/error/
 C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE 
 .fi
 .PP
- If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a useable name. (default: \fINothing\fP) 
+ If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINULL\fP) 
 .PP
-Definition at line 717 of file msgque.h.
-.SS "enum \fBMqStartE\fP \fBMqConfigS.startAs\fP"
+Definition at line 721 of file msgque.h.
+.SS "enum \fBMqStartE\fP \fBMqConfigS::startAs\fP"
 .PP
 create a new \fIapplication-context\fP as thread, spawn or fork 
 .PP
@@ -175,9 +175,9 @@ a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from 
 .IP "\(bu" 2
 a \fIfilter-context\fP create a new \fIfilter-instance\fP 
 .IP "\(bu" 2
-a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
+a \fIserver-context\fP create a new \fIworker-context\fP using \fBMqSlaveWorker\fP
 .IP "\(bu" 2
-a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
+a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBMqLinkCreate\fP
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
@@ -191,8 +191,8 @@ The allowed integer values are:
 .PP
 (default: do not create a new application-context) 
 .PP
-Definition at line 680 of file msgque.h.
+Definition at line 684 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

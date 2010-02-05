@@ -736,7 +736,7 @@ namespace ccmsgque {
 	enum MqWaitOnEventE const   wait      = MQ_WAIT_ONCE
       ) throw(MqCException)
       {
-	ErrorCheck(MqProcessEvent(&context, MQ_TIMEOUT_USER, wait));
+	ErrorCheck(MqProcessEvent(&context, MQ_TIMEOUT_DEFAULT, wait));
       }
 
     /// \} Mq_Service_CC_API

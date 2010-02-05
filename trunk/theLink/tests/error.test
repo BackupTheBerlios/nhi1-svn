@@ -512,7 +512,7 @@ foreach S [filterGet SRV_LST] {
 
   foreach O {debug buffersize} {
 
-test error-13-$O-$S {error core dump protection} \
+test error-13-$O-$S {invalid int argument} \
     -constraints    {local} \
     -body	    {
         Exec {*}[getServer $S] --$O KK
@@ -522,7 +522,7 @@ test error-13-$O-$S {error core dump protection} \
 
   }; # Option
 
-test error-13-timeout-$S {error core dump protection} \
+test error-13-timeout-$S {invalid --timeout argument} \
     -constraints    {local} \
     -body	    {
         Exec {*}[getServer $S] --timeout KK
@@ -532,6 +532,15 @@ test error-13-timeout-$S {error core dump protection} \
 
 }; # SRV_LST
 unset -nocomplain S
+
+test error-X1 {wait forever on server and nothing happen} \
+    -constraints  {local} \
+    -setup	  { Setup 1 binary pipe c.pipe.pipe --timeout 1 } \
+    -body	  { $FH_LAST ProcessEvent -timeout 2 -wait ONCE } \
+    -cleanup	  { Cleanup } \
+    -returnCodes  error \
+    -result	  {C> (client-0) [pWaitOnEvent] TIMEOUT after '2' sec
+C> (client-0) found in function "MqProcessEvent" at file "service.c"}
 
 ##
 ## -----------------------------------------------------------------------

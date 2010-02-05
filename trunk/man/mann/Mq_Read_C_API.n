@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -119,11 +119,11 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 .PP
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBMqSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the \fIbody\fP as \fIbyte-array\fP 
 .br
@@ -167,7 +167,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -184,7 +184,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -201,7 +201,7 @@ get the number of items left in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -216,7 +216,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -233,12 +233,12 @@ check if an item exists in the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-boolean, \fItrue\fP or \fIfalse\fP 
+boolean, \fIMQ_YES\fP or \fIMQ_NO\fP 
 .RE
 .PP
 
@@ -265,7 +265,7 @@ finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -278,13 +278,13 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
-Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBMqReadL_END(ctx)\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBctx.ReadU() As ReadU=MqBufferS\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqReadU(ctx)\fP call or \fINULL\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -297,11 +297,11 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBMqSendN\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
 .br
@@ -320,7 +320,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -337,7 +337,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP and the source of the copy 
+\fIctx\fP the context returned by \fBMqContextCreate\fP and the source of the copy 
 .br
 \fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
 .RE
@@ -354,7 +354,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -373,7 +373,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the buffer 
 .RE
@@ -392,7 +392,7 @@ Put the internal position-pointer to the start of the last read \fIbody-item\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -407,7 +407,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -424,7 +424,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIval\fP the value to read 
 .RE
@@ -437,4 +437,4 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

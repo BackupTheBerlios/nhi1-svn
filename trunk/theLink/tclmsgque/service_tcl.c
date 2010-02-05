@@ -84,7 +84,7 @@ int NS(ServiceProxy) (NS_ARGS)
 int NS(ProcessEvent) (NS_ARGS)
 {
   SETUP_mqctx
-  int timeout = -2;
+  int timeout = MQ_TIMEOUT_DEFAULT;
   int FLAGS = MQ_WAIT_NO;
   int iA;
   static const char *optA[] = { "-timeout", "-wait", NULL };

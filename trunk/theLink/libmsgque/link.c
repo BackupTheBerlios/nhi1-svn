@@ -645,7 +645,6 @@ MqLinkConnect (
 	case MQ_CONTINUE:
 	  break;
 	case MQ_ERROR:
-	case MQ_EXIT:
 	  MqErrorCopy(context, cldCtx);
 	  goto error;
 	  break;
@@ -695,9 +694,17 @@ MqLinkCreate (
     context->link.bits.onCreateStart = MQ_YES;
     context->link.bits.onCreateEnd = MQ_NO;
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
-      return (*context->setup.Child.fCreate) (context, argvP);
+      enum MqErrorE ret;
+      context->link.refCount++;
+      ret = (*context->setup.Child.fCreate) (context, argvP);
+      context->link.refCount--;
+      return ret;
     } else if (context->config.parent == NULL && context->setup.Parent.fCreate != NULL) {
-      return (*context->setup.Parent.fCreate) (context, argvP);
+      enum MqErrorE ret;
+      context->link.refCount++;
+      ret = (*context->setup.Parent.fCreate) (context, argvP);
+      context->link.refCount--;
+      return ret;
     }
   }
 
@@ -849,7 +856,7 @@ MqLinkCreate (
       // configure the new server
       if (context->setup.ServerSetup.fFunc != NULL) {
 	context->link.bits.flagServerSetup = MQ_YES;
-	MqErrorCheck((*context->setup.ServerSetup.fFunc) (context, context->setup.ServerSetup.data));
+	MqErrorCheck(MqCallbackCall(context, context->setup.ServerSetup));
       }
 
       // change into "connected"
@@ -898,9 +905,9 @@ MqLinkDelete (
     return;
   } else {
     // check on "bits.deleteProtection"
-    if (context->link.ctxIdP != NULL && context->link.ctxIdP->link.bits.deleteProtection == MQ_YES) {
+    if (context->link.refCount > 0) {
       MqDLogC(context,3,"DELETE protection\n");
-      pErrorSetEXIT (context, __func__);
+      MqErrorCreateEXIT (context, __func__);
       return;
     }
 
@@ -908,17 +915,21 @@ MqLinkDelete (
     if (context->link.bits.onDelete == MQ_NO) {
       context->link.bits.onDelete = MQ_YES;
       if (MQ_IS_CHILD(context) && context->setup.Child.fDelete) {
+	context->link.refCount++;
 	(*context->setup.Child.fDelete) (context);
+	context->link.refCount--;
 	return;
       } else if (MQ_IS_PARENT(context) && context->setup.Parent.fDelete) {
+	context->link.refCount++;
 	(*context->setup.Parent.fDelete) (context);
+	context->link.refCount--;
 	return;
       }
     }
 
     // cleanup the server
     if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fFunc != NULL) {
-      (*context->setup.ServerCleanup.fFunc) (context, context->setup.ServerCleanup.data);
+      MqCallbackCall(context, context->setup.ServerCleanup);
     }
 
     // shutdown depending context
@@ -1064,4 +1075,5 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 

@@ -332,7 +332,6 @@ pEventStart (
     case MQ_CONTINUE: return MQ_CONTINUE;
     case MQ_OK:	      break;
     case MQ_ERROR:    goto error;
-    case MQ_EXIT:     return MQ_EXIT;
   }
 
   // process the results
@@ -387,44 +386,6 @@ pEventStart (
 	  MqErrorCopy(context, eventctx);
 	  goto error;
 	}
-      }
-      case MQ_EXIT: {
-/*
-	// the MQ_EXIT is handeled here because this is the only place who
-	// know the caller of the object (context) and the exit object (eventctx)
-	struct MqS * const errctx  = eventctx->error.context;
-	struct MqS * const parentctx  = pMqGetFirstParent(context);
-//eventctx->link.errctx = NULL;
-
-	// check variants
-	if (context == errctx)  {
-	  // case 1. can not delete myself -> upper code have to handle this
-	  return MQ_EXIT;
-	} else if (parentctx == eventctx) {
-	  // case 2. context and errctx belong together, both have the same parent
-	  return MqErrorCopy (context, errctx);
-	} else if (MQ_IS_SERVER(errctx)) {
-	  // case 3. delete a "server"
-	  if (MQ_IS_CHILD(errctx)) {
-	    // case 3a. errctx is a server-child and not in use
-	    parentctx->link.bits.deleteProtection = MQ_YES;
-MqDLogV(context,0, "errctx<%p>\n", errctx);
-	    MqLinkDelete(errctx);
-	    parentctx->link.bits.deleteProtection = MQ_NO;
-	    return MqErrorGetCodeI(context);
-	  } else {
-	    // case 3b. exit the server-parent 
-	    MqExit(errctx);
-	  }
-
-	} else {
-	  // case 4 errctx is a client -> the client is allways deleted
-	  // at the end of the client-executable
-	  // copy the exit message to the context
-	  return MqErrorCopy (context, errctx);
-	}
-*/
-	return MqErrorCopy (context, eventctx);
       }
       case MQ_CONTINUE:	  // never used
 	break;

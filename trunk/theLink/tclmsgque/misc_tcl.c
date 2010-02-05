@@ -83,7 +83,7 @@ enum MqErrorE NS(ProcError) (
     Tcl_ListObjIndex (NULL, errorCode, 2, &item);
     Tcl_GetIntFromObj(NULL, item, &errcode); 
     Tcl_ListObjIndex (NULL, errorCode, 3, &item);
-    ret = MqErrorSet (MQCTX, errnum, (enum MqErrorE) errcode, Tcl_GetString(item));
+    ret = MqErrorSet (MQCTX, errnum, (enum MqErrorE) errcode, Tcl_GetString(item), NULL);
   }
   Tcl_ResetResult(interp);
   return ret;

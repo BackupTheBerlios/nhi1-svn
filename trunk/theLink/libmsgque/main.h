@@ -51,6 +51,8 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
+#define MqMessageNum(n) (n+200)
+
 /// \brief error-codes used by \libmsgque
 enum MqMessageNumE {
     /*  0 */ MQ_ERROR_TIMEOUT,

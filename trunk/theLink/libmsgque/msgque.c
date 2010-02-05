@@ -93,7 +93,7 @@ sCallEventProc (
 	context->link.bits.onCreateEnd == MQ_YES &&
 	  context->setup.Event.fFunc != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
-    switch ((*context->setup.Event.fFunc) (context, context->setup.Event.data)) {
+    switch (MqCallbackCall(context, context->setup.Event)) {
       case MQ_OK:
 	break;
       case MQ_CONTINUE:
@@ -102,7 +102,6 @@ sCallEventProc (
 	}
 	break;
       case MQ_ERROR:
-      case MQ_EXIT:
 	context->bits.EventProc_LOCK = MQ_NO;
 	goto error;
     }
@@ -120,7 +119,6 @@ sCallEventProc (
 	    CONTINUE++;
 	  break;
 	case MQ_ERROR:
-	case MQ_EXIT:
 	  MqErrorCopy(context, cldCtx);
 	  goto error;
 	  break;
@@ -171,8 +169,7 @@ pWaitOnEvent (
     switch (pIoSelectAll (context->link.io, what, &tv)) {
       case MQ_CONTINUE:	break;		  // nothing found wait for next event
       case MQ_OK:	goto end;	  // found event
-      case MQ_ERROR:			  // something wrong happen
-      case MQ_EXIT:	goto error;	  // something unexpected happen
+      case MQ_ERROR:	goto error;	  // something wrong happen
     }
 
     // 2. call external event-proc
@@ -191,9 +188,8 @@ pWaitOnEvent (
 	  break;
 	case MQ_CONTINUE:
 	  context->setup.ignoreExit = MQ_NO;
-	  return pErrorSetEXIT (context, __func__);
+	  return MqErrorCreateEXIT (context, __func__);
 	case MQ_ERROR:
-	case MQ_EXIT:
 	  MqErrorCopy (context, parent);
 	  goto error;
       }
@@ -417,4 +413,5 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
 

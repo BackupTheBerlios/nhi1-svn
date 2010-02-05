@@ -351,7 +351,7 @@ pTokenInvoke (
 */
   
   if (item->callback.fFunc != NULL) {
-    return item->callback.fFunc (token->context, item->callback.data);
+    return MqCallbackCall (token->context, item->callback);
   } else {
     return MqSendRETURN(token->context);
   }
@@ -450,7 +450,7 @@ pTokenCheckSystem (
 		MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
 		if (context->setup.BgError.fFunc != NULL) {
 		  MqDLogCL (context, 5, "call BqError\n");
-		  MqErrorCheck ((*context->setup.BgError.fFunc) (context, context->setup.BgError.data));
+		  MqErrorCheck (MqCallbackCall(context, context->setup.BgError));
 		}
 		// check "error.code" again because "setup.BgError.fFunc" could clean it
 		MqErrorCheck (context->error.code);
@@ -563,7 +563,7 @@ error1:
 	    // shutdown all dependenig objects
 	    pMqShutdown(context);
 	    // the deletion will be handled in "pEventStart"
-	    return pErrorSetEXIT (context, __func__);
+	    return MqErrorCreateEXIT (context, __func__);
 	  }
         case 'R':              // _SRT: System return
           pTransSetResult (context->link.trans, MQ_TRANS_END, NULL);
@@ -617,5 +617,6 @@ pTokenCheck (
 }
 
 END_C_DECLS
+
 
 

@@ -268,6 +268,18 @@ static mq_inline struct MqS* pMqGetFirstParent(
   return context->link.ctxIdP;
 }
 
+static mq_inline enum MqErrorE MqCallbackCall (
+  struct MqS *const context,
+  struct MqCallbackS cb
+)
+{
+  enum MqErrorE ret;
+  context->link.refCount++;
+  ret=(*cb.fFunc)(context,cb.data);
+  context->link.refCount--;
+  return ret;
+};
+
 #if (HDR_TOK_LEN+1) == 5
 #define ppTokenCopy(i1,i2) memcpy(i1,i2,5);
 #else

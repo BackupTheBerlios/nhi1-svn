@@ -136,7 +136,7 @@ ALIASES		    += "LinkGetTargetIdent=MQ_CST MqLinkGetTargetIdent (struct MqS *ctx
 
 # SEND DATA
 ALIASES		    += "send_example=\code \n\
-SendSTART(ctx);\n\
+MqSendSTART(ctx);\n\
 MqSendI(ctx,num);\n\
 MqSendL_START(ctx);\n\
   MqSendD(ctx,balance);\n\
@@ -147,7 +147,7 @@ MqErrorCheck(MqSendEND_AND_WAIT(ctx,\"SRV1\",MQ_TIMEOUT_USER));\endcode"
 
 ALIASES		    += "SendSTART=MqSendSTART(ctx)"
 ALIASES		    += "SendEND=MqSendEND(ctx,MQ_TOK token)"
-ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T timeout)"
 ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
 ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
 ALIASES		    += "SendERROR=MqSendERROR(ctx)"
@@ -189,9 +189,9 @@ ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_(NO|O
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
-ALIASES		    += "ServiceGetFilter=struct MqS* ServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
-ALIASES		    += "ServiceIsTransaction=int ServiceIsTransaction (ctx)"
-ALIASES		    += "ServiceGetToken=MQ_CST ServiceGetToken (ctx)"
+ALIASES		    += "ServiceGetFilter=struct MqS* MqServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+ALIASES		    += "ServiceIsTransaction=int MqServiceIsTransaction (ctx)"
+ALIASES		    += "ServiceGetToken=MQ_CST MqServiceGetToken (ctx)"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"

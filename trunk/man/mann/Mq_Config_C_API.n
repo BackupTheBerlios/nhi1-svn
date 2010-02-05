@@ -1,11 +1,11 @@
-.TH "Mq_Config_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Config_C_API \- configuration of a context  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -93,7 +93,7 @@ Mq_Config_C_API \- configuration of a context
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP, \fBMQ_FACTORY_NEW_CHILD\fP, \fBMQ_FACTORY_NEW_SLAVE\fP, \fBMQ_FACTORY_NEW_FORK\fP, \fBMQ_FACTORY_NEW_THREAD\fP, \fBMQ_FACTORY_NEW_FILTER\fP, \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
+.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
 .br
 .R "the \fIfactory\fP is called to create an object for ... "
 .ti -1c
@@ -111,55 +111,55 @@ Mq_Config_C_API \- configuration of a context
 .ti -1c
 .RI "void \fBMqConfigReset\fP (struct \fBMqS\fP *const context)"
 .br
-.R "clean the \fBMqS.config\fP data "
+.R "clean the \fBMqS::config\fP data "
 .ti -1c
 .RI "void \fBMqConfigDup\fP (struct \fBMqS\fP *const to, struct \fBMqS\fP const *const from)"
 .br
-.R "copy the \fBMqS.config\fP data "
+.R "copy the \fBMqS::config\fP data "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSetupDup\fP (struct \fBMqS\fP *const to, struct \fBMqS\fP const *const from)"
 .br
-.R "copy the \fBMqS.setup\fP data "
+.R "copy the \fBMqS::setup\fP data "
 .ti -1c
 .RI "void \fBMqConfigSetName\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
 .br
-.R "set the \fBMqConfigS.name\fP value and cleanup old value "
+.R "set the \fBMqConfigS::name\fP value and cleanup old value "
 .ti -1c
 .RI "void \fBMqConfigSetIdent\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
 .br
-.R "set the \fBMqSetupS.ident\fP value and cleanup old value "
+.R "set the \fBMqSetupS::ident\fP value and cleanup old value "
 .ti -1c
 .RI "void \fBMqConfigSetSrvName\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP data)"
 .br
-.R "set the \fBMqConfigS.srvname\fP value and cleanup old value "
+.R "set the \fBMqConfigS::srvname\fP value and cleanup old value "
 .ti -1c
 .RI "void \fBMqConfigSetBuffersize\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP data)"
 .br
-.R "set the \fBMqIoConfigS.buffersize\fP value "
+.R "set the \fBMqIoConfigS::buffersize\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetDebug\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP data)"
 .br
-.R "set the \fBMqConfigS.debug\fP value "
+.R "set the \fBMqConfigS::debug\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetTimeout\fP (struct \fBMqS\fP *const context, \fBMQ_TIME_T\fP data)"
 .br
-.R "set the \fBMqIoConfigS.timeout\fP value "
+.R "set the \fBMqIoConfigS::timeout\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetIsSilent\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqConfigS.isSilent\fP value "
+.R "set the \fBMqConfigS::isSilent\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetIsServer\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqSetupS.isServer\fP value "
+.R "set the \fBMqSetupS::isServer\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetIsString\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqConfigS.isString\fP value "
+.R "set the \fBMqConfigS::isString\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetIgnoreExit\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqSetupS.ignoreExit\fP value "
+.R "set the \fBMqSetupS::ignoreExit\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetFactory\fP (struct \fBMqS\fP *const context, \fBMqFactoryCreateF\fP fCreate, \fBMQ_PTR\fP CreateData, \fBMqTokenDataFreeF\fP fCreateFree, \fBMqTokenDataCopyF\fP fCreateCopy, \fBMqFactoryDeleteF\fP fDelete, \fBMQ_PTR\fP DeleteData, \fBMqTokenDataFreeF\fP fDeleteFree, \fBMqTokenDataCopyF\fP fDeleteCopy)"
 .br
@@ -171,15 +171,15 @@ Mq_Config_C_API \- configuration of a context
 .ti -1c
 .RI "void \fBMqConfigSetIgnoreFork\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqConfigS.ignoreFork\fP value "
+.R "set the \fBMqConfigS::ignoreFork\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetIgnoreThread\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP data)"
 .br
-.R "set the \fBMqConfigS.ignoreThread\fP value "
+.R "set the \fBMqConfigS::ignoreThread\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetStartAs\fP (struct \fBMqS\fP *const context, enum \fBMqStartE\fP data)"
 .br
-.R "set the \fBMqConfigS.startAs\fP value "
+.R "set the \fBMqConfigS::startAs\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetSetup\fP (struct \fBMqS\fP *const context, \fBMqCreateF\fP fChildCreate, \fBMqDeleteF\fP fChildDelete, \fBMqCreateF\fP fParentCreate, \fBMqDeleteF\fP fParentDelete, \fBMqExitF\fP fProcessExit, \fBMqExitF\fP fThreadExit)"
 .br
@@ -187,19 +187,19 @@ Mq_Config_C_API \- configuration of a context
 .ti -1c
 .RI "void \fBMqConfigSetEvent\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
-.R "set the \fBMqSetupS.Event\fP "
+.R "set the \fBMqSetupS::Event\fP "
 .ti -1c
 .RI "void \fBMqConfigSetServerSetup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
-.R "set the \fBMqSetupS.ServerSetup\fP "
+.R "set the \fBMqSetupS::ServerSetup\fP "
 .ti -1c
 .RI "void \fBMqConfigSetServerCleanup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
-.R "set the \fBMqSetupS.ServerCleanup\fP "
+.R "set the \fBMqSetupS::ServerCleanup\fP "
 .ti -1c
 .RI "void \fBMqConfigSetBgError\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
-.R "set the \fBMqSetupS.BgError\fP "
+.R "set the \fBMqSetupS::BgError\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqConfigSetIoUds\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP file)"
 .br
@@ -259,23 +259,23 @@ Mq_Config_C_API \- configuration of a context
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoUdsFile\fP (struct \fBMqS\fP *const context)"
 .br
-.R "return the \fBMqIoUdsConfigS.file\fP value "
+.R "return the \fBMqIoUdsConfigS::file\fP value "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoTcpHost\fP (struct \fBMqS\fP *const context)"
 .br
-.R "get the \fBMqIoTcpConfigS.host\fP configuration data "
+.R "get the \fBMqIoTcpConfigS::host\fP configuration data "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoTcpPort\fP (struct \fBMqS\fP *const context)"
 .br
-.R "get the \fBMqIoTcpConfigS.port\fP configuration data "
+.R "get the \fBMqIoTcpConfigS::port\fP configuration data "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoTcpMyHost\fP (struct \fBMqS\fP *const context)"
 .br
-.R "get the \fBMqIoTcpConfigS.myhost\fP configuration data "
+.R "get the \fBMqIoTcpConfigS::myhost\fP configuration data "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqConfigGetIoTcpMyPort\fP (struct \fBMqS\fP *const context)"
 .br
-.R "get the \fBMqIoTcpConfigS.myport\fP configuration data "
+.R "get the \fBMqIoTcpConfigS::myport\fP configuration data "
 .ti -1c
 .RI "\fBMQ_SOCK\fP \fBMqConfigGetIoPipeSocket\fP (struct \fBMqS\fP *const context)"
 .br
@@ -283,15 +283,15 @@ Mq_Config_C_API \- configuration of a context
 .ti -1c
 .RI "enum \fBMqStartE\fP \fBMqConfigGetStartAs\fP (struct \fBMqS\fP *const context)"
 .br
-.R "return the \fBMqConfigS.startAs\fP value "
+.R "return the \fBMqConfigS::startAs\fP value "
 .ti -1c
 .RI "void \fBMqConfigSetSelf\fP (struct \fBMqS\fP *const context, void *self)"
 .br
-.R "set the \fBMqS.self\fP value "
+.R "set the \fBMqS::self\fP value "
 .ti -1c
 .RI "void * \fBMqConfigGetSelf\fP (struct \fBMqS\fP const *const context)"
 .br
-.R "get the \fBMqS.self\fP value "
+.R "get the \fBMqS::self\fP value "
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqInitCreate\fP (void)"
 .br
@@ -344,14 +344,14 @@ The configuration is done persistent using \fIconfig-api\fP functions or on link
 .PP
 initialize a \fBMqFactoryS\fP object to \fCNULL\fP 
 .PP
-Definition at line 534 of file msgque.h.
+Definition at line 538 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef void( * \fBMqDeleteF\fP)(struct \fBMqS\fP *const context)"
 .PP
 the prototype for a ContextDelete function 
 .PP
-This function is the MqS.fDelete and MqS.fThreadDelete parameter and is used to:
+This function is the MqS::fDelete and MqS::fThreadDelete parameter and is used to:
 .IP "1." 4
 delete a \fIchild\fP context
 .IP "2." 4
@@ -359,32 +359,32 @@ delete a \fIparent\fP context as the thread exit point
 .PP
 
 .PP
-Definition at line 434 of file msgque.h.
+Definition at line 438 of file msgque.h.
 .SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .PP
 prototype for a Object-Delete factory function 
 .PP
-Definition at line 492 of file msgque.h.
+Definition at line 496 of file msgque.h.
 .SS "typedef pid_t( * \fBMqForkF\fP)(void)"
 .PP
 prototype for the \fCfork\fP sys-call 
 .PP
-Definition at line 408 of file msgque.h.
+Definition at line 412 of file msgque.h.
 .SS "typedef void( * \fBMqHelpF\fP)(\fBMQ_CST\fP)"
 .PP
 application specific help function type 
 .PP
-Definition at line 465 of file msgque.h.
+Definition at line 469 of file msgque.h.
 .SS "typedef void( * \fBMqTokenDataFreeF\fP)(struct \fBMqS\fP const *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a free additional token data function 
 .PP
-Definition at line 449 of file msgque.h.
+Definition at line 453 of file msgque.h.
 .SS "typedef pid_t( * \fBMqVForkF\fP)(void)"
 .PP
 prototype for the \fCvfork\fP sys-call 
 .PP
-Definition at line 411 of file msgque.h.
+Definition at line 415 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqFactoryE\fP"
@@ -405,21 +405,9 @@ the \fIfactory\fP is called to create an object for ...
 \fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
 .TP
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_INIT \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_CHILD \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_SLAVE \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_FORK \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 470 of file msgque.h.
+Definition at line 474 of file msgque.h.
 .SS "enum \fBMqIoComE\fP"
 .PP
 what kind of socket interface to use? 
@@ -434,7 +422,7 @@ what kind of socket interface to use?
 \fB\fIMQ_IO_TCP \fP\fP
 
 .PP
-Definition at line 572 of file msgque.h.
+Definition at line 576 of file msgque.h.
 .SS "enum \fBMqStartE\fP"
 .PP
 User preferences on HOWTO start a new entity. 
@@ -454,12 +442,12 @@ create entity as \fIthread\fP
 \fB\fIMQ_START_SPAWN \fP\fP
 create entity as \fIspawn\fP process 
 .PP
-Definition at line 550 of file msgque.h.
+Definition at line 554 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqConfigDup (struct \fBMqS\fP *const  to, struct \fBMqS\fP const *const  from)"
 .PP
-copy the \fBMqS.config\fP data 
+copy the \fBMqS::config\fP data 
 .PP
 .SS "\fBMQ_INT\fP MqConfigGetBuffersize (struct \fBMqS\fP const *const  context)"
 .PP
@@ -528,23 +516,23 @@ the pipe socket
 
 .SS "\fBMQ_CST\fP MqConfigGetIoTcpHost (struct \fBMqS\fP *const  context)"
 .PP
-get the \fBMqIoTcpConfigS.host\fP configuration data 
+get the \fBMqIoTcpConfigS::host\fP configuration data 
 .PP
 .SS "\fBMQ_CST\fP MqConfigGetIoTcpMyHost (struct \fBMqS\fP *const  context)"
 .PP
-get the \fBMqIoTcpConfigS.myhost\fP configuration data 
+get the \fBMqIoTcpConfigS::myhost\fP configuration data 
 .PP
 .SS "\fBMQ_CST\fP MqConfigGetIoTcpMyPort (struct \fBMqS\fP *const  context)"
 .PP
-get the \fBMqIoTcpConfigS.myport\fP configuration data 
+get the \fBMqIoTcpConfigS::myport\fP configuration data 
 .PP
 .SS "\fBMQ_CST\fP MqConfigGetIoTcpPort (struct \fBMqS\fP *const  context)"
 .PP
-get the \fBMqIoTcpConfigS.port\fP configuration data 
+get the \fBMqIoTcpConfigS::port\fP configuration data 
 .PP
 .SS "\fBMQ_CST\fP MqConfigGetIoUdsFile (struct \fBMqS\fP *const  context)"
 .PP
-return the \fBMqIoUdsConfigS.file\fP value 
+return the \fBMqIoUdsConfigS::file\fP value 
 .PP
 .SS "\fBMQ_BOL\fP MqConfigGetIsDupAndThread (struct \fBMqS\fP const *const  context)"
 .PP
@@ -628,7 +616,7 @@ the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !!
 
 .SS "void* MqConfigGetSelf (struct \fBMqS\fP const *const  context)"
 .PP
-get the \fBMqS.self\fP value 
+get the \fBMqS::self\fP value 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -658,7 +646,7 @@ the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !!
 
 .SS "enum \fBMqStartE\fP MqConfigGetStartAs (struct \fBMqS\fP *const  context)"
 .PP
-return the \fBMqConfigS.startAs\fP value 
+return the \fBMqConfigS::startAs\fP value 
 .PP
 .SS "\fBMQ_TIME_T\fP MqConfigGetTimeout (struct \fBMqS\fP const *const  context)"
 .PP
@@ -677,15 +665,15 @@ the \fCcontext.config.timeout\fP value
 
 .SS "void MqConfigReset (struct \fBMqS\fP *const  context)"
 .PP
-clean the \fBMqS.config\fP data 
+clean the \fBMqS::config\fP data 
 .PP
 .SS "void MqConfigSetBgError (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
-set the \fBMqSetupS.BgError\fP 
+set the \fBMqSetupS::BgError\fP 
 .PP
 .SS "void MqConfigSetBuffersize (struct \fBMqS\fP *const  context, \fBMQ_INT\fP data)"
 .PP
-set the \fBMqIoConfigS.buffersize\fP value 
+set the \fBMqIoConfigS::buffersize\fP value 
 .PP
 .SS "enum \fBMqErrorE\fP MqConfigSetDaemon (struct \fBMqS\fP *const  ctx, \fBMQ_CST\fP pidfile)"
 .PP
@@ -700,7 +688,7 @@ this option require the \fBfork\fP system-call and is \fBnot\fP compatible with 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIpidfile\fP write the PID of the daemon into this file (default: NULL, do not start as daemon) 
 .RE
@@ -713,7 +701,7 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SS "void MqConfigSetDebug (struct \fBMqS\fP *const  context, \fBMQ_INT\fP data)"
 .PP
-set the \fBMqConfigS.debug\fP value 
+set the \fBMqConfigS::debug\fP value 
 .PP
 .SS "void MqConfigSetDefaultFactory (struct \fBMqS\fP *const  context)"
 .PP
@@ -727,7 +715,7 @@ setup the default \fIfactory\fP pattern
 The \fIdefault\fP factory is just a wrapper for \fBMqContextCreate\fP with additional error management code. A simple application \fIwithout\fP an application specific \fIfactory\fP use this configuration. 
 .SS "void MqConfigSetEvent (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
-set the \fBMqSetupS.Event\fP 
+set the \fBMqSetupS::Event\fP 
 .PP
 .SS "void MqConfigSetFactory (struct \fBMqS\fP *const  context, \fBMqFactoryCreateF\fP fCreate, \fBMQ_PTR\fP CreateData, \fBMqTokenDataFreeF\fP fCreateFree, \fBMqTokenDataCopyF\fP fCreateCopy, \fBMqFactoryDeleteF\fP fDelete, \fBMQ_PTR\fP DeleteData, \fBMqTokenDataFreeF\fP fDeleteFree, \fBMqTokenDataCopyF\fP fDeleteCopy)"
 .PP
@@ -737,17 +725,17 @@ setup the \fIfactory\fP pattern
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIfCreate\fP set the \fBMqSetupS.Factory\fP - \fBMqFactoryCreateS.fCall\fP value 
+\fIfCreate\fP set the \fBMqSetupS::Factory\fP - \fBMqFactoryCreateS::fCall\fP value 
 .br
-\fICreateData\fP set the \fBMqSetupS.Factory\fP - \fBMqFactoryCreateS.data\fP value 
+\fICreateData\fP set the \fBMqSetupS::Factory\fP - \fBMqFactoryCreateS::data\fP value 
 .br
 \fIfCreateFree\fP free the \fICreateData\fP 
 .br
 \fIfCreateCopy\fP copy the \fICreateData\fP 
 .br
-\fIfDelete\fP set the \fBMqSetupS.Factory\fP - \fBMqFactoryDeleteS.fCall\fP value 
+\fIfDelete\fP set the \fBMqSetupS::Factory\fP - \fBMqFactoryDeleteS::fCall\fP value 
 .br
-\fIDeleteData\fP set the \fBMqSetupS.Factory\fP - \fBMqFactoryDeleteS.data\fP value 
+\fIDeleteData\fP set the \fBMqSetupS::Factory\fP - \fBMqFactoryDeleteS::data\fP value 
 .br
 \fIfDeleteFree\fP delete the \fIDeleteData\fP 
 .br
@@ -757,19 +745,19 @@ setup the \fIfactory\fP pattern
 
 .SS "void MqConfigSetIdent (struct \fBMqS\fP *const  context, \fBMQ_CST\fP data)"
 .PP
-set the \fBMqSetupS.ident\fP value and cleanup old value 
+set the \fBMqSetupS::ident\fP value and cleanup old value 
 .PP
 .SS "void MqConfigSetIgnoreExit (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqSetupS.ignoreExit\fP value 
+set the \fBMqSetupS::ignoreExit\fP value 
 .PP
 .SS "void MqConfigSetIgnoreFork (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqConfigS.ignoreFork\fP value 
+set the \fBMqConfigS::ignoreFork\fP value 
 .PP
 .SS "void MqConfigSetIgnoreThread (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqConfigS.ignoreThread\fP value 
+set the \fBMqConfigS::ignoreThread\fP value 
 .PP
 .SS "enum \fBMqErrorE\fP MqConfigSetIoPipe (struct \fBMqS\fP *const  context, \fBMQ_SOCK\fP socket)"
 .PP
@@ -811,7 +799,7 @@ configure a context to use a \fItcp-client-server-link\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -828,14 +816,14 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINothing\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
 .RE
 .PP
  
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -846,23 +834,23 @@ an \fBEXCEPTION OBJECT\fP on error
 
 .SS "void MqConfigSetIsServer (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqSetupS.isServer\fP value 
+set the \fBMqSetupS::isServer\fP value 
 .PP
 .SS "void MqConfigSetIsSilent (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqConfigS.isSilent\fP value 
+set the \fBMqConfigS::isSilent\fP value 
 .PP
 .SS "void MqConfigSetIsString (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP data)"
 .PP
-set the \fBMqConfigS.isString\fP value 
+set the \fBMqConfigS::isString\fP value 
 .PP
 .SS "void MqConfigSetName (struct \fBMqS\fP *const  context, \fBMQ_CST\fP data)"
 .PP
-set the \fBMqConfigS.name\fP value and cleanup old value 
+set the \fBMqConfigS::name\fP value and cleanup old value 
 .PP
 .SS "void MqConfigSetSelf (struct \fBMqS\fP *const  context, void * self)"
 .PP
-set the \fBMqS.self\fP value 
+set the \fBMqS::self\fP value 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -874,11 +862,11 @@ set the \fBMqS.self\fP value
 
 .SS "void MqConfigSetServerCleanup (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fTok, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
-set the \fBMqSetupS.ServerCleanup\fP 
+set the \fBMqSetupS::ServerCleanup\fP 
 .PP
 .SS "void MqConfigSetServerSetup (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
-set the \fBMqSetupS.ServerSetup\fP 
+set the \fBMqSetupS::ServerSetup\fP 
 .PP
 .SS "void MqConfigSetSetup (struct \fBMqS\fP *const  context, \fBMqCreateF\fP fChildCreate, \fBMqDeleteF\fP fChildDelete, \fBMqCreateF\fP fParentCreate, \fBMqDeleteF\fP fParentDelete, \fBMqExitF\fP fProcessExit, \fBMqExitF\fP fThreadExit)"
 .PP
@@ -886,27 +874,27 @@ set various attributes from \fBMqConfigS\fP struct
 .PP
 .SS "void MqConfigSetSrvName (struct \fBMqS\fP *const  context, \fBMQ_CST\fP data)"
 .PP
-set the \fBMqConfigS.srvname\fP value and cleanup old value 
+set the \fBMqConfigS::srvname\fP value and cleanup old value 
 .PP
 .SS "void MqConfigSetStartAs (struct \fBMqS\fP *const  context, enum \fBMqStartE\fP data)"
 .PP
-set the \fBMqConfigS.startAs\fP value 
+set the \fBMqConfigS::startAs\fP value 
 .PP
 .SS "void MqConfigSetTimeout (struct \fBMqS\fP *const  context, \fBMQ_TIME_T\fP data)"
 .PP
-set the \fBMqIoConfigS.timeout\fP value 
+set the \fBMqIoConfigS::timeout\fP value 
 .PP
 .SS "struct \fBMqBufferLS\fP* MqInitCreate (void)\fC [read]\fP"
 .PP
 Initialize the process \fIstartup-prefix\fP argument. 
 .PP
-The \fIstartup-prefix\fP have to be the name of the executablei, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
+The \fIstartup-prefix\fP have to be the name of the executable, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
 .IP "\(bu" 2
 To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
 .IP "\(bu" 2
-To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBLinkCreate\fP.
+To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBMqLinkCreate\fP.
 .PP
-Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBLinkCreate\fP and have \fBnot\fP to be initialized again. 
+Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBMqLinkCreate\fP and have \fBnot\fP to be initialized again. 
 .SS "void MqInitSysAPI (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
 .PP
 helper to set the application specific \fCfork\fP functions 
@@ -919,7 +907,7 @@ by default the OS specific functions are used
 
 .SS "enum \fBMqErrorE\fP MqSetupDup (struct \fBMqS\fP *const  to, struct \fBMqS\fP const *const  from)"
 .PP
-copy the \fBMqS.setup\fP data 
+copy the \fBMqS::setup\fP data 
 .PP
 .SH "Variable Documentation"
 .PP 
@@ -927,7 +915,7 @@ copy the \fBMqS.setup\fP data
 .PP
 the prototype for a ContextCreate function 
 .PP
-This function is the MqS.fCreate and MqS.fThreadCreate parameter and is used to :
+This function is the MqS::fCreate and MqS::fThreadCreate parameter and is used to :
 .IP "1." 4
 create a \fIchild\fP context
 .IP "2." 4
@@ -942,7 +930,7 @@ prototype for a Object-Creation factory function
 .PP
 name of a procedure to return \fImain\fP like entry-points 
 .PP
-Definition at line 876 of file msgque.h.
+Definition at line 880 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP( * \fBMqFactorySelectorF\fP)(\fBMQ_CST\fP name)"
 .PP
 Return a \fImain\fP factory function found by \fIname\fP. 
@@ -957,7 +945,7 @@ This function have to be defined in the target tool (example: \fCatool.c\fP) and
 .PP
 the prefix arguments of the starting application 
 .PP
-Definition at line 873 of file msgque.h.
+Definition at line 877 of file msgque.h.
 .SS "enum \fBMqErrorE\fP( * \fBMqTokenDataCopyF\fP)(struct \fBMqS\fP *const context, \fBMQ_PTR\fP *dataP)"
 .PP
 prototype for a copy additional token data function 
@@ -968,4 +956,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

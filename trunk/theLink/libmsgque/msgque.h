@@ -180,8 +180,12 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT90	(MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)
 /// \brief very short timeout in sec (5 sec)
 #define MQ_TIMEOUT180	(MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)
-/// \brief request the user defined timeout value from the argument of the \c --timeout option
+/// \brief request the default timeout value
+#define MQ_TIMEOUT_DEFAULT -1
+/// \brief request the user defined timeout value from the \RNSC{timeout} configuration value
 #define MQ_TIMEOUT_USER -2
+/// \brief request the maximum possible (inifinit) timeout value
+#define MQ_TIMEOUT_MAX -3
 #endif
 
 /*****************************************************************************/
@@ -323,7 +327,6 @@ enum MqErrorE {
   MQ_OK		= 0,		///< everything is OK, no error available (persistent)
   MQ_CONTINUE	= 1,            ///< continue with upper code
   MQ_ERROR	= 2,            ///< exit upper code with an error (persistent)
-  MQ_EXIT	= 3		///< exit parent context
 };
 
 /// \ingroup Mq_Link_C_API
@@ -344,6 +347,7 @@ struct MqLinkS {
   struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
   struct MqCacheS * readCache;	    ///< cache for MqReadS
+  MQ_INT refCount;		    ///< refCount
 
   /// \brief bit-field to represent the boolean values
   struct {
@@ -354,7 +358,6 @@ struct MqLinkS {
     MQ_BOL onCreateEnd	      : 1 ; ///< End "MqLinkCreate"
     MQ_BOL onDelete	      :	1 ; ///< is already a "delete" ongoing?
     MQ_BOL onShutdown	      :	1 ; ///< is already a "shutdown" ongoing?
-    MQ_BOL deleteProtection   :	1 ; ///< object in use -> delete is not allowed
     MQ_BOL prepareDone	      :	1 ; ///< was a prepare already done ?
     MQ_BOL doFactoryCleanup   :	1 ; ///< was the context create by a 'Factory'
     MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fFunc was called ?
@@ -1896,26 +1899,33 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
 /** \brief enter the \e event-loop and wait for an incoming \e service-request.
  * 
  *  This function is used to enter the \e event-loop and start listen on open
- *  \e file-handles and to call \RNSC{IEvent} on idle. The third argument \e wait
- *  support three modes to define the \e operation-mode:
- *  - \b \MQ_WAIT_NO, don't wait for an event just do the check and comeback. if an
- *      Event is available process the event, but only one. If no Event is available
- *      return with #MQ_CONTINUE.
- *  - \b \MQ_WAIT_ONCE, wait maximum \e timeout seconds for only \e one event or raise
- *      a \e timeout-error if no event was found.
- *  - \b \MQ_WAIT_FOREVER, wait maximum \e timeout seconds for a event. If an event was found
- *      process the event. If no event was found, raise a \e timeout-error. After the event was
- *      processed continue to listen for a the new event. If timeout is #MQ_TIMEOUT_USER
- *      (-2, the default) set \e timeout to infinite. The function will only come back 
- *      on \e error or on \e exit.
- *  .
- *  This function is usually used on a server to enter the \e event-loop and wait 
+ *  \e file-handles and to call \RNSC{IEvent} on idle.\n
+ *  This function is direct used on a server to enter the \e event-loop and wait 
  *  for incoming service requests or after the \RNSA{SendEND_AND_CALLBACK} function 
- *  to wait for the \e service-result.
+ *  to wait for the \e service-result. This function is indirect used in 
+ *  \RNSA{SendEND_AND_WAIT} to 
  * 
  *  \ctx
- *  \param_timeout_with_default
- *  \param[in] wait chose the \e time-interval to wait for a new event (default: \MQ_WAIT_NO)
+ *  \param[in] timeout the maximum \e wait-time in seconds until a \e timeout-error is raised,
+ *    possible values are:
+ *  - \b >0, use this value as number of seconds.
+ *  - #MQ_TIMEOUT_DEFAULT = -1, \copydoc MQ_TIMEOUT_DEFAULT.  #MQ_TIMEOUT_USER for \MQ_WAIT_ONCE
+ *    or #MQ_TIMEOUT_MAX for \MQ_WAIT_FOREVER.
+ *  - #MQ_TIMEOUT_USER = -2, \copydoc MQ_TIMEOUT_USER
+ *  - #MQ_TIMEOUT_MAX = -3, \copydoc MQ_TIMEOUT_MAX
+ *  .
+ *  \param[in] wait the \e operation-mode used to define the behaviour,
+ *    possible values are:
+ *  - \MQ_WAIT_NO = 0, don't wait for an event just do the check and comeback. if an
+ *      Event is available process the event, but only one. If no Event is available
+ *      return with #MQ_CONTINUE.
+ *  - \MQ_WAIT_ONCE = 1, wait maximum \e timeout seconds for only \e one event or raise
+ *      a \e timeout-error if no event was found.
+ *  - \MQ_WAIT_FOREVER = 2, wait maximum \e timeout seconds for a event. If an event was found
+ *      process the event. If no event was found, raise a \e timeout-error. After the event was
+ *      processed continue to listen for a the new event. 
+ *      The function will only come back on \e error or on \e exit.
+ *  .
  *  \retException
  *
 \ifnot MAN
@@ -2986,7 +2996,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
 	"internal ERROR in function '%s', please contact your local support", __func__);
 
 /// \brief clear the \e error and reset the \e context
-MQ_EXTERN void MQ_DECL MqErrorReset (
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorReset (
   struct MqS * const context
 );
 
@@ -3151,6 +3161,17 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
   struct MqS * const context
 );
 
+/// \brief create the application exit flag
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCreateEXIT (
+  struct MqS * const context,
+  MQ_CST const prefix
+);
+
+/// \brief delete the application exit flag
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorDeleteEXIT (
+  struct MqS * const context
+);
+
 /// \brief check if context is on \e exit, return \yes or \no
 /// \details An \e EXIT-return-code is set to signal a fatal error
 /// which require an \e application-exit. The \e only source
@@ -3171,9 +3192,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 /// \endcode
 /// \endif
 
-MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
+static mq_inline MQ_BOL
+MqErrorIsEXIT (
   struct MqS * const context
-);
+)
+{
+  return context->link.bits.requestExit;
+};
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3182,18 +3207,18 @@ MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
 /*****************************************************************************/
 
 /// \brief check on error
-/// \return on #MQ_OK and #MQ_CONTINUE return \b 1 and an #MQ_ERROR and #MQ_EXIT return \b 0
+/// \return on #MQ_OK and #MQ_CONTINUE return \b 1 and an #MQ_ERROR return \b 0
 #define MqErrorCheckI(PROC) (unlikely((PROC) >= MQ_ERROR))
 /// \brief check \e return-code and <I>goto error</I> on error
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
 
 /// \brief process error message
 #define MqErrorSwitch(PROC) switch (PROC) {\
-case MQ_OK: break; case MQ_ERROR: goto error; case MQ_EXIT: return MQ_EXIT; case MQ_CONTINUE: return MQ_CONTINUE;\
+case MQ_OK: break; case MQ_ERROR: goto error; case MQ_CONTINUE: return MQ_CONTINUE;\
 }
 /// \brief process error message
 #define MqErrorReturn(PROC) switch (PROC) {\
-case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_EXIT: case MQ_ERROR: return MqErrorStack (MQ_CONTEXT_S);\
+case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_ERROR: return MqErrorStack (MQ_CONTEXT_S);\
 }; return MQ_OK;
 /// \brief check on error and goto label \e error1
 #define MqErrorCheck1(PROC) if (MqErrorCheckI(PROC)) goto error1
@@ -3673,7 +3698,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND (
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_WAIT (
   struct MqS * const ctx,
   MQ_TOK const token,
-  MQ_TIME_T const timeout
+  MQ_TIME_T timeout
 );
 
 /// \brief finish the \e send-data-block, call the remote service and do \e not-wait for return.

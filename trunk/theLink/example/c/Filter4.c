@@ -73,12 +73,7 @@ static enum MqErrorE FilterEvent (
     MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
     // if connection is down -> connect again
-    switch (MqLinkConnect (ftr)) {
-      case MQ_OK:	  break;
-      case MQ_CONTINUE:	  return MQ_OK;
-      case MQ_EXIT:	  goto error1;
-      case MQ_ERROR:	  goto error1;
-    }
+    MqErrorCheck1 (MqLinkConnect (ftr));
 
     // extract the first (oldest) item from the store
     itm = ctx->itm[ctx->rIdx];
@@ -95,14 +90,14 @@ static enum MqErrorE FilterEvent (
       case MQ_CONTINUE:	  
 	return MQ_OK;
       case MQ_ERROR:
-	ErrorWrite (ftr);
-	goto end;
-      case MQ_EXIT:
-	MqErrorReset(ftr);
-	return MQ_OK;
+	if (MqErrorIsEXIT(ftr)) {
+	  return MqErrorDeleteEXIT(ftr);
+	} else {
+	  ErrorWrite (ftr);
+	}
+	break;
     }
     // reset the item-storage
-end:
     MqBufferReset(itm->data);
     ctx->rIdx++;
     return MQ_OK;

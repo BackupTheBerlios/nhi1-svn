@@ -1,4 +1,4 @@
-.TH "MqS" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "MqS" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -77,79 +77,79 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP 
 data structure for the \fIlibmsgque-specific-data\fP 
 .PP
-Definition at line 1387 of file msgque.h.
-.SH "Member Data Documentation"
+Definition at line 1391 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "struct { ... }   \fBMqS.bits\fP"
+.SS "struct { ... }   \fBMqS::bits\fP"
 .PP
 boolean bit-fields 
 .PP
-.SS "struct \fBMqConfigS\fP \fBMqS.config\fP\fC [read]\fP"
+.SS "struct \fBMqConfigS\fP \fBMqS::config\fP\fC [read]\fP"
 .PP
 the configuration data is used for 'end-user' configuration 
 .PP
-Definition at line 1390 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqS.contextsize\fP"
+Definition at line 1394 of file msgque.h.
+.SS "\fBMQ_SIZE\fP \fBMqS::contextsize\fP"
 .PP
 ALLOC-size of the user-defined context struct. 
 .PP
-Definition at line 1403 of file msgque.h.
-.SS "struct \fBMqErrorS\fP \fBMqS.error\fP\fC [read]\fP"
+Definition at line 1407 of file msgque.h.
+.SS "struct \fBMqErrorS\fP \fBMqS::error\fP\fC [read]\fP"
 .PP
 error object data 
 .PP
-Definition at line 1392 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.EventProc_LOCK\fP"
+Definition at line 1396 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqS::EventProc_LOCK\fP"
 .PP
 protect sCallEventProc against double-call 
 .PP
-Definition at line 1399 of file msgque.h.
-.SS "struct \fBMqLinkS\fP \fBMqS.link\fP\fC [read]\fP"
+Definition at line 1403 of file msgque.h.
+.SS "struct \fBMqLinkS\fP \fBMqS::link\fP\fC [read]\fP"
 .PP
 link object data 
 .PP
-Definition at line 1393 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.MqContextDelete_LOCK\fP"
+Definition at line 1397 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqS::MqContextDelete_LOCK\fP"
 .PP
 protect MqContextDelete against double-call 
 .PP
-Definition at line 1397 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.MqContextFree_LOCK\fP"
+Definition at line 1401 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqS::MqContextFree_LOCK\fP"
 .PP
 protect MqContextFree against double-call 
 .PP
-Definition at line 1398 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS.self\fP"
+Definition at line 1402 of file msgque.h.
+.SS "\fBMQ_PTR\fP \fBMqS::self\fP"
 .PP
 link to the managed object 
 .PP
-Definition at line 1402 of file msgque.h.
-.SS "struct \fBMqSetupS\fP \fBMqS.setup\fP\fC [read]\fP"
+Definition at line 1406 of file msgque.h.
+.SS "struct \fBMqSetupS\fP \fBMqS::setup\fP\fC [read]\fP"
 .PP
 the setup data is used to link the object with the user application 
 .PP
-Definition at line 1391 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqS.signature\fP"
+Definition at line 1395 of file msgque.h.
+.SS "\fBMQ_INT\fP \fBMqS::signature\fP"
 .PP
 used to verify the \fIpointer-data-type\fP in a type-less programming languages 
 .PP
-Definition at line 1388 of file msgque.h.
-.SS "enum \fBMqStatusIsE\fP \fBMqS.statusIs\fP"
+Definition at line 1392 of file msgque.h.
+.SS "enum \fBMqStatusIsE\fP \fBMqS::statusIs\fP"
 .PP
 how the context was created? 
 .PP
-Definition at line 1395 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqS.temp\fP\fC [read]\fP"
+Definition at line 1399 of file msgque.h.
+.SS "struct \fBMqBufferS\fP* \fBMqS::temp\fP\fC [read]\fP"
 .PP
 misc temporary \fBMqBufferS\fP object 
 .PP
-Definition at line 1394 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS.threadData\fP"
+Definition at line 1398 of file msgque.h.
+.SS "\fBMQ_PTR\fP \fBMqS::threadData\fP"
 .PP
 application specific thread data 
 .PP
-Definition at line 1401 of file msgque.h.
+Definition at line 1405 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

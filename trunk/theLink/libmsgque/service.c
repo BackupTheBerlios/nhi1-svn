@@ -157,7 +157,6 @@ sMqEventStart (
     case MQ_OK:	      break;
     case MQ_CONTINUE: return MQ_OK;
     case MQ_ERROR:    MqDLogCL(context,7,"pReadHDR: report an error\n"); goto error;
-    case MQ_EXIT:     return MQ_EXIT;
   }
 
   // ##################### TOKEN Handler #####################
@@ -179,7 +178,7 @@ sMqEventStart (
 	goto error;
       }
     } else {
-      // MQ_EXIT, MQ_CONTINUE, ...
+      // MQ_CONTINUE, ...
       goto error;
     }
   }
@@ -221,10 +220,14 @@ MqProcessEvent (
   }
 
   // set the default for timeout
-  if (timeout == MQ_TIMEOUT_USER) {
-    timeout = forever ? LONG_MAX : pIoGetTimeout(context->link.io);
-  } else if (timeout < 0) {
-    timeout = MQ_TIMEOUT;
+  if (timeout < 0 && once) {
+    if (timeout == MQ_TIMEOUT_USER) {
+      timeout = pIoGetTimeout(context->link.io);
+    } else if (timeout == MQ_TIMEOUT_MAX) {
+      timeout = LONG_MAX;
+    } else {
+      timeout = wait == MQ_WAIT_ONCE ? pIoGetTimeout(context->link.io) : LONG_MAX;
+    }
   }
 
   // check for an event
@@ -237,15 +240,6 @@ MqProcessEvent (
         case MQ_OK:	  break;
         case MQ_CONTINUE: ret = MQ_OK; continue;
         case MQ_ERROR:	  goto error;
-        case MQ_EXIT:	  {
-	  // we check for toplevel "server-forever-loop"
-	  if (forever) {
-	    // on "toplevel"
-	  } else {
-	    // not on "toplevel"
-	  }
-	  goto error;
-	}
       }
     }
 
@@ -255,14 +249,10 @@ MqProcessEvent (
       case MQ_OK:	  break;
       case MQ_CONTINUE:	  ret = MQ_OK; continue;
       case MQ_ERROR:	  goto error;
-      case MQ_EXIT:	  {
-	goto error;
-      }
     }
   }
   while (forever && ret == MQ_OK);
 
-end:
   // restore master transaction
   if (master != NULL) master->link._trans = trans;
   MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(ret));

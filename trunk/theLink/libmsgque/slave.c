@@ -256,7 +256,7 @@ pSlaveDelete (
 
   // delete my link to the master
   if (context->config.master != NULL) {
-MqDLogV(context, 0, "master<%p>\n", context->config.master);
+//MqDLogV(context, 0, "master<%p>\n", context->config.master);
     if (context->config.master_id < context->config.master->link.slave->used) 
       context->config.master->link.slave->slaves[context->config.master_id] = NULL;
     pConfigSetMaster (context, NULL, 0);

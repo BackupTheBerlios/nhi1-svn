@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "2 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -151,7 +151,7 @@ Last: submit the a data package to the link target using one of:
 .IP "  \(bu" 4
 \fBMqSendEND(ctx,MQ_TOK token)\fP
 .IP "  \(bu" 4
-\fBMqSendEND_AND_WAIT(ctx,MQ_TOK token,?timeout=MQ_TIMEOUT_USER?)\fP
+\fBMqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T timeout)\fP
 .IP "  \(bu" 4
 \fBMqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)\fP
 .IP "  \(bu" 4

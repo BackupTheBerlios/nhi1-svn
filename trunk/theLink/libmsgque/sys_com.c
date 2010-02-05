@@ -350,7 +350,7 @@ SysSelect (
 	      return sSysMqErrorMsg (context, __func__, "select");
 	    } else if (sockmq == context) {
 	      pIoCloseSocket (context->link.io, __func__);
-	      return pErrorSetEXIT (context, __func__);
+	      return MqErrorCreateEXIT (context, __func__);
 	    } else {
 	      pIoCloseSocket (sockmq->link.io, __func__);
 	      return MQ_CONTINUE;
@@ -365,7 +365,6 @@ SysSelect (
 	      case MQ_OK:	break;
 	      case MQ_CONTINUE:	break;
 	      case MQ_ERROR:	return MQ_ERROR;
-	      case MQ_EXIT:	return MQ_EXIT;
 	    }
 	  }
 	  return MQ_CONTINUE;
@@ -478,8 +477,6 @@ SysSend (
 	    case MQ_ERROR:
 	      pIoCloseSocket (context->link.io, __func__);
 	      return MqErrorStack (context);
-	    case MQ_EXIT:
-	      return MQ_EXIT;
 	  }
 	  ldata = 0;
 	  break;
@@ -487,7 +484,7 @@ SysSend (
 	case WIN32_WSA (ECONNRESET):
 	case WIN32_WSA (EBADF): {
 	  pIoCloseSocket (context->link.io, __func__);
-	  return pErrorSetEXIT (context, __func__);
+	  return MqErrorCreateEXIT (context, __func__);
 	}
         default:
           pIoCloseSocket (context->link.io, __func__);
@@ -539,8 +536,6 @@ SysRecv (
 		case MQ_ERROR:
 		  pIoCloseSocket (context->link.io, __func__);
 		  return MqErrorStack(context);
-		case MQ_EXIT:
-		  return MQ_EXIT;
 	      }
 	      ldata = 0;
 	      break;
@@ -548,7 +543,7 @@ SysRecv (
 	    case WIN32_WSA (ECONNRESET):
 	    case WIN32_WSA (EBADF): {
 	      pIoCloseSocket (context->link.io, __func__);
-	      return pErrorSetEXIT (context, __func__);
+	      return MqErrorCreateEXIT (context, __func__);
 	    }
 	    default:
 	      pIoCloseSocket (context->link.io, __func__);
@@ -556,7 +551,7 @@ SysRecv (
 	  }
 	} else if (ldata == 0) {
 	  pIoCloseSocket (context->link.io, __func__);
-	  return pErrorSetEXIT (context, __func__);
+	  return MqErrorCreateEXIT (context, __func__);
 	}
     }
 
@@ -710,6 +705,7 @@ error:
 }
 
 END_C_DECLS
+
 
 
 

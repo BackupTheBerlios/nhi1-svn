@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "2 Feb 2010" "Version 4.3" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "4 Feb 2010" "Version 4.3" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -54,6 +54,8 @@ propagate the error messages from the server to the client
  \fBContextDelete\fP
 .br
  \fBExit\fP
+.br
+ \fBMain\fP
 .br
 .PP
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
@@ -115,6 +117,32 @@ To delete an application is a difficult task because the \fIlink-target\fP have 
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
+.PP
+.SS "tclmsgque Main {code}"
+Tcl has a special requirement, for every new \fIserver-thread\fP a new interpreter is created and this interpreter source the toplevel file for initialization. This file is set on library startup and can be changed with \fBInit\fP. The problem is the server startup code from the toplevel. For internal purpose this code should only be executed on \fIapplication-startup\fP (like the C \fBmain\fP function) and not for every thread again, use \fBMain\fP to achieve this. 
+.PP
+.nf
+
+package require TclMsgque
+...
+proc ServerSetup {ctx} ...
+proc ServerCleanup {ctx} ...
+...
+tclmsgque Main {
+  set srv [tclmsgque MqS]
+  $srv ConfigSetServerSetup ServerSetup
+  $srv ConfigSetServerCleanup ServerCleanup
+  $srv ConfigSetFactory
+  if {[catch {
+    $srv LinkCreate {*}$argv
+    $srv ProcessEvent -wait FOREVER
+  }]} {
+    $srv ErrorSet
+  }
+  $srv Exit
+}
+
+.fi
 .PP
 .SH "CONFIG API"
 .PP

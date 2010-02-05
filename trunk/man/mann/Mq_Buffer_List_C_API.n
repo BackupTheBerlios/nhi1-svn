@@ -1,11 +1,11 @@
-.TH "Mq_Buffer_List_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -418,7 +418,7 @@ search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with
 .PP
 \fBReturn values:\fP
 .RS 4
-\fIvar\fP if \fIopt\fP is found set \fIvar\fP to \fBMQ_YES\fP otherwiese \fBMQ_NO\fP 
+\fIvar\fP if \fIopt\fP is found set \fIvar\fP to \fBMQ_YES\fP otherwise \fBMQ_NO\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -753,4 +753,4 @@ The size of \fIstr\fP have to be at least 4 bytes
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

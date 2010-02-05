@@ -795,13 +795,14 @@ enum MqErrorE
 MqSendEND_AND_WAIT (
   struct MqS * const context,
   MQ_TOK const token,
-  MQ_TIME_T const timeout
+  MQ_TIME_T timeout
 )
 {
   struct MqTransS * const trans = context->link.trans;
   enum MqTransE status;
   static struct MqCallbackS empty = {NULL, NULL, NULL, NULL};
   struct MqReadS * read;
+  MQ_TIME_T endT;
 
   // 1. create the transaktion
   MQ_HDL transH =  pTransPop (trans, empty);
@@ -814,32 +815,28 @@ MqSendEND_AND_WAIT (
     case MQ_ERROR: 
       pTransPush (trans, transH);
       goto error; 
-    case MQ_EXIT: 
-      pTransPush (trans, transH);
-      return MQ_EXIT; 
     case MQ_CONTINUE: 
       pTransPush (trans, transH);
       return MQ_CONTINUE;
   }
 
   // 3. wait until the transaction has finished
+  endT = time(NULL) + timeout;
   context->link._trans = 0;
   do {
     switch (MqProcessEvent (context, timeout, MQ_WAIT_ONCE)) {
       case MQ_OK:
+	timeout = endT - time(NULL);
 	break; 
       case MQ_ERROR: 
 	pTransPush (trans, transH);
 	goto error; 
-      case MQ_EXIT: 
-	pTransPush (trans, transH);
-	return MQ_EXIT; 
       case MQ_CONTINUE: 
 	pTransPush (trans, transH);
 	return MQ_CONTINUE;
     }
   }
-  while (pTransCheckStart (trans, transH));
+  while (pTransCheckStart (trans, transH) && timeout > 0);
   context->link._trans = pTransGetLast (trans, transH);
 
   // 4. replace 'read'
@@ -1053,8 +1050,6 @@ MqSendRETURN (
 	pSendListEnd (context, MQ_RETT);
 	MqErrorReset (context);
 	break;
-      case MQ_EXIT:
-	return MQ_EXIT;
       case MQ_CONTINUE:
 	MqPanicSYS (context);
     }

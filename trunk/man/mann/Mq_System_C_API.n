@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -84,7 +84,7 @@ Mq_System_C_API \- access to native system functions with error handling
 .ti -1c
 .RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
 .br
-.R "duplicate a string, the argument \fCNULL\fP is allowd "
+.R "duplicate a string, the argument \fCNULL\fP is allowed "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -145,12 +145,12 @@ do { \
 .PP
 
 .PP
-Definition at line 3953 of file msgque.h.
+Definition at line 3985 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
+.SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [inline, static]\fP"
 .PP
-duplicate a string, the argument \fCNULL\fP is allowd 
+duplicate a string, the argument \fCNULL\fP is allowed 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -164,7 +164,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 4005 of file msgque.h.
+Definition at line 4037 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 'basename' system call with error handling feature 
@@ -304,4 +304,4 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

@@ -26,7 +26,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \section	\NS{context}				CONTEXT API
 \RNSA{ContextCreate}\n
 \RNSA{ContextDelete}\n
-\RNSA{Exit}\n
+\RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
 
 \copydoc Mq_Context_C_API
 
@@ -41,6 +41,35 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \subsection	\NS{Exit}				\Exit
 \copydoc MqExit
+
+\if TCL
+\subsection	\NS{Main}				\Main
+Tcl has a special requirement, for every new \e server-thread a new interpreter is created and
+this interpreter source the toplevel file for initialization. This file is set on library startup and
+can be changed with \RNSA{Init}. The problem is the server startup code from the toplevel. For internal
+purpose this code should only be executed on \e application-startup (like the C \b main function) 
+and not for every thread again, use \RNSA{Main} to achieve this.
+\verbatim
+package require TclMsgque
+...
+proc ServerSetup {ctx} ...
+proc ServerCleanup {ctx} ...
+...
+tclmsgque Main {
+  set srv [tclmsgque MqS]
+  $srv ConfigSetServerSetup ServerSetup
+  $srv ConfigSetServerCleanup ServerCleanup
+  $srv ConfigSetFactory
+  if {[catch {
+    $srv LinkCreate {*}$argv
+    $srv ProcessEvent -wait FOREVER
+  }]} {
+    $srv ErrorSet
+  }
+  $srv Exit
+}
+\endverbatim
+\endif
 
 
 \section	\NS{config}				CONFIG API

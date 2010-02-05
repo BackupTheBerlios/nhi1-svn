@@ -185,47 +185,9 @@ sLogDynItem (
   MQ_CST prefix,
   const MQ_INT level,
   struct MqBufferS * space
-);
-
-static void
-sLogDynList (
-  struct MqS * const context,
-  struct MqBufferS * const dyn,
-  MQ_CST prefix,
-  const MQ_INT level,
-  struct MqBufferS * space
-) {
-  // set binary or string
-  dyn->type = MQ_STRING_TYPE(context->config.isString);
-
-  // read numItems
-  dyn->cur.B = dyn->data;
-  dyn->numItems = (dyn->type==MQ_BINT ? MqBufU2INT(dyn->cur) : str2int(dyn->cur.C,NULL,16));
-  dyn->cur.B += (HDR_INT_LEN + 1);
-
-  // start-msg
-  if (likely (!context->config.isSilent))
-    MqLog (stderr, "numItems<" MQ_FORMAT_Z ">\n", dyn->numItems);
-
-  // print item-list
-  MqBufferPush	(space, "   ");
-  sLogDynItem	(context, dyn, prefix, level, space);
-  MqBufferPop	(space, "   ");
-
-  return;
-}
-
-static void
-sLogDynItem (
-  struct MqS * const context,
-  struct MqBufferS * const dyn,
-  MQ_CST prefix,
-  const MQ_INT level,
-  struct MqBufferS * space
 )
 {
   struct MqBufferS * hd = pBufferCreateRef (dyn);
-  register enum MqTypeE type;
   int num, size=400;
   char buf[400];
   char *ptr = buf;
@@ -234,13 +196,12 @@ sLogDynItem (
 
   while (dyn->numItems) {
     MqErrorCheck (pReadWord (context, dyn, hd));
-    type = hd->type;
 
     num	  =  snprintf(buf, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
     ptr	  += num;
     size  -= num;
 
-    switch (type) {
+    switch (hd->type) {
       case MQ_STRT:
 	snprintf(ptr, size, "%s", hd->data);
         break;
@@ -269,23 +230,34 @@ sLogDynItem (
         snprintf(ptr, size, ">>>> ");
         break;
       case MQ_RETT:
-        snprintf(ptr, size, ">>>> code<%c> ", pReadGetReturnCode(context));
+        snprintf(ptr, size, ">>>> code<%c>", pReadGetReturnCode(context));
         break;
       case MQ_BINT: 
         snprintf(ptr, size, "%s", "?binary?");
         break;
     }
     
-    MqDLogX (context, prefix, level, "%s\n", buf);
-
-    switch (type) {
+    switch (hd->type) {
       case MQ_LSTT:
-        sLogDynList (context, hd, prefix, level, space);
-        break;
       case MQ_RETT:
-        sLogDynList (context, hd, prefix, level, space);
+	// set binary or string
+	hd->type = MQ_STRING_TYPE(context->config.isString);
+
+	// read numItems
+	hd->cur.B = hd->data;
+	hd->numItems = (hd->type==MQ_BINT ? MqBufU2INT(hd->cur) : str2int(hd->cur.C,NULL,16));
+	hd->cur.B += (HDR_INT_LEN + 1);
+
+	// start-msg
+	MqDLogX (context, prefix, level, "%s, numItems<" MQ_FORMAT_Z ">\n", buf, hd->numItems);
+
+	// print item-list
+	MqBufferPush	(space, "   ");
+	sLogDynItem	(context, hd, prefix, level, space);
+	MqBufferPop	(space, "   ");
         break;
       default:
+	MqDLogX (context, prefix, level, "%s\n", buf);
 	break;
     }
   }
@@ -414,7 +386,6 @@ MqLogErrorCode (
     case MQ_OK:		return "OK";
     case MQ_ERROR:	return "ERROR";
     case MQ_CONTINUE:	return "CONTINUE";
-    case MQ_EXIT:	return "EXIT";
   }
   return "unknown";
 }
