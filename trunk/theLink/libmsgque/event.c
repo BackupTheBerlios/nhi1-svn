@@ -347,20 +347,19 @@ pEventStart (
       case MQ_OK:
 	return MQ_OK;
       case MQ_ERROR: {
-	// the following error's have to be handled:
-	// 1. error happen in the same context as "pEventStart" was called
-	// 2. "pEventStart" is called on a server context and get an error on a 
-	//	client context
-	// 3. error happen in the server context
-	// 4. error happen in different client context	
-
-	if (context == eventctx) {
-	  // case 1.
+	// case 1. check on "error" for the same "context"
+	if (context == eventctx->error.errctx) {
 	  // do nothing just move the error to the calling function
 	  goto error;
 	} else if (MqErrorIsEXIT(eventctx)) {
-	  // the GC have to handle this
-	  MqErrorReset (context);
+	  if (MQ_IS_CLIENT(context) && pMqGetFirstParent(context) == pMqGetFirstParent(eventctx->error.errctx)) {
+	    // report "link-down-error" from a "parent-context" to a "client-context"
+	    MqErrorCopy (context, eventctx);
+	    goto error;
+	  } else {
+	    // the GC have to handle this
+	    MqErrorReset (context);
+	  }
 	} else if (MQ_IS_SERVER(context) && MQ_IS_CLIENT(eventctx)) {
 	  // case 2.
 	  // copy the error from the client to the server context

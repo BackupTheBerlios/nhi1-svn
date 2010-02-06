@@ -165,7 +165,6 @@ sMqEventStart (
   switch (pTokenInvoke (a_context->link.srvT)) {
     case MQ_OK:       break;
     case MQ_ERROR:
-      M1
       if (a_context->link._trans != 0) {
 	// in a transaction, "MqSendRETURN" will convert the context error 
 	// into an "error" package and send this package back to the client
@@ -215,15 +214,13 @@ MqProcessEvent (
   enum MqWaitOnEventE const wait
 )
 {
-  enum MqErrorE ret = MQ_OK;
   const int forever = (wait >= MQ_WAIT_FOREVER);
   const int once = (wait >= MQ_WAIT_ONCE);
   struct mq_timeval tv = {0L, 0L};
   int debugLevel;
-  struct MqS * const master = context->config.master;
 
   // save master transaction
-  MQ_HDL trans = (master != NULL ? master->link._trans : 0);
+  MQ_HDL trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
 
   // protection code
   MqSetDebugLevel(context);
@@ -240,34 +237,32 @@ MqProcessEvent (
 
   // check for an event
   MqDLogCL(context,6,"START\n");
+  context->link.refCount++;
   do {
     // ################ CHECK TO BE READABLE ##################
     if (once) {
-      ret = pWaitOnEvent (context, MQ_SELECT_RECV, timeout);
-      switch (ret) {
+      switch (pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
         case MQ_OK:	  break;
-        case MQ_CONTINUE: ret = MQ_OK; continue;
+        case MQ_CONTINUE: continue;
         case MQ_ERROR:	  goto error;
       }
     }
 
     // ##################### Process Events #####################
-    ret=pMqSelectStart(context, &tv, sMqEventStart);
-    switch (ret) {
+    switch (pMqSelectStart(context, &tv, sMqEventStart)) {
       case MQ_OK:	  break;
-      case MQ_CONTINUE:	  ret = MQ_OK; continue;
+      case MQ_CONTINUE:	  continue;
       case MQ_ERROR:	  goto error;
     }
   }
-  while (forever && ret == MQ_OK);
+  while (forever);
 
   // restore master transaction
-  if (master != NULL) master->link._trans = trans;
-  MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(ret));
-  return ret;
+  MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(MqErrorGetCode(context)));
 
 error:
   // restore master transaction
+  context->link.refCount--;
   if (context->config.master != NULL) context->config.master->link._trans = trans;
   return MqErrorStack (context);
 }
