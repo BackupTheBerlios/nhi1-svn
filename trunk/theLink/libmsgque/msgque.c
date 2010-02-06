@@ -100,6 +100,7 @@ sCallEventProc (
 	if (context->link.bits.onShutdown == MQ_YES || context->link.bits.isConnected == MQ_NO) {
 	  CONTINUE++;
 	}
+	MqErrorReset(context);
 	break;
       case MQ_ERROR:
 	context->bits.EventProc_LOCK = MQ_NO;
@@ -127,9 +128,10 @@ sCallEventProc (
   }
   // with "ignoreExit" all "context" have to be on "CONTINUE" to trigger an exit
   if (context->setup.ignoreExit == MQ_NO || NUM != CONTINUE) {
-    MqErrorReset(context);
+    return MqErrorGetCodeI(context);
+  } else {
+    return MqErrorSetCONTINUE(context);
   }
-  return MqErrorGetCodeI(context);
 error:
   context->setup.ignoreExit = MQ_NO;
   return MqErrorStack(context);
@@ -291,7 +293,8 @@ MqCheckForLeftOverArguments (
 /*****************************************************************************/
 
 void
-MqExit (
+MqExitP (
+  MQ_CST prefix,
   struct MqS * context
 )
 {
@@ -299,8 +302,9 @@ MqExit (
     // exit on empty context
     SysExit (0,0);
   } else if (context->link.bits.onExit == MQ_YES) {
-    // no double invovation of MqExit
-    MqPanicSYS(context);
+    // no double calling of MqExit
+    MqPanicV(MQ_ERROR_PANIC, prefix, MqMessageNum(MQ_ERROR_EXIT),
+      "called '%s' for context '%p' twice", __func__, context);
   } else {
     // do the exit
     int num;
@@ -308,7 +312,8 @@ MqExit (
     MQ_BOL isThread;
 
     context->link.bits.onExit = MQ_YES;
-    MqDLogC(context,3,"EXIT\n");
+    context->setup.ignoreExit = MQ_NO;
+    MqDLogV(context,3,"call EXIT from %s\n", prefix);
 
     // switch to parent
     if (MQ_IS_CHILD(context)) {

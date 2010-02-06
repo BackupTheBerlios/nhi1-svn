@@ -821,6 +821,7 @@ MqSendEND_AND_WAIT (
   }
 
   // 3. wait until the transaction has finished
+  timeout = pGetTimeout (context, timeout, MQ_WAIT_ONCE);
   endT = time(NULL) + timeout;
   context->link._trans = 0;
   do {

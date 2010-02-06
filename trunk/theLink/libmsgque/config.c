@@ -232,7 +232,6 @@ MqSetupDup (
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
   context->setup.Factory.type = FactoryType;
-  context->setup.ignoreExit = MQ_NO;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   MqErrorCheck (sSetupDupHelper (context, &context->setup.Event.data, context->setup.Event.fCopy, Event));

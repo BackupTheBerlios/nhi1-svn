@@ -280,6 +280,12 @@ static mq_inline enum MqErrorE MqCallbackCall (
   return ret;
 };
 
+MQ_TIME_T pGetTimeout (
+  struct MqS *const context,
+  MQ_TIME_T timeout,
+  enum MqWaitOnEventE wait
+);
+
 #if (HDR_TOK_LEN+1) == 5
 #define ppTokenCopy(i1,i2) memcpy(i1,i2,5);
 #else

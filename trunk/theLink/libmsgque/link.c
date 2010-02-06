@@ -841,6 +841,7 @@ MqLinkCreate (
 	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetEvent(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetIsServer(myFilter, MQ_NO);
+	  MqConfigSetIgnoreExit(myFilter, MQ_NO);
 	  pConfigSetMaster(myFilter, context, 0);
 
 	  // step 6, create the link
@@ -902,14 +903,15 @@ MqLinkDelete (
   pErrorReport(context);
 
   if (unlikely(context->link.bits.onCreateStart == MQ_NO)) {
+    // never was started ?
+    return;
+  } else if (context->link.refCount > 0 && context->link.bits.onExit == MQ_NO) {
+    // check on "bits.deleteProtection"
+    MqDLogC(context,3,"DELETE protection\n");
+    pMqShutdown (context);
+    MqErrorCreateEXIT (context, __func__);
     return;
   } else {
-    // check on "bits.deleteProtection"
-    if (context->link.refCount > 0) {
-      MqDLogC(context,3,"DELETE protection\n");
-      MqErrorCreateEXIT (context, __func__);
-      return;
-    }
 
     // Try to invoke the "DeleteHandler" first
     if (context->link.bits.onDelete == MQ_NO) {

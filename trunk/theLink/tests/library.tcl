@@ -1299,10 +1299,10 @@ proc MakeFile {init name} {
 }
 
 proc Bg {args} {
-  if {$::env(TS_SETUP)} {
-    Print args
-  }
-  lappend ::CLEANUP_PID [exec {*}$args >&@stdout &]
+  if {$::env(TS_SETUP)} { Print args }
+  set PID [exec {*}$args >&@stdout &]
+  if {$::env(TS_SETUP)} { Print PID }
+  lappend ::CLEANUP_PID $PID
 }
 
 proc BgAct {ch cmd} {

@@ -176,6 +176,7 @@ pSlaveCreate (
       }
       pConfigSetParent(newctx, slave_parent);
       pConfigSetMaster(newctx, master, id);
+      MqConfigSetIgnoreExit(newctx, MQ_NO);
       if (master->config.srvname)
 	MqConfigSetSrvName(newctx, master->config.srvname);
       // create the child
@@ -288,6 +289,7 @@ MqSlaveWorker (
     if (argvP != NULL) *argvP = NULL;
     MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &newctx));
     pConfigSetMaster(newctx, context, id);
+    MqConfigSetIgnoreExit(newctx, MQ_NO);
     if (argv == NULL) {
       argv = MqBufferLCreateArgsV(context, "worker-client", MQ_ALFA_STR, "WORKER", NULL);
     } else {

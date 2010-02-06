@@ -1461,9 +1461,13 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// .
 /// \endif
 /// \ctx
-MQ_EXTERN void MQ_DECL MqExit (
+MQ_EXTERN void MQ_DECL MqExitP (
+  MQ_CST prefix,
   struct MqS * ctx
 ) __attribute__ ((noreturn));
+
+/// \brief wrapper to add calling function to #MqExit
+#define MqExit(ctx) MqExitP(__func__, ctx)
 
 /** \brief write \libmsgque specific user-help to stderr
  *  \param tool the name of the tool (e.g. argv[0]) or NULL.
@@ -2993,7 +2997,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
 /// \context
 /// \attention this function will never return
 #define MqPanicSYS(context) MqPanicV(context,__func__,-1,\
-	"internal ERROR in function '%s', please contact your local support", __func__);
+	"internal ERROR, please contact your local support");
 
 /// \brief clear the \e error and reset the \e context
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorReset (
@@ -3192,13 +3196,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorDeleteEXIT (
 /// \endcode
 /// \endif
 
-static mq_inline MQ_BOL
-MqErrorIsEXIT (
+MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
-)
-{
-  return context->link.bits.requestExit;
-};
+);
 
 /*****************************************************************************/
 /*                                                                           */

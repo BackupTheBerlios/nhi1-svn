@@ -86,6 +86,10 @@
 #define XIB(x) IX(x,BBBBBBBBBBBBBBBB)
 #define XIE(x) IX(x,EEEEEEEEEEEEEEEE)
 
+#define IXP(x,s,p) MqDLogX(x,__func__,0, "<" #s "-" #x "-%s> -> (%s:%d)\n", p, __FILE__, __LINE__);
+
+#define I0P IXP(MQ_CONTEXT_S,0000000000000000,prefix)
+
 #define MV(f,v) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, a);fflush(stderr);
 

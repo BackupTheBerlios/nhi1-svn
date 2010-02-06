@@ -356,8 +356,11 @@ pEventStart (
 
 	if (context == eventctx) {
 	  // case 1.
-	  // do nothing just report the error
+	  // do nothing just move the error to the calling function
 	  goto error;
+	} else if (MqErrorIsEXIT(eventctx)) {
+	  // the GC have to handle this
+	  MqErrorReset (context);
 	} else if (MQ_IS_SERVER(context) && MQ_IS_CLIENT(eventctx)) {
 	  // case 2.
 	  // copy the error from the client to the server context

@@ -156,15 +156,16 @@ sMqEventStart (
   switch (pReadHDR (context, &a_context)) {
     case MQ_OK:	      break;
     case MQ_CONTINUE: return MQ_OK;
-    case MQ_ERROR:    MqDLogCL(context,7,"pReadHDR: report an error\n"); goto error;
+    case MQ_ERROR:    goto error;
   }
 
   // ##################### TOKEN Handler #####################
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
-  if (MqErrorCheckI(pTokenInvoke (a_context->link.srvT))) {
-    enum MqErrorE err = MqErrorGetCodeI(a_context);
-    if (err == MQ_ERROR) {
+  switch (pTokenInvoke (a_context->link.srvT)) {
+    case MQ_OK:       break;
+    case MQ_ERROR:
+      M1
       if (a_context->link._trans != 0) {
 	// in a transaction, "MqSendRETURN" will convert the context error 
 	// into an "error" package and send this package back to the client
@@ -174,13 +175,11 @@ sMqEventStart (
 	// but "only" if the connection "pIoCheck" is still available
 	MqErrorCheck (MqSendERROR (a_context));
       } else {
-	// report thr error to the top-level
+	// report the error to the top-level
 	goto error;
       }
-    } else {
-      // MQ_CONTINUE, ...
-      goto error;
-    }
+      break;
+    case MQ_CONTINUE: MqPanicSYS(context);
   }
 
   MqDLogCL(a_context,6,"END-OK\n");
@@ -190,6 +189,23 @@ error:
   // the errors are reported into a_context->link.error
   MqErrorStack (a_context);
   return MqErrorCopy (context, a_context);
+}
+
+MQ_TIME_T pGetTimeout (
+  struct MqS *const context,
+  MQ_TIME_T timeout,
+  enum MqWaitOnEventE wait
+)
+{
+  if (timeout >= 0) {
+    return timeout;
+  } else if (timeout == MQ_TIMEOUT_USER) {
+    return pIoGetTimeout(context->link.io);
+  } else if (timeout == MQ_TIMEOUT_MAX) {
+    return LONG_MAX;
+  } else {
+    return wait == MQ_WAIT_ONCE ? pIoGetTimeout(context->link.io) : LONG_MAX;
+  }
 }
 
 enum MqErrorE
@@ -220,15 +236,7 @@ MqProcessEvent (
   }
 
   // set the default for timeout
-  if (timeout < 0 && once) {
-    if (timeout == MQ_TIMEOUT_USER) {
-      timeout = pIoGetTimeout(context->link.io);
-    } else if (timeout == MQ_TIMEOUT_MAX) {
-      timeout = LONG_MAX;
-    } else {
-      timeout = wait == MQ_WAIT_ONCE ? pIoGetTimeout(context->link.io) : LONG_MAX;
-    }
-  }
+  timeout = pGetTimeout (context, timeout, wait);
 
   // check for an event
   MqDLogCL(context,6,"START\n");
@@ -260,8 +268,6 @@ MqProcessEvent (
 
 error:
   // restore master transaction
-//I0
-//printP(master)
   if (context->config.master != NULL) context->config.master->link._trans = trans;
   return MqErrorStack (context);
 }

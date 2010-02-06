@@ -68,18 +68,20 @@ MqPanicVL (
   va_list ap
 )
 {
-  if (!MQ_ERROR_IS_POINTER(context)) {
-    struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
-    MqBufferSetV (buf, "PANIC: %s\n", fmt);
-    MqDLogEVL (NULL, prefix, buf->cur.C, ap);
-    MqBufferDelete (&buf);
-  } else {
+  // try to report a 'panic' to link-target
+  if (MQ_ERROR_IS_POINTER(context)) {
     struct MqS * const parent = pMqGetFirstParent(context);
     MqErrorSGenVL (context, "PANIC", MQ_ERROR, errnum, fmt, ap);
     if (prefix) MqErrorSAppendV (context, "found in function \"%s\"", prefix);
     MqErrorCopy(parent, context);
     pErrorReport(parent);
-    MqExit (parent);
+  }
+  // always report a 'panic' local
+  {
+    struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
+    MqBufferSetV (buf, "PANIC: %s\n", fmt);
+    MqDLogEVL (MQ_ERROR_IS_POINTER(context) ? context : NULL, prefix, buf->cur.C, ap);
+    MqBufferDelete (&buf);
   }
   SysAbort();
 }
@@ -381,9 +383,17 @@ MqErrorDeleteEXIT(
 )
 {
   context->link.bits.requestExit = MQ_NO;
-  //pGcDelete(context);
+  // pGcDelete(context);
   return MqErrorReset(context);
 }
+
+MQ_BOL
+MqErrorIsEXIT (
+  struct MqS * const context
+)
+{
+  return (MqMessageNum(MQ_ERROR_EXIT) == context->error.num);
+};
 
 void
 pErrorSync (
@@ -427,7 +437,9 @@ pErrorReport(
 )
 {
   if (!MQ_ERROR_IS_POINTER(context)) return;
-  if (MQ_IS_PARENT (context) && context->error.code == MQ_ERROR) {
+  if (MQ_IS_PARENT (context) && 
+	context->error.code == MQ_ERROR && 
+	  context->error.num != MqMessageNum(MQ_ERROR_EXIT)) {
     if (MQ_IS_SERVER (context) && pIoCheck (context->link.io)) {
       // save the original context
       MQ_BUF err = MqBufferDup (context->error.text);
