@@ -238,6 +238,7 @@ MqProcessEvent (
   // check for an event
   MqDLogCL(context,6,"START\n");
   context->link.refCount++;
+  MqErrorReset(context);
   do {
     // ################ CHECK TO BE READABLE ##################
     if (once) {
