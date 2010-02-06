@@ -187,87 +187,91 @@ sLogDynItem (
   struct MqBufferS * space
 )
 {
-  struct MqBufferS * hd = pBufferCreateRef (dyn);
-  int num, size=400;
-  char buf[400];
-  char *ptr = buf;
+  if (context->config.isSilent) {
+    return;
+  } else {
+    struct MqBufferS * hd = pBufferCreateRef (dyn);
+    int num, size=400;
+    char buf[400];
+    char *ptr;
 
-  if (context->config.isSilent) return;
 
-  while (dyn->numItems) {
-    MqErrorCheck (pReadWord (context, dyn, hd));
+    while (dyn->numItems) {
+      ptr = buf;
+      MqErrorCheck (pReadWord (context, dyn, hd));
 
-    num	  =  snprintf(buf, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
-    ptr	  += num;
-    size  -= num;
+      num  =  snprintf(ptr, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
+      ptr  += num;
+      size -= num;
 
-    switch (hd->type) {
-      case MQ_STRT:
-	snprintf(ptr, size, "%s", hd->data);
-        break;
-      case MQ_BYTT:
-        snprintf(ptr, size, MQ_FORMAT_Y, MqBufU2BYT(hd->cur));
-        break;
-      case MQ_BOLT:
-        snprintf(ptr, size, MQ_FORMAT_O, MqBufU2BOL(hd->cur));
-        break;
-      case MQ_SRTT:
-        snprintf(ptr, size, MQ_FORMAT_S, MqBufU2SRT(hd->cur));
-        break;
-      case MQ_INTT:
-        snprintf(ptr, size, MQ_FORMAT_I, MqBufU2INT(hd->cur));
-        break;
-      case MQ_FLTT:
-        snprintf(ptr, size, MQ_FORMAT_F, MqBufU2FLT(hd->cur));
-        break;
-      case MQ_WIDT:
-        snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
-        break;
-      case MQ_DBLT:
-        snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
-        break;
-      case MQ_LSTT:
-        snprintf(ptr, size, ">>>> ");
-        break;
-      case MQ_RETT:
-        snprintf(ptr, size, ">>>> code<%c>", pReadGetReturnCode(context));
-        break;
-      case MQ_BINT: 
-        snprintf(ptr, size, "%s", "?binary?");
-        break;
+      switch (hd->type) {
+	case MQ_STRT:
+	  snprintf(ptr, size, MQ_FORMAT_C, hd->cur.C);
+	  break;
+	case MQ_BYTT:
+	  snprintf(ptr, size, MQ_FORMAT_Y, MqBufU2BYT(hd->cur));
+	  break;
+	case MQ_BOLT:
+	  snprintf(ptr, size, MQ_FORMAT_O, MqBufU2BOL(hd->cur));
+	  break;
+	case MQ_SRTT:
+	  snprintf(ptr, size, MQ_FORMAT_S, MqBufU2SRT(hd->cur));
+	  break;
+	case MQ_INTT:
+	  snprintf(ptr, size, MQ_FORMAT_I, MqBufU2INT(hd->cur));
+	  break;
+	case MQ_FLTT:
+	  snprintf(ptr, size, MQ_FORMAT_F, MqBufU2FLT(hd->cur));
+	  break;
+	case MQ_WIDT:
+	  snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
+	  break;
+	case MQ_DBLT:
+	  snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
+	  break;
+	case MQ_LSTT:
+	  snprintf(ptr, size, ">>>> ");
+	  break;
+	case MQ_RETT:
+	  snprintf(ptr, size, ">>>> code<%c>", pReadGetReturnCode(context));
+	  break;
+	case MQ_BINT: 
+	  snprintf(ptr, size, "%s", "?binary?");
+	  break;
+      }
+      
+      switch (hd->type) {
+	case MQ_LSTT:
+	case MQ_RETT:
+	  // set binary or string
+	  hd->type = MQ_STRING_TYPE(context->config.isString);
+
+	  // read numItems
+	  hd->cur.B = hd->data;
+	  hd->numItems = (hd->type==MQ_BINT ? MqBufU2INT(hd->cur) : str2int(hd->cur.C,NULL,16));
+	  hd->cur.B += (HDR_INT_LEN + 1);
+
+	  // start-msg
+	  MqDLogX (context, prefix, level, "%s, numItems<" MQ_FORMAT_Z ">\n", buf, hd->numItems);
+
+	  // print item-list
+	  MqBufferPush	(space, "   ");
+	  sLogDynItem	(context, hd, prefix, level, space);
+	  MqBufferPop	(space, "   ");
+	  break;
+	default:
+	  MqDLogX (context, prefix, level, "%s\n", buf);
+	  break;
+      }
     }
-    
-    switch (hd->type) {
-      case MQ_LSTT:
-      case MQ_RETT:
-	// set binary or string
-	hd->type = MQ_STRING_TYPE(context->config.isString);
 
-	// read numItems
-	hd->cur.B = hd->data;
-	hd->numItems = (hd->type==MQ_BINT ? MqBufU2INT(hd->cur) : str2int(hd->cur.C,NULL,16));
-	hd->cur.B += (HDR_INT_LEN + 1);
+    MqBufferDelete (&hd);
 
-	// start-msg
-	MqDLogX (context, prefix, level, "%s, numItems<" MQ_FORMAT_Z ">\n", buf, hd->numItems);
-
-	// print item-list
-	MqBufferPush	(space, "   ");
-	sLogDynItem	(context, hd, prefix, level, space);
-	MqBufferPop	(space, "   ");
-        break;
-      default:
-	MqDLogX (context, prefix, level, "%s\n", buf);
-	break;
-    }
-  }
-
-  MqBufferDelete (&hd);
-
-  return;
+    return;
 
 error:
-  MqPanicC (context, __func__, -1, "logging not possible");
+    MqPanicC (context, __func__, -1, "logging not possible");
+  }
 }
 
 // ##########################################################################

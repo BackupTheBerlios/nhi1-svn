@@ -350,6 +350,7 @@ pEventStart (
 	// case 1. check on "error" for the same "context"
 	if (context == eventctx->error.errctx) {
 	  // do nothing just move the error to the calling function
+	  MqErrorCopy (context, eventctx);
 	  goto error;
 	} else if (MqErrorIsEXIT(eventctx)) {
 	  if (MQ_IS_CLIENT(context) && pMqGetFirstParent(context) == pMqGetFirstParent(eventctx->error.errctx)) {
