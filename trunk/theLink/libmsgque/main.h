@@ -200,6 +200,24 @@ extern MQ_CST MqMessageText[MQ_MESSAGE_END];
 #  define str2ptr	strtoull
 #endif
 
+#if defined (MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD)
+#  define MqThreadSelf() pthread_self()
+#  define MqThreadGetTLS(k) pthread_getspecific(k)
+#  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
+#  define MqThreadSetTLSCheck(k,v) pthread_setspecific(k,v)
+#  define MqThreadKeyType pthread_key_t
+#  define MqThreadKeyNULL PTHREAD_KEYS_MAX
+# else
+#  define MqThreadSelf() GetCurrentThreadId()
+#  define MqThreadGetTLS(k) TlsGetValue(k)
+#  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
+#  define MqThreadSetTLSCheck(k,v) (TlsSetValue(k,v) == 0)
+#  define MqThreadKeyType DWORD
+#  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
+# endif
+#endif // MQ_HAS_THREAD
+
 END_C_DECLS
 
 #endif // MAIN_H

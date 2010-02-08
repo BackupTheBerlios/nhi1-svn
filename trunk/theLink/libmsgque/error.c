@@ -361,7 +361,7 @@ MqErrorSetCONTINUE (
 }
 
 enum MqErrorE
-MqErrorCreateEXIT (
+MqErrorCreateEXITP (
   struct MqS * const context,
   MQ_CST prefix
 )

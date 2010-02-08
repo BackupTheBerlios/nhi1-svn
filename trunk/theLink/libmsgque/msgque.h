@@ -1405,6 +1405,8 @@ struct MqS {
   MQ_PTR self;			    ///< link to the managed object
   MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
   MQ_INT refCount;		    ///< is an objekt in use?
+  struct MqGcS *gc;		    ///< link to the garbage-collection
+  MQ_SIZE gcid;			    ///< position in the Gc array
 };
 
 /// \brief initialize the #MqS object related data but do \e not create the object self
@@ -3166,10 +3168,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 );
 
 /// \brief create the application exit flag
-MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCreateEXIT (
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCreateEXITP (
   struct MqS * const context,
   MQ_CST const prefix
 );
+
+/// \brief wrapper to add trace-back information
+#define MqErrorCreateEXIT(ctx) MqErrorCreateEXITP(ctx,__func__)
 
 /// \brief delete the application exit flag
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorDeleteEXIT (

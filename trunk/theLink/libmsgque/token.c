@@ -558,12 +558,15 @@ error1:
       curr++;
       switch (*curr) {
         case 'H':		// _SHD: SERVER shutdown request from remote Mq
-	  // ignore _SHD is already on EXIT
-	  if (pMqGetFirstParent(context)->link.bits.onExit == MQ_NO) {
-	    // shutdown all dependenig objects
+	  // delete link, but without memory free
+	  if (context->setup.ignoreExit == MQ_NO) {
+	    context->refCount++;
+	    MqLinkDelete(context);
+	    context->refCount--;
+	    return MqErrorCreateEXIT(context);
+	  } else {
 	    pMqShutdown(context);
-	    // the deletion will be handled in "pEventStart"
-	    return MqErrorCreateEXIT (context, __func__);
+	    break;
 	  }
         case 'R':              // _SRT: System return
           pTransSetResult (context->link.trans, MQ_TRANS_END, NULL);
@@ -571,15 +574,11 @@ error1:
       }
       break;
     default:                   // got a wrong message
-      goto wrong_token;
+      return MqErrorV (context, __func__, -1,
+            "unknown Mq-System-Token \"%s\" found", context->link.srvT->current);
   }
 
   return MQ_CONTINUE;
-
-wrong_token:
-  MqErrorV (context, __func__, -1,
-	    "unknown Mq-System-Token \"%s\" found", context->link.srvT->current);
-
 error:
   return MqErrorStack (context);
 }

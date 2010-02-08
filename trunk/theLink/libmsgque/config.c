@@ -22,6 +22,204 @@ BEGIN_C_DECLS
 
 /*****************************************************************************/
 /*                                                                           */
+/*                                  GC                                       */
+/*                                                                           */
+/*****************************************************************************/
+
+/// \brief everything \e io need for local storage
+struct MqGcS {
+#if defined (MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD)
+  pthread_t thread;		///< the thread gc link to
+# else
+  DWORD thread;			///< the thread gc link to
+# endif
+#endif
+  struct MqS ** DataL;          ///< list of #MqS objects
+  MQ_SIZE DataLNum;             ///< size of \e DataL
+  MQ_SIZE DataLCur;             ///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
+};
+
+void GcCreate (void) __attribute__ ((constructor)); 
+void GcDelete (void) __attribute__ ((destructor)); 
+
+#if defined (MQ_HAS_THREAD)
+static MqThreadKeyType gc_key = MqThreadKeyNULL;
+#endif
+
+static void
+sGcDeleteAll (
+  struct MqGcS * const gc
+)
+{
+  MQ_SIZE i;
+  for (i=0; i<gc->DataLCur; i++) {
+    struct MqS *context = gc->DataL[i];
+    if (context != NULL) {
+      MqDLogC(context,4,"FORCE delete\n");
+      context->refCount = 0;
+      MqContextDelete (&context);
+    }
+  }
+}
+
+void
+GcRun (
+  struct MqS * const context
+)
+{
+  struct MqGcS * sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key);
+  if (sysgc != NULL) {
+    MQ_INT MqSetDebugLevel(context);
+    MQ_SIZE i;
+    MqDLogCL(context,5,"GC-START\n");
+    for (i=0; i<sysgc->DataLCur; i++) {
+      struct MqS *ctx = sysgc->DataL[i];
+      if (ctx != NULL && ctx->refCount != 0) {
+	MqDLogC(ctx,6,"GC_DELETE\n");
+	MqContextDelete (&ctx);
+      }
+    }
+    MqDLogCL(context,5,"GC-END\n");
+  }
+}
+
+void
+GcCreate(void)
+{
+#if defined (MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD)
+    if (pthread_key_create(&gc_key, NULL) != 0) {
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'");
+    }
+# else
+    if ((gc_key = TlsAlloc()) == TLS_OUT_OF_INDEXES) {
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'");
+    }
+# endif
+#endif
+}
+
+void
+GcDelete(void)
+{
+#if defined (MQ_HAS_THREAD)
+  if (gc_key == MqThreadKeyNULL) {
+    return;
+  } else {
+    struct MqGcS * sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key);
+    if (sysgc != NULL) {
+      MqThreadSetTLS(gc_key, NULL);
+      sGcDeleteAll(sysgc);
+      MqSysFree(sysgc->DataL);
+      MqSysFree(sysgc);
+    }
+  }
+#else
+  if (sysgc != NULL) {
+    sGcDeleteAll(sysgc);
+    MqSysFree(sysgc->DataL);
+    MqSysFree(sysgc);
+  }
+#endif
+}
+
+static struct MqGcS*
+sGcAlloc(
+  struct MqS * const context
+)
+{
+#if defined (MQ_HAS_THREAD)
+  struct MqGcS * sysgc = NULL;
+  MqErrorReset(context);
+  if ((sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key)) == NULL) {
+    sysgc = (struct MqGcS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*sysgc));
+    sysgc->thread = MqThreadSelf();
+    if (MqThreadSetTLSCheck(gc_key,sysgc)) {
+      MqSysFree(sysgc);
+      MqPanicC (context, __func__, -1, "unable to alloc Thread-Local-Storage data");
+    }
+  }
+#else
+  MqErrorReset(context);
+  if (sysgc == NULL) {
+    sysgc = (struct MqGcS*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof (*sysgc));
+  }
+#endif
+  //MqDLogV(MqErrorGetMsgque(context), 4, "create EVENT<%p>\n", sysgc);
+  return sysgc;
+}
+
+void
+sGcReset(
+  struct MqGcS * gc
+)
+{
+  MqSysFree (gc->DataL);
+  gc->DataLNum = 0;
+  gc->DataLCur = 0;
+}
+
+static void
+pGcCreate (
+  struct MqS * const context
+) {
+  if (context->gc != NULL) {
+    return;
+  } else {
+    struct MqGcS *sysgc = sGcAlloc(context);
+
+    // if the context was created by a "fork" cleanup gcs first
+    if (MQ_IS_PARENT(context) && context->statusIs & MQ_STATUS_IS_FORK) {
+      struct MqS **start = sysgc->DataL;
+      struct MqS **end   = sysgc->DataL + sysgc->DataLCur;
+      // make all "old" context undelete-able
+      // reason: perl GarbageCollection will delete these "old" context on
+      // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
+      for (; start < end; start++) {
+	// block all "open" context
+	(*start)->bits.MqContextDelete_LOCK = MQ_YES;
+      }
+      // now reset the gc data
+      sGcReset(sysgc);
+    }
+
+    // check if enough space is available
+    if (sysgc->DataLCur >= sysgc->DataLNum) {
+      sysgc->DataLNum += 10;
+      sysgc->DataL = (struct MqS **) MqSysRealloc (MQ_ERROR_PANIC, sysgc->DataL,
+	  sizeof (*sysgc->DataL) * sysgc->DataLNum);
+    }
+    // ATTENTION: we don't check on double insert !!
+    sysgc->DataL[sysgc->DataLCur] = context;
+
+    MqDLogV(context,4,"TSD-Id<%p>, Thread-Id<0x%lx>, DataLCur<%i>\n", sysgc, 
+	(long unsigned int)MqThreadSelf(), sysgc->DataLCur);
+
+    // report gc back
+    context->gc = sysgc;
+    context->gcid = sysgc->DataLCur;
+
+    sysgc->DataLCur++;
+  }
+}
+
+static void
+pGcDelete (
+  struct MqS * const context
+) {
+  if (context->gc == NULL) {
+    return;
+  } else {
+    struct MqGcS * const sysgc = context->gc;
+    sysgc->DataL[sysgc->DataLCur] = context;
+    context->gcid = 0;
+    context->gc = NULL;
+  }
+}
+
+/*****************************************************************************/
+/*                                                                           */
 /*                                context                                    */
 /*                                                                           */
 /*****************************************************************************/
@@ -108,6 +306,8 @@ MqContextFree (
     MqBufferDelete (&context->config.io.tcp.myhost);
     MqBufferDelete (&context->config.io.tcp.myport);
     MqBufferDelete (&context->config.io.uds.file);
+
+    pGcDelete(context);
   }
 }
 
@@ -122,8 +322,7 @@ MqContextDelete (
   } else if (context->refCount) {
     // check on "bits.deleteProtection"
     MqDLogC(context,3,"DELETE protection\n");
-    //pGcCreate(context);
-    return;
+    pGcCreate (context);
   } else if (context->setup.Factory.Delete.fCall) {
     MqFactoryDeleteF fCall = context->setup.Factory.Delete.fCall;
     MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;

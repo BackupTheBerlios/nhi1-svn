@@ -903,20 +903,22 @@ MqLinkDelete (
   pErrorReport(context);
 
   if (unlikely(context->link.bits.onCreateStart == MQ_NO)) {
-    // never was started ?
+    return; // nothing to do, never was connected
+  } else  if (context->link.bits.onDelete == MQ_YES) {
+    return; // nothing to do, onDelete was already performed
+  } else if (MQ_IS_CHILD(context) && context->setup.Child.fDelete) {
+    MqDeleteF func = context->setup.Child.fDelete;
+    context->setup.Child.fDelete = NULL;  // no double call
+    (*func) (context);
+    return;
+  } else if (MQ_IS_PARENT(context) && context->setup.Parent.fDelete) {
+    MqDeleteF func = context->setup.Parent.fDelete;
+    context->setup.Parent.fDelete = NULL;  // no double call
+    (*func) (context);
     return;
   } else {
-    // Try to invoke the "DeleteHandler" first
-    if (context->link.bits.onDelete == MQ_NO) {
-      context->link.bits.onDelete = MQ_YES;
-      if (MQ_IS_CHILD(context) && context->setup.Child.fDelete) {
-	(*context->setup.Child.fDelete) (context);
-	return;
-      } else if (MQ_IS_PARENT(context) && context->setup.Parent.fDelete) {
-	(*context->setup.Parent.fDelete) (context);
-	return;
-      }
-    }
+    // lock this function
+    context->link.bits.onDelete = MQ_YES;
 
     // cleanup the server
     if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fFunc != NULL) {
@@ -982,7 +984,6 @@ MqLinkDelete (
     // cleanup the factory object ?
     if (context->link.bits.doFactoryCleanup == MQ_YES) {
       // do not call "MqLinkDelete" again
-      context->link.bits.onCreateStart = MQ_NO;
       MqContextDelete((struct MqS **)&context);
     } else {
       // initialize "msgque" object to "NULL"

@@ -37,13 +37,8 @@ struct MqEventS {
   
 };
 
-#if defined(_MSC_VER)
-#define PREFIX
-#else
-#define PREFIX static
-PREFIX void sEventCreate (void) __attribute__ ((constructor)); 
-PREFIX void sEventDelete (void) __attribute__ ((destructor)); 
-#endif /* !_MSC_VER */
+void EventCreate (void) __attribute__ ((constructor)); 
+void EventDelete (void) __attribute__ ((destructor)); 
 
 //######################################################################
 
@@ -74,24 +69,8 @@ sEventDeleteAllClient (
 
 #if defined (MQ_HAS_THREAD)
 
-#if defined(HAVE_PTHREAD)
-#  define MqThreadSelf() pthread_self()
-#  define MqThreadGetTLS(k) pthread_getspecific(k)
-#  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
-#  define MqThreadSetTLSCheck(k,v) pthread_setspecific(k,v)
-#  define MqThreadKeyType pthread_key_t
-#  define event_key_null PTHREAD_KEYS_MAX
-#else
-#  define MqThreadSelf() GetCurrentThreadId()
-#  define MqThreadGetTLS(k) TlsGetValue(k)
-#  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
-#  define MqThreadSetTLSCheck(k,v) (TlsSetValue(k,v) == 0)
-#  define MqThreadKeyType DWORD
-#  define event_key_null TLS_OUT_OF_INDEXES
-#endif
-
 /// \brief Thread-Specific-Data (TSD) key
-static MqThreadKeyType event_key = event_key_null;
+static MqThreadKeyType event_key = MqThreadKeyNULL;
 
 /// \brief Check (and if not available) allocate TLS storage
 /// \context
@@ -119,25 +98,9 @@ sEventAlloc(
   return MQ_OK;
 }
 
-void
-sEventFree(void)
-{
-  struct MqEventS * sysevent;
-  if (event_key == event_key_null) return;
-
-  sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
-
-  if (sysevent != NULL) {
-    MqThreadSetTLS(event_key, NULL);
-    sEventDeleteAllClient(sysevent);
-    MqSysFree(sysevent->DataL);
-    MqSysFree(sysevent);
-  }
-}
-
 /// \brief one-time initializer for the TSD key
-PREFIX void
-sEventCreate(void)
+void
+EventCreate(void)
 {
 #if defined(HAVE_PTHREAD)
   if (pthread_key_create(&event_key, NULL) != 0) {
@@ -150,10 +113,20 @@ sEventCreate(void)
 #endif
 }
 
-PREFIX void
-sEventDelete(void)
+void
+EventDelete(void)
 {
-  sEventFree();
+  if (event_key != MqThreadKeyNULL) {
+    struct MqEventS * sysevent;
+    sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
+
+    if (sysevent != NULL) {
+      MqThreadSetTLS(event_key, NULL);
+      sEventDeleteAllClient(sysevent);
+      MqSysFree(sysevent->DataL);
+      MqSysFree(sysevent);
+    }
+  }
 }
 #undef PREFIX
 
@@ -178,23 +151,17 @@ sEventAlloc(
 }
 
 void
-sEventFree(void)
+EventCreate(void)
+{
+}
+
+void
+EventDelete(void)
 {
   if (sysevent != NULL) {
     sEventDeleteAllClient(sysevent);
     MqSysFree(sysevent);
   }
-}
-
-static void
-sEventCreate(void)
-{
-}
-
-static void
-sEventDelete(void)
-{
-  sEventFree();
 }
 
 #define MqThreadSelf() 0L
@@ -237,9 +204,9 @@ pEventAdd (
       context->link.io->sockP = sockP;
     }
 
-    event->DataLCur++;
-
     MqDLogV(context,4,"event<%p> sock<%i> DataLCur<%i>\n", event, sock, event->DataLCur);
+
+    event->DataLCur++;
 
 //pEventLog(msgque, event, __func__);
   }
@@ -343,7 +310,10 @@ pEventStart (
     // is the context still in duty ? (sock >= 0)
     if (sock < 0 || !FD_ISSET (sock, &fds)) continue;
     // found valid socket -> call it
-    switch ((*proc)(eventctx)) {
+    eventctx->refCount++;
+    ret = (*proc)(eventctx);
+    eventctx->refCount--;
+    switch (ret) {
       case MQ_OK:
 	return MQ_OK;
       case MQ_ERROR: {

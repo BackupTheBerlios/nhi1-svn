@@ -255,6 +255,9 @@ MqProcessEvent (
       case MQ_CONTINUE:	  continue;
       case MQ_ERROR:	  goto error;
     }
+
+    // clean up delete objects
+    if (forever) GcRun (context);
   }
   while (forever);
 

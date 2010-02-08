@@ -286,6 +286,10 @@ MQ_TIME_T pGetTimeout (
   enum MqWaitOnEventE wait
 );
 
+void GcRun (
+  struct MqS * const context
+);
+
 #if (HDR_TOK_LEN+1) == 5
 #define ppTokenCopy(i1,i2) memcpy(i1,i2,5);
 #else

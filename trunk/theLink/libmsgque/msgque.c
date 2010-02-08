@@ -28,7 +28,8 @@
 
 BEGIN_C_DECLS
 
-void sEventFree (void);
+void EventDelete (void);
+void GcDelete (void);
 MQ_EXTERN struct MqBufferLS * MqInitBuf = NULL;
 MQ_EXTERN MqFactorySelectorF MqFactorySelector = NULL;
 static void pMqCleanup (void) __attribute__ ((destructor));
@@ -190,7 +191,7 @@ pWaitOnEvent (
 	  break;
 	case MQ_CONTINUE:
 	  context->setup.ignoreExit = MQ_NO;
-	  return MqErrorCreateEXIT (context, __func__);
+	  return MqErrorCreateEXIT (context);
 	case MQ_ERROR:
 	  MqErrorCopy (context, parent);
 	  goto error;
@@ -340,12 +341,15 @@ MqExitP (
     MqLinkDelete (context);
 
     // 2. delete all other parent context from current thread or process
-    sEventFree();
+    EventDelete();
 
-    // 3. call application specific exit function
+    // 3. delete all collected objects
+    GcDelete();
+
+    // 4. call application specific exit function
     if (exitF) (*exitF) (num);
 
-    // 4. finally call libmsgque exit function
+    // 5. finally call libmsgque exit function
     SysExit(isThread, num);
   }
 }
@@ -407,12 +411,14 @@ BOOL WINAPI DllMain(
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
+      sGcCreate();
       sEventCreate();
       sGenericCreate();
       break;
     case DLL_PROCESS_DETACH:
-      sEventDelete();
       sGenericDelete();
+      sEventDelete();
+      sGcDelete();
       break;
   }
   return TRUE;
