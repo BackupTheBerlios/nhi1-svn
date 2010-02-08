@@ -119,6 +119,11 @@ MqContextDelete (
   *contextP = NULL;
   if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) {
     return;
+  } else if (context->refCount) {
+    // check on "bits.deleteProtection"
+    MqDLogC(context,3,"DELETE protection\n");
+    //pGcCreate(context);
+    return;
   } else if (context->setup.Factory.Delete.fCall) {
     MqFactoryDeleteF fCall = context->setup.Factory.Delete.fCall;
     MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;

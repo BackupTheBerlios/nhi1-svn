@@ -125,10 +125,15 @@ sLogVL (
     MQ_STR name = context->config.name;
     if (context->config.isSilent) return;
     t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
-    snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%p-%s]: %s", t, name, mq_getpid(),
-	sLogTime (time_buf), level, context->link.ctxId, (void*) context, proc, fmt);
+#if defined(MQ_HAS_THREAD)
+    snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) pthread_self(), 
+	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
+#else
+    snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(),
+	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
+#endif
   } else {
-    snprintf (header, 400, "X> %s [%i-%i-%p-%s]: %s", sLogTime (time_buf), level, 0, (void*)NULL, proc, fmt);
+    snprintf (header, 400, "X> %s [%i-%s]: %s", sLogTime (time_buf), level, proc, fmt);
   }
 
   vfprintf (channel, header, ap);

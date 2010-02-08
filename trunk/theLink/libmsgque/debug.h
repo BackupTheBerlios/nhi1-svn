@@ -24,7 +24,12 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
+#if defined(MQ_HAS_THREAD)
+# define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      (void*) pthread_self(), #s);fflush(stderr);
+#else
+# define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
+#endif
 
 #define M0 MX(00000000000000000)
 #define M1 MX(11111111111111111)

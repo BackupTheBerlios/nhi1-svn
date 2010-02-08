@@ -237,7 +237,7 @@ MqProcessEvent (
 
   // check for an event
   MqDLogCL(context,6,"START\n");
-  context->link.refCount++;
+  context->refCount++;
   MqErrorReset(context);
   do {
     // ################ CHECK TO BE READABLE ##################
@@ -263,12 +263,13 @@ MqProcessEvent (
 
 error:
   // restore master transaction
-  context->link.refCount--;
+  context->refCount--;
   if (context->config.master != NULL) context->config.master->link._trans = trans;
   return MqErrorStack (context);
 }
 
 END_C_DECLS
+
 
 
 

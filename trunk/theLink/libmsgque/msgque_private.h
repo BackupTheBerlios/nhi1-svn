@@ -274,9 +274,9 @@ static mq_inline enum MqErrorE MqCallbackCall (
 )
 {
   enum MqErrorE ret;
-  context->link.refCount++;
+  context->refCount++;
   ret=(*cb.fFunc)(context,cb.data);
-  context->link.refCount--;
+  context->refCount--;
   return ret;
 };
 

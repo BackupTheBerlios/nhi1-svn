@@ -695,15 +695,15 @@ MqLinkCreate (
     context->link.bits.onCreateEnd = MQ_NO;
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       enum MqErrorE ret;
-      context->link.refCount++;
+      context->refCount++;
       ret = (*context->setup.Child.fCreate) (context, argvP);
-      context->link.refCount--;
+      context->refCount--;
       return ret;
     } else if (context->config.parent == NULL && context->setup.Parent.fCreate != NULL) {
       enum MqErrorE ret;
-      context->link.refCount++;
+      context->refCount++;
       ret = (*context->setup.Parent.fCreate) (context, argvP);
-      context->link.refCount--;
+      context->refCount--;
       return ret;
     }
   }
@@ -905,26 +905,15 @@ MqLinkDelete (
   if (unlikely(context->link.bits.onCreateStart == MQ_NO)) {
     // never was started ?
     return;
-  } else if (context->link.refCount > 0 && context->link.bits.onExit == MQ_NO) {
-    // check on "bits.deleteProtection"
-    MqDLogC(context,3,"DELETE protection\n");
-    pMqShutdown (context);
-    MqErrorCreateEXIT (context, __func__);
-    return;
   } else {
-
     // Try to invoke the "DeleteHandler" first
     if (context->link.bits.onDelete == MQ_NO) {
       context->link.bits.onDelete = MQ_YES;
       if (MQ_IS_CHILD(context) && context->setup.Child.fDelete) {
-	context->link.refCount++;
 	(*context->setup.Child.fDelete) (context);
-	context->link.refCount--;
 	return;
       } else if (MQ_IS_PARENT(context) && context->setup.Parent.fDelete) {
-	context->link.refCount++;
 	(*context->setup.Parent.fDelete) (context);
-	context->link.refCount--;
 	return;
       }
     }
@@ -1077,5 +1066,6 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 

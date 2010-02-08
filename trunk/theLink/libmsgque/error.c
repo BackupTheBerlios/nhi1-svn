@@ -372,7 +372,6 @@ MqErrorCreateEXIT (
   } else {
     MqDLogV(context, 3, "called from %s\n", prefix);
     context->link.bits.requestExit = MQ_YES;
-    //pGcCreate(context);
     return MqErrorSGenV(context, prefix, MQ_ERROR, MqMessageNum(MQ_ERROR_EXIT), MqMessageText[MQ_ERROR_EXIT]);
   }
 }
@@ -383,7 +382,6 @@ MqErrorDeleteEXIT(
 )
 {
   context->link.bits.requestExit = MQ_NO;
-  // pGcDelete(context);
   return MqErrorReset(context);
 }
 

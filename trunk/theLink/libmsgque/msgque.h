@@ -347,7 +347,6 @@ struct MqLinkS {
   struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
   struct MqCacheS * readCache;	    ///< cache for MqReadS
-  MQ_INT refCount;		    ///< refCount
 
   /// \brief bit-field to represent the boolean values
   struct {
@@ -1405,6 +1404,7 @@ struct MqS {
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object
   MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
+  MQ_INT refCount;		    ///< is an objekt in use?
 };
 
 /// \brief initialize the #MqS object related data but do \e not create the object self
