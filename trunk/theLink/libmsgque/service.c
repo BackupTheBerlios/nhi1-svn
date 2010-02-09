@@ -214,6 +214,7 @@ MqProcessEvent (
   enum MqWaitOnEventE const wait
 )
 {
+  enum MqErrorE ret = MQ_OK;
   const int forever = (wait >= MQ_WAIT_FOREVER);
   const int once = (wait >= MQ_WAIT_ONCE);
   struct mq_timeval tv = {0L, 0L};
@@ -240,10 +241,9 @@ MqProcessEvent (
   context->refCount++;
   MqErrorReset(context);
   do {
-    MqErrorReset(context);
     // ################ CHECK TO BE READABLE ##################
     if (once) {
-      switch (pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
+      switch (ret = pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
         case MQ_OK:	  break;
         case MQ_CONTINUE: continue;
         case MQ_ERROR:	  goto error;
@@ -251,7 +251,7 @@ MqProcessEvent (
     }
 
     // ##################### Process Events #####################
-    MqErrorCheck (pMqSelectStart(context, &tv, sMqEventStart));
+    MqErrorCheck (ret = pMqSelectStart(context, &tv, sMqEventStart));
 
     // clean up delete objects
     if (forever) GcRun (context);
@@ -261,11 +261,16 @@ MqProcessEvent (
   // restore master transaction
   MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(MqErrorGetCode(context)));
 
-error:
-  // restore master transaction
+end:
+  // restore the "master" transaction
   context->refCount--;
   if (context->config.master != NULL) context->config.master->link._trans = trans;
-  return MqErrorStack (context);
+  return ret;
+
+error:
+  // on "error" add stack-trace
+  ret = MqErrorStack (context);
+  goto end;
 }
 
 END_C_DECLS

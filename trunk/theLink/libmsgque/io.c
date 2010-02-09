@@ -239,6 +239,7 @@ error:
   return MqErrorStack (io->context);
 }
 
+/*
 enum MqErrorE
 pIoSelect (
   struct MqIoS * const io,
@@ -251,7 +252,7 @@ pIoSelect (
   fd_set *fds, *readfds = NULL, *writefds = NULL;
 
   if (sock < 0)
-    return MqErrorSetCONTINUE(io->context);	    // nothing found
+    return MQ_CONTINUE;	    // nothing found
 
   fds = &io->fdset;
 
@@ -271,6 +272,7 @@ pIoSelect (
   // do the select
   MqErrorReturn (SysSelect (io->context, (sock+1), readfds, writefds, timeout));
 }
+*/
 
 enum MqErrorE
 pIoSelectAll (

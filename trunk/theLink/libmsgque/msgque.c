@@ -101,7 +101,6 @@ sCallEventProc (
 	if (context->link.bits.onShutdown == MQ_YES || context->link.bits.isConnected == MQ_NO) {
 	  CONTINUE++;
 	}
-	MqErrorReset(context);
 	break;
       case MQ_ERROR:
 	context->bits.EventProc_LOCK = MQ_NO;
@@ -119,7 +118,6 @@ sCallEventProc (
 	  break;
 	case MQ_CONTINUE:
 	  CONTINUE++;
-	  MqErrorReset(context);
 	  break;
 	case MQ_ERROR:
 	  MqErrorCopy(context, cldCtx);
@@ -132,7 +130,7 @@ sCallEventProc (
   if (context->setup.ignoreExit == MQ_NO || NUM != CONTINUE) {
     return MqErrorGetCodeI(context);
   } else {
-    return MqErrorSetCONTINUE(context);
+    return MQ_CONTINUE;
   }
 error:
   context->setup.ignoreExit = MQ_NO;
@@ -168,8 +166,6 @@ pWaitOnEvent (
 
   MqDLogCL(context,6,"START loop\n");
   do {
-    MqErrorReset(context);
-
     // 1. test on 'select'
     switch (pIoSelectAll (context->link.io, what, &tv)) {
       case MQ_CONTINUE:	break;		  // nothing found wait for next event
@@ -205,7 +201,7 @@ pWaitOnEvent (
       // -> let upper code decide what to do
       if (!pTokenCheck(context->link.srvT,"____")) {
         //pDLog(context,7,"fEvent in<%p>, token<%s>\n", msgque, pTokenGetCurrent(context->link.srvT));
-        return MqErrorSetCONTINUE(context);
+        return MQ_CONTINUE;
       }
     }
 
@@ -219,8 +215,6 @@ pWaitOnEvent (
 
 end:
   MqDLogCL(context,6,"END-OK\n");
-  return MQ_OK;
-
 error:
   return MqErrorStack (context);
 }

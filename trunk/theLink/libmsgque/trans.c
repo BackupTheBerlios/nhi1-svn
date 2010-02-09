@@ -233,7 +233,7 @@ pTransSetResult (
   if (unlikely(_trans < 0 || _trans > trans->transIdR)) 
       return MqErrorV (context, __func__, -1, "invalid transaction-id '%i'", _trans);
   item = trans->transIdA[_trans];
-  if (item == NULL) return MqErrorSetCONTINUE(context);
+  if (item == NULL) return MQ_OK;
   item->status = status;
   if (item->callback.fFunc) {
     switch (pReadGetReturnCode (context)) {
@@ -272,7 +272,6 @@ error1:
     context->link.read = (struct MqReadS * const) pCachePop (context->link.readCache);
   }
   return MQ_OK;
-
 error:
   return MqErrorStack(context);
 }

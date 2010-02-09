@@ -222,7 +222,7 @@ SysStat (
 {
   if (unlikely (stat (file, st) == -1)) {
     if (!context || errno == ENOENT) {
-      return MqErrorSetCONTINUE(context);
+      return MQ_CONTINUE;
     } else {
       return MqErrorSys(stat);
     }

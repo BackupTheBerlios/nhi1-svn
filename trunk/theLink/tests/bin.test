@@ -59,7 +59,7 @@ Setup $I $B $C $S
 # tests ----------------------------
 
 test bin-1-($I|$B|$C|$S) {echo datatype (BIN)} {
-    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadB SendB [binary format w 7810179016327718216]]
+  tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadB SendB [binary format w 7810179016327718216]]
 } "bytearray"
 
 test bin-2-($I|$B|$C|$S) {echo binary data} \

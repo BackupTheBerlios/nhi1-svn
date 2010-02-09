@@ -133,7 +133,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
     test async-F1-($B|$C|$S) {work on mass background events} \
 	-setup	    {
 	    set RET [list]
-	    proc RSleep {ctx a timeout} {
+	    proc RSleep {ctx a} {
 		$ctx SendSTART
 		$ctx SendI 1
 		$ctx SendEND_AND_WAIT SLEP $::env(TS_TIMEOUT)
@@ -146,7 +146,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 	    set i 0
 	    foreach name [lsort [array names FH]] {
 	      set RD [expr {[lindex $RAND $i]/30}]
-	      after $RD "RSleep $FH($name) $RD $env(TS_TIMEOUT)"
+	      after $RD "RSleep $FH($name) $RD"
 	      incr i
 	    }
 	    while {[llength $RET] != $MAX} {

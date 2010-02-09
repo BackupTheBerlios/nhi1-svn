@@ -214,7 +214,7 @@ MqErrorStackP(
   if (MQ_ERROR_IS_POINTER(context)) {
     if (MqErrorCheckI(context->error.code)) {
       MQ_STR basename = MqSysBasename(file, MQ_YES);
-      MQ_STR type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
+      MQ_CST type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
       MqDLogX (context, func, 5, "detect %s in file '%s'\n", type, basename);
       MqErrorSAppendV(context, "found in function \"%s\" at file \"%s\"", func, basename);
       free(basename);
@@ -356,11 +356,7 @@ MqErrorSetCONTINUE (
   struct MqS * const context
 )
 {
-  if (context->error.code != MQ_CONTINUE) {
-    MqDLogC(context,4,"set CONTINUE\n");
-    context->error.code = MQ_CONTINUE;
-    context->error.errctx = context;
-  }
+  MqDLogC(context,4,"done\n");
   return MQ_CONTINUE;
 }
 
@@ -372,7 +368,7 @@ MqErrorCreateEXITP (
 {
   if (context->setup.ignoreExit == MQ_YES) {
     MqDLogV(context, 3, "%s - ignore EXIT\n", prefix);
-    return MqErrorSetCONTINUE(context);
+    return MQ_CONTINUE;
   } else {
     MqDLogV(context, 3, "called from %s\n", prefix);
     context->link.bits.requestExit = MQ_YES;

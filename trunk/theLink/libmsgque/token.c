@@ -571,7 +571,7 @@ error1:
 	  }
 	  break;
         case 'R':              // _SRT: System return
-          pTransSetResult (context->link.trans, MQ_TRANS_END, NULL);
+          MqErrorCheck (pTransSetResult (context->link.trans, MQ_TRANS_END, NULL));
           break;
       }
       break;
@@ -580,7 +580,7 @@ error1:
             "unknown Mq-System-Token \"%s\" found", context->link.srvT->current);
   }
 
-  return MqErrorSetCONTINUE(context);
+  return MQ_CONTINUE;
 error:
   return MqErrorStack (context);
 }

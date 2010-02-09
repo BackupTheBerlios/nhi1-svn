@@ -144,6 +144,16 @@ set io  Pipe
 ## option procs
 ## 
 
+proc Pop {_argv} {
+  upvar $_argv argv
+  if {[llength $argv] == 0} {
+    return -code break
+  }
+  set ret [lindex $argv 0]
+  set argv [lrange $argv 1 end]
+  return $ret
+}
+
 proc optB {_argv opt {def 0}} {
   upvar $_argv argv
   set IDX 0
@@ -691,198 +701,194 @@ if {!$USE_VB} {
   set env(LNG_LST) [filterGet -not LNG_LST vb]
 }
 
+# set default values
+if {![info exists env(USE_REMOTE)]}	  { set env(USE_REMOTE)	      false	}
+if {![info exists env(TS_DEBUG)]}	  { set env(TS_DEBUG)	      0		}
+if {![info exists env(TS_TIMEOUT)]}	  { set env(TS_TIMEOUT)	      20	}
+if {![info exists env(TS_SETUP)]}	  { set env(TS_SETUP)	      false	}
+if {![info exists env(TS_HOST)]}	  { set env(TS_HOST)	      localhost	}
+if {![info exists env(TS_PORT)]}	  { set env(TS_PORT)	      PORT	}
+if {![info exists env(TS_FILE)]}	  { set env(TS_FILE)	      FILE	}
+if {![info exists env(TS_PID)]}		  { set env(TS_PID)	      PID	}
+if {![info exists env(TS_MAX)]}		  { set env(TS_MAX)	      -1	}
+if {![info exists env(TS_STARTUP_AS)]}	  { set env(TS_STARTUP_AS)    NO	}
+if {![info exists env(PAR_LST)]}	  { set env(PAR_LST)	      0		}
+if {[info exists env(TS_FILTER)]} {
+  if {$env(TS_FILTER) ne "NO"} {
+    set env(TS_FILTER_SERVER)  $env(TS_FILTER)
+    set env(TS_FILTER_CLIENT)  $env(TS_FILTER)
+  }
+} else {
+  set env(TS_FILTER)        NO
+}
+if {![info exists env(TS_FILTER_SERVER)]} { set env(TS_FILTER_SERVER) NO	}
+if {![info exists env(TS_FILTER_CLIENT)]} { set env(TS_FILTER_CLIENT) NO	}
+set TS_HELP_MSGQUE false
+
 # try to analyse the "argv" array
-if {[info exist argv]} {
-    set argv [linsert $argv 0 -verbose {start pass body error}]
-    if {[optB argv --testing]} {
-	lappend argv --only-pipe --only-binary --max 5 --only-num 1
+set args [list -verbose {start pass body error}]
+while {true} {
+  set arg [Pop argv]
+  switch -exact $arg {
+    "--testing"	{
+      set argv [list --only-pipe --only-binary --max 5 --only-num 1 {*}$argv]
     }
-    if {[optB argv --mem-testing]} {
-	lappend argv --only-pipe --only-binary --max 5 
+    "--mem-testing" {
+      set argv [list --only-pipe --only-binary --max 5 {*}$argv]
     }
-    if {[optB argv --full-testing]} {
-	lappend argv --only-binary --max 5 
+    "--full-testing" {
+      set argv [list --only-binary --max 5 {*}$argv]
     }
-    if {[optB argv --thread-testing]} {
-	lappend argv --only-binary --max 5 --only-thread --only-tcp
+    "--thread-testing" {
+      set argv [list --only-binary --max 5 --only-thread --only-tcp {*}$argv]
     }
-    if {[optB argv --fork-testing]} {
-	lappend argv --only-binary --max 5 --only-fork --only-uds
+    "--fork-testing" {
+      set argv [list --only-binary --max 5 --only-fork --only-uds {*}$argv]
     }
-    if {[optB argv --spawn-testing]} {
-	lappend argv --only-binary --max 5 --only-spawn --only-tcp
+    "--spawn-testing" {
+      set argv [list --only-binary --max 5 --only-spawn --only-tcp {*}$argv]
     }
-    if {[optB argv --remote-testing]} {
-	lappend argv --only-tcp --port 7777 --only-binary --use-remote --max 5
+    "--remote-testing" {
+      set argv [list --only-tcp --port 7777 --only-binary --use-remote --max 5 {*}$argv]
     }
-    if {![info exist env(USE_REMOTE)]} {
-	set env(USE_REMOTE) [optB argv --use-remote]
+    "--use-remote" {
+      set env(USE_REMOTE) true
     }
-    if {![info exist env(TS_DEBUG)]} {
-	set env(TS_DEBUG)   [optV argv --debug 0]
+    "--debug" {
+      set env(TS_DEBUG)	  [Pop argv]
     }
-    if {![info exists env(TS_TIMEOUT)]} {
-	set env(TS_TIMEOUT) [optV argv --timeout 20]
+    "--timeout" {
+      set env(TS_TIMEOUT) [Pop argv]
     }
-    if {![info exist env(TS_SETUP)]} {
-	set env(TS_SETUP)   [optB argv --setup]
+    "--setup" {
+      set env(TS_SETUP)	  true
     }
-    if {![info exists env(TS_HOST)]} {
-	set env(TS_HOST)    [optV argv --host localhost]
+    "--host" {
+      set env(TS_HOST)	  [Pop argv]
     }
-    if {![info exists env(TS_PORT)]} {
-	set env(TS_PORT)    [optV argv --port PORT]
+    "--port" {
+      set env(TS_PORT)	  [Pop argv]
     }
-    if {![info exists env(TS_FILE)]} {
-	set env(TS_FILE)    [optV argv --file FILE]
+    "--file" {
+      set env(TS_FILE)	  [Pop argv]
     }
-    if {![info exists env(TS_PID)]} {
-	set env(TS_PID)	    [optV argv --pid PID]
+    "--pid" {
+      set env(TS_PID)	  [Pop argv]
     }
-    if {![info exists env(TS_MAX)]} {
-	set env(TS_MAX)	    [optV argv --max -1]
+    "--max" {
+      set env(TS_MAX)	  [Pop argv]
     }
-    if {[info exists env(TS_FILTER)]} {
-	if {$env(TS_FILTER) ne "NO"} {
-	  set env(TS_FILTER_SERVER)  $env(TS_FILTER)
-	  set env(TS_FILTER_CLIENT)  $env(TS_FILTER)
-	}
-    } else {
-	set env(TS_FILTER)  [optV argv --filter NO]
+    "--filter" {
+      set env(TS_FILTER)  [Pop argv]
     }
-    if {![info exists env(TS_FILTER_SERVER)]} {
-	set env(TS_FILTER_SERVER)  [optV argv --filter-server NO]
+    "--filter-server" {
+      set env(TS_FILTER_SERVER)  [Pop argv]
     }
-    if {![info exists env(TS_FILTER_CLIENT)]} {
-	set env(TS_FILTER_CLIENT)  [optV argv --filter-client NO]
+    "--filter-client" {
+      set env(TS_FILTER_CLIENT)  [Pop argv]
     }
-
-    if {[optB argv --only-string]} {
-	set env(BIN_LST) string
-    } elseif {[optB argv --only-binary]} {
-	set env(BIN_LST) binary
+    "--only-string" -
+    "--only-binary" {
+      set env(BIN_LST) [string range $arg 7 end]
     }
-
-    ## reduce the possibilities based on the final "SRV_LST"
-    set env(SRV_LST) [optV argv --server $env(SRV_LST)]
-
-    # choose the programming-language
-    if {[optB argv --only-c]} {
-      set env(LNG_LST) c
-    } elseif {[optB argv --only-tcl]} {
-      set env(LNG_LST) tcl
-    } elseif {[optB argv --only-java]} {
-      set env(LNG_LST) java
-    } elseif {[optB argv --only-csharp]} {
-      set env(LNG_LST) csharp
-    } elseif {[optB argv --only-vb]} {
-      set env(LNG_LST) vb
-    } elseif {[optB argv --only-python]} {
-      set env(LNG_LST) python
-    } elseif {[optB argv --only-perl]} {
-      set env(LNG_LST) perl
-    } elseif {[optB argv --only-cc]} {
-      set env(LNG_LST) cc
+    "--server" {
+      set env(SRV_LST) [Pop argv]
     }
-    set env(SRV_LST) [filterGet SRV_LST "(^[join $env(LNG_LST) |]\[.].*)"]
-
-    # filter COM_LST (and SRV_LST too)
-    if {[optB argv --only-uds]} {
-      set env(COM_LST) uds
-    } elseif {[optB argv --only-pipe]} {
-      set env(COM_LST) pipe
-    } elseif {[optB argv --only-tcp]} {
-      set env(COM_LST) tcp
+    "--only-c" -
+    "--only-tcl" -
+    "--only-java" -
+    "--only-csharp" -
+    "--only-vb" -
+    "--only-python" -
+    "--only-perl" -
+    "--only-cc" {
+      set T		[string range $arg 7 end]
+      set env(LNG_LST)	$T
+      set env(SRV_LST)	[filterGet SRV_LST "\\m$T\\M"]
     }
-
-    set env(SRV_LST) [filterGet SRV_LST "([join $env(COM_LST) |])"]
-
-    # filter SRV_LST
-    if {[optB argv --only-fork]} {
-      set env(START_LST) [filterGet START_LST fork]
-      set env(SRV_LST)   [filterGet SRV_LST fork]
-    } elseif {[optB argv --only-thread]} {
-      set env(START_LST) [filterGet START_LST thread]
-      set env(SRV_LST)   [filterGet SRV_LST thread]
-    } elseif {[optB argv --only-spawn]} {
-      set env(START_LST) [filterGet START_LST spawn]
-      set env(SRV_LST)   [filterGet SRV_LST spawn]
+    "--only-uds" -
+    "--only-pipe" -
+    "--only-tcp" {
+      set T		[string range $arg 7 end]
+      set env(COM_LST)	$T
+      set env(SRV_LST)	[filterGet SRV_LST $T]
     }
-
-    # filter SRV_LST
-    if {![info exist env(TS_STARTUP_AS)]} {
-      if {[optB argv --use-fork]} {
-	set env(START_LST) [filterGet START_LST fork]
-	set env(TS_STARTUP_AS) --fork
-      } elseif {[optB argv --use-thread]} {
-	set env(START_LST) [filterGet START_LST thread]
-	set env(TS_STARTUP_AS) --thread
-      } elseif {[optB argv --use-spawn]} {
-	set env(START_LST) [filterGet START_LST spawn]
-	set env(TS_STARTUP_AS) --spawn
-      } else {
-	set env(TS_STARTUP_AS) NO
-      }
+    "--only-fork" -
+    "--only-thread" -
+    "--only-spawn" {
+      set T		  [string range $arg 7 end]
+      set env(START_LST)  [filterGet START_LST $T]
+      set env(SRV_LST)	  [filterGet SRV_LST $T]
     }
-
-    # delete everything from COM_LST which doesn't belongs to SRV_LST
-    if {![llength [filterGet SRV_LST pipe]]} {
-      ## without "pipe" in "SRV_LST" we don't need "pipe" in "COM_LST"
-      set env(COM_LST) [filterGet -not COM_LST pipe]
+    "--use-fork" -
+    "--use-thread" -
+    "--use-spawn" {
+      set T		      [string range $arg 6 end]
+      set env(START_LST)      [filterGet START_LST $T]
+      set env(TS_STARTUP_AS)  --$T
     }
-
-    # set parent/child depth
-    if {![info exists env(PAR_LST)]} {
-	set env(PAR_LST) [optV argv --only-num 0]
+    "--only-num"  {
+      set env(PAR_LST)	[Pop argv]
     }
-
-    # print the help
-    if {[optB argv -h] || [optB argv --help]} {
-	puts "USAGE [file tail $argv0]: OPTIONS ...."
-	puts ""
-	puts " testing ARRAGEMENTS"
-	puts "  LANG = c|cc|tcl|java|python|csharp|perl|vb"
-	puts "  ........................................... programming-language"
-	puts "  COM  = pipe|uds|tcp ....................... communication-layer"
-	puts "  TYPE = string|binary ...................... package-type"
-	puts "  MODE = fork|thread|spawn .................. startup-mode"
-	puts ""
-	puts " testing OPTIONS"
-	puts "  --only-TYPE ...... only use 'package-type' for testing"
-	puts "  --only-COM ....... only use 'communication-layer' for testing"
-	puts "  --only-LANG ...... only use 'programming-language' for testing"
-	puts "  --only-MODE ...... only use 'startup-mode' for server+pipe starup"
-	puts "  --use-MODE ....... only use 'startup-mode' for server startup"
-	puts ""
-	puts "  --only-num # ..... test only with parent/child number #"
-	puts "  --use-remote ..... use remote server for tcp/udp connection"
-	puts "  --max # .......... set the maximun of allowed processes to #"
-	puts "  --debug # ........ set debug level between 0 and 9"
-	puts "  --host STR ....... use host as TCP/IP connection host"
-	puts "  --port # or STR .. use port as TCP/IP connection port"
-	puts "  --file STR ....... use file as Unix Domain Socket connection file"
-	puts "  --pid STR ........ use file as --daemon pid file"
-	puts "  --server LANG.COM(.MODE) ... only use this server"
-	puts "  --setup .......... print additional setup information"
-	puts "  --filter exec .... use 'exec' as filter"
-	puts "  --help-msgque .... get libmsgque specific help"
-	puts "  --help / -h ...... get help"
-	puts ""
-	puts " compound OPTIONS"
-	puts "  --testing  ....... --only-binary --only-pipe --max 5 --only-num 1"
-	puts "  --mem-testing .... --only-binary --only-pipe --max 5"
-	puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
-	puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
-	puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
-	puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
-	exit 1
+    "-h" -
+    "--help" {
+      puts "USAGE [file tail $argv0]: OPTIONS ...."
+      puts ""
+      puts " testing ARRAGEMENTS"
+      puts "  LANG = c|cc|tcl|java|python|csharp|perl|vb"
+      puts "  ........................................... programming-language"
+      puts "  COM  = pipe|uds|tcp ....................... communication-layer"
+      puts "  TYPE = string|binary ...................... package-type"
+      puts "  MODE = fork|thread|spawn .................. startup-mode"
+      puts ""
+      puts " testing OPTIONS"
+      puts "  --only-TYPE ...... only use 'package-type' for testing"
+      puts "  --only-COM ....... only use 'communication-layer' for testing"
+      puts "  --only-LANG ...... only use 'programming-language' for testing"
+      puts "  --only-MODE ...... only use 'startup-mode' for server+pipe starup"
+      puts "  --use-MODE ....... only use 'startup-mode' for server startup"
+      puts ""
+      puts "  --only-num # ..... test only with parent/child number #"
+      puts "  --use-remote ..... use remote server for tcp/udp connection"
+      puts "  --max # .......... set the maximun of allowed processes to #"
+      puts "  --debug # ........ set debug level between 0 and 9"
+      puts "  --host STR ....... use host as TCP/IP connection host"
+      puts "  --port # or STR .. use port as TCP/IP connection port"
+      puts "  --file STR ....... use file as Unix Domain Socket connection file"
+      puts "  --pid STR ........ use file as --daemon pid file"
+      puts "  --server LANG.COM(.MODE) ... only use this server"
+      puts "  --setup .......... print additional setup information"
+      puts "  --filter exec .... use 'exec' as filter"
+      puts "  --help-msgque .... get libmsgque specific help"
+      puts "  --help / -h ...... get help"
+      puts ""
+      puts " compound OPTIONS"
+      puts "  --testing  ....... --only-binary --only-pipe --max 5 --only-num 1"
+      puts "  --mem-testing .... --only-binary --only-pipe --max 5"
+      puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
+      puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
+      puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
+      puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
+      exit 1
     }
-    set TS_HELP_MSGQUE [optB argv --help-msgque]
+    "--help-msgque" {
+      set TS_HELP_MSGQUE true
+    }
+    default {
+      lappend args $arg
+    }
+  }
 } ;# no argv
+
+# delete everything from COM_LST which doesn't belongs to SRV_LST
+if {![llength [filterGet SRV_LST pipe]]} {
+  ## without "pipe" in "SRV_LST" we don't need "pipe" in "COM_LST"
+  set env(COM_LST) [filterGet -not COM_LST pipe]
+}
 
 package require tcltest
 namespace import -force ::tcltest::*
-configure {*}$::argv
+configure {*}$::args
 
 ## some basic restrictions
 testConstraint local [expr {$env(USE_REMOTE) ? no : yes}]
