@@ -251,7 +251,7 @@ pIoSelect (
   fd_set *fds, *readfds = NULL, *writefds = NULL;
 
   if (sock < 0)
-    return MQ_CONTINUE;	    // nothing found
+    return MqErrorSetCONTINUE(io->context);	    // nothing found
 
   fds = &io->fdset;
 
@@ -861,4 +861,5 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
 

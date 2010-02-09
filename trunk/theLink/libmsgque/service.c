@@ -155,7 +155,7 @@ sMqEventStart (
   // ##################### READ HEADER #####################
   switch (pReadHDR (context, &a_context)) {
     case MQ_OK:	      break;
-    case MQ_CONTINUE: return MQ_OK;
+    case MQ_CONTINUE: return MqErrorReset(context);
     case MQ_ERROR:    goto error;
   }
 
@@ -240,6 +240,7 @@ MqProcessEvent (
   context->refCount++;
   MqErrorReset(context);
   do {
+    MqErrorReset(context);
     // ################ CHECK TO BE READABLE ##################
     if (once) {
       switch (pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
@@ -250,11 +251,7 @@ MqProcessEvent (
     }
 
     // ##################### Process Events #####################
-    switch (pMqSelectStart(context, &tv, sMqEventStart)) {
-      case MQ_OK:	  break;
-      case MQ_CONTINUE:	  continue;
-      case MQ_ERROR:	  goto error;
-    }
+    MqErrorCheck (pMqSelectStart(context, &tv, sMqEventStart));
 
     // clean up delete objects
     if (forever) GcRun (context);
@@ -272,8 +269,4 @@ error:
 }
 
 END_C_DECLS
-
-
-
-
 

@@ -335,7 +335,7 @@ pReadHDR (
     // original context
     context = context->link.ctxIdP->link.ctxIdA[ctxId];
     // check if entry was already deleted
-    if (!context) return MQ_CONTINUE;
+    if (!context) return MqErrorSetCONTINUE(context);
     *a_context = context;
   }
 //MqDLogX (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
@@ -922,6 +922,7 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
 
 
 

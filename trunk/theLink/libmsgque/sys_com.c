@@ -315,11 +315,11 @@ SysSelect (
   switch (ret) {
     case 0:
       // return "MQ_CONTINUE" on timeout
-      return MQ_CONTINUE;
+      return MqErrorSetCONTINUE(context);
     case SOCKET_ERROR:
       switch (sSysGetErrorNum) {
 	case WIN32_WSA (EINTR):
-          return MQ_CONTINUE;
+          return MqErrorSetCONTINUE(context);
 	case WIN32_WSA (EBADF): {
 	  // check all sockets's to get the bad one
 	  MQ_SOCK i;
@@ -353,7 +353,7 @@ SysSelect (
 	      return MqErrorCreateEXIT (context);
 	    } else {
 	      pIoCloseSocket (sockmq->link.io, __func__);
-	      return MQ_CONTINUE;
+	      return MqErrorSetCONTINUE(context);
 	    }
 	  }
 	  // ok, more than one socket check every socket
@@ -361,13 +361,11 @@ SysSelect (
 	    if (!FD_ISSET(i,fds)) continue;
 	    FD_ZERO (&fd_test);
 	    FD_SET (i, &fd_test);
-	    switch(SysSelect(context,i+1,read_test,write_test,&timeout)) {
-	      case MQ_OK:	break;
-	      case MQ_CONTINUE:	break;
-	      case MQ_ERROR:	return MQ_ERROR;
+	    if (MqErrorCheckI (SysSelect(context,i+1,read_test,write_test,&timeout))) {
+	      return MQ_ERROR;
 	    }
 	  }
-	  return MQ_CONTINUE;
+	  return MqErrorSetCONTINUE(context);
 	}
 	default:
           return sSysMqErrorMsg (context, __func__, "select");
@@ -472,6 +470,7 @@ SysSend (
 	    case MQ_OK:
 	      break;
 	    case MQ_CONTINUE:
+	      MqErrorReset(context);
 	      trycount -= 1;
 	      continue; // with "do" loop
 	    case MQ_ERROR:
@@ -705,6 +704,7 @@ error:
 }
 
 END_C_DECLS
+
 
 
 

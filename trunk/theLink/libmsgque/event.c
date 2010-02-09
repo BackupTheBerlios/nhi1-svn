@@ -238,7 +238,7 @@ pEventCheck (
 
   // are sockets available? if not do nothing
   if (event == NULL || event->fdmax < 0)
-    return MQ_CONTINUE;
+    return MqErrorSetCONTINUE(context);
 
   // fill fd_set for use in 'select'
   memcpy (&fds, &event->fdset, sizeof (fd_set));
@@ -288,7 +288,7 @@ pEventStart (
 
   // are sockets available? if not do nothing
   if (!event || event->fdmax < 0)
-    return MQ_CONTINUE;
+    return MqErrorSetCONTINUE(context);
 
   // fill fd_set for use in 'select'
   fds = event->fdset;
@@ -549,4 +549,5 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 

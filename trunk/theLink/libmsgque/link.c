@@ -639,15 +639,9 @@ MqLinkConnect (
     // connect child's
     for (child = context->link.childs; child != NULL; child=child->right) {
       struct MqS *cldCtx = child->context;
-      switch (MqLinkConnect (cldCtx)) {
-	case MQ_OK:
-	  break;
-	case MQ_CONTINUE:
-	  break;
-	case MQ_ERROR:
-	  MqErrorCopy(context, cldCtx);
-	  goto error;
-	  break;
+      if (MqErrorCheckI (MqLinkConnect (cldCtx))) {
+	MqErrorCopy(context, cldCtx);
+	goto error;
       }
     }
 

@@ -225,6 +225,20 @@ C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkC
 
     SetConstraints 1 binary $S
 
+test client-6g-($S) {client/server full test} \
+    -constraints  pipe \
+    -body    { Exec {*}[getClient client] --name client --all --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -match   glob \
+    -result  {NONE--C> (client:*:*) \[*] \[0-0-0-*-main]: start: --------------------------------------
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:                      MqSendEND:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:         MqSendEND_AND_CALLBACK:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:             MqSendEND_AND_WAIT:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:                  parent create:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:                  parent delete:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:                   child create:*
+C> (client:*:*) \[*] \[0-0-0-*-statistics]:                   child delete:*
+C> (client:*:*) \[*] \[0-0-0-*-main]: end: ----------------------------------------}
+
 	test client-7-($S) {check startup error} \
 	    -constraints    {tcp} \
 	    -body       {Exec {*}[getServer $S] --name server --tcp} \

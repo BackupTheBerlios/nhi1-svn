@@ -118,7 +118,8 @@ sCallEventProc (
 	case MQ_OK:
 	  break;
 	case MQ_CONTINUE:
-	    CONTINUE++;
+	  CONTINUE++;
+	  MqErrorReset(context);
 	  break;
 	case MQ_ERROR:
 	  MqErrorCopy(context, cldCtx);
@@ -167,6 +168,7 @@ pWaitOnEvent (
 
   MqDLogCL(context,6,"START loop\n");
   do {
+    MqErrorReset(context);
 
     // 1. test on 'select'
     switch (pIoSelectAll (context->link.io, what, &tv)) {
@@ -203,7 +205,7 @@ pWaitOnEvent (
       // -> let upper code decide what to do
       if (!pTokenCheck(context->link.srvT,"____")) {
         //pDLog(context,7,"fEvent in<%p>, token<%s>\n", msgque, pTokenGetCurrent(context->link.srvT));
-        return MQ_CONTINUE;
+        return MqErrorSetCONTINUE(context);
       }
     }
 
@@ -424,5 +426,6 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
 
 

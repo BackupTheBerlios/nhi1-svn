@@ -222,7 +222,7 @@ SysStat (
 {
   if (unlikely (stat (file, st) == -1)) {
     if (!context || errno == ENOENT) {
-      return MQ_CONTINUE;
+      return MqErrorSetCONTINUE(context);
     } else {
       return MqErrorSys(stat);
     }
@@ -936,5 +936,6 @@ void SysAbort (
 }
 
 END_C_DECLS
+
 
 

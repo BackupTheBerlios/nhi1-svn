@@ -580,7 +580,7 @@ error1:
             "unknown Mq-System-Token \"%s\" found", context->link.srvT->current);
   }
 
-  return MQ_CONTINUE;
+  return MqErrorSetCONTINUE(context);
 error:
   return MqErrorStack (context);
 }
@@ -618,6 +618,7 @@ pTokenCheck (
 }
 
 END_C_DECLS
+
 
 
 

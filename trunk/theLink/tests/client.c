@@ -184,7 +184,6 @@ ClientMain (
   MqDLogC (mqctx, 0, "start: --------------------------------------\n");
 
   if (sendB) {
-
     // if necessary apply the default number of transactions
     MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
 
@@ -232,7 +231,6 @@ ClientMain (
   } /* finish the MqSendEND test */
 
   if (sendAndCall) {
-
     // if necessary apply the default number of transactions
     MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
 

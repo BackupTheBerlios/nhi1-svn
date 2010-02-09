@@ -306,9 +306,11 @@ MqErrorReset (
   struct MqS * const context
 )
 {
-  pErrorReset(context);
-  if (context->config.master != NULL)
-    MqErrorReset(context->config.master);
+  if (context->error.code != MQ_OK) {
+    pErrorReset(context);
+    if (context->config.master != NULL)
+      MqErrorReset(context->config.master);
+  }
   return MQ_OK;
 }
 
@@ -354,9 +356,11 @@ MqErrorSetCONTINUE (
   struct MqS * const context
 )
 {
-  MqDLogC(context,4,"set CONTINUE\n");
-  context->error.code = MQ_CONTINUE;
-  context->error.errctx = context;
+  if (context->error.code != MQ_CONTINUE) {
+    MqDLogC(context,4,"set CONTINUE\n");
+    context->error.code = MQ_CONTINUE;
+    context->error.errctx = context;
+  }
   return MQ_CONTINUE;
 }
 
@@ -368,7 +372,7 @@ MqErrorCreateEXITP (
 {
   if (context->setup.ignoreExit == MQ_YES) {
     MqDLogV(context, 3, "%s - ignore EXIT\n", prefix);
-    return MQ_CONTINUE;
+    return MqErrorSetCONTINUE(context);
   } else {
     MqDLogV(context, 3, "called from %s\n", prefix);
     context->link.bits.requestExit = MQ_YES;
@@ -477,5 +481,6 @@ MqErrorLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
