@@ -193,8 +193,7 @@ pGcCreate (
     // ATTENTION: we don't check on double insert !!
     sysgc->DataL[sysgc->DataLCur] = context;
 
-    MqDLogV(context,4,"TSD-Id<%p>, Thread-Id<0x%lx>, DataLCur<%i>\n", sysgc, 
-	(long unsigned int)MqThreadSelf(), sysgc->DataLCur);
+    MqDLogV(context,4,"TSD-Id<%p>, DataLCur<%i>\n", sysgc, sysgc->DataLCur);
 
     // report gc back
     context->gc = sysgc;
@@ -212,7 +211,7 @@ pGcDelete (
     return;
   } else {
     struct MqGcS * const sysgc = context->gc;
-    sysgc->DataL[sysgc->DataLCur] = context;
+    sysgc->DataL[context->gcid] = NULL;
     context->gcid = 0;
     context->gc = NULL;
   }

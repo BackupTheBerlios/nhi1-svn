@@ -204,7 +204,7 @@ pEventAdd (
       context->link.io->sockP = sockP;
     }
 
-    MqDLogV(context,4,"event<%p> sock<%i> DataLCur<%i>\n", event, sock, event->DataLCur);
+    MqDLogV(context,4,"TLS-Id<%p> Socket<%i> DataLCur<%i>\n", event, sock, event->DataLCur);
 
     event->DataLCur++;
 
@@ -400,7 +400,7 @@ pEventCreate (
   if (likely (eventP != NULL))
     *eventP = sysevent;
 
-  MqDLogV(context,4,"TSD-Id<%p>, Thread-Id<0x%lx>\n", (void*)sysevent, (long unsigned int)MqThreadSelf());
+  MqDLogV(context,4,"TLS-Id<%p>\n", (void*)sysevent);
 
 error:
   return MqErrorStack(context);

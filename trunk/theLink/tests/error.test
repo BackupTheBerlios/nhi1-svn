@@ -43,7 +43,7 @@ if {[info exists env(TS_LIBRARY)]} {
 
 test error-1-($I|$B|$C|$S) {fatal error} \
     -setup          { 
-      Setup $I $B $C $S --bgerror RET_BG 
+      Setup $I $B $C $S --bgerror RET_BG --server-silent
     } \
     -constraints    { c } \
     -cleanup	    { Cleanup } \

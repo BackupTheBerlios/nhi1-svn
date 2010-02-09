@@ -144,22 +144,23 @@ set io  Pipe
 ## option procs
 ## 
 
-proc optB {_argv opt} {
-    upvar $_argv argv
-    if {[set IDX [lsearch -exact $argv $opt]] != -1} {
-	set argv    [lreplace $argv $IDX $IDX]
-	return 1
-    } else {
-	return 0
-    }
+proc optB {_argv opt {def 0}} {
+  upvar $_argv argv
+  set IDX 0
+  while {[set IDX [lsearch -start $IDX -exact $argv $opt]] != -1} {
+    set argv  [lreplace $argv $IDX $IDX]
+    set def   1
+  }
+  return $def
 }
 
 proc optV {_argv opt {def ""}} {
   upvar $_argv argv
-  if {[set IDX [lsearch -exact $argv $opt]] != -1} {
-    set IDX2    [expr {$IDX+1}]
-    set def	[lindex $argv $IDX2]
-    set argv    [lreplace $argv $IDX $IDX2]
+  set IDX 0
+  while {[set IDX [lsearch -start $IDX -exact $argv $opt]] != -1} {
+    set IDX2  [expr {$IDX+1}]
+    set def   [lindex $argv $IDX2]
+    set argv  [lreplace $argv $IDX $IDX2]
   }
   return $def
 }

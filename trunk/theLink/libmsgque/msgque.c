@@ -314,7 +314,7 @@ MqExitP (
 
     context->link.bits.onExit = MQ_YES;
     context->setup.ignoreExit = MQ_NO;
-    MqDLogV(context,3,"call EXIT from %s\n", prefix);
+    MqDLogV(context,3,"called from '%s'\n", prefix);
 
     // switch to parent
     if (MQ_IS_CHILD(context)) {
