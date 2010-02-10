@@ -987,7 +987,7 @@ MqLinkDelete (
   }
 }
 
-MQ_BOL
+int
 MqLinkIsConnected (
   struct MqS const * const context
 )
@@ -1003,7 +1003,7 @@ MqLinkGetParent (
   return MqLinkGetParentI(context);
 }
 
-MQ_BOL
+int
 MqLinkIsParent (
   struct MqS const * const context
 )

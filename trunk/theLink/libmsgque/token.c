@@ -559,7 +559,7 @@ error1:
       switch (*curr) {
         case 'H':		// _SHD: SERVER shutdown request from remote Mq
 	  // delete link, but without memory free
-	  if (context->link.bits.onExit == MQ_NO) {
+	  if (context->bits.onExit == MQ_NO) {
 	    if (context->setup.ignoreExit == MQ_NO) {
 	      context->refCount++;
 	      MqLinkDelete(context);

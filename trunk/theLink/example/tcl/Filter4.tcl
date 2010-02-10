@@ -27,7 +27,8 @@ proc LOGF {ctx} {
     $ftr SendC $file
     $ftr SendEND_AND_WAIT "LOGF"
   } else {
-    $ftr dict set FH [open $file a]
+    set FH [open $file a]
+    $ftr dict set FH $FH
   }
   $ctx SendRETURN
 }
@@ -58,8 +59,11 @@ proc FilterSetup {ctx} {
 }
 
 proc FilterCleanup {ctx} {
+  set ftr [$ctx ServiceGetFilter]
+  set FH  [$ftr dict get FH]
   $ctx dict unset Itms
-  close [$ctx ServiceGetFilter] dict unset FH]
+  $ctx dict unset FH
+  if {$FH ne ""} {close $FH}
 }
 
 proc FilterEvent {ctx} {

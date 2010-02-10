@@ -56,8 +56,8 @@ sGcDeleteAll (
   for (i=0; i<gc->DataLCur; i++) {
     struct MqS *context = gc->DataL[i];
     if (context != NULL) {
-      MqDLogC(context,4,"FORCE delete\n");
-      context->refCount = 0;
+      MqDLogC(context,8,"FORCE delete\n");
+      context->bits.onExit = MQ_YES;
       MqContextDelete (&context);
     }
   }
@@ -72,15 +72,15 @@ GcRun (
   if (sysgc != NULL) {
     MQ_INT MqSetDebugLevel(context);
     MQ_SIZE i;
-    MqDLogCL(context,5,"GC-START\n");
+    MqDLogCL(context,8,"START\n");
     for (i=0; i<sysgc->DataLCur; i++) {
       struct MqS *ctx = sysgc->DataL[i];
-      if (ctx != NULL && ctx->refCount != 0) {
-	MqDLogC(ctx,6,"GC_DELETE\n");
+      if (ctx != NULL && ctx->refCount == 0) {
+	MqDLogC(ctx,8,"CLEANUP\n");
 	MqContextDelete (&ctx);
       }
     }
-    MqDLogCL(context,5,"GC-END\n");
+    MqDLogCL(context,8,"END\n");
   }
 }
 
@@ -318,7 +318,7 @@ MqContextDelete (
   *contextP = NULL;
   if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) {
     return;
-  } else if (context->refCount) {
+  } else if (context->refCount && context->bits.onExit == MQ_NO) {
     // check on "bits.deleteProtection"
     MqDLogC(context,3,"DELETE protection\n");
     pGcCreate (context);
@@ -871,7 +871,7 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_BOL
+int
 MqConfigGetIsServer (
   struct MqS const * const context
 )
@@ -879,7 +879,7 @@ MqConfigGetIsServer (
   return MQ_IS_SERVER(context);
 }
 
-MQ_BOL
+int
 MqConfigGetIsString (
   struct MqS const * const context
 )
@@ -887,7 +887,7 @@ MqConfigGetIsString (
   return (context->config.isString == MQ_YES);
 }
 
-MQ_BOL
+int
 MqConfigGetIsSilent (
   struct MqS const * const context
 )
@@ -895,7 +895,7 @@ MqConfigGetIsSilent (
   return (context->config.isSilent == MQ_YES);
 }
 
-MQ_BOL
+int
 MqConfigGetIsDupAndThread (
   struct MqS const * const context
 )

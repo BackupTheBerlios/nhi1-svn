@@ -351,8 +351,6 @@ struct MqLinkS {
   /// \brief bit-field to represent the boolean values
   struct {
     MQ_BOL endian	      : 1 ; ///< a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
-    MQ_BOL requestExit	      : 1 ; ///< an exit was requested.
-    MQ_BOL onExit	      : 1 ; ///< is already an "exit" ongoing?
     MQ_BOL onCreateStart      : 1 ; ///< Start "MqLinkCreate"
     MQ_BOL onCreateEnd	      : 1 ; ///< End "MqLinkCreate"
     MQ_BOL onDelete	      :	1 ; ///< is already a "delete" ongoing?
@@ -1150,7 +1148,7 @@ MQ_DECL MqConfigSetDaemon (
  *  \context
  *  \return the <TT>(context->setup.isServer == MQ_YES)</TT> value
  */
-MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsServer (
+MQ_EXTERN int MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1158,7 +1156,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsServer (
  *  \context
  *  \return the <TT>(context->config.isString == MQ_YES)</TT> value
  */
-MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsString (
+MQ_EXTERN int MQ_DECL MqConfigGetIsString (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1166,7 +1164,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsString (
  *  \context
  *  \return the <TT>(context->config.isSilent == MQ_YES)</TT> value
  */
-MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsSilent (
+MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1182,7 +1180,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetDoFactoryCleanup (
  *  \context
  *  \return the <TT>((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_IS_THREAD))</TT> value
  */
-MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsDupAndThread (
+MQ_EXTERN int MQ_DECL MqConfigGetIsDupAndThread (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1400,6 +1398,7 @@ struct MqS {
     MQ_BOL MqContextDelete_LOCK :1; ///< protect MqContextDelete against double-call
     MQ_BOL MqContextFree_LOCK	:1; ///< protect MqContextFree against double-call
     MQ_BOL EventProc_LOCK	:1; ///< protect sCallEventProc against double-call
+    MQ_BOL onExit	        :1; ///< is already an "exit" ongoing?
   } bits;			    ///< boolean bit-fields
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object
@@ -1690,7 +1689,7 @@ MQ_EXTERN void MQ_DECL MqLinkDelete (
 /// .
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsConnected (
+MQ_EXTERN int MQ_DECL MqLinkIsConnected (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
@@ -1713,12 +1712,12 @@ static mq_inline struct MqS * MqLinkGetParentI (
 /// \details A \e context is a \e parent-context if it was created with \RNSA{LinkCreate}
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsParent (
+MQ_EXTERN int MQ_DECL MqLinkIsParent (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
 /// \copydoc MqLinkIsParent
-static mq_inline MQ_BOL MqLinkIsParentI (
+static mq_inline int MqLinkIsParentI (
   struct MqS const * const ctx
 )
 {
@@ -1833,7 +1832,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
 /// or can be \e without-transaction (return \no if the package was send with \RNSA{SendEND})
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN MQ_BOL
+MQ_EXTERN int
 MQ_DECL MqServiceIsTransaction (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
@@ -3176,11 +3175,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCreateEXITP (
 /// \brief wrapper to add trace-back information
 #define MqErrorCreateEXIT(ctx) MqErrorCreateEXITP(ctx,__func__)
 
-/// \brief delete the application exit flag
-MQ_EXTERN enum MqErrorE MQ_DECL MqErrorDeleteEXIT (
-  struct MqS * const context
-);
-
 /// \brief check if context is on \e exit, return \yes or \no
 /// \details An \e EXIT-return-code is set to signal a fatal error
 /// which require an \e application-exit. The \e only source
@@ -3200,8 +3194,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorDeleteEXIT (
 /// } 
 /// \endcode
 /// \endif
+MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
+  struct MqS * const context
+);
 
-MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
+/// \brief clenup an \e exit-error
+MQ_EXTERN enum MqErrorE MqErrorDeleteEXIT (
   struct MqS * const context
 );
 
@@ -3923,12 +3921,12 @@ static mq_inline struct MqS* MqSlaveGetMasterI (
 /// \brief is the \e context a \e slave-context ?
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN MQ_BOL MQ_DECL MqSlaveIs (
+MQ_EXTERN int MQ_DECL MqSlaveIs (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
 /// \copydoc MqSlaveIs
-static mq_inline MQ_BOL MqSlaveIsI (
+static mq_inline int MqSlaveIsI (
   struct MqS const * const ctx
 )
 {

@@ -101,6 +101,7 @@ sCallEventProc (
 	if (context->link.bits.onShutdown == MQ_YES || context->link.bits.isConnected == MQ_NO) {
 	  CONTINUE++;
 	}
+	MqErrorReset(context);
 	break;
       case MQ_ERROR:
 	context->bits.EventProc_LOCK = MQ_NO;
@@ -118,6 +119,7 @@ sCallEventProc (
 	  break;
 	case MQ_CONTINUE:
 	  CONTINUE++;
+	  MqErrorReset(cldCtx);
 	  break;
 	case MQ_ERROR:
 	  MqErrorCopy(context, cldCtx);
@@ -298,7 +300,7 @@ MqExitP (
   if (context == NULL) {
     // exit on empty context
     SysExit (0,0);
-  } else if (context->link.bits.onExit == MQ_YES) {
+  } else if (context->bits.onExit == MQ_YES) {
     // no double calling of MqExit
     MqPanicV(MQ_ERROR_PANIC, prefix, MqMessageNum(MQ_ERROR_EXIT),
       "called '%s' for context '%p' twice", __func__, context);
@@ -308,7 +310,7 @@ MqExitP (
     MqExitF exitF;
     MQ_BOL isThread;
 
-    context->link.bits.onExit = MQ_YES;
+    context->bits.onExit = MQ_YES;
     context->setup.ignoreExit = MQ_NO;
     MqDLogV(context,3,"called from '%s'\n", prefix);
 
@@ -317,7 +319,7 @@ MqExitP (
       struct MqS * parent = pMqGetFirstParent(context);
       MqErrorCopy (parent, context);
       context = parent;
-      context->link.bits.onExit = MQ_YES;
+      context->bits.onExit = MQ_YES;
       MqDLogC(context,3,"switch to PARENT\n");
     }
 

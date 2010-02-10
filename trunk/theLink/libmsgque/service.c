@@ -47,7 +47,7 @@ MqServiceGetFilter (
   );
 }
 
-MQ_BOL
+int
 MqServiceIsTransaction (
   struct MqS const * const context
 )

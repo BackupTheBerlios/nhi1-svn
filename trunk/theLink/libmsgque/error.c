@@ -306,12 +306,17 @@ MqErrorReset (
   struct MqS * const context
 )
 {
-  if (context->error.code != MQ_OK) {
-    pErrorReset(context);
-    if (context->config.master != NULL)
-      MqErrorReset(context->config.master);
+  switch (context->error.code) {
+    case MQ_OK: 
+      return MQ_OK;
+    case MQ_CONTINUE: 
+      return context->error.code = MQ_OK;
+    default:
+      pErrorReset(context);
+      if (context->config.master != NULL)
+	MqErrorReset(context->config.master);
+      return MQ_OK;
   }
-  return MQ_OK;
 }
 
 MQ_INT
@@ -356,8 +361,8 @@ MqErrorSetCONTINUE (
   struct MqS * const context
 )
 {
-  MqDLogC(context,4,"done\n");
-  return MQ_CONTINUE;
+  MqDLogC(context, 5, "done\n");
+  return context->error.code = MQ_CONTINUE;
 }
 
 enum MqErrorE
@@ -371,27 +376,24 @@ MqErrorCreateEXITP (
     return MQ_CONTINUE;
   } else {
     MqDLogV(context, 3, "called from %s\n", prefix);
-    context->link.bits.requestExit = MQ_YES;
-    return MqErrorSGenV(context, prefix, MQ_ERROR, MqMessageNum(MQ_ERROR_EXIT), MqMessageText[MQ_ERROR_EXIT]);
+    return MqErrorDb(MQ_ERROR_EXIT);
   }
 }
 
-enum MqErrorE
-MqErrorDeleteEXIT(
-  struct MqS * const context
-)
-{
-  context->link.bits.requestExit = MQ_NO;
-  return MqErrorReset(context);
-}
-
-MQ_BOL
+int
 MqErrorIsEXIT (
   struct MqS * const context
 )
 {
   return (MqMessageNum(MQ_ERROR_EXIT) == context->error.num);
 };
+
+enum MqErrorE MqErrorDeleteEXIT (
+  struct MqS * const context
+)
+{
+  return MqErrorReset(context);
+}
 
 void
 pErrorSync (
