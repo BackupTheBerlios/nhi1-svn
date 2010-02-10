@@ -376,7 +376,7 @@ MqErrorCreateEXITP (
     return MQ_CONTINUE;
   } else {
     MqDLogV(context, 3, "called from %s\n", prefix);
-    return MqErrorDb(MQ_ERROR_EXIT);
+    return MqErrorSGenV(context,prefix,MQ_ERROR,MqMessageNum(MQ_ERROR_EXIT),MqMessageText[MQ_ERROR_EXIT]);
   }
 }
 

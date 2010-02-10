@@ -450,7 +450,7 @@ BG-TEXT-RET:S> (server-Y) \[ErrorSet] this is an error
 BG-TEXT-CODE:NONE
 111-CATCH:1
 111-RET:C> (client-Y) \[SysRecv] application EXIT request*
-111-CODE:TCLMSGQUE 215 3 {C> (client-Y) \[SysRecv] application EXIT request*}
+111-CODE:TCLMSGQUE 215 2 {C> (client-Y) \[SysRecv] application EXIT request*}
 END}
 
 test tcl-client-A-0 {rename cmd hdl} \

@@ -825,17 +825,11 @@ MqSendEND_AND_WAIT (
   endT = time(NULL) + timeout;
   context->link._trans = 0;
   do {
-    switch (MqProcessEvent (context, timeout, MQ_WAIT_ONCE)) {
-      case MQ_OK:
-	timeout = endT - time(NULL);
-	break; 
-      case MQ_ERROR: 
-	pTransPush (trans, transH);
-	goto error; 
-      case MQ_CONTINUE: 
-	pTransPush (trans, transH);
-	return MQ_CONTINUE;
+    if (MqErrorCheckI (MqProcessEvent (context, timeout, MQ_WAIT_ONCE))) {
+      pTransPush (trans, transH);
+      goto error; 
     }
+    timeout = endT - time(NULL);
   }
   while (pTransCheckStart (trans, transH) && timeout > 0);
   context->link._trans = pTransGetLast (trans, transH);

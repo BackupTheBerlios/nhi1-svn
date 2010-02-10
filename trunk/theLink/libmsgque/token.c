@@ -511,28 +511,28 @@ pTokenCheckSystem (
       break;
     case 'O':                  // _OKS: SERVER , CHILD statup OK
       if (MQ_IS_SERVER (context)) {
-	struct MqS * fcontext;
+	struct MqS * childctx;
 	MQ_INT i;
 	// need client-code to handel ContextCreate request
-	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.Factory, &fcontext));
-	pConfigSetParent (fcontext, context);
+	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.Factory, &childctx));
+	pConfigSetParent (childctx, context);
         MqErrorCheck (MqReadI (context, &i));
-	if (i != -1) MqConfigSetDebug(fcontext, i);
+	if (i != -1) MqConfigSetDebug(childctx, i);
         MqErrorCheck (MqReadI (context, &i));
-	if (i) MqConfigSetIsSilent(fcontext, MQ_YES);
+	if (i) MqConfigSetIsSilent(childctx, MQ_YES);
 	if (MqReadItemExists(context)) {
 	  MQ_CST name;
 	  MqErrorCheck (MqReadC (context, &name));
 	  if (MqSlaveGet(context, 0)) {
-	    MqConfigSetSrvName (fcontext, name);
+	    MqConfigSetSrvName (childctx, name);
 	  } else {
-	    MqConfigSetName (fcontext, name);
+	    MqConfigSetName (childctx, name);
 	  }
 	}
-        if (MqErrorCheckI(MqLinkCreate (fcontext, NULL))) {
+        if (MqErrorCheckI(MqLinkCreate (childctx, NULL))) {
 	  // if the error happen !after! fmsgque was created, use this code
-	  MqErrorCopy(context, fcontext);
-	  MqContextDelete(&fcontext);
+	  MqErrorCopy(context, childctx);
+	  MqContextDelete(&childctx);
         }
 error1:
 	MqSendSTART (context);

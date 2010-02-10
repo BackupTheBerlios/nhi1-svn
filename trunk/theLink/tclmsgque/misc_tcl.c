@@ -119,7 +119,7 @@ enum MqErrorE NS(ProcCall) (
   Tcl_DecrRefCount(lobjv[1]);
   Tcl_DecrRefCount(lobjv[0]);
 
-  return ret == TCL_OK ? Tcl_ResetResult(interp),MqErrorGetCodeI(mqctx) : NS(ProcError) (tclctx, "ProcCall");
+  return ret == TCL_OK ? Tcl_ResetResult(interp),MqErrorGetCodeI(mqctx) : NS(ProcError) (tclctx, "ErrorSet");
 }
 
 void NS(ProcFree) (
