@@ -56,7 +56,7 @@ namespace ccmsgque {
   enum MqErrorE MqC::ErrorSet (const exception& e) {
     MqCException const * const  mqex = dynamic_cast<MqCException const * const>(&e);
     if (mqex != NULL) {
-      return MqErrorSet (&context, mqex->num(), mqex->code(), mqex->what());
+      return MqErrorSet (&context, mqex->num(), mqex->code(), mqex->what(), NULL);
     } else {
       return MqErrorC (&context, __func__, -1, e.what());
     }

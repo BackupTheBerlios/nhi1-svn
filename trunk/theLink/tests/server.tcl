@@ -678,7 +678,7 @@ tclmsgque Main {
   if {[catch {
     # create the initial parent-context and wait forever for events
     $srv LinkCreate {*}$argv
-    $srv DLogC "test" 1 "this is the log test\n"
+    $srv LogC "test" 1 "this is the log test\n"
     $srv ProcessEvent -wait FOREVER
   }]} {
     $srv ErrorSet

@@ -633,7 +633,7 @@ MqConfigSetFactory (
   MqTokenDataFreeF  fDeleteFree,
   MqTokenDataCopyF  fDeleteCopy
 ) {
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
+//MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.Factory.Create.data && context->setup.Factory.Create.fFree) {
     (*context->setup.Factory.Create.fFree) (context, &context->setup.Factory.Create.data);
   }
@@ -695,7 +695,7 @@ MqConfigSetSetup (
   MqExitF   fThreadExit
 )
 {
-//MqDLogX(context,__func__,0,"%p-%p-%p-%p-%p-%p\n", fChildCreate, fChildDelete, fParentCreate, fParentDelete, fProcessExit, fThreadExit);
+//MqDLogV(context,__func__,0,"%p-%p-%p-%p-%p-%p\n", fChildCreate, fChildDelete, fParentCreate, fParentDelete, fProcessExit, fThreadExit);
 
   context->setup.Child.fCreate = fChildCreate;
   context->setup.Child.fDelete = fChildDelete;
@@ -714,7 +714,7 @@ MqConfigSetServerSetup (
   MqTokenDataCopyF fCopy
 )
 {
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
+//MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
     (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
   }
@@ -752,7 +752,7 @@ MqConfigSetServerCleanup (
   MqTokenDataCopyF fCopy
 )
 {
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
+//MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerCleanup.data && context->setup.ServerCleanup.fFree) {
     (*context->setup.ServerCleanup.fFree) (context, &context->setup.ServerCleanup.data);
   }
@@ -1044,6 +1044,7 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
 
 
 

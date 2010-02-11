@@ -89,7 +89,7 @@ pReadCreate (
   register struct MqReadS * const read = (struct MqReadS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*read));
   read->context = context;
 
-//MqDLogX(read->context,__func__,-1,"read<%p>\n", read);
+//MqDLogV(read->context,__func__,-1,"read<%p>\n", read);
 
   read->hdr = MqBufferCreate (context, HDR_SIZE + 1);
   read->bdy = MqBufferCreate (context, 10000);
@@ -292,7 +292,7 @@ pReadHDR (
   MqErrorSwitch (pIoRead (context->link.io, read->hdr, sizeof(struct HdrS)));
   cur = (struct HdrS *) read->hdr->cur.B;
 
-//MqDLogX (context, __func__, 0, "START (%c%c%c%c)\n", cur->tok[0], cur->tok[1], cur->tok[2], cur->tok[3]);
+//MqDLogV (context, __func__, 0, "START (%c%c%c%c)\n", cur->tok[0], cur->tok[1], cur->tok[2], cur->tok[3]);
 //pReadLog(context, "pReadHDR->1");
 
   // check "HDR"
@@ -338,8 +338,8 @@ pReadHDR (
     if (!context) return MQ_CONTINUE;
     *a_context = context;
   }
-//MqDLogX (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
-//MqDLogX (context, __func__, 0, "hex\n<%s>\n", pLogHEX (read->hdr->data, sizeof (struct HdrS)));
+//MqDLogV (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
+//MqDLogV (context, __func__, 0, "hex\n<%s>\n", pLogHEX (read->hdr->data, sizeof (struct HdrS)));
   debug = context->config.debug;
   context->link._trans = trans;
 
@@ -364,7 +364,7 @@ pReadHDR (
   if ((bdy->cursize = size)) {
     bdy->type = MQ_STRING_TYPE(string);
     if (unlikely (debug >= 6))
-      MqDLogX (context, __func__, 6, "BDY -> " MQ_FORMAT_Z " bytes\n", size);
+      MqLogV (context, __func__, 6, "BDY -> " MQ_FORMAT_Z " bytes\n", size);
 
     // 1. read
     MqErrorCheck (sReadFIX (context, bdy, "BDY"));
@@ -907,21 +907,22 @@ pReadLog (
 {
   struct MqReadS * read = context->link.read;
 
-  MqDLogX (context, prefix, 0, ">>>> MqReadS (%p)\n", (void*) read);
-  MqDLogX (context, prefix, 0, "returnCode = " "%c" "\n", read->returnCode);
-  MqDLogX (context, prefix, 0, "returnNum  = " MQ_FORMAT_I "\n", read->returnNum);
-  MqDLogX (context, prefix, 0, "  >>>> read->hdr\n");
+  MqLogV (context, prefix, 0, ">>>> MqReadS (%p)\n", (void*) read);
+  MqLogV (context, prefix, 0, "returnCode = " "%c" "\n", read->returnCode);
+  MqLogV (context, prefix, 0, "returnNum  = " MQ_FORMAT_I "\n", read->returnNum);
+  MqLogV (context, prefix, 0, "  >>>> read->hdr\n");
   MqBufferLog (context, read->hdr, prefix);
-  MqDLogX (context, prefix, 0, "  >>>> read->bdy\n");
+  MqLogV (context, prefix, 0, "  >>>> read->bdy\n");
   MqBufferLog (context, read->bdy, prefix);
-  MqDLogX (context, prefix, 0, "  >>>> read->cur\n");
+  MqLogV (context, prefix, 0, "  >>>> read->cur\n");
   MqBufferLog (context, read->cur, prefix);
-  MqDLogX (context, prefix, 0, "<<<< MqReadS\n");
+  MqLogV (context, prefix, 0, "<<<< MqReadS\n");
 }
 
 #endif
 
 END_C_DECLS
+
 
 
 

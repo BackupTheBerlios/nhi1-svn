@@ -67,7 +67,7 @@
 #define MEI(i) MXI(EEEEEEEEEEEEEEEEE,i)
 #define MFI(i) MXI(FFFFFFFFFFFFFFFFF,i)
 
-#define IX(x,s) MqDLogX(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
+#define IX(x,s) MqDLogV(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
 
 #define I0 IX(MQ_CONTEXT_S,0000000000000000)
 #define I1 IX(MQ_CONTEXT_S,1111111111111111)
@@ -91,7 +91,7 @@
 #define XIB(x) IX(x,BBBBBBBBBBBBBBBB)
 #define XIE(x) IX(x,EEEEEEEEEEEEEEEE)
 
-#define IXP(x,s,p) MqDLogX(x,__func__,0, "<" #s "-" #x "-%s> -> (%s:%d)\n", p, __FILE__, __LINE__);
+#define IXP(x,s,p) MqDLogV(x,__func__,0, "<" #s "-" #x "-%s> -> (%s:%d)\n", p, __FILE__, __LINE__);
 
 #define I0P IXP(MQ_CONTEXT_S,0000000000000000,prefix)
 
@@ -112,8 +112,8 @@
 
 #define printCP(txt,var)  MVA("%p",txt,var)
 
-#define MLV(x,f,v) MqDLogX(x,__func__,0,"(%s:%d) -> " #v "<" f ">\n", __FILE__, __LINE__, v);
-#define MLV2(x,f,t,v) MqDLogX(x,__func__,0,"(%s:%d) -> %s<" f ">\n", __FILE__, __LINE__, t, v);
+#define MLV(x,f,v) MqDLogV(x,__func__,0,"(%s:%d) -> " #v "<" f ">\n", __FILE__, __LINE__, v);
+#define MLV2(x,f,t,v) MqDLogV(x,__func__,0,"(%s:%d) -> %s<" f ">\n", __FILE__, __LINE__, t, v);
 
 #define printLP(var)	MLV(MQ_CONTEXT_S, "%p",        var)
 #define printLI(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_I, var)
@@ -146,7 +146,7 @@
 
 #define printMI(msgque,var)  printLog(msgque,#var " = <" MQ_FORMAT_I  ">\n", var);fflush(stderr);
 
-#define printM(mq) MqDLogX(mq,__func__,0,"(%s:%d) -> <" #mq ">\n", __FILE__, __LINE__);
+#define printM(mq) MqDLogV(mq,__func__,0,"(%s:%d) -> <" #mq ">\n", __FILE__, __LINE__);
 #define printU(var) MqBufferLog(MQ_CONTEXT_S, var, #var);
 #define printXU(ctx,var) MqBufferLog(ctx, var, #var);
 #define printUL(var) MqBufferLLog(MQ_CONTEXT_S, var, #var);
@@ -205,3 +205,4 @@
 #endif
 
 #endif /* MQ_DEBUG_H */
+

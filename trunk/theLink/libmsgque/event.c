@@ -260,7 +260,7 @@ pEventCheck (
     int i;
     for (i=0; i<=event->fdmax; i++) {
       if (FD_ISSET(i,&fds))
-        MqDLogX(context,__func__,0,"sock<%i>, set<YES>\n", i);
+        MqDLogV(context,__func__,0,"sock<%i>, set<YES>\n", i);
     }
   }
 }
@@ -533,21 +533,22 @@ void pEventLog (
 {
   struct MqS ** start, ** end;
   if (!context || !event || context->config.isSilent == MQ_YES) return;
-  MqDLogX(context, proc, 0, ">>>>> MqEventS<%p>\n", (void*)event);
-  MqDLogX(context, proc, 0, "fdmax    = %i\n", event->fdmax);
-  MqDLogX(context, proc, 0, "DataLNum = %i\n", event->DataLNum);
-  MqDLogX(context, proc, 0, "DataLCur = %i\n", event->DataLCur);
+  MqLogV(context, proc, 0, ">>>>> MqEventS<%p>\n", (void*)event);
+  MqLogV(context, proc, 0, "fdmax    = %i\n", event->fdmax);
+  MqLogV(context, proc, 0, "DataLNum = %i\n", event->DataLNum);
+  MqLogV(context, proc, 0, "DataLCur = %i\n", event->DataLCur);
   start = event->DataL;
   end = event->DataL + event->DataLCur;
   for (; start < end; start++) {
     struct MqS * mq = *start;
-    MqDLogX(context, proc, 0, " -> context<%p>, server<%s>, sock<%i>\n", (void*) mq, 
+    MqLogV(context, proc, 0, " -> context<%p>, server<%s>, sock<%i>\n", (void*) mq, 
 	(MQ_IS_SERVER(mq)?"yes":"no"), *(mq->link.io->sockP));
   }
-  MqDLogX(context, proc, 0, "<<<<< MqEventS<%p>\n", (void*) event);
+  MqLogV(context, proc, 0, "<<<<< MqEventS<%p>\n", (void*) event);
 }
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 

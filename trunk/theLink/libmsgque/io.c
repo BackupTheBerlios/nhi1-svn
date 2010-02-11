@@ -645,7 +645,7 @@ int i;
 char ** xarg = argV;
 //printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
-  MqDLogX (context, __func__, 0, "alfa1[%2i]=%s\n",i, *xarg);
+  MqDLogV (context, __func__, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }
         }
 */
@@ -691,7 +691,7 @@ for (i=0; *xarg != NULL; xarg++, i++) {
   if (unlikely(context != NULL && context->config.debug >= 4)) {
     MQ_STRB buf[50];
     // !attention "name" can be "alfa1[0]"
-    MqDLogX(context,__func__,4,"finish start server '%s' as '%s' with ID '%s'\n",
+    MqLogV(context,__func__,4,"finish start server '%s' as '%s' with ID '%s'\n",
 		name, pIoLogStartType(startType), pIoLogId(buf,50,*idP));
   }
 
@@ -777,13 +777,13 @@ pIoEventAdd(
   MQ_INT current = 0;
   socklen_t len;
 
-//MqDLogX(context,__func__,0,"1. buffersize<%d>, current<%d>\n", buffersize, current);
+//MqDLogV(context,__func__,0,"1. buffersize<%d>, current<%d>\n", buffersize, current);
 
   // 1. set the send-buffersize
   len = sizeof (MQ_INT);
   MqErrorCheck (SysGetSockOpt (context, sock, SOL_SOCKET, SO_SNDBUF, (MQ_sockopt_optval_T) &current, &len));
 
-//MqDLogX(context,__func__,0,"2. buffersize<%d>, current<%d>\n", buffersize, current);
+//MqDLogV(context,__func__,0,"2. buffersize<%d>, current<%d>\n", buffersize, current);
 
   if (current < buffersize) {
     len = sizeof (MQ_INT);
@@ -798,7 +798,7 @@ pIoEventAdd(
   len = sizeof (MQ_INT);
   MqErrorCheck (SysGetSockOpt (context, sock, SOL_SOCKET, SO_RCVBUF, (MQ_sockopt_optval_T) &current, &len));
 
-//MqDLogX(context,__func__,0,"3. buffersize<%d>, current<%d>\n", buffersize, current);
+//MqDLogV(context,__func__,0,"3. buffersize<%d>, current<%d>\n", buffersize, current);
 
   if (current < buffersize) {
     len = sizeof (MQ_INT);
@@ -807,7 +807,7 @@ pIoEventAdd(
     MqDLogV (context, 5, "set SO_RCVBUF to '%d'\n", current);
   }
 
-//MqDLogX(context,__func__,0,"4. buffersize<%d>, current<%d>\n", buffersize, current);
+//MqDLogV(context,__func__,0,"4. buffersize<%d>, current<%d>\n", buffersize, current);
 
 
   if (current < io->config->buffersize) {
@@ -857,11 +857,12 @@ pIoLog (
   MQ_CST proc
 )
 {
-  MqDLogX(io->context, proc, 0, "IO: event<%p>\n", (void*) io->event);
+  MqLogV(io->context, proc, 0, "IO: event<%p>\n", (void*) io->event);
 }
 
 #endif
 
 END_C_DECLS
+
 
 

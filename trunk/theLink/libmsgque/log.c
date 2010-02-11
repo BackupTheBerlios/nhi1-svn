@@ -47,7 +47,7 @@ pLogHEX (
   MQ_INT pos=0;
   MQ_BINB as[COL+1], *asP;
 
-  MqDLogX(context,func,0,"START hex log >>>>>>>>>>>>>\n");
+  MqLogV(context,func,0,"START hex log >>>>>>>>>>>>>\n");
   for (;data<dataE;) {
     // init "as"
     dataL = as + COL;
@@ -62,7 +62,7 @@ pLogHEX (
     }
     fprintf(stderr,"= [%s]\n", as);
   }
-  MqDLogX(context,func,0,"END hex log >>>>>>>>>>>>>\n");
+  MqLogV(context,func,0,"END hex log >>>>>>>>>>>>>\n");
 # undef COL
 }
 
@@ -92,7 +92,7 @@ sLogTime (
 #endif
 
 void
-MqLog (
+pLog (
   FILE * channel,
   MQ_CST const fmt,
   ...
@@ -136,12 +136,31 @@ sLogVL (
     snprintf (header, 400, "X> %s [%i-%s]: %s", sLogTime (time_buf), level, proc, fmt);
   }
 
-  vfprintf (channel, header, ap);
+  if (ap == NULL) {
+    fputs (header, channel);
+  } else {
+    vfprintf (channel, header, ap);
+  }
   fflush (channel);
 }
 
 void
-MqDLogX (
+MqLogC (
+  struct MqS const * const context, 
+  MQ_CST const proc,
+  MQ_INT level,
+  MQ_CST const str
+)
+{
+  if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
+    return;
+  } else {
+    sLogVL (context, proc, level, str, NULL, stderr);
+  }
+}
+
+void
+MqLogV (
   struct MqS const * const context, 
   MQ_CST const proc,
   MQ_INT level,
@@ -149,36 +168,30 @@ MqDLogX (
   ...
 )
 {
-  va_list ap;
-  if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) return;
-  va_start (ap, fmt);
-  sLogVL (context, proc, level, fmt, ap, stderr);
-  va_end (ap);
+  if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
+    return;
+  } else {
+    va_list ap;
+    va_start (ap, fmt);
+    sLogVL (context, proc, level, fmt, ap, stderr);
+    va_end (ap);
+  }
 }
 
 void
-MqDLogEVL (
+MqLogVL (
   struct MqS const * const context,
   MQ_CST const proc,
+  MQ_INT level,
   MQ_CST const fmt,
   va_list ap
 )
 {
-  sLogVL (context, proc, 0, fmt, ap, stderr);
-}
-
-void
-MqDLogEV (
-  struct MqS const * const context,
-  MQ_CST const proc,
-  MQ_CST const fmt,
-  ...
-)
-{
-  va_list ap;
-  va_start (ap, fmt);
-  MqDLogEVL (context, proc, fmt, ap);
-  va_end (ap);
+  if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
+    return;
+  } else {
+    sLogVL (context, proc, level, fmt, ap, stderr);
+  }
 }
 
 // ##########################################################################
@@ -257,7 +270,7 @@ sLogDynItem (
 	  hd->cur.B += (HDR_INT_LEN + 1);
 
 	  // start-msg
-	  MqDLogX (context, prefix, level, "%s, numItems<" MQ_FORMAT_Z ">\n", buf, hd->numItems);
+	  MqLogV (context, prefix, level, "%s, numItems<" MQ_FORMAT_Z ">\n", buf, hd->numItems);
 
 	  // print item-list
 	  MqBufferPush	(space, "   ");
@@ -265,7 +278,7 @@ sLogDynItem (
 	  MqBufferPop	(space, "   ");
 	  break;
 	default:
-	  MqDLogX (context, prefix, level, "%s\n", buf);
+	  MqLogV (context, prefix, level, "%s\n", buf);
 	  break;
       }
     }
@@ -314,7 +327,7 @@ pLogHDR (
     t++;
   }
 
-  MqDLogX (context, prefix, level, "HEADER <%s> ...\n", hd->data);
+  MqLogV (context, prefix, level, "HEADER <%s> ...\n", hd->data);
 
   MqBufferDelete (&hd);
 }
@@ -347,14 +360,14 @@ pLogBDY (
   hd->type = MQ_STRING_TYPE(context->config.isString);
 
   // start-msg
-  MqDLogX (context, prefix, level, ">>>>> BDY size<" MQ_FORMAT_Z "> numItems<" MQ_FORMAT_Z ">\n",
+  MqLogV (context, prefix, level, ">>>>> BDY size<" MQ_FORMAT_Z "> numItems<" MQ_FORMAT_Z ">\n",
            hd->cursize - BDY_SIZE, hd->numItems);
 
   // items
   sLogDynItem (context, hd, prefix, level, space);
 
   // end-msg
-  MqDLogX (context, prefix, level, "<<<<< BDY\n");
+  MqLogV (context, prefix, level, "<<<<< BDY\n");
 
   // cleanup readRef
   MqBufferDelete (&hd);
@@ -378,7 +391,7 @@ pLogMqBuffer (
   struct MqBufferS * buf
 )
 {
-  MqDLogX (context, header, level,
+  MqLogV (context, header, level,
       "pointer<%p> type<%c>, alloc<%s>, size<" MQ_FORMAT_Z ">, cursize<" MQ_FORMAT_Z ">, data<%s>\n",
       (void*) buf, buf->type,
       (buf->alloc == MQ_ALLOC_DYNAMIC	? "DYNAMIC"   : "STATIC"), 
@@ -437,7 +450,7 @@ MqLogParentOrChild (
 }
 
 MQ_STR
-MqLogC (
+pLogAscii (
   MQ_STR buf,
   MQ_STR str,
   MQ_SIZE size
@@ -455,4 +468,6 @@ MqLogC (
 }
 
 END_C_DECLS
+
+
 

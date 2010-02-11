@@ -1385,7 +1385,7 @@ main (
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // test debug output
-  MqDLogX(mqctx, "test", 1, "%s", "this is the log test\n");
+  MqLogC(mqctx, "test", 1, "this is the log test\n");
 
   // start event-loop and wait forever
   MqProcessEvent (mqctx, MQ_TIMEOUT_DEFAULT, MQ_WAIT_FOREVER);

@@ -194,7 +194,7 @@ StatCtxPrint (
   StatCtxSP context
 )
 {
-  MqDLogX (context->mqctx, "statistics",
+  MqLogV (context->mqctx, "statistics",
            0, "%30s: %10.2f\n", context->name->data, context->val);
 }
 
@@ -249,12 +249,12 @@ StatLog (
 )
 {
   register struct MqS * const mqctx = timer->mqctx;
-  MqDLogX (mqctx, prefix, 0, ">>> StatTimerS\n");
-  MqDLogX (mqctx, prefix, 0, "tv_sec         = %li\n", (long) timer->tv.tv_sec);
-  MqDLogX (mqctx, prefix, 0, "tv_usec        = %li\n", (long) timer->tv.tv_usec);
-  MqDLogX (mqctx, prefix, 0, "tz_minuteswest = %i\n",  timer->tz.tz_minuteswest);
-  MqDLogX (mqctx, prefix, 0, "tz_dsttime     = %i\n",  timer->tz.tz_dsttime);
-  MqDLogX (mqctx, prefix, 0, "<<< StatTimerS\n");
+  MqLogV (mqctx, prefix, 0, ">>> StatTimerS\n");
+  MqLogV (mqctx, prefix, 0, "tv_sec         = %li\n", (long) timer->tv.tv_sec);
+  MqLogV (mqctx, prefix, 0, "tv_usec        = %li\n", (long) timer->tv.tv_usec);
+  MqLogV (mqctx, prefix, 0, "tz_minuteswest = %i\n",  timer->tz.tz_minuteswest);
+  MqLogV (mqctx, prefix, 0, "tz_dsttime     = %i\n",  timer->tz.tz_dsttime);
+  MqLogV (mqctx, prefix, 0, "<<< StatTimerS\n");
 }
 
 /** \} stat_api */

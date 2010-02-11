@@ -741,18 +741,18 @@ MqBufferLLog (
   int i;
 
   if (unlikely(bufL == NULL)) {
-    MqDLogX (context, func, 0, "%s\n", "++++ MqBufferLS (NULL)");
+    MqLogV (context, func, 0, "%s\n", "++++ MqBufferLS (NULL)");
     return;
   }
 
-  MqDLogX (context, func, 0, ">>>> MqBufferLS (%p) (" MQ_FORMAT_Z " items)\n", (void*) bufL, bufL->cursize);
+  MqLogV (context, func, 0, ">>>> MqBufferLS (%p) (" MQ_FORMAT_Z " items)\n", (void*) bufL, bufL->cursize);
   for (i = 0; i < bufL->cursize; i++) {
     sprintf (tmp, "# %i ", i);
     MqBufferLog (context, bufL->data[i], tmp);
     if (i < bufL->cursize - 1)
-      MqDLogX (context, func, 0, "-----------------------------\n");
+      MqLogV (context, func, 0, "-----------------------------\n");
   }
-  MqDLogX (context, func, 0, "<<<< MqBufferLS <<<<\n");
+  MqLogV (context, func, 0, "<<<< MqBufferLS <<<<\n");
 }
 
 void
@@ -764,19 +764,19 @@ MqBufferLLogS (
 )
 {
   if (unlikely(bufL == NULL)) {
-    MqDLogX (context, func, 0, "++++ MqBufferLS (%s:NULL)", varname);
+    MqLogV (context, func, 0, "++++ MqBufferLS (%s:NULL)", varname);
     return;
   } else {
     MQ_BUF buf = (context ? context->temp : MqBufferCreate (MQ_ERROR_PANIC, 100));
     int i;
     int relsize = bufL->cur - bufL->data;
-    MqDLogX (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
+    MqLogV (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
       (void*) bufL->data, (void*) bufL->cur, relsize, bufL->cursize, (relsize == bufL->cursize ? "OK" : "CUR-ERROR"));
     for (i = 0; i < bufL->cursize; i++) {
       MqBufferSetV(buf, "# %i (%p)", i, bufL->data[i]);
       MqBufferLogS (context, bufL->data[i], buf->cur.C);
     }
-    MqDLogX (context, func, 0, "<<<< MqBufferLS <<<<\n");
+    MqLogV (context, func, 0, "<<<< MqBufferLS <<<<\n");
     if (!context) MqBufferDelete(&buf);
   }
 }
@@ -784,6 +784,7 @@ MqBufferLLogS (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

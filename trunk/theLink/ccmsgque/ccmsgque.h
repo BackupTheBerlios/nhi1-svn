@@ -387,6 +387,21 @@ namespace ccmsgque {
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
       /// \api #MqSysUSleep
       inline void USleep (unsigned int const usec) throw(MqCException) { ErrorCheck (MqSysUSleep(&context, usec)); }
+      /// \api #MqLogC
+      inline void LogC (MQ_CST prefix, MQ_INT level, MQ_CST str) { MqLogC(&context, prefix, level, str); }
+      /// \api #MqLogV
+      inline void LogV (MQ_CST prefix, MQ_INT level, MQ_CST fmt, ...) { 
+	if (level > context.config.debug) {
+	  return;
+	} else {
+	  va_list ap;
+	  va_start (ap, fmt);
+	  MqLogVL (&context, prefix, level, fmt, ap);
+	  va_end (ap);
+	}
+      }
+      /// \api #MqLogVL
+      inline void LogVL (MQ_CST prefix, MQ_INT level, MQ_CST fmt, va_list ap) { MqLogVL(&context, prefix, level, fmt, ap); }
 
     /// \} Mq_Context_CC_API
 

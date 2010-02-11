@@ -455,7 +455,7 @@ SysSend (
     ldata = send (hdl, (const MQ_buf_T) buf, numBytes, flags);
     // check for errors
     if (unlikely (ldata == -1)) {
-//MqDLogX(context,__func__,0,"ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
+//MqDLogV(context,__func__,0,"ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
       switch (sSysGetErrorNum) {
 	case WIN32_WSA (EWOULDBLOCK): {
 	  // waiting for "send" is buggy -> just use 0.01 sec and try send again on "timeout" (MQ_CONTINUE)
@@ -516,7 +516,7 @@ SysRecv (
     // check for errors
     if (unlikely (ldata <= 0)) {
 	if (ldata == -1) {
-//MqDLogX(MqErrorGetMsgque(context),__func__,0,"ERROR sock<%i>, numBytes<%i>, str<%s>\n", 
+//MqDLogV(MqErrorGetMsgque(context),__func__,0,"ERROR sock<%i>, numBytes<%i>, str<%s>\n", 
 //	  hdl, numBytes, strerror(errno));
 	  switch (sSysGetErrorNum) {
 	    case WIN32_WSA (EWOULDBLOCK): {
@@ -702,6 +702,7 @@ error:
 }
 
 END_C_DECLS
+
 
 
 

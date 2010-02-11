@@ -497,12 +497,13 @@ MqLinkPrepare (
 
     // 4. send message
     if (context->config.debug >= 2) {
-      if (MQ_IS_SLAVE(context))
-	MqDLogX(context,__func__,2,"PREPARE-SLAVE: master<%p>\n", (void*) context->config.master);
-      else if (MQ_IS_PARENT(context))
-	MqDLogX(context,__func__,2,"PREPARE: io->com<%s>\n", pIoLogCom(context->config.io.com));
-      else
-	MqDLogX(context,__func__,2,"PREPARE-CHILD: parent<%p>\n", (void*) context->config.parent);
+      if (MQ_IS_SLAVE(context)) {
+	MqLogV(context,__func__,2,"PREPARE-SLAVE: master<%p>\n", (void*) context->config.master);
+      } else if (MQ_IS_PARENT(context)) {
+	MqLogV(context,__func__,2,"PREPARE: io->com<%s>\n", pIoLogCom(context->config.io.com));
+      } else {
+	MqLogV(context,__func__,2,"PREPARE-CHILD: parent<%p>\n", (void*) context->config.parent);
+      }
     }
     return MqErrorStack(context);
   }
@@ -709,12 +710,13 @@ MqLinkCreate (
     // 2. parse the command-line arguments
     MqErrorCheck (MqLinkPrepare (context, argvP));
     if (context->config.debug >= 2) {
-      if (MQ_IS_SLAVE(context))
-	MqDLogX(context,__func__,2,"START-SLAVE: master<%p>\n", (void*) context->config.master);
-      else if (MQ_IS_PARENT(context))
-	MqDLogX(context,__func__,2,"START: io->com<%s>\n", pIoLogCom(context->config.io.com));
-      else
-	MqDLogX(context,__func__,2,"START-CHILD: parent<%p>\n", (void*) context->config.parent);
+      if (MQ_IS_SLAVE(context)) {
+	MqLogV(context,__func__,2,"START-SLAVE: master<%p>\n", (void*) context->config.master);
+      } else if (MQ_IS_PARENT(context)) {
+	MqLogV(context,__func__,2,"START: io->com<%s>\n", pIoLogCom(context->config.io.com));
+      } else {
+	MqLogV(context,__func__,2,"START-CHILD: parent<%p>\n", (void*) context->config.parent);
+      }
     }
 
     // handle empty MqBufferLS list alfa
@@ -1051,16 +1053,17 @@ MqLogChild (
 )
 {
   struct pChildS * childs;
-  MqDLogX(context,prefix,0,"MqLogMsgque >>>>>\n");
-  MqDLogX(context,prefix,0,"server=%s, parent=%p\n", (MQ_IS_SERVER(context)?"yes":"no"), (void*) context->config.parent);
+  MqLogV(context,prefix,0,"MqLogMsgque >>>>>\n");
+  MqLogV(context,prefix,0,"server=%s, parent=%p\n", (MQ_IS_SERVER(context)?"yes":"no"), (void*) context->config.parent);
   for(childs = context->link.childs; childs != NULL ; childs = childs->right) {
-    MqDLogX(context,prefix,0,"child: context=%p\n", (void*) childs->context);
+    MqLogV(context,prefix,0,"child: context=%p\n", (void*) childs->context);
   }
-  MqDLogX(context,prefix,0,"MqLogMsgque <<<<<\n");
+  MqLogV(context,prefix,0,"MqLogMsgque <<<<<\n");
 }
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

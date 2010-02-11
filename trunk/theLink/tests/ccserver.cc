@@ -707,6 +707,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   try {
     server.ConfigSetName ("server");
     server.LinkCreateVC (argc, argv);
+    server.LogC("test",1,"this is the log test\n");
     server.ProcessEvent (MQ_WAIT_FOREVER);  
   } catch (const exception& e) {
     // Convert the "exception" object in an "MqCException" object, "Exit" will report the error to the client

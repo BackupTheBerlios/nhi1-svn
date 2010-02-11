@@ -408,7 +408,7 @@ if (newSize == buf->size+1) {
   memset (buf->cur.B, '\0', (buf->size - cursize));
 
   // additional debugging output
-  //MqDLogX (msgque, header, 5, "increase buffer size to " MQ_FORMAT_Z " bytes\n", buf->size);
+  //MqDLogV (msgque, header, 5, "increase buffer size to " MQ_FORMAT_Z " bytes\n", buf->size);
 }
 
 /*****************************************************************************/
@@ -1194,37 +1194,37 @@ MqBufferLogS (
   MQ_STR cur = (buf->cursize > MY_MAX ? (MQ_STR) "" : buf->cur.C);
   switch (buf->type) {
     case MQ_STRT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_C ">\n", cur);
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_C ">\n", cur);
       break;
     case MQ_BINT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_B ">\n", buf->cur.B);
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_B ">\n", buf->cur.B);
       break;
     case MQ_BYTT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_Y ">\n", MqBufU2BYT(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_Y ">\n", MqBufU2BYT(buf->cur));
       break;
     case MQ_BOLT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_O ">\n", MqBufU2BOL(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_O ">\n", MqBufU2BOL(buf->cur));
       break;
     case MQ_SRTT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_S ">\n", MqBufU2SRT(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_S ">\n", MqBufU2SRT(buf->cur));
       break;
     case MQ_INTT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_I ">\n", MqBufU2INT(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_I ">\n", MqBufU2INT(buf->cur));
       break;
     case MQ_FLTT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_F ">\n", MqBufU2FLT(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_F ">\n", MqBufU2FLT(buf->cur));
       break;
     case MQ_WIDT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_W ">\n", MqBufU2WID(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_W ">\n", MqBufU2WID(buf->cur));
       break;
     case MQ_DBLT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_D ">\n", MqBufU2DBL(buf->cur));
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_D ">\n", MqBufU2DBL(buf->cur));
       break;
     case MQ_LSTT:
-      MqDLogX (context, prefix, 0, "cur      = <" MQ_FORMAT_L ">\n", buf->cur.L);
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_L ">\n", buf->cur.L);
       break;
     case MQ_RETT:
-      MqDLogX (context, prefix, 0, "cur      = <%s>\n", MqLogTypeName(buf->type));
+      MqLogV (context, prefix, 0, "cur      = <%s>\n", MqLogTypeName(buf->type));
       break;
   }
 #undef MY_MAX
@@ -1248,22 +1248,22 @@ MqBufferLog (
   // no memory -> no work
   if (!buf) return;
 
-  MqDLogX (context, prefix, 0, ">>>> MqBufferS (%p)\n", (void*) buf);
+  MqLogV (context, prefix, 0, ">>>> MqBufferS (%p)\n", (void*) buf);
 
-  MqDLogX (context, prefix, 0, "data     = <%s>\n", MqLogC (tmp,(MQ_STR)buf->data, buf->cursize));
-  MqDLogX (context, prefix, 0, "size     = <" MQ_FORMAT_Z ">\n", buf->size);
-  MqDLogX (context, prefix, 0, "cursize  = <" MQ_FORMAT_Z ">\n", buf->cursize);
-  MqDLogX (context, prefix, 0, "numItems = <" MQ_FORMAT_Z ">\n", buf->numItems);
-  MqDLogX (context, prefix, 0, "curpos   = <" MQ_FORMAT_Z ">\n", (MQ_SIZE) (buf->cur.B - buf->data));
-  MqDLogX (context, prefix, 0, "type     = <%s:%i>\n", MqLogTypeName(buf->type), buf->type);
-  MqDLogX (context, prefix, 0, "pointer  = data<%p> buf->cur.B<%p>\n", buf->data, buf->cur.B);
+  MqLogV (context, prefix, 0, "data     = <%s>\n", pLogAscii (tmp,(MQ_STR)buf->data, buf->cursize));
+  MqLogV (context, prefix, 0, "size     = <" MQ_FORMAT_Z ">\n", buf->size);
+  MqLogV (context, prefix, 0, "cursize  = <" MQ_FORMAT_Z ">\n", buf->cursize);
+  MqLogV (context, prefix, 0, "numItems = <" MQ_FORMAT_Z ">\n", buf->numItems);
+  MqLogV (context, prefix, 0, "curpos   = <" MQ_FORMAT_Z ">\n", (MQ_SIZE) (buf->cur.B - buf->data));
+  MqLogV (context, prefix, 0, "type     = <%s:%i>\n", MqLogTypeName(buf->type), buf->type);
+  MqLogV (context, prefix, 0, "pointer  = data<%p> buf->cur.B<%p>\n", buf->data, buf->cur.B);
 
   MqBufferLogS(context, buf, prefix);
 
-  MqDLogX (context, prefix, 0, "alloc    = <%s>\n",
+  MqLogV (context, prefix, 0, "alloc    = <%s>\n",
      (buf->alloc == MQ_ALLOC_DYNAMIC   ? "DYNAMIC"   : "STATIC")
   );
-  MqDLogX (context, prefix, 0, "<<<< MqBufferS\n");
+  MqLogV (context, prefix, 0, "<<<< MqBufferS\n");
 
   MqSysFree(tmp);
 }
@@ -1271,6 +1271,7 @@ MqBufferLog (
 #endif
 
 END_C_DECLS
+
 
 
 

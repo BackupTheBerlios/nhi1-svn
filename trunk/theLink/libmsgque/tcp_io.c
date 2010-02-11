@@ -205,7 +205,7 @@ TcpConnect (
     MQ_CST host;
     MQ_INT port;
     MqErrorCheck(SysGetTcpInfo(context,&addr,&host,&port));
-    MqDLogX(context, __func__, 4, "local socket host<%s> and port<%u>\n", host, port);
+    MqLogV(context, __func__, 4, "local socket host<%s> and port<%u>\n", host, port);
   }
 
 error:
@@ -228,17 +228,18 @@ TcpLogAddr (
   struct sockaddr_in * sockaddr_in = (struct sockaddr_in *) addrinfo->ai_addr;
   MQ_CST str;
   MQ_INT port;
-  MqDLogX (context, __func__, 0, ">>>> sockaddr_in (%p)\n", (void*) sockaddr_in);
+  MqLogV (context, __func__, 0, ">>>> sockaddr_in (%p)\n", (void*) sockaddr_in);
   str = (sockaddr_in->sin_family == AF_INET ? "AF_INET" : "WRONG!!");
-  MqDLogX (context, __func__, 0, " sin_family = %s(%i)\n", str, sockaddr_in->sin_family);
+  MqLogV (context, __func__, 0, " sin_family = %s(%i)\n", str, sockaddr_in->sin_family);
   SysGetTcpInfo(context,sockaddr_in,&str,&port);
-  MqDLogX (context, __func__, 0, " sin_port   = %u\n", port);
-  MqDLogX (context, __func__, 0, " sin_addr   = %s\n", str);
-  MqDLogX (context, __func__, 0, "<<<< sockaddr_in\n");
+  MqLogV (context, __func__, 0, " sin_port   = %u\n", port);
+  MqLogV (context, __func__, 0, " sin_addr   = %s\n", str);
+  MqLogV (context, __func__, 0, "<<<< sockaddr_in\n");
 }
 #endif
 
 END_C_DECLS
+
 
 
 

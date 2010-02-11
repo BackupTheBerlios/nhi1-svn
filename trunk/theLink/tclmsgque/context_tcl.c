@@ -92,7 +92,7 @@ NS(ThreadExit) (
 /*                                                                           */
 /*****************************************************************************/
 
-static int NS(DLogC) (NS_ARGS)
+static int NS(LogC) (NS_ARGS)
 {
   MQ_CST str,proc;
   MQ_INT level;
@@ -100,7 +100,7 @@ static int NS(DLogC) (NS_ARGS)
   CHECK_I(level)
   CHECK_C(str)
   CHECK_NOARGS
-  MqDLogX(MQCTX, proc, level, "%s", str);
+  MqLogC(MQCTX, proc, level, str);
   RETURN_TCL
 }
 
@@ -438,7 +438,7 @@ int NS(MqS_Cmd) (
     { "RenameTo",		  NS(RenameTo)		      },
     { "Exit",			  NS(Exit)		      },
     { "Delete",			  NS(Delete)		      },
-    { "DLogC",			  NS(DLogC)		      },
+    { "LogC",			  NS(LogC)		      },
     { "dict",			  NS(dict)		      },
 
 // Link
@@ -552,5 +552,6 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
+
 
 

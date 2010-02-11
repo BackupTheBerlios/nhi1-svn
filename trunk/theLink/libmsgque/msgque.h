@@ -4056,28 +4056,47 @@ static mq_inline MQ_STR mq_strdup_save (
 /// \brief log information to stderr with a common format.
 ///
 
-/// \brief log vararg string without formatting to \e channel
-/// \param channel the file-handle to report the message on
-/// \format
-MQ_EXTERN void MQ_DECL MqLog (
-  FILE * channel,
-  MQ_CST const fmt,
-  ...
-) __attribute__ ((format (printf, 2, 3)));
+/// \brief log string if \RNSA{debug} >= \e level
+/// \context
+/// \proc
+/// \param level debug level: 0 <= level <= 9
+/// \param str
+/// \attention if the \b -silent option is set nothing will be reported
+MQ_EXTERN void MQ_DECL MqLogC (
+  struct MqS const * const context,
+  MQ_CST const proc,
+  MQ_INT level,
+  MQ_CST const str
+);
 
-/// \brief log vararg string using formatting
+/// \brief log a vararg string if \RNSA{debug} >= \e level
 /// \context
 /// \proc
 /// \param level debug level: 0 <= level <= 9
 /// \format
 /// \attention if the \b -silent option is set nothing will be reported
-MQ_EXTERN void MQ_DECL MqDLogX (
+MQ_EXTERN void MQ_DECL MqLogV (
   struct MqS const * const context,
   MQ_CST const proc,
   MQ_INT level,
   MQ_CST const fmt,
   ...
 ) __attribute__ ((format (printf, 4, 5)));
+
+/// \brief log a va_list string if \RNSA{debug} >= \e level
+/// \context
+/// \proc
+/// \param level debug level: 0 <= level <= 9
+/// \format
+/// \var_list
+/// \attention if the \b -silent option is set nothing will be reported
+MQ_EXTERN void MQ_DECL MqLogVL (
+  struct MqS const * const context,
+  MQ_CST const proc,
+  MQ_INT level,
+  MQ_CST const fmt,
+  va_list var_list
+);
 
 #if defined(MQ_DISABLE_LOG)
 #   define MqSetDebugLevel(context)
@@ -4093,14 +4112,14 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 /// \param level debug level 0 <= level <= 9
 /// \param str string to log
 #   define MqDLogC(context,level,str) \
-      if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)
+      if (unlikely(context != NULL && context->config.debug >= level)) MqLogC(context,__func__,level,str)
 
 /// \brief log a plain string using the \e MqSetDebugLevel definition
 /// \context
 /// \param level debug level 0 <= level <= 9
 /// \param str string to log
 #   define MqDLogCL(context,level,str) \
-      if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)
+      if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)
 
 /// \brief log a vararg string using formatting and checking for logging level
 /// \context
@@ -4109,7 +4128,7 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 /// \param ... vararg string argument
 /// \attention the prefix string is the calling function name
 #   define MqDLogV(context, level,fmt,...) \
-      if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)
+      if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)
 
 /// \brief log a vararg string using formatting and checking for logging level using the \e MqSetDebugLevel definition
 /// \context
@@ -4118,32 +4137,9 @@ MQ_EXTERN void MQ_DECL MqDLogX (
 /// \param ... vararg string argument
 /// \attention the prefix string is the calling function name
 #   define MqDLogVL(context, level,fmt,...) \
-      if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)
+      if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)
 
 #endif
-
-/// \brief log a vararg error list using formatting
-/// \context
-/// \proc
-/// \format
-/// \var_list
-MQ_EXTERN void MQ_DECL MqDLogEVL (
-  struct MqS const * const context,
-  MQ_CST const proc,
-  MQ_CST const fmt,
-  va_list var_list
-);
-
-/// \brief log a vararg error string using formatting
-/// \context
-/// \proc
-/// \format
-MQ_EXTERN void MQ_DECL MqDLogEV (
-  struct MqS const * const context,
-  MQ_CST const proc,
-  MQ_CST const fmt,
-  ...
-) __attribute__ ((format (printf, 3, 4)));
 
 /*****************************************************************************/
 /*                                                                           */
@@ -4177,19 +4173,6 @@ MQ_EXTERN MQ_CST MQ_DECL MqLogServerOrClient (
 /// \return the string \e PARENT or \e CHILD
 MQ_EXTERN MQ_CST MQ_DECL MqLogParentOrChild (
   struct MqS const * const context
-);
-
-/// \brief convert a raw #MQ_STR into a human readable string.
-/// \param buf buffer of size \e size+1 able to store the temporary string representation of \e str
-/// \param str the input string
-/// \param size the size of \e str
-/// \return the string
-///
-/// replace non ASCII characters with '?' or 'o' (NULL)
-MQ_EXTERN MQ_STR MQ_DECL MqLogC (
-  MQ_STR buf,
-  MQ_STR str,
-  MQ_SIZE size
 );
 
 /// \}	  Mq_Log_C_API
@@ -4310,6 +4293,8 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 
 
 

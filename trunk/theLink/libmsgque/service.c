@@ -125,7 +125,7 @@ MqServiceCreate(
   MqTokenDataFreeF datafreeF
 )
 {
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
+//MqDLogV(context,__func__,0,"data<%p>\n", data);
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
   if (strlen(token) != HDR_TOK_LEN) {
     return MqErrorDbV (MQ_ERROR_TOKEN_LENGTH, token);
@@ -274,4 +274,5 @@ error:
 }
 
 END_C_DECLS
+
 

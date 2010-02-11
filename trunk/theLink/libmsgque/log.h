@@ -15,24 +15,27 @@
 
 BEGIN_C_DECLS
 
-void
- pLogHDR (
+void pLog (
+  FILE * channel,
+  MQ_CST const fmt,
+  ...
+) __attribute__ ((format (printf, 2, 3)));
+
+void pLogHDR (
   struct MqS * const context,
   MQ_CST prefix,
   const MQ_INT level,
   struct MqBufferS * const buf
 );
 
-void
- pLogBDY (
+void pLogBDY (
   struct MqS * const context,
   MQ_CST prefix,
   const MQ_INT level,
   struct MqBufferS * const buf
 );
 
-void
- pLogMqBuffer (
+void pLogMqBuffer (
   struct MqS * const context,
   MQ_CST header,
   MQ_INT level,
@@ -40,6 +43,8 @@ void
 );
 
 void pLogHEX ( struct MqS const * const, MQ_CST const, MQ_BINB const * , MQ_SIZE const);
+
+MQ_STR pLogAscii ( MQ_STR buf, MQ_STR str, MQ_SIZE size);
 
 END_C_DECLS
 

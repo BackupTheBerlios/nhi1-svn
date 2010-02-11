@@ -141,7 +141,7 @@ pTransPop (
   trans->transIdA[item->transId] = item;
 
 //if (!strncmp(trans->context->config.name,"fs",2))
-//  MqDLogX(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, item->transId);
+//  MqDLogV(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, item->transId);
 
   return item->transId;
 }
@@ -153,7 +153,7 @@ pTransPush (
 )
 {
 //if (!strncmp(trans->context->config.name,"fs",2))
-//  MqDLogX(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, transId);
+//  MqDLogV(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, transId);
 
   struct MqTransItemS * const item = trans->transIdA[transId];
   if (unlikely(item == NULL)) return;
@@ -277,5 +277,6 @@ error:
 }
 
 END_C_DECLS
+
 
 

@@ -80,7 +80,7 @@ MqPanicVL (
   {
     struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
     MqBufferSetV (buf, "PANIC: %s\n", fmt);
-    MqDLogEVL (MQ_ERROR_IS_POINTER(context) ? context : NULL, prefix, buf->cur.C, ap);
+    MqLogVL (MQ_ERROR_IS_POINTER(context) ? context : NULL, prefix, 0, buf->cur.C, ap);
     MqBufferDelete (&buf);
   }
   SysAbort();
@@ -143,13 +143,13 @@ MqErrorSGenVL (
     if (errcode == MQ_ERROR) {
       MqPanicVL (MQ_ERROR_PANIC, prefix, errnum, (MQ_STR) buf->data, ap);
     } else {
-      MqDLogEVL (MQ_ERROR_PANIC, prefix, (MQ_STR) buf->data, ap);
+      MqLogVL (MQ_ERROR_PANIC, prefix, 0, (MQ_STR) buf->data, ap);
     }
     MqBufferDelete (&buf);
   } else if (context == MQ_ERROR_PRINT) {
     struct MqBufferS * buf = MqBufferCreate (MQ_ERROR_PANIC, 255);
     MqBufferSetV (buf, "#(" MQ_FORMAT_I ") -> %s\n", errnum, fmt);
-    MqDLogEVL (MQ_ERROR_PANIC, prefix, (MQ_STR) buf->data, ap);
+    MqLogVL (MQ_ERROR_PANIC, prefix, 0, (MQ_STR) buf->data, ap);
     MqBufferDelete (&buf);
   } else {
     struct MqBufferS * const text = context->error.text;
@@ -215,7 +215,8 @@ MqErrorStackP(
     if (MqErrorCheckI(context->error.code)) {
       MQ_STR basename = MqSysBasename(file, MQ_YES);
       MQ_CST type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
-      MqDLogX (context, func, 5, "detect %s in file '%s'\n", type, basename);
+      if (unlikely(context->config.debug >= 5)) 
+	MqLogV (context, func, 5, "detect %s in file '%s'\n", type, basename);
       MqErrorSAppendV(context, "found in function \"%s\" at file \"%s\"", func, basename);
       free(basename);
     }
@@ -250,8 +251,8 @@ MqErrorSAppendV (
       MqBufferAppendVL (master->error.text, fmt, ap);
     return context->error.code;
   } else {
-    MqDLogEVL (NULL, __func__, fmt, ap);
-    MqLog (stderr, "\n");
+    MqLogVL (MQ_ERROR_PANIC, __func__, 0, fmt, ap);
+    pLog (stderr, "\n");
   }
   va_end (ap);
   return MQ_ERROR;
@@ -446,12 +447,12 @@ pErrorReport(
       // send the context to the client
       if (MqSendERROR (context) == MQ_ERROR) {
 	if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-	  MqLog (stderr, "%s\n", (MQ_STR) err->data);
+	  pLog (stderr, "%s\n", (MQ_STR) err->data);
 	}
       }
       MqBufferDelete (&err);
     } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-      MqLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
+      pLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
     }
   }
   pErrorReset(context);
@@ -470,15 +471,17 @@ MqErrorLog (
   MQ_CST const prefix
 )
 {
-  MqDLogX (context, prefix, 0, ">>>> MqErrorS (%p)\n", (void*) context);
-  MqDLogX (context, prefix, 0, "status   = <%s>\n", MqLogErrorCode (context->error.code));
-  MqDLogX (context, prefix, 0, "num      = <%i>\n", context->error.num);
+  MqLogV (context, prefix, 0, ">>>> MqErrorS (%p)\n", (void*) context);
+  MqLogV (context, prefix, 0, "status   = <%s>\n", MqLogErrorCode (context->error.code));
+  MqLogV (context, prefix, 0, "num      = <%i>\n", context->error.num);
   MqBufferLog (context, context->error.text, "context->error.text");
-  MqDLogX (context, prefix, 0, "<<<< MqErrorS\n");
+  MqLogV (context, prefix, 0, "<<<< MqErrorS\n");
 }
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
 
 
 

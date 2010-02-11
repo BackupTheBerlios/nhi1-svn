@@ -365,16 +365,16 @@ MqLogData (
   MQ_CST const prefix
 )
 {
-  MqDLogX (context, prefix, 0, ">>>> MqS \n");
+  MqLogV (context, prefix, 0, ">>>> MqS \n");
 
-  MqDLogX (context, prefix, 0, "debug     = " MQ_FORMAT_I "\n", context->config.debug);
-  MqDLogX (context, prefix, 0, "silent    = " MQ_FORMAT_C "\n", (context->config.isSilent ? "yes" : "no"));
-  MqDLogX (context, prefix, 0, "string    = " MQ_FORMAT_C "\n", (context->config.isString ? "yes" : "no"));
-  MqDLogX (context, prefix, 0, "ctxId     = " MQ_FORMAT_I "\n", context->link.ctxId);
-  MqDLogX (context, prefix, 0, "sOc       = " MQ_FORMAT_C "\n", MqLogServerOrClient (context));
-  MqDLogX (context, prefix, 0, "pOc       = " MQ_FORMAT_C "\n", MqLogParentOrChild (context));
+  MqLogV (context, prefix, 0, "debug     = " MQ_FORMAT_I "\n", context->config.debug);
+  MqLogV (context, prefix, 0, "silent    = " MQ_FORMAT_C "\n", (context->config.isSilent ? "yes" : "no"));
+  MqLogV (context, prefix, 0, "string    = " MQ_FORMAT_C "\n", (context->config.isString ? "yes" : "no"));
+  MqLogV (context, prefix, 0, "ctxId     = " MQ_FORMAT_I "\n", context->link.ctxId);
+  MqLogV (context, prefix, 0, "sOc       = " MQ_FORMAT_C "\n", MqLogServerOrClient (context));
+  MqLogV (context, prefix, 0, "pOc       = " MQ_FORMAT_C "\n", MqLogParentOrChild (context));
 
-  MqDLogX (context, prefix, 0, "<<<< MqS\n");
+  MqLogV (context, prefix, 0, "<<<< MqS\n");
 }
 #endif /* _DEBUG */
 
@@ -422,6 +422,7 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
 
 
 

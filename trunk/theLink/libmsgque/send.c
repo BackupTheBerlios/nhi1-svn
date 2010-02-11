@@ -691,14 +691,14 @@ MqSendSTART (
       buf->type = MQ_STRT;
       SEND_IS (cur->charS, cur->ctxId.S, context->link.ctxId, HDR_INT_LEN);
 
-  //MqDLogX (msgque, __func__, 0, "msgque->ctxId<%i>, cur->ctxId.B<%s>, string<%i>\n", 
+  //MqDLogV (msgque, __func__, 0, "msgque->ctxId<%i>, cur->ctxId.B<%s>, string<%i>\n", 
   //    msgque->ctxId, cur->ctxId.S, msgque->config.isString);
 
     } else {
       buf->type = MQ_BINT;
       cur->ctxId.B = context->link.ctxId;
 
-  //MqDLogX (msgque, __func__, 0, "msgque->ctxId<%i>, cur->ctxId.B<%i>, string<%i>\n", 
+  //MqDLogV (msgque, __func__, 0, "msgque->ctxId<%i>, cur->ctxId.B<%i>, string<%i>\n", 
   //    msgque->ctxId, cur->ctxId.B, msgque->config.isString);
     }
 
@@ -776,10 +776,10 @@ pSendEND (
 
   /*
   if (MQ_IS_SERVER(msgque)) {
-  MqDLogX (msgque, __func__, 0, "token<%s>, ctxId<%i>, trans<%p>, string<%i>\n", 
+  MqDLogV (msgque, __func__, 0, "token<%s>, ctxId<%i>, trans<%p>, string<%i>\n", 
       token, cur->hdr.ctxId.B, cur->hdr.trans, msgque->config.isString);
-  MqDLogX (msgque, __func__, 0, "body-prefix<%s>\n", buf->data+sizeof(struct HdrS));
-  MqDLogX (msgque, __func__, 0, "body-item<%s>\n", buf->data+sizeof(struct HdrS)+sizeof(struct BdyS)+1);
+  MqDLogV (msgque, __func__, 0, "body-prefix<%s>\n", buf->data+sizeof(struct HdrS));
+  MqDLogV (msgque, __func__, 0, "body-item<%s>\n", buf->data+sizeof(struct HdrS)+sizeof(struct BdyS)+1);
   }
 
   I1
@@ -890,7 +890,7 @@ MqSendEND_AND_CALLBACK (
   MqTokenDataFreeF datafreeF
 )
 {
-//MqDLogX(context,__func__,0,"data<%p>\n", data);
+//MqDLogV(context,__func__,0,"data<%p>\n", data);
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
   MQ_HDL transH = pTransPop (context->link.trans, cb);
   pSendL_CLEANUP (context);
@@ -1056,5 +1056,6 @@ error:
 }
 
 END_C_DECLS
+
 
 
