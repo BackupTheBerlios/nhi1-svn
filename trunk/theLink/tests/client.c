@@ -163,7 +163,7 @@ ClientMain (
   if (all) {
     sendB = sendAndWait = sendAndCall = parent = child = MQ_YES;
   } else if (sendB == MQ_NO && sendAndWait == MQ_NO && sendAndCall == MQ_NO
-		&& parent == MQ_NO && child == MQ_NO) {
+		&& parent == MQ_NO && child == MQ_NO ) {
     sendAndWait = MQ_YES;
   }
 

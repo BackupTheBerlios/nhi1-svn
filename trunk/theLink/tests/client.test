@@ -141,6 +141,12 @@ test client-5 {server help} \
     -h, --help       print this help
 }
 
+test client-6z {client/server debug -1- message} \
+    -constraints  c \
+    -body    { Exec {*}[getClient client] --name client --debug 1 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -match   glob \
+    -result  {NONE--S> (server:*) \[*] \[1-0-*-test]: this is the log test*}
+
 test client-6a {client/server debug -2- message} \
     -constraints  c \
     -body    { Exec {*}[getClient client] --name client --debug 2 --num 1 @ {*}[getServer c.pipe ] --name server } \
@@ -148,6 +154,7 @@ test client-6a {client/server debug -2- message} \
     -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>
+S> (server:*) \[*] \[1-0-*-test]: this is the log test
 C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>*}
 
 test client-6b {client/server debug -3- message} \
@@ -157,6 +164,7 @@ test client-6b {client/server debug -3- message} \
     -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<3>, endian<0>
+S> (server:*) \[*] \[1-0-*-test]: this is the log test
 C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<3>, endian<0>*}
 
 test client-6c {client/server debug -4- message} \
@@ -191,6 +199,7 @@ test client-6d {client/server debug -2- message with long names} \
     -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[1-0-*-test]: this is the log test
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: start: --------------------------------------
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-statistics]:             MqSendEND_AND_WAIT:*
@@ -203,6 +212,7 @@ test client-6e {client/server debug -2- message with 50c names} \
     -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>
+S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[1-0-*-test]: this is the log test
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, endian<0>
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: start: --------------------------------------
 C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-statistics]:             MqSendEND_AND_WAIT:*
@@ -216,6 +226,7 @@ test client-6f {client/server debug -2- message with 51c names} \
     -result  {NONE--C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkCreate\]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*\] \[2-0-*-MqLinkCreate\]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*\] \[2-0-*-MqLinkCreate\]: END string<no>, silent<no>, debug<2>, endian<0>
+S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[1-0-*-test]: this is the log test
 C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkCreate\]: END string<no>, silent<no>, debug<2>, endian<0>
 *}
 
