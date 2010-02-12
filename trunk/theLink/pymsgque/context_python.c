@@ -77,3 +77,18 @@ PyObject* NS(Exit)(
   MqExit(CONTEXT);
   Py_RETURN_NONE;
 }
+
+PyObject* NS(LogC)(
+  PyObject  *self,
+  PyObject  *args
+)
+{
+  MQ_CST prefix, text;
+  MQ_INT level;
+  if (!PyArg_ParseTuple(args, "sis:LogC", &prefix, &level, &text)) {
+    return NULL;
+  } else {
+    MqLogC(CONTEXT,prefix,level,text);
+  }
+  Py_RETURN_NONE;
+}

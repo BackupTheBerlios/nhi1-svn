@@ -634,6 +634,7 @@ srv = Server()
 
 try:
   srv.LinkCreate(sys.argv)
+  srv.LogC("test",1,"this is the log test\n")
   srv.ProcessEvent(wait="FOREVER")
 
 except:

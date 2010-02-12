@@ -88,7 +88,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorC")]
     private static extern MqErrorE MqErrorC(IntPtr context, string proc, int num, string message);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSet")]
-    private static extern void MqErrorSet(IntPtr context, int num, MqErrorE code, string message);
+    private static extern void MqErrorSet([In]IntPtr context, [In]int num, [In]MqErrorE code, [In]string message, [In]IntPtr errctx);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSetCONTINUE")]
     private static extern void MqErrorSetCONTINUE(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorIsEXIT")]
@@ -148,7 +148,7 @@ namespace csmsgque {
     static private MqErrorE MqErrorSet2 (IntPtr context, Exception ex) {
       if (ex is MqSException) {
 	MqSException exm = (MqSException) ex;
-	MqErrorSet (context, exm.num, exm.code, exm.txt);
+	MqErrorSet (context, exm.num, exm.code, exm.txt, IntPtr.Zero);
       } else {
 	MqErrorC(context, "ErrorSet", -1, ex.ToString());
       }

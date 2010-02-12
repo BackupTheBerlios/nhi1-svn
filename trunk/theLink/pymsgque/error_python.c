@@ -121,9 +121,10 @@ PyObject* NS(ErrorSet)(
     } else if (PyErr_GivenExceptionMatches(typeO,NS(MqSException))) {
 
       MqErrorSet (context, 
-       (MQ_INT) PyLong_AsLong(PyObject_GetAttrString(typeO,"num")),
-       (enum MqErrorE) PyLong_AsLong(PyObject_GetAttrString(typeO,"code")),
-       (MQ_CST const) PyBytes_AsString(PyUnicode_AsUTF8String(PyObject_GetAttrString(typeO,"text")))
+	(MQ_INT) PyLong_AsLong(PyObject_GetAttrString(typeO,"num")),
+	(enum MqErrorE) PyLong_AsLong(PyObject_GetAttrString(typeO,"code")),
+	(MQ_CST const) PyBytes_AsString(PyUnicode_AsUTF8String(PyObject_GetAttrString(typeO,"text"))),
+	NULL
       );
 
     } else if (valueO) {

@@ -117,7 +117,7 @@ ProcError (pTHX_ MqS * context, SV* err)
   if (SvTRUE(err)) {
     if (sv_isobject(err) && sv_derived_from(err, "Net::PerlMsgque::MqSException")) {
       MqSException *ex = INT2PTR(MqSException*, SvIV(SvRV(err)));
-      MqErrorSet (context, ex->num, ex->code, ex->text);
+      MqErrorSet (context, ex->num, ex->code, ex->text, NULL);
       MqSysFree (ex->text);
       MqSysFree(ex);
     } else {
@@ -447,6 +447,9 @@ MqLinkConnect (MqS* context)
 
 void
 MqExit(MqS * context)
+
+void
+MqLogC(MqS * context, MQ_CST prefix, int level, MQ_CST text)
 
 void
 MqConfigSetBuffersize (MqS* context, int buffersize)
