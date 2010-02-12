@@ -313,15 +313,18 @@ JNIEXPORT void JNICALL NS(ContextDelete) (
   }
 }
 
-JNIEXPORT void JNICALL NS(DLogC) (
+JNIEXPORT void JNICALL NS(LogC) (
   JNIEnv  *env, 
   jobject self,
+  jstring prefixO,
   jint	  level,
-  jstring text
+  jstring textO
 )
 {
-  MQ_CST str = JO2C_START(env, text);
-  MqDLogC(CONTEXT, level, str);
-  JO2C_STOP(env, text, str);
+  MQ_CST prefix = JO2C_START(env, prefixO);
+  MQ_CST text = JO2C_START(env, textO);
+  MqLogC(CONTEXT, prefix, level, text);
+  JO2C_STOP(env, textO, text);
+  JO2C_STOP(env, prefixO, prefix);
 }
 

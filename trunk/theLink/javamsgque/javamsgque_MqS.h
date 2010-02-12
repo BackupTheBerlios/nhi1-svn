@@ -281,11 +281,11 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
 
 /*
  * Class:     javamsgque_MqS
- * Method:    DLogC
- * Signature: (ILjava/lang/String;)V
+ * Method:    LogC
+ * Signature: (Ljava/lang/String;ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_DLogC
-  (JNIEnv *, jobject, jint, jstring);
+JNIEXPORT void JNICALL Java_javamsgque_MqS_LogC
+  (JNIEnv *, jobject, jstring, jint, jstring);
 
 /*
  * Class:     javamsgque_MqS

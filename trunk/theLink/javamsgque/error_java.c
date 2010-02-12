@@ -88,7 +88,8 @@ JNIEXPORT void JNICALL NS(ErrorSet) (
     MqErrorSet(context,
       (MQ_INT) (*env)->GetIntField(env,ex,NS(FID_MqSException_num)), 
       (enum MqErrorE) (*env)->GetIntField(env,ex,NS(FID_MqSException_code)), 
-      txtC
+      txtC,
+      NULL
     );
     JO2C_STOP(env, ex, txtC);
 

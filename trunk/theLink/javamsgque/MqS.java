@@ -127,8 +127,8 @@ public abstract class MqS {
   /// \api #MqExit
   public native void Exit ();
 
-  /// \api #MqDLogC
-  public native void DLogC (int level, String text);
+  /// \api #MqLogC
+  public native void LogC (String prefix, int level, String text);
 
 /// \} Mq_Context_Java_API
 

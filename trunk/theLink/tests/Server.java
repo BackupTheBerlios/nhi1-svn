@@ -450,6 +450,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
     try {
       srv.ConfigSetName("server");
       srv.LinkCreate (args);
+      srv.LogC("test",1,"this is the log test\n");
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable ex) {
       srv.ErrorSet(ex);
@@ -838,11 +839,4 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
-
-
-
-
-
-
-
 
