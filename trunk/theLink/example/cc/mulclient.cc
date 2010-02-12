@@ -18,7 +18,7 @@ using namespace ccmsgque;
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  MqC ctx;
+  static MqC ctx;
   try {
     ctx.ConfigSetName ("MyMulClient");
     ctx.LinkCreateVC (argc, argv);

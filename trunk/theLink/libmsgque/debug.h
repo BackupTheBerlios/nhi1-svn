@@ -67,7 +67,7 @@
 #define MEI(i) MXI(EEEEEEEEEEEEEEEEE,i)
 #define MFI(i) MXI(FFFFFFFFFFFFFFFFF,i)
 
-#define IX(x,s) MqDLogV(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
+#define IX(x,s) MqLogV(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
 
 #define I0 IX(MQ_CONTEXT_S,0000000000000000)
 #define I1 IX(MQ_CONTEXT_S,1111111111111111)
@@ -96,7 +96,14 @@
 #define I0P IXP(MQ_CONTEXT_S,0000000000000000,prefix)
 
 #define MV(f,v) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stderr);
-#define MVA(f,v,a) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, a);fflush(stderr);
+
+#if defined(MQ_HAS_THREAD)
+#define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      (void*) pthread_self(), a);fflush(stderr);
+#else
+#define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      a);fflush(stderr);
+#endif
 
 #define printI(var)	MV(MQ_FORMAT_I,	var)
 #define printY(var)	MV(MQ_FORMAT_Y,	var)
@@ -112,8 +119,8 @@
 
 #define printCP(txt,var)  MVA("%p",txt,var)
 
-#define MLV(x,f,v) MqDLogV(x,__func__,0,"(%s:%d) -> " #v "<" f ">\n", __FILE__, __LINE__, v);
-#define MLV2(x,f,t,v) MqDLogV(x,__func__,0,"(%s:%d) -> %s<" f ">\n", __FILE__, __LINE__, t, v);
+#define MLV(x,f,v) MqLogV(x,__func__,0,"(%s:%d) -> " #v "<" f ">\n", __FILE__, __LINE__, v);
+#define MLV2(x,f,t,v) MqLogV(x,__func__,0,"(%s:%d) -> %s<" f ">\n", __FILE__, __LINE__, t, v);
 
 #define printLP(var)	MLV(MQ_CONTEXT_S, "%p",        var)
 #define printLI(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_I, var)

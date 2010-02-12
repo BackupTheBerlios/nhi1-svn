@@ -68,7 +68,7 @@ class Filter1 : public MqC, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter1 filter;
+  static Filter1 filter;
   filter.ConfigSetIsServer(MQ_YES);
   try {
     filter.LinkCreateVC (argc, argv);

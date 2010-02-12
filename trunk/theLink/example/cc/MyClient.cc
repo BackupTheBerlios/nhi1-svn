@@ -17,7 +17,7 @@ using namespace std;
 using namespace ccmsgque;
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  MqC c;
+  static MqC c;
   try {
     c.LinkCreateVC(argc, argv);
     c.SendSTART();

@@ -40,7 +40,6 @@ namespace ccmsgque {
   {
     struct ProcCallS const * const data = static_cast<struct ProcCallS const * const> (dataP);
 
-    // call the function
     try {
 
       switch (data->type) {
@@ -66,9 +65,9 @@ namespace ccmsgque {
 
     } catch (exception& ex) {
       return GetThis(context)->ErrorSet (ex);
-
     } catch (...) {
-      return MqErrorC(context, __func__, -1, "unknown MqCException");
+      // http://groups.google.com/group/comp.programming.threads/browse_thread/thread/652bcf186fbbf697/f63757846514e5e5
+      throw;
     }
 
     // everything is OK

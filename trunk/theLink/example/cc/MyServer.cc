@@ -33,7 +33,7 @@ class MyServer : public MqC, public IServerSetup, public IFactory {
 };
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  MyServer srv;
+  static MyServer srv;
   try {
     srv.LinkCreateVC(argc, argv);
     srv.ProcessEvent (MQ_WAIT_FOREVER);

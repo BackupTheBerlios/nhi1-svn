@@ -154,7 +154,7 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter4 filter;
+  static Filter4 filter;
   try {
     filter.ConfigSetIgnoreExit(true);
     filter.ConfigSetIdent("transFilter");

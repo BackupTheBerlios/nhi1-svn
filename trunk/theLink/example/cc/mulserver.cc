@@ -31,7 +31,7 @@ class mulserver : public MqC, public IServerSetup, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  mulserver ctx;
+  static mulserver ctx;
   try {
     ctx.ConfigSetName ("MyMulServer");
     ctx.LinkCreateVC (argc, argv);

@@ -38,7 +38,7 @@ class testserver : public MqC, public IServerSetup, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  testserver ctx;
+  static testserver ctx;
   try {
     ctx.ConfigSetName ("testserver");
     ctx.LinkCreateVC(argc, argv);

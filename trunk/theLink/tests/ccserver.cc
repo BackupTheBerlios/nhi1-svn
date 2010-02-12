@@ -461,7 +461,12 @@ namespace example {
 	    return;
 	  } else if (!strcmp(s,"ERR-1")) {
 	    ClientERR2 *slv = new ClientERR2();
-	    slv->LinkCreate(ConfigGetDebug());
+	    try {
+	      slv->LinkCreate(ConfigGetDebug());
+	    } catch (const exception& e) {
+	      delete(slv);
+	      ErrorSet(e);
+	    }
 	  } else if (!strcmp(s,"isSlave")) {
 	    SendO(cl->SlaveIs());
 	  }
@@ -703,7 +708,7 @@ using namespace example;
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Server server;
+  static Server server;
   try {
     server.ConfigSetName ("server");
     server.LinkCreateVC (argc, argv);

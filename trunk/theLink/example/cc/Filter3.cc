@@ -54,9 +54,10 @@ class Filter3 : public MqC, public IFactory, public IServerSetup {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter3 filter;
+  static Filter3 filter;
   try {
     filter.ConfigSetIsServer(MQ_YES);
+    filter.ConfigSetName("Filter3");
     filter.LinkCreateVC (argc, argv);
     filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {

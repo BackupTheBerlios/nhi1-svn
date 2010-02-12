@@ -45,7 +45,7 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   if (argc > 1)
     LIST.insert(LIST.end(), argv+1, argv+argc);
 
-  MqC c0, c00, c01, c000, c1, c10, c100, c101;
+  static MqC c0, c00, c01, c000, c1, c10, c100, c101;
 
   try {
 

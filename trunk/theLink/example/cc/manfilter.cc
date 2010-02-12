@@ -34,7 +34,7 @@ class manfilter : public MqC, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  manfilter filter;
+  static manfilter filter;
   try {
     filter.ConfigSetName ("manfilter");
     filter.ConfigSetIsServer (MQ_YES);

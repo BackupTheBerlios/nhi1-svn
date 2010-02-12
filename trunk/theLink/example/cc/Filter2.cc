@@ -35,7 +35,7 @@ class Filter2 : public MqC, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter2 filter;
+  static Filter2 filter;
   try {
     filter.ConfigSetName("filter");
     filter.ConfigSetIsServer(MQ_YES);

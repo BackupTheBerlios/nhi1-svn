@@ -378,6 +378,11 @@ namespace ccmsgque {
 	MQ_PTR *dataP
       );
 
+      static void MQ_DECL ProcFreeISetup (
+	struct MqS const * const context, 
+	MQ_PTR *dataP
+      );
+
     public:
       /// \brief get access to an internal buffer
       inline MQ_BUF GetTempBuffer() { return context.temp; }
