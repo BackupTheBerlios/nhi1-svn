@@ -36,11 +36,14 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextDelete")]
     private static extern void MqContextDelete([In,Out]ref IntPtr context);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExit")]
-    private static extern void MqExit([In]IntPtr context);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExitP")]
+    private static extern void MqExitP([In]string prefix, [In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLogData")]
     private static extern void MqLogData([In]IntPtr context, [In]string prefix);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLogC")]
+    private static extern void MqLogC([In]IntPtr context, [In]string prefix, [In]int level, [In]string text);
 
   // Private
 
@@ -66,7 +69,12 @@ namespace csmsgque {
 
     /// \api #MqExit
     public void Exit() {
-      MqExit (context);
+      MqExitP ("Exit", context);
+    }
+
+    /// \api #MqLogC
+    public void LogC(string prefix, int level, string text) {
+      MqLogC (context, prefix, level, text);
     }
 
     /// \api #MqContextCreate

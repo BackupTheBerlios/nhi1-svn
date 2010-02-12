@@ -694,6 +694,7 @@ namespace example {
       try {
 	srv.ConfigSetName("server");
 	srv.LinkCreate(args);
+	srv.LogC("test",1,"this is the log test\n");
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {
 	srv.ErrorSet (ex);
