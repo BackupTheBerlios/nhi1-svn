@@ -21,7 +21,7 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief Return-Codes used in #sSend_RET_START function
+/// \brief Return-Codes used in #MqSendEND_AND_WAIT function
 enum MqReturnE {
     MQ_RETURN_OK	  = 'O',  ///< return a \b ok package
     MQ_RETURN_ERROR	  = 'E',  ///< return an \b error package

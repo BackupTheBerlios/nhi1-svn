@@ -1,4 +1,4 @@
-.TH "csmsgque" n "2 Feb 2010" "Version 4.3" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "12 Feb 2010" "Version 4.4" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,7 +71,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
 .SS "MqS ctx=new MqS()"
 create a new context and initialize the default configuration data 
 .PP
@@ -112,15 +112,7 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .RE
 .PP
 .SS "ctx.Exit()"
-delete the \fIcontext\fP and exit the current process or thread 
-.PP
-To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enougth to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
-.RE
-.PP
+wrapper to add calling function to \fBMqExitP\fP 
 .SH "CONFIG API"
 .PP
 \fBInit\fP
@@ -146,7 +138,7 @@ The configuration is done persistent using \fIconfig-api\fP functions or on link
 .SS "static: MqS.Init(params string[] args)"
 Initialize the process \fIstartup-prefix\fP argument. 
 .PP
-The \fIstartup-prefix\fP have to be the name of the executablei, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
+The \fIstartup-prefix\fP have to be the name of the executable, found in the \fCPATH\fP environment variable, and additional arguments like the script name or the required startup options. The \fIstartup-prefix\fP is used for two different purpose:
 .IP "\(bu" 2
 To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
 .IP "\(bu" 2
@@ -164,7 +156,7 @@ Every use of this function will free the data of the previous \fIstartup-prefix\
 .SS "command-line:  --buffersize"
 \fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBcsmsgque.MqS.ConfigGetBuffersize\fP\fP , \fBset:\fP \fC\fBcsmsgque.MqS.ConfigSetBuffersize\fP\fP
 .PP
-set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS sepecific) 
+set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
 .SS "command-line:  --debug"
 \fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBcsmsgque.MqS.ConfigGetDebug\fP\fP , \fBset:\fP \fC\fBcsmsgque.MqS.ConfigSetDebug\fP\fP
 .PP
@@ -207,7 +199,7 @@ Use the \fIserver-name\fP as a client specific prefix in the server debug/error/
 C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE 
 .fi
 .PP
- If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a useable name. (default: \fInull\fP) 
+ If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fInull\fP) 
 .SS "ident"
 \fBtype:\fP \fCstring\fP, \fBget:\fP \fC\fBcsmsgque.MqS.ConfigGetIdent\fP\fP , \fBset:\fP \fC\fBcsmsgque.MqS.ConfigSetIdent\fP\fP
 .PP
@@ -363,7 +355,7 @@ The \fIfactory-interface\fP is used to create a new:
 .fi
 .PP
 .SS "interface: IBgError.Call()"
-A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the aplication continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP. 
+A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP. 
 .SS "interface: IEvent.Call()"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
@@ -395,7 +387,7 @@ Together with \fBignoreExit\fP the Event-Handler is used to start background pro
 .PP
 setup and manage a \fIclient-server-link\fP 
 .PP
-The \fIclient-server-link\fP connect two \fIcontext\fP, a \fIclient-parent-context\fP and a \fIserver-parent-context\fP. The \fIlink\fP can be \fIlocal\fP (connect two \fIcontext\fP on the same host) or can be \fIremote\fP (connect two \fIcontext\fP on different hosts). OnTop the \fIparent-context\fP multiple \fIchild-context\fP are allowed. 
+The \fIclient-server-link\fP connect two \fIcontext\fP, a \fIclient-parent-context\fP and a \fIserver-parent-context\fP. The \fIlink\fP can be \fIlocal\fP (connect two \fIcontext\fP on the same host) or can be \fIremote\fP (connect two \fIcontext\fP on different hosts). On-Top the \fIparent-context\fP multiple \fIchild-context\fP are allowed. 
 .PP
 .nf
 
@@ -460,7 +452,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incomming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS.WAIT.FOREVER.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS.WAIT.FOREVER.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -504,7 +496,7 @@ make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\f
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-commandline-arguments\fP for the \fI--pipe\fP setup.
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-command-line-arguments\fP for the \fI--pipe\fP setup.
 .RE
 .PP
 \fBReturns:\fP
@@ -518,7 +510,7 @@ if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an ind
 .RE
 .PP
 .SS "ctx.LinkCreateChild(MqS parent, params string[] args)"
-make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP 
+make a \fIcontext\fP to a \fIchild-context\fP on-top of an existing \fIparent-client-server-link\fP 
 .PP
 A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
 .PP
@@ -749,7 +741,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ServiceCreate(string token, IService callback)"
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincomming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -806,23 +798,33 @@ an \fBEXCEPTION OBJECT\fP on error
 .SS "ctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
-This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle. The third argument \fIwait\fP support three modes to define the \fIoperation-mode\fP:
-.IP "\(bu" 2
-\fBMqS.WAIT.NO\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
-.IP "\(bu" 2
-\fBMqS.WAIT.ONCE\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout\fP error if no event was found.
-.IP "\(bu" 2
-\fBMqS.WAIT.FOREVER\fP, wait forever and only come back on \fIerror\fP or on \fIexit\fP.
-.PP
-This function is usually used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP.
+This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
+.br
+ This function is direct used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP. This function is indirect used in \fBSendEND_AND_WAIT\fP to
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fItimeout\fP seconds until a \fItimeout-error\fP is raised (default: \fBtimeout\fP value), only used if \fIwait\fP = MqS.WAIT.ONCE 
+\fItimeout\fP the maximum \fIwait-time\fP in seconds until a \fItimeout-error\fP is raised, possible values are:
+.IP "\(bu" 2
+\fB>0\fP, use this value as number of seconds.
+.IP "\(bu" 2
+\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for MqS.WAIT.ONCE or \fBMQ_TIMEOUT_MAX\fP for MqS.WAIT.FOREVER.
+.IP "\(bu" 2
+\fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
+.IP "\(bu" 2
+\fBMQ_TIMEOUT_MAX\fP = -3, request the maximum possible (inifinit) timeout value 
+.PP
 .br
-\fIwait\fP chose the \fItime-interval\fP to wait for a new event (default: MqS.WAIT.NO) 
+\fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
+.IP "\(bu" 2
+MqS.WAIT.NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+.IP "\(bu" 2
+MqS.WAIT.ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+.IP "\(bu" 2
+MqS.WAIT.FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+.PP
 .RE
 .PP
 \fBReturns:\fP
@@ -1486,7 +1488,7 @@ The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItype
 .SS "TYPE IDENTIFIER"
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string datatype (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string data-type (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character (byte)
 .IP "\(bu" 2
@@ -1583,7 +1585,7 @@ signal end of processing in an \fBIEvent\fP callback
 .SS "bool ctx.ErrorIsEXIT()"
 check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP 
 .PP
-An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to igore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
  
 .PP
@@ -1600,7 +1602,7 @@ An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapp
 .fi
 .PP
 .SS "ctx.ErrorReset()"
-clear the \fIerror\fP and reset the \fIcontex\fP 
+clear the \fIerror\fP and reset the \fIcontext\fP 
 .SS "ctx.ErrorRaise()"
 convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise the object.
 .SS "ctx.ErrorPrint()"

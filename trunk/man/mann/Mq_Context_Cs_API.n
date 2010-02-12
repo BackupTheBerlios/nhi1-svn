@@ -1,4 +1,4 @@
-.TH "Mq_Context_Cs_API" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_Cs_API" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,6 +21,10 @@ Mq_Context_Cs_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
 .ti -1c
+.RI "void \fBcsmsgque::MqS.LogC\fP (string prefix, int level, string text)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.ti -1c
 .RI "\fBcsmsgque::MqS.MqS\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
@@ -42,19 +46,24 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper arround this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
 .SH "Function Documentation"
 .PP 
 .SS "void csmsgque.MqS.Exit ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
 .PP
-Definition at line 68 of file context.cs.
+Definition at line 71 of file context.cs.
+.SS "void csmsgque.MqS.LogC (string prefix, int level, string text)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
+.PP
+Definition at line 76 of file context.cs.
 .SS "csmsgque.MqS.MqS ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
-Definition at line 73 of file context.cs.
+Definition at line 81 of file context.cs.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

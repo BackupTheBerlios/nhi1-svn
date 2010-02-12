@@ -1,4 +1,4 @@
-.TH "MqBufferAtomU" n "5 Feb 2010" "Version 4.3" "libmsgque" \" -*- nroff -*-
+.TH "MqBufferAtomU" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqBufferAtomU \- union used to set or modify native data from an \fBMqBufferS\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -66,70 +66,70 @@ MqBufferAtomU \- union used to set or modify native data from an \fBMqBufferS\fP
 .PP 
 union used to set or modify native data from an \fBMqBufferS\fP object 
 .PP
-Definition at line 2032 of file msgque.h.
-.SH "Field Documentation"
+Definition at line 2038 of file msgque.h.
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B\fP[8]"
+.SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 2040 of file msgque.h.
-.SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B1\fP[1]"
+Definition at line 2046 of file msgque.h.
+.SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B1\fP[1]"
 .PP
 1 byte ARRAY used for copy 
 .PP
-Definition at line 2044 of file msgque.h.
-.SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B2\fP[2]"
+Definition at line 2050 of file msgque.h.
+.SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B2\fP[2]"
 .PP
 2 byte ARRAY used for copy 
 .PP
-Definition at line 2043 of file msgque.h.
-.SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B4\fP[4]"
+Definition at line 2049 of file msgque.h.
+.SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B4\fP[4]"
 .PP
 4 byte ARRAY used for copy 
 .PP
-Definition at line 2042 of file msgque.h.
-.SS "\fBMQ_BINB\fP \fBMqBufferAtomU::B8\fP[8]"
+Definition at line 2048 of file msgque.h.
+.SS "\fBMQ_BINB\fP \fBMqBufferAtomU.B8\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
-Definition at line 2041 of file msgque.h.
-.SS "\fBMQ_DBL\fP \fBMqBufferAtomU::D\fP"
+Definition at line 2047 of file msgque.h.
+.SS "\fBMQ_DBL\fP \fBMqBufferAtomU.D\fP"
 .PP
 8 byte double data 
 .PP
-Definition at line 2039 of file msgque.h.
-.SS "\fBMQ_FLT\fP \fBMqBufferAtomU::F\fP"
+Definition at line 2045 of file msgque.h.
+.SS "\fBMQ_FLT\fP \fBMqBufferAtomU.F\fP"
 .PP
 4 byte float data 
 .PP
-Definition at line 2037 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqBufferAtomU::I\fP"
+Definition at line 2043 of file msgque.h.
+.SS "\fBMQ_INT\fP \fBMqBufferAtomU.I\fP"
 .PP
 4 byte integer data 
 .PP
-Definition at line 2036 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqBufferAtomU::O\fP"
+Definition at line 2042 of file msgque.h.
+.SS "\fBMQ_BOL\fP \fBMqBufferAtomU.O\fP"
 .PP
 1 byte boolean data 
 .PP
-Definition at line 2034 of file msgque.h.
-.SS "\fBMQ_SRT\fP \fBMqBufferAtomU::S\fP"
+Definition at line 2040 of file msgque.h.
+.SS "\fBMQ_SRT\fP \fBMqBufferAtomU.S\fP"
 .PP
 2 byte short data 
 .PP
-Definition at line 2035 of file msgque.h.
-.SS "\fBMQ_WID\fP \fBMqBufferAtomU::W\fP"
+Definition at line 2041 of file msgque.h.
+.SS "\fBMQ_WID\fP \fBMqBufferAtomU.W\fP"
 .PP
 8 byte integer data 
 .PP
-Definition at line 2038 of file msgque.h.
-.SS "\fBMQ_BYT\fP \fBMqBufferAtomU::Y\fP"
+Definition at line 2044 of file msgque.h.
+.SS "\fBMQ_BYT\fP \fBMqBufferAtomU.Y\fP"
 .PP
 1 byte byte data 
 .PP
-Definition at line 2033 of file msgque.h.
+Definition at line 2039 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

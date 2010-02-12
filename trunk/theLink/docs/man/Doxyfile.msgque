@@ -43,6 +43,7 @@ ALIASES		    += "config_isServer=#MqSetupS:.isServer"
 ALIASES		    += "config_IServerCleanup=#MqConfigSetServerSetup"
 ALIASES		    += "config_name=#MqConfigS::name"
 ALIASES		    += "config_srvname=#MqConfigS::srvname"
+ALIASES		    += "config_debug=#MqConfigS::debug"
 
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"

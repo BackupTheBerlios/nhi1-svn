@@ -133,7 +133,7 @@ EventDelete(void)
 //######################################################################
 #else	/* ! MQ_HAS_THREAD */
 
-struct MqEventS * sysevent = NULL;
+static struct MqEventS * sysevent = NULL;
 
 static enum MqErrorE
 sEventAlloc(

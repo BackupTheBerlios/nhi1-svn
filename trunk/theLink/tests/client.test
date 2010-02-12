@@ -171,26 +171,26 @@ test client-6c {client/server debug -4- message} \
     -constraints  c \
     -body    { Exec {*}[getClient client] --name client --debug 4 --num 1 @ {*}[getServer c.pipe ] --name server --silent} \
     -match   glob \
-    -result  {NONE--C> (client:*:*) \[*] \[2-0-0-*-MqLinkPrepare]: PREPARE: io->com<PIPE>
-C> (client:*:*) \[*] \[2-0-0-*-MqLinkCreate]: START: io->com<PIPE>
-C> (client:*:*) \[*] \[4-0-0-*-pEventCreate]: TLS-Id<*>
-C> (client:*:*) \[*] \[4-0-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[1]<*>
-C> (client:*:*) \[*] \[4-0-0-*-MqLinkConnect]: START
-C> (client:*:*) \[*] \[4-0-0-*-pIoStartServer]: finish start server 'server' as 'spawn' with ID '*'
-C> (client:*:*) \[*] \[4-0-0-*-pEventAdd]: TLS-Id<*> Socket<*> DataLCur<0>
-C> (client:*:*) \[*] \[4-0-0-*-MqLinkConnect]: send token<_IAA>
-C> (client:*:*) \[*] \[4-0-0-*-sWaitForToken]: wait for token<_PEO>
-C> (client:*:*) \[*] \[4-0-0-*-sWaitForToken]: got token<_PEO>
-C> (client:*:*) \[*] \[4-0-0-*-MqLinkConnect]: END
-C> (client:*:*) \[*] \[2-0-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<4>, endian<0>
+    -result  {NONE--C> (client:*) \[*] \[2-0-0-*-MqLinkPrepare]: PREPARE: io->com<PIPE>
+C> (client:*) \[*] \[2-0-0-*-MqLinkCreate]: START: io->com<PIPE>
+C> (client:*) \[*] \[4-0-0-*-pEventCreate]: TLS-Id<*>
+C> (client:*) \[*] \[4-0-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[1]<*>
+C> (client:*) \[*] \[4-0-0-*-MqLinkConnect]: START
+C> (client:*) \[*] \[4-0-0-*-pIoStartServer]: finish start server 'server' as 'spawn' with ID '*'
+C> (client:*) \[*] \[4-0-0-*-pEventAdd]: TLS-Id<*> Socket<*> DataLCur<0>
+C> (client:*) \[*] \[4-0-0-*-MqLinkConnect]: send token<_IAA>
+C> (client:*) \[*] \[4-0-0-*-sWaitForToken]: wait for token<_PEO>
+C> (client:*) \[*] \[4-0-0-*-sWaitForToken]: got token<_PEO>
+C> (client:*) \[*] \[4-0-0-*-MqLinkConnect]: END
+C> (client:*) \[*] \[2-0-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<4>, endian<0>
 *
-C> (client:*:*) \[*] \[3-0-0-*-MqExitP]: called from 'main'
-C> (client:*:*) \[*] \[4-0-0-*-pMqShutdown]: START shutdown
-C> (client:*:*) \[*] \[4-0-0-*-pMqShutdown]: send token<_SHD>
-C> (client:*:*) \[*] \[4-0-0-*-pEventShutdown]: sock<*> DataLCur<0>
-C> (client:*:*) \[*] \[4-0-0-*-pMqShutdown]: END shutdown
-C> (client:*:*) \[*] \[4-0-0-*-pEventShutdown]: sock<-1> DataLCur<0>
-C> (client:*:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE }
+C> (client:*) \[*] \[3-0-0-*-MqExitP]: called from 'main'
+C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: START shutdown
+C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: send token<_SHD>
+C> (client:*) \[*] \[4-0-0-*-pEventShutdown]: sock<*> DataLCur<0>
+C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: END shutdown
+C> (client:*) \[*] \[4-0-0-*-pEventShutdown]: sock<-1> DataLCur<0>
+C> (client:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE }
 
 test client-6d {client/server debug -2- message with long names} \
     -constraints  c \
@@ -240,15 +240,15 @@ test client-6g-($S) {client/server full test} \
     -constraints  pipe \
     -body    { Exec {*}[getClient client] --name client --all --num 1 @ {*}[getServer c.pipe ] --name server } \
     -match   glob \
-    -result  {NONE--C> (client:*:*) \[*] \[0-0-0-*-main]: start: --------------------------------------
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:                      MqSendEND:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:         MqSendEND_AND_CALLBACK:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:             MqSendEND_AND_WAIT:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:                  parent create:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:                  parent delete:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:                   child create:*
-C> (client:*:*) \[*] \[0-0-0-*-statistics]:                   child delete:*
-C> (client:*:*) \[*] \[0-0-0-*-main]: end: ----------------------------------------}
+    -result  {NONE--C> (client:*) \[*] \[0-0-0-*-main]: start: --------------------------------------
+C> (client:*) \[*] \[0-0-0-*-statistics]:                      MqSendEND:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:         MqSendEND_AND_CALLBACK:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:             MqSendEND_AND_WAIT:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:                  parent create:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:                  parent delete:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:                   child create:*
+C> (client:*) \[*] \[0-0-0-*-statistics]:                   child delete:*
+C> (client:*) \[*] \[0-0-0-*-main]: end: ----------------------------------------}
 
 	test client-7-($S) {check startup error} \
 	    -constraints    {tcp} \

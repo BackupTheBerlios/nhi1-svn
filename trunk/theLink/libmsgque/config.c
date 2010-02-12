@@ -45,6 +45,8 @@ void GcDelete (void) __attribute__ ((destructor));
 
 #if defined (MQ_HAS_THREAD)
 static MqThreadKeyType gc_key = MqThreadKeyNULL;
+#else
+static struct MqGcS * sysgc = NULL;
 #endif
 
 static void
@@ -68,7 +70,9 @@ GcRun (
   struct MqS * const context
 )
 {
+#if defined (MQ_HAS_THREAD)
   struct MqGcS * sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key);
+#endif
   if (sysgc != NULL) {
     MQ_INT MqSetDebugLevel(context);
     MQ_SIZE i;

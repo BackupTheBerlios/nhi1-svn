@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "2 Feb 2010" "Version 4.3" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "12 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -144,9 +144,9 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
 .ti -1c
-.RI "native void \fBDLogC\fP (int level, String text)"
+.RI "native void \fBLogC\fP (String prefix, int level, String text)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqDLogC\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
 .ti -1c
 .RI "native void \fBLinkCreate\fP (String...args)  throws MqSException"
 .br

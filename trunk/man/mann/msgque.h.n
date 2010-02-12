@@ -1,8 +1,8 @@
-.TH "msgque.h" n "2 Feb 2010" "Version 4.3" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "12 Feb 2010" "Version 4.4" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 195 2010-02-11 11:21:24Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -175,9 +175,17 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "very short timeout in sec (5 sec) "
 .ti -1c
+.RI "#define \fBMQ_TIMEOUT_DEFAULT\fP   -1"
+.br
+.R "request the default timeout value "
+.ti -1c
 .RI "#define \fBMQ_TIMEOUT_USER\fP   -2"
 .br
-.R "request the user defined timeout value from the argument of the \fC--timeout\fP option "
+.R "request the user defined timeout value from the \fBMqIoConfigS::timeout\fP configuration value "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT_MAX\fP   -3"
+.br
+.R "request the maximum possible (inifinit) timeout value "
 .ti -1c
 .RI "#define \fBMQ_EXTERN\fP"
 .br
@@ -214,6 +222,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
 .R "signature marker used in \fBMqS::signature\fP "
+.ti -1c
+.RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
+.br
+.R "wrapper to add calling function to \fBMqExitP\fP "
 .ti -1c
 .RI "#define \fBMQ_TYPE_IS_1_BYTE\fP   (1<<0)"
 .br
@@ -278,6 +290,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "convenience wrapper for \fBMqErrorStackP\fP "
 .ti -1c
+.RI "#define \fBMqErrorCreateEXIT\fP(ctx)   MqErrorCreateEXITP(ctx,__func__)"
+.br
+.R "wrapper to add trace-back information "
+.ti -1c
 .RI "#define \fBMqErrorCheckI\fP(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .br
 .R "check on error "
@@ -314,19 +330,19 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "define a variable \fIdebugLevel\fP valid only in the current context "
 .ti -1c
-.RI "#define \fBMqDLogC\fP(context, level, str)   if (unlikely(context != NULL && context->config.debug >= level)) MqDLogX(context,__func__,level,str)"
+.RI "#define \fBMqDLogC\fP(context, level, str)   if (unlikely(context != NULL && context->config.debug >= level)) MqLogC(context,__func__,level,str)"
 .br
 .R "log a plain string "
 .ti -1c
-.RI "#define \fBMqDLogCL\fP(context, level, str)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,str)"
+.RI "#define \fBMqDLogCL\fP(context, level, str)   if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)"
 .br
 .R "log a plain string using the \fIMqSetDebugLevel\fP definition "
 .ti -1c
-.RI "#define \fBMqDLogV\fP(context, level, fmt,...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.RI "#define \fBMqDLogV\fP(context, level, fmt,...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .br
 .R "log a vararg string using formatting and checking for logging level "
 .ti -1c
-.RI "#define \fBMqDLogVL\fP(context, level, fmt,...)   if (unlikely(debugLevel >= level)) MqDLogX(context,__func__,level,fmt,__VA_ARGS__)"
+.RI "#define \fBMqDLogVL\fP(context, level, fmt,...)   if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .br
 .R "log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition "
 .in -1c
@@ -474,7 +490,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2, \fBMQ_EXIT\fP =  3 }"
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2 }"
 .br
 .R "collection for the different error-codes "
 .ti -1c
@@ -618,19 +634,19 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "start the \fIserver-context\fP as daemon "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
+.RI "int \fBMqConfigGetIsServer\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIserver\fP ? "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
+.RI "int \fBMqConfigGetIsString\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is a \fIstring\fP ? "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
+.RI "int \fBMqConfigGetIsSilent\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIsilent\fP ? "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
+.RI "int \fBMqConfigGetIsDupAndThread\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "does the \fIcontext\fP object is \fIDuplicate\fP and \fIThread\fP ? "
 .ti -1c
@@ -718,7 +734,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "delete the \fIcontext\fP "
 .ti -1c
-.RI "void \fBMqExit\fP (struct \fBMqS\fP *ctx)"
+.RI "void \fBMqExitP\fP (\fBMQ_CST\fP prefix, struct \fBMqS\fP *ctx)"
 .br
 .R "delete the \fIcontext\fP and exit the current process or thread "
 .ti -1c
@@ -739,7 +755,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreateChild\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const parent, struct \fBMqBufferLS\fP **args)"
 .br
-.R "make a \fIcontext\fP to a \fIchild-context\fP ontop of an existing \fIparent-client-server-link\fP "
+.R "make a \fIcontext\fP to a \fIchild-context\fP on-top of an existing \fIparent-client-server-link\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkDefault\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
@@ -749,7 +765,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "close the \fIclient-server-link\fP "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqLinkIsConnected\fP (struct \fBMqS\fP const *const ctx)"
+.RI "int \fBMqLinkIsConnected\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the context connected? "
 .ti -1c
@@ -760,11 +776,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .RI "static struct \fBMqS\fP * \fBMqLinkGetParentI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqLinkIsParent\fP (struct \fBMqS\fP const *const ctx)"
+.RI "int \fBMqLinkIsParent\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the \fIcontext\fP a \fIparent-context\fP? "
 .ti -1c
-.RI "static \fBMQ_BOL\fP \fBMqLinkIsParentI\fP (struct \fBMqS\fP const *const ctx)"
+.RI "static int \fBMqLinkIsParentI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqLinkGetCtxId\fP (struct \fBMqS\fP const *const ctx)"
@@ -782,7 +798,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "get the \fIfilter-context\fP or the \fImaster-context\fP "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
+.RI "int \fBMqServiceIsTransaction\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "check if the \fIongoing-service-call\fP belongs to a transaction "
 .ti -1c
@@ -1132,9 +1148,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "do a \fBpanic\fP with vararg arguments "
 .ti -1c
-.RI "void \fBMqErrorReset\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorReset\fP (struct \fBMqS\fP *const context)"
 .br
-.R "clear the \fIerror\fP and reset the \fIcontex\fP "
+.R "clear the \fIerror\fP and reset the \fIcontext\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorSGenVL\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix, enum \fBMqErrorE\fP const errorcode, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
@@ -1180,7 +1196,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .RI "static \fBMQ_INT\fP \fBMqErrorGetNumI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorSet\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP num, enum \fBMqErrorE\fP code, \fBMQ_CST\fP const message, struct \fBMqS\fP *const errctx)"
 .br
 .R "set the value of the \fBMqErrorS\fP object "
 .ti -1c
@@ -1188,9 +1204,17 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "signal end of processing in an \fBMqConfigSetEvent\fP callback "
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorCreateEXITP\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix)"
+.br
+.R "create the application exit flag "
+.ti -1c
+.RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
 .R "check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
+.br
+.R "clenup an \fIexit-error\fP "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -1331,7 +1355,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_TIME_T\fP const timeout)"
+.RI "enum \fBMqErrorE\fP \fBMqSendEND_AND_WAIT\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token, \fBMQ_TIME_T\fP timeout)"
 .br
 .R "finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. "
 .ti -1c
@@ -1378,11 +1402,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
-.RI "\fBMQ_BOL\fP \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
+.RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .R "is the \fIcontext\fP a \fIslave-context\fP ? "
 .ti -1c
-.RI "static \fBMQ_BOL\fP \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
+.RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
@@ -1419,23 +1443,19 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .ti -1c
 .RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
 .br
-.R "duplicate a string, the argument \fCNULL\fP is allowd "
+.R "duplicate a string, the argument \fCNULL\fP is allowed "
 .ti -1c
-.RI "void \fBMqLog\fP (FILE *channel, \fBMQ_CST\fP const fmt,...)"
+.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
-.R "log vararg string without formatting to \fIchannel\fP "
+.R "log string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
 .ti -1c
-.RI "void \fBMqDLogX\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.RI "void \fBMqLogV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
-.R "log vararg string using formatting "
+.R "log a vararg string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
 .ti -1c
-.RI "void \fBMqDLogEVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt, va_list var_list)"
+.RI "void \fBMqLogVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
-.R "log a vararg error list using formatting "
-.ti -1c
-.RI "void \fBMqDLogEV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_CST\fP const fmt,...)"
-.br
-.R "log a vararg error string using formatting "
+.R "log a va_list string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqLogErrorCode\fP (enum \fBMqErrorE\fP code)"
 .br
@@ -1452,10 +1472,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .RI "\fBMQ_CST\fP \fBMqLogParentOrChild\fP (struct \fBMqS\fP const *const context)"
 .br
 .R "convert a MqContextS parent member into a human readable string "
-.ti -1c
-.RI "\fBMQ_STR\fP \fBMqLogC\fP (\fBMQ_STR\fP buf, \fBMQ_STR\fP str, \fBMQ_SIZE\fP size)"
-.br
-.R "convert a raw \fBMQ_STR\fP into a human readable string. "
 .in -1c
 .SS "Variables"
 
@@ -1491,13 +1507,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 173 2010-02-02 12:03:28Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 195 2010-02-11 11:21:24Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 173 $ 
+$Rev: 195 $ 
 .RE
 .PP
 \fBAuthor:\fP

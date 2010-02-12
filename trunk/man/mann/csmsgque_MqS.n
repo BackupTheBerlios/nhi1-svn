@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "2 Feb 2010" "Version 4.3" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -150,6 +150,10 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBExit\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "void \fBLogC\fP (string prefix, int level, string text)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
 .ti -1c
 .RI "\fBMqS\fP ()"
 .br

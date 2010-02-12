@@ -1,4 +1,4 @@
-.TH "ccmsgque Tutorial" n "2 Feb 2010" "Version 4.3" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque Tutorial" n "12 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -106,7 +106,7 @@ class MyServer : public MqC, public IServerSetup, public IFactory {
 };
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  MyServer srv;
+  static MyServer srv;
   try {
     srv.LinkCreateVC(argc, argv);
     srv.ProcessEvent (MQ_WAIT_FOREVER);
@@ -183,7 +183,7 @@ using namespace std;
 using namespace ccmsgque;
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  MqC c;
+  static MqC c;
   try {
     c.LinkCreateVC(argc, argv);
     c.SendSTART();
@@ -257,7 +257,7 @@ class manfilter : public MqC, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  manfilter filter;
+  static manfilter filter;
   try {
     filter.ConfigSetName ('manfilter');
     filter.ConfigSetIsServer (MQ_YES);

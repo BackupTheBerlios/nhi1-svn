@@ -1461,13 +1461,14 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// -# it is a \e panic-error to call #MqExit twice for the same object
 /// .
 /// \endif
+/// \param[in] prefix identify the caller
 /// \ctx
 MQ_EXTERN void MQ_DECL MqExitP (
   MQ_CST prefix,
   struct MqS * ctx
 ) __attribute__ ((noreturn));
 
-/// \brief wrapper to add calling function to #MqExit
+/// \brief wrapper to add calling function to #MqExitP
 #define MqExit(ctx) MqExitP(__func__, ctx)
 
 /** \brief write \libmsgque specific user-help to stderr
@@ -4056,7 +4057,7 @@ static mq_inline MQ_STR mq_strdup_save (
 /// \brief log information to stderr with a common format.
 ///
 
-/// \brief log string if \RNSA{debug} >= \e level
+/// \brief log string if \RNSC{debug} >= \e level
 /// \context
 /// \proc
 /// \param level debug level: 0 <= level <= 9
@@ -4069,7 +4070,7 @@ MQ_EXTERN void MQ_DECL MqLogC (
   MQ_CST const str
 );
 
-/// \brief log a vararg string if \RNSA{debug} >= \e level
+/// \brief log a vararg string if \RNSC{debug} >= \e level
 /// \context
 /// \proc
 /// \param level debug level: 0 <= level <= 9
@@ -4083,7 +4084,7 @@ MQ_EXTERN void MQ_DECL MqLogV (
   ...
 ) __attribute__ ((format (printf, 4, 5)));
 
-/// \brief log a va_list string if \RNSA{debug} >= \e level
+/// \brief log a va_list string if \RNSC{debug} >= \e level
 /// \context
 /// \proc
 /// \param level debug level: 0 <= level <= 9
@@ -4109,21 +4110,21 @@ MQ_EXTERN void MQ_DECL MqLogVL (
 
 /// \brief log a plain string 
 /// \context
-/// \param level debug level 0 <= level <= 9
+/// \param level from \RNSC{debug}
 /// \param str string to log
 #   define MqDLogC(context,level,str) \
       if (unlikely(context != NULL && context->config.debug >= level)) MqLogC(context,__func__,level,str)
 
 /// \brief log a plain string using the \e MqSetDebugLevel definition
 /// \context
-/// \param level debug level 0 <= level <= 9
+/// \param level from \RNSC{debug}
 /// \param str string to log
 #   define MqDLogCL(context,level,str) \
       if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)
 
 /// \brief log a vararg string using formatting and checking for logging level
 /// \context
-/// \param level debug level 0 <= level <= 9
+/// \param level from \RNSC{debug}
 /// \format
 /// \param ... vararg string argument
 /// \attention the prefix string is the calling function name
@@ -4132,7 +4133,7 @@ MQ_EXTERN void MQ_DECL MqLogVL (
 
 /// \brief log a vararg string using formatting and checking for logging level using the \e MqSetDebugLevel definition
 /// \context
-/// \param level debug level 0 <= level <= 9
+/// \param level from \RNSC{debug}
 /// \format
 /// \param ... vararg string argument
 /// \attention the prefix string is the calling function name

@@ -1,4 +1,4 @@
-.TH "javamsgque::IFactory" n "2 Feb 2010" "Version 4.3" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::IFactory" n "12 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

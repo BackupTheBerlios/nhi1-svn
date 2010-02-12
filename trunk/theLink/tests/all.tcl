@@ -10,9 +10,9 @@
 #§              please contact AUTHORS for additional information
 #§
 
-if {![llength $argv]} {
-  lappend argv --only-c --only-binary
-}
+#if {![llength $argv]} {
+#  lappend argv --only-c --only-binary
+#}
 
 source [file join [file dirname [info script]] library.tcl]
 
@@ -26,7 +26,7 @@ testsDirectory $testdir
 tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
-#configure -file int.test
+configure -file aexec.test
 
 tcltest::runAllTests
 
