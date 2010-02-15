@@ -807,7 +807,7 @@ MqLinkCreate (
 	// test on "filter" (alfa!=NULL) or a normal "server" (alfa==NULL)
 	if (context->link.alfa == NULL) {
 	  // a "server"
-	  if (context->config.srvname != NULL) 
+	  if (context->config.srvname == NULL || strncmp(context->config.srvname,"LOCK",4) != 0) 
 	    MqConfigSetName(context, context->config.srvname);
 	} else {
 	  // a "filter", we have to start the right site (an Server)
@@ -839,6 +839,9 @@ MqLinkCreate (
 	  MqConfigSetIsServer(myFilter, MQ_NO);
 	  MqConfigSetIgnoreExit(myFilter, MQ_NO);
 	  pConfigSetMaster(myFilter, context, 0);
+	  if (context->config.srvname == NULL || strncmp(context->config.srvname,"LOCK",4) != 0) {
+	    MqConfigSetSrvName(myFilter, context->config.srvname);
+	  }
 
 	  // step 6, create the link
 	  if (MqErrorCheckI (MqLinkCreate (myFilter, &alfa))) {
@@ -851,7 +854,7 @@ MqLinkCreate (
       }
 
       // configure the new server
-      if (context->setup.ServerSetup.fFunc != NULL) {
+      if (context->setup.ServerSetup.fCall != NULL) {
 	context->link.bits.flagServerSetup = MQ_YES;
 	MqErrorCheck(MqCallbackCall(context, context->setup.ServerSetup));
       }
@@ -917,7 +920,7 @@ MqLinkDelete (
     context->link.bits.onDelete = MQ_YES;
 
     // cleanup the server
-    if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fFunc != NULL) {
+    if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fCall != NULL) {
       MqCallbackCall(context, context->setup.ServerCleanup);
     }
 
@@ -1063,6 +1066,7 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

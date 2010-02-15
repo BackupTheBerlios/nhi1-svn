@@ -132,8 +132,8 @@ main (
   mqctx->setup.Child.fCreate	    = MqLinkDefault;
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fFunc    = ServerSetup;
-  mqctx->setup.ServerCleanup.fFunc  = Filter3Cleanup;
+  mqctx->setup.ServerSetup.fCall    = ServerSetup;
+  mqctx->setup.ServerCleanup.fCall  = Filter3Cleanup;
   MqConfigSetDefaultFactory (mqctx);
   MqConfigSetName (mqctx, "Filter3");
 

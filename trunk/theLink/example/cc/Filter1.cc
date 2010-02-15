@@ -78,6 +78,6 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
-  filter.Exit ();
+  filter.Exit();
 }
 

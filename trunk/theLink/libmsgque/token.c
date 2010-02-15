@@ -249,8 +249,8 @@ sTokenSpaceDelItem (
     memset(start+space->used, '\0', sizeof(struct pTokenItemS));
   } else {
     // delete the "+ALL" token
-    if (space->all.fFunc != NULL) {
-      space->all.fFunc = NULL;
+    if (space->all.fCall != NULL) {
+      space->all.fCall = NULL;
       if (space->all.data && space->all.fFree) {
 	(*space->all.fFree) (space->context, &space->all.data);
       }
@@ -335,8 +335,8 @@ pTokenInvoke (
     }
 
     // search "+ALL" items
-    if (space->all.fFunc != NULL) {
-      return (space->all.fFunc (token->context, space->all.data));
+    if (space->all.fCall != NULL) {
+      return (space->all.fCall (token->context, space->all.data));
     }
 
     // nothing found -> break
@@ -347,10 +347,10 @@ pTokenInvoke (
 
 /*
     MqDLogV(context,1,"current<%s>, currentPtr->proc<%p>, currentPtr->data<%p>\n", 
-	token->current, currentPtr->callback.fFunc, currentPtr->callback.data);
+	token->current, currentPtr->callback.fCall, currentPtr->callback.data);
 */
   
-  if (item->callback.fFunc != NULL) {
+  if (item->callback.fCall != NULL) {
     return MqCallbackCall (token->context, item->callback);
   } else {
     return MqSendRETURN(token->context);
@@ -369,10 +369,10 @@ pTokenAddHdl (
   register struct pTokenItemS *free;
 
   MqDLogV(context, 4, "HANDEL %s ADD %s: proc<%p>, data<%p>\n",
-    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, (void*) callback.fFunc, callback.data);
+    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, (void*) callback.fCall, callback.data);
 
   if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
-    if (space->all.fFunc != NULL) goto error2;
+    if (space->all.fCall != NULL) goto error2;
     space->all = callback;
   } else {
     MQ_INT nameI = pByte2INT(name); 
@@ -405,7 +405,7 @@ pTokenDelHdl (
     return sTokenSpaceDelItem (token->loc, name);
   } else {
     struct pTokenSpaceS * const loc = token->loc;
-    loc->all.fFunc = NULL;
+    loc->all.fCall = NULL;
     if (loc->all.data && loc->all.fFree) {
       (*loc->all.fFree) (token->context, &loc->all.data);
     }
@@ -448,11 +448,11 @@ pTokenCheckSystem (
 		MqSendERROR (context->config.master);
 	      } else {
 		MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
-		if (context->setup.BgError.fFunc != NULL) {
+		if (context->setup.BgError.fCall != NULL) {
 		  MqDLogCL (context, 5, "call BqError\n");
 		  MqErrorCheck (MqCallbackCall(context, context->setup.BgError));
 		}
-		// check "error.code" again because "setup.BgError.fFunc" could clean it
+		// check "error.code" again because "setup.BgError.fCall" could clean it
 		MqErrorCheck (context->error.code);
 	      }
 	      break;
@@ -489,7 +489,8 @@ pTokenCheckSystem (
 
 	    // read server name
 	    MqReadC(context, &name);
-	    if (*name != '\0') MqConfigSetSrvName (context, name);
+	    if (*name != '\0')
+	      MqConfigSetSrvName (context, name);
 
 	    // send my endian back
 	    MqSendSTART (context);
@@ -618,6 +619,7 @@ pTokenCheck (
 }
 
 END_C_DECLS
+
 
 
 

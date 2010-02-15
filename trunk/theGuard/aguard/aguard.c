@@ -224,8 +224,8 @@ main (
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.fHelp		    = GuardHelp;
   mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fFunc    = GuardSetup;
-  mqctx->setup.ServerCleanup.fFunc  = GuardCleanup;
+  mqctx->setup.ServerSetup.fCall    = GuardSetup;
+  mqctx->setup.ServerCleanup.fCall  = GuardCleanup;
   MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS

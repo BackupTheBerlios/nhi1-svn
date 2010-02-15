@@ -86,7 +86,7 @@ pSlaveChildCreate (
   slave->slaves[id] = slave_context;
   pConfigSetMaster (slave_context, context, id);
   // set background error handler
-  if (slave_context->setup.BgError.fFunc == NULL)
+  if (slave_context->setup.BgError.fCall == NULL)
     MqConfigSetBgError (slave_context, pSlaveBqError, NULL, NULL, NULL);
   return MQ_OK;
 }
@@ -371,6 +371,7 @@ MqSlaveIs (
 }
 
 END_C_DECLS
+
 
 
 

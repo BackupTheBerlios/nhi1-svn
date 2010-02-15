@@ -11,11 +11,9 @@ fi
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
-		    --enable-cxx \
-		    --enable-java \
-		    --enable-csharp \
 		    --enable-perl \
 		    --enable-python \
+		    --enable-cxx \
 		    --enable-brain \
 		    --enable-guard \
 		    $ARGS $@
@@ -24,6 +22,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 #		    --enable-guard \
 #		    --enable-tcl \
 #		    --enable-cxx \
+#		    --enable-java \
 #		    --enable-csharp \
 #		    --enable-python \
 #		    --enable-perl \

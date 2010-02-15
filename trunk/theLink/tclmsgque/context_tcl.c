@@ -502,7 +502,7 @@ NS(MqS_Free) (
     Tcl_Obj* dict = tclctx->dict;
     // we delete the command using "Tcl_DeleteObjCommand" the "Factory" is useless -> delete
     mqctx->setup.Factory.Delete.fCall = NULL;
-    mqctx->setup.Event.fFunc = NULL;
+    mqctx->setup.Event.fCall = NULL;
     // delete the context
     MqContextDelete(&mqctx);
     if (self != NULL && Tcl_IsShared(self)) {

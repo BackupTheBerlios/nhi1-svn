@@ -357,7 +357,7 @@ struct MqLinkS {
     MQ_BOL onShutdown	      :	1 ; ///< is already a "shutdown" ongoing?
     MQ_BOL prepareDone	      :	1 ; ///< was a prepare already done ?
     MQ_BOL doFactoryCleanup   :	1 ; ///< was the context create by a 'Factory'
-    MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fFunc was called ?
+    MQ_BOL flagServerSetup    :	1 ; ///< setup.ServerSetup.fCall was called ?
     MQ_BOL isWORKER	      :	1 ; ///< is alfa[0] set to "WORKER"
     MQ_BOL isConnected	      : 1 ; ///< is the "client-link" is "connected" ?
   } bits;
@@ -557,7 +557,7 @@ enum MqStartE {
 
 /// \brief used for callback function pointer management
 struct MqCallbackS {
-  MqTokenF		fFunc;	    ///< callback method
+  MqTokenF		fCall;	    ///< callback method
   MQ_PTR		data;	    ///< additional data for the callback function
   MqTokenDataFreeF	fFree;	    ///< free additional data pointer
   MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer, used in a #MqSetupDup
@@ -1051,7 +1051,7 @@ MQ_DECL MqConfigSetSetup (
 MQ_EXTERN void
 MQ_DECL MqConfigSetEvent (
   struct MqS * const context,
-  MqTokenF fFunc,
+  MqTokenF fCall,
   MQ_PTR data,
   MqTokenDataFreeF fFree,
   MqTokenDataCopyF fCopy
@@ -1061,7 +1061,7 @@ MQ_DECL MqConfigSetEvent (
 MQ_EXTERN void
 MQ_DECL MqConfigSetServerSetup (
   struct MqS * const context,
-  MqTokenF fFunc,
+  MqTokenF fCall,
   MQ_PTR data,
   MqTokenDataFreeF fFree,
   MqTokenDataCopyF fCopy
@@ -4294,6 +4294,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 

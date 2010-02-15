@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "14 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

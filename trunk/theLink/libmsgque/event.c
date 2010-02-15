@@ -57,7 +57,10 @@ sEventDeleteAllClient (
       struct MqS *context = event->DataL[i];
       if (MQ_IS_CLIENT(context) ) {
 	MqDLogC(context,4,"FORCE delete\n");
-	MqContextDelete (&context);
+	// MqLinkDelete requiert -> perl does in "MqContextDelete" only an refCount derease
+	// but no event-free
+	MqLinkDelete (context);
+	// if deletion is not done -> shutdown the link
 	// exit "for" loop to accept new "start" and "end"
 	break;
       }
@@ -164,6 +167,14 @@ EventDelete(void)
   }
 }
 
+void
+EventCleanup(void)
+{
+  if (sysevent != NULL) {
+    sEventDeleteAllClient(sysevent);
+  }
+}
+  
 #define MqThreadSelf() 0L
 
 #endif   /* ! MQ_HAS_THREAD */

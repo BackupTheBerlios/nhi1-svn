@@ -91,7 +91,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
 *[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 
 test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -constraints    string \
@@ -126,8 +126,8 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
-[sS]> (server-0) found in function "*sReadA4" at file "read.c*"
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (wk-sv-0) found in function "*sReadA4" at file "read.c*"
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:
@@ -150,7 +150,7 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[*pTokenInvoke] token <XXXX> not found
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pTokenInvoke] token <XXXX> not found
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:
@@ -176,8 +176,8 @@ BG-NUM-CATCH:0
 BG-NUM-RET:1
 BG-NUM-CODE:NONE
 BG-TEXT-CATCH:0
-BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
-[sS]> (server-0) found in function "*sReadA4" at file "read.c*"
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (wk-sv-0) found in function "*sReadA4" at file "read.c*"
 BG-TEXT-CODE:NONE
 222-CATCH:0
 222-RET:
@@ -198,7 +198,7 @@ test slave-6-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
 *[cC]> (wk-cl-0) \[callback-error] <Num|1>*
-[sS]> (server-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
+[sS]> (wk-sv-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
 
 test slave-7-($I|$B|$C|$S) {check ctxId} \
     -body           {Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI 0 SendC GTCX} \

@@ -387,7 +387,7 @@ namespace ccmsgque {
       /// \brief get access to an internal buffer
       inline MQ_BUF GetTempBuffer() { return context.temp; }
       /// \api #MqExit
-      inline void Exit () __attribute__((noreturn)) { MqExit (&context); } 
+      inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
       /// \api #MqSysSleep
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
       /// \api #MqSysUSleep

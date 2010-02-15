@@ -56,7 +56,7 @@ static enum MqErrorE NS(FactoryCreate) (
 
   // child does not need an event-handler if not user supplied
   if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
-    mqctx->setup.Event.fFunc = NULL;
+    mqctx->setup.Event.fCall = NULL;
   }
   
   return MQ_OK;

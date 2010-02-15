@@ -540,8 +540,8 @@ main (
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.fHelp		    = BrainHelp;
   mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fFunc    = BrainSetup;
-  mqctx->setup.ServerCleanup.fFunc  = BrainCleanup;
+  mqctx->setup.ServerSetup.fCall    = BrainSetup;
+  mqctx->setup.ServerCleanup.fCall  = BrainCleanup;
   MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS

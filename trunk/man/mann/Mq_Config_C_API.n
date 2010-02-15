@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "14 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -185,11 +185,11 @@ Mq_Config_C_API \- configuration of a context
 .br
 .R "set various attributes from \fBMqConfigS\fP struct "
 .ti -1c
-.RI "void \fBMqConfigSetEvent\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.RI "void \fBMqConfigSetEvent\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fCall, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
 .R "set the \fBMqSetupS.Event\fP "
 .ti -1c
-.RI "void \fBMqConfigSetServerSetup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.RI "void \fBMqConfigSetServerSetup\fP (struct \fBMqS\fP *const context, \fBMqTokenF\fP fCall, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .br
 .R "set the \fBMqSetupS.ServerSetup\fP "
 .ti -1c
@@ -725,7 +725,7 @@ setup the default \fIfactory\fP pattern
 .RE
 .PP
 The \fIdefault\fP factory is just a wrapper for \fBMqContextCreate\fP with additional error management code. A simple application \fIwithout\fP an application specific \fIfactory\fP use this configuration. 
-.SS "void MqConfigSetEvent (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.SS "void MqConfigSetEvent (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fCall, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
 set the \fBMqSetupS.Event\fP 
 .PP
@@ -876,7 +876,7 @@ set the \fBMqS.self\fP value
 .PP
 set the \fBMqSetupS.ServerCleanup\fP 
 .PP
-.SS "void MqConfigSetServerSetup (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fFunc, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
+.SS "void MqConfigSetServerSetup (struct \fBMqS\fP *const  context, \fBMqTokenF\fP fCall, \fBMQ_PTR\fP data, \fBMqTokenDataFreeF\fP fFree, \fBMqTokenDataCopyF\fP fCopy)"
 .PP
 set the \fBMqSetupS.ServerSetup\fP 
 .PP

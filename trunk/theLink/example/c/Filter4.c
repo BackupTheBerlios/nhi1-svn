@@ -262,8 +262,8 @@ main (
   mqctx->setup.Child.fCreate	    = MqLinkDefault;
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fFunc    = FilterSetup;
-  mqctx->setup.ServerCleanup.fFunc  = FilterCleanup;
+  mqctx->setup.ServerSetup.fCall    = FilterSetup;
+  mqctx->setup.ServerCleanup.fCall  = FilterCleanup;
   mqctx->setup.ignoreExit	    = MQ_YES;
 
   MqConfigSetDefaultFactory (mqctx);

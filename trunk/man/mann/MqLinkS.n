@@ -1,4 +1,4 @@
-.TH "MqLinkS" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "MqLinkS" n "14 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -83,7 +83,7 @@ MqLinkS \- object responsible to manage a client/server link data
 .ti -1c
 .RI "   \fBMQ_BOL\fP \fBflagServerSetup\fP: 1"
 .br
-.R "setup.ServerSetup.fFunc was called ? "
+.R "setup.ServerSetup.fCall was called ? "
 .ti -1c
 .RI "   \fBMQ_BOL\fP \fBisWORKER\fP: 1"
 .br
@@ -192,7 +192,7 @@ a endian switch have to be done? (boolean: MQ_YES or MQ_NO)
 Definition at line 353 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqLinkS.flagServerSetup\fP"
 .PP
-setup.ServerSetup.fFunc was called ? 
+setup.ServerSetup.fCall was called ? 
 .PP
 Definition at line 360 of file msgque.h.
 .SS "struct MqIoS* \fBMqLinkS.io\fP\fC [read]\fP"

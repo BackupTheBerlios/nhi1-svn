@@ -1377,8 +1377,8 @@ main (
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.fHelp		    = ServerHelp;
   mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fFunc    = ServerSetup;
-  mqctx->setup.ServerCleanup.fFunc  = ServerCleanup;
+  mqctx->setup.ServerSetup.fCall    = ServerSetup;
+  mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
   MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS

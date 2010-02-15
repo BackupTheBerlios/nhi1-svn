@@ -34,7 +34,7 @@
 #define printSV(x,sv) MqDLogX(x,__func__,0,"\n ---> interp<%p> thread<%ld>, ptr<%p>, refcnt<%d>, type<%s>, val<%s>\n", \
     PERL_GET_CONTEXT, pthread_self(), sv, SvREFCNT((SV*)sv), sv_reftype((SV*)sv,1), SvPV_nolen((SV*)sv));fflush(stdout);
 
-#define printID(x) MqDLogX(x,__func__,0,"PERL_GET_CONTEXT<%p> context->threadData<%p>\n", PERL_GET_CONTEXT, x?x->threadData:NULL);
+#define printID(x) MqLogV(x,__func__,0,"PERL_GET_CONTEXT<%p> context->threadData<%p>\n", PERL_GET_CONTEXT, x?x->threadData:NULL);
 
 #define MQ_CONTEXT_S context
 
@@ -195,9 +195,11 @@ static enum MqErrorE FactoryCreate (
   MQ_PTR data,
   struct MqS ** contextP
 ) {
+#ifdef USE_THREADS
   if (create == MQ_FACTORY_NEW_THREAD) {
     perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }
+#endif
 
   {
     dSP;

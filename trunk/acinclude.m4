@@ -435,6 +435,9 @@ AC_DEFUN([SC_ENABLE_JAVA], [
   )
   AC_MSG_RESULT($enable_java)
   if test x$enable_java = xyes; then
+    if test x$enable_threads = xno; then
+      AC_MSG_ERROR([JAVA require thread support])
+    fi
     m4_include([m4/ac_java.m4])
     #------------------------------------
     AC_MSG_CHECKING(get java support);echo
@@ -501,7 +504,6 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_CSHARP], [
-  AC_PROG_AWK
   AC_MSG_CHECKING([for build with csharp])
   AC_ARG_ENABLE(csharp,
       AC_HELP_STRING([--enable-csharp], [build theLink with C[#] support]),
@@ -509,6 +511,10 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
   )
   AC_MSG_RESULT($enable_csharp)
   if test x$enable_csharp = xyes; then
+    if test x$enable_threads = xno; then
+      AC_MSG_ERROR([C[#] require thread support])
+    fi
+    AC_PROG_AWK
     AC_ARG_VAR( [CSCOMP], [C# compiler])
     AC_ARG_VAR( [CLREXEC], [CLR runtime])
     AC_PATH_PROGS( [CSCOMP], [gmcs] )

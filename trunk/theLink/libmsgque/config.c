@@ -336,7 +336,7 @@ MqContextDelete (
     // set this because "setup.Factory.Delete.fCall" is !not! required
     context->link.bits.doFactoryCleanup = MQ_NO;
     context->bits.MqContextDelete_LOCK = MQ_YES;
-    MqContextFree (context);
+    MqContextFree(context);
     if (context->contextsize > 0) {
       context->signature = 0;
       MqSysFree(context);
@@ -392,7 +392,7 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.uds.file);
   to->config = from->config;
   to->config.name    = mq_strdup_save(from->config.name);
-  to->config.srvname = mq_strdup_save(from->config.srvname);
+  to->config.srvname = NULL;
   to->config.parent = NULL;
   to->config.master = NULL;
   to->config.master_id = 0;
@@ -400,31 +400,25 @@ MqConfigDup (
   pConfigInit (to);
 }
 
-static mq_inline enum MqErrorE
-sSetupDupHelper (
-  struct MqS * const  context,
-  struct MqCallbackS  *cb,
-  MQ_PTR	      oldData
-)
-{
-  if (oldData != NULL && cb->data == NULL) {
-    // if set in "Step 1", callback set but not needed
-    if (cb->fFree) {
-      (*cb->fFree) (context, &oldData);
-    }
-    cb->fFunc = NULL;
-    cb->data  = NULL;
-  } else if (oldData != NULL && cb->data != NULL) {
-    // if set in "Step 2", callback set and needed
-    cb->data = oldData;
-  } else if (cb->data != NULL && cb->fCopy != NULL) {
-    // if set in "Step 3", callback NOT set but needed (copy constructor)
-    return (*cb->fCopy) (context, &cb->data);
-  } else {
-    // if set in "Step 4", callback NOT set but needed (NO copy constructor)
-    // -> already done
-  }
-  return MQ_OK;
+#define sSetupDupHelper(context, cb, oldcb) { \
+/* MqLogV(context,__func__,0,"cb.fFree<%p>, oldcb.data<%p>, cb.data<%p>\n", cb.fFree, oldcb.data, cb.data); */ \
+  if (oldcb.data != NULL && cb.data == NULL) { \
+    /* if set in "Step 1", callback set but not needed */ \
+    if (oldcb.fFree) { \
+      (*oldcb.fFree) (context, &oldcb.data); \
+    } \
+    cb.fCall = NULL; \
+    cb.data  = NULL; \
+  } else if (oldcb.data != NULL && cb.data != NULL) { \
+    /* if set in "Step 2", callback set and needed */ \
+    cb.data = oldcb.data; \
+  } else if (cb.data != NULL && cb.fCopy != NULL) { \
+    /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \
+    MqErrorCheck ((*cb.fCopy) (context, &cb.data)); \
+  } else { \
+    /* if set in "Step 4", callback NOT set but needed (NO copy constructor) */ \
+    /* -> already done */ \
+  } \
 }
 
 enum MqErrorE
@@ -435,12 +429,12 @@ MqSetupDup (
 {
   // Step 1, save all "data" entries because these are already set by the 
   // Class-Constructor proper
-  MQ_PTR Event = context->setup.Event.data;
-  MQ_PTR ServerSetup = context->setup.ServerSetup.data;
-  MQ_PTR ServerCleanup = context->setup.ServerCleanup.data;
-  MQ_PTR BgError = context->setup.BgError.data;
-  MQ_PTR FactoryC = context->setup.Factory.Create.data;
-  MQ_PTR FactoryD = context->setup.Factory.Delete.data;
+  struct MqCallbackS Event = context->setup.Event;
+  struct MqCallbackS ServerSetup = context->setup.ServerSetup;
+  struct MqCallbackS ServerCleanup = context->setup.ServerCleanup;
+  struct MqCallbackS BgError = context->setup.BgError;
+  struct MqFactoryCreateS FactoryC = context->setup.Factory.Create;
+  struct MqFactoryDeleteS FactoryD = context->setup.Factory.Delete;
   enum MqFactoryE FactoryType = context->setup.Factory.type;
 
   // Step 1,  copy "setup" 
@@ -450,12 +444,12 @@ MqSetupDup (
   context->setup.Factory.type = FactoryType;
 
   // reinitialize "data" entries which were !not! set by the class constructor
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.Event,	  Event));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerSetup,	  ServerSetup));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.ServerCleanup,  ServerCleanup));
-  MqErrorCheck (sSetupDupHelper (context, &context->setup.BgError,	  BgError));
-  MqErrorCheck (sSetupDupHelper (context, (struct MqCallbackS*) &context->setup.Factory.Create, FactoryC));
-  MqErrorCheck (sSetupDupHelper (context, (struct MqCallbackS*) &context->setup.Factory.Delete, FactoryD));
+  sSetupDupHelper (context, context->setup.Event,          Event);
+  sSetupDupHelper (context, context->setup.ServerSetup,    ServerSetup);
+  sSetupDupHelper (context, context->setup.ServerCleanup,  ServerCleanup);
+  sSetupDupHelper (context, context->setup.BgError,        BgError);
+  sSetupDupHelper (context, context->setup.Factory.Create, FactoryC);
+  sSetupDupHelper (context, context->setup.Factory.Delete, FactoryD);
 
   return MQ_OK;
 
@@ -539,6 +533,10 @@ MqConfigSetName (
 ) {
   MqSysFree(context->config.name);
   context->config.name = mq_strdup_save(data);
+  if (MQ_IS_SERVER(context)) {
+    MqSysFree(context->config.srvname);
+    context->config.srvname = mq_strdup_save("LOCK");
+  }
 }
 
 void 
@@ -732,10 +730,10 @@ MqConfigSetServerSetup (
     (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
   }
   context->setup.isServer	   = MQ_YES;
-  context->setup.ServerSetup.fFunc = fTok;
+  context->setup.ServerSetup.fCall = fTok;
   context->setup.ServerSetup.data  = data;
-  if (fFree != NULL) context->setup.ServerSetup.fFree = fFree;
-  if (fCopy != NULL) context->setup.ServerSetup.fCopy = fCopy;
+  context->setup.ServerSetup.fFree = fFree;
+  context->setup.ServerSetup.fCopy = fCopy;
 }
 
 void
@@ -750,10 +748,10 @@ MqConfigSetEvent (
   if (context->setup.Event.data && context->setup.Event.fFree) {
     (*context->setup.Event.fFree) (context, &context->setup.Event.data);
   }
-  context->setup.Event.fFunc = fTok;
+  context->setup.Event.fCall = fTok;
   context->setup.Event.data  = data;
-  if (fFree != NULL) context->setup.Event.fFree = fFree;
-  if (fCopy != NULL) context->setup.Event.fCopy = fCopy;
+  context->setup.Event.fFree = fFree;
+  context->setup.Event.fCopy = fCopy;
 }
 
 void
@@ -770,10 +768,10 @@ MqConfigSetServerCleanup (
     (*context->setup.ServerCleanup.fFree) (context, &context->setup.ServerCleanup.data);
   }
   context->setup.isServer	      = MQ_YES;
-  context->setup.ServerCleanup.fFunc  = fTok;
+  context->setup.ServerCleanup.fCall  = fTok;
   context->setup.ServerCleanup.data   = data;
-  if (fFree != NULL) context->setup.ServerCleanup.fFree  = fFree;
-  if (fCopy != NULL) context->setup.ServerCleanup.fCopy  = fCopy;
+  context->setup.ServerCleanup.fFree  = fFree;
+  context->setup.ServerCleanup.fCopy  = fCopy;
 }
 
 void
@@ -788,7 +786,7 @@ MqConfigSetBgError (
   if (context->setup.BgError.data && context->setup.BgError.fFree) {
     (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
   }
-  context->setup.BgError.fFunc  = fTok;
+  context->setup.BgError.fCall  = fTok;
   context->setup.BgError.data   = data;
   context->setup.BgError.fFree  = fFree;
   context->setup.BgError.fCopy  = fCopy;
@@ -1057,6 +1055,7 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
 
 
 

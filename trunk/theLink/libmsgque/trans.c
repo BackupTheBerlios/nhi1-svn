@@ -235,19 +235,19 @@ pTransSetResult (
   item = trans->transIdA[_trans];
   if (item == NULL) return MQ_OK;
   item->status = status;
-  if (item->callback.fFunc) {
+  if (item->callback.fCall) {
     switch (pReadGetReturnCode (context)) {
       case MQ_RETURN_OK: {
 	enum MqErrorE ret;
 	// from: MqSendEND_AND_CALLBACK
-	ret = (*item->callback.fFunc)(context, item->callback.data);
+	ret = (*item->callback.fCall)(context, item->callback.data);
 	pTransPush(trans, _trans);
 	MqErrorCheck(ret);
 	return MQ_OK;
       }
       case MQ_RETURN_ERROR: {
 	MQ_CST msg;
-	// (*callback.fFunc) is never called
+	// (*callback.fCall) is never called
 	pTransPush(trans, _trans);
 	MqDLogV(context,5,"%s\n","got ERROR return code");
 	MqErrorCheck1(pRead_RET_START (context));
@@ -277,6 +277,7 @@ error:
 }
 
 END_C_DECLS
+
 
 
 

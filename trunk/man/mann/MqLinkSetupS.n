@@ -1,4 +1,4 @@
-.TH "MqLinkSetupS" n "12 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "MqLinkSetupS" n "14 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

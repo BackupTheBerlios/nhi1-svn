@@ -95,12 +95,16 @@
 
 #define I0P IXP(MQ_CONTEXT_S,0000000000000000,prefix)
 
-#define MV(f,v) fprintf(stderr,"%s(%s:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, v);fflush(stderr);
-
 #if defined(MQ_HAS_THREAD)
+
+#define MV(f,v) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      (void*) pthread_self(), v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      (void*) pthread_self(), a);fflush(stderr);
 #else
+
+#define MV(f,v) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      a);fflush(stderr);
 #endif

@@ -28,7 +28,7 @@
 
 BEGIN_C_DECLS
 
-void EventDelete (void);
+void EventCleanup (void);
 void GcDelete (void);
 MQ_EXTERN struct MqBufferLS * MqInitBuf = NULL;
 MQ_EXTERN MqFactorySelectorF MqFactorySelector = NULL;
@@ -92,7 +92,7 @@ sCallEventProc (
   // call my own event-proc
   if (context->bits.EventProc_LOCK == MQ_NO && 
 	context->link.bits.onCreateEnd == MQ_YES &&
-	  context->setup.Event.fFunc != NULL) {
+	  context->setup.Event.fCall != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
     switch (MqCallbackCall(context, context->setup.Event)) {
       case MQ_OK:
@@ -113,7 +113,7 @@ sCallEventProc (
   for (child = context->link.childs; child != NULL; child=child->right) {
     NUM++;
     cldCtx = child->context;
-    if (cldCtx != NULL && cldCtx->setup.Event.fFunc != NULL) {
+    if (cldCtx != NULL && cldCtx->setup.Event.fCall != NULL) {
       switch (sCallEventProc (cldCtx)) {
 	case MQ_OK:
 	  break;
@@ -154,7 +154,7 @@ pWaitOnEvent (
   const int MqSetDebugLevel(context);
 
   // set initial timeout
-  if (context->setup.Event.fFunc != NULL) {
+  if (context->setup.Event.fCall != NULL) {
     // we have an extern event-handlig procedure (proc) ... give this code the chance 
     // to do somethig usefull
     tv.tv_sec = 0L;
@@ -176,7 +176,7 @@ pWaitOnEvent (
     }
 
     // 2. call external event-proc
-    if (context->setup.Event.fFunc != NULL) {
+    if (context->setup.Event.fCall != NULL) {
       // this guarding with "____" is important to detect and break-out-of "nested" event calls
       // pWaitOnEvent
       //   -> guard 
@@ -228,7 +228,7 @@ pUSleep (
   long const usec
 )
 {
-  if (context != NULL && context->setup.Event.fFunc != NULL) {
+  if (context != NULL && context->setup.Event.fCall != NULL) {
     struct MqS * const parent = pMqGetFirstParent (context);
     struct mq_timeval start;
     struct mq_timeval now;
@@ -339,7 +339,7 @@ MqExitP (
     MqLinkDelete (context);
 
     // 2. delete all other parent context from current thread or process
-    EventDelete();
+    EventCleanup();
 
     // 3. delete all collected objects
     GcDelete();
@@ -380,7 +380,7 @@ MqLogData (
 
   void sGenericCreate (void);
   void sGenericDelete (void);
-  void sEventCreate (void);
+  void sEventCleanup (void);
   void sEventDelete (void);
 
 END_C_DECLS
@@ -415,13 +415,14 @@ BOOL WINAPI DllMain(
       break;
     case DLL_PROCESS_DETACH:
       sGenericDelete();
-      sEventDelete();
+      sEventCleanup();
       sGcDelete();
       break;
   }
   return TRUE;
 }
 #endif
+
 
 
 

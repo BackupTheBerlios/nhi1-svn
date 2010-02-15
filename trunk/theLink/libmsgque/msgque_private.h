@@ -275,7 +275,7 @@ static mq_inline enum MqErrorE MqCallbackCall (
 {
   enum MqErrorE ret;
   context->refCount++;
-  ret=(*cb.fFunc)(context,cb.data);
+  ret=(*cb.fCall)(context,cb.data);
   context->refCount--;
   return ret;
 };
@@ -299,5 +299,6 @@ void GcRun (
 END_C_DECLS
 
 #endif /* MQ_PRIVATE_H */
+
 
 

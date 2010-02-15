@@ -438,7 +438,7 @@ ClientMain (
     }
 
     // cleanup
-    MqSysFree(template);
+    MqContextDelete(&template);
     MqSysFree(contextA);
     StatDelete (&itemT);
   }
