@@ -182,7 +182,7 @@ pGcCreate (
       // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
       for (; start < end; start++) {
 	// block all "open" context
-	(*start)->bits.MqContextDelete_LOCK = MQ_YES;
+	if (*start != NULL) (*start)->bits.MqContextDelete_LOCK = MQ_YES;
       }
       // now reset the gc data
       sGcReset(sysgc);

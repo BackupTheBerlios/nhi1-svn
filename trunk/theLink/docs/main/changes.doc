@@ -2,6 +2,24 @@
 
 \page changelog ChangeLog
 
+\section V0_6 16 Feb 2010 - NHI1-0.6, PLMK-1.5 and libmsgque-4.4
+
+This is a \e major-feature-release to prepare the environment for the new 
+\e milestone-release coming soon
+
+\subsection V0_6_gc New memory cleanup using Garbage-Collection
+
+To find the \e right moment to delete an mamory-allocated object is the
+most difficult part in a complex software. To solve this problem I 
+introduce a \e refCount based \e Garbage-Collection. This is not an easy
+step because the \e GC have to cooperate with all the existing \e GC
+implementations available in the high-level programming languages like
+\AllLng{syn}.
+
+
+
+
+
 \section V0_5 1 Feb 2010 - NHI1-0.5, PLMK-1.4 and libmsgque-4.3
 
 This is a \e feature-release to prepare the environment for the new 

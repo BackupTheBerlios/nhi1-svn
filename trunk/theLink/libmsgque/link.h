@@ -22,7 +22,8 @@ struct pChildS {
 };
 
 void pMqShutdown (
-  struct MqS * const context
+  struct MqS * const context,
+  MQ_CST prefix
 );
 
 void pLinkDisConnect (

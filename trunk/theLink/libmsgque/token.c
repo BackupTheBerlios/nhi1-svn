@@ -567,7 +567,7 @@ error1:
 	      context->refCount--;
 	      return MqErrorCreateEXIT(context);
 	    } else {
-	      pMqShutdown(context);
+	      pMqShutdown(context,__func__);
 	    }
 	  }
 	  break;

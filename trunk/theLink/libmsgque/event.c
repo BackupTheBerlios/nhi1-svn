@@ -403,6 +403,8 @@ pEventCreate (
     for (; start < end; start++) {
       // block all "open" context
       (*start)->bits.MqContextDelete_LOCK = MQ_YES;
+      // a destructor of a static C++ class-object is called on exit -> don't do this
+      (*start)->link.bits.onDelete = MQ_YES;
     }
     // now reset the event data
     sEventReset(sysevent);

@@ -388,7 +388,8 @@ error:
 
 void
 pMqShutdown (
-  struct MqS * const context
+  struct MqS * const context,
+  MQ_CST prefix
 )
 {
   if (context->link.bits.onShutdown == MQ_YES) {
@@ -396,7 +397,7 @@ pMqShutdown (
   } else {
     struct pChildS * child;
 
-    MqDLogC(context,4,"START shutdown\n");
+    MqDLogV(context,4,"START - called from '%s'\n",prefix);
     context->link.bits.onShutdown = MQ_YES;
 
     // shutdown all childs
@@ -405,7 +406,7 @@ pMqShutdown (
       // "context->link.childs->context->link.self->context" are identical. The last one is 
       // free'd during the following "MqLinkDelete" too and a double-free error
       // will happen
-      pMqShutdown (child->context);
+      pMqShutdown (child->context,__func__);
     }
 
     // shutdown all slaves
@@ -924,7 +925,7 @@ MqLinkDelete (
     }
 
     // shutdown depending context
-    pMqShutdown (context);
+    pMqShutdown (context,__func__);
 
     // shutdown all childs
     while (context->link.childs) {

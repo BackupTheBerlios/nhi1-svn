@@ -44,8 +44,6 @@ dist-hook:
 DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
       --enable-python --enable-perl --enable-guard --enable-brain
 
-#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-perl
-
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command
 #export DYLD_LIBRARY_PATH = @abs_top_builddir@/libmsgque/.libs
