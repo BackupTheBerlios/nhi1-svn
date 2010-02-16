@@ -507,7 +507,7 @@ error:
     MqErrorCopy(tmpl, *contextP);
     MqContextDelete(contextP);
   }
-  return MqErrorGetCodeI (tmpl);
+  return MqErrorStack (tmpl);
 }
 
 /*****************************************************************************/

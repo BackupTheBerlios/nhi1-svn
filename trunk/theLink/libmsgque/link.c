@@ -183,7 +183,6 @@ sMqCheckArg (
     }
     // delete the "first" item
     MqErrorCheck (MqBufferLDeleteItem (context, argv, 0, 1, MQ_YES));
-
     // loop over the arguments until "end"
     for (idx=0; idx<argv->cursize; idx++) {
       arg = argv->data[idx];
@@ -807,7 +806,7 @@ MqLinkCreate (
 	// test on "filter" (alfa!=NULL) or a normal "server" (alfa==NULL)
 	if (context->link.alfa == NULL) {
 	  // a "server"
-	  if (context->config.srvname == NULL || strncmp(context->config.srvname,"LOCK",4) != 0) 
+	  if (context->config.srvname != NULL && strncmp(context->config.srvname,"LOCK",4) != 0) 
 	    MqConfigSetName(context, context->config.srvname);
 	} else {
 	  // a "filter", we have to start the right site (an Server)
@@ -839,7 +838,7 @@ MqLinkCreate (
 	  MqConfigSetIsServer(myFilter, MQ_NO);
 	  MqConfigSetIgnoreExit(myFilter, MQ_NO);
 	  pConfigSetMaster(myFilter, context, 0);
-	  if (context->config.srvname == NULL || strncmp(context->config.srvname,"LOCK",4) != 0) {
+	  if (context->config.srvname != NULL && strncmp(context->config.srvname,"LOCK",4) != 0) {
 	    MqConfigSetSrvName(myFilter, context->config.srvname);
 	  }
 

@@ -163,6 +163,7 @@ EventDelete(void)
 {
   if (sysevent != NULL) {
     sEventDeleteAllClient(sysevent);
+    MqSysFree(sysevent->DataL);
     MqSysFree(sysevent);
   }
 }

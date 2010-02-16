@@ -24,8 +24,8 @@
 /// \brief the local \b context of the \ref acut tool
 struct CutCtxS {
 
-  struct MqS   mqctx;	    ///< \msgqueI
-  MQ_INT	      fields[256];  ///< fields used to cut, from the <tt>-f \b FIELDS</tt> option
+  struct MqS  mqctx;	    ///< \msgqueI
+  MQ_INT      fields[256];  ///< fields used to cut, from the <tt>-f \b FIELDS</tt> option
 
 };
 
