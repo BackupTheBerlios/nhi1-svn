@@ -7,18 +7,42 @@
 This is a \e major-feature-release to prepare the environment for the new 
 \e milestone-release coming soon
 
-\subsection V0_6_gc New memory cleanup using Garbage-Collection
+\subsection V0_6_gc New memory cleanup technology using Garbage-Collection
 
-To find the \e right moment to delete an mamory-allocated object is the
-most difficult part in a complex software. To solve this problem I 
-introduce a \e refCount based \e Garbage-Collection. This is not an easy
-step because the \e GC have to cooperate with all the existing \e GC
-implementations available in the high-level programming languages like
-\AllLng{syn}.
+To find the \e right moment to delete a dynamic object is the
+most difficult part in a complex software. To solve this problem 
+a \e refCount based \e Garbage-Collection has been introduced. This is not an easy
+step because the \e GC have to cooperate with the \RNSA{syn,callback-language} 
+memory cleanup technology.
+To achive this goal a very \e conservative strategy was applied. \b No cleanup
+of lost objects is performed (this is the job of the \e callback-languages).
+Only deleted objects (\RNSA{ContextDelete}) with a #MqS::refCount > 0
+are added into the \e GC-Pool. The cleanup is done with the following conditions:
+- \RNSA{ProcessEvent} with the \e FOREVER flag (this is the \e main-loop)
+  after an event was processed.
+- \RNSA{Exit}, on thread or process exit
+- on application-exit
+.
+The #MqS::refCount is increased with \b ++ and decreased with \b --. The
+default #MqS::refCount is \b 0. \n
+The refCount is modified to protect the calling object:
+- during a \RNSA{ProcessEvent} call
+- in a \e callback
+- during an \e event-action task, example: \RNSC{IEvent}
+.
 
+\subsection V0_6_log New logging API
 
+The \e PNLK logging was opened to give the user the abillity to create a \e PMLK
+conform logging message on stderr.\n
+The following functions were added:
+- \RNSA{LogC}, to write a string message
+- \b LogV (\ref c_LogV "C", \ref cc_LogV "C++"), to write a \e printf style message
+- \b LogVL (\ref c_LogVL "C", \ref cc_LogVL "C++"), to write a \e vprintf style message
+.
 
-
+\n
+\n
 
 \section V0_5 1 Feb 2010 - NHI1-0.5, PLMK-1.4 and libmsgque-4.3
 
