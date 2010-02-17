@@ -16,7 +16,6 @@ libmsgque_private/main.doc \
 libmsgque_public/Doxyfile \
 list.mk \
 main/Doxyfile \
-main/changes.doc \
 main/context.doc \
 main/faq.doc \
 main/features.doc \
