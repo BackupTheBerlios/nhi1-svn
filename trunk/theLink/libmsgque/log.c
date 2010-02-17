@@ -126,14 +126,14 @@ sLogVL (
     if (context->config.isSilent) return;
     t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
 #if defined(MQ_HAS_THREAD)
-    snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) pthread_self(), 
+    mq_snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) MqThreadSelf(), 
 	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
 #else
-    snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(),
+    mq_snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(),
 	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
 #endif
   } else {
-    snprintf (header, 400, "X> %s [%i-%s]: %s", sLogTime (time_buf), level, proc, fmt);
+    mq_snprintf (header, 400, "X> %s [%i-%s]: %s", sLogTime (time_buf), level, proc, fmt);
   }
 
   if (ap == NULL) {
@@ -218,43 +218,43 @@ sLogDynItem (
       ptr = buf;
       MqErrorCheck (pReadWord (context, dyn, hd));
 
-      num  =  snprintf(ptr, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
+      num  =  mq_snprintf(ptr, size, "%s%7i : %s : ", space->data, hd->cursize, MqLogTypeName(hd->type));
       ptr  += num;
       size -= num;
 
       switch (hd->type) {
 	case MQ_STRT:
-	  snprintf(ptr, size, MQ_FORMAT_C, hd->cur.C);
+	  mq_snprintf(ptr, size, MQ_FORMAT_C, hd->cur.C);
 	  break;
 	case MQ_BYTT:
-	  snprintf(ptr, size, MQ_FORMAT_Y, MqBufU2BYT(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_Y, MqBufU2BYT(hd->cur));
 	  break;
 	case MQ_BOLT:
-	  snprintf(ptr, size, MQ_FORMAT_O, MqBufU2BOL(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_O, MqBufU2BOL(hd->cur));
 	  break;
 	case MQ_SRTT:
-	  snprintf(ptr, size, MQ_FORMAT_S, MqBufU2SRT(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_S, MqBufU2SRT(hd->cur));
 	  break;
 	case MQ_INTT:
-	  snprintf(ptr, size, MQ_FORMAT_I, MqBufU2INT(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_I, MqBufU2INT(hd->cur));
 	  break;
 	case MQ_FLTT:
-	  snprintf(ptr, size, MQ_FORMAT_F, MqBufU2FLT(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_F, MqBufU2FLT(hd->cur));
 	  break;
 	case MQ_WIDT:
-	  snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
 	  break;
 	case MQ_DBLT:
-	  snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
+	  mq_snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
 	  break;
 	case MQ_LSTT:
-	  snprintf(ptr, size, ">>>> ");
+	  mq_snprintf(ptr, size, ">>>> ");
 	  break;
 	case MQ_RETT:
-	  snprintf(ptr, size, ">>>> code<%c>", pReadGetReturnCode(context));
+	  mq_snprintf(ptr, size, ">>>> code<%c>", pReadGetReturnCode(context));
 	  break;
 	case MQ_BINT: 
-	  snprintf(ptr, size, "%s", "?binary?");
+	  mq_snprintf(ptr, size, "%s", "?binary?");
 	  break;
       }
       

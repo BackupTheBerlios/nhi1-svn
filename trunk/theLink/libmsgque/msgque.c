@@ -382,7 +382,7 @@ MqLogData (
   void GcDelete (void);
   void GenericCreate (void);
   void GenericDelete (void);
-  void EventCleanup (void);
+  void EventCreate (void);
   void EventDelete (void);
 
 END_C_DECLS

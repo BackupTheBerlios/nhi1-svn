@@ -137,7 +137,6 @@ SysWSACleanup (
 {
   int err;
   if ((err = WSACleanup ()) != 0) {
-  printI(err)
     return MqErrorDbV (MQ_ERROR_WINSOCK, "WSACleanup", WSAGetLastError());
   }
   return MQ_OK;

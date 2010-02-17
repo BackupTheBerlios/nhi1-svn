@@ -45,7 +45,7 @@ test error-1-($I|$B|$C|$S) {fatal error} \
     -setup          { 
       Setup $I $B $C $S --bgerror RET_BG --server-silent
     } \
-    -constraints    { c } \
+    -constraints    { unix c } \
     -cleanup	    { Cleanup } \
     -body           { 
       RET_start

@@ -369,7 +369,7 @@ MqErrorSetCONTINUE (
 enum MqErrorE
 MqErrorCreateEXITP (
   struct MqS * const context,
-  MQ_CST prefix
+  MQ_CST const prefix
 )
 {
   if (context->setup.ignoreExit == MQ_YES) {
