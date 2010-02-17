@@ -11,7 +11,4 @@ WriteMakefile(
        AUTHOR         => 'Andreas Otto <aotto1968@users.sourceforge.net>') : ()),
     LIBS              => [''], # e.g., '-lm'
     DEFINE            => '-DMQ_IGNORE_EXTERN', # e.g., '-DHAVE_SOMETHING'
-    INC               => '-Wall -I. -I../../src -I../..', # e.g., '-I. -I/usr/include/other'
-	# Un-comment this if you add C files to link with later:
-    OBJECT            => '$(O_FILES) ../../src/.libs/*.o', # link all the C files too
 );

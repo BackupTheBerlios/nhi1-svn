@@ -31,7 +31,7 @@
     croak(NULL); \
   }
 
-#define printSV(x,sv) MqDLogX(x,__func__,0,"\n ---> interp<%p> thread<%ld>, ptr<%p>, refcnt<%d>, type<%s>, val<%s>\n", \
+#define printSV(x,sv) MqLogV(x,__func__,0,"\n ---> interp<%p> thread<%ld>, ptr<%p>, refcnt<%d>, type<%s>, val<%s>\n", \
     PERL_GET_CONTEXT, pthread_self(), sv, SvREFCNT((SV*)sv), sv_reftype((SV*)sv,1), SvPV_nolen((SV*)sv));fflush(stdout);
 
 #define printID(x) MqLogV(x,__func__,0,"PERL_GET_CONTEXT<%p> context->threadData<%p>\n", PERL_GET_CONTEXT, x?x->threadData:NULL);
@@ -195,7 +195,7 @@ static enum MqErrorE FactoryCreate (
   MQ_PTR data,
   struct MqS ** contextP
 ) {
-#ifdef USE_THREADS
+#ifdef MQ_HAS_THREAD
   if (create == MQ_FACTORY_NEW_THREAD) {
     perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }
@@ -1000,7 +1000,7 @@ MqSlaveIs (MqS* context)
 void
 MqLog (MqS* context, MQ_CST prefix, MQ_INT level, MQ_CST str)
   CODE:
-    if (context->config.debug >= level) MqDLogX(context,prefix,level,str);
+    MqLogC(context,prefix,level,str);
 
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqBufferS

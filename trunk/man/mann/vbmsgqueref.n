@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "16 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "17 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -54,6 +54,8 @@ propagate the error messages from the server to the client
  \fBContextDelete\fP
 .br
  \fBExit\fP
+.br
+ \fBLogC\fP
 .br
 .PP
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
@@ -114,7 +116,41 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .RE
 .PP
 .SS "ctx.Exit()"
-wrapper to add calling function to \fBMqExitP\fP 
+delete the \fIcontext\fP and exit the current process or thread 
+.PP
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIprefix\fP identify the caller 
+.br
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+.SS "\\LogC"
+write a logging-message to stderr using the internal format 
+.PP
+The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 
+.PP
+.nf
+
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+
+.fi
+.PP
+ 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIprefix\fP used to identify the calling function or the environment 
+.br
+\fIlevel\fP debug level: 0 <= level <= 9 
+.br
+\fIstr\fP message text 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBInit\fP

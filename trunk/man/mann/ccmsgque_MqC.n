@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "16 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "17 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -179,15 +179,15 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
 .ti -1c
-.RI "void \fBLogC\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP str)"
+.RI "void \fBLogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
 .ti -1c
-.RI "void \fBLogV\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt,...)"
+.RI "void \fBLogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
 .ti -1c
-.RI "void \fBLogVL\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt, va_list ap)"
+.RI "void \fBLogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
 .ti -1c

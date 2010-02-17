@@ -42,6 +42,7 @@ static void Main(string[] args) \n\
 ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LogC=ctx.LogC(string prefix, int level, string str)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=MqS.Init(params string[] args)"

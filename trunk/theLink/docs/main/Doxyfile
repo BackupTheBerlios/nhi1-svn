@@ -14,7 +14,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-INPUT		    +=	.
+INPUT		    +=	. $(SRCDIR)/../ChangeLog
 FILE_PATTERNS	    +=	*.doc
 EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $(SRCDIR)/docs/main \
 			$(SRCDIR)/docs/man $(SRCDIR)/tests $(SRCDIR)/tests/docs \

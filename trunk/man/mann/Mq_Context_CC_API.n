@@ -1,4 +1,4 @@
-.TH "Mq_Context_CC_API" n "16 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "17 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -54,15 +54,15 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::LogC\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP str)"
+.RI "void \fBccmsgque::MqC::LogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::LogV\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt,...)"
+.RI "void \fBccmsgque::MqC::LogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::LogVL\fP (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt, va_list ap)"
+.RI "void \fBccmsgque::MqC::LogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
 .in -1c
@@ -112,17 +112,17 @@ Definition at line 390 of file ccmsgque.h.
 get access to an internal buffer 
 .PP
 Definition at line 388 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP str)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
 .PP
 Definition at line 396 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt,  ...)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogV\fP 
 .PP
 Definition at line 398 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP fmt, va_list ap)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list ap)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP 
 .PP

@@ -44,6 +44,7 @@ ctx = MyClass() \n\
 ALIASES		    += "ContextCreate=ctx=MqS()"
 ALIASES		    += "ContextDelete=del ctx"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LogC=ctx.LogC(prefix,level,str)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=Init()"

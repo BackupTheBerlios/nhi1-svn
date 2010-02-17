@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "16 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "17 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -289,7 +289,7 @@ do a \fBpanic\fP with \fIstring\fP as argument
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIerrnum\fP the error number 
 .br
@@ -455,7 +455,7 @@ log the \fBMqErrorS\fP for debugging
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .RE
 .PP
 
@@ -531,7 +531,7 @@ set a error-code in \fBMqErrorS\fP with vararg string argument
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIerrorcode\fP identify the code 
 .br
@@ -554,7 +554,7 @@ set an error-code in \fBMqErrorS\fP with vararg list argument
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIerrorcode\fP identify the code 
 .br
@@ -598,7 +598,7 @@ do a \fBpanic\fP with vararg arguments
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIerrnum\fP the error number 
 .br
@@ -619,7 +619,7 @@ do a \fBpanic\fP with a vararg argument list
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIprefix\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIerrnum\fP the error number 
 .br

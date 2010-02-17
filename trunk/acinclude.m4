@@ -413,6 +413,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
       AC_DEFINE([MQ_HAS_THREAD], [], [does the user require thread support])
     fi
   fi
+  AM_CONDITIONAL([HAS_THREAD], [test x$enable_threads = xyes])
 ])
 
 #------------------------------------------------------------------------

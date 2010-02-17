@@ -1,4 +1,4 @@
-.TH "msgque.h" n "16 Feb 2010" "Version 4.4" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "17 Feb 2010" "Version 4.4" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1445,17 +1445,17 @@ msgque.h \- $Id: \fBmsgque.h\fP 201 2010-02-15 14:57:42Z aotto1968 $
 .br
 .R "duplicate a string, the argument \fCNULL\fP is allowed "
 .ti -1c
-.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
-.R "log string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
+.R "write a logging-message to stderr using the internal format "
 .ti -1c
-.RI "void \fBMqLogV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.RI "void \fBMqLogV\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
-.R "log a vararg string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
+.R "write a \fIprintf\fP style logging-message to stderr using the internal format "
 .ti -1c
-.RI "void \fBMqLogVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list var_list)"
+.RI "void \fBMqLogVL\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
-.R "log a va_list string if \fBMqConfigS::debug\fP >= \fIlevel\fP "
+.R "write a \fIvprintf\fP style logging-message to stderr using the internal format "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqLogErrorCode\fP (enum \fBMqErrorE\fP code)"
 .br

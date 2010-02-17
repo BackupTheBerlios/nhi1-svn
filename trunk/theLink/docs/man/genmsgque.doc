@@ -27,6 +27,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNSA{ContextCreate}\n
 \RNSA{ContextDelete}\n
 \RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
+\RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
 
 \copydoc Mq_Context_C_API
 
@@ -40,7 +41,20 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \copydoc MqContextDelete
 
 \subsection	\NS{Exit}				\Exit
-\copydoc MqExit
+\copydoc MqExitP
+
+\subsection	\NS{LogC}				\LogC
+\copydoc MqLogC
+
+\if HAS_LOGV
+\subsection	\NS{LogV}				\LogV
+\copydoc MqLogV
+\endif
+
+\if HAS_LOGVL
+\subsection	\NS{LogVL}				\LogVL
+\copydoc MqLogVL
+\endif
 
 \if TCL
 \subsection	\NS{Main}				\Main

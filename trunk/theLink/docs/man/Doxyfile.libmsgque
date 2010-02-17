@@ -41,6 +41,11 @@ struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
 ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
 ALIASES		    += "Exit=MqExit(struct MqS* ctx)"
+ALIASES		    += "LogC=MqLogC(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const str)"
+ENABLED_SECTIONS    += HAS_LOGV
+ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
+ENABLED_SECTIONS    += HAS_LOGVL
+ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"

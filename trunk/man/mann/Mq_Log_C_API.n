@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "16 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "17 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,17 +33,17 @@ Mq_Log_C_API \- log information to stderr with a common format.
 
 .in +1c
 .ti -1c
-.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
-.R "log string if \fBdebug\fP >= \fIlevel\fP "
+.R "write a logging-message to stderr using the internal format "
 .ti -1c
-.RI "void \fBMqLogV\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.RI "void \fBMqLogV\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
-.R "log a vararg string if \fBdebug\fP >= \fIlevel\fP "
+.R "write a \fIprintf\fP style logging-message to stderr using the internal format "
 .ti -1c
-.RI "void \fBMqLogVL\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list var_list)"
+.RI "void \fBMqLogVL\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list var_list)"
 .br
-.R "log a va_list string if \fBdebug\fP >= \fIlevel\fP "
+.R "write a \fIvprintf\fP style logging-message to stderr using the internal format "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqLogErrorCode\fP (enum \fBMqErrorE\fP code)"
 .br
@@ -81,7 +81,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 4115 of file msgque.h.
+Definition at line 4119 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)"
 .PP
 log a plain string using the \fIMqSetDebugLevel\fP definition 
@@ -97,7 +97,7 @@ log a plain string using the \fIMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 4122 of file msgque.h.
+Definition at line 4126 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -120,7 +120,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4131 of file msgque.h.
+Definition at line 4135 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
@@ -143,32 +143,37 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4140 of file msgque.h.
+Definition at line 4144 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 4109 of file msgque.h.
+Definition at line 4113 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "void MqLogC (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)"
+.SS "void MqLogC (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)"
 .PP
-log string if \fBdebug\fP >= \fIlevel\fP 
+write a logging-message to stderr using the internal format 
+.PP
+The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 
+.PP
+.nf
+
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+
+.fi
+.PP
+ 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
-\fIstr\fP 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-if the \fB-silent\fP option is set nothing will be reported 
+\fIstr\fP message text 
 .RE
 .PP
 
@@ -232,47 +237,41 @@ the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the
 .RE
 .PP
 
-.SS "void MqLogV (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)"
+.SS "void MqLogV (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)"
 .PP
-log a vararg string if \fBdebug\fP >= \fIlevel\fP 
+write a \fIprintf\fP style logging-message to stderr using the internal format 
+.PP
+Use the format and the restrictions from \fBLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
 \fIfmt\fP a \fBprintf\fP like format string 
 .RE
 .PP
-\fBAttention:\fP
-.RS 4
-if the \fB-silent\fP option is set nothing will be reported 
-.RE
-.PP
 
-.SS "void MqLogVL (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  proc, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list var_list)"
+.SS "void MqLogVL (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list var_list)"
 .PP
-log a va_list string if \fBdebug\fP >= \fIlevel\fP 
+write a \fIvprintf\fP style logging-message to stderr using the internal format 
+.PP
+Use the format and the restrictions from \fBLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIproc\fP used to identify the calling function (e.g. __func__) or the environment 
+\fIprefix\fP used to identify the calling function or the environment 
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
 \fIfmt\fP a \fBprintf\fP like format string 
 .br
 \fIvar_list\fP a variable argument list object 
-.RE
-.PP
-\fBAttention:\fP
-.RS 4
-if the \fB-silent\fP option is set nothing will be reported 
 .RE
 .PP
 

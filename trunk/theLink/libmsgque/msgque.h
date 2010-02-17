@@ -4057,43 +4057,47 @@ static mq_inline MQ_STR mq_strdup_save (
 /// \brief log information to stderr with a common format.
 ///
 
-/// \brief log string if \RNSC{debug} >= \e level
-/// \context
-/// \proc
-/// \param level debug level: 0 <= level <= 9
-/// \param str
-/// \attention if the \b -silent option is set nothing will be reported
+/** \brief write a logging-message to stderr using the internal format
+\details The logging is only done if \RNSC{debug} >= \e level and \RNSC{isSilent} == \no using the following format:
+\verbatim
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+\endverbatim
+\ctx
+\prefix
+\level
+\param[in] str message text
+*/
 MQ_EXTERN void MQ_DECL MqLogC (
-  struct MqS const * const context,
-  MQ_CST const proc,
+  struct MqS const * const ctx,
+  MQ_CST const prefix,
   MQ_INT level,
   MQ_CST const str
 );
 
-/// \brief log a vararg string if \RNSC{debug} >= \e level
-/// \context
-/// \proc
-/// \param level debug level: 0 <= level <= 9
+/// \brief write a \e printf style logging-message to stderr using the internal format
+/// \details Use the format and the restrictions from \RNSA{LogC}.
+/// \ctx
+/// \prefix
+/// \level
 /// \format
-/// \attention if the \b -silent option is set nothing will be reported
 MQ_EXTERN void MQ_DECL MqLogV (
-  struct MqS const * const context,
-  MQ_CST const proc,
+  struct MqS const * const ctx,
+  MQ_CST const prefix,
   MQ_INT level,
   MQ_CST const fmt,
   ...
 ) __attribute__ ((format (printf, 4, 5)));
 
-/// \brief log a va_list string if \RNSC{debug} >= \e level
-/// \context
-/// \proc
-/// \param level debug level: 0 <= level <= 9
+/// \brief write a \e vprintf style logging-message to stderr using the internal format
+/// \details Use the format and the restrictions from \RNSA{LogC}.
+/// \ctx
+/// \prefix
+/// \level
 /// \format
 /// \var_list
-/// \attention if the \b -silent option is set nothing will be reported
 MQ_EXTERN void MQ_DECL MqLogVL (
-  struct MqS const * const context,
-  MQ_CST const proc,
+  struct MqS const * const ctx,
+  MQ_CST const prefix,
   MQ_INT level,
   MQ_CST const fmt,
   va_list var_list

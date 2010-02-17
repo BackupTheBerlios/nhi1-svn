@@ -227,10 +227,11 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "opt_pFlag=\param pFlag the array with defined options " \
                          "opt_Len=\param Len the size of the \e pFlag array " \
                          "buf_generic=\param val union used to modify or create an MqBufferS object;\param size the size of the \e val object;\param type the type used for the object in the \e val union " \
-                         "format=\param fmt a \b printf like format string " \
-                         "var_list=\param var_list a variable argument list object " \
-                         "prefix=\param prefix used to identify the calling function (e.g. __func__) or the environment " \
-                         "proc=\param proc used to identify the calling function (e.g. __func__) or the environment " \
+                         "format=\param[in] fmt a \b printf like format string " \
+                         "level=\param[in] level debug level: 0 <= level <= 9" \
+                         "var_list=\param[in] var_list a variable argument list object " \
+                         "prefix=\param[in] prefix used to identify the calling function or the environment " \
+                         "proc=\param[in] proc used to identify the calling function or the environment " \
                          "optionL=\param[in] opt find option string in the MqBufferLS list " \
                          "varL=\retval var if \e option string is found set \e var with the following entry from the MqBufferLS object " \
                          "attL=\attention if \e option is found, the entry \b and his argument will be deleted from the MqBufferLS object " \

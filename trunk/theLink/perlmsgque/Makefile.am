@@ -22,6 +22,12 @@ if DEBUG
 PERLCONFIG    += OPTIMIZE=-g
 endif
 
+if HAS_THREAD
+PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN -DMQ_HAS_THREAD"
+else
+PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN"
+endif
+
 $(PERLMAKEFILE): $(PERLDEPEND) Makefile.am
 	-test ! -d Net-PerlMsgque && cp -pr $(srcdir)/Net-PerlMsgque . && chmod -R u+w Net-PerlMsgque && touch Net-PerlMsgque/.distclean
 	cd Net-PerlMsgque && @PERL@ Makefile.PL $(PERLCONFIG)

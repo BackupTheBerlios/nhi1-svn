@@ -2,16 +2,16 @@
 
 <CENTER>
 
-\section nw  NEWS, from 02 Feb 2010
+\section nw  NEWS, from 17 Feb 2010
 
-This is a \ref changelog "feature-release" to prepare the environment\n
+This is a \ref V0_6 "major-feature-release" to prepare the environment\n
 for the new \b milestone-release coming soon. \n
-1. FEATURE: Recover from a Server or a Network downtime \n
-+ NEW: \RNSA{LinkConnect} +\n
-+ NEW: \RNSA{ErrorIsEXIT} +\n
-2. FEATURE: Identify the link-target \n
-+ NEW: \RNSC{ident} +\n
-+ NEW: \RNSA{LinkGetTargetIdent} +\n
+1. FEATURE: \ref V0_6_gc \n
++ Find a safe moment to free unused memory +\n
+2. FEATURE: \ref V0_6_log \n
++ NEW: \RNSA{LogC} +\n
++ NEW: \b LogV (\ref c_LogV "C", \ref cc_LogV "C++") +\n
++ NEW: \b LogVL (\ref c_LogVL "C", \ref cc_LogVL "C++")\n
 
 \section intro Introduction
 

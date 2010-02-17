@@ -120,14 +120,23 @@ void
 EventDelete(void)
 {
   if (event_key != MqThreadKeyNULL) {
-    struct MqEventS * sysevent;
-    sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
-
+    struct MqEventS * sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
     if (sysevent != NULL) {
       MqThreadSetTLS(event_key, NULL);
       sEventDeleteAllClient(sysevent);
       MqSysFree(sysevent->DataL);
       MqSysFree(sysevent);
+    }
+  }
+}
+
+void
+EventCleanup(void)
+{
+  if (event_key != MqThreadKeyNULL) {
+    struct MqEventS * sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
+    if (sysevent != NULL) {
+      sEventDeleteAllClient(sysevent);
     }
   }
 }

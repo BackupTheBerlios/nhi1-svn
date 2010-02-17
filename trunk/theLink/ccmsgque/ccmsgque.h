@@ -393,9 +393,9 @@ namespace ccmsgque {
       /// \api #MqSysUSleep
       inline void USleep (unsigned int const usec) throw(MqCException) { ErrorCheck (MqSysUSleep(&context, usec)); }
       /// \api #MqLogC
-      inline void LogC (MQ_CST prefix, MQ_INT level, MQ_CST str) { MqLogC(&context, prefix, level, str); }
+      inline void LogC (MQ_CST const prefix, MQ_INT level, MQ_CST const str) { MqLogC(&context, prefix, level, str); }
       /// \api #MqLogV
-      inline void LogV (MQ_CST prefix, MQ_INT level, MQ_CST fmt, ...) { 
+      inline void LogV (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, ...) { 
 	if (level > context.config.debug) {
 	  return;
 	} else {
@@ -406,7 +406,7 @@ namespace ccmsgque {
 	}
       }
       /// \api #MqLogVL
-      inline void LogVL (MQ_CST prefix, MQ_INT level, MQ_CST fmt, va_list ap) { MqLogVL(&context, prefix, level, fmt, ap); }
+      inline void LogVL (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list ap) { MqLogVL(&context, prefix, level, fmt, ap); }
 
     /// \} Mq_Context_CC_API
 
