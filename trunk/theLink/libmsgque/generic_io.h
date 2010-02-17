@@ -46,12 +46,12 @@ struct GenericS {
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE GenericCreate (
+enum MqErrorE pGenericCreate (
   struct MqIoS * const io,
   struct GenericS ** const out
 );
 
-void GenericDelete (
+void pGenericDelete (
   struct GenericS ** const genericP
 ) __attribute__((nonnull));
 

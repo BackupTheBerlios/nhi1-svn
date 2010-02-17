@@ -88,7 +88,7 @@ UdsCreate (
   }
 
   // intit the generic part
-  MqErrorCheck (GenericCreate (io, &uds->generic));
+  MqErrorCheck (pGenericCreate (io, &uds->generic));
 
   // set the socket
   MqErrorCheck (GenericCreateSocket (uds->generic, AF_UNIX, SOCK_STREAM, 0));
@@ -107,7 +107,7 @@ UdsDelete (
   struct UdsS * const uds = *udsP;
   if (unlikely(!uds)) return MQ_OK;   // nothing to do
 
-  GenericDelete (&uds->generic);
+  pGenericDelete (&uds->generic);
   MqSysFree (*udsP);
 
   return MQ_OK;

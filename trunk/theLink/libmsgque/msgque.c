@@ -378,10 +378,12 @@ MqLogData (
 }
 #endif /* _DEBUG */
 
-  void sGenericCreate (void);
-  void sGenericDelete (void);
-  void sEventCleanup (void);
-  void sEventDelete (void);
+  void GcCreate (void);
+  void GcDelete (void);
+  void GenericCreate (void);
+  void GenericDelete (void);
+  void EventCleanup (void);
+  void EventDelete (void);
 
 END_C_DECLS
 
@@ -409,14 +411,14 @@ BOOL WINAPI DllMain(
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
-      sGcCreate();
-      sEventCreate();
-      sGenericCreate();
+      GcCreate();
+      EventCreate();
+      GenericCreate();
       break;
     case DLL_PROCESS_DETACH:
-      sGenericDelete();
-      sEventCleanup();
-      sGcDelete();
+      GenericDelete();
+      EventCleanup();
+      GcDelete();
       break;
   }
   return TRUE;

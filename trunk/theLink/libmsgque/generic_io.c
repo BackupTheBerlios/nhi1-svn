@@ -36,15 +36,12 @@ BEGIN_C_DECLS
 #  define PREFIX
 #else
 #  define PREFIX static
-PREFIX void sGenericCreate (
-) __attribute__ ((constructor));
-
-PREFIX void sGenericDelete (
-) __attribute__ ((destructor));
+PREFIX void GenericCreate () __attribute__ ((constructor)); 
+PREFIX void GenericDelete () __attribute__ ((destructor));
 #endif /* ! _MSC_VER */
 
 PREFIX void
-sGenericCreate (
+GenericCreate (
   void
 )
 {
@@ -52,7 +49,7 @@ sGenericCreate (
 }
 
 PREFIX void
-sGenericDelete (
+GenericDelete (
   void
 )
 {
@@ -75,7 +72,7 @@ sGenericDelete (
 
 /// \attention only the PARENT is using #GenericCreate
 enum MqErrorE
-GenericCreate (
+pGenericCreate (
   struct MqIoS * const io,
   struct GenericS ** const out
 )
@@ -94,7 +91,7 @@ GenericCreate (
 }
 
 void
-GenericDelete (
+pGenericDelete (
   struct GenericS ** const genericP
 )
 {

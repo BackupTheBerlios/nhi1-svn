@@ -118,7 +118,7 @@ TcpCreate (
     return MqErrorDbV2(context, MQ_ERROR_OPTION_REQUIRED,"TCP","--port");
 
   // init the generic part
-  MqErrorCheck (GenericCreate (io, &tcp->generiC));
+  MqErrorCheck (pGenericCreate (io, &tcp->generiC));
 
   // fill remote address
   if (tcp->remoteaddr == NULL)
@@ -156,7 +156,7 @@ TcpDelete (
   struct TcpS * const tcp = *tcpP;
   if (unlikely(!tcp))	return;		// nothing to do
 
-  GenericDelete (&tcp->generiC);
+  pGenericDelete (&tcp->generiC);
 
   SysFreeAddrInfo(&tcp->remoteaddr);
   SysFreeAddrInfo(&tcp->localaddr);
