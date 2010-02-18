@@ -98,17 +98,10 @@ TotalLink() {
 "
   IDX=0
   if test -f docs/$F.perf ; then
-    for LINE in $(<docs/$F.perf) ; do
-      unset IFS
-      [[ $LINE == *statistics* ]] && {
-	## clean WhiteSpace
-	for V in ${LINE:98}; do
-	  vals[$IDX]=$V
-	  let IDX++
-	done
-      }
+    for V in $(awk -F ": " '/statistics/ {sub(/^  */, "", $3); print $3}' docs/$F.perf) ; do
+      vals[$IDX]=$V
+      let IDX++
     done
-
     printf "$FIL" "   ${!L}" ${vals[*]} 1>&3
   else 
     printf "$FIL" "   ${!L}" na. na. na. na. na. na. na. 1>&3
@@ -224,7 +217,7 @@ for SRV in $R; do
   echo $SRV
 
   case $SRV in
-    *thread*)	
+    *thread* | *java* | *csharp* )	
       ENV="ENV=thread ./performance_thread.env ./local.env"
       export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
       export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"

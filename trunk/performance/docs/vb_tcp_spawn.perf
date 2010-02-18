@@ -1,11 +1,9 @@
-> mono nothread/NHI1-0.5/theLink/tests/vbserver.exe --tcp --host localhost --port 7793 --spawn
-> nothread/NHI1-0.5/theLink/tests/client --all --tcp --host localhost --port 7793
-C> (client:12676) [2010-02-02:13-25-12] [0-0-0x620bc0-main]: start: --------------------------------------
-C> (client:12676) [2010-02-02:13-25-12] [0-0-0x620bc0-statistics]:                      MqSendEND:       3.71
-C> (client:12676) [2010-02-02:13-25-13] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.64
-C> (client:12676) [2010-02-02:13-25-16] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      26.12
-C> (client:12676) [2010-02-02:13-25-19] [0-0-0x620bc0-statistics]:                  parent create:   29498.74
-C> (client:12676) [2010-02-02:13-25-19] [0-0-0x620bc0-statistics]:                  parent delete:    2954.78
-C> (client:12676) [2010-02-02:13-25-19] [0-0-0x620bc0-statistics]:                   child create:     165.95
-C> (client:12676) [2010-02-02:13-25-19] [0-0-0x620bc0-statistics]:                   child delete:      34.08
-C> (client:12676) [2010-02-02:13-25-19] [0-0-0x620bc0-main]: end: ----------------------------------------
+> mono nothread/NHI1-0.6/theLink/tests/vbserver.exe --tcp --host localhost --port 7793 --spawn
+> nothread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7793
+C> (client) [SysConnect] TIMEOUT after '90' sec
+C> (client) found in function "GenericConnect" at file "generic_io.c"
+C> (client) found in function "TcpConnect" at file "tcp_io.c"
+C> (client) found in function "pIoConnect" at file "io.c"
+C> (client) found in function "MqLinkConnect" at file "link.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
+C> (client) use '-h' or '--help' for usage

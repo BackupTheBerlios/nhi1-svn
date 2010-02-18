@@ -1,11 +1,11 @@
-> perl nothread/NHI1-0.5/theLink/tests/server.pl --tcp --host localhost --port 7794 --fork
-> nothread/NHI1-0.5/theLink/tests/client --all --tcp --host localhost --port 7794
-C> (client:13609) [2010-02-02:13-26-03] [0-0-0x620bc0-main]: start: --------------------------------------
-C> (client:13609) [2010-02-02:13-26-03] [0-0-0x620bc0-statistics]:                      MqSendEND:       7.95
-C> (client:13609) [2010-02-02:13-26-04] [0-0-0x620bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.79
-C> (client:13609) [2010-02-02:13-26-07] [0-0-0x620bc0-statistics]:             MqSendEND_AND_WAIT:      32.73
-C> (client:13609) [2010-02-02:13-26-07] [0-0-0x620bc0-statistics]:                  parent create:     996.12
-C> (client:13609) [2010-02-02:13-26-08] [0-0-0x620bc0-statistics]:                  parent delete:     880.42
-C> (client:13609) [2010-02-02:13-26-08] [0-0-0x620bc0-statistics]:                   child create:     129.20
-C> (client:13609) [2010-02-02:13-26-08] [0-0-0x620bc0-statistics]:                   child delete:      33.89
-C> (client:13609) [2010-02-02:13-26-08] [0-0-0x620bc0-main]: end: ----------------------------------------
+> perl nothread/NHI1-0.6/theLink/tests/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7794
+C> (client:14076) [2010-02-18:09-02-28] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:14076) [2010-02-18:09-02-28] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       9.12
+C> (client:14076) [2010-02-18:09-02-29] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      16.64
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      33.46
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-statistics]:                  parent create:    1251.81
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-statistics]:                  parent delete:     842.16
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-statistics]:                   child create:     125.31
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-statistics]:                   child delete:      57.26
+C> (client:14076) [2010-02-18:09-02-33] [0-0-0-0x621bc0-main]: end: ----------------------------------------

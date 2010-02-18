@@ -1,11 +1,11 @@
-> nothread/NHI1-0.5/theLink/tests/server --uds --file ./socket.uds --fork
-> nothread/NHI1-0.5/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:4033) [2010-02-02:13-20-50] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:4033) [2010-02-02:13-20-50] [0-0-0x6209a0-statistics]:                      MqSendEND:       3.87
-C> (client:4033) [2010-02-02:13-20-51] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:       9.26
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      14.44
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                  parent create:     293.23
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                  parent delete:     118.27
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                   child create:      70.16
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-statistics]:                   child delete:      24.39
-C> (client:4033) [2010-02-02:13-20-53] [0-0-0x6209a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.6/theLink/tests/server --uds --file ./socket.uds --fork
+> nothread/NHI1-0.6/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:5478) [2010-02-18:08-54-22] [0-0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:5478) [2010-02-18:08-54-22] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       4.77
+C> (client:5478) [2010-02-18:08-54-22] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      10.00
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      14.40
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-statistics]:                  parent create:     308.05
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-statistics]:                  parent delete:     122.75
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-statistics]:                   child create:      70.56
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-statistics]:                   child delete:      33.72
+C> (client:5478) [2010-02-18:08-54-25] [0-0-0-0x6219a0-main]: end: ----------------------------------------

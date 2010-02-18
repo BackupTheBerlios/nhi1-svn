@@ -1,11 +1,9 @@
-> mono nothread/NHI1-0.5/theLink/tests/vbserver.exe --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.5/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:13153) [2010-02-02:13-25-27] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:13153) [2010-02-02:13-25-28] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.14
-C> (client:13153) [2010-02-02:13-25-28] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      11.23
-C> (client:13153) [2010-02-02:13-25-31] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      16.86
-C> (client:13153) [2010-02-02:13-25-34] [0-0-0x6209a0-statistics]:                  parent create:   29489.64
-C> (client:13153) [2010-02-02:13-25-34] [0-0-0x6209a0-statistics]:                  parent delete:    2930.10
-C> (client:13153) [2010-02-02:13-25-34] [0-0-0x6209a0-statistics]:                   child create:     157.06
-C> (client:13153) [2010-02-02:13-25-35] [0-0-0x6209a0-statistics]:                   child delete:      28.37
-C> (client:13153) [2010-02-02:13-25-35] [0-0-0x6209a0-main]: end: ----------------------------------------
+> mono nothread/NHI1-0.6/theLink/tests/vbserver.exe --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.6/theLink/tests/client --all --uds --file ./socket.uds
+C> (client) [SysConnect] TIMEOUT after '90' sec
+C> (client) found in function "GenericConnect" at file "generic_io.c"
+C> (client) found in function "UdsConnect" at file "uds_io.c"
+C> (client) found in function "pIoConnect" at file "io.c"
+C> (client) found in function "MqLinkConnect" at file "link.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
+C> (client) use '-h' or '--help' for usage

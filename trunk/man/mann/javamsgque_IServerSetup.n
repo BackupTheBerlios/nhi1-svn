@@ -1,4 +1,4 @@
-.TH "javamsgque::IServerSetup" n "17 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::IServerSetup" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

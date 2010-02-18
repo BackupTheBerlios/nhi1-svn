@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "17 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -127,7 +127,7 @@ To delete an application is a difficult task because the \fIlink-target\fP have 
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
-.SS "\\LogC"
+.SS "ctx.LogC(prefix As String, level As Integer, As String)"
 write a logging-message to stderr using the internal format 
 .PP
 The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 

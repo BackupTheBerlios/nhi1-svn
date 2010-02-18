@@ -1,10 +1,10 @@
-> nothread/NHI1-0.5/theLink/tests/client --all @ perl nothread/NHI1-0.5/theLink/tests/server.pl
-C> (client:13486) [2010-02-02:13-25-35] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:13486) [2010-02-02:13-25-35] [0-0-0x6209a0-statistics]:                      MqSendEND:       8.56
-C> (client:13486) [2010-02-02:13-25-36] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      17.93
-C> (client:13486) [2010-02-02:13-25-39] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      24.48
-C> (client:13486) [2010-02-02:13-26-00] [0-0-0x6209a0-statistics]:                  parent create:  209150.53
-C> (client:13486) [2010-02-02:13-26-00] [0-0-0x6209a0-statistics]:                  parent delete:     489.14
-C> (client:13486) [2010-02-02:13-26-01] [0-0-0x6209a0-statistics]:                   child create:     117.22
-C> (client:13486) [2010-02-02:13-26-01] [0-0-0x6209a0-statistics]:                   child delete:      24.71
-C> (client:13486) [2010-02-02:13-26-01] [0-0-0x6209a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.6/theLink/tests/client --all @ perl nothread/NHI1-0.6/theLink/tests/server.pl
+C> (client:13958) [2010-02-18:09-01-59] [0-0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:13958) [2010-02-18:09-02-00] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       8.60
+C> (client:13958) [2010-02-18:09-02-01] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      18.30
+C> (client:13958) [2010-02-18:09-02-04] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      25.12
+C> (client:13958) [2010-02-18:09-02-26] [0-0-0-0x6219a0-statistics]:                  parent create:  217772.65
+C> (client:13958) [2010-02-18:09-02-26] [0-0-0-0x6219a0-statistics]:                  parent delete:     668.21
+C> (client:13958) [2010-02-18:09-02-26] [0-0-0-0x6219a0-statistics]:                   child create:     118.16
+C> (client:13958) [2010-02-18:09-02-26] [0-0-0-0x6219a0-statistics]:                   child delete:      50.02
+C> (client:13958) [2010-02-18:09-02-26] [0-0-0-0x6219a0-main]: end: ----------------------------------------

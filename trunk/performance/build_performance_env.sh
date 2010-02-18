@@ -36,9 +36,8 @@ Build() {
       cd $PACKAGE-$PACKAGE_VERSION
 
       ../../performance_$BUILD.env ./configure --prefix=$OLDPWD $@ \
-	--enable-java --enable-python --enable-csharp --enable-cxx \
-	  --enable-tcl --enable-perl --enable-vb --enable-static \
-	    --enable-brain || exit 1
+	--enable-python --enable-cxx --enable-tcl --enable-perl \
+	  --enable-vb --enable-static --enable-brain || exit 1
 
       make || exit 1
 
@@ -48,5 +47,5 @@ Build() {
 }
 
 ## main
-Build thread --enable-threads
+Build thread --enable-threads --enable-csharp --enable-java
 Build nothread 

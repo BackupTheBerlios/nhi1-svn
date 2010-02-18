@@ -1,10 +1,10 @@
-> nothread/NHI1-0.5/theLink/tests/client --all @ mono nothread/NHI1-0.5/theLink/tests/csserver.exe
-C> (client:10965) [2010-02-02:13-24-19] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:10965) [2010-02-02:13-24-19] [0-0-0x6209a0-statistics]:                      MqSendEND:       4.04
-C> (client:10965) [2010-02-02:13-24-19] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      10.93
-C> (client:10965) [2010-02-02:13-24-22] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      16.50
-C> (client:10965) [2010-02-02:13-24-25] [0-0-0x6209a0-statistics]:                  parent create:   29220.79
-C> (client:10965) [2010-02-02:13-24-25] [0-0-0x6209a0-statistics]:                  parent delete:    2547.26
-C> (client:10965) [2010-02-02:13-24-26] [0-0-0x6209a0-statistics]:                   child create:     137.89
-C> (client:10965) [2010-02-02:13-24-26] [0-0-0x6209a0-statistics]:                   child delete:      27.25
-C> (client:10965) [2010-02-02:13-24-26] [0-0-0x6209a0-main]: end: ----------------------------------------
+> thread/NHI1-0.6/theLink/tests/client --all @ mono thread/NHI1-0.6/theLink/tests/csserver.exe
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-01] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-01] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.30
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-02] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      11.79
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-05] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      16.95
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-08] [0-0-0-0x6229a0-statistics]:                  parent create:   32566.42
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-08] [0-0-0-0x6229a0-statistics]:                  parent delete:    2972.16
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-08] [0-0-0-0x6229a0-statistics]:                   child create:     155.90
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-08] [0-0-0-0x6229a0-statistics]:                   child delete:      45.84
+C> (client:12336:0x7eff2e2f86f0) [2010-02-18:08-58-08] [0-0-0-0x6229a0-main]: end: ----------------------------------------

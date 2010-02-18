@@ -1,10 +1,10 @@
-> nothread/NHI1-0.5/theLink/tests/client --all @ python nothread/NHI1-0.5/theLink/tests/server.py
-C> (client:10326) [2010-02-02:13-23-37] [0-0-0x6209a0-main]: start: --------------------------------------
-C> (client:10326) [2010-02-02:13-23-37] [0-0-0x6209a0-statistics]:                      MqSendEND:       5.73
-C> (client:10326) [2010-02-02:13-23-38] [0-0-0x6209a0-statistics]:         MqSendEND_AND_CALLBACK:      16.74
-C> (client:10326) [2010-02-02:13-23-41] [0-0-0x6209a0-statistics]:             MqSendEND_AND_WAIT:      22.47
-C> (client:10326) [2010-02-02:13-23-44] [0-0-0x6209a0-statistics]:                  parent create:   29613.37
-C> (client:10326) [2010-02-02:13-23-44] [0-0-0x6209a0-statistics]:                  parent delete:    2159.88
-C> (client:10326) [2010-02-02:13-23-44] [0-0-0x6209a0-statistics]:                   child create:     126.39
-C> (client:10326) [2010-02-02:13-23-44] [0-0-0x6209a0-statistics]:                   child delete:      24.76
-C> (client:10326) [2010-02-02:13-23-44] [0-0-0x6209a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.6/theLink/tests/client --all @ python nothread/NHI1-0.6/theLink/tests/server.py
+C> (client:11697) [2010-02-18:08-57-17] [0-0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:11697) [2010-02-18:08-57-18] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       5.45
+C> (client:11697) [2010-02-18:08-57-19] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      17.53
+C> (client:11697) [2010-02-18:08-57-22] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      23.82
+C> (client:11697) [2010-02-18:08-57-25] [0-0-0-0x6219a0-statistics]:                  parent create:   32083.70
+C> (client:11697) [2010-02-18:08-57-25] [0-0-0-0x6219a0-statistics]:                  parent delete:    2658.42
+C> (client:11697) [2010-02-18:08-57-25] [0-0-0-0x6219a0-statistics]:                   child create:     129.37
+C> (client:11697) [2010-02-18:08-57-25] [0-0-0-0x6219a0-statistics]:                   child delete:      47.03
+C> (client:11697) [2010-02-18:08-57-25] [0-0-0-0x6219a0-main]: end: ----------------------------------------
