@@ -1,0 +1,11 @@
+> java example.Server --uds --file ./socket.uds --spawn
+> thread/NHI1-0.6/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-01] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-01] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       5.72
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-02] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      14.36
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-05] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      19.96
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-16] [0-0-0-0x6229a0-statistics]:                  parent create:  115016.93
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-17] [0-0-0-0x6229a0-statistics]:                  parent delete:    2090.30
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-17] [0-0-0-0x6229a0-statistics]:                   child create:     169.11
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-17] [0-0-0-0x6229a0-statistics]:                   child delete:      43.83
+C> (client:10458:0x7fb63de986f0) [2010-02-18:08-57-17] [0-0-0-0x6229a0-main]: end: ----------------------------------------

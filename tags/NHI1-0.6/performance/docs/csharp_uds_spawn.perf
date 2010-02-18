@@ -1,0 +1,11 @@
+> mono thread/NHI1-0.6/theLink/tests/csserver.exe --uds --file ./socket.uds --spawn
+> thread/NHI1-0.6/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-33] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-33] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.37
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-34] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      11.77
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-37] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      17.25
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-40] [0-0-0-0x6229a0-statistics]:                  parent create:   32279.40
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-40] [0-0-0-0x6229a0-statistics]:                  parent delete:    2980.83
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-40] [0-0-0-0x6229a0-statistics]:                   child create:     131.13
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-40] [0-0-0-0x6229a0-statistics]:                   child delete:      45.28
+C> (client:13264:0x7ff4b6abe6f0) [2010-02-18:08-58-40] [0-0-0-0x6229a0-main]: end: ----------------------------------------

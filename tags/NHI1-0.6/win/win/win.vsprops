@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="win"
+	OutputDirectory="$(TOP_BUILD_DIR)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;"
+		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS"
+		RuntimeLibrary="2"
+		CompileAs="1"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="ws2_32.lib"
+		Version="$(LIBMSGQUE_VERSION)"
+		CLRThreadAttribute="0"
+	/>
+	<UserMacro
+		Name="TOP_BUILD_DIR"
+		Value="..\..\.."
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="PYTHON_DIR"
+		Value="C:\Python31"
+	/>
+	<UserMacro
+		Name="TCL_DIR"
+		Value="C:\cygwin\home\dev1usr\ext\i686-pc-cygwin\thread"
+	/>
+	<UserMacro
+		Name="JAVA_DIR"
+		Value="C:\Programme\Java\jdk1.6.0_13\"
+	/>
+	<UserMacro
+		Name="PERL_DIR"
+		Value="C:\Perl"
+	/>
+	<UserMacro
+		Name="PERL_LIB"
+		Value="C:\Perl\lib\CORE\perl510.lib"
+	/>
+	<UserMacro
+		Name="LIBMSGQUE_VERSION"
+		Value="4.4"
+	/>
+</VisualStudioPropertySheet>

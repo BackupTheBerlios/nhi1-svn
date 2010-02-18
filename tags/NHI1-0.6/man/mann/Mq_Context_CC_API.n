@@ -1,0 +1,157 @@
+.TH "Mq_Context_CC_API" n "18 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
+
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fBccmsgque::MqC\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.ti -1c
+.RI "struct \fBccmsgque::MqC::MqC::ProcCallS\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef void(MqC::* \fBccmsgque::MqC::CallbackF\fP )()"
+.br
+.ti -1c
+.RI "typedef MqC *(MqC::* \fBccmsgque::MqC::FactoryF\fP )()"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBccmsgque::MqC::MqC\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.ti -1c
+.RI "virtual \fBccmsgque::MqC::~MqC\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBccmsgque::MqC::GetTempBuffer\fP ()"
+.br
+.R "get access to an internal buffer "
+.ti -1c
+.RI "void \fBccmsgque::MqC::Exit\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::Sleep\fP (unsigned int const sec)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::USleep\fP (unsigned int const usec)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::LogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::LogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::LogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqS\fP \fBccmsgque::MqC::context\fP"
+.br
+.R "link between \fBMqC\fP and \fBMqS\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
+
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+.PP
+The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+.PP
+.nf
+ struct MyCtxDataS {
+   struct MqS  mqctx;   // libmsgque-specific-data
+   int         mydata;  // application-specific-data
+   ...                  // application-specific-data
+ };
+
+.fi
+.PP
+ The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
+.br
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef void(MqC::* \fBccmsgque::MqC::CallbackF\fP)()\fC [inherited]\fP"
+.PP
+.SS "typedef MqC*(MqC::* \fBccmsgque::MqC::FactoryF\fP)()\fC [inherited]\fP"
+.PP
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqC::Exit ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
+.PP
+Definition at line 390 of file ccmsgque.h.
+.SS "\fBMQ_BUF\fP ccmsgque::MqC::GetTempBuffer ()\fC [inline, inherited]\fP"
+.PP
+get access to an internal buffer 
+.PP
+Definition at line 388 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
+.PP
+Definition at line 396 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLogV\fP 
+.PP
+Definition at line 398 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list ap)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP 
+.PP
+Definition at line 409 of file ccmsgque.h.
+.SS "ccmsgque::MqC::MqC ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
+.PP
+.SS "void ccmsgque::MqC::Sleep (unsigned int const  sec)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP 
+.PP
+Definition at line 392 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::USleep (unsigned int const  usec)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP 
+.PP
+Definition at line 394 of file ccmsgque.h.
+.SS "virtual ccmsgque::MqC::~MqC ()\fC [virtual, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
+.PP
+.SH "Variable Documentation"
+.PP 
+.SS "struct \fBMqS\fP \fBccmsgque::MqC::context\fP\fC [read, protected, inherited]\fP"
+.PP
+link between \fBMqC\fP and \fBMqS\fP 
+.PP
+Definition at line 318 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

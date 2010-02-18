@@ -1,0 +1,57 @@
+.TH "ccmsgque" n "18 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque \- The CcMsgque Libraray.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fBIService\fP"
+.br
+.R "Callback for a Service. "
+.ti -1c
+.RI "class \fBIFactory\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP "
+.ti -1c
+.RI "class \fBIServerSetup\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP "
+.ti -1c
+.RI "class \fBIServerCleanup\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP "
+.ti -1c
+.RI "class \fBIBgError\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP "
+.ti -1c
+.RI "class \fBIEvent\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP "
+.ti -1c
+.RI "class \fBMqCException\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
+.ti -1c
+.RI "class \fBMqBufferC\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.ti -1c
+.RI "class \fBMqC\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+The CcMsgque Libraray. 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

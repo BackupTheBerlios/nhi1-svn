@@ -1,0 +1,509 @@
+#+
+#§  \file       theLink/tests/slave.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+set BLOCK_1 true
+#set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+set BLOCK_3 true
+#set BLOCK_3 false
+set BLOCK_4 true
+#set BLOCK_4 false
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if $BLOCK_1 {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+    #set TIME [expr {[string match "*thread*" $S] ? 300 : 0}]
+
+    switch -glob $S {
+      *pipe*	{ set STATUS_IS DUP-SPAWN-  }
+      *thread*  { set STATUS_IS DUP-THREAD- }
+      *fork*	{ set STATUS_IS DUP-FORK-   }
+      *spawn*	{ set STATUS_IS DUP-SPAWN-  }
+    }
+
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+# start the "worker" server
+
+Setup $I $B $C $S --setup-parent {
+  Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0
+} --bgerror RET_BG
+
+SetConstraints $I $B $S
+
+# tests ----------------------------
+
+test slave-1-($I|$B|$C|$S) {SendEND_AND_WAIT with ok} \
+    -body           {
+      Echo1 $FH_LAST SND2 ReadI SendC WAIT SendI 0 SendI 777
+    } \
+    -returnCodes    ok \
+    -result         {778}
+
+test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -constraints    binary \
+    -body           {Echo1 $FH_LAST SND2 ReadI SendC WAIT SendI 0 SendD 4.7 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
+*[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+
+test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -constraints    string \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND2 SendC WAIT SendI 0 SendD 4.7 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
+*[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
+
+test slave-3-($I|$B|$C|$S) {SendEND with ok} \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendI 777} \
+    -returnCodes    ok \
+    -result         {}
+
+test slave-4a-($I|$B|$C|$S) {SendEND with error} \
+    -constraints    binary  \
+    -body           {
+	RET_start
+	## 1. create an error
+	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendW 777
+	## 2. get the error from above as side-effect of the following service call
+	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_end
+    } \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (wk-sv-0) found in function "*sReadA4" at file "read.c*"
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
+
+test slave-4b-($I|$B|$C|$S) {SendEND with background error} \
+    -body           {
+	RET_start
+	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC XXXX SendI 777
+	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_end
+    } \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pTokenInvoke] token <XXXX> not found
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
+
+test slave-4c-($I|$B|$C|$S) {SendEND with error} \
+    -constraints    binary  \
+    -body           {
+	RET_start
+	## 1. create an error
+	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendW 777
+	## 2. get the error from above as side-effect of the following service call
+	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_end
+    } \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (wk-sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (wk-sv-0) found in function "*sReadA4" at file "read.c*"
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
+
+test slave-5-($I|$B|$C|$S) {SendEND_AND_WAIT with ok} \
+    -body           {
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CALLBACK SendI 0 SendI 777
+	$FH_LAST ReadI
+    } \
+    -returnCodes    ok \
+    -result         778
+
+test slave-6-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND2 SendC CALLBACK SendI 0 SendC OTTO} \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
+*[cC]> (wk-cl-0) \[callback-error] <Num|1>*
+[sS]> (wk-sv-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
+
+test slave-7-($I|$B|$C|$S) {check ctxId} \
+    -body           {Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI 0 SendC GTCX} \
+    -result         [expr {$I-1}]
+
+test slave-8-($I|$B|$C|$S) {check startAs} \
+    -constraints    {c && parent && filter} \
+    -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
+    -result         {DUP-SPAWN-}
+
+test slave-8-($I|$B|$C|$S) {check startAs} \
+    -constraints    {c && parent && !filter} \
+    -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
+    -result         $STATUS_IS
+
+test slave-9-($I|$B|$C|$S) {check isSlave} \
+    -body           {Echo1 $FH_LAST SND2 ReadO SendC isSlave SendI 0} \
+    -result         1
+
+# cleanup ---------------------------
+Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
+##
+## -----------------------------------------------------------------------
+## Master/Worker - start as "fork", "thread" or "spawn"
+##
+
+if $BLOCK_2 {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I 1 {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      # startAs: fork thread spawn
+      foreach T [envGet START_LST] {
+
+	# set STATUS
+	switch -exact $T {
+	  thread  { set STATUS_IS DUP-THREAD- }
+	  fork    { set STATUS_IS DUP-FORK-   }
+	  spawn   { set STATUS_IS DUP-SPAWN-  }
+	}
+
+	# start the slave
+	SetConstraints $I $B $S
+
+	if {$T == "fork" && [string match *thread* $S]} {
+	  test slave-X0-($I|$B|$C|$S|$T) {check startAs} \
+	      -constraints  {c && !filter}  \
+	      -body	    {
+		Setup $I $B $C $S --setup-parent "
+		  Call \$FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0 SendC --$T
+		"
+	      } \
+	      -cleanup	      { Cleanup } \
+	      -returnCodes    error \
+	      -match	      glob \
+	      -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|222>*
+C> (server-0) \[*sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+	} else {
+	  test slave-X0-($I|$B|$C|$S|$T) {check startAs} \
+	      -constraints  c \
+	      -setup	    {
+		Setup $I $B $C $S --setup-parent "
+		  Call \$FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0 SendC --$T
+		"
+	      } \
+	      -cleanup	    {
+		Cleanup
+	      } \
+	      -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
+	      -result         $STATUS_IS
+	}
+
+      }; # START_LST
+
+      test slave-X1-($I|$B|$C|$S) {error-1} \
+	  -body		  {
+	    Setup $I $B $C $S --setup-parent "
+	      Call \$FH_LAST SendEND_AND_WAIT SND2 SendC ERR-1 SendI 0
+	    "
+	  } \
+	  -returnCodes    error \
+	  -cleanup	  { Cleanup } \
+	  -match	  glob \
+	  -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|204>*
+C> (cl-err-1) \[*] can not start server 'DUMMY'*}
+
+      test slave-X2-($I|$B|$C|$S) {error-2} \
+	  -setup	  { Setup 2 $B $C $S } \
+	  -body		  {
+	      Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0
+	  } \
+	  -returnCodes    error \
+	  -cleanup	  { Cleanup } \
+	  -match	  glob \
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|227>*
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
+##
+## -----------------------------------------------------------------------
+## Master/Worker - multiple slave - one master
+##
+
+if $BLOCK_3 {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      # start the slave
+      Setup $I $B $C $S --setup-parent {
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 1
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 2
+      }
+      SetConstraints $I $B $S
+
+      # do the test
+      test slave-Y-0-($I|$B|$C|$S) {get/set on different slaves} \
+	  -body           {
+	    set RET [list]
+	    foreach i {0 1 2} {
+	      Call $FH_LAST SendEND SND2 SendC MqSendEND SendI $i SendC SETU SendI $i
+	    }
+	    foreach i {1 2 0} {
+	      lappend RET [Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI $i SendC GETU SendI $i]
+	    }
+	    set RET
+	  } \
+	  -result         {1 2 0}
+
+      test slave-Y-1-($I|$B|$C|$S) {delete a PARENT slave} \
+	  -body           {
+	    Echo1 $FH(0-0) SND2 ReadC SendC DELETE SendI 1
+	  } \
+	  -result         {OK}
+
+      test slave-Y-2-($I|$B|$C|$S) {delete a CHILD slave} \
+	  -constraints	  {!parent} \
+	  -body           {
+	    Echo1 $FH_LAST SND2 ReadC SendC DELETE SendI 2
+	  } \
+	  -returnCodes    error \
+	  -match	  glob \
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
+s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
+
+      test slave-Y-3-($I|$B|$C|$S) {test after delete} \
+	  -body           {
+	    set RET [list]
+	    foreach i {0 2} {
+	      Call $FH_LAST SendEND SND2 SendC MqSendEND SendI $i SendC SETU SendI $i
+	    }
+	    foreach i {0 2} {
+	      lappend RET [Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI $i SendC GETU SendI $i]
+	    }
+	    set RET
+	  } \
+	  -result         {0 2}
+
+      # cleanup ---------------------------
+      Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
+##
+## -----------------------------------------------------------------------
+## Master/Slave - multiple slave - one master
+##
+
+if $BLOCK_4 {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      SetConstraints $I $B $S
+
+      # do the test
+      test slave-Z-ERR-1-($I|$B|$C|$S) {IFactory is not available} \
+	  -constraints	  { child } \
+	  -body           {
+	    Setup $I $B $C $S --setup-parent {
+	      Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE3 SendI 0
+	    }
+	  } \
+	  -cleanup	  { Cleanup } \
+	  -returnCodes    error \
+	  -match	  glob \
+	  -result         {C> (client-0) \[service-call-error] <Tok|_OKS> <Num|232>*
+C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration 'MqSetupS::Factory.Create.fCall' is required*}
+
+      # start the slave
+      Setup $I $B $C $S --setup-parent {
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE2 SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE2 SendI 1
+	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE2 SendI 2
+      }
+
+      # do the test
+      test slave-Z-0-($I|$B|$C|$S) {get/set on different slaves} \
+	  -body           {
+	    set RET [list]
+	    foreach i {0 1 2} {
+	      Call $FH_LAST SendEND SND2 SendC MqSendEND SendI $i SendC SETU SendI $i
+	    }
+	    foreach i {1 2 0} {
+	      lappend RET [Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI $i SendC GETU SendI $i]
+	    }
+	    set RET
+	  } \
+	  -result         {1 2 0}
+
+      test slave-Z-1-($I|$B|$C|$S) {delete a PARENT slave} \
+	  -body           {
+	    Echo1 $FH(0-0) SND2 ReadC SendC DELETE SendI 1
+	  } \
+	  -result         {OK}
+
+      test slave-Z-2-($I|$B|$C|$S) {delete a CHILD slave} \
+	  -constraints	  {!parent} \
+	  -body           {
+	    Echo1 $FH_LAST SND2 ReadC SendC DELETE SendI 2
+	  } \
+	  -returnCodes    error \
+	  -match	  glob \
+	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
+s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
+
+      test slave-Z-3-($I|$B|$C|$S) {test after delete} \
+	  -body           {
+	    set RET [list]
+	    foreach i {0 2} {
+	      Call $FH_LAST SendEND SND2 SendC MqSendEND SendI $i SendC SETU SendI $i
+	    }
+	    foreach i {0 2} {
+	      lappend RET [Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI $i SendC GETU SendI $i]
+	    }
+	    set RET
+	  } \
+	  -result         {0 2}
+
+      # cleanup ---------------------------
+      Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+
+

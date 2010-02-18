@@ -1,0 +1,74 @@
+#+
+#§  \file       theLink/tests/acmd.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint c]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set data1 [makeFile {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46} data1.[pid]]
+
+##
+## -----------------------------------------------------------------------
+## acmd
+##
+
+foreach server {join cut sort} {
+    set title [string totitle $server]
+
+    test acmd-1-$server {error: no client} \
+	-body       { Exec {*}[getATool $server] } \
+	-result	    [subst -nobackslashes -nocommands \
+{CHILDSTATUS-201-S> ($server) [${io}Create] it is not allowed to use a server in a client context
+S> ($server) found in function "pIoCreate" at file "io.c"
+S> ($server) found in function "MqLinkCreate" at file "link.c"
+S> ($server) found in function "${title}Create" at file "a${server}.c"
+S> ($server) use '-h' or '--help' for usage}]
+
+}
+
+test acmd-3-asplit {error: to few arguments} \
+    -body           { Exec {*}[getATool split] } \
+    -result {CHILDSTATUS-203-C> (split) [pIoStartServer] can not start PIPE client without '@ server ...' as argument
+C> (split) found in function "MqLinkConnect" at file "link.c"
+C> (split) found in function "MqLinkCreate" at file "link.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,45 @@
+    Tests from:       |                  
+ 2010-02-18 09:35:24  |   PUT      GET   
+ -------------------  | -------- --------
+
+ pipe:
+    memory hash       |    15.67    16.04                                              
+    memory btree      |    19.33    20.03                                              
+    file hash         |    18.11    17.96                                              
+    file btree        |   339.57   162.48                                              
+
+ tcp_fork:
+    memory hash       |    26.32    26.19                                              
+    memory btree      |    29.75    31.50                                              
+    file hash         |    28.60    28.28                                              
+    file btree        |   172.57   175.07                                              
+
+ tcp_thread:
+    e0-statistics]: memory |     PUT:     GET:                                              
+    e0-statistics]: memory |     PUT:     GET:                                              
+    e0-statistics]: file |     PUT:     GET:                                              
+    e0-statistics]: file |     PUT:     GET:                                              
+
+ tcp_spawn:
+    memory hash       |    25.60    25.62                                              
+    memory btree      |    29.20    29.66                                              
+    file hash         |    26.81    27.08                                              
+    file btree        |   191.76   309.00                                              
+
+ uds_fork:
+    memory hash       |    15.66    15.88                                              
+    memory btree      |    19.14    20.08                                              
+    file hash         |    18.47    18.41                                              
+    file btree        |   142.45   163.95                                              
+
+ uds_thread:
+    d0-statistics]: memory |     PUT:     GET:                                              
+    d0-statistics]: memory |     PUT:     GET:                                              
+    d0-statistics]: file |     PUT:     GET:                                              
+    d0-statistics]: file |     PUT:     GET:                                              
+
+ uds_spawn:
+    memory hash       |    15.37    16.33                                              
+    memory btree      |    19.81    20.53                                              
+    file hash         |    17.44    17.90                                              
+    file btree        |   171.56   158.63                                              

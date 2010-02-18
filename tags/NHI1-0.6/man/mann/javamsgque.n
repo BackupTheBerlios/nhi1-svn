@@ -1,0 +1,61 @@
+.TH "javamsgque" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque \- The \fBJavaMsgque\fP Package.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "interface \fBIBgError\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP "
+.ti -1c
+.RI "interface \fBICallback\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqCallbackS\fP "
+.ti -1c
+.RI "interface \fBIEvent\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP "
+.ti -1c
+.RI "interface \fBIFactory\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP "
+.ti -1c
+.RI "interface \fBIServerCleanup\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP "
+.ti -1c
+.RI "interface \fBIServerSetup\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP "
+.ti -1c
+.RI "interface \fBIService\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP "
+.ti -1c
+.RI "class \fBMqBufferS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.ti -1c
+.RI "class \fBMqS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.ti -1c
+.RI "class \fBMqSException\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+The \fBJavaMsgque\fP Package. 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

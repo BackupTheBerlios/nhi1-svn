@@ -1,0 +1,254 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+ENABLED_SECTIONS    += C
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/c
+
+ALIASES		    += "self=libmsgque"
+ALIASES		    += "selftut=libmsgquetut"
+ALIASES		    += "NS{1}=c_\1"
+ALIASES		    += "lang=C"
+ALIASES		    += "fileextension=c"
+ALIASES		    += "null=\e NULL"
+ALIASES		    += "yes=\e MQ_YES"
+ALIASES		    += "no=\e MQ_NO"
+ALIASES		    += "package=\#include \"msgque.h\""
+ALIASES		    += "RNS_PREFIX{1}=Mq\1"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+struct MyCtxDataS { \n\
+  struct MqS mqctx; \n\
+  int mydata; \n\
+}; \n\
+struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
+ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
+ALIASES		    += "Exit=MqExit(struct MqS* ctx)"
+ALIASES		    += "LogC=MqLogC(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const str)"
+ENABLED_SECTIONS    += HAS_LOGV
+ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
+ENABLED_SECTIONS    += HAS_LOGVL
+ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "init_example=\
+\code \n\
+struct MqBufferLS * init = MqInitCreate(); \n\
+MqBufferLAppendC(init, \"myExecutable\"); \n\
+MqBufferLAppendC(init, \"myFirstArgument\"); \n\
+\endcode \n\
+The memory is owned by the library -> <B>do not free the memory</B>"
+
+ALIASES		    += "config_type_buffersize=#MQ_INT"
+ALIASES		    += "config_set_buffersize=#MqConfigSetBuffersize (ctx, MQ_INT buffersize)"
+ALIASES		    += "config_get_buffersize=#MqConfigGetBuffersize (ctx)"
+
+ALIASES		    += "config_type_debug=#MQ_INT"
+ALIASES		    += "config_set_debug=#MqConfigSetDebug (ctx, MQ_INT debug)"
+ALIASES		    += "config_get_debug=#MqConfigGetDebug (ctx)"
+
+ALIASES		    += "config_type_timeout=#MQ_TIME_T"
+ALIASES		    += "config_set_timeout=#MqConfigSetTimeout (ctx, MQ_TIME_T timeout)"
+ALIASES		    += "config_get_timeout=#MqConfigGetTimeout (ctx)"
+
+ALIASES		    += "config_type_name=#MQ_CST"
+ALIASES		    += "config_set_name=#MqConfigSetName (ctx. MQ_CST name)"
+ALIASES		    += "config_get_name=#MqConfigGetName (ctx)"
+
+ALIASES		    += "config_type_srvname=#MQ_CST"
+ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, MQ_CST srvName)"
+ALIASES		    += "config_get_srvname=#MqConfigGetSrvName (ctx)"
+
+ALIASES		    += "config_type_ident=#MQ_CST"
+ALIASES		    += "config_set_ident=#MqConfigSetIdent (struct MqS *ctx, MQ_CST ident)"
+ALIASES		    += "config_get_ident=#MqConfigGetIdent (struct MqS *ctx)"
+
+ALIASES		    += "config_type_isSilent=#MQ_BOL"
+ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, MQ_BOL bool)"
+ALIASES		    += "config_get_isSilent=#MqConfigGetIsSilent (ctx)"
+
+ALIASES		    += "config_type_isString=#MQ_BOL"
+ALIASES		    += "config_set_isString=#MqConfigSetIsString (ctx, MQ_BOL bool)"
+ALIASES		    += "config_get_isString=#MqConfigGetIsString (ctx)"
+
+ALIASES		    += "config_type_ignoreExit=#MQ_BOL"
+ALIASES		    += "config_set_ignoreExit=#MqConfigSetIgnoreExit (ctx, MQ_BOL bool)"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_daemon=#MQ_CST"
+ALIASES		    += "config_set_daemon=#MqConfigSetDaemon (ctx, MQ_CST pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_isServer=#MQ_BOL"
+ALIASES		    += "config_set_isServer=#MqConfigSetIsServer (ctx, MQ_BOL isServer)"
+ALIASES		    += "config_get_isServer=#MqConfigGetIsServer (ctx)"
+
+ALIASES		    += "config_type_startAs=enum #MqStartE"
+ALIASES		    += "config_set_startAs=#MqConfigSetStartAs (ctx, enum #MqStartE startAS)"
+ALIASES		    += "config_get_startAs=#MqConfigGetStartAs (ctx)"
+
+ALIASES		    += "config_type_tcp=#MQ_CST"
+ALIASES		    += "config_set_tcp=#MqConfigSetIoTcp (ctx,MQ_CST host, MQ_INT port, MQ_CST myhost, MQ_INT myport)"
+ALIASES		    += "config_get_tcp=#MqConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=#MQ_CST"
+ALIASES		    += "config_set_uds=#MqConfigSetIoUds (ctx, MQ_CST file)"
+ALIASES		    += "config_get_uds=#MqConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=#MQ_SOCK"
+ALIASES		    += "config_set_pipe=#MqConfigSetIoPipe (ctx, MQ_INT socket)"
+ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
+
+ALIASES             += "config_IServerSetup=MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_IServerCleanup=MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
+ALIASES		    += "config_IFactory=MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
+ALIASES		    += "config_IBgError=MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
+ALIASES		    += "config_IEvent=MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+MqConfigSetDefaultFactory (ctx); \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=MqLinkCreate (struct MqS *ctx, struct MqBufferLS ** args)"
+ALIASES		    += "LinkCreateChild=MqLinkCreateChild (struct MqS *ctx, struct MqS *parent, struct MqBufferLS ** args)"
+ALIASES		    += "LinkIsConnected=MqLinkIsConnected (struct MqS *ctx)"
+ALIASES		    += "LinkGetParent=struct MqS* MqLinkGetParent (struct MqS *ctx)"
+ALIASES		    += "LinkGetCtxId=MQ_SIZE MqLinkGetCtxId (struct MqS *ctx)"
+ALIASES		    += "LinkIsParent=MQ_BOL MqLinkIsParent (struct MqS *ctx)"
+ALIASES		    += "LinkIsConnected=MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
+ALIASES		    += "LinkDelete=MqLinkDelete(struct MqS *ctx)"
+ALIASES		    += "LinkConnect=MqLinkConnect(struct MqS *ctx)"
+ALIASES		    += "LinkGetTargetIdent=MQ_CST MqLinkGetTargetIdent (struct MqS *ctx)"
+
+# SEND DATA
+ALIASES		    += "send_example=\code \n\
+MqSendSTART(ctx);\n\
+MqSendI(ctx,num);\n\
+MqSendL_START(ctx);\n\
+  MqSendD(ctx,balance);\n\
+  MqSendC(ctx,\"name of the owner\");\n\
+  MqSendB(ctx,signature);\n\
+MqSendL_END(ctx);\n\
+MqErrorCheck(MqSendEND_AND_WAIT(ctx,\"SRV1\",MQ_TIMEOUT_USER));\endcode"
+
+ALIASES		    += "SendSTART=MqSendSTART(ctx)"
+ALIASES		    += "SendEND=MqSendEND(ctx,MQ_TOK token)"
+ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T timeout)"
+ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
+ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
+ALIASES		    += "SendERROR=MqSendERROR(ctx)"
+ALIASES		    += "SendFTR=MqSendFTR(ctx,timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendEOF=MqSendEOF(ctx,timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendTYPE=MqSendTYPE(ctx,value)"
+ALIASES		    += "SendN=MqSendN(ctx,MQ_BIN value,MQ_SIZE len)"
+ALIASES		    += "SendBDY=MqSendBDY(ctx,MQ_BIN value,MQ_SIZE len)"
+ALIASES		    += "SendL_START=MqSendL_START(ctx)"
+ALIASES		    += "SendL_END=MqSendL_END(ctx)"
+
+# READ DATE
+ALIASES		    += "read_example=\code MqErrorCheck(MqReadI(ctx, &i));\nMqErrorCheck(MqReadL_START(ctx, NULL));\n  MqErrorCheck(MqReadD(ctx, &balance));\n  MqErrorCheck(MqReadC(ctx, &owner));\n  MqErrorCheck(MqReadB(ctx, &signature));\nMqReadL_END(ctx);\endcode"
+ALIASES		    += "ReadTYPE=MqReadTYPE(ctx, TYPE *val)"
+ALIASES		    += "ReadN=MqReadN(ctx,MQ_BIN *value, MQ_SIZE *len)"
+ALIASES		    += "ReadBDY=MqReadBDY(ctx,MQ_BIN *value, MQ_SIZE *len)"
+ALIASES		    += "ReadU=MqReadU(ctx)"
+ALIASES		    += "ReadProxy=MqReadProxy(ctx, struct MqS *otherCtx)"
+ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"
+ALIASES		    += "ReadItemExists=MQ_BOL MqReadItemExists(ctx)"
+ALIASES		    += "ReadUndo=MqReadUndo(ctx)"
+ALIASES		    += "ReadL_START=MqReadL_START(ctx, struct MqBufferS buffer=NULL)"
+ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+enum MqErrorE ServerSetup(struct MqS * msgque) { \n\
+  MqErrorCheck(MqServiceCreate(msgque, \"SRV1\", SRV1, NULL, NULL)); \n\
+  return MQ_OK; \n\
+error: \n\
+  return MqErrorStack(msgque->error); \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,MQ_TOK token,callback,data,fFree)"
+ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_TOK token, MQ_SIZE id=0)"
+ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,MQ_TOK token)"
+ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "ServiceGetFilter=struct MqS* MqServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+ALIASES		    += "ServiceIsTransaction=int MqServiceIsTransaction (ctx)"
+ALIASES		    += "ServiceGetToken=MQ_CST MqServiceGetToken (ctx)"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"
+ALIASES		    += "SlaveWorker_example=\code \nMqErrorCheck(MqSlaveWorker (ctx, 7,\n   MqBufferLCreateArgsV(ctx, \"--thread\", \"--silent\", \"@\", \"--name\", \"MyWorker\", NULL)\n);\endcode"
+ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
+ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGet=struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGetMaster=struct MqS* MqSlaveGetMaster(ctx)"
+ALIASES		    += "SlaveIs=MQ_BOL MqSlaveIs(ctx)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+MQ_BUF buf = MqReadU(ctx); \n\
+if (buf->type == MQ_STRT) \n\
+  printf(buf->cur.C); \n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>struct MqBufferS*</I>"
+ALIASES		    += "BufferGetTYPE=TYPE MqBufferGetTYPE(MQ_BUF buffer)"
+ALIASES		    += "BufferType=buffer->type"
+
+ALIASES		    += "Y=#MQ_BYT"
+ALIASES		    += "O=#MQ_BOL"
+ALIASES		    += "S=#MQ_SRT"
+ALIASES		    += "I=#MQ_INT"
+ALIASES		    += "F=#MQ_FLT"
+ALIASES		    += "W=#MQ_WID"
+ALIASES		    += "D=#MQ_DBL"
+ALIASES		    += "C=#MQ_CST"
+ALIASES		    += "B=#MQ_BIN"
+ALIASES		    += "U=#MQ_BUF"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+if (MqErrorCheckI(MqReadI(ctx, &i))) { \n\
+ printf(MqErrorGetText(ctx)); \n\
+ MqErrorReset(ctx); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>ctx</I>"
+ALIASES		    += "ErrorGetText=MQ_CST MqErrorGetText(ctx)"
+ALIASES		    += "ErrorGetNum=MQ_INT MqErrorGetNum(ctx)"
+ALIASES		    += "ErrorC=MqErrorC(ctx,MQ_CST prefix, MQ_INT errnum, MQ_CST message)"
+ALIASES		    += "ErrorSet=MqErrorSet(ctx,MQ_INT errnum,enum MqErrorE errorcode,MQ_CST message)"
+ALIASES		    += "ErrorSetCONTINUE=MqErrorSetCONTINUE(ctx)"
+ALIASES		    += "ErrorIsEXIT=MQ_BOL MqErrorIsEXIT(ctx)"
+ALIASES		    += "ErrorReset=MqErrorReset(ctx)"
+ALIASES		    += "ErrorRaise=MqErrorRaise(ctx)"
+ALIASES		    += "ErrorPrint=MqErrorPrint(ctx)"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, \"TOKS\", MQ_TIMEOUT_USER))) { \n\
+  if (MqErrorIsEXIT (ctx)) MqErrorReset (ctx); \n\
+} \n\
+\endcode"

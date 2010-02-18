@@ -1,0 +1,83 @@
+.TH "ccmsgque::MqBufferC" n "18 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::MqBufferC \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqBufferC\fP (struct \fBMqBufferS\fP *bufP)"
+.br
+.ti -1c
+.RI "enum \fBMqTypeE\fP \fBGetType\fP () const "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS::type\fP "
+.ti -1c
+.RI "\fBMQ_BYT\fP \fBGetY\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBGetO\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP "
+.ti -1c
+.RI "\fBMQ_SRT\fP \fBGetS\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP "
+.ti -1c
+.RI "\fBMQ_INT\fP \fBGetI\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP "
+.ti -1c
+.RI "\fBMQ_FLT\fP \fBGetF\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP "
+.ti -1c
+.RI "\fBMQ_WID\fP \fBGetW\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP "
+.ti -1c
+.RI "\fBMQ_DBL\fP \fBGetD\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBGetC\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP "
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBGetU\fP () const   throw (MqCException)"
+.br
+.ti -1c
+.RI "void \fBGetB\fP (\fBMQ_BIN\fP *outP, \fBMQ_SIZE\fP *sizeP) const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
+.ti -1c
+.RI "vector< \fBMQ_BINB\fP > * \fBGetB\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
+.ti -1c
+.RI "void \fBAppendC\fP (\fBMQ_CST\fP str) const "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferAppendC\fP "
+.ti -1c
+.RI "void \fBReset\fP () const   throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqBufferReset\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP 
+.PP
+Definition at line 112 of file ccmsgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

@@ -1,0 +1,31 @@
+.TH "javamsgque::IService" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::IService \- implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Package Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBService\fP (\fBMqS\fP ctx)  throws MqSException"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP 
+.PP
+Definition at line 17 of file IService.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "void javamsgque.IService.Service (\fBMqS\fP ctx)  throws \fBMqSException\fP\fC [package]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

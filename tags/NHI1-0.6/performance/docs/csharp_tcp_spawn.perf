@@ -1,0 +1,11 @@
+> mono thread/NHI1-0.6/theLink/tests/csserver.exe --tcp --host localhost --port 7791 --spawn
+> thread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7791
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-17] [0-0-0-0x622bc0-main]: start: --------------------------------------
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-17] [0-0-0-0x622bc0-statistics]:                      MqSendEND:       4.56
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-18] [0-0-0-0x622bc0-statistics]:         MqSendEND_AND_CALLBACK:       9.87
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-21] [0-0-0-0x622bc0-statistics]:             MqSendEND_AND_WAIT:      26.73
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-24] [0-0-0-0x622bc0-statistics]:                  parent create:   33212.01
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-25] [0-0-0-0x622bc0-statistics]:                  parent delete:    3121.09
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-25] [0-0-0-0x622bc0-statistics]:                   child create:     143.04
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-25] [0-0-0-0x622bc0-statistics]:                   child delete:      54.58
+C> (client:12796:0x7fc3bdc396f0) [2010-02-18:08-58-25] [0-0-0-0x622bc0-main]: end: ----------------------------------------

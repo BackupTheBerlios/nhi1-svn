@@ -1,0 +1,277 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += PYTHON
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/python
+
+ALIASES		    += "self=pymsgque"
+ALIASES		    += "selftut=pymsgquetut"
+ALIASES		    += "NS{1}=py_\1"
+ALIASES		    += "lang=PYTHON"
+ALIASES		    += "fileextension=py"
+ALIASES		    += "null=\e None"
+ALIASES		    += "yes=\e True"
+ALIASES		    += "no=\e False"
+ALIASES		    += "package=from pymsgque import *"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+class MyClass(MqS): \n\
+  ... \n\
+  def __init__(self): \n\
+    self.mydata = None \n\
+    MqS.__init__(self) \n\
+  ... \n\
+ctx = MyClass() \n\
+... \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=ctx=MqS()"
+ALIASES		    += "ContextDelete=del ctx"
+ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LogC=ctx.LogC(prefix,level,str)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Init()"
+ALIASES		    += "init_example=\
+\code \n\
+Init(\"python\", \"myExecutable.py\", \"myFirstArgument\"); \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=PyLong"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=PyLong"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=PyLong"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=PyUnicode"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=PyUnicode"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=PyUnicode"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=PyBool"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=PyBool"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=PyBool"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_ignoreExit=PyBool"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_daemon=PyUnicode"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=PyLong"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=PyUnicode"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=PyUnicode"
+ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=PyLong"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=PyBool"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isParent=PyBool"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=MqConfigGetIsParent"
+
+ALIASES		    += "config_type_isSlave=PyBool"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_isConnected=PyBool"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
+
+ALIASES		    += "config_type_master=PyObject"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES		    += "config_type_ctxId=PyLong"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
+
+ALIASES             += "config_IServerSetup=ConfigSetServerSetup(callback)"
+ALIASES		    += "config_IServerCleanup=ConfigSetServerCleanup(callback)"
+ALIASES		    += "config_IFactory=ConfigSetFactory(callback)"
+ALIASES             += "config_IBgError=ConfigSetBgError(callback)"
+ALIASES             += "config_IEvent=ConfigSetEvent(callback)"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+class Server(MqS): \n\
+  def __init__(self): \n\
+    self.ConfigSetFactory(lambda: Server()) \n\
+    ... \n\
+... \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=PyBool ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=PyLong ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=PyLong ctx.LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token,callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendFTR=ctx.SendFTR(?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendEOF=ctx.SendEOF(?timeout=MQ_TIMEOUT_USER?)"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendN(value)"
+ALIASES		    += "SendBDY=ctx.SendBDY(value)"
+
+# READ DATE
+ALIASES		    += "read_example=\code \
+num = ctx.ReadI()\n\
+ctx.ReadL_START()\n\
+balance = ctx.ReadD()\n\
+owner = ctx.ReadC()\n\
+signature = ctx.ReadB()\n\
+ctx.ReadL_END()\n\
+\endcode"
+
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
+ALIASES		    += "ReadN=ByteArray ctx.ReadN()"
+ALIASES		    += "ReadBDY=ByteArray ctx.ReadBDY()"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
+ALIASES		    += "ReadGetNumItems=PyLong ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=PyBool ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+def ServerSetup(ctx): \n\
+  ctx.ServiceCreate (\"SRV1\", SRV1) \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)"
+ALIASES		    += "MQ_WAIT_NO=NO"
+ALIASES		    += "MQ_WAIT_ONCE=ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=FOREVER"
+ALIASES		    += "ServiceGetToken=PyUnicode ctx.ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=MqS ctx.ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceIsTransaction=PyBool ctx.ServiceIsTransaction()"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster(id)"
+ALIASES		    += "SlaveIs=\O ctx.SlaveIs(id)"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+buf = ctx.ReadU() \n\
+if buf.GetType() == 'C' : \n\
+  print(buf.GetC()) \n\
+\endcode"
+ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
+ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
+ALIASES		    += "BufferType=PyUnicode buffer.GetType()"
+
+ALIASES		    += "Y=PyLong"
+ALIASES		    += "O=PyBool"
+ALIASES		    += "S=PyLong"
+ALIASES		    += "I=PyLong"
+ALIASES		    += "F=PyFloat"
+ALIASES		    += "W=PyLong"
+ALIASES		    += "D=PyFloat"
+ALIASES		    += "C=PyUnicode"
+ALIASES		    += "B=PyByteArray"
+ALIASES		    += "U=MqBufferS"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try: \n\
+ i = ctx.ReadI() \n\
+except: \n\
+ ctx.ErrorSet() \n\
+ print(ctx.ErrorGetText()) \n\
+ ctx.ErrorReset() \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>ex=pymsgque.MqSException()</I>"
+ALIASES		    += "ErrorGetText=ex.text or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(prefix,errnum,message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet()"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try: \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\") \n\
+except: \n\
+  ctx.ErrorSet() \n\
+  if ctx.ErrorIsEXIT(): \n\
+    ctx.ErrorReset() \n\
+\endcode"
+

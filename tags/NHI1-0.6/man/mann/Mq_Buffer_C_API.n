@@ -1,0 +1,1242 @@
+.TH "Mq_Buffer_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.  
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "union \fBMqBufferAtomU\fP"
+.br
+.R "union used to set or modify native data from an \fBMqBufferS\fP object "
+.ti -1c
+.RI "union \fBMqBufferU\fP"
+.br
+.R "a union for all data items supported by \fBMqBufferS\fP. "
+.ti -1c
+.RI "struct \fBMqBufferS\fP"
+.br
+.R "a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_1_BYTE\fP   (1<<0)"
+.br
+.R "the type is native and has a size of 1 byte "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_2_BYTE\fP   (1<<1)"
+.br
+.R "the type is native and has a size of 2 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_4_BYTE\fP   (1<<2)"
+.br
+.R "the type is native and has a size of 4 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_8_BYTE\fP   (1<<3)"
+.br
+.R "the type is native and has a size of 8 bytes "
+.ti -1c
+.RI "#define \fBMQ_TYPE_IS_NATIVE\fP"
+.br
+.R "the type is native "
+.ti -1c
+.RI "#define \fBMQ_BLS_SIZE\fP   50"
+.br
+.R "initial size of the \fBMqBufferS.bls\fP object "
+.ti -1c
+.RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
+.br
+.R "a collection of all \fInative-data-types\fP supported "
+.ti -1c
+.RI "enum \fBMqAllocE\fP { \fBMQ_ALLOC_STATIC\fP =  0, \fBMQ_ALLOC_DYNAMIC\fP =  1 }"
+.br
+.R "allocation style used for the data-segment in \fBMqBufferS\fP. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_BYT\fP \fBMqBufU2BYT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_BYT from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqBufU2BOL\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_BOL from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_SRT\fP \fBMqBufU2SRT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_SRT from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_INT\fP \fBMqBufU2INT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_INT from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_FLT\fP \fBMqBufU2FLT\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_FLT from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_WID\fP \fBMqBufU2WID\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_WID from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_DBL\fP \fBMqBufU2DBL\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_DBL from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "\fBMQ_ATO\fP \fBMqBufU2ATO\fP (union \fBMqBufferU\fP bufU)"
+.br
+.R "extract a MQ_ATO from a \fBMqBufferS\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreate\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
+.br
+.R "create a new \fBMqBufferS\fP with \fIsize\fP "
+.ti -1c
+.RI "void \fBMqBufferDelete\fP (struct \fBMqBufferS\fP **const bufP)"
+.br
+.R "delete a new \fBMqBufferS\fP "
+.ti -1c
+.RI "void \fBMqBufferReset\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.R "reset a \fBMqBufferS\fP to the length zero "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCopy\fP (register struct \fBMqBufferS\fP *const dest, register struct \fBMqBufferS\fP const *const srce)"
+.br
+.R "copy the \fBMqBufferS\fP from \fIsrce\fP to \fIdest\fP "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferDup\fP (struct \fBMqBufferS\fP const *const srce)"
+.br
+.R "create an new object as duplication of an existing object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateY\fP (struct \fBMqS\fP *const context, \fBMQ_BYT\fP const val)"
+.br
+.R "create and initialize a new \fBMqBufferS\fP object using native typed value "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateO\fP (struct \fBMqS\fP *const context, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateS\fP (struct \fBMqS\fP *const context, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateI\fP (struct \fBMqS\fP *const context, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateF\fP (struct \fBMqS\fP *const context, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateW\fP (struct \fBMqS\fP *const context, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateD\fP (struct \fBMqS\fP *const context, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const val)"
+.br
+.R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_STR\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const val, \fBMQ_SIZE\fP const len)"
+.br
+.R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP const *const val)"
+.br
+.R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetY\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BYT\fP *const valP)"
+.br
+.R "read native typed value from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetO\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BOL\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetS\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_SRT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetI\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_INT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetF\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_FLT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetW\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_WID\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetD\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_DBL\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const size)"
+.br
+.R "function to read an \fBMQ_BIN\fP from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferGetC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP *const out)"
+.br
+.R "function to read an \fBMQ_STR\fP from an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.R "return the type from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.R "return the \fBMqErrorS\fP object from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetY\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BYT\fP const val)"
+.br
+.R "set the \fBMqBufferS\fP object with a native typed value "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetO\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetS\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetI\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetF\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetW\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetD\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const in)"
+.br
+.R "set the \fBMqBufferS\fP object with an \fBMQ_STR\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.br
+.R "set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetU\fP (struct \fBMqBufferS\fP *const buf, struct \fBMqBufferS\fP const *const in)"
+.br
+.R "set the \fBMqBufferS\fP object with an \fBMQ_BUF\fP object "
+.ti -1c
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetV\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "set the \fBMqBufferS\fP to a vararg \fIstring\fP with \fIformat\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferCastTo\fP (struct \fBMqBufferS\fP *const buf, enum \fBMqTypeE\fP const type)"
+.br
+.R "change the type of an \fBMqBufferS\fP object to \fItype\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferAppendC\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.R "append a single \fIstring\fP to a \fBMqBufferS\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferAppendVL\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt, va_list var_list)"
+.br
+.R "append a single string with \fIformat\fP and \fIvar_list\fP arguments to a \fBMqBufferS\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferAppendV\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "append a single string with \fIformat\fP and \fI\fP... arguments to a \fBMqBufferS\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferPush\fP (register struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.R "add \fIstr\fP to the \fBMqBufferS\fP "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferPop\fP (register struct \fBMqBufferS\fP *const buf, \fBMQ_CST\fP const string)"
+.br
+.R "delete \fIstr\fP from the \fBMqBufferS\fP "
+.ti -1c
+.RI "void \fBMqBufferLog\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferS\fP const *const buf, \fBMQ_CST\fP const prefix)"
+.br
+.R "log the whole \fBMqBufferS\fP object to the stderr device "
+.ti -1c
+.RI "void \fBMqBufferLogS\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferS\fP const *const buf, \fBMQ_CST\fP const prefix)"
+.br
+.R "log the short \fBMqBufferS\fP object data to the stderr device "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage dynamic, generic, mixed typed data. 
+
+The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data in a \fBMqBufferU\fP storage. If \fBlibmsgque\fP is working on any kind of data it is working on \fBMqBufferS\fP objects or on a list of \fBMqBufferS\fP objects called \fBMqBufferLS\fP. 
+.SH "Define Documentation"
+.PP 
+.SS "#define MQ_BLS_SIZE   50"
+.PP
+initial size of the \fBMqBufferS.bls\fP object 
+.PP
+Definition at line 2076 of file msgque.h.
+.SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
+.PP
+Definition at line 2079 of file msgque.h.
+.SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
+.PP
+the type is native and has a size of 1 byte 
+.PP
+Definition at line 1977 of file msgque.h.
+.SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
+.PP
+the type is native and has a size of 2 bytes 
+.PP
+Definition at line 1980 of file msgque.h.
+.SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
+.PP
+the type is native and has a size of 4 bytes 
+.PP
+Definition at line 1983 of file msgque.h.
+.SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
+.PP
+the type is native and has a size of 8 bytes 
+.PP
+Definition at line 1986 of file msgque.h.
+.SS "#define MQ_TYPE_IS_NATIVE"
+.PP
+\fBValue:\fP
+.PP
+.nf
+(      MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |     \
+                                MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE   )
+.fi
+the type is native 
+.PP
+Definition at line 1989 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqAllocE\fP"
+.PP
+allocation style used for the data-segment in \fBMqBufferS\fP. 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_ALLOC_STATIC \fP\fP
+opposite from MQ_ALLOC_DYNAMIC) 
+.TP
+\fB\fIMQ_ALLOC_DYNAMIC \fP\fP
+dynamic allocation (e.g. MqSysMalloc, ...) 
+.PP
+Definition at line 2070 of file msgque.h.
+.SS "enum \fBMqTypeE\fP"
+.PP
+a collection of all \fInative-data-types\fP supported 
+.PP
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String data-type (TYPE=C) is allowed. The following type identifier's are available:
+.IP "\(bu" 2
+\fCY\fP : 1 byte signed character (Byte)
+.IP "\(bu" 2
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (Boolean)
+.IP "\(bu" 2
+\fCS\fP : 2 byte signed short (Short)
+.IP "\(bu" 2
+\fCI\fP : 4 byte signed integer (Integer)
+.IP "\(bu" 2
+\fCW\fP : 8 byte signed long long integer (Long)
+.IP "\(bu" 2
+\fCF\fP : 4 byte float (Float)
+.IP "\(bu" 2
+\fCD\fP : 8 byte double (Double)
+.IP "\(bu" 2
+\fCB\fP : unsigned char array used for binary data (Byte())
+.IP "\(bu" 2
+\fCC\fP : string data using a \fC\\0\fP at the end (String)
+.IP "\(bu" 2
+\fCL\fP : list type able to hold a list of all items from above
+.IP "\(bu" 2
+\fCU\fP : typeless buffer able to hold a single item from above (\fBMqBufferS\fP)
+.PP
+
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_BYTT \fP\fP
+Y: 1 byte 'byte' type. 
+.TP
+\fB\fIMQ_BOLT \fP\fP
+O: 1 byte 'boolean' type. 
+.TP
+\fB\fIMQ_SRTT \fP\fP
+S: 2 byte 'short' type. 
+.TP
+\fB\fIMQ_INTT \fP\fP
+I: 4 byte 'int' type. 
+.TP
+\fB\fIMQ_FLTT \fP\fP
+F: 4 byte 'float' type. 
+.TP
+\fB\fIMQ_WIDT \fP\fP
+W: 8 byte 'long long int' type. 
+.TP
+\fB\fIMQ_DBLT \fP\fP
+D: 8 byte 'double' type. 
+.TP
+\fB\fIMQ_BINT \fP\fP
+B: \fIbyte-array\fP type. 
+.TP
+\fB\fIMQ_STRT \fP\fP
+C: \fIstring\fP type (e.g. with a \\0 at the end). 
+.TP
+\fB\fIMQ_LSTT \fP\fP
+L: list object type. 
+.TP
+\fB\fIMQ_RETT \fP\fP
+R: return object type. 
+.PP
+Definition at line 2023 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
+.PP
+append a single \fIstring\fP to a \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIstring\fP the text to append to \fIbuf\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP size of the string appended to the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_SIZE\fP MqBufferAppendV (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  fmt,  ...)"
+.PP
+append a single string with \fIformat\fP and \fI\fP... arguments to a \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP size of the string appended to the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_SIZE\fP MqBufferAppendVL (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  fmt, va_list var_list)"
+.PP
+append a single string with \fIformat\fP and \fIvar_list\fP arguments to a \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.br
+\fIvar_list\fP a variable argument list object 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP size of the string appended to the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferCastTo (struct \fBMqBufferS\fP *const  buf, enum \fBMqTypeE\fP const  type)"
+.PP
+change the type of an \fBMqBufferS\fP object to \fItype\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCopy (register struct \fBMqBufferS\fP *const  dest, register struct \fBMqBufferS\fP const *const  srce)\fC [read]\fP"
+.PP
+copy the \fBMqBufferS\fP from \fIsrce\fP to \fIdest\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest\fP target of the copy 
+.br
+\fIsrce\fP source of the copy 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP \fIdest\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCreate (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size)\fC [read]\fP"
+.PP
+create a new \fBMqBufferS\fP with \fIsize\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsize\fP initial size of the buffer, if \fIsize\fP = 0 the initial size is set to an default value 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCreateB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  val, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
+.PP
+create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the MQ_BIN object 
+.br
+\fIlen\fP the size of the MQ_BIN object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCreateC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  val)\fC [read]\fP"
+.PP
+create and initialize an new \fBMqBufferS\fP object using an \fBMQ_STR\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the MQ_STR object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCreateD (struct \fBMqS\fP *const  context, \fBMQ_DBL\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateF (struct \fBMqS\fP *const  context, \fBMQ_FLT\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateI (struct \fBMqS\fP *const  context, \fBMQ_INT\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateO (struct \fBMqS\fP *const  context, \fBMQ_BOL\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateS (struct \fBMqS\fP *const  context, \fBMQ_SRT\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateU (struct \fBMqS\fP *const  context, struct \fBMqBufferS\fP const *const  val)\fC [read]\fP"
+.PP
+create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the MQ_BUF object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferCreateW (struct \fBMqS\fP *const  context, \fBMQ_WID\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferCreateY (struct \fBMqS\fP *const  context, \fBMQ_BYT\fP const  val)\fC [read]\fP"
+.PP
+create and initialize a new \fBMqBufferS\fP object using native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIval\fP the value to initialize the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "void MqBufferDelete (struct \fBMqBufferS\fP **const  bufP)"
+.PP
+delete a new \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufP\fP a pointer to an struct \fBMqBufferS\fP * object 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+.PP
+The memory will be freed and the object-pointer will be set to \fBNULL\fP. If the object-pointer is already \fBNULL\fP nothing will be done. 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferDup (struct \fBMqBufferS\fP const *const  srce)\fC [read]\fP"
+.PP
+create an new object as duplication of an existing object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsrce\fP source of the duplication 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP new object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferGetB (struct \fBMqBufferS\fP *const  buf, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  size)"
+.PP
+function to read an \fBMQ_BIN\fP from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIout\fP the pointer to an MQ_BIN array object 
+.br
+\fIsize\fP the size of the array the array pointer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the return-pointer (\fIout\fP) is owned by the \fBMQ_BUF\fP object -> never free this pointer 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferGetC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP *const  out)"
+.PP
+function to read an \fBMQ_STR\fP from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIout\fP the pointer to an MQ_STR object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the return-pointer (\fIout\fP) is owned by the \fBMQ_BUF\fP object -> never free this pointer 
+.RE
+.PP
+
+.SS "struct \fBMqS\fP* MqBufferGetContext (struct \fBMqBufferS\fP *const  buf)\fC [read]\fP"
+.PP
+return the \fBMqErrorS\fP object from a \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorS\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferGetD (struct \fBMqBufferS\fP *const  buf, \fBMQ_DBL\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferGetF (struct \fBMqBufferS\fP *const  buf, \fBMQ_FLT\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferGetI (struct \fBMqBufferS\fP *const  buf, \fBMQ_INT\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferGetO (struct \fBMqBufferS\fP *const  buf, \fBMQ_BOL\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferGetS (struct \fBMqBufferS\fP *const  buf, \fBMQ_SRT\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "char MqBufferGetType (struct \fBMqBufferS\fP *const  buf)"
+.PP
+return the type from a \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the type from a \fBMqTypeE\fP object as single character value 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferGetW (struct \fBMqBufferS\fP *const  buf, \fBMQ_WID\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferGetY (struct \fBMqBufferS\fP *const  buf, \fBMQ_BYT\fP *const  valP)"
+.PP
+read native typed value from an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIvalP\fP a pointer of the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "void MqBufferLog (struct \fBMqS\fP const *const  context, struct \fBMqBufferS\fP const *const  buf, \fBMQ_CST\fP const  prefix)"
+.PP
+log the whole \fBMqBufferS\fP object to the stderr device 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIprefix\fP item to identify the output 
+.RE
+.PP
+
+.SS "void MqBufferLogS (struct \fBMqS\fP const *const  context, struct \fBMqBufferS\fP const *const  buf, \fBMQ_CST\fP const  prefix)"
+.PP
+log the short \fBMqBufferS\fP object data to the stderr device 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIprefix\fP item to identify the output 
+.RE
+.PP
+
+.SS "\fBMQ_SIZE\fP MqBufferPop (register struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
+.PP
+delete \fIstr\fP from the \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIstring\fP the text to remove from \fIbuf\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP size of the string removed from the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_SIZE\fP MqBufferPush (register struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
+.PP
+add \fIstr\fP to the \fBMqBufferS\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIstring\fP the text to append to \fIbuf\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP size of the string appended to the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "void MqBufferReset (struct \fBMqBufferS\fP *const  buf)"
+.PP
+reset a \fBMqBufferS\fP to the length zero 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferSetB (struct \fBMqBufferS\fP *const  buf, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIin\fP the \fIbyte-array\fP to set the buffer 
+.br
+\fIlen\fP the length of the \fIbyte-array\fP data 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferSetC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  in)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with an \fBMQ_STR\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIin\fP the string to set the buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferSetD (struct \fBMqBufferS\fP *const  buf, \fBMQ_DBL\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetF (struct \fBMqBufferS\fP *const  buf, \fBMQ_FLT\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetI (struct \fBMqBufferS\fP *const  buf, \fBMQ_INT\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetO (struct \fBMqBufferS\fP *const  buf, \fBMQ_BOL\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetS (struct \fBMqBufferS\fP *const  buf, \fBMQ_SRT\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetU (struct \fBMqBufferS\fP *const  buf, struct \fBMqBufferS\fP const *const  in)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with an \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIin\fP the MQ_BUF to set the buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferSetV (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  fmt,  ...)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP to a vararg \fIstring\fP with \fIformat\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIfmt\fP a \fBprintf\fP like format string 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferS\fP* MqBufferSetW (struct \fBMqBufferS\fP *const  buf, \fBMQ_WID\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+ 
+.SS "struct \fBMqBufferS\fP* MqBufferSetY (struct \fBMqBufferS\fP *const  buf, \fBMQ_BYT\fP const  val)\fC [read]\fP"
+.PP
+set the \fBMqBufferS\fP object with a native typed value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.br
+\fIval\fP the value to set the buffer to 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqBufferS\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_ATO\fP MqBufU2ATO (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_ATO from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_BOL\fP MqBufU2BOL (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_BOL from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_BYT\fP MqBufU2BYT (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_BYT from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_DBL\fP MqBufU2DBL (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_DBL from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_FLT\fP MqBufU2FLT (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_FLT from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_INT\fP MqBufU2INT (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_INT from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_SRT\fP MqBufU2SRT (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_SRT from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SS "\fBMQ_WID\fP MqBufU2WID (union \fBMqBufferU\fP bufU)"
+.PP
+extract a MQ_WID from a \fBMqBufferS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufU\fP the \fBMqBufferU\fP object to work on 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

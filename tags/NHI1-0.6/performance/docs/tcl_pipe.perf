@@ -1,0 +1,10 @@
+> nothread/NHI1-0.6/theLink/tests/client --all @ tclsh nothread/NHI1-0.6/theLink/tests/server.tcl
+C> (client:6773) [2010-02-18:08-55-18] [0-0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:6773) [2010-02-18:08-55-18] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       6.62
+C> (client:6773) [2010-02-18:08-55-19] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      15.92
+C> (client:6773) [2010-02-18:08-55-22] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      22.08
+C> (client:6773) [2010-02-18:08-55-24] [0-0-0-0x6219a0-statistics]:                  parent create:   13187.67
+C> (client:6773) [2010-02-18:08-55-24] [0-0-0-0x6219a0-statistics]:                  parent delete:     303.52
+C> (client:6773) [2010-02-18:08-55-24] [0-0-0-0x6219a0-statistics]:                   child create:     250.69
+C> (client:6773) [2010-02-18:08-55-24] [0-0-0-0x6219a0-statistics]:                   child delete:      49.88
+C> (client:6773) [2010-02-18:08-55-24] [0-0-0-0x6219a0-main]: end: ----------------------------------------

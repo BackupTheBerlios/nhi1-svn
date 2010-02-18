@@ -1,0 +1,11 @@
+> java example.Server --tcp --host localhost --port 7787 --spawn
+> thread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7787
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-36] [0-0-0-0x622bc0-main]: start: --------------------------------------
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-36] [0-0-0-0x622bc0-statistics]:                      MqSendEND:       5.48
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-37] [0-0-0-0x622bc0-statistics]:         MqSendEND_AND_CALLBACK:      11.47
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-40] [0-0-0-0x622bc0-statistics]:             MqSendEND_AND_WAIT:      29.66
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-52] [0-0-0-0x622bc0-statistics]:                  parent create:  114834.02
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-52] [0-0-0-0x622bc0-statistics]:                  parent delete:    2218.72
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-52] [0-0-0-0x622bc0-statistics]:                   child create:     181.24
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-52] [0-0-0-0x622bc0-statistics]:                   child delete:      60.51
+C> (client:9063:0x7f199ae4b6f0) [2010-02-18:08-56-52] [0-0-0-0x622bc0-main]: end: ----------------------------------------

@@ -1,0 +1,300 @@
+.TH "Mq_Config_Cs_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Config_Cs_API \- configuration of a context   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBcsmsgque::MqS.Init\fP (params string[] argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetName\fP (string data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetSrvName\fP (string data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIdent\fP (string data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetBuffersize\fP (int data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetDebug\fP (int data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetTimeout\fP (long data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIsSilent\fP (bool data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIsServer\fP (bool data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIsString\fP (bool data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIgnoreExit\fP (bool data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIoTcp\fP (string host, string port, string myhost, string myport)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIoUds\fP (string data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetIoPipe\fP (int data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.ConfigSetStartAs\fP (int data)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.ConfigGetIsServer\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.ConfigGetIsString\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP "
+.ti -1c
+.RI "bool \fBcsmsgque::MqS.ConfigGetIsSilent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetName\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetSrvName\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqS.ConfigGetDebug\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
+.ti -1c
+.RI "long \fBcsmsgque::MqS.ConfigGetTimeout\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqS.ConfigGetBuffersize\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIoTcpHost\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIoTcpPort\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIoTcpMyHost\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIoTcpMyPort\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.ConfigGetIoUdsFile\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqS.ConfigGetIoPipeSocket\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
+.ti -1c
+.RI "int \fBcsmsgque::MqS.ConfigGetStartAs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+configuration of a context  
+
+The configuration is done persistent using \fIconfig-api\fP functions or on link-setup using \fIcommand-line-arguments\fP.  
+.SH "Function Documentation"
+.PP 
+.SS "int csmsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP 
+.PP
+Definition at line 259 of file config.cs.
+.SS "int csmsgque.MqS.ConfigGetDebug ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP 
+.PP
+Definition at line 255 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIdent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP 
+.PP
+Definition at line 253 of file config.cs.
+.SS "int csmsgque.MqS.ConfigGetIoPipeSocket ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP 
+.PP
+Definition at line 271 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIoTcpHost ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP 
+.PP
+Definition at line 261 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIoTcpMyHost ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP 
+.PP
+Definition at line 265 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIoTcpMyPort ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP 
+.PP
+Definition at line 267 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIoTcpPort ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP 
+.PP
+Definition at line 263 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetIoUdsFile ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP 
+.PP
+Definition at line 269 of file config.cs.
+.SS "bool csmsgque.MqS.ConfigGetIsServer ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP 
+.PP
+Definition at line 243 of file config.cs.
+.SS "bool csmsgque.MqS.ConfigGetIsSilent ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP 
+.PP
+Definition at line 247 of file config.cs.
+.SS "bool csmsgque.MqS.ConfigGetIsString ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP 
+.PP
+Definition at line 245 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetName ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP 
+.PP
+Definition at line 249 of file config.cs.
+.SS "string csmsgque.MqS.ConfigGetSrvName ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP 
+.PP
+Definition at line 251 of file config.cs.
+.SS "int csmsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP 
+.PP
+Definition at line 273 of file config.cs.
+.SS "long csmsgque.MqS.ConfigGetTimeout ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP 
+.PP
+Definition at line 257 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetBuffersize (int data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP 
+.PP
+Definition at line 159 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetDebug (int data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP 
+.PP
+Definition at line 161 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIdent (string data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP 
+.PP
+Definition at line 157 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIgnoreExit (bool data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP 
+.PP
+Definition at line 171 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIoPipe (int data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP 
+.PP
+Definition at line 181 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIoTcp (string host, string port, string myhost, string myport)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP 
+.PP
+Definition at line 173 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIoUds (string data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP 
+.PP
+Definition at line 177 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIsServer (bool data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP 
+.PP
+Definition at line 167 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIsSilent (bool data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP 
+.PP
+Definition at line 165 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetIsString (bool data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP 
+.PP
+Definition at line 169 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetName (string data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP 
+.PP
+Definition at line 153 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetSrvName (string data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP 
+.PP
+Definition at line 155 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetStartAs (int data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP 
+.PP
+Definition at line 185 of file config.cs.
+.SS "void csmsgque.MqS.ConfigSetTimeout (long data)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP 
+.PP
+Definition at line 163 of file config.cs.
+.SS "static void csmsgque.MqS.Init (params string[] argv)\fC [static, protected, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP 
+.PP
+Definition at line 64 of file config.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

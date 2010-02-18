@@ -1,0 +1,11 @@
+> tclsh nothread/NHI1-0.6/theLink/tests/server.tcl --tcp --host localhost --port 7785 --spawn
+> nothread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7785
+C> (client:7159) [2010-02-18:08-55-42] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:7159) [2010-02-18:08-55-42] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       6.75
+C> (client:7159) [2010-02-18:08-55-43] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.46
+C> (client:7159) [2010-02-18:08-55-46] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      31.67
+C> (client:7159) [2010-02-18:08-55-48] [0-0-0-0x621bc0-statistics]:                  parent create:   13950.98
+C> (client:7159) [2010-02-18:08-55-48] [0-0-0-0x621bc0-statistics]:                  parent delete:     358.89
+C> (client:7159) [2010-02-18:08-55-48] [0-0-0-0x621bc0-statistics]:                   child create:     248.79
+C> (client:7159) [2010-02-18:08-55-48] [0-0-0-0x621bc0-statistics]:                   child delete:      55.12
+C> (client:7159) [2010-02-18:08-55-48] [0-0-0-0x621bc0-main]: end: ----------------------------------------

@@ -1,0 +1,440 @@
+.TH "Mq_Read_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.  
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.br
+.R "start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BYT\fP *const val)"
+.br
+.R "read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadO\fP (struct \fBMqS\fP *const ctx, \fBMQ_BOL\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadS\fP (struct \fBMqS\fP *const ctx, \fBMQ_SRT\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadI\fP (struct \fBMqS\fP *const ctx, \fBMQ_INT\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadF\fP (struct \fBMqS\fP *const ctx, \fBMQ_FLT\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadW\fP (struct \fBMqS\fP *const ctx, \fBMQ_WID\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadD\fP (struct \fBMqS\fP *const ctx, \fBMQ_DBL\fP *const val)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadC\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP *const out)"
+.br
+.R "generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadB\fP (struct \fBMqS\fP *const context, \fBMQ_BIN\fP *const out, \fBMQ_SIZE\fP *const len)"
+.br
+.R "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.br
+.R "extract a \fIbody-item\fP from the \fIread-data-package\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.br
+.R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
+.br
+.R "extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadL\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **const out)"
+.br
+.R "read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadProxy\fP (struct \fBMqS\fP *const ctx, struct \fBMqS\fP *const otherCtx)"
+.br
+.R "link two \fIcontext-objects\fP to direct pass a data item from one object to the other. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadUndo\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "undo the last \fBREAD API\fP function call "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqReadGetNumItems\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "get the number of items left in the \fIread-data-package\fP "
+.ti -1c
+.RI "\fBMQ_BOL\fP \fBMqReadItemExists\fP (struct \fBMqS\fP const *const ctx)"
+.br
+.R "check if an item exists in the \fIread-data-package\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+extract data from an incoming \fIread-data-package\fP. 
+
+\fIReading\fP data is a passive task and the opposite of \fIsending\fP data which is an active task. Passive mean that the \fIread\fP is triggered by an incoming data-package and not by the software-work-flow or the user. There is one \fIread\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
+.PP
+\fBAttention:\fP
+.RS 4
+Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBMqErrorE\fP MqReadB (struct \fBMqS\fP *const  context, \fBMQ_BIN\fP *const  out, \fBMQ_SIZE\fP *const  len)"
+.PP
+generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIout\fP the \fIbyte-array\fP data to return 
+.br
+\fIlen\fP the length of the \fIbyte-array\fP data 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadBDY (struct \fBMqS\fP *const  ctx, \fBMQ_BIN\fP *const  val, \fBMQ_SIZE\fP *const  len)"
+.PP
+extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
+.PP
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the \fIbody\fP as \fIbyte-array\fP 
+.br
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadC (struct \fBMqS\fP *const  context, \fBMQ_CST\fP *const  out)"
+.PP
+generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIout\fP the string to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the string returned has \fIstatic\fP allocation and have to be duplicated for long term storage. 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadD (struct \fBMqS\fP *const  ctx, \fBMQ_DBL\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqReadF (struct \fBMqS\fP *const  ctx, \fBMQ_FLT\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "\fBMQ_SIZE\fP MqReadGetNumItems (struct \fBMqS\fP const *const  ctx)"
+.PP
+get the number of items left in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the number of items as integer 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadI (struct \fBMqS\fP *const  ctx, \fBMQ_INT\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "\fBMQ_BOL\fP MqReadItemExists (struct \fBMqS\fP const *const  ctx)"
+.PP
+check if an item exists in the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+boolean, \fItrue\fP or \fIfalse\fP 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadL (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP **const  out)"
+.PP
+read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIout\fP data will be appended to \fI*out\fP, if \fI*out\fP != \fCNULL\fP the \fI*out\fP value will be used otherwise \fI*out\fP will be set to a new \fBMqBufferLS\fP object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadL_END (struct \fBMqS\fP *const  ctx)"
+.PP
+finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadL_START (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP buffer)"
+.PP
+start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBctx.ReadU() As ReadU=MqBufferS\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadN (struct \fBMqS\fP *const  ctx, \fBMQ_BIN\fP *const  val, \fBMQ_SIZE\fP *const  len)"
+.PP
+extract a \fIbody-item\fP from the \fIread-data-package\fP 
+.PP
+A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the \fIbody-item\fP as \fIbyte-array\fP 
+.br
+\fIlen\fP the \fIbyte-array-length\fP of the \fIval\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadO (struct \fBMqS\fP *const  ctx, \fBMQ_BOL\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqReadProxy (struct \fBMqS\fP *const  ctx, struct \fBMqS\fP *const  otherCtx)"
+.PP
+link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP and the source of the copy 
+.br
+\fIotherCtx\fP the \fIother-context-object\fP and the target of the copy 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadS (struct \fBMqS\fP *const  ctx, \fBMQ_SRT\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP *const  val)"
+.PP
+extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
+.PP
+The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the buffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadUndo (struct \fBMqS\fP *const  ctx)"
+.PP
+undo the last \fBREAD API\fP function call 
+.PP
+Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadW (struct \fBMqS\fP *const  ctx, \fBMQ_WID\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqReadY (struct \fBMqS\fP *const  ctx, \fBMQ_BYT\fP *const  val)"
+.PP
+read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIval\fP the value to read 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

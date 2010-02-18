@@ -1,0 +1,110 @@
+/**
+
+\page changelog ChangeLog
+
+\section V0_6 16 Feb 2010 - NHI1-0.6, PLMK-1.5 and libmsgque-4.4
+
+This is a \e major-feature-release to prepare the environment for the new 
+\e milestone-release coming soon
+
+\subsection V0_6_gc Performing memory cleanup using Garbage-Collection
+
+To find a \e safe moment to free unused memory is the
+most difficult part in a complex software. To solve this problem 
+a \e refCount based \e Garbage-Collection has been introduced. This is not an easy
+step because the \e GC have to cooperate with the \RNSA{syn,callback-language} 
+memory cleanup technology.
+To achive this goal a very \e conservative strategy was applied. \b No cleanup
+of lost objects is performed (this is the job of the \e callback-languages).
+Only deleted objects (\RNSA{ContextDelete}) with a #MqS::refCount > 0
+are added into the \e GC-Pool. The cleanup is done with the following conditions:
+- \RNSA{ProcessEvent} with the \e FOREVER flag (this is the \e main-loop)
+  after an event was processed.
+- \RNSA{Exit}, on thread or process exit
+- on application-exit
+.
+The #MqS::refCount is increased with \b ++ and decreased with \b --. The
+default #MqS::refCount is \b 0. \n
+The refCount is modified to protect the calling object:
+- during a \RNSA{ProcessEvent} call
+- in a \e callback
+- during an \e event-action task, example: \RNSC{IEvent}
+.
+
+\subsection V0_6_log New message-logging API
+
+The \e PNLK logging was opened to give the user the abillity to create a \e PMLK
+conform logging message on stderr.\n
+The following functions were added:
+- \RNSA{LogC}, to write a string message
+- \b LogV (\ref c_LogV "C", \ref cc_LogV "C++"), to write a \e printf style message
+- \b LogVL (\ref c_LogVL "C", \ref cc_LogVL "C++"), to write a \e vprintf style message
+.
+
+\n
+\n
+
+\section V0_5 1 Feb 2010 - NHI1-0.5, PLMK-1.4 and libmsgque-4.3
+
+This is a \e feature-release to prepare the environment for the new 
+\e milestone-release coming soon
+
+\subsection V0_5_con Recover from a Server or a Network downtime
+
+\subsubsection V0_5_con_old Old Behaviour
+
+A \e server-downtime is equivalent with a broken \e client-server-link and result in an 
+\e exit-error-code from a \e link-access-operation. This error usually end in
+a \RNSA{ContextDelete} operation and the entire environment, including the local variables,
+is lost. No functions are available to act on the \e exit-error-code and to \e re-connect
+the server.
+
+\subsubsection V0_5_con_new New Behaviour
+
+Starting with the release \b libmsgque-4.3 two functions are available to act on
+the \e exit-error-code.
+-# \RNSA{ErrorIsEXIT}: in an \e error-handler separate the \e exit-error 
+   from the \e normal-error
+-# \RNSA{LinkConnect}: do a \e re-connect on a broken \e client-server-link
+.
+
+These two functions can be used together with \RNSC{ignoreExit}, 
+\RNSC{IEvent} and \RNSA{ErrorSetCONTINUE} to build a filter to cache a 
+\e service-request and guarantee the delivery.
+
+\subsubsection V0_5_con_example C++ Example from the file "theLink/example/cc/Filter4.cc"
+\dontinclude Filter4.cc
+
+\skip void Event
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+
+\subsection V0_5_ident Identify the link-target
+
+\subsubsection V0_5_ident_def Definition
+
+A \e link-target is the direct neighbour and the identification of the \e link-target is used to
+modify the local behaviour. In different to \RNSC{name} the \RNSC{ident} is set by the
+programmer and can \b not be changed by the user. The goal is to give every major 
+\e application a unique name like: \c "PayrollServer-V1.7" or \c "DocuStoreClient-V1.7-USR-aotto1968". 
+This ident is exchanged during \e link-startup and can be retrieved with
+\RNSA{LinkGetTargetIdent}.
+
+\subsubsection V0_5_ident_example C++ Example from the file "theLink/example/cc/Filter4.cc"
+
+In the \e service-handler \b LOGF decide to use the \e string-data local or to send the \e string-data to the \e link-target
+\dontinclude Filter4.cc
+
+\skip LOGF
+\until SendRETURN
+\until }
+
+*/
+

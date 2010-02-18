@@ -1,0 +1,11 @@
+> tclsh thread/NHI1-0.6/theLink/tests/server.tcl --uds --file ./socket.uds --thread
+> thread/NHI1-0.6/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-55-57] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-55-57] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       6.75
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-55-58] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      17.79
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-01] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      24.15
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-02] [0-0-0-0x6229a0-statistics]:                  parent create:   11480.61
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-02] [0-0-0-0x6229a0-statistics]:                  parent delete:     607.37
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-03] [0-0-0-0x6229a0-statistics]:                   child create:     248.94
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-03] [0-0-0-0x6229a0-statistics]:                   child delete:      47.91
+C> (client:7422:0x7fa3932da6f0) [2010-02-18:08-56-03] [0-0-0-0x6229a0-main]: end: ----------------------------------------

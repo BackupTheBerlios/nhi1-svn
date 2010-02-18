@@ -1,0 +1,31 @@
+.TH "csmsgque::IServerSetup" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::IServerSetup \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBServerSetup\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP 
+.PP
+Definition at line 19 of file config.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "void csmsgque.IServerSetup.ServerSetup ()"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

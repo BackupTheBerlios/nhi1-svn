@@ -1,0 +1,140 @@
+#+
+#§  \file       theLink/tests/ajoin.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint c]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set data1 [makeFile {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46} data1.[pid]]
+
+ # start-type: fork, thread or spawn
+  foreach S [envGet START_LST] {
+
+test ajoin-4-($S) {split and join} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , } \
+    -result {xa,24,12345678987654321,5.78
+cg,89,98765432123456789,3.46}
+
+test ajoin-5-($S) {split and join with string format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , -0 "str(%s)"} \
+    -result {str(xa),24,12345678987654321,5.78
+str(cg),89,98765432123456789,3.46}
+
+test ajoin-6-($S) {split and join with integer format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , -0 "str(%s)" -1 "int(%-10i)"} \
+    -result {str(xa),int(24        ),12345678987654321,5.78
+str(cg),int(89        ),98765432123456789,3.46}
+
+test ajoin-7-($S) {split and join with wide format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , -0 "str(%s)" -1 "int(%-10i)" -2 "wid(%lli)"} \
+    -result {str(xa),int(24        ),wid(12345678987654321),5.78
+str(cg),int(89        ),wid(98765432123456789),3.46}
+
+test ajoin-8-($S) {split and join with double format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , -0 "str(%s)" -1 "int(%-10i)" -2 "wid(%lli)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {str(xa),int(24        ),wid(12345678987654321),dbl(5.780000e+00*)
+str(cg),int(89        ),wid(98765432123456789),dbl(3.460000e+00*)}
+
+test ajoin-9-($S) {split and join with gap in format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , -0 "str(%s)" -2 "wid(%lli)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {str(xa),24,wid(12345678987654321),dbl(5.780000e+00*)
+str(cg),89,wid(98765432123456789),dbl(3.460000e+00*)}
+
+test ajoin-10-($S) {split and join with large -d option and hex int} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%llx)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {str(xa)=24=wid(2bdc546291f4b1)=dbl(5.780000e+00*)
+str(cg)=89=wid(15ee2a321ce7d15)=dbl(3.460000e+00*)}
+
+test ajoin-11-($S) {split and join with wrong option} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -x "wid(%lli)" -3 "dbl(%e)" } \
+    -match  glob \
+    -result {CHILDSTATUS-*-S> (join) \[OptLCreate\] number out of range or invalid, unable to convert option '-x' into a column number
+S> (join) found in function "JoinCreate" at file "ajoin.c"
+S> (join) use '-h' or '--help' for usage*}
+
+test ajoin-12-($S) {split and join with wrong format - multiple formats} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%lli - %s)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {CHILDSTATUS-1-S> (join) \[JoinCreate] column '2' has multiple '%' formats 'wid(%lli - %s)' but only one is allowed
+S> (join) found in function "JoinCreate" at file "ajoin.c"
+S> (join) use '-h' or '--help' for usage*}
+
+test ajoin-13-($S) {split and join with wrong format - no valid format} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {CHILDSTATUS-1-S> (join) \[JoinCreate] column '2' has no valid format 'wid(%)'
+S> (join) found in function "JoinCreate" at file "ajoin.c"
+S> (join) use '-h' or '--help' for usage*}
+
+test ajoin-14-($S) {split and join with wrong format - convertion error} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%lli)" -3 "dbl-as-hex(%x)"} \
+    -match glob \
+    -result {CHILDSTATUS-1-str(xa)=24=wid(12345678987654321)=C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
+S> (join) \[pBufferGetA4] size ERROR, can not convert '5.78' into an 'INT' object*}
+
+test ajoin-15-($S) {split and join with wrong format - overflow} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d "=" -0 "str(%s)" -2 "wid(%i)" -3 "dbl(%e)"} \
+    -match  glob \
+    -result {CHILDSTATUS-1-str(xa)=24=C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
+S> (join) \[pBufferGetA4] overflow ERROR, can not convert '12345678987654321' into an 'INT' object*}
+
+test ajoin-16-($S) {join help} \
+    -body   { Exec {*}[getATool join] --help } \
+    -returnCodes ok \
+    -result {NONE--usage: join [OPTION]... [ARGUMENT]...
+
+  The join tool expect data from a msgque client as input and create for
+  every input package an stdout output string by joining the objects of the
+  input package together using the delimiter '-d'.
+
+  join [ARGUMENT]... syntax:
+    aclient [OPTIONS]... @ join [OPTIONS]... | ...
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  join [OPTION]:
+    -d CHAR          the delimiter         (default: ' ')
+    -NUM FORTMAT     the column number(s)  (default: 'empty'
+      NUM            a single column with '0' < NUM < '255'
+      FORMAT         printf like format    (default: '%s'
+    -h, --help       print this help
+}
+
+    } ; ## START_LST
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+
+
+
+
+
