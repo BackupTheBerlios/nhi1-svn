@@ -34,6 +34,26 @@ int NS(ReadL_END) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ReadT_START) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BUF MqBufferS_obj = NULL;
+  if (skip != objc) {
+    CHECK_BUFFER (MqBufferS_obj)
+  }
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadT_START(mqctx, MqBufferS_obj));
+  RETURN_TCL
+}
+
+int NS(ReadT_END) (NS_ARGS)
+{
+  SETUP_mqctx
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadT_END(mqctx));
+  RETURN_TCL
+}
+
 int NS(ReadY) (NS_ARGS)
 {
   SETUP_mqctx

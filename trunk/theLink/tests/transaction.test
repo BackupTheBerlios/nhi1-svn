@@ -25,7 +25,10 @@ if {[info exists env(TS_LIBRARY)]} {
 
 proc CB_I {ctx} {
   global RET
-  set RET [$ctx ReadI]
+  $ctx ReadT_START
+  lappend RET [$ctx ReadI]
+  $ctx ReadT_END
+  lappend RET [$ctx ReadI]
 }
 
 ##
@@ -90,7 +93,7 @@ test transaction-2-($I|$B|$C|$S) {basic test} \
     -cleanup {
       $FH_LAST ServiceDelete TEST
     } \
-    -result         {}
+    -result         {9978 1}
  
 # cleanup ---------------------------
 

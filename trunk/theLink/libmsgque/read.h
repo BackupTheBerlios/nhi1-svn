@@ -80,6 +80,10 @@ void pReadInitTransactionItem (
   struct MqS * const context
 );
 
+MQ_CST pReadGetTransactionToken (
+  struct MqS * const context
+);
+
 /// \brief get the return-number of the current Msgque packet from the \e MqReadS stack
 /// \context
 /// \return the return-number

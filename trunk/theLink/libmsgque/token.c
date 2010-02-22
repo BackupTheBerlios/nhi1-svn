@@ -421,8 +421,8 @@ pTokenCheckSystem (
       break;
     }
     case 'T': {                // _TRT: return from a transaction-service
-      //MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
-      break;
+      pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
+      return MQ_OK;
     }
     case 'E':
     {   

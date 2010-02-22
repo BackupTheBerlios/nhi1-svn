@@ -206,6 +206,40 @@ MqReadL_END (
   }
 }
 
+enum MqErrorE
+MqReadT_START (
+  struct MqS * const context,
+  MQ_BUF buf
+)
+{
+  register struct MqReadS * const read = context->link.read;
+  if (unlikely(read == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (buf == NULL && MqErrorCheckI(MqReadU(context,&buf))) {
+    return MqErrorStack(context);
+  } else if (buf->type != MQ_TRAT) {
+    return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_TRAT), MqLogTypeName(buf->type));
+  } else {
+    sReadListStart (context, buf);
+    read->bdy->cur.B += (HDR_TOK_LEN+1);
+    return MQ_OK;
+  }
+}
+
+enum MqErrorE
+MqReadT_END (
+  struct MqS * const context
+)
+{
+  register struct MqReadS * const read = context->link.read;
+  if (unlikely(read == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    sReadListEnd (context);
+    return MQ_OK;
+  }
+}
+
 void pReadL_CLEANUP (
   register struct MqS * const context
 )
@@ -280,7 +314,6 @@ pReadHDR (
   register struct MqReadS * read = context->link.read;
   MQ_SIZE ctxId;
   MQ_SIZE size;
-  MQ_HDL trans;
   register int const string = context->config.isString;
   register struct HdrS * cur;
   int debug;
@@ -384,7 +417,7 @@ pReadHDR (
     if (unlikely (debug >= 7 && size > BDY_SIZE))
       pLogBDY (context, __func__, 7, bdy);
 
-    // 4. if transaction, read the transaction-item
+    // 4. if in a transaction, read the transaction-item
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION_START) {
       MQ_BIN itm; MQ_SIZE len;
       enum MqErrorE ret;
@@ -928,6 +961,14 @@ pReadInitTransactionItem (
     read->trans_item = NULL;
     read->trans_size = 0;
   }
+}
+
+MQ_CST
+pReadGetTransactionToken (
+  struct MqS * const context
+)
+{
+  return (MQ_CST) context->link.read->bdy->data + BDY_SIZE + BUFFER_P2_LIST;
 }
 
 /*****************************************************************************/

@@ -223,6 +223,8 @@ int NS(ReadBDY) (NS_ARGS);
 int NS(ReadU) (NS_ARGS);
 int NS(ReadL_START) (NS_ARGS);
 int NS(ReadL_END) (NS_ARGS);
+int NS(ReadT_START) (NS_ARGS);
+int NS(ReadT_END) (NS_ARGS);
 int NS(ReadGetNumItems) (NS_ARGS);
 int NS(ReadItemExists) (NS_ARGS);
 int NS(ReadUndo) (NS_ARGS);
@@ -354,6 +356,8 @@ int NS(MqS_Cmd) (
     { "ReadU",		      NS(ReadU)			},
     { "ReadL_START",	      NS(ReadL_START)		},
     { "ReadL_END",	      NS(ReadL_END)		},
+    { "ReadT_START",	      NS(ReadT_START)		},
+    { "ReadT_END",	      NS(ReadT_END)		},
     { "ReadGetNumItems",      NS(ReadGetNumItems)	},
     { "ReadItemExists",	      NS(ReadItemExists)	},
     { "ReadUndo",	      NS(ReadUndo)		},

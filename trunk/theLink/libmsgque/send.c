@@ -937,14 +937,14 @@ pSendListStart (
 
   pBufferAddSize (buf, BUFFER_P2_LIST);
 // MK1
-  buf->cursize += BUFFER_P2_PRENUM;
-  buf->cur.B += BUFFER_P2_PRENUM;
+  buf->cursize	+= BUFFER_P2_PRENUM;
+  buf->cur.B	+= BUFFER_P2_PRENUM;
 
   // zustand sichern !
   save = (struct SendSaveS*) pCachePop (send->cache);
-  save->save = send->save;
-  save->numItems = buf->numItems;
-  save->cursize = buf->cursize;
+  save->save	  = send->save;
+  save->numItems  = buf->numItems;
+  save->cursize	  = buf->cursize;
 
   send->save = save;
 
@@ -1024,9 +1024,14 @@ MqSendT_START (
   } else if (buf->numItems > 0) {
     return MqErrorC(context, __func__, -1, "the TRANSACTION item have to be the first item in the data package");
   } else {
+    register struct MqBufferS * const buf = send->buf;
     pSendListStart (context);
-    MqSendC (context, callback);
     *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_START;
+    pBufferAddSize (buf, HDR_TOK_LEN+1);
+    strncpy(buf->cur.C, callback, HDR_TOK_LEN);
+    buf->cur.B   += HDR_TOK_LEN;
+    *buf->cur.B++ = BUFFER_CHAR;
+    buf->cursize += (HDR_TOK_LEN+1);
     return MQ_OK;
   }
 }

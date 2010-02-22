@@ -3292,6 +3292,17 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
   struct MqS * const ctx
 );
 
+/// \brief ?????
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_START (
+  struct MqS * const ctx,
+  MQ_BUF buffer
+);
+
+/// \brief ?????
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_END (
+  struct MqS * const ctx
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              read functions                               */

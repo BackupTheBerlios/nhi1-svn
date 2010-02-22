@@ -219,7 +219,6 @@ MqProcessEvent (
   const int once = (wait >= MQ_WAIT_ONCE);
   struct mq_timeval tv = {0L, 0L};
   int debugLevel;
-  enum MqHandShakeE hs;
 
   // save master transaction
   MQ_HDL trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
