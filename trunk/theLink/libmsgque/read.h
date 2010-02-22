@@ -80,6 +80,10 @@ void pReadInitTransactionItem (
   struct MqS * const context
 );
 
+void pReadCleanupTransactionItem (
+  struct MqS * const context
+);
+
 MQ_CST pReadGetTransactionToken (
   struct MqS * const context
 );

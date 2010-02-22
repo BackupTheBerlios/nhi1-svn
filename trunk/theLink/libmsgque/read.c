@@ -954,10 +954,18 @@ pReadInitTransactionItem (
 )
 {
   struct MqReadS *read = context->link.read;
-  if (read->trans_item == NULL) {
-    return;
-  } else {
+  if (read->trans_item != NULL) {
     MqSendN (context, read->trans_item, read->trans_size);
+  }
+}
+
+void
+pReadCleanupTransactionItem (
+  struct MqS * const context
+)
+{
+  struct MqReadS *read = context->link.read;
+  if (read->trans_item != NULL) {
     read->trans_item = NULL;
     read->trans_size = 0;
   }

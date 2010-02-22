@@ -783,6 +783,9 @@ pSendEND (
       }
     }
 
+    // cleanup transaction item if available
+    pReadCleanupTransactionItem (context);
+
   /*
   if (MQ_IS_SERVER(msgque)) {
   MqDLogV (msgque, __func__, 0, "token<%s>, ctxId<%i>, trans<%p>, string<%i>\n", 
@@ -1089,12 +1092,12 @@ MqSendRETURN (
   } else {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    pSendSTART_CHECK(context);
     switch (pReadGetHandShake (context)) {
       case MQ_HANDSHAKE_START: {
 	// "normal" service call -> normal return
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK: 
+	    pSendSTART_CHECK(context);
 	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
 	    break;
 	  case MQ_ERROR:
@@ -1116,6 +1119,7 @@ MqSendRETURN (
 	// "transaction" service-call -> transaction return
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK:
+	    pSendSTART_CHECK(context);
 	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_OK;
 	    break;
 	  case MQ_ERROR:
