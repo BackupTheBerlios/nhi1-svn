@@ -21,11 +21,14 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief Return-Codes used in #MqSendEND_AND_WAIT function
-enum MqReturnE {
-    MQ_RETURN_OK	  = 'O',  ///< return a \b ok package
-    MQ_RETURN_ERROR	  = 'E',  ///< return an \b error package
-    MQ_RETURN_TRANSACTION = 'T',  ///< return an \b error package
+/// \brief the \e role of a data package in a service call
+enum MqHandShakeE {
+  MQ_HANDSHAKE_START		  = 'S',  ///< start  \b service-call
+  MQ_HANDSHAKE_OK		  = 'O',  ///< return \b ok service-call
+  MQ_HANDSHAKE_ERROR		  = 'E',  ///< return \b error service-call
+  MQ_HANDSHAKE_TRANSACTION_START  = 's',  ///< start  \b transaction
+  MQ_HANDSHAKE_TRANSACTION_OK	  = 'o',  ///< return \b ok transaction
+  MQ_HANDSHAKE_TRANSACTION_ERROR  = 'e',  ///< return \b error transaction
 };
 
 /*****************************************************************************/
@@ -64,11 +67,17 @@ void pReadSetType(
 
 void pReadL_CLEANUP (register struct MqS * const);
 
-/// \brief get the return-code of the current Msgque packet from the \e MqReadS stack
-/// \context
-/// \return the return-code
-enum MqReturnE pReadGetReturnCode (
+enum MqHandShakeE pReadGetHandShake (
   struct MqS const * const context
+);
+
+void pReadSetHandShake (
+  struct MqS const * const context,
+  enum MqHandShakeE hs
+);
+
+void pReadInitTransactionItem (
+  struct MqS * const context
 );
 
 /// \brief get the return-number of the current Msgque packet from the \e MqReadS stack

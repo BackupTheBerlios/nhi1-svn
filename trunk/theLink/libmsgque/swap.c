@@ -83,8 +83,9 @@ sSwapDYN (
       case MQ_WIDT: SWAP_8  (ist);  break;
       case MQ_DBLT: SWAP_8  (ist);  break;
       case MQ_RETT: sSwapRET (ist); break;
-      case MQ_LSTT: sSwapDYN (ist); break;
       case MQ_STRT: case MQ_BINT: case MQ_BYTT: case MQ_BOLT: break;
+      case MQ_LSTT: sSwapDYN (ist); break;
+      case MQ_TRAT: sSwapDYN (ist); break;
     }
     ist += (len + 1);
     numItems--;

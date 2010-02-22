@@ -31,20 +31,6 @@ BEGIN_C_DECLS
 #define TOKEN_LEN (HDR_TOK_LEN+1)
 #define MQ_CONTEXT_S token->context
 
-// can be (*((MQ_INT const *)(bin)))
-static mq_inline MQ_INT pByte2INT (
-  //MQ_BINB const * const bin
-  MQ_CST const bin
-) {
-#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
-  MQ_INT i;
-  memcpy(&i,bin,sizeof(MQ_INT));
-  return i;
-#else
-  return (*((MQ_INT const *)(bin)));
-#endif
-}
-
 #if defined(WORDS_BIGENDIAN)
 #   define pTokenCmpD(s1,s2) (pByte2INT(s1) - pByte2INT(s2))
 #else
@@ -432,6 +418,10 @@ pTokenCheckSystem (
   switch (*curr) {
     case 'R': {                // _RET: return from a service
       MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
+      break;
+    }
+    case 'T': {                // _TRT: return from a transaction-service
+      //MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
       break;
     }
     case 'E':

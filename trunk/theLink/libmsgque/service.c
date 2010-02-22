@@ -219,6 +219,7 @@ MqProcessEvent (
   const int once = (wait >= MQ_WAIT_ONCE);
   struct mq_timeval tv = {0L, 0L};
   int debugLevel;
+  enum MqHandShakeE hs;
 
   // save master transaction
   MQ_HDL trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
@@ -251,7 +252,8 @@ MqProcessEvent (
     }
 
     // ##################### Process Events #####################
-    MqErrorCheck (ret = pMqSelectStart(context, &tv, sMqEventStart));
+    ret = pMqSelectStart(context, &tv, sMqEventStart);
+    MqErrorCheck (ret);
 
     // clean up delete objects
     if (forever) GcRun (context);

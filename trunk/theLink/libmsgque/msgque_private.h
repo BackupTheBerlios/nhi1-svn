@@ -126,7 +126,7 @@ BODY_DATA_TYPE+BODY_DATA_SIZE+BODY_DATA
 
 with BODY_DATA_SIZE as the number of bytes in BODY_DATA.
 
-If RETURNCODE == \e MQ_RETURN_ERROR (defined in \e MqReturnE) the \e last BODYITEM is defined 
+If RETURNCODE == \e MQ_HANDSHAKE_ERROR (defined in \e MqHandShakeE) the \e last BODYITEM is defined 
 as RETURNITEM with a RETURNITEM_HEADER:
 
 \verbatim
@@ -148,22 +148,22 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
  *	Header-Prefix
  */
 
-#define HDR_CtxId_S	    (3					+ 1)        ///< 4  : "HDR" string[3]
-#define	HDR_BdySize_S	    (HDR_CtxId_S	+ HDR_INT_LEN	+ 1)        ///< 13 : "CONTEXT" integer
-#define HDR_Token_S	    (HDR_BdySize_S	+ HDR_INT_LEN	+ 1)        ///< 22 : "BODYSIZE" integer
-#define HDR_Trans_S	    (HDR_Token_S	+ HDR_TOK_LEN	+ 1)        ///< 27 : "TOKEN" string[4]
-#define HDR_Code_S	    (HDR_Trans_S	+ HDR_HDL_LEN	+ 1)        ///< 32 : "TRANSACTION" pointer
-#define HDR_SIZE	    (HDR_Code_S		+ HDR_RET_LEN	+ 1)        ///< 34 : "RETURNCODE" char
+#define HDR_CtxId_S	    (3					+ 1)        ///< 4  : "CONTEXT" integer
+#define	HDR_BdySize_S	    (HDR_CtxId_S	+ HDR_INT_LEN	+ 1)        ///< 13 : "BODYSIZE" integer
+#define HDR_Token_S	    (HDR_BdySize_S	+ HDR_INT_LEN	+ 1)        ///< 22 : "TOKEN" string[4]
+#define HDR_Trans_S	    (HDR_Token_S	+ HDR_TOK_LEN	+ 1)        ///< 27 : "TRANSACTION" pointer
+#define HDR_Code_S	    (HDR_Trans_S	+ HDR_HDL_LEN	+ 1)        ///< 32 : "HAND-SHAKE" char
+#define HDR_SIZE	    (HDR_Code_S		+ HDR_RET_LEN	+ 1)        ///< 34 : "END" header
 
 /*
  *	Body-Prefix
  */
 
-#define BDY_NumItems_S	    (3				    + 1)	    ///< 4  : "BDY" string[3]
-#define BDY_SIZE	    (BDY_NumItems_S + HDR_INT_LEN   + 1)	    ///< 13 : "BODY_ITEM_SIZE" integer
+#define BDY_NumItems_S	    (3				    + 1)	    ///< 4  : "BODY_ITEM_SIZE" integer
+#define BDY_SIZE	    (BDY_NumItems_S + HDR_INT_LEN   + 1)	    ///< 13 : "END" body
 
 /*
- *      Body-Object-Header (BOH)
+ *      Body-Item-Header (BOH)
  */
 
 /// \brief the HEADER size of an BODYITEM
@@ -173,6 +173,9 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
  
 //  Definition:                 TYP + CHAR  
 #   define BUFFER_P2_NATIVE    (1   + 1    )
+ 
+//  Definition:                 bodyItem         + numItem     + CHAR  
+#   define BUFFER_P2_LIST      (BUFFER_P2_PRENUM + HDR_INT_LEN + 1   )
 
 /*
  *	Misc stuff
@@ -299,6 +302,9 @@ void GcRun (
 END_C_DECLS
 
 #endif /* MQ_PRIVATE_H */
+
+
+
 
 
 

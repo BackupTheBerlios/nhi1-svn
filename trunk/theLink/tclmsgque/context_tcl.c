@@ -249,6 +249,8 @@ int NS(SendBDY) (NS_ARGS);
 int NS(SendU) (NS_ARGS);
 int NS(SendL_START) (NS_ARGS);
 int NS(SendL_END) (NS_ARGS);
+int NS(SendT_START) (NS_ARGS);
+int NS(SendT_END) (NS_ARGS);
 int NS(SendAll) (NS_ARGS);
 
 int NS(ConfigReset) (NS_ARGS);
@@ -380,6 +382,8 @@ int NS(MqS_Cmd) (
     { "SendU",		      NS(SendU)			},
     { "SendL_START",	      NS(SendL_START)		},
     { "SendL_END",	      NS(SendL_END)		},
+    { "SendT_START",	      NS(SendT_START)		},
+    { "SendT_END",	      NS(SendT_END)		},
     { "SendAll",	      NS(SendAll)		},
 
 // CONFIG

@@ -2031,7 +2031,8 @@ enum MqTypeE {
   MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
   MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
   MQ_LSTT = (10<<4                   ),  ///< L: list object type
-  MQ_RETT = (11<<4                   )   ///< R: return object type
+  MQ_RETT = (11<<4                   ),  ///< R: return object type
+  MQ_TRAT = (12<<4                   )   ///< T: transaction object type
 };
 
 /// \brief union used to set or modify native data from an MqBufferS object
@@ -2064,6 +2065,7 @@ union MqBufferU {
   MQ_STR  C;			///< C string like data (e.g. with a \\0 at the end)
   MQ_LST  L;			///< list object type data
   MQ_LST  R;			///< return object type data
+  MQ_LST  T;			///< transaction object type data
 };
 
 /// \brief allocation style used for the data-segment in #MqBufferS.
@@ -2075,7 +2077,7 @@ enum MqAllocE {
 /// \brief initial size of the #MqBufferS::bls object
 #define MQ_BLS_SIZE 50
 
-// \brief signature used in #MqBufferS::signature
+/// \brief signature used in #MqBufferS::signature
 #define MQ_MqBufferS_SIGNATURE 0x6021139
 
 /// \brief a single object to store a \e native-type-data-item defined by \RNS{BufferIdentifer}
@@ -2258,50 +2260,43 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateU (
 /// \if MSGQUE
 /// \anchor \NS{BufferGetTYPE}
 /// \endif
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetY (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetY (
   struct MqBufferS * const buf,
   MQ_BYT * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetO (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetO (
   struct MqBufferS * const buf,
   MQ_BOL * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetS (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetS (
   struct MqBufferS * const buf,
   MQ_SRT * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetI (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetI (
   struct MqBufferS * const buf,
   MQ_INT * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetF (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetF (
   struct MqBufferS * const buf,
   MQ_FLT * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetW (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetW (
   struct MqBufferS * const buf,
   MQ_WID * const valP
 );
 
 /// \copydoc MqBufferGetY
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetD (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetD (
   struct MqBufferS * const buf,
   MQ_DBL * const valP
 );
@@ -2312,8 +2307,7 @@ MQ_DECL MqBufferGetD (
 /// \retval size the size of the array the array pointer
 /// \retMqErrorE
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetB (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetB (
   struct MqBufferS * const buf,
   MQ_BIN * const out,
   MQ_SIZE * const size
@@ -2324,8 +2318,7 @@ MQ_DECL MqBufferGetB (
 /// \retval out the pointer to an MQ_STR object
 /// \retMqErrorE
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqBufferGetC (
+MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetC (
   struct MqBufferS * const buf,
   MQ_CST * const out
 );
@@ -3776,6 +3769,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_START (
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
+  struct MqS * const ctx
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
+  struct MqS * const ctx,
+  MQ_TOK const callback
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
   struct MqS * const ctx
 );
 

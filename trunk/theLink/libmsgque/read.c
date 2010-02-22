@@ -50,12 +50,14 @@ struct MqReadS {
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
   struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
   struct MqBufferS * cur;	    ///< used as reference on BUF with the current data
-  enum MqReturnE returnCode;	    ///< Return-Code (O)K, (E)RROR or (W)ARNING
+  enum MqHandShakeE handShake;	    ///< Return-Code (O)K, (E)RROR or (W)ARNING
   MQ_INT returnNum;		    ///< Return-Number
   struct MqCacheS * saveCache;
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
+  MQ_BIN trans_item;		    ///< transaction item
+  MQ_SIZE trans_size;		    ///< transaction size
 };
 
 /*****************************************************************************/
@@ -323,14 +325,11 @@ pReadHDR (
     }
   }
 
-  trans = cur->trans;
-
   // 4. set my context
   if (ctxId != context->link.ctxId) {
     // check if ctxId is out of range
     if (ctxId > context->link.ctxIdP->link.ctxIdR) 
-	return MqErrorV (context, __func__, -1, 
-	    "invalid context-id '%i'", ctxId);
+	return MqErrorV (context, __func__, -1, "invalid context-id '%i'", ctxId);
     // do the context-switch if the message does !!not!! belongs to the
     // original context
     context = context->link.ctxIdP->link.ctxIdA[ctxId];
@@ -341,7 +340,7 @@ pReadHDR (
 //MqDLogV (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
 //MqDLogV (context, __func__, 0, "hex\n<%s>\n", pLogHEX (read->hdr->data, sizeof (struct HdrS)));
   debug = context->config.debug;
-  context->link._trans = trans;
+  context->link._trans = cur->trans;
 
   // 6. log message
   if (unlikely (debug >= 5)) {
@@ -351,7 +350,7 @@ pReadHDR (
 
   // 7. setup read
   read = context->link.read;
-  read->returnCode = (enum MqReturnE) cur->code;
+  read->handShake = (enum MqHandShakeE) cur->code;
   read->returnNum = 0;
   bdy = read->bdy;
 
@@ -381,8 +380,24 @@ pReadHDR (
 
     bdy->cur.B = (bdy->data + BDY_SIZE);
 
+    // 3. if required, log package
     if (unlikely (debug >= 7 && size > BDY_SIZE))
       pLogBDY (context, __func__, 7, bdy);
+
+    // 4. if transaction, read the transaction-item
+    if (read->handShake == MQ_HANDSHAKE_TRANSACTION_START) {
+      MQ_BIN itm; MQ_SIZE len;
+      enum MqErrorE ret;
+      MqErrorCheck (MqReadN (context, &itm, &len));
+      // answer first call with an empty return package
+      MqErrorCheck (MqSendSTART  (context));
+      read->handShake = MQ_HANDSHAKE_START;
+      ret = MqSendRETURN (context);
+      read->handShake = MQ_HANDSHAKE_TRANSACTION_START;
+      MqErrorCheck (ret);
+      read->trans_item = itm; 
+      read->trans_size = len;
+    }
   }
 
   // reset data
@@ -875,12 +890,21 @@ MqReadItemExists (
   return (context->link.read && context->link.read->bdy->numItems != 0 ? MQ_YES : MQ_NO);
 }
 
-enum MqReturnE
-pReadGetReturnCode (
+enum MqHandShakeE
+pReadGetHandShake (
   struct MqS const * const context
 )
 {
-  return context->link.read->returnCode;
+  return context->link.read->handShake;
+}
+
+void
+pReadSetHandShake (
+  struct MqS const * const context,
+  enum MqHandShakeE hs
+)
+{
+  context->link.read->handShake = hs;
 }
 
 MQ_INT
@@ -889,6 +913,21 @@ pReadGetReturnNum (
 )
 {
   return context->link.read->returnNum;
+}
+
+void
+pReadInitTransactionItem (
+  struct MqS * const context
+)
+{
+  struct MqReadS *read = context->link.read;
+  if (read->trans_item == NULL) {
+    return;
+  } else {
+    MqSendN (context, read->trans_item, read->trans_size);
+    read->trans_item = NULL;
+    read->trans_size = 0;
+  }
 }
 
 /*****************************************************************************/
@@ -908,7 +947,7 @@ pReadLog (
   struct MqReadS * read = context->link.read;
 
   MqLogV (context, prefix, 0, ">>>> MqReadS (%p)\n", (void*) read);
-  MqLogV (context, prefix, 0, "returnCode = " "%c" "\n", read->returnCode);
+  MqLogV (context, prefix, 0, "handShake = " "%c" "\n", read->handShake);
   MqLogV (context, prefix, 0, "returnNum  = " MQ_FORMAT_I "\n", read->returnNum);
   MqLogV (context, prefix, 0, "  >>>> read->hdr\n");
   MqBufferLog (context, read->hdr, prefix);
@@ -922,11 +961,4 @@ pReadLog (
 #endif
 
 END_C_DECLS
-
-
-
-
-
-
-
 

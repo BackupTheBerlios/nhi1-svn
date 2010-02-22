@@ -72,6 +72,20 @@ enum MqErrorE pTokenDelHdl (
   MQ_CST const name
 );
 
+// can be (*((MQ_INT const *)(bin)))
+static mq_inline MQ_INT pByte2INT (
+  //MQ_BINB const * const bin
+  MQ_CST const bin
+) {
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+  MQ_INT i;
+  memcpy(&i,bin,sizeof(MQ_INT));
+  return i;
+#else
+  return (*((MQ_INT const *)(bin)));
+#endif
+}
+
 END_C_DECLS
 
 #endif /* TOKEN_H */

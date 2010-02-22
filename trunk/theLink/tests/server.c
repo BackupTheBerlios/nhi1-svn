@@ -178,7 +178,6 @@ Ot_ECOI (
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &l));
   MqSendI (mqctx, l);
-
 error:
   return MqSendRETURN (mqctx);
 }

@@ -23,6 +23,7 @@
 #include "trans.h"
 #include "cache.h"
 #include "read.h"
+#include "token.h"
 
 BEGIN_C_DECLS
 
@@ -583,6 +584,7 @@ MqSendU (
 	MqReadL_END(context);
 	break;
       }
+      case MQ_TRAT:
       case MQ_RETT: MqPanicSYS(context);
     }
     return MQ_OK;
@@ -655,9 +657,12 @@ MqSendV (
 static mq_inline void pSendL_CLEANUP (
   register struct MqS * const context
 ) {
-  if (context->link.send == NULL) return;
-  while (context->link.send->save != NULL) { 
-    MqSendL_END (context); 
+  if (context->link.send == NULL) {
+    return;
+  } else {
+    while (context->link.send->save != NULL) { 
+      MqSendL_END (context); 
+    }
   }
 }
 
@@ -666,8 +671,9 @@ pSendSTART_CHECK (
   struct MqS * const context
 )
 {
-  if (context->link.send->haveStart == MQ_NO) 
+  if (context->link.send->haveStart == MQ_NO) {
     MqSendSTART(context);
+  }
 }
 
 enum MqErrorE
@@ -675,10 +681,10 @@ MqSendSTART (
   struct MqS * const context
 )
 {
-  if (context->link.send == NULL) {
+  struct MqSendS * const send = context->link.send;
+  if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct MqSendS * const send = context->link.send;
     register struct MqBufferS * const buf = send->buf;
     register struct HdrS * const cur = (struct HdrS *) buf->data;
 
@@ -703,10 +709,13 @@ MqSendSTART (
     }
 
     // intitialize the return-code
-    cur->code = MQ_RETURN_OK;
-
+    cur->code = MQ_HANDSHAKE_START;
     buf->cur.B = (((MQ_BIN)cur) + sizeof(struct HdrS) + BDY_SIZE);
     buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
+
+    // add transaction item if available
+    pReadInitTransactionItem (context);
+
     return MQ_OK;
   }
 }
@@ -803,6 +812,7 @@ MqSendEND_AND_WAIT (
   static struct MqCallbackS empty = {NULL, NULL, NULL, NULL};
   struct MqReadS * read;
   MQ_TIME_T endT;
+  enum MqHandShakeE hs = pReadGetHandShake(context);
 
   // 1. create the transaktion
   MQ_HDL transH =  pTransPop (trans, empty);
@@ -854,11 +864,11 @@ MqSendEND_AND_WAIT (
       MqPanicC (context, __func__, -1, "INTERNAL: invalid transaction return-status 'MQ_TRANS_START'");
   }
 
-  // 6. check returnCode
-  switch (pReadGetReturnCode (context)) {
-    case MQ_RETURN_OK:
-      return MQ_OK;
-    case MQ_RETURN_ERROR: {
+  // 6. check handShake
+  switch (pReadGetHandShake (context)) {
+    case MQ_HANDSHAKE_OK:
+      break;
+    case MQ_HANDSHAKE_ERROR: {
       MQ_CST msg;
       MqDLogC(context,5,"got ERROR from LINK target\n");
       MqErrorCheck(pRead_RET_START (context));
@@ -871,13 +881,18 @@ MqSendEND_AND_WAIT (
 	pErrorAppendC (context, msg);
       }
       pRead_RET_END (context);
+      pReadSetHandShake(context, hs);
       return MQ_ERROR;
     }
-    case MQ_RETURN_TRANSACTION:
+    case MQ_HANDSHAKE_START:
+    case MQ_HANDSHAKE_TRANSACTION_START:
+    case MQ_HANDSHAKE_TRANSACTION_OK:
+    case MQ_HANDSHAKE_TRANSACTION_ERROR:
       MqPanicSYS (context);
   }
 
 error:
+  pReadSetHandShake(context, hs);
   return MqErrorStack (context);
 }
 
@@ -890,7 +905,6 @@ MqSendEND_AND_CALLBACK (
   MqTokenDataFreeF datafreeF
 )
 {
-//MqDLogV(context,__func__,0,"data<%p>\n", data);
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
   MQ_HDL transH = pTransPop (context->link.trans, cb);
   pSendL_CLEANUP (context);
@@ -902,6 +916,7 @@ pSendSYSTEM_RETR (
   struct MqS * const context
 )
 {
+  *(context->link.send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
   MqErrorReturn (pSendEND (context, "_SRT", context->link._trans));
 }
 
@@ -920,7 +935,7 @@ pSendListStart (
   register struct MqBufferS * const buf = send->buf;
   register struct SendSaveS * save;
 
-  pBufferAddSize (buf, (BUFFER_P2_PRENUM + HDR_INT_LEN + 1));
+  pBufferAddSize (buf, BUFFER_P2_LIST);
 // MK1
   buf->cursize += BUFFER_P2_PRENUM;
   buf->cur.B += BUFFER_P2_PRENUM;
@@ -935,8 +950,8 @@ pSendListStart (
 
   // Init
   buf->numItems = 0;
-  buf->cur.B += HDR_INT_LEN+1;
   buf->cursize += HDR_INT_LEN+1;
+  buf->cur.B += HDR_INT_LEN+1;
 }
 
 static void
@@ -996,6 +1011,39 @@ MqSendL_END (
   }
 }
 
+enum MqErrorE
+MqSendT_START (
+  struct MqS * const context,
+  MQ_TOK const callback
+)
+{
+  struct MqSendS * const send = context->link.send;
+  struct MqBufferS * const buf = send->buf;
+  if (send == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (buf->numItems > 0) {
+    return MqErrorC(context, __func__, -1, "the TRANSACTION item have to be the first item in the data package");
+  } else {
+    pSendListStart (context);
+    MqSendC (context, callback);
+    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_START;
+    return MQ_OK;
+  }
+}
+
+enum MqErrorE
+MqSendT_END (
+  struct MqS * const context
+)
+{
+  if (context->link.send == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    pSendListEnd (context, MQ_TRAT);
+    return MQ_OK;
+  }
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              send_RET                                     */
@@ -1027,35 +1075,69 @@ MqSendRETURN (
   struct MqS * const context
 )
 {
-  if (context->link._trans == 0) {
+  struct MqSendS * const send = context->link.send;
+  if (send == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (context->link._trans == 0) {
+    // no answer for a "MqSendEND" call ... just return
     return MqErrorGetCodeI(context);
   } else {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    switch (MqErrorGetCodeI (context)) {
-      case MQ_OK: 
-	break;
-      case MQ_ERROR:
-	MqErrorCheck(MqSendSTART (context));
-	MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-	*(context->link.send->buf->data+HDR_Code_S) = (char) MQ_RETURN_ERROR;
-	pSendListStart (context);
-	MqSendI (context, MqErrorGetNumI (context));
-	MqSendC (context, MqErrorGetText (context));
-	pSendListEnd (context, MQ_RETT);
-	MqErrorReset (context);
-	break;
-      case MQ_CONTINUE:
-	MqPanicSYS (context);
-    }
     pSendSTART_CHECK(context);
-    return pSendEND (context, "_RET", context->link._trans);
-error:
-    return MqErrorStack(context);
+    switch (pReadGetHandShake (context)) {
+      case MQ_HANDSHAKE_START: {
+	// "normal" service call -> normal return
+	switch (MqErrorGetCodeI (context)) {
+	  case MQ_OK: 
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
+	    break;
+	  case MQ_ERROR:
+	    MqErrorCheck(MqSendSTART (context));
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
+	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
+	    pSendListStart (context);
+	    MqSendI (context, MqErrorGetNumI (context));
+	    MqSendC (context, MqErrorGetText (context));
+	    pSendListEnd (context, MQ_RETT);
+	    MqErrorReset (context);
+	    break;
+	  case MQ_CONTINUE:
+	    MqPanicSYS (context);
+	}
+	return pSendEND (context, "_RET", context->link._trans);
+      }
+      case MQ_HANDSHAKE_TRANSACTION_START: {
+	// "transaction" service-call -> transaction return
+	switch (MqErrorGetCodeI (context)) {
+	  case MQ_OK:
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_OK;
+	    break;
+	  case MQ_ERROR:
+	    MqErrorCheck(MqSendSTART (context));
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_ERROR;
+	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
+	    pSendListStart (context);
+	    MqSendI (context, MqErrorGetNumI (context));
+	    MqSendC (context, MqErrorGetText (context));
+	    pSendListEnd (context, MQ_RETT);
+	    MqErrorReset (context);
+	    break;
+	  case MQ_CONTINUE:
+	    MqPanicSYS (context);
+	}
+	return pSendEND (context, "_TRT", 0);
+      }
+      case MQ_HANDSHAKE_OK:
+      case MQ_HANDSHAKE_ERROR:
+      case MQ_HANDSHAKE_TRANSACTION_OK:
+      case MQ_HANDSHAKE_TRANSACTION_ERROR:
+	MqPanicSYS(context);
+    }
   }
+error:
+  return MqErrorStack(context);
 }
 
 END_C_DECLS
-
-
 

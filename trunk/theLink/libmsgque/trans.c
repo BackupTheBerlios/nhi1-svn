@@ -44,6 +44,7 @@ struct MqTransItemS {
   MQ_HDL last;			    ///< temporary storage of last transaction
   MQ_HDL transId;		    ///< unique transaction ID
   struct MqCallbackS callback;	    ///< callback function pointer
+  MQ_TOK token;			    ///< callback token
 };
 
 /*****************************************************************************/
@@ -236,8 +237,8 @@ pTransSetResult (
   if (item == NULL) return MQ_OK;
   item->status = status;
   if (item->callback.fCall) {
-    switch (pReadGetReturnCode (context)) {
-      case MQ_RETURN_OK: {
+    switch (pReadGetHandShake (context)) {
+      case MQ_HANDSHAKE_OK: {
 	enum MqErrorE ret;
 	// from: MqSendEND_AND_CALLBACK
 	ret = (*item->callback.fCall)(context, item->callback.data);
@@ -245,7 +246,7 @@ pTransSetResult (
 	MqErrorCheck(ret);
 	return MQ_OK;
       }
-      case MQ_RETURN_ERROR: {
+      case MQ_HANDSHAKE_ERROR: {
 	MQ_CST msg;
 	// (*callback.fCall) is never called
 	pTransPush(trans, _trans);
@@ -263,7 +264,10 @@ error1:
 	pRead_RET_END (context);
 	return MQ_ERROR;
       }
-      case MQ_RETURN_TRANSACTION:
+      case MQ_HANDSHAKE_START:
+      case MQ_HANDSHAKE_TRANSACTION_START:
+      case MQ_HANDSHAKE_TRANSACTION_OK:
+      case MQ_HANDSHAKE_TRANSACTION_ERROR:
 	MqPanicSYS(context);
     }
   } else if (result) {
@@ -277,6 +281,8 @@ error:
 }
 
 END_C_DECLS
+
+
 
 
 

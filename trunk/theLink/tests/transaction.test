@@ -1,0 +1,116 @@
+#+
+#§  \file       theLink/tests/int.test
+#§  \brief      \$Id: int.test 83 2009-12-18 15:16:28Z aotto1968 $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 83 $
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+proc CB_I {ctx} {
+  global RET
+  set RET [$ctx ReadI]
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      # what is currently tested
+       SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test transaction-1-($I|$B|$C|$S) {wrong item position} \
+    -constraints    {1 pipe} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendI 1
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendEND_AND_WAIT TRAT
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[MqSendT_START] the TRANSACTION item have to be the first item in the data package}
+
+test transaction-2-($I|$B|$C|$S) {basic test} \
+    -constraints    {1 pipe} \
+    -setup	    {
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {}
+ 
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+

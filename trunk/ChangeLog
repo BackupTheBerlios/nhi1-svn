@@ -33,7 +33,7 @@ The refCount is modified to protect the calling object:
 
 \subsection V0_6_log New message-logging API
 
-The \e PNLK logging was opened to give the user the abillity to create a \e PMLK
+The \PLMK logging was opened to give the user the abillity to create a \PLMK
 conform logging message on stderr.\n
 The following functions were added:
 - \RNSA{LogC}, to write a string message
