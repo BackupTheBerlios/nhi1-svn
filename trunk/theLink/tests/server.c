@@ -698,7 +698,7 @@ Ot_BUF1 (
     case MQ_STRT:
       MqSendC(mqctx, buf->cur.C); break;
     case MQ_LSTT:
-    case MQ_RETT:
+    case MQ_TRAT:
       break;
   }
   return MqSendRETURN(mqctx);

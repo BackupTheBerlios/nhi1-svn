@@ -584,8 +584,7 @@ MqSendU (
 	MqReadL_END(context);
 	break;
       }
-      case MQ_TRAT:
-      case MQ_RETT: MqPanicSYS(context);
+      case MQ_TRAT: MqPanicSYS(context);
     }
     return MQ_OK;
   }
@@ -872,18 +871,18 @@ MqSendEND_AND_WAIT (
     case MQ_HANDSHAKE_OK:
       break;
     case MQ_HANDSHAKE_ERROR: {
+      MQ_INT retNum;
       MQ_CST msg;
       MqDLogC(context,5,"got ERROR from LINK target\n");
-      MqErrorCheck(pRead_RET_START (context));
+      MqErrorCheck(MqReadI (context, &retNum));
+      pReadSetReturnNum (context, retNum);
     // write my HEADER
-      MqErrorV (context, "service-call-error", pReadGetReturnNum (context), 
-				"<Tok|%s> <Num|%i>\n", token, pReadGetReturnNum (context));
+      MqErrorV (context, "service-call-error", retNum, "<Tok|%s> <Num|%i>\n", token, retNum);
     // write ERROR-STACK
       while (MqReadItemExists (context)) {
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
-      pRead_RET_END (context);
       pReadSetHandShake(context, hs);
       return MQ_ERROR;
     }
@@ -1104,10 +1103,8 @@ MqSendRETURN (
 	    MqErrorCheck(MqSendSTART (context));
 	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
 	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-	    pSendListStart (context);
 	    MqSendI (context, MqErrorGetNumI (context));
 	    MqSendC (context, MqErrorGetText (context));
-	    pSendListEnd (context, MQ_RETT);
 	    MqErrorReset (context);
 	    break;
 	  case MQ_CONTINUE:
@@ -1126,10 +1123,8 @@ MqSendRETURN (
 	    MqErrorCheck(MqSendSTART (context));
 	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_ERROR;
 	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
-	    pSendListStart (context);
 	    MqSendI (context, MqErrorGetNumI (context));
 	    MqSendC (context, MqErrorGetText (context));
-	    pSendListEnd (context, MQ_RETT);
 	    MqErrorReset (context);
 	    break;
 	  case MQ_CONTINUE:

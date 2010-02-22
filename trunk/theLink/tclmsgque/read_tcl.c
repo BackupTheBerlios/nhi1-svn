@@ -267,8 +267,7 @@ int NS(ReadALL) (NS_ARGS)
 	OBJ = Tcl_GetObjResult(interp);
 	break;
       }
-      case MQ_TRAT:
-      case MQ_RETT: {
+      case MQ_TRAT: {
 	break;
       }
     }

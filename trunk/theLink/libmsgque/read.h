@@ -88,11 +88,9 @@ MQ_CST pReadGetTransactionToken (
   struct MqS * const context
 );
 
-/// \brief get the return-number of the current Msgque packet from the \e MqReadS stack
-/// \context
-/// \return the return-number
-MQ_INT pReadGetReturnNum (
-  struct MqS const * const context
+void pReadSetReturnNum (
+  struct MqS const * const context,
+  MQ_INT retNum
 );
 
 /// \brief reading from a dynamic \e MqBufferS

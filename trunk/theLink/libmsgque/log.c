@@ -255,9 +255,6 @@ sLogDynItem (
 	case MQ_TRAT:
 	  mq_snprintf(ptr, size, ">>>> ");
 	  break;
-	case MQ_RETT:
-	  mq_snprintf(ptr, size, ">>>> code<%c>", pReadGetHandShake(context));
-	  break;
 	case MQ_BINT: 
 	  mq_snprintf(ptr, size, "%s", "?binary?");
 	  break;
@@ -265,7 +262,6 @@ sLogDynItem (
       
       switch (hd->type) {
 	case MQ_LSTT:
-	case MQ_RETT:
 	  // set binary or string
 	  hd->type = MQ_STRING_TYPE(context->config.isString);
 
@@ -457,7 +453,6 @@ MqLogTypeName (
     case MQ_DBLT: return "DBL";
     case MQ_LSTT: return "LST";
     case MQ_TRAT: return "TRA";
-    case MQ_RETT: return "RET";
   }
   return "UNKNOWN";
 }

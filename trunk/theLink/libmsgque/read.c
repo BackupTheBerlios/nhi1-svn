@@ -249,31 +249,6 @@ void pReadL_CLEANUP (
   }
 }
 
-enum MqErrorE
-pRead_RET_START (
-  struct MqS * const context
-)
-{
-  register struct MqReadS * const read = context->link.read;
-  MQ_BUF buf = NULL;
-  if (MqErrorCheckI(MqReadU(context,&buf))) {
-    return MqErrorStack(context);
-  } else if (buf->type != MQ_RETT) {
-    return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_RETT), MqLogTypeName(buf->type));
-  } else {
-    sReadListStart (context, buf);
-    if (MqErrorCheckI (MqReadI (context, &read->returnNum)))
-      return MqErrorStack(context);
-    return MQ_OK;
-  }
-}
-
-void pRead_RET_END (
-  struct MqS * const context
-) {
-  sReadListEnd (context);
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                read_native                                */
@@ -940,12 +915,13 @@ pReadSetHandShake (
   context->link.read->handShake = hs;
 }
 
-MQ_INT
-pReadGetReturnNum (
-  struct MqS const * const context
+void
+pReadSetReturnNum (
+  struct MqS const * const context,
+  MQ_INT retNum
 )
 {
-  return context->link.read->returnNum;
+  context->link.read->returnNum = retNum;
 }
 
 void

@@ -2031,8 +2031,7 @@ enum MqTypeE {
   MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
   MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
   MQ_LSTT = (10<<4                   ),  ///< L: list object type
-  MQ_RETT = (11<<4                   ),  ///< R: return object type
-  MQ_TRAT = (12<<4                   )   ///< T: transaction object type
+  MQ_TRAT = (11<<4                   )   ///< T: transaction object type
 };
 
 /// \brief union used to set or modify native data from an MqBufferS object

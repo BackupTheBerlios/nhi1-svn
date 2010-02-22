@@ -75,7 +75,7 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_START] the TRANSACTION item have to be the first item in the data package}
 
-test transaction-2-($I|$B|$C|$S) {basic test} \
+test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
     -constraints    {1 pipe} \
     -setup	    {
       $FH_LAST ServiceCreate TEST CB_I
@@ -86,6 +86,26 @@ test transaction-2-($I|$B|$C|$S) {basic test} \
       $FH_LAST SendI 9978
       $FH_LAST SendT_END
       $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {9978 1}
+
+test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
+    -constraints    {1 pipe} \
+    -setup	    {
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendW 1
       $FH_LAST SendEND_AND_WAIT ECOI
       $FH_LAST ProcessEvent -wait ONCE
       set RET

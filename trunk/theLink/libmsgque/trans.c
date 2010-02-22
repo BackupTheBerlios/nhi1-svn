@@ -247,21 +247,23 @@ pTransSetResult (
 	return MQ_OK;
       }
       case MQ_HANDSHAKE_ERROR: {
+	MQ_INT retNum;
 	MQ_CST msg;
+
 	// (*callback.fCall) is never called
 	pTransPush(trans, _trans);
 	MqDLogV(context,5,"%s\n","got ERROR return code");
-	MqErrorCheck1(pRead_RET_START (context));
+	MqErrorCheck1 (MqReadI (context, &retNum));
+	pReadSetReturnNum (context, retNum);
+	
 	// write HEADER
-	MqErrorV (context, "callback-error", pReadGetReturnNum (context),
-		"<Num|%i>\n", pReadGetReturnNum (context));
+	MqErrorV (context, "callback-error", retNum, "<Num|%i>\n", retNum);
 	// write ERROR-STACK
 	while (MqReadItemExists (context)) {
 	  MqErrorCheck1 (MqReadC (context, &msg));
 	  pErrorAppendC (context, msg);
 	}
 error1:
-	pRead_RET_END (context);
 	return MQ_ERROR;
       }
       case MQ_HANDSHAKE_START:
