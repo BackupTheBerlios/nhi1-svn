@@ -421,8 +421,39 @@ pTokenCheckSystem (
       break;
     }
     case 'T': {                // _TRT: return from a transaction-service
-      pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
-      return MQ_OK;
+      switch (pReadGetHandShake (context)) {
+	case MQ_HANDSHAKE_TRANSACTION_OK: {
+	  pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
+	  return MQ_OK;
+	}
+	case MQ_HANDSHAKE_TRANSACTION_ERROR: {
+	  MQ_INT retNum;
+	  MQ_CST msg;
+	  MQ_BUF tmp;
+
+	  // (*callback.fCall) is never called
+	  MqDLogC(context,5,"got ERROR return code\n");
+	  MqErrorCheck2 (MqReadU (context, &tmp), error2);
+	  MqErrorCheck2 (MqReadI (context, &retNum), error2);
+	  pReadSetReturnNum (context, retNum);
+	  
+	  // write HEADER
+	  MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
+	    pReadGetTransactionToken(context), retNum);
+	  // write ERROR-STACK
+	  while (MqReadItemExists (context)) {
+	    MqErrorCheck2 (MqReadC (context, &msg), error2);
+	    pErrorAppendC (context, msg);
+	  }
+error2:
+	  return MQ_ERROR;
+	}
+	case MQ_HANDSHAKE_START:
+	case MQ_HANDSHAKE_TRANSACTION_START:
+	case MQ_HANDSHAKE_OK:
+	case MQ_HANDSHAKE_ERROR:
+	  MqPanicSYS(context);
+      }
     }
     case 'E':
     {   

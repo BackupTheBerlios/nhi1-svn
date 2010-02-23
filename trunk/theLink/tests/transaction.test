@@ -78,6 +78,7 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
 test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
     -constraints    {1 pipe} \
     -setup	    {
+      set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
     } \
     -body           {
@@ -98,12 +99,13 @@ test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
 test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
     -constraints    {1 pipe} \
     -setup	    {
+      set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
     } \
     -body           {
       $FH_LAST SendSTART
       $FH_LAST SendT_START TEST
-      $FH_LAST SendI 9978
+      $FH_LAST SendW 9978
       $FH_LAST SendT_END
       $FH_LAST SendW 1
       $FH_LAST SendEND_AND_WAIT ECOI
@@ -113,7 +115,14 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
     -cleanup {
       $FH_LAST ServiceDelete TEST
     } \
-    -result         {9978 1}
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[callback-error] <Token|TEST>, <Num|1>
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (server-0) found in function "sReadA4" at file "read.c"
+[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
  
 # cleanup ---------------------------
 

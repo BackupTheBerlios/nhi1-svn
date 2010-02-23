@@ -252,7 +252,7 @@ pTransSetResult (
 
 	// (*callback.fCall) is never called
 	pTransPush(trans, _trans);
-	MqDLogV(context,5,"%s\n","got ERROR return code");
+	MqDLogC(context,5,"got ERROR return code\n");
 	MqErrorCheck1 (MqReadI (context, &retNum));
 	pReadSetReturnNum (context, retNum);
 	
