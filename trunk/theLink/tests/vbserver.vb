@@ -156,8 +156,32 @@ Public Module example
         ServiceCreate("MSQT", AddressOf MSQT)
         ServiceCreate("CFG1", AddressOf CFG1)
         ServiceCreate("PRNT", AddressOf PRNT)
+        ServiceCreate("TRNS", AddressOf TRNS)
+        ServiceCreate("TRN2", AddressOf TRN2)
 
       End If
+    End Sub
+
+    Private Sub TRNS()
+      SendSTART()
+      SendT_START("TRN2")
+      SendI(9876)
+      SendT_END()
+      SendI(ReadI())
+      SendEND_AND_WAIT("ECOI")
+      ProcessEvent(MqS.WAIT.ONCE)
+      SendSTART()
+      SendI(i)
+      SendI(j)
+      SendRETURN()
+    End Sub
+
+    Private Sub TRN2()
+      ReadT_START()
+      i = ReadI()
+      ReadT_END()
+      j = ReadI()
+      SendRETURN()
     End Sub
 
     Private Sub PRNT()
@@ -172,7 +196,7 @@ Public Module example
 
       SendSTART()
 
-      Select cmd
+      Select Case cmd
         Case "Buffersize"
           Dim old As Integer = ConfigGetBuffersize()
           ConfigSetBuffersize(ReadI())
@@ -229,10 +253,10 @@ Public Module example
           mh = ConfigGetIoTcpMyHost()
           mp = ConfigGetIoTcpMyPort()
           hv = ReadC()
-          PV = ReadC()
+          pv = ReadC()
           mhv = ReadC()
           mpv = ReadC()
-          ConfigSetIoTcp(hv, PV, mhv, mpv)
+          ConfigSetIoTcp(hv, pv, mhv, mpv)
           SendC(ConfigGetIoTcpHost())
           SendC(ConfigGetIoTcpPort())
           SendC(ConfigGetIoTcpMyHost())
@@ -310,10 +334,11 @@ Public Module example
     End Sub
 
 
-    Dim myInt As Integer = -1
+    Dim i As Integer = -1
+    Dim j As Integer = -1
 
     Private Sub SetMyInt()
-      CType(SlaveGetMaster(), Server).myInt = ReadI()
+      CType(SlaveGetMaster(), Server).i = ReadI()
     End Sub
 
     Private Sub SND2()
@@ -363,10 +388,10 @@ Public Module example
         Case "CALLBACK"
           cl.SendSTART()
           ReadProxy(cl)
-          myInt = -1
+          i = -1
           cl.SendEND_AND_CALLBACK("ECOI", AddressOf CType(cl, Server).SetMyInt)
           cl.ProcessEvent(10, MqS.WAIT.ONCE)
-          SendI(myInt + 1)
+          SendI(i + 1)
         Case "MqSendEND_AND_WAIT"
           Dim TOK As String = ReadC()
           cl.SendSTART()

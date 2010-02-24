@@ -124,8 +124,8 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[callback-error] <Token|TEST>, <Num|1>
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
-[sS]> (server-0) found in function "sReadA4" at file "read.c*"
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (server-0) found in function "*sReadA4" at file "read.c*"
 [cC]> (client-0) found in function "sMqEventStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
