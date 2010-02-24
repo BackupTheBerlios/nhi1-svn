@@ -75,7 +75,7 @@ final class ClientERR2 extends MqS implements IFactory {
 
 final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory {
 
-  private int myInt;
+  private int i,j;
   private MqBufferS buf;
   private Client[] cl = new Client[3];
 
@@ -144,6 +144,8 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ServiceCreate("ERLS", new ERLS());
       ServiceCreate("CFG1", new CFG1());
       ServiceCreate("PRNT", new PRNT());
+      ServiceCreate("TRNS", new TRNS());
+      ServiceCreate("TRN2", new TRN2());
     }
   }
 
@@ -347,7 +349,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
   class SND2 implements IService, ICallback {
     public void Callback (MqS ctx) throws MqSException {
       Server master = (Server) ctx.SlaveGetMaster();
-      master.myInt = ctx.ReadI();
+      master.i = ctx.ReadI();
     }
     public void Service (MqS ctx) throws MqSException {
       String s = ReadC();
@@ -388,10 +390,10 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	} else if (s.equals("CALLBACK")) {
 	  cl.SendSTART();
 	  ReadProxy(cl);
-	  myInt = -1;
+	  i = -1;
 	  cl.SendEND_AND_CALLBACK("ECOI", this);
 	  cl.ProcessEvent(10,MqS.WAIT.ONCE);
-	  SendI(myInt+1);
+	  SendI(i+1);
 	} else if (s.equals("MqSendEND_AND_WAIT")) {
 	  String TOK = ReadC();
 	  cl.SendSTART();
@@ -441,6 +443,32 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ctx.SendSTART();
       ctx.SendU(buf);
       ctx.SendRETURN();
+    }
+  }
+
+  class TRNS implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      SendSTART ();
+      SendT_START ("TRN2");
+      SendI (9876);
+      SendT_END ();
+      SendI ( ReadI() );
+      SendEND_AND_WAIT ("ECOI");
+      ProcessEvent (MqS.WAIT.ONCE);
+      SendSTART ();
+      SendI (i);
+      SendI (j);
+      SendRETURN ();
+    }
+  }
+
+  class TRN2 implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      ReadT_START ();
+      i = ReadI ();
+      ReadT_END ();
+      j = ReadI ();
+      SendRETURN ();
     }
   }
 

@@ -422,11 +422,11 @@ pTokenCheckSystem (
     }
     case 'T': {                // _TRT: return from a transaction-service
       switch (pReadGetHandShake (context)) {
-	case MQ_HANDSHAKE_TRANSACTION_OK: {
+	case MQ_HANDSHAKE_OK: {
 	  pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
 	  return MQ_OK;
 	}
-	case MQ_HANDSHAKE_TRANSACTION_ERROR: {
+	case MQ_HANDSHAKE_ERROR: {
 	  MQ_INT retNum;
 	  MQ_CST msg;
 	  MQ_BUF tmp;
@@ -449,9 +449,7 @@ error2:
 	  return MQ_ERROR;
 	}
 	case MQ_HANDSHAKE_START:
-	case MQ_HANDSHAKE_TRANSACTION_START:
-	case MQ_HANDSHAKE_OK:
-	case MQ_HANDSHAKE_ERROR:
+	case MQ_HANDSHAKE_TRANSACTION:
 	  MqPanicSYS(context);
       }
     }

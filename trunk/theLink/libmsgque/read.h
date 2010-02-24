@@ -23,12 +23,10 @@ BEGIN_C_DECLS
 
 /// \brief the \e role of a data package in a service call
 enum MqHandShakeE {
-  MQ_HANDSHAKE_START		  = 'S',  ///< start  \b service-call
-  MQ_HANDSHAKE_OK		  = 'O',  ///< return \b ok service-call
-  MQ_HANDSHAKE_ERROR		  = 'E',  ///< return \b error service-call
-  MQ_HANDSHAKE_TRANSACTION_START  = 's',  ///< start  \b transaction
-  MQ_HANDSHAKE_TRANSACTION_OK	  = 'o',  ///< return \b ok transaction
-  MQ_HANDSHAKE_TRANSACTION_ERROR  = 'e',  ///< return \b error transaction
+  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b service-call
+  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok service-call
+  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error service-call
+  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b transaction
 };
 
 /*****************************************************************************/

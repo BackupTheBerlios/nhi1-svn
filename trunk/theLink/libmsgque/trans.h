@@ -73,6 +73,11 @@ enum MqTransE pTransGetStatus (
   const MQ_HDL transId
 );
 
+enum MqHandShakeE pTransGetHandShake (
+  struct MqTransS const * const trans,
+  const MQ_HDL transId
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              trans_set                                    */

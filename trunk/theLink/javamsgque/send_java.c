@@ -142,6 +142,34 @@ error:
   return;
 }
 
+JNIEXPORT void JNICALL NS(SendT_1START) (
+  JNIEnv *	env, 
+  jobject	self,
+  jstring	token
+)
+{
+  const char * str;
+  enum MqErrorE ret;
+  SETUP_context;
+  str = JO2C_START(env,token);
+  ret = MqSendT_START(context,str);
+  JO2C_STOP(env,token,str);
+  ErrorMqToJavaWithCheck(ret);
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(SendT_1END) (
+  JNIEnv *	env, 
+  jobject	self 
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck(MqSendT_END(context));
+error:
+  return;
+}
+
 JNIEXPORT void JNICALL NS(SendY) (
   JNIEnv *	env, 
   jobject	self,

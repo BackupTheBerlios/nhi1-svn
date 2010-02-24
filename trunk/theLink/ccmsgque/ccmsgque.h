@@ -628,6 +628,19 @@ namespace ccmsgque {
       inline void ReadL_END() throw(MqCException) 
 	{ ErrorCheck (MqReadL_END(&context)); }
 
+      /// \api #MqReadT_START
+      inline void ReadT_START(MQ_BUF buf = NULL) throw(MqCException) 
+	{ ErrorCheck (MqReadT_START(&context, buf)); }
+      /// \api #MqReadT_START
+      inline void ReadT_START(const MqBufferC& buf) throw(MqCException) 
+	{ ErrorCheck (MqReadT_START(&context, buf.GetU())); }
+      /// \api #MqReadT_START
+      inline void ReadT_START(MqBufferC * const buf) throw(MqCException)
+	{ ErrorCheck (MqReadT_START(&context, buf->GetU())); }
+      /// \api #MqReadT_END
+      inline void ReadT_END() throw(MqCException) 
+	{ ErrorCheck (MqReadT_END(&context)); }
+
       /// \api #MqReadItemExists
       inline MQ_BOL  ReadItemExists()		
 	{return MqReadItemExists(&context);}
@@ -707,6 +720,10 @@ namespace ccmsgque {
       inline void SendL_START() throw(MqCException)      { ErrorCheck (MqSendL_START(&context)); }
       /// \api #MqSendL_END
       inline void SendL_END() throw(MqCException)	 { ErrorCheck (MqSendL_END(&context)); }
+      /// \api #MqSendT_START
+      inline void SendT_START(MQ_CST token) throw(MqCException)	{ ErrorCheck (MqSendT_START(&context, token)); }
+      /// \api #MqSendT_END
+      inline void SendT_END() throw(MqCException)	 { ErrorCheck (MqSendT_END(&context)); }
 
     /// \} Mq_Send_CC_API
 

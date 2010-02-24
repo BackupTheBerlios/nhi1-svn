@@ -308,6 +308,12 @@ public abstract class MqS {
   public native void	ReadL_START (MqBufferS buf)	throws MqSException;
   /// \api #MqReadL_END
   public native void	ReadL_END	    ()	throws MqSException;
+  /// \api #MqReadT_START
+  public native void	ReadT_START	    ()	throws MqSException;
+  /// \api #MqReadT_START
+  public native void	ReadT_START (MqBufferS buf)	throws MqSException;
+  /// \api #MqReadT_END
+  public native void	ReadT_END	    ()	throws MqSException;
   /// \api #MqReadGetNumItems
   public native int	ReadGetNumItems	    ()	throws MqSException;
   /// \api #MqReadItemExists
@@ -367,6 +373,10 @@ public abstract class MqS {
   public native void	SendL_START		()  throws MqSException;
   /// \api #MqSendL_END
   public native void	SendL_END		()  throws MqSException;
+  /// \api #MqSendT_START
+  public native void	SendT_START		(String token)  throws MqSException;
+  /// \api #MqSendT_END
+  public native void	SendT_END		()  throws MqSException;
 
 /// \} Mq_Send_Java_API
 

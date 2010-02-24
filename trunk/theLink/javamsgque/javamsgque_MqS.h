@@ -633,6 +633,30 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1END
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ReadT_START
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1START__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadT_START
+ * Signature: (Ljavamsgque/MqBufferS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1START__Ljavamsgque_MqBufferS_2
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadT_END
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1END
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ReadGetNumItems
  * Signature: ()I
  */
@@ -821,6 +845,22 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1START
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1END
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendT_START
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendT_1START
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    SendT_END
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SendT_1END
   (JNIEnv *, jobject);
 
 /*

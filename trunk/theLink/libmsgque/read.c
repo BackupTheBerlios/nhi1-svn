@@ -96,6 +96,7 @@ pReadCreate (
   read->hdr = MqBufferCreate (context, HDR_SIZE + 1);
   read->bdy = MqBufferCreate (context, 10000);
   read->canUndo = MQ_NO;
+  read->handShake = MQ_HANDSHAKE_START;
 
   // references
   read->cur = pBufferCreateRef (read->bdy);
@@ -393,7 +394,7 @@ pReadHDR (
       pLogBDY (context, __func__, 7, bdy);
 
     // 4. if in a transaction, read the transaction-item
-    if (read->handShake == MQ_HANDSHAKE_TRANSACTION_START) {
+    if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
       MQ_BIN itm; MQ_SIZE len;
       enum MqErrorE ret;
       MqErrorCheck (MqReadN (context, &itm, &len));
@@ -401,7 +402,7 @@ pReadHDR (
       MqErrorCheck (MqSendSTART  (context));
       read->handShake = MQ_HANDSHAKE_START;
       ret = MqSendRETURN (context);
-      read->handShake = MQ_HANDSHAKE_TRANSACTION_START;
+      read->handShake = MQ_HANDSHAKE_TRANSACTION;
       MqErrorCheck (ret);
       read->trans_item = itm; 
       read->trans_size = len;
@@ -903,7 +904,11 @@ pReadGetHandShake (
   struct MqS const * const context
 )
 {
-  return context->link.read->handShake;
+  if (context->link.read != NULL) {
+    return context->link.read->handShake;
+  } else {
+    return MQ_HANDSHAKE_START;
+  }
 }
 
 void
@@ -912,7 +917,7 @@ pReadSetHandShake (
   enum MqHandShakeE hs
 )
 {
-  context->link.read->handShake = hs;
+  if (context->link.read != NULL) context->link.read->handShake = hs;
 }
 
 void

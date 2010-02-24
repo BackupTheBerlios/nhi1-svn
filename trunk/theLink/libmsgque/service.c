@@ -221,7 +221,9 @@ MqProcessEvent (
   int debugLevel;
 
   // save master transaction
-  MQ_HDL trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
+  MQ_HDL master_trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
+  MQ_HDL trans = context->link._trans;
+  enum MqHandShakeE hs = pReadGetHandShake(context);
 
   // protection code
   MqSetDebugLevel(context);
@@ -265,7 +267,9 @@ MqProcessEvent (
 end:
   // restore the "master" transaction
   context->refCount--;
-  if (context->config.master != NULL) context->config.master->link._trans = trans;
+  if (context->config.master != NULL) context->config.master->link._trans = master_trans;
+  context->link._trans = trans;
+  pReadSetHandShake (context, hs);
   return ret;
 
 error:

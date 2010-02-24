@@ -11,12 +11,12 @@
  */
 
 #include "main.h"
-#include "trans.h"
 #include "sys.h"
 #include "error.h"
 #include "log.h"
 #include "read.h"
 #include "cache.h"
+#include "trans.h"
 
 #define TOKEN_LEN (HDR_TOK_LEN+1)
 
@@ -29,7 +29,7 @@ BEGIN_C_DECLS
 /*****************************************************************************/
 
 struct MqTransS {
-  struct MqS * context;	    ///< link to the msgque object
+  struct MqS * context;		    ///< link to the msgque object
   MQ_SIZE   transIdR;		    ///< the largest currently used tranId number
   MQ_SIZE   transIdZ;		    ///< the size of the tranIdA array
   struct MqTransItemS ** transIdA;  ///< array of struct MqTransItemS * pointer's
@@ -45,6 +45,7 @@ struct MqTransItemS {
   MQ_HDL transId;		    ///< unique transaction ID
   struct MqCallbackS callback;	    ///< callback function pointer
   MQ_TOK token;			    ///< callback token
+  enum MqHandShakeE hs;		    ///< save the handshake
 };
 
 /*****************************************************************************/
@@ -215,6 +216,15 @@ pTransGetStatus (
   return trans->transIdA[transId]->status;
 }
 
+enum MqHandShakeE
+pTransGetHandShake (
+  struct MqTransS const * const trans,
+  const MQ_HDL transId
+)
+{
+  return trans->transIdA[transId]->hs;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              trans_set                                    */
@@ -236,7 +246,7 @@ pTransSetResult (
   item = trans->transIdA[_trans];
   if (item == NULL) return MQ_OK;
   item->status = status;
-  if (item->callback.fCall) {
+  if (unlikely (item->callback.fCall != NULL)) {
     switch (pReadGetHandShake (context)) {
       case MQ_HANDSHAKE_OK: {
 	enum MqErrorE ret;
@@ -267,15 +277,16 @@ error1:
 	return MQ_ERROR;
       }
       case MQ_HANDSHAKE_START:
-      case MQ_HANDSHAKE_TRANSACTION_START:
-      case MQ_HANDSHAKE_TRANSACTION_OK:
-      case MQ_HANDSHAKE_TRANSACTION_ERROR:
+      case MQ_HANDSHAKE_TRANSACTION:
 	MqPanicSYS(context);
     }
-  } else if (result) {
-    item->result = result;
-    // from: MqSendEND_AND_WAIT
-    context->link.read = (struct MqReadS * const) pCachePop (context->link.readCache);
+  } else {
+    item->hs = pReadGetHandShake(context);
+    if (result) {
+      item->result = result;
+      // from: MqSendEND_AND_WAIT
+      context->link.read = (struct MqReadS * const) pCachePop (context->link.readCache);
+    }
   }
   return MQ_OK;
 error:

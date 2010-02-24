@@ -814,7 +814,8 @@ MqSendEND_AND_WAIT (
   static struct MqCallbackS empty = {NULL, NULL, NULL, NULL};
   struct MqReadS * read;
   MQ_TIME_T endT;
-  enum MqHandShakeE hs = pReadGetHandShake(context);
+  enum MqHandShakeE hs;
+  MQ_HDL trans_save = context->link._trans;
 
   // 1. create the transaktion
   MQ_HDL transH =  pTransPop (trans, empty);
@@ -849,13 +850,16 @@ MqSendEND_AND_WAIT (
   // 4. replace 'read'
   read = pTransGetResult (trans, transH);
   if (read) {
+    enum MqHandShakeE shs = pReadGetHandShake (context);
     // the next 2 lines are a TRANSACTION -> do not split
     pCachePush (context->link.readCache, context->link.read);
     context->link.read = read;
+    pReadSetHandShake (context, shs);
   }
 
   // 5. clean transaction
   status = pTransGetStatus (trans, transH);
+  hs = pTransGetHandShake (trans, transH);
   pTransPush (trans, transH);
   switch (status) {
     case MQ_TRANS_END: 
@@ -867,7 +871,7 @@ MqSendEND_AND_WAIT (
   }
 
   // 6. check handShake
-  switch (pReadGetHandShake (context)) {
+  switch (hs) {
     case MQ_HANDSHAKE_OK:
       break;
     case MQ_HANDSHAKE_ERROR: {
@@ -883,18 +887,16 @@ MqSendEND_AND_WAIT (
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
-      pReadSetHandShake(context, hs);
+      context->link._trans = trans_save;
       return MQ_ERROR;
     }
     case MQ_HANDSHAKE_START:
-    case MQ_HANDSHAKE_TRANSACTION_START:
-    case MQ_HANDSHAKE_TRANSACTION_OK:
-    case MQ_HANDSHAKE_TRANSACTION_ERROR:
+    case MQ_HANDSHAKE_TRANSACTION:
       MqPanicSYS (context);
   }
 
 error:
-  pReadSetHandShake(context, hs);
+  context->link._trans = trans_save;
   return MqErrorStack (context);
 }
 
@@ -1028,7 +1030,7 @@ MqSendT_START (
   } else {
     register struct MqBufferS * const buf = send->buf;
     pSendListStart (context);
-    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_START;
+    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
     pBufferAddSize (buf, HDR_TOK_LEN+1);
     strncpy(buf->cur.C, callback, HDR_TOK_LEN);
     buf->cur.B   += HDR_TOK_LEN;
@@ -1112,16 +1114,16 @@ MqSendRETURN (
 	}
 	return pSendEND (context, "_RET", context->link._trans);
       }
-      case MQ_HANDSHAKE_TRANSACTION_START: {
+      case MQ_HANDSHAKE_TRANSACTION: {
 	// "transaction" service-call -> transaction return
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK:
 	    pSendSTART_CHECK(context);
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_OK;
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
 	    break;
 	  case MQ_ERROR:
 	    MqErrorCheck(MqSendSTART (context));
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION_ERROR;
+	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
 	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
 	    MqSendI (context, MqErrorGetNumI (context));
 	    MqSendC (context, MqErrorGetText (context));
@@ -1134,8 +1136,6 @@ MqSendRETURN (
       }
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-      case MQ_HANDSHAKE_TRANSACTION_OK:
-      case MQ_HANDSHAKE_TRANSACTION_ERROR:
 	MqPanicSYS(context);
     }
   }

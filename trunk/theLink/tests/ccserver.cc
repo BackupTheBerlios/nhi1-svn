@@ -99,12 +99,12 @@ namespace example {
   class Server : public MqC, public IService, public IServerSetup, public IServerCleanup, public IFactory {
 
     private:
-      MQ_INT myInt;
+      MQ_INT i, j;
       MQ_BUF buf;
       Client* cl[3];
 
     public:
-      Server() : MqC(), myInt(0), buf(NULL) {
+      Server() : MqC(), i(0), j(0), buf(NULL) {
 	int i=0;
 	for (i=0; i<3; i++) {
 	  cl[i] = NULL;
@@ -391,7 +391,7 @@ namespace example {
       }
 
       void Service(MqC * const ctx) {
-	myInt = ctx->ReadI();
+	i = ctx->ReadI();
       }
 
       void SND2 () {
@@ -440,10 +440,10 @@ namespace example {
 	  } else if (!strcmp(s,"CALLBACK")) {
 	    cl->SendSTART();
 	    ReadProxy(cl);
-	    myInt = -1;
+	    i = -1;
 	    cl->SendEND_AND_CALLBACK("ECOI", static_cast<IService* const>(this));
 	    cl->ProcessEvent(10, MQ_WAIT_ONCE);
-	    SendI(myInt+1);
+	    SendI(i+1);
 	  } else if (!strcmp(s,"MqSendEND_AND_WAIT")) {
 	    MQ_CST TOK = ReadC();
 	    cl->SendSTART();
@@ -624,6 +624,28 @@ namespace example {
 	SendRETURN();
       }
 
+      void TRNS () {
+	SendSTART ();
+	SendT_START ("TRN2");
+	SendI (9876);
+	SendT_END ();
+	SendI ( ReadI() );
+	SendEND_AND_WAIT ("ECOI", MQ_TIMEOUT_USER);
+	ProcessEvent (MQ_TIMEOUT_USER, MQ_WAIT_ONCE);
+	SendSTART ();
+	SendI (i);
+	SendI (j);
+	SendRETURN ();
+      }
+
+      void TRN2 () {
+	ReadT_START ();
+	i = ReadI ();
+	ReadT_END ();
+	j = ReadI ();
+	SendRETURN ();
+      }
+
     private:
       // factory  used to create server object instances
       MqC* Factory() const { return new Server(); }
@@ -693,6 +715,8 @@ namespace example {
 	  ServiceCreate("ERLS", CallbackF(&Server::ERLS));
 	  ServiceCreate("CFG1", CallbackF(&Server::CFG1));
 	  ServiceCreate("PRNT", CallbackF(&Server::PRNT));
+	  ServiceCreate("TRNS", CallbackF(&Server::TRNS));
+	  ServiceCreate("TRN2", CallbackF(&Server::TRN2));
 	}
       }
   };
