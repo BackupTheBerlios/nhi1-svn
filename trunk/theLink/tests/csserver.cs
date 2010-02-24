@@ -137,6 +137,8 @@ namespace example {
 	ServiceCreate("ERLS", ERLS);
 	ServiceCreate("CFG1", CFG1);
 	ServiceCreate("PRNT", PRNT);
+	ServiceCreate("TRNS", TRNS);
+	ServiceCreate("TRN2", TRN2);
       }
     }
 
@@ -376,9 +378,10 @@ namespace example {
       SendRETURN();
     }
 
-    int myInt = -1;
+    int i = 0;
+    int j = 0;
     private void SetMyInt () {
-     ((Server) SlaveGetMaster()).myInt = ReadI();
+     ((Server) SlaveGetMaster()).i = ReadI();
     }
 
     public void SND2 () {
@@ -421,10 +424,10 @@ namespace example {
         } else if (s == "CALLBACK") {
           cl.SendSTART();
 	  ReadProxy(cl);
-          myInt = -1;
+          i = -1;
           cl.SendEND_AND_CALLBACK("ECOI", ((Server)cl).SetMyInt);
           cl.ProcessEvent(10, MqS.WAIT.ONCE);
-          SendI(myInt+1);
+          SendI(i+1);
         } else if (s == "MqSendEND_AND_WAIT") {
           string TOK = ReadC();
           cl.SendSTART();
@@ -684,6 +687,28 @@ namespace example {
       SendSTART();
       SendU(buf);
       SendRETURN();
+    }
+
+    void TRNS () {
+      SendSTART ();
+      SendT_START ("TRN2");
+      SendI (9876);
+      SendT_END ();
+      SendI ( ReadI() );
+      SendEND_AND_WAIT ("ECOI");
+      ProcessEvent (MqS.WAIT.ONCE);
+      SendSTART ();
+      SendI (i);
+      SendI (j);
+      SendRETURN ();
+    }
+
+    void TRN2 () {
+      ReadT_START ();
+      i = ReadI ();
+      ReadT_END ();
+      j = ReadI ();
+      SendRETURN ();
     }
 
   // ########################################################################
