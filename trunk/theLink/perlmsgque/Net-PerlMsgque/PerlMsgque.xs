@@ -933,6 +933,16 @@ MqSendL_END (MqS* context)
     ErrorMqToPerlWithCheck (MqSendL_END(context));
 
 void
+MqSendT_START (MqS* context, MQ_CST token)
+  CODE:
+    ErrorMqToPerlWithCheck (MqSendT_START(context, token));
+
+void
+MqSendT_END (MqS* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqSendT_END(context));
+
+void
 MqReadL_START (MqS* context, ...)
   PREINIT:
     MQ_BUF buffer = NULL;
@@ -946,6 +956,21 @@ void
 MqReadL_END (MqS* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadL_END(context));
+
+void
+MqReadT_START (MqS* context, ...)
+  PREINIT:
+    MQ_BUF buffer = NULL;
+  CODE:
+    if (items > 1) {
+      buffer = get_MqBufferS (aTHX_ ST(1));
+    }
+    ErrorMqToPerlWithCheck (MqReadT_START (context, buffer)); 
+
+void
+MqReadT_END (MqS* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadT_END(context));
 
 void
 MqSysUSleep (MqS* context, unsigned int usec)

@@ -86,6 +86,8 @@ PyObject* NS(SendRETURN)	    ( PyObject*		    );
 PyObject* NS(SendERROR)		    ( PyObject*		    );
 PyObject* NS(SendL_START)	    ( PyObject*		    );
 PyObject* NS(SendL_END)		    ( PyObject*		    );
+PyObject* NS(SendT_START)	    ( PyObject*, PyObject*  );
+PyObject* NS(SendT_END)		    ( PyObject*		    );
 PyObject* NS(SendY)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendO)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendS)		    ( PyObject*, PyObject*  );
@@ -119,6 +121,8 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 #define SendU_DOC		  "[value] Send a PyMqS buffer object."
 #define	SendL_START_DOC		  "[noARG] Start to Send an embedded List-Item."
 #define	SendL_END_DOC		  "[noARG] End to Send an embedded List-Item."
+#define	SendT_START_DOC		  "[noARG] Start to Send an Transaction-Item."
+#define	SendT_END_DOC		  "[noARG] End to Send an Transaction-Item."
 
 // from service_python.c
 
@@ -168,6 +172,8 @@ PyObject* NS(ReadBDY)		  ( PyObject* );
 PyObject* NS(ReadU)		  ( PyObject* );
 PyObject* NS(ReadL_START)	  ( PyObject*, PyObject* );
 PyObject* NS(ReadL_END)		  ( PyObject* );
+PyObject* NS(ReadT_START)	  ( PyObject*, PyObject* );
+PyObject* NS(ReadT_END)		  ( PyObject* );
 PyObject* NS(ReadGetNumItems)	  ( PyObject* );
 PyObject* NS(ReadItemExists)	  ( PyObject* );
 PyObject* NS(ReadUndo)		  ( PyObject* );
@@ -187,6 +193,8 @@ PyObject* NS(ReadProxy)		  ( PyObject*, PyObject* );
 #define ReadU_DOC		  "[noARG] Read a PyMqS buffer from the current PyMqS package."
 #define ReadL_START_DOC		  "[noARG] Start to read an embedded list item from the current PyMqS package."
 #define ReadL_END_DOC		  "[noARG] End to read an embedded list item from the current PyMqS package."
+#define ReadT_START_DOC		  "[noARG] Start to read an transaction item from the current PyMqS package."
+#define ReadT_END_DOC		  "[noARG] End to read an transaction item from the current PyMqS package."
 #define ReadGetNumItems_DOC	  "[noARG] Get the number of items left in the PyMqS data package."
 #define ReadItemExists_DOC	  "[noARG] Is an additional item available in the PyMqS data package."
 #define ReadUndo_DOC		  "[noARG] Undo the last Read? operation."
@@ -322,6 +330,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(SendERROR,		METH_NOARGS),
     ARG(SendL_START,		METH_NOARGS),
     ARG(SendL_END,		METH_NOARGS),
+    ARG(SendT_START,		METH_VARARGS),
+    ARG(SendT_END,		METH_NOARGS),
     ARG(SendY,			METH_VARARGS),
     ARG(SendO,			METH_VARARGS),
     ARG(SendS,			METH_VARARGS),
@@ -337,6 +347,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
 
     ARG(ReadL_START,		METH_VARARGS),
     ARG(ReadL_END,		METH_NOARGS),
+    ARG(ReadT_START,		METH_VARARGS),
+    ARG(ReadT_END,		METH_NOARGS),
     ARG(ReadY,			METH_NOARGS),
     ARG(ReadO,			METH_NOARGS),
     ARG(ReadS,			METH_NOARGS),

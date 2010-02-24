@@ -553,7 +553,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ReadProxy($cl);
 	$cl->DictSet ("i", -1);
 	$cl->SendEND_AND_CALLBACK("ECOI", \&Client::ECOI_CB);
-	$cl->ProcessEvent({"timeout" => 10, "wait" => "ONCE"});
+	$cl->ProcessEvent({timeout => 10, wait => "ONCE"});
 	$ctx->SendI($cl->DictGet ("i")+1);
       } 
       case "MqSendEND_AND_WAIT" {
@@ -693,6 +693,30 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub TRNS {
+    my $ctx = shift;
+    $ctx->SendSTART ();
+    $ctx->SendT_START ("TRN2");
+    $ctx->SendI (9876);
+    $ctx->SendT_END ();
+    $ctx->SendI ( $ctx->ReadI() );
+    $ctx->SendEND_AND_WAIT ("ECOI");
+    $ctx->ProcessEvent ({wait => "ONCE"});
+    $ctx->SendSTART ();
+    $ctx->SendI ($ctx->DictGet("i"));
+    $ctx->SendI ($ctx->DictGet("j"));
+    $ctx->SendRETURN ();
+  }
+
+  sub TRN2 {
+    my $ctx = shift;
+    $ctx->ReadT_START ();
+    $ctx->DictSet ("i", $ctx->ReadI ());
+    $ctx->ReadT_END ();
+    $ctx->DictSet ("j", $ctx->ReadI ());
+    $ctx->SendRETURN ();
+  }
+
   sub ServerCleanup {
     my $ctx = shift;
     my $i;
@@ -762,6 +786,8 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("GTCX", \&GTCX);
       $ctx->ServiceCreate("CFG1", \&CFG1);
       $ctx->ServiceCreate("PRNT", \&PRNT);
+      $ctx->ServiceCreate("TRNS", \&TRNS);
+      $ctx->ServiceCreate("TRN2", \&TRN2);
     }
   }
 

@@ -94,8 +94,7 @@ PyObject* NS(SendERROR) (
 }
 
 PyObject* NS(SendL_START) (
-  PyObject	*self ,
-  PyObject	*arg
+  PyObject	*self
 )
 {
   SETUP_context
@@ -104,12 +103,34 @@ PyObject* NS(SendL_START) (
 }
 
 PyObject* NS(SendL_END) (
-  PyObject	*self,
-  PyObject	*arg
+  PyObject	*self
 )
 {
   SETUP_context
   ErrorMqToPythonWithCheck (MqSendL_END(context));
+  SETUP_RETURN
+}
+
+PyObject* NS(SendT_START) (
+  PyObject	*self ,
+  PyObject	*args
+)
+{
+  SETUP_context
+  const char *c;
+  if (!PyArg_ParseTuple(args, "s:SendT_START", &c)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck (MqSendT_START(context,c));
+  SETUP_RETURN
+}
+
+PyObject* NS(SendT_END) (
+  PyObject	*self
+)
+{
+  SETUP_context
+  ErrorMqToPythonWithCheck (MqSendT_END(context));
   SETUP_RETURN
 }
 

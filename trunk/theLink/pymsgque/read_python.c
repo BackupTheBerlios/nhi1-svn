@@ -44,6 +44,31 @@ error:
   return NULL;
 }
 
+PyObject* NS(ReadT_START) (
+  PyObject*	self,
+  PyObject*	args
+)
+{
+  SETUP_context
+  MqBufferS_Obj *bufO = NULL;
+  PyErrorCheck (PyArg_ParseTuple(args, "|O!:ReadT_START", &NS(MqBufferS), &bufO));
+  ErrorMqToPythonWithCheck(MqReadT_START(context, (bufO == NULL ? NULL : bufO->buf)));
+  Py_RETURN_NONE;
+error:
+  return NULL;
+}
+
+PyObject* NS(ReadT_END) (
+  PyObject*	self 
+)
+{
+  SETUP_context
+  ErrorMqToPythonWithCheck(MqReadT_END(context));
+  Py_RETURN_NONE;
+error:
+  return NULL;
+}
+
 PyObject* NS(ReadY) (
   PyObject*	self 
 )

@@ -126,6 +126,28 @@ class Server(MqS):
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
       self.ServiceCreate("PRNT", self.PRNT)
+      self.ServiceCreate("TRNS", self.TRNS)
+      self.ServiceCreate("TRN2", self.TRN2)
+
+  def TRNS (self):
+    self.SendSTART ()
+    self.SendT_START ("TRN2")
+    self.SendI (9876)
+    self.SendT_END ()
+    self.SendI ( self.ReadI() )
+    self.SendEND_AND_WAIT ("ECOI")
+    self.ProcessEvent (wait="ONCE")
+    self.SendSTART ()
+    self.SendI (self.i)
+    self.SendI (self.j)
+    self.SendRETURN ()
+
+  def TRN2 (self):
+    self.ReadT_START ()
+    self.i = self.ReadI ()
+    self.ReadT_END ()
+    self.j = self.ReadI ()
+    self.SendRETURN ()
 
   def PRNT(self):
     self.SendSTART()
