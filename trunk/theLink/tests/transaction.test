@@ -31,6 +31,12 @@ proc CB_I {ctx} {
   lappend RET [$ctx ReadI]
 }
 
+proc ECOI {ctx} {
+  $ctx SendSTART
+  $ctx SendI [$ctx ReadI]
+  $ctx SendRETURN
+}
+
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
@@ -97,7 +103,7 @@ test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
     -result         {9978 1}
 
 test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
-    -constraints    {1 pipe} \
+    -constraints    {1 pipe binary} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -123,6 +129,22 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
 [cC]> (client-0) found in function "sMqEventStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
+
+test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
+    -constraints    {1 pipe} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate ECOI ECOI
+    } \
+    -body           {
+      EchoL $FH_LAST TRNS SendI 345
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete ECOI
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {9876 345}
  
 # cleanup ---------------------------
 

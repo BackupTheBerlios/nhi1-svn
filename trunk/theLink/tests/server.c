@@ -37,6 +37,7 @@ struct ServerCtxS {
   MQ_BUF	val;	///< context specific data
   struct MqS	*cl[3];	///< \e MqSend* test client
   MQ_INT	i;	///< callback data
+  MQ_INT	j;	///< callback data
 };
 
 /// \brief the local child \b context used in the Callback test
@@ -1256,6 +1257,48 @@ error:
   return MqSendRETURN (mqctx);
 }
 
+/// \brief print data to file
+/// \service
+static enum MqErrorE
+Ot_TRN2 (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  struct ServerCtxS *srvctx = (struct ServerCtxS*) mqctx;
+  MqErrorCheck (MqReadT_START (mqctx, NULL));
+  MqErrorCheck (MqReadI (mqctx, &srvctx->i));
+  MqErrorCheck (MqReadT_END (mqctx));
+  MqErrorCheck (MqReadI (mqctx, &srvctx->j));
+error:
+  return MqSendRETURN (mqctx);
+}
+
+/// \brief print data to file
+/// \service
+static enum MqErrorE
+Ot_TRNS (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  struct ServerCtxS *srvctx = (struct ServerCtxS*) mqctx;
+  MQ_INT i;
+  MqErrorCheck (MqSendSTART (mqctx));
+  MqErrorCheck (MqSendT_START (mqctx, "TRN2"));
+  MqErrorCheck (MqSendI (mqctx, 9876));
+  MqErrorCheck (MqSendT_END (mqctx));
+  MqErrorCheck (MqReadI (mqctx, &i));
+  MqErrorCheck (MqSendI (mqctx, i));
+  MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "ECOI", MQ_TIMEOUT_USER));
+  MqErrorCheck (MqProcessEvent (mqctx, MQ_TIMEOUT_USER, MQ_WAIT_ONCE));
+  MqErrorCheck (MqSendSTART (mqctx));
+  MqErrorCheck (MqSendI (mqctx, srvctx->i));
+  MqErrorCheck (MqSendI (mqctx, srvctx->j));
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                context_init                               */
@@ -1343,6 +1386,8 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "TRNS", Ot_TRNS, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "TRN2", Ot_TRN2, NULL, NULL));
   }
 
 error:

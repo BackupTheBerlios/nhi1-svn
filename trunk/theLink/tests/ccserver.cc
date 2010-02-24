@@ -363,7 +363,7 @@ namespace example {
 	    break;
 	  }
 	  case MQ_LSTT: break;
-	  case MQ_RETT: break;
+	  case MQ_TRAT: break;
 	}
 	SendRETURN();
       }
