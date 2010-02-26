@@ -119,6 +119,7 @@
 #define printF(var)	MV(MQ_FORMAT_F,	var)
 #define printC(var)	MV(MQ_FORMAT_C,	var)
 #define printc(var)	MV("%c",	var)
+#define printX(var)	MV("%x",	var)
 #define printO(var)	MVA("%s",	#var,	(var==MQ_YES?"yes":"no"));
 
 #define printCP(txt,var)  MVA("%p",txt,var)

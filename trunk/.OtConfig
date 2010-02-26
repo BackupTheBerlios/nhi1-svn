@@ -11,7 +11,6 @@ fi
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
-		    --enable-perl \
 		    $ARGS $@
 
 #		    --enable-brain \

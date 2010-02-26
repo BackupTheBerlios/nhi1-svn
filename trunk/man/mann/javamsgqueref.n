@@ -1,4 +1,4 @@
-.TH "javamsgque" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -857,7 +857,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_MAX\fP = -3, request the maximum possible (inifinit) timeout value 
+\fBMQ_TIMEOUT_MAX\fP = -3, request the maximum possible (infinite) timeout value 
 .PP
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
@@ -898,6 +898,10 @@ an \fBEXCEPTION OBJECT\fP on error
  \fBSendL_START\fP
 .br
  \fBSendL_END\fP
+.br
+ \fBSendT_START\fP
+.br
+ \fBSendT_END\fP
 .br
 .PP
 construct an outgoing \fIsend-data-package\fP. 
@@ -1112,6 +1116,54 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 an \fBEXCEPTION OBJECT\fP on error 
 .RE
 .PP
+.SS "ctx.SendT_START()"
+start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+.PP
+In difference to \fBSendEND_AND_WAIT\fP and \fBSendEND_AND_CALLBACK\fP a \fIlongterm-transaction-call\fP have to survive an application restart. To achieve this goal two features have to be available to process the results:
+.IP "1." 4
+a callback as \fIknown\fP service created with \fBServiceCreate\fP
+.IP "2." 4
+one or more \fIdata-item\fP(s) to initialise the environment in the callback
+.PP
+The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. The callback is a \fBServiceIdentifier\fP and have to be defined with \fBServiceCreate\fP in the application setup code (like \fBIServerSetup\fP) to be available after an application restart. This command requires a final \fBSendT_END\fP to finish the write. The list of \fIdata-items\fP between \fISTART\fP and \fIEND\fP have to be provided by the programmer and is used to initialise the environment in the \fIcallback\fP. The data is send to the \fIlink-target\fP and returned as first item in the \fIresult-data-package\fP. Use \fBReadT_START\fP and \fBReadT_END\fP to extract the data. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIcallback\fP a \fBServiceIdentifier\fP to identify the target to process the results 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ \fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+.nf
+ ctx.SendSTART (); 
+ ctx.SendT_START ('SRVR'); 
+ ctx.SendC ('myEnvironment'); 
+ ctx.SendT_END (); 
+ ctx.SendC ('myData'); 
+ ctx.SendEND_AND_WAIT ('SRVC');
+
+.fi
+.PP
+.SS "ctx.SendT_END()"
+finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
 .SH "READ API"
 .PP
 \fBReadTYPE\fP
@@ -1125,6 +1177,10 @@ an \fBEXCEPTION OBJECT\fP on error
  \fBReadL_START\fP
 .br
  \fBReadL_END\fP
+.br
+ \fBReadT_START\fP
+.br
+ \fBReadT_END\fP
 .br
  \fBReadProxy\fP
 .br
@@ -1236,7 +1292,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBMqBufferS ctx.ReadU()\fP call or \fInull\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInull\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -1245,7 +1301,52 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
 .SS "ctx.ReadL_END()"
-finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+.SS "ctx.ReadT_START()"
+.SS "ctx.ReadT_START(MqBufferS buffer)"
+start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
+.PP
+Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\fP. The \fIcurrent-item\fP have to be the first item in the \fIread-data-package\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInull\fP to use the next item from the \fIread-data-package\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+ \fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+.nf
+ class SRVR implements IService { 
+   public void Service (MqS ctx) throws MqSException { 
+     ctx.ReadT_START (); 
+     myEnvironment = ctx.ReadC (); 
+     ctx.ReadT_END (); 
+     theResult = ctx.ReadC (); 
+   } 
+ }
+
+.fi
+.PP
+.SS "ctx.ReadT_END()"
+finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4

@@ -1,4 +1,4 @@
-.TH "Mq_Type_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -72,7 +72,7 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_MAX\fP   -3"
 .br
-.R "request the maximum possible (inifinit) timeout value "
+.R "request the maximum possible (infinite) timeout value "
 .ti -1c
 .RI "#define \fBMQ_EXTERN\fP"
 .br
@@ -296,7 +296,7 @@ request the default timeout value
 Definition at line 184 of file msgque.h.
 .SS "#define MQ_TIMEOUT_MAX   -3"
 .PP
-request the maximum possible (inifinit) timeout value 
+request the maximum possible (infinite) timeout value 
 .PP
 Definition at line 188 of file msgque.h.
 .SS "#define MQ_TIMEOUT_USER   -2"

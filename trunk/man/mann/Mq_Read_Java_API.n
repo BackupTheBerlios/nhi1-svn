@@ -1,4 +1,4 @@
-.TH "Mq_Read_Java_API" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Read_Java_API" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -72,6 +72,18 @@ Mq_Read_Java_API \- extract data from an incoming \fIread-data-package\fP.
 .RI "native void \fBjavamsgque::MqS.ReadL_END\fP ()  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadT_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadT_START\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ReadT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.ReadGetNumItems\fP ()  throws MqSException"
 .br
@@ -160,6 +172,18 @@ implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP
 .SS "native short javamsgque.MqS.ReadS ()  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadT_END ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadT_START (\fBMqBufferS\fP buf)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP 
+.PP
+.SS "native void javamsgque.MqS.ReadT_START ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP 
 .PP
 .SS "native \fBMqBufferS\fP javamsgque.MqS.ReadU ()  throws MqSException\fC [inherited]\fP"
 .PP

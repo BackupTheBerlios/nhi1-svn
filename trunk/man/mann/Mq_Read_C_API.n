@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,7 +15,15 @@ Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.R "finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.br
+.R "start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadT_END\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BYT\fP *const val)"
 .br
@@ -261,7 +269,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\f
 
 .SS "enum \fBMqErrorE\fP MqReadL_END (struct \fBMqS\fP *const  ctx)"
 .PP
-finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -284,7 +292,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBctx.ReadU() As ReadU=MqBufferS\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -365,6 +373,40 @@ an \fBEXCEPTION OBJECT\fP on error
 .RE
 .PP
  
+.SS "enum \fBMqErrorE\fP MqReadT_END (struct \fBMqS\fP *const  ctx)"
+.PP
+finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqReadT_START (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP buffer)"
+.PP
+start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
+.PP
+Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\fP. The \fIcurrent-item\fP have to be the first item in the \fIread-data-package\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
 .SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP *const  val)"
 .PP
 extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 

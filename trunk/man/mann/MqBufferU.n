@@ -1,4 +1,4 @@
-.TH "MqBufferU" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferU" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,6 +33,10 @@ MqBufferU \- a union for all data items supported by \fBMqBufferS\fP.
 .RI "\fBMQ_LST\fP \fBR\fP"
 .br
 .R "return object type data "
+.ti -1c
+.RI "\fBMQ_LST\fP \fBT\fP"
+.br
+.R "transaction object type data "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -68,6 +72,11 @@ Definition at line 2065 of file msgque.h.
 return object type data 
 .PP
 Definition at line 2066 of file msgque.h.
+.SS "\fBMQ_LST\fP \fBMqBufferU.T\fP"
+.PP
+transaction object type data 
+.PP
+Definition at line 2067 of file msgque.h.
 
 .SH "Author"
 .PP 

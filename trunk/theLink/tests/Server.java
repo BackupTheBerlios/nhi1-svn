@@ -468,7 +468,6 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       i = ReadI ();
       ReadT_END ();
       j = ReadI ();
-      SendRETURN ();
     }
   }
 

@@ -147,6 +147,16 @@ ALIASES		    += "SendL_START=$ctx SendL_START"
 ALIASES		    += "SendL_END=$ctx SendL_END"
 ALIASES		    += "SendN=$ctx SendN value"
 ALIASES		    += "SendBDY=$ctx SendBDY value"
+ALIASES		    += "SendT_START=$ctx SendT_START callback"
+ALIASES		    += "SendT_END=$ctx SendT_END"
+ALIASES		    += "SendT_example=\code \n\
+$ctx SendSTART \n\
+$ctx SendT_START \"SRVR\" \n\
+$ctx SendC \"myEnvironment\" \n\
+$ctx SendT_END \n\
+$ctx SendC \"mydata\" \n\
+$ctx SendEND_AND_WAIT \"ECOI\" \endcode"
+
 
 # READ DATE
 ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
@@ -160,6 +170,15 @@ ALIASES		    += "ReadItemExists=\O [$ctx ReadItemExists]"
 ALIASES		    += "ReadUndo=$ctx ReadUndo()"
 ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
 ALIASES		    += "ReadL_END=$ctx ReadL_END"
+ALIASES		    += "ReadT_START=$ctx ReadT_START ?buffer?"
+ALIASES		    += "ReadT_END=$ctx ReadT_END"
+ALIASES		    += "ReadT_example=\code \n\
+proc SRVR {ctx} { \n\
+  $ctx ReadT_START \n\
+  set myEnvironment [$ctx ReadC] \n\
+  $ctx ReadT_END \n\
+  set theResult [$ctx ReadC] \n\
+}\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

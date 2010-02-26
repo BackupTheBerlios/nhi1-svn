@@ -592,6 +592,27 @@ proc Ot_PRNT {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_TRNS {ctx} {
+  $ctx SendSTART
+  $ctx SendT_START "TRN2"
+  $ctx SendI 9876
+  $ctx SendT_END
+  $ctx SendI [$ctx ReadI]
+  $ctx SendEND_AND_WAIT "ECOI"
+  $ctx ProcessEvent -wait ONCE
+  $ctx SendSTART
+  $ctx SendI [$ctx dict get "i"]
+  $ctx SendI [$ctx dict get "j"]
+  $ctx SendRETURN
+}
+
+proc Ot_TRN2 {ctx} {
+  $ctx ReadT_START
+  $ctx dict set "i" [$ctx ReadI]
+  $ctx ReadT_END
+  $ctx dict set "j" [$ctx ReadI]
+}
+
 proc ServerSetup {ctx} {
 
   if {[$ctx SlaveIs]} {
@@ -654,6 +675,8 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERLS Ot_ERLS
     $ctx ServiceCreate CFG1 Ot_CFG1
     $ctx ServiceCreate PRNT Ot_PRNT
+    $ctx ServiceCreate TRN2 Ot_TRN2
+    $ctx ServiceCreate TRNS Ot_TRNS
   }
 }
 

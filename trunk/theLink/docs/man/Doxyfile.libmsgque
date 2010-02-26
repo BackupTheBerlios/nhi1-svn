@@ -156,13 +156,22 @@ ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T 
 ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
 ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
 ALIASES		    += "SendERROR=MqSendERROR(ctx)"
-ALIASES		    += "SendFTR=MqSendFTR(ctx,timeout=MQ_TIMEOUT_USER)"
-ALIASES		    += "SendEOF=MqSendEOF(ctx,timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendFTR=MqSendFTR(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
+ALIASES		    += "SendEOF=MqSendEOF(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 ALIASES		    += "SendTYPE=MqSendTYPE(ctx,value)"
 ALIASES		    += "SendN=MqSendN(ctx,MQ_BIN value,MQ_SIZE len)"
 ALIASES		    += "SendBDY=MqSendBDY(ctx,MQ_BIN value,MQ_SIZE len)"
 ALIASES		    += "SendL_START=MqSendL_START(ctx)"
 ALIASES		    += "SendL_END=MqSendL_END(ctx)"
+ALIASES		    += "SendT_START=MqSendT_START(ctx, MQ_CST callback)"
+ALIASES		    += "SendT_END=MqSendT_END(ctx)"
+ALIASES		    += "SendT_example=\code \n\
+MqErrorCheck (MqSendSTART (mqctx)); \n\
+MqErrorCheck (MqSendT_START (mqctx, \"SRVR\")); \n\
+MqErrorCheck (MqSendC (mqctx, \"myEnvironment\")); \n\
+MqErrorCheck (MqSendT_END (mqctx)); \n\
+MqErrorCheck (MqSendC (mqctx, \"myData\")); \n\
+MqErrorCheck (MqSendEND_AND_WAIT (mqctx, \"SRVC\", MQ_TIMEOUT_USER)); \endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code MqErrorCheck(MqReadI(ctx, &i));\nMqErrorCheck(MqReadL_START(ctx, NULL));\n  MqErrorCheck(MqReadD(ctx, &balance));\n  MqErrorCheck(MqReadC(ctx, &owner));\n  MqErrorCheck(MqReadB(ctx, &signature));\nMqReadL_END(ctx);\endcode"
@@ -174,8 +183,27 @@ ALIASES		    += "ReadProxy=MqReadProxy(ctx, struct MqS *otherCtx)"
 ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"
 ALIASES		    += "ReadItemExists=MQ_BOL MqReadItemExists(ctx)"
 ALIASES		    += "ReadUndo=MqReadUndo(ctx)"
-ALIASES		    += "ReadL_START=MqReadL_START(ctx, struct MqBufferS buffer=NULL)"
+ALIASES		    += "ReadL_START=MqReadL_START(ctx, struct MqBufferS *buffer=NULL)"
 ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
+ALIASES		    += "ReadT_START=MqReadT_START(ctx, struct MqBufferS *buffer=NULL)"
+ALIASES		    += "ReadT_END=MqReadT_END(ctx)"
+ALIASES		    += "ReadT_example=\code \n\
+static enum MqErrorE SRVR ( \n\
+  struct MqS * const mqctx, \n\
+  MQ_PTR data \n\
+) \n\
+{ \n\
+  struct MyCtxS *srvctx = (struct MyCtxS*) mqctx; \n\
+  MqErrorCheck (MqReadT_START (mqctx, NULL)); \n\
+  MqErrorCheck (MqReadC (mqctx, &myEnvrironment)); \n\
+  MqErrorCheck (MqReadT_END (mqctx)); \n\
+  MqErrorCheck (MqReadC (mqctx, &theResult)); \n\
+error: \n\
+  return MqErrorStack (mqctx); \n\
+} \endcode"
+
+
+
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

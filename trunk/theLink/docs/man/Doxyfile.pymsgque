@@ -177,15 +177,25 @@ ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value)"
 ALIASES		    += "SendBDY=ctx.SendBDY(value)"
+ALIASES		    += "SendT_START=ctx.SendT_START(callback)"
+ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART () \n\
+ctx.SendT_START (\"SRVR\") \n\
+ctx.SendC (\"myEnvironment\") \n\
+ctx.SendT_END () \n\
+ctx.SendC (\"myData\") \n\
+ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
+
 
 # READ DATE
-ALIASES		    += "read_example=\code \
-num = ctx.ReadI()\n\
-ctx.ReadL_START()\n\
-balance = ctx.ReadD()\n\
-owner = ctx.ReadC()\n\
-signature = ctx.ReadB()\n\
-ctx.ReadL_END()\n\
+ALIASES		    += "read_example=\code \n\
+num = ctx.ReadI() \n\
+ctx.ReadL_START() \n\
+balance = ctx.ReadD() \n\
+owner = ctx.ReadC() \n\
+signature = ctx.ReadB() \n\
+ctx.ReadL_END() \n\
 \endcode"
 
 ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
@@ -198,6 +208,14 @@ ALIASES		    += "ReadItemExists=PyBool ctx.ReadItemExists()"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START(?buffer?)"
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+def SRVR (ctx): \n\
+  ctx.ReadT_START () \n\
+  myEnvironment = ctx.ReadI () \n\
+  ctx.ReadT_END () \n\
+  theResult = ctx.ReadI ()\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

@@ -178,6 +178,15 @@ ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendB(MQ_BIN value, MQ_SIZE len)"
 ALIASES		    += "SendBDY=ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
+ALIASES		    += "SendT_START=ctx.SendT_START(MQ_CST callback)"
+ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART (); \n\
+ctx.SendT_START (\"SRVR\"); \n\
+ctx.SendC (\"myEnvironment\"); \n\
+ctx.SendT_END (); \n\
+ctx.SendC (\"myData\"); \n\
+ctx.SendEND_AND_WAIT (\"SRVC\", MQ_TIMEOUT_USER);\endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\verbatim num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx->ReadD();\n  owner = ctx->ReadC();\n  signature = ctx->ReadB();\nctx->ReadL_END();\endverbatim"
@@ -195,6 +204,19 @@ ENABLED_SECTIONS    += ReadL_START2
 ALIASES		    += "ReadL_START3=ctx.ReadL_START(MqBufferC * const buffer)"
 ENABLED_SECTIONS    += ReadL_START3
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START(MQ_BUF buffer=NULL)"
+ALIASES		    += "ReadT_START2=ctx.ReadT_START(const MqBufferC& buffer)"
+ENABLED_SECTIONS    += ReadT_START2
+ALIASES		    += "ReadT_START3=ctx.ReadT_START(MqBufferC * const buffer)"
+ENABLED_SECTIONS    += ReadT_START3
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+void SRVR () { \n\
+  ReadT_START (); \n\
+  myEnvironment = ReadC (); \n\
+  ReadT_END (); \n\
+  theResult = ReadC (); \n\
+}\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

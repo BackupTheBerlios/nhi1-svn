@@ -534,16 +534,25 @@ MqSendBDY (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (len != 0) {
     register struct MqBufferS * const buf = send->buf;
-    register MQ_SIZE const newlen = sizeof(struct HdrS) + len;
+    register MQ_SIZE const newlen = HDR_SIZE + len;
+    MQ_BIN bdy;
     pBufferNewSize (buf, newlen);
-    memcpy (buf->data + sizeof(struct HdrS), in, len);
-    buf->cur.B = buf->data + sizeof(struct HdrS) + BDY_NumItems_S;
+    bdy = buf->data + HDR_SIZE;
+    memcpy (bdy, in, len);
     // read NumItems -> attention no ENDIAN conversion
+    buf->cur.B = bdy + BDY_NumItems_S;
     if (unlikely(context->config.isString)) {
       buf->numItems = str2int(buf->cur.C,NULL,16);
     } else {
       buf->numItems = iBufU2INT(buf->cur);
     }
+    // set handshake
+    if (*(bdy + BDY_SIZE) == MQ_TRAT) {
+      *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
+    } else {
+      *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_START;
+    }
+    // finish
     buf->cursize = newlen;
     buf->cur.B = buf->data + newlen;
   }
@@ -1085,15 +1094,21 @@ MqSendRETURN (
 )
 {
   struct MqSendS * const send = context->link.send;
+  enum MqHandShakeE hs = pReadGetHandShake (context);
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (context->link._trans == 0) {
+  } else if (
+    // normal service-call without logterm-transaction
+      (context->link._trans == 0 && hs == MQ_HANDSHAKE_START)	||
+    // if a filter and a logterm-transaction ignore the retun
+      (context->link.slave->used == 1 && hs == MQ_HANDSHAKE_TRANSACTION)
+    ) {
     // no answer for a "MqSendEND" call ... just return
     return MqErrorGetCodeI(context);
   } else {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    switch (pReadGetHandShake (context)) {
+    switch (hs) {
       case MQ_HANDSHAKE_START: {
 	// "normal" service call -> normal return
 	switch (MqErrorGetCodeI (context)) {
@@ -1141,6 +1156,15 @@ MqSendRETURN (
   }
 error:
   return MqErrorStack(context);
+}
+
+void
+pSendSetHandShake (
+  struct MqS const * const context,
+  enum MqHandShakeE hs
+)
+{
+  if (context->link.send != NULL) *(context->link.send->buf->data + HDR_Code_S) = hs;
 }
 
 END_C_DECLS

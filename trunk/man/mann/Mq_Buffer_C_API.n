@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -51,12 +51,13 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
 .br
+.R "signature used in \fBMqBufferS.signature\fP "
 .in -1c
 .SS "Enumerations"
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
+.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_TRAT\fP =  (11<<4 ) }"
 .br
 .R "a collection of all \fInative-data-types\fP supported "
 .ti -1c
@@ -273,10 +274,12 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 2076 of file msgque.h.
+Definition at line 2077 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-Definition at line 2079 of file msgque.h.
+signature used in \fBMqBufferS.signature\fP 
+.PP
+Definition at line 2080 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
@@ -323,7 +326,7 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 2070 of file msgque.h.
+Definition at line 2071 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
@@ -387,8 +390,8 @@ C: \fIstring\fP type (e.g. with a \\0 at the end).
 \fB\fIMQ_LSTT \fP\fP
 L: list object type. 
 .TP
-\fB\fIMQ_RETT \fP\fP
-R: return object type. 
+\fB\fIMQ_TRAT \fP\fP
+T: transaction object type. 
 .PP
 Definition at line 2023 of file msgque.h.
 .SH "Function Documentation"

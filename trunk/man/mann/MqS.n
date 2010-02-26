@@ -1,4 +1,4 @@
-.TH "MqS" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "MqS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -79,7 +79,7 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .ti -1c
 .RI "\fBMQ_INT\fP \fBrefCount\fP"
 .br
-.R "is an objekt in use? "
+.R "is an object in use? "
 .ti -1c
 .RI "struct MqGcS * \fBgc\fP"
 .br
@@ -87,7 +87,7 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBgcid\fP"
 .br
-.R "position in the Gc array "
+.R "position in the gc array "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -127,7 +127,7 @@ link to the garbage-collection
 Definition at line 1407 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqS.gcid\fP"
 .PP
-position in the Gc array 
+position in the gc array 
 .PP
 Definition at line 1408 of file msgque.h.
 .SS "struct \fBMqLinkS\fP \fBMqS.link\fP\fC [read]\fP"
@@ -152,7 +152,7 @@ is already an 'exit' ongoing?
 Definition at line 1401 of file msgque.h.
 .SS "\fBMQ_INT\fP \fBMqS.refCount\fP"
 .PP
-is an objekt in use? 
+is an object in use? 
 .PP
 Definition at line 1406 of file msgque.h.
 .SS "\fBMQ_PTR\fP \fBMqS.self\fP"

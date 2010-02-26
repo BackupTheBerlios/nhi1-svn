@@ -421,36 +421,50 @@ pTokenCheckSystem (
       break;
     }
     case 'T': {                // _TRT: return from a transaction-service
-      switch (pReadGetHandShake (context)) {
-	case MQ_HANDSHAKE_OK: {
-	  pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
-	  return MQ_OK;
-	}
-	case MQ_HANDSHAKE_ERROR: {
-	  MQ_INT retNum;
-	  MQ_CST msg;
-	  MQ_BUF tmp;
-
-	  // (*callback.fCall) is never called
-	  MqDLogC(context,5,"got ERROR return code\n");
-	  MqErrorCheck2 (MqReadU (context, &tmp), error2);
-	  MqErrorCheck2 (MqReadI (context, &retNum), error2);
-	  pReadSetReturnNum (context, retNum);
-	  
-	  // write HEADER
-	  MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
-	    pReadGetTransactionToken(context), retNum);
-	  // write ERROR-STACK
-	  while (MqReadItemExists (context)) {
-	    MqErrorCheck2 (MqReadC (context, &msg), error2);
-	    pErrorAppendC (context, msg);
+      if (MqSlaveIsI(context)) {
+	MQ_BIN bdy; MQ_SIZE len;
+	struct MqS *master = context->config.master;
+	enum MqHandShakeE hs = pReadGetHandShake(context);
+	MqErrorCheck  (MqReadBDY   (context, &bdy, &len));
+	MqErrorCheck2 (MqSendSTART (master),           errorTRT);
+	MqErrorCheck2 (MqSendBDY   (master, bdy, len), errorTRT);
+	pSendSetHandShake (master, hs);
+	MqErrorCheck2 (MqSendEND   (master, "_TRT"),   errorTRT);
+	return MQ_CONTINUE;
+errorTRT:
+	return MqErrorCopy (context, master);
+      } else {
+	switch (pReadGetHandShake (context)) {
+	  case MQ_HANDSHAKE_OK: {
+	    pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
+	    return MQ_OK;
 	  }
+	  case MQ_HANDSHAKE_ERROR: {
+	    MQ_INT retNum;
+	    MQ_CST msg;
+	    MQ_BUF tmp;
+
+	    // (*callback.fCall) is never called
+	    MqDLogC(context,5,"got ERROR return code\n");
+	    MqErrorCheck2 (MqReadU (context, &tmp), error2);
+	    MqErrorCheck2 (MqReadI (context, &retNum), error2);
+	    pReadSetReturnNum (context, retNum);
+	    
+	    // write HEADER
+	    MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
+	      pReadGetTransactionToken(context), retNum);
+	    // write ERROR-STACK
+	    while (MqReadItemExists (context)) {
+	      MqErrorCheck2 (MqReadC (context, &msg), error2);
+	      pErrorAppendC (context, msg);
+	    }
 error2:
-	  return MQ_ERROR;
+	    return MQ_ERROR;
+	  }
+	  case MQ_HANDSHAKE_START:
+	  case MQ_HANDSHAKE_TRANSACTION:
+	    MqPanicSYS(context);
 	}
-	case MQ_HANDSHAKE_START:
-	case MQ_HANDSHAKE_TRANSACTION:
-	  MqPanicSYS(context);
       }
     }
     case 'E':

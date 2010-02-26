@@ -175,6 +175,7 @@ Ot_ECOI (
   void *data
 )
 {
+M0
   MQ_INT l;
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &l));
@@ -1259,8 +1260,7 @@ error:
 
 /// \brief print data to file
 /// \service
-static enum MqErrorE
-Ot_TRN2 (
+static enum MqErrorE Ot_TRN2 (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -1271,7 +1271,7 @@ Ot_TRN2 (
   MqErrorCheck (MqReadT_END (mqctx));
   MqErrorCheck (MqReadI (mqctx, &srvctx->j));
 error:
-  return MqSendRETURN (mqctx);
+  return MqErrorStack (mqctx);
 }
 
 /// \brief print data to file

@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -332,6 +332,18 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
 .ti -1c
+.RI "native void \fBReadT_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBReadT_START\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBReadT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.ti -1c
 .RI "native int \fBReadGetNumItems\fP ()  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
@@ -427,6 +439,14 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "native void \fBSendL_END\fP ()  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "native void \fBSendT_START\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "native void \fBSendT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
 .ti -1c
 .RI "native void \fBSlaveWorker\fP (int id, String...args)  throws MqSException"
 .br

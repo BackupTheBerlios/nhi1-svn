@@ -313,6 +313,8 @@ UNKNOWN
 \RNSA{SendBDY}\n
 \RNSA{SendL_START}\n
 \RNSA{SendL_END}\n
+\RNSA{SendT_START}\n
+\RNSA{SendT_END}\n
 
 \copydoc Mq_Send_C_API
 \b Example: send an integer and a list of double, string and a \e byte-array: \send_example
@@ -338,7 +340,7 @@ UNKNOWN
 \subsection	  \NS{SendERROR}			\SendERROR
 \copydoc MqSendERROR
 
-\subsection	  \NS{SendTYPE}			\SendTYPE
+\subsection	  \NS{SendTYPE}				\SendTYPE
 \copydoc MqSendY
 
 \subsection	  \NS{SendN}				\SendN
@@ -353,6 +355,13 @@ UNKNOWN
 \subsection	  \NS{SendL_END}			\SendL_END
 \copydoc MqSendL_END
 
+\subsection	  \NS{SendT_START}			\SendT_START
+\copydoc MqSendT_START
+\b Example: make a \e service-call with \e transaction-support: \SendT_example
+
+\subsection	  \NS{SendT_END}			\SendT_END
+\copydoc MqSendT_END
+
 \section	  \NS{ReadData}				READ API
 \RNSA{ReadTYPE}\n
 \RNSA{ReadN}\n
@@ -360,6 +369,8 @@ UNKNOWN
 \RNSA{ReadU}\n
 \RNSA{ReadL_START}\n
 \RNSA{ReadL_END}\n
+\RNSA{ReadT_START}\n
+\RNSA{ReadT_END}\n
 \RNSA{ReadProxy}\n
 \RNSA{ReadGetNumItems}\n
 \RNSA{ReadItemExists}\n
@@ -391,6 +402,19 @@ UNKNOWN
 
 \subsection	  \NS{ReadL_END}			\ReadL_END
 \copydoc MqReadL_END
+
+\subsection	  \NS{ReadT_START}			\ReadT_START
+\if ReadT_START2
+\subsection	  \NS{ReadT_START2}			\ReadT_START2
+\endif
+\if ReadT_START3
+\subsection	  \NS{ReadT_START3}			\ReadT_START3
+\endif
+\copydoc MqReadT_START
+\b Example: read the results from a \e service-call with \e transaction-support: \ReadT_example
+
+\subsection	  \NS{ReadT_END}			\ReadT_END
+\copydoc MqReadT_END
 
 \subsection	  \NS{ReadProxy}			\ReadProxy
 \copydoc MqReadProxy

@@ -21,6 +21,11 @@ if {[info exists env(TS_LIBRARY)]} {
 ## init
 ##
 
+set BLOCK_1 true
+set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+
 #set tcl_traceExec 1
 
 proc CB_I {ctx} {
@@ -41,6 +46,8 @@ proc ECOI {ctx} {
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
+
+if {$BLOCK_1} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [numGet 3] {
@@ -68,7 +75,6 @@ Setup $I $B $C $S
 # tests ----------------------------
 
 test transaction-1-($I|$B|$C|$S) {wrong item position} \
-    -constraints    {1 pipe} \
     -body           {
       $FH_LAST SendSTART
       $FH_LAST SendI 1
@@ -81,8 +87,7 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_START] the TRANSACTION item have to be the first item in the data package}
 
-test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
-    -constraints    {1 pipe} \
+test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -102,8 +107,55 @@ test transaction-2-($I|$B|$C|$S) {basic test - OK return} \
     } \
     -result         {9978 1}
 
+test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_CALLBACK ECOI CB
+      $FH_LAST ProcessEvent -wait ONCE; # wait for callback
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {CB 9978 1}
+
+test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND ECOI
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {9978 1}
+
 test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
-    -constraints    {1 pipe binary} \
+    -constraints    {binary} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -131,7 +183,6 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
 
 test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
-    -constraints    {1 pipe} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate ECOI ECOI
@@ -149,17 +200,62 @@ test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
 # cleanup ---------------------------
 
 Cleanup
-
-##  
-## -----------------------------------------------------------------------
-## finish loop
-##
    
     }; # SRV_LST
    }; # COM_LST
   }; # BIN_LST
  }; # Master/Child  
 unset -nocomplain I B C S
+
+}
+
+##  
+## -----------------------------------------------------------------------
+## additional testes
+##
+
+if {$BLOCK_2} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+test X1-($I|$B|$C|$S) {Read/Send BDY test} \
+    -setup	    {
+      Setup $I $B $C $S --filter-server Filter3
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      Cleanup
+    } \
+    -result         {9978 1}
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}
 
 ##
 ## -----------------------------------------------------------------------

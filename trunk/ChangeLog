@@ -2,6 +2,8 @@
 
 \page changelog ChangeLog
 
+\section V0_7 X Feb 2010 - NHI1-0.7, PLMK-1.6 and libmsgque-4.5
+
 \section V0_6 16 Feb 2010 - NHI1-0.6, PLMK-1.5 and libmsgque-4.4
 
 This is a \e major-feature-release to prepare the environment for the new 

@@ -643,7 +643,6 @@ namespace example {
 	i = ReadI ();
 	ReadT_END ();
 	j = ReadI ();
-	SendRETURN ();
       }
 
     private:

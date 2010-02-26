@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -93,6 +93,14 @@ Mq_Send_C_API \- construct an outgoing \fIsend-data-package\fP.
 .RI "enum \fBMqErrorE\fP \fBMqSendL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
 .R "finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const callback)"
+.br
+.R "start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendT_END\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -437,6 +445,46 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendT_END (struct \fBMqS\fP *const  ctx)"
+.PP
+finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBEXCEPTION OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSendT_START (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  callback)"
+.PP
+start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+.PP
+In difference to \fBSendEND_AND_WAIT\fP and \fBSendEND_AND_CALLBACK\fP a \fIlongterm-transaction-call\fP have to survive an application restart. To achieve this goal two features have to be available to process the results:
+.IP "1." 4
+a callback as \fIknown\fP service created with \fBServiceCreate\fP
+.IP "2." 4
+one or more \fIdata-item\fP(s) to initialise the environment in the callback
+.PP
+The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. The callback is a \fBServiceIdentifier\fP and have to be defined with \fBServiceCreate\fP in the application setup code (like \fBIServerSetup\fP) to be available after an application restart. This command requires a final \fBSendT_END\fP to finish the write. The list of \fIdata-items\fP between \fISTART\fP and \fIEND\fP have to be provided by the programmer and is used to initialise the environment in the \fIcallback\fP. The data is send to the \fIlink-target\fP and returned as first item in the \fIresult-data-package\fP. Use \fBReadT_START\fP and \fBReadT_END\fP to extract the data. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIcallback\fP a \fBServiceIdentifier\fP to identify the target to process the results 
 .RE
 .PP
 \fBReturns:\fP

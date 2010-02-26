@@ -1,4 +1,4 @@
-.TH "Mq_Read_CC_API" n "18 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Read_CC_API" n "25 Feb 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -85,6 +85,22 @@ Mq_Read_CC_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
 .ti -1c
+.RI "void \fBccmsgque::MqC::ReadT_START\fP (\fBMQ_BUF\fP buf=NULL)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadT_START\fP (const MqBufferC &buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadT_START\fP (MqBufferC *const buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ReadT_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.ti -1c
 .RI "\fBMQ_BOL\fP \fBccmsgque::MqC::ReadItemExists\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
@@ -147,7 +163,7 @@ Definition at line 580 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP 
 .PP
-Definition at line 635 of file ccmsgque.h.
+Definition at line 648 of file ccmsgque.h.
 .SS "\fBMQ_INT\fP ccmsgque::MqC::ReadI ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadI\fP 
@@ -157,7 +173,7 @@ Definition at line 578 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP 
 .PP
-Definition at line 632 of file ccmsgque.h.
+Definition at line 645 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ReadL_END ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP 
@@ -203,6 +219,26 @@ Definition at line 612 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqReadS\fP 
 .PP
 Definition at line 576 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadT_END ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP 
+.PP
+Definition at line 641 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadT_START (\fBMqBufferC\fP *const  buf)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP 
+.PP
+Definition at line 638 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadT_START (const \fBMqBufferC\fP & buf)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP 
+.PP
+Definition at line 635 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ReadT_START (\fBMQ_BUF\fP buf = \fCNULL\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP 
+.PP
+Definition at line 632 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqC::ReadU ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadU\fP 
@@ -212,7 +248,7 @@ Definition at line 609 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP 
 .PP
-Definition at line 638 of file ccmsgque.h.
+Definition at line 651 of file ccmsgque.h.
 .SS "\fBMQ_WID\fP ccmsgque::MqC::ReadW ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadW\fP 

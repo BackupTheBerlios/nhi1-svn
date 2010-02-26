@@ -50,7 +50,7 @@ struct MqReadS {
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
   struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
   struct MqBufferS * cur;	    ///< used as reference on BUF with the current data
-  enum MqHandShakeE handShake;	    ///< Return-Code (O)K, (E)RROR or (W)ARNING
+  enum MqHandShakeE handShake;	    ///< what kind aof call is it?
   MQ_INT returnNum;		    ///< Return-Number
   struct MqCacheS * saveCache;
   struct ReadSaveS * save;	    ///< need for List objects
@@ -399,11 +399,13 @@ pReadHDR (
       enum MqErrorE ret;
       MqErrorCheck (MqReadN (context, &itm, &len));
       // answer first call with an empty return package
-      MqErrorCheck (MqSendSTART  (context));
-      read->handShake = MQ_HANDSHAKE_START;
-      ret = MqSendRETURN (context);
-      read->handShake = MQ_HANDSHAKE_TRANSACTION;
-      MqErrorCheck (ret);
+      if (context->link._trans != 0) {
+	MqErrorCheck (MqSendSTART  (context));
+	read->handShake = MQ_HANDSHAKE_START;
+	ret = MqSendRETURN (context);
+	read->handShake = MQ_HANDSHAKE_TRANSACTION;
+	MqErrorCheck (ret);
+      }
       read->trans_item = itm; 
       read->trans_size = len;
     }

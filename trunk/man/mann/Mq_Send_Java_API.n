@@ -1,4 +1,4 @@
-.TH "Mq_Send_Java_API" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Send_Java_API" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -92,6 +92,14 @@ Mq_Send_Java_API \- construct an outgoing \fIsend-data-package\fP.
 .RI "native void \fBjavamsgque::MqS.SendL_END\fP ()  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendT_START\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -180,6 +188,14 @@ implement the \fBlibmsgque\fP API object: \fBMqSendS\fP
 .SS "native void javamsgque.MqS.SendSTART ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP 
+.PP
+.SS "native void javamsgque.MqS.SendT_END ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP 
+.PP
+.SS "native void javamsgque.MqS.SendT_START (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP 
 .PP
 .SS "native void javamsgque.MqS.SendU (\fBMqBufferS\fP buf)  throws MqSException\fC [inherited]\fP"
 .PP

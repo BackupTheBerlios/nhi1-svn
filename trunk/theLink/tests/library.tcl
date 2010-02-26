@@ -1057,8 +1057,14 @@ proc Setup {num mode com server args} {
   set setup	    [optV args --setup]
   set setup_parent  [optV args --setup-parent]
   set bgerror	    [optV args --bgerror]
-  set filter_server [optV args --filter $env(TS_FILTER_SERVER)]
-  set filter_client [optV args --filter $env(TS_FILTER_CLIENT)]
+  set filter	    [optV args --filter NO]
+  if {$filter ne "NO"} {
+    set filter_server $filter
+    set filter_client $filter
+  } else {
+    set filter_server [optV args --filter-server $env(TS_FILTER_SERVER)]
+    set filter_client [optV args --filter-client $env(TS_FILTER_CLIENT)]
+  }
   unset -nocomplain SERVER_OUTPUT
 
   ## 1. setup variables

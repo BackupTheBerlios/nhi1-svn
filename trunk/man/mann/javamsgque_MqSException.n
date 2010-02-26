@@ -1,4 +1,4 @@
-.TH "javamsgque::MqSException" n "18 Feb 2010" "Version 4.4" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqSException" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

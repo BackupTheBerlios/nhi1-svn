@@ -55,6 +55,14 @@ MqServiceIsTransaction (
   return context->link._trans != 0;
 }
 
+int
+MqServiceIsLongtermTransaction (
+  struct MqS const * const context
+)
+{
+  return pReadGetHandShake(context) == MQ_HANDSHAKE_TRANSACTION;
+}
+
 MQ_CST 
 MqServiceGetToken (
   struct MqS const * const context

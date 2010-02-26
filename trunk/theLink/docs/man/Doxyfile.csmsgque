@@ -152,6 +152,15 @@ ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(byte[] value)"
 ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
+ALIASES		    += "SendT_START=ctx.SendL_START(string callback)"
+ALIASES		    += "SendT_END=ctx.SendL_END()"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART (); \n\
+ctx.SendT_START (\"SRVR\"); \n\
+ctx.SendC (\"myEnvironment\"); \n\
+ctx.SendT_END (); \n\
+ctx.SendC (\"myData\"); \n\
+ctx.SendEND_AND_WAIT (\"SRVC\");\endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
@@ -167,6 +176,17 @@ ALIASES		    += "ReadL_START=ctx.ReadL_START()"
 ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
 ENABLED_SECTIONS    += ReadL_START2
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START()"
+ALIASES		    += "ReadT_START2=ctx.ReadT_START(MqBufferS buffer)"
+ENABLED_SECTIONS    += ReadT_START2
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+void SRVR () { \n\
+  ReadT_START (); \n\
+  myEnvironment = ReadC (); \n\
+  ReadT_END (); \n\
+  theResult = ReadC (); \n\
+}\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

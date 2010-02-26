@@ -44,7 +44,7 @@ void pLogMqBuffer (
 
 void pLogHEX ( struct MqS const * const, MQ_CST const, MQ_BINB const * , MQ_SIZE const);
 
-MQ_STR pLogAscii ( MQ_STR buf, MQ_STR str, MQ_SIZE size);
+MQ_STR pLogAscii ( MQ_STR buf, MQ_CST str, MQ_SIZE size);
 
 END_C_DECLS
 

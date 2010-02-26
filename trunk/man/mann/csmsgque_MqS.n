@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "18 Feb 2010" "Version 4.4" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -302,6 +302,18 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
 .ti -1c
+.RI "void \fBReadT_START\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBReadT_START\fP (\fBMqBufferS\fP buffer)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument "
+.ti -1c
+.RI "void \fBReadT_END\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.ti -1c
 .RI "int \fBReadGetNumItems\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
@@ -401,6 +413,14 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBSendL_END\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "void \fBSendT_START\fP (string token)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "void \fBSendT_END\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
 .ti -1c
 .RI "string \fBServiceGetToken\fP ()"
 .br

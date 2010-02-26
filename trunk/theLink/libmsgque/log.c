@@ -476,11 +476,11 @@ MqLogParentOrChild (
 MQ_STR
 pLogAscii (
   MQ_STR buf,
-  MQ_STR str,
+  MQ_CST str,
   MQ_SIZE size
 )
 {
-  register MQ_STR g = str;
+  register MQ_CST g = str;
   register MQ_STR t = buf;
   register MQ_STR e = buf + size;
   for (;t < e; t++, g++) {

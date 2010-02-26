@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "18 Feb 2010" "Version 4.4" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "25 Feb 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -375,6 +375,22 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
 .ti -1c
+.RI "void \fBReadT_START\fP (\fBMQ_BUF\fP buf=NULL)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBReadT_START\fP (const \fBMqBufferC\fP &buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBReadT_START\fP (\fBMqBufferC\fP *const buf)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "void \fBReadT_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.ti -1c
 .RI "\fBMQ_BOL\fP \fBReadItemExists\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
@@ -478,6 +494,14 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBSendL_END\fP ()  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "void \fBSendT_START\fP (\fBMQ_CST\fP token)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "void \fBSendT_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
 .ti -1c
 .RI "bool \fBServiceIsTransaction\fP ()"
 .br

@@ -714,7 +714,6 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->DictSet ("i", $ctx->ReadI ());
     $ctx->ReadT_END ();
     $ctx->DictSet ("j", $ctx->ReadI ());
-    $ctx->SendRETURN ();
   }
 
   sub ServerCleanup {

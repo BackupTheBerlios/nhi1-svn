@@ -1,8 +1,8 @@
-.TH "msgque.h" n "18 Feb 2010" "Version 4.4" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "25 Feb 2010" "Version 4.5" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -185,7 +185,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_MAX\fP   -3"
 .br
-.R "request the maximum possible (inifinit) timeout value "
+.R "request the maximum possible (infinite) timeout value "
 .ti -1c
 .RI "#define \fBMQ_EXTERN\fP"
 .br
@@ -253,6 +253,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .ti -1c
 .RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
 .br
+.R "signature used in \fBMqBufferS::signature\fP "
 .ti -1c
 .RI "#define \fBMQ_ERROR_PANIC\fP   ((struct \fBMqS\fP*)NULL)"
 .br
@@ -514,7 +515,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .br
 .R "wait for an event? "
 .ti -1c
-.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_RETT\fP =  (11<<4 ) }"
+.RI "enum \fBMqTypeE\fP { \fBMQ_BYTT\fP =  (1<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_BOLT\fP =  (2<<4 | MQ_TYPE_IS_1_BYTE), \fBMQ_SRTT\fP =  (3<<4 | MQ_TYPE_IS_2_BYTE), \fBMQ_INTT\fP =  (4<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_FLTT\fP =  (5<<4 | MQ_TYPE_IS_4_BYTE), \fBMQ_WIDT\fP =  (6<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_DBLT\fP =  (7<<4 | MQ_TYPE_IS_8_BYTE), \fBMQ_BINT\fP =  (8<<4 ), \fBMQ_STRT\fP =  (9<<4 ), \fBMQ_LSTT\fP =  (10<<4 ), \fBMQ_TRAT\fP =  (11<<4 ) }"
 .br
 .R "a collection of all \fInative-data-types\fP supported "
 .ti -1c
@@ -1214,7 +1215,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "clenup an \fIexit-error\fP "
+.R "cleanup an \fIexit-error\fP "
 .ti -1c
 .RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
 .br
@@ -1230,7 +1231,15 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadL_END\fP (struct \fBMqS\fP *const ctx)"
 .br
-.R "finish start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.R "finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.br
+.R "start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqReadT_END\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqReadY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BYT\fP *const val)"
 .br
@@ -1379,6 +1388,14 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .br
 .R "finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const callback)"
+.br
+.R "start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSendT_END\fP (struct \fBMqS\fP *const ctx)"
+.br
+.R "finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. "
+.ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **args)"
 .br
 .R "create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. "
@@ -1507,13 +1524,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 206 2010-02-17 14:21:42Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 206 $ 
+$Rev: 217 $ 
 .RE
 .PP
 \fBAuthor:\fP

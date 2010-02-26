@@ -147,7 +147,6 @@ class Server(MqS):
     self.i = self.ReadI ()
     self.ReadT_END ()
     self.j = self.ReadI ()
-    self.SendRETURN ()
 
   def PRNT(self):
     self.SendSTART()

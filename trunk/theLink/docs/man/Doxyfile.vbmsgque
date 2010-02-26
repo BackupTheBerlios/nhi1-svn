@@ -158,14 +158,30 @@ ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token As String, [timeout
 ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token As String, AddressOf callback)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(value As TYPE)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(ByVal value() As Byte)"
 ALIASES		    += "SendBDY=ctx.SendBDY(ByVal value() As Byte)"
+ALIASES		    += "SendT_START=ctx.SendT_START(callback As String)"
+ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART() \n\
+ctx.SendT_START(\"SRVR\") \n\
+ctx.SendC(\"myEnvironment\") \n\
+ctx.SendT_END() \n\
+ctx.SendC(\"myData\") \n\
+ctx.SendEND_AND_WAIT("SRVC")\endcode"
+
 
 # READ DATE
-ALIASES		    += "read_example=\code num = ctx.ReadI()\nctx.ReadL_START()\n  balance = ctx.ReadD()\n  owner = ctx.ReadC()\n  signature = ctx.ReadB()\nctx.ReadL_END()\endcode"
+ALIASES		    += "read_example=\code \n\
+num = ctx.ReadI()\n\
+ctx.ReadL_START()\n\
+  balance = ctx.ReadD()\n\
+  owner = ctx.ReadC()\n\
+  signature = ctx.ReadB()\n\
+ctx.ReadL_END()\endcode"
 ALIASES		    += "ReadTYPE=ctx.ReadTYPE() As TYPE"
 ALIASES		    += "ReadU=ctx.ReadU() As ReadU=MqBufferS"
 ALIASES		    += "ReadN=ctx.ReadN() As Byte()"
@@ -174,8 +190,17 @@ ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx As MqS)"
 ALIASES		    += "ReadGetNumItems=ctx.ReadGetNumItems() As Integer"
 ALIASES		    += "ReadItemExists=ctx.ReadItemExists() As Boolean"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
-ALIASES		    += "ReadL_START=ctx.ReadL_START(?MqBufferS buffer?)"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer As MqBufferS?)"
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START(?buffer As MqBufferS?)"
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+Private Sub SRVR()\n\
+  ctx.ReadT_START()\n\
+  myEnvironment = ctx.ReadC()\n\
+  ctx.ReadT_END()\n\
+  theResult = ctx.ReadC()\n\
+End Sub\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\

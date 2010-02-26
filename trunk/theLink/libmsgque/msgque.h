@@ -184,7 +184,7 @@ BEGIN_C_DECLS
 #define MQ_TIMEOUT_DEFAULT -1
 /// \brief request the user defined timeout value from the \RNSC{timeout} configuration value
 #define MQ_TIMEOUT_USER -2
-/// \brief request the maximum possible (inifinit) timeout value
+/// \brief request the maximum possible (infinite) timeout value
 #define MQ_TIMEOUT_MAX -3
 #endif
 
@@ -1403,9 +1403,9 @@ struct MqS {
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object
   MQ_SIZE contextsize;		    ///< ALLOC-size of the user-defined context struct
-  MQ_INT refCount;		    ///< is an objekt in use?
+  MQ_INT refCount;		    ///< is an object in use?
   struct MqGcS *gc;		    ///< link to the garbage-collection
-  MQ_SIZE gcid;			    ///< position in the Gc array
+  MQ_SIZE gcid;			    ///< position in the gc array
 };
 
 /// \brief initialize the #MqS object related data but do \e not create the object self
@@ -1835,6 +1835,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
 /// \return a boolean value, \yes or \no
 MQ_EXTERN int
 MQ_DECL MqServiceIsTransaction (
+  struct MqS const * const ctx
+) __attribute__((nonnull(1)));
+
+/// \brief ?????
+MQ_EXTERN int
+MQ_DECL MqServiceIsLongtermTransaction (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
 
@@ -3191,7 +3197,7 @@ MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );
 
-/// \brief clenup an \e exit-error
+/// \brief cleanup an \e exit-error
 MQ_EXTERN enum MqErrorE MqErrorDeleteEXIT (
   struct MqS * const context
 );
@@ -3276,7 +3282,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /// Initialize the read with the current \e body-item or an optional \e buffer-object.
 /// This command requires a final \RNS{ReadL_END} to finish the read.
 /// \ctx
-/// \param[in] buffer an optional \e buffer-object as result from a previous \RNS{ReadU} call or \null to
+/// \param[in] buffer an optional \e buffer-object as result from a previous \RNSA{ReadU} call or \null to
 ///   use the next item from the \e read-data-package.
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_START (
@@ -3284,20 +3290,30 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_START (
   MQ_BUF buffer
 );
 
-/// \brief finish start to extract a \e list-items from the \e read-data-package.
+/// \brief finish to extract a \e list-items from the \e read-data-package.
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
   struct MqS * const ctx
 );
 
-/// \brief ?????
+/// \brief start to extract a \e longterm-transaction-item from the \e read-data-package.
+///
+/// Initialize the read with the \e current-item or an optional \e buffer-object.
+/// The \e current-item have to be the first item in the \e read-data-package.
+/// This command requires a final \RNS{ReadL_END} to finish the read.
+/// \ctx
+/// \param[in] buffer an optional \e buffer-object as result from a previous \RNSA{ReadU} call or \null to
+///   use the next item from the \e read-data-package.
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_START (
   struct MqS * const ctx,
   MQ_BUF buffer
 );
 
-/// \brief ?????
+/// \brief finish to extract a \e longterm-transaction-item from the \e read-data-package.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_END (
   struct MqS * const ctx
 );
@@ -3782,11 +3798,37 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
   struct MqS * const ctx
 );
 
+/** 
+\brief start to write a \e longterm-transaction-item to the \e send-data-package.
+
+In difference to \RNSA{SendEND_AND_WAIT} and \RNSA{SendEND_AND_CALLBACK} a
+\e longterm-transaction-call have to survive an application restart. To achieve
+this goal two features have to be available to process the results:
+-# a callback as \e known service created with \RNSA{ServiceCreate}
+-# one or more \e data-item(s) to initialise the environment in the callback
+.
+The \e transaction-item have to be the first item in the \e data-package.
+The callback is a \RNSA{ServiceIdentifier} and have to be defined 
+with \RNSA{ServiceCreate} in the application setup code (like \RNSC{IServerSetup}) 
+to be available after an application restart.
+This command requires a final \RNSA{SendT_END} to finish the write.
+The list of \e data-items between \e START and \e END have to be provided by the programmer 
+and is used to initialise the environment in the \e callback. The data
+is send to the \e link-target and returned as first item in the \e result-data-package.
+Use \RNSA{ReadT_START} and \RNSA{ReadT_END} to extract the data.
+\ctx
+\param[in] callback a \RNSA{ServiceIdentifier} to identify the target
+                    to process the results
+\retException
+*/
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
   struct MqS * const ctx,
   MQ_TOK const callback
 );
 
+/// \brief finish to write a \e longterm-transaction-item to the \e send-data-package.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
   struct MqS * const ctx
 );
