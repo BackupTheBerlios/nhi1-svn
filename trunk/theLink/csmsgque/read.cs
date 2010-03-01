@@ -72,14 +72,8 @@ namespace csmsgque {
     private static extern MqErrorE MqReadUndo(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadProxy")]
     private static extern MqErrorE MqReadProxy(IntPtr contextMsgque, IntPtr sendMsgque);
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadGetHandShake")]
-    private static extern char MqReadGetHandShake(IntPtr contextMsgque);
 
     // PUBLIC
-
-    public char MqReadGetHandShake() {
-      return MqReadGetHandShake(context);
-    }
 
     /// \api #MqReadY
     public byte ReadY() {
