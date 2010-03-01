@@ -22,9 +22,9 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 set BLOCK_1 true
-set BLOCK_1 false
+#set BLOCK_1 false
 set BLOCK_2 true
-#set BLOCK_2 false
+set BLOCK_2 false
 
 #set tcl_traceExec 1
 
@@ -196,6 +196,29 @@ test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
     -returnCodes    ok \
     -match	    glob \
     -result         {9876 345}
+
+test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND ERR5
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {9978 1}
  
 # cleanup ---------------------------
 

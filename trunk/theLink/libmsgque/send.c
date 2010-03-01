@@ -1097,20 +1097,15 @@ MqSendRETURN (
   enum MqHandShakeE hs = pReadGetHandShake (context);
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (
-    // normal service-call without logterm-transaction
-      (context->link._trans == 0 && hs == MQ_HANDSHAKE_START)	||
-    // if a filter and a logterm-transaction ignore the retun
-      (context->link.slave->used == 1 && hs == MQ_HANDSHAKE_TRANSACTION)
-    ) {
-    // no answer for a "MqSendEND" call ... just return
-    return MqErrorGetCodeI(context);
   } else {
-    pSendL_CLEANUP (context);
-    pReadL_CLEANUP (context);
     switch (hs) {
       case MQ_HANDSHAKE_START: {
+	// without "shortterm-transaction" no return
+	if (context->link._trans == 0) 
+	  return MqErrorGetCodeI(context);
 	// "normal" service call -> normal return
+	pSendL_CLEANUP (context);
+	pReadL_CLEANUP (context);
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK: 
 	    pSendSTART_CHECK(context);
@@ -1130,7 +1125,8 @@ MqSendRETURN (
 	return pSendEND (context, "_RET", context->link._trans);
       }
       case MQ_HANDSHAKE_TRANSACTION: {
-	// "transaction" service-call -> transaction return
+	pSendL_CLEANUP (context);
+	pReadL_CLEANUP (context);
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK:
 	    pSendSTART_CHECK(context);
@@ -1161,7 +1157,7 @@ error:
 void
 pSendSetHandShake (
   struct MqS const * const context,
-  enum MqHandShakeE hs
+  char hs
 )
 {
   if (context->link.send != NULL) *(context->link.send->buf->data + HDR_Code_S) = hs;

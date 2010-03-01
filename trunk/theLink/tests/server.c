@@ -130,6 +130,20 @@ Ot_ERR4 (
   exit (1);
 }
 
+/// \brief test MqSendERROR
+/// \service
+static enum MqErrorE
+Ot_ERR5 (
+  struct MqS * const mqctx,
+  void *data
+)
+{
+  MQ_CST err;
+  MqReadC (mqctx, &err);
+  MqErrorC (mqctx, "MYERR", 9 , err);
+  return MqSendERROR (mqctx);
+}
+
 /// \brief echo a MqBufferS object
 /// \service
 static enum MqErrorE
@@ -175,7 +189,6 @@ Ot_ECOI (
   void *data
 )
 {
-M0
   MQ_INT l;
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &l));
@@ -1346,6 +1359,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERR2", Ot_ERR2, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR3", Ot_ERR3, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR4", Ot_ERR4, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "ERR5", Ot_ERR5, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECOU", Ot_ECOU, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECON", Ot_ECON, NULL, NULL));
     // START-C-SERVICE-DEFINITION

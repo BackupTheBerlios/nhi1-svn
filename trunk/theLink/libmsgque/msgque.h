@@ -1838,12 +1838,6 @@ MQ_DECL MqServiceIsTransaction (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
 
-/// \brief ?????
-MQ_EXTERN int
-MQ_DECL MqServiceIsLongtermTransaction (
-  struct MqS const * const ctx
-) __attribute__((nonnull(1)));
-
 /// \brief get the \RNS{ServiceIdentifier} from an \e ongoing-service-call
 ///
 /// This function is needed on the server to process a \e service-request

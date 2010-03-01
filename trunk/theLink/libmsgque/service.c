@@ -55,14 +55,6 @@ MqServiceIsTransaction (
   return context->link._trans != 0;
 }
 
-int
-MqServiceIsLongtermTransaction (
-  struct MqS const * const context
-)
-{
-  return pReadGetHandShake(context) == MQ_HANDSHAKE_TRANSACTION;
-}
-
 MQ_CST 
 MqServiceGetToken (
   struct MqS const * const context
@@ -173,17 +165,17 @@ sMqEventStart (
   switch (pTokenInvoke (a_context->link.srvT)) {
     case MQ_OK:       break;
     case MQ_ERROR:
-      if (a_context->link._trans != 0) {
-	// in a transaction, "MqSendRETURN" will convert the context error 
-	// into an "error" package and send this package back to the client
-	MqErrorCheck (MqSendRETURN (a_context));
-      } else if (pIoCheck (a_context->link.io)) {
-	// outsite of a transaction we have to send a "real" error,
-	// but "only" if the connection "pIoCheck" is still available
-	MqErrorCheck (MqSendERROR (a_context));
-      } else {
-	// report the error to the top-level
-	goto error;
+      // in a transaction, "MqSendRETURN" will convert the context error 
+      // into an "error" package and send this package back to the client
+      if (MqErrorCheckI (MqSendRETURN (a_context))) {
+	if (pIoCheck (a_context->link.io)) {
+	  // outsite of a transaction we have to send a "real" error,
+	  // but "only" if the connection "pIoCheck" is still available
+	  MqErrorCheck (MqSendERROR (a_context));
+	} else {
+	  // report the error to the top-level
+	  goto error;
+	}
       }
       break;
     case MQ_CONTINUE: MqPanicSYS(context);

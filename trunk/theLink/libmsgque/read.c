@@ -405,6 +405,7 @@ pReadHDR (
 	ret = MqSendRETURN (context);
 	read->handShake = MQ_HANDSHAKE_TRANSACTION;
 	MqErrorCheck (ret);
+	context->link._trans = 0;
       }
       read->trans_item = itm; 
       read->trans_size = len;
@@ -795,6 +796,10 @@ MqReadBDY (
   } else {
     *out = read->bdy->data;
     *len = read->bdy->cursize;
+    // in a "longterm-transaction" with "MqReadBDY" no return transaction is
+    // required because the transaction is forwarded
+    if (read->handShake == MQ_HANDSHAKE_TRANSACTION)
+      read->handShake = MQ_HANDSHAKE_START;
     return MQ_OK;
   }
 }

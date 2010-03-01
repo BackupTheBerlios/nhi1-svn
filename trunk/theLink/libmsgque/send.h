@@ -15,8 +15,6 @@
 
 BEGIN_C_DECLS
 
-#include "read.h"
-
 /*****************************************************************************/
 /*                                                                           */
 /*                           send_private_init                               */
@@ -53,7 +51,7 @@ enum MqErrorE pSendSYSTEM_RETR (
 
 void pSendSetHandShake (
   struct MqS const * const context,
-  enum MqHandShakeE hs
+  char hs
 );
 
 END_C_DECLS
