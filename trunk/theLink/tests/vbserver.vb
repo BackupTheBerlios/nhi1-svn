@@ -132,6 +132,7 @@ Public Module example
         ServiceCreate("ERR2", AddressOf ERR2)
         ServiceCreate("ERR3", AddressOf ERR3)
         ServiceCreate("ERR4", AddressOf ERR4)
+        ServiceCreate("ERRT", AddressOf ERRT)
         ServiceCreate("INIT", AddressOf INITX)
         ServiceCreate("SND1", AddressOf SND1)
 
@@ -586,6 +587,12 @@ Public Module example
       SendSTART()
       SendRETURN()
       SendRETURN()
+    End Sub
+
+    Private Sub ERRT()
+      SendSTART()
+      ErrorC("MYERR", 9, ReadC())
+      SendERROR()
     End Sub
 
     Private Sub ERR4()

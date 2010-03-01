@@ -327,6 +327,13 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub ERRT {
+    my $ctx = shift;
+    $ctx->SendSTART();
+    $ctx->ErrorC("MYERR", 9, $ctx->ReadC());
+    $ctx->SendERROR();
+  }
+
   sub ERLR {
     my $ctx = shift;
     $ctx->SendSTART();
@@ -771,6 +778,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("ERR4", \&ERR4);
       $ctx->ServiceCreate("ERR5", \&ERR5);
       $ctx->ServiceCreate("ERR6", \&ERR6);
+      $ctx->ServiceCreate("ERRT", \&ERRT);
       $ctx->ServiceCreate("MSQT", \&MSQT);
       $ctx->ServiceCreate("ERLR", \&ERLR);
       $ctx->ServiceCreate("ERLS", \&ERLS);

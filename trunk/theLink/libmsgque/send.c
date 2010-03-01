@@ -1076,6 +1076,7 @@ MqSendERROR (
   if (MqErrorGetCodeI(context) == MQ_ERROR) {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
+    pReadCleanupTransactionItem (context);
     MqErrorCheck(MqSendSTART (context));
     MqSendI (context, MqErrorGetNumI (context));
     MqSendC (context, MqErrorGetText (context));
@@ -1095,6 +1096,7 @@ MqSendRETURN (
 {
   struct MqSendS * const send = context->link.send;
   enum MqHandShakeE hs = pReadGetHandShake (context);
+
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
@@ -1147,7 +1149,7 @@ MqSendRETURN (
       }
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-	MqPanicSYS(context);
+	return MqErrorDb(MQ_ERROR_HANDSHAKE);
     }
   }
 error:

@@ -3483,6 +3483,10 @@ MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
   struct MqS const * const ctx
 );
 
+MQ_EXTERN char MQ_DECL MqReadGetHandShake (
+  struct MqS const * const context
+);
+
 /** \} Mq_Read_C_API */
 
 /* ####################################################################### */

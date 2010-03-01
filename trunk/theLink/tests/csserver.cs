@@ -119,6 +119,7 @@ namespace example {
 	ServiceCreate("ERR2", ERR2);
 	ServiceCreate("ERR3", ERR3);
 	ServiceCreate("ERR4", ERR4);
+	ServiceCreate("ERRT", ERRT);
 	ServiceCreate("CSV1", CSV1);
 	ServiceCreate("SLEP", SLEP);
 	ServiceCreate("USLP", USLP);
@@ -526,6 +527,12 @@ namespace example {
       Environment.Exit (1);
     }
 
+    public void ERRT () {
+      SendSTART();
+      ErrorC("MYERR", 9, ReadC());
+      SendERROR();
+    }
+
     public void BUF1 () {
       MqBufferS buf = ReadU();
       char typ = buf.Type;
@@ -708,7 +715,6 @@ namespace example {
       i = ReadI ();
       ReadT_END ();
       j = ReadI ();
-      SendRETURN ();
     }
 
   // ########################################################################

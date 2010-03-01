@@ -84,6 +84,12 @@ proc Ot_Error {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_ERRT {ctx} {
+  $ctx SendSTART
+  $ctx ErrorC "MYERR" 9 [$ctx ReadC]
+  $ctx SendERROR
+}
+
 proc Ot_MSQT {ctx} {
   $ctx SendSTART
   if {[$ctx ConfigGetDebug]} {
@@ -650,6 +656,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERR4 Ot_Error
     $ctx ServiceCreate ERR5 Ot_Error
     $ctx ServiceCreate ERR6 Ot_Error
+    $ctx ServiceCreate ERRT Ot_ERRT
     $ctx ServiceCreate MSQT Ot_MSQT
     $ctx ServiceCreate GTCX Ot_GTCX
     $ctx ServiceCreate GTTO Ot_GTTO

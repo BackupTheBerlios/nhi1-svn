@@ -133,7 +133,7 @@ Ot_ERR4 (
 /// \brief test MqSendERROR
 /// \service
 static enum MqErrorE
-Ot_ERR5 (
+Ot_ERRT (
   struct MqS * const mqctx,
   void *data
 )
@@ -1359,7 +1359,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERR2", Ot_ERR2, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR3", Ot_ERR3, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERR4", Ot_ERR4, NULL, NULL));
-    MqErrorCheck (MqServiceCreate (mqctx, "ERR5", Ot_ERR5, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "ERRT", Ot_ERRT, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECOU", Ot_ECOU, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECON", Ot_ECON, NULL, NULL));
     // START-C-SERVICE-DEFINITION

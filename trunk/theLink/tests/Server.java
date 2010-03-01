@@ -124,6 +124,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
       ServiceCreate("ERR2", new ERR2());
       ServiceCreate("ERR3", new ERR3());
       ServiceCreate("ERR4", new ERR4());
+      ServiceCreate("ERRT", new ERRT());
       ServiceCreate("SLEP", new SLEP());
       ServiceCreate("USLP", new USLP());
       ServiceCreate("CSV1", new CSV1());
@@ -611,6 +612,14 @@ class ERR3 implements IService {
 class ERR4 implements IService {
   public void Service (MqS ctx) throws MqSException {
     System.exit(1);
+  }
+}
+
+class ERRT implements IService {
+  public void Service (MqS ctx) throws MqSException {
+    ctx.SendSTART();
+    ctx.ErrorC("MYERR", 9, ctx.ReadC());
+    ctx.SendERROR();
   }
 }
 

@@ -211,14 +211,20 @@ test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
       $FH_LAST SendI 9978
       $FH_LAST SendT_END
       $FH_LAST SendI 1
-      $FH_LAST SendEND ERR5
+      $FH_LAST SendEND ERRT
       $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
       set RET
     } \
     -cleanup {
       $FH_LAST ServiceDelete TEST
     } \
-    -result         {9978 1}
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[sS]> (server-0) \[MYERR] 1
+[cC]> (client-0) found in function "pTokenCheckSystem" at file "token.c"
+[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
  
 # cleanup ---------------------------
 

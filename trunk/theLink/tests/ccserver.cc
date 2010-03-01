@@ -159,6 +159,12 @@ namespace example {
 	exit (1);
       }
 
+      void ERRT() {
+	SendSTART(); 
+	ErrorC("MYERR", 9, ReadC());
+	SendERROR();
+      }
+
       void SETU () { buf = ReadU(); }
       void GETU () { SendSTART(); SendU(buf); SendRETURN(); }
 
@@ -691,6 +697,7 @@ namespace example {
 	  ServiceCreate("ERR2", CallbackF(&Server::ERR2));
 	  ServiceCreate("ERR3", CallbackF(&Server::ERR3));
 	  ServiceCreate("ERR4", CallbackF(&Server::ERR4));
+	  ServiceCreate("ERRT", CallbackF(&Server::ERRT));
 	  ServiceCreate("ECOL", CallbackF(&Server::ECOL));
 	  ServiceCreate("ECLI", CallbackF(&Server::ECLI));
 	  ServiceCreate("LST1", CallbackF(&Server::LST1));

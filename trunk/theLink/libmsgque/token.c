@@ -463,7 +463,7 @@ error2:
 	  }
 	  case MQ_HANDSHAKE_START:
 	  case MQ_HANDSHAKE_TRANSACTION:
-	    MqPanicSYS(context);
+	    return MqErrorDb(MQ_ERROR_HANDSHAKE);
 	}
       }
     }

@@ -84,7 +84,7 @@ enum MqMessageNumE {
     /* 26 */ MQ_ERROR_NO_INIT,
     /* 27 */ MQ_ERROR_MASTER_SLAVE,
     /* 28 */ MQ_ERROR_ID_IN_USE,
-    /* 29 */ MQ_FREE_1,
+    /* 29 */ MQ_ERROR_HANDSHAKE,
     /* 30 */ MQ_ERROR_SLAVE_CHILD_DELETE,
     /* 31 */ MQ_ERROR_ID_OUT_OF_RANGE,
     /* 32 */ MQ_ERROR_CONFIGURATION_REQUIRED, 
@@ -156,8 +156,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the '%s' have to be a 'parent' without 'child' objects",
     /* MQ_ERROR_ID_IN_USE */
 	"'%s' identifer '%i' is already in use",
-    /* MQ_FREE_1 */
-	"",
+    /* MQ_ERROR_HANDSHAKE */
+	"hand-shake-error",
     /* MQ_ERROR_SLAVE_CHILD_DELETE */
 	"it is not allowed to delete a slave 'child' context",
     /* MQ_ERROR_ID_OUT_OF_RANGE */

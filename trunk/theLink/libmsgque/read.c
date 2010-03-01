@@ -918,6 +918,14 @@ pReadGetHandShake (
   }
 }
 
+char
+MqReadGetHandShake (
+  struct MqS const * const context
+)
+{
+  return (char) pReadGetHandShake (context);
+}
+
 void
 pReadSetHandShake (
   struct MqS const * const context,

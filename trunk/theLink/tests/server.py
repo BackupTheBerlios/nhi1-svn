@@ -105,6 +105,7 @@ class Server(MqS):
       self.ServiceCreate("ERR2", self.Error)
       self.ServiceCreate("ERR3", self.Error)
       self.ServiceCreate("ERR4", self.Error)
+      self.ServiceCreate("ERRT", self.ERRT)
       self.ServiceCreate("ERR5", self.Error)
       self.ServiceCreate("ERR6", self.Error)
       self.ServiceCreate("ECOY", self.ECOY)
@@ -399,6 +400,11 @@ class Server(MqS):
     elif t == "ERR6" :
       self.SendU(self)
     self.SendRETURN()
+
+  def ERRT(self):
+    self.SendSTART();
+    self.ErrorC("MYERR", 9, self.ReadC());
+    self.SendERROR();
 
   # my services
   def EchoList(self, doincr):

@@ -178,7 +178,8 @@ sMqEventStart (
 	}
       }
       break;
-    case MQ_CONTINUE: MqPanicSYS(context);
+    case MQ_CONTINUE: 
+      MqPanicSYS(context);
   }
 
   MqDLogCL(a_context,6,"END-OK\n");
