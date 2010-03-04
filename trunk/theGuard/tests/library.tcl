@@ -36,4 +36,5 @@ append env(PATH) "$PATH_SEP[file nativename [file join $guardbuilddir aguard]]"
 ##
 ## check if GUARD is available
 testConstraint guard $USE_GUARD
+testConstraint filter-test yes
 

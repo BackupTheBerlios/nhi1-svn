@@ -25,8 +25,6 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 		  public IServerCleanup, public IEvent, public IService {
   private:
     struct FilterItmS {
-      MQ_STRB token[5];
-      bool    isTransaction;
       MQ_BIN  bdy;
       MQ_SIZE len;
     };
@@ -58,13 +56,7 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
 	  // send the data
-	  ftr->SendSTART();
 	  ftr->SendBDY(it.bdy, it.len);
-	  if (it.isTransaction) {
-	    ftr->SendEND_AND_WAIT(it.token);
-	  } else {
-	    ftr->SendEND(it.token);
-	  }
 	// on error, check if an "exit" happen
 	} catch (const exception& e) {
 	  ftr->ErrorSet (e);
@@ -93,11 +85,8 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       ReadBDY(&bdy, &len);
 
       // fill the item data
-      it.bdy = (MQ_BIN)MqSysMalloc(MQ_ERROR_PANIC, len * sizeof(MQ_BINB));
-      memcpy(it.bdy, bdy, len);
+      it.bdy = bdy;
       it.len = len;
-      strncpy(it.token, ServiceGetToken(), 5);
-      it.isTransaction = ServiceIsTransaction();
       itms.push (it);
 
       SendRETURN();

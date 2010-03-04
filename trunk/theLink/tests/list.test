@@ -85,7 +85,7 @@ test list-1b-($I|$B|$C|$S) {read error in double list} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|ERLR> <Num|212>*
-[sS]> (server-0) \[*MqReadL_START] invalid type, expect 'LST' but got 'INT'}
+[sS]> (server-0) \[*MqReadL_START] invalid type, expect 'LST' but got 'INT'*}
 
 test list-1c-($I|$B|$C|$S) {send error in double list} \
     -constraints    binary \
@@ -173,7 +173,7 @@ test list-16-($I|$B|$C|$S) {read list from non-list} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>*
-[sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'INT'}
+[sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'INT'*}
 
 test list-16-($I|$B|$C|$S) {read list from non-list} \
     -constraints    {string} \

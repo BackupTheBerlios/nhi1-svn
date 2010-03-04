@@ -49,9 +49,11 @@ enum MqErrorE pSendSYSTEM_RETR (
   struct MqS * const context
 );
 
-void pSendSetHandShake (
-  struct MqS const * const context,
-  char hs
+void pSendBDY (
+  struct MqS * const context,
+  MQ_BINB const * const in,
+  MQ_SIZE const len,
+  MQ_BINB hs
 );
 
 END_C_DECLS

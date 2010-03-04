@@ -18,8 +18,6 @@
 #include "cache.h"
 #include "trans.h"
 
-#define TOKEN_LEN (HDR_TOK_LEN+1)
-
 BEGIN_C_DECLS
 
 /*****************************************************************************/

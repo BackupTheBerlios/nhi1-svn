@@ -55,7 +55,7 @@ test token-1-($I|$B|$C|$S) {unknown service token} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error\] <Tok|XXXX> <Num|1>*
-[sS]> (server-0) \[*pTokenInvoke\] token <XXXX> not found}
+[sS]> (server-0) \[*pTokenInvoke\] token <XXXX> not found*}
 
 test token-2-($I|$B|$C|$S) {double service token} \
     -setup	    { 
@@ -68,9 +68,8 @@ test token-2-($I|$B|$C|$S) {double service token} \
       Cleanup 
     } \
     -body           { $FH_LAST ServiceCreate XXXX nothing } \
-    -match	    glob \
-    -returnCodes    error \
-    -result         {[cC]> (client-0) \[*pTokenAddHdl\] item 'XXXX' already available}
+    -returnCodes    ok \
+    -result         {ctx}
 
 test token-3-($I|$B|$C|$S) {delete unknown servicehdl} \
     -setup	    {Setup $I $B $C $S} \
@@ -78,7 +77,8 @@ test token-3-($I|$B|$C|$S) {delete unknown servicehdl} \
     -body           { $FH_LAST ServiceDelete XXXX } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[*sTokenSpaceDelItem\] item 'XXXX' not found}
+    -result         {[cC]> (client-0) \[*sTokenSpaceDelItem\] item 'XXXX' not found
+[cC]> (client-0) found in function "pTokenDelHdl" at file "token.c"}
 
 test token-4-($I|$B|$C|$S) {valid service call after wrong service call} \
     -setup	    {Setup $I $B $C $S

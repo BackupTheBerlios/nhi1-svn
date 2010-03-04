@@ -24,25 +24,10 @@ class Filter3 : public MqC, public IFactory, public IServerSetup {
     }
     void ServerSetup() {
       MqC *ftr = ServiceGetFilter();
-      ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
-      ftr->ServiceCreate ("+ALL", CallbackF(&Filter3::Filter));
-    }
-    void Filter () {
-      MQ_BIN bdy;
-      MQ_SIZE len;
-      MqC *ftr = ServiceGetFilter();
-      ReadBDY(&bdy, &len);
-      ftr->SendSTART();
-      ftr->SendBDY(bdy, len);
-      if (ServiceIsTransaction()) {
-	ftr->SendEND_AND_WAIT(ServiceGetToken());
-	SendSTART();
-	ftr->ReadBDY(&bdy, &len);
-	SendBDY(bdy, len);
-      } else {
-	ftr->SendEND(ServiceGetToken());
-      }
-      SendRETURN();
+      ServiceProxy ("+ALL");
+      ServiceProxy ("+TRT");
+      ftr->ServiceProxy ("+ALL");
+      ftr->ServiceProxy ("+TRT");
     }
 };
 

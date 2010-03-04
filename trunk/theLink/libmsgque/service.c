@@ -14,6 +14,7 @@
 #include "error.h"
 #include "token.h"
 #include "read.h"
+#include "send.h"
 #include "mq_io.h"
 #include <limits.h>
 
@@ -77,22 +78,25 @@ sServiceProxy (
   struct MqS * const context,
   MQ_PTR const data
 ) {
+  MQ_BINB hs;
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
-  MqErrorCheck (MqServiceGetFilter (context, (int) (long) data, &ftrctx));
+  MqErrorCheck (MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
 
-  MqErrorCheck  (MqReadBDY (context, &bdy, &len));
   MqErrorCheck1 (MqSendSTART (ftrctx));
-  MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
+
+  pReadBDY (context, &bdy, &len, &hs);
+  pSendBDY (ftrctx,   bdy,  len,  hs);
 
   // continue with the original transaction
   if (MqServiceIsTransaction (context)) {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqServiceGetToken(context), MQ_TIMEOUT_USER));
-    // read the answer
+    // send the answer
     MqSendSTART (context);
-    MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
-    MqErrorCheck  (MqSendBDY (context, bdy, len));
+    // BDY in + out
+    pReadBDY (ftrctx,  &bdy, &len, &hs);
+    pSendBDY (context,  bdy,  len,  hs);
   } else {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND (ftrctx, MqServiceGetToken(context)));
@@ -163,7 +167,8 @@ sMqEventStart (
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
   switch (pTokenInvoke (a_context->link.srvT)) {
-    case MQ_OK:       break;
+    case MQ_OK:       
+      break;
     case MQ_ERROR:
       // in a transaction, "MqSendRETURN" will convert the context error 
       // into an "error" package and send this package back to the client

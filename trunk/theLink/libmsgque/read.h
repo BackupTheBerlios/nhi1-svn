@@ -17,20 +17,6 @@ BEGIN_C_DECLS
 
 /*****************************************************************************/
 /*                                                                           */
-/*                            msgque return codes                            */
-/*                                                                           */
-/*****************************************************************************/
-
-/// \brief the \e role of a data package in a service call
-enum MqHandShakeE {
-  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b service-call
-  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok service-call
-  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error service-call
-  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b transaction
-};
-
-/*****************************************************************************/
-/*                                                                           */
 /*                                read_init                                  */
 /*                                                                           */
 /*****************************************************************************/
@@ -120,6 +106,13 @@ enum MqErrorE pRead_RET_START (
 void pRead_RET_END (
   struct MqS * const context
 ) __attribute__((nonnull));
+
+void pReadBDY (
+  struct MqS * const context,
+  MQ_BIN * const out,
+  MQ_SIZE * const len,
+  MQ_BINB * const hs
+) __attribute__((nonnull(1)));
 
 /*****************************************************************************/
 /*                                                                           */

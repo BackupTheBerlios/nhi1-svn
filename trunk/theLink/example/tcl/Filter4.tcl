@@ -45,7 +45,7 @@ proc WRIT {ftr} {
 }
 
 proc FilterIn {ctx} {
-  $ctx dict lappend Itms [list [$ctx ReadBDY] [$ctx ServiceGetToken] [$ctx ServiceIsTransaction]]
+  $ctx dict lappend Itms [$ctx ReadBDY]
   $ctx SendRETURN
 }
 
@@ -73,19 +73,13 @@ proc FilterEvent {ctx} {
     $ctx ErrorSetCONTINUE
   } else {
     # with data -> try to send
-    foreach {data token isTran} [lindex $Itms 0] break
+    set data [lindex $Itms 0]
     set ftr [$ctx ServiceGetFilter]
     if {[catch {
       # try to connect if not already connected
       $ftr LinkConnect
-      # send data
-      $ftr SendSTART
+      # send BDY data to the link-target
       $ftr SendBDY $data
-      if {$isTran} {
-	$ftr SendEND_AND_WAIT $token
-      } else {
-	$ftr SendEND $token
-      }
     }]} {
       # on "error" do the following:
       $ftr ErrorSet

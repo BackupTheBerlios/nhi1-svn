@@ -31,7 +31,6 @@ BEGIN_C_DECLS
 /*****************************************************************************/
 
 #define MQ_CONTEXT_S context
-#define TOKEN_LEN (HDR_TOK_LEN+1)
 
 /*****************************************************************************/
 /*                                                                           */
@@ -46,7 +45,8 @@ struct ReadSaveS {
 };
 
 struct MqReadS {
-  struct MqS * context;	    ///< link to the msgque object
+  struct MqS * context;		    ///< link to the msgque object
+  struct MqBufferS * hdrorig;	    ///< in a context->switch, poit to the original header data, need in "MqReadBDY"
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
   struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
   struct MqBufferS * cur;	    ///< used as reference on BUF with the current data
@@ -256,69 +256,46 @@ void pReadL_CLEANUP (
 /*                                                                           */
 /*****************************************************************************/
 
-static enum MqErrorE
-sReadFIX (
-  struct MqS * const context,
-  register struct MqBufferS * const buf,
-  MQ_CST const prefix
-)
-{
-  // 1. read
-  MqErrorSwitch (pIoRead (context->link.io, buf, buf->cursize));
-
-  // 2. read 'HDR'
-#ifdef MQ_SAVE
-  if (unlikely (strncmp (buf->cur.C, prefix, 3))) {
-    MqErrorV (context, __func__, "expect '%3s' but got '%s'", prefix, buf->cur.C);
-    goto error;
-  }
-#endif
-  buf->cur.B += HDR_CtxId_S;
-
-  return MQ_OK;
-
-error:
-  return MqErrorStack (context);
-}
-
 enum MqErrorE
 pReadHDR (
   register struct MqS  * context,
   struct MqS ** a_context
 )
 {
-  register struct MqReadS * read = context->link.read;
+  struct MqReadS * read = context->link.read;
   MQ_SIZE ctxId;
   MQ_SIZE size;
   register int const string = context->config.isString;
   register struct HdrS * cur;
   int debug;
   register struct MqBufferS * bdy;
-  register struct MqTokenS * srvT;
+  struct MqBufferS * hdr = read->hdr;
 
   // 1. preset context
   *a_context = context;
 
   // 2. read
-  MqErrorSwitch (pIoRead (context->link.io, read->hdr, sizeof(struct HdrS)));
-  cur = (struct HdrS *) read->hdr->cur.B;
+  MqErrorSwitch (pIoRead (context->link.io, hdr, HDR_SIZE));
+  cur = (struct HdrS *) hdr->cur.B;
 
 //MqDLogV (context, __func__, 0, "START (%c%c%c%c)\n", cur->tok[0], cur->tok[1], cur->tok[2], cur->tok[3]);
 //pReadLog(context, "pReadHDR->1");
 
   // check "HDR"
-  if (cur->ID1 != 'H' || cur->ID2 != 'D' || cur->ID3 != 'R') {
+#ifdef MQ_SAVE
+  if (unlikely (strncmp (cur->ID, "HDR", 3))) {
     MQ_BUF save = MqBufferCreate (MQ_ERROR_PANIC, 1000);
     do {
-      MqBufferAppendC (save, (MQ_STR) read->hdr->data);
-    } while (pIoRead (context->link.io, read->hdr, sizeof(struct HdrS)) == MQ_OK);
-    *(read->hdr->data+read->hdr->cursize) = '\0';
-    MqBufferAppendC (save, (MQ_STR) read->hdr->data);
+      MqBufferAppendC (save, (MQ_STR) hdr->data);
+    } while (pIoRead (context->link.io, hdr, HDR_SIZE) == MQ_OK);
+    *(hdr->data+hdr->cursize) = '\0';
+    MqBufferAppendC (save, (MQ_STR) hdr->data);
     MqErrorDb (MQ_ERROR_INVALID_HEADER);
     MqErrorSAppendV (context, "but got: %s", (MQ_STR) save->data);
     MqBufferDelete (&save);
     return MQ_ERROR;
   }
+#endif
 
   // 3. read binary data
   if (unlikely(string)) {
@@ -347,26 +324,26 @@ pReadHDR (
     *a_context = context;
   }
 //MqDLogV (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
-//MqDLogV (context, __func__, 0, "hex\n<%s>\n", pLogHEX (read->hdr->data, sizeof (struct HdrS)));
+//MqDLogV (context, __func__, 0, "hex\n<%s>\n", pLogHEX (hdr->data, sizeof (struct HdrS)));
   debug = context->config.debug;
   context->link._trans = cur->trans;
 
   // 6. log message
   if (unlikely (debug >= 5)) {
-    read->hdr->type = MQ_STRING_TYPE(string);
-    pLogHDR (context, __func__, 5, read->hdr);
+    hdr->type = MQ_STRING_TYPE(string);
+    pLogHDR (context, __func__, 5, hdr);
   }
 
   // 7. setup read
   read = context->link.read;
   read->handShake = (enum MqHandShakeE) cur->code;
   read->returnNum = 0;
+  // MqReadBDY need the original "header", save this header in the current context
+  read->hdrorig = hdr;
   bdy = read->bdy;
 
   // 8. read token
-  srvT = context->link.srvT;
-  cur->charT = '\0';
-  pTokenSetCurrent (srvT, cur->tok);
+  pTokenSetCurrent (context->link.srvT, cur->tok);
 
   // 9. read BDY
   if ((bdy->cursize = size)) {
@@ -375,9 +352,17 @@ pReadHDR (
       MqLogV (context, __func__, 6, "BDY -> " MQ_FORMAT_Z " bytes\n", size);
 
     // 1. read
-    MqErrorCheck (sReadFIX (context, bdy, "BDY"));
+    MqErrorSwitch (pIoRead (context->link.io, bdy, bdy->cursize));
 
-    // 2. read NumItems
+    // 2. read 'HDR'
+#ifdef MQ_SAVE
+    if (unlikely (strncmp (bdy->cur.C, "BDY", 3))) {
+      return MqErrorV (context, __func__, "expect 'BDY' but got '%s'", bdy->cur.C);
+    }
+#endif
+    bdy->cur.B += BDY_NumItems_S;
+
+    // 3. read NumItems
     if (unlikely(string)) {
       bdy->numItems = str2int(bdy->cur.C,NULL,16);
     } else {
@@ -386,14 +371,13 @@ pReadHDR (
       }
       bdy->numItems = iBufU2INT(bdy->cur);
     }
-
     bdy->cur.B = (bdy->data + BDY_SIZE);
 
-    // 3. if required, log package
+    // 4. if required, log package
     if (unlikely (debug >= 7 && size > BDY_SIZE))
       pLogBDY (context, __func__, 7, bdy);
 
-    // 4. if in a transaction, read the transaction-item
+    // 5. if in a longterm-transaction, read the transaction-item
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
       MQ_BIN itm; MQ_SIZE len;
       enum MqErrorE ret;
@@ -419,7 +403,7 @@ pReadHDR (
   // 11. check if it's a System-pToken
   // this line have to use the 'return' because pTokenCheckSystem usually return
   // MQ_CONTINUE if a system token (_*) was found
-  return pTokenCheckSystem (srvT);
+  return pTokenCheckSystem (context->link.srvT);
 
 error:
   return MqErrorStack (context);
@@ -783,6 +767,23 @@ MqReadN (
   }
 }
 
+void
+pReadBDY (
+  struct MqS * const context,
+  MQ_BIN * const out,
+  MQ_SIZE * const len,
+  MQ_BINB * const hs
+)
+{
+  struct MqReadS * const read = context->link.read;
+  *out = read->bdy->data;
+  *len = read->bdy->cursize;
+  *hs = (MQ_BINB) read->handShake;
+  // in a "longterm-transaction" with "MqReadBDY" no return transaction is
+  // required because the transaction is forwarded
+  read->handShake = MQ_HANDSHAKE_START;
+}
+
 enum MqErrorE
 MqReadBDY (
   struct MqS * const context,
@@ -794,12 +795,16 @@ MqReadBDY (
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    *out = read->bdy->data;
-    *len = read->bdy->cursize;
+    MQ_SIZE const lbdy = read->bdy->cursize;
+    MQ_SIZE const llen = HDR_SIZE + lbdy;
+    MQ_BIN data = (MQ_BIN) MqSysMalloc (MQ_ERROR_PANIC, llen);
+    memcpy (data, read->hdrref->data, HDR_SIZE);
+    memcpy (data+HDR_SIZE, read->bdy->data, lbdy);
+    *out = data;
+    *len = llen;
     // in a "longterm-transaction" with "MqReadBDY" no return transaction is
     // required because the transaction is forwarded
-    if (read->handShake == MQ_HANDSHAKE_TRANSACTION)
-      read->handShake = MQ_HANDSHAKE_START;
+    read->handShake = MQ_HANDSHAKE_START;
     return MQ_OK;
   }
 }
@@ -998,4 +1003,5 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
 

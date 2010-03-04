@@ -709,7 +709,9 @@ namespace ccmsgque {
       /// \api #MqSendN
       inline void SendN (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
       /// \api #MqSendBDY
-      inline void SendBDY (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendBDY (&context, val, len)); }
+      inline void SendBDY (MQ_BIN val, MQ_SIZE len) throw(MqCException) { 
+	ErrorCheck (MqSendBDY (&context, val, len)); 
+      }
       /// \api #MqSendB
       inline void SendB (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendB (&context, val, len)); }
       /// \api #MqSendB

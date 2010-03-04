@@ -17,76 +17,13 @@
 
 /// link to the MqErrorS object
 #define ARGS  struct MqS * const mqctx, void *data
-#define GUARDCTX ((struct Filter3CtxS*const)mqctx)
-#define MQCTX ((struct MqS*const)guard)
 #define MQ_CONTEXT_S mqctx
-#define SETUP_guard struct Filter3CtxS*const guard = GUARDCTX
-#define CHECK_ARGS(s) \
-  if (MqReadGetNumItems(mqctx))  { \
-    return MqErrorV (mqctx, __func__, -1, "usage: %s (%s)\n", __func__, s); \
-  }
-
-/// \brief the local \b context of the \ref server tool
-/// \mqctx
-struct Filter3CtxS {
-  struct MqS	mqctx;	///< \mqctxI
-};
-
-/*****************************************************************************/
-/*                                                                           */
-/*                               Request Handler                             */
-/*                                                                           */
-/*****************************************************************************/
-
-static enum MqErrorE
-Filter3 (
-  struct MqS * const mqctx,
-  MQ_PTR data
-)
-{
-  MQ_BIN bdy; MQ_SIZE len;
-  struct MqS * ftrctx;
-  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
-
-  MqErrorCheck (MqReadBDY (mqctx, &bdy, &len));
-  MqErrorCheck1 (MqSendSTART (ftrctx));
-  MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
-
-  // continue with the original transaction
-  if (MqServiceIsTransaction (mqctx)) {
-    // use a transaction protection
-    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqServiceGetToken(mqctx), MQ_TIMEOUT_USER));
-    // read the answer
-    MqSendSTART (mqctx);
-    MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
-    MqErrorCheck  (MqSendBDY (mqctx, bdy, len));
-  } else {
-    // use a transaction protection
-    MqErrorCheck1 (MqSendEND (ftrctx, MqServiceGetToken(mqctx)));
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-
-error1:
-  MqErrorCopy (mqctx, ftrctx);
-  goto error;
-}
 
 /*****************************************************************************/
 /*                                                                           */
 /*                                context_init                               */
 /*                                                                           */
 /*****************************************************************************/
-
-static enum MqErrorE
-Filter3Cleanup (
-  struct MqS * const mqctx,
-  MQ_PTR data
-)
-{
-  return MQ_OK;
-}
 
 static enum MqErrorE
 ServerSetup (
@@ -98,9 +35,11 @@ ServerSetup (
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   // SERVER: listen on every token (+ALL)
-  MqErrorCheck (MqServiceCreate (mqctx, "+ALL", Filter3, NULL, NULL));
+  MqErrorCheck (MqServiceProxy  (mqctx, "+ALL", 0));
+  MqErrorCheck (MqServiceProxy  (mqctx, "+TRT", 0));
   // CLIENT: listen on every token (+ALL)
-  MqErrorCheck (MqServiceCreate (ftrctx, "+ALL", Filter3, NULL, NULL));
+  MqErrorCheck (MqServiceProxy  (ftrctx, "+ALL", 0));
+  MqErrorCheck (MqServiceProxy  (ftrctx, "+TRT", 0));
 
 error:
   return MqErrorStack(mqctx);
@@ -123,7 +62,7 @@ main (
 )
 {
   // the parent-context
-  struct MqS * const mqctx = MqContextCreate(sizeof(struct Filter3CtxS), NULL);
+  struct MqS * const mqctx = MqContextCreate(0, NULL);
 
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
@@ -133,7 +72,6 @@ main (
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = ServerSetup;
-  mqctx->setup.ServerCleanup.fCall  = Filter3Cleanup;
   MqConfigSetDefaultFactory (mqctx);
   MqConfigSetName (mqctx, "Filter3");
 

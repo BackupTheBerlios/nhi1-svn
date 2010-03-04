@@ -28,7 +28,6 @@
 
 BEGIN_C_DECLS
 
-#define TOKEN_LEN (HDR_TOK_LEN+1)
 #define MQ_CONTEXT_S token->context
 
 #if defined(WORDS_BIGENDIAN)
@@ -43,13 +42,15 @@ BEGIN_C_DECLS
 #   define pTokenCmpI(i1,i2) (i2 - i1)
 #endif
 
+static enum MqErrorE pTokenDefaultTRT (struct MqS * const context, MQ_PTR const data);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                               token_define                                */
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqTokenS;
+struct pTokenS;
 
 struct pTokenItemS {
   MQ_INT name;			///< the pToken name (cast into an integer)
@@ -64,12 +65,6 @@ struct pTokenSpaceS {
   MQ_SIZE size;                 ///< max possible number of items
   MQ_SIZE used;                 ///< number of used entries in the items
   MQ_INT sorted;		///< is the array sorted ?
-};
-
-struct MqTokenS {
-  struct MqS * context;		///< link to msgque object
-  MQ_STRB current[TOKEN_LEN];	///< kind the the current action
-  struct pTokenSpaceS *loc;     ///< the local handler
 };
 
 /*****************************************************************************/
@@ -103,23 +98,26 @@ static enum MqErrorE sTokenSpaceDelItem (
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqTokenS*
+struct pTokenS*
 pTokenCreate (
   struct MqS * const context
 )
 {
-  struct MqTokenS * const token = 
-    (struct MqTokenS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*token));
+  static struct MqCallbackS cb = {pTokenDefaultTRT, NULL, NULL, NULL};
+  struct pTokenS * const token = 
+    (struct pTokenS *const) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*token));
 
   token->context = context;
   token->loc = sTokenSpaceCreate (context, 10);
+
+  pTokenAddHdl (token, "+TRT", cb);
 
   return token;
 }
 
 void
 pTokenDelete (
-  register struct MqTokenS ** const tokenP
+  register struct pTokenS ** const tokenP
 )
 {
   if (unlikely(tokenP == NULL || *tokenP == NULL)) {
@@ -144,7 +142,7 @@ sTokenSpaceCreate (
 {
   // create the structure
   register struct pTokenSpaceS *space = (struct pTokenSpaceS *) 
-					    MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*space));
+    MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*space));
 
   // filling the items
   space->items = (struct pTokenItemS *) MqSysCalloc (MQ_ERROR_PANIC, add, sizeof (*space->items));
@@ -218,6 +216,7 @@ sTokenSpaceDelItem (
            struct pTokenItemS * end = start + space->used;
 
   if (strncmp (name, "-ALL", HDR_TOK_LEN)) {
+    // name != "-ALL"
     start = sTokenSpaceFindItem (start, end, pByte2INT(name));
 
     if (unlikely (start == NULL))
@@ -227,13 +226,14 @@ sTokenSpaceDelItem (
     if (start->callback.data && start->callback.fFree) {
       (*start->callback.fFree) (space->context, &start->callback.data);
     }
+    // move all items !after! start one to the left
+    memmove(start, start+1, (end-start-1) * sizeof(*space->items));
+    // set the last item to zero
+    memset(end-1, '\0', sizeof(*space->items));
     // one item less
     space->used -= 1;
-    // move all ites !after! start one to the left
-    memmove(start, start+1, end-start-1);
-    // set the last item to zero
-    memset(start+space->used, '\0', sizeof(struct pTokenItemS));
   } else {
+    // name == "-ALL"
     // delete the "+ALL" token
     if (space->all.fCall != NULL) {
       space->all.fCall = NULL;
@@ -282,7 +282,7 @@ MQ_CDECL sTokenCompare2 (
 /*
 MQ_SIZE 
 pTokenGetUsed (
-  register struct MqTokenS const * const token
+  register struct pTokenS const * const token
 )
 {
   return token->loc->used;
@@ -292,21 +292,22 @@ pTokenGetUsed (
 // "MQ_INLINE" because the proc in only used once
 enum MqErrorE
 pTokenInvoke (
-  register struct MqTokenS const * const token
+  struct pTokenS const * const token
 )
 {
-  register struct pTokenItemS *item = NULL;
+  struct MqS * const context = token->context;
+  register struct pTokenItemS * item = NULL;
   register struct pTokenSpaceS * const space = token->loc;
   const MQ_INT icurrent = pByte2INT(token->current);
 
   // clear error buffer
-  MqErrorReset (token->context);
+  MqErrorReset (context);
 
   if (unlikely (!space->sorted)) {
     qsort (space->items, space->used, sizeof (struct pTokenItemS), sTokenCompare1);
     space->sorted = 1;
   }
-  // ATTENTION: token->lastItem was filled in pTokenCreate
+  // ATTENTION: space->lastItem was filled in pTokenCreate
   for (;;) {
     if (sTokenCompare2 (&icurrent, space->lastItem) == 0) {
       item = space->lastItem;
@@ -322,11 +323,11 @@ pTokenInvoke (
 
     // search "+ALL" items
     if (space->all.fCall != NULL) {
-      return (space->all.fCall (token->context, space->all.data));
+      return (space->all.fCall (context, space->all.data));
     }
 
     // nothing found -> break
-    return MqErrorV (token->context, __func__, -1, "token <%s> not found", token->current);
+    return MqErrorV (context, __func__, -1, "token <%s> not found", token->current);
   };
 
   space->lastItem = item;
@@ -337,15 +338,15 @@ pTokenInvoke (
 */
   
   if (item->callback.fCall != NULL) {
-    return MqCallbackCall (token->context, item->callback);
+    return MqCallbackCall (context, item->callback);
   } else {
-    return MqSendRETURN(token->context);
+    return MqSendRETURN(context);
   }
 }
 
 enum MqErrorE
 pTokenAddHdl (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const name,
   struct MqCallbackS callback
 )
@@ -354,15 +355,19 @@ pTokenAddHdl (
   register struct pTokenSpaceS * const space = token->loc;
   register struct pTokenItemS *free;
 
-  MqDLogV(context, 4, "HANDEL %s ADD %s: proc<%p>, data<%p>\n",
-    (token == context->link.srvT ? "SERVICE" : "RETURN"), name, (void*) callback.fCall, callback.data);
+  MqDLogV(context, 4, "HANDEL SERVICE ADD %s: proc<%p>, data<%p>\n",
+    name, (void*) callback.fCall, callback.data);
 
   if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
-    if (space->all.fCall != NULL) goto error2;
+    if (space->all.fCall != NULL) {
+      MqErrorCheck (pTokenDelHdl (token, name));
+    }
     space->all = callback;
   } else {
     MQ_INT nameI = pByte2INT(name); 
-    if (sTokenSpaceFindItem (space->items, space->items + space->used, nameI)) goto error2;
+    if (sTokenSpaceFindItem (space->items, space->items + space->used, nameI)) {
+      MqErrorCheck (pTokenDelHdl (token, name));
+    }
     MqErrorCheck (sTokenSpaceAdd (space, 1));
 
     free = space->items + space->used;
@@ -376,32 +381,79 @@ pTokenAddHdl (
 
 error:
   return MqErrorStack (context);
-error2:
-  return MqErrorV (context, __func__, -1, "item '%s' already available", name);
 }
 
 enum MqErrorE
 pTokenDelHdl (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const name
 )
 {
-  MqDLogV (token->context, 6, "HANDEL DEL %s: token<%p>\n", name, (void*) token);
+  struct MqS * const context = token->context;
+  MqDLogV (context, 6, "HANDEL DEL %s: token<%p>\n", name, (void*) token);
   if (strncmp (name, "+ALL", HDR_TOK_LEN)) {
-    return sTokenSpaceDelItem (token->loc, name);
+    static struct MqCallbackS cb = {pTokenDefaultTRT, NULL, NULL, NULL};
+    // name != "+ALL"
+    MqErrorCheck (sTokenSpaceDelItem (token->loc, name));
+    // re-initialize the "longterm-transaction-result-handler"
+    if (!strncmp (name, "-ALL", HDR_TOK_LEN)) {
+      MqErrorCheck (pTokenAddHdl (token, "+TRT", cb));
+    }
   } else {
+    // name == "+ALL"
     struct pTokenSpaceS * const loc = token->loc;
     loc->all.fCall = NULL;
     if (loc->all.data && loc->all.fFree) {
-      (*loc->all.fFree) (token->context, &loc->all.data);
+      (*loc->all.fFree) (context, &loc->all.data);
     }
-    return MQ_OK;
   }
+error:
+  return MqErrorStack(context);
+}
+
+static enum MqErrorE
+pTokenDefaultTRT (
+  struct MqS * const context,
+  MQ_PTR const data
+) 
+{
+  switch (pReadGetHandShake (context)) {
+    case MQ_HANDSHAKE_OK: {
+      pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
+      return pTokenInvoke (context->link.srvT);
+    }
+    case MQ_HANDSHAKE_ERROR: {
+      MQ_INT retNum;
+      MQ_CST msg;
+      MQ_BUF tmp;
+
+      // (*callback.fCall) is never called
+      MqDLogC(context,5,"got ERROR return code\n");
+      MqErrorCheck (MqReadU (context, &tmp));
+      MqErrorCheck (MqReadI (context, &retNum));
+      pReadSetReturnNum (context, retNum);
+      
+      // write HEADER
+      MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
+	pReadGetTransactionToken(context), retNum);
+      // write ERROR-STACK
+      while (MqReadItemExists (context)) {
+	MqErrorCheck (MqReadC (context, &msg));
+	pErrorAppendC (context, msg);
+      }
+error:
+      return MQ_ERROR;
+    }
+    case MQ_HANDSHAKE_START:
+    case MQ_HANDSHAKE_TRANSACTION:
+      break;
+  }
+  return MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
 }
 
 enum MqErrorE
 pTokenCheckSystem (
-  struct MqTokenS const * const token
+  struct pTokenS const * const token
 )
 {
   register struct MqS * const context = token->context;
@@ -419,53 +471,6 @@ pTokenCheckSystem (
     case 'R': {                // _RET: return from a service
       MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
       break;
-    }
-    case 'T': {                // _TRT: return from a transaction-service
-      if (MqSlaveIsI(context)) {
-	MQ_BIN bdy; MQ_SIZE len;
-	struct MqS *master = context->config.master;
-	enum MqHandShakeE hs = pReadGetHandShake(context);
-	MqErrorCheck  (MqReadBDY   (context, &bdy, &len));
-	MqErrorCheck2 (MqSendSTART (master),           errorTRT);
-	MqErrorCheck2 (MqSendBDY   (master, bdy, len), errorTRT);
-	pSendSetHandShake (master, hs);
-	MqErrorCheck2 (MqSendEND   (master, "_TRT"),   errorTRT);
-	return MQ_CONTINUE;
-errorTRT:
-	return MqErrorCopy (context, master);
-      } else {
-	switch (pReadGetHandShake (context)) {
-	  case MQ_HANDSHAKE_OK: {
-	    pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
-	    return MQ_OK;
-	  }
-	  case MQ_HANDSHAKE_ERROR: {
-	    MQ_INT retNum;
-	    MQ_CST msg;
-	    MQ_BUF tmp;
-
-	    // (*callback.fCall) is never called
-	    MqDLogC(context,5,"got ERROR return code\n");
-	    MqErrorCheck2 (MqReadU (context, &tmp), error2);
-	    MqErrorCheck2 (MqReadI (context, &retNum), error2);
-	    pReadSetReturnNum (context, retNum);
-	    
-	    // write HEADER
-	    MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
-	      pReadGetTransactionToken(context), retNum);
-	    // write ERROR-STACK
-	    while (MqReadItemExists (context)) {
-	      MqErrorCheck2 (MqReadC (context, &msg), error2);
-	      pErrorAppendC (context, msg);
-	    }
-error2:
-	    return MQ_ERROR;
-	  }
-	  case MQ_HANDSHAKE_START:
-	  case MQ_HANDSHAKE_TRANSACTION:
-	    return MqErrorDb(MQ_ERROR_HANDSHAKE);
-	}
-      }
     }
     case 'E':
     {   
@@ -625,26 +630,9 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_CST
-pTokenGetCurrent (
-  struct MqTokenS const * const token
-)
-{
-  return token->current;
-}
-
-void
-pTokenSetCurrent (
-  struct MqTokenS * const token,
-  MQ_CST const str
-)
-{
-  memcpy (token->current, str, HDR_TOK_LEN);
-}
-
 int
 pTokenCheck (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const str
 )
 {
@@ -652,6 +640,7 @@ pTokenCheck (
 }
 
 END_C_DECLS
+
 
 
 

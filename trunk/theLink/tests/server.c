@@ -1064,7 +1064,6 @@ Ot_INIT (
 )
 {
   struct MqBufferLS * initB = MqInitCreate();
-  MqSendSTART(mqctx);
   MqReadL(mqctx, &initB);
   return MqSendRETURN (mqctx);
 }

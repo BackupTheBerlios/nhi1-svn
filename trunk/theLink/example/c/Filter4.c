@@ -26,9 +26,8 @@
   }
 
 struct FilterItmS {
-  MQ_STRB token[5];
-  MQ_BOL  isTransaction;
-  MQ_BUF  data;
+  MQ_BIN  data;
+  MQ_SIZE len;
 };
 
 struct FilterCtxS {
@@ -78,27 +77,16 @@ static enum MqErrorE FilterEvent (
     // extract the first (oldest) item from the store
     itm = ctx->itm[ctx->rIdx];
 
-    // send the data to the "filter", on error write message but do not stop processing
-    MqErrorCheck1 (MqSendSTART(ftr));
-    MqErrorCheck1 (MqSendBDY(ftr, itm->data->cur.B, itm->data->cursize));
-    switch ( itm->isTransaction ?
-      MqSendEND_AND_WAIT(ftr, itm->token, MQ_TIMEOUT_USER) :
-	MqSendEND(ftr, itm->token)
-    ) {
-      case MQ_OK:	  
-	break;
-      case MQ_CONTINUE:	  
-	return MQ_OK;
-      case MQ_ERROR:
-	if (MqErrorIsEXIT(ftr)) {
-	  return MqErrorDeleteEXIT(ftr);
-	} else {
-	  ErrorWrite (ftr);
-	}
-	break;
+    // send BDY data to the link-target, on error write message but do not stop processing
+    if (MqErrorCheckI (MqSendBDY(ftr, itm->data, itm->len))) {
+      if (MqErrorIsEXIT(ftr)) {
+	return MqErrorDeleteEXIT(ftr);
+      } else {
+	ErrorWrite (ftr);
+      }
     }
     // reset the item-storage
-    MqBufferReset(itm->data);
+    MqSysFree(itm->data);
     ctx->rIdx++;
     return MQ_OK;
 error1:
@@ -168,12 +156,8 @@ static enum MqErrorE FilterIn ( ARGS ) {
   if (it == NULL) {
     ctx->itm[ctx->wIdx] = it = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(struct FilterItmS));
   }
-  if (it->data == NULL) {
-    it->data = MqBufferCreate(MQ_ERROR_PANIC, len);
-  }
-  MqBufferSetB(it->data, bdy, len);
-  strncpy(it->token, MqServiceGetToken(mqctx), 5);
-  it->isTransaction = MqServiceIsTransaction(mqctx);
+  it->data = bdy;
+  it->len = len;
   ctx->wIdx++;
 error:
   return MqSendRETURN(mqctx);
@@ -198,7 +182,7 @@ FilterCleanup (
 
   for (i=0;i<ctx->size;i++) {
     if (ctx->itm[i] != NULL) {
-      MqBufferDelete (&ctx->itm[i]->data);
+      MqSysFree(ctx->itm[i]->data);
       MqSysFree(ctx->itm[i]);
     }
   }

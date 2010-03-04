@@ -164,6 +164,7 @@ int NS(ReadBDY) (NS_ARGS)
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqReadBDY(mqctx, &val, &len));
   Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(val,len));
+  MqSysFree (val);
   RETURN_TCL
 }
 

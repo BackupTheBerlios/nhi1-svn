@@ -522,18 +522,17 @@ MqSendN (
   }
 }
 
-enum MqErrorE
-MqSendBDY (
+void
+pSendBDY (
   struct MqS * const context,
   MQ_BINB const * const in,
-  MQ_SIZE const len
+  MQ_SIZE const len,
+  MQ_BINB hs
 )
 {
   struct MqSendS * const send = context->link.send;
-  if (unlikely(send == NULL)) {
-    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (len != 0) {
-    register struct MqBufferS * const buf = send->buf;
+  register struct MqBufferS * const buf = send->buf;
+  if (len > 0) {
     register MQ_SIZE const newlen = HDR_SIZE + len;
     MQ_BIN bdy;
     pBufferNewSize (buf, newlen);
@@ -546,17 +545,51 @@ MqSendBDY (
     } else {
       buf->numItems = iBufU2INT(buf->cur);
     }
-    // set handshake
-    if (*(bdy + BDY_SIZE) == MQ_TRAT) {
-      *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
-    } else {
-      *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_START;
-    }
     // finish
     buf->cursize = newlen;
     buf->cur.B = buf->data + newlen;
+  } else {
+    buf->numItems = 0;
   }
-  return MQ_OK;
+  // set handshake
+  *(buf->data + HDR_Code_S) = hs;
+}
+
+enum MqErrorE
+MqSendBDY (
+  struct MqS * const context,
+  MQ_BINB const * in,
+  MQ_SIZE len
+)
+{
+  struct MqSendS * const send = context->link.send;
+  if (unlikely(send == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    struct HdrS const * cur = (struct HdrS const *) in;
+    in  += HDR_SIZE;
+    len -= HDR_SIZE;
+    // send data
+    MqSendSTART (context);
+    pSendBDY (context, in, len, cur->code);
+    switch (cur->code) {
+      case MQ_HANDSHAKE_START:
+      case MQ_HANDSHAKE_TRANSACTION:
+	if (cur->trans != 0) {
+	  MqErrorCheck (MqSendEND_AND_WAIT (context, cur->tok, MQ_TIMEOUT_USER));
+	  return MQ_CONTINUE;   // additional data on return
+	} else {
+	  MqErrorCheck (pSendEND(context, cur->tok, 0));
+	}
+	break;
+      case MQ_HANDSHAKE_OK:
+      case MQ_HANDSHAKE_ERROR:
+	MqErrorCheck (pSendEND (context, cur->tok, cur->trans));
+	break;
+    }
+  }
+error:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
@@ -1073,7 +1106,9 @@ MqSendERROR (
   register struct MqS * const context
 )
 {
-  if (MqErrorGetCodeI(context) == MQ_ERROR) {
+  if (MQ_IS_CLIENT(context)) {
+    return MqErrorStack(context);
+  } else if (MqErrorGetCodeI(context) == MQ_ERROR) {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
     pReadCleanupTransactionItem (context);
@@ -1145,24 +1180,15 @@ MqSendRETURN (
 	  case MQ_CONTINUE:
 	    MqPanicSYS (context);
 	}
-	return pSendEND (context, "_TRT", 0);
+	return pSendEND (context, "+TRT", 0);
       }
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-	return MqErrorDb(MQ_ERROR_HANDSHAKE);
+	break;
     }
   }
 error:
   return MqErrorStack(context);
-}
-
-void
-pSendSetHandShake (
-  struct MqS const * const context,
-  char hs
-)
-{
-  if (context->link.send != NULL) *(context->link.send->buf->data + HDR_Code_S) = hs;
 }
 
 END_C_DECLS

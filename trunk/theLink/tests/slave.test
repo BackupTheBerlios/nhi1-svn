@@ -377,7 +377,7 @@ if $BLOCK_3 {
 	  -returnCodes    error \
 	  -match	  glob \
 	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
-s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
+s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context*}
 
       test slave-Y-3-($I|$B|$C|$S) {test after delete} \
 	  -body           {
@@ -473,7 +473,7 @@ C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration
 	  -returnCodes    error \
 	  -match	  glob \
 	  -result         {c> (client-0) \[service-call-error] <Tok|SND2> <Num|230>*
-s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context}
+s> (server-0) \[*MqSlaveDelete] it is not allowed to delete a slave 'child' context*}
 
       test slave-Z-3-($I|$B|$C|$S) {test after delete} \
 	  -body           {

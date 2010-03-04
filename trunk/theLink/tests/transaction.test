@@ -24,7 +24,7 @@ if {[info exists env(TS_LIBRARY)]} {
 set BLOCK_1 true
 #set BLOCK_1 false
 set BLOCK_2 true
-set BLOCK_2 false
+#set BLOCK_2 false
 
 #set tcl_traceExec 1
 
@@ -81,7 +81,7 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
       $FH_LAST SendT_START TEST
       $FH_LAST SendI 9978
       $FH_LAST SendT_END
-      $FH_LAST SendEND_AND_WAIT TRAT
+      $FH_LAST SendEND_AND_WAIT TRNS
     } \
     -returnCodes    error \
     -match	    glob \
@@ -258,6 +258,7 @@ if {$BLOCK_2} {
     foreach S [filterGet SRV_LST $C] {
 
 test X1-($I|$B|$C|$S) {Read/Send BDY test} \
+    -constraints    {!filter-test} \
     -setup	    {
       Setup $I $B $C $S --filter-server Filter3
       set RET [list]

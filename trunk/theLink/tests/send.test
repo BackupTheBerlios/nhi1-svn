@@ -246,7 +246,7 @@ test send-X5-($I|$B|$C|$S) {double LinkCreate} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
-[cC]> (cl-0) \[*MqLinkCreate] the 'msgque' object link is 'already' connected}
+[cC]> (cl-0) \[*MqLinkCreate] the 'msgque' object link is 'already' connected*}
 
 
 test send-X6-($I|$B|$C|$S) {parent is not connected} \
@@ -263,7 +263,7 @@ test send-X6-($I|$B|$C|$S) {parent is not connected} \
     -returnCodes    error \
     -match	    glob \
     -result         {c> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
-c> (unknown) \[*MqLinkCreate] the 'parent' object link is 'not' connected}
+c> (unknown) \[*MqLinkCreate] the 'parent' object link is 'not' connected*}
 
 test send-X7-($I|$B|$C|$S) {master is not connected} \
     -constraints    {} \
@@ -279,7 +279,7 @@ test send-X7-($I|$B|$C|$S) {master is not connected} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
-[cC]> (cl-0) \[*MqSlaveWorker] the 'master' object link is 'not' connected}
+[cC]> (cl-0) \[*MqSlaveWorker] the 'master' object link is 'not' connected*}
 
 test send-X8-($I|$B|$C|$S) {master is no server} \
     -constraints    {} \

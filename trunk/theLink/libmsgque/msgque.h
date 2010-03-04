@@ -321,6 +321,14 @@ typedef MQ_INT  MQ_SOCK;
 /// \brief boolean YES
 #define MQ_YES 1
 
+/// \brief the \e 
+enum MqHandShakeE {
+  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
+  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
+  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
+  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
+};
+
 /// \ingroup Mq_Error_C_API
 /// \brief collection for the different error-codes
 enum MqErrorE {
@@ -344,7 +352,7 @@ struct MqLinkS {
   struct MqS *ctxIdP;		    ///< the initial (first) context (home of the ctxIdA)
 
   // private variables
-  struct MqTokenS * srvT;	    ///< identifier for the 'service' token handle
+  struct pTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
   struct MqCacheS * readCache;	    ///< cache for MqReadS
 
@@ -3636,8 +3644,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
   struct MqS * const ctx,
-  MQ_BINB const * const value,
-  MQ_SIZE const len
+  MQ_BINB const * value,
+  MQ_SIZE len
 );
 
 /// \brief append a #MQ_BUF object to the \e Send-Buffer object
@@ -4346,6 +4354,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 

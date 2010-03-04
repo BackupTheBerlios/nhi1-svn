@@ -21,10 +21,10 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqTokenS* pTokenCreate (struct MqS * const);
+struct pTokenS* pTokenCreate (struct MqS * const);
 
 void pTokenDelete (
-  register struct MqTokenS ** const tokenP
+  register struct pTokenS ** const tokenP
 ) __attribute__((nonnull));
 
 /*****************************************************************************/
@@ -34,41 +34,32 @@ void pTokenDelete (
 /*****************************************************************************/
 
 enum MqErrorE pTokenCheckSystem (
-  struct MqTokenS const * const token
+  struct pTokenS const * const token
 );
 
 /*
 MQ_SIZE pTokenGetUsed (
-  register struct MqTokenS const * const token
+  register struct pTokenS const * const token
 );
 */
 
 enum MqErrorE pTokenInvoke (
-  register struct MqTokenS const * const token
-);
-
-MQ_CST pTokenGetCurrent (
-  struct MqTokenS const * const token
-);
-
-void pTokenSetCurrent (
-  struct MqTokenS * const token,
-  MQ_CST const str
+  struct pTokenS const * const token
 );
 
 int pTokenCheck (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const str
 );
 
 enum MqErrorE pTokenAddHdl (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const name,
   struct MqCallbackS callback
 );
 
 enum MqErrorE pTokenDelHdl (
-  struct MqTokenS const * const token,
+  struct pTokenS const * const token,
   MQ_CST const name
 );
 
@@ -86,8 +77,30 @@ static mq_inline MQ_INT pByte2INT (
 #endif
 }
 
+#define TOKEN_LEN (HDR_TOK_LEN+1)
+
+struct pTokenS {
+  struct MqS * context;		///< link to msgque object
+  MQ_STRB current[TOKEN_LEN];	///< kind the the current action
+  struct pTokenSpaceS *loc;     ///< the local handler
+};
+
+static mq_inline MQ_CST pTokenGetCurrent (
+  struct pTokenS const * const token
+)
+{
+  return token->current;
+}
+
+static mq_inline void pTokenSetCurrent (
+  struct pTokenS * const token,
+  MQ_CST const str
+)
+{
+  memcpy (token->current, str, HDR_TOK_LEN);
+}
+
 END_C_DECLS
 
 #endif /* TOKEN_H */
-
 

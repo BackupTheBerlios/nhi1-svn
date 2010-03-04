@@ -70,6 +70,7 @@ test trans-1-($I|$B|$C|$S) {send data with error} \
     -result         {START
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
+[cC]> (fs) found in function "MqSendBDY" at file "send.c"
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
@@ -109,6 +110,7 @@ test trans-3-($I|$B|$C|$S) {send error + valid data} \
     -result         "START
 ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
 \[sS]> (server-0) \\\[*pTokenInvoke] token <DUM1> not found
+\[cC]> (fs) found in function \"MqSendBDY\" at file \"send.c\"
 $J - HALLO"
 
 # cleanup ---------------------------

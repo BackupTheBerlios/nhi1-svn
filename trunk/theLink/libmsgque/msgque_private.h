@@ -208,9 +208,7 @@ union HdrIU {
 
 /// \brief The protocol HEADER mapped to a \e struct
 struct HdrS {
-    MQ_STRB	    ID1	    ;   ///< <TT>size: 1 .............. -> total: 1 .. -> character .. -> "H"</TT>
-    MQ_STRB	    ID2	    ;   ///< <TT>size: 1 .............. -> total: 2 .. -> character .. -> "D"</TT>
-    MQ_STRB	    ID3	    ;   ///< <TT>size: 1 .............. -> total: 3 .. -> character .. -> "R"</TT>
+    MQ_STRB	    ID[3]   ;   ///< <TT>size: 1 .............. -> total: 3 .. -> character .. -> "HDR"</TT>
     MQ_STRB	    charI   ;   ///< <TT>size: 1 .............. -> total: 4 .. -> character .. -> "+"</TT>
     union HdrIU	    ctxId   ;   ///< <TT>size: HDR_INT_LEN=8 .. -> total: 12 . -> integer .... -> "CONTEXT"</TT>
     MQ_STRB	    charS   ;   ///< <TT>size: 1 .............. -> total: 13 . -> character .. -> "+"</TT>
