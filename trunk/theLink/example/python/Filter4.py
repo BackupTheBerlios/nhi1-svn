@@ -57,16 +57,10 @@ class Filter4(MqS):
     if len(ctx.itms) == 0:
       ctx.ErrorSetCONTINUE()
     else:
-      (token, isTransaction, bdy) = ctx.itms[0]
       ftr = ctx.ServiceGetFilter()
       try:
         ftr.LinkConnect()
-        ftr.SendSTART()
-        ftr.SendBDY(bdy)
-        if isTransaction:
-          ftr.SendEND_AND_WAIT(token)
-        else:
-          ftr.SendEND(token)
+        ftr.SendBDY(ctx.itms[0])
       except:
         ftr.ErrorSet()
         if ftr.ErrorIsEXIT():
@@ -76,7 +70,7 @@ class Filter4(MqS):
           ftr.ErrorWrite()
       ctx.itms.pop(0)
   def FilterIn(ctx):
-    ctx.itms.append([ctx.ServiceGetToken(), ctx.ServiceIsTransaction(), ctx.ReadBDY()])
+    ctx.itms.append(ctx.ReadBDY())
     ctx.SendRETURN()
 try:
   srv = Filter4()

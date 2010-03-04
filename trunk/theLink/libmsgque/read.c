@@ -798,7 +798,7 @@ MqReadBDY (
     MQ_SIZE const lbdy = read->bdy->cursize;
     MQ_SIZE const llen = HDR_SIZE + lbdy;
     MQ_BIN data = (MQ_BIN) MqSysMalloc (MQ_ERROR_PANIC, llen);
-    memcpy (data, read->hdrref->data, HDR_SIZE);
+    memcpy (data, read->hdrorig->data, HDR_SIZE);
     memcpy (data+HDR_SIZE, read->bdy->data, lbdy);
     *out = data;
     *len = llen;

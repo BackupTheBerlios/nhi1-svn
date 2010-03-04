@@ -202,8 +202,11 @@ PyObject* NS(ReadBDY) (
   SETUP_context
   MQ_BIN b;
   MQ_SIZE len;
+  PyObject *ret;
   ErrorMqToPythonWithCheck(MqReadBDY(context, &b, &len));
-  return PyByteArray_FromStringAndSize((const char*)b, len);
+  ret = PyByteArray_FromStringAndSize((const char*)b, len);
+  MqSysFree (b);
+  return ret;
 error:
   return NULL;
 }

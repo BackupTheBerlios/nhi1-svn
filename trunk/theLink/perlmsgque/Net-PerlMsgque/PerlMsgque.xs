@@ -798,6 +798,7 @@ MqReadBDY (MqS* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadBDY (context, &bin, &len));
     RETVAL = newSVpvn((MQ_CST)bin, len);
+    MqSysFree(bin);
   OUTPUT:
     RETVAL
 

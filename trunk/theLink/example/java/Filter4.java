@@ -18,12 +18,7 @@ import java.io.FileWriter;
 
 class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEvent, IService {
 
-  private class FilterItmS {
-    public String token;
-    public Boolean isTransaction;
-    public byte[] bdy;
-  }
-  private Queue<FilterItmS> itms = new LinkedList<FilterItmS>();
+  private Queue<byte[]> itms = new LinkedList<byte[]>();
   private FileWriter FH = null;
 
   public MqS Factory() {
@@ -47,20 +42,14 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
   }
 
   public void Event() throws MqSException {
-    FilterItmS it = itms.peek();
+    byte[] it = itms.peek();
     if (it == null) {
       ErrorSetCONTINUE();
     } else {
       Filter4 ftr = (Filter4) ServiceGetFilter();
       try {
 	ftr.LinkConnect();
-	ftr.SendSTART();
-	ftr.SendBDY(it.bdy);
-	if (it.isTransaction) {
-	  ftr.SendEND_AND_WAIT(it.token);
-	} else {
-	  ftr.SendEND(it.token);
-	}
+	ftr.SendBDY(it);
       } catch (Throwable ex) {
 	ftr.ErrorSet(ex);
 	if (ftr.ErrorIsEXIT()) {
@@ -124,11 +113,7 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
   }
 
   public void Service(MqS ctx) throws MqSException {
-    FilterItmS it = new FilterItmS();
-    it.bdy = ReadBDY();
-    it.token = ServiceGetToken();
-    it.isTransaction = ServiceIsTransaction();
-    itms.add(it);
+    itms.add(ReadBDY());
     SendRETURN();
   }
 

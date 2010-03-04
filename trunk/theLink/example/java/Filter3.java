@@ -20,31 +20,17 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
 
   public void ServerSetup() throws MqSException {
     MqS ftr = ServiceGetFilter();
-    ServiceCreate("+ALL", new Filter()); 
-    ftr.ServiceCreate("+ALL", new Filter());
-  }
-
-  public class Filter implements IService {
-    public void Service(MqS ctx) throws MqSException {
-      MqS ftr = ServiceGetFilter();
-      ftr.SendSTART();
-      ftr.SendBDY(ReadBDY());
-      if (ServiceIsTransaction()) {
-	ftr.SendEND_AND_WAIT(ServiceGetToken());
-	SendSTART();
-	SendBDY(ftr.ReadBDY());
-      } else {
-	ftr.SendEND(ServiceGetToken());
-      }
-      SendRETURN();
-    }
+    ServiceProxy("+ALL"); 
+    ServiceProxy("+TRT"); 
+    ftr.ServiceProxy("+ALL");
+    ftr.ServiceProxy("+TRT");
   }
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter3");
     Filter3 srv = new Filter3();
     try {
-      srv.ConfigSetName("filter");
+      srv.ConfigSetName("Filter3");
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {

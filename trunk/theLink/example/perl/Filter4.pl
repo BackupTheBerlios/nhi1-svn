@@ -63,15 +63,8 @@ use base qw(Net::PerlMsgque::MqS);
     } else {
       my $ftr = $ctx->ServiceGetFilter();
       eval {
-	my ($token,$isTransaction,$bdy) = @{$it};
 	$ftr->LinkConnect();
-	$ftr->SendSTART();
-	$ftr->SendBDY($bdy);
-	if ($isTransaction) {
-	  $ftr->SendEND_AND_WAIT($token);
-	} else {
-	  $ftr->SendEND($token);
-	}
+	$ftr->SendBDY($it);
       };
       if ($@) {
 	$ftr->ErrorSet($@);
@@ -89,7 +82,7 @@ use base qw(Net::PerlMsgque::MqS);
   sub FilterIn {
     my $ctx = shift;
     my $itms = $ctx->DictGet("itms");
-    push(@{$itms},[$ctx->ServiceGetToken(), $ctx->ServiceIsTransaction(), $ctx->ReadBDY()]);
+    push(@{$itms}, $ctx->ReadBDY());
     $ctx->SendRETURN();
   }
 

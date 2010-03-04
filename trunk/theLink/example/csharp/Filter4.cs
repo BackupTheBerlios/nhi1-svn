@@ -17,12 +17,7 @@ using csmsgque;
 namespace example {
   sealed class Filter4 : MqS, IFactory, IServerSetup, IServerCleanup, IEvent, IService {
 
-    struct FilterItmS {
-      public string token;
-      public bool isTransaction;
-      public byte[] bdy;
-    }
-    Queue<FilterItmS> itms = new Queue<FilterItmS>();
+    Queue<byte[]> itms = new Queue<byte[]>();
     StreamWriter FH = null;
 
     MqS IFactory.Factory () {
@@ -30,11 +25,7 @@ namespace example {
     }
 
     void IService.Service (MqS ctx) {
-      FilterItmS it;
-      it.token = ServiceGetToken();
-      it.isTransaction = ServiceIsTransaction();
-      it.bdy = ReadBDY();
-      itms.Enqueue(it);
+      itms.Enqueue(ReadBDY());
       SendRETURN();
     }
 
@@ -42,17 +33,11 @@ namespace example {
       if (itms.Count <= 0) {
 	ErrorSetCONTINUE();
       } else {
-	FilterItmS it = itms.Peek();
+	byte[] it = itms.Peek();
 	Filter4 ftr = (Filter4) ServiceGetFilter();
 	try  {
 	  ftr.LinkConnect();
-	  ftr.SendSTART();
-	  ftr.SendBDY(it.bdy);
-	  if (it.isTransaction) {
-	    ftr.SendEND_AND_WAIT(it.token);
-	  } else {
-	    ftr.SendEND(it.token);
-	  }
+	  ftr.SendBDY(it);
 	} catch (Exception ex) {
 	  ftr.ErrorSet (ex);
 	  if (ftr.ErrorIsEXIT()) {

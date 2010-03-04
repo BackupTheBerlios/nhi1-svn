@@ -20,31 +20,18 @@ namespace example {
       return new Filter3();
     }
 
-    // service definition
-    void Filter () {
-      MqS ftr = ServiceGetFilter();
-      ftr.SendSTART();
-      ftr.SendBDY(ReadBDY());
-      if (ServiceIsTransaction()) {
-	ftr.SendEND_AND_WAIT(ServiceGetToken());
-	SendSTART();
-	SendBDY(ftr.ReadBDY());
-      } else {
-	ftr.SendEND(ServiceGetToken());
-      }
-      SendRETURN();
-    }
-
     void IServerSetup.ServerSetup() {
       MqS ftr = ServiceGetFilter();
-      ServiceCreate("+ALL", Filter);
-      ftr.ServiceCreate("+ALL", Filter);
+      ServiceProxy("+ALL");
+      ServiceProxy("+TRT");
+      ftr.ServiceProxy("+ALL");
+      ftr.ServiceProxy("+TRT");
     }
 
     public static void Main(string[] argv) {
       Filter3 srv = new Filter3();
       try {
-	srv.ConfigSetName("filter");
+	srv.ConfigSetName("Filter3");
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {

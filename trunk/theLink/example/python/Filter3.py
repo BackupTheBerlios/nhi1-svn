@@ -16,24 +16,15 @@ from pymsgque import *
 class Filter3(MqS):
   def __init__(self):
     self.ConfigSetFactory(lambda: Filter3())
-    self.ConfigSetName("filter")
+    self.ConfigSetName("Filter3")
     self.ConfigSetServerSetup(self.ServerSetup)
     MqS.__init__(self)
   def ServerSetup(ctx):
     ftr =ctx.ServiceGetFilter()
-    ctx.ServiceCreate("+ALL", ctx.Filter)
-    ftr.ServiceCreate("+ALL", ctx.Filter)
-  def Filter(ctx):
-    ftr = ctx.ServiceGetFilter()
-    ftr.SendSTART()
-    ftr.SendBDY(ctx.ReadBDY())
-    if (ctx.ServiceIsTransaction()):
-      ftr.SendEND_AND_WAIT(ctx.ServiceGetToken())
-      ctx.SendSTART()
-      ctx.SendBDY(ftr.ReadBDY())
-    else:
-      ftr.SendEND(ctx.ServiceGetToken())
-    ctx.SendRETURN()
+    ctx.ServiceProxy("+ALL")
+    ctx.ServiceProxy("+TRT")
+    ftr.ServiceProxy("+ALL")
+    ftr.ServiceProxy("+TRT")
 srv = Filter3()
 try:
   srv.LinkCreate(sys.argv)

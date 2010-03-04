@@ -72,6 +72,8 @@ namespace csmsgque {
     private static extern MqErrorE MqReadUndo(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadProxy")]
     private static extern MqErrorE MqReadProxy(IntPtr contextMsgque, IntPtr sendMsgque);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSysFreeP")]
+    private static extern void MqSysFreeP([In]IntPtr ptr);
 
     // PUBLIC
 
@@ -151,6 +153,7 @@ namespace csmsgque {
       ErrorMqToCsWithCheck(MqReadBDY(context, out outV, out size));
       byte[] outB = new byte[size];
       Marshal.Copy(outV,outB,0,size);
+      MqSysFreeP(outV);
       return outB;
     }
 

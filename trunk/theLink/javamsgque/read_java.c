@@ -250,6 +250,7 @@ JNIEXPORT jbyteArray JNICALL NS(ReadBDY) (
   ErrorMqToJavaWithCheck(MqReadBDY(context, &b, &len));
   tmp = (*env)->NewByteArray(env,len);
   (*env)->SetByteArrayRegion(env,tmp,0,len,(jbyte*)b);
+  MqSysFree(b);
   return tmp;
 error:
   return NULL;
