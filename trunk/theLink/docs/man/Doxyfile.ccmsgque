@@ -17,6 +17,7 @@
 
 ENABLED_SECTIONS    += CC
 ENABLED_SECTIONS    += DAEMON
+ENABLED_SECTIONS    += C-STYLE
 EXAMPLE_PATH	    += $(SRCDIR)/example/cc
 
 ALIASES		    += "self=ccmsgque"
@@ -177,7 +178,7 @@ ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendB(MQ_BIN value, MQ_SIZE len)"
-ALIASES		    += "SendBDY=ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
+ALIASES		    += "SendBDY=enum MqErrorE ctx.SendBDY(MQ_BIN value, MQ_SIZE len)"
 ALIASES		    += "SendT_START=ctx.SendT_START(MQ_CST callback)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -228,7 +229,7 @@ ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=ctx.ServiceCreate(MQ_CST token, IService * callback)"
 ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF callback)"
 ENABLED_SECTIONS    += ServiceCreate2
-ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0 )"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"

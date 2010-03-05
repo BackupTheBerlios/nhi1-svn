@@ -16,6 +16,7 @@
 
 ENABLED_SECTIONS    += C
 ENABLED_SECTIONS    += DAEMON
+ENABLED_SECTIONS    += C-STYLE
 EXAMPLE_PATH	    += $(SRCDIR)/example/c
 
 ALIASES		    += "self=libmsgque"
@@ -159,8 +160,8 @@ ALIASES		    += "SendERROR=MqSendERROR(ctx)"
 ALIASES		    += "SendFTR=MqSendFTR(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 ALIASES		    += "SendEOF=MqSendEOF(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 ALIASES		    += "SendTYPE=MqSendTYPE(ctx,value)"
-ALIASES		    += "SendN=MqSendN(ctx,MQ_BIN value,MQ_SIZE len)"
-ALIASES		    += "SendBDY=MqSendBDY(ctx,MQ_BIN value,MQ_SIZE len)"
+ALIASES		    += "SendN=MqSendN(ctx,MQ_CBI const value,MQ_SIZE const len)"
+ALIASES		    += "SendBDY=enum MqErrorE MqSendBDY(ctx,MQ_CBI const value,MQ_SIZE const len)"
 ALIASES		    += "SendL_START=MqSendL_START(ctx)"
 ALIASES		    += "SendL_END=MqSendL_END(ctx)"
 ALIASES		    += "SendT_START=MqSendT_START(ctx, MQ_CST callback)"
@@ -176,8 +177,8 @@ MqErrorCheck (MqSendEND_AND_WAIT (mqctx, \"SRVC\", MQ_TIMEOUT_USER)); \endcode"
 # READ DATE
 ALIASES		    += "read_example=\code MqErrorCheck(MqReadI(ctx, &i));\nMqErrorCheck(MqReadL_START(ctx, NULL));\n  MqErrorCheck(MqReadD(ctx, &balance));\n  MqErrorCheck(MqReadC(ctx, &owner));\n  MqErrorCheck(MqReadB(ctx, &signature));\nMqReadL_END(ctx);\endcode"
 ALIASES		    += "ReadTYPE=MqReadTYPE(ctx, TYPE *val)"
-ALIASES		    += "ReadN=MqReadN(ctx,MQ_BIN *value, MQ_SIZE *len)"
-ALIASES		    += "ReadBDY=MqReadBDY(ctx,MQ_BIN *value, MQ_SIZE *len)"
+ALIASES		    += "ReadN=MqReadN(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
+ALIASES		    += "ReadBDY=MqReadBDY(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
 ALIASES		    += "ReadU=MqReadU(ctx)"
 ALIASES		    += "ReadProxy=MqReadProxy(ctx, struct MqS *otherCtx)"
 ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"

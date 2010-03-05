@@ -151,7 +151,7 @@ ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(byte[] value)"
-ALIASES		    += "SendBDY=ctx.SendBDY(byte[] value)"
+ALIASES		    += "SendBDY=\I ctx.SendBDY(byte[] value)"
 ALIASES		    += "SendT_START=ctx.SendL_START(string callback)"
 ALIASES		    += "SendT_END=ctx.SendL_END()"
 ALIASES		    += "SendT_example=\code \n\

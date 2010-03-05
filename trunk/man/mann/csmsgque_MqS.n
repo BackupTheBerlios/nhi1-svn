@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -394,7 +394,7 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "void \fBSendBDY\fP (byte[] val)"
+.RI "int \fBSendBDY\fP (byte[] val)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c
@@ -511,8 +511,8 @@ implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP
 .PP
 .SS "void csmsgque.MqS.DLogC (int level, string val)"
 .PP
-Definition at line 153 of file csmsgque.cs.
+Definition at line 152 of file csmsgque.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

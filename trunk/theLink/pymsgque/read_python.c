@@ -187,7 +187,7 @@ PyObject* NS(ReadN) (
 )
 {
   SETUP_context
-  MQ_BIN b;
+  MQ_CBI b;
   MQ_SIZE len;
   ErrorMqToPythonWithCheck(MqReadN(context, &b, &len));
   return PyByteArray_FromStringAndSize((const char*)b, len);

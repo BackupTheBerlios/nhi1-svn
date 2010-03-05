@@ -73,8 +73,7 @@ namespace csmsgque {
   internal enum MqErrorE :int {
     MQ_OK,
     MQ_CONTINUE,
-    MQ_ERROR,
-    MQ_EXIT
+    MQ_ERROR
   };
 
   internal enum MqFactoryE :int {

@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,17 +34,17 @@ Mq_Send_C_API \- construct an outgoing \fIsend-data-package\fP.
 .RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_CBI\fP const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP const value, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fIbody-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP value, \fBMQ_SIZE\fP len)"
 .br
-.R "append the \fIentire-body\fP to the \fIsend-data-package\fP. "
+.R "send the \fIentire-body\fP to the \fIlink-target\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
 .br
@@ -84,7 +84,7 @@ Mq_Send_C_API \- construct an outgoing \fIsend-data-package\fP.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendERROR\fP (register struct \fBMqS\fP *const ctx)"
 .br
-.R "send the data from the \fBEXCEPTION OBJECT\fP to the link target . "
+.R "send the data from the \fBERROR OBJECT\fP to the link target . "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendL_START\fP (struct \fBMqS\fP *const ctx)"
 .br
@@ -116,7 +116,7 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 
 .SH "Function Documentation"
 .PP 
-.SS "enum \fBMqErrorE\fP MqSendB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendB (struct \fBMqS\fP *const  context, \fBMQ_CBI\fP const  in, \fBMQ_SIZE\fP const  len)"
 .PP
 append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object 
 .PP
@@ -131,15 +131,15 @@ append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  ctx, \fBMQ_BINB\fP const *const  value, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendBDY (struct \fBMqS\fP *const  ctx, \fBMQ_CBI\fP value, \fBMQ_SIZE\fP len)"
 .PP
-append the \fIentire-body\fP to the \fIsend-data-package\fP. 
+send the \fIentire-body\fP to the \fIlink-target\fP 
 .PP
-The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBctx.ReadBDY() As Byte()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -152,7 +152,13 @@ The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+.IP "\(bu" 2
+\fBMQ_OK\fP = 0 on OK for \fBSendEND\fP
+.IP "\(bu" 2
+\fBMQ_CONTINUE\fP = 1 on OK for \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
+.IP "\(bu" 2
+\fBMQ_ERROR\fP = 2 on error and an \fBErrorObject\fP
+.PP
 .RE
 .PP
 
@@ -169,7 +175,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -186,7 +192,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -205,7 +211,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -213,7 +219,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([int timeout], [MqS.WAIT.(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -230,7 +236,7 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -251,13 +257,13 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
 .SS "enum \fBMqErrorE\fP MqSendERROR (register struct \fBMqS\fP *const  ctx)"
 .PP
-send the data from the \fBEXCEPTION OBJECT\fP to the link target . 
+send the data from the \fBERROR OBJECT\fP to the link target . 
 .PP
 If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
 .PP
@@ -268,7 +274,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -285,7 +291,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -302,7 +308,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -319,7 +325,7 @@ append a \fBMqBufferLS\fP object to the \fISend-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -339,7 +345,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -354,15 +360,15 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  ctx, \fBMQ_BINB\fP const *const  value, \fBMQ_SIZE\fP const  len)"
+.SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *const  ctx, \fBMQ_CBI\fP const  value, \fBMQ_SIZE\fP const  len)"
 .PP
 append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBctx.ReadN() As Byte()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBbyte[] ctx.ReadN()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -375,7 +381,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -392,7 +398,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -400,7 +406,7 @@ an \fBEXCEPTION OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
-Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(token As String)\fP)
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(string token)\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -415,7 +421,7 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -432,7 +438,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -449,7 +455,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -464,7 +470,7 @@ finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -489,7 +495,7 @@ The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -506,7 +512,7 @@ append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -549,7 +555,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -566,10 +572,10 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

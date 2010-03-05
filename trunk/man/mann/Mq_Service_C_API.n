@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,14 +86,14 @@ The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\f
 .PP
 
 .PP
-Definition at line 1789 of file msgque.h.
+Definition at line 1791 of file msgque.h.
 .SS "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
 .PP
 function used as \fIservice-handle\fP 
 .PP
 A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
 .PP
-Definition at line 1798 of file msgque.h.
+Definition at line 1800 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqWaitOnEventE\fP"
@@ -112,7 +112,7 @@ wait for one new event
 \fB\fIMQ_WAIT_FOREVER \fP\fP
 wait forever 
 .PP
-Definition at line 1801 of file msgque.h.
+Definition at line 1803 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"
@@ -150,7 +150,7 @@ MqS.WAIT.FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an even
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -175,7 +175,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincoming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -192,7 +192,7 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -209,7 +209,7 @@ delete a service.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -231,12 +231,12 @@ return a 'filter not available' error
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fInull\fP on error 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -291,10 +291,10 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

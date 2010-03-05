@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -55,11 +55,11 @@ Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
 .R "extract a \fIbody-item\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
 .R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
 .ti -1c
@@ -119,15 +119,15 @@ generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP objec
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqReadBDY (struct \fBMqS\fP *const  ctx, \fBMQ_BIN\fP *const  val, \fBMQ_SIZE\fP *const  len)"
+.SS "enum \fBMqErrorE\fP MqReadBDY (struct \fBMqS\fP *const  ctx, \fBMQ_CBI\fP *const  val, \fBMQ_SIZE\fP *const  len)"
 .PP
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be ican send later using \fBSendBDY\fP.
 .PP
 \fBParameters:\fP
 .RS 4
@@ -140,7 +140,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -160,7 +160,7 @@ generic function to read an \fBMQ_STR\fP object from the \fIRead-Buffer\fP objec
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -182,7 +182,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -199,7 +199,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -231,7 +231,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -263,7 +263,7 @@ read an \fBMqBufferLS\fP object from all items of the \fIRead-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -278,7 +278,7 @@ finish to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -292,16 +292,16 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInull\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqReadN (struct \fBMqS\fP *const  ctx, \fBMQ_BIN\fP *const  val, \fBMQ_SIZE\fP *const  len)"
+.SS "enum \fBMqErrorE\fP MqReadN (struct \fBMqS\fP *const  ctx, \fBMQ_CBI\fP *const  val, \fBMQ_SIZE\fP *const  len)"
 .PP
 extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
@@ -318,7 +318,7 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -335,7 +335,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -352,7 +352,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -369,7 +369,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -384,7 +384,7 @@ finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-packag
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -398,12 +398,12 @@ Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInull\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -422,7 +422,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -439,7 +439,7 @@ Put the internal position-pointer to the start of the last read \fIbody-item\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
@@ -456,7 +456,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  
@@ -473,10 +473,10 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

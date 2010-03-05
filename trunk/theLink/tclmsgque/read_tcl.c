@@ -148,7 +148,7 @@ int NS(ReadB) (NS_ARGS)
 int NS(ReadN) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE len;
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqReadN(mqctx, &val, &len));

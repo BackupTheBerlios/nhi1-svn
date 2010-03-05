@@ -598,7 +598,7 @@ namespace ccmsgque {
 	return new vector<MQ_BINB> (val, val+len);
       }
       /// \api #MqReadN
-      inline void ReadN(MQ_BIN * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
+      inline void ReadN(MQ_CBI * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
 	ErrorCheck (MqReadN(&context, valP, lenP)); 
       }
       /// \api #MqReadBDY
@@ -707,13 +707,13 @@ namespace ccmsgque {
       /// \api #MqSendU
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
       /// \api #MqSendN
-      inline void SendN (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
+      inline void SendN (MQ_CBI val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
       /// \api #MqSendBDY
-      inline void SendBDY (MQ_BIN val, MQ_SIZE len) throw(MqCException) { 
-	ErrorCheck (MqSendBDY (&context, val, len)); 
+      inline void SendBDY (MQ_CBI val, MQ_SIZE len) throw(MqCException) { 
+	ErrorCheck (MqSendBDY (&context, val, len));
       }
       /// \api #MqSendB
-      inline void SendB (MQ_BIN val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendB (&context, val, len)); }
+      inline void SendB (MQ_CBI const val, MQ_SIZE const len) throw(MqCException) { ErrorCheck (MqSendB (&context, val, len)); }
       /// \api #MqSendB
       inline void SendB (vector<MQ_BINB>* val) throw(MqCException) { 
 	ErrorCheck (MqSendB (&context, &(*val->begin()) , (int) val->size())); 

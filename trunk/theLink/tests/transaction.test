@@ -257,7 +257,7 @@ if {$BLOCK_2} {
     # server-type: server server.tcl
     foreach S [filterGet SRV_LST $C] {
 
-test X1-($I|$B|$C|$S) {Read/Send BDY test} \
+test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
     -constraints    {!filter-test} \
     -setup	    {
       Setup $I $B $C $S --filter-server Filter3

@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "25 Feb 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "5 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -339,11 +339,11 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
 .ti -1c
-.RI "void \fBReadN\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.RI "void \fBReadN\fP (\fBMQ_CBI\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
 .ti -1c
-.RI "void \fBReadBDY\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.RI "void \fBReadBDY\fP (\fBMQ_CBI\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
 .ti -1c
@@ -471,15 +471,15 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendU\fP "
 .ti -1c
-.RI "void \fBSendN\fP (\fBMQ_BIN\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.RI "void \fBSendN\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "void \fBSendBDY\fP (\fBMQ_BIN\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.RI "enum \fBMqErrorE\fP \fBSendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c
-.RI "void \fBSendB\fP (\fBMQ_BIN\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.RI "void \fBSendB\fP (\fBMQ_CBI\fP const val, \fBMQ_SIZE\fP const len)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
 .ti -1c

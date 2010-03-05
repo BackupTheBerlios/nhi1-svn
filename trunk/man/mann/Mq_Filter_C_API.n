@@ -1,4 +1,4 @@
-.TH "Mq_Filter_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Filter_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -161,4 +161,4 @@ A one-directional filter is a special form of a bi-directional filter and allow 
 and send every data item with \fBSendEND_AND_WAIT\fP. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

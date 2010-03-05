@@ -298,6 +298,8 @@ typedef MQ_STRB *MQ_STR;
 typedef MQ_STRB const * MQ_CST;
 /// \e byte-array pointer data-type
 typedef MQ_BINB *MQ_BIN;
+/// \e const byte-array pointer data-type
+typedef MQ_BINB const* MQ_CBI;
 /// list pointer data-type
 typedef MQ_LSTB *MQ_LST;
 /// Buffer pointer data-type
@@ -320,14 +322,6 @@ typedef MQ_INT  MQ_SOCK;
 
 /// \brief boolean YES
 #define MQ_YES 1
-
-/// \brief the \e 
-enum MqHandShakeE {
-  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
-  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
-  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
-  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
-};
 
 /// \ingroup Mq_Error_C_API
 /// \brief collection for the different error-codes
@@ -2241,7 +2235,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateC (
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateB (
   struct MqS * const context,
-  MQ_BINB const * const val,
+  MQ_CBI  const val,
   MQ_SIZE const len
 );
 
@@ -2316,7 +2310,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetD (
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetB (
   struct MqBufferS * const buf,
-  MQ_BIN * const out,
+  MQ_BIN  * const out,
   MQ_SIZE * const size
 );
 
@@ -2411,7 +2405,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetC (
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetB (
   struct MqBufferS * const buf,
-  MQ_BINB const * const in,
+  MQ_CBI  const in,
   MQ_SIZE const len
 );
 
@@ -3392,7 +3386,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
   struct MqS * const context,
-  MQ_BIN * const out,
+  MQ_BIN  * const out,
   MQ_SIZE * const len
 );
 
@@ -3407,22 +3401,26 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   struct MqS * const ctx,
-  MQ_BIN * const val,
+  MQ_CBI  * const val,
   MQ_SIZE * const len
 );
 
 /// \brief extract the entire \e body-package from the \e read-data-package
 ///
 /// A \e body is a \e byte-array with a defined \e length and including the \e number-of-items
-/// and the \e body-items as information. The \e body extracted can be saved into an external storage 
-/// or be used in a software tunnel (example: the \e agurad tool) and be send later using \RNSA{SendBDY}.
+/// and the \e body-items as information. The \e body extracted can be saved into an external 
+/// storage or be used in a software tunnel (example: the \e agurad tool) and be ican send later 
+/// using \RNSA{SendBDY}. 
+/// \if C-STYLE
+/// The memory is \e dynamic-allocated and have to be freed using #MqSysFree.
+/// \endif
 /// \ctx
 /// \param[out] val the \e body as \e byte-array
 /// \param[out] len the \e byte-array-length of the \e val
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   struct MqS * const ctx,
-  MQ_BIN * const val,
+  MQ_BIN  * const val,
   MQ_SIZE * const len
 );
 
@@ -3612,7 +3610,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendC (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
   struct MqS * const context,
-  MQ_BINB const * const in,
+  MQ_CBI  const in,
   MQ_SIZE const len
 );
 
@@ -3628,23 +3626,24 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
   struct MqS * const ctx,
-  MQ_BINB const * const value,
+  MQ_CBI  const value,
   MQ_SIZE const len
 );
 
-/// \brief append the \e entire-body to the \e send-data-package.
-/// \details The \e entire-body is a \e byte-array and including the \e number-of-items 
-/// and the \e body-items as value.
-/// The \e entire-body is the result of a previous \RNS{ReadBDY} function call and can 
-/// be used for saving into an external storage or for an additional operation like 
-/// encryption.
+/// \brief send the \e entire-body to the \e link-target
+/// \details The goal of this function is to send the \e entire-body of a service
+/// request to the \e link-target. The \e entire-body is the result of a previous 
+/// \RNSA{ReadBDY} function call and can be used to save the \e entire-body into an 
+/// external storage or for an additional operation like encryption.
+/// The \e SendBDY is a special kind of function because it combines the \e SendSTART, 
+/// \e Send? and \e SendEND... style of function into one single command.
 /// \ctx
 /// \param[in] value the \e entire-body for appending
 /// \param[in] len the size of the \e entire-body-byte-array (C-API only)
-/// \retException
+/// \retException 
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
   struct MqS * const ctx,
-  MQ_BINB const * value,
+  MQ_CBI  value,
   MQ_SIZE len
 );
 

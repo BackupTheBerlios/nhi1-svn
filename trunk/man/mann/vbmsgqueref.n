@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -24,7 +24,7 @@ vbmsgque \- The \fBVB.NET\fP \fBApplication-Server\fP and \fBProgramming-Languag
 .br
  \fBBUFFER API\fP
 .br
- \fBEXCEPTION OBJECT\fP
+ \fBERROR OBJECT\fP
 .br
  \fBFILTER MODE\fP
 .br
@@ -284,7 +284,7 @@ configure a context to use a \fItcp-client-server-link\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error
+an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
@@ -303,7 +303,7 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error
+an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
@@ -322,7 +322,7 @@ The \fIsocket\fP option is special because it is used only for internal purpose 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error
+an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --thread --spawn --fork"
@@ -541,7 +541,7 @@ make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\f
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
@@ -565,7 +565,7 @@ A child is using the same process or thread as the parent but a different namesp
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.LinkDelete()"
@@ -590,7 +590,7 @@ Do nothing if the \fIclient-server-link\fP is already connected. This function i
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.LinkGetParent() As MqS"
@@ -686,6 +686,8 @@ get the \fIident\fP of the \fIlink-target\fP or \fINothing\fP if not connected
 .br
  \fBServiceDelete\fP
 .br
+ \fBServiceProxy\fP
+.br
  \fBProcessEvent\fP
 .br
 .PP
@@ -775,7 +777,7 @@ return a 'filter not available' error
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ServiceCreate(token As String, AddressOf callback)"
@@ -798,7 +800,7 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ServiceProxy(token As String, [id=0 As Integer])"
@@ -817,7 +819,7 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ServiceDelete(string token)"
@@ -832,7 +834,7 @@ delete a service.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])"
@@ -869,7 +871,7 @@ MqS.WAIT.FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an even
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SH "SEND API"
@@ -936,7 +938,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendEND(token As String)"
@@ -953,7 +955,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendEND_AND_WAIT(token As String, [timeout As Integer])"
@@ -972,7 +974,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendEND_AND_CALLBACK(token As String, AddressOf callback)"
@@ -995,7 +997,7 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendRETURN()"
@@ -1016,11 +1018,11 @@ if no transaction is ongoing this function does just return the error code.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendERROR()"
-send the data from the \fBEXCEPTION OBJECT\fP to the link target . 
+send the data from the \fBERROR OBJECT\fP to the link target . 
 .PP
 If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
 .PP
@@ -1031,7 +1033,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendTYPE(value As TYPE)"
@@ -1046,7 +1048,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendN(ByVal value() As Byte)"
@@ -1065,13 +1067,13 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.SS "ctx.SendBDY(ByVal value() As Byte)"
-append the \fIentire-body\fP to the \fIsend-data-package\fP. 
+.SS "ctx.SendBDY(ByVal value() As Byte) As Integer"
+send the \fIentire-body\fP to the \fIlink-target\fP 
 .PP
-The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as value. The \fIentire-body\fP is the result of a previous \fBctx.ReadBDY() As Byte()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. To distinguish a \fIshort-term-transaction\fP (\fBSendEND_AND_WAIT\fP, \fBSendEND_AND_CALLBACK\fP) from \fBSendEND\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1084,7 +1086,13 @@ The \fIentire-body\fP is a \fIbyte-array\fP and including the \fInumber-of-items
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+.IP "\(bu" 2
+\fBMQ_OK\fP = 0 on OK for \fBSendEND\fP
+.IP "\(bu" 2
+\fBMQ_CONTINUE\fP = 1 on OK for \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
+.IP "\(bu" 2
+\fBMQ_ERROR\fP = 2 on error and an \fBErrorObject\fP
+.PP
 .RE
 .PP
 .SS "ctx.SendL_START()"
@@ -1097,7 +1105,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendL_END()"
@@ -1110,7 +1118,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendT_START(callback As String)"
@@ -1133,7 +1141,7 @@ The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  \fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
@@ -1158,7 +1166,7 @@ finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SH "READ API"
@@ -1221,7 +1229,7 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadN() As Byte()"
@@ -1240,13 +1248,13 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadBDY() As Byte()"
 extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be send later using \fBSendBDY\fP. 
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be ican send later using \fBSendBDY\fP.
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1259,7 +1267,7 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadU() As ReadU=MqBufferS"
@@ -1276,7 +1284,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadL_START(?buffer As MqBufferS?)"
@@ -1293,7 +1301,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadL_END()"
@@ -1306,7 +1314,7 @@ finish to extract a \fIlist-items\fP from the \fIread-data-package\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadT_START(?buffer As MqBufferS?)"
@@ -1323,7 +1331,7 @@ Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
  \fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
@@ -1348,7 +1356,7 @@ finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-packag
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadProxy(otherCtx As MqS)"
@@ -1363,7 +1371,7 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.ReadGetNumItems() As Integer"
@@ -1404,7 +1412,7 @@ Put the internal position-pointer to the start of the last read \fIbody-item\fP.
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SH "SLAVE API"
@@ -1504,7 +1512,7 @@ The slave-context is started as an independent process or thread based on the \f
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .PP
@@ -1529,7 +1537,7 @@ create a \fImaster/slave\fP link between the master-context object and the slave
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
@@ -1551,7 +1559,7 @@ By default the \fIslave-context\fP object will be deleted if the \fImaster-conte
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBEXCEPTION OBJECT\fP on error 
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 \fBAttention:\fP
@@ -1653,7 +1661,7 @@ The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B
 return the data form the buffer using the \fBTYPE IDENTIFIER\fP.
 .SS "buffer.Type As Char"
 return the type as single character of the item stored in the buffer object.
-.SH "EXCEPTION OBJECT"
+.SH "ERROR OBJECT"
 .PP
 \fBErrorGetText\fP
 .br
@@ -1674,7 +1682,7 @@ return the type as single character of the item stored in the buffer object.
  \fBErrorPrint\fP
 .br
 .PP
-The \fIexception-object\fP (\fIclass MqSException\fP) is used to transport the \fIerror\fP from the \fBlibmsgque\fP context using the \fIprogramming-language\fP error-handling-code.
+The \fIerror-object\fP (\fIclass MqSException\fP) is used to transport the \fIerror\fP from the \fBlibmsgque\fP context using the \fIprogramming-language\fP error-handling-code.
 .PP
 \fBExample:\fP catch an error and write the message to stdout: 
 .PP
@@ -1702,7 +1710,7 @@ the \fIerror-number\fP from the \fIexception-object\fP. The number can be used a
 .RE
 .PP
 .SS "ctx.ErrorC(prefix As String, errnum As Integer, message As String)"
-set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION OBJECT\fP 
+set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJECT\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1716,7 +1724,7 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBEXCEPTION O
 .RE
 .PP
 .SS "ctx.ErrorSet(Exception ex)"
-convert a \fIclass MqSException\fP into a vbmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the exception was caught and before the application exit or the object is deleted.
+convert a \fIclass MqSException\fP into a vbmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "ctx.ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
 .SS "ctx.ErrorIsEXIT() As Boolean"
@@ -1743,7 +1751,7 @@ An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapp
 .SS "ctx.ErrorReset()"
 clear the \fIerror\fP and reset the \fIcontext\fP 
 .SS "ctx.ErrorRaise()"
-convert the error from an \fIcontext\fP into an \fBEXCEPTION OBJECT\fP and raise the object.
+convert the error from an \fIcontext\fP into an \fBERROR OBJECT\fP and raise the object.
 .SS "ctx.ErrorPrint()"
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "CONTEXT LOCAL STORAGE API"

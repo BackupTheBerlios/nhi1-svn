@@ -56,7 +56,7 @@ struct MqReadS {
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
-  MQ_BIN trans_item;		    ///< transaction item
+  MQ_CBI trans_item;		    ///< transaction item
   MQ_SIZE trans_size;		    ///< transaction size
 };
 
@@ -379,7 +379,7 @@ pReadHDR (
 
     // 5. if in a longterm-transaction, read the transaction-item
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
-      MQ_BIN itm; MQ_SIZE len;
+      MQ_CBI itm; MQ_SIZE len;
       enum MqErrorE ret;
       MqErrorCheck (MqReadN (context, &itm, &len));
       // answer first call with an empty return package
@@ -725,7 +725,7 @@ MqReadB (
 enum MqErrorE
 MqReadN (
   struct MqS * const context,
-  MQ_BIN * const out,
+  MQ_CBI  * const out,
   MQ_SIZE * const len
 )
 {
@@ -787,7 +787,7 @@ pReadBDY (
 enum MqErrorE
 MqReadBDY (
   struct MqS * const context,
-  MQ_BIN * const out,
+  MQ_BIN  * const out,
   MQ_SIZE * const len
 )
 {
@@ -835,7 +835,7 @@ MqReadProxy (
 )
 {
   if (readctx->config.isString == sendctx->config.isString) {
-    MQ_BIN buf = NULL;
+    MQ_CBI buf = NULL;
     MQ_SIZE len = 0;
     MqErrorCheck(MqReadN(readctx, &buf, &len));
     if (MqErrorCheckI(MqSendN(sendctx, buf, len))) {

@@ -354,7 +354,7 @@ MqBufferCreateC (
 struct MqBufferS * 
 MqBufferCreateB (
   struct MqS * const context,
-  MQ_BINB const * const val,
+  MQ_CBI  const val,
   MQ_SIZE const len
 )
 {
@@ -959,7 +959,7 @@ MqBufferSetC (
 struct MqBufferS *
 MqBufferSetB (
   struct MqBufferS * const buf,
-  MQ_BINB const * const in,
+  MQ_CBI  const in,
   MQ_SIZE const len
 )
 {

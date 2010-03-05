@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -147,7 +147,7 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .br
 .R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_STR\fP object "
 .ti -1c
-.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const val, \fBMQ_SIZE\fP const len)"
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_CBI\fP const val, \fBMQ_SIZE\fP const len)"
 .br
 .R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object "
 .ti -1c
@@ -219,7 +219,7 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .br
 .R "set the \fBMqBufferS\fP object with an \fBMQ_STR\fP object "
 .ti -1c
-.RI "struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CBI\fP const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object "
 .ti -1c
@@ -274,32 +274,32 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 2077 of file msgque.h.
+Definition at line 2079 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
 signature used in \fBMqBufferS.signature\fP 
 .PP
-Definition at line 2080 of file msgque.h.
+Definition at line 2082 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 1977 of file msgque.h.
+Definition at line 1979 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 1980 of file msgque.h.
+Definition at line 1982 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 1983 of file msgque.h.
+Definition at line 1985 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 1986 of file msgque.h.
+Definition at line 1988 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -310,7 +310,7 @@ Definition at line 1986 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 1989 of file msgque.h.
+Definition at line 1991 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -326,30 +326,30 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 2071 of file msgque.h.
+Definition at line 2073 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String data-type (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string data-type (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (Byte)
+\fCY\fP : 1 byte signed character (byte)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (Boolean)
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (bool)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (Short)
+\fCS\fP : 2 byte signed short (short)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (Integer)
+\fCI\fP : 4 byte signed integer (int)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (Long)
+\fCW\fP : 8 byte signed long long integer (long)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (Float)
+\fCF\fP : 4 byte float (float)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (Double)
+\fCD\fP : 8 byte double (double)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (Byte())
+\fCB\fP : unsigned char array used for binary data (byte[])
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end (String)
+\fCC\fP : string data using a \fC\\0\fP at the end (string)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
@@ -393,7 +393,7 @@ L: list object type.
 \fB\fIMQ_TRAT \fP\fP
 T: transaction object type. 
 .PP
-Definition at line 2023 of file msgque.h.
+Definition at line 2025 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
@@ -462,7 +462,7 @@ change the type of an \fBMqBufferS\fP object to \fItype\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -495,7 +495,7 @@ create a new \fBMqBufferS\fP with \fIsize\fP
 .RE
 .PP
 
-.SS "struct \fBMqBufferS\fP* MqBufferCreateB (struct \fBMqS\fP *const  context, \fBMQ_BINB\fP const *const  val, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* MqBufferCreateB (struct \fBMqS\fP *const  context, \fBMQ_CBI\fP const  val, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
 .PP
 create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object 
 .PP
@@ -716,7 +716,7 @@ function to read an \fBMQ_BIN\fP from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -741,7 +741,7 @@ function to read an \fBMQ_STR\fP from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -778,7 +778,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -795,7 +795,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -812,7 +812,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -829,7 +829,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -846,7 +846,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -878,7 +878,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -895,7 +895,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -971,7 +971,7 @@ reset a \fBMqBufferS\fP to the length zero
 .RE
 .PP
 
-.SS "struct \fBMqBufferS\fP* MqBufferSetB (struct \fBMqBufferS\fP *const  buf, \fBMQ_BINB\fP const *const  in, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* MqBufferSetB (struct \fBMqBufferS\fP *const  buf, \fBMQ_CBI\fP const  in, \fBMQ_SIZE\fP const  len)\fC [read]\fP"
 .PP
 set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object 
 .PP
@@ -1242,4 +1242,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

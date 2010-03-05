@@ -240,7 +240,7 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "contextP=\param[in,out] contextP a pointer of \contextI (will be set to \c NULL)" \
                          "send=\param send the #MqS::send object created by #MqLinkCreate " \
                          "error=\param[in] error the #MqS::error object created by #MqLinkCreate " \
-                         "retMqErrorE=\return the #MqErrorE return status #MQ_OK, #MQ_ERROR or #MQ_CONTINUE " \
+                         "retMqErrorE=\return the #MqErrorE return status #MQ_OK, #MQ_CONTINUE or #MQ_ERROR and an \RNSA{ErrorObject}" \
                          "retMqBufferS=\return the #MqBufferS object " \
                          "read=\param read the #MqS::read object created by #MqLinkCreate " \
                          "readFrom=\read;\retval out a pointer to the object for return;\retMqErrorE " \

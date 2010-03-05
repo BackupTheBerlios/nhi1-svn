@@ -227,7 +227,7 @@ JNIEXPORT jbyteArray JNICALL NS(ReadN) (
 )
 {
   SETUP_context;
-  MQ_BIN b;
+  MQ_CBI b;
   MQ_SIZE len;
   jbyteArray tmp;
   ErrorMqToJavaWithCheck(MqReadN(context, &b, &len));

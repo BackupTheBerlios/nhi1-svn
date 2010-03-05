@@ -70,7 +70,7 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  MQ_BIN bdy; MQ_SIZE len;
+  MQ_BIN bdy = NULL; MQ_SIZE len;
   struct MqS * ftrctx;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
@@ -82,6 +82,7 @@ PkgToGuard (
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
   MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
+  MqSysFree (bdy);
 
   // continue with the original transaction
   if (MqServiceIsTransaction (mqctx)) {
@@ -94,6 +95,7 @@ error:
   return MqSendRETURN(mqctx);
 
 error1:
+  MqSysFree (bdy);
   MqErrorCopy(mqctx, ftrctx);
   return MqErrorStack(mqctx);
 }
@@ -111,18 +113,14 @@ GuardToPkg (
 
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   guard_crypt (bdy, len, DECRYPT);
-  switch (MqSendBDY (ftrctx, bdy, len)) {
-    case MQ_OK:
-      break;
-    case MQ_CONTINUE:
-      // send the "answer" back
-      MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
-      guard_crypt (bdy, len, ENCRYPT);
-      MqErrorCheck (MqSendSTART (mqctx));
-      MqErrorCheck (MqSendB (mqctx, bdy, len));
-      break;
-    case MQ_ERROR:
-      goto error1;
+  MqErrorCheck (MqSendBDY (ftrctx, bdy, len));
+
+  // check for a short-term-transaction and return the results
+  if (MqServiceIsTransaction (ftrctx)) {
+    MqErrorCheck1 (MqReadBDY (ftrctx, &bdy, &len));
+    guard_crypt (bdy, len, ENCRYPT);
+    MqErrorCheck (MqSendSTART (mqctx));
+    MqErrorCheck (MqSendB (mqctx, bdy, len));
   }
 
 error:

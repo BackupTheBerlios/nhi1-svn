@@ -1,4 +1,4 @@
-.TH "csmsgque" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -50,7 +50,7 @@ csmsgque \-
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP, \fBMQ_CONTINUE\fP, \fBMQ_ERROR\fP, \fBMQ_EXIT\fP }"
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP, \fBMQ_CONTINUE\fP, \fBMQ_ERROR\fP }"
 .br
 .ti -1c
 .RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP, \fBMQ_FACTORY_NEW_CHILD\fP, \fBMQ_FACTORY_NEW_SLAVE\fP, \fBMQ_FACTORY_NEW_FORK\fP, \fBMQ_FACTORY_NEW_THREAD\fP, \fBMQ_FACTORY_NEW_FILTER\fP }"
@@ -107,7 +107,7 @@ csmsgque \-
 \fB\fIMQ_YES \fP\fP
 
 .PP
-Definition at line 89 of file csmsgque.cs.
+Definition at line 88 of file csmsgque.cs.
 .SS "enum \fBcsmsgque::MqErrorE\fP"
 .PP
 \fBEnumerator: \fP
@@ -118,8 +118,6 @@ Definition at line 89 of file csmsgque.cs.
 \fB\fIMQ_CONTINUE \fP\fP
 .TP
 \fB\fIMQ_ERROR \fP\fP
-.TP
-\fB\fIMQ_EXIT \fP\fP
 
 .PP
 Definition at line 73 of file csmsgque.cs.
@@ -141,7 +139,7 @@ Definition at line 73 of file csmsgque.cs.
 \fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
 
 .PP
-Definition at line 80 of file csmsgque.cs.
+Definition at line 79 of file csmsgque.cs.
 .SH "Function Documentation"
 .PP 
 .SS "internal delegate \fBMqErrorE\fP csmsgque.MqCreateF ([In] IntPtr context, [In, Out] ref IntPtr argv)"
@@ -178,4 +176,4 @@ implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

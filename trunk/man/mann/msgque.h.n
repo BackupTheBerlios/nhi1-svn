@@ -1,8 +1,8 @@
-.TH "msgque.h" n "25 Feb 2010" "Version 4.5" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "5 Mar 2010" "Version 4.5" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 228 2010-03-04 13:39:52Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -426,6 +426,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
 .br
 .R "\fIbyte-array\fP pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_BINB\fP const * \fBMQ_CBI\fP"
+.br
+.R "\fIconst\fP byte-array pointer data-type "
 .ti -1c
 .RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
 .br
@@ -905,7 +909,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .br
 .R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_STR\fP object "
 .ti -1c
-.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const val, \fBMQ_SIZE\fP const len)"
+.RI "struct \fBMqBufferS\fP * \fBMqBufferCreateB\fP (struct \fBMqS\fP *const context, \fBMQ_CBI\fP const val, \fBMQ_SIZE\fP const len)"
 .br
 .R "create and initialize an new \fBMqBufferS\fP object using an \fBMQ_BIN\fP object "
 .ti -1c
@@ -977,7 +981,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .br
 .R "set the \fBMqBufferS\fP object with an \fBMQ_STR\fP object "
 .ti -1c
-.RI "struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "struct \fBMqBufferS\fP * \fBMqBufferSetB\fP (struct \fBMqBufferS\fP *const buf, \fBMQ_CBI\fP const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "set the \fBMqBufferS\fP object with an \fBMQ_BIN\fP object "
 .ti -1c
@@ -1271,11 +1275,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .br
 .R "generic function to read an \fBMQ_BIN\fP object from the \fIRead-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadN\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
 .R "extract a \fIbody-item\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BIN\fP *const val, \fBMQ_SIZE\fP *const len)"
+.RI "enum \fBMqErrorE\fP \fBMqReadBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP *const val, \fBMQ_SIZE\fP *const len)"
 .br
 .R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
 .ti -1c
@@ -1328,17 +1332,17 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .RI "enum \fBMqErrorE\fP \fBMqSendC\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP const value)"
 .br
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_BINB\fP const *const in, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendB\fP (struct \fBMqS\fP *const context, \fBMQ_CBI\fP const in, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fBMQ_BIN\fP object to the \fISend-Buffer\fP object "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendN\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP const value, \fBMQ_SIZE\fP const len)"
 .br
 .R "append a \fIbody-item\fP to the \fIsend-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_BINB\fP const *const value, \fBMQ_SIZE\fP const len)"
+.RI "enum \fBMqErrorE\fP \fBMqSendBDY\fP (struct \fBMqS\fP *const ctx, \fBMQ_CBI\fP value, \fBMQ_SIZE\fP len)"
 .br
-.R "append the \fIentire-body\fP to the \fIsend-data-package\fP. "
+.R "send the \fIentire-body\fP to the \fIlink-target\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSendU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferS\fP *const in)"
 .br
@@ -1524,13 +1528,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 217 2010-02-22 16:50:29Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 228 2010-03-04 13:39:52Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 217 $ 
+$Rev: 228 $ 
 .RE
 .PP
 \fBAuthor:\fP

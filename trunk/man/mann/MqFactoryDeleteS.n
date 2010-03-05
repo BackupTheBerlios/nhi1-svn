@@ -1,4 +1,4 @@
-.TH "MqFactoryDeleteS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "MqFactoryDeleteS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,30 +34,30 @@ MqFactoryDeleteS \- function pointer to \fIdelete\fP an object
 .PP 
 function pointer to \fIdelete\fP an object 
 .PP
-Definition at line 520 of file msgque.h.
+Definition at line 522 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_PTR\fP \fBMqFactoryDeleteS.data\fP"
 .PP
 additional data pointer for the fCreate 
 .PP
-Definition at line 522 of file msgque.h.
+Definition at line 524 of file msgque.h.
 .SS "\fBMqFactoryDeleteF\fP \fBMqFactoryDeleteS.fCall\fP"
 .PP
 delete the object created with \fBMqFactoryCreateS\fP 
 .PP
-Definition at line 521 of file msgque.h.
+Definition at line 523 of file msgque.h.
 .SS "\fBMqTokenDataCopyF\fP \fBMqFactoryDeleteS.fCopy\fP"
 .PP
 copy additional data pointer 
 .PP
-Definition at line 524 of file msgque.h.
+Definition at line 526 of file msgque.h.
 .SS "\fBMqTokenDataFreeF\fP \fBMqFactoryDeleteS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 523 of file msgque.h.
+Definition at line 525 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

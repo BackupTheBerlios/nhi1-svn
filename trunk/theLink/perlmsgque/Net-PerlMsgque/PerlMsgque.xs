@@ -744,7 +744,7 @@ MqReadC (MqS* context)
 void
 MqSendB (MqS* context, SV* binary)
   INIT:
-    MQ_BIN bin;
+    MQ_CBI bin;
     STRLEN len;
   CODE:
     bin = (MQ_BIN)SvPVbyte (binary, len);
@@ -753,7 +753,7 @@ MqSendB (MqS* context, SV* binary)
 void
 MqSendN (MqS* context, SV* binary)
   INIT:
-    MQ_BIN bin;
+    MQ_CBI bin;
     STRLEN len;
   CODE:
     bin = (MQ_BIN)SvPVbyte (binary, len);
@@ -762,7 +762,7 @@ MqSendN (MqS* context, SV* binary)
 void
 MqSendBDY (MqS* context, SV* binary)
   INIT:
-    MQ_BIN bin;
+    MQ_CBI bin;
     STRLEN len;
   CODE:
     bin = (MQ_BIN)SvPVbyte (binary, len);
@@ -782,7 +782,7 @@ MqReadB (MqS* context)
 SV*
 MqReadN (MqS* context)
   INIT:
-    MQ_BIN bin;
+    MQ_CBI bin;
     MQ_SIZE len;
   CODE:
     ErrorMqToPerlWithCheck (MqReadN (context, &bin, &len));

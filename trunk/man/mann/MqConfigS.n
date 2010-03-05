@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -70,7 +70,7 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .PP 
 end-user configuration data, also available as command-line options 
 .PP
-Definition at line 647 of file msgque.h.
+Definition at line 649 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_INT\fP \fBMqConfigS.debug\fP"
@@ -79,49 +79,49 @@ set the \fIdebug-level\fP of the \fIcontext\fP
 .PP
 Valid values are 0 <= \fIdebug-level\fP <= 9 using 0 for \fIno-debug\fP and 9 for \fImaximum-debug\fP. (default: 0) 
 .PP
-Definition at line 722 of file msgque.h.
+Definition at line 724 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreFork\fP"
 .PP
 do not allow the usage of \fIfork\fP 
 .PP
-Definition at line 745 of file msgque.h.
+Definition at line 747 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreSpawn\fP"
 .PP
 do not allow the usage of \fIspawn\fP 
 .PP
-Definition at line 742 of file msgque.h.
+Definition at line 744 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS.ignoreThread\fP"
 .PP
 do not allow the usage of \fIthreads\fP 
 .PP
-Definition at line 739 of file msgque.h.
+Definition at line 741 of file msgque.h.
 .SS "struct \fBMqIoConfigS\fP \fBMqConfigS.io\fP\fC [read]\fP"
 .PP
 Global configuration data belonging to 'io'. 
 .PP
-Definition at line 748 of file msgque.h.
+Definition at line 750 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS.isSilent\fP"
 .PP
 write (\fIfalse\fP) or don't write (\fItrue\fP) any massages to stdout or stderr (default: \fIfalse\fP) 
 .PP
-Definition at line 650 of file msgque.h.
+Definition at line 652 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS.isString\fP"
 .PP
 use the string-mode (\fItrue\fP) or the binary-mode (\fIfalse\fP) to send \fInative-data\fP 
 .PP
 The items in a \fIdata-package\fP are defined as \fBTYPE IDENTIFIER\fP and can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast) data. The \fIstring-mode\fP is used for debugging purpose or if the \fIbinary-data-model\fP is different between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require the \fIstring-mode\fP. The option is only available for the \fIclient-parent-context\fP. (default: binary-mode) 
 .PP
-Definition at line 660 of file msgque.h.
+Definition at line 662 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS.master\fP\fC [read]\fP"
 .PP
 SLAVE: a pointer to the master object or \fCNULL\fP. 
 .PP
-Definition at line 733 of file msgque.h.
+Definition at line 735 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqConfigS.master_id\fP"
 .PP
 SLAVE: the ID in the master SLAVES array or \fCO\fP. 
 .PP
-Definition at line 736 of file msgque.h.
+Definition at line 738 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS.name\fP"
 .PP
 set the human-readable name of the \fIlocal-context\fP 
@@ -144,14 +144,14 @@ use the \fI--name\fP argument from the \fIcommand-line-arguments\fP
 .PP
 
 .PP
-Definition at line 702 of file msgque.h.
+Definition at line 704 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqConfigS.parent\fP\fC [read]\fP"
 .PP
 Create a child-context. 
 .PP
 type default option application context  POINTER NULL NO client parent  
 .PP
-Definition at line 730 of file msgque.h.
+Definition at line 732 of file msgque.h.
 .SS "\fBMQ_STR\fP \fBMqConfigS.srvname\fP"
 .PP
 set the human-readable name of the \fIserver-context\fP 
@@ -162,9 +162,9 @@ Use the \fIserver-name\fP as a client specific prefix in the server debug/error/
 C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE 
 .fi
 .PP
- If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINothing\fP) 
+ If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fInull\fP) 
 .PP
-Definition at line 718 of file msgque.h.
+Definition at line 720 of file msgque.h.
 .SS "enum \fBMqStartE\fP \fBMqConfigS.startAs\fP"
 .PP
 create a new \fIapplication-context\fP as thread, spawn or fork 
@@ -191,8 +191,8 @@ The allowed integer values are:
 .PP
 (default: do not create a new application-context) 
 .PP
-Definition at line 681 of file msgque.h.
+Definition at line 683 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

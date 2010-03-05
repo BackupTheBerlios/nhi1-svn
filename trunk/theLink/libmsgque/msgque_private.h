@@ -92,6 +92,14 @@ typedef enum MqErrorE (
   struct MqS * const
 );
 
+/// \brief the \e hand-shake of a \e service-call
+enum MqHandShakeE {
+  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
+  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
+  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
+  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
+};
+
 /*****************************************************************************/
 /*                                                                           */
 /*                          protocol reference                               */

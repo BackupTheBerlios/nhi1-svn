@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "25 Feb 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "5 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -424,7 +424,7 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "native void \fBSendBDY\fP (byte[] b)  throws MqSException"
+.RI "native int \fBSendBDY\fP (byte[] b)  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c

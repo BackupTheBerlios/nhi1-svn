@@ -9,8 +9,14 @@ else
 fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
+		    --enable-guard \
+		    --enable-brain \
 		    --enable-symbols \
 		    --enable-tcl \
+		    --enable-cxx \
+		    --enable-java \
+		    --enable-csharp \
+		    --enable-python \
 		    --enable-perl \
 		    $ARGS $@
 

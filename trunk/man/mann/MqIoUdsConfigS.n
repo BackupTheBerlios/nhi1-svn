@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,18 +25,18 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINothing\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fInull\fP) 
 .RE
 .PP
 
 .PP
-Definition at line 586 of file msgque.h.
+Definition at line 588 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS.file\fP"
 .PP
-Definition at line 587 of file msgque.h.
+Definition at line 589 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

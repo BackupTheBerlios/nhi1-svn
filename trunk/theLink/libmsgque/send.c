@@ -482,7 +482,7 @@ MqSendC (
 enum MqErrorE
 MqSendB (
   struct MqS * const context,
-  MQ_BINB const * const in,
+  MQ_CBI  const in,
   MQ_SIZE const len
 )
 {
@@ -558,7 +558,7 @@ pSendBDY (
 enum MqErrorE
 MqSendBDY (
   struct MqS * const context,
-  MQ_BINB const * in,
+  MQ_CBI  in,
   MQ_SIZE len
 )
 {
@@ -574,21 +574,19 @@ MqSendBDY (
     pSendBDY (context, in, len, cur->code);
     switch (cur->code) {
       case MQ_HANDSHAKE_START:
+	// used for "MqServiceIsTransaction" to return the right values (aguard)
+	context->link._trans = cur->trans;
       case MQ_HANDSHAKE_TRANSACTION:
-	if (cur->trans != 0) {
-	  MqErrorCheck (MqSendEND_AND_WAIT (context, cur->tok, MQ_TIMEOUT_USER));
-	  return MQ_CONTINUE;   // additional data on return
-	} else {
-	  MqErrorCheck (pSendEND(context, cur->tok, 0));
-	}
+	cur->trans != 0 ?
+	  MqSendEND_AND_WAIT (context, cur->tok, MQ_TIMEOUT_USER) :
+	    pSendEND(context, cur->tok, 0);
 	break;
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-	MqErrorCheck (pSendEND (context, cur->tok, cur->trans));
+	pSendEND (context, cur->tok, cur->trans);
 	break;
     }
   }
-error:
   return MqErrorStack(context);
 }
 

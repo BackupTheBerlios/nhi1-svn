@@ -1000,7 +1000,7 @@ Ot_SND2 (
       MqErrorCheck(MqSendU(clmqctx, buf));
       MqErrorCheck(MqSendEND(clmqctx, TOK));
     } else if (!strcmp(s,"WAIT")) {
-      MQ_BIN itm;
+      MQ_CBI itm;
       MQ_SIZE len;
       MqErrorCheck(MqSendSTART(clmqctx));
       MqErrorCheck(MqReadN(mqctx, &itm, &len));

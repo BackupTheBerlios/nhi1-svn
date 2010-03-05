@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -31,15 +31,15 @@ The \fIsocket\fP option is special because it is used only for internal purpose 
 .PP
 
 .PP
-Definition at line 616 of file msgque.h.
+Definition at line 618 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS.socket\fP[2]"
 .PP
 result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP 
 .PP
-Definition at line 617 of file msgque.h.
+Definition at line 619 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

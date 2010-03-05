@@ -436,7 +436,7 @@ namespace example {
 	    ReadProxy(cl);
 	    cl->SendEND(TOK);
 	  } else if (!strcmp(s,"WAIT")) {
-	    MQ_BIN itm;
+	    MQ_CBI itm;
 	    MQ_SIZE len;
 	    cl->SendSTART();
 	    ReadN(&itm, &len);

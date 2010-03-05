@@ -169,7 +169,7 @@ ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
 ALIASES		    += "SendL_START=$ctx->SendL_START()"
 ALIASES		    += "SendL_END=$ctx->SendL_END()"
 ALIASES		    += "SendN=$ctx->SendN(value)"
-ALIASES		    += "SendBDY=$ctx->SendBDY(value)"
+ALIASES		    += "SendBDY=\I $ctx->SendBDY(value)"
 ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
 ALIASES		    += "SendT_END=$ctx->SendT_END()"
 ALIASES		    += "SendT_example=\code \n\

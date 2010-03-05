@@ -25,7 +25,7 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 		  public IServerCleanup, public IEvent, public IService {
   private:
     struct FilterItmS {
-      MQ_BIN  bdy;
+      MQ_CBI  bdy;
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;

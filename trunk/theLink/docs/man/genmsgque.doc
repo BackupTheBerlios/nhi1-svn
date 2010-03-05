@@ -243,6 +243,7 @@ This option is \b not available for \self.
 \RNSA{ServiceGetFilter}\n
 \RNSA{ServiceCreate}\n
 \RNSA{ServiceDelete}\n
+\RNSA{ServiceProxy}\n
 \RNSA{ProcessEvent}\n
 
 \copydoc Mq_Service_C_API
@@ -494,7 +495,7 @@ return the data form the buffer using the \RNS{BufferIdentifer}.
 return the type as single character of the item stored in the buffer object.
 
 
-\section	\NS{ErrorObject}			EXCEPTION OBJECT
+\section	\NS{ErrorObject}			ERROR OBJECT
 \RNSA{ErrorGetText}\n
 \RNSA{ErrorGetNum}\n
 \RNSA{ErrorC}\n
@@ -505,7 +506,7 @@ return the type as single character of the item stored in the buffer object.
 \RNSA{ErrorRaise}\n
 \RNSA{ErrorPrint}\n
 
-The \e exception-object (\ErrorObject) is used to transport the \e error from the
+The \e error-object (\ErrorObject) is used to transport the \e error from the
 \libmsgque context using the \e programming-language error-handling-code.
 
 \b Example: catch an error and write the message to stdout: \error_example
@@ -521,7 +522,7 @@ The \e exception-object (\ErrorObject) is used to transport the \e error from th
 
 \subsection	\NS{ErrorSet}				\ErrorSet
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
-additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the exception was
+additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the error was
 caught and before the application exit or the object is deleted.
 
 \subsection	\NS{ErrorSetCONTINUE}			\ErrorSetCONTINUE

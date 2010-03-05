@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_List_C_API" n "25 Feb 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -312,7 +312,7 @@ search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP 
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -342,7 +342,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -368,7 +368,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -394,7 +394,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -423,7 +423,7 @@ search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -449,7 +449,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -475,7 +475,7 @@ search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP 
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -501,7 +501,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -527,7 +527,7 @@ search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP obj
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -629,7 +629,7 @@ delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -673,7 +673,7 @@ the \fIindex'th\fP element of the \fIbuf\fP list \fBwill\fP be deleted from the 
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_ERROR\fP or \fBMQ_CONTINUE\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -753,4 +753,4 @@ The size of \fIstr\fP have to be at least 4 bytes
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

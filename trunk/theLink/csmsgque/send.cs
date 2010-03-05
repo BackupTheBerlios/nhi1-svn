@@ -171,7 +171,7 @@ public partial class MqS
 
   /// \api #MqSendBDY
   public void SendBDY(byte[] val) {
-    ErrorMqToCsWithCheck(MqSendBDY(context, val, val.Length));
+    ErrorMqToCsWithCheck (MqSendBDY(context, val, val.Length));
   }
 
   /// \api #MqSendU

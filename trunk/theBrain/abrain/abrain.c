@@ -40,7 +40,7 @@
   TCFDB * const fdb = brain->db->fdb;
 #define SETUP_ADB \
   SETUP_brain; \
-  MQ_BIN key; MQ_SIZE klen; \
+  MQ_CBI key; MQ_SIZE klen; \
   TCADB * const adb = brain->db;
 #define DbErrorCheck(f) \
   if (!(f))  { \
@@ -124,7 +124,7 @@ DbError(struct BrainCtxS *brain, MQ_CST func){
 
 static enum MqErrorE APUT ( ARGS ) {
   SETUP_ADB;
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE vlen;
 
   MqSendSTART(mqctx);
@@ -141,7 +141,7 @@ error:
 static enum MqErrorE APUT_F ( ARGS ) {
   SETUP_FDB;
 
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE vlen;
 
   MqSendSTART(mqctx);
@@ -157,7 +157,7 @@ error:
 
 static enum MqErrorE AKEP ( ARGS ) {
   SETUP_ADB;
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE vlen;
 
   MqSendSTART(mqctx);
@@ -174,7 +174,7 @@ error:
 static enum MqErrorE AKEP_F ( ARGS ) {
   SETUP_FDB;
 
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE vlen;
 
   MqSendSTART(mqctx);
@@ -244,7 +244,7 @@ static enum MqErrorE AITN ( ARGS ) {
   MqSendSTART(mqctx);
   while (num-- >= 0 && (key=tcadbiternext(adb, &klen)) != NULL) {
     MqSendN(mqctx, key, klen);
-    free(key);
+    free((MQ_BIN)key);
   }
 
 error:
@@ -283,7 +283,7 @@ static enum MqErrorE AITA ( ARGS ) {
     MqSendN(mqctx, key, klen);
     DbErrorCheck(val=tcadbget(adb, key, klen, &vlen));
     MqSendN(mqctx, val, vlen);
-    free(key);
+    free((MQ_BIN)key);
     free(val);
   }
 

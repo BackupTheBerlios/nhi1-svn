@@ -26,7 +26,7 @@
   }
 
 struct FilterItmS {
-  MQ_BIN  data;
+  MQ_CBI  data;
   MQ_SIZE len;
 };
 
@@ -130,7 +130,7 @@ static enum MqErrorE EXIT ( ARGS ) {
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
-  MQ_BIN bdy;
+  MQ_CBI bdy;
   MQ_SIZE len;
   SETUP_ctx;
   register struct FilterItmS * it;

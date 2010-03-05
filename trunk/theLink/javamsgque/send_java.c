@@ -307,11 +307,13 @@ JNIEXPORT void JNICALL NS(SendBDY) (
   jbyteArray	b
 )
 {
+  enum MqErrorE ret = MQ_ERROR;
   jbyte * tmp;
   SETUP_context;
   tmp = (*env)->GetByteArrayElements(env,b,NULL);
-  ErrorMqToJavaWithCheck(MqSendBDY(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b)));
+  ret = MqSendBDY(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
   (*env)->ReleaseByteArrayElements(env,b,tmp,0);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
