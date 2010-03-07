@@ -2,7 +2,44 @@
 
 \page changelog ChangeLog
 
-\section V0_7 X Feb 2010 - NHI1-0.7, PLMK-1.6 and libmsgque-4.5
+\section V0_7 08 Mar 2010 - NHI1-0.7, PLMK-1.6 and libmsgque-4.5
+
+This is a \e major-feature-release to add \e longtime-transaction support.
+
+\subsection V0_7_lt longtime-transaction support
+
+A \e longtime-transaction is a transaction with an infinite time period between the start 
+and the end. A \e longtime-transaction is always a \e persistent-transaction
+too. The \e persistent support is available as in-memory solution on the \e application-server
+or in an additional \e bidirectional-filter available for the next release.\n
+
+A typical scenario for a \e longtime-transaction is:
+- A user with a client connect to the server and start a \e longtime-transaction job. 
+After a while the user shutdown the client and leave the office. At the next morning the
+user start the client again and the results are send from the server to the client.
+- On a space mission the time-overhead between transaction start and end is large. It is
+usually not possible to keep the client-server-connection open all the time.
+- On a military action-system the enemy try to interrupted the client-server-connection
+to disable data communication.
+.
+
+To use a \e longtime-transaction the results are send to a \e client-service registered with
+\RNSA{ServiceCreate}. This service and addtional data (I call this data \e local-context-data)
+have to be added to the \e longterm-transaction package to be available in the result. On the 
+\e link-target the \e local-context-data is initial stripped from the \e data-package and is 
+later added to the results again.\n
+
+The \e local-context-data is added to the \e data-package with \RNSA{SendT_START} and
+\RNSA{SendT_END}. The \e local-context-data is read from the \e data-package with 
+\RNSA{ReadT_START} and \RNSA{ReadT_END}.
+
+\subsection V0_7_sp service proxy support
+
+A \e service-proxy (\RNSA{ServiceProxy}) is used to forward the entire \e data-package from one 
+context to an other context and is used in a \e filter like environment.
+
+\n
+\n
 
 \section V0_6 16 Feb 2010 - NHI1-0.6, PLMK-1.5 and libmsgque-4.4
 
