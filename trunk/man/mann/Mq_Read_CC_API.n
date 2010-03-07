@@ -53,7 +53,7 @@ Mq_Read_CC_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::ReadBDY\fP (\fBMQ_CBI\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.RI "void \fBccmsgque::MqC::ReadBDY\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
 .ti -1c
@@ -139,7 +139,7 @@ Definition at line 594 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqReadB\fP 
 .PP
 Definition at line 590 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::ReadBDY (\fBMQ_CBI\fP *const  valP, \fBMQ_SIZE\fP *const  lenP)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::ReadBDY (\fBMQ_BIN\fP *const  valP, \fBMQ_SIZE\fP *const  lenP)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP 
 .PP

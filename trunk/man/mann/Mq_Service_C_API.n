@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -175,7 +175,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -231,7 +231,7 @@ return a 'filter not available' error
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fInull\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
 .RE
 .PP
 \fBReturns:\fP
@@ -297,4 +297,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

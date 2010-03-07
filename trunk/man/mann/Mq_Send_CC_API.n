@@ -81,7 +81,7 @@ Mq_Send_CC_API \- construct an outgoing \fIsend-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBccmsgque::MqC::SendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.RI "void \fBccmsgque::MqC::SendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c
@@ -129,13 +129,13 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
 .PP
-Definition at line 720 of file ccmsgque.h.
+Definition at line 718 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SendB (\fBMQ_CBI\fP const  val, \fBMQ_SIZE\fP const  len)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
 .PP
-Definition at line 718 of file ccmsgque.h.
-.SS "enum \fBMqErrorE\fP ccmsgque::MqC::SendBDY (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)\fC [inline, inherited]\fP"
+Definition at line 716 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendBDY (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP 
 .PP
@@ -187,12 +187,12 @@ Definition at line 689 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP 
 .PP
-Definition at line 726 of file ccmsgque.h.
+Definition at line 724 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SendL_START ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP 
 .PP
-Definition at line 724 of file ccmsgque.h.
+Definition at line 722 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SendN (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendN\fP 
@@ -222,12 +222,12 @@ Definition at line 664 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP 
 .PP
-Definition at line 730 of file ccmsgque.h.
+Definition at line 728 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SendT_START (\fBMQ_CST\fP token)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP 
 .PP
-Definition at line 728 of file ccmsgque.h.
+Definition at line 726 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::SendU (\fBMQ_BUF\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendU\fP 

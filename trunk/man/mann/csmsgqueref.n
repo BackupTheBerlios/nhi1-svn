@@ -1082,13 +1082,7 @@ The goal of this function is to send the \fIentire-body\fP of a service request 
 .PP
 \fBReturns:\fP
 .RS 4
-.IP "\(bu" 2
-\fBMQ_OK\fP = 0 on OK for \fBSendEND\fP
-.IP "\(bu" 2
-\fBMQ_CONTINUE\fP = 1 on OK for \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
-.IP "\(bu" 2
-\fBMQ_ERROR\fP = 2 on error and an \fBErrorObject\fP
-.PP
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendL_START()"

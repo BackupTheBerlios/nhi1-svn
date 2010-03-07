@@ -77,7 +77,7 @@ Mq_Send_Java_API \- construct an outgoing \fIsend-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "native int \fBjavamsgque::MqS.SendBDY\fP (byte[] b)  throws MqSException"
+.RI "native void \fBjavamsgque::MqS.SendBDY\fP (byte[] b)  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c
@@ -121,7 +121,7 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
 .PP
-.SS "native int javamsgque.MqS.SendBDY (byte[] b)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.SendBDY (byte[] b)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP 
 .PP

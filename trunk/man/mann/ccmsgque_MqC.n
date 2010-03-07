@@ -343,7 +343,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
 .ti -1c
-.RI "void \fBReadBDY\fP (\fBMQ_CBI\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
+.RI "void \fBReadBDY\fP (\fBMQ_BIN\fP *const valP, \fBMQ_SIZE\fP *const lenP)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
 .ti -1c
@@ -475,7 +475,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBSendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.RI "void \fBSendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c

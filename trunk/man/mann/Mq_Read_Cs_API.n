@@ -1,4 +1,4 @@
-.TH "Mq_Read_Cs_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Read_Cs_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -223,4 +223,4 @@ implement the \fBlibmsgque\fP API object: \fBMqReadY\fP
 Definition at line 81 of file read.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

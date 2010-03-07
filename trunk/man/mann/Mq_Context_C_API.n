@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -159,7 +159,7 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .PP
 delete the \fIcontext\fP 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fInull\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINothing\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -214,4 +214,4 @@ If \fItool\fP != NULL, the function will display a header like:
  on the help page. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

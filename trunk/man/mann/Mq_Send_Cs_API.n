@@ -1,4 +1,4 @@
-.TH "Mq_Send_Cs_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Send_Cs_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -77,7 +77,7 @@ Mq_Send_Cs_API \- construct an outgoing \fIsend-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "int \fBcsmsgque::MqS.SendBDY\fP (byte[] val)"
+.RI "void \fBcsmsgque::MqS.SendBDY\fP (byte[] val)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c
@@ -124,7 +124,7 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
 .PP
 Definition at line 163 of file send.cs.
-.SS "int csmsgque.MqS.SendBDY (byte[] val)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.SendBDY (byte[] val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP 
 .PP
@@ -133,7 +133,7 @@ Definition at line 173 of file send.cs.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendC\fP 
 .PP
-Definition at line 185 of file send.cs.
+Definition at line 183 of file send.cs.
 .SS "void csmsgque.MqS.SendD (double val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendD\fP 
@@ -183,12 +183,12 @@ Definition at line 143 of file send.cs.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP 
 .PP
-Definition at line 195 of file send.cs.
+Definition at line 193 of file send.cs.
 .SS "void csmsgque.MqS.SendL_START ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP 
 .PP
-Definition at line 190 of file send.cs.
+Definition at line 188 of file send.cs.
 .SS "void csmsgque.MqS.SendN (byte[] val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendN\fP 
@@ -218,17 +218,17 @@ Definition at line 86 of file send.cs.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP 
 .PP
-Definition at line 205 of file send.cs.
+Definition at line 203 of file send.cs.
 .SS "void csmsgque.MqS.SendT_START (string token)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP 
 .PP
-Definition at line 200 of file send.cs.
+Definition at line 198 of file send.cs.
 .SS "void csmsgque.MqS.SendU (\fBMqBufferS\fP buffer)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendU\fP 
 .PP
-Definition at line 180 of file send.cs.
+Definition at line 178 of file send.cs.
 .SS "void csmsgque.MqS.SendW (long val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendW\fP 
@@ -241,4 +241,4 @@ implement the \fBlibmsgque\fP API object: \fBMqSendY\fP
 Definition at line 128 of file send.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

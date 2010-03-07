@@ -1076,7 +1076,7 @@ an \fBERROR OBJECT\fP on error
 .SS "int ctx.SendBDY(byte[] value)"
 send the \fIentire-body\fP to the \fIlink-target\fP 
 .PP
-The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. To distinguish a \fIshort-term-transaction\fP (\fBSendEND_AND_WAIT\fP, \fBSendEND_AND_CALLBACK\fP) from \fBSendEND\fP 
+The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1089,13 +1089,7 @@ The goal of this function is to send the \fIentire-body\fP of a service request 
 .PP
 \fBReturns:\fP
 .RS 4
-.IP "\(bu" 2
-\fBMQ_OK\fP = 0 on OK for \fBSendEND\fP
-.IP "\(bu" 2
-\fBMQ_CONTINUE\fP = 1 on OK for \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
-.IP "\(bu" 2
-\fBMQ_ERROR\fP = 2 on error and an \fBErrorObject\fP
-.PP
+an \fBERROR OBJECT\fP on error 
 .RE
 .PP
 .SS "ctx.SendL_START()"

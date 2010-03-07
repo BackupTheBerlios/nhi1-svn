@@ -1,4 +1,4 @@
-.TH "Mq_Link_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -313,7 +313,7 @@ get the \fIparent-context\fP from a client/server link
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fInull\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
 .RE
 .PP
 
@@ -328,7 +328,7 @@ get the \fIparent-context\fP from a client/server link
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fInull\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
 .RE
 .PP
  
@@ -347,7 +347,7 @@ This function is only useful if the link is up and running.
 .PP
 \fBReturns:\fP
 .RS 4
-get the \fIident\fP of the \fIlink-target\fP or \fInull\fP if not connected 
+get the \fIident\fP of the \fIlink-target\fP or \fINothing\fP if not connected 
 .RE
 .PP
 
@@ -410,4 +410,4 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 Definition at line 1723 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -1,4 +1,4 @@
-.TH "MqFactoryS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "MqFactoryS" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,4 +45,4 @@ Definition at line 531 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

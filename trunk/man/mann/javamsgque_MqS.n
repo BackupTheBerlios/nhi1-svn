@@ -424,7 +424,7 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
 .ti -1c
-.RI "native int \fBSendBDY\fP (byte[] b)  throws MqSException"
+.RI "native void \fBSendBDY\fP (byte[] b)  throws MqSException"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
 .ti -1c

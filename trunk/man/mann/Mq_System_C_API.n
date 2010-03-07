@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -145,7 +145,7 @@ do { \
 .PP
 
 .PP
-Definition at line 4048 of file msgque.h.
+Definition at line 4044 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
@@ -164,7 +164,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 4100 of file msgque.h.
+Definition at line 4096 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 'basename' system call with error handling feature 
@@ -304,4 +304,4 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

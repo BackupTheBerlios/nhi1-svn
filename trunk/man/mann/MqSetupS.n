@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "5 Mar 2010" "Version 4.5" "csmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "5 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -168,7 +168,7 @@ Definition at line 839 of file msgque.h.
 .PP
 set the application identifier 
 .PP
-The \fIapplication-identifier\fP is used to modify the client or filter behaviour depending on the \fIidentifier-value\fP of the \fIremote-context\fP. The \fIidentifier\fP is \fBnot\fP changeable by the user, like the \fBname\fP configuration option, because this is a 'build-in' feature set by the \fIprogrammer\fP. (default: \fInull\fP) 
+The \fIapplication-identifier\fP is used to modify the client or filter behaviour depending on the \fIidentifier-value\fP of the \fIremote-context\fP. The \fIidentifier\fP is \fBnot\fP changeable by the user, like the \fBname\fP configuration option, because this is a 'build-in' feature set by the \fIprogrammer\fP. (default: \fINothing\fP) 
 .PP
 Definition at line 763 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS.ignoreExit\fP"
@@ -214,4 +214,4 @@ Definition at line 795 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.
