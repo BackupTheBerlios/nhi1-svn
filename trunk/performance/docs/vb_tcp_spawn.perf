@@ -1,5 +1,5 @@
-> mono nothread/NHI1-0.6/theLink/tests/vbserver.exe --tcp --host localhost --port 7793 --spawn
-> nothread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7793
+> mono nothread/NHI1-0.7/theLink/tests/vbserver.exe --tcp --host localhost --port 7793 --spawn
+> nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7793
 C> (client) [SysConnect] TIMEOUT after '90' sec
 C> (client) found in function "GenericConnect" at file "generic_io.c"
 C> (client) found in function "TcpConnect" at file "tcp_io.c"

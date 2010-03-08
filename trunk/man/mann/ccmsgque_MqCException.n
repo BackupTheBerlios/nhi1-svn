@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqCException" n "7 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqCException" n "8 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

@@ -1,11 +1,11 @@
-> tclsh nothread/NHI1-0.6/theLink/tests/server.tcl --tcp --host localhost --port 7783 --fork
-> nothread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7783
-C> (client:6891) [2010-02-18:08-55-26] [0-0-0-0x621bc0-main]: start: --------------------------------------
-C> (client:6891) [2010-02-18:08-55-26] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       6.98
-C> (client:6891) [2010-02-18:08-55-27] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      14.04
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      32.51
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-statistics]:                  parent create:    1294.89
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-statistics]:                  parent delete:     457.03
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-statistics]:                   child create:     255.28
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-statistics]:                   child delete:      58.81
-C> (client:6891) [2010-02-18:08-55-31] [0-0-0-0x621bc0-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.7/theLink/tests/server.tcl --tcp --host localhost --port 7783 --fork
+> nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7783
+C> (client:31172) [2010-03-08:09-02-22] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:31172) [2010-03-08:09-02-22] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       6.39
+C> (client:31172) [2010-03-08:09-02-23] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.46
+C> (client:31172) [2010-03-08:09-02-26] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      32.40
+C> (client:31172) [2010-03-08:09-02-27] [0-0-0-0x621bc0-statistics]:                  parent create:    1045.79
+C> (client:31172) [2010-03-08:09-02-27] [0-0-0-0x621bc0-statistics]:                  parent delete:     418.37
+C> (client:31172) [2010-03-08:09-02-27] [0-0-0-0x621bc0-statistics]:                   child create:     259.59
+C> (client:31172) [2010-03-08:09-02-27] [0-0-0-0x621bc0-statistics]:                   child delete:      48.92
+C> (client:31172) [2010-03-08:09-02-27] [0-0-0-0x621bc0-main]: end: ----------------------------------------

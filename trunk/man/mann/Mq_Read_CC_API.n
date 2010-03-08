@@ -1,4 +1,4 @@
-.TH "Mq_Read_CC_API" n "7 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Read_CC_API" n "8 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

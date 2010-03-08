@@ -10,8 +10,8 @@ This is a \e major-feature-release to add \e longtime-transaction support.
 
 A \e longtime-transaction is a transaction with an infinite time period between the start 
 and the end. A \e longtime-transaction is always a \e persistent-transaction
-too. The \e persistent support is available as in-memory solution on the \e application-server
-or in an additional \e bidirectional-filter available for the next release.\n
+too. The \e persistent support is available as an in-memory solution on the \e application-server
+or in an additional \e bidirectional-filter, with local storage, available for the next release.\n
 
 A typical scenario for a \e longtime-transaction is:
 - A user with a client connect to the server and start a \e longtime-transaction job. 

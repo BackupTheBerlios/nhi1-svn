@@ -1,16 +1,16 @@
-> nothread/NHI1-0.6/theLink/tests/client --all @ mono nothread/NHI1-0.6/theLink/tests/vbserver.exe
+> nothread/NHI1-0.7/theLink/tests/client --all @ mono nothread/NHI1-0.7/theLink/tests/vbserver.exe
 
-** (nothread/NHI1-0.6/theLink/tests/vbserver.exe:13595): WARNING **: The following assembly referenced from /home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.6/theLink/tests/vbserver.exe could not be loaded:
+** (nothread/NHI1-0.7/theLink/tests/vbserver.exe:5662): WARNING **: The following assembly referenced from /home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.7/theLink/tests/vbserver.exe could not be loaded:
      Assembly:   csmsgque    (assemblyref_index=2)
-     Version:    4.4.3701.15511
+     Version:    4.4.3707.30495
      Public Key: (none)
-The assembly was not found in the Global Assembly Cache, a path listed in the MONO_PATH environment variable, or in the location of the executing assembly (/home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.6/theLink/tests/).
+The assembly was not found in the Global Assembly Cache, a path listed in the MONO_PATH environment variable, or in the location of the executing assembly (/home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.7/theLink/tests/).
 
 
-** (nothread/NHI1-0.6/theLink/tests/vbserver.exe:13595): WARNING **: Could not load file or assembly 'csmsgque, Version=4.4.3701.15511, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
+** (nothread/NHI1-0.7/theLink/tests/vbserver.exe:5662): WARNING **: Could not load file or assembly 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
 
-Unhandled Exception: System.IO.FileNotFoundException: Could not load file or assembly 'csmsgque, Version=4.4.3701.15511, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
-File name: 'csmsgque, Version=4.4.3701.15511, Culture=neutral, PublicKeyToken=null'
+Unhandled Exception: System.IO.FileNotFoundException: Could not load file or assembly 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
+File name: 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null'
 C> (client) [MqLinkConnect] can not start server 'mono'
 C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"

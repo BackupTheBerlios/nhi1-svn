@@ -1,10 +1,10 @@
-> nothread/NHI1-0.6/theLink/tests/client --all @ nothread/NHI1-0.6/theLink/tests/ccserver
-C> (client:5870) [2010-02-18:08-54-38] [0-0-0-0x6218a0-main]: start: --------------------------------------
-C> (client:5870) [2010-02-18:08-54-38] [0-0-0-0x6218a0-statistics]:                      MqSendEND:       4.77
-C> (client:5870) [2010-02-18:08-54-39] [0-0-0-0x6218a0-statistics]:         MqSendEND_AND_CALLBACK:       9.66
-C> (client:5870) [2010-02-18:08-54-41] [0-0-0-0x6218a0-statistics]:             MqSendEND_AND_WAIT:      14.52
-C> (client:5870) [2010-02-18:08-54-42] [0-0-0-0x6218a0-statistics]:                  parent create:    1685.65
-C> (client:5870) [2010-02-18:08-54-42] [0-0-0-0x6218a0-statistics]:                  parent delete:     235.73
-C> (client:5870) [2010-02-18:08-54-42] [0-0-0-0x6218a0-statistics]:                   child create:      80.58
-C> (client:5870) [2010-02-18:08-54-42] [0-0-0-0x6218a0-statistics]:                   child delete:      34.38
-C> (client:5870) [2010-02-18:08-54-42] [0-0-0-0x6218a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.7/theLink/tests/client --all @ nothread/NHI1-0.7/theLink/tests/ccserver
+C> (client:30153) [2010-03-08:09-01-35] [0-0-0-0x6218a0-main]: start: --------------------------------------
+C> (client:30153) [2010-03-08:09-01-35] [0-0-0-0x6218a0-statistics]:                      MqSendEND:       3.54
+C> (client:30153) [2010-03-08:09-01-35] [0-0-0-0x6218a0-statistics]:         MqSendEND_AND_CALLBACK:       9.56
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-statistics]:             MqSendEND_AND_WAIT:      14.87
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-statistics]:                  parent create:    1349.07
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-statistics]:                  parent delete:     184.03
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-statistics]:                   child create:      74.61
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-statistics]:                   child delete:      31.58
+C> (client:30153) [2010-03-08:09-01-38] [0-0-0-0x6218a0-main]: end: ----------------------------------------

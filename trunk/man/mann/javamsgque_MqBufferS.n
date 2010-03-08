@@ -1,4 +1,4 @@
-.TH "javamsgque::MqBufferS" n "7 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqBufferS" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

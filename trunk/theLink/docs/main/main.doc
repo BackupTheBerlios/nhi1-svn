@@ -2,16 +2,16 @@
 
 <CENTER>
 
-\section nw  NEWS, from 17 Feb 2010
+\section nw  NEWS, from 08 Mar 2010
 
-This is a \ref V0_6 "major-feature-release" to prepare the environment\n
-for the new \b milestone-release coming soon. \n
-1. FEATURE: \ref V0_6_gc \n
-+ Find a safe moment to free unused memory +\n
-2. FEATURE: \ref V0_6_log \n
-+ NEW: \RNSA{LogC} +\n
-+ NEW: \b LogV (\ref c_LogV "C", \ref cc_LogV "C++") +\n
-+ NEW: \b LogVL (\ref c_LogVL "C", \ref cc_LogVL "C++")\n
+This is a \ref V0_7 "major-feature-release" \n
+1. FEATURE: \ref V0_7_lt \n
++ A \e longtime-transaction is a transaction with an infinite time period between the start
+and the end. A \e longtime-transaction is always a \e persistent-transaction
+too. The \e persistent support is available as an in-memory solution on the \e application-server
+or in an additional \e bidirectional-filter, with local storage, available for the next release.\n +
+2. FEATURE: \ref V0_7_sp \n
++ NEW: \RNSA{ServiceProxy} +\n
 
 \section intro Introduction
 

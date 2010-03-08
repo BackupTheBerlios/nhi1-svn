@@ -1,11 +1,11 @@
-> mono thread/NHI1-0.6/theLink/tests/vbserver.exe --tcp --host localhost --port 7792 --thread
-> thread/NHI1-0.6/theLink/tests/client --all --tcp --host localhost --port 7792
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-43] [0-0-0-0x622bc0-main]: start: --------------------------------------
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-43] [0-0-0-0x622bc0-statistics]:                      MqSendEND:       4.03
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-43] [0-0-0-0x622bc0-statistics]:         MqSendEND_AND_CALLBACK:       9.34
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-statistics]:             MqSendEND_AND_WAIT:      26.26
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-statistics]:                  parent create:     503.54
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-statistics]:                  parent delete:     443.59
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-statistics]:                   child create:     239.88
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-statistics]:                   child delete:      61.89
-C> (client:13616:0x7f3e4e1166f0) [2010-02-18:08-58-47] [0-0-0-0x622bc0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.7/theLink/tests/vbserver.exe --tcp --host localhost --port 7792 --thread
+> thread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7792
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-34] [0-0-0-0x622bc0-main]: start: --------------------------------------
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-34] [0-0-0-0x622bc0-statistics]:                      MqSendEND:       3.87
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-34] [0-0-0-0x622bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.37
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-37] [0-0-0-0x622bc0-statistics]:             MqSendEND_AND_WAIT:      26.53
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-38] [0-0-0-0x622bc0-statistics]:                  parent create:     411.64
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-38] [0-0-0-0x622bc0-statistics]:                  parent delete:     462.29
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-38] [0-0-0-0x622bc0-statistics]:                   child create:     246.51
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-38] [0-0-0-0x622bc0-statistics]:                   child delete:      52.46
+C> (client:5683:0x7fc1467d36f0) [2010-03-08:09-05-38] [0-0-0-0x622bc0-main]: end: ----------------------------------------
