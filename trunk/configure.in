@@ -68,7 +68,7 @@ AC_DEFINE([LIBMSGQUE_VERSION], ["4.5"], [version of the 'libmsgque' package])
 #  use the `-release' flag (*note Release numbers::), but be warned that
 #  every release of your package will not be binary compatible with any
 #  other release.
-AC_SUBST([VERSION_INFO], [16:0:1])
+AC_SUBST([VERSION_INFO], [17:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
 AM_PROG_CC_C_O
