@@ -1,11 +1,11 @@
 > thread/NHI1-0.7/theLink/tests/ccserver --uds --file ./socket.uds --thread
 > thread/NHI1-0.7/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-04] [0-0-0-0x6229a0-main]: start: --------------------------------------
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-04] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.12
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-05] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      10.31
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      15.86
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-statistics]:                  parent create:     167.85
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-statistics]:                  parent delete:      77.16
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-statistics]:                   child create:      78.20
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-statistics]:                   child delete:      37.06
-C> (client:30795:0x7ffba283a6f0) [2010-03-08:09-02-08] [0-0-0-0x6229a0-main]: end: ----------------------------------------
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-44] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-44] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       3.81
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-44] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      10.20
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      15.86
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-statistics]:                  parent create:     166.01
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-statistics]:                  parent delete:      73.13
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-statistics]:                   child create:      77.49
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-statistics]:                   child delete:      37.15
+C> (client:7394:0x7fc3273506f0) [2010-03-08:09-44-47] [0-0-0-0x6229a0-main]: end: ----------------------------------------

@@ -18,6 +18,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-csharp \
 		    --enable-python \
 		    --enable-perl \
+		    --enable-vb \
 		    $ARGS $@
 
 #		    --enable-guard \

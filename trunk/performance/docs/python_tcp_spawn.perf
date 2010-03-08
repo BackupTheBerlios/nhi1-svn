@@ -1,11 +1,11 @@
 > python nothread/NHI1-0.7/theLink/tests/server.py --tcp --host localhost --port 7789 --spawn
 > nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7789
-C> (client:3844) [2010-03-08:09-04-27] [0-0-0-0x621bc0-main]: start: --------------------------------------
-C> (client:3844) [2010-03-08:09-04-28] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       5.04
-C> (client:3844) [2010-03-08:09-04-28] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.30
-C> (client:3844) [2010-03-08:09-04-32] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      33.62
-C> (client:3844) [2010-03-08:09-04-35] [0-0-0-0x621bc0-statistics]:                  parent create:   30844.92
-C> (client:3844) [2010-03-08:09-04-35] [0-0-0-0x621bc0-statistics]:                  parent delete:    2309.92
-C> (client:3844) [2010-03-08:09-04-36] [0-0-0-0x621bc0-statistics]:                   child create:     141.77
-C> (client:3844) [2010-03-08:09-04-36] [0-0-0-0x621bc0-statistics]:                   child delete:      51.73
-C> (client:3844) [2010-03-08:09-04-36] [0-0-0-0x621bc0-main]: end: ----------------------------------------
+C> (client:12906) [2010-03-08:09-47-09] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:12906) [2010-03-08:09-47-09] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       6.26
+C> (client:12906) [2010-03-08:09-47-10] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.87
+C> (client:12906) [2010-03-08:09-47-14] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      33.38
+C> (client:12906) [2010-03-08:09-47-17] [0-0-0-0x621bc0-statistics]:                  parent create:   32165.26
+C> (client:12906) [2010-03-08:09-47-17] [0-0-0-0x621bc0-statistics]:                  parent delete:    2715.47
+C> (client:12906) [2010-03-08:09-47-17] [0-0-0-0x621bc0-statistics]:                   child create:     143.13
+C> (client:12906) [2010-03-08:09-47-17] [0-0-0-0x621bc0-statistics]:                   child delete:      53.70
+C> (client:12906) [2010-03-08:09-47-17] [0-0-0-0x621bc0-main]: end: ----------------------------------------

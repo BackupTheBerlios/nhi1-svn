@@ -217,7 +217,7 @@ for SRV in $R; do
   echo $SRV
 
   case $SRV in
-    *thread* | *java* | *csharp* )	
+    *thread* | *java* | *csharp* | *vb* )	
       ENV="ENV=thread ./performance_thread.env ./local.env"
       export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
       export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"
@@ -284,6 +284,7 @@ for SRV in $R; do
   case $SRV in
     *pipe*)
       CL="$VG${VG:+ }$CLIENT${NUM}--all @ $SERVER"
+echo $ENV
       echo "> $CL" | tee docs/${SRV}.perf
       eval $ENV $CL 2>&1 | tee -a docs/${SRV}.perf
 

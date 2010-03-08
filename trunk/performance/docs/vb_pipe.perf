@@ -1,17 +1,10 @@
-> nothread/NHI1-0.7/theLink/tests/client --all @ mono nothread/NHI1-0.7/theLink/tests/vbserver.exe
-
-** (nothread/NHI1-0.7/theLink/tests/vbserver.exe:5662): WARNING **: The following assembly referenced from /home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.7/theLink/tests/vbserver.exe could not be loaded:
-     Assembly:   csmsgque    (assemblyref_index=2)
-     Version:    4.4.3707.30495
-     Public Key: (none)
-The assembly was not found in the Global Assembly Cache, a path listed in the MONO_PATH environment variable, or in the location of the executing assembly (/home/dev1usr/Project/NHI1/performance/nothread/NHI1-0.7/theLink/tests/).
-
-
-** (nothread/NHI1-0.7/theLink/tests/vbserver.exe:5662): WARNING **: Could not load file or assembly 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
-
-Unhandled Exception: System.IO.FileNotFoundException: Could not load file or assembly 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null' or one of its dependencies.
-File name: 'csmsgque, Version=4.4.3707.30495, Culture=neutral, PublicKeyToken=null'
-C> (client) [MqLinkConnect] can not start server 'mono'
-C> (client) found in function "MqLinkConnect" at file "link.c"
-C> (client) found in function "MqLinkCreate" at file "link.c"
-C> (client) use '-h' or '--help' for usage
+> thread/NHI1-0.7/theLink/tests/client --all @ mono thread/NHI1-0.7/theLink/tests/vbserver.exe
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.24
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-15] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      11.75
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-18] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      17.02
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent create:   32636.88
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent delete:    3201.55
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child create:     164.26
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child delete:      43.47
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-main]: end: ----------------------------------------

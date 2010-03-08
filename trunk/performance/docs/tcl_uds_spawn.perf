@@ -1,11 +1,11 @@
 > tclsh nothread/NHI1-0.7/theLink/tests/server.tcl --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.7/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:31829) [2010-03-08:09-02-59] [0-0-0-0x6219a0-main]: start: --------------------------------------
-C> (client:31829) [2010-03-08:09-03-00] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       6.27
-C> (client:31829) [2010-03-08:09-03-00] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      16.03
-C> (client:31829) [2010-03-08:09-03-04] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      22.41
-C> (client:31829) [2010-03-08:09-03-05] [0-0-0-0x6219a0-statistics]:                  parent create:   10378.82
-C> (client:31829) [2010-03-08:09-03-05] [0-0-0-0x6219a0-statistics]:                  parent delete:     270.58
-C> (client:31829) [2010-03-08:09-03-05] [0-0-0-0x6219a0-statistics]:                   child create:     249.48
-C> (client:31829) [2010-03-08:09-03-05] [0-0-0-0x6219a0-statistics]:                   child delete:      40.14
-C> (client:31829) [2010-03-08:09-03-05] [0-0-0-0x6219a0-main]: end: ----------------------------------------
+C> (client:8452) [2010-03-08:09-45-39] [0-0-0-0x6219a0-main]: start: --------------------------------------
+C> (client:8452) [2010-03-08:09-45-39] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       6.72
+C> (client:8452) [2010-03-08:09-45-40] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      16.53
+C> (client:8452) [2010-03-08:09-45-43] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      22.80
+C> (client:8452) [2010-03-08:09-45-44] [0-0-0-0x6219a0-statistics]:                  parent create:   10390.00
+C> (client:8452) [2010-03-08:09-45-44] [0-0-0-0x6219a0-statistics]:                  parent delete:     289.38
+C> (client:8452) [2010-03-08:09-45-44] [0-0-0-0x6219a0-statistics]:                   child create:     258.56
+C> (client:8452) [2010-03-08:09-45-44] [0-0-0-0x6219a0-statistics]:                   child delete:      42.03
+C> (client:8452) [2010-03-08:09-45-44] [0-0-0-0x6219a0-main]: end: ----------------------------------------

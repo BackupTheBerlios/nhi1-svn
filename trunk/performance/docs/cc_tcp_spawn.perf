@@ -1,11 +1,11 @@
 > nothread/NHI1-0.7/theLink/tests/ccserver --tcp --host localhost --port 7782 --spawn
 > nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7782
-C> (client:30533) [2010-03-08:09-01-52] [0-0-0-0x621bc0-main]: start: --------------------------------------
-C> (client:30533) [2010-03-08:09-01-52] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       2.88
-C> (client:30533) [2010-03-08:09-01-53] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.32
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      25.91
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-statistics]:                  parent create:    1419.63
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-statistics]:                  parent delete:     230.61
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-statistics]:                   child create:      85.52
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-statistics]:                   child delete:      41.24
-C> (client:30533) [2010-03-08:09-01-56] [0-0-0-0x621bc0-main]: end: ----------------------------------------
+C> (client:7132) [2010-03-08:09-44-32] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:7132) [2010-03-08:09-44-32] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       3.36
+C> (client:7132) [2010-03-08:09-44-32] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.51
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      25.11
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-statistics]:                  parent create:    1420.21
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-statistics]:                  parent delete:     220.59
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-statistics]:                   child create:      86.23
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-statistics]:                   child delete:      41.26
+C> (client:7132) [2010-03-08:09-44-36] [0-0-0-0x621bc0-main]: end: ----------------------------------------
