@@ -1,0 +1,178 @@
+#+
+#§  \file       theLink/tests/wid.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+## 
+## -----------------------------------------------------------------------
+## init
+##
+
+set MAX_WID    [tclmsgque const maxW]
+set MIN_WID    [tclmsgque const minW]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test wid-1-($I|$B|$C|$S) {echo datatype (MQ_WID)} \
+    -body	    { tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadW SendW $MAX_WID] } \
+    -returnCodes    ok \
+    -result	    [expr {$tcl_platform(wordSize) == 8 ? "int" : "wideInt"}]
+
+test wid-2-($I|$B|$C|$S) {(MQ_WID to MQ_WID) fit max} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendW $MAX_WID} \
+    -returnCodes    ok \
+    -result         $MAX_WID
+ 
+test wid-3-($I|$B|$C|$S) {(MQ_WID to MQ_WID) fit min} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendW $MIN_WID} \
+    -returnCodes    ok \
+    -result         $MIN_WID
+
+test wid-4-($I|$B|$C|$S) {(MQ_STR to MQ_WID) fit max} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC $MAX_WID} \
+    -returnCodes    ok \
+    -result         $MAX_WID
+
+test wid-5-($I|$B|$C|$S) {(MQ_STR to MQ_WID) fit min} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC $MIN_WID} \
+    -returnCodes    ok \
+    -result         $MIN_WID
+
+test wid-6-($I|$B|$C|$S) {(MQ_STR to MQ_WID) error size} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC 1234.7} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] size ERROR, can not convert '1234.7' into an 'WID' object*}
+
+test wid-7-($I|$B|$C|$S) {range error underflow} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC ${MIN_WID}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] underflow ERROR, can not convert '*' into an 'WID' object*}
+
+test wid-8-($I|$B|$C|$S) {range error overflow} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC ${MAX_WID}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] overflow ERROR, can not convert '*' into an 'WID' object*}
+ 
+if {$B eq "binary"} {
+    test wid-9-($I|$B|$C|$S) {(MQ_INT to MQ_WID) error INT type} \
+	-body           {Echo1 $FH_LAST ECOW ReadW SendI 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'INT' object into an 'WID' object*}
+} else {
+    test wid-9-($I|$B|$C|$S) {(MQ_INT to MQ_WID) error INT type} \
+	-body           {Echo1 $FH_LAST ECOW ReadW SendI 1234} \
+	-returnCodes    ok \
+	-result         1234
+}
+
+if {$B eq "binary"} { 
+    test wid-10-($I|$B|$C|$S) {(MQ_DBL to MQ_WID) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOW ReadW SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'DBL' object into an 'WID' object*}
+} else {
+    test wid-10-($I|$B|$C|$S) {(MQ_DBL to MQ_WID) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOW ReadW SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] size ERROR, can not convert '1.2345*e+*03' into an 'WID' object*}
+}
+ 
+test wid-11-($I|$B|$C|$S) {(MQ_LST to MQ_WID) error LST type} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOW
+      $FH_LAST ReadI
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA8\] type ERROR, it is not allowed to convert an 'LST' object into an 'WID' object*}
+
+test wid-12-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOW
+      $FH_LAST ReadI
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOW> <Num|213>*
+[sS]> (server-0) \[*sReadA8\] request more arguments than available*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##  
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+

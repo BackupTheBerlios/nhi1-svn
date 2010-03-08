@@ -1,0 +1,20 @@
+usage: cut [OPTION]... [ARGUMENT]...
+
+  The cut tool works as a filter between a msgque client and a msgque server
+  using the option '-f' to extract columns.
+
+  cut [ARGUMENT]... syntax:
+    aclient [OPTION]... @ cut [OPTION]... @ [ARGUMENT]...
+
+  msgque [OPTION]:
+    --help-msgque    print msgque specific help
+
+  cut [OPTION]:
+    -f NUM...        the column number(s)  (default: 'empty')
+      NUM            a single column with '0' < NUM < '255'
+      NUM1,NUM2      multiple columns, use ',' as delimiter
+      NUM1-NUM2      multiple columns, from NUM1 up to NUM2
+      NUM-           multiple columns, from NUM up to the end
+      -NUM           multiple columns, from the beginn up to NUM
+    -h, --help       print this help
+

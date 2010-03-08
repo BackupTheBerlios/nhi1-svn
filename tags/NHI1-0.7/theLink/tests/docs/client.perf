@@ -1,0 +1,9 @@
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-53] [0-0-0-0x6238a0-main]: start: --------------------------------------
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-53] [0-0-0-0x6238a0-statistics]:                      MqSendEND:       4.65
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-53] [0-0-0-0x6238a0-statistics]:         MqSendEND_AND_CALLBACK:       9.50
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-statistics]:             MqSendEND_AND_WAIT:      13.84
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-statistics]:                  parent create:     812.49
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-statistics]:                  parent delete:     208.57
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-statistics]:                   child create:      75.96
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-statistics]:                   child delete:      32.16
+C> (client:11313:0x2af38067d6f0) [2010-03-08:11-06-56] [0-0-0-0x6238a0-main]: end: ----------------------------------------

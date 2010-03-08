@@ -1,0 +1,296 @@
+#+
+#§  \file       theLink/tests/int.test
+#§  \brief      \$Id: int.test 83 2009-12-18 15:16:28Z aotto1968 $
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 83 $
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set BLOCK_1 true
+#set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+
+#set tcl_traceExec 1
+
+proc CB_I {ctx} {
+  global RET
+  $ctx ReadT_START
+  lappend RET [$ctx ReadI]
+  $ctx ReadT_END
+  lappend RET [$ctx ReadI]
+}
+
+proc ECOI {ctx} {
+  $ctx SendSTART
+  $ctx SendI [$ctx ReadI]
+  $ctx SendRETURN
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if {$BLOCK_1} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      # what is currently tested
+       SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test transaction-1-($I|$B|$C|$S) {wrong item position} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendI 1
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendEND_AND_WAIT TRNS
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[MqSendT_START] the TRANSACTION item have to be the first item in the data package}
+
+test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {9978 1}
+
+test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_CALLBACK ECOI CB
+      $FH_LAST ProcessEvent -wait ONCE; # wait for callback
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {CB 9978 1}
+
+test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND ECOI
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -result         {9978 1}
+
+test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
+    -constraints    {binary} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendW 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendW 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[callback-error] <Token|TEST>, <Num|1>
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
+[sS]> (server-0) found in function "*sReadA4" at file "read.c*"
+[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
+
+test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate ECOI ECOI
+    } \
+    -body           {
+      EchoL $FH_LAST TRNS SendI 345
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete ECOI
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {9876 345}
+
+test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
+    -setup	    {
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      proc CB {ctx} {
+	lappend ::RET CB
+      }
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND ERRT
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
+      set RET
+    } \
+    -cleanup {
+      $FH_LAST ServiceDelete TEST
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[sS]> (server-0) \[MYERR] 1
+[cC]> (client-0) found in function "pTokenCheckSystem" at file "token.c"
+[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
+ 
+# cleanup ---------------------------
+
+Cleanup
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}
+
+##  
+## -----------------------------------------------------------------------
+## additional testes
+##
+
+if {$BLOCK_2} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
+    -constraints    {!filter-test} \
+    -setup	    {
+      Setup $I $B $C $S --filter-server Filter3
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START TEST
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      Cleanup
+    } \
+    -result         {9978 1}
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+

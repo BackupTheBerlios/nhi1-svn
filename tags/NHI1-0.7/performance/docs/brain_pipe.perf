@@ -1,0 +1,11 @@
+> nothread/NHI1-0.7/theBrain/tests/client --all @ nothread/NHI1-0.7/theBrain/abrain/abrain
+C> (client:16989) [2010-03-08:09-50-50] [0-0-0-0x621650-main]: start: --------------------------------------
+C> (client:16989) [2010-03-08:09-50-51] [0-0-0-0x621650-statistics]:              memory hash - PUT:      16.01
+C> (client:16989) [2010-03-08:09-50-52] [0-0-0-0x621650-statistics]:              memory hash - GET:      16.33
+C> (client:16989) [2010-03-08:09-50-53] [0-0-0-0x621650-statistics]:             memory btree - PUT:      20.22
+C> (client:16989) [2010-03-08:09-50-54] [0-0-0-0x621650-statistics]:             memory btree - GET:      20.21
+C> (client:16989) [2010-03-08:09-50-55] [0-0-0-0x621650-statistics]:                file hash - PUT:      17.30
+C> (client:16989) [2010-03-08:09-50-56] [0-0-0-0x621650-statistics]:                file hash - GET:      17.65
+C> (client:16989) [2010-03-08:09-51-03] [0-0-0-0x621650-statistics]:               file btree - PUT:     139.41
+C> (client:16989) [2010-03-08:09-51-11] [0-0-0-0x621650-statistics]:               file btree - GET:     161.01
+C> (client:16989) [2010-03-08:09-51-11] [0-0-0-0x621650-main]: end: ----------------------------------------

@@ -1,0 +1,115 @@
+.TH "Mq_Java_API" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Java_API \- public libmsgque API   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBjavamsgque.MqS\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.in -1c
+.SS "Packages"
+
+.in +1c
+.ti -1c
+.RI "package \fBjavamsgque\fP"
+.br
+.R "The \fBJavaMsgque\fP Package. "
+.PP
+
+.in -1c
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBMq_Buffer_Java_API\fP"
+.br
+.R "create and manage dynamic, generic, mixed typed data.  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Config_Java_API\fP"
+.br
+.R "configuration of a context  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Context_Java_API\fP"
+.br
+.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Link_Java_API\fP"
+.br
+.R "setup and manage a \fIclient-server-link\fP  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Service_Java_API\fP"
+.br
+.R "create and manage services  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Error_Java_API\fP"
+.br
+.R "create and manage error messages.  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Read_Java_API\fP"
+.br
+.R "extract data from an incoming \fIread-data-package\fP.  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Send_Java_API\fP"
+.br
+.R "construct an outgoing \fIsend-data-package\fP.  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Slave_Java_API\fP"
+.br
+.R "create and manage a slave context  "
+.PP
+
+.in -1c
+.SH "Detailed Description"
+.PP 
+public libmsgque API  
+
+public libmsgque API 
+.PP
+The msgque project is an infrastructure to link software together to act like a single software. To link mean distributing work from one software to an other software an wait or not wait for an answer. The linking is done using unix or inet domain sockets and is based on packages send from one software to an other software and back. The msgque project is used to handle all the different aspects for setup and maintain the link and is responsible for:
+.IP "\(bu" 2
+starting and stopping the server application
+.IP "\(bu" 2
+starting and stopping the communication interface
+.IP "\(bu" 2
+sending and receiving package data
+.IP "\(bu" 2
+reading and writing data from or into a package
+.IP "\(bu" 2
+setup and maintain the event-handling for an asynchronous transfer
+.IP "\(bu" 2
+propagate the error messages from the server to the client
+.PP
+ 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

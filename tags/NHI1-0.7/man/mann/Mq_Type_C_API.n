@@ -1,0 +1,467 @@
+.TH "Mq_Type_C_API" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Type_C_API \- a collection of common used data types and definitions  
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqLinkS\fP"
+.br
+.R "object responsible to manage a client/server link data "
+.ti -1c
+.RI "struct \fBMqErrorS\fP"
+.br
+.R "error-object data type "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMQ_DECL\fP   MQ_CDECL"
+.br
+.ti -1c
+.RI "#define \fBBEGIN_C_DECLS\fP"
+.br
+.ti -1c
+.RI "#define \fBEND_C_DECLS\fP"
+.br
+.ti -1c
+.RI "#define \fBlikely\fP(x)   __builtin_expect((x),1)"
+.br
+.R "gcc jump optimization "
+.ti -1c
+.RI "#define \fBunlikely\fP(x)   __builtin_expect((x),0)"
+.br
+.R "gcc jump optimization "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT\fP   900"
+.br
+.R "maximum timeout in sec (900 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT5\fP   (MQ_TIMEOUT/5)"
+.br
+.R "long timeout in sec (180 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT10\fP   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
+.br
+.R "normal timeout in sec (90 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT45\fP   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
+.br
+.R "short timeout in sec (20 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT90\fP   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
+.br
+.R "shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT180\fP   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
+.br
+.R "very short timeout in sec (5 sec) "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT_DEFAULT\fP   -1"
+.br
+.R "request the default timeout value "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT_USER\fP   -2"
+.br
+.R "request the user defined timeout value from the \fBtimeout\fP configuration value "
+.ti -1c
+.RI "#define \fBMQ_TIMEOUT_MAX\fP   -3"
+.br
+.R "request the maximum possible (infinite) timeout value "
+.ti -1c
+.RI "#define \fBMQ_EXTERN\fP"
+.br
+.R "define the external binding "
+.ti -1c
+.RI "#define \fBMQ_CPPXSTR\fP(s)   MQ_CPPSTR(s)"
+.br
+.R "connecting of expressions, step 1 "
+.ti -1c
+.RI "#define \fBMQ_CPPSTR\fP(s)   #s"
+.br
+.R "connecting of expressions, step 2 "
+.ti -1c
+.RI "#define \fBMQ_ALFA\fP   '@'"
+.br
+.R "MQ_ALFA the command-line separator between server and client. "
+.ti -1c
+.RI "#define \fBMQ_ALFA_STR\fP   '@'"
+.br
+.R "MQ_ALFA the command-line separator as string. "
+.ti -1c
+.RI "#define \fBMQ_NO\fP   0"
+.br
+.R "boolean NO "
+.ti -1c
+.RI "#define \fBMQ_YES\fP   1"
+.br
+.R "boolean YES "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef signed char \fBMQ_BYT\fP"
+.br
+.R "1 byte \fBbyte\fP data-type "
+.ti -1c
+.RI "typedef unsigned char \fBMQ_BOL\fP"
+.br
+.R "1 byte \fBboolean\fP data-type "
+.ti -1c
+.RI "typedef short \fBMQ_SRT\fP"
+.br
+.R "2 byte \fBshort\fP data-type "
+.ti -1c
+.RI "typedef int \fBMQ_INT\fP"
+.br
+.R "4 byte \fBinteger\fP data-type "
+.ti -1c
+.RI "typedef float \fBMQ_FLT\fP"
+.br
+.R "4 byte \fBfloat\fP data-type "
+.ti -1c
+.RI "typedef long long int \fBMQ_WID\fP"
+.br
+.R "8 byte \fBwide\fP integer data-type "
+.ti -1c
+.RI "typedef double \fBMQ_DBL\fP"
+.br
+.R "8 byte \fBdouble\fP data-type "
+.ti -1c
+.RI "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
+.br
+.R "8 byte \fBatom\fP data-type "
+.ti -1c
+.RI "typedef int \fBMQ_SIZE\fP"
+.br
+.R "array size data-type "
+.ti -1c
+.RI "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
+.br
+.R "OS wide MQ_TIME_T. "
+.ti -1c
+.RI "typedef int \fBMQ_HDL\fP"
+.br
+.R "handle data-type "
+.ti -1c
+.RI "typedef void \fBMQ_PTRB\fP"
+.br
+.R "pointer basic data-type "
+.ti -1c
+.RI "typedef char \fBMQ_STRB\fP"
+.br
+.R "string basic data-type "
+.ti -1c
+.RI "typedef unsigned char \fBMQ_BINB\fP"
+.br
+.R "\fIbyte-array\fP basic data-type "
+.ti -1c
+.RI "typedef unsigned char \fBMQ_LSTB\fP"
+.br
+.R "list basic data-type "
+.ti -1c
+.RI "typedef \fBMQ_PTRB\fP * \fBMQ_PTR\fP"
+.br
+.R "generic pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_STRB\fP * \fBMQ_STR\fP"
+.br
+.R "string pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_STRB\fP const * \fBMQ_CST\fP"
+.br
+.R "const string pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
+.br
+.R "\fIbyte-array\fP pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_BINB\fP const * \fBMQ_CBI\fP"
+.br
+.R "\fIconst\fP byte-array pointer data-type "
+.ti -1c
+.RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
+.br
+.R "list pointer data-type "
+.ti -1c
+.RI "typedef struct \fBMqBufferS\fP * \fBMQ_BUF\fP"
+.br
+.R "Buffer pointer data-type. "
+.ti -1c
+.RI "typedef struct \fBMqBufferLS\fP * \fBMQ_BFL\fP"
+.br
+.R "Buffer-List pointer data-type. "
+.ti -1c
+.RI "typedef struct \fBMqS\fP * \fBMQ_CTX\fP"
+.br
+.R "Context pointer data-type. "
+.ti -1c
+.RI "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
+.br
+.R "data type for a socket handle "
+.ti -1c
+.RI "typedef void(* \fBMqExitF\fP )(int num)"
+.br
+.R "prototype for exit a process or thread "
+.ti -1c
+.RI "typedef void(* \fBMqSetupF\fP )(struct \fBMqS\fP *const )"
+.br
+.R "used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands "
+.in -1c
+.SH "Detailed Description"
+.PP 
+a collection of common used data types and definitions 
+.SH "Define Documentation"
+.PP 
+.SS "#define BEGIN_C_DECLS"
+.PP
+Definition at line 118 of file msgque.h.
+.SS "#define END_C_DECLS"
+.PP
+Definition at line 119 of file msgque.h.
+.SS "#define likely(x)   __builtin_expect((x),1)"
+.PP
+gcc jump optimization 
+.PP
+Definition at line 132 of file msgque.h.
+.SS "#define MQ_ALFA   '@'"
+.PP
+MQ_ALFA the command-line separator between server and client. 
+.PP
+Definition at line 232 of file msgque.h.
+.SS "#define MQ_ALFA_STR   '@'"
+.PP
+MQ_ALFA the command-line separator as string. 
+.PP
+Definition at line 234 of file msgque.h.
+.SS "#define MQ_CPPSTR(s)   #s"
+.PP
+connecting of expressions, step 2 
+.PP
+Definition at line 229 of file msgque.h.
+.SS "#define MQ_CPPXSTR(s)   MQ_CPPSTR(s)"
+.PP
+connecting of expressions, step 1 
+.PP
+Definition at line 227 of file msgque.h.
+.SS "#define MQ_DECL   MQ_CDECL"
+.PP
+Definition at line 102 of file msgque.h.
+.SS "#define MQ_EXTERN"
+.PP
+define the external binding 
+.PP
+Definition at line 217 of file msgque.h.
+.SS "#define MQ_NO   0"
+.PP
+boolean NO 
+.PP
+Definition at line 321 of file msgque.h.
+.SS "#define MQ_TIMEOUT   900"
+.PP
+maximum timeout in sec (900 sec) 
+.PP
+Definition at line 171 of file msgque.h.
+.SS "#define MQ_TIMEOUT10   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
+.PP
+normal timeout in sec (90 sec) 
+.PP
+Definition at line 175 of file msgque.h.
+.SS "#define MQ_TIMEOUT180   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
+.PP
+very short timeout in sec (5 sec) 
+.PP
+Definition at line 182 of file msgque.h.
+.SS "#define MQ_TIMEOUT45   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
+.PP
+short timeout in sec (20 sec) 
+.PP
+Definition at line 177 of file msgque.h.
+.SS "#define MQ_TIMEOUT5   (MQ_TIMEOUT/5)"
+.PP
+long timeout in sec (180 sec) 
+.PP
+Definition at line 173 of file msgque.h.
+.SS "#define MQ_TIMEOUT90   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
+.PP
+shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' 
+.PP
+Definition at line 180 of file msgque.h.
+.SS "#define MQ_TIMEOUT_DEFAULT   -1"
+.PP
+request the default timeout value 
+.PP
+Definition at line 184 of file msgque.h.
+.SS "#define MQ_TIMEOUT_MAX   -3"
+.PP
+request the maximum possible (infinite) timeout value 
+.PP
+Definition at line 188 of file msgque.h.
+.SS "#define MQ_TIMEOUT_USER   -2"
+.PP
+request the user defined timeout value from the \fBtimeout\fP configuration value 
+.PP
+Definition at line 186 of file msgque.h.
+.SS "#define MQ_YES   1"
+.PP
+boolean YES 
+.PP
+Definition at line 324 of file msgque.h.
+.SS "#define unlikely(x)   __builtin_expect((x),0)"
+.PP
+gcc jump optimization 
+.PP
+Definition at line 135 of file msgque.h.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
+.PP
+8 byte \fBatom\fP data-type 
+.PP
+Definition at line 271 of file msgque.h.
+.SS "typedef struct \fBMqBufferLS\fP* \fBMQ_BFL\fP"
+.PP
+Buffer-List pointer data-type. 
+.PP
+Definition at line 308 of file msgque.h.
+.SS "typedef \fBMQ_BINB\fP* \fBMQ_BIN\fP"
+.PP
+\fIbyte-array\fP pointer data-type 
+.PP
+Definition at line 300 of file msgque.h.
+.SS "typedef unsigned char \fBMQ_BINB\fP"
+.PP
+\fIbyte-array\fP basic data-type 
+.PP
+Definition at line 289 of file msgque.h.
+.SS "typedef unsigned char \fBMQ_BOL\fP"
+.PP
+1 byte \fBboolean\fP data-type 
+.PP
+Definition at line 255 of file msgque.h.
+.SS "typedef struct \fBMqBufferS\fP* \fBMQ_BUF\fP"
+.PP
+Buffer pointer data-type. 
+.PP
+Definition at line 306 of file msgque.h.
+.SS "typedef signed char \fBMQ_BYT\fP"
+.PP
+1 byte \fBbyte\fP data-type 
+.PP
+Definition at line 244 of file msgque.h.
+.SS "typedef \fBMQ_BINB\fP const* \fBMQ_CBI\fP"
+.PP
+\fIconst\fP byte-array pointer data-type 
+.PP
+Definition at line 302 of file msgque.h.
+.SS "typedef \fBMQ_STRB\fP const* \fBMQ_CST\fP"
+.PP
+const string pointer data-type 
+.PP
+Definition at line 298 of file msgque.h.
+.SS "typedef struct \fBMqS\fP* \fBMQ_CTX\fP"
+.PP
+Context pointer data-type. 
+.PP
+Definition at line 310 of file msgque.h.
+.SS "typedef double \fBMQ_DBL\fP"
+.PP
+8 byte \fBdouble\fP data-type 
+.PP
+Definition at line 269 of file msgque.h.
+.SS "typedef float \fBMQ_FLT\fP"
+.PP
+4 byte \fBfloat\fP data-type 
+.PP
+Definition at line 261 of file msgque.h.
+.SS "typedef int \fBMQ_HDL\fP"
+.PP
+handle data-type 
+.PP
+Definition at line 282 of file msgque.h.
+.SS "typedef int \fBMQ_INT\fP"
+.PP
+4 byte \fBinteger\fP data-type 
+.PP
+Definition at line 259 of file msgque.h.
+.SS "typedef \fBMQ_LSTB\fP* \fBMQ_LST\fP"
+.PP
+list pointer data-type 
+.PP
+Definition at line 304 of file msgque.h.
+.SS "typedef unsigned char \fBMQ_LSTB\fP"
+.PP
+list basic data-type 
+.PP
+Definition at line 291 of file msgque.h.
+.SS "typedef \fBMQ_PTRB\fP* \fBMQ_PTR\fP"
+.PP
+generic pointer data-type 
+.PP
+Definition at line 294 of file msgque.h.
+.SS "typedef void \fBMQ_PTRB\fP"
+.PP
+pointer basic data-type 
+.PP
+Definition at line 285 of file msgque.h.
+.SS "typedef int \fBMQ_SIZE\fP"
+.PP
+array size data-type 
+.PP
+\fBAttention:\fP
+.RS 4
+-> need signed integer in pReadWord -> need int because of pSwapI in pReadHDR 
+.RE
+.PP
+
+.PP
+Definition at line 276 of file msgque.h.
+.SS "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
+.PP
+data type for a socket handle 
+.PP
+Definition at line 312 of file msgque.h.
+.SS "typedef short \fBMQ_SRT\fP"
+.PP
+2 byte \fBshort\fP data-type 
+.PP
+Definition at line 257 of file msgque.h.
+.SS "typedef \fBMQ_STRB\fP* \fBMQ_STR\fP"
+.PP
+string pointer data-type 
+.PP
+Definition at line 296 of file msgque.h.
+.SS "typedef char \fBMQ_STRB\fP"
+.PP
+string basic data-type 
+.PP
+Definition at line 287 of file msgque.h.
+.SS "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
+.PP
+OS wide MQ_TIME_T. 
+.PP
+Definition at line 279 of file msgque.h.
+.SS "typedef long long int \fBMQ_WID\fP"
+.PP
+8 byte \fBwide\fP integer data-type 
+.PP
+Definition at line 266 of file msgque.h.
+.SS "typedef void( * \fBMqExitF\fP)(int num)"
+.PP
+prototype for exit a process or thread 
+.PP
+Definition at line 543 of file msgque.h.
+.SS "typedef void( * \fBMqSetupF\fP)(struct \fBMqS\fP *const )"
+.PP
+used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands 
+.PP
+Definition at line 550 of file msgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -1,0 +1,3 @@
+cp tests/.libs/*.exe tests/
+cp acmds/.libs/*.exe acmds/
+cp example/c/.libs/*.exe example/c/

@@ -1,0 +1,11 @@
+> python nothread/NHI1-0.7/theLink/tests/server.py --tcp --host localhost --port 7788 --fork
+> nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7788
+C> (client:12761) [2010-03-08:09-47-02] [0-0-0-0x621bc0-main]: start: --------------------------------------
+C> (client:12761) [2010-03-08:09-47-02] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       6.00
+C> (client:12761) [2010-03-08:09-47-03] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.06
+C> (client:12761) [2010-03-08:09-47-06] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      33.29
+C> (client:12761) [2010-03-08:09-47-06] [0-0-0-0x621bc0-statistics]:                  parent create:    1091.35
+C> (client:12761) [2010-03-08:09-47-07] [0-0-0-0x621bc0-statistics]:                  parent delete:    3919.73
+C> (client:12761) [2010-03-08:09-47-07] [0-0-0-0x621bc0-statistics]:                   child create:     141.63
+C> (client:12761) [2010-03-08:09-47-07] [0-0-0-0x621bc0-statistics]:                   child delete:      56.25
+C> (client:12761) [2010-03-08:09-47-07] [0-0-0-0x621bc0-main]: end: ----------------------------------------

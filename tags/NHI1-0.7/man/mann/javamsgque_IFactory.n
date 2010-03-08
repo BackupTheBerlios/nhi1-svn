@@ -1,0 +1,31 @@
+.TH "javamsgque::IFactory" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::IFactory \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqS\fP \fBFactory\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP 
+.PP
+Definition at line 17 of file IFactory.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBMqS\fP javamsgque.IFactory.Factory ()"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

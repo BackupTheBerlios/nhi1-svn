@@ -1,0 +1,42 @@
+.TH "MqIoUdsConfigS" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIoUdsConfigS \- configure a context to use a \fIuds-client-server-link\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBfile\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+configure a context to use a \fIuds-client-server-link\fP 
+
+The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usually 50% faster than a local tcp communication but only available on UNIX. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINothing\fP) 
+.RE
+.PP
+
+.PP
+Definition at line 588 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS.file\fP"
+.PP
+Definition at line 589 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

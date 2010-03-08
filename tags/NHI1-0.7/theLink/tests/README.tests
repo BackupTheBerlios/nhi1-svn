@@ -1,0 +1,45 @@
+#+
+#§  \file       theLink/tests/README.tests
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+LibMsgque Test Environment
+==========================
+
+
+The scripts used in this directory are used to verify the libmsgque
+library inclusing the tcl, java and python language binding. 
+Testing is done using the tcltest feature of the tcl distribution.
+The tests are done using 3 different approaches:
+
+  1. using the test feature of the build environment
+	> make check (not available for windows)
+
+  2. invoke an individual test script
+	> tclsh tests/int.test (example)
+
+  3. invoke all tests
+	> tclsh tests/all.tcl
+
+  4. example: invoke all tests but only using the "python" interpreter
+	> tclsh tests/all.tcl --only-python
+
+  5. example: invoke all tests but only using the "tcp/ip" server
+	> tclsh tests/all.tcl --only-tcp
+
+Help is available with the following commands:
+
+  1. test specific help
+	> tclsh tests/all.tcl --help
+
+  2. tcltest specific help
+	> man tcltest
+

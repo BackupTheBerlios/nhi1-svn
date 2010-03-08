@@ -1,0 +1,515 @@
+.TH "javamsgque::MqS" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBWAIT\fP { \fBNO\fP = (0), \fBONCE\fP = (1), \fBFOREVER\fP = (2) }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "native void \fBConfigSetName\fP (String val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP "
+.ti -1c
+.RI "native void \fBConfigSetSrvName\fP (String val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
+.ti -1c
+.RI "native void \fBConfigSetIdent\fP (String val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
+.ti -1c
+.RI "native void \fBConfigSetBuffersize\fP (int val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP "
+.ti -1c
+.RI "native void \fBConfigSetDebug\fP (int val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP "
+.ti -1c
+.RI "native void \fBConfigSetTimeout\fP (long val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP "
+.ti -1c
+.RI "native void \fBConfigSetIsSilent\fP (boolean val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP "
+.ti -1c
+.RI "native void \fBConfigSetIsServer\fP (boolean val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP "
+.ti -1c
+.RI "native void \fBConfigSetIsString\fP (boolean val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP "
+.ti -1c
+.RI "native void \fBConfigSetIgnoreExit\fP (boolean val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
+.ti -1c
+.RI "native void \fBConfigSetStartAs\fP (int val)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
+.ti -1c
+.RI "native void \fBConfigSetIoTcp\fP (String host, String port, String myhost, String myport)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
+.ti -1c
+.RI "native void \fBConfigSetIoUds\fP (String file)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP "
+.ti -1c
+.RI "native void \fBConfigSetIoPipe\fP (int socket)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP "
+.ti -1c
+.RI "native boolean \fBConfigGetIsServer\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP "
+.ti -1c
+.RI "native boolean \fBConfigGetIsString\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP "
+.ti -1c
+.RI "native boolean \fBConfigGetIsSilent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP "
+.ti -1c
+.RI "native int \fBConfigGetBuffersize\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP "
+.ti -1c
+.RI "native long \fBConfigGetTimeout\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP "
+.ti -1c
+.RI "native String \fBConfigGetName\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP "
+.ti -1c
+.RI "native String \fBConfigGetSrvName\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
+.ti -1c
+.RI "native String \fBConfigGetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP "
+.ti -1c
+.RI "native int \fBConfigGetDebug\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
+.ti -1c
+.RI "native int \fBConfigGetStartAs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
+.ti -1c
+.RI "native String \fBConfigGetIoTcpHost\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP "
+.ti -1c
+.RI "native String \fBConfigGetIoTcpPort\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP "
+.ti -1c
+.RI "native String \fBConfigGetIoTcpMyHost\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP "
+.ti -1c
+.RI "native String \fBConfigGetIoTcpMyPort\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP "
+.ti -1c
+.RI "native String \fBConfigGetIoUdsFile\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
+.ti -1c
+.RI "native int \fBConfigGetIoPipeSocket\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
+.ti -1c
+.RI "native void \fBExit\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "native void \fBLogC\fP (String prefix, int level, String text)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.ti -1c
+.RI "native void \fBLinkCreate\fP (String...args)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP "
+.ti -1c
+.RI "native void \fBLinkCreateChild\fP (\fBMqS\fP parent, String...args)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP "
+.ti -1c
+.RI "native void \fBLinkDelete\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
+.ti -1c
+.RI "native void \fBLinkConnect\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBLinkGetParent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP "
+.ti -1c
+.RI "native String \fBLinkGetTargetIdent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
+.ti -1c
+.RI "native boolean \fBLinkIsParent\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkIsParent\fP "
+.ti -1c
+.RI "native boolean \fBLinkIsConnected\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkIsConnected\fP "
+.ti -1c
+.RI "native int \fBLinkGetCtxId\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP "
+.ti -1c
+.RI "native String \fBServiceGetToken\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBServiceGetFilter\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBServiceGetFilter\fP (int id)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "native boolean \fBServiceIsTransaction\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.ti -1c
+.RI "native void \fBServiceCreate\fP (String token, \fBIService\fP service)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "native void \fBServiceProxy\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "native void \fBServiceProxy\fP (String token, int id)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "native void \fBServiceDelete\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.ti -1c
+.RI "void \fBProcessEvent\fP (int timeout, \fBWAIT\fP flags)  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBProcessEvent\fP (\fBWAIT\fP flags)  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBProcessEvent\fP ()  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "native void \fBErrorC\fP (String func, int num, String message)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP "
+.ti -1c
+.RI "native void \fBErrorRaise\fP ()  throws MqSException"
+.br
+.R "throw an exception with the data from \fBMqErrorS\fP "
+.ti -1c
+.RI "native void \fBErrorReset\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP "
+.ti -1c
+.RI "native void \fBErrorSet\fP (Throwable ex)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP "
+.ti -1c
+.RI "native void \fBErrorSetCONTINUE\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "native boolean \fBErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.ti -1c
+.RI "native int \fBErrorGetNum\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
+.ti -1c
+.RI "native String \fBErrorGetText\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
+.ti -1c
+.RI "native void \fBErrorPrint\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "void \fBErrorPrint\fP (Throwable ex)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "native byte \fBReadY\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native boolean \fBReadO\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native short \fBReadS\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native int \fBReadI\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.ti -1c
+.RI "native float \fBReadF\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadF\fP "
+.ti -1c
+.RI "native long \fBReadW\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadW\fP "
+.ti -1c
+.RI "native double \fBReadD\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadD\fP "
+.ti -1c
+.RI "native String \fBReadC\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadC\fP "
+.ti -1c
+.RI "native byte[] \fBReadB\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.ti -1c
+.RI "native byte[] \fBReadN\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
+.ti -1c
+.RI "native byte[] \fBReadBDY\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
+.ti -1c
+.RI "native \fBMqBufferS\fP \fBReadU\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadU\fP "
+.ti -1c
+.RI "native void \fBReadProxy\fP (\fBMqS\fP hdl)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.ti -1c
+.RI "native void \fBReadL_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "native void \fBReadL_START\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.ti -1c
+.RI "native void \fBReadL_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.ti -1c
+.RI "native void \fBReadT_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBReadT_START\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.ti -1c
+.RI "native void \fBReadT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.ti -1c
+.RI "native int \fBReadGetNumItems\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
+.ti -1c
+.RI "native boolean \fBReadItemExists\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
+.ti -1c
+.RI "native void \fBReadUndo\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP "
+.ti -1c
+.RI "native void \fBSendSTART\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP "
+.ti -1c
+.RI "native void \fBSendEND\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP "
+.ti -1c
+.RI "native void \fBSendEND_AND_WAIT\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.ti -1c
+.RI "native void \fBSendEND_AND_WAIT\fP (String token, int timeout)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.ti -1c
+.RI "native void \fBSendEND_AND_CALLBACK\fP (String token, \fBICallback\fP callback)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.ti -1c
+.RI "native void \fBSendRETURN\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP "
+.ti -1c
+.RI "native void \fBSendERROR\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP "
+.ti -1c
+.RI "native void \fBSendY\fP (byte y)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendY\fP "
+.ti -1c
+.RI "native void \fBSendO\fP (boolean o)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendO\fP "
+.ti -1c
+.RI "native void \fBSendS\fP (short s)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendS\fP "
+.ti -1c
+.RI "native void \fBSendI\fP (int i)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendI\fP "
+.ti -1c
+.RI "native void \fBSendF\fP (float f)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendF\fP "
+.ti -1c
+.RI "native void \fBSendW\fP (long w)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendW\fP "
+.ti -1c
+.RI "native void \fBSendD\fP (double l)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendD\fP "
+.ti -1c
+.RI "native void \fBSendC\fP (String s)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendC\fP "
+.ti -1c
+.RI "native void \fBSendB\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
+.ti -1c
+.RI "native void \fBSendN\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
+.ti -1c
+.RI "native void \fBSendBDY\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
+.ti -1c
+.RI "native void \fBSendU\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendU\fP "
+.ti -1c
+.RI "native void \fBSendL_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP "
+.ti -1c
+.RI "native void \fBSendL_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "native void \fBSendT_START\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "native void \fBSendT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
+.ti -1c
+.RI "native void \fBSlaveWorker\fP (int id, String...args)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.ti -1c
+.RI "native void \fBSlaveCreate\fP (int id, \fBMqS\fP slave)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.ti -1c
+.RI "native void \fBSlaveDelete\fP (int id)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBSlaveGet\fP (int id)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBSlaveGetMaster\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.ti -1c
+.RI "native boolean \fBSlaveIs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqS\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.ti -1c
+.RI "void \fBfinalize\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
+.in -1c
+.SS "Static Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static native void \fBInit\fP (String...argv)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP "
+.in -1c
+.SS "Static Package Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB[static initializer]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqS\fP 
+.PP
+Definition at line 22 of file MqS.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "javamsgque.MqS.[static initializer] ()\fC [static, package]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

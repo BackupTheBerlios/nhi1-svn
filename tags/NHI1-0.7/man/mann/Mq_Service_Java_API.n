@@ -1,0 +1,147 @@
+.TH "Mq_Service_Java_API" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Service_Java_API \- create and manage services   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "interface \fBjavamsgque.IService\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBjavamsgque::MqS.WAIT\fP { \fBjavamsgque::MqS.NO\fP = (0), \fBjavamsgque::MqS.ONCE\fP = (1), \fBjavamsgque::MqS.FOREVER\fP = (2) }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "native String \fBjavamsgque::MqS.ServiceGetToken\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBjavamsgque::MqS.ServiceGetFilter\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "native \fBMqS\fP \fBjavamsgque::MqS.ServiceGetFilter\fP (int id)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "native boolean \fBjavamsgque::MqS.ServiceIsTransaction\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ServiceCreate\fP (String token, IService service)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ServiceProxy\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ServiceProxy\fP (String token, int id)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ServiceDelete\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.ti -1c
+.RI "void \fBjavamsgque::MqS.ProcessEvent\fP (int timeout, WAIT flags)  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBjavamsgque::MqS.ProcessEvent\fP (WAIT flags)  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBjavamsgque::MqS.ProcessEvent\fP ()  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage services  
+
+create and manage services 
+.PP
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function.  
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBjavamsgque::MqS::WAIT\fP\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fINO \fP\fP
+.TP
+\fB\fIONCE \fP\fP
+.TP
+\fB\fIFOREVER \fP\fP
+
+.PP
+Definition at line 182 of file MqS.java.
+.SH "Function Documentation"
+.PP 
+.SS "void javamsgque.MqS.ProcessEvent ()  throws MqSException \fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
+.PP
+Definition at line 227 of file MqS.java.
+.SS "void javamsgque.MqS.ProcessEvent (\fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
+.PP
+Definition at line 223 of file MqS.java.
+.SS "void javamsgque.MqS.ProcessEvent (int timeout, \fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
+.PP
+Definition at line 219 of file MqS.java.
+.SS "native void javamsgque.MqS.ServiceCreate (String token, \fBIService\fP service)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+.SS "native void javamsgque.MqS.ServiceDelete (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP 
+.PP
+.SS "native \fBMqS\fP javamsgque.MqS.ServiceGetFilter (int id)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP 
+.PP
+.SS "native \fBMqS\fP javamsgque.MqS.ServiceGetFilter ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP 
+.PP
+.SS "native String javamsgque.MqS.ServiceGetToken ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP 
+.PP
+.SS "native boolean javamsgque.MqS.ServiceIsTransaction ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP 
+.PP
+.SS "native void javamsgque.MqS.ServiceProxy (String token, int id)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+.SS "native void javamsgque.MqS.ServiceProxy (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

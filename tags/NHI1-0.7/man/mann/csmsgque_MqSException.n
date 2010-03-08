@@ -1,0 +1,63 @@
+.TH "csmsgque::MqSException" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::MqSException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMqSException\fP ()"
+.br
+.ti -1c
+.RI "\fBMqSException\fP (SerializationInfo info, StreamingContext context)"
+.br
+.ti -1c
+.RI "override void \fBGetObjectData\fP (SerializationInfo info, StreamingContext context)"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBtxt\fP\fC [get]\fP"
+.br
+.ti -1c
+.RI "int \fBnum\fP\fC [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP 
+.PP
+Definition at line 27 of file error.cs.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "csmsgque.MqSException.MqSException ()"
+.PP
+Definition at line 33 of file error.cs.
+.SS "csmsgque.MqSException.MqSException (SerializationInfo info, StreamingContext context)"
+.PP
+Definition at line 51 of file error.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "override void csmsgque.MqSException.GetObjectData (SerializationInfo info, StreamingContext context)"
+.PP
+Definition at line 57 of file error.cs.
+.SH "Property Documentation"
+.PP 
+.SS "int csmsgque.MqSException.num\fC [get]\fP"
+.PP
+Definition at line 65 of file error.cs.
+.SS "string csmsgque.MqSException.txt\fC [get]\fP"
+.PP
+Definition at line 64 of file error.cs.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.
