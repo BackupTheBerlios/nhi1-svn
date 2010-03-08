@@ -20,25 +20,12 @@ Public Module example
     Implements IFactory
     Implements IServerSetup
 
-    ' service definition
-    Private Sub Filter()
-      Dim ftr As MqS = ServiceGetFilter()
-      ftr.SendSTART()
-      ftr.SendBDY(ReadBDY)
-      If ServiceIsTransaction() Then
-        ftr.SendEND_AND_WAIT(ServiceGetToken())
-        SendSTART()
-        SendBDY(ftr.ReadBDY())
-      Else
-        ftr.SendEND(ServiceGetToken())
-      End If
-      SendRETURN()
-    End Sub
-
     Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       Dim ftr As MqS = ServiceGetFilter()
-      ServiceCreate("+ALL", AddressOf Filter)
-      ftr.ServiceCreate("+ALL", AddressOf Filter)
+      ServiceProxy("+ALL")
+      ServiceProxy("+TRT")
+      ftr.ServiceProxy("+ALL")
+      ftr.ServiceProxy("+TRT")
     End Sub
 
     Private Function Factory() As csmsgque.MqS Implements IFactory.Factory

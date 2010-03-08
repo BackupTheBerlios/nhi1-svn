@@ -23,13 +23,7 @@ Public Module example
     Implements IEvent
     Implements IService
 
-    Structure FilterItmS
-      Public token As String
-      Public isTransaction As Boolean
-      Public bdy As Byte()
-    End Structure
-
-    Dim itms As New Queue(Of FilterItmS)
+    Dim itms As New Queue(Of Byte())
     Dim FH As StreamWriter = Nothing
 
     Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
@@ -89,17 +83,11 @@ Public Module example
 
     Private Sub EventF() Implements IEvent.Event
       If (itms.Count > 0) Then
-        Dim it As FilterItmS = itms.Peek()
+        Dim it As Byte() = itms.Peek()
         Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
         Try
           ftr.LinkConnect()
-          ftr.SendSTART()
-          ftr.SendBDY(it.bdy)
-          If (it.isTransaction) Then
-            ftr.SendEND_AND_WAIT(it.token)
-          Else
-            ftr.SendEND(it.token)
-          End If
+          ftr.SendBDY(it)
         Catch ex As Exception
           ftr.ErrorSet(ex)
           If (ftr.ErrorIsEXIT()) Then
@@ -116,11 +104,7 @@ Public Module example
     End Sub
 
     Private Sub Service(ByVal ctx As csmsgque.MqS) Implements IService.Service
-      Dim it As FilterItmS
-      it.token = ServiceGetToken()
-      it.isTransaction = ServiceIsTransaction()
-      it.bdy = ReadBDY()
-      itms.Enqueue(it)
+      itms.Enqueue(ReadBDY())
       SendRETURN()
     End Sub
   End Class
