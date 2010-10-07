@@ -1,0 +1,103 @@
+/**
+ *  \file       theLink/rubymsgque/service_ruby.c
+ *  \brief      \$Id$
+ *  
+ *  (C) 2010 - NHI - #1 - Project - Group
+ *  
+ *  \version    \$Rev$
+ *  \author     EMail: aotto1968 at users.berlios.de
+ *  \attention  this software has GPL permissions to copy
+ *              please contact AUTHORS for additional information
+ */
+
+#include "msgque_ruby.h"
+
+extern VALUE cMqS;
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                private                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+static VALUE ServiceGetToken (VALUE self) {
+  return CST2VAL(MqServiceGetToken(MQCTX));
+}
+
+static VALUE ServiceIsTransaction (VALUE self) {
+  return BOL2VAL(MqServiceIsTransaction(MQCTX));
+}
+
+static VALUE ServiceGetFilter (VALUE self, VALUE id) {
+  SETUP_mqctx
+  struct MqS * ctx;
+  ErrorMqToRubyWithCheck(MqServiceGetFilter(mqctx, VAL2INT(id), &ctx));
+  return MqS2VAL(ctx);
+}
+
+static VALUE ServiceCreate (VALUE self, VALUE token, VALUE callback) {
+  SETUP_mqctx
+  CheckType(callback, rb_cMethod, "usage ServiceCreate token Method-Type-Arg");
+  rb_gc_register_address(&callback);
+  ErrorMqToRubyWithCheck(MqServiceCreate(mqctx, VAL2CST(token), 
+    NS(ProcCall), (void*) callback, NS(ProcFree))
+  );
+  return Qnil;
+}
+
+static VALUE ServiceDelete (VALUE self, VALUE token) {
+  SETUP_mqctx
+  ErrorMqToRubyWithCheck(MqServiceDelete(mqctx, VAL2CST(token)));
+  return Qnil;
+}
+
+static VALUE ServiceProxy (int argc, VALUE *argv, VALUE self) {
+  SETUP_mqctx
+  MQ_INT id = 0;
+  if (argc < 1 || argc > 2) rb_raise(rb_eArgError, "usage: ServiceProxy token ?id?");
+  if (argc == 2) id = VAL2INT(argv[1]);
+  ErrorMqToRubyWithCheck(MqServiceProxy(mqctx, VAL2CST(argv[0]), id));
+  return Qnil;
+}
+
+static VALUE ProcessEvent (int argc, VALUE *argv, VALUE self) {
+  SETUP_mqctx
+  MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
+  enum MqWaitOnEventE wait = MQ_WAIT_NO;
+  if (argc < 0 || argc > 2) rb_raise(rb_eArgError, "usage: ProcessEvent ?timeout? ?wait?");
+  if (argc <= 2) timeout = VAL2INT(argv[0]);
+  if (argc == 2) wait = VAL2INT(argv[1]);
+  ErrorMqToRubyWithCheck(MqProcessEvent(mqctx, timeout, wait));
+  return Qnil;
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                public                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+void NS(MqS_Service_Init)(void) {
+
+  // Timeout
+  VALUE cTimeout = rb_define_class_under(cMqS, "Timeout", rb_cObject);
+  rb_iv_set(cTimeout, "DEFAULT",  INT2VAL(-1));
+  rb_iv_set(cTimeout, "USER",	  INT2VAL(-2));
+  rb_iv_set(cTimeout, "MAX",	  INT2VAL(-3));
+
+  // Wait
+  VALUE cWait = rb_define_class_under(cMqS, "Wait", rb_cObject);
+  rb_iv_set(cWait,    "NO",	  INT2VAL(0));
+  rb_iv_set(cWait,    "ONCE",	  INT2VAL(1));
+  rb_iv_set(cWait,    "FOREVER",  INT2VAL(2));
+
+  // Methods
+  rb_define_method(cMqS, "ServiceGetToken",	  ServiceGetToken,	0);
+  rb_define_method(cMqS, "ServiceIsTransaction",  ServiceIsTransaction, 0);
+  rb_define_method(cMqS, "ServiceGetFilter",	  ServiceGetFilter,	1);
+  rb_define_method(cMqS, "ServiceCreate",	  ServiceCreate,	2);
+  rb_define_method(cMqS, "ServiceDelete",	  ServiceDelete,	1);
+  rb_define_method(cMqS, "ServiceProxy",	  ServiceProxy,		-1);
+  rb_define_method(cMqS, "ProcessEvent",	  ProcessEvent,		-1);
+}
+
