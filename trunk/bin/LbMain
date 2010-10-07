@@ -270,6 +270,7 @@ array set MAP {
     .bash	.sh
     .txt	.sh
     .py		.sh
+    .rb		.sh
     .pl		.sh
     .env	.sh
     .n          .man

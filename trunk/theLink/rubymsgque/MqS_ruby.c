@@ -22,29 +22,21 @@ VALUE cMqS;
 /*****************************************************************************/
 
 static void
-ProcessExit (
-  MQ_INT num
-)
+ProcessExit (MQ_INT num)
 {
   rb_exit(num);
 }
 
 static void
-ThreadExit (
-  MQ_INT num
-)
+ThreadExit (MQ_INT num)
 {
 }
 
-static void Mark (
-  void * ctx
-)
+static void Mark (void * ctx)
 {
 }
 
-static void Free (
-  void * ctx
-)
+static void Free (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
   mqctx->setup.Factory.Delete.fCall = NULL;

@@ -21,6 +21,8 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/javamsgque/*.java \
 		$(top_srcdir)/theLink/pymsgque/*.c \
 		$(top_srcdir)/theLink/pymsgque/*.h \
+		$(top_srcdir)/theLink/rubymsgque/*.c \
+		$(top_srcdir)/theLink/rubymsgque/*.h \
 		$(top_srcdir)/theLink/tclmsgque/*.c \
 		$(top_srcdir)/theLink/tclmsgque/*.h \
 		$(top_srcdir)/theLink/ccmsgque/*.cc \

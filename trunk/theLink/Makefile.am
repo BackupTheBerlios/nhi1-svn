@@ -24,6 +24,10 @@ if USE_PYTHON
 SUBDIRS += pymsgque
 SUBDIRS += example/python
 endif
+if USE_RUBY
+SUBDIRS += rubymsgque
+SUBDIRS += example/ruby
+endif
 if USE_CSHARP
 SUBDIRS += csmsgque
 SUBDIRS += example/csharp

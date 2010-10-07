@@ -39,9 +39,10 @@
 #define VAL2WID(val)	    (MQ_WID)NUM2LL(val)
 #define VAL2FLT(val)	    (MQ_FLT)NUM2DBL(val)
 #define VAL2DBL(val)	    (MQ_DBL)NUM2DBL(val)
-#define VAL2CST(val)	    (MQ_CST)StringValueCStr(val)
+#define VAL2CST(val)	    (MQ_CST)RSTRING_PTR(rb_obj_as_string(val))
 #define VAL2PTR(val)	    (MQ_PTR)val
 #define VALP2CST(valp)	    (MQ_CST)rb_string_value_cstr(valp)
+#define VAL2BIN(val)	    (MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
 #define VAL2MqS(val)	    (struct MqS*)DATA_PTR(val)
 
@@ -89,10 +90,9 @@ VALUE NS(MqBufferS_New)	    (MQ_BUF);
 /*****************************************************************************/
 
 void NS(MqSException_Raise) (struct MqS*);
-void NS(MqSException_Set)   (struct MqS*, MQ_CST, VALUE);
+void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
-
-
+MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
 

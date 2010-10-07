@@ -32,22 +32,7 @@ static VALUE SlaveWorker(int argc, VALUE *argv, VALUE self)
   argc--; argv++;
 
   // command-line arguments to MqBufferLS
-  if (argc != 0) {
-    int i;
-    args = MqBufferLCreate (argc+1);
-    MqBufferLAppendC (args, "ruby");
-    for (i = 0; i < argc; i++, argv++) {
-      const VALUE argv2 = *argv;
-      if (rb_type(argv2) == T_ARRAY) {
-	VALUE arg;
-	while ((arg = rb_ary_shift(argv2)) != Qnil) {
-	  MqBufferLAppendC (args, VAL2CST(arg));
-	}
-      } else {
-	MqBufferLAppendC (args, VALP2CST(argv));
-      }
-    }
-  }
+  args = NS(argv2bufl)(argc,argv);
 
   // create Worker
   ErrorMqToRubyWithCheck (MqSlaveWorker(mqctx, id, &args));

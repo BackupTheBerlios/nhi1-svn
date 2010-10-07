@@ -16,55 +16,53 @@ extern VALUE cMqS;
 
 static VALUE ErrorGetText(VALUE self)
 { 
-  return self;
+  return CST2VAL(MqErrorGetText(MQCTX));
 } 
 
 static VALUE ErrorGetNum(VALUE self)
 { 
-  return self;
+  return INT2VAL(MqErrorGetNum(MQCTX));
 } 
 
 static VALUE ErrorC(VALUE self, VALUE prefix, VALUE num, VALUE text)
 { 
-  SETUP_mqctx
-  MqErrorC(mqctx, VAL2CST(prefix), VAL2INT(num), VAL2CST(text));
+  MqErrorC(MQCTX, VAL2CST(prefix), VAL2INT(num), VAL2CST(text));
   return Qnil;
 } 
 
 static VALUE ErrorSet(VALUE self, VALUE ex)
 { 
-  SETUP_mqctx
-  NS(MqSException_Set)(mqctx, __func__, ex);
+  NS(MqSException_Set)(MQCTX, ex);
   return Qnil;
 } 
 
 static VALUE ErrorSetCONTINUE(VALUE self)
 { 
-  return self;
+  MqErrorSetCONTINUE(MQCTX);
+  return Qnil;
 } 
 
-static VALUE ErrorIsExit(VALUE self)
+static VALUE ErrorIsEXIT(VALUE self)
 { 
-  return self;
+  return BOL2VAL(MqErrorIsEXIT(MQCTX));
 } 
 
 static VALUE ErrorReset(VALUE self)
 { 
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqErrorReset(mqctx));
-  return self;
+  MqErrorReset(MQCTX);
+  return Qnil;
 } 
 
 static VALUE ErrorRaise(VALUE self)
 { 
-  SETUP_mqctx
-  NS(MqSException_Raise)(mqctx);
+  NS(MqSException_Raise)(MQCTX);
   return Qnil;
 } 
 
 static VALUE ErrorPrint(VALUE self)
 { 
-  return self;
+  MqErrorPrint(MQCTX);
+  return Qnil;
 } 
 
 void NS(MqS_Error_Init)(void) {
@@ -73,7 +71,7 @@ void NS(MqS_Error_Init)(void) {
   rb_define_method(cMqS, "ErrorC",	      ErrorC,		3);
   rb_define_method(cMqS, "ErrorSet",	      ErrorSet,		1);
   rb_define_method(cMqS, "ErrorSetCONTINUE",  ErrorSetCONTINUE, 0);
-  rb_define_method(cMqS, "ErrorIsExit",	      ErrorIsExit,	0);
+  rb_define_method(cMqS, "ErrorIsEXIT",	      ErrorIsEXIT,	0);
   rb_define_method(cMqS, "ErrorReset",	      ErrorReset,	0);
   rb_define_method(cMqS, "ErrorRaise",	      ErrorRaise,	0);
   rb_define_method(cMqS, "ErrorPrint",	      ErrorPrint,	0);

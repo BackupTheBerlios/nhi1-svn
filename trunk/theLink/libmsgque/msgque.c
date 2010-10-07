@@ -301,9 +301,9 @@ MqExitP (
     // exit on empty context
     SysExit (0,0);
   } else if (context->bits.onExit == MQ_YES) {
-    // no double calling of MqExit
-    MqPanicV(MQ_ERROR_PANIC, prefix, MqMessageNum(MQ_ERROR_EXIT),
-      "called '%s' for context '%p' twice", __func__, context);
+    // do not allow !! double calling of MqExit
+    MqPanicV(MQ_ERROR_PANIC, __func__, MqMessageNum(MQ_ERROR_EXIT),
+      "called for context '%p' twice from '%s'", context, prefix);
   } else {
     // do the exit
     int num;

@@ -17,7 +17,7 @@ static VALUE b_proc (VALUE method) {
 }
 
 static VALUE r_proc (VALUE self, VALUE ex) {
-  NS(MqSException_Set) (VAL2MqS(self), "ProcCall", ex);
+  NS(MqSException_Set) (VAL2MqS(self), ex);
   return Qnil;
 }
 
@@ -52,4 +52,25 @@ enum MqErrorE NS(ProcCopy) (
   return MQ_OK;
 }
 
+MQ_BFL NS(argv2bufl) (int argc, VALUE *argv)
+{
+  struct MqBufferLS * args = NULL;
+  if (argc != 0) {
+    int i;
+    args = MqBufferLCreate (argc+1);
+    MqBufferLAppendC (args, VAL2CST(rb_argv0));
+    for (i = 0; i < argc; i++, argv++) {
+      const VALUE argv2 = *argv;
+      if (rb_type(argv2) == T_ARRAY) {
+	VALUE arg;
+	while ((arg = rb_ary_shift(argv2)) != Qnil) {
+	  MqBufferLAppendC (args, VAL2CST(arg));
+	}
+      } else {
+	MqBufferLAppendC (args, VALP2CST(argv));
+      }
+    }
+  }
+  return args;
+}
 

@@ -985,7 +985,7 @@ MqLinkDelete (
       // do not call "MqLinkDelete" again
       MqContextDelete((struct MqS **)&context);
     } else {
-      // initialize "msgque" object to "NULL"
+      // initialize "link" object to "NULL"
       memset(&context->link,0,sizeof(struct MqLinkS));
     }
     return;

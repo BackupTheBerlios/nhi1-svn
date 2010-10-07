@@ -41,21 +41,21 @@ Send(C,CST)
 static VALUE SendB (VALUE self, VALUE val) {
   SETUP_mqctx
   StringValue(val);
-  ErrorMqToRubyWithCheck(MqSendN(mqctx,(MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)));
+  ErrorMqToRubyWithCheck(MqSendB(mqctx,VAL2BIN(val)));
   return Qnil;
 }
 
 static VALUE SendN (VALUE self, VALUE val) {
   SETUP_mqctx
   StringValue(val);
-  ErrorMqToRubyWithCheck(MqSendN(mqctx,(MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)));
+  ErrorMqToRubyWithCheck(MqSendN(mqctx,VAL2BIN(val)));
   return Qnil;
 }
 
 static VALUE SendBDY (VALUE self, VALUE val) {
   SETUP_mqctx
   StringValue(val);
-  ErrorMqToRubyWithCheck(MqSendBDY(mqctx,(MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)));
+  ErrorMqToRubyWithCheck(MqSendBDY(mqctx,VAL2BIN(val)));
   return Qnil;
 }
 

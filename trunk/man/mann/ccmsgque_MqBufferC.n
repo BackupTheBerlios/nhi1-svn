@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqBufferC" n "6 Oct 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqBufferC" n "7 Oct 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

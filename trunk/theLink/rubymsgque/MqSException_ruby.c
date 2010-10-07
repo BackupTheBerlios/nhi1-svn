@@ -18,6 +18,7 @@ static ID id_new;
 static ID id_num;
 static ID id_code;
 static ID id_txt;
+static ID id_backtrace;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -70,11 +71,16 @@ inline static MQ_CST GetTxtN(VALUE self)
 /*                                                                           */
 /*****************************************************************************/
 
-void NS(MqSException_Set) (struct MqS* mqctx, MQ_CST prefix, VALUE ex) {
+void NS(MqSException_Set) (struct MqS* mqctx, VALUE ex) {
   if (rb_obj_is_kind_of(ex, cMqSException) == Qtrue) {
     MqErrorSet (mqctx, GetNumN(ex), GetCodeN(ex), GetTxtN(ex), NULL);
   } else if (rb_obj_is_kind_of(ex, rb_eException) == Qtrue) {
-    MqErrorC(mqctx, prefix, -1, GetTxtN(ex));
+    VALUE arg;
+    VALUE argv = rb_funcall(ex,id_backtrace,0,NULL);
+    MqErrorC(mqctx, "ruby-error", -1, VAL2CST(rb_inspect(ex)));
+    while ((arg = rb_ary_shift(argv)) != Qnil) {
+      MqErrorSAppendC(mqctx, VAL2CST(arg));
+    }
   } else {
     rb_raise(rb_eTypeError, "expect 'Exception' type as argument");
   }
@@ -86,6 +92,7 @@ void NS(MqSException_Raise) (struct MqS* mqctx) {
     INT2VAL	(MqErrorGetCodeI (mqctx)), 
     CST2VAL	(MqErrorGetText  (mqctx))
   };
+  MqErrorReset(mqctx);
   rb_exc_raise(rb_class_new_instance(3,args,cMqSException));
 }
 
@@ -97,9 +104,10 @@ void NS(MqSException_Init) (void) {
   rb_define_method(cMqSException, "GetNum", GetNum, 0);
   rb_define_method(cMqSException, "GetTxt", GetTxt, 0);
 
-  id_new  = rb_intern("new");
-  id_num  = rb_intern("@num");
-  id_code = rb_intern("@code");
-  id_txt  = rb_intern("message");
+  id_new       = rb_intern("new");
+  id_num       = rb_intern("@num");
+  id_code      = rb_intern("@code");
+  id_txt       = rb_intern("message");
+  id_backtrace = rb_intern("backtrace");
 }
 

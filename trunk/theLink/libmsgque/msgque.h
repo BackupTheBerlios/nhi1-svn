@@ -873,7 +873,7 @@ struct MqSetupS {
 # ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
 /// \brief the prefix arguments of the starting application
-/// \body this is the name of the executable and additional arguments
+/// \details this is the name of the executable and additional arguments
 /// used to initialize the environment like the name of a script.
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 

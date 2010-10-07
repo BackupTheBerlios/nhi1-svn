@@ -22,26 +22,10 @@ extern VALUE cMqS;
 
 static VALUE LinkCreate(int argc, VALUE *argv, VALUE self)
 {
-  struct MqBufferLS * args = NULL;
   SETUP_mqctx
+  struct MqBufferLS * args = NS(argv2bufl)(argc,argv);
 
-  // command-line arguments to MqBufferLS
-  if (argc != 0) {
-    int i;
-    args = MqBufferLCreate (argc+1);
-    MqBufferLAppendC (args, "ruby");
-    for (i = 0; i < argc; i++, argv++) {
-      const VALUE argv2 = *argv;
-      if (rb_type(argv2) == T_ARRAY) {
-	VALUE arg;
-	while ((arg = rb_ary_shift(argv2)) != Qnil) {
-	  MqBufferLAppendC (args, VAL2CST(arg));
-	}
-      } else {
-	MqBufferLAppendC (args, VALP2CST(argv));
-      }
-    }
-  }
+//printXULS(NULL, args);
 
   // create Context
   ErrorMqToRubyWithCheck (MqLinkCreate(mqctx, &args));
@@ -61,22 +45,7 @@ static VALUE LinkCreateChild(int argc, VALUE *argv, VALUE self)
   argc--; argv++;
 
   // command-line arguments to MqBufferLS
-  if (argc != 0) {
-    int i;
-    args = MqBufferLCreate (argc+1);
-    MqBufferLAppendC (args, "ruby");
-    for (i = 0; i < argc; i++, argv++) {
-      const VALUE argv2 = *argv;
-      if (rb_type(argv2) == T_ARRAY) {
-	VALUE arg;
-	while ((arg = rb_ary_shift(argv2)) != Qnil) {
-	  MqBufferLAppendC (args, VAL2CST(arg));
-	}
-      } else {
-	MqBufferLAppendC (args, VALP2CST(argv));
-      }
-    }
-  }
+  args = NS(argv2bufl)(argc,argv);
 
   // create Context
   ErrorMqToRubyWithCheck (MqLinkCreateChild(mqctx, parent, &args));

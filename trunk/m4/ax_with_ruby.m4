@@ -1,3 +1,14 @@
+dnl
+dnl  \file       m4/ax_with_ruby.m4
+dnl  \brief      \$Id$
+dnl  
+dnl  (C) 2010 - NHI - #1 - Project - Group
+dnl  
+dnl  \version    \$Rev$
+dnl  \author     EMail: aotto1968 at users.berlios.de
+dnl  \attention  this software has GPL permissions to copy
+dnl              please contact AUTHORS for additional information
+dnl
 # ===========================================================================
 #       http://www.gnu.org/software/autoconf-archive/ax_with_ruby.html
 # ===========================================================================

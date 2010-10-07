@@ -177,6 +177,36 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     self.SendU(self)
 TypeError: must be pymsgque.MqBufferS, not Server*}
 
+test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
+    -constraints    { ruby } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR5 ReadI SendI 345 SendI 456
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
+[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
+  File "*", line *, in Error
+    self.ReadProxy(self.ReadU())
+TypeError: must be pymsgque.MqS, not pymsgque.MqBufferS*}
+
+test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
+    -constraints    { ruby } \
+    -setup          { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           { 
+      Echo1 $FH_LAST ERR6 ReadI
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>*
+[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
+  File "*", line *, in Error
+    self.SendU(self)
+TypeError: must be pymsgque.MqBufferS, not Server*}
+
 test error-5-($I|$B|$C|$S) {wrong host name) port} \
     -constraints    {tcp && parent && !filter} \
     -body           { Setup $I $B $C $S --host 10.10.10.10 --silent --timeout 0 --error} \

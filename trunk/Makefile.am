@@ -43,7 +43,7 @@ dist-hook:
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
       --enable-python --enable-perl --enable-guard --enable-brain \
-	--enable-csharp --enable-java --enable-threads
+	--enable-csharp --enable-java --enable-ruby --enable-threads
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command

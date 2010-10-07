@@ -28,10 +28,13 @@ static VALUE ServiceIsTransaction (VALUE self) {
   return BOL2VAL(MqServiceIsTransaction(MQCTX));
 }
 
-static VALUE ServiceGetFilter (VALUE self, VALUE id) {
+static VALUE ServiceGetFilter (int argc, VALUE *argv, VALUE self) {
+  MQ_INT id=0;
   SETUP_mqctx
   struct MqS * ctx;
-  ErrorMqToRubyWithCheck(MqServiceGetFilter(mqctx, VAL2INT(id), &ctx));
+  if (argc < 0 || argc > 1) rb_raise(rb_eArgError, "usage: ServiceGetFilter ?id=0?");
+  if (argc == 1) id = VAL2INT(argv[0]);
+  ErrorMqToRubyWithCheck(MqServiceGetFilter(mqctx, id, &ctx));
   return MqS2VAL(ctx);
 }
 
@@ -65,8 +68,13 @@ static VALUE ProcessEvent (int argc, VALUE *argv, VALUE self) {
   MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
   enum MqWaitOnEventE wait = MQ_WAIT_NO;
   if (argc < 0 || argc > 2) rb_raise(rb_eArgError, "usage: ProcessEvent ?timeout? ?wait?");
-  if (argc <= 2) timeout = VAL2INT(argv[0]);
-  if (argc == 2) wait = VAL2INT(argv[1]);
+  if (argc == 1) {
+    wait = VAL2INT(argv[0]);
+  }
+  if (argc == 2) {
+    timeout = VAL2INT(argv[0]);
+    wait = VAL2INT(argv[1]);
+  }
   ErrorMqToRubyWithCheck(MqProcessEvent(mqctx, timeout, wait));
   return Qnil;
 }
@@ -94,7 +102,7 @@ void NS(MqS_Service_Init)(void) {
   // Methods
   rb_define_method(cMqS, "ServiceGetToken",	  ServiceGetToken,	0);
   rb_define_method(cMqS, "ServiceIsTransaction",  ServiceIsTransaction, 0);
-  rb_define_method(cMqS, "ServiceGetFilter",	  ServiceGetFilter,	1);
+  rb_define_method(cMqS, "ServiceGetFilter",	  ServiceGetFilter,	-1);
   rb_define_method(cMqS, "ServiceCreate",	  ServiceCreate,	2);
   rb_define_method(cMqS, "ServiceDelete",	  ServiceDelete,	1);
   rb_define_method(cMqS, "ServiceProxy",	  ServiceProxy,		-1);

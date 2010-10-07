@@ -123,7 +123,7 @@ endif
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.py $(srcdir)/*.pl \
 		README.tests $(srcdir)/*.java $(srcdir)/*.cs $(srcdir)/*.vb \
-		  $(srcdir)/*.exe MakeTclTest.bash massclient.bash
+		  $(srcdir)/*.rb $(srcdir)/*.exe MakeTclTest.bash massclient.bash
 
 VPATH_FILES = vbserver.exe csserver.exe example
 

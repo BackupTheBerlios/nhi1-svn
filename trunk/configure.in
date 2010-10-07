@@ -172,10 +172,10 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
 		      theLink/phpmsgque/Makefile theLink/example/php/Makefile theLink/phpmsgque/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-			  theLink/rubymsgque/Makefile
+			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
 			    theLink/example/vb/Makefile
 			      performance/Makefile performance/env.sh 
-			        theBrain/Makefile theBrain/abrain/Makefile
+			        theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
 				  theBrain/libbrain/Makefile theBrain/tests/Makefile 
 				    theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 

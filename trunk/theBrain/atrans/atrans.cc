@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/cc/atrans.cc
+ *  \file       theBrain/atrans/atrans.cc
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

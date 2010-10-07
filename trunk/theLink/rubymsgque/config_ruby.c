@@ -14,6 +14,8 @@
 
 extern VALUE cMqS;
 
+#define MQ_CONTEXT_S mqctx
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                private                                    */
@@ -66,6 +68,8 @@ Get(IoTcpPort,	  CST)
 Get(IoTcpMyHost,  CST)
 Get(IoTcpMyPort,  CST)
 
+Set(IgnoreExit,	  BOL)
+
 static VALUE ConfigSetIoTcp (VALUE self, VALUE host, VALUE port, VALUE myhost, VALUE myport) {
   MqConfigSetIoTcp (MQCTX, VAL2CST(host), VAL2CST(port), VAL2CST(myhost), VAL2CST(myport));
   return Qnil;
@@ -81,7 +85,7 @@ static VALUE b_proc (VALUE proc) {
 }
 
 static VALUE r_proc (VALUE tmpl, VALUE ex) {
-  NS(MqSException_Set) (VAL2MqS(tmpl), "FactoryCreate", ex);
+  NS(MqSException_Set) (VAL2MqS(tmpl), ex);
   return Qnil;
 }
 
@@ -123,7 +127,7 @@ FactoryDelete(
 {
   SETUP_self
   MqContextFree (mqctx);
-  rb_gc_unregister_address(&self);
+  if (doFactoryDelete) rb_gc_unregister_address(&self);
 }
 
 
@@ -171,5 +175,7 @@ void NS(MqS_Config_Init)(void) {
   MthBas(Factory,	Set, 1)
   MthBas(BgError,	Set, 1)
   MthBas(Event,		Set, 1)
+
+  MthBas(IgnoreExit,	Set, 1)
 }
 

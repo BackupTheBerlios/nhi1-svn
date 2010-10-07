@@ -758,7 +758,7 @@ AC_DEFUN([SC_ENABLE_RUBY], [
     AX_RUBY_DEVEL($ruby_version)
   fi
   AC_SUBST([USE_RUBY], $enable_ruby)
-  AM_CONDITIONAL([USE_RUBY], [test "x$enable_ruby" != xyes])
+  AM_CONDITIONAL([USE_RUBY], [test "x$enable_ruby" = xyes])
 ])
 
 #------------------------------------------------------------------------
