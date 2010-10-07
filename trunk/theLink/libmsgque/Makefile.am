@@ -22,7 +22,7 @@ libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
     mq_io.h read.h swap.h tcp_io.h pipe_io.h uds_io.h slave.h \
     service.c link.c link.h
 
-libtmp_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
+libtmp_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes $(AM_CFLAGS)
 libtmp_la_LDFLAGS = -no-undefined
 
 html: libtmp.la

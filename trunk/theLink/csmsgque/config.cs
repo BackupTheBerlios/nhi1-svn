@@ -138,11 +138,11 @@ namespace csmsgque {
     private static extern MqErrorE MqConfigSetIoTcp([In]IntPtr context, [In]string host, [In]string port, 
 				  [In]string myhost, [In]string myport );
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIoUds")]
-    private static extern MqErrorE MqConfigSetIoUds([In]IntPtr context, [In]string file);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIoUdsFile")]
+    private static extern MqErrorE MqConfigSetIoUdsFile([In]IntPtr context, [In]string file);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIoPipe")]
-    private static extern MqErrorE MqConfigSetIoPipe([In]IntPtr context, [In]int socket);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIoPipeSocket")]
+    private static extern MqErrorE MqConfigSetIoPipeSocket([In]IntPtr context, [In]int socket);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetStartAs")]
     private static extern void MqConfigSetStartAs([In]IntPtr context, [In]int startAs);
@@ -173,13 +173,13 @@ namespace csmsgque {
     public void   ConfigSetIoTcp	(string host, string port, string myhost, string myport) { 
       ErrorMqToCsWithCheck (MqConfigSetIoTcp (context, host, port, myhost, myport)); 
     }
-    /// \api #MqConfigSetIoUds
-    public void   ConfigSetIoUds	(string data) { 
-      ErrorMqToCsWithCheck (MqConfigSetIoUds (context, data));
+    /// \api #MqConfigSetIoUdsFile
+    public void   ConfigSetIoUdsFile	(string data) { 
+      ErrorMqToCsWithCheck (MqConfigSetIoUdsFile (context, data));
     }
-    /// \api #MqConfigSetIoPipe
-    public void   ConfigSetIoPipe	(int data)    { 
-      ErrorMqToCsWithCheck (MqConfigSetIoPipe (context, data)); 
+    /// \api #MqConfigSetIoPipeSocket
+    public void   ConfigSetIoPipeSocket	(int data)    { 
+      ErrorMqToCsWithCheck (MqConfigSetIoPipeSocket (context, data)); 
     }
     /// \api #MqConfigSetStartAs
     public void   ConfigSetStartAs	(int data)    { MqConfigSetStartAs	(context, data); }
@@ -276,4 +276,7 @@ namespace csmsgque {
 
   } // END - class "MqS"
 } // END - namespace "csmsgque"
+
+
+
 

@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_Java_API" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_Java_API" n "6 Oct 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

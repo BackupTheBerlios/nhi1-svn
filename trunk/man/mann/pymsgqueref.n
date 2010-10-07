@@ -1,4 +1,4 @@
-.TH "pymsgque" n "8 Mar 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "6 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -287,7 +287,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fCPyUnicode\fP, \fBget:\fP \fCConfigGetIoUdsFile\fP , \fBset:\fP \fCConfigSetIoUds (file)\fP
+\fBtype:\fP \fCPyUnicode\fP, \fBget:\fP \fCConfigGetIoUdsFile\fP , \fBset:\fP \fCConfigSetIoUdsFile (file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -306,7 +306,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCPyLong\fP, \fBget:\fP \fCConfigGetIoPipeSocket\fP , \fBset:\fP \fCConfigSetIoPipe (socket)\fP
+\fBtype:\fP \fCPyLong\fP, \fBget:\fP \fCConfigGetIoPipeSocketSocket\fP , \fBset:\fP \fCConfigSetIoPipeSocket (socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP

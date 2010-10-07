@@ -221,8 +221,10 @@ MqReadT_START (
   } else if (buf->type != MQ_TRAT) {
     return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_TRAT), MqLogTypeName(buf->type));
   } else {
+    MQ_CST tmp;
     sReadListStart (context, buf);
     read->bdy->cur.B += (HDR_TOK_LEN+1);
+    MqReadC(context, &tmp);
     return MQ_OK;
   }
 }

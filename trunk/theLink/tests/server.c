@@ -1137,37 +1137,12 @@ Ot_ERLS (
     MqErrorCheck (MqSend ## I (mqctx, MqConfigGet ## A (mqctx))); \
     MqConfigSet ## A (mqctx, I ## O);
 
-#define CFGTestB(A,B,I) \
-    I ## O = MqConfigGet ## A ## B (mqctx); \
-    MqErrorCheck (MqRead ## I (mqctx, & I ## V)); \
-    MqErrorCheck(MqConfigSet ## A (mqctx, I ## V)); \
-    MqErrorCheck (MqSend ## I (mqctx, MqConfigGet ## A ## B (mqctx))); \
-    MqConfigSet ## A (mqctx, I ## O);
-
 #define CFGTestC(A) \
     CO = MqConfigGet ## A (mqctx); \
     if (CO) CO = mq_strdup(CO); \
     MqErrorCheck (MqReadC (mqctx, &CV)); \
     MqConfigSet ## A (mqctx, CV); \
     MqErrorCheck (MqSendC (mqctx, MqConfigGet ## A (mqctx))); \
-    MqConfigSet ## A (mqctx, CO); \
-    MqSysFree (CO);
-
-#define CFGTestCB(A,B) \
-    CO = MqConfigGet ## A ## B (mqctx); \
-    if (CO) CO = mq_strdup(CO); \
-    MqErrorCheck (MqReadC (mqctx, &CV)); \
-    MqConfigSet ## A (mqctx, CV); \
-    MqErrorCheck (MqSendC (mqctx, MqConfigGet ## A ## B (mqctx))); \
-    MqConfigSet ## A (mqctx, CO); \
-    MqSysFree (CO);
-
-#define CFGTestCBE(A,B) \
-    CO = MqConfigGet ## A ## B (mqctx); \
-    if (CO) CO = mq_strdup(CO); \
-    MqErrorCheck (MqReadC (mqctx, &CV)); \
-    MqErrorCheck (MqConfigSet ## A (mqctx, CV)); \
-    MqErrorCheck (MqSendC (mqctx, MqConfigGet ## A ## B (mqctx))); \
     MqConfigSet ## A (mqctx, CO); \
     MqSysFree (CO);
 
@@ -1219,7 +1194,7 @@ Ot_CFG1 (
   } else if (!strncmp (cmd, "IsString", 8)) {
     CFGTest(IsString,O)
   } else if (!strncmp (cmd, "IoUds", 5)) {
-    CFGTestCBE(IoUds,File)
+    CFGTestC(IoUdsFile)
   } else if (!strncmp (cmd, "IoTcp", 5)) {
     MQ_CST h, p, mh, mp;
     MQ_CST hV, pV, mhV, mpV;
@@ -1242,7 +1217,7 @@ Ot_CFG1 (
     MqSysFree (mh);
     MqSysFree (mp);
   } else if (!strncmp (cmd, "IoPipe", 6)) {
-    CFGTestB(IoPipe, Socket, I)
+    CFGTest(IoPipeSocket, I)
   } else if (!strncmp (cmd, "StartAs", 7)) {
     CFGTest(StartAs, I)
   } else {
@@ -1437,6 +1412,7 @@ main (
   mqctx->setup.ServerSetup.fCall    = ServerSetup;
   mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
   MqConfigSetDefaultFactory (mqctx);
+  MqConfigSetIdent (mqctx, "test-server");
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

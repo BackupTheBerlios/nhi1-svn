@@ -113,18 +113,18 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoTcp
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigSetIoUds
+ * Method:    ConfigSetIoUdsFile
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoUds
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoUdsFile
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigSetIoPipe
+ * Method:    ConfigSetIoPipeSocket
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoPipe
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoPipeSocket
   (JNIEnv *, jobject, jint);
 
 /*
@@ -915,3 +915,5 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_SlaveIs
 }
 #endif
 #endif
+
+

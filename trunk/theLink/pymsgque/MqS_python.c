@@ -209,9 +209,9 @@ PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIdent)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIoUds)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIoUdsFile)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIoPipe)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIoPipeSocket)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetStartAs)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetDaemon)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsString)	      ( PyObject*, PyObject* );
@@ -248,9 +248,9 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigSetName_DOC	    "[string]"
 #define ConfigSetSrvName_DOC	    "[string]"
 #define ConfigSetIdent_DOC	    "[string]"
-#define ConfigSetIoUds_DOC	    "[file-name]"
+#define ConfigSetIoUdsFile_DOC	    "[file-name]"
 #define ConfigSetIoTcp_DOC	    "[hots, port, myhost, myport]"
-#define ConfigSetIoPipe_DOC	    "[socket]"
+#define ConfigSetIoPipeSocket_DOC	    "[socket]"
 #define ConfigSetStartAs_DOC	    "[integer (0-3)]"
 #define ConfigSetDaemon_DOC	    "[pidfile]"
 #define ConfigSetIsString_DOC	    "[boolean]"
@@ -384,9 +384,9 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
     ARG(ConfigSetIdent,		METH_O),
-    ARG(ConfigSetIoUds,		METH_O),
+    ARG(ConfigSetIoUdsFile,		METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
-    ARG(ConfigSetIoPipe,	METH_O),
+    ARG(ConfigSetIoPipeSocket,	METH_O),
     ARG(ConfigSetStartAs,	METH_O),
     ARG(ConfigSetDaemon,	METH_O),
     ARG(ConfigSetIsSilent,	METH_O),
@@ -489,6 +489,8 @@ PyTypeObject NS(MqS) = {
   0,				  /* tp_alloc */
   NS(MqS_new),			  /* tp_new */
 };
+
+
 
 
 

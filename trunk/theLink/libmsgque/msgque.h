@@ -873,6 +873,8 @@ struct MqSetupS {
 # ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
 
 /// \brief the prefix arguments of the starting application
+/// \body this is the name of the executable and additional arguments
+/// used to initialize the environment like the name of a script.
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 
 /// \brief name of a procedure to return \e main like entry-points 
@@ -1094,7 +1096,7 @@ MQ_DECL MqConfigSetBgError (
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE
-MQ_DECL MqConfigSetIoUds (
+MQ_DECL MqConfigSetIoUdsFile (
   struct MqS * const ctx,
   MQ_CST file
 );
@@ -1120,7 +1122,7 @@ MQ_DECL MqConfigSetIoTcp (
 /// This is configuration option is only useful for a \e (x)inetd setup
 /// to use the stdin (socket=0) as send/recv communication socket
 MQ_EXTERN enum MqErrorE
-MQ_DECL MqConfigSetIoPipe (
+MQ_DECL MqConfigSetIoPipeSocket (
   struct MqS * const context,
   MQ_SOCK socket
 );
@@ -4353,14 +4355,6 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
-
-
-
-
-
-
 
 
 

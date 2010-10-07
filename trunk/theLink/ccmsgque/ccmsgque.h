@@ -252,17 +252,17 @@ namespace ccmsgque {
       inline void ConfigSetIsString   (MQ_BOL data)	    { MqConfigSetIsString (&context, data); }
       /// \api #MqConfigSetIgnoreExit
       inline void ConfigSetIgnoreExit (MQ_BOL data)	    { MqConfigSetIgnoreExit (&context, data); }
-      /// \api #MqConfigSetIoUds
-      inline void ConfigSetIoUds      (MQ_CST data)	    { 
-        ErrorCheck(MqConfigSetIoUds (&context, data)); 
+      /// \api #MqConfigSetIoUdsFile
+      inline void ConfigSetIoUdsFile  (MQ_CST data)	    { 
+        ErrorCheck(MqConfigSetIoUdsFile (&context, data)); 
       }
       /// \api #MqConfigSetIoTcp
       inline void ConfigSetIoTcp      (MQ_CST host, MQ_CST port, MQ_CST myhost, MQ_CST myport)	{ 
 	ErrorCheck(MqConfigSetIoTcp (&context, host, port, myhost, myport)); 
       }
-      /// \api #MqConfigSetIoPipe
-      inline void ConfigSetIoPipe     (MQ_SOCK data)	    { 
-	ErrorCheck(MqConfigSetIoPipe	 (&context, data)); 
+      /// \api #MqConfigSetIoPipeSocket
+      inline void ConfigSetIoPipeSocket     (MQ_SOCK data)	    { 
+	ErrorCheck(MqConfigSetIoPipeSocket	 (&context, data)); 
       }
       /// \api #MqConfigSetStartAs
       inline void ConfigSetStartAs    (enum MqStartE data)  { MqConfigSetStartAs (&context, data); }
@@ -313,7 +313,7 @@ namespace ccmsgque {
     /// \copydoc Mq_Context_C_API
     /// \{
 
-    protected:
+    public:
       /// \brief link between MqC and MqS
       struct MqS context;
 
@@ -416,9 +416,8 @@ namespace ccmsgque {
     /// \copydoc Mq_Link_C_API
     /// \{
     public:
-
       /// \api #MqLinkCreate
-      void LinkCreateVC (int const argc, MQ_CST argv[]) {
+      inline void LinkCreateVC (int const argc, MQ_CST argv[]) {
 	LinkCreate (MqBufferLCreateArgs (argc, argv));
       }
       /// \api #MqLinkCreate
@@ -426,7 +425,7 @@ namespace ccmsgque {
 	LinkCreateVC ((int const) args.size(), (MQ_CST*) &(*args.begin()));
       }
       /// \api #MqLinkCreate
-      void LinkCreateVA (va_list ap) {
+      inline void LinkCreateVA (va_list ap) {
 	LinkCreate (MqBufferLCreateArgsVA (&context, ap));
       }
       /// \api #MqLinkCreate
@@ -499,15 +498,13 @@ namespace ccmsgque {
     /// \copydoc Mq_Error_C_API
     /// \{
 
-    private:
+    public:
 
       inline void ErrorCheck(enum MqErrorE err) throw(MqCException) {
 	if (MqErrorCheckI(err)) {
 	  throw MqCException(&context);
 	}
       }
-
-    public:
 
       /// \api #MqErrorC
       inline void ErrorC (MQ_CST const prefix, MQ_INT const errnum, MQ_CST const message) {
@@ -845,5 +842,8 @@ namespace ccmsgque {
 /// \} Mq_CC_API
 
 #endif /* MQ_CCMSGQUE_H */
+
+
+
 
 

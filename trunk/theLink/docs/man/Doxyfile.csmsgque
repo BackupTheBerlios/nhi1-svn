@@ -96,12 +96,12 @@ ALIASES		    += "config_set_tcp=#csmsgque.MqS.ConfigSetIoTcp (host, port, myhost
 ALIASES		    += "config_get_tcp=#csmsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=string"
-ALIASES		    += "config_set_uds=#csmsgque.MqS.ConfigSetIoUds (file)"
+ALIASES		    += "config_set_uds=#csmsgque.MqS.ConfigSetIoUdsFile (file)"
 ALIASES		    += "config_get_uds=#csmsgque.MqS.ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#csmsgque.MqS.ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=#csmsgque.MqS.ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#csmsgque.MqS.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=#csmsgque.MqS.ConfigGetIoPipeSocketSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
@@ -266,4 +266,9 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
+
+
+
+
 

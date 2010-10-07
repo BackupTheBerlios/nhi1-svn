@@ -5,11 +5,11 @@
 
 \copydoc Mq_Context_C_API
 
-\section context_addon ADVANCED client/server
+\section context_client_server ADVANCED client/server
 
 \copydoc Mq_Link_C_API
 
-\section context_addon ADVANCED master/slave
+\section context_master_slave ADVANCED master/slave
 
 \copydoc Mq_Slave_C_API
 

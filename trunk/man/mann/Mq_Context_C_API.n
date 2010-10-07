@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "6 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -88,12 +88,12 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
 signature marker used in \fBMqS.signature\fP 
 .PP
-Definition at line 1383 of file msgque.h.
+Definition at line 1385 of file msgque.h.
 .SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
 .PP
 wrapper to add calling function to \fBMqExitP\fP 
 .PP
-Definition at line 1474 of file msgque.h.
+Definition at line 1476 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -118,7 +118,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1374 of file msgque.h.
+Definition at line 1376 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"

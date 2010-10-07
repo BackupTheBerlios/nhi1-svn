@@ -77,10 +77,11 @@ PREFIX=""
 CMD=$1; shift
 
 case "$CMD" in
-  *.tcl|*.test)   PREFIX="$PREFIX tclsh$EXT $CMD";;
-  *.java)	  PREFIX="$PREFIX java$EXT $(basename $CMD .java)";;
-  *.py)		  PREFIX="$PREFIX python$EXT $CMD";;
-  *.pl)		  PREFIX="$PREFIX perl$EXT $CMD";;
+  *.tcl|*.test)   PREFIX="$PREFIX $TCLSH $CMD";;
+  *.java)	  PREFIX="$PREFIX $JAVA $(basename $CMD .java)";;
+  *.py)		  PREFIX="$PREFIX $PYTHON $CMD";;
+  *.pl)		  PREFIX="$PREFIX $PERL $CMD";;
+  *.rb)		  PREFIX="$PREFIX $RUBY $CMD";;
   *.exe)	  PREFIX="$PREFIX $MONO $CMD";;
   *.cc)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;
   *.c)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;

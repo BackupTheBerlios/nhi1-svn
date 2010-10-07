@@ -582,9 +582,9 @@ namespace example {
 	  ConfigSetIsString (old);
 	} else if (!strncmp(cmd, "IoUds", 5)) {
 	  MQ_CST old = mq_strdup_save(ConfigGetIoUdsFile());
-	  ConfigSetIoUds (ReadC());
+	  ConfigSetIoUdsFile (ReadC());
 	  SendC (ConfigGetIoUdsFile());
-	  ConfigSetIoUds (old);
+	  ConfigSetIoUdsFile (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "IoTcp", 5)) {
 	  MQ_CST h,p,mh,mp;
@@ -609,9 +609,9 @@ namespace example {
 	  MqSysFree(mp);
 	} else if (!strncmp(cmd, "IoPipe", 6)) {
 	  MQ_SOCK old = ConfigGetIoPipeSocket();
-	  ConfigSetIoPipe (ReadI());
+	  ConfigSetIoPipeSocket (ReadI());
 	  SendI (ConfigGetIoPipeSocket());
-	  ConfigSetIoPipe (old);
+	  ConfigSetIoPipeSocket (old);
 	} else if (!strncmp(cmd, "StartAs", 5)) {
 	  MQ_INT old = ConfigGetStartAs();
 	  ConfigSetStartAs ((enum MqStartE)ReadI());
@@ -741,6 +741,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   static Server server;
   try {
     server.ConfigSetName ("server");
+    server.ConfigSetIdent ("test-server");
     server.LinkCreateVC (argc, argv);
     server.LogC("test",1,"this is the log test\n");
     server.ProcessEvent (MQ_WAIT_FOREVER);  
@@ -751,4 +752,6 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server.Exit ();
 }
+
+
 

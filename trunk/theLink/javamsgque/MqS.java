@@ -63,10 +63,10 @@ public abstract class MqS {
   public native void ConfigSetStartAs	      (int val);
   /// \api #MqConfigSetIoTcp
   public native void ConfigSetIoTcp	      (String host, String port, String myhost, String myport);
-  /// \api #MqConfigSetIoUds
-  public native void ConfigSetIoUds	      (String file);
-  /// \api #MqConfigSetIoPipe
-  public native void ConfigSetIoPipe	      (int socket);
+  /// \api #MqConfigSetIoUdsFile
+  public native void ConfigSetIoUdsFile	      (String file);
+  /// \api #MqConfigSetIoPipeSocket
+  public native void ConfigSetIoPipeSocket    (int socket);
 
   /// \api #MqConfigGetIsServer
   public native boolean	ConfigGetIsServer     ();
@@ -98,8 +98,8 @@ public abstract class MqS {
   public native String ConfigGetIoTcpMyPort   ();
   /// \api #MqConfigGetIoUdsFile
   public native String ConfigGetIoUdsFile     ();
-  /// \api #MqConfigGetIoPipeSocket
-  public native int ConfigGetIoPipeSocket     ();
+  /// \api #MqConfigGetIoPipeSocketSocket
+  public native int ConfigGetIoPipeSocketSocket     ();
 
 /// \} Mq_Config_Java_API
 
@@ -406,4 +406,9 @@ public abstract class MqS {
 }
 
 /// \} Mq_Java_API
+
+
+
+
+
 

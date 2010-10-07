@@ -74,11 +74,12 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_PROG_CC_C_O
 GCC=yes
 #LDFLAGS="-no-undefined"
+AC_PROG_CXX
 AC_PROG_CC_C99
-if test "$ac_cv_prog_cc_c99" = "no"; then
-    AC_MSG_ERROR([reguire c99 mode to compile])
-fi
-CFLAGS="-O3 -Wall -Wcast-align -Wstrict-prototypes -fvisibility=hidden $CFLAGS"
+AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
+  AC_MSG_ERROR([require c99 mode to compile])
+])
+CFLAGS="-O3 -Wall -Wcast-align -fvisibility=hidden $CFLAGS"
 CXXFLAGS="-O3 -Wall -fvisibility=hidden $CXXFLAGS"
 SC_ENABLE_THREADS
 
@@ -103,6 +104,7 @@ SC_ENABLE_PHP
 SC_ENABLE_PERL
 SC_ENABLE_TCL
 SC_ENABLE_VB
+SC_ENABLE_RUBY
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
 
@@ -170,11 +172,12 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
 		      theLink/phpmsgque/Makefile theLink/example/php/Makefile theLink/phpmsgque/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-			  theLink/example/vb/Makefile
-			    performance/Makefile performance/env.sh 
-			      theBrain/Makefile theBrain/abrain/Makefile
-				theBrain/libbrain/Makefile theBrain/tests/Makefile 
-				  theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+			  theLink/rubymsgque/Makefile
+			    theLink/example/vb/Makefile
+			      performance/Makefile performance/env.sh 
+			        theBrain/Makefile theBrain/abrain/Makefile
+				  theBrain/libbrain/Makefile theBrain/tests/Makefile 
+				    theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
 
 AC_OUTPUT

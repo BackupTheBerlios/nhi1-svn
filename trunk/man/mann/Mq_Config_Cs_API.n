@@ -1,4 +1,4 @@
-.TH "Mq_Config_Cs_API" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_Cs_API" n "6 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -57,13 +57,13 @@ Mq_Config_Cs_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
 .ti -1c
-.RI "void \fBcsmsgque::MqS.ConfigSetIoUds\fP (string data)"
+.RI "void \fBcsmsgque::MqS.ConfigSetIoUdsFile\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP "
 .ti -1c
-.RI "void \fBcsmsgque::MqS.ConfigSetIoPipe\fP (int data)"
+.RI "void \fBcsmsgque::MqS.ConfigSetIoPipeSocket\fP (int data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ConfigSetStartAs\fP (int data)"
 .br
@@ -240,9 +240,9 @@ Definition at line 157 of file config.cs.
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP 
 .PP
 Definition at line 171 of file config.cs.
-.SS "void csmsgque.MqS.ConfigSetIoPipe (int data)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ConfigSetIoPipeSocket (int data)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP 
 .PP
 Definition at line 181 of file config.cs.
 .SS "void csmsgque.MqS.ConfigSetIoTcp (string host, string port, string myhost, string myport)\fC [inherited]\fP"
@@ -250,9 +250,9 @@ Definition at line 181 of file config.cs.
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP 
 .PP
 Definition at line 173 of file config.cs.
-.SS "void csmsgque.MqS.ConfigSetIoUds (string data)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ConfigSetIoUdsFile (string data)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP 
 .PP
 Definition at line 177 of file config.cs.
 .SS "void csmsgque.MqS.ConfigSetIsServer (bool data)\fC [inherited]\fP"

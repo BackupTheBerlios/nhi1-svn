@@ -67,33 +67,33 @@
 #define MEI(i) MXI(EEEEEEEEEEEEEEEEE,i)
 #define MFI(i) MXI(FFFFFFFFFFFFFFFFF,i)
 
-#define IX(x,s) MqLogV(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
+#define MQ_IX(x,s) MqLogV(x,__func__,0, #x "<" #s "> -> (%s:%d)\n", __FILE__, __LINE__);
 
-#define I0 IX(MQ_CONTEXT_S,0000000000000000)
-#define I1 IX(MQ_CONTEXT_S,1111111111111111)
-#define I2 IX(MQ_CONTEXT_S,2222222222222222)
-#define I3 IX(MQ_CONTEXT_S,3333333333333333)
-#define I4 IX(MQ_CONTEXT_S,4444444444444444)
-#define I5 IX(MQ_CONTEXT_S,5555555555555555)
-#define I6 IX(MQ_CONTEXT_S,6666666666666666)
-#define I7 IX(MQ_CONTEXT_S,7777777777777777)
-#define I8 IX(MQ_CONTEXT_S,8888888888888888)
-#define I9 IX(MQ_CONTEXT_S,9999999999999999)
-#define IA IX(MQ_CONTEXT_S,aaaaaaaaaaaaaaaa)
-#define IB IX(MQ_CONTEXT_S,bbbbbbbbbbbbbbbb)
-#define IC IX(MQ_CONTEXT_S,cccccccccccccccc)
-#define ID IX(MQ_CONTEXT_S,dddddddddddddddd)
-#define IE IX(MQ_CONTEXT_S,eeeeeeeeeeeeeeee)
+#define MQ_I0 MQ_IX(MQ_CONTEXT_S,0000000000000000)
+#define MQ_I1 MQ_IX(MQ_CONTEXT_S,1111111111111111)
+#define MQ_I2 MQ_IX(MQ_CONTEXT_S,2222222222222222)
+#define MQ_I3 MQ_IX(MQ_CONTEXT_S,3333333333333333)
+#define MQ_I4 MQ_IX(MQ_CONTEXT_S,4444444444444444)
+#define MQ_I5 MQ_IX(MQ_CONTEXT_S,5555555555555555)
+#define MQ_I6 MQ_IX(MQ_CONTEXT_S,6666666666666666)
+#define MQ_I7 MQ_IX(MQ_CONTEXT_S,7777777777777777)
+#define MQ_I8 MQ_IX(MQ_CONTEXT_S,8888888888888888)
+#define MQ_I9 MQ_IX(MQ_CONTEXT_S,9999999999999999)
+#define MQ_IA MQ_IX(MQ_CONTEXT_S,aaaaaaaaaaaaaaaa)
+#define MQ_IB MQ_IX(MQ_CONTEXT_S,bbbbbbbbbbbbbbbb)
+#define MQ_IC MQ_IX(MQ_CONTEXT_S,cccccccccccccccc)
+#define MQ_ID MQ_IX(MQ_CONTEXT_S,dddddddddddddddd)
+#define MQ_IE MQ_IX(MQ_CONTEXT_S,eeeeeeeeeeeeeeee)
 
-#define XI0(x) IX(x,0000000000000000)
-#define XI1(x) IX(x,1111111111111111)
-#define XI2(x) IX(x,2222222222222222)
-#define XIB(x) IX(x,BBBBBBBBBBBBBBBB)
-#define XIE(x) IX(x,EEEEEEEEEEEEEEEE)
+#define XI0(x) MQ_IX(x,0000000000000000)
+#define XI1(x) MQ_IX(x,1111111111111111)
+#define XI2(x) MQ_IX(x,2222222222222222)
+#define XIB(x) MQ_IX(x,BBBBBBBBBBBBBBBB)
+#define XIE(x) MQ_IX(x,EEEEEEEEEEEEEEEE)
 
-#define IXP(x,s,p) MqDLogV(x,__func__,0, "<" #s "-" #x "-%s> -> (%s:%d)\n", p, __FILE__, __LINE__);
+#define MQ_IXP(x,s,p) MqDLogV(x,__func__,0, "<" #s "-" #x "-%s> -> (%s:%d)\n", p, __FILE__, __LINE__);
 
-#define I0P IXP(MQ_CONTEXT_S,0000000000000000,prefix)
+#define MQ_I0P MQ_IXP(MQ_CONTEXT_S,0000000000000000,prefix)
 
 #if defined(MQ_HAS_THREAD)
 
@@ -114,7 +114,7 @@
 #define printFo(var)	MV("%o",	var)
 #define printH(var)	MV("%c",	var)
 #define printW(var)	MV(MQ_FORMAT_W, var)
-#define printP(var)	MV("%p",	var)
+#define printP(var)	MV("%p",	(MQ_PTR)var)
 #define printD(var)	MV(MQ_FORMAT_D,	var)
 #define printF(var)	MV(MQ_FORMAT_F,	var)
 #define printC(var)	MV(MQ_FORMAT_C,	var)

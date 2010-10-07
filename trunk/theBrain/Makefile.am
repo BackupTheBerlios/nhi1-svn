@@ -13,7 +13,7 @@
 SUBDIRS = libbrain abrain
 
 if USE_CXX
-#SUBDIRS += atrans
+SUBDIRS += atrans
 endif
 
 if USE_TCL

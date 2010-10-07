@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "8 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "6 Oct 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -329,7 +329,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fCMQ_CST\fP, \fBget:\fP \fC\fBccmsgque::MqC::ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBccmsgque::MqC::ConfigSetIoUds\fP (file)\fP
+\fBtype:\fP \fCMQ_CST\fP, \fBget:\fP \fC\fBccmsgque::MqC::ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBccmsgque::MqC::ConfigSetIoUdsFile\fP (file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -348,7 +348,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCMQ_SOCK\fP, \fBget:\fP \fC\fBccmsgque::MqC::ConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBccmsgque::MqC::ConfigSetIoPipe\fP (socket)\fP
+\fBtype:\fP \fCMQ_SOCK\fP, \fBget:\fP \fCccmsgque::MqC::ConfigGetIoPipeSocketSocket\fP , \fBset:\fP \fC\fBccmsgque::MqC::ConfigSetIoPipeSocket\fP (socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP

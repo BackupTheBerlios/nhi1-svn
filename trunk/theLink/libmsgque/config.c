@@ -793,7 +793,7 @@ MqConfigSetBgError (
 }
 
 enum MqErrorE
-MqConfigSetIoUds (
+MqConfigSetIoUdsFile (
   struct MqS * const context,
   MQ_CST fileName
 )
@@ -841,7 +841,7 @@ MqConfigSetIoTcp (
 }
 
 enum MqErrorE
-MqConfigSetIoPipe (
+MqConfigSetIoPipeSocket (
   struct MqS * const context,
   MQ_SOCK socket
 )
@@ -1055,6 +1055,8 @@ MqConfigGetSelf (
 }
 
 END_C_DECLS
+
+
 
 
 

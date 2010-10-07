@@ -271,9 +271,9 @@ int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
 int NS(ConfigSetFactory) (NS_ARGS);
-int NS(ConfigSetIoUds) (NS_ARGS);
+int NS(ConfigSetIoUdsFile) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
-int NS(ConfigSetIoPipe) (NS_ARGS);
+int NS(ConfigSetIoPipeSocket) (NS_ARGS);
 int NS(ConfigSetStartAs) (NS_ARGS);
 int NS(ConfigSetDaemon) (NS_ARGS);
 int NS(ConfigGetIsString) (NS_ARGS);
@@ -408,9 +408,9 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
     { "ConfigSetFactory",	  NS(ConfigSetFactory)	      },
-    { "ConfigSetIoUds",		  NS(ConfigSetIoUds)	      },
+    { "ConfigSetIoUdsFile",		  NS(ConfigSetIoUdsFile)	      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },
-    { "ConfigSetIoPipe",	  NS(ConfigSetIoPipe)	      },
+    { "ConfigSetIoPipeSocket",	  NS(ConfigSetIoPipeSocket)	      },
     { "ConfigSetStartAs",	  NS(ConfigSetStartAs)	      },
     { "ConfigSetDaemon",	  NS(ConfigSetDaemon)	      },
     { "ConfigGetIsString",	  NS(ConfigGetIsString)	      },
@@ -560,6 +560,8 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
+
+
 
 
 

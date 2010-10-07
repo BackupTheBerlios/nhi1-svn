@@ -1,4 +1,4 @@
-.TH "msgque.h" n "8 Mar 2010" "Version 4.5" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "6 Oct 2010" "Version 4.5" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -623,7 +623,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 230 2010-03-05 14:45:19Z aotto1968 $
 .br
 .R "set the \fBMqSetupS::BgError\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqConfigSetIoUds\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP file)"
+.RI "enum \fBMqErrorE\fP \fBMqConfigSetIoUdsFile\fP (struct \fBMqS\fP *const ctx, \fBMQ_CST\fP file)"
 .br
 .R "configure a context to use a \fIuds-client-server-link\fP  "
 .ti -1c
@@ -631,7 +631,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 230 2010-03-05 14:45:19Z aotto1968 $
 .br
 .R "configure a context to use a \fItcp-client-server-link\fP  "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqConfigSetIoPipe\fP (struct \fBMqS\fP *const context, \fBMQ_SOCK\fP socket)"
+.RI "enum \fBMqErrorE\fP \fBMqConfigSetIoPipeSocket\fP (struct \fBMqS\fP *const context, \fBMQ_SOCK\fP socket)"
 .br
 .R "set the \fIpipe\fP configuration data "
 .ti -1c
@@ -1520,7 +1520,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 230 2010-03-05 14:45:19Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqInitBuf\fP"
 .br
-.R "the prefix arguments of the starting application "
+.R "the prefix arguments of the starting application  this is the name of the executable and additional arguments used to initialize the environment like the name of a script. "
 .ti -1c
 .RI "\fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
 .br

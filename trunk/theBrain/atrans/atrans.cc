@@ -1,5 +1,5 @@
 /**
- *  \file       theBrain/atrans/atrans.cc
+ *  \file       theLink/example/cc/atrans.cc
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
@@ -14,19 +14,32 @@
 
 #include <queue>
 #include <stdexcept>
+#include <stdlib.h>
 #include "ccmsgque.h"
 #include "debug.h"
+
+#if defined(_MSC_VER)
+# define mq_mkdir _mkdir
+# define mq_chdir _chdir
+# define mq_pathsep "\\"
+#else
+# define mq_mkdir mkdir
+# define mq_chdir chdir
+# define mq_pathsep "/"
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#endif
 
 using namespace std;
 using namespace ccmsgque;
 
 class atrans : public MqC, public IFactory, public IServerSetup,
-		  public IEvent, public IService {
+		  public IServerCleanup, public IEvent {
   private:
     struct FilterItmS {
-      MQ_STRB token[5];
-      bool    isTransaction;
-      MQ_BIN  bdy;
+      MQ_CBI  bdy;
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;
@@ -35,50 +48,48 @@ class atrans : public MqC, public IFactory, public IServerSetup,
       return new atrans(); 
     }
 
+    void ErrorWrite () {
+      fprintf(stderr, "ERROR: %s\n", ErrorGetText());
+      fflush(stderr);
+      ErrorReset ();
+    }
+
     void Event () {
-      // check if an item is available
+      // check if data is available
       if (itms.empty()) {
-	// no transaction available
+	// no data available, set error-code to CONTINUE
 	ErrorSetCONTINUE();
       } else {
-	MqC *ftr;
-	register struct FilterItmS it;
-
-	// is an item available?
-	try {
-	  ftr = ServiceGetFilter();
-	} catch (...) {
-	  ErrorReset();
-	  return;
-	}
-
 	// extract the first (oldest) item from the store
-	it = itms.front();
-
-	// send the transaction to the ctx, on error write message but do not stop processing
-	ftr->SendSTART();
-	ftr->SendBDY(it.bdy, it.len);
+	struct FilterItmS it = itms.front();
+	// get the filter-context
+	atrans *ftr = static_cast<atrans*>(ServiceGetFilter());
+	// an item is available, try to send the data
 	try {
-	  if (ServiceIsTransaction()) {
-	    ftr->SendEND_AND_WAIT(it.token);
-	  } else {
-	    ftr->SendEND(it.token);
-	  }
+	  // reconnect to the server or do nothing if the server is already connected
+	  ftr->LinkConnect();
+	  // send the data
+	  ftr->SendBDY(it.bdy, it.len);
+	// on error, check if an "exit" happen
 	} catch (const exception& e) {
 	  ftr->ErrorSet (e);
-	  ftr->ErrorPrint();
-	  ftr->ErrorReset();
-	  // do not delete item without successful send
-	  return;
+	  if (ftr->ErrorIsEXIT()) {
+	    // on exit ignore the error but do !not! forget the data
+	    ftr->ErrorReset();
+	    return;
+	  } else {
+	    // on error write the error-text and "forget" the data
+	    ftr->ErrorWrite();
+	  }
 	}
-
 	// reset the item-storage
 	MqSysFree(it.bdy);
+	// delete the data, will contine with next item
 	itms.pop();
       }
     }
 
-    void Service (MqC * const ctx) {
+    void ServiceALL (MqC * const ctx) {
       MQ_BIN bdy;
       MQ_SIZE len;
       register struct FilterItmS it;
@@ -87,18 +98,53 @@ class atrans : public MqC, public IFactory, public IServerSetup,
       ReadBDY(&bdy, &len);
 
       // fill the item data
-      it.bdy = (MQ_BIN)MqSysMalloc(MQ_ERROR_PANIC, len * sizeof(MQ_BINB));
-      memcpy(it.bdy, bdy, len);
+      it.bdy = bdy;
       it.len = len;
-      strncpy(it.token, ServiceGetToken(), 5);
-      it.isTransaction = ServiceIsTransaction();
       itms.push (it);
 
       SendRETURN();
     }
 
+    void ServiceTRT (MqC * const ctx) {
+      MQ_BIN bdy;
+      MQ_SIZE len;
+      register struct FilterItmS it;
+
+      // read the body-item
+      ReadBDY(&bdy, &len);
+
+      // fill the item data
+      it.bdy = bdy;
+      it.len = len;
+      itms.push (it);
+
+      SendRETURN();
+    }
+
+    void ServerCleanup() {
+    }
+
     void ServerSetup() {
-      ServiceCreate ("+ALL", this);
+      //atrans *ftr = static_cast<atrans*>(ServiceGetFilter());
+      // SERVER: listen on every token (+ALL)
+      ServiceCreate ("+ALL", CallbackF(&atrans::ServiceALL));
+      ServiceCreate ("+TRT", CallbackF(&atrans::ServiceTRT));
+    }
+
+  public:
+
+    void SysMkDir (MQ_CST dirname, mode_t mode ) {
+      if (mq_mkdir (dirname, mode) == -1) {
+	ErrorV (__func__, errno, "can not create directory <%s> -> ERR<%s>", dirname, strerror (errno));
+	ErrorRaise();
+      }
+    }
+
+    void SysChDir (MQ_CST dirname) {
+      if (mq_chdir (dirname) == -1) {
+	ErrorV (__func__, errno, "can not change into the directory <%s> -> ERR<%s>", dirname, strerror (errno));
+	ErrorRaise();
+      }
     }
 };
 
@@ -110,16 +156,29 @@ class atrans : public MqC, public IFactory, public IServerSetup,
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  atrans filter;
+  static atrans filter;
   try {
-    filter.ConfigSetIgnoreExit(true);
-    filter.LinkCreateVC (argc, argv);
+    MQ_STR datadir = NULL;
+    struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
+
+    // setup direktory
+    MqBufferLCheckOptionC(MQ_ERROR_PANIC, args, "-datadir", &datadir);
+    if (datadir != NULL) {
+      filter.SysChDir (datadir);
+      MqSysFree (datadir);
+    }
+    filter.SysMkDir ("atrans", 00700);
+    filter.SysMkDir ("atrans" mq_pathsep "IN", 00700);
+    filter.SysMkDir ("atrans" mq_pathsep "OUT", 00700);
+
+    // setup link
+    filter.ConfigSetIgnoreExit (true);
+    filter.ConfigSetIdent ("transFilter");
+    filter.LinkCreate (args);
     filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
     filter.ErrorSet(e);
   }
   filter.Exit();
 }
-
-
 

@@ -556,9 +556,9 @@ proc Ot_CFG1 {ctx} {
     }
     "IoUds" {
       set old [$ctx ConfigGetIoUdsFile] 
-      $ctx ConfigSetIoUds [$ctx ReadC]
+      $ctx ConfigSetIoUdsFile [$ctx ReadC]
       $ctx SendC [$ctx ConfigGetIoUdsFile]
-      $ctx ConfigSetIoUds $old
+      $ctx ConfigSetIoUdsFile $old
     }
     "IoTcp" {
       set host	  [$ctx ConfigGetIoTcpHost] 
@@ -574,9 +574,9 @@ proc Ot_CFG1 {ctx} {
     }
     "IoPipe" {
       set old [$ctx ConfigGetIoPipeSocket] 
-      $ctx ConfigSetIoPipe [$ctx ReadI]
+      $ctx ConfigSetIoPipeSocket [$ctx ReadI]
       $ctx SendI [$ctx ConfigGetIoPipeSocket]
-      $ctx ConfigSetIoPipe $old
+      $ctx ConfigSetIoPipeSocket $old
     }
     "StartAs" {
       set old [$ctx ConfigGetStartAs] 
@@ -701,6 +701,7 @@ proc ServerCleanup {ctx} {
 tclmsgque Main {
   set srv [tclmsgque MqS]
   $srv ConfigSetName server
+  $srv ConfigSetIdent test-server
   $srv ConfigSetServerSetup ServerSetup
   $srv ConfigSetServerCleanup ServerCleanup
   $srv ConfigSetFactory
@@ -718,4 +719,6 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
+
+
 

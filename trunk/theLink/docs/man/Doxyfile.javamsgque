@@ -98,16 +98,16 @@ ALIASES		    += "config_set_tcp=#javamsgque.MqS.ConfigSetIoTcp (host, port, myho
 ALIASES		    += "config_get_tcp=#javamsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=String"
-ALIASES		    += "config_set_uds=#javamsgque.MqS.ConfigSetIoUds (file)"
+ALIASES		    += "config_set_uds=#javamsgque.MqS.ConfigSetIoUdsFile (file)"
 ALIASES		    += "config_get_uds=#javamsgque.MqS.ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocketSocket"
 
 ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocketSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
@@ -282,4 +282,9 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
+
+
+
+
 

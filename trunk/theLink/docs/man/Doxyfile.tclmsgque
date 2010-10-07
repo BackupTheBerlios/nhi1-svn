@@ -100,11 +100,11 @@ ALIASES		    += "config_set_tcp=ConfigSetIoTcp host port myhost myport"
 ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=string"
-ALIASES		    += "config_set_uds=ConfigSetIoUds pidfile"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile pidfile"
 ALIASES		    += "config_get_uds=ConfigGetIoUds"
 
 ALIASES		    += "config_type_pipe=integer"
-ALIASES		    += "config_set_pipe=ConfigSetIoPipe socket"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket socket"
 ALIASES		    += "config_get_pipe=ConfigGetIoPipe"
 
 ALIASES             += "config_IServerSetup=$ctx ConfigSetServerSetup callback"
@@ -270,4 +270,9 @@ if {[catch { \n\
   } \n\
 } \n\
 \endcode"
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-.TH "javamsgque" n "8 Mar 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "6 Oct 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -293,7 +293,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoUds\fP (file)\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoUdsFile\fP (file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -312,7 +312,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoPipe\fP (socket)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoPipeSocketSocket\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoPipeSocket\fP (socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP

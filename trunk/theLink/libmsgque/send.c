@@ -1066,16 +1066,19 @@ MqSendT_START (
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (buf->numItems > 0) {
-    return MqErrorC(context, __func__, -1, "the TRANSACTION item have to be the first item in the data package");
+    return MqErrorDbV(MQ_ERROR_ITEM_IN_PACKAGE, "TRANSACTION", "first");
+  } else if (context->setup.ident == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "ident");
   } else {
     register struct MqBufferS * const buf = send->buf;
     pSendListStart (context);
     *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
     pBufferAddSize (buf, HDR_TOK_LEN+1);
     strncpy(buf->cur.C, callback, HDR_TOK_LEN);
-    buf->cur.B   += HDR_TOK_LEN;
+    buf->cur.B += HDR_TOK_LEN;
     *buf->cur.B++ = BUFFER_CHAR;
     buf->cursize += (HDR_TOK_LEN+1);
+    MqSendC(context, context->setup.ident);
     return MQ_OK;
   }
 }

@@ -203,9 +203,9 @@ namespace example {
 	ConfigSetIsString (old);
       } else if (cmd == "IoUds") {
 	string old = ConfigGetIoUdsFile();
-	ConfigSetIoUds (ReadC());
+	ConfigSetIoUdsFile (ReadC());
 	SendC (ConfigGetIoUdsFile());
-	ConfigSetIoUds (old);
+	ConfigSetIoUdsFile (old);
       } else if (cmd == "IoTcp") {
 	string h,p,mh,mp;
 	string hv,pv,mhv,mpv;
@@ -225,9 +225,9 @@ namespace example {
 	ConfigSetIoTcp (h,p,mh,mp);
       } else if (cmd == "IoPipe") {
 	int old = ConfigGetIoPipeSocket();
-	ConfigSetIoPipe (ReadI());
+	ConfigSetIoPipeSocket (ReadI());
 	SendI (ConfigGetIoPipeSocket());
-	ConfigSetIoPipe (old);
+	ConfigSetIoPipeSocket (old);
       } else if (cmd == "StartAs") {
 	int old = ConfigGetStartAs();
 	ConfigSetStartAs (ReadI());
@@ -724,6 +724,7 @@ namespace example {
       Server srv = new Server();
       try {
 	srv.ConfigSetName("server");
+	srv.ConfigSetIdent("test-server");
 	srv.LinkCreate(args);
 	srv.LogC("test",1,"this is the log test\n");
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

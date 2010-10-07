@@ -9,16 +9,10 @@ else
 fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
-		    --enable-guard \
-		    --enable-brain \
 		    --enable-symbols \
+		    --enable-brain \
 		    --enable-tcl \
-		    --enable-cxx \
-		    --enable-java \
-		    --enable-csharp \
-		    --enable-python \
-		    --enable-perl \
-		    --enable-vb \
+		    --enable-ruby \
 		    $ARGS $@
 
 #		    --enable-guard \
@@ -30,5 +24,6 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 #		    --enable-python \
 #		    --enable-perl \
 #		    --enable-vb \
+#		    --enable-ruby \
 #		    --enable-static \
 

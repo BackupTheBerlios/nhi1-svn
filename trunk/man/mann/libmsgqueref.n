@@ -1,4 +1,4 @@
-.TH "libmsgque" n "8 Mar 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "6 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -298,7 +298,7 @@ change the context to act as \fIserver-context\fP (\fIMQ_YES\fP) or not (\fIMQ_N
 .PP
 A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIMQ_NO\fP) 
 .SS "command-line: --tcp --host --port --myhost --myport"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIoTcpHost\fP/Port/MyHost/MyPort\fP , \fBset:\fP \fC\fBMqConfigSetIoTcp\fP (ctx,MQ_CST host, MQ_INT port, MQ_CST myhost, MQ_INT myport)\fP
+\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIoTcpHost\fP/Port/MyHost/MyPort\fP , \fBset:\fP \fC\fBMqConfigSetIoTcp\fP (ctx,MQ_CST host, MQ_CST port, MQ_CST myhost, MQ_CST myport)\fP
 .PP
 configure a context to use a \fItcp-client-server-link\fP 
 .PP
@@ -325,7 +325,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBMqConfigSetIoUds\fP (ctx, MQ_CST file)\fP
+\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBMqConfigSetIoUdsFile\fP (ctx, MQ_CST file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -344,7 +344,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fC\fBMQ_SOCK\fP\fP, \fBget:\fP \fC\fBMqConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBMqConfigSetIoPipe\fP (ctx, MQ_INT socket)\fP
+\fBtype:\fP \fC\fBMQ_SOCK\fP\fP, \fBget:\fP \fCMqConfigGetIoPipeSocketSocket\fP , \fBset:\fP \fC\fBMqConfigSetIoPipeSocket\fP (ctx, MQ_INT socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP

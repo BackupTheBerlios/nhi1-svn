@@ -243,9 +243,9 @@ Public Module example
           ConfigSetIsString(old)
         Case "IoUds"
           Dim old As String = ConfigGetIoUdsFile()
-          ConfigSetIoUds(ReadC())
+          ConfigSetIoUdsFile(ReadC())
           SendC(ConfigGetIoUdsFile())
-          ConfigSetIoUds(old)
+          ConfigSetIoUdsFile(old)
         Case "IoTcp"
           Dim h, p, mh, mp As String
           Dim hv, pv, mhv, mpv As String
@@ -265,9 +265,9 @@ Public Module example
           ConfigSetIoTcp(h, p, mh, mp)
         Case "IoPipe"
           Dim old As Integer = ConfigGetIoPipeSocket()
-          ConfigSetIoPipe(ReadI())
+          ConfigSetIoPipeSocket(ReadI())
           SendI(ConfigGetIoPipeSocket())
-          ConfigSetIoPipe(old)
+          ConfigSetIoPipeSocket(old)
         Case "StartAs"
           Dim old As Integer = ConfigGetStartAs()
           ConfigSetStartAs(ReadI())
@@ -751,6 +751,7 @@ Public Module example
     Dim srv As New Server()
     Try
       srv.ConfigSetName("server")
+      srv.ConfigSetIdent("test-server")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
@@ -760,5 +761,7 @@ Public Module example
     End Try
   End Sub
 End Module
+
+
 
 

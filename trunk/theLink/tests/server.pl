@@ -653,9 +653,9 @@ use base qw(Net::PerlMsgque::MqS);
       }
       case "IoUds" {
 	my $old = $ctx->ConfigGetIoUdsFile();
-	$ctx->ConfigSetIoUds ($ctx->ReadC());
+	$ctx->ConfigSetIoUdsFile ($ctx->ReadC());
 	$ctx->SendC ($ctx->ConfigGetIoUdsFile());
-	$ctx->ConfigSetIoUds ($old);
+	$ctx->ConfigSetIoUdsFile ($old);
       }
       case "IoTcp" {
 	my $h  = $ctx->ConfigGetIoTcpHost   ();
@@ -675,9 +675,9 @@ use base qw(Net::PerlMsgque::MqS);
       }
       case "IoPipe" {
 	my $old = $ctx->ConfigGetIoPipeSocket();
-	$ctx->ConfigSetIoPipe ($ctx->ReadI());
+	$ctx->ConfigSetIoPipeSocket ($ctx->ReadI());
 	$ctx->SendI ($ctx->ConfigGetIoPipeSocket());
-	$ctx->ConfigSetIoPipe ($old);
+	$ctx->ConfigSetIoPipeSocket ($old);
       }
       case "StartAs" {
 	my $old = $ctx->ConfigGetStartAs();
@@ -802,6 +802,7 @@ use base qw(Net::PerlMsgque::MqS);
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetName("server");
+    $ctx->ConfigSetIdent("test-server");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetServerCleanup(\&ServerCleanup);
     $ctx->ConfigSetFactory(
@@ -826,5 +827,7 @@ package main;
   $srv->Exit();
 
 1;
+
+
 
 

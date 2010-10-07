@@ -87,7 +87,7 @@ test config-8-($I|$B|$C|$S) {IoUds} \
     -returnCodes    error \
     -match	    glob \
     -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>*
-[Ss]> (server-0) \[*MqConfigSetIoUds] the 'msgque' object link is 'already' connected*}
+[Ss]> (server-0) \[*MqConfigSetIoUdsFile] the 'msgque' object link is 'already' connected*}
 
 test config-9-($I|$B|$C|$S) {IoTcp} \
     -body           {EchoL $FH_LAST CFG1 SendC IoTcp SendC rHost SendC rPort SendC lHost SendI 4444} \
@@ -101,7 +101,7 @@ test config-10-($I|$B|$C|$S) {IoPipe} \
     -returnCodes    error \
     -match	    glob \
     -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235*>
-[Ss]> (server-0) \[*MqConfigSetIoPipe] the 'msgque' object link is 'already' connected*}
+[Ss]> (server-0) \[*MqConfigSetIoPipeSocket] the 'msgque' object link is 'already' connected*}
 
 test config-11-($I|$B|$C|$S) {StartAs} \
     -body           {Echo1 $FH_LAST CFG1 ReadI SendC StartAs SendI 3} \
@@ -137,6 +137,9 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
+
+
 
 
 

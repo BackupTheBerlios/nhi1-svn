@@ -199,9 +199,9 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	ConfigSetIsString (old);
       } else if (cmd.equals("IoUds")) {
 	String old = ConfigGetIoUdsFile();
-	ConfigSetIoUds (ReadC());
+	ConfigSetIoUdsFile (ReadC());
 	SendC (ConfigGetIoUdsFile());
-	ConfigSetIoUds (old);
+	ConfigSetIoUdsFile (old);
       } else if (cmd.equals("IoTcp")) {
 	String h,p,mh,mp;
 	String hv,pv,mhv,mpv;
@@ -221,9 +221,9 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	ConfigSetIoTcp (h,p,mh,mp);
       } else if (cmd.equals("IoPipe")) {
 	int old = ConfigGetIoPipeSocket();
-	ConfigSetIoPipe (ReadI());
+	ConfigSetIoPipeSocket (ReadI());
 	SendI (ConfigGetIoPipeSocket());
-	ConfigSetIoPipe (old);
+	ConfigSetIoPipeSocket (old);
       } else if (cmd.equals("StartAs")) {
 	int old = ConfigGetStartAs();
 	ConfigSetStartAs (ReadI());
@@ -477,6 +477,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
     Server srv = new Server();
     try {
       srv.ConfigSetName("server");
+      srv.ConfigSetIdent("test-server");
       srv.LinkCreate (args);
       srv.LogC("test",1,"this is the log test\n");
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -875,4 +876,6 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
+
+
 

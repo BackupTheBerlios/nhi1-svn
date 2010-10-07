@@ -58,6 +58,7 @@ class Server(MqS):
 
   def __init__(self):
     self.ConfigSetName("server")
+    self.ConfigSetIdent("test-server")
     self.ConfigSetServerSetup(self.ServerSetup)
     self.ConfigSetServerCleanup(self.ServerCleanup)
     self.ConfigSetFactory(lambda: Server())
@@ -205,9 +206,9 @@ class Server(MqS):
       self.ConfigSetIsString (old)
     elif cmd == "IoUds":
       old = self.ConfigGetIoUdsFile()
-      self.ConfigSetIoUds (self.ReadC())
+      self.ConfigSetIoUdsFile (self.ReadC())
       self.SendC (self.ConfigGetIoUdsFile())
-      self.ConfigSetIoUds (old)
+      self.ConfigSetIoUdsFile (old)
     elif cmd == "IoTcp":
       h  = self.ConfigGetIoTcpHost   ()
       p  = self.ConfigGetIoTcpPort   ()
@@ -225,9 +226,9 @@ class Server(MqS):
       self.ConfigSetIoTcp (h,p,mh,mp)
     elif cmd == "IoPipe":
       old = self.ConfigGetIoPipeSocket()
-      self.ConfigSetIoPipe (self.ReadI())
+      self.ConfigSetIoPipeSocket (self.ReadI())
       self.SendI (self.ConfigGetIoPipeSocket())
-      self.ConfigSetIoPipe (old)
+      self.ConfigSetIoPipeSocket (old)
     elif cmd == "StartAs":
       old = self.ConfigGetStartAs()
       self.ConfigSetStartAs (self.ReadI())
@@ -671,3 +672,5 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
+

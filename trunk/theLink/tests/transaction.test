@@ -72,6 +72,8 @@ if {$BLOCK_1} {
 # startup binary --------------------------
 Setup $I $B $C $S
 
+$FH_LAST ConfigSetIdent OTTO
+
 # tests ----------------------------
 
 test transaction-1-($I|$B|$C|$S) {wrong item position} \
@@ -85,7 +87,7 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[MqSendT_START] the TRANSACTION item have to be the first item in the data package}
+    -result         {[cC]> (client-0) \[MqSendT_START] the 'TRANSACTION' item have to be the 'first' item in the data package}
 
 test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {
@@ -263,6 +265,7 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
       Setup $I $B $C $S --filter-server Filter3
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
+      $FH_LAST ConfigSetIdent OTTO
     } \
     -body           {
       $FH_LAST SendSTART

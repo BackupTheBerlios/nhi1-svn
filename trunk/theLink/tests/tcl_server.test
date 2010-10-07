@@ -179,7 +179,7 @@ test tcl-server-X4 {server with defined UDS handle problem startup} \
 	    \$srv ConfigSetName server
 	    \$srv ConfigSetDebug $env(TS_DEBUG)
 	    \$srv ConfigSetServerSetup ServerSetup
-	    \$srv ConfigSetIoUds $UDS
+	    \$srv ConfigSetIoUdsFile $UDS
 	    \$srv ConfigSetStartAs 3
 	    if {\[catch {
 	      \$srv LinkCreate {*}\$argv
@@ -262,6 +262,7 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 ##
 
 freeTests
+
 
 
 

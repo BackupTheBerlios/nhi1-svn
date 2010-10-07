@@ -1,4 +1,4 @@
-.TH "Mq_Context_CC_API" n "8 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "6 Oct 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -147,7 +147,7 @@ implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP
 .PP
 .SH "Variable Documentation"
 .PP 
-.SS "struct \fBMqS\fP \fBccmsgque::MqC::context\fP\fC [read, protected, inherited]\fP"
+.SS "struct \fBMqS\fP \fBccmsgque::MqC::context\fP\fC [read, inherited]\fP"
 .PP
 link between \fBMqC\fP and \fBMqS\fP 
 .PP

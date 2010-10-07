@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "6 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -274,32 +274,32 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 2079 of file msgque.h.
+Definition at line 2081 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
 signature used in \fBMqBufferS.signature\fP 
 .PP
-Definition at line 2082 of file msgque.h.
+Definition at line 2084 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 1979 of file msgque.h.
+Definition at line 1981 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 1982 of file msgque.h.
+Definition at line 1984 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 1985 of file msgque.h.
+Definition at line 1987 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 1988 of file msgque.h.
+Definition at line 1990 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -310,7 +310,7 @@ Definition at line 1988 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 1991 of file msgque.h.
+Definition at line 1993 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -326,7 +326,7 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. MqSysMalloc, ...) 
 .PP
-Definition at line 2073 of file msgque.h.
+Definition at line 2075 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
@@ -393,7 +393,7 @@ L: list object type.
 \fB\fIMQ_TRAT \fP\fP
 T: transaction object type. 
 .PP
-Definition at line 2025 of file msgque.h.
+Definition at line 2027 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"

@@ -106,12 +106,12 @@ ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
 ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=PyUnicode"
-ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
 ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=PyLong"
-ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocketSocket"
 
 ALIASES		    += "config_type_isServer=PyBool"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
@@ -292,4 +292,9 @@ except: \n\
   if ctx.ErrorIsEXIT(): \n\
     ctx.ErrorReset() \n\
 \endcode"
+
+
+
+
+
 

@@ -134,7 +134,7 @@ PyObject* NS(ConfigSetIdent) (
   Py_RETURN_NONE;
 }
 
-PyObject* NS(ConfigSetIoUds) (
+PyObject* NS(ConfigSetIoUdsFile) (
   MqS_Obj    *self,
   PyObject    *arg
 )
@@ -142,7 +142,7 @@ PyObject* NS(ConfigSetIoUds) (
   SETUP_context
   MQ_STR str = PyO2C_START (&arg);
   if (PyErr_Occurred() != NULL) return NULL;
-  ErrorMqToPythonWithCheck(MqConfigSetIoUds (context, str));
+  ErrorMqToPythonWithCheck(MqConfigSetIoUdsFile (context, str));
   PyO2C_STOP (&arg);
   SETUP_RETURN
 }
@@ -161,17 +161,17 @@ PyObject* NS(ConfigSetIoTcp) (
   SETUP_RETURN
 }
 
-PyObject* NS(ConfigSetIoPipe) (
+PyObject* NS(ConfigSetIoPipeSocket) (
   MqS_Obj    *self,
   PyObject    *arg
 )
 {
   SETUP_context
   if (!PyLong_Check(arg)) {
-    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetIoPipe' must be an integer");
+    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetIoPipeSocket' must be an integer");
     return NULL;
   }
-  ErrorMqToPythonWithCheck (MqConfigSetIoPipe (context, (MQ_INT) PyLong_AsLong(arg)));
+  ErrorMqToPythonWithCheck (MqConfigSetIoPipeSocket (context, (MQ_INT) PyLong_AsLong(arg)));
   SETUP_RETURN
 }
 
@@ -459,3 +459,6 @@ PyObject* NS(ConfigSetDaemon) (
 error:
   return NULL;
 }
+
+
+

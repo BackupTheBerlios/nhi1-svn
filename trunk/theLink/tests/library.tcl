@@ -99,6 +99,14 @@ lappend PYTHONPATH [file nativename [file join $linkbuilddir pymsgque .libs]]
 set env(PYTHONPATH) [join $PYTHONPATH $PATH_SEP]
 #Print env(PYTHONPATH)
 
+## setup RUBY path
+set RUBYLIB [list]
+lappend RUBYLIB [file nativename [file join $linkbuilddir tests]]
+lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque]]
+lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque .libs]]
+set env(RUBYLIB) [join $RUBYLIB $PATH_SEP]
+#Print env(RUBYLIB)
+
 ## setup JAVA classpath
 set CLASSPATH [list]
 lappend CLASSPATH [file nativename [file join $linkbuilddir javamsgque javamsgque.jar]]
@@ -297,6 +305,7 @@ if {![array exists TS_SERVER]} {
     csharp  [list {*}$CLREXEC [file join $linksrcdir tests csserver.exe]] \
     vb	    [list {*}$CLREXEC [file join $linksrcdir tests vbserver.exe]] \
     python  [list $PYTHON     [file join $linksrcdir tests server.py]]	  \
+    ruby    [list $RUBY	      [file join $linksrcdir tests server.rb]]	  \
     java    [list $JAVA	      example.Server]				  \
     tcl	    [list $TCLSH      [file join $linksrcdir tests server.tcl]]	  \
     perl    [list $PERL -w    [file join $linksrcdir tests server.pl]]	  \
@@ -412,6 +421,7 @@ proc getExampleExecutable {srv} {
   } else {
     switch $lng {
       python	{ lappend RET $::PYTHON [file join $::linksrcdir example python $path.py] }
+      ruby	{ lappend RET $::RUBY [file join $::linksrcdir example ruby $path.rb] }
       perl	{ lappend RET $::PERL [file join $::linksrcdir example perl $path.pl] }
       java	{ lappend RET $::JAVA example.$path }
       csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
@@ -552,7 +562,7 @@ proc SetConstraints {args} {
     foreach c [envGet BIN_LST] {
       testConstraint $c yes
     }
-    foreach c {c cc tcl java csharp python perl} {
+    foreach c {c cc tcl java csharp python ruby perl} {
       testConstraint $c [expr {[lsearch -glob [envGet SRV_LST] "$c.*"] != -1}]
     }
     foreach c {pipe uds tcp fork spawn thread server} {
@@ -560,7 +570,7 @@ proc SetConstraints {args} {
     }
   } else {
     # 1. cleanup all constraint
-    foreach c {string binary uds tcp pipe c cc tcl java csharp python perl fork
+    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl fork
 		  thread spawn server parent child child2 child3} {
       testConstraint $c no
     }
@@ -593,7 +603,7 @@ if {![info exists env(COM_LST)]} {
   set env(COM_LST) {uds tcp pipe}
 }
 if {![info exists env(LNG_LST)]} {
-  set env(LNG_LST) {c cc tcl python java csharp perl vb}
+  set env(LNG_LST) {c cc tcl python ruby java csharp perl vb}
 }
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
@@ -624,6 +634,13 @@ if {![info exists env(SRV_LST)]} {
     python.tcp.fork
     python.uds.spawn
     python.uds.fork
+    ruby.pipe.pipe
+    ruby.tcp.spawn
+    ruby.tcp.fork
+    ruby.tcp.thread
+    ruby.uds.spawn
+    ruby.uds.fork
+    ruby.uds.thread
     csharp.pipe.pipe
     csharp.tcp.thread
     csharp.uds.thread
@@ -681,6 +698,12 @@ if {!$USE_CXX} {
 if {!$USE_PYTHON} {
   set env(SRV_LST) [filterGet -not SRV_LST python]
   set env(LNG_LST) [filterGet -not LNG_LST python]
+}
+
+# without --enable-ruby no ruby
+if {!$USE_RUBY} {
+  set env(SRV_LST) [filterGet -not SRV_LST ruby]
+  set env(LNG_LST) [filterGet -not LNG_LST ruby]
 }
 
 # without --enable-perl no perl
@@ -800,6 +823,7 @@ while {true} {
     "--only-csharp" -
     "--only-vb" -
     "--only-python" -
+    "--only-ruby" -
     "--only-perl" -
     "--only-cc" {
       set T		[string range $arg 7 end]
@@ -835,7 +859,7 @@ while {true} {
       puts "USAGE [file tail $argv0]: OPTIONS ...."
       puts ""
       puts " testing ARRAGEMENTS"
-      puts "  LANG = c|cc|tcl|java|python|csharp|perl|vb"
+      puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|vb"
       puts "  ........................................... programming-language"
       puts "  COM  = pipe|uds|tcp ....................... communication-layer"
       puts "  TYPE = string|binary ...................... package-type"

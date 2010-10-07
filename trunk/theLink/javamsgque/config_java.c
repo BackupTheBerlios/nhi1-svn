@@ -105,10 +105,10 @@ GetC(ConfigGetIoTcpPort)
 GetC(ConfigGetIoTcpMyHost)
 GetC(ConfigGetIoTcpMyPort)
 
-SetCE(ConfigSetIoUds)
+SetCE(ConfigSetIoUdsFile)
 GetC(ConfigGetIoUdsFile)
 
-SetIE(ConfigSetIoPipe)
+SetIE(ConfigSetIoPipeSocket)
 GetI(ConfigGetIoPipeSocket)
 
 SetI(ConfigSetStartAs)
@@ -124,4 +124,6 @@ GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
 GetC(ConfigGetIdent)
+
+
 

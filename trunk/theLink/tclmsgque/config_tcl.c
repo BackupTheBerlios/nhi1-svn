@@ -231,13 +231,13 @@ int NS(ConfigSetFactory) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIoUds) (NS_ARGS)
+int NS(ConfigSetIoUdsFile) (NS_ARGS)
 {
   SETUP_mqctx
   MQ_CST file;
   CHECK_C(file)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqConfigSetIoUds (mqctx, file));
+  ErrorMqToTclWithCheck (MqConfigSetIoUdsFile (mqctx, file));
   RETURN_TCL
 }
 
@@ -254,13 +254,13 @@ int NS(ConfigSetIoTcp) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIoPipe) (NS_ARGS)
+int NS(ConfigSetIoPipeSocket) (NS_ARGS)
 {
   SETUP_mqctx
   MQ_SOCK socket;
   CHECK_I(socket)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqConfigSetIoPipe (mqctx, socket));
+  ErrorMqToTclWithCheck (MqConfigSetIoPipeSocket (mqctx, socket));
   RETURN_TCL
 }
 
@@ -399,4 +399,7 @@ int NS(ConfigGetStartAs) (NS_ARGS)
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStartAs(&tclctx->mqctx)));
   RETURN_TCL
 }
+
+
+
 

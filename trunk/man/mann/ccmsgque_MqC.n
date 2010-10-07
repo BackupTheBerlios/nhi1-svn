@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "8 Mar 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "6 Oct 2010" "Version 4.5" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,17 +71,17 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
 .ti -1c
-.RI "void \fBConfigSetIoUds\fP (\fBMQ_CST\fP data)"
+.RI "void \fBConfigSetIoUdsFile\fP (\fBMQ_CST\fP data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP "
 .ti -1c
 .RI "void \fBConfigSetIoTcp\fP (\fBMQ_CST\fP host, \fBMQ_CST\fP port, \fBMQ_CST\fP myhost, \fBMQ_CST\fP myport)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
 .ti -1c
-.RI "void \fBConfigSetIoPipe\fP (\fBMQ_SOCK\fP data)"
+.RI "void \fBConfigSetIoPipeSocket\fP (\fBMQ_SOCK\fP data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
 .ti -1c
 .RI "void \fBConfigSetStartAs\fP (enum \fBMqStartE\fP data)"
 .br
@@ -258,6 +258,9 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "\fBMQ_CST\fP \fBLinkGetTargetIdent\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
+.ti -1c
+.RI "void \fBErrorCheck\fP (enum \fBMqErrorE\fP err)  throw (MqCException)"
+.br
 .ti -1c
 .RI "void \fBErrorC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
 .br
@@ -579,7 +582,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
 .in -1c
-.SS "Protected Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c

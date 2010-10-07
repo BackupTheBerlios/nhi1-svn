@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "8 Mar 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "6 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,13 +71,13 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
 .ti -1c
-.RI "void \fBConfigSetIoUds\fP (string data)"
+.RI "void \fBConfigSetIoUdsFile\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUds\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP "
 .ti -1c
-.RI "void \fBConfigSetIoPipe\fP (int data)"
+.RI "void \fBConfigSetIoPipeSocket\fP (int data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipe\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
 .ti -1c
 .RI "void \fBConfigSetStartAs\fP (int data)"
 .br

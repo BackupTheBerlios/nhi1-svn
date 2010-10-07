@@ -507,7 +507,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 AC_DEFUN([SC_ENABLE_CSHARP], [
   AC_MSG_CHECKING([for build with csharp])
   AC_ARG_ENABLE(csharp,
-      AC_HELP_STRING([--enable-csharp], [build theLink with C[#] support]),
+      AC_HELP_STRING([--enable-csharp], [build theLink with C# support]),
       enable_csharp=yes, enable_csharp=no
   )
   AC_MSG_RESULT($enable_csharp)
@@ -582,16 +582,16 @@ AC_DEFUN([SC_ENABLE_VB], [
 AC_DEFUN([SC_ENABLE_CXX], [
   AC_MSG_CHECKING([for build with C++])
   AC_ARG_ENABLE(cxx,
-      AC_HELP_STRING([--enable-cxx], [build theLink with C[++] support]),
+      AC_HELP_STRING([--enable-cxx], [build theLink with C++ support]),
       enable_cxx=yes, enable_cxx=no
   )
   AC_MSG_RESULT($enable_cxx)
-  if test x$enable_cxx = xyes; then
-    AC_PROG_CXX
-    if test "x$enable_symbols" = "xyes" ; then
+  if test "x$enable_cxx" = "xyes"; then
+    dnl AC_PROG_CXX
+    if test "x$enable_symbols" = "xyes"; then
       CXXFLAGS="-g $CXXFLAGS"
     fi
-    if test "x$enable_threads" = "xyes" ; then
+    if test "x$enable_threads" = "xyes"; then
       CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
     fi
   fi
@@ -725,6 +725,40 @@ AC_DEFUN([SC_ENABLE_TCL], [
   fi
   AC_SUBST([USE_TCL], $enable_tcl)
   AM_CONDITIONAL([USE_TCL], [test x$enable_tcl = xyes])
+])
+
+#------------------------------------------------------------------------
+# SC_ENABLE_RUBY --
+#
+#       Specify if RUBY support is needed
+#
+# Arguments:
+#       none
+#
+# Results:
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_ENABLE_RUBY], [
+  AC_MSG_CHECKING([for build with RUBY])
+  AC_ARG_ENABLE(ruby, 
+      AC_HELP_STRING([--enable-ruby], [build theLink with RUBY support]),
+      enable_ruby=yes, enable_ruby=no
+  )
+  AC_MSG_RESULT($enable_ruby)
+  if test "x$enable_tcl" = xyes; then
+    AX_WITH_RUBY([no])
+    if test "x$RUBY" = "xno"; then
+      AC_MSG_ERROR([Could not find "ruby"])
+    fi
+    AX_PROG_RUBY_VERSION([1.9.2], ruby_version_flag=ok, ruby_version_flag=ko)
+    if test "x$ruby_version_flag" = "xko"; then
+      AC_MSG_ERROR([Could not find RUBY version 1.9.2 or later])
+    fi
+    AX_RUBY_DEVEL($ruby_version)
+  fi
+  AC_SUBST([USE_RUBY], $enable_ruby)
+  AM_CONDITIONAL([USE_RUBY], [test "x$enable_ruby" != xyes])
 ])
 
 #------------------------------------------------------------------------

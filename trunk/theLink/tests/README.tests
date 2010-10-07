@@ -43,3 +43,6 @@ Help is available with the following commands:
   2. tcltest specific help
 	> man tcltest
 
+Development-Tests are done using
+
+  1. MakeTclTest.bash

@@ -490,9 +490,9 @@ MQ_NST
 MqConfigGetIdent (MqS* context)
 
 void
-MqConfigSetIoUds (MqS* context, MQ_NST udsfile)
+MqConfigSetIoUdsFile (MqS* context, MQ_NST udsfile)
   CODE:
-    ErrorMqToPerlWithCheck(MqConfigSetIoUds(context, udsfile))
+    ErrorMqToPerlWithCheck(MqConfigSetIoUdsFile(context, udsfile))
 
 MQ_NST
 MqConfigGetIoUdsFile (MqS* context)
@@ -515,9 +515,9 @@ MQ_NST
 MqConfigGetIoTcpMyPort (MqS* context)
 
 void
-MqConfigSetIoPipe (MqS* context, MQ_INT socket)
+MqConfigSetIoPipeSocket (MqS* context, MQ_INT socket)
   CODE:
-    ErrorMqToPerlWithCheck(MqConfigSetIoPipe(context, socket))
+    ErrorMqToPerlWithCheck(MqConfigSetIoPipeSocket(context, socket))
 
 MQ_INT
 MqConfigGetIoPipeSocket (MqS* context)
@@ -1117,4 +1117,7 @@ GetB (MqBufferS *buffer)
     RETVAL = newSVpvn((MQ_CST)bin, len);
   OUTPUT:
     RETVAL
+
+
+
 

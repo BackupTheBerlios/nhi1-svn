@@ -99,12 +99,12 @@ ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
 ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
 ALIASES		    += "config_type_uds=String"
-ALIASES		    += "config_set_uds=ConfigSetIoUds (file)"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
 ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=Integer"
-ALIASES		    += "config_set_pipe=ConfigSetIoPipe (socket)"
-ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocketSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
@@ -281,4 +281,9 @@ Catch e As Exception \n\
   End If \n\
 End Try \n\
 \endcode"
+
+
+
+
+
 

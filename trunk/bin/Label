@@ -54,6 +54,7 @@ array set LABELIGNORE {
     ./theLink/tclmsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* pkgIndex.tcl }
     ./theLink/tclmsgque/tmp	{ pkgIndex.tcl }
     ./theLink/pymsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build }
+    ./theLink/rubymsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build *.rb }
     ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags}
     ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
 				  MqS_Main.h Manifest.txt *.in *.stamp *.jar javamsgque_MqS.h
@@ -76,14 +77,14 @@ array set LABELIGNORE {
 
     ./save			{ openfacts2.berlios.de }
 
-    ./win		{ c cc csharp vb win Makefile.in Makefile win.sln .CHANGE }
-    .			{ aclocal.m4 ltmain.sh libtool.m4 install-sh depcomp Makefile.in 
-			    configure config.guess config.sub .PERSONAL missing autom4te.cache 
-			    config.log mqconfig.h.in libtool config.status stamp-h1 
-			    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
-			    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
-			    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
-			    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML}
+    ./win			{ c cc csharp vb win Makefile.in Makefile win.sln .CHANGE }
+    .				{ aclocal.m4 ltmain.sh libtool.m4 install-sh depcomp Makefile.in 
+				    configure config.guess config.sub .PERSONAL missing autom4te.cache 
+				    config.log mqconfig.h.in libtool config.status stamp-h1 
+				    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
+				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
+				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
+				    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML}
 }
 
 array set env [list \
