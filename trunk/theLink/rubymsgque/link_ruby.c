@@ -40,7 +40,7 @@ static VALUE LinkCreateChild(int argc, VALUE *argv, VALUE self)
 
   // get parent
   if (argc < 1) rb_raise(rb_eArgError, "usage: LinkCreateChild parent ...");
-  CheckType(argv[0], cMqS, usage: LinkCreateChild MqS-Type-Arg ...);
+  CheckType(argv[0], cMqS, "usage: LinkCreateChild MqS-Type-Arg ...");
   parent = VAL2MqS(argv[0]);
   argc--; argv++;
 

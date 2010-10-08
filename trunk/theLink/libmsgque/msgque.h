@@ -841,6 +841,9 @@ struct MqSetupS {
   /// \brief setup and initialize a fork-process before a new fork-process is created by \libmsgque
   MqSetupF fForkInit;
 
+  /// \brief setup and initialize a spawn-process before a new spawn-process is created by \libmsgque
+  MqSetupF fSpawnInit;
+
   /// \brief exit/cleanup a process
   MqExitF fProcessExit;
 
@@ -1419,7 +1422,11 @@ MQ_EXTERN void MQ_DECL MqContextInit (
   struct MqS const * const tmpl
 );
 
-/// \brief free the #MqS object related data but do \e not free the object self
+/// \brief free the #MqS object related data but do \b not free the \e toplevel object self
+/// \details Shutdown the \e client-server-link and free the related memory.
+/// The \e toplevel object is still alive to give an existing 
+/// Garbage-Collection the control when to delete the object.
+/// The \e context can \b not be reused.
 MQ_EXTERN void MQ_DECL MqContextFree (
   struct MqS       * const context
 );
@@ -1436,7 +1443,7 @@ MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
   struct MqS const * const tmpl
 );
 
-/// \brief delete the \e context
+/// \brief delete the #MqS object and \b all depending data including the \e toplevel object self
 /// \details Shutdown the \e client-server-link, free the memory and set the \e ctx to \null. 
 /// The \e context can \b not be reused.
 /// \ctx

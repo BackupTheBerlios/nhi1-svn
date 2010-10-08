@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -131,7 +131,7 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3905 of file msgque.h.
+Definition at line 3909 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
@@ -210,7 +210,7 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINothing\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fINone\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
 
@@ -225,12 +225,12 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINothing\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fINone\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
  
 .PP
-Definition at line 3973 of file msgque.h.
+Definition at line 3977 of file msgque.h.
 .SS "int MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
@@ -242,11 +242,11 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 
-.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
+.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
@@ -257,12 +257,12 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
  
 .PP
-Definition at line 3987 of file msgque.h.
+Definition at line 3991 of file msgque.h.
 .SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
 .PP
 create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
@@ -286,4 +286,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

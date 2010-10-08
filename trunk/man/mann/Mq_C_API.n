@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -127,4 +127,4 @@ propagate the error messages from the server to the client
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

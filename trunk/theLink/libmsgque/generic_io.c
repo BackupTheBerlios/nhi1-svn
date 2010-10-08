@@ -151,8 +151,9 @@ GenericServer (
   do {
     id.type = MQ_ID_UNUSED;
     mysockaddrlen = sizeof(mysockaddr);
-    // 3. accept incomming call
-    MqErrorCheck (SysAccept (context, generiC->sock, &mysockaddr, &mysockaddrlen, &child_sock));
+    // 3. accept incomming call, on error shutdown server
+    if (MqErrorCheckI(SysAccept (context, generiC->sock, &mysockaddr, &mysockaddrlen, &child_sock)))
+      return MqErrorCreateEXIT(context);
     // select: how to start the new task
     switch (context->config.startAs) {
       case MQ_START_FORK: {

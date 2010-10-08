@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,14 +86,14 @@ The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\f
 .PP
 
 .PP
-Definition at line 1793 of file msgque.h.
+Definition at line 1797 of file msgque.h.
 .SS "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
 .PP
 function used as \fIservice-handle\fP 
 .PP
 A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
 .PP
-Definition at line 1802 of file msgque.h.
+Definition at line 1806 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqWaitOnEventE\fP"
@@ -112,7 +112,7 @@ wait for one new event
 \fB\fIMQ_WAIT_FOREVER \fP\fP
 wait forever 
 .PP
-Definition at line 1805 of file msgque.h.
+Definition at line 1809 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqProcessEvent (struct \fBMqS\fP *const  ctx, \fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)"
@@ -131,7 +131,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for MqS.WAIT.ONCE or \fBMQ_TIMEOUT_MAX\fP for MqS.WAIT.FOREVER.
+\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for ONCE or \fBMQ_TIMEOUT_MAX\fP for FOREVER.
 .IP "\(bu" 2
 \fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
@@ -140,11 +140,11 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-MqS.WAIT.NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-MqS.WAIT.ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-MqS.WAIT.FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP
@@ -167,7 +167,7 @@ in an \fIongoing-service-call\fP compare the \fBTOKEN IDENTIFIER\fP with \fItoke
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 
@@ -175,7 +175,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincoming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBPyUnicode ctx.ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -231,7 +231,7 @@ return a 'filter not available' error
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fINone\fP on error 
 .RE
 .PP
 \fBReturns:\fP
@@ -261,7 +261,7 @@ the \fBTOKEN IDENTIFIER\fP
 .PP
 check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
-A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIfalse\fP if the package was send with \fBSendEND\fP) 
+A \fIservice-call\fP can be \fIwith-transaction\fP (return \fITrue\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIFalse\fP if the package was send with \fBSendEND\fP) 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -270,7 +270,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the pac
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 
@@ -297,4 +297,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

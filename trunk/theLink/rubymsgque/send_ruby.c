@@ -61,7 +61,7 @@ static VALUE SendBDY (VALUE self, VALUE val) {
 
 static VALUE SendU (VALUE self, VALUE buf) {
   SETUP_mqctx
-  CheckType(buf, cMqBufferS, usage: SendU MqBufferS-Type-Arg);
+  CheckType(buf, cMqBufferS, "usage: SendU MqBufferS-Type-Arg");
   ErrorMqToRubyWithCheck(MqSendU(mqctx,VAL2MqBufferS(buf)));
   return Qnil;
 }
@@ -91,10 +91,12 @@ static VALUE SendEND_AND_WAIT (int argc, VALUE *argv, VALUE self) {
 
 static VALUE SendEND_AND_CALLBACK (VALUE self, VALUE token, VALUE callback) {
   SETUP_mqctx
+  MqServiceCallbackF procCall;
+  MQ_PTR procData;
   CheckType(callback, rb_cMethod, "usage SendEND_AND_CALLBACK Method-Type-Arg");
-  rb_gc_register_address(&callback);
+  NS(ProcInit) (self, callback, &procCall, &procData);
   ErrorMqToRubyWithCheck(MqSendEND_AND_CALLBACK(mqctx, VAL2CST(token), 
-    NS(ProcCall), (void*) callback, NS(ProcFree))
+    procCall, procData, NS(ProcFree))
   );
   return Qnil;
 }
@@ -111,10 +113,9 @@ static VALUE SendL_END (VALUE self) {
   return Qnil;
 }
 
-static VALUE SendT_START (VALUE self, VALUE callback) {
+static VALUE SendT_START (VALUE self, VALUE token) {
   SETUP_mqctx
-  CheckType(callback, rb_cMethod, "usage SendT_START Method-Type-Arg");
-  ErrorMqToRubyWithCheck(MqSendT_START(mqctx, VAL2CST(callback)));
+  ErrorMqToRubyWithCheck(MqSendT_START(mqctx, VAL2CST(token)));
   return Qnil;
 }
 

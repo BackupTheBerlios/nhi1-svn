@@ -17,7 +17,21 @@
 #    define RUBYMQ_EXTERN __attribute__ ((visibility("default")))
 #endif
 
+VALUE id_receiver;
+
+#ifdef HAVE_FORK
+//static id_t NS(fork) (void) {
+//  int status;
+//  return rb_fork(&status, NULL, 0, Qnil)
+//}
+#endif
+
 RUBYMQ_EXTERN void Init_rubymsgque() {
+
+  // Register system
+#ifdef HAVE_FORK
+//  MqInitSysAPI(NS(fork),NULL);
+#endif
 
   // Initialize components
   NS(MqS_Init)();
@@ -33,5 +47,8 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
     MqBufferLAppendC(initB, VAL2CST(rb_argv0));
     MqBufferLAppendC(initB, VAL2CST(a0));
   }
+
+  // set global data
+  id_receiver = rb_intern("receiver");
 }
 

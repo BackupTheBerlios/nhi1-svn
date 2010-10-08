@@ -1,11 +1,11 @@
-.TH "Mq_Error_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Error_C_API \- create and manage error messages.  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -85,7 +85,7 @@ Mq_Error_C_API \- create and manage error messages.
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP, \fBMQ_CONTINUE\fP, \fBMQ_ERROR\fP, \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2 }"
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2 }"
 .br
 .R "collection for the different error-codes "
 .in -1c
@@ -163,7 +163,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP "
+.R "check if context is on \fIexit\fP, return \fITrue\fP or \fIFalse\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
@@ -190,41 +190,41 @@ ignore error and do not generate any error-text (don't fill the error object)
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2946 of file msgque.h.
+Definition at line 2950 of file msgque.h.
 .SS "#define MQ_ERROR_IS_POINTER(e)   (e>MQ_ERROR_PRINT)"
 .PP
 check if the error pointer is a \fIreal\fP pointer or just a flag 
 .PP
-Definition at line 2955 of file msgque.h.
+Definition at line 2959 of file msgque.h.
 .SS "#define MQ_ERROR_PANIC   ((struct \fBMqS\fP*)NULL)"
 .PP
 panic on error 
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2940 of file msgque.h.
+Definition at line 2944 of file msgque.h.
 .SS "#define MQ_ERROR_PRINT   ((struct \fBMqS\fP*)0x2)"
 .PP
 print error to stderr 
 .PP
 This item is used as special meaning for the \fCstruct\fP \fBMqErrorS\fP argument of error-functions 
 .PP
-Definition at line 2952 of file msgque.h.
+Definition at line 2956 of file msgque.h.
 .SS "#define MqErrorCheck(PROC)   if (MqErrorCheckI(PROC)) goto error"
 .PP
 check \fIreturn-code\fP and \fIgoto error\fP on error 
 .PP
-Definition at line 3213 of file msgque.h.
+Definition at line 3217 of file msgque.h.
 .SS "#define MqErrorCheck1(PROC)   if (MqErrorCheckI(PROC)) goto error1"
 .PP
 check on error and goto label \fIerror1\fP 
 .PP
-Definition at line 3224 of file msgque.h.
+Definition at line 3228 of file msgque.h.
 .SS "#define MqErrorCheck2(PROC, JUMP)   if (MqErrorCheckI(PROC)) goto JUMP"
 .PP
 check on error and goto label \fIJUMP\fP 
 .PP
-Definition at line 3226 of file msgque.h.
+Definition at line 3230 of file msgque.h.
 .SS "#define MqErrorCheckI(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .PP
 check on error 
@@ -236,12 +236,12 @@ on \fBMQ_OK\fP and \fBMQ_CONTINUE\fP return \fB1\fP and an \fBMQ_ERROR\fP return
 .PP
 
 .PP
-Definition at line 3211 of file msgque.h.
+Definition at line 3215 of file msgque.h.
 .SS "#define MqErrorCreateEXIT(ctx)   MqErrorCreateEXITP(ctx,__func__)"
 .PP
 wrapper to add trace-back information 
 .PP
-Definition at line 3173 of file msgque.h.
+Definition at line 3177 of file msgque.h.
 .SS "#define MqErrorReturn(PROC)"
 .PP
 \fBValue:\fP
@@ -253,17 +253,17 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_ERROR: r
 .fi
 process error message 
 .PP
-Definition at line 3220 of file msgque.h.
+Definition at line 3224 of file msgque.h.
 .SS "#define MqErrorSAppendC(error, str)   MqErrorSAppendV(error,'%s',str);"
 .PP
 append a string to a \fBMqErrorS\fP 
 .PP
-Definition at line 3077 of file msgque.h.
+Definition at line 3081 of file msgque.h.
 .SS "#define MqErrorStack(error)   MqErrorStackP(error, __func__, __FILE__)"
 .PP
 convenience wrapper for \fBMqErrorStackP\fP 
 .PP
-Definition at line 3092 of file msgque.h.
+Definition at line 3096 of file msgque.h.
 .SS "#define MqErrorSwitch(PROC)"
 .PP
 \fBValue:\fP
@@ -275,12 +275,12 @@ case MQ_OK: break; case MQ_ERROR: goto error; case MQ_CONTINUE: return MQ_CONTIN
 .fi
 process error message 
 .PP
-Definition at line 3216 of file msgque.h.
+Definition at line 3220 of file msgque.h.
 .SS "#define MqErrorV(error, prefix, errnum, format,  ...)   MqErrorSGenV(error,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)"
 .PP
 customized edition of \fBMqErrorSGenV\fP 
 .PP
-Definition at line 3057 of file msgque.h.
+Definition at line 3061 of file msgque.h.
 .SS "#define MqPanicC(context, prefix, errnum, string)   MqPanicV(context,prefix,errnum,'%s',string);"
 .PP
 do a \fBpanic\fP with \fIstring\fP as argument 
@@ -303,7 +303,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2992 of file msgque.h.
+Definition at line 2996 of file msgque.h.
 .SS "#define MqPanicSYS(context)"
 .PP
 \fBValue:\fP
@@ -326,7 +326,7 @@ this function will never return
 .PP
 
 .PP
-Definition at line 2997 of file msgque.h.
+Definition at line 3001 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP"
@@ -335,12 +335,6 @@ collection for the different error-codes
 .PP
 \fBEnumerator: \fP
 .in +1c
-.TP
-\fB\fIMQ_OK \fP\fP
-.TP
-\fB\fIMQ_CONTINUE \fP\fP
-.TP
-\fB\fIMQ_ERROR \fP\fP
 .TP
 \fB\fIMQ_OK \fP\fP
 everything is OK, no error available (persistent) 
@@ -376,9 +370,9 @@ copy a \fBMqErrorS\fP from \fIin\fP to \fIout\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIout\fP the \fBMqS.error\fP object created by \fBMqLinkCreate\fP 
+\fIout\fP the \fBMqS::error\fP object created by \fBMqLinkCreate\fP 
 .br
-\fIin\fP the \fBMqS.error\fP object created by \fBMqLinkCreate\fP 
+\fIin\fP the \fBMqS::error\fP object created by \fBMqLinkCreate\fP 
 .RE
 .PP
 
@@ -400,7 +394,7 @@ return the value of \fBMqErrorS\fP code member
 .RE
 .PP
 
-.SS "static enum \fBMqErrorE\fP MqErrorGetCodeI (struct \fBMqS\fP const *const  context)\fC [static]\fP"
+.SS "static enum \fBMqErrorE\fP MqErrorGetCodeI (struct \fBMqS\fP const *const  context)\fC [inline, static]\fP"
 .PP
 return the value of \fBMqErrorS\fP code member 
 .PP
@@ -411,7 +405,7 @@ return the value of \fBMqErrorS\fP code member
 .PP
  
 .PP
-Definition at line 3108 of file msgque.h.
+Definition at line 3112 of file msgque.h.
 .SS "\fBMQ_INT\fP MqErrorGetNum (struct \fBMqS\fP const *const  ctx)"
 .PP
 \fBReturns:\fP
@@ -420,7 +414,7 @@ the \fIerror-number\fP from the \fIexception-object\fP. The number can be used a
 .RE
 .PP
 
-.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
+.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
 .PP
 \fBReturns:\fP
 .RS 4
@@ -429,7 +423,7 @@ the \fIerror-number\fP from the \fIexception-object\fP. The number can be used a
 .PP
  
 .PP
-Definition at line 3139 of file msgque.h.
+Definition at line 3143 of file msgque.h.
 .SS "\fBMQ_CST\fP MqErrorGetText (struct \fBMqS\fP const *const  ctx)"
 .PP
 \fBReturns:\fP
@@ -440,7 +434,7 @@ the \fIerror-message\fP from the \fIexception-object\fP
 
 .SS "int MqErrorIsEXIT (struct \fBMqS\fP *const  context)"
 .PP
-check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP 
+check if context is on \fIexit\fP, return \fITrue\fP or \fIFalse\fP 
 .PP
 An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
@@ -634,4 +628,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

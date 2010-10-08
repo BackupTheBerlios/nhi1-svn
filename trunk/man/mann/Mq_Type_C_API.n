@@ -1,11 +1,11 @@
-.TH "Mq_Type_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Type_C_API \- a collection of common used data types and definitions  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -464,4 +464,4 @@ used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP 
 Definition at line 550 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

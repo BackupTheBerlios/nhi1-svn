@@ -42,7 +42,7 @@ static VALUE SlaveWorker(int argc, VALUE *argv, VALUE self)
 static VALUE SlaveCreate(VALUE self, VALUE id, VALUE mqs)
 {
   SETUP_mqctx
-  CheckType(mqs, cMqS, usage: SlaveCreate id MqS-Type-Arg);
+  CheckType(mqs, cMqS, "usage: SlaveCreate id MqS-Type-Arg");
   ErrorMqToRubyWithCheck (MqSlaveCreate(mqctx, VAL2INT(id), VAL2MqS(mqs)));
   return Qnil;
 }

@@ -1,11 +1,11 @@
-.TH "Mq_Link_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Link_C_API \- setup and manage a \fIclient-server-link\fP  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -135,7 +135,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS.WAIT.FOREVER.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the FOREVER.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -239,7 +239,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 helper: wrapper for \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP with additional \fIerror-check\fP code 
 .PP
-The function have to be used as argument to \fBMqSetupS.Child\fP, \fBMqSetupS.Parent\fP or \fBMqConfigSetSetup\fP as default \fIcontext-create\fP function. Return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found. 
+The function have to be used as argument to \fBMqSetupS::Child\fP, \fBMqSetupS::Parent\fP or \fBMqConfigSetSetup\fP as default \fIcontext-create\fP function. Return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -258,7 +258,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 close the \fIclient-server-link\fP 
 .PP
-On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIfalse\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fItrue\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
+On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIFalse\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fITrue\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -283,7 +283,7 @@ the identifier as number
 .RE
 .PP
 
-.SS "static \fBMQ_SIZE\fP MqLinkGetCtxIdI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
+.SS "static \fBMQ_SIZE\fP MqLinkGetCtxIdI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
 .PP
 get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
 .PP
@@ -301,7 +301,7 @@ the identifier as number
 .PP
  
 .PP
-Definition at line 1745 of file msgque.h.
+Definition at line 1749 of file msgque.h.
 .SS "struct \fBMqS\fP* MqLinkGetParent (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
 .PP
 get the \fIparent-context\fP from a client/server link 
@@ -313,7 +313,7 @@ get the \fIparent-context\fP from a client/server link
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINone\fP if not a \fIchild-context\fP 
 .RE
 .PP
 
@@ -328,12 +328,12 @@ get the \fIparent-context\fP from a client/server link
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINone\fP if not a \fIchild-context\fP 
 .RE
 .PP
  
 .PP
-Definition at line 1709 of file msgque.h.
+Definition at line 1713 of file msgque.h.
 .SS "\fBMQ_CST\fP MqLinkGetTargetIdent (struct \fBMqS\fP *const  ctx)"
 .PP
 get the \fIident\fP of the \fIlink-target\fP 
@@ -347,7 +347,7 @@ This function is only useful if the link is up and running.
 .PP
 \fBReturns:\fP
 .RS 4
-get the \fIident\fP of the \fIlink-target\fP or \fINothing\fP if not connected 
+get the \fIident\fP of the \fIlink-target\fP or \fINone\fP if not connected 
 .RE
 .PP
 
@@ -368,7 +368,7 @@ the link was deleted with \fBLinkDelete\fP
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 
@@ -385,11 +385,11 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
 
-.SS "static int MqLinkIsParentI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
+.SS "static int MqLinkIsParentI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
 .PP
 is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
@@ -402,12 +402,12 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fItrue\fP or \fIfalse\fP 
+a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
  
 .PP
-Definition at line 1725 of file msgque.h.
+Definition at line 1729 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

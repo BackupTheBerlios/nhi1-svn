@@ -88,8 +88,8 @@ class Filter4 < MqS
 end
 srv = Filter4.new
 begin
-  srv.LinkCreate(ARGV)
-  srv.ProcessEvent(MqS::Wait::FOREVER)
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
 rescue SignalException => ex
   # ignore
 rescue Exception => ex

@@ -1,4 +1,4 @@
-.TH "pymsgque" n "7 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -104,16 +104,10 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 
 .fi
 .PP
-.SS "del ctx"
-delete the \fIcontext\fP 
+.SS "ctx.Delete()"
+free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINone\fP. The \fIcontext\fP can \fBnot\fP be reused. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
-.RE
-.PP
+Shutdown the \fIclient-server-link\fP and free the related memory. The \fItoplevel\fP object is still alive to give an existing Garbage-Collection the control when to delete the object. The \fIcontext\fP can \fBnot\fP be reused. 
 .SS "ctx.Exit()"
 delete the \fIcontext\fP and exit the current process or thread 
 .PP

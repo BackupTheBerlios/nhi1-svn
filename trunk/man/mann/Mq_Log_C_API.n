@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -81,7 +81,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 4176 of file msgque.h.
+Definition at line 4180 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)"
 .PP
 log a plain string using the \fIMqSetDebugLevel\fP definition 
@@ -97,7 +97,7 @@ log a plain string using the \fIMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 4183 of file msgque.h.
+Definition at line 4187 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -120,7 +120,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4192 of file msgque.h.
+Definition at line 4196 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
@@ -143,19 +143,19 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4201 of file msgque.h.
+Definition at line 4205 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 4170 of file msgque.h.
+Definition at line 4174 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqLogC (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)"
 .PP
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 
+The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIFalse\fP using the following format: 
 .PP
 .nf
 
@@ -228,7 +228,7 @@ get the \fItype\fP member from an MqTypeE object in human readable form
 .PP
 \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -277,4 +277,4 @@ Use the format and the restrictions from \fBLogC\fP.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

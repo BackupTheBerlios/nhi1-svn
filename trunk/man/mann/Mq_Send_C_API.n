@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -213,7 +213,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -362,7 +362,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBctx.ReadN() As Byte()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBByteArray ctx.ReadN()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -400,7 +400,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
-Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(token As String)\fP)
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(token)\fP)
 .IP "\(bu" 2
 if a transaction is ongoing this function return the answer.
 .IP "\(bu" 2
@@ -572,4 +572,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

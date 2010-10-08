@@ -12,27 +12,30 @@
 
 require "rubymsgque"
 
-class Filter3(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: Filter3())
-    self.ConfigSetName("Filter3")
-    self.ConfigSetServerSetup(self.ServerSetup)
-    MqS.__init__(self)
-  def ServerSetup(ctx):
-    ftr =ctx.ServiceGetFilter()
-    ctx.ServiceProxy("+ALL")
-    ctx.ServiceProxy("+TRT")
+class Filter3 < MqS
+  def initialize
+    ConfigSetFactory(lambda {Filter3.new})
+    ConfigSetName("Filter3")
+    ConfigSetServerSetup(method(:ServerSetup))
+    super()
+  end
+  def ServerSetup
+    ftr = ServiceGetFilter()
+    ServiceProxy("+ALL")
+    ServiceProxy("+TRT")
     ftr.ServiceProxy("+ALL")
     ftr.ServiceProxy("+TRT")
-srv = Filter3()
-try:
-  srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
-except:
-  srv.ErrorSet()
-finally:
+  end
+end
+srv = Filter3.new
+begin
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
+rescue SignalException => ex
+  # ignore
+rescue Exception => ex
+  srv.ErrorSet(ex)
+ensure
   srv.Exit()
-
-
-
+end
 

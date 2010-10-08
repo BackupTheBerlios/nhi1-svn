@@ -1,11 +1,11 @@
-.TH "Mq_Context_C_API" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -19,7 +19,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
-.R "signature marker used in \fBMqS.signature\fP "
+.R "signature marker used in \fBMqS::signature\fP "
 .ti -1c
 .RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
 .br
@@ -43,7 +43,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "void \fBMqContextFree\fP (struct \fBMqS\fP *const context)"
 .br
-.R "free the \fBMqS\fP object related data but do \fInot\fP free the object self "
+.R "free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqContextCreate\fP (\fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
 .br
@@ -51,7 +51,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "void \fBMqContextDelete\fP (struct \fBMqS\fP **ctx)"
 .br
-.R "delete the \fIcontext\fP "
+.R "delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self "
 .ti -1c
 .RI "void \fBMqExitP\fP (\fBMQ_CST\fP prefix, struct \fBMqS\fP *ctx)"
 .br
@@ -86,14 +86,14 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
-signature marker used in \fBMqS.signature\fP 
+signature marker used in \fBMqS::signature\fP 
 .PP
 Definition at line 1385 of file msgque.h.
 .SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
 .PP
 wrapper to add calling function to \fBMqExitP\fP 
 .PP
-Definition at line 1476 of file msgque.h.
+Definition at line 1480 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqStatusIsE\fP"
@@ -157,9 +157,9 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 
 .SS "void MqContextDelete (struct \fBMqS\fP ** ctx)"
 .PP
-delete the \fIcontext\fP 
+delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINothing\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINone\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -169,8 +169,9 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 
 .SS "void MqContextFree (struct \fBMqS\fP *const  context)"
 .PP
-free the \fBMqS\fP object related data but do \fInot\fP free the object self 
+free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self 
 .PP
+Shutdown the \fIclient-server-link\fP and free the related memory. The \fItoplevel\fP object is still alive to give an existing Garbage-Collection the control when to delete the object. The \fIcontext\fP can \fBnot\fP be reused. 
 .SS "void MqContextInit (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const  tmpl)"
 .PP
 initialize the \fBMqS\fP object related data but do \fInot\fP create the object self 
@@ -214,4 +215,4 @@ If \fItool\fP != NULL, the function will display a header like:
  on the help page. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

@@ -44,9 +44,11 @@ rb_define_method(cMqS, MQ_CPPXSTR(Config ## T ## K), Config ## T ## K, A); \
   MthBas(K,Set,1) 
 
 #define CB(T) static VALUE ConfigSet ## T (VALUE self, VALUE callback) { \
-  CheckType(callback, rb_cMethod, usage: ConfigSet ## T Method-Type-Arg); \
-  rb_gc_register_address(&callback); \
-  MqConfigSet ## T (MQCTX,  NS(ProcCall), (void*) callback, NS(ProcFree), NS(ProcCopy)); \
+  MqServiceCallbackF procCall; \
+  MQ_PTR procData; \
+  CheckType(callback, rb_cMethod, "usage: ConfigSet" #T " Method-Type-Arg"); \
+  NS(ProcInit) (self, callback, &procCall, &procData); \
+  MqConfigSet ## T (MQCTX,  procCall, procData, NS(ProcFree), NS(ProcCopy)); \
   return Qnil; \
 }
 
@@ -90,14 +92,14 @@ static VALUE r_proc (VALUE tmpl, VALUE ex) {
 }
 
 static enum MqErrorE
-FactoryCreate (
+FactoryCreate(
   struct MqS * const tmpl,
   enum MqFactoryE create,
   MQ_PTR data,
   struct MqS  ** mqctxP
 )
 {
-  //if (create == MQ_FACTORY_NEW_FORK) PyOS_AfterFork();
+  if (create == MQ_FACTORY_NEW_FORK) rb_thread_atfork();
   VALUE self = rb_rescue2(
     b_proc, PTR2VAL(data), r_proc, MqS2VAL(tmpl), rb_eException, (VALUE)0
   );
@@ -134,7 +136,7 @@ FactoryDelete(
 static VALUE ConfigSetFactory (VALUE self, VALUE proc)
 {
   //rb_io_puts(1, &proc, rb_stdout);
-  CheckType(proc, rb_cProc, usage: ConfigSetFactory Proc-Type-Arg);
+  CheckType(proc, rb_cProc, "usage: ConfigSetFactory Proc-Type-Arg");
   rb_gc_register_address(&proc);
   MqConfigSetFactory(MQCTX,
     FactoryCreate,  VAL2PTR(proc),  NS(ProcFree), NS(ProcCopy),

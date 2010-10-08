@@ -40,10 +40,12 @@ static VALUE ServiceGetFilter (int argc, VALUE *argv, VALUE self) {
 
 static VALUE ServiceCreate (VALUE self, VALUE token, VALUE callback) {
   SETUP_mqctx
+  MqServiceCallbackF procCall;
+  MQ_PTR procData;
   CheckType(callback, rb_cMethod, "usage ServiceCreate token Method-Type-Arg");
-  rb_gc_register_address(&callback);
-  ErrorMqToRubyWithCheck(MqServiceCreate(mqctx, VAL2CST(token), 
-    NS(ProcCall), (void*) callback, NS(ProcFree))
+  NS(ProcInit) (self, callback, &procCall, &procData);
+  ErrorMqToRubyWithCheck(MqServiceCreate(mqctx, mq_strdup(VAL2CST(token)), 
+    procCall, procData, NS(ProcFree))
   );
   return Qnil;
 }
@@ -88,13 +90,13 @@ static VALUE ProcessEvent (int argc, VALUE *argv, VALUE self) {
 void NS(MqS_Service_Init)(void) {
 
   // Timeout
-  VALUE cTimeout = rb_define_class_under(cMqS, "Timeout", rb_cObject);
+  VALUE cTimeout = rb_define_class_under(cMqS, "TIMEOUT", rb_cObject);
   rb_iv_set(cTimeout, "DEFAULT",  INT2VAL(-1));
   rb_iv_set(cTimeout, "USER",	  INT2VAL(-2));
   rb_iv_set(cTimeout, "MAX",	  INT2VAL(-3));
 
   // Wait
-  VALUE cWait = rb_define_class_under(cMqS, "Wait", rb_cObject);
+  VALUE cWait = rb_define_class_under(cMqS, "WAIT", rb_cObject);
   rb_iv_set(cWait,    "NO",	  INT2VAL(0));
   rb_iv_set(cWait,    "ONCE",	  INT2VAL(1));
   rb_iv_set(cWait,    "FOREVER",  INT2VAL(2));

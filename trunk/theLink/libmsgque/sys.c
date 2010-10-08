@@ -641,6 +641,9 @@ SysServerSpawn (
 )
 {
   pid_t pid;
+  
+  // spawn setup !before! a spawn is created
+  if (context->setup.fSpawnInit) (*context->setup.fSpawnInit)(context);
 
 #if defined(HAVE_POSIX_SPAWN)
   if (unlikely (posix_spawnp(&pid, name, NULL, NULL, (char *const *) argv, __environ) != 0)) {

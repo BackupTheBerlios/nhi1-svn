@@ -59,7 +59,7 @@
 #define	MqS2VAL(nat)	    (nat != NULL ? ((VALUE)(nat)->self) : Qnil)
 
 #define CheckType(val,typ,err) \
-  if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, #err);
+  if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
 
 #define printVAL(val) rb_io_puts(1, &val, rb_stdout); rb_io_flush(rb_stdout);
 
@@ -95,4 +95,5 @@ enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
 MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
+void NS(ProcInit)	    (VALUE, VALUE, MqServiceCallbackF*, MQ_PTR*);
 

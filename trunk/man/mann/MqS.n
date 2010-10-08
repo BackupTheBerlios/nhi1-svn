@@ -1,4 +1,4 @@
-.TH "MqS" n "7 Oct 2010" "Version 4.5" "vbmsgque" \" -*- nroff -*-
+.TH "MqS" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -94,93 +94,93 @@ MqS \- data structure for the \fIlibmsgque-specific-data\fP
 data structure for the \fIlibmsgque-specific-data\fP 
 .PP
 Definition at line 1392 of file msgque.h.
-.SH "Member Data Documentation"
+.SH "Field Documentation"
 .PP 
-.SS "struct { ... }   \fBMqS.bits\fP"
+.SS "struct { ... }   \fBMqS::bits\fP"
 .PP
 boolean bit-fields 
 .PP
-.SS "struct \fBMqConfigS\fP \fBMqS.config\fP\fC [read]\fP"
+.SS "struct \fBMqConfigS\fP \fBMqS::config\fP\fC [read]\fP"
 .PP
 the configuration data is used for 'end-user' configuration 
 .PP
 Definition at line 1395 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqS.contextsize\fP"
+.SS "\fBMQ_SIZE\fP \fBMqS::contextsize\fP"
 .PP
 ALLOC-size of the user-defined context struct. 
 .PP
 Definition at line 1409 of file msgque.h.
-.SS "struct \fBMqErrorS\fP \fBMqS.error\fP\fC [read]\fP"
+.SS "struct \fBMqErrorS\fP \fBMqS::error\fP\fC [read]\fP"
 .PP
 error object data 
 .PP
 Definition at line 1397 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.EventProc_LOCK\fP"
+.SS "\fBMQ_BOL\fP \fBMqS::EventProc_LOCK\fP"
 .PP
 protect sCallEventProc against double-call 
 .PP
 Definition at line 1404 of file msgque.h.
-.SS "struct MqGcS* \fBMqS.gc\fP\fC [read]\fP"
+.SS "struct MqGcS* \fBMqS::gc\fP\fC [read]\fP"
 .PP
 link to the garbage-collection 
 .PP
 Definition at line 1411 of file msgque.h.
-.SS "\fBMQ_SIZE\fP \fBMqS.gcid\fP"
+.SS "\fBMQ_SIZE\fP \fBMqS::gcid\fP"
 .PP
 position in the gc array 
 .PP
 Definition at line 1412 of file msgque.h.
-.SS "struct \fBMqLinkS\fP \fBMqS.link\fP\fC [read]\fP"
+.SS "struct \fBMqLinkS\fP \fBMqS::link\fP\fC [read]\fP"
 .PP
 link object data 
 .PP
 Definition at line 1398 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.MqContextDelete_LOCK\fP"
+.SS "\fBMQ_BOL\fP \fBMqS::MqContextDelete_LOCK\fP"
 .PP
 protect MqContextDelete against double-call 
 .PP
 Definition at line 1402 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.MqContextFree_LOCK\fP"
+.SS "\fBMQ_BOL\fP \fBMqS::MqContextFree_LOCK\fP"
 .PP
 protect MqContextFree against double-call 
 .PP
 Definition at line 1403 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqS.onExit\fP"
+.SS "\fBMQ_BOL\fP \fBMqS::onExit\fP"
 .PP
 is already an 'exit' ongoing? 
 .PP
 Definition at line 1405 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqS.refCount\fP"
+.SS "\fBMQ_INT\fP \fBMqS::refCount\fP"
 .PP
 is an object in use? 
 .PP
 Definition at line 1410 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS.self\fP"
+.SS "\fBMQ_PTR\fP \fBMqS::self\fP"
 .PP
 link to the managed object 
 .PP
 Definition at line 1408 of file msgque.h.
-.SS "struct \fBMqSetupS\fP \fBMqS.setup\fP\fC [read]\fP"
+.SS "struct \fBMqSetupS\fP \fBMqS::setup\fP\fC [read]\fP"
 .PP
 the setup data is used to link the object with the user application 
 .PP
 Definition at line 1396 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqS.signature\fP"
+.SS "\fBMQ_INT\fP \fBMqS::signature\fP"
 .PP
 used to verify the \fIpointer-data-type\fP in a type-less programming languages 
 .PP
 Definition at line 1393 of file msgque.h.
-.SS "enum \fBMqStatusIsE\fP \fBMqS.statusIs\fP"
+.SS "enum \fBMqStatusIsE\fP \fBMqS::statusIs\fP"
 .PP
 how the context was created? 
 .PP
 Definition at line 1400 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqS.temp\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqS::temp\fP\fC [read]\fP"
 .PP
 misc temporary \fBMqBufferS\fP object 
 .PP
 Definition at line 1399 of file msgque.h.
-.SS "\fBMQ_PTR\fP \fBMqS.threadData\fP"
+.SS "\fBMQ_PTR\fP \fBMqS::threadData\fP"
 .PP
 application specific thread data 
 .PP
@@ -188,4 +188,4 @@ Definition at line 1407 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for pymsgque from the source code.

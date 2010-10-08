@@ -21,20 +21,20 @@ VALUE cMqS;
 /*                                                                           */
 /*****************************************************************************/
 
-static void
-ProcessExit (MQ_INT num)
+static void ProcessExit (MQ_INT num)
 {
   rb_exit(num);
 }
 
-static void
-ThreadExit (MQ_INT num)
+static void ThreadExit (MQ_INT num)
 {
 }
 
-static void Mark (void * ctx)
-{
+/*
+static void ForkAndSpawnInit (struct MqS *mqctx) {
+  rb_thread_atfork_before_exec();
 }
+*/
 
 static void Free (void * ctx)
 {
@@ -51,7 +51,7 @@ static VALUE new(VALUE class)
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
 
   // create a "ruby" object and link it to the "mqctx" class
-  VALUE self = Data_Wrap_Struct(class, Mark, Free, mqctx);
+  VALUE self = Data_Wrap_Struct(class, NULL, Free, mqctx);
 
   // create ruby command
   mqctx->self = (void*) self;
@@ -61,6 +61,8 @@ static VALUE new(VALUE class)
   mqctx->setup.Parent.fCreate  = MqLinkDefault;      
   mqctx->setup.fProcessExit    = ProcessExit;    
   mqctx->setup.fThreadExit     = ThreadExit;     
+  //mqctx->setup.fSpawnInit      = ForkAndSpawnInit;     
+  //mqctx->setup.fForkInit       = ForkAndSpawnInit;     
 
   // call "initialize"
   rb_obj_call_init(self, 0, NULL);
@@ -73,6 +75,12 @@ static VALUE new(VALUE class)
 static VALUE Exit(VALUE self)
 {
   MqExit(MQCTX);
+  return Qnil;
+}
+
+static VALUE Delete(VALUE self)
+{
+  MqContextFree (MQCTX);
   return Qnil;
 }
 
@@ -95,8 +103,9 @@ void NS(MqS_Init) (void) {
 
   rb_define_singleton_method(cMqS, "new", new, 0);
 
-  rb_define_method(cMqS, "Exit",  Exit,	0);
-  rb_define_method(cMqS, "LogC",  LogC,	3);
+  rb_define_method(cMqS, "Exit",    Exit,   0);
+  rb_define_method(cMqS, "Delete",  Delete, 0);
+  rb_define_method(cMqS, "LogC",    LogC,   3);
 
   NS(MqS_Send_Init)();
   NS(MqS_Read_Init)();

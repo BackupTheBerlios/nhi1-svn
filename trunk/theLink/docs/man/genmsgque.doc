@@ -38,7 +38,11 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \object_example
 
 \subsection	\NS{ContextDelete}			\ContextDelete
+\if GC
+\copydoc MqContextFree
+\else
 \copydoc MqContextDelete
+\endif
 
 \subsection	\NS{Exit}				\Exit
 \copydoc MqExitP

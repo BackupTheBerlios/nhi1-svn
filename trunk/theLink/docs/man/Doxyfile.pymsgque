@@ -17,6 +17,7 @@
 
 ENABLED_SECTIONS    += PYTHON
 ENABLED_SECTIONS    += DAEMON
+ENABLED_SECTIONS    += GC
 EXAMPLE_PATH	    += $(SRCDIR)/example/python
 
 ALIASES		    += "self=pymsgque"
@@ -42,7 +43,7 @@ ctx = MyClass() \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=ctx=MqS()"
-ALIASES		    += "ContextDelete=del ctx"
+ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,str)"
 
