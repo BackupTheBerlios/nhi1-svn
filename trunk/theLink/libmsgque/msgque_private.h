@@ -20,7 +20,7 @@
 # elif defined(MQ_IS_WIN32)
 #  define mqthread_t unsigned long
 # endif
-#endif /* MQ_HAS_THREAD */
+#endif // MQ_HAS_THREAD
 
 #include <sys/types.h>
 

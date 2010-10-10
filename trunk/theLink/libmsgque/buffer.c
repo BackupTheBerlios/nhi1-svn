@@ -158,12 +158,12 @@ MqBufferCreate (
   MQ_SIZE size
 )
 {
-  register struct MqBufferS * const buf = (struct MqBufferS * const) MqSysMalloc (MQ_ERROR_PANIC, sizeof (*buf));
+  register struct MqBufferS * const buf = (struct MqBufferS * const) MqSysMalloc(MQ_ERROR_PANIC, sizeof (*buf));
 
   // +1 to allow strings with len=strlen(str) fit into the buffer with an additional
   // '\0' at the end
   if (size > MQ_BLS_SIZE) {
-    buf->data = (MQ_BIN) MqSysCalloc (context, (size+1), sizeof (*buf->data));
+    buf->data = (MQ_BIN) MqSysCalloc(context, (size+1), sizeof (*buf->data));
     buf->size = size;
     buf->alloc = MQ_ALLOC_DYNAMIC;
   } else {
@@ -1271,6 +1271,13 @@ MqBufferLog (
 #endif
 
 END_C_DECLS
+
+
+
+
+
+
+
 
 
 

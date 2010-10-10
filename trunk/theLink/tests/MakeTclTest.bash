@@ -25,7 +25,7 @@ else
 fi
 
 USAGE() {
-  echo "usage $0 ?-ur? ?-vg|-gdb|-ddd|-lc|-sr|-sp|-st? args..."
+  echo "usage $0 ?-ur? ?-vg|-gdb|-kdbg|-ddd|-lc|-sr|-sp|-st? args..."
   echo "   ur:  use-remote"
   echo "   st:  strace"
   echo "   sp:  valgrind: --gen-suppressions"
@@ -49,6 +49,11 @@ PREFIX=""
 }
 [[ $1 == "-ddd" ]] && {
   PREFIX="ddd --args"
+  TEE=no
+  shift
+}
+[[ $1 == "-kdbg" ]] && {
+  PREFIX="/opt/kde3/bin/kdbg"
   TEE=no
   shift
 }
@@ -77,20 +82,32 @@ PREFIX=""
 CMD=$1; shift
 
 case "$CMD" in
-  *.tcl|*.test)   PREFIX="$PREFIX $TCLSH $CMD";;
-  *.java)	  PREFIX="$PREFIX $JAVA $(basename $CMD .java)";;
-  *.py)		  PREFIX="$PREFIX $PYTHON $CMD";;
-  *.pl)		  PREFIX="$PREFIX $PERL $CMD";;
-  *.rb)		  PREFIX="$PREFIX $RUBY $CMD";;
-  *.exe)	  PREFIX="$PREFIX $MONO $CMD";;
-  *.cc)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;
-  *.c)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;
-  *)		  PREFIX="$PREFIX $CMD";;
+  *.tcl|*.test)   EXE="$TCLSH";;
+  *.java)	  EXE="$JAVA"; CMD="$(basename $CMD .java)";;
+  *.py)		  EXE="$PYTHON";;
+  *.pl)		  EXE="$PERL";;
+  *.rb)		  EXE="$RUBY";;
+  *.exe)	  EXE="$MONO";;
+  *.cc)		  EXE=""; CMD="${CMD%\.*}$EXT";;
+  *.c)		  EXE=""; CMD="${CMD%\.*}$EXT";;
+  *)		  EXE="";;
 esac
 
+#set -x 
+
 if [[ $TEE == "yes" ]] ; then
-  exec $PREFIX "$@" 2>&1 | tee /tmp/$(basename $CMD).log
+  if [[ $PREFIX == *kdbg* ]] ; then
+    T="$CMD $@"
+    exec $PREFIX $EXE -a "$T" 2>&1 | tee /tmp/$(basename $CMD).log
+  else
+    exec $PREFIX $EXE $CMD "$@" 2>&1 | tee /tmp/$(basename $CMD).log
+  fi
 else
-  exec $PREFIX "$@"
+  if [[ $PREFIX == *kdbg* ]] ; then
+    T="$CMD $@"
+    exec $PREFIX $EXE -a "$T"
+  else
+    exec $PREFIX $EXE $CMD "$@"
+  fi
 fi
 

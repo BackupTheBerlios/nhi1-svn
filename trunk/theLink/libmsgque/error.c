@@ -83,7 +83,7 @@ MqPanicVL (
     MqLogVL (MQ_ERROR_IS_POINTER(context) ? context : NULL, prefix, 0, buf->cur.C, ap);
     MqBufferDelete (&buf);
   }
-  SysAbort();
+  MqSysAbort();
 }
 
 void
@@ -480,6 +480,8 @@ MqErrorLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
 
 
 

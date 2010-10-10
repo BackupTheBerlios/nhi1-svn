@@ -160,7 +160,7 @@ pIoDelete (
       // wait for started thread because to exit ithe main process image will
       // exit the thread too, and the thread propably has no chance for
       // proper cleanup -> this is only used in FILTER mode
-      SysWait (MQ_ERROR_IGNORE, &io->id);
+      MqSysWait (MQ_ERROR_IGNORE, &io->id);
 
       // drop event
       pEventDelete (context);
@@ -377,6 +377,21 @@ sIoFillArgvU (
 }
 #endif
 
+static void sIoFreeArgvArray (
+  char *** argvP		    ///< [in,out] a pointer to the argv array
+) {
+  char ** arg = *argvP;
+  
+  if (arg == NULL) return;
+
+  // 1. free the arguments
+  for (;*arg != NULL;arg++)
+    MqSysFree(*arg);
+
+  // 2. free the array itself
+  MqSysFree(*argvP);
+}
+
 enum MqErrorE
 pIoStartServer (
   struct MqIoS * const io,
@@ -548,7 +563,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
 */
 
 	// start the server
-	MqErrorCheck (SysServerThread (context, factory, &alfa1, &alfa2, name, thread_status, idP));
+	MqErrorCheck (MqSysServerThread (context, factory, &alfa1, &alfa2, name, thread_status, idP));
       }
       break;
 #endif /* MQ_HAS_THREAD */
@@ -587,7 +602,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	sIoFillArgvU(io,*sockP,alfa1,"--fork");
 
 	// start the server
-	MqErrorCheck (SysServerFork (context, factory, &alfa1, &alfa2, name, idP));
+	MqErrorCheck (MqSysServerFork (context, factory, &alfa1, &alfa2, name, idP));
 	// cleanup socket of the child
 	MqErrorCheck(SysCloseSocket (context, __func__, MQ_NO, sockP));
       }
@@ -650,10 +665,10 @@ for (i=0; *xarg != NULL; xarg++, i++) {
         }
 */
 
-	MqErrorCheck (SysServerSpawn (context, argV, name, idP));
+	MqErrorCheck (MqSysServerSpawn (context, argV, name, idP));
 
 	// cleanup array's
-	SysFreeArgvArray (&argV);
+	sIoFreeArgvArray(&argV);
 	// cleanup socket of the child
 	MqErrorCheck(SysCloseSocket (context, __func__, MQ_NO, sockP));
       }
@@ -671,7 +686,7 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 	// case: the function GenericServer is listen on a "tcl" or "uds" connection
 	// and start for every incomming connection a new process with "fork". !no!
 	// initialization have to be done because we reuse the current state.
-	MqErrorCheck (SysFork (context, idP));
+	MqErrorCheck (MqSysFork (context, idP));
 	// if pid != 0 -> this is the parent just continue with default "client" code
 	if ((*idP).val.process == 0) {
 	  // pid = 0 -> this is the fork child
@@ -863,6 +878,12 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
+
+
+
+
+
 
 
 

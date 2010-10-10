@@ -567,7 +567,7 @@ SysRecv (
 /*****************************************************************************/
 
 void
-SysFreeAddrInfo(
+MqSysFreeAddrInfo(
     struct addrinfo **res		///< [in,out] the linked list of addrinfo data freed and set pointer to NULL
 ) {
   if (!*res) return;
@@ -701,6 +701,7 @@ error:
 }
 
 END_C_DECLS
+
 
 
 

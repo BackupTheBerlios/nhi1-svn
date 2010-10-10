@@ -82,20 +82,14 @@ static MqVForkF mq_vfork = vfork;
 static MqVForkF mq_vfork = NULL;
 #endif
 
-void
-MqInitSysAPI (MqForkF forkF, MqVForkF vforkF) {
-  mq_fork = forkF;
-  mq_vfork = vforkF;
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                               sys_memory                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_PTR 
-MqSysCalloc (
+static MQ_PTR 
+SysCalloc (
   struct MqS * const context,
   MQ_SIZE nmemb,
   MQ_SIZE size
@@ -107,8 +101,8 @@ MqSysCalloc (
   return ptr;
 }
 
-MQ_PTR 
-MqSysMalloc (
+static MQ_PTR 
+SysMalloc (
   struct MqS * const context,
   MQ_SIZE size
 )
@@ -119,8 +113,8 @@ MqSysMalloc (
   return ptr;
 }
 
-MQ_PTR
-MqSysRealloc (
+static MQ_PTR
+SysRealloc (
   struct MqS * const context,
   MQ_PTR buf,
   MQ_SIZE size
@@ -132,8 +126,8 @@ MqSysRealloc (
   return ptr;
 }
 
-void
-MqSysFreeP (
+static void
+SysFreeP (
   MQ_PTR ptr
 )
 {
@@ -146,7 +140,7 @@ MqSysFreeP (
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE
+static enum MqErrorE
 SysGetEnv (
   struct MqS * const context,
   MQ_CST str,
@@ -159,162 +153,14 @@ SysGetEnv (
   return MQ_OK;
 }
 
-/*
-enum MqErrorE
-SysSetEnv (
-  struct MqS * const context,
-  MQ_CST name,
-  MQ_CST str
-)
-{
-  if (unlikely (setenv (name, str, 1))) {
-    return MqErrorSys(setenv);
-  }
-  return MQ_OK;
-}
-
-enum MqErrorE
-SysUnSetEnv (
-  struct MqS * const context,
-  MQ_CST name
-)
-{
-#ifdef HAVE_UNSETENV_RETURN
-  if (unlikely (unsetenv (name))) {
-    return MqErrorSys(unsetenv);
-  }
-#else
-  unsetenv (name);
-#endif
-  return MQ_OK;
-}
-*/
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                sys_file                                   */
-/*                                                                           */
-/*****************************************************************************/
-
-/*
-enum MqErrorE
-SysOpen (
-  struct MqS * const context,
-  MQ_STR pathname,
-  int flags,
-  mode_t mode,
-  MQ_INT *fh
-)
-{
-  if (unlikely ((*fh = open (pathname, flags, mode)) == -1)) {
-    return MqErrorV (context, __func__, errno,
-                     "can not open file <%s> -> ERR<%s>", pathname, strerror (errno));
-  }
-  return MQ_OK;
-}
-
-enum MqErrorE
-SysStat (
-  struct MqS * const context,
-  const MQ_STR file,
-  struct stat * st
-)
-{
-  if (unlikely (stat (file, st) == -1)) {
-    if (!context || errno == ENOENT) {
-      return MQ_CONTINUE;
-    } else {
-      return MqErrorSys(stat);
-    }
-  }
-  return MQ_OK;
-}
-*/
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                sys_io                                     */
 /*                                                                           */
 /*****************************************************************************/
 
-/*
-enum MqErrorE
-SysRead (
-  struct MqS * const context,
-  MQ_INT hdl,
-  MQ_BIN buf,
-  const MQ_SIZE numBytes
-)
-{
-  register MQ_BIN lbuf = buf;
-  register MQ_SIZE lsize = numBytes;
-  register MQ_SIZE lread = 0;
-
-  while (lread != lsize) {
-    lbuf += lread;
-    lsize -= lread;
-
-    // read data in buf
-    lread = read (hdl, lbuf, lsize);
-
-    // check for errors
-    if (unlikely (lread == -1)) {
-      return MqErrorSys (read);
-    } else if (unlikely (lread == 0)) {
-      return MqErrorDb2 (context,MQ_ERROR_EOF);
-    }
-  }
-
-  return MQ_OK;
-}
-
-enum MqErrorE
-SysWrite (
-  struct MqS * const context,
-  MQ_INT hdl,
-  MQ_BIN buf,
-  const MQ_SIZE numBytes
-)
-{
-  register MQ_BIN  lbuf = buf;
-  register MQ_SIZE lsize = numBytes;
-  register MQ_SIZE lwrite = 0;
-
-  while (lwrite != lsize) {
-
-    lbuf += lwrite;
-    lsize -= lwrite;
-
-    // write data from buf
-    lwrite = write (hdl, lbuf, lsize);
-
-    // check for errors
-    if (unlikely (lwrite == -1)) {
-      return MqErrorSys (write);
-    }
-  }
-
-  return MQ_OK;
-}
-
-enum MqErrorE
-SysClose (
-  struct MqS * const context,
-  MQ_INT *hdl
-)
-{
-  if (*hdl == -1)
-    return MQ_OK;
-	if (unlikely (close (*hdl) == -1)) {
-		return MqErrorV (context, __func__, errno, "can not close fileHdl ERR<%s>", strerror (errno));
-  }
-  *hdl = -1;
-  return MQ_OK;
-}
-*/
-
 #if defined(MQ_IS_POSIX)
-enum MqErrorE
+static enum MqErrorE
 SysUnlink (
   struct MqS * const context,
   const MQ_STR fileName
@@ -346,7 +192,7 @@ SysUnlink (
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
  
-int gettimeofday(
+static int gettimeofday(
     struct mq_timeval *tv, 
     struct mq_timezone *tz
 )
@@ -386,8 +232,8 @@ int gettimeofday(
 
 #endif /* ! _MSC_VER */
 
-enum MqErrorE
-MqSysGetTimeOfDay (
+static enum MqErrorE
+SysGetTimeOfDay (
   struct MqS * const context,
   struct mq_timeval * tv,
   struct mq_timezone * tz
@@ -405,7 +251,7 @@ MqSysGetTimeOfDay (
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE
+static enum MqErrorE
 SysWait (
   struct MqS * const context,
   const struct MqIdS *idP
@@ -450,7 +296,7 @@ SysWait (
 }
 
 #if defined(HAVE_FORK)
-enum MqErrorE
+static enum MqErrorE
 SysServerFork (
   struct MqS * const context,  ///< [ini,out] error handler
   struct MqFactoryS   factory,	      ///< [in,out] server configuration (memroy will be freed)
@@ -466,7 +312,7 @@ SysServerFork (
 
   // this is used for a filter pipeline like "| atool split .. @ cut ... @ join ..."
   // argv[0] is set by the tool (cut or join) and need !not! be set by name
-  MqErrorCheck(SysFork(context,idP));
+  MqErrorCheck(MqSysFork(context,idP));
   if ((*idP).val.process == 0) {
     struct MqS * newctx;
     // prevent the "client-context" from deleting in the new process
@@ -497,7 +343,7 @@ error1:
   MqBufferLDelete (argvP);
   MqBufferLDelete (alfaP);
   // do not create a "defunc" process
-  MqErrorCheck (SysIgnorSIGCHLD(context));
+  MqErrorCheck (MqSysIgnorSIGCHLD(context));
   return MQ_OK;
 
 error:
@@ -553,10 +399,10 @@ error:
 }
 
 /// \brief start a new thread
-enum MqErrorE
+static enum MqErrorE
 SysServerThread (
   struct MqS * const context,  ///< [in,out] error handler
-  struct MqFactoryS factory,	      ///< [in,out] server configuration (memroy will be freed)
+  struct MqFactoryS factory,	      ///< [in,out] server configuration (memory will be freed)
   struct MqBufferLS ** argvP,	      ///< [in] command-line arguments befor #MQ_ALFA, owned by SysServerThread
   struct MqBufferLS ** alfaP,	      ///< [in] command-line arguments after #MQ_ALFA, owned by SysServerThread
   MQ_CST  name,			      ///< [in] the name of the process
@@ -632,7 +478,7 @@ error:
 #endif   /* MQ_HAS_THREAD */
 
 /// \brief spawn a new process
-enum MqErrorE
+static enum MqErrorE
 SysServerSpawn (
   struct MqS * const context,  ///< [ini,out] error handler
   char * * argv,		  ///< [in] command-line arguments
@@ -704,8 +550,8 @@ error:
   return MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
 }
 
-enum MqErrorE
-MqSysUSleep (
+static enum MqErrorE
+SysUSleep (
   struct MqS * const context,
   unsigned int const usec
 )
@@ -722,8 +568,8 @@ MqSysUSleep (
   return MQ_OK;
 }
 
-enum MqErrorE
-MqSysSleep (
+static enum MqErrorE
+SysSleep (
   struct MqS * const context,
   unsigned int const sec
 )
@@ -741,8 +587,8 @@ MqSysSleep (
 }
 
 #if defined(_MSC_VER)
-MQ_STR
-MqSysBasename (
+static MQ_STR
+SysBasename (
   MQ_CST const in,
   MQ_BOL includeExtension
 )
@@ -759,8 +605,8 @@ MqSysBasename (
     return fname;
 }
 #else
-MQ_STR
-MqSysBasename (
+static MQ_STR
+SysBasename (
   MQ_CST const in,
   MQ_BOL includeExtension
 )
@@ -786,7 +632,7 @@ MqSysBasename (
 #endif
 
 #ifdef HAVE_FORK
-enum MqErrorE
+static enum MqErrorE
 SysFork (
   struct MqS * const context,
   struct MqIdS * idP
@@ -801,7 +647,7 @@ SysFork (
 #endif
 
 #ifdef MQ_IS_POSIX
-enum MqErrorE
+static enum MqErrorE
 SysIgnorSIGCHLD (
   struct MqS * const context
 )
@@ -812,7 +658,7 @@ SysIgnorSIGCHLD (
   return MQ_OK;
 }
 
-enum MqErrorE
+static enum MqErrorE
 SysAllowSIGCHLD (
   struct MqS * const context
 )
@@ -824,9 +670,9 @@ SysAllowSIGCHLD (
 }
 #endif /* MQ_IS_POSIX */
 
-#if ! defined(SysDaemonize)
+#if defined(MQ_IS_POSIX)
 /// \brief daemonize the current process and save the resulting pid into \e pidfile
-enum MqErrorE
+static enum MqErrorE
 SysDaemonize (
   struct MqS * const context,	///< [in,out] error handler
   MQ_CST pidfile		///< [in] file to save the \e pid
@@ -882,40 +728,10 @@ error:
   return MqErrorStack(context);
 }
 
-#endif /* ! defined(SysDaemonize) */
-
-/// \brief delete file from filesystem (used to delete the pidfile)
-enum MqErrorE
-SysUnLink (
-  struct MqS * const context,    ///< [in,out] error handler
-  const MQ_STR filename		    ///< [in] filename to unlink
-) {
-  if (mq_unlink (filename) == -1) {
-    return MqErrorV (context, __func__, errno,
-      "can not unlink file <%s> -> ERR<%s>", filename, strerror (errno));
-  }
-  return MQ_OK;
-}
-
-/// \brief deep free of an argv array
-void SysFreeArgvArray (
-  char *** argvP		    ///< [in,out] a pointer to the argv array
-) {
-  char ** arg = *argvP;
-  
-  if (arg == NULL) return;
-
-  // 1. free the arguments
-  for (;*arg != NULL;arg++)
-    free(*arg);
-
-  // 2. free the array itself
-  free (*argvP);
-  *argvP = NULL;
-}
+#endif /* ! defined(MQ_IS_POSIX) */
 
 /// \brief thread save exit
-void SysExit (
+static void SysExit (
   int isThread,			    ///< [in] is this a thread
   int num			    ///< [in] exit number
 ) {
@@ -933,12 +749,45 @@ void SysExit (
 }
 
 /// \brief thread save abort
-void SysAbort (
-) {
+static void SysAbort (void) {
   abort();
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                                MQ-LAL                                     */
+/*                    (Language Abstraction Layer)                           */
+/*                                                                           */
+/*****************************************************************************/
+
+struct MqLalS MqLal = {
+  SysCalloc,
+  SysMalloc,
+  SysRealloc,
+  SysFreeP,
+  SysServerSpawn,
+#if defined(MQ_HAS_THREAD)
+  SysServerThread,
+#endif
+#if defined(HAVE_FORK)
+  SysServerFork,
+  SysFork,
+#endif
+  SysGetTimeOfDay,
+  SysWait,
+  SysUSleep,
+  SysSleep,
+  SysBasename,
+#if defined(MQ_IS_POSIX)
+  SysIgnorSIGCHLD,
+  SysAllowSIGCHLD,
+  SysDaemonize,
+  SysUnlink,
+#endif
+  SysExit,
+  SysAbort,
+  SysGetEnv
+};
+
 END_C_DECLS
-
-
 

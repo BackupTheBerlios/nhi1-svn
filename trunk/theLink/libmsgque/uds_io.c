@@ -127,7 +127,7 @@ UdsServer (
   struct MqS * const context = MQ_CONTEXT_S;
 
   // delete the UDS file (only if it exists)
-  MqErrorCheck (SysUnlink(context,uds->config->file->cur.C));
+  MqErrorCheck (MqSysUnlink(context,uds->config->file->cur.C));
 
   MqDLogV(context, 2, "create UNIX uds socket file<%s>\n", uds->config->file->cur.C);
   MqErrorCheck (GenericServer (uds->generic, (struct sockaddr *) &uds->sockaddr, 
@@ -136,7 +136,7 @@ UdsServer (
   // if it is the !only! server context then cleanup the uds socket file 
   if (context->config.startAs == MQ_START_DEFAULT) {
     MqDLogV(context, 2, "delete UNIX uds socket file<%s>\n", uds->config->file->cur.C);
-    MqErrorCheck (SysUnlink (context, uds->config->file->cur.C));
+    MqErrorCheck (MqSysUnlink (context, uds->config->file->cur.C));
   }
 
 error:
@@ -181,6 +181,9 @@ error:
 END_C_DECLS
 
 #endif
+
+
+
 
 
 

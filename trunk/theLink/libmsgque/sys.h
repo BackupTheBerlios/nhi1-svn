@@ -35,20 +35,6 @@ BEGIN_C_DECLS
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                 sys_init                                  */
-/*                                                                           */
-/*****************************************************************************/
-
-/*
-typedef void (
-  MQ_DECL *AtExitP
-) (
-  void
-);
-*/
-
-/*****************************************************************************/
-/*                                                                           */
 /*                                sys_env                                    */
 /*                                                                           */
 /*****************************************************************************/
@@ -65,43 +51,7 @@ typedef void (
  * \param ret point to the resulting buffer space used to store the data of the environment variable
  * \return the error ststus
  */
-enum MqErrorE SysGetEnv (
-  struct MqS * const context,
-  MQ_CST name,
-  MQ_STR *ret
-);
-
-enum MqErrorE SysSetEnv (
-  struct MqS * const context,
-  MQ_CST name,
-  MQ_CST str
-);
-
-enum MqErrorE SysUnSetEnv (
-  struct MqS * const context,
-  MQ_CST name
-);
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                sys_file                                   */
-/*****************************************************************************/
-
-/*
-enum MqErrorE SysOpen (
-  struct MqS * const context,
-  MQ_STR pathname,
-  int flags,
-  mode_t mode,
-  MQ_INT *fh
-);
-
-enum MqErrorE SysStat (
-  struct MqS * const context,
-  const MQ_STR file,
-  struct stat *st
-);
-*/
+#define MqSysGetEnv(context,name,ret) (*MqLal.SysGetEnv)(context,name,ret)
 
 /*****************************************************************************/
 /*                                                                           */
@@ -109,33 +59,8 @@ enum MqErrorE SysStat (
 /*                                                                           */
 /*****************************************************************************/
 
-/*
-enum MqErrorE SysRead (
-  struct MqS * const context,
-  MQ_INT hdl,
-  MQ_BIN buf,
-  const MQ_SIZE numBytes
-);
-
-enum MqErrorE SysWrite (
-  struct MqS * const context,
-  MQ_INT hdl,
-  MQ_BIN buf,
-  const MQ_SIZE numBytes
-);
-
-enum MqErrorE SysClose (
-  struct MqS * const context,
-  MQ_INT *hdl
-);
-
-*/
-
 #if defined(MQ_IS_POSIX)
-enum MqErrorE SysUnlink (
-  struct MqS * const context,
-  const MQ_STR fileName
-);
+#define MqSysUnlink(context,fileName) (*MqLal.SysUnlink)(context,fileName)
 #endif
 
 /*****************************************************************************/
@@ -144,97 +69,46 @@ enum MqErrorE SysUnlink (
 /*                                                                           */
 /*****************************************************************************/
 
-/*
-enum MqErrorE SysAtExit (
-  struct MqS * const context,
-  AtExitP proc
-);
-*/
+#define MqSysExit(isThread,num) (*MqLal.SysExit)(isThread,num)
 
-void SysExit (
-  int isThread,
-  int num
-) __attribute__ ((noreturn));
+#define MqSysAbort() (*MqLal.SysAbort)()
 
-void SysAbort (
-  void
-) __attribute__ ((noreturn));
-
-enum MqErrorE SysWait (struct MqS * const, const struct MqIdS*);
+#define MqSysWait(context,idP) (*MqLal.SysWait)(context,idP)
 
 #if defined(HAVE_FORK)
-enum MqErrorE SysServerFork (
-  struct MqS * const,
-  struct MqFactoryS,
-  struct MqBufferLS **,
-  struct MqBufferLS **,
-  MQ_CST,
-  struct MqIdS *
-);
+# define MqSysServerFork(context,factory,argvP,alfaP,name,idP) \
+  (*MqLal.SysServerFork)(context,factory,argvP,alfaP,name,idP)
 #endif
 
 #if defined(MQ_HAS_THREAD)
-enum MqErrorE SysServerThread (
-  struct MqS * const,
-  struct MqFactoryS,
-  struct MqBufferLS **,
-  struct MqBufferLS **,
-  MQ_CST,
-  int,
-  struct MqIdS *
-);
+# define MqSysServerThread(context,factory,argvP,alfaP,name,state,idP) \
+  (*MqLal.SysServerThread)(context,factory,argvP,alfaP,name,state,idP)
 #endif
 
-enum MqErrorE SysServerSpawn (
-  struct MqS * const context,
-  char * * argv,
-  MQ_CST name,
-  struct MqIdS * idP
-);
+#define MqSysServerSpawn(context,argv,name,idP) \
+  (*MqLal.SysServerSpawn)(context,argv,name,idP)
 
 #ifdef HAVE_FORK
-enum MqErrorE SysFork (
-  struct MqS * const context,
-  struct MqIdS * idP
-);
+#define MqSysFork(context,idP) (*MqLal.SysFork)(context,idP)
 #endif
 
 #ifdef MQ_IS_POSIX
-enum MqErrorE
-SysIgnorSIGCHLD (
-  struct MqS * const context
-);
-
-enum MqErrorE
-SysAllowSIGCHLD (
-  struct MqS * const context
-);
-
-enum MqErrorE
-SysDaemonize (
-  struct MqS * const context,
-  MQ_CST pidfile
-);
+# define MqSysIgnorSIGCHLD(context) (*MqLal.SysIgnorSIGCHLD)(context)
+# define MqSysAllowSIGCHLD(context) (*MqLal.SysAllowSIGCHLD)(context)
+# define MqSysDaemonize(context,pidfile) (*MqLal.SysDaemonize)(context,pidfile)
 #else
-#define SysIgnorSIGCHLD(error) MQ_OK
-#define SysAllowSIGCHLD(error) MQ_OK
-#define SysDaemonize(error,pidfile) MQ_OK
-#endif /* MQ_IS_POSIX */
-
-enum MqErrorE
-SysUnLink (
-  struct MqS * const context,
-  const MQ_STR filename
-);
-
-void SysFreeArgvArray (
-  char *** argvP
-);
+# define MqSysIgnorSIGCHLD(error) MQ_OK
+# define MqSysAllowSIGCHLD(error) MQ_OK
+# define MqSysDaemonize(error,pidfile) MQ_OK
+#endif
 
 /** \} */
 
 END_C_DECLS
 
 #endif /* SYS_H */
+
+
+
 
 

@@ -158,8 +158,8 @@ TcpDelete (
 
   pGenericDelete (&tcp->generiC);
 
-  SysFreeAddrInfo(&tcp->remoteaddr);
-  SysFreeAddrInfo(&tcp->localaddr);
+  MqSysFreeAddrInfo(&tcp->remoteaddr);
+  MqSysFreeAddrInfo(&tcp->localaddr);
 
   MqSysFree (*tcpP);
 }
@@ -239,6 +239,9 @@ TcpLogAddr (
 #endif
 
 END_C_DECLS
+
+
+
 
 
 

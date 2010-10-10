@@ -299,7 +299,7 @@ MqExitP (
 {
   if (context == NULL) {
     // exit on empty context
-    SysExit (0,0);
+    MqSysExit (0,0);
   } else if (context->bits.onExit == MQ_YES) {
     // do not allow !! double calling of MqExit
     MqPanicV(MQ_ERROR_PANIC, __func__, MqMessageNum(MQ_ERROR_EXIT),
@@ -348,7 +348,7 @@ MqExitP (
     if (exitF) (*exitF) (num);
 
     // 5. finally call libmsgque exit function
-    SysExit(isThread, num);
+    MqSysExit(isThread, num);
   }
 }
 
@@ -424,6 +424,9 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
+
+
 
 
 

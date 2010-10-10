@@ -233,15 +233,16 @@ BEGIN_C_DECLS
 /// \brief MQ_ALFA the command-line separator as string
 #define MQ_ALFA_STR "@"
 
+struct MqS;
 struct MqTransS;
 struct MqErrorS;
 struct MqBufferLS;
 struct MqBufferS;
 union  MqBufferU;
-struct MqS;
 struct MqConfigS;
 struct MqEventS;
 struct MqFactoryS;
+struct MqIdS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1337,10 +1338,6 @@ MQ_DECL MqConfigGetSelf (
 /// \endif
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 
-/// \brief helper to set the application specific \c fork functions
-/// \attention by default the OS specific functions are used
-MQ_EXTERN void MQ_DECL MqInitSysAPI (MqForkF forkF, MqVForkF vforkF);
-
 /// \} Mq_Config_C_API
 
 /* ####################################################################### */
@@ -1437,6 +1434,7 @@ MQ_EXTERN void MQ_DECL MqContextFree (
 /// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the configuration data. 
 ///                  This template is used for a \e child to get the configuration data from the \e parent. 
 ///                  (default: \e NULL, create an initial context)
+/// \param[in] lal  (C-API) Language-Abstraction-Layer
 /// \return the new \e context, no error return because this function \e panic on \e out-of-memory-error
 MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
   MQ_SIZE size,
@@ -2081,7 +2079,7 @@ union MqBufferU {
 /// \brief allocation style used for the data-segment in #MqBufferS.
 enum MqAllocE {
   MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
-  MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. MqSysMalloc, ...)
+  MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. SysMalloc, ...)
 };
 
 /// \brief initial size of the #MqBufferS::bls object
@@ -4008,8 +4006,69 @@ static mq_inline int MqSlaveIsI (
 
 /// \defgroup Mq_System_C_API Mq_System_C_API
 /// \{
-/// \brief access to native system functions with error handling
+/// \brief L)anguage A)bstraction L)ayer
+/// \details access to native system functions with #MqS error handling
 ///
+
+/// \brief Interface between #MqS and the Operating-System
+/// \details
+struct MqLalS {
+  /// \copydoc MqSysCalloc
+  MQ_PTR (*SysCalloc) (struct MqS * const, MQ_SIZE, MQ_SIZE);
+  /// \copydoc MqSysMalloc
+  MQ_PTR (*SysMalloc) (struct MqS * const, MQ_SIZE);
+  /// \copydoc MqSysRealloc
+  MQ_PTR (*SysRealloc) (struct MqS * const, MQ_PTR, MQ_SIZE);
+  /// \copydoc MqSysFree
+  void (*SysFreeP) (MQ_PTR);
+  /// SysServerSpawn
+  enum MqErrorE (*SysServerSpawn) (struct MqS * const, char **, MQ_CST, struct MqIdS *);
+#if defined(MQ_HAS_THREAD)
+  /// SysServerThread
+  enum MqErrorE (*SysServerThread) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **, 
+    struct MqBufferLS **, MQ_CST, int, struct MqIdS *);
+#endif
+#if defined(HAVE_FORK)
+  /// SysServerFork
+  enum MqErrorE (*SysServerFork) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **,
+    struct MqBufferLS **, MQ_CST, struct MqIdS *);
+  /// SysFork
+  enum MqErrorE (*SysFork) (struct MqS * const, struct MqIdS *);
+  /// SysUnlink
+#endif
+  enum MqErrorE (*SysUnlink) (struct MqS * const, const MQ_STR);
+  /// \copydoc MqSysGetTimeOfDay
+  enum MqErrorE (*SysGetTimeOfDay) (struct MqS * const, struct mq_timeval *, 
+    struct mq_timezone *);
+  /// SysWait
+  enum MqErrorE (*SysWait) (struct MqS * const, const struct MqIdS *);
+  /// \copydoc MqSysUSleep
+  enum MqErrorE (*SysUSleep) (struct MqS * const, unsigned int const);
+  /// \copydoc MqSysSleep
+  enum MqErrorE (*SysSleep) (struct MqS * const, unsigned int const);
+  /// \copydoc MqSysBasename
+  MQ_STR (*SysBasename) (MQ_CST const, MQ_BOL);
+#if defined(MQ_IS_POSIX)
+  /// SysIgnorSIGCHLD
+  enum MqErrorE (*SysIgnorSIGCHLD) (struct MqS * const);
+  /// SysAllowSIGCHLD
+  enum MqErrorE (*SysAllowSIGCHLD) (struct MqS * const);
+  /// SysDaemonize
+  enum MqErrorE (*SysDaemonize) (struct MqS * const, MQ_CST);
+  /// SysUnLink
+  enum MqErrorE (*SysUnLink) (struct MqS * const, const MQ_STR);
+#endif
+  /// SysExit
+  void (*SysExit) (int, int) __attribute__ ((noreturn));
+  /// SysAbort
+  void (*SysAbort) (void) __attribute__ ((noreturn));
+  /// SysGetEnv
+  enum MqErrorE (*SysGetEnv) (struct MqS * const, MQ_CST, MQ_STR*);
+};
+
+//#if ! defined(MQ_IN_SYS_C)
+extern struct MqLalS MqLal;
+//#endif
 
 /// \brief 'calloc' system call with error handling feature
 ///
@@ -4017,43 +4076,27 @@ static mq_inline int MqSlaveIsI (
 /// \param nmemb the number of members in the memory block
 /// \param size the size of the new memory block
 /// \return a pointer to the new memory block initialized with '0'
-MQ_EXTERN MQ_PTR MQ_DECL MqSysCalloc (
-  struct MqS * const context,
-  MQ_SIZE nmemb,
-  MQ_SIZE size
-);
+#define MqSysCalloc(context,nmemb,size) (*MqLal.SysCalloc)(context,nmemb,size)
 
 /// \brief 'malloc' system call with error handling feature
 /// \context
 /// \param size the size of the new memory block
 /// \return a pointer to the new memory block
-MQ_EXTERN MQ_PTR MQ_DECL MqSysMalloc (
-  struct MqS * const context,
-  MQ_SIZE size
-);
+#define MqSysMalloc(context,size) (*MqLal.SysMalloc)(context,size)
 
 /// \brief 'realloc' system call with error handling feature
 /// \context
 /// \param buf the \b old memory block to extend
 /// \param size the size of the new memory block
 /// \return a pointer to the new memory block
-MQ_EXTERN MQ_PTR MQ_DECL MqSysRealloc (
-  struct MqS * const context,
-  MQ_PTR buf,
-  MQ_SIZE size
-);
-
-/// \brief 'free' system call wrapper of libmsgque
-MQ_EXTERN void MQ_DECL MqSysFreeP (
-  MQ_PTR ptr
-);
+#define MqSysRealloc(context, buf, size) (*MqLal.SysRealloc) (context, buf, size)
 
 /// \brief 'free' system call macro
 /// \retval tgt the memory block to delete and set to NULL
 #define MqSysFree(tgt) \
     do { \
 	if ( likely((tgt) != (NULL)) ) { \
-	    MqSysFreeP((MQ_PTR)tgt); \
+	    (*MqLal.SysFreeP)((MQ_PTR)tgt); \
 	    (tgt) = (NULL); \
 	} \
     } while (0)
@@ -4062,19 +4105,13 @@ MQ_EXTERN void MQ_DECL MqSysFreeP (
 /// \context
 /// \param usec the micro (10^-6) seconds to sleep
 /// \retMqErrorE
-MQ_EXTERN enum MqErrorE MQ_DECL MqSysUSleep (
-  struct MqS * const context,
-  unsigned int const usec
-);
+#define MqSysUSleep(context, usec) (*MqLal.SysUSleep)(context, usec)
 
 /// \brief 'sleep' system call with error handling feature
 /// \context
 /// \param sec the seconds to sleep
 /// \retMqErrorE
-MQ_EXTERN enum MqErrorE MQ_DECL MqSysSleep (
-  struct MqS * const context,
-  unsigned int const sec
-);
+#define MqSysSleep(context, sec) (*MqLal.SysSleep)(context, sec)
 
 /// \brief 'basename' system call with error handling feature
 ///
@@ -4082,23 +4119,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysSleep (
 /// \param[in] includeExtension add extension like '.exe' to the filename (#MQ_YES or #MQ_NO)
 /// \return the basename of \e in (it is save to modify the basename for additional needs)
 /// \attention the memory of the basename string returned is owned by the caller and have to be freed
-MQ_EXTERN MQ_STR MQ_DECL MqSysBasename (
-  MQ_CST const in, 
-  MQ_BOL includeExtension
-);
+#define MqSysBasename(in, includeExtension) (*MqLal.SysBasename)(in, includeExtension)
 
 /// \brief 'gettimeofday' system call with error handling feature
 /// \context
 /// \retval tv the timeval object
 /// \retval tz the timezone object
 /// \retMqErrorE
-MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
-  struct MqS * const context,
-  struct mq_timeval * tv,
-  struct mq_timezone * tz
-);
+#define MqSysGetTimeOfDay(context, tv, tz) (*MqLal.SysGetTimeOfDay)(context, tv, tz)
 
-  
 /// \brief duplicate a string, the argument \c NULL is allowed
 /// \param[in] v the string to duplicate
 /// \return the new string or \c NULL
@@ -4107,6 +4136,8 @@ static mq_inline MQ_STR mq_strdup_save (
 ) {
   return v != NULL ? mq_strdup(v) : NULL;
 }
+
+/// \}    Mq-LAL-API
 
 /// \} Mq_System_C_API
 
@@ -4362,6 +4393,4 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
 

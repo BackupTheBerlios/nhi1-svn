@@ -44,7 +44,7 @@ static VALUE ServiceCreate (VALUE self, VALUE token, VALUE callback) {
   MQ_PTR procData;
   CheckType(callback, rb_cMethod, "usage ServiceCreate token Method-Type-Arg");
   NS(ProcInit) (self, callback, &procCall, &procData);
-  ErrorMqToRubyWithCheck(MqServiceCreate(mqctx, mq_strdup(VAL2CST(token)), 
+  ErrorMqToRubyWithCheck(MqServiceCreate(mqctx, VAL2CST(token), 
     procCall, procData, NS(ProcFree))
   );
   return Qnil;

@@ -80,7 +80,7 @@ sLogTime (
   struct mq_timeval tv;
   time_t time;
 
-  MqSysGetTimeOfDay (NULL, &tv, NULL);
+  MqSysGetTimeOfDay(NULL, &tv, NULL);
   time = tv.tv_sec;
   t = localtime (&time);
   sprintf (TIME, "[%4d-%02d-%02d:%02d-%02d-%02d]", t->tm_year + 1900,
@@ -492,6 +492,8 @@ pLogAscii (
 }
 
 END_C_DECLS
+
+
 
 
 

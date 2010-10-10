@@ -79,13 +79,11 @@ static VALUE SendEND (VALUE self, VALUE token) {
 }
 
 static VALUE SendEND_AND_WAIT (int argc, VALUE *argv, VALUE self) {
-  MQ_CST token;
   MQ_INT timeout = MQ_TIMEOUT_USER;
   SETUP_mqctx
   if (argc < 1 || argc > 2) rb_raise(rb_eArgError,"usage: SendEND_AND_WAIT token ?timeout?");
-  token = VAL2CST(argv[0]);
   if (argc == 2) timeout = VAL2INT(argv[1]);
-  ErrorMqToRubyWithCheck(MqSendEND_AND_WAIT(mqctx, token, timeout));
+  ErrorMqToRubyWithCheck(MqSendEND_AND_WAIT(mqctx, VAL2CST(argv[0]), timeout));
   return Qnil;
 }
 

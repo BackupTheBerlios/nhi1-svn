@@ -184,7 +184,7 @@ enum MqErrorE SysRecv (
 /*****************************************************************************/
 
 void
-SysFreeAddrInfo(
+MqSysFreeAddrInfo(
     struct addrinfo **res
 );
 
@@ -208,5 +208,6 @@ SysGetTcpInfo(
 END_C_DECLS
 
 #endif /* SYS_COM_H */
+
 
 
