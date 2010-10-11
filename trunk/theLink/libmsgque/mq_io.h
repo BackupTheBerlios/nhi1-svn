@@ -33,7 +33,7 @@ struct MqIoS {
   } iocom;                          ///< link to 'iocom' object
   fd_set fdset;                     ///< select need this
   MQ_SOCK *sockP;                   ///< pointer to the current socket
-  struct MqIdS id;                  ///< (pid_t/mqthread_t) id of the server in "pipe" mode
+  struct MqIdS id;		    ///< (pid_t/mqthread_t) id of the server in "pipe" mode
   struct MqEventS * event;          ///< link to the according Event structure
   struct MqIoConfigS * config;      ///< "Io" part of the global configuration data
 };

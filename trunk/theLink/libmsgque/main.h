@@ -92,7 +92,8 @@ enum MqMessageNumE {
     /* 34 */ MQ_ERROR_LINK_CREATE,
     /* 35 */ MQ_ERROR_CONNECTED,
     /* 36 */ MQ_ERROR_ITEM_IN_PACKAGE,
-    /* 37 */ MQ_MESSAGE_END,
+    /* 37 */ MQ_ERROR_NOT_SUPPORTED,
+    /* 38 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -173,6 +174,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the '%s' object link is '%s' connected",
     /* MQ_ERROR_ITEM_IN_PACKAGE */
 	"the '%s' item have to be the '%s' item in the data package",
+    /* MQ_ERROR_NOT_SUPPORTED */
+	"the feature is not supported in the current setup",
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };

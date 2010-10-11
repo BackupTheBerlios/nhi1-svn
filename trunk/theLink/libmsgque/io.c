@@ -688,7 +688,7 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 	// initialization have to be done because we reuse the current state.
 	MqErrorCheck (MqSysFork (context, idP));
 	// if pid != 0 -> this is the parent just continue with default "client" code
-	if ((*idP).val.process == 0) {
+	if ((*idP).val == 0UL) {
 	  // pid = 0 -> this is the fork child
 	  context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_FORK);
 	  // we don't need to cleanup argv1/2 because the INLINE_FORK is done
@@ -744,19 +744,10 @@ pIoLogId (
   MQ_INT size,		    ///< [in] size of the input-buffer
   struct MqIdS id	    ///< [in] value to print
 ) {
-  switch (id.type) {
-    case MQ_ID_PROCESS:
-      mq_snprintf(buf,size,"%i",id.val.process);
-      break;
-#if defined(MQ_HAS_THREAD)
-    case MQ_ID_THREAD:
-      mq_snprintf(buf,size,"%lu",(long unsigned int)id.val.thread);
-      break;
-#endif
-    case MQ_ID_UNUSED:
-      strcpy(buf,"unknown");
-      break;
-  }
+  if (id.type == MQ_ID_UNUSED)
+    strcpy(buf,"unknown");
+  else
+    mq_snprintf(buf,size,"%lu",id.val);
   return buf;
 }
 
@@ -878,12 +869,4 @@ pIoLog (
 #endif
 
 END_C_DECLS
-
-
-
-
-
-
-
-
 

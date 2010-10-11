@@ -185,10 +185,7 @@ GenericServer (
   //   than 0 -> loop
   // for a --fork/--thread/--spawn child the 'id.val' will be '0' -> continue
   } while (
-	(id.type == MQ_ID_PROCESS && id.val.process != 0) 
-#if defined(MQ_HAS_THREAD)
-    ||	(id.type == MQ_ID_THREAD  && id.val.thread  != 0UL)	   
-#endif
+    id.type != MQ_ID_UNUSED && id.val != 0UL
   );
 
   // fork child (pid=0) close parent socket

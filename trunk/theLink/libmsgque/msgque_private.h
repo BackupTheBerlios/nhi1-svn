@@ -16,13 +16,14 @@
 #if defined(MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD)
 #  include <pthread.h>
-#  define mqthread_t pthread_t
+typedef pthread_t mqthread_t;
 # elif defined(MQ_IS_WIN32)
-#  define mqthread_t unsigned long
+typedef unsigned long mqthread_t;
 # endif
 #endif // MQ_HAS_THREAD
 
 #include <sys/types.h>
+typedef pid_t mqpid_t;
 
 BEGIN_C_DECLS
 
@@ -55,29 +56,6 @@ struct MqTransItemS;
 /// \brief separator between Message-Queue-Package-Data
 #define BUFFER_CHAR         '\0'
 #define BUFFER_CHAR_S       "\0"
-
-enum MqIdSE {
-  MQ_ID_UNUSED  = 0,
-  MQ_ID_PROCESS = 1,
-#if defined(MQ_HAS_THREAD)
-  MQ_ID_THREAD  = 2
-#endif
-};
-
-union MqIdSU {
-  pid_t	process;	
-#if defined(MQ_HAS_THREAD)
-  mqthread_t	thread;
-#endif
-};
-
-/// \brief data type for process/thread identification
-///  
-/// The values of \e pid_t and \e mqthread_t have to fit into this storage
-struct MqIdS {
-  enum MqIdSE type;
-  union MqIdSU val;
-};
 
 /// \brief 'select' type for reading or writing
 enum MqIoSelectE {

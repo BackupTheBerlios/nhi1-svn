@@ -242,7 +242,6 @@ union  MqBufferU;
 struct MqConfigS;
 struct MqEventS;
 struct MqFactoryS;
-struct MqIdS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1475,7 +1474,7 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 MQ_EXTERN void MQ_DECL MqExitP (
   MQ_CST prefix,
   struct MqS * ctx
-) __attribute__ ((noreturn));
+);
 
 /// \brief wrapper to add calling function to #MqExitP
 #define MqExit(ctx) MqExitP(__func__, ctx)
@@ -2972,7 +2971,7 @@ MQ_EXTERN void MQ_DECL MqPanicVL (
   MQ_INT const errnum,
   MQ_CST const fmt,
   va_list var_list
-) __attribute__ ((noreturn));
+);
 
 /// \brief do a \b panic with vararg arguments
 /// \context
@@ -2986,7 +2985,7 @@ MQ_EXTERN void MQ_DECL MqPanicV (
   MQ_INT const errnum,
   MQ_CST const fmt,
   ...
-) __attribute__ ((noreturn, format (printf, 4, 5)));
+) __attribute__ ((format (printf, 4, 5)));
 
 /// \brief do a \b panic with \e string as argument
 /// \context
@@ -4010,6 +4009,19 @@ static mq_inline int MqSlaveIsI (
 /// \details access to native system functions with #MqS error handling
 ///
 
+/// \brief data type for process/thread identification
+///  
+/// This struct is used as storage for the process and the thread identification handle.
+struct MqIdS {
+  /// signal type of \e val data
+  enum MqIdSE {
+    MQ_ID_UNUSED  = 0,	      ///< empty struct
+    MQ_ID_PROCESS = 1,	      ///< \e val has a process handle
+    MQ_ID_THREAD  = 2	      ///< \e val has a thread handle
+  } type;
+  unsigned long	val;	      ///< process or thread handle
+};
+
 /// \brief Interface between #MqS and the Operating-System
 /// \details
 struct MqLalS {
@@ -4023,23 +4035,16 @@ struct MqLalS {
   void (*SysFreeP) (MQ_PTR);
   /// SysServerSpawn
   enum MqErrorE (*SysServerSpawn) (struct MqS * const, char **, MQ_CST, struct MqIdS *);
-#if defined(MQ_HAS_THREAD)
   /// SysServerThread
   enum MqErrorE (*SysServerThread) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **, 
     struct MqBufferLS **, MQ_CST, int, struct MqIdS *);
-#endif
-#if defined(HAVE_FORK)
   /// SysServerFork
   enum MqErrorE (*SysServerFork) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **,
     struct MqBufferLS **, MQ_CST, struct MqIdS *);
   /// SysFork
   enum MqErrorE (*SysFork) (struct MqS * const, struct MqIdS *);
-  /// SysUnlink
-#endif
-  enum MqErrorE (*SysUnlink) (struct MqS * const, const MQ_STR);
   /// \copydoc MqSysGetTimeOfDay
-  enum MqErrorE (*SysGetTimeOfDay) (struct MqS * const, struct mq_timeval *, 
-    struct mq_timezone *);
+  enum MqErrorE (*SysGetTimeOfDay) (struct MqS * const, struct mq_timeval *, struct mq_timezone *);
   /// SysWait
   enum MqErrorE (*SysWait) (struct MqS * const, const struct MqIdS *);
   /// \copydoc MqSysUSleep
@@ -4048,7 +4053,6 @@ struct MqLalS {
   enum MqErrorE (*SysSleep) (struct MqS * const, unsigned int const);
   /// \copydoc MqSysBasename
   MQ_STR (*SysBasename) (MQ_CST const, MQ_BOL);
-#if defined(MQ_IS_POSIX)
   /// SysIgnorSIGCHLD
   enum MqErrorE (*SysIgnorSIGCHLD) (struct MqS * const);
   /// SysAllowSIGCHLD
@@ -4056,19 +4060,18 @@ struct MqLalS {
   /// SysDaemonize
   enum MqErrorE (*SysDaemonize) (struct MqS * const, MQ_CST);
   /// SysUnLink
-  enum MqErrorE (*SysUnLink) (struct MqS * const, const MQ_STR);
-#endif
+  enum MqErrorE (*SysUnlink) (struct MqS * const, const MQ_STR);
   /// SysExit
-  void (*SysExit) (int, int) __attribute__ ((noreturn));
+  void (*SysExit) (int, int);
   /// SysAbort
-  void (*SysAbort) (void) __attribute__ ((noreturn));
+  void (*SysAbort) (void);
   /// SysGetEnv
   enum MqErrorE (*SysGetEnv) (struct MqS * const, MQ_CST, MQ_STR*);
 };
 
-//#if ! defined(MQ_IN_SYS_C)
+#ifndef MQ_IN_SYS_C
 extern struct MqLalS MqLal;
-//#endif
+#endif
 
 /// \brief 'calloc' system call with error handling feature
 ///

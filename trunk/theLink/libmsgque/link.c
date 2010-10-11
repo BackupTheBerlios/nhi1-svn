@@ -358,7 +358,7 @@ sMqCheckArg (
 	    continue;
 	  } else if (!strncmp(argC, "help-msgque", 11)) {
 	    fputs(sHelp(),stderr);
-	    SysExit(0,EXIT_SUCCESS);
+	    MqSysExit(0,EXIT_SUCCESS);
 	  } else if (!strncmp(argC, "help", 4)) {
 	    if (context->setup.fHelp) {
 	      (*context->setup.fHelp)(context->config.name);

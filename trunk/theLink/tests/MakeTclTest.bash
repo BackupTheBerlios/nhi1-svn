@@ -88,8 +88,8 @@ case "$CMD" in
   *.pl)		  EXE="$PERL";;
   *.rb)		  EXE="$RUBY";;
   *.exe)	  EXE="$MONO";;
-  *.cc)		  EXE=""; CMD="${CMD%\.*}$EXT";;
-  *.c)		  EXE=""; CMD="${CMD%\.*}$EXT";;
+  *.cc)		  EXE="${CMD%\.*}$EXT"; CMD="";;
+  *.c)		  EXE="${CMD%\.*}$EXT"; CMD="";;
   *)		  EXE="";;
 esac
 

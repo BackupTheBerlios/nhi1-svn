@@ -127,10 +127,11 @@ error:
 
 static enum MqErrorE EXIT ( ARGS ) {
   MqExit(mqctx);
+  return MQ_OK;
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
-  MQ_CBI bdy;
+  MQ_BIN bdy;
   MQ_SIZE len;
   SETUP_ctx;
   register struct FilterItmS * it;

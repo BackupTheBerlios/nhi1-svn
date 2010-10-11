@@ -518,7 +518,7 @@ Ot_SLEP (
 
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &time));
-  MqErrorCheck (MqSysSleep (mqctx, time));
+  MqErrorCheck ((*MqLal.SysSleep)(mqctx, time));
   MqSendI (mqctx, time);
 
 error:
