@@ -87,8 +87,6 @@ cp $D/tags .
 }
 
 [[ $(basename $PWD) == "rubymsgque" ]] && {
-  find $HOME/ext/$MACHTYPE/thread/include/ruby-1.9.1/ruby -name "*.h" | \
-    xargs ctags -a $ADD 
   find $HOME/src/ruby-1.9.2-p0 -name "*.[ch]" | \
     xargs ctags -a $ADD
 }

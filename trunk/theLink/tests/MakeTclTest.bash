@@ -80,16 +80,17 @@ PREFIX=""
 (( $# == 0 )) && USAGE
 
 CMD=$1; shift
+ID=$CMD
 
 case "$CMD" in
   *.tcl|*.test)   EXE="$TCLSH";;
-  *.java)	  EXE="$JAVA"; CMD="$(basename $CMD .java)";;
+  *.java)	  EXE="$JAVA"; CMD="$(basename $CMD .java)"; ID=$CMD;;
   *.py)		  EXE="$PYTHON";;
   *.pl)		  EXE="$PERL";;
   *.rb)		  EXE="$RUBY";;
   *.exe)	  EXE="$MONO";;
-  *.cc)		  EXE="${CMD%\.*}$EXT"; CMD="";;
-  *.c)		  EXE="${CMD%\.*}$EXT"; CMD="";;
+  *.cc)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
+  *.c)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *)		  EXE="";;
 esac
 
@@ -98,9 +99,9 @@ esac
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
     T="$CMD $@"
-    exec $PREFIX $EXE -a "$T" 2>&1 | tee /tmp/$(basename $CMD).log
+    exec $PREFIX $EXE -a "$T"   2>&1 | tee /tmp/$(basename $ID).log
   else
-    exec $PREFIX $EXE $CMD "$@" 2>&1 | tee /tmp/$(basename $CMD).log
+    exec $PREFIX $EXE $CMD "$@" 2>&1 | tee /tmp/$(basename $ID).log
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then

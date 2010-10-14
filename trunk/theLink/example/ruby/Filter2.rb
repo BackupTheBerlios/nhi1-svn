@@ -12,23 +12,31 @@
 
 require "rubymsgque"
 
-class Filter2(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: Filter2())
-    self.ConfigSetName("filter")
-    self.ConfigSetServerSetup(self.ServerSetup)
-    MqS.__init__(self)
-  def ServerSetup(self):
-    self.ServiceCreate("+FTR", self.FTRcmd)
-    self.ServiceProxy ("+EOF")
-  def FTRcmd(ctx):
-    raise Exception("my error")
-srv = Filter2()
-try:
-  srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
-except:
-  srv.ErrorSet()
-finally:
+class Filter2 < MqS
+  def initialize
+    ConfigSetName("filter")
+    ConfigSetFactory(lambda {Filter2.new})
+    ConfigSetServerSetup(method(:ServerSetup))
+    @data = []
+    super()
+  end
+  def ServerSetup
+    ServiceCreate("+FTR", method(:FTRcmd))
+    ServiceProxy("+EOF")
+  end
+  def FTRcmd
+    raise "my error"
+  end
+end
+srv = Filter2.new
+begin
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
+rescue SignalException => ex
+  # ignore
+rescue Exception => ex
+  srv.ErrorSet(ex)
+ensure
   srv.Exit()
+end
 

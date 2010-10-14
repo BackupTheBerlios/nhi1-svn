@@ -111,7 +111,7 @@ ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=\I"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_isServer=\O"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
@@ -294,6 +294,7 @@ if ($@) { \n\
   if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
 } \n\
 \endcode"
+
 
 
 

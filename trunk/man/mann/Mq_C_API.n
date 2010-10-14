@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -88,14 +88,7 @@ Mq_C_API \- public libmsgque API
 .ti -1c
 .RI "\fBMq_System_C_API\fP"
 .br
-.R "access to native system functions with error handling "
-.PP
-.in +1c
-
-.ti -1c
-.RI "\fBMq_Log_C_API\fP"
-.br
-.R "log information to stderr with a common format. "
+.R "L)anguage A)bstraction L)ayer defnition. "
 .PP
 .in +1c
 
@@ -127,4 +120,4 @@ propagate the error messages from the server to the client
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for pymsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

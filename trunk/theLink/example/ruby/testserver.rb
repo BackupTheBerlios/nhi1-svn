@@ -9,32 +9,37 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
-require "rubymsgque"
-class testserver(MqS):
-  def GTCX(ctx):
-    ctx.SendSTART()
-    ctx.SendI(ctx.LinkGetCtxId())
-    ctx.SendC("+")
-    if (ctx.LinkIsParent()):
-      ctx.SendI(-1)
-    else:
-      ctx.SendI(ctx.LinkGetParent().LinkGetCtxId())
-    ctx.SendC("+");
-    ctx.SendC(ctx.ConfigGetName());
-    ctx.SendC(":")
-    ctx.SendRETURN()
-  def ServerConfig(ctx):
-    ctx.ServiceCreate("GTCX",ctx.GTCX)
 
-if __name__ == "__main__":
-  srv = testserver()
-  try:
-    srv.ConfigSetName("testserver")
-    srv.ConfigSetServerSetup(srv.ServerConfig)
-    srv.ConfigSetFactory(lambda: testserver())
-    srv.LinkCreate(sys.argv)
-    srv.ProcessEvent(wait="FOREVER")
-  except:
-    srv.ErrorSet()
-  finally:
-    srv.Exit()
+require "rubymsgque"
+
+class TestServer < MqS
+  def GTCX
+    SendSTART()
+    SendI(LinkGetCtxId())
+    SendC("+")
+    if (LinkIsParent())
+      SendI(-1)
+    else
+      SendI(LinkGetParent().LinkGetCtxId())
+    end
+    SendC("+")
+    SendC(ConfigGetName())
+    SendC(":")
+    SendRETURN()
+  end
+  def ServerConfig
+    ServiceCreate("GTCX",method(:GTCX))
+  end
+end
+srv = TestServer.new
+begin
+  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
+  srv.ConfigSetFactory(lambda {TestServer.new})
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
+rescue Exception => ex
+  srv.ErrorSet(ex)
+ensure
+  srv.Exit()
+end
+

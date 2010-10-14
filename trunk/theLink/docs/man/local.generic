@@ -52,6 +52,9 @@ ALIASES		    += "retException=\return an \RNS{ErrorObject} on error"
 ALIASES		    += "example=\xrefitem examples \"Example\" \"Example List\""
 ALIASES		    += "change=\xrefitem changes \"Change\" \"Change List\""
 
+ALIASES             += "copyall{1}=\brief \copybrief \1 \n\details \copydetails \1"
+ALIASES             += "syscall{1}=\brief <B>\1</B> syscall with #MqS error plugin"
+
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css
 GENERATE_MAN	    = YES

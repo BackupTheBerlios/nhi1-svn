@@ -25,6 +25,7 @@
 #define SETUP_mqctx     struct MqS * mqctx = VAL2MqS(self);
 #define SELF            MqS2VAL(mqctx)
 #define SETUP_self      VALUE self = SELF;
+#define MQ_CONTEXT_S	    mqctx
 
 #define ErrorMqToRuby() NS(MqSException_Raise)(mqctx)
 #define ErrorMqToRubyWithCheck(PROC) \
@@ -44,7 +45,7 @@
 #define VALP2CST(valp)	    (MQ_CST)rb_string_value_cstr(valp)
 #define VAL2BIN(val)	    (MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
-#define VAL2MqS(val)	    (struct MqS*)DATA_PTR(val)
+#define VAL2MqS(val)	    ((struct MqS*)DATA_PTR(val))
 
 #define	BYT2VAL(nat)	    INT2FIX((MQ_BYT)nat)
 #define	BOL2VAL(nat)	    ((nat)?Qtrue:Qfalse)
@@ -61,7 +62,7 @@
 #define CheckType(val,typ,err) \
   if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
 
-#define printVAL(val) rb_io_puts(1, &val, rb_stdout); rb_io_flush(rb_stdout);
+#define printVAL(val) rb_io_puts(1, &val, rb_stderr); rb_io_flush(rb_stderr);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -77,6 +78,8 @@ void NS(MqS_Config_Init)    (void);
 void NS(MqS_Service_Init)   (void);
 void NS(MqS_Link_Init)	    (void);
 void NS(MqS_Slave_Init)	    (void);
+void NS(MqS_Sys_Init)	    (void);
+void NS(MqS_Api_Init)	    (void);
 
 void NS(MqSException_Init)  (void);
 
@@ -95,5 +98,7 @@ enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
 MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
-void NS(ProcInit)	    (VALUE, VALUE, MqServiceCallbackF*, MQ_PTR*);
+enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);
+VALUE NS(Rescue)	    (struct MqS * const, VALUE(*)(ANYARGS), VALUE);
 
+#define NIL_Check(v)	    if (NIL_P(v)) goto error;

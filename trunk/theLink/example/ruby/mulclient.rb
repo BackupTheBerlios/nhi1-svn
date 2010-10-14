@@ -10,16 +10,18 @@
 #§              please contact AUTHORS for additional information
 #§
 require "rubymsgque"
-ctx = MqS()
-try:
+ctx = MqS.new
+begin
   ctx.ConfigSetName("MyMul")
-  ctx.LinkCreate(sys.argv)
+  ctx.LinkCreate($0,ARGV)
   ctx.SendSTART()
   ctx.SendD(3.67)
   ctx.SendD(22.3)
   ctx.SendEND_AND_WAIT("MMUL")
-  print(ctx.ReadD())
-except:
-  ctx.ErrorSet()
-finally:
+  $stdout.puts ctx.ReadD()
+  $stdout.flush
+rescue Exception => ex
+  ctx.ErrorSet(ex)
+ensure
   ctx.Exit()
+end

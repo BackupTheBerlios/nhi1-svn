@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/example/ruby/manfilter.rb
+#§  \file       theLink/example/ruby/ManFilter.rb
 #§  \brief      \$Id: LbMain 26 2009-12-03 11:48:43Z aotto1968 $
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group
@@ -12,30 +12,37 @@
 
 require "rubymsgque"
 
-class manfilter(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: manfilter())
-    self.ConfigSetName("ManFilter")
-    self.ConfigSetServerSetup(self.ServerSetup)
-    self.data = []
-    MqS.__init__(self)
-  def ServerSetup(self):
-    self.ServiceCreate("+FTR", self.FTRcmd)
-    self.ServiceProxy("+EOF")
-  def FTRcmd(ctx):
-    ftr = ctx.ServiceGetFilter()
+class ManFilter < MqS
+  def initialize
+    ConfigSetName("filter")
+    ConfigSetFactory(lambda {ManFilter.new})
+    ConfigSetServerSetup(method(:ServerSetup))
+    @data = []
+    super()
+  end
+  def ServerSetup
+    ServiceCreate("+FTR", method(:FTRcmd))
+    ServiceProxy("+EOF")
+  end
+  def FTRcmd
+    ftr = ServiceGetFilter()
     ftr.SendSTART()
-    while ctx.ReadItemExists():
-      ftr.SendC("<" + ctx.ReadC() + ">")
+    while ReadItemExists()
+      ftr.SendC("<" + ReadC() + ">")
+    end
     ftr.SendEND_AND_WAIT("+FTR")
-    ctx.SendRETURN()
-srv = manfilter()
-try:
-  srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
-except:
-  srv.ErrorSet()
-finally:
+    SendRETURN()
+  end
+end
+srv = ManFilter.new
+begin
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
+rescue SignalException => ex
+  # ignore
+rescue Exception => ex
+  srv.ErrorSet(ex)
+ensure
   srv.Exit()
-
+end
 

@@ -15,11 +15,14 @@
 
 #include "sys.h"
 #include "error.h"
-#include "mq_io.h"
-#include "log.h"
 
 #include <errno.h>
 #include <fcntl.h>
+
+#include <sys/stat.h>
+#if !defined(_MSC_VER)
+#   include <sys/time.h>
+#endif
 
 #if !defined(_MSC_VER)
 #  include <libgen.h>
@@ -110,7 +113,6 @@ static enum MqErrorE SysDaemonize (struct MqS * const, MQ_CST);
 static enum MqErrorE SysUnlink (struct MqS * const, const MQ_STR);
 static void SysExit (int, int);
 static void SysAbort (void);
-static enum MqErrorE SysGetEnv (struct MqS * const, MQ_CST, MQ_STR*);
 
 struct MqLalS MqLal = {
   SysCalloc,
@@ -131,8 +133,7 @@ struct MqLalS MqLal = {
   SysDaemonize,
   SysUnlink,
   SysExit,
-  SysAbort,
-  SysGetEnv
+  SysAbort
 };
 
 /*****************************************************************************/
@@ -141,8 +142,7 @@ struct MqLalS MqLal = {
 /*                                                                           */
 /*****************************************************************************/
 
-static MQ_PTR 
-SysCalloc (
+static MQ_PTR SysCalloc (
   struct MqS * const context,
   MQ_SIZE nmemb,
   MQ_SIZE size
@@ -154,8 +154,7 @@ SysCalloc (
   return ptr;
 }
 
-static MQ_PTR 
-SysMalloc (
+static MQ_PTR SysMalloc (
   struct MqS * const context,
   MQ_SIZE size
 )
@@ -166,8 +165,7 @@ SysMalloc (
   return ptr;
 }
 
-static MQ_PTR
-SysRealloc (
+static MQ_PTR SysRealloc (
   struct MqS * const context,
   MQ_PTR buf,
   MQ_SIZE size
@@ -179,8 +177,7 @@ SysRealloc (
   return ptr;
 }
 
-static void
-SysFreeP (
+static void SysFreeP (
   MQ_PTR ptr
 )
 {
@@ -189,31 +186,11 @@ SysFreeP (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                sys_env                                    */
-/*                                                                           */
-/*****************************************************************************/
-
-static enum MqErrorE
-SysGetEnv (
-  struct MqS * const context,
-  MQ_CST str,
-  MQ_STR *ret
-)
-{
-  if ((*ret = (MQ_STR) getenv (str)) == NULL) {
-    return MqErrorV (context, __func__, errno, "can not read the environment variable \"%s\"", str);
-  }
-  return MQ_OK;
-}
-
-/*****************************************************************************/
-/*                                                                           */
 /*                                sys_io                                     */
 /*                                                                           */
 /*****************************************************************************/
 
-static enum MqErrorE
-SysUnlink (
+static enum MqErrorE SysUnlink (
   struct MqS * const context,
   const MQ_STR fileName
 )
@@ -287,8 +264,7 @@ static int gettimeofday(
 
 #endif /* ! _MSC_VER */
 
-static enum MqErrorE
-SysGetTimeOfDay (
+static enum MqErrorE SysGetTimeOfDay (
   struct MqS * const context,
   struct mq_timeval * tv,
   struct mq_timezone * tz
@@ -306,8 +282,7 @@ SysGetTimeOfDay (
 /*                                                                           */
 /*****************************************************************************/
 
-static enum MqErrorE
-SysWait (
+static enum MqErrorE SysWait (
   struct MqS * const context,
   const struct MqIdS *idP
 )
@@ -350,8 +325,7 @@ SysWait (
   return MQ_OK;
 }
 
-static enum MqErrorE
-SysServerFork (
+static enum MqErrorE SysServerFork (
   struct MqS * const context,	///< [in,out] error handler
   struct MqFactoryS   factory,	///< [in,out] server configuration (memroy will be freed)
   struct MqBufferLS ** argvP,	///< [in] command-line arguments befor #MQ_ALFA
@@ -408,20 +382,10 @@ error:
 #endif   /* HAVE_FORK */
 }
 
-#if defined(MQ_HAS_THREAD)
-
-struct SysServerThreadCreateS {
-  struct MqS * tmpl;
-  struct MqFactoryS   factory;
-  struct MqBufferLS * argv;
-  struct MqBufferLS * alfa;
-};
-
-static mqthread_ret_t mqthread_stdcall sSysServerThreadCreate (
-  void * data
+void MqSysServerThreadMain (
+  struct MqSysServerThreadMainS * argP
 ) 
 {
-  struct SysServerThreadCreateS * argP = (struct SysServerThreadCreateS *) data;
   // save data local
   struct MqS * tmpl  = argP->tmpl;
   struct MqFactoryS factory = argP->factory;
@@ -452,21 +416,24 @@ static mqthread_ret_t mqthread_stdcall sSysServerThreadCreate (
 error:
   MqBufferLDelete (&argv);
   MqExit(newctx);
+}
+
+static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
+ void * data
+) 
+{
+  MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
   return (mqthread_ret_t) NULL;
 }
-#endif	// MQ_HAS_THREAD
 
-/// \brief start a new thread
-static enum MqErrorE
-SysServerThread (
-  struct MqS * const context,  ///< [in,out] error handler
-  struct MqFactoryS factory,	      ///< [in,out] server configuration (memory will be freed)
-  struct MqBufferLS ** argvP,	      ///< [in] command-line arguments befor #MQ_ALFA, owned by SysServerThread
-  struct MqBufferLS ** alfaP,	      ///< [in] command-line arguments after #MQ_ALFA, owned by SysServerThread
-  MQ_CST  name,			      ///< [in] the name of the process
-  int state,			      ///< [in] detachstate of the thread \c PTHREAD_CREATE_DETACHED or 
-				      ///< \c PTHREAD_CREATE_JOINABLE
-  struct MqIdS * idP		      ///< [out] the thread identifer
+static enum MqErrorE SysServerThread (
+  struct MqS * const context,
+  struct MqFactoryS factory,
+  struct MqBufferLS ** argvP,
+  struct MqBufferLS ** alfaP,
+  MQ_CST  name,		
+  int state,		
+  struct MqIdS * idP	
 )
 {
 #if defined(MQ_HAS_THREAD)
@@ -476,7 +443,7 @@ SysServerThread (
 #endif
 
   // fill thread data
-  struct SysServerThreadCreateS * argP = (struct SysServerThreadCreateS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
+  struct MqSysServerThreadMainS * argP = (struct MqSysServerThreadMainS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
   argP->factory = factory;
   argP->argv = *argvP;
   argP->alfa = *alfaP;
@@ -501,7 +468,7 @@ SysServerThread (
 
   // start thread
   do {
-    ret = pthread_create(&threadId,&attr,sSysServerThreadCreate,argP);
+    ret = pthread_create(&threadId,&attr,sSysServerThreadInit,argP);
   } while (ret == EAGAIN);
 
   // cleanup attribute
@@ -514,7 +481,7 @@ SysServerThread (
 
 #elif defined(MQ_IS_WIN32)
 
-  if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadCreate, argP, 0, NULL)) == 0)) {
+  if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadInit, argP, 0, NULL)) == 0)) {
     MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
     MqErrorSysAppend (_beginthreadex);
     goto error;
@@ -538,13 +505,11 @@ error:
 #endif   /* MQ_HAS_THREAD */
 }
 
-/// \brief spawn a new process
-static enum MqErrorE
-SysServerSpawn (
-  struct MqS * const context,  ///< [ini,out] error handler
-  char * * argv,		  ///< [in] command-line arguments
-  MQ_CST  name,			  ///< [in] the name of the process
-  struct MqIdS * idP		  ///< [out] the process identifer
+static enum MqErrorE SysServerSpawn (
+  struct MqS * const context,
+  char * * argv,
+  MQ_CST  name,
+  struct MqIdS * idP
 )
 {
   pid_t pid;
@@ -587,10 +552,6 @@ SysServerSpawn (
     nbuf += sprintf(nbuf, "\"%s\" ", *argv);
   }
 
-//printC(name)
-//printC(buf)
-//system("set PATH");
-
   // start process
   if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
     //printC(strerror(errno))
@@ -611,8 +572,7 @@ error:
   return MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
 }
 
-static enum MqErrorE
-SysUSleep (
+static enum MqErrorE SysUSleep (
   struct MqS * const context,
   unsigned int const usec
 )
@@ -629,8 +589,7 @@ SysUSleep (
   return MQ_OK;
 }
 
-static enum MqErrorE
-SysSleep (
+static enum MqErrorE SysSleep (
   struct MqS * const context,
   unsigned int const sec
 )
@@ -647,8 +606,7 @@ SysSleep (
   return MQ_OK;
 }
 
-static MQ_STR
-SysBasename (
+static MQ_STR SysBasename (
   MQ_CST const in,
   MQ_BOL includeExtension
 )
@@ -685,8 +643,7 @@ SysBasename (
 #endif
 }
 
-static enum MqErrorE
-SysFork (
+static enum MqErrorE SysFork (
   struct MqS * const context,
   struct MqIdS * idP
 )
@@ -702,8 +659,7 @@ SysFork (
 #endif
 }
 
-static enum MqErrorE
-SysIgnorSIGCHLD (
+static enum MqErrorE SysIgnorSIGCHLD (
   struct MqS * const context
 )
 {
@@ -711,14 +667,11 @@ SysIgnorSIGCHLD (
   if (unlikely ((signal(SIGCHLD, SIG_IGN)) == SIG_ERR)) {
     return MqErrorSys (signal);
   }
-  return MQ_OK;
-#else
-  return MqErrorDb(MQ_ERROR_NOT_SUPPORTED);
 #endif
+  return MQ_OK;
 }
 
-static enum MqErrorE
-SysAllowSIGCHLD (
+static enum MqErrorE SysAllowSIGCHLD (
   struct MqS * const context
 )
 {
@@ -726,17 +679,13 @@ SysAllowSIGCHLD (
   if (unlikely ((signal(SIGCHLD, SIG_DFL)) == SIG_ERR)) {
     return MqErrorSys (signal);
   }
-  return MQ_OK;
-#else
-  return MqErrorDb(MQ_ERROR_NOT_SUPPORTED);
 #endif
+  return MQ_OK;
 }
 
-/// \brief daemonize the current process and save the resulting pid into \e pidfile
-static enum MqErrorE
-SysDaemonize (
-  struct MqS * const context,	///< [in,out] error handler
-  MQ_CST pidfile		///< [in] file to save the \e pid
+static enum MqErrorE SysDaemonize (
+  struct MqS * const context,
+  MQ_CST pidfile
 ) 
 {
 #if defined(MQ_IS_POSIX)
@@ -817,4 +766,5 @@ static void SysAbort (void) {
 }
 
 END_C_DECLS
+
 

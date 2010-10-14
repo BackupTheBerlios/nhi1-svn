@@ -10,14 +10,16 @@
 #§              please contact AUTHORS for additional information
 #§
 require "rubymsgque"
-ctx = MqS()
-try:
+ctx = MqS.new
+begin
   ctx.ConfigSetName("MyClient")
-  ctx.LinkCreate(sys.argv)
+  ctx.LinkCreate($0,ARGV)
   ctx.SendSTART()
   ctx.SendEND_AND_WAIT("HLWO")
-  print(ctx.ReadC())
-except:
-  ctx.ErrorSet();
-finally:
+  $stdout.puts ctx.ReadC()
+  $stdout.flush
+rescue Exception => ex
+  ctx.ErrorSet(ex)
+ensure
   ctx.Exit()
+end

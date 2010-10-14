@@ -13,16 +13,28 @@
 #include "msgque_ruby.h"
 
 extern VALUE id_receiver;
+extern VALUE id_clone;
+extern VALUE id_unbind;
+extern VALUE id_bind;
 
-static VALUE r_proc (VALUE self, VALUE ex) {
+static VALUE sRescueError (VALUE self, VALUE ex) {
   NS(MqSException_Set) (VAL2MqS(self), ex);
   return Qnil;
+}
+
+VALUE NS(Rescue) (
+  struct MqS * const  mqctx,
+  VALUE(*proc)(ANYARGS),
+  VALUE data
+)
+{ 
+  return rb_rescue2(proc, data, sRescueError, SELF, rb_eException, (VALUE)0);
 }
 
 // ==========================================================================
 // Method belongs to calling object
 
-static VALUE b_proc (VALUE method) {
+static VALUE ProcCallMethod (VALUE method) {
   return rb_method_call(0, NULL, method);
 }
 
@@ -31,24 +43,24 @@ static enum MqErrorE ProcCall (
   MQ_PTR const dataP
 ) 
 { 
-  rb_rescue2( b_proc, PTR2VAL(dataP), r_proc, SELF, rb_eException, (VALUE)0);
+  NS(Rescue)(mqctx,ProcCallMethod,PTR2VAL(dataP));
   return MqErrorGetCode(mqctx);
 } 
 
 // ==========================================================================
 // Method belongs NOT to calling object
 
-static VALUE b_proc2 (VALUE array) {
+static VALUE ProcCallMethod2 (VALUE array) {
   VALUE *valP = RARRAY_PTR(array);
   return rb_method_call(1, valP, valP[1]);
 }
 
-static enum MqErrorE ProcCall2 (
+static enum MqErrorE ProcCallWithArg (
   struct MqS * const mqctx,
   MQ_PTR const dataP
 ) 
 { 
-  rb_rescue2( b_proc2, PTR2VAL(dataP), r_proc, SELF, rb_eException, (VALUE)0);
+  NS(Rescue)(mqctx,ProcCallMethod2,PTR2VAL(dataP));
   return MqErrorGetCode(mqctx);
 } 
 
@@ -64,35 +76,77 @@ void NS(ProcFree) (
   *dataP = NULL;
 }
 
-enum MqErrorE NS(ProcCopy) (
+static enum MqErrorE ProcCopyProc (
   struct MqS * const mqctx,
   MQ_PTR *dataP
 )
 {
-  VALUE val = rb_obj_dup((VALUE) dataP);
+  VALUE val = PTR2VAL(*dataP);
+  val = rb_funcall(val,id_clone,0,NULL);
   rb_gc_register_address(&val);
-  *dataP = (MQ_PTR) val;
+  *dataP = VAL2PTR(val);
   return MQ_OK;
 }
 
-void NS(ProcInit) (
-  VALUE		      self, 
-  VALUE		      method, 
+static enum MqErrorE ProcCopyMethod (
+  struct MqS * const mqctx,
+  MQ_PTR *dataP
+)
+{
+  SETUP_self;
+  VALUE val = PTR2VAL(*dataP);
+  val = rb_funcall(val,id_clone,0,NULL);
+  val = rb_funcall(val,id_unbind,0,NULL);
+  val = rb_funcall(val,id_bind,1,self);
+  rb_gc_register_address(&val);
+  *dataP = VAL2PTR(val);
+  return MQ_OK;
+}
+
+static enum MqErrorE ProcCopyMethodWithArg (
+  struct MqS * const mqctx,
+  MQ_PTR *dataP
+)
+{
+  VALUE ary = PTR2VAL(*dataP);
+  VALUE mth = rb_ary_entry(ary,1);
+  ary = rb_ary_new3(2,SELF,rb_funcall(mth,id_clone,0,NULL));
+  rb_gc_register_address(&ary);
+  *dataP = VAL2PTR(ary);
+  return MQ_OK;
+}
+
+enum MqErrorE NS(ProcInit) (
+  struct MqS	      *mqctx,
+  VALUE		      val, 
   MqServiceCallbackF  *procCall, 
-  MQ_PTR	      *procData
+  MQ_PTR	      *procData,
+  MqTokenDataCopyF    *procCopy
 ) {
+  SETUP_self
   VALUE dataVal;
-  if (rb_equal(self,rb_funcall(method,id_receiver,0,NULL)) == Qtrue) {
-    // method belongs to calling object, NO argument is required
-    *procCall = ProcCall;
-    dataVal   = method;
+  if (rb_obj_is_kind_of(val, rb_cProc) == Qtrue) {
+      *procCall = ProcCall;
+      *procCopy = ProcCopyProc;
+      dataVal   = val;
+  } else if (rb_obj_is_kind_of(val, rb_cMethod) == Qtrue) {
+    if (rb_equal(self,rb_funcall(val,id_receiver,0,NULL)) == Qtrue) {
+      // val belongs to calling object, NO argument is required
+      *procCall = ProcCall;
+      *procCopy = ProcCopyMethod;
+      dataVal   = val;
+    } else {
+      // val belongs NOT to calling object, argument is required
+      *procCall = ProcCallWithArg;
+      *procCopy = ProcCopyMethodWithArg;
+      dataVal   = rb_ary_new3(2,self,val);
+    }
   } else {
-    // method belongs NOT to calling object, argument is required
-    *procCall = ProcCall2;
-    dataVal   = rb_ary_new3(2,self,method);
+    return MqErrorC(mqctx,__func__,1,"expect 'proc' or 'method' argument");
   }
   *procData = VAL2PTR(dataVal);
   rb_gc_register_address(&dataVal);
+  return MQ_OK;
 }
 
 MQ_BFL NS(argv2bufl) (int argc, VALUE *argv)
@@ -117,4 +171,5 @@ MQ_BFL NS(argv2bufl) (int argc, VALUE *argv)
 }
 
 // ==========================================================================
+
 

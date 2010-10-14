@@ -17,7 +17,7 @@
 ENABLED_SECTIONS    += C
 ENABLED_SECTIONS    += DAEMON
 ENABLED_SECTIONS    += C-STYLE
-EXAMPLE_PATH	    += $(SRCDIR)/example/c
+EXAMPLE_PATH	    += $(SRCDIR)/example/c $(SRCDIR)/libmsgque
 
 ALIASES		    += "self=libmsgque"
 ALIASES		    += "selftut=libmsgquetut"
@@ -116,7 +116,7 @@ ALIASES		    += "config_get_uds=#MqConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=#MQ_SOCK"
 ALIASES		    += "config_set_pipe=#MqConfigSetIoPipeSocket (ctx, MQ_INT socket)"
-ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
 
 ALIASES             += "config_IServerSetup=MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 ALIASES		    += "config_IServerCleanup=MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
@@ -281,6 +281,7 @@ if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, \"TOKS\", MQ_TIMEOUT_USER))) { \n\
   if (MqErrorIsEXIT (ctx)) MqErrorReset (ctx); \n\
 } \n\
 \endcode"
+
 
 
 

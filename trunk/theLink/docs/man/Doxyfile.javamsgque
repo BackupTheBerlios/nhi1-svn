@@ -103,11 +103,11 @@ ALIASES		    += "config_get_uds=#javamsgque.MqS.ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=int"
 ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_pipe=int"
 ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
@@ -282,6 +282,7 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
 
 
 

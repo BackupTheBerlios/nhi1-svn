@@ -114,7 +114,7 @@ ALIASES		    += "config_get_uds=#ccmsgque::MqC::ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=MQ_SOCK"
 ALIASES		    += "config_set_pipe=#ccmsgque::MqC::ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=#ccmsgque::MqC::ConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=#ccmsgque::MqC::ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_isServer=bool"
 ALIASES		    += "config_set_isServer=#ccmsgque::MqC::ConfigSetIsServer"
@@ -323,6 +323,7 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
 
 
 

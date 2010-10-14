@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "7 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -48,27 +48,17 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 .PP
 .PP
 .nf
-noinst_PROGRAMS = mulclient mulserver manfilter \
-                    testclient testserver \
-                      MyClient MyServer \
-                        Filter1 Filter2 Filter3 Filter4
 .fi
 .PP
  ... 
 .PP
 .nf
-MyClient_SOURCES = MyClient.c
-MyClient_LDADD = -lm ../../libmsgque/libtmp.la
-
-MyServer_SOURCES = MyServer.c
-MyServer_LDADD = -lm ../../libmsgque/libtmp.la
 
 .fi
 .PP
  ... 
 .PP
 .nf
-INCLUDES = -I$(srcdir)/../../libmsgque
 
 .fi
 .PP

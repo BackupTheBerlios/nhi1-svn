@@ -14,8 +14,6 @@
 
 extern VALUE cMqS;
 
-#define MQ_CONTEXT_S mqctx
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                private                                    */
@@ -44,11 +42,13 @@ rb_define_method(cMqS, MQ_CPPXSTR(Config ## T ## K), Config ## T ## K, A); \
   MthBas(K,Set,1) 
 
 #define CB(T) static VALUE ConfigSet ## T (VALUE self, VALUE callback) { \
+  SETUP_mqctx; \
   MqServiceCallbackF procCall; \
   MQ_PTR procData; \
+  MqTokenDataCopyF procCopy; \
   CheckType(callback, rb_cMethod, "usage: ConfigSet" #T " Method-Type-Arg"); \
-  NS(ProcInit) (self, callback, &procCall, &procData); \
-  MqConfigSet ## T (MQCTX,  procCall, procData, NS(ProcFree), NS(ProcCopy)); \
+  ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, callback, &procCall, &procData, &procCopy)); \
+  MqConfigSet ## T (mqctx,  procCall, procData, NS(ProcFree), procCopy); \
   return Qnil; \
 }
 
@@ -82,13 +82,8 @@ CB(ServerCleanup)
 CB(BgError)
 CB(Event)
 
-static VALUE b_proc (VALUE proc) {
+static VALUE FactoryCreateCall (VALUE proc) {
   return rb_proc_call_with_block(proc, 0, NULL, Qnil);
-}
-
-static VALUE r_proc (VALUE tmpl, VALUE ex) {
-  NS(MqSException_Set) (VAL2MqS(tmpl), ex);
-  return Qnil;
 }
 
 static enum MqErrorE
@@ -100,10 +95,11 @@ FactoryCreate(
 )
 {
   if (create == MQ_FACTORY_NEW_FORK) rb_thread_atfork();
-  VALUE self = rb_rescue2(
-    b_proc, PTR2VAL(data), r_proc, MqS2VAL(tmpl), rb_eException, (VALUE)0
-  );
-  if (self == Qnil) {
+  if (create == MQ_FACTORY_NEW_THREAD) {
+    ruby_stack_check();
+  }
+  VALUE self = NS(Rescue)(tmpl, FactoryCreateCall, PTR2VAL(data));
+  if (NIL_P(self)) {
     *mqctxP = NULL;
     return MqErrorGetCode(tmpl);
   } else {
@@ -136,11 +132,15 @@ FactoryDelete(
 static VALUE ConfigSetFactory (VALUE self, VALUE proc)
 {
   //rb_io_puts(1, &proc, rb_stdout);
+  SETUP_mqctx;
+  MqServiceCallbackF procCall;
+  MQ_PTR procData;
+  MqTokenDataCopyF procCopy;
   CheckType(proc, rb_cProc, "usage: ConfigSetFactory Proc-Type-Arg");
-  rb_gc_register_address(&proc);
-  MqConfigSetFactory(MQCTX,
-    FactoryCreate,  VAL2PTR(proc),  NS(ProcFree), NS(ProcCopy),
-    FactoryDelete,  NULL,	    NULL,         NULL
+  ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, proc, &procCall, &procData, &procCopy));
+  MqConfigSetFactory(mqctx,
+    FactoryCreate,  procData,  NS(ProcFree), procCopy,
+    FactoryDelete,  NULL,      NULL,         NULL
   );
   return Qnil;
 }

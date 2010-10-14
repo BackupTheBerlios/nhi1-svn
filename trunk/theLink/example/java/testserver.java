@@ -17,7 +17,7 @@ final class testserver extends MqS implements IServerSetup, IFactory {
   public MqS Factory() {
     return new testserver();
   }
-  // service to serve all incomming requests for token "HLWO"
+
   class GTCX implements IService {
     public void Service (MqS ctx) throws MqSException {
       SendSTART();
@@ -35,7 +35,6 @@ final class testserver extends MqS implements IServerSetup, IFactory {
     }
   }
 
-  // define a service as link between the token "HLWO" and the class "MyFirstService"
   public void ServerSetup() throws MqSException {
     ServiceCreate("GTCX", new GTCX());
   }

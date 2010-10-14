@@ -187,10 +187,11 @@ test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
-[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
-  File "*", line *, in Error
-    self.ReadProxy(self.ReadU())
-TypeError: must be pymsgque.MqS, not pymsgque.MqBufferS*}
+[sS]> (server-0) \[Ruby-Error] #<TypeError: usage: ReadProxy MqS-Type-Arg>
+[sS]> (server-0) */server.rb:*:in `ReadProxy'
+[sS]> (server-0) */server.rb:*:in `ERRX'
+[sS]> (server-0) */server.rb:*:in `ProcessEvent'
+[sS]> (server-0) */server.rb:*:in `<main>'}
 
 test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     -constraints    { ruby } \
@@ -202,10 +203,11 @@ test error-1e-($I|$B|$C|$S) {wrong MqBufferS reference} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR6> <Num|1>*
-[sS]> (server-0) \[pymsgque_ErrorSet] Traceback (most recent call last):
-  File "*", line *, in Error
-    self.SendU(self)
-TypeError: must be pymsgque.MqBufferS, not Server*}
+[sS]> (server-0) \[Ruby-Error] #<TypeError: usage: SendU MqBufferS-Type-Arg>
+[sS]> (server-0) */server.rb:*:in `SendU'
+[sS]> (server-0) */server.rb:*:in `ERRX'
+[sS]> (server-0) */server.rb:*:in `ProcessEvent'
+[sS]> (server-0) */server.rb:*:in `<main>'}
 
 test error-5-($I|$B|$C|$S) {wrong host name) port} \
     -constraints    {tcp && parent && !filter} \
@@ -580,4 +582,5 @@ C> (client-0) found in function "MqProcessEvent" at file "service.c"}
 ##
 
 freeTests
+
 

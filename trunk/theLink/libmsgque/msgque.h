@@ -1433,7 +1433,6 @@ MQ_EXTERN void MQ_DECL MqContextFree (
 /// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the configuration data. 
 ///                  This template is used for a \e child to get the configuration data from the \e parent. 
 ///                  (default: \e NULL, create an initial context)
-/// \param[in] lal  (C-API) Language-Abstraction-Layer
 /// \return the new \e context, no error return because this function \e panic on \e out-of-memory-error
 MQ_EXTERN struct MqS * MQ_DECL MqContextCreate (
   MQ_SIZE size,
@@ -4005,13 +4004,22 @@ static mq_inline int MqSlaveIsI (
 
 /// \defgroup Mq_System_C_API Mq_System_C_API
 /// \{
-/// \brief L)anguage A)bstraction L)ayer
-/// \details access to native system functions with #MqS error handling
+/// \brief L)anguage A)bstraction L)ayer defnition
 ///
+/// The \b LAL is required to give the target of embedding a change 
+/// to modify the access to system functions. \e RUBY for example has it's
+/// own Thread-Creation function.
+/// 
+/// All wrappers to access the underlying OS,Languags and system functions
+/// are located in this section. Every external Function has additional
+/// code to map the OS/System specific error codes/messages into
+/// #MqS specific error codes/messages
+
+/// process or thread identifer
+typedef unsigned long MQ_IDNT;
 
 /// \brief data type for process/thread identification
-///  
-/// This struct is used as storage for the process and the thread identification handle.
+/// \details This struct is used as storage for the process or the thread identification handle.
 struct MqIdS {
   /// signal type of \e val data
   enum MqIdSE {
@@ -4019,83 +4027,181 @@ struct MqIdS {
     MQ_ID_PROCESS = 1,	      ///< \e val has a process handle
     MQ_ID_THREAD  = 2	      ///< \e val has a thread handle
   } type;
-  unsigned long	val;	      ///< process or thread handle
+  MQ_IDNT	val;	      ///< process or thread handle
 };
 
+/// \brief data used to initialize a new created thread
+struct MqSysServerThreadMainS {
+  struct MqS * tmpl;		///< calling (parent) context
+  struct MqFactoryS   factory;	///< server configuration (memory will be freed)
+  struct MqBufferLS * argv;	///< command-line arguments befor #MQ_ALFA, owned by SysServerThread
+  struct MqBufferLS * alfa;	///< command-line arguments after #MQ_ALFA, owned by SysServerThread
+};
+
+/// \brief initialize a new created thred
+/// \param[in] data configuration data for the new thread
+MQ_EXTERN void MQ_DECL MqSysServerThreadMain (
+  struct MqSysServerThreadMainS *data
+);
+
 /// \brief Interface between #MqS and the Operating-System
-/// \details
 struct MqLalS {
-  /// \copydoc MqSysCalloc
-  MQ_PTR (*SysCalloc) (struct MqS * const, MQ_SIZE, MQ_SIZE);
-  /// \copydoc MqSysMalloc
-  MQ_PTR (*SysMalloc) (struct MqS * const, MQ_SIZE);
-  /// \copydoc MqSysRealloc
-  MQ_PTR (*SysRealloc) (struct MqS * const, MQ_PTR, MQ_SIZE);
-  /// \copydoc MqSysFree
-  void (*SysFreeP) (MQ_PTR);
-  /// SysServerSpawn
-  enum MqErrorE (*SysServerSpawn) (struct MqS * const, char **, MQ_CST, struct MqIdS *);
-  /// SysServerThread
-  enum MqErrorE (*SysServerThread) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **, 
-    struct MqBufferLS **, MQ_CST, int, struct MqIdS *);
-  /// SysServerFork
-  enum MqErrorE (*SysServerFork) (struct MqS * const, struct MqFactoryS, struct MqBufferLS **,
-    struct MqBufferLS **, MQ_CST, struct MqIdS *);
-  /// SysFork
-  enum MqErrorE (*SysFork) (struct MqS * const, struct MqIdS *);
-  /// \copydoc MqSysGetTimeOfDay
-  enum MqErrorE (*SysGetTimeOfDay) (struct MqS * const, struct mq_timeval *, struct mq_timezone *);
-  /// SysWait
-  enum MqErrorE (*SysWait) (struct MqS * const, const struct MqIdS *);
-  /// \copydoc MqSysUSleep
-  enum MqErrorE (*SysUSleep) (struct MqS * const, unsigned int const);
-  /// \copydoc MqSysSleep
-  enum MqErrorE (*SysSleep) (struct MqS * const, unsigned int const);
-  /// \copydoc MqSysBasename
-  MQ_STR (*SysBasename) (MQ_CST const, MQ_BOL);
-  /// SysIgnorSIGCHLD
-  enum MqErrorE (*SysIgnorSIGCHLD) (struct MqS * const);
-  /// SysAllowSIGCHLD
-  enum MqErrorE (*SysAllowSIGCHLD) (struct MqS * const);
-  /// SysDaemonize
-  enum MqErrorE (*SysDaemonize) (struct MqS * const, MQ_CST);
-  /// SysUnLink
-  enum MqErrorE (*SysUnlink) (struct MqS * const, const MQ_STR);
-  /// SysExit
-  void (*SysExit) (int, int);
-  /// SysAbort
+  /// \copyall{MqSysCalloc}
+  MQ_PTR (*SysCalloc) (
+    struct MqS * const	  context, 
+    MQ_SIZE		  nmemb, 
+    MQ_SIZE		  size
+  );
+  /// \copyall{MqSysMalloc}
+  MQ_PTR (*SysMalloc) (
+    struct MqS * const	  context, 
+    MQ_SIZE		  size
+  );
+  /// \copyall{MqSysRealloc}
+  MQ_PTR (*SysRealloc) (
+    struct MqS * const	  context, 
+    MQ_PTR		  buf, 
+    MQ_SIZE		  size
+  );
+  /// \copyall{MqSysFree}
+  void (*SysFreeP) (
+    MQ_PTR		  tgt
+  );
+  /// \copyall{MqSysServerSpawn}
+  enum MqErrorE (*SysServerSpawn) (
+    struct MqS * const	  context, 
+    char **		  argv, 
+    MQ_CST		  name, 
+    struct MqIdS *	  idP
+  );
+  /// \copyall{MqSysServerThread}
+  enum MqErrorE (*SysServerThread) (
+    struct MqS * const	  context, 
+    struct MqFactoryS	  factory, 
+    struct MqBufferLS **  argvP, 
+    struct MqBufferLS **  alfaP, 
+    MQ_CST		  name, 
+    int			  state, 
+    struct MqIdS *	  idP
+  );
+  /// \copyall{MqSysServerFork}
+  enum MqErrorE (*SysServerFork) (
+    struct MqS * const	  context, 
+    struct MqFactoryS	  factory, 
+    struct MqBufferLS **  argvP, 
+    struct MqBufferLS **  alfaP, 
+    MQ_CST		  name, 
+    struct MqIdS *	  idP
+  );
+  /// \copyall{MqSysFork}
+  enum MqErrorE (*SysFork) (
+    struct MqS * const	  context, 
+    struct MqIdS *	  idP
+  );
+  /// \copyall{MqSysGetTimeOfDay}
+  enum MqErrorE (*SysGetTimeOfDay) (
+    struct MqS * const	  context, 
+    struct mq_timeval	  *tv, 
+    struct mq_timezone	  *tz
+  );
+  /// \copyall{MqSysWait}
+  enum MqErrorE (*SysWait) (
+    struct MqS * const	  context, 
+    const struct MqIdS *  idP
+  );
+  /// \copyall{MqSysUSleep}
+  enum MqErrorE (*SysUSleep) (
+    struct MqS * const	  context, 
+    unsigned int const	  usec
+  );
+  /// \copyall{MqSysSleep}
+  enum MqErrorE (*SysSleep) (
+    struct MqS * const	  context, 
+    unsigned int const	  sec
+  );
+  /// \copyall{MqSysBasename}
+  MQ_STR (*SysBasename) (
+    MQ_CST const	  in, 
+    MQ_BOL		  includeExtension
+  );
+  /// \copyall{MqSysIgnorSIGCHLD}
+  enum MqErrorE (*SysIgnorSIGCHLD) (
+    struct MqS * const	  context
+  );
+  /// \copyall{MqSysAllowSIGCHLD}
+  enum MqErrorE (*SysAllowSIGCHLD) (
+    struct MqS * const	  context
+  );
+  /// \copyall{MqSysDaemonize}
+  enum MqErrorE (*SysDaemonize) (
+    struct MqS * const	  context, 
+    MQ_CST		  pidfile
+  );
+  /// \copyall{MqSysUnlink}
+  enum MqErrorE (*SysUnlink) (
+    struct MqS * const	  context, 
+    const MQ_STR	  fileName
+  );
+  /// \copyall{MqSysExit}
+  void (*SysExit) (
+    int			  isThread, 
+    int			  num
+  );
+  /// \copyall{MqSysAbort}
   void (*SysAbort) (void);
-  /// SysGetEnv
-  enum MqErrorE (*SysGetEnv) (struct MqS * const, MQ_CST, MQ_STR*);
 };
 
 #ifndef MQ_IN_SYS_C
+/// Language Abstraction Layer in duty
 extern struct MqLalS MqLal;
 #endif
 
-/// \brief 'calloc' system call with error handling feature
-///
+/// \syscall{calloc}
 /// \context
-/// \param nmemb the number of members in the memory block
-/// \param size the size of the new memory block
+/// \param[in] nmemb the number of members in the memory block
+/// \param[in] size the size of the new memory block
 /// \return a pointer to the new memory block initialized with '0'
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysCalloc
+/// \until }
 #define MqSysCalloc(context,nmemb,size) (*MqLal.SysCalloc)(context,nmemb,size)
 
-/// \brief 'malloc' system call with error handling feature
+/// \syscall{malloc}
 /// \context
-/// \param size the size of the new memory block
+/// \param[in] size the size of the new memory block
 /// \return a pointer to the new memory block
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysMalloc
+/// \until }
 #define MqSysMalloc(context,size) (*MqLal.SysMalloc)(context,size)
 
-/// \brief 'realloc' system call with error handling feature
+/// \syscall{realloc}
 /// \context
-/// \param buf the \b old memory block to extend
-/// \param size the size of the new memory block
+/// \param[in] buf the \b old memory block to extend
+/// \param[in] size the size of the new memory block
 /// \return a pointer to the new memory block
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysRealloc
+/// \until }
 #define MqSysRealloc(context, buf, size) (*MqLal.SysRealloc) (context, buf, size)
 
-/// \brief 'free' system call macro
-/// \retval tgt the memory block to delete and set to NULL
+/// \syscall{free}
+/// \param[in,out] tgt the memory block to delete and set to NULL
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysFree
+/// \until }
 #define MqSysFree(tgt) \
     do { \
 	if ( likely((tgt) != (NULL)) ) { \
@@ -4104,31 +4210,209 @@ extern struct MqLalS MqLal;
 	} \
     } while (0)
 
-/// \brief 'usleep' system call with error handling feature
+/// \syscall{spawn server create}
 /// \context
-/// \param usec the micro (10^-6) seconds to sleep
+/// \param[in]	argv  command-line arguments
+/// \param[in]	name  the name of the process
+/// \param[out]	idP   the process identifer
 /// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysServerSpawn
+/// \until MQ_ERROR_CAN_NOT_START_SERVER
+/// \until }
+#define MqSysServerSpawn(context, argv, name, idP) (*MqLal.SysServerSpawn)(context, argv, name, idP)
+
+/// \syscall{thread server create}
+/// \context
+/// \param[in,out]  factory	server configuration (memory will be freed)
+/// \param[in]	    argvP	command-line arguments befor #MQ_ALFA, owned by SysServerThread
+/// \param[in]	    alfaP	command-line arguments after #MQ_ALFA, owned by SysServerThread
+/// \param[in]	    name	the name of the thread
+/// \param[in]	    state	detachstate of the thread \c PTHREAD_CREATE_DETACHED or \c PTHREAD_CREATE_JOINABLE
+/// \param[out]	    idP		the thread identifer
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysServerThread
+/// \until MQ_ERROR_NOT_SUPPORTED
+/// \until }
+#define MqSysServerThread(context, factory, argvP, alfaP, name, state, idP) \
+  (*MqLal.SysServerThread)(context, factory, argvP, alfaP, name, state, idP)
+
+/// \syscall{fork server create}
+/// \context
+/// \param[in,out]  factory	server configuration (memory will be freed)
+/// \param[in]	    argvP	command-line arguments befor #MQ_ALFA, owned by SysServerThread
+/// \param[in]	    alfaP	command-line arguments after #MQ_ALFA, owned by SysServerThread
+/// \param[in]	    name	the name of the thread
+/// \param[out]	    idP		the process identifer
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysServerFork
+/// \until MQ_ERROR_NOT_SUPPORTED
+/// \until }
+#define MqSysServerFork(context, factory, argvP, alfaP, name, idP) \
+  (*MqLal.SysServerFork)(context, factory, argvP, alfaP, name, idP)
+
+/// \syscall{fork}
+/// \context
+/// \param[out] idP process handle
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static enum MqErrorE SysFork
+/// \until MQ_ERROR_NOT_SUPPORTED
+/// \until }
+#define MqSysFork(context, idP) (*MqLal.SysFork)(context, idP)
+
+/// \syscall{wait for process or thread}
+/// \context
+/// \param[in] idP process or thread handle
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysWait
+/// \until MQ_OK
+/// \until }
+#define MqSysWait(context, idP) (*MqLal.SysWait)(context, idP)
+
+/// \syscall{usleep}
+/// \context
+/// \param[in] usec the micro (10^-6) seconds to sleep
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysUSleep
+/// \until }
+/// \until }
 #define MqSysUSleep(context, usec) (*MqLal.SysUSleep)(context, usec)
 
-/// \brief 'sleep' system call with error handling feature
+/// \syscall{sleep}
 /// \context
-/// \param sec the seconds to sleep
+/// \param[in] sec the seconds to sleep
 /// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysSleep
+/// \until }
+/// \until }
 #define MqSysSleep(context, sec) (*MqLal.SysSleep)(context, sec)
 
-/// \brief 'basename' system call with error handling feature
-///
+/// \syscall{basename}
 /// \param[in] in name of the string to extract the basename from (value of \e in will not be changed)
 /// \param[in] includeExtension add extension like '.exe' to the filename (#MQ_YES or #MQ_NO)
 /// \return the basename of \e in (it is save to modify the basename for additional needs)
 /// \attention the memory of the basename string returned is owned by the caller and have to be freed
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysBasename
+/// \until }
+/// \until }
+/// \until }
 #define MqSysBasename(in, includeExtension) (*MqLal.SysBasename)(in, includeExtension)
 
-/// \brief 'gettimeofday' system call with error handling feature
+/// \syscall{ignor SIGCHLD}
 /// \context
-/// \retval tv the timeval object
-/// \retval tz the timezone object
 /// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static enum MqErrorE SysIgnorSIGCHLD
+/// \until }
+/// \until }
+#define MqSysIgnorSIGCHLD(context) (*MqLal.SysIgnorSIGCHLD)(context)
+
+/// \syscall{allow SIGCHLD}
+/// \context
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static enum MqErrorE SysAllowSIGCHLD
+/// \until }
+/// \until }
+#define MqSysAllowSIGCHLD(context) (*MqLal.SysAllowSIGCHLD)(context)
+
+/// \brief \b daemonize the current process and save the resulting pid into the \e pidfile
+/// \context
+/// \param[in] pidfile	file to save the process identifer, can be used to kill the process later
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static enum MqErrorE SysDaemonize
+/// \until MQ_ERROR_NOT_SUPPORTED
+/// \until }
+#define MqSysDaemonize(context,pidfile) (*MqLal.SysDaemonize)(context,pidfile)
+
+/// \syscall{unlink}
+/// \context
+/// \param[in] fileName	name of the file to \e unlink
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static enum MqErrorE SysUnlink
+/// \until MQ_ERROR_NOT_SUPPORTED
+/// \until }
+#define MqSysUnlink(context,fileName) (*MqLal.SysUnlink)(context,fileName)
+
+/// \syscall{exit}
+/// \param[in] isThread	exit a thread?
+/// \param[in] num exit code
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static void SysExit
+/// \until exit(num)
+/// \until }
+#define MqSysExit(isThread,num) (*MqLal.SysExit)(isThread,num)
+
+/// \syscall{abort}
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip static void SysAbort (void)
+/// \until }
+#define MqSysAbort() (*MqLal.SysAbort)()
+
+/// \syscall{gettimeofday}
+/// \context
+/// \param[out] tv the timeval object
+/// \param[out] tz the timezone object
+/// \retMqErrorE
+///
+/// \b Example:
+/// \dontinclude sys.c
+/// \skip sys_memory
+/// \skip SysGetTimeOfDay
+/// \until }
+/// \until }
 #define MqSysGetTimeOfDay(context, tv, tz) (*MqLal.SysGetTimeOfDay)(context, tv, tz)
 
 /// \brief duplicate a string, the argument \c NULL is allowed
@@ -4396,4 +4680,5 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 

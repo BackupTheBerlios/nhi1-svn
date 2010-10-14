@@ -637,10 +637,8 @@ if {![info exists env(SRV_LST)]} {
     ruby.pipe.pipe
     ruby.tcp.spawn
     ruby.tcp.fork
-    ruby.tcp.thread
     ruby.uds.spawn
     ruby.uds.fork
-    ruby.uds.thread
     csharp.pipe.pipe
     csharp.tcp.thread
     csharp.uds.thread
@@ -1398,7 +1396,7 @@ proc WaitOnFileToken {file token} {
 }
 
 proc Kill {P} {
-  catch {exec $::KILL $P}
+  catch {exec $::KILL -9 $P}
 }
 
 proc Create {I CON} {

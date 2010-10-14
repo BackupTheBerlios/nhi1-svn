@@ -108,6 +108,10 @@ class Server < MqS
       ServiceCreate("SND2", method(:SND2))
       ServiceCreate("REDI", method(:REDI))
       ServiceCreate("GTCX", method(:GTCX))
+      ServiceCreate("CSV1", method(:CSV1))
+      ServiceCreate("SLEP", method(:SLEP))
+      ServiceCreate("USLP", method(:USLP))
+      ServiceCreate("CFG1", method(:CFG1))
 
       ServiceCreate("BUF1", method(:BUF1))
       ServiceCreate("BUF2", method(:BUF2))
@@ -132,6 +136,117 @@ class Server < MqS
       ServiceCreate("ECOU", method(:ECOU))
       ServiceCreate("ECON", method(:ECON))
     end
+  end
+
+  def CFG1
+    cmd = ReadC()
+    SendSTART()
+    case cmd
+      when "Buffersize"
+        old = ConfigGetBuffersize()
+        ConfigSetBuffersize(ReadI())
+        SendI(ConfigGetBuffersize())
+        ConfigSetBuffersize(old)
+      when "Debug"
+        old = ConfigGetDebug()
+        ConfigSetDebug(ReadI())
+        SendI(ConfigGetDebug())
+        ConfigSetDebug(old)
+      when "Timeout"
+        old = ConfigGetTimeout()
+        ConfigSetTimeout(ReadW())
+        SendW(ConfigGetTimeout())
+        ConfigSetTimeout(old)
+      when "Name"
+        old = ConfigGetName()
+        ConfigSetName(ReadC())
+        SendC(ConfigGetName())
+        ConfigSetName(old)
+      when "SrvName"
+        old = ConfigGetSrvName()
+        ConfigSetSrvName(ReadC())
+        SendC(ConfigGetSrvName())
+        ConfigSetSrvName(old)
+      when "Ident"
+        old = ConfigGetIdent()
+        ConfigSetIdent(ReadC())
+        check = LinkGetTargetIdent() == ReadC()
+        SendSTART()
+        SendC(ConfigGetIdent())
+        SendO(check);
+        ConfigSetIdent(old)
+      when "IsSilent"
+        old = ConfigGetIsSilent()
+        ConfigSetIsSilent(ReadO())
+        SendO(ConfigGetIsSilent())
+        ConfigSetIsSilent(old)
+      when "IsString"
+        old = ConfigGetIsString()
+        ConfigSetIsString(ReadO())
+        SendO(ConfigGetIsString())
+        ConfigSetIsString(old)
+      when "IoUds"
+        old = ConfigGetIoUdsFile()
+        ConfigSetIoUdsFile(ReadC())
+        SendC(ConfigGetIoUdsFile())
+        ConfigSetIoUdsFile(old)
+      when "IoTcp"
+        h  = ConfigGetIoTcpHost()
+        p  = ConfigGetIoTcpPort()
+        mh = ConfigGetIoTcpMyHost()
+        mp = ConfigGetIoTcpMyPort()
+        hv = ReadC()
+        pv = ReadC()
+        mhv = ReadC()
+        mpv = ReadC()
+        ConfigSetIoTcp(hv,pv,mhv,mpv)
+        SendC(ConfigGetIoTcpHost())
+        SendC(ConfigGetIoTcpPort())
+        SendC(ConfigGetIoTcpMyHost())
+        SendC(ConfigGetIoTcpMyPort())
+        ConfigSetIoTcp(h,p,mh,mp)
+      when "IoPipe"
+        old = ConfigGetIoPipeSocket()
+        ConfigSetIoPipeSocket(ReadI())
+        SendI(ConfigGetIoPipeSocket())
+        ConfigSetIoPipeSocket(old)
+      when "StartAs"
+        old = ConfigGetStartAs()
+        ConfigSetStartAs(ReadI())
+        SendI(ConfigGetStartAs())
+        ConfigSetStartAs(old)
+      else
+        ErrorC("CFG1", 1, "invalid command: " + cmd)
+    end
+    SendRETURN();
+  end
+
+  def USLP
+    i = ReadI()
+    USleep(i)
+    SendSTART()
+    SendI(i)
+    SendRETURN()
+  end
+
+  def SLEP
+    i = ReadI()
+    Sleep(i)
+    SendSTART()
+    SendI(i)
+    SendRETURN()
+  end
+
+  def CSV1
+    # call an other service
+    SendSTART()
+    SendI(ReadI()+1)
+    SendEND_AND_WAIT("CSV2", 10)
+
+    # read the answer and send the result back
+    SendSTART()
+    SendI(ReadI()+1)
+    SendRETURN()
   end
 
   def ECON
@@ -483,9 +598,6 @@ end
 ## --------------------------------------------------------
 ##    Main
 ##
-
-#print("1111")
-#sys.stdout.flush()
 
 srv = Server.new
 

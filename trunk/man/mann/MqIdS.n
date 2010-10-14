@@ -1,0 +1,72 @@
+.TH "MqIdS" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIdS \- data type for process/thread identification  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqIdSE\fP { \fBMQ_ID_UNUSED\fP =  0, \fBMQ_ID_PROCESS\fP =  1, \fBMQ_ID_THREAD\fP =  2 }"
+.br
+.R "signal type of \fIval\fP data "
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqIdS::MqIdSE\fP \fBtype\fP"
+.br
+.R "signal type of \fIval\fP data "
+.ti -1c
+.RI "unsigned long \fBval\fP"
+.br
+.R "process or thread handle "
+.in -1c
+.SH "Detailed Description"
+.PP 
+data type for process/thread identification 
+
+This struct is used as storage for the process or the thread identification handle. 
+.PP
+Definition at line 4020 of file msgque.h.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBMqIdS::MqIdSE\fP"
+.PP
+signal type of \fIval\fP data 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_ID_UNUSED \fP\fP
+empty struct 
+.TP
+\fB\fIMQ_ID_PROCESS \fP\fP
+\fIval\fP has a process handle 
+.TP
+\fB\fIMQ_ID_THREAD \fP\fP
+\fIval\fP has a thread handle 
+.PP
+Definition at line 4022 of file msgque.h.
+.SH "Field Documentation"
+.PP 
+.SS "enum \fBMqIdS::MqIdSE\fP  \fBMqIdS::type\fP"
+.PP
+signal type of \fIval\fP data 
+.PP
+.SS "unsigned long \fBMqIdS::val\fP"
+.PP
+process or thread handle 
+.PP
+Definition at line 4027 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for libmsgque from the source code.

@@ -12,39 +12,49 @@
 
 require "rubymsgque"
 
-class Filter1(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: Filter1())
-    self.ConfigSetName("filter")
-    self.ConfigSetServerSetup(self.ServerSetup)
-    self.data = []
-    MqS.__init__(self)
-  def ServerSetup(self):
-    self.ServiceCreate("+FTR", self.FTRcmd)
-    self.ServiceCreate("+EOF", self.EOFcmd)
-  def FTRcmd(ctx):
-    L = []
-    while ctx.ReadItemExists():
-      L.append("<" + ctx.ReadC() + ">")
-    ctx.data.append(L)
-    ctx.SendRETURN()
-  def EOFcmd(ctx):
-    ftr = ctx.ServiceGetFilter()
-    for L in ctx.data:
+class Filter1 < MqS
+  def initialize
+    ConfigSetName("filter")
+    ConfigSetFactory(lambda {Filter1.new})
+    ConfigSetServerSetup(method(:ServerSetup))
+    @data = []
+    super()
+  end
+  def ServerSetup
+    ServiceCreate("+FTR", method(:FTRcmd))
+    ServiceCreate("+EOF", method(:EOFcmd))
+  end
+  def FTRcmd
+    list = []
+    while ReadItemExists()
+      list << "<" + ReadC() + ">"
+    end
+    @data << list
+    SendRETURN()
+  end
+  def EOFcmd
+    ftr = ServiceGetFilter()
+    for list in @data
       ftr.SendSTART()
-      for I in L:
-        ftr.SendC(I)
+      for item in list
+        ftr.SendC(item)
+      end
       ftr.SendEND_AND_WAIT("+FTR")
+    end
     ftr.SendSTART()
     ftr.SendEND_AND_WAIT("+EOF")
-    ctx.SendRETURN()
-srv = Filter1()
-try:
-  srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
-except:
-  srv.ErrorSet()
-finally:
+    SendRETURN()
+  end
+end
+srv = Filter1.new
+begin
+  srv.LinkCreate($0,ARGV)
+  srv.ProcessEvent(MqS::WAIT::FOREVER)
+rescue SignalException => ex
+  # ignore
+rescue Exception => ex
+  srv.ErrorSet(ex)
+ensure
   srv.Exit()
-
+end
 

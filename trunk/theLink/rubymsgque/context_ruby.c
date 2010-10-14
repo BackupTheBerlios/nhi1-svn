@@ -18,6 +18,9 @@
 #endif
 
 VALUE id_receiver;
+VALUE id_clone;
+VALUE id_unbind;
+VALUE id_bind;
 
 #ifdef HAVE_FORK
 //static id_t NS(fork) (void) {
@@ -42,7 +45,7 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
   VALUE a0 = rb_gv_get("$0");
 
   // init libmsgque global data
-  if (MqInitBuf == NULL && a0 != Qnil) {
+  if (MqInitBuf == NULL && !NIL_P(a0)) {
     struct MqBufferLS * initB = MqInitCreate();
     MqBufferLAppendC(initB, VAL2CST(rb_argv0));
     MqBufferLAppendC(initB, VAL2CST(a0));
@@ -50,5 +53,8 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
 
   // set global data
   id_receiver = rb_intern("receiver");
+  id_clone = rb_intern("clone");
+  id_unbind = rb_intern("unbind");
+  id_bind = rb_intern("bind");
 }
 

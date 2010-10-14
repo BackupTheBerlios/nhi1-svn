@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "8 Oct 2010" "Version 4.5" "pymsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINone\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
 .RE
 .PP
 
@@ -39,4 +39,4 @@ Definition at line 589 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for pymsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

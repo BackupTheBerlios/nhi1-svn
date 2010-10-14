@@ -1,200 +1,109 @@
-.TH "Mq_System_C_API" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "MqLalS" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.  
+MqLalS \- Interface between \fBMqS\fP and the Operating-System.  
 
 .PP
-.SS "Data Structures"
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
-.RI "struct \fBMqIdS\fP"
+.RI "\fBMQ_PTR\fP(* \fBSysCalloc\fP )(struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
-.R "data type for process/thread identification "
+.R "\fBcalloc\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "struct \fBMqLalS\fP"
+.RI "\fBMQ_PTR\fP(* \fBSysMalloc\fP )(struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
 .br
-.R "Interface between \fBMqS\fP and the Operating-System. "
-.in -1c
-.SS "Defines"
-
-.in +1c
+.R "\fBmalloc\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_strtoll\fP   strtoll"
+.RI "\fBMQ_PTR\fP(* \fBSysRealloc\fP )(struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
 .br
+.R "\fBrealloc\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_strdup\fP(v)   strdup(v)"
+.RI "void(* \fBSysFreeP\fP )(\fBMQ_PTR\fP tgt)"
 .br
+.R "\fBfree\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_getpid\fP   getpid"
+.RI "enum \fBMqErrorE\fP(* \fBSysServerSpawn\fP )(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .br
+.R "\fBspawn server create\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_unlink\fP   unlink"
+.RI "enum \fBMqErrorE\fP(* \fBSysServerThread\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
 .br
+.R "\fBthread server create\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_snprintf\fP   snprintf"
+.RI "enum \fBMqErrorE\fP(* \fBSysServerFork\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .br
+.R "\fBfork server create\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMQ_CLRCALL\fP"
+.RI "enum \fBMqErrorE\fP(* \fBSysFork\fP )(struct \fBMqS\fP *const context, struct \fBMqIdS\fP *idP)"
 .br
+.R "\fBfork\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMQ_STDCALL\fP"
+.RI "enum \fBMqErrorE\fP(* \fBSysGetTimeOfDay\fP )(struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
 .br
+.R "\fBgettimeofday\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMQ_CDECL\fP"
+.RI "enum \fBMqErrorE\fP(* \fBSysWait\fP )(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
 .br
+.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_inline\fP   inline"
+.RI "enum \fBMqErrorE\fP(* \fBSysUSleep\fP )(struct \fBMqS\fP *const context, unsigned int const usec)"
 .br
+.R "\fBusleep\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_timeval\fP   timeval"
+.RI "enum \fBMqErrorE\fP(* \fBSysSleep\fP )(struct \fBMqS\fP *const context, unsigned int const sec)"
 .br
+.R "\fBsleep\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBmq_timezone\fP   timezone"
+.RI "\fBMQ_STR\fP(* \fBSysBasename\fP )(\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .br
+.R "\fBbasename\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysCalloc\fP(context, nmemb, size)   (*MqLal.SysCalloc)(context,nmemb,size)"
+.RI "enum \fBMqErrorE\fP(* \fBSysIgnorSIGCHLD\fP )(struct \fBMqS\fP *const context)"
 .br
-.R "\fBcalloc\fP syscall with \fBMqS\fP error plugin "
+.R "\fBignor SIGCHLD\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysMalloc\fP(context, size)   (*MqLal.SysMalloc)(context,size)"
+.RI "enum \fBMqErrorE\fP(* \fBSysAllowSIGCHLD\fP )(struct \fBMqS\fP *const context)"
 .br
-.R "\fBmalloc\fP syscall with \fBMqS\fP error plugin "
+.R "\fBallow SIGCHLD\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysRealloc\fP(context, buf, size)   (*MqLal.SysRealloc) (context, buf, size)"
+.RI "enum \fBMqErrorE\fP(* \fBSysDaemonize\fP )(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .br
-.R "\fBrealloc\fP syscall with \fBMqS\fP error plugin "
+.R "\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP  "
 .ti -1c
-.RI "#define \fBMqSysFree\fP(tgt)"
+.RI "enum \fBMqErrorE\fP(* \fBSysUnlink\fP )(struct \fBMqS\fP *const context, const \fBMQ_STR\fP fileName)"
 .br
-.R "\fBfree\fP syscall with \fBMqS\fP error plugin "
+.R "\fBunlink\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysServerSpawn\fP(context, argv, name, idP)   (*MqLal.SysServerSpawn)(context, argv, name, idP)"
+.RI "void(* \fBSysExit\fP )(int isThread, int num)"
 .br
-.R "\fBspawn server create\fP syscall with \fBMqS\fP error plugin "
+.R "\fBexit\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysServerThread\fP(context, factory, argvP, alfaP, name, state, idP)   (*MqLal.SysServerThread)(context, factory, argvP, alfaP, name, state, idP)"
+.RI "void(* \fBSysAbort\fP )(void)"
 .br
-.R "\fBthread server create\fP syscall with \fBMqS\fP error plugin "
+.R "\fBabort\fP syscall with \fBMqS\fP error plugin  "
 .ti -1c
-.RI "#define \fBMqSysServerFork\fP(context, factory, argvP, alfaP, name, idP)   (*MqLal.SysServerFork)(context, factory, argvP, alfaP, name, idP)"
+.RI "enum \fBMqErrorE\fP(* \fBSysGetEnv\fP )(struct \fBMqS\fP *const context, \fBMQ_CST\fP name, \fBMQ_STR\fP *ret)"
 .br
-.R "\fBfork server create\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysFork\fP(context, idP)   (*MqLal.SysFork)(context, idP)"
-.br
-.R "\fBfork\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysWait\fP(context, idP)   (*MqLal.SysWait)(context, idP)"
-.br
-.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysUSleep\fP(context, usec)   (*MqLal.SysUSleep)(context, usec)"
-.br
-.R "\fBusleep\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysSleep\fP(context, sec)   (*MqLal.SysSleep)(context, sec)"
-.br
-.R "\fBsleep\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysBasename\fP(in, includeExtension)   (*MqLal.SysBasename)(in, includeExtension)"
-.br
-.R "\fBbasename\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysIgnorSIGCHLD\fP(context)   (*MqLal.SysIgnorSIGCHLD)(context)"
-.br
-.R "\fBignor SIGCHLD\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysAllowSIGCHLD\fP(context)   (*MqLal.SysAllowSIGCHLD)(context)"
-.br
-.R "\fBallow SIGCHLD\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysDaemonize\fP(context, pidfile)   (*MqLal.SysDaemonize)(context,pidfile)"
-.br
-.R "\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP "
-.ti -1c
-.RI "#define \fBMqSysUnlink\fP(context, fileName)   (*MqLal.SysUnlink)(context,fileName)"
-.br
-.R "\fBunlink\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysExit\fP(isThread, num)   (*MqLal.SysExit)(isThread,num)"
-.br
-.R "\fBexit\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysAbort\fP()   (*MqLal.SysAbort)()"
-.br
-.R "\fBabort\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysGetEnv\fP(context, name, ret)   (*MqLal.SysGetEnv)(context,name,ret)"
-.br
-.R "\fBgetenv\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysGetTimeOfDay\fP(context, tv, tz)   (*MqLal.SysGetTimeOfDay)(context, tv, tz)"
-.br
-.R "\fBgettimeofday\fP syscall with \fBMqS\fP error plugin "
-.in -1c
-.SS "Functions"
-
-.in +1c
-.ti -1c
-.RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
-.br
-.R "duplicate a string, the argument \fCNULL\fP is allowed "
-.in -1c
-.SS "Variables"
-
-.in +1c
-.ti -1c
-.RI "struct \fBMqLalS\fP \fBMqLal\fP"
-.br
-.R "Language Abstraction Layer in duty. "
+.R "\fBgetenv\fP syscall with \fBMqS\fP error plugin  "
 .in -1c
 .SH "Detailed Description"
 .PP 
-L)anguage A)bstraction L)ayer defnition. 
-
-The \fBLAL\fP is required to give the target of embedding a change to modify the access to system functions. \fIRUBY\fP for example has it's own Thread-Creation function.
+Interface between \fBMqS\fP and the Operating-System. 
 .PP
-All wrappers to access the underlying OS,Languags and system functions are located in this section. Every external Function has additional code to map the OS/System specific error codes/messages into \fBMqS\fP specific error codes/messages 
-.SH "Define Documentation"
+Definition at line 4031 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "#define MQ_CDECL"
+.SS "void(* \fBMqLalS::SysAbort\fP)(void)"
 .PP
-Definition at line 90 of file msgque.h.
-.SS "#define MQ_CLRCALL"
-.PP
-Definition at line 86 of file msgque.h.
-.SS "#define mq_getpid   getpid"
-.PP
-Definition at line 80 of file msgque.h.
-.SS "#define mq_inline   inline"
-.PP
-Definition at line 92 of file msgque.h.
-.SS "#define mq_snprintf   snprintf"
-.PP
-Definition at line 84 of file msgque.h.
-.SS "#define MQ_STDCALL"
-.PP
-Definition at line 88 of file msgque.h.
-.SS "#define mq_strdup(v)   strdup(v)"
-.PP
-Definition at line 78 of file msgque.h.
-.SS "#define mq_strtoll   strtoll"
-.PP
-Definition at line 76 of file msgque.h.
-.SS "#define mq_timeval   timeval"
-.PP
-Definition at line 158 of file msgque.h.
-.SS "#define mq_timezone   timezone"
-.PP
-Definition at line 160 of file msgque.h.
-.SS "#define mq_unlink   unlink"
-.PP
-Definition at line 82 of file msgque.h.
-.SS "#define MqSysAbort()   (*MqLal.SysAbort)()"
-.PP
-\fBabort\fP syscall with \fBMqS\fP error plugin 
+\fBabort\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBExample:\fP  
 .PP
@@ -205,12 +114,10 @@ static void SysAbort (void) {
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysAllowSIGCHLD\fP)(struct \fBMqS\fP *const context)"
 .PP
-Definition at line 4391 of file msgque.h.
-.SS "#define MqSysAllowSIGCHLD(context)   (*MqLal.SysAllowSIGCHLD)(context)"
-.PP
-\fBallow SIGCHLD\fP syscall with \fBMqS\fP error plugin 
+\fBallow SIGCHLD\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -239,12 +146,10 @@ static enum MqErrorE SysAllowSIGCHLD (
 
 .fi
 .PP
- 
+  
+.SS "\fBMQ_STR\fP(* \fBMqLalS::SysBasename\fP)(\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .PP
-Definition at line 4343 of file msgque.h.
-.SS "#define MqSysBasename(in, includeExtension)   (*MqLal.SysBasename)(in, includeExtension)"
-.PP
-\fBbasename\fP syscall with \fBMqS\fP error plugin 
+\fBbasename\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -305,12 +210,10 @@ static MQ_STR SysBasename (
 
 .fi
 .PP
- 
+  
+.SS "\fBMQ_PTR\fP(* \fBMqLalS::SysCalloc\fP)(struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .PP
-Definition at line 4319 of file msgque.h.
-.SS "#define MqSysCalloc(context, nmemb, size)   (*MqLal.SysCalloc)(context,nmemb,size)"
-.PP
-\fBcalloc\fP syscall with \fBMqS\fP error plugin 
+\fBcalloc\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -343,12 +246,10 @@ static MQ_PTR SysCalloc (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .PP
-Definition at line 4159 of file msgque.h.
-.SS "#define MqSysDaemonize(context, pidfile)   (*MqLal.SysDaemonize)(context,pidfile)"
-.PP
-\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP 
+\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -426,12 +327,10 @@ error:
 
 .fi
 .PP
- 
+  
+.SS "void(* \fBMqLalS::SysExit\fP)(int isThread, int num)"
 .PP
-Definition at line 4356 of file msgque.h.
-.SS "#define MqSysExit(isThread, num)   (*MqLal.SysExit)(isThread,num)"
-.PP
-\fBexit\fP syscall with \fBMqS\fP error plugin 
+\fBexit\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -467,12 +366,10 @@ static void SysExit (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysFork\fP)(struct \fBMqS\fP *const context, struct \fBMqIdS\fP *idP)"
 .PP
-Definition at line 4382 of file msgque.h.
-.SS "#define MqSysFork(context, idP)   (*MqLal.SysFork)(context, idP)"
-.PP
-\fBfork\fP syscall with \fBMqS\fP error plugin 
+\fBfork\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -507,22 +404,10 @@ static enum MqErrorE SysFork (
 
 .fi
 .PP
- 
+  
+.SS "void(* \fBMqLalS::SysFreeP\fP)(\fBMQ_PTR\fP tgt)"
 .PP
-Definition at line 4265 of file msgque.h.
-.SS "#define MqSysFree(tgt)"
-.PP
-\fBValue:\fP
-.PP
-.nf
-do { \
-        if ( likely((tgt) != (NULL)) ) { \
-            (*MqLal.SysFreeP)((MQ_PTR)tgt); \
-            (tgt) = (NULL); \
-        } \
-    } while (0)
-.fi
-\fBfree\fP syscall with \fBMqS\fP error plugin 
+\fBfree\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -541,12 +426,10 @@ static void SysFreeP (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysGetEnv\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP name, \fBMQ_STR\fP *ret)"
 .PP
-Definition at line 4194 of file msgque.h.
-.SS "#define MqSysGetEnv(context, name, ret)   (*MqLal.SysGetEnv)(context,name,ret)"
-.PP
-\fBgetenv\fP syscall with \fBMqS\fP error plugin 
+\fBgetenv\fP syscall with \fBMqS\fP error plugin  
 .PP
 Environment variables are out of control by the programmer and are sources of error. The following code is used to secure read, write and delete environment variables and integrate the error cases into the msgque error-handling.
 .PP
@@ -581,12 +464,10 @@ static enum MqErrorE SysGetEnv (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysGetTimeOfDay\fP)(struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
 .PP
-Definition at line 4411 of file msgque.h.
-.SS "#define MqSysGetTimeOfDay(context, tv, tz)   (*MqLal.SysGetTimeOfDay)(context, tv, tz)"
-.PP
-\fBgettimeofday\fP syscall with \fBMqS\fP error plugin 
+\fBgettimeofday\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -619,12 +500,10 @@ static enum MqErrorE SysGetTimeOfDay (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysIgnorSIGCHLD\fP)(struct \fBMqS\fP *const context)"
 .PP
-Definition at line 4425 of file msgque.h.
-.SS "#define MqSysIgnorSIGCHLD(context)   (*MqLal.SysIgnorSIGCHLD)(context)"
-.PP
-\fBignor SIGCHLD\fP syscall with \fBMqS\fP error plugin 
+\fBignor SIGCHLD\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -653,12 +532,10 @@ static enum MqErrorE SysIgnorSIGCHLD (
 
 .fi
 .PP
- 
+  
+.SS "\fBMQ_PTR\fP(* \fBMqLalS::SysMalloc\fP)(struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
 .PP
-Definition at line 4331 of file msgque.h.
-.SS "#define MqSysMalloc(context, size)   (*MqLal.SysMalloc)(context,size)"
-.PP
-\fBmalloc\fP syscall with \fBMqS\fP error plugin 
+\fBmalloc\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -688,12 +565,10 @@ static MQ_PTR SysMalloc (
 
 .fi
 .PP
- 
+  
+.SS "\fBMQ_PTR\fP(* \fBMqLalS::SysRealloc\fP)(struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
 .PP
-Definition at line 4171 of file msgque.h.
-.SS "#define MqSysRealloc(context, buf, size)   (*MqLal.SysRealloc) (context, buf, size)"
-.PP
-\fBrealloc\fP syscall with \fBMqS\fP error plugin 
+\fBrealloc\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -726,12 +601,10 @@ static MQ_PTR SysRealloc (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
-Definition at line 4184 of file msgque.h.
-.SS "#define MqSysServerFork(context, factory, argvP, alfaP, name, idP)   (*MqLal.SysServerFork)(context, factory, argvP, alfaP, name, idP)"
-.PP
-\fBfork server create\fP syscall with \fBMqS\fP error plugin 
+\fBfork server create\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -815,12 +688,10 @@ error:
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerSpawn\fP)(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
-Definition at line 4251 of file msgque.h.
-.SS "#define MqSysServerSpawn(context, argv, name, idP)   (*MqLal.SysServerSpawn)(context, argv, name, idP)"
-.PP
-\fBspawn server create\fP syscall with \fBMqS\fP error plugin 
+\fBspawn server create\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -910,12 +781,10 @@ error:
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerThread\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
 .PP
-Definition at line 4215 of file msgque.h.
-.SS "#define MqSysServerThread(context, factory, argvP, alfaP, name, state, idP)   (*MqLal.SysServerThread)(context, factory, argvP, alfaP, name, state, idP)"
-.PP
-\fBthread server create\fP syscall with \fBMqS\fP error plugin 
+\fBthread server create\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1069,12 +938,10 @@ error:
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysSleep\fP)(struct \fBMqS\fP *const context, unsigned int const sec)"
 .PP
-Definition at line 4233 of file msgque.h.
-.SS "#define MqSysSleep(context, sec)   (*MqLal.SysSleep)(context, sec)"
-.PP
-\fBsleep\fP syscall with \fBMqS\fP error plugin 
+\fBsleep\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1110,12 +977,10 @@ static enum MqErrorE SysSleep (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysUnlink\fP)(struct \fBMqS\fP *const context, const \fBMQ_STR\fP fileName)"
 .PP
-Definition at line 4304 of file msgque.h.
-.SS "#define MqSysUnlink(context, fileName)   (*MqLal.SysUnlink)(context,fileName)"
-.PP
-\fBunlink\fP syscall with \fBMqS\fP error plugin 
+\fBunlink\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1160,12 +1025,10 @@ static enum MqErrorE SysUnlink (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysUSleep\fP)(struct \fBMqS\fP *const context, unsigned int const usec)"
 .PP
-Definition at line 4369 of file msgque.h.
-.SS "#define MqSysUSleep(context, usec)   (*MqLal.SysUSleep)(context, usec)"
-.PP
-\fBusleep\fP syscall with \fBMqS\fP error plugin 
+\fBusleep\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1201,12 +1064,10 @@ static enum MqErrorE SysUSleep (
 
 .fi
 .PP
- 
+  
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysWait\fP)(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
 .PP
-Definition at line 4291 of file msgque.h.
-.SS "#define MqSysWait(context, idP)   (*MqLal.SysWait)(context, idP)"
-.PP
-\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin 
+\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1268,34 +1129,8 @@ static enum MqErrorE SysWait (
 
 .fi
 .PP
- 
-.PP
-Definition at line 4278 of file msgque.h.
-.SH "Function Documentation"
-.PP 
-.SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [inline, static]\fP"
-.PP
-duplicate a string, the argument \fCNULL\fP is allowed 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIv\fP the string to duplicate 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-the new string or \fCNULL\fP 
-.RE
-.PP
+  
 
-.PP
-Definition at line 4430 of file msgque.h.
-.SH "Variable Documentation"
-.PP 
-.SS "struct \fBMqLalS\fP \fBMqLal\fP"
-.PP
-Language Abstraction Layer in duty. 
-.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for libmsgque from the source code.

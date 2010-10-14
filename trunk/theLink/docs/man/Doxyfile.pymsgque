@@ -112,7 +112,7 @@ ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
 
 ALIASES		    += "config_type_pipe=PyLong"
 ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocketSocket"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_isServer=PyBool"
 ALIASES		    += "config_set_isServer=ConfigSetIsServer"
@@ -293,6 +293,7 @@ except: \n\
   if ctx.ErrorIsEXIT(): \n\
     ctx.ErrorReset() \n\
 \endcode"
+
 
 
 

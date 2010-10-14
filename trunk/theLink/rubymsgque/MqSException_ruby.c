@@ -77,7 +77,7 @@ void NS(MqSException_Set) (struct MqS* mqctx, VALUE ex) {
   } else if (rb_obj_is_kind_of(ex, rb_eException) == Qtrue) {
     VALUE arg;
     VALUE argv = rb_funcall(ex,id_backtrace,0,NULL);
-    MqErrorC(mqctx, "ruby-error", -1, VAL2CST(rb_inspect(ex)));
+    MqErrorC(mqctx, "Ruby-Error", -1, VAL2CST(rb_inspect(ex)));
     while ((arg = rb_ary_shift(argv)) != Qnil) {
       MqErrorSAppendC(mqctx, VAL2CST(arg));
     }

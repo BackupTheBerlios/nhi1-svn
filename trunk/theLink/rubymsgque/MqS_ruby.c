@@ -11,8 +11,6 @@
  */
 #include "msgque_ruby.h"
 
-#define MQ_CONTEXT_S mqctx
-
 VALUE cMqS;
 
 /*****************************************************************************/
@@ -21,22 +19,7 @@ VALUE cMqS;
 /*                                                                           */
 /*****************************************************************************/
 
-static void ProcessExit (MQ_INT num)
-{
-  rb_exit(num);
-}
-
-static void ThreadExit (MQ_INT num)
-{
-}
-
-/*
-static void ForkAndSpawnInit (struct MqS *mqctx) {
-  rb_thread_atfork_before_exec();
-}
-*/
-
-static void Free (void * ctx)
+static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
   mqctx->setup.Factory.Delete.fCall = NULL;
@@ -51,7 +34,7 @@ static VALUE new(VALUE class)
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
 
   // create a "ruby" object and link it to the "mqctx" class
-  VALUE self = Data_Wrap_Struct(class, NULL, Free, mqctx);
+  VALUE self = Data_Wrap_Struct(class, NULL, sFree, mqctx);
 
   // create ruby command
   mqctx->self = (void*) self;
@@ -59,10 +42,7 @@ static VALUE new(VALUE class)
   // set configuration data
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;      
-  mqctx->setup.fProcessExit    = ProcessExit;    
-  mqctx->setup.fThreadExit     = ThreadExit;     
-  //mqctx->setup.fSpawnInit      = ForkAndSpawnInit;     
-  //mqctx->setup.fForkInit       = ForkAndSpawnInit;     
+  MqConfigSetIgnoreThread(mqctx, MQ_YES);
 
   // call "initialize"
   rb_obj_call_init(self, 0, NULL);
@@ -90,6 +70,18 @@ static VALUE LogC(VALUE self, VALUE prefix, VALUE level, VALUE str)
   return Qnil;
 }
 
+static VALUE Sleep(VALUE self, VALUE sec)
+{
+  MqSysSleep(MQCTX, VAL2INT(sec));
+  return Qnil;
+}
+
+static VALUE USleep(VALUE self, VALUE usec)
+{
+  MqSysUSleep(MQCTX, VAL2INT(usec));
+  return Qnil;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                public                                     */
@@ -106,7 +98,10 @@ void NS(MqS_Init) (void) {
   rb_define_method(cMqS, "Exit",    Exit,   0);
   rb_define_method(cMqS, "Delete",  Delete, 0);
   rb_define_method(cMqS, "LogC",    LogC,   3);
+  rb_define_method(cMqS, "Sleep",   Sleep,  1);
+  rb_define_method(cMqS, "USleep",  USleep, 1);
 
+  NS(MqS_Sys_Init)();
   NS(MqS_Send_Init)();
   NS(MqS_Read_Init)();
   NS(MqS_Error_Init)();
