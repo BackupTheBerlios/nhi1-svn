@@ -19,9 +19,29 @@ VALUE cMqS;
 /*                                                                           */
 /*****************************************************************************/
 
+static void sMqMark (struct MqS *mqctx)
+{
+  SETUP_self;
+MQ_I0
+printP(self)
+  rb_gc_mark(self);
+}
+
+static void sMark (void * ctx)
+{
+  struct MqS *mqctx = (struct MqS *) ctx;
+  SETUP_self;
+MQ_I0
+printP(self)
+  MqMark(mqctx, sMqMark);
+}
+
 static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
+  SETUP_self;
+MQ_I0
+printP(self)
   mqctx->setup.Factory.Delete.fCall = NULL;
   mqctx->setup.Event.fCall = NULL;
   mqctx->self = NULL;
@@ -34,7 +54,7 @@ static VALUE new(VALUE class)
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
 
   // create a "ruby" object and link it to the "mqctx" class
-  VALUE self = Data_Wrap_Struct(class, NULL, sFree, mqctx);
+  VALUE self = Data_Wrap_Struct(class, sMark, sFree, mqctx);
 
   // create ruby command
   mqctx->self = (void*) self;
@@ -82,6 +102,15 @@ static VALUE USleep(VALUE self, VALUE usec)
   return Qnil;
 }
 
+static VALUE Init(int argc, VALUE *argv, VALUE self)
+{
+  struct MqBufferLS * initB = MqInitCreate();
+  for (; argc>0; argc--,argv++) {
+    MqBufferLAppendC(initB, VAL2CST(*argv));
+  }
+  return Qnil;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                public                                     */
@@ -93,7 +122,8 @@ void NS(MqS_Init) (void) {
   // define class MqS
   cMqS = rb_define_class("MqS", rb_cObject);
 
-  rb_define_singleton_method(cMqS, "new", new, 0);
+  rb_define_singleton_method(cMqS, "new",  new,  0);
+  rb_define_method(cMqS, "Init", Init, -1);
 
   rb_define_method(cMqS, "Exit",    Exit,   0);
   rb_define_method(cMqS, "Delete",  Delete, 0);

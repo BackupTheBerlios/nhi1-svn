@@ -125,7 +125,7 @@
 #define printCP(txt,var)  MVA("%p",txt,var)
 
 #define MLV(x,f,v) MqLogV(x,__func__,0,"(%s:%d) -> " #v "<" f ">\n", __FILE__, __LINE__, v);
-#define MLV2(x,f,t,v) MqLogV(x,__func__,0,"(%s:%d) -> %s<" f ">\n", __FILE__, __LINE__, t, v);
+#define MLVA(x,f,t,v) MqLogV(x,__func__,0,"(%s:%d) -> " #t "<" f ">\n", __FILE__, __LINE__, v);
 
 #define printLP(var)	MLV(MQ_CONTEXT_S, "%p",        var)
 #define printLI(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_I, var)
@@ -133,14 +133,14 @@
 #define printLO(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_C, var == MQ_YES ? "yes" : "no" )
 #define printLC(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_C, var)
 #define printLH(var)	MLV(MQ_CONTEXT_S, "%c",        var)
-#define printR(var)	MLV2(MQ_CONTEXT_S, MQ_FORMAT_C, "RET", MqLogErrorCode(ret))
+#define printR(var)	MLVA(MQ_CONTEXT_S, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
 
 #define printXLP(x,var)	  MLV(x, "%p"       , var)
 #define printXLI(x,var)	  MLV(x, MQ_FORMAT_I, var)
 #define printXLC(x,var)	  MLV(x, MQ_FORMAT_C, var)
 #define printXLW(x,var)	  MLV(x, MQ_FORMAT_W, var)
 #define printXLO(x,var)	  MLV(x, MQ_FORMAT_C, var == MQ_YES ? "yes" : "no" )
-#define printXR(x,var)	  MLV2(x, MQ_FORMAT_C, "RET", MqLogErrorCode(ret))
+#define printXR(x,var)	  MLVA(x, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
 
 #define printC2(var,len)  fprintf(stderr,"%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(var,len));fflush(stderr);
 #define printC3(buf) fprintf(stderr, "%s->" #buf " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(MqBufferGetC(buf),buf->cursize));fflush(stderr);

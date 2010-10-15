@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-bin_PROGRAMS = abrain
+bin_PROGRAMS = abrain$(EXEEXT)
 
 CLEANFILES =
 

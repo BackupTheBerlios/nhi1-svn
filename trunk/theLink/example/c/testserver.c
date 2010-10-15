@@ -12,7 +12,7 @@
 
 #include "string.h"
 #include "msgque.h"
-static enum MqErrorE  GTCX( struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE  GTCX( struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   MqErrorCheck(MqSendSTART(ctx));
   MqSendI(ctx, MqLinkGetCtxId(ctx));
   MqSendC(ctx, "+");
@@ -28,7 +28,7 @@ error:
   return MqSendRETURN(ctx);
 }
 
-static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   return MqServiceCreate(ctx,"GTCX", GTCX, NULL, NULL);
 }
 

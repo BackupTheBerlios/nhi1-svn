@@ -62,7 +62,8 @@ end
 class Server < MqS
   attr_reader :cl
   def initialize
-    #puts("initialize-1 -----------" + self.to_s)
+    #$stderr.puts("initialize-1 -----------" + self.to_s)
+    #$stderr.flush
     ConfigSetName("server")
     ConfigSetIdent("test-server")
     ConfigSetServerSetup(method(:ServerSetup))
@@ -84,15 +85,17 @@ class Server < MqS
   end
 
   def ServerSetup
-    #puts("ServerSetup ----------- " + self.to_s)
+    $stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
+    $stderr.flush
+
     if (SlaveIs() == false)
 
       # initialize objects
-      @cl = [Client.new, Client.new, Client.new]
-      for i in 0..2 
-        @cl[i].ConfigSetName("cl-" + i.to_s)
-        @cl[i].ConfigSetSrvName("sv-" + i.to_s)
-      end
+      # @cl = [Client.new, Client.new, Client.new]
+      # for i in 0..2 
+      #   @cl[i].ConfigSetName("cl-" + i.to_s)
+      #   @cl[i].ConfigSetSrvName("sv-" + i.to_s)
+      # end
 
       # add "master" services here
       ServiceCreate("SETU", method(:SETU))
@@ -112,6 +115,7 @@ class Server < MqS
       ServiceCreate("SLEP", method(:SLEP))
       ServiceCreate("USLP", method(:USLP))
       ServiceCreate("CFG1", method(:CFG1))
+      ServiceCreate("INIT", method(:INIT))
 
       ServiceCreate("BUF1", method(:BUF1))
       ServiceCreate("BUF2", method(:BUF2))
@@ -136,6 +140,16 @@ class Server < MqS
       ServiceCreate("ECOU", method(:ECOU))
       ServiceCreate("ECON", method(:ECON))
     end
+  end
+
+  def INIT
+    SendSTART()
+    list = []
+    while ReadItemExists()
+      list << ReadC()
+    end
+    Init(list)
+    SendRETURN()
   end
 
   def CFG1
@@ -359,7 +373,7 @@ class Server < MqS
       when "START4" 
         @cl[id].SlaveWorker(0)
       when "START5" 
-        SlaveWorker(id, "--name", "wk-cl-" + id.to_s, "--srvname", "wk-sv-" + id.to_s, "--thread")
+        SlaveWorker(id, "--name", "wk-cl-" + id.to_s, "--srvname", "wk-sv-" + id.to_s, "--spawn")
       when "STOP" 
         @cl[id].LinkDelete()
       when "SEND" 
@@ -608,8 +622,12 @@ begin
 rescue SignalException
   #ignore
 rescue Exception => ex
+$stderr.puts ex
+$stderr.flush
   srv.ErrorSet(ex)
 ensure
+$stderr.puts 11111111111111111111
+$stderr.flush
   srv.Exit()
 end
 

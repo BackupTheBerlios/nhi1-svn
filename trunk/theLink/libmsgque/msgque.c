@@ -19,6 +19,7 @@
 #include "token.h"
 #include "error.h"
 #include "sys.h"
+#include "slave.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>
@@ -94,7 +95,7 @@ sCallEventProc (
 	context->link.bits.onCreateEnd == MQ_YES &&
 	  context->setup.Event.fCall != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
-    switch (MqCallbackCall(context, context->setup.Event)) {
+    switch (MqCallbackCall(context, __func__, context->setup.Event)) {
       case MQ_OK:
 	break;
       case MQ_CONTINUE:
@@ -349,6 +350,24 @@ MqExitP (
 
     // 5. finally call libmsgque exit function
     MqSysExit(isThread, num);
+  }
+}
+
+void
+MqMark (
+  struct MqS * const context,
+  MqMarkF markF
+)
+{
+  // MqLinkS
+
+  // 1. mark child's
+  if (context->link.childs != NULL) {
+    pLinkMark(context->link.childs, markF);
+  }
+  // 2. mark slave's
+  if (context->link.slave != NULL) {
+    pSlaveMark(context->link.slave, markF);
   }
 }
 

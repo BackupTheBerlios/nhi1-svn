@@ -20,12 +20,24 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define NS(n)		RubyMsgque_ ## n
-#define MQCTX		VAL2MqS(self)
-#define SETUP_mqctx     struct MqS * mqctx = VAL2MqS(self);
-#define SELF            MqS2VAL(mqctx)
-#define SETUP_self      VALUE self = SELF;
+#define NS(n)		    RubyMsgque_ ## n
+#define MQCTX		    VAL2MqS(self)
+#define SETUP_mqctx	    struct MqS * mqctx = VAL2MqS(self);
+#define SELF		    MqS2VAL(mqctx)
+#define SETUP_self	    VALUE self = SELF;
 #define MQ_CONTEXT_S	    mqctx
+
+#define INCR_REF(val)	    if ((val)!=Qnil) { \
+  rb_gc_register_address(&val);\
+  MLVA(MQ_CONTEXT_S, "%p", INCR_REF, (MQ_PTR)val); \
+  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
+}
+
+#define DECR_REF(val)	    if ((val)!=Qnil) { \
+  MLVA(MQ_CONTEXT_S, "%p", DECR_REF, (MQ_PTR)val); \
+  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
+  rb_gc_unregister_address(&val);\
+}
 
 #define ErrorMqToRuby() NS(MqSException_Raise)(mqctx)
 #define ErrorMqToRubyWithCheck(PROC) \
@@ -34,7 +46,7 @@
   }
 
 #define VAL2BYT(val)	    (MQ_BYT)FIX2INT(val)
-#define VAL2BOL(val)	    (MQ_BOL)((val)==Qnil||(val)==Qfalse?0:1)
+#define VAL2BOL(val)	    (MQ_BOL)(NIL_P(val)||(val)==Qfalse?0:1)
 #define VAL2SRT(val)	    (MQ_SRT)FIX2INT(val)
 #define VAL2INT(val)	    (MQ_INT)FIX2INT(val)
 #define VAL2WID(val)	    (MQ_WID)NUM2LL(val)
@@ -95,7 +107,7 @@ VALUE NS(MqBufferS_New)	    (MQ_BUF);
 void NS(MqSException_Raise) (struct MqS*);
 void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
-void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
+void NS(ProcFree)	    (struct MqS const * const, MQ_CST, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
 MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
 enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);

@@ -39,6 +39,7 @@ struct MqLinkSlaveS {
 static enum MqErrorE
 pSlaveBqError (
   struct MqS * const context,
+  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -265,6 +266,20 @@ pSlaveDelete (
 
   // delete the slave object
   MqSysFree(*slaveP);
+}
+
+void pSlaveMark (
+  struct MqLinkSlaveS * const slave,
+  MqMarkF const markF
+)
+{
+  MQ_SIZE i;
+  struct MqS * sctx;
+  for (i=0; i<slave->used; i++) {
+    sctx = slave->slaves[i];
+    (*markF)(sctx);
+    MqMark(sctx, markF);
+  }
 }
 
 /*****************************************************************************/

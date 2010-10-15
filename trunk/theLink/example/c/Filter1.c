@@ -16,7 +16,7 @@
 
 static struct MqBufferLS * myftr;
 
-static enum MqErrorE FTR_F( struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE FTR_F( struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   MQ_CST str;
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
@@ -27,7 +27,7 @@ error:
   return MqSendRETURN (ctx);
 }
 
-static enum MqErrorE EOF_F( struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE EOF_F( struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   MQ_CST dat;
   MQ_BUF buf = NULL;
   struct MqS * ftr;

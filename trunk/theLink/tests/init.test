@@ -49,6 +49,7 @@ proc MapServer {t} {
 
       switch -glob $S {
 	python*	  { set SRV [MapServer python ] }
+	ruby*	  { set SRV [MapServer ruby   ] }
 	csharp*	  { set SRV [MapServer csharp ] }
 	java*	  { set SRV [MapServer java   ]	}
 	tcl*	  { set SRV [MapServer tcl    ] }

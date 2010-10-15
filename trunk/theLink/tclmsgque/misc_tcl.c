@@ -91,6 +91,7 @@ enum MqErrorE NS(ProcError) (
 
 enum MqErrorE NS(ProcCall) (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR const dataP
 )
 {
@@ -124,6 +125,7 @@ enum MqErrorE NS(ProcCall) (
 
 void NS(ProcFree) (
   struct MqS const * const msgque,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
@@ -133,6 +135,7 @@ void NS(ProcFree) (
 
 enum MqErrorE NS(ProcCopy) (
   struct MqS * const msgque,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {

@@ -71,11 +71,9 @@ pIoCreate (
 
     // create communication layer
     switch (io->config->com) {
-#if defined(MQ_IS_POSIX)
       case MQ_IO_UDS:
         MqErrorCheck (UdsCreate  (io, &io->iocom.udsSP));
         break;
-#endif
       case MQ_IO_TCP:
         MqErrorCheck (TcpCreate  (io, &io->iocom.tcpSP));
         break;
@@ -96,11 +94,9 @@ pIoCreate (
   // create the server socket
   if (MQ_IS_SERVER_PARENT (context)) {
     switch (io->config->com) {
-#if defined(MQ_IS_POSIX)
       case MQ_IO_UDS:
         MqErrorCheck (UdsServer (io->iocom.udsSP));
         break;
-#endif
       case MQ_IO_TCP:
         MqErrorCheck (TcpServer (io->iocom.tcpSP));
         break;
@@ -167,11 +163,9 @@ pIoDelete (
 
       // cleanup the io data
       switch (io->config->com) {
-#if defined(MQ_IS_POSIX)
 	case MQ_IO_UDS:
 	  UdsDelete ((struct UdsS **) & io->iocom);
 	  break;
-#endif
 	case MQ_IO_TCP:
 	  TcpDelete ((struct TcpS **) & io->iocom);
 	  break;
@@ -222,11 +216,9 @@ pIoConnect (
 )
 {
   switch (io->config->com) {
-#if defined(MQ_IS_POSIX)
     case MQ_IO_UDS:
       MqErrorCheck (UdsConnect (io->iocom.udsSP));
       break;
-#endif
     case MQ_IO_TCP:
       MqErrorCheck (TcpConnect (io->iocom.tcpSP));
       break;
@@ -756,9 +748,7 @@ pIoLogCom (
   enum MqIoComE com
 ) {
   switch (com) {
-#if defined(MQ_IS_POSIX)
     case MQ_IO_UDS:   return "UDS";
-#endif
     case MQ_IO_TCP:   return "TCP";
     case MQ_IO_PIPE:  return "PIPE";
   }
@@ -846,9 +836,7 @@ pIoIsRemote (
 )
 {
   switch (io->config->com) {
-#if defined(MQ_IS_POSIX)
     case  MQ_IO_UDS:
-#endif
     case  MQ_IO_TCP:   return MQ_YES;
     case  MQ_IO_PIPE:  return MQ_NO;
   }

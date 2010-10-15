@@ -2,12 +2,57 @@
 #include "msgque_ruby.h"
 
 #include <errno.h>
+#include <ruby/defines.h>
 
 static ID id_join;
 
 #define MqErrorSys(cmd) \
   MqErrorV (context, __func__, errno, \
     "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
+
+// *************************************************************************
+
+static MQ_PTR SysCalloc (
+  struct MqS * const context,
+  MQ_SIZE nmemb,
+  MQ_SIZE size
+)
+{
+  MQ_PTR ptr = xcalloc (nmemb, size);
+  if (unlikely (ptr == NULL))
+    MqErrorC (context, __func__, errno, strerror (errno));
+  return ptr;
+}
+
+static MQ_PTR SysMalloc (
+  struct MqS * const context,
+  MQ_SIZE size
+)
+{
+  MQ_PTR ptr = xmalloc (size);
+  if (unlikely (ptr == NULL))
+    MqErrorC (context, __func__, errno, strerror (errno));
+  return ptr;
+}
+
+static MQ_PTR SysRealloc (
+  struct MqS * const context,
+  MQ_PTR buf,
+  MQ_SIZE size
+)
+{
+  MQ_PTR ptr = xrealloc (buf, size);
+  if (unlikely (ptr == NULL))
+    MqErrorC (context, __func__, errno, strerror (errno));
+  return ptr;
+}
+
+static void SysFreeP (
+  MQ_PTR ptr
+)
+{
+  if ( likely((ptr) != (NULL)) ) xfree(ptr);
+}
 
 static enum MqErrorE SysFork (
   struct MqS * const context,
@@ -106,7 +151,7 @@ static enum MqErrorE SysServerThread (
   NIL_Check(ret = NS(Rescue)(context, SysServerThreadCall, INT2FIX((long)argP)));
 
   // make thread_id persistent
-  rb_gc_register_address(&ret);
+  INCR_REF(ret);
 
   // save tid
   (*idP).val = ret;
@@ -151,7 +196,7 @@ static enum MqErrorE SysWait (
     case MQ_ID_THREAD: {
       VALUE thread = PTR2VAL((MQ_PTR)idP->val);
       NIL_Check(NS(Rescue)(context, SysWaitCall, thread));
-      rb_gc_unregister_address(&thread);
+      INCR_REF(thread);
       break;
     }
     case MQ_ID_UNUSED: {
@@ -170,7 +215,11 @@ void NS(MqS_Sys_Init)(void) {
   id_join = rb_intern("join");
 
   // update LAL
-  MqLal.SysFork = SysFork;
+  MqLal.SysCalloc   = SysCalloc	  ;
+  MqLal.SysMalloc   = SysMalloc	  ;
+  MqLal.SysRealloc  = SysRealloc  ;
+  MqLal.SysFreeP    = SysFreeP	  ;
+  MqLal.SysFork	    = SysFork	  ;
 
 /*
   MqLal.SysServerThread = SysServerThread;

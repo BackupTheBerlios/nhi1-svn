@@ -30,6 +30,11 @@ void pLinkDisConnect (
   struct MqS * const context
 );
 
+void pLinkMark (
+  struct pChildS * child,
+  MqMarkF const markF
+);
+
 END_C_DECLS
 
 #endif /* MQ_LINK_H */

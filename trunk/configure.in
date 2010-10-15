@@ -71,7 +71,9 @@ AC_DEFINE([LIBMSGQUE_VERSION], ["4.5"], [version of the 'libmsgque' package])
 AC_SUBST([VERSION_INFO], [17:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
+
 AM_PROG_CC_C_O
+
 GCC=yes
 #LDFLAGS="-no-undefined"
 AC_PROG_CXX
@@ -79,8 +81,8 @@ AC_PROG_CC_C99
 AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
   AC_MSG_ERROR([require c99 mode to compile])
 ])
-CFLAGS="-O3 -Wall -Wcast-align -fvisibility=hidden $CFLAGS"
-CXXFLAGS="-O3 -Wall -fvisibility=hidden $CXXFLAGS"
+CFLAGS="-Wall -Wcast-align -fvisibility=hidden"
+CXXFLAGS="-Wall -fvisibility=hidden"
 SC_ENABLE_THREADS
 
 #------------------------------------
@@ -88,6 +90,7 @@ AC_MSG_CHECKING(get libtool support);echo
 #------------------------------------
 AC_DISABLE_STATIC
 AC_LIBTOOL_WIN32_DLL
+
 AC_PROG_LIBTOOL
 
 #------------------------------------
@@ -123,10 +126,8 @@ AC_MSG_CHECKING([for special portability support]);echo
 #------------------------------------
 AC_CHECK_FUNCS([signal])
 AC_CHECK_HEADERS([signal.h])
-AC_CHECK_FUNCS([strtoul])
-AC_CHECK_FUNCS([strtoull])
-AC_CHECK_FUNCS([strtof])
-AC_CHECK_FUNCS([strtod])
+AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
+AC_CHECK_FUNCS([getline])
 if test "$build_os" = "cygwin" ; then
   if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll ; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])

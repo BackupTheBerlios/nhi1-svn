@@ -11,7 +11,7 @@
  */
 #include "string.h"
 #include "msgque.h"
-static enum MqErrorE  MMUL( struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE  MMUL( struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   MQ_DBL d1,d2;
   MqErrorCheck (MqSendSTART(ctx));
   MqErrorCheck (MqReadD(ctx, &d1));
@@ -20,7 +20,7 @@ static enum MqErrorE  MMUL( struct MqS *ctx, MQ_PTR data) {
 error:
   return MqSendRETURN(ctx);
 }
-static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_PTR data) {
+static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
   return MqServiceCreate(ctx,"MMUL", MMUL, NULL, NULL);
 }
 int main (int argc, MQ_CST argv[]) 

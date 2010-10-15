@@ -74,6 +74,7 @@ JoinHelp ( const char * base  )
 static enum MqErrorE
 JoinFTR (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR data
 )
 {

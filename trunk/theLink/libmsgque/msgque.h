@@ -443,6 +443,7 @@ typedef enum MqErrorE ( MQ_DECL
   *MqTokenF
 ) (
   struct MqS * const context,
+  MQ_CST prefix,
   MQ_PTR const data
 );
 
@@ -451,6 +452,7 @@ typedef void ( MQ_DECL
   *MqTokenDataFreeF
 ) (
   struct MqS const * const context,
+  MQ_CST prefix,
   MQ_PTR *dataP
 );
 
@@ -459,6 +461,7 @@ typedef enum MqErrorE ( MQ_DECL
   *MqTokenDataCopyF
 ) (
   struct MqS * const context,
+  MQ_CST prefix,
   MQ_PTR *dataP
 );
 
@@ -468,6 +471,13 @@ typedef void ( MQ_DECL
 ) (
   MQ_CST 		///< the basename of the tool
 ) __attribute__ ((noreturn));
+
+/// \brief prototype for a Garbage-Collection mark function
+typedef void ( MQ_DECL
+  *MqMarkF
+) (
+  struct MqS * const context
+);
 
 /// \brief the \e factory is called to create an object for ...
 enum MqFactoryE {
@@ -574,9 +584,7 @@ struct MqLinkSetupS {
 /// \brief what kind of socket interface to use?
 enum MqIoComE { 
     MQ_IO_PIPE,
-#if defined(MQ_IS_POSIX)
     MQ_IO_UDS, 
-#endif
     MQ_IO_TCP
 };
 
@@ -1509,6 +1517,11 @@ MQ_EXTERN MQ_STR MQ_DECL MqHelp (
 MQ_EXTERN enum MqErrorE MQ_DECL MqCheckForLeftOverArguments (
   struct MqS * const context,
   struct MqBufferLS ** argvP
+);
+
+MQ_EXTERN void MQ_DECL MqMark (
+  struct MqS * const context,
+  MqMarkF markF
 );
 
 #ifdef _DEBUG

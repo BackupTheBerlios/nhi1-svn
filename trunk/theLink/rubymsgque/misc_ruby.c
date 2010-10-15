@@ -28,39 +28,59 @@ VALUE NS(Rescue) (
   VALUE data
 )
 { 
-  return rb_rescue2(proc, data, sRescueError, SELF, rb_eException, (VALUE)0);
+  VALUE val = rb_rescue2(proc, data, sRescueError, SELF, rb_eException, (VALUE)0);
+  return val;
 }
 
 // ==========================================================================
-// Method belongs to calling object
+// call just a Proc
 
-static VALUE ProcCallMethod (VALUE method) {
-  return rb_method_call(0, NULL, method);
+static VALUE ProcCallCall (VALUE proc) {
+  return rb_proc_call_with_block(proc, 0, NULL, Qnil);
 }
 
 static enum MqErrorE ProcCall (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR const dataP
 ) 
 { 
-  NS(Rescue)(mqctx,ProcCallMethod,PTR2VAL(dataP));
+  NS(Rescue)(mqctx,ProcCallCall,PTR2VAL(dataP));
+  return MqErrorGetCode(mqctx);
+} 
+
+// ==========================================================================
+// Method belongs to calling object
+
+static VALUE ProcCallMethodCall (VALUE method) {
+  return rb_method_call(0, NULL, method);
+}
+
+static enum MqErrorE ProcCallMethod (
+  struct MqS * const mqctx,
+  MQ_CST prefix,
+  MQ_PTR const dataP
+) 
+{ 
+  NS(Rescue)(mqctx,ProcCallMethodCall,PTR2VAL(dataP));
   return MqErrorGetCode(mqctx);
 } 
 
 // ==========================================================================
 // Method belongs NOT to calling object
 
-static VALUE ProcCallMethod2 (VALUE array) {
+static VALUE ProcCallMethodWithArgCall (VALUE array) {
   VALUE *valP = RARRAY_PTR(array);
   return rb_method_call(1, valP, valP[1]);
 }
 
-static enum MqErrorE ProcCallWithArg (
+static enum MqErrorE ProcCallMethodWithArg (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR const dataP
 ) 
 { 
-  NS(Rescue)(mqctx,ProcCallMethod2,PTR2VAL(dataP));
+  NS(Rescue)(mqctx,ProcCallMethodWithArgCall,PTR2VAL(dataP));
   return MqErrorGetCode(mqctx);
 } 
 
@@ -68,28 +88,31 @@ static enum MqErrorE ProcCallWithArg (
 
 void NS(ProcFree) (
   struct MqS const * const mqctx,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
-  VALUE val = (VALUE) dataP;
-  rb_gc_unregister_address(&val);
+  VALUE val = PTR2VAL(dataP);
+  DECR_REF(val);
   *dataP = NULL;
 }
 
 static enum MqErrorE ProcCopyProc (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
   VALUE val = PTR2VAL(*dataP);
   val = rb_funcall(val,id_clone,0,NULL);
-  rb_gc_register_address(&val);
+  INCR_REF(val);
   *dataP = VAL2PTR(val);
   return MQ_OK;
 }
 
 static enum MqErrorE ProcCopyMethod (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
@@ -98,20 +121,21 @@ static enum MqErrorE ProcCopyMethod (
   val = rb_funcall(val,id_clone,0,NULL);
   val = rb_funcall(val,id_unbind,0,NULL);
   val = rb_funcall(val,id_bind,1,self);
-  rb_gc_register_address(&val);
+  INCR_REF(val);
   *dataP = VAL2PTR(val);
   return MQ_OK;
 }
 
 static enum MqErrorE ProcCopyMethodWithArg (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
   VALUE ary = PTR2VAL(*dataP);
   VALUE mth = rb_ary_entry(ary,1);
   ary = rb_ary_new3(2,SELF,rb_funcall(mth,id_clone,0,NULL));
-  rb_gc_register_address(&ary);
+  INCR_REF(ary);
   *dataP = VAL2PTR(ary);
   return MQ_OK;
 }
@@ -132,12 +156,12 @@ enum MqErrorE NS(ProcInit) (
   } else if (rb_obj_is_kind_of(val, rb_cMethod) == Qtrue) {
     if (rb_equal(self,rb_funcall(val,id_receiver,0,NULL)) == Qtrue) {
       // val belongs to calling object, NO argument is required
-      *procCall = ProcCall;
+      *procCall = ProcCallMethod;
       *procCopy = ProcCopyMethod;
       dataVal   = val;
     } else {
       // val belongs NOT to calling object, argument is required
-      *procCall = ProcCallWithArg;
+      *procCall = ProcCallMethodWithArg;
       *procCopy = ProcCopyMethodWithArg;
       dataVal   = rb_ary_new3(2,self,val);
     }
@@ -145,7 +169,7 @@ enum MqErrorE NS(ProcInit) (
     return MqErrorC(mqctx,__func__,1,"expect 'proc' or 'method' argument");
   }
   *procData = VAL2PTR(dataVal);
-  rb_gc_register_address(&dataVal);
+  INCR_REF(dataVal);
   return MQ_OK;
 }
 

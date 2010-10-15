@@ -134,6 +134,8 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([JAVA_DEBUG], [-g])
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
     else
+      CFLAGS="-O3 $CFLAGS"
+      CXXFLAGS="-O3 $CXXFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
     fi
     AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])

@@ -76,6 +76,7 @@ MqServiceCheckToken(
 static enum MqErrorE 
 sServiceProxy (
   struct MqS * const context,
+  MQ_CST prefix,
   MQ_PTR const data
 ) {
   MQ_BINB hs;

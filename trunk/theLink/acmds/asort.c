@@ -110,6 +110,7 @@ SortComp (
 static enum MqErrorE
 SortEOF (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -143,6 +144,7 @@ error:
 static enum MqErrorE
 SortFTR (
   struct MqS * const mqctx,
+  MQ_CST prefix,
   MQ_PTR data
 )
 {

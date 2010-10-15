@@ -411,9 +411,9 @@ test send-Y1-($B|$C|$S) {stop and start child} \
 	## test #4
 	catch {Test $FH(0-4) 3} ERR
 	if {[string match {c> (client-0) \[MqSendSTART] the 'msgque' object link is 'not' connected} $ERR]} {
-	    return ok
+	  return ok
 	} else {
-	    return $ERR
+	  return $ERR
 	}
     } \
     -cleanup	    { 
@@ -436,6 +436,4 @@ unset B C S
 ## finish
 ##
 freeTests
-
-
 

@@ -10,12 +10,12 @@
  *              please contact AUTHORS for additional information
  */
 
-#if defined(MQ_IS_POSIX)
-
 #ifndef UDS_IO_H
 #   define UDS_IO_H
 
 #   define UDS_SAVE_ERROR(uds) ((uds)?IO_SAVE_ERROR((uds)->io):NULL)
+
+#if defined(MQ_IS_POSIX)
 
 BEGIN_C_DECLS
 
@@ -50,8 +50,15 @@ enum MqErrorE UdsConnect (
 
 END_C_DECLS
 
-#endif /* UDS_IO_H */
+#else /* MQ_IS_POSIX */
+
+#define UdsCreate(io,udsPtr)
+#define UdsDelete(udsP) 
+#define UdsServer(uds)
+#define UdsConnect(uds)
 
 #endif /* MQ_IS_POSIX */
+
+#endif /* UDS_IO_H */
 
 

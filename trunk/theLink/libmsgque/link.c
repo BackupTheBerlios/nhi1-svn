@@ -855,8 +855,10 @@ MqLinkCreate (
 
       // configure the new server
       if (context->setup.ServerSetup.fCall != NULL) {
+	MqDLogC(context,8,"call: ServerSetup -> START\n");
 	context->link.bits.flagServerSetup = MQ_YES;
-	MqErrorCheck(MqCallbackCall(context, context->setup.ServerSetup));
+	MqErrorCheck(MqCallbackCall(context, __func__, context->setup.ServerSetup));
+	MqDLogC(context,8,"call: ServerSetup -> END\n");
       }
 
       // change into "connected"
@@ -921,7 +923,7 @@ MqLinkDelete (
 
     // cleanup the server
     if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fCall != NULL) {
-      MqCallbackCall(context, context->setup.ServerCleanup);
+      MqCallbackCall(context, __func__, context->setup.ServerCleanup);
     }
 
     // shutdown depending context
@@ -1042,6 +1044,21 @@ void pLinkDisConnect (
   }
 }
 
+void
+pLinkMark (
+  struct pChildS * child,
+  MqMarkF const markF
+)
+{
+  // MqLinkS
+  struct MqS * cctx;
+  for (; child != NULL; child=child->right) {
+    cctx = child->context;
+    (*markF)(cctx);
+    MqMark (cctx, markF);
+  }
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                debugging                                  */
@@ -1066,16 +1083,4 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
 

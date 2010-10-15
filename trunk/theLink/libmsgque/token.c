@@ -42,7 +42,7 @@ BEGIN_C_DECLS
 #   define pTokenCmpI(i1,i2) (i2 - i1)
 #endif
 
-static enum MqErrorE pTokenDefaultTRT (struct MqS * const context, MQ_PTR const data);
+static enum MqErrorE pTokenDefaultTRT (struct MqS * const context, MQ_CST prefix, MQ_PTR const data);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -224,7 +224,7 @@ sTokenSpaceDelItem (
 
     // call the data item cleanup
     if (start->callback.data && start->callback.fFree) {
-      (*start->callback.fFree) (space->context, &start->callback.data);
+      (*start->callback.fFree) (space->context, __func__, &start->callback.data);
     }
     // move all items !after! start one to the left
     memmove(start, start+1, (end-start-1) * sizeof(*space->items));
@@ -238,13 +238,13 @@ sTokenSpaceDelItem (
     if (space->all.fCall != NULL) {
       space->all.fCall = NULL;
       if (space->all.data && space->all.fFree) {
-	(*space->all.fFree) (space->context, &space->all.data);
+	(*space->all.fFree) (space->context, __func__, &space->all.data);
       }
     }
     // delete the other token
     while (start < end--) {
       if (end->callback.data && end->callback.fFree) {
-	(*end->callback.fFree) (space->context, &end->callback.data);
+	(*end->callback.fFree) (space->context, __func__, &end->callback.data);
       }
     }
     // set all items to zero
@@ -323,7 +323,7 @@ pTokenInvoke (
 
     // search "+ALL" items
     if (space->all.fCall != NULL) {
-      return (space->all.fCall (context, space->all.data));
+      return (space->all.fCall (context, __func__, space->all.data));
     }
 
     // nothing found -> break
@@ -338,7 +338,7 @@ pTokenInvoke (
 */
   
   if (item->callback.fCall != NULL) {
-    return MqCallbackCall (context, item->callback);
+    return MqCallbackCall (context, __func__, item->callback);
   } else {
     return MqSendRETURN(context);
   }
@@ -404,7 +404,7 @@ pTokenDelHdl (
     struct pTokenSpaceS * const loc = token->loc;
     loc->all.fCall = NULL;
     if (loc->all.data && loc->all.fFree) {
-      (*loc->all.fFree) (context, &loc->all.data);
+      (*loc->all.fFree) (context, __func__, &loc->all.data);
     }
   }
 error:
@@ -414,6 +414,7 @@ error:
 static enum MqErrorE
 pTokenDefaultTRT (
   struct MqS * const context,
+  MQ_CST prefix,
   MQ_PTR const data
 ) 
 {
@@ -488,7 +489,7 @@ pTokenCheckSystem (
 		MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
 		if (context->setup.BgError.fCall != NULL) {
 		  MqDLogCL (context, 5, "call BqError\n");
-		  MqErrorCheck (MqCallbackCall(context, context->setup.BgError));
+		  MqErrorCheck (MqCallbackCall(context, __func__, context->setup.BgError));
 		}
 		// check "error.code" again because "setup.BgError.fCall" could clean it
 		MqErrorCheck (context->error.code);
