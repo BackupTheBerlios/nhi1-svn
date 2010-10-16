@@ -82,11 +82,10 @@ CB(ServerCleanup)
 CB(BgError)
 CB(Event)
 
-/*
 static VALUE FactoryCreateCall (VALUE proc) {
-  return rb_proc_call_with_block(proc, 0, NULL, Qnil);
+  //return rb_proc_call_with_block(proc, 0, NULL, Qnil);
+  return rb_proc_call(proc, rb_ary_new());
 }
-*/
 
 static enum MqErrorE
 FactoryCreate(
@@ -96,21 +95,22 @@ FactoryCreate(
   struct MqS  ** mqctxP
 )
 {
-  if (create == MQ_FACTORY_NEW_FORK) rb_thread_atfork();
-/*
+  //struct MqS * const mqctx = tmpl;
+  if (create == MQ_FACTORY_NEW_FORK) {
+    //rb_thread_atfork();
+  }
   if (create == MQ_FACTORY_NEW_THREAD) {
-    ruby_stack_check();
+    //RUBY_INIT_STACK;
   }
   VALUE self = NS(Rescue)(tmpl, FactoryCreateCall, PTR2VAL(data));
-*/
-  VALUE self = rb_proc_call_with_block(PTR2VAL(data), 0, NULL, Qnil);
+  //VALUE self = rb_proc_call_with_block(PTR2VAL(data), 0, NULL, Qnil);
 
   if (NIL_P(self)) {
     *mqctxP = NULL;
     return MqErrorGetCode(tmpl);
   } else {
     struct MqS * const mqctx = *mqctxP = VAL2MqS(self);
-    INCR_REF(self);
+    INCR_REG(self);
     MqConfigDup(mqctx, tmpl);
     MqErrorCheck(MqSetupDup(mqctx, tmpl));
     return MQ_OK;
@@ -129,9 +129,11 @@ FactoryDelete(
   MQ_PTR data
 )
 {
-  SETUP_self
   MqContextFree (mqctx);
-  if (doFactoryDelete) DECR_REF(self);
+  if (doFactoryDelete) {
+    DECR_REG(PTR2VAL(mqctx->self));
+    mqctx->self = NULL;
+  }
 }
 
 

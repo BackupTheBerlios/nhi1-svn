@@ -857,7 +857,7 @@ MqLinkCreate (
       if (context->setup.ServerSetup.fCall != NULL) {
 	MqDLogC(context,8,"call: ServerSetup -> START\n");
 	context->link.bits.flagServerSetup = MQ_YES;
-	MqErrorCheck(MqCallbackCall(context, __func__, context->setup.ServerSetup));
+	MqErrorCheck(MqCallbackCall(context, context->setup.ServerSetup));
 	MqDLogC(context,8,"call: ServerSetup -> END\n");
       }
 
@@ -923,7 +923,7 @@ MqLinkDelete (
 
     // cleanup the server
     if (context->link.bits.flagServerSetup == MQ_YES && context->setup.ServerCleanup.fCall != NULL) {
-      MqCallbackCall(context, __func__, context->setup.ServerCleanup);
+      MqCallbackCall(context, context->setup.ServerCleanup);
     }
 
     // shutdown depending context
@@ -1046,15 +1046,17 @@ void pLinkDisConnect (
 
 void
 pLinkMark (
-  struct pChildS * child,
+  struct MqS * const context,
   MqMarkF const markF
 )
 {
   // MqLinkS
+  struct pChildS * child = context->link.childs;
   struct MqS * cctx;
+  if (child == NULL) return;
   for (; child != NULL; child=child->right) {
     cctx = child->context;
-    (*markF)(cctx);
+    if (cctx->self != NULL) (*markF)(cctx->self);
     MqMark (cctx, markF);
   }
 }

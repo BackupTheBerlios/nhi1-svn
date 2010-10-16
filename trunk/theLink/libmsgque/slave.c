@@ -39,7 +39,6 @@ struct MqLinkSlaveS {
 static enum MqErrorE
 pSlaveBqError (
   struct MqS * const context,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -269,15 +268,17 @@ pSlaveDelete (
 }
 
 void pSlaveMark (
-  struct MqLinkSlaveS * const slave,
+  struct MqS * const context,
   MqMarkF const markF
 )
 {
+  struct MqLinkSlaveS * const slave = context->link.slave;
   MQ_SIZE i;
   struct MqS * sctx;
+  if (slave == NULL) return;
   for (i=0; i<slave->used; i++) {
     sctx = slave->slaves[i];
-    (*markF)(sctx);
+    if (sctx->self != NULL) (*markF)(sctx->self);
     MqMark(sctx, markF);
   }
 }

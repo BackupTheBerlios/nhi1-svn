@@ -26,6 +26,11 @@ void pConfigSetMaster (
   int master_id
 );
 
+void pSetupMark (
+  struct MqS * const context,
+  MqMarkF const markF
+);
+
 END_C_DECLS
 
 #endif /* CONFIG_H */

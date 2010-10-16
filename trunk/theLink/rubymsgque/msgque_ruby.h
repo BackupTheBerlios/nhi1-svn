@@ -16,6 +16,16 @@
 
 /*****************************************************************************/
 /*                                                                           */
+/*                                 ref counting                              */
+/*                                                                           */
+/*****************************************************************************/
+
+extern VALUE globalRef;
+#define INCR_REG(val) rb_ary_push(globalRef,val)
+#define DECR_REG(val) rb_ary_delete(globalRef,val)
+
+/*****************************************************************************/
+/*                                                                           */
 /*                                 definition's                              */
 /*                                                                           */
 /*****************************************************************************/
@@ -27,17 +37,23 @@
 #define SETUP_self	    VALUE self = SELF;
 #define MQ_CONTEXT_S	    mqctx
 
+#define INCR_REF(val)	    INCR_REG(val)
+/*
 #define INCR_REF(val)	    if ((val)!=Qnil) { \
-  rb_gc_register_address(&val);\
+  rb_gc_register_address(&val); \
   MLVA(MQ_CONTEXT_S, "%p", INCR_REF, (MQ_PTR)val); \
-  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
+  MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); \
 }
+*/
 
+#define DECR_REF(val)	    DECR_REG(val)
+/*
 #define DECR_REF(val)	    if ((val)!=Qnil) { \
+  MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); \
   MLVA(MQ_CONTEXT_S, "%p", DECR_REF, (MQ_PTR)val); \
-  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
-  rb_gc_unregister_address(&val);\
-}
+  rb_gc_unregister_address(&val); \
+} \
+*/
 
 #define ErrorMqToRuby() NS(MqSException_Raise)(mqctx)
 #define ErrorMqToRubyWithCheck(PROC) \
@@ -107,7 +123,7 @@ VALUE NS(MqBufferS_New)	    (MQ_BUF);
 void NS(MqSException_Raise) (struct MqS*);
 void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
-void NS(ProcFree)	    (struct MqS const * const, MQ_CST, MQ_PTR *);
+void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
 MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
 enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);

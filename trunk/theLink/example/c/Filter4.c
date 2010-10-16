@@ -16,7 +16,7 @@
 #include "msgque.h"
 #include "debug.h"
 
-#define ARGS  struct MqS * const mqctx, MQ_CST prefix, void *data
+#define ARGS  struct MqS * const mqctx, void *data
 #define TRANSCTX ((struct FilterCtxS*const)mqctx)
 #define MQ_CONTEXT_S mqctx
 #define SETUP_ctx struct FilterCtxS*const ctx = TRANSCTX
@@ -57,7 +57,6 @@ static void ErrorWrite (
 
 static enum MqErrorE FilterEvent (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR const data
 )
 {
@@ -174,7 +173,6 @@ error:
 static enum MqErrorE
 FilterCleanup (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -202,7 +200,6 @@ error:
 static enum MqErrorE
 FilterSetup (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {

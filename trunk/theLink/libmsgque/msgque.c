@@ -95,7 +95,7 @@ sCallEventProc (
 	context->link.bits.onCreateEnd == MQ_YES &&
 	  context->setup.Event.fCall != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
-    switch (MqCallbackCall(context, __func__, context->setup.Event)) {
+    switch (MqCallbackCall(context, context->setup.Event)) {
       case MQ_OK:
 	break;
       case MQ_CONTINUE:
@@ -359,16 +359,14 @@ MqMark (
   MqMarkF markF
 )
 {
-  // MqLinkS
-
   // 1. mark child's
-  if (context->link.childs != NULL) {
-    pLinkMark(context->link.childs, markF);
-  }
+  pLinkMark(context, markF);
   // 2. mark slave's
-  if (context->link.slave != NULL) {
-    pSlaveMark(context->link.slave, markF);
-  }
+  pSlaveMark(context, markF);
+  // 3. mark setup data
+  pSetupMark(context, markF);
+  // 4. mark token data
+  pSetupMark(context, markF);
 }
 
 /*****************************************************************************/

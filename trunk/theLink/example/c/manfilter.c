@@ -11,7 +11,7 @@
  */
 #include "string.h"
 #include "msgque.h"
-static enum MqErrorE  FTR( struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
+static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
   struct MqS * ftr;
   MqErrorCheck (MqServiceGetFilter (ctx, 0, &ftr));

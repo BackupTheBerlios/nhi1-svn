@@ -16,12 +16,11 @@
 
 enum MqErrorE NS(EventLink) (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR const data
 )
 {
   Tcl_DoOneEvent(TCL_ALL_EVENTS|TCL_DONT_WAIT);
-  return data == NULL ? MQ_OK : NS(ProcCall) (mqctx, __func__, data);
+  return data == NULL ? MQ_OK : NS(ProcCall) (mqctx, data);
 }
 
 static enum MqErrorE NS(FactoryCreate) (

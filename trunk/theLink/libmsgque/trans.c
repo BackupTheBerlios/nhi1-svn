@@ -158,7 +158,7 @@ pTransPush (
   struct MqTransItemS * const item = trans->transIdA[transId];
   if (unlikely(item == NULL)) return;
   if (item->callback.data && item->callback.fFree)
-    (*item->callback.fFree)(trans->context, __func__, &item->callback.data);
+    (*item->callback.fFree)(trans->context, &item->callback.data);
   pCachePush (trans->transCache, item);
   trans->transIdA[transId] = NULL;
 }
@@ -249,7 +249,7 @@ pTransSetResult (
       case MQ_HANDSHAKE_OK: {
 	enum MqErrorE ret;
 	// from: MqSendEND_AND_CALLBACK
-	ret = (*item->callback.fCall)(context, __func__, item->callback.data);
+	ret = (*item->callback.fCall)(context, item->callback.data);
 	pTransPush(trans, _trans);
 	MqErrorCheck(ret);
 	return MQ_OK;

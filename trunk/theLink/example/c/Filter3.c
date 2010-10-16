@@ -28,7 +28,6 @@
 static enum MqErrorE
 ServerSetup (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {

@@ -80,8 +80,7 @@ ServerHelp (const char * base)
 static enum MqErrorE
 Ot_ERR1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MqPanicC (mqctx, __func__, -1, "this is a non recoverable error");
@@ -95,8 +94,7 @@ Ot_ERR1 (
 static enum MqErrorE
 Ot_ERR2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MqSendSTART (mqctx);
@@ -111,8 +109,7 @@ Ot_ERR2 (
 static enum MqErrorE
 Ot_ERR3 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MqSendSTART (mqctx);
@@ -127,8 +124,7 @@ Ot_ERR3 (
 static enum MqErrorE
 Ot_ERR4 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   exit (1);
@@ -139,8 +135,7 @@ Ot_ERR4 (
 static enum MqErrorE
 Ot_ERRT (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_CST err;
@@ -154,8 +149,7 @@ Ot_ERRT (
 static enum MqErrorE
 Ot_ECOU (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   struct MqBufferS *buf;
@@ -173,8 +167,7 @@ error:
 static enum MqErrorE
 Ot_ECON (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_CST str;
@@ -193,8 +186,7 @@ error:
 static enum MqErrorE
 Ot_ECOI (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_INT l;
@@ -211,8 +203,7 @@ error:
 static enum MqErrorE
 Ot_ECOS (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_SRT l;
@@ -229,8 +220,7 @@ error:
 static enum MqErrorE
 Ot_ECOY (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BYT l;
@@ -247,8 +237,7 @@ error:
 static enum MqErrorE
 Ot_ECOO (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BOL l;
@@ -265,8 +254,7 @@ error:
 static enum MqErrorE
 Ot_ECOW (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_WID w;
@@ -283,8 +271,7 @@ error:
 static enum MqErrorE
 Ot_ECOD (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_DBL d;
@@ -301,8 +288,7 @@ error:
 static enum MqErrorE
 Ot_ECOF (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_FLT d;
@@ -319,8 +305,7 @@ error:
 static enum MqErrorE
 Ot_ECOC (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_CST str;
@@ -337,8 +322,7 @@ error:
 static enum MqErrorE
 Ot_ECOB (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BIN bin;
@@ -389,8 +373,7 @@ error:
 static enum MqErrorE
 Ot_ECLI (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BUF buf;
@@ -413,8 +396,7 @@ error:
 static enum MqErrorE
 Ot_ECOL (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MqSendSTART (mqctx);
@@ -433,8 +415,7 @@ error:
 static enum MqErrorE
 Ot_ECUL (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BYT y;
@@ -466,8 +447,7 @@ error:
 static enum MqErrorE
 Ot_RDUL (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_BYT y;
@@ -491,8 +471,7 @@ error:
 static enum MqErrorE
 Ot_ECOM (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MqSendSTART(mqctx);
@@ -506,8 +485,7 @@ Ot_ECOM (
 static enum MqErrorE
 Ot_MSQT (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   // Send
@@ -533,8 +511,7 @@ Ot_MSQT (
 static enum MqErrorE
 Ot_SLEP (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_INT time;
@@ -553,8 +530,7 @@ error:
 static enum MqErrorE
 Ot_USLP (
   struct MqS * const mqctx,
-  MQ_CST prefix,
-  void *data
+  MQ_PTR data
 )
 {
   MQ_INT time;
@@ -573,7 +549,6 @@ error:
 static enum MqErrorE
 Ot_CSV1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -602,7 +577,6 @@ error:
 static enum MqErrorE
 Ot_GTCX (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -616,7 +590,6 @@ Ot_GTCX (
 static enum MqErrorE
 Ot_GTTO (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -630,7 +603,6 @@ Ot_GTTO (
 static enum MqErrorE
 Ot_GTSI (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -654,7 +626,6 @@ Ot_GTSI (
 static enum MqErrorE
 Ot_SETU (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -666,7 +637,6 @@ Ot_SETU (
 static enum MqErrorE
 Ot_GETU (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -680,7 +650,6 @@ Ot_GETU (
 static enum MqErrorE
 Callback1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -692,7 +661,6 @@ Callback1 (
 static enum MqErrorE
 Callback2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -704,7 +672,6 @@ Callback2 (
 static enum MqErrorE
 Ot_REDI (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -717,7 +684,6 @@ Ot_REDI (
 static enum MqErrorE
 Ot_BUF1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -760,7 +726,6 @@ error:
 static enum MqErrorE
 Ot_BUF2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -784,7 +749,6 @@ error:
 static enum MqErrorE
 Ot_BUF3 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -809,7 +773,6 @@ error:
 static enum MqErrorE
 Ot_LST1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -823,7 +786,6 @@ Ot_LST1 (
 static enum MqErrorE
 Ot_LST2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -835,7 +797,6 @@ Ot_LST2 (
 static enum MqErrorE
 BgError (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -920,7 +881,6 @@ error:
 static enum MqErrorE
 Ot_SND1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1007,7 +967,6 @@ error:
 static enum MqErrorE
 Ot_SND2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1101,7 +1060,6 @@ error:
 static enum MqErrorE
 Ot_INIT (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1115,7 +1073,6 @@ Ot_INIT (
 static enum MqErrorE
 Ot_CNFG (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1141,7 +1098,6 @@ Ot_CNFG (
 static enum MqErrorE
 Ot_ERLR (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1158,7 +1114,6 @@ Ot_ERLR (
 static enum MqErrorE
 Ot_ERLS (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1196,7 +1151,6 @@ Ot_ERLS (
 static enum MqErrorE
 Ot_CFG1 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1279,7 +1233,6 @@ error:
 static enum MqErrorE
 Ot_PRNT (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1296,7 +1249,6 @@ error:
 /// \service
 static enum MqErrorE Ot_TRN2 (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1314,7 +1266,6 @@ error:
 static enum MqErrorE
 Ot_TRNS (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1344,7 +1295,6 @@ error:
 static enum MqErrorE
 ServerCleanup (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {
@@ -1360,7 +1310,6 @@ ServerCleanup (
 static enum MqErrorE
 ServerSetup (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {

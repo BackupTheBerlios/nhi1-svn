@@ -85,17 +85,17 @@ class Server < MqS
   end
 
   def ServerSetup
-    $stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
-    $stderr.flush
+    #$stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
+    #$stderr.flush
 
     if (SlaveIs() == false)
 
       # initialize objects
-      # @cl = [Client.new, Client.new, Client.new]
-      # for i in 0..2 
-      #   @cl[i].ConfigSetName("cl-" + i.to_s)
-      #   @cl[i].ConfigSetSrvName("sv-" + i.to_s)
-      # end
+      @cl = [Client.new, Client.new, Client.new]
+      for i in 0..2 
+        @cl[i].ConfigSetName("cl-" + i.to_s)
+        @cl[i].ConfigSetSrvName("sv-" + i.to_s)
+      end
 
       # add "master" services here
       ServiceCreate("SETU", method(:SETU))
@@ -427,14 +427,14 @@ class Server < MqS
     SendSTART()
     debug = ConfigGetDebug()
     if debug != 0
-      SendC ("debug")
-      SendI (debug)
+      SendC("debug")
+      SendI(debug)
     end
-    SendC ("binary") if not ConfigGetIsString()
-    SendC ("silent") if ConfigGetIsSilent()
-    SendC ("sOc");
+    SendC("binary") if not ConfigGetIsString()
+    SendC("silent") if ConfigGetIsSilent()
+    SendC("sOc");
     ConfigGetIsServer() ? SendC("SERVER") : SendC("CLIENT")
-    SendC ("pOc");
+    SendC("pOc");
     LinkIsParent() ? SendC("PARENT") : SendC("CHILD")
     SendRETURN()
   end
@@ -539,15 +539,15 @@ class Server < MqS
     SendSTART()
     SendC(typ)
     case typ
-      when "Y" then SendY (buf.GetY())
-      when "O" then SendO (buf.GetO())
-      when "S" then SendS (buf.GetS())
-      when "I" then SendI (buf.GetI())
-      when "F" then SendF (buf.GetF())
-      when "W" then SendW (buf.GetW())
-      when "D" then SendD (buf.GetD())
-      when "C" then SendC (buf.GetC())
-      when "B" then SendB (buf.GetB())
+      when "Y" then SendY(buf.GetY())
+      when "O" then SendO(buf.GetO())
+      when "S" then SendS(buf.GetS())
+      when "I" then SendI(buf.GetI())
+      when "F" then SendF(buf.GetF())
+      when "W" then SendW(buf.GetW())
+      when "D" then SendD(buf.GetD())
+      when "C" then SendC(buf.GetC())
+      when "B" then SendB(buf.GetB())
     end
     SendRETURN()
   end
@@ -622,12 +622,8 @@ begin
 rescue SignalException
   #ignore
 rescue Exception => ex
-$stderr.puts ex
-$stderr.flush
   srv.ErrorSet(ex)
 ensure
-$stderr.puts 11111111111111111111
-$stderr.flush
   srv.Exit()
 end
 

@@ -279,22 +279,22 @@ MqContextFree (
 
     // cleanup setup data entries
     if (context->setup.Event.data && context->setup.Event.fFree) {
-      (*context->setup.Event.fFree) (context, __func__, &context->setup.Event.data);
+      (*context->setup.Event.fFree) (context, &context->setup.Event.data);
     }
     if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
-      (*context->setup.ServerSetup.fFree) (context, __func__, &context->setup.ServerSetup.data);
+      (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
     }
     if (context->setup.ServerCleanup.data && context->setup.ServerCleanup.fFree) {
-      (*context->setup.ServerCleanup.fFree) (context, __func__, &context->setup.ServerCleanup.data);
+      (*context->setup.ServerCleanup.fFree) (context, &context->setup.ServerCleanup.data);
     }
     if (context->setup.BgError.data && context->setup.BgError.fFree) {
-      (*context->setup.BgError.fFree) (context, __func__, &context->setup.BgError.data);
+      (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
     }
     if (context->setup.Factory.Create.data && context->setup.Factory.Create.fFree) {
-      (*context->setup.Factory.Create.fFree) (context, __func__, &context->setup.Factory.Create.data);
+      (*context->setup.Factory.Create.fFree) (context, &context->setup.Factory.Create.data);
     }
     if (context->setup.Factory.Delete.data && context->setup.Factory.Delete.fFree) {
-      (*context->setup.Factory.Delete.fFree) (context, __func__, &context->setup.Factory.Delete.data);
+      (*context->setup.Factory.Delete.fFree) (context, &context->setup.Factory.Delete.data);
     }
 
     pErrorCleanup(context);
@@ -405,7 +405,7 @@ MqConfigDup (
   if (oldcb.data != NULL && cb.data == NULL) { \
     /* if set in "Step 1", callback set but not needed */ \
     if (oldcb.fFree) { \
-      (*oldcb.fFree) (context, __func__, &oldcb.data); \
+      (*oldcb.fFree) (context, &oldcb.data); \
     } \
     cb.fCall = NULL; \
     cb.data  = NULL; \
@@ -414,7 +414,7 @@ MqConfigDup (
     cb.data = oldcb.data; \
   } else if (cb.data != NULL && cb.fCopy != NULL) { \
     /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \
-    MqErrorCheck ((*cb.fCopy) (context, __func__, &cb.data)); \
+    MqErrorCheck ((*cb.fCopy) (context, &cb.data)); \
   } else { \
     /* if set in "Step 4", callback NOT set but needed (NO copy constructor) */ \
     /* -> already done */ \
@@ -646,10 +646,10 @@ MqConfigSetFactory (
 ) {
 //MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.Factory.Create.data && context->setup.Factory.Create.fFree) {
-    (*context->setup.Factory.Create.fFree) (context, __func__, &context->setup.Factory.Create.data);
+    (*context->setup.Factory.Create.fFree) (context, &context->setup.Factory.Create.data);
   }
   if (context->setup.Factory.Delete.data && context->setup.Factory.Delete.fFree) {
-    (*context->setup.Factory.Delete.fFree) (context, __func__, &context->setup.Factory.Delete.data);
+    (*context->setup.Factory.Delete.fFree) (context, &context->setup.Factory.Delete.data);
   }
   context->setup.Factory.Create.fCall = fCreate;
   context->setup.Factory.Create.data  = CreateData;
@@ -727,7 +727,7 @@ MqConfigSetServerSetup (
 {
 //MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
-    (*context->setup.ServerSetup.fFree) (context, __func__, &context->setup.ServerSetup.data);
+    (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
   }
   context->setup.isServer	   = MQ_YES;
   context->setup.ServerSetup.fCall = fTok;
@@ -746,7 +746,7 @@ MqConfigSetEvent (
 )
 {
   if (context->setup.Event.data && context->setup.Event.fFree) {
-    (*context->setup.Event.fFree) (context, __func__, &context->setup.Event.data);
+    (*context->setup.Event.fFree) (context, &context->setup.Event.data);
   }
   context->setup.Event.fCall = fTok;
   context->setup.Event.data  = data;
@@ -765,7 +765,7 @@ MqConfigSetServerCleanup (
 {
 //MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerCleanup.data && context->setup.ServerCleanup.fFree) {
-    (*context->setup.ServerCleanup.fFree) (context, __func__, &context->setup.ServerCleanup.data);
+    (*context->setup.ServerCleanup.fFree) (context, &context->setup.ServerCleanup.data);
   }
   context->setup.isServer	      = MQ_YES;
   context->setup.ServerCleanup.fCall  = fTok;
@@ -784,7 +784,7 @@ MqConfigSetBgError (
 )
 {
   if (context->setup.BgError.data && context->setup.BgError.fFree) {
-    (*context->setup.BgError.fFree) (context, __func__, &context->setup.BgError.data);
+    (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
   }
   context->setup.BgError.fCall  = fTok;
   context->setup.BgError.data   = data;
@@ -1054,21 +1054,20 @@ MqConfigGetSelf (
   return context->self;
 }
 
+#define sSetupMark(cb) if (cb.data != NULL) (*markF)(cb.data);
+
+void pSetupMark (
+  struct MqS * const context,
+  MqMarkF const markF
+)
+{
+  sSetupMark (context->setup.Event);
+  sSetupMark (context->setup.ServerSetup);
+  sSetupMark (context->setup.ServerCleanup);
+  sSetupMark (context->setup.BgError);
+  sSetupMark (context->setup.Factory.Create);
+  sSetupMark (context->setup.Factory.Delete);
+}
+
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

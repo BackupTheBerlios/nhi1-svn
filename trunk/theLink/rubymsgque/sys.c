@@ -5,45 +5,46 @@
 #include <ruby/defines.h>
 
 static ID id_join;
+static VALUE threadM;
 
 #define MqErrorSys(cmd) \
-  MqErrorV (context, __func__, errno, \
+  MqErrorV (mqctx, __func__, errno, \
     "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
 
 // *************************************************************************
 
 static MQ_PTR SysCalloc (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   MQ_SIZE nmemb,
   MQ_SIZE size
 )
 {
   MQ_PTR ptr = xcalloc (nmemb, size);
   if (unlikely (ptr == NULL))
-    MqErrorC (context, __func__, errno, strerror (errno));
+    MqErrorC (mqctx, __func__, errno, strerror (errno));
   return ptr;
 }
 
 static MQ_PTR SysMalloc (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   MQ_SIZE size
 )
 {
   MQ_PTR ptr = xmalloc (size);
   if (unlikely (ptr == NULL))
-    MqErrorC (context, __func__, errno, strerror (errno));
+    MqErrorC (mqctx, __func__, errno, strerror (errno));
   return ptr;
 }
 
 static MQ_PTR SysRealloc (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   MQ_PTR buf,
   MQ_SIZE size
 )
 {
   MQ_PTR ptr = xrealloc (buf, size);
   if (unlikely (ptr == NULL))
-    MqErrorC (context, __func__, errno, strerror (errno));
+    MqErrorC (mqctx, __func__, errno, strerror (errno));
   return ptr;
 }
 
@@ -55,7 +56,7 @@ static void SysFreeP (
 }
 
 static enum MqErrorE SysFork (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   struct MqIdS * idP
 )
 {
@@ -72,7 +73,7 @@ static enum MqErrorE SysFork (
 
 /*
 static enum MqErrorE SysServerSpawn (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   char * * argv,
   MQ_CST  name,
   struct MqIdS * idP
@@ -80,12 +81,12 @@ static enum MqErrorE SysServerSpawn (
 { 
   rb_pid_t pid;
   VALUE args = rb_ary_new();
-  MQ_BUF tmp = context->temp;
+  MQ_BUF tmp = mqctx->temp;
 
   MqBufferReset(tmp);
 
   // spawn setup !before! a spawn is created
-  if (context->setup.fSpawnInit) (*context->setup.fSpawnInit)(context);
+  if (mqctx->setup.fSpawnInit) (*mqctx->setup.fSpawnInit)(mqctx);
 
   // fill the args
   for (;*argv!=NULL; argv++) {
@@ -98,7 +99,7 @@ printC(*argv)
 
   // check for error
   if (pid == -1) {
-    return MqErrorC (context, name, 1, tmp->cur.C);
+    return MqErrorC (mqctx, name, 1, tmp->cur.C);
   }
 
   // return ok
@@ -108,21 +109,22 @@ printC(*argv)
 }
 */
 
-/*
 static VALUE
-sSysServerThreadInit(void *data)
+sSysServerThreadInit(MQ_PTR data)
 {
   MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
   return rb_last_status_get();
 }
 
 static VALUE SysServerThreadCall (VALUE data) {
-  VALUE ret = rb_thread_create(sSysServerThreadInit, (void*)FIX2ULONG(data));
+  struct timeval sleep = {0, 200000};
+  VALUE ret = rb_thread_create(sSysServerThreadInit, VAL2PTR(data));
+  rb_thread_wait_for(sleep);
   return ret;
 }
 
 static enum MqErrorE SysServerThread (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   struct MqFactoryS factory,
   struct MqBufferLS ** argvP,
   struct MqBufferLS ** alfaP,
@@ -138,17 +140,17 @@ static enum MqErrorE SysServerThread (
   argP->factory = factory;
   argP->argv = *argvP;
   argP->alfa = *alfaP;
-  argP->tmpl = context;
+  argP->tmpl = mqctx;
 
   // pointers are owned by SysServerThread
   *argvP = NULL;
   *alfaP = NULL;
 
   // after a "thread" no "fork" is possible
-  MqConfigSetIgnoreFork (context, MQ_YES);
+  MqConfigSetIgnoreFork (mqctx, MQ_YES);
 
   // start thread
-  NIL_Check(ret = NS(Rescue)(context, SysServerThreadCall, INT2FIX((long)argP)));
+  NIL_Check(ret = NS(Rescue)(mqctx, SysServerThreadCall, PTR2VAL(argP)));
 
   // make thread_id persistent
   INCR_REF(ret);
@@ -184,7 +186,7 @@ static VALUE SysWaitCall (
 }
 
 static enum MqErrorE SysWait (
-  struct MqS * const context,
+  struct MqS * const mqctx,
   const struct MqIdS *idP
 )
 {
@@ -195,7 +197,7 @@ static enum MqErrorE SysWait (
     }
     case MQ_ID_THREAD: {
       VALUE thread = PTR2VAL((MQ_PTR)idP->val);
-      NIL_Check(NS(Rescue)(context, SysWaitCall, thread));
+      NIL_Check(NS(Rescue)(mqctx, SysWaitCall, thread));
       INCR_REF(thread);
       break;
     }
@@ -206,9 +208,8 @@ static enum MqErrorE SysWait (
   return MQ_OK;
 
 error:
-  return MqErrorStack(context);
+  return MqErrorStack(mqctx);
 }
-*/
 
 void NS(MqS_Sys_Init)(void) {
 
@@ -221,11 +222,11 @@ void NS(MqS_Sys_Init)(void) {
   MqLal.SysFreeP    = SysFreeP	  ;
   MqLal.SysFork	    = SysFork	  ;
 
-/*
   MqLal.SysServerThread = SysServerThread;
   MqLal.SysExit = SysExit;
   MqLal.SysWait = SysWait;
-*/
+
+  threadM = rb_mutex_new();
 }
 
 

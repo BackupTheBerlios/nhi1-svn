@@ -248,7 +248,7 @@ void  NS(MqS_Free)	    ( ClientData );
 // from config_tcl.c
 
 void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, MQ_PTR );
-enum MqErrorE NS(EventLink) ( struct MqS * const , MQ_CST, MQ_PTR const );
+enum MqErrorE NS(EventLink) ( struct MqS * const , MQ_PTR const );
 
 // from MqBufferS_tcl.c
 
@@ -264,9 +264,9 @@ int   NS(ReadAll)	    ( Tcl_Interp *, struct MqReadS * const, int, Tcl_Obj **);
 int   NS(PrepareList)	    ( struct MqS const * const, Tcl_Obj * const, int const);
 
 int   NS(ProcCheck)	    ( Tcl_Interp *, struct Tcl_Obj *, char const * const);
-void MQ_DECL NS(ProcFree)   ( struct MqS const * const, MQ_CST, MQ_PTR *);
-enum MqErrorE MQ_DECL NS(ProcCopy) ( struct MqS * const, MQ_CST, MQ_PTR *);
-enum MqErrorE MQ_DECL NS(ProcCall) ( struct MqS * const , MQ_CST, MQ_PTR);
+void MQ_DECL NS(ProcFree)   ( struct MqS const * const, MQ_PTR *);
+enum MqErrorE MQ_DECL NS(ProcCopy) ( struct MqS * const, MQ_PTR *);
+enum MqErrorE MQ_DECL NS(ProcCall) ( struct MqS * const , MQ_PTR);
 enum MqErrorE   NS(ProcError)	    ( struct TclContextS * const, MQ_CST);
 
 // from error_tcl.c

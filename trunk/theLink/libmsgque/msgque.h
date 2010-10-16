@@ -443,7 +443,6 @@ typedef enum MqErrorE ( MQ_DECL
   *MqTokenF
 ) (
   struct MqS * const context,
-  MQ_CST prefix,
   MQ_PTR const data
 );
 
@@ -452,7 +451,6 @@ typedef void ( MQ_DECL
   *MqTokenDataFreeF
 ) (
   struct MqS const * const context,
-  MQ_CST prefix,
   MQ_PTR *dataP
 );
 
@@ -461,7 +459,6 @@ typedef enum MqErrorE ( MQ_DECL
   *MqTokenDataCopyF
 ) (
   struct MqS * const context,
-  MQ_CST prefix,
   MQ_PTR *dataP
 );
 
@@ -476,7 +473,7 @@ typedef void ( MQ_DECL
 typedef void ( MQ_DECL
   *MqMarkF
 ) (
-  struct MqS * const context
+  MQ_PTR data
 );
 
 /// \brief the \e factory is called to create an object for ...
@@ -1417,6 +1414,7 @@ struct MqS {
   MQ_INT refCount;		    ///< is an object in use?
   struct MqGcS *gc;		    ///< link to the garbage-collection
   MQ_SIZE gcid;			    ///< position in the gc array
+  MQ_CST caller;		    ///< identify the parent of the current called function
 };
 
 /// \brief initialize the #MqS object related data but do \e not create the object self

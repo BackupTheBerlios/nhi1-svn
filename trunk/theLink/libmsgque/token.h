@@ -100,6 +100,11 @@ static mq_inline void pTokenSetCurrent (
   memcpy (token->current, str, HDR_TOK_LEN);
 }
 
+void pTokenMark (
+  struct MqS * const context,
+  MqMarkF markF
+);
+
 END_C_DECLS
 
 #endif /* TOKEN_H */

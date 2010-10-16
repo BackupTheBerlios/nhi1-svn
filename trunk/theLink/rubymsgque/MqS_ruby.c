@@ -12,6 +12,7 @@
 #include "msgque_ruby.h"
 
 VALUE cMqS;
+VALUE globalRef;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -19,29 +20,22 @@ VALUE cMqS;
 /*                                                                           */
 /*****************************************************************************/
 
-static void sMqMark (struct MqS *mqctx)
+/*
+static void sMqMark (MQ_PTR data)
 {
-  SETUP_self;
-MQ_I0
-printP(self)
-  rb_gc_mark(self);
+  rb_gc_mark((VALUE)data);
 }
 
 static void sMark (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
-  SETUP_self;
-MQ_I0
-printP(self)
   MqMark(mqctx, sMqMark);
 }
+*/
 
 static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
-  SETUP_self;
-MQ_I0
-printP(self)
   mqctx->setup.Factory.Delete.fCall = NULL;
   mqctx->setup.Event.fCall = NULL;
   mqctx->self = NULL;
@@ -54,7 +48,7 @@ static VALUE new(VALUE class)
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
 
   // create a "ruby" object and link it to the "mqctx" class
-  VALUE self = Data_Wrap_Struct(class, sMark, sFree, mqctx);
+  VALUE self = Data_Wrap_Struct(class, NULL, sFree, mqctx);
 
   // create ruby command
   mqctx->self = (void*) self;
@@ -62,7 +56,7 @@ static VALUE new(VALUE class)
   // set configuration data
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;      
-  MqConfigSetIgnoreThread(mqctx, MQ_YES);
+  //MqConfigSetIgnoreThread(mqctx, MQ_YES);
 
   // call "initialize"
   rb_obj_call_init(self, 0, NULL);
@@ -139,5 +133,8 @@ void NS(MqS_Init) (void) {
   NS(MqS_Service_Init)();
   NS(MqS_Link_Init)();
   NS(MqS_Slave_Init)();
+
+  globalRef = rb_ary_new();
+  rb_gc_register_address(&globalRef);
 }
 

@@ -31,7 +31,7 @@ void pLinkDisConnect (
 );
 
 void pLinkMark (
-  struct pChildS * child,
+  struct MqS * const context,
   MqMarkF const markF
 );
 

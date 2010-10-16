@@ -11,12 +11,12 @@
  */
 #include "string.h"
 #include "msgque.h"
-static enum MqErrorE MyFirstService (struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
+static enum MqErrorE MyFirstService (struct MqS *ctx, MQ_PTR data) {
   MqSendSTART(ctx);
   MqSendC(ctx, "Hello World");
   return MqSendRETURN(ctx);
 }
-static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_CST prefix, MQ_PTR data) {
+static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_PTR data) {
   return MqServiceCreate(ctx,"HLWO", MyFirstService, NULL, NULL);
 }
 int main (int argc, MQ_CST argv[]) 

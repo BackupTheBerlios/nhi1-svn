@@ -41,7 +41,6 @@ static VALUE ProcCallCall (VALUE proc) {
 
 static enum MqErrorE ProcCall (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR const dataP
 ) 
 { 
@@ -58,7 +57,6 @@ static VALUE ProcCallMethodCall (VALUE method) {
 
 static enum MqErrorE ProcCallMethod (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR const dataP
 ) 
 { 
@@ -76,7 +74,6 @@ static VALUE ProcCallMethodWithArgCall (VALUE array) {
 
 static enum MqErrorE ProcCallMethodWithArg (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR const dataP
 ) 
 { 
@@ -88,7 +85,6 @@ static enum MqErrorE ProcCallMethodWithArg (
 
 void NS(ProcFree) (
   struct MqS const * const mqctx,
-  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
@@ -99,7 +95,6 @@ void NS(ProcFree) (
 
 static enum MqErrorE ProcCopyProc (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
@@ -112,7 +107,6 @@ static enum MqErrorE ProcCopyProc (
 
 static enum MqErrorE ProcCopyMethod (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
@@ -128,7 +122,6 @@ static enum MqErrorE ProcCopyMethod (
 
 static enum MqErrorE ProcCopyMethodWithArg (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR *dataP
 )
 {
