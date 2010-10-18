@@ -63,6 +63,20 @@ void
   MQ_PTR data
 );
 
+typedef void ( MQ_DECL
+  *MqCacheMarkF
+) (
+  MQ_PTR data,
+  MqMarkF markF
+);
+
+void pCacheMark (
+  register struct MqCacheS * const top,
+  MqCacheMarkF cacheMarkF,
+  MqMarkF markF
+);
+  
+
 END_C_DECLS
 
 #endif

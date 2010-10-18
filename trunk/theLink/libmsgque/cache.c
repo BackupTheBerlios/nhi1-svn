@@ -124,6 +124,20 @@ pCachePush (
   top->free = item;
 }
 
+void 
+pCacheMark (
+  register struct MqCacheS * const top,
+  MqCacheMarkF cacheMarkF,
+  MqMarkF markF
+)
+{
+  struct MqCacheItemS * item = top->used;
+  while (item) {
+    (*cacheMarkF)(item->data, markF);
+    item = item->next;
+  }
+}
+
 END_C_DECLS
 
 

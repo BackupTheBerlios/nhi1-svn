@@ -19,7 +19,6 @@ BEGIN_C_DECLS
 enum MqErrorE pSlaveCreate (struct MqS * const, struct MqLinkSlaveS ** const);
 void pSlaveDelete (struct MqLinkSlaveS ** const);
 void pSlaveShutdown (struct MqLinkSlaveS * const);
-void pSlaveMark (struct MqS * const, MqMarkF const);
 
 END_C_DECLS
 

@@ -23,15 +23,16 @@ VALUE globalRef;
 /*
 static void sMqMark (MQ_PTR data)
 {
+printP(data)
   rb_gc_mark((VALUE)data);
 }
+*/
 
 static void sMark (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
-  MqMark(mqctx, sMqMark);
+  MqMark(mqctx, (MqMarkF)rb_gc_mark);
 }
-*/
 
 static void sFree (void * ctx)
 {
@@ -48,7 +49,7 @@ static VALUE new(VALUE class)
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
 
   // create a "ruby" object and link it to the "mqctx" class
-  VALUE self = Data_Wrap_Struct(class, NULL, sFree, mqctx);
+  VALUE self = Data_Wrap_Struct(class, sMark, sFree, mqctx);
 
   // create ruby command
   mqctx->self = (void*) self;
@@ -135,6 +136,6 @@ void NS(MqS_Init) (void) {
   NS(MqS_Slave_Init)();
 
   globalRef = rb_ary_new();
-  rb_gc_register_address(&globalRef);
+  rb_gc_register_mark_object(globalRef);
 }
 

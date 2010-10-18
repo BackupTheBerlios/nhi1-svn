@@ -160,6 +160,7 @@ test dbl-12-($I|$B|$C|$S) {no data} \
 [sS]> (server-0) \[*sReadA8\] request more arguments than available*}
 
 test dbl-13-($I|$B|$C|$S) {set/get context data} \
+    -constraints {$I <= 2} \
     -setup	 {
 	set DATA [list 5278.363489 0.0035346]
     } \
@@ -208,6 +209,3 @@ unset I B C S
 ##
 
 freeTests
-
-
-

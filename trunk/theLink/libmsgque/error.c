@@ -218,7 +218,7 @@ MqErrorStackP(
       if (unlikely(context->config.debug >= 5)) 
 	MqLogV (context, func, 5, "detect %s in file '%s'\n", type, basename);
       MqErrorSAppendV(context, "found in function \"%s\" at file \"%s\"", func, basename);
-      free(basename);
+      MqSysFree(basename);
     }
     return context->error.code;
   } else {

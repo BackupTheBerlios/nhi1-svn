@@ -125,32 +125,10 @@ test server-4-($I|$B|$C|$S) {start server as child} \
     -result         {CHILDSTATUS-201-S> (server) \[*PipeCreate] it is not allowed to use a server in a client context*}
 
 test server-5-($I|$B|$C|$S) {get server configuration data} \
-    -constraints    {parent string} \
     -setup	    { Setup $I $B $C $S } \
     -body           { EchoL $FH_LAST CNFG } \
     -cleanup	    { Cleanup } \
-    -result         {1 1 0 1 0 1 server-0 0 0 CNFG}
-
-test server-5-($I|$B|$C|$S) {get server configuration data} \
-    -constraints    {child string} \
-    -setup	    { Setup $I $B $C $S } \
-    -body           { EchoL $FH_LAST CNFG } \
-    -cleanup	    { Cleanup } \
-    -result         {1 0 0 1 0 1 server-0 0 1 CNFG}
-
-test server-5-($I|$B|$C|$S) {get server configuration data} \
-    -constraints    {parent binary} \
-    -setup	    { Setup $I $B $C $S } \
-    -body           { EchoL $FH_LAST CNFG } \
-    -cleanup	    { Cleanup } \
-    -result         {1 1 0 0 0 1 server-0 0 0 CNFG}
-
-test server-5-($I|$B|$C|$S) {get server configuration data} \
-    -constraints    {child binary} \
-    -setup	    { Setup $I $B $C $S } \
-    -body           { EchoL $FH_LAST CNFG } \
-    -cleanup	    { Cleanup } \
-    -result         {1 0 0 0 0 1 server-0 0 1 CNFG}
+    -result         [list 1 [expr {$I == 1 ? 1 : 0}] 0 [expr {$B eq "string" ? 1 : 0}] 0 1 server-0 0 [expr {$I-1}] CNFG]
 
 # cleanup ---------------------------
 

@@ -629,7 +629,7 @@ static MQ_STR SysBasename (
   // ... Is This POSIX ?
   MQ_STR t1 = mq_strdup((MQ_STR) in);
   const MQ_STR orig = mq_strdup(basename(t1));
-  free (t1);
+  SysFreeP (t1);
   if (includeExtension == MQ_NO) {
     // delete the extension like '.EXE'
     MQ_STR end;

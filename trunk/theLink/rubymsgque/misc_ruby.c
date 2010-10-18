@@ -37,6 +37,7 @@ VALUE NS(Rescue) (
 
 static VALUE ProcCallCall (VALUE proc) {
   return rb_proc_call_with_block(proc, 0, NULL, Qnil);
+  //return rb_proc_call(proc, rb_ary_new());
 }
 
 static enum MqErrorE ProcCall (
@@ -88,8 +89,7 @@ void NS(ProcFree) (
   MQ_PTR *dataP
 )
 {
-  VALUE val = PTR2VAL(dataP);
-  DECR_REF(val);
+  if (*dataP != NULL) DECR_REF((VALUE)*dataP);
   *dataP = NULL;
 }
 
@@ -127,7 +127,8 @@ static enum MqErrorE ProcCopyMethodWithArg (
 {
   VALUE ary = PTR2VAL(*dataP);
   VALUE mth = rb_ary_entry(ary,1);
-  ary = rb_ary_new3(2,SELF,rb_funcall(mth,id_clone,0,NULL));
+  ProcCopyMethod(mqctx, (MQ_PTR*)&mth);
+  ary = rb_ary_new3(2,SELF,mth);
   INCR_REF(ary);
   *dataP = VAL2PTR(ary);
   return MQ_OK;

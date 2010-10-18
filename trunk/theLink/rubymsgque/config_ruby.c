@@ -130,8 +130,8 @@ FactoryDelete(
 )
 {
   MqContextFree (mqctx);
-  if (doFactoryDelete) {
-    DECR_REG(PTR2VAL(mqctx->self));
+  if (doFactoryDelete && mqctx->self != NULL) {
+    DECR_REG((VALUE)mqctx->self);
     mqctx->self = NULL;
   }
 }

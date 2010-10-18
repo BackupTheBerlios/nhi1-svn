@@ -37,7 +37,8 @@ extern VALUE globalRef;
 #define SETUP_self	    VALUE self = SELF;
 #define MQ_CONTEXT_S	    mqctx
 
-#define INCR_REF(val)	    INCR_REG(val)
+#define INCR_REF(val)	    
+//#define INCR_REF(val)	    INCR_REG(val)
 /*
 #define INCR_REF(val)	    if ((val)!=Qnil) { \
   rb_gc_register_address(&val); \
@@ -46,7 +47,8 @@ extern VALUE globalRef;
 }
 */
 
-#define DECR_REF(val)	    DECR_REG(val)
+#define DECR_REF(val)	    
+//#define DECR_REF(val)	    DECR_REG(val)
 /*
 #define DECR_REF(val)	    if ((val)!=Qnil) { \
   MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); \

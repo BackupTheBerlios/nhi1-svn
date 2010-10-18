@@ -65,19 +65,21 @@ static VALUE ReadBDY (VALUE self) {
 
 static VALUE ReadU (VALUE self) {
   MQ_BUF buf = NULL;
+  VALUE ret;
   SETUP_mqctx
   ErrorMqToRubyWithCheck(MqReadU(mqctx, &buf));
-  return NS(MqBufferS_New) (buf);
+  ret = NS(MqBufferS_New) (buf);
+  return ret;
 }
 
 static VALUE ReadL_START (int argc, VALUE *argv, VALUE self) {
   MQ_BUF MqBufferS_object = NULL;
   SETUP_mqctx
-  if (argc != 1) goto error;
-  if (rb_obj_is_kind_of(argv[0], cMqBufferS) == Qtrue) {
-    MqBufferS_object = VAL2MqBufferS(argv[0]);
-  } else {
+  if (argc < 0 || argc > 2) {
     goto error;
+  } else if (argc == 1) {
+    if (rb_obj_is_kind_of(argv[0], cMqBufferS) == Qfalse) goto error;
+    MqBufferS_object = VAL2MqBufferS(argv[0]);
   }
   ErrorMqToRubyWithCheck(MqReadL_START(mqctx, MqBufferS_object));
   return Qnil;

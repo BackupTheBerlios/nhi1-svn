@@ -36,7 +36,7 @@ proc Sleep {} {
 if true {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I {1} {
+ foreach I [numGet 1] {
 
  # transport-type: string or binary
   foreach B [envGet BIN_LST] {
@@ -132,6 +132,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
     ## this test will wait for (num * 0,1) seconds
     test async-F1-($B|$C|$S) {work on mass background events} \
 	-setup	    {
+	    array unset FH
 	    set RET [list]
 	    proc RSleep {ctx a} {
 		$ctx SendSTART

@@ -291,17 +291,19 @@ error:
   return MqErrorStack(context);
 }
 
+static void sTransMark (struct MqCallbackS *cb, MqMarkF const markF) {
+  if (cb->data != NULL) (*markF)(cb->data);
+}
+
+void pTransMark (
+  struct MqS * const context,
+  MqMarkF const markF
+) 
+{ 
+  struct MqTransS const * const trans = context->link.trans;
+  if (unlikely(trans == NULL)) return;
+  pCacheMark(trans->transCache, (MqCacheMarkF) sTransMark, markF);
+}
+
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
 

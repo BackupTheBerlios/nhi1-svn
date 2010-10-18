@@ -31,9 +31,6 @@ class Client < MqS
       master.SendERROR();
     end
   end
-  def Callback2
-    SlaveGetMaster.i = ReadI()
-  end
 end
 
 class ClientERR < MqS
@@ -69,15 +66,19 @@ class Server < MqS
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))
     ConfigSetFactory(lambda {Server.new})
-
+    @buf = nil
     super()
   end
 
   def ServerCleanup
-    #puts("ServerCleanup -----------" + self.to_s)
-    # free objects
+#    $stderr.puts("ServerCleanup -1---------" + self.to_s)
+#    $stderr.flush
+#$stderr.puts "clients -> " + @cl.to_s
+#$stderr.flush
     for i in 0..2
       if @cl[i] != nil
+#$stderr.puts "cl[" + i.to_s + "] -> " + @cl[i].to_s
+#$stderr.flush
         @cl[i].Delete()
         @cl[i] = nil
       end
@@ -85,14 +86,18 @@ class Server < MqS
   end
 
   def ServerSetup
-    #$stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
-    #$stderr.flush
+#    $stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
+#    $stderr.flush
 
     if (SlaveIs() == false)
 
       # initialize objects
       @cl = [Client.new, Client.new, Client.new]
+#$stderr.puts "clients -> " + @cl.to_s
+#$stderr.flush
       for i in 0..2 
+#$stderr.puts "cl[" + i.to_s + "] -> " + @cl[i].to_s
+#$stderr.flush
         @cl[i].ConfigSetName("cl-" + i.to_s)
         @cl[i].ConfigSetSrvName("sv-" + i.to_s)
       end
@@ -116,6 +121,8 @@ class Server < MqS
       ServiceCreate("USLP", method(:USLP))
       ServiceCreate("CFG1", method(:CFG1))
       ServiceCreate("INIT", method(:INIT))
+      ServiceCreate("LST1", method(:LST1))
+      ServiceCreate("LST2", method(:LST2))
 
       ServiceCreate("BUF1", method(:BUF1))
       ServiceCreate("BUF2", method(:BUF2))
@@ -139,7 +146,91 @@ class Server < MqS
       ServiceCreate("ECOB", method(:ECOB))
       ServiceCreate("ECOU", method(:ECOU))
       ServiceCreate("ECON", method(:ECON))
+      ServiceCreate("ECOL", method(:ECOL))
+      ServiceCreate("ECLI", method(:ECLI))
+      ServiceCreate("ERLR", method(:ERLR))
+      ServiceCreate("ERLS", method(:ERLS))
     end
+  end
+
+  def SETU
+    @buf = ReadU()
+  end
+
+  def GETU
+    SendSTART()
+#$stderr.puts 11111
+#$stderr.flush
+    SendU(@buf)
+#$stderr.puts 22222
+#$stderr.flush
+    SendRETURN()
+    @buf = nil
+    Sleep(1)
+  end
+
+  def ERLR
+    SendSTART()
+    ReadL_START()
+    ReadL_START()
+    SendRETURN()
+  end
+
+  def ERLS
+    SendSTART()
+    SendL_START()
+    SendU(ReadU())
+    SendL_START()
+    SendU(ReadU())
+    SendRETURN()
+  end
+
+  def EchoList(doincr)
+    while ReadItemExists()
+      buf = ReadU()
+      if buf.GetType() == "L"
+        ReadL_START(buf)
+        SendL_START()
+        EchoList(doincr)
+        SendL_END()
+        ReadL_END()
+      elsif doincr == true
+        SendI(buf.GetI()+1)
+      else
+        SendU(buf)
+      end
+    end
+  end
+
+  def ECLI
+    opt = ReadU()
+    doincr = (opt.GetType() == "C" && opt.GetC() == "--incr")
+    ReadUndo() if doincr == false
+    SendSTART()
+    EchoList(doincr)
+    SendRETURN()
+  end
+
+  def ECOL
+    SendSTART()
+    ReadL_START()
+    SendL_START()
+    EchoList(false)
+    SendL_END()
+    ReadL_END()
+    SendRETURN()
+  end
+
+  def LST1
+    SendSTART()
+    SendL_END()
+    SendRETURN()
+  end
+
+  def LST2
+    SendSTART()
+    ReadL_END()
+    SendRETURN()
   end
 
   def INIT
@@ -269,6 +360,10 @@ class Server < MqS
     SendRETURN()
   end
 
+  def Callback2(ctx)
+    @i = ctx.ReadI()
+  end
+
   def SND2
     s  = ReadC()
     id = ReadI()
@@ -307,7 +402,7 @@ class Server < MqS
         cl.SendSTART();
         cl.SendU(ReadU());
         @i = -1;
-        cl.SendEND_AND_CALLBACK("ECOI", cl.method(:Callback2));
+        cl.SendEND_AND_CALLBACK("ECOI", method(:Callback2));
         cl.ProcessEvent(10,MqS::WAIT::ONCE);
         SendI(@i+1);
       when "MqSendEND_AND_WAIT"
@@ -329,7 +424,7 @@ class Server < MqS
         cl.SendEND(tok);
         return
       when "ERR-1"
-        slv = ClientERR2()
+        slv = ClientERR2.new
         slv.LinkCreate(ConfigGetDebug())
       when "isSlave"
         SendO(cl.SlaveIs());
@@ -594,17 +689,6 @@ class Server < MqS
     SendSTART()
     SendI(ReadI())
     SendRETURN()
-  end
-
-  def SETU
-    @buf = ReadU()
-  end
-
-  def GETU
-    SendSTART()
-    SendU(@buf)
-    SendRETURN()
-    @buf = nil
   end
 
 end

@@ -5,7 +5,6 @@
 #include <ruby/defines.h>
 
 static ID id_join;
-static VALUE threadM;
 
 #define MqErrorSys(cmd) \
   MqErrorV (mqctx, __func__, errno, \
@@ -142,7 +141,7 @@ static enum MqErrorE SysServerThread (
   argP->alfa = *alfaP;
   argP->tmpl = mqctx;
 
-  // pointers are owned by SysServerThread
+  // pointers are now owned by SysServerThread
   *argvP = NULL;
   *alfaP = NULL;
 
@@ -153,7 +152,7 @@ static enum MqErrorE SysServerThread (
   NIL_Check(ret = NS(Rescue)(mqctx, SysServerThreadCall, PTR2VAL(argP)));
 
   // make thread_id persistent
-  INCR_REF(ret);
+  INCR_REG(ret);
 
   // save tid
   (*idP).val = ret;
@@ -168,14 +167,19 @@ error:
   return MQ_ERROR;
 }
 
+static VALUE SysExit2(void) {
+  VALUE thread = rb_thread_current();
+  DECR_REG(thread);
+  rb_thread_kill(thread);
+  return Qnil;
+}
+
 static void SysExit (
   int isThread,                     ///< [in] is this a thread
   int num                           ///< [in] exit number
 ) {
-  if (isThread) {
-    rb_thread_kill(rb_thread_current());
-  }
-  rb_exit(num);
+  rb_rescue(SysExit2,Qnil,NULL,Qnil);
+  if (!isThread) exit(num);
 }
 
 static VALUE SysWaitCall (
@@ -225,8 +229,6 @@ void NS(MqS_Sys_Init)(void) {
   MqLal.SysServerThread = SysServerThread;
   MqLal.SysExit = SysExit;
   MqLal.SysWait = SysWait;
-
-  threadM = rb_mutex_new();
 }
 
 

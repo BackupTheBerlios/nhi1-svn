@@ -19,7 +19,6 @@
 #include "token.h"
 #include "error.h"
 #include "sys.h"
-#include "slave.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>
@@ -353,20 +352,30 @@ MqExitP (
   }
 }
 
+void pTransMark	( struct MqS * const, MqMarkF const);
+void pSetupMark	( struct MqS * const, MqMarkF const);
+void pSlaveMark	( struct MqS * const, MqMarkF const);
+void pLinkMark	( struct MqS * const, MqMarkF const);
+void pTokenMark ( struct MqS * const, MqMarkF const);
+
 void
 MqMark (
   struct MqS * const context,
   MqMarkF markF
 )
 {
+  if (context == NULL) return;
+
   // 1. mark child's
   pLinkMark(context, markF);
   // 2. mark slave's
   pSlaveMark(context, markF);
   // 3. mark setup data
   pSetupMark(context, markF);
-  // 4. mark token data
-  pSetupMark(context, markF);
+  // 4. mark transaction data
+  pTransMark(context, markF);
+  // 5. make service handle data
+  pTokenMark(context, markF);
 }
 
 /*****************************************************************************/

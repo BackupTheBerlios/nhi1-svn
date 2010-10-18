@@ -355,7 +355,7 @@ pTokenAddHdl (
   register struct pTokenSpaceS * const space = token->loc;
   register struct pTokenItemS *free;
 
-  MqDLogV(context, 4, "HANDEL SERVICE ADD %s: proc<%p>, data<%p>\n",
+  MqDLogV(context, 5, "HANDEL SERVICE ADD %s: proc<%p>, data<%p>\n",
     name, (void*) callback.fCall, callback.data);
 
   if (!strncmp (name, "+ALL", HDR_TOK_LEN)) {
@@ -645,11 +645,14 @@ pTokenMark (
   MqMarkF markF
 )
 {
-  struct pTokenSpaceS * const space = context->link.srvT->loc;
-           struct pTokenItemS * start = space->items;
-  register struct pTokenItemS * end = start + space->used;
-  while (start < end--) {
-    if (end->callback.data) (*markF)(end->callback.data);
+  struct pTokenS const * const token = context->link.srvT;
+  if (token != NULL) {
+    struct pTokenSpaceS * const space = token->loc;
+	     struct pTokenItemS * start = space->items;
+    register struct pTokenItemS * end = start + space->used;
+    while (start < end--) {
+      if (end->callback.data) (*markF)(end->callback.data);
+    }
   }
 }
 

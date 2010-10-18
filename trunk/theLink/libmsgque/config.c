@@ -274,6 +274,7 @@ MqContextFree (
   if (context == NULL || context->bits.MqContextFree_LOCK == MQ_YES) {
     return;
   } else {
+    MqDLogC(context,3,"FREE\n");
     context->bits.MqContextFree_LOCK = MQ_YES;
     MqLinkDelete(context);
 
@@ -334,6 +335,7 @@ MqContextDelete (
     (*fCall) (context, doFactoryCleanup, context->setup.Factory.Delete.data);
   } else {
     // set this because "setup.Factory.Delete.fCall" is !not! required
+    MqDLogC(context,3,"DELETE\n");
     context->link.bits.doFactoryCleanup = MQ_NO;
     context->bits.MqContextDelete_LOCK = MQ_YES;
     MqContextFree(context);
@@ -356,6 +358,7 @@ MqContextCreate (
   context->statusIs = (tmpl == NULL ? MQ_STATUS_IS_INITIAL : MQ_STATUS_IS_DUP);
   context->contextsize = size;
   context->signature = MQ_MqS_SIGNATURE;
+  MqDLogC(context,3,"CREATE\n");
   return context;
 }
 

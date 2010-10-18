@@ -164,6 +164,7 @@ test flt-12-($I|$B|$C|$S) {no data} \
 [sS]> (server-0) \[*sReadA4\] request more arguments than available*}
 
 test flt-13-($I|$B|$C|$S) {set/get context data} \
+    -constraints {$I <= 2} \
     -setup	 {
 	set DATA [list 5278.3628 0.0035345999]
     } \

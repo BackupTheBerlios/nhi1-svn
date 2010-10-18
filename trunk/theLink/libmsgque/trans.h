@@ -94,5 +94,3 @@ END_C_DECLS
 
 #endif /* TRANS_H */
 
-
-
