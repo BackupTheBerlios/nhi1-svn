@@ -66,7 +66,6 @@ CutHelp ( const char * base  )
 static enum MqErrorE
 CutFTR (
   struct MqS * const mqctx,
-  MQ_CST prefix,
   MQ_PTR data
 )
 {

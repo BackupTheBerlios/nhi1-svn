@@ -4160,12 +4160,20 @@ struct MqLalS {
   );
   /// \copyall{MqSysAbort}
   void (*SysAbort) (void);
+  /// \copyall{MqSysSelect}
+/*
+  int (*SysSelect) (
+    int			  max, 
+    void		  *read, 
+    void		  *write, 
+    void		  *except, 
+    struct timeval	  *timeout
+  );
+*/
 };
 
-#ifndef MQ_IN_SYS_C
 /// Language Abstraction Layer in duty
 extern struct MqLalS MqLal;
-#endif
 
 /// \syscall{calloc}
 /// \context
@@ -4411,6 +4419,17 @@ extern struct MqLalS MqLal;
 /// \skip static void SysAbort (void)
 /// \until }
 #define MqSysAbort() (*MqLal.SysAbort)()
+
+/*
+/// \syscall{select}
+/// read more at: <TT>man 2 select</TT>
+/// \param[in] max the maximim file descriptor + 1 fron the \e read, \e write or \e except input data
+/// \param[in] read set of file descriptores
+/// \param[in] write set of file descriptores
+/// \param[in] except set of file descriptores
+/// \param[in] timeout maximum time to wait for data
+#define MqSysSelect(max,read,write,except,timeout)  (*MqLal.SysSelect)(max,read,write,except,timeout)
+*/
 
 /// \syscall{gettimeofday}
 /// \context

@@ -118,7 +118,7 @@ pIoShutdown (
   if (unlikely(io == NULL)) {
     return;
   } else {
-    pEventShutdown (io->context);
+    pEventDel (io->context);
   }
 }
 
@@ -132,7 +132,7 @@ pIoCloseSocket (
     return;
   } else {
     struct MqS * const context = io->context;
-    pEventShutdown (context);
+    pEventDel (context);
     SysCloseSocket (context, caller, MQ_YES, io->sockP);
     // set "initial" parent and all child to "NO"
     pLinkDisConnect (context->link.ctxIdP);

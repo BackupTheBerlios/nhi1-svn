@@ -28,6 +28,7 @@
 #   define MQ_PRIVATE_CONFIG_CONST
 
 #   include "msgque.h"
+#   include "debug.h"
 #   include "msgque_private.h"
 
 
@@ -41,7 +42,6 @@
 #   include <time.h>
 #   include <string.h>
 
-#   include "debug.h"
 
 BEGIN_C_DECLS
 

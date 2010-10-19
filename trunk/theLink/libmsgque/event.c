@@ -275,16 +275,14 @@ pEventCheck (
   }
 
 /*
-{
   MqLogData(context, "select");
   if (MQ_IS_CLIENT(context)) {
     int i;
     for (i=0; i<=event->fdmax; i++) {
       if (FD_ISSET(i,&fds))
-        MqDLogV(context,__func__,0,"sock<%i>, set<YES>\n", i);
+        MqDLogV(context,0,"sock<%i>, set<YES>\n", i);
     }
   }
-}
 */
 
   // do the select
@@ -432,7 +430,7 @@ error:
 /// \attention only call this function for a \e PARENT context
 /// \attention this function free "context->link.io->sockP"
 void
-pEventShutdown (
+pEventDel (
   struct MqS const * const context
 )
 {
@@ -533,7 +531,7 @@ pEventDelete (
     if (MQ_IS_SERVER(context)) {
       sEventDeleteAllClient(context->link.io->event);
     } else {
-      pEventShutdown (context);
+      pEventDel (context);
     }
   }
 
@@ -572,10 +570,4 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
 

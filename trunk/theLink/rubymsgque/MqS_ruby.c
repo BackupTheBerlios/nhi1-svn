@@ -44,6 +44,16 @@ static void sFree (void * ctx)
   MqContextDelete(&mqctx);
 }
 
+static enum MqErrorE sEvent (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  rb_thread_schedule();
+  return MQ_OK;
+}
+
+
 static VALUE new(VALUE class)
 {
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
@@ -58,6 +68,7 @@ static VALUE new(VALUE class)
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;      
   //MqConfigSetIgnoreThread(mqctx, MQ_YES);
+  MqConfigSetEvent(mqctx,sEvent,NULL,NULL,NULL);
 
   // call "initialize"
   rb_obj_call_init(self, 0, NULL);

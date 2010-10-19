@@ -20,6 +20,7 @@
 #include "sys.h"
 #include "log.h"
 #include "send.h"
+#include "event.h"
 
 #define MQ_CONTEXT_S  generiC->context
 
@@ -131,6 +132,7 @@ GenericServer (
   socklen_t mysockaddrlen;
   // this is just a flag
   struct MqIdS id;
+  const int serverStartup = (context->config.startAs != MQ_START_DEFAULT);
 
   // the parent server should "forget" his child's
   // server / child dependency management is done by libmsgque
@@ -148,9 +150,24 @@ GenericServer (
 
   // 2. listen on port
   MqErrorCheck (SysListen (context, generiC->sock, 128));
+
+  // 2a. add listener socket to the select list
+  if (serverStartup) {
+    pEventAdd(context, &generiC->sock);
+    // allow the call to the 'Event' proc
+    context->link.bits.onCreateEnd = MQ_YES;
+  }
+
+  // start the server required
   do {
     id.type = MQ_ID_UNUSED;
     mysockaddrlen = sizeof(mysockaddr);
+    // wait for a connection request and process events
+    if (serverStartup) {
+      if (MqErrorCheckI(pWaitOnEvent (context, MQ_SELECT_RECV, LONG_MAX))) {
+	return MqErrorCreateEXIT(context);
+      }
+    }
     // 3. accept incomming call, on error shutdown server
     if (MqErrorCheckI(SysAccept (context, generiC->sock, &mysockaddr, &mysockaddrlen, &child_sock)))
       return MqErrorCreateEXIT(context);
@@ -187,12 +204,24 @@ GenericServer (
   } while (
     id.type != MQ_ID_UNUSED && id.val != 0UL
   );
+  
+  // \attention only the inline fork child (MQ_START_FORK) or the non --fork/--thread/--spawn server 
+  // (MQ_START_DEFAULT) will go behind this line
 
-  // fork child (pid=0) close parent socket
+  // close listener socket
   MqErrorCheck (SysCloseSocket (context, __func__, MQ_NO, &generiC->sock));
+
+  // delete listener socket from select list
+  if (serverStartup) {
+    pEventDel(context);
+    // disallow the call to the 'Event' proc
+    context->link.bits.onCreateEnd = MQ_NO;
+  }
+
+  // child socket is now the main socket
   generiC->sock = child_sock;
 
-  // 3. save socket pointer and listen on socket events
+  // 3. add child socket to the select list and configure the new socket
   pIoEventAdd(generiC->io, &generiC->sock);
 
   // 4. the fork-server should "allow" the SIGCHLD

@@ -117,14 +117,23 @@ printC(*argv)
 static VALUE
 sSysServerThreadInit(MQ_PTR data)
 {
+M0
   MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
-  return rb_last_status_get();
+M1
+  //return rb_last_status_get();
+  return Qnil;
 }
 
-static VALUE SysServerThreadCall (VALUE data) {
-  struct timeval sleep = {0, 200000};
+static VALUE SysServerThread2 (VALUE data) {
+  //struct timeval sleep = {0, 100000};
+M0
   VALUE ret = rb_thread_create(sSysServerThreadInit, VAL2PTR(data));
-  rb_thread_wait_for(sleep);
+M1
+  // make thread_id persistent
+  INCR_REG(ret);
+M2
+  //rb_thread_wait_for(sleep);
+M3
   return ret;
 }
 
@@ -155,10 +164,11 @@ static enum MqErrorE SysServerThread (
   MqConfigSetIgnoreFork (mqctx, MQ_YES);
 
   // start thread
-  NIL_Check(ret = NS(Rescue)(mqctx, SysServerThreadCall, PTR2VAL(argP)));
-
-  // make thread_id persistent
-  INCR_REG(ret);
+M0
+  NIL_Check(ret = rb_protect(SysServerThread2, PTR2VAL(argP), NULL));
+M1
+  //rb_protect(rb_thread_run, ret, NULL);
+M2
 
   // save tid
   (*idP).val = ret;
@@ -198,7 +208,7 @@ static void SysExit (
   }
 }
 
-static VALUE SysWaitCall (
+static VALUE SysWait2 (
   VALUE thread
 )
 {
@@ -216,9 +226,7 @@ static enum MqErrorE SysWait (
       break;
     }
     case MQ_ID_THREAD: {
-      VALUE thread = PTR2VAL((MQ_PTR)idP->val);
-      NIL_Check(NS(Rescue)(mqctx, SysWaitCall, thread));
-      INCR_REF(thread);
+      rb_protect(SysWait2, PTR2VAL((MQ_PTR)idP->val), NULL);
       break;
     }
     case MQ_ID_UNUSED: {
@@ -226,9 +234,6 @@ static enum MqErrorE SysWait (
     }
   }
   return MQ_OK;
-
-error:
-  return MqErrorStack(mqctx);
 }
 
 void NS(MqS_Sys_Init)(void) {

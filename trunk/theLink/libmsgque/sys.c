@@ -10,7 +10,6 @@
  *              please contact AUTHORS for additional information
  */
 
-#define MQ_IN_SYS_C
 #include "main.h"
 
 #include "sys.h"
@@ -73,6 +72,10 @@
 
 BEGIN_C_DECLS
 
+void SysCreate (void) __attribute__ ((constructor)); 
+
+struct MqLalS MqLal;
+
 #ifdef HAVE_FORK
 static MqForkF mq_fork = fork;
 #else
@@ -86,55 +89,6 @@ static MqForkF mq_fork = NULL;
   static MqVForkF mq_vfork = NULL;
 # endif
 #endif
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                MQ-LAL                                     */
-/*                    (Language Abstraction Layer)                           */
-/*                                                                           */
-/*****************************************************************************/
-
-static MQ_PTR SysCalloc (struct MqS * const, MQ_SIZE, MQ_SIZE);
-static MQ_PTR SysMalloc (struct MqS * const, MQ_SIZE);
-static MQ_PTR SysRealloc (struct MqS * const, MQ_PTR, MQ_SIZE);
-static void SysFreeP (MQ_PTR);
-static enum MqErrorE SysServerSpawn (struct MqS * const, char **, MQ_CST, struct MqIdS *);
-static enum MqErrorE SysServerThread (struct MqS * const, struct MqFactoryS, struct MqBufferLS **, struct MqBufferLS **, MQ_CST, int, struct MqIdS *);
-static enum MqErrorE SysServerFork (struct MqS * const, struct MqFactoryS, struct MqBufferLS **, struct MqBufferLS **, MQ_CST, struct MqIdS *);
-static enum MqErrorE SysFork (struct MqS * const, struct MqIdS *);
-static enum MqErrorE SysGetTimeOfDay (struct MqS * const, struct mq_timeval *, struct mq_timezone *);
-static enum MqErrorE SysWait (struct MqS * const, const struct MqIdS *);
-static enum MqErrorE SysUSleep (struct MqS * const, unsigned int const);
-static enum MqErrorE SysSleep (struct MqS * const, unsigned int const);
-static MQ_STR SysBasename (MQ_CST const, MQ_BOL);
-static enum MqErrorE SysIgnorSIGCHLD (struct MqS * const);
-static enum MqErrorE SysAllowSIGCHLD (struct MqS * const);
-static enum MqErrorE SysDaemonize (struct MqS * const, MQ_CST);
-static enum MqErrorE SysUnlink (struct MqS * const, const MQ_STR);
-static void SysExit (int, int);
-static void SysAbort (void);
-
-struct MqLalS MqLal = {
-  SysCalloc,
-  SysMalloc,
-  SysRealloc,
-  SysFreeP,
-  SysServerSpawn,
-  SysServerThread,
-  SysServerFork,
-  SysFork,
-  SysGetTimeOfDay,
-  SysWait,
-  SysUSleep,
-  SysSleep,
-  SysBasename,
-  SysIgnorSIGCHLD,
-  SysAllowSIGCHLD,
-  SysDaemonize,
-  SysUnlink,
-  SysExit,
-  SysAbort
-};
 
 /*****************************************************************************/
 /*                                                                           */
@@ -764,6 +718,35 @@ static void SysExit (
 static void SysAbort (void) {
   abort();
 }
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                MQ-LAL                                     */
+/*                    (Language Abstraction Layer)                           */
+/*                                                                           */
+/*****************************************************************************/
+
+void SysCreate(void) {
+  MqLal.SysCalloc = SysCalloc;
+  MqLal.SysMalloc = SysMalloc;
+  MqLal.SysRealloc = SysRealloc;
+  MqLal.SysFreeP = SysFreeP;
+  MqLal.SysServerSpawn = SysServerSpawn;
+  MqLal.SysServerThread = SysServerThread;
+  MqLal.SysServerFork = SysServerFork;
+  MqLal.SysFork = SysFork;
+  MqLal.SysGetTimeOfDay = SysGetTimeOfDay;
+  MqLal.SysWait = SysWait;
+  MqLal.SysUSleep = SysUSleep;
+  MqLal.SysSleep = SysSleep;
+  MqLal.SysBasename = SysBasename;
+  MqLal.SysIgnorSIGCHLD = SysIgnorSIGCHLD;
+  MqLal.SysAllowSIGCHLD = SysAllowSIGCHLD;
+  MqLal.SysDaemonize = SysDaemonize;
+  MqLal.SysUnlink = SysUnlink;
+  MqLal.SysExit = SysExit;
+  MqLal.SysAbort = SysAbort;
+};
 
 END_C_DECLS
 
