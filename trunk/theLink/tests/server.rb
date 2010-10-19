@@ -17,7 +17,7 @@ class Client < MqS
     ConfigSetFactory(lambda {Client.new})
     ConfigSetBgError(method(:BgError))
     ConfigSetSrvName("test-server")
-    ConfigSetName("client")
+    #ConfigSetName("client")
     super()
   end
   def LinkCreate(debug)

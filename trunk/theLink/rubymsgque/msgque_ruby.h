@@ -127,7 +127,7 @@ void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
-MQ_BFL NS(argv2bufl)	    (int argc, VALUE *argv);
+MQ_BFL NS(argv2bufl)	    (struct MqBufferLS*, int, VALUE*);
 enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);
 VALUE NS(Rescue)	    (struct MqS * const, VALUE(*)(ANYARGS), VALUE);
 

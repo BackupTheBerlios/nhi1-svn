@@ -99,10 +99,7 @@ static VALUE USleep(VALUE self, VALUE usec)
 
 static VALUE Init(int argc, VALUE *argv, VALUE self)
 {
-  struct MqBufferLS * initB = MqInitCreate();
-  for (; argc>0; argc--,argv++) {
-    MqBufferLAppendC(initB, VAL2CST(*argv));
-  }
+  NS(argv2bufl) (MqInitCreate(), argc, argv);
   return Qnil;
 }
 

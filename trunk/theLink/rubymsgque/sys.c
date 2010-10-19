@@ -60,9 +60,15 @@ static enum MqErrorE SysFork (
 )
 {
 #ifdef HAVE_FORK
-  if (unlikely (((*idP).val = rb_fork(0, 0, 0, Qnil)) == -1)) {
-    return MqErrorSys (fork);
+  rb_pid_t pid;
+  switch (pid = rb_fork(0, 0, 0, Qnil)) {
+    case 0:
+      rb_thread_atfork();
+      break;
+    case -1:
+      return MqErrorSys (fork);
   }
+  (*idP).val = pid;
   (*idP).type = MQ_ID_PROCESS;
   return MQ_OK;
 #else
@@ -167,10 +173,15 @@ error:
   return MQ_ERROR;
 }
 
-static VALUE SysExit2(void) {
+static VALUE SysExit2(VALUE dummy) {
   VALUE thread = rb_thread_current();
   DECR_REG(thread);
   rb_thread_kill(thread);
+  return Qnil;
+}
+
+static VALUE SysExit3(VALUE num) {
+  rb_exit((int)num);
   return Qnil;
 }
 
@@ -178,8 +189,13 @@ static void SysExit (
   int isThread,                     ///< [in] is this a thread
   int num                           ///< [in] exit number
 ) {
-  rb_rescue(SysExit2,Qnil,NULL,Qnil);
-  if (!isThread) exit(num);
+  if (isThread) {
+    rb_protect(SysExit2,Qnil,NULL);
+  } else {
+    rb_protect(SysExit3,num,NULL);
+    ruby_finalize();
+    exit(num);
+  }
 }
 
 static VALUE SysWaitCall (

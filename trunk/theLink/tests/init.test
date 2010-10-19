@@ -47,17 +47,7 @@ proc MapServer {t} {
     # server-type: server server.tcl
     foreach S [filterGet SRV_LST $C] {
 
-      switch -glob $S {
-	python*	  { set SRV [MapServer python ] }
-	ruby*	  { set SRV [MapServer ruby   ] }
-	csharp*	  { set SRV [MapServer csharp ] }
-	java*	  { set SRV [MapServer java   ]	}
-	tcl*	  { set SRV [MapServer tcl    ] }
-	cc*	  { set SRV [MapServer cc     ] }
-	perl*	  { set SRV [MapServer perl   ] }
-	vb*	  { set SRV [MapServer vb     ] }
-	c*	  { set SRV [MapServer c      ] }
-      }
+      set SRV	  [MapServer [langGet $S]]
 
       SetConstraints $I $B $S
 

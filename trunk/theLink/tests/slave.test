@@ -100,7 +100,7 @@ test slave-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND2> <Num|1>*
 *[cC]> (wk-cl-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
+[sS]> (wk-sv-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
 
 test slave-3-($I|$B|$C|$S) {SendEND with ok} \
     -body           {Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendI 777} \

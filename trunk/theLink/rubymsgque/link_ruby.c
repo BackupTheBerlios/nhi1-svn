@@ -23,7 +23,7 @@ extern VALUE cMqS;
 static VALUE LinkCreate(int argc, VALUE *argv, VALUE self)
 {
   SETUP_mqctx
-  struct MqBufferLS * args = NS(argv2bufl)(argc,argv);
+  struct MqBufferLS * args = NS(argv2bufl)(NULL,argc,argv);
 
 //printXULS(NULL, args);
 
@@ -45,7 +45,7 @@ static VALUE LinkCreateChild(int argc, VALUE *argv, VALUE self)
   argc--; argv++;
 
   // command-line arguments to MqBufferLS
-  args = NS(argv2bufl)(argc,argv);
+  args = NS(argv2bufl)(NULL,argc,argv);
 
   // create Context
   ErrorMqToRubyWithCheck (MqLinkCreateChild(mqctx, parent, &args));

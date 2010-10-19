@@ -167,12 +167,11 @@ enum MqErrorE NS(ProcInit) (
   return MQ_OK;
 }
 
-MQ_BFL NS(argv2bufl) (int argc, VALUE *argv)
+MQ_BFL NS(argv2bufl) (struct MqBufferLS * args, int argc, VALUE *argv)
 {
-  struct MqBufferLS * args = NULL;
   if (argc != 0) {
     int i;
-    args = MqBufferLCreate (argc);
+    if (args == NULL) args = MqBufferLCreate (argc);
     for (i = 0; i < argc; i++, argv++) {
       const VALUE argv2 = *argv;
       if (rb_type(argv2) == T_ARRAY) {

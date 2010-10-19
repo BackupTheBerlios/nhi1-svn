@@ -279,6 +279,10 @@ proc numGet { num } {
     return $ret
 }
 
+proc langGet {server} {
+  return [lindex [split $server .] 0]
+}
+
 proc getPrefix {srv} {
     global env
     set RET [list]

@@ -275,7 +275,7 @@ unset I B C S
 
 test error-2 {low level port} \
     -body           {Exec {*}[getClient client] --name client --tcp --port 10 --timeout 1 --error} \
-    -constraints    {tcp parent} \
+    -constraints    {c tcp parent} \
     -result         {CHILDSTATUS-200-C> (client) [SysConnect] TIMEOUT after '1' sec
 C> (client) found in function "GenericConnect" at file "generic_io.c"
 C> (client) found in function "TcpConnect" at file "tcp_io.c"
@@ -285,8 +285,8 @@ C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 test error-3 {low ssh (tcp-22) port} \
-    -body           {Exec {*}[getClient client] --name client --tcp --port 22 --timeout 1 --error} \
-    -constraints    {tcp parent} \
+    -body           {Exec {*}[getClient client] --name client --tcp --port echo --timeout 1 --error} \
+    -constraints    {c tcp parent} \
     -result	    {CHILDSTATUS-204-C> (client) [MqLinkConnect] can not start server 'remote-connect'
 C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"

@@ -32,7 +32,7 @@ static VALUE SlaveWorker(int argc, VALUE *argv, VALUE self)
   argc--; argv++;
 
   // command-line arguments to MqBufferLS
-  args = NS(argv2bufl)(argc,argv);
+  args = NS(argv2bufl)(NULL,argc,argv);
 
   // create Worker
   ErrorMqToRubyWithCheck (MqSlaveWorker(mqctx, id, &args));

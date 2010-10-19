@@ -59,7 +59,7 @@ static VALUE SendBDY (VALUE self, VALUE val) {
 
 static VALUE SendU (VALUE self, VALUE buf) {
   SETUP_mqctx
-  //CheckType(buf, cMqBufferS, "usage: SendU MqBufferS-Type-Arg");
+  CheckType(buf, cMqBufferS, "usage: SendU MqBufferS-Type-Arg");
   ErrorMqToRubyWithCheck(MqSendU(mqctx,VAL2MqBufferS(buf)));
   return Qnil;
 }
