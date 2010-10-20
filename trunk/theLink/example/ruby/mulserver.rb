@@ -10,18 +10,19 @@
 #§              please contact AUTHORS for additional information
 #§
 require "rubymsgque"
-def MMUL(ctx)
-  ctx.SendSTART()
-  ctx.SendD(ctx.ReadD() * ctx.ReadD())
-  ctx.SendRETURN()
+def MMUL
+  SendSTART()
+  SendD(ReadD() * ReadD())
+  SendRETURN()
 end
-def ServerConfig(ctx)
-  ctx.ServiceCreate("MMUL",method(:MMUL))
+def ServerConfig()
+  ServiceCreate("MMUL",method(:MMUL))
 end
 srv = MqS.new
 begin
   srv.ConfigSetName("MyMulServer")
-  srv.ConfigSetServerSetup(method(:ServerConfig))
+  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
+  srv.ConfigSetFactory(lambda {MqS.new})
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT::FOREVER)
 rescue Exception => ex

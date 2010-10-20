@@ -152,22 +152,26 @@ GenericServer (
   MqErrorCheck (SysListen (context, generiC->sock, 128));
 
   // 2a. add listener socket to the select list
+/*
   if (serverStartup) {
     pEventAdd(context, &generiC->sock);
     // allow the call to the 'Event' proc
     context->link.bits.onCreateEnd = MQ_YES;
   }
+*/
 
   // start the server required
   do {
     id.type = MQ_ID_UNUSED;
     mysockaddrlen = sizeof(mysockaddr);
     // wait for a connection request and process events
+/*
     if (serverStartup) {
       if (MqErrorCheckI(pWaitOnEvent (context, MQ_SELECT_RECV, LONG_MAX))) {
 	return MqErrorCreateEXIT(context);
       }
     }
+*/
     // 3. accept incomming call, on error shutdown server
     if (MqErrorCheckI(SysAccept (context, generiC->sock, &mysockaddr, &mysockaddrlen, &child_sock)))
       return MqErrorCreateEXIT(context);
@@ -212,11 +216,13 @@ GenericServer (
   MqErrorCheck (SysCloseSocket (context, __func__, MQ_NO, &generiC->sock));
 
   // delete listener socket from select list
+/*
   if (serverStartup) {
     pEventDel(context);
     // disallow the call to the 'Event' proc
     context->link.bits.onCreateEnd = MQ_NO;
   }
+*/
 
   // child socket is now the main socket
   generiC->sock = child_sock;

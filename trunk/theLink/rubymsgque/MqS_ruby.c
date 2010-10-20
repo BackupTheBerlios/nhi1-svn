@@ -67,7 +67,7 @@ static VALUE new(VALUE class)
   // set configuration data
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;      
-  //MqConfigSetIgnoreThread(mqctx, MQ_YES);
+  MqConfigSetIgnoreThread(mqctx, MQ_YES);
   MqConfigSetEvent(mqctx,sEvent,NULL,NULL,NULL);
 
   // call "initialize"

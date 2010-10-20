@@ -697,16 +697,6 @@ end
 ##    Main
 ##
 
-$stdout.puts Signal.list
-$stdout.flush
-
-for i in 0..30 do
-  Signal.trap(i) {|i| $stdout.puts "i=#{i}";$stdout.flush}
-end
-
-$stdout.puts $$
-$stdout.flush
-
 srv = Server.new
 
 begin

@@ -92,7 +92,7 @@ extern VALUE globalRef;
 #define CheckType(val,typ,err) \
   if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
 
-#define printVAL(val) rb_io_puts(1, &val, rb_stderr); rb_io_flush(rb_stderr);
+#define printVAL(val) {VALUE tmp=(val); rb_io_puts(1, &tmp, rb_stderr); rb_io_flush(rb_stderr);}
 
 /*****************************************************************************/
 /*                                                                           */

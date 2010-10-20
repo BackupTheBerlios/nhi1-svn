@@ -187,9 +187,9 @@ C> (client:*) \[*] \[2-0-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<4>
 C> (client:*) \[*] \[3-0-0-*-MqExitP]: called from 'main'
 C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: START - called from 'MqLinkDelete'
 C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: send token<_SHD>
-C> (client:*) \[*] \[4-0-0-*-pEventShutdown]: sock<*> DataLCur<0>
+C> (client:*) \[*] \[4-0-0-*-pEventDel]: sock<*> DataLCur<0>
 C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: END shutdown
-C> (client:*) \[*] \[4-0-0-*-pEventShutdown]: sock<-1> DataLCur<0>
+C> (client:*) \[*] \[4-0-0-*-pEventDel]: sock<-1> DataLCur<0>
 C> (client:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE }
 
 test client-6d {client/server debug -2- message with long names} \
@@ -276,6 +276,7 @@ C> (client:*) \[*] \[0-0-0-*-main]: end: ---------------------------------------
 ##
     
 freeTests
+
 
 
 

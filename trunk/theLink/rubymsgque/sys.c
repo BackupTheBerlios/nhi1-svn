@@ -117,23 +117,15 @@ printC(*argv)
 static VALUE
 sSysServerThreadInit(MQ_PTR data)
 {
-M0
   MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
-M1
   //return rb_last_status_get();
   return Qnil;
 }
 
 static VALUE SysServerThread2 (VALUE data) {
-  //struct timeval sleep = {0, 100000};
-M0
   VALUE ret = rb_thread_create(sSysServerThreadInit, VAL2PTR(data));
-M1
   // make thread_id persistent
   INCR_REG(ret);
-M2
-  //rb_thread_wait_for(sleep);
-M3
   return ret;
 }
 
@@ -164,11 +156,7 @@ static enum MqErrorE SysServerThread (
   MqConfigSetIgnoreFork (mqctx, MQ_YES);
 
   // start thread
-M0
   NIL_Check(ret = rb_protect(SysServerThread2, PTR2VAL(argP), NULL));
-M1
-  //rb_protect(rb_thread_run, ret, NULL);
-M2
 
   // save tid
   (*idP).val = ret;

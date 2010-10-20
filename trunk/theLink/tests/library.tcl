@@ -641,10 +641,8 @@ if {![info exists env(SRV_LST)]} {
     ruby.pipe.pipe
     ruby.tcp.spawn
     ruby.tcp.fork
-    ruby.tcp.thread
     ruby.uds.spawn
     ruby.uds.fork
-    ruby.uds.thread
     csharp.pipe.pipe
     csharp.tcp.thread
     csharp.uds.thread
@@ -776,7 +774,7 @@ while {true} {
       set argv [list --only-binary --max 5 --only-spawn --only-tcp {*}$argv]
     }
     "--remote-testing" {
-      set argv [list --only-tcp --port 7777 --only-binary --use-remote --max 5 {*}$argv]
+      set argv [list --only-tcp --port 7777 --only-thread --only-binary --use-remote --max 5 {*}$argv]
     }
     "--use-remote" {
       set env(USE_REMOTE) true

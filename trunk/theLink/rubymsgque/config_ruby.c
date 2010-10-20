@@ -104,7 +104,9 @@ FactoryCreate(
     //RUBY_INIT_STACK;
   }
 */
+
   VALUE self = NS(Rescue)(tmpl, FactoryCreateCall, PTR2VAL(data));
+
   //VALUE self = rb_proc_call_with_block(PTR2VAL(data), 0, NULL, Qnil);
 
   if (NIL_P(self)) {

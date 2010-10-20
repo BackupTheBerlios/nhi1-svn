@@ -10,17 +10,18 @@
 #§              please contact AUTHORS for additional information
 #§
 require "rubymsgque"
-def HLWO(ctx)
-  ctx.SendSTART()
-  ctx.SendC("Hello World")
-  ctx.SendRETURN()
+def HLWO
+  SendSTART()
+  SendC("Hello World")
+  SendRETURN()
 end
-def ServerConfig(ctx)
-  ctx.ServiceCreate("HLWO",method(:HLWO))
+def ServerConfig
+  ServiceCreate("HLWO",method(:HLWO))
 end
 srv = MqS.new
 begin
-  srv.ConfigSetServerSetup(method(:ServerConfig))
+  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
+  srv.ConfigSetFactory(lambda {MqS.new})
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT::FOREVER)
 rescue Exception => ex
