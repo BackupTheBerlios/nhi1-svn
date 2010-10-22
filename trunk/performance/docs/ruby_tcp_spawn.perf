@@ -1,11 +1,11 @@
-> ruby nothread/NHI1-0.7/theLink/tests/server.rb --tcp --host localhost --port 7778 --spawn
-> nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7778
-C> (client:14947) [2010-10-21:19-51-25] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:14947) [2010-10-21:19-51-25] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       4.39
-C> (client:14947) [2010-10-21:19-51-25] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.21
-C> (client:14947) [2010-10-21:19-51-29] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      30.27
-C> (client:14947) [2010-10-21:19-51-30] [0-0-0-0x624bc0-statistics]:                  parent create:   14244.00
-C> (client:14947) [2010-10-21:19-51-30] [0-0-0-0x624bc0-statistics]:                  parent delete:     549.06
-C> (client:14947) [2010-10-21:19-51-30] [0-0-0-0x624bc0-statistics]:                   child create:     157.95
-C> (client:14947) [2010-10-21:19-51-30] [0-0-0-0x624bc0-statistics]:                   child delete:      83.11
-C> (client:14947) [2010-10-21:19-51-30] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> ruby nothread/NHI1-0.8/theLink/tests/server.rb --tcp --host localhost --port 7791 --spawn
+> nothread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7791
+C> (client:12569) [2010-10-22:13-23-08] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:12569) [2010-10-22:13-23-08] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.06
+C> (client:12569) [2010-10-22:13-23-09] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       6.85
+C> (client:12569) [2010-10-22:13-23-12] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      28.56
+C> (client:12569) [2010-10-22:13-23-13] [0-0-0-0x624bc0-statistics]:                  parent create:   13690.16
+C> (client:12569) [2010-10-22:13-23-13] [0-0-0-0x624bc0-statistics]:                  parent delete:     534.14
+C> (client:12569) [2010-10-22:13-23-14] [0-0-0-0x624bc0-statistics]:                   child create:     152.38
+C> (client:12569) [2010-10-22:13-23-14] [0-0-0-0x624bc0-statistics]:                   child delete:      75.52
+C> (client:12569) [2010-10-22:13-23-14] [0-0-0-0x624bc0-main]: end: ----------------------------------------

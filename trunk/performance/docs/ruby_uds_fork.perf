@@ -1,11 +1,11 @@
-> ruby nothread/NHI1-0.7/theLink/tests/server.rb --uds --file ./socket.uds --fork
-> nothread/NHI1-0.7/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:15180) [2010-10-21:19-51-33] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:15180) [2010-10-21:19-51-33] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.37
-C> (client:15180) [2010-10-21:19-51-33] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       7.42
-C> (client:15180) [2010-10-21:19-51-36] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.13
-C> (client:15180) [2010-10-21:19-51-36] [0-0-0-0x6249a0-statistics]:                  parent create:    1159.19
-C> (client:15180) [2010-10-21:19-51-36] [0-0-0-0x6249a0-statistics]:                  parent delete:    1143.49
-C> (client:15180) [2010-10-21:19-51-37] [0-0-0-0x6249a0-statistics]:                   child create:     160.26
-C> (client:15180) [2010-10-21:19-51-37] [0-0-0-0x6249a0-statistics]:                   child delete:      91.88
-C> (client:15180) [2010-10-21:19-51-37] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> ruby nothread/NHI1-0.8/theLink/tests/server.rb --uds --file ./socket.uds --fork
+> nothread/NHI1-0.8/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:12802) [2010-10-22:13-23-16] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:12802) [2010-10-22:13-23-16] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.13
+C> (client:12802) [2010-10-22:13-23-16] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       7.15
+C> (client:12802) [2010-10-22:13-23-19] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      20.58
+C> (client:12802) [2010-10-22:13-23-19] [0-0-0-0x6249a0-statistics]:                  parent create:     823.29
+C> (client:12802) [2010-10-22:13-23-19] [0-0-0-0x6249a0-statistics]:                  parent delete:     645.96
+C> (client:12802) [2010-10-22:13-23-20] [0-0-0-0x6249a0-statistics]:                   child create:     142.72
+C> (client:12802) [2010-10-22:13-23-20] [0-0-0-0x6249a0-statistics]:                   child delete:      70.02
+C> (client:12802) [2010-10-22:13-23-20] [0-0-0-0x6249a0-main]: end: ----------------------------------------

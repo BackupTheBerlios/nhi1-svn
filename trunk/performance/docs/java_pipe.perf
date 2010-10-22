@@ -1,10 +1,10 @@
-> thread/NHI1-0.7/theLink/tests/client --all @ java example.Server
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-45-44] [0-0-0-0x6229a0-main]: start: --------------------------------------
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-45-45] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       5.66
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-45-45] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      14.33
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-45-48] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      20.10
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-46-01] [0-0-0-0x6229a0-statistics]:                  parent create:  121977.99
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-46-01] [0-0-0-0x6229a0-statistics]:                  parent delete:    1959.12
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-46-01] [0-0-0-0x6229a0-statistics]:                   child create:     176.75
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-46-01] [0-0-0-0x6229a0-statistics]:                   child delete:      42.83
-C> (client:8580:0x7fe2b16596f0) [2010-03-08:09-46-01] [0-0-0-0x6229a0-main]: end: ----------------------------------------
+> thread/NHI1-0.8/theLink/tests/client --all @ java example.Server
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-16] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-16] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       5.06
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-16] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       7.23
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-19] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      20.49
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-29] [0-0-0-0x6249a0-statistics]:                  parent create:   98128.13
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-29] [0-0-0-0x6249a0-statistics]:                  parent delete:    1814.89
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-30] [0-0-0-0x6249a0-statistics]:                   child create:     164.25
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-30] [0-0-0-0x6249a0-statistics]:                   child delete:      27.75
+C> (client:7356:0x7f26f7bac700) [2010-10-22:13-21-30] [0-0-0-0x6249a0-main]: end: ----------------------------------------

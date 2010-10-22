@@ -1,11 +1,11 @@
-> mono thread/NHI1-0.7/theLink/tests/csserver.exe --uds --file ./socket.uds --spawn
-> thread/NHI1-0.7/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-07] [0-0-0-0x6229a0-main]: start: --------------------------------------
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-07] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.42
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-07] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      12.08
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-10] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      17.44
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-13] [0-0-0-0x6229a0-statistics]:                  parent create:   31114.19
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                  parent delete:    2828.05
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                   child create:     134.17
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                   child delete:      45.01
-C> (client:14309:0x7f1580d6f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.8/theLink/tests/csserver.exe --uds --file ./socket.uds --spawn
+> thread/NHI1-0.8/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-23-56] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-23-56] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       3.42
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-23-57] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       5.89
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-00] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      19.07
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-02] [0-0-0-0x6249a0-statistics]:                  parent create:   24180.67
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-02] [0-0-0-0x6249a0-statistics]:                  parent delete:    2631.37
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-02] [0-0-0-0x6249a0-statistics]:                   child create:     130.51
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-02] [0-0-0-0x6249a0-statistics]:                   child delete:      30.34
+C> (client:14495:0x7fedc3e19700) [2010-10-22:13-24-02] [0-0-0-0x6249a0-main]: end: ----------------------------------------

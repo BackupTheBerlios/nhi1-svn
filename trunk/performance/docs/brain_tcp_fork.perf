@@ -1,12 +1,12 @@
-> nothread/NHI1-0.7/theBrain/abrain/abrain --tcp --host localhost --port 7797 --fork
-> nothread/NHI1-0.7/theBrain/tests/client --all --tcp --host localhost --port 7797
-C> (client:17038) [2010-03-08:09-51-13] [0-0-0-0x6217e0-main]: start: --------------------------------------
-C> (client:17038) [2010-03-08:09-51-14] [0-0-0-0x6217e0-statistics]:              memory hash - PUT:      25.95
-C> (client:17038) [2010-03-08:09-51-16] [0-0-0-0x6217e0-statistics]:              memory hash - GET:      26.60
-C> (client:17038) [2010-03-08:09-51-17] [0-0-0-0x6217e0-statistics]:             memory btree - PUT:      30.71
-C> (client:17038) [2010-03-08:09-51-19] [0-0-0-0x6217e0-statistics]:             memory btree - GET:      30.65
-C> (client:17038) [2010-03-08:09-51-20] [0-0-0-0x6217e0-statistics]:                file hash - PUT:      27.17
-C> (client:17038) [2010-03-08:09-51-22] [0-0-0-0x6217e0-statistics]:                file hash - GET:      28.14
-C> (client:17038) [2010-03-08:09-51-30] [0-0-0-0x6217e0-statistics]:               file btree - PUT:     171.36
-C> (client:17038) [2010-03-08:09-51-39] [0-0-0-0x6217e0-statistics]:               file btree - GET:     170.24
-C> (client:17038) [2010-03-08:09-51-39] [0-0-0-0x6217e0-main]: end: ----------------------------------------
+> nothread/NHI1-0.8/theBrain/abrain/abrain --tcp --host localhost --port 7799 --fork
+> nothread/NHI1-0.8/theBrain/tests/client --all --tcp --host localhost --port 7799
+C> (client:15979) [2010-10-22:13-32-27] [0-0-0-0x6237e0-main]: start: --------------------------------------
+C> (client:15979) [2010-10-22:13-32-28] [0-0-0-0x6237e0-statistics]:              memory hash - PUT:      26.43
+C> (client:15979) [2010-10-22:13-32-29] [0-0-0-0x6237e0-statistics]:              memory hash - GET:      26.81
+C> (client:15979) [2010-10-22:13-32-31] [0-0-0-0x6237e0-statistics]:             memory btree - PUT:      29.71
+C> (client:15979) [2010-10-22:13-32-32] [0-0-0-0x6237e0-statistics]:             memory btree - GET:      30.44
+C> (client:15979) [2010-10-22:13-32-34] [0-0-0-0x6237e0-statistics]:                file hash - PUT:      27.57
+C> (client:15979) [2010-10-22:13-32-35] [0-0-0-0x6237e0-statistics]:                file hash - GET:      28.04
+C> (client:15979) [2010-10-22:13-32-42] [0-0-0-0x6237e0-statistics]:               file btree - PUT:     146.29
+C> (client:15979) [2010-10-22:13-32-51] [0-0-0-0x6237e0-statistics]:               file btree - GET:     162.51
+C> (client:15979) [2010-10-22:13-32-51] [0-0-0-0x6237e0-main]: end: ----------------------------------------

@@ -1,12 +1,12 @@
-> nothread/NHI1-0.7/theBrain/abrain/abrain --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.7/theBrain/tests/client --all --uds --file ./socket.uds
-C> (client:17360) [2010-03-08:09-54-15] [0-0-0-0x6216d0-main]: start: --------------------------------------
-C> (client:17360) [2010-03-08:09-54-16] [0-0-0-0x6216d0-statistics]:              memory hash - PUT:      15.71
-C> (client:17360) [2010-03-08:09-54-16] [0-0-0-0x6216d0-statistics]:              memory hash - GET:      16.24
-C> (client:17360) [2010-03-08:09-54-17] [0-0-0-0x6216d0-statistics]:             memory btree - PUT:      20.03
-C> (client:17360) [2010-03-08:09-54-18] [0-0-0-0x6216d0-statistics]:             memory btree - GET:      20.61
-C> (client:17360) [2010-03-08:09-54-19] [0-0-0-0x6216d0-statistics]:                file hash - PUT:      17.90
-C> (client:17360) [2010-03-08:09-54-20] [0-0-0-0x6216d0-statistics]:                file hash - GET:      17.70
-C> (client:17360) [2010-03-08:09-54-28] [0-0-0-0x6216d0-statistics]:               file btree - PUT:     148.81
-C> (client:17360) [2010-03-08:09-54-35] [0-0-0-0x6216d0-statistics]:               file btree - GET:     154.91
-C> (client:17360) [2010-03-08:09-54-38] [0-0-0-0x6216d0-main]: end: ----------------------------------------
+> nothread/NHI1-0.8/theBrain/abrain/abrain --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.8/theBrain/tests/client --all --uds --file ./socket.uds
+C> (client:16144) [2010-10-22:13-34-35] [0-0-0-0x6236d0-main]: start: --------------------------------------
+C> (client:16144) [2010-10-22:13-34-36] [0-0-0-0x6236d0-statistics]:              memory hash - PUT:      18.09
+C> (client:16144) [2010-10-22:13-34-37] [0-0-0-0x6236d0-statistics]:              memory hash - GET:      18.41
+C> (client:16144) [2010-10-22:13-34-38] [0-0-0-0x6236d0-statistics]:             memory btree - PUT:      21.06
+C> (client:16144) [2010-10-22:13-34-39] [0-0-0-0x6236d0-statistics]:             memory btree - GET:      21.61
+C> (client:16144) [2010-10-22:13-34-40] [0-0-0-0x6236d0-statistics]:                file hash - PUT:      19.21
+C> (client:16144) [2010-10-22:13-34-41] [0-0-0-0x6236d0-statistics]:                file hash - GET:      19.59
+C> (client:16144) [2010-10-22:13-34-47] [0-0-0-0x6236d0-statistics]:               file btree - PUT:     124.27
+C> (client:16144) [2010-10-22:13-34-55] [0-0-0-0x6236d0-statistics]:               file btree - GET:     154.26
+C> (client:16144) [2010-10-22:13-34-55] [0-0-0-0x6236d0-main]: end: ----------------------------------------
