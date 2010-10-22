@@ -17,7 +17,7 @@
 
 INPUT			= $(SRCDIR)/csmsgque $(SRCDIR)/libmsgque .
 FILE_PATTERNS		= *.doc *.cs msgque.h
-EXAMPLE_PATH		= . $(SRCDIR)/tests $(SRCDIR)/example/csharp
+EXAMPLE_PATH		+= $(SRCDIR)/example/csharp
 OPTIMIZE_OUTPUT_JAVA	= YES
 OPTIMIZE_OUTPUT_FOR_C	= NO
 STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/csmsgque

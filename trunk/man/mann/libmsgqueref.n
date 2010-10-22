@@ -1,4 +1,4 @@
-.TH "libmsgque" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "22 Oct 2010" "Version 4.6" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -419,9 +419,9 @@ do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown
 .PP
 By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBMqErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
 .SS "interface: MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
-This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
-This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBMqLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBMqLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
 .PP
@@ -445,7 +445,7 @@ The \fIfactory-interface\fP is used to create a new:
 .fi
 .PP
 .SS "interface: MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
-A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBMqSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBMqErrorGetNum\fP and \fBMqErrorGetText\fP and can be cleared using \fBMqErrorReset\fP. 
+A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBMqSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBMqErrorGetNum\fP and \fBMqErrorGetText\fP and can be cleared using \fBMqErrorReset\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
 Event-Handling is used to process instructions in the \fIbackground\fP to give the tool-user the feeling of a non-blocking application. For example Tcl using the event-handling to update the Tk user-interface while the application is waiting for data. The event handling function is called on idle and is designed for a very \fBshort\fP function execution time. Do only \fIone\fP action per function call. This function will be called with a ~10000 usec interval to guarantee a parallel like execution. 
 .PP
@@ -454,6 +454,7 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBMqErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBMqErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
 .RE
 .PP
+ Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SH "LINK API"
 .PP
 \fBMqLinkCreate\fP

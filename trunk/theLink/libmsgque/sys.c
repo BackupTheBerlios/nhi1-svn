@@ -52,7 +52,7 @@
 # elif defined(MQ_IS_WIN32)
 #  define mqthread_ret_t unsigned
 #  if defined(_MANAGED)
-//   MS awitch "/clr" is active
+//   MS switch "/clr" is active
 #    define mqthread_stdcall
 #  else
 #    define mqthread_stdcall __stdcall
@@ -76,66 +76,45 @@ void SysCreate (void) __attribute__ ((constructor));
 
 struct MqLalS MqLal;
 
-#ifdef HAVE_FORK
-static MqForkF mq_fork = fork;
-#else
-static MqForkF mq_fork = NULL;
-#endif
-
-#ifndef HAVE_POSIX_SPAWN
-# ifdef HAVE_VFORK
-  static MqVForkF mq_vfork = vfork;
-# else
-  static MqVForkF mq_vfork = NULL;
-# endif
-#endif
-
 /*****************************************************************************/
 /*                                                                           */
 /*                               sys_memory                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-static MQ_PTR SysCalloc (
+MQ_PTR MqSysCalloc (
   struct MqS * const context,
   MQ_SIZE nmemb,
   MQ_SIZE size
 )
 {
-  MQ_PTR ptr = calloc (nmemb, size);
+  MQ_PTR ptr = (*MqLal.SysCalloc) (nmemb, size);
   if (unlikely (ptr == NULL))
     MqErrorC (context, __func__, errno, strerror (errno));
   return ptr;
 }
 
-static MQ_PTR SysMalloc (
+MQ_PTR MqSysMalloc (
   struct MqS * const context,
   MQ_SIZE size
 )
 {
-  MQ_PTR ptr = malloc (size);
+  MQ_PTR ptr = (*MqLal.SysMalloc) (size);
   if (unlikely (ptr == NULL))
     MqErrorC (context, __func__, errno, strerror (errno));
   return ptr;
 }
 
-static MQ_PTR SysRealloc (
+MQ_PTR MqSysRealloc (
   struct MqS * const context,
   MQ_PTR buf,
   MQ_SIZE size
 )
 {
-  MQ_PTR ptr = realloc (buf, size);
+  MQ_PTR ptr = (*MqLal.SysRealloc) (buf, size);
   if (unlikely (ptr == NULL))
     MqErrorC (context, __func__, errno, strerror (errno));
   return ptr;
-}
-
-static void SysFreeP (
-  MQ_PTR ptr
-)
-{
-  if ( likely((ptr) != (NULL)) ) free(ptr);
 }
 
 /*****************************************************************************/
@@ -144,7 +123,7 @@ static void SysFreeP (
 /*                                                                           */
 /*****************************************************************************/
 
-static enum MqErrorE SysUnlink (
+enum MqErrorE SysUnlink (
   struct MqS * const context,
   const MQ_STR fileName
 )
@@ -218,7 +197,7 @@ static int gettimeofday(
 
 #endif /* ! _MSC_VER */
 
-static enum MqErrorE SysGetTimeOfDay (
+enum MqErrorE MqSysGetTimeOfDay (
   struct MqS * const context,
   struct mq_timeval * tv,
   struct mq_timezone * tz
@@ -258,7 +237,6 @@ static enum MqErrorE SysWait (
 */
       break;
     }
-#if defined(MQ_HAS_THREAD)
     case MQ_ID_THREAD: {
 # if defined(HAVE_PTHREAD)
       if ( pthread_join ((mqthread_t)idP->val, NULL)) {
@@ -271,7 +249,6 @@ static enum MqErrorE SysWait (
 # endif
       break;
     }
-#endif   /* MQ_HAS_THREAD */
     case MQ_ID_UNUSED: {
       break;
     }
@@ -295,7 +272,7 @@ static enum MqErrorE SysServerFork (
 
   // this is used for a filter pipeline like "| atool split .. @ cut ... @ join ..."
   // argv[0] is set by the tool (cut or join) and need !not! be set by name
-  MqErrorCheck(MqSysFork(context,idP));
+  MqErrorCheck(SysFork(context,idP));
   if ((*idP).val == 0UL) {
     struct MqS * newctx;
     // prevent the "client-context" from deleting in the new process
@@ -326,7 +303,7 @@ error1:
   MqBufferLDelete (argvP);
   MqBufferLDelete (alfaP);
   // do not create a "defunc" process
-  MqErrorCheck (MqSysIgnorSIGCHLD(context));
+  MqErrorCheck (SysIgnorSIGCHLD(context));
   return MQ_OK;
 
 error:
@@ -372,6 +349,7 @@ error:
   MqExit(newctx);
 }
 
+#if defined(MQ_HAS_THREAD)
 static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
  void * data
 ) 
@@ -379,6 +357,7 @@ static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
   MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
   return (mqthread_ret_t) NULL;
 }
+#endif
 
 static enum MqErrorE SysServerThread (
   struct MqS * const context,
@@ -480,13 +459,13 @@ static enum MqErrorE SysServerSpawn (
 #elif (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
 
   // fork to create the child
-  if (mq_vfork != NULL) {
-    if (unlikely ((pid = mq_vfork()) == -1)) goto error;
-  } else if (mq_fork != NULL) {
-    if (unlikely ((pid = mq_fork()) == -1)) goto error;
-  } else {
-    goto error;
-  }
+#if defined(HAVE_VFORK)
+  if (unlikely ((pid = vfork()) == -1)) goto error;
+#elif defined(HAVE_FORK)
+  if (unlikely ((pid = MqSysFork()) == -1)) goto error;
+#else
+  goto error;
+#endif
       
   if (pid == 0) {
     // this is the child
@@ -560,7 +539,7 @@ static enum MqErrorE SysSleep (
   return MQ_OK;
 }
 
-static MQ_STR SysBasename (
+MQ_STR MqSysBasename (
   MQ_CST const in,
   MQ_BOL includeExtension
 )
@@ -583,7 +562,7 @@ static MQ_STR SysBasename (
   // ... Is This POSIX ?
   MQ_STR t1 = mq_strdup((MQ_STR) in);
   const MQ_STR orig = mq_strdup(basename(t1));
-  SysFreeP (t1);
+  MqSysFree (t1);
   if (includeExtension == MQ_NO) {
     // delete the extension like '.EXE'
     MQ_STR end;
@@ -597,13 +576,13 @@ static MQ_STR SysBasename (
 #endif
 }
 
-static enum MqErrorE SysFork (
+enum MqErrorE SysFork (
   struct MqS * const context,
   struct MqIdS * idP
 )
 {
 #ifdef HAVE_FORK
-  if (unlikely (((*idP).val = (mqpid_t) mq_fork()) == -1)) {
+  if (unlikely (((*idP).val = (mqpid_t) MqSysFork()) == -1)) {
     return MqErrorSys (fork);
   }
   (*idP).type = MQ_ID_PROCESS;
@@ -613,7 +592,7 @@ static enum MqErrorE SysFork (
 #endif
 }
 
-static enum MqErrorE SysIgnorSIGCHLD (
+enum MqErrorE SysIgnorSIGCHLD (
   struct MqS * const context
 )
 {
@@ -625,7 +604,7 @@ static enum MqErrorE SysIgnorSIGCHLD (
   return MQ_OK;
 }
 
-static enum MqErrorE SysAllowSIGCHLD (
+enum MqErrorE SysAllowSIGCHLD (
   struct MqS * const context
 )
 {
@@ -651,7 +630,7 @@ static enum MqErrorE SysDaemonize (
     return MqErrorSys (open);
 
   // step 1 -> delete initial process
-  MqErrorCheck(MqSysFork(context, &id));
+  MqErrorCheck(SysFork(context, &id));
   if (id.val != 0UL)
     _exit(0);
 
@@ -660,7 +639,7 @@ static enum MqErrorE SysDaemonize (
     return MqErrorSys (setsid);
 
   // step 3 -> fork the new process, parent write the pid
-  MqErrorCheck(MqSysFork(context, &id));
+  MqErrorCheck(SysFork(context, &id));
   if (id.val != 0UL) {
     MQ_BUF buf = context->temp;
     MqBufferSetV(buf,"%lu",id.val);
@@ -697,7 +676,7 @@ error:
 }
 
 /// \brief thread save exit
-static void SysExit (
+__attribute__((noreturn)) static void SysExit (
   int isThread,			    ///< [in] is this a thread
   int num			    ///< [in] exit number
 ) {
@@ -715,8 +694,12 @@ static void SysExit (
 }
 
 /// \brief thread save abort
-static void SysAbort (void) {
+__attribute__((noreturn)) static void SysAbort (void) {
   abort();
+}
+
+void MqSysFreeP(MQ_PTR data) {
+  MqSysFree(data);
 }
 
 /*****************************************************************************/
@@ -727,27 +710,24 @@ static void SysAbort (void) {
 /*****************************************************************************/
 
 void SysCreate(void) {
-  MqLal.SysCalloc = SysCalloc;
-  MqLal.SysMalloc = SysMalloc;
-  MqLal.SysRealloc = SysRealloc;
-  MqLal.SysFreeP = SysFreeP;
+  MqLal.SysCalloc	= (MqSysCallocF)  calloc;
+  MqLal.SysMalloc	= (MqSysMallocF)  malloc;
+  MqLal.SysRealloc	= (MqSysReallocF) realloc;
+  MqLal.SysFree		= (MqSysFreeF)	  free;
+#if defined(HAVE_FORK)
+  MqLal.SysFork		= (MqSysForkF)	  fork;
+#endif
+  MqLal.SysAbort	= abort;
+
   MqLal.SysServerSpawn = SysServerSpawn;
   MqLal.SysServerThread = SysServerThread;
   MqLal.SysServerFork = SysServerFork;
-  MqLal.SysFork = SysFork;
-  MqLal.SysGetTimeOfDay = SysGetTimeOfDay;
   MqLal.SysWait = SysWait;
   MqLal.SysUSleep = SysUSleep;
   MqLal.SysSleep = SysSleep;
-  MqLal.SysBasename = SysBasename;
-  MqLal.SysIgnorSIGCHLD = SysIgnorSIGCHLD;
-  MqLal.SysAllowSIGCHLD = SysAllowSIGCHLD;
   MqLal.SysDaemonize = SysDaemonize;
-  MqLal.SysUnlink = SysUnlink;
   MqLal.SysExit = SysExit;
-  MqLal.SysAbort = SysAbort;
 };
 
 END_C_DECLS
-
 

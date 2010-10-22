@@ -411,6 +411,7 @@ MqLogData (
   void EventCreate (void);
   void EventDelete (void);
   void SysCreate (void);
+  void SysComCreate (void);
 
 END_C_DECLS
 
@@ -442,6 +443,7 @@ BOOL WINAPI DllMain(
       EventCreate();
       GenericCreate();
       SysCreate();
+      SysComCreate();
       break;
     case DLL_PROCESS_DETACH:
       GenericDelete();

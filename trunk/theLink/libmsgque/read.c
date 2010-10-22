@@ -49,10 +49,10 @@ struct MqReadS {
   struct MqBufferS * hdrorig;	    ///< in a context->switch, poit to the original header data, need in "MqReadBDY"
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
   struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
-  struct MqBufferS * cur;	    ///< used as reference on BUF with the current data
+  struct MqBufferS * cur;	    ///< used as reference on \e bdy with the current data
   enum MqHandShakeE handShake;	    ///< what kind aof call is it?
   MQ_INT returnNum;		    ///< Return-Number
-  struct MqCacheS * saveCache;
+  struct MqCacheS * saveCache;	    ///< cache of <TT>struct ReadSaveS</TT> data
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
@@ -1005,6 +1005,10 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
+
+
+
 
 
 

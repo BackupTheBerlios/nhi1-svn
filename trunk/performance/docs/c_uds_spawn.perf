@@ -1,11 +1,11 @@
 > nothread/NHI1-0.7/theLink/tests/server --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.7/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:6624) [2010-03-08:09-44-10] [0-0-0-0x6219a0-main]: start: --------------------------------------
-C> (client:6624) [2010-03-08:09-44-11] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       3.46
-C> (client:6624) [2010-03-08:09-44-11] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:       9.65
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      15.00
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-statistics]:                  parent create:     764.20
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-statistics]:                  parent delete:     107.21
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-statistics]:                   child create:      75.60
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-statistics]:                   child delete:      31.17
-C> (client:6624) [2010-03-08:09-44-14] [0-0-0-0x6219a0-main]: end: ----------------------------------------
+C> (client:24866) [2010-10-21:19-43-23] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:24866) [2010-10-21:19-43-23] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       3.05
+C> (client:24866) [2010-10-21:19-43-24] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       4.85
+C> (client:24866) [2010-10-21:19-43-26] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      18.65
+C> (client:24866) [2010-10-21:19-43-27] [0-0-0-0x6249a0-statistics]:                  parent create:     762.37
+C> (client:24866) [2010-10-21:19-43-27] [0-0-0-0x6249a0-statistics]:                  parent delete:      89.25
+C> (client:24866) [2010-10-21:19-43-27] [0-0-0-0x6249a0-statistics]:                   child create:      73.88
+C> (client:24866) [2010-10-21:19-43-27] [0-0-0-0x6249a0-statistics]:                   child delete:      32.51
+C> (client:24866) [2010-10-21:19-43-27] [0-0-0-0x6249a0-main]: end: ----------------------------------------

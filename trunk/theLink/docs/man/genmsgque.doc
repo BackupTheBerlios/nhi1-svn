@@ -161,9 +161,11 @@ This option is \b not available for \self.
 
 \interface{IServerSetup}
 \copydetails MqSetupS::ServerSetup
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
 
 \interface{IServerCleanup}
 \copydetails MqSetupS::ServerCleanup
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
 
 \interface{IFactory}
 \copydetails MqSetupS::Factory
@@ -171,9 +173,11 @@ This option is \b not available for \self.
 
 \interface{IBgError}
 \copydetails MqSetupS::BgError
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
 
 \interface{IEvent}
 \copydetails MqSetupS::Event
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
 
 \section	\NS{ClientServerLink}			LINK API
 \RNSA{LinkCreate}\n
@@ -269,6 +273,39 @@ using a delegate of type <I>Sub Callback()</I>.
 The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I>
 \elseif PYTHON
 The callback is implemented using \ServiceInterface method <I>Service(ctx)</I>
+\elseif RUBY
+The \e callback is implemented using <I>\ServiceInterface</I>. \n
+If the \e callback belongs to the calling context no callback-argument is provided:
+\verbatim
+class MyClass < MqS
+  def initialize
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def ServerSetup
+    ServiceCreate("MYTK", method(:MyTkMethod))
+  end
+  def MyTkMethod
+    ...
+  end
+end
+\endverbatim
+If the \e callback belongs \b not to the calling context one callback-argument (the context) is provided:
+\verbatim
+class Other
+  def MyTkMethod(ctx)
+    ...
+  end
+end
+other = Other.new
+class MyClass < MqS
+  def initialize
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def ServerSetup
+    ServiceCreate("MYTK", other.method(:MyTkMethod))
+  end
+end
+\endverbatim
 \elseif TCL
 The callback is implemented as callback using <I>proc Service {ctx} ...</I>
 \elseif PERL
@@ -589,6 +626,15 @@ Start \e mulserver.py using \e TCP port \e 7777 and create a \e fork for every i
 \verbatim
 > python mulserver.py --tcp --port 7777 --fork
 \endverbatim
+\elseif RUBY
+\dontinclude mulserver.rb
+\skip require
+\until Exit
+\until end
+Start \e mulserver.rb using \e TCP port \e 7777 and create a \e fork for every incoming connection
+\verbatim
+> ruby mulserver.rb --tcp --port 7777 --fork
+\endverbatim
 \elseif JAVA
 \include mulserver.java
 Start \e mulserver.java using \e TCP port \e 7777 and create a \e thread for every incoming connection
@@ -649,6 +695,15 @@ Use \e mulclient.py to connect to \e mulserver.py using \e TCP port \e 7777:
 \verbatim
 > python mulclient.py --tcp --port 7777
 \endverbatim
+\elseif RUBY
+\dontinclude mulclient.rb
+\skip require
+\until Exit
+\until end
+Use \e mulclient.rb to connect to \e mulserver.rb using \e TCP port \e 7777:
+\verbatim
+> ruby mulclient.rb --tcp --port 7777
+\endverbatim
 \elseif JAVA
 \include mulclient.java
 Use \e mulclient.java to connect to \e mulserver.java using \e TCP port \e 7777:
@@ -707,6 +762,15 @@ Use \e mulclient.cc to connect to \e mulserver.cc using \e TCP port \e 7777:
 Use \e manfilter.py in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
+\endverbatim
+\elseif RUBY
+\dontinclude manfilter.rb
+\skip require
+\until Exit
+\until end
+Use \e manfilter.rb in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ ruby manfilter.rb @ atool join -d :
 \endverbatim
 \elseif JAVA
 \include manfilter.java

@@ -26,7 +26,7 @@ using System.Security.Permissions;
 [assembly:AssemblyTrademarkAttribute("")]
 [assembly:AssemblyCultureAttribute("")]
 
-[assembly:AssemblyVersionAttribute("4.5.*")]
+[assembly:AssemblyVersionAttribute("4.6.*")]
 [assembly:ComVisible(false)]
 [assembly:CLSCompliantAttribute(true)]
 [assembly:SecurityPermission(SecurityAction.RequestMinimum, UnmanagedCode = true)]

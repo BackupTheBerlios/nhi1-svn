@@ -23,7 +23,7 @@ NHI1 build
 "NHI1" is able to build on a UNIX operating system like Linux, 
 BSD. For a build on Windows please change into the "win" directory 
 and follow the instructions from the "README.win" file.
-
+http://www.ruby-lang.org/
 The main development system is:
 
     SuSE Linux 11 (64bit) on "Intel(R) Core(TM)2 CPU 6600 @ 2.40GHz"
@@ -60,6 +60,9 @@ In addition the following software is also supported:
 
   - perl from The Perl Programming Language
        -> http://www.perl.org/
+
+  - ruby - ruby 1.9.2p0 (2010-08-18 revision 29036)
+       -> http://www.ruby-lang.org/
 
 To build "NHI1" please follow the next steps:
 

@@ -13,6 +13,28 @@
 
 \page changelog ChangeLog
 
+\section V0_8 22 Oct 2010 - NHI1-0.8, PLMK-1.6 und libmsgque-4.6
+
+This release adds the ability to:
+
+- <A HREF="http://www.ruby-lang.org/">Ruby</A> language support (LNG)
+- L)anguage A)bstraction L)ayer (\ref MqLalS)
+- G)arbage C)ollection Object-Mark (\ref MqMark)
+
+Ruby is an object-oriented programming language like Python.
+The new \libmsgque C-function \ref MqMark was added to the GC support and marks all objects
+that are referenced within 'libmsgque'. The programmer now has the opportunity to replace 
+internal functions such as: \ref MqLalS::SysCalloc "SysCalloc", \ref MqLalS::SysMalloc "SysMalloc", 
+\ref MqLalS::SysRealloc "SysRealloc", \ref MqLalS::SysFree "SysFree", \ref MqLalS::SysSelect "SysSelect", 
+\ref MqLalS::SysFork "SysFork", \ref MqLalS::SysServerSpawn "SysServerSpawn", 
+\ref MqLalS::SysServerThread "SysServerThread", \ref MqLalS::SysServerFork "SysServerFork", 
+\ref MqLalS::SysWait "SysWait", \ref MqLalS::SysUSleep "SysUSleep", \ref MqLalS::SysSleep "SysSleep", 
+\ref MqLalS::SysDaemonize "SysDaemonize", \ref MqLalS::SysExit "SysExit", \ref MqLalS::SysAbort "SysAbort" 
+to adapt to the environment (\ref MqLalS).
+
+\n
+\n
+
 \section V0_7 08 Mar 2010 - NHI1-0.7, PLMK-1.6 and libmsgque-4.5
 
 This is a \e major-feature-release to add \e longtime-transaction support.

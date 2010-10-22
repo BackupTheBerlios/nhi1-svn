@@ -16,7 +16,7 @@
 
 INPUT			= $(SRCDIR)/ccmsgque $(SRCDIR)/libmsgque .
 FILE_PATTERNS		= *.doc ccmsgque.h $(SRCDIR)/libmsgque/msgque.h
-EXAMPLE_PATH		= . $(SRCDIR)/tests $(SRCDIR)/example/cc
+EXAMPLE_PATH		+= $(SRCDIR)/example/cc
 STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/ccmsgque
 STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque $(SRCDIR)/ccmsgque 
 

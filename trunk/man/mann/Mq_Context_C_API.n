@@ -1,11 +1,11 @@
-.TH "Mq_Context_C_API" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
 
 .PP
-.SS "Data Structures"
+.SS "Classes"
 
 .in +1c
 .ti -1c
@@ -19,7 +19,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
-.R "signature marker used in \fBMqS::signature\fP "
+.R "signature marker used in \fBMqS.signature\fP "
 .ti -1c
 .RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
 .br
@@ -63,12 +63,16 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
+.ti -1c
+.RI "void \fBMqMark\fP (struct \fBMqS\fP *const context, \fBMqMarkF\fP markF)"
+.br
+.R "Mark objects as \fIused\fP to avoid to free used external memory in an external Garbage-Collection. "
 .in -1c
 .SH "Detailed Description"
 .PP 
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 
-The \fIcontext-data-structure\fP is created with \fBMqContextCreate\fP and deleted with \fBMqContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
 .nf
  struct MyCtxDataS {
@@ -86,9 +90,9 @@ The \fIcontext-data-structure\fP is created with \fBMqContextCreate\fP and delet
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
-signature marker used in \fBMqS::signature\fP 
+signature marker used in \fBMqS.signature\fP 
 .PP
-Definition at line 1384 of file msgque.h.
+Definition at line 1383 of file msgque.h.
 .SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
 .PP
 wrapper to add calling function to \fBMqExitP\fP 
@@ -118,7 +122,7 @@ context is created as a fork
 \fB\fIMQ_STATUS_IS_SPAWN \fP\fP
 context is created as a spawn 
 .PP
-Definition at line 1375 of file msgque.h.
+Definition at line 1374 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
@@ -134,7 +138,7 @@ check for left over arguments from parameter \fIargv\fP of \fBMqLinkCreate\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 This code is not part of \fBMqLinkCreate\fP because sometimes it is necessary to check for left over arguments \fBafter\fP \fBMqLinkCreate\fP was called and after the calling function was able to process function specific arguments. By Default \fBMqLinkCreate\fP will delete \fBall\fP arguments belonging to \fBlibmsgque\fP from the \fIargv\fP object. If the calling function does \fBnot\fP expect additional arguments or arguments were added with spelling errors, a call to \fBMqCheckForLeftOverArguments\fP will detect this. 
@@ -159,11 +163,11 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .PP
 delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINULL\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINothing\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 
@@ -180,13 +184,13 @@ initialize the \fBMqS\fP object related data but do \fInot\fP create the object 
 .PP
 delete the \fIcontext\fP and exit the current process or thread 
 .PP
-To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBMqExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBMqExit\fP to exit your application.
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
 .PP
 \fBParameters:\fP
 .RS 4
 \fIprefix\fP identify the caller 
 .br
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 
@@ -213,6 +217,20 @@ If \fItool\fP != NULL, the function will display a header like:
 .fi
 .PP
  on the help page. 
+.SS "void MqMark (struct \fBMqS\fP *const  context, \fBMqMarkF\fP markF)"
+.PP
+Mark objects as \fIused\fP to avoid to free used external memory in an external Garbage-Collection. 
+.PP
+An external Garbage-Collction (GC) need information about external objects referenced by \fBlibmsgque\fP. This objects are the \fCMQ_PTR data\fP parameter required by different functions. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fImarkF\fP function provided by the embedded language 
+.RE
+.PP
+
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

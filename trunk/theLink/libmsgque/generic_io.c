@@ -132,7 +132,7 @@ GenericServer (
   socklen_t mysockaddrlen;
   // this is just a flag
   struct MqIdS id;
-  const int serverStartup = (context->config.startAs != MQ_START_DEFAULT);
+  //const int serverStartup = (context->config.startAs != MQ_START_DEFAULT);
 
   // the parent server should "forget" his child's
   // server / child dependency management is done by libmsgque
@@ -142,7 +142,7 @@ GenericServer (
 #endif
      ) {
     // do not create a "defunc" process
-    MqErrorCheck (MqSysIgnorSIGCHLD(context));
+    MqErrorCheck (SysIgnorSIGCHLD(context));
   }
 
   // 1. create socket
@@ -243,7 +243,7 @@ GenericServer (
      * to remind people that ECHILD errors can occur on
      * some systems if SIGCHLD isn't in its default state.
      */
-    MqErrorCheck (MqSysAllowSIGCHLD(context));
+    MqErrorCheck (SysAllowSIGCHLD(context));
   }
 
   // 5, finish
@@ -309,6 +309,8 @@ GenericGetSockName (
 }
 
 END_C_DECLS
+
+
 
 
 

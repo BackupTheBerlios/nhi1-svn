@@ -80,6 +80,8 @@ An example \b automake configuration file is available in: \c example/\lang/Make
 \b no build necessary
 \elseif PYTHON
 \b no build necessary
+\elseif RUBY
+\b no build necessary
 \elseif VB
 \b no UNIX build possible, mono tool \b vbnc is still in development
 \endif
@@ -117,6 +119,11 @@ The \e minimal server looks like:
 \dontinclude MyServer.\fileextension
 \skip import
 \until Exit
+\elseif RUBY
+\dontinclude MyServer.\fileextension
+\skip require
+\until Exit
+\until end
 \else
 \include MyServer.\fileextension
 \endif
@@ -146,6 +153,10 @@ new connection request:
 \elseif PYTHON
 \verbatim
 > python MyServer.py --tcp --port 2345 --thread
+\endverbatim
+\elseif RUBY
+\verbatim
+> ruby MyServer.rb --tcp --port 2345 --thread
 \endverbatim
 \else
 \verbatim
@@ -178,6 +189,10 @@ port:
 \elseif PYTHON
 \verbatim
 > python MyServer.py --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif RUBY
+\verbatim
+> ruby MyServer.rb --uds --file /path/to/any/file.uds --thread
 \endverbatim
 \else
 \verbatim
@@ -241,6 +256,11 @@ The \e minimal client looks like:
 \dontinclude MyClient.\fileextension
 \skip import
 \until Exit
+\elseif RUBY
+\dontinclude MyClient.\fileextension
+\skip require
+\until Exit
+\until end
 \else
 \include MyClient.\fileextension
 \endif
@@ -274,6 +294,11 @@ To call a network visible \e TCP server listen on \e PORT 2345 use:
 \elseif PYTHON
 \verbatim
 > python MyClient.py --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif RUBY
+\verbatim
+> ruby MyClient.rb --tcp --port 2345
 > Hello World
 \endverbatim
 \else
@@ -313,6 +338,11 @@ To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds 
 > python MyClient.py --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
+\elseif RUBY
+\verbatim
+> ruby MyClient.rb --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
 \else
 \verbatim
 > MyClient --uds --file /path/to/any/file.uds
@@ -350,6 +380,11 @@ To call a \e local server started by the client using \e PIPE communication use:
 > python MyClient.py @ python MyServer.py
 > Hello World
 \endverbatim
+\elseif RUBY
+\verbatim
+> ruby MyClient.rb @ ruby MyServer.rb
+> Hello World
+\endverbatim
 \else
 \verbatim
 > MyClient @ MyServer
@@ -368,6 +403,15 @@ The \RNS{filter} is used to define a command pipeline. A \e minimal filter looks
 Use \e manfilter.py in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
+\endverbatim
+\elseif RUBY
+\dontinclude manfilter.rb
+\skip require
+\until Exit
+\until end
+Use \e manfilter.rb in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ ruby manfilter.rb @ atool join -d :
 \endverbatim
 \elseif JAVA
 \include manfilter.java

@@ -1,8 +1,8 @@
-.TH "msgque.h" n "7 Oct 2010" "Version 4.5" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "22 Oct 2010" "Version 4.6" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 253 2010-10-19 18:18:07Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -43,7 +43,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqFactoryS\fP"
 .br
-.R "used for factory function pointer management "
+.R "used as interface for object creation "
 .ti -1c
 .RI "struct \fBMqCallbackS\fP"
 .br
@@ -96,6 +96,18 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .RI "struct \fBMqBufferLS\fP"
 .br
 .R "the object to manage an array of \fBMqBufferS\fP items. "
+.ti -1c
+.RI "struct \fBMqIdS\fP"
+.br
+.R "data type for process/thread identification "
+.ti -1c
+.RI "struct \fBMqSysServerThreadMainS\fP"
+.br
+.R "data used to initialize a new created thread "
+.ti -1c
+.RI "struct \fBMqLalS\fP"
+.br
+.R "Interface between \fBMqS\fP and the Operating-System. "
 .in -1c
 .SS "Defines"
 
@@ -325,7 +337,23 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .ti -1c
 .RI "#define \fBMqSysFree\fP(tgt)"
 .br
-.R "'free' system call macro "
+.R "\fBfree\fP syscall "
+.ti -1c
+.RI "#define \fBMqSysWait\fP(context, idP)   (*MqLal.SysWait)(context, idP)"
+.br
+.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysUSleep\fP(context, usec)   (*MqLal.SysUSleep)(context, usec)"
+.br
+.R "\fBusleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysSleep\fP(context, sec)   (*MqLal.SysSleep)(context, sec)"
+.br
+.R "\fBsleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysExit\fP(isThread, num)   (*MqLal.SysExit)(isThread,num)"
+.br
+.R "\fBexit\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "#define \fBMqSetDebugLevel\fP(context)   debugLevel = context->config.debug"
 .br
@@ -451,14 +479,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .br
 .R "data type for a socket handle "
 .ti -1c
-.RI "typedef pid_t(* \fBMqForkF\fP )(void)"
-.br
-.R "prototype for the \fCfork\fP sys-call "
-.ti -1c
-.RI "typedef pid_t(* \fBMqVForkF\fP )(void)"
-.br
-.R "prototype for the \fCvfork\fP sys-call "
-.ti -1c
 .RI "typedef void(* \fBMqDeleteF\fP )(struct \fBMqS\fP *const context)"
 .br
 .R "the prototype for a ContextDelete function "
@@ -470,6 +490,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .RI "typedef void(* \fBMqHelpF\fP )(\fBMQ_CST\fP)"
 .br
 .R "application specific help function type "
+.ti -1c
+.RI "typedef void(* \fBMqMarkF\fP )(\fBMQ_PTR\fP data)"
+.br
+.R "prototype for a Garbage-Collection mark function "
 .ti -1c
 .RI "typedef void(* \fBMqFactoryDeleteF\fP )(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, \fBMQ_PTR\fP data)"
 .br
@@ -490,6 +514,34 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .RI "typedef \fBMqTokenF\fP \fBMqServiceCallbackF\fP"
 .br
 .R "function used as \fIservice-handle\fP "
+.ti -1c
+.RI "typedef unsigned long \fBMQ_IDNT\fP"
+.br
+.R "process or thread identifer "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP )(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
+.br
+.R "\fBcalloc\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysMallocF\fP )(\fBMQ_SIZE\fP)"
+.br
+.R "\fBmalloc\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysReallocF\fP )(\fBMQ_PTR\fP, \fBMQ_SIZE\fP)"
+.br
+.R "\fBrealloc\fP syscall "
+.ti -1c
+.RI "typedef void(* \fBMqSysFreeF\fP )(\fBMQ_PTR\fP)"
+.br
+.R "\fBfree\fP syscall "
+.ti -1c
+.RI "typedef int(* \fBMqSysSelectF\fP )(int, void *, void *, void *, struct timeval *)"
+.br
+.R "\fBselect\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_IDNT\fP(* \fBMqSysForkF\fP )(void)"
+.br
+.R "\fBfork\fP syscall "
 .in -1c
 .SS "Enumerations"
 
@@ -526,6 +578,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .RI "enum \fBMqAllocE\fP { \fBMQ_ALLOC_STATIC\fP =  0, \fBMQ_ALLOC_DYNAMIC\fP =  1 }"
 .br
 .R "allocation style used for the data-segment in \fBMqBufferS\fP. "
+.ti -1c
+.RI "enum \fBMqIdSE\fP { \fBMQ_ID_UNUSED\fP =  0, \fBMQ_ID_PROCESS\fP =  1, \fBMQ_ID_THREAD\fP =  2 }"
+.br
+.R "signal type of the \fI\fBMqIdS\fP\fP data \fIval\fP "
 .in -1c
 .SS "Functions"
 
@@ -719,17 +775,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .br
 .R "Initialize the process \fIstartup-prefix\fP argument. "
 .ti -1c
-.RI "void \fBMqInitSysAPI\fP (\fBMqForkF\fP forkF, \fBMqVForkF\fP vforkF)"
-.br
-.R "helper to set the application specific \fCfork\fP functions "
-.ti -1c
 .RI "void \fBMqContextInit\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
 .br
 .R "initialize the \fBMqS\fP object related data but do \fInot\fP create the object self "
 .ti -1c
 .RI "void \fBMqContextFree\fP (struct \fBMqS\fP *const context)"
 .br
-.R "free the \fBMqS\fP object related data but do \fInot\fP free the object self "
+.R "free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqContextCreate\fP (\fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
 .br
@@ -737,7 +789,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .ti -1c
 .RI "void \fBMqContextDelete\fP (struct \fBMqS\fP **ctx)"
 .br
-.R "delete the \fIcontext\fP "
+.R "delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self "
 .ti -1c
 .RI "void \fBMqExitP\fP (\fBMQ_CST\fP prefix, struct \fBMqS\fP *ctx)"
 .br
@@ -749,6 +801,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
 .br
+.ti -1c
+.RI "void \fBMqMark\fP (struct \fBMqS\fP *const context, \fBMqMarkF\fP markF)"
+.br
+.R "Mark objects as \fIused\fP to avoid to free used external memory in an external Garbage-Collection. "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqLinkCreate\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferLS\fP **args)"
 .br
@@ -1430,37 +1486,33 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
+.RI "void \fBMqSysServerThreadMain\fP (struct \fBMqSysServerThreadMainS\fP *data)"
+.br
+.R "initialize a new created thred "
+.ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
-.R "'calloc' system call with error handling feature "
+.R "\fBcalloc\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysMalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
 .br
-.R "'malloc' system call with error handling feature "
+.R "\fBmalloc\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysRealloc\fP (struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
 .br
-.R "'realloc' system call with error handling feature "
+.R "\fBrealloc\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
-.RI "void \fBMqSysFreeP\fP (\fBMQ_PTR\fP ptr)"
+.RI "void \fBMqSysFreeP\fP (\fBMQ_PTR\fP data)"
 .br
-.R "'free' system call wrapper of libmsgque "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSysUSleep\fP (struct \fBMqS\fP *const context, unsigned int const usec)"
-.br
-.R "'usleep' system call with error handling feature "
-.ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqSysSleep\fP (struct \fBMqS\fP *const context, unsigned int const sec)"
-.br
-.R "'sleep' system call with error handling feature "
+.R "\fBfree\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "\fBMQ_STR\fP \fBMqSysBasename\fP (\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .br
-.R "'basename' system call with error handling feature "
+.R "\fBbasename\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
 .br
-.R "'gettimeofday' system call with error handling feature "
+.R "\fBgettimeofday\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
 .br
@@ -1520,21 +1572,25 @@ msgque.h \- $Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqInitBuf\fP"
 .br
-.R "the prefix arguments of the starting application  this is the name of the executable and additional arguments used to initialize the environment like the name of a script. "
+.R "the prefix arguments of the starting application "
 .ti -1c
 .RI "\fBMqFactorySelectorF\fP \fBMqFactorySelector\fP"
 .br
 .R "name of a procedure to return \fImain\fP like entry-points "
+.ti -1c
+.RI "struct \fBMqLalS\fP \fBMqLal\fP"
+.br
+.R "Language Abstraction Layer in duty. "
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 243 2010-10-07 05:56:51Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 253 2010-10-19 18:18:07Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 243 $ 
+$Rev: 253 $ 
 .RE
 .PP
 \fBAuthor:\fP

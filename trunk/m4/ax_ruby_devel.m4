@@ -158,10 +158,11 @@ $ac_mkmf_result])
     AC_LANG_PUSH([C])
     # save current global flags
     ac_save_LIBS="$LIBS"
-    LIBS="$ac_save_LIBS $RUBY_LDFLAGS"
+    #LIBS="$ac_save_LIBS $RUBY_LDFLAGS"
+    LIBS="$ac_save_LIBS"
     ac_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$ac_save_CPPFLAGS $RUBY_CPPFLAGS"
-    AC_TRY_LINK([
+    AC_TRY_COMPILE([
         #include <ruby.h>
     ],[
         ruby_init();

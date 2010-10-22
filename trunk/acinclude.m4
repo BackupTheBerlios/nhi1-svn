@@ -748,7 +748,7 @@ AC_DEFUN([SC_ENABLE_RUBY], [
       enable_ruby=yes, enable_ruby=no
   )
   AC_MSG_RESULT($enable_ruby)
-  if test "x$enable_tcl" = xyes; then
+  if test "x$enable_ruby" = xyes; then
     AX_WITH_RUBY([no])
     if test "x$RUBY" = "xno"; then
       AC_MSG_ERROR([Could not find "ruby"])

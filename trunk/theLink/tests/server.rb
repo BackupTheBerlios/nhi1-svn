@@ -71,14 +71,8 @@ class Server < MqS
   end
 
   def ServerCleanup
-#    $stderr.puts("ServerCleanup -1---------" + self.to_s)
-#    $stderr.flush
-#$stderr.puts "clients -> " + @cl.to_s
-#$stderr.flush
     for i in 0..2
       if @cl[i] != nil
-#$stderr.puts "cl[" + i.to_s + "] -> " + @cl[i].to_s
-#$stderr.flush
         @cl[i].Delete()
         @cl[i] = nil
       end
@@ -86,18 +80,11 @@ class Server < MqS
   end
 
   def ServerSetup
-#    $stderr.puts("ServerSetup ----------- " + self.to_s + " -> " + self.ConfigGetName + " -> " + self.LinkGetCtxId.to_s)
-#    $stderr.flush
-
     if (SlaveIs() == false)
 
       # initialize objects
       @cl = [Client.new, Client.new, Client.new]
-#$stderr.puts "clients -> " + @cl.to_s
-#$stderr.flush
       for i in 0..2 
-#$stderr.puts "cl[" + i.to_s + "] -> " + @cl[i].to_s
-#$stderr.flush
         @cl[i].ConfigSetName("cl-" + i.to_s)
         @cl[i].ConfigSetSrvName("sv-" + i.to_s)
       end
@@ -150,7 +137,27 @@ class Server < MqS
       ServiceCreate("ECLI", method(:ECLI))
       ServiceCreate("ERLR", method(:ERLR))
       ServiceCreate("ERLS", method(:ERLS))
+      ServiceCreate("ECUL", method(:ECUL))
+      ServiceCreate("RDUL", method(:RDUL))
     end
+  end
+
+  def RDUL
+    ReadY()
+    ReadS()
+    ReadI()
+    ReadW()
+    ReadU()
+  end
+
+  def ECUL
+    SendSTART()
+    SendY(ReadY())
+    SendS(ReadS())
+    SendI(ReadI())
+    SendW(ReadW())
+    ReadProxy(self)
+    SendRETURN()
   end
 
   def SETU
@@ -159,11 +166,7 @@ class Server < MqS
 
   def GETU
     SendSTART()
-#$stderr.puts 11111
-#$stderr.flush
     SendU(@buf)
-#$stderr.puts 22222
-#$stderr.flush
     SendRETURN()
     @buf = nil
     Sleep(1)

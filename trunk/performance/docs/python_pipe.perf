@@ -1,10 +1,10 @@
 > nothread/NHI1-0.7/theLink/tests/client --all @ python nothread/NHI1-0.7/theLink/tests/server.py
-C> (client:12629) [2010-03-08:09-46-52] [0-0-0-0x6219a0-main]: start: --------------------------------------
-C> (client:12629) [2010-03-08:09-46-52] [0-0-0-0x6219a0-statistics]:                      MqSendEND:       6.24
-C> (client:12629) [2010-03-08:09-46-53] [0-0-0-0x6219a0-statistics]:         MqSendEND_AND_CALLBACK:      17.21
-C> (client:12629) [2010-03-08:09-46-56] [0-0-0-0x6219a0-statistics]:             MqSendEND_AND_WAIT:      23.37
-C> (client:12629) [2010-03-08:09-46-59] [0-0-0-0x6219a0-statistics]:                  parent create:   33158.32
-C> (client:12629) [2010-03-08:09-46-59] [0-0-0-0x6219a0-statistics]:                  parent delete:    2340.24
-C> (client:12629) [2010-03-08:09-47-00] [0-0-0-0x6219a0-statistics]:                   child create:     134.44
-C> (client:12629) [2010-03-08:09-47-00] [0-0-0-0x6219a0-statistics]:                   child delete:      44.89
-C> (client:12629) [2010-03-08:09-47-00] [0-0-0-0x6219a0-main]: end: ----------------------------------------
+C> (client:14413) [2010-10-21:19-50-35] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:14413) [2010-10-21:19-50-35] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.96
+C> (client:14413) [2010-10-21:19-50-36] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:      10.73
+C> (client:14413) [2010-10-21:19-50-39] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      23.48
+C> (client:14413) [2010-10-21:19-50-42] [0-0-0-0x6249a0-statistics]:                  parent create:   30769.00
+C> (client:14413) [2010-10-21:19-50-42] [0-0-0-0x6249a0-statistics]:                  parent delete:    2159.52
+C> (client:14413) [2010-10-21:19-50-42] [0-0-0-0x6249a0-statistics]:                   child create:     129.61
+C> (client:14413) [2010-10-21:19-50-42] [0-0-0-0x6249a0-statistics]:                   child delete:      41.77
+C> (client:14413) [2010-10-21:19-50-42] [0-0-0-0x6249a0-main]: end: ----------------------------------------

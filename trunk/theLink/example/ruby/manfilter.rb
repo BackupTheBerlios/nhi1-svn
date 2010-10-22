@@ -11,13 +11,11 @@
 #§
 
 require "rubymsgque"
-
 class ManFilter < MqS
   def initialize
     ConfigSetName("filter")
     ConfigSetFactory(lambda {ManFilter.new})
     ConfigSetServerSetup(method(:ServerSetup))
-    @data = []
     super()
   end
   def ServerSetup

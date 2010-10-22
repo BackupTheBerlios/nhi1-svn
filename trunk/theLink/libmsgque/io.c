@@ -678,7 +678,7 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 	// case: the function GenericServer is listen on a "tcl" or "uds" connection
 	// and start for every incomming connection a new process with "fork". !no!
 	// initialization have to be done because we reuse the current state.
-	MqErrorCheck (MqSysFork (context, idP));
+	MqErrorCheck (SysFork (context, idP));
 	// if pid != 0 -> this is the parent just continue with default "client" code
 	if ((*idP).val == 0UL) {
 	  // pid = 0 -> this is the fork child
@@ -857,4 +857,8 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
+
+
+
 

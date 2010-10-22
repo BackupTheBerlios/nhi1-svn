@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "7 Oct 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "22 Oct 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -136,9 +136,9 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
 .ti -1c
-.RI "native int \fBConfigGetIoPipeSocketSocket\fP ()"
+.RI "native int \fBConfigGetIoPipeSocket\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqConfigGetIoPipeSocketSocket "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
 .ti -1c
 .RI "native void \fBExit\fP ()"
 .br

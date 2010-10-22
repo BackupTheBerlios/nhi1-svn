@@ -17,7 +17,7 @@
 ENABLED_SECTIONS    += C
 ENABLED_SECTIONS    += DAEMON
 ENABLED_SECTIONS    += C-STYLE
-EXAMPLE_PATH	    += $(SRCDIR)/example/c $(SRCDIR)/libmsgque
+EXAMPLE_PATH	    += $(SRCDIR)/example/c
 
 ALIASES		    += "self=libmsgque"
 ALIASES		    += "selftut=libmsgquetut"

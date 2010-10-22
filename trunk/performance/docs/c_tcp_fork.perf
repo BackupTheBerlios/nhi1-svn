@@ -1,11 +1,11 @@
 > nothread/NHI1-0.7/theLink/tests/server --tcp --host localhost --port 7777 --fork
 > nothread/NHI1-0.7/theLink/tests/client --all --tcp --host localhost --port 7777
-C> (client:5977) [2010-03-08:09-43-41] [0-0-0-0x621bc0-main]: start: --------------------------------------
-C> (client:5977) [2010-03-08:09-43-41] [0-0-0-0x621bc0-statistics]:                      MqSendEND:       3.69
-C> (client:5977) [2010-03-08:09-43-41] [0-0-0-0x621bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.56
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-statistics]:             MqSendEND_AND_WAIT:      26.73
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-statistics]:                  parent create:     377.19
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-statistics]:                  parent delete:     414.97
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-statistics]:                   child create:     246.02
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-statistics]:                   child delete:      53.15
-C> (client:5977) [2010-03-08:09-43-45] [0-0-0-0x621bc0-main]: end: ----------------------------------------
+C> (client:24220) [2010-10-21:19-42-54] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:24220) [2010-10-21:19-42-54] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       3.14
+C> (client:24220) [2010-10-21:19-42-54] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.21
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      27.65
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-statistics]:                  parent create:     409.77
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-statistics]:                  parent delete:     136.81
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-statistics]:                   child create:      79.44
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-statistics]:                   child delete:      41.34
+C> (client:24220) [2010-10-21:19-42-58] [0-0-0-0x624bc0-main]: end: ----------------------------------------

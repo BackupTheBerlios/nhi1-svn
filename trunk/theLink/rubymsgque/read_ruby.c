@@ -58,9 +58,11 @@ static VALUE ReadN (VALUE self) {
 static VALUE ReadBDY (VALUE self) {
   MQ_BIN val;
   MQ_SIZE len;
+  VALUE ret;
   SETUP_mqctx
   ErrorMqToRubyWithCheck(MqReadBDY(mqctx, &val, &len));
-  return BIN2VAL(val,len);
+  ret = BIN2VAL(val,len);
+  return ret;
 }
 
 static VALUE ReadU (VALUE self) {

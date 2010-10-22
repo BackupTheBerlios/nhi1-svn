@@ -1,4 +1,4 @@
-.TH "MqErrorS" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "MqErrorS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqErrorS \- error-object data type
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -39,29 +39,29 @@ MqErrorS \- error-object data type
 error-object data type 
 .PP
 Definition at line 387 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_BOL\fP \fBMqErrorS::append\fP"
+.SS "\fBMQ_BOL\fP \fBMqErrorS.append\fP"
 .PP
 allow to append? MQ_YES or MQ_NO 
 .PP
 Definition at line 391 of file msgque.h.
-.SS "enum \fBMqErrorE\fP \fBMqErrorS::code\fP"
+.SS "enum \fBMqErrorE\fP \fBMqErrorS.code\fP"
 .PP
 the error code 
 .PP
 Definition at line 388 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqErrorS::errctx\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqErrorS.errctx\fP\fC [read]\fP"
 .PP
 source of the error, NULL = current context 
 .PP
 Definition at line 392 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqErrorS::num\fP"
+.SS "\fBMQ_INT\fP \fBMqErrorS.num\fP"
 .PP
 the error number also used as exit code 
 .PP
 Definition at line 390 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqErrorS::text\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqErrorS.text\fP\fC [read]\fP"
 .PP
 the error message 
 .PP
@@ -69,4 +69,4 @@ Definition at line 389 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

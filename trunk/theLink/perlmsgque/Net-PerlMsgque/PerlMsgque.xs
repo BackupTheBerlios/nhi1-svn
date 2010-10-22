@@ -6,6 +6,10 @@
 #include "msgque.h"
 #include "debug.h"
 
+#define MqErrorSys(cmd) \
+  MqErrorV (context, __func__, errno, \
+    "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
+
 #define ErrorMqToPerlWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
     SV* errsv = get_sv("@", TRUE); \
@@ -273,7 +277,7 @@ PrintID(MqS *context)
     printID(context)
 
 BOOT:
-  MqInitSysAPI (my_fork, NULL);
+  MqLal.SysFork = (MqSysForkF) my_fork;
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS
 

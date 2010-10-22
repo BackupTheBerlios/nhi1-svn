@@ -98,8 +98,8 @@ public abstract class MqS {
   public native String ConfigGetIoTcpMyPort   ();
   /// \api #MqConfigGetIoUdsFile
   public native String ConfigGetIoUdsFile     ();
-  /// \api #MqConfigGetIoPipeSocketSocket
-  public native int ConfigGetIoPipeSocketSocket     ();
+  /// \api #MqConfigGetIoPipeSocket
+  public native int ConfigGetIoPipeSocket     ();
 
 /// \} Mq_Config_Java_API
 

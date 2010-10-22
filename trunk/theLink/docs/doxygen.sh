@@ -9,6 +9,7 @@ libmsgque_private=../man/Doxyfile.msgque
 ccmsgque_private=../man/Doxyfile.msgque
 javamsgque_private=../man/Doxyfile.msgque
 pymsgque_private=../man/Doxyfile.msgque
+rubymsgque_private=../man/Doxyfile.msgque
 tclmsgque_private=../man/Doxyfile.msgque
 
 main=../man/Doxyfile.msgque
@@ -20,6 +21,7 @@ csmsgque=../csmsgque_public/Doxyfile
 vbmsgque=../csmsgque_public/Doxyfile
 perlmsgque=../libmsgque_public/Doxyfile
 pymsgque=../libmsgque_public/Doxyfile
+rubymsgque=../libmsgque_public/Doxyfile
 tclmsgque=../libmsgque_public/Doxyfile
 
 export HAVE_DOT=NO

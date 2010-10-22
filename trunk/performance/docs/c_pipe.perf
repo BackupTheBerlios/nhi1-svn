@@ -1,10 +1,10 @@
 > nothread/NHI1-0.7/theLink/tests/client --all @ nothread/NHI1-0.7/theLink/tests/server
-C> (client:5856) [2010-03-08:09-43-35] [0-0-0-0x6218a0-main]: start: --------------------------------------
-C> (client:5856) [2010-03-08:09-43-35] [0-0-0-0x6218a0-statistics]:                      MqSendEND:       3.71
-C> (client:5856) [2010-03-08:09-43-36] [0-0-0-0x6218a0-statistics]:         MqSendEND_AND_CALLBACK:       9.44
-C> (client:5856) [2010-03-08:09-43-38] [0-0-0-0x6218a0-statistics]:             MqSendEND_AND_WAIT:      14.88
-C> (client:5856) [2010-03-08:09-43-39] [0-0-0-0x6218a0-statistics]:                  parent create:     793.92
-C> (client:5856) [2010-03-08:09-43-39] [0-0-0-0x6218a0-statistics]:                  parent delete:      97.48
-C> (client:5856) [2010-03-08:09-43-39] [0-0-0-0x6218a0-statistics]:                   child create:      72.61
-C> (client:5856) [2010-03-08:09-43-39] [0-0-0-0x6218a0-statistics]:                   child delete:      31.20
-C> (client:5856) [2010-03-08:09-43-39] [0-0-0-0x6218a0-main]: end: ----------------------------------------
+C> (client:24102) [2010-10-21:19-42-49] [0-0-0-0x6248a0-main]: start: --------------------------------------
+C> (client:24102) [2010-10-21:19-42-49] [0-0-0-0x6248a0-statistics]:                      MqSendEND:       2.75
+C> (client:24102) [2010-10-21:19-42-49] [0-0-0-0x6248a0-statistics]:         MqSendEND_AND_CALLBACK:       4.66
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-statistics]:             MqSendEND_AND_WAIT:      18.41
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-statistics]:                  parent create:     758.61
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-statistics]:                  parent delete:      90.56
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-statistics]:                   child create:      73.49
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-statistics]:                   child delete:      31.99
+C> (client:24102) [2010-10-21:19-42-52] [0-0-0-0x6248a0-main]: end: ----------------------------------------

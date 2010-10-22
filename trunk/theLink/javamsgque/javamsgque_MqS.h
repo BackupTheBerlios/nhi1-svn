@@ -915,5 +915,3 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_SlaveIs
 }
 #endif
 #endif
-
-

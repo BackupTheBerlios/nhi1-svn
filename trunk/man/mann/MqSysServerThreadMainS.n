@@ -1,0 +1,63 @@
+.TH "MqSysServerThreadMainS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqSysServerThreadMainS \- data used to initialize a new created thread  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqS\fP * \fBtmpl\fP"
+.br
+.R "calling (parent) context "
+.ti -1c
+.RI "struct \fBMqFactoryS\fP \fBfactory\fP"
+.br
+.R "server configuration (memory belongs to caller) "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBargv\fP"
+.br
+.R "command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBalfa\fP"
+.br
+.R "command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread "
+.in -1c
+.SH "Detailed Description"
+.PP 
+data used to initialize a new created thread 
+.PP
+Definition at line 4077 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.alfa\fP\fC [read]\fP"
+.PP
+command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
+.PP
+Definition at line 4081 of file msgque.h.
+.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.argv\fP\fC [read]\fP"
+.PP
+command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+.PP
+Definition at line 4080 of file msgque.h.
+.SS "struct \fBMqFactoryS\fP \fBMqSysServerThreadMainS.factory\fP\fC [read]\fP"
+.PP
+server configuration (memory belongs to caller) 
+.PP
+Definition at line 4079 of file msgque.h.
+.SS "struct \fBMqS\fP* \fBMqSysServerThreadMainS.tmpl\fP\fC [read]\fP"
+.PP
+calling (parent) context 
+.PP
+Definition at line 4078 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

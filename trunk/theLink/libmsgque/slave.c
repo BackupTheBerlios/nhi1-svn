@@ -16,6 +16,7 @@
 #include "bufferL.h"
 #include "link.h"
 #include "config.h"
+#include "sys.h"
 
 #define MQ_CONTEXT_S context
 
@@ -387,6 +388,10 @@ MqSlaveIs (
 }
 
 END_C_DECLS
+
+
+
+
 
 
 

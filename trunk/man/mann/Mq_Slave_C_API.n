@@ -1,4 +1,4 @@
-.TH "Mq_Slave_C_API" n "11 Oct 2010" "Version 4.5" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -83,22 +83,22 @@ In difference to the \fIclient-server-link\fP the \fImaster-slave-link\fP connec
 \fBDefinition of a 'master-context'\fP
 .br
 .IP "\(bu" 2
-the \fImaster-context\fP is a \fBMqparent-context\fP without a \fBMqchild-context\fP available.
+the \fImaster-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
 .IP "\(bu" 2
-the \fImaster-context\fP is a \fBMqclient-context\fP or a \fBMqserver-context\fP.
+the \fImaster-context\fP is a \fBclient-context\fP or a \fBserver-context\fP.
 .IP "\(bu" 2
-the \fImaster-context\fP is responsible to create or delete the \fBMqchild-context\fP of the \fIslave\fP.
+the \fImaster-context\fP is responsible to create or delete the \fBchild-context\fP of the \fIslave\fP.
 .IP "\(bu" 2
-the \fImaster-context\fP is responsible to delete the \fBMqparent-context\fP of the \fIslave\fP.
+the \fImaster-context\fP is responsible to delete the \fBparent-context\fP of the \fIslave\fP.
 .IP "\(bu" 2
-the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBMqSlaveWorker\fP
+the \fIlink\fP between the \fImaster-context\fP and the \fIslave-context\fP is done using \fBSlaveWorker\fP
 .PP
 \fBDefinition of a 'slave-context'\fP
 .br
 .IP "\(bu" 2
-the \fIslave-context\fP is a \fBMqparent-context\fP without a \fBMqchild-context\fP available.
+the \fIslave-context\fP is a \fBparent-context\fP without a \fBchild-context\fP available.
 .IP "\(bu" 2
-the \fIslave-context\fP is a \fBMqclient-context\fP.
+the \fIslave-context\fP is a \fBclient-context\fP.
 .IP "\(bu" 2
 the \fIslave-context\fP lifetime is controlled by the \fImaster-context\fP.
 .IP "\(bu" 2
@@ -111,9 +111,9 @@ a special form of a \fIslave-context\fP is a \fIworker-context\fP
 .IP "\(bu" 2
 the \fIworker-context\fP is a \fIslave-context\fP using the image of the \fImaster-context\fP self.
 .IP "\(bu" 2
-the \fImaster-context\fP have to be a \fBMqserver-context\fP.
+the \fImaster-context\fP have to be a \fBserver-context\fP.
 .IP "\(bu" 2
-the \fIworker-context\fP is created using \fBMqSlaveWorker\fP
+the \fIworker-context\fP is created using \fBSlaveWorker\fP
 .IP "\(bu" 2
 the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \fC0\fP.
 .PP
@@ -131,7 +131,7 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 .PP
 
 .PP
-Definition at line 3908 of file msgque.h.
+Definition at line 3919 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
@@ -178,7 +178,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 \fBAttention:\fP
 .RS 4
-it is still possible to delete a \fIchild-slave-context\fP using \fBMqLinkDelete\fP but this will break the internal master/slave order. 
+it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
 
@@ -205,12 +205,12 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINULL\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fINothing\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
 
@@ -220,49 +220,49 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fINULL\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fINothing\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
  
 .PP
-Definition at line 3976 of file msgque.h.
+Definition at line 3987 of file msgque.h.
 .SS "int MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
-.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
+.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
 .PP
 is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fIMQ_YES\fP or \fIMQ_NO\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
  
 .PP
-Definition at line 3990 of file msgque.h.
+Definition at line 4001 of file msgque.h.
 .SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
 .PP
 create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
@@ -286,4 +286,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -17,7 +17,7 @@
 
 INPUT			= $(SRCDIR)/javamsgque $(SRCDIR)/libmsgque .
 FILE_PATTERNS		= *.doc *.java msgque.h
-EXAMPLE_PATH		= . $(SRCDIR)/tests $(SRCDIR)/example/java
+EXAMPLE_PATH		+= $(SRCDIR)/example/java
 OPTIMIZE_OUTPUT_JAVA	= YES
 OPTIMIZE_OUTPUT_FOR_C	= NO
 STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/javamsgque

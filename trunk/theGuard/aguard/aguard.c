@@ -113,7 +113,7 @@ GuardToPkg (
 
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
   guard_crypt (bdy, len, DECRYPT);
-  MqErrorCheck (MqSendBDY (ftrctx, bdy, len));
+  MqErrorCheck1 (MqSendBDY (ftrctx, bdy, len));
 
   // check for a short-term-transaction and return the results
   if (MqServiceIsTransaction (ftrctx)) {
@@ -121,6 +121,7 @@ GuardToPkg (
     guard_crypt (bdy, len, ENCRYPT);
     MqErrorCheck (MqSendSTART (mqctx));
     MqErrorCheck (MqSendB (mqctx, bdy, len));
+    MqSysFree(bdy);
   }
 
 error:

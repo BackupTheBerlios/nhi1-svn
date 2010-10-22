@@ -10,6 +10,23 @@
 #§              please contact AUTHORS for additional information
 #§
 
+22 Oct 2010: v NHI1-0.8, PLMK-1.6 und libmsgque-4.6
+
+This release adds the ability to:
+
+* Ruby language support (LNG)
+* L)anguage A)bstraction L)ayer (LaL)
+* G)arbage C)ollection (GC) Objecti-Mark
+
+Ruby is an object-oriented programming language like Python. 
+The new 'libmsgque' function (MqMark) was added to the GC support and marks all objects 
+that are referenced within 'libmsgque'. The programmer now has the opportunity to replace 
+internal functions such as: SysCalloc, SysMalloc, SysRealloc, SysFree, SysSelect, SysFork, 
+SysServerSpawn, SysServerThread, SysServerFork, SysWait, SysUSleep, SysSleep, SysDaemonize, 
+SYSEXIT, SysAbort to adapt to the environment (Lal).
+
+
+
 08 Mar 2010: v NHI1-0.7, PLMK-1.6 and libmsgque-4.5
 
 This is a 'major-feature-release' to add 'longtime-transaction' support.

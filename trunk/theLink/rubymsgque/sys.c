@@ -4,76 +4,16 @@
 #include <errno.h>
 #include <ruby/defines.h>
 
-static ID id_join;
-
-#define MqErrorSys(cmd) \
-  MqErrorV (mqctx, __func__, errno, \
-    "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
+//static ID id_join;
 
 // *************************************************************************
 
-static MQ_PTR SysCalloc (
-  struct MqS * const mqctx,
-  MQ_SIZE nmemb,
-  MQ_SIZE size
+static rb_pid_t SysFork (
 )
 {
-  MQ_PTR ptr = xcalloc (nmemb, size);
-  if (unlikely (ptr == NULL))
-    MqErrorC (mqctx, __func__, errno, strerror (errno));
-  return ptr;
-}
-
-static MQ_PTR SysMalloc (
-  struct MqS * const mqctx,
-  MQ_SIZE size
-)
-{
-  MQ_PTR ptr = xmalloc (size);
-  if (unlikely (ptr == NULL))
-    MqErrorC (mqctx, __func__, errno, strerror (errno));
-  return ptr;
-}
-
-static MQ_PTR SysRealloc (
-  struct MqS * const mqctx,
-  MQ_PTR buf,
-  MQ_SIZE size
-)
-{
-  MQ_PTR ptr = xrealloc (buf, size);
-  if (unlikely (ptr == NULL))
-    MqErrorC (mqctx, __func__, errno, strerror (errno));
-  return ptr;
-}
-
-static void SysFreeP (
-  MQ_PTR ptr
-)
-{
-  if ( likely((ptr) != (NULL)) ) xfree(ptr);
-}
-
-static enum MqErrorE SysFork (
-  struct MqS * const mqctx,
-  struct MqIdS * idP
-)
-{
-#ifdef HAVE_FORK
-  rb_pid_t pid;
-  switch (pid = rb_fork(0, 0, 0, Qnil)) {
-    case 0:
-      rb_thread_atfork();
-      break;
-    case -1:
-      return MqErrorSys (fork);
-  }
-  (*idP).val = pid;
-  (*idP).type = MQ_ID_PROCESS;
-  return MQ_OK;
-#else
-  return MqErrorDb(MQ_ERROR_NOT_SUPPORTED);
-#endif
+  rb_pid_t pid = rb_fork(0, 0, 0, Qnil);
+  if (pid == 0) rb_thread_atfork();
+  return pid;
 }
 
 /*
@@ -114,6 +54,7 @@ printC(*argv)
 }
 */
 
+/*
 static VALUE
 sSysServerThreadInit(MQ_PTR data)
 {
@@ -170,6 +111,7 @@ error:
   MqSysFree (argP);
   return MQ_ERROR;
 }
+*/
 
 static VALUE SysExit2(VALUE dummy) {
   VALUE thread = rb_thread_current();
@@ -183,19 +125,20 @@ static VALUE SysExit3(VALUE num) {
   return Qnil;
 }
 
-static void SysExit (
-  int isThread,                     ///< [in] is this a thread
-  int num                           ///< [in] exit number
+__attribute__ ((noreturn)) static void SysExit (
+  int isThread,
+  int num
 ) {
   if (isThread) {
     rb_protect(SysExit2,Qnil,NULL);
   } else {
     rb_protect(SysExit3,num,NULL);
     ruby_finalize();
-    exit(num);
   }
+  exit(num);
 }
 
+/*
 static VALUE SysWait2 (
   VALUE thread
 )
@@ -208,7 +151,6 @@ static enum MqErrorE SysWait (
   const struct MqIdS *idP
 )
 {
-  errno = 0;
   switch (idP->type) {
     case MQ_ID_PROCESS: {
       break;
@@ -223,21 +165,23 @@ static enum MqErrorE SysWait (
   }
   return MQ_OK;
 }
+*/
 
 void NS(MqS_Sys_Init)(void) {
 
-  id_join = rb_intern("join");
+  //id_join = rb_intern("join");
 
   // update LAL
-  MqLal.SysCalloc   = SysCalloc	  ;
-  MqLal.SysMalloc   = SysMalloc	  ;
-  MqLal.SysRealloc  = SysRealloc  ;
-  MqLal.SysFreeP    = SysFreeP	  ;
-  MqLal.SysFork	    = SysFork	  ;
+  MqLal.SysCalloc   = (MqSysCallocF)  xcalloc	  ;
+  MqLal.SysMalloc   = (MqSysMallocF)  xmalloc	  ;
+  MqLal.SysRealloc  = (MqSysReallocF) xrealloc	  ;
+  MqLal.SysFree	    = (MqSysFreeF)    xfree	  ;
+  MqLal.SysFork	    = (MqSysForkF)    SysFork	  ;
 
-  MqLal.SysServerThread = SysServerThread;
-  MqLal.SysExit = SysExit;
-  MqLal.SysWait = SysWait;
+  //MqLal.SysServerThread = SysServerThread;
+  MqLal.SysExit	    = SysExit;
+  //MqLal.SysWait = SysWait;
+
+  MqLal.SysSelect   = (MqSysSelectF) rb_thread_select;
 }
-
 

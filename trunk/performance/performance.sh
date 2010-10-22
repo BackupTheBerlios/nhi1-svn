@@ -85,6 +85,7 @@ csharp=C#
 java=Java
 perl=Perl
 python=Python
+ruby=Ruby
 tcl=Tcl
 vb=VB.NET
 php=PHP
@@ -171,6 +172,11 @@ python_tcp_fork
 python_tcp_spawn
 python_uds_fork
 python_uds_spawn
+ruby_pipe
+ruby_tcp_fork
+ruby_tcp_spawn
+ruby_uds_fork
+ruby_uds_spawn
 csharp_pipe
 csharp_tcp_thread
 csharp_tcp_spawn
@@ -241,6 +247,10 @@ for SRV in $R; do
     ;;
     *python*)	
       SERVER="python $LINK_DIR/tests/server.py"	    
+      CLIENT="$LINK_DIR/tests/client"
+    ;;
+    *ruby*)	
+      SERVER="ruby $LINK_DIR/tests/server.rb"
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *csharp*)	
@@ -322,7 +332,7 @@ done
 # calculate the total
 for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
   echo -e "\n $TST:" 1>&3
-  for LNG in c cc csharp java perl python tcl vb php; do
+  for LNG in c cc csharp java perl python ruby tcl vb php; do
     TotalLink ${LNG} ${TST}
   done
   echo -e "\n $TST:" 1>&4

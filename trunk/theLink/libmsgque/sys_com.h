@@ -44,6 +44,8 @@ BEGIN_C_DECLS
 #endif
 
 
+#define MqSysSelect(max,read,write,except,timeout)  (*MqLal.SysSelect)(max,read,write,except,timeout)
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                sys_com                                    */

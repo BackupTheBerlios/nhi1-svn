@@ -1,4 +1,4 @@
-.TH "Mq_Config_Java_API" n "7 Oct 2010" "Version 4.5" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_Java_API" n "22 Oct 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -157,9 +157,9 @@ Mq_Config_Java_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
 .ti -1c
-.RI "native int \fBjavamsgque::MqS.ConfigGetIoPipeSocketSocket\fP ()"
+.RI "native int \fBjavamsgque::MqS.ConfigGetIoPipeSocket\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqConfigGetIoPipeSocketSocket "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -182,9 +182,9 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP 
 .PP
-.SS "native int javamsgque.MqS.ConfigGetIoPipeSocketSocket ()\fC [inherited]\fP"
+.SS "native int javamsgque.MqS.ConfigGetIoPipeSocket ()\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: MqConfigGetIoPipeSocketSocket 
+implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP 
 .PP
 .SS "native String javamsgque.MqS.ConfigGetIoTcpHost ()\fC [inherited]\fP"
 .PP

@@ -30,12 +30,6 @@
 #   endif
 #   include <errno.h>
 #   include <signal.h>
-static void sysCreate (void) __attribute__ ((constructor));
-
-static void sysCreate (void) 
-{
-  signal(SIGPIPE, SIG_IGN);
-}
 
 #elif defined(MQ_IS_WIN32)
 #   define SHUTDOWN_BOTH SD_BOTH
@@ -49,6 +43,16 @@ static void sysCreate (void)
 #define MQ_CONTEXT_S context
 
 BEGIN_C_DECLS
+
+static void SysComCreate (void) __attribute__ ((constructor));
+
+static void SysComCreate (void) 
+{
+#if defined(MQ_IS_POSIX)
+  signal(SIGPIPE, SIG_IGN);
+#endif
+  MqLal.SysSelect = (MqSysSelectF) select;
+}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -310,7 +314,7 @@ SysSelect (
   int ret;
   struct timeval tv = *timeout;
   sSysSetErrorNum(0);
-  ret = select (n, readfds, writefds, NULL, &tv);
+  ret = MqSysSelect (n, (void*)readfds, (void*)writefds, NULL, &tv);
   switch (ret) {
     case 0:
       return MQ_CONTINUE;   // timeout

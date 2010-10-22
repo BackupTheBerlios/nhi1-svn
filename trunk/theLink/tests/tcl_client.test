@@ -241,7 +241,7 @@ test tcl-client-ReadUndo-0-($I|$B|$C|$S) {ReadUndo ...} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|224>*
-[sS]> (server-0) \[MqReadUndo] maximum undo level reached}
+[sS]> (server-0) \[MqReadUndo] maximum undo level reached*}
 
 test tcl-client-ReadUndo-1-($I|$B|$C|$S) {ReadUndo ...} \
     -body           {
