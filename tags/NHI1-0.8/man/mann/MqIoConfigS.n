@@ -1,0 +1,83 @@
+.TH "MqIoConfigS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqIoConfigS \- configuration data which belong to \fIMqIoS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_TIME_T\fP \fBtimeout\fP"
+.br
+.R "user defined timeout to terminate a blocking function call (default: 90 sec) "
+.ti -1c
+.RI "\fBMQ_INT\fP \fBbuffersize\fP"
+.br
+.R "set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) "
+.ti -1c
+.RI "enum \fBMqIoComE\fP \fBcom\fP"
+.br
+.R "what kind of socket interface to use? "
+.ti -1c
+.RI "struct \fBMqIoUdsConfigS\fP \fBuds\fP"
+.br
+.R "set \fIuds\fP configuration-data "
+.ti -1c
+.RI "struct \fBMqIoTcpConfigS\fP \fBtcp\fP"
+.br
+.R "set \fItcp\fP configuration-data "
+.ti -1c
+.RI "struct \fBMqIoPipeConfigS\fP \fBpipe\fP"
+.br
+.R "set \fIpipe\fP configuration-data "
+.in -1c
+.SH "Detailed Description"
+.PP 
+configuration data which belong to \fIMqIoS\fP 
+.PP
+Definition at line 622 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBMQ_INT\fP \fBMqIoConfigS.buffersize\fP"
+.PP
+set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
+.PP
+Definition at line 628 of file msgque.h.
+.SS "enum \fBMqIoComE\fP \fBMqIoConfigS.com\fP"
+.PP
+what kind of socket interface to use? 
+.PP
+type default option application context  INTEGER (enum) IO_PIPE --tcp/--uds/--pipe server parent  
+.PP
+Definition at line 635 of file msgque.h.
+.SS "struct \fBMqIoPipeConfigS\fP \fBMqIoConfigS.pipe\fP\fC [read]\fP"
+.PP
+set \fIpipe\fP configuration-data 
+.PP
+Definition at line 644 of file msgque.h.
+.SS "struct \fBMqIoTcpConfigS\fP \fBMqIoConfigS.tcp\fP\fC [read]\fP"
+.PP
+set \fItcp\fP configuration-data 
+.PP
+Definition at line 641 of file msgque.h.
+.SS "\fBMQ_TIME_T\fP \fBMqIoConfigS.timeout\fP"
+.PP
+user defined timeout to terminate a blocking function call (default: 90 sec) 
+.PP
+Definition at line 625 of file msgque.h.
+.SS "struct \fBMqIoUdsConfigS\fP \fBMqIoConfigS.uds\fP\fC [read]\fP"
+.PP
+set \fIuds\fP configuration-data 
+.PP
+Definition at line 638 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

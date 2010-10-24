@@ -1,0 +1,284 @@
+/**
+
+\page filter Definition of the "filter"
+
+\ref filter-intro\n
+\ref filter-bi\n
+\ref filter-one\n
+\ref filter-shell\n
+
+\section filter-intro				  INTRODUCTION
+\copydetails Mq_Filter_C_API
+
+\section filter-bi				  BI-DIRECTIONAL FILTER
+The following code is based on the \b JAVA example \c theLink/example/java/Filter3.java:
+
+\dontinclude Filter3.java
+
+\skip package example
+\until javamsgque
+
+create the \e class, implement the \e factory and the \e server interface:
+\skip IFactory
+\until }
+
+define the \e ServerSetup function to configure a new connection request and create a \e generic 
+service-handler (\b +ALL) for the \e left and the \e right context:
+\skip ServerSetup
+\until }
+
+define the \e generic service-handler to act on \b +ALL token:
+\skip Filter
+\until MqSException
+
+get the \e right context as send-target:
+\skipline ServiceGetFilter
+
+read the data from the \e left context send the data to the \e right context:
+\until SendBDY
+
+depending on the \e transaction-status decide to use the proper \b Send function:
+\until }
+\until }
+
+finally finish the service-handler:
+\until }
+\until }
+
+define the main function and create the initial context:
+\skip main
+\until filter
+
+process the command-line arguments and start the initial link:
+\skipline LinkCreate
+
+finally start the event-loop and wait for an incoming service-request:
+\skipline ProcessEvent
+
+on exit delete the context and finish the process:
+\until }
+\until }
+\until }
+\until }
+\until }
+
+
+\section        filter-one                         ONE-DIRECTIONAL FILTER
+
+The following code is based on the \b JAVA example \c theLink/example/java/Filter1.java:
+
+\dontinclude Filter1.java
+
+\skip package example
+\until javamsgque
+
+create a \e class and implement the \e factory interface:
+\skip IFactory
+\until }
+
+define a service-handler for the \b +FTR token and collect the data:
+\skip FTR
+\until Filter1
+
+finally finish the service-handler:
+\until }
+\until }
+
+define a service-handler for the \b +EOF token:
+\skip EOF
+\until }
+
+first send the \b +FTR data, line by line:
+\until FTR
+\until }
+
+second send the \b +EOF data, only once at the end:
+\skip SendSTART
+\until EOF
+
+finally finish the service-handler:
+\until }
+\until }
+
+define the main function and create the initial context:
+\skip main
+\until filter
+
+define the server setup:
+\skipline ConfigSetIsServer
+
+process the command-line arguments and start the initial link:
+\skipline LinkCreate
+
+define the \b +FTR and the \b +EOF token but only for the \e left context:
+\skip FTR
+\until EOF
+
+finally start the event-loop and wait for an incoming service-request:
+\skipline ProcessEvent
+
+on exit delete the context and finish the process:
+\until }
+\until }
+\until }
+\until }
+\until }
+
+
+\section filter-shell FILTER - SHELL - INTEGRATION
+
+\libmsgque was designed to act as a glue between different applications. For an
+overview about the basic concepts we are using the good old shell and using
+\libmsgque to extend the usability of the well known pipe \b '|' syntax.
+
+\section basic basic shell behaviour
+A \e shell command-line is a collection of one or more commands linked together
+using the \b '|' symbol:
+
+\verbatim
+command1 | command2 | command3
+\endverbatim
+
+\c command1, \c command2 and \c command3 are started by the \e shell and the stdout of
+command1 is the stdin of \c command2 and the stdout of \c command2 is the stdin of \c command3.
+The data send through the pipeline are strings and every command in the pipeline
+have to parse the string output of the previous command to extract the information's needed. 
+ - \b advantage: 
+  - easy to use and human readable interface based on strings
+  .
+ - \b disadvantage: 
+  - every command has to re-parse the output of the previous command
+  .
+ .
+
+\subsection alfa additional shell behaviour using the libmsgque syntax
+\libmsgque is adding an additional link character \b '@' to the shell and
+the example from above looks like this:
+
+\verbatim
+alfacmd1 @ alfacmd2 @ alfacmd3
+\endverbatim
+
+Only \c alfacmd1 is started by the shell and gets '<b><tt>@ alfacmd2 @ alfacmd3</tt></b>' as 
+command-line arguments. \libmsgque will start the both commands \c alfacmd2 and \c alfacmd3
+and setup the message-queues: 
+    -# alfacmd1 -> alfacmd2
+    -# alfacmd2 -> alfacmd3
+    .
+\c Alfacmd2 receiving the output from \c alfacmd1 and \c alfacmd3 receiving the output 
+from \c alfacmd2 without re-parsing the data again.
+ - \b advantage: 
+  - single parsing of output and direct access to columns and rows
+  - the alfacmdX commands are independent processes and only connected by message queues
+  .
+ - \b disadvantage: 
+  - every command using the alfa syntax have to use the \libmsgque library
+  .
+ .
+
+\subsection shell-alfa interface between shell commands and alfa commands
+For full integration of alfa commands into the shell syntax 2 additional interfaces are necessary
+ - \b advantage: 
+  - direct integration between shell and alfa commands
+  - reusing of already available shell commands and adding new features by alfa commands
+  .
+ .
+
+\subsubsection shell_to_alfa interface: shellcmd | alfacmd
+To connect a shell with an alfa command the special alfa command \e split is used:
+
+\verbatim
+    shellcmd | atool split @ ...
+\endverbatim
+
+The \e split command expect input data from stdin and is sending output data as package 
+to an alfa command. For every input data string an output package is created by splitting 
+the input string into output objects using the the delimiter \b -d.
+
+\subsubsection alfa_to_shell interface: alfacmd | shellcmd
+To connect an alfa with a shell command the special alfa command \e join is used.\n
+If the \libmsgque object was created by \e atool :
+\verbatim
+    ... @ join | shellcmd
+\endverbatim
+
+or if the \libmsgque object was \b not created by atool :
+\verbatim
+    ... @ atool join | shellcmd
+\endverbatim
+
+The \e join tool expect data from a msgque client as input and create for
+every input package an stdout output string by joining the objects of the
+input package together using the delimiter \b -d .
+
+\subsection network command pipelines using multiple hosts
+
+\code
+starthost:     alfacmd1 --tcp --host rmthost --port rmtport
+endhost:       alfacmd2 --tcp --port rmtport
+\endcode
+
+By default \libmsgque is using unix-domain sockets (UDS) for communication but inet (TCP)
+sockets can be used as well.  The data-flow is the same as above except that 
+two hosts are involved using \libmsgque over tcp sockets for connection. The tcp connection
+is buildup between \c alfacmd1 and \c alfacmd2. 
+ - \b advantage: 
+  - multiple hosts can be used
+  .
+ .
+
+\subsection example a collection of examples should help to understand the software
+
+\subsubsection acmds example: this is a list of commands already available in this distribution
+  - \e atool \atool_desc
+  - \e aexec \aexec_desc
+  .
+
+\subsubsection overview_example_1 example 1 : just the famous hello world example
+\code
+echo 'hello world with text' | atool split -d " " @ cut -f 0,1 @ join -D ":"
+\endcode
+return: <tt>hello:world</tt>
+
+\subsubsection overview_example_2 example 2 : a little bit more features used
+\code
+echo -e 'nobody 10 euro\nmanager 1000 dollar\nworker 100 pound' | \
+    atool split -d " " @ sort -1 D @ join -d " : " -0 "position -> %-8s" \
+	-1 "amount = %7.2f" -2 "%s"
+\endcode
+with the output:
+\verbatim
+position -> nobody   : amount =   10.00 : euro
+position -> worker   : amount =  100.00 : pound
+position -> manager  : amount = 1000.00 : dollar
+\endverbatim
+
+\subsubsection overview_example_3 example 3 : use tcl to create a smart filter
+The following tcl code \c total.tcl does 2 things:
+  -# convert the currencies into dollar ($)
+  -# calculate the total amount
+  .
+\dontinclude total.tcl
+\skip package
+\until Exit
+using the following command pipeline:
+\verbatim
+echo -e "nobody 10 euro\nmanager 1000 dollar\nworker 100 pound" | \
+    atool split -d " " @ sort -1 D @ tclsh total.tcl @ \
+	atool join -d " : " -0 "%-8s" -1 "%5.2f$"
+\endverbatim
+to create the following result:
+\verbatim
+nobody   : 13.54$
+worker   : 198.96$
+manager  : 1000.00$
+total    : 1212.50$
+\endverbatim
+
+\subsubsection overview_example_4 example 4 : use the debug mode
+The debugging mode is enabled with \e --debug followed by a \e number between 1 and 9\n
+ - \ref debug_output
+ .
+
+*/
+

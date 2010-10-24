@@ -1,0 +1,217 @@
+#+
+#§  \file       theLink/tests/bol.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+set MAX    1
+set MIN    0
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test bol-1-($I|$B|$C|$S) {echo datatype (MQ_BOL)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadO SendO $MAX]
+} "int"
+
+test bol-1a-($I|$B|$C|$S) {(yes to MQ_BOL) fit max} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendO yes} \
+    -returnCodes    ok \
+    -result         1
+ 
+test bol-1b-($I|$B|$C|$S) {(no to MQ_BOL) fit min} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendO no} \
+    -returnCodes    ok \
+    -result         0
+
+test bol-2-($I|$B|$C|$S) {(native to MQ_BOL) fit max} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendO $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+ 
+test bol-3-($I|$B|$C|$S) {(native to MQ_BOL) fit min} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendO $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test bol-4-($I|$B|$C|$S) {(string to MQ_BOL) fit max} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendC $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+
+test bol-5-($I|$B|$C|$S) {(string to MQ_BOL) fit min} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendC $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test bol-6-($I|$B|$C|$S) {(MQ_STR to MQ_BOL) error size} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendC 1x} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '*' into an 'BOL' object*}
+
+test bol-7-($I|$B|$C|$S) {range error underflow} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendC -1} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BOL' object*}
+
+test bol-8-($I|$B|$C|$S) {range error overflow} \
+    -body           {Echo1 $FH_LAST ECOO ReadO SendC 2} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BOL' object*}
+ 
+if {$B eq "binary"} {
+    test bol-9-($I|$B|$C|$S) {(MQ_WID to MQ_BOL) error WID type} \
+	-body           {Echo1 $FH_LAST ECOO ReadO SendW 2} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'WID' object into an 'BOL' object*}
+} else {
+    test bol-9-($I|$B|$C|$S) {(MQ_WID to MQ_BOL) error WID type} \
+	-body           {Echo1 $FH_LAST ECOO ReadO SendW 2} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '2' into an 'BOL' object*}
+}
+
+if {$B eq "binary"} { 
+    test bol-10-($I|$B|$C|$S) {(MQ_DBL to MQ_BOL) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOO ReadO SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'DBL' object into an 'BOL' object*}
+} else {
+    test bol-10-($I|$B|$C|$S) {(MQ_DBL to MQ_BOL) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOO ReadO SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '1.2345*e+*03' into an 'BOL' object*}
+}
+ 
+test bol-11-($I|$B|$C|$S) {(MQ_LST to MQ_BOL) error LST type} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOO
+      $FH_LAST ReadY
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'LST' object into an 'BOL' object*}
+
+test bol-12-($I|$B|$C|$S) {set/get context data} \
+    -body           {
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendO yes
+	  $ctx SendEND SETU
+	}
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendEND_AND_WAIT GETU
+	  set ret [$ctx ReadO]
+	  if {1 != $ret} {
+	    error "expect value '1' but got '$ret'"
+	  }
+	}
+	return OK
+    } \
+    -result	{OK}
+
+## !ACHTUNG! dieser test muss am ende stehen
+test bol-XX-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOO
+      $FH_LAST ReadO
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOO> <Num|213>*
+[sS]> (server-0) \[*sReadA1\] request more arguments than available*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+
+
+
+
+
+

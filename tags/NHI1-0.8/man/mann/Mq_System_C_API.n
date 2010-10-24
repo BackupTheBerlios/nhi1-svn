@@ -1,0 +1,555 @@
+.TH "Mq_System_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.  
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqIdS\fP"
+.br
+.R "data type for process/thread identification "
+.ti -1c
+.RI "struct \fBMqSysServerThreadMainS\fP"
+.br
+.R "data used to initialize a new created thread "
+.ti -1c
+.RI "struct \fBMqLalS\fP"
+.br
+.R "Interface between \fBMqS\fP and the Operating-System. "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBmq_strtoll\fP   strtoll"
+.br
+.ti -1c
+.RI "#define \fBmq_strdup\fP(v)   strdup(v)"
+.br
+.ti -1c
+.RI "#define \fBmq_getpid\fP   getpid"
+.br
+.ti -1c
+.RI "#define \fBmq_unlink\fP   unlink"
+.br
+.ti -1c
+.RI "#define \fBmq_snprintf\fP   snprintf"
+.br
+.ti -1c
+.RI "#define \fBMQ_CLRCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_STDCALL\fP"
+.br
+.ti -1c
+.RI "#define \fBMQ_CDECL\fP"
+.br
+.ti -1c
+.RI "#define \fBmq_inline\fP   inline"
+.br
+.ti -1c
+.RI "#define \fBmq_timeval\fP   timeval"
+.br
+.ti -1c
+.RI "#define \fBmq_timezone\fP   timezone"
+.br
+.ti -1c
+.RI "#define \fBMqSysFree\fP(tgt)"
+.br
+.R "\fBfree\fP syscall "
+.ti -1c
+.RI "#define \fBMqSysWait\fP(context, idP)   (*MqLal.SysWait)(context, idP)"
+.br
+.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysUSleep\fP(context, usec)   (*MqLal.SysUSleep)(context, usec)"
+.br
+.R "\fBusleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysSleep\fP(context, sec)   (*MqLal.SysSleep)(context, sec)"
+.br
+.R "\fBsleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "#define \fBMqSysExit\fP(isThread, num)   (*MqLal.SysExit)(isThread,num)"
+.br
+.R "\fBexit\fP syscall with \fBMqS\fP error plugin "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef unsigned long \fBMQ_IDNT\fP"
+.br
+.R "process or thread identifer "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP )(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
+.br
+.R "\fBcalloc\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysMallocF\fP )(\fBMQ_SIZE\fP)"
+.br
+.R "\fBmalloc\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_PTR\fP(* \fBMqSysReallocF\fP )(\fBMQ_PTR\fP, \fBMQ_SIZE\fP)"
+.br
+.R "\fBrealloc\fP syscall "
+.ti -1c
+.RI "typedef void(* \fBMqSysFreeF\fP )(\fBMQ_PTR\fP)"
+.br
+.R "\fBfree\fP syscall "
+.ti -1c
+.RI "typedef int(* \fBMqSysSelectF\fP )(int, void *, void *, void *, struct timeval *)"
+.br
+.R "\fBselect\fP syscall "
+.ti -1c
+.RI "typedef \fBMQ_IDNT\fP(* \fBMqSysForkF\fP )(void)"
+.br
+.R "\fBfork\fP syscall "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqIdSE\fP { \fBMQ_ID_UNUSED\fP =  0, \fBMQ_ID_PROCESS\fP =  1, \fBMQ_ID_THREAD\fP =  2 }"
+.br
+.R "signal type of the \fI\fBMqIdS\fP\fP data \fIval\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBMqSysServerThreadMain\fP (struct \fBMqSysServerThreadMainS\fP *data)"
+.br
+.R "initialize a new created thred "
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
+.br
+.R "\fBcalloc\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBMqSysMalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size)"
+.br
+.R "\fBmalloc\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBMqSysRealloc\fP (struct \fBMqS\fP *const context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
+.br
+.R "\fBrealloc\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "void \fBMqSysFreeP\fP (\fBMQ_PTR\fP data)"
+.br
+.R "\fBfree\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "\fBMQ_STR\fP \fBMqSysBasename\fP (\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
+.br
+.R "\fBbasename\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqSysGetTimeOfDay\fP (struct \fBMqS\fP *const context, struct mq_timeval *tv, struct mq_timezone *tz)"
+.br
+.R "\fBgettimeofday\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "static \fBMQ_STR\fP \fBmq_strdup_save\fP (\fBMQ_CST\fP v)"
+.br
+.R "duplicate a string, the argument \fCNULL\fP is allowed "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqLalS\fP \fBMqLal\fP"
+.br
+.R "Language Abstraction Layer in duty. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+L)anguage A)bstraction L)ayer defnition. 
+
+The \fBLAL\fP is required to give the target of embedding a change to modify the access to system functions. \fIRUBY\fP for example has it's own Thread-Creation function.
+.PP
+All wrappers to access the underlying OS,Languags and system functions are located in this section. Every external Function has additional code to map the OS/System specific error codes/messages into \fBMqS\fP specific error codes/messages 
+.SH "Define Documentation"
+.PP 
+.SS "#define MQ_CDECL"
+.PP
+Definition at line 90 of file msgque.h.
+.SS "#define MQ_CLRCALL"
+.PP
+Definition at line 86 of file msgque.h.
+.SS "#define mq_getpid   getpid"
+.PP
+Definition at line 80 of file msgque.h.
+.SS "#define mq_inline   inline"
+.PP
+Definition at line 92 of file msgque.h.
+.SS "#define mq_snprintf   snprintf"
+.PP
+Definition at line 84 of file msgque.h.
+.SS "#define MQ_STDCALL"
+.PP
+Definition at line 88 of file msgque.h.
+.SS "#define mq_strdup(v)   strdup(v)"
+.PP
+Definition at line 78 of file msgque.h.
+.SS "#define mq_strtoll   strtoll"
+.PP
+Definition at line 76 of file msgque.h.
+.SS "#define mq_timeval   timeval"
+.PP
+Definition at line 158 of file msgque.h.
+.SS "#define mq_timezone   timezone"
+.PP
+Definition at line 160 of file msgque.h.
+.SS "#define mq_unlink   unlink"
+.PP
+Definition at line 82 of file msgque.h.
+.SS "#define MqSysExit(isThread, num)   (*MqLal.SysExit)(isThread,num)"
+.PP
+\fBexit\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIisThread\fP exit a thread? 
+.br
+\fInum\fP exit code 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4329 of file msgque.h.
+.SS "#define MqSysFree(tgt)"
+.PP
+\fBValue:\fP
+.PP
+.nf
+do { \
+        if ( likely((tgt) != (NULL)) ) { \
+            (*MqLal.SysFree)((MQ_PTR)tgt); \
+            (tgt) = (NULL); \
+        } \
+    } while (0)
+.fi
+\fBfree\fP syscall 
+.PP
+additional info: \fCman free\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItgt\fP the memory block to delete and set to NULL 
+.RE
+.PP
+
+.PP
+Definition at line 4291 of file msgque.h.
+.SS "#define MqSysSleep(context, sec)   (*MqLal.SysSleep)(context, sec)"
+.PP
+\fBsleep\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsec\fP the seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4323 of file msgque.h.
+.SS "#define MqSysUSleep(context, usec)   (*MqLal.SysUSleep)(context, usec)"
+.PP
+\fBusleep\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIusec\fP the micro (10^-6) seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4317 of file msgque.h.
+.SS "#define MqSysWait(context, idP)   (*MqLal.SysWait)(context, idP)"
+.PP
+\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIidP\fP process or thread handle 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4311 of file msgque.h.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef unsigned long \fBMQ_IDNT\fP"
+.PP
+process or thread identifer 
+.PP
+Definition at line 4030 of file msgque.h.
+.SS "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP)(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
+.PP
+\fBcalloc\fP syscall 
+.PP
+additional info: \fCman calloc\fP 
+.PP
+Definition at line 4034 of file msgque.h.
+.SS "typedef \fBMQ_IDNT\fP(* \fBMqSysForkF\fP)(void)"
+.PP
+\fBfork\fP syscall 
+.PP
+additional info: \fCman fork\fP 
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP process identifer of the new child (in the parent process) or 0 (in the child process) 
+.RE
+.PP
+
+.PP
+Definition at line 4060 of file msgque.h.
+.SS "typedef void(* \fBMqSysFreeF\fP)(\fBMQ_PTR\fP)"
+.PP
+\fBfree\fP syscall 
+.PP
+additional info: \fCman free\fP 
+.PP
+Definition at line 4046 of file msgque.h.
+.SS "typedef \fBMQ_PTR\fP(* \fBMqSysMallocF\fP)(\fBMQ_SIZE\fP)"
+.PP
+\fBmalloc\fP syscall 
+.PP
+additional info: \fCman malloc\fP 
+.PP
+Definition at line 4038 of file msgque.h.
+.SS "typedef \fBMQ_PTR\fP(* \fBMqSysReallocF\fP)(\fBMQ_PTR\fP, \fBMQ_SIZE\fP)"
+.PP
+\fBrealloc\fP syscall 
+.PP
+additional info: \fCman realloc\fP 
+.PP
+Definition at line 4042 of file msgque.h.
+.SS "typedef int(* \fBMqSysSelectF\fP)(int, void *, void *, void *, struct timeval *)"
+.PP
+\fBselect\fP syscall 
+.PP
+read more at: \fCman 2 select\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImax\fP the maximim file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
+.br
+\fIread\fP set of file descriptores 
+.br
+\fIwrite\fP set of file descriptores 
+.br
+\fIexcept\fP set of file descriptores 
+.br
+\fItimeout\fP maximum time to wait for data 
+.RE
+.PP
+
+.PP
+Definition at line 4055 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqIdSE\fP"
+.PP
+signal type of the \fI\fBMqIdS\fP\fP data \fIval\fP 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_ID_UNUSED \fP\fP
+empty struct 
+.TP
+\fB\fIMQ_ID_PROCESS \fP\fP
+\fIval\fP has a process handle 
+.TP
+\fB\fIMQ_ID_THREAD \fP\fP
+\fIval\fP has a thread handle 
+.PP
+Definition at line 4063 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
+.PP
+duplicate a string, the argument \fCNULL\fP is allowed 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIv\fP the string to duplicate 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new string or \fCNULL\fP 
+.RE
+.PP
+
+.PP
+Definition at line 4357 of file msgque.h.
+.SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
+.PP
+\fBbasename\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman basename\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIin\fP name of the string to extract the basename from (value of \fIin\fP will not be changed) 
+.br
+\fIincludeExtension\fP add extension like '.exe' to the filename (\fBMQ_YES\fP or \fBMQ_NO\fP) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the basename of \fIin\fP (it is save to modify the basename for additional needs) 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the memory of the basename string returned is owned by the caller and have to be freed 
+.RE
+.PP
+
+.SS "\fBMQ_PTR\fP MqSysCalloc (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
+.PP
+\fBcalloc\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman calloc\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fInmemb\fP the number of members in the memory block 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block initialized with '0' 
+.RE
+.PP
+
+.SS "void MqSysFreeP (\fBMQ_PTR\fP data)"
+.PP
+\fBfree\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman free\fP Free memory of \fIdata\fP if \fIdata\fP is \fBnot\fP \fCNULL\fP. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP block to be freed 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqSysGetTimeOfDay (struct \fBMqS\fP *const  context, struct mq_timeval * tv, struct mq_timezone * tz)"
+.PP
+\fBgettimeofday\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman gettimeofday\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fItv\fP the timeval object 
+.br
+\fItz\fP the timezone object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.SS "\fBMQ_PTR\fP MqSysMalloc (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size)"
+.PP
+\fBmalloc\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman malloc\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block 
+.RE
+.PP
+
+.SS "\fBMQ_PTR\fP MqSysRealloc (struct \fBMqS\fP *const  context, \fBMQ_PTR\fP buf, \fBMQ_SIZE\fP size)"
+.PP
+\fBrealloc\fP syscall with \fBMqS\fP error plugin 
+.PP
+additional info: \fCman realloc\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbuf\fP the \fBold\fP memory block to extend 
+.br
+\fIsize\fP the size of the new memory block 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+a pointer to the new memory block 
+.RE
+.PP
+
+.SS "void MqSysServerThreadMain (struct \fBMqSysServerThreadMainS\fP * data)"
+.PP
+initialize a new created thred 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP configuration data for the new thread 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "struct \fBMqLalS\fP \fBMqLal\fP"
+.PP
+Language Abstraction Layer in duty. 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

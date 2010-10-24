@@ -1,0 +1,145 @@
+#+
+#§  \file       theLink/tests/config.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set Start_PREFIX {
+  $FH_LAST ConfigSetIdent otto
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [filterGet COM_LST pipe] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      SetConstraints all
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test config-1-($I|$B|$C|$S) {Buffersize} \
+    -body           {Echo1 $FH_LAST CFG1 ReadI SendC Buffersize SendI 1024} \
+    -result         1024
+
+test config-2-($I|$B|$C|$S) {Debug} \
+    -body           {Echo1 $FH_LAST CFG1 ReadI SendC Debug SendI 5} \
+    -result         5
+
+test config-3-($I|$B|$C|$S) {Timeout} \
+    -body           {Echo1 $FH_LAST CFG1 ReadW SendC Timeout SendW 14} \
+    -result         14
+
+test config-4-($I|$B|$C|$S) {Name} \
+    -body           {Echo1 $FH_LAST CFG1 ReadC SendC Name SendC otto} \
+    -result         otto
+
+test config-5-($I|$B|$C|$S) {SrvName} \
+    -body           {Echo1 $FH_LAST CFG1 ReadC SendC SrvName SendC ottoS} \
+    -result         ottoS
+
+test config-6-($I|$B|$C|$S) {IsSilent} \
+    -body           {Echo1 $FH_LAST CFG1 ReadO SendC IsSilent SendO yes} \
+    -result         1
+
+test config-7-($I|$B|$C|$S) {IsSilent} \
+    -body           {Echo1 $FH_LAST CFG1 ReadO SendC IsString SendO no} \
+    -result         0
+
+test config-8-($I|$B|$C|$S) {IoUds} \
+    -body           {Echo1 $FH_LAST CFG1 ReadC SendC IoUds SendC pfile} \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>*
+[Ss]> (server-0) \[*MqConfigSetIoUdsFile] the 'msgque' object link is 'already' connected*}
+
+test config-9-($I|$B|$C|$S) {IoTcp} \
+    -body           {EchoL $FH_LAST CFG1 SendC IoTcp SendC rHost SendC rPort SendC lHost SendI 4444} \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235>*
+[Ss]> (server-0) \[*MqConfigSetIoTcp] the 'msgque' object link is 'already' connected*}
+
+test config-10-($I|$B|$C|$S) {IoPipe} \
+    -body           {EchoL $FH_LAST CFG1 SendC IoPipe SendI 9} \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[Cc]> (client-0) \[service-call-error] <Tok|CFG1> <Num|235*>
+[Ss]> (server-0) \[*MqConfigSetIoPipeSocket] the 'msgque' object link is 'already' connected*}
+
+test config-11-($I|$B|$C|$S) {StartAs} \
+    -body           {Echo1 $FH_LAST CFG1 ReadI SendC StartAs SendI 3} \
+    -result         {3}
+
+test config-12-($I|$B|$C|$S) {Ident} \
+    -constraints    {filter} \
+    -body           {EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto} \
+    -result         {myident 0}
+
+test config-12-($I|$B|$C|$S) {Ident} \
+    -constraints    {!filter} \
+    -body           {EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto} \
+    -result         {myident 1}
+ 
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+
+
+
+
+

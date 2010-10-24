@@ -1,0 +1,253 @@
+.TH "Mq_Send_CC_API" n "22 Oct 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Send_CC_API \- construct an outgoing \fIsend-data-package\fP.   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendSTART\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendRETURN\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendERROR\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendEND\fP (\fBMQ_CST\fP const token)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendEND_AND_WAIT\fP (\fBMQ_CST\fP const token, \fBMQ_TIME_T\fP timeout=MQ_TIMEOUT_USER)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendEND_AND_CALLBACK\fP (\fBMQ_CST\fP const token, CallbackF const callback)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendEND_AND_CALLBACK\fP (\fBMQ_CST\fP const token, IService *const callback)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendY\fP (\fBMQ_BYT\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendY\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendO\fP (\fBMQ_BOL\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendO\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendS\fP (\fBMQ_SRT\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendS\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendI\fP (\fBMQ_INT\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendI\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendF\fP (\fBMQ_FLT\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendF\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendW\fP (\fBMQ_WID\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendW\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendD\fP (\fBMQ_DBL\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendD\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendC\fP (\fBMQ_CST\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendV\fP (\fBMQ_CST\fP fmt,...)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendU\fP (\fBMQ_BUF\fP val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendU\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendN\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendBDY\fP (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendB\fP (\fBMQ_CBI\fP const val, \fBMQ_SIZE\fP const len)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendB\fP (vector< \fBMQ_BINB\fP > *val)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendL_START\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendL_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendT_START\fP (\fBMQ_CST\fP token)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::SendT_END\fP ()  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+construct an outgoing \fIsend-data-package\fP.  
+
+construct an outgoing \fIsend-data-package\fP. 
+.PP
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
+.PP
+\fBAttention:\fP
+.RS 4
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+.RE
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqC::SendB (vector< \fBMQ_BINB\fP > * val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
+.PP
+Definition at line 715 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendB (\fBMQ_CBI\fP const  val, \fBMQ_SIZE\fP const  len)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
+.PP
+Definition at line 713 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendBDY (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP 
+.PP
+Definition at line 709 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendC (\fBMQ_CST\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendC\fP 
+.PP
+Definition at line 694 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendD (\fBMQ_DBL\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendD\fP 
+.PP
+Definition at line 692 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendEND (\fBMQ_CST\fP const  token)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP 
+.PP
+Definition at line 667 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendEND_AND_CALLBACK (\fBMQ_CST\fP const  token, \fBIService\fP *const  callback)  throw (MqCException)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP 
+.PP
+.SS "void ccmsgque::MqC::SendEND_AND_CALLBACK (\fBMQ_CST\fP const  token, \fBCallbackF\fP const  callback)  throw (MqCException)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP 
+.PP
+.SS "void ccmsgque::MqC::SendEND_AND_WAIT (\fBMQ_CST\fP const  token, \fBMQ_TIME_T\fP timeout = \fCMQ_TIMEOUT_USER\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP 
+.PP
+Definition at line 671 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendERROR ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP 
+.PP
+Definition at line 665 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendF (\fBMQ_FLT\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendF\fP 
+.PP
+Definition at line 688 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendI (\fBMQ_INT\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendI\fP 
+.PP
+Definition at line 686 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendL_END ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP 
+.PP
+Definition at line 721 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendL_START ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP 
+.PP
+Definition at line 719 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendN (\fBMQ_CBI\fP val, \fBMQ_SIZE\fP len)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendN\fP 
+.PP
+Definition at line 707 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendO (\fBMQ_BOL\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendO\fP 
+.PP
+Definition at line 682 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendRETURN ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP 
+.PP
+Definition at line 663 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendS (\fBMQ_SRT\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendS\fP 
+.PP
+Definition at line 684 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendSTART ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP 
+.PP
+Definition at line 661 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendT_END ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP 
+.PP
+Definition at line 725 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendT_START (\fBMQ_CST\fP token)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP 
+.PP
+Definition at line 723 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendU (\fBMQ_BUF\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendU\fP 
+.PP
+Definition at line 705 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendV (\fBMQ_CST\fP fmt,  ...)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendC\fP 
+.PP
+Definition at line 696 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendW (\fBMQ_WID\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendW\fP 
+.PP
+Definition at line 690 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::SendY (\fBMQ_BYT\fP val)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendY\fP 
+.PP
+Definition at line 680 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

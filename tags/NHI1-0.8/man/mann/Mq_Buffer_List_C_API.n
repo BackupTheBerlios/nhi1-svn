@@ -1,0 +1,756 @@
+.TH "Mq_Buffer_List_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.  
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqBufferLS\fP"
+.br
+.R "the object to manage an array of \fBMqBufferS\fP items. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreate\fP (\fBMQ_SIZE\fP const size)"
+.br
+.R "create and initialize a \fBMqBufferLS\fP object "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgs\fP (int const argc, \fBMQ_CST\fP argv[])"
+.br
+.R "create and initialize a \fBMqBufferLS\fP object with argc/argv data "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVA\fP (struct \fBMqS\fP *const context, va_list ap)"
+.br
+.R "create and return a \fBMqBufferLS\fP object using a \fIva_list\fP argument "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsV\fP (struct \fBMqS\fP *const context,...)"
+.br
+.R "create and return a \fBMqBufferLS\fP object using \fIvarargs\fP arguments end with \fCNULL\fP "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVC\fP (struct \fBMqS\fP *const context, int const argc, \fBMQ_CST\fP argv[])"
+.br
+.R "create and return a a \fBMqBufferLS\fP object using \fImain\fP startup arguments "
+.ti -1c
+.RI "struct \fBMqBufferLS\fP * \fBMqBufferLDup\fP (struct \fBMqBufferLS\fP const *const in)"
+.br
+.R "create an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object "
+.ti -1c
+.RI "void \fBMqBufferLDelete\fP (struct \fBMqBufferLS\fP **bufP)"
+.br
+.R "delete a dynamically created \fBMqBufferLS\fP object "
+.ti -1c
+.RI "void \fBMqBufferLAppend\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferS\fP *const in, \fBMQ_SIZE\fP const position)"
+.br
+.R "append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP "
+.ti -1c
+.RI "void \fBMqBufferLAppendL\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferLS\fP *const in, \fBMQ_SIZE\fP position)"
+.br
+.R "copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP "
+.ti -1c
+.RI "void \fBMqBufferLAppendY\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BYT\fP const val)"
+.br
+.R "append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object "
+.ti -1c
+.RI "void \fBMqBufferLAppendO\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BOL\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendS\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_SRT\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendI\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_INT\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendF\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_FLT\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendW\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_WID\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendD\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_DBL\fP const val)"
+.br
+.ti -1c
+.RI "void \fBMqBufferLAppendC\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const val)"
+.br
+.R "append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "void \fBMqBufferLAppendU\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BUF\fP const val)"
+.br
+.R "append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionO\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BOL\fP *const var)"
+.br
+.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionY\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BYT\fP *const valP)"
+.br
+.R "search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionS\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_SRT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionI\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_INT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionF\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_FLT\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionW\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_WID\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionD\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_DBL\fP *const valP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionC\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_STR\fP *const var)"
+.br
+.R "search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BUF\fP *const var)"
+.br
+.R "search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object "
+.ti -1c
+.RI "void \fBMqBufferLMove\fP (struct \fBMqBufferLS\fP *const to, struct \fBMqBufferLS\fP **fromP)"
+.br
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLDeleteItem\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, const \fBMQ_SIZE\fP index, const \fBMQ_SIZE\fP numitems, const \fBMQ_BOL\fP doDelete)"
+.br
+.R "delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBMqBufferLSearchC\fP (struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const str, \fBMQ_SIZE\fP const len, \fBMQ_SIZE\fP const startindex)"
+.br
+.R "search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP "
+.ti -1c
+.RI "void \fBMqBufferLLog\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func)"
+.br
+.R "output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.ti -1c
+.RI "void \fBMqBufferLLogS\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func, \fBMQ_CST\fP const varname)"
+.br
+.R "\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqBufferLGetU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_SIZE\fP const index, struct \fBMqBufferS\fP **const var)"
+.br
+.R "get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage a list of \fBMqBufferS\fP objects. 
+
+the memory is allocated and extended dynamically. 
+.SH "Function Documentation"
+.PP 
+.SS "void MqBufferLAppend (register struct \fBMqBufferLS\fP *const  bufL, struct \fBMqBufferS\fP *const  in, \fBMQ_SIZE\fP const  position)"
+.PP
+append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIin\fP the \fBMqBufferS\fP object to append 
+.br
+\fIposition\fP insert \fIin\fP at \fIposition\fP, shift all following arguments one up 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+Set \fIposition\fP to \fB0\fP to append to the beginning or set position to \fB-1\fP to append to the end 
+.RE
+.PP
+
+.SS "void MqBufferLAppendC (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  val)"
+.PP
+append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the string for input 
+.RE
+.PP
+
+.SS "void MqBufferLAppendD (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_DBL\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendF (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_FLT\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendI (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_INT\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendL (register struct \fBMqBufferLS\fP *const  bufL, struct \fBMqBufferLS\fP *const  in, \fBMQ_SIZE\fP position)"
+.PP
+copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIin\fP the \fBMqBufferLS\fP object to append 
+.br
+\fIposition\fP insert \fIin\fP at \fIposition\fP, shift all following arguments one up 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+Set \fIposition\fP to \fB0\fP to append to the beginning or set position to \fB-1\fP to append to the end 
+.RE
+.PP
+
+.SS "void MqBufferLAppendO (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BOL\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendS (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_SRT\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendU (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BUF\fP const  val)"
+.PP
+append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the buffer for input 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+after the insert the buffer is owed by the \fIbuf\fP object -> do \fBnot\fP free \fIval\fP 
+.RE
+.PP
+
+.SS "void MqBufferLAppendW (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_WID\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+ 
+.SS "void MqBufferLAppendY (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BYT\fP const  val)"
+.PP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIval\fP the value to append to 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionC (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_STR\fP *const  var)"
+.PP
+search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvar\fP the MQ_STR argument for return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.br
+ The return string \fIvar\fP has dynamic allocated data and have to be freed later.
+.br
+ if the original value of \fC*var != NULL\fP than the memory is freed before set with the new value. 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionD (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_DBL\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+  
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionF (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_FLT\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+  
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionI (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_INT\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionO (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BOL\fP *const  var)"
+.PP
+search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIvar\fP if \fIopt\fP is found set \fIvar\fP to \fBMQ_YES\fP otherwise \fBMQ_NO\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found the entry is deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionS (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_SRT\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+ 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionU (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BUF\fP *const  var)"
+.PP
+search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvar\fP the MQ_BUF argument for return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionW (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_WID\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+  
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionY (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BYT\fP *const  valP)"
+.PP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on or \fCNULL\fP 
+.br
+\fIopt\fP find option string in the \fBMqBufferLS\fP list 
+.br
+\fIvalP\fP the native option value to search for 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from the \fBMqBufferLS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreate (\fBMQ_SIZE\fP const  size)\fC [read]\fP"
+.PP
+create and initialize a \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP create the object with a predefined list size 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new created and initialized \fBMqBufferLS\fP object 
+.RE
+.PP
+
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgs (int const  argc, \fBMQ_CST\fP argv[])\fC [read]\fP"
+.PP
+create and initialize a \fBMqBufferLS\fP object with argc/argv data 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIargc\fP the argc from the initial \fBmain\fP function 
+.br
+\fIargv\fP the arguments from the initial \fBmain\fP function 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIargs\fP the new created \fBMqBufferLS\fP object including all arguments from argv \fBbefore\fP the first \fBMQ_ALFA\fP 
+.br
+\fIalfa\fP the new created \fBMqBufferLS\fP object including all arguments from argv \fBafter\fP the first \fBMQ_ALFA\fP
+.RE
+.PP
+This function is usually called by the client (the initiator) of a msgque request. The \fIalfa\fP arguments will be used to start the server during the creation of the msgque object in \fBMqLinkCreate\fP. 
+.PP
+.nf
+int
+main ( int argc, char **argv)
+{
+  // the command-line-arguments before (largv) and after (lalfa) the first MQ_ALFA
+  struct MqBufferLS * largv, lalfa;
+  MqBufferLCreateArgv(NULL, argc, argv, &largv, &lalfa);
+....
+
+.fi
+.PP
+ 
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsV (struct \fBMqS\fP *const  context,  ...)\fC [read]\fP"
+.PP
+create and return a \fBMqBufferLS\fP object using \fIvarargs\fP arguments end with \fCNULL\fP 
+.PP
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVA (struct \fBMqS\fP *const  context, va_list ap)\fC [read]\fP"
+.PP
+create and return a \fBMqBufferLS\fP object using a \fIva_list\fP argument 
+.PP
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVC (struct \fBMqS\fP *const  context, int const  argc, \fBMQ_CST\fP argv[])\fC [read]\fP"
+.PP
+create and return a a \fBMqBufferLS\fP object using \fImain\fP startup arguments 
+.PP
+.SS "void MqBufferLDelete (struct \fBMqBufferLS\fP ** bufP)"
+.PP
+delete a dynamically created \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufP\fP the pointer to an struct \fBMqBufferLS\fP * object 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+The memory will be freed and the object-pointer will be set to \fBNULL\fP. If the object-pointer is already \fBNULL\fP nothing will be done. 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLDeleteItem (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, const \fBMQ_SIZE\fP index, const \fBMQ_SIZE\fP numitems, const \fBMQ_BOL\fP doDelete)"
+.PP
+delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIindex\fP the index'th object from the \fBMqBufferLS\fP object starting with 0 
+.br
+\fInumitems\fP delete number of items 
+.br
+\fIdoDelete\fP if \fIdelete\fP != 0 delete the \fBMqBufferS\fP object, associated with the index, too 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+
+.SS "struct \fBMqBufferLS\fP* MqBufferLDup (struct \fBMqBufferLS\fP const *const  in)\fC [read]\fP"
+.PP
+create an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIin\fP the \fBMqBufferLS\fP object to copy from 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+out the \fBMqBufferLS\fP object to create 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqBufferLGetU (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_SIZE\fP const  index, struct \fBMqBufferS\fP **const  var)"
+.PP
+get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIindex\fP get the \fIindex'th\fP element of the \fIbuf\fP list 
+.RE
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIvar\fP the \fBMqBufferS\fP object to return 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the \fIindex'th\fP element of the \fIbuf\fP list \fBwill\fP be deleted from the buffer list 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if \fIbufL\fP is \fBnot\fP \fCNULL\fP the object from \fIbufL\fP will be deleted first 
+.RE
+.PP
+
+.SS "void MqBufferLLog (struct \fBMqS\fP const *const  context, struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  func)"
+.PP
+output a \fBMqBufferLS\fP object for debugging purpose to stderr 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIfunc\fP prefix to identify the debugging output 
+.RE
+.PP
+
+.SS "void MqBufferLLogS (struct \fBMqS\fP const *const  context, struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  func, \fBMQ_CST\fP const  varname)"
+.PP
+\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIfunc\fP prefix to identify the debugging output 
+.br
+\fIvarname\fP prefix to identify the variable name 
+.RE
+.PP
+
+.SS "void MqBufferLMove (struct \fBMqBufferLS\fP *const  to, struct \fBMqBufferLS\fP ** fromP)"
+.PP
+.SS "\fBMQ_SIZE\fP MqBufferLSearchC (struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  str, \fBMQ_SIZE\fP const  len, \fBMQ_SIZE\fP const  startindex)"
+.PP
+search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbufL\fP the \fBMqBufferLS\fP object to work on 
+.br
+\fIstr\fP the string to search for 
+.br
+\fIlen\fP the length of \fIstr\fP 
+.br
+\fIstartindex\fP start searching in \fIbuf\fP from index \fIstartindex\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+The index of the \fIstr\fP found or -1 if not found. The return value can be used as startindex of following calls to \fBMqBufferLSearchC\fP
+.RE
+.PP
+a typical usage for this code is parsing an \fBMqBufferLS\fP object for multiple occurrences of a string 
+.PP
+.nf
+ while ((startindex = MqBufferLSearchC (buf, str, startindex)) != -1) {
+   ...
+ }
+
+.fi
+.PP
+ 
+.PP
+\fBAttention:\fP
+.RS 4
+The size of \fIstr\fP have to be at least 4 bytes 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

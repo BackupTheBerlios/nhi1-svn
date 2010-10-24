@@ -1,0 +1,37 @@
+.TH "javamsgque::MqSException" n "22 Oct 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::MqSException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBgetNum\fP ()"
+.br
+.ti -1c
+.RI "String \fBgetTxt\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP 
+.PP
+Definition at line 25 of file MqSException.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "int javamsgque.MqSException.getNum ()"
+.PP
+Definition at line 38 of file MqSException.java.
+.SS "String javamsgque.MqSException.getTxt ()"
+.PP
+Definition at line 42 of file MqSException.java.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

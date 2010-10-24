@@ -1,0 +1,116 @@
+.TH "Mq_Error_Java_API" n "22 Oct 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Error_Java_API \- create and manage error messages.   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBjavamsgque.MqSException\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorC\fP (String func, int num, String message)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorRaise\fP ()  throws MqSException"
+.br
+.R "throw an exception with the data from \fBMqErrorS\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorReset\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorSet\fP (Throwable ex)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorSetCONTINUE\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "native boolean \fBjavamsgque::MqS.ErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.ti -1c
+.RI "native int \fBjavamsgque::MqS.ErrorGetNum\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
+.ti -1c
+.RI "native String \fBjavamsgque::MqS.ErrorGetText\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.ErrorPrint\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "void \fBjavamsgque::MqS.ErrorPrint\fP (Throwable ex)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage error messages.  
+
+create and manage error messages. 
+.PP
+the management is done with a \fBMqErrorS\fP object created by \fBMqContextCreate\fP. every \fBMqS\fP object is linked with only one \fBMqErrorS\fP object and every \fBMqErrorS\fP object is linked with only one \fBMqS\fP object. the \fBMqErrorS\fP object is used to collect all data needed to handle an error. 
+.PP
+create and manage error messages. 
+.PP
+the management is done with a \fBMqErrorS\fP object created by \fBMqContextCreate\fP. every \fBMqS\fP object is linked with only one \fBMqErrorS\fP object and every \fBMqErrorS\fP object is linked with only one \fBMqS\fP object. the \fBMqErrorS\fP object is used to collect all data needed to handle an error.  
+.SH "Function Documentation"
+.PP 
+.SS "native void javamsgque.MqS.ErrorC (String func, int num, String message)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP 
+.PP
+.SS "native int javamsgque.MqS.ErrorGetNum ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP 
+.PP
+.SS "native String javamsgque.MqS.ErrorGetText ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP 
+.PP
+.SS "native boolean javamsgque.MqS.ErrorIsEXIT ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP 
+.PP
+.SS "void javamsgque.MqS.ErrorPrint (Throwable ex)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
+.PP
+Definition at line 263 of file MqS.java.
+.SS "native void javamsgque.MqS.ErrorPrint ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
+.PP
+.SS "native void javamsgque.MqS.ErrorRaise ()  throws MqSException\fC [inherited]\fP"
+.PP
+throw an exception with the data from \fBMqErrorS\fP 
+.PP
+.SS "native void javamsgque.MqS.ErrorReset ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP 
+.PP
+.SS "native void javamsgque.MqS.ErrorSet (Throwable ex)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP 
+.PP
+.SS "native void javamsgque.MqS.ErrorSetCONTINUE ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

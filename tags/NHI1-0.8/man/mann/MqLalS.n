@@ -1,0 +1,774 @@
+.TH "MqLalS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqLalS \- Interface between \fBMqS\fP and the Operating-System.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMqSysCallocF\fP \fBSysCalloc\fP"
+.br
+.R "\fBcalloc\fP syscall  "
+.ti -1c
+.RI "\fBMqSysMallocF\fP \fBSysMalloc\fP"
+.br
+.R "\fBmalloc\fP syscall  "
+.ti -1c
+.RI "\fBMqSysReallocF\fP \fBSysRealloc\fP"
+.br
+.R "\fBrealloc\fP syscall  "
+.ti -1c
+.RI "\fBMqSysFreeF\fP \fBSysFree\fP"
+.br
+.R "\fBfree\fP syscall  "
+.ti -1c
+.RI "\fBMqSysSelectF\fP \fBSysSelect\fP"
+.br
+.R "\fBselect\fP syscall  "
+.ti -1c
+.RI "\fBMqSysForkF\fP \fBSysFork\fP"
+.br
+.R "\fBfork\fP syscall  "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysServerSpawn\fP )(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
+.br
+.R "\fBspawn server create\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysServerThread\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
+.br
+.R "\fBthread server create\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysServerFork\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
+.br
+.R "\fBfork server create\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysWait\fP )(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
+.br
+.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysUSleep\fP )(struct \fBMqS\fP *const context, unsigned int const usec)"
+.br
+.R "\fBusleep\fP syscall with \fBMqS\fP error plugin  "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysSleep\fP )(struct \fBMqS\fP *const context, unsigned int const sec)"
+.br
+.R "\fBsleep\fP syscall with \fBMqS\fP error plugin  "
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBSysDaemonize\fP )(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
+.br
+.R "\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP "
+.ti -1c
+.RI "void(* \fBSysExit\fP )(int isThread, int num)"
+.br
+.R "\fBexit\fP syscall with \fBMqS\fP error plugin  "
+.ti -1c
+.RI "void(* \fBSysAbort\fP )(void)"
+.br
+.R "\fBabort\fP syscall "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Interface between \fBMqS\fP and the Operating-System. 
+.PP
+Definition at line 4091 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "void(* \fBMqLalS.SysAbort\fP)(void)"
+.PP
+\fBabort\fP syscall 
+.PP
+additional info: \fCman abort\fP 
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+\fBExample:\fP  
+.PP
+.nf
+__attribute__((noreturn)) static void SysAbort (void) {
+  abort();
+}
+
+.fi
+.PP
+ 
+.SS "\fBMqSysCallocF\fP \fBMqLalS.SysCalloc\fP"
+.PP
+\fBcalloc\fP syscall  
+.PP
+additional info: \fCman calloc\fP  
+.PP
+Definition at line 4093 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
+.PP
+\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIpidfile\fP file to save the process identifer, can be used to kill the process later 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysDaemonize (
+  struct MqS * const context,
+  MQ_CST pidfile
+) 
+{
+#if defined(MQ_IS_POSIX)
+  int fd, fpid;
+  struct MqIdS id;
+
+  // step 0 -> open the pidfile
+  if ((fpid = open(pidfile, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) == -1) 
+    return MqErrorSys (open);
+
+  // step 1 -> delete initial process
+  MqErrorCheck(SysFork(context, &id));
+  if (id.val != 0UL)
+    _exit(0);
+
+  // step 2 -> create a new session
+  if (setsid() == -1)
+    return MqErrorSys (setsid);
+
+  // step 3 -> fork the new process, parent write the pid
+  MqErrorCheck(SysFork(context, &id));
+  if (id.val != 0UL) {
+    MQ_BUF buf = context->temp;
+    MqBufferSetV(buf,'%lu',id.val);
+    write(fpid,buf->cur.C,buf->cursize);
+    _exit(0);
+  }
+
+  // step 4 -> close the fpid after writing
+  if (close(fpid) == -1)
+    return MqErrorSys (close);
+
+  // step 5 -> close default io
+  fd = open('/dev/null', O_RDONLY);
+  if (fd != 0) {
+    dup2(fd, 0);
+    close(fd);
+  }
+  fd = open('/dev/null', O_WRONLY);
+  if (fd != 1) {
+    dup2(fd, 1);
+    close(fd);
+  }
+  fd = open('/dev/null', O_WRONLY);
+  if (fd != 2) {
+    dup2(fd, 2);
+    close(fd);
+  }
+
+error:
+  return MqErrorStack(context);
+#else
+  return MqErrorDb(MQ_ERROR_NOT_SUPPORTED);
+#endif
+}
+
+.fi
+.PP
+ 
+.SS "void(* \fBMqLalS.SysExit\fP)(int isThread, int num)"
+.PP
+\fBexit\fP syscall with \fBMqS\fP error plugin  
+.PP
+\fBParameters:\fP
+.RS 4
+\fIisThread\fP exit a thread? 
+.br
+\fInum\fP exit code 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP  
+.PP
+.nf
+__attribute__((noreturn)) static void SysExit (
+  int isThread,                     
+  int num                           
+) {
+  if (isThread) {
+#if defined(MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD)
+    pthread_detach(pthread_self());
+    pthread_exit(NULL);
+# elif defined(MQ_IS_WIN32)
+   _endthreadex(num);
+# endif
+#endif   /* MQ_HAS_THREAD */
+  }
+  exit(num);
+}
+
+.fi
+.PP
+ 
+.SS "\fBMqSysForkF\fP \fBMqLalS.SysFork\fP"
+.PP
+\fBfork\fP syscall  
+.PP
+additional info: \fCman fork\fP 
+.PP
+\fBReturn values:\fP
+.RS 4
+\fIthe\fP process identifer of the new child (in the parent process) or 0 (in the child process) 
+.RE
+.PP
+ 
+.PP
+Definition at line 4103 of file msgque.h.
+.SS "\fBMqSysFreeF\fP \fBMqLalS.SysFree\fP"
+.PP
+\fBfree\fP syscall  
+.PP
+additional info: \fCman free\fP  
+.PP
+Definition at line 4099 of file msgque.h.
+.SS "\fBMqSysMallocF\fP \fBMqLalS.SysMalloc\fP"
+.PP
+\fBmalloc\fP syscall  
+.PP
+additional info: \fCman malloc\fP  
+.PP
+Definition at line 4095 of file msgque.h.
+.SS "\fBMqSysReallocF\fP \fBMqLalS.SysRealloc\fP"
+.PP
+\fBrealloc\fP syscall  
+.PP
+additional info: \fCman realloc\fP  
+.PP
+Definition at line 4097 of file msgque.h.
+.SS "\fBMqSysSelectF\fP \fBMqLalS.SysSelect\fP"
+.PP
+\fBselect\fP syscall  
+.PP
+read more at: \fCman 2 select\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImax\fP the maximim file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
+.br
+\fIread\fP set of file descriptores 
+.br
+\fIwrite\fP set of file descriptores 
+.br
+\fIexcept\fP set of file descriptores 
+.br
+\fItimeout\fP maximum time to wait for data 
+.RE
+.PP
+ 
+.PP
+Definition at line 4101 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
+.PP
+\fBfork server create\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIfactory\fP server configuration (memory will be freed) 
+.br
+\fIargvP\fP command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+.br
+\fIalfaP\fP command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
+.br
+\fIname\fP the name of the thread 
+.br
+\fIidP\fP the process identifer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysServerFork (
+  struct MqS * const context,   
+  struct MqFactoryS   factory,  
+  struct MqBufferLS ** argvP,   
+  struct MqBufferLS ** alfaP,   
+  MQ_CST  name,                 
+  struct MqIdS * idP            
+)
+{
+#if defined(HAVE_FORK)
+  
+  // fork setup !before! a fork is created
+  if (context->setup.fForkInit) (*context->setup.fForkInit)(context);
+
+  // this is used for a filter pipeline like '| atool split .. @ cut ... @ join ...'
+  // argv[0] is set by the tool (cut or join) and need !not! be set by name
+  MqErrorCheck(SysFork(context,idP));
+  if ((*idP).val == 0UL) {
+    struct MqS * newctx;
+    // prevent the 'client-context' from deleting in the new process
+    // reason: perl has a garbage collection, after fork this 'context' is in the
+    // new process but with an invalid 'event-link' (pIoCreate was done but pIoconnect not)
+    // and 'pEventCreate' can not set the 'MqContextDelete_LOCK'
+    context->bits.MqContextDelete_LOCK = MQ_YES;
+    // create the new context
+    MqErrorCheck1(pCallFactory (context, MQ_FACTORY_NEW_FORK, factory, &newctx));
+    // add my configuration
+    newctx->statusIs = (enum MqStatusIsE) (newctx->statusIs | MQ_STATUS_IS_FORK);
+    // the new CONTEXT is always a SERVER
+    newctx->setup.isServer = MQ_YES;
+    // join argvP alfaP
+    if (alfaP != NULL && *alfaP != NULL) {
+      MqBufferLAppendC(*argvP, MQ_ALFA_STR);
+      MqBufferLMove(*argvP, alfaP);
+    }
+    // create link
+    MqErrorCheck1(MqLinkCreate(newctx,argvP));
+    // the MqProcessEvent is necessary because 'ParentCreate' have to come back
+    // ifNot: java create object will fail
+    if (newctx->setup.isServer == MQ_YES)
+      MqProcessEvent(newctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
+error1:
+    MqExit(newctx);
+  }
+  MqBufferLDelete (argvP);
+  MqBufferLDelete (alfaP);
+  // do not create a 'defunc' process
+  MqErrorCheck (SysIgnorSIGCHLD(context));
+  return MQ_OK;
+
+error:
+  return MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+#else
+  return MqErrorDb (MQ_ERROR_NOT_SUPPORTED);
+#endif   /* HAVE_FORK */
+}
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerSpawn\fP)(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
+.PP
+\fBspawn server create\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIargv\fP command-line arguments 
+.br
+\fIname\fP the name of the process 
+.br
+\fIidP\fP the process identifer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysServerSpawn (
+  struct MqS * const context,
+  char * * argv,
+  MQ_CST  name,
+  struct MqIdS * idP
+)
+{
+  pid_t pid;
+  
+  // spawn setup !before! a spawn is created
+  if (context->setup.fSpawnInit) (*context->setup.fSpawnInit)(context);
+
+#if defined(HAVE_POSIX_SPAWN)
+  if (unlikely (posix_spawnp(&pid, name, NULL, NULL, (char *const *) argv, __environ) != 0)) {
+    goto error;
+  }
+  goto ok;
+
+#elif (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
+
+  // fork to create the child
+#if defined(HAVE_VFORK)
+  if (unlikely ((pid = vfork()) == -1)) goto error;
+#elif defined(HAVE_FORK)
+  if (unlikely ((pid = MqSysFork()) == -1)) goto error;
+#else
+  goto error;
+#endif
+      
+  if (pid == 0) {
+    // this is the child
+    if (execvp(name, argv) == -1) {
+      _exit (EXIT_FAILURE);
+    }
+    // the child will never reach this
+  }
+  goto ok;
+
+#elif defined(MQ_IS_WIN32)
+  char buf[2048];
+  char *nbuf=buf;
+
+  // build command-line
+  for (;*argv != '\0'; argv++) {
+    nbuf += sprintf(nbuf, '\'%s\' ', *argv);
+  }
+
+  // start process
+  if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
+    //printC(strerror(errno))
+    goto error;
+  }
+  goto ok;
+
+#else
+# error unable to SysServerSpawn
+#endif
+
+ok:
+  (*idP).val = (mqpid_t)pid;
+  (*idP).type = MQ_ID_PROCESS;
+  return MQ_OK;
+
+error:
+  return MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+}
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerThread\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
+.PP
+\fBthread server create\fP syscall with \fBMqS\fP error plugin 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIfactory\fP server configuration (memory will be freed) 
+.br
+\fIargvP\fP command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+.br
+\fIalfaP\fP command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
+.br
+\fIname\fP the name of the thread 
+.br
+\fIstate\fP detachstate of the thread \fCPTHREAD_CREATE_DETACHED\fP or \fCPTHREAD_CREATE_JOINABLE\fP 
+.br
+\fIidP\fP the thread identifer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+\fBExample:\fP  
+.PP
+.nf
+void MqSysServerThreadMain (
+  struct MqSysServerThreadMainS * argP
+) 
+{
+  // save data local
+  struct MqS * tmpl  = argP->tmpl;
+  struct MqFactoryS factory = argP->factory;
+  struct MqBufferLS * argv  = argP->argv;
+  struct MqBufferLS * alfa  = argP->alfa;
+  struct MqS * newctx;
+  // cleanup
+  free(argP);
+  // create the new context
+  MqErrorCheck(pCallFactory (tmpl, MQ_FACTORY_NEW_THREAD, factory, &newctx));
+  // add my configuration
+  newctx->statusIs = (enum MqStatusIsE) (newctx->statusIs | MQ_STATUS_IS_THREAD);
+  // the new CONTEXT is always a SERVER
+  newctx->setup.isServer = MQ_YES;
+  // join argvP alfaP
+  if (alfa != NULL) {
+    MqBufferLAppendC(argv, MQ_ALFA_STR);
+    MqBufferLMove(argv, &alfa);
+  }
+  // create link
+  MqErrorCheck(MqLinkCreate(newctx, &argv));
+  //MqDLogC(msgque,0,'THREAD exit');
+  // the MqProcessEvent is necessary because 'ParentCreate' have to come back
+  // ifNot: java create object will fail
+  if (newctx->setup.isServer == MQ_YES) {
+    MqProcessEvent(newctx, MQ_TIMEOUT_USER, MQ_WAIT_FOREVER);
+  }
+error:
+  MqBufferLDelete (&argv);
+  MqExit(newctx);
+}
+
+#if defined(MQ_HAS_THREAD)
+static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
+ void * data
+) 
+{
+  MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
+  return (mqthread_ret_t) NULL;
+}
+#endif
+
+static enum MqErrorE SysServerThread (
+  struct MqS * const context,
+  struct MqFactoryS factory,
+  struct MqBufferLS ** argvP,
+  struct MqBufferLS ** alfaP,
+  MQ_CST  name,         
+  int state,            
+  struct MqIdS * idP    
+)
+{
+#if defined(MQ_HAS_THREAD)
+  mqthread_t threadId;
+#if defined(HAVE_PTHREAD)
+  int ret;
+#endif
+
+  // fill thread data
+  struct MqSysServerThreadMainS * argP = (struct MqSysServerThreadMainS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
+  argP->factory = factory;
+  argP->argv = *argvP;
+  argP->alfa = *alfaP;
+  argP->tmpl = context;
+
+  // pointers are owned by SysServerThread
+  *argvP = NULL;
+  *alfaP = NULL;
+
+  // after a 'thread' no 'fork' is possible
+  MqConfigSetIgnoreFork (context, MQ_YES);
+
+#if defined(HAVE_PTHREAD)
+
+  // thread attributes
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, state);
+  
+  // thread setup !before! a thread was created
+  if (context->setup.fThreadInit) (*context->setup.fThreadInit)(context);
+
+  // start thread
+  do {
+    ret = pthread_create(&threadId,&attr,sSysServerThreadInit,argP);
+  } while (ret == EAGAIN);
+
+  // cleanup attribute
+  pthread_attr_destroy(&attr);
+
+  if (unlikely(ret != 0)) {
+    MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+    goto error;
+  }
+
+#elif defined(MQ_IS_WIN32)
+
+  if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadInit, argP, 0, NULL)) == 0)) {
+    MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+    MqErrorSysAppend (_beginthreadex);
+    goto error;
+  }
+
+#endif
+
+  // save tid
+  (*idP).val = (mqthread_t)threadId;
+  (*idP).type = MQ_ID_THREAD;
+
+  return MQ_OK;
+
+error:
+  MqBufferLDelete (&argP->argv);
+  MqBufferLDelete (&argP->alfa);
+  MqSysFree (argP);
+  return MQ_ERROR;
+#else
+  return MqErrorDb(MQ_ERROR_NOT_SUPPORTED);
+#endif   /* MQ_HAS_THREAD */
+}
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysSleep\fP)(struct \fBMqS\fP *const context, unsigned int const sec)"
+.PP
+\fBsleep\fP syscall with \fBMqS\fP error plugin  
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIsec\fP the seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysSleep (
+  struct MqS * const context,
+  unsigned int const sec
+)
+{
+#if defined(MQ_IS_POSIX)
+  if (unlikely (sleep (sec))) {
+    return MqErrorSys (sleep);
+  }
+#elif defined (MQ_IS_WIN32)
+  Sleep (sec * 1000);
+#else
+#   error not supported
+#endif
+  return MQ_OK;
+}
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysUSleep\fP)(struct \fBMqS\fP *const context, unsigned int const usec)"
+.PP
+\fBusleep\fP syscall with \fBMqS\fP error plugin  
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIusec\fP the micro (10^-6) seconds to sleep 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysUSleep (
+  struct MqS * const context,
+  unsigned int const usec
+)
+{
+#if defined(MQ_IS_POSIX)
+  if (unlikely (usleep (usec))) {
+    return MqErrorSys (usleep);
+  }
+#elif defined (MQ_IS_WIN32)
+  Sleep ((usec + 500) / 1000);
+#else
+#   error not supported
+#endif
+  return MQ_OK;
+}
+
+.fi
+.PP
+ 
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysWait\fP)(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
+.PP
+\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIidP\fP process or thread handle 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+.RE
+.PP
+.PP
+\fBExample:\fP  
+.PP
+.nf
+static enum MqErrorE SysWait (
+  struct MqS * const context,
+  const struct MqIdS *idP
+)
+{
+  errno = 0;
+  switch (idP->type) {
+    case MQ_ID_PROCESS: {
+/*
+  we don't wait for a process because this is buggy (for example BSD wait forever)
+#if defined(MQ_IS_POSIX)
+      if ( waitpid (idP->val.process, NULL, 0) == -1) {
+        return MqErrorSys (waitpid);
+      }
+#elif defined(MQ_IS_WIN32)
+      if ( _cwait (NULL, idP->val.process, _WAIT_CHILD) == -1) {
+        return MqErrorSys (waitpid);
+      }
+#endif
+*/
+      break;
+    }
+    case MQ_ID_THREAD: {
+# if defined(HAVE_PTHREAD)
+      if ( pthread_join ((mqthread_t)idP->val, NULL)) {
+        return MqErrorSys (pthread_join);
+      }
+# elif defined(MQ_IS_WIN32)
+      if ( WaitForSingleObject((HANDLE)idP->val, INFINITE ) == WAIT_FAILED) {
+        return MqErrorSys(WaitForSingleObject);
+      }
+# endif
+      break;
+    }
+    case MQ_ID_UNUSED: {
+      break;
+    }
+  }
+  return MQ_OK;
+}
+
+.fi
+.PP
+ 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

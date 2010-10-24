@@ -1,0 +1,398 @@
+#+
+#§  \file       bin/LbMain
+#§  \brief      \$Id$
+#§  
+#§  (C) 2009 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {![info exists LLabel]} {
+    puts stderr "ERROR do not use this proc directly, please use the Lb* procedures with defined Label as wrapper"
+    exit 1
+}
+
+##
+## -------------------------------------------------------------
+## procs ...
+##
+
+proc Exist? {var} {
+    global env
+    if {[info exist env($var)]} return
+    puts stderr "ERROR: $var does not exist"
+    exit 1
+}
+
+proc OptionB {name} {
+    global argv
+    set i 0
+    foreach a $argv {
+	if {$a eq "--"} break
+	if {$a eq $name} {
+	    set argv [lreplace $argv $i $i]
+	    return 1
+	}
+	incr i
+    }
+    return 0
+}
+
+proc Header {_LIST OLD PRE BODY POST} {
+    upvar $_LIST LIST
+    global LLabel
+ ## get year
+    set year $::YEAR
+    set id {$Id$}
+    set rev {$Rev$}
+    foreach h $OLD {
+        if {[regexp {\(C\)\s+([0-9]+)}	$h dummy year	]} continue
+        if {[regexp {[$]Id:[^$]*[$]}	$h id		]} continue
+        if {[regexp {[$]Rev:[^$]*[$]}	$h rev		]} continue
+	if {$h eq ""} break
+    }
+ ## new header
+    set file [::FileLib::MkRel $::F $::env(PROJECT_SRC)]
+    lappend LIST $PRE
+    foreach l $LLabel {
+	lappend LIST	[ 
+	    string map [list %FILE% $file %PREFIX% $BODY %YEAR% $year \
+				%ID% $id %REV% $rev ] $l ]
+    }
+    lappend LIST $POST
+}
+
+proc Type# {} {
+    global FI FO
+    set CHANGED 0
+    set I	0
+
+  ## 1. read header
+    set H [list]
+    while {[gets $FI Line]} {
+	if {[string index $Line 0] ne "#"} break
+	lappend H $Line
+    }
+
+  ## 2. check on #!
+    set h [lindex $H $I]
+    if {[string range $h 0 1] eq "#!"} {
+	lappend NH  $h
+	incr I
+    }
+
+  ## 3. prepare HEADER
+    Header NH [lrange $H $I end] "#+" "#�" "#�"
+
+  ## 4. write # header
+    foreach h $H nh $NH {
+	if {$h ne $nh} {
+	    set CHANGED 1
+	    break
+	}
+    }
+
+  ## 5. write the header
+    if {$CHANGED} {
+	foreach nh $NH {
+	    puts $FO $nh
+	}
+	puts $FO $Line
+    }
+
+  ## 6. back
+    return $CHANGED
+}
+
+proc TypeGENERIC {CHAR} {
+    global FI FO
+    set CHANGED 0
+    set I	0
+
+  ## 1. read header
+    set H [list]
+    while {[gets $FI Line]} {
+	if {[string range $Line 0 2] ne $CHAR} break
+	lappend H $Line
+    }
+
+  ## 2. prepare HEADER
+    Header NH $H $CHAR $CHAR $CHAR
+
+  ## 3. write CHAR header
+    foreach h $H nh $NH {
+	if {$h ne $nh} {
+	    set CHANGED 1
+	    break
+	}
+    }
+
+  ## 4. write the header
+    if {$CHANGED} {
+	foreach nh $NH {
+	    puts $FO $nh
+	}
+	puts $FO $Line
+    }
+
+  ## 5. back
+    return $CHANGED
+}
+
+proc TypeBAT {} {
+    global FI FO
+    set CHANGED 0
+    set I	0
+
+  ## 1. read header
+    set H [list]
+    while {[gets $FI Line]} {
+	if {	[string index $Line 0] ne "@" && 
+		[string toupper [string range $Line 0 2]] ne "REM"} break
+	lappend H $Line
+    }
+
+  ## 2. check on @ECHO OFF
+    set h [lindex $H $I]
+    if {[string range $h 0 8] eq "@ECHO OFF"} {
+	lappend NH  $h
+	incr I
+    }
+
+  ## 3. prepare HEADER
+    Header NH [lrange $H $I end] "REM" "REM" "REM"
+
+  ## 4. write # header
+    foreach h $H nh $NH {
+	if {$h ne $nh} {
+	    set CHANGED 1
+	    break
+	}
+    }
+
+  ## 5. write the header
+    if {$CHANGED} {
+	foreach nh $NH {
+	    puts $FO $nh
+	}
+	puts $FO $Line
+    }
+
+  ## 6. back
+    return $CHANGED
+}
+
+proc Type* {} {
+    global FI FO
+    set CHANGED 0
+    set NH	[list]
+
+  ## 1. read header
+    set H [list]
+    while {[gets $FI Line]} {
+	if {[string index $Line 1] ne "*"} break
+	lappend H $Line
+    }
+
+  ## 2. prepare HEADER
+    Header NH $H "/**" " *" " */"
+
+  ## 3. write # header
+    foreach h $H nh $NH {
+	if {$h ne $nh} {
+	    set CHANGED 1
+	    break
+	}
+    }
+
+  ## 4. write the header
+    if {$CHANGED} {
+	foreach nh $NH {
+	    puts $FO $nh
+	}
+	puts $FO $Line
+    }
+
+  ## 5. back
+    return $CHANGED
+}
+
+##
+## -------------------------------------------------------------
+## main ...
+##
+
+Exist? PROJECT_ENV
+
+lappend auto_path $env(FBGBASE)
+
+package require FileLib
+
+if {[OptionB -h]} {
+    puts "usage [file tail $argv0] \[-w\] \[-e\] \[-v\] -- \[file\] ..."
+    puts "  -w ... do the write (default only print)"
+    puts "  -e ... edit the configuration file"
+    puts "  -v ... be verbose"
+    exit 1
+}
+if {[lindex $argv 0] eq "--"} {
+    set argv [lrange $argv 1 end]
+}
+
+set PRINT   [expr {![OptionB -w]}]
+set VERBOSE [OptionB -v]
+
+if {[OptionB -e]} {
+    exec vi $argv0 <@stdin >@stdout 2>@stderr
+    exit 
+}
+
+set PWD		    [::FileLib::GetAbsNoLinkFile [pwd]]
+set PROJECT_SRC	    [::FileLib::GetAbsNoLinkFile $env(PROJECT_SRC)]
+set PROJECT_BUILD   [::FileLib::GetAbsNoLinkFile $env(PROJECT_BUILD)]
+set YEAR	    [clock format [clock seconds] -format %Y]
+
+array set MAP {
+    .c		.c
+    .cs		.c
+    .java	.c
+    .h		.c
+    .sh		.sh
+    .tcl	.sh
+    .test	.sh
+    .perf	.sh
+    .local	.sh
+    .conf	.sh
+    .perf	.sh
+    .bash	.sh
+    .txt	.sh
+    .py		.sh
+    .rb		.sh
+    .pl		.sh
+    .env	.sh
+    .n          .man
+    .bat	.bat
+    .vb		.bat
+    .m4         .m4
+    .exe	ignore
+    .htm	ignore
+    .html	ignore
+    .tar	ignore
+    .tgz	ignore
+}
+
+if {[llength $argv]} {
+    set argd [list]
+    foreach a $argv {
+	lappend argd [file dirname $a]
+    }
+    set argd [lsort -unique $argd]
+} else {
+    set argd [::FileLib::GetTree -ignorearray "LABELIGNORE $LHOME" \
+		-ignorefile .labelignore -nocomplain -types d -directory . .* *]
+    set argv [::FileLib::GetTree -ignorearray "LABELIGNORE $LHOME" \
+		-ignorefile .labelignore -nocomplain -types f -directory . .* *]
+}
+
+##
+## do the ".labeluse" stuff
+##
+lappend argd .
+array set USE [list]
+set _use [list]
+
+foreach DIR $argd {
+    set f [file join $DIR .labeluse]
+    if {[file exists $f]} {
+	set LIST [ReadFile $f]
+    } else {
+	set LIST [list]
+    }
+    set LBDIR [string map [list $LHOME .] [file normalize $DIR]]
+    if {[info exists LABELUSE($LBDIR)]} {
+	set LIST [concat $LIST $LABELUSE($LBDIR)]
+    }
+    if {![llength $LIST]} continue
+    foreach {p e} $LIST {
+	foreach n [glob -directory $DIR -nocomplain -types f $p] {
+	    regsub {[.][/](.*)} $n {\1} n
+	    lappend _use $n $e
+	}
+    }
+}
+array set USE $_use
+
+foreach _F $argv {
+    regsub {[.][/](.*)} $_F {\1} _F
+
+  ## 1. change file-name into the src-tree-file-name
+    set T   [file tail $_F]
+    if {$T == ".labelignore" || $T == ".labeluse" || $T == ".cvsignore"} continue
+    set	D   [file normalize [file dirname $_F]]
+    set	D   [file join $PROJECT_SRC [::FileLib::MkRel $D $PROJECT_BUILD]]
+    set F   [file join $D $T]
+
+  ## skip local files
+    if {![file exists $F]} continue
+    if {[file type $F] ne "file"} continue
+
+  ## get extension
+    if {[info exists USE($_F)]} {
+	set E $USE($_F)
+    } else {
+	set E [file extension $T]
+    }
+
+  ## map extensions
+    if {[info exists MAP($E)]} {
+	set E $MAP($E)
+    } elseif {[regexp {^(Makefile.*|.CTAGS.*|.OtConfig.*|README|CHANGES|.screen.*|arch.make|.TCLTAGS)$} $T]} {
+	set E .sh
+    } elseif {[file tail $D] == "install"} {
+	set E .sh
+    }
+
+  ## 2. call the right handler
+    set TF  [::FileLib::CreateTmpFile /tmp/Label]
+    set FI  [open $F  r]
+    set	FO  [open $TF w]
+    set do  0
+    set ig  0
+    switch -exact $E {
+	{.sh}	    {set do [Type#]}
+	{.c}	    {set do [Type*]}
+	{.cc}	    {set do [Type*]}
+	{.man}	    {set do [TypeGENERIC {'\"}]}
+	{.m4}	    {set do [TypeGENERIC dnl]}
+	{.bat}	    {set do [TypeBAT]}
+	ignore	    {continue}
+	default	    {set ig 1;puts "ignore: $_F"}
+    }
+
+  ## 3. copy other parts of the file
+    if {$do} {
+	puts "C: $_F"
+	fcopy $FI $FO
+    } elseif {!$ig && $VERBOSE} {
+	puts "N: $_F"
+    }
+    close $FI
+    close $FO
+
+  ## 4. copy TMP back
+    if {!$PRINT && $do} {
+	set P [file attributes $F -permissions]
+	file copy -force $TF $F
+	file attributes $F -permissions $P
+	if {[catch {exec svn ps svn:keywords {Id Date Rev} $F} ERR]} {
+	  puts stderr "SVN-ERROR: $ERR"
+	}
+    }
+
+  ## 5. cleanup
+    file delete $TF
+}
+

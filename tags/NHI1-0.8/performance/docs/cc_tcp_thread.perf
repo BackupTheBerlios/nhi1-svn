@@ -1,0 +1,11 @@
+> thread/NHI1-0.8/theLink/tests/ccserver --tcp --host localhost --port 7781 --thread
+> thread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7781
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-01] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-01] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       3.00
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-01] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.43
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      26.20
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-statistics]:                  parent create:     237.52
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-statistics]:                  parent delete:      79.62
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-statistics]:                   child create:      84.28
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-statistics]:                   child delete:      39.96
+C> (client:5781:0x7f47943aa700) [2010-10-22:13-20-05] [0-0-0-0x624bc0-main]: end: ----------------------------------------

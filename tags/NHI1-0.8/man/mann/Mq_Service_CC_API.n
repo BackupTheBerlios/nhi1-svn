@@ -1,0 +1,101 @@
+.TH "Mq_Service_CC_API" n "22 Oct 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Service_CC_API \- create and manage services   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBccmsgque::MqC::ServiceIsTransaction\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.ti -1c
+.RI "MqC * \fBccmsgque::MqC::ServiceGetFilter\fP (\fBMQ_SIZE\fP id=0)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBccmsgque::MqC::ServiceGetToken\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ServiceCreate\fP (\fBMQ_CST\fP const token, CallbackF const callback)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ServiceCreate\fP (\fBMQ_CST\fP const token, IService *const service)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ServiceDelete\fP (\fBMQ_CST\fP const token)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ServiceProxy\fP (\fBMQ_CST\fP const token, \fBMQ_SIZE\fP id=0)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ProcessEvent\fP (\fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const wait)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ProcessEvent\fP (enum \fBMqWaitOnEventE\fP const wait=MQ_WAIT_ONCE)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage services  
+
+create and manage services 
+.PP
+To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function.  
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqC::ProcessEvent (enum \fBMqWaitOnEventE\fP const  wait = \fCMQ_WAIT_ONCE\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
+.PP
+Definition at line 771 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ProcessEvent (\fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
+.PP
+Definition at line 763 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ServiceCreate (\fBMQ_CST\fP const  token, \fBIService\fP *const  service)  throw (MqCException)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+.SS "void ccmsgque::MqC::ServiceCreate (\fBMQ_CST\fP const  token, \fBCallbackF\fP const  callback)  throw (MqCException)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+.SS "void ccmsgque::MqC::ServiceDelete (\fBMQ_CST\fP const  token)  throw (MqCException)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP 
+.PP
+.SS "MqC* ccmsgque::MqC::ServiceGetFilter (\fBMQ_SIZE\fP id = \fC0\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP 
+.PP
+Definition at line 739 of file ccmsgque.h.
+.SS "\fBMQ_CST\fP ccmsgque::MqC::ServiceGetToken ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP 
+.PP
+Definition at line 746 of file ccmsgque.h.
+.SS "bool ccmsgque::MqC::ServiceIsTransaction ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP 
+.PP
+Definition at line 736 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ServiceProxy (\fBMQ_CST\fP const  token, \fBMQ_SIZE\fP id = \fC0\fP)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+Definition at line 758 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

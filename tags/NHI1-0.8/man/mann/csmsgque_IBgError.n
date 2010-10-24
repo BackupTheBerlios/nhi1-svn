@@ -1,0 +1,31 @@
+.TH "csmsgque::IBgError" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::IBgError \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBBgError\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP 
+.PP
+Definition at line 34 of file config.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "void csmsgque.IBgError.BgError ()"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

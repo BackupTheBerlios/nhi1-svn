@@ -1,0 +1,303 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += PERL
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/perl
+
+ALIASES		    += "self=perlmsgque"
+ALIASES		    += "selftut=perlmsgquetut"
+ALIASES		    += "NS{1}=perl_\1"
+ALIASES		    += "lang=perl"
+ALIASES		    += "fileextension=pl"
+ALIASES		    += "null=\e undef"
+ALIASES		    += "yes=\e 1"
+ALIASES		    += "no=\e 0"
+ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+package MyClass; \n\
+use base qw(Net::PerlMsgque::MqS); \n\
+... \n\
+sub new { \n\
+  my $class = shift; \n\
+  my $ctx = $class->SUPER::new(@_); \n\
+  $ctx->DictSet(\"mydata\", 0); \n\
+  return $ctx; \n\
+} \n\
+... \n\
+package main; \n\
+  our $ctx = new MyClass(); \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=our $ctx=new MqS()"
+ALIASES		    += "ContextDelete=undef $ctx"
+ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "LogC=$ctx->LogC(prefix,level,str)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Net::PerlMsgque::Init(...)"
+ALIASES		    += "init_example=\
+\code \n\
+Net::PerlMsgque::Init(\"perl\", \"myExecutable.pl\", \"myFirstArgument\"); \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=\I"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=\I"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=seconds"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=\C"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=\C"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=\C"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=\O"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=\O"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=\O"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_daemon=\C"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=\I"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=\C"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=\C"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=\I"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=\O"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isSlave=\O"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_master=MqS"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES             += "config_IServerSetup=$ctx->ConfigSetServerSetup(callback)"
+ALIASES		    += "config_IServerCleanup=$ctx->ConfigSetServerCleanup(callback)"
+ALIASES		    += "config_IFactory=$ctx->ConfigSetFactory(callback)"
+ALIASES             += "config_IBgError=$ctx->ConfigSetBgError(callback)"
+ALIASES             += "config_IEvent=$ctx->ConfigSetEvent(callback)"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+package Server; \n\
+use base qw(Net::PerlMsgque::MqS); \n\
+... \n\
+sub new { \n\
+  my $class = shift; \n\
+  my $ctx = $class->SUPER::new(@_); \n\
+  ... \n\
+  $ctx->ConfigSetFactory( sub { new Server() } ); \n\
+  return $ctx; \n\
+} \n\
+... \n\
+\endcode"
+
+
+# LINK CREATION AND DELETION
+ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
+ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(parent, args...)"
+ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS $ctx->LinkGetParent()"
+ALIASES		    += "LinkIsParent=\O $ctx->LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=\I $ctx->LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=\O $ctx->LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C $ctx->LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=$ctx->LinkConnect()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code $ctx->SendSTART();\n$ctx->SendI($num);\n$ctx->SendL_START();\n  $ctx->SendD($balance);\n  $ctx->SendC(\"name of the owner\");\n  $ctx->SendB($signature);\n$ctx->SendL_END();\n$ctx->SendEND_AND_WAIT(\"SRV1\"); \endcode"
+ALIASES		    += "SendSTART=$ctx->SendSTART()"
+ALIASES		    += "SendEND=$ctx->SendEND(token)"
+ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(token, timeout=seconds)"
+ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(token, callback)"
+ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
+ALIASES		    += "SendERROR=$ctx->SendERROR()"
+ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
+ALIASES		    += "SendL_START=$ctx->SendL_START()"
+ALIASES		    += "SendL_END=$ctx->SendL_END()"
+ALIASES		    += "SendN=$ctx->SendN(value)"
+ALIASES		    += "SendBDY=\I $ctx->SendBDY(value)"
+ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
+ALIASES		    += "SendT_END=$ctx->SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+$ctx->SendSTART (); \n\
+$ctx->SendT_START (\"SRVR\"); \n\
+$ctx->SendC (\"myEnvironment\"); \n\
+$ctx->SendT_END (); \n\
+$ctx->SendC (\"myData\"); \n\
+$ctx->SendEND_AND_WAIT (\"SRVC\");\endcode"
+
+# READ DATE
+ALIASES		    += "read_example=\code$num = $ctx->ReadI();\n$ctx->ReadL_START();\n  $balance = $ctx->ReadD();\n  $owner = $ctx->ReadC();\n  $signature = $ctx->ReadB();\n$ctx->ReadL_END();\endcode"
+ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
+ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
+ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
+ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
+ALIASES		    += "ReadGetNumItems=\I $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=\O $ctx->ReadItemExists()"
+ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
+ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
+ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
+ALIASES		    += "ReadT_START=$ctx->ReadT_START(?MqBufferS buffer?)"
+ALIASES		    += "ReadT_END=$ctx->ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+sub SRVR { \n\
+  my $ctx = shift; \n\
+  $ctx->ReadT_START (); \n\
+  $myEnvironment = $ctx->ReadC (); \n\
+  $ctx->ReadT_END (); \n\
+  $myResult = $ctx->ReadC (); \n\
+}\endcode"
+
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+sub ServerSetup { \n\
+  my $ctx = shift; \n\
+  $ctx->ServiceCreate(\"SRV1\",serviceF); \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
+ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(token, id=0)"
+ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(token)"
+ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ONCE|FOREVER)})"
+ALIASES		    += "MQ_WAIT_NO=\c NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c FOREVER"
+ALIASES		    += "ServiceGetToken=\C $ctx->ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=$filter=MqS $ctx->ServiceGetFilter()"
+ALIASES		    += "ServiceIsTransaction=\O $ctx->ServiceIsTransaction()"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(id, args...)"
+ALIASES		    += "SlaveWorker_example=\code $ctx->SlaveWorker(7,\"--thread\",\"--silent\",\"@\",\"WORKER\",\"--name\",\"MyWorker\"); \endcode"
+ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(id, slave)"
+ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(id)"
+ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(id)"
+ALIASES		    += "SlaveGetMaster=MqS $ctx->SlaveGetMaster()"
+ALIASES		    += "SlaveIs=\O $ctx->SlaveIs()"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+$buf = $ctx->ReadU(); \n\
+if {$buf->GetType() eq 'C'} { \n\
+  print $buf->GetC(); \n\
+} \n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
+ALIASES		    += "BufferType=char $buffer->GetType()"
+
+ALIASES		    += "Y=char"
+ALIASES		    += "O=bool"
+ALIASES		    += "S=short"
+ALIASES		    += "I=int"
+ALIASES		    += "F=float"
+ALIASES		    += "W=long"
+ALIASES		    += "D=double"
+ALIASES		    += "C=string"
+ALIASES		    += "B=byteArray"
+ALIASES		    += "U=MqBufferS"
+
+# CONTEXT LOCAL STORAGE
+ENABLED_SECTIONS    += DATA
+ALIASES		    += "DictSet=$ctx->DictSet(key, data)"
+ALIASES		    += "DictGet=$ctx->DictGet(key)"
+ALIASES		    += "DictExists=$ctx->DictExists(key)"
+ALIASES		    += "DictUnset=$ctx->DictUnset(key)"
+ALIASES		    += "DictUndef=undef"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+eval { \n\
+ i = $ctx->ReadI(); \n\
+} \n\
+if ($@) { \n\
+ $ctx->ErrorSet($@); \n\
+ print $ctx->ErrorGetText(); \n\
+ $ctx->ErrorReset(); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqSException ex</I>"
+ALIASES		    += "ErrorGetText=\C $ctx->ErrorGetText()"
+ALIASES		    += "ErrorGetNum=\I $ctx->ErrorGetNum()"
+ALIASES		    += "ErrorC=$ctx->ErrorC(\C prefix, int num, \C what)"
+ALIASES		    += "ErrorSet=$ctx->ErrorSet($ex)"
+ALIASES		    += "ErrorSetCONTINUE=$ctx->ErrorSetCONTINUE()"
+ALIASES		    += "ErrorIsEXIT=\O $ctx->ErrorIsEXIT()"
+ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
+ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
+ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+eval { \n\
+  $ctx->SendEND_AND_WAIT(\"TOKS\"); \n\
+} \n\
+if ($@) { \n\
+  $ctx->ErrorSet($@); \n\
+  if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
+} \n\
+\endcode"
+
+
+
+
+
+
+

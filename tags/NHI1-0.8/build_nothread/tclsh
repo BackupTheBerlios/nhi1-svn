@@ -1,0 +1,5 @@
+#!/bin/bash
+TCL=$HOME/ext/$MACHTYPE/nothread
+export PATH=$TCL/bin:$PATH
+export LD_LIBRARY_PATH=$TCL/lib:$LD_LIBRARY_PATH
+exec $TCL/bin/tclsh8* "$@"

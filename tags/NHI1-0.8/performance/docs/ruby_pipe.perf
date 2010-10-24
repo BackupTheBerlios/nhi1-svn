@@ -1,0 +1,10 @@
+> nothread/NHI1-0.8/theLink/tests/client --all @ ruby nothread/NHI1-0.8/theLink/tests/server.rb
+C> (client:12015) [2010-10-22:13-22-54] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:12015) [2010-10-22:13-22-55] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.09
+C> (client:12015) [2010-10-22:13-22-55] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       6.97
+C> (client:12015) [2010-10-22:13-22-58] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      20.27
+C> (client:12015) [2010-10-22:13-22-59] [0-0-0-0x6249a0-statistics]:                  parent create:   13528.46
+C> (client:12015) [2010-10-22:13-22-59] [0-0-0-0x6249a0-statistics]:                  parent delete:     479.60
+C> (client:12015) [2010-10-22:13-22-59] [0-0-0-0x6249a0-statistics]:                   child create:     143.54
+C> (client:12015) [2010-10-22:13-23-00] [0-0-0-0x6249a0-statistics]:                   child delete:      70.50
+C> (client:12015) [2010-10-22:13-23-00] [0-0-0-0x6249a0-main]: end: ----------------------------------------

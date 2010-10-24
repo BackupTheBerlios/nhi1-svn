@@ -1,0 +1,31 @@
+.TH "csmsgque::IService" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::IService \- implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBService\fP (\fBMqS\fP ctx)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+Definition at line 44 of file config.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "void csmsgque.IService.Service (\fBMqS\fP ctx)"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.
