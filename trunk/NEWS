@@ -16,7 +16,7 @@ This release adds the ability to:
 
 * Ruby language support (LNG)
 * L)anguage A)bstraction L)ayer (LaL)
-* G)arbage C)ollection (GC) Objecti-Mark
+* G)arbage C)ollection (GC) Object-Mark
 
 Ruby is an object-oriented programming language like Python. 
 The new 'libmsgque' function (MqMark) was added to the GC support and marks all objects 

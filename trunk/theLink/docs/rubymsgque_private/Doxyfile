@@ -15,7 +15,7 @@
 #---------------------------------------------------------------------------
 
 
-INPUT			+= $(SRCDIR)/pymsgque .
+INPUT			+= $(SRCDIR)/rubymsgque .
 FILE_PATTERNS		+= *.doc $(SRCDIR)/rubymsgque/*.[ch]
 #EXAMPLE_PATH		= $(SRCDIR)/tests
 OPTIMIZE_OUTPUT_JAVA	= NO

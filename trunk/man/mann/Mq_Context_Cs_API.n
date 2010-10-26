@@ -46,7 +46,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Ruby, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP  
 .SH "Function Documentation"
 .PP 
 .SS "void csmsgque.MqS.Exit ()\fC [inherited]\fP"

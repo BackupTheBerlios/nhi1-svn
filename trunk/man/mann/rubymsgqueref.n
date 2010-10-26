@@ -73,7 +73,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
  The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
 .br
- A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Ruby, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
 .SS "ctx=MqS.new"
 create a new context and initialize the default configuration data 
 .PP
@@ -507,7 +507,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the FOREVER.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS::WAIT::FOREVER.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -892,7 +892,7 @@ delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.SS "ctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)"
+.SS "ctx.ProcessEvent(?MqS::TIMEOUT::(DEFAULT|USER|MAX) or Fixnum?,?MqS::WAIT::(NO|ONCE|FOREVER)?)"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
@@ -907,7 +907,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for ONCE or \fBMQ_TIMEOUT_MAX\fP for FOREVER.
+\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for MqS::WAIT::ONCE or \fBMQ_TIMEOUT_MAX\fP for MqS::WAIT::FOREVER.
 .IP "\(bu" 2
 \fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
@@ -916,11 +916,11 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+MqS::WAIT::NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
 .IP "\(bu" 2
-ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+MqS::WAIT::ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+MqS::WAIT::FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP
@@ -1035,7 +1035,7 @@ an \fBERROR OBJECT\fP on error
 .SS "ctx.SendEND_AND_CALLBACK(token,callback)"
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(?timeout=val?,?wait=(NO|ONCE|FOREVER)?)\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(?MqS::TIMEOUT::(DEFAULT|USER|MAX) or Fixnum?,?MqS::WAIT::(NO|ONCE|FOREVER)?)\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4

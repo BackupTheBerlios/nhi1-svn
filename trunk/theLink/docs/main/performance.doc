@@ -14,6 +14,7 @@
       <TD>\ref perf-java "Java"</TD>
       <TD>\ref perf-perl "Perl"</TD>
       <TD>\ref perf-python "Python"</TD>
+      <TD>\ref perf-ruby "Ruby"</TD>
       <TD>\ref perf-tcl "Tcl"</TD>
       <TD>\ref perf-vb "VB.NET"</TD>
       <TD>\b PHP</TD>
@@ -25,6 +26,7 @@
       <TD>\ref perf-java-pipe "pipe"</TD>
       <TD>\ref perf-perl-pipe "pipe"</TD>
       <TD>\ref perf-python-pipe "pipe"</TD>
+      <TD>\ref perf-ruby-pipe "pipe"</TD>
       <TD>\ref perf-tcl-pipe "pipe"</TD>
       <TD>\ref perf-vb-pipe "pipe"</TD>
       <TD>na.</TD>
@@ -36,6 +38,7 @@
       <TD>\ref perf-java-uds "uds"</TD>
       <TD>\ref perf-perl-uds "uds"</TD>
       <TD>\ref perf-python-uds "uds"</TD>
+      <TD>\ref perf-ruby-uds "uds"</TD>
       <TD>\ref perf-tcl-uds "uds"</TD>
       <TD>\ref perf-vb-uds "uds"</TD>
       <TD>na.</TD>
@@ -47,6 +50,7 @@
       <TD>\ref perf-java-tcp "tcp"</TD>
       <TD>\ref perf-perl-tcp "tcp"</TD>
       <TD>\ref perf-python-tcp "tcp"</TD>
+      <TD>\ref perf-ruby-tcp "tcp"</TD>
       <TD>\ref perf-tcl-tcp "tcp"</TD>
       <TD>\ref perf-vb-tcp "tcp"</TD>
       <TD>na.</TD>
@@ -235,6 +239,25 @@ The following information is important:
 
  - Using TCP and Spawn \dontinclude python_tcp_spawn.perf \until --all
  - Using TCP and Fork \dontinclude python_tcp_fork.perf \until --all
+ .
+
+\section perf-ruby Detail Python Setup
+
+\subsection perf-ruby-pipe Using PIPE
+
+ - Using PIPE \dontinclude ruby_pipe.perf \until --all
+ .
+
+\subsection perf-ruby-uds Using UDS
+
+ - Using UDS and Spawn \dontinclude ruby_uds_spawn.perf \until --all
+ - Using UDS and Fork \dontinclude ruby_uds_fork.perf \until --all
+ .
+
+\subsection perf-ruby-tcp Using TCP
+
+ - Using TCP and Spawn \dontinclude ruby_tcp_spawn.perf \until --all
+ - Using TCP and Fork \dontinclude ruby_tcp_fork.perf \until --all
  .
 
 \section perf-tcl Detail Tcl Setup

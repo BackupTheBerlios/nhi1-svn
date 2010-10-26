@@ -93,6 +93,12 @@ ctx.SendSTART()
 ctx.SendI(567)
 ctx.SendEND_AND_WAIT("ECOI", 10)
 \endverbatim
+<B>using \rubymsgque code</B> 
+\verbatim
+ctx.SendSTART()
+ctx.SendI(567)
+ctx.SendEND_AND_WAIT("ECOI", 10)
+\endverbatim
 <B>using \perlmsgque code</B> 
 \verbatim
 $ctx->SendSTART();

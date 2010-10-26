@@ -38,6 +38,7 @@ export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 ARGS=""
 test "$USE_JAVA"    == "yes"  && ARGS="$ARGS --enable-java"
 test "$USE_PYTHON"  == "yes"  && ARGS="$ARGS --enable-python"
+test "$USE_RUBY"    == "yes"  && ARGS="$ARGS --enable-ruby"
 test "$USE_CSHARP"  == "yes"  && ARGS="$ARGS --enable-csharp"
 test "$USE_VB"	    == "yes"  && ARGS="$ARGS --enable-vb"
 test "$USE_PERL"    == "yes"  && ARGS="$ARGS --enable-perl"
@@ -49,6 +50,8 @@ test "$USE_GUARD"   == "yes"  && ARGS="$ARGS --enable-guard"
 bash ./configure --prefix=/usr/local --enable-static --enable-threads $ARGS || exit 1
 
 make || exit 1
+
+echo "#########################################################"
 
 test -d /tmp/$PKG || mkdir /tmp/$PKG
 

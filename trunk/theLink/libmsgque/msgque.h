@@ -1363,7 +1363,7 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 /// };
 /// \endcode
 /// The \e libmsgque-specific-data have to be the \e first data entry in the structure.\n
-/// A \e high-level-programming-language like JAVA, C#, C++, Perl, Python, Tcl or VB-NET
+/// A \e high-level-programming-language like JAVA, C#, C++, Perl, Python, Ruby, Tcl or VB-NET
 /// is using a wrapper around this \e data-structure as \e application-handle.
 /// The \e application-specific-data is available as \RNS{ContextLocalStorage}
 /// \if MSGQUE

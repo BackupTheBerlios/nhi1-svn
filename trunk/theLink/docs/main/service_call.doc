@@ -41,7 +41,7 @@ ctx.SendI(myInteger);
 ctx.sendC(myString);
 ctx.SendRETURN();
 \endverbatim
- - using \pymsgque and \vbmsgque code: 
+ - using \pymsgque \rubymsgque and \vbmsgque code: 
   - on the client: \verbatim
 ctx.SendSTART()
 ctx.SendI(myInteger)
@@ -205,6 +205,14 @@ ctx.ServiceCreate("ECUL", Ot_ECUL)
 ctx.SendEND_AND_CALLBACK("ECUL", RET_ECUL)
 \endcode
   .
+ - using \rubymsgque code: 
+  - on a server: \code 
+ctx.ServiceCreate("ECUL", method(:Ot_ECUL)) 
+\endcode
+  - on a client: \code
+ctx.SendEND_AND_CALLBACK("ECUL", method(:RET_ECUL))
+\endcode
+  .
  - using \tclmsgque code: 
   - on a server: \verbatim 
 $ctx ServiceCreate ECUL Ot_ECUL 
@@ -249,6 +257,9 @@ ctx.ProcessEvent(MqS.WAIT.FOREVER);
  - using \pymsgque code: \code
 ctx.ProcessEvent(wait="FOREVER")
 \endcode
+ - using \rubymsgque code: \code
+ctx.ProcessEvent(MqS::WAIT::FOREVER)
+\endcode
  - using \tclmsgque code: \code
 $ctx ProcessEvent -wait FOREVER
 \endcode
@@ -270,7 +281,7 @@ MqErrorCheck (MqReadC (ctx, &myString));
 myInteger = ctx.ReadI();
 myString = ctx.ReadC();
 \endcode
- - using \pymsgque and \vbmsgque code: \code
+ - using \pymsgque, \rubymsgque and \vbmsgque code: \code
 myInteger = ctx.ReadI()
 myString = ctx.ReadC()
 \endcode

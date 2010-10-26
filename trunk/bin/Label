@@ -64,7 +64,14 @@ array set LABELIGNORE {
     ./theLink/ccmsgque		{ .libs .deps *.lo *.o *.in Makefile *.la tags *.sw* }
     ./theLink/csmsgque		{ Makefile *.in tags *.dll *.exe .vimrc .libs .deps libtest* *.mdb 
 				  *.sw* .vpath_hook }
-    ./theLink/phpmsgque		{ * }
+    ./theLink/phpmsgque		{ Makefile Makefile.in }
+    ./theLink/phpmsgque/PhpMsgque {
+acinclude.m4    config.sub     include          Makefile            modules       tags
+aclocal.m4      configure      install-sh       Makefile.fragments  PhpMsgque.la  tests
+autom4te.cache  config.log     configure.in     libtool       Makefile.global     tmp-php.ini
+build           config.w32     Makefile.objects PhpMsgque.php
+config.guess    config.nice    CREDITS          missing       .libs  .deps
+config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs       run-tests.php *.lo}
 
     ./theBrain			{ Makefile.in Makefile }
     ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc* check.* *.sw* }
@@ -85,7 +92,9 @@ array set LABELIGNORE {
 				    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
 				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
-				    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML}
+				    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML
+				    .GREP_FOR_SOURCE_CODE .PHP.info
+				}
 }
 
 array set env [list \

@@ -21,6 +21,8 @@ Three of them are on the list to extend the already available \AllLng{syn} langu
 
 \b ruby is the first language binding for \b WPII. I'm really interested how it compares with \b python.
 
+-> \b DONE, 22 Oct 2010
+
 \subsection wp2_php php
 
 \b php is the gorilla for web programming and the only one with a missing C-API documentation as well.

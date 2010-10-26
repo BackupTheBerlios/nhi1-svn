@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/example/ruby/ManFilter.rb
-#§  \brief      \$Id: LbMain 26 2009-12-03 11:48:43Z aotto1968 $
+#§  \file       theLink/example/ruby/manfilter.rb
+#§  \brief      \$Id$
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 26 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

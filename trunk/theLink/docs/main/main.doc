@@ -2,11 +2,10 @@
 
 <CENTER>
 
-\section nw  NEWS, from 01 Oct 2010
+\section nw  NEWS, from 22 Oct 2010
 
-After six month research workshop with bicycling through the \n
-'Black Forrest', 'Vosges', 'Switzerland' / 'French' and 'Italy' Alps ... \n
-I'm back to serve for \ref wp2 of NHI1
+Finish release \b 1 of \ref wp2 with adding \ref wp2_ruby support. \n
+Read more at: \ref V0_8 "ChangeLog"
 
 \section intro Introduction
 

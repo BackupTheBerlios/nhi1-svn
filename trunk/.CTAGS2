@@ -11,7 +11,10 @@
 #§              please contact AUTHORS for additional information
 #§
 
-. $(dirname $0)/env.sh
+D=${PWD%%/NHI1*}/NHI1
+DO="yes"
+
+. $D/env.sh
 
 set -x
 
@@ -20,9 +23,6 @@ if [[ $HOSTTYPE == "FreeBSD" ]] ; then
 else
   ADD="--c-kinds=+p"
 fi
-
-D=$(dirname $0)
-DO="yes"
 
 [[ ! -f $D/tags || $D/.CTAGS -nt $D/tags ]] && (
     cd $D
@@ -79,10 +79,8 @@ cp $D/tags .
   #ctags -a $ADD *.py
 }
 
-[[ $(basename $PWD) == "phpmsgque" ]] && {
-  find $HOME/ext/$MACHTYPE/thread/include/php -name "*.h" | \
-    xargs ctags -a $ADD 
-  find $HOME/src/php-5.3.0 -name "*.c" | \
+[[ $(basename $PWD) == "phpmsgque" || $(basename $PWD) == "PhpMsgque" ]] && {
+  find $HOME/src/php-5.3.3 -name "*.[ch]" | \
     xargs ctags -a $ADD
 }
 

@@ -109,7 +109,6 @@ void NS(MqS_Service_Init)   (void);
 void NS(MqS_Link_Init)	    (void);
 void NS(MqS_Slave_Init)	    (void);
 void NS(MqS_Sys_Init)	    (void);
-void NS(MqS_Api_Init)	    (void);
 
 void NS(MqSException_Init)  (void);
 
