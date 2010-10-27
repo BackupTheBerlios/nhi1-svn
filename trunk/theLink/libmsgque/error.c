@@ -481,9 +481,3 @@ MqErrorLog (
 
 END_C_DECLS
 
-
-
-
-
-
-

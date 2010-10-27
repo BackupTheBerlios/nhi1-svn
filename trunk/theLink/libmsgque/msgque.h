@@ -3245,6 +3245,7 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_ERROR: r
 /*                                                                           */
 /*****************************************************************************/
 
+#ifdef _DEBUG
 /// \brief log the #MqErrorS for debugging
 /// \context
 /// \prefix
@@ -3252,6 +3253,7 @@ MQ_EXTERN void MQ_DECL MqErrorLog (
   struct MqS const * const context,
   MQ_CST const prefix
 );
+#endif
 
 /// \brief copy a #MqErrorS from \a in to \a out
 /// \param out the #MqS::error object created by #MqLinkCreate
