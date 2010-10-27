@@ -17,11 +17,12 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "zend_interfaces.h"
 #include "php_PhpMsgque.h"
 #include "msgque.h"
 #include "debug.h"
 
-extern int le_MqS;
+extern zend_class_entry *PhpMsgque_MqS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -37,18 +38,38 @@ extern int le_MqS;
 #define SETUP_self          zval * this_ptr = SELF
 #define MQ_CONTEXT_S        mqctx
 
-
 #define INCR_REG(val) 
 #define DECR_REG(val)
 
+#define ID(name)	    #name,sizeof(#name)-1
+
+/*
+static inline void printVALex(zval *val TSRMLS_DC) {
+  zend_eval_string("echo \"printVAL -> \", serialize($ctx), \"\\n\";", NULL, "11111" TSRMLS_CC);
+}
+*/
+
+#define printVAL(val) php_var_dump(&val,2 TSRMLS_CC)
+
+#define VAL2MqS(val)  (struct MqS*)Z_LVAL_P(zend_read_property(PhpMsgque_MqS, getThis(), ID(mqctx), 0 TSRMLS_CC))
+
+/*
 static inline struct MqS* VAL2MqS(zval* val TSRMLS_DC) {
   zval **rsrc;
-  if(zend_hash_find(HASH_OF(val), "_MqS_ptr", sizeof("_MqS_ptr"), (void **) &rsrc) == SUCCESS) 
+M0
+printP(val)
+printVAL(val);
+  if(zend_hash_find(HASH_OF(val), ID(_MqS_ptr), (void **) &rsrc) == SUCCESS) 
   {
+M1
     return (struct MqS *) zend_fetch_resource(rsrc TSRMLS_CC, -1, "MqS", NULL, 1, le_MqS);
   }
+M2
+  zend_error(E_ERROR, "unable to extract 'struct MqS *' from 'zval *'");
+M3
   return NULL;
 }
+*/
 
 /*****************************************************************************/
 /*                                                                           */
@@ -83,7 +104,7 @@ static inline struct MqS* VAL2MqS(zval* val TSRMLS_DC) {
 #define	WID2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	FLT2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
 #define	DBL2VAL(zval,nat)	    ZVAL_STRING(zval,(double)nat)
-#define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,nat,TRUE)
+#define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,nat,1)
 #define	PTR2VAL(zval,nat)	    (nat != NULL ? ZVAL_RESOURCE(zval,nat) : ZVAL_NULL(zval))
 #define BIN2VAL(zval,ptr,len)	    rb_str_buf_cat(rb_str_buf_new(0),(char*)ptr,len)
 #define	MqS2VAL(val,nat)	    \
@@ -97,29 +118,6 @@ if (nat != NULL) { \
 #define CheckType(val,typ,err) \
   if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
 
-#define printVAL(val) {VALUE tmp=(val); rb_io_puts(1, &tmp, rb_stderr); rb_io_flush(rb_stderr);}
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                 Init's                                    */
-/*                                                                           */
-/*****************************************************************************/
-
-void NS(MqS_Init)	    (TSRMLS_D);
-void NS(MqS_Error_Init)	    (TSRMLS_D);
-void NS(MqS_Read_Init)	    (TSRMLS_D);
-void NS(MqS_Send_Init)	    (TSRMLS_D);
-void NS(MqS_Config_Init)    (TSRMLS_D);
-void NS(MqS_Service_Init)   (TSRMLS_D);
-void NS(MqS_Link_Init)	    (TSRMLS_D);
-void NS(MqS_Slave_Init)	    (TSRMLS_D);
-void NS(MqS_Sys_Init)	    (TSRMLS_D);
-
-void NS(MqSException_Init)  (TSRMLS_D);
-
-void NS(MqBufferS_Init)	    (TSRMLS_D);
-//VALUE NS(MqBufferS_New)	    (MQ_BUF);
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                  Misc's                                   */
@@ -127,8 +125,8 @@ void NS(MqBufferS_Init)	    (TSRMLS_D);
 /*****************************************************************************/
 
 void NS(MqSException_Raise) (struct MqS* TSRMLS_DC);
+void NS(MqSException_Set)   (struct MqS*, zval* TSRMLS_DC);
 /*
-void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);

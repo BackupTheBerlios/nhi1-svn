@@ -32,5 +32,16 @@ if test "$PHP_PHPMSGQUE" != "no"; then
  
   dnl PHP_SUBST(PHPMSGQUE_SHARED_LIBADD)
   dnl add extension 
-  PHP_NEW_EXTENSION(PhpMsgque, PhpMsgque.c MqS_php.c MqSException_php.c link_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
+  PHP_NEW_EXTENSION(PhpMsgque, PhpMsgque.c MqS_php.c MqSException_php.c link_php.c config_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
 fi
+
+AC_MSG_CHECKING([for build with symbols])
+AC_ARG_ENABLE(symbols,
+    AC_HELP_STRING([--enable-symbols], [build with debugging support]),
+    enable_symbols=yes, enable_symbols=no
+)
+if test "x$enable_symbols" = "xyes"; then
+  CFLAGS="-g $CFLAGS"
+  CPPFLAGS="-D_DEBUG $CPPFLAGS"
+fi
+AC_MSG_RESULT($symbol)

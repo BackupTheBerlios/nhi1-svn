@@ -20,6 +20,7 @@
 
 PHP_METHOD(PhpMsgque_MqS, LinkCreate)
 {
+M0
   SETUP_mqctx;
   //struct MqBufferLS * args = NS(argv2bufl)(NULL,argc,argv);
   struct MqBufferLS * args = NULL;

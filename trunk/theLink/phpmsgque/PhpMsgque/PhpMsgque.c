@@ -76,16 +76,16 @@ static void php_PhpMsgque_init_globals(zend_PhpMsgque_globals *PhpMsgque_globals
 
 /* {{{ PHP_MINIT_FUNCTION
  */
+
+void NS(MqS_Init)			(TSRMLS_D);
+void NS(MqSException_Init)  (TSRMLS_D);
+void NS(MqBufferS_Init)	    (TSRMLS_D);
+
 PHP_MINIT_FUNCTION(PhpMsgque)
 {
-	NS(MqS_Init)(TSRMLS_C);
-/*
-  zend_class_entry ce;
-  INIT_CLASS_ENTRY(ce,"MqS", NULL);
-  //NS(MqS) = zend_register_internal_class(&ce TSRMLS_CC);
-  zend_register_internal_class(&ce TSRMLS_CC);
-*/
-	
+	NS(MqS_Init)			(TSRMLS_C);
+	NS(MqSException_Init)	(TSRMLS_C);
+
 	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
 	*/
