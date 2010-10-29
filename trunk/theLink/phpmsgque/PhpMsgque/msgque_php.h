@@ -17,6 +17,7 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "ext/standard/php_var.h"
 #include "zend_interfaces.h"
 #include "php_PhpMsgque.h"
 #include "msgque.h"
@@ -37,39 +38,8 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define SELF                MqS2VAL(mqctx)
 #define SETUP_self          zval * this_ptr = SELF
 #define MQ_CONTEXT_S        mqctx
-
-#define INCR_REG(val) 
-#define DECR_REG(val)
-
 #define ID(name)	    #name,sizeof(#name)-1
-
-/*
-static inline void printVALex(zval *val TSRMLS_DC) {
-  zend_eval_string("echo \"printVAL -> \", serialize($ctx), \"\\n\";", NULL, "11111" TSRMLS_CC);
-}
-*/
-
-#define printVAL(val) php_var_dump(&val,2 TSRMLS_CC)
-
-#define VAL2MqS(val)  (struct MqS*)Z_LVAL_P(zend_read_property(PhpMsgque_MqS, getThis(), ID(mqctx), 0 TSRMLS_CC))
-
-/*
-static inline struct MqS* VAL2MqS(zval* val TSRMLS_DC) {
-  zval **rsrc;
-M0
-printP(val)
-printVAL(val);
-  if(zend_hash_find(HASH_OF(val), ID(_MqS_ptr), (void **) &rsrc) == SUCCESS) 
-  {
-M1
-    return (struct MqS *) zend_fetch_resource(rsrc TSRMLS_CC, -1, "MqS", NULL, 1, le_MqS);
-  }
-M2
-  zend_error(E_ERROR, "unable to extract 'struct MqS *' from 'zval *'");
-M3
-  return NULL;
-}
-*/
+#define printVAL(val)	    php_var_dump(&val,2 TSRMLS_CC);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -96,6 +66,8 @@ M3
 #define VALP2CST(valp)	    (MQ_CST)rb_string_value_cstr(valp)
 #define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),Z_STRLEN_P(val)
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
+#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(PhpMsgque_MqS, getThis(), ID(mqctx), 0 TSRMLS_CC))
+
 
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	BOL2VAL(zval,nat)	    ZVAL_BOOL(zval,nat)

@@ -18,14 +18,51 @@
 /*                                                                           */
 /*****************************************************************************/
 
+static int argArray (zval **, MQ_BFL TSRMLS_DC);
+
+static void MqBufferLAppendZVal(MQ_BFL bufL, zval* arg TSRMLS_DC) {
+  switch (Z_TYPE_P(arg)) {
+    case IS_STRING:
+      MqBufferLAppendC(bufL, Z_STRVAL_P(arg));
+      break;
+    case IS_BOOL:
+      MqBufferLAppendO(bufL, Z_LVAL_P(arg) ? 1 : 0);
+      break;
+    case IS_LONG:
+      MqBufferLAppendI(bufL, Z_LVAL_P(arg));
+      break;
+    case IS_DOUBLE:
+      MqBufferLAppendD(bufL, Z_DVAL_P(arg));
+      break;
+    case IS_ARRAY:
+      zend_hash_apply_with_argument(Z_ARRVAL_P(arg), (apply_func_arg_t) argArray, bufL TSRMLS_CC);
+      break;
+  }
+  ZEND_HASH_APPLY_KEEP;
+}
+
+static int argArray (zval **argP, MQ_BFL args TSRMLS_DC) {
+  MqBufferLAppendZVal (args, *argP TSRMLS_CC);
+}
+
 PHP_METHOD(PhpMsgque_MqS, LinkCreate)
 {
-M0
+  int i;
+  zval ***arguments;
   SETUP_mqctx;
   //struct MqBufferLS * args = NS(argv2bufl)(NULL,argc,argv);
   struct MqBufferLS * args = NULL;
 
-//printXULS(NULL, args);
+  if (ZEND_NUM_ARGS() > 0) {
+    args = MqBufferLCreate(ZEND_NUM_ARGS());
+    arguments = emalloc(sizeof(zval**) * ZEND_NUM_ARGS());
+    if (zend_get_parameters_array_ex(ZEND_NUM_ARGS(),arguments)) {
+      RETURN_NULL();
+    }
+    for (i=0; i<ZEND_NUM_ARGS(); i++) {
+      MqBufferLAppendZVal (args, *arguments[i] TSRMLS_CC);
+    }
+  }
 
   // create Context
   ErrorMqToPhpWithCheck (MqLinkCreate(mqctx, &args));
