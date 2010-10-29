@@ -11,7 +11,6 @@
  */
 
 #include "msgque_php.h"
-#include "zend_exceptions.h"
 
 static zend_class_entry *default_exception_ce;
 static zend_class_entry *MqSExceptionC;
@@ -91,7 +90,7 @@ void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
       add_next_index_stringl(ctor, ID(getTraceAsString), 0);
       if (call_user_function_ex(&default_exception_ce->function_table,
 	      NULL, ctor, &trace, 0, NULL, 0, NULL TSRMLS_CC) == FAILURE) {
-	  zend_error(E_ERROR, "Unable to call 'getTraceAsString'");
+	  RaiseError("Unable to call 'getTraceAsString'");
       }
       if (trace) {
 	MqErrorSAppendC(mqctx, VAL2CST(trace));
@@ -101,21 +100,21 @@ void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
       return;
     }
   }
-  zend_error(E_ERROR, "expect 'Exception' type as argument");
+  RaiseError("expect 'Exception' type as argument");
 }
 
 void NS(MqSException_Raise) (struct MqS* mqctx TSRMLS_DC) {
   zval *MqSExceptionO = NULL;
   MAKE_STD_ZVAL(MqSExceptionO);
-  ErrorCheck(object_init_ex(MqSExceptionO, MqSExceptionC));
+  if (object_init_ex(MqSExceptionO, MqSExceptionC) == FAILURE) {
+    RaiseError("unable to initialize 'MqSException' object");
+  }
   zend_update_property_string (default_exception_ce, MqSExceptionO, ID(message),  MqErrorGetText  (mqctx) TSRMLS_CC);
   zend_update_property_long   (default_exception_ce, MqSExceptionO, ID(code),	  MqErrorGetCodeI (mqctx) TSRMLS_CC);
   zend_update_property_long   (default_exception_ce, MqSExceptionO, ID(num),	  MqErrorGetNumI  (mqctx) TSRMLS_CC);
   MqErrorReset(mqctx);
   zend_throw_exception_object(MqSExceptionO TSRMLS_CC);
   return;
-error:
-  zend_error(E_ERROR, "unable to raise MqSException");
 }
 
 ZEND_BEGIN_ARG_INFO_EX(PhpMsgque_no_arg, 0, 0, 0)

@@ -22,20 +22,20 @@
 #define ARG2INT(val) \
 long val;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
-  zend_throw_exception(zend_exception_get_default(TSRMLS_C),"invalid argument - expect long",1 TSRMLS_CC); \
+  RaiseError("invalid argument - expect 'long'"); \
   return; \
 }
 #define ARG2CST(val) \
 MQ_CST val; int len;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, &len) == FAILURE) { \
-  zend_throw_exception(zend_exception_get_default(TSRMLS_C),"invalid argument - expect string",1 TSRMLS_CC); \
+  RaiseError("invalid argument - expect 'string'"); \
   return; \
 }
 
 #define ARG2BOL(val) \
 zend_bool val;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
-  zend_throw_exception(zend_exception_get_default(TSRMLS_C),"invalid argument - expect boolean",1 TSRMLS_CC); \
+  RaiseError("invalid argument - expect 'boolean'"); \
   return; \
 }
 

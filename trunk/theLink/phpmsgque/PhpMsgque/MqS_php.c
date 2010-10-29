@@ -11,7 +11,7 @@
  */
 #include "msgque_php.h"
 
-zend_class_entry *PhpMsgque_MqS;
+zend_class_entry *NS(MqS);
 
 int le_MqS;
 

@@ -1,0 +1,2 @@
+extension_dir="@abs_builddir@/PhpMsgque/modules"
+extension="PhpMsgque.so"

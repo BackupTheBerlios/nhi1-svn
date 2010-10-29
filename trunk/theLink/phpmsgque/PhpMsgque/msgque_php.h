@@ -19,6 +19,7 @@
 #include "ext/standard/info.h"
 #include "ext/standard/php_var.h"
 #include "zend_interfaces.h"
+#include "zend_exceptions.h"
 #include "php_PhpMsgque.h"
 #include "msgque.h"
 #include "debug.h"
@@ -54,6 +55,12 @@ extern zend_class_entry *PhpMsgque_MqS;
   }
 #define ErrorCheck(val) if ((val) == FAILURE) goto error
 
+#define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),msg,1 TSRMLS_CC);
+//#define RaiseError(msg)	    zend_throw_exception(zend_get_error_exception(TSRMLS_C),msg,1 TSRMLS_CC);
+
+#define CheckType(val,typ,err) \
+  if (instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) RaiseError(err)
+
 #define VAL2BYT(val)	    (MQ_BYT)Z_LVAL_P(val)
 #define VAL2BOL(val)	    (MQ_BOL)Z_BVAL_P(val)
 #define VAL2SRT(val)	    (MQ_SRT)Z_LVAL_P(val)
@@ -87,17 +94,17 @@ if (nat != NULL) { \
   ZVAL_NULL(val); \
 }
 
-#define CheckType(val,typ,err) \
-  if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                  Misc's                                   */
 /*                                                                           */
 /*****************************************************************************/
 
-void NS(MqSException_Raise) (struct MqS* TSRMLS_DC);
-void NS(MqSException_Set)   (struct MqS*, zval* TSRMLS_DC);
+void NS(MqSException_Raise)	(struct MqS* TSRMLS_DC);
+void NS(MqSException_Set)	(struct MqS*, zval* TSRMLS_DC);
+MQ_BFL NS(Argument2MqBufferLS)	(int numArgs TSRMLS_DC);
+void MqBufferLAppendZVal	(MQ_BFL, zval* TSRMLS_DC);
+
 /*
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
