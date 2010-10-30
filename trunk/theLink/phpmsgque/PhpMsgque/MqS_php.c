@@ -12,24 +12,36 @@
 #include "msgque_php.h"
 
 zend_class_entry *NS(MqS);
+zend_class_entry *NS(iServerSetup);
+zend_class_entry *NS(iServerCleanup);
+zend_class_entry *NS(iFactory);
+zend_class_entry *NS(iBgError);
+zend_class_entry *NS(iEvent);
 
 int le_MqS;
 
-static
-PHP_METHOD(PhpMsgque_MqS, __construct)
+static zend_object_value NS(MqS_new)(zend_class_entry *ce TSRMLS_DC)
 {
-  long MqS_id;
   struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
+  zend_object *object;
+  zval retval;
 
-  // create ruby command
-  mqctx->self = (void*) this_ptr;
+  /* Reuse Zend's generic object creator */
+  Z_OBJVAL(retval) = zend_objects_new(&object, ce TSRMLS_CC);
+  /* When overriding create_object,
+   * properties must be manually initialized */
+  ALLOC_HASHTABLE(object->properties);
+  zend_hash_init(object->properties, 0, NULL, ZVAL_PTR_DTOR, 0);
+  /* Other object initialization may occur here */
 
   // set configuration data
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;
+  TSRMLS_SET_CTX(mqctx->threadData) ;
 
   // register resources
-  zend_update_property_long(PhpMsgque_MqS, getThis(), ID(mqctx), (long) mqctx TSRMLS_CC);
+  zend_update_property_long(NS(MqS), &retval, ID(mqctx), (long) mqctx TSRMLS_CC);
+  return Z_OBJVAL(retval);
 }
 
 static
@@ -45,6 +57,69 @@ PHP_METHOD(PhpMsgque_MqS, ErrorSet)
   zend_get_parameters(0, 1, &ex);
   NS(MqSException_Set)(MQCTX, ex TSRMLS_CC);
   RETURN_NULL();
+}
+
+static 
+enum MqErrorE tokenF (struct MqS * const mqctx, zval* const ctor)
+{
+M0
+  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  zval *result = NULL;
+  zend_try {
+    PhpErrorCheck(call_user_function_ex(&NS(MqS)->function_table,
+      NULL, ctor, &result, 0, NULL, 0, NULL TSRMLS_CC));
+  } zend_catch {
+    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
+    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
+  } zend_end_try()
+  if (result) {
+    zval_dtor(result);
+  }
+  return MqErrorGetCode(mqctx);
+error:
+  return MqErrorC(mqctx,__func__,1,"unknown error");
+}
+
+static 
+void tokenDataFreeF (struct MqS const * const mqctx, zval **ctorP)
+{
+M0
+  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  zval_ptr_dtor(ctorP);
+  *ctorP = NULL;
+}
+
+static 
+enum MqErrorE tokenDataCopyF (struct MqS * const mqctx, zval *ctor)
+{
+M0
+}
+
+static
+PHP_METHOD(PhpMsgque_MqS, __construct)
+{
+  SETUP_mqctx;
+
+  // create link between 'php' and 'MqS'
+  mqctx->self = (void*) getThis();
+
+  //refcount++
+  zval_addref_p(getThis());
+  
+  if (instanceof_function(Z_OBJCE_P(getThis()), NS(iServerSetup) TSRMLS_CC)) {
+    zval *ctor;
+    MAKE_STD_ZVAL(ctor);
+    array_init(ctor);
+    zval_addref_p(mqctx->self);
+    add_next_index_zval(ctor, mqctx->self);
+    add_next_index_string(ctor, "ServerSetup", 1);
+    MqConfigSetServerSetup(mqctx, (MqTokenF) tokenF, (MQ_PTR) ctor, 
+      (MqTokenDataFreeF) tokenDataFreeF, (MqTokenDataCopyF) tokenDataCopyF);
+  }
+  
+  if (instanceof_function(Z_OBJCE_P(getThis()), NS(iServerCleanup) TSRMLS_CC)) {
+    //MqConfigSetServerCleanup(mqctx, MqTokenF fTok, MQ_PTR data, MqTokenDataFreeF fFree, MqTokenDataCopyF fCopy);
+  }
 }
 
 static
@@ -193,9 +268,9 @@ ZEND_BEGIN_ARG_INFO_EX(Exception_arg, 0, 0, 1)
   ZEND_ARG_OBJ_INFO(0, ex, Exception, 0)
 ZEND_END_ARG_INFO()
 
-static const zend_function_entry PhpMsgque_MqS_functions[] = {
+static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, __construct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
-  PHP_ME(PhpMsgque_MqS, __destruct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
+  PHP_ME(PhpMsgque_MqS, __destruct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(PhpMsgque_MqS, Exit,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSet,		Exception_arg,	      ZEND_ACC_PUBLIC)
 /*
@@ -325,6 +400,32 @@ static const zend_function_entry PhpMsgque_MqS_functions[] = {
 };
 /* }}} */
 
+const zend_function_entry NS(iServerSetup_functions)[] = {
+  ZEND_ABSTRACT_ME(NS(iServerSetup), ServerSetup, no_arg)
+  {NULL, NULL, NULL}
+};
+
+const zend_function_entry NS(iServerCleanup_functions)[] = {
+  ZEND_ABSTRACT_ME(NS(iServerCleanup), ServerCleanup, no_arg)
+  {NULL, NULL, NULL}
+};
+
+const zend_function_entry NS(iFactory_functions)[] = {
+  ZEND_ABSTRACT_ME(NS(iFactory), Factory, no_arg)
+  {NULL, NULL, NULL}
+};
+
+const zend_function_entry NS(iBgError_functions)[] = {
+  ZEND_ABSTRACT_ME(NS(iBgError), BgError, no_arg)
+  {NULL, NULL, NULL}
+};
+
+const zend_function_entry NS(iEvent_functions)[] = {
+  ZEND_ABSTRACT_ME(NS(iEvent), Event, no_arg)
+  {NULL, NULL, NULL}
+};
+
+
 void NS(MqS_Error_Init)	    (TSRMLS_D);
 void NS(MqS_Read_Init)	    (TSRMLS_D);
 void NS(MqS_Send_Init)	    (TSRMLS_D);
@@ -336,16 +437,58 @@ void NS(MqS_Sys_Init)	    (TSRMLS_D);
 
 void NS(MqS_Init) (TSRMLS_D)
 {
-  zend_class_entry ce;
+  zend_class_entry cMqS;
+  zend_class_entry iServerSetup;
+  zend_class_entry iServerCleanup;
+  zend_class_entry iFactory;
+  zend_class_entry iBgError;
+  zend_class_entry iEvent;
 
   // initialize the other files
   NS(MqS_Config_Init)(TSRMLS_C);
   NS(MqS_Link_Init)(TSRMLS_C);
 
   // create class "MqS"
-  INIT_CLASS_ENTRY(ce,"MqS", PhpMsgque_MqS_functions);
-  PhpMsgque_MqS = zend_register_internal_class(&ce TSRMLS_CC);
+  INIT_CLASS_ENTRY(cMqS,"MqS", NS(MqS_functions));
+  NS(MqS) = zend_register_internal_class(&cMqS TSRMLS_CC);
+  NS(MqS)->create_object = NS(MqS_new);
 
   // define additional properties "mqctx" to save the "struct MqS *" pointer
-  zend_declare_property_null(PhpMsgque_MqS, ID(mqctx), ZEND_ACC_PRIVATE TSRMLS_CC);
+  zend_declare_property_null(NS(MqS), ID(mqctx), ZEND_ACC_PRIVATE TSRMLS_CC);
+
+  // create enum "MqS_WAIT"
+  zend_declare_class_constant_long(NS(MqS), ID(WAIT_NO),	  0 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(WAIT_ONCE),	  1 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(WAIT_FOREVER),	  2 TSRMLS_CC);
+
+  // create enum "MqS_TIMEOUT"
+  zend_declare_class_constant_long(NS(MqS), ID(TIMEOUT_DEFAULT),  -1 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(TIMEOUT_USER),	  -2 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(TIMEOUT_MAX),	  -3 TSRMLS_CC);
+
+  // create enum "MqS_START"
+  zend_declare_class_constant_long(NS(MqS), ID(START_DEFAULT),	  0 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(START_FORK),	  1 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(START_THREAD),	  2 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(START_THREAD),	  3 TSRMLS_CC);
+
+  // create interface "iServerSetup"
+  INIT_CLASS_ENTRY(iServerSetup,"iServerSetup", NS(iServerSetup_functions));
+  NS(iServerSetup) = zend_register_internal_interface(&iServerSetup TSRMLS_CC);
+
+  // create interface "iServerCleanup"
+  INIT_CLASS_ENTRY(iServerCleanup,"iServerCleanup", NS(iServerCleanup_functions));
+  NS(iServerCleanup) = zend_register_internal_interface(&iServerCleanup TSRMLS_CC);
+
+  // create interface "iFactory"
+  INIT_CLASS_ENTRY(iFactory,"iFactory", NS(iFactory_functions));
+  NS(iFactory) = zend_register_internal_interface(&iFactory TSRMLS_CC);
+
+  // create interface "iBgError"
+  INIT_CLASS_ENTRY(iBgError,"iBgError", NS(iBgError_functions));
+  NS(iBgError) = zend_register_internal_interface(&iBgError TSRMLS_CC);
+
+  // create interface "iEvent"
+  INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
+  NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }

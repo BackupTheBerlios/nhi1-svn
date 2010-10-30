@@ -17,6 +17,7 @@ array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
+    ./theLink/phpmsgque		{ php.ini.in .phpini }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./theLink/tests		{ README.tests .sh }
     ./win			{ README.win .sh }
@@ -64,7 +65,7 @@ array set LABELIGNORE {
     ./theLink/ccmsgque		{ .libs .deps *.lo *.o *.in Makefile *.la tags *.sw* }
     ./theLink/csmsgque		{ Makefile *.in tags *.dll *.exe .vimrc .libs .deps libtest* *.mdb 
 				  *.sw* .vpath_hook }
-    ./theLink/phpmsgque		{ Makefile Makefile.in }
+    ./theLink/phpmsgque		{ Makefile Makefile.in test.php php.ini tags }
     ./theLink/phpmsgque/PhpMsgque {
 acinclude.m4    config.sub     include          Makefile            modules       tags
 aclocal.m4      configure      install-sh       Makefile.fragments  PhpMsgque.la  tests

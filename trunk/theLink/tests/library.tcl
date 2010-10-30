@@ -313,6 +313,7 @@ if {![array exists TS_SERVER]} {
     java    [list {*}$JAVA    example.Server]				  \
     tcl	    [list {*}$TCLSH   [file join $linksrcdir tests server.tcl]]	  \
     perl    [list {*}$PERL -w [file join $linksrcdir tests server.pl]]	  \
+    php	    [list {*}$PHP     [file join $linksrcdir tests server.php]]	  \
     jdb	    [list jdb	      Server]					  \
     cc	    ccserver							  \
     c	    server							  \
@@ -424,13 +425,14 @@ proc getExampleExecutable {srv} {
     set RET $path
   } else {
     switch $lng {
-      python	{ lappend RET $::PYTHON [file join $::linksrcdir example python $path.py] }
-      ruby	{ lappend RET $::RUBY [file join $::linksrcdir example ruby $path.rb] }
-      perl	{ lappend RET $::PERL [file join $::linksrcdir example perl $path.pl] }
-      java	{ lappend RET $::JAVA example.$path }
+      python	{ lappend RET {*}$::PYTHON [file join $::linksrcdir example python $path.py] }
+      ruby	{ lappend RET {*}$::RUBY [file join $::linksrcdir example ruby $path.rb] }
+      perl	{ lappend RET {*}$::PERL [file join $::linksrcdir example perl $path.pl] }
+      php	{ lappend RET {*}$::PHP [file join $::linksrcdir example php $path.php] }
+      java	{ lappend RET {*}$::JAVA example.$path }
       csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
       vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
-      tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
+      tcl	{ lappend RET {*}$::TCLSH [file join $::linksrcdir example tcl $srv] }
       cc	{ lappend RET [file join $::linkbuilddir example cc $path$::EXEEXT] }
       c		{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }
       *		{ Error "invalid example: $srv" }
@@ -566,7 +568,7 @@ proc SetConstraints {args} {
     foreach c [envGet BIN_LST] {
       testConstraint $c yes
     }
-    foreach c {c cc tcl java csharp python ruby perl} {
+    foreach c {c cc tcl java csharp python ruby perl php} {
       testConstraint $c [expr {[lsearch -glob [envGet SRV_LST] "$c.*"] != -1}]
     }
     foreach c {pipe uds tcp fork spawn thread server} {
@@ -574,7 +576,7 @@ proc SetConstraints {args} {
     }
   } else {
     # 1. cleanup all constraint
-    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl fork
+    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl php fork
 		  thread spawn server parent child child2 child3} {
       testConstraint $c no
     }
@@ -607,7 +609,7 @@ if {![info exists env(COM_LST)]} {
   set env(COM_LST) {uds tcp pipe}
 }
 if {![info exists env(LNG_LST)]} {
-  set env(LNG_LST) {c cc tcl python ruby java csharp perl vb}
+  set env(LNG_LST) {c cc tcl python ruby java csharp perl php vb}
 }
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
@@ -662,6 +664,7 @@ if {![info exists env(SRV_LST)]} {
     perl.uds.spawn
     perl.uds.fork
     perl.uds.thread
+    php.pipe.pipe
     vb.pipe.pipe
     vb.tcp.spawn
     vb.tcp.thread
@@ -712,6 +715,12 @@ if {!$USE_RUBY} {
 if {!$USE_PERL} {
   set env(SRV_LST) [filterGet -not SRV_LST perl]
   set env(LNG_LST) [filterGet -not LNG_LST perl]
+}
+
+# without --enable-php no php
+if {!$USE_PHP} {
+  set env(SRV_LST) [filterGet -not SRV_LST php]
+  set env(LNG_LST) [filterGet -not LNG_LST php]
 }
 
 # without --enable-csharp no C#
@@ -827,6 +836,7 @@ while {true} {
     "--only-python" -
     "--only-ruby" -
     "--only-perl" -
+    "--only-php" -
     "--only-cc" {
       set T		[string range $arg 7 end]
       set env(LNG_LST)	$T
@@ -861,7 +871,7 @@ while {true} {
       puts "USAGE [file tail $argv0]: OPTIONS ...."
       puts ""
       puts " testing ARRAGEMENTS"
-      puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|vb"
+      puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|php|vb"
       puts "  ........................................... programming-language"
       puts "  COM  = pipe|uds|tcp ....................... communication-layer"
       puts "  TYPE = string|binary ...................... package-type"

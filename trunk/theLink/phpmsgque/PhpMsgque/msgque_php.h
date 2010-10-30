@@ -53,7 +53,7 @@ extern zend_class_entry *PhpMsgque_MqS;
   if (unlikely(MqErrorCheckI(PROC))) { \
     ErrorMqToPhp(); \
   }
-#define ErrorCheck(val) if ((val) == FAILURE) goto error
+#define PhpErrorCheck(val) if ((val) == FAILURE) goto error
 
 #define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),msg,1 TSRMLS_CC);
 //#define RaiseError(msg)	    zend_throw_exception(zend_get_error_exception(TSRMLS_C),msg,1 TSRMLS_CC);

@@ -88,6 +88,7 @@ case "$CMD" in
   *.py)		  EXE="$PYTHON";;
   *.pl)		  EXE="$PERL";;
   *.rb)		  EXE="$RUBY";;
+  *.php)	  EXE="$PHP";;
   *.exe)	  EXE="$MONO";;
   *.cc)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *.c)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
@@ -105,7 +106,11 @@ if [[ $TEE == "yes" ]] ; then
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
+set -x
     T="$CMD $@"
+    set $EXE
+    EXE="$1"; shift
+    T="$@ $T"
     exec $PREFIX $EXE -a "$T"
   else
     exec $PREFIX $EXE $CMD "$@"

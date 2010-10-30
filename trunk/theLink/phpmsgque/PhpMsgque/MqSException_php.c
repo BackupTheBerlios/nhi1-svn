@@ -73,7 +73,7 @@ inline static MQ_CST GetTxtN(zval *this_ptr TSRMLS_DC)
 /*****************************************************************************/
 
 void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
-  if (Z_TYPE_P(ex) == IS_OBJECT) {
+  if (ex != NULL && Z_TYPE_P(ex) == IS_OBJECT) {
     if (instanceof_function(Z_OBJCE_P(ex), MqSExceptionC TSRMLS_CC)) {
       MqErrorSet (mqctx, GetNumN(ex TSRMLS_CC), GetCodeN(ex TSRMLS_CC), GetTxtN(ex TSRMLS_CC), NULL);
       return;

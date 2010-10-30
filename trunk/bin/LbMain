@@ -277,6 +277,7 @@ array set MAP {
     .bat	.bat
     .vb		.bat
     .m4         .m4
+    .phpini     .phpini
     .exe	ignore
     .htm	ignore
     .html	ignore
@@ -367,6 +368,7 @@ foreach _F $argv {
 	{.cc}	    {set do [Type*]}
 	{.man}	    {set do [TypeGENERIC {'\"}]}
 	{.m4}	    {set do [TypeGENERIC dnl]}
+	{.phpini}   {set do [TypeGENERIC \;]}
 	{.bat}	    {set do [TypeBAT]}
 	ignore	    {continue}
 	default	    {set ig 1;puts "ignore: $_F"}
