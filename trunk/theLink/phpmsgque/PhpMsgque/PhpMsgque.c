@@ -84,7 +84,7 @@ void NS(MqBufferS_Init)	    (TSRMLS_D);
 PHP_MINIT_FUNCTION(PhpMsgque)
 {
   // throw ErrorException as default
-	zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), NULL TSRMLS_CC);
+	zend_replace_error_handling(EH_NORMAL, zend_get_error_exception(TSRMLS_C), NULL TSRMLS_CC);
 
 	NS(MqS_Init)			(TSRMLS_C);
 	NS(MqSException_Init)	(TSRMLS_C);

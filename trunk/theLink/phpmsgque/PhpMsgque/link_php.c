@@ -22,7 +22,6 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreate)
 {
   SETUP_mqctx;
   struct MqBufferLS * args = NS(Argument2MqBufferLS)(ZEND_NUM_ARGS() TSRMLS_CC) ;
-printULS(args)
   ErrorMqToPhpWithCheck (MqLinkCreate(mqctx, &args));
 }
 
@@ -47,7 +46,7 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
     int i;
     args = MqBufferLCreate(argc);
     for (i=0; i<argc; i++) {
-      MqBufferLAppendZVal (args, *argv[i] TSRMLS_CC);
+      NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }
   }
 

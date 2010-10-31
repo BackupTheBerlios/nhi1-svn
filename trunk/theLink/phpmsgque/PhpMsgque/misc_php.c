@@ -20,7 +20,7 @@
 
 static int MqBufferLAppendZValArrayItem (zval **, MQ_BFL TSRMLS_DC);
 
-void MqBufferLAppendZVal(MQ_BFL bufL, zval* arg TSRMLS_DC) {
+void NS(MqBufferLAppendZVal)(MQ_BFL bufL, zval* arg TSRMLS_DC) {
   switch (Z_TYPE_P(arg)) {
     case IS_STRING:
       MqBufferLAppendC(bufL, Z_STRVAL_P(arg));
@@ -45,7 +45,7 @@ void MqBufferLAppendZVal(MQ_BFL bufL, zval* arg TSRMLS_DC) {
 }
 
 static int MqBufferLAppendZValArrayItem (zval **argP, MQ_BFL args TSRMLS_DC) {
-  MqBufferLAppendZVal (args, *argP TSRMLS_CC);
+  NS(MqBufferLAppendZVal) (args, *argP TSRMLS_CC);
   return ZEND_HASH_APPLY_KEEP;
 }
 
@@ -62,12 +62,119 @@ MQ_BFL NS(Argument2MqBufferLS)(const int numArgs TSRMLS_DC)
       ZEND_WRONG_PARAM_COUNT_WITH_RETVAL(args);
     }
     for (i=0; i<numArgs; i++) {
-      MqBufferLAppendZVal (args, *arguments[i] TSRMLS_CC);
+      NS(MqBufferLAppendZVal) (args, *arguments[i] TSRMLS_CC);
     }
     efree(arguments);
   }
 
   return args;
+}
+
+static enum MqErrorE ProcCallNoArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
+{
+M0
+  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  zval *result = NULL;
+  zend_try {
+    PhpErrorCheck(call_user_function_ex(data->function_table,
+      NULL, data->ctor, &result, 0, NULL, 0, NULL TSRMLS_CC));
+  } zend_catch {
+    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
+    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
+  } zend_end_try()
+  if (result) {
+    zval_dtor(result);
+  }
+  return MqErrorGetCode(mqctx);
+error:
+  return MqErrorC(mqctx,__func__,1,"unknown error");
+}
+
+static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
+{
+M0
+  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  zval *result = NULL;
+  zval *self = mqctx->self;
+  zval_addref_p(self);
+  zval **selfP = &self;
+  zend_try {
+    PhpErrorCheck(call_user_function_ex(data->function_table,
+      NULL, data->ctor, &result, 1, &selfP, 0, NULL TSRMLS_CC));
+  } zend_catch {
+    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
+    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
+  } zend_end_try()
+  if (result) {
+    zval_dtor(result);
+  }
+  zval_delref_p(self);
+  return MqErrorGetCode(mqctx);
+error:
+  return MqErrorC(mqctx,__func__,1,"unknown error");
+}
+
+static void ProcFree (struct MqS const * const mqctx, struct NS(ProcDataS) ** dataP)
+{
+M0
+  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  zval_ptr_dtor(&(*dataP)->ctor);
+  efree(*dataP);
+  *dataP = NULL;
+}
+
+enum MqErrorE NS(ProcInit) (
+  struct MqS * const  mqctx, 
+  zval *	      callable,
+  void **	      dataP,
+  MqTokenF *	      tokenFP,
+  MqTokenDataFreeF *  tokenDataFreeFP,
+  MqTokenDataCopyF *  tokenDataCopyFP
+  TSRMLS_DC
+)
+{
+  // INIT:
+  // PHP_METHOD(PhpMsgque_MqS, __construct) set the callback's during construct -> allways
+  // up-to-data -> no "copy" constructor needed
+  char *error;
+  struct NS(ProcDataS) *data = (*dataP) = emalloc(sizeof(struct NS(ProcDataS)));
+  // 1. is the "callable" call-able?
+  if (!zend_is_callable_ex(callable, NULL, 0, NULL, NULL, NULL, &error TSRMLS_CC)) {
+    return MqErrorC(mqctx, __func__, 1, error);
+  }
+  // 2. is "callable" an method?
+  if (Z_TYPE_P(callable) == IS_ARRAY) {
+    // YES
+    zval **obj;
+    zend_class_entry *ce;
+    // 3. get "object" from "method"
+    if (zend_hash_index_find(Z_ARRVAL_P(callable), 0, (void**) &obj) == FAILURE) {
+      return MqErrorC(mqctx, __func__, 1, "unable to extract object from callback");
+    }
+    // 4. belongs "object" to local "MqS" instance?
+    ce = zend_get_class_entry(*obj TSRMLS_CC);
+    if (instanceof_function(ce, NS(MqS) TSRMLS_CC) && VAL2MqS(*obj) == mqctx) {
+      // YES, no "this" argument needed
+      *tokenFP		= (MqTokenF) ProcCallNoArg;
+      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+    } else {
+      // NO, "this" argument needed
+      *tokenFP		= (MqTokenF) ProcCallOneArg;
+      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+    }
+    data->function_table = &ce->function_table;
+  } else {
+    // NO
+      *tokenFP		= (MqTokenF) ProcCallOneArg;
+      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+    data->function_table = CG(function_table);
+  }
+  zval_addref_p(callable);
+  data->ctor = callable;
+  return MQ_OK;
 }
 
 

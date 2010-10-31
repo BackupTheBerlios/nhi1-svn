@@ -244,7 +244,7 @@ ALIASES		    += "ServiceIsTransaction=true/false ctx.ServiceIsTransaction()"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
-ALIASES		    += "SlaveWorker_example=\code ctx.SlaveCreate (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
 ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
 ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"

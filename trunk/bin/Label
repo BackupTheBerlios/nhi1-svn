@@ -70,7 +70,7 @@ array set LABELIGNORE {
 acinclude.m4    config.sub     include          Makefile            modules       tags
 aclocal.m4      configure      install-sh       Makefile.fragments  PhpMsgque.la  tests
 autom4te.cache  config.log     configure.in     libtool       Makefile.global     tmp-php.ini
-build           config.w32     Makefile.objects PhpMsgque.php
+build           config.w32     Makefile.objects PhpMsgque.php *.sw*
 config.guess    config.nice    CREDITS          missing       .libs  .deps
 config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs       run-tests.php *.lo}
 

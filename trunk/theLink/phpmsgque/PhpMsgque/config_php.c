@@ -19,26 +19,6 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define ARG2INT(val) \
-long val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
-  RaiseError("invalid argument - expect 'long'"); \
-  return; \
-}
-#define ARG2CST(val) \
-MQ_CST val; int len;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, &len) == FAILURE) { \
-  RaiseError("invalid argument - expect 'string'"); \
-  return; \
-}
-
-#define ARG2BOL(val) \
-zend_bool val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
-  RaiseError("invalid argument - expect 'boolean'"); \
-  return; \
-}
-
 #define Get(K,T) \
 PHP_METHOD(PhpMsgque_MqS, ConfigGet ## K) \
 { \
@@ -48,7 +28,7 @@ PHP_METHOD(PhpMsgque_MqS, ConfigGet ## K) \
 #define Set(K,T) \
 PHP_METHOD(PhpMsgque_MqS, ConfigSet ## K) \
 { \
-  ARG2 ## T(val); \
+  ARG2 ## T(K,val); \
   MqConfigSet ## K (MQCTX, (MQ_ ## T) (val)); \
   RETURN_NULL(); \
 }

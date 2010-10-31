@@ -59,41 +59,23 @@ PHP_METHOD(PhpMsgque_MqS, ErrorSet)
   RETURN_NULL();
 }
 
-static 
-enum MqErrorE tokenF (struct MqS * const mqctx, zval* const ctor)
-{
-M0
-  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
-  zval *result = NULL;
-  zend_try {
-    PhpErrorCheck(call_user_function_ex(&NS(MqS)->function_table,
-      NULL, ctor, &result, 0, NULL, 0, NULL TSRMLS_CC));
-  } zend_catch {
-    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
-    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
-  } zend_end_try()
-  if (result) {
-    zval_dtor(result);
+#define CB(name) \
+  if (instanceof_function(Z_OBJCE_P(getThis()), NS(i ## name) TSRMLS_CC)) { \
+    zval *ctor; \
+    void *data; \
+    MqTokenF tokenF; \
+    MqTokenDataFreeF tokenDataFreeF; \
+    MqTokenDataCopyF tokenDataCopyF; \
+    MAKE_STD_ZVAL(ctor); \
+    array_init(ctor); \
+    zval_addref_p(mqctx->self); \
+    add_next_index_zval(ctor, mqctx->self); \
+    add_next_index_string(ctor, #name, 1); \
+    ErrorMqToPhpWithCheck ( \
+      NS(ProcInit) (mqctx, ctor, &data, &tokenF, &tokenDataFreeF, &tokenDataCopyF TSRMLS_CC) \
+    ); \
+    MqConfigSet ## name(mqctx, tokenF, data, tokenDataFreeF, tokenDataCopyF); \
   }
-  return MqErrorGetCode(mqctx);
-error:
-  return MqErrorC(mqctx,__func__,1,"unknown error");
-}
-
-static 
-void tokenDataFreeF (struct MqS const * const mqctx, zval **ctorP)
-{
-M0
-  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
-  zval_ptr_dtor(ctorP);
-  *ctorP = NULL;
-}
-
-static 
-enum MqErrorE tokenDataCopyF (struct MqS * const mqctx, zval *ctor)
-{
-M0
-}
 
 static
 PHP_METHOD(PhpMsgque_MqS, __construct)
@@ -106,20 +88,12 @@ PHP_METHOD(PhpMsgque_MqS, __construct)
   //refcount++
   zval_addref_p(getThis());
   
-  if (instanceof_function(Z_OBJCE_P(getThis()), NS(iServerSetup) TSRMLS_CC)) {
-    zval *ctor;
-    MAKE_STD_ZVAL(ctor);
-    array_init(ctor);
-    zval_addref_p(mqctx->self);
-    add_next_index_zval(ctor, mqctx->self);
-    add_next_index_string(ctor, "ServerSetup", 1);
-    MqConfigSetServerSetup(mqctx, (MqTokenF) tokenF, (MQ_PTR) ctor, 
-      (MqTokenDataFreeF) tokenDataFreeF, (MqTokenDataCopyF) tokenDataCopyF);
-  }
-  
-  if (instanceof_function(Z_OBJCE_P(getThis()), NS(iServerCleanup) TSRMLS_CC)) {
-    //MqConfigSetServerCleanup(mqctx, MqTokenF fTok, MQ_PTR data, MqTokenDataFreeF fFree, MqTokenDataCopyF fCopy);
-  }
+  // add callback's
+  CB(ServerSetup)
+  CB(ServerCleanup)
+  CB(BgError)
+  CB(Event)
+  //CB(Factory)
 }
 
 static
@@ -268,6 +242,24 @@ ZEND_BEGIN_ARG_INFO_EX(Exception_arg, 0, 0, 1)
   ZEND_ARG_OBJ_INFO(0, ex, Exception, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(SlaveCreate_arg, 0, 0, 2)
+  ZEND_ARG_INFO(0, "id")
+  ZEND_ARG_OBJ_INFO(0, slave, NS(MqS), 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(ServiceCreate_arg, 0, 0, 2)
+  ZEND_ARG_INFO(0, "token")
+  ZEND_ARG_INFO(0, "callback")
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(ServiceDelete_arg, 0, 0, 2)
+  ZEND_ARG_INFO(0, "token")
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(id_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "id")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, __construct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(PhpMsgque_MqS, __destruct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
@@ -369,15 +361,16 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, LinkCreateChild,	NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LinkDelete,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LinkConnect,		NULL,                 ZEND_ACC_PUBLIC)
-/*
-  PHP_ME(PhpMsgque_MqS, ServiceGetToken,	NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ServiceIsTransaction,	NULL,                 ZEND_ACC_PUBLIC)
+
+  PHP_ME(PhpMsgque_MqS, ServiceGetToken,	no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ServiceIsTransaction,	no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ServiceGetFilter,	NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ServiceProxy,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ServiceCreate,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ServiceDelete,		NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ServiceCreate,		ServiceCreate_arg,    ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ServiceDelete,		ServiceDelete_arg,    ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ProcessEvent,		NULL,                 ZEND_ACC_PUBLIC)
 
+/*
   PHP_ME(PhpMsgque_MqS, ErrorC,			NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSet,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSetCONTINUE,	NULL,                 ZEND_ACC_PUBLIC)
@@ -387,14 +380,14 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ErrorGetCode,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorReset,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorPrint,		NULL,                 ZEND_ACC_PUBLIC)
+*/
 
   PHP_ME(PhpMsgque_MqS, SlaveWorker,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SlaveCreate,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SlaveDelete,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SlaveGet,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SlaveGetMaster,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SlaveIs,		NULL,                 ZEND_ACC_PUBLIC)
-*/
+  PHP_ME(PhpMsgque_MqS, SlaveCreate,		SlaveCreate_arg,      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SlaveDelete,		id_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SlaveGet,		id_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SlaveGetMaster,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SlaveIs,		no_arg,               ZEND_ACC_PUBLIC)
 
   {NULL, NULL, NULL}
 };

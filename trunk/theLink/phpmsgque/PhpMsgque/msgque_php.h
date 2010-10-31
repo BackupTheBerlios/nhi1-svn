@@ -34,10 +34,10 @@ extern zend_class_entry *PhpMsgque_MqS;
 
 #define LIBMSGQUE_VERSION   "4.6"
 #define NS(n)               PhpMsgque_ ## n
-#define MQCTX               VAL2MqS(getThis() TSRMLS_CC)
-#define SETUP_mqctx         struct MqS * mqctx = VAL2MqS(this_ptr TSRMLS_CC)
-#define SELF                MqS2VAL(mqctx)
-#define SETUP_self          zval * this_ptr = SELF
+#define MQCTX               VAL2MqS(getThis())
+#define SETUP_mqctx         struct MqS * mqctx = MQCTX
+#define SELF                ((zval*)(mqctx)->self)
+#define SETUP_self          zval * self = SELF
 #define MQ_CONTEXT_S        mqctx
 #define ID(name)	    #name,sizeof(#name)-1
 #define printVAL(val)	    php_var_dump(&val,2 TSRMLS_CC);
@@ -73,7 +73,7 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define VALP2CST(valp)	    (MQ_CST)rb_string_value_cstr(valp)
 #define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),Z_STRLEN_P(val)
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
-#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(PhpMsgque_MqS, getThis(), ID(mqctx), 0 TSRMLS_CC))
+#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(mqctx), 0 TSRMLS_CC))
 
 
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
@@ -88,10 +88,30 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define BIN2VAL(zval,ptr,len)	    rb_str_buf_cat(rb_str_buf_new(0),(char*)ptr,len)
 #define	MqS2VAL(val,nat)	    \
 if (nat != NULL) { \
-  zval *tmp = (zval*)(nat)->self; \
+  zval *tmp = (zval*)nat->self; \
   ZVAL_ZVAL(val,tmp,0,0); \
 } else { \
   ZVAL_NULL(val); \
+}
+
+#define ARG2INT(mth,val) \
+long val;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
+  RaiseError("usage: " #mth "(long:" #val ")"); \
+  return; \
+}
+#define ARG2CST(mth,val) \
+MQ_CST val; int len;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, &len) == FAILURE) { \
+  RaiseError("usage: " #mth "(string:" #val ")"); \
+  return; \
+}
+
+#define ARG2BOL(mth,val) \
+zend_bool val;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
+  RaiseError("usage: " #mth "(boolean:" #val ")"); \
+  return; \
 }
 
 /*****************************************************************************/
@@ -100,18 +120,31 @@ if (nat != NULL) { \
 /*                                                                           */
 /*****************************************************************************/
 
-void NS(MqSException_Raise)	(struct MqS* TSRMLS_DC);
-void NS(MqSException_Set)	(struct MqS*, zval* TSRMLS_DC);
-MQ_BFL NS(Argument2MqBufferLS)	(int numArgs TSRMLS_DC);
-void MqBufferLAppendZVal	(MQ_BFL, zval* TSRMLS_DC);
+void NS(MqSException_Raise)	  (struct MqS* TSRMLS_DC);
+void NS(MqSException_Set)	  (struct MqS*, zval* TSRMLS_DC);
+MQ_BFL NS(Argument2MqBufferLS)	  (int numArgs TSRMLS_DC);
+void NS(MqBufferLAppendZVal)	  (MQ_BFL, zval* TSRMLS_DC);
 
-/*
-enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
-void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
-enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
-MQ_BFL NS(argv2bufl)	    (struct MqBufferLS*, int, VALUE*);
-enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);
-VALUE NS(Rescue)	    (struct MqS * const, VALUE(*)(ANYARGS), VALUE);
-*/
+
+/*****************************************************************************/
+/*                                                                           */
+/*                               Callback's                                  */
+/*                                                                           */
+/*****************************************************************************/
+
+struct NS(ProcDataS) {
+  HashTable	*function_table;
+  zval		*ctor;
+};
+
+enum MqErrorE NS(ProcInit) (
+  struct MqS * const  mqctx, 
+  zval *		    callable,
+  void **		    dataP,
+  MqTokenF *		    tokenFP,
+  MqTokenDataFreeF *	    tokenDataFreeFP,
+  MqTokenDataCopyF *	    tokenDataCopyFP
+  TSRMLS_DC
+);
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;

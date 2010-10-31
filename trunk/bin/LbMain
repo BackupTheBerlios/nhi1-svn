@@ -65,23 +65,25 @@ proc Header {_LIST OLD PRE BODY POST} {
     lappend LIST $POST
 }
 
-proc Type# {} {
+proc Type# {pre} {
     global FI FO
     set CHANGED 0
     set I	0
 
-  ## 1. read header
+  ## 1. check on prefix
+    gets $FI Line
+    if {[regexp "^$pre" $Line]} {
+	set prefix $Line
+    } else {
+	set prefix ""
+	seek $FI 0 start
+    }
+
+  ## 2. read header
     set H [list]
     while {[gets $FI Line]} {
 	if {[string index $Line 0] ne "#"} break
 	lappend H $Line
-    }
-
-  ## 2. check on #!
-    set h [lindex $H $I]
-    if {[string range $h 0 1] eq "#!"} {
-	lappend NH  $h
-	incr I
     }
 
   ## 3. prepare HEADER
@@ -97,6 +99,9 @@ proc Type# {} {
 
   ## 5. write the header
     if {$CHANGED} {
+	if {[string length $prefix]} {
+	  puts $FO $prefix
+	}
 	foreach nh $NH {
 	    puts $FO $nh
 	}
@@ -256,6 +261,7 @@ set PROJECT_BUILD   [::FileLib::GetAbsNoLinkFile $env(PROJECT_BUILD)]
 set YEAR	    [clock format [clock seconds] -format %Y]
 
 array set MAP {
+    .php	.php
     .c		.c
     .cs		.c
     .java	.c
@@ -363,7 +369,8 @@ foreach _F $argv {
     set do  0
     set ig  0
     switch -exact $E {
-	{.sh}	    {set do [Type#]}
+	{.sh}	    {set do [Type# {#!}]}
+	{.php}	    {set do [Type# {<\?php}]}
 	{.c}	    {set do [Type*]}
 	{.cc}	    {set do [Type*]}
 	{.man}	    {set do [TypeGENERIC {'\"}]}
