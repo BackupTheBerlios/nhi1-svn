@@ -78,29 +78,27 @@ void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
       MqErrorSet (mqctx, GetNumN(ex TSRMLS_CC), GetCodeN(ex TSRMLS_CC), GetTxtN(ex TSRMLS_CC), NULL);
       return;
     } else if (instanceof_function(Z_OBJCE_P(ex), default_exception_ce TSRMLS_CC)) {
-      zval *message = zend_read_property(default_exception_ce, ex, ID(message), 0 TSRMLS_CC);
-      zval *trace = NULL, *ctor = NULL;
-      MqErrorC(mqctx, "PHP-Error", -1, VAL2CST(message));
-
-      /// call method "getTraceAsString"
-      MAKE_STD_ZVAL(ctor);
-      array_init(ctor);
-      //zval_add_ref(&ex);
-      add_next_index_zval(ctor, ex);
-      add_next_index_stringl(ctor, ID(getTraceAsString), 0);
-      if (call_user_function_ex(&default_exception_ce->function_table,
-	      NULL, ctor, &trace, 0, NULL, 0, NULL TSRMLS_CC) == FAILURE) {
-	  RaiseError("Unable to call 'getTraceAsString'");
-      }
-      if (trace) {
-	MqErrorSAppendC(mqctx, VAL2CST(trace));
-	zval_ptr_dtor(&trace);
-      }
-      //zval_ptr_dtor(&ctor);
+      // make 'ex' save
+      zval_addref_p(ex);
+      // clear 'EG(exception)'
+      zend_clear_exception(TSRMLS_C);
+      // we want to have the string
+      convert_to_string(ex);
+      // write the string tp 'MqS' error
+      MqErrorC(mqctx, "PHP-Error", -1, VAL2CST(ex));
+      // clear 'ex'
+      zval_ptr_dtor(&ex);
       return;
     }
+  } else if (PG(track_errors)) {
+    zval* pData;
+    PhpErrorCheck(zend_hash_find(EG(active_symbol_table), ID(php_errormsg), (void **) & pData));
+    convert_to_string(pData);
+    MqErrorC(mqctx, "PHP-Error", -1, VAL2CST(pData));
+    return;
   }
-  RaiseError("expect 'Exception' type as argument");
+error:
+  MqErrorC(mqctx, "PHP-Fatal-Error", -1, "unknown exception");
 }
 
 void NS(MqSException_Raise) (struct MqS* mqctx TSRMLS_DC) {

@@ -44,7 +44,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
 ALIASES		    += "ContextCreate=MqC ctx; MqC *ctx=new MqC()"
 ALIASES		    += "ContextDelete=delete(ctx)"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const str)"
+ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
 ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=ctx.LogV(MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL

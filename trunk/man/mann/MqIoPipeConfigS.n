@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

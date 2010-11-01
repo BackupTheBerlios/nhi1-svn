@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

@@ -1,4 +1,4 @@
-.TH "Mq_Config_CC_API" n "22 Oct 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Config_CC_API" n "1 Nov 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

@@ -1,4 +1,4 @@
-.TH "vbmsgque" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "vbmsgque" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -127,14 +127,14 @@ To delete an application is a difficult task because the \fIlink-target\fP have 
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
-.SS "ctx.LogC(prefix As String, level As Integer, As String)"
+.SS "ctx.LogC(prefix As String, level As Integer, message As String)"
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIfalse\fP'\fP using the following format: 
 .PP
 .nf
 
-C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-prefix]: message
 
 .fi
 .PP
@@ -148,7 +148,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
-\fIstr\fP message text 
+\fImessage\fP string to log to stderr 
 .RE
 .PP
 .SH "CONFIG API"
@@ -1514,7 +1514,7 @@ an \fBERROR OBJECT\fP on error
 \fBexample\fP create a worker with id 7 and name 'MyWorker' as thread. 
 .PP
 .nf
- ctx.SlaveCreate (7, '--thread', '--silent', '@', 'WORKER', '--name', 'MyWorker'); 
+ ctx.SlaveWorker (7, '--thread', '--silent', '@', 'WORKER', '--name', 'MyWorker'); 
 
 .fi
 .PP

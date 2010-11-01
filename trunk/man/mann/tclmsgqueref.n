@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "22 Oct 2010" "Version 4.6" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "1 Nov 2010" "Version 4.6" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -122,14 +122,14 @@ To delete an application is a difficult task because the \fIlink-target\fP have 
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
-.SS "$ctx LogC prefix level str"
+.SS "$ctx LogC prefix level message"
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIno\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIno\fP'\fP using the following format: 
 .PP
 .nf
 
-C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-prefix]: message
 
 .fi
 .PP
@@ -143,7 +143,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
-\fIstr\fP message text 
+\fImessage\fP string to log to stderr 
 .RE
 .PP
 .SS "tclmsgque Main {code}"

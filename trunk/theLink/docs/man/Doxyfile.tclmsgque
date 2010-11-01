@@ -37,7 +37,7 @@ $ctx dict set mydata 0 \n\
 ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS]"
 ALIASES		    += "ContextDelete=rename $ctx \"\""
 ALIASES		    += "Exit=$ctx Exit"
-ALIASES		    += "LogC=$ctx LogC prefix level str"
+ALIASES		    += "LogC=$ctx LogC prefix level message"
 ALIASES		    += "Main=tclmsgque Main {code}"
 
 # OBJECT CONFIGURATION

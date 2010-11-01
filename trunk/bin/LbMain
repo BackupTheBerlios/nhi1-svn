@@ -120,7 +120,7 @@ proc TypeGENERIC {CHAR} {
   ## 1. read header
     set H [list]
     while {[gets $FI Line]} {
-	if {[string range $Line 0 2] ne $CHAR} break
+	if {![regexp "^$CHAR" $Line]} break
 	lappend H $Line
     }
 

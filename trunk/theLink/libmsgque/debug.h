@@ -18,6 +18,10 @@
 #  include <process.h>
 #endif
 
+#if !defined(mq_getpid)
+# define mq_getpid() 1
+#endif
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              msgque/types                                 */

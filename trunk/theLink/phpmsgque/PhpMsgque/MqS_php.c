@@ -51,6 +51,21 @@ PHP_METHOD(PhpMsgque_MqS, Exit)
 }
 
 static
+PHP_METHOD(PhpMsgque_MqS, LogC)
+{
+  char* prefix; int prefixlen;
+  char* msg; int msglen;
+  long level;
+  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "sls", 
+	&prefix, &prefixlen, &level, &msg, &msglen) == FAILURE) {
+    RaiseError("usage: LogC(string: prefix, long: level, string: message)");
+    return;
+  }
+  MqLogC(MQCTX, prefix, level, msg);
+}
+
+
+static
 PHP_METHOD(PhpMsgque_MqS, ErrorSet)
 {
   zval *ex;
@@ -260,11 +275,18 @@ ZEND_BEGIN_ARG_INFO_EX(id_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "id")
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(LogC_arg, 0, 0, 3)
+  ZEND_ARG_INFO(0, "prefix")
+  ZEND_ARG_INFO(0, "level")
+  ZEND_ARG_INFO(0, "message")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, __construct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(PhpMsgque_MqS, __destruct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(PhpMsgque_MqS, Exit,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSet,		Exception_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, LogC,			LogC_arg,	      ZEND_ACC_PUBLIC)
 /*
   PHP_ME(PhpMsgque_MqS, ReadY,			NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadO,			NULL,                 ZEND_ACC_PUBLIC)

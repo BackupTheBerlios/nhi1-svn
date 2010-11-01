@@ -4378,20 +4378,20 @@ static mq_inline MQ_STR mq_strdup_save (
 ///
 
 /** \brief write a logging-message to stderr using the internal format
-\details The logging is only done if \RNSC{debug} >= \e level and \RNSC{isSilent} == \no using the following format:
+\details The logging is only done if '<TT>\RNSC{debug} >= level</TT>' and '<TT>\RNSC{isSilent} == \no</TT>' using the following format:
 \verbatim
-C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-prefix]: message
 \endverbatim
 \ctx
 \prefix
 \level
-\param[in] str message text
+\param[in] message string to log to stderr
 */
 MQ_EXTERN void MQ_DECL MqLogC (
   struct MqS const * const ctx,
   MQ_CST const prefix,
   MQ_INT level,
-  MQ_CST const str
+  MQ_CST const message
 );
 
 /// \brief write a \e printf style logging-message to stderr using the internal format

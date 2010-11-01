@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -168,10 +168,6 @@ Mq_Error_C_API \- create and manage error messages.
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
 .R "cleanup an \fIexit-error\fP "
-.ti -1c
-.RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
-.br
-.R "log the \fBMqErrorS\fP for debugging "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorCopy\fP (struct \fBMqS\fP *const out, struct \fBMqS\fP *const in)"
 .br
@@ -445,18 +441,6 @@ check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP
 An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
  
-.SS "void MqErrorLog (struct \fBMqS\fP const *const  context, \fBMQ_CST\fP const  prefix)"
-.PP
-log the \fBMqErrorS\fP for debugging 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
-.br
-\fIprefix\fP used to identify the calling function or the environment 
-.RE
-.PP
-
 .SS "void MqErrorPrint (struct \fBMqS\fP *const  context)"
 .PP
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 

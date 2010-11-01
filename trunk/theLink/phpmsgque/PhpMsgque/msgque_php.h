@@ -40,6 +40,7 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define SETUP_self          zval * self = SELF
 #define MQ_CONTEXT_S        mqctx
 #define ID(name)	    #name,sizeof(#name)-1
+#define ID2(name)	    #name,sizeof(#name)
 #define printVAL(val)	    php_var_dump(&val,2 TSRMLS_CC);
 
 /*****************************************************************************/

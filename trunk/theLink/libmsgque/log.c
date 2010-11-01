@@ -151,13 +151,13 @@ MqLogC (
   struct MqS const * const context, 
   MQ_CST const proc,
   MQ_INT level,
-  MQ_CST const str
+  MQ_CST const message
 )
 {
   if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
     return;
   } else {
-    sLogVL (context, proc, level, str, NULL, stderr);
+    sLogVL (context, proc, level, message, NULL, stderr);
   }
 }
 

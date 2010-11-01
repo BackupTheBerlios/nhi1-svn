@@ -1,8 +1,8 @@
-.TH "msgque.h" n "22 Oct 2010" "Version 4.6" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "1 Nov 2010" "Version 4.6" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 255 2010-10-22 10:50:51Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -1277,10 +1277,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 255 2010-10-22 10:50:51Z aotto1968 $
 .br
 .R "cleanup an \fIexit-error\fP "
 .ti -1c
-.RI "void \fBMqErrorLog\fP (struct \fBMqS\fP const *const context, \fBMQ_CST\fP const prefix)"
-.br
-.R "log the \fBMqErrorS\fP for debugging "
-.ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorCopy\fP (struct \fBMqS\fP *const out, struct \fBMqS\fP *const in)"
 .br
 .R "copy a \fBMqErrorS\fP from \fIin\fP to \fIout\fP "
@@ -1518,7 +1514,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 255 2010-10-22 10:50:51Z aotto1968 $
 .br
 .R "duplicate a string, the argument \fCNULL\fP is allowed "
 .ti -1c
-.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const message)"
 .br
 .R "write a logging-message to stderr using the internal format "
 .ti -1c
@@ -1584,13 +1580,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 255 2010-10-22 10:50:51Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 255 2010-10-22 10:50:51Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 255 $ 
+$Rev: 259 $ 
 .RE
 .PP
 \fBAuthor:\fP

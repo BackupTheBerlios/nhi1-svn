@@ -70,53 +70,60 @@ MQ_BFL NS(Argument2MqBufferLS)(const int numArgs TSRMLS_DC)
   return args;
 }
 
-static enum MqErrorE ProcCallNoArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
+static enum MqErrorE ProcCall (
+  struct MqS * const		mqctx, 
+  struct NS(ProcDataS) * const	data,
+  zend_uint			param_count, 
+  zval**			params[]
+)
 {
-M0
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
   zval *result = NULL;
+  zend_clear_exception(TSRMLS_C);
+  MQ_BOL bailout = MQ_NO;
   zend_try {
-    PhpErrorCheck(call_user_function_ex(data->function_table,
-      NULL, data->ctor, &result, 0, NULL, 0, NULL TSRMLS_CC));
+    int ret;
+    zend_error_handling  original_error_handling;
+    zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
+    // call function or method
+    ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
+      param_count, params, 1, EG(active_symbol_table) TSRMLS_CC);
+    zend_restore_error_handling(&original_error_handling TSRMLS_CC);
+    PhpErrorCheck(ret);
   } zend_catch {
-    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
-    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
+    // longjmp -> bailout -> fatal error
+    MqErrorC(mqctx, "PHP-Fatal-Error", -1, "bailout");
   } zend_end_try()
+  // is an exception happen?
+  if (EG(exception)) {
+    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
+  }
+  // clear result
   if (result) {
     zval_dtor(result);
   }
   return MqErrorGetCode(mqctx);
 error:
-  return MqErrorC(mqctx,__func__,1,"unknown error");
+  return MqErrorC(mqctx, "PHP-Fatal-Error", -1, "unknown");
+}
+
+static enum MqErrorE ProcCallNoArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
+{
+  return ProcCall(mqctx,data,0,NULL);
 }
 
 static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
 {
-M0
-  TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
-  zval *result = NULL;
   zval *self = mqctx->self;
   zval_addref_p(self);
   zval **selfP = &self;
-  zend_try {
-    PhpErrorCheck(call_user_function_ex(data->function_table,
-      NULL, data->ctor, &result, 1, &selfP, 0, NULL TSRMLS_CC));
-  } zend_catch {
-    MqErrorCheck(EG(exception) == NULL || Z_TYPE_P(EG(exception)) != IS_OBJECT);
-    NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
-  } zend_end_try()
-  if (result) {
-    zval_dtor(result);
-  }
+  enum MqErrorE ret = ProcCall(mqctx,data,1,&selfP);
   zval_delref_p(self);
-  return MqErrorGetCode(mqctx);
-error:
-  return MqErrorC(mqctx,__func__,1,"unknown error");
+  return ret;
 }
 
 static void ProcFree (struct MqS const * const mqctx, struct NS(ProcDataS) ** dataP)
 {
-M0
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
   zval_ptr_dtor(&(*dataP)->ctor);
   efree(*dataP);
@@ -140,7 +147,7 @@ enum MqErrorE NS(ProcInit) (
   struct NS(ProcDataS) *data = (*dataP) = emalloc(sizeof(struct NS(ProcDataS)));
   // 1. is the "callable" call-able?
   if (!zend_is_callable_ex(callable, NULL, 0, NULL, NULL, NULL, &error TSRMLS_CC)) {
-    return MqErrorC(mqctx, __func__, 1, error);
+    return MqErrorC(mqctx, __func__, -1, error);
   }
   // 2. is "callable" an method?
   if (Z_TYPE_P(callable) == IS_ARRAY) {
@@ -149,7 +156,7 @@ enum MqErrorE NS(ProcInit) (
     zend_class_entry *ce;
     // 3. get "object" from "method"
     if (zend_hash_index_find(Z_ARRVAL_P(callable), 0, (void**) &obj) == FAILURE) {
-      return MqErrorC(mqctx, __func__, 1, "unable to extract object from callback");
+      return MqErrorC(mqctx, __func__, -1, "unable to extract object from callback");
     }
     // 4. belongs "object" to local "MqS" instance?
     ce = zend_get_class_entry(*obj TSRMLS_CC);

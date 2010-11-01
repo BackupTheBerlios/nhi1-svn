@@ -44,7 +44,7 @@ End Sub \n\
 ALIASES		    += "ContextCreate=Dim ctx As New MqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "LogC=ctx.LogC(prefix As String, level As Integer, As String)"
+ALIASES		    += "LogC=ctx.LogC(prefix As String, level As Integer, message As String)"
 
 ALIASES		    += "init_example=\
 \code \n\

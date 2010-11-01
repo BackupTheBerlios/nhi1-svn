@@ -1,4 +1,4 @@
-.TH "MqBufferS" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferS" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

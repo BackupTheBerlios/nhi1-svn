@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "22 Oct 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,7 +33,7 @@ Mq_Log_C_API \- log information to stderr with a common format.
 
 .in +1c
 .ti -1c
-.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.RI "void \fBMqLogC\fP (struct \fBMqS\fP const *const ctx, \fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const message)"
 .br
 .R "write a logging-message to stderr using the internal format "
 .ti -1c
@@ -81,7 +81,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 4437 of file msgque.h.
+Definition at line 4439 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)"
 .PP
 log a plain string using the \fIMqSetDebugLevel\fP definition 
@@ -97,7 +97,7 @@ log a plain string using the \fIMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 4444 of file msgque.h.
+Definition at line 4446 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -120,7 +120,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4453 of file msgque.h.
+Definition at line 4455 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
@@ -143,23 +143,23 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4462 of file msgque.h.
+Definition at line 4464 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 4431 of file msgque.h.
+Definition at line 4433 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "void MqLogC (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)"
+.SS "void MqLogC (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  message)"
 .PP
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if \fBdebug\fP >= \fIlevel\fP and \fBisSilent\fP == \fIfalse\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIfalse\fP'\fP using the following format: 
 .PP
 .nf
 
-C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-FUNCTION]: MESSAGE
+C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONTEXTPTR-prefix]: message
 
 .fi
 .PP
@@ -173,7 +173,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .br
 \fIlevel\fP debug level: 0 <= level <= 9 
 .br
-\fIstr\fP message text 
+\fImessage\fP string to log to stderr 
 .RE
 .PP
 
