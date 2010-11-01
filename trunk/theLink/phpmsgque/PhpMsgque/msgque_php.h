@@ -83,7 +83,7 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define	INT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	WID2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	FLT2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
-#define	DBL2VAL(zval,nat)	    ZVAL_STRING(zval,(double)nat)
+#define	DBL2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
 #define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,nat,1)
 #define	PTR2VAL(zval,nat)	    (nat != NULL ? ZVAL_RESOURCE(zval,nat) : ZVAL_NULL(zval))
 #define BIN2VAL(zval,ptr,len)	    rb_str_buf_cat(rb_str_buf_new(0),(char*)ptr,len)
@@ -101,6 +101,19 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
   RaiseError("usage: " #mth "(long:" #val ")"); \
   return; \
 }
+#define ARG2BYT(mth,val) ARG2INT(mth,val)
+#define ARG2SRT(mth,val) ARG2INT(mth,val)
+#define ARG2WID(mth,val) ARG2INT(mth,val)
+
+#define ARG2DBL(mth,val) \
+double val;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "d", &val) == FAILURE) { \
+  RaiseError("usage: " #mth "(double:" #val ")"); \
+  return; \
+}
+#define ARG2FLT(mth,val) ARG2DBL(mth,val)
+
+
 #define ARG2CST(mth,val) \
 MQ_CST val; int len;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, &len) == FAILURE) { \

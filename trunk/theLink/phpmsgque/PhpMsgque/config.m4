@@ -32,7 +32,7 @@ if test "$PHP_PHPMSGQUE" != "no"; then
  
   dnl PHP_SUBST(PHPMSGQUE_SHARED_LIBADD)
   dnl add extension 
-  PHP_NEW_EXTENSION(PhpMsgque, PhpMsgque.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
+  PHP_NEW_EXTENSION(PhpMsgque, PhpMsgque.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c send_php.c read_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
 fi
 
 AC_MSG_CHECKING([for build with symbols])

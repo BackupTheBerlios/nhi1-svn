@@ -88,6 +88,8 @@ static enum MqErrorE ProcCall (
     // call function or method
     ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
       param_count, params, 1, EG(active_symbol_table) TSRMLS_CC);
+    // clear result
+    if (result) zval_dtor(result);
     zend_restore_error_handling(&original_error_handling TSRMLS_CC);
     PhpErrorCheck(ret);
   } zend_catch {
@@ -97,10 +99,6 @@ static enum MqErrorE ProcCall (
   // is an exception happen?
   if (EG(exception)) {
     NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
-  }
-  // clear result
-  if (result) {
-    zval_dtor(result);
   }
   return MqErrorGetCode(mqctx);
 error:

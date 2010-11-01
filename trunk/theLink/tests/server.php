@@ -85,14 +85,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
   }
 
   public function ECOI() {
-    throw new Exception('this is a test');
-#    $this->SendSTART();
-#    $this->SendI($this->ReadI());
-#    $this->SendRETURN();
+    $this->SendSTART();
+    $this->SendI($this->ReadI());
+    $this->SendRETURN();
   }
 
   public function ECOU() {
-#    throw new Exception('ECOU exception');
     $this->SendSTART();
     $this->SendU($this->ReadU());
     $this->SendRETURN();

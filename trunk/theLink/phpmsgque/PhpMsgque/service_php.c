@@ -44,8 +44,7 @@ PHP_METHOD(PhpMsgque_MqS, ServiceGetFilter)
 PHP_METHOD(PhpMsgque_MqS, ServiceCreate)
 {
   SETUP_mqctx;
-  char *str;
-  int strlen;
+  char *str; int strlen;
   zval *callable;
   void *data;
   MqTokenF tokenF;
