@@ -53,9 +53,9 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("LST1", array(&$this, 'LST1'));
 #      $this->ServiceCreate("LST2", array(&$this, 'LST2'));
 #
-#      $this->ServiceCreate("BUF1", array(&$this, 'BUF1'));
-#      $this->ServiceCreate("BUF2", array(&$this, 'BUF2'));
-#      $this->ServiceCreate("BUF3", array(&$this, 'BUF3'));
+      $this->ServiceCreate("BUF1", array(&$this, 'BUF1'));
+      $this->ServiceCreate("BUF2", array(&$this, 'BUF2'));
+      $this->ServiceCreate("BUF3", array(&$this, 'BUF3'));
 #
 #      $this->ServiceCreate("ERR2", array(&$this, 'ERRX'));
 #      $this->ServiceCreate("ERR3", array(&$this, 'ERRX'));
@@ -65,7 +65,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ERRT", array(&$this, 'ERRT'));
 #
 #      $this->ServiceCreate("ECOY", array(&$this, 'ECOY'));
-#      $this->ServiceCreate("ECOO", array(&$this, 'ECOO'));
+      $this->ServiceCreate("ECOO", array(&$this, 'ECOO'));
 #      $this->ServiceCreate("ECOS", array(&$this, 'ECOS'));
       $this->ServiceCreate("ECOI", array(&$this, 'ECOI'));
 #      $this->ServiceCreate("ECOW", array(&$this, 'ECOW'));
@@ -82,6 +82,51 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function BUF1() {
+    $buf = $this->ReadU();
+    $typ = $buf->GetType();
+    $this->SendSTART();
+    $this->SendC($typ);
+    switch ($typ) {
+      case "Y" : $this->SendY($buf->GetY()); break;
+      case "O" : $this->SendO($buf->GetO()); break;
+      case "S" : $this->SendS($buf->GetS()); break;
+      case "I" : $this->SendI($buf->GetI()); break;
+      case "F" : $this->SendF($buf->GetF()); break;
+      case "W" : $this->SendW($buf->GetW()); break;
+      case "D" : $this->SendD($buf->GetD()); break;
+      case "C" : $this->SendC($buf->GetC()); break;
+      case "B" : $this->SendB($buf->GetB()); break;
+    }
+    $this->SendRETURN();
+  }
+
+  public function BUF3() {
+    $this->SendSTART();
+    $buf = $this->ReadU();
+    $this->SendC($buf->GetType());
+    $this->SendU($buf);
+    $this->SendI($this->ReadI());
+    $this->SendU($buf);
+    $this->SendRETURN();
+  }
+
+  public function BUF2() {
+    $this->SendSTART();
+    for ($i=0; $i<3; $i++) {
+      $buf = $this->ReadU();
+      $this->SendC($buf->GetType());
+      $this->SendU($buf);
+    }
+    $this->SendRETURN();
+  }
+
+  public function ECOO() {
+    $this->SendSTART();
+    $this->SendO($this->ReadO());
+    $this->SendRETURN();
   }
 
   public function ECOB() {

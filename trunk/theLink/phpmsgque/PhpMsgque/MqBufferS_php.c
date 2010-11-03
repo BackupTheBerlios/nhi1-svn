@@ -1,3 +1,14 @@
+/**
+ *  \file       theLink/phpmsgque/PhpMsgque/MqBufferS_php.c
+ *  \brief      \$Id$
+ *  
+ *  (C) 2010 - NHI - #1 - Project - Group
+ *  
+ *  \version    \$Rev$
+ *  \author     EMail: aotto1968 at users.berlios.de
+ *  \attention  this software has GPL permissions to copy
+ *              please contact AUTHORS for additional information
+ */
 
 #include "msgque_php.h"
 
@@ -37,15 +48,15 @@ GET(F,FLT);
 GET(D,DBL);
 GET(C,CST);
 
-/*
-static VALUE GetB (VALUE self) {
+static
+PHP_METHOD(PhpMsgque_MqBufferS, GetB)
+{
+  SETUP_buf;
   MQ_BIN val;
   MQ_SIZE len;
-  SETUP_buf
   ErrorBufToPhpWithCheck(MqBufferGetB(buf, &val, &len));
-  return BIN2VAL(val,len);
+  BIN2VAL(return_value, val,len);
 }
-*/
 
 static
 PHP_METHOD(PhpMsgque_MqBufferS, GetType)
@@ -73,6 +84,8 @@ static const zend_function_entry NS(MqBufferS_functions)[] = {
   PHP_ME(PhpMsgque_MqBufferS, GetF,		no_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqBufferS, GetD,		no_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqBufferS, GetC,		no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqBufferS, GetB,		no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqBufferS, GetType,		no_arg,	      ZEND_ACC_PUBLIC)
 
   {NULL, NULL, NULL}
 };
