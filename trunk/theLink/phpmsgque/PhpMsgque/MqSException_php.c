@@ -90,12 +90,14 @@ void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
       zval_ptr_dtor(&ex);
       return;
     }
+/*
   } else if (PG(track_errors)) {
     zval* pData;
     PhpErrorCheck(zend_hash_find(EG(active_symbol_table), ID(php_errormsg), (void **) & pData));
     convert_to_string(pData);
     MqErrorC(mqctx, "PHP-Error", -1, VAL2CST(pData));
     return;
+*/
   }
 error:
   MqErrorC(mqctx, "PHP-Fatal-Error", -1, "unknown exception");

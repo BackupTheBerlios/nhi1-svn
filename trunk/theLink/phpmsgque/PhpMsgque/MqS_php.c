@@ -9,7 +9,10 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 #include "msgque_php.h"
+
+#define MQ_CONTEXT_S mqctx
 
 zend_class_entry *NS(MqS);
 zend_class_entry *NS(iServerSetup);
@@ -92,6 +95,60 @@ PHP_METHOD(PhpMsgque_MqS, ErrorSet)
     MqConfigSet ## name(mqctx, tokenF, data, tokenDataFreeF, tokenDataCopyF); \
   }
 
+
+static enum MqErrorE
+FactoryCreate(
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  MQ_PTR data,
+  struct MqS  ** mqctxP
+)
+{
+/*
+  if (create == MQ_FACTORY_NEW_FORK) {
+    //rb_thread_atfork();
+  }
+  if (create == MQ_FACTORY_NEW_THREAD) {
+    //RUBY_INIT_STACK;
+  }
+*/
+
+  TSRMLS_FETCH_FROM_CTX(tmpl->threadData);
+  zval *self;
+  enum MqErrorE ret = NS(ProcCall) (tmpl, (struct NS(ProcDataS) * const) data, 0, NULL, &self);
+
+  if (MqErrorCheckI(ret) || self == NULL || Z_TYPE_P(self) == IS_NULL) {
+    *mqctxP = NULL;
+    return MqErrorGetCode(tmpl);
+  } else {
+    struct MqS * const mqctx = *mqctxP = VAL2MqS(self);
+    zval_addref_p(self);
+    MqConfigDup(mqctx, tmpl);
+    MqErrorCheck(MqSetupDup(mqctx, tmpl));
+    return MQ_OK;
+error:
+    *mqctxP = NULL;
+    MqErrorCopy (tmpl, mqctx);
+    return MqErrorStack(tmpl);
+  }
+  return MQ_OK;
+}
+
+
+static void
+FactoryDelete(
+  struct MqS * mqctx,
+  MQ_BOL doFactoryDelete,
+  MQ_PTR data
+)
+{ 
+  MqContextFree (mqctx);
+  if (doFactoryDelete && mqctx->self != NULL) {
+    zval_delref_p(mqctx->self);
+    mqctx->self = NULL;
+  }
+}
+
 static
 PHP_METHOD(PhpMsgque_MqS, __construct)
 {
@@ -108,7 +165,25 @@ PHP_METHOD(PhpMsgque_MqS, __construct)
   CB(ServerCleanup)
   CB(BgError)
   CB(Event)
-  //CB(Factory)
+  if (instanceof_function(Z_OBJCE_P(getThis()), NS(iFactory) TSRMLS_CC)) {
+    zval *ctor;
+    void *data;
+    MqTokenF tokenF;
+    MqTokenDataFreeF tokenDataFreeF;
+    MqTokenDataCopyF tokenDataCopyF;
+    MAKE_STD_ZVAL(ctor);
+    array_init(ctor);
+    zval_addref_p(mqctx->self);
+    add_next_index_zval(ctor, mqctx->self);
+    add_next_index_string(ctor, "Factory", 1);
+    ErrorMqToPhpWithCheck (
+      NS(ProcInit) (mqctx, ctor, &data, &tokenF, &tokenDataFreeF, &tokenDataCopyF TSRMLS_CC)
+    );
+    MqConfigSetFactory(mqctx, 
+      FactoryCreate, data, tokenDataFreeF, tokenDataCopyF,
+      FactoryDelete, NULL,           NULL,           NULL
+    );
+  }
 }
 
 static
@@ -261,6 +336,10 @@ ZEND_BEGIN_ARG_INFO_EX(MqBufferS_arg, 0, 0, 1)
   ZEND_ARG_OBJ_INFO(0, buf, MqBufferS, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(MqS_arg, 0, 0, 1)
+  ZEND_ARG_OBJ_INFO(0, mqs, MqS, 0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(SlaveCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "id")
   ZEND_ARG_OBJ_INFO(0, slave, NS(MqS), 0)
@@ -322,12 +401,14 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ReadL_END,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadT_START,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadT_END,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadGetNumItems,	NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadItemExists,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadUndo,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadALL,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadProxy,		NULL,                 ZEND_ACC_PUBLIC)
 */
+  PHP_ME(PhpMsgque_MqS, ReadGetNumItems,	no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadItemExists,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadUndo,		no_arg,               ZEND_ACC_PUBLIC)
+/*
+  PHP_ME(PhpMsgque_MqS, ReadALL,		NULL,                 ZEND_ACC_PUBLIC)
+*/
+  PHP_ME(PhpMsgque_MqS, ReadProxy,		MqS_arg,              ZEND_ACC_PUBLIC)
 
   PHP_ME(PhpMsgque_MqS, SendSTART,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendEND,		SendEND_arg,          ZEND_ACC_PUBLIC)

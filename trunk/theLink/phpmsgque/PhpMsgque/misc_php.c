@@ -70,15 +70,17 @@ MQ_BFL NS(Argument2MqBufferLS)(const int numArgs TSRMLS_DC)
   return args;
 }
 
-static enum MqErrorE ProcCall (
+enum MqErrorE NS(ProcCall) (
   struct MqS * const		mqctx, 
   struct NS(ProcDataS) * const	data,
   zend_uint			param_count, 
-  zval**			params[]
+  zval**			params[],
+  zval**			resultP
 )
 {
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
   zval *result = NULL;
+  if (resultP) *resultP = NULL;
   zend_clear_exception(TSRMLS_C);
   MQ_BOL bailout = MQ_NO;
   zend_try {
@@ -87,16 +89,22 @@ static enum MqErrorE ProcCall (
     zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
     // call function or method
     ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
-      param_count, params, 1, EG(active_symbol_table) TSRMLS_CC);
-    // clear result
-    if (result) zval_dtor(result);
+      param_count, params, 1, NULL TSRMLS_CC);
+    // clear or save result
+    if (result) {
+      if (resultP) {
+	*resultP = result;
+      } else {
+	zval_dtor(result);
+      }
+    }
     zend_restore_error_handling(&original_error_handling TSRMLS_CC);
     PhpErrorCheck(ret);
   } zend_catch {
     // longjmp -> bailout -> fatal error
     MqErrorC(mqctx, "PHP-Fatal-Error", -1, "bailout");
   } zend_end_try()
-  // is an exception happen?
+  // does an exception happen?
   if (EG(exception)) {
     NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
   }
@@ -107,7 +115,7 @@ error:
 
 static enum MqErrorE ProcCallNoArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
 {
-  return ProcCall(mqctx,data,0,NULL);
+  return NS(ProcCall)(mqctx,data,0,NULL,NULL);
 }
 
 static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
@@ -115,7 +123,7 @@ static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDat
   zval *self = mqctx->self;
   zval_addref_p(self);
   zval **selfP = &self;
-  enum MqErrorE ret = ProcCall(mqctx,data,1,&selfP);
+  enum MqErrorE ret = NS(ProcCall)(mqctx,data,1,&selfP,NULL);
   zval_delref_p(self);
   return ret;
 }
@@ -162,19 +170,19 @@ enum MqErrorE NS(ProcInit) (
       // YES, no "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallNoArg;
       *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
     } else {
       // NO, "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallOneArg;
       *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
     }
     data->function_table = &ce->function_table;
   } else {
     // NO
       *tokenFP		= (MqTokenF) ProcCallOneArg;
       *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = NULL;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
     data->function_table = CG(function_table);
   }
   zval_addref_p(callable);

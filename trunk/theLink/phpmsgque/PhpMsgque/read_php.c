@@ -113,30 +113,29 @@ static VALUE ReadT_END (VALUE self) {
 }
 */
 
-/*
-static VALUE ReadProxy (VALUE self, VALUE mqs) {
-  SETUP_mqctx
-  CheckType(mqs, cMqS, "usage: ReadProxy MqS-Type-Arg");
+PHP_METHOD(PhpMsgque_MqS, ReadProxy)
+{
+  SETUP_mqctx;
+  ARG2OBJ(ReadProxy, mqs);
   ErrorMqToPhpWithCheck(MqReadProxy(mqctx, VAL2MqS(mqs)));
-  return Qnil;
 }
 
-static VALUE ReadGetNumItems (VALUE self) {
-  SETUP_mqctx
-  return INT2VAL(MqReadGetNumItems(mqctx));
+PHP_METHOD(PhpMsgque_MqS, ReadGetNumItems)
+{
+  INT2VAL(return_value, MqReadGetNumItems(MQCTX));
 }
 
-static VALUE ReadItemExists (VALUE self) {
-  SETUP_mqctx
-  return BOL2VAL(MqReadItemExists(mqctx));
+PHP_METHOD(PhpMsgque_MqS, ReadItemExists)
+{
+  BOL2VAL(return_value, MqReadItemExists(MQCTX));
 }
 
-static VALUE ReadUndo (VALUE self) {
-  SETUP_mqctx
+PHP_METHOD(PhpMsgque_MqS, ReadUndo)
+{
+  SETUP_mqctx;
   ErrorMqToPhpWithCheck(MqReadUndo(mqctx));
-  return Qnil;
+  RETURN_NULL();
 }
-*/
 
 /*****************************************************************************/
 /*                                                                           */
@@ -146,5 +145,4 @@ static VALUE ReadUndo (VALUE self) {
 
 void NS(MqS_Read_Init)(void) {
 }
-
 

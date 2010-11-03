@@ -168,4 +168,13 @@ enum MqErrorE NS(ProcInit) (
   TSRMLS_DC
 );
 
+enum MqErrorE NS(ProcCall) (
+  struct MqS * const		mqctx, 
+  struct NS(ProcDataS) * const	data,
+  zend_uint			param_count, 
+  zval**			params[],
+  zval**			resultP
+);
+
+
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;

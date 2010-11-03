@@ -85,14 +85,14 @@ PHP_METHOD(PhpMsgque_MqS, SendEND)
 PHP_METHOD(PhpMsgque_MqS, SendEND_AND_WAIT)
 {
   SETUP_mqctx;
-  int timeout = MQ_TIMEOUT_USER;
+  long timeout = MQ_TIMEOUT_USER;
   char *token; int tokenlen;
   if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, 
       "s|l", &token, &tokenlen, &timeout) == FAILURE) {
     RaiseError("usage: SendEND_AND_WAIT(string: token, long: timeout)");
     return;
   }
-  ErrorMqToPhpWithCheck(MqSendEND_AND_WAIT(mqctx, token, timeout));
+  ErrorMqToPhpWithCheck(MqSendEND_AND_WAIT(mqctx, token, (MQ_TIME_T)timeout));
   RETURN_NULL();
 }
 

@@ -29,6 +29,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
   }
 
   public function ServerSetup() {
+
     if ($this->SlaveIs() == false) {
 
       # add "master" services here
@@ -45,9 +46,9 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("SND2", array(&$this, 'SND2'));
 #      $this->ServiceCreate("REDI", array(&$this, 'REDI'));
 #      $this->ServiceCreate("GTCX", array(&$this, 'GTCX'));
-#      $this->ServiceCreate("CSV1", array(&$this, 'CSV1'));
-#      $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
-#      $this->ServiceCreate("USLP", array(&$this, 'USLP'));
+      $this->ServiceCreate("CSV1", array(&$this, 'CSV1'));
+      $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
+      $this->ServiceCreate("USLP", array(&$this, 'USLP'));
 #      $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
 #      $this->ServiceCreate("INIT", array(&$this, 'INIT'));
 #      $this->ServiceCreate("LST1", array(&$this, 'LST1'));
@@ -64,14 +65,14 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ERR6", array(&$this, 'ERRX'));
 #      $this->ServiceCreate("ERRT", array(&$this, 'ERRT'));
 #
-#      $this->ServiceCreate("ECOY", array(&$this, 'ECOY'));
+      $this->ServiceCreate("ECOY", array(&$this, 'ECOY'));
       $this->ServiceCreate("ECOO", array(&$this, 'ECOO'));
-#      $this->ServiceCreate("ECOS", array(&$this, 'ECOS'));
+      $this->ServiceCreate("ECOS", array(&$this, 'ECOS'));
       $this->ServiceCreate("ECOI", array(&$this, 'ECOI'));
-#      $this->ServiceCreate("ECOW", array(&$this, 'ECOW'));
-#      $this->ServiceCreate("ECOF", array(&$this, 'ECOF'));
-#      $this->ServiceCreate("ECOD", array(&$this, 'ECOD'));
-#      $this->ServiceCreate("ECOC", array(&$this, 'ECOC'));
+      $this->ServiceCreate("ECOW", array(&$this, 'ECOW'));
+      $this->ServiceCreate("ECOF", array(&$this, 'ECOF'));
+      $this->ServiceCreate("ECOD", array(&$this, 'ECOD'));
+      $this->ServiceCreate("ECOC", array(&$this, 'ECOC'));
       $this->ServiceCreate("ECOB", array(&$this, 'ECOB'));
       $this->ServiceCreate("ECOU", array(&$this, 'ECOU'));
 #      $this->ServiceCreate("ECON", array(&$this, 'ECON'));
@@ -82,6 +83,70 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function SLEP() {
+    $i = $this->ReadI();
+    sleep($i);
+    $this->SendSTART();
+    $this->SendI($i);
+    $this->SendRETURN();
+  }
+
+  public function USLP() {
+    $i = $this->ReadI();
+    usleep($i);
+    $this->SendSTART();
+    $this->SendI($i);
+    $this->SendRETURN();
+  }
+
+  public function CSV1() {
+    # call an other service
+    $this->SendSTART();
+    $this->SendI($this->ReadI()+1);
+    $this->SendEND_AND_WAIT("CSV2", 10);
+
+    # read the answer and send the result back
+    $this->SendSTART();
+    $this->SendI($this->ReadI()+1);
+    $this->SendRETURN();
+  }
+
+  public function ECOY() {
+    $this->SendSTART();
+    $this->SendY($this->ReadY());
+    $this->SendRETURN();
+  }
+
+  public function ECOW() {
+    $this->SendSTART();
+    $this->SendW($this->ReadW());
+    $this->SendRETURN();
+  }
+
+  public function ECOC() {
+    $this->SendSTART();
+    $this->SendC($this->ReadC());
+    $this->SendRETURN();
+  }
+
+  public function ECOS() {
+    $this->SendSTART();
+    $this->SendS($this->ReadS());
+    $this->SendRETURN();
+  }
+
+  public function ECOD() {
+    $this->SendSTART();
+    $this->SendD($this->ReadD());
+    $this->SendRETURN();
+  }
+
+  public function ECOF() {
+    $this->SendSTART();
+    $this->SendF($this->ReadF());
+    $this->SendRETURN();
   }
 
   public function BUF1() {
@@ -148,14 +213,14 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
   }
 
   public function SETU() {
-    $buf = $this->ReadU();
+    $this->buf = $this->ReadU();
   }
 
   public function GETU() {
     $this->SendSTART();
-    $this->SendU($buf);
+    $this->SendU($this->buf);
     $this->SendRETURN();
-    $buf = NULL;
+    $this->buf = NULL;
   }
 
 }

@@ -417,6 +417,7 @@ error:
   /* check if an argument is available? and decrease the number of arguments */ \
   /* buf->numItems have to be an \b int !! because --0 have to be < 0 */ \
   if ((--buf->numItems) < 0) { \
+    buf->numItems = 0; \
     return MqErrorDb2 (context,MQ_ERROR_REQUEST_ARGUMENTS); \
   } \
  \

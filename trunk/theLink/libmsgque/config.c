@@ -728,7 +728,6 @@ MqConfigSetServerSetup (
   MqTokenDataCopyF fCopy
 )
 {
-//MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
     (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
   }
