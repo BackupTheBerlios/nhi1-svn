@@ -40,7 +40,7 @@ static zend_object_value NS(MqS_new)(zend_class_entry *ce TSRMLS_DC)
   TSRMLS_SET_CTX(mqctx->threadData) ;
 
   // register resources
-  zend_update_property_long(NS(MqS), &retval, ID(mqctx), (long) mqctx TSRMLS_CC);
+  zend_update_property_long(NS(MqS), &retval, ID(__ctx), (long) mqctx TSRMLS_CC);
   return Z_OBJVAL(retval);
 }
 
@@ -257,6 +257,10 @@ ZEND_BEGIN_ARG_INFO_EX(Exception_arg, 0, 0, 1)
   ZEND_ARG_OBJ_INFO(0, ex, Exception, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(MqBufferS_arg, 0, 0, 1)
+  ZEND_ARG_OBJ_INFO(0, buf, MqBufferS, 0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(SlaveCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "id")
   ZEND_ARG_OBJ_INFO(0, slave, NS(MqS), 0)
@@ -309,12 +313,11 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ReadW,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadD,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadC,			no_arg,               ZEND_ACC_PUBLIC)
-
+  PHP_ME(PhpMsgque_MqS, ReadB,			no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadN,			no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadBDY,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadU,			no_arg,               ZEND_ACC_PUBLIC)
 /*
-  PHP_ME(PhpMsgque_MqS, ReadB,			NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadN,			NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadBDY,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadU,			NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadL_START,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadL_END,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadT_START,		NULL,                 ZEND_ACC_PUBLIC)
@@ -340,11 +343,11 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, SendW,			value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendD,			value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendC,			value_arg,            ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendB,			value_arg,            ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendN,			value_arg,            ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendBDY,		value_arg,            ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendU,			MqBufferS_arg,        ZEND_ACC_PUBLIC)
 /*
-  PHP_ME(PhpMsgque_MqS, SendB,			NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendN,			NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendBDY,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendU,			NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendL_START,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendL_END,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendT_START,		NULL,                 ZEND_ACC_PUBLIC)
@@ -487,7 +490,7 @@ void NS(MqS_Init) (TSRMLS_D)
   NS(MqS)->create_object = NS(MqS_new);
 
   // define additional properties "mqctx" to save the "struct MqS *" pointer
-  zend_declare_property_null(NS(MqS), ID(mqctx), ZEND_ACC_PRIVATE TSRMLS_CC);
+  zend_declare_property_null(NS(MqS), ID(__ctx), ZEND_ACC_PRIVATE TSRMLS_CC);
 
   // create enum "MqS_WAIT"
   zend_declare_class_constant_long(NS(MqS), ID(WAIT_NO),	  0 TSRMLS_CC);

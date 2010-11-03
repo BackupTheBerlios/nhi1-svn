@@ -35,39 +35,37 @@ Send(F,FLT)
 Send(D,DBL)
 Send(C,CST)
 
-/*
 PHP_METHOD(PhpMsgque_MqS, SendB)
 {
   SETUP_mqctx;
-  StringValue(val);
-  ErrorMqToPhpWithCheck(MqSendB(mqctx,VAL2BIN(val)));
+  ARG2CST(SendB,val);
+  ErrorMqToPhpWithCheck(MqSendB(mqctx,val,vallen));
   RETURN_NULL();
 }
 
 PHP_METHOD(PhpMsgque_MqS, SendN)
 {
   SETUP_mqctx;
-  StringValue(val);
-  ErrorMqToPhpWithCheck(MqSendN(mqctx,VAL2BIN(val)));
+  ARG2CST(SendN,val);
+  ErrorMqToPhpWithCheck(MqSendN(mqctx,val,vallen));
   RETURN_NULL();
 }
 
 PHP_METHOD(PhpMsgque_MqS, SendBDY)
 {
   SETUP_mqctx;
-  StringValue(val);
-  ErrorMqToPhpWithCheck(MqSendBDY(mqctx,VAL2BIN(val)));
+  ARG2CST(SendBDY,val);
+  ErrorMqToPhpWithCheck(MqSendBDY(mqctx,val,vallen));
   RETURN_NULL();
 }
 
 PHP_METHOD(PhpMsgque_MqS, SendU)
 {
   SETUP_mqctx;
-  CheckType(buf, cMqBufferS, "usage: SendU MqBufferS-Type-Arg");
+  ARG2OBJ(SendU,buf);
   ErrorMqToPhpWithCheck(MqSendU(mqctx,VAL2MqBufferS(buf)));
   RETURN_NULL();
 }
-*/
 
 PHP_METHOD(PhpMsgque_MqS, SendSTART)
 {

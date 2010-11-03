@@ -36,42 +36,42 @@ READ(F,FLT);
 READ(D,DBL);
 READ(C,CST);
 
-/*
-static VALUE ReadB (VALUE self) {
+PHP_METHOD(PhpMsgque_MqS, ReadB)
+{
   MQ_BIN val;
   MQ_SIZE len;
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadB(mqctx, &val, &len));
-  return BIN2VAL(val,len);
+  SETUP_mqctx;
+  ErrorMqToPhpWithCheck(MqReadB(mqctx, &val, &len));
+  BIN2VAL(return_value,val,len);
 }
 
-static VALUE ReadN (VALUE self) {
+PHP_METHOD(PhpMsgque_MqS, ReadN)
+{
   MQ_CBI val;
   MQ_SIZE len;
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadN(mqctx, &val, &len));
-  return BIN2VAL(val,len);
+  SETUP_mqctx;
+  ErrorMqToPhpWithCheck(MqReadN(mqctx, &val, &len));
+  BIN2VAL(return_value, val,len);
 }
 
-static VALUE ReadBDY (VALUE self) {
+PHP_METHOD(PhpMsgque_MqS, ReadBDY)
+{
   MQ_BIN val;
   MQ_SIZE len;
-  VALUE ret;
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadBDY(mqctx, &val, &len));
-  ret = BIN2VAL(val,len);
-  return ret;
+  SETUP_mqctx;
+  ErrorMqToPhpWithCheck(MqReadBDY(mqctx, &val, &len));
+  BIN2VAL(return_value, val,len);
 }
 
-static VALUE ReadU (VALUE self) {
+PHP_METHOD(PhpMsgque_MqS, ReadU)
+{
   MQ_BUF buf = NULL;
-  VALUE ret;
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadU(mqctx, &buf));
-  ret = NS(MqBufferS_New) (buf);
-  return ret;
+  SETUP_mqctx;
+  ErrorMqToPhpWithCheck(MqReadU(mqctx, &buf));
+  NS(MqBufferS_New) (return_value, buf TSRMLS_CC);
 }
 
+/*
 static VALUE ReadL_START (int argc, VALUE *argv, VALUE self) {
   MQ_BUF MqBufferS_object = NULL;
   SETUP_mqctx
@@ -81,7 +81,7 @@ static VALUE ReadL_START (int argc, VALUE *argv, VALUE self) {
     if (rb_obj_is_kind_of(argv[0], cMqBufferS) == Qfalse) goto error;
     MqBufferS_object = VAL2MqBufferS(argv[0]);
   }
-  ErrorMqToRubyWithCheck(MqReadL_START(mqctx, MqBufferS_object));
+  ErrorMqToPhpWithCheck(MqReadL_START(mqctx, MqBufferS_object));
   return Qnil;
 error:
   rb_raise(rb_eArgError,"usage: ReadL_START ?MqBufferS-Type-Arg?");
@@ -89,7 +89,7 @@ error:
 
 static VALUE ReadL_END (VALUE self) {
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadL_END(mqctx));
+  ErrorMqToPhpWithCheck(MqReadL_END(mqctx));
   return Qnil;
 }
 
@@ -102,13 +102,13 @@ static VALUE ReadT_START (int argc, VALUE *argv, VALUE self) {
     CheckType(argv[0],cMqBufferS,"usage: ReadT_START ?MqBufferS-Type-Arg?")
     MqBufferS_object = VAL2MqBufferS(argv[0]);
   }
-  ErrorMqToRubyWithCheck(MqReadT_START(mqctx, MqBufferS_object));
+  ErrorMqToPhpWithCheck(MqReadT_START(mqctx, MqBufferS_object));
   return Qnil;
 }
 
 static VALUE ReadT_END (VALUE self) {
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadT_END(mqctx));
+  ErrorMqToPhpWithCheck(MqReadT_END(mqctx));
   return Qnil;
 }
 */
@@ -117,7 +117,7 @@ static VALUE ReadT_END (VALUE self) {
 static VALUE ReadProxy (VALUE self, VALUE mqs) {
   SETUP_mqctx
   CheckType(mqs, cMqS, "usage: ReadProxy MqS-Type-Arg");
-  ErrorMqToRubyWithCheck(MqReadProxy(mqctx, VAL2MqS(mqs)));
+  ErrorMqToPhpWithCheck(MqReadProxy(mqctx, VAL2MqS(mqs)));
   return Qnil;
 }
 
@@ -133,7 +133,7 @@ static VALUE ReadItemExists (VALUE self) {
 
 static VALUE ReadUndo (VALUE self) {
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadUndo(mqctx));
+  ErrorMqToPhpWithCheck(MqReadUndo(mqctx));
   return Qnil;
 }
 */
@@ -146,4 +146,5 @@ static VALUE ReadUndo (VALUE self) {
 
 void NS(MqS_Read_Init)(void) {
 }
+
 

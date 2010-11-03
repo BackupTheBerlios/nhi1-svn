@@ -89,6 +89,7 @@ PHP_MINIT_FUNCTION(PhpMsgque)
 
   NS(MqS_Init)			(TSRMLS_C);
   NS(MqSException_Init)	(TSRMLS_C);
+  NS(MqBufferS_Init)	(TSRMLS_C);
 
   /* If you have INI entries, uncomment these lines 
   REGISTER_INI_ENTRIES();

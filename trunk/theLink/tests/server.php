@@ -32,8 +32,8 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
     if ($this->SlaveIs() == false) {
 
       # add "master" services here
-#      $this->ServiceCreate("SETU", array(&$this, 'SETU'));
-#      $this->ServiceCreate("GETU", array(&$this, 'GETU'));
+      $this->ServiceCreate("SETU", array(&$this, 'SETU'));
+      $this->ServiceCreate("GETU", array(&$this, 'GETU'));
 #
 #      $this->ServiceCreate("PRNT", array(&$this, 'PRNT'));
 #      $this->ServiceCreate("TRNS", array(&$this, 'TRNS'));
@@ -72,7 +72,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECOF", array(&$this, 'ECOF'));
 #      $this->ServiceCreate("ECOD", array(&$this, 'ECOD'));
 #      $this->ServiceCreate("ECOC", array(&$this, 'ECOC'));
-#      $this->ServiceCreate("ECOB", array(&$this, 'ECOB'));
+      $this->ServiceCreate("ECOB", array(&$this, 'ECOB'));
       $this->ServiceCreate("ECOU", array(&$this, 'ECOU'));
 #      $this->ServiceCreate("ECON", array(&$this, 'ECON'));
 #      $this->ServiceCreate("ECOL", array(&$this, 'ECOL'));
@@ -82,6 +82,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function ECOB() {
+    $this->SendSTART();
+    $this->SendB($this->ReadB());
+    $this->SendRETURN();
   }
 
   public function ECOI() {
@@ -95,6 +101,18 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
     $this->SendU($this->ReadU());
     $this->SendRETURN();
   }
+
+  public function SETU() {
+    $buf = $this->ReadU();
+  }
+
+  public function GETU() {
+    $this->SendSTART();
+    $this->SendU($buf);
+    $this->SendRETURN();
+    $buf = NULL;
+  }
+
 }
 
 $ctx = new Server();

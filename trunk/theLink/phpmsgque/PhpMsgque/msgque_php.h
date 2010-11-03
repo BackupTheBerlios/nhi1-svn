@@ -24,16 +24,18 @@
 #include "msgque.h"
 #include "debug.h"
 
-extern zend_class_entry *PhpMsgque_MqS;
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                 ref counting                              */
 /*                                                                           */
 /*****************************************************************************/
 
-#define LIBMSGQUE_VERSION   "4.6"
 #define NS(n)               PhpMsgque_ ## n
+
+extern zend_class_entry *NS(MqS);
+extern zend_class_entry *NS(MqBufferS);
+
+#define LIBMSGQUE_VERSION   "4.6"
 #define MQCTX               VAL2MqS(getThis())
 #define SETUP_mqctx         struct MqS * mqctx = MQCTX
 #define SELF                ((zval*)(mqctx)->self)
@@ -70,11 +72,9 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define VAL2FLT(val)	    (MQ_FLT)Z_DVAL_P(val)
 #define VAL2DBL(val)	    (MQ_DBL)Z_DVAL_P(val)
 #define VAL2CST(val)	    (MQ_CST)Z_STRVAL_P(val)
-#define VAL2PTR(val)	    (MQ_PTR)(val)
-#define VALP2CST(valp)	    (MQ_CST)rb_string_value_cstr(valp)
-#define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),Z_STRLEN_P(val)
-#define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
-#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(mqctx), 0 TSRMLS_CC))
+#define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),(MQ_SIZE)Z_STRLEN_P(val)
+#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
+#define VAL2MqBufferS(val)  (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
 
 
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
@@ -85,8 +85,7 @@ extern zend_class_entry *PhpMsgque_MqS;
 #define	FLT2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
 #define	DBL2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
 #define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,nat,1)
-#define	PTR2VAL(zval,nat)	    (nat != NULL ? ZVAL_RESOURCE(zval,nat) : ZVAL_NULL(zval))
-#define BIN2VAL(zval,ptr,len)	    rb_str_buf_cat(rb_str_buf_new(0),(char*)ptr,len)
+#define	BIN2VAL(zval,ptr,len)	    ZVAL_STRINGL(zval,ptr,len,1)
 #define	MqS2VAL(val,nat)	    \
 if (nat != NULL) { \
   zval *tmp = (zval*)nat->self; \
@@ -115,8 +114,8 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
 
 
 #define ARG2CST(mth,val) \
-MQ_CST val; int len;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, &len) == FAILURE) { \
+MQ_CST val; int val ## len;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, & val ## len) == FAILURE) { \
   RaiseError("usage: " #mth "(string:" #val ")"); \
   return; \
 }
@@ -125,6 +124,13 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
 zend_bool val;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
   RaiseError("usage: " #mth "(boolean:" #val ")"); \
+  return; \
+}
+
+#define ARG2OBJ(mth,val) \
+zval *val;\
+if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "o", &val) == FAILURE) { \
+  RaiseError("usage: " #mth "(object:" #val ")"); \
   return; \
 }
 
@@ -138,6 +144,7 @@ void NS(MqSException_Raise)	  (struct MqS* TSRMLS_DC);
 void NS(MqSException_Set)	  (struct MqS*, zval* TSRMLS_DC);
 MQ_BFL NS(Argument2MqBufferLS)	  (int numArgs TSRMLS_DC);
 void NS(MqBufferLAppendZVal)	  (MQ_BFL, zval* TSRMLS_DC);
+void NS(MqBufferS_New)		  (zval *, MQ_BUF TSRMLS_DC);
 
 
 /*****************************************************************************/

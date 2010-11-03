@@ -75,7 +75,7 @@ PHP_METHOD(PhpMsgque_MqS, ConfigSetIoTcp)
   MQ_PTR procData; \
   MqTokenDataCopyF procCopy; \
   CheckType(callback, rb_cMethod, "usage: ConfigSet" #T " Method-Type-Arg"); \
-  ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, callback, &procCall, &procData, &procCopy)); \
+  ErrorMqToPhpWithCheck(NS(ProcInit) (mqctx, callback, &procCall, &procData, &procCopy)); \
   MqConfigSet ## T (mqctx,  procCall, procData, NS(ProcFree), procCopy); \
   return Qnil; \
 }
@@ -145,7 +145,7 @@ static VALUE ConfigSetFactory (VALUE self, VALUE proc)
   MQ_PTR procData;
   MqTokenDataCopyF procCopy;
   CheckType(proc, rb_cProc, "usage: ConfigSetFactory Proc-Type-Arg");
-  ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, proc, &procCall, &procData, &procCopy));
+  ErrorMqToPhpWithCheck(NS(ProcInit) (mqctx, proc, &procCall, &procData, &procCopy));
   MqConfigSetFactory(mqctx,
     FactoryCreate,  procData,  NS(ProcFree), procCopy,
     FactoryDelete,  NULL,      NULL,         NULL
@@ -163,4 +163,5 @@ static VALUE ConfigSetFactory (VALUE self, VALUE proc)
 
 void NS(MqS_Config_Init)(TSRMLS_D) {
 }
+
 
