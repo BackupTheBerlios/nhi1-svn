@@ -1,6 +1,6 @@
 <?php
 #+
-#§  \file       theLink/example/php/manfilter.php
+#§  \file       theLink/example/php/Filter1.php
 #§  \brief      \$Id$
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group
@@ -11,29 +11,43 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class ManFilter extends MqS implements iServerSetup, iFactory {
+class Filter1 extends MqS implements iServerSetup, iFactory {
   public function __construct() {
     $this->ConfigSetName('filter');
+    $this->data = array();
     parent::__construct();
   }
   public function Factory() {
-    return new ManFilter();
+    return new Filter1();
   }
   public function ServerSetup() {
     $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
-    $this->ServiceProxy('+EOF');
+    $this->ServiceCreate('+EOF', array(&$this, 'EOFcmd'));
   }
   public function FTRcmd() {
-    $ftr = $this->ServiceGetFilter();
-    $ftr->SendSTART();
+    $list = array();
     while ($this->ReadItemExists()) {
-      $ftr->SendC("<" . $this->ReadC() . ">");
+      $item = $this->ReadC();
+      $list[] = "<$item>";
     }
-    $ftr->SendEND_AND_WAIT('+FTR');
+    $this->data[] = $list;
+    $this->SendRETURN();
+  }
+  public function EOFcmd() {
+    $ftr = $this->ServiceGetFilter();
+    foreach ($this->data as $list) {
+      $ftr->SendSTART();
+      foreach ($list as $item) {
+        $ftr->SendC($item);
+      }
+      $ftr->SendEND_AND_WAIT('+FTR');
+    }
+    $ftr->SendSTART();
+    $ftr->SendEND_AND_WAIT('+EOF');
     $this->SendRETURN();
   }
 }
-$srv = new ManFilter();
+$srv = new Filter1();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

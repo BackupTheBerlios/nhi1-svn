@@ -51,6 +51,14 @@ static
 PHP_METHOD(PhpMsgque_MqS, Exit)
 {
   MqExit(MQCTX);
+  RETURN_NULL();
+}
+
+static
+PHP_METHOD(PhpMsgque_MqS, Delete)
+{
+  MqContextFree(MQCTX);
+  RETURN_NULL();
 }
 
 static
@@ -67,15 +75,6 @@ PHP_METHOD(PhpMsgque_MqS, LogC)
   MqLogC(MQCTX, prefix, level, msg);
 }
 
-
-static
-PHP_METHOD(PhpMsgque_MqS, ErrorSet)
-{
-  zval *ex;
-  zend_get_parameters(0, 1, &ex);
-  NS(MqSException_Set)(MQCTX, ex TSRMLS_CC);
-  RETURN_NULL();
-}
 
 #define CB(name) \
   if (instanceof_function(Z_OBJCE_P(getThis()), NS(i ## name) TSRMLS_CC)) { \
@@ -114,6 +113,7 @@ FactoryCreate(
 */
 
   TSRMLS_FETCH_FROM_CTX(tmpl->threadData);
+  //TSRMLS_FETCH();
   zval *self;
   enum MqErrorE ret = NS(ProcCall) (tmpl, (struct NS(ProcDataS) * const) data, 0, NULL, &self);
 
@@ -133,7 +133,6 @@ error:
   }
   return MQ_OK;
 }
-
 
 static void
 FactoryDelete(
@@ -377,11 +376,17 @@ ZEND_BEGIN_ARG_INFO_EX(value_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "value")
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(ErrorC_arg, 0, 0, 3)
+  ZEND_ARG_INFO(0, "prefix")
+  ZEND_ARG_INFO(0, "errnum")
+  ZEND_ARG_INFO(0, "message")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, __construct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(PhpMsgque_MqS, __destruct,		NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(PhpMsgque_MqS, Exit,			no_arg,		      ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorSet,		Exception_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, Delete,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LogC,			LogC_arg,	      ZEND_ACC_PUBLIC)
 
   PHP_ME(PhpMsgque_MqS, ReadY,			no_arg,               ZEND_ACC_PUBLIC)
@@ -494,17 +499,17 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ServiceDelete,		ServiceDelete_arg,    ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ProcessEvent,		NULL,                 ZEND_ACC_PUBLIC)
 
+  PHP_ME(PhpMsgque_MqS, ErrorC,			ErrorC_arg,           ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorSet,		Exception_arg,        ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorSetCONTINUE,	no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorIsEXIT,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorGetText,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorGetNum,		no_arg,               ZEND_ACC_PUBLIC)
 /*
-  PHP_ME(PhpMsgque_MqS, ErrorC,			NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorSet,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorSetCONTINUE,	NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorIsEXIT,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorGetText,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorGetNum,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorGetCode,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorReset,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorPrint,		NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorGetCode,		no_arg,               ZEND_ACC_PUBLIC)
 */
+  PHP_ME(PhpMsgque_MqS, ErrorReset,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorPrint,		no_arg,               ZEND_ACC_PUBLIC)
 
   PHP_ME(PhpMsgque_MqS, SlaveWorker,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SlaveCreate,		SlaveCreate_arg,      ZEND_ACC_PUBLIC)

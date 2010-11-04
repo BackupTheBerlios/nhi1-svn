@@ -596,6 +596,7 @@ enum MqErrorE SysIgnorSIGCHLD (
   struct MqS * const context
 )
 {
+MQ_I0;
 #ifdef MQ_IS_POSIX
   if (unlikely ((signal(SIGCHLD, SIG_IGN)) == SIG_ERR)) {
     return MqErrorSys (signal);

@@ -79,32 +79,31 @@ enum MqErrorE NS(ProcCall) (
 )
 {
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  //TSRMLS_FETCH();
   zval *result = NULL;
   if (resultP) *resultP = NULL;
   zend_clear_exception(TSRMLS_C);
   MQ_BOL bailout = MQ_NO;
-  zend_try {
-    int ret;
-    zend_error_handling  original_error_handling;
-    zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
-    // call function or method
-    ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
-      param_count, params, 1, NULL TSRMLS_CC);
-    // clear or save result
-    if (result) {
-      if (resultP) {
-	*resultP = result;
-      } else {
-	zval_dtor(result);
-      }
+  int ret;
+  zend_error_handling  original_error_handling;
+  // throw 'exception' on error
+  zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
+  // call function or method
+  ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
+    param_count, params, 1, NULL TSRMLS_CC);
+  // clear or save result
+  if (result) {
+    if (resultP) {
+      *resultP = result;
+    } else {
+      zval_dtor(result);
     }
-    zend_restore_error_handling(&original_error_handling TSRMLS_CC);
-    PhpErrorCheck(ret);
-  } zend_catch {
-    // longjmp -> bailout -> fatal error
-    MqErrorC(mqctx, "PHP-Fatal-Error", -1, "bailout");
-  } zend_end_try()
-  // does an exception happen?
+  }
+  // restore old exception handler
+  zend_restore_error_handling(&original_error_handling TSRMLS_CC);
+  // Error result ?
+  PhpErrorCheck(ret);
+  // does an 'Exception' happen?
   if (EG(exception)) {
     NS(MqSException_Set) (mqctx, EG(exception) TSRMLS_CC);
   }
@@ -131,6 +130,7 @@ static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDat
 static void ProcFree (struct MqS const * const mqctx, struct NS(ProcDataS) ** dataP)
 {
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
+  //TSRMLS_FETCH();
   zval_ptr_dtor(&(*dataP)->ctor);
   efree(*dataP);
   *dataP = NULL;

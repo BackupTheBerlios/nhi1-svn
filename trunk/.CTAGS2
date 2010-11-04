@@ -82,6 +82,8 @@ cp $D/tags .
 [[ $(basename $PWD) == "phpmsgque" || $(basename $PWD) == "PhpMsgque" ]] && {
   find $HOME/src/php-5.3.3 -name "*.[ch]" | \
     xargs ctags -a $ADD
+  find $HOME/ext/x86_64-suse-linux/thread/include/php -name "*.[h]" | \
+    xargs ctags -f php.tags $ADD
 }
 
 [[ $(basename $PWD) == "rubymsgque" ]] && {

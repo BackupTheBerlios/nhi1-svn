@@ -970,8 +970,9 @@ MqConfigGetIoUdsFile (
 )
 {
   MQ_CST s=NULL;
-  if (context->config.io.uds.file != NULL)
+  if (context->config.io.uds.file != NULL) {
     MqBufferGetC(context->config.io.uds.file, &s);
+  }
   return s;
 }
 

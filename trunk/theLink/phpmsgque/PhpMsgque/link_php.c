@@ -39,17 +39,15 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
   zend_get_parameters_array_ex(argc, argv);
   CheckType(*argv[0], NS(MqS), "usage: LinkCreateChild MqS-Type-Arg ...");
   parent = VAL2MqS(*argv[0]);
-  argc--; argv++;
 
   // read other args
-  if (argc > 0) {
+  if (argc > 1) {
     int i;
     args = MqBufferLCreate(argc);
-    for (i=0; i<argc; i++) {
+    for (i=1; i<argc; i++) {
       NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }
   }
-
   efree(argv);
 
   // create Context

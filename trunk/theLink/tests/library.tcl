@@ -928,6 +928,7 @@ if {![llength [filterGet SRV_LST pipe]]} {
 
 package require tcltest
 namespace import -force ::tcltest::*
+
 configure {*}$::args
 
 ## some basic restrictions
@@ -1330,6 +1331,7 @@ proc Exec {args} {
   if {$::env(TS_SETUP)} {
     Print args
   }
+  #if {[catch {exec {*}$args >&@stdout} ERR]} {}
   if {[catch {exec {*}$args} ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {

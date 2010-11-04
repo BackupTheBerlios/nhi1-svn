@@ -59,10 +59,12 @@ extern zend_class_entry *NS(MqBufferS);
 #define PhpErrorCheck(val) if ((val) == FAILURE) goto error
 
 #define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),msg,1 TSRMLS_CC);
-//#define RaiseError(msg)	    zend_throw_exception(zend_get_error_exception(TSRMLS_C),msg,1 TSRMLS_CC);
 
 #define CheckType(val,typ,err) \
-  if (instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) RaiseError(err)
+  if (!instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) { \
+    RaiseError(err); \
+    RETURN_NULL(); \
+  }
 
 #define VAL2BYT(val)	    (MQ_BYT)Z_LVAL_P(val)
 #define VAL2BOL(val)	    (MQ_BOL)Z_BVAL_P(val)
@@ -84,12 +86,12 @@ extern zend_class_entry *NS(MqBufferS);
 #define	WID2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	FLT2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
 #define	DBL2VAL(zval,nat)	    ZVAL_DOUBLE(zval,(double)nat)
-#define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,nat,1)
+#define	CST2VAL(zval,nat)	    ZVAL_STRING(zval,(nat?nat:""),1)
 #define	BIN2VAL(zval,ptr,len)	    ZVAL_STRINGL(zval,ptr,len,1)
 #define	MqS2VAL(val,nat)	    \
 if (nat != NULL) { \
   zval *tmp = (zval*)nat->self; \
-  ZVAL_ZVAL(val,tmp,0,0); \
+  ZVAL_ZVAL(val,tmp,1,0); \
 } else { \
   ZVAL_NULL(val); \
 }

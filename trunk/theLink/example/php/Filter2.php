@@ -1,6 +1,6 @@
 <?php
 #+
-#§  \file       theLink/example/php/manfilter.php
+#§  \file       theLink/example/php/Filter2.php
 #§  \brief      \$Id$
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group
@@ -11,29 +11,24 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class ManFilter extends MqS implements iServerSetup, iFactory {
+class Filter2 extends MqS implements iServerSetup, iFactory {
   public function __construct() {
     $this->ConfigSetName('filter');
+    $this->data = array();
     parent::__construct();
   }
   public function Factory() {
-    return new ManFilter();
+    return new Filter2();
   }
   public function ServerSetup() {
     $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
     $this->ServiceProxy('+EOF');
   }
   public function FTRcmd() {
-    $ftr = $this->ServiceGetFilter();
-    $ftr->SendSTART();
-    while ($this->ReadItemExists()) {
-      $ftr->SendC("<" . $this->ReadC() . ">");
-    }
-    $ftr->SendEND_AND_WAIT('+FTR');
-    $this->SendRETURN();
+    throw new Exception('my error');
   }
 }
-$srv = new ManFilter();
+$srv = new Filter2();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

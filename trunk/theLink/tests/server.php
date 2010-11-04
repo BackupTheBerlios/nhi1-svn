@@ -49,7 +49,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("CSV1", array(&$this, 'CSV1'));
       $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
-#      $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
+      $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
 #      $this->ServiceCreate("INIT", array(&$this, 'INIT'));
 #      $this->ServiceCreate("LST1", array(&$this, 'LST1'));
 #      $this->ServiceCreate("LST2", array(&$this, 'LST2'));
@@ -57,14 +57,14 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("BUF1", array(&$this, 'BUF1'));
       $this->ServiceCreate("BUF2", array(&$this, 'BUF2'));
       $this->ServiceCreate("BUF3", array(&$this, 'BUF3'));
-#
-#      $this->ServiceCreate("ERR2", array(&$this, 'ERRX'));
-#      $this->ServiceCreate("ERR3", array(&$this, 'ERRX'));
-#      $this->ServiceCreate("ERR4", array(&$this, 'ERRX'));
-#      $this->ServiceCreate("ERR5", array(&$this, 'ERRX'));
-#      $this->ServiceCreate("ERR6", array(&$this, 'ERRX'));
-#      $this->ServiceCreate("ERRT", array(&$this, 'ERRT'));
-#
+
+      $this->ServiceCreate("ERR2", array(&$this, 'ERRX'));
+      $this->ServiceCreate("ERR3", array(&$this, 'ERRX'));
+      $this->ServiceCreate("ERR4", array(&$this, 'ERRX'));
+      $this->ServiceCreate("ERR5", array(&$this, 'ERRX'));
+      $this->ServiceCreate("ERR6", array(&$this, 'ERRX'));
+      $this->ServiceCreate("ERRT", array(&$this, 'ERRT'));
+
       $this->ServiceCreate("ECOY", array(&$this, 'ECOY'));
       $this->ServiceCreate("ECOO", array(&$this, 'ECOO'));
       $this->ServiceCreate("ECOS", array(&$this, 'ECOS'));
@@ -83,6 +83,130 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function ERRT() {
+    $this->SendSTART();
+    $this->ErrorC("MYERR", 9, $this->ReadC());
+    $this->SendERROR();
+  }
+
+  public function ERRX() {
+    $this->SendSTART();
+    switch ($this->ServiceGetToken()) {
+      case "ERR2":
+        $this->SendC("some data");
+        $this->ErrorC("Ot_ERR2", 10, "some error");
+	break;
+      case "ERR3":;
+        $this->SendRETURN();
+	break;
+      case "ERR4":
+        exit(1);
+	break;
+      case "ERR5":
+        $this->ReadProxy($this->ReadU());
+	break;
+      case "ERR6":
+        $this->SendU(self);
+	break;
+    }
+    $this->SendRETURN();
+  }
+
+  public function CFG1() {
+    $cmd = $this->ReadC();
+    $this->SendSTART();
+    switch ($cmd) {
+      case "Buffersize":
+        $old = $this->ConfigGetBuffersize();
+        $this->ConfigSetBuffersize($this->ReadI());
+        $this->SendI($this->ConfigGetBuffersize());
+        $this->ConfigSetBuffersize($old);
+	break;
+      case "Debug":
+        $old = $this->ConfigGetDebug();
+        $this->ConfigSetDebug($this->ReadI());
+        $this->SendI($this->ConfigGetDebug());
+        $this->ConfigSetDebug($old);
+	break;
+      case "Timeout":
+        $old = $this->ConfigGetTimeout();
+        $this->ConfigSetTimeout($this->ReadW());
+        $this->SendW($this->ConfigGetTimeout());
+        $this->ConfigSetTimeout($old);
+	break;
+      case "Name":
+        $old = $this->ConfigGetName();
+        $this->ConfigSetName($this->ReadC());
+        $this->SendC($this->ConfigGetName());
+        $this->ConfigSetName($old);
+	break;
+      case "SrvName":
+        $old = $this->ConfigGetSrvName();
+        $this->ConfigSetSrvName($this->ReadC());
+        $this->SendC($this->ConfigGetSrvName());
+        $this->ConfigSetSrvName($old);
+	break;
+      case "Ident":
+        $old = $this->ConfigGetIdent();
+        $this->ConfigSetIdent($this->ReadC());
+        $check = $this->LinkGetTargetIdent() == $this->ReadC();
+        $this->SendSTART();
+        $this->SendC($this->ConfigGetIdent());
+        $this->SendO($check);;
+        $this->ConfigSetIdent($old);
+	break;
+      case "IsSilent":
+        $old = $this->ConfigGetIsSilent();
+        $this->ConfigSetIsSilent($this->ReadO());
+        $this->SendO($this->ConfigGetIsSilent());
+        $this->ConfigSetIsSilent($old);
+	break;
+      case "IsString":
+        $old = $this->ConfigGetIsString();
+        $this->ConfigSetIsString($this->ReadO());
+        $this->SendO($this->ConfigGetIsString());
+        $this->ConfigSetIsString($old);
+	break;
+      case "IoUds":
+        $old = $this->ConfigGetIoUdsFile();
+        $this->ConfigSetIoUdsFile($this->ReadC());
+        $this->SendC($this->ConfigGetIoUdsFile());
+        $this->ConfigSetIoUdsFile($old);
+	break;
+      case "IoTcp":
+        $h  = $this->ConfigGetIoTcpHost();
+        $p  = $this->ConfigGetIoTcpPort();
+        $mh = $this->ConfigGetIoTcpMyHost();
+        $mp = $this->ConfigGetIoTcpMyPort();
+        $hv = $this->ReadC();
+        $pv = $this->ReadC();
+        $mhv = $this->ReadC();
+        $mpv = $this->ReadC();
+        $this->ConfigSetIoTcp($hv,$pv,$mhv,$mpv);
+        $this->SendC($this->ConfigGetIoTcpHost());
+        $this->SendC($this->ConfigGetIoTcpPort());
+        $this->SendC($this->ConfigGetIoTcpMyHost());
+        $this->SendC($this->ConfigGetIoTcpMyPort());
+        $this->ConfigSetIoTcp($h,$p,$mh,$mp);
+	break;
+      case "IoPipe":
+        $old = $this->ConfigGetIoPipeSocket();
+        $this->ConfigSetIoPipeSocket($this->ReadI());
+        $this->SendI($this->ConfigGetIoPipeSocket());
+        $this->ConfigSetIoPipeSocket($old);
+	break;
+      case "StartAs":
+        $old = $this->ConfigGetStartAs();
+        $this->ConfigSetStartAs($this->ReadI());
+        $this->SendI($this->ConfigGetStartAs());
+        $this->ConfigSetStartAs($old);
+	break;
+      default:
+        ErrorC("CFG1", 1, "invalid command: " + cmd);
+    }
+    $this->SendRETURN();
   }
 
   public function SLEP() {

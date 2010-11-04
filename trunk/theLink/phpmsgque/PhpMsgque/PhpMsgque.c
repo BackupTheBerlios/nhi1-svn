@@ -84,8 +84,7 @@ void NS(MqBufferS_Init)	    (TSRMLS_D);
 PHP_MINIT_FUNCTION(PhpMsgque)
 {
   // we need the global variable $php_errormsg to act on errors
-  zend_alter_ini_entry(ID2(track_errors), ID(1), PHP_INI_SYSTEM, PHP_INI_STAGE_STARTUP);
-
+  //zend_alter_ini_entry(ID2(track_errors), ID(1), PHP_INI_SYSTEM, PHP_INI_STAGE_STARTUP);
 
   NS(MqS_Init)			(TSRMLS_C);
   NS(MqSException_Init)	(TSRMLS_C);

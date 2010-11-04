@@ -49,8 +49,9 @@ array set LABELIGNORE {
     ./theLink/example/python	{ *.sw* Makefile.in Makefile}
     ./theLink/example/ruby	{ *.sw* Makefile.in Makefile}
     ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
+    ./theLink/example/php	{ *.sw* Makefile.in Makefile}
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
-    ./theLink/example		{ php tags }
+    ./theLink/example		{ tags }
 
     ./theLink/libmsgque		{ *.sw* *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
     ./theLink/tclmsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* pkgIndex.tcl }
@@ -70,7 +71,7 @@ array set LABELIGNORE {
 acinclude.m4    config.sub     include          Makefile            modules       tags
 aclocal.m4      configure      install-sh       Makefile.fragments  PhpMsgque.la  tests
 autom4te.cache  config.log     configure.in     libtool       Makefile.global     tmp-php.ini
-build           config.w32     Makefile.objects PhpMsgque.php *.sw*
+build           config.w32     Makefile.objects PhpMsgque.php *.sw* php.tags
 config.guess    config.nice    CREDITS          missing       .libs  .deps
 config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs       run-tests.php *.lo}
 

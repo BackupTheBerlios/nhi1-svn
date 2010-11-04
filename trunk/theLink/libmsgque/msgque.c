@@ -399,6 +399,7 @@ MqLogData (
   MqLogV (context, prefix, 0, "ctxId     = " MQ_FORMAT_I "\n", context->link.ctxId);
   MqLogV (context, prefix, 0, "sOc       = " MQ_FORMAT_C "\n", MqLogServerOrClient (context));
   MqLogV (context, prefix, 0, "pOc       = " MQ_FORMAT_C "\n", MqLogParentOrChild (context));
+  MqLogV (context, prefix, 0, "factory   = " MQ_FORMAT_C "\n", context->link.bits.doFactoryCleanup == MQ_YES?"YES":"NO");
 
   MqLogV (context, prefix, 0, "<<<< MqS\n");
 }
