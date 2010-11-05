@@ -75,6 +75,15 @@ PHP_METHOD(PhpMsgque_MqS, LogC)
   MqLogC(MQCTX, prefix, level, msg);
 }
 
+static
+PHP_METHOD(PhpMsgque_MqS, Info)
+{
+  SETUP_mqctx;
+  ARG2CST(Info,prefix);
+  MqLogData(mqctx, prefix);
+  MqLogV(mqctx,prefix,0,"refCount = %d\n", Z_REFCOUNT_P(mqctx->self));
+}
+
 
 #define CB(name) \
   if (instanceof_function(Z_OBJCE_P(getThis()), NS(i ## name) TSRMLS_CC)) { \
@@ -85,7 +94,7 @@ PHP_METHOD(PhpMsgque_MqS, LogC)
     MqTokenDataCopyF tokenDataCopyF; \
     MAKE_STD_ZVAL(ctor); \
     array_init(ctor); \
-    zval_addref_p(mqctx->self); \
+    INCR_REG(mqctx->self); \
     add_next_index_zval(ctor, mqctx->self); \
     add_next_index_string(ctor, #name, 1); \
     ErrorMqToPhpWithCheck ( \
@@ -122,7 +131,7 @@ FactoryCreate(
     return MqErrorGetCode(tmpl);
   } else {
     struct MqS * const mqctx = *mqctxP = VAL2MqS(self);
-    zval_addref_p(self);
+    INCR_REG(self);
     MqConfigDup(mqctx, tmpl);
     MqErrorCheck(MqSetupDup(mqctx, tmpl));
     return MQ_OK;
@@ -143,7 +152,7 @@ FactoryDelete(
 { 
   MqContextFree (mqctx);
   if (doFactoryDelete && mqctx->self != NULL) {
-    zval_delref_p(mqctx->self);
+    DECR_REG(mqctx->self);
     mqctx->self = NULL;
   }
 }
@@ -157,7 +166,7 @@ PHP_METHOD(PhpMsgque_MqS, __construct)
   mqctx->self = (void*) getThis();
 
   //refcount++
-  zval_addref_p(getThis());
+  INCR_REG(mqctx->self);
   
   // add callback's
   CB(ServerSetup)
@@ -172,7 +181,7 @@ PHP_METHOD(PhpMsgque_MqS, __construct)
     MqTokenDataCopyF tokenDataCopyF;
     MAKE_STD_ZVAL(ctor);
     array_init(ctor);
-    zval_addref_p(mqctx->self);
+    INCR_REG(mqctx->self);
     add_next_index_zval(ctor, mqctx->self);
     add_next_index_string(ctor, "Factory", 1);
     ErrorMqToPhpWithCheck (
@@ -189,6 +198,7 @@ static
 PHP_METHOD(PhpMsgque_MqS, __destruct)
 {
   SETUP_mqctx;
+  DECR_REG(mqctx->self);
   mqctx->setup.Factory.Delete.fCall = NULL;
   mqctx->setup.Event.fCall = NULL;
   mqctx->self = NULL;
@@ -388,6 +398,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, Exit,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, Delete,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LogC,			LogC_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, Info,			val_arg,	      ZEND_ACC_PUBLIC)
 
   PHP_ME(PhpMsgque_MqS, ReadY,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadO,			no_arg,               ZEND_ACC_PUBLIC)

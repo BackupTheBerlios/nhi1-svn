@@ -57,7 +57,7 @@ print(Get($c10));
 print(Get($c100));
 print(Get($c101));
 ## do the cleanup
-#$c0->Delete();
-#$c1->Delete();
+$c0->Delete();
+$c1->Delete();
 
 ?>

@@ -120,10 +120,10 @@ static enum MqErrorE ProcCallNoArg (struct MqS * const mqctx, struct NS(ProcData
 static enum MqErrorE ProcCallOneArg (struct MqS * const mqctx, struct NS(ProcDataS) * const data)
 {
   zval *self = mqctx->self;
-  zval_addref_p(self);
+  INCR_REG(self);
   zval **selfP = &self;
   enum MqErrorE ret = NS(ProcCall)(mqctx,data,1,&selfP,NULL);
-  zval_delref_p(self);
+  DECR_REG(self);
   return ret;
 }
 
@@ -185,7 +185,7 @@ enum MqErrorE NS(ProcInit) (
       if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
     data->function_table = CG(function_table);
   }
-  zval_addref_p(callable);
+  INCR_REG(callable);
   data->ctor = callable;
   return MQ_OK;
 }

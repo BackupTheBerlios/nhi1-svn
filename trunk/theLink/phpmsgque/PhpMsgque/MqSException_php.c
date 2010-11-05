@@ -79,7 +79,7 @@ void NS(MqSException_Set) (struct MqS* mqctx, zval *ex TSRMLS_DC) {
       return;
     } else if (instanceof_function(Z_OBJCE_P(ex), default_exception_ce TSRMLS_CC)) {
       // make 'ex' save
-      zval_addref_p(ex);
+      INCR_REG(ex);
       // clear 'EG(exception)'
       zend_clear_exception(TSRMLS_C);
       // we want to have the string

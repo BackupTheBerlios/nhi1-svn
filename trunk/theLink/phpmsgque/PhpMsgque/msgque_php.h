@@ -35,6 +35,19 @@
 extern zend_class_entry *NS(MqS);
 extern zend_class_entry *NS(MqBufferS);
 
+#define INCR_REG(val)	    zval_addref_p(val)
+#define DECR_REG(val)	    zval_delref_p(val)
+
+/*
+#define INCR_REG(val) \
+  MqDLogV(mqctx,0,"INCR_REG(%d): self<%p>, refCount<%d>\n", __LINE__, val, Z_REFCOUNT_P(val)); \
+  zval_addref_p(val)
+  
+#define DECR_REG(val) \
+  MqDLogV(mqctx,0,"DECR_REG(%d): self<%p>, refCount<%d>\n", __LINE__, val, Z_REFCOUNT_P(val)); \
+  zval_delref_p(val)
+*/
+
 #define LIBMSGQUE_VERSION   "4.6"
 #define MQCTX               VAL2MqS(getThis())
 #define SETUP_mqctx         struct MqS * mqctx = MQCTX
