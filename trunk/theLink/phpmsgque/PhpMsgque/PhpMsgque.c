@@ -113,6 +113,32 @@ PHP_MSHUTDOWN_FUNCTION(PhpMsgque)
  */
 PHP_RINIT_FUNCTION(PhpMsgque)
 {
+	zval **_SERVER;
+	zval **SCRIPT_FILENAME;
+
+	/* fetch the script name */
+	zval *a0 = cfg_get_entry(ID(cfg_file_path) + 1);
+	convert_to_string(a0);
+
+	/* Fetch $_SERVER from the global scope */
+	zend_hash_find(&EG(symbol_table), ID(_SERVER)+1, (void**)&_SERVER);
+
+	/* FETCH $_SERVER['SCRIPT_FILENAME'] */
+	if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID(SCRIPT_FILENAME)+1, (void **) &SCRIPT_FILENAME)) {
+
+		/* init libmsgque global data */
+		if (MqInitBuf == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
+		  struct MqBufferLS * initB = MqInitCreate();
+		  MqBufferLAppendC(initB, "php");
+		  MqBufferLAppendC(initB, "-c");
+		  MqBufferLAppendC(initB, VAL2CST(a0));
+		  MqBufferLAppendC(initB, VAL2CST(*SCRIPT_FILENAME));
+		} else {
+		  return FAILURE;
+		}
+	} else {
+	  return FAILURE;
+	}
 	return SUCCESS;
 }
 /* }}} */

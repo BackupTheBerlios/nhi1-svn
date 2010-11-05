@@ -13,7 +13,32 @@
 
 #phpinfo();
 
+
+class Client extends MqS implements iBgError, iFactory {
+  public function __construct() {
+    $this->ConfigSetSrvName("test-server");
+    parent::__construct();
+  }
+  public function Factory() {
+    return new Client();
+  }
+  public function LinkCreate($debug) {
+    $this->ConfigSetDebug($debug);
+    parent::LinkCreate("client", "@", "SELF");
+  }
+  public function BgError() {
+    $master = $this->SlaveGetMaster();
+    if ($master != NULL) {
+      $master->ErrorC("BGERROR", $this->ErrorGetNum(), $this->ErrorGetText());
+      $master->SendERROR();
+    }
+  }
+}
+
 class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
+
+  public $cl = array();
+  public $i  = NULL;
 
   public function __construct() {
     $this->ConfigSetName("server");
@@ -26,11 +51,24 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
   }
 
   public function ServerCleanup() {
+    for ($i=0;$i<2;$i++) {
+      if ($this->cl[$i] != NULL) {
+        $this->cl[$i]->Delete();
+        $this->cl[$i] = NULL;
+      }
+    }
   }
 
   public function ServerSetup() {
 
     if ($this->SlaveIs() == false) {
+
+      # initialize objects
+      $this->cl = array(new Client(), new Client(), new Client());
+      for ($i=0;$i<2;$i++) {
+        $this->cl[$i]->ConfigSetName("cl-" . $i);
+        $this->cl[$i]->ConfigSetSrvName("sv-" . $i);
+      }
 
       # add "master" services here
       $this->ServiceCreate("SETU", array(&$this, 'SETU'));
@@ -42,10 +80,10 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("GTTO", array(&$this, 'GTTO'));
       $this->ServiceCreate("MSQT", array(&$this, 'MSQT'));
 #      $this->ServiceCreate("CNFG", array(&$this, 'CNFG'));
-#      $this->ServiceCreate("SND1", array(&$this, 'SND1'));
+      $this->ServiceCreate("SND1", array(&$this, 'SND1'));
 #      $this->ServiceCreate("SND2", array(&$this, 'SND2'));
-#      $this->ServiceCreate("REDI", array(&$this, 'REDI'));
-#      $this->ServiceCreate("GTCX", array(&$this, 'GTCX'));
+      $this->ServiceCreate("REDI", array(&$this, 'REDI'));
+      $this->ServiceCreate("GTCX", array(&$this, 'GTCX'));
       $this->ServiceCreate("CSV1", array(&$this, 'CSV1'));
       $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
@@ -83,6 +121,86 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function GTCX() {
+    $this->SendSTART();
+    $this->SendI($this->LinkGetCtxId());
+    $this->SendRETURN();
+  }
+
+  public function REDI() {
+    $this->i = $this->ReadI();
+  }
+
+  public function Callback($ctx) {
+    $this->i = $ctx->ReadI();
+  }
+
+  public function SND1() {
+    $s = $this->ReadC();
+    $id = $this->ReadI();
+    $this->SendSTART();
+    switch ($s) {
+      case "START":
+        $parent = $this->LinkGetParent();
+        if ($parent != NULL and $parent->cl[$id]->LinkIsConnected()) {
+          $this->cl[$id]->LinkCreateChild($parent->cl[$id]);
+        } else {
+          $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
+        }
+	break;
+      case "START2":
+        $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
+        $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
+	break;
+      case "START3":
+        $parent = new Client();
+        $this->cl[$id]->LinkCreateChild($parent);
+	break;
+      case "START4":
+        $this->cl[$id]->SlaveWorker(0);
+	break;
+      case "START5":
+        $this->SlaveWorker($id, "--name", "wk-cl-" . $id, "--srvname", "wk-sv-" . $id, "--spawn");
+	break;
+      case "STOP":
+        $this->cl[$id]->LinkDelete();
+	break;
+      case "SEND":
+        $this->cl[$id]->SendSTART();
+        $tok = $this->ReadC();
+        $this->cl[$id]->SendU($this->ReadU());
+        $this->cl[$id]->SendEND($tok);
+	break;
+      case "WAIT":
+        $this->cl[$id]->SendSTART();
+        $this->ReadProxy($this->cl[$id]);
+        $this->cl[$id]->SendEND_AND_WAIT("ECOI", 5);
+        $this->SendI($this->cl[$id]->ReadI()+1);
+	break;
+      case "CALLBACK":
+        $this->cl[$id]->SendSTART();
+        $this->cl[$id]->SendU($this->ReadU());
+        $this->i = -1;
+        $this->cl[$id]->SendEND_AND_CALLBACK("ECOI", array(&$this, 'Callback'));
+        $this->cl[$id]->ProcessEvent(10,MqS::WAIT_ONCE);
+        $this->SendI($this->i+1);
+	break;
+      case "ERR-1":
+        $this->cl[$id]->SendSTART();
+        try {
+          $this->ReadProxy($this->cl[$id]);
+          $this->cl[$id]->SendEND_AND_WAIT("ECOI", 5);
+        } catch (Exception $ex) {
+          $this->ErrorSet($ex);
+          $this->SendI($this->ErrorGetNum());
+          $this->SendC($this->ErrorGetText());
+          $this->ErrorReset();
+        }
+	break;
+    }
+    $this->SendRETURN();
   }
 
   public function PRNT() {

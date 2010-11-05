@@ -24,30 +24,31 @@ PHP_METHOD(PhpMsgque_MqS, SlaveWorker)
   struct MqBufferLS * args = NULL;
   MQ_INT id = 0;
   int argc = ZEND_NUM_ARGS();
-  zval **argv;
+  zval ***argv;
 
   // get id
-  if (argc < 1) RaiseError("usage: SlaveWorker id ...");
+  if (argc < 1) goto error;
   argv = emalloc(sizeof(zval*) * argc);
-  zend_get_parameters_array(0, argc, argv);
-  convert_to_long(argv[0]);
-  id = VAL2INT(argv[0]);
-  argc--; argv++;
+  zend_get_parameters_array_ex(argc, argv);
+  convert_to_long(*argv[0]);
+  id = VAL2INT(*argv[0]);
 
   // read other args
-  if (argc > 0) {
+  if (argc > 1) {
     int i;
-    args = MqBufferLCreate(argc);
-    for (i=0; i<argc; i++) {
-      NS(MqBufferLAppendZVal) (args, argv[i] TSRMLS_CC);
+    args = MqBufferLCreate(argc-1);
+    for (i=1; i<argc; i++) {
+      NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }
   }
-
   efree(argv);
 
   // create Worker
   ErrorMqToPhpWithCheck (MqSlaveWorker(mqctx, id, &args));
   RETURN_NULL();
+error:
+  RaiseError("usage: SlaveWorker(long: id, ...)");
+  return;
 }
 
 PHP_METHOD(PhpMsgque_MqS, SlaveCreate)

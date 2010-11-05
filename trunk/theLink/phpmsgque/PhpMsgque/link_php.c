@@ -43,7 +43,7 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
   // read other args
   if (argc > 1) {
     int i;
-    args = MqBufferLCreate(argc);
+    args = MqBufferLCreate(argc-1);
     for (i=1; i<argc; i++) {
       NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }

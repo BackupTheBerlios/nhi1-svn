@@ -650,9 +650,9 @@ MqBufferLLogS(context, alfa2, "alfa2");
         {
 int i;
 char ** xarg = argV;
-//printLC(name)
+printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
-  MqDLogV (context, __func__, 0, "alfa1[%2i]=%s\n",i, *xarg);
+  MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }
         }
 */
