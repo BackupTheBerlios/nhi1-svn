@@ -16,13 +16,13 @@
 
 
 #+
-#§  \file       example/tcl/Makefile.am
-#§  \brief      \$Id: Makefile.am 300 2009-09-24 17:08:33Z dev1usr $
+#§  \file       theLink/example/php/Makefile.am
+#§  \brief      \$Id: Makefile.am 270 2010-11-04 18:49:36Z aotto1968 $
 #§  
-#§  (C) 2007 - LibMsgque - Project - Group - 2
+#§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 300 $
-#§  \author     EMail: aotto1968 at users.sourceforge.net
+#§  \version    \$Rev: 270 $
+#§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§

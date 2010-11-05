@@ -73,11 +73,7 @@ extern zend_class_entry *NS(MqBufferS);
 
 #define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),msg,1 TSRMLS_CC);
 
-#define CheckType(val,typ,err) \
-  if (!instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) { \
-    RaiseError(err); \
-    RETURN_NULL(); \
-  }
+#define CheckType(val,typ) if (!instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) goto error;
 
 #define VAL2BYT(val)	    (MQ_BYT)Z_LVAL_P(val)
 #define VAL2BOL(val)	    (MQ_BOL)Z_BVAL_P(val)

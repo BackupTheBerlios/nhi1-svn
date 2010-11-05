@@ -34,10 +34,10 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
   zval ***argv;
 
   // get parent
-  if (argc < 1) RaiseError("usage: LinkCreateChild parent ...");
+  if (argc < 1) goto error;
   argv = emalloc(sizeof(zval**) * argc);
   zend_get_parameters_array_ex(argc, argv);
-  CheckType(*argv[0], NS(MqS), "usage: LinkCreateChild MqS-Type-Arg ...");
+  CheckType(*argv[0], NS(MqS));
   parent = VAL2MqS(*argv[0]);
 
   // read other args
@@ -52,6 +52,9 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
 
   // create Context
   ErrorMqToPhpWithCheck (MqLinkCreateChild(mqctx, parent, &args));
+error:
+  RaiseError("usage: LinkCreateChild(MqS: parent, ...)");
+  return;
 }
 
 PHP_METHOD(PhpMsgque_MqS, LinkDelete)

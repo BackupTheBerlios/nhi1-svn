@@ -71,47 +71,54 @@ PHP_METHOD(PhpMsgque_MqS, ReadU)
   NS(MqBufferS_New) (return_value, buf TSRMLS_CC);
 }
 
-/*
-static VALUE ReadL_START (int argc, VALUE *argv, VALUE self) {
-  MQ_BUF MqBufferS_object = NULL;
-  SETUP_mqctx
-  if (argc < 0 || argc > 2) {
-    goto error;
-  } else if (argc == 1) {
-    if (rb_obj_is_kind_of(argv[0], cMqBufferS) == Qfalse) goto error;
-    MqBufferS_object = VAL2MqBufferS(argv[0]);
+PHP_METHOD(PhpMsgque_MqS, ReadL_START)
+{
+  SETUP_mqctx;
+  MQ_BUF buf = NULL;
+  zval *bufZ = NULL;
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|o", &bufZ));
+  if (bufZ) {
+    CheckType(bufZ, NS(MqBufferS));
+    buf = VAL2MqBufferS(bufZ);
   }
-  ErrorMqToPhpWithCheck(MqReadL_START(mqctx, MqBufferS_object));
-  return Qnil;
+  ErrorMqToPhpWithCheck(MqReadL_START(mqctx, buf));
+  RETURN_NULL();
 error:
-  rb_raise(rb_eArgError,"usage: ReadL_START ?MqBufferS-Type-Arg?");
+  RaiseError("usage: ReadL_START(?MqBufferS: buf?)");
+  return;
 }
 
-static VALUE ReadL_END (VALUE self) {
-  SETUP_mqctx
+PHP_METHOD(PhpMsgque_MqS, ReadL_END)
+{
+  SETUP_mqctx;
   ErrorMqToPhpWithCheck(MqReadL_END(mqctx));
-  return Qnil;
+  RETURN_NULL();
 }
 
-static VALUE ReadT_START (int argc, VALUE *argv, VALUE self) {
-  MQ_BUF MqBufferS_object = NULL;
-  SETUP_mqctx
-  if (argc < 0 || argc > 1)
-    rb_raise(rb_eArgError,"usage: ReadT_START ?MqBufferS-Type-Arg?");
-  if (argc == 1) {
-    CheckType(argv[0],cMqBufferS,"usage: ReadT_START ?MqBufferS-Type-Arg?")
-    MqBufferS_object = VAL2MqBufferS(argv[0]);
+PHP_METHOD(PhpMsgque_MqS, ReadT_START)
+{
+  SETUP_mqctx;
+  MQ_BUF buf = NULL;
+  zval *bufZ = NULL;
+  zend_class_entry* bufC;
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|O", &bufZ, &bufC));
+  if (bufZ) {
+    if (!instanceof_function(bufC, NS(MqBufferS) TSRMLS_CC)) goto error;
+    buf = VAL2MqBufferS(bufZ);
   }
-  ErrorMqToPhpWithCheck(MqReadT_START(mqctx, MqBufferS_object));
-  return Qnil;
+  ErrorMqToPhpWithCheck(MqReadT_START(mqctx, buf));
+  RETURN_NULL();
+error:
+  RaiseError("usage: ReadT_START(?MqBufferS: buf?)");
+  return;
 }
 
-static VALUE ReadT_END (VALUE self) {
-  SETUP_mqctx
+PHP_METHOD(PhpMsgque_MqS, ReadT_END)
+{
+  SETUP_mqctx;
   ErrorMqToPhpWithCheck(MqReadT_END(mqctx));
-  return Qnil;
+  RETURN_NULL();
 }
-*/
 
 PHP_METHOD(PhpMsgque_MqS, ReadProxy)
 {

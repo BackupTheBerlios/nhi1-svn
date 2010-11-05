@@ -55,13 +55,12 @@ PHP_METHOD(PhpMsgque_MqS, SlaveCreate)
   SETUP_mqctx;
   long id;
   zval *mqs;
-  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "lo", &id, &mqs) == FAILURE) {
-    RaiseError("invalid argument - expect 'long' and 'MqS'");
-    return;
-  }
-  CheckType(mqs, NS(MqS), "usage: SlaveCreate id MqS-Type-Arg");
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "lo", &id, &mqs));
+  CheckType(mqs, NS(MqS))
   ErrorMqToPhpWithCheck (MqSlaveCreate(mqctx, id, VAL2MqS(mqs)));
   RETURN_NULL();
+error:
+  RaiseError("usage: SlaveCreate(long: id, MqS: ctx)");
 }
 
 PHP_METHOD(PhpMsgque_MqS, SlaveDelete)

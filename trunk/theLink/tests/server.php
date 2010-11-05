@@ -35,12 +35,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       # add "master" services here
       $this->ServiceCreate("SETU", array(&$this, 'SETU'));
       $this->ServiceCreate("GETU", array(&$this, 'GETU'));
-#
-#      $this->ServiceCreate("PRNT", array(&$this, 'PRNT'));
-#      $this->ServiceCreate("TRNS", array(&$this, 'TRNS'));
-#      $this->ServiceCreate("TRN2", array(&$this, 'TRN2'));
-#      $this->ServiceCreate("GTTO", array(&$this, 'GTTO'));
-#      $this->ServiceCreate("MSQT", array(&$this, 'MSQT'));
+
+      $this->ServiceCreate("PRNT", array(&$this, 'PRNT'));
+      $this->ServiceCreate("TRNS", array(&$this, 'TRNS'));
+      $this->ServiceCreate("TRN2", array(&$this, 'TRN2'));
+      $this->ServiceCreate("GTTO", array(&$this, 'GTTO'));
+      $this->ServiceCreate("MSQT", array(&$this, 'MSQT'));
 #      $this->ServiceCreate("CNFG", array(&$this, 'CNFG'));
 #      $this->ServiceCreate("SND1", array(&$this, 'SND1'));
 #      $this->ServiceCreate("SND2", array(&$this, 'SND2'));
@@ -50,10 +50,10 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
       $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
-#      $this->ServiceCreate("INIT", array(&$this, 'INIT'));
-#      $this->ServiceCreate("LST1", array(&$this, 'LST1'));
-#      $this->ServiceCreate("LST2", array(&$this, 'LST2'));
-#
+      $this->ServiceCreate("INIT", array(&$this, 'INIT'));
+      $this->ServiceCreate("LST1", array(&$this, 'LST1'));
+      $this->ServiceCreate("LST2", array(&$this, 'LST2'));
+
       $this->ServiceCreate("BUF1", array(&$this, 'BUF1'));
       $this->ServiceCreate("BUF2", array(&$this, 'BUF2'));
       $this->ServiceCreate("BUF3", array(&$this, 'BUF3'));
@@ -75,14 +75,144 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("ECOC", array(&$this, 'ECOC'));
       $this->ServiceCreate("ECOB", array(&$this, 'ECOB'));
       $this->ServiceCreate("ECOU", array(&$this, 'ECOU'));
-#      $this->ServiceCreate("ECON", array(&$this, 'ECON'));
-#      $this->ServiceCreate("ECOL", array(&$this, 'ECOL'));
-#      $this->ServiceCreate("ECLI", array(&$this, 'ECLI'));
-#      $this->ServiceCreate("ERLR", array(&$this, 'ERLR'));
-#      $this->ServiceCreate("ERLS", array(&$this, 'ERLS'));
+      $this->ServiceCreate("ECON", array(&$this, 'ECON'));
+      $this->ServiceCreate("ECOL", array(&$this, 'ECOL'));
+      $this->ServiceCreate("ECLI", array(&$this, 'ECLI'));
+      $this->ServiceCreate("ERLR", array(&$this, 'ERLR'));
+      $this->ServiceCreate("ERLS", array(&$this, 'ERLS'));
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function PRNT() {
+    $this->SendSTART();
+    $this->SendC($this->LinkGetCtxId() . " - " . $this->ReadC());
+    $this->SendEND_AND_WAIT("WRIT");
+    $this->SendRETURN();
+  }
+
+  public function TRN2() {
+    $this->ReadT_START();
+    $this->i = $this->ReadI();
+    $this->ReadT_END();
+    $this->j = $this->ReadI();
+  }
+
+  public function TRNS() {
+    $this->SendSTART();
+    $this->SendT_START("TRN2");
+    $this->SendI(9876);
+    $this->SendT_END();
+    $this->SendI($this->ReadI());
+    $this->SendEND_AND_WAIT("ECOI");
+    $this->ProcessEvent(MqS::WAIT_ONCE);
+    $this->SendSTART();
+    $this->SendI($this->i);
+    $this->SendI($this->j);
+    $this->SendRETURN();
+  }
+
+  public function GTTO() {
+    $this->SendSTART();
+    $this->SendC($this->ServiceGetToken());
+    $this->SendRETURN();
+  }
+
+  public function MSQT() {
+    $this->SendSTART();
+    $debug = $this->ConfigGetDebug();
+    if ($debug != 0) {
+      $this->SendC("debug");
+      $this->SendI($debug);
+    }
+    if (!$this->ConfigGetIsString()) $this->SendC("binary");
+    if ($this->ConfigGetIsSilent())  $this->SendC("silent");
+    $this->SendC("sOc");
+    $this->ConfigGetIsServer() ? $this->SendC("SERVER") : $this->SendC("CLIENT");
+    $this->SendC("pOc");
+    $this->LinkIsParent() ? $this->SendC("PARENT") : $this->SendC("CHILD");
+    $this->SendRETURN();
+  }
+
+  public function ECON() {
+    $this->SendSTART();
+    $this->SendC($this->ReadC() . "-" . $this->ConfigGetName());
+    $this->SendRETURN();
+  }
+
+  public function ERLS() {
+    $this->SendSTART();
+    $this->SendL_START();
+    $this->SendU($this->ReadU());
+    $this->SendL_START();
+    $this->SendU($this->ReadU());
+    $this->SendRETURN();
+  }
+
+  public function ERLR() {
+    $this->SendSTART();
+    $this->ReadL_START();
+    $this->ReadL_START();
+    $this->SendRETURN();
+  }
+
+  private function EchoList($doincr) {
+    while ($this->ReadItemExists()) {
+      $buf = $this->ReadU();
+      if ($buf->GetType() == "L") {
+        $this->ReadL_START($buf);
+        $this->SendL_START();
+        $this->EchoList($doincr);
+        $this->SendL_END();
+        $this->ReadL_END();
+      } else if ($doincr == TRUE) {
+        $this->SendI($buf->GetI()+1);
+      } else {
+        $this->SendU($buf);
+      }
+    }
+  }
+
+  public function ECLI() {
+    $opt = $this->ReadU();
+    $doincr = ($opt->GetType() == "C" && $opt->GetC() == "--incr");
+    if ($doincr == FALSE) $this->ReadUndo();
+    $this->SendSTART();
+    $this->EchoList($doincr);
+    $this->SendRETURN();
+  }
+
+  public function ECOL() {
+    $this->SendSTART();
+    $this->ReadL_START();
+    $this->SendL_START();
+    $this->EchoList(FALSE);
+    $this->SendL_END();
+    $this->ReadL_END();
+    $this->SendRETURN();
+  }
+
+  public function LST1() {
+    $this->SendSTART();
+    $this->SendL_END();
+    $this->SendRETURN();
+  }
+
+  public function LST2() {
+    $this->SendSTART();
+    $this->ReadL_END();
+    $this->SendRETURN();
+  }
+
+  public function INIT() {
+    $this->SendSTART();
+    $list = array();
+    while ($this->ReadItemExists()) {
+      $list[] = $this->ReadC();
+    }
+    $this->Init($list);
+    $this->SendRETURN();
   }
 
   public function ERRT() {

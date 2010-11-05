@@ -412,12 +412,10 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ReadN,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadBDY,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadU,			no_arg,               ZEND_ACC_PUBLIC)
-/*
-  PHP_ME(PhpMsgque_MqS, ReadL_START,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadL_END,		NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadL_START,		NULL,		      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ReadL_END,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadT_START,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ReadT_END,		NULL,                 ZEND_ACC_PUBLIC)
-*/
+  PHP_ME(PhpMsgque_MqS, ReadT_END,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadGetNumItems,	no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadItemExists,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadUndo,		no_arg,               ZEND_ACC_PUBLIC)
@@ -444,13 +442,11 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, SendN,			value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendBDY,		value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, SendU,			MqBufferS_arg,        ZEND_ACC_PUBLIC)
-/*
-  PHP_ME(PhpMsgque_MqS, SendL_START,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendL_END,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendT_START,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendT_END,		NULL,                 ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, SendAll,		NULL,                 ZEND_ACC_PUBLIC)
-*/
+  PHP_ME(PhpMsgque_MqS, SendL_START,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendL_END,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendT_START,		no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, SendT_END,		no_arg,               ZEND_ACC_PUBLIC)
+//  PHP_ME(PhpMsgque_MqS, SendAll,		NULL,                 ZEND_ACC_PUBLIC)
 
 //  PHP_ME(PhpMsgque_MqS, ConfigReset,		NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ConfigSetBuffersize,	val_arg,              ZEND_ACC_PUBLIC)
