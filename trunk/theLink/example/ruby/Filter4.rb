@@ -59,7 +59,7 @@ class Filter4 < MqS
     SendRETURN()
   end
   def EXIT
-    exit
+    ErrorSetEXIT();
   end
   def Event
     if @itms.length == 0 then

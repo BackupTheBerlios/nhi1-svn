@@ -64,7 +64,7 @@ namespace example {
     }
 
     void EXIT () {
-      Exit();
+      ErrorSetEXIT();
     }
 
     void WRIT () {

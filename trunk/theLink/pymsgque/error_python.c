@@ -78,6 +78,15 @@ PyObject* NS(ErrorSetCONTINUE)(
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ErrorSetEXIT)(
+  PyObject  *self
+)
+{
+  SETUP_context;
+  ErrorMqToPythonWithCheck(MqErrorSetEXIT(context));
+  SETUP_RETURN
+}
+
 PyObject* NS(ErrorIsEXIT)(
   PyObject  *self
 )

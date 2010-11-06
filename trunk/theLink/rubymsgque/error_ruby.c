@@ -42,6 +42,13 @@ static VALUE ErrorSetCONTINUE(VALUE self)
   return Qnil;
 } 
 
+static VALUE ErrorSetEXIT(VALUE self)
+{ 
+  SETUP_mqctx;
+  ErrorMqToRubyWithCheck(MqErrorSetEXIT(mqctx));
+  return Qnil;
+} 
+
 static VALUE ErrorIsEXIT(VALUE self)
 { 
   return BOL2VAL(MqErrorIsEXIT(MQCTX));
@@ -71,6 +78,7 @@ void NS(MqS_Error_Init)(void) {
   rb_define_method(cMqS, "ErrorC",	      ErrorC,		3);
   rb_define_method(cMqS, "ErrorSet",	      ErrorSet,		1);
   rb_define_method(cMqS, "ErrorSetCONTINUE",  ErrorSetCONTINUE, 0);
+  rb_define_method(cMqS, "ErrorSetEXIT",      ErrorSetEXIT,	0);
   rb_define_method(cMqS, "ErrorIsEXIT",	      ErrorIsEXIT,	0);
   rb_define_method(cMqS, "ErrorReset",	      ErrorReset,	0);
   rb_define_method(cMqS, "ErrorRaise",	      ErrorRaise,	0);

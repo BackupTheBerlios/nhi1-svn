@@ -49,10 +49,10 @@ PHP_METHOD(PhpMsgque_MqS, ErrorSetCONTINUE)
   RETURN_NULL();
 } 
 
-PHP_METHOD(PhpMsgque_MqS, ErrorCreateEXIT)
+PHP_METHOD(PhpMsgque_MqS, ErrorSetEXIT)
 { 
   SETUP_mqctx;
-  ErrorMqToPhpWithCheck(MqErrorCreateEXIT(MQCTX));
+  ErrorMqToPhpWithCheck(MqErrorSetEXIT(MQCTX));
   RETURN_NULL();
 } 
 
@@ -87,3 +87,4 @@ PHP_METHOD(PhpMsgque_MqS, ErrorPrint)
 
 void NS(MqS_Error_Init)(TSRMLS_D) {
 }
+

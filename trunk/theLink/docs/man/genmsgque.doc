@@ -542,6 +542,7 @@ return the type as single character of the item stored in the buffer object.
 \RNSA{ErrorC}\n
 \RNSA{ErrorSet}\n
 \RNSA{ErrorSetCONTINUE}\n
+\RNSA{ErrorSetEXIT}\n
 \RNSA{ErrorIsEXIT}\n
 \RNSA{ErrorReset}\n
 \RNSA{ErrorRaise}\n
@@ -568,6 +569,9 @@ caught and before the application exit or the object is deleted.
 
 \subsection	\NS{ErrorSetCONTINUE}			\ErrorSetCONTINUE
 \copybrief MqErrorSetCONTINUE
+
+\subsection	\NS{ErrorSetEXIT}			\ErrorSetEXIT
+\copydoc MqErrorSetEXIT
 
 \subsection	\NS{ErrorIsEXIT}			\ErrorIsEXIT
 \copydoc MqErrorIsEXIT

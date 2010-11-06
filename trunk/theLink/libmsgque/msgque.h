@@ -3178,25 +3178,31 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetCONTINUE (
 );
 
 /// \brief create the application exit flag
-MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCreateEXITP (
+MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
   struct MqS * const context,
   MQ_CST const prefix
 );
 
-/// \brief wrapper to add trace-back information
-#define MqErrorCreateEXIT(ctx) MqErrorCreateEXITP(ctx,__func__)
+/// \brief finish the current \e callback, return to \e toplevel and \RNSA{Exit} the application
+/// \details To exit a application from a callback is a difficult task because
+/// the code is \e in-duty. To achive this goal a special \e exit-error-object
+/// is created and reportet to the \e toplevel. If a \e transaction is ongoing
+/// the \RNSA{SendRETURN} is \b not called and thus the transaction is not finished.
+/// The calling application is informed later by a \e socket-down event.
+#define MqErrorSetEXIT(ctx) MqErrorSetEXITP(ctx,__func__)
 
-/// \brief check if context is on \e exit, return \yes or \no
-/// \details An \e EXIT-return-code is set to signal a fatal error
+/// \brief check for an \e exit-error-object, return \yes or \no
+/// \details A \e \e exit-error-object is set to signal a fatal error
 /// which require an \e application-exit. The \e only source
-/// of this kind of error is a \e link-target-abnormal-exit like a server
-/// or a network crash. This \e return-code can only happen for
-/// functions doing a network-request like:
+/// of this kind of error is a \e link-target-abnormal-exit like a server/network
+/// crash or an \RNSA{ErrorSetEXIT} function call. 
+/// The \e link-target-abnormal-exit can only happen for functions doing a network-request like:
 /// \RNSA{LinkCreate}, \RNSA{LinkCreateChild}, \RNSA{LinkConnect}, 
 /// \RNSA{SendEND}, \RNSA{SendEND_AND_WAIT} or \RNSA{ProcessEvent}.
-/// The goal of this function is to act on this \e return-code
+/// The goal of this function is to act on an \e exit-error-object
 /// and is used to ignore this error using \RNSA{ErrorReset} and
 /// later do a reconnect using \RNSA{LinkConnect}.\n
+/// Read more using the code from <B><TT>theLink/example/LNG/Filter4.LNG</TT></B>
 /// \ifnot MAN
 /// \b Example: catch and ignore an EXIT return-code
 /// \code
@@ -4618,5 +4624,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 
 

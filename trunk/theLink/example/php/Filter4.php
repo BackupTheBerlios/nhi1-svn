@@ -61,7 +61,7 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent, iFact
     $this->SendRETURN();
   }
   public function EXITX() {
-    $this->ErrorCreateEXIT();
+    $this->ErrorSetEXIT();
   }
   public function Event() {
     if (count($this->items) == 0) {

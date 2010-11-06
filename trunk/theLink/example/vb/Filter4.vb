@@ -58,7 +58,7 @@ Public Module example
     End Sub
 
     Private Sub EXI2()
-      Me.Exit()
+      Me.ErrorSetEXIT()
     End Sub
 
     Private Sub WRIT()

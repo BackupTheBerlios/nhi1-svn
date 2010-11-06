@@ -603,7 +603,7 @@ error1:
 	      context->refCount++;
 	      MqLinkDelete(context);
 	      context->refCount--;
-	      return MqErrorCreateEXIT(context);
+	      return pErrorSetExitWithCheck(context);
 	    } else {
 	      pMqShutdown(context,__func__);
 	    }
@@ -657,6 +657,8 @@ pTokenMark (
 }
 
 END_C_DECLS
+
+
 
 
 

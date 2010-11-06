@@ -168,13 +168,13 @@ GenericServer (
 /*
     if (serverStartup) {
       if (MqErrorCheckI(pWaitOnEvent (context, MQ_SELECT_RECV, LONG_MAX))) {
-	return MqErrorCreateEXIT(context);
+	return pErrorSetExitWithCheck(context);
       }
     }
 */
     // 3. accept incomming call, on error shutdown server
     if (MqErrorCheckI(SysAccept (context, generiC->sock, &mysockaddr, &mysockaddrlen, &child_sock)))
-      return MqErrorCreateEXIT(context);
+      return pErrorSetExitWithCheck(context);
     // select: how to start the new task
     switch (context->config.startAs) {
       case MQ_START_FORK: {
@@ -309,6 +309,8 @@ GenericGetSockName (
 }
 
 END_C_DECLS
+
+
 
 
 

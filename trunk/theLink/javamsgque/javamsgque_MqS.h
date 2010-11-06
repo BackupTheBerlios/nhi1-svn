@@ -473,6 +473,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetCONTINUE
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ErrorSetEXIT
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ErrorSetEXIT
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ErrorIsEXIT
  * Signature: ()Z
  */

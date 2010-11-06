@@ -1,8 +1,8 @@
-.TH "msgque.h" n "1 Nov 2010" "Version 4.6" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "6 Nov 2010" "Version 4.6" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -303,9 +303,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $
 .br
 .R "convenience wrapper for \fBMqErrorStackP\fP "
 .ti -1c
-.RI "#define \fBMqErrorCreateEXIT\fP(ctx)   MqErrorCreateEXITP(ctx,__func__)"
+.RI "#define \fBMqErrorSetEXIT\fP(ctx)   MqErrorSetEXITP(ctx,__func__)"
 .br
-.R "wrapper to add trace-back information "
+.R "exit an \fIcallback\fP, return to \fItoplevel\fP and \fBMqExit\fP the application "
 .ti -1c
 .RI "#define \fBMqErrorCheckI\fP(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .br
@@ -1265,7 +1265,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $
 .br
 .R "signal end of processing in an \fBMqConfigSetEvent\fP callback "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqErrorCreateEXITP\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix)"
+.RI "enum \fBMqErrorE\fP \fBMqErrorSetEXITP\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const prefix)"
 .br
 .R "create the application exit flag "
 .ti -1c
@@ -1580,13 +1580,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 259 2010-10-27 17:15:08Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 259 $ 
+$Rev: 265 $ 
 .RE
 .PP
 \fBAuthor:\fP

@@ -70,6 +70,17 @@ JNIEXPORT void JNICALL NS(ErrorSetCONTINUE) (
   MqErrorSetCONTINUE(CONTEXT);
 }
 
+JNIEXPORT void JNICALL NS(ErrorSetEXIT) (
+  JNIEnv    *env,
+  jobject   self
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck(MqErrorSetEXIT(context));
+error:
+  return;
+}
+
 JNIEXPORT void JNICALL NS(ErrorSet) (
   JNIEnv      *env,
   jobject     self,

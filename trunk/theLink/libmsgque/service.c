@@ -170,6 +170,8 @@ sMqEventStart (
     case MQ_OK:       
       break;
     case MQ_ERROR:
+      // on EXIT do return nothing and just report EXIT to the TOPLEVEL
+      if (MqErrorIsEXIT(a_context)) goto error;
       // in a transaction, "MqSendRETURN" will convert the context error 
       // into an "error" package and send this package back to the client
       if (MqErrorCheckI (MqSendRETURN (a_context))) {

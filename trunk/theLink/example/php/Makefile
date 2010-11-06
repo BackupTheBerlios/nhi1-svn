@@ -81,15 +81,15 @@ BRAIN_LIBADD =
 CC = ccache gcc -std=gnu99
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -Wall -Wcast-align -fvisibility=hidden -pthread
-CLREXEC = 
+CLREXEC = /usr/bin/mono
 CPP = ccache gcc -std=gnu99 -E
 CPPFLAGS = -D_DEBUG 
-CSCOMP = 
+CSCOMP = /usr/bin/gmcs
 CSHARP_DEBUG = -debug -define:_DEBUG
 CXX = ccache g++
 CXXCPP = ccache g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -Wall -fvisibility=hidden
+CXXFLAGS = -g -Wall -fvisibility=hidden -pthread
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -112,11 +112,11 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-JAR = 
-JAVA = 
-JAVAC = 
-JAVAH = 
-JAVA_CPPFLAGS = 
+JAR = jar
+JAVA = java
+JAVAC = javac
+JAVAH = /usr/bin/javah
+JAVA_CPPFLAGS =  -I/usr/lib64/jvm/java-1.6.0-sun/include -I/usr/lib64/jvm/java-1.6.0-sun/include/linux
 JAVA_DEBUG = -g
 LD = /usr/x86_64-suse-linux/bin/ld -m elf_x86_64
 LDFLAGS = 
@@ -144,26 +144,26 @@ PACKAGE_URL = http://developer.berlios.de/projects/nhi1/
 PACKAGE_VERSION = 0.8
 PATH_SEP = :
 PATH_SEPARATOR = :
-PERL = 
+PERL = /home/dev1usr/ext/x86_64-suse-linux/thread/bin/perl
 PHP = /home/dev1usr/ext/x86_64-suse-linux/thread/bin/php
 PHPIZE = /home/dev1usr/ext/x86_64-suse-linux/thread/bin/phpize
 PTHREAD_CC = ccache gcc -std=gnu99
 PTHREAD_CFLAGS = -pthread
 PTHREAD_LIBS = 
-PYTHON = 
-PYTHON_CPPFLAGS = 
-PYTHON_EXTRA_LDFLAGS = 
-PYTHON_EXTRA_LIBS = 
-PYTHON_LDFLAGS = 
-PYTHON_SITE_PKG = 
+PYTHON = /home/dev1usr/ext/x86_64-suse-linux/thread/bin/python
+PYTHON_CPPFLAGS = -I/home/dev1usr/ext/x86_64-suse-linux/thread/include/python3.1
+PYTHON_EXTRA_LDFLAGS = -Xlinker -export-dynamic
+PYTHON_EXTRA_LIBS =  -lpthread -ldl  -lutil
+PYTHON_LDFLAGS = -L/home/dev1usr/ext/x86_64-suse-linux/thread/lib/python3.1/.. -lpython3.1
+PYTHON_SITE_PKG = /home/dev1usr/ext/x86_64-suse-linux/thread/lib/python3.1/site-packages
 PYTHON_VERSION = 
 RANLIB = ranlib
-RUBY = 
-RUBY_CPPFLAGS = 
+RUBY = /home/dev1usr/ext/x86_64-suse-linux/thread/bin/ruby
+RUBY_CPPFLAGS = -I/home/dev1usr/ext/x86_64-suse-linux/thread/include/ruby-1.9.1 -I/home/dev1usr/ext/x86_64-suse-linux/thread/include/ruby-1.9.1/x86_64-linux
 RUBY_EXTRA_LIBS = 
-RUBY_LDFLAGS = 
-RUBY_SITE_PKG = 
-RUBY_VERSION = 
+RUBY_LDFLAGS = -Wl,-R -Wl,/home/dev1usr/ext/x86_64-suse-linux/thread/lib -L/home/dev1usr/ext/x86_64-suse-linux/thread/lib -lruby
+RUBY_SITE_PKG = /home/dev1usr/ext/x86_64-suse-linux/thread/lib/ruby/site_ruby/1.9.1/x86_64-linux
+RUBY_VERSION = ruby 1.9.2p0 (2010-08-18 revision 29036) [x86_64-linux]
 SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
@@ -175,14 +175,14 @@ TCL_INCLUDE_SPEC = -I/home/dev1usr/ext/x86_64-suse-linux/thread/include
 TCL_LIBADD = -L/home/dev1usr/ext/x86_64-suse-linux/thread/lib -ltclstub8.5
 TCL_PACKAGE_PATH = /home/dev1usr/ext/x86_64-suse-linux/thread/lib 
 USE_BRAIN = no
-USE_CSHARP = no
-USE_CXX = no
+USE_CSHARP = yes
+USE_CXX = yes
 USE_GUARD = no
-USE_JAVA = no
-USE_PERL = no
+USE_JAVA = yes
+USE_PERL = yes
 USE_PHP = yes
-USE_PYTHON = no
-USE_RUBY = no
+USE_PYTHON = yes
+USE_RUBY = yes
 USE_TCL = yes
 USE_VB = no
 VBCOMP = 
@@ -192,7 +192,7 @@ VERSION_INFO = 18:0:0
 VPATH_HOOK = @if test ! -f .vpath_files -a "$(srcdir)" != "." ; then (cd "$(srcdir)" && cp -r $(VPATH_FILES) "$(abs_builddir)";) && touch ".vpath_files" && chmod -R u+w $(VPATH_FILES) && echo "VPATH copy"; else true; fi && touch ".vpath_hook"
 VPATH_HOOK_CLEANUP = -rm -f .vpath_hook; test -f .vpath_files && rm -fr .vpath_files $(VPATH_FILES)
 VPATH_HOOK_DIST = -rm -f $(distdir)/.vpath_hook
-_ACJNI_JAVAC = 
+_ACJNI_JAVAC = /usr/bin/javac
 abs_builddir = /home/dev1usr/Project/NHI1/theLink/example/php
 abs_srcdir = /home/dev1usr/Project/NHI1/theLink/example/php
 abs_top_builddir = /home/dev1usr/Project/NHI1
@@ -251,7 +251,7 @@ target_vendor = suse
 top_build_prefix = ../../../
 top_builddir = ../../..
 top_srcdir = ../../..
-uudecode = 
+uudecode = yes
 EXTRA_DIST = manfilter.php mulclient.php mulserver.php MyClient.php  \
 	      MyServer.php testclient.php testserver.php Filter1.php \
 		Filter2.php Filter3.php Filter4.php

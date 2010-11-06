@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -815,7 +815,7 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINothing\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fInull\fP) 
 .RE
 .PP
  
@@ -947,4 +947,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

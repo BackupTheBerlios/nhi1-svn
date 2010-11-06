@@ -1,4 +1,4 @@
-.TH "csmsgque" n "1 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1666,6 +1666,8 @@ return the type as single character of the item stored in the buffer object.
 .br
  \fBErrorSetCONTINUE\fP
 .br
+ \fBErrorSetEXIT\fP
+.br
  \fBErrorIsEXIT\fP
 .br
  \fBErrorReset\fP
@@ -1720,12 +1722,16 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJEC
 convert a \fIclass MqSException\fP into a \fBcsmsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "ctx.ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
-.SS "bool ctx.ErrorIsEXIT()"
-check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP 
+.SS "ctx.ErrorSetEXIT()"
+finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
 .PP
-An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event. 
+.SS "bool ctx.ErrorIsEXIT()"
+check for an \fIexit-error-object\fP, return \fItrue\fP or \fIfalse\fP 
+.PP
+A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- 
+ Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP

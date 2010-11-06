@@ -90,7 +90,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSet")]
     private static extern void MqErrorSet([In]IntPtr context, [In]int num, [In]MqErrorE code, [In]string message, [In]IntPtr errctx);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSetCONTINUE")]
-    private static extern void MqErrorSetCONTINUE(IntPtr context);
+    private static extern MqErrorE MqErrorSetCONTINUE(IntPtr context);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorSetEXIT")]
+    private static extern MqErrorE MqErrorSetEXIT(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqErrorIsEXIT")]
     private static extern MQ_BOL MqErrorIsEXIT(IntPtr context);
 
@@ -113,6 +115,11 @@ namespace csmsgque {
     /// \api #MqErrorSetCONTINUE
     public void ErrorSetCONTINUE() {
       MqErrorSetCONTINUE(context);
+    }
+
+    /// \api #MqErrorSetEXIT
+    public void ErrorSetEXIT() {
+      ErrorMqToCsWithCheck(MqErrorSetEXIT(context));
     }
 
     /// \api #MqErrorIsEXIT

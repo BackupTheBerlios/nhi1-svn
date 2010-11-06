@@ -115,7 +115,7 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     }
 
     void EXIT () {
-      Exit();
+      ErrorSetEXIT();
     }
 
     void ServerCleanup() {

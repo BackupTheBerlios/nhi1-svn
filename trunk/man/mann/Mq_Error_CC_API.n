@@ -1,4 +1,4 @@
-.TH "Mq_Error_CC_API" n "1 Nov 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Error_CC_API" n "6 Nov 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -44,6 +44,10 @@ Mq_Error_CC_API \- create and manage error messages.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
 .ti -1c
+.RI "void \fBccmsgque::MqC::ErrorSetEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
+.ti -1c
 .RI "int \fBccmsgque::MqC::ErrorGetNum\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
@@ -81,17 +85,17 @@ Definition at line 503 of file ccmsgque.h.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP 
 .PP
-Definition at line 543 of file ccmsgque.h.
+Definition at line 548 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ErrorGetText ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP 
 .PP
-Definition at line 548 of file ccmsgque.h.
+Definition at line 553 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::ErrorIsEXIT ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP 
 .PP
-Definition at line 556 of file ccmsgque.h.
+Definition at line 561 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ErrorPrint ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
@@ -116,6 +120,11 @@ implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP
 implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP 
 .PP
 Definition at line 538 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorSetEXIT ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP 
+.PP
+Definition at line 543 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ErrorV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorV\fP 

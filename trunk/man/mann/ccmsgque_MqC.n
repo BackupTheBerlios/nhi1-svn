@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "1 Nov 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "6 Nov 2010" "Version 4.6" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -285,6 +285,10 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBErrorSetCONTINUE\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "void \fBErrorSetEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
 .ti -1c
 .RI "int \fBErrorGetNum\fP ()"
 .br

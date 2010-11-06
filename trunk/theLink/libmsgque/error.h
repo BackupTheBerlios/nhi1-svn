@@ -46,6 +46,13 @@ pErrorSync (
   struct MqS * const in
 );
 
+enum MqErrorE MQ_DECL pErrorSetExitWithCheckP (
+  struct MqS * const context,
+  MQ_CST const prefix
+);
+#define pErrorSetExitWithCheck(ctx) pErrorSetExitWithCheckP(ctx,__func__)
+
+
 void pErrorReset (struct MqS * const);
 
 #define MqErrorDb(item) \

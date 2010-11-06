@@ -367,7 +367,7 @@ MqErrorSetCONTINUE (
 }
 
 enum MqErrorE
-MqErrorCreateEXITP (
+pErrorSetExitWithCheckP (
   struct MqS * const context,
   MQ_CST const prefix
 )
@@ -376,9 +376,18 @@ MqErrorCreateEXITP (
     MqDLogV(context, 3, "%s - ignore EXIT\n", prefix);
     return MQ_CONTINUE;
   } else {
-    MqDLogV(context, 3, "called from %s\n", prefix);
-    return MqErrorSGenV(context,prefix,MQ_ERROR,MqMessageNum(MQ_ERROR_EXIT),MqMessageText[MQ_ERROR_EXIT]);
+    return MqErrorSetEXITP(context, prefix);
   }
+}
+
+enum MqErrorE
+MqErrorSetEXITP (
+  struct MqS * const context,
+  MQ_CST const prefix
+)
+{
+  MqDLogV(context, 3, "called from %s\n", prefix);
+  return MqErrorSGenV(context,prefix,MQ_ERROR,MqMessageNum(MQ_ERROR_EXIT),MqMessageText[MQ_ERROR_EXIT]);
 }
 
 int
@@ -480,4 +489,7 @@ MqErrorLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
+
 

@@ -284,6 +284,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 PyObject* NS(ErrorC)		    ( PyObject*, PyObject*  );
 PyObject* NS(ErrorSet)		    ( PyObject*		    );
 PyObject* NS(ErrorSetCONTINUE)	    ( PyObject*		    );
+PyObject* NS(ErrorSetEXIT)	    ( PyObject*		    );
 PyObject* NS(ErrorIsEXIT)	    ( PyObject*		    );
 PyObject* NS(ErrorRaise)	    ( PyObject*		    );
 PyObject* NS(ErrorReset)	    ( PyObject*		    );
@@ -294,6 +295,7 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ErrorC_DOC		    "[function-name, error-number, error-message] (testing only) create a PyMqS error"
 #define ErrorSet_DOC		    "set a 'libmsgque' error from a python 'MqSException' error"
 #define ErrorSetCONTINUE_DOC	    "signal that the event-function has finished the work"
+#define ErrorSetEXIT_DOC	    "return a callback with an EXIT"
 #define ErrorIsEXIT_DOC		    "check if context is on exit, return True or False"
 #define ErrorRaise_DOC		    "convert and raise an error from 'pymsgque' into 'python'"
 #define ErrorReset_DOC		    "clear a 'pymsgque' error"
@@ -420,6 +422,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ErrorC,			METH_VARARGS),
     ARG(ErrorSet,		METH_NOARGS),
     ARG(ErrorSetCONTINUE,	METH_NOARGS),
+    ARG(ErrorSetEXIT,		METH_NOARGS),
     ARG(ErrorIsEXIT,		METH_NOARGS),
     ARG(ErrorRaise,		METH_NOARGS),
     ARG(ErrorReset,		METH_NOARGS),

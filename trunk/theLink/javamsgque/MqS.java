@@ -250,6 +250,8 @@ public abstract class MqS {
   public native void    ErrorSet            (Throwable ex);
   /// \api #MqErrorSetCONTINUE
   public native void    ErrorSetCONTINUE    ();
+  /// \api #MqErrorSetEXIT
+  public native void    ErrorSetEXIT	    ();
   /// \api #MqErrorIsEXIT
   public native boolean	ErrorIsEXIT	    ();
 

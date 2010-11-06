@@ -1,4 +1,4 @@
-.TH "MqIoPipeConfigS" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,4 +42,4 @@ Definition at line 618 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

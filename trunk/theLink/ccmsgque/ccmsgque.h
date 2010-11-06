@@ -539,6 +539,11 @@ namespace ccmsgque {
 	MqErrorSetCONTINUE (&context);
       }
 
+      /// \api #MqErrorSetEXIT
+      inline void ErrorSetEXIT () {
+	ErrorCheck (MqErrorSetEXIT (&context));
+      }
+
       /// \api #MqErrorGetNum
       inline int ErrorGetNum () {
 	return MqErrorGetNumI (&context);

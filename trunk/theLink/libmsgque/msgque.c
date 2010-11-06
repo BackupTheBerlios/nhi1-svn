@@ -191,7 +191,7 @@ pWaitOnEvent (
 	  break;
 	case MQ_CONTINUE:
 	  context->setup.ignoreExit = MQ_NO;
-	  return MqErrorCreateEXIT (context);
+	  return pErrorSetExitWithCheck (context);
 	case MQ_ERROR:
 	  MqErrorCopy (context, parent);
 	  goto error;
@@ -455,4 +455,6 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
+
 

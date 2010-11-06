@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -222,7 +222,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 .PP
 
 .PP
-Definition at line 4331 of file msgque.h.
+Definition at line 4337 of file msgque.h.
 .SS "#define MqSysFree(tgt)"
 .PP
 \fBValue:\fP
@@ -246,7 +246,7 @@ additional info: \fCman free\fP
 .PP
 
 .PP
-Definition at line 4293 of file msgque.h.
+Definition at line 4299 of file msgque.h.
 .SS "#define MqSysSleep(context, sec)   (*MqLal.SysSleep)(context, sec)"
 .PP
 \fBsleep\fP syscall with \fBMqS\fP error plugin 
@@ -265,7 +265,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 .PP
 
 .PP
-Definition at line 4325 of file msgque.h.
+Definition at line 4331 of file msgque.h.
 .SS "#define MqSysUSleep(context, usec)   (*MqLal.SysUSleep)(context, usec)"
 .PP
 \fBusleep\fP syscall with \fBMqS\fP error plugin 
@@ -284,7 +284,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 .PP
 
 .PP
-Definition at line 4319 of file msgque.h.
+Definition at line 4325 of file msgque.h.
 .SS "#define MqSysWait(context, idP)   (*MqLal.SysWait)(context, idP)"
 .PP
 \fBwait for process or thread\fP syscall with \fBMqS\fP error plugin 
@@ -303,21 +303,21 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 .PP
 
 .PP
-Definition at line 4313 of file msgque.h.
+Definition at line 4319 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef unsigned long \fBMQ_IDNT\fP"
 .PP
 process or thread identifer 
 .PP
-Definition at line 4032 of file msgque.h.
+Definition at line 4038 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP)(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
 .PP
 \fBcalloc\fP syscall 
 .PP
 additional info: \fCman calloc\fP 
 .PP
-Definition at line 4036 of file msgque.h.
+Definition at line 4042 of file msgque.h.
 .SS "typedef \fBMQ_IDNT\fP(* \fBMqSysForkF\fP)(void)"
 .PP
 \fBfork\fP syscall 
@@ -331,28 +331,28 @@ additional info: \fCman fork\fP
 .PP
 
 .PP
-Definition at line 4062 of file msgque.h.
+Definition at line 4068 of file msgque.h.
 .SS "typedef void(* \fBMqSysFreeF\fP)(\fBMQ_PTR\fP)"
 .PP
 \fBfree\fP syscall 
 .PP
 additional info: \fCman free\fP 
 .PP
-Definition at line 4048 of file msgque.h.
+Definition at line 4054 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysMallocF\fP)(\fBMQ_SIZE\fP)"
 .PP
 \fBmalloc\fP syscall 
 .PP
 additional info: \fCman malloc\fP 
 .PP
-Definition at line 4040 of file msgque.h.
+Definition at line 4046 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysReallocF\fP)(\fBMQ_PTR\fP, \fBMQ_SIZE\fP)"
 .PP
 \fBrealloc\fP syscall 
 .PP
 additional info: \fCman realloc\fP 
 .PP
-Definition at line 4044 of file msgque.h.
+Definition at line 4050 of file msgque.h.
 .SS "typedef int(* \fBMqSysSelectF\fP)(int, void *, void *, void *, struct timeval *)"
 .PP
 \fBselect\fP syscall 
@@ -374,7 +374,7 @@ read more at: \fCman 2 select\fP
 .PP
 
 .PP
-Definition at line 4057 of file msgque.h.
+Definition at line 4063 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqIdSE\fP"
@@ -393,7 +393,7 @@ empty struct
 \fB\fIMQ_ID_THREAD \fP\fP
 \fIval\fP has a thread handle 
 .PP
-Definition at line 4065 of file msgque.h.
+Definition at line 4071 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [static]\fP"
@@ -412,7 +412,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 4359 of file msgque.h.
+Definition at line 4365 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 \fBbasename\fP syscall with \fBMqS\fP error plugin 
@@ -552,4 +552,4 @@ Language Abstraction Layer in duty.
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

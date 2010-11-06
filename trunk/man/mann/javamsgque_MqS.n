@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "1 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "6 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -247,6 +247,10 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "native void \fBErrorSetCONTINUE\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "native void \fBErrorSetEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
 .ti -1c
 .RI "native boolean \fBErrorIsEXIT\fP ()"
 .br

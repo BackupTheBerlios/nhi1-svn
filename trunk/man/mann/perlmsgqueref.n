@@ -1,4 +1,4 @@
-.TH "perlmsgque" n "1 Nov 2010" "Version 4.6" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque" n "6 Nov 2010" "Version 4.6" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1701,6 +1701,8 @@ return the type as single character of the item stored in the buffer object.
 .br
  \fBErrorSetCONTINUE\fP
 .br
+ \fBErrorSetEXIT\fP
+.br
  \fBErrorIsEXIT\fP
 .br
  \fBErrorReset\fP
@@ -1756,6 +1758,10 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJEC
 convert a \fIclass MqSException ex\fP into a perlmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "$ctx->ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
+.SS "$ctx->ErrorSetEXIT()"
+exit an \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
+.PP
+To exit and application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed by a \fIsocket-down\fP event. 
 .SS "bool $ctx->ErrorIsEXIT()"
 check if context is on \fIexit\fP, return \fI1\fP or \fI0\fP 
 .PP

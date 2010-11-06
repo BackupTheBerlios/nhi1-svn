@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "1 Nov 2010" "Version 4.6" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "6 Nov 2010" "Version 4.6" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

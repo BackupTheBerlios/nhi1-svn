@@ -335,6 +335,11 @@ MqErrorSet(MqS* context, SV* err)
 void
 MqErrorSetCONTINUE(MqS* context)
 
+void
+MqErrorSetEXIT(MqS* context)
+  CODE:
+    ErrorMqToPerlWithCheck(MqErrorSetEXIT(context))
+
 bool
 MqErrorIsEXIT(MqS* context)
 

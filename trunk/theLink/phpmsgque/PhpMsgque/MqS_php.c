@@ -316,7 +316,7 @@ PHP_METHOD(PhpMsgque_MqS, ProcessEvent);
 PHP_METHOD(PhpMsgque_MqS, ErrorC);
 PHP_METHOD(PhpMsgque_MqS, ErrorSet);
 PHP_METHOD(PhpMsgque_MqS, ErrorSetCONTINUE);
-PHP_METHOD(PhpMsgque_MqS, ErrorCreateEXIT);
+PHP_METHOD(PhpMsgque_MqS, ErrorSetEXIT);
 PHP_METHOD(PhpMsgque_MqS, ErrorIsEXIT);
 PHP_METHOD(PhpMsgque_MqS, ErrorGetText);
 PHP_METHOD(PhpMsgque_MqS, ErrorGetNum);
@@ -517,7 +517,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, ErrorC,			ErrorC_arg,           ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSet,		Exception_arg,        ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorSetCONTINUE,	no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, ErrorCreateEXIT,	no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, ErrorSetEXIT,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorIsEXIT,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorGetText,		no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ErrorGetNum,		no_arg,               ZEND_ACC_PUBLIC)
@@ -630,3 +630,4 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+

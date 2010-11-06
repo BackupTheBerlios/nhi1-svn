@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "1 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -169,6 +169,10 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBErrorSetCONTINUE\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "void \fBErrorSetEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
 .ti -1c
 .RI "bool \fBErrorIsEXIT\fP ()"
 .br
@@ -515,4 +519,4 @@ Definition at line 152 of file csmsgque.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.
