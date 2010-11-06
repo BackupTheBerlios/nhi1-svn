@@ -64,7 +64,7 @@ extern zend_class_entry *NS(MqBufferS);
 /*                                                                           */
 /*****************************************************************************/
 
-#define ErrorMqToPhp() NS(MqSException_Raise)(mqctx TSRMLS_CC)
+#define ErrorMqToPhp() NS(MqSException_Raise)(mqctx TSRMLS_CC); return
 #define ErrorMqToPhpWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
     ErrorMqToPhp(); \

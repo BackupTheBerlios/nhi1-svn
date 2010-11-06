@@ -11,7 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-$stderr = fopen("php://stderr", "w");
+#$stderr = fopen("php://stderr", "w");
 
 class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent, iFactory {
   public function __construct() {
@@ -61,7 +61,7 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent, iFact
     $this->SendRETURN();
   }
   public function EXITX() {
-    exit;
+    $this->ErrorCreateEXIT();
   }
   public function Event() {
     if (count($this->items) == 0) {

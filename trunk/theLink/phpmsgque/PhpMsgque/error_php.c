@@ -49,6 +49,13 @@ PHP_METHOD(PhpMsgque_MqS, ErrorSetCONTINUE)
   RETURN_NULL();
 } 
 
+PHP_METHOD(PhpMsgque_MqS, ErrorCreateEXIT)
+{ 
+  SETUP_mqctx;
+  ErrorMqToPhpWithCheck(MqErrorCreateEXIT(MQCTX));
+  RETURN_NULL();
+} 
+
 PHP_METHOD(PhpMsgque_MqS, ErrorIsEXIT)
 { 
   BOL2VAL(return_value, MqErrorIsEXIT(MQCTX));

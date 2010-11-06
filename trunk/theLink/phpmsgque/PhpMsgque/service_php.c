@@ -36,7 +36,7 @@ PHP_METHOD(PhpMsgque_MqS, ServiceGetFilter)
   PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|l", &id));
   ErrorMqToPhpWithCheck(MqServiceGetFilter(mqctx, id, &filter));
   MqS2VAL(return_value,filter);
-  RETURN_NULL();
+  return;
 error:
   RaiseError("usage: ServiceGetFilter(?long: id=0?)");
   return;
