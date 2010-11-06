@@ -37,6 +37,29 @@ class Client extends MqS implements iBgError, iFactory {
   }
 }
 
+class ClientERR extends MqS {
+  public function __construct() {
+    $this->ConfigSetSrvName("test-server");
+    $this->ConfigSetName("test-client");
+    parent::__construct();
+  }
+  public function LinkCreate($debug) {
+    $this->ConfigSetDebug($debug);
+    parent::LinkCreate("client", "@", "SELF");
+  }
+}
+
+class ClientERR2 extends MqS {
+  public function __construct() {
+    $this->ConfigSetName("cl-err-1");
+    parent::__construct();
+  }
+  public function LinkCreate($debug) {
+    $this->ConfigSetDebug($debug);
+    parent::LinkCreate("client", "@", "DUMMY");
+  }
+}
+
 class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 
   public $cl = array();
@@ -81,16 +104,16 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("TRN2", array(&$this, 'TRN2'));
       $this->ServiceCreate("GTTO", array(&$this, 'GTTO'));
       $this->ServiceCreate("MSQT", array(&$this, 'MSQT'));
-#      $this->ServiceCreate("CNFG", array(&$this, 'CNFG'));
+      $this->ServiceCreate("CNFG", array(&$this, 'CNFG'));
       $this->ServiceCreate("SND1", array(&$this, 'SND1'));
-#      $this->ServiceCreate("SND2", array(&$this, 'SND2'));
+      $this->ServiceCreate("SND2", array(&$this, 'SND2'));
       $this->ServiceCreate("REDI", array(&$this, 'REDI'));
       $this->ServiceCreate("GTCX", array(&$this, 'GTCX'));
       $this->ServiceCreate("CSV1", array(&$this, 'CSV1'));
       $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
       $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
-      $this->ServiceCreate("INIT", array(&$this, 'INIT'));
+      $this->ServiceCreate("INIT", array(&$this, 'INITX'));
       $this->ServiceCreate("LST1", array(&$this, 'LST1'));
       $this->ServiceCreate("LST2", array(&$this, 'LST2'));
 
@@ -123,6 +146,103 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 #      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
 #      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function CNFG() {
+    $this->SendSTART();
+    $this->SendO($this->ConfigGetIsServer());
+    $this->SendO($this->LinkIsParent());
+    $this->SendO($this->SlaveIs());
+    $this->SendO($this->ConfigGetIsString());
+    $this->SendO($this->ConfigGetIsSilent());
+    $this->SendO($this->LinkIsConnected());
+    $this->SendC($this->ConfigGetName());
+    $this->SendI($this->ConfigGetDebug());
+    $this->SendI($this->LinkGetCtxId());
+    $this->SendC($this->ServiceGetToken());
+    $this->SendRETURN();
+  }
+
+  public function Callback2($ctx) {
+    $this->i = $ctx->ReadI();
+  }
+
+  public function SND2() {
+    $s  = $this->ReadC();
+    $id = $this->ReadI();
+    $cl = $this->SlaveGet($id);
+    $this->SendSTART();
+    switch ($s) {
+      case "CREATE":
+        $args = array();
+        while ($this->ReadItemExists()) {
+          $args[] = ReadC();
+        }
+        array_push(&$args, "--name", "wk-cl-" . $id, "@", "--name", "wk-sv-" . $id);
+        $this->SlaveWorker($id, $args);
+	break;
+      case "CREATE2":
+        $slv = new Client();
+        $slv->LinkCreate($this->ConfigGetDebug());
+        $this->SlaveCreate($id, $slv);
+	break;
+      case "CREATE3":
+        $slv = new ClientERR();
+        $slv->LinkCreate($this->ConfigGetDebug());
+        $this->SlaveCreate($id, $slv);
+	break;
+      case "DELETE":
+        $this->SlaveDelete($id);
+        $this->SlaveGet($id) == NULL ? $this->SendC("OK") : $this->SendC("ERROR");
+	break;
+      case "SEND":
+        $cl->SendSTART();
+        $tok = $this->ReadC();
+        $cl->SendU($this->ReadU());
+        $cl->SendEND($tok);
+	break;
+      case "WAIT":
+        $cl->SendSTART();
+        $cl->SendN($this->ReadN());
+        $cl->SendEND_AND_WAIT("ECOI", 5);
+        $this->SendI($cl->ReadI()+1);
+	break;
+      case "CALLBACK":
+        $cl->SendSTART();
+        $cl->SendU($this->ReadU());
+        $this->i = -1;
+        $cl->SendEND_AND_CALLBACK("ECOI", array(&$this, "Callback2"));
+        $cl->ProcessEvent(10,MqS::WAIT_ONCE);
+        $this->SendI($this->i+1);
+	break;
+      case "MqSendEND_AND_WAIT":
+        $tok = $this->ReadC();
+        $cl->SendSTART();
+        while ($this->ReadItemExists()) {
+          $cl->SendU($this->ReadU());
+        }
+        $cl->SendEND_AND_WAIT($tok, 5);
+        while ($cl->ReadItemExists()) {
+          $this->SendU($cl->ReadU());
+        }
+	break;
+      case "MqSendEND":
+        $tok = $this->ReadC();
+        $cl->SendSTART();
+        while ($this->ReadItemExists()) {
+          $cl->SendU($this->ReadU());
+        }
+        $cl->SendEND($tok);
+        return;
+      case "ERR-1":
+        $slv = new ClientERR2();
+        $slv->LinkCreate($this->ConfigGetDebug());
+	break;
+      case "isSlave":
+        $this->SendO($cl->SlaveIs());
+	break;
+    }
+    $this->SendRETURN();
   }
 
   public function GTCX() {
@@ -329,7 +449,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
     $this->SendRETURN();
   }
 
-  public function INIT() {
+  public function INITX() {
     $this->SendSTART();
     $list = array();
     while ($this->ReadItemExists()) {

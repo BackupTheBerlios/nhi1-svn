@@ -49,14 +49,12 @@ static int MqBufferLAppendZValArrayItem (zval **argP, MQ_BFL args TSRMLS_DC) {
   return ZEND_HASH_APPLY_KEEP;
 }
 
-MQ_BFL NS(Argument2MqBufferLS)(const int numArgs TSRMLS_DC)
+MQ_BFL NS(Argument2MqBufferLS)(struct MqBufferLS * args, const int numArgs TSRMLS_DC)
 {
-  struct MqBufferLS * args = NULL;
-
   if (numArgs > 0) {
     int i;
     zval ***arguments;
-    args = MqBufferLCreate(numArgs);
+    if (args == NULL) args = MqBufferLCreate(numArgs);
     arguments = emalloc(sizeof(zval**) * numArgs);
     if (zend_get_parameters_array_ex(numArgs,arguments)) {
       ZEND_WRONG_PARAM_COUNT_WITH_RETVAL(args);

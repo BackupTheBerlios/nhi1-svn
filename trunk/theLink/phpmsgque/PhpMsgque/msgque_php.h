@@ -153,7 +153,7 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
 
 void NS(MqSException_Raise)	  (struct MqS* TSRMLS_DC);
 void NS(MqSException_Set)	  (struct MqS*, zval* TSRMLS_DC);
-MQ_BFL NS(Argument2MqBufferLS)	  (int numArgs TSRMLS_DC);
+MQ_BFL NS(Argument2MqBufferLS)	  (struct MqBufferLS *, int numArgs TSRMLS_DC);
 void NS(MqBufferLAppendZVal)	  (MQ_BFL, zval* TSRMLS_DC);
 void NS(MqBufferS_New)		  (zval *, MQ_BUF TSRMLS_DC);
 

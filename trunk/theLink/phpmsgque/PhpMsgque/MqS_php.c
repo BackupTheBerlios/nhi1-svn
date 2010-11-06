@@ -84,6 +84,12 @@ PHP_METHOD(PhpMsgque_MqS, Info)
   MqLogV(mqctx,prefix,0,"refCount = %d\n", Z_REFCOUNT_P(mqctx->self));
 }
 
+static
+PHP_METHOD(PhpMsgque_MqS, Init)
+{
+  NS(Argument2MqBufferLS)(MqInitCreate(), ZEND_NUM_ARGS() TSRMLS_CC) ;
+}
+
 
 #define CB(name) \
   if (instanceof_function(Z_OBJCE_P(getThis()), NS(i ## name) TSRMLS_CC)) { \
@@ -351,7 +357,7 @@ ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(SlaveCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "id")
-  ZEND_ARG_OBJ_INFO(0, slave, NS(MqS), 0)
+  ZEND_ARG_OBJ_INFO(0, slave, MqS, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(ServiceCreate_arg, 0, 0, 2)
@@ -399,6 +405,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, Delete,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LogC,			LogC_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, Info,			val_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, Init,			NULL,		      ZEND_ACC_PUBLIC)
 
   PHP_ME(PhpMsgque_MqS, ReadY,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadO,			no_arg,               ZEND_ACC_PUBLIC)
