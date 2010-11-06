@@ -101,6 +101,7 @@ void NS(MqBufferS_New) (zval *return_value, MQ_BUF buf TSRMLS_DC)
   // convert to an object instance
   if (object_init_ex(return_value, NS(MqBufferS)) == FAILURE) {
     RaiseError("unable to create an 'MqBufferS' instance.");
+    return;
   }
   // link 'buf' with the object instance
   zend_update_property_long(NS(MqBufferS), return_value, ID(__buf), (long) buf TSRMLS_CC);

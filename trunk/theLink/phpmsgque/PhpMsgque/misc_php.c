@@ -89,6 +89,8 @@ enum MqErrorE NS(ProcCall) (
   // throw 'exception' on error
   zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
   // call function or method
+//MQ_I0
+//printVAL(data->ctor);
   ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
     param_count, params, 1, NULL TSRMLS_CC);
   // clear or save result

@@ -14,6 +14,8 @@
 #phpinfo();
 
 
+$stderr = fopen("php://stderr", "w");
+
 class Client extends MqS implements iBgError, iFactory {
   public function __construct() {
     $this->ConfigSetSrvName("test-server");
@@ -138,6 +140,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
   }
 
   public function SND1() {
+    global $stderr;
     $s = $this->ReadC();
     $id = $this->ReadI();
     $this->SendSTART();
@@ -145,6 +148,9 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       case "START":
         $parent = $this->LinkGetParent();
         if ($parent != NULL and $parent->cl[$id]->LinkIsConnected()) {
+#fwrite($stderr,"111111111111111111111111111111\n");
+#fwrite($stderr,"THIS\n");
+#var_dump($this->cl[$id]);
           $this->cl[$id]->LinkCreateChild($parent->cl[$id]);
         } else {
           $this->cl[$id]->LinkCreate($this->ConfigGetDebug());

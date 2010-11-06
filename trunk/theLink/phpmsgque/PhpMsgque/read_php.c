@@ -84,7 +84,7 @@ PHP_METHOD(PhpMsgque_MqS, ReadL_START)
   ErrorMqToPhpWithCheck(MqReadL_START(mqctx, buf));
   RETURN_NULL();
 error:
-  RaiseError("usage: ReadL_START(?MqBufferS: buf?)");
+  RaiseError("usage: ReadL_START(?MqBufferS: buf=NULL?)");
   return;
 }
 
@@ -109,7 +109,7 @@ PHP_METHOD(PhpMsgque_MqS, ReadT_START)
   ErrorMqToPhpWithCheck(MqReadT_START(mqctx, buf));
   RETURN_NULL();
 error:
-  RaiseError("usage: ReadT_START(?MqBufferS: buf?)");
+  RaiseError("usage: ReadT_START(?MqBufferS: buf=NULL?)");
   return;
 }
 

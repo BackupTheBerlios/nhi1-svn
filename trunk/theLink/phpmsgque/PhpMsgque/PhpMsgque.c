@@ -11,6 +11,7 @@
  */
 
 #include "msgque_php.h"
+#include "SAPI.h"
 
 /* If you declare any globals in php_PhpMsgque.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(PhpMsgque)
@@ -129,7 +130,7 @@ PHP_RINIT_FUNCTION(PhpMsgque)
 		/* init libmsgque global data */
 		if (MqInitBuf == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
 		  struct MqBufferLS * initB = MqInitCreate();
-		  MqBufferLAppendC(initB, "php");
+		  MqBufferLAppendC(initB, sapi_module.executable_location ? sapi_module.executable_location : "php");
 		  MqBufferLAppendC(initB, "-c");
 		  MqBufferLAppendC(initB, VAL2CST(a0));
 		  MqBufferLAppendC(initB, VAL2CST(*SCRIPT_FILENAME));

@@ -52,6 +52,7 @@ PHP_METHOD(PhpMsgque_MqS, LinkCreateChild)
 
   // create Context
   ErrorMqToPhpWithCheck (MqLinkCreateChild(mqctx, parent, &args));
+  RETURN_NULL();
 error:
   RaiseError("usage: LinkCreateChild(MqS: parent, ...)");
   return;

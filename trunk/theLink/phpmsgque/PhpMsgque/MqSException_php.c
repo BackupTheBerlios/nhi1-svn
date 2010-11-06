@@ -108,6 +108,7 @@ void NS(MqSException_Raise) (struct MqS* mqctx TSRMLS_DC) {
   MAKE_STD_ZVAL(MqSExceptionO);
   if (object_init_ex(MqSExceptionO, MqSExceptionC) == FAILURE) {
     RaiseError("unable to initialize 'MqSException' object");
+    return;
   }
   zend_update_property_string (default_exception_ce, MqSExceptionO, ID(message),  MqErrorGetText  (mqctx) TSRMLS_CC);
   zend_update_property_long   (default_exception_ce, MqSExceptionO, ID(code),	  MqErrorGetCodeI (mqctx) TSRMLS_CC);

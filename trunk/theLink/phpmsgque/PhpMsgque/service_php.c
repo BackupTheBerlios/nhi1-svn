@@ -33,12 +33,13 @@ PHP_METHOD(PhpMsgque_MqS, ServiceGetFilter)
   SETUP_mqctx;
   struct MqS * filter;
   long id=0;
-  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|l", &id) == FAILURE) {
-    RaiseError("usage: ServiceGetFilter ?id=0?");
-    return;
-  }
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|l", &id));
   ErrorMqToPhpWithCheck(MqServiceGetFilter(mqctx, id, &filter));
   MqS2VAL(return_value,filter);
+  RETURN_NULL();
+error:
+  RaiseError("usage: ServiceGetFilter(?long: id=0?)");
+  return;
 }
 
 PHP_METHOD(PhpMsgque_MqS, ServiceCreate)
@@ -76,12 +77,12 @@ PHP_METHOD(PhpMsgque_MqS, ServiceProxy)
   char *str;
   int strlen;
   long id=0;
-  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &str, &strlen, &id) == FAILURE) {
-    RaiseError("usage: ServiceProxy token ?id=0?");
-    return;
-  }
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &str, &strlen, &id));
   ErrorMqToPhpWithCheck(MqServiceProxy(mqctx, str, id));
   RETURN_NULL();
+error:
+  RaiseError("usage: ServiceProxy(string: token, ?long: id=0?");
+  return;
 }
 
 PHP_METHOD(PhpMsgque_MqS, ProcessEvent)
@@ -90,10 +91,7 @@ PHP_METHOD(PhpMsgque_MqS, ProcessEvent)
   MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
   enum MqWaitOnEventE wait = MQ_WAIT_NO;
   long arg1=0, arg2=0;
-  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|ll", &arg1, &arg2) == FAILURE) {
-    RaiseError("usage: ProcessEvent ?timeout? ?wait?");
-    return;
-  }
+  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|ll", &arg1, &arg2));
   if (ZEND_NUM_ARGS() == 1) {
     wait = arg1;
   }
@@ -103,6 +101,9 @@ PHP_METHOD(PhpMsgque_MqS, ProcessEvent)
   }
   ErrorMqToPhpWithCheck(MqProcessEvent(mqctx, timeout, wait));
   RETURN_NULL();
+error:
+  RaiseError("usage: ProcessEvent(?long|MqS::TIMEOUT_(DEFAULT|USER|MAX): timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER): wait?)");
+  return;
 }
 
 /*****************************************************************************/
