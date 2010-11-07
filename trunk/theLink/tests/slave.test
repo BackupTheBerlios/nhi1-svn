@@ -114,7 +114,7 @@ test slave-4a-($I|$B|$C|$S) {SendEND with error} \
 	## 1. create an error
 	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendW 777
 	## 2. get the error from above as side-effect of the following service call
-	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_add 222 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
 	RET_end
     } \
     -match	    glob \
@@ -138,7 +138,7 @@ test slave-4b-($I|$B|$C|$S) {SendEND with background error} \
     -body           {
 	RET_start
 	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC XXXX SendI 777
-	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_add 222 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
 	RET_end
     } \
     -match	    glob \
@@ -164,7 +164,7 @@ test slave-4c-($I|$B|$C|$S) {SendEND with error} \
 	## 1. create an error
 	RET_add 111 Call $FH_LAST SendEND_AND_WAIT SND2 SendC SEND SendI 0 SendC REDI SendW 777
 	## 2. get the error from above as side-effect of the following service call
-	RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	RET_add 222 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
 	RET_end
     } \
     -match	    glob \
@@ -504,6 +504,7 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
 
 
 

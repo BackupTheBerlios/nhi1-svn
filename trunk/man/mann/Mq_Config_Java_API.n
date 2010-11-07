@@ -1,4 +1,4 @@
-.TH "Mq_Config_Java_API" n "6 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_Java_API" n "7 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -32,6 +32,14 @@ Mq_Config_Java_API \- configuration of a context
 .RI "interface \fBjavamsgque.IServerSetup\fP"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBjavamsgque::MqS.START\fP { \fBjavamsgque::MqS.DEFAULT\fP = (0), \fBjavamsgque::MqS.FORK\fP = (1), \fBjavamsgque::MqS.THREAD\fP = (2), \fBjavamsgque::MqS.SPAWN\fP = (3) }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
 .in -1c
 .SS "Functions"
 
@@ -81,7 +89,7 @@ Mq_Config_Java_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
 .ti -1c
-.RI "native void \fBjavamsgque::MqS.ConfigSetStartAs\fP (int val)"
+.RI "void \fBjavamsgque::MqS.ConfigSetStartAs\fP (START val)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
 .ti -1c
@@ -133,7 +141,7 @@ Mq_Config_Java_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
 .ti -1c
-.RI "native int \fBjavamsgque::MqS.ConfigGetStartAs\fP ()"
+.RI "START \fBjavamsgque::MqS.ConfigGetStartAs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .ti -1c
@@ -168,6 +176,25 @@ configuration of a context
 configuration of a context 
 .PP
 The configuration is done persistent using \fIconfig-api\fP functions or on link-setup using \fIcommand-line-arguments\fP.  
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBjavamsgque::MqS::START\fP\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqStartE\fP 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIDEFAULT \fP\fP
+.TP
+\fB\fIFORK \fP\fP
+.TP
+\fB\fITHREAD \fP\fP
+.TP
+\fB\fISPAWN \fP\fP
+
+.PP
+Definition at line 40 of file MqS.java.
 .SH "Function Documentation"
 .PP 
 .SS "native int javamsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"
@@ -226,10 +253,11 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP 
 .PP
-.SS "native int javamsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
+.SS "START javamsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP 
 .PP
+Definition at line 118 of file MqS.java.
 .SS "native long javamsgque.MqS.ConfigGetTimeout ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP 
@@ -282,10 +310,11 @@ implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP 
 .PP
-.SS "native void javamsgque.MqS.ConfigSetStartAs (int val)\fC [inherited]\fP"
+.SS "void javamsgque.MqS.ConfigSetStartAs (\fBSTART\fP val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP 
 .PP
+Definition at line 87 of file MqS.java.
 .SS "native void javamsgque.MqS.ConfigSetTimeout (long val)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP 

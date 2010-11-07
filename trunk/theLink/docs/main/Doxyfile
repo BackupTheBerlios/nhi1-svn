@@ -47,6 +47,8 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 			\
 			$(DOCDIR)/../perlmsgque/perlmsgque.tag=perlmsgque \
 			\
+			$(DOCDIR)/../phpmsgque/phpmsgque.tag=phpmsgque \
+			\
 			$(DOCDIR)/../vbmsgque/vbmsgque.tag=vbmsgque
 
 #			$(DOCDIR)/../tclmsgque_private/tclmsgque_private.tag=tclmsgque_private \

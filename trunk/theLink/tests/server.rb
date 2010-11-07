@@ -406,7 +406,7 @@ class Server < MqS
         cl.SendU(ReadU());
         @i = -1;
         cl.SendEND_AND_CALLBACK("ECOI", method(:Callback2));
-        cl.ProcessEvent(10,MqS::WAIT::ONCE);
+        cl.ProcessEvent(10,MqS::WAIT_ONCE);
         SendI(@i+1);
       when "MqSendEND_AND_WAIT"
         tok = ReadC()
@@ -489,7 +489,7 @@ class Server < MqS
         @cl[id].SendU(ReadU())
         @i = -1
         @cl[id].SendEND_AND_CALLBACK("ECOI", method(:Callback))
-        @cl[id].ProcessEvent(10,MqS::WAIT::ONCE)
+        @cl[id].ProcessEvent(10,MqS::WAIT_ONCE)
         SendI(@i+1)
       when "ERR-1" 
         @cl[id].SendSTART()
@@ -557,7 +557,7 @@ class Server < MqS
     SendT_END()
     SendI( ReadI() )
     SendEND_AND_WAIT("ECOI")
-    ProcessEvent(MqS::WAIT::ONCE)
+    ProcessEvent(MqS::WAIT_ONCE)
     SendSTART()
     SendI(@i)
     SendI(@j)
@@ -705,7 +705,7 @@ srv = Server.new
 begin
   srv.LinkCreate($0,ARGV)
   srv.LogC("test",1,"this is the log test\n")
-  srv.ProcessEvent(MqS::WAIT::FOREVER)
+  srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue SignalException
   #ignore
 rescue Exception => ex
@@ -715,3 +715,4 @@ ensure
 end
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+

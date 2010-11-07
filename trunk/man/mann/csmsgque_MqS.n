@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,9 +19,17 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 
 .in +1c
 .ti -1c
+.RI "enum \fBSTART\fP { \fBDEFAULT\fP =  0, \fBFORK\fP =  1, \fBTHREAD\fP =  2, \fBSPAWN\fP =  3 }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
+.ti -1c
 .RI "enum \fBWAIT\fP { \fBNO\fP =  0, \fBONCE\fP =  1, \fBFOREVER\fP =  2 }"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.ti -1c
+.RI "enum \fBTIMEOUT\fP { \fBDEFAULT\fP =  -1, \fBUSER\fP =  -2, \fBMAX\fP =  -3 }"
+.br
+.R "implement the \fBlibmsgque\fP API object: timeout default values "
 .in -1c
 .SS "Public Member Functions"
 
@@ -79,7 +87,7 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
 .ti -1c
-.RI "void \fBConfigSetStartAs\fP (int data)"
+.RI "void \fBConfigSetStartAs\fP (\fBSTART\fP data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
 .ti -1c
@@ -143,7 +151,7 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
 .ti -1c
-.RI "int \fBConfigGetStartAs\fP ()"
+.RI "\fBSTART\fP \fBConfigGetStartAs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .ti -1c
@@ -462,9 +470,13 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error "
 .ti -1c
+.RI "void \fBProcessEvent\fP (\fBTIMEOUT\fP timeout, \fBWAIT\fP wait)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error "
+.ti -1c
 .RI "void \fBProcessEvent\fP (\fBWAIT\fP wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time "
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP "
 .ti -1c
 .RI "void \fBProcessEvent\fP ()"
 .br

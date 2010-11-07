@@ -1,10 +1,18 @@
-.TH "Mq_Config_Cs_API" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Config_Cs_API" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Config_Cs_API \- configuration of a context   
 
 .PP
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBcsmsgque::MqS.START\fP { \fBcsmsgque::MqS.DEFAULT\fP =  0, \fBcsmsgque::MqS.FORK\fP =  1, \fBcsmsgque::MqS.THREAD\fP =  2, \fBcsmsgque::MqS.SPAWN\fP =  3 }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
+.in -1c
 .SS "Functions"
 
 .in +1c
@@ -65,7 +73,7 @@ Mq_Config_Cs_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
 .ti -1c
-.RI "void \fBcsmsgque::MqS.ConfigSetStartAs\fP (int data)"
+.RI "void \fBcsmsgque::MqS.ConfigSetStartAs\fP (START data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
 .ti -1c
@@ -129,7 +137,7 @@ Mq_Config_Cs_API \- configuration of a context
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
 .ti -1c
-.RI "int \fBcsmsgque::MqS.ConfigGetStartAs\fP ()"
+.RI "START \fBcsmsgque::MqS.ConfigGetStartAs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .in -1c
@@ -138,88 +146,107 @@ Mq_Config_Cs_API \- configuration of a context
 configuration of a context  
 
 The configuration is done persistent using \fIconfig-api\fP functions or on link-setup using \fIcommand-line-arguments\fP.  
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcsmsgque::MqS::START\fP\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqStartE\fP 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIDEFAULT \fP\fP
+.TP
+\fB\fIFORK \fP\fP
+.TP
+\fB\fITHREAD \fP\fP
+.TP
+\fB\fISPAWN \fP\fP
+
+.PP
+Definition at line 186 of file config.cs.
 .SH "Function Documentation"
 .PP 
 .SS "int csmsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP 
 .PP
-Definition at line 259 of file config.cs.
+Definition at line 268 of file config.cs.
 .SS "int csmsgque.MqS.ConfigGetDebug ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP 
 .PP
-Definition at line 255 of file config.cs.
+Definition at line 264 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIdent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP 
 .PP
-Definition at line 253 of file config.cs.
+Definition at line 262 of file config.cs.
 .SS "int csmsgque.MqS.ConfigGetIoPipeSocket ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP 
 .PP
-Definition at line 271 of file config.cs.
+Definition at line 280 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIoTcpHost ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP 
 .PP
-Definition at line 261 of file config.cs.
+Definition at line 270 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIoTcpMyHost ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP 
 .PP
-Definition at line 265 of file config.cs.
+Definition at line 274 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIoTcpMyPort ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP 
 .PP
-Definition at line 267 of file config.cs.
+Definition at line 276 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIoTcpPort ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP 
 .PP
-Definition at line 263 of file config.cs.
+Definition at line 272 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetIoUdsFile ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP 
 .PP
-Definition at line 269 of file config.cs.
+Definition at line 278 of file config.cs.
 .SS "bool csmsgque.MqS.ConfigGetIsServer ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP 
 .PP
-Definition at line 243 of file config.cs.
+Definition at line 252 of file config.cs.
 .SS "bool csmsgque.MqS.ConfigGetIsSilent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP 
 .PP
-Definition at line 247 of file config.cs.
+Definition at line 256 of file config.cs.
 .SS "bool csmsgque.MqS.ConfigGetIsString ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP 
 .PP
-Definition at line 245 of file config.cs.
+Definition at line 254 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetName ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP 
 .PP
-Definition at line 249 of file config.cs.
+Definition at line 258 of file config.cs.
 .SS "string csmsgque.MqS.ConfigGetSrvName ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP 
 .PP
-Definition at line 251 of file config.cs.
-.SS "int csmsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
+Definition at line 260 of file config.cs.
+.SS "START csmsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP 
 .PP
-Definition at line 273 of file config.cs.
+Definition at line 282 of file config.cs.
 .SS "long csmsgque.MqS.ConfigGetTimeout ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP 
 .PP
-Definition at line 257 of file config.cs.
+Definition at line 266 of file config.cs.
 .SS "void csmsgque.MqS.ConfigSetBuffersize (int data)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP 
@@ -280,11 +307,11 @@ Definition at line 153 of file config.cs.
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP 
 .PP
 Definition at line 155 of file config.cs.
-.SS "void csmsgque.MqS.ConfigSetStartAs (int data)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ConfigSetStartAs (\fBSTART\fP data)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP 
 .PP
-Definition at line 185 of file config.cs.
+Definition at line 194 of file config.cs.
 .SS "void csmsgque.MqS.ConfigSetTimeout (long data)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP 

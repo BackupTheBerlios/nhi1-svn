@@ -38,7 +38,7 @@ PHP_METHOD(PhpMsgque_MqS, ServiceGetFilter)
   MqS2VAL(return_value,filter);
   return;
 error:
-  RaiseError("usage: ServiceGetFilter(?long: id=0?)");
+  RaiseError("usage: ServiceGetFilter(?integer: id=0?)");
   return;
 }
 
@@ -81,7 +81,7 @@ PHP_METHOD(PhpMsgque_MqS, ServiceProxy)
   ErrorMqToPhpWithCheck(MqServiceProxy(mqctx, str, id));
   RETURN_NULL();
 error:
-  RaiseError("usage: ServiceProxy(string: token, ?long: id=0?");
+  RaiseError("usage: ServiceProxy(string: token, ?integer: id=0?");
   return;
 }
 
@@ -102,7 +102,7 @@ PHP_METHOD(PhpMsgque_MqS, ProcessEvent)
   ErrorMqToPhpWithCheck(MqProcessEvent(mqctx, timeout, wait));
   RETURN_NULL();
 error:
-  RaiseError("usage: ProcessEvent(?long|MqS::TIMEOUT_(DEFAULT|USER|MAX): timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER): wait?)");
+  RaiseError("usage: ProcessEvent(?integer|MqS::TIMEOUT_(DEFAULT|USER|MAX): timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER): wait?)");
   return;
 }
 
@@ -114,4 +114,5 @@ error:
 
 void NS(MqS_Service_Init)(TSRMLS_D) {
 }
+
 

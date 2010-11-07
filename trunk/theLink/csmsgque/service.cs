@@ -103,11 +103,22 @@ namespace csmsgque {
       FOREVER = 2,
     };
 
+    /// \api timeout default values
+    public enum TIMEOUT {
+      DEFAULT = -1,   ///< #MQ_TIMEOUT_DEFAULT
+      USER    = -2,   ///< #MQ_TIMEOUT_USER
+      MAX     = -3,   ///< #MQ_TIMEOUT_MAX
+    };
+
     /// \api #MqProcessEvent, wait for \e timeout seconds and process event or raise an error
     public void ProcessEvent ( long timeout, WAIT wait) {
       ErrorMqToCsWithCheck(MqProcessEvent(context, timeout, (int)wait));
     }
-    /// \api #MqProcessEvent, wait application default time
+    /// \api #MqProcessEvent, wait for \e TIMEOUT seconds and process event or raise an error
+    public void ProcessEvent ( TIMEOUT timeout, WAIT wait) {
+      ErrorMqToCsWithCheck(MqProcessEvent(context, (long)timeout, (int)wait));
+    }
+    /// \api #MqProcessEvent, wait application default time #MQ_TIMEOUT_DEFAULT
     public void ProcessEvent (WAIT wait) {
       ErrorMqToCsWithCheck(MqProcessEvent(context, -2, (int)wait));
     }

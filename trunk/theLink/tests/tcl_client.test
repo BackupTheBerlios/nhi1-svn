@@ -67,7 +67,7 @@ test tcl-client-1-($I|$B|$C|$S) {send with wrong number of arguments} \
     -match	    glob \
     -result	    {wrong # args: should be "<MqS-*> subcommand ..."}
 
-test tcl-client-2-($I|$B|$C|$S) {send with wrong -timeout} \
+test tcl-client-2-($I|$B|$C|$S) {send with wrong integer} \
     -body	    {
       $FH_LAST SendSTART
       $FH_LAST SendI 1
@@ -91,7 +91,7 @@ test tcl-client-3d-($I|$B|$C|$S) {"send" with invalid callback} \
 	$FH_LAST SendSTART
 	$FH_LAST SendI 1
         $FH_LAST SendEND_AND_CALLBACK ECOI XXX
-	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+	$FH_LAST ProcessEvent 3 $MqS_WAIT_ONCE
     } \
     -match	    glob \
     -returnCodes    error \
@@ -104,7 +104,7 @@ test tcl-client-3e-($I|$B|$C|$S) {"send" with invalid callback (no args)} \
 	$FH_LAST SendSTART
 	$FH_LAST SendI 1
         $FH_LAST SendEND_AND_CALLBACK ECOI NoArgs
-	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+	$FH_LAST ProcessEvent 3 $MqS_WAIT_ONCE
     } \
     -match	    glob \
     -returnCodes    error \
@@ -117,7 +117,7 @@ test tcl-client-3f-($I|$B|$C|$S) {"send" with invalid callback (to many args)} \
 	$FH_LAST SendSTART
 	$FH_LAST SendI 1
         $FH_LAST SendEND_AND_CALLBACK ECOI ToManyArgs
-	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+	$FH_LAST ProcessEvent 3 $MqS_WAIT_ONCE
     } \
     -match	    glob \
     -returnCodes    error \
@@ -130,7 +130,7 @@ test tcl-client-3g-($I|$B|$C|$S) {"send" with error in callback} \
 	$FH_LAST SendSTART
 	$FH_LAST SendI 1
         $FH_LAST SendEND_AND_CALLBACK ECOI Error
-	$FH_LAST ProcessEvent -timeout 3 -wait ONCE
+	$FH_LAST ProcessEvent 3 $MqS_WAIT_ONCE
     } \
     -match	    glob \
     -returnCodes    error \
@@ -385,7 +385,7 @@ test tcl-client-24-($I|$B|$C|$S) {processEvent with additional arg} \
 	$FH_LAST ProcessEvent xxx
     } \
     -returnCodes    error \
-    -result         {bad option "xxx": must be -timeout or -wait}
+    -result         {expected integer but got "xxx"}
 
 # cleanup ---------------------------
 
@@ -420,7 +420,7 @@ set tclserver [makeFile {
     }
     if {[catch {
       $srv LinkCreate {*}[lrange $argv $i end]
-      $srv ProcessEvent -wait FOREVER
+      $srv ProcessEvent $MqS_WAIT_FOREVER
     }]} {
       $srv ErrorSet
     }
@@ -459,45 +459,15 @@ test tcl-client-A-0 {rename cmd hdl} \
     -body	  { $ctx LinkDelete } \
     -returnCodes  ok
 
-test tcl-client-ProcessEvent-1 {ProcessEvent error with -timeout and NO arg} \
+test tcl-client-ProcessEvent-4 {ProcessEvent error with wait and WRONG arg} \
     -constraints  {local} \
     -cleanup	  { $ctx LinkDelete } \
     -body	  {
 	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
-	$ctx ProcessEvent -timeout
+	$ctx ProcessEvent KKK
     } \
     -returnCodes  error \
-    -result	  {no additional argument available for '-timeout'}
-
-test tcl-client-ProcessEvent-2 {ProcessEvent error with -timeout and WRONG arg} \
-    -constraints  {local} \
-    -cleanup	  { $ctx LinkDelete } \
-    -body	  {
-	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
-	$ctx ProcessEvent -timeout KK
-    } \
-    -returnCodes  error \
-    -result	  {expected integer but got "KK"}
-
-test tcl-client-ProcessEvent-3 {ProcessEvent error with -wait and NO arg} \
-    -constraints  {local} \
-    -cleanup	  { $ctx LinkDelete } \
-    -body	  {
-	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
-	$ctx ProcessEvent -wait
-    } \
-    -returnCodes  error \
-    -result	  {no additional argument available for '-wait'}
-
-test tcl-client-ProcessEvent-4 {ProcessEvent error with -wait and WRONG arg} \
-    -constraints  {local} \
-    -cleanup	  { $ctx LinkDelete } \
-    -body	  {
-	$ctx LinkCreate --name client @ {*}[getServer c.pipe]
-	$ctx ProcessEvent -wait KKK
-    } \
-    -returnCodes  error \
-    -result	  {bad -wait "KKK": must be NO, ONCE, or FOREVER}
+    -result	  {expected integer but got "KKK"}
 
 rename $ctx ""
 
@@ -507,6 +477,7 @@ rename $ctx ""
 ##
 
 freeTests
+
 
 
 

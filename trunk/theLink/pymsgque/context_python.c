@@ -33,32 +33,27 @@ NS(ProcessExit) (
 
 PyObject* NS(ProcessEvent) (
   PyObject    *self,
-  PyObject    *args,
-  PyObject    *keywds
+  PyObject    *args
 )
 {
-  int timeout=MQ_TIMEOUT_USER;
-  const char *wait="NO";
-  static char *kwlist[] = {"timeout", "wait", NULL};
+  SETUP_context;
+  int timeout=MQ_TIMEOUT_DEFAULT;
+  int wait=MQ_WAIT_NO;
+  int val1, val2;
+  const int size = PyTuple_Size(args);
 
-  if (!PyArg_ParseTupleAndKeywords(args, keywds, "|is:ProcessEvent", kwlist,
-	&timeout, &wait)) { 
+  if (!PyArg_ParseTuple(args, "|ii:ProcessEvent", &val1, &val2)) { 
     return NULL;
-  } else {
-    SETUP_context
-    enum MqWaitOnEventE flags = MQ_WAIT_NO;
-    if (!strncmp(wait,"NO",2)) {
-      flags = MQ_WAIT_NO;
-    } else if (!strncmp(wait,"ONCE",4)) {
-      flags = MQ_WAIT_ONCE;
-    } else if (!strncmp(wait,"FOREVER",7)) {
-      flags = MQ_WAIT_FOREVER;
-    } else {
-      PyErr_SetString(PyExc_TypeError, "wait=(NO|ONCE|FOREVER)");
-      return NULL;
-    }
-    SETUP_CHECK_RETURN(MqProcessEvent(context, timeout, flags));
   }
+
+  if (size == 2) {
+    timeout = val1;
+    wait = val2;
+  } else if (size == 1) {
+    wait = val1;
+  }
+  
+  SETUP_CHECK_RETURN(MqProcessEvent(context, timeout, wait));
 }
 
 PyObject* NS(Delete) (

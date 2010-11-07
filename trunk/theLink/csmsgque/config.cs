@@ -181,8 +181,17 @@ namespace csmsgque {
     public void   ConfigSetIoPipeSocket	(int data)    { 
       ErrorMqToCsWithCheck (MqConfigSetIoPipeSocket (context, data)); 
     }
+
+    /// \api #MqStartE
+    public enum START {
+      DEFAULT = 0,
+      FORK    = 1,
+      THREAD  = 2,
+      SPAWN   = 3,
+    };
+
     /// \api #MqConfigSetStartAs
-    public void   ConfigSetStartAs	(int data)    { MqConfigSetStartAs	(context, data); }
+    public void   ConfigSetStartAs	(START data)    { MqConfigSetStartAs	(context, (int)data); }
 
   // PRIVATE
 
@@ -270,7 +279,7 @@ namespace csmsgque {
     /// \api #MqConfigGetIoPipeSocket
     public int	    ConfigGetIoPipeSocket() { return MqConfigGetIoPipeSocket(context); }
     /// \api #MqConfigGetStartAs
-    public int	    ConfigGetStartAs()	    { return MqConfigGetStartAs(context); }
+    public START    ConfigGetStartAs()	    { return (START)MqConfigGetStartAs(context); }
 
 /// \}
 

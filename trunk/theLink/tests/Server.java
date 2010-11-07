@@ -225,9 +225,9 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 	SendI (ConfigGetIoPipeSocket());
 	ConfigSetIoPipeSocket (old);
       } else if (cmd.equals("StartAs")) {
-	int old = ConfigGetStartAs();
-	ConfigSetStartAs (ReadI());
-	SendI (ConfigGetStartAs());
+	START old = ConfigGetStartAs();
+	ConfigSetStartAs (START.SetFlag(ReadI()));
+	SendI (ConfigGetStartAs().GetFlag());
 	ConfigSetStartAs (old);
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);

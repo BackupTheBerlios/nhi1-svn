@@ -138,7 +138,7 @@ class Server(MqS):
     self.SendT_END ()
     self.SendI ( self.ReadI() )
     self.SendEND_AND_WAIT ("ECOI")
-    self.ProcessEvent (wait="ONCE")
+    self.ProcessEvent (MqS_WAIT_ONCE)
     self.SendSTART ()
     self.SendI (self.i)
     self.SendI (self.j)
@@ -569,7 +569,7 @@ class Server(MqS):
       self.cl[id].SendU(self.ReadU());
       self.i = -1;
       self.cl[id].SendEND_AND_CALLBACK("ECOI", self.Callback);
-      self.cl[id].ProcessEvent(10,wait="ONCE");
+      self.cl[id].ProcessEvent(10, MqS_WAIT_ONCE);
       self.SendI(self.i+1);
     elif s == "ERR-1" :
       self.cl[id].SendSTART();
@@ -626,7 +626,7 @@ class Server(MqS):
       cl.SendU(self.ReadU());
       self.i = -1;
       cl.SendEND_AND_CALLBACK("ECOI", self.Callback2);
-      cl.ProcessEvent(10,wait="ONCE");
+      cl.ProcessEvent(10, MqS_WAIT_ONCE);
       self.SendI(self.i+1);
     elif s == "MqSendEND_AND_WAIT" :
       TOK = self.ReadC()
@@ -655,7 +655,7 @@ class Server(MqS):
 ##    Main
 ##
 
-#print("1111")
+#print("1111 >", MqS_WAIT_FOREVER)
 #sys.stdout.flush()
 
 srv = Server()
@@ -663,7 +663,7 @@ srv = Server()
 try:
   srv.LinkCreate(sys.argv)
   srv.LogC("test",1,"this is the log test\n")
-  srv.ProcessEvent(wait="FOREVER")
+  srv.ProcessEvent(MqS_WAIT_FOREVER)
 
 except:
   srv.ErrorSet()
@@ -672,5 +672,6 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
 
 

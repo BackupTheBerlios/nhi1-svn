@@ -1,4 +1,4 @@
-.TH "rubymsgque" n "6 Nov 2010" "Version 4.6" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque" n "7 Nov 2010" "Version 4.6" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -337,13 +337,13 @@ a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as 
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
-\fB0\fP = \fBMQ_START_DEFAULT\fP, use application-context default entity creation
+\fB\fCMqS::START_DEFAULT\fP =\fP 0, use application-context default entity creation
 .IP "\(bu" 2
-\fB1\fP = \fBMQ_START_FORK\fP, create entity as \fIfork\fP 
+\fB\fCMqS::START_FORK\fP =\fP 1, create entity as \fIfork\fP 
 .IP "\(bu" 2
-\fB2\fP = \fBMQ_START_THREAD\fP, create entity as \fIthread\fP 
+\fB\fCMqS::START_THREAD\fP =\fP 2, create entity as \fIthread\fP 
 .IP "\(bu" 2
-\fB3\fP = \fBMQ_START_SPAWN\fP, create entity as \fIspawn\fP process
+\fB\fCMqS::START_SPAWN\fP =\fP 3, create entity as \fIspawn\fP process
 .PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
@@ -507,7 +507,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS::WAIT::FOREVER.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS::WAIT_FOREVER\fP.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -907,20 +907,20 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for MqS::WAIT::ONCE or \fBMQ_TIMEOUT_MAX\fP for MqS::WAIT::FOREVER.
+\fB\fCMqS::TIMEOUT_DEFAULT\fP =\fP -1, request the default timeout value . \fCMqS::TIMEOUT_USER\fP for \fCMqS::WAIT_ONCE\fP or \fCMqS::TIMEOUT_MAX\fP for \fCMqS::WAIT_FOREVER\fP. \fBdefault\fP 
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
+\fB\fCMqS::TIMEOUT_USER\fP =\fP -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_MAX\fP = -3, request the maximum possible (infinite) timeout value 
+\fB\fCMqS::TIMEOUT_MAX\fP =\fP -3, request the maximum possible (infinite) timeout value 
 .PP
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-MqS::WAIT::NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+\fB\fCMqS::WAIT_NO\fP =\fP 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
 .IP "\(bu" 2
-MqS::WAIT::ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+\fB\fCMqS::WAIT_ONCE\fP =\fP 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-MqS::WAIT::FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+\fB\fCMqS::WAIT_FOREVER\fP =\fP 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP
@@ -1780,15 +1780,15 @@ convert a \fIex=MqSException()\fP into a rubymsgque conform error using the \fIc
 .SS "ctx.ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
 .SS "ctx.ErrorSetEXIT()"
-exit an \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
+finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
 .PP
-To exit and application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed by a \fIsocket-down\fP event. 
+To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event. 
 .SS "true/false ctx.ErrorIsEXIT()"
-check if context is on \fIexit\fP, return \fItrue\fP or \fIfalse\fP 
+check for an \fIexit-error-object\fP, return \fItrue\fP or \fIfalse\fP 
 .PP
-An \fIEXIT-return-code\fP is set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server or a network crash. This \fIreturn-code\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on this \fIreturn-code\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
+A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- 
+ Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP
@@ -1993,7 +1993,7 @@ begin
   srv.ConfigSetServerSetup(srv.method(:ServerConfig))
   srv.ConfigSetFactory(lambda {MqS.new})
   srv.LinkCreate($0,ARGV)
-  srv.ProcessEvent(MqS::WAIT::FOREVER)
+  srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex
   srv.ErrorSet(ex)
 ensure
@@ -2070,7 +2070,7 @@ end
 srv = ManFilter.new
 begin
   srv.LinkCreate($0,ARGV)
-  srv.ProcessEvent(MqS::WAIT::FOREVER)
+  srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue SignalException => ex
   # ignore
 rescue Exception => ex

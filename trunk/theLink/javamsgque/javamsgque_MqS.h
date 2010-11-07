@@ -97,10 +97,10 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIgnoreExit
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigSetStartAs
+ * Method:    pConfigSetStartAs
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetStartAs
+JNIEXPORT void JNICALL Java_javamsgque_MqS_pConfigSetStartAs
   (JNIEnv *, jobject, jint);
 
 /*
@@ -201,10 +201,10 @@ JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetDebug
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigGetStartAs
+ * Method:    pConfigGetStartAs
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetStartAs
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_pConfigGetStartAs
   (JNIEnv *, jobject);
 
 /*

@@ -33,12 +33,13 @@ tclmsgque Main {
   $srv ConfigSetFactory
   if {[catch {
     $srv LinkCreate {*}$argv
-    $srv ProcessEvent -wait FOREVER
+    $srv ProcessEvent $MqS_WAIT_FOREVER
   }]} {
     $srv ErrorSet
   }
   $srv Exit
 }
+
 
 
 

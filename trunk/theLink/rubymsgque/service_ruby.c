@@ -90,18 +90,6 @@ static VALUE ProcessEvent (int argc, VALUE *argv, VALUE self) {
 
 void NS(MqS_Service_Init)(void) {
 
-  // Timeout
-  VALUE cTimeout = rb_define_class_under(cMqS, "TIMEOUT", rb_cObject);
-  rb_iv_set(cTimeout, "DEFAULT",  INT2VAL(-1));
-  rb_iv_set(cTimeout, "USER",	  INT2VAL(-2));
-  rb_iv_set(cTimeout, "MAX",	  INT2VAL(-3));
-
-  // Wait
-  VALUE cWait = rb_define_class_under(cMqS, "WAIT", rb_cObject);
-  rb_iv_set(cWait,    "NO",	  INT2VAL(0));
-  rb_iv_set(cWait,    "ONCE",	  INT2VAL(1));
-  rb_iv_set(cWait,    "FOREVER",  INT2VAL(2));
-
   // Methods
   rb_define_method(cMqS, "ServiceGetToken",	  ServiceGetToken,	0);
   rb_define_method(cMqS, "ServiceIsTransaction",  ServiceIsTransaction, 0);

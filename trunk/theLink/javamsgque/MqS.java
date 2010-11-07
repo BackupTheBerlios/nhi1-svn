@@ -36,6 +36,28 @@ public abstract class MqS {
 /// \copydoc Mq_Config_C_API
 //
 
+  /// \api #MqStartE
+  public enum START {
+    DEFAULT(0), FORK(1), THREAD(2), SPAWN(3);
+
+    private int flag;
+
+    START(int setFlag)
+    {
+      flag = setFlag;
+    }
+
+    public int GetFlag()
+    {
+      return(flag);
+    }
+
+    public static START SetFlag(int value)
+    {
+      return START.class.getEnumConstants()[value];
+    }
+  }
+
   /// \api #MqInitCreate
   protected static native void	Init	      (String... argv);
 
@@ -60,7 +82,11 @@ public abstract class MqS {
   /// \api #MqConfigSetIgnoreExit
   public native void ConfigSetIgnoreExit      (boolean val);
   /// \api #MqConfigSetStartAs
-  public native void ConfigSetStartAs	      (int val);
+  private native void pConfigSetStartAs	      (int val);
+  /// \api #MqConfigSetStartAs
+  public void ConfigSetStartAs (START val) {
+    pConfigSetStartAs(val.GetFlag());
+  }
   /// \api #MqConfigSetIoTcp
   public native void ConfigSetIoTcp	      (String host, String port, String myhost, String myport);
   /// \api #MqConfigSetIoUdsFile
@@ -87,7 +113,11 @@ public abstract class MqS {
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
   /// \api #MqConfigGetStartAs
-  public native int	ConfigGetStartAs      ();
+  private native int	pConfigGetStartAs      ();
+  /// \api #MqConfigGetStartAs
+  public START	ConfigGetStartAs()  {
+    return START.SetFlag(pConfigGetStartAs());
+  }
   /// \api #MqConfigGetIoTcpHost
   public native String ConfigGetIoTcpHost     ();
   /// \api #MqConfigGetIoTcpPort
@@ -195,6 +225,23 @@ public abstract class MqS {
     }
   }
 
+  /// \api default TIMEOUT values
+  public enum TIMEOUT {
+    DEFAULT(-1), USER(-2), MAX(-2);
+
+    private int flag;
+
+    TIMEOUT(int setFlag)
+    {
+      flag = setFlag;
+    }
+
+    public int GetFlag()
+    {
+      return(flag);
+    }
+  }
+
   /// \api #MqServiceGetToken
   public native String	ServiceGetToken	    ();
   /// \api #MqServiceGetFilter
@@ -220,12 +267,16 @@ public abstract class MqS {
     pProcessEvent(timeout,flags.GetFlag());
   }
   /// \api #MqProcessEvent
+  public void ProcessEvent (TIMEOUT timeout, WAIT flags) throws MqSException {
+    pProcessEvent(timeout.GetFlag(),flags.GetFlag());
+  }
+  /// \api #MqProcessEvent
   public void ProcessEvent (WAIT flags) throws MqSException {
-    pProcessEvent(-2,flags.GetFlag());
+    pProcessEvent(MqS.TIMEOUT.DEFAULT.GetFlag(),flags.GetFlag());
   }
   /// \api #MqProcessEvent
   public void ProcessEvent () throws MqSException {
-    pProcessEvent(-2,WAIT.NO.GetFlag());
+    pProcessEvent(MqS.TIMEOUT.DEFAULT.GetFlag(),WAIT.NO.GetFlag());
   }
 
 /// \} Mq_Service_Java_API

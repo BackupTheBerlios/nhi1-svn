@@ -36,10 +36,11 @@ begin
   srv.ConfigSetServerSetup(srv.method(:ServerConfig))
   srv.ConfigSetFactory(lambda {TestServer.new})
   srv.LinkCreate($0,ARGV)
-  srv.ProcessEvent(MqS::WAIT::FOREVER)
+  srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex
   srv.ErrorSet(ex)
 ensure
   srv.Exit()
 end
+
 

@@ -229,9 +229,9 @@ namespace example {
 	SendI (ConfigGetIoPipeSocket());
 	ConfigSetIoPipeSocket (old);
       } else if (cmd == "StartAs") {
-	int old = ConfigGetStartAs();
-	ConfigSetStartAs (ReadI());
-	SendI (ConfigGetStartAs());
+	START old = ConfigGetStartAs();
+	ConfigSetStartAs ((START)ReadI());
+	SendI ((int)ConfigGetStartAs());
 	ConfigSetStartAs (old);
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);

@@ -1,4 +1,4 @@
-.TH "MqBufferU" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "MqBufferU" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqBufferU \- a union for all data items supported by \fBMqBufferS\fP.
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -45,34 +45,34 @@ a union for all data items supported by \fBMqBufferS\fP.
 A \fBlibmsgque\fP data package is a collection of items of type \fBMqBufferU\fP with variable length data of type: \fBMQ_BIN\fP, \fBMQ_STR\fP and MQ_LST or a a fixed length data of type \fBMQ_ATO\fP. The \fBMqBufferS\fP object is using a \fBMqBufferU\fP union and a \fBMqTypeE\fP enum to define an item. 
 .PP
 Definition at line 2079 of file msgque.h.
-.SH "Member Data Documentation"
+.SH "Field Documentation"
 .PP 
-.SS "\fBMQ_ATO\fP* \fBMqBufferU.A\fP"
+.SS "\fBMQ_ATO\fP* \fBMqBufferU::A\fP"
 .PP
 atom for native data-types 
 .PP
 Definition at line 2080 of file msgque.h.
-.SS "\fBMQ_BIN\fP \fBMqBufferU.B\fP"
+.SS "\fBMQ_BIN\fP \fBMqBufferU::B\fP"
 .PP
 arbitrary \fIbyte-array\fP data 
 .PP
 Definition at line 2081 of file msgque.h.
-.SS "\fBMQ_STR\fP \fBMqBufferU.C\fP"
+.SS "\fBMQ_STR\fP \fBMqBufferU::C\fP"
 .PP
 C string like data (e.g. with a \\0 at the end). 
 .PP
 Definition at line 2082 of file msgque.h.
-.SS "\fBMQ_LST\fP \fBMqBufferU.L\fP"
+.SS "\fBMQ_LST\fP \fBMqBufferU::L\fP"
 .PP
 list object type data 
 .PP
 Definition at line 2083 of file msgque.h.
-.SS "\fBMQ_LST\fP \fBMqBufferU.R\fP"
+.SS "\fBMQ_LST\fP \fBMqBufferU::R\fP"
 .PP
 return object type data 
 .PP
 Definition at line 2084 of file msgque.h.
-.SS "\fBMQ_LST\fP \fBMqBufferU.T\fP"
+.SS "\fBMQ_LST\fP \fBMqBufferU::T\fP"
 .PP
 transaction object type data 
 .PP
@@ -80,4 +80,4 @@ Definition at line 2085 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for phpmsgque from the source code.

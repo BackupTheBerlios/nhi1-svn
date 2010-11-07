@@ -49,7 +49,7 @@ end
 srv = Filter1.new
 begin
   srv.LinkCreate($0,ARGV)
-  srv.ProcessEvent(MqS::WAIT::FOREVER)
+  srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue SignalException => ex
   # ignore
 rescue Exception => ex
@@ -57,4 +57,5 @@ rescue Exception => ex
 ensure
   srv.Exit()
 end
+
 

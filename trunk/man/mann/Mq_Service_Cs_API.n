@@ -1,4 +1,4 @@
-.TH "Mq_Service_Cs_API" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Service_Cs_API" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,6 +12,10 @@ Mq_Service_Cs_API \- create and manage services
 .RI "enum \fBcsmsgque::MqS.WAIT\fP { \fBcsmsgque::MqS.NO\fP =  0, \fBcsmsgque::MqS.ONCE\fP =  1, \fBcsmsgque::MqS.FOREVER\fP =  2 }"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.ti -1c
+.RI "enum \fBcsmsgque::MqS.TIMEOUT\fP { \fBcsmsgque::MqS.DEFAULT\fP =  -1, \fBcsmsgque::MqS.USER\fP =  -2, \fBcsmsgque::MqS.MAX\fP =  -3 }"
+.br
+.R "implement the \fBlibmsgque\fP API object: timeout default values "
 .in -1c
 .SS "Functions"
 
@@ -53,9 +57,13 @@ Mq_Service_Cs_API \- create and manage services
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error "
 .ti -1c
+.RI "void \fBcsmsgque::MqS.ProcessEvent\fP (TIMEOUT timeout, WAIT wait)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error "
+.ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP (WAIT wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time "
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP "
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP ()"
 .br
@@ -68,6 +76,23 @@ create and manage services
 To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function.  
 .SH "Enumeration Type Documentation"
 .PP 
+.SS "enum \fBcsmsgque::MqS::TIMEOUT\fP\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: timeout default values 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIDEFAULT \fP\fP
+\fBMQ_TIMEOUT_DEFAULT\fP 
+.TP
+\fB\fIUSER \fP\fP
+\fBMQ_TIMEOUT_USER\fP 
+.TP
+\fB\fIMAX \fP\fP
+\fBMQ_TIMEOUT_MAX\fP 
+.PP
+Definition at line 107 of file service.cs.
 .SS "enum \fBcsmsgque::MqS::WAIT\fP\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP 
@@ -89,17 +114,22 @@ Definition at line 100 of file service.cs.
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event 
 .PP
-Definition at line 115 of file service.cs.
+Definition at line 126 of file service.cs.
 .SS "void csmsgque.MqS.ProcessEvent (\fBWAIT\fP wait)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time 
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP 
 .PP
-Definition at line 111 of file service.cs.
+Definition at line 122 of file service.cs.
+.SS "void csmsgque.MqS.ProcessEvent (\fBTIMEOUT\fP timeout, \fBWAIT\fP wait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error 
+.PP
+Definition at line 118 of file service.cs.
 .SS "void csmsgque.MqS.ProcessEvent (long timeout, \fBWAIT\fP wait)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error 
 .PP
-Definition at line 107 of file service.cs.
+Definition at line 114 of file service.cs.
 .SS "void csmsgque.MqS.ServiceCreate (string token, \fBIService\fP call)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 

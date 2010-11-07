@@ -455,7 +455,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
     while ($this->ReadItemExists()) {
       $list[] = $this->ReadC();
     }
-    $this->Init($list);
+    MqS::Init($list);
     $this->SendRETURN();
   }
 

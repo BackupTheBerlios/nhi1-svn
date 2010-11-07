@@ -115,8 +115,8 @@ test prt-2-($I|$B|$C|$S) {SEND + CALLBACK with error} \
       RET_start
       RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
       RET_add 222 CallCB $FH_LAST ECOI CB SendD 3.3
-      RET_add 333 $FH_LAST ProcessEvent -wait ONCE
-      RET_add 444 $FH_LAST ProcessEvent -wait ONCE
+      RET_add 333 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
+      RET_add 444 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
       RET_end
     } \
     -returnCodes    ok \
@@ -153,8 +153,8 @@ test prt-2b-($I|$B|$C|$S) {SEND + CALLBACK without error} \
       RET_start
       RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
       RET_add 222 CallCB $FH_LAST ECOI CB SendI 123
-      RET_add 333 $FH_LAST ProcessEvent -wait ONCE
-      RET_add 444 $FH_LAST ProcessEvent -wait ONCE
+      RET_add 333 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
+      RET_add 444 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
       RET_end
     } \
     -returnCodes    ok \
@@ -188,7 +188,7 @@ test prt-3-($I|$B|$C|$S) {} \
     -body	    {
       RET_start
       RET_add 111 Call $FH_LAST SendEND SND2 SendC MqSendEND SendI 0 SendC REDI SendD 1.1
-      RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+      RET_add 222 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
       RET_end
     } \
     -returnCodes    ok \
@@ -228,6 +228,7 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
 
 
 

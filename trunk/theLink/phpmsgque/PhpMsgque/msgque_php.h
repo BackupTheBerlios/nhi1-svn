@@ -108,7 +108,7 @@ if (nat != NULL) { \
 #define ARG2INT(mth,val) \
 long val;\
 if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
-  RaiseError("usage: " #mth "(long:" #val ")"); \
+  RaiseError("usage: " #mth "(integer:" #val ")"); \
   return; \
 }
 #define ARG2BYT(mth,val) ARG2INT(mth,val)
@@ -189,3 +189,4 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
+

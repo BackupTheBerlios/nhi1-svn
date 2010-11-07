@@ -88,6 +88,16 @@ PyInit_pymsgque(void)
   PyErrorCheck(PyModule_AddObject(m, "MqS",		(PyObject *)&NS(MqS)));
   PyErrorCheck(PyModule_AddObject(m, "MqBufferS",	(PyObject *)&NS(MqBufferS)));
   PyErrorCheck(PyModule_AddObject(m, "MqSException",	NS(MqSException)));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_DEFAULT",  -1));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_USER",     -2));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_MAX",      -3));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_WAIT_NO",	  0));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_WAIT_ONCE",	  1));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_WAIT_FOREVER",     2));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_DEFAULT",    0));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_FORK",	  1));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_THREAD",     2));
+  PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_SPAWN",      3));
 
   // init libmsgque global data
   if (MqInitBuf == NULL && Py_GetProgramName() != NULL) {

@@ -111,9 +111,6 @@ GetC(ConfigGetIoUdsFile)
 SetIE(ConfigSetIoPipeSocket)
 GetI(ConfigGetIoPipeSocket)
 
-SetI(ConfigSetStartAs)
-GetI(ConfigGetStartAs)
-
 GetI(ConfigGetDebug)
 GetO(ConfigGetIsString)
 GetO(ConfigGetIsSilent)
@@ -126,4 +123,20 @@ GetC(ConfigGetSrvName)
 GetC(ConfigGetIdent)
 
 
+JNIEXPORT void JNICALL NS(pConfigSetStartAs) (
+  JNIEnv    *env,
+  jobject   self,
+  jint      data
+)
+{
+  MqConfigSetStartAs (CONTEXT, data);
+}
+
+JNIEXPORT jint JNICALL NS(pConfigGetStartAs) (
+  JNIEnv    *env,
+  jobject   self
+)
+{
+  return MqConfigGetStartAs (CONTEXT);
+}
 

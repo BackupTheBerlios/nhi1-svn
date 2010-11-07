@@ -39,7 +39,7 @@ import pymsgque
 srv = pymsgque.MqS()
 try:
   srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(timeout="KK")
+  srv.ProcessEvent("KK")
 except Exception as e:
   srv.ErrorSet()
 finally:
@@ -53,10 +53,10 @@ finally:
     -match	  glob \
     -result	  {C> (client) \[pymsgque_ErrorSet\] Traceback (most recent call last):
   File "*", line 7, in <module>
-    srv.ProcessEvent(timeout="KK")
+    srv.ProcessEvent("KK")
 TypeError: an integer is required*}
 
-test py-client-ErrorSet-2 {ProcessEvent error with -timeout and WRONG arg} \
+test py-client-ErrorSet-2 {ProcessEvent error with WRONG arg} \
     -constraints  {local} \
     -setup	  {
 	set pyclient [makeFile {
@@ -66,7 +66,7 @@ import pymsgque
 srv = pymsgque.MqS()
 try:
   srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="KK")
+  srv.ProcessEvent(10,"KK")
 except Exception:
   srv.ErrorSet()
 finally:
@@ -80,8 +80,8 @@ finally:
     -match	  glob \
     -result	  {C> (client) \[pymsgque_ErrorSet] Traceback (most recent call last):
   File "*", line 8, in <module>
-    srv.ProcessEvent(wait="KK")
-TypeError: wait=(NO|ONCE|FOREVER)*}
+    srv.ProcessEvent(10,"KK")
+TypeError: an integer is required*}
 
 test py-client-ErrorSet-3 {error with default as exception object} \
     -constraints  {local} \
@@ -116,7 +116,7 @@ import sys
 import pymsgque
 srv = pymsgque.MqS()
 try:
-  srv.ProcessEvent(wait="FOREVER")
+  srv.ProcessEvent(pymsgque.MqS_WAIT_FOREVER)
 except:
   srv.ErrorSet()
 finally:

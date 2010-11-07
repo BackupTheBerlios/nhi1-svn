@@ -34,11 +34,13 @@ if __name__ == "__main__":
     srv.ConfigSetServerSetup(srv.ServerConfig)
     srv.ConfigSetFactory(lambda: testserver())
     srv.LinkCreate(sys.argv)
-    srv.ProcessEvent(wait="FOREVER")
+    srv.ProcessEvent(MqS_WAIT_FOREVER)
   except:
     srv.ErrorSet()
   finally:
     srv.Exit()
+
+
 
 
 

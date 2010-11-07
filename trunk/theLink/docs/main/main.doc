@@ -38,6 +38,7 @@ setup and maintain the link and is responsible for:\n
     <TH>ruby</TH>     
     <TH>tcl</TH>             
     <TH>perl</TH> 
+    <TH>php</TH> 
     <TH>VB.NET</TH> 
   </TR>
   <TR>  
@@ -50,6 +51,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\man{ruby,YES}</TD>
     <TD>\man{tcl,YES}</TD>
     <TD>\man{perl,YES}</TD>
+    <TD>\man{php,YES}</TD>
     <TD>\man{vb,YES}</TD>
   </TR>
   <TR>  
@@ -62,6 +64,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\tut{ruby,YES}</TD>
     <TD>\tut{tcl,YES}</TD>
     <TD>\tut{perl,YES}</TD>
+    <TD>\tut{php,YES}</TD>
     <TD>\tut{vb,YES}</TD>
   </TR>
   <TR>  
@@ -86,7 +89,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\private{ruby,YES}</TD>
     <TD>\private{tcl,YES}</TD>
     <TD>NO</TD>   
-    <TD>NO</TD>   
+    <TD>\private{php,YES}</TD>
   </TR>
 </TABLE>
 
@@ -111,6 +114,7 @@ setup and maintain the link and is responsible for:\n
     <TH>ruby</TH>     
     <TH>tcl</TH>             
     <TH>perl</TH>             
+    <TH>php</TH>             
     <TH>VB.NET</TH>             
   </TR>
   <TR>  
@@ -123,6 +127,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref ruby_e1 "YES"</TD>
     <TD>\ref tcl_e1 "YES"</TD>
     <TD>\ref perl_e1 "YES"</TD>
+    <TD>\ref php_e1 "YES"</TD>
     <TD>\ref vb_e1 "YES"</TD>
   </TR>
   <TR>  
@@ -135,6 +140,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref ruby_e2 "YES"</TD>
     <TD>\ref tcl_e2 "YES"</TD>
     <TD>\ref perl_e2 "YES"</TD>
+    <TD>\ref php_e2 "YES"</TD>
     <TD>\ref vb_e2 "YES"</TD>
   </TR>
 </TABLE>
@@ -151,6 +157,7 @@ setup and maintain the link and is responsible for:\n
     <TH>ruby</TH>     
     <TH>tcl</TH>             
     <TH>perl</TH>             
+    <TH>php</TH>             
     <TH>VB.NET</TH>             
   </TR>
   <TR>  
@@ -163,6 +170,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref ruby_e3 "YES"</TD>
     <TD>\ref tcl_e3 "YES"</TD>
     <TD>\ref perl_e3 "YES"</TD>
+    <TD>\ref php_e3 "YES"</TD>
     <TD>\ref vb_e3 "YES"</TD>
   </TR>
 </TABLE>

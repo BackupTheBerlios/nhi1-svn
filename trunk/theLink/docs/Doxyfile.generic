@@ -184,7 +184,7 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "ccmsgque=\ref ccmsgqueref" \
                          "ccmsgque_private_desc=- The CcMsgque Source-Code Documentation" \
                          "tclmsgque=\ref tclmsgqueref" \
-                         "tclmsgque_private_desc=- The Tclmsgque C-API Documentation" \
+                         "tclmsgque_private_desc=- The TclMsgque C-API Documentation" \
                          "javamsgque=\ref javamsgqueref" \
                          "javamsgque_private_desc=- The JavaMsgque C-API Documentation" \
                          "csmsgque=\ref csmsgqueref" \
@@ -194,9 +194,12 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "rubymsgque=\ref rubymsgqueref" \
                          "rubymsgque_private_desc=- The RubyMsgque C-API Documentation" \
                          "perlmsgque=\ref perlmsgqueref" \
+                         "phpmsgque=\ref phpmsgqueref" \
+                         "phpmsgque_private_desc=- The PhpMsgque C-API Documentation" \
                          "vbmsgque=\ref vbmsgqueref" \
                          "server_bin=\ref server \"server.exe\"" \
                          "server_tcl=\ref server_tcl" \
+                         "server_php=\ref server_php" \
                          "server_java=\ref server_java \"Server.java\"" \
                          "aexec_desc=- a tool to setup a remote function call client and server" \
                          "atool_desc=- a tool to work like a swiss-knife for command-line operations" \

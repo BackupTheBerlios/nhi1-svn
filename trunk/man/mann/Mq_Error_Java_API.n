@@ -1,4 +1,4 @@
-.TH "Mq_Error_Java_API" n "6 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Error_Java_API" n "7 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -94,7 +94,7 @@ implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
 .PP
-Definition at line 265 of file MqS.java.
+Definition at line 316 of file MqS.java.
 .SS "native void javamsgque.MqS.ErrorPrint ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 

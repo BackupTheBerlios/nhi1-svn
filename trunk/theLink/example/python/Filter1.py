@@ -42,10 +42,12 @@ class Filter1(MqS):
 srv = Filter1()
 try:
   srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
+  srv.ProcessEvent(MqS_WAIT_FOREVER)
 except:
   srv.ErrorSet()
 finally:
   srv.Exit()
+
+
 
 

@@ -69,7 +69,7 @@ PHP_METHOD(PhpMsgque_MqS, LogC)
   long level;
   if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "sls", 
 	&prefix, &prefixlen, &level, &msg, &msglen) == FAILURE) {
-    RaiseError("usage: LogC(string: prefix, long: level, string: message)");
+    RaiseError("usage: LogC(string: prefix, integer: level, string: message)");
     return;
   }
   MqLogC(MQCTX, prefix, level, msg);
@@ -406,7 +406,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(PhpMsgque_MqS, Delete,			no_arg,		      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, LogC,			LogC_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, Info,			val_arg,	      ZEND_ACC_PUBLIC)
-  PHP_ME(PhpMsgque_MqS, Init,			NULL,		      ZEND_ACC_PUBLIC)
+  PHP_ME(PhpMsgque_MqS, Init,			NULL,		      ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 
   PHP_ME(PhpMsgque_MqS, ReadY,			no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(PhpMsgque_MqS, ReadO,			no_arg,               ZEND_ACC_PUBLIC)
@@ -608,7 +608,7 @@ void NS(MqS_Init) (TSRMLS_D)
   zend_declare_class_constant_long(NS(MqS), ID(START_DEFAULT),	  0 TSRMLS_CC);
   zend_declare_class_constant_long(NS(MqS), ID(START_FORK),	  1 TSRMLS_CC);
   zend_declare_class_constant_long(NS(MqS), ID(START_THREAD),	  2 TSRMLS_CC);
-  zend_declare_class_constant_long(NS(MqS), ID(START_THREAD),	  3 TSRMLS_CC);
+  zend_declare_class_constant_long(NS(MqS), ID(START_SPAWN),	  3 TSRMLS_CC);
 
   // create interface "iServerSetup"
   INIT_CLASS_ENTRY(iServerSetup,"iServerSetup", NS(iServerSetup_functions));
@@ -630,4 +630,5 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+
 

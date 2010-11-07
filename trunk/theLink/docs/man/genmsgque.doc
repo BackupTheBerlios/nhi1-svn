@@ -310,6 +310,24 @@ end
 The callback is implemented as callback using <I>proc Service {ctx} ...</I>
 \elseif PERL
 The callback is implemented as callback using <I>sub Service {my ctx = shift;...}</I>
+\elseif PHP
+The callback can be a \e method:
+\code
+$ctx->ServiceCreate('TOK1', array(&$this, 'callback'));
+\endcode
+or a \e function:
+\code
+$ctx->ServiceCreate('TOK1', 'callback');
+\endcode
+If the callback belongs to the calling object the interface is defined as:
+\code
+function callback() {...
+\endcode
+If the callback does \b not belongs to the calling object an additional argument
+(the calling context) is added to the callback interface:
+\code
+function callback($ctx) {...
+\endcode
 \elseif CC
 The callback is implemented using \ServiceInterface method <I>Service(MqC ctx)</I> or
 as callback using <I>void CallbackF()</I>.

@@ -49,7 +49,7 @@ PyObject* NS(Delete)		    ( PyObject*		   );
 PyObject* NS(Exit)		    ( PyObject*            );
 PyObject* NS(LogC)		    ( PyObject*, PyObject* );
 
-#define ProcessEvent_DOC	    "[[timeout(sec),wait(bool)[,forever(bool)]]]\nStart the eventloop and wait for incomming messages."
+#define ProcessEvent_DOC	    "[[timeout(sec),MqS::WAIT_(NO|ONCE|FOREVER)]]\nStart the eventloop and wait for incomming messages."
 #define Delete_DOC		    "[noARG] Delete the LibMsgque object, but keep the PyMqS object alive."
 #define Exit_DOC		    "exit the application or thread"
 #define LogC_DOC		    "write log-messages to stderr"
@@ -309,7 +309,7 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
 static PyMethodDef NS(MqS_Methods)[] = {
 
-    ARG(ProcessEvent,		METH_VARARGS | METH_KEYWORDS),
+    ARG(ProcessEvent,		METH_VARARGS),
     ARG(Delete,			METH_NOARGS),
     ARG(Exit,			METH_NOARGS),
     ARG(LogC,			METH_VARARGS),

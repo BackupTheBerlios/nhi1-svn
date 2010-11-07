@@ -85,31 +85,17 @@ int NS(ProcessEvent) (NS_ARGS)
 {
   SETUP_mqctx
   int timeout = MQ_TIMEOUT_DEFAULT;
-  int FLAGS = MQ_WAIT_NO;
-  int iA;
-  static const char *optA[] = { "-timeout", "-wait", NULL };
-  static const char *optB[] = { "NO", "ONCE", "FOREVER", NULL };
-  enum optE { TIMEOUT, WAIT };
-
-  // look for options
-  objc -= skip;
-  objv += skip;
-  while (objc) {
-    TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optA, "option", 0, &iA));
-    switch ((enum optE) iA) {
-      case WAIT:
-        CheckForAdditionalArg (-wait);
-	TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[0], optB, "-wait", 0, &FLAGS));
-	objv++;objc--;
-	break;
-      case TIMEOUT:
-        CheckForAdditionalArg (-timeout);
-        TclErrorCheck (Tcl_GetIntFromObj (interp, objv[0], &timeout));
-	objv++;objc--;
-        break;
-    }
+  int wait = MQ_WAIT_NO;
+  Tcl_Obj *val1, *val2;
+  CHECK_OPTIONAL_OBJ(val1);
+  CHECK_OPTIONAL_OBJ(val2);
+  CHECK_NOARGS;
+  if (val2) {
+    TclErrorCheck (Tcl_GetIntFromObj (interp, val1, &timeout));
+    TclErrorCheck (Tcl_GetIntFromObj (interp, val2, &wait));
+  } else if (val1) {
+    TclErrorCheck (Tcl_GetIntFromObj (interp, val1, &wait));
   }
-
-  ErrorMqToTclWithCheck (MqProcessEvent (mqctx, timeout, FLAGS));
+  ErrorMqToTclWithCheck (MqProcessEvent (mqctx, timeout, wait));
   RETURN_TCL
 }

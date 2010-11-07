@@ -93,7 +93,7 @@ test token-5-($I|$B|$C|$S) {token error in async-call} \
     -body           {
 	RET_start
 	RET_add 111 Call $FH_LAST SendEND XXXX
-	RET_add 222 $FH_LAST ProcessEvent -timeout 2 -wait ONCE
+	RET_add 222 $FH_LAST ProcessEvent 2 $MqS_WAIT_ONCE
 	RET_end
     } \
     -match	    glob \

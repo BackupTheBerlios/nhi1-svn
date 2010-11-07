@@ -21,11 +21,13 @@ srv = MqS()
 try:
   srv.ConfigSetServerSetup(ServerConfig)
   srv.LinkCreate(sys.argv)
-  srv.ProcessEvent(wait="FOREVER")
+  srv.ProcessEvent(MqS_WAIT_FOREVER)
 except:
   srv.ErrorSet()
 finally:
   srv.Exit()
+
+
 
 
 

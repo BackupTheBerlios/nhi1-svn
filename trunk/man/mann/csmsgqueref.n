@@ -1,4 +1,4 @@
-.TH "csmsgque" n "6 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -324,7 +324,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBcsmsgque.MqS.ConfigGetStartAs\fP\fP , \fBset:\fP \fC\fBcsmsgque.MqS.ConfigSetStartAs\fP (startAs)\fP
+\fBtype:\fP \fCSTART\fP, \fBget:\fP \fC\fBcsmsgque.MqS.ConfigGetStartAs\fP\fP , \fBset:\fP \fC\fBcsmsgque.MqS.ConfigSetStartAs\fP (startAs)\fP
 .PP
 create a new \fIapplication-context\fP as thread, spawn or fork 
 .PP
@@ -340,13 +340,13 @@ a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as 
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
-\fB0\fP = \fBMQ_START_DEFAULT\fP, use application-context default entity creation
+\fB\fCMqS.START.DEFAULT\fP =\fP 0, use application-context default entity creation
 .IP "\(bu" 2
-\fB1\fP = \fBMQ_START_FORK\fP, create entity as \fIfork\fP 
+\fB\fCMqS.START.FORK\fP =\fP 1, create entity as \fIfork\fP 
 .IP "\(bu" 2
-\fB2\fP = \fBMQ_START_THREAD\fP, create entity as \fIthread\fP 
+\fB\fCMqS.START.THREAD\fP =\fP 2, create entity as \fIthread\fP 
 .IP "\(bu" 2
-\fB3\fP = \fBMQ_START_SPAWN\fP, create entity as \fIspawn\fP process
+\fB\fCMqS.START.SPAWN\fP =\fP 3, create entity as \fIspawn\fP process
 .PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
@@ -849,20 +849,20 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_DEFAULT\fP = -1, request the default timeout value . \fBMQ_TIMEOUT_USER\fP for MqS.WAIT.ONCE or \fBMQ_TIMEOUT_MAX\fP for MqS.WAIT.FOREVER.
+\fB\fCMqS.TIMEOUT.DEFAULT\fP =\fP -1, request the default timeout value . \fCMqS.TIMEOUT.USER\fP for MqS.WAIT.ONCE or \fCMqS.TIMEOUT.MAX\fP for MqS.WAIT.FOREVER. \fBdefault\fP 
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_USER\fP = -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
+\fB\fCMqS.TIMEOUT.USER\fP =\fP -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
-\fBMQ_TIMEOUT_MAX\fP = -3, request the maximum possible (infinite) timeout value 
+\fB\fCMqS.TIMEOUT.MAX\fP =\fP -3, request the maximum possible (infinite) timeout value 
 .PP
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-MqS.WAIT.NO = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP.
+\fBMqS.WAIT.NO\fP = 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
 .IP "\(bu" 2
-MqS.WAIT.ONCE = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+\fBMqS.WAIT.ONCE\fP = 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-MqS.WAIT.FOREVER = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+\fBMqS.WAIT.FOREVER\fP = 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP

@@ -78,6 +78,8 @@ An example \b automake configuration file is available in: \c example/\lang/Make
 \b no build necessary
 \elseif PERL
 \b no build necessary
+\elseif PHP
+\b no build necessary
 \elseif PYTHON
 \b no build necessary
 \elseif RUBY
@@ -115,6 +117,10 @@ The \e minimal server looks like:
 \dontinclude MyServer.\fileextension
 \skip use strict
 \until Exit
+\elseif PHP
+\dontinclude MyServer.\fileextension
+\skip class MyServer
+\until Exit
 \elseif PYTHON
 \dontinclude MyServer.\fileextension
 \skip import
@@ -149,6 +155,10 @@ new connection request:
 \elseif PERL
 \verbatim
 > perl MyServer.pl --tcp --port 2345 --thread
+\endverbatim
+\elseif PHP
+\verbatim
+> php -c /path/to/php.ini MyServer.php --tcp --port 2345 --thread
 \endverbatim
 \elseif PYTHON
 \verbatim
@@ -185,6 +195,10 @@ port:
 \elseif PERL
 \verbatim
 > perl MyServer.pl --uds --file /path/to/any/file.uds --thread
+\endverbatim
+\elseif PHP
+\verbatim
+> php -c /path/to/php.ini MyServer.php --uds --file /path/to/any/file.uds --thread
 \endverbatim
 \elseif PYTHON
 \verbatim
@@ -224,11 +238,8 @@ parameter is a \b 4 byte Token as public name. 4 byte is required because this
 string is mapped to a 4 byte integer for speed reason. The second parameter
 is an object providing the \RNS{ServiceCallback} interface.
 
-The \RNS{ServiceCallback} function has one parameter of type \RNS{ContextCreate}. This
-parameter refer to the original object (in our case \e MyServer). If
-the service object (in our case \e MyFirstService) is a subclass of
-the original \RNS{ContextCreate} object class, the both statements \b SendSTART() and
-\b ctx.sendSTART() are identical.
+The \RNS{ServiceCallback} is called for every incoming \e service-request which 
+belongs to token.
 
 \section \NST{client} CLIENT
 
@@ -251,6 +262,10 @@ The \e minimal client looks like:
 \elseif PERL
 \dontinclude MyClient.\fileextension
 \skip use strict
+\until Exit
+\elseif PHP
+\dontinclude MyClient.\fileextension
+\skip new MqS
 \until Exit
 \elseif PYTHON
 \dontinclude MyClient.\fileextension
@@ -289,6 +304,16 @@ To call a network visible \e TCP server listen on \e PORT 2345 use:
 \elseif PERL
 \verbatim
 > perl MyClient.pl --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif PERL
+\verbatim
+> perl MyClient.pl --tcp --port 2345
+> Hello World
+\endverbatim
+\elseif PHP
+\verbatim
+> php -c /path/to/php.ini MyClient.php --tcp --port 2345
 > Hello World
 \endverbatim
 \elseif PYTHON
@@ -333,6 +358,11 @@ To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds 
 > perl MyClient.pl --uds --file /path/to/any/file.uds
 > Hello World
 \endverbatim
+\elseif PHP
+\verbatim
+> php -c /path/to/php.ini MyClient.php --uds --file /path/to/any/file.uds
+> Hello World
+\endverbatim
 \elseif PYTHON
 \verbatim
 > python MyClient.py --uds --file /path/to/any/file.uds
@@ -373,6 +403,11 @@ To call a \e local server started by the client using \e PIPE communication use:
 \elseif PERL
 \verbatim
 > perl MyClient.pl @ perl MyServer.pl
+> Hello World
+\endverbatim
+\elseif PHP
+\verbatim
+> php -c /path/to/php.ini MyClient.php @ perl -c /path/to/php.ini MyServer.php
 > Hello World
 \endverbatim
 \elseif PYTHON
@@ -448,6 +483,14 @@ Use \e manfilter.tcl in a LibMsgque command pipeline:
 Use \e manfilter.pl in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
+\endverbatim
+\elseif PHP
+\dontinclude manfilter.php
+\skip class ManFilter
+\until Exit
+Use \e manfilter.php in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ php -c /path/to/php.ini  manfilter.php @ atool join -d :
 \endverbatim
 \elseif C
 \include manfilter.c

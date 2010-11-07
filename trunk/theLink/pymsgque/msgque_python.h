@@ -27,6 +27,10 @@
 #include "mqconfig.h"
 #include "msgque.h"
 
+#ifdef MQ_HAS_THREAD
+# include "pthread.h"
+#endif
+
 #define MQ_IS_POSIX
 #include "debug.h"
 

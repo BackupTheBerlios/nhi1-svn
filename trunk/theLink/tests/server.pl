@@ -493,7 +493,7 @@ use base qw(Net::PerlMsgque::MqS);
 	  $cl->SendSTART();
 	  $ctx->ReadProxy($cl);
 	  $cl->SendEND_AND_CALLBACK("ECOI", \&Client::ECOI_CB);
-	  $cl->ProcessEvent({timeout => 10, wait => "ONCE"});
+	  $cl->ProcessEvent(10, Net::PerlMsgque::MqS::WAIT_ONCE);
 	  $ctx->SendI($cl->DictGet("i")+1);
 	}
 	case "ERR-1" {
@@ -560,7 +560,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ReadProxy($cl);
 	$cl->DictSet ("i", -1);
 	$cl->SendEND_AND_CALLBACK("ECOI", \&Client::ECOI_CB);
-	$cl->ProcessEvent({timeout => 10, wait => "ONCE"});
+	$cl->ProcessEvent(10, Net::PerlMsgque::MqS::WAIT_ONCE);
 	$ctx->SendI($cl->DictGet ("i")+1);
       } 
       case "MqSendEND_AND_WAIT" {
@@ -708,7 +708,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendT_END ();
     $ctx->SendI ( $ctx->ReadI() );
     $ctx->SendEND_AND_WAIT ("ECOI");
-    $ctx->ProcessEvent ({wait => "ONCE"});
+    $ctx->ProcessEvent (Net::PerlMsgque::MqS::WAIT_ONCE);
     $ctx->SendSTART ();
     $ctx->SendI ($ctx->DictGet("i"));
     $ctx->SendI ($ctx->DictGet("j"));
@@ -819,7 +819,7 @@ package main;
 
   eval {
     $srv->LinkCreate(@ARGV);
-    $srv->ProcessEvent({wait => "FOREVER"});
+    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
@@ -827,7 +827,4 @@ package main;
   $srv->Exit();
 
 1;
-
-
-
 

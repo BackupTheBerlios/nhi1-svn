@@ -309,7 +309,7 @@ proc Ot_SND1 {ctx} {
       $cl SendSTART
       $ctx ReadProxy $cl
       $cl SendEND_AND_CALLBACK "ECOI" Callback
-      $cl ProcessEvent -timeout 10 -wait ONCE
+      $cl ProcessEvent 10 $::MqS_WAIT_ONCE
       $ctx SendI [expr {[$cl dict get i] + 1}]
     }
     ERR-1 {
@@ -376,7 +376,7 @@ proc Ot_SND2 {ctx} {
       $cl SendSTART
       $ctx ReadProxy $cl
       $cl SendEND_AND_CALLBACK "ECOI" Callback2
-      $cl ProcessEvent -timeout 10 -wait ONCE
+      $cl ProcessEvent 10 $::MqS_WAIT_ONCE
       $ctx SendI [expr {[$cl dict get i] + 1}]
     }
     MqSendEND_AND_WAIT {
@@ -605,7 +605,7 @@ proc Ot_TRNS {ctx} {
   $ctx SendT_END
   $ctx SendI [$ctx ReadI]
   $ctx SendEND_AND_WAIT "ECOI"
-  $ctx ProcessEvent -wait ONCE
+  $ctx ProcessEvent $::MqS_WAIT_ONCE
   $ctx SendSTART
   $ctx SendI [$ctx dict get "i"]
   $ctx SendI [$ctx dict get "j"]
@@ -710,7 +710,7 @@ tclmsgque Main {
     # create the initial parent-context and wait forever for events
     $srv LinkCreate {*}$argv
     $srv LogC "test" 1 "this is the log test\n"
-    $srv ProcessEvent -wait FOREVER
+    $srv ProcessEvent $MqS_WAIT_FOREVER
   }]} {
     $srv ErrorSet
   }

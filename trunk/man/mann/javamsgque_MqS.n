@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "6 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "7 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,9 +12,17 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 
 .in +1c
 .ti -1c
+.RI "enum \fBSTART\fP { \fBDEFAULT\fP = (0), \fBFORK\fP = (1), \fBTHREAD\fP = (2), \fBSPAWN\fP = (3) }"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
+.ti -1c
 .RI "enum \fBWAIT\fP { \fBNO\fP = (0), \fBONCE\fP = (1), \fBFOREVER\fP = (2) }"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.ti -1c
+.RI "enum \fBTIMEOUT\fP { \fBDEFAULT\fP = (-1), \fBUSER\fP = (-2), \fBMAX\fP = (-2) }"
+.br
+.R "implement the \fBlibmsgque\fP API object: default TIMEOUT values "
 .in -1c
 .SS "Public Member Functions"
 
@@ -60,7 +68,7 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
 .ti -1c
-.RI "native void \fBConfigSetStartAs\fP (int val)"
+.RI "void \fBConfigSetStartAs\fP (\fBSTART\fP val)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
 .ti -1c
@@ -112,7 +120,7 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
 .ti -1c
-.RI "native int \fBConfigGetStartAs\fP ()"
+.RI "\fBSTART\fP \fBConfigGetStartAs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .ti -1c
@@ -217,6 +225,10 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
 .ti -1c
 .RI "void \fBProcessEvent\fP (int timeout, \fBWAIT\fP flags)  throws MqSException "
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
+.ti -1c
+.RI "void \fBProcessEvent\fP (\fBTIMEOUT\fP timeout, \fBWAIT\fP flags)  throws MqSException "
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP "
 .ti -1c

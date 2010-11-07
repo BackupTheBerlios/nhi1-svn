@@ -32,7 +32,7 @@ PHP_METHOD(PhpMsgque_MqS, ErrorC)
   MqErrorC(MQCTX, prefix, (MQ_INT)errnum, message);
   RETURN_NULL();
 error:
-  RaiseError("usage: ErrorC(string: prefix, long: errnum, string: message)");
+  RaiseError("usage: ErrorC(string: prefix, integer: errnum, string: message)");
   return;
 } 
 
@@ -87,4 +87,5 @@ PHP_METHOD(PhpMsgque_MqS, ErrorPrint)
 
 void NS(MqS_Error_Init)(TSRMLS_D) {
 }
+
 

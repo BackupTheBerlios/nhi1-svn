@@ -134,6 +134,22 @@ void NS(MqS_Init) (void) {
   rb_define_method(cMqS, "Sleep",   Sleep,  1);
   rb_define_method(cMqS, "USleep",  USleep, 1);
 
+  // Timeout
+  rb_define_const(cMqS, "TIMEOUT_DEFAULT",  INT2VAL(-1));
+  rb_define_const(cMqS, "TIMEOUT_USER",     INT2VAL(-2));
+  rb_define_const(cMqS, "TIMEOUT_MAX",      INT2VAL(-3));
+
+  // Wait
+  rb_define_const(cMqS, "WAIT_NO",	    INT2VAL(0));
+  rb_define_const(cMqS, "WAIT_ONCE",	    INT2VAL(1));
+  rb_define_const(cMqS, "WAIT_FOREVER",     INT2VAL(2));
+
+  // Start
+  rb_define_const(cMqS, "START_DEFAULT",    INT2VAL(0));
+  rb_define_const(cMqS, "START_FORK",	    INT2VAL(1));
+  rb_define_const(cMqS, "START_THREAD",	    INT2VAL(2));
+  rb_define_const(cMqS, "START_SPAWN",	    INT2VAL(3));
+
   NS(MqS_Sys_Init)();
   NS(MqS_Send_Init)();
   NS(MqS_Read_Init)();

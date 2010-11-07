@@ -51,12 +51,13 @@ package main;
   our $srv = new testserver();
   eval {
     $srv->LinkCreate(@ARGV);
-    $srv->ProcessEvent({wait => "FOREVER"});
+    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

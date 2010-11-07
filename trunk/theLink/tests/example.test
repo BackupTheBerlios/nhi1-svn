@@ -43,7 +43,7 @@ test example-1 {check the example 1 from the tclmsgque man page} \
 	    $srv ConfigSetServerSetup ServerConfig
 	    if {[catch {
 	      $srv LinkCreate {*}$argv
-	      $srv ProcessEvent -wait FOREVER
+	      $srv ProcessEvent $MqS_WAIT_FOREVER
 	    }]} {
 	      $srv ErrorSet
 	    }
@@ -209,4 +209,5 @@ c101+3+1+s101:}
 ##
 
 freeTests
+
 

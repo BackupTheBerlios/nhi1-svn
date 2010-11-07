@@ -141,7 +141,7 @@ set tclserver [makeFile {
   $srv ConfigSetServerSetup ServerSetup
   if {[catch {
     $srv LinkCreate {*}$argv
-    $srv ProcessEvent -wait FOREVER
+    $srv ProcessEvent $MqS_WAIT_FOREVER
   }]} {
     $srv ErrorSet
   }
@@ -183,7 +183,7 @@ test tcl-server-X4 {server with defined UDS handle problem startup} \
 	    \$srv ConfigSetStartAs 3
 	    if {\[catch {
 	      \$srv LinkCreate {*}\$argv
-	      \$srv ProcessEvent -wait FOREVER
+	      \$srv ProcessEvent $MqS_WAIT_FOREVER
 	    }]} {
 	      \$srv ErrorSet
 	    }
@@ -219,7 +219,7 @@ test tcl-server-X5 {server with defined TCP handle problem startup} \
 	  \$srv ConfigSetStartAs 3
 	  if {\[catch {
 	    \$srv LinkCreate {*}\$argv
-	    \$srv ProcessEvent -wait FOREVER
+	    \$srv ProcessEvent $MqS_WAIT_FOREVER
 	  }]} {
 	    \$srv ErrorSet
 	  }
@@ -262,6 +262,7 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 ##
 
 freeTests
+
 
 
 

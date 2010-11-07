@@ -50,12 +50,13 @@ package main;
     $srv->LinkCreate(@ARGV);
     $srv->ServiceCreate("+FTR", \&FTRcmd);
     $srv->ServiceCreate("+EOF", \&EOFcmd);
-    $srv->ProcessEvent({wait => "FOREVER"});
+    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

@@ -229,7 +229,7 @@ test error-6-($I|$B|$C|$S) {error in callback} \
 	$FH_LAST SendSTART
 	$FH_LAST SendI 666
 	$FH_LAST SendEND_AND_CALLBACK ERR2 Callback
-	$FH_LAST ProcessEvent -wait ONCE
+	$FH_LAST ProcessEvent $MqS_WAIT_ONCE
     } \
     -cleanup	    { Cleanup } \
     -returnCodes    error \
@@ -245,7 +245,7 @@ test error-7-($I|$B|$C|$S) {double RETURN} \
     -body           {
 	RET_start
 	RET_add 111 $FH_LAST SendEND_AND_WAIT ERR3
-	#RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+	#RET_add 222 $FH_LAST ProcessEvent $MqS_WAIT_ONCE
 	RET_end
     } \
     -cleanup	    { Cleanup } \
@@ -566,7 +566,7 @@ unset -nocomplain S
 test error-X1 {wait forever on server and nothing happen} \
     -constraints  {local} \
     -setup	  { Setup 1 binary pipe c.pipe.pipe --timeout 1 } \
-    -body	  { $FH_LAST ProcessEvent -timeout 2 -wait ONCE } \
+    -body	  { $FH_LAST ProcessEvent 2 $MqS_WAIT_ONCE } \
     -cleanup	  { Cleanup } \
     -returnCodes  error \
     -result	  {C> (client-0) [pWaitOnEvent] TIMEOUT after '2' sec
@@ -578,5 +578,6 @@ C> (client-0) found in function "MqProcessEvent" at file "service.c"}
 ##
 
 freeTests
+
 
 

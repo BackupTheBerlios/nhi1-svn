@@ -364,36 +364,20 @@ MQ_CST
 MqErrorGetText (MqS* context)
 
 void
-MqProcessEvent(MqS* context, HV* hashArgs)
+MqProcessEvent(MqS* context, ...)
   PREINIT:
-    MQ_TIME_T timeout = -2;
+    MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
     enum MqWaitOnEventE wait = MQ_WAIT_NO;
   CODE:
-    if (hv_exists (hashArgs, "wait", 4)) {
-      SV *val = *hv_fetch (hashArgs, "wait", 4, 0);
-      MQ_CST waitS = NULL;
-      if (val == NULL) {
-	croak ("unable to read 'wait' value");
-      } else {
-	waitS = SvPV_nolen(val);
-	if (!strncmp(waitS,"NO",2)) {
-	  wait = MQ_WAIT_NO;
-	} else if (!strncmp(waitS,"ONCE",4)) {
-	  wait = MQ_WAIT_ONCE;
-	} else if (!strncmp(waitS,"FOREVER",7)) {
-	  wait = MQ_WAIT_FOREVER;
-	} else {
-	  croak ("invalid 'wait' value '%s', allowed are: NO, ONCE or FOREVER", waitS);
-	}
-      }
-    }
-    if (hv_exists (hashArgs, "timeout", 7)) {
-      SV *val = *hv_fetch (hashArgs, "timeout", 7, 0);
-      if (val == NULL) {
-	croak ("unable to read 'timeout' value");
-      } else {
-	timeout = SvIV(val);
-      }
+    if (items == 3) {
+      timeout = SvIV(ST(1));
+      wait = SvIV(ST(2));
+    } else if (items == 2) {
+      wait = SvIV(ST(1));
+    } else if (items == 1) {
+      // do nothing
+    } else {
+      croak ("usage: ProcessEvent(?timeout?, ?wait?)");
     }
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
