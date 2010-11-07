@@ -1,4 +1,4 @@
-.TH "MqIoConfigS" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "MqIoConfigS" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIoConfigS \- configuration data which belong to \fIMqIoS\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -43,36 +43,36 @@ MqIoConfigS \- configuration data which belong to \fIMqIoS\fP
 configuration data which belong to \fIMqIoS\fP 
 .PP
 Definition at line 622 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_INT\fP \fBMqIoConfigS::buffersize\fP"
+.SS "\fBMQ_INT\fP \fBMqIoConfigS.buffersize\fP"
 .PP
 set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
 .PP
 Definition at line 628 of file msgque.h.
-.SS "enum \fBMqIoComE\fP \fBMqIoConfigS::com\fP"
+.SS "enum \fBMqIoComE\fP \fBMqIoConfigS.com\fP"
 .PP
 what kind of socket interface to use? 
 .PP
 type default option application context  INTEGER (enum) IO_PIPE --tcp/--uds/--pipe server parent  
 .PP
 Definition at line 635 of file msgque.h.
-.SS "struct \fBMqIoPipeConfigS\fP \fBMqIoConfigS::pipe\fP\fC [read]\fP"
+.SS "struct \fBMqIoPipeConfigS\fP \fBMqIoConfigS.pipe\fP\fC [read]\fP"
 .PP
 set \fIpipe\fP configuration-data 
 .PP
 Definition at line 644 of file msgque.h.
-.SS "struct \fBMqIoTcpConfigS\fP \fBMqIoConfigS::tcp\fP\fC [read]\fP"
+.SS "struct \fBMqIoTcpConfigS\fP \fBMqIoConfigS.tcp\fP\fC [read]\fP"
 .PP
 set \fItcp\fP configuration-data 
 .PP
 Definition at line 641 of file msgque.h.
-.SS "\fBMQ_TIME_T\fP \fBMqIoConfigS::timeout\fP"
+.SS "\fBMQ_TIME_T\fP \fBMqIoConfigS.timeout\fP"
 .PP
 user defined timeout to terminate a blocking function call (default: 90 sec) 
 .PP
 Definition at line 625 of file msgque.h.
-.SS "struct \fBMqIoUdsConfigS\fP \fBMqIoConfigS::uds\fP\fC [read]\fP"
+.SS "struct \fBMqIoUdsConfigS\fP \fBMqIoConfigS.uds\fP\fC [read]\fP"
 .PP
 set \fIuds\fP configuration-data 
 .PP
@@ -80,4 +80,4 @@ Definition at line 638 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

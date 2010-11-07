@@ -1,4 +1,4 @@
-.TH "Mq_Link_Cs_API" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Link_Cs_API" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -114,7 +114,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS.WAIT.FOREVER.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS.WAIT.FOREVER\fP.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -201,4 +201,4 @@ implement the \fBlibmsgque\fP API object: \fBLinkIsParent\fP
 Definition at line 69 of file link.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

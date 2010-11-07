@@ -15,12 +15,12 @@
 #---------------------------------------------------------------------------
 
 
-INPUT			+= $(SRCDIR)/tclmsgque .
-FILE_PATTERNS		+= *.doc $(SRCDIR)/phpmsgque/*.[ch]
+INPUT			+= $(SRCDIR)/phpmsgque/PhpMsgque .
+FILE_PATTERNS		+= *.doc $(SRCDIR)/phpmsgque/PhpMsgque/*.[ch]
 #EXAMPLE_PATH		= $(SRCDIR)/tests
 OPTIMIZE_OUTPUT_JAVA	= NO
 OPTIMIZE_OUTPUT_FOR_C	= YES
-STRIP_FROM_PATH		+= $(SRCDIR)/phpmsgque
+STRIP_FROM_PATH		+= $(SRCDIR)/phpmsgque/PhpMsgque
 
 ALIASES			+= "libmsgque=\ref Mq_C_API \"libmsgque\""
 ALIASES			+= "phpmsgque=\e phpmsgque"

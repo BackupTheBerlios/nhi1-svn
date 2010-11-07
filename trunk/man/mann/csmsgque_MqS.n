@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -531,4 +531,4 @@ Definition at line 152 of file csmsgque.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

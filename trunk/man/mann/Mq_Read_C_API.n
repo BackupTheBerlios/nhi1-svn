@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -246,7 +246,7 @@ check if an item exists in the \fIread-data-package\fP
 .PP
 \fBReturns:\fP
 .RS 4
-boolean, \fITRUE\fP or \fIFALSE\fP 
+boolean, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
@@ -286,13 +286,13 @@ an \fBERROR OBJECT\fP on error
 .PP
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
-Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx->ReadL_END()\fP to finish the read. 
+Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fIundef\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -392,13 +392,13 @@ an \fBERROR OBJECT\fP on error
 .PP
 start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP
-Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\fP. The \fIcurrent-item\fP have to be the first item in the \fIread-data-package\fP. This command requires a final \fB$ctx->ReadL_END()\fP to finish the read. 
+Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\fP. The \fIcurrent-item\fP have to be the first item in the \fIread-data-package\fP. This command requires a final \fBctx.ReadL_END()\fP to finish the read. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fIundef\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -479,4 +479,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

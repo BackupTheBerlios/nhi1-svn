@@ -1,11 +1,11 @@
-.TH "Mq_Error_C_API" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Error_C_API \- create and manage error messages.  
 
 .PP
-.SS "Data Structures"
+.SS "Classes"
 
 .in +1c
 .ti -1c
@@ -85,7 +85,7 @@ Mq_Error_C_API \- create and manage error messages.
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2 }"
+.RI "enum \fBMqErrorE\fP { \fBMQ_OK\fP, \fBMQ_CONTINUE\fP, \fBMQ_ERROR\fP, \fBMQ_OK\fP =  0, \fBMQ_CONTINUE\fP =  1, \fBMQ_ERROR\fP =  2 }"
 .br
 .R "collection for the different error-codes "
 .in -1c
@@ -163,7 +163,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP "
+.R "check for an \fIexit-error-object\fP, return \fItrue\fP or \fIfalse\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
@@ -335,6 +335,12 @@ collection for the different error-codes
 .in +1c
 .TP
 \fB\fIMQ_OK \fP\fP
+.TP
+\fB\fIMQ_CONTINUE \fP\fP
+.TP
+\fB\fIMQ_ERROR \fP\fP
+.TP
+\fB\fIMQ_OK \fP\fP
 everything is OK, no error available (persistent) 
 .TP
 \fB\fIMQ_CONTINUE \fP\fP
@@ -368,9 +374,9 @@ copy a \fBMqErrorS\fP from \fIin\fP to \fIout\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIout\fP the \fBMqS::error\fP object created by \fBMqLinkCreate\fP 
+\fIout\fP the \fBMqS.error\fP object created by \fBMqLinkCreate\fP 
 .br
-\fIin\fP the \fBMqS::error\fP object created by \fBMqLinkCreate\fP 
+\fIin\fP the \fBMqS.error\fP object created by \fBMqLinkCreate\fP 
 .RE
 .PP
 
@@ -388,7 +394,7 @@ return the value of \fBMqErrorS\fP code member
 .RE
 .PP
 
-.SS "static enum \fBMqErrorE\fP MqErrorGetCodeI (struct \fBMqS\fP const *const  context)\fC [inline, static]\fP"
+.SS "static enum \fBMqErrorE\fP MqErrorGetCodeI (struct \fBMqS\fP const *const  context)\fC [static]\fP"
 .PP
 return the value of \fBMqErrorS\fP code member 
 .PP
@@ -408,7 +414,7 @@ the \fIerror-number\fP from the \fIexception-object\fP. The number can be used a
 .RE
 .PP
 
-.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
+.SS "static \fBMQ_INT\fP MqErrorGetNumI (struct \fBMqS\fP const *const  ctx)\fC [static]\fP"
 .PP
 \fBReturns:\fP
 .RS 4
@@ -428,7 +434,7 @@ the \fIerror-message\fP from the \fIexception-object\fP
 
 .SS "int MqErrorIsEXIT (struct \fBMqS\fP *const  context)"
 .PP
-check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP 
+check for an \fIexit-error-object\fP, return \fItrue\fP or \fIfalse\fP 
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
@@ -614,4 +620,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

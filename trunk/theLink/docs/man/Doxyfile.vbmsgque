@@ -93,6 +93,10 @@ ALIASES		    += "config_get_ignoreExit=NO"
 ALIASES		    += "config_type_startAs=Integer"
 ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
 ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c MqS.START.DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c MqS.START.FORK"
+ALIASES		    += "MQ_START_THREAD=\c MqS.START.THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c MqS.START.SPAWN"
 
 ALIASES		    += "config_type_tcp=String"
 ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
@@ -213,9 +217,12 @@ ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token As String, AddressOf call
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token As String, [id=0 As Integer])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])"
-ALIASES		    += "MQ_WAIT_NO=MqS.WAIT.NO"
-ALIASES		    += "MQ_WAIT_ONCE=MqS.WAIT.ONCE"
-ALIASES		    += "MQ_WAIT_FOREVER=MqS.WAIT.FOREVER"
+ALIASES		    += "MQ_WAIT_NO=\c MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c MqS.WAIT.FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c MqS.TIMEOUT.DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=\c MqS.TIMEOUT.USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=\c MqS.TIMEOUT.MAX"
 ALIASES		    += "ServiceGetToken=ctx.ServiceGetToken() As String"
 ALIASES		    += "ServiceGetFilter=ctx.ServiceGetFilter([id=0]) As MqS"
 ALIASES		    += "ServiceIsTransaction=ctx.ServiceIsTransaction() As Boolean"
@@ -282,10 +289,4 @@ Catch e As Exception \n\
   End If \n\
 End Try \n\
 \endcode"
-
-
-
-
-
-
 

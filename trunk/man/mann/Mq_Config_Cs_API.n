@@ -1,4 +1,4 @@
-.TH "Mq_Config_Cs_API" n "7 Nov 2010" "Version 4.6" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Config_Cs_API" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -324,4 +324,4 @@ implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP
 Definition at line 64 of file config.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

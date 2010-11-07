@@ -133,7 +133,7 @@ The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote servi
 .PP
 Services are created with the \fBctx.ServiceCreate(token,callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
-The \fBSERVICE CALLBACK\fP function has one parameter of type \fBctx=MqS()\fP. This parameter refer to the original object (in our case \fIMyServer\fP). If the service object (in our case \fIMyFirstService\fP) is a subclass of the original \fBctx=MqS()\fP object class, the both statements \fBSendSTART()\fP and \fBctx.sendSTART()\fP are identical.
+The \fBSERVICE CALLBACK\fP is called for every incoming \fIservice-request\fP which belongs to token.
 .SH "CLIENT"
 .PP
 A \fBpymsgque\fP client requires the following setup:

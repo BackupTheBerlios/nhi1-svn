@@ -290,9 +290,3 @@ if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, \"TOKS\", MQ_TIMEOUT_USER))) { \n\
 } \n\
 \endcode"
 
-
-
-
-
-
-

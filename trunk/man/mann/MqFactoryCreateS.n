@@ -1,4 +1,4 @@
-.TH "MqFactoryCreateS" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "MqFactoryCreateS" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqFactoryCreateS \- function pointer to \fIcreate\fP an object
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -35,24 +35,24 @@ MqFactoryCreateS \- function pointer to \fIcreate\fP an object
 function pointer to \fIcreate\fP an object 
 .PP
 Definition at line 515 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS::data\fP"
+.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS.data\fP"
 .PP
 additional data pointer for the fCall 
 .PP
 Definition at line 517 of file msgque.h.
-.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS::fCall\fP"
+.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS.fCall\fP"
 .PP
 create a new object 
 .PP
 Definition at line 516 of file msgque.h.
-.SS "\fBMqTokenDataCopyF\fP \fBMqFactoryCreateS::fCopy\fP"
+.SS "\fBMqTokenDataCopyF\fP \fBMqFactoryCreateS.fCopy\fP"
 .PP
 copy additional data pointer 
 .PP
 Definition at line 519 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS::fFree\fP"
+.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
@@ -60,4 +60,4 @@ Definition at line 518 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

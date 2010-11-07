@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -155,7 +155,7 @@ Definition at line 4439 of file msgque.h.
 .PP
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIFALSE\fP'\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIfalse\fP'\fP using the following format: 
 .PP
 .nf
 
@@ -228,7 +228,7 @@ get the \fItype\fP member from an MqTypeE object in human readable form
 .PP
 \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -277,4 +277,4 @@ Use the format and the restrictions from \fBLogC\fP.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

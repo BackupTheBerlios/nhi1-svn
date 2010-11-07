@@ -1,4 +1,4 @@
-.TH "MqSysServerThreadMainS" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "MqSysServerThreadMainS" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqSysServerThreadMainS \- data used to initialize a new created thread
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -35,24 +35,24 @@ MqSysServerThreadMainS \- data used to initialize a new created thread
 data used to initialize a new created thread 
 .PP
 Definition at line 4085 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS::alfa\fP\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.alfa\fP\fC [read]\fP"
 .PP
 command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
 .PP
 Definition at line 4089 of file msgque.h.
-.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS::argv\fP\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.argv\fP\fC [read]\fP"
 .PP
 command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
 .PP
 Definition at line 4088 of file msgque.h.
-.SS "struct \fBMqFactoryS\fP \fBMqSysServerThreadMainS::factory\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryS\fP \fBMqSysServerThreadMainS.factory\fP\fC [read]\fP"
 .PP
 server configuration (memory belongs to caller) 
 .PP
 Definition at line 4087 of file msgque.h.
-.SS "struct \fBMqS\fP* \fBMqSysServerThreadMainS::tmpl\fP\fC [read]\fP"
+.SS "struct \fBMqS\fP* \fBMqSysServerThreadMainS.tmpl\fP\fC [read]\fP"
 .PP
 calling (parent) context 
 .PP
@@ -60,4 +60,4 @@ Definition at line 4086 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

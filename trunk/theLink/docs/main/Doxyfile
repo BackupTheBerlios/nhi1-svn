@@ -57,7 +57,7 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 #			$(DOCDIR)/../javamsgque_private/javamsgque_private.tag=javamsgque_private \
 #			$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_private \
 			
-ALIASES		    +=	"private{2}=<A HREF=\"\1msgque_private\index.htm\">\2</A>"
+ALIASES		    +=	"private{2}=<A HREF=\"\1msgque_private/index.htm\">\2</A>"
 ALIASES		    +=	"man{2}=\ref \1msgqueref \"\2\""
 ALIASES		    +=	"tut{2}=\ref \1msgquetut \"\2\""
 ALIASES		    +=	"apiref{3}=\ref Mq_\2_API \"\3\""

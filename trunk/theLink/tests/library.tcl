@@ -666,7 +666,9 @@ if {![info exists env(SRV_LST)]} {
     perl.uds.thread
     php.pipe.pipe
     php.tcp.spawn
+    php.tcp.fork
     php.uds.spawn
+    php.uds.fork
     vb.pipe.pipe
     vb.tcp.spawn
     vb.tcp.thread

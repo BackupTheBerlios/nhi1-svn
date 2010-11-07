@@ -1,8 +1,8 @@
-.TH "msgque.h" n "6 Nov 2010" "Version 4.6" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "7 Nov 2010" "Version 4.6" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 278 2010-11-07 17:50:58Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -305,7 +305,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $
 .ti -1c
 .RI "#define \fBMqErrorSetEXIT\fP(ctx)   MqErrorSetEXITP(ctx,__func__)"
 .br
-.R "exit an \fIcallback\fP, return to \fItoplevel\fP and \fBMqExit\fP the application "
+.R "finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBMqExit\fP the application "
 .ti -1c
 .RI "#define \fBMqErrorCheckI\fP(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .br
@@ -1271,7 +1271,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $
 .ti -1c
 .RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "check if context is on \fIexit\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
+.R "check for an \fIexit-error-object\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
@@ -1580,13 +1580,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 265 2010-11-01 17:39:21Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 278 2010-11-07 17:50:58Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 265 $ 
+$Rev: 278 $ 
 .RE
 .PP
 \fBAuthor:\fP

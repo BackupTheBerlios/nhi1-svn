@@ -49,9 +49,17 @@ ALIASES		    += "config_srvname=#MqConfigS::srvname"
 ALIASES		    += "config_debug=#MqConfigS::debug"
 ALIASES		    += "config_isSilent=#MqConfigS::isSilent"
 
+ALIASES		    += "MQ_START_DEFAULT=#MQ_START_DEFAULT"
+ALIASES		    += "MQ_START_FORK=#MQ_START_FORK"
+ALIASES		    += "MQ_START_THREAD=#MQ_START_THREAD"
+ALIASES		    += "MQ_START_SPAWN=#MQ_START_SPAWN"
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=#MQ_TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=#MQ_TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=#MQ_TIMEOUT_MAX"
+
 ALIASES		    += "ctx=\param[in] ctx the context returned by \RNS{ContextCreate}"
 ALIASES		    += "retException=\return an \RNS{ErrorObject} on error"
 
