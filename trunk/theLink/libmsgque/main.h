@@ -145,7 +145,7 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
     /* MQ_ERROR_OPTION_ARG */
 	"expect argument for option '%s'",
     /* MQ_ERROR_OPTION_FORBIDDEN */
-	"for a '%s' setup the option '%s' is forbidden",
+	"for the '%s' setup the option '%s' is forbidden",
     /* MQ_ERROR_WAIT_FOR_TOKEN */
 	"TIMEOUT: wait '%i' sec for token '%s' but got only token '%s'",
     /* MQ_ERROR_UNDO_FORBIDDEN */

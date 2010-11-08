@@ -1,4 +1,4 @@
-.TH "phpmsgque" n "7 Nov 2010" "Version 4.6" "phpmsgque" \" -*- nroff -*-
+.TH "phpmsgque" n "8 Nov 2010" "Version 4.7" "phpmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

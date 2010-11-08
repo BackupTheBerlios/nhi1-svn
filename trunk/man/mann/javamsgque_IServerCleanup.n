@@ -1,4 +1,4 @@
-.TH "javamsgque::IServerCleanup" n "7 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::IServerCleanup" n "8 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

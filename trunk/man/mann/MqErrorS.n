@@ -1,4 +1,4 @@
-.TH "MqErrorS" n "7 Nov 2010" "Version 4.6" "vbmsgque" \" -*- nroff -*-
+.TH "MqErrorS" n "8 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

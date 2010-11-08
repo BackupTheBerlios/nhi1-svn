@@ -17,18 +17,26 @@ dnl without editing.
 dnl If your extension references something external, use with:
 
 PHP_ARG_WITH(PhpMsgque, for PhpMsgque support,
-dnl Make sure that the comment is aligned:
-[  --with-PhpMsgque             Include PhpMsgque support])
+[  --with-PhpMsgque[=DIR]  Include PhpMsgque support])
+PHP_ARG_WITH(PhpMsgqueSrc, for PhpMsgque source directory,
+[  --with-PhpMsgqueSrc[=DIR]  Include PhpMsgque source-directory])
 
 dnl Otherwise use enable:
 
 if test "$PHP_PHPMSGQUE" != "no"; then
   dnl libmsgque sources
-  EXTRA_LDFLAGS=../../libmsgque/liblocal.la
 
-  dnl --with-PhpMsgque -> add include path
-  PHPMSGQUE_DIR=../../libmsgque
-  PHP_ADD_INCLUDE($PHPMSGQUE_DIR)
+  if test "$PHP_PHPMSGQUE" == "yes"; then
+    PHP_PHPMSGQUE=../../libmsgque
+  fi
+  if test "$PHP_PHPMSGQUESRC" == "no" -o "$PHP_PHPMSGQUESRC" == "yes" ; then
+    PHP_PHPMSGQUESRC=../../libmsgque
+  fi
+
+  EXTRA_LDFLAGS=${PHP_PHPMSGQUE}/liblocal.la
+
+  dnl --with-PhpMsgqueSrc -> add include path
+  PHP_ADD_INCLUDE($PHP_PHPMSGQUESRC)
  
   dnl PHP_SUBST(PHPMSGQUE_SHARED_LIBADD)
   dnl add extension 

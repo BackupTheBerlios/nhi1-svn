@@ -143,9 +143,27 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
       $this->ServiceCreate("ECLI", array(&$this, 'ECLI'));
       $this->ServiceCreate("ERLR", array(&$this, 'ERLR'));
       $this->ServiceCreate("ERLS", array(&$this, 'ERLS'));
-#      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
-#      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
+      $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
+      $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
     }
+  }
+
+  public function RDUL() {
+    $this->ReadY();
+    $this->ReadS();
+    $this->ReadI();
+    $this->ReadW();
+    $this->ReadU();
+  }
+
+  public function ECUL() {
+    $this->SendSTART();
+    $this->SendY($this->ReadY());
+    $this->SendS($this->ReadS());
+    $this->SendI($this->ReadI());
+    $this->SendW($this->ReadW());
+    $this->ReadProxy($this);
+    $this->SendRETURN();
   }
 
   public function CNFG() {

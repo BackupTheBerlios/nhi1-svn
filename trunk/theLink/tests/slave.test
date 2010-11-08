@@ -273,7 +273,7 @@ if $BLOCK_2 {
 	      -returnCodes    error \
 	      -match	      glob \
 	      -result         {C> (client-0) \[service-call-error] <Tok|SND2> <Num|222>*
-C> (server-0) \[*sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+C> (server-0) \[*sMqCheckArg] for the 'current' setup the option '--fork' is forbidden*}
 	} else {
 	  test slave-X0-($I|$B|$C|$S|$T) {check startAs} \
 	      -constraints  c \

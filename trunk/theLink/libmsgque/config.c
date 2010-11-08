@@ -865,7 +865,7 @@ MqConfigSetDaemon (
 {
   if (MQ_IS_SERVER(context)) {
     if (context->config.ignoreFork == MQ_YES) {
-      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "local", "--daemon");
+      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--daemon");
     } else {
       MqErrorCheck (MqSysDaemonize(context, pidfile));
       MqConfigSetIsSilent (context, MQ_YES);

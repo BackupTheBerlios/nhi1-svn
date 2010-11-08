@@ -207,7 +207,7 @@ sMqCheckArg (
 	    if (MqInitBuf == NULL) {
 	      return MqErrorDb (MQ_ERROR_NO_INIT);
 	    } else if (context->config.ignoreSpawn == MQ_YES) {
-	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "local", "--spawn");
+	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--spawn");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_SPAWN);
 	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP) {
@@ -250,7 +250,7 @@ sMqCheckArg (
 	case 't': {
 	  if (!strncmp(argC, "thread", 6)) {
 	    if (context->config.ignoreThread == MQ_YES) {
-	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "local", "--thread");
+	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--thread");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_THREAD);
 	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP)
@@ -328,7 +328,7 @@ sMqCheckArg (
 	case 'f': {
 	  if (!strncmp(argC, "fork", 4)) {
 	    if (context->config.ignoreFork == MQ_YES) {
-	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "local", "--fork");
+	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--fork");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_FORK);
 	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP)

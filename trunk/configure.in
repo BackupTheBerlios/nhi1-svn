@@ -13,7 +13,7 @@
 # set NHI1 VERSION information also in:
 # > win/mqconfig.h
 # > win/env.sh
-AC_INIT([NHI1],[0.8],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_INIT([NHI1],[0.9],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([mqconfig.h])
@@ -23,8 +23,8 @@ AC_CONFIG_HEADER([mqconfig.h])
 # > win/mqconfig.h
 # > theLink/csmsgque/csmsgque.cs
 # > win/win/win.vsprops
-AC_SUBST([LIBMSGQUE_VERSION], ["4.6"])
-AC_DEFINE([LIBMSGQUE_VERSION], ["4.6"], [version of the 'libmsgque' package])
+AC_SUBST([LIBMSGQUE_VERSION], ["4.7"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["4.7"], [version of the 'libmsgque' package])
 
 #  Updating library version information
 #  ====================================

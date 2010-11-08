@@ -70,9 +70,13 @@ mqs_DATA = javamsgque.jar
 
 pkglib_LTLIBRARIES = libjavamsgque.la
 BUILT_SOURCES = .vpath_hook $(mqs_DATA) javamsgque_MqS.h javamsgque_MqBufferS.h
-EXTRA_DIST = $(JAVA_FILES) $(BUILT_SOURCES) javamsgque_MqS_WAIT.h
-MAINTAINERCLEANFILES = $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque/*.class
-VPATH_FILES = javamsgque javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqS_WAIT.h javamsgque.jar
+EXTRA_DIST = $(JAVA_FILES) $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h \
+		  javamsgque_MqS_START.h
+MAINTAINERCLEANFILES = $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h \
+	      javamsgque_MqS_START.h javamsgque/*.class
+VPATH_FILES = javamsgque javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqS_WAIT.h \
+	      javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h javamsgque.jar
+
 
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)

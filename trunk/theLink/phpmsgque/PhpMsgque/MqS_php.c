@@ -40,6 +40,7 @@ static zend_object_value NS(MqS_new)(zend_class_entry *ce TSRMLS_DC)
   // set configuration data
   mqctx->setup.Child.fCreate   = MqLinkDefault;
   mqctx->setup.Parent.fCreate  = MqLinkDefault;
+  MqConfigSetIgnoreThread(mqctx, MQ_YES);
   TSRMLS_SET_CTX(mqctx->threadData) ;
 
   // register resources
@@ -118,17 +119,28 @@ FactoryCreate(
   struct MqS  ** mqctxP
 )
 {
+
 /*
   if (create == MQ_FACTORY_NEW_FORK) {
     //rb_thread_atfork();
   }
+*/
+
+/*
+  //php seems NOT to support external thread creation
+
+  void ***tsrm_ls;
   if (create == MQ_FACTORY_NEW_THREAD) {
-    //RUBY_INIT_STACK;
+    tsrm_set_interpreter_context(tsrm_new_interpreter_context());
+    tsrm_ls = (void ***) ts_resource_ex(0, NULL);
+  } else {
+    tsrm_ls = (void ***) tmpl->threadData;
   }
+  //TSRMLS_FETCH();
+}
 */
 
   TSRMLS_FETCH_FROM_CTX(tmpl->threadData);
-  //TSRMLS_FETCH();
   zval *self;
   enum MqErrorE ret = NS(ProcCall) (tmpl, (struct NS(ProcDataS) * const) data, 0, NULL, &self);
 

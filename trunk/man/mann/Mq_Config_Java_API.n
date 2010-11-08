@@ -1,4 +1,4 @@
-.TH "Mq_Config_Java_API" n "7 Nov 2010" "Version 4.6" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_Java_API" n "8 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

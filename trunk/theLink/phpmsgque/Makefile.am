@@ -13,17 +13,40 @@
 if USE_PHP
 
 PHPMAKEFILE  =	PhpMsgque/Makefile
-PHPCONFIG    =  --with-PhpMsgque
+PHPCONFIG    =  --with-PhpMsgque=$(abs_builddir)/../libmsgque
+PHPCONFIG    +=  --with-PhpMsgqueSrc=$(abs_srcdir)/../libmsgque
 
 if DEBUG
 PHPCONFIG    += --enable-symbols
 endif
 
+#PHPCONFIG    += --srcdir=$(srcdir)
+PHPCONFIG    += --bindir=$(bindir)
+PHPCONFIG    += --sbindir=$(sbindir)
+PHPCONFIG    += --libexecdir=$(libexecdir)
+PHPCONFIG    += --sysconfdir=$(sysconfdir)
+PHPCONFIG    += --sharedstatedir=$(sharedstatedir)
+PHPCONFIG    += --localstatedir=$(localstatedir)
+PHPCONFIG    += --libdir=$(libdir)
+PHPCONFIG    += --includedir=$(includedir)
+PHPCONFIG    += --oldincludedir=$(oldincludedir)
+PHPCONFIG    += --datarootdir=$(datarootdir)
+PHPCONFIG    += --datadir=$(datadir)
+PHPCONFIG    += --infodir=$(infodir)
+PHPCONFIG    += --localedir=$(localedir)
+PHPCONFIG    += --mandir=$(mandir)
+PHPCONFIG    += --docdir=$(docdir)
+PHPCONFIG    += --htmldir=$(htmldir)
+PHPCONFIG    += --dvidir=$(dvidir)
+PHPCONFIG    += --pdfdir=$(pdfdir)
+PHPCONFIG    += --psdir=$(psdir)
+
+
 PhpMsgque/configure: PhpMsgque/config.m4
+	-test ! -d PhpMsgque && cp -pr $(srcdir)/PhpMsgque . && chmod -R u+w PhpMsgque && touch PhpMsgque/.distclean
 	cd PhpMsgque && $(PHPIZE)
 
-$(PHPMAKEFILE): PhpMsgque/configure
-	-test ! -d PhpMsgque && cp -pr $(srcdir)/PhpMsgque . && chmod -R u+w PhpMsgque && touch PhpMsgque/.distclean
+$(PHPMAKEFILE): PhpMsgque/configure Makefile.am
 	cd PhpMsgque && ./configure $(PHPCONFIG)
 
 all-local: $(PHPMAKEFILE)
@@ -43,16 +66,23 @@ distclean-local:
 endif
 
 EXTRA_DIST = \
-	PhpMsgque/MqS_php.c \
-	PhpMsgque/msgque_php.h \
-	PhpMsgque/config.w32 \
-	PhpMsgque/PhpMsgque.php \
-	PhpMsgque/tests \
-	PhpMsgque/tests/001.phpt \
+	PhpMsgque/.cvsignore \
 	PhpMsgque/config.m4 \
+	PhpMsgque/config.w32 \
+	PhpMsgque/CREDITS \
+	PhpMsgque/PhpMsgque.php \
+	PhpMsgque/tests/001.phpt \
+	PhpMsgque/msgque_php.h \
 	PhpMsgque/php_PhpMsgque.h \
 	PhpMsgque/PhpMsgque.c \
-	PhpMsgque/.cvsignore \
-	PhpMsgque/CREDITS \
-	PhpMsgque/EXPERIMENTAL
-
+	PhpMsgque/MqS_php.c \
+	PhpMsgque/MqBufferS_php.c \
+	PhpMsgque/MqSException_php.c \
+	PhpMsgque/config_php.c \
+	PhpMsgque/link_php.c \
+	PhpMsgque/read_php.c \
+	PhpMsgque/service_php.c \
+	PhpMsgque/error_php.c \
+	PhpMsgque/misc_php.c \
+	PhpMsgque/send_php.c \
+	PhpMsgque/slave_php.c

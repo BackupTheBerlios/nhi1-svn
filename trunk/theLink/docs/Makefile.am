@@ -23,6 +23,8 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/pymsgque/*.h \
 		$(top_srcdir)/theLink/rubymsgque/*.c \
 		$(top_srcdir)/theLink/rubymsgque/*.h \
+		$(top_srcdir)/theLink/phpmsgque/PhpMsgque/*.c \
+		$(top_srcdir)/theLink/phpmsgque/PhpMsgque/*.h \
 		$(top_srcdir)/theLink/tclmsgque/*.c \
 		$(top_srcdir)/theLink/tclmsgque/*.h \
 		$(top_srcdir)/theLink/ccmsgque/*.cc \

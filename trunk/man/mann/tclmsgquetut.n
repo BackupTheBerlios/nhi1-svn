@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "7 Nov 2010" "Version 4.6" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "8 Nov 2010" "Version 4.7" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

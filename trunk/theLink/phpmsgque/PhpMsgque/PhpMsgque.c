@@ -24,10 +24,12 @@ ZEND_DECLARE_MODULE_GLOBALS(PhpMsgque)
  *
  * Every user visible function must have an entry in PhpMsgque_functions[].
  */
+
 const zend_function_entry NS(functions)[] = {
-	PHP_FE(confirm_PhpMsgque_compiled,	NULL)		/* For testing, remove later. */
+	/* PHP_FE(confirm_PhpMsgque_compiled,	NULL)		// For testing, remove later. */
 	{NULL, NULL, NULL}								/* Must be the last line in PhpMsgque_functions[] */
 };
+
 /* }}} */
 
 /* {{{ PhpMsgque_module_entry
@@ -175,6 +177,7 @@ PHP_MINFO_FUNCTION(PhpMsgque)
 /* Every user-visible function in PHP should document itself in the source */
 /* {{{ proto string confirm_PhpMsgque_compiled(string arg)
    Return a string to confirm that the module is compiled in */
+/*
 PHP_FUNCTION(confirm_PhpMsgque_compiled)
 {
 	char *arg = NULL;
@@ -188,6 +191,7 @@ PHP_FUNCTION(confirm_PhpMsgque_compiled)
 	len = spprintf(&strg, 0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "PhpMsgque", arg);
 	RETURN_STRINGL(strg, len, 0);
 }
+*/
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and 
    unfold functions in source code. See the corresponding marks just before 
