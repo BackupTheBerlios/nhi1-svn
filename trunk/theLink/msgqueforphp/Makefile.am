@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/phpmsgque/Makefile.am
+#§  \file       theLink/msgqueforphp/Makefile.am
 #§  \brief      \$Id: Makefile.am 206 2010-02-17 14:21:42Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
@@ -91,6 +91,7 @@ EXTRA_DIST = \
 	MsgqueForPhp/misc_php.c \
 	MsgqueForPhp/send_php.c \
 	MsgqueForPhp/slave_php.c
+
 
 
 

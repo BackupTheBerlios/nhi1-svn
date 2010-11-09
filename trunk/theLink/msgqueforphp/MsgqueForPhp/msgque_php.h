@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/msgque_php.h
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/msgque_php.h
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -189,5 +189,6 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
+
 
 

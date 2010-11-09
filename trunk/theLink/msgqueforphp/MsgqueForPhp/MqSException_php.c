@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/MqSException_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/MqSException_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -138,5 +138,6 @@ void NS(MqSException_Init) (TSRMLS_D) {
   // define additional properties ("message" and "code" is covered by "Exception")
   zend_declare_property_null(MqSExceptionC, ID(num), ZEND_ACC_PROTECTED TSRMLS_CC);
 }
+
 
 

@@ -15,14 +15,15 @@
 #---------------------------------------------------------------------------
 
 
-INPUT			+= $(SRCDIR)/phpmsgque/MsgqueForPhp .
-FILE_PATTERNS		+= *.doc $(SRCDIR)/phpmsgque/MsgqueForPhp/*.[ch]
+INPUT			+= $(SRCDIR)/msgqueforphp/MsgqueForPhp .
+FILE_PATTERNS		+= *.doc $(SRCDIR)/msgqueforphp/MsgqueForPhp/*.[ch]
 #EXAMPLE_PATH		= $(SRCDIR)/tests
 OPTIMIZE_OUTPUT_JAVA	= NO
 OPTIMIZE_OUTPUT_FOR_C	= YES
-STRIP_FROM_PATH		+= $(SRCDIR)/phpmsgque/MsgqueForPhp
+STRIP_FROM_PATH		+= $(SRCDIR)/msgqueforphp/MsgqueForPhp
 
 ALIASES			+= "libmsgque=\ref Mq_C_API \"libmsgque\""
-ALIASES			+= "phpmsgque=\e phpmsgque"
+ALIASES			+= "msgqueforphp=\e msgqueforphp"
 PREDEFINED  +=  "PHP_METHOD(class,name)=void name ()"
+
 

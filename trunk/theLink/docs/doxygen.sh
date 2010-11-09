@@ -11,7 +11,7 @@ javamsgque_private=../man/Doxyfile.msgque
 pymsgque_private=../man/Doxyfile.msgque
 rubymsgque_private=../man/Doxyfile.msgque
 tclmsgque_private=../man/Doxyfile.msgque
-phpmsgque_private=../man/Doxyfile.msgque
+msgqueforphp_private=../man/Doxyfile.msgque
 
 main=../man/Doxyfile.msgque
 
@@ -21,7 +21,7 @@ ccmsgque=../ccmsgque_public/Doxyfile
 csmsgque=../csmsgque_public/Doxyfile
 vbmsgque=../csmsgque_public/Doxyfile
 perlmsgque=../libmsgque_public/Doxyfile
-phpmsgque=../libmsgque_public/Doxyfile
+msgqueforphp=../libmsgque_public/Doxyfile
 pymsgque=../libmsgque_public/Doxyfile
 rubymsgque=../libmsgque_public/Doxyfile
 tclmsgque=../libmsgque_public/Doxyfile
@@ -101,3 +101,4 @@ export HAVE_DOT=NO
     popd
   done
 )
+

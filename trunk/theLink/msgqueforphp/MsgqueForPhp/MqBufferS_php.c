@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/MqBufferS_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/MqBufferS_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -118,5 +118,6 @@ void NS(MqBufferS_Init) (TSRMLS_D) {
   // define additional properties "buf" to save the "struct MqBufferS *" pointer
   zend_declare_property_null(NS(MqBufferS), ID(__buf), ZEND_ACC_PRIVATE TSRMLS_CC);
 }
+
 
 

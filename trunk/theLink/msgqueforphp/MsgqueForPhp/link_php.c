@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/link_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/link_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -103,5 +103,6 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkGetTargetIdent)
 
 void NS(MqS_Link_Init)(TSRMLS_D) {
 }
+
 
 

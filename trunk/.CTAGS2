@@ -79,7 +79,7 @@ cp $D/tags .
   #ctags -a $ADD *.py
 }
 
-[[ $(basename $PWD) == "phpmsgque" || $(basename $PWD) == "MsgqueForPhp" ]] && {
+[[ $(basename $PWD) == "msgqueforphp" || $(basename $PWD) == "MsgqueForPhp" ]] && {
   find $HOME/src/php-5.3.3 -name "*.[ch]" | \
     xargs ctags -a $ADD
   find $HOME/ext/x86_64-suse-linux/thread/include/php -name "*.[h]" | \
@@ -128,4 +128,5 @@ cp $D/tags .
 [[ $DO == "yes" ]] && ctags -a $ADD -I NS *.[ch] 
 
 exit 0
+
 

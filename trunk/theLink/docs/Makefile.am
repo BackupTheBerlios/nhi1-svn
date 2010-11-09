@@ -23,8 +23,8 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/pymsgque/*.h \
 		$(top_srcdir)/theLink/rubymsgque/*.c \
 		$(top_srcdir)/theLink/rubymsgque/*.h \
-		$(top_srcdir)/theLink/phpmsgque/MsgqueForPhp/*.c \
-		$(top_srcdir)/theLink/phpmsgque/MsgqueForPhp/*.h \
+		$(top_srcdir)/theLink/msgqueforphp/MsgqueForPhp/*.c \
+		$(top_srcdir)/theLink/msgqueforphp/MsgqueForPhp/*.h \
 		$(top_srcdir)/theLink/tclmsgque/*.c \
 		$(top_srcdir)/theLink/tclmsgque/*.h \
 		$(top_srcdir)/theLink/ccmsgque/*.cc \
@@ -38,5 +38,6 @@ html: $(DX_DEPEND) $(DX_DIST)
 	${SHELL} doxygen.sh -usedot -release ALL
 
 EXTRA_DIST = $(DX_DIST)
+
 
 

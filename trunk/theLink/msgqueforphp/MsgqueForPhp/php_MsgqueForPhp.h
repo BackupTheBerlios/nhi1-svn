@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/php_MsgqueForPhp.h
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/php_MsgqueForPhp.h
  *  \brief      \$Id: php_MsgqueForPhp.h 258 2010-10-26 19:38:14Z aotto1968 $
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -63,5 +63,6 @@ ZEND_END_MODULE_GLOBALS(MsgqueForPhp)
 #endif
 
 #endif	/* PHP_PHPMSGQUE_H */
+
 
 

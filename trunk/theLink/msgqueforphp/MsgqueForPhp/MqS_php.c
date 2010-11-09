@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/MqS_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/MqS_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -642,6 +642,7 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+
 
 
 

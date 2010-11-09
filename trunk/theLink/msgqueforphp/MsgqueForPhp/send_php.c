@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/send_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/send_php.c
  *  \brief      \$Id: LbMain 265 2010-11-01 17:39:21Z aotto1968 $
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -168,6 +168,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendERROR)
 
 void NS(MqS_Send_Init)(void) {
 }
+
 
 
 

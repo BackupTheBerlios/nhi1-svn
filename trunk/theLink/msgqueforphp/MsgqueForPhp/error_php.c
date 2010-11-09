@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/error_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/error_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -87,6 +87,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ErrorPrint)
 
 void NS(MqS_Error_Init)(TSRMLS_D) {
 }
+
 
 
 

@@ -171,7 +171,7 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		theLink/javamsgque/Makefile theLink/example/java/Makefile theLink/javamsgque/Manifest.txt
 		  theLink/pymsgque/Makefile theLink/example/python/Makefile
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
-		      theLink/phpmsgque/Makefile theLink/example/php/Makefile theLink/phpmsgque/php.ini
+		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
 			    theLink/example/vb/Makefile
@@ -182,3 +182,4 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 
 
 AC_OUTPUT
+

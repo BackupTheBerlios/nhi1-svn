@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/service_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/service_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -114,6 +114,7 @@ error:
 
 void NS(MqS_Service_Init)(TSRMLS_D) {
 }
+
 
 
 

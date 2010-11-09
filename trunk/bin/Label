@@ -17,7 +17,7 @@ array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
-    ./theLink/phpmsgque		{ php.ini.in .phpini }
+    ./theLink/msgqueforphp		{ php.ini.in .phpini }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./theLink/tests		{ README.tests .sh }
     ./win			{ README.win .sh }
@@ -66,8 +66,8 @@ array set LABELIGNORE {
     ./theLink/ccmsgque		{ .libs .deps *.lo *.o *.in Makefile *.la tags *.sw* }
     ./theLink/csmsgque		{ Makefile *.in tags *.dll *.exe .vimrc .libs .deps libtest* *.mdb 
 				  *.sw* .vpath_hook }
-    ./theLink/phpmsgque		{ Makefile Makefile.in test.php php.ini tags }
-    ./theLink/phpmsgque/MsgqueForPhp {
+    ./theLink/msgqueforphp		{ Makefile Makefile.in test.php php.ini tags }
+    ./theLink/msgqueforphp/MsgqueForPhp {
 acinclude.m4    config.sub     include          Makefile            modules       tags
 aclocal.m4      configure      install-sh       Makefile.fragments  MsgqueForPhp.la  tests
 autom4te.cache  config.log     configure.in     libtool       Makefile.global     tmp-php.ini
@@ -94,7 +94,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				    Makefile mqconfig.h NHI1-*.tar.gz doxygen.* doxygen-doc distcheck.out
 				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
-				    discheck.out phpmsgque *.bak mqconfig.h.in~ *.log .PUT_HTML
+				    discheck.out msgqueforphp *.bak mqconfig.h.in~ *.log .PUT_HTML
 				    .GREP_FOR_SOURCE_CODE .PHP.info
 				}
 }
@@ -119,5 +119,6 @@ set LLabel [list								\
 ]
 
 source $env(FBGBASE)/LbMain
+
 
 

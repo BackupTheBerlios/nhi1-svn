@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/config_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/config_php.c
  *  \brief      \$Id: LbMain 244 2010-10-07 18:12:40Z aotto1968 $
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -76,6 +76,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIoTcp)
 
 void NS(MqS_Config_Init)(TSRMLS_D) {
 }
+
 
 
 

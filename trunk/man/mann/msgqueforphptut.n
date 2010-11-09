@@ -1,8 +1,8 @@
-.TH "phpmsgque Tutorial" n "9 Nov 2010" "Version 4.7" "phpmsgque" \" -*- nroff -*-
+.TH "msgqueforphp Tutorial" n "9 Nov 2010" "Version 4.7" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-phpmsgque Tutorial \- .SH "INDEX"
+msgqueforphp Tutorial \- .SH "INDEX"
 .PP
 \fBINTRODUCTION\fP
 .br
@@ -16,7 +16,7 @@ phpmsgque Tutorial \- .SH "INDEX"
 .br
 .SH "INTRODUCTION"
 .PP
-\fBphpmsgque\fP is the php language binding of the \fBlibmsgque\fP library.
+\fBmsgqueforphp\fP is the php language binding of the \fBlibmsgque\fP library.
 .br
  The library was designed to simplify the client/server development using the following design rules:
 .IP "1." 4
@@ -28,7 +28,7 @@ processor hardware independent
 .PP
 The php language binding provide the following basic components:
 .IP "\(bu" 2
-abstract class of the \fBphpmsgque\fP object: \fB$ctx=new MqS()\fP
+abstract class of the \fBmsgqueforphp\fP object: \fB$ctx=new MqS()\fP
 .IP "\(bu" 2
 interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
@@ -44,14 +44,14 @@ adding and removing \fBservices\fP
 .PP
 The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
 .SS "UNIX"
-The example from the tutorial is using the \fBautomake\fP build-environment from the \fBphpmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/php/Makefile.am\fP 
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBmsgqueforphp\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/php/Makefile.am\fP 
 .PP
 \fBno\fP build necessary
 .SS "WINDOWS"
 The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
 .SH "SERVER"
 .PP
-A \fBphpmsgque\fP server requires the following setup:
+A \fBmsgqueforphp\fP server requires the following setup:
 .IP "1." 4
 file: \fCexample/php/MyServer.php\fP 
 .IP "2." 4
@@ -140,7 +140,7 @@ Services are created with the \fB$ctx->ServiceCreate(string:token, callback)\fP 
 The \fBSERVICE CALLBACK\fP is called for every incoming \fIservice-request\fP which belongs to token.
 .SH "CLIENT"
 .PP
-A \fBphpmsgque\fP client requires the following setup:
+A \fBmsgqueforphp\fP client requires the following setup:
 .IP "1." 4
 an instance of the abstract class \fB$ctx=new MqS()\fP
 .PP
@@ -244,4 +244,5 @@ $srv->Exit();
  
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.
+

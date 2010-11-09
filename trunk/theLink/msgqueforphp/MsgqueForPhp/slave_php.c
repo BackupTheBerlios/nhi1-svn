@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/slave_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/slave_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -96,6 +96,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveIs)
 
 void NS(MqS_Slave_Init)(TSRMLS_D) {
 }
+
 
 
 

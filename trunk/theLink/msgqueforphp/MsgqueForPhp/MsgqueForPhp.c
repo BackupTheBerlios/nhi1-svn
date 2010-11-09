@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/MsgqueForPhp.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/MsgqueForPhp.c
  *  \brief      \$Id: MsgqueForPhp.c 280 2010-11-08 19:22:52Z aotto1968 $
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -208,4 +208,5 @@ PHP_FUNCTION(confirm_MsgqueForPhp_compiled)
  * vim600: noet sw=4 ts=4 fdm=marker
  * vim<600: noet sw=4 ts=4
  */
+
 

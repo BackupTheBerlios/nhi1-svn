@@ -33,7 +33,7 @@ SUBDIRS += csmsgque
 SUBDIRS += example/csharp
 endif
 if USE_PHP
-SUBDIRS += phpmsgque
+SUBDIRS += msgqueforphp
 SUBDIRS += example/php
 endif
 if USE_PERL
@@ -50,3 +50,4 @@ SUBDIRS += example/vb
 endif
 SUBDIRS += acmds docs
 #SUBDIRS += docs
+

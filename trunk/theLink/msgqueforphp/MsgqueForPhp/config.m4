@@ -1,5 +1,5 @@
 dnl
-dnl  \file       theLink/phpmsgque/MsgqueForPhp/config.m4
+dnl  \file       theLink/msgqueforphp/MsgqueForPhp/config.m4
 dnl  \brief      \$Id$
 dnl  
 dnl  (C) 2010 - NHI - #1 - Project - Group
@@ -53,4 +53,5 @@ if test "x$enable_symbols" = "xyes"; then
   CPPFLAGS="-D_DEBUG $CPPFLAGS"
 fi
 AC_MSG_RESULT($symbol)
+
 

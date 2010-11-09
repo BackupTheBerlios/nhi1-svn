@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/phpmsgque/MsgqueForPhp/misc_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/misc_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -199,5 +199,6 @@ enum MqErrorE NS(ProcInit) (
 
 void NS(Misc_Init)(TSRMLS_D) {
 }
+
 
 

@@ -19,8 +19,8 @@ ENABLED_SECTIONS    += PHP
 ENABLED_SECTIONS    += DAEMON
 EXAMPLE_PATH	    += $(SRCDIR)/example/php
 
-ALIASES		    += "self=phpmsgque"
-ALIASES		    += "selftut=phpmsgquetut"
+ALIASES		    += "self=msgqueforphp"
+ALIASES		    += "selftut=msgqueforphptut"
 ALIASES		    += "NS{1}=php_\1"
 ALIASES		    += "lang=php"
 ALIASES		    += "fileextension=php"
@@ -306,5 +306,6 @@ try { \n\
   if ($ctx->ErrorIsEXIT()) $ctx->ErrorReset(); \n\
 } \n\
 \endcode"
+
 
 

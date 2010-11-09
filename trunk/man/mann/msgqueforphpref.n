@@ -1,8 +1,8 @@
-.TH "phpmsgque" n "9 Nov 2010" "Version 4.7" "phpmsgque" \" -*- nroff -*-
+.TH "msgqueforphp" n "9 Nov 2010" "Version 4.7" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-phpmsgque \- The \fBphp\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
+msgqueforphp \- The \fBphp\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
 \fB# php.ini: extension='MsgqueForPhp.so'\fP
@@ -1770,7 +1770,7 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJEC
 .RE
 .PP
 .SS "$ctx->ErrorSet(MqSException:$ex)"
-convert a \fIclass MqSException $ex\fP into a phpmsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
+convert a \fIclass MqSException $ex\fP into a msgqueforphp conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "$ctx->ErrorSetCONTINUE()"
 signal end of processing in an \fBIEvent\fP callback 
 .SS "$ctx->ErrorSetEXIT()"
@@ -1977,5 +1977,6 @@ php, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PY
 php, unix, socket, message, msgque 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for phpmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.
+
 

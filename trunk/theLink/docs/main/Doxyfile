@@ -47,7 +47,7 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 			\
 			$(DOCDIR)/../perlmsgque/perlmsgque.tag=perlmsgque \
 			\
-			$(DOCDIR)/../phpmsgque/phpmsgque.tag=phpmsgque \
+			$(DOCDIR)/../msgqueforphp/msgqueforphp.tag=msgqueforphp \
 			\
 			$(DOCDIR)/../vbmsgque/vbmsgque.tag=vbmsgque
 
@@ -76,3 +76,4 @@ ALIASES             += "RNSC{1}=\AllLngTxtC{\1}"
 ALIASES             += "RNSC{2}=\AllLngTxtC{\1,\2}"
 
 ENABLED_SECTIONS    += Data
+
