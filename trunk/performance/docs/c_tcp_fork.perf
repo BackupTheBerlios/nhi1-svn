@@ -1,11 +1,11 @@
 > nothread/NHI1-0.9/theLink/tests/server --tcp --host localhost --port 7777 --fork
 > nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7777
-C> (client:16646) [2010-11-09:09-36-52] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:16646) [2010-11-09:09-36-52] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       7.83
-C> (client:16646) [2010-11-09:09-36-53] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      14.48
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      33.77
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-statistics]:                  parent create:     780.50
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-statistics]:                  parent delete:     302.33
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-statistics]:                   child create:     213.25
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-statistics]:                   child delete:      61.34
-C> (client:16646) [2010-11-09:09-36-57] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+C> (client:16436) [2010-11-09:21-30-43] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:16436) [2010-11-09:21-30-43] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       2.67
+C> (client:16436) [2010-11-09:21-30-44] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       4.83
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      25.76
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-statistics]:                  parent create:     380.84
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-statistics]:                  parent delete:     124.17
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-statistics]:                   child create:      78.59
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-statistics]:                   child delete:      38.71
+C> (client:16436) [2010-11-09:21-30-47] [0-0-0-0x624bc0-main]: end: ----------------------------------------

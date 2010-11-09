@@ -1,11 +1,11 @@
 > thread/NHI1-0.9/theLink/tests/ccserver --tcp --host localhost --port 7781 --thread
 > thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7781
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-37] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-37] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       2.99
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-37] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.66
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      26.80
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-statistics]:                  parent create:     252.52
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-statistics]:                  parent delete:      78.21
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-statistics]:                   child create:      85.62
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-statistics]:                   child delete:      40.73
-C> (client:17672:0x7fa9dd0f7700) [2010-11-09:09-37-41] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-27] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-27] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       3.01
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-27] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.38
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      26.30
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-statistics]:                  parent create:     242.53
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-statistics]:                  parent delete:      78.93
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-statistics]:                   child create:      84.00
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-statistics]:                   child delete:      39.60
+C> (client:17460:0x7f404bba0700) [2010-11-09:21-31-31] [0-0-0-0x624bc0-main]: end: ----------------------------------------

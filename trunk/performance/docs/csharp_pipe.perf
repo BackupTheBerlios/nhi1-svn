@@ -1,10 +1,10 @@
 > thread/NHI1-0.9/theLink/tests/client --all @ mono thread/NHI1-0.9/theLink/tests/csserver.exe
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-06] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-06] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       3.58
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-07] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       5.98
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-10] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      18.97
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-12] [0-0-0-0x6249a0-statistics]:                  parent create:   24607.10
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-12] [0-0-0-0x6249a0-statistics]:                  parent delete:    2705.04
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-13] [0-0-0-0x6249a0-statistics]:                   child create:     130.25
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-13] [0-0-0-0x6249a0-statistics]:                   child delete:      31.11
-C> (client:25233:0x7fa7f9118700) [2010-11-09:09-41-13] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-53] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-53] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       3.49
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-53] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       5.90
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-56] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      18.98
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-59] [0-0-0-0x6249a0-statistics]:                  parent create:   24183.76
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-59] [0-0-0-0x6249a0-statistics]:                  parent delete:    2470.12
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-59] [0-0-0-0x6249a0-statistics]:                   child create:     131.27
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-59] [0-0-0-0x6249a0-statistics]:                   child delete:      30.16
+C> (client:25021:0x7f1e06ea9700) [2010-11-09:21-34-59] [0-0-0-0x6249a0-main]: end: ----------------------------------------

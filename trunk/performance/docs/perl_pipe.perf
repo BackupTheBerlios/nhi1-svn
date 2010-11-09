@@ -1,8 +1,10 @@
 > nothread/NHI1-0.9/theLink/tests/client --all @ perl nothread/NHI1-0.9/theLink/tests/server.pl
-Bareword "Net::PerlMsgque::MqS::WAIT_ONCE" not allowed while "strict subs" in use at nothread/NHI1-0.9/theLink/tests/server.pl line 496.
-Bareword "Net::PerlMsgque::MqS::WAIT_FOREVER" not allowed while "strict subs" in use at nothread/NHI1-0.9/theLink/tests/server.pl line 822.
-Execution of nothread/NHI1-0.9/theLink/tests/server.pl aborted due to compilation errors.
-C> (client) [MqLinkConnect] can not start server 'perl'
-C> (client) found in function "MqLinkConnect" at file "link.c"
-C> (client) found in function "MqLinkCreate" at file "link.c"
-C> (client) use '-h' or '--help' for usage
+C> (client:26582) [2010-11-09:21-35-28] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:26582) [2010-11-09:21-35-29] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       7.24
+C> (client:26582) [2010-11-09:21-35-29] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       9.43
+C> (client:26582) [2010-11-09:21-35-32] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.77
+C> (client:26582) [2010-11-09:21-35-54] [0-0-0-0x6249a0-statistics]:                  parent create:  211835.24
+C> (client:26582) [2010-11-09:21-35-54] [0-0-0-0x6249a0-statistics]:                  parent delete:     469.74
+C> (client:26582) [2010-11-09:21-35-54] [0-0-0-0x6249a0-statistics]:                   child create:     113.26
+C> (client:26582) [2010-11-09:21-35-54] [0-0-0-0x6249a0-statistics]:                   child delete:      38.22
+C> (client:26582) [2010-11-09:21-35-54] [0-0-0-0x6249a0-main]: end: ----------------------------------------

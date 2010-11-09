@@ -1,11 +1,11 @@
 > python nothread/NHI1-0.9/theLink/tests/server.py --tcp --host localhost --port 7788 --fork
 > nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7788
-C> (client:23361) [2010-11-09:09-40-02] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:23361) [2010-11-09:09-40-02] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.69
-C> (client:23361) [2010-11-09:09-40-03] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      12.76
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      31.54
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                  parent create:    1000.92
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                  parent delete:    3834.05
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                   child create:     143.66
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                   child delete:      48.98
-C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+C> (client:23150) [2010-11-09:21-33-50] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:23150) [2010-11-09:21-33-50] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       4.84
+C> (client:23150) [2010-11-09:21-33-50] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.11
+C> (client:23150) [2010-11-09:21-33-54] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      30.49
+C> (client:23150) [2010-11-09:21-33-54] [0-0-0-0x624bc0-statistics]:                  parent create:     971.89
+C> (client:23150) [2010-11-09:21-33-54] [0-0-0-0x624bc0-statistics]:                  parent delete:    3625.81
+C> (client:23150) [2010-11-09:21-33-54] [0-0-0-0x624bc0-statistics]:                   child create:     134.34
+C> (client:23150) [2010-11-09:21-33-55] [0-0-0-0x624bc0-statistics]:                   child delete:      47.52
+C> (client:23150) [2010-11-09:21-33-55] [0-0-0-0x624bc0-main]: end: ----------------------------------------

@@ -1,10 +1,10 @@
 > thread/NHI1-0.9/theLink/tests/client --all @ java example.Server
-C> (client:19227:0x7feabc829700) [2010-11-09:09-38-53] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:19227:0x7feabc829700) [2010-11-09:09-38-54] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.89
-C> (client:19227:0x7feabc829700) [2010-11-09:09-38-54] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       7.63
-C> (client:19227:0x7feabc829700) [2010-11-09:09-38-57] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      20.09
-C> (client:19227:0x7feabc829700) [2010-11-09:09-39-07] [0-0-0-0x6249a0-statistics]:                  parent create:   99463.91
-C> (client:19227:0x7feabc829700) [2010-11-09:09-39-07] [0-0-0-0x6249a0-statistics]:                  parent delete:    1694.66
-C> (client:19227:0x7feabc829700) [2010-11-09:09-39-07] [0-0-0-0x6249a0-statistics]:                   child create:     173.51
-C> (client:19227:0x7feabc829700) [2010-11-09:09-39-07] [0-0-0-0x6249a0-statistics]:                   child delete:      29.07
-C> (client:19227:0x7feabc829700) [2010-11-09:09-39-07] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-42] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-42] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.82
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-43] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       7.03
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-46] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      20.23
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-55] [0-0-0-0x6249a0-statistics]:                  parent create:   97485.99
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-56] [0-0-0-0x6249a0-statistics]:                  parent delete:    1803.92
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-56] [0-0-0-0x6249a0-statistics]:                   child create:     168.48
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-56] [0-0-0-0x6249a0-statistics]:                   child delete:      28.19
+C> (client:19016:0x7f3a7e417700) [2010-11-09:21-32-56] [0-0-0-0x6249a0-main]: end: ----------------------------------------

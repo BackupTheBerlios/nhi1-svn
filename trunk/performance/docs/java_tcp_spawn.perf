@@ -1,11 +1,11 @@
 > java example.Server --tcp --host localhost --port 7787 --spawn
 > thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7787
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-16] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-16] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.85
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-17] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       9.06
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-20] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      28.70
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-30] [0-0-0-0x624bc0-statistics]:                  parent create:   98855.65
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-30] [0-0-0-0x624bc0-statistics]:                  parent delete:    1855.80
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-31] [0-0-0-0x624bc0-statistics]:                   child create:     182.38
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-31] [0-0-0-0x624bc0-statistics]:                   child delete:      42.07
-C> (client:20609:0x7f1fde265700) [2010-11-09:09-39-31] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-04] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-05] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.73
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-05] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       8.53
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-09] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      27.89
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-18] [0-0-0-0x624bc0-statistics]:                  parent create:   96952.55
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-18] [0-0-0-0x624bc0-statistics]:                  parent delete:    1846.29
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-19] [0-0-0-0x624bc0-statistics]:                   child create:     176.11
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-19] [0-0-0-0x624bc0-statistics]:                   child delete:      39.26
+C> (client:20398:0x7f8244bc3700) [2010-11-09:21-33-19] [0-0-0-0x624bc0-main]: end: ----------------------------------------
