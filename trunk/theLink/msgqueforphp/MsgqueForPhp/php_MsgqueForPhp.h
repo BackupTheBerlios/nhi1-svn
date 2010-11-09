@@ -10,18 +10,18 @@
  *              please contact AUTHORS for additional information
  */
 
-#ifndef PHP_PHPMSGQUE_H
-#define PHP_PHPMSGQUE_H
+#ifndef PHP_MSGQUEFORPHP_H
+#define PHP_MSGQUEFORPHP_H
 
 extern zend_module_entry MsgqueForPhp_module_entry;
 #define phpext_MsgqueForPhp_ptr &MsgqueForPhp_module_entry
 
 #ifdef PHP_WIN32
-#	define PHP_PHPMSGQUE_API __declspec(dllexport)
+#	define PHP_MSGQUEFORPHP_API __declspec(dllexport)
 #elif defined(__GNUC__) && __GNUC__ >= 4
-#	define PHP_PHPMSGQUE_API __attribute__ ((visibility("default")))
+#	define PHP_MSGQUEFORPHP_API __attribute__ ((visibility("default")))
 #else
-#	define PHP_PHPMSGQUE_API
+#	define PHP_MSGQUEFORPHP_API
 #endif
 
 #ifdef ZTS
@@ -51,18 +51,19 @@ ZEND_END_MODULE_GLOBALS(MsgqueForPhp)
    variables used by that function, or better yet, pass in TSRMLS_CC
    after the last function argument and declare your utility function
    with TSRMLS_DC after the last declared argument.  Always refer to
-   the globals in your function as PHPMSGQUE_G(variable).  You are 
+   the globals in your function as MSGQUEFORPHP_G(variable).  You are 
    encouraged to rename these macros something shorter, see
    examples in any other php module directory.
 */
 
 #ifdef ZTS
-#define PHPMSGQUE_G(v) TSRMG(MsgqueForPhp_globals_id, zend_MsgqueForPhp_globals *, v)
+#define MSGQUEFORPHP_G(v) TSRMG(MsgqueForPhp_globals_id, zend_MsgqueForPhp_globals *, v)
 #else
-#define PHPMSGQUE_G(v) (MsgqueForPhp_globals.v)
+#define MSGQUEFORPHP_G(v) (MsgqueForPhp_globals.v)
 #endif
 
-#endif	/* PHP_PHPMSGQUE_H */
+#endif	/* PHP_MSGQUEFORPHP_H */
+
 
 
 

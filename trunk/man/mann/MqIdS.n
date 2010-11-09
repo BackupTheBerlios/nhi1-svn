@@ -28,19 +28,19 @@ data type for process/thread identification
 
 This struct is used as storage for the process or the thread identification handle. 
 .PP
-Definition at line 4079 of file msgque.h.
+Definition at line 4081 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "enum \fBMqIdSE\fP \fBMqIdS.type\fP"
 .PP
 signal type of \fIval\fP data 
 .PP
-Definition at line 4080 of file msgque.h.
+Definition at line 4082 of file msgque.h.
 .SS "\fBMQ_IDNT\fP \fBMqIdS.val\fP"
 .PP
 process or thread handle 
 .PP
-Definition at line 4081 of file msgque.h.
+Definition at line 4083 of file msgque.h.
 
 .SH "Author"
 .PP 

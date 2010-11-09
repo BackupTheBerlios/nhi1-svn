@@ -58,8 +58,11 @@ TAGFILES	    =	$(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque \
 #			$(DOCDIR)/../libmsgque_private/libmsgque_private.tag=libmsgque_private \
 			
 ALIASES		    +=	"private{2}=<A HREF=\"\1msgque_private/index.htm\">\2</A>"
+ALIASES		    +=	"privatefor{2}=<A HREF=\"msgquefor\1_private/index.htm\">\2</A>"
 ALIASES		    +=	"man{2}=\ref \1msgqueref \"\2\""
+ALIASES		    +=	"manfor{2}=\ref msgquefor\1ref \"\2\""
 ALIASES		    +=	"tut{2}=\ref \1msgquetut \"\2\""
+ALIASES		    +=	"tutfor{2}=\ref msgquefor\1tut \"\2\""
 ALIASES		    +=	"apiref{3}=\ref Mq_\2_API \"\3\""
 
 ALIASES             +=  "AllLng{1}=(\ref c_\1 \"C\", \ref cc_\1 \"C++\", \ref cs_\1 \"C#\", \ref java_\1 \"Java\", \ref py_\1 \"Python\", \ref ruby_\1 \"Ruby\", \ref tcl_\1 \"Tcl\", \ref perl_\1 \"Perl\", \ref vb_\1 \"VB.NET\")"

@@ -78,7 +78,7 @@ MqLalS \- Interface between \fBMqS\fP and the Operating-System.
 .PP 
 Interface between \fBMqS\fP and the Operating-System. 
 .PP
-Definition at line 4099 of file msgque.h.
+Definition at line 4101 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "void(* \fBMqLalS.SysAbort\fP)(void)"
@@ -108,7 +108,7 @@ __attribute__((noreturn)) static void SysAbort (void) {
 .PP
 additional info: \fCman calloc\fP  
 .PP
-Definition at line 4101 of file msgque.h.
+Definition at line 4103 of file msgque.h.
 .SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .PP
 \fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP 
@@ -243,28 +243,28 @@ additional info: \fCman fork\fP
 .PP
  
 .PP
-Definition at line 4111 of file msgque.h.
+Definition at line 4113 of file msgque.h.
 .SS "\fBMqSysFreeF\fP \fBMqLalS.SysFree\fP"
 .PP
 \fBfree\fP syscall  
 .PP
 additional info: \fCman free\fP  
 .PP
-Definition at line 4107 of file msgque.h.
+Definition at line 4109 of file msgque.h.
 .SS "\fBMqSysMallocF\fP \fBMqLalS.SysMalloc\fP"
 .PP
 \fBmalloc\fP syscall  
 .PP
 additional info: \fCman malloc\fP  
 .PP
-Definition at line 4103 of file msgque.h.
+Definition at line 4105 of file msgque.h.
 .SS "\fBMqSysReallocF\fP \fBMqLalS.SysRealloc\fP"
 .PP
 \fBrealloc\fP syscall  
 .PP
 additional info: \fCman realloc\fP  
 .PP
-Definition at line 4105 of file msgque.h.
+Definition at line 4107 of file msgque.h.
 .SS "\fBMqSysSelectF\fP \fBMqLalS.SysSelect\fP"
 .PP
 \fBselect\fP syscall  
@@ -286,7 +286,7 @@ read more at: \fCman 2 select\fP
 .PP
  
 .PP
-Definition at line 4109 of file msgque.h.
+Definition at line 4111 of file msgque.h.
 .SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
 \fBfork server create\fP syscall with \fBMqS\fP error plugin 

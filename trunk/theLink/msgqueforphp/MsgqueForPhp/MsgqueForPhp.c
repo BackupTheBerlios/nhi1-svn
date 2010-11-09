@@ -52,7 +52,7 @@ zend_module_entry MsgqueForPhp_module_entry = {
 };
 /* }}} */
 
-#ifdef COMPILE_DL_PHPMSGQUE
+#ifdef COMPILE_DL_MSGQUEFORPHP
 ZEND_GET_MODULE(MsgqueForPhp)
 #endif
 
@@ -208,5 +208,6 @@ PHP_FUNCTION(confirm_MsgqueForPhp_compiled)
  * vim600: noet sw=4 ts=4 fdm=marker
  * vim<600: noet sw=4 ts=4
  */
+
 
 

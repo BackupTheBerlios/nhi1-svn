@@ -3770,10 +3770,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
 /// \brief finish the \e send-data-block on the server and optional return the results.
 /// \details Every \e service-handler have to use this function at the end to return the
 /// results or the error. If an \e error is returned the local \e error-object is reset.
-/// If no results have to be returned (\RNS{SendEND})
-/// - if a transaction is ongoing this function return the answer.
-/// - if the answer is an empty package no previous #MqSendSTART is required.
-/// - if no transaction is ongoing this function does just return the error code.
+/// The following behaviour is used:
+/// - if a shortterm transaction is ongoing this function return the data or the error to
+///   the link target
+/// - if the answer does not return any data no previous #MqSendSTART is required.
+/// - if no transaction is ongoing this function does just return. If an error is available
+///   report an asyncrone error to the link target.
 /// .
 /// \ctx
 /// \retException

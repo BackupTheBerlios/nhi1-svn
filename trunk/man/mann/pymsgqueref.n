@@ -1013,13 +1013,13 @@ an \fBERROR OBJECT\fP on error
 .SS "ctx.SendRETURN()"
 finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
-Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. If no results have to be returned (\fBctx.SendEND(token)\fP)
+Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. The following behaviour is used:
 .IP "\(bu" 2
-if a transaction is ongoing this function return the answer.
+if a shortterm transaction is ongoing this function return the data or the error to the link target
 .IP "\(bu" 2
-if the answer is an empty package no previous \fBMqSendSTART\fP is required.
+if the answer does not return any data no previous \fBMqSendSTART\fP is required.
 .IP "\(bu" 2
-if no transaction is ongoing this function does just return the error code.
+if no transaction is ongoing this function does just return. If an error is available report an asyncrone error to the link target.
 .PP
 \fBParameters:\fP
 .RS 4

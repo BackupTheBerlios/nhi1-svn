@@ -51,7 +51,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\man{ruby,YES}</TD>
     <TD>\man{tcl,YES}</TD>
     <TD>\man{perl,YES}</TD>
-    <TD>\man{php,YES}</TD>
+    <TD>\manfor{php,YES}</TD>
     <TD>\man{vb,YES}</TD>
   </TR>
   <TR>  
@@ -64,7 +64,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\tut{ruby,YES}</TD>
     <TD>\tut{tcl,YES}</TD>
     <TD>\tut{perl,YES}</TD>
-    <TD>\tut{php,YES}</TD>
+    <TD>\tutfor{php,YES}</TD>
     <TD>\tut{vb,YES}</TD>
   </TR>
   <TR>  
@@ -74,6 +74,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\apiref{cs,Cs,YES}</TD>
     <TD>\apiref{java,Java,YES}</TD>
     <TD>NO</TD>   
+    <TD>NO</TD>
     <TD>NO</TD>
     <TD>NO</TD>
     <TD>NO</TD>
@@ -89,7 +90,8 @@ setup and maintain the link and is responsible for:\n
     <TD>\private{ruby,YES}</TD>
     <TD>\private{tcl,YES}</TD>
     <TD>NO</TD>   
-    <TD>\private{php,YES}</TD>
+    <TD>\privatefor{php,YES}</TD>
+    <TD>NO</TD>   
   </TR>
 </TABLE>
 
