@@ -12,9 +12,9 @@
 
 if USE_PHP
 
-PHPMAKEFILE  =	PhpMsgque/Makefile
-PHPCONFIGURE    =  --with-PhpMsgque=$(abs_builddir)/../libmsgque
-PHPCONFIGURE    +=  --with-PhpMsgqueSrc=$(abs_srcdir)/../libmsgque
+PHPMAKEFILE  =	MsgqueForPhp/Makefile
+PHPCONFIGURE    =  --with-MsgqueForPhp=$(abs_builddir)/../libmsgque
+PHPCONFIGURE    +=  --with-MsgqueForPhpSrc=$(abs_srcdir)/../libmsgque
 PHPCONFIGURE    += --with-php-config=$(PHPCONFIG)
 
 if DEBUG
@@ -43,53 +43,54 @@ PHPCONFIGURE    += --pdfdir=$(pdfdir)
 PHPCONFIGURE    += --psdir=$(psdir)
 
 
-PhpMsgque/configure: PhpMsgque/config.m4
-	-test ! -d PhpMsgque && cp -pr $(srcdir)/PhpMsgque . && chmod -R u+w PhpMsgque && touch PhpMsgque/.distclean
-	cd PhpMsgque && $(PHPIZE)
+MsgqueForPhp/configure: MsgqueForPhp/config.m4
+	-test ! -d MsgqueForPhp && cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp && touch MsgqueForPhp/.distclean
+	cd MsgqueForPhp && $(PHPIZE)
 
-$(PHPMAKEFILE): PhpMsgque/configure Makefile.am
-	cd PhpMsgque && ./configure $(PHPCONFIGURE)
+$(PHPMAKEFILE): MsgqueForPhp/configure Makefile.am
+	cd MsgqueForPhp && ./configure $(PHPCONFIGURE)
 
 all-local: $(PHPMAKEFILE)
-	cd PhpMsgque && $(MAKE) $(AM_MAKEFLAGS)
+	cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS)
 
 clean-local: $(PHPMAKEFILE)
-	cd PhpMsgque && $(MAKE) $(AM_MAKEFLAGS) clean
+	cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) clean
 
-#cd PhpMsgque && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
+#cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 install-exec-local:
-	cp PhpMsgque/modules/* "$(DESTDIR)/$(pkglibdir)"
-	echo "extension=\"$(pkglibdir)/PhpMsgque.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
+	cp MsgqueForPhp/modules/* "$(DESTDIR)/$(pkglibdir)"
+	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 uninstall-local:
-	rm -f "$(DESTDIR)/$(pkglibdir)"/PhpMsgque.*
+	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
 	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 distclean-local:
-	-test -f PhpMsgque/.distclean && rm -fr PhpMsgque
+	-test -f MsgqueForPhp/.distclean && rm -fr MsgqueForPhp
 
 endif
 
 EXTRA_DIST = \
-	PhpMsgque/.cvsignore \
-	PhpMsgque/config.m4 \
-	PhpMsgque/config.w32 \
-	PhpMsgque/CREDITS \
-	PhpMsgque/PhpMsgque.php \
-	PhpMsgque/tests/001.phpt \
-	PhpMsgque/msgque_php.h \
-	PhpMsgque/php_PhpMsgque.h \
-	PhpMsgque/PhpMsgque.c \
-	PhpMsgque/MqS_php.c \
-	PhpMsgque/MqBufferS_php.c \
-	PhpMsgque/MqSException_php.c \
-	PhpMsgque/config_php.c \
-	PhpMsgque/link_php.c \
-	PhpMsgque/read_php.c \
-	PhpMsgque/service_php.c \
-	PhpMsgque/error_php.c \
-	PhpMsgque/misc_php.c \
-	PhpMsgque/send_php.c \
-	PhpMsgque/slave_php.c
+	MsgqueForPhp/.cvsignore \
+	MsgqueForPhp/config.m4 \
+	MsgqueForPhp/config.w32 \
+	MsgqueForPhp/CREDITS \
+	MsgqueForPhp/MsgqueForPhp.php \
+	MsgqueForPhp/tests/001.phpt \
+	MsgqueForPhp/msgque_php.h \
+	MsgqueForPhp/php_MsgqueForPhp.h \
+	MsgqueForPhp/MsgqueForPhp.c \
+	MsgqueForPhp/MqS_php.c \
+	MsgqueForPhp/MqBufferS_php.c \
+	MsgqueForPhp/MqSException_php.c \
+	MsgqueForPhp/config_php.c \
+	MsgqueForPhp/link_php.c \
+	MsgqueForPhp/read_php.c \
+	MsgqueForPhp/service_php.c \
+	MsgqueForPhp/error_php.c \
+	MsgqueForPhp/misc_php.c \
+	MsgqueForPhp/send_php.c \
+	MsgqueForPhp/slave_php.c
+
 
 

@@ -1,10 +1,10 @@
 --TEST--
-Check for PhpMsgque presence
+Check for MsgqueForPhp presence
 --SKIPIF--
-<?php if (!extension_loaded("PhpMsgque")) print "skip"; ?>
+<?php if (!extension_loaded("MsgqueForPhp")) print "skip"; ?>
 --FILE--
 <?php 
-echo "PhpMsgque extension is available";
+echo "MsgqueForPhp extension is available";
 /*
 	you can add regression tests for your extension here
 
@@ -18,4 +18,5 @@ echo "PhpMsgque extension is available";
 */
 ?>
 --EXPECT--
-PhpMsgque extension is available
+MsgqueForPhp extension is available
+
