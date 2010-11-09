@@ -625,6 +625,8 @@ AC_DEFUN([SC_ENABLE_PHP], [
     AC_PATH_PROG([PHP], [php]) 
     AC_ARG_VAR([PHPIZE], [path to the 'phpize' tool])
     AC_PATH_PROG([PHPIZE], [phpize]) 
+    AC_ARG_VAR([PHPCONFIG], [path to the 'php-config' tool])
+    AC_PATH_PROG([PHPCONFIG], [php-config]) 
   fi
   AC_SUBST([USE_PHP], $enable_php)
   AM_CONDITIONAL([USE_PHP], [test x$enable_php = xyes])

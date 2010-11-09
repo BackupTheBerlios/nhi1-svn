@@ -15,7 +15,7 @@ if USE_PERL
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
 PERLDEPEND    =	Net-PerlMsgque/Makefile.PL Net-PerlMsgque/typemap Net-PerlMsgque/lib/Net/PerlMsgque.pm
 PERLCONFIG    =	  PREFIX="$(prefix)" \
-		  INC="-Wall -I. -I../$(srcdir)/../libmsgque" \
+		  INC="-Wall -I. -I../$(top_builddir) -I../$(srcdir)/../libmsgque" \
 		  OBJECT="\$$(O_FILES) ../$(builddir)/../libmsgque/.libs/liblocal*.o"
 
 if DEBUG

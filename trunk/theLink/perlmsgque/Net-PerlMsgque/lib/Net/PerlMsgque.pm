@@ -36,6 +36,20 @@ Net::PerlMsgque::Init($^X, $0);
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
 
+package Net::PerlMsgque;
+use constant {
+  START_DEFAULT	  => 0,
+  START_FORK	  => 1,
+  START_THREAD	  => 2,
+  START_SPAWN	  => 3,
+  TIMEOUT_DEFAULT => -1,
+  TIMEOUT_USER	  => -2,
+  TIMEOUT_MAX	  => -3,
+  WAIT_NO	  => 0,
+  WAIT_ONCE	  => 1,
+  WAIT_FOREVER	  => 2,
+};
+
 1;
 __END__
 # Below is stub documentation for your module. You'd better edit it!

@@ -1,10 +1,8 @@
-> nothread/NHI1-0.8/theLink/tests/client --all @ perl nothread/NHI1-0.8/theLink/tests/server.pl
-C> (client:15059) [2010-10-22:13-30-15] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:15059) [2010-10-22:13-30-15] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       7.63
-C> (client:15059) [2010-10-22:13-30-16] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       9.63
-C> (client:15059) [2010-10-22:13-30-19] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.97
-C> (client:15059) [2010-10-22:13-30-40] [0-0-0-0x6249a0-statistics]:                  parent create:  210916.02
-C> (client:15059) [2010-10-22:13-30-40] [0-0-0-0x6249a0-statistics]:                  parent delete:     468.62
-C> (client:15059) [2010-10-22:13-30-40] [0-0-0-0x6249a0-statistics]:                   child create:     114.62
-C> (client:15059) [2010-10-22:13-30-40] [0-0-0-0x6249a0-statistics]:                   child delete:      37.44
-C> (client:15059) [2010-10-22:13-30-40] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.9/theLink/tests/client --all @ perl nothread/NHI1-0.9/theLink/tests/server.pl
+Bareword "Net::PerlMsgque::MqS::WAIT_ONCE" not allowed while "strict subs" in use at nothread/NHI1-0.9/theLink/tests/server.pl line 496.
+Bareword "Net::PerlMsgque::MqS::WAIT_FOREVER" not allowed while "strict subs" in use at nothread/NHI1-0.9/theLink/tests/server.pl line 822.
+Execution of nothread/NHI1-0.9/theLink/tests/server.pl aborted due to compilation errors.
+C> (client) [MqLinkConnect] can not start server 'perl'
+C> (client) found in function "MqLinkConnect" at file "link.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
+C> (client) use '-h' or '--help' for usage

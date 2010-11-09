@@ -42,12 +42,13 @@ package main;
   our $srv = new mulserver();
   eval {
     $srv->LinkCreate(@ARGV);
-    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
+    $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

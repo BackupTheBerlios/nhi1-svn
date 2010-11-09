@@ -13,11 +13,11 @@
       <TD>\ref perf-csharp "C#"</TD>
       <TD>\ref perf-java "Java"</TD>
       <TD>\ref perf-perl "Perl"</TD>
+      <TD>\ref perf-php "PHP"</TD>
       <TD>\ref perf-python "Python"</TD>
       <TD>\ref perf-ruby "Ruby"</TD>
       <TD>\ref perf-tcl "Tcl"</TD>
       <TD>\ref perf-vb "VB.NET"</TD>
-      <TD>\b PHP</TD>
     </TR>
     <TR>
       <TD>\ref perf-c-pipe "pipe"</TD>
@@ -25,11 +25,11 @@
       <TD>\ref perf-csharp-pipe "pipe"</TD>
       <TD>\ref perf-java-pipe "pipe"</TD>
       <TD>\ref perf-perl-pipe "pipe"</TD>
+      <TD>\ref perf-php-pipe "pipe"</TD>
       <TD>\ref perf-python-pipe "pipe"</TD>
       <TD>\ref perf-ruby-pipe "pipe"</TD>
       <TD>\ref perf-tcl-pipe "pipe"</TD>
       <TD>\ref perf-vb-pipe "pipe"</TD>
-      <TD>na.</TD>
     </TR>
     <TR>
       <TD>\ref perf-c-uds "uds"</TD>
@@ -37,11 +37,11 @@
       <TD>\ref perf-csharp-uds "uds"</TD>
       <TD>\ref perf-java-uds "uds"</TD>
       <TD>\ref perf-perl-uds "uds"</TD>
+      <TD>\ref perf-php-uds "uds"</TD>
       <TD>\ref perf-python-uds "uds"</TD>
       <TD>\ref perf-ruby-uds "uds"</TD>
       <TD>\ref perf-tcl-uds "uds"</TD>
       <TD>\ref perf-vb-uds "uds"</TD>
-      <TD>na.</TD>
     </TR>
     <TR>
       <TD>\ref perf-c-tcp "tcp"</TD>
@@ -49,11 +49,11 @@
       <TD>\ref perf-csharp-tcp "tcp"</TD>
       <TD>\ref perf-java-tcp "tcp"</TD>
       <TD>\ref perf-perl-tcp "tcp"</TD>
+      <TD>\ref perf-php-tcp "tcp"</TD>
       <TD>\ref perf-python-tcp "tcp"</TD>
       <TD>\ref perf-ruby-tcp "tcp"</TD>
       <TD>\ref perf-tcl-tcp "tcp"</TD>
       <TD>\ref perf-vb-tcp "tcp"</TD>
-      <TD>na.</TD>
     </TR>
    </TABLE>
  .
@@ -110,9 +110,6 @@ The following information is important:
   - thread enabled: \e thread
   .
  - the results are time-value per transaction -> as bigger, as slower
- - \e PHP was not able to provide useful API documentation for <B>Zend Engine 2.0</B>
-  - this is interesting because \b Zend is the \b commercial part of the PHP project
-  .
  - \e VB.NET is using the \e CLR dll from \e C#
   - one goal was to prove if the \e CLR language compatibility works -> it does !!
  .
@@ -220,6 +217,25 @@ The following information is important:
  - Using TCP and Fork \dontinclude perl_tcp_fork.perf \until --all
  - Using TCP and Spawn \dontinclude perl_uds_spawn.perf \until --all
  - Using TCP and Thread \dontinclude perl_tcp_thread.perf \until --all
+ .
+
+\section perf-php Detail Perl Setup
+
+\subsection perf-php-pipe Using PIPE
+
+ - Using PIPE \dontinclude php_pipe.perf \until --all
+ .
+
+\subsection perf-php-uds Using UDS
+
+ - Using UDS and Fork \dontinclude php_uds_fork.perf \until --all
+ - Using UDS and Spawn \dontinclude php_uds_spawn.perf \until --all
+ .
+
+\subsection perf-php-tcp Using TCP
+
+ - Using TCP and Fork \dontinclude php_tcp_fork.perf \until --all
+ - Using TCP and Spawn \dontinclude php_uds_spawn.perf \until --all
  .
 
 \section perf-python Detail Python Setup

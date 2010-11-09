@@ -3,6 +3,7 @@
 #include "XSUB.h"
 
 #include "ppport.h"
+#include "mqconfig.h"
 #include "msgque.h"
 #include "debug.h"
 
@@ -199,7 +200,9 @@ static enum MqErrorE FactoryCreate (
   MQ_PTR data,
   struct MqS ** contextP
 ) {
+
 #ifdef MQ_HAS_THREAD
+
   if (create == MQ_FACTORY_NEW_THREAD) {
     perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }

@@ -1,10 +1,10 @@
-> nothread/NHI1-0.8/theLink/tests/client --all @ tclsh nothread/NHI1-0.8/theLink/tests/server.tcl
-C> (client:6449) [2010-10-22:13-20-28] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:6449) [2010-10-22:13-20-28] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       5.59
-C> (client:6449) [2010-10-22:13-20-28] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       8.91
-C> (client:6449) [2010-10-22:13-20-31] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.03
-C> (client:6449) [2010-10-22:13-20-32] [0-0-0-0x6249a0-statistics]:                  parent create:   10222.66
-C> (client:6449) [2010-10-22:13-20-32] [0-0-0-0x6249a0-statistics]:                  parent delete:     220.32
-C> (client:6449) [2010-10-22:13-20-33] [0-0-0-0x6249a0-statistics]:                   child create:     242.19
-C> (client:6449) [2010-10-22:13-20-33] [0-0-0-0x6249a0-statistics]:                   child delete:      37.13
-C> (client:6449) [2010-10-22:13-20-33] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.9/theLink/tests/client --all @ tclsh nothread/NHI1-0.9/theLink/tests/server.tcl
+C> (client:18324) [2010-11-09:09-38-04] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:18324) [2010-11-09:09-38-04] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       5.88
+C> (client:18324) [2010-11-09:09-38-04] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:      10.79
+C> (client:18324) [2010-11-09:09-38-08] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.56
+C> (client:18324) [2010-11-09:09-38-09] [0-0-0-0x6249a0-statistics]:                  parent create:   11647.14
+C> (client:18324) [2010-11-09:09-38-09] [0-0-0-0x6249a0-statistics]:                  parent delete:     218.54
+C> (client:18324) [2010-11-09:09-38-09] [0-0-0-0x6249a0-statistics]:                   child create:     243.40
+C> (client:18324) [2010-11-09:09-38-09] [0-0-0-0x6249a0-statistics]:                   child delete:      37.65
+C> (client:18324) [2010-11-09:09-38-09] [0-0-0-0x6249a0-main]: end: ----------------------------------------

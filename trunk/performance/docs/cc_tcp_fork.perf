@@ -1,11 +1,11 @@
-> nothread/NHI1-0.8/theLink/tests/ccserver --tcp --host localhost --port 7780 --fork
-> nothread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7780
-C> (client:5650) [2010-10-22:13-19-55] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:5650) [2010-10-22:13-19-55] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       2.63
-C> (client:5650) [2010-10-22:13-19-55] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.01
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      25.84
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-statistics]:                  parent create:     408.53
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-statistics]:                  parent delete:     185.80
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-statistics]:                   child create:      82.42
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-statistics]:                   child delete:      39.00
-C> (client:5650) [2010-10-22:13-19-59] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> nothread/NHI1-0.9/theLink/tests/ccserver --tcp --host localhost --port 7780 --fork
+> nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7780
+C> (client:17541) [2010-11-09:09-37-31] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:17541) [2010-11-09:09-37-31] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       3.39
+C> (client:17541) [2010-11-09:09-37-31] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.38
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      26.16
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-statistics]:                  parent create:     429.88
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-statistics]:                  parent delete:     184.74
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-statistics]:                   child create:      83.30
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-statistics]:                   child delete:      38.23
+C> (client:17541) [2010-11-09:09-37-35] [0-0-0-0x624bc0-main]: end: ----------------------------------------

@@ -4085,8 +4085,8 @@ struct MqIdS {
 struct MqSysServerThreadMainS {
   struct MqS * tmpl;		///< calling (parent) context
   struct MqFactoryS   factory;	///< server configuration (memory belongs to caller)
-  struct MqBufferLS * argv;	///< command-line arguments befor #MQ_ALFA, owned by SysServerThread
-  struct MqBufferLS * alfa;	///< command-line arguments after #MQ_ALFA, owned by SysServerThread
+  struct MqBufferLS * argv;	///< command-line arguments befor \b MQ_ALFA, owned by SysServerThread
+  struct MqBufferLS * alfa;	///< command-line arguments after \b MQ_ALFA, owned by SysServerThread
 };
 
 /// \brief initialize a new created thred
@@ -4316,25 +4316,49 @@ MQ_EXTERN void MQ_DECL MqSysFreeP(
 /// \context
 /// \param[in] idP process or thread handle
 /// \retMqErrorE
-#define MqSysWait(context, idP) (*MqLal.SysWait)(context, idP)
+static mq_inline enum MqErrorE MqSysWait (
+  struct MqS * const	context, 
+  const struct MqIdS *  idP
+)
+{
+  return (*MqLal.SysWait)(context, idP);
+};
 
 /// \syscall{usleep}
 /// \context
 /// \param[in] usec the micro (10^-6) seconds to sleep
 /// \retMqErrorE
-#define MqSysUSleep(context, usec) (*MqLal.SysUSleep)(context, usec)
+static mq_inline enum MqErrorE MqSysUSleep (
+  struct MqS * const	context, 
+  unsigned int const	usec
+)
+{
+  return (*MqLal.SysUSleep)(context, usec);
+};
 
 /// \syscall{sleep}
 /// \context
 /// \param[in] sec the seconds to sleep
 /// \retMqErrorE
-#define MqSysSleep(context, sec) (*MqLal.SysSleep)(context, sec)
+static mq_inline enum MqErrorE MqSysSleep (
+  struct MqS * const	context, 
+  unsigned int const	sec
+)
+{
+  return (*MqLal.SysSleep)(context, sec);
+};
 
 /// \syscall{exit}
 /// \param[in] isThread	exit a thread?
 /// \param[in] num exit code
 /// \retMqErrorE
-#define MqSysExit(isThread,num) (*MqLal.SysExit)(isThread,num)
+__attribute__((noreturn)) static mq_inline void MqSysExit (
+  int			isThread, 
+  int			num
+)
+{
+  (*MqLal.SysExit)(isThread,num);
+};
 
 /// \syscall{basename}
 /// \details additional info: <TT>man basename</TT>

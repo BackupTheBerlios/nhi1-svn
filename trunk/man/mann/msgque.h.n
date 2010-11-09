@@ -1,4 +1,4 @@
-.TH "msgque.h" n "8 Nov 2010" "Version 4.7" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "9 Nov 2010" "Version 4.7" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -338,22 +338,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 278 2010-11-07 17:50:58Z aotto1968 $
 .RI "#define \fBMqSysFree\fP(tgt)"
 .br
 .R "\fBfree\fP syscall "
-.ti -1c
-.RI "#define \fBMqSysWait\fP(context, idP)   (*MqLal.SysWait)(context, idP)"
-.br
-.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysUSleep\fP(context, usec)   (*MqLal.SysUSleep)(context, usec)"
-.br
-.R "\fBusleep\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysSleep\fP(context, sec)   (*MqLal.SysSleep)(context, sec)"
-.br
-.R "\fBsleep\fP syscall with \fBMqS\fP error plugin "
-.ti -1c
-.RI "#define \fBMqSysExit\fP(isThread, num)   (*MqLal.SysExit)(isThread,num)"
-.br
-.R "\fBexit\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "#define \fBMqSetDebugLevel\fP(context)   debugLevel = context->config.debug"
 .br
@@ -1501,6 +1485,22 @@ msgque.h \- $Id: \fBmsgque.h\fP 278 2010-11-07 17:50:58Z aotto1968 $
 .RI "void \fBMqSysFreeP\fP (\fBMQ_PTR\fP data)"
 .br
 .R "\fBfree\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "static enum \fBMqErrorE\fP \fBMqSysWait\fP (struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
+.br
+.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "static enum \fBMqErrorE\fP \fBMqSysUSleep\fP (struct \fBMqS\fP *const context, unsigned int const usec)"
+.br
+.R "\fBusleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "static enum \fBMqErrorE\fP \fBMqSysSleep\fP (struct \fBMqS\fP *const context, unsigned int const sec)"
+.br
+.R "\fBsleep\fP syscall with \fBMqS\fP error plugin "
+.ti -1c
+.RI "static void \fBMqSysExit\fP (int isThread, int num)"
+.br
+.R "\fBexit\fP syscall with \fBMqS\fP error plugin "
 .ti -1c
 .RI "\fBMQ_STR\fP \fBMqSysBasename\fP (\fBMQ_CST\fP const in, \fBMQ_BOL\fP includeExtension)"
 .br

@@ -42,7 +42,7 @@ package main;
   our $srv = new Filter3();
   eval {
     $srv->LinkCreate(@ARGV);
-    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
+    $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
@@ -50,5 +50,6 @@ package main;
   $srv->Exit();
 
 1;
+
 
 

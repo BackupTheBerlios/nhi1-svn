@@ -29,12 +29,13 @@ package main;
     $srv->LinkCreate(@ARGV);
     $srv->ServiceCreate("+FTR", \&FTRcmd);
     $srv->ServiceProxy("+EOF");
-    $srv->ProcessEvent(Net::PerlMsgque::MqS::WAIT_FOREVER);
+    $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
   };
   if ($@) {
     $srv->ErrorSet($@);
   }
   $srv->Exit();
+
 
 
 

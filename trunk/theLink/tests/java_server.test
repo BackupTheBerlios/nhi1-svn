@@ -93,7 +93,7 @@ test java-server-X1 {start java server with --fork} \
 	Exec {*}[getServer java] --tcp --port [FindFreePort] --fork
     } \
     -match	glob \
-    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for the 'current' setup the option '--fork' is forbidden
 S> (server) found in function "MqLinkPrepare" at file "link.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"
 S> (server) found in function "MqLinkDefault" at file "link.c"}
@@ -102,7 +102,7 @@ test java-server-X2 {start java server with --daemon} \
     -body       {
 	Exec {*}[getServer java] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
     } \
-    -result	{CHILDSTATUS-222-S> (server) [MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
+    -result	{CHILDSTATUS-222-S> (server) [MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "link.c"
 S> (server) found in function "MqLinkPrepare" at file "link.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"

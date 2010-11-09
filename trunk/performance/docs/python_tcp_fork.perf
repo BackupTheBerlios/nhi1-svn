@@ -1,11 +1,11 @@
-> python nothread/NHI1-0.8/theLink/tests/server.py --tcp --host localhost --port 7788 --fork
-> nothread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7788
-C> (client:11494) [2010-10-22:13-22-24] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:11494) [2010-10-22:13-22-24] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.69
-C> (client:11494) [2010-10-22:13-22-24] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.54
-C> (client:11494) [2010-10-22:13-22-28] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      31.54
-C> (client:11494) [2010-10-22:13-22-28] [0-0-0-0x624bc0-statistics]:                  parent create:     961.16
-C> (client:11494) [2010-10-22:13-22-28] [0-0-0-0x624bc0-statistics]:                  parent delete:    3555.46
-C> (client:11494) [2010-10-22:13-22-29] [0-0-0-0x624bc0-statistics]:                   child create:     151.78
-C> (client:11494) [2010-10-22:13-22-29] [0-0-0-0x624bc0-statistics]:                   child delete:      47.91
-C> (client:11494) [2010-10-22:13-22-29] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> python nothread/NHI1-0.9/theLink/tests/server.py --tcp --host localhost --port 7788 --fork
+> nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7788
+C> (client:23361) [2010-11-09:09-40-02] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:23361) [2010-11-09:09-40-02] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.69
+C> (client:23361) [2010-11-09:09-40-03] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      12.76
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      31.54
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                  parent create:    1000.92
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                  parent delete:    3834.05
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                   child create:     143.66
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-statistics]:                   child delete:      48.98
+C> (client:23361) [2010-11-09:09-40-07] [0-0-0-0x624bc0-main]: end: ----------------------------------------

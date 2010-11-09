@@ -1,11 +1,2 @@
-> perl nothread/NHI1-0.8/theLink/tests/server.pl --tcp --host localhost --port 7796 --fork
-> nothread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7796
-C> (client:15178) [2010-10-22:13-30-42] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:15178) [2010-10-22:13-30-43] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       7.91
-C> (client:15178) [2010-10-22:13-30-43] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.86
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      31.29
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-statistics]:                  parent create:    1034.45
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-statistics]:                  parent delete:     611.49
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-statistics]:                   child create:     121.96
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-statistics]:                   child delete:      47.18
-C> (client:15178) [2010-10-22:13-30-47] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> perl nothread/NHI1-0.9/theLink/tests/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7794

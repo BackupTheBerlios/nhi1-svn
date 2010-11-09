@@ -10,6 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
+SHELL = /bin/bash
+
 AUTOMAKE_OPTIONS = check-news 
 
 ACLOCAL_AMFLAGS = -I m4

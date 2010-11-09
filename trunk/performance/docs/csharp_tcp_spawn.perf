@@ -1,11 +1,11 @@
-> mono thread/NHI1-0.8/theLink/tests/csserver.exe --tcp --host localhost --port 7793 --spawn
-> thread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7793
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-42] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-42] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       4.35
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-42] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       6.23
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-45] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      27.11
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-48] [0-0-0-0x624bc0-statistics]:                  parent create:   24367.35
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-48] [0-0-0-0x624bc0-statistics]:                  parent delete:    2660.01
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-48] [0-0-0-0x624bc0-statistics]:                   child create:     142.04
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-48] [0-0-0-0x624bc0-statistics]:                   child delete:      36.83
-C> (client:13924:0x7f27ced79700) [2010-10-22:13-23-48] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.9/theLink/tests/csserver.exe --tcp --host localhost --port 7793 --spawn
+> thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7793
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-21] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-21] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       4.34
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-22] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.73
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-25] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      27.29
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-27] [0-0-0-0x624bc0-statistics]:                  parent create:   24576.78
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-28] [0-0-0-0x624bc0-statistics]:                  parent delete:    2846.63
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-28] [0-0-0-0x624bc0-statistics]:                   child create:     136.93
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-28] [0-0-0-0x624bc0-statistics]:                   child delete:      38.34
+C> (client:25793:0x7f3dab969700) [2010-11-09:09-41-28] [0-0-0-0x624bc0-main]: end: ----------------------------------------

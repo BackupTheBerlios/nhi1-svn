@@ -94,14 +94,14 @@ test csharp-server-X1 {start csharp server with --fork} \
 	Exec {*}[getServer csharp] --tcp --port [FindFreePort] --fork
     } \
     -match	glob \
-    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for the 'current' setup the option '--fork' is forbidden*}
 
 test csharp-server-X2 {start csharp server with --daemon} \
     -body       {
 	Exec {*}[getServer csharp] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
     } \
     -match	glob \
-   -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden*}
+   -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden*}
 
 freeTests
 

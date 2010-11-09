@@ -244,7 +244,7 @@ test tcl-server-X6 {start tcl server with --fork on thread enabled tcl} \
 	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --fork
     } \
     -match	glob \
-    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for a 'local' setup the option '--fork' is forbidden*}
+    -result	{CHILDSTATUS-222-S> (server) \[sMqCheckArg] for the 'current' setup the option '--fork' is forbidden*}
 
 test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
     -constraints    {thread} \
@@ -252,7 +252,7 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
     } \
     -match	glob \
-    -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden*}
+    -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden*}
 }
 
 

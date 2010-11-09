@@ -1,10 +1,19 @@
-> thread/NHI1-0.7/theLink/tests/client --all @ mono thread/NHI1-0.7/theLink/tests/vbserver.exe
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-main]: start: --------------------------------------
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.24
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-15] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      11.75
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-18] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      17.02
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent create:   32636.88
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent delete:    3201.55
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child create:     164.26
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child delete:      43.47
-C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-main]: end: ----------------------------------------
+> thread/NHI1-0.9/theLink/tests/client --all @ mono thread/NHI1-0.9/theLink/tests/vbserver.exe
+
+** (thread/NHI1-0.9/theLink/tests/vbserver.exe:16408): WARNING **: The following assembly referenced from /home/dev1usr/Project/NHI1/performance/thread/NHI1-0.9/theLink/tests/vbserver.exe could not be loaded:
+     Assembly:   Microsoft.VisualBasic    (assemblyref_index=1)
+     Version:    8.0.0.0
+     Public Key: b03f5f7f11d50a3a
+The assembly was not found in the Global Assembly Cache, a path listed in the MONO_PATH environment variable, or in the location of the executing assembly (/home/dev1usr/Project/NHI1/performance/thread/NHI1-0.9/theLink/tests/).
+
+
+** (thread/NHI1-0.9/theLink/tests/vbserver.exe:16408): WARNING **: Could not load file or assembly 'Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies.
+
+** (thread/NHI1-0.9/theLink/tests/vbserver.exe:16408): WARNING **: Missing method SetProjectError in assembly /home/dev1usr/Project/NHI1/performance/thread/NHI1-0.9/theLink/tests/vbserver.exe, type Microsoft.VisualBasic.CompilerServices.ProjectData
+
+Unhandled Exception: System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies.
+File name: 'Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
+C> (client) [MqLinkConnect] can not start server 'mono'
+C> (client) found in function "MqLinkConnect" at file "link.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
+C> (client) use '-h' or '--help' for usage

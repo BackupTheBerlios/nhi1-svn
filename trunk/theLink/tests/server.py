@@ -673,5 +673,3 @@ finally:
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
 
-
-

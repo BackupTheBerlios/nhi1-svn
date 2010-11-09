@@ -1,11 +1,11 @@
-> tclsh nothread/NHI1-0.8/theLink/tests/server.tcl --tcp --host localhost --port 7785 --spawn
-> nothread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7785
-C> (client:6831) [2010-10-22:13-20-49] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:6831) [2010-10-22:13-20-49] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       7.03
-C> (client:6831) [2010-10-22:13-20-50] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.78
-C> (client:6831) [2010-10-22:13-20-54] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      30.31
-C> (client:6831) [2010-10-22:13-20-55] [0-0-0-0x624bc0-statistics]:                  parent create:   10315.37
-C> (client:6831) [2010-10-22:13-20-55] [0-0-0-0x624bc0-statistics]:                  parent delete:     247.50
-C> (client:6831) [2010-10-22:13-20-55] [0-0-0-0x624bc0-statistics]:                   child create:     252.78
-C> (client:6831) [2010-10-22:13-20-55] [0-0-0-0x624bc0-statistics]:                   child delete:      45.99
-C> (client:6831) [2010-10-22:13-20-55] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.9/theLink/tests/server.tcl --tcp --host localhost --port 7785 --spawn
+> nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7785
+C> (client:18705) [2010-11-09:09-38-26] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:18705) [2010-11-09:09-38-26] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       6.77
+C> (client:18705) [2010-11-09:09-38-27] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      11.48
+C> (client:18705) [2010-11-09:09-38-30] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      30.24
+C> (client:18705) [2010-11-09:09-38-32] [0-0-0-0x624bc0-statistics]:                  parent create:   11671.68
+C> (client:18705) [2010-11-09:09-38-32] [0-0-0-0x624bc0-statistics]:                  parent delete:     260.90
+C> (client:18705) [2010-11-09:09-38-32] [0-0-0-0x624bc0-statistics]:                   child create:     251.45
+C> (client:18705) [2010-11-09:09-38-32] [0-0-0-0x624bc0-statistics]:                   child delete:      46.59
+C> (client:18705) [2010-11-09:09-38-32] [0-0-0-0x624bc0-main]: end: ----------------------------------------

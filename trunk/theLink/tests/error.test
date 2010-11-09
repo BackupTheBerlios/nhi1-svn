@@ -444,7 +444,7 @@ test error-10-($x) "'--$x' option in a thread enabled interpreter" \
     -constraints    {has_thread local tcl fork} \
     -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --$x} \
     -match	    glob \
-    -result         "CHILDSTATUS-204-S> (server) \\\[sMqCheckArg] for a 'local' setup the option '--$x' is forbidden
+    -result         "CHILDSTATUS-204-S> (server) \\\[sMqCheckArg] for the 'current' setup the option '--$x' is forbidden
 S> (server) found in function \"MqLinkPrepare\" at file \"link.c\"
 S> (server) found in function \"MqLinkCreate\" at file \"link.c\"
 S> (server) found in function \"MqLinkDefault\" at file \"link.c\"
@@ -459,7 +459,7 @@ test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
     -constraints    {has_thread local tcl fork} \
     -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --daemon} \
     -match	    glob \
-    -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for a 'local' setup the option '--daemon' is forbidden
+    -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "link.c"
 S> (server) found in function "MqLinkPrepare" at file "link.c"
 S> (server) found in function "MqLinkCreate" at file "link.c"

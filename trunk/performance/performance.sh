@@ -182,11 +182,6 @@ csharp_tcp_thread
 csharp_tcp_spawn
 csharp_uds_thread
 csharp_uds_spawn
-vb_pipe
-vb_tcp_thread
-vb_tcp_spawn
-vb_uds_thread
-vb_uds_spawn
 perl_pipe
 perl_tcp_fork
 perl_tcp_thread
@@ -194,6 +189,11 @@ perl_tcp_spawn
 perl_uds_fork
 perl_uds_thread
 perl_uds_spawn
+php_pipe
+php_tcp_fork
+php_tcp_spawn
+php_uds_fork
+php_uds_spawn
 brain_pipe
 brain_tcp_fork
 brain_tcp_thread
@@ -201,6 +201,12 @@ brain_tcp_spawn
 brain_uds_fork
 brain_uds_thread
 brain_uds_spawn"
+
+#vb_pipe
+#vb_tcp_thread
+#vb_tcp_spawn
+#vb_uds_thread
+#vb_uds_spawn
 
 [[ $HT == "yes" ]] && {
   echo $ALL
@@ -271,6 +277,14 @@ for SRV in $R; do
     ;;
     *perl*)	
       SERVER="perl $LINK_DIR/tests/server.pl" 
+      CLIENT="$LINK_DIR/tests/client"
+    ;;
+    *php*)	
+      if [[ "$ENV" == "thread" ]] ; then
+	SERVER="php -c \"thread/lib/NHI1/php.ini\" $LINK_DIR/tests/server.php" 
+      else
+	SERVER="php -c \"nothread/lib/NHI1/php.ini\" $LINK_DIR/tests/server.php" 
+      fi
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *tcl*)	

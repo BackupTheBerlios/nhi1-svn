@@ -1,10 +1,10 @@
-> nothread/NHI1-0.8/theLink/tests/client --all @ nothread/NHI1-0.8/theLink/tests/server
-C> (client:4640) [2010-10-22:13-19-12] [0-0-0-0x6248a0-main]: start: --------------------------------------
-C> (client:4640) [2010-10-22:13-19-12] [0-0-0-0x6248a0-statistics]:                      MqSendEND:       2.64
-C> (client:4640) [2010-10-22:13-19-12] [0-0-0-0x6248a0-statistics]:         MqSendEND_AND_CALLBACK:       4.42
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-statistics]:             MqSendEND_AND_WAIT:      17.83
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-statistics]:                  parent create:     721.05
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-statistics]:                  parent delete:      85.87
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-statistics]:                   child create:      70.20
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-statistics]:                   child delete:      29.30
-C> (client:4640) [2010-10-22:13-19-15] [0-0-0-0x6248a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.9/theLink/tests/client --all @ nothread/NHI1-0.9/theLink/tests/server
+C> (client:16528) [2010-11-09:09-36-46] [0-0-0-0x6248a0-main]: start: --------------------------------------
+C> (client:16528) [2010-11-09:09-36-46] [0-0-0-0x6248a0-statistics]:                      MqSendEND:       2.72
+C> (client:16528) [2010-11-09:09-36-47] [0-0-0-0x6248a0-statistics]:         MqSendEND_AND_CALLBACK:       4.51
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-statistics]:             MqSendEND_AND_WAIT:      18.13
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-statistics]:                  parent create:     710.69
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-statistics]:                  parent delete:      86.92
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-statistics]:                   child create:      75.29
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-statistics]:                   child delete:      30.23
+C> (client:16528) [2010-11-09:09-36-50] [0-0-0-0x6248a0-main]: end: ----------------------------------------

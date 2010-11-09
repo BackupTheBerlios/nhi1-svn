@@ -1,11 +1,11 @@
 > java example.Server --tcp --host localhost --port 7786 --thread
-> thread/NHI1-0.8/theLink/tests/client --all --tcp --host localhost --port 7786
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-32] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-32] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.69
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-32] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.93
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      28.43
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-statistics]:                  parent create:     781.53
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-statistics]:                  parent delete:     299.76
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-statistics]:                   child create:     166.78
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-statistics]:                   child delete:      37.38
-C> (client:8596:0x7f2be5186700) [2010-10-22:13-21-36] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7786
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-09] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-10] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.86
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-10] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       9.40
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      28.41
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-statistics]:                  parent create:     787.57
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-statistics]:                  parent delete:     321.52
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-statistics]:                   child create:     166.36
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-statistics]:                   child delete:      44.73
+C> (client:20467:0x7f5431355700) [2010-11-09:09-39-14] [0-0-0-0x624bc0-main]: end: ----------------------------------------

@@ -10,5 +10,4 @@
 ;              please contact AUTHORS for additional information
 ;
 
-extension_dir="@abs_builddir@/PhpMsgque/modules"
-extension="PhpMsgque.so"
+extension="@abs_builddir@/PhpMsgque/modules/PhpMsgque.so"

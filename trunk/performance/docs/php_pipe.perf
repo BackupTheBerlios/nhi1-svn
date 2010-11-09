@@ -1,0 +1,10 @@
+> nothread/NHI1-0.9/theLink/tests/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.9/theLink/tests/server.php
+C> (client:8727) [2010-11-09:09-19-51] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:8727) [2010-11-09:09-19-51] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       6.65
+C> (client:8727) [2010-11-09:09-19-52] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      11.12
+C> (client:8727) [2010-11-09:09-19-55] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      25.13
+C> (client:8727) [2010-11-09:09-19-56] [0-0-0-0x624bc0-statistics]:                  parent create:    7068.31
+C> (client:8727) [2010-11-09:09-19-56] [0-0-0-0x624bc0-statistics]:                  parent delete:     259.55
+C> (client:8727) [2010-11-09:09-19-56] [0-0-0-0x624bc0-statistics]:                   child create:     198.14
+C> (client:8727) [2010-11-09:09-19-56] [0-0-0-0x624bc0-statistics]:                   child delete:      51.52
+C> (client:8727) [2010-11-09:09-19-56] [0-0-0-0x624bc0-main]: end: ----------------------------------------
