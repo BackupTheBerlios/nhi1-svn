@@ -27,7 +27,7 @@ ALIASES		    += "fileextension=php"
 ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e TRUE"
 ALIASES		    += "no=\e FALSE"
-ALIASES		    += "package=# php.ini: extension=\"PhpMsgque.so\""
+ALIASES		    += "package=# php.ini: extension=\"MsgqueForPhp.so\""
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -306,4 +306,5 @@ try { \n\
   if ($ctx->ErrorIsEXIT()) $ctx->ErrorReset(); \n\
 } \n\
 \endcode"
+
 

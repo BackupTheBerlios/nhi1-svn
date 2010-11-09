@@ -195,7 +195,7 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "rubymsgque_private_desc=- The RubyMsgque C-API Documentation" \
                          "perlmsgque=\ref perlmsgqueref" \
                          "phpmsgque=\ref phpmsgqueref" \
-                         "phpmsgque_private_desc=- The PhpMsgque C-API Documentation" \
+                         "phpmsgque_private_desc=- The MsgqueForPhp C-API Documentation" \
                          "vbmsgque=\ref vbmsgqueref" \
                          "server_bin=\ref server \"server.exe\"" \
                          "server_tcl=\ref server_tcl" \
@@ -1639,3 +1639,4 @@ DOT_CLEANUP            = YES
 # used. If set to NO the values of all tags below this one will be ignored.
 
 SEARCHENGINE           = YES
+

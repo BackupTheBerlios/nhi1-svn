@@ -5,7 +5,7 @@
 phpmsgque \- The \fBphp\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
-\fB# php.ini: extension='PhpMsgque.so'\fP
+\fB# php.ini: extension='MsgqueForPhp.so'\fP
 .SH "INDEX"
 .PP
 \fBCONTEXT API\fP
@@ -1978,3 +1978,4 @@ php, unix, socket, message, msgque
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for phpmsgque from the source code.
+
