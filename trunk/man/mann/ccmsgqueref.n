@@ -905,7 +905,9 @@ delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.SS "ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
+.SS "ctx.ProcessEvent(MQ_TIME_T timeout, enum MqWaitOnEventE const wait)"
+.SS "ctx.ProcessEvent(enum MqWaitOnEventE const wait)"
+.SS "ctx.ProcessEvent()"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
@@ -1049,7 +1051,7 @@ an \fBERROR OBJECT\fP on error
 .SS "ctx.SendEND_AND_CALLBACK(MQ_CST const token, CallbackF const callback)"
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(MQ_TIME_T timeout, enum MqWaitOnEventE const wait)\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4

@@ -12,6 +12,13 @@
 
 08 Nov 2010: v NHI1-0.9, PLMK-1.7 und libmsgque-4.7
 
+This version adds the ability to:
+* PHP language support.
+* Revision of the "ProcessEvent" and the "Config(Set|Get)StartAs" functions.
+* The new "ErrorSetEXIT" to terminate an application from a callback out.
+The PHP language is characterized by an extensive but undocumented C API. A number of 
+features combined with a growing extent, the language task made difficult and lengthy. 
+The successful PHP extension shows the flexibility and adaptability of NHI1.
 
 
 

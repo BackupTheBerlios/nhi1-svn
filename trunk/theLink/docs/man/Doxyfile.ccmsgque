@@ -235,7 +235,11 @@ ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(MQ_CST token, CallbackF callba
 ENABLED_SECTIONS    += ServiceCreate2
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(MQ_CST token, MQ_SIZE id=0)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(MQ_CST token)"
-ALIASES		    += "ProcessEvent=ctx.ProcessEvent([int timeout], [MQ_WAIT_(NO|ONCE|FOREVER)])"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(MQ_TIME_T timeout, enum MqWaitOnEventE const wait)"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(enum MqWaitOnEventE const wait)"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent()"
+ENABLED_SECTIONS    +=  ProcessEvent2
+ENABLED_SECTIONS    +=  ProcessEvent3
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"

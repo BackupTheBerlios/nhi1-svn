@@ -13,6 +13,19 @@
 
 \page changelog ChangeLog
 
+\section V0_9 08 Nov 2010 - NHI1-0.9, PLMK-1.7 und libmsgque-4.7
+
+This version adds the ability to:
+
+- PHP language support.
+- Revision of the \RNSA{ProcessEvent} and the \RNSC{startAs} functions.
+- The new \RNSA{ErrorSetEXIT} to terminate an application from a callback out.
+
+The PHP language is characterized by an extensive but undocumented C API. A number of 
+features combined with a growing extent, the language task made difficult and lengthy. 
+The successful PHP extension shows the flexibility and adaptability of NHI1.
+
+
 \section V0_8 22 Oct 2010 - NHI1-0.8, PLMK-1.6 und libmsgque-4.6
 
 This release adds the ability to:
