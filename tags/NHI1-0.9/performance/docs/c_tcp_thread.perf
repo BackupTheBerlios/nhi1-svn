@@ -1,0 +1,11 @@
+> thread/NHI1-0.9/theLink/tests/server --tcp --host localhost --port 7778 --thread
+> thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7778
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-49] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-49] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       3.00
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-50] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:       5.29
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      26.13
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-statistics]:                  parent create:     244.20
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-statistics]:                  parent delete:      75.31
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-statistics]:                   child create:      78.81
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-statistics]:                   child delete:      38.69
+C> (client:16559:0x7f097bf1c700) [2010-11-09:21-30-53] [0-0-0-0x624bc0-main]: end: ----------------------------------------

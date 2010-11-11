@@ -1,0 +1,9 @@
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-29] [0-0-0-0x62d8a0-main]: start: --------------------------------------
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-29] [0-0-0-0x62d8a0-statistics]:                      MqSendEND:       3.01
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-30] [0-0-0-0x62d8a0-statistics]:         MqSendEND_AND_CALLBACK:       5.56
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-statistics]:             MqSendEND_AND_WAIT:      19.46
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-statistics]:                  parent create:     917.01
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-statistics]:                  parent delete:     146.18
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-statistics]:                   child create:      80.92
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-statistics]:                   child delete:      45.14
+C> (client:19604:0x2b7bcdc78b20) [2010-11-11:18-13-33] [0-0-0-0x62d8a0-main]: end: ----------------------------------------

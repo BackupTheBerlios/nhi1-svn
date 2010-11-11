@@ -1,0 +1,441 @@
+#+
+#§  \file       theLink/tests/send.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+set BLOCK_1 true
+#set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+set BLOCK_3 true
+#set BLOCK_3 false
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 3] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+      set TIME [expr {[string match "*thread*" $S] ? 300 : 0}]
+
+      SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+if $BLOCK_1 {
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# start the "sub" server
+Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+
+# tests ----------------------------
+
+test send-1-($I|$B|$C|$S) {SendEND_AND_WAIT with ok} \
+    -body           {
+      Echo1 $FH_LAST SND1 ReadI SendC WAIT SendI 0 SendI 777
+    } \
+    -returnCodes    ok \
+    -result         {778}
+
+test send-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -constraints    binary \
+    -body           {Echo1 $FH_LAST SND1 ReadI SendC WAIT SendI 0 SendD 4.7 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|1>*
+*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>
+[sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+
+test send-2-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -constraints    string \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND1 SendC WAIT SendI 0 SendD 4.7 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|1>*
+*[cC]> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>
+[sS]> (sv-0) \[*pBufferGetA4] size ERROR, can not convert '4.70000000000e+00*' into an 'INT' object*}
+
+test send-3-($I|$B|$C|$S) {SendEND with ok} \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC REDI SendI 777} \
+    -returnCodes    ok \
+    -result         {}
+
+test send-4a-($I|$B|$C|$S) {SendEND with error} \
+    -constraints    binary  \
+    -body           {
+	## 1. create an error
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC REDI SendW 777
+	## 2. get the error from above as side-effect of the following service call
+	$FH_LAST ProcessEvent -wait ONCE
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object*}
+
+test send-4b-($I|$B|$C|$S) {SendEND with background error} \
+    -body           {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC XXXX SendI 777
+	$FH_LAST ProcessEvent -wait ONCE
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[sS]> (sv-0) \[*pTokenInvoke] token <XXXX> not found*}
+
+test send-4c-($I|$B|$C|$S) {SendEND with error} \
+    -constraints    binary  \
+    -body           {
+	## 1. create an error
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC REDI SendW 777
+	## 2. get the error from above as side-effect of the following service call
+	$FH_LAST ProcessEvent -wait ONCE
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[sS]> (sv-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object*}
+
+test send-5-($I|$B|$C|$S) {SendEND_AND_WAIT with ok} \
+    -body           {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC CALLBACK SendI 0 SendI 777
+	$FH_LAST ReadI
+    } \
+    -returnCodes    ok \
+    -result         778
+
+test send-6-($I|$B|$C|$S) {SendEND_AND_WAIT with error} \
+    -body           {Call $FH_LAST SendEND_AND_WAIT SND1 SendC CALLBACK SendI 0 SendC OTTO} \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|1>*
+*[cC]> (cl-0) \[callback-error] <Num|1>
+[sS]> (sv-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object*}
+
+test send-7-($I|$B|$C|$S) {error catch code} \
+    -body           {EchoL $FH_LAST SND1 SendC ERR-1 SendI 0 SendC OTTO} \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {1 {C> (cl-0) \[service-call-error] <Tok|ECOI> <Num|1>
+[sS]> (sv-0) \[*pBufferGetA4] size ERROR, can not convert 'OTTO' into an 'INT' object
+[sS]> (sv-0) found in function "*sReadA4" at file "read.c*"}}
+
+
+# cleanup ---------------------------
+Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
+
+Cleanup
+
+} ; # END - $BLOCK_1
+
+# extended test ---------------------------
+
+if $BLOCK_2 {
+
+test send-X1-($I|$B|$C|$S) {close single parent server-client connection} \
+    -setup	    {
+	Setup $I $B $C $S
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+    } \
+    -body           {
+	Cleanup
+    } \
+    -returnCodes    ok \
+    -result         {}
+
+test send-X2-($I|$B|$C|$S) {close single parent-child server-client connection} \
+    -setup	    {
+	Setup $I $B $C $S
+	foreach {K} [lsort [array names FH]] {
+	  Call $FH($K) SendEND_AND_WAIT SND1 SendC START SendI 0
+	}
+    } \
+    -body           {
+	Cleanup
+    } \
+    -returnCodes    ok \
+    -result         {}
+
+test send-X3-($I|$B|$C|$S) {close multiple parent-child server-client connection} \
+    -setup	    {
+#puts 0000000000
+	Setup $I $B $C $S
+	## 1'st parent/child
+#puts 1111111111-[lsort [array names FH]]
+	foreach {K} [lsort [array names FH]] {
+	  Call $FH($K) SendEND_AND_WAIT SND1 SendC START SendI 0
+	}
+	## 2'nd parent/child
+#puts 22222222222-[lsort [array names FH]]
+	foreach {K} [lsort [array names FH]] {
+	  Call $FH($K) SendEND_AND_WAIT SND1 SendC START SendI 1
+	}
+	## 3'rd parent/child
+#puts 3333333333-[lsort [array names FH]]
+	foreach {K} [lsort [array names FH]] {
+	  Call $FH($K) SendEND_AND_WAIT SND1 SendC START SendI 2
+	}
+    } \
+    -body           {
+	Cleanup
+    } \
+    -returnCodes    ok \
+    -result         {}
+
+test send-X4-($I|$B|$C|$S) {close single parent server-client connection} \
+    -setup	    {
+	Setup $I $B $C $S
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 1
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC WAIT SendI 1 SendI -482
+	$FH_LAST ReadI
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    ok \
+    -result         {-481}
+
+test send-X5-($I|$B|$C|$S) {double LinkCreate} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START2 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
+[cC]> (cl-0) \[*MqLinkCreate] the 'msgque' object link is 'already' connected*}
+
+
+test send-X6-($I|$B|$C|$S) {parent is not connected} \
+    -constraints    {child} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START3 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {c> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
+c> (unknown) \[*MqLinkCreate] the 'parent' object link is 'not' connected*}
+
+test send-X7-($I|$B|$C|$S) {master is not connected} \
+    -constraints    {} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START4 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
+[cC]> (cl-0) \[*MqSlaveWorker] the 'master' object link is 'not' connected*}
+
+test send-X8-($I|$B|$C|$S) {master is no server} \
+    -constraints    {} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START4 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|232>*
+[cC]> (cl-0) \[*pSlaveCreate] to use the 'slave-worker' feature the configuration 'MqConfigS::isServer = MQ_YES' is required*}
+
+test send-X9-($I|$B|$C|$S) {invalid master} \
+    -constraints    {child has_thread} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+
+test send-X10-($I|$B|$C|$S) {invalid master} \
+    -constraints    {child has_thread} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH(0-0) SendEND_AND_WAIT SND1 SendC START5 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
+C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+
+test send-X11-($I|$B|$C|$S) {master_id to big} \
+    -constraints    {parent has_thread} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 10000000
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|231>*
+S> (server-0) \[*pSlaveChildCreate] 'slave' identifer out of range (0 <= 10000000 <= 1023)*}
+
+test send-X12-($I|$B|$C|$S) {master_id in use} \
+    -constraints    {parent has_thread} \
+    -setup	    {
+	Setup $I $B $C $S
+    } \
+    -body	    {
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 0
+	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 0
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|228>*
+S> (server-0) \[*pSlaveChildCreate] 'slave' identifer '0' is already in use*}
+
+} ; # END - $BLOCK_2
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+
+if $BLOCK_3 {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+test send-Y1-($B|$C|$S) {stop and start child} \
+    -setup	    { 
+	Setup 5 $B $C $S
+	proc Test {FH num} {
+	    if {[Echo1 $FH GTCX ReadI] != $num} {
+		error $num
+	    }
+	}
+    } \
+    -body           {
+	## initial test
+	Test $FH(0-4) 4
+	## delete CHILD context #4
+	$FH(0-4) LinkDelete
+	## create CHILD context #4 again
+	$FH(0-4) LinkCreateChild $FH(0-3) --name [$FH(0-3) ConfigGetName]
+	## test #4
+	Test $FH(0-4) 5
+	## delete 
+	$FH(0-3) LinkDelete
+	## test #4
+	catch {Test $FH(0-4) 3} ERR
+	if {[string match {c> (client-0) \[MqSendSTART] the 'msgque' object link is 'not' connected} $ERR]} {
+	  return ok
+	} else {
+	  return $ERR
+	}
+    } \
+    -cleanup	    { 
+	Cleanup
+    } \
+    -returnCodes    return \
+    -match	    glob \
+    -result         {ok}
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+
+unset B C S
+
+} ; # END - BLOCK_3
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+
+

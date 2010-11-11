@@ -1,0 +1,33 @@
+.TH "ccmsgque::IEvent" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::IEvent \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual void \fBEvent\fP ()=0"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP 
+.PP
+Definition at line 72 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual void ccmsgque::IEvent::Event ()\fC [pure virtual]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

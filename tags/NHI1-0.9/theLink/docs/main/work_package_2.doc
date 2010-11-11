@@ -1,0 +1,97 @@
+/** 
+\page wp2 "Work Package II"
+
+<center>
+\b Version 1
+</center>
+
+This documentation define the next steps of the NHI1 development. The main goal of \b WPII is
+\b persistence. The persistence will be used to full implement <I>persistent transactions</I>.
+The \e persistence open a new development window for a:
+-# new BLOB data type
+-# real message based connectivity
+-# new message routing technology
+
+\section wp2_lang_sec 1) Three New Language Bindings
+
+To come back into the <I>development cycle</I> I usually start to implement a new languages binding.
+Three of them are on the list to extend the already available \AllLng{syn} languages.
+
+\subsection wp2_ruby ruby
+
+\b ruby is the first language binding for \b WPII. I'm really interested how it compares with \b python.
+
+-> \b DONE, 22 Oct 2010
+
+\subsection wp2_php php
+
+\b php is the gorilla for web programming and the only one with a missing C-API documentation as well.
+I probably found the reason. One book is available <B>Extending and Embedding PHP</B> to cover this.
+
+\subsection wp2_go go
+
+\b go is the newcomer in 2009/10 and promise a lot. after they got \e callbacks working I'm really interested
+in the execution speed.
+
+\section wp2_sqllite_sec 2) Embed the "SQlite" project into the "NHI1" project
+
+\b SQlite will play a major role in the future of the \b NHI1 development. The code will be embedded and I expect
+a significant improvement for both projects. \e SQlite will get a client/server stack and I will get a persistent
+layer and an OS abstraction layer with memory management.
+
+\subsection wp2_SQLite sqlite
+
+The <a href="http://www.sqlite.org/">SQlite</a> code will be embedded into the \b NHI1 code.
+\b SQlite is a free, stable widely used database with a very good documentation and a good speed.
+
+\subsection wp2_blob blob
+
+\b blobs are special because blobs a usually to big to fit efficient into memory. The persistence will
+be used to cut the \e blob into pieces and store the pieces into the local database. \e libmsgque is
+responsible to send the pieces into the remote database without programmer/user interaction. Only if the
+blob is available in the remote database the remote service is called to handle the blob data.
+
+\subsection wp2_dbserver dbserver
+
+\b SQlite is an embedded database a client/server stack is missing -> I'll add this
+
+\section wp2_route 3) Message Routing
+
+Message routing is important. By default \libmsgque support the classic synchronic technology using
+hostname/port to unique identify the server for a network connection.
+(read more at: \ref context_client_server)
+
+\verbatim
+client <--> server
+\endverbatim
+
+With the help of the \AllLngTxt{filter,Filter} technology a pipeline (still synchronic) is possible
+(read more at: \ref context_master_slave)
+
+\verbatim
+client <--> filter1 <--> ... <--> filterN <--> server
+\endverbatim
+
+With the help of the already implemented server identification configuration option \AllLngTxtC{ident}
+the technology of message routing is possible. The \e server register himself to a router and the 
+\e client send the message to the router using \b only the \b ident value for target identification. 
+The router is responsible to send the message to the \e server.
+
+\verbatim
+client <-> (client persistent storage) <-> 
+  (router persistent storage master) <-> router <-> (router persistent storage slave) <-> ...
+    (server persistent storage) <-> server
+\endverbatim
+    
+\section wp2_moggel_sec 4) Start Of "moggel" With Integration Into Java-Script 
+
+\b Java-Script is the major player for the Web-Client-Programming.
+
+\subsection wp2_firefox firefox
+I choose firefox using the <a href="https://developer.mozilla.org/en/XPCOM">XPCOM</a> technology
+to extend \e Java-Script with \e NHI1 technology.
+With a \b NHI1 client available a new style of client/server applications
+are possible with a Web-Based-Layout for visual effects and a NHI1-Link for dynamic.
+
+*/
+

@@ -1,0 +1,36 @@
+.TH "ccmsgque::IFactory" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::IFactory \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBMqC\fP * \fBFactory\fP () const =0"
+.br
+.R "create a object of the top-most class "
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP 
+.PP
+Definition at line 47 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual \fBMqC\fP* ccmsgque::IFactory::Factory () const\fC [pure virtual]\fP"
+.PP
+create a object of the top-most class 
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

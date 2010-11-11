@@ -1,0 +1,214 @@
+.TH "Mq_Send_Java_API" n "11 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Send_Java_API \- construct an outgoing \fIsend-data-package\fP.   
+
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendSTART\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendEND\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendEND_AND_WAIT\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendEND_AND_WAIT\fP (String token, int timeout)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendEND_AND_CALLBACK\fP (String token, ICallback callback)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendRETURN\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendERROR\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendY\fP (byte y)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendY\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendO\fP (boolean o)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendO\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendS\fP (short s)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendS\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendI\fP (int i)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendI\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendF\fP (float f)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendF\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendW\fP (long w)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendW\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendD\fP (double l)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendD\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendC\fP (String s)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendC\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendB\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendN\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendBDY\fP (byte[] b)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendU\fP (\fBMqBufferS\fP buf)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendU\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendL_START\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendL_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendT_START\fP (String token)  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.ti -1c
+.RI "native void \fBjavamsgque::MqS.SendT_END\fP ()  throws MqSException"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+construct an outgoing \fIsend-data-package\fP.  
+
+construct an outgoing \fIsend-data-package\fP. 
+.PP
+\fISending\fP data is an active task and the opposite of \fIreading\fP data which is an passive task. Active mean that the \fIsend\fP is triggered by the software-work-flow or the user. There is one \fIsend\fP function for every basic type defined in \fBTYPE IDENTIFIER\fP plus a couple of help functions. 
+.PP
+\fBAttention:\fP
+.RS 4
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+.RE
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "native void javamsgque.MqS.SendB (byte[] b)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
+.PP
+.SS "native void javamsgque.MqS.SendBDY (byte[] b)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP 
+.PP
+.SS "native void javamsgque.MqS.SendC (String s)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendC\fP 
+.PP
+.SS "native void javamsgque.MqS.SendD (double l)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendD\fP 
+.PP
+.SS "native void javamsgque.MqS.SendEND (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP 
+.PP
+.SS "native void javamsgque.MqS.SendEND_AND_CALLBACK (String token, \fBICallback\fP callback)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP 
+.PP
+.SS "native void javamsgque.MqS.SendEND_AND_WAIT (String token, int timeout)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP 
+.PP
+.SS "native void javamsgque.MqS.SendEND_AND_WAIT (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP 
+.PP
+.SS "native void javamsgque.MqS.SendERROR ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP 
+.PP
+.SS "native void javamsgque.MqS.SendF (float f)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendF\fP 
+.PP
+.SS "native void javamsgque.MqS.SendI (int i)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendI\fP 
+.PP
+.SS "native void javamsgque.MqS.SendL_END ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP 
+.PP
+.SS "native void javamsgque.MqS.SendL_START ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP 
+.PP
+.SS "native void javamsgque.MqS.SendN (byte[] b)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendN\fP 
+.PP
+.SS "native void javamsgque.MqS.SendO (boolean o)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendO\fP 
+.PP
+.SS "native void javamsgque.MqS.SendRETURN ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP 
+.PP
+.SS "native void javamsgque.MqS.SendS (short s)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendS\fP 
+.PP
+.SS "native void javamsgque.MqS.SendSTART ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP 
+.PP
+.SS "native void javamsgque.MqS.SendT_END ()  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP 
+.PP
+.SS "native void javamsgque.MqS.SendT_START (String token)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP 
+.PP
+.SS "native void javamsgque.MqS.SendU (\fBMqBufferS\fP buf)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendU\fP 
+.PP
+.SS "native void javamsgque.MqS.SendW (long w)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendW\fP 
+.PP
+.SS "native void javamsgque.MqS.SendY (byte y)  throws MqSException\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqSendY\fP 
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

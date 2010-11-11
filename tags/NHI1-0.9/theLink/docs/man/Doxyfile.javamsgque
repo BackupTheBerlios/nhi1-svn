@@ -1,0 +1,305 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += JAVA
+EXAMPLE_PATH	    += $(SRCDIR)/example/java
+
+ALIASES		    += "self=javamsgque"
+ALIASES		    += "selftut=javamsgquetut"
+ALIASES		    += "NS{1}=java_\1"
+ALIASES		    += "lang=JAVA"
+ALIASES		    += "fileextension=java"
+ALIASES		    += "null=\e null"
+ALIASES		    += "yes=\e true"
+ALIASES		    += "no=\e false"
+ALIASES		    += "package=import javamsgque.*;"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+final class MyClass extends MqS { \n\
+  private int mydata; \n\
+  ... \n\
+} \n\
+public static void main(String[] args) { \n\
+  MyClass ctx = new MyClass(); ... \n\
+} \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "LogC=ctx.LogC(String prefix, int level, String message)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=MqS.Init(String... args)"
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"java\", \"myExecutable\", \"myFirstArgument\"); \n\
+\endcode \n\
+\attention It is not possible to initialize the \e startup-prefix during \n\
+\e package-loading. -> This <B>have to be used</B> to use the features from above."
+
+ALIASES		    += "config_type_buffersize=int"
+ALIASES		    += "config_set_buffersize=#javamsgque.MqS.ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=#javamsgque.MqS.ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=int"
+ALIASES		    += "config_set_debug=#javamsgque.MqS.ConfigSetDebug"
+ALIASES		    += "config_get_debug=#javamsgque.MqS.ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=long"
+ALIASES		    += "config_set_timeout=#javamsgque.MqS.ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=#javamsgque.MqS.ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=String"
+ALIASES		    += "config_set_name=#javamsgque.MqS.ConfigSetName"
+ALIASES		    += "config_get_name=#javamsgque.MqS.ConfigGetName"
+
+ALIASES		    += "config_type_srvname=String"
+ALIASES		    += "config_set_srvname=#javamsgque.MqS.ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=#javamsgque.MqS.ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=String"
+ALIASES		    += "config_set_ident=#javamsgque.MqS.ConfigSetIdent"
+ALIASES		    += "config_get_ident=#javamsgque.MqS.ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=boolean"
+ALIASES		    += "config_set_isSilent=#javamsgque.MqS.ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=#javamsgque.MqS.ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=boolean"
+ALIASES		    += "config_set_isString=#javamsgque.MqS.ConfigSetIsString"
+ALIASES		    += "config_get_isString=#javamsgque.MqS.ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=boolean"
+ALIASES		    += "config_set_ignoreExit=#javamsgque.MqS.ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_startAs=int"
+ALIASES		    += "config_set_startAs=#javamsgque.MqS.ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=#javamsgque.MqS.ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c MqS.START.DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c MqS.START.FORK"
+ALIASES		    += "MQ_START_THREAD=\c MqS.START.THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c MqS.START.SPAWN"
+
+ALIASES		    += "config_type_tcp=String"
+ALIASES		    += "config_set_tcp=#javamsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=#javamsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=String"
+ALIASES		    += "config_set_uds=#javamsgque.MqS.ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=#javamsgque.MqS.ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=int"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_pipe=int"
+ALIASES		    += "config_set_pipe=#javamsgque.MqS.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=#javamsgque.MqS.ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_isServer=boolean"
+ALIASES		    += "config_set_isServer=#javamsgque.MqS.ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=#javamsgque.MqS.ConfigGetIsServer"
+
+ALIASES		    += "config_type_isSlave=boolean"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=#javamsgque.MqS.ConfigGetIsSlave"
+
+ALIASES		    += "config_type_master=MqC"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=#javamsgque.MqS.ConfigGetMaster"
+
+ALIASES             += "config_IServerSetup=IServerSetup.ServerSetup()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup.ServerCleanup()"
+ALIASES		    += "config_IFactory=MqS IFactory.Factory()"
+ALIASES             += "config_IBgError=IBgError.BgError()"
+ALIASES             += "config_IEvent=IEvent.Event()"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+final class Server extends MqS implements IFactory, ... { \n\
+  public MqS Factory() { \n\
+    return new Server(); \n\
+  } \n\
+  ... \n\
+} \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(String... args)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, String... args)"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=\O ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=\I ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=\O ctx.LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(String token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(String token, [int timeout])"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(String token, IService callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendN(byte[] value)"
+ALIASES		    += "SendBDY=\I ctx.SendBDY(byte[] value)"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART (); \n\
+ctx.SendT_START (\"SRVR\"); \n\
+ctx.SendC (\"myEnvironment\"); \n\
+ctx.SendT_END (); \n\
+ctx.SendC (\"myData\"); \n\
+ctx.SendEND_AND_WAIT (\"SRVC\");\endcode"
+
+# READ DATE
+ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
+
+ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
+ALIASES		    += "ReadN=\B ctx.ReadN()"
+ALIASES		    += "ReadBDY=\B ctx.ReadBDY()"
+ALIASES		    += "ReadU=\U ctx.ReadU()"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
+ALIASES		    += "ReadGetNumItems=\I ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=\O ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START()"
+ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
+ENABLED_SECTIONS    += ReadL_START2
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START()"
+ALIASES		    += "ReadT_START2=ctx.ReadT_START(MqBufferS buffer)"
+ENABLED_SECTIONS    += ReadT_START2
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+class SRVR implements IService { \n\
+  public void Service (MqS ctx) throws MqSException { \n\
+    ctx.ReadT_START (); \n\
+    myEnvironment = ctx.ReadC (); \n\
+    ctx.ReadT_END (); \n\
+    theResult = ctx.ReadC (); \n\
+  } \n\
+}\endcode"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public void ServerSetup() { \n\
+  ServiceCreate (\"SRV1\", new SRV1()); \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(String token, IService callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(String token, [int id=0])"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(String token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(int timeout, MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent4=ctx.ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ENABLED_SECTIONS    += ProcessEvent4
+ALIASES		    += "MQ_WAIT_NO=\c MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c MqS.WAIT.FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c MqS.TIMEOUT.DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=\c MqS.TIMEOUT.USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=\c MqS.TIMEOUT.MAX"
+ALIASES		    += "ServiceGetToken=\C ctx.ServiceGetToken()"
+ALIASES		    += "ServiceIsTransaction=\O ctx.ServiceIsTransaction()"
+ALIASES		    += "ServiceGetFilter=MqS ctx.ServiceGetFilter([int id=0])"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, String... argv)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
+ALIASES		    += "SlaveIs=\O ctx.SlaveIs()"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+MqBufferS buf = ctx.ReadU(); \n\
+if (buf.GetType() == 'C') \n\
+  System.out.println(buf.GetC()); \n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
+ALIASES		    += "BufferType=char buffer.GetType()"
+
+ALIASES		    += "Y=byte"
+ALIASES		    += "O=boolean"
+ALIASES		    += "S=short"
+ALIASES		    += "I=int"
+ALIASES		    += "F=float"
+ALIASES		    += "W=long"
+ALIASES		    += "D=double"
+ALIASES		    += "C=String"
+ALIASES		    += "B=byte[]"
+ALIASES		    += "U=MqBufferS"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try { \n\
+ i = ctx.ReadI(); \n\
+} catch (Throwable ex) { \n\
+ ctx.ErrorSet(ex); \n\
+ System.out.println(ctx.ErrorGetText()); \n\
+ ctx.ErrorReset(); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqSException</I>"
+ALIASES		    += "ErrorGetText=String ex.GetTxt() or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=int ex.GetNum() or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(String prefix, int errnum, String message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorSetEXIT=ctx.ErrorSetEXIT()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
+ALIASES		    += "ErrorGetTargetIdent=ctx.ErrorGetTargetIdent()"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try { \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\"); \n\
+} catch (Throwable e) { \n\
+  ctx.ErrorSet (e); \n\
+  if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
+} \n\
+\endcode"
+
+
+
+
+
+
+

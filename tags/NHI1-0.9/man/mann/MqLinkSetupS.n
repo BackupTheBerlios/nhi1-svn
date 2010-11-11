@@ -1,0 +1,45 @@
+.TH "MqLinkSetupS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqLinkSetupS \- used to Create/Delete of object  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMqCreateF\fP \fBfCreate\fP"
+.br
+.R "create a new object "
+.ti -1c
+.RI "\fBMqDeleteF\fP \fBfDelete\fP"
+.br
+.R "delete a object "
+.in -1c
+.SH "Detailed Description"
+.PP 
+used to Create/Delete of object 
+.PP
+Definition at line 570 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBMqCreateF\fP \fBMqLinkSetupS.fCreate\fP"
+.PP
+create a new object 
+.PP
+Definition at line 571 of file msgque.h.
+.SS "\fBMqDeleteF\fP \fBMqLinkSetupS.fDelete\fP"
+.PP
+delete a object 
+.PP
+Definition at line 572 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -1,0 +1,171 @@
+#+
+#§  \file       theLink/tests/str.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set MAX_INT    [tclmsgque const maxI]
+set MIN_INT    [tclmsgque const minI]
+set MAX_WID    [tclmsgque const maxW]
+set MIN_WID    [tclmsgque const minW]
+set MAX_DBL    [tclmsgque const maxD]
+set MIN_DBL    [tclmsgque const minD]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [numGet 2] {
+
+ # transport-type: string or binary
+  foreach B [envGet BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [envGet COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filterGet SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test str-1-($I|$B|$C|$S) {echo datatype (STR)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadC SendC "012345678"]
+} "unknown"
+
+test str-2-($I|$B|$C|$S) {(INT to STR) fit max} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendI $MAX_INT} \
+    -returnCodes    ok \
+    -result         $MAX_INT
+    
+test str-3-($I|$B|$C|$S) {(INT to STR) fit min} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendI $MIN_INT} \
+    -returnCodes    ok \
+    -result         $MIN_INT
+
+test str-4-($I|$B|$C|$S) {(WID to STR) fit max} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendW $MAX_WID} \
+    -returnCodes    ok \
+    -result         $MAX_WID
+ 
+test str-5-($I|$B|$C|$S) {(WID to STR) fit min} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendW $MIN_WID} \
+    -returnCodes    ok \
+    -result         $MIN_WID
+  
+test str-6-($I|$B|$C|$S) {(DBL to STR) fit max} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendD $MAX_DBL} \
+    -returnCodes    ok \
+    -result         $MAX_DBL
+
+test str-7-($I|$B|$C|$S) {(DBL to STR) fit min} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendD $MIN_DBL} \
+    -returnCodes    ok \
+    -result         $MIN_DBL
+
+test str-8-($I|$B|$C|$S) {(STR to INT) fit max} \
+    -body           {Echo1 $FH_LAST ECOI ReadI SendC $MAX_INT} \
+    -returnCodes    ok \
+    -result         $MAX_INT
+
+test str-9-($I|$B|$C|$S) {(STR to INT) fit min} \
+    -body           {Echo1 $FH_LAST ECOI ReadI SendC $MIN_INT} \
+    -returnCodes    ok \
+    -result         $MIN_INT
+
+test str-10-($I|$B|$C|$S) {(STR to WID) fit max} \
+    -body           {Echo1 $FH_LAST ECOW ReadW SendC $MAX_WID} \
+    -returnCodes    ok \
+    -result         $MAX_WID
+
+test str-11-($I|$B|$C|$S) {(STR to WID) fit min} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendC $MIN_WID} \
+    -returnCodes    ok \
+    -result         $MIN_WID
+
+test str-12-($I|$B|$C|$S) {(STR to DBL) fit max} \
+    -body           {Echo1 $FH_LAST ECOD ReadD SendC $MAX_DBL} \
+    -returnCodes    ok \
+    -result         $MAX_DBL
+
+test str-13-($I|$B|$C|$S) {(STR to DBL) fit min} \
+    -body           {Echo1 $FH_LAST ECOC ReadC SendC $MIN_DBL} \
+    -returnCodes    ok \
+    -result         $MIN_DBL
+
+test str-14-($I|$B|$C|$S) {(LST to STR) fit max} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOC
+      $FH_LAST ReadC
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|1>*
+[sS]> (server-0) \[*MqBufferGetC\] type ERROR, it is not allowed to convert an 'LST' object into an 'STR' object*}
+
+test str-15-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOC
+      $FH_LAST ReadC
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOC> <Num|213>*
+[sS]> (server-0) \[*MqReadC\] request more arguments than available*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+    
+freeTests
+
+
+

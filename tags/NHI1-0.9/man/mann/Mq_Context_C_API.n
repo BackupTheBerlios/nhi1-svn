@@ -1,0 +1,236 @@
+.TH "Mq_Context_C_API" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqS\fP"
+.br
+.R "data structure for the \fIlibmsgque-specific-data\fP "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
+.br
+.R "signature marker used in \fBMqS.signature\fP "
+.ti -1c
+.RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
+.br
+.R "wrapper to add calling function to \fBMqExitP\fP "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqStatusIsE\fP { \fBMQ_STATUS_IS_INITIAL\fP =  0, \fBMQ_STATUS_IS_DUP\fP =  1<<0, \fBMQ_STATUS_IS_THREAD\fP =  1<<1, \fBMQ_STATUS_IS_FORK\fP =  1<<2, \fBMQ_STATUS_IS_SPAWN\fP =  1<<3 }"
+.br
+.R "Information about how the \fIcontext\fP was created. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBMqContextInit\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
+.br
+.R "initialize the \fBMqS\fP object related data but do \fInot\fP create the object self "
+.ti -1c
+.RI "void \fBMqContextFree\fP (struct \fBMqS\fP *const context)"
+.br
+.R "free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self "
+.ti -1c
+.RI "struct \fBMqS\fP * \fBMqContextCreate\fP (\fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
+.br
+.R "create a new context and initialize the default configuration data "
+.ti -1c
+.RI "void \fBMqContextDelete\fP (struct \fBMqS\fP **ctx)"
+.br
+.R "delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self "
+.ti -1c
+.RI "void \fBMqExitP\fP (\fBMQ_CST\fP prefix, struct \fBMqS\fP *ctx)"
+.br
+.R "delete the \fIcontext\fP and exit the current process or thread "
+.ti -1c
+.RI "\fBMQ_STR\fP \fBMqHelp\fP (\fBMQ_CST\fP tool)"
+.br
+.R "write \fBlibmsgque\fP specific user-help to stderr "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqCheckForLeftOverArguments\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP **argvP)"
+.br
+.ti -1c
+.RI "void \fBMqMark\fP (struct \fBMqS\fP *const context, \fBMqMarkF\fP markF)"
+.br
+.R "Mark objects as \fIused\fP to avoid to free used external memory in an external Garbage-Collection. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+
+The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
+.PP
+.nf
+ struct MyCtxDataS {
+   struct MqS  mqctx;   // libmsgque-specific-data
+   int         mydata;  // application-specific-data
+   ...                  // application-specific-data
+ };
+
+.fi
+.PP
+ The \fIlibmsgque-specific-data\fP have to be the \fIfirst\fP data entry in the structure.
+.br
+ A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Ruby, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
+.SH "Define Documentation"
+.PP 
+.SS "#define MQ_MqS_SIGNATURE   0x212CF91"
+.PP
+signature marker used in \fBMqS.signature\fP 
+.PP
+Definition at line 1383 of file msgque.h.
+.SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
+.PP
+wrapper to add calling function to \fBMqExitP\fP 
+.PP
+Definition at line 1479 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqStatusIsE\fP"
+.PP
+Information about how the \fIcontext\fP was created. 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_STATUS_IS_INITIAL \fP\fP
+context is the \fIfirst\fP context 
+.TP
+\fB\fIMQ_STATUS_IS_DUP \fP\fP
+context is created as a duplicate of an other context 
+.TP
+\fB\fIMQ_STATUS_IS_THREAD \fP\fP
+context is created as a thread 
+.TP
+\fB\fIMQ_STATUS_IS_FORK \fP\fP
+context is created as a fork 
+.TP
+\fB\fIMQ_STATUS_IS_SPAWN \fP\fP
+context is created as a spawn 
+.PP
+Definition at line 1374 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBMqErrorE\fP MqCheckForLeftOverArguments (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP ** argvP)"
+.PP
+check for left over arguments from parameter \fIargv\fP of \fBMqLinkCreate\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIargvP\fP a pointer to the argv, the memory will be freed and the value will be set to \fCNULL\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+.RE
+.PP
+This code is not part of \fBMqLinkCreate\fP because sometimes it is necessary to check for left over arguments \fBafter\fP \fBMqLinkCreate\fP was called and after the calling function was able to process function specific arguments. By Default \fBMqLinkCreate\fP will delete \fBall\fP arguments belonging to \fBlibmsgque\fP from the \fIargv\fP object. If the calling function does \fBnot\fP expect additional arguments or arguments were added with spelling errors, a call to \fBMqCheckForLeftOverArguments\fP will detect this. 
+.SS "struct \fBMqS\fP* MqContextCreate (\fBMQ_SIZE\fP size, struct \fBMqS\fP const *const  tmpl)\fC [read]\fP"
+.PP
+create a new context and initialize the default configuration data 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP (C-API) the number of bytes in the \fIcontext-data-structure\fP as returned by \fCsizeof(struct MyCtxDataS)\fP (default: \fI0\fP, use only \fIlibmsgque-specific-data\fP and no \fIapplication-specific-data\fP) 
+.br
+\fItmpl\fP (C-API) an other \fIcontext-data-structure\fP used as template to initialize the configuration data. This template is used for a \fIchild\fP to get the configuration data from the \fIparent\fP. (default: \fINULL\fP, create an initial context) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIout-of-memory-error\fP 
+.RE
+.PP
+
+.SS "void MqContextDelete (struct \fBMqS\fP ** ctx)"
+.PP
+delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
+.PP
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINothing\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+
+.SS "void MqContextFree (struct \fBMqS\fP *const  context)"
+.PP
+free the \fBMqS\fP object related data but do \fBnot\fP free the \fItoplevel\fP object self 
+.PP
+Shutdown the \fIclient-server-link\fP and free the related memory. The \fItoplevel\fP object is still alive to give an existing Garbage-Collection the control when to delete the object. The \fIcontext\fP can \fBnot\fP be reused. 
+.SS "void MqContextInit (struct \fBMqS\fP *const  context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const  tmpl)"
+.PP
+initialize the \fBMqS\fP object related data but do \fInot\fP create the object self 
+.PP
+.SS "void MqExitP (\fBMQ_CST\fP prefix, struct \fBMqS\fP * ctx)"
+.PP
+delete the \fIcontext\fP and exit the current process or thread 
+.PP
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIprefix\fP identify the caller 
+.br
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.RE
+.PP
+
+.SS "\fBMQ_STR\fP MqHelp (\fBMQ_CST\fP tool)"
+.PP
+write \fBlibmsgque\fP specific user-help to stderr 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItool\fP the name of the tool (e.g. argv[0]) or NULL. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the help messages as string
+.RE
+.PP
+If \fItool\fP != NULL, the function will display a header like: 
+.PP
+.nf
+  tool [ARGUMENT]... syntax:
+    aclient [OPTION]... @ tool [OPTION]... @...
+
+.fi
+.PP
+ on the help page. 
+.SS "void MqMark (struct \fBMqS\fP *const  context, \fBMqMarkF\fP markF)"
+.PP
+Mark objects as \fIused\fP to avoid to free used external memory in an external Garbage-Collection. 
+.PP
+An external Garbage-Collction (GC) need information about external objects referenced by \fBlibmsgque\fP. This objects are the \fCMQ_PTR data\fP parameter required by different functions. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fImarkF\fP function provided by the embedded language 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

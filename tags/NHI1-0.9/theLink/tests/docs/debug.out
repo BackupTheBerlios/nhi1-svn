@@ -1,0 +1,163 @@
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [2-0-0-0x62dbc0-MqLinkPrepare]: PREPARE: io->com<PIPE>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [2-0-0-0x62dbc0-MqLinkCreate]: START: io->com<PIPE>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-0-0x62dbc0-pTokenAddHdl]: HANDEL SERVICE ADD +TRT: proc<0x41fd75>, data<(nil)>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pEventCreate]: TLS-Id<0x634200>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-PipeCreate]: create SOCKETPAIR -> sock[0]<3>, sock[1]<4>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-MqLinkConnect]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [2-0-1-0x630010-MqLinkPrepare]: PREPARE: io->com<PIPE>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [2-0-1-0x630010-MqLinkCreate]: START: io->com<PIPE>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-1-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD +TRT: proc<0x422721>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-1-0x630010-pEventCreate]: TLS-Id<0x6368e0>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-1-0x630010-PipeCreate]: get SOCKET -> 4
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-0-0x62dbc0-SysCloseSocket]: pIoStartServer - close socket<4>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-1-0x630010-pEventAdd]: TLS-Id<0x6368e0> Socket<4> DataLCur<0>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pIoStartServer]: finish start server './server' as 'spawn' with ID '19602'
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-1-0x630010-sWaitForToken]: wait for token<_IAA>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-1-0x630010-MqProcessEvent]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-pWaitOnEvent]: START loop
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-MqLinkConnect]: send token<_IAA>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-pWaitOnEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: START loop
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-3-0x630010-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-3-0x630010-pReadHDR]: HEADER <HDR+       0+      3f+_IAA+1++++S+> ...
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-3-0x630010-pReadHDR]: BDY -> 63 bytes
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]: >>>>> BDY size<50> numItems<4>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]:       1 : STR : 0
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]:       1 : STR : 0
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]:       0 : STR : 
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]:       0 : STR : 
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-3-0x630010-pReadHDR]: <<<<< BDY
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-3-0x630010-pTokenCheckSystem]: check token<_IAA>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [8-0-1-0x630010-MqLinkCreate]: call: ServerSetup -> START
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pReadHDR]: HEADER <HDR+       0+      31+_SRT+1++++O+> ...
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-pReadHDR]: BDY -> 49 bytes
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD CSV1: proc<0x402f97>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERR1: proc<0x402324>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERR2: proc<0x40235a>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERR3: proc<0x4023b0>, data<(nil)>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-0-0x62dbc0-MqProcessEvent]: START
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: START loop
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERR4: proc<0x4023e6>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERRT: proc<0x402400>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOU: proc<0x40244e>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECON: proc<0x4024af>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOI: proc<0x402544>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOY: proc<0x402606>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOO: proc<0x402669>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOS: proc<0x4025a3>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOW: proc<0x4026cc>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOD: proc<0x40272d>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOF: proc<0x40278c>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOC: proc<0x4027eb>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOB: proc<0x40284c>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECLI: proc<0x4029e7>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOL: proc<0x402aa0>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECOM: proc<0x402d4b>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ECUL: proc<0x402b32>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD GETU: proc<0x403229>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD GTCX: proc<0x403074>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD GTTO: proc<0x4030ba>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD GTSI: proc<0x403102>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD MSQT: proc<0x402d9a>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD RDUL: proc<0x402c81>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD REDI: proc<0x4032c5>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD SETU: proc<0x4031fd>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD SLEP: proc<0x402e8d>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD SND1: proc<0x403ad3>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD SND2: proc<0x4041cc>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD USLP: proc<0x402f14>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD BUF1: proc<0x4032ea>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD BUF2: proc<0x40350f>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD BUF3: proc<0x4035c3>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD LST1: proc<0x4036b0>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD LST2: proc<0x4036e6>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD INIT: proc<0x404a2f>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD CNFG: proc<0x404a69>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERLR: proc<0x404b92>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD ERLS: proc<0x404bde>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD CFG1: proc<0x404c6c>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD PRNT: proc<0x405a39>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD TRNS: proc<0x405bc2>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenAddHdl]: HANDEL SERVICE ADD TRN2: proc<0x405b02>, data<(nil)>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [8-0-1-0x630010-MqLinkCreate]: call: ServerSetup -> END
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [2-0-1-0x630010-MqLinkCreate]: END string<no>, silent<no>, debug<9>, endian<0>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [1-0-0-0x630010-test]: this is the log test
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-0-0x630010-MqProcessEvent]: send token<_PEO>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-0-0x630010-MqProcessEvent]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-1-0x630010-pWaitOnEvent]: START loop
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-sMqEventStart]: START
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pReadHDR]: HEADER <HDR+       0+       0+_PEO+0++++S+> ...
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pTokenCheckSystem]: check token<_PEO>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-MqProcessEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-sWaitForToken]: got token<_PEO>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-MqLinkConnect]: END
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [2-0-0-0x62dbc0-MqLinkCreate]: END string<no>, silent<no>, debug<9>, endian<0>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-1-0x630010-pWaitOnEvent]: END-OK
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pReadHDR]: HEADER <HDR+       0+     401+ECOU+1++++S+> ...
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-pReadHDR]: BDY -> 1025 bytes
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]: >>>>> BDY size<1012> numItems<1>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:    1000 : BIN : ?binary?
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]: <<<<< BDY
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenCheckSystem]: check token<ECOU>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-sMqEventStart]: START
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pReadHDR]: HEADER <HDR+       0+     401+_RET+1++++O+> ...
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-pReadHDR]: BDY -> 1025 bytes
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]: >>>>> BDY size<1012> numItems<1>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:    1000 : BIN : ?binary?
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]: <<<<< BDY
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pTokenCheckSystem]: check token<_RET>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-MqProcessEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [0-0-0-0x62dbc0-main]: start: --------------------------------------
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-1-0x630010-pWaitOnEvent]: END-OK
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pReadHDR]: HEADER <HDR+       0+      35+ECUL+1++++S+> ...
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-pReadHDR]: BDY -> 53 bytes
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]: >>>>> BDY size<40> numItems<5>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:       1 : BYT : -128
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:       2 : SRT : -32768
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:       4 : INT : -2147483648
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:       8 : WID : -9223372036854775808
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]:       1 : BIN : ?binary?
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [7-0-2-0x630010-pReadHDR]: <<<<< BDY
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenCheckSystem]: check token<ECUL>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-sMqEventStart]: START
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pReadHDR]: HEADER <HDR+       0+      35+_RET+1++++O+> ...
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-pReadHDR]: BDY -> 53 bytes
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]: >>>>> BDY size<40> numItems<5>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:       1 : BYT : -128
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:       2 : SRT : -32768
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:       4 : INT : -2147483648
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:       8 : WID : -9223372036854775808
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]:       1 : BIN : ?binary?
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [7-0-2-0x62dbc0-pReadHDR]: <<<<< BDY
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pTokenCheckSystem]: check token<_RET>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-MqProcessEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [0-0-0-0x62dbc0-statistics]:             MqSendEND_AND_WAIT:     252.00
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [0-0-0-0x62dbc0-main]: end: ----------------------------------------
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [3-0-0-0x62dbc0-MqExitP]: called from 'main'
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pMqShutdown]: START - called from 'MqLinkDelete'
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pMqShutdown]: send token<_SHD>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-1-0x630010-pWaitOnEvent]: END-OK
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [6-0-2-0x630010-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pReadHDR]: HEADER <HDR+       0+       0+_SHD+1++++S+> ...
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-2-0x630010-pTokenCheckSystem]: check token<_SHD>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [4-0-3-0x630010-pMqShutdown]: START - called from 'MqLinkDelete'
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-pWaitOnEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-2-0x62dbc0-sMqEventStart]: START
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-3-0x630010-SysCloseSocket]: PipeDelete - shutdown socket<4>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pReadHDR]: HEADER <HDR+       0+       0+_RET+1++++O+> ...
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-2-0x62dbc0-pTokenCheckSystem]: check token<_RET>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [6-0-1-0x62dbc0-MqProcessEvent]: END-OK
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pEventDel]: sock<3> DataLCur<0>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pMqShutdown]: END shutdown
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [4-0-0-0x62dbc0-pEventDel]: sock<-1> DataLCur<0>
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-0-0x62dbc0-SysCloseSocket]: PipeDelete - shutdown socket<3>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [5-0-1-0x630010-MqProcessEvent]: detect EXIT in file 'service.c'
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [5-0-0-0x62dbc0-SysCloseSocket]: PipeDelete - close socket<3>
+S> (server:19602:0x2b7494f62b20) [2010-11-11:18-13-29] [3-0-0-0x630010-MqExitP]: called from 'main'
+C> (client:19601:0x2ae10cb8fb20) [2010-11-11:18-13-29] [2-0-0-0x62dbc0-MqLinkDelete]: DELETE 

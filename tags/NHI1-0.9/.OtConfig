@@ -1,0 +1,35 @@
+set -x
+
+rm -fr /tmp/libmsgque-install
+
+if [[ $ENVHOME == *nothread* ]] ; then
+  ARGS=""
+else
+  ARGS=--enable-threads
+fi
+
+bash ./configure    --prefix=/tmp/libmsgque-install \
+		    --enable-symbols \
+		    --enable-tcl \
+		    --enable-php \
+		    --enable-ruby \
+		    --enable-cxx \
+		    --enable-java \
+		    --enable-csharp \
+		    --enable-python \
+		    --enable-perl \
+		    $ARGS $@
+
+#		    --enable-guard \
+#		    --enable-brain \
+#		    --enable-tcl \
+#		    --enable-ruby \
+#		    --enable-cxx \
+#		    --enable-java \
+#		    --enable-csharp \
+#		    --enable-python \
+#		    --enable-perl \
+#		    --enable-php \
+#		    --enable-vb \
+#		    --enable-static \
+

@@ -1,0 +1,31 @@
+.TH "javamsgque::ICallback" n "11 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+javamsgque::ICallback \- implement the \fBlibmsgque\fP API object: \fBMqCallbackS\fP  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Package Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBCallback\fP (\fBMqS\fP ctx)  throws MqSException"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+implement the \fBlibmsgque\fP API object: \fBMqCallbackS\fP 
+.PP
+Definition at line 17 of file ICallback.java.
+.SH "Member Function Documentation"
+.PP 
+.SS "void javamsgque.ICallback.Callback (\fBMqS\fP ctx)  throws \fBMqSException\fP\fC [package]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for javamsgque from the source code.

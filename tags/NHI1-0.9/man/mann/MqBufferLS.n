@@ -1,0 +1,65 @@
+.TH "MqBufferLS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MqBufferLS \- the object to manage an array of \fBMqBufferS\fP items.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <msgque.h>\fP
+.PP
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBsize\fP"
+.br
+.R "the total allocated size "
+.ti -1c
+.RI "\fBMQ_SIZE\fP \fBcursize\fP"
+.br
+.R "the currently used size (e.g. 0 <= cursize <= size) "
+.ti -1c
+.RI "struct \fBMqBufferS\fP ** \fBdata\fP"
+.br
+.R "pointer to the allocated memory (fixed position) "
+.ti -1c
+.RI "struct \fBMqBufferS\fP ** \fBcur\fP"
+.br
+.R "pointer to the current position (e.g. data <= cur <= data+cursize, floating position) "
+.in -1c
+.SH "Detailed Description"
+.PP 
+the object to manage an array of \fBMqBufferS\fP items. 
+
+every \fBMqBufferLS\fP is able to store a infinite number of \fBMqBufferS\fP objects using dynamic allocation. the \fBMqBufferS\fP objects are stored in a flat array of \fBMqBufferS\fP object pointers. to access an object only the \fIdata\fP or the \fIcur\fP member is used (e.g. \fB\fCdata\fP[index\fP]). in difference to the \fIdata\fP member the \fIcur\fP member has a floating position to implement an increment/decrement like behaviour 
+.PP
+Definition at line 2573 of file msgque.h.
+.SH "Member Data Documentation"
+.PP 
+.SS "struct \fBMqBufferS\fP** \fBMqBufferLS.cur\fP\fC [read]\fP"
+.PP
+pointer to the current position (e.g. data <= cur <= data+cursize, floating position) 
+.PP
+Definition at line 2577 of file msgque.h.
+.SS "\fBMQ_SIZE\fP \fBMqBufferLS.cursize\fP"
+.PP
+the currently used size (e.g. 0 <= cursize <= size) 
+.PP
+Definition at line 2575 of file msgque.h.
+.SS "struct \fBMqBufferS\fP** \fBMqBufferLS.data\fP\fC [read]\fP"
+.PP
+pointer to the allocated memory (fixed position) 
+.PP
+Definition at line 2576 of file msgque.h.
+.SS "\fBMQ_SIZE\fP \fBMqBufferLS.size\fP"
+.PP
+the total allocated size 
+.PP
+Definition at line 2574 of file msgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

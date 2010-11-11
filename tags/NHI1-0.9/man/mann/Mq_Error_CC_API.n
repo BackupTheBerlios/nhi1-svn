@@ -1,0 +1,135 @@
+.TH "Mq_Error_CC_API" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Error_CC_API \- create and manage error messages.   
+
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fBccmsgque::MqCException\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorCheck\fP (enum \fBMqErrorE\fP err)  throw (MqCException)"
+.br
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const message)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP const errnum, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorV\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorRaise\fP ()  throw (MqCException)"
+.br
+.R "throw an \fBccmsgque::MqCException\fP using the data from \fBMqErrorS\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorReset\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorPrint\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorSetCONTINUE\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.ti -1c
+.RI "void \fBccmsgque::MqC::ErrorSetEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
+.ti -1c
+.RI "int \fBccmsgque::MqC::ErrorGetNum\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBccmsgque::MqC::ErrorGetText\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBccmsgque::MqC::ErrorSet\fP (const exception &e)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP "
+.ti -1c
+.RI "bool \fBccmsgque::MqC::ErrorIsEXIT\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+create and manage error messages.  
+
+create and manage error messages. 
+.PP
+the management is done with a \fBMqErrorS\fP object created by \fBMqContextCreate\fP. every \fBMqS\fP object is linked with only one \fBMqErrorS\fP object and every \fBMqErrorS\fP object is linked with only one \fBMqS\fP object. the \fBMqErrorS\fP object is used to collect all data needed to handle an error.  
+.SH "Function Documentation"
+.PP 
+.SS "void ccmsgque::MqC::ErrorC (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  message)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP 
+.PP
+Definition at line 510 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorCheck (enum \fBMqErrorE\fP err)  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+Definition at line 503 of file ccmsgque.h.
+.SS "int ccmsgque::MqC::ErrorGetNum ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP 
+.PP
+Definition at line 548 of file ccmsgque.h.
+.SS "\fBMQ_CST\fP ccmsgque::MqC::ErrorGetText ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP 
+.PP
+Definition at line 553 of file ccmsgque.h.
+.SS "bool ccmsgque::MqC::ErrorIsEXIT ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP 
+.PP
+Definition at line 561 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorPrint ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP 
+.PP
+Definition at line 533 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorRaise ()  throw (MqCException)\fC [inline, inherited]\fP"
+.PP
+throw an \fBccmsgque::MqCException\fP using the data from \fBMqErrorS\fP 
+.PP
+Definition at line 523 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorReset ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP 
+.PP
+Definition at line 528 of file ccmsgque.h.
+.SS "enum \fBMqErrorE\fP ccmsgque::MqC::ErrorSet (const exception & e)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP 
+.PP
+.SS "void ccmsgque::MqC::ErrorSetCONTINUE ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP 
+.PP
+Definition at line 538 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorSetEXIT ()\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP 
+.PP
+Definition at line 543 of file ccmsgque.h.
+.SS "void ccmsgque::MqC::ErrorV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP const  errnum, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorV\fP 
+.PP
+Definition at line 515 of file ccmsgque.h.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

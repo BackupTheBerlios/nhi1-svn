@@ -1,0 +1,287 @@
+.TH "ccmsgque Tutorial" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque Tutorial \- .SH "INDEX"
+.PP
+\fBINTRODUCTION\fP
+.br
+ \fBBUILD\fP
+.br
+ \fBSERVER\fP
+.br
+ \fBCLIENT\fP
+.br
+ \fBFILTER\fP
+.br
+.SH "INTRODUCTION"
+.PP
+\fBccmsgque\fP is the C++ language binding of the \fBlibmsgque\fP library.
+.br
+ The library was designed to simplify the client/server development using the following design rules:
+.IP "1." 4
+programming language independent
+.IP "2." 4
+operating system independent
+.IP "3." 4
+processor hardware independent
+.PP
+The C++ language binding provide the following basic components:
+.IP "\(bu" 2
+abstract class of the \fBccmsgque\fP object: \fBMqC ctx; MqC *ctx=new MqC()\fP
+.IP "\(bu" 2
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+.IP "\(bu" 2
+interface: \fBIFactory\fP to create a new application instance
+.IP "\(bu" 2
+interface: \fBIBgError\fP to act on asyncrone errors
+.IP "\(bu" 2
+interface: \fBIEvent\fP to process background events
+.IP "\(bu" 2
+adding and removing \fBservices\fP
+.PP
+.SH "BUILD"
+.PP
+The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
+.SS "UNIX"
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBccmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/C++/Makefile\fP.am 
+.PP
+.PP
+.nf
+noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilter$(EXEEXT) \
+      testserver$(EXEEXT) testclient$(EXEEXT) MyClient$(EXEEXT)  MyServer$(EXEEXT) Filter2$(EXEEXT) \
+        Filter3$(EXEEXT) Filter4$(EXEEXT)
+
+AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+LDADD = ../../ccmsgque/libtmp.la
+.fi
+.PP
+ ... 
+.PP
+.nf
+MyClient_SOURCES = MyClient.cc
+MyServer_SOURCES = MyServer.cc
+
+.fi
+.PP
+.SS "WINDOWS"
+The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
+.SH "SERVER"
+.PP
+A \fBccmsgque\fP server requires the following setup:
+.IP "1." 4
+file: \fCexample/C++/MyServer\fP.cc
+.IP "2." 4
+an instance of the abstract class \fBMqC ctx; MqC *ctx=new MqC()\fP
+.IP "3." 4
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+.IP "4." 4
+the interface \fBIFactory\fP to create a new application instance
+.PP
+The \fIminimal\fP server looks like:
+.PP
+.PP
+.nf
+
+#include 'ccmsgque.h'
+
+using namespace ccmsgque;
+
+class MyServer : public MqC, public IServerSetup, public IFactory {
+
+  // service to serve all incomming requests for token 'HLWO'
+  void MyFirstService () {
+    SendSTART();
+    SendC('Hello World');
+    SendRETURN();
+  }
+
+  // factory to create objects
+  MqC* Factory() const {return new MyServer();}
+
+  // define a service as link between the token 'HLWO' and the callback 'MyFirstService'
+  void ServerSetup() {
+    ServiceCreate('HLWO', CallbackF(&MyServer::MyFirstService));
+  }
+};
+
+int MQ_CDECL main(int argc, MQ_CST argv[]) {
+  static MyServer srv;
+  try {
+    srv.LinkCreateVC(argc, argv);
+    srv.ProcessEvent (MQ_WAIT_FOREVER);
+  } catch (const exception& e) {
+    srv.ErrorSet(e);
+  }
+  srv.Exit();
+}
+.fi
+.PP
+.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
+.PP
+.PP
+.nf
+
+> MyServer --tcp --port 2345 --thread
+.fi
+.PP
+.PP
+If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
+.PP
+.PP
+.nf
+
+> MyServer --uds --file /path/to/any/file.uds --thread
+.fi
+.PP
+.PP
+Three things are important:
+.IP "1." 4
+the \fBsend\fP style of functions
+.IP "2." 4
+the \fBctx.ServiceCreate(MQ_CST token, IService * callback)\fP function
+.IP "3." 4
+a \fBconnected\fP context of type \fBMqC ctx; MqC *ctx=new MqC()\fP
+.PP
+Sending data is done using a minimum of 2 steps:
+.IP "1." 4
+First: start a data package with \fBctx.SendSTART()\fP
+.IP "2." 4
+Last: submit the a data package to the link target using one of:
+.IP "  \(bu" 4
+\fBctx.SendEND(MQ_CST const token)\fP
+.IP "  \(bu" 4
+\fBctx.SendEND_AND_WAIT(MQ_CST const token, MQ_TIME_T timeout=MQ_TIMEOUT_USER)\fP
+.IP "  \(bu" 4
+\fBctx.SendEND_AND_CALLBACK(MQ_CST const token, IService * const callback)\fP
+.IP "  \(bu" 4
+\fBctx.SendRETURN()\fP
+.PP
+
+.PP
+The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(MQ_CST const token) ... other \fBSEND API\fP style commands are available to fill the data package with data.
+.PP
+Services are created with the \fBctx.ServiceCreate(MQ_CST token, IService * callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+.PP
+The \fBSERVICE CALLBACK\fP is called for every incoming \fIservice-request\fP which belongs to token.
+.SH "CLIENT"
+.PP
+A \fBccmsgque\fP client requires the following setup:
+.IP "1." 4
+an instance of the abstract class \fBMqC ctx; MqC *ctx=new MqC()\fP
+.PP
+The \fIminimal\fP client looks like:
+.PP
+.PP
+.nf
+
+#include <iostream>
+#include 'ccmsgque.h'
+
+using namespace std;
+using namespace ccmsgque;
+
+int MQ_CDECL main(int argc, MQ_CST argv[]) {
+  static MqC c;
+  try {
+    c.LinkCreateVC(argc, argv);
+    c.SendSTART();
+    c.SendEND_AND_WAIT('HLWO');
+    cout << c.ReadC() << endl;
+  } catch (const exception& e) {
+    c.ErrorSet(e);
+  }
+  c.Exit();
+}
+.fi
+.PP
+.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
+.PP
+.PP
+.nf
+
+> MyClient --tcp --port 2345
+> Hello World
+.fi
+.PP
+.PP
+To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
+.PP
+.PP
+.nf
+
+> MyClient --uds --file /path/to/any/file.uds
+> Hello World
+.fi
+.PP
+.PP
+To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
+.PP
+.PP
+.nf
+
+> MyClient @ MyServer
+> Hello World
+.fi
+.PP
+.SH "FILTER"
+.PP
+The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filter looks like:
+.PP
+.PP
+.nf
+
+#include 'ccmsgque.h'
+
+using namespace std;
+using namespace ccmsgque;
+
+class manfilter : public MqC, public IFactory {
+    MqC* Factory() const { 
+      return new manfilter(); 
+    }
+  public:
+    void fFTR () {
+      MqC *ftr = ServiceGetFilter();
+      MQ_BUF temp = GetTempBuffer();
+      ftr->SendSTART();
+      while (ReadItemExists()) {
+        ftr->SendU(MqBufferSetV(temp, '<%s>', ReadC()));
+      }
+      ftr->SendEND_AND_WAIT('+FTR');
+      return SendRETURN();
+    }
+};
+
+int MQ_CDECL main (int argc, MQ_CST argv[])
+{
+  static manfilter filter;
+  try {
+    filter.ConfigSetName ('manfilter');
+    filter.ConfigSetIsServer (MQ_YES);
+    filter.LinkCreateVC(argc, argv);
+    filter.ServiceCreate('+FTR', MqC::CallbackF(&manfilter::fFTR));
+    filter.ServiceProxy ('+EOF');
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
+  } catch (const exception& e) {
+    filter.ErrorSet(e);
+  }
+  filter.Exit();
+}
+
+.fi
+.PP
+ Use \fImanfilter.cc\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+
+.fi
+.PP
+ 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.
