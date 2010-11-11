@@ -1969,11 +1969,117 @@ The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc or i6
 .SH "EXAMPLES"
 .PP
 .SS "1. create a server to multiplicate 2 double values and return the result"
+ 
+.PP
+.nf
+class MulServer extends MqS implements iServerSetup, iFactory {
+  public function Factory() {
+    return new MulServer();
+  }
+  public function ServerSetup() {
+    $this->ServiceCreate('MMUL', array(&$this, 'MMUL'));
+  }
+  public function MMUL() {
+    $this->SendSTART();
+    $this->SendD($this->ReadD() * $this->ReadD());
+    $this->SendRETURN();
+  }
+}
+$srv = new MulServer();
+try {
+  $srv->LinkCreate($argv);
+  $srv->ProcessEvent(MqS::WAIT_FOREVER);
+} catch (Exception $ex) {
+  $srv->ErrorSet($ex);
+}
+$srv->Exit();
+
+.fi
+.PP
+ Start \fImulserver.cwphppl\fP using \fITCP\fP port \fI7777\fP and create a \fIthread\fP for every incoming connection 
+.PP
+.nf
+
+> php mulserver.php --tcp --port 7777 --thread
+
+.fi
+.PP
 .SS "2. in a client call the service from 1."
+ 
+.PP
+.nf
+$srv = new MqS();
+try {
+  $srv->ConfigSetName('MyMul');
+  $srv->LinkCreate($argv);
+  $srv->SendSTART();
+  $srv->SendD(3.67);
+  $srv->SendD(22.3);
+  $srv->SendEND_AND_WAIT('MMUL');
+  print($srv->ReadD());
+} catch (Exception $ex) {
+  $srv->ErrorSet($ex);
+}
+$srv->Exit();
+
+.fi
+.PP
+ Use \fImulclient.php\fP to connect to \fImulserver.php\fP using \fITCP\fP port \fI7777\fP: 
+.PP
+.nf
+
+> php mulclient.php --tcp --port 7777
+
+.fi
+.PP
 .SS "3. create a filter to wrap every column in a '<>' pair"
+ 
+.PP
+.nf
+class ManFilter extends MqS implements iServerSetup, iFactory {
+  public function __construct() {
+    $this->ConfigSetName('filter');
+    parent::__construct();
+  }
+  public function Factory() {
+    return new ManFilter();
+  }
+  public function ServerSetup() {
+    $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
+    $this->ServiceProxy('+EOF');
+  }
+  public function FTRcmd() {
+    $ftr = $this->ServiceGetFilter();
+    $ftr->SendSTART();
+    while ($this->ReadItemExists()) {
+      $ftr->SendC('<' . $this->ReadC() . '>');
+    }
+    $ftr->SendEND_AND_WAIT('+FTR');
+    $this->SendRETURN();
+  }
+}
+$srv = new ManFilter();
+try {
+  $srv->LinkCreate($argv);
+  $srv->ProcessEvent(MqS::WAIT_FOREVER);
+} catch (Exception $ex) {
+  $srv->ErrorSet($ex);
+}
+$srv->Exit();
+
+.fi
+.PP
+ Use \fImanfilter.php\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ php manfilter.php @ atool join -d :
+
+.fi
+.PP
 .SH "SEE ALSO"
 .PP
-php, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
+php, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
 .SH "KEYWORDS"
 .PP
 php, unix, socket, message, msgque 

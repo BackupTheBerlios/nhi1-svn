@@ -2096,7 +2096,7 @@ error:
 .PP
 .SH "SEE ALSO"
 .PP
-C, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
+C, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
 .SH "KEYWORDS"
 .PP
 C, unix, socket, message, msgque 

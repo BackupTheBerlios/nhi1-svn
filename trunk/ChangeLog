@@ -17,14 +17,16 @@
 
 This version adds the ability to:
 
-- PHP language support.
-- Revision of the \RNSA{ProcessEvent} and the \RNSC{startAs} functions.
-- The new \RNSA{ErrorSetEXIT} to terminate an application from a callback out.
+- \msgqueforphp "PHP" language support.
+- a new interface of the \RNSA{ProcessEvent} function and the \RNSC{startAs} configuration option.
+- terminate an application from a callback with the \RNSA{ErrorSetEXIT} function.
 
-The PHP language is characterized by an extensive but undocumented C API. A number of 
-features combined with a growing extent, the language task made difficult and lengthy. 
-The successful PHP extension shows the flexibility and adaptability of NHI1.
+The PHP language is characterized by an extensive but undocumented C API. The number of 
+features combined with a growing and moving language made the extension programming difficult
+and lengthy. The successful PHP extension shows the flexibility and adaptability of NHI1.
 
+\n
+\n
 
 \section V0_8 22 Oct 2010 - NHI1-0.8, PLMK-1.6 und libmsgque-4.6
 

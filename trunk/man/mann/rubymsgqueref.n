@@ -2093,7 +2093,7 @@ end
 .PP
 .SH "SEE ALSO"
 .PP
-RUBY, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
+RUBY, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
 .SH "KEYWORDS"
 .PP
 RUBY, unix, socket, message, msgque 

@@ -703,6 +703,14 @@ Start \e mulserver.pl using \e TCP port \e 7777 and create a \e thread for every
 \verbatim
 > perl mulserver.pl --tcp --port 7777 --thread
 \endverbatim
+\elseif PHP
+\dontinclude mulserver.php
+\skip class
+\until Exit
+Start \e mulserver.cwphppl using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> php mulserver.php --tcp --port 7777 --thread
+\endverbatim
 \elseif C
 \include mulserver.c
 Start \e mulserver.c using \e TCP port \e 7777 and create a \e thread for every incoming connection
@@ -770,6 +778,14 @@ Use \e mulclient.tcl to connect to \e mulserver.tcl using \e TCP port \e 7777:
 Use \e mulclient.pl to connect to \e mulserver.pl using \e TCP port \e 7777:
 \verbatim
 > perl mulclient.pl --tcp --port 7777
+\endverbatim
+\elseif PHP
+\dontinclude mulclient.php
+\skip MqS
+\until Exit
+Use \e mulclient.php to connect to \e mulserver.php using \e TCP port \e 7777:
+\verbatim
+> php mulclient.php --tcp --port 7777
 \endverbatim
 \elseif C
 \include mulclient.c
@@ -839,6 +855,14 @@ Use \e manfilter.pl in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
 \endverbatim
+\elseif PHP
+\dontinclude manfilter.php
+\skip class
+\until Exit
+Use \e manfilter.php in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ php manfilter.php @ atool join -d :
+\endverbatim
 \elseif C
 \include manfilter.c
 Use \e manfilter.c in a LibMsgque command pipeline:
@@ -854,8 +878,9 @@ Use \e manfilter.cc in a LibMsgque command pipeline:
 \endif
 
 \section	\NS{also}				SEE ALSO
-\lang, C: libmsgque(n), C++: ccmsgque(n), C#: csmsgque(n), JAVA: javamsgque(n), PYTHON: pymsgque(n), 
-TCL: tclmsgque(n), PERL: perlmsgque(n), VB.NET: vbmsgque(n)
+\lang, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), 
+PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), 
+RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
 
 \section	\NS{keywords}				KEYWORDS
 \lang, unix, socket, message, msgque
