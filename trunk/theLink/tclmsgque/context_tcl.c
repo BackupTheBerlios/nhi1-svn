@@ -561,7 +561,3 @@ NS(MqS_Init) (
   RETURN_TCL
 }
 
-
-
-
-

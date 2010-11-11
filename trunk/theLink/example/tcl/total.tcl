@@ -46,12 +46,13 @@ tclmsgque Main {
     $srv LinkCreate {*}$argv
     $srv ServiceCreate "+FTR" FTR
     $srv ServiceCreate "+EOF" EOF
-    $srv ProcessEvent $MqS_WAIT_FOREVER
+    $srv ProcessEvent -wait FOREVER
   }]} {
     $srv ErrorSet
   }
   $srv Exit
 }
+
 
 
 

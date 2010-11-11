@@ -216,7 +216,13 @@ ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token As String, AddressOf callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token As String, [id=0 As Integer])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
-ALIASES		    += "ProcessEvent=ctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout As Integer, MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent4=ctx.ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ENABLED_SECTIONS    += ProcessEvent4
 ALIASES		    += "MQ_WAIT_NO=\c MqS.WAIT.NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c MqS.WAIT.ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c MqS.WAIT.FOREVER"

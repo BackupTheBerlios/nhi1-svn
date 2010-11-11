@@ -238,7 +238,11 @@ ALIASES		    += "ServiceInterface=method(:OwnMethod, :OtherMethod or :Proc)"
 ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
-ALIASES		    += "ProcessEvent=ctx.ProcessEvent(?MqS::TIMEOUT::(DEFAULT|USER|MAX) or Fixnum?,?MqS::WAIT::(NO|ONCE|FOREVER)?)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout=Fixnum|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
 ALIASES		    += "MQ_WAIT_NO=\c MqS::WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c MqS::WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c MqS::WAIT_FOREVER"

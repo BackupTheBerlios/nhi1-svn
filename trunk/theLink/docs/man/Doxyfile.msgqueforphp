@@ -225,7 +225,11 @@ public function ServerSetup() { \n\
 ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(\C:token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(\C:token, ?\I:id=0?)"
 ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(\C:token)"
-ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(?\I|MqS::TIMEOUT_(DEFAULT|USER|MAX):timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER):wait?)"
+ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(timeout=\I|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=$ctx->ProcessEvent(wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=$ctx->ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
 ALIASES		    += "MQ_WAIT_NO=\c MqS::WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c MqS::WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c MqS::WAIT_FOREVER"

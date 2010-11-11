@@ -151,7 +151,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 	      incr i
 	    }
 	    while {[llength $RET] != $MAX} {
-	      $FH_LAST ProcessEvent $env(TS_TIMEOUT) $MqS_WAIT_ONCE
+	      $FH_LAST ProcessEvent -timeout $env(TS_TIMEOUT) -wait ONCE
 	    }
 	} \
 	-cleanup    {
@@ -179,7 +179,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 	      incr i
 	    }
 	    while {[llength $RET] != $MAX} {
-	      $FH_LAST ProcessEvent $env(TS_TIMEOUT) $MqS_WAIT_ONCE
+	      $FH_LAST ProcessEvent -timeout $env(TS_TIMEOUT) -wait ONCE
 	    }
 	} \
 	-cleanup    {

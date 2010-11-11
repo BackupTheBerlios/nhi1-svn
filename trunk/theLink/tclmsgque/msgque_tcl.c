@@ -372,18 +372,6 @@ Tclmsgque_Init (
   Tcl_CreateObjCommand (interp, "tclmsgque", NS(MsgqueCmd), (ClientData) NULL,
                         (Tcl_CmdDeleteProc *) NULL);
 
-  // define global constants
-  Tcl_SetVar2Ex(interp, "MqS_WAIT_NO",		NULL, Tcl_NewIntObj(0),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_WAIT_ONCE",	NULL, Tcl_NewIntObj(1),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_WAIT_FOREVER",	NULL, Tcl_NewIntObj(2),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_TIMEOUT_DEFAULT",	NULL, Tcl_NewIntObj(-1),  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_TIMEOUT_MAX",	NULL, Tcl_NewIntObj(-2),  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_TIMEOUT_USER",	NULL, Tcl_NewIntObj(-3),  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_START_DEFAULT",	NULL, Tcl_NewIntObj(0),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_START_FORK ",	NULL, Tcl_NewIntObj(1),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_START_THREAD",	NULL, Tcl_NewIntObj(2),	  TCL_GLOBAL_ONLY);
-  Tcl_SetVar2Ex(interp, "MqS_START_SPAWN ",	NULL, Tcl_NewIntObj(3),	  TCL_GLOBAL_ONLY);
-
   // init libmsgque global data
   if (MqInitBuf == NULL && Tcl_GetNameOfExecutable() != NULL) {
     struct MqBufferLS * initB = MqInitCreate();

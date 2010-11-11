@@ -267,8 +267,18 @@ int NS(ConfigSetIoPipeSocket) (NS_ARGS)
 int NS(ConfigSetStartAs) (NS_ARGS)
 {
   int startAs;
-  CHECK_I(startAs)
-  CHECK_NOARGS
+  static const char *optA[] = { "DEFAULT", "FORK", "THREAD", "SPAWN", NULL };
+  enum optAE { DEFAULT, FORK, THREAD, SPAWN };
+  if (objc-skip<1) {
+    Tcl_SetResult(interp, "no additional argument available for 'startAs'", TCL_STATIC);
+    return TCL_ERROR;
+  }
+  if (Tcl_GetIntFromObj (interp, objv[skip], &startAs) != TCL_OK) {
+    Tcl_ResetResult(interp);
+    TclErrorCheck (Tcl_GetIndexFromObj (interp, objv[skip], optA, "startAs", 0, &startAs));
+  }
+  objv++;objc--;
+  CHECK_NOARGS;
   MqConfigSetStartAs (MQCTX, startAs);
   RETURN_TCL
 }

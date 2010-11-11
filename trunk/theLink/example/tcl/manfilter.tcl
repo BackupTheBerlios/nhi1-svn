@@ -27,11 +27,12 @@ if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate "+FTR" FTRcmd
   $srv ServiceProxy  "+EOF"
-  $srv ProcessEvent $MqS_WAIT_FOREVER
+  $srv ProcessEvent -wait FOREVER
 }]} {
   $srv ErrorSet
 }
 $srv Exit
+
 
 
 

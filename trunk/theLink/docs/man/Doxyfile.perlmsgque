@@ -219,7 +219,11 @@ ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(token, id=0)"
 ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(token)"
-ALIASES		    += "ProcessEvent=$ctx->ProcessEvent({timeout=>seconds, wait=>(NO|ONCE|FOREVER)})"
+ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(timeout, wait)"
+ALIASES		    += "ProcessEvent2=$ctx->ProcessEvent(wait)"
+ALIASES		    += "ProcessEvent3=$ctx->ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
 ALIASES		    += "MQ_WAIT_NO=\c Net::PerlMsgque::WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=\c Net::PerlMsgque::WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=\c Net::PerlMsgque::WAIT_FOREVER"

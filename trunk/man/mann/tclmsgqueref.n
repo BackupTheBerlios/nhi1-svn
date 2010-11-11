@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "9 Nov 2010" "Version 4.7" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "11 Nov 2010" "Version 4.7" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -363,13 +363,13 @@ a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as 
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
-\fB\fC$MqS_START_DEFAULT\fP =\fP 0, use application-context default entity creation
+\fB\fCDEFAULT\fP =\fP 0, use application-context default entity creation
 .IP "\(bu" 2
-\fB\fC$MqS_START_FORK\fP =\fP 1, create entity as \fIfork\fP 
+\fB\fCFORK\fP =\fP 1, create entity as \fIfork\fP 
 .IP "\(bu" 2
-\fB\fC$MqS_START_THREAD\fP =\fP 2, create entity as \fIthread\fP 
+\fB\fCTHREAD\fP =\fP 2, create entity as \fIthread\fP 
 .IP "\(bu" 2
-\fB\fC$MqS_START_SPAWN\fP =\fP 3, create entity as \fIspawn\fP process
+\fB\fCSPAWN\fP =\fP 3, create entity as \fIspawn\fP process
 .PP
 (default: do not create a new application-context) 
 .SS "command-line:  --daemon"
@@ -532,7 +532,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fC$MqS_WAIT_FOREVER\fP.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fC-wait FOREVER\fP.
 .PP
 .PP
 \fBDefinition of a 'parent-context'\fP
@@ -877,12 +877,14 @@ delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.SS "$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?"
+.SS "$ctx ProcessEvent -timeout (IntObj|DEFAULT|USER|MAX) -wait (NO|ONCE|FOREVER)"
+.SS "$ctx ProcessEvent -wait (NO|ONCE|FOREVER)"
+.SS "$ctx ProcessEvent"
 enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
 .br
- This function is direct used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP. This function is indirect used in \fBSendEND_AND_WAIT\fP to
+ This function is direct used on a server to enter the \fIevent-loop\fP and wait for incoming service requests or after the \fBSendEND_AND_CALLBACK\fP function to wait for the \fIservice-result\fP. This function is indirect used in \fBSendEND_AND_WAIT\fP too.
 .PP
 \fBParameters:\fP
 .RS 4
@@ -892,20 +894,20 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fB\fC$MqS_TIMEOUT_DEFAULT\fP =\fP -1, request the default timeout value . \fC$MqS_TIMEOUT_USER\fP for \fC$MqS_WAIT_ONCE\fP or \fC$MqS_TIMEOUT_MAX\fP for \fC$MqS_WAIT_FOREVER\fP. \fBdefault\fP 
+\fB\fC-timeout DEFAULT\fP = -1\fP, request the default timeout value . \fC-timeout USER\fP for \fC-wait ONCE\fP or \fC-timeout MAX\fP for \fC-wait FOREVER\fP. \fBdefault\fP 
 .IP "\(bu" 2
-\fB\fC$MqS_TIMEOUT_USER\fP =\fP -2, request the user defined timeout value from the \fBtimeout\fP configuration value 
+\fB\fC-timeout USER\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
-\fB\fC$MqS_TIMEOUT_MAX\fP =\fP -3, request the maximum possible (infinite) timeout value 
+\fB\fC-timeout MAX\fP = -3\fP, request the maximum possible (infinite) timeout value 
 .PP
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-\fB\fC$MqS_WAIT_NO\fP =\fP 0, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
+\fB\fC-wait NO\fP = 0\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
 .IP "\(bu" 2
-\fB\fC$MqS_WAIT_ONCE\fP =\fP 1, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+\fB\fC-wait ONCE\fP = 1\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-\fB\fC$MqS_WAIT_FOREVER\fP =\fP 2, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+\fB\fC-wait FOREVER\fP = 2\fP, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP
@@ -1020,7 +1022,7 @@ an \fBERROR OBJECT\fP on error
 .SS "$ctx SendEND_AND_CALLBACK token callback"
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx ProcessEvent ?-timeout val? ?-wait (NO|ONCE|FOREVER)?\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx ProcessEvent -timeout (IntObj|DEFAULT|USER|MAX) -wait (NO|ONCE|FOREVER)\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1987,7 +1989,7 @@ tclmsgque Main {
   $srv ConfigSetServerSetup ServerConfig
   if {[catch {
     $srv LinkCreate {*}$argv
-    $srv ProcessEvent $MqS_WAIT_FOREVER
+    $srv ProcessEvent -wait FOREVER
   }]} {
     $srv ErrorSet
   }
@@ -2050,7 +2052,7 @@ if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate '+FTR' FTRcmd
   $srv ServiceProxy  '+EOF'
-  $srv ProcessEvent $MqS_WAIT_FOREVER
+  $srv ProcessEvent -wait FOREVER
 }]} {
   $srv ErrorSet
 }

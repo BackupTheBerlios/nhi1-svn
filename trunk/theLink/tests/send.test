@@ -103,7 +103,7 @@ test send-4a-($I|$B|$C|$S) {SendEND with error} \
 	## 1. create an error
 	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC REDI SendW 777
 	## 2. get the error from above as side-effect of the following service call
-	$FH_LAST ProcessEvent $MqS_WAIT_ONCE
+	$FH_LAST ProcessEvent -wait ONCE
     } \
     -returnCodes    error \
     -match	    glob \
@@ -112,7 +112,7 @@ test send-4a-($I|$B|$C|$S) {SendEND with error} \
 test send-4b-($I|$B|$C|$S) {SendEND with background error} \
     -body           {
 	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC XXXX SendI 777
-	$FH_LAST ProcessEvent $MqS_WAIT_ONCE
+	$FH_LAST ProcessEvent -wait ONCE
     } \
     -returnCodes    error \
     -match	    glob \
@@ -124,7 +124,7 @@ test send-4c-($I|$B|$C|$S) {SendEND with error} \
 	## 1. create an error
 	Call $FH_LAST SendEND_AND_WAIT SND1 SendC SEND SendI 0 SendC REDI SendW 777
 	## 2. get the error from above as side-effect of the following service call
-	$FH_LAST ProcessEvent $MqS_WAIT_ONCE
+	$FH_LAST ProcessEvent -wait ONCE
     } \
     -returnCodes    error \
     -match	    glob \
@@ -436,5 +436,6 @@ unset B C S
 ## finish
 ##
 freeTests
+
 
 

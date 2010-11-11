@@ -1,4 +1,4 @@
-.TH "Mq_Error_CC_API" n "9 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Error_CC_API" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

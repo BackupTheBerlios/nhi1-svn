@@ -101,7 +101,7 @@ test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
       $FH_LAST SendT_END
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_WAIT ECOI
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE
+      $FH_LAST ProcessEvent -wait ONCE
       set RET
     } \
     -cleanup {
@@ -124,8 +124,8 @@ test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} 
       $FH_LAST SendT_END
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_CALLBACK ECOI CB
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE; # wait for callback
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE; # wait for transaction
+      $FH_LAST ProcessEvent -wait ONCE; # wait for callback
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
       set RET
     } \
     -cleanup {
@@ -148,7 +148,7 @@ test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
       $FH_LAST SendT_END
       $FH_LAST SendI 1
       $FH_LAST SendEND ECOI
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE; # wait for transaction
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
       set RET
     } \
     -cleanup {
@@ -169,7 +169,7 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
       $FH_LAST SendT_END
       $FH_LAST SendW 1
       $FH_LAST SendEND_AND_WAIT ECOI
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE
+      $FH_LAST ProcessEvent -wait ONCE
       set RET
     } \
     -cleanup {
@@ -214,7 +214,7 @@ test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
       $FH_LAST SendT_END
       $FH_LAST SendI 1
       $FH_LAST SendEND ERRT
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE; # wait for transaction
+      $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
       set RET
     } \
     -cleanup {
@@ -274,7 +274,7 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
       $FH_LAST SendT_END
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_WAIT ECOI
-      $FH_LAST ProcessEvent $MqS_WAIT_ONCE
+      $FH_LAST ProcessEvent -wait ONCE
       set RET
     } \
     -cleanup {
@@ -295,6 +295,7 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
 
 
 

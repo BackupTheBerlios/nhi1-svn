@@ -22,6 +22,10 @@
 # define mq_getpid() 1
 #endif
 
+#if defined(MQ_HAS_THREAD)
+# include <pthread.h>
+#endif
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              msgque/types                                 */

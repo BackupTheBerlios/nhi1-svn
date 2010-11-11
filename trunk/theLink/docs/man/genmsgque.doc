@@ -359,6 +359,15 @@ UNKNOWN
 \copydoc MqServiceDelete
 
 \subsection	  \NS{ProcessEvent}			\ProcessEvent
+\if ProcessEvent2
+\subsection	  \NS{ProcessEvent2}			\ProcessEvent2
+\endif
+\if ProcessEvent3
+\subsection	  \NS{ProcessEvent3}			\ProcessEvent3
+\endif
+\if ProcessEvent4
+\subsection	  \NS{ProcessEvent4}			\ProcessEvent4
+\endif
 \copydoc MqProcessEvent
 
 \section	\NS{SendData}				SEND API

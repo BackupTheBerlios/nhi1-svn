@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "9 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -213,7 +213,7 @@ an \fBERROR OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent([timeout As Integer], [MqS.WAIT.(NO|ONCE|FOREVER)])\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(timeout As Integer, MqS.WAIT.(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
