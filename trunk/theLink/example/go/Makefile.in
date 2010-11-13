@@ -16,12 +16,12 @@
 @SET_MAKE@
 
 #+
-#§  \file       theLink/gomsgque/Makefile.am
-#§  \brief      \$Id$
+#§  \file       theLink/example/go/Makefile.am
+#§  \brief      \$Id: LbMain 265 2010-11-01 17:39:21Z aotto1968 $
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev$
+#§  \version    \$Rev: 265 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -46,7 +46,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-subdir = theLink/gomsgque
+subdir = theLink/example/go
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compare_version.m4 \
@@ -255,9 +255,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
-TARG = gomsgque
-CGOFILES = gomsgque.go
-CGO_CFLAGS = -I $(srcdir)/../libmsgque
+EXTRA_DIST = 
 all: all-am
 
 .SUFFIXES:
@@ -270,9 +268,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu theLink/gomsgque/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu theLink/example/go/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu theLink/gomsgque/Makefile
+	  $(AUTOMAKE) --gnu theLink/example/go/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -445,13 +443,11 @@ uninstall-am:
 
 include $(GOROOT)/src/Make.inc
 
-include $(GOROOT)/src/Make.pkg
+#TARG=gomsgque 
+#CGOFILES=gomsgque.go
+#CGO_CFLAGS=-I $(srcdir)/../libmsgque
 
-#BUILT_SOURCES = 
-#EXTRA_DIST = 
-#MAINTAINERCLEANFILES = 
-#distclean-local:
-#dist-hook: 
+include $(GOROOT)/src/Make.pkg
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -633,6 +633,37 @@ AC_DEFUN([SC_ENABLE_PHP], [
 ])
 
 #------------------------------------------------------------------------
+# SC_ENABLE_GO --
+#
+#       Specify if GO support is needed
+#
+# Arguments:
+#       none
+#
+# Results:
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_ENABLE_GO], [
+  AC_MSG_CHECKING([for build with GO])
+  AC_ARG_ENABLE(go,
+      AC_HELP_STRING([--enable-go], [build theLink with GO support]),
+      enable_go=yes, enable_go=no
+  )
+  AC_MSG_RESULT($enable_go)
+  if test x$enable_go = xyes; then
+    AC_ARG_VAR([GOROOT], [directory of the 'go' installation])
+    if test x"$GOROOT" = x ; then
+      AC_MSG_ERROR([GOROOT is required to use GO])
+    else
+      AC_MSG_RESULT([checking for build with GOROOT... $GOROOT])
+    fi
+  fi
+  AC_SUBST([USE_GO], $enable_go)
+  AM_CONDITIONAL([USE_GO], [test x$enable_go = xyes])
+])
+
+#------------------------------------------------------------------------
 # SC_ENABLE_PERL --
 #
 #       Specify if PERL support is needed

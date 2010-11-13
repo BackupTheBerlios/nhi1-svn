@@ -108,6 +108,7 @@ SC_ENABLE_PERL
 SC_ENABLE_TCL
 SC_ENABLE_VB
 SC_ENABLE_RUBY
+SC_ENABLE_GO
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
 
@@ -174,11 +175,12 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/example/vb/Makefile
-			      performance/Makefile performance/env.sh 
-			        theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
-				  theBrain/libbrain/Makefile theBrain/tests/Makefile 
-				    theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+			    theLink/gomsgque/Makefile theLink/example/go/Makefile
+			      theLink/example/vb/Makefile
+				performance/Makefile performance/env.sh
+				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+				    theBrain/libbrain/Makefile theBrain/tests/Makefile
+				      theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
 
 AC_OUTPUT

@@ -266,6 +266,7 @@ array set MAP {
     .cs		.c
     .java	.c
     .h		.c
+    .go		.c
     .sh		.sh
     .tcl	.sh
     .test	.sh

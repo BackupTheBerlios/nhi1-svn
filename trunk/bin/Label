@@ -17,7 +17,7 @@ array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
-    ./theLink/msgqueforphp		{ php.ini.in .phpini }
+    ./theLink/msgqueforphp	{ php.ini.in .phpini }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./theLink/tests		{ README.tests .sh }
     ./win			{ README.win .sh }
@@ -50,6 +50,7 @@ array set LABELIGNORE {
     ./theLink/example/ruby	{ *.sw* Makefile.in Makefile}
     ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
     ./theLink/example/php	{ *.sw* Makefile.in Makefile}
+    ./theLink/example/go	{ *.sw* Makefile.in Makefile}
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
     ./theLink/example		{ tags }
 
@@ -59,6 +60,7 @@ array set LABELIGNORE {
     ./theLink/pymsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build }
     ./theLink/rubymsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build *.rb }
     ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags}
+    ./theLink/gomsgque		{ Makefile Makefile.in }
     ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
 				  MqS_Main.h Manifest.txt *.in *.stamp *.jar javamsgque_MqS.h
 				    javamsgque_MqS_WAIT.h javamsgque_MqConfigS.h javamsgque_MqBufferS.h 

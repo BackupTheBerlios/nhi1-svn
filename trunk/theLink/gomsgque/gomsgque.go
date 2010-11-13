@@ -9,6 +9,8 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
+
 // Copyright 2009 The Go Authors.  All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.

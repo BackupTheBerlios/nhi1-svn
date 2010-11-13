@@ -40,6 +40,10 @@ if USE_PERL
 SUBDIRS += perlmsgque
 SUBDIRS += example/perl
 endif
+if USE_GO
+SUBDIRS += gomsgque
+SUBDIRS += example/go
+endif
 if USE_TCL
 SUBDIRS += tclmsgque
 SUBDIRS += example/tcl
