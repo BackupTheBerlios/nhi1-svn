@@ -19,7 +19,7 @@
 #§  \file       theLink/gomsgque/Makefile.am
 #§  \brief      \$Id$
 #§  
-#§  (C) 2010 - NHI - #1 - Project - Group
+#§  (C) 2007 - NHI - #1 - Project - Group
 #§  
 #§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
@@ -255,9 +255,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
-TARG = gomsgque
-CGOFILES = gomsgque.go
-CGO_CFLAGS = -I $(srcdir)/../libmsgque
+@USE_GO_TRUE@GOMAKEFILE = src/Makefile
+@USE_GO_TRUE@MAKEARGS = $(AM_MAKEFLAGS)
+EXTRA_DIST = 
 all: all-am
 
 .SUFFIXES:
@@ -336,7 +336,8 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile
+@USE_GO_FALSE@all-local:
+all-am: Makefile all-local
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -363,13 +364,17 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@USE_GO_FALSE@uninstall-local:
+@USE_GO_FALSE@distclean-local:
+@USE_GO_FALSE@install-exec-local:
+@USE_GO_FALSE@clean-local:
 clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic
+distclean-am: clean-am distclean-generic distclean-local
 
 dvi: dvi-am
 
@@ -389,7 +394,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am:
+install-exec-am: install-exec-local
 
 install-html: install-html-am
 
@@ -427,31 +432,39 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-local
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
+.PHONY: all all-am all-local check check-am clean clean-generic \
+	clean-libtool clean-local distclean distclean-generic \
+	distclean-libtool distclean-local distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-exec-local install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-am uninstall-local
 
 
-include $(GOROOT)/src/Make.inc
+@USE_GO_TRUE@all-local:
+@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS)
 
-include $(GOROOT)/src/Make.pkg
+@USE_GO_TRUE@clean-local: $(GOMAKEFILE)
+@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) clean
 
-#BUILT_SOURCES = 
-#EXTRA_DIST = 
-#MAINTAINERCLEANFILES = 
-#distclean-local:
-#dist-hook: 
+@USE_GO_TRUE@install-exec-local:
+@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
+
+@USE_GO_TRUE@uninstall-local:
+@USE_GO_TRUE@	rm -f "$(DESTDIR)/$(pkglibdir)"/src.*
+@USE_GO_TRUE@	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
+
+@USE_GO_TRUE@distclean-local:
+@USE_GO_TRUE@	-test -f src/.distclean && rm -fr src
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

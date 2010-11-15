@@ -1,0 +1,43 @@
+#+
+#§  \file       theLink/gomsgque/src/Makefile.in
+#§  \brief      \$Id$
+#§  
+#§  (C) 2010 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+GOROOT = /home/dev1usr/src/go
+srcdir = .
+builddir = .
+
+MQOBJ  = $(wildcard $(builddir)/../../libmsgque/.libs/liblocal_la-*.o)
+
+include $(GOROOT)/src/Make.inc
+
+TARG=gomsgque
+CGOFILES=gomsgque.go
+
+#LDPATH_freebsd=-Wl,-R,`pwd`
+#LDPATH_linux=-Wl,-R,`pwd`
+#LDPATH_darwin=
+
+CGO_CFLAGS=-I $(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
+CGO_LDFLAGS= $(MQOBJ)
+CGO_DEPS=$(MQOBJ)
+
+#CGO_LDFLAGS=libmsgque.so $(LDPATH_$(GOOS))
+#CGO_DEPS=libmsgque.so $(LDPATH_$(GOOS))
+
+#GOFILES=test.go
+
+include $(GOROOT)/src/Make.pkg
+
+%: install %.go
+	echo $(MQOBJ)
+	$(GC) $*.go
+	$(LD) -o $@ $*.$O
+

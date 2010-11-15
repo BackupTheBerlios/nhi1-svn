@@ -26,6 +26,14 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
+#include $(GOROOT)/src/Make.inc
+
+#TARG=gomsgque 
+#CGOFILES=gomsgque.go
+#CGO_CFLAGS=-I $(srcdir)/../libmsgque
+
+#include $(GOROOT)/src/Make.pkg
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -440,14 +448,6 @@ uninstall-am:
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
-
-include $(GOROOT)/src/Make.inc
-
-#TARG=gomsgque 
-#CGOFILES=gomsgque.go
-#CGO_CFLAGS=-I $(srcdir)/../libmsgque
-
-include $(GOROOT)/src/Make.pkg
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

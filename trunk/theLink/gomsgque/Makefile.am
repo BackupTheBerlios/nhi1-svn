@@ -2,7 +2,7 @@
 #§  \file       theLink/gomsgque/Makefile.am
 #§  \brief      \$Id$
 #§  
-#§  (C) 2010 - NHI - #1 - Project - Group
+#§  (C) 2007 - NHI - #1 - Project - Group
 #§  
 #§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
@@ -10,21 +10,28 @@
 #§              please contact AUTHORS for additional information
 #§
 
+if USE_GO
 
-include $(GOROOT)/src/Make.inc
+GOMAKEFILE  =	src/Makefile
+MAKEARGS    =	$(AM_MAKEFLAGS)
 
-TARG=gomsgque
-CGOFILES=gomsgque.go
-CGO_CFLAGS=-I $(srcdir)/../libmsgque
+all-local:
+	cd src && $(MAKE) $(MAKEARGS)
 
-include $(GOROOT)/src/Make.pkg
+clean-local: $(GOMAKEFILE)
+	cd src && $(MAKE) $(MAKEARGS) clean
 
+install-exec-local:
+	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
 
+uninstall-local:
+	rm -f "$(DESTDIR)/$(pkglibdir)"/src.*
+	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 
+distclean-local:
+	-test -f src/.distclean && rm -fr src
 
-#BUILT_SOURCES = 
-#EXTRA_DIST = 
-#MAINTAINERCLEANFILES = 
-#distclean-local:
-#dist-hook: 
+endif
+
+EXTRA_DIST =
 

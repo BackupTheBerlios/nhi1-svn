@@ -10,13 +10,13 @@
 #§              please contact AUTHORS for additional information
 #§
 
-include $(GOROOT)/src/Make.inc
+#include $(GOROOT)/src/Make.inc
 
 #TARG=gomsgque 
 #CGOFILES=gomsgque.go
 #CGO_CFLAGS=-I $(srcdir)/../libmsgque
 
-include $(GOROOT)/src/Make.pkg
+#include $(GOROOT)/src/Make.pkg
 
 
 EXTRA_DIST = 

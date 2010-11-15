@@ -175,7 +175,7 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/gomsgque/Makefile theLink/example/go/Makefile
+			    theLink/gomsgque/Makefile theLink/gomsgque/src/Makefile theLink/example/go/Makefile
 			      theLink/example/vb/Makefile
 				performance/Makefile performance/env.sh
 				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile

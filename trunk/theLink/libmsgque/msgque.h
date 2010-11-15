@@ -200,9 +200,9 @@ BEGIN_C_DECLS
 // to be set
 #if defined(PIC) && !defined(MQ_IGNORE_EXTERN)
     // does we build a DLL ?
-#   ifdef DLL_EXPORT
+#   if defined(DLL_EXPORT)
         // does we build the libmsgque library ?
-#	ifdef MQ_BUILD_LIBMSGQUE_DLL
+#	if defined(MQ_BUILD_LIBMSGQUE_DLL)
 #	    define MQ_EXTERN __declspec(dllexport)
 #	else
 #	    define MQ_EXTERN __declspec(dllimport)
@@ -282,13 +282,13 @@ typedef MQ_WID MQ_TIME_T;
 typedef int MQ_HDL;
 
 /// pointer basic data-type
-typedef void MQ_PTRB;
+#define MQ_PTRB void
 /// string basic data-type
-typedef char MQ_STRB;
+#define MQ_STRB char
 /// \e byte-array basic data-type
-typedef unsigned char MQ_BINB;
+#define MQ_BINB unsigned char
 /// list basic data-type
-typedef unsigned char MQ_LSTB;
+#define MQ_LSTB unsigned char
 
 /// generic pointer data-type
 typedef MQ_PTRB *MQ_PTR;
@@ -1522,7 +1522,7 @@ MQ_EXTERN void MQ_DECL MqMark (
   MqMarkF markF
 );
 
-#ifdef _DEBUG
+#if defined(_DEBUG)
 /// \brief convenience function to log \e MqS configuration data
 /// \context
 /// \param prefix used to identify the data logged to the stderr
@@ -3251,7 +3251,7 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_ERROR: r
 /*                                                                           */
 /*****************************************************************************/
 
-#ifdef _DEBUG
+#if defined(_DEBUG)
 /// \brief log the #MqErrorS for debugging
 /// \context
 /// \prefix
