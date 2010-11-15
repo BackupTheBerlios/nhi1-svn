@@ -254,9 +254,9 @@ typedef signed char MQ_BYT;
 /// 1 byte \b boolean data-type
 typedef unsigned char MQ_BOL;
 /// 2 byte \b short data-type
-typedef short MQ_SRT;
+typedef signed short MQ_SRT;
 /// 4 byte \b integer data-type
-typedef int MQ_INT;
+typedef signed int MQ_INT;
 /// 4 byte \b float data-type
 typedef float MQ_FLT;
 /// 8 byte \b wide integer data-type
@@ -280,6 +280,8 @@ typedef MQ_WID MQ_TIME_T;
 
 /// handle data-type
 typedef int MQ_HDL;
+
+// "google go" can not uses nested typedef's -> use "#define" for the basic typ's
 
 /// pointer basic data-type
 #define MQ_PTRB void
