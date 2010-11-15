@@ -21,7 +21,8 @@ typedef signed int* MQ_INTP;
 import "C"
 
 import (
-  // "fmt"
+  //"fmt"
+  //"strings"
   "unsafe"
 )
 
@@ -47,6 +48,7 @@ func NewMqS() *MqS {
 
 func (this *MqS) LinkCreate(argv ... string) uint32 {
   var largv *_Ctype_struct_MqBufferLS
+  //fmt.Println("argv = " + strings.Join(argv,","))
   if (len(argv) != 0) {
     largv = C.MqBufferLCreate(C.MQ_SIZE(len(argv)));
     for idx:= range argv {
@@ -93,15 +95,13 @@ func (this *MqS) SendI(val int32) uint32 {
   return C.MqSendI(this.ctx, C.MQ_INT(val))
 }
 
-func (this *MqS) ReadI(val *int32) uint32 {
+func (this *MqS) ReadI() (uint32, int32) {
   tmp := C.MQ_INT(0)
   ret := uint32(OK)
-  *val = 0
   ret = C.MqReadI(this.ctx, &tmp)
   if (ret == ERROR) {goto error}
-  *val = int32(tmp)
 error:
-  return ret
+  return ret, int32(tmp)
 }
 
 
