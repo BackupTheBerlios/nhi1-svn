@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/client.go
+ *  \file       theLink/gomsgque/src/server.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -17,6 +17,11 @@ import (
   "os"
   "fmt"
 )
+
+type Server struct {
+
+
+}
 
 func main() {
   var ctx = gomsgque.NewMqS()

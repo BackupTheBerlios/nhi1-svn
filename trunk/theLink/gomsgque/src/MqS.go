@@ -9,14 +9,12 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-package MqS
+
+package gomsgque
 
 /*
 #include <stdlib.h>
 #include <msgque.h>
-
-typedef signed int* MQ_INTP;
-
 */
 import "C"
 
@@ -41,23 +39,7 @@ type MqS struct {
 }
 
 func NewMqS() *MqS {
-  var ret = new(MqS)
-  ret.ctx = C.MqContextCreate(0,nil)
-  return ret
-}
-
-func (this *MqS) LinkCreate(argv ... string) uint32 {
-  var largv *_Ctype_struct_MqBufferLS
-  //fmt.Println("argv = " + strings.Join(argv,","))
-  if (len(argv) != 0) {
-    largv = C.MqBufferLCreate(C.MQ_SIZE(len(argv)));
-    for idx:= range argv {
-      a := C.CString(argv[idx])
-      C.MqBufferLAppendC(largv, a);
-      C.free(unsafe.Pointer(a))
-    }
-  }
-  return C.MqLinkCreate(this.ctx, &largv)
+  return &MqS{C.MqContextCreate(0,nil)}
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {
@@ -73,35 +55,4 @@ func (this *MqS) Exit(prefix string) {
   C.MqExitP(p, this.ctx)
   C.free(unsafe.Pointer(p))
 }
-
-func (this *MqS) ConfigSetName(val string) {
-  v := C.CString(val)
-  C.MqConfigSetName(this.ctx, v)
-  C.free(unsafe.Pointer(v))
-}
-
-func (this *MqS) SendSTART() uint32 {
-  return C.MqSendSTART(this.ctx)
-}
-
-func (this *MqS) SendEND_AND_WAIT(token string, timeout int32) uint32 {
-  t := C.CString(token)
-  r := C.MqSendEND_AND_WAIT(this.ctx, t, C.MQ_TIME_T(timeout))
-  C.free(unsafe.Pointer(t))
-  return r
-}
-
-func (this *MqS) SendI(val int32) uint32 {
-  return C.MqSendI(this.ctx, C.MQ_INT(val))
-}
-
-func (this *MqS) ReadI() (uint32, int32) {
-  tmp := C.MQ_INT(0)
-  ret := uint32(OK)
-  ret = C.MqReadI(this.ctx, &tmp)
-  if (ret == ERROR) {goto error}
-error:
-  return ret, int32(tmp)
-}
-
 
