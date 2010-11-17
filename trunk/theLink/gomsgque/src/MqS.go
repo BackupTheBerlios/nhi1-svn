@@ -23,19 +23,24 @@ import (
   "unsafe"
 )
 
-const (
-  OK		  = 0
-  CONTINUE	  = 1
-  ERROR		  = 2
+type TIMEOUT  C.MQ_TIME_T
+type WAIT     uint32
 
-  TIMEOUT_DEFAULT = -1
-  TIMEOUT_USER	  = -2
-  TIMEOUT_MAX	  = -3
+const (
+  OK		  MqSException  = 0
+  CONTINUE	  MqSException  = 1
+  ERROR		  MqSException  = 2
+
+  TIMEOUT_DEFAULT TIMEOUT = -1
+  TIMEOUT_USER	  TIMEOUT = -2
+  TIMEOUT_MAX	  TIMEOUT = -3
+
+  WAIT_NO	  WAIT	= 0
+  WAIT_ONCE	  WAIT	= 1
+  WAIT_FOREVER	  WAIT	= 2
 )
 
-type MqS struct {
-  ctx *_Ctype_struct_MqS
-}
+type MqS _Ctype_struct_MqS
 
 type IServerSetup interface {
   ServerSetup() MqSException
@@ -46,21 +51,21 @@ type IServerCleanup interface {
 }
 
 func NewMqS() *MqS {
-  //fmt.Println("NewMqS...")
-  return &MqS{C.MqContextCreate(0,nil)}
+  println("NewMqS...")
+  return (*MqS)(C.MqContextCreate(0,nil))
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {
   p := C.CString(prefix)
   m := C.CString(message)
-  C.MqLogC(this.ctx, p, C.MQ_INT(level), m)
+  C.MqLogC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)
   C.free(unsafe.Pointer(p))
   C.free(unsafe.Pointer(m))
 }
 
 func (this *MqS) Exit(prefix string) {
   p := C.CString(prefix)
-  C.MqExitP(p, this.ctx)
+  C.MqExitP(p, (*_Ctype_struct_MqS)(this))
   C.free(unsafe.Pointer(p))
 }
 

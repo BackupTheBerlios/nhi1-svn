@@ -20,7 +20,7 @@ import "C"
 import (
   //"fmt"
   //"strings"
-  //"unsafe"
+  "unsafe"
 )
 
 type MqSException uint32
@@ -29,4 +29,12 @@ func (this MqSException) IsERROR() bool {
   return this == ERROR
 }
 
+func (this *MqS) ErrorC(prefix string, level int, message string) MqSException {
+  p := C.CString(prefix)
+  m := C.CString(message)
+  r := C.MqErrorC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)
+  C.free(unsafe.Pointer(p))
+  C.free(unsafe.Pointer(m))
+  return MqSException(r)
+}
 

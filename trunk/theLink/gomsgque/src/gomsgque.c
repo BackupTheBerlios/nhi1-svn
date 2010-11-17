@@ -19,6 +19,7 @@ static enum MqErrorE sServerSetup (
 )
 {
 M0
+  return (enum MqErrorE) cServerSetup((int*)context);
 }
 
 void
@@ -26,6 +27,6 @@ gomsgque_ConfigSetServerSetup (
   struct MqS * const context
 )
 {
-  MqConfigSetServerSetup(this.ctx, sServerSetup, nil, nil, nil)
+  MqConfigSetServerSetup(context, sServerSetup, NULL, NULL, NULL);
 }
 

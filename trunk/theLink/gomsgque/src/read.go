@@ -25,77 +25,78 @@ import (
 
 func (this *MqS) ReadO() (MqSException, bool) {
   tmp := C.MQ_BOL(0)
-  return MqSException(C.MqReadO(this.ctx, &tmp)), tmp != C.MQ_BOL(0)
+  return MqSException(C.MqReadO((*_Ctype_struct_MqS)(this), &tmp)), tmp != C.MQ_BOL(0)
 }
 
 func (this *MqS) ReadY() (MqSException, int8) {
   tmp := C.MQ_BYT(0)
-  return MqSException(C.MqReadY(this.ctx, &tmp)), int8(tmp)
+  return MqSException(C.MqReadY((*_Ctype_struct_MqS)(this), &tmp)), int8(tmp)
 }
 
 func (this *MqS) ReadS() (MqSException, int16) {
   tmp := C.MQ_SRT(0)
-  return MqSException(C.MqReadS(this.ctx, &tmp)), int16(tmp)
+  return MqSException(C.MqReadS((*_Ctype_struct_MqS)(this), &tmp)), int16(tmp)
 }
 
 func (this *MqS) ReadI() (MqSException, int32) {
   tmp := C.MQ_INT(0)
-  return MqSException(C.MqReadI(this.ctx, &tmp)), int32(tmp)
+  return MqSException(C.MqReadI((*_Ctype_struct_MqS)(this), &tmp)), int32(tmp)
 }
 
 func (this *MqS) ReadW() (MqSException, int64) {
   tmp := C.MQ_WID(0)
-  return MqSException(C.MqReadW(this.ctx, &tmp)), int64(tmp)
+  return MqSException(C.MqReadW((*_Ctype_struct_MqS)(this), &tmp)), int64(tmp)
 }
 
 func (this *MqS) ReadF() (MqSException, float32) {
   tmp := C.MQ_FLT(0.0)
-  return MqSException(C.MqReadF(this.ctx, &tmp)), float32(tmp)
+  return MqSException(C.MqReadF((*_Ctype_struct_MqS)(this), &tmp)), float32(tmp)
 }
 
 func (this *MqS) ReadD() (MqSException, float64) {
   tmp := C.MQ_DBL(0.0)
-  return MqSException(C.MqReadD(this.ctx, &tmp)), float64(tmp)
+  return MqSException(C.MqReadD((*_Ctype_struct_MqS)(this), &tmp)), float64(tmp)
 }
 
 func (this *MqS) ReadN() (MqSException, MqBinary) {
   var tmp C.MQ_CBI
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadN(this.ctx, &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
+  return MqSException(C.MqReadN((*_Ctype_struct_MqS)(this), &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
 func (this *MqS) ReadB() (MqSException, MqBinary) {
   var tmp C.MQ_BIN
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadB(this.ctx, &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
+  return MqSException(C.MqReadB((*_Ctype_struct_MqS)(this), &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
 func (this *MqS) ReadU() (MqSException, C.MQ_BUF) {
   var tmp C.MQ_BUF
-  return MqSException(C.MqReadU(this.ctx, &tmp)), tmp
+  return MqSException(C.MqReadU((*_Ctype_struct_MqS)(this), &tmp)), tmp
 }
 
 func (this *MqS) ReadL_START(buf C.MQ_BUF) MqSException {
-  return MqSException(C.MqReadL_START(this.ctx, buf))
+  return MqSException(C.MqReadL_START((*_Ctype_struct_MqS)(this), buf))
 }
 
 func (this *MqS) ReadL_END() MqSException {
-  return MqSException(C.MqReadL_END(this.ctx))
+  return MqSException(C.MqReadL_END((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ReadT_START(buf C.MQ_BUF) MqSException {
-  return MqSException(C.MqReadT_START(this.ctx, buf))
+  return MqSException(C.MqReadT_START((*_Ctype_struct_MqS)(this), buf))
 }
 
 func (this *MqS) ReadT_END() MqSException {
-  return MqSException(C.MqReadT_END(this.ctx))
+  return MqSException(C.MqReadT_END((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ReadProxy(ctx *MqS) MqSException {
-  return MqSException(C.MqReadProxy(this.ctx, ctx.ctx))
+  return MqSException(C.MqReadProxy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx)))
 }
 
 func (this *MqS) ReadGetNumItems(ctx *MqS) uint32 {
-  return uint32(C.MqReadGetNumItems(this.ctx))
+  return uint32(C.MqReadGetNumItems((*_Ctype_struct_MqS)(this)))
 }
+
 

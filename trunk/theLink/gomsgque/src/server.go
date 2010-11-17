@@ -15,7 +15,7 @@ package main
 import (
   "gomsgque"
   //"reflect"
-  //"os"
+  "os"
   "fmt"
   //"unsafe"
 )
@@ -42,7 +42,6 @@ func main() {
   var srv = NewServer()
   defer srv.Exit("END")
 
-  fmt.Printf("val = %T\n", srv)
 /*
   if _, ok := interface{}(srv).(gomsgque.IServerSetup); ok {
     fmt.Printf("val = has gomsgque.IServerSetup -> \n")
@@ -52,17 +51,10 @@ func main() {
   }
 */
 
-  fmt.Println("END")
-
-/*
-  var ret gomsgque.MqSException
   srv.ConfigSetName("server")
   srv.ConfigSetIdent("test-server")
-  ret = srv.LinkCreate(os.Args...)
-    if ret.IsERROR() { return }
+  if srv.LinkCreate(os.Args...).IsERROR() { return }
   srv.LogC("test",1,"this is the log test\n")
-  ret = srv.ProcessEvent(MqS.WAIT.FOREVER);
-    if ret.IsERROR() { return }
-*/
+  if srv.ProcessEvent(gomsgque.TIMEOUT_DEFAULT, gomsgque.WAIT_FOREVER).IsERROR() { return }
 }
 

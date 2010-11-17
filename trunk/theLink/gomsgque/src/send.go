@@ -24,18 +24,19 @@ import (
 )
 
 func (this *MqS) SendSTART() MqSException {
-  return MqSException(C.MqSendSTART(this.ctx))
+  return MqSException(C.MqSendSTART((*_Ctype_struct_MqS)(this)))
 }
 
-func (this *MqS) SendEND_AND_WAIT(token string, timeout int64) MqSException {
+func (this *MqS) SendEND_AND_WAIT(token string, timeout TIMEOUT) MqSException {
   t := C.CString(token)
-  r := C.MqSendEND_AND_WAIT(this.ctx, t, C.MQ_TIME_T(timeout))
+  r := C.MqSendEND_AND_WAIT((*_Ctype_struct_MqS)(this), t, C.MQ_TIME_T(timeout))
   C.free(unsafe.Pointer(t))
   return MqSException(r)
 }
 
 func (this *MqS) SendI(val int32) MqSException {
-  return MqSException(C.MqSendI(this.ctx, C.MQ_INT(val)))
+  return MqSException(C.MqSendI((*_Ctype_struct_MqS)(this), C.MQ_INT(val)))
 }
+
 
 

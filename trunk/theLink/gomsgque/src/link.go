@@ -34,6 +34,7 @@ func (this *MqS) LinkCreate(argv ... string) MqSException {
       C.free(unsafe.Pointer(a))
     }
   }
-  return MqSException(C.MqLinkCreate(this.ctx, &largv))
+  return MqSException(C.MqLinkCreate((*_Ctype_struct_MqS)(this), &largv))
 }
+
 
