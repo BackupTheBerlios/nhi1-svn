@@ -13,8 +13,7 @@
 package gomsgque
 
 /*
-#include <stdlib.h>
-#include <msgque.h>
+#include <gomsgque.h>
 */
 import "C"
 
@@ -36,17 +35,15 @@ func (this *MqS) ConfigSetIdent(val string) {
   C.free(unsafe.Pointer(v))
 }
 
-/*
 //export ServerSetup
-func (this *MqS) ServerSetup() MqSException {
+func cServerSetup(ctx *MqS) MqSException {
   //fmt.Println("ServerSetup...")
   return MqSException(OK)
 }
-*/
 
 func (this *MqS) ConfigSetServerSetup(ifc IServerSetup) {
   fmt.Printf("ConfigSetServerSetup ... %T\n", ifc)
-  C.MqConfigSetServerSetup(this.ctx, nil, nil, nil, nil)
+  C.gomsgque_ConfigSetServerSetup(this.ctx)
 }
 
 func (this *MqS) ConfigSetServerCleanup(ifc IServerCleanup) {

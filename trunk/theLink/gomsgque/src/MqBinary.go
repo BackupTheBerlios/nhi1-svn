@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqSException.go
+ *  \file       theLink/gomsgque/src/MqBinary.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -20,13 +20,21 @@ import "C"
 import (
   //"fmt"
   //"strings"
-  //"unsafe"
+  "unsafe"
 )
 
-type MqSException uint32
-
-func (this MqSException) IsERROR() bool {
-  return this == ERROR
+type MqBinary struct {
+  D unsafe.Pointer
+  L int
 }
 
+func (this MqBinary) array() []byte {
+  byt := make([]byte, this.L)
+  C.memcpy(unsafe.Pointer(&byt[0]),this.D,C.size_t(this.L))
+  return byt
+}
+
+func (this MqBinary) string() string {
+  return C.GoStringN((*C.char)(this.D), C.int(this.L))
+}
 

@@ -13,10 +13,7 @@
 package gomsgque
 
 /*
-#include <stdlib.h>
-#include <msgque.h>
-
-typedef char* charP;
+#include <gomsgque.h>
 */
 import "C"
 
@@ -25,25 +22,6 @@ import (
   //"strings"
   "unsafe"
 )
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-type MqBinary struct {
-  D unsafe.Pointer
-  L int
-}
-
-func (this MqBinary) array() []byte {
-  byt := make([]byte, this.L)
-  C.memcpy(unsafe.Pointer(&byt[0]),this.D,C.size_t(this.L))
-  return byt
-}
-
-func (this MqBinary) string() string {
-  return C.GoStringN((*C.char)(this.D), C.int(this.L))
-}
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 func (this *MqS) ReadO() (MqSException, bool) {
   tmp := C.MQ_BOL(0)

@@ -13,8 +13,7 @@
 package gomsgque
 
 /*
-#include <stdlib.h>
-#include <msgque.h>
+#include <gomsgque.h>
 */
 import "C"
 

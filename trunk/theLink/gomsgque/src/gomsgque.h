@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqSException.go
+ *  \file       theLink/gomsgque/src/gomsgque.h
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -9,24 +9,9 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+#include <stdlib.h>
+#include "msgque.h"
+#include "debug.h"
 
-package gomsgque
-
-/*
-#include <gomsgque.h>
-*/
-import "C"
-
-import (
-  //"fmt"
-  //"strings"
-  //"unsafe"
-)
-
-type MqSException uint32
-
-func (this MqSException) IsERROR() bool {
-  return this == ERROR
-}
-
+void gomsgque_ConfigSetServerSetup (struct MqS * const);
 
