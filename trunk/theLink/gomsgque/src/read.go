@@ -26,11 +26,24 @@ import (
   "unsafe"
 )
 
-type Binary struct {
-  dat unsafe.Pointer
-  len int
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type MqBinary struct {
+  D unsafe.Pointer
+  L int
 }
 
+func (this MqBinary) array() []byte {
+  byt := make([]byte, this.L)
+  C.memcpy(unsafe.Pointer(&byt[0]),this.D,C.size_t(this.L))
+  return byt
+}
+
+func (this MqBinary) string() string {
+  return C.GoStringN((*C.char)(this.D), C.int(this.L))
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 func (this *MqS) ReadO() (MqSException, bool) {
   tmp := C.MQ_BOL(0)
@@ -67,34 +80,16 @@ func (this *MqS) ReadD() (MqSException, float64) {
   return MqSException(C.MqReadD(this.ctx, &tmp)), float64(tmp)
 }
 
-func Binary2ByteArray(ret MqSException, bin Binary) (MqSException, []byte) {
-  if ret == ERROR {
-    return ret, nil
-  }
-  byt := make([]byte, bin.len)
-  C.memcpy(unsafe.Pointer(&byt[0]),bin.dat,C.size_t(bin.len))
-  return ret, byt
-}
-
-/*
-func Binary2String(ret MqSException, bin Binary) (MqSException, string) {
-  if ret == ERROR {
-    return ret, ""
-  }
-  return ret, C.GoStringN(bin.dat, C.int(bin.len))
-}
-*/
-
-func (this *MqS) ReadN() (MqSException, Binary) {
+func (this *MqS) ReadN() (MqSException, MqBinary) {
   var tmp C.MQ_CBI
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadN(this.ctx, &tmp, &len)), Binary{unsafe.Pointer(tmp), int(len)}
+  return MqSException(C.MqReadN(this.ctx, &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
-func (this *MqS) ReadB() (MqSException, Binary) {
+func (this *MqS) ReadB() (MqSException, MqBinary) {
   var tmp C.MQ_BIN
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadB(this.ctx, &tmp, &len)), Binary{unsafe.Pointer(tmp), int(len)}
+  return MqSException(C.MqReadB(this.ctx, &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
 func (this *MqS) ReadU() (MqSException, C.MQ_BUF) {

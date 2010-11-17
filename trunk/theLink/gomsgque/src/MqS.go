@@ -38,7 +38,16 @@ type MqS struct {
   ctx *_Ctype_struct_MqS
 }
 
+type IServerSetup interface {
+  ServerSetup() MqSException
+}
+
+type IServerCleanup interface {
+  ServerCleanup() MqSException
+}
+
 func NewMqS() *MqS {
+  //fmt.Println("NewMqS...")
   return &MqS{C.MqContextCreate(0,nil)}
 }
 

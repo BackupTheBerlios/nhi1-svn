@@ -14,35 +14,55 @@ package main
 
 import (
   "gomsgque"
-  "os"
+  //"reflect"
+  //"os"
   "fmt"
+  //"unsafe"
 )
 
 type Server struct {
+  *gomsgque.MqS
+}
 
+func NewServer() *Server {
+  fmt.Println("NewServer...")
+  ret := &Server{gomsgque.NewMqS()}
+  ret.ConfigSetServerSetup(ret)
+  //ret.ConfigSetServerCleanup(ret)
+  return ret
+}
 
+// //export ServerSetup
+func (this *Server) ServerSetup() gomsgque.MqSException {
+  var ret gomsgque.MqSException
+  return ret
 }
 
 func main() {
-  var ctx = gomsgque.NewMqS()
-  var val int32
+  var srv = NewServer()
+  defer srv.Exit("END")
+
+  fmt.Printf("val = %T\n", srv)
+/*
+  if _, ok := interface{}(srv).(gomsgque.IServerSetup); ok {
+    fmt.Printf("val = has gomsgque.IServerSetup -> \n")
+  }
+  if _, ok := interface{}(srv).(gomsgque.IServerCleanup); ok {
+    fmt.Printf("val = has gomsgque.IServerCleanup -> \n")
+  }
+*/
+
+  fmt.Println("END")
+
+/*
   var ret gomsgque.MqSException
-  defer ctx.Exit("END")
-  //ctx.ConfigSetName("otto")
-  ctx.LogC("client", 0, "START\n")
-  ret = ctx.LinkCreate(os.Args...)
+  srv.ConfigSetName("server")
+  srv.ConfigSetIdent("test-server")
+  ret = srv.LinkCreate(os.Args...)
     if ret.IsERROR() { return }
-  ret = ctx.SendSTART()
+  srv.LogC("test",1,"this is the log test\n")
+  ret = srv.ProcessEvent(MqS.WAIT.FOREVER);
     if ret.IsERROR() { return }
-  ret = ctx.SendI(100)
-    if ret.IsERROR() { return }
-  ctx.LogC("client", 0, "SEND\n")
-  ret = ctx.SendEND_AND_WAIT("ECOI", gomsgque.TIMEOUT_DEFAULT)
-    if ret.IsERROR() { return }
-  ctx.LogC("client", 0, "READ\n")
-  ret,val = ctx.ReadI()
-    if ret.IsERROR() { return }
-  ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", val))
-  ctx.LogC("client", 0, "END\n")
+*/
 }
 
