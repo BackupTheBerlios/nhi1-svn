@@ -20,24 +20,22 @@ import (
 
 func main() {
   var ctx = gomsgque.NewMqS()
-  var val int32
-  var ret gomsgque.MqSException
-  defer ctx.Exit("END")
+  defer func() {
+    if x := recover(); x != nil {
+      ctx.ErrorSet(x)
+    }
+    ctx.Exit()
+  }()
   //ctx.ConfigSetName("otto")
   ctx.LogC("client", 0, "START\n")
-  ret = ctx.LinkCreate(os.Args...)
-    if ret.IsERROR() { return }
-  ret = ctx.SendSTART()
-    if ret.IsERROR() { return }
-  ret = ctx.SendI(100)
-    if ret.IsERROR() { return }
+  ctx.LinkCreate(os.Args...)
+  ctx.SendSTART()
+  ctx.SendI(100)
   ctx.LogC("client", 0, "SEND\n")
-  ret = ctx.SendEND_AND_WAIT("ECOI", gomsgque.TIMEOUT_DEFAULT)
-    if ret.IsERROR() { return }
+  ctx.SendEND_AND_WAIT("ECOI", gomsgque.TIMEOUT_DEFAULT)
   ctx.LogC("client", 0, "READ\n")
-  ret,val = ctx.ReadI()
-    if ret.IsERROR() { return }
-  ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", val))
+  ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", ctx.ReadI()))
   ctx.LogC("client", 0, "END\n")
 }
+
 

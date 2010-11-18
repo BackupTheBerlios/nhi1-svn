@@ -23,8 +23,12 @@ import (
   //"unsafe"
 )
 
-func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) MqSException {
-  return MqSException(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
+func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
+  this.iErrorMqToGoWithCheck(C.MqProcessEvent(this.mqctx, C.MQ_TIME_T(timeout), uint32(wait)))
 }
+
+
+
+
 
 

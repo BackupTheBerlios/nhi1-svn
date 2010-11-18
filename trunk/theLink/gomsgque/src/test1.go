@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/testex.go
+ *  \file       theLink/gomsgque/src/test1.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -9,10 +9,11 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 package main
 
 import "fmt"
-import "unsafe"
+//import "unsafe"
 
 type F func(int) string
 type Fi interface {
@@ -36,14 +37,14 @@ func DoCall(f Fi, i int) string {
 
 func main() {
   g := F(f)
-  h := unsafe.Pointer(&g)
-  println(g, &g, h)
+  h := &g
+  println("g=", g, "h=", h)
   println(g(1))
   println(g.call(2))
   println(DoCall(g,3))
   println()
-  //println(h(4))
-  //println(h.call(5))
-  //println(DoCall(h,6))
+  println((*h)(4))
+  println((*h).call(5))
+  println(DoCall((*h),6))
   return
 }

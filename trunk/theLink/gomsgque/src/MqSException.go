@@ -19,22 +19,56 @@ import "C"
 
 import (
   //"fmt"
-  //"strings"
   "unsafe"
+  "os"
 )
 
-type MqSException uint32
-
-func (this MqSException) IsERROR() bool {
-  return this == ERROR
+func (this *MqS)  iErrorMqToGoWithCheck(ex uint32) {
+  if (ex == C.MQ_ERROR) {
+println("iErrorMqToGoWithCheck...")
+    panic(this)
+  }
 }
 
-func (this *MqS) ErrorC(prefix string, level int, message string) MqSException {
+func (this *MqS) ErrorSet(ex interface{}) {
+println("ErrorSet...")
+  if ctx,ok := ex.(*MqS); ok {
+    C.MqErrorCopy(this.mqctx, ctx.mqctx)
+  } else if err,ok := ex.(os.Error); ok {
+    m := C.CString(err.String())
+    C.MqErrorC(this.mqctx, C.sGO, -1, m)
+    C.free(unsafe.Pointer(m))
+  } else {
+    C.MqErrorC(this.mqctx, C.sGO, -1, C.sUNKNOWN)
+  }
+}
+
+func (this *MqS) ErrorC(prefix string, level int, message string) {
   p := C.CString(prefix)
   m := C.CString(message)
-  r := C.MqErrorC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)
+  C.MqErrorC(this.mqctx, p, C.MQ_INT(level), m)
   C.free(unsafe.Pointer(p))
   C.free(unsafe.Pointer(m))
-  return MqSException(r)
+}
+
+func (this *MqS) ErrorSetCONTINUE() {
+  C.MqErrorSetCONTINUE(this.mqctx)
+}
+
+func (this *MqS) ErrorSetEXIT() {
+  r := C.MqErrorSetEXITP(this.mqctx,C.sGO)
+  this.iErrorMqToGoWithCheck(r)
+}
+
+func (this *MqS) ErrorIsEXIT() bool {
+  return C.MqErrorIsEXIT(this.mqctx) == C.MQ_YES
+}
+
+func (this *MqS) ErrorReset() {
+  C.MqErrorReset(this.mqctx)
+}
+
+func (this *MqS) ErrorPrint() {
+  C.MqErrorPrint(this.mqctx)
 }
 

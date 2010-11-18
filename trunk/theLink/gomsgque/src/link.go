@@ -23,7 +23,7 @@ import (
   "unsafe"
 )
 
-func (this *MqS) LinkCreate(argv ... string) MqSException {
+func (this *MqS) LinkCreate(argv ... string) {
   var largv *_Ctype_struct_MqBufferLS
   //fmt.Println("argv = " + strings.Join(argv,","))
   if (len(argv) != 0) {
@@ -34,7 +34,11 @@ func (this *MqS) LinkCreate(argv ... string) MqSException {
       C.free(unsafe.Pointer(a))
     }
   }
-  return MqSException(C.MqLinkCreate((*_Ctype_struct_MqS)(this), &largv))
+  this.iErrorMqToGoWithCheck(C.MqLinkCreate(this.mqctx, &largv))
 }
+
+
+
+
 
 

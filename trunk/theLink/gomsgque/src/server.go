@@ -12,49 +12,40 @@
 
 package main
 
+import . "gomsgque"
 import (
-  "gomsgque"
-  //"reflect"
   "os"
-  "fmt"
-  //"unsafe"
 )
 
 type Server struct {
-  *gomsgque.MqS
+  *MqS
 }
 
 func NewServer() *Server {
-  fmt.Println("NewServer...")
-  ret := &Server{gomsgque.NewMqS()}
-  ret.ConfigSetServerSetup(ret)
-  //ret.ConfigSetServerCleanup(ret)
+  ret := &Server{NewMqS()}
+println("NewServer...", ret)
+  ret.ConfigSetServerSetup(MqCallback(func() {ret.ServerSetup()}))
   return ret
 }
 
-// //export ServerSetup
-func (this *Server) ServerSetup() gomsgque.MqSException {
-  var ret gomsgque.MqSException
-  return ret
+func (this *Server) ServerSetup() {
+  println("ServerSetup -> WoW !!!!!!!!!!!!!!!!!!!!!!!!!!")
 }
 
 func main() {
   var srv = NewServer()
-  defer srv.Exit("END")
-
-/*
-  if _, ok := interface{}(srv).(gomsgque.IServerSetup); ok {
-    fmt.Printf("val = has gomsgque.IServerSetup -> \n")
-  }
-  if _, ok := interface{}(srv).(gomsgque.IServerCleanup); ok {
-    fmt.Printf("val = has gomsgque.IServerCleanup -> \n")
-  }
-*/
-
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  println("srv=", srv)
   srv.ConfigSetName("server")
   srv.ConfigSetIdent("test-server")
-  if srv.LinkCreate(os.Args...).IsERROR() { return }
+  srv.LinkCreate(os.Args...)
   srv.LogC("test",1,"this is the log test\n")
-  if srv.ProcessEvent(gomsgque.TIMEOUT_DEFAULT, gomsgque.WAIT_FOREVER).IsERROR() { return }
+  srv.ProcessEvent(TIMEOUT_DEFAULT, WAIT_FOREVER)
 }
+
 

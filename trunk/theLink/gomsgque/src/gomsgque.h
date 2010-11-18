@@ -9,9 +9,12 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 #include <stdlib.h>
 #include "msgque.h"
 #include "debug.h"
 
-void gomsgque_ConfigSetServerSetup (struct MqS * const);
+void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);
 
+extern MQ_CST sGO;
+extern MQ_CST sUNKNOWN;

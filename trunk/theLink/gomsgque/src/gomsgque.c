@@ -13,20 +13,27 @@
 #include "gomsgque.h"
 #include "_cgo_export.h"
 
+MQ_CST sGO = "GO";
+MQ_CST sUNKNOWN = "UNKNOWN";
+
 static enum MqErrorE sServerSetup (
   struct MqS * const context,
   MQ_PTR const data
 )
 {
 M0
-  return (enum MqErrorE) cServerSetup((int*)context);
+printP(context)
+  MqLogC(context,"sServerSetup",0,"INFO\n");
+  cServerSetup((int*)context->self, data);
+  return MqErrorStack(context);
 }
 
 void
 gomsgque_ConfigSetServerSetup (
-  struct MqS * const context
+  struct MqS * const context,
+  void *data
 )
 {
-  MqConfigSetServerSetup(context, sServerSetup, NULL, NULL, NULL);
+  MqConfigSetServerSetup(context, sServerSetup, data, NULL, NULL);
 }
 

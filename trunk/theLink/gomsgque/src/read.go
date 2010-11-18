@@ -23,80 +23,90 @@ import (
   "unsafe"
 )
 
-func (this *MqS) ReadO() (MqSException, bool) {
+func (this *MqS) ReadO() bool {
   tmp := C.MQ_BOL(0)
-  return MqSException(C.MqReadO((*_Ctype_struct_MqS)(this), &tmp)), tmp != C.MQ_BOL(0)
+  this.iErrorMqToGoWithCheck(C.MqReadO(this.mqctx, &tmp))
+  return tmp != C.MQ_BOL(0)
 }
 
-func (this *MqS) ReadY() (MqSException, int8) {
+func (this *MqS) ReadY() int8 {
   tmp := C.MQ_BYT(0)
-  return MqSException(C.MqReadY((*_Ctype_struct_MqS)(this), &tmp)), int8(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadY(this.mqctx, &tmp))
+  return int8(tmp)
 }
 
-func (this *MqS) ReadS() (MqSException, int16) {
+func (this *MqS) ReadS() int16 {
   tmp := C.MQ_SRT(0)
-  return MqSException(C.MqReadS((*_Ctype_struct_MqS)(this), &tmp)), int16(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadS(this.mqctx, &tmp))
+  return int16(tmp)
 }
 
-func (this *MqS) ReadI() (MqSException, int32) {
+func (this *MqS) ReadI() int32 {
   tmp := C.MQ_INT(0)
-  return MqSException(C.MqReadI((*_Ctype_struct_MqS)(this), &tmp)), int32(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadI(this.mqctx, &tmp))
+  return int32(tmp)
 }
 
-func (this *MqS) ReadW() (MqSException, int64) {
+func (this *MqS) ReadW() int64 {
   tmp := C.MQ_WID(0)
-  return MqSException(C.MqReadW((*_Ctype_struct_MqS)(this), &tmp)), int64(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadW(this.mqctx, &tmp))
+  return int64(tmp)
 }
 
-func (this *MqS) ReadF() (MqSException, float32) {
+func (this *MqS) ReadF() float32 {
   tmp := C.MQ_FLT(0.0)
-  return MqSException(C.MqReadF((*_Ctype_struct_MqS)(this), &tmp)), float32(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadF(this.mqctx, &tmp))
+  return float32(tmp)
 }
 
-func (this *MqS) ReadD() (MqSException, float64) {
+func (this *MqS) ReadD() float64 {
   tmp := C.MQ_DBL(0.0)
-  return MqSException(C.MqReadD((*_Ctype_struct_MqS)(this), &tmp)), float64(tmp)
+  this.iErrorMqToGoWithCheck(C.MqReadD(this.mqctx, &tmp))
+  return float64(tmp)
 }
 
-func (this *MqS) ReadN() (MqSException, MqBinary) {
+func (this *MqS) ReadN() MqBinary {
   var tmp C.MQ_CBI
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadN((*_Ctype_struct_MqS)(this), &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
+  this.iErrorMqToGoWithCheck(C.MqReadN(this.mqctx, &tmp, &len))
+  return MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
-func (this *MqS) ReadB() (MqSException, MqBinary) {
+func (this *MqS) ReadB() MqBinary {
   var tmp C.MQ_BIN
   len := C.MQ_SIZE(0)
-  return MqSException(C.MqReadB((*_Ctype_struct_MqS)(this), &tmp, &len)), MqBinary{unsafe.Pointer(tmp), int(len)}
+  this.iErrorMqToGoWithCheck(C.MqReadB(this.mqctx, &tmp, &len))
+  return MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
-func (this *MqS) ReadU() (MqSException, C.MQ_BUF) {
+func (this *MqS) ReadU() C.MQ_BUF {
   var tmp C.MQ_BUF
-  return MqSException(C.MqReadU((*_Ctype_struct_MqS)(this), &tmp)), tmp
+  this.iErrorMqToGoWithCheck(C.MqReadU(this.mqctx, &tmp))
+  return tmp
 }
 
-func (this *MqS) ReadL_START(buf C.MQ_BUF) MqSException {
-  return MqSException(C.MqReadL_START((*_Ctype_struct_MqS)(this), buf))
+func (this *MqS) ReadL_START(buf C.MQ_BUF) {
+  this.iErrorMqToGoWithCheck(C.MqReadL_START(this.mqctx, buf))
 }
 
-func (this *MqS) ReadL_END() MqSException {
-  return MqSException(C.MqReadL_END((*_Ctype_struct_MqS)(this)))
+func (this *MqS) ReadL_END() {
+  this.iErrorMqToGoWithCheck(C.MqReadL_END(this.mqctx))
 }
 
-func (this *MqS) ReadT_START(buf C.MQ_BUF) MqSException {
-  return MqSException(C.MqReadT_START((*_Ctype_struct_MqS)(this), buf))
+func (this *MqS) ReadT_START(buf C.MQ_BUF) {
+  this.iErrorMqToGoWithCheck(C.MqReadT_START(this.mqctx, buf))
 }
 
-func (this *MqS) ReadT_END() MqSException {
-  return MqSException(C.MqReadT_END((*_Ctype_struct_MqS)(this)))
+func (this *MqS) ReadT_END() {
+  this.iErrorMqToGoWithCheck(C.MqReadT_END(this.mqctx))
 }
 
-func (this *MqS) ReadProxy(ctx *MqS) MqSException {
-  return MqSException(C.MqReadProxy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx)))
+func (this *MqS) ReadProxy(ctx *MqS) {
+  this.iErrorMqToGoWithCheck(C.MqReadProxy(this.mqctx, ctx.mqctx))
 }
 
 func (this *MqS) ReadGetNumItems(ctx *MqS) uint32 {
-  return uint32(C.MqReadGetNumItems((*_Ctype_struct_MqS)(this)))
+  return uint32(C.MqReadGetNumItems(this.mqctx))
 }
 
 
