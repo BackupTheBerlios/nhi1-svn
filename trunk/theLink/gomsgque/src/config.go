@@ -18,7 +18,7 @@ package gomsgque
 import "C"
 
 import (
-  "fmt"
+  //"fmt"
   "unsafe"
 )
 
@@ -35,23 +35,20 @@ func (this *MqS) ConfigSetIdent(val string) {
 }
 
 //export cServerSetup
-func (this *MqS) cServerSetup(cb *IServerSetup) {
+func (this *MqS) cServerSetup(cb *ServerSetup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  this.LogC("cServerSetup",0,"1111111111111111111111\n")
   (*cb).ServerSetup()
 }
 
-func (this *MqS) ConfigSetServerSetup(cb IServerSetup) {
-  println("1. ConfigSetServerSetup ... ", cb)
+func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
   C.gomsgque_ConfigSetServerSetup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 
-func (this *MqS) ConfigSetServerCleanup(cb IServerCleanup) {
-  fmt.Printf("ConfigSetServerCleanup ... %T\n", cb)
+func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
   C.MqConfigSetServerCleanup((*_Ctype_struct_MqS)(this), nil, nil, nil, nil)
 }
 

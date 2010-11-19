@@ -24,18 +24,16 @@ import (
 )
 
 //export cService
-func (this *MqS) cService(cb *IService) {
+func (this *MqS) cService(cb *Service) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  this.LogC("cService",0,"1111111111111111111111\n")
   (*cb).Call()
 }
 
-func (this *MqS) ServiceCreate(token string, cb IService) {
-  println("1. ServiceCreate ... ", cb)
+func (this *MqS) ServiceCreate(token string, cb Service) {
   t := C.CString(token)
   C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
   C.free(unsafe.Pointer(t))

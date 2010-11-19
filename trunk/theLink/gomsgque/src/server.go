@@ -19,29 +19,44 @@ import (
 
 type Server struct {
   *MqS
-  incr	int32
 }
 
 func NewServer() *Server {
-  ret := &Server{NewMqS(),10}
-println("NewServer...", ret)
+  ret := &Server{NewMqS()}
   ret.ConfigSetServerSetup(ret)
   return ret
 }
 
 func (this *Server) ServerSetup() {
   this.ServiceCreate("ECOI", &ECOI{this})
+  this.ServiceCreate("ECOU", &ECOU{this})
+  this.ServiceCreate("ECUL", &ECUL{this})
 }
 
-type ECOI struct {
-  *Server
-}
+type ECOI struct { *Server }
+  func (this *ECOI) Call() {
+    this.SendSTART()
+    this.SendI(this.ReadI())
+    this.SendRETURN()
+  }
 
-func (this *ECOI) Call() {
-  this.SendSTART()
-  this.SendI(this.ReadI() + this.incr)
-  this.SendRETURN()
-}
+type ECOU struct { *Server }
+  func (this *ECOU) Call() {
+    this.SendSTART()
+    this.SendU(this.ReadU())
+    this.SendRETURN()
+  }
+
+type ECUL struct { *Server }
+  func (this *ECUL) Call() {
+    this.SendSTART()
+    this.SendY(this.ReadY())
+    this.SendS(this.ReadS())
+    this.SendI(this.ReadI())
+    this.SendW(this.ReadW())
+    this.ReadProxy(this.Server.MqS)
+    this.SendRETURN()
+  }
 
 func main() {
   var srv = NewServer()

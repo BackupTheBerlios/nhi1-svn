@@ -177,7 +177,7 @@ sReadListEnd (
 enum MqErrorE
 MqReadL_START (
   struct MqS * const context,
-  MQ_BUF buf
+  struct MqBufferS * buf
 )
 {
   register struct MqReadS * const read = context->link.read;
@@ -210,7 +210,7 @@ MqReadL_END (
 enum MqErrorE
 MqReadT_START (
   struct MqS * const context,
-  MQ_BUF buf
+  struct MqBufferS * buf
 )
 {
   register struct MqReadS * const read = context->link.read;
@@ -815,7 +815,7 @@ MqReadBDY (
 enum MqErrorE
 MqReadU (
   struct MqS * const context,
-  MQ_BUF * const out
+  struct MqBufferS ** out
 )
 {
   struct MqReadS * const read = context->link.read;

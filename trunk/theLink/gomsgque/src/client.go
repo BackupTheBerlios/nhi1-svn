@@ -27,15 +27,11 @@ func main() {
     ctx.Exit()
   }()
   //ctx.ConfigSetName("otto")
-  ctx.LogC("client", 0, "START\n")
   ctx.LinkCreate(os.Args...)
   ctx.SendSTART()
   ctx.SendI(100)
-  ctx.LogC("client", 0, "SEND\n")
   ctx.SendEND_AND_WAIT("ECOI", MqS_TIMEOUT_DEFAULT)
-  ctx.LogC("client", 0, "READ\n")
   ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", ctx.ReadI()))
-  ctx.LogC("client", 0, "END\n")
 }
 
 

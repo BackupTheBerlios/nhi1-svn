@@ -2349,6 +2349,13 @@ MQ_EXTERN char MQ_DECL MqBufferGetType (
   struct MqBufferS * const buf
 );
 
+/// \brief return the type from a #MQ_BUF object
+/// \buf
+/// \return the #MqTypeE object 
+MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
+  struct MqBufferS * const buf
+);
+
 /// \brief return the #MqErrorS object from a #MQ_BUF object
 /// \buf
 /// \return the #MqErrorS object
@@ -3309,7 +3316,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_START (
   struct MqS * const ctx,
-  MQ_BUF buffer
+  struct MqBufferS * buffer
 );
 
 /// \brief finish to extract a \e list-items from the \e read-data-package.
@@ -3330,7 +3337,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_START (
   struct MqS * const ctx,
-  MQ_BUF buffer
+  struct MqBufferS * buffer
 );
 
 /// \brief finish to extract a \e longterm-transaction-item from the \e read-data-package.
@@ -3460,7 +3467,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
   struct MqS * const ctx,
-  MQ_BUF * const val
+  struct MqBufferS ** val
 );
 
 /// \brief read an MqBufferLS object from all items of the \e Read-Buffer object

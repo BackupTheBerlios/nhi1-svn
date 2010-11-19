@@ -20,7 +20,6 @@ static enum MqErrorE sServerSetup (
   MQ_PTR const data
 )
 {
-  MqLogC(context,"sServerSetup",0,"INFO\n");
   cServerSetup((int*)context->self, data);
   return MqErrorStack(context);
 }
@@ -39,7 +38,6 @@ static enum MqErrorE sService (
   MQ_PTR const data
 )
 {
-  MqLogC(context,"sService",0,"INFO\n");
   cService((int*)context->self, data);
   return MqErrorStack(context);
 }

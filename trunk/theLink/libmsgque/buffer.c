@@ -777,6 +777,14 @@ MqBufferGetType (
   return '*';
 }
 
+enum MqTypeE
+MqBufferGetType2 (
+  struct MqBufferS * const buf
+)
+{
+  return buf->type;
+}
+
 struct MqS *
 MqBufferGetContext (
   struct MqBufferS * const buf

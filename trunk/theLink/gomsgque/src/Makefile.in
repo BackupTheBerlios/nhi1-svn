@@ -19,25 +19,19 @@ MQOBJ  = $(wildcard $(builddir)/../../libmsgque/.libs/liblocal_la-*.o)
 include $(GOROOT)/src/Make.inc
 
 TARG=gomsgque
-CGOFILES=gomsgque.go
+CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go service.go
 
-#LDPATH_freebsd=-Wl,-R,`pwd`
-#LDPATH_linux=-Wl,-R,`pwd`
-#LDPATH_darwin=
-
-CGO_CFLAGS=-I $(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
-CGO_LDFLAGS= $(MQOBJ)
-CGO_DEPS=$(MQOBJ)
-
-#CGO_LDFLAGS=libmsgque.so $(LDPATH_$(GOOS))
-#CGO_DEPS=libmsgque.so $(LDPATH_$(GOOS))
-
-#GOFILES=test.go
+CGO_CFLAGS=-I . -I $(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
+CGO_LDFLAGS= $(MQOBJ) _cgo_export.o gomsgque.o
+CGO_DEPS=$(MQOBJ) _cgo_export.o gomsgque.o 
 
 include $(GOROOT)/src/Make.pkg
 
+gomsgque.o: gomsgque.c gomsgque.h _cgo_export.h
+	gcc $(_CGO_CFLAGS_$(GOARCH)) -o gomsgque.o -c -fPIC $(CFLAGS) $(CGO_CFLAGS) gomsgque.c
+
 %: install %.go
-	echo $(MQOBJ)
 	$(GC) $*.go
 	$(LD) -o $@ $*.$O
 
+all: _obj/gomsgque.a client server

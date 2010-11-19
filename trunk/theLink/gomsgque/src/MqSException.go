@@ -25,13 +25,11 @@ import (
 
 func (this *MqS)  iErrorMqToGoWithCheck(ex uint32) {
   if (ex == C.MQ_ERROR) {
-println("iErrorMqToGoWithCheck...")
     panic(this)
   }
 }
 
 func (this *MqS) ErrorSet(ex interface{}) {
-println("ErrorSet...")
   if ctx,ok := ex.(*MqS); ok {
     C.MqErrorCopy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx))
   } else if err,ok := ex.(os.Error); ok {
