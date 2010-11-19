@@ -12,9 +12,9 @@
 
 package main
 
-import . "gomsgque"
 import (
-  "os"
+  . "gomsgque"
+    "os"
 )
 
 type Server struct {
@@ -24,7 +24,7 @@ type Server struct {
 func NewServer() *Server {
   ret := &Server{NewMqS()}
 println("NewServer...", ret)
-  ret.ConfigSetServerSetup(MqCallback(func() {ret.ServerSetup()}))
+  ret.ConfigSetServerSetup(ret)
   return ret
 }
 
@@ -45,7 +45,6 @@ func main() {
   srv.ConfigSetIdent("test-server")
   srv.LinkCreate(os.Args...)
   srv.LogC("test",1,"this is the log test\n")
-  srv.ProcessEvent(TIMEOUT_DEFAULT, WAIT_FOREVER)
+  srv.ProcessEvent(MqS_TIMEOUT_DEFAULT, MqS_WAIT_FOREVER)
 }
-
 

@@ -14,7 +14,7 @@
 #include "msgque.h"
 #include "debug.h"
 
-void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);
-
 extern MQ_CST sGO;
 extern MQ_CST sUNKNOWN;
+
+void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);

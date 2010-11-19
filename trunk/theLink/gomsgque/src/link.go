@@ -34,7 +34,7 @@ func (this *MqS) LinkCreate(argv ... string) {
       C.free(unsafe.Pointer(a))
     }
   }
-  this.iErrorMqToGoWithCheck(C.MqLinkCreate(this.mqctx, &largv))
+  this.iErrorMqToGoWithCheck(C.MqLinkCreate((*_Ctype_struct_MqS)(this), &largv))
 }
 
 

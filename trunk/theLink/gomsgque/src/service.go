@@ -24,7 +24,7 @@ import (
 )
 
 func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
-  this.iErrorMqToGoWithCheck(C.MqProcessEvent(this.mqctx, C.MQ_TIME_T(timeout), uint32(wait)))
+  this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
 }
 
 

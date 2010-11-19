@@ -15,7 +15,11 @@ package main
 import "fmt"
 
 type F func()
-type G func (*second, int)
+type G func (*interface{}, int)
+
+type Fi interface {
+  self2(int)
+}
 
 type first struct {
 }
@@ -40,15 +44,20 @@ func misc() {
   println("misc")
 }
 
+func DoCall(f Fi, i int) {
+  f.self2(i)
+}
+
 func main() {
   x := new(second)
   y := F(misc)
   z := F(func() { x.self() })
-  z2 := G((*second).self2)
+  z2 := Fi(x)
   x.first.self()
   x.self()
   y()
   z()
-  z2(x,1)
+  DoCall(x,1)
+  z2.self2(2)
 }
 

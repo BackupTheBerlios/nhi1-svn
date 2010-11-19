@@ -11,7 +11,6 @@
  */
 
 #include "gomsgque.h"
-#include "_cgo_export.h"
 
 MQ_CST sGO = "GO";
 MQ_CST sUNKNOWN = "UNKNOWN";
@@ -34,6 +33,6 @@ gomsgque_ConfigSetServerSetup (
   void *data
 )
 {
-  MqConfigSetServerSetup(context, sServerSetup, data, NULL, NULL);
+  MqConfigSetServerSetup(context, sServerSetup, (MQ_PTR)data, NULL, NULL);
 }
 

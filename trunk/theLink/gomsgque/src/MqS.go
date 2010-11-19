@@ -27,20 +27,18 @@ type TIMEOUT  C.MQ_TIME_T
 type WAIT     uint32
 
 const (
-  TIMEOUT_DEFAULT TIMEOUT = C.MQ_TIMEOUT_DEFAULT
-  TIMEOUT_USER	  TIMEOUT = C.MQ_TIMEOUT_USER
-  TIMEOUT_MAX	  TIMEOUT = C.MQ_TIMEOUT_MAX
+  MqS_TIMEOUT_DEFAULT TIMEOUT	= C.MQ_TIMEOUT_DEFAULT
+  MqS_TIMEOUT_USER    TIMEOUT	= C.MQ_TIMEOUT_USER
+  MqS_TIMEOUT_MAX     TIMEOUT	= C.MQ_TIMEOUT_MAX
 
-  WAIT_NO	  WAIT	= C.MQ_WAIT_NO
-  WAIT_ONCE	  WAIT	= C.MQ_WAIT_ONCE
-  WAIT_FOREVER	  WAIT	= C.MQ_WAIT_FOREVER
+  MqS_WAIT_NO	      WAIT	= C.MQ_WAIT_NO
+  MqS_WAIT_ONCE	      WAIT	= C.MQ_WAIT_ONCE
+  MqS_WAIT_FOREVER    WAIT	= C.MQ_WAIT_FOREVER
 )
 
-type MqS struct {
-  mqctx *_Ctype_struct_MqS
-}
+type MqS _Ctype_struct_MqS
 
-type MqCallback func()
+type MqSCallback func()
 
 type IServerSetup interface {
   ServerSetup()
@@ -51,26 +49,25 @@ type IServerCleanup interface {
 }
 
 func NewMqS() *MqS {
-  this := new(MqS)
-  this.mqctx = C.MqContextCreate(0,nil)
-  C.MqConfigSetSelf(this.mqctx, unsafe.Pointer(this))
-println("NewMqS...", this, this.mqctx)
-  return this
+  this := C.MqContextCreate(0,nil)
+  C.MqConfigSetSelf(this, unsafe.Pointer(this))
+println("NewMqS...", this)
+  return (*MqS)(this)
 }
 
 func (this *MqS) String() string {
-  return C.GoString(C.MqErrorGetText(this.mqctx))
+  return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {
   p := C.CString(prefix)
   m := C.CString(message)
-  C.MqLogC(this.mqctx, p, C.MQ_INT(level), m)
+  C.MqLogC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)
   C.free(unsafe.Pointer(m))
   C.free(unsafe.Pointer(p))
 }
 
 func (this *MqS) Exit() {
-  C.MqExitP(C.sGO, this.mqctx)
+  C.MqExitP(C.sGO, (*_Ctype_struct_MqS)(this))
 }
 

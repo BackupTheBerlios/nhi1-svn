@@ -24,42 +24,36 @@ import (
 
 func (this *MqS) ConfigSetName(val string) {
   v := C.CString(val)
-  C.MqConfigSetName(this.mqctx, v)
+  C.MqConfigSetName((*_Ctype_struct_MqS)(this), v)
   C.free(unsafe.Pointer(v))
 }
 
 func (this *MqS) ConfigSetIdent(val string) {
   v := C.CString(val)
-  C.MqConfigSetIdent(this.mqctx, v)
+  C.MqConfigSetIdent((*_Ctype_struct_MqS)(this), v)
   C.free(unsafe.Pointer(v))
 }
 
 //export cServerSetup
-func (this *MqS) cServerSetup(c *MqCallback) {
+func (this *MqS) cServerSetup(cb *IServerSetup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-println("cServerSetup... this=", this)
+println("cServerSetup... this=", this, "*cb=", cb, "cb=", *cb)
   this.LogC("cServerSetup",0,"1111111111111111111111\n")
-  (*c)()
+  (*cb).ServerSetup()
   this.LogC("cServerSetup",0,"2222222222222222222222\n")
 }
 
-func (this *MqS) ConfigSetServerSetup(cb MqCallback) {
-  fmt.Printf("ConfigSetServerSetup ... %T\n", cb)
-  C.gomsgque_ConfigSetServerSetup(this.mqctx, unsafe.Pointer(&cb))
+func (this *MqS) ConfigSetServerSetup(cb IServerSetup) {
+  println("1. ConfigSetServerSetup ... ", cb)
+  C.gomsgque_ConfigSetServerSetup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 
-func (this *MqS) ConfigSetServerCleanup(ifc IServerCleanup) {
-  fmt.Printf("ConfigSetServerCleanup ... %T\n", ifc)
-  C.MqConfigSetServerCleanup(this.mqctx, nil, nil, nil, nil)
+func (this *MqS) ConfigSetServerCleanup(cb IServerCleanup) {
+  fmt.Printf("ConfigSetServerCleanup ... %T\n", cb)
+  C.MqConfigSetServerCleanup((*_Ctype_struct_MqS)(this), nil, nil, nil, nil)
 }
-
-
-
-
-
-
 

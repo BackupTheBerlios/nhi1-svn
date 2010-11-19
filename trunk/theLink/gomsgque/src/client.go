@@ -13,13 +13,13 @@
 package main
 
 import (
-  "gomsgque"
+  . "gomsgque"
   "os"
   "fmt"
 )
 
 func main() {
-  var ctx = gomsgque.NewMqS()
+  var ctx = NewMqS()
   defer func() {
     if x := recover(); x != nil {
       ctx.ErrorSet(x)
@@ -32,7 +32,7 @@ func main() {
   ctx.SendSTART()
   ctx.SendI(100)
   ctx.LogC("client", 0, "SEND\n")
-  ctx.SendEND_AND_WAIT("ECOI", gomsgque.TIMEOUT_DEFAULT)
+  ctx.SendEND_AND_WAIT("ECOI", MqS_TIMEOUT_DEFAULT)
   ctx.LogC("client", 0, "READ\n")
   ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", ctx.ReadI()))
   ctx.LogC("client", 0, "END\n")
