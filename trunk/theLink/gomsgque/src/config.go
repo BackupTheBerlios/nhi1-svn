@@ -41,10 +41,8 @@ func (this *MqS) cServerSetup(cb *IServerSetup) {
       this.ErrorSet(x)
     }
   }()
-println("cServerSetup... this=", this, "*cb=", cb, "cb=", *cb)
   this.LogC("cServerSetup",0,"1111111111111111111111\n")
   (*cb).ServerSetup()
-  this.LogC("cServerSetup",0,"2222222222222222222222\n")
 }
 
 func (this *MqS) ConfigSetServerSetup(cb IServerSetup) {

@@ -20,15 +20,29 @@ import "C"
 import (
   //"fmt"
   //"strings"
-  //"unsafe"
+  "unsafe"
 )
+
+//export cService
+func (this *MqS) cService(cb *IService) {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  this.LogC("cService",0,"1111111111111111111111\n")
+  (*cb).Call()
+}
+
+func (this *MqS) ServiceCreate(token string, cb IService) {
+  println("1. ServiceCreate ... ", cb)
+  t := C.CString(token)
+  C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  C.free(unsafe.Pointer(t))
+}
 
 func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
   this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
 }
-
-
-
-
 
 

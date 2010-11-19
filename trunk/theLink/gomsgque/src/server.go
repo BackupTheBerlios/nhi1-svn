@@ -19,17 +19,28 @@ import (
 
 type Server struct {
   *MqS
+  incr	int32
 }
 
 func NewServer() *Server {
-  ret := &Server{NewMqS()}
+  ret := &Server{NewMqS(),10}
 println("NewServer...", ret)
   ret.ConfigSetServerSetup(ret)
   return ret
 }
 
 func (this *Server) ServerSetup() {
-  println("ServerSetup -> WoW !!!!!!!!!!!!!!!!!!!!!!!!!!")
+  this.ServiceCreate("ECOI", &ECOI{this})
+}
+
+type ECOI struct {
+  *Server
+}
+
+func (this *ECOI) Call() {
+  this.SendSTART()
+  this.SendI(this.ReadI() + this.incr)
+  this.SendRETURN()
 }
 
 func main() {
@@ -40,7 +51,6 @@ func main() {
     }
     srv.Exit()
   }()
-  println("srv=", srv)
   srv.ConfigSetName("server")
   srv.ConfigSetIdent("test-server")
   srv.LinkCreate(os.Args...)

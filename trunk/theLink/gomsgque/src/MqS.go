@@ -48,6 +48,10 @@ type IServerCleanup interface {
   ServerCleanup()
 }
 
+type IService interface {
+  Call()
+}
+
 func NewMqS() *MqS {
   this := C.MqContextCreate(0,nil)
   C.MqConfigSetSelf(this, unsafe.Pointer(this))
