@@ -24,10 +24,6 @@ clean-local: $(GOMAKEFILE)
 install-exec-local:
 	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
 
-uninstall-local:
-	rm -f "$(DESTDIR)/$(pkglibdir)"/src.*
-	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
-
 distclean-local:
 	-test -f src/.distclean && rm -fr src
 

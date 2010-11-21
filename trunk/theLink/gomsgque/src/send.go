@@ -38,6 +38,10 @@ func (this *MqS) SendRETURN() {
   this.iErrorMqToGoWithCheck(C.MqSendRETURN((*_Ctype_struct_MqS)(this)))
 }
 
+func (this *MqS) SendERROR() {
+  this.iErrorMqToGoWithCheck(C.MqSendERROR((*_Ctype_struct_MqS)(this)))
+}
+
 func (this *MqS) SendO(val bool) {
   var v C.MQ_BOL
   if val {

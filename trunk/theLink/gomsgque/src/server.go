@@ -15,6 +15,7 @@ package main
 import (
   . "gomsgque"
     "os"
+    "syscall"
 )
 
 /*
@@ -42,6 +43,11 @@ func NewServer() *Server {
 }
 
 func (this *Server) ServerSetup(ctx *MqS) {
+  ctx.ServiceCreate("ERR2", (*Error)(this))
+  ctx.ServiceCreate("ERR3", (*Error)(this))
+  ctx.ServiceCreate("ERR4", (*Error)(this))
+  ctx.ServiceCreate("ERRT", (*ERRT)(this))
+
   ctx.ServiceCreate("CFG1", (*CFG1)(this))
 
   ctx.ServiceCreate("BUF1", (*BUF1)(this))
@@ -63,6 +69,27 @@ func (this *Server) ServerSetup(ctx *MqS) {
   ctx.ServiceCreate("ECOB", (*ECOB)(this))
   ctx.ServiceCreate("ECUL", (*ECUL)(this))
 }
+
+type ERRT Server
+  func (this *ERRT) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.ErrorC("MYERR", 9, ctx.ReadC())
+    ctx.SendERROR()
+  }
+
+type Error Server
+  func (this *Error) Call(ctx *MqS) {
+    ctx.SendSTART()
+    switch ctx.ServiceGetToken() {
+      case "ERR2" : {
+	ctx.SendC("some data")
+	ctx.ErrorC("Ot_ERR2", 10, "some error");
+      }
+      case "ERR3" : ctx.SendRETURN()
+      case "ERR4" : syscall.Exit(1)
+    }
+    ctx.SendRETURN()
+  }
 
 type CFG1 Server
   func (this *CFG1) Call(ctx *MqS) {
