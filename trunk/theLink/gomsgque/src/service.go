@@ -24,14 +24,13 @@ import (
 )
 
 //export gomsgque_cService
-func cService(this *MqS, cb *Service) uint32 {
+func (this *MqS) cService(cb Service) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  (*cb).Call(this)
-  return this.error.code
+  cb.Call(this)
 }
 
 func (this *MqS) ServiceCreate(token string, cb Service) {

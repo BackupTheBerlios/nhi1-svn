@@ -785,6 +785,27 @@ MqBufferGetType2 (
   return buf->type;
 }
 
+MQ_CST
+MqBufferGetType3 (
+  struct MqBufferS * const buf
+)
+{
+  switch (buf->type) {
+    case MQ_STRT: return "C";
+    case MQ_INTT: return "I";
+    case MQ_DBLT: return "D";
+    case MQ_WIDT: return "W";
+    case MQ_BINT: return "B";
+    case MQ_BYTT: return "Y";
+    case MQ_BOLT: return "O";
+    case MQ_SRTT: return "S";
+    case MQ_FLTT: return "F";
+    case MQ_LSTT: return "L";
+    case MQ_TRAT: return "T";
+  }
+  return "*";
+}
+
 struct MqS *
 MqBufferGetContext (
   struct MqBufferS * const buf

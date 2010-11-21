@@ -16,13 +16,34 @@
 MQ_CST sGO = "GO";
 MQ_CST sUNKNOWN = "UNKNOWN";
 
+static enum MqErrorE
+gomsgque_sServerSetup
+ (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cServerSetup((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
+}
+
 void
 gomsgque_ConfigSetServerSetup (
   struct MqS * const context,
   void *data
 )
 {
-  MqConfigSetServerSetup(context, (MqTokenF)gomsgque_cServerSetup, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetServerSetup(context, gomsgque_sServerSetup, (MQ_PTR)data, NULL, NULL);
+}
+
+static enum MqErrorE
+gomsgque_sServerCleanup (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cServerCleanup((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
 }
 
 void
@@ -31,7 +52,17 @@ gomsgque_ConfigSetServerCleanup (
   void *data
 )
 {
-  MqConfigSetServerCleanup(context, (MqTokenF)gomsgque_cServerCleanup, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetServerCleanup(context, gomsgque_sServerCleanup, (MQ_PTR)data, NULL, NULL);
+}
+
+static enum MqErrorE
+gomsgque_sService (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cService((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
 }
 
 void
@@ -41,6 +72,6 @@ gomsgque_ServiceCreate (
   void *data
 )
 {
-  MqServiceCreate(context, token, (MqTokenF)gomsgque_cService, (MQ_PTR)data, NULL);
+  MqServiceCreate(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
 }
 

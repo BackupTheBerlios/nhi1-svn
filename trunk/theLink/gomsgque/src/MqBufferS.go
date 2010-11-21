@@ -24,8 +24,7 @@ import (
 type MqBufferS _Ctype_struct_MqBufferS
 
 func (this *MqBufferS)  iErrorBufToGoWithCheck(ex uint32) {
-  //if (ex == C.MQ_ERROR) {
-  if (ex == 2) {
+  if (ex == _Cconst_MQ_ERROR) {
     panic(C.MqBufferGetContext((*_Ctype_struct_MqBufferS)(this)))
   }
 }
@@ -103,4 +102,8 @@ const (
 
 func (this *MqBufferS)  GetType() MqTypeE {
   return MqTypeE(C.MqBufferGetType2((*_Ctype_struct_MqBufferS)(this)))
+}
+
+func (this *MqBufferS)  GetTypeC() string {
+  return C.GoString(C.MqBufferGetType3((*_Ctype_struct_MqBufferS)(this)))
 }

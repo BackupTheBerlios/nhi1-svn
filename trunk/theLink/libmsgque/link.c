@@ -1086,9 +1086,3 @@ MqLogChild (
 
 END_C_DECLS
 
-
-
-
-
-
-

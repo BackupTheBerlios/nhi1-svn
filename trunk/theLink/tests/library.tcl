@@ -314,9 +314,10 @@ if {![array exists TS_SERVER]} {
     tcl	    [list {*}$TCLSH   [file join $linksrcdir tests server.tcl]]	  \
     perl    [list {*}$PERL -w [file join $linksrcdir tests server.pl]]	  \
     php	    [list {*}$PHP     [file join $linksrcdir tests server.php]]	  \
+    go	    [file join $linksrcdir gomsgque src server$::EXEEXT]	  \
     jdb	    [list jdb	      Server]					  \
-    cc	    ccserver							  \
-    c	    server							  \
+    cc	    ccserver$::EXEEXT						  \
+    c	    server$::EXEEXT						  \
   ]
 }
 
@@ -429,6 +430,7 @@ proc getExampleExecutable {srv} {
       ruby	{ lappend RET {*}$::RUBY [file join $::linksrcdir example ruby $path.rb] }
       perl	{ lappend RET {*}$::PERL [file join $::linksrcdir example perl $path.pl] }
       php	{ lappend RET {*}$::PHP [file join $::linksrcdir example php $path.php] }
+      go	{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }
       java	{ lappend RET {*}$::JAVA example.$path }
       csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
       vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
@@ -568,7 +570,7 @@ proc SetConstraints {args} {
     foreach c [envGet BIN_LST] {
       testConstraint $c yes
     }
-    foreach c {c cc tcl java csharp python ruby perl php} {
+    foreach c {c cc tcl java csharp python ruby perl php go} {
       testConstraint $c [expr {[lsearch -glob [envGet SRV_LST] "$c.*"] != -1}]
     }
     foreach c {pipe uds tcp fork spawn thread server} {
@@ -576,7 +578,7 @@ proc SetConstraints {args} {
     }
   } else {
     # 1. cleanup all constraint
-    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl php fork
+    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl php go fork
 		  thread spawn server parent child child2 child3} {
       testConstraint $c no
     }
@@ -609,7 +611,7 @@ if {![info exists env(COM_LST)]} {
   set env(COM_LST) {uds tcp pipe}
 }
 if {![info exists env(LNG_LST)]} {
-  set env(LNG_LST) {c cc tcl python ruby java csharp perl php vb}
+  set env(LNG_LST) {c cc tcl python ruby java csharp perl php go vb}
 }
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
@@ -669,6 +671,7 @@ if {![info exists env(SRV_LST)]} {
     php.tcp.fork
     php.uds.spawn
     php.uds.fork
+    go.pipe.pipe
     vb.pipe.pipe
     vb.tcp.spawn
     vb.tcp.thread
@@ -841,6 +844,7 @@ while {true} {
     "--only-ruby" -
     "--only-perl" -
     "--only-php" -
+    "--only-go" -
     "--only-cc" {
       set T		[string range $arg 7 end]
       set env(LNG_LST)	$T
@@ -875,7 +879,7 @@ while {true} {
       puts "USAGE [file tail $argv0]: OPTIONS ...."
       puts ""
       puts " testing ARRAGEMENTS"
-      puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|php|vb"
+      puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|php|go|vb"
       puts "  ........................................... programming-language"
       puts "  COM  = pipe|uds|tcp ....................... communication-layer"
       puts "  TYPE = string|binary ...................... package-type"

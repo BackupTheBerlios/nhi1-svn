@@ -456,5 +456,3 @@ BOOL WINAPI DllMain(
 }
 #endif
 
-
-

@@ -37,6 +37,10 @@ func (this *MqS) LinkCreate(argv ... string) {
   this.iErrorMqToGoWithCheck(C.MqLinkCreate((*_Ctype_struct_MqS)(this), &largv))
 }
 
+func (this *MqS) LinkGetTargetIdent() string {
+  return C.GoString(C.MqLinkGetTargetIdent((*_Ctype_struct_MqS)(this)))
+}
+
 
 
 

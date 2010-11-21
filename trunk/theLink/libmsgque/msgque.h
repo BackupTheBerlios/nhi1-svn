@@ -2342,7 +2342,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetC (
   MQ_CST * const out
 );
 
-/// \brief return the type from a #MQ_BUF object
+/// \brief return the type from a #MQ_BUF object on character identifer
 /// \buf
 /// \return the type from a #MqTypeE object as single character value
 MQ_EXTERN char MQ_DECL MqBufferGetType (
@@ -2353,6 +2353,13 @@ MQ_EXTERN char MQ_DECL MqBufferGetType (
 /// \buf
 /// \return the #MqTypeE object 
 MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
+  struct MqBufferS * const buf
+);
+
+/// \brief return the type from a #MQ_BUF object as strint
+/// \buf
+/// \return the #MqTypeE object as string
+MQ_EXTERN MQ_CST MQ_DECL MqBufferGetType3 (
   struct MqBufferS * const buf
 );
 
