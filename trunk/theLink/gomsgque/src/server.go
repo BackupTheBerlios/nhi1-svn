@@ -17,6 +17,19 @@ import (
     "os"
 )
 
+/*
+type Server struct {
+  MqS
+}
+
+func NewServer() *Server {
+  ret := new(Server)
+  ret.Init()
+  ret.ConfigSetServerSetup(ret)
+  return ret
+}
+*/
+
 type Server struct {
   *MqS
 }
@@ -27,35 +40,36 @@ func NewServer() *Server {
   return ret
 }
 
-func (this *Server) ServerSetup() {
-  this.ServiceCreate("ECOI", &ECOI{this})
-  this.ServiceCreate("ECOU", &ECOU{this})
-  this.ServiceCreate("ECUL", &ECUL{this})
+func (this *Server) ServerSetup(ctx *MqS) {
+  ctx.ServiceCreate("ECOI", (*ECOI)(this))
+  ctx.ServiceCreate("ECOU", (*ECOU)(this))
+  ctx.ServiceCreate("ECUL", (*ECUL)(this))
 }
 
-type ECOI struct { *Server }
-  func (this *ECOI) Call() {
-    this.SendSTART()
-    this.SendI(this.ReadI())
-    this.SendRETURN()
+type ECOI Server
+  func (this *ECOI) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendI(ctx.ReadI())
+    ctx.SendRETURN()
   }
 
-type ECOU struct { *Server }
-  func (this *ECOU) Call() {
-    this.SendSTART()
-    this.SendU(this.ReadU())
-    this.SendRETURN()
+type ECOU Server
+  func (this *ECOU) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendU(ctx.ReadU())
+    ctx.SendRETURN()
   }
 
-type ECUL struct { *Server }
-  func (this *ECUL) Call() {
-    this.SendSTART()
-    this.SendY(this.ReadY())
-    this.SendS(this.ReadS())
-    this.SendI(this.ReadI())
-    this.SendW(this.ReadW())
-    this.ReadProxy(this.Server.MqS)
-    this.SendRETURN()
+type ECUL Server
+  func (this *ECUL) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendY(ctx.ReadY())
+    ctx.SendS(ctx.ReadS())
+    ctx.SendI(ctx.ReadI())
+    ctx.SendW(ctx.ReadW())
+    ctx.ReadProxy(ctx)
+    ctx.SendRETURN()
+    //ctx.ErrorC("ECUL",-1,"fehler")
   }
 
 func main() {

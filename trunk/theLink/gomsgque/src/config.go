@@ -34,21 +34,33 @@ func (this *MqS) ConfigSetIdent(val string) {
   C.free(unsafe.Pointer(v))
 }
 
-//export cServerSetup
-func (this *MqS) cServerSetup(cb *ServerSetup) {
+//export gomsgque_cServerSetup
+func cServerSetup(this *MqS, cb *ServerSetup) uint32 {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  (*cb).ServerSetup()
+  (*cb).ServerSetup(this)
+  return this.error.code
 }
 
 func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
   C.gomsgque_ConfigSetServerSetup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 
+//export gomsgque_cServerCleanup
+func cServerCleanup(this *MqS, cb *ServerCleanup) uint32 {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  (*cb).ServerCleanup(this)
+  return this.error.code
+}
+
 func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
-  C.MqConfigSetServerCleanup((*_Ctype_struct_MqS)(this), nil, nil, nil, nil)
+  C.gomsgque_ConfigSetServerCleanup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 

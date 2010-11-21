@@ -61,7 +61,7 @@ array set LABELIGNORE {
     ./theLink/rubymsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build *.rb }
     ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags}
     ./theLink/gomsgque		{ Makefile Makefile.in }
-    ./theLink/gomsgque/src	{ Makefile client server testex *.6 *.log tags *cgo* _obj _go_* }
+    ./theLink/gomsgque/src	{ Makefile client server testex *.6 *.log tags *cgo* _obj _go_* *.o test* .*.sw* }
     ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
 				  MqS_Main.h Manifest.txt *.in *.stamp *.jar javamsgque_MqS.h
 				    javamsgque_MqS_WAIT.h javamsgque_MqConfigS.h javamsgque_MqBufferS.h 

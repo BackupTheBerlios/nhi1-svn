@@ -16,34 +16,23 @@
 MQ_CST sGO = "GO";
 MQ_CST sUNKNOWN = "UNKNOWN";
 
-static enum MqErrorE sServerSetup (
-  struct MqS * const context,
-  MQ_PTR const data
-)
-{
-  cServerSetup((int*)context->self, data);
-  return MqErrorStack(context);
-}
-
 void
 gomsgque_ConfigSetServerSetup (
   struct MqS * const context,
   void *data
 )
 {
-  MqConfigSetServerSetup(context, sServerSetup, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetServerSetup(context, (MqTokenF)gomsgque_cServerSetup, (MQ_PTR)data, NULL, NULL);
 }
 
-/*
-static enum MqErrorE sService (
+void
+gomsgque_ConfigSetServerCleanup (
   struct MqS * const context,
-  MQ_PTR const data
+  void *data
 )
 {
-  cService((int*)context->self, data);
-  return MqErrorStack(context);
+  MqConfigSetServerCleanup(context, (MqTokenF)gomsgque_cServerCleanup, (MQ_PTR)data, NULL, NULL);
 }
-*/
 
 void
 gomsgque_ServiceCreate (

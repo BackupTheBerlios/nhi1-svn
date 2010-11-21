@@ -41,21 +41,28 @@ type MqS _Ctype_struct_MqS
 type MqSCallback func()
 
 type ServerSetup interface {
-  ServerSetup()
+  ServerSetup(*MqS)
 }
 
 type ServerCleanup interface {
-  ServerCleanup()
+  ServerCleanup(*MqS)
 }
 
 type Service interface {
-  Call()
+  Call(*MqS)
 }
 
+// for toplevel "MqS"
 func NewMqS() *MqS {
   this := C.MqContextCreate(0,nil)
   C.MqConfigSetSelf(this, unsafe.Pointer(this))
   return (*MqS)(this)
+}
+
+// for embedding "MqS"
+func (this *MqS) Init() {
+  C.MqContextInit((*_Ctype_struct_MqS)(this), 0,nil)
+  C.MqConfigSetSelf((*_Ctype_struct_MqS)(this), unsafe.Pointer(this))
 }
 
 func (this *MqS) String() string {
