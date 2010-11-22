@@ -16,12 +16,12 @@
 @SET_MAKE@
 
 #+
-#§  \file       theLink/gomsgque/Makefile.am
-#§  \brief      \$Id: Makefile.am 305 2010-11-15 09:55:37Z aotto1968 $
+#§  \file       theLink/example/go/Makefile.am
+#§  \brief      \$Id: Makefile.am 320 2010-11-21 17:05:19Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 305 $
+#§  \version    \$Rev: 320 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -255,12 +255,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
-@USE_GO_TRUE@GOMAKEFILE = src/Makefile
-@USE_GO_TRUE@MAKEARGS = $(AM_MAKEFLAGS)
-EXTRA_DIST = 
-all: all-am
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+SUFFIXES = .go .bin $(EXEEXT)
+CLEANFILES = $(BUILT_SOURCES)
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
+.SUFFIXES: .go .bin @EXEEXT@ $(EXEEXT)
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -335,11 +337,12 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
-@USE_GO_FALSE@all-local:
-all-am: Makefile all-local
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
+all-am: Makefile
 installdirs:
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -356,6 +359,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -364,16 +368,14 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@USE_GO_FALSE@distclean-local:
-@USE_GO_FALSE@install-exec-local:
-@USE_GO_FALSE@clean-local:
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-local mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-local
+distclean-am: clean-am distclean-generic
 
 dvi: dvi-am
 
@@ -393,7 +395,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-exec-local
+install-exec-am:
 
 install-html: install-html-am
 
@@ -433,33 +435,29 @@ ps-am:
 
 uninstall-am:
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
-.PHONY: all all-am all-local check check-am clean clean-generic \
-	clean-libtool clean-local distclean distclean-generic \
-	distclean-libtool distclean-local distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-local install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	distclean distclean-generic distclean-libtool distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
 
-@USE_GO_TRUE@all-local:
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS)
+include $(GOROOT)/src/Make.inc
 
-@USE_GO_TRUE@clean-local: $(GOMAKEFILE)
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) clean
+dummy:	all
 
-@USE_GO_TRUE@install-exec-local:
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
+.go.bin:
+	$(GC) -o $@ $<
 
-@USE_GO_TRUE@distclean-local:
-@USE_GO_TRUE@	-test -f src/.distclean && rm -fr src
+.bin$(EXEEXT):
+	$(LD) -o $@ $<
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

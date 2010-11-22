@@ -10,24 +10,29 @@
 #§              please contact AUTHORS for additional information
 #§
 
-if USE_GO
+##
+## ==========================================================================
+## GO
+##
 
-GOMAKEFILE  =	src/Makefile
-MAKEARGS    =	$(AM_MAKEFLAGS)
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
 
-all-local:
-	cd src && $(MAKE) $(MAKEARGS)
+include $(GOROOT)/src/Make.inc
 
-clean-local: $(GOMAKEFILE)
-	cd src && $(MAKE) $(MAKEARGS) clean
+SUFFIXES = .go .bin $(EXEEXT)
 
-install-exec-local:
-	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
+dummy:	all
 
-distclean-local:
-	-test -f src/.distclean && rm -fr src
+.go.bin:
+	$(GC) -o $@ $<
 
-endif
+.bin$(EXEEXT):
+	$(LD) -o $@ $<
 
-EXTRA_DIST =
+##
+## ==========================================================================
+## Main
+##
+
+CLEANFILES = $(BUILT_SOURCES)
 
