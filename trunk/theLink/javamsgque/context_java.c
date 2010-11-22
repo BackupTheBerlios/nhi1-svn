@@ -176,8 +176,11 @@ static enum MqErrorE MQ_DECL NS(FactoryCreate) (
   }
 
   MqConfigDup (*contextP, tmpl);
-  MqSetupDup (*contextP, tmpl);
+  MqErrorCheck(MqSetupDup (*contextP, tmpl));
   return MQ_OK;
+error:
+  MqErrorCopy(tmpl, *contextP);
+  return MqErrorStack(tmpl);
 }
 
 static void 

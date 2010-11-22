@@ -430,7 +430,7 @@ proc getExampleExecutable {srv} {
       ruby	{ lappend RET {*}$::RUBY [file join $::linksrcdir example ruby $path.rb] }
       perl	{ lappend RET {*}$::PERL [file join $::linksrcdir example perl $path.pl] }
       php	{ lappend RET {*}$::PHP [file join $::linksrcdir example php $path.php] }
-      go	{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }
+      go	{ lappend RET [file join $::linkbuilddir example go $path$::EXEEXT] }
       java	{ lappend RET {*}$::JAVA example.$path }
       csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
       vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb $path.exe] }

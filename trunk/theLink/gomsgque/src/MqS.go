@@ -48,21 +48,24 @@ type ServerCleanup interface {
   ServerCleanup(*MqS)
 }
 
+type Factory interface {
+  Factory(*MqS) *MqS
+}
+
 type Service interface {
   Call(*MqS)
 }
 
 // for toplevel "MqS"
 func NewMqS() *MqS {
-  this := C.MqContextCreate(0,nil)
-  C.MqConfigSetSelf(this, unsafe.Pointer(this))
-  return (*MqS)(this)
+  ret := C.MqContextCreate(0,nil)
+  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(ret), nil)
+  return (*MqS)(ret)
 }
 
 // for embedding "MqS"
 func (this *MqS) Init() {
   C.MqContextInit((*_Ctype_struct_MqS)(this), 0,nil)
-  C.MqConfigSetSelf((*_Ctype_struct_MqS)(this), unsafe.Pointer(this))
 }
 
 func (this *MqS) String() string {

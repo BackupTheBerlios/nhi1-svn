@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/example/go/src/MyClient.go
- *  \brief      \$Id: MyClient.go 320 2010-11-21 17:05:19Z aotto1968 $
+ *  \file       theLink/example/go/MyClient.go
+ *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 320 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

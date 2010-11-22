@@ -46,5 +46,3 @@ func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
 func (this *MqS) ServiceGetToken() string {
   return C.GoString(C.MqServiceGetToken((*_Ctype_struct_MqS)(this)))
 }
-
-

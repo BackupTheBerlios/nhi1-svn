@@ -23,7 +23,6 @@ array set LABELUSE {
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
     ./bin			{ LbMain .sh Label .sh }
-    ./theLink/example/go/src	{ MakeGoMsgque.inc.in .sh }
     ./theLink/gomsgque/src	{ MakeGoMsgque.inc.in .sh }
 }
 
@@ -52,8 +51,7 @@ array set LABELIGNORE {
     ./theLink/example/ruby	{ *.sw* Makefile.in Makefile}
     ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
     ./theLink/example/php	{ *.sw* Makefile.in Makefile}
-    ./theLink/example/go	{ *.sw* Makefile.in Makefile}
-    ./theLink/example/go/src	{ *.sw* MakeGoMsgque.inc }
+    ./theLink/example/go	{ *.sw* Makefile.in Makefile *.log MyClient MyServer}
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
     ./theLink/example		{ tags }
 

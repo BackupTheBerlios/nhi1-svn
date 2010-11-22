@@ -195,3 +195,17 @@ func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
   C.gomsgque_ConfigSetServerCleanup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 
+//export gomsgque_cFactoryCreate
+func (this *MqS) cFactoryCreate(cb Factory) *MqS {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  return cb.Factory(this)
+}
+
+func (this *MqS) ConfigSetFactory(cb Factory) {
+  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+}
+

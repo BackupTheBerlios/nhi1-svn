@@ -19,4 +19,5 @@ extern MQ_CST sUNKNOWN;
 
 void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);
 void gomsgque_ConfigSetServerCleanup (struct MqS * const, void *data);
+void gomsgque_ConfigSetFactory (struct MqS * const, void *data);
 void gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, void *data);

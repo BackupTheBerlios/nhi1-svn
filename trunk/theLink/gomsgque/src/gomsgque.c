@@ -56,6 +56,48 @@ gomsgque_ConfigSetServerCleanup (
 }
 
 static enum MqErrorE
+gomsgque_sFactoryCreate (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  MQ_PTR  data,
+  struct MqS  ** contextP
+)
+{
+  *contextP = (struct MqS*)gomsgque_cFactoryCreate((int*)tmpl, *((GoInterface*)data));
+  if (*contextP == NULL) return MqErrorStack(tmpl);
+  MqConfigDup (*contextP, tmpl);
+  MqErrorCheck(MqSetupDup (*contextP, tmpl));
+  return MQ_OK;
+error:
+  MqErrorCopy(tmpl, *contextP);
+  return MqErrorStack(tmpl);
+}
+
+// only necessary if we have to "unlock" an object
+static void
+gomsgque_sFactoryDelete (
+  struct MqS  * context,
+  MQ_BOL doFactoryCleanup,
+  MQ_PTR data
+)
+{
+  MqContextDelete (&context);
+}
+
+void
+gomsgque_ConfigSetFactory (
+  struct MqS * const context,
+  void *data
+)
+{
+  MqFactoryCreateF  fCreate = data != NULL ? gomsgque_sFactoryCreate : NULL;
+  MqConfigSetFactory(context, 
+    fCreate,		      (MQ_PTR)data, NULL, NULL,
+    gomsgque_sFactoryDelete,  NULL,	    NULL, NULL
+  );
+}
+
+static enum MqErrorE
 gomsgque_sService (
   struct MqS * const context,
   MQ_PTR const data
