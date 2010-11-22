@@ -9,31 +9,51 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
-namespace example {
-  sealed class mulserver : MqS, IServerSetup, IFactory {
-    MqS IFactory.Factory() {
-      return new mulserver();
-    }
-    public void MMUL () {
-      SendSTART();
-      SendD(ReadD() * ReadD());
-      SendRETURN();
-    }
-    void IServerSetup.ServerSetup() {
-      ServiceCreate("MMUL", MMUL);
-    }
-    static void Main(string[] argv) {
-      mulserver srv = new mulserver();
-      try {
-	srv.ConfigSetName("MyMulServer");
-	srv.LinkCreate(argv);
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
-  }
+
+package main
+
+import (
+  . "gomsgque"
+    "os"
+)
+
+type mulserver struct {
+  // add server specific data 
 }
+
+func Newmulserver() *MqS {
+  ctx := NewMqS()
+  srv := new(mulserver)
+  ctx.ConfigSetServerSetup(srv)
+  ctx.ConfigSetFactory(srv)
+  return ctx
+}
+
+func (this *mulserver) Factory(ctx *MqS) *MqS {
+  return Newmulserver()
+}
+
+func (this *mulserver) ServerSetup(ctx *MqS) {
+  ctx.ServiceCreate("MMUL", (*MMUL)(this))
+}
+
+type MMUL mulserver
+  func (this *MMUL) Call(ctx *MqS) {
+    ctx.SendSTART();
+    ctx.SendD(ctx.ReadD() * ctx.ReadD());
+    ctx.SendRETURN();
+  }
+
+func main() {
+  var srv = Newmulserver()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName("MyMulServer")
+  srv.LinkCreate(os.Args...)
+  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+}
+

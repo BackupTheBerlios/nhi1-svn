@@ -111,7 +111,11 @@ func (this *MqS) ReadProxy(ctx *MqS) {
   this.iErrorMqToGoWithCheck(C.MqReadProxy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx)))
 }
 
-func (this *MqS) ReadGetNumItems(ctx *MqS) uint32 {
+func (this *MqS) ReadGetNumItems() uint32 {
   return uint32(C.MqReadGetNumItems((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) ReadItemExists() bool {
+  return C.MqReadItemExists((*_Ctype_struct_MqS)(this)) == C.MQ_YES
 }
 

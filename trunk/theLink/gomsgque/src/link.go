@@ -41,8 +41,15 @@ func (this *MqS) LinkGetTargetIdent() string {
   return C.GoString(C.MqLinkGetTargetIdent((*_Ctype_struct_MqS)(this)))
 }
 
+func (this *MqS) LinkGetCtxId() int32 {
+  return int32(C.MqLinkGetCtxId((*_Ctype_struct_MqS)(this)))
+}
 
+func (this *MqS) LinkIsParent() bool {
+  return bool(C.MqLinkIsParent((*_Ctype_struct_MqS)(this)) != 0)
+}
 
-
-
+func (this *MqS) LinkGetParent() *MqS {
+  return (*MqS)(C.MqLinkGetParent((*_Ctype_struct_MqS)(this)))
+}
 

@@ -9,24 +9,28 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
-namespace example {
-  sealed class mulclient : MqS {
-    static void Main(string[] argv) {
-      mulclient ctx = new mulclient();
-      try {
-	ctx.ConfigSetName("MyMul");
-	ctx.LinkCreate(argv);
-	ctx.SendSTART();
-	ctx.SendD(3.67);
-	ctx.SendD(22.3);
-	ctx.SendEND_AND_WAIT("MMUL", 5);
-	Console.WriteLine(ctx.ReadD());
-      } catch (Exception ex) {
-        ctx.ErrorSet (ex);
-      }
-      ctx.Exit();
+
+package main
+
+import (
+  . "gomsgque"
+    "os"
+    "fmt"
+)
+
+func main() {
+  var ctx = NewMqS()
+  defer func() {
+    if x := recover(); x != nil {
+      ctx.ErrorSet(x)
     }
-  }
+    ctx.Exit()
+  }()
+  ctx.ConfigSetName("MyMul")
+  ctx.LinkCreate(os.Args...)
+  ctx.SendSTART()
+  ctx.SendD(3.67)
+  ctx.SendD(22.3)
+  ctx.SendEND_AND_WAIT("MMUL", 5)
+  fmt.Printf("%f", ctx.ReadD())
 }

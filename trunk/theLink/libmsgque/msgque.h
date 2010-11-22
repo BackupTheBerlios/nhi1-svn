@@ -1843,7 +1843,7 @@ enum MqWaitOnEventE {
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
   struct MqS  * const ctx,
   MQ_SIZE const id,
-  struct MqS ** const filter
+  struct MqS ** filter
 ) __attribute__((nonnull(1)));
 
 /// \brief check if the \e ongoing-service-call belongs to a transaction

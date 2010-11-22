@@ -129,6 +129,20 @@ func (this *MqS) ConfigSetIsString(val bool) {
   C.MqConfigSetIsString((*_Ctype_struct_MqS)(this), v)
 }
 
+func (this *MqS) ConfigGetIsServer() bool {
+  return C.MqConfigGetIsServer((*_Ctype_struct_MqS)(this)) == C.MQ_YES
+}
+
+func (this *MqS) ConfigSetIsServer(val bool) {
+  var v C.MQ_BOL
+  if val {
+    v = C.MQ_YES
+  } else {
+    v = C.MQ_NO
+  }
+  C.MqConfigSetIsServer((*_Ctype_struct_MqS)(this), v)
+}
+
 func (this *MqS) ConfigGetIoUdsFile() string {
   return C.GoString(C.MqConfigGetIoUdsFile((*_Ctype_struct_MqS)(this)))
 }

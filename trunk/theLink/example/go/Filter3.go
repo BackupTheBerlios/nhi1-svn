@@ -9,38 +9,48 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
-using System.Collections.Generic;
 
-namespace example {
-  sealed class Filter3 : MqS, IFactory, IServerSetup {
+package main
 
-    MqS IFactory.Factory () {
-      return new Filter3();
-    }
+import (
+  . "gomsgque"
+    "os"
+)
 
-    void IServerSetup.ServerSetup() {
-      MqS ftr = ServiceGetFilter();
-      ServiceProxy("+ALL");
-      ServiceProxy("+TRT");
-      ftr.ServiceProxy("+ALL");
-      ftr.ServiceProxy("+TRT");
-    }
-
-    public static void Main(string[] argv) {
-      Filter3 srv = new Filter3();
-      try {
-	srv.ConfigSetName("Filter3");
-	srv.LinkCreate(argv);
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
-  }
+type Filter3 struct {
+  // add server specific data 
 }
 
+func NewFilter3() *MqS {
+  ctx := NewMqS()
+  srv := new(Filter3)
+  ctx.ConfigSetServerSetup(srv)
+  ctx.ConfigSetFactory(srv)
+  return ctx
+}
 
+func (this *Filter3) Factory(ctx *MqS) *MqS {
+  return NewFilter3()
+}
+
+func (this *Filter3) ServerSetup(ctx *MqS) {
+  ftr := ctx.ServiceGetFilter2()
+  ctx.ServiceProxy2("+ALL")
+  ctx.ServiceProxy2("+TRT")
+  ftr.ServiceProxy2("+ALL")
+  ftr.ServiceProxy2("+TRT")
+}
+
+func main() {
+  var srv = NewFilter3()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName("Filter3")
+  srv.LinkCreate(os.Args...)
+  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+}
 

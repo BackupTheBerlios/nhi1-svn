@@ -34,6 +34,13 @@ func (this *MqS) SendEND_AND_WAIT(token string, timeout TIMEOUT) {
   this.iErrorMqToGoWithCheck(r)
 }
 
+func (this *MqS) SendEND_AND_WAIT2(token string) {
+  t := C.CString(token)
+  r := C.MqSendEND_AND_WAIT((*_Ctype_struct_MqS)(this), t, C.MQ_TIMEOUT_DEFAULT)
+  C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
+}
+
 func (this *MqS) SendRETURN() {
   this.iErrorMqToGoWithCheck(C.MqSendRETURN((*_Ctype_struct_MqS)(this)))
 }

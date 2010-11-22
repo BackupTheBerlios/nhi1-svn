@@ -9,36 +9,44 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
-namespace example {
-  sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Factory () {
-      return new manfilter();
-    }
-    void FTR () {
-      MqS ftr = ServiceGetFilter();
-      ftr.SendSTART();
-      while (ReadItemExists()) {
-	ftr.SendC("<" + ReadC() + ">");
-      }
-      ftr.SendEND_AND_WAIT("+FTR");
-      SendRETURN();
-    }
-    static void Main(string[] argv) {
-      manfilter srv = new manfilter();
-      try {
-	srv.ConfigSetName("ManFilter");
-	srv.ConfigSetIsServer(true);
-	srv.LinkCreate(argv);
-	srv.ServiceCreate("+FTR", srv.FTR);
-	srv.ServiceProxy ("+EOF");
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
+
+package main
+
+import (
+  . "gomsgque"
+    "os"
+)
+
+type ManFilter MqS
+  func (this *ManFilter) Factory (ctx *MqS) *MqS {
+    return NewMqS()
   }
+
+type FTR MqS
+  func (this *FTR) Call (ctx *MqS) {
+    ftr := ctx.ServiceGetFilter2()
+    ftr.SendSTART()
+    for ctx.ReadItemExists() {
+      ftr.SendC("<" + ctx.ReadC() + ">")
+    }
+    ftr.SendEND_AND_WAIT2("+FTR")
+    ctx.SendRETURN()
+  }
+
+func main() {
+  var srv = NewMqS()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName("ManFilter")
+  srv.ConfigSetIsServer(true)
+  srv.ConfigSetFactory((*ManFilter)(srv))
+  srv.LinkCreate(os.Args...)
+  srv.ServiceCreate("+FTR", (*FTR)(srv))
+  srv.ServiceProxy2("+EOF")
+  srv.ProcessEvent2(MqS_WAIT_FOREVER)
 }
 

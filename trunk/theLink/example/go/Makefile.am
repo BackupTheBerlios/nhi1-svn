@@ -15,7 +15,8 @@
 ## GO
 ##
 
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
+  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT)
 
 include $(GOROOT)/src/Make.inc
 

@@ -17,11 +17,11 @@
 
 #+
 #§  \file       theLink/example/go/Makefile.am
-#§  \brief      \$Id: Makefile.am 323 2010-11-22 11:52:10Z aotto1968 $
+#§  \brief      \$Id: Makefile.am 325 2010-11-22 12:03:40Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 323 $
+#§  \version    \$Rev: 325 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -255,7 +255,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
+  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT)
+
 SUFFIXES = .go .bin $(EXEEXT)
 CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = *.go

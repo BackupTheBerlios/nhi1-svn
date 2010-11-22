@@ -51,37 +51,51 @@ namespace example {
       testclient c10 = new testclient();
       testclient c100 = new testclient();
       testclient c101 = new testclient();
-      try {
-	// create the link
-	if(Type.GetType ("Mono.Runtime") != null)
-	  c0.LinkCreate("--name", "c0", "--debug", System.Environment.GetEnvironmentVariable("TS_DEBUG"), 
-					    "@", "mono", server, "--name", "s0");
-	else
-	  c0.LinkCreate("--name", "c0", "--debug", System.Environment.GetEnvironmentVariable("TS_DEBUG"), 
-					    "@", server, "--name", "s0");
-
-	c00.LinkCreateChild(c0, "--name", "c00", "--srvname", "s00");
-	c01.LinkCreateChild(c0, "--name", "c01", "--srvname", "s01");
-	c000.LinkCreateChild(c00, "--name", "c000", "--srvname", "s000");
-	c1.LinkCreate(LIST.ToArray());
-	c10.LinkCreateChild(c1, "--name", "c10", "--srvname", "s10");
-	c100.LinkCreateChild(c10, "--name", "c100", "--srvname", "s100");
-	c101.LinkCreateChild(c10, "--name", "c101", "--srvname", "s101");
-	// do the tests
-	Console.WriteLine(c0.Get());
-	Console.WriteLine(c00.Get());
-	Console.WriteLine(c01.Get());
-	Console.WriteLine(c000.Get());
-	Console.WriteLine(c1.Get());
-	Console.WriteLine(c10.Get());
-	Console.WriteLine(c100.Get());
-	Console.WriteLine(c101.Get());
-      } catch {
-      } finally {
-	// do the cleanup
-	c0.LinkDelete();
-	c1.LinkDelete();
-      }
     }
   }
 }
+
+package main
+
+import (
+  . "gomsgque"
+  "os"
+)
+
+func main() {
+  var ctx = NewMqS()
+  defer func() {
+    if x := recover(); x != nil {
+      ctx.ErrorSet(x)
+    }
+    // do the cleanup
+    c0.LinkDelete();
+    c1.LinkDelete();
+  }()
+  ctx.LinkCreate(os.Args...)
+  ctx.SendSTART()
+  ctx.SendI(100)
+  ctx.SendEND_AND_WAIT("HLWO", 5)
+  println(ctx.ReadC())
+
+  // create the link
+  c0.LinkCreate("--name", "c0", "--debug", os.Getenv("TS_DEBUG"), "@", server, "--name", "s0")
+  c00.LinkCreateChild(c0, "--name", "c00", "--srvname", "s00")
+  c01.LinkCreateChild(c0, "--name", "c01", "--srvname", "s01")
+  c000.LinkCreateChild(c00, "--name", "c000", "--srvname", "s000")
+  c1.LinkCreate(LIST.ToArray())
+  c10.LinkCreateChild(c1, "--name", "c10", "--srvname", "s10")
+  c100.LinkCreateChild(c10, "--name", "c100", "--srvname", "s100")
+  c101.LinkCreateChild(c10, "--name", "c101", "--srvname", "s101")
+
+  // do the tests
+  println(c0.Get())
+  println(c00.Get())
+  println(c01.Get())
+  println(c000.Get())
+  println(c1.Get())
+  println(c10.Get())
+  println(c100.Get())
+  println(c101.Get())
+}
+

@@ -23,9 +23,19 @@ import (
   "os"
 )
 
+type MqSException MqS
+
+func (this *MqSException) GetText() string {
+  return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqSException) GetNum() int32 {
+  return int32(C.MqErrorGetNum((*_Ctype_struct_MqS)(this)))
+}
+
 func (this *MqS)  iErrorMqToGoWithCheck(ex uint32) {
   if (ex == C.MQ_ERROR) {
-    panic(this)
+    panic((*MqSException)(this))
   }
 }
 
@@ -66,7 +76,21 @@ func (this *MqS) ErrorReset() {
   C.MqErrorReset((*_Ctype_struct_MqS)(this))
 }
 
+func (this *MqS) ErrorRaise() {
+  if (C.MqErrorGetCode((*_Ctype_struct_MqS)(this)) == C.MQ_ERROR) {
+    panic((*MqSException)(this))
+  }
+}
+
 func (this *MqS) ErrorPrint() {
   C.MqErrorPrint((*_Ctype_struct_MqS)(this))
+}
+
+func (this *MqS) ErrorGetText() string {
+  return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) ErrorGetNum() int32 {
+  return int32(C.MqErrorGetNum((*_Ctype_struct_MqS)(this)))
 }
 

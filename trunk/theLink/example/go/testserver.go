@@ -9,48 +9,59 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
 
-namespace example {
+package main
 
-  sealed class testserver : MqS, IServerSetup, IFactory {
+import (
+  . "gomsgque"
+    "os"
+)
 
-    MqS IFactory.Factory() {
-      return new testserver();
-    }
-
-    public void GTCX () {
-      SendSTART();
-      SendI(LinkGetCtxId());
-      SendC("+");
-      if (LinkIsParent()) {
-        SendI(-1);
-      } else {
-        SendI(LinkGetParent().LinkGetCtxId());
-      }
-      SendC("+");
-      SendC(ConfigGetName());
-      SendC(":");
-      SendRETURN();
-    }
-
-    void IServerSetup.ServerSetup() {
-      ServiceCreate("GTCX", GTCX);
-    }
-
-    static void Main(string[] argv) {
-      testserver srv = new testserver();
-      try {
-	srv.LinkCreate(argv);
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
-  }
+type TestServer struct {
+  // add server specific data 
 }
 
+func NewTestServer() *MqS {
+  ctx := NewMqS()
+  srv := new(TestServer)
+  ctx.ConfigSetServerSetup(srv)
+  ctx.ConfigSetFactory(srv)
+  return ctx
+}
 
+func (this *TestServer) Factory(ctx *MqS) *MqS {
+  return NewTestServer()
+}
+
+func (this *TestServer) ServerSetup(ctx *MqS) {
+  ctx.ServiceCreate("GTCX", (*GTCX)(this))
+}
+
+type GTCX TestServer
+  func (this *GTCX) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendI(ctx.LinkGetCtxId())
+    ctx.SendC("+")
+    if (ctx.LinkIsParent()) {
+      ctx.SendI(-1)
+    } else {
+      ctx.SendI(ctx.LinkGetParent().LinkGetCtxId())
+    }
+    ctx.SendC("+")
+    ctx.SendC(ctx.ConfigGetName())
+    ctx.SendC(":")
+    ctx.SendRETURN()
+  }
+
+func main() {
+  var srv = NewTestServer()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.LinkCreate(os.Args...)
+  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+}
 
