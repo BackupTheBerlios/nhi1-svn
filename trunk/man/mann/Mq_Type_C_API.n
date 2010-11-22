@@ -1,4 +1,4 @@
-.TH "Mq_Type_C_API" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -94,6 +94,22 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .br
 .R "MQ_ALFA the command-line separator as string. "
 .ti -1c
+.RI "#define \fBMQ_PTRB\fP   void"
+.br
+.R "pointer basic data-type "
+.ti -1c
+.RI "#define \fBMQ_STRB\fP   char"
+.br
+.R "string basic data-type "
+.ti -1c
+.RI "#define \fBMQ_BINB\fP   unsigned char"
+.br
+.R "\fIbyte-array\fP basic data-type "
+.ti -1c
+.RI "#define \fBMQ_LSTB\fP   unsigned char"
+.br
+.R "list basic data-type "
+.ti -1c
 .RI "#define \fBMQ_NO\fP   0"
 .br
 .R "boolean NO "
@@ -114,11 +130,11 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .br
 .R "1 byte \fBboolean\fP data-type "
 .ti -1c
-.RI "typedef short \fBMQ_SRT\fP"
+.RI "typedef signed short \fBMQ_SRT\fP"
 .br
 .R "2 byte \fBshort\fP data-type "
 .ti -1c
-.RI "typedef int \fBMQ_INT\fP"
+.RI "typedef signed int \fBMQ_INT\fP"
 .br
 .R "4 byte \fBinteger\fP data-type "
 .ti -1c
@@ -150,43 +166,27 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .br
 .R "handle data-type "
 .ti -1c
-.RI "typedef void \fBMQ_PTRB\fP"
-.br
-.R "pointer basic data-type "
-.ti -1c
-.RI "typedef char \fBMQ_STRB\fP"
-.br
-.R "string basic data-type "
-.ti -1c
-.RI "typedef unsigned char \fBMQ_BINB\fP"
-.br
-.R "\fIbyte-array\fP basic data-type "
-.ti -1c
-.RI "typedef unsigned char \fBMQ_LSTB\fP"
-.br
-.R "list basic data-type "
-.ti -1c
-.RI "typedef \fBMQ_PTRB\fP * \fBMQ_PTR\fP"
+.RI "typedef MQ_PTRB * \fBMQ_PTR\fP"
 .br
 .R "generic pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_STRB\fP * \fBMQ_STR\fP"
+.RI "typedef MQ_STRB * \fBMQ_STR\fP"
 .br
 .R "string pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_STRB\fP const * \fBMQ_CST\fP"
+.RI "typedef MQ_STRB const * \fBMQ_CST\fP"
 .br
 .R "const string pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
+.RI "typedef MQ_BINB * \fBMQ_BIN\fP"
 .br
 .R "\fIbyte-array\fP pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_BINB\fP const * \fBMQ_CBI\fP"
+.RI "typedef MQ_BINB const * \fBMQ_CBI\fP"
 .br
 .R "\fIconst\fP byte-array pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
+.RI "typedef MQ_LSTB * \fBMQ_LST\fP"
 .br
 .R "list pointer data-type "
 .ti -1c
@@ -240,6 +240,11 @@ Definition at line 232 of file msgque.h.
 MQ_ALFA the command-line separator as string. 
 .PP
 Definition at line 234 of file msgque.h.
+.SS "#define MQ_BINB   unsigned char"
+.PP
+\fIbyte-array\fP basic data-type 
+.PP
+Definition at line 291 of file msgque.h.
 .SS "#define MQ_CPPSTR(s)   #s"
 .PP
 connecting of expressions, step 2 
@@ -258,11 +263,26 @@ Definition at line 102 of file msgque.h.
 define the external binding 
 .PP
 Definition at line 217 of file msgque.h.
+.SS "#define MQ_LSTB   unsigned char"
+.PP
+list basic data-type 
+.PP
+Definition at line 293 of file msgque.h.
 .SS "#define MQ_NO   0"
 .PP
 boolean NO 
 .PP
-Definition at line 321 of file msgque.h.
+Definition at line 323 of file msgque.h.
+.SS "#define MQ_PTRB   void"
+.PP
+pointer basic data-type 
+.PP
+Definition at line 287 of file msgque.h.
+.SS "#define MQ_STRB   char"
+.PP
+string basic data-type 
+.PP
+Definition at line 289 of file msgque.h.
 .SS "#define MQ_TIMEOUT   900"
 .PP
 maximum timeout in sec (900 sec) 
@@ -312,7 +332,7 @@ Definition at line 186 of file msgque.h.
 .PP
 boolean YES 
 .PP
-Definition at line 324 of file msgque.h.
+Definition at line 326 of file msgque.h.
 .SS "#define unlikely(x)   __builtin_expect((x),0)"
 .PP
 gcc jump optimization 
@@ -329,17 +349,12 @@ Definition at line 271 of file msgque.h.
 .PP
 Buffer-List pointer data-type. 
 .PP
-Definition at line 308 of file msgque.h.
-.SS "typedef \fBMQ_BINB\fP* \fBMQ_BIN\fP"
+Definition at line 310 of file msgque.h.
+.SS "typedef MQ_BINB* \fBMQ_BIN\fP"
 .PP
 \fIbyte-array\fP pointer data-type 
 .PP
-Definition at line 300 of file msgque.h.
-.SS "typedef unsigned char \fBMQ_BINB\fP"
-.PP
-\fIbyte-array\fP basic data-type 
-.PP
-Definition at line 289 of file msgque.h.
+Definition at line 302 of file msgque.h.
 .SS "typedef unsigned char \fBMQ_BOL\fP"
 .PP
 1 byte \fBboolean\fP data-type 
@@ -349,27 +364,27 @@ Definition at line 255 of file msgque.h.
 .PP
 Buffer pointer data-type. 
 .PP
-Definition at line 306 of file msgque.h.
+Definition at line 308 of file msgque.h.
 .SS "typedef signed char \fBMQ_BYT\fP"
 .PP
 1 byte \fBbyte\fP data-type 
 .PP
 Definition at line 244 of file msgque.h.
-.SS "typedef \fBMQ_BINB\fP const* \fBMQ_CBI\fP"
+.SS "typedef MQ_BINB const* \fBMQ_CBI\fP"
 .PP
 \fIconst\fP byte-array pointer data-type 
 .PP
-Definition at line 302 of file msgque.h.
-.SS "typedef \fBMQ_STRB\fP const* \fBMQ_CST\fP"
+Definition at line 304 of file msgque.h.
+.SS "typedef MQ_STRB const* \fBMQ_CST\fP"
 .PP
 const string pointer data-type 
 .PP
-Definition at line 298 of file msgque.h.
+Definition at line 300 of file msgque.h.
 .SS "typedef struct \fBMqS\fP* \fBMQ_CTX\fP"
 .PP
 Context pointer data-type. 
 .PP
-Definition at line 310 of file msgque.h.
+Definition at line 312 of file msgque.h.
 .SS "typedef double \fBMQ_DBL\fP"
 .PP
 8 byte \fBdouble\fP data-type 
@@ -385,31 +400,21 @@ Definition at line 261 of file msgque.h.
 handle data-type 
 .PP
 Definition at line 282 of file msgque.h.
-.SS "typedef int \fBMQ_INT\fP"
+.SS "typedef signed int \fBMQ_INT\fP"
 .PP
 4 byte \fBinteger\fP data-type 
 .PP
 Definition at line 259 of file msgque.h.
-.SS "typedef \fBMQ_LSTB\fP* \fBMQ_LST\fP"
+.SS "typedef MQ_LSTB* \fBMQ_LST\fP"
 .PP
 list pointer data-type 
 .PP
-Definition at line 304 of file msgque.h.
-.SS "typedef unsigned char \fBMQ_LSTB\fP"
-.PP
-list basic data-type 
-.PP
-Definition at line 291 of file msgque.h.
-.SS "typedef \fBMQ_PTRB\fP* \fBMQ_PTR\fP"
+Definition at line 306 of file msgque.h.
+.SS "typedef MQ_PTRB* \fBMQ_PTR\fP"
 .PP
 generic pointer data-type 
 .PP
-Definition at line 294 of file msgque.h.
-.SS "typedef void \fBMQ_PTRB\fP"
-.PP
-pointer basic data-type 
-.PP
-Definition at line 285 of file msgque.h.
+Definition at line 296 of file msgque.h.
 .SS "typedef int \fBMQ_SIZE\fP"
 .PP
 array size data-type 
@@ -426,22 +431,17 @@ Definition at line 276 of file msgque.h.
 .PP
 data type for a socket handle 
 .PP
-Definition at line 312 of file msgque.h.
-.SS "typedef short \fBMQ_SRT\fP"
+Definition at line 314 of file msgque.h.
+.SS "typedef signed short \fBMQ_SRT\fP"
 .PP
 2 byte \fBshort\fP data-type 
 .PP
 Definition at line 257 of file msgque.h.
-.SS "typedef \fBMQ_STRB\fP* \fBMQ_STR\fP"
+.SS "typedef MQ_STRB* \fBMQ_STR\fP"
 .PP
 string pointer data-type 
 .PP
-Definition at line 296 of file msgque.h.
-.SS "typedef char \fBMQ_STRB\fP"
-.PP
-string basic data-type 
-.PP
-Definition at line 287 of file msgque.h.
+Definition at line 298 of file msgque.h.
 .SS "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
 .PP
 OS wide MQ_TIME_T. 
@@ -456,12 +456,12 @@ Definition at line 266 of file msgque.h.
 .PP
 prototype for exit a process or thread 
 .PP
-Definition at line 544 of file msgque.h.
+Definition at line 546 of file msgque.h.
 .SS "typedef void( * \fBMqSetupF\fP)(struct \fBMqS\fP *const )"
 .PP
 used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands 
 .PP
-Definition at line 551 of file msgque.h.
+Definition at line 553 of file msgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

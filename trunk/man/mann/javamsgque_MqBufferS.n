@@ -1,4 +1,4 @@
-.TH "javamsgque::MqBufferS" n "11 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqBufferS" n "22 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -14,7 +14,7 @@ javamsgque::MqBufferS \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\
 .ti -1c
 .RI "native char \fBGetType\fP ()"
 .br
-.R "return the type from a \fBMQ_BUF\fP object  "
+.R "return the type from a \fBMQ_BUF\fP object on character identifer  "
 .ti -1c
 .RI "native byte \fBGetY\fP ()"
 .br
@@ -89,7 +89,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 .SS "native char javamsgque.MqBufferS.GetType ()"
 .PP
-return the type from a \fBMQ_BUF\fP object  
+return the type from a \fBMQ_BUF\fP object on character identifer  
 .PP
 .SS "native long javamsgque.MqBufferS.GetW ()"
 .PP

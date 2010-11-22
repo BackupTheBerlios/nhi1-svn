@@ -1,4 +1,4 @@
-.TH "MqIoConfigS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoConfigS" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,41 +42,41 @@ MqIoConfigS \- configuration data which belong to \fIMqIoS\fP
 .PP 
 configuration data which belong to \fIMqIoS\fP 
 .PP
-Definition at line 622 of file msgque.h.
+Definition at line 624 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_INT\fP \fBMqIoConfigS.buffersize\fP"
 .PP
 set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
 .PP
-Definition at line 628 of file msgque.h.
+Definition at line 630 of file msgque.h.
 .SS "enum \fBMqIoComE\fP \fBMqIoConfigS.com\fP"
 .PP
 what kind of socket interface to use? 
 .PP
 type default option application context  INTEGER (enum) IO_PIPE --tcp/--uds/--pipe server parent  
 .PP
-Definition at line 635 of file msgque.h.
+Definition at line 637 of file msgque.h.
 .SS "struct \fBMqIoPipeConfigS\fP \fBMqIoConfigS.pipe\fP\fC [read]\fP"
 .PP
 set \fIpipe\fP configuration-data 
 .PP
-Definition at line 644 of file msgque.h.
+Definition at line 646 of file msgque.h.
 .SS "struct \fBMqIoTcpConfigS\fP \fBMqIoConfigS.tcp\fP\fC [read]\fP"
 .PP
 set \fItcp\fP configuration-data 
 .PP
-Definition at line 641 of file msgque.h.
+Definition at line 643 of file msgque.h.
 .SS "\fBMQ_TIME_T\fP \fBMqIoConfigS.timeout\fP"
 .PP
 user defined timeout to terminate a blocking function call (default: 90 sec) 
 .PP
-Definition at line 625 of file msgque.h.
+Definition at line 627 of file msgque.h.
 .SS "struct \fBMqIoUdsConfigS\fP \fBMqIoConfigS.uds\fP\fC [read]\fP"
 .PP
 set \fIuds\fP configuration-data 
 .PP
-Definition at line 638 of file msgque.h.
+Definition at line 640 of file msgque.h.
 
 .SH "Author"
 .PP 

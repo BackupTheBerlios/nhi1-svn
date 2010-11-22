@@ -29,5 +29,17 @@ distclean-local:
 
 endif
 
-EXTRA_DIST =
+EXTRA_DIST = \
+$(srcdir)/src/MqS.go \
+$(srcdir)/src/MqSException.go \
+$(srcdir)/src/MqBufferS.go \
+$(srcdir)/src/MqBinary.go \
+$(srcdir)/src/send.go \
+$(srcdir)/src/read.go \
+$(srcdir)/src/link.go \
+$(srcdir)/src/config.go \
+$(srcdir)/src/service.go\
+$(srcdir)/src/gomsgque.h \
+$(srcdir)/src/gomsgque.c \
+$(srcdir)/src/Makefile
 

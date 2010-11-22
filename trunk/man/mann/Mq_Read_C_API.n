@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,7 +9,7 @@ Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP *buffer)"
 .br
 .R "start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
@@ -17,7 +17,7 @@ Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP *buffer)"
 .br
 .R "start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
 .ti -1c
@@ -63,7 +63,7 @@ Mq_Read_C_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
+.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP **val)"
 .br
 .R "extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP "
 .ti -1c
@@ -282,7 +282,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqReadL_START (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP buffer)"
+.SS "enum \fBMqErrorE\fP MqReadL_START (struct \fBMqS\fP *const  ctx, struct \fBMqBufferS\fP * buffer)"
 .PP
 start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
@@ -388,7 +388,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqReadT_START (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP buffer)"
+.SS "enum \fBMqErrorE\fP MqReadT_START (struct \fBMqS\fP *const  ctx, struct \fBMqBufferS\fP * buffer)"
 .PP
 start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP
@@ -407,7 +407,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  ctx, \fBMQ_BUF\fP *const  val)"
+.SS "enum \fBMqErrorE\fP MqReadU (struct \fBMqS\fP *const  ctx, struct \fBMqBufferS\fP ** val)"
 .PP
 extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP

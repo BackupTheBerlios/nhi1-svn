@@ -1,4 +1,4 @@
-.TH "Mq_Read_CC_API" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Read_CC_API" n "22 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,7 +45,7 @@ Mq_Read_CC_API \- extract data from an incoming \fIread-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
 .ti -1c
-.RI "vector< \fBMQ_BINB\fP > * \fBccmsgque::MqC::ReadB\fP ()  throw (MqCException)"
+.RI "vector< MQ_BINB > * \fBccmsgque::MqC::ReadB\fP ()  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
 .ti -1c
@@ -129,7 +129,7 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
  
 .SH "Function Documentation"
 .PP 
-.SS "vector<\fBMQ_BINB\fP>* ccmsgque::MqC::ReadB ()  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "vector<MQ_BINB>* ccmsgque::MqC::ReadB ()  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadB\fP 
 .PP

@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "22 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -342,7 +342,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
 .ti -1c
-.RI "vector< \fBMQ_BINB\fP > * \fBReadB\fP ()  throw (MqCException)"
+.RI "vector< MQ_BINB > * \fBReadB\fP ()  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
 .ti -1c
@@ -490,7 +490,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
 .ti -1c
-.RI "void \fBSendB\fP (vector< \fBMQ_BINB\fP > *val)  throw (MqCException)"
+.RI "void \fBSendB\fP (vector< MQ_BINB > *val)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
 .ti -1c

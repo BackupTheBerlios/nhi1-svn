@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,12 +30,12 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 
 .PP
-Definition at line 587 of file msgque.h.
+Definition at line 589 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS.file\fP"
 .PP
-Definition at line 588 of file msgque.h.
+Definition at line 590 of file msgque.h.
 
 .SH "Author"
 .PP 

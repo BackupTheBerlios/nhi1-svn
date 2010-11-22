@@ -1,4 +1,4 @@
-.TH "Mq_Send_CC_API" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Send_CC_API" n "22 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -89,7 +89,7 @@ Mq_Send_CC_API \- construct an outgoing \fIsend-data-package\fP.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::SendB\fP (vector< \fBMQ_BINB\fP > *val)  throw (MqCException)"
+.RI "void \fBccmsgque::MqC::SendB\fP (vector< MQ_BINB > *val)  throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
 .ti -1c
@@ -125,7 +125,7 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
  
 .SH "Function Documentation"
 .PP 
-.SS "void ccmsgque::MqC::SendB (vector< \fBMQ_BINB\fP > * val)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SendB (vector< MQ_BINB > * val)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSendB\fP 
 .PP

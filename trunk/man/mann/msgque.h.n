@@ -1,8 +1,8 @@
-.TH "msgque.h" n "11 Nov 2010" "Version 4.7" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "22 Nov 2010" "Version 4.7" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 319 2010-11-21 15:57:51Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -219,6 +219,22 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "MQ_ALFA the command-line separator as string. "
 .ti -1c
+.RI "#define \fBMQ_PTRB\fP   void"
+.br
+.R "pointer basic data-type "
+.ti -1c
+.RI "#define \fBMQ_STRB\fP   char"
+.br
+.R "string basic data-type "
+.ti -1c
+.RI "#define \fBMQ_BINB\fP   unsigned char"
+.br
+.R "\fIbyte-array\fP basic data-type "
+.ti -1c
+.RI "#define \fBMQ_LSTB\fP   unsigned char"
+.br
+.R "list basic data-type "
+.ti -1c
 .RI "#define \fBMQ_NO\fP   0"
 .br
 .R "boolean NO "
@@ -371,11 +387,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "1 byte \fBboolean\fP data-type "
 .ti -1c
-.RI "typedef short \fBMQ_SRT\fP"
+.RI "typedef signed short \fBMQ_SRT\fP"
 .br
 .R "2 byte \fBshort\fP data-type "
 .ti -1c
-.RI "typedef int \fBMQ_INT\fP"
+.RI "typedef signed int \fBMQ_INT\fP"
 .br
 .R "4 byte \fBinteger\fP data-type "
 .ti -1c
@@ -407,43 +423,27 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "handle data-type "
 .ti -1c
-.RI "typedef void \fBMQ_PTRB\fP"
-.br
-.R "pointer basic data-type "
-.ti -1c
-.RI "typedef char \fBMQ_STRB\fP"
-.br
-.R "string basic data-type "
-.ti -1c
-.RI "typedef unsigned char \fBMQ_BINB\fP"
-.br
-.R "\fIbyte-array\fP basic data-type "
-.ti -1c
-.RI "typedef unsigned char \fBMQ_LSTB\fP"
-.br
-.R "list basic data-type "
-.ti -1c
-.RI "typedef \fBMQ_PTRB\fP * \fBMQ_PTR\fP"
+.RI "typedef MQ_PTRB * \fBMQ_PTR\fP"
 .br
 .R "generic pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_STRB\fP * \fBMQ_STR\fP"
+.RI "typedef MQ_STRB * \fBMQ_STR\fP"
 .br
 .R "string pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_STRB\fP const * \fBMQ_CST\fP"
+.RI "typedef MQ_STRB const * \fBMQ_CST\fP"
 .br
 .R "const string pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_BINB\fP * \fBMQ_BIN\fP"
+.RI "typedef MQ_BINB * \fBMQ_BIN\fP"
 .br
 .R "\fIbyte-array\fP pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_BINB\fP const * \fBMQ_CBI\fP"
+.RI "typedef MQ_BINB const * \fBMQ_CBI\fP"
 .br
 .R "\fIconst\fP byte-array pointer data-type "
 .ti -1c
-.RI "typedef \fBMQ_LSTB\fP * \fBMQ_LST\fP"
+.RI "typedef MQ_LSTB * \fBMQ_LST\fP"
 .br
 .R "list pointer data-type "
 .ti -1c
@@ -989,7 +989,15 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .ti -1c
 .RI "char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
 .br
+.R "return the type from a \fBMQ_BUF\fP object on character identifer "
+.ti -1c
+.RI "enum \fBMqTypeE\fP \fBMqBufferGetType2\fP (struct \fBMqBufferS\fP *const buf)"
+.br
 .R "return the type from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqBufferGetType3\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.R "return the type from a \fBMQ_BUF\fP object as strint "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -1265,7 +1273,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "copy a \fBMqErrorS\fP from \fIin\fP to \fIout\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.RI "enum \fBMqErrorE\fP \fBMqReadL_START\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP *buffer)"
 .br
 .R "start to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
@@ -1273,7 +1281,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP buffer)"
+.RI "enum \fBMqErrorE\fP \fBMqReadT_START\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP *buffer)"
 .br
 .R "start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. "
 .ti -1c
@@ -1319,7 +1327,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .br
 .R "extract the entire \fIbody-package\fP from the \fIread-data-package\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, \fBMQ_BUF\fP *const val)"
+.RI "enum \fBMqErrorE\fP \fBMqReadU\fP (struct \fBMqS\fP *const ctx, struct \fBMqBufferS\fP **val)"
 .br
 .R "extract a \fBtemporary\fP \fBMqBufferObject\fP from the \fIread-data-package\fP "
 .ti -1c
@@ -1580,13 +1588,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 295 2010-11-11 10:08:41Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 319 2010-11-21 15:57:51Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 295 $ 
+$Rev: 319 $ 
 .RE
 .PP
 \fBAuthor:\fP

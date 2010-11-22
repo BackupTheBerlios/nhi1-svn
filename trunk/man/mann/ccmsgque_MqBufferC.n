@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqBufferC" n "11 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqBufferC" n "22 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -60,7 +60,7 @@ ccmsgque::MqBufferC \- implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
 .ti -1c
-.RI "vector< \fBMQ_BINB\fP > * \fBGetB\fP () const   throw (MqCException)"
+.RI "vector< MQ_BINB > * \fBGetB\fP () const   throw (MqCException)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP "
 .ti -1c

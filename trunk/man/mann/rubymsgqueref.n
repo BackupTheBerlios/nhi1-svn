@@ -1,4 +1,4 @@
-.TH "rubymsgque" n "11 Nov 2010" "Version 4.7" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque" n "22 Nov 2010" "Version 4.7" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

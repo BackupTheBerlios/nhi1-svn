@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -187,7 +187,15 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
 .br
+.R "return the type from a \fBMQ_BUF\fP object on character identifer "
+.ti -1c
+.RI "enum \fBMqTypeE\fP \fBMqBufferGetType2\fP (struct \fBMqBufferS\fP *const buf)"
+.br
 .R "return the type from a \fBMQ_BUF\fP object "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqBufferGetType3\fP (struct \fBMqBufferS\fP *const buf)"
+.br
+.R "return the type from a \fBMQ_BUF\fP object as strint "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -274,32 +282,32 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 initial size of the \fBMqBufferS.bls\fP object 
 .PP
-Definition at line 2095 of file msgque.h.
+Definition at line 2097 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
 signature used in \fBMqBufferS.signature\fP 
 .PP
-Definition at line 2098 of file msgque.h.
+Definition at line 2100 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
 .PP
 the type is native and has a size of 1 byte 
 .PP
-Definition at line 1995 of file msgque.h.
+Definition at line 1997 of file msgque.h.
 .SS "#define MQ_TYPE_IS_2_BYTE   (1<<1)"
 .PP
 the type is native and has a size of 2 bytes 
 .PP
-Definition at line 1998 of file msgque.h.
+Definition at line 2000 of file msgque.h.
 .SS "#define MQ_TYPE_IS_4_BYTE   (1<<2)"
 .PP
 the type is native and has a size of 4 bytes 
 .PP
-Definition at line 2001 of file msgque.h.
+Definition at line 2003 of file msgque.h.
 .SS "#define MQ_TYPE_IS_8_BYTE   (1<<3)"
 .PP
 the type is native and has a size of 8 bytes 
 .PP
-Definition at line 2004 of file msgque.h.
+Definition at line 2006 of file msgque.h.
 .SS "#define MQ_TYPE_IS_NATIVE"
 .PP
 \fBValue:\fP
@@ -310,7 +318,7 @@ Definition at line 2004 of file msgque.h.
 .fi
 the type is native 
 .PP
-Definition at line 2007 of file msgque.h.
+Definition at line 2009 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP"
@@ -326,7 +334,7 @@ opposite from MQ_ALLOC_DYNAMIC)
 \fB\fIMQ_ALLOC_DYNAMIC \fP\fP
 dynamic allocation (e.g. SysMalloc, ...) 
 .PP
-Definition at line 2089 of file msgque.h.
+Definition at line 2091 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
 a collection of all \fInative-data-types\fP supported 
@@ -393,7 +401,7 @@ L: list object type.
 \fB\fIMQ_TRAT \fP\fP
 T: transaction object type. 
 .PP
-Definition at line 2041 of file msgque.h.
+Definition at line 2043 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "\fBMQ_SIZE\fP MqBufferAppendC (struct \fBMqBufferS\fP *const  buf, \fBMQ_CST\fP const  string)"
@@ -852,7 +860,7 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
  
 .SS "char MqBufferGetType (struct \fBMqBufferS\fP *const  buf)"
 .PP
-return the type from a \fBMQ_BUF\fP object 
+return the type from a \fBMQ_BUF\fP object on character identifer 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -862,6 +870,36 @@ return the type from a \fBMQ_BUF\fP object
 \fBReturns:\fP
 .RS 4
 the type from a \fBMqTypeE\fP object as single character value 
+.RE
+.PP
+
+.SS "enum \fBMqTypeE\fP MqBufferGetType2 (struct \fBMqBufferS\fP *const  buf)"
+.PP
+return the type from a \fBMQ_BUF\fP object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqTypeE\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqBufferGetType3 (struct \fBMqBufferS\fP *const  buf)"
+.PP
+return the type from a \fBMQ_BUF\fP object as strint 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP the \fBMqBufferS\fP object to work on 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fBMqTypeE\fP object as string 
 .RE
 .PP
 

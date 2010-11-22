@@ -1,4 +1,4 @@
-.TH "MqBufferS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "MqBufferS" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -49,7 +49,7 @@ MqBufferS \- a single object to store a \fInative-type-data-item\fP defined by \
 .br
 .R "type of the item stored into the data-segment "
 .ti -1c
-.RI "\fBMQ_BINB\fP \fBbls\fP [MQ_BLS_SIZE+1]"
+.RI "MQ_BINB \fBbls\fP [MQ_BLS_SIZE+1]"
 .br
 .R "B)uffer L)ocal S)torage used in \fBMqBufferGetC\fP to get a string from a \fBMQ_ATO\fP data. "
 .in -1c
@@ -59,61 +59,61 @@ a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTI
 
 The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
 .PP
-Definition at line 2106 of file msgque.h.
+Definition at line 2108 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "enum \fBMqAllocE\fP \fBMqBufferS.alloc\fP"
 .PP
 allocation style, MQ_DYNAMIC or MQ_STATIC 
 .PP
-Definition at line 2115 of file msgque.h.
-.SS "\fBMQ_BINB\fP \fBMqBufferS.bls\fP[MQ_BLS_SIZE+1]"
+Definition at line 2117 of file msgque.h.
+.SS "MQ_BINB \fBMqBufferS.bls\fP[MQ_BLS_SIZE+1]"
 .PP
 B)uffer L)ocal S)torage used in \fBMqBufferGetC\fP to get a string from a \fBMQ_ATO\fP data. 
 .PP
 +1 to allow strings with MQ_BLS_SIZE=strlen(str) fit into the buffer with an additional '\\0' at the end 
 .PP
-Definition at line 2122 of file msgque.h.
+Definition at line 2124 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqBufferS.context\fP\fC [read]\fP"
 .PP
 error object of the related msgque 
 .PP
-Definition at line 2108 of file msgque.h.
+Definition at line 2110 of file msgque.h.
 .SS "union \fBMqBufferU\fP \fBMqBufferS.cur\fP\fC [write]\fP"
 .PP
 point to current position, used for 'appending to' or 'reading from' a package (always: data <= cur.B <= data+cursize) 
 .PP
-Definition at line 2113 of file msgque.h.
+Definition at line 2115 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS.cursize\fP"
 .PP
 currently used size (always: \fIcursize\fP < \fIsize\fP) 
 .PP
-Definition at line 2111 of file msgque.h.
+Definition at line 2113 of file msgque.h.
 .SS "\fBMQ_BIN\fP \fBMqBufferS.data\fP"
 .PP
 always point to the beginning of the data-segment 
 .PP
-Definition at line 2109 of file msgque.h.
+Definition at line 2111 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS.numItems\fP"
 .PP
 the number of items in the data-segment (only if it is a package) 
 .PP
-Definition at line 2112 of file msgque.h.
+Definition at line 2114 of file msgque.h.
 .SS "\fBMQ_INT\fP \fBMqBufferS.signature\fP"
 .PP
 used to verify the \fIpointer-data-type\fP in a type-less programming languages 
 .PP
-Definition at line 2107 of file msgque.h.
+Definition at line 2109 of file msgque.h.
 .SS "\fBMQ_SIZE\fP \fBMqBufferS.size\fP"
 .PP
 the size of the data-segment 
 .PP
-Definition at line 2110 of file msgque.h.
+Definition at line 2112 of file msgque.h.
 .SS "enum \fBMqTypeE\fP \fBMqBufferS.type\fP"
 .PP
 type of the item stored into the data-segment 
 .PP
-Definition at line 2116 of file msgque.h.
+Definition at line 2118 of file msgque.h.
 
 .SH "Author"
 .PP 

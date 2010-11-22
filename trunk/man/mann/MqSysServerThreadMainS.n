@@ -1,4 +1,4 @@
-.TH "MqSysServerThreadMainS" n "11 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "MqSysServerThreadMainS" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,29 +34,29 @@ MqSysServerThreadMainS \- data used to initialize a new created thread
 .PP 
 data used to initialize a new created thread 
 .PP
-Definition at line 4087 of file msgque.h.
+Definition at line 4103 of file msgque.h.
 .SH "Member Data Documentation"
 .PP 
 .SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.alfa\fP\fC [read]\fP"
 .PP
 command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
 .PP
-Definition at line 4091 of file msgque.h.
+Definition at line 4107 of file msgque.h.
 .SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS.argv\fP\fC [read]\fP"
 .PP
 command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
 .PP
-Definition at line 4090 of file msgque.h.
+Definition at line 4106 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP \fBMqSysServerThreadMainS.factory\fP\fC [read]\fP"
 .PP
 server configuration (memory belongs to caller) 
 .PP
-Definition at line 4089 of file msgque.h.
+Definition at line 4105 of file msgque.h.
 .SS "struct \fBMqS\fP* \fBMqSysServerThreadMainS.tmpl\fP\fC [read]\fP"
 .PP
 calling (parent) context 
 .PP
-Definition at line 4088 of file msgque.h.
+Definition at line 4104 of file msgque.h.
 
 .SH "Author"
 .PP 

@@ -36,3 +36,5 @@ dummy:	all
 
 CLEANFILES = $(BUILT_SOURCES)
 
+EXTRA_DIST = *.go
+
