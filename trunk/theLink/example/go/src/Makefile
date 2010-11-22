@@ -13,15 +13,16 @@
 include ./MakeGoMsgque.inc
 include $(GOROOT)/src/Make.inc
 
-TARG=Filter1
-GOFILES=Filter1.go
+GOMAIN = 
 
-include $(GOROOT)/src/Make.pkg
-
-%: %.go
+%: Makefile %.go
 	$(GC) $*.go
 	$(LD) -o $@ $*.$O
+	cp $@ ..
 
-all =	Filter1.go  Filter3.go  manfilter.go  mulserver.go  MyServer.go    testserver.go  \
-	Filter2.go  Filter4.go  mulclient.go  MyClient.go   testclient.go
+
+#all =	Filter1.go  Filter3.go  manfilter.go  mulserver.go  MyServer.go    testserver.go  \
+#	Filter2.go  Filter4.go  mulclient.go  MyClient.go   testclient.go
+
+all:	MyClient MyServer
 
