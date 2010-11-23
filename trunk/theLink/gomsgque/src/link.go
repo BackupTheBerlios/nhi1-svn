@@ -29,12 +29,30 @@ func (this *MqS) LinkCreate(argv ... string) {
   if (len(argv) != 0) {
     largv = C.MqBufferLCreate(C.MQ_SIZE(len(argv)));
     for idx:= range argv {
-      a := C.CString(argv[idx])
+	a := C.CString(argv[idx])
       C.MqBufferLAppendC(largv, a);
-      C.free(unsafe.Pointer(a))
+	C.free(unsafe.Pointer(a))
     }
   }
   this.iErrorMqToGoWithCheck(C.MqLinkCreate((*_Ctype_struct_MqS)(this), &largv))
+}
+
+func (this *MqS) LinkCreateChild(parent *MqS, argv ... string) {
+  var largv *_Ctype_struct_MqBufferLS
+  //fmt.Println("LinkCreateChild -> argv = " + strings.Join(argv,","))
+  if (len(argv) != 0) {
+    largv = C.MqBufferLCreate(C.MQ_SIZE(len(argv)));
+    for idx:= range argv {
+	a := C.CString(argv[idx])
+      C.MqBufferLAppendC(largv, a);
+	C.free(unsafe.Pointer(a))
+    }
+  }
+  this.iErrorMqToGoWithCheck(C.MqLinkCreateChild((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(parent), &largv))
+}
+
+func (this *MqS) LinkDelete() {
+  C.MqLinkDelete((*_Ctype_struct_MqS)(this))
 }
 
 func (this *MqS) LinkGetTargetIdent() string {

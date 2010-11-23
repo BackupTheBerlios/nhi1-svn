@@ -9,93 +9,77 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Reflection;
-using csmsgque;
-
-namespace example {
-
-  sealed class testclient : MqS {
-
-    private StringBuilder Get() {
-      StringBuilder RET = new StringBuilder();
-      SendSTART();
-      SendEND_AND_WAIT("GTCX", -1);
-      RET.Append(ConfigGetName());
-      RET.Append("+");
-      RET.Append(ReadC());
-      RET.Append(ReadC());
-      RET.Append(ReadC());
-      RET.Append(ReadC());
-      RET.Append(ReadC());
-      RET.Append(ReadC());
-      return RET;
-    }
-
-    static void Main(string[] argv) {
-
-      // setup the clients
-      string dirname = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
-      string server = Path.Combine(dirname, "testserver.exe");
-      List<String> LIST = new List<String>() {"--name", "c1", "--srvname", "s1"};
-      LIST.AddRange(argv);
-      // create the object
-      testclient c0 = new testclient();
-      testclient c00 = new testclient();
-      testclient c01 = new testclient();
-      testclient c000 = new testclient();
-      testclient c1 = new testclient();
-      testclient c10 = new testclient();
-      testclient c100 = new testclient();
-      testclient c101 = new testclient();
-    }
-  }
-}
 
 package main
 
 import (
   . "gomsgque"
-  "os"
+    "os"
+    "path"
+    //"fmt"
 )
 
+func Get(ctx *MqS) string {
+  var RET string
+  ctx.SendSTART()
+  ctx.SendEND_AND_WAIT("GTCX", -1)
+  RET += ctx.ConfigGetName()
+  RET += "+"
+  RET += ctx.ReadC()
+  RET += ctx.ReadC()
+  RET += ctx.ReadC()
+  RET += ctx.ReadC()
+  RET += ctx.ReadC()
+  RET += ctx.ReadC()
+  return RET
+}
+
 func main() {
-  var ctx = NewMqS()
+  // create the object
+  c0	:= NewMqS()
+  c00	:= NewMqS()
+  c01	:= NewMqS()
+  c000	:= NewMqS()
+  c1	:= NewMqS()
+  c10	:= NewMqS()
+  c100	:= NewMqS()
+  c101	:= NewMqS()
+
+  // catch errors and exit the app
   defer func() {
     if x := recover(); x != nil {
-      ctx.ErrorSet(x)
+      c0.ErrorSet(x)
     }
-    // do the cleanup
-    c0.LinkDelete();
-    c1.LinkDelete();
+    c0.Exit();
   }()
-  ctx.LinkCreate(os.Args...)
-  ctx.SendSTART()
-  ctx.SendI(100)
-  ctx.SendEND_AND_WAIT("HLWO", 5)
-  println(ctx.ReadC())
+
+  // get server
+  dir, _ := path.Split(os.Args[0])
+  server := path.Join(dir, "testserver")
+  LIST := append([]string{os.Args[0], "--name", "c1", "--srvname", "s1"}, os.Args[1:]...)
 
   // create the link
-  c0.LinkCreate("--name", "c0", "--debug", os.Getenv("TS_DEBUG"), "@", server, "--name", "s0")
-  c00.LinkCreateChild(c0, "--name", "c00", "--srvname", "s00")
-  c01.LinkCreateChild(c0, "--name", "c01", "--srvname", "s01")
-  c000.LinkCreateChild(c00, "--name", "c000", "--srvname", "s000")
-  c1.LinkCreate(LIST.ToArray())
-  c10.LinkCreateChild(c1, "--name", "c10", "--srvname", "s10")
-  c100.LinkCreateChild(c10, "--name", "c100", "--srvname", "s100")
-  c101.LinkCreateChild(c10, "--name", "c101", "--srvname", "s101")
+  c0.LinkCreate(os.Args[0], "--name", "c0", "--debug", os.Getenv("TS_DEBUG"), "@", server, "--silent", "--name", "s0")
+  c00.LinkCreateChild(c0, os.Args[0], "--name", "c00", "--srvname", "s00")
+  c01.LinkCreateChild(c0, os.Args[0], "--name", "c01", "--srvname", "s01")
+  c000.LinkCreateChild(c00, os.Args[0], "--name", "c000", "--srvname", "s000")
+  c1.LinkCreate(LIST...)
+  c10.LinkCreateChild(c1, os.Args[0], "--name", "c10", "--srvname", "s10")
+  c100.LinkCreateChild(c10, os.Args[0], "--name", "c100", "--srvname", "s100")
+  c101.LinkCreateChild(c10, os.Args[0], "--name", "c101", "--srvname", "s101")
 
   // do the tests
-  println(c0.Get())
-  println(c00.Get())
-  println(c01.Get())
-  println(c000.Get())
-  println(c1.Get())
-  println(c10.Get())
-  println(c100.Get())
-  println(c101.Get())
+  println(Get(c0))
+  println(Get(c00))
+  println(Get(c01))
+  println(Get(c000))
+  println(Get(c1))
+  println(Get(c10))
+  println(Get(c100))
+  println(Get(c101))
+
+  // cleanup
+  c0.LinkDelete()
+  c1.LinkDelete()
 }
 

@@ -82,6 +82,9 @@ gomsgque_sFactoryDelete (
 )
 {
   MqContextDelete (&context);
+  if (doFactoryCleanup == MQ_YES) {
+    gomsgque_cFactoryDelete((int*)context);
+  }
 }
 
 void

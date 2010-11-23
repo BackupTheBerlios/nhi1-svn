@@ -16,7 +16,7 @@
 ##
 
 BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
-  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT)
+  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT)
 
 include $(GOROOT)/src/Make.inc
 
@@ -29,6 +29,16 @@ dummy:	all
 
 .bin$(EXEEXT):
 	$(LD) -o $@ $<
+
+## all executables depend on our new created "gomsgque.a" library
+MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 
 ##
 ## ==========================================================================

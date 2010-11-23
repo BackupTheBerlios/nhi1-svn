@@ -17,11 +17,11 @@
 
 #+
 #§  \file       theLink/example/go/Makefile.am
-#§  \brief      \$Id: Makefile.am 325 2010-11-22 12:03:40Z aotto1968 $
+#§  \brief      \$Id: Makefile.am 326 2010-11-22 19:09:37Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 325 $
+#§  \version    \$Rev: 326 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -256,7 +256,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
 BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
-  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT)
+  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT)
 
 SUFFIXES = .go .bin $(EXEEXT)
 CLEANFILES = $(BUILT_SOURCES)
@@ -461,6 +461,15 @@ dummy:	all
 
 .bin$(EXEEXT):
 	$(LD) -o $@ $<
+
+MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
