@@ -16,7 +16,8 @@ include $(GOROOT)/src/Make.inc
 MQOBJ  = $(builddir)/../../libmsgque/.libs/liblocal.a
 
 TARG=gomsgque
-CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go service.go
+CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
+	  service.go slave.go
 
 CGO_CFLAGS=-I . -I $(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
 CGO_LDFLAGS= $(MQOBJ) _cgo_export.o gomsgque.o

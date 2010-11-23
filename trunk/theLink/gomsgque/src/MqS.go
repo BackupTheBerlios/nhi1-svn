@@ -40,18 +40,6 @@ type MqS _Ctype_struct_MqS
 
 type MqSCallback func()
 
-type ServerSetup interface {
-  ServerSetup(*MqS)
-}
-
-type ServerCleanup interface {
-  ServerCleanup(*MqS)
-}
-
-type Factory interface {
-  Factory(*MqS) *MqS
-}
-
 type Service interface {
   Call(*MqS)
 }

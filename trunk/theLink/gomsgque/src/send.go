@@ -41,6 +41,12 @@ func (this *MqS) SendEND_AND_WAIT2(token string) {
   this.iErrorMqToGoWithCheck(r)
 }
 
+func (this *MqS) SendEND(token string) {
+  t := C.CString(token)
+  this.iErrorMqToGoWithCheck(C.MqSendEND((*_Ctype_struct_MqS)(this), t))
+  C.free(unsafe.Pointer(t))
+}
+
 func (this *MqS) SendRETURN() {
   this.iErrorMqToGoWithCheck(C.MqSendRETURN((*_Ctype_struct_MqS)(this)))
 }
@@ -89,6 +95,10 @@ func (this *MqS) SendU(val *MqBufferS) {
 
 func (this *MqS) SendB(val MqBinary) {
   this.iErrorMqToGoWithCheck(C.MqSendB((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
+}
+
+func (this *MqS) SendN(val MqBinary) {
+  this.iErrorMqToGoWithCheck(C.MqSendN((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }
 
 func (this *MqS) SendC(val string) {

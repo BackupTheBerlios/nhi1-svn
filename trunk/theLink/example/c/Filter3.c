@@ -31,8 +31,8 @@ ServerSetup (
   MQ_PTR data
 )
 {
-  struct MqS * ftrctx;
-  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
+  struct MqS * ftrctx = MqServiceGetFilter (mqctx, 0);
+  if (ftrctx == NULL) goto error;
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceProxy  (mqctx, "+ALL", 0));

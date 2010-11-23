@@ -30,8 +30,8 @@ error:
 static enum MqErrorE EOF_F( struct MqS *ctx, MQ_PTR data) {
   MQ_CST dat;
   MQ_BUF buf = NULL;
-  struct MqS * ftr;
-  MqErrorCheck (MqServiceGetFilter (ctx, 0, &ftr));
+  struct MqS * ftr = MqServiceGetFilter (ctx, 0);
+  if (ftr == NULL) goto error;
   MqSendSTART(ftr);
   while (myftr->cursize) {
     MqErrorCheck(MqBufferLGetU(ctx, myftr, 0, &buf));

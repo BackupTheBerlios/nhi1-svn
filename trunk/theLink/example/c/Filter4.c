@@ -68,8 +68,8 @@ static enum MqErrorE FilterEvent (
     return MqErrorSetCONTINUE(mqctx);
   } else {
     register struct FilterItmS * itm;
-    struct MqS * ftr;
-    MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
+    struct MqS * ftr = MqServiceGetFilter(mqctx, 0);
+    if (ftr == NULL) goto error;
 
     // if connection is down -> connect again
     MqErrorCheck1 (MqLinkConnect (ftr));
@@ -101,7 +101,8 @@ static enum MqErrorE LOGF ( ARGS ) {
   MQ_CST file;
   struct MqS * ftr;
   struct FilterCtxS *ftrctx;
-  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
+  ftr = MqServiceGetFilter(mqctx, 0);
+  if (ftr == NULL) goto error;
   ftrctx = (struct FilterCtxS*const)ftr;
   MqErrorCheck (MqReadC (mqctx, &file));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
@@ -188,7 +189,8 @@ FilterCleanup (
   }
   MqSysFree (ctx->itm);
 
-  MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
+  ftr = MqServiceGetFilter(mqctx, 0);
+  if (ftr == NULL) goto error;
   ftrctx = (struct FilterCtxS*const)ftr;
   if (ftrctx->FH != NULL) fclose(ftrctx->FH);
 
@@ -203,8 +205,8 @@ FilterSetup (
 )
 {
   register SETUP_ctx;
-  struct MqS *ftr;
-  MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftr));
+  struct MqS *ftr = MqServiceGetFilter (mqctx, 0);
+  if (ftr == NULL) goto error;
 
   // init the cache
   ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));

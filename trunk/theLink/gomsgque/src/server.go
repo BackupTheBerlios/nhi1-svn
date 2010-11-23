@@ -16,6 +16,7 @@ import (
   . "gomsgque"
     "os"
     "syscall"
+    "fmt"
 )
 
 /*
@@ -31,82 +32,289 @@ func NewServer() *Server {
 }
 */
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type ClientERR struct {
+  *MqS
+  i int32
+}
+
+func NewClientERR() *ClientERR {
+  ctx := NewMqS()
+  ret := &ClientERR{ctx,0}
+  return ret
+}
+
+func (this *ClientERR) LinkCreate(debug int32) {
+  this.ConfigSetDebug(debug)
+  this.ConfigSetName("test-client")
+  this.ConfigSetSrvName("test-server")
+  this.MqS.LinkCreate(os.Args[0], "@", "SELF")
+}
+
+func (this *ClientERR) ECOI_CB(ctx *MqS) {
+  this.i = ctx.ReadI()
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type ClientERR2 struct {
+  *MqS
+}
+
+func NewClientERR2() *ClientERR2 {
+  ctx := NewMqS()
+  ret := &ClientERR2{ctx}
+  return ret
+}
+
+func (this *ClientERR2) LinkCreate(debug int32) {
+  this.ConfigSetDebug(debug)
+  this.ConfigSetName("cl-err-1")
+  this.MqS.LinkCreate(os.Args[0], "@", "DUMMY")
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type Client struct {
+  *MqS
+  i int32
+}
+
+func NewClient() *Client {
+  ctx := NewMqS()
+  ret := &Client{ctx,0}
+  ctx.ConfigSetFactory(ret)
+  ctx.ConfigSetBgError(ret)
+  return ret
+}
+
+func (this *Client) Factory(ctx *MqS) *MqS {
+  return NewClient().MqS
+}
+
+func (this *Client) BgError(ctx *MqS) {
+  master := ctx.SlaveGetMaster()
+  if (master != nil) {
+    master.ErrorC ("BGERROR", ctx.ErrorGetNum(), ctx.ErrorGetText())
+    master.SendERROR ()
+  }
+}
+
+func (this *Client) LinkCreate(debug int32) {
+  this.ConfigSetDebug(debug)
+  this.MqS.LinkCreate(os.Args[0], "@", "SELF", "--name", "test-server");
+}
+
+func (this *Client) ECOI_CB(ctx *MqS) {
+  this.i = ctx.ReadI()
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 type Server struct {
   buf *MqBufferS
+  cl  [3]*Client
+  i   int32
 }
 
 func NewServer() *MqS {
   ctx := NewMqS()
   srv := new(Server)
   ctx.ConfigSetServerSetup(srv)
+  ctx.ConfigSetServerCleanup(srv)
+  ctx.ConfigSetFactory(srv)
   return ctx
 }
 
-func (this *Server) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("ERR2", (*Error)(this))
-  ctx.ServiceCreate("ERR3", (*Error)(this))
-  ctx.ServiceCreate("ERR4", (*Error)(this))
-  ctx.ServiceCreate("ERRT", (*ERRT)(this))
-
-  ctx.ServiceCreate("CFG1", (*CFG1)(this))
-
-  ctx.ServiceCreate("BUF1", (*BUF1)(this))
-  ctx.ServiceCreate("BUF2", (*BUF2)(this))
-  ctx.ServiceCreate("BUF3", (*BUF3)(this))
-
-  ctx.ServiceCreate("SETU", (*SETU)(this))
-  ctx.ServiceCreate("GETU", (*GETU)(this))
-
-  ctx.ServiceCreate("ECOO", (*ECOO)(this))
-  ctx.ServiceCreate("ECOY", (*ECOY)(this))
-  ctx.ServiceCreate("ECOS", (*ECOS)(this))
-  ctx.ServiceCreate("ECOI", (*ECOI)(this))
-  ctx.ServiceCreate("ECOW", (*ECOW)(this))
-  ctx.ServiceCreate("ECOF", (*ECOF)(this))
-  ctx.ServiceCreate("ECOD", (*ECOD)(this))
-
-  ctx.ServiceCreate("ECOU", (*ECOU)(this))
-  ctx.ServiceCreate("ECOB", (*ECOB)(this))
-  ctx.ServiceCreate("ECUL", (*ECUL)(this))
-
-  ctx.ServiceCreate("ECOL", (*ECOL)(this))
-  ctx.ServiceCreate("ECLI", (*ECLI)(this))
-  ctx.ServiceCreate("LST1", (*LST1)(this))
-  ctx.ServiceCreate("LST2", (*LST2)(this))
-  ctx.ServiceCreate("ERLS", (*ERLS)(this))
-  ctx.ServiceCreate("ERLR", (*ERLR)(this))
+func (this *Server) Factory(ctx *MqS) *MqS {
+  return NewServer()
 }
+
+func (this *Server) ServerCleanup(ctx *MqS) {
+  for _,cl := range this.cl {
+    if cl == nil { continue }
+    cl.LinkDelete()
+    cl = nil
+  }
+}
+
+func (this *Server) ServerSetup(ctx *MqS) {
+ if (ctx.SlaveIs()) {
+    // add "slave" services here
+  } else {
+    for i,cl := range this.cl {
+      cl = NewClient()
+      cl.ConfigSetName("cl-" + string(i))
+      cl.ConfigSetSrvName("sv-" + string(i))
+    }
+    // add "master" services here
+    ctx.ServiceCreate("ERR2", (*Error)(this))
+    ctx.ServiceCreate("ERR3", (*Error)(this))
+    ctx.ServiceCreate("ERR4", (*Error)(this))
+    ctx.ServiceCreate("ERRT", (*ERRT)(this))
+
+    ctx.ServiceCreate("CFG1", (*CFG1)(this))
+
+    ctx.ServiceCreate("BUF1", (*BUF1)(this))
+    ctx.ServiceCreate("BUF2", (*BUF2)(this))
+    ctx.ServiceCreate("BUF3", (*BUF3)(this))
+
+    ctx.ServiceCreate("SETU", (*SETU)(this))
+    ctx.ServiceCreate("GETU", (*GETU)(this))
+
+    ctx.ServiceCreate("ECOO", (*ECOO)(this))
+    ctx.ServiceCreate("ECOY", (*ECOY)(this))
+    ctx.ServiceCreate("ECOS", (*ECOS)(this))
+    ctx.ServiceCreate("ECOI", (*ECOI)(this))
+    ctx.ServiceCreate("ECOW", (*ECOW)(this))
+    ctx.ServiceCreate("ECOF", (*ECOF)(this))
+    ctx.ServiceCreate("ECOD", (*ECOD)(this))
+
+    ctx.ServiceCreate("ECOU", (*ECOU)(this))
+    ctx.ServiceCreate("ECOB", (*ECOB)(this))
+    ctx.ServiceCreate("ECUL", (*ECUL)(this))
+    ctx.ServiceCreate("ECON", (*ECON)(this))
+
+    ctx.ServiceCreate("ECOL", (*ECOL)(this))
+    ctx.ServiceCreate("ECLI", (*ECLI)(this))
+    ctx.ServiceCreate("LST1", (*LST1)(this))
+    ctx.ServiceCreate("LST2", (*LST2)(this))
+    ctx.ServiceCreate("ERLS", (*ERLS)(this))
+    ctx.ServiceCreate("ERLR", (*ERLR)(this))
+
+    ctx.ServiceCreate("SND2", (*SND2)(this))
+  }
+}
+
+type setMyInt Server
+  func (this *setMyInt) Call(ctx *MqS) {
+    //(*Server)(ctx.SlaveGetMaster()).i = ctx.ReadI()
+  }
+
+type SND2 Server
+  func (this *SND2) Call(ctx *MqS) {
+    s  := ctx.ReadC()
+    id := ctx.ReadI()
+    cl := ctx.SlaveGet(id)
+
+    ctx.SendSTART()
+    switch s {
+      case "CREATE": {
+	var LIST  []string
+	for ctx.ReadItemExists() {
+	  LIST = append(LIST, ctx.ReadC())
+	}
+	LIST = append(LIST, os.Args[0], "--name", "wk-cl-" + fmt.Sprintf("%d", id), 
+			"@", "--name", "wk-sv-" + fmt.Sprintf("%d", id))
+	ctx.SlaveWorker(id, LIST...)
+      }
+      case "CREATE2": {
+	c := NewClient()
+	c.LinkCreate(ctx.ConfigGetDebug())
+	ctx.SlaveCreate(id, c.MqS)
+      }
+      case "CREATE3": {
+	c := NewClientERR()
+	c.LinkCreate(ctx.ConfigGetDebug())
+	ctx.SlaveCreate(id, c.MqS)
+      }
+      case "DELETE": {
+	ctx.SlaveDelete(id)
+	if ctx.SlaveGet(id) == nil {
+	  ctx.SendC("OK")
+	} else {
+	  ctx.SendC("ERROR")
+	}
+      }
+      case "SEND": {
+	cl.SendSTART()
+	TOK := ctx.ReadC()
+	ctx.ReadProxy(cl)
+	cl.SendEND(TOK)
+      }
+      case "WAIT": {
+	cl.SendSTART()
+	cl.SendN(ctx.ReadN())
+	cl.SendEND_AND_WAIT("ECOI", 5)
+	ctx.SendI(cl.ReadI()+1)
+      }
+      case "CALLBACK": {
+	cl.SendSTART()
+	ctx.ReadProxy(cl)
+	this.i = -1
+	cl.SendEND_AND_CALLBACK("ECOI", (*setMyInt)(this));
+	cl.ProcessEvent(10, MqS_WAIT_ONCE)
+	ctx.SendI(this.i+1)
+      }
+      case "MqSendEND_AND_WAIT": {
+	TOK := ctx.ReadC()
+	cl.SendSTART()
+	for ctx.ReadItemExists() {
+	  ctx.ReadProxy(cl)
+	}
+	cl.SendEND_AND_WAIT(TOK, 5)
+	for cl.ReadItemExists() {
+	  cl.ReadProxy(ctx)
+	}
+      }
+      case "MqSendEND": {
+	TOK := ReadC()
+	cl.SendSTART()
+	for ctx.ReadItemExists() {
+	  ctx.ReadProxy(cl)
+	}
+	cl.SendEND(TOK)
+	return
+      }
+      case "ERR-1": {
+	c := NewClientERR2()
+	c.LinkCreate(ctx.ConfigGetDebug())
+      }
+      case "isSlave": {
+	ctx.SendO(cl.SlaveIs())
+      }
+    }
+    ctx.SendRETURN()
+  }
+
+type ECON Server
+  func (this *ECON) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendC(ctx.ReadC() + "-" + ctx.ConfigGetName())
+    ctx.SendRETURN()
+  }
 
 type ERLR Server
   func (this *ERLR) Call(ctx *MqS) {
-    ctx.SendSTART();
-    ctx.ReadL_START(nil);
-    ctx.ReadL_START(nil);
-    ctx.SendRETURN();
+    ctx.SendSTART()
+    ctx.ReadL_START(nil)
+    ctx.ReadL_START(nil)
+    ctx.SendRETURN()
   }
 
 type ERLS Server
   func (this *ERLS) Call(ctx *MqS) {
-    ctx.SendSTART();
-    ctx.SendL_START();
-    ctx.SendU(ctx.ReadU());
-    ctx.SendL_START();
-    ctx.SendU(ctx.ReadU());
-    ctx.SendRETURN();
+    ctx.SendSTART()
+    ctx.SendL_START()
+    ctx.SendU(ctx.ReadU())
+    ctx.SendL_START()
+    ctx.SendU(ctx.ReadU())
+    ctx.SendRETURN()
   }
 
 type LST1 Server
   func (this *LST1) Call(ctx *MqS) {
-    ctx.SendSTART();
-    ctx.SendL_END();
-    ctx.SendRETURN();
+    ctx.SendSTART()
+    ctx.SendL_END()
+    ctx.SendRETURN()
   }
 
 type LST2 Server
   func (this *LST2) Call(ctx *MqS) {
-    ctx.SendSTART();
-    ctx.ReadL_END();
-    ctx.SendRETURN();
+    ctx.SendSTART()
+    ctx.ReadL_END()
+    ctx.SendRETURN()
   }
 
   func (this *Server) EchoList(ctx *MqS, doincr bool) {

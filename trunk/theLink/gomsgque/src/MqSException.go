@@ -57,7 +57,7 @@ func (this *MqS) ErrorSet(ex interface{}) {
   }
 }
 
-func (this *MqS) ErrorC(prefix string, level int, message string) {
+func (this *MqS) ErrorC(prefix string, level int32, message string) {
   p := C.CString(prefix)
   m := C.CString(message)
   C.MqErrorC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)

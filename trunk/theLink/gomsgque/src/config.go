@@ -184,6 +184,12 @@ func (this *MqS) ConfigSetIoTcp(host, port, myhost, myport string) {
   C.free(unsafe.Pointer(h))
 }
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type ServerSetup interface {
+  ServerSetup(*MqS)
+}
+
 //export gomsgque_cServerSetup
 func (this *MqS) cServerSetup(cb ServerSetup) {
   defer func() {
@@ -198,6 +204,12 @@ func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
   C.gomsgque_ConfigSetServerSetup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
 }
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type ServerCleanup interface {
+  ServerCleanup(*MqS)
+}
+
 //export gomsgque_cServerCleanup
 func (this *MqS) cServerCleanup(cb ServerCleanup) {
   defer func() {
@@ -210,6 +222,32 @@ func (this *MqS) cServerCleanup(cb ServerCleanup) {
 
 func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
   C.gomsgque_ConfigSetServerCleanup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type BgError interface {
+  BgError(*MqS)
+}
+
+//export gomsgque_cBgError
+func (this *MqS) cBgError(cb BgError) {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  cb.BgError(this)
+}
+
+func (this *MqS) ConfigSetBgError(cb BgError) {
+  C.gomsgque_ConfigSetBgError((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type Factory interface {
+  Factory(*MqS) *MqS
 }
 
 //export gomsgque_cFactoryCreate

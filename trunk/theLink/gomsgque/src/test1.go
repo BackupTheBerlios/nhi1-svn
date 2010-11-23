@@ -38,6 +38,7 @@ func DoCall(f Fi, i int) string {
 func main() {
   g := F(f)
   h := &g
+  println(string(69))
   println("g=", g, "h=", h)
   println(g(1))
   println(g.call(2))

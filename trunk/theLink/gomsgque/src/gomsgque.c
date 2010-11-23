@@ -57,6 +57,25 @@ gomsgque_ConfigSetServerCleanup (
 }
 
 static enum MqErrorE
+gomsgque_sBgError (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cBgError((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
+}
+
+void
+gomsgque_ConfigSetBgError (
+  struct MqS * const context,
+  void *data
+)
+{
+  MqConfigSetBgError(context, gomsgque_sBgError, (MQ_PTR)data, NULL, NULL);
+}
+
+static enum MqErrorE
 gomsgque_sFactoryCreate (
   struct MqS * const tmpl,
   enum MqFactoryE create,

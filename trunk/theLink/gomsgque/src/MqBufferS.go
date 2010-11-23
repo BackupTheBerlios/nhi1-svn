@@ -84,26 +84,7 @@ func (this *MqBufferS)  GetB() MqBinary {
   return MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
-type MqTypeE uint32
-
-const (
-  MQ_BYTT MqTypeE = C.MQ_BYTT
-  MQ_BOLT MqTypeE = C.MQ_BOLT
-  MQ_SRTT MqTypeE = C.MQ_SRTT
-  MQ_INTT MqTypeE = C.MQ_INTT
-  MQ_FLTT MqTypeE = C.MQ_FLTT
-  MQ_WIDT MqTypeE = C.MQ_WIDT
-  MQ_DBLT MqTypeE = C.MQ_DBLT
-  MQ_BINT MqTypeE = C.MQ_BINT
-  MQ_STRT MqTypeE = C.MQ_STRT
-  MQ_LSTT MqTypeE = C.MQ_LSTT
-  MQ_TRAT MqTypeE = C.MQ_TRAT
-)
-
-func (this *MqBufferS)  GetType() MqTypeE {
-  return MqTypeE(C.MqBufferGetType2((*_Ctype_struct_MqBufferS)(this)))
+func (this *MqBufferS)  GetType() string {
+  return string(C.MqBufferGetType2((*_Ctype_struct_MqBufferS)(this)))
 }
 
-func (this *MqBufferS)  GetTypeC() string {
-  return C.GoString(C.MqBufferGetType3((*_Ctype_struct_MqBufferS)(this)))
-}
