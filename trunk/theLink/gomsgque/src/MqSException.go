@@ -18,7 +18,7 @@ package gomsgque
 import "C"
 
 import (
-  //"fmt"
+  "fmt"
   "unsafe"
   "os"
 )
@@ -44,10 +44,16 @@ func (this *MqS) ErrorSet(ex interface{}) {
     C.MqErrorCopy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx))
   } else if err,ok := ex.(os.Error); ok {
     m := C.CString(err.String())
-    C.MqErrorC((*_Ctype_struct_MqS)(this), C.sGO, -1, m)
+    C.MqErrorC((*_Ctype_struct_MqS)(this), C.sERROR, -1, m)
+    C.free(unsafe.Pointer(m))
+  } else if err,ok := ex.(fmt.Stringer); ok {
+    m := C.CString(err.String())
+    C.MqErrorC((*_Ctype_struct_MqS)(this), C.sERROR, -1, m)
     C.free(unsafe.Pointer(m))
   } else {
-    C.MqErrorC((*_Ctype_struct_MqS)(this), C.sGO, -1, C.sUNKNOWN)
+    m := C.CString(fmt.Sprintf("%s", ex))
+    C.MqErrorC((*_Ctype_struct_MqS)(this), C.sERROR, -1, m)
+    C.free(unsafe.Pointer(m))
   }
 }
 

@@ -32,14 +32,14 @@ func NewServer() *Server {
 */
 
 type Server struct {
-  *MqS
   buf *MqBufferS
 }
 
-func NewServer() *Server {
-  ret := &Server{NewMqS(),nil}
-  ret.ConfigSetServerSetup(ret)
-  return ret
+func NewServer() *MqS {
+  ctx := NewMqS()
+  srv := new(Server)
+  ctx.ConfigSetServerSetup(srv)
+  return ctx
 }
 
 func (this *Server) ServerSetup(ctx *MqS) {
@@ -68,7 +68,84 @@ func (this *Server) ServerSetup(ctx *MqS) {
   ctx.ServiceCreate("ECOU", (*ECOU)(this))
   ctx.ServiceCreate("ECOB", (*ECOB)(this))
   ctx.ServiceCreate("ECUL", (*ECUL)(this))
+
+  ctx.ServiceCreate("ECOL", (*ECOL)(this))
+  ctx.ServiceCreate("ECLI", (*ECLI)(this))
+  ctx.ServiceCreate("LST1", (*LST1)(this))
+  ctx.ServiceCreate("LST2", (*LST2)(this))
+  ctx.ServiceCreate("ERLS", (*ERLS)(this))
+  ctx.ServiceCreate("ERLR", (*ERLR)(this))
 }
+
+type ERLR Server
+  func (this *ERLR) Call(ctx *MqS) {
+    ctx.SendSTART();
+    ctx.ReadL_START(nil);
+    ctx.ReadL_START(nil);
+    ctx.SendRETURN();
+  }
+
+type ERLS Server
+  func (this *ERLS) Call(ctx *MqS) {
+    ctx.SendSTART();
+    ctx.SendL_START();
+    ctx.SendU(ctx.ReadU());
+    ctx.SendL_START();
+    ctx.SendU(ctx.ReadU());
+    ctx.SendRETURN();
+  }
+
+type LST1 Server
+  func (this *LST1) Call(ctx *MqS) {
+    ctx.SendSTART();
+    ctx.SendL_END();
+    ctx.SendRETURN();
+  }
+
+type LST2 Server
+  func (this *LST2) Call(ctx *MqS) {
+    ctx.SendSTART();
+    ctx.ReadL_END();
+    ctx.SendRETURN();
+  }
+
+  func (this *Server) EchoList(ctx *MqS, doincr bool) {
+    for ctx.ReadItemExists() {
+      buf := ctx.ReadU()
+      if (buf.GetType() == MQ_LSTT) {
+	ctx.ReadL_START(buf)
+	ctx.SendL_START()
+	this.EchoList(ctx, doincr)
+	ctx.SendL_END()
+	ctx.ReadL_END()
+      } else if (doincr) {
+	ctx.SendI (buf.GetI()+1)
+      } else {
+	ctx.SendU(buf)
+      }
+    }
+  }
+
+type ECOL Server
+  func (this *ECOL) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.ReadL_START(nil)
+    ctx.SendL_START()
+    (*Server)(this).EchoList(ctx, false)
+    ctx.SendL_END()
+    ctx.ReadL_END()
+    ctx.SendRETURN()
+  }
+
+type ECLI Server
+  func (this *ECLI) Call(ctx *MqS) {
+    opt := ctx.ReadU()
+    doincr := (opt.GetType() == MQ_STRT && opt.GetC() == "--incr")
+    if (!doincr) { ctx.ReadUndo() }
+    ctx.SendSTART()
+    (*Server)(this).EchoList(ctx, doincr)
+    ctx.SendRETURN()
+  }
 
 type ERRT Server
   func (this *ERRT) Call(ctx *MqS) {

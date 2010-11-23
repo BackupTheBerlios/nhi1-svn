@@ -15,9 +15,10 @@
 #include "debug.h"
 
 extern MQ_CST sGO;
+extern MQ_CST sERROR;
 extern MQ_CST sUNKNOWN;
 
 void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);
 void gomsgque_ConfigSetServerCleanup (struct MqS * const, void *data);
 void gomsgque_ConfigSetFactory (struct MqS * const, void *data);
-void gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, void *data);
+enum MqErrorE gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, void *data);

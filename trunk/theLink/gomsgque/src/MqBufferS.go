@@ -25,7 +25,7 @@ type MqBufferS _Ctype_struct_MqBufferS
 
 func (this *MqBufferS)  iErrorBufToGoWithCheck(ex uint32) {
   if (ex == _Cconst_MQ_ERROR) {
-    panic(C.MqBufferGetContext((*_Ctype_struct_MqBufferS)(this)))
+    panic((*MqSException)(C.MqBufferGetContext((*_Ctype_struct_MqBufferS)(this))))
   }
 }
 

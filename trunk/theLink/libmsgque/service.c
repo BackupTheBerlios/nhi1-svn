@@ -129,8 +129,10 @@ MqServiceCreate(
   MqTokenDataFreeF datafreeF
 )
 {
-//MqDLogV(context,__func__,0,"data<%p>\n", data);
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
+  if (context->link.srvT == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  }
   if (strlen(token) != HDR_TOK_LEN) {
     return MqErrorDbV (MQ_ERROR_TOKEN_LENGTH, token);
   }
@@ -143,6 +145,9 @@ MqServiceDelete(
   MQ_TOK const token
 )
 {
+  if (context->link.srvT == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  }
   return (pTokenDelHdl (context->link.srvT, token));
 }
 

@@ -572,13 +572,29 @@ test error-X1 {wait forever on server and nothing happen} \
     -result	  {C> (client-0) [pWaitOnEvent] TIMEOUT after '2' sec
 C> (client-0) found in function "MqProcessEvent" at file "service.c"}
 
+test error-X2 {ServiceCreate without connected context} \
+    -constraints  {local tcl} \
+    -setup	  {
+      proc dummy {ctx} {}
+    } \
+    -body	  { [tclmsgque MqS] ServiceCreate AAAA dummy } \
+    -cleanup	  {
+      rename dummy ""
+    } \
+    -returnCodes  error \
+    -result	  {C> (unknown) [MqServiceCreate] the 'msgque' object link is 'not' connected}
+
+test error-X3 {ServiceDelete without connected context} \
+    -constraints  {local tcl} \
+    -body	  { [tclmsgque MqS] ServiceDelete AAAA } \
+    -returnCodes  error \
+    -result	  {C> (unknown) [MqServiceDelete] the 'msgque' object link is 'not' connected}
+
+
 ##
 ## -----------------------------------------------------------------------
 ## finish
 ##
 
 freeTests
-
-
-
 

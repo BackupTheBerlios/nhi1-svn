@@ -9,34 +9,51 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using csmsgque;
 
-namespace example {
-  sealed class Filter2 : MqS, IFactory {
+package main
 
-    MqS IFactory.Factory () {
-      return new Filter2();
-    }
+import (
+  . "gomsgque"
+    "os"
+    //"fmt"
+)
 
-    // service definition from IFilterFTR
-    void FTR () {
-      throw new ApplicationException("my error");
-    }
-
-    public static void Main(String[] argv) {
-      Filter2 srv = new Filter2();
-      try {
-	srv.ConfigSetName("filter");
-	srv.ConfigSetIsServer(true);
-	srv.LinkCreate(argv); 
-	srv.ServiceCreate("+FTR", srv.FTR);
-	srv.ServiceProxy ("+EOF");
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
-  }
+type Filter2 struct {
+  // add server specific data 
 }
+
+func NewFilter2() *MqS {
+  ctx := NewMqS()
+  ftr := new(Filter2)
+  ctx.ConfigSetFactory(ftr)
+  ctx.ConfigSetServerSetup(ftr)
+  return ctx
+}
+
+func (this *Filter2) ServerSetup(ctx *MqS) {
+  ctx.ServiceCreate("+FTR", (*FTR)(this))
+  ctx.ServiceProxy2("+EOF")
+}
+
+func (this *Filter2) Factory(ctx *MqS) *MqS {
+  return NewFilter2()
+}
+
+type FTR Filter2
+  func (this *FTR) Call(ctx *MqS) {
+    panic("my error")
+  }
+
+func main() {
+  var srv = NewFilter2()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName("filter")
+  srv.LinkCreate(os.Args...)
+  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+}
+

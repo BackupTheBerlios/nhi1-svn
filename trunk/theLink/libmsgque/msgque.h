@@ -1888,6 +1888,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
 /// \param[in] data a user defined additional \e data-argument for the \e callback function (C-API only)
 /// \param[in] datafreeF the function to free the \e data-argument after use (C-API only)
 /// \retException
+/// \attention the link-setup (\RNSA{LinkCreate} or \RNSA{LinkCreateChild}) have to done \b befor using this function
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   struct MqS * const ctx, 
   MQ_TOK const token,

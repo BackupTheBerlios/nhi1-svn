@@ -98,3 +98,10 @@ func (this *MqS) SendC(val string) {
   this.iErrorMqToGoWithCheck(ret)
 }
 
+func (this *MqS) SendL_START() {
+  this.iErrorMqToGoWithCheck(C.MqSendL_START((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) SendL_END() {
+  this.iErrorMqToGoWithCheck(C.MqSendL_END((*_Ctype_struct_MqS)(this)))
+}

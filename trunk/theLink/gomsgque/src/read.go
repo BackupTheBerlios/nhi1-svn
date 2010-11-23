@@ -119,3 +119,7 @@ func (this *MqS) ReadItemExists() bool {
   return C.MqReadItemExists((*_Ctype_struct_MqS)(this)) == C.MQ_YES
 }
 
+func (this *MqS) ReadUndo() {
+  C.MqReadUndo((*_Ctype_struct_MqS)(this))
+}
+

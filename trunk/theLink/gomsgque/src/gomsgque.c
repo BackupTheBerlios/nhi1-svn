@@ -14,6 +14,7 @@
 #include "_cgo_export.h"
 
 MQ_CST sGO = "GO";
+MQ_CST sERROR = "Error";
 MQ_CST sUNKNOWN = "UNKNOWN";
 
 static enum MqErrorE
@@ -110,13 +111,13 @@ gomsgque_sService (
   return MqErrorStack(context);
 }
 
-void
+enum MqErrorE
 gomsgque_ServiceCreate (
   struct MqS * const context,
   MQ_TOK const token,
   void *data
 )
 {
-  MqServiceCreate(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
+  return MqServiceCreate(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
 }
 
