@@ -38,16 +38,15 @@ const (
 
 type MqS _Ctype_struct_MqS
 
-type MqSCallback func()
-
-type Service interface {
-  Call(*MqS)
-}
-
-// for toplevel "MqS"
+// for toplevel "*MqS"
 func NewMqS() *MqS {
   ret := C.MqContextCreate(0,nil)
-  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(ret), nil)
+  // save the pointer, use "SetSelf" to create link to toplevel object
+  lock[(*MqS)(ret)] = nil
+  // cleanup "lock" after "object" is deleted
+  C.gomsgque_ConfigSetFactory(ret, nil)
+  // set default action for startup (check for "left over arguments")
+  C.gomsgque_ConfigSetSetup(ret)
   return (*MqS)(ret)
 }
 
@@ -56,8 +55,14 @@ func (this *MqS) Init() {
   C.MqContextInit((*_Ctype_struct_MqS)(this), 0,nil)
 }
 
-func (this *MqS) String() string {
-  return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
+// set link between *MqS and toplevel object
+func (ctx *MqS) SetSelf(ifc interface{}) {
+  lock[ctx] = ifc
+}
+
+// get toplevel object from *MqS
+func (ctx *MqS) GetSelf() interface{} {
+  return lock[ctx]
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {

@@ -23,7 +23,7 @@ import (
 )
 
 // global lock for created objects
-var lock = make(map[*MqS]bool)
+var lock = make(map[*MqS]interface{})
 
 func (this *MqS) ConfigGetBuffersize() int32 {
   return int32(C.MqConfigGetBuffersize((*_Ctype_struct_MqS)(this)))
@@ -257,14 +257,13 @@ func (this *MqS) cFactoryCreate(cb Factory) *MqS {
       this.ErrorSet(x)
     }
   }()
-  ret := cb.Factory(this)
-  lock[ret] = true
-  return ret
+  return cb.Factory(this)
+
 }
 
 //export gomsgque_cFactoryDelete
 func (this *MqS) cFactoryDelete() {
-  lock[this] = false, false
+  lock[this] = nil, false
 }
 
 func (this *MqS) ConfigSetFactory(cb Factory) {

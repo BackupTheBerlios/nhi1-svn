@@ -1839,9 +1839,31 @@ enum MqWaitOnEventE {
 /// \ctx
 /// \id
 /// \param[out] filter the \e other-context or \null on error
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
+  struct MqS  * const ctx,
+  MQ_SIZE const id,
+  struct MqS  ** const
+) __attribute__((nonnull(1)));
+
+/// \brief get the \e filter-context or the \e master-context
+///
+/// A \e filter-pipeline has two context, one on the left and one on the right.
+/// The \e left-context is linked with the \e master-context and the \e right-context
+/// is linked to the \e slave-context.
+/// This function extract the \e other-context related to the initial \e ctx argument 
+/// using the following order:
+/// -# return the \e master-context if not NULL
+/// -# return the \e slave-context using \e id if not NULL
+/// -# return a "filter not available" error
+/// .
+/// 
+/// \ctx
+/// \id
+/// \param[out] filter the \e other-context or \null on error
 /// \return the \e filter-context or \null if the \e context hs no \e filter-context
 /// \attention if no filter is available an error-message is created in the context
-MQ_EXTERN struct MqS  * const MQ_DECL MqServiceGetFilter (
+MQ_EXTERN struct MqS  * const MQ_DECL MqServiceGetFilter2 (
   struct MqS  * const ctx,
   MQ_SIZE const id
 ) __attribute__((nonnull(1)));

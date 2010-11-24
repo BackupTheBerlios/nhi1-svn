@@ -258,6 +258,20 @@ test error-7-($I|$B|$C|$S) {double RETURN} \
 [cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"}
 END}
 
+test error-8-($I|$B|$C|$S) {invalid option found} \
+    -constraints    {parent} \
+    -body           {
+	Setup $I $B $C $S --error --server-arg --wrong-option
+    } \
+    -cleanup {
+	Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {S> (server-0) \[MqCheckForLeftOverArguments] invalid \[OPTION]... found:
+S> (server-0) => --wrong-option
+S> (server-0) found in function "MqLinkDefault" at file "link.*"*}
+
 ##
 ## -----------------------------------------------------------------------
 ## finish Setup tests

@@ -28,8 +28,28 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqS * const
+enum MqErrorE
 MqServiceGetFilter (
+  struct MqS * const context,
+  MQ_SIZE const id,
+  struct MqS ** const filterP
+ )
+{
+  return (
+    (
+      *filterP = (
+       context->config.master != NULL ?
+         context->config.master :
+         MqSlaveGet (context, id)
+      )
+    ) == NULL ?
+      MqErrorDb(MQ_ERROR_NO_FILTER) :
+      MQ_OK
+  );
+}
+
+struct MqS * const
+MqServiceGetFilter2 (
   struct MqS * const context,
   MQ_SIZE const id
  )
@@ -71,8 +91,8 @@ sServiceProxy (
 ) {
   MQ_BINB hs;
   MQ_BIN bdy; MQ_SIZE len;
-  struct MqS * ftrctx = MqServiceGetFilter (context, (MQ_SIZE) (long) data);
-  if (ftrctx == NULL) goto error;
+  struct MqS * ftrctx;
+  MqErrorCheck(MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
 
   MqErrorCheck1 (MqSendSTART (ftrctx));
 

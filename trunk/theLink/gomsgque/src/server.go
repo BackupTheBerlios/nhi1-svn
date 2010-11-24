@@ -40,9 +40,7 @@ type ClientERR struct {
 }
 
 func NewClientERR() *ClientERR {
-  ctx := NewMqS()
-  ret := &ClientERR{ctx,0}
-  return ret
+  return &ClientERR{NewMqS(),0}
 }
 
 func (this *ClientERR) LinkCreate(debug int32) {
@@ -63,9 +61,7 @@ type ClientERR2 struct {
 }
 
 func NewClientERR2() *ClientERR2 {
-  ctx := NewMqS()
-  ret := &ClientERR2{ctx}
-  return ret
+  return &ClientERR2{NewMqS()}
 }
 
 func (this *ClientERR2) LinkCreate(debug int32) {
@@ -82,10 +78,9 @@ type Client struct {
 }
 
 func NewClient() *Client {
-  ctx := NewMqS()
-  ret := &Client{ctx,0}
-  ctx.ConfigSetFactory(ret)
-  ctx.ConfigSetBgError(ret)
+  ret := &Client{NewMqS(),0}
+  ret.ConfigSetFactory(ret)
+  ret.ConfigSetBgError(ret)
   return ret
 }
 
@@ -113,22 +108,24 @@ func (this *Client) ECOI_CB(ctx *MqS) {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 type Server struct {
+  *MqS
   buf *MqBufferS
   cl  [3]*Client
   i   int32
 }
 
-func NewServer() *MqS {
-  ctx := NewMqS()
+func NewServer() *Server {
   srv := new(Server)
-  ctx.ConfigSetServerSetup(srv)
-  ctx.ConfigSetServerCleanup(srv)
-  ctx.ConfigSetFactory(srv)
-  return ctx
+  srv.MqS = NewMqS()
+  srv.MqS.SetSelf(srv)
+  srv.MqS.ConfigSetServerSetup(srv)
+  srv.MqS.ConfigSetServerCleanup(srv)
+  srv.MqS.ConfigSetFactory(srv)
+  return srv
 }
 
 func (this *Server) Factory(ctx *MqS) *MqS {
-  return NewServer()
+  return NewServer().MqS
 }
 
 func (this *Server) ServerCleanup(ctx *MqS) {
@@ -189,7 +186,7 @@ func (this *Server) ServerSetup(ctx *MqS) {
 
 type setMyInt Server
   func (this *setMyInt) Call(ctx *MqS) {
-    //(*Server)(ctx.SlaveGetMaster()).i = ctx.ReadI()
+    ctx.SlaveGetMaster().GetSelf().(*Server).i = ctx.ReadI()
   }
 
 type SND2 Server
@@ -205,7 +202,7 @@ type SND2 Server
 	for ctx.ReadItemExists() {
 	  LIST = append(LIST, ctx.ReadC())
 	}
-	LIST = append(LIST, os.Args[0], "--name", "wk-cl-" + fmt.Sprintf("%d", id), 
+	LIST = append(LIST, os.Args[0], "--name", "wk-cl-" + fmt.Sprintf("%d", id),
 			"@", "--name", "wk-sv-" + fmt.Sprintf("%d", id))
 	ctx.SlaveWorker(id, LIST...)
       }
@@ -259,7 +256,7 @@ type SND2 Server
 	}
       }
       case "MqSendEND": {
-	TOK := ReadC()
+	TOK := ctx.ReadC()
 	cl.SendSTART()
 	for ctx.ReadItemExists() {
 	  ctx.ReadProxy(cl)
@@ -320,7 +317,7 @@ type LST2 Server
   func (this *Server) EchoList(ctx *MqS, doincr bool) {
     for ctx.ReadItemExists() {
       buf := ctx.ReadU()
-      if (buf.GetType() == MQ_LSTT) {
+      if (buf.GetType() == "L") {
 	ctx.ReadL_START(buf)
 	ctx.SendL_START()
 	this.EchoList(ctx, doincr)
@@ -348,7 +345,7 @@ type ECOL Server
 type ECLI Server
   func (this *ECLI) Call(ctx *MqS) {
     opt := ctx.ReadU()
-    doincr := (opt.GetType() == MQ_STRT && opt.GetC() == "--incr")
+    doincr := (opt.GetType() == "S" && opt.GetC() == "--incr")
     if (!doincr) { ctx.ReadUndo() }
     ctx.SendSTART()
     (*Server)(this).EchoList(ctx, doincr)
@@ -476,7 +473,7 @@ type BUF3 Server
   func (this *BUF3) Call(ctx *MqS) {
     ctx.SendSTART()
     buf := ctx.ReadU()
-    ctx.SendC(buf.GetTypeC())
+    ctx.SendC(buf.GetType())
     ctx.SendU(buf)
     ctx.SendI(ctx.ReadI())
     ctx.SendU(buf)
@@ -488,7 +485,7 @@ type BUF2 Server
     ctx.SendSTART()
     for i:=0; i<3; i++ {
       buf := ctx.ReadU()
-      ctx.SendC(buf.GetTypeC())
+      ctx.SendC(buf.GetType())
       ctx.SendU(buf)
     }
     ctx.SendRETURN()
@@ -497,18 +494,19 @@ type BUF2 Server
 type BUF1 Server
   func (this *BUF1) Call(ctx *MqS) {
     buf := ctx.ReadU()
+    typ := buf.GetType()
     ctx.SendSTART()
-    ctx.SendC(buf.GetTypeC())
-    switch (buf.GetType()) {
-      case MQ_BYTT: ctx.SendY(buf.GetY())
-      case MQ_BOLT: ctx.SendO(buf.GetO())
-      case MQ_SRTT: ctx.SendS(buf.GetS())
-      case MQ_INTT: ctx.SendI(buf.GetI())
-      case MQ_FLTT: ctx.SendF(buf.GetF())
-      case MQ_WIDT: ctx.SendW(buf.GetW())
-      case MQ_DBLT: ctx.SendD(buf.GetD())
-      case MQ_STRT: ctx.SendC(buf.GetC())
-      case MQ_BINT: ctx.SendB(buf.GetB())
+    ctx.SendC(typ)
+    switch (typ) {
+      case "Y": ctx.SendY(buf.GetY())
+      case "O": ctx.SendO(buf.GetO())
+      case "S": ctx.SendS(buf.GetS())
+      case "I": ctx.SendI(buf.GetI())
+      case "F": ctx.SendF(buf.GetF())
+      case "W": ctx.SendW(buf.GetW())
+      case "D": ctx.SendD(buf.GetD())
+      case "C": ctx.SendC(buf.GetC())
+      case "B": ctx.SendB(buf.GetB())
     }
     ctx.SendRETURN()
   }

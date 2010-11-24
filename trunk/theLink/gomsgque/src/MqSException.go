@@ -25,6 +25,10 @@ import (
 
 type MqSException MqS
 
+func (this *MqSException) String() string {
+  return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
+}
+
 func (this *MqSException) GetText() string {
   return C.GoString(C.MqErrorGetText((*_Ctype_struct_MqS)(this)))
 }

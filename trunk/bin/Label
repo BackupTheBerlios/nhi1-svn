@@ -52,7 +52,7 @@ array set LABELIGNORE {
     ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
     ./theLink/example/php	{ *.sw* Makefile.in Makefile}
     ./theLink/example/go	{ *.sw* Makefile.in Makefile *.log MyClient MyServer Filter3 mulclient
-				  manfilter mulserver testserver testclient }
+				  manfilter mulserver testserver testclient Filter1 Filter2 }
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
     ./theLink/example		{ tags }
 

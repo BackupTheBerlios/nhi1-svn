@@ -23,6 +23,12 @@ import (
   "unsafe"
 )
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type Service interface {
+  Call(*MqS)
+}
+
 //export gomsgque_cService
 func (this *MqS) cService(cb Service) {
   defer func() {
@@ -39,6 +45,8 @@ func (this *MqS) ServiceCreate(token string, cb Service) {
   C.free(unsafe.Pointer(t))
 }
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
   this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
 }
@@ -52,14 +60,18 @@ func (this *MqS) ServiceGetToken() string {
 }
 
 func (this *MqS) ServiceGetFilter(i int32) *MqS {
-  var ret *_Ctype_struct_MqS
-  this.iErrorMqToGoWithCheck(C.MqServiceGetFilter((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i), &ret))
+  ret := C.MqServiceGetFilter2((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i))
+  if ret == nil {
+    this.ErrorRaise()
+  }
   return (*MqS)(ret)
 }
 
 func (this *MqS) ServiceGetFilter2() *MqS {
-  var ret *_Ctype_struct_MqS
-  this.iErrorMqToGoWithCheck(C.MqServiceGetFilter((*_Ctype_struct_MqS)(this), 0, &ret))
+  ret := C.MqServiceGetFilter2((*_Ctype_struct_MqS)(this), 0)
+  if ret == nil {
+    this.ErrorRaise()
+  }
   return (*MqS)(ret)
 }
 

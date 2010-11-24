@@ -1098,6 +1098,7 @@ proc Setup {num mode com server args} {
     Print num mode com server args
   }
   set serverSilent  [optB args --server-silent]
+  set serverArg	    [optV args --server-arg]
   set isError	    [optB args --error]
   set setup	    [optV args --setup]
   set setup_parent  [optV args --setup-parent]
@@ -1129,6 +1130,10 @@ proc Setup {num mode com server args} {
   # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
   set cargs	[list]
   set sargs	[list]
+
+  if {$serverArg ne ""} {
+    lappend sargs $serverArg
+  }
 
   ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
   if {$com ne "pipe"} {
@@ -1171,6 +1176,7 @@ proc Setup {num mode com server args} {
   set FH_LAST	""
 
   lappend cargs {*}$args
+
   for {set PNO 0} {$PNO<$numParent} {incr PNO} {
 
     ## prepare parent arguments
@@ -1185,7 +1191,7 @@ proc Setup {num mode com server args} {
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {
-	lappend cl @ {*}[getServer $server] 
+	lappend cl @ {*}[getServer $server] {*}$sargs
 	if {$serverSilent} { lappend cl --silent }
       }
     }

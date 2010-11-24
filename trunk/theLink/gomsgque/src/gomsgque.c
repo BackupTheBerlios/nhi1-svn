@@ -101,10 +101,8 @@ gomsgque_sFactoryDelete (
   MQ_PTR data
 )
 {
+  gomsgque_cFactoryDelete((int*)context);
   MqContextDelete (&context);
-  if (doFactoryCleanup == MQ_YES) {
-    gomsgque_cFactoryDelete((int*)context);
-  }
 }
 
 void
@@ -139,4 +137,23 @@ gomsgque_ServiceCreate (
 {
   return MqServiceCreate(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
 }
+
+enum MqErrorE
+gomsgque_SendEND_AND_CALLBACK (
+  struct MqS * const context,
+  MQ_TOK const token,
+  void *data
+)
+{
+  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
+}
+
+void
+gomsgque_ConfigSetSetup (
+  struct MqS * const context
+)
+{
+  return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
+}
+
 
