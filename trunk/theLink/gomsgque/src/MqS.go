@@ -39,15 +39,34 @@ const (
 type MqS _Ctype_struct_MqS
 
 // for toplevel "*MqS"
-func NewMqS() *MqS {
-  ret := C.MqContextCreate(0,nil)
+func NewMqS(ifc interface{}) *MqS {
+  ctx := C.MqContextCreate(0,nil)
+  ret := (*MqS)(ctx)
   // save the pointer, use "SetSelf" to create link to toplevel object
-  lock[(*MqS)(ret)] = nil
+  lock[ret] = ifc
+//fmt.Printf("NewMqS => c:%p -> i:%p\n", ret, ifc)
   // cleanup "lock" after "object" is deleted
-  C.gomsgque_ConfigSetFactory(ret, nil)
+  C.gomsgque_ConfigSetFactory(ctx, nil)
   // set default action for startup (check for "left over arguments")
-  C.gomsgque_ConfigSetSetup(ret)
-  return (*MqS)(ret)
+  C.gomsgque_ConfigSetSetup(ctx)
+  // no THREAD
+  C.MqConfigSetIgnoreThread(ctx, C.MQ_YES)
+  // no FORK
+  //C.MqConfigSetIgnoreFork(ctx, C.MQ_YES)
+  ret.ConfigSetStartAs(MQ_START_FORK)
+  // add server interfaces
+  if ifc != nil {
+    if obj,ok := ifc.(ServerSetup); ok {
+      ret.ConfigSetServerSetup(obj)
+    }
+    if obj,ok := ifc.(ServerCleanup); ok {
+      ret.ConfigSetServerCleanup(obj)
+    }
+    if obj,ok := ifc.(Factory); ok {
+      ret.ConfigSetFactory(obj)
+    }
+  }
+  return ret
 }
 
 // for embedding "MqS"
@@ -56,13 +75,15 @@ func (this *MqS) Init() {
 }
 
 // set link between *MqS and toplevel object
-func (ctx *MqS) SetSelf(ifc interface{}) {
-  lock[ctx] = ifc
+func (this *MqS) SetSelf(ifc interface{}) {
+//fmt.Printf("SetSelf => c:%p -> i:%p\n", this, ifc)
+  lock[this] = ifc
 }
 
 // get toplevel object from *MqS
-func (ctx *MqS) GetSelf() interface{} {
-  return lock[ctx]
+func (this *MqS) GetSelf() interface{} {
+//fmt.Printf("GetSelf => c:%p\n", this)
+  return lock[this]
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {
@@ -75,5 +96,22 @@ func (this *MqS) LogC(prefix string, level int, message string) {
 
 func (this *MqS) Exit() {
   C.MqExitP(C.sGO, (*_Ctype_struct_MqS)(this))
+}
+
+func (this *MqS) SysSleep(sec uint32) {
+  this.iErrorMqToGoWithCheck(C.MqSysSleep((*_Ctype_struct_MqS)(this), C.uint(sec)))
+}
+
+func (this *MqS) SysUSleep(sec uint32) {
+  this.iErrorMqToGoWithCheck(C.MqSysUSleep((*_Ctype_struct_MqS)(this), C.uint(sec)))
+}
+
+func Init(argv []string) {
+  initB := C.MqInitCreate()
+  for _,arg := range argv {
+      s := C.CString(arg)
+    C.MqBufferLAppendC(initB, s)
+      C.free(unsafe.Pointer(s))
+  }
 }
 

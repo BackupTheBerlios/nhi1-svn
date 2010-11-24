@@ -21,6 +21,7 @@ import (
   "fmt"
   "unsafe"
   "os"
+  //"runtime"
 )
 
 type MqSException MqS
@@ -59,6 +60,16 @@ func (this *MqS) ErrorSet(ex interface{}) {
     C.MqErrorC((*_Ctype_struct_MqS)(this), C.sERROR, -1, m)
     C.free(unsafe.Pointer(m))
   }
+/*
+  // add stack-trace
+  for i:=4; i<5; i++ {
+    _,file,line,ok := runtime.Caller(i)
+    if !ok { break }
+    s := C.CString(fmt.Sprintf("called from %s(%d)", file, line))
+      C.MqErrorSAppendC((*_Ctype_struct_MqS)(this), s)
+    C.free(unsafe.Pointer(s))
+  }
+*/
 }
 
 func (this *MqS) ErrorC(prefix string, level int32, message string) {

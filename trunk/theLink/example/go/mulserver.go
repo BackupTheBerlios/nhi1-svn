@@ -22,11 +22,7 @@ type mulserver struct {
 }
 
 func Newmulserver() *MqS {
-  ctx := NewMqS()
-  srv := new(mulserver)
-  ctx.ConfigSetServerSetup(srv)
-  ctx.ConfigSetFactory(srv)
-  return ctx
+  return NewMqS(new(mulserver))
 }
 
 func (this *mulserver) Factory(ctx *MqS) *MqS {

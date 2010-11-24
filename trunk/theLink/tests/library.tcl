@@ -1226,7 +1226,7 @@ proc Cleanup {args} {
 #Print args
   global CLEANUP_PID CLEANUP_FILES PIDFILE FH FH_LAST env SERVER_OUTPUT
 
-  array set OPT {-wait 0}
+  array set OPT {-wait 0 -force 0}
   array set OPT $args
 
 ## 2. close all tclmsgque objects
@@ -1235,7 +1235,11 @@ proc Cleanup {args} {
     $FH($num) LinkDelete
   }
   foreach num [lsort [array names FH]] {
-    $FH($num) ConfigReset
+    if {$OPT(-force)} {
+      unset FH($num)
+    } else {
+      $FH($num) ConfigReset
+    }
   }
   unset -nocomplain FH_LAST
 ## 3. if a separate server was startet (NON-PIPE communication) kill this server

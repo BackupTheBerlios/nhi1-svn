@@ -22,11 +22,7 @@ type MyServer struct {
 }
 
 func NewMyServer() *MqS {
-  ctx := NewMqS()
-  srv := new(MyServer)
-  ctx.ConfigSetServerSetup(srv)
-  ctx.ConfigSetFactory(srv)
-  return ctx
+  return NewMqS(new(MyServer))
 }
 
 func (this *MyServer) Factory(ctx *MqS) *MqS {

@@ -40,7 +40,7 @@ type ClientERR struct {
 }
 
 func NewClientERR() *ClientERR {
-  return &ClientERR{NewMqS(),0}
+  return &ClientERR{NewMqS(nil),0}
 }
 
 func (this *ClientERR) LinkCreate(debug int32) {
@@ -61,7 +61,7 @@ type ClientERR2 struct {
 }
 
 func NewClientERR2() *ClientERR2 {
-  return &ClientERR2{NewMqS()}
+  return &ClientERR2{NewMqS(nil)}
 }
 
 func (this *ClientERR2) LinkCreate(debug int32) {
@@ -78,10 +78,9 @@ type Client struct {
 }
 
 func NewClient() *Client {
-  ret := &Client{NewMqS(),0}
-  ret.ConfigSetFactory(ret)
-  ret.ConfigSetBgError(ret)
-  return ret
+  srv := new(Client)
+  srv.MqS = NewMqS(srv)
+  return srv
 }
 
 func (this *Client) Factory(ctx *MqS) *MqS {
@@ -101,7 +100,8 @@ func (this *Client) LinkCreate(debug int32) {
   this.MqS.LinkCreate(os.Args[0], "@", "SELF", "--name", "test-server");
 }
 
-func (this *Client) ECOI_CB(ctx *MqS) {
+type ECOI_CB Client
+func (this *ECOI_CB) Call(ctx *MqS) {
   this.i = ctx.ReadI()
 }
 
@@ -116,11 +116,7 @@ type Server struct {
 
 func NewServer() *Server {
   srv := new(Server)
-  srv.MqS = NewMqS()
-  srv.MqS.SetSelf(srv)
-  srv.MqS.ConfigSetServerSetup(srv)
-  srv.MqS.ConfigSetServerCleanup(srv)
-  srv.MqS.ConfigSetFactory(srv)
+  srv.MqS = NewMqS(srv)
   return srv
 }
 
@@ -129,10 +125,10 @@ func (this *Server) Factory(ctx *MqS) *MqS {
 }
 
 func (this *Server) ServerCleanup(ctx *MqS) {
-  for _,cl := range this.cl {
+  for i,cl := range this.cl {
     if cl == nil { continue }
     cl.LinkDelete()
-    cl = nil
+    this.cl[i] = nil
   }
 }
 
@@ -140,10 +136,10 @@ func (this *Server) ServerSetup(ctx *MqS) {
  if (ctx.SlaveIs()) {
     // add "slave" services here
   } else {
-    for i,cl := range this.cl {
-      cl = NewClient()
-      cl.ConfigSetName("cl-" + string(i))
-      cl.ConfigSetSrvName("sv-" + string(i))
+    for i := range this.cl {
+      this.cl[i] = NewClient()
+      this.cl[i].ConfigSetName(fmt.Sprintf("cl-%d", i))
+      this.cl[i].ConfigSetSrvName(fmt.Sprintf("sv-%d", i))
     }
     // add "master" services here
     ctx.ServiceCreate("ERR2", (*Error)(this))
@@ -167,6 +163,7 @@ func (this *Server) ServerSetup(ctx *MqS) {
     ctx.ServiceCreate("ECOW", (*ECOW)(this))
     ctx.ServiceCreate("ECOF", (*ECOF)(this))
     ctx.ServiceCreate("ECOD", (*ECOD)(this))
+    ctx.ServiceCreate("ECOC", (*ECOC)(this))
 
     ctx.ServiceCreate("ECOU", (*ECOU)(this))
     ctx.ServiceCreate("ECOB", (*ECOB)(this))
@@ -180,9 +177,213 @@ func (this *Server) ServerSetup(ctx *MqS) {
     ctx.ServiceCreate("ERLS", (*ERLS)(this))
     ctx.ServiceCreate("ERLR", (*ERLR)(this))
 
+    ctx.ServiceCreate("SND1", (*SND1)(this))
     ctx.ServiceCreate("SND2", (*SND2)(this))
+    ctx.ServiceCreate("REDI", (*REDI)(this))
+    ctx.ServiceCreate("GTCX", (*GTCX)(this))
+    ctx.ServiceCreate("CNFG", (*CNFG)(this))
+    ctx.ServiceCreate("CSV1", (*CSV1)(this))
+    ctx.ServiceCreate("SLEP", (*SLEP)(this))
+    ctx.ServiceCreate("USLP", (*USLP)(this))
+    ctx.ServiceCreate("INIT", (*INIT)(this))
+    ctx.ServiceCreate("MSQT", (*MSQT)(this))
+    ctx.ServiceCreate("GTTO", (*GTTO)(this))
   }
 }
+
+type GTTO Server
+  func (this *GTTO) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendC(ctx.ServiceGetToken())
+    ctx.SendRETURN()
+  }
+
+type ECOC Server
+  func (this *ECOC) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendC(ctx.ReadC())
+    ctx.SendRETURN()
+  }
+
+type MSQT Server
+  func (this *MSQT) Call(ctx *MqS) {
+    ctx.SendSTART()
+    if (ctx.ConfigGetDebug() != 0) {
+      ctx.SendC ("debug")
+      ctx.SendI (ctx.ConfigGetDebug())
+    }
+    if (ctx.ConfigGetIsString() == false) {
+      ctx.SendC ("binary")
+    }
+    if (ctx.ConfigGetIsSilent() == true) {
+      ctx.SendC ("silent")
+    }
+    ctx.SendC ("sOc")
+    if ctx.ConfigGetIsServer() {
+      ctx.SendC ("SERVER")
+    } else {
+      ctx.SendC ("CLIENT")
+    }
+    ctx.SendC ("pOc")
+    if ctx.LinkIsParent() {
+      ctx.SendC ("PARENT")
+    } else {
+      ctx.SendC ("CHILD")
+    }
+    ctx.SendRETURN()
+  }
+
+type INIT Server
+  func (this *INIT) Call(ctx *MqS) {
+    max := int(ctx.ReadGetNumItems())
+    list := make([]string,max)
+    ctx.SendSTART()
+    for i:=0; i<max; i++ {
+      list[i] = ctx.ReadC()
+    }
+    Init(list)
+    ctx.SendRETURN()
+  }
+
+type USLP Server
+  func (this *USLP) Call(ctx *MqS) {
+    ctx.SendSTART()
+    i := ctx.ReadI()
+    ctx.SysUSleep(uint32(i))
+    ctx.SendI(i)
+    ctx.SendRETURN()
+  }
+
+type SLEP Server
+  func (this *SLEP) Call(ctx *MqS) {
+    ctx.SendSTART()
+    i := ctx.ReadI()
+    ctx.SysSleep(uint32(i))
+    ctx.SendI(i)
+    ctx.SendRETURN()
+  }
+
+type CSV1 Server
+  func (this *CSV1) Call(ctx *MqS) {
+    var num int32
+
+    // call an other service
+    ctx.SendSTART()
+    num = ctx.ReadI()
+    num++
+    ctx.SendI(num)
+    ctx.SendEND_AND_WAIT ("CSV2", 10)
+
+    // read the answer and send the result back
+    ctx.SendSTART()
+    num = ctx.ReadI()
+    num++
+    ctx.SendI(num)
+    ctx.SendRETURN()
+  }
+
+type CNFG Server
+  func (this *CNFG) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendO(ctx.ConfigGetIsServer())
+    ctx.SendO(ctx.LinkIsParent())
+    ctx.SendO(ctx.SlaveIs())
+    ctx.SendO(ctx.ConfigGetIsString())
+    ctx.SendO(ctx.ConfigGetIsSilent())
+    ctx.SendO(ctx.LinkIsConnected())
+    ctx.SendC(ctx.ConfigGetName())
+    ctx.SendI(ctx.ConfigGetDebug())
+    ctx.SendI(ctx.LinkGetCtxId())
+    ctx.SendC(ctx.ServiceGetToken())
+    ctx.SendRETURN()
+  }
+
+type GTCX Server
+  func (this *GTCX) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendI(ctx.LinkGetCtxId())
+    ctx.SendRETURN()
+  }
+
+type REDI Server
+  func (this *REDI) Call(ctx *MqS) {
+    ctx.ReadI()
+  }
+
+type SND1 Server
+  func (this *SND1) Call(ctx *MqS) {
+    s := ctx.ReadC()
+    id := ctx.ReadI()
+    ctx.SendSTART()
+    switch s {
+      case "START": {
+	parent := ctx.LinkGetParent()
+	if (parent != nil && parent.GetSelf().(*Server).cl[id].LinkIsConnected()) {
+	  this.cl[id].LinkCreateChild(parent.GetSelf().(*Server).cl[id].MqS)
+	} else {
+	  this.cl[id].LinkCreate(ctx.ConfigGetDebug())
+	}
+      }
+      case "START2": {
+	// object already created ERROR
+	this.cl[id].LinkCreate(ctx.ConfigGetDebug())
+	this.cl[id].LinkCreate(ctx.ConfigGetDebug())
+      }
+      case "START3": {
+	parent := NewClient()
+	// parent not connected ERROR
+	this.cl[id].LinkCreateChild(parent.MqS)
+      }
+      case "START4": {
+	// master not connected ERROR
+	this.cl[id].SlaveWorker(0)
+      }
+      case "START5": {
+	// the 'master' have to be a 'parent' without 'child' objects
+	// 'slave' identifer out of range (0 <= 10000000 <= 1023)
+	ctx.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id),
+	  "--srvname", fmt.Sprintf("wk-sv-%d", id))
+      }
+      case "STOP": {
+	this.cl[id].LinkDelete()
+      }
+      case "SEND": {
+	this.cl[id].SendSTART()
+	TOK := ctx.ReadC()
+	ctx.ReadProxy(this.cl[id].MqS)
+	this.cl[id].SendEND(TOK)
+      }
+      case "WAIT": {
+	this.cl[id].SendSTART()
+	ctx.ReadProxy(this.cl[id].MqS)
+	this.cl[id].SendEND_AND_WAIT("ECOI", 5)
+	ctx.SendI(this.cl[id].ReadI()+1)
+      }
+      case "CALLBACK": {
+	this.cl[id].SendSTART()
+	ctx.ReadProxy(this.cl[id].MqS)
+	this.cl[id].i = -1
+	this.cl[id].SendEND_AND_CALLBACK("ECOI", (*ECOI_CB)(this.cl[id]))
+	this.cl[id].ProcessEvent(10, MqS_WAIT_ONCE)
+	ctx.SendI(this.cl[id].i+1)
+      }
+      case "ERR-1": {
+	defer func() {
+	  if x := recover(); x != nil {
+	    ctx.ErrorSet(x)
+	    ctx.SendI(ctx.ErrorGetNum());
+	    ctx.SendC(ctx.ErrorGetText());
+	    ctx.ErrorReset();
+	    ctx.SendRETURN()
+	  }
+	}()
+	this.cl[id].SendSTART()
+	ctx.ReadProxy(this.cl[id].MqS)
+	this.cl[id].SendEND_AND_WAIT("ECOI", 5);
+      }
+    }
+    ctx.SendRETURN()
+  }
 
 type setMyInt Server
   func (this *setMyInt) Call(ctx *MqS) {
@@ -202,7 +403,7 @@ type SND2 Server
 	for ctx.ReadItemExists() {
 	  LIST = append(LIST, ctx.ReadC())
 	}
-	LIST = append(LIST, os.Args[0], "--name", "wk-cl-" + fmt.Sprintf("%d", id),
+	LIST = append(LIST, "--name", "wk-cl-" + fmt.Sprintf("%d", id),
 			"@", "--name", "wk-sv-" + fmt.Sprintf("%d", id))
 	ctx.SlaveWorker(id, LIST...)
       }
@@ -345,7 +546,7 @@ type ECOL Server
 type ECLI Server
   func (this *ECLI) Call(ctx *MqS) {
     opt := ctx.ReadU()
-    doincr := (opt.GetType() == "S" && opt.GetC() == "--incr")
+    doincr := (opt.GetType() == "C" && opt.GetC() == "--incr")
     if (!doincr) { ctx.ReadUndo() }
     ctx.SendSTART()
     (*Server)(this).EchoList(ctx, doincr)

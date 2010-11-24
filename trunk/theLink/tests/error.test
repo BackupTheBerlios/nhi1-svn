@@ -248,7 +248,9 @@ test error-7-($I|$B|$C|$S) {double RETURN} \
 	#RET_add 222 $FH_LAST ProcessEvent -wait ONCE
 	RET_end
     } \
-    -cleanup	    { Cleanup } \
+    -cleanup	    { 
+	Cleanup -force yes
+    } \
     -match	    glob \
     -result	    {START
 111-CATCH:1

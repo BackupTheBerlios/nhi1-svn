@@ -22,11 +22,7 @@ type Filter3 struct {
 }
 
 func NewFilter3() *MqS {
-  ctx := NewMqS()
-  srv := new(Filter3)
-  ctx.ConfigSetServerSetup(srv)
-  ctx.ConfigSetFactory(srv)
-  return ctx
+  return NewMqS(new(Filter3))
 }
 
 func (this *Filter3) Factory(ctx *MqS) *MqS {

@@ -71,3 +71,8 @@ func (this *MqS) LinkGetParent() *MqS {
   return (*MqS)(C.MqLinkGetParent((*_Ctype_struct_MqS)(this)))
 }
 
+func (this *MqS) LinkIsConnected() bool {
+  return C.MqLinkIsConnected((*_Ctype_struct_MqS)(this)) != 0
+}
+
+

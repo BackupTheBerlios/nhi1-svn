@@ -19,7 +19,7 @@ import (
 
 type ManFilter MqS
   func (this *ManFilter) Factory (ctx *MqS) *MqS {
-    return NewMqS()
+    return NewMqS(nil)
   }
 
 type FTR MqS
@@ -34,7 +34,7 @@ type FTR MqS
   }
 
 func main() {
-  var srv = NewMqS()
+  var srv = NewMqS(nil)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

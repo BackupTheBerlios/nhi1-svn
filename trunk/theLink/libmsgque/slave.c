@@ -302,7 +302,7 @@ MqSlaveWorker (
   } else {
     struct MqS * newctx;
     struct MqBufferLS * argv = (argvP == NULL ? NULL : *argvP);
-    // argv is noe "owend" by "MqSlaveWorker"
+    // argv is now "owend" by "MqSlaveWorker"
     if (argvP != NULL) *argvP = NULL;
     MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &newctx));
     pConfigSetMaster(newctx, context, id);

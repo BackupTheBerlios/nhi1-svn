@@ -85,6 +85,6 @@ func (this *MqBufferS)  GetB() MqBinary {
 }
 
 func (this *MqBufferS)  GetType() string {
-  return string(C.MqBufferGetType2((*_Ctype_struct_MqBufferS)(this)))
+  return string(C.MqBufferGetType((*_Ctype_struct_MqBufferS)(this)))
 }
 
