@@ -18,8 +18,6 @@ package gomsgque
 import "C"
 
 import (
-  //"fmt"
-  //"strings"
   "unsafe"
 )
 
@@ -28,13 +26,15 @@ type MqBinary struct {
   L int
 }
 
-func (this MqBinary) array() []byte {
+func (this *MqBinary) Set(val []byte) *MqBinary {
+  this.D = unsafe.Pointer(&val[0])
+  this.L = len(val)
+  return this
+}
+
+func (this *MqBinary) Get() []byte {
   byt := make([]byte, this.L)
   C.memcpy(unsafe.Pointer(&byt[0]),this.D,C.size_t(this.L))
   return byt
-}
-
-func (this MqBinary) string() string {
-  return C.GoStringN((*C.char)(this.D), C.int(this.L))
 }
 

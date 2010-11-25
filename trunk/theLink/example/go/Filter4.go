@@ -9,165 +9,117 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-using System;
-using System.IO;
-using System.Collections.Generic;
-using csmsgque;
-
-namespace example {
-  sealed class Filter4 : MqS, IFactory, IServerSetup, IServerCleanup, IEvent, IService {
-
-    Queue<byte[]> itms = new Queue<byte[]>();
-    StreamWriter FH = null;
-
-    MqS IFactory.Factory () {
-      return new Filter4();
-    }
-
-    void IService.Service (MqS ctx) {
-      itms.Enqueue(ReadBDY());
-      SendRETURN();
-    }
-
-    void IEvent.Event () {
-      if (itms.Count <= 0) {
-	ErrorSetCONTINUE();
-      } else {
-	byte[] it = itms.Peek();
-	Filter4 ftr = (Filter4) ServiceGetFilter();
-	try  {
-	  ftr.LinkConnect();
-	  ftr.SendBDY(it);
-	} catch (Exception ex) {
-	  ftr.ErrorSet (ex);
-	  if (ftr.ErrorIsEXIT()) {
-	    ftr.ErrorReset();
-	    return;
-	  } else {
-	    ftr.ErrorWrite();
-	  }
-	}
-	itms.Dequeue();
-      }
-    }
-
-    void LOGF () {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
-      if (ftr.LinkGetTargetIdent() == "transFilter") {
-        ftr.SendSTART();
-        ftr.SendC(ReadC());
-        ftr.SendEND_AND_WAIT("LOGF");
-      } else {
-	ftr.FH = File.AppendText(ReadC());
-      }
-      SendRETURN();
-    }
-
-    void EXIT () {
-      ErrorSetEXIT();
-    }
-
-    void WRIT () {
-      FH.WriteLine(ReadC());
-      FH.Flush();
-      SendRETURN();
-    }
-
-    void ErrorWrite () {
-      FH.WriteLine("ERROR: " + ErrorGetText());
-      FH.Flush();
-      ErrorReset();
-    }
-
-    void IServerCleanup.ServerCleanup() {
-      Filter4 ftr = (Filter4)ServiceGetFilter();
-      if (ftr.FH != null)
-	ftr.FH.Close();
-    }
-
-    void IServerSetup.ServerSetup() {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
-      ServiceCreate("LOGF", LOGF);
-      ServiceCreate("EXIT", EXIT);
-      ServiceCreate("+ALL", this);
-      ftr.ServiceCreate("WRIT", ftr.WRIT);
-    }
-
-    public static void Main(string[] argv) {
-      Filter4 srv = new Filter4();
-      try {
-	srv.ConfigSetIgnoreExit(true);
-	srv.ConfigSetIdent("transFilter");
-	srv.ConfigSetName("Filter4");
-	srv.LinkCreate(argv);
-	srv.ProcessEvent(MqS.WAIT.FOREVER);
-      } catch (Exception ex) {
-        srv.ErrorSet (ex);
-      }
-      srv.Exit();
-    }
-  }
-}
 
 package main
 
 import (
   . "gomsgque"
+    "container/list"
     "os"
-    //"fmt"
 )
 
-type Filter1 struct {
-  data [][]string
+type Filter4 struct {
+  *MqS
+  itms	*list.List
+  FH	*os.File
 }
 
-func NewFilter1() *MqS {
-  return NewMqS(new(Filter1))
+func NewFilter4() *Filter4 {
+  ret := new(Filter4)
+  ret.MqS = NewMqS(ret)
+  ret.itms = list.New()
+  return ret
 }
 
-func (this *Filter1) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("+FTR", (*FTR)(this))
-  ctx.ServiceCreate("+EOF", (*EOF)(this))
+func (this *Filter4) ServerCleanup() {
+  ftr := this.ServiceGetFilter2().GetSelf().(*Filter4)
+  if (ftr.FH != nil) {
+    ftr.FH.Close()
+    ftr.FH = nil
+  }
 }
 
-func (this *Filter1) Factory(ctx *MqS) *MqS {
-  return NewFilter1()
+func (this *Filter4) ServerSetup() {
+  ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+  this.ServiceCreate("LOGF", (*LOGF)(this))
+  this.ServiceCreate("EXIT", (*EXIT)(this))
+  this.ServiceCreate("+ALL", (*ALLS)(this))
+  ftr.ServiceCreate("WRIT", (*WRIT)(ftr))
 }
 
-type FTR Filter1
-  func (this *FTR) Call(ctx *MqS) {
-    var d []string
-    for ctx.ReadItemExists() {
-      d = append(d, "<" + ctx.ReadC() + ">")
-    }
-    this.data = append(this.data, d)
-    ctx.SendRETURN()
+func (this *Filter4) Factory() *MqS {
+  return NewFilter4().MqS
+}
+
+type ALLS Filter4
+  func (this *ALLS) Call() {
+    this.itms.PushBack(this.ReadBDY().Get())
+    this.SendRETURN()
   }
 
-type EOF Filter1
-  func (this *EOF) Call(ctx *MqS) {
-    ftr := ctx.ServiceGetFilter2()
-    for _,d := range this.data {
-      ftr.SendSTART()
-      for _,s := range d {
-	ftr.SendC(s)
+func (this *Filter4) Event() {
+  if (this.itms.Len() <= 0) {
+    this.ErrorSetCONTINUE()
+  } else {
+    it := this.itms.Front()
+    ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+    defer func() {
+      if x := recover(); x != nil {
+	ftr.ErrorSet(x)
+	if ftr.ErrorIsEXIT() {
+	  ftr.ErrorReset()
+	  return;
+	} else {
+	  ftr.ErrorWrite()
+	}
       }
-      ftr.SendEND_AND_WAIT2("+FTR")
-    }
-    ftr.SendSTART()
-    ftr.SendEND_AND_WAIT2("+EOF")
-    ctx.SendRETURN()
+      this.itms.Remove(it)
+    }()
+    ftr.LinkConnect()
+    ftr.SendBDY(new(MqBinary).Set(it.Value.([]byte)))
   }
+}
+
+type LOGF Filter4
+  func (this *LOGF) Call() {
+    ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+    if (ftr.LinkGetTargetIdent() == "transFilter") {
+      ftr.SendSTART()
+      ftr.SendC(this.ReadC())
+      ftr.SendEND_AND_WAIT2("LOGF")
+    } else {
+      ftr.FH,_ = os.Open(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
+    }
+    this.SendRETURN()
+  }
+
+type EXIT Filter4
+  func (this *EXIT) Call() {
+    this.ErrorSetEXIT()
+  }
+
+type WRIT Filter4
+  func (this *WRIT) Call() {
+    this.FH.WriteString(this.ReadC() + "\n")
+    this.SendRETURN()
+  }
+
+func (this *Filter4) ErrorWrite() {
+  this.FH.WriteString("ERROR: " + this.ErrorGetText())
+  this.ErrorReset()
+}
 
 func main() {
-  var srv = NewFilter1()
+  var srv = NewFilter4()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("Filter1")
+  srv.ConfigSetIgnoreExit(true)
+  srv.ConfigSetIdent("transFilter")
+  srv.ConfigSetName("Filter4")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent2(MqS_WAIT_FOREVER)
 }

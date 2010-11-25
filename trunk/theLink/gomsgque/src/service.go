@@ -26,7 +26,7 @@ import (
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 type Service interface {
-  Call(*MqS)
+  Call()
 }
 
 //export gomsgque_cService
@@ -36,10 +36,32 @@ func (this *MqS) cService(cb Service) {
       this.ErrorSet(x)
     }
   }()
-  cb.Call(this)
+  cb.Call()
 }
 
 func (this *MqS) ServiceCreate(token string, cb Service) {
+  t := C.CString(token)
+  C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  C.free(unsafe.Pointer(t))
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+type Service2 interface {
+  Call(*MqS)
+}
+
+//export gomsgque_cService2
+func (this *MqS) cService2(cb Service2) {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  cb.Call(this)
+}
+
+func (this *MqS) ServiceCreate2(token string, cb Service2) {
   t := C.CString(token)
   C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
   C.free(unsafe.Pointer(t))

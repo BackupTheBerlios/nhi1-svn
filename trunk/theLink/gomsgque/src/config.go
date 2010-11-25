@@ -118,6 +118,16 @@ func (this *MqS) ConfigSetIsSilent(val bool) {
   C.MqConfigSetIsSilent((*_Ctype_struct_MqS)(this), v)
 }
 
+func (this *MqS) ConfigSetIgnoreExit(val bool) {
+  var v C.MQ_BOL
+  if val {
+    v = C.MQ_YES
+  } else {
+    v = C.MQ_NO
+  }
+  C.MqConfigSetIgnoreExit((*_Ctype_struct_MqS)(this), v)
+}
+
 func (this *MqS) ConfigGetIsString() bool {
   return C.MqConfigGetIsString((*_Ctype_struct_MqS)(this)) == C.MQ_YES
 }
@@ -187,7 +197,7 @@ func (this *MqS) ConfigSetIoTcp(host, port, myhost, myport string) {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 type ServerSetup interface {
-  ServerSetup(*MqS)
+  ServerSetup()
 }
 
 //export gomsgque_cServerSetup
@@ -197,7 +207,7 @@ func (this *MqS) cServerSetup(cb ServerSetup) {
       this.ErrorSet(x)
     }
   }()
-  cb.ServerSetup(this)
+  cb.ServerSetup()
 }
 
 func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
@@ -207,7 +217,7 @@ func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 type ServerCleanup interface {
-  ServerCleanup(*MqS)
+  ServerCleanup()
 }
 
 //export gomsgque_cServerCleanup
@@ -217,7 +227,7 @@ func (this *MqS) cServerCleanup(cb ServerCleanup) {
       this.ErrorSet(x)
     }
   }()
-  cb.ServerCleanup(this)
+  cb.ServerCleanup()
 }
 
 func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
@@ -227,7 +237,7 @@ func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 type BgError interface {
-  BgError(*MqS)
+  BgError()
 }
 
 //export gomsgque_cBgError
@@ -237,7 +247,7 @@ func (this *MqS) cBgError(cb BgError) {
       this.ErrorSet(x)
     }
   }()
-  cb.BgError(this)
+  cb.BgError()
 }
 
 func (this *MqS) ConfigSetBgError(cb BgError) {
@@ -246,8 +256,28 @@ func (this *MqS) ConfigSetBgError(cb BgError) {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+type Event interface {
+  Event()
+}
+
+//export gomsgque_cEvent
+func (this *MqS) cEvent(cb Event) {
+  defer func() {
+    if x := recover(); x != nil {
+      this.ErrorSet(x)
+    }
+  }()
+  cb.Event()
+}
+
+func (this *MqS) ConfigSetEvent(cb Event) {
+  C.gomsgque_ConfigSetEvent((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 type Factory interface {
-  Factory(*MqS) *MqS
+  Factory() *MqS
 }
 
 //export gomsgque_cFactoryCreate
@@ -257,7 +287,7 @@ func (this *MqS) cFactoryCreate(cb Factory) *MqS {
       this.ErrorSet(x)
     }
   }()
-  return cb.Factory(this)
+  return cb.Factory()
 
 }
 

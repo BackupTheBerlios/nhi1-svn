@@ -40,7 +40,9 @@ type ClientERR struct {
 }
 
 func NewClientERR() *ClientERR {
-  return &ClientERR{NewMqS(nil),0}
+  ret := new(ClientERR)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
 func (this *ClientERR) LinkCreate(debug int32) {
@@ -61,7 +63,9 @@ type ClientERR2 struct {
 }
 
 func NewClientERR2() *ClientERR2 {
-  return &ClientERR2{NewMqS(nil)}
+  ret := new(ClientERR2)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
 func (this *ClientERR2) LinkCreate(debug int32) {
@@ -83,21 +87,21 @@ func NewClient() *Client {
   return srv
 }
 
-func (this *Client) Factory(ctx *MqS) *MqS {
+func (this *Client) Factory() *MqS {
   return NewClient().MqS
 }
 
-func (this *Client) BgError(ctx *MqS) {
-  master := ctx.SlaveGetMaster()
+func (this *Client) BgError() {
+  master := this.SlaveGetMaster()
   if (master != nil) {
-    master.ErrorC ("BGERROR", ctx.ErrorGetNum(), ctx.ErrorGetText())
+    master.ErrorC ("BGERROR", this.ErrorGetNum(), this.ErrorGetText())
     master.SendERROR ()
   }
 }
 
 func (this *Client) LinkCreate(debug int32) {
   this.ConfigSetDebug(debug)
-  this.MqS.LinkCreate(os.Args[0], "@", "SELF", "--name", "test-server");
+  this.MqS.LinkCreate(os.Args[0], "@", "SELF", "--name", "test-server")
 }
 
 type ECOI_CB Client
@@ -112,6 +116,7 @@ type Server struct {
   buf *MqBufferS
   cl  [3]*Client
   i   int32
+  j int32
 }
 
 func NewServer() *Server {
@@ -120,11 +125,11 @@ func NewServer() *Server {
   return srv
 }
 
-func (this *Server) Factory(ctx *MqS) *MqS {
+func (this *Server) Factory() *MqS {
   return NewServer().MqS
 }
 
-func (this *Server) ServerCleanup(ctx *MqS) {
+func (this *Server) ServerCleanup() {
   for i,cl := range this.cl {
     if cl == nil { continue }
     cl.LinkDelete()
@@ -132,8 +137,8 @@ func (this *Server) ServerCleanup(ctx *MqS) {
   }
 }
 
-func (this *Server) ServerSetup(ctx *MqS) {
- if (ctx.SlaveIs()) {
+func (this *Server) ServerSetup() {
+  if (this.SlaveIs()) {
     // add "slave" services here
   } else {
     for i := range this.cl {
@@ -142,192 +147,227 @@ func (this *Server) ServerSetup(ctx *MqS) {
       this.cl[i].ConfigSetSrvName(fmt.Sprintf("sv-%d", i))
     }
     // add "master" services here
-    ctx.ServiceCreate("ERR2", (*Error)(this))
-    ctx.ServiceCreate("ERR3", (*Error)(this))
-    ctx.ServiceCreate("ERR4", (*Error)(this))
-    ctx.ServiceCreate("ERRT", (*ERRT)(this))
+    this.ServiceCreate("ERR2", (*Error)(this))
+    this.ServiceCreate("ERR3", (*Error)(this))
+    this.ServiceCreate("ERR4", (*Error)(this))
+    this.ServiceCreate("ERRT", (*ERRT)(this))
 
-    ctx.ServiceCreate("CFG1", (*CFG1)(this))
+    this.ServiceCreate("CFG1", (*CFG1)(this))
 
-    ctx.ServiceCreate("BUF1", (*BUF1)(this))
-    ctx.ServiceCreate("BUF2", (*BUF2)(this))
-    ctx.ServiceCreate("BUF3", (*BUF3)(this))
+    this.ServiceCreate("BUF1", (*BUF1)(this))
+    this.ServiceCreate("BUF2", (*BUF2)(this))
+    this.ServiceCreate("BUF3", (*BUF3)(this))
 
-    ctx.ServiceCreate("SETU", (*SETU)(this))
-    ctx.ServiceCreate("GETU", (*GETU)(this))
+    this.ServiceCreate("SETU", (*SETU)(this))
+    this.ServiceCreate("GETU", (*GETU)(this))
 
-    ctx.ServiceCreate("ECOO", (*ECOO)(this))
-    ctx.ServiceCreate("ECOY", (*ECOY)(this))
-    ctx.ServiceCreate("ECOS", (*ECOS)(this))
-    ctx.ServiceCreate("ECOI", (*ECOI)(this))
-    ctx.ServiceCreate("ECOW", (*ECOW)(this))
-    ctx.ServiceCreate("ECOF", (*ECOF)(this))
-    ctx.ServiceCreate("ECOD", (*ECOD)(this))
-    ctx.ServiceCreate("ECOC", (*ECOC)(this))
+    this.ServiceCreate("ECOO", (*ECOO)(this))
+    this.ServiceCreate("ECOY", (*ECOY)(this))
+    this.ServiceCreate("ECOS", (*ECOS)(this))
+    this.ServiceCreate("ECOI", (*ECOI)(this))
+    this.ServiceCreate("ECOW", (*ECOW)(this))
+    this.ServiceCreate("ECOF", (*ECOF)(this))
+    this.ServiceCreate("ECOD", (*ECOD)(this))
+    this.ServiceCreate("ECOC", (*ECOC)(this))
 
-    ctx.ServiceCreate("ECOU", (*ECOU)(this))
-    ctx.ServiceCreate("ECOB", (*ECOB)(this))
-    ctx.ServiceCreate("ECUL", (*ECUL)(this))
-    ctx.ServiceCreate("ECON", (*ECON)(this))
+    this.ServiceCreate("ECOU", (*ECOU)(this))
+    this.ServiceCreate("ECOB", (*ECOB)(this))
+    this.ServiceCreate("ECUL", (*ECUL)(this))
+    this.ServiceCreate("ECON", (*ECON)(this))
 
-    ctx.ServiceCreate("ECOL", (*ECOL)(this))
-    ctx.ServiceCreate("ECLI", (*ECLI)(this))
-    ctx.ServiceCreate("LST1", (*LST1)(this))
-    ctx.ServiceCreate("LST2", (*LST2)(this))
-    ctx.ServiceCreate("ERLS", (*ERLS)(this))
-    ctx.ServiceCreate("ERLR", (*ERLR)(this))
+    this.ServiceCreate("ECOL", (*ECOL)(this))
+    this.ServiceCreate("ECLI", (*ECLI)(this))
+    this.ServiceCreate("LST1", (*LST1)(this))
+    this.ServiceCreate("LST2", (*LST2)(this))
+    this.ServiceCreate("ERLS", (*ERLS)(this))
+    this.ServiceCreate("ERLR", (*ERLR)(this))
 
-    ctx.ServiceCreate("SND1", (*SND1)(this))
-    ctx.ServiceCreate("SND2", (*SND2)(this))
-    ctx.ServiceCreate("REDI", (*REDI)(this))
-    ctx.ServiceCreate("GTCX", (*GTCX)(this))
-    ctx.ServiceCreate("CNFG", (*CNFG)(this))
-    ctx.ServiceCreate("CSV1", (*CSV1)(this))
-    ctx.ServiceCreate("SLEP", (*SLEP)(this))
-    ctx.ServiceCreate("USLP", (*USLP)(this))
-    ctx.ServiceCreate("INIT", (*INIT)(this))
-    ctx.ServiceCreate("MSQT", (*MSQT)(this))
-    ctx.ServiceCreate("GTTO", (*GTTO)(this))
+    this.ServiceCreate("SND1", (*SND1)(this))
+    this.ServiceCreate("SND2", (*SND2)(this))
+    this.ServiceCreate("REDI", (*REDI)(this))
+    this.ServiceCreate("GTCX", (*GTCX)(this))
+    this.ServiceCreate("CNFG", (*CNFG)(this))
+    this.ServiceCreate("CSV1", (*CSV1)(this))
+    this.ServiceCreate("SLEP", (*SLEP)(this))
+    this.ServiceCreate("USLP", (*USLP)(this))
+    this.ServiceCreate("INIT", (*INIT)(this))
+    this.ServiceCreate("MSQT", (*MSQT)(this))
+    this.ServiceCreate("GTTO", (*GTTO)(this))
+    this.ServiceCreate("PRNT", (*PRNT)(this))
+    this.ServiceCreate("TRNS", (*TRNS)(this))
+    this.ServiceCreate("TRN2", (*TRN2)(this))
   }
 }
 
+type TRN2 Server
+  func (this *TRN2) Call() {
+    this.ReadT_START(nil)
+    this.i = this.ReadI()
+    this.ReadT_END()
+    this.j = this.ReadI()
+  }
+
+type TRNS Server
+  func (this *TRNS) Call() {
+    this.SendSTART ()
+    this.SendT_START ("TRN2")
+    this.SendI (9876)
+    this.SendT_END ()
+    this.SendI ( this.ReadI() )
+    this.SendEND_AND_WAIT2 ("ECOI")
+    this.ProcessEvent2 (MqS_WAIT_ONCE)
+    this.SendSTART ()
+    this.SendI (this.i)
+    this.SendI (this.j)
+    this.SendRETURN ()
+  }
+
+type PRNT Server
+  func (this *PRNT) Call() {
+    this.SendSTART()
+    this.SendC(fmt.Sprintf("%d - %s", this.LinkGetCtxId(), this.ReadC()))
+    this.SendEND_AND_WAIT2("WRIT")
+    this.SendRETURN()
+  }
+
 type GTTO Server
-  func (this *GTTO) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendC(ctx.ServiceGetToken())
-    ctx.SendRETURN()
+  func (this *GTTO) Call() {
+    this.SendSTART()
+    this.SendC(this.ServiceGetToken())
+    this.SendRETURN()
   }
 
 type ECOC Server
-  func (this *ECOC) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendC(ctx.ReadC())
-    ctx.SendRETURN()
+  func (this *ECOC) Call() {
+    this.SendSTART()
+    this.SendC(this.ReadC())
+    this.SendRETURN()
   }
 
 type MSQT Server
-  func (this *MSQT) Call(ctx *MqS) {
-    ctx.SendSTART()
-    if (ctx.ConfigGetDebug() != 0) {
-      ctx.SendC ("debug")
-      ctx.SendI (ctx.ConfigGetDebug())
+  func (this *MSQT) Call() {
+    this.SendSTART()
+    if (this.ConfigGetDebug() != 0) {
+      this.SendC ("debug")
+      this.SendI (this.ConfigGetDebug())
     }
-    if (ctx.ConfigGetIsString() == false) {
-      ctx.SendC ("binary")
+    if (this.ConfigGetIsString() == false) {
+      this.SendC ("binary")
     }
-    if (ctx.ConfigGetIsSilent() == true) {
-      ctx.SendC ("silent")
+    if (this.ConfigGetIsSilent() == true) {
+      this.SendC ("silent")
     }
-    ctx.SendC ("sOc")
-    if ctx.ConfigGetIsServer() {
-      ctx.SendC ("SERVER")
+    this.SendC ("sOc")
+    if this.ConfigGetIsServer() {
+      this.SendC ("SERVER")
     } else {
-      ctx.SendC ("CLIENT")
+      this.SendC ("CLIENT")
     }
-    ctx.SendC ("pOc")
-    if ctx.LinkIsParent() {
-      ctx.SendC ("PARENT")
+    this.SendC ("pOc")
+    if this.LinkIsParent() {
+      this.SendC ("PARENT")
     } else {
-      ctx.SendC ("CHILD")
+      this.SendC ("CHILD")
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type INIT Server
-  func (this *INIT) Call(ctx *MqS) {
-    max := int(ctx.ReadGetNumItems())
+  func (this *INIT) Call() {
+    max := int(this.ReadGetNumItems())
     list := make([]string,max)
-    ctx.SendSTART()
+    this.SendSTART()
     for i:=0; i<max; i++ {
-      list[i] = ctx.ReadC()
+      list[i] = this.ReadC()
     }
     Init(list)
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type USLP Server
-  func (this *USLP) Call(ctx *MqS) {
-    ctx.SendSTART()
-    i := ctx.ReadI()
-    ctx.SysUSleep(uint32(i))
-    ctx.SendI(i)
-    ctx.SendRETURN()
+  func (this *USLP) Call() {
+    this.SendSTART()
+    i := this.ReadI()
+    this.SysUSleep(uint32(i))
+    this.SendI(i)
+    this.SendRETURN()
   }
 
 type SLEP Server
-  func (this *SLEP) Call(ctx *MqS) {
-    ctx.SendSTART()
-    i := ctx.ReadI()
-    ctx.SysSleep(uint32(i))
-    ctx.SendI(i)
-    ctx.SendRETURN()
+  func (this *SLEP) Call() {
+    this.SendSTART()
+    i := this.ReadI()
+    this.SysSleep(uint32(i))
+    this.SendI(i)
+    this.SendRETURN()
   }
 
 type CSV1 Server
-  func (this *CSV1) Call(ctx *MqS) {
+  func (this *CSV1) Call() {
     var num int32
 
     // call an other service
-    ctx.SendSTART()
-    num = ctx.ReadI()
+    this.SendSTART()
+    num = this.ReadI()
     num++
-    ctx.SendI(num)
-    ctx.SendEND_AND_WAIT ("CSV2", 10)
+    this.SendI(num)
+    this.SendEND_AND_WAIT ("CSV2", 10)
 
     // read the answer and send the result back
-    ctx.SendSTART()
-    num = ctx.ReadI()
+    this.SendSTART()
+    num = this.ReadI()
     num++
-    ctx.SendI(num)
-    ctx.SendRETURN()
+    this.SendI(num)
+    this.SendRETURN()
   }
 
 type CNFG Server
-  func (this *CNFG) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendO(ctx.ConfigGetIsServer())
-    ctx.SendO(ctx.LinkIsParent())
-    ctx.SendO(ctx.SlaveIs())
-    ctx.SendO(ctx.ConfigGetIsString())
-    ctx.SendO(ctx.ConfigGetIsSilent())
-    ctx.SendO(ctx.LinkIsConnected())
-    ctx.SendC(ctx.ConfigGetName())
-    ctx.SendI(ctx.ConfigGetDebug())
-    ctx.SendI(ctx.LinkGetCtxId())
-    ctx.SendC(ctx.ServiceGetToken())
-    ctx.SendRETURN()
+  func (this *CNFG) Call() {
+    this.SendSTART()
+    this.SendO(this.ConfigGetIsServer())
+    this.SendO(this.LinkIsParent())
+    this.SendO(this.SlaveIs())
+    this.SendO(this.ConfigGetIsString())
+    this.SendO(this.ConfigGetIsSilent())
+    this.SendO(this.LinkIsConnected())
+    this.SendC(this.ConfigGetName())
+    this.SendI(this.ConfigGetDebug())
+    this.SendI(this.LinkGetCtxId())
+    this.SendC(this.ServiceGetToken())
+    this.SendRETURN()
   }
 
+// test for callback without relationship to "*Server"
 type GTCX Server
-  func (this *GTCX) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendI(ctx.LinkGetCtxId())
-    ctx.SendRETURN()
+  func (this *GTCX) Call() {
+    this.SendSTART()
+    this.SendI(this.LinkGetCtxId())
+    this.SendRETURN()
   }
 
 type REDI Server
-  func (this *REDI) Call(ctx *MqS) {
-    ctx.ReadI()
+  func (this *REDI) Call() {
+    this.ReadI()
   }
 
 type SND1 Server
-  func (this *SND1) Call(ctx *MqS) {
-    s := ctx.ReadC()
-    id := ctx.ReadI()
-    ctx.SendSTART()
+  func (this *SND1) Call() {
+    s := this.ReadC()
+    id := this.ReadI()
+    this.SendSTART()
     switch s {
       case "START": {
-	parent := ctx.LinkGetParent()
+	parent := this.LinkGetParent()
 	if (parent != nil && parent.GetSelf().(*Server).cl[id].LinkIsConnected()) {
 	  this.cl[id].LinkCreateChild(parent.GetSelf().(*Server).cl[id].MqS)
 	} else {
-	  this.cl[id].LinkCreate(ctx.ConfigGetDebug())
+	  this.cl[id].LinkCreate(this.ConfigGetDebug())
 	}
       }
       case "START2": {
 	// object already created ERROR
-	this.cl[id].LinkCreate(ctx.ConfigGetDebug())
-	this.cl[id].LinkCreate(ctx.ConfigGetDebug())
+	this.cl[id].LinkCreate(this.ConfigGetDebug())
+	this.cl[id].LinkCreate(this.ConfigGetDebug())
       }
       case "START3": {
 	parent := NewClient()
@@ -341,7 +381,7 @@ type SND1 Server
       case "START5": {
 	// the 'master' have to be a 'parent' without 'child' objects
 	// 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	ctx.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id),
+	this.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id),
 	  "--srvname", fmt.Sprintf("wk-sv-%d", id))
       }
       case "STOP": {
@@ -349,458 +389,458 @@ type SND1 Server
       }
       case "SEND": {
 	this.cl[id].SendSTART()
-	TOK := ctx.ReadC()
-	ctx.ReadProxy(this.cl[id].MqS)
+	TOK := this.ReadC()
+	this.ReadProxy(this.cl[id].MqS)
 	this.cl[id].SendEND(TOK)
       }
       case "WAIT": {
 	this.cl[id].SendSTART()
-	ctx.ReadProxy(this.cl[id].MqS)
+	this.ReadProxy(this.cl[id].MqS)
 	this.cl[id].SendEND_AND_WAIT("ECOI", 5)
-	ctx.SendI(this.cl[id].ReadI()+1)
+	this.SendI(this.cl[id].ReadI()+1)
       }
       case "CALLBACK": {
 	this.cl[id].SendSTART()
-	ctx.ReadProxy(this.cl[id].MqS)
+	this.ReadProxy(this.cl[id].MqS)
 	this.cl[id].i = -1
-	this.cl[id].SendEND_AND_CALLBACK("ECOI", (*ECOI_CB)(this.cl[id]))
+	this.cl[id].SendEND_AND_CALLBACK2("ECOI", (*ECOI_CB)(this.cl[id]))
 	this.cl[id].ProcessEvent(10, MqS_WAIT_ONCE)
-	ctx.SendI(this.cl[id].i+1)
+	this.SendI(this.cl[id].i+1)
       }
       case "ERR-1": {
 	defer func() {
 	  if x := recover(); x != nil {
-	    ctx.ErrorSet(x)
-	    ctx.SendI(ctx.ErrorGetNum());
-	    ctx.SendC(ctx.ErrorGetText());
-	    ctx.ErrorReset();
-	    ctx.SendRETURN()
+	    this.ErrorSet(x)
+	    this.SendI(this.ErrorGetNum())
+	    this.SendC(this.ErrorGetText())
+	    this.ErrorReset()
+	    this.SendRETURN()
 	  }
 	}()
 	this.cl[id].SendSTART()
-	ctx.ReadProxy(this.cl[id].MqS)
-	this.cl[id].SendEND_AND_WAIT("ECOI", 5);
+	this.ReadProxy(this.cl[id].MqS)
+	this.cl[id].SendEND_AND_WAIT("ECOI", 5)
       }
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
-type setMyInt Server
-  func (this *setMyInt) Call(ctx *MqS) {
-    ctx.SlaveGetMaster().GetSelf().(*Server).i = ctx.ReadI()
+type SetMyInt Server
+  func (this *SetMyInt) Call() {
+    this.SlaveGetMaster().GetSelf().(*Server).i = this.ReadI()
   }
 
 type SND2 Server
-  func (this *SND2) Call(ctx *MqS) {
-    s  := ctx.ReadC()
-    id := ctx.ReadI()
-    cl := ctx.SlaveGet(id)
+  func (this *SND2) Call() {
+    s  := this.ReadC()
+    id := this.ReadI()
+    cl := this.SlaveGet(id)
 
-    ctx.SendSTART()
+    this.SendSTART()
     switch s {
       case "CREATE": {
 	var LIST  []string
-	for ctx.ReadItemExists() {
-	  LIST = append(LIST, ctx.ReadC())
+	for this.ReadItemExists() {
+	  LIST = append(LIST, this.ReadC())
 	}
 	LIST = append(LIST, "--name", "wk-cl-" + fmt.Sprintf("%d", id),
 			"@", "--name", "wk-sv-" + fmt.Sprintf("%d", id))
-	ctx.SlaveWorker(id, LIST...)
+	this.SlaveWorker(id, LIST...)
       }
       case "CREATE2": {
 	c := NewClient()
-	c.LinkCreate(ctx.ConfigGetDebug())
-	ctx.SlaveCreate(id, c.MqS)
+	c.LinkCreate(this.ConfigGetDebug())
+	this.SlaveCreate(id, c.MqS)
       }
       case "CREATE3": {
 	c := NewClientERR()
-	c.LinkCreate(ctx.ConfigGetDebug())
-	ctx.SlaveCreate(id, c.MqS)
+	c.LinkCreate(this.ConfigGetDebug())
+	this.SlaveCreate(id, c.MqS)
       }
       case "DELETE": {
-	ctx.SlaveDelete(id)
-	if ctx.SlaveGet(id) == nil {
-	  ctx.SendC("OK")
+	this.SlaveDelete(id)
+	if this.SlaveGet(id) == nil {
+	  this.SendC("OK")
 	} else {
-	  ctx.SendC("ERROR")
+	  this.SendC("ERROR")
 	}
       }
       case "SEND": {
 	cl.SendSTART()
-	TOK := ctx.ReadC()
-	ctx.ReadProxy(cl)
+	TOK := this.ReadC()
+	this.ReadProxy(cl)
 	cl.SendEND(TOK)
       }
       case "WAIT": {
 	cl.SendSTART()
-	cl.SendN(ctx.ReadN())
+	cl.SendN(this.ReadN())
 	cl.SendEND_AND_WAIT("ECOI", 5)
-	ctx.SendI(cl.ReadI()+1)
+	this.SendI(cl.ReadI()+1)
       }
       case "CALLBACK": {
 	cl.SendSTART()
-	ctx.ReadProxy(cl)
+	this.ReadProxy(cl)
 	this.i = -1
-	cl.SendEND_AND_CALLBACK("ECOI", (*setMyInt)(this));
+	cl.SendEND_AND_CALLBACK("ECOI", (*SetMyInt)(cl.GetSelf().(*Server)))
 	cl.ProcessEvent(10, MqS_WAIT_ONCE)
-	ctx.SendI(this.i+1)
+	this.SendI(this.i+1)
       }
       case "MqSendEND_AND_WAIT": {
-	TOK := ctx.ReadC()
+	TOK := this.ReadC()
 	cl.SendSTART()
-	for ctx.ReadItemExists() {
-	  ctx.ReadProxy(cl)
+	for this.ReadItemExists() {
+	  this.ReadProxy(cl)
 	}
 	cl.SendEND_AND_WAIT(TOK, 5)
 	for cl.ReadItemExists() {
-	  cl.ReadProxy(ctx)
+	  cl.ReadProxy(this.MqS)
 	}
       }
       case "MqSendEND": {
-	TOK := ctx.ReadC()
+	TOK := this.ReadC()
 	cl.SendSTART()
-	for ctx.ReadItemExists() {
-	  ctx.ReadProxy(cl)
+	for this.ReadItemExists() {
+	  this.ReadProxy(cl)
 	}
 	cl.SendEND(TOK)
 	return
       }
       case "ERR-1": {
 	c := NewClientERR2()
-	c.LinkCreate(ctx.ConfigGetDebug())
+	c.LinkCreate(this.ConfigGetDebug())
       }
       case "isSlave": {
-	ctx.SendO(cl.SlaveIs())
+	this.SendO(cl.SlaveIs())
       }
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type ECON Server
-  func (this *ECON) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendC(ctx.ReadC() + "-" + ctx.ConfigGetName())
-    ctx.SendRETURN()
+  func (this *ECON) Call() {
+    this.SendSTART()
+    this.SendC(this.ReadC() + "-" + this.ConfigGetName())
+    this.SendRETURN()
   }
 
 type ERLR Server
-  func (this *ERLR) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.ReadL_START(nil)
-    ctx.ReadL_START(nil)
-    ctx.SendRETURN()
+  func (this *ERLR) Call() {
+    this.SendSTART()
+    this.ReadL_START(nil)
+    this.ReadL_START(nil)
+    this.SendRETURN()
   }
 
 type ERLS Server
-  func (this *ERLS) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendL_START()
-    ctx.SendU(ctx.ReadU())
-    ctx.SendL_START()
-    ctx.SendU(ctx.ReadU())
-    ctx.SendRETURN()
+  func (this *ERLS) Call() {
+    this.SendSTART()
+    this.SendL_START()
+    this.SendU(this.ReadU())
+    this.SendL_START()
+    this.SendU(this.ReadU())
+    this.SendRETURN()
   }
 
 type LST1 Server
-  func (this *LST1) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendL_END()
-    ctx.SendRETURN()
+  func (this *LST1) Call() {
+    this.SendSTART()
+    this.SendL_END()
+    this.SendRETURN()
   }
 
 type LST2 Server
-  func (this *LST2) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.ReadL_END()
-    ctx.SendRETURN()
+  func (this *LST2) Call() {
+    this.SendSTART()
+    this.ReadL_END()
+    this.SendRETURN()
   }
 
-  func (this *Server) EchoList(ctx *MqS, doincr bool) {
-    for ctx.ReadItemExists() {
-      buf := ctx.ReadU()
-      if (buf.GetType() == "L") {
-	ctx.ReadL_START(buf)
-	ctx.SendL_START()
-	this.EchoList(ctx, doincr)
-	ctx.SendL_END()
-	ctx.ReadL_END()
-      } else if (doincr) {
-	ctx.SendI (buf.GetI()+1)
-      } else {
-	ctx.SendU(buf)
-      }
+func (this *Server) EchoList(doincr bool) {
+  for this.ReadItemExists() {
+    buf := this.ReadU()
+    if (buf.GetType() == "L") {
+      this.ReadL_START(buf)
+      this.SendL_START()
+      this.EchoList(doincr)
+      this.SendL_END()
+      this.ReadL_END()
+    } else if (doincr) {
+      this.SendI (buf.GetI()+1)
+    } else {
+      this.SendU(buf)
     }
   }
+}
 
 type ECOL Server
-  func (this *ECOL) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.ReadL_START(nil)
-    ctx.SendL_START()
-    (*Server)(this).EchoList(ctx, false)
-    ctx.SendL_END()
-    ctx.ReadL_END()
-    ctx.SendRETURN()
+  func (this *ECOL) Call() {
+    this.SendSTART()
+    this.ReadL_START(nil)
+    this.SendL_START()
+    (*Server)(this).EchoList(false)
+    this.SendL_END()
+    this.ReadL_END()
+    this.SendRETURN()
   }
 
 type ECLI Server
-  func (this *ECLI) Call(ctx *MqS) {
-    opt := ctx.ReadU()
+  func (this *ECLI) Call() {
+    opt := this.ReadU()
     doincr := (opt.GetType() == "C" && opt.GetC() == "--incr")
-    if (!doincr) { ctx.ReadUndo() }
-    ctx.SendSTART()
-    (*Server)(this).EchoList(ctx, doincr)
-    ctx.SendRETURN()
+    if (!doincr) { this.ReadUndo() }
+    this.SendSTART()
+    (*Server)(this).EchoList(doincr)
+    this.SendRETURN()
   }
 
 type ERRT Server
-  func (this *ERRT) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.ErrorC("MYERR", 9, ctx.ReadC())
-    ctx.SendERROR()
+  func (this *ERRT) Call() {
+    this.SendSTART()
+    this.ErrorC("MYERR", 9, this.ReadC())
+    this.SendERROR()
   }
 
 type Error Server
-  func (this *Error) Call(ctx *MqS) {
-    ctx.SendSTART()
-    switch ctx.ServiceGetToken() {
+  func (this *Error) Call() {
+    this.SendSTART()
+    switch this.ServiceGetToken() {
       case "ERR2" : {
-	ctx.SendC("some data")
-	ctx.ErrorC("Ot_ERR2", 10, "some error");
+	this.SendC("some data")
+	this.ErrorC("Ot_ERR2", 10, "some error")
       }
-      case "ERR3" : ctx.SendRETURN()
+      case "ERR3" : this.SendRETURN()
       case "ERR4" : syscall.Exit(1)
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type CFG1 Server
-  func (this *CFG1) Call(ctx *MqS) {
-    ctx.SendSTART()
-    switch ctx.ReadC() {
+  func (this *CFG1) Call() {
+    this.SendSTART()
+    switch this.ReadC() {
       case "Buffersize": {
-	old := ctx.ConfigGetBuffersize()
-	ctx.ConfigSetBuffersize (ctx.ReadI())
-	ctx.SendI (ctx.ConfigGetBuffersize())
-	ctx.ConfigSetBuffersize (old)
+	old := this.ConfigGetBuffersize()
+	this.ConfigSetBuffersize (this.ReadI())
+	this.SendI (this.ConfigGetBuffersize())
+	this.ConfigSetBuffersize (old)
       }
       case "Debug": {
-	old := ctx.ConfigGetDebug()
-	ctx.ConfigSetDebug (ctx.ReadI())
-	ctx.SendI (ctx.ConfigGetDebug())
-	ctx.ConfigSetDebug (old)
+	old := this.ConfigGetDebug()
+	this.ConfigSetDebug (this.ReadI())
+	this.SendI (this.ConfigGetDebug())
+	this.ConfigSetDebug (old)
       }
       case "Timeout": {
-	old := ctx.ConfigGetTimeout()
-	ctx.ConfigSetTimeout (ctx.ReadW())
-	ctx.SendW (ctx.ConfigGetTimeout())
-	ctx.ConfigSetTimeout (old)
+	old := this.ConfigGetTimeout()
+	this.ConfigSetTimeout (this.ReadW())
+	this.SendW (this.ConfigGetTimeout())
+	this.ConfigSetTimeout (old)
       }
       case "Name": {
-	old := ctx.ConfigGetName()
-	ctx.ConfigSetName (ctx.ReadC())
-	ctx.SendC (ctx.ConfigGetName())
-	ctx.ConfigSetName (old)
+	old := this.ConfigGetName()
+	this.ConfigSetName (this.ReadC())
+	this.SendC (this.ConfigGetName())
+	this.ConfigSetName (old)
       }
       case "SrvName": {
-	old := ctx.ConfigGetSrvName()
-	ctx.ConfigSetSrvName (ctx.ReadC())
-	ctx.SendC (ctx.ConfigGetSrvName())
-	ctx.ConfigSetSrvName (old)
+	old := this.ConfigGetSrvName()
+	this.ConfigSetSrvName (this.ReadC())
+	this.SendC (this.ConfigGetSrvName())
+	this.ConfigSetSrvName (old)
       }
       case "Ident": {
-	old := ctx.ConfigGetIdent()
-	ctx.ConfigSetIdent (ctx.ReadC())
-	check := ctx.LinkGetTargetIdent() == ctx.ReadC()
-	ctx.SendSTART()
-	ctx.SendC (ctx.ConfigGetIdent())
-	ctx.SendO (check);
-	ctx.ConfigSetIdent (old)
+	old := this.ConfigGetIdent()
+	this.ConfigSetIdent (this.ReadC())
+	check := this.LinkGetTargetIdent() == this.ReadC()
+	this.SendSTART()
+	this.SendC (this.ConfigGetIdent())
+	this.SendO (check)
+	this.ConfigSetIdent (old)
       }
       case "IsSilent": {
-	old := ctx.ConfigGetIsSilent()
-	ctx.ConfigSetIsSilent (ctx.ReadO())
-	ctx.SendO (ctx.ConfigGetIsSilent())
-	ctx.ConfigSetIsSilent (old)
+	old := this.ConfigGetIsSilent()
+	this.ConfigSetIsSilent (this.ReadO())
+	this.SendO (this.ConfigGetIsSilent())
+	this.ConfigSetIsSilent (old)
       }
       case "IsString": {
-	old := ctx.ConfigGetIsString()
-	ctx.ConfigSetIsString (ctx.ReadO())
-	ctx.SendO (ctx.ConfigGetIsString())
-	ctx.ConfigSetIsString (old)
+	old := this.ConfigGetIsString()
+	this.ConfigSetIsString (this.ReadO())
+	this.SendO (this.ConfigGetIsString())
+	this.ConfigSetIsString (old)
       }
       case "IoUds": {
-	old := ctx.ConfigGetIoUdsFile()
-	ctx.ConfigSetIoUdsFile (ctx.ReadC())
-	ctx.SendC (ctx.ConfigGetIoUdsFile())
-	ctx.ConfigSetIoUdsFile (old)
+	old := this.ConfigGetIoUdsFile()
+	this.ConfigSetIoUdsFile (this.ReadC())
+	this.SendC (this.ConfigGetIoUdsFile())
+	this.ConfigSetIoUdsFile (old)
       }
       case "IoTcp": {
-	h  := ctx.ConfigGetIoTcpHost   ()
-	p  := ctx.ConfigGetIoTcpPort   ()
-	mh := ctx.ConfigGetIoTcpMyHost ()
-	mp := ctx.ConfigGetIoTcpMyPort ()
-	hv := ctx.ReadC()
-	pv := ctx.ReadC()
-	mhv := ctx.ReadC()
-	mpv := ctx.ReadC()
-	ctx.ConfigSetIoTcp (hv,pv,mhv,mpv)
-	ctx.SendC (ctx.ConfigGetIoTcpHost())
-	ctx.SendC (ctx.ConfigGetIoTcpPort())
-	ctx.SendC (ctx.ConfigGetIoTcpMyHost())
-	ctx.SendC (ctx.ConfigGetIoTcpMyPort())
-	ctx.ConfigSetIoTcp (h,p,mh,mp)
+	h  := this.ConfigGetIoTcpHost   ()
+	p  := this.ConfigGetIoTcpPort   ()
+	mh := this.ConfigGetIoTcpMyHost ()
+	mp := this.ConfigGetIoTcpMyPort ()
+	hv := this.ReadC()
+	pv := this.ReadC()
+	mhv := this.ReadC()
+	mpv := this.ReadC()
+	this.ConfigSetIoTcp (hv,pv,mhv,mpv)
+	this.SendC (this.ConfigGetIoTcpHost())
+	this.SendC (this.ConfigGetIoTcpPort())
+	this.SendC (this.ConfigGetIoTcpMyHost())
+	this.SendC (this.ConfigGetIoTcpMyPort())
+	this.ConfigSetIoTcp (h,p,mh,mp)
       }
       case "IoPipe": {
-	old := ctx.ConfigGetIoPipeSocket()
-	ctx.ConfigSetIoPipeSocket (ctx.ReadI())
-	ctx.SendI (ctx.ConfigGetIoPipeSocket())
-	ctx.ConfigSetIoPipeSocket (old)
+	old := this.ConfigGetIoPipeSocket()
+	this.ConfigSetIoPipeSocket (this.ReadI())
+	this.SendI (this.ConfigGetIoPipeSocket())
+	this.ConfigSetIoPipeSocket (old)
       }
       case "StartAs": {
-	old := ctx.ConfigGetStartAs()
-	ctx.ConfigSetStartAs (MqStartE(ctx.ReadI()))
-	ctx.SendI (int32(ctx.ConfigGetStartAs()))
-	ctx.ConfigSetStartAs (old)
+	old := this.ConfigGetStartAs()
+	this.ConfigSetStartAs (MqStartE(this.ReadI()))
+	this.SendI (int32(this.ConfigGetStartAs()))
+	this.ConfigSetStartAs (old)
       }
       default: {
-	ctx.ErrorC ("CFG1", 1, "invalid command: ")
+	this.ErrorC ("CFG1", 1, "invalid command: ")
       }
     }
-    ctx.SendRETURN();
+    this.SendRETURN()
   }
 
 type BUF3 Server
-  func (this *BUF3) Call(ctx *MqS) {
-    ctx.SendSTART()
-    buf := ctx.ReadU()
-    ctx.SendC(buf.GetType())
-    ctx.SendU(buf)
-    ctx.SendI(ctx.ReadI())
-    ctx.SendU(buf)
-    ctx.SendRETURN()
+  func (this *BUF3) Call() {
+    this.SendSTART()
+    buf := this.ReadU()
+    this.SendC(buf.GetType())
+    this.SendU(buf)
+    this.SendI(this.ReadI())
+    this.SendU(buf)
+    this.SendRETURN()
   }
 
 type BUF2 Server
-  func (this *BUF2) Call(ctx *MqS) {
-    ctx.SendSTART()
+  func (this *BUF2) Call() {
+    this.SendSTART()
     for i:=0; i<3; i++ {
-      buf := ctx.ReadU()
-      ctx.SendC(buf.GetType())
-      ctx.SendU(buf)
+      buf := this.ReadU()
+      this.SendC(buf.GetType())
+      this.SendU(buf)
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type BUF1 Server
-  func (this *BUF1) Call(ctx *MqS) {
-    buf := ctx.ReadU()
+  func (this *BUF1) Call() {
+    buf := this.ReadU()
     typ := buf.GetType()
-    ctx.SendSTART()
-    ctx.SendC(typ)
+    this.SendSTART()
+    this.SendC(typ)
     switch (typ) {
-      case "Y": ctx.SendY(buf.GetY())
-      case "O": ctx.SendO(buf.GetO())
-      case "S": ctx.SendS(buf.GetS())
-      case "I": ctx.SendI(buf.GetI())
-      case "F": ctx.SendF(buf.GetF())
-      case "W": ctx.SendW(buf.GetW())
-      case "D": ctx.SendD(buf.GetD())
-      case "C": ctx.SendC(buf.GetC())
-      case "B": ctx.SendB(buf.GetB())
+      case "Y": this.SendY(buf.GetY())
+      case "O": this.SendO(buf.GetO())
+      case "S": this.SendS(buf.GetS())
+      case "I": this.SendI(buf.GetI())
+      case "F": this.SendF(buf.GetF())
+      case "W": this.SendW(buf.GetW())
+      case "D": this.SendD(buf.GetD())
+      case "C": this.SendC(buf.GetC())
+      case "B": this.SendB(buf.GetB())
     }
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type ECOB Server
-  func (this *ECOB) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendB(ctx.ReadB())
-    ctx.SendRETURN()
+  func (this *ECOB) Call() {
+    this.SendSTART()
+    this.SendB(this.ReadB())
+    this.SendRETURN()
   }
 
 type ECOD Server
-  func (this *ECOD) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendD(ctx.ReadD())
-    ctx.SendRETURN()
+  func (this *ECOD) Call() {
+    this.SendSTART()
+    this.SendD(this.ReadD())
+    this.SendRETURN()
   }
 
 type ECOF Server
-  func (this *ECOF) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendF(ctx.ReadF())
-    ctx.SendRETURN()
+  func (this *ECOF) Call() {
+    this.SendSTART()
+    this.SendF(this.ReadF())
+    this.SendRETURN()
   }
 
 type SETU Server
-  func (this *SETU) Call(ctx *MqS) {
-    this.buf = ctx.ReadU()
+  func (this *SETU) Call() {
+    this.buf = this.ReadU()
   }
 
 type GETU Server
-  func (this *GETU) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendU(this.buf)
-    ctx.SendRETURN()
+  func (this *GETU) Call() {
+    this.SendSTART()
+    this.SendU(this.buf)
+    this.SendRETURN()
   }
 
 type ECOO Server
-  func (this *ECOO) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendO(ctx.ReadO())
-    ctx.SendRETURN()
+  func (this *ECOO) Call() {
+    this.SendSTART()
+    this.SendO(this.ReadO())
+    this.SendRETURN()
   }
 
 type ECOY Server
-  func (this *ECOY) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendY(ctx.ReadY())
-    ctx.SendRETURN()
+  func (this *ECOY) Call() {
+    this.SendSTART()
+    this.SendY(this.ReadY())
+    this.SendRETURN()
   }
 
 type ECOS Server
-  func (this *ECOS) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendS(ctx.ReadS())
-    ctx.SendRETURN()
+  func (this *ECOS) Call() {
+    this.SendSTART()
+    this.SendS(this.ReadS())
+    this.SendRETURN()
   }
 
 type ECOI Server
-  func (this *ECOI) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendI(ctx.ReadI())
-    ctx.SendRETURN()
+  func (this *ECOI) Call() {
+    this.SendSTART()
+    this.SendI(this.ReadI())
+    this.SendRETURN()
   }
 
 type ECOW Server
-  func (this *ECOW) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendW(ctx.ReadW())
-    ctx.SendRETURN()
+  func (this *ECOW) Call() {
+    this.SendSTART()
+    this.SendW(this.ReadW())
+    this.SendRETURN()
   }
 
 type ECOU Server
-  func (this *ECOU) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendU(ctx.ReadU())
-    ctx.SendRETURN()
+  func (this *ECOU) Call() {
+    this.SendSTART()
+    this.SendU(this.ReadU())
+    this.SendRETURN()
   }
 
 type ECUL Server
-  func (this *ECUL) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendY(ctx.ReadY())
-    ctx.SendS(ctx.ReadS())
-    ctx.SendI(ctx.ReadI())
-    ctx.SendW(ctx.ReadW())
-    ctx.ReadProxy(ctx)
-    ctx.SendRETURN()
-    //ctx.ErrorC("ECUL",-1,"fehler")
+  func (this *ECUL) Call() {
+    this.SendSTART()
+    this.SendY(this.ReadY())
+    this.SendS(this.ReadS())
+    this.SendI(this.ReadI())
+    this.SendW(this.ReadW())
+    this.ReadProxy(this.MqS)
+    this.SendRETURN()
+    //this.ErrorC("ECUL",-1,"fehler")
   }
 
 func main() {
-  var srv = NewServer()
+  srv := NewServer()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

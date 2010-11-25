@@ -17,7 +17,7 @@
 
 BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
   mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \
-    Filter1$(EXEEXT) Filter2$(EXEEXT)
+    Filter1$(EXEEXT) Filter2$(EXEEXT) Filter4$(EXEEXT)
   
 
 include $(GOROOT)/src/Make.inc
@@ -38,6 +38,7 @@ MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a

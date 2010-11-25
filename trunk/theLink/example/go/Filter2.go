@@ -19,24 +19,27 @@ import (
 )
 
 type Filter2 struct {
+  *MqS
   // add server specific data 
 }
 
-func NewFilter2() *MqS {
-  return NewMqS(new(Filter2))
+func NewFilter2() *Filter2 {
+  ret := new(Filter2)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *Filter2) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("+FTR", (*FTR)(this))
-  ctx.ServiceProxy2("+EOF")
+func (this *Filter2) ServerSetup() {
+  this.ServiceCreate("+FTR", (*FTR)(this))
+  this.ServiceProxy2("+EOF")
 }
 
-func (this *Filter2) Factory(ctx *MqS) *MqS {
-  return NewFilter2()
+func (this *Filter2) Factory() *MqS {
+  return NewFilter2().MqS
 }
 
 type FTR Filter2
-  func (this *FTR) Call(ctx *MqS) {
+  func (this *FTR) Call() {
     panic("my error")
   }
 

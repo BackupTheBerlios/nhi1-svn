@@ -19,35 +19,38 @@ import (
 )
 
 type Filter1 struct {
+  *MqS
   data [][]string
 }
 
-func NewFilter1() *MqS {
-  return NewMqS(new(Filter1))
+func NewFilter1() *Filter1 {
+  ret := new(Filter1)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *Filter1) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("+FTR", (*FTR)(this))
-  ctx.ServiceCreate("+EOF", (*EOF)(this))
+func (this *Filter1) ServerSetup() {
+  this.ServiceCreate("+FTR", (*FTR)(this))
+  this.ServiceCreate("+EOF", (*EOF)(this))
 }
 
-func (this *Filter1) Factory(ctx *MqS) *MqS {
-  return NewFilter1()
+func (this *Filter1) Factory() *MqS {
+  return NewFilter1().MqS
 }
 
 type FTR Filter1
-  func (this *FTR) Call(ctx *MqS) {
+  func (this *FTR) Call() {
     var d []string
-    for ctx.ReadItemExists() {
-      d = append(d, "<" + ctx.ReadC() + ">")
+    for this.ReadItemExists() {
+      d = append(d, "<" + this.ReadC() + ">")
     }
     this.data = append(this.data, d)
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 type EOF Filter1
-  func (this *EOF) Call(ctx *MqS) {
-    ftr := ctx.ServiceGetFilter2()
+  func (this *EOF) Call() {
+    ftr := this.ServiceGetFilter2()
     for _,d := range this.data {
       ftr.SendSTART()
       for _,s := range d {
@@ -57,7 +60,7 @@ type EOF Filter1
     }
     ftr.SendSTART()
     ftr.SendEND_AND_WAIT2("+EOF")
-    ctx.SendRETURN()
+    this.SendRETURN()
   }
 
 func main() {

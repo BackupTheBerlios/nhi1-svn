@@ -18,26 +18,29 @@ import (
 )
 
 type mulserver struct {
+  *MqS
   // add server specific data 
 }
 
-func Newmulserver() *MqS {
-  return NewMqS(new(mulserver))
+func Newmulserver() *mulserver {
+  ret := new(mulserver)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *mulserver) Factory(ctx *MqS) *MqS {
-  return Newmulserver()
+func (this *mulserver) Factory() *MqS {
+  return Newmulserver().MqS
 }
 
-func (this *mulserver) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("MMUL", (*MMUL)(this))
+func (this *mulserver) ServerSetup() {
+  this.ServiceCreate("MMUL", (*MMUL)(this))
 }
 
 type MMUL mulserver
-  func (this *MMUL) Call(ctx *MqS) {
-    ctx.SendSTART();
-    ctx.SendD(ctx.ReadD() * ctx.ReadD());
-    ctx.SendRETURN();
+  func (this *MMUL) Call() {
+    this.SendSTART();
+    this.SendD(this.ReadD() * this.ReadD());
+    this.SendRETURN();
   }
 
 func main() {

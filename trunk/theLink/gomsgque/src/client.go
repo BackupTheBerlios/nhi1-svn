@@ -19,19 +19,17 @@ import (
 )
 
 func main() {
-  var ctx = NewMqS()
+  var ctx = NewMqS(nil)
   defer func() {
     if x := recover(); x != nil {
       ctx.ErrorSet(x)
     }
     ctx.Exit()
   }()
-  //ctx.ConfigSetName("otto")
   ctx.LinkCreate(os.Args...)
   ctx.SendSTART()
   ctx.SendI(100)
   ctx.SendEND_AND_WAIT("ECOI", MqS_TIMEOUT_DEFAULT)
   ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", ctx.ReadI()))
 }
-
 

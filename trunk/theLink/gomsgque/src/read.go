@@ -71,18 +71,25 @@ func (this *MqS) ReadC() string {
   return C.GoString(tmp)
 }
 
-func (this *MqS) ReadN() MqBinary {
+func (this *MqS) ReadN() *MqBinary {
   var tmp C.MQ_CBI
   var len C.MQ_SIZE
   this.iErrorMqToGoWithCheck(C.MqReadN((*_Ctype_struct_MqS)(this), &tmp, &len))
-  return MqBinary{unsafe.Pointer(tmp), int(len)}
+  return &MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
-func (this *MqS) ReadB() MqBinary {
+func (this *MqS) ReadB() *MqBinary {
   var tmp C.MQ_BIN
   var len C.MQ_SIZE
   this.iErrorMqToGoWithCheck(C.MqReadB((*_Ctype_struct_MqS)(this), &tmp, &len))
-  return MqBinary{unsafe.Pointer(tmp), int(len)}
+  return &MqBinary{unsafe.Pointer(tmp), int(len)}
+}
+
+func (this *MqS) ReadBDY() *MqBinary {
+  var tmp C.MQ_BIN
+  var len C.MQ_SIZE
+  this.iErrorMqToGoWithCheck(C.MqReadBDY((*_Ctype_struct_MqS)(this), &tmp, &len))
+  return &MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
 func (this *MqS) ReadU() *MqBufferS {

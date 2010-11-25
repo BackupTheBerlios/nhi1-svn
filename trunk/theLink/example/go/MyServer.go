@@ -18,26 +18,29 @@ import (
 )
 
 type MyServer struct {
+  *MqS
   // add server specific data 
 }
 
-func NewMyServer() *MqS {
-  return NewMqS(new(MyServer))
+func NewMyServer() *MyServer {
+  ret := new(MyServer)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *MyServer) Factory(ctx *MqS) *MqS {
-  return NewMyServer()
+func (this *MyServer) Factory() *MqS {
+  return NewMyServer().MqS
 }
 
-func (this *MyServer) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("HLWO", (*MyFirstService)(this))
+func (this *MyServer) ServerSetup() {
+  this.ServiceCreate("HLWO", (*MyFirstService)(this))
 }
 
 type MyFirstService MyServer
-  func (this *MyFirstService) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendC("Hello World")
-    ctx.SendRETURN()
+  func (this *MyFirstService) Call() {
+    this.SendSTART()
+    this.SendC("Hello World")
+    this.SendRETURN()
   }
 
 func main() {

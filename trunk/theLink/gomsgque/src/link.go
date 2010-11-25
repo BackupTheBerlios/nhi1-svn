@@ -75,4 +75,7 @@ func (this *MqS) LinkIsConnected() bool {
   return C.MqLinkIsConnected((*_Ctype_struct_MqS)(this)) != 0
 }
 
+func (this *MqS) LinkConnect() {
+  this.iErrorMqToGoWithCheck(C.MqLinkConnect((*_Ctype_struct_MqS)(this)))
+}
 

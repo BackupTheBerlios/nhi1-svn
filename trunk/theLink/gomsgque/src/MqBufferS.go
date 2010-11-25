@@ -77,11 +77,11 @@ func (this *MqBufferS)  GetC() string {
   return C.GoString(tmp)
 }
 
-func (this *MqBufferS)  GetB() MqBinary {
+func (this *MqBufferS)  GetB() *MqBinary {
   var tmp C.MQ_BIN
   var len C.MQ_SIZE
   this.iErrorBufToGoWithCheck(C.MqBufferGetB((*_Ctype_struct_MqBufferS)(this), &tmp, &len))
-  return MqBinary{unsafe.Pointer(tmp), int(len)}
+  return &MqBinary{unsafe.Pointer(tmp), int(len)}
 }
 
 func (this *MqBufferS)  GetType() string {

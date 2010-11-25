@@ -76,6 +76,25 @@ gomsgque_ConfigSetBgError (
 }
 
 static enum MqErrorE
+gomsgque_sEvent (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cEvent((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
+}
+
+void
+gomsgque_ConfigSetEvent (
+  struct MqS * const context,
+  void *data
+)
+{
+  MqConfigSetEvent(context, gomsgque_sEvent, (MQ_PTR)data, NULL, NULL);
+}
+
+static enum MqErrorE
 gomsgque_sFactoryCreate (
   struct MqS * const tmpl,
   enum MqFactoryE create,
@@ -128,6 +147,16 @@ gomsgque_sService (
   return MqErrorStack(context);
 }
 
+static enum MqErrorE
+gomsgque_sService2 (
+  struct MqS * const context,
+  MQ_PTR const data
+)
+{
+  gomsgque_cService2((int*)context, *((GoInterface*)data));
+  return MqErrorStack(context);
+}
+
 enum MqErrorE
 gomsgque_ServiceCreate (
   struct MqS * const context,
@@ -139,6 +168,16 @@ gomsgque_ServiceCreate (
 }
 
 enum MqErrorE
+gomsgque_ServiceCreate2 (
+  struct MqS * const context,
+  MQ_TOK const token,
+  void *data
+)
+{
+  return MqServiceCreate(context, token, gomsgque_sService2, (MQ_PTR)data, NULL);
+}
+
+enum MqErrorE
 gomsgque_SendEND_AND_CALLBACK (
   struct MqS * const context,
   MQ_TOK const token,
@@ -146,6 +185,16 @@ gomsgque_SendEND_AND_CALLBACK (
 )
 {
   return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
+}
+
+enum MqErrorE
+gomsgque_SendEND_AND_CALLBACK2 (
+  struct MqS * const context,
+  MQ_TOK const token,
+  void *data
+)
+{
+  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService2, (MQ_PTR)data, NULL);
 }
 
 void

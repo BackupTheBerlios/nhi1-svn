@@ -18,21 +18,24 @@ import (
 )
 
 type Filter3 struct {
+  *MqS
   // add server specific data 
 }
 
-func NewFilter3() *MqS {
-  return NewMqS(new(Filter3))
+func NewFilter3() *Filter3 {
+  ret := new(Filter3)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *Filter3) Factory(ctx *MqS) *MqS {
-  return NewFilter3()
+func (this *Filter3) Factory() *MqS {
+  return NewFilter3().MqS
 }
 
-func (this *Filter3) ServerSetup(ctx *MqS) {
-  ftr := ctx.ServiceGetFilter2()
-  ctx.ServiceProxy2("+ALL")
-  ctx.ServiceProxy2("+TRT")
+func (this *Filter3) ServerSetup() {
+  ftr := this.ServiceGetFilter(0)
+  this.ServiceProxy2("+ALL")
+  this.ServiceProxy2("+TRT")
   ftr.ServiceProxy2("+ALL")
   ftr.ServiceProxy2("+TRT")
 }

@@ -18,12 +18,13 @@ import (
 )
 
 type ManFilter MqS
-  func (this *ManFilter) Factory (ctx *MqS) *MqS {
+  func (this *ManFilter) Factory () *MqS {
     return NewMqS(nil)
   }
 
 type FTR MqS
-  func (this *FTR) Call (ctx *MqS) {
+  func (this *FTR) Call () {
+    ctx := (*MqS)(this)
     ftr := ctx.ServiceGetFilter2()
     ftr.SendSTART()
     for ctx.ReadItemExists() {

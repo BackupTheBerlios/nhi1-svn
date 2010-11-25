@@ -18,35 +18,38 @@ import (
 )
 
 type TestServer struct {
+  *MqS
   // add server specific data 
 }
 
-func NewTestServer() *MqS {
-  return NewMqS(new(TestServer))
+func NewTestServer() *TestServer {
+  ret := new(TestServer)
+  ret.MqS = NewMqS(ret)
+  return ret
 }
 
-func (this *TestServer) Factory(ctx *MqS) *MqS {
-  return NewTestServer()
+func (this *TestServer) Factory() *MqS {
+  return NewTestServer().MqS
 }
 
-func (this *TestServer) ServerSetup(ctx *MqS) {
-  ctx.ServiceCreate("GTCX", (*GTCX)(this))
+func (this *TestServer) ServerSetup() {
+  this.ServiceCreate("GTCX", (*GTCX)(this))
 }
 
 type GTCX TestServer
-  func (this *GTCX) Call(ctx *MqS) {
-    ctx.SendSTART()
-    ctx.SendI(ctx.LinkGetCtxId())
-    ctx.SendC("+")
-    if (ctx.LinkIsParent()) {
-      ctx.SendI(-1)
+  func (this *GTCX) Call() {
+    this.SendSTART()
+    this.SendI(this.LinkGetCtxId())
+    this.SendC("+")
+    if (this.LinkIsParent()) {
+      this.SendI(-1)
     } else {
-      ctx.SendI(ctx.LinkGetParent().LinkGetCtxId())
+      this.SendI(this.LinkGetParent().LinkGetCtxId())
     }
-    ctx.SendC("+")
-    ctx.SendC(ctx.ConfigGetName())
-    ctx.SendC(":")
-    ctx.SendRETURN()
+    this.SendC("+")
+    this.SendC(this.ConfigGetName())
+    this.SendC(":")
+    this.SendRETURN()
   }
 
 func main() {

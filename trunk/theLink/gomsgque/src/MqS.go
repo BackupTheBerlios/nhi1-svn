@@ -54,7 +54,7 @@ func NewMqS(ifc interface{}) *MqS {
   // no FORK
   //C.MqConfigSetIgnoreFork(ctx, C.MQ_YES)
   ret.ConfigSetStartAs(MQ_START_FORK)
-  // add server interfaces
+  // add interfaces
   if ifc != nil {
     if obj,ok := ifc.(ServerSetup); ok {
       ret.ConfigSetServerSetup(obj)
@@ -64,6 +64,12 @@ func NewMqS(ifc interface{}) *MqS {
     }
     if obj,ok := ifc.(Factory); ok {
       ret.ConfigSetFactory(obj)
+    }
+    if obj,ok := ifc.(BgError); ok {
+      ret.ConfigSetBgError(obj)
+    }
+    if obj,ok := ifc.(Event); ok {
+      ret.ConfigSetEvent(obj)
     }
   }
   return ret

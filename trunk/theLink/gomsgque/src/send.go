@@ -43,8 +43,16 @@ func (this *MqS) SendEND_AND_WAIT2(token string) {
 
 func (this *MqS) SendEND_AND_CALLBACK(token string, cb Service) {
   t := C.CString(token)
-  C.gomsgque_SendEND_AND_CALLBACK((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  r := C.gomsgque_SendEND_AND_CALLBACK((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
   C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
+}
+
+func (this *MqS) SendEND_AND_CALLBACK2(token string, cb Service2) {
+  t := C.CString(token)
+  r := C.gomsgque_SendEND_AND_CALLBACK2((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
 }
 
 func (this *MqS) SendEND(token string) {
@@ -99,11 +107,15 @@ func (this *MqS) SendU(val *MqBufferS) {
   this.iErrorMqToGoWithCheck(C.MqSendU((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqBufferS)(val)))
 }
 
-func (this *MqS) SendB(val MqBinary) {
+func (this *MqS) SendB(val *MqBinary) {
   this.iErrorMqToGoWithCheck(C.MqSendB((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }
 
-func (this *MqS) SendN(val MqBinary) {
+func (this *MqS) SendBDY(val *MqBinary) {
+  this.iErrorMqToGoWithCheck(C.MqSendBDY((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
+}
+
+func (this *MqS) SendN(val *MqBinary) {
   this.iErrorMqToGoWithCheck(C.MqSendN((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }
 
@@ -120,4 +132,15 @@ func (this *MqS) SendL_START() {
 
 func (this *MqS) SendL_END() {
   this.iErrorMqToGoWithCheck(C.MqSendL_END((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) SendT_START(tok string) {
+  t := C.CString(tok)
+  r := C.MqSendT_START((*_Ctype_struct_MqS)(this), C.MQ_TOK(t))
+  C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
+}
+
+func (this *MqS) SendT_END() {
+  this.iErrorMqToGoWithCheck(C.MqSendT_END((*_Ctype_struct_MqS)(this)))
 }
