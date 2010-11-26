@@ -18,13 +18,15 @@ extern MQ_CST sGO;
 extern MQ_CST sERROR;
 extern MQ_CST sUNKNOWN;
 
+//typedef struct { void *t; void *v; } GoInterface;
+
 void gomsgque_ConfigSetServerSetup (struct MqS * const, void *data);
 void gomsgque_ConfigSetServerCleanup (struct MqS * const, void *data);
 void gomsgque_ConfigSetBgError (struct MqS * const, void *data);
 void gomsgque_ConfigSetEvent (struct MqS * const, void *data);
 void gomsgque_ConfigSetFactory (struct MqS * const, void *data);
 void gomsgque_ConfigSetSetup (struct MqS * const);
-enum MqErrorE gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, void *data);
-enum MqErrorE gomsgque_ServiceCreate2 (struct MqS * const, MQ_TOK const token, void *data);
-enum MqErrorE gomsgque_SendEND_AND_CALLBACK (struct MqS * const, MQ_TOK const token, void *data);
-enum MqErrorE gomsgque_SendEND_AND_CALLBACK2 (struct MqS * const, MQ_TOK const token, void *data);
+enum MqErrorE gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, MQ_PTR data);
+enum MqErrorE gomsgque_ServiceCreate2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);
+enum MqErrorE gomsgque_SendEND_AND_CALLBACK (struct MqS * const, MQ_TOK const token, MQ_PTR data);
+enum MqErrorE gomsgque_SendEND_AND_CALLBACK2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);

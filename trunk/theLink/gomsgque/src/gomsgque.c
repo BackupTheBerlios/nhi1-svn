@@ -17,6 +17,10 @@ MQ_CST sGO = "GO";
 MQ_CST sERROR = "Error";
 MQ_CST sUNKNOWN = "UNKNOWN";
 
+#define SETUP_data \
+  GoInterface *data = (GoInterface*) MqSysMalloc(context, sizeof(GoInterface)); \
+  *data = ifc;
+
 static enum MqErrorE
 gomsgque_sServerSetup
  (
@@ -143,8 +147,18 @@ gomsgque_sService (
   MQ_PTR const data
 )
 {
-  gomsgque_cService((int*)context, *((GoInterface*)data));
+  gomsgque_cService((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sServiceFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_decrServiceRef((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 static enum MqErrorE
@@ -153,48 +167,58 @@ gomsgque_sService2 (
   MQ_PTR const data
 )
 {
-  gomsgque_cService2((int*)context, *((GoInterface*)data));
+  gomsgque_cService2((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sService2Free (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_decrService2Ref((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 enum MqErrorE
 gomsgque_ServiceCreate (
   struct MqS * const context,
   MQ_TOK const token,
-  void *data
+  MQ_PTR data
 )
 {
-  return MqServiceCreate(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
+  return MqServiceCreate(context, token, gomsgque_sService, data, gomsgque_sService2Free);
 }
 
 enum MqErrorE
 gomsgque_ServiceCreate2 (
   struct MqS * const context,
   MQ_TOK const token,
-  void *data
+  MQ_PTR data
 )
 {
-  return MqServiceCreate(context, token, gomsgque_sService2, (MQ_PTR)data, NULL);
+  return MqServiceCreate(context, token, gomsgque_sService2, (MQ_PTR)data, gomsgque_sServiceFree);
 }
 
 enum MqErrorE
 gomsgque_SendEND_AND_CALLBACK (
   struct MqS * const context,
   MQ_TOK const token,
-  void *data
+  MQ_PTR data
 )
 {
-  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService, (MQ_PTR)data, NULL);
+  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService, (MQ_PTR)data, gomsgque_sServiceFree);
 }
 
 enum MqErrorE
 gomsgque_SendEND_AND_CALLBACK2 (
   struct MqS * const context,
   MQ_TOK const token,
-  void *data
+  MQ_PTR data
 )
 {
-  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService2, (MQ_PTR)data, NULL);
+  return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService2, (MQ_PTR)data, gomsgque_sService2Free);
 }
 
 void

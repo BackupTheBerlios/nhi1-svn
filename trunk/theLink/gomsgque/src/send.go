@@ -43,16 +43,18 @@ func (this *MqS) SendEND_AND_WAIT2(token string) {
 
 func (this *MqS) SendEND_AND_CALLBACK(token string, cb Service) {
   t := C.CString(token)
-  r := C.gomsgque_SendEND_AND_CALLBACK((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  r := C.gomsgque_SendEND_AND_CALLBACK((*_Ctype_struct_MqS)(this), t, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(t))
   this.iErrorMqToGoWithCheck(r)
+  incrServiceRef(&cb)
 }
 
 func (this *MqS) SendEND_AND_CALLBACK2(token string, cb Service2) {
   t := C.CString(token)
-  r := C.gomsgque_SendEND_AND_CALLBACK2((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  r := C.gomsgque_SendEND_AND_CALLBACK2((*_Ctype_struct_MqS)(this), t, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(t))
   this.iErrorMqToGoWithCheck(r)
+  incrService2Ref(&cb)
 }
 
 func (this *MqS) SendEND(token string) {

@@ -21,50 +21,99 @@ import (
   //"fmt"
   //"strings"
   "unsafe"
+  //"runtime"
 )
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "Service" interfaces
+var lockService  = make(map[*Service]int)
+
+func incrServiceRef(ifc *Service) {
+  if count,ok := lockService[ifc]; ok {
+    lockService[ifc] = count+1
+  } else {
+    lockService[ifc] = 1
+  }
+}
+
+//export gomsgque_decrServiceRef
+func decrServiceRef(ifc *Service) {
+  if count,ok := lockService[ifc]; ok {
+    if count > 1 {
+      lockService[ifc]--
+    } else {
+      lockService[ifc] = 0,false
+    }
+  }
+}
 
 type Service interface {
   Call()
 }
 
 //export gomsgque_cService
-func (this *MqS) cService(cb Service) {
+func (this *MqS) cService(cb *Service) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.Call()
+  (*cb).Call()
 }
 
 func (this *MqS) ServiceCreate(token string, cb Service) {
   t := C.CString(token)
-  C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  r := C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
+  incrServiceRef(&cb)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "Service2" interfaces
+var lockService2  = make(map[*Service2]int)
+
+func incrService2Ref(ifc *Service2) {
+  if count,ok := lockService2[ifc]; ok {
+    lockService2[ifc] = count+1
+  } else {
+    lockService2[ifc] = 1
+  }
+}
+
+//export gomsgque_decrService2Ref
+func decrService2Ref(ifc *Service2) {
+  if count,ok := lockService2[ifc]; ok {
+    if count > 1 {
+      lockService2[ifc]--
+    } else {
+      lockService2[ifc] = 0,false
+    }
+  }
+}
 
 type Service2 interface {
   Call(*MqS)
 }
 
 //export gomsgque_cService2
-func (this *MqS) cService2(cb Service2) {
+func (this *MqS) cService2(cb *Service2) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.Call(this)
+  (*cb).Call(this)
 }
 
 func (this *MqS) ServiceCreate2(token string, cb Service2) {
   t := C.CString(token)
-  C.gomsgque_ServiceCreate((*_Ctype_struct_MqS)(this), t, unsafe.Pointer(&cb))
+  r := C.gomsgque_ServiceCreate2((*_Ctype_struct_MqS)(this), t, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(t))
+  this.iErrorMqToGoWithCheck(r)
+  incrService2Ref(&cb)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

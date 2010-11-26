@@ -32,4 +32,4 @@ gomsgque.o: gomsgque.c gomsgque.h _cgo_export.h
 	$(GC) $*.go
 	$(LD) -o $@ $*.$O
 
-all: _obj/gomsgque.a server
+all: _obj/gomsgque.a server client

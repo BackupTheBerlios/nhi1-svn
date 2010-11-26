@@ -43,7 +43,7 @@ func NewMqS(ifc interface{}) *MqS {
   ctx := C.MqContextCreate(0,nil)
   ret := (*MqS)(ctx)
   // save the pointer, use "SetSelf" to create link to toplevel object
-  lock[ret] = ifc
+  ctxlock[ret] = ifc
 //fmt.Printf("NewMqS => c:%p -> i:%p\n", ret, ifc)
   // cleanup "lock" after "object" is deleted
   C.gomsgque_ConfigSetFactory(ctx, nil)
@@ -83,13 +83,13 @@ func (this *MqS) Init() {
 // set link between *MqS and toplevel object
 func (this *MqS) SetSelf(ifc interface{}) {
 //fmt.Printf("SetSelf => c:%p -> i:%p\n", this, ifc)
-  lock[this] = ifc
+  ctxlock[this] = ifc
 }
 
 // get toplevel object from *MqS
 func (this *MqS) GetSelf() interface{} {
 //fmt.Printf("GetSelf => c:%p\n", this)
-  return lock[this]
+  return ctxlock[this]
 }
 
 func (this *MqS) LogC(prefix string, level int, message string) {

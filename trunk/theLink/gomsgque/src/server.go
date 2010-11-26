@@ -185,7 +185,7 @@ func (this *Server) ServerSetup() {
     this.ServiceCreate("SND1", (*SND1)(this))
     this.ServiceCreate("SND2", (*SND2)(this))
     this.ServiceCreate("REDI", (*REDI)(this))
-    this.ServiceCreate("GTCX", (*GTCX)(this))
+    this.ServiceCreate2("GTCX", new(GTCX))
     this.ServiceCreate("CNFG", (*CNFG)(this))
     this.ServiceCreate("CSV1", (*CSV1)(this))
     this.ServiceCreate("SLEP", (*SLEP)(this))
@@ -338,11 +338,11 @@ type CNFG Server
   }
 
 // test for callback without relationship to "*Server"
-type GTCX Server
-  func (this *GTCX) Call() {
-    this.SendSTART()
-    this.SendI(this.LinkGetCtxId())
-    this.SendRETURN()
+type GTCX int
+  func (this *GTCX) Call(ctx *MqS) {
+    ctx.SendSTART()
+    ctx.SendI(ctx.LinkGetCtxId())
+    ctx.SendRETURN()
   }
 
 type REDI Server
