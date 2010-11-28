@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -134,7 +134,7 @@ Three things are important:
 .IP "1." 4
 the \fBsend\fP style of functions
 .IP "2." 4
-the \fBctx.ServiceCreate(string token, IService callback)\fP function
+the \fBctx.ServiceCreate(token string, callback Service)\fP function
 .IP "3." 4
 a \fBconnected\fP context of type \fBctx := NewMqS()\fP
 .PP
@@ -156,7 +156,7 @@ Last: submit the a data package to the link target using one of:
 .PP
 The first three \fBSendEND\fP... functions are used to \fBcall\fP a remote service and the last one is used to answer an incoming service call. In-between ctx.SendSTART() and ctx.SendEND(token string) ... other \fBSEND API\fP style commands are available to fill the data package with data.
 .PP
-Services are created with the \fBctx.ServiceCreate(string token, IService callback)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
+Services are created with the \fBctx.ServiceCreate(token string, callback Service)\fP function. The first parameter is a \fB4\fP byte Token as public name. 4 byte is required because this string is mapped to a 4 byte integer for speed reason. The second parameter is an object providing the \fBSERVICE CALLBACK\fP interface.
 .PP
 The \fBSERVICE CALLBACK\fP is called for every incoming \fIservice-request\fP which belongs to token.
 .SH "CLIENT"

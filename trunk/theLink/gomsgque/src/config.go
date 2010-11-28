@@ -34,20 +34,20 @@ func (this *MqS) ConfigSetBuffersize(val int32) {
   C.MqConfigSetBuffersize((*_Ctype_struct_MqS)(this), C.MQ_INT(val))
 }
 
-type MqStartE uint32
+type START uint32
 
 const (
-  START_DEFAULT  MqStartE = C.MQ_START_DEFAULT
-  START_FORK	 MqStartE = C.MQ_START_FORK
-  START_THREAD   MqStartE = C.MQ_START_THREAD
-  START_SPAWN    MqStartE = C.MQ_START_SPAWN
+  START_DEFAULT  START = C.MQ_START_DEFAULT
+  START_FORK	 START = C.MQ_START_FORK
+  START_THREAD   START = C.MQ_START_THREAD
+  START_SPAWN    START = C.MQ_START_SPAWN
 )
 
-func (this *MqS) ConfigGetStartAs() MqStartE {
-  return MqStartE(C.MqConfigGetStartAs((*_Ctype_struct_MqS)(this)))
+func (this *MqS) ConfigGetStartAs() START {
+  return START(C.MqConfigGetStartAs((*_Ctype_struct_MqS)(this)))
 }
 
-func (this *MqS) ConfigSetStartAs(val MqStartE) {
+func (this *MqS) ConfigSetStartAs(val START) {
   C.MqConfigSetStartAs((*_Ctype_struct_MqS)(this), uint32(val))
 }
 

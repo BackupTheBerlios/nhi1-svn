@@ -95,7 +95,7 @@ ALIASES		    += "config_type_ignoreExit=\O"
 ALIASES		    += "config_set_ignoreExit=ctx.ConfigSetIgnoreExit"
 ALIASES		    += "config_get_ignoreExit=NO"
 
-ALIASES		    += "config_type_startAs=MqStartE"
+ALIASES		    += "config_type_startAs=START"
 ALIASES		    += "config_set_startAs=ctx.ConfigSetStartAs (startAs)"
 ALIASES		    += "config_get_startAs=ctx.ConfigGetStartAs"
 ALIASES		    += "MQ_START_DEFAULT=\c START_DEFAULT"
@@ -123,11 +123,11 @@ ALIASES		    += "config_type_isServer=\O"
 ALIASES		    += "config_set_isServer=ctx.ConfigSetIsServer"
 ALIASES		    += "config_get_isServer=ctx.ConfigGetIsServer"
 
-ALIASES             += "config_IServerSetup=func (this *Server) ServerSetup() {...}"
-ALIASES		    += "config_IServerCleanup=func (this *Server) ServerCleanup() {...}"
-ALIASES		    += "config_IFactory=func (this *Server) Factory() \M {...}"
-ALIASES             += "config_IBgError=func (this *Server) BgError() {...}"
-ALIASES             += "config_IEvent=func (this *Server) Event() {...}"
+ALIASES             += "config_IServerSetup=type ServerSetup interface { ServerSetup() }"
+ALIASES		    += "config_IServerCleanup=type ServerCleanup interface { ServerCleanup() }"
+ALIASES		    += "config_IFactory=type Factory interface { Factory() \TM }"
+ALIASES             += "config_IBgError=type BgError interface { BgError() }"
+ALIASES             += "config_IEvent=type Event interface { Event() }"
 
 ALIASES		    += "config_IFactory_example=\code \n\
 type Server struct { \n\
@@ -149,9 +149,9 @@ func (this *Server) Factory() *MqS { \n\
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=ctx.LinkCreate(args ... \C)"
-ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent \M, args ... \C)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent \TM, args ... \C)"
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
-ALIASES		    += "LinkGetParent=ctx.LinkGetParent() \M"
+ALIASES		    += "LinkGetParent=ctx.LinkGetParent() \TM"
 ALIASES		    += "LinkIsParent=ctx.LinkIsParent() \O"
 ALIASES		    += "LinkGetCtxId=ctx.LinkGetCtxId() \O"
 ALIASES		    += "LinkIsConnected=ctx.LinkIsConnected() \O"
@@ -161,13 +161,13 @@ ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 # SEND DATA
 ALIASES		    += "send_example=\code \n\
 ctx.SendSTART() \n\
-ctx.SendI(num); \n\
-ctx.SendL_START(); \n\
-  ctx.SendD(balance); \n\
-  ctx.SendC(\"name of the owner\"); \n\
-  ctx.SendB(signature); \n\
-ctx.SendL_END(); \n\
-ctx.SendEND_AND_WAIT(\"SRV1\"); \n\
+ctx.SendI(num) \n\
+ctx.SendL_START() \n\
+  ctx.SendD(balance) \n\
+  ctx.SendC(\"name of the owner\") \n\
+  ctx.SendB(new(MqBinary).Set(signature)) \n\
+ctx.SendL_END() \n\
+ctx.SendEND_AND_WAIT(\"SRV1\") \n\
 \endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
 ALIASES		    += "SendEND=ctx.SendEND(token \C)"
@@ -182,8 +182,8 @@ ALIASES		    += "SendERROR=ctx.SendERROR()"
 ALIASES		    += "SendTYPE=ctx.SendTYPE(value TYPE)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
-ALIASES		    += "SendN=ctx.SendN(value MqBinary)"
-ALIASES		    += "SendBDY=ctx.SendBDY(value MqBinary)"
+ALIASES		    += "SendN=ctx.SendN(value \TB)"
+ALIASES		    += "SendBDY=ctx.SendBDY(value \TB)"
 ALIASES		    += "SendT_START=ctx.SendT_START(token \C)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -195,77 +195,86 @@ ctx.SendC (\"myData\") \n\
 ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
 
 # READ DATE
-ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
-ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
-ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
-ALIASES		    += "ReadN=byte[] ctx.ReadN()"
-ALIASES		    += "ReadBDY=byte[] ctx.ReadBDY()"
-ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
-ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
-ALIASES		    += "ReadItemExists=bool ctx.ReadItemExists()"
+ALIASES		    += "read_example=\code \n\
+num = ctx.ReadI() \n\
+ctx.ReadL_START() \n\
+  balance = ctx.ReadD() \n\
+  owner = ctx.ReadC() \n\
+  signature = ctx.ReadB() \n\
+ctx.ReadL_END() \n\
+\endcode"
+ALIASES		    += "ReadTYPE=ctx.ReadTYPE() TYPE"
+ALIASES		    += "ReadU=ctx.ReadU() \U"
+ALIASES		    += "ReadN=ctx.ReadN() \TB"
+ALIASES		    += "ReadBDY=ctx.ReadBDY() \TB"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx \TM)"
+ALIASES		    += "ReadGetNumItems=ctx.ReadGetNumItems() \I"
+ALIASES		    += "ReadItemExists=ctx.ReadItemExists() \O"
 ALIASES		    += "ReadUndo=ctx.ReadUndo()"
 ALIASES		    += "ReadL_START=ctx.ReadL_START()"
-ALIASES		    += "ReadL_START2=ctx.ReadL_START(MqBufferS buffer)"
+ALIASES		    += "ReadL_START2=ctx.ReadL_START(buffer \U)"
 ENABLED_SECTIONS    += ReadL_START2
 ALIASES		    += "ReadL_END=ctx.ReadL_END()"
 ALIASES		    += "ReadT_START=ctx.ReadT_START()"
-ALIASES		    += "ReadT_START2=ctx.ReadT_START(MqBufferS buffer)"
+ALIASES		    += "ReadT_START2=ctx.ReadT_START(buffer \U)"
 ENABLED_SECTIONS    += ReadT_START2
 ALIASES		    += "ReadT_END=ctx.ReadT_END()"
 ALIASES		    += "ReadT_example=\code \n\
 void SRVR () { \n\
-  ReadT_START (); \n\
-  myEnvironment = ReadC (); \n\
-  ReadT_END (); \n\
-  theResult = ReadC (); \n\
+  ReadT_START () \n\
+  myEnvironment = ReadC () \n\
+  ReadT_END () \n\
+  theResult = ReadC () \n\
 }\endcode"
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\
-public void IServerSetup.ServerSetup() { \n\
-  ServiceCreate (\"SRV1\", srv1); \n\
+func (this *Server) ServerSetup() { \n\
+  this.ServiceCreate (\"SRV1\", srv1) \n\
 } \n\
 \endcode"
-ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(string token, IService callback)"
-ALIASES		    += "ServiceProxy=ctx.ServiceProxy(string token, [int id=0])"
-ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
-ALIASES		    += "ProcessEvent=ctx.ProcessEvent(int timeout, MqS.WAIT.(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEvent4=ctx.ProcessEvent()"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token \C, callback Service)"
+ENABLED_SECTIONS    += ServiceCreate2
+ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(token \C, callback Service2)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token \C)"
+ENABLED_SECTIONS    += ServiceProxy2
+ALIASES		    += "ServiceProxy2=ctx.ServiceProxy2(token \C, id \I)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token \C)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(wait WAIT)"
 ENABLED_SECTIONS    += ProcessEvent2
-ENABLED_SECTIONS    += ProcessEvent3
-ENABLED_SECTIONS    += ProcessEvent4
-ALIASES		    += "MQ_WAIT_NO=\c MqS.WAIT.NO"
-ALIASES		    += "MQ_WAIT_ONCE=\c MqS.WAIT.ONCE"
-ALIASES		    += "MQ_WAIT_FOREVER=\c MqS.WAIT.FOREVER"
-ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c MqS.TIMEOUT.DEFAULT"
-ALIASES		    += "MQ_TIMEOUT_USER=\c MqS.TIMEOUT.USER"
-ALIASES		    += "MQ_TIMEOUT_MAX=\c MqS.TIMEOUT.MAX"
-ALIASES		    += "ServiceGetToken=string ServiceGetToken()"
-ALIASES		    += "ServiceGetFilter=MqS ServiceGetFilter([int id=0])"
-ALIASES		    += "ServiceIsTransaction=bool ServiceIsTransaction()"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(timeout TIMEOUT, wait WAIT)"
+ALIASES		    += "MQ_WAIT_NO=\c WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=\c TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=\c TIMEOUT_MAX"
+ALIASES		    += "ServiceGetToken=ServiceGetToken() \C"
+ALIASES		    += "ServiceGetFilter=ServiceGetFilter() \TM"
+ENABLED_SECTIONS    += ServiceGetFilter2
+ALIASES		    += "ServiceGetFilter2=ServiceGetFilter(id \I) \TM"
+ALIASES		    += "ServiceIsTransaction=ServiceIsTransaction() \O"
 
 # SLAVE CREATION AND DELETION
-ALIASES		    += "SlaveWorker=ctx.SlaveWorker(int id, params string[] args)"
-ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
-ALIASES		    += "SlaveCreate=ctx.SlaveCreate(int id, MqS slave)"
-ALIASES		    += "SlaveDelete=ctx.SlaveDelete(int id)"
-ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
-ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
-ALIASES		    += "SlaveIs=MqS ctx.SlaveIs()"
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id \I, args ... \C)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\") \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id \I, slave \TM)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id \I)"
+ALIASES		    += "SlaveGet=ctx.SlaveGet(id \I) \TM"
+ALIASES		    += "SlaveGetMaster=ctx.SlaveGetMaster() \TM"
+ALIASES		    += "SlaveIs=ctx.SlaveIs() \TM"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
-MqBufferS buf = ctx.ReadU();\n\
-if (buf.Type == 'C')\n\
-  Console.WriteLine(buf.C);\n\
+MqBufferS buf = ctx.ReadU() \n\
+if buf.GetType() == 'C' { \n\
+  println(buf.C) \n\
+} \n\
 \endcode"
 
-ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
-ALIASES		    += "BufferGetTYPE=TYPE buffer.TYPE"
-ALIASES		    += "BufferType=char buffer.Type"
+ALIASES		    += "BufferObject=<I>type \TM</I>"
+ALIASES		    += "BufferGetTYPE=buffer.GetTYPE() TYPE"
+ALIASES		    += "BufferType=buffer.GetType() \C"
 
 ALIASES		    += "Y=int8"
 ALIASES		    += "O=bool"
@@ -277,23 +286,26 @@ ALIASES		    += "D=float64"
 ALIASES		    += "C=string"
 ALIASES		    += "B=[]byte"
 ALIASES		    += "U=*MqBufferS"
-ALIASES		    += "M=*MqS"
+ALIASES		    += "TM=*MqS"
+ALIASES		    += "TB=*MqBinary"
+ALIASES		    += "TE=*MqSException"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
-try { \n\
- i = ctx.ReadI(); \n\
-} catch (Exception ex) { \n\
- ctx.ErrorSet(ex); \n\
- Console.WriteLine(ctx.ErrorGetText()); \n\
- ctx.ErrorReset(); \n\
-} \n\
+defer func() { \n\
+  if ex := recover(); ex != nil { \n\
+    ctx.ErrorSet(ex) \n\
+    println(ctx.ErrorGetText()) \n\
+    ctx.ErrorReset() \n\
+  } \n\
+}() \n\
+i = ctx.ReadI() \n\
 \endcode"
-ALIASES		    += "ErrorObject=<I>class MqSException</I>"
-ALIASES		    += "ErrorGetText=string ex.txt or ctx.ErrorGetText()"
-ALIASES		    += "ErrorGetNum=int ex.num or ctx.ErrorGetNum()"
-ALIASES		    += "ErrorC=ctx.ErrorC(string prefix, int errnum, string message)"
-ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorObject=<I>type \TE</I>"
+ALIASES		    += "ErrorGetText=ex.GetTxt() or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=ex.GetNum() or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(prefix \C, errnum \I, message \C)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(ex interface{})"
 ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
 ALIASES		    += "ErrorSetEXIT=ctx.ErrorSetEXIT()"
 ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
@@ -301,12 +313,18 @@ ALIASES		    += "ErrorReset=ctx.ErrorReset()"
 ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
 ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
 
-ALIASES		    += "ErrorIsEXIT_example=\code \
-try { \n\
-  ctx.SendEND_AND_WAIT(\"TOKS\"); \n\
-} catch (Exception e) { \n\
-  ctx.ErrorSet(e); \n\
-  if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
-} \n\
+ALIASES		    += "ErrorIsEXIT_example=\code \n\
+defer func() { \n\
+  if ex := recover(); ex != nil { \n\
+    ctx.ErrorSet(ex) \n\
+    if (ctx.ErrorIsEXIT()) ctx.ErrorReset() \n\
+  } \n\
+}() \n\
+ctx.SendEND_AND_WAIT(\"TOKS\") \n\
 \endcode"
+
+ENABLED_SECTIONS    += BINARY
+
+ALIASES		    += "BinarySet=binary.Set(data \B)"
+ALIASES		    += "BinaryGet=binary.Get() \B"
 

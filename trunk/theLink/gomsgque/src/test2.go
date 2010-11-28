@@ -25,7 +25,7 @@ type first struct {
 }
 
 func (this *first) self() {
-  fmt.Fprintln(os.Stderr,("*first=", this)
+  println("*first=", this)
 }
 
 type second struct {
@@ -33,7 +33,7 @@ type second struct {
 }
 
 func (this *second) self() {
-  fmt.Fprintln(os.Stderr,("*second=", this)
+  println("*second=", this)
 }
 
 func (this *second) self2(i int) {
@@ -41,7 +41,7 @@ func (this *second) self2(i int) {
 }
 
 func misc() {
-  fmt.Fprintln(os.Stderr,("misc")
+  println("misc")
 }
 
 func DoCall(f Fi, i int) {

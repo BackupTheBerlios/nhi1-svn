@@ -17,6 +17,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNS{SlaveContext}\n
 \RNS{BufferObject}\n
 \RNS{ErrorObject}\n
+\RNS{BinaryObject}\n
 \RNS{filter}\n
 \RNS{ContextLocalStorage}
 
@@ -333,6 +334,17 @@ The callback is implemented using \ServiceInterface method <I>Service(MqC ctx)</
 as callback using <I>void CallbackF()</I>.
 \elseif C
 The callback is implemented as a set of functions and data suitable for #MqCallbackS.
+\elseif GO
+The callback is implemented using one form of the two interfaces:
+\code
+type Service interface { Call() }
+\endcode
+and
+\code
+type Service2 interface { Call(*MqS) }
+\endcode
+The second interface provide the \e context-in-duty as argument and is used to call
+callbacks not belonging to a \e sub-type of the original \e context-type.
 \else
 UNKNOWN
 \endif
@@ -344,6 +356,9 @@ UNKNOWN
 \copydoc MqServiceIsTransaction
 
 \subsection	  \NS{ServiceGetFilter}			\ServiceGetFilter
+\if ServiceGetFilter2
+\subsection	  \NS{ServiceGetFilter2}		\ServiceGetFilter2
+\endif
 \copydoc MqServiceGetFilter
 
 \subsection	  \NS{ServiceCreate}			\ServiceCreate
@@ -353,6 +368,9 @@ UNKNOWN
 \copydoc MqServiceCreate
 
 \subsection       \NS{ServiceProxy}			\ServiceProxy
+\if ServiceProxy2
+\subsection       \NS{ServiceProxy2}			\ServiceProxy2
+\endif
 \copydoc MqServiceProxy
 
 \subsection	  \NS{ServiceDelete}			\ServiceDelete
@@ -386,7 +404,7 @@ UNKNOWN
 \RNSA{SendT_END}\n
 
 \copydoc Mq_Send_C_API
-\b Example: send an integer and a list of double, string and a \e byte-array: \send_example
+\b Example: send an \I and a list of \D, \C and a \e \TB: \send_example
 
 \subsection	  \NS{SendSTART}			\SendSTART
 \copydoc MqSendSTART
@@ -449,7 +467,7 @@ UNKNOWN
 \RNSA{ReadUndo}\n
 
 \copydoc Mq_Read_C_API
-\b Example: read an integer and a list of double, string and a \e byte-array: \read_example
+\b Example: read an \I and a list of \D, \C and a \TB: \read_example
 
 \subsection	  \NS{ReadTYPE}				\ReadTYPE
 \copydoc MqReadY
@@ -616,6 +634,22 @@ convert the error from an \e context into an \RNS{ErrorObject} and raise the obj
 
 \subsection	\NS{ErrorPrint}				\ErrorPrint
 \copydoc MqErrorPrint
+
+\section	\NS{BinaryObject}			BINARY OBJECT
+\if BINARY
+The \TB is use to transport binary data defined by a \e pointer and a \e data-size.
+The object self is \b temporary. Data belongs to libmsgque and is only valid for
+the next transaction. The \TB is used by: \RNSA{ReadTYPE,ReadB}, \RNSA{ReadN}, \RNSA{ReadBDY},
+\RNSA{SendTYPE,SendB}, \RNSA{SendN}, \RNSA{SendBDY}.
+
+\subsection	\NS{BinaryGet}				\BinaryGet
+Convert a \e temporary \TB object into a permanent \B object.
+
+\subsection	\NS{BinarySet}				\BinarySet
+Set a \e temporary \TB object fom a permanent \B object.
+\else
+No special \e binary-object is used. All \e binary-data is available as \B.
+\endif
 
 \section	\NS{ContextLocalStorage}		CONTEXT LOCAL STORAGE API
 \if DATA

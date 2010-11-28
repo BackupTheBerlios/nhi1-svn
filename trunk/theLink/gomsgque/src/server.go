@@ -699,7 +699,7 @@ type CFG1 Server
       }
       case "StartAs": {
 	old := this.ConfigGetStartAs()
-	this.ConfigSetStartAs (MqStartE(this.ReadI()))
+	this.ConfigSetStartAs (START(this.ReadI()))
 	this.SendI (int32(this.ConfigGetStartAs()))
 	this.ConfigSetStartAs (old)
       }

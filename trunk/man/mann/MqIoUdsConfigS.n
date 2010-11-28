@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

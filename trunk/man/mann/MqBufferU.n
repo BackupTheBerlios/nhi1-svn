@@ -1,4 +1,4 @@
-.TH "MqBufferU" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "MqBufferU" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
