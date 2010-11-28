@@ -31,3 +31,4 @@ enum MqErrorE gomsgque_ServiceCreate (struct MqS * const, MQ_TOK const token, MQ
 enum MqErrorE gomsgque_ServiceCreate2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);
 enum MqErrorE gomsgque_SendEND_AND_CALLBACK (struct MqS * const, MQ_TOK const token, MQ_PTR data);
 enum MqErrorE gomsgque_SendEND_AND_CALLBACK2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);
+void gomsgque_SysServerThreadMain(struct MqSysServerThreadMainS *data, MQ_PTR chn);

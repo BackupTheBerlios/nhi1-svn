@@ -176,8 +176,9 @@ gomsgque_sFactoryDelete (
   MQ_PTR data
 )
 {
-  gomsgque_cFactoryDelete((int*)context);
+  MQ_PTR chnp = context->threadData;
   MqContextDelete (&context);
+  gomsgque_cFactoryDelete((int*)context, chnp);
 }
 
 static void
@@ -314,10 +315,21 @@ gomsgque_ConfigSetSetup (
 
 #include <pthread.h>
 #include <errno.h>
-typedef pthread_t mqthread_t;
+typedef GoChan mqthread_t;
 
 #define mqthread_ret_t void*
 #define mqthread_stdcall
+
+void
+gomsgque_SysServerThreadMain (
+  struct MqSysServerThreadMainS *data,
+  MQ_PTR chn
+)
+{
+  MqBufferLAppendC(data->argv, "---threadData");
+  MqBufferLAppendW(data->argv, (MQ_WID)chn);
+  MqSysServerThreadMain(data);
+}
 
 static enum MqErrorE gomsgque_SysServerThread (
   struct MqS * const context,
@@ -330,7 +342,7 @@ static enum MqErrorE gomsgque_SysServerThread (
 )
 {
   mqthread_t threadId;
-  int ret;  
+  mqthread_t ret;  
 
   // fill thread data
   struct MqSysServerThreadMainS * argP = (struct MqSysServerThreadMainS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
@@ -347,11 +359,10 @@ static enum MqErrorE gomsgque_SysServerThread (
   MqConfigSetIgnoreFork (context, MQ_YES);
 
   // start thread as "go" routine
-  gomsgque_CreateThread((int*)argP);
+  ret = gomsgque_CreateThread((int*)argP);
 
   // save tid
-  //(*idP).val = (mqthread_t)threadId;
-  (*idP).val = (mqthread_t)999;
+  (*idP).val = (MQ_IDNT)ret;
   (*idP).type = MQ_ID_THREAD;
 
   return MQ_OK;
@@ -371,26 +382,10 @@ static enum MqErrorE gomsgque_SysWait (
   errno = 0;
   switch (idP->type) {  
     case MQ_ID_PROCESS: { 
-/*
-  we don't wait for a process because this is buggy (for example BSD wait forever)
-#if defined(MQ_IS_POSIX)
-      if ( waitpid (idP->val.process, NULL, 0) == -1) {
-        return MqErrorSys (waitpid);
-      }
-#elif defined(MQ_IS_WIN32)
-      if ( _cwait (NULL, idP->val.process, _WAIT_CHILD) == -1) {
-        return MqErrorSys (waitpid);
-      }
-#endif
-*/
       break;
     }
     case MQ_ID_THREAD: {
-/*
-      if ( pthread_join ((mqthread_t)idP->val, NULL)) {
-        return MqErrorSys (pthread_join);
-      }
-*/
+      gomsgque_WaitForThread((GoChan)idP->val);
       break;
     }
     case MQ_ID_UNUSED: {

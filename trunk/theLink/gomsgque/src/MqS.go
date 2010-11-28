@@ -112,12 +112,25 @@ func Init(argv []string) {
   }
 }
 
+// global lock for thread-channel objects
+// this lock is used by the thread-starter to wait for the exit of the thread-started
+var lockThread = make(map[*chan bool]bool)
+
 //export gomsgque_CreateThread
-func gomsgque_CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) {
+func gomsgque_CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) *chan bool {
+  chn := make(chan bool)
+  lockThread[&chn] = true
   go func() {
     runtime.LockOSThread()
-    C.MqSysServerThreadMain(data)
+    C.gomsgque_SysServerThreadMain(data, C.MQ_PTR(&chn))
   }()
+  return &chn
+}
+
+//export gomsgque_WaitForThread
+func gomsgque_WaitForThread(chnp *chan bool) {
+  <-(*chnp)
+  lockThread[chnp] = false, false
 }
 
 //export gomsgque_ProcessExit

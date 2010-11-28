@@ -347,6 +347,11 @@ sMqCheckArg (
 	    context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_DUP);
 	    context->config.startAs = MQ_START_DEFAULT;
 	    context->config.io.com = MQ_IO_PIPE;
+	  } else if (!strncmp(argC, "-threadData", 11)) {
+	    MQ_WID tmp;
+	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
+	    MqErrorCheck(MqBufferGetW(argv->data[idx], &tmp));
+	    context->threadData = (MQ_PTR)tmp;
 	  } else {
 	    continue;
 	  }

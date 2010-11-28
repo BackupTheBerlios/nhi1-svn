@@ -333,8 +333,11 @@ func (this *MqS) cFactoryCreate(cb *Factory) (ret *MqS) {
 }
 
 //export gomsgque_cFactoryDelete
-func (this *MqS) cFactoryDelete() {
+func (this *MqS) cFactoryDelete(chnp *chan bool) {
   ctxlock[this] = nil, false
+  if chnp != nil {
+    (*chnp) <- true
+  }
 }
 
 //export gomsgque_cFactoryFree

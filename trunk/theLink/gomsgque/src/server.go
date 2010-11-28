@@ -382,7 +382,7 @@ type SND1 Server
 	// the 'master' have to be a 'parent' without 'child' objects
 	// 'slave' identifer out of range (0 <= 10000000 <= 1023)
 	this.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id),
-	  "--srvname", fmt.Sprintf("wk-sv-%d", id))
+	  "--srvname", fmt.Sprintf("wk-sv-%d", id), "--thread")
       }
       case "STOP": {
 	this.cl[id].LinkDelete()
