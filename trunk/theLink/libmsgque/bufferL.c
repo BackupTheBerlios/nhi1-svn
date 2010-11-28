@@ -764,7 +764,7 @@ MqBufferLLogS (
 )
 {
   if (unlikely(bufL == NULL)) {
-    MqLogV (context, func, 0, "++++ MqBufferLS (%s:NULL)", varname);
+    MqLogV (context, func, 0, "++++ MqBufferLS (%s:NULL)\n", varname);
     return;
   } else {
     MQ_BUF buf = (context ? context->temp : MqBufferCreate (MQ_ERROR_PANIC, 100));

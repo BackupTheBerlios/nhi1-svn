@@ -52,6 +52,6 @@ func main() {
     srv.Exit()
   }()
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent(MqS_TIMEOUT_DEFAULT, MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

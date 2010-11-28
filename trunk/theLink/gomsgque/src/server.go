@@ -15,8 +15,8 @@ package main
 import (
   . "gomsgque"
     "os"
-    "syscall"
     "fmt"
+    "time"
 )
 
 /*
@@ -215,7 +215,7 @@ type TRNS Server
     this.SendT_END ()
     this.SendI ( this.ReadI() )
     this.SendEND_AND_WAIT2 ("ECOI")
-    this.ProcessEvent2 (MqS_WAIT_ONCE)
+    this.ProcessEvent (WAIT_ONCE)
     this.SendSTART ()
     this.SendI (this.i)
     this.SendI (this.j)
@@ -288,7 +288,7 @@ type USLP Server
   func (this *USLP) Call() {
     this.SendSTART()
     i := this.ReadI()
-    this.SysUSleep(uint32(i))
+    time.Sleep(int64(i) * 1000)
     this.SendI(i)
     this.SendRETURN()
   }
@@ -297,7 +297,7 @@ type SLEP Server
   func (this *SLEP) Call() {
     this.SendSTART()
     i := this.ReadI()
-    this.SysSleep(uint32(i))
+    time.Sleep(int64(i) * 1000000000)
     this.SendI(i)
     this.SendRETURN()
   }
@@ -404,7 +404,7 @@ type SND1 Server
 	this.ReadProxy(this.cl[id].MqS)
 	this.cl[id].i = -1
 	this.cl[id].SendEND_AND_CALLBACK2("ECOI", (*ECOI_CB)(this.cl[id]))
-	this.cl[id].ProcessEvent(10, MqS_WAIT_ONCE)
+	this.cl[id].ProcessEvent2(10, WAIT_ONCE)
 	this.SendI(this.cl[id].i+1)
       }
       case "ERR-1": {
@@ -482,7 +482,7 @@ type SND2 Server
 	this.ReadProxy(cl)
 	this.i = -1
 	cl.SendEND_AND_CALLBACK("ECOI", (*SetMyInt)(cl.GetSelf().(*Server)))
-	cl.ProcessEvent(10, MqS_WAIT_ONCE)
+	cl.ProcessEvent2(10, WAIT_ONCE)
 	this.SendI(this.i+1)
       }
       case "MqSendEND_AND_WAIT": {
@@ -609,7 +609,7 @@ type Error Server
 	this.ErrorC("Ot_ERR2", 10, "some error")
       }
       case "ERR3" : this.SendRETURN()
-      case "ERR4" : syscall.Exit(1)
+      case "ERR4" : os.Exit(1)
     }
     this.SendRETURN()
   }
@@ -851,6 +851,6 @@ func main() {
   srv.ConfigSetIdent("test-server")
   srv.LinkCreate(os.Args...)
   srv.LogC("test",1,"this is the log test\n")
-  srv.ProcessEvent(MqS_TIMEOUT_DEFAULT, MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

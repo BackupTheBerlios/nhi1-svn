@@ -1,4 +1,4 @@
-.TH "MqIoTcpConfigS" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "MqIoTcpConfigS" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIoTcpConfigS \- configure a context to use a \fItcp-client-server-link\fP
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -48,21 +48,21 @@ configure a context to use a \fItcp-client-server-link\fP
 
 .PP
 Definition at line 603 of file msgque.h.
-.SH "Member Data Documentation"
+.SH "Field Documentation"
 .PP 
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.host\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::host\fP\fC [read]\fP"
 .PP
 Definition at line 604 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myhost\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myhost\fP\fC [read]\fP"
 .PP
 Definition at line 606 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.myport\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::myport\fP\fC [read]\fP"
 .PP
 Definition at line 607 of file msgque.h.
-.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS.port\fP\fC [read]\fP"
+.SS "struct \fBMqBufferS\fP* \fBMqIoTcpConfigS::port\fP\fC [read]\fP"
 .PP
 Definition at line 605 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for gomsgque from the source code.

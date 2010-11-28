@@ -1,11 +1,11 @@
-.TH "Mq_Context_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
 
 .PP
-.SS "Classes"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -19,7 +19,7 @@ Mq_Context_C_API \- \fIcontext\fP, the top-level data structure and \fIapplicati
 .ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
-.R "signature marker used in \fBMqS.signature\fP "
+.R "signature marker used in \fBMqS::signature\fP "
 .ti -1c
 .RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
 .br
@@ -90,7 +90,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
-signature marker used in \fBMqS.signature\fP 
+signature marker used in \fBMqS::signature\fP 
 .PP
 Definition at line 1385 of file msgque.h.
 .SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
@@ -163,7 +163,7 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .PP
 delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
 .PP
-Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fINothing\fP. The \fIcontext\fP can \fBnot\fP be reused. 
+Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fInil\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -233,4 +233,4 @@ An external Garbage-Collction (GC) need information about external objects refer
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for gomsgque from the source code.

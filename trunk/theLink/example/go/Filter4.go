@@ -32,7 +32,7 @@ func NewFilter4() *Filter4 {
 }
 
 func (this *Filter4) ServerCleanup() {
-  ftr := this.ServiceGetFilter2().GetSelf().(*Filter4)
+  ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
   if (ftr.FH != nil) {
     ftr.FH.Close()
     ftr.FH = nil
@@ -40,7 +40,7 @@ func (this *Filter4) ServerCleanup() {
 }
 
 func (this *Filter4) ServerSetup() {
-  ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+  ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
   this.ServiceCreate("LOGF", (*LOGF)(this))
   this.ServiceCreate("EXIT", (*EXIT)(this))
   this.ServiceCreate("+ALL", (*ALLS)(this))
@@ -62,7 +62,7 @@ func (this *Filter4) Event() {
     this.ErrorSetCONTINUE()
   } else {
     it := this.itms.Front()
-    ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+    ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
     defer func() {
       if x := recover(); x != nil {
 	ftr.ErrorSet(x)
@@ -82,7 +82,7 @@ func (this *Filter4) Event() {
 
 type LOGF Filter4
   func (this *LOGF) Call() {
-    ftr := this.ServiceGetFilter(0).GetSelf().(*Filter4)
+    ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
     if (ftr.LinkGetTargetIdent() == "transFilter") {
       ftr.SendSTART()
       ftr.SendC(this.ReadC())
@@ -105,7 +105,7 @@ type WRIT Filter4
   }
 
 func (this *Filter4) ErrorWrite() {
-  this.FH.WriteString("ERROR: " + this.ErrorGetText())
+  this.FH.WriteString("ERROR: " + this.ErrorGetText() + "\n")
   this.ErrorReset()
 }
 
@@ -121,6 +121,6 @@ func main() {
   srv.ConfigSetIdent("transFilter")
   srv.ConfigSetName("Filter4")
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

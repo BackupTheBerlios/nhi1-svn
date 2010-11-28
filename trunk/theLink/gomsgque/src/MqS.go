@@ -20,20 +20,27 @@ import "C"
 import (
   //"fmt"
   "unsafe"
-  //"reflect"
+  "os"
+  "runtime"
+  //"time"
 )
+
+func init() {
+  runtime.GOMAXPROCS(2)
+  C.gomsgque_Init()
+}
 
 type TIMEOUT  C.MQ_TIME_T
 type WAIT     uint32
 
 const (
-  MqS_TIMEOUT_DEFAULT TIMEOUT	= C.MQ_TIMEOUT_DEFAULT
-  MqS_TIMEOUT_USER    TIMEOUT	= C.MQ_TIMEOUT_USER
-  MqS_TIMEOUT_MAX     TIMEOUT	= C.MQ_TIMEOUT_MAX
+  TIMEOUT_DEFAULT TIMEOUT	= C.MQ_TIMEOUT_DEFAULT
+  TIMEOUT_USER    TIMEOUT	= C.MQ_TIMEOUT_USER
+  TIMEOUT_MAX     TIMEOUT	= C.MQ_TIMEOUT_MAX
 
-  MqS_WAIT_NO	      WAIT	= C.MQ_WAIT_NO
-  MqS_WAIT_ONCE	      WAIT	= C.MQ_WAIT_ONCE
-  MqS_WAIT_FOREVER    WAIT	= C.MQ_WAIT_FOREVER
+  WAIT_NO	  WAIT	= C.MQ_WAIT_NO
+  WAIT_ONCE	  WAIT	= C.MQ_WAIT_ONCE
+  WAIT_FOREVER    WAIT	= C.MQ_WAIT_FOREVER
 )
 
 type MqS _Ctype_struct_MqS
@@ -44,16 +51,10 @@ func NewMqS(ifc interface{}) *MqS {
   ret := (*MqS)(ctx)
   // save the pointer, use "SetSelf" to create link to toplevel object
   ctxlock[ret] = ifc
-//fmt.Printf("NewMqS => c:%p -> i:%p\n", ret, ifc)
   // cleanup "lock" after "object" is deleted
   C.gomsgque_ConfigSetFactory(ctx, nil)
   // set default action for startup (check for "left over arguments")
   C.gomsgque_ConfigSetSetup(ctx)
-  // no THREAD
-  C.MqConfigSetIgnoreThread(ctx, C.MQ_YES)
-  // no FORK
-  //C.MqConfigSetIgnoreFork(ctx, C.MQ_YES)
-  ret.ConfigSetStartAs(MQ_START_FORK)
   // add interfaces
   if ifc != nil {
     if obj,ok := ifc.(ServerSetup); ok {
@@ -82,17 +83,15 @@ func (this *MqS) Init() {
 
 // set link between *MqS and toplevel object
 func (this *MqS) SetSelf(ifc interface{}) {
-//fmt.Printf("SetSelf => c:%p -> i:%p\n", this, ifc)
   ctxlock[this] = ifc
 }
 
 // get toplevel object from *MqS
 func (this *MqS) GetSelf() interface{} {
-//fmt.Printf("GetSelf => c:%p\n", this)
   return ctxlock[this]
 }
 
-func (this *MqS) LogC(prefix string, level int, message string) {
+func (this *MqS) LogC(prefix string, level int32, message string) {
   p := C.CString(prefix)
   m := C.CString(message)
   C.MqLogC((*_Ctype_struct_MqS)(this), p, C.MQ_INT(level), m)
@@ -104,14 +103,6 @@ func (this *MqS) Exit() {
   C.MqExitP(C.sGO, (*_Ctype_struct_MqS)(this))
 }
 
-func (this *MqS) SysSleep(sec uint32) {
-  this.iErrorMqToGoWithCheck(C.MqSysSleep((*_Ctype_struct_MqS)(this), C.uint(sec)))
-}
-
-func (this *MqS) SysUSleep(sec uint32) {
-  this.iErrorMqToGoWithCheck(C.MqSysUSleep((*_Ctype_struct_MqS)(this), C.uint(sec)))
-}
-
 func Init(argv []string) {
   initB := C.MqInitCreate()
   for _,arg := range argv {
@@ -119,5 +110,23 @@ func Init(argv []string) {
     C.MqBufferLAppendC(initB, s)
       C.free(unsafe.Pointer(s))
   }
+}
+
+//export gomsgque_CreateThread
+func gomsgque_CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) {
+  go func() {
+    runtime.LockOSThread()
+    C.MqSysServerThreadMain(data)
+  }()
+}
+
+//export gomsgque_ProcessExit
+func gomsgque_ProcessExit (num int32) {
+  os.Exit(int(num))
+}
+
+//export gomsgque_ThreadExit
+func gomsgque_ThreadExit (num int32) {
+  runtime.Goexit()
 }
 

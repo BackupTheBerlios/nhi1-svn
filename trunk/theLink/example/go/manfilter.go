@@ -25,7 +25,7 @@ type ManFilter MqS
 type FTR MqS
   func (this *FTR) Call () {
     ctx := (*MqS)(this)
-    ftr := ctx.ServiceGetFilter2()
+    ftr := ctx.ServiceGetFilter()
     ftr.SendSTART()
     for ctx.ReadItemExists() {
       ftr.SendC("<" + ctx.ReadC() + ">")
@@ -47,7 +47,7 @@ func main() {
   srv.ConfigSetFactory((*ManFilter)(srv))
   srv.LinkCreate(os.Args...)
   srv.ServiceCreate("+FTR", (*FTR)(srv))
-  srv.ServiceProxy2("+EOF")
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ServiceProxy("+EOF")
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

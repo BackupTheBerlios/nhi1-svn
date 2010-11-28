@@ -38,14 +38,15 @@ func DoCall(f Fi, i int) string {
 func main() {
   g := F(f)
   h := &g
-  println(string(69))
-  println("g=", g, "h=", h)
-  println(g(1))
-  println(g.call(2))
-  println(DoCall(g,3))
-  println()
-  println((*h)(4))
-  println((*h).call(5))
-  println(DoCall((*h),6))
+  fmt.Fprintln(os.Stderr,(string(69))
+  fmt.Fprintln(os.Stderr,("g=", g, "h=", h)
+  fmt.Fprintln(os.Stderr,(g(1))
+  fmt.Fprintln(os.Stderr,(g.call(2))
+  fmt.Fprintln(os.Stderr,(DoCall(g,3))
+  fmt.Fprintln(os.Stderr,()
+  fmt.Fprintln(os.Stderr,((*h)(4))
+  fmt.Fprintln(os.Stderr,((*h).call(5))
+  fmt.Fprintln(os.Stderr,(DoCall((*h),6))
   return
 }
+

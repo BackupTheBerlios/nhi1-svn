@@ -53,6 +53,6 @@ func main() {
   }()
   srv.ConfigSetName("MyMulServer")
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

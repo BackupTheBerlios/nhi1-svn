@@ -31,7 +31,7 @@ func NewFilter2() *Filter2 {
 
 func (this *Filter2) ServerSetup() {
   this.ServiceCreate("+FTR", (*FTR)(this))
-  this.ServiceProxy2("+EOF")
+  this.ServiceProxy("+EOF")
 }
 
 func (this *Filter2) Factory() *MqS {
@@ -53,6 +53,6 @@ func main() {
   }()
   srv.ConfigSetName("filter")
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

@@ -33,11 +33,11 @@ func (this *Filter3) Factory() *MqS {
 }
 
 func (this *Filter3) ServerSetup() {
-  ftr := this.ServiceGetFilter(0)
-  this.ServiceProxy2("+ALL")
-  this.ServiceProxy2("+TRT")
-  ftr.ServiceProxy2("+ALL")
-  ftr.ServiceProxy2("+TRT")
+  ftr := this.ServiceGetFilter()
+  this.ServiceProxy("+ALL")
+  this.ServiceProxy("+TRT")
+  ftr.ServiceProxy("+ALL")
+  ftr.ServiceProxy("+TRT")
 }
 
 func main() {
@@ -50,6 +50,6 @@ func main() {
   }()
   srv.ConfigSetName("Filter3")
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

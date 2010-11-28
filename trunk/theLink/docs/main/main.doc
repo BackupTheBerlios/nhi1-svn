@@ -34,6 +34,7 @@ setup and maintain the link and is responsible for:\n
     <TH>C++</TH> 
     <TH>C#</TH>     
     <TH>java</TH>   
+    <TH>Go</TH>   
     <TH>python</TH>     
     <TH>ruby</TH>     
     <TH>tcl</TH>             
@@ -47,6 +48,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\man{cc,YES}</TD>
     <TD>\man{cs,YES}</TD>
     <TD>\man{java,YES}</TD>
+    <TD>\man{go,YES}</TD>
     <TD>\man{py,YES}</TD>
     <TD>\man{ruby,YES}</TD>
     <TD>\man{tcl,YES}</TD>
@@ -60,6 +62,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\tut{cc,YES}</TD>
     <TD>\tut{cs,YES}</TD>
     <TD>\tut{java,YES}</TD>
+    <TD>\tut{go,YES}</TD>
     <TD>\tut{py,YES}</TD>
     <TD>\tut{ruby,YES}</TD>
     <TD>\tut{tcl,YES}</TD>
@@ -74,6 +77,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\apiref{cs,Cs,YES}</TD>
     <TD>\apiref{java,Java,YES}</TD>
     <TD>NO</TD>   
+    <TD>NO</TD>   
     <TD>NO</TD>
     <TD>NO</TD>
     <TD>NO</TD>
@@ -86,6 +90,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\private{cc,YES}</TD>
     <TD>NO</TD>   
     <TD>\private{java,YES}</TD>
+    <TD>NO</TD>   
     <TD>\private{py,YES}</TD>
     <TD>\private{ruby,YES}</TD>
     <TD>\private{tcl,YES}</TD>
@@ -112,6 +117,7 @@ setup and maintain the link and is responsible for:\n
     <TH>C++</TH> 
     <TH>C#</TH>     
     <TH>java</TH>   
+    <TH>Go</TH>   
     <TH>python</TH>     
     <TH>ruby</TH>     
     <TH>tcl</TH>             
@@ -125,6 +131,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref cc_e1 "YES"</TD>
     <TD>\ref cs_e1 "YES"</TD>
     <TD>\ref java_e1 "YES"</TD>
+    <TD>\ref go_e1 "YES"</TD>
     <TD>\ref py_e1 "YES"</TD>
     <TD>\ref ruby_e1 "YES"</TD>
     <TD>\ref tcl_e1 "YES"</TD>
@@ -138,6 +145,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref cc_e2 "YES"</TD>
     <TD>\ref cs_e2 "YES"</TD>
     <TD>\ref java_e2 "YES"</TD>
+    <TD>\ref go_e2 "YES"</TD>
     <TD>\ref py_e2 "YES"</TD>
     <TD>\ref ruby_e2 "YES"</TD>
     <TD>\ref tcl_e2 "YES"</TD>
@@ -155,6 +163,7 @@ setup and maintain the link and is responsible for:\n
     <TH>C++</TH> 
     <TH>C#</TH>     
     <TH>java</TH>   
+    <TH>go</TH>   
     <TH>python</TH>     
     <TH>ruby</TH>     
     <TH>tcl</TH>             
@@ -168,6 +177,7 @@ setup and maintain the link and is responsible for:\n
     <TD>\ref cc_e3 "YES"</TD>
     <TD>\ref cs_e3 "YES"</TD>
     <TD>\ref java_e3 "YES"</TD>
+    <TD>\ref go_e3 "YES"</TD>
     <TD>\ref py_e3 "YES"</TD>
     <TD>\ref ruby_e3 "YES"</TD>
     <TD>\ref tcl_e3 "YES"</TD>

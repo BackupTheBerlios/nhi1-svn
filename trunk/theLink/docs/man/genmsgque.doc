@@ -395,6 +395,9 @@ UNKNOWN
 \copydoc MqSendEND
 
 \subsection	  \NS{SendEND_AND_WAIT}			\SendEND_AND_WAIT
+\if SendEND_AND_WAIT2
+\subsection	  \NS{SendEND_AND_WAIT2}		\SendEND_AND_WAIT2
+\endif
 \copydoc MqSendEND_AND_WAIT
 
 \subsection	  \NS{SendEND_AND_CALLBACK}		\SendEND_AND_CALLBACK

@@ -175,8 +175,6 @@ ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT
 ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token,callback)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendFTR=ctx.SendFTR(?timeout=MQ_TIMEOUT_USER?)"
-ALIASES		    += "SendEOF=ctx.SendEOF(?timeout=MQ_TIMEOUT_USER?)"
 ALIASES		    += "SendTYPE=ctx.SendTYPE(value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"

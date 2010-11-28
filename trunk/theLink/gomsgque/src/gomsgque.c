@@ -13,6 +13,8 @@
 #include "gomsgque.h"
 #include "_cgo_export.h"
 
+#define MQ_CONTEXT_S context
+
 MQ_CST sGO = "GO";
 MQ_CST sERROR = "Error";
 MQ_CST sUNKNOWN = "UNKNOWN";
@@ -21,6 +23,8 @@ MQ_CST sUNKNOWN = "UNKNOWN";
   GoInterface *data = (GoInterface*) MqSysMalloc(context, sizeof(GoInterface)); \
   *data = ifc;
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 static enum MqErrorE
 gomsgque_sServerSetup
  (
@@ -28,8 +32,18 @@ gomsgque_sServerSetup
   MQ_PTR const data
 )
 {
-  gomsgque_cServerSetup((int*)context, *((GoInterface*)data));
+  gomsgque_cServerSetup((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sServerSetupFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_cServerSetupFree((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 void
@@ -38,8 +52,10 @@ gomsgque_ConfigSetServerSetup (
   void *data
 )
 {
-  MqConfigSetServerSetup(context, gomsgque_sServerSetup, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetServerSetup(context, gomsgque_sServerSetup, (MQ_PTR)data, gomsgque_sServerSetupFree, NULL);
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sServerCleanup (
@@ -47,8 +63,18 @@ gomsgque_sServerCleanup (
   MQ_PTR const data
 )
 {
-  gomsgque_cServerCleanup((int*)context, *((GoInterface*)data));
+  gomsgque_cServerCleanup((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sServerCleanupFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_cServerCleanupFree((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 void
@@ -57,8 +83,10 @@ gomsgque_ConfigSetServerCleanup (
   void *data
 )
 {
-  MqConfigSetServerCleanup(context, gomsgque_sServerCleanup, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetServerCleanup(context, gomsgque_sServerCleanup, (MQ_PTR)data, gomsgque_sServerCleanupFree, NULL);
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sBgError (
@@ -66,8 +94,18 @@ gomsgque_sBgError (
   MQ_PTR const data
 )
 {
-  gomsgque_cBgError((int*)context, *((GoInterface*)data));
+  gomsgque_cBgError((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sBgErrorFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_cBgErrorFree((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 void
@@ -76,8 +114,10 @@ gomsgque_ConfigSetBgError (
   void *data
 )
 {
-  MqConfigSetBgError(context, gomsgque_sBgError, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetBgError(context, gomsgque_sBgError, (MQ_PTR)data, gomsgque_sBgErrorFree, NULL);
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sEvent (
@@ -85,8 +125,18 @@ gomsgque_sEvent (
   MQ_PTR const data
 )
 {
-  gomsgque_cEvent((int*)context, *((GoInterface*)data));
+  gomsgque_cEvent((int*)context, (GoInterface*)data);
   return MqErrorStack(context);
+}
+
+static void
+gomsgque_sEventFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_cEventFree((GoInterface*)(*dataP));
+  *dataP = NULL;
 }
 
 void
@@ -95,8 +145,10 @@ gomsgque_ConfigSetEvent (
   void *data
 )
 {
-  MqConfigSetEvent(context, gomsgque_sEvent, (MQ_PTR)data, NULL, NULL);
+  MqConfigSetEvent(context, gomsgque_sEvent, (MQ_PTR)data, gomsgque_sEventFree, NULL);
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sFactoryCreate (
@@ -106,7 +158,7 @@ gomsgque_sFactoryCreate (
   struct MqS  ** contextP
 )
 {
-  *contextP = (struct MqS*)gomsgque_cFactoryCreate((int*)tmpl, *((GoInterface*)data));
+  *contextP = (struct MqS*)gomsgque_cFactoryCreate((int*)tmpl, (GoInterface*)data);
   if (*contextP == NULL) return MqErrorStack(tmpl);
   MqConfigDup (*contextP, tmpl);
   MqErrorCheck(MqSetupDup (*contextP, tmpl));
@@ -128,18 +180,30 @@ gomsgque_sFactoryDelete (
   MqContextDelete (&context);
 }
 
+static void
+gomsgque_sFactoryFree (
+  struct MqS const * const context,
+  MQ_PTR *dataP
+)
+{
+  gomsgque_cFactoryFree((GoInterface*)(*dataP));
+  *dataP = NULL;
+}
+
 void
 gomsgque_ConfigSetFactory (
   struct MqS * const context,
-  void *data
+  MQ_PTR data
 )
 {
   MqFactoryCreateF  fCreate = data != NULL ? gomsgque_sFactoryCreate : NULL;
   MqConfigSetFactory(context, 
-    fCreate,		      (MQ_PTR)data, NULL, NULL,
-    gomsgque_sFactoryDelete,  NULL,	    NULL, NULL
+    fCreate,		      data, gomsgque_sFactoryFree, NULL,
+    gomsgque_sFactoryDelete,  NULL, NULL, NULL
   );
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sService (
@@ -160,6 +224,18 @@ gomsgque_sServiceFree (
   gomsgque_decrServiceRef((GoInterface*)(*dataP));
   *dataP = NULL;
 }
+
+enum MqErrorE
+gomsgque_ServiceCreate (
+  struct MqS * const context,
+  MQ_TOK const token,
+  MQ_PTR data
+)
+{
+  return MqServiceCreate(context, token, gomsgque_sService, data, gomsgque_sServiceFree);
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 static enum MqErrorE
 gomsgque_sService2 (
@@ -182,24 +258,16 @@ gomsgque_sService2Free (
 }
 
 enum MqErrorE
-gomsgque_ServiceCreate (
-  struct MqS * const context,
-  MQ_TOK const token,
-  MQ_PTR data
-)
-{
-  return MqServiceCreate(context, token, gomsgque_sService, data, gomsgque_sService2Free);
-}
-
-enum MqErrorE
 gomsgque_ServiceCreate2 (
   struct MqS * const context,
   MQ_TOK const token,
   MQ_PTR data
 )
 {
-  return MqServiceCreate(context, token, gomsgque_sService2, (MQ_PTR)data, gomsgque_sServiceFree);
+  return MqServiceCreate(context, token, gomsgque_sService2, (MQ_PTR)data, gomsgque_sService2Free);
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 enum MqErrorE
 gomsgque_SendEND_AND_CALLBACK (
@@ -221,12 +289,120 @@ gomsgque_SendEND_AND_CALLBACK2 (
   return MqSendEND_AND_CALLBACK(context, token, gomsgque_sService2, (MQ_PTR)data, gomsgque_sService2Free);
 }
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void
+sProcessExit (int num) {
+  gomsgque_ProcessExit(num);
+}
+
+void
+sThreadExit (int num) {
+  gomsgque_ThreadExit(num);
+}
+
 void
 gomsgque_ConfigSetSetup (
   struct MqS * const context
 )
 {
-  return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
+  return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, 
+	  NULL, sProcessExit, sThreadExit);
 }
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#include <pthread.h>
+#include <errno.h>
+typedef pthread_t mqthread_t;
+
+#define mqthread_ret_t void*
+#define mqthread_stdcall
+
+static enum MqErrorE gomsgque_SysServerThread (
+  struct MqS * const context,
+  struct MqFactoryS factory,
+  struct MqBufferLS ** argvP,
+  struct MqBufferLS ** alfaP,
+  MQ_CST  name,
+  int state,   
+  struct MqIdS * idP
+)
+{
+  mqthread_t threadId;
+  int ret;  
+
+  // fill thread data
+  struct MqSysServerThreadMainS * argP = (struct MqSysServerThreadMainS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
+  argP->factory = factory;
+  argP->argv = *argvP;
+  argP->alfa = *alfaP;
+  argP->tmpl = context; 
+
+  // pointers are owned by SysServerThread
+  *argvP = NULL;
+  *alfaP = NULL;
+
+  // after a "thread" no "fork" is possible
+  MqConfigSetIgnoreFork (context, MQ_YES);
+
+  // start thread as "go" routine
+  gomsgque_CreateThread((int*)argP);
+
+  // save tid
+  //(*idP).val = (mqthread_t)threadId;
+  (*idP).val = (mqthread_t)999;
+  (*idP).type = MQ_ID_THREAD;
+
+  return MQ_OK;
+
+error:
+  MqBufferLDelete (&argP->argv);
+  MqBufferLDelete (&argP->alfa);
+  MqSysFree (argP);
+  return MQ_ERROR;
+}
+
+static enum MqErrorE gomsgque_SysWait (
+  struct MqS * const context,
+  const struct MqIdS *idP
+)
+{
+  errno = 0;
+  switch (idP->type) {  
+    case MQ_ID_PROCESS: { 
+/*
+  we don't wait for a process because this is buggy (for example BSD wait forever)
+#if defined(MQ_IS_POSIX)
+      if ( waitpid (idP->val.process, NULL, 0) == -1) {
+        return MqErrorSys (waitpid);
+      }
+#elif defined(MQ_IS_WIN32)
+      if ( _cwait (NULL, idP->val.process, _WAIT_CHILD) == -1) {
+        return MqErrorSys (waitpid);
+      }
+#endif
+*/
+      break;
+    }
+    case MQ_ID_THREAD: {
+/*
+      if ( pthread_join ((mqthread_t)idP->val, NULL)) {
+        return MqErrorSys (pthread_join);
+      }
+*/
+      break;
+    }
+    case MQ_ID_UNUSED: {
+      break;
+    }
+  }
+  return MQ_OK;
+}
+
+void
+gomsgque_Init() {
+  MqLal.SysServerThread	  =   gomsgque_SysServerThread;
+  MqLal.SysWait		  =   gomsgque_SysWait;
+}
 

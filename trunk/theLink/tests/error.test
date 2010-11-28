@@ -261,7 +261,7 @@ test error-7-($I|$B|$C|$S) {double RETURN} \
 END}
 
 test error-8-($I|$B|$C|$S) {invalid option found} \
-    -constraints    {parent} \
+    -constraints    {parent && pipe} \
     -body           {
 	Setup $I $B $C $S --error --server-arg --wrong-option
     } \

@@ -672,6 +672,12 @@ if {![info exists env(SRV_LST)]} {
     php.uds.spawn
     php.uds.fork
     go.pipe.pipe
+    go.tcp.spawn
+    go.tcp.fork
+    go.tcp.thread
+    go.uds.spawn
+    go.uds.fork
+    go.uds.thread
     vb.pipe.pipe
     vb.tcp.spawn
     vb.tcp.thread

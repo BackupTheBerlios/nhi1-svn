@@ -19,6 +19,7 @@ import "C"
 
 import (
   //"fmt"
+  //"os"
   "unsafe"
 )
 
@@ -36,10 +37,10 @@ func (this *MqS) ConfigSetBuffersize(val int32) {
 type MqStartE uint32
 
 const (
-  MQ_START_DEFAULT  MqStartE = C.MQ_START_DEFAULT
-  MQ_START_FORK	    MqStartE = C.MQ_START_FORK
-  MQ_START_THREAD   MqStartE = C.MQ_START_THREAD
-  MQ_START_SPAWN    MqStartE = C.MQ_START_SPAWN
+  START_DEFAULT  MqStartE = C.MQ_START_DEFAULT
+  START_FORK	 MqStartE = C.MQ_START_FORK
+  START_THREAD   MqStartE = C.MQ_START_THREAD
+  START_SPAWN    MqStartE = C.MQ_START_SPAWN
 )
 
 func (this *MqS) ConfigGetStartAs() MqStartE {
@@ -196,99 +197,139 @@ func (this *MqS) ConfigSetIoTcp(host, port, myhost, myport string) {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+// global lock for "ServerSetup" interfaces
+var lockServerSetup  = make(map[*ServerSetup]bool)
+
 type ServerSetup interface {
   ServerSetup()
 }
 
 //export gomsgque_cServerSetup
-func (this *MqS) cServerSetup(cb ServerSetup) {
+func (this *MqS) cServerSetup(cb *ServerSetup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.ServerSetup()
+  (*cb).ServerSetup()
+}
+
+//export gomsgque_cServerSetupFree
+func cServerSetupFree(cb *ServerSetup) {
+  lockServerSetup[cb] = false, false
 }
 
 func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
   C.gomsgque_ConfigSetServerSetup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+  lockServerSetup[&cb] = true
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "ServerCleanup" interfaces
+var lockServerCleanup  = make(map[*ServerCleanup]bool)
 
 type ServerCleanup interface {
   ServerCleanup()
 }
 
 //export gomsgque_cServerCleanup
-func (this *MqS) cServerCleanup(cb ServerCleanup) {
+func (this *MqS) cServerCleanup(cb *ServerCleanup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.ServerCleanup()
+  (*cb).ServerCleanup()
+}
+
+//export gomsgque_cServerCleanupFree
+func cServerCleanupFree(cb *ServerCleanup) {
+  lockServerCleanup[cb] = false, false
 }
 
 func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
   C.gomsgque_ConfigSetServerCleanup((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+  lockServerCleanup[&cb] = true
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "BgError" interfaces
+var lockBgError  = make(map[*BgError]bool)
 
 type BgError interface {
   BgError()
 }
 
 //export gomsgque_cBgError
-func (this *MqS) cBgError(cb BgError) {
+func (this *MqS) cBgError(cb *BgError) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.BgError()
+  (*cb).BgError()
+}
+
+//export gomsgque_cBgErrorFree
+func cBgErrorFree(cb *BgError) {
+  lockBgError[cb] = false, false
 }
 
 func (this *MqS) ConfigSetBgError(cb BgError) {
   C.gomsgque_ConfigSetBgError((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+  lockBgError[&cb] = true
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "Event" interfaces
+var lockEvent  = make(map[*Event]bool)
 
 type Event interface {
   Event()
 }
 
 //export gomsgque_cEvent
-func (this *MqS) cEvent(cb Event) {
+func (this *MqS) cEvent(cb *Event) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
     }
   }()
-  cb.Event()
+  (*cb).Event()
+}
+
+//export gomsgque_cEventFree
+func cEventFree(cb *Event) {
+  lockEvent[cb] = false, false
 }
 
 func (this *MqS) ConfigSetEvent(cb Event) {
   C.gomsgque_ConfigSetEvent((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+  lockEvent[&cb] = true
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// global lock for "Factory" interfaces
+var lockFactory  = make(map[*Factory]bool)
 
 type Factory interface {
   Factory() *MqS
 }
 
 //export gomsgque_cFactoryCreate
-func (this *MqS) cFactoryCreate(cb Factory) *MqS {
+func (this *MqS) cFactoryCreate(cb *Factory) (ret *MqS) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
+      ret = nil
     }
   }()
-  return cb.Factory()
-
+  ret = (*cb).Factory()
+  return
 }
 
 //export gomsgque_cFactoryDelete
@@ -296,7 +337,13 @@ func (this *MqS) cFactoryDelete() {
   ctxlock[this] = nil, false
 }
 
+//export gomsgque_cFactoryFree
+func cFactoryFree(cb *Factory) {
+  lockFactory[cb] = false, false
+}
+
 func (this *MqS) ConfigSetFactory(cb Factory) {
-  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
+  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), C.MQ_PTR(&cb))
+  lockFactory[&cb] = true
 }
 

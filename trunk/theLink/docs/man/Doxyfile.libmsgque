@@ -161,8 +161,6 @@ ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T 
 ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
 ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
 ALIASES		    += "SendERROR=MqSendERROR(ctx)"
-ALIASES		    += "SendFTR=MqSendFTR(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
-ALIASES		    += "SendEOF=MqSendEOF(ctx,MQ_TIME_T timeout=MQ_TIMEOUT_USER)"
 ALIASES		    += "SendTYPE=MqSendTYPE(ctx,value)"
 ALIASES		    += "SendN=MqSendN(ctx,MQ_CBI const value,MQ_SIZE const len)"
 ALIASES		    += "SendBDY=enum MqErrorE MqSendBDY(ctx,MQ_CBI const value,MQ_SIZE const len)"

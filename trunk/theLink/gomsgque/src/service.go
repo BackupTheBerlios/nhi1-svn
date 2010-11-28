@@ -118,27 +118,19 @@ func (this *MqS) ServiceCreate2(token string, cb Service2) {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-func (this *MqS) ProcessEvent(timeout TIMEOUT, wait WAIT) {
-  this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
+func (this *MqS) ProcessEvent(wait WAIT) {
+  this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIMEOUT_DEFAULT, uint32(wait)))
 }
 
-func (this *MqS) ProcessEvent2(wait WAIT) {
-  this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIMEOUT_DEFAULT, uint32(wait)))
+func (this *MqS) ProcessEvent2(timeout TIMEOUT, wait WAIT) {
+  this.iErrorMqToGoWithCheck(C.MqProcessEvent((*_Ctype_struct_MqS)(this), C.MQ_TIME_T(timeout), uint32(wait)))
 }
 
 func (this *MqS) ServiceGetToken() string {
   return C.GoString(C.MqServiceGetToken((*_Ctype_struct_MqS)(this)))
 }
 
-func (this *MqS) ServiceGetFilter(i int32) *MqS {
-  ret := C.MqServiceGetFilter2((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i))
-  if ret == nil {
-    this.ErrorRaise()
-  }
-  return (*MqS)(ret)
-}
-
-func (this *MqS) ServiceGetFilter2() *MqS {
+func (this *MqS) ServiceGetFilter() *MqS {
   ret := C.MqServiceGetFilter2((*_Ctype_struct_MqS)(this), 0)
   if ret == nil {
     this.ErrorRaise()
@@ -146,14 +138,22 @@ func (this *MqS) ServiceGetFilter2() *MqS {
   return (*MqS)(ret)
 }
 
-func (this *MqS) ServiceProxy(token string, i int32) {
+func (this *MqS) ServiceGetFilter2(i int32) *MqS {
+  ret := C.MqServiceGetFilter2((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i))
+  if ret == nil {
+    this.ErrorRaise()
+  }
+  return (*MqS)(ret)
+}
+
+func (this *MqS) ServiceProxy(token string) {
   t := C.CString(token)
-  this.iErrorMqToGoWithCheck(C.MqServiceProxy((*_Ctype_struct_MqS)(this), t, C.MQ_SIZE(i)))
+  this.iErrorMqToGoWithCheck(C.MqServiceProxy((*_Ctype_struct_MqS)(this), t, 0))
   C.free(unsafe.Pointer(t))
 }
 
-func (this *MqS) ServiceProxy2(token string) {
+func (this *MqS) ServiceProxy2(token string, i int32) {
   t := C.CString(token)
-  this.iErrorMqToGoWithCheck(C.MqServiceProxy((*_Ctype_struct_MqS)(this), t, 0))
+  this.iErrorMqToGoWithCheck(C.MqServiceProxy((*_Ctype_struct_MqS)(this), t, C.MQ_SIZE(i)))
   C.free(unsafe.Pointer(t))
 }

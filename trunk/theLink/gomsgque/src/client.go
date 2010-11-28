@@ -18,18 +18,28 @@ import (
   "fmt"
 )
 
-func main() {
-  var ctx = NewMqS(nil)
-  defer func() {
-    if x := recover(); x != nil {
-      ctx.ErrorSet(x)
-    }
-    ctx.Exit()
-  }()
-  ctx.LinkCreate(os.Args...)
+func Call(ctx *MqS) {
   ctx.SendSTART()
   ctx.SendI(100)
-  ctx.SendEND_AND_WAIT("ECOI", MqS_TIMEOUT_DEFAULT)
+  ctx.SendEND_AND_WAIT("ECOI", TIMEOUT_DEFAULT)
   ctx.LogC("client", 0, fmt.Sprintf("RESULT = %d\n", ctx.ReadI()))
+}
+
+func main() {
+  var ctx1 = NewMqS(nil)
+  var ctx2 = NewMqS(nil)
+  var ctx3 = NewMqS(nil)
+  defer func() {
+    if x := recover(); x != nil {
+      ctx1.ErrorSet(x)
+    }
+    ctx1.Exit()
+  }()
+  ctx1.LinkCreate(os.Args...)
+  ctx2.LinkCreate(os.Args...)
+  ctx3.LinkCreate(os.Args...)
+  Call(ctx1)
+  Call(ctx2)
+  Call(ctx3)
 }
 

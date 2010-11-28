@@ -1,4 +1,4 @@
-.TH "Mq_Read_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_C_API" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -292,7 +292,7 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInil\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -398,7 +398,7 @@ Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fINothing\fP to use the next item from the \fIread-data-package\fP. 
+\fIbuffer\fP an optional \fIbuffer-object\fP as result from a previous \fBReadU\fP call or \fInil\fP to use the next item from the \fIread-data-package\fP. 
 .RE
 .PP
 \fBReturns:\fP
@@ -479,4 +479,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for gomsgque from the source code.

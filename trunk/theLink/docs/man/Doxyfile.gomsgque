@@ -15,154 +15,184 @@
 #---------------------------------------------------------------------------
 
 
-ENABLED_SECTIONS    += CSHARP
-EXAMPLE_PATH	    += $(SRCDIR)/example/csharp
+ENABLED_SECTIONS    += GO
+EXAMPLE_PATH	    += $(SRCDIR)/example/go
 
-ALIASES		    += "self=csmsgque"
-ALIASES		    += "selftut=csmsgquetut"
-ALIASES		    += "NS{1}=cs_\1"
-ALIASES		    += "lang=C#"
-ALIASES		    += "fileextension=cs"
-ALIASES		    += "null=\e null"
+ALIASES		    += "self=gomsgque"
+ALIASES		    += "selftut=gomsgquetut"
+ALIASES		    += "NS{1}=go_\1"
+ALIASES		    += "lang=Go"
+ALIASES		    += "fileextension=go"
+ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
-ALIASES		    += "package=using csmsgque;"
+ALIASES		    += "package=import . \"gomsgque\""
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-sealed class MyClass : MqS { \n\
-  private int mydata; \n\
+type MyClass struct { \n\
+  *MqS \n\
+  mydata int \n\
   ... \n\
 } \n\
-static void Main(string[] args) \n\
-  MyClass ctx = new MyClass(); ... \n\
+... \n\
+func NewMyClass() *MyClass { \n\
+  srv := new(MyClass) \n\
+  srv.MqS = NewMqS(srv) \n\
+  return srv \n\
+} \n\
+... \n\
+func main() \n\
+  ctx := NewMyClass() ... \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextCreate=ctx := NewMqS()"
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "LogC=ctx.LogC(string prefix, int level, string message)"
+ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=MqS.Init(params string[] args)"
+ALIASES		    += "Init=MqS.Init(args []string)"
 ALIASES		    += "init_example=\
 \code \n\
-MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
+Init(\"myExecutable.exe\", \"myFirstArgument\") \n\
 \endcode"
 
-ALIASES		    += "config_type_buffersize=int"
-ALIASES		    += "config_set_buffersize=#csmsgque.MqS.ConfigSetBuffersize"
-ALIASES		    += "config_get_buffersize=#csmsgque.MqS.ConfigGetBuffersize"
+ALIASES		    += "config_type_buffersize=\I"
+ALIASES		    += "config_set_buffersize=ctx.ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ctx.ConfigGetBuffersize"
 
-ALIASES		    += "config_type_debug=int"
-ALIASES		    += "config_set_debug=#csmsgque.MqS.ConfigSetDebug"
-ALIASES		    += "config_get_debug=#csmsgque.MqS.ConfigGetDebug"
+ALIASES		    += "config_type_debug=\I"
+ALIASES		    += "config_set_debug=ctx.ConfigSetDebug"
+ALIASES		    += "config_get_debug=ctx.ConfigGetDebug"
 
-ALIASES		    += "config_type_timeout=int"
-ALIASES		    += "config_set_timeout=#csmsgque.MqS.ConfigSetTimeout"
-ALIASES		    += "config_get_timeout=#csmsgque.MqS.ConfigGetTimeout"
+ALIASES		    += "config_type_timeout=\I"
+ALIASES		    += "config_set_timeout=ctx.ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ctx.ConfigGetTimeout"
 
-ALIASES		    += "config_type_name=string"
-ALIASES		    += "config_set_name=#csmsgque.MqS.ConfigSetName"
-ALIASES		    += "config_get_name=#csmsgque.MqS.ConfigGetName"
+ALIASES		    += "config_type_name=\C"
+ALIASES		    += "config_set_name=ctx.ConfigSetName"
+ALIASES		    += "config_get_name=ctx.ConfigGetName"
 
-ALIASES		    += "config_type_srvname=string"
-ALIASES		    += "config_set_srvname=#csmsgque.MqS.ConfigSetSrvName"
-ALIASES		    += "config_get_srvname=#csmsgque.MqS.ConfigGetSrvName"
+ALIASES		    += "config_type_srvname=\C"
+ALIASES		    += "config_set_srvname=ctx.ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ctx.ConfigGetSrvName"
 
-ALIASES		    += "config_type_ident=string"
-ALIASES		    += "config_set_ident=#csmsgque.MqS.ConfigSetIdent"
-ALIASES		    += "config_get_ident=#csmsgque.MqS.ConfigGetIdent"
+ALIASES		    += "config_type_ident=\C"
+ALIASES		    += "config_set_ident=ctx.ConfigSetIdent"
+ALIASES		    += "config_get_ident=ctx.ConfigGetIdent"
 
-ALIASES		    += "config_type_isSilent=bool"
-ALIASES		    += "config_set_isSilent=#csmsgque.MqS.ConfigSetIsSilent"
-ALIASES		    += "config_get_isSilent=#csmsgque.MqS.ConfigGetIsSilent"
+ALIASES		    += "config_type_isSilent=\O"
+ALIASES		    += "config_set_isSilent=ctx.ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ctx.ConfigGetIsSilent"
 
-ALIASES		    += "config_type_isString=bool"
-ALIASES		    += "config_set_isString=#csmsgque.MqS.ConfigSetIsString"
-ALIASES		    += "config_get_isString=#csmsgque.MqS.ConfigGetIsString"
+ALIASES		    += "config_type_isString=\O"
+ALIASES		    += "config_set_isString=ctx.ConfigSetIsString"
+ALIASES		    += "config_get_isString=ctx.ConfigGetIsString"
 
-ALIASES		    += "config_type_ignoreExit=bool"
-ALIASES		    += "config_set_ignoreExit=#csmsgque.MqS.ConfigSetIgnoreExit"
+ALIASES		    += "config_type_ignoreExit=\O"
+ALIASES		    += "config_set_ignoreExit=ctx.ConfigSetIgnoreExit"
 ALIASES		    += "config_get_ignoreExit=NO"
 
-ALIASES		    += "config_type_startAs=START"
-ALIASES		    += "config_set_startAs=#csmsgque.MqS.ConfigSetStartAs (startAs)"
-ALIASES		    += "config_get_startAs=#csmsgque.MqS.ConfigGetStartAs"
-ALIASES		    += "MQ_START_DEFAULT=\c MqS.START.DEFAULT"
-ALIASES		    += "MQ_START_FORK=\c MqS.START.FORK"
-ALIASES		    += "MQ_START_THREAD=\c MqS.START.THREAD"
-ALIASES		    += "MQ_START_SPAWN=\c MqS.START.SPAWN"
+ALIASES		    += "config_type_startAs=MqStartE"
+ALIASES		    += "config_set_startAs=ctx.ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ctx.ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c START_DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c START_FORK"
+ALIASES		    += "MQ_START_THREAD=\c START_THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c START_SPAWN"
 
-ALIASES		    += "config_type_tcp=string"
-ALIASES		    += "config_set_tcp=#csmsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)"
-ALIASES		    += "config_get_tcp=#csmsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort"
+ALIASES		    += "config_type_tcp=\C"
+ALIASES		    += "config_set_tcp=ctx.ConfigSetIoTcp (host, port, myhost, myport \C)"
+ALIASES		    += "config_get_tcp=ctx.ConfigGetIoTcpHost/Port/MyHost/MyPort"
 
-ALIASES		    += "config_type_uds=string"
-ALIASES		    += "config_set_uds=#csmsgque.MqS.ConfigSetIoUdsFile (file)"
-ALIASES		    += "config_get_uds=#csmsgque.MqS.ConfigGetIoUdsFile"
+ALIASES		    += "config_type_uds=\C"
+ALIASES		    += "config_set_uds=ctx.ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=ctx.ConfigGetIoUdsFile"
 
-ALIASES		    += "config_type_pipe=int"
-ALIASES		    += "config_set_pipe=#csmsgque.MqS.ConfigSetIoPipeSocket (socket)"
-ALIASES		    += "config_get_pipe=#csmsgque.MqS.ConfigGetIoPipeSocket"
+ALIASES		    += "config_type_pipe=\I"
+ALIASES		    += "config_set_pipe=ctx.ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ctx.ConfigGetIoPipeSocket"
 
 ALIASES		    += "config_type_daemon=NO"
 ALIASES		    += "config_set_daemon=NO"
 ALIASES		    += "config_get_daemon=NO"
 
-ALIASES		    += "config_type_isServer=bool"
-ALIASES		    += "config_set_isServer=#csmsgque.MqS.ConfigSetIsServer"
-ALIASES		    += "config_get_isServer=#csmsgque.MqS.ConfigGetIsServer"
+ALIASES		    += "config_type_isServer=\O"
+ALIASES		    += "config_set_isServer=ctx.ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ctx.ConfigGetIsServer"
 
-ALIASES             += "config_IServerSetup=IServerSetup.Call()"
-ALIASES		    += "config_IServerCleanup=IServerCleanup.Call()"
-ALIASES		    += "config_IFactory=MqS IFactory.Call()"
-ALIASES             += "config_IBgError=IBgError.Call()"
-ALIASES             += "config_IEvent=IEvent.Call()"
+ALIASES             += "config_IServerSetup=func (this *Server) ServerSetup() {...}"
+ALIASES		    += "config_IServerCleanup=func (this *Server) ServerCleanup() {...}"
+ALIASES		    += "config_IFactory=func (this *Server) Factory() \M {...}"
+ALIASES             += "config_IBgError=func (this *Server) BgError() {...}"
+ALIASES             += "config_IEvent=func (this *Server) Event() {...}"
 
 ALIASES		    += "config_IFactory_example=\code \n\
-sealed class Server : MqS, IFactory ... { \n\
-  MqS IFactory.Call () { \n\
-    return new Server(); \n\
-  } \n\
+type Server struct { \n\
+  *MqS \n\
   ... \n\
 } \n\
+... \n\
+func NewServer() *MyClass { \n\
+  srv := new(Server) \n\
+  srv.MqS = NewMqS(srv) \n\
+  return srv \n\
+} \n\
+... \n\
+func (this *Server) Factory() *MqS { \n\
+  return NewServer().MqS \n\
+} \n\
+... \n\
 \endcode"
 
 # LINK CREATION AND DELETION
-ALIASES		    += "LinkCreate=ctx.LinkCreate(params string[] args)"
-ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(MqS parent, params string[] args)"
+ALIASES		    += "LinkCreate=ctx.LinkCreate(args ... \C)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent \M, args ... \C)"
 ALIASES		    += "LinkDelete=ctx.LinkDelete()"
-ALIASES		    += "LinkGetParent=MqC ctx.LinkGetParent()"
-ALIASES		    += "LinkIsParent=bool ctx.LinkIsParent()"
-ALIASES		    += "LinkGetCtxId=bool ctx.LinkGetCtxId()"
-ALIASES		    += "LinkIsConnected=bool ctx.LinkIsConnected()"
-ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkGetParent=ctx.LinkGetParent() \M"
+ALIASES		    += "LinkIsParent=ctx.LinkIsParent() \O"
+ALIASES		    += "LinkGetCtxId=ctx.LinkGetCtxId() \O"
+ALIASES		    += "LinkIsConnected=ctx.LinkIsConnected() \O"
+ALIASES		    += "LinkGetTargetIdent=ctx.LinkGetTargetIdent() \C"
 ALIASES		    += "LinkConnect=ctx.LinkConnect()"
 
 # SEND DATA
-ALIASES		    += "send_example=\code ctx.SendSTART();\nctx.SendI(num);\nctx.SendL_START();\n  ctx.SendD(balance);\n  ctx.SendC(\"name of the owner\");\n  ctx.SendB(signature);\nctx.SendL_END();\nctx.SendEND_AND_WAIT(\"SRV1\");\endcode"
+ALIASES		    += "send_example=\code \n\
+ctx.SendSTART() \n\
+ctx.SendI(num); \n\
+ctx.SendL_START(); \n\
+  ctx.SendD(balance); \n\
+  ctx.SendC(\"name of the owner\"); \n\
+  ctx.SendB(signature); \n\
+ctx.SendL_END(); \n\
+ctx.SendEND_AND_WAIT(\"SRV1\"); \n\
+\endcode"
 ALIASES		    += "SendSTART=ctx.SendSTART()"
-ALIASES		    += "SendEND=ctx.SendEND(string token)"
-ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(string token, [int timeout])"
-ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(string token, IService callback)"
+ALIASES		    += "SendEND=ctx.SendEND(token \C)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token \C)"
+ENABLED_SECTIONS    += SendEND_AND_WAIT2
+ALIASES		    += "SendEND_AND_WAIT2=ctx.SendEND_AND_WAIT2(token \C, timeout TIMEOUT)"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token \C, callback Service)"
+ENABLED_SECTIONS    += SendEND_AND_CALLBACK2
+ALIASES		    += "SendEND_AND_CALLBACK2=ctx.SendEND_AND_CALLBACK2(token \C, callback Service2)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendTYPE=ctx.SendTYPE(value TYPE)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
-ALIASES		    += "SendN=ctx.SendN(byte[] value)"
-ALIASES		    += "SendBDY=\I ctx.SendBDY(byte[] value)"
-ALIASES		    += "SendT_START=ctx.SendT_START(string token)"
+ALIASES		    += "SendN=ctx.SendN(value MqBinary)"
+ALIASES		    += "SendBDY=ctx.SendBDY(value MqBinary)"
+ALIASES		    += "SendT_START=ctx.SendT_START(token \C)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
-ctx.SendSTART (); \n\
-ctx.SendT_START (\"SRVR\"); \n\
-ctx.SendC (\"myEnvironment\"); \n\
-ctx.SendT_END (); \n\
-ctx.SendC (\"myData\"); \n\
-ctx.SendEND_AND_WAIT (\"SRVC\");\endcode"
+ctx.SendSTART () \n\
+ctx.SendT_START (\"SRVR\") \n\
+ctx.SendC (\"myEnvironment\") \n\
+ctx.SendT_END () \n\
+ctx.SendC (\"myData\") \n\
+ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
@@ -237,16 +267,17 @@ ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE buffer.TYPE"
 ALIASES		    += "BufferType=char buffer.Type"
 
-ALIASES		    += "Y=byte"
+ALIASES		    += "Y=int8"
 ALIASES		    += "O=bool"
-ALIASES		    += "S=short"
-ALIASES		    += "I=int"
-ALIASES		    += "F=float"
-ALIASES		    += "W=long"
-ALIASES		    += "D=double"
+ALIASES		    += "S=int16"
+ALIASES		    += "I=int32"
+ALIASES		    += "F=float32"
+ALIASES		    += "W=int64"
+ALIASES		    += "D=float64"
 ALIASES		    += "C=string"
-ALIASES		    += "B=byte[]"
-ALIASES		    += "U=MqBufferS"
+ALIASES		    += "B=[]byte"
+ALIASES		    += "U=*MqBufferS"
+ALIASES		    += "M=*MqS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -278,10 +309,4 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
-
-
-
-
-
-
 

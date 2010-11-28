@@ -19,6 +19,7 @@ libmsgque=../libmsgque_public/Doxyfile
 javamsgque=../javamsgque_public/Doxyfile
 ccmsgque=../ccmsgque_public/Doxyfile
 csmsgque=../csmsgque_public/Doxyfile
+gomsgque=../libmsgque_public/Doxyfile
 vbmsgque=../csmsgque_public/Doxyfile
 perlmsgque=../libmsgque_public/Doxyfile
 msgqueforphp=../libmsgque_public/Doxyfile

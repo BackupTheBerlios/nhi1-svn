@@ -50,7 +50,7 @@ type FTR Filter1
 
 type EOF Filter1
   func (this *EOF) Call() {
-    ftr := this.ServiceGetFilter2()
+    ftr := this.ServiceGetFilter()
     for _,d := range this.data {
       ftr.SendSTART()
       for _,s := range d {
@@ -73,6 +73,6 @@ func main() {
   }()
   srv.ConfigSetName("Filter1")
   srv.LinkCreate(os.Args...)
-  srv.ProcessEvent2(MqS_WAIT_FOREVER)
+  srv.ProcessEvent(WAIT_FOREVER)
 }
 

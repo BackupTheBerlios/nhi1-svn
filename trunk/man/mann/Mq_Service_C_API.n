@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "22 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "27 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -29,7 +29,11 @@ Mq_Service_C_API \- create and manage services
 
 .in +1c
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const filter)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceGetFilter\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP **const )"
+.br
+.R "get the \fIfilter-context\fP or the \fImaster-context\fP "
+.ti -1c
+.RI "struct \fBMqS\fP *const \fBMqServiceGetFilter2\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id)"
 .br
 .R "get the \fIfilter-context\fP or the \fImaster-context\fP "
 .ti -1c
@@ -53,7 +57,7 @@ Mq_Service_C_API \- create and manage services
 .br
 .R "create a service to link a \fImaster-context\fP with a \fIslave-context\fP. "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP const *const ctx, \fBMQ_TOK\fP const token)"
+.RI "enum \fBMqErrorE\fP \fBMqServiceDelete\fP (struct \fBMqS\fP *const ctx, \fBMQ_TOK\fP const token)"
 .br
 .R "delete a service. "
 .ti -1c
@@ -175,7 +179,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 .PP
 create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
-The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBctx.ServiceGetToken() As String\fP to get the current token in an \fIincoming-service-call\fP. 
+The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -195,8 +199,13 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+\fBAttention:\fP
+.RS 4
+the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefor\fP using this function 
+.RE
+.PP
 
-.SS "enum \fBMqErrorE\fP MqServiceDelete (struct \fBMqS\fP const *const  ctx, \fBMQ_TOK\fP const  token)"
+.SS "enum \fBMqErrorE\fP MqServiceDelete (struct \fBMqS\fP *const  ctx, \fBMQ_TOK\fP const  token)"
 .PP
 delete a service. 
 .PP
@@ -213,7 +222,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqServiceGetFilter (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP **const  filter)"
+.SS "enum \fBMqErrorE\fP MqServiceGetFilter (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP ** const)"
 .PP
 get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
@@ -231,12 +240,44 @@ return a 'filter not available' error
 .br
 \fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
 .br
-\fIfilter\fP the \fIother-context\fP or \fINothing\fP on error 
+\fIfilter\fP the \fIother-context\fP or \fInil\fP on error 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
 an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SS "struct \fBMqS\fP* const MqServiceGetFilter2 (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
+.PP
+get the \fIfilter-context\fP or the \fImaster-context\fP 
+.PP
+A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
+.IP "1." 4
+return the \fImaster-context\fP if not NULL
+.IP "2." 4
+return the \fIslave-context\fP using \fIid\fP if not NULL
+.IP "3." 4
+return a 'filter not available' error
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP the context returned by \fBContextCreate\fP 
+.br
+\fIid\fP an \fIinteger\fP used as \fIunique\fP identifer for the master/slave link 
+.br
+\fIfilter\fP the \fIother-context\fP or \fInil\fP on error 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fIfilter-context\fP or \fInil\fP if the \fIcontext\fP hs no \fIfilter-context\fP 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+if no filter is available an error-message is created in the context 
 .RE
 .PP
 
@@ -297,4 +338,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for gomsgque from the source code.
