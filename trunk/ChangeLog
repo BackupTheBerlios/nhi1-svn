@@ -13,6 +13,90 @@
 
 \page changelog ChangeLog
 
+\section V0_10 29 Nov 2010 - NHI1-0.10, PLMK-1.8 und libmsgque-4.8
+
+This release add support for the new programming-language "Go" from Google.
+
+files changed:
+
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/all.tcl
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/error.test
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/client.test
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/library.tcl
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/csserver.exe
+-  M      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/javamsgque/context_java.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/javamsgque/javamsgque.jar
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/csmsgque/csmsgque.cs
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/MakeGoMsgque.inc.in
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/Makefile.in
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/read.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/client.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqSException.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqBinary.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/send.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqBufferS.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/link.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqS.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/service.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/test1.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/test2.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/gomsgque.c
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/config.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/server.go
+- A       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/Makefile
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/gomsgque.h
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/slave.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/Makefile.am
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/main/Doxyfile
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/main/main.doc
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/doxygen.sh
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/Doxyfile.generic
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/service.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/msgque.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/msgque.h
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/read.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/buffer.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/slave.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/token.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/bufferL.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/trans.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/link.c
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/Makefile.am
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/c/Filter4.c
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/MyServer.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/mulclient.go
+- A       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Makefile.in
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/testclient.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/src
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/MyClient.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/mulserver.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Makefile.am
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter1.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/testserver.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter2.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter3.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter4.go
+- AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/php/Makefile.in
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/bin/Label
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/bin/LbMain
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/NEWS
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/.OtConfig
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/configure.in
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/env.sh
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/mqconfig.h
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/win/win.vsprops
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/acinclude.m4
+- M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/Makefile.am
+.
+
+\n
+\n
+
 \section V0_9 08 Nov 2010 - NHI1-0.9, PLMK-1.7 und libmsgque-4.7
 
 This version adds the ability to:
