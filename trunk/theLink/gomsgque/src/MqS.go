@@ -49,12 +49,28 @@ type MqS _Ctype_struct_MqS
 func NewMqS(ifc interface{}) *MqS {
   ctx := C.MqContextCreate(0,nil)
   ret := (*MqS)(ctx)
-  // save the pointer, use "SetSelf" to create link to toplevel object
-  ctxlock[ret] = ifc
   // cleanup "lock" after "object" is deleted
   C.gomsgque_ConfigSetFactory(ctx, nil)
   // set default action for startup (check for "left over arguments")
   C.gomsgque_ConfigSetSetup(ctx)
+  // save the pointer, use "SetSelf" to create link to toplevel object
+  ret.SetSelf(ifc)
+  return ret
+}
+
+// for embedding "MqS"
+func (this *MqS) Init() {
+  C.MqContextInit((*_Ctype_struct_MqS)(this), 0,nil)
+}
+
+func (this *MqS) Delete() {
+  ctxlock[this] = nil, false
+  C.MqContextFree((*_Ctype_struct_MqS)(this))
+}
+
+// set link between *MqS and toplevel object
+func (this *MqS) SetSelf(ifc interface{}) {
+  ctxlock[this] = ifc
   // add interfaces
   if ifc != nil {
     if obj,ok := ifc.(ServerSetup); ok {
@@ -73,17 +89,6 @@ func NewMqS(ifc interface{}) *MqS {
       ret.ConfigSetEvent(obj)
     }
   }
-  return ret
-}
-
-// for embedding "MqS"
-func (this *MqS) Init() {
-  C.MqContextInit((*_Ctype_struct_MqS)(this), 0,nil)
-}
-
-// set link between *MqS and toplevel object
-func (this *MqS) SetSelf(ifc interface{}) {
-  ctxlock[this] = ifc
 }
 
 // get toplevel object from *MqS

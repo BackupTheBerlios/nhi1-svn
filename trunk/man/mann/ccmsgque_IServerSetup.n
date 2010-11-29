@@ -1,4 +1,4 @@
-.TH "ccmsgque::IServerSetup" n "22 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IServerSetup" n "29 Nov 2010" "Version 4.7" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

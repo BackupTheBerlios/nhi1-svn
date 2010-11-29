@@ -44,6 +44,7 @@ $ctx = new MyClass(); \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=$ctx=new MqS()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=$ctx->Delete()"
 ALIASES		    += "Exit=$ctx->Exit()"
 ALIASES		    += "LogC=$ctx->LogC(\C:prefix, \I:level, \C:message)"
@@ -271,6 +272,9 @@ ALIASES		    += "D=float"
 ALIASES		    += "C=string"
 ALIASES		    += "B=binary-string"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=binary-string"
+ALIASES		    += "TE=MqSException"
 
 # CONTEXT LOCAL STORAGE
 #ENABLED_SECTIONS    += DATA
@@ -310,6 +314,4 @@ try { \n\
   if ($ctx->ErrorIsEXIT()) $ctx->ErrorReset(); \n\
 } \n\
 \endcode"
-
-
 

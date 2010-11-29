@@ -1,4 +1,4 @@
-.TH "perlmsgque" n "22 Nov 2010" "Version 4.7" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque" n "29 Nov 2010" "Version 4.7" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -29,6 +29,8 @@ use base qw(Net::PerlMsgque::MqS);\fP
  \fBBUFFER API\fP
 .br
  \fBERROR OBJECT\fP
+.br
+ \fBBINARY OBJECT\fP
 .br
  \fBFILTER MODE\fP
 .br
@@ -835,6 +837,11 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+\fBAttention:\fP
+.RS 4
+the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefor\fP using this function 
+.RE
+.PP
 .SS "$ctx->ServiceProxy(token, id=0)"
 create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
 .PP
@@ -946,7 +953,7 @@ construct an outgoing \fIsend-data-package\fP.
 Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
- \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
+ \fBExample:\fP send an int and a list of double, string and a \fIbyteArray:\fP 
 .PP
 .nf
  $ctx->SendSTART();
@@ -1233,7 +1240,7 @@ extract data from an incoming \fIread-data-package\fP.
 Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an integer and a list of double, string and a \fIbyte-array\fP: 
+ \fBExample:\fP read an int and a list of double, string and a byteArray: 
 .PP
 .nf
  $num = $ctx->ReadI();
@@ -1790,6 +1797,9 @@ clear the \fIerror\fP and reset the \fIcontext\fP
 convert the error from an \fIcontext\fP into an \fBERROR OBJECT\fP and raise the object.
 .SS "$ctx->ErrorPrint()"
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
+.SH "BINARY OBJECT"
+.PP
+No special \fIbinary-object\fP is used. All \fIbinary-data\fP is available as byteArray.
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
 The CONTEXT LOCAL STORAGE is required to bind the \fIapplication-specific-data\fP to the perlmsgque context

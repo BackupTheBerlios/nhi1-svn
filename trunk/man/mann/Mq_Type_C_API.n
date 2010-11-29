@@ -1,4 +1,4 @@
-.TH "Mq_Type_C_API" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -464,4 +464,4 @@ used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP 
 Definition at line 553 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

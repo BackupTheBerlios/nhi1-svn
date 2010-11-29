@@ -1,4 +1,4 @@
-.TH "MqIdS" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "MqIdS" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -28,20 +28,20 @@ data type for process/thread identification
 
 This struct is used as storage for the process or the thread identification handle. 
 .PP
-Definition at line 4120 of file msgque.h.
+Definition at line 4119 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "enum \fBMqIdSE\fP \fBMqIdS::type\fP"
 .PP
 signal type of \fIval\fP data 
 .PP
-Definition at line 4121 of file msgque.h.
+Definition at line 4120 of file msgque.h.
 .SS "\fBMQ_IDNT\fP \fBMqIdS::val\fP"
 .PP
 process or thread handle 
 .PP
-Definition at line 4122 of file msgque.h.
+Definition at line 4121 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

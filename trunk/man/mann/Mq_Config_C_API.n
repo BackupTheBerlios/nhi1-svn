@@ -1,4 +1,4 @@
-.TH "Mq_Config_C_API" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "Mq_Config_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -675,7 +675,7 @@ this option require the \fBfork\fP system-call and is \fBnot\fP compatible with 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIpidfile\fP write the PID of the daemon into this file (default: NULL, do not start as daemon) 
 .RE
@@ -759,7 +759,7 @@ set the \fIpipe\fP configuration data
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 This is configuration option is only useful for a \fI\fP(x)inetd setup to use the stdin (socket=0) as send/recv communication socket 
@@ -786,7 +786,7 @@ configure a context to use a \fItcp-client-server-link\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -803,14 +803,14 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fInil\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
 .RE
 .PP
  
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -879,9 +879,9 @@ The \fIstartup-prefix\fP have to be the name of the executable, found in the \fC
 .IP "\(bu" 2
 To start a new entity using the \fBstartAs\fP '--spawn' command-line option.
 .IP "\(bu" 2
-To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBLinkCreate\fP.
+To replace the \fIcommand-line-argument\fP \fC'... @ SELF ...'\fP with \fC'... @ startup-prefix ...'\fP at \fBMqLinkCreate\fP.
 .PP
-Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBLinkCreate\fP and have \fBnot\fP to be initialized again. 
+Every use of this function will free the data of the previous \fIstartup-prefix\fP. By default the \fIstartup-prefix\fP is set during package loading or during \fBMqLinkCreate\fP and have \fBnot\fP to be initialized again. 
 .SS "enum \fBMqErrorE\fP MqSetupDup (struct \fBMqS\fP *const  to, struct \fBMqS\fP const *const  from)"
 .PP
 copy the \fBMqS::setup\fP data 
@@ -935,4 +935,4 @@ prototype for an object method function
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

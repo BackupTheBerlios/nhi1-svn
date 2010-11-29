@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -110,7 +110,7 @@ construct an outgoing \fIsend-data-package\fP.
 .PP
 \fBAttention:\fP
 .RS 4
-Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
+Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBMqSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
 
@@ -139,11 +139,11 @@ an \fBERROR OBJECT\fP on error
 .PP
 send the \fIentire-body\fP to the \fIlink-target\fP 
 .PP
-The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. 
+The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBMqReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the \fIentire-body\fP for appending 
 .br
@@ -162,7 +162,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -179,7 +179,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -198,7 +198,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .RE
@@ -213,11 +213,11 @@ an \fBERROR OBJECT\fP on error
 .PP
 finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(wait WAIT)\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBMqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -242,7 +242,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fItoken\fP the \fBTOKEN IDENTIFIER\fP to identify the service 
 .br
@@ -263,7 +263,7 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -278,7 +278,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -295,7 +295,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -319,7 +319,7 @@ append a \fBMqBufferLS\fP object to the \fISend-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -334,7 +334,7 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -349,7 +349,7 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -362,11 +362,11 @@ an \fBERROR OBJECT\fP on error
 .PP
 append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
-A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBctx.ReadN() *MqBinary\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBMqReadN(ctx,MQ_CBI * const value, MQ_SIZE * const len)\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the \fIbody-item\fP for appending 
 .br
@@ -385,7 +385,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -410,7 +410,7 @@ if no transaction is ongoing this function does just return. If an error is avai
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -425,7 +425,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -444,7 +444,7 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -459,7 +459,7 @@ finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -472,19 +472,19 @@ an \fBERROR OBJECT\fP on error
 .PP
 start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
 .PP
-In difference to \fBSendEND_AND_WAIT\fP and \fBSendEND_AND_CALLBACK\fP a \fIlongterm-transaction-call\fP have to survive an application restart. To achieve this goal two features have to be available to process the results:
+In difference to \fBMqSendEND_AND_WAIT\fP and \fBMqSendEND_AND_CALLBACK\fP a \fIlongterm-transaction-call\fP have to survive an application restart. To achieve this goal two features have to be available to process the results:
 .IP "1." 4
-a callback as \fIknown\fP service created with \fBServiceCreate\fP
+a callback as \fIknown\fP service created with \fBMqServiceCreate\fP
 .IP "2." 4
 one or more \fIdata-item\fP(s) to initialise the environment in the callback
 .PP
-The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. The callback is a \fBServiceIdentifier\fP and have to be defined with \fBServiceCreate\fP in the application setup code (like \fBIServerSetup\fP) to be available after an application restart. This command requires a final \fBSendT_END\fP to finish the write. The list of \fIdata-items\fP between \fISTART\fP and \fIEND\fP have to be provided by the programmer and is used to initialise the environment in the \fIcallback\fP. The data is send to the \fIlink-target\fP and returned as first item in the \fIresult-data-package\fP. Use \fBReadT_START\fP and \fBReadT_END\fP to extract the data. 
+The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. The callback is a \fBMqServiceIdentifier\fP and have to be defined with \fBMqServiceCreate\fP in the application setup code (like \fBIServerSetup\fP) to be available after an application restart. This command requires a final \fBMqSendT_END\fP to finish the write. The list of \fIdata-items\fP between \fISTART\fP and \fIEND\fP have to be provided by the programmer and is used to initialise the environment in the \fIcallback\fP. The data is send to the \fIlink-target\fP and returned as first item in the \fIresult-data-package\fP. Use \fBMqReadT_START\fP and \fBMqReadT_END\fP to extract the data. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
-\fIcallback\fP a \fBServiceIdentifier\fP to identify the target to process the results 
+\fIcallback\fP a \fBMqServiceIdentifier\fP to identify the target to process the results 
 .RE
 .PP
 \fBReturns:\fP
@@ -506,7 +506,7 @@ append a \fBMQ_BUF\fP object to the \fISend-Buffer\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
@@ -542,7 +542,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -559,7 +559,7 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIvalue\fP the value for appending 
 .RE
@@ -572,4 +572,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

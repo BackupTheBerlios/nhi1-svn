@@ -42,6 +42,7 @@ End Sub \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=Dim ctx As New MqS()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(prefix As String, level As Integer, message As String)"
@@ -262,6 +263,9 @@ ALIASES		    += "D=Double"
 ALIASES		    += "C=String"
 ALIASES		    += "B=Byte()"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=\B"
+ALIASES		    += "TE=MqSException"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

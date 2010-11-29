@@ -46,6 +46,7 @@ package main; \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=our $ctx=new MqS()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=undef $ctx"
 ALIASES		    += "Exit=$ctx->Exit()"
 ALIASES		    += "LogC=$ctx->LogC(prefix,level,message)"
@@ -265,6 +266,9 @@ ALIASES		    += "D=double"
 ALIASES		    += "C=string"
 ALIASES		    += "B=byteArray"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=byteArray"
+ALIASES		    += "TE=MqSException"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
@@ -306,10 +310,4 @@ if ($@) { \n\
   if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
 } \n\
 \endcode"
-
-
-
-
-
-
 

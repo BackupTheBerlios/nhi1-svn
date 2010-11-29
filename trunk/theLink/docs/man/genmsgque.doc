@@ -34,6 +34,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \subsection	\NS{ContextCreate}			\ContextCreate
 \copydoc MqContextCreate
+\ContextCreateSection
 
 \b Example: create an \e application-context with \e mydata as \e application-specific-data:
 \object_example
@@ -47,6 +48,24 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \subsection	\NS{Exit}				\Exit
 \copydoc MqExitP
+
+\if SELF
+\subsection	\NS{SetSelf}				\SetSelf
+Create a \e link between the toplevel object and the \TM object and check
+for the	availability of the following interfaces:
+- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNSC{IFactory}, \RNSC{IBgError}, \RNSC{IEvent}
+.
+
+\subsection	\NS{GetSelf}				\GetSelf
+convert the \TM object, returned by:
+- \RNSA{LinkGetParent}, \RNSA{ServiceGetFilter}, \RNSA{SlaveGet}, \RNSA{SlaveGetMaster}
+.
+back into a toplevel object.
+
+\b Example: convert an \TM object into a toplevel \e *Server object
+\GetSelfExample
+
+\endif
 
 \subsection	\NS{LogC}				\LogC
 \copydoc MqLogC

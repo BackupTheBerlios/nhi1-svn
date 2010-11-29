@@ -40,6 +40,7 @@ struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
 ALIASES		    += "Exit=MqExit(struct MqS* ctx)"
 ALIASES		    += "LogC=MqLogC(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
@@ -262,6 +263,9 @@ ALIASES		    += "D=#MQ_DBL"
 ALIASES		    += "C=#MQ_CST"
 ALIASES		    += "B=#MQ_BIN"
 ALIASES		    += "U=#MQ_BUF"
+ALIASES		    += "TM=MqS*"
+ALIASES		    += "TB=#MQ_BIN"
+ALIASES		    += "TE=MqS*"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

@@ -28,6 +28,8 @@ ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import . \"gomsgque\""
 
+ENABLED_SECTIONS    += GC
+
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
 type MyClass struct { \n\
@@ -47,10 +49,20 @@ func main() \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=ctx := NewMqS()"
-ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "ContextCreate=ctx := NewMqS(top interface{})"
+ALIASES		    += "ContextCreateSection= \n\
+\e Go does not support class dependencies. To access the toplevel object from a \TM type function \n\
+the toplevel interface is require. The reference can be set with the \e top argument of \e NewCtx \n\
+or with the \RNSA{SetSelf} method"
+ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
+ENABLED_SECTIONS    += SELF
+ALIASES		    += "SetSelf=ctx.SetSelf(ifc interface{})"
+ALIASES		    += "GetSelf=ctx.GetSelf() interface{}"
+ALIASES		    += "GetSelfExample= \code \n\
+ctx.ServiceGetFilter().GetSelf().(*Server) \n\
+\endcode"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=MqS.Init(args []string)"
@@ -262,7 +274,7 @@ ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id \I, slave \TM)"
 ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id \I)"
 ALIASES		    += "SlaveGet=ctx.SlaveGet(id \I) \TM"
 ALIASES		    += "SlaveGetMaster=ctx.SlaveGetMaster() \TM"
-ALIASES		    += "SlaveIs=ctx.SlaveIs() \TM"
+ALIASES		    += "SlaveIs=ctx.SlaveIs() \O"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\

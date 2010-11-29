@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "29 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -28,7 +28,7 @@ processor hardware independent
 .PP
 The Go language binding provide the following basic components:
 .IP "\(bu" 2
-abstract class of the \fBgomsgque\fP object: \fBctx := NewMqS()\fP
+abstract class of the \fBgomsgque\fP object: \fBctx := NewMqS(top interface{})\fP
 .IP "\(bu" 2
 interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
@@ -53,7 +53,7 @@ A \fBgomsgque\fP server requires the following setup:
 .IP "1." 4
 file: \fCexample/Go/MyServer.go\fP 
 .IP "2." 4
-an instance of the abstract class \fBctx := NewMqS()\fP
+an instance of the abstract class \fBctx := NewMqS(top interface{})\fP
 .IP "3." 4
 the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .IP "4." 4
@@ -136,7 +136,7 @@ the \fBsend\fP style of functions
 .IP "2." 4
 the \fBctx.ServiceCreate(token string, callback Service)\fP function
 .IP "3." 4
-a \fBconnected\fP context of type \fBctx := NewMqS()\fP
+a \fBconnected\fP context of type \fBctx := NewMqS(top interface{})\fP
 .PP
 Sending data is done using a minimum of 2 steps:
 .IP "1." 4
@@ -163,7 +163,7 @@ The \fBSERVICE CALLBACK\fP is called for every incoming \fIservice-request\fP wh
 .PP
 A \fBgomsgque\fP client requires the following setup:
 .IP "1." 4
-an instance of the abstract class \fBctx := NewMqS()\fP
+an instance of the abstract class \fBctx := NewMqS(top interface{})\fP
 .PP
 The \fIminimal\fP client looks like:
 .PP

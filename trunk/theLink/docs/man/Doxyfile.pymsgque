@@ -43,6 +43,7 @@ ctx = MyClass() \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=ctx=MqS()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
@@ -273,6 +274,9 @@ ALIASES		    += "D=PyFloat"
 ALIASES		    += "C=PyUnicode"
 ALIASES		    += "B=PyByteArray"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=PyByteArray"
+ALIASES		    += "TE=MqSException"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -303,10 +307,4 @@ except: \n\
   if ctx.ErrorIsEXIT(): \n\
     ctx.ErrorReset() \n\
 \endcode"
-
-
-
-
-
-
 

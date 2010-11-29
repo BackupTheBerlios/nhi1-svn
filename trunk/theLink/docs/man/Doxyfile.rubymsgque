@@ -45,6 +45,7 @@ ctx = MyClass.new \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=ctx=MqS.new"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
@@ -281,6 +282,9 @@ ALIASES		    += "D=Float"
 ALIASES		    += "C=String"
 ALIASES		    += "B=Binary"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=Binary"
+ALIASES		    += "TE=MqSException"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

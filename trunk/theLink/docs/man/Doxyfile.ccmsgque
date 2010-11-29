@@ -42,6 +42,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=MqC ctx; MqC *ctx=new MqC()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=delete(ctx)"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
@@ -304,6 +305,9 @@ ALIASES		    += "D=#MQ_DBL"
 ALIASES		    += "C=#MQ_CST"
 ALIASES		    += "B=#MQ_BIN"
 ALIASES		    += "U=#MQ_BUF"
+ALIASES		    += "TM=MqC*"
+ALIASES		    += "TB=#MQ_BIN"
+ALIASES		    += "TE=MqCException*"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -335,10 +339,4 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
-
-
-
-
-
-
 

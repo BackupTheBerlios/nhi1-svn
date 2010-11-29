@@ -1,4 +1,4 @@
-.TH "MqLalS" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "MqLalS" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -78,7 +78,7 @@ MqLalS \- Interface between \fBMqS\fP and the Operating-System.
 .PP 
 Interface between \fBMqS\fP and the Operating-System. 
 .PP
-Definition at line 4140 of file msgque.h.
+Definition at line 4139 of file msgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "void(* \fBMqLalS::SysAbort\fP)(void)"
@@ -89,7 +89,7 @@ additional info: \fCman abort\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -108,7 +108,7 @@ __attribute__((noreturn)) static void SysAbort (void) {
 .PP
 additional info: \fCman calloc\fP  
 .PP
-Definition at line 4142 of file msgque.h.
+Definition at line 4141 of file msgque.h.
 .SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .PP
 \fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP 
@@ -122,7 +122,7 @@ Definition at line 4142 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -203,7 +203,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 .PP
@@ -243,28 +243,28 @@ additional info: \fCman fork\fP
 .PP
  
 .PP
-Definition at line 4152 of file msgque.h.
+Definition at line 4151 of file msgque.h.
 .SS "\fBMqSysFreeF\fP \fBMqLalS::SysFree\fP"
 .PP
 \fBfree\fP syscall  
 .PP
 additional info: \fCman free\fP  
 .PP
-Definition at line 4148 of file msgque.h.
+Definition at line 4147 of file msgque.h.
 .SS "\fBMqSysMallocF\fP \fBMqLalS::SysMalloc\fP"
 .PP
 \fBmalloc\fP syscall  
 .PP
 additional info: \fCman malloc\fP  
 .PP
-Definition at line 4144 of file msgque.h.
+Definition at line 4143 of file msgque.h.
 .SS "\fBMqSysReallocF\fP \fBMqLalS::SysRealloc\fP"
 .PP
 \fBrealloc\fP syscall  
 .PP
 additional info: \fCman realloc\fP  
 .PP
-Definition at line 4146 of file msgque.h.
+Definition at line 4145 of file msgque.h.
 .SS "\fBMqSysSelectF\fP \fBMqLalS::SysSelect\fP"
 .PP
 \fBselect\fP syscall  
@@ -286,7 +286,7 @@ read more at: \fCman 2 select\fP
 .PP
  
 .PP
-Definition at line 4150 of file msgque.h.
+Definition at line 4149 of file msgque.h.
 .SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
 \fBfork server create\fP syscall with \fBMqS\fP error plugin 
@@ -308,7 +308,7 @@ Definition at line 4150 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -391,7 +391,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -490,7 +490,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -637,7 +637,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 .PP
@@ -677,7 +677,7 @@ static enum MqErrorE SysSleep (
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 .PP
@@ -717,7 +717,7 @@ static enum MqErrorE SysUSleep (
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 .PP
@@ -771,4 +771,4 @@ static enum MqErrorE SysWait (
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

@@ -35,6 +35,7 @@ $ctx dict set mydata 0 \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS]"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=rename $ctx \"\""
 ALIASES		    += "Exit=$ctx Exit"
 ALIASES		    += "LogC=$ctx LogC prefix level message"
@@ -241,6 +242,9 @@ ALIASES		    += "D=DoubleObj"
 ALIASES		    += "C=StringObj"
 ALIASES		    += "B=ByteArrayObj"
 ALIASES		    += "U=CmdObj"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=\B"
+ALIASES		    += "TE=TCLMSGQUE errorCode"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
@@ -282,9 +286,4 @@ if {[catch { \n\
   } \n\
 } \n\
 \endcode"
-
-
-
-
-
 

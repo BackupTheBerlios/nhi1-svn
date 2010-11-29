@@ -1,4 +1,4 @@
-.TH "Mq_System_C_API" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -227,21 +227,21 @@ additional info: \fCman free\fP
 .PP
 
 .PP
-Definition at line 4340 of file msgque.h.
+Definition at line 4339 of file msgque.h.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef unsigned long \fBMQ_IDNT\fP"
 .PP
 process or thread identifer 
 .PP
-Definition at line 4079 of file msgque.h.
+Definition at line 4078 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP)(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
 .PP
 \fBcalloc\fP syscall 
 .PP
 additional info: \fCman calloc\fP 
 .PP
-Definition at line 4083 of file msgque.h.
+Definition at line 4082 of file msgque.h.
 .SS "typedef \fBMQ_IDNT\fP(* \fBMqSysForkF\fP)(void)"
 .PP
 \fBfork\fP syscall 
@@ -255,28 +255,28 @@ additional info: \fCman fork\fP
 .PP
 
 .PP
-Definition at line 4109 of file msgque.h.
+Definition at line 4108 of file msgque.h.
 .SS "typedef void(* \fBMqSysFreeF\fP)(\fBMQ_PTR\fP)"
 .PP
 \fBfree\fP syscall 
 .PP
 additional info: \fCman free\fP 
 .PP
-Definition at line 4095 of file msgque.h.
+Definition at line 4094 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysMallocF\fP)(\fBMQ_SIZE\fP)"
 .PP
 \fBmalloc\fP syscall 
 .PP
 additional info: \fCman malloc\fP 
 .PP
-Definition at line 4087 of file msgque.h.
+Definition at line 4086 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysReallocF\fP)(\fBMQ_PTR\fP, \fBMQ_SIZE\fP)"
 .PP
 \fBrealloc\fP syscall 
 .PP
 additional info: \fCman realloc\fP 
 .PP
-Definition at line 4091 of file msgque.h.
+Definition at line 4090 of file msgque.h.
 .SS "typedef int(* \fBMqSysSelectF\fP)(int, void *, void *, void *, struct timeval *)"
 .PP
 \fBselect\fP syscall 
@@ -298,7 +298,7 @@ read more at: \fCman 2 select\fP
 .PP
 
 .PP
-Definition at line 4104 of file msgque.h.
+Definition at line 4103 of file msgque.h.
 .SH "Enumeration Type Documentation"
 .PP 
 .SS "enum \fBMqIdSE\fP"
@@ -317,7 +317,7 @@ empty struct
 \fB\fIMQ_ID_THREAD \fP\fP
 \fIval\fP has a thread handle 
 .PP
-Definition at line 4112 of file msgque.h.
+Definition at line 4111 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "static \fBMQ_STR\fP mq_strdup_save (\fBMQ_CST\fP v)\fC [inline, static]\fP"
@@ -336,7 +336,7 @@ the new string or \fCNULL\fP
 .PP
 
 .PP
-Definition at line 4430 of file msgque.h.
+Definition at line 4429 of file msgque.h.
 .SS "\fBMQ_STR\fP MqSysBasename (\fBMQ_CST\fP const  in, \fBMQ_BOL\fP includeExtension)"
 .PP
 \fBbasename\fP syscall with \fBMqS\fP error plugin 
@@ -395,12 +395,12 @@ a pointer to the new memory block initialized with '0'
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
 .PP
-Definition at line 4396 of file msgque.h.
+Definition at line 4395 of file msgque.h.
 .SS "void MqSysFreeP (\fBMQ_PTR\fP data)"
 .PP
 \fBfree\fP syscall with \fBMqS\fP error plugin 
@@ -433,7 +433,7 @@ additional info: \fCman gettimeofday\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
@@ -500,12 +500,12 @@ initialize a new created thred
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
 .PP
-Definition at line 4384 of file msgque.h.
+Definition at line 4383 of file msgque.h.
 .SS "static enum \fBMqErrorE\fP MqSysUSleep (struct \fBMqS\fP *const  context, unsigned int const  usec)\fC [inline, static]\fP"
 .PP
 \fBusleep\fP syscall with \fBMqS\fP error plugin 
@@ -519,12 +519,12 @@ Definition at line 4384 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
 .PP
-Definition at line 4372 of file msgque.h.
+Definition at line 4371 of file msgque.h.
 .SS "static enum \fBMqErrorE\fP MqSysWait (struct \fBMqS\fP *const  context, const struct \fBMqIdS\fP * idP)\fC [inline, static]\fP"
 .PP
 \fBwait for process or thread\fP syscall with \fBMqS\fP error plugin 
@@ -538,12 +538,12 @@ Definition at line 4372 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
 .RE
 .PP
 
 .PP
-Definition at line 4360 of file msgque.h.
+Definition at line 4359 of file msgque.h.
 .SH "Variable Documentation"
 .PP 
 .SS "struct \fBMqLalS\fP \fBMqLal\fP"
@@ -552,4 +552,4 @@ Language Abstraction Layer in duty.
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

@@ -1,4 +1,4 @@
-.TH "Mq_Error_Java_API" n "22 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Error_Java_API" n "29 Nov 2010" "Version 4.7" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

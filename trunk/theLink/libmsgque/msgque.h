@@ -1843,7 +1843,7 @@ enum MqWaitOnEventE {
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
   struct MqS  * const ctx,
   MQ_SIZE const id,
-  struct MqS  ** const
+  struct MqS  ** filter
 ) __attribute__((nonnull(1)));
 
 /// \brief get the \e filter-context or the \e master-context
@@ -1860,7 +1860,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
 /// 
 /// \ctx
 /// \id
-/// \param[out] filter the \e other-context or \null on error
 /// \return the \e filter-context or \null if the \e context hs no \e filter-context
 /// \attention if no filter is available an error-message is created in the context
 MQ_EXTERN struct MqS  * const MQ_DECL MqServiceGetFilter2 (
@@ -3393,43 +3392,43 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_END (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadY (
   struct MqS * const ctx,
   MQ_BYT * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadO (
   struct MqS * const ctx,
   MQ_BOL * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadS (
   struct MqS * const ctx,
   MQ_SRT * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadI (
   struct MqS * const ctx,
   MQ_INT * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadF (
   struct MqS * const ctx,
   MQ_FLT * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadW (
   struct MqS * const ctx,
   MQ_WID * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
   struct MqS * const ctx,
   MQ_DBL * const val
-);
+) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_STR object from the \e Read-Buffer object
 /// \context
@@ -3440,7 +3439,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
   struct MqS * const context,
   MQ_CST * const out
-);
+) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_BIN object from the \e Read-Buffer object
 /// \context
@@ -3451,7 +3450,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
   struct MqS * const context,
   MQ_BIN  * const out,
   MQ_SIZE * const len
-);
+) __attribute__((nonnull(1)));
 
 /// \brief extract a \e body-item from the \e read-data-package
 ///
@@ -3466,7 +3465,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   struct MqS * const ctx,
   MQ_CBI  * const val,
   MQ_SIZE * const len
-);
+) __attribute__((nonnull(1)));
 
 /// \brief extract the entire \e body-package from the \e read-data-package
 ///
@@ -3485,7 +3484,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
   struct MqS * const ctx,
   MQ_BIN  * const val,
   MQ_SIZE * const len
-);
+) __attribute__((nonnull(1)));
 
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
@@ -3498,7 +3497,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
   struct MqS * const ctx,
   struct MqBufferS ** val
-);
+) __attribute__((nonnull(1)));
 
 /// \brief read an MqBufferLS object from all items of the \e Read-Buffer object
 /// \context
@@ -3509,7 +3508,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
   struct MqS * const context,
   struct MqBufferLS ** const out
-);
+) __attribute__((nonnull(1)));
 
 
 /// \brief link two \e context-objects to direct pass a data item from one object to the other.
@@ -3519,7 +3518,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
   struct MqS * const ctx,
   struct MqS * const otherCtx
-);
+) __attribute__((nonnull(1)));
 
 /*****************************************************************************/
 /*                                                                           */

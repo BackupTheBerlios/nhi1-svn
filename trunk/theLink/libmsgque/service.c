@@ -32,7 +32,7 @@ enum MqErrorE
 MqServiceGetFilter (
   struct MqS * const context,
   MQ_SIZE const id,
-  struct MqS ** const filterP
+  struct MqS ** filterP
  )
 {
   return (

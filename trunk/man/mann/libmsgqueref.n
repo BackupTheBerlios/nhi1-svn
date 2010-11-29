@@ -1,4 +1,4 @@
-.TH "libmsgque" n "22 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,6 +25,8 @@ libmsgque \- The \fBC\fP \fBApplication-Server\fP and \fBProgramming-Language-Mi
  \fBBUFFER API\fP
 .br
  \fBERROR OBJECT\fP
+.br
+ \fBBINARY OBJECT\fP
 .br
  \fBFILTER MODE\fP
 .br
@@ -857,6 +859,11 @@ The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+\fBAttention:\fP
+.RS 4
+the link-setup (\fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP) have to done \fBbefor\fP using this function 
+.RE
+.PP
 .SS "MqServiceProxy(ctx,MQ_TOK token, MQ_SIZE id=0)"
 create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
 .PP
@@ -966,7 +973,7 @@ construct an outgoing \fIsend-data-package\fP.
 Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBMqSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
- \fBExample:\fP send an integer and a list of double, string and a \fIbyte-array\fP: 
+ \fBExample:\fP send an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fI\fBMQ_BIN\fP:\fP 
 .PP
 .nf
  MqSendSTART(ctx);
@@ -1253,7 +1260,7 @@ extract data from an incoming \fIread-data-package\fP.
 Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an integer and a list of double, string and a \fIbyte-array\fP: 
+ \fBExample:\fP read an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fBMQ_BIN\fP: 
 .PP
 .nf
  MqErrorCheck(MqReadI(ctx, &i));
@@ -1811,6 +1818,9 @@ clear the \fIerror\fP and reset the \fIcontext\fP
 convert the error from an \fIcontext\fP into an \fBERROR OBJECT\fP and raise the object.
 .SS "MqErrorPrint(ctx)"
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
+.SH "BINARY OBJECT"
+.PP
+No special \fIbinary-object\fP is used. All \fIbinary-data\fP is available as \fBMQ_BIN\fP.
 .SH "CONTEXT LOCAL STORAGE API"
 .PP
 The \fIapplication-specific-data\fP is available as \fIclass-data-member\fP.

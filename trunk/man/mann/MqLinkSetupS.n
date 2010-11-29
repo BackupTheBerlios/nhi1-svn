@@ -1,4 +1,4 @@
-.TH "MqLinkSetupS" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "MqLinkSetupS" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,4 +42,4 @@ Definition at line 574 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

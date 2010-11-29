@@ -40,6 +40,7 @@ public static void main(String[] args) { \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(String prefix, int level, String message)"
@@ -264,6 +265,9 @@ ALIASES		    += "D=double"
 ALIASES		    += "C=String"
 ALIASES		    += "B=byte[]"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=byte[]"
+ALIASES		    += "TE=MqSException"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -296,10 +300,4 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
-
-
-
-
-
-
 

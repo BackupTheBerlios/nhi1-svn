@@ -1,4 +1,4 @@
-.TH "Mq_Filter_C_API" n "28 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "Mq_Filter_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -87,47 +87,47 @@ A bi-directional filter allow a \fIdata-flow\fP in both directions and is used i
 .PP
  To define a \fIbi-directional\fP filter a couple of commands provide support:
 .IP "\(bu" 2
-\fBServiceCreate\fP
+\fBMqServiceCreate\fP
 .IP "  \(bu" 4
 use the token \fB+ALL\fP to add a listener for \fIall\fP services. This feature is used for a tunnel to modify the body at all. (example: \fCaguard\fP)
 .PP
 
 .IP "\(bu" 2
-\fBServiceProxy\fP
+\fBMqServiceProxy\fP
 .IP "  \(bu" 4
 use this function to link the \fIleft\fP context with the \fIright\fP context identified with the slave-identifier \fIid\fP (default: 0). No data manipulation is performed.
 .PP
 
 .IP "\(bu" 2
-\fBServiceGetFilter\fP
+\fBMqServiceGetFilter\fP
 .IP "  \(bu" 4
 in a filter service the current context is used to \fIread\fP the data. To \fIsend\fP the data an other context, belonging to the \fIother\fP site of the communication, have to be used. This function return the context of the other site.
 .PP
 
 .IP "\(bu" 2
-\fBServiceGetToken\fP
+\fBMqServiceGetToken\fP
 .IP "  \(bu" 4
 if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current token is not known. This function return the current token.
 .PP
 
 .IP "\(bu" 2
-\fBServiceIsTransaction\fP
+\fBMqServiceIsTransaction\fP
 .IP "  \(bu" 4
 if the token \fB+ALL\fP is used in \fBServiceCreate\fP to add a \fIgeneric\fP service handler the current transaction-status is not known. This function return the transaction-status as boolean with \fBtrue\fP (with-transaction) or \fBfalse\fP (without-transaction).
 .IP "  \(bu" 4
-\fBwith-transaction\fP: the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP
+\fBwith-transaction\fP: the package was send with \fBMqSendEND_AND_WAIT\fP or \fBMqSendEND_AND_CALLBACK\fP
 .IP "  \(bu" 4
-\fBwithout-transaction\fP: the package was send with \fBSendEND\fP
+\fBwithout-transaction\fP: the package was send with \fBMqSendEND\fP
 .PP
 
 .IP "\(bu" 2
-\fBReadBDY\fP
+\fBMqReadBDY\fP
 .IP "  \(bu" 4
 read and return the entire body as binary array. Use this array to apply a transformation to the body at all like encryption (example: \fCaguard\fP) or to save the body in a persistent storage for later use like transaction support (example: \fCatrans\fP)
 .PP
 
 .IP "\(bu" 2
-\fBSendBDY\fP
+\fBMqSendBDY\fP
 .IP "  \(bu" 4
 send a binary array, as returned by \fBReadBDY\fP, to the filter target.
 .PP
@@ -152,13 +152,13 @@ A one-directional filter is a special form of a bi-directional filter and allow 
 
 .fi
 .PP
- with every command have to use \fBlibmsgque\fP. To define a \fBlibmsgque\fP filter create a service handle with \fBServiceCreate\fP or \fBServiceProxy\fP for the both special token:
+ with every command have to use \fBlibmsgque\fP. To define a \fBlibmsgque\fP filter create a service handle with \fBMqServiceCreate\fP or \fBMqServiceProxy\fP for the both special token:
 .IP "\(bu" 2
 \fB+FTR\fP : required to act on filter data rows. Every filter input data is a list of filter data rows and every row is a list of filter data columns. Every row is send to the following filter-command as \fB+FTR\fP service request.
 .IP "\(bu" 2
 \fB+EOF\fP : required to act on End-Of-Filter data and is called after all \fB+FTR\fP data was send. Sometimes the filter data can not be served as \fB+FTR\fP data (example: sorting of the input rows need to read all rows before the data can be send to the next filter command) and the\fB+EOF\fP token is used to continue send \fB+FTR\fP data rows.
 .PP
-and send every data item with \fBSendEND_AND_WAIT\fP. 
+and send every data item with \fBMqSendEND_AND_WAIT\fP. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for gomsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.
