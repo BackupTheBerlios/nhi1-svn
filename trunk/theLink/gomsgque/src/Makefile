@@ -10,16 +10,16 @@
 #§              please contact AUTHORS for additional information
 #§
 
-include ./MakeGoMsgque.inc
+include ../MakeGoMsgque.inc
 include $(GOROOT)/src/Make.inc
 
-MQOBJ  = $(builddir)/../../libmsgque/.libs/liblocal.a
+MQOBJ  = $(abs_top_builddir)/theLink/libmsgque/.libs/liblocal.a
 
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
 	  service.go slave.go
 
-CGO_CFLAGS=-I . -I $(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
+CGO_CFLAGS=-I . -I $(abs_top_srcdir)/theLink/libmsgque -DMQ_IGNORE_EXTERN
 CGO_LDFLAGS= $(MQOBJ) _cgo_export.o gomsgque.o
 CGO_DEPS=$(MQOBJ) _cgo_export.o gomsgque.o 
 
@@ -32,4 +32,4 @@ gomsgque.o: gomsgque.c gomsgque.h _cgo_export.h
 	$(GC) $*.go
 	$(LD) -o $@ $*.$O
 
-all: _obj/gomsgque.a server client
+all: _obj/gomsgque.a server

@@ -14,12 +14,7 @@
 ## ==========================================================================
 ## GO
 ##
-
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) mulclient$(EXEEXT) \
-  mulserver$(EXEEXT) manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \
-    Filter1$(EXEEXT) Filter2$(EXEEXT) Filter4$(EXEEXT)
   
-
 include $(GOROOT)/src/Make.inc
 
 SUFFIXES = .go .bin $(EXEEXT)
@@ -33,17 +28,37 @@ dummy:	all
 	$(LD) -o $@ $<
 
 ## all executables depend on our new created "gomsgque.a" library
+
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
 MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += Filter3$(EXEEXT)
 Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += mulclient$(EXEEXT)
 mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += mulserver$(EXEEXT)
 mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += manfilter$(EXEEXT)
 manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += testserver$(EXEEXT)
 testserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += testclient$(EXEEXT)
 testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += Filter1$(EXEEXT)
+Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += Filter2$(EXEEXT)
+Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += Filter4$(EXEEXT)
+Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 
 ##
 ## ==========================================================================
@@ -51,6 +66,4 @@ testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 ##
 
 CLEANFILES = $(BUILT_SOURCES)
-
-EXTRA_DIST = *.go
-
+EXTRA_DIST = $(srcdir)/*.go

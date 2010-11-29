@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "29 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "29 Nov 2010" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,6 +45,32 @@ adding and removing \fBservices\fP
 The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
 .SS "UNIX"
 The example from the tutorial is using the \fBautomake\fP build-environment from the \fBgomsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/Go/Makefile.am\fP 
+.PP
+.PP
+.nf
+include $(GOROOT)/src/Make.inc
+
+SUFFIXES = .go .bin $(EXEEXT)
+
+dummy:  all
+
+.go.bin:
+        $(GC) -o $@ $<
+
+.bin$(EXEEXT):
+        $(LD) -o $@ $<
+
+## all executables depend on our new created 'gomsgque.a' library
+.fi
+.PP
+.PP
+.PP
+.nf
+BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+.fi
+.PP
 .SS "WINDOWS"
 The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
 .SH "SERVER"
@@ -108,7 +134,6 @@ func main() {
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }
-
 .fi
 .PP
 .PP
@@ -191,7 +216,6 @@ func main() {
   ctx.SendEND_AND_WAIT('HLWO', 5)
   println(ctx.ReadC())
 }
-
 .fi
 .PP
 .PP
@@ -226,7 +250,62 @@ To call a \fIlocal\fP server started by the client using \fIPIPE\fP communicatio
 .PP
 .SH "FILTER"
 .PP
-The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filter looks like: 
+The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filter looks like:
+.PP
+.PP
+.nf
+
+package main
+
+import (
+  . 'gomsgque'
+    'os'
+)
+
+type ManFilter MqS
+  func (this *ManFilter) Factory () *MqS {
+    return NewMqS(nil)
+  }
+
+type FTR MqS
+  func (this *FTR) Call () {
+    ctx := (*MqS)(this)
+    ftr := ctx.ServiceGetFilter()
+    ftr.SendSTART()
+    for ctx.ReadItemExists() {
+      ftr.SendC('<' + ctx.ReadC() + '>')
+    }
+    ftr.SendEND_AND_WAIT2('+FTR')
+    ctx.SendRETURN()
+  }
+
+func main() {
+  var srv = NewMqS(nil)
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName('ManFilter')
+  srv.ConfigSetIsServer(true)
+  srv.ConfigSetFactory((*ManFilter)(srv))
+  srv.LinkCreate(os.Args...)
+  srv.ServiceCreate('+FTR', (*FTR)(srv))
+  srv.ServiceProxy('+EOF')
+  srv.ProcessEvent(WAIT_FOREVER)
+}
+.fi
+.PP
+ Use \fImanfilter.go\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+
+.fi
+.PP
+ 
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for gomsgque from the source code.

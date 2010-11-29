@@ -728,6 +728,12 @@ Start \e mulserver.java using \e TCP port \e 7777 and create a \e thread for eve
 \verbatim
 > java example.mulserver --tcp --port 7777 --thread
 \endverbatim
+\elseif GO
+\include mulserver.go
+Start \e mulserver using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mulserver --tcp --port 7777 --thread
+\endverbatim
 \elseif CSHARP
 \include mulserver.cs
 Start \e mulserver.exe using \e TCP port \e 7777 and create a \e thread for every incoming connection
@@ -805,6 +811,12 @@ Use \e mulclient.java to connect to \e mulserver.java using \e TCP port \e 7777:
 \verbatim
 > java example.mulclient --tcp --port 7777
 \endverbatim
+\elseif GO
+\include mulclient.go
+Use \e mulclient to connect to \e mulserver.exe using \e TCP port \e 7777:
+\verbatim
+> mulclient --tcp --port 7777
+\endverbatim
 \elseif CSHARP
 \include mulclient.cs
 Use \e mulclient.exe to connect to \e mulserver.exe using \e TCP port \e 7777:
@@ -880,6 +892,12 @@ Use \e manfilter.rb in a LibMsgque command pipeline:
 Use \e manfilter.java in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
+\endverbatim
+\elseif GO
+\include manfilter.go
+Use \e manfilter in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
 \endverbatim
 \elseif CSHARP
 \include manfilter.cs

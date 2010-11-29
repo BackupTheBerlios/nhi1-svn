@@ -12,13 +12,19 @@
 
 if USE_GO
 
+#####################################################################################
+## GO files
+
 GOMAKEFILE  =	src/Makefile
 MAKEARGS    =	$(AM_MAKEFLAGS)
 
-all-local:
+setup:
+	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
+
+all-local: setup
 	cd src && $(MAKE) $(MAKEARGS)
 
-clean-local: $(GOMAKEFILE)
+clean-local: setup
 	cd src && $(MAKE) $(MAKEARGS) clean
 
 install-exec-local:
@@ -39,7 +45,10 @@ $(srcdir)/src/read.go \
 $(srcdir)/src/link.go \
 $(srcdir)/src/config.go \
 $(srcdir)/src/service.go\
+$(srcdir)/src/slave.go\
+$(srcdir)/src/server.go\
 $(srcdir)/src/gomsgque.h \
 $(srcdir)/src/gomsgque.c \
-$(srcdir)/src/Makefile
+$(srcdir)/src/Makefile \
+MakeGoMsgque.inc.in
 

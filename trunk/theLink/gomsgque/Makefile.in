@@ -47,7 +47,8 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 subdir = theLink/gomsgque
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(srcdir)/MakeGoMsgque.inc.in $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compare_version.m4 \
 	$(top_srcdir)/m4/ax_prog_ruby_version.m4 \
@@ -62,7 +63,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/mqconfig.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = MakeGoMsgque.inc
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -255,6 +256,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 uudecode = @uudecode@
+
+#####################################################################################
 @USE_GO_TRUE@GOMAKEFILE = src/Makefile
 @USE_GO_TRUE@MAKEARGS = $(AM_MAKEFLAGS)
 EXTRA_DIST = \
@@ -267,9 +270,12 @@ $(srcdir)/src/read.go \
 $(srcdir)/src/link.go \
 $(srcdir)/src/config.go \
 $(srcdir)/src/service.go\
+$(srcdir)/src/slave.go\
+$(srcdir)/src/server.go\
 $(srcdir)/src/gomsgque.h \
 $(srcdir)/src/gomsgque.c \
-$(srcdir)/src/Makefile
+$(srcdir)/src/Makefile \
+MakeGoMsgque.inc.in
 
 all: all-am
 
@@ -304,6 +310,8 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+MakeGoMsgque.inc: $(top_builddir)/config.status $(srcdir)/MakeGoMsgque.inc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -462,10 +470,13 @@ uninstall-am:
 	uninstall uninstall-am
 
 
-@USE_GO_TRUE@all-local:
+@USE_GO_TRUE@setup:
+@USE_GO_TRUE@	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
+
+@USE_GO_TRUE@all-local: setup
 @USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS)
 
-@USE_GO_TRUE@clean-local: $(GOMAKEFILE)
+@USE_GO_TRUE@clean-local: setup
 @USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) clean
 
 @USE_GO_TRUE@install-exec-local:

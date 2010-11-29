@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "29 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -155,7 +155,7 @@ Definition at line 4503 of file msgque.h.
 .PP
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIMQ_NO\fP'\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIfalse\fP'\fP using the following format: 
 .PP
 .nf
 
@@ -167,7 +167,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -228,7 +228,7 @@ get the \fItype\fP member from an MqTypeE object in human readable form
 .PP
 \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -241,11 +241,11 @@ the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the
 .PP
 write a \fIprintf\fP style logging-message to stderr using the internal format 
 .PP
-Use the format and the restrictions from \fBMqLogC\fP. 
+Use the format and the restrictions from \fBLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -259,11 +259,11 @@ Use the format and the restrictions from \fBMqLogC\fP.
 .PP
 write a \fIvprintf\fP style logging-message to stderr using the internal format 
 .PP
-Use the format and the restrictions from \fBMqLogC\fP. 
+Use the format and the restrictions from \fBLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -277,4 +277,4 @@ Use the format and the restrictions from \fBMqLogC\fP.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

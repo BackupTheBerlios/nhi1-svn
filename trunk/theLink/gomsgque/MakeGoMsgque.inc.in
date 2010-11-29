@@ -11,5 +11,5 @@
 #§
 
 GOROOT = @GOROOT@
-srcdir = @srcdir@
-builddir = @builddir@
+abs_top_srcdir = @abs_top_srcdir@
+abs_top_builddir = @abs_top_builddir@

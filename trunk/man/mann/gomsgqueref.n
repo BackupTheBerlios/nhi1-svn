@@ -1,4 +1,4 @@
-.TH "gomsgque" n "29 Nov 2010" "Version 4.7" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque" n "29 Nov 2010" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1985,8 +1985,156 @@ The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc or i6
 .SH "EXAMPLES"
 .PP
 .SS "1. create a server to multiplicate 2 double values and return the result"
+.PP
+.nf
+
+package main
+
+import (
+  . 'gomsgque'
+    'os'
+)
+
+type mulserver struct {
+  *MqS
+  // add server specific data 
+}
+
+func Newmulserver() *mulserver {
+  ret := new(mulserver)
+  ret.MqS = NewMqS(ret)
+  return ret
+}
+
+func (this *mulserver) Factory() *MqS {
+  return Newmulserver().MqS
+}
+
+func (this *mulserver) ServerSetup() {
+  this.ServiceCreate('MMUL', (*MMUL)(this))
+}
+
+type MMUL mulserver
+  func (this *MMUL) Call() {
+    this.SendSTART();
+    this.SendD(this.ReadD() * this.ReadD());
+    this.SendRETURN();
+  }
+
+func main() {
+  var srv = Newmulserver()
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName('MyMulServer')
+  srv.LinkCreate(os.Args...)
+  srv.ProcessEvent(WAIT_FOREVER)
+}
+.fi
+.PP
+ Start \fImulserver\fP using \fITCP\fP port \fI7777\fP and create a \fIthread\fP for every incoming connection 
+.PP
+.nf
+
+> mulserver --tcp --port 7777 --thread
+
+.fi
+.PP
 .SS "2. in a client call the service from 1."
+.PP
+.nf
+
+package main
+
+import (
+  . 'gomsgque'
+    'os'
+    'fmt'
+)
+
+func main() {
+  var ctx = NewMqS(nil)
+  defer func() {
+    if x := recover(); x != nil {
+      ctx.ErrorSet(x)
+    }
+    ctx.Exit()
+  }()
+  ctx.ConfigSetName('MyMul')
+  ctx.LinkCreate(os.Args...)
+  ctx.SendSTART()
+  ctx.SendD(3.67)
+  ctx.SendD(22.3)
+  ctx.SendEND_AND_WAIT('MMUL', 5)
+  fmt.Printf('%f', ctx.ReadD())
+}
+.fi
+.PP
+ Use \fImulclient\fP to connect to \fImulserver.exe\fP using \fITCP\fP port \fI7777\fP: 
+.PP
+.nf
+
+> mulclient --tcp --port 7777
+
+.fi
+.PP
 .SS "3. create a filter to wrap every column in a '<>' pair"
+.PP
+.nf
+
+package main
+
+import (
+  . 'gomsgque'
+    'os'
+)
+
+type ManFilter MqS
+  func (this *ManFilter) Factory () *MqS {
+    return NewMqS(nil)
+  }
+
+type FTR MqS
+  func (this *FTR) Call () {
+    ctx := (*MqS)(this)
+    ftr := ctx.ServiceGetFilter()
+    ftr.SendSTART()
+    for ctx.ReadItemExists() {
+      ftr.SendC('<' + ctx.ReadC() + '>')
+    }
+    ftr.SendEND_AND_WAIT2('+FTR')
+    ctx.SendRETURN()
+  }
+
+func main() {
+  var srv = NewMqS(nil)
+  defer func() {
+    if x := recover(); x != nil {
+      srv.ErrorSet(x)
+    }
+    srv.Exit()
+  }()
+  srv.ConfigSetName('ManFilter')
+  srv.ConfigSetIsServer(true)
+  srv.ConfigSetFactory((*ManFilter)(srv))
+  srv.LinkCreate(os.Args...)
+  srv.ServiceCreate('+FTR', (*FTR)(srv))
+  srv.ServiceProxy('+EOF')
+  srv.ProcessEvent(WAIT_FOREVER)
+}
+.fi
+.PP
+ Use \fImanfilter\fP in a LibMsgque command pipeline: 
+.PP
+.nf
+
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+
+.fi
+.PP
 .SH "SEE ALSO"
 .PP
 Go, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)

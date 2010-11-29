@@ -1,4 +1,4 @@
-.TH "csmsgque::IService" n "29 Nov 2010" "Version 4.7" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IService" n "29 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

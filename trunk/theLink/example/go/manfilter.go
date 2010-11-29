@@ -50,4 +50,3 @@ func main() {
   srv.ServiceProxy("+EOF")
   srv.ProcessEvent(WAIT_FOREVER)
 }
-

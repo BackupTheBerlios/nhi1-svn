@@ -71,22 +71,22 @@ func (this *MqS) Delete() {
 // set link between *MqS and toplevel object
 func (this *MqS) SetSelf(ifc interface{}) {
   ctxlock[this] = ifc
-  // add interfaces
+  // add interfaces based callback's
   if ifc != nil {
     if obj,ok := ifc.(ServerSetup); ok {
-      ret.ConfigSetServerSetup(obj)
+      this.ConfigSetServerSetup(obj)
     }
     if obj,ok := ifc.(ServerCleanup); ok {
-      ret.ConfigSetServerCleanup(obj)
+      this.ConfigSetServerCleanup(obj)
     }
     if obj,ok := ifc.(Factory); ok {
-      ret.ConfigSetFactory(obj)
+      this.ConfigSetFactory(obj)
     }
     if obj,ok := ifc.(BgError); ok {
-      ret.ConfigSetBgError(obj)
+      this.ConfigSetBgError(obj)
     }
     if obj,ok := ifc.(Event); ok {
-      ret.ConfigSetEvent(obj)
+      this.ConfigSetEvent(obj)
     }
   }
 }

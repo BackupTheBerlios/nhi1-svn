@@ -13,7 +13,7 @@
 # set NHI1 VERSION information also in:
 # > win/mqconfig.h
 # > win/env.sh
-AC_INIT([NHI1],[0.9],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_INIT([NHI1],[0.10],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADER([mqconfig.h])
@@ -23,8 +23,8 @@ AC_CONFIG_HEADER([mqconfig.h])
 # > win/mqconfig.h
 # > theLink/csmsgque/csmsgque.cs
 # > win/win/win.vsprops
-AC_SUBST([LIBMSGQUE_VERSION], ["4.7"])
-AC_DEFINE([LIBMSGQUE_VERSION], ["4.7"], [version of the 'libmsgque' package])
+AC_SUBST([LIBMSGQUE_VERSION], ["4.8"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["4.8"], [version of the 'libmsgque' package])
 
 #  Updating library version information
 #  ====================================
@@ -175,7 +175,7 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/gomsgque/Makefile theLink/gomsgque/src/MakeGoMsgque.inc theLink/example/go/Makefile 
+			    theLink/gomsgque/Makefile theLink/gomsgque/MakeGoMsgque.inc theLink/example/go/Makefile 
 			      theLink/example/vb/Makefile
 				performance/Makefile performance/env.sh
 				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile

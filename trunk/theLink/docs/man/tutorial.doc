@@ -56,6 +56,13 @@ An example \b automake configuration file is available in: \c example/\lang/Make
 ...
 \skip	MyClient_SOURCES
 \until	MyServer_SOURCES
+\elseif GO
+\skip   include
+\until  ## all
+
+\skip	MyClient
+\until	MyServer
+\until	MyServer
 \elseif CSHARP
 \skip	RULE_CS_EXE
 \until	RULE_CS_EXE
@@ -492,15 +499,9 @@ Use \e manfilter.php in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ php -c /path/to/php.ini  manfilter.php @ atool join -d :
 \endverbatim
-\elseif C
-\include manfilter.c
-Use \e manfilter.c in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
-\endverbatim
-\elseif CC
-\include manfilter.cc
-Use \e manfilter.cc in a LibMsgque command pipeline:
+\else
+\include manfilter.\fileextension
+Use \e manfilter.\fileextension in a LibMsgque command pipeline:
 \verbatim
 > echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
 \endverbatim

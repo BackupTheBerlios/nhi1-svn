@@ -314,7 +314,7 @@ if {![array exists TS_SERVER]} {
     tcl	    [list {*}$TCLSH   [file join $linksrcdir tests server.tcl]]	  \
     perl    [list {*}$PERL -w [file join $linksrcdir tests server.pl]]	  \
     php	    [list {*}$PHP     [file join $linksrcdir tests server.php]]	  \
-    go	    [file join $linksrcdir gomsgque src server$::EXEEXT]	  \
+    go	    [file normalize [file join .. gomsgque src server$::EXEEXT] ] \
     jdb	    [list jdb	      Server]					  \
     cc	    ccserver$::EXEEXT						  \
     c	    server$::EXEEXT						  \

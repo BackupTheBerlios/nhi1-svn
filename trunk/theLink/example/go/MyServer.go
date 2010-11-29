@@ -54,4 +54,3 @@ func main() {
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }
-

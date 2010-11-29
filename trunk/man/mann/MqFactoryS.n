@@ -1,4 +1,4 @@
-.TH "MqFactoryS" n "29 Nov 2010" "Version 4.7" "libmsgque" \" -*- nroff -*-
+.TH "MqFactoryS" n "29 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqFactoryS \- used as interface for object creation
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -31,19 +31,19 @@ MqFactoryS \- used as interface for object creation
 used as interface for object creation 
 .PP
 Definition at line 533 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS::Create\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS.Create\fP\fC [read]\fP"
 .PP
 object creation function 
 .PP
 Definition at line 535 of file msgque.h.
-.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS::Delete\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS.Delete\fP\fC [read]\fP"
 .PP
 object deletion function 
 .PP
 Definition at line 536 of file msgque.h.
-.SS "enum \fBMqFactoryE\fP \fBMqFactoryS::type\fP"
+.SS "enum \fBMqFactoryE\fP \fBMqFactoryS.type\fP"
 .PP
 set during factory create to save the 'reason' 
 .PP
@@ -51,4 +51,4 @@ Definition at line 534 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.
