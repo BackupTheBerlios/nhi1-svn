@@ -2,10 +2,14 @@
 
 <CENTER>
 
-\section nw  NEWS, from 22 Oct 2010
+\section nw  NEWS, from 29 Nov 2010
 
-Finish release \b 1 of \ref wp2 with adding \ref wp2_ruby support. \n
-Read more at: \ref V0_8 "ChangeLog"
+Finish release \b 3 of \ref wp2 with adding \ref wp2_go support. \n
+Read more at: \ref V0_10 "ChangeLog" \n
+\n
+<B><I>It takes 2 years and a team of qualified software developers to implement</I></B> \n
+<B><I>a new programming language,</I></B> \n 
+<B><I>but it takes only 2 weeks to add a \e micro-kernel</I></B> \n
 
 \section intro Introduction
 

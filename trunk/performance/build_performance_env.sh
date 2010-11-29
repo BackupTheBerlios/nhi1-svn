@@ -40,13 +40,13 @@ Build() {
 	  --enable-vb --enable-static --enable-brain --enable-ruby \
 	    --enable-php || exit 1
 
-      make || exit 1
+      ../../performance_$BUILD.env make || exit 1
 
-      make install || exit 1
+      ../../performance_$BUILD.env make install || exit 1
     )
   )
 }
 
 ## main
-Build thread --enable-threads --enable-csharp --enable-java
+Build thread --enable-threads --enable-csharp --enable-java --enable-go
 Build nothread 

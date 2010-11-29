@@ -17,11 +17,11 @@
 
 #+
 #§  \file       theLink/example/go/Makefile.am
-#§  \brief      \$Id: Makefile.am 332 2010-11-25 16:41:11Z aotto1968 $
+#§  \brief      \$Id: Makefile.am 338 2010-11-29 17:42:02Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 332 $
+#§  \version    \$Rev: 338 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
