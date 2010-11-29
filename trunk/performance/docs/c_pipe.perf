@@ -1,10 +1,4 @@
-> nothread/NHI1-0.9/theLink/tests/client --all @ nothread/NHI1-0.9/theLink/tests/server
-C> (client:16318) [2010-11-09:21-30-38] [0-0-0-0x6248a0-main]: start: --------------------------------------
-C> (client:16318) [2010-11-09:21-30-38] [0-0-0-0x6248a0-statistics]:                      MqSendEND:       2.62
-C> (client:16318) [2010-11-09:21-30-38] [0-0-0-0x6248a0-statistics]:         MqSendEND_AND_CALLBACK:       4.31
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-statistics]:             MqSendEND_AND_WAIT:      17.70
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-statistics]:                  parent create:     708.66
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-statistics]:                  parent delete:      87.03
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-statistics]:                   child create:      70.38
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-statistics]:                   child delete:      28.99
-C> (client:16318) [2010-11-09:21-30-41] [0-0-0-0x6248a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.10/theLink/tests/client --all @ nothread/NHI1-0.10/theLink/tests/server
+C> (client:25898) [2010-11-29:19-59-21] [0-0-0-0x6248a0-main]: start: --------------------------------------
+C> (client:25898) [2010-11-29:19-59-21] [0-0-0-0x6248a0-statistics]:                      MqSendEND:       2.66
+C> (client:25898) [2010-11-29:19-59-22] [0-0-0-0x6248a0-statistics]:         MqSendEND_AND_CALLBACK:       4.37

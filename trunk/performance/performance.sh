@@ -89,6 +89,7 @@ ruby=Ruby
 tcl=Tcl
 vb=VB.NET
 php=PHP
+go=Go
 
 TotalLink() {
   L=$1;
@@ -189,6 +190,13 @@ perl_tcp_spawn
 perl_uds_fork
 perl_uds_thread
 perl_uds_spawn
+go_pipe
+go_tcp_fork
+go_tcp_thread
+go_tcp_spawn
+go_uds_fork
+go_uds_thread
+go_uds_spawn
 php_pipe
 php_tcp_fork
 php_tcp_spawn
@@ -229,7 +237,7 @@ for SRV in $R; do
   echo $SRV
 
   case $SRV in
-    *thread* | *java* | *csharp* | *vb* )	
+    *thread* | *java* | *csharp* | *vb* | *go* )	
       ENV="ENV=thread ./performance_thread.env ./local.env"
       export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
       export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"
@@ -289,6 +297,10 @@ for SRV in $R; do
     ;;
     *tcl*)	
       SERVER="tclsh $LINK_DIR/tests/server.tcl" 
+      CLIENT="$LINK_DIR/tests/client"
+    ;;
+    *go*)	
+      SERVER="$LINK_DIR/gomsgque/src/server" 
       CLIENT="$LINK_DIR/tests/client"
     ;;
     *cc*)	

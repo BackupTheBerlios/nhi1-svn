@@ -1,0 +1,2 @@
+> nothread/NHI1-0.10/theLink/gomsgque/src/server --tcp --host localhost --port 7777 --fork
+> nothread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7777

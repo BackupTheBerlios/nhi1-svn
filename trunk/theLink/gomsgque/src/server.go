@@ -196,8 +196,18 @@ func (this *Server) ServerSetup() {
     this.ServiceCreate("PRNT", (*PRNT)(this))
     this.ServiceCreate("TRNS", (*TRNS)(this))
     this.ServiceCreate("TRN2", (*TRN2)(this))
+    this.ServiceCreate("RDUL", (*RDUL)(this))
   }
 }
+
+type RDUL Server
+  func (this *RDUL) Call() {
+    this.ReadY()
+    this.ReadS()
+    this.ReadI()
+    this.ReadW()
+    this.ReadU()
+  }
 
 type TRN2 Server
   func (this *TRN2) Call() {
