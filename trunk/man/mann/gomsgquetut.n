@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "29 Nov 2010" "Version 4.8" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "30 Nov 2010" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME

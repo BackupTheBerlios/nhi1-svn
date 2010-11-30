@@ -12,6 +12,15 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
 		    --enable-guard \
+		    --enable-brain \
+		    --enable-go \
+		    --enable-ruby \
+		    --enable-cxx \
+		    --enable-java \
+		    --enable-csharp \
+		    --enable-python \
+		    --enable-perl \
+		    --enable-php \
 		    $ARGS $@
 
 #		    --enable-guard \

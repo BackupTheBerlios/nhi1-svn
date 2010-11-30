@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_Cs_API" n "29 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_Cs_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
