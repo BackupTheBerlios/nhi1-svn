@@ -1,0 +1,11 @@
+> thread/NHI1-0.10/theLink/gomsgque/src/server --uds --file ./socket.uds --spawn
+> thread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-16] [0-0-0-0x6259a0-main]: start: --------------------------------------
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-16] [0-0-0-0x6259a0-statistics]:                      MqSendEND:       5.72
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-16] [0-0-0-0x6259a0-statistics]:         MqSendEND_AND_CALLBACK:       8.89
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-19] [0-0-0-0x6259a0-statistics]:             MqSendEND_AND_WAIT:      22.08
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-20] [0-0-0-0x6259a0-statistics]:                  parent create:    2017.38
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-20] [0-0-0-0x6259a0-statistics]:                  parent delete:     160.71
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-20] [0-0-0-0x6259a0-statistics]:                   child create:     175.29
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-20] [0-0-0-0x6259a0-statistics]:                   child delete:      48.84
+C> (client:8159:0x7febdca37700) [2010-11-30:08-09-20] [0-0-0-0x6259a0-main]: end: ----------------------------------------
