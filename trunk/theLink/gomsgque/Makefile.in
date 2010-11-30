@@ -385,6 +385,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@USE_GO_FALSE@uninstall-local:
 @USE_GO_FALSE@distclean-local:
 @USE_GO_FALSE@install-exec-local:
 @USE_GO_FALSE@clean-local:
@@ -452,7 +453,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-local
 
 .MAKE: install-am install-strip
 
@@ -467,7 +468,7 @@ uninstall-am:
 	install-strip installcheck installcheck-am installdirs \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am
+	uninstall uninstall-am uninstall-local
 
 
 @USE_GO_TRUE@setup:
@@ -480,7 +481,10 @@ uninstall-am:
 @USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) clean
 
 @USE_GO_TRUE@install-exec-local:
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
+@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" goinstall
+
+@USE_GO_TRUE@uninstall-local:
+@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" gouninstall
 
 @USE_GO_TRUE@distclean-local:
 @USE_GO_TRUE@	-test -f src/.distclean && rm -fr src

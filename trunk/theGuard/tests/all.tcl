@@ -27,7 +27,7 @@ tcltest::verbose {pass body error}
 
 # just run the files specified by the following line
 
-configure -file tcl_client.test
+#configure -file tcl_client.test
 
 tcltest::runAllTests
 

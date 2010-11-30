@@ -341,12 +341,27 @@ pEventStart (
 	  // do nothing just move the error to the calling function
 	  MqErrorCopy (context, eventctx);
 	  goto error;
+// code not required anymore -> an exit is just a "normal" error
 	} else if (MqErrorIsEXIT(eventctx)) {
-	  if (MQ_IS_CLIENT(context) && pMqGetFirstParent(context) == pMqGetFirstParent(eventctx->error.errctx)) {
+/*
+M0
+XI0(context)
+XI0(eventctx)
+XI0(eventctx->error.errctx)
+XI0(pMqGetFirstParent(context))
+XI0(pMqGetFirstParent(eventctx->error.errctx))
+*/
+	  if (
+	      /* every exit in a client is reported, but only if the ignoreExit is NOt set for the target */
+	      (MQ_IS_CLIENT(eventctx->error.errctx) && context->setup.ignoreExit == MQ_NO) ||
+	      (MQ_IS_CLIENT(context) && pMqGetFirstParent(context) == pMqGetFirstParent(eventctx->error.errctx))
+	  ) {
+//M1
 	    // report "link-down-error" from a "parent-context" to a "client-context"
 	    MqErrorCopy (context, eventctx);
 	    goto error;
 	  } else {
+//M2
 	    // the GC have to handle this
 	    MqErrorReset (context);
 	  }

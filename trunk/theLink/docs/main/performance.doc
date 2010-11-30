@@ -12,6 +12,7 @@
       <TD>\ref perf-cc "C++"</TD>
       <TD>\ref perf-csharp "C#"</TD>
       <TD>\ref perf-java "Java"</TD>
+      <TD>\ref perf-go "Go"</TD>
       <TD>\ref perf-perl "Perl"</TD>
       <TD>\ref perf-php "PHP"</TD>
       <TD>\ref perf-python "Python"</TD>
@@ -24,6 +25,7 @@
       <TD>\ref perf-cc-pipe "pipe"</TD>
       <TD>\ref perf-csharp-pipe "pipe"</TD>
       <TD>\ref perf-java-pipe "pipe"</TD>
+      <TD>\ref perf-go-pipe "pipe"</TD>
       <TD>\ref perf-perl-pipe "pipe"</TD>
       <TD>\ref perf-php-pipe "pipe"</TD>
       <TD>\ref perf-python-pipe "pipe"</TD>
@@ -36,6 +38,7 @@
       <TD>\ref perf-cc-uds "uds"</TD>
       <TD>\ref perf-csharp-uds "uds"</TD>
       <TD>\ref perf-java-uds "uds"</TD>
+      <TD>\ref perf-go-uds "uds"</TD>
       <TD>\ref perf-perl-uds "uds"</TD>
       <TD>\ref perf-php-uds "uds"</TD>
       <TD>\ref perf-python-uds "uds"</TD>
@@ -48,6 +51,7 @@
       <TD>\ref perf-cc-tcp "tcp"</TD>
       <TD>\ref perf-csharp-tcp "tcp"</TD>
       <TD>\ref perf-java-tcp "tcp"</TD>
+      <TD>\ref perf-go-tcp "tcp"</TD>
       <TD>\ref perf-perl-tcp "tcp"</TD>
       <TD>\ref perf-php-tcp "tcp"</TD>
       <TD>\ref perf-python-tcp "tcp"</TD>
@@ -198,6 +202,27 @@ The following information is important:
  - Using TCP and Thread \dontinclude java_tcp_thread.perf \until --all
  .
 
+\section perf-go Detail Perl Setup
+
+\subsection perf-go-pipe Using PIPE
+
+ - Using PIPE \dontinclude go_pipe.perf \until --all
+ .
+
+\subsection perf-go-uds Using UDS
+
+ - Using UDS and Fork \dontinclude go_uds_fork.perf \until --all
+ - Using UDS and Spawn \dontinclude go_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude go_uds_thread.perf \until --all
+ .
+
+\subsection perf-go-tcp Using TCP
+
+ - Using TCP and Fork \dontinclude go_tcp_fork.perf \until --all
+ - Using TCP and Spawn \dontinclude go_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude go_tcp_thread.perf \until --all
+ .
+
 \section perf-perl Detail Perl Setup
 
 \subsection perf-perl-pipe Using PIPE
@@ -215,7 +240,7 @@ The following information is important:
 \subsection perf-perl-tcp Using TCP
 
  - Using TCP and Fork \dontinclude perl_tcp_fork.perf \until --all
- - Using TCP and Spawn \dontinclude perl_uds_spawn.perf \until --all
+ - Using TCP and Spawn \dontinclude perl_tcp_spawn.perf \until --all
  - Using TCP and Thread \dontinclude perl_tcp_thread.perf \until --all
  .
 
@@ -235,7 +260,7 @@ The following information is important:
 \subsection perf-php-tcp Using TCP
 
  - Using TCP and Fork \dontinclude php_tcp_fork.perf \until --all
- - Using TCP and Spawn \dontinclude php_uds_spawn.perf \until --all
+ - Using TCP and Spawn \dontinclude php_tcp_spawn.perf \until --all
  .
 
 \section perf-python Detail Python Setup

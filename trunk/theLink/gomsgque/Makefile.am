@@ -28,7 +28,10 @@ clean-local: setup
 	cd src && $(MAKE) $(MAKEARGS) clean
 
 install-exec-local:
-	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" install
+	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" goinstall
+
+uninstall-local:
+	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" gouninstall
 
 distclean-local:
 	-test -f src/.distclean && rm -fr src
