@@ -1,2 +1,11 @@
-> nothread/NHI1-0.10/theLink/gomsgque/src/server --tcp --host localhost --port 7777 --fork
-> nothread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7777
+> thread/NHI1-0.10/theLink/gomsgque/src/server --tcp --host localhost --port 7777 --fork
+> thread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7777
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-43] [0-0-0-0x625bc0-main]: start: --------------------------------------
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-43] [0-0-0-0x625bc0-statistics]:                      MqSendEND:       6.72
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-44] [0-0-0-0x625bc0-statistics]:         MqSendEND_AND_CALLBACK:       9.63
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-47] [0-0-0-0x625bc0-statistics]:             MqSendEND_AND_WAIT:      29.70
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-47] [0-0-0-0x625bc0-statistics]:                  parent create:     741.51
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-47] [0-0-0-0x625bc0-statistics]:                  parent delete:     188.75
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-47] [0-0-0-0x625bc0-statistics]:                   child create:     172.97
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-48] [0-0-0-0x625bc0-statistics]:                   child delete:      55.09
+C> (client:7504:0x7fb149080700) [2010-11-30:08-08-48] [0-0-0-0x625bc0-main]: end: ----------------------------------------

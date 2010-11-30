@@ -358,7 +358,7 @@ done
 # calculate the total
 for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
   echo -e "\n $TST:" 1>&3
-  for LNG in c cc csharp java perl python ruby tcl vb php; do
+  for LNG in c cc csharp java go perl python ruby tcl vb php; do
     TotalLink ${LNG} ${TST}
   done
   echo -e "\n $TST:" 1>&4

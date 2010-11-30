@@ -1,11 +1,11 @@
-> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.9/theLink/tests/server.php --tcp --host localhost --port 7798 --spawn
-> nothread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7798
-C> (client:27734) [2010-11-09:21-37-32] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:27734) [2010-11-09:21-37-33] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       7.71
-C> (client:27734) [2010-11-09:21-37-33] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.16
-C> (client:27734) [2010-11-09:21-37-37] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      32.90
-C> (client:27734) [2010-11-09:21-37-38] [0-0-0-0x624bc0-statistics]:                  parent create:    6853.06
-C> (client:27734) [2010-11-09:21-37-38] [0-0-0-0x624bc0-statistics]:                  parent delete:     428.31
-C> (client:27734) [2010-11-09:21-37-38] [0-0-0-0x624bc0-statistics]:                   child create:     206.07
-C> (client:27734) [2010-11-09:21-37-38] [0-0-0-0x624bc0-statistics]:                   child delete:      57.16
-C> (client:27734) [2010-11-09:21-37-38] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.10/theLink/tests/server.php --tcp --host localhost --port 7801 --spawn
+> nothread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7801
+C> (client:3774) [2010-11-29:20-17-59] [0-0-0-0x624bc0-main]: start: --------------------------------------
+C> (client:3774) [2010-11-29:20-17-59] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       6.88
+C> (client:3774) [2010-11-29:20-18-00] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      12.98
+C> (client:3774) [2010-11-29:20-18-04] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      33.01
+C> (client:3774) [2010-11-29:20-18-04] [0-0-0-0x624bc0-statistics]:                  parent create:    6837.83
+C> (client:3774) [2010-11-29:20-18-04] [0-0-0-0x624bc0-statistics]:                  parent delete:     433.42
+C> (client:3774) [2010-11-29:20-18-05] [0-0-0-0x624bc0-statistics]:                   child create:     207.20
+C> (client:3774) [2010-11-29:20-18-05] [0-0-0-0x624bc0-statistics]:                   child delete:      58.15
+C> (client:3774) [2010-11-29:20-18-05] [0-0-0-0x624bc0-main]: end: ----------------------------------------

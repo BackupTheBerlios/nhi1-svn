@@ -1,11 +1,11 @@
-> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.9/theLink/tests/server.php --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.9/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:27996) [2010-11-09:21-37-47] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:27996) [2010-11-09:21-37-47] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       6.60
-C> (client:27996) [2010-11-09:21-37-47] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:      11.34
-C> (client:27996) [2010-11-09:21-37-51] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      25.18
-C> (client:27996) [2010-11-09:21-37-51] [0-0-0-0x6249a0-statistics]:                  parent create:    6705.89
-C> (client:27996) [2010-11-09:21-37-51] [0-0-0-0x6249a0-statistics]:                  parent delete:     281.95
-C> (client:27996) [2010-11-09:21-37-52] [0-0-0-0x6249a0-statistics]:                   child create:     196.05
-C> (client:27996) [2010-11-09:21-37-52] [0-0-0-0x6249a0-statistics]:                   child delete:      51.22
-C> (client:27996) [2010-11-09:21-37-52] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.10/theLink/tests/server.php --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:4036) [2010-11-29:20-18-13] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:4036) [2010-11-29:20-18-14] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       6.61
+C> (client:4036) [2010-11-29:20-18-14] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:      11.42
+C> (client:4036) [2010-11-29:20-18-18] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      25.22
+C> (client:4036) [2010-11-29:20-18-18] [0-0-0-0x6249a0-statistics]:                  parent create:    6689.60
+C> (client:4036) [2010-11-29:20-18-18] [0-0-0-0x6249a0-statistics]:                  parent delete:     278.33
+C> (client:4036) [2010-11-29:20-18-18] [0-0-0-0x6249a0-statistics]:                   child create:     199.03
+C> (client:4036) [2010-11-29:20-18-19] [0-0-0-0x6249a0-statistics]:                   child delete:      51.58
+C> (client:4036) [2010-11-29:20-18-19] [0-0-0-0x6249a0-main]: end: ----------------------------------------

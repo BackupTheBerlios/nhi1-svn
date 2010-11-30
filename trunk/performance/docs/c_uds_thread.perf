@@ -1,11 +1,11 @@
-> thread/NHI1-0.9/theLink/tests/server --uds --file ./socket.uds --thread
-> thread/NHI1-0.9/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-06] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-07] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       2.93
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-07] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       5.16
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      18.06
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-statistics]:                  parent create:     152.94
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-statistics]:                  parent delete:      61.30
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-statistics]:                   child create:      71.15
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-statistics]:                   child delete:      29.52
-C> (client:16952:0x7f0fa75f8700) [2010-11-09:21-31-10] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> thread/NHI1-0.10/theLink/tests/server --uds --file ./socket.uds --thread
+> thread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-49] [0-0-0-0x6259a0-main]: start: --------------------------------------
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-49] [0-0-0-0x6259a0-statistics]:                      MqSendEND:       2.98
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-49] [0-0-0-0x6259a0-statistics]:         MqSendEND_AND_CALLBACK:       5.10
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-statistics]:             MqSendEND_AND_WAIT:      18.11
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-statistics]:                  parent create:     154.37
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-statistics]:                  parent delete:      62.02
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-statistics]:                   child create:      73.30
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-statistics]:                   child delete:      29.68
+C> (client:24345:0x7f547e6d4700) [2010-11-29:20-10-52] [0-0-0-0x6259a0-main]: end: ----------------------------------------

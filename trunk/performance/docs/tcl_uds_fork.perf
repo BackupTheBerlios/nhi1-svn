@@ -1,11 +1,11 @@
-> tclsh nothread/NHI1-0.9/theLink/tests/server.tcl --uds --file ./socket.uds --fork
-> nothread/NHI1-0.9/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:18624) [2010-11-09:21-32-23] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:18624) [2010-11-09:21-32-23] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       5.64
-C> (client:18624) [2010-11-09:21-32-24] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       9.28
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.15
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-statistics]:                  parent create:     907.07
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-statistics]:                  parent delete:     250.66
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-statistics]:                   child create:     243.59
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-statistics]:                   child delete:      36.78
-C> (client:18624) [2010-11-09:21-32-27] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.10/theLink/tests/server.tcl --uds --file ./socket.uds --fork
+> nothread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
+C> (client:26029) [2010-11-29:20-12-06] [0-0-0-0x6249a0-main]: start: --------------------------------------
+C> (client:26029) [2010-11-29:20-12-06] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       5.71
+C> (client:26029) [2010-11-29:20-12-07] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       9.11
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      22.52
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-statistics]:                  parent create:     896.94
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-statistics]:                  parent delete:     258.84
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-statistics]:                   child create:     243.97
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-statistics]:                   child delete:      36.96
+C> (client:26029) [2010-11-29:20-12-10] [0-0-0-0x6249a0-main]: end: ----------------------------------------
