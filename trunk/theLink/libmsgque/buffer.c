@@ -163,7 +163,7 @@ MqBufferCreate (
   // +1 to allow strings with len=strlen(str) fit into the buffer with an additional
   // '\0' at the end
   if (size > MQ_BLS_SIZE) {
-    buf->data = (MQ_BIN) MqSysCalloc(context, (size+1), sizeof (*buf->data));
+    buf->data = (MQ_BIN) MqSysCalloc(MQ_ERROR_PANIC, (size+1), sizeof (*buf->data));
     buf->size = size;
     buf->alloc = MQ_ALLOC_DYNAMIC;
   } else {

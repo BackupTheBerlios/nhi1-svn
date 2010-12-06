@@ -25,6 +25,7 @@
 #include "cache.h"
 #include "slave.h"
 #include "config.h"
+#include "factory.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>
@@ -153,7 +154,7 @@ sMqCheckArg (
   if (MQ_IS_CHILD(context)) {
     context->link.bits.endian = context->config.parent->link.bits.endian;
     MqSysFree (context->link.targetIdent);
-    context->link.targetIdent = mq_strdup_save(context->config.parent->link.targetIdent);
+    context->link.targetIdent = MqSysStrDupSave(MQ_ERROR_PANIC, context->config.parent->link.targetIdent);
   }
   // after the block from above 'setup.ident' is always set
 
@@ -572,12 +573,12 @@ MqLinkConnect (
       MQ_BOL myendian;
 
       if (pIoIsRemote(context->link.io) == MQ_YES) {
-	serverexec = mq_strdup_save("remote-connect");
+	serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, "remote-connect");
       } else {
 	if (context->link.alfa != NULL)
-	  serverexec = mq_strdup_save(context->link.alfa->data[0]->cur.C);
+	  serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, context->link.alfa->data[0]->cur.C);
 	if (serverexec == NULL)
-	  serverexec = mq_strdup_save(sInitGetFirst());
+	  serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, sInitGetFirst());
       }
 
       // 0. Start the PIPE server (if necessary)
@@ -627,7 +628,7 @@ MqLinkConnect (
       // read the target ident
       MqReadC(context, &ident);
       MqSysFree(context->link.targetIdent);
-      context->link.targetIdent = mq_strdup(ident);
+      context->link.targetIdent = MqSysStrDup(MQ_ERROR_PANIC, ident);
 
 #     if defined(WORDS_BIGENDIAN)
 	context->link.bits.endian = (myendian ? MQ_NO : MQ_YES);
@@ -835,7 +836,7 @@ MqLinkCreate (
 	  MqBufferLAppendL (alfa, context->link.alfa, -1);
 
 	  // step 4, create the new context and fill the myFilter
-	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.Factory, &myFilter));
+	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.factory, &myFilter));
 
 	  // step 5, configure "myFilter"
 	  MqConfigSetServerSetup(myFilter, NULL, NULL, NULL, NULL);
@@ -1090,4 +1091,9 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
+
+
+
 

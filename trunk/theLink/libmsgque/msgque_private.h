@@ -239,13 +239,6 @@ enum MqErrorE pUSleep (
   long const usec
 );
 
-enum MqErrorE MQ_DECL pCallFactory (
-  struct MqS * const context,
-  enum MqFactoryE create,
-  struct MqFactoryS factory,
-  struct MqS ** contextP
-);
-
 void pConfigSetName (
   struct MqS * const context,
   MQ_STR  data

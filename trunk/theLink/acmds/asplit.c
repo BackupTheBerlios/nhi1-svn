@@ -278,9 +278,9 @@ SplitFactory (
 {
   struct MqS * const mqctx = MqContextCreate(0,tmpl);
   MqConfigSetName(mqctx, "split");
+  MqConfigSetIdent(mqctx, "split");
   mqctx->setup.Parent.fCreate = SplitCreate;
   mqctx->setup.fHelp = SplitHelp;
-  mqctx->setup.Factory.Create.fCall = SplitFactory;
   *contextP = mqctx;
   return MQ_OK;
 }

@@ -25,6 +25,7 @@
 #include "cache.h"
 #include "link.h"
 #include "config.h"
+#include "factory.h"
 
 BEGIN_C_DECLS
 
@@ -523,7 +524,7 @@ pTokenCheckSystem (
 
 	    // read the other endian and set my context->link.bits.endian
 	    MqReadC(context, &name);
-	    context->link.targetIdent = mq_strdup(name);
+	    context->link.targetIdent = MqSysStrDup(MQ_ERROR_PANIC, name);
 
 	    // read server name
 	    MqReadC(context, &name);
@@ -553,7 +554,7 @@ pTokenCheckSystem (
 	struct MqS * childctx;
 	MQ_INT i;
 	// need client-code to handel ContextCreate request
-	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.Factory, &childctx));
+	MqErrorCheck1(pCallFactory(context, MQ_FACTORY_NEW_CHILD, context->setup.factory, &childctx));
 	pConfigSetParent (childctx, context);
         MqErrorCheck (MqReadI (context, &i));
 	if (i != -1) MqConfigSetDebug(childctx, i);
@@ -657,4 +658,7 @@ pTokenMark (
 }
 
 END_C_DECLS
+
+
+
 

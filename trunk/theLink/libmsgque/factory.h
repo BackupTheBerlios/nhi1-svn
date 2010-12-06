@@ -39,6 +39,19 @@ void pFactoryMark (
   MqMarkF markF
 );
 
+struct pFactoryItemS*
+pFactoryItemGetWithCheck (
+  struct MqS * context,
+  MQ_CST const name
+);
+
+enum MqErrorE MQ_DECL pCallFactory (
+  struct MqS * const context,
+  enum MqFactoryE create,
+  struct pFactoryItemS* item,
+  struct MqS ** contextP
+);
+
 END_C_DECLS
 
 #endif /* FACTORY_H */

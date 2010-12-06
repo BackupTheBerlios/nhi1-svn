@@ -17,6 +17,7 @@
 #include "link.h"
 #include "config.h"
 #include "sys.h"
+#include "factory.h"
 
 #define MQ_CONTEXT_S context
 
@@ -171,7 +172,7 @@ pSlaveCreate (
       if (slave_parent == NULL) continue;
       // create the CHILD of a SLAVE
       // a SLAVE is allways a CLIENT
-      if (MqErrorCheckI(pCallFactory(slave_parent, MQ_FACTORY_NEW_CHILD, slave_parent->setup.Factory, &newctx))) {
+      if (MqErrorCheckI(pCallFactory(slave_parent, MQ_FACTORY_NEW_CHILD, slave_parent->setup.factory, &newctx))) {
 	MqErrorCopy (context, slave_parent);
 	goto error;
       }
@@ -304,7 +305,7 @@ MqSlaveWorker (
     struct MqBufferLS * argv = (argvP == NULL ? NULL : *argvP);
     // argv is now "owend" by "MqSlaveWorker"
     if (argvP != NULL) *argvP = NULL;
-    MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.Factory, &newctx));
+    MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.factory, &newctx));
     pConfigSetMaster(newctx, context, id);
     MqConfigSetIgnoreExit(newctx, MQ_NO);
     if (argv == NULL) {
@@ -388,6 +389,7 @@ MqSlaveIs (
 }
 
 END_C_DECLS
+
 
 
 

@@ -55,7 +55,7 @@
 # define __func__ __FUNCTION__
 # define va_copy(a,b) a = b
 # define mq_strtoll _strtoi64
-# define mq_strdup(v) _strdup(v)
+# define mq_strdup _strdup
 # define mq_getpid _getpid
 # define mq_unlink _unlink
 # define mq_snprintf _snprintf
@@ -75,7 +75,7 @@
 /// \ingroup Mq_System_C_API
 # define mq_strtoll strtoll
 /// \ingroup Mq_System_C_API
-# define mq_strdup(v) strdup(v)
+# define mq_strdup strdup
 /// \ingroup Mq_System_C_API
 # define mq_getpid getpid
 /// \ingroup Mq_System_C_API
@@ -506,7 +506,6 @@ struct MqFactoryCreateS {
   MqFactoryCreateF	fCall;	    ///< create a new object
   MQ_PTR		data;	    ///< additional data pointer for the fCall
   MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-  MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
 };
 
 /// \brief function pointer to \e delete an object
@@ -514,7 +513,6 @@ struct MqFactoryDeleteS {
   MqFactoryDeleteF	fCall;	    ///< delete the object created with #MqFactoryCreateS
   MQ_PTR		data;	    ///< additional data pointer for the fCreate
   MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-  MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer
 };
 
 /// \brief used as interface for object creation
@@ -738,14 +736,28 @@ struct MqConfigS {
 /// \brief application-programmer configuration data
 struct MqSetupS {
 
-  /// \brief set the application identifier
+  /// \brief set the application-identifier
   ///
-  /// The \e application-identifier is used to modify the client or filter behaviour depending on the \e identifier-value of
-  /// the \e remote-context.
+  /// The \e application-identifier is used as \e factory-lookup-identifier to create a new \e server-context
+  /// and to modify the client or filter behaviour depending on the \e identifier-value of
+  /// the \e remote-context and as factory lookup identifier to create a new \e server-context.
   /// The \e identifier is \b not changeable by the user, like the \RNSC{name} configuration option, because this is a "build-in" 
   /// feature set by the \e programmer.
-  /// (default: \null)
-  MQ_STR ident;
+  /// Without the \e application-identifier only the initial \e startup-context is available to serve
+  /// incoming requests. In general every \e server need to provide an \e application-identifier.
+  ///
+  /// The \e application-identifier is used to create a new:
+  ///  - \e application-context (C, TCL) or a new \e class-instance (C++, C#, JAVA, PYTHON, PERL, VB.NET)
+  ///  - \e server-child-context or \e slave-child-context using \RNSA{LinkCreateChild}
+  ///  - \e server-parent-context using the \RNSC{startAs} option \e --thread
+  ///  - \e slave-worker-context using \RNSA{SlaveWorker}
+  ///  - \e filter-parent-context using the \RNSC{startAs} option \e --fork or \e --thread
+  ///  .
+  /// (default: "DEFAULT")
+  ///
+  /// \attention: if this value changes the factory need to be updated too.
+  MQ_CST ident;
+  struct pFactoryItemS* factory;
  
   /// \brief setup/cleanup a \e CHILD object
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
@@ -805,21 +817,6 @@ struct MqSetupS {
   /// example: \c theLink/example/LANG/Filter4.EXT
   struct MqCallbackS Event;
 
-  /// \brief define the \e server-object-create-delete-interface
-  ///
-  /// The \e factory-interface is used to create a new \e server-context.
-  /// Without the \e factory-interface only the initial \e startup-context is available to serve
-  /// incoming requests. In general every \e server need to provide a \e factory-interface.
-  ///
-  /// The \e factory-interface is used to create a new:
-  ///  - \e application-context (C, TCL) or a new \e class-instance (C++, C#, JAVA, PYTHON, PERL, VB.NET)
-  ///  - \e server-child-context or \e slave-child-context using \RNSA{LinkCreateChild}
-  ///  - \e server-parent-context using the \RNSC{startAs} option \e --thread
-  ///  - \e slave-worker-context using \RNSA{SlaveWorker}
-  ///  - \e filter-parent-context using the \RNSC{startAs} option \e --fork or \e --thread
-  ///  .
-  struct MqFactoryS Factory;
-
   /// \brief setup and initialize a thread before a new thread is created by \libmsgque
   MqSetupF fThreadInit;
 
@@ -867,18 +864,16 @@ MQ_EXTERN void MQ_DECL MqFactoryCreate (
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
   MqTokenDataFreeF const createDatafreeF,
-  MqTokenDataCopyF const createDatacopyF,
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF,
-  MqTokenDataCopyF const deleteDatacopyF
+  MqTokenDataFreeF const deleteDatafreeF
 );
 
 MQ_EXTERN void MQ_DECL MqFactoryDelete (
   MQ_CST const name
 );
 
-MQ_EXTERN void MQ_DECL MqFactoryCall (
+MQ_EXTERN int MQ_DECL MqFactoryCall (
   MQ_CST const name,
   struct MqS **ctxP
 );
@@ -984,27 +979,25 @@ MQ_DECL MqConfigSetIgnoreExit (
 
 /// \brief setup the \e factory pattern
 /// \context
+/// \param[in] ident the application identifier
 /// \param[in] fCreate set the #MqSetupS::Factory - #MqFactoryCreateS::fCall value
 /// \param[in] CreateData set the #MqSetupS::Factory - #MqFactoryCreateS::data value
 /// \param[in] fCreateFree free the \e CreateData
-/// \param[in] fCreateCopy copy the \e CreateData
 /// \param[in] fDelete set the #MqSetupS::Factory - #MqFactoryDeleteS::fCall value
 /// \param[in] DeleteData set the #MqSetupS::Factory - #MqFactoryDeleteS::data value
 /// \param[in] fDeleteFree delete the \e DeleteData
-/// \param[in] fDeleteCopy copy the \e DeleteData
 MQ_EXTERN void 
 MQ_DECL MqConfigSetFactory (
   struct MqS * const context,
+  MQ_CST	    ident,
 
   MqFactoryCreateF  fCreate,
   MQ_PTR	    CreateData,
   MqTokenDataFreeF  fCreateFree,
-  MqTokenDataCopyF  fCreateCopy,
 
   MqFactoryDeleteF  fDelete,
   MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree,
-  MqTokenDataCopyF  fDeleteCopy
+  MqTokenDataFreeF  fDeleteFree
 );
 
 /// \brief setup the default \e factory pattern
@@ -1014,7 +1007,8 @@ MQ_DECL MqConfigSetFactory (
 /// A simple application \e without an application specific \e factory use this configuration.
 MQ_EXTERN void 
 MQ_DECL MqConfigSetDefaultFactory (
-  struct MqS * const context
+  struct MqS * const context,
+  MQ_CST ident
 );
 
 /// \brief set the #MqConfigS::ignoreFork value
@@ -4082,6 +4076,10 @@ typedef MQ_PTR (*MqSysCallocF) (MQ_SIZE, MQ_SIZE);
 /// \details additional info: <TT>man malloc</TT>
 typedef MQ_PTR (*MqSysMallocF) (MQ_SIZE);
 
+/// \brief \b strdup syscall
+/// \details additional info: <TT>man strdup</TT>
+typedef MQ_PTR (*MqSysStrDupF) (MQ_CST);
+
 /// \brief \b realloc syscall
 /// \details additional info: <TT>man realloc</TT>
 typedef MQ_PTR (*MqSysReallocF) (MQ_PTR, MQ_SIZE);
@@ -4120,10 +4118,10 @@ struct MqIdS {
 
 /// \brief data used to initialize a new created thread
 struct MqSysServerThreadMainS {
-  struct MqS * tmpl;		///< calling (parent) context
-  struct MqFactoryS   factory;	///< server configuration (memory belongs to caller)
-  struct MqBufferLS * argv;	///< command-line arguments befor \b MQ_ALFA, owned by SysServerThread
-  struct MqBufferLS * alfa;	///< command-line arguments after \b MQ_ALFA, owned by SysServerThread
+  struct MqS * tmpl;		  ///< calling (parent) context
+  struct pFactoryItemS * factory; ///< server configuration (memory belongs to caller)
+  struct MqBufferLS * argv;	  ///< command-line arguments befor \b MQ_ALFA, owned by SysServerThread
+  struct MqBufferLS * alfa;	  ///< command-line arguments after \b MQ_ALFA, owned by SysServerThread
 };
 
 /// \brief initialize a new created thred
@@ -4140,6 +4138,8 @@ struct MqLalS {
   MqSysMallocF		  SysMalloc;
   /// \copyall{MqSysReallocF}
   MqSysReallocF		  SysRealloc;
+  /// \copyall{MqSysStrDupF}
+  MqSysStrDupF		  SysStrDup;
   /// \copyall{MqSysFreeF}
   MqSysFreeF		  SysFree;
   /// \copyall{MqSysSelectF}
@@ -4185,7 +4185,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerThread) (
     struct MqS * const	  context, 
-    struct MqFactoryS	  factory, 
+    struct pFactoryItemS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4210,7 +4210,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerFork) (
     struct MqS * const	  context, 
-    struct MqFactoryS	  factory, 
+    struct pFactoryItemS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4318,6 +4318,16 @@ MQ_EXTERN MQ_PTR MQ_DECL MqSysMalloc (
   MQ_SIZE size
 );
 
+/// \syscall{strdup}
+/// \details additional info: <TT>man strdup</TT>
+///  \context
+/// \param[in] str the string to duplicate
+/// \return a pointer to the new memory block
+MQ_EXTERN MQ_STR MQ_DECL MqSysStrDup (
+  struct MqS * const context,
+  MQ_CST str
+);
+
 /// \syscall{realloc}
 /// \details additional info: <TT>man realloc</TT>
 /// \context
@@ -4423,10 +4433,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 /// \brief duplicate a string, the argument \c NULL is allowed
 /// \param[in] v the string to duplicate
 /// \return the new string or \c NULL
-static mq_inline MQ_STR mq_strdup_save (
+static mq_inline MQ_STR MqSysStrDupSave (
+  struct MqS * const context,
   MQ_CST v
 ) {
-  return v != NULL ? mq_strdup(v) : NULL;
+  return v != NULL ? MqSysStrDup(context, v) : NULL;
 }
 
 /// \}    Mq-LAL-API

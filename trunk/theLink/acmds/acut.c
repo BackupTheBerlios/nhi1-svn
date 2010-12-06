@@ -190,8 +190,8 @@ CutFactory (
   MqConfigSetName(mqctx, "cut");
   if (create != MQ_FACTORY_NEW_FILTER) {
     MqConfigSetIsServer(mqctx, MQ_YES);
+    MqConfigSetIdent(mqctx, "cut");
     mqctx->setup.Parent.fCreate = CutCreate;
-    mqctx->setup.Factory.Create.fCall = CutFactory;
   }
   *contextP = mqctx;
   return MQ_OK;

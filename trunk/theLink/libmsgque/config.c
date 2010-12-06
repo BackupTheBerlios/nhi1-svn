@@ -15,6 +15,7 @@
 #include "error.h"
 #include "token.h"
 #include "sys.h"
+#include "factory.h"
 
 BEGIN_C_DECLS
 
@@ -288,12 +289,6 @@ MqContextFree (
     if (context->setup.BgError.data && context->setup.BgError.fFree) {
       (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
     }
-    if (context->setup.Factory.Create.data && context->setup.Factory.Create.fFree) {
-      (*context->setup.Factory.Create.fFree) (context, &context->setup.Factory.Create.data);
-    }
-    if (context->setup.Factory.Delete.data && context->setup.Factory.Delete.fFree) {
-      (*context->setup.Factory.Delete.fFree) (context, &context->setup.Factory.Delete.data);
-    }
 
     pErrorCleanup(context);
     MqBufferDelete(&context->temp);
@@ -324,14 +319,20 @@ MqContextDelete (
     // check on "bits.deleteProtection"
     MqDLogC(context,3,"DELETE protection\n");
     pGcCreate (context);
-  } else if (context->setup.Factory.Delete.fCall) {
-    MqFactoryDeleteF fCall = context->setup.Factory.Delete.fCall;
-    MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;
-    context->link.bits.doFactoryCleanup = MQ_NO;
-    context->setup.Factory.Delete.fCall = NULL;
-    (*fCall) (context, doFactoryCleanup, context->setup.Factory.Delete.data);
+  } else if (context->setup.factory != NULL) {
+    struct MqFactoryS factory = pFactoryGet(context->setup.factory);
+    if (factory.Delete.fCall != NULL) {
+      MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;
+      context->link.bits.doFactoryCleanup = MQ_NO;
+      context->setup.factory = NULL;
+      (*factory.Delete.fCall) (context, doFactoryCleanup, factory.Delete.data);
+    } else {
+      // without default factory-cleanup continue with "normal" cleanup
+      goto CONT;
+    }
   } else {
-    // set this because "setup.Factory.Delete.fCall" is !not! required
+CONT:
+    // set this because "Factory.Delete.fCall" is !not! required
     MqDLogC(context,3,"DELETE\n");
     context->link.bits.doFactoryCleanup = MQ_NO;
     context->bits.MqContextDelete_LOCK = MQ_YES;
@@ -391,7 +392,7 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.tcp.myport);
   MqBufferDelete (&to->config.io.uds.file);
   to->config = from->config;
-  to->config.name    = mq_strdup_save(from->config.name);
+  to->config.name    = MqSysStrDupSave(MQ_ERROR_PANIC, from->config.name);
   to->config.srvname = NULL;
   to->config.parent = NULL;
   to->config.master = NULL;
@@ -433,21 +434,18 @@ MqSetupDup (
   struct MqCallbackS ServerSetup = context->setup.ServerSetup;
   struct MqCallbackS ServerCleanup = context->setup.ServerCleanup;
   struct MqCallbackS BgError = context->setup.BgError;
-  struct MqFactoryCreateS FactoryC = context->setup.Factory.Create;
-  struct MqFactoryDeleteS FactoryD = context->setup.Factory.Delete;
 
   // Step 1,  copy "setup" 
   MqSysFree(context->setup.ident);
   context->setup = from->setup;
-  context->setup.ident = mq_strdup_save(from->setup.ident);
+  context->setup.ident = MqSysStrDupSave(MQ_ERROR_PANIC, from->setup.ident);
+  context->setup.factory = from->setup.factory;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   sSetupDupHelper (context, context->setup.Event,          Event);
   sSetupDupHelper (context, context->setup.ServerSetup,    ServerSetup);
   sSetupDupHelper (context, context->setup.ServerCleanup,  ServerCleanup);
   sSetupDupHelper (context, context->setup.BgError,        BgError);
-  sSetupDupHelper (context, context->setup.Factory.Create, FactoryC);
-  sSetupDupHelper (context, context->setup.Factory.Delete, FactoryD);
 
   return MQ_OK;
 
@@ -473,41 +471,6 @@ error:
   return MqErrorGetCodeI (tmpl);
 }
 
-enum MqErrorE 
-pCallFactory (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryS factory,
-  struct MqS ** contextP
-)
-{
-  *contextP = NULL;
-
-  // get latest values
-  if (factory.Create.fCall == NULL) {
-    return MqErrorDbV2(tmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory.Create.fCall");
-  }
-
-  // call the factory
-  MqErrorCheck((factory.Create.fCall)(tmpl, create, factory.Create.data, contextP));
-
-  // set the factory
-  (*contextP)->link.bits.doFactoryCleanup = MQ_YES;
-  //(*contextP)->setup.Factory.type = create;
-  // child inherit "ignoreExit" from "template"
-  if (tmpl != NULL && create == MQ_FACTORY_NEW_CHILD)
-    (*contextP)->setup.ignoreExit = tmpl->setup.ignoreExit;
-
-  return MQ_OK;
-
-error:
-  if (*contextP != NULL) {
-    MqErrorCopy(tmpl, *contextP);
-    MqContextDelete(contextP);
-  }
-  return MqErrorStack (tmpl);
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                 init                                      */
@@ -530,20 +493,21 @@ MqConfigSetName (
   MQ_CST  data
 ) {
   MqSysFree(context->config.name);
-  context->config.name = mq_strdup_save(data);
+  context->config.name = MqSysStrDupSave(MQ_ERROR_PANIC, data);
   if (MQ_IS_SERVER(context)) {
     MqSysFree(context->config.srvname);
-    context->config.srvname = mq_strdup_save("LOCK");
+    context->config.srvname = MqSysStrDupSave(MQ_ERROR_PANIC, "LOCK");
   }
 }
 
 void 
 MqConfigSetIdent (
   struct MqS * const context,
-  MQ_CST  data
+  MQ_CST ident
 ) {
   MqSysFree(context->setup.ident);
-  context->setup.ident = mq_strdup_save(data);
+  context->setup.ident = MqSysStrDupSave(MQ_ERROR_PANIC, ident);
+  context->setup.factory = pFactoryItemGet(ident);
 }
 
 void 
@@ -552,7 +516,7 @@ MqConfigSetSrvName (
   MQ_CST  data
 ) {
   MqSysFree(context->config.srvname);
-  context->config.srvname = mq_strdup_save(data);
+  context->config.srvname = MqSysStrDupSave(MQ_ERROR_PANIC, data);
 }
 
 void 
@@ -633,37 +597,26 @@ pConfigSetMaster (
 void 
 MqConfigSetFactory (
   struct MqS * const context,
+  MQ_CST	    ident,
   MqFactoryCreateF  fCreate,
   MQ_PTR	    CreateData,
   MqTokenDataFreeF  fCreateFree,
-  MqTokenDataCopyF  fCreateCopy,
   MqFactoryDeleteF  fDelete,
   MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree,
-  MqTokenDataCopyF  fDeleteCopy
+  MqTokenDataFreeF  fDeleteFree
 ) {
-//MqDLogV(context,__func__,0,"data<%p>\n", data);
-  if (context->setup.Factory.Create.data && context->setup.Factory.Create.fFree) {
-    (*context->setup.Factory.Create.fFree) (context, &context->setup.Factory.Create.data);
-  }
-  if (context->setup.Factory.Delete.data && context->setup.Factory.Delete.fFree) {
-    (*context->setup.Factory.Delete.fFree) (context, &context->setup.Factory.Delete.data);
-  }
-  context->setup.Factory.Create.fCall = fCreate;
-  context->setup.Factory.Create.data  = CreateData;
-  context->setup.Factory.Create.fFree = fCreateFree;
-  context->setup.Factory.Create.fCopy = fCreateCopy;
-  context->setup.Factory.Delete.fCall = fDelete;
-  context->setup.Factory.Delete.data  = DeleteData;
-  context->setup.Factory.Delete.fFree = fDeleteFree;
-  context->setup.Factory.Delete.fCopy = fDeleteCopy;
+  MqSysFree(context->setup.ident);
+  MqFactoryCreate(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree);
+  MqConfigSetIdent(context, ident);
 }
 
 void 
 MqConfigSetDefaultFactory (
-  struct MqS * const context
+  struct MqS * const context,
+  MQ_CST ident
 ) {
-  context->setup.Factory.Create.fCall = sDefaultFactory;
+  MqFactoryCreate(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
+  MqConfigSetIdent(context, ident);
 }
 
 void
@@ -1063,8 +1016,6 @@ void pSetupMark (
   sSetupMark (context->setup.ServerSetup);
   sSetupMark (context->setup.ServerCleanup);
   sSetupMark (context->setup.BgError);
-  sSetupMark (context->setup.Factory.Create);
-  sSetupMark (context->setup.Factory.Delete);
 }
 
 /*****************************************************************************/
@@ -1076,7 +1027,8 @@ void pSetupMark (
 void
 ConfigCreate (void)
 {
-  MqFactoryCreate("DEFAULT", sDefaultFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  //MqFactoryCreate("DEFAULT", sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
 }
 
 END_C_DECLS
+

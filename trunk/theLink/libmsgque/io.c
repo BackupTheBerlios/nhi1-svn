@@ -304,37 +304,37 @@ sIoFillArgvC (
   struct MqBufferS **start, **end;
 
   // 3. add PIPE arguments
-  *arg++ = mq_strdup("---duplicate");
-  *arg++ = mq_strdup("--socket");
+  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "---duplicate");
+  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--socket");
   *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
   mq_snprintf((char*)*arg++,20,"%i",sock);
-  *arg++ = mq_strdup("--buffersize");
+  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--buffersize");
   *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
   mq_snprintf((char*)*arg++,20,"%i",io->config->buffersize);
-  *arg++ = mq_strdup("--timeout");
+  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--timeout");
   *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
   mq_snprintf((char*)*arg++,20,"%lli",io->config->timeout);
 
   // 4. add context stuff
   if (context->config.isSilent) {
-    *arg++ = mq_strdup("--silent");
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--silent");
   }
   if (context->config.debug) {
-    *arg++ = mq_strdup("--debug");
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--debug");
     *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,5);
     mq_snprintf ((char*)*arg++, 5, "%i", context->config.debug);
   }
   if (startAs) {
-    *arg++ = mq_strdup(startAs);
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, startAs);
   }
 
   // 5. copy the left over parts starting with the first MQ_ALFA
   if (alfa2) {
-    *arg++ = mq_strdup(MQ_ALFA_STR);
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, MQ_ALFA_STR);
     start = alfa2->data;
     end = start+alfa2->cursize;
     for (; start < end; start++,arg++) {
-      *arg = mq_strdup((*start)->cur.C);
+      *arg = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
     }
   }
   *arg = NULL;
@@ -393,7 +393,7 @@ pIoStartServer (
 ) {
   struct MqS * const context = io->context;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
-  struct MqFactoryS factory = MqFactoryS_NULL;
+  struct pFactoryItemS * factory = NULL;
   struct MqBufferLS * alfa1 = NULL;
   struct MqBufferLS * alfa2 = NULL;
   int start_as_pipe = 0;
@@ -449,22 +449,23 @@ rescan:
 	  // replace "WORKER" itself on position "0"
 	  MqErrorCheck (MqBufferLDeleteItem (context, alfa1, 0, 1, MQ_YES));
 	  // add startup entry function
-	  factory = context->setup.Factory;
-	} else {
-	  struct pFactoryItemS * item = pFactoryItemGet(name);
-	  // does we use MqMainSelector and is the first entry in alfa1 found?
-	  if (item != NULL) factory = pFactoryGet(item);
+	  factory = context->setup.factory;
+	} else if (
+	  // check for factory using "name"
+	  (factory = pFactoryItemGet(name)) != NULL
+	) {
+	  // -> found
 
-	  // if yes then use MqMainToolName (if available)
+	  // well we need the "name-of-the-executable" binary name
 	  // > atool split ... @ cut ... @ join ...
 	  // name is "cut" and next line will replace the name with "atool"
-	  name = ( factory.Create.fCall && MqInitBuf ? MqInitBuf->data[0]->cur.C : name );
+	  name = ( MqInitBuf ? MqInitBuf->data[0]->cur.C : name );
 	}
 
 //printLC(name)
-//printLP(factory.Create.fCall)
+//printLC(factory)
 
-	if (factory.Create.fCall) {
+	if (factory) {
 #if defined(HAVE_FORK)
 	  // continue with "fork"
 	  if (context->config.ignoreFork == MQ_NO && (
@@ -504,7 +505,7 @@ rescan:
 //printLC("spawn")
 	startType = MQ_START_SERVER_AS_SPAWN;
 	// only SPAWN need all arguments from MqInitBuf
-	if (factory.Create.fCall != NULL) {
+	if (factory != NULL) {
 	  MqBufferLAppendL(alfa1, MqInitBuf, 0);
 	}
 
@@ -519,7 +520,7 @@ rescan:
 
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
-	  factory = context->setup.Factory;
+	  factory = context->setup.factory;
 	}
 
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
@@ -567,7 +568,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	  alfa2 = MqBufferLDup (context->link.alfa);
 	// copy the configuration from the "PARENT" server
 	if (!start_as_pipe) {
-	  factory = context->setup.Factory;
+	  factory = context->setup.factory;
 	}
 
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
@@ -624,7 +625,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	if (alfa1 == NULL) {
           int i;
 	  for (i=0; i<MqInitBuf->cursize; i++) {
-	    *arg++ = mq_strdup(MqInitBuf->data[i]->cur.C);
+	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, MqInitBuf->data[i]->cur.C);
 	  }
 	} else {
 	  struct MqBufferS **start, **end;
@@ -633,14 +634,14 @@ MqBufferLLogS(context, alfa2, "alfa2");
 	  start = alfa1->data;
 	  end = start+alfa1->cursize;
 	  for (; start < end; start++) {
-	    *arg++ = mq_strdup((*start)->cur.C);
+	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
 	  }
 	}
 
 	// if started from "GenericServer" get the "name" from the "inital-server"
 	if (start_as_pipe == 0) {
-	  *arg++ = mq_strdup("--name");
-	  *arg++ = mq_strdup(context->config.name);
+	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
+	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
 	}
 
 	// fill arg with system-arguments
@@ -858,3 +859,6 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
+
+

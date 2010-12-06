@@ -291,14 +291,13 @@ SortFactory (
   MqConfigSetName(mqctx, "sort");
   if (create != MQ_FACTORY_NEW_FILTER) {
     MqConfigSetIsServer(mqctx, MQ_YES);
+    MqConfigSetIdent(mqctx, "sort");
     mqctx->setup.Parent.fCreate = SortCreate;
     mqctx->setup.Parent.fDelete = SortDelete;
-    mqctx->setup.Factory.Create.fCall = SortFactory;
   }
   *contextP = mqctx;
   return MQ_OK;
 }
 
 /** \} asort */
-
 

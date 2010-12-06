@@ -305,10 +305,10 @@ JoinFactory (
   struct MqS * const mqctx = MqContextCreate(sizeof(struct JoinCtxS), tmpl);
   mqctx->setup.fHelp = JoinHelp;
   MqConfigSetName(mqctx, "join");
+  MqConfigSetIdent(mqctx, "join");
   MqConfigSetIsServer(mqctx, MQ_YES);
   mqctx->setup.Parent.fCreate = JoinCreate;
   mqctx->setup.Parent.fDelete = JoinDelete;
-  mqctx->setup.Factory.Create.fCall = JoinFactory;
   *contextP = mqctx;
   return MQ_OK;
 }

@@ -560,7 +560,7 @@ MqBufferLCheckOptionC (
       MQ_CST tmp;
       MqErrorCheck (MqBufferGetC (bufL->data[index], &tmp));
       MqSysFree(*var);
-      *var = mq_strdup(tmp);
+      *var = MqSysStrDup(MQ_ERROR_PANIC, tmp);
       MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
     } else {
       return MqErrorDbV (MQ_ERROR_OPTION_ARG, opt);
@@ -784,6 +784,8 @@ MqBufferLLogS (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
 
 
 

@@ -223,10 +223,11 @@ int NS(ConfigSetBgError) (NS_ARGS)
 
 int NS(ConfigSetFactory) (NS_ARGS)
 {
+  MQ_CST ident;
+  CHECK_C(ident)
   CHECK_NOARGS
-  MqConfigSetFactory(MQCTX, 
-    NS(FactoryCreate), NULL, NULL, NULL,
-    NS(FactoryDelete), NULL, NULL, NULL
+  MqConfigSetFactory(MQCTX, ident,
+    NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL
   );
   RETURN_TCL
 }

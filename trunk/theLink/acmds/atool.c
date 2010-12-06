@@ -107,20 +107,15 @@ main (
     MqBufferLAppendC(initB, argv[0]);
 
     // add Factory 
-    MqFactoryCreate("split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    MqFactoryCreate("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    MqFactoryCreate("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    MqFactoryCreate("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
-    // find entry-point
-    //factory = ToolFactorySelector (argv[1]);
-
-    // entry not found
-    if (factory.Create.fCall == NULL)
-      ToolHelp(MqSysBasename(argv[0], MQ_NO));
+    MqFactoryCreate("split", SplitFactory, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL);
 
     // call the initial factory to initialize the "config"
-    MqFactoryCall(argv[1], &ctx);
+    if (MqFactoryCall(argv[1], &ctx) != 0) {
+      ToolHelp(MqSysBasename(argv[0], MQ_NO));
+    }
 
     // call entry point
     MqErrorCheck(MqLinkCreate(ctx, &largv));

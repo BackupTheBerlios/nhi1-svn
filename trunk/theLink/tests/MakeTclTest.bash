@@ -33,6 +33,7 @@ USAGE() {
 }
 
 PREFIX=""
+POSTFIX="cat"
 [[ $1 == "-h" ]] && USAGE
 [[ $1 == "-ur" ]] && {
   shift
@@ -40,6 +41,7 @@ PREFIX=""
 }
 [[ $1 == "-vg" ]] && {
   PREFIX="valgrind --trace-children=yes --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-gdb" ]] && {
@@ -100,9 +102,9 @@ esac
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
     T="$CMD $@"
-    exec $PREFIX $EXE -a "$T"   2>&1 | tee /tmp/$(basename $ID).log
+    $PREFIX $EXE -a "$T"   2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
   else
-    exec $PREFIX $EXE $CMD "$@" 2>&1 | tee /tmp/$(basename $ID).log
+    $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
@@ -111,9 +113,9 @@ set -x
     set $EXE
     EXE="$1"; shift
     T="$@ $T"
-    exec $PREFIX $EXE -a "$T"
+    $PREFIX $EXE -a "$T"
   else
-    exec $PREFIX $EXE $CMD "$@"
+    $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
   fi
 fi
 

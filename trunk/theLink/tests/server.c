@@ -817,7 +817,7 @@ ClientCreateParent (
 {
   struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "SELF", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
-  MqConfigSetDefaultFactory(mqctx);
+  MqConfigSetDefaultFactory(mqctx, "client");
   MqConfigSetBgError(mqctx,BgError, NULL, NULL, NULL);
   MqErrorCheck(MqLinkCreate(mqctx,&args));
   MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
@@ -1198,10 +1198,10 @@ Ot_CFG1 (
   } else if (!strncmp (cmd, "IoTcp", 5)) {
     MQ_CST h, p, mh, mp;
     MQ_CST hV, pV, mhV, mpV;
-    h = mq_strdup_save(MqConfigGetIoTcpHost(mqctx));
-    p = mq_strdup_save(MqConfigGetIoTcpPort(mqctx));
-    mh = mq_strdup_save(MqConfigGetIoTcpMyHost(mqctx));
-    mp = mq_strdup_save(MqConfigGetIoTcpMyPort(mqctx));
+    h = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpHost(mqctx));
+    p = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpPort(mqctx));
+    mh = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpMyHost(mqctx));
+    mp = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpMyPort(mqctx));
     MqErrorCheck (MqReadC (mqctx, &hV));
     MqErrorCheck (MqReadC (mqctx, &pV));
     MqErrorCheck (MqReadC (mqctx, &mhV));
@@ -1411,8 +1411,7 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = ServerSetup;
   mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
-  MqConfigSetDefaultFactory (mqctx);
-  MqConfigSetIdent (mqctx, "test-server");
+  MqConfigSetDefaultFactory (mqctx, "test-server");
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));
@@ -1429,3 +1428,4 @@ error:
 }
 
 /** \} server */
+
