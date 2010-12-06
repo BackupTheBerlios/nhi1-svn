@@ -373,7 +373,7 @@ Tclmsgque_Init (
                         (Tcl_CmdDeleteProc *) NULL);
 
   // init libmsgque global data
-  if (MqInitBuf == NULL && Tcl_GetNameOfExecutable() != NULL) {
+  if (MqInitGet() == NULL && Tcl_GetNameOfExecutable() != NULL) {
     struct MqBufferLS * initB = MqInitCreate();
 
     if (Tcl_Eval(interp, "info script") == TCL_ERROR)

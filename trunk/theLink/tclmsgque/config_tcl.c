@@ -38,7 +38,7 @@ static enum MqErrorE NS(FactoryCreate) (
     interp = Tcl_CreateInterp();
     TclErrorToMq (Tcl_Init(interp))
     Tcl_SetVar (interp, "MQ_STARTUP_IS_THREAD", "yes", TCL_GLOBAL_ONLY);
-    TclErrorToMq (Tcl_EvalFile(interp, MqInitBuf->data[1]->cur.C))
+    TclErrorToMq (Tcl_EvalFile(interp, MqInitGet()->data[1]->cur.C))
   } else {
     interp = (Tcl_Interp *const) tmpl->threadData;
   }

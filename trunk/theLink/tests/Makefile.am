@@ -21,8 +21,8 @@
 ## test tools setup
 ##
 
-LIBMSGQUE = ../libmsgque/liblocal.la
-CCMSGQUE = ../ccmsgque/liblocal.la
+LIBMSGQUE = ../libmsgque/libtmp.la
+CCMSGQUE = ../ccmsgque/libtmp.la
 
 SUFFIXES =
 BUILT_SOURCES = .vpath_hook

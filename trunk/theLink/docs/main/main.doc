@@ -13,13 +13,13 @@ Read more at: \ref V0_10 "ChangeLog" \n
 
 \section intro Introduction
 
-The \libmsgque project is an infrastructure to link applications together \n
-to act like a single application. To link mean distributing work from \n
-one application to an other application an wait or not wait for an answer.\n
+The libmsgque project is an infrastructure to link applications together \n
+to act like a single application. To link means distributing work from \n
+one application to an other application and wait, or not wait, for an answer. \n
 The linking is done using network or local sockets and is based on \n
-packages send from one application to an other application and back. \n
+packages sent from one application to an other application and back. \n
 The libmsgque project is used to handle all the different aspects for \n
-setup and maintain the link and is responsible for:\n
+setup and maintaining the link and is responsible for: \n
 \n
 <TABLE>
   <TR> <TD>starting and stopping the different applications			</TD></TR>

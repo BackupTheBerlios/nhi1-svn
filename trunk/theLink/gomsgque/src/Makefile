@@ -13,7 +13,7 @@
 include ../MakeGoMsgque.inc
 include $(GOROOT)/src/Make.inc
 
-MQOBJ  = $(abs_top_builddir)/theLink/libmsgque/.libs/liblocal.a
+MQOBJ  = $(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a
 
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \

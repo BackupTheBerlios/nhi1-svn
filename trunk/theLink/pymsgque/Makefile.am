@@ -20,7 +20,7 @@ pymsgque_la_SOURCES = MqS_python.c MqBufferS_python.c \
       link_python.c
 
 pymsgque_la_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(PYTHON_CPPFLAGS) -fno-strict-aliasing $(AM_CFLAGS)
-pymsgque_la_LIBADD = ../libmsgque/liblocal.la $(PYTHON_EXTRA_LIBS)
+pymsgque_la_LIBADD = ../libmsgque/libtmp.la $(PYTHON_EXTRA_LIBS)
 
 pymsgque_la_LDFLAGS = -avoid-version -module -no-undefined $(PYTHON_LDFLAGS) $(PYTHON_EXTRA_LDFLAGS)
 

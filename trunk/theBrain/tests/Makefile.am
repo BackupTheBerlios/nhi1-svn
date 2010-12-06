@@ -21,7 +21,7 @@ noinst_PROGRAMS = client
 
 client_SOURCES = client.c stat.c stat.h
 client_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_IGNORE_EXTERN
-client_LDADD = -lm ../../theLink/libmsgque/liblocal.la
+client_LDADD = -lm ../../theLink/libmsgque/libtmp.la
 
 ## test data
 

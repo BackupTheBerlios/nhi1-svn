@@ -24,7 +24,7 @@ tclmsgque_la_SOURCES =	context_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_t
 
 # use this if you want to include the libmsgque files into the tclmsgque libraray
 tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN
-tclmsgque_la_LIBADD = ../libmsgque/liblocal.la
+tclmsgque_la_LIBADD = ../libmsgque/libtmp.la
 
 tclmsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined $(TCL_LIBADD)
 

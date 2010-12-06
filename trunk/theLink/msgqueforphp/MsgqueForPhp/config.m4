@@ -33,7 +33,7 @@ if test "$PHP_MSGQUEFORPHP" != "no"; then
     PHP_MSGQUEFORPHPSRC=../../libmsgque
   fi
 
-  EXTRA_LDFLAGS=${PHP_MSGQUEFORPHP}/liblocal.la
+  EXTRA_LDFLAGS=${PHP_MSGQUEFORPHP}/libtmp.la
 
   dnl --with-MsgqueForPhpSrc -> add include path
   PHP_ADD_INCLUDE($PHP_MSGQUEFORPHPSRC)

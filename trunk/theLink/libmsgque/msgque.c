@@ -30,7 +30,7 @@ BEGIN_C_DECLS
 
 void EventCleanup (void);
 void GcDelete (void);
-MQ_EXTERN struct MqBufferLS * MqInitBuf = NULL;
+struct MqBufferLS * MqInitBuf = NULL;
 
 static void pMqCreate (void) __attribute__ ((constructor));
 static void pMqDelete (void) __attribute__ ((destructor));
@@ -70,6 +70,13 @@ MqInitCreate ()
   MqInitBuf = MqBufferLCreate(2);
   return MqInitBuf;
 }
+
+struct MqBufferLS*
+MqInitGet ()
+{
+  return MqInitBuf;
+}
+
 
 /*****************************************************************************/
 /*                                                                           */

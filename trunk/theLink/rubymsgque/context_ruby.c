@@ -45,7 +45,7 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
   VALUE a0 = rb_gv_get("$0");
 
   // init libmsgque global data
-  if (MqInitBuf == NULL && !NIL_P(a0)) {
+  if (MqInitGet() == NULL && !NIL_P(a0)) {
     struct MqBufferLS * initB = MqInitCreate();
     MqBufferLAppendC(initB, VAL2CST(rb_argv0));
     MqBufferLAppendC(initB, VAL2CST(a0));

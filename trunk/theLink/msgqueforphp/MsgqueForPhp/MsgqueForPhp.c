@@ -130,7 +130,7 @@ PHP_RINIT_FUNCTION(MsgqueForPhp)
 	if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID(SCRIPT_FILENAME)+1, (void **) &SCRIPT_FILENAME)) {
 
 		/* init libmsgque global data */
-		if (MqInitBuf == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
+		if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
 		  struct MqBufferLS * initB = MqInitCreate();
 		  MqBufferLAppendC(initB, sapi_module.executable_location ? sapi_module.executable_location : "php");
 		  MqBufferLAppendC(initB, "-c");

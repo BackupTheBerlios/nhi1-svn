@@ -100,7 +100,7 @@ PyInit_pymsgque(void)
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_SPAWN",      3));
 
   // init libmsgque global data
-  if (MqInitBuf == NULL && Py_GetProgramName() != NULL) {
+  if (MqInitGet() == NULL && Py_GetProgramName() != NULL) {
     struct MqBufferLS * initB = MqInitCreate();
     char * buf1 = MqSysMalloc(MQ_ERROR_IGNORE, 250);
     PyObject *sys, *list, *item, *utf8;

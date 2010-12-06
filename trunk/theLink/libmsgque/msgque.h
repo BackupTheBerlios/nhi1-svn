@@ -856,19 +856,6 @@ struct MqSetupS {
   MQ_BOL ignoreExit;
 };
 
-#ifndef MQ_PRIVATE
-
-# ifndef MQ_LINK_WITH_LIBRARY_OBJECT_FILES
-
-/// \brief the prefix arguments of the starting application
-/// \details this is the name of the executable and additional arguments
-/// used to initialize the environment like the name of a script.
-MQ_EXTERN struct MqBufferLS * MqInitBuf;
-
-# endif /* MQ_LINK_WITH_OBJECT_FILES */
-
-#endif /* !MQ_PRIVATE */
-
 /*****************************************************************************/
 /*                                                                           */
 /*                           factory                                         */
@@ -1345,6 +1332,8 @@ MQ_DECL MqConfigGetSelf (
 /// \anchor \NS{Init}
 /// \endif
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
+
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 
 /// \} Mq_Config_C_API
 

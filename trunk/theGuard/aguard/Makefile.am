@@ -18,5 +18,5 @@ aguard_SOURCES = aguard.c key.h
 aguard_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque \
 		      -DMQ_IGNORE_EXTERN $(BRAIN_CPPFLAGS)
 
-aguard_LDADD = ../../theLink/libmsgque/liblocal.la
+aguard_LDADD = ../../theLink/libmsgque/libtmp.la
 

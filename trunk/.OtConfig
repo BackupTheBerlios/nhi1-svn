@@ -11,6 +11,7 @@ fi
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
+\
 		    $ARGS $@
 
 #		    --enable-guard \

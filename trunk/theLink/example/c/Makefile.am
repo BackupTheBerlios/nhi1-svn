@@ -16,39 +16,17 @@ noinst_PROGRAMS = mulclient mulserver manfilter \
 			Filter1 Filter2 Filter3 Filter4
 
 AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
+LDADD = -lm ../../libmsgque/libtmp.la
 
 mulclient_SOURCES = mulclient.c
-mulclient_LDADD = -lm ../../libmsgque/liblocal.la
-
 mulserver_SOURCES = mulserver.c
-mulserver_LDADD = -lm ../../libmsgque/liblocal.la
-
 manfilter_SOURCES = manfilter.c
-manfilter_LDADD = -lm ../../libmsgque/liblocal.la
-
 testclient_SOURCES = testclient.c
-testclient_LDADD = -lm ../../libmsgque/liblocal.la
-
 testserver_SOURCES = testserver.c
-testserver_LDADD = -lm ../../libmsgque/liblocal.la
-
 MyClient_SOURCES = MyClient.c
-MyClient_LDADD = -lm ../../libmsgque/liblocal.la
-
 MyServer_SOURCES = MyServer.c
-MyServer_LDADD = -lm ../../libmsgque/liblocal.la
-
 Filter1_SOURCES = Filter1.c
-Filter1_LDADD = -lm ../../libmsgque/liblocal.la
-
 Filter2_SOURCES = Filter2.c
-Filter2_LDADD = -lm ../../libmsgque/liblocal.la
-
 Filter3_SOURCES = Filter3.c
-Filter3_LDADD = -lm ../../libmsgque/liblocal.la
-
 Filter4_SOURCES = Filter4.c
-Filter4_LDADD = -lm ../../libmsgque/liblocal.la
-
-INCLUDES = -I$(srcdir)/../../libmsgque
 

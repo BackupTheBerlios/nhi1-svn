@@ -38,7 +38,7 @@ libjavamsgque_la_SOURCES =  context_java.c context_java.h \
 
 # use this if you want to link again the dynmic library libmsgque...
 libjavamsgque_la_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(JAVA_CPPFLAGS) $(AM_CFLAGS) 
-libjavamsgque_la_LIBADD = ../libmsgque/liblocal.la
+libjavamsgque_la_LIBADD = ../libmsgque/libtmp.la
 libjavamsgque_la_LDFLAGS = -module -avoid-version -no-undefined 
 
 if WIN32

@@ -17,5 +17,5 @@ CLEANFILES =
 atrans_SOURCES = atrans.cc
 atrans_CPPFLAGS = -I$(srcdir)/../../theLink/ccmsgque -DMQ_IGNORE_EXTERN
 
-atrans_LDADD = ../../theLink/ccmsgque/liblocal.la
+atrans_LDADD = ../../theLink/ccmsgque/libtmp.la
 

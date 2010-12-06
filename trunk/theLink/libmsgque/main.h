@@ -13,16 +13,6 @@
 #ifndef MAIN_H
 #   define MAIN_H
 
-#   define MQ_PRIVATE
-
-/*
-#if defined(DLL_EXPORT) && !defined(MQ_IGNORE_EXTERN)
-#  define MQ_DDL_EXPORT __declspec(dllexport)
-#else
-#  define MQ_DDL_EXPORT
-#endif
-*/
-
 #   include "mqconfig.h"
 
 #   define MQ_PRIVATE_CONFIG_CONST
