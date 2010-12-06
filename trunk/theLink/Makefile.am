@@ -10,8 +10,8 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = libmsgque example/c
-#SUBDIRS = libmsgque 
+#SUBDIRS = libmsgque example/c
+SUBDIRS = libmsgque 
 if USE_CXX
 SUBDIRS += ccmsgque
 SUBDIRS += example/cc

@@ -736,6 +736,12 @@ if {!$USE_PHP} {
   set env(LNG_LST) [filterGet -not LNG_LST php]
 }
 
+# without --enable-go no Go
+if {!$USE_GO} {
+  set env(SRV_LST) [filterGet -not SRV_LST go]
+  set env(LNG_LST) [filterGet -not LNG_LST go]
+}
+
 # without --enable-csharp no C#
 if {!$USE_CSHARP} {
   set env(SRV_LST) [filterGet -not SRV_LST csharp]

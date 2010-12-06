@@ -25,6 +25,7 @@
 #include "send.h"
 #include "event.h"
 #include "link.h"
+#include "factory.h"
 
 BEGIN_C_DECLS
 
@@ -32,7 +33,6 @@ BEGIN_C_DECLS
 static MQ_SOCK sockUndef = -1;
 
 extern struct MqBufferLS * MqInitBuf;
-extern MqFactorySelectorF MqFactorySelector;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -451,8 +451,9 @@ rescan:
 	  // add startup entry function
 	  factory = context->setup.Factory;
 	} else {
+	  struct pFactoryItemS * item = pFactoryItemGet(name);
 	  // does we use MqMainSelector and is the first entry in alfa1 found?
-	  if (MqFactorySelector) factory = MqFactorySelector(name);
+	  if (item != NULL) factory = pFactoryGet(item);
 
 	  // if yes then use MqMainToolName (if available)
 	  // > atool split ... @ cut ... @ join ...
@@ -461,7 +462,7 @@ rescan:
 	}
 
 //printLC(name)
-//printLP(fFactory)
+//printLP(factory.Create.fCall)
 
 	if (factory.Create.fCall) {
 #if defined(HAVE_FORK)
@@ -650,7 +651,7 @@ MqBufferLLogS(context, alfa2, "alfa2");
         {
 int i;
 char ** xarg = argV;
-printLC(name)
+//printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
   MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }
@@ -857,8 +858,3 @@ pIoLog (
 #endif
 
 END_C_DECLS
-
-
-
-
-

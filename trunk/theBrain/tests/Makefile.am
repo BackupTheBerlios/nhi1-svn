@@ -20,8 +20,8 @@ EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.bash $(srcdir)/*.env
 noinst_PROGRAMS = client
 
 client_SOURCES = client.c stat.c stat.h
-client_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
-client_LDADD = -lm ../../theLink/libmsgque/libtmp.la
+client_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_IGNORE_EXTERN
+client_LDADD = -lm ../../theLink/libmsgque/liblocal.la
 
 ## test data
 

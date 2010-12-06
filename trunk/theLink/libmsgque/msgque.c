@@ -31,19 +31,15 @@ BEGIN_C_DECLS
 void EventCleanup (void);
 void GcDelete (void);
 MQ_EXTERN struct MqBufferLS * MqInitBuf = NULL;
-MQ_EXTERN MqFactorySelectorF MqFactorySelector = NULL;
-static void pMqCleanup (void) __attribute__ ((destructor));
+
+static void pMqCreate (void) __attribute__ ((constructor));
+static void pMqDelete (void) __attribute__ ((destructor));
 
 /*****************************************************************************/
 /*                                                                           */
 /*                                private                                    */
 /*                                                                           */
 /*****************************************************************************/
-
-static void pMqCleanup(void)
-{
-  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
-}
 
 MQ_STR
 MqHelp ( MQ_CST  tool )
@@ -352,11 +348,12 @@ MqExitP (
   }
 }
 
-void pTransMark	( struct MqS * const, MqMarkF const);
-void pSetupMark	( struct MqS * const, MqMarkF const);
-void pSlaveMark	( struct MqS * const, MqMarkF const);
-void pLinkMark	( struct MqS * const, MqMarkF const);
-void pTokenMark ( struct MqS * const, MqMarkF const);
+void pTransMark	  ( struct MqS * const, MqMarkF const);
+void pSetupMark	  ( struct MqS * const, MqMarkF const);
+void pSlaveMark	  ( struct MqS * const, MqMarkF const);
+void pLinkMark	  ( struct MqS * const, MqMarkF const);
+void pTokenMark	  ( struct MqS * const, MqMarkF const);
+//void pFactoryMark ( struct MqS * const, MqMarkF const);
 
 void
 MqMark (
@@ -405,16 +402,16 @@ MqLogData (
 }
 #endif /* _DEBUG */
 
-  void GcCreate (void);
-  void GcDelete (void);
-  void GenericCreate (void);
-  void GenericDelete (void);
-  void EventCreate (void);
-  void EventDelete (void);
   void SysCreate (void);
+  void GcCreate (void);
+  void EventCreate (void);
   void SysComCreate (void);
+  void FactorySpaceCreate (void);
+  void ConfigCreate (void);
 
-END_C_DECLS
+  void GcDelete (void);
+  void EventDelete (void);
+  void FactorySpaceDelete (void);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -423,6 +420,11 @@ END_C_DECLS
 /*****************************************************************************/
 
 #if defined(_MSC_VER)
+
+END_C_DECLS
+
+  void GenericCreate (void);
+  void GenericDelete (void);
 
 BOOL WINAPI DllMain( 
     HINSTANCE hModule,
@@ -440,7 +442,10 @@ BOOL WINAPI DllMain(
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
+      SysCreate ();
       GcCreate();
+      FactorySpaceCreate ();
+      ConfigCreate ();
       EventCreate();
       GenericCreate();
       SysCreate();
@@ -449,10 +454,34 @@ BOOL WINAPI DllMain(
     case DLL_PROCESS_DETACH:
       GenericDelete();
       EventCleanup();
+      FactorySpaceDelete ();
       GcDelete();
       break;
   }
   return TRUE;
 }
+#else
+
+static void pMqCreate(void)
+{
+  SysCreate ();
+  GcCreate ();
+  ConfigCreate ();
+  FactorySpaceCreate ();
+  EventCreate ();
+  SysComCreate ();
+  ConfigCreate ();
+}
+
+static void pMqDelete(void)
+{
+  EventDelete ();
+  GcDelete ();
+  FactorySpaceDelete ();
+  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
+}
+
+END_C_DECLS
+
 #endif
 

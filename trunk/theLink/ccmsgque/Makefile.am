@@ -17,7 +17,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     token.cc uds_io.cc bufferL.cc error.cc \
     generic_io.cc io.cc msgque.cc read.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
-    service.cc \
+    service.cc factory.cc \
     \
     ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
@@ -25,7 +25,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
     log.h msgque.h read.h swap.h tcp_io.h uds_io.h cache.h debug.h \
     generic_io.h main.h msgque_private.h send.h sys_com.h token.h \
-    link.cc link.h config.h
+    link.cc link.h config.h factory.h
 
 
 libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)

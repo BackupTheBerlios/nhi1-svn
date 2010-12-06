@@ -44,9 +44,7 @@
 
 BEGIN_C_DECLS
 
-static void SysComCreate (void) __attribute__ ((constructor));
-
-static void SysComCreate (void) 
+void SysComCreate (void) 
 {
 #if defined(MQ_IS_POSIX)
   signal(SIGPIPE, SIG_IGN);

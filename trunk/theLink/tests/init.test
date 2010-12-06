@@ -72,8 +72,8 @@ test init-1-($I|$B|$C|$S) {init $bin_server.exe} \
     -returnCodes    ok \
     -result         334
 
+#    -constraints    local 
 test init-3-($I|$B|$C|$S) {init WRONG_SERVER} \
-    -constraints    local \
     -setup	    {Setup $I $B $C $S} \
     -body           {
       Call $FH_LAST SendEND_AND_WAIT INIT {*}[lreplace $SRV 1 1 WRONG_SERVER]
@@ -112,7 +112,3 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
-
-
-
-

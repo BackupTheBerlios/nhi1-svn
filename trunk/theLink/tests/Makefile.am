@@ -21,8 +21,8 @@
 ## test tools setup
 ##
 
-LIBMSGQUE = ../libmsgque/libtmp.la
-CCMSGQUE = ../ccmsgque/libtmp.la
+LIBMSGQUE = ../libmsgque/liblocal.la
+CCMSGQUE = ../ccmsgque/liblocal.la
 
 SUFFIXES =
 BUILT_SOURCES = .vpath_hook
@@ -46,11 +46,11 @@ HTMLFILES = docs/server.help docs/client.help docs/debug.out docs/client.perf
 html: $(HTMLFILES)
 
 server_SOURCES = server.c 
-server_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+server_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
 server_LDADD = -lm $(LIBMSGQUE)
 
 client_SOURCES = client.c stat.c stat.h
-client_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+client_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
 client_LDADD = -lm $(LIBMSGQUE)
 
 ##
@@ -61,7 +61,7 @@ client_LDADD = -lm $(LIBMSGQUE)
 if USE_CXX
 noinst_PROGRAMS += ccserver$(EXEEXT)
 ccserver_SOURCES = ccserver.cc
-ccserver_CXXFLAGS = -I$(srcdir)/../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+ccserver_CXXFLAGS = -I$(srcdir)/../ccmsgque -DMQ_IGNORE_EXTERN
 ccserver_LDADD = $(CCMSGQUE)
 endif
 

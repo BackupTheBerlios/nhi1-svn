@@ -32,16 +32,8 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-#ifdef MQ_IS_WIN32
 #if defined(_MSC_VER)
-#  define PREFIX
-#else
-#  define PREFIX static
-PREFIX void GenericCreate () __attribute__ ((constructor)); 
-PREFIX void GenericDelete () __attribute__ ((destructor));
-#endif /* ! _MSC_VER */
-
-PREFIX void
+void
 GenericCreate (
   void
 )
@@ -49,14 +41,13 @@ GenericCreate (
   SysWSAStartup (NULL);
 }
 
-PREFIX void
+void
 GenericDelete (
   void
 )
 {
   SysWSACleanup (NULL);
 }
-#undef PREFIX
 #endif
 
 /*****************************************************************************/

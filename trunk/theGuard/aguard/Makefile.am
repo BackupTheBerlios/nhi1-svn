@@ -16,7 +16,7 @@ CLEANFILES =
 
 aguard_SOURCES = aguard.c key.h
 aguard_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque \
-		      -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES $(BRAIN_CPPFLAGS)
+		      -DMQ_IGNORE_EXTERN $(BRAIN_CPPFLAGS)
 
-aguard_LDADD = ../../theLink/libmsgque/libtmp.la
+aguard_LDADD = ../../theLink/libmsgque/liblocal.la
 

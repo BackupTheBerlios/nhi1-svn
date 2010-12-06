@@ -72,8 +72,6 @@
 
 BEGIN_C_DECLS
 
-void SysCreate (void) __attribute__ ((constructor)); 
-
 struct MqLalS MqLal;
 
 /*****************************************************************************/
@@ -457,6 +455,7 @@ static enum MqErrorE SysServerSpawn (
   goto ok;
 
 #elif (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
+//#if (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
 
   // fork to create the child
 #if defined(HAVE_VFORK)

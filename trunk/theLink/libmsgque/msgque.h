@@ -501,18 +501,6 @@ typedef void ( MQ_DECL
   MQ_PTR data
 );
 
-/// \brief Return a \e main factory function found by \e name
-/// \param[in] name the string name of the function to select
-///
-/// This function have to be defined in the target tool (example: \c atool.c)
-/// and have to return the \e main function of type #MqFactoryS,
-/// The result is used as Entry-Point for \e fork and \e thread startup.
-typedef struct MqFactoryS ( MQ_DECL
-    *MqFactorySelectorF
-) (
-    MQ_CST name
-);
-
 /// \brief function pointer to \e create an object
 struct MqFactoryCreateS {
   MqFactoryCreateF	fCall;	    ///< create a new object
@@ -531,13 +519,9 @@ struct MqFactoryDeleteS {
 
 /// \brief used as interface for object creation
 struct MqFactoryS {
-  enum MqFactoryE type;		    ///< set during factory create to save the "reason"
   struct MqFactoryCreateS Create;   ///< object creation function
   struct MqFactoryDeleteS Delete;   ///< object deletion function
 };
-
-/// \brief initialize a #MqFactoryS object to \c NULL
-#define MqFactoryS_NULL { MQ_FACTORY_NEW_INIT, {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
 
 /// \ingroup Mq_Type_C_API
 /// \brief prototype for exit a process or thread
@@ -821,7 +805,7 @@ struct MqSetupS {
   /// example: \c theLink/example/LANG/Filter4.EXT
   struct MqCallbackS Event;
 
-  /// \brief define the \e server-cleanup-interface
+  /// \brief define the \e server-object-create-delete-interface
   ///
   /// The \e factory-interface is used to create a new \e server-context.
   /// Without the \e factory-interface only the initial \e startup-context is available to serve
@@ -881,12 +865,36 @@ struct MqSetupS {
 /// used to initialize the environment like the name of a script.
 MQ_EXTERN struct MqBufferLS * MqInitBuf;
 
-/// \brief name of a procedure to return \e main like entry-points 
-MQ_EXTERN MqFactorySelectorF MqFactorySelector;
-
 # endif /* MQ_LINK_WITH_OBJECT_FILES */
 
 #endif /* !MQ_PRIVATE */
+
+/*****************************************************************************/
+/*                                                                           */
+/*                           factory                                         */
+/*                                                                           */
+/*****************************************************************************/
+
+MQ_EXTERN void MQ_DECL MqFactoryCreate (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqTokenDataCopyF const createDatacopyF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF,
+  MqTokenDataCopyF const deleteDatacopyF
+);
+
+MQ_EXTERN void MQ_DECL MqFactoryDelete (
+  MQ_CST const name
+);
+
+MQ_EXTERN void MQ_DECL MqFactoryCall (
+  MQ_CST const name,
+  struct MqS **ctxP
+);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -2989,19 +2997,19 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLGetU (
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
-#define MQ_ERROR_PANIC ((struct MqS*)NULL)
+#define MQ_ERROR_PANIC ((struct MqS* const)NULL)
 
 /// \brief ignore error and do not generate any error-text (don't fill the error object)
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
-#define MQ_ERROR_IGNORE ((struct MqS*)0x1)
+#define MQ_ERROR_IGNORE ((struct MqS* const)0x1)
 
 /// \brief print error to stderr
 ///
 /// This item is used as special meaning for the \c struct #MqErrorS 
 /// argument of error-functions
-#define MQ_ERROR_PRINT ((struct MqS*)0x2)
+#define MQ_ERROR_PRINT ((struct MqS* const)0x2)
 
 /// \brief check if the error pointer is a \e real pointer or just a flag
 #define MQ_ERROR_IS_POINTER(e) (e>MQ_ERROR_PRINT)

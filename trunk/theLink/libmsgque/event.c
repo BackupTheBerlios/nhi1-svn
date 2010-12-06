@@ -37,9 +37,6 @@ struct MqEventS {
   
 };
 
-void EventCreate (void) __attribute__ ((constructor)); 
-void EventDelete (void) __attribute__ ((destructor)); 
-
 //######################################################################
 
 static void

@@ -40,9 +40,6 @@ struct MqGcS {
   MQ_SIZE DataLCur;             ///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
 };
 
-void GcCreate (void) __attribute__ ((constructor)); 
-void GcDelete (void) __attribute__ ((destructor)); 
-
 #if defined (MQ_HAS_THREAD)
 static MqThreadKeyType gc_key = MqThreadKeyNULL;
 #else
@@ -438,13 +435,11 @@ MqSetupDup (
   struct MqCallbackS BgError = context->setup.BgError;
   struct MqFactoryCreateS FactoryC = context->setup.Factory.Create;
   struct MqFactoryDeleteS FactoryD = context->setup.Factory.Delete;
-  enum MqFactoryE FactoryType = context->setup.Factory.type;
 
   // Step 1,  copy "setup" 
   MqSysFree(context->setup.ident);
   context->setup = from->setup;
   context->setup.ident = mq_strdup_save(from->setup.ident);
-  context->setup.Factory.type = FactoryType;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   sSetupDupHelper (context, context->setup.Event,          Event);
@@ -498,7 +493,7 @@ pCallFactory (
 
   // set the factory
   (*contextP)->link.bits.doFactoryCleanup = MQ_YES;
-  (*contextP)->setup.Factory.type = create;
+  //(*contextP)->setup.Factory.type = create;
   // child inherit "ignoreExit" from "template"
   if (tmpl != NULL && create == MQ_FACTORY_NEW_CHILD)
     (*contextP)->setup.ignoreExit = tmpl->setup.ignoreExit;
@@ -1072,11 +1067,16 @@ void pSetupMark (
   sSetupMark (context->setup.Factory.Delete);
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                                 Setup                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+void
+ConfigCreate (void)
+{
+  MqFactoryCreate("DEFAULT", sDefaultFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+}
+
 END_C_DECLS
-
-
-
-
-
-
-

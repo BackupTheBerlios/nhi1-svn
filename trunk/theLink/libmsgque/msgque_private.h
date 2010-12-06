@@ -289,9 +289,3 @@ void GcRun (
 END_C_DECLS
 
 #endif /* MQ_PRIVATE_H */
-
-
-
-
-
-

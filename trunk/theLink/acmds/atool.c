@@ -65,6 +65,7 @@ ToolHelp ( const char * base  )
 /// \brief convert an application \e name into a \e main function-pointer
 /// \param name the name uf the sub-command
 /// \return the \e main function-pointer or NULL
+/*
 struct MqFactoryS ToolFactorySelector (
   MQ_CST name
 ) {
@@ -80,6 +81,7 @@ struct MqFactoryS ToolFactorySelector (
     }
     return ret;
 }
+*/
 
 /// \brief main entry-point for the tool
 /// \param argc the number of command-line arguments
@@ -101,20 +103,24 @@ main (
     struct MqS *ctx = NULL;
     struct MqFactoryS factory;
 
-
     // init libmsgque global data
     MqBufferLAppendC(initB, argv[0]);
-    MqFactorySelector = ToolFactorySelector;
+
+    // add Factory 
+    MqFactoryCreate("split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryCreate("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // find entry-point
-    factory = ToolFactorySelector (argv[1]);
+    //factory = ToolFactorySelector (argv[1]);
 
     // entry not found
     if (factory.Create.fCall == NULL)
       ToolHelp(MqSysBasename(argv[0], MQ_NO));
 
     // call the initial factory to initialize the "config"
-    MqErrorCheck((*factory.Create.fCall) (NULL, MQ_FACTORY_NEW_INIT, NULL, &ctx));
+    MqFactoryCall(argv[1], &ctx);
 
     // call entry point
     MqErrorCheck(MqLinkCreate(ctx, &largv));
@@ -130,4 +136,3 @@ error:
 }
 
 /** \} atool */
-
