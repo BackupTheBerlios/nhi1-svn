@@ -28,10 +28,10 @@
 #define MSGQUE msgque
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-enum MqErrorE SplitFactory (struct MqS * const, enum MqFactoryE, MQ_PTR, struct MqS **);
-enum MqErrorE CutFactory   (struct MqS * const, enum MqFactoryE, MQ_PTR, struct MqS **);
-enum MqErrorE SortFactory  (struct MqS * const, enum MqFactoryE, MQ_PTR, struct MqS **);
-enum MqErrorE JoinFactory  (struct MqS * const, enum MqFactoryE, MQ_PTR, struct MqS **);
+enum MqErrorE SplitFactory (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
+enum MqErrorE CutFactory   (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
+enum MqErrorE SortFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
+enum MqErrorE JoinFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
 #endif
 
 /*****************************************************************************/
@@ -62,27 +62,6 @@ ToolHelp ( const char * base  )
     exit(EXIT_SUCCESS);
 }
 
-/// \brief convert an application \e name into a \e main function-pointer
-/// \param name the name uf the sub-command
-/// \return the \e main function-pointer or NULL
-/*
-struct MqFactoryS ToolFactorySelector (
-  MQ_CST name
-) {
-    struct MqFactoryS ret = MqFactoryS_NULL;
-    if (strncmp("split",name,5) == 0) {
-	ret.Create.fCall = SplitFactory;
-    } else if (strncmp("cut",name,3) == 0) {
-	ret.Create.fCall = CutFactory;
-    } else if (strncmp("sort",name,4) == 0) {
-	ret.Create.fCall = SortFactory;
-    } else if (strncmp("join",name,4) == 0) {
-	ret.Create.fCall = JoinFactory;
-    }
-    return ret;
-}
-*/
-
 /// \brief main entry-point for the tool
 /// \param argc the number of command-line arguments
 /// \param argv the command-line arguments as an array of strings
@@ -101,7 +80,6 @@ main (
     struct MqBufferLS * largv = MqBufferLCreateArgs ((argc-1), (argv+1));
     struct MqBufferLS * initB = MqInitCreate();
     struct MqS *ctx = NULL;
-    struct MqFactoryS factory;
 
     // init libmsgque global data
     MqBufferLAppendC(initB, argv[0]);

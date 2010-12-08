@@ -29,8 +29,7 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
-  MqConfigSetName (ctx, "ManFilter");
-  MqConfigSetDefaultFactory (ctx);
+  MqConfigSetDefaultFactory (ctx, "ManFilter");
   MqConfigSetIsServer (ctx, MQ_YES);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, "+FTR", FTR, NULL, NULL));

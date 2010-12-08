@@ -22,9 +22,8 @@ proc ServerSetup {ctx} {
 
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetName Filter3
   $srv ConfigSetServerSetup ServerSetup
-  $srv ConfigSetFactory
+  $srv ConfigSetFactory Filter3
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

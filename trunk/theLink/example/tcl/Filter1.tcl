@@ -35,9 +35,8 @@ proc EOFcmd {ctx} {
   $ctx SendRETURN
 }
 set srv [tclmsgque MqS]
-$srv ConfigSetName filter
 $srv ConfigSetIsServer yes
-$srv ConfigSetFactory
+$srv ConfigSetFactory filter
 if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate "+FTR" FTRcmd

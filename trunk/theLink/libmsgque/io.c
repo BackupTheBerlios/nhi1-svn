@@ -393,7 +393,7 @@ pIoStartServer (
 ) {
   struct MqS * const context = io->context;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
-  struct pFactoryItemS * factory = NULL;
+  struct MqFactoryItemS * factory = NULL;
   struct MqBufferLS * alfa1 = NULL;
   struct MqBufferLS * alfa2 = NULL;
   int start_as_pipe = 0;
@@ -440,12 +440,14 @@ rescan:
 	idP = &io->id;
 	// this is the first entry in alfa1
 	name = alfa1->data[0]->cur.C;
+
 //printLC(name)
 
 	// check if we use the "WORKER" keyword
 	if (context->link.bits.isWORKER) {
 	  // replace "WORKER" with "MqInitBuf" data
-	  name = MqInitBuf->data[0]->cur.C;
+	  if (MqInitBuf && MqInitBuf->data[0])
+	    name = MqInitBuf->data[0]->cur.C;
 	  // replace "WORKER" itself on position "0"
 	  MqErrorCheck (MqBufferLDeleteItem (context, alfa1, 0, 1, MQ_YES));
 	  // add startup entry function
@@ -459,11 +461,12 @@ rescan:
 	  // well we need the "name-of-the-executable" binary name
 	  // > atool split ... @ cut ... @ join ...
 	  // name is "cut" and next line will replace the name with "atool"
-	  name = ( MqInitBuf ? MqInitBuf->data[0]->cur.C : name );
+	  if (MqInitBuf && MqInitBuf->data[0])
+	    name = MqInitBuf->data[0]->cur.C;
 	}
 
 //printLC(name)
-//printLC(factory)
+//printLP(factory)
 
 	if (factory) {
 #if defined(HAVE_FORK)
@@ -550,11 +553,9 @@ rescan:
 	// special in "thread" mode, the server socket now belongs to the "new-thread"
 	// and not the "current-thread"
 	*sockP = sockUndef;
-/*
-I2
-MqBufferLLogS(context, alfa1, "alfa1");
-MqBufferLLogS(context, alfa2, "alfa2");
-*/
+
+//MqBufferLLogS(context, alfa1, __func__, "alfa1");
+//MqBufferLLogS(context, alfa2, __func__, "alfa2");
 
 	// start the server
 	MqErrorCheck (MqSysServerThread (context, factory, &alfa1, &alfa2, name, thread_status, idP));
@@ -859,6 +860,7 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
 
 
 

@@ -815,7 +815,7 @@ ClientCreateParent (
   MQ_INT debug
 )
 {
-  struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "SELF", "--name", "test-server", NULL);
+  struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
   MqConfigSetDefaultFactory(mqctx, "client");
   MqConfigSetBgError(mqctx,BgError, NULL, NULL, NULL);
@@ -834,7 +834,7 @@ ClientERRCreateParent (
   MQ_INT debug
 )
 {
-  struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "SELF", "--name", "test-server", NULL);
+  struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
   MqErrorCheck(MqLinkCreate(mqctx,&args));
   MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
@@ -1198,10 +1198,10 @@ Ot_CFG1 (
   } else if (!strncmp (cmd, "IoTcp", 5)) {
     MQ_CST h, p, mh, mp;
     MQ_CST hV, pV, mhV, mpV;
-    h = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpHost(mqctx));
-    p = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpPort(mqctx));
-    mh = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpMyHost(mqctx));
-    mp = MqSysStrDupSave(MQ_ERROR_PANIC, MqConfigGetIoTcpMyPort(mqctx));
+    h = MqSysStrDup(MQ_ERROR_PANIC, MqConfigGetIoTcpHost(mqctx));
+    p = MqSysStrDup(MQ_ERROR_PANIC, MqConfigGetIoTcpPort(mqctx));
+    mh = MqSysStrDup(MQ_ERROR_PANIC, MqConfigGetIoTcpMyHost(mqctx));
+    mp = MqSysStrDup(MQ_ERROR_PANIC, MqConfigGetIoTcpMyPort(mqctx));
     MqErrorCheck (MqReadC (mqctx, &hV));
     MqErrorCheck (MqReadC (mqctx, &pV));
     MqErrorCheck (MqReadC (mqctx, &mhV));
@@ -1388,6 +1388,28 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
+enum MqErrorE
+ServerFactory (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS * const item,
+  struct MqS **contextP
+)
+{ 
+  struct MqS * const mqctx = MqContextCreate(sizeof(struct ServerCtxS),tmpl);
+  // we do not copy the "setup" because the "caller" could be something
+  // !NOT! necessary an other "server" object
+  mqctx->setup.Child.fCreate	    = MqLinkDefault;
+  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
+  mqctx->setup.fHelp		    = ServerHelp;
+  mqctx->setup.isServer		    = MQ_YES;
+  mqctx->setup.ServerSetup.fCall    = ServerSetup;
+  mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
+  MqConfigSetFactoryItem (mqctx, item);
+  *contextP = mqctx;
+  return MQ_OK;
+}
+
 /// \brief main entry-point for the tool
 /// \param argc the number of command-line arguments
 /// \param argv the command-line arguments as an array of strings
@@ -1398,20 +1420,18 @@ main (
   MQ_CST argv[]
 )
 {
-  // the parent-context
-  struct MqS * const mqctx = MqContextCreate(sizeof(struct ServerCtxS), NULL);
+  struct MqS *mqctx = NULL;
 
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
-  // add config data
-  mqctx->setup.Child.fCreate	    = MqLinkDefault;
-  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
-  mqctx->setup.fHelp		    = ServerHelp;
-  mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fCall    = ServerSetup;
-  mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
-  MqConfigSetDefaultFactory (mqctx, "test-server");
+  // add Factory 
+  MqFactoryCreate("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
+
+  // call the initial factory to initialize the "config"
+  if (MqFactoryCall("server", &mqctx) != 0) {
+    ServerHelp(MqSysBasename("server", MQ_NO));
+  }
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));
@@ -1420,7 +1440,7 @@ main (
   MqLogC(mqctx, "test", 1, "this is the log test\n");
 
   // start event-loop and wait forever
-  MqProcessEvent (mqctx, MQ_TIMEOUT_DEFAULT, MQ_WAIT_FOREVER);
+  MqErrorCheck(MqProcessEvent (mqctx, MQ_TIMEOUT_DEFAULT, MQ_WAIT_FOREVER));
 
   // finish and exit
 error:

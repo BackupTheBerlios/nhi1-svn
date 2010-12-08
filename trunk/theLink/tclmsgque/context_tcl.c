@@ -509,7 +509,7 @@ NS(MqS_Free) (
     struct MqS * mqctx = (struct MqS *) tclctx;
     Tcl_Obj* dict = tclctx->dict;
     // we delete the command using "Tcl_DeleteObjCommand" the "Factory" is useless -> delete
-    MqSysFree(mqctx->setup.ident);
+    mqctx->setup.factory = NULL;
     mqctx->setup.Event.fCall = NULL;
     // delete the context
     MqContextDelete(&mqctx);
@@ -551,7 +551,7 @@ NS(MqS_Init) (
   tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
   tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
 
-  MqConfigSetFactory (MQCTX, "DEFAULT", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
+  MqConfigSetFactory (MQCTX, "tclmsgque", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
   MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
 
   if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {

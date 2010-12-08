@@ -21,8 +21,7 @@ proc ServerConfig {ctx} {
 }
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetName MyMulServer
-  $srv ConfigSetFactory
+  $srv ConfigSetFactory MyMulServer
   $srv ConfigSetServerSetup ServerConfig
   if {[catch {
     $srv LinkCreate {*}$argv

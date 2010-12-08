@@ -234,8 +234,8 @@ proc BgError {ctx} {
 
 proc ClientCreateParent {ctx debug} {
   $ctx ConfigSetDebug $debug
-  $ctx ConfigSetFactory
   $ctx ConfigSetBgError BgError
+  $ctx ConfigSetFactory test-client
   $ctx LinkCreate @ SELF --name test-server
 }
 
@@ -522,9 +522,11 @@ proc Ot_CFG1 {ctx} {
       $ctx ConfigSetTimeout $old
     }
     "Name" {
+puts 1111111111111111111111111111111
       set old [$ctx ConfigGetName] 
       $ctx ConfigSetName [$ctx ReadC]
       $ctx SendC [$ctx ConfigGetName]
+Print old
       $ctx ConfigSetName $old
     }
     "SrvName" {
@@ -700,11 +702,9 @@ proc ServerCleanup {ctx} {
 # only used to start the initial process
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetName server
-  $srv ConfigSetIdent test-server
   $srv ConfigSetServerSetup ServerSetup
   $srv ConfigSetServerCleanup ServerCleanup
-  $srv ConfigSetFactory
+  $srv ConfigSetFactory server
 
   if {[catch {
     # create the initial parent-context and wait forever for events
@@ -719,6 +719,4 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
-
-
 

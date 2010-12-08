@@ -142,6 +142,7 @@
 #define printLC(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_C, var)
 #define printLH(var)	MLV(MQ_CONTEXT_S, "%c",        var)
 #define printR(var)	MLVA(MQ_CONTEXT_S, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
+#define printLV(fmt,args...)  MqDLogV(MQ_CONTEXT_S,0,fmt,args)
 
 #define printXLP(x,var)	  MLV(x, "%p"       , var)
 #define printXLI(x,var)	  MLV(x, MQ_FORMAT_I, var)
@@ -158,7 +159,7 @@
 
 #define CL(code) if (MQ_IS_CLIENT(MQ_CONTEXT_S)) {code}
 
-#define bufLog(fmt,MQ_VAR_ARGS) {\
+#define bufLog(fmt,args...) {\
     char buf[1000];\
     snprintf(buf,1000,"echo '%-5i - %-30s : " fmt "' >> /tmp/buf.log",getpid(),__func__,args);\
     system(buf);\

@@ -154,7 +154,7 @@ sMqCheckArg (
   if (MQ_IS_CHILD(context)) {
     context->link.bits.endian = context->config.parent->link.bits.endian;
     MqSysFree (context->link.targetIdent);
-    context->link.targetIdent = MqSysStrDupSave(MQ_ERROR_PANIC, context->config.parent->link.targetIdent);
+    context->link.targetIdent = MqSysStrDup(MQ_ERROR_PANIC, context->config.parent->link.targetIdent);
   }
   // after the block from above 'setup.ident' is always set
 
@@ -573,12 +573,12 @@ MqLinkConnect (
       MQ_BOL myendian;
 
       if (pIoIsRemote(context->link.io) == MQ_YES) {
-	serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, "remote-connect");
+	serverexec = MqSysStrDup(MQ_ERROR_PANIC, "remote-connect");
       } else {
 	if (context->link.alfa != NULL)
-	  serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, context->link.alfa->data[0]->cur.C);
+	  serverexec = MqSysStrDup(MQ_ERROR_PANIC, context->link.alfa->data[0]->cur.C);
 	if (serverexec == NULL)
-	  serverexec = MqSysStrDupSave(MQ_ERROR_PANIC, sInitGetFirst());
+	  serverexec = MqSysStrDup(MQ_ERROR_PANIC, sInitGetFirst());
       }
 
       // 0. Start the PIPE server (if necessary)
@@ -734,7 +734,13 @@ MqLinkCreate (
       } else {
 	if (!strncmp(context->link.alfa->data[0]->cur.C, "SELF", 4)) {
 	  MqBufferLDeleteItem (MQ_ERROR_PANIC, context->link.alfa, 0, 1, MQ_YES);
-	  MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
+	  if (	context->setup.factory != NULL &&  // "factory" available ?
+		  context->setup.factory->callback.Create.fCall != NULL  // constructor available ?
+	      ) {
+	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->name), 0);
+	  } else {
+	    MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
+	  }
 	} else if (!strncmp(context->link.alfa->data[0]->cur.C, "WORKER", 6)) {
 	  context->link.bits.isWORKER = MQ_YES;
 	}
@@ -1091,6 +1097,7 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

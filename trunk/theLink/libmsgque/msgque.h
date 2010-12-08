@@ -242,6 +242,7 @@ union  MqBufferU;
 struct MqConfigS;
 struct MqEventS;
 struct MqFactoryS;
+struct MqFactoryItemS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -488,7 +489,7 @@ typedef enum MqErrorE ( MQ_DECL
 ) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR  data,
+  struct MqFactoryItemS* const item,
   struct MqS  ** contextP
 );
 
@@ -757,7 +758,7 @@ struct MqSetupS {
   ///
   /// \attention: if this value changes the factory need to be updated too.
   MQ_CST ident;
-  struct pFactoryItemS* factory;
+  struct MqFactoryItemS* factory;
  
   /// \brief setup/cleanup a \e CHILD object
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
@@ -1000,6 +1001,12 @@ MQ_DECL MqConfigSetFactory (
   MqTokenDataFreeF  fDeleteFree
 );
 
+MQ_EXTERN void 
+MQ_DECL MqConfigSetFactoryItem (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+);
+
 /// \brief setup the default \e factory pattern
 /// \context
 ///
@@ -1008,7 +1015,7 @@ MQ_DECL MqConfigSetFactory (
 MQ_EXTERN void 
 MQ_DECL MqConfigSetDefaultFactory (
   struct MqS * const context,
-  MQ_CST ident
+  MQ_CST const ident
 );
 
 /// \brief set the #MqConfigS::ignoreFork value
@@ -4119,7 +4126,7 @@ struct MqIdS {
 /// \brief data used to initialize a new created thread
 struct MqSysServerThreadMainS {
   struct MqS * tmpl;		  ///< calling (parent) context
-  struct pFactoryItemS * factory; ///< server configuration (memory belongs to caller)
+  struct MqFactoryItemS * factory; ///< server configuration (memory belongs to caller)
   struct MqBufferLS * argv;	  ///< command-line arguments befor \b MQ_ALFA, owned by SysServerThread
   struct MqBufferLS * alfa;	  ///< command-line arguments after \b MQ_ALFA, owned by SysServerThread
 };
@@ -4185,7 +4192,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerThread) (
     struct MqS * const	  context, 
-    struct pFactoryItemS* factory,
+    struct MqFactoryItemS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4210,7 +4217,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerFork) (
     struct MqS * const	  context, 
-    struct pFactoryItemS* factory,
+    struct MqFactoryItemS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4430,16 +4437,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
   struct mq_timezone * tz
 );
 
-/// \brief duplicate a string, the argument \c NULL is allowed
-/// \param[in] v the string to duplicate
-/// \return the new string or \c NULL
-static mq_inline MQ_STR MqSysStrDupSave (
-  struct MqS * const context,
-  MQ_CST v
-) {
-  return v != NULL ? MqSysStrDup(context, v) : NULL;
-}
-
 /// \}    Mq-LAL-API
 
 /// \} Mq_System_C_API
@@ -4504,7 +4501,7 @@ MQ_EXTERN void MQ_DECL MqLogVL (
 #if defined(MQ_DISABLE_LOG)
 #   define MqSetDebugLevel(context)
 #   define MqDLogC(context,level,str)
-#   define MqDLogV(context,level,fmt,MQ_VAR_ARGS)
+#   define MqDLogV(context,level,fmt,VAR_ARGS)
 #else
 
 /// \brief define a variable \e debugLevel valid only in the current context
@@ -4696,6 +4693,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 

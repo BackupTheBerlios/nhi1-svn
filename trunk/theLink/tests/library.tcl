@@ -1451,12 +1451,12 @@ proc Create {I CON} {
     set FH_CUR [tclmsgque MqS]
     if {$i == 0} {
       set FH_FIRST $FH_CUR
-      $FH_FIRST ConfigSetName     "client"
-      $FH_FIRST ConfigSetTimeout  $env(TS_TIMEOUT)
-      $FH_FIRST ConfigSetDebug    $env(TS_DEBUG)
-      $FH_FIRST LinkCreate	  {*}$CON
+      $FH_CUR ConfigSetName     "client"
+      $FH_CUR ConfigSetTimeout  $env(TS_TIMEOUT)
+      $FH_CUR ConfigSetDebug    $env(TS_DEBUG)
+      $FH_CUR LinkCreate	{*}$CON
     } else {
-      $FH_CUR LinkCreateChild $FH_LAST
+      $FH_CUR LinkCreateChild	$FH_LAST
     }
     set FH_LAST $FH_CUR
   }

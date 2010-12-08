@@ -99,13 +99,11 @@ proc FilterEvent {ctx} {
 
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetName Filter4
   $srv ConfigSetServerSetup FilterSetup
   $srv ConfigSetServerCleanup FilterCleanup
   $srv ConfigSetEvent FilterEvent
-  $srv ConfigSetIdent "transFilter"
   $srv ConfigSetIgnoreExit yes
-  $srv ConfigSetFactory
+  $srv ConfigSetFactory "transFilter"
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

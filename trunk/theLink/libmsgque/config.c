@@ -392,7 +392,7 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.tcp.myport);
   MqBufferDelete (&to->config.io.uds.file);
   to->config = from->config;
-  to->config.name    = MqSysStrDupSave(MQ_ERROR_PANIC, from->config.name);
+  to->config.name    = MqSysStrDup(MQ_ERROR_PANIC, from->config.name);
   to->config.srvname = NULL;
   to->config.parent = NULL;
   to->config.master = NULL;
@@ -438,7 +438,7 @@ MqSetupDup (
   // Step 1,  copy "setup" 
   MqSysFree(context->setup.ident);
   context->setup = from->setup;
-  context->setup.ident = MqSysStrDupSave(MQ_ERROR_PANIC, from->setup.ident);
+  context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, from->setup.ident);
   context->setup.factory = from->setup.factory;
 
   // reinitialize "data" entries which were !not! set by the class constructor
@@ -458,7 +458,7 @@ static enum MqErrorE
 sDefaultFactory (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR  data,
+  struct MqFactoryItemS* item,
   struct MqS  ** contextP
 )
 {
@@ -493,10 +493,10 @@ MqConfigSetName (
   MQ_CST  data
 ) {
   MqSysFree(context->config.name);
-  context->config.name = MqSysStrDupSave(MQ_ERROR_PANIC, data);
+  context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
   if (MQ_IS_SERVER(context)) {
     MqSysFree(context->config.srvname);
-    context->config.srvname = MqSysStrDupSave(MQ_ERROR_PANIC, "LOCK");
+    context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, "LOCK");
   }
 }
 
@@ -506,8 +506,10 @@ MqConfigSetIdent (
   MQ_CST ident
 ) {
   MqSysFree(context->setup.ident);
-  context->setup.ident = MqSysStrDupSave(MQ_ERROR_PANIC, ident);
+  context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
   context->setup.factory = pFactoryItemGet(ident);
+  if (context->config.name == NULL)
+    MqConfigSetName(context, ident);
 }
 
 void 
@@ -516,7 +518,7 @@ MqConfigSetSrvName (
   MQ_CST  data
 ) {
   MqSysFree(context->config.srvname);
-  context->config.srvname = MqSysStrDupSave(MQ_ERROR_PANIC, data);
+  context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, data);
 }
 
 void 
@@ -611,9 +613,17 @@ MqConfigSetFactory (
 }
 
 void 
+MqConfigSetFactoryItem (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+) {
+  if (item != NULL) MqConfigSetIdent(context, item->name);
+}
+
+void 
 MqConfigSetDefaultFactory (
   struct MqS * const context,
-  MQ_CST ident
+  MQ_CST const ident
 ) {
   MqFactoryCreate(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
   MqConfigSetIdent(context, ident);
@@ -1031,4 +1041,5 @@ ConfigCreate (void)
 }
 
 END_C_DECLS
+
 

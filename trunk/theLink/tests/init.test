@@ -77,7 +77,7 @@ test init-3-($I|$B|$C|$S) {init WRONG_SERVER} \
     -setup	    {Setup $I $B $C $S} \
     -body           {
       Call $FH_LAST SendEND_AND_WAIT INIT {*}[lreplace $SRV 1 1 WRONG_SERVER]
-      Call $FH_LAST SendEND_AND_WAIT SND1 SendC START SendI 0
+      Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 0
       Call $FH_LAST SendEND_AND_WAIT SND1 SendC WAIT SendI 0 SendI 333
       set ret [$FH_LAST ReadI]
       Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
@@ -90,7 +90,7 @@ test init-3-($I|$B|$C|$S) {init WRONG_SERVER} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|204>*
-C> (cl-0) \[*] can not start server 'WRONG_SERVER'*}
+C> (wk-cl-0) \[*] can not start server 'WORKER'*}
 
 # cleanup ---------------------------
 

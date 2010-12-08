@@ -272,7 +272,7 @@ enum MqErrorE
 SplitFactory (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR data, 
+  struct MqFactoryItemS * const item,
   struct MqS **contextP
 )
 {

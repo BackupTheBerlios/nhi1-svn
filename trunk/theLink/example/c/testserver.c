@@ -36,9 +36,8 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
-  MqConfigSetName (ctx, "testserver");
   MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
-  MqConfigSetDefaultFactory (ctx);
+  MqConfigSetDefaultFactory (ctx, "testserver");
   ctx->setup.Parent.fCreate = MqLinkDefault;
   ctx->setup.Child.fCreate = MqLinkDefault;
   MqErrorCheck (MqLinkCreate (ctx, &largv));

@@ -436,7 +436,7 @@ if $BLOCK_4 {
 	  -returnCodes    error \
 	  -match	  glob \
 	  -result         {C> (client-0) \[service-call-error] <Tok|_OKS> <Num|232>*
-C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration 'MqSetupS::Factory.Create.fCall' is required*}
+C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration 'MqSetupS::Factory' is required*}
 
       # start the slave
       Setup $I $B $C $S --setup-parent {

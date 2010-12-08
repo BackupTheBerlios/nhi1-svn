@@ -20,9 +20,8 @@ proc FTRcmd {ctx} {
   $ctx SendRETURN
 }
 set srv [tclmsgque MqS]
-$srv ConfigSetName ManFilter
 $srv ConfigSetIsServer yes
-$srv ConfigSetFactory
+$srv ConfigSetFactory ManFilter
 if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate "+FTR" FTRcmd

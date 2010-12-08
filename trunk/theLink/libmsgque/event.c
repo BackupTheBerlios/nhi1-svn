@@ -327,6 +327,7 @@ pEventStart (
     if (sock < 0 || !FD_ISSET (sock, &fds)) continue;
     // found valid socket -> call it
     eventctx->refCount++;
+//printLV("eventctx<%p>, sock<%d>\n", eventctx, sock);
     ret = (*proc)(eventctx);
     eventctx->refCount--;
     switch (ret) {

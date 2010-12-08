@@ -206,11 +206,11 @@ foreach C pipe {
 
     test startup-$C-17 {wrong server} \
 	-setup	      {set FH0 [tclmsgque MqS] } \
-	-body	      {$FH0 LinkCreate --timeout 1 @ unknown_server_executable} \
+	-body	      {$FH0 LinkCreate --timeout 1 --name otto @ unknown_server_executable} \
 	-cleanup      {rename $FH0 ""} \
 	-returnCodes  error \
 	-match	      glob \
-	-result	      {C> (tclsh*) \[*\] can not start server 'unknown_server_executable'*}
+	-result	      {C> (otto) \[*\] can not start server 'unknown_server_executable'*}
 
     test startup-$C-19 {no subcommand} \
 	-body   {tclmsgque} \

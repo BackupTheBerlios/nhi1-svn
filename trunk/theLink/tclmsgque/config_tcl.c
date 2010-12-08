@@ -26,7 +26,7 @@ enum MqErrorE NS(EventLink) (
 static enum MqErrorE NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR data,
+  struct MqFactoryItemS *item,
   struct MqS ** contextP
 ) {
   struct MqBufferS * const buf = tmpl->temp;
@@ -76,7 +76,6 @@ void NS(FactoryDelete) (
   enum MqStatusIsE statusIs = tclctx->mqctx.statusIs;
   MQ_INT refCount = tclctx->mqctx.refCount;
   SETUP_interp;
-
   Tcl_DeleteCommandFromToken (interp, tclctx->command);
   // the "thread" have to delete the interpreter
   if (refCount == 0 && statusIs & MQ_STATUS_IS_THREAD) {

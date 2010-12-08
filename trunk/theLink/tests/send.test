@@ -263,7 +263,7 @@ test send-X6-($I|$B|$C|$S) {parent is not connected} \
     -returnCodes    error \
     -match	    glob \
     -result         {c> (client-0) \[service-call-error] <Tok|SND1> <Num|235>*
-c> (unknown) \[*MqLinkCreate] the 'parent' object link is 'not' connected*}
+c> (*) \[*MqLinkCreate] the 'parent' object link is 'not' connected*}
 
 test send-X7-($I|$B|$C|$S) {master is not connected} \
     -constraints    {} \

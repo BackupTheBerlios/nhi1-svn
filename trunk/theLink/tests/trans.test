@@ -276,12 +276,12 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
       Bg {*}$SRV
       Bg {*}$FT1
       Bg {*}$FT2
-      foreach {FIRST CTX} [Create $I $CON1] break
-      Echo0 $CTX LOGF SendC $TMP
-      Echo0 $CTX PRNT SendC T1
+      foreach {FIRST LAST} [Create $I $CON1] break
+      Echo0 $LAST LOGF SendC $TMP
+      Echo0 $LAST PRNT SendC T1
       WaitOnFileToken $TMP T1
-      Call  $CTX SendEND EXIT
-      $CTX Delete
+      Call  $LAST SendEND EXIT
+      $LAST Delete
       WaitOnFileToken $TMP T1
     } \
     -cleanup	    {
@@ -371,6 +371,7 @@ unset -nocomplain I B C S
 test trans-Y1 {try to connect a "not-created" link} \
   -setup	    {
     set CTX   [tclmsgque MqS]
+    $CTX ConfigSetName otto
   } \
   -body           {
     $CTX  LinkConnect
@@ -379,7 +380,7 @@ test trans-Y1 {try to connect a "not-created" link} \
     $CTX Delete
   } \
   -returnCodes    error \
-  -result         {C> (unknown) [MqLinkConnect] the 'client-server-link' was not created}
+  -result         {C> (otto) [MqLinkConnect] the 'client-server-link' was not created}
 
 ##
 ## -----------------------------------------------------------------------

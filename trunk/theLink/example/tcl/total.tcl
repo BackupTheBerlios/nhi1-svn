@@ -39,9 +39,8 @@ proc EOF {ctx} {
 }
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetName total
   $srv ConfigSetIsServer yes
-  $srv ConfigSetFactory
+  $srv ConfigSetFactory total
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ServiceCreate "+FTR" FTR
@@ -52,7 +51,4 @@ tclmsgque Main {
   }
   $srv Exit
 }
-
-
-
 

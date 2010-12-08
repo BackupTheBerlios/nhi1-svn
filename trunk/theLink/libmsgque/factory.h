@@ -21,17 +21,22 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
+struct MqFactoryItemS {
+  MQ_CST name;			    ///< the pFactory name (cast into an integer)
+  struct MqFactoryS callback;	    ///< callback data
+};
+
 /// \brief initialize a #MqFactoryS object to \c NULL
 #define MqFactoryS_NULL { {NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL} }
 
-struct pFactoryItemS;
+struct MqFactoryItemS;
 
-struct pFactoryItemS* pFactoryItemGet (
+struct MqFactoryItemS* pFactoryItemGet (
   MQ_CST const name
 );
 
 struct MqFactoryS pFactoryGet (
-  struct pFactoryItemS *item
+  struct MqFactoryItemS *item
 );
 
 void pFactoryMark (
@@ -39,7 +44,7 @@ void pFactoryMark (
   MqMarkF markF
 );
 
-struct pFactoryItemS*
+struct MqFactoryItemS*
 pFactoryItemGetWithCheck (
   struct MqS * context,
   MQ_CST const name
@@ -48,11 +53,12 @@ pFactoryItemGetWithCheck (
 enum MqErrorE MQ_DECL pCallFactory (
   struct MqS * const context,
   enum MqFactoryE create,
-  struct pFactoryItemS* item,
+  struct MqFactoryItemS* item,
   struct MqS ** contextP
 );
 
 END_C_DECLS
 
 #endif /* FACTORY_H */
+
 

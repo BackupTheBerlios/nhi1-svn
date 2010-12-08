@@ -454,9 +454,10 @@ SysSend (
   // send data from buf
   do {
     ldata = send (hdl, (const MQ_buf_T) buf, numBytes, flags);
+//printLV("numBytes<%d>, hdl<%d>, ldata<%d>\n", numBytes, hdl, ldata);
     // check for errors
     if (unlikely (ldata == -1)) {
-//MqDLogV(context,__func__,0,"ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
+//printLV("ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
       switch (sSysGetErrorNum) {
 	case WIN32_WSA (EWOULDBLOCK): {
 	  // waiting for "send" is buggy -> just use 0.01 sec and try send again on "timeout" (MQ_CONTINUE)
@@ -517,8 +518,7 @@ SysRecv (
     // check for errors
     if (unlikely (ldata <= 0)) {
 	if (ldata == -1) {
-//MqDLogV(MqErrorGetMsgque(context),__func__,0,"ERROR sock<%i>, numBytes<%i>, str<%s>\n", 
-//	  hdl, numBytes, strerror(errno));
+//MqDLogV(context,0,"ERROR sock<%i>, numBytes<%i>, str<%s>\n", hdl, numBytes, strerror(errno));
 	  switch (sSysGetErrorNum) {
 	    case WIN32_WSA (EWOULDBLOCK): {
 	      struct timeval tv = {(long)timeout, 0L};
