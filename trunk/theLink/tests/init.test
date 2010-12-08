@@ -74,6 +74,7 @@ test init-1-($I|$B|$C|$S) {init $bin_server.exe} \
 
 #    -constraints    local 
 test init-3-($I|$B|$C|$S) {init WRONG_SERVER} \
+    -constraints    {pipe parent} \
     -setup	    {Setup $I $B $C $S} \
     -body           {
       Call $FH_LAST SendEND_AND_WAIT INIT {*}[lreplace $SRV 1 1 WRONG_SERVER]
