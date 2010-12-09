@@ -30,12 +30,6 @@ void pFactoryMark (
   MqMarkF markF
 );
 
-struct MqFactoryItemS*
-MqFactoryItemGetWithCheck (
-  struct MqS * context,
-  MQ_CST const name
-);
-
 enum MqErrorE MQ_DECL pCallFactory (
   struct MqS * const context,
   enum MqFactoryE create,

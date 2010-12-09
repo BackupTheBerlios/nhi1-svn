@@ -30,7 +30,7 @@ proc ServerConfig {ctx} {
 tclmsgque Main {
   set srv [tclmsgque MqS]
   $srv ConfigSetServerSetup ServerConfig
-  $srv ConfigSetFactory testserver
+  $srv ConfigSetDefaultFactory testserver
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

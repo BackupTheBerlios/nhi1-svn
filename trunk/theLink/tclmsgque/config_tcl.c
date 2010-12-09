@@ -46,28 +46,33 @@ enum MqErrorE NS(FactoryCreate) (
 
   {
     // Call Factory
-    Tcl_Obj *lobjv[2];
-    int ret;
+    Tcl_Obj *lobjv[3];
+    int ret,num=0,i;
 
     // 1. add service handler
-    lobjv[0] = (Tcl_Obj*) item->Create.data;
-    if (create == MQ_FACTORY_NEW_INIT || create == MQ_FACTORY_NEW_THREAD) {
-      lobjv[1] = Tcl_NewObj();
+    if (item->Create.data) {
+      lobjv[num++] = (Tcl_Obj*) item->Create.data;
     } else {
-      lobjv[1] = (Tcl_Obj*) tmpl->self;
+      lobjv[num++] = Tcl_NewStringObj("tclmsgque",-1);
+      lobjv[num++] = Tcl_NewStringObj("MqS",-1);
+    }
+    if (create == MQ_FACTORY_NEW_INIT || create == MQ_FACTORY_NEW_THREAD) {
+      lobjv[num++] = Tcl_NewObj();
+    } else {
+      lobjv[num++] = (Tcl_Obj*) tmpl->self;
     }
     
     // 2. add refCount
-    Tcl_IncrRefCount(lobjv[0]);
-    Tcl_IncrRefCount(lobjv[1]);
+    for (i=0;i<num;i++) Tcl_IncrRefCount(lobjv[i]);
 
-    // 2. evaluate the script
-    ret = Tcl_EvalObjv (interp, 2, lobjv, TCL_EVAL_GLOBAL);
-    Tcl_DecrRefCount(lobjv[1]);
-    Tcl_DecrRefCount(lobjv[0]);
+    // 3. evaluate the script
+    ret = Tcl_EvalObjv (interp, num, lobjv, TCL_EVAL_GLOBAL);
+
+    // 4. cleanup
+    for (i=0;i<num;i++) Tcl_DecrRefCount(lobjv[i]);
     TclErrorCheck3(ret);
 
-    // 3. get context from the Factory return value
+    // 5. get context from the Factory return value
     TclErrorCheck3(NS(GetClientData) (interp, Tcl_GetObjResult(interp), (MQ_PTR*) &mqctx));
   }
 
@@ -274,6 +279,15 @@ int NS(ConfigSetFactory) (NS_ARGS)
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
   MqConfigSetFactory(MQCTX, ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL);
+  RETURN_TCL
+}
+
+int NS(ConfigSetDefaultFactory) (NS_ARGS)
+{
+  MQ_CST ident;
+  CHECK_C(ident)
+  CHECK_NOARGS
+  MqConfigSetFactory(MQCTX, ident, NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
   RETURN_TCL
 }
 

@@ -235,7 +235,7 @@ proc BgError {ctx} {
 proc ClientCreateParent {ctx debug} {
   $ctx ConfigSetDebug $debug
   $ctx ConfigSetBgError BgError
-  $ctx ConfigSetFactory test-client
+  $ctx ConfigSetDefaultFactory test-client
   $ctx LinkCreate @ server --name test-server
 }
 
@@ -522,11 +522,9 @@ proc Ot_CFG1 {ctx} {
       $ctx ConfigSetTimeout $old
     }
     "Name" {
-puts 1111111111111111111111111111111
       set old [$ctx ConfigGetName] 
       $ctx ConfigSetName [$ctx ReadC]
       $ctx SendC [$ctx ConfigGetName]
-Print old
       $ctx ConfigSetName $old
     }
     "SrvName" {
@@ -700,6 +698,7 @@ proc ServerCleanup {ctx} {
 }
 
 proc ServerFactory {tmpl} {
+#puts ServerFactory-11111111111111111111111111111111111111111111111111111
   set srv [tclmsgque MqS $tmpl]
   $srv ConfigSetServerSetup ServerSetup
   $srv ConfigSetServerCleanup ServerCleanup

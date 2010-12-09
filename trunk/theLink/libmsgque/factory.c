@@ -140,24 +140,6 @@ sFactorySpaceDelItem (
 /*                                                                           */
 /*****************************************************************************/
 
-static int
-MQ_CDECL sFactoryCompare1 (
-  const void *one,
-  const void *two
-)
-{
-  return pFactoryCmp (((struct MqFactoryItemS *) one)->name, ((struct MqFactoryItemS *) two)->name);
-}
-
-static int
-MQ_CDECL sFactoryCompare2 (
-  const void *key,
-  const void *two
-)
-{
-  return pFactoryCmp (((MQ_CST)key), ((struct MqFactoryItemS *) two)->name);
-}
-
 static void
 pFactoryAddHdl (
   MQ_CST const name,
@@ -179,12 +161,14 @@ pFactoryAddHdl (
 
     sFactorySpaceAdd (1);
 
+    //free = space.items + space.used * sizeof(*space.items);
     free = space.items + space.used;
 
     space.sorted = 0;
     space.used += 1;
 
     free->name = MqSysStrDup(MQ_ERROR_PANIC, name);
+
     free->Create = Create;
     free->Delete = Delete;
   }
@@ -195,21 +179,6 @@ pFactoryAddHdl (
 /*                              protected                                    */
 /*                                                                           */
 /*****************************************************************************/
-
-struct MqFactoryItemS*
-MqFactoryItemGetWithCheck (
-  struct MqS * context,
-  MQ_CST const name
-)
-{
-  struct MqFactoryItemS * item = MqFactoryItemGet(name);
-
-  if (item == NULL) {
-    MqPanicV(context,__FILE__,-1,"unable to find factory-item for factory-entry '%s'", name);
-  }
-
-  return item;
-}
 
 void
 pFactoryMark (
@@ -275,19 +244,10 @@ MqFactoryItemGet (
   MQ_CST const name
 )
 {
-  struct MqFactoryItemS * item = NULL;
-
-  if (unlikely (!space.sorted)) {
-    qsort (space.items, space.used, sizeof (struct MqFactoryItemS), sFactoryCompare1);
-    space.sorted = 1;
-  }
-
-  if (space.used != 0) {
-    item = (struct MqFactoryItemS *) bsearch (name, space.items,
-	space.used, sizeof (struct MqFactoryItemS), sFactoryCompare2);
-  }
-
-  return item;
+	   struct MqFactoryItemS * start = space.items;
+  register struct MqFactoryItemS * end = start + space.used;
+  while (start < end-- && strcmp(end->name,name)) {}
+  return end >= start ? end : NULL;
 }
 
 void

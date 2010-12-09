@@ -271,6 +271,7 @@ int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
 int NS(ConfigSetFactory) (NS_ARGS);
+int NS(ConfigSetDefaultFactory) (NS_ARGS);
 int NS(ConfigSetIoUdsFile) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
 int NS(ConfigSetIoPipeSocket) (NS_ARGS);
@@ -408,9 +409,10 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
     { "ConfigSetFactory",	  NS(ConfigSetFactory)	      },
-    { "ConfigSetIoUdsFile",		  NS(ConfigSetIoUdsFile)	      },
+    { "ConfigSetDefaultFactory",  NS(ConfigSetDefaultFactory) },
+    { "ConfigSetIoUdsFile",	  NS(ConfigSetIoUdsFile)      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },
-    { "ConfigSetIoPipeSocket",	  NS(ConfigSetIoPipeSocket)	      },
+    { "ConfigSetIoPipeSocket",	  NS(ConfigSetIoPipeSocket)   },
     { "ConfigSetStartAs",	  NS(ConfigSetStartAs)	      },
     { "ConfigSetDaemon",	  NS(ConfigSetDaemon)	      },
     { "ConfigGetIsString",	  NS(ConfigGetIsString)	      },
@@ -553,7 +555,7 @@ NS(MqS_Init) (
     tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
     tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
 
-    MqConfigSetFactory (MQCTX, "tclmsgque", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
+    MqConfigSetFactory (MQCTX, "DEFAULT", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
     MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
 
     if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {

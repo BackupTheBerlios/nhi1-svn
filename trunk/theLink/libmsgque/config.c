@@ -402,17 +402,16 @@ MqConfigDup (
 }
 
 #define sSetupDupHelper(context, cb, oldcb) { \
-/* MqLogV(context,__func__,0,"cb.fFree<%p>, oldcb.data<%p>, cb.data<%p>\n", cb.fFree, oldcb.data, cb.data); */ \
+/* printLV("cb.fFree<%p>, oldcb.data<%p>, cb.data<%p>\n", cb.fFree, oldcb.data, cb.data); */ \
   if (oldcb.data != NULL && cb.data == NULL) { \
-    /* if set in "Step 1", callback set but not needed */ \
-    if (oldcb.fFree) { \
-      (*oldcb.fFree) (context, &oldcb.data); \
-    } \
-    cb.fCall = NULL; \
-    cb.data  = NULL; \
+    /* if set in "Step 1", callback set by factory -> use it */ \
+    cb = oldcb; \
   } else if (oldcb.data != NULL && cb.data != NULL) { \
-    /* if set in "Step 2", callback set and needed */ \
-    cb.data = oldcb.data; \
+    /* if set in "Step 2", callback set by copy and factory -> use factory */ \
+    if (oldcb.fFree) { \
+      (*oldcb.fFree) (context, &cb.data); \
+    } \
+    cb = oldcb; \
   } else if (cb.data != NULL && cb.fCopy != NULL) { \
     /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \
     MqErrorCheck ((*cb.fCopy) (context, &cb.data)); \
@@ -508,7 +507,7 @@ MqConfigSetIdent (
   MqSysFree(context->setup.ident);
   context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
   context->setup.factory = MqFactoryItemGet(ident);
-  if (context->config.name == NULL)
+  if (context->config.name == NULL || !strncmp(context->config.name, "DEFAULT", 7))
     MqConfigSetName(context, ident);
 }
 
@@ -617,7 +616,9 @@ MqConfigSetFactoryItem (
   struct MqS * const context,
   struct MqFactoryItemS * const item
 ) {
-  if (item != NULL) MqConfigSetIdent(context, item->name);
+  if (item != NULL) {
+    MqConfigSetIdent(context, item->name);
+  }
 }
 
 void 

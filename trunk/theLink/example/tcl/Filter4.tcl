@@ -103,7 +103,7 @@ tclmsgque Main {
   $srv ConfigSetServerCleanup FilterCleanup
   $srv ConfigSetEvent FilterEvent
   $srv ConfigSetIgnoreExit yes
-  $srv ConfigSetFactory "transFilter"
+  $srv ConfigSetDefaultFactory "transFilter"
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER
