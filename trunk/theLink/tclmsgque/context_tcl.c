@@ -529,33 +529,36 @@ NS(MqS_Init) (
   Tcl_Obj * const objv[]
 )
 {
-  struct TclContextS * tclctx = (struct TclContextS *) MqContextCreate(sizeof (*tclctx), NULL);
-  struct MqBufferS * const buf = MQCTX->temp;
+  struct MqS * tmpl = NULL;
+  int skip = 2;
 
-  if (2 != objc) {
-    Tcl_WrongNumArgs(interp, 2, objv, "");
-    goto error;
-  }
+  CHECK_MQS_OPT(tmpl)
+  CHECK_NOARGS
 
-  // create tcl command
-  tclctx->mqctx.threadData = (MQ_PTR)interp;
-  MqBufferSetV(buf, "<MqS-%p>", tclctx);
-  tclctx->command = Tcl_CreateObjCommand (interp, buf->cur.C, NS(MqS_Cmd), tclctx, NS(MqS_Free));
-  tclctx->mqctx.self = (void*) Tcl_NewStringObj(buf->cur.C,-1);
-  Tcl_IncrRefCount(SELF);
-  Tcl_SetObjResult (interp, SELF);
+  {
+    struct TclContextS * tclctx = (struct TclContextS *) MqContextCreate(sizeof (*tclctx), tmpl);
+    struct MqBufferS * const buf = MQCTX->temp;
 
-  // set configuration data
-  tclctx->mqctx.setup.Child.fCreate   = MqLinkDefault;
-  tclctx->mqctx.setup.Parent.fCreate  = MqLinkDefault;
-  tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
-  tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
+    // create tcl command
+    tclctx->mqctx.threadData = (MQ_PTR)interp;
+    MqBufferSetV(buf, "<MqS-%p>", tclctx);
+    tclctx->command = Tcl_CreateObjCommand (interp, buf->cur.C, NS(MqS_Cmd), tclctx, NS(MqS_Free));
+    tclctx->mqctx.self = (void*) Tcl_NewStringObj(buf->cur.C,-1);
+    Tcl_IncrRefCount(SELF);
+    Tcl_SetObjResult (interp, SELF);
 
-  MqConfigSetFactory (MQCTX, "tclmsgque", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
-  MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
+    // set configuration data
+    tclctx->mqctx.setup.Child.fCreate   = MqLinkDefault;
+    tclctx->mqctx.setup.Parent.fCreate  = MqLinkDefault;
+    tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
+    tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
 
-  if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
-    MqConfigSetIgnoreFork (&tclctx->mqctx, MQ_YES);
+    MqConfigSetFactory (MQCTX, "tclmsgque", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
+    MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
+
+    if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
+      MqConfigSetIgnoreFork (&tclctx->mqctx, MQ_YES);
+    }
   }
 
   RETURN_TCL

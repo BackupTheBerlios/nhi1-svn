@@ -312,6 +312,44 @@ static int NS(Main) (
 /*                                                                           */
 /*****************************************************************************/
 
+static int NS(FactoryAdd) (
+  Tcl_Interp * interp,
+  int objc,
+  struct Tcl_Obj *const *objv
+)
+{
+  int skip = 2;
+  MQ_CST ident;
+  Tcl_Obj *factory;
+  CHECK_C(ident)
+  CHECK_PROC(factory, "FactoryAdd ident factory-proc")
+  CHECK_NOARGS
+  Tcl_IncrRefCount(factory);
+  MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL);
+  RETURN_TCL
+}
+
+static int NS(FactoryCall) (
+  Tcl_Interp * interp,
+  int objc,
+  struct Tcl_Obj *const *objv
+)
+{
+  struct MqS * mqctx;
+  int skip = 2;
+  MQ_CST ident;
+  CHECK_C(ident)
+  CHECK_NOARGS
+  {
+    // call the factory
+    struct MqFactoryItemS * item = MqFactoryItemGet (ident);
+    if (item == NULL || item->Create.fCall == NULL) goto error;
+    MqErrorCheck((*item->Create.fCall) ((struct MqS* const)interp, MQ_FACTORY_NEW_INIT, item, &mqctx));
+  }
+  Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
+  RETURN_TCL
+}
+
 /** \brief handle the \b msgque tcl command
  *
  * \param[in] clientData Tcl mandatory field, not used
@@ -330,10 +368,15 @@ static int NS(MsgqueCmd) (
   int index;
 
   struct LookupKeyword keys[] = {
-    { "MqS",	    NS(MqS_Init)	},  
-    { "print",      NS(Print)		},  { "Main",       NS(Main)            },
-    { "const",	    NS(Const)		},  { "support",    NS(Support)		},
-    { "Init",	    NS(InitCmd)		},  { NULL,	    NULL		}
+    { "MqS",		NS(MqS_Init)	  },  
+    { "print",		NS(Print)	  },
+    { "Main",		NS(Main)          },
+    { "const",		NS(Const)	  },  
+    { "support",	NS(Support)	  },
+    { "Init",		NS(InitCmd)	  },
+    { "FactoryAdd",	NS(FactoryAdd)	  },  
+    { "FactoryCall",	NS(FactoryCall)	  },  
+    { NULL,		NULL		  }
   };
 
   // read the index

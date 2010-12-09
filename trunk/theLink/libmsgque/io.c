@@ -454,7 +454,7 @@ rescan:
 	  factory = context->setup.factory;
 	} else if (
 	  // check for factory using "name"
-	  (factory = pFactoryItemGet(name)) != NULL
+	  (factory = MqFactoryItemGet(name)) != NULL
 	) {
 	  // -> found
 
@@ -860,6 +860,7 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
 
 
 

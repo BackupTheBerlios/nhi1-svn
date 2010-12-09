@@ -735,7 +735,7 @@ MqLinkCreate (
 	if (!strncmp(context->link.alfa->data[0]->cur.C, "SELF", 4)) {
 	  MqBufferLDeleteItem (MQ_ERROR_PANIC, context->link.alfa, 0, 1, MQ_YES);
 	  if (	context->setup.factory != NULL &&  // "factory" available ?
-		  context->setup.factory->callback.Create.fCall != NULL  // constructor available ?
+		  context->setup.factory->Create.fCall != NULL  // constructor available ?
 	      ) {
 	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->name), 0);
 	  } else {

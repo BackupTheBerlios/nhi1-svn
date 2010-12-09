@@ -141,6 +141,28 @@ error: \
     skip++; \
   }
 
+#define CHECK_MQS_OPT(val) \
+  if (skip < objc) { \
+    val = NULL; \
+    if (objv[skip]->length == 0 && objv[skip]->typePtr == NULL) { \
+      skip++; \
+    } else { \
+      if (Tcl_GetCommandFromObj(interp, objv[skip])) { \
+	MQ_PTR ctx = NULL; \
+	if (NS(GetClientData) (interp, objv[skip], &ctx) == TCL_OK) { \
+	  val = (struct MqS *) ctx; \
+	  if (val->signature != MQ_MqS_SIGNATURE) val = NULL; \
+	} \
+      } \
+      if (val == NULL) { \
+	Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
+	goto error; \
+      } else { \
+	skip++; \
+      } \
+    } \
+  }
+
 #define CHECK_BUFFER(val) \
   val = NULL; \
   if (skip < objc && Tcl_GetCommandFromObj(interp, objv[skip])) {\
@@ -247,8 +269,9 @@ void  NS(MqS_Free)	    ( ClientData );
 
 // from config_tcl.c
 
-void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, MQ_PTR );
-enum MqErrorE NS(EventLink) ( struct MqS * const , MQ_PTR const );
+void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, struct MqFactoryItemS* );
+enum MqErrorE  NS(FactoryCreate)  ( struct MqS * const, enum MqFactoryE, struct MqFactoryItemS*const, struct MqS **);
+enum MqErrorE NS(EventLink) ( struct MqS * const, MQ_PTR const );
 
 // from MqBufferS_tcl.c
 

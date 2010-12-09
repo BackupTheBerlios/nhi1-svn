@@ -1426,7 +1426,7 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // add Factory 
-  MqFactoryCreate("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
 
   // call the initial factory to initialize the "config"
   if (MqFactoryCall("server", &mqctx) != 0) {

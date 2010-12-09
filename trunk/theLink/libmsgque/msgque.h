@@ -241,7 +241,6 @@ struct MqBufferS;
 union  MqBufferU;
 struct MqConfigS;
 struct MqEventS;
-struct MqFactoryS;
 struct MqFactoryItemS;
 
 /*****************************************************************************/
@@ -466,13 +465,6 @@ typedef void ( MQ_DECL
   MQ_CST 		///< the basename of the tool
 ) __attribute__ ((noreturn));
 
-/// \brief prototype for a Garbage-Collection mark function
-typedef void ( MQ_DECL
-  *MqMarkF
-) (
-  MQ_PTR data
-);
-
 /// \brief the \e factory is called to create an object for ...
 enum MqFactoryE {
   MQ_FACTORY_NEW_INIT	= 0,
@@ -499,8 +491,28 @@ typedef void ( MQ_DECL
 ) (
   struct MqS  * context,
   MQ_BOL doFactoryCleanup,
+  struct MqFactoryItemS* const item
+);
+
+/// \brief prototype for a Garbage-Collection mark function
+typedef void ( MQ_DECL
+  *MqMarkF
+) (
   MQ_PTR data
 );
+
+/// \ingroup Mq_Type_C_API
+/// \brief prototype for exit a process or thread
+typedef void ( MQ_DECL
+  *MqExitF
+) (
+  int num
+);
+
+/// \ingroup Mq_Type_C_API
+/// \brief used to setup (initialize) a new thread/fork/process created by \libmsgque
+///        using the \c SysServer? style commands
+typedef void (MQ_DECL *MqSetupF) ( struct MqS * const );
 
 /// \brief function pointer to \e create an object
 struct MqFactoryCreateS {
@@ -516,24 +528,12 @@ struct MqFactoryDeleteS {
   MqTokenDataFreeF	fFree;	    ///< free additional data pointer
 };
 
-/// \brief used as interface for object creation
-struct MqFactoryS {
+/// \brief data used to define a factory
+struct MqFactoryItemS {
+  MQ_CST name;			    ///< public known factory name
   struct MqFactoryCreateS Create;   ///< object creation function
   struct MqFactoryDeleteS Delete;   ///< object deletion function
 };
-
-/// \ingroup Mq_Type_C_API
-/// \brief prototype for exit a process or thread
-typedef void ( MQ_DECL
-  *MqExitF
-) (
-  int num
-);
-
-/// \ingroup Mq_Type_C_API
-/// \brief used to setup (initialize) a new thread/fork/process created by \libmsgque
-///        using the \c SysServer? style commands
-typedef void (MQ_DECL *MqSetupF) ( struct MqS * const );
 
 /// \brief User preferences on HOWTO start a new entity
 enum MqStartE {
@@ -860,7 +860,7 @@ struct MqSetupS {
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_EXTERN void MQ_DECL MqFactoryCreate (
+MQ_EXTERN void MQ_DECL MqFactoryAdd (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
@@ -868,16 +868,16 @@ MQ_EXTERN void MQ_DECL MqFactoryCreate (
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF
-);
-
-MQ_EXTERN void MQ_DECL MqFactoryDelete (
-  MQ_CST const name
-);
+) __attribute__((nonnull(1)));
 
 MQ_EXTERN int MQ_DECL MqFactoryCall (
   MQ_CST const name,
   struct MqS **ctxP
-);
+) __attribute__((nonnull(1)));
+
+MQ_EXTERN struct MqFactoryItemS* MQ_DECL MqFactoryItemGet (
+  MQ_CST const name
+) __attribute__((nonnull(1)));
 
 /*****************************************************************************/
 /*                                                                           */

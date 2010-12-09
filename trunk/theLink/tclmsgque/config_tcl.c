@@ -23,15 +23,14 @@ enum MqErrorE NS(EventLink) (
   return data == NULL ? MQ_OK : NS(ProcCall) (mqctx, data);
 }
 
-static enum MqErrorE NS(FactoryCreate) (
+enum MqErrorE NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS *item,
+  struct MqFactoryItemS * const item,
   struct MqS ** contextP
 ) {
-  struct MqBufferS * const buf = tmpl->temp;
-  struct MqS * mqctx = *contextP = MqContextCreate (sizeof(struct TclContextS), tmpl);
-  SETUP_tclctx
+  struct MqS * mqctx;
+
   Tcl_Interp * interp;
 
   if (create == MQ_FACTORY_NEW_THREAD) {
@@ -39,38 +38,79 @@ static enum MqErrorE NS(FactoryCreate) (
     TclErrorToMq (Tcl_Init(interp))
     Tcl_SetVar (interp, "MQ_STARTUP_IS_THREAD", "yes", TCL_GLOBAL_ONLY);
     TclErrorToMq (Tcl_EvalFile(interp, MqInitGet()->data[1]->cur.C))
+  } else if (create == MQ_FACTORY_NEW_INIT) {
+    interp = (Tcl_Interp *const) tmpl;
   } else {
     interp = (Tcl_Interp *const) tmpl->threadData;
   }
-  tclctx->mqctx.threadData = (MQ_PTR)interp;
 
-  // initialize
-  MqBufferSetV(buf, "<MqS-%p>", tclctx);
-  tclctx->command = Tcl_CreateObjCommand (interp, buf->cur.C, NS(MqS_Cmd), tclctx, NS(MqS_Free));
-  tclctx->mqctx.self = (void*)Tcl_NewStringObj(buf->cur.C,-1);
-    Tcl_IncrRefCount((Tcl_Obj*)tclctx->mqctx.self);
-  tclctx->dict = NULL;
+  {
+    // Call Factory
+    Tcl_Obj *lobjv[2];
+    int ret;
+
+    // 1. add service handler
+    lobjv[0] = (Tcl_Obj*) item->Create.data;
+    if (create == MQ_FACTORY_NEW_INIT || create == MQ_FACTORY_NEW_THREAD) {
+      lobjv[1] = Tcl_NewObj();
+    } else {
+      lobjv[1] = (Tcl_Obj*) tmpl->self;
+    }
+    
+    // 2. add refCount
+    Tcl_IncrRefCount(lobjv[0]);
+    Tcl_IncrRefCount(lobjv[1]);
+
+    // 2. evaluate the script
+    ret = Tcl_EvalObjv (interp, 2, lobjv, TCL_EVAL_GLOBAL);
+    Tcl_DecrRefCount(lobjv[1]);
+    Tcl_DecrRefCount(lobjv[0]);
+    TclErrorCheck3(ret);
+
+    // 3. get context from the Factory return value
+    TclErrorCheck3(NS(GetClientData) (interp, Tcl_GetObjResult(interp), (MQ_PTR*) &mqctx));
+  }
 
   // copy setup data and initialize data entries
-  MqErrorCheck (MqSetupDup(mqctx, tmpl));
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCheck (MqSetupDup(mqctx, tmpl));
+  }
 
   // child does not need an event-handler if not user supplied
   if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
     mqctx->setup.Event.fCall = NULL;
   }
+
+  // set Factory on a new object
+  MqConfigSetFactoryItem (mqctx, item);
   
+  *contextP = mqctx;
   return MQ_OK;
 
 error:
-  MqErrorCopy (tmpl, mqctx);
-  MqContextDelete (&mqctx);
-  return MqErrorStack(tmpl);
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCopy (tmpl, mqctx);
+    MqContextDelete (&mqctx);
+    return MqErrorStack(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+error1:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    NS(ProcError) ((struct TclContextS * const)tmpl, "FactoryCreate");
+    return MqErrorGetCode(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
 }
 
 void NS(FactoryDelete) (
   struct MqS * ctx,
   MQ_BOL doFactoryCleanup,
-  MQ_PTR data
+  struct MqFactoryItemS *item
 ) {
   struct TclContextS * tclctx = (struct TclContextS *) ctx;
   enum MqStatusIsE statusIs = tclctx->mqctx.statusIs;
@@ -80,6 +120,11 @@ void NS(FactoryDelete) (
   // the "thread" have to delete the interpreter
   if (refCount == 0 && statusIs & MQ_STATUS_IS_THREAD) {
     Tcl_DeleteInterp(interp);
+  }
+  // cleanup data
+  if (item->Create.data) {
+    Tcl_DecrRefCount((Tcl_Obj*)item->Create.data);
+    item->Create.data = NULL;
   }
 }
 
@@ -223,11 +268,12 @@ int NS(ConfigSetBgError) (NS_ARGS)
 int NS(ConfigSetFactory) (NS_ARGS)
 {
   MQ_CST ident;
+  Tcl_Obj *factory;
   CHECK_C(ident)
+  CHECK_PROC(factory, "ConfigSetFactory ident factory-proc")
   CHECK_NOARGS
-  MqConfigSetFactory(MQCTX, ident,
-    NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL
-  );
+  Tcl_IncrRefCount(factory);
+  MqConfigSetFactory(MQCTX, ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL);
   RETURN_TCL
 }
 

@@ -236,7 +236,7 @@ proc ClientCreateParent {ctx debug} {
   $ctx ConfigSetDebug $debug
   $ctx ConfigSetBgError BgError
   $ctx ConfigSetFactory test-client
-  $ctx LinkCreate @ SELF --name test-server
+  $ctx LinkCreate @ server --name test-server
 }
 
 proc ClientERRCreateParent {ctx debug} {
@@ -244,7 +244,7 @@ proc ClientERRCreateParent {ctx debug} {
   $ctx ConfigSetBgError BgError
   $ctx ConfigSetName test-client
   $ctx ConfigSetSrvName test-server
-  $ctx LinkCreate @ SELF
+  $ctx LinkCreate @ server
 }
 
 proc ClientERR2CreateParent {ctx debug} {
@@ -699,12 +699,18 @@ proc ServerCleanup {ctx} {
   }
 }
 
-# only used to start the initial process
-tclmsgque Main {
-  set srv [tclmsgque MqS]
+proc ServerFactory {tmpl} {
+  set srv [tclmsgque MqS $tmpl]
   $srv ConfigSetServerSetup ServerSetup
   $srv ConfigSetServerCleanup ServerCleanup
-  $srv ConfigSetFactory server
+  return $srv
+}
+
+# only used to start the initial process
+tclmsgque Main {
+
+  tclmsgque FactoryAdd "server" ServerFactory
+  set srv [tclmsgque FactoryCall "server"]
 
   if {[catch {
     # create the initial parent-context and wait forever for events

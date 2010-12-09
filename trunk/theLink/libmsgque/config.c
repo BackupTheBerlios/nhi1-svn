@@ -320,12 +320,12 @@ MqContextDelete (
     MqDLogC(context,3,"DELETE protection\n");
     pGcCreate (context);
   } else if (context->setup.factory != NULL) {
-    struct MqFactoryS factory = pFactoryGet(context->setup.factory);
-    if (factory.Delete.fCall != NULL) {
+    struct MqFactoryItemS *item = context->setup.factory;
+    if (item->Delete.fCall != NULL) {
       MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;
       context->link.bits.doFactoryCleanup = MQ_NO;
       context->setup.factory = NULL;
-      (*factory.Delete.fCall) (context, doFactoryCleanup, factory.Delete.data);
+      (*item->Delete.fCall) (context, doFactoryCleanup, item);
     } else {
       // without default factory-cleanup continue with "normal" cleanup
       goto CONT;
@@ -507,7 +507,7 @@ MqConfigSetIdent (
 ) {
   MqSysFree(context->setup.ident);
   context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
-  context->setup.factory = pFactoryItemGet(ident);
+  context->setup.factory = MqFactoryItemGet(ident);
   if (context->config.name == NULL)
     MqConfigSetName(context, ident);
 }
@@ -608,7 +608,7 @@ MqConfigSetFactory (
   MqTokenDataFreeF  fDeleteFree
 ) {
   MqSysFree(context->setup.ident);
-  MqFactoryCreate(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree);
+  MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree);
   MqConfigSetIdent(context, ident);
 }
 
@@ -625,7 +625,7 @@ MqConfigSetDefaultFactory (
   struct MqS * const context,
   MQ_CST const ident
 ) {
-  MqFactoryCreate(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryAdd(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
   MqConfigSetIdent(context, ident);
 }
 
@@ -1041,5 +1041,6 @@ ConfigCreate (void)
 }
 
 END_C_DECLS
+
 
 
