@@ -287,7 +287,7 @@ proc Ot_SND1 {ctx} {
       $cl SlaveWorker 0
     }
     START5 {
-      $ctx SlaveWorker $id --name wk-cl-$id --srvname wk-sv-$id --thread
+      $ctx SlaveWorker $id --name wk-cl-$id @ --name wk-sv-$id
     }
     STOP {
       $cl LinkDelete

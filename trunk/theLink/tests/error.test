@@ -426,7 +426,7 @@ test error-tclmsgque-no-arg-config	{no config argument} \
     -cleanup		{rename $ctx ""} \
     -returnCodes	error \
     -match		glob \
-    -result		{C> (tclmsgque) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
+    -result		{C> (DEFAULT) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
 
 test error-tclmsgque-wrong-arg-config	{wrong config argument} \
     -constraints	tcl \
@@ -435,7 +435,7 @@ test error-tclmsgque-wrong-arg-config	{wrong config argument} \
     -cleanup		{ $ctx Delete} \
     -returnCodes	error \
     -match		glob \
-    -result		{C> (tclmsgque) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
+    -result		{C> (DEFAULT) \[pIoStartServer] can not start PIPE client without '@ server ...' as argument*}
 
 test error-tclmsgque-no-arg-parent	{no parent argument} \
     -constraints	tcl \
@@ -599,13 +599,13 @@ test error-X2 {ServiceCreate without connected context} \
       rename dummy ""
     } \
     -returnCodes  error \
-    -result	  {C> (tclmsgque) [MqServiceCreate] the 'msgque' object link is 'not' connected}
+    -result	  {C> (DEFAULT) [MqServiceCreate] the 'msgque' object link is 'not' connected}
 
 test error-X3 {ServiceDelete without connected context} \
     -constraints  {local tcl} \
     -body	  { [tclmsgque MqS] ServiceDelete AAAA } \
     -returnCodes  error \
-    -result	  {C> (tclmsgque) [MqServiceDelete] the 'msgque' object link is 'not' connected}
+    -result	  {C> (DEFAULT) [MqServiceDelete] the 'msgque' object link is 'not' connected}
 
 
 ##

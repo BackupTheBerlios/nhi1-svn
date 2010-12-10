@@ -408,9 +408,6 @@ MqConfigDup (
     cb = oldcb; \
   } else if (oldcb.data != NULL && cb.data != NULL) { \
     /* if set in "Step 2", callback set by copy and factory -> use factory */ \
-    if (oldcb.fFree) { \
-      (*oldcb.fFree) (context, &cb.data); \
-    } \
     cb = oldcb; \
   } else if (cb.data != NULL && cb.fCopy != NULL) { \
     /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \

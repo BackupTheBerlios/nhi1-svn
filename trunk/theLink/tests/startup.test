@@ -220,7 +220,7 @@ foreach C pipe {
     test startup-$C-20 {wrong subcommand} \
 	-body   {tclmsgque xxx} \
 	-returnCodes error \
-	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, or Init}
+	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, Init, FactoryAdd, or FactoryCall}
 
     foreach S [filterGet SRV_LST pipe] {
 
