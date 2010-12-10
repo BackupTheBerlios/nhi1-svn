@@ -446,7 +446,7 @@ rescan:
 	// check if we use the "WORKER" keyword
 	if (context->link.bits.isWORKER) {
 	  // replace "WORKER" with "MqInitBuf" data
-	  if (MqInitBuf && MqInitBuf->data[0])
+	  if (MqInitBuf && MqInitBuf->cursize >= 1)
 	    name = MqInitBuf->data[0]->cur.C;
 	  // replace "WORKER" itself on position "0"
 	  MqErrorCheck (MqBufferLDeleteItem (context, alfa1, 0, 1, MQ_YES));
@@ -461,7 +461,7 @@ rescan:
 	  // well we need the "name-of-the-executable" binary name
 	  // > atool split ... @ cut ... @ join ...
 	  // name is "cut" and next line will replace the name with "atool"
-	  if (MqInitBuf && MqInitBuf->data[0])
+	  if (MqInitBuf && MqInitBuf->cursize >= 1)
 	    name = MqInitBuf->data[0]->cur.C;
 	}
 

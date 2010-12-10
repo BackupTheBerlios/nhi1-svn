@@ -299,20 +299,18 @@ test send-X8-($I|$B|$C|$S) {master is no server} \
 [cC]> (cl-0) \[*pSlaveCreate] to use the 'slave-worker' feature the configuration 'MqConfigS::isServer = MQ_YES' is required*}
 
 test send-X9-($I|$B|$C|$S) {invalid master} \
-    -constraints    {child has_thread} \
+    -constraints    {parent has_thread} \
     -setup	    {
 	Setup $I $B $C $S
     } \
     -body	    {
 	Call $FH_LAST SendEND_AND_WAIT SND1 SendC START5 SendI 0
+	Echo1 $FH_LAST SND2 ReadI SendC WAIT SendI 0 SendI 99
     } \
     -cleanup	    {
 	Cleanup
     } \
-    -returnCodes    error \
-    -match	    glob \
-    -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|227>*
-C> (wk-cl-0) \[*pSlaveCreate] the 'master' have to be a 'parent' without 'child' objects*}
+    -result         {100}
 
 test send-X10-($I|$B|$C|$S) {invalid master} \
     -constraints    {child has_thread} \
