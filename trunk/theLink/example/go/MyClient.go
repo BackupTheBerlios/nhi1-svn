@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-  var ctx = NewMqS(nil)
+  var ctx = NewMqS(nil,nil)
   defer func() {
     if x := recover(); x != nil {
       ctx.ErrorSet(x)

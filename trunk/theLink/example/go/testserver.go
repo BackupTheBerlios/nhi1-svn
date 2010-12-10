@@ -22,14 +22,8 @@ type TestServer struct {
   // add server specific data 
 }
 
-func NewTestServer() *TestServer {
-  ret := new(TestServer)
-  ret.MqS = NewMqS(ret)
-  return ret
-}
-
-func (this *TestServer) Factory() *MqS {
-  return NewTestServer().MqS
+func NewTestServer(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(TestServer))
 }
 
 func (this *TestServer) ServerSetup() {
@@ -53,7 +47,7 @@ type GTCX TestServer
   }
 
 func main() {
-  var srv = NewTestServer()
+  srv := FactoryNew("TestServer", NewTestServer)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

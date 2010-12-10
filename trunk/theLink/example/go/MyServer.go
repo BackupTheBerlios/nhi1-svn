@@ -22,14 +22,8 @@ type MyServer struct {
   // add server specific data 
 }
 
-func NewMyServer() *MyServer {
-  ret := new(MyServer)
-  ret.MqS = NewMqS(ret)
-  return ret
-}
-
-func (this *MyServer) Factory() *MqS {
-  return NewMyServer().MqS
+func NewMyServer(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(MyServer))
 }
 
 func (this *MyServer) ServerSetup() {
@@ -44,7 +38,8 @@ type MyFirstService MyServer
   }
 
 func main() {
-  var srv = NewMyServer()
+  FactoryAdd("MyServer", NewMyServer)
+  srv := FactoryCall("MyServer")
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
@@ -54,3 +49,4 @@ func main() {
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }
+

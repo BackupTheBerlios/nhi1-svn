@@ -17,11 +17,6 @@ import (
     "os"
 )
 
-type ManFilter MqS
-  func (this *ManFilter) Factory () *MqS {
-    return NewMqS(nil)
-  }
-
 type FTR MqS
   func (this *FTR) Call () {
     ctx := (*MqS)(this)
@@ -35,7 +30,7 @@ type FTR MqS
   }
 
 func main() {
-  var srv = NewMqS(nil)
+  var srv = NewMqS(nil,nil)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
@@ -44,7 +39,6 @@ func main() {
   }()
   srv.ConfigSetName("ManFilter")
   srv.ConfigSetIsServer(true)
-  srv.ConfigSetFactory((*ManFilter)(srv))
   srv.LinkCreate(os.Args...)
   srv.ServiceCreate("+FTR", (*FTR)(srv))
   srv.ServiceProxy("+EOF")

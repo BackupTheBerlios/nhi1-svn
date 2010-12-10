@@ -17,7 +17,7 @@
 
 MQ_CST sGO = "GO";
 MQ_CST sERROR = "Error";
-MQ_CST sUNKNOWN = "UNKNOWN";
+MQ_CST sDEFAULT = "DEFAULT";
 
 #define SETUP_data \
   GoInterface *data = (GoInterface*) MqSysMalloc(context, sizeof(GoInterface)); \
@@ -154,14 +154,27 @@ static enum MqErrorE
 gomsgque_sFactoryCreate (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR  data,
+  struct MqFactoryItemS * const item,
   struct MqS  ** contextP
 )
 {
-  *contextP = (struct MqS*)gomsgque_cFactoryCreate((int*)tmpl, (GoInterface*)data);
-  if (*contextP == NULL) return MqErrorStack(tmpl);
-  MqConfigDup (*contextP, tmpl);
-  MqErrorCheck(MqSetupDup (*contextP, tmpl));
+  struct MqS * mqctx = (struct MqS*)gomsgque_cFactoryCall((int*)tmpl, (void**)item->Create.data);
+  if (mqctx == NULL) return MqErrorStack(tmpl);
+
+  // copy setup data and initialize "setup" data
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCheck(MqSetupDup (*contextP, tmpl));
+  }
+
+  // child does not need an event-handler if not user supplied
+  if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
+    mqctx->setup.Event.fCall = NULL;
+  }
+
+  // set Factory on a new object
+  MqConfigSetFactoryItem (mqctx, item);
+
+  *contextP = mqctx;
   return MQ_OK;
 error:
   MqErrorCopy(tmpl, *contextP);
@@ -173,7 +186,7 @@ static void
 gomsgque_sFactoryDelete (
   struct MqS  * context,
   MQ_BOL doFactoryCleanup,
-  MQ_PTR data
+  struct MqFactoryItemS* const item
 )
 {
   MQ_PTR chnp = context->threadData;
@@ -187,20 +200,33 @@ gomsgque_sFactoryFree (
   MQ_PTR *dataP
 )
 {
-  gomsgque_cFactoryFree((GoInterface*)(*dataP));
+  gomsgque_cFactoryFree((void**)(*dataP));
   *dataP = NULL;
 }
 
 void
 gomsgque_ConfigSetFactory (
   struct MqS * const context,
+  MQ_CST const ident,
   MQ_PTR data
 )
 {
   MqFactoryCreateF  fCreate = data != NULL ? gomsgque_sFactoryCreate : NULL;
-  MqConfigSetFactory(context, 
-    fCreate,		      data, gomsgque_sFactoryFree, NULL,
-    gomsgque_sFactoryDelete,  NULL, NULL, NULL
+  MqConfigSetFactory(context, ident,
+    fCreate,		      data, gomsgque_sFactoryFree, 
+    gomsgque_sFactoryDelete,  NULL, NULL
+  );
+}
+
+void
+gomsgque_FactoryAdd (
+  MQ_CST const ident,
+  MQ_PTR data
+)
+{
+  MqFactoryAdd(ident,
+    gomsgque_sFactoryCreate, data, gomsgque_sFactoryFree, 
+    gomsgque_sFactoryDelete, NULL, NULL
   );
 }
 
@@ -307,8 +333,7 @@ gomsgque_ConfigSetSetup (
   struct MqS * const context
 )
 {
-  return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, 
-	  NULL, sProcessExit, sThreadExit);
+  return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, sProcessExit, sThreadExit);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -333,7 +358,7 @@ gomsgque_SysServerThreadMain (
 
 static enum MqErrorE gomsgque_SysServerThread (
   struct MqS * const context,
-  struct MqFactoryS factory,
+  struct MqFactoryItemS *factory,
   struct MqBufferLS ** argvP,
   struct MqBufferLS ** alfaP,
   MQ_CST  name,

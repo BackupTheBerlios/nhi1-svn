@@ -91,7 +91,10 @@ main (
     MqFactoryAdd("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL);
 
     // call the initial factory to initialize the "config"
-    if (MqFactoryCall(argv[1], &ctx) != 0) {
+    ctx = MqFactoryCall(argv[1]);
+
+    // on error -> exit
+    if (ctx == NULL) {
       ToolHelp(MqSysBasename(argv[0], MQ_NO));
     }
 

@@ -313,27 +313,19 @@ func (this *MqS) ConfigSetEvent(cb Event) {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+type FactoryF func(*MqS) (*MqS) 
+
 // global lock for "Factory" interfaces
-var lockFactory  = make(map[*Factory]bool)
+var lockFactory  = make(map[*FactoryF]bool)
 
-type Factory interface {
-  Factory() *MqS
-}
-
-//export gomsgque_cFactoryCreate
-func (this *MqS) cFactoryCreate(cb *Factory) (ret *MqS) {
-  defer func() {
-    if x := recover(); x != nil {
-      this.ErrorSet(x)
-      ret = nil
-    }
-  }()
-  ret = (*cb).Factory()
+//export gomsgque_cFactoryCall
+func cFactoryCall(this *MqS, cb *FactoryF) (ret *MqS) {
+  ret = (*cb)(this)
   return
 }
 
 //export gomsgque_cFactoryDelete
-func (this *MqS) cFactoryDelete(chnp *chan bool) {
+func cFactoryDelete(this *MqS, chnp *chan bool) {
   ctxlock[this] = nil, false
   if chnp != nil {
     (*chnp) <- true
@@ -341,12 +333,36 @@ func (this *MqS) cFactoryDelete(chnp *chan bool) {
 }
 
 //export gomsgque_cFactoryFree
-func cFactoryFree(cb *Factory) {
+func cFactoryFree(cb *FactoryF) {
   lockFactory[cb] = false, false
 }
 
-func (this *MqS) ConfigSetFactory(cb Factory) {
-  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), C.MQ_PTR(&cb))
+func (this *MqS) ConfigSetFactory(ident string, cb FactoryF) {
+  v := C.CString(ident)
+  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), v, C.MQ_PTR(&cb))
+  C.free(unsafe.Pointer(v))
   lockFactory[&cb] = true
+}
+
+func FactoryAdd(ident string, cb FactoryF) {
+  v := C.CString(ident)
+  C.gomsgque_FactoryAdd(v, C.MQ_PTR(&cb))
+  C.free(unsafe.Pointer(v))
+  lockFactory[&cb] = true
+}
+
+func FactoryCall(ident string) (*MqS) {
+  v := C.CString(ident)
+  ctx := C.MqFactoryCall(v)
+  C.free(unsafe.Pointer(v))
+  if (ctx == nil) {
+    panic("unable to call " + ident + " factory")
+  }
+  return (*MqS)(ctx)
+}
+
+func FactoryNew(ident string, cb FactoryF) *MqS {
+  FactoryAdd(ident, cb)
+  return FactoryCall(ident)
 }
 

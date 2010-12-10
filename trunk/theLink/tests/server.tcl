@@ -708,8 +708,7 @@ proc ServerFactory {tmpl} {
 # only used to start the initial process
 tclmsgque Main {
 
-  tclmsgque FactoryAdd "server" ServerFactory
-  set srv [tclmsgque FactoryCall "server"]
+  set srv [tclmsgque FactoryNew "server" ServerFactory]
 
   if {[catch {
     # create the initial parent-context and wait forever for events

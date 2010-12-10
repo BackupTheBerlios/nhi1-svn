@@ -23,19 +23,13 @@ type Filter1 struct {
   data [][]string
 }
 
-func NewFilter1() *Filter1 {
-  ret := new(Filter1)
-  ret.MqS = NewMqS(ret)
-  return ret
+func NewFilter1(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(Filter1))
 }
 
 func (this *Filter1) ServerSetup() {
   this.ServiceCreate("+FTR", (*FTR)(this))
   this.ServiceCreate("+EOF", (*EOF)(this))
-}
-
-func (this *Filter1) Factory() *MqS {
-  return NewFilter1().MqS
 }
 
 type FTR Filter1
@@ -64,14 +58,13 @@ type EOF Filter1
   }
 
 func main() {
-  var srv = NewFilter1()
+  srv := FactoryNew("Filter1", NewFilter1)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("Filter1")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }

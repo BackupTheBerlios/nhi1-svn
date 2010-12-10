@@ -46,11 +46,11 @@ const (
 type MqS _Ctype_struct_MqS
 
 // for toplevel "*MqS"
-func NewMqS(ifc interface{}) *MqS {
-  ctx := C.MqContextCreate(0,nil)
+func NewMqS(tmpl *MqS, ifc interface{}) *MqS {
+  ctx := C.MqContextCreate(0,(*_Ctype_struct_MqS)(tmpl))
   ret := (*MqS)(ctx)
   // cleanup "lock" after "object" is deleted
-  C.gomsgque_ConfigSetFactory(ctx, nil)
+  C.gomsgque_ConfigSetFactory(ctx, C.sDEFAULT, nil)
   // set default action for startup (check for "left over arguments")
   C.gomsgque_ConfigSetSetup(ctx)
   // save the pointer, use "SetSelf" to create link to toplevel object
@@ -79,9 +79,6 @@ func (this *MqS) SetSelf(ifc interface{}) {
     if obj,ok := ifc.(ServerCleanup); ok {
       this.ConfigSetServerCleanup(obj)
     }
-    if obj,ok := ifc.(Factory); ok {
-      this.ConfigSetFactory(obj)
-    }
     if obj,ok := ifc.(BgError); ok {
       this.ConfigSetBgError(obj)
     }
@@ -106,15 +103,6 @@ func (this *MqS) LogC(prefix string, level int32, message string) {
 
 func (this *MqS) Exit() {
   C.MqExitP(C.sGO, (*_Ctype_struct_MqS)(this))
-}
-
-func Init(argv []string) {
-  initB := C.MqInitCreate()
-  for _,arg := range argv {
-      s := C.CString(arg)
-    C.MqBufferLAppendC(initB, s)
-      C.free(unsafe.Pointer(s))
-  }
 }
 
 // global lock for thread-channel objects
@@ -146,5 +134,19 @@ func gomsgque_ProcessExit (num int32) {
 //export gomsgque_ThreadExit
 func gomsgque_ThreadExit (num int32) {
   runtime.Goexit()
+}
+
+//
+// ===========================================================
+// static functions (namespace: gomsgque)
+//
+
+func Init(argv []string) {
+  initB := C.MqInitCreate()
+  for _,arg := range argv {
+      s := C.CString(arg)
+    C.MqBufferLAppendC(initB, s)
+      C.free(unsafe.Pointer(s))
+  }
 }
 

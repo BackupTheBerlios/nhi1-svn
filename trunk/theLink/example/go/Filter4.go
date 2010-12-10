@@ -24,11 +24,11 @@ type Filter4 struct {
   FH	*os.File
 }
 
-func NewFilter4() *Filter4 {
+func NewFilter4(tmpl *MqS) *MqS {
   ret := new(Filter4)
-  ret.MqS = NewMqS(ret)
+  ret.MqS = NewMqS(tmpl, ret)
   ret.itms = list.New()
-  return ret
+  return ret.MqS
 }
 
 func (this *Filter4) ServerCleanup() {
@@ -45,10 +45,6 @@ func (this *Filter4) ServerSetup() {
   this.ServiceCreate("EXIT", (*EXIT)(this))
   this.ServiceCreate("+ALL", (*ALLS)(this))
   ftr.ServiceCreate("WRIT", (*WRIT)(ftr))
-}
-
-func (this *Filter4) Factory() *MqS {
-  return NewFilter4().MqS
 }
 
 type ALLS Filter4
@@ -110,7 +106,7 @@ func (this *Filter4) ErrorWrite() {
 }
 
 func main() {
-  var srv = NewFilter4()
+  srv := FactoryNew("transFilter", NewFilter4)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
@@ -118,7 +114,6 @@ func main() {
     srv.Exit()
   }()
   srv.ConfigSetIgnoreExit(true)
-  srv.ConfigSetIdent("transFilter")
   srv.ConfigSetName("Filter4")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)

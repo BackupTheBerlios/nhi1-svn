@@ -1429,7 +1429,10 @@ main (
   MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
 
   // call the initial factory to initialize the "config"
-  if (MqFactoryCall("server", &mqctx) != 0) {
+  mqctx = MqFactoryCall("server");
+
+  // context not available -> an error happen
+  if (mqctx == NULL) {
     ServerHelp(MqSysBasename("server", MQ_NO));
   }
 

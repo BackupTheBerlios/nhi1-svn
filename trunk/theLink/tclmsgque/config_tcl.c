@@ -76,7 +76,7 @@ enum MqErrorE NS(FactoryCreate) (
     TclErrorCheck3(NS(GetClientData) (interp, Tcl_GetObjResult(interp), (MQ_PTR*) &mqctx));
   }
 
-  // copy setup data and initialize data entries
+  // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
     MqErrorCheck (MqSetupDup(mqctx, tmpl));
   }

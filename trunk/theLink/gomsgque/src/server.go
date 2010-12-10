@@ -41,7 +41,7 @@ type ClientERR struct {
 
 func NewClientERR() *ClientERR {
   ret := new(ClientERR)
-  ret.MqS = NewMqS(ret)
+  ret.MqS = NewMqS(nil, ret)
   return ret
 }
 
@@ -49,7 +49,7 @@ func (this *ClientERR) LinkCreate(debug int32) {
   this.ConfigSetDebug(debug)
   this.ConfigSetName("test-client")
   this.ConfigSetSrvName("test-server")
-  this.MqS.LinkCreate(os.Args[0], "@", "SELF")
+  this.MqS.LinkCreate(os.Args[0], "@", "server")
 }
 
 func (this *ClientERR) ECOI_CB(ctx *MqS) {
@@ -64,7 +64,7 @@ type ClientERR2 struct {
 
 func NewClientERR2() *ClientERR2 {
   ret := new(ClientERR2)
-  ret.MqS = NewMqS(ret)
+  ret.MqS = NewMqS(nil, ret)
   return ret
 }
 
@@ -81,14 +81,15 @@ type Client struct {
   i int32
 }
 
-func NewClient() *Client {
+func NewClient(tmpl *MqS) *Client {
   srv := new(Client)
-  srv.MqS = NewMqS(srv)
+  srv.MqS = NewMqS(tmpl, srv)
+  srv.ConfigSetFactory("test-client", ClientFactory)
   return srv
 }
 
-func (this *Client) Factory() *MqS {
-  return NewClient().MqS
+func ClientFactory(tmpl *MqS) (*MqS) {
+  return NewClient(tmpl).MqS
 }
 
 func (this *Client) BgError() {
@@ -101,7 +102,7 @@ func (this *Client) BgError() {
 
 func (this *Client) LinkCreate(debug int32) {
   this.ConfigSetDebug(debug)
-  this.MqS.LinkCreate(os.Args[0], "@", "SELF", "--name", "test-server")
+  this.MqS.LinkCreate(os.Args[0], "@", "server", "--name", "test-server")
 }
 
 type ECOI_CB Client
@@ -119,14 +120,8 @@ type Server struct {
   j int32
 }
 
-func NewServer() *Server {
-  srv := new(Server)
-  srv.MqS = NewMqS(srv)
-  return srv
-}
-
-func (this *Server) Factory() *MqS {
-  return NewServer().MqS
+func NewServer(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(Server))
 }
 
 func (this *Server) ServerCleanup() {
@@ -142,7 +137,7 @@ func (this *Server) ServerSetup() {
     // add "slave" services here
   } else {
     for i := range this.cl {
-      this.cl[i] = NewClient()
+      this.cl[i] = NewClient(nil)
       this.cl[i].ConfigSetName(fmt.Sprintf("cl-%d", i))
       this.cl[i].ConfigSetSrvName(fmt.Sprintf("sv-%d", i))
     }
@@ -380,7 +375,7 @@ type SND1 Server
 	this.cl[id].LinkCreate(this.ConfigGetDebug())
       }
       case "START3": {
-	parent := NewClient()
+	parent := NewClient(nil)
 	// parent not connected ERROR
 	this.cl[id].LinkCreateChild(parent.MqS)
       }
@@ -391,8 +386,7 @@ type SND1 Server
       case "START5": {
 	// the 'master' have to be a 'parent' without 'child' objects
 	// 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	this.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id),
-	  "--srvname", fmt.Sprintf("wk-sv-%d", id), "--thread")
+	this.SlaveWorker(id, "--name", fmt.Sprintf("wk-cl-%d",id), "@", "--name", fmt.Sprintf("wk-sv-%d", id))
       }
       case "STOP": {
 	this.cl[id].LinkDelete()
@@ -458,7 +452,7 @@ type SND2 Server
 	this.SlaveWorker(id, LIST...)
       }
       case "CREATE2": {
-	c := NewClient()
+	c := NewClient(nil)
 	c.LinkCreate(this.ConfigGetDebug())
 	this.SlaveCreate(id, c.MqS)
       }
@@ -846,19 +840,16 @@ type ECUL Server
     this.SendW(this.ReadW())
     this.ReadProxy(this.MqS)
     this.SendRETURN()
-    //this.ErrorC("ECUL",-1,"fehler")
   }
 
 func main() {
-  srv := NewServer()
+  srv := FactoryNew("server", NewServer)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("server")
-  srv.ConfigSetIdent("test-server")
   srv.LinkCreate(os.Args...)
   srv.LogC("test",1,"this is the log test\n")
   srv.ProcessEvent(WAIT_FOREVER)

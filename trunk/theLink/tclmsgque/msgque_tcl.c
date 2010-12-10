@@ -341,13 +341,30 @@ static int NS(FactoryCall) (
   CHECK_C(ident)
   CHECK_NOARGS
   {
-    // call the factory
     struct MqFactoryItemS * item = MqFactoryItemGet (ident);
-    if (item == NULL || item->Create.fCall == NULL) goto error;
-    MqErrorCheck((*item->Create.fCall) ((struct MqS* const)interp, MQ_FACTORY_NEW_INIT, item, &mqctx));
+    if (item != NULL && item->Create.fCall != NULL) {
+      (*item->Create.fCall) ((struct MqS *)interp, MQ_FACTORY_NEW_INIT, item, &mqctx);
+    }
   }
-  Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
-  RETURN_TCL
+  if (mqctx) {
+    Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
+    return TCL_OK;
+  } else {
+error:
+    Tcl_SetResult(interp, "unable to call factory", TCL_STATIC);
+    return TCL_ERROR;
+  }
+}
+
+static int NS(FactoryNew) (
+  Tcl_Interp * interp,
+  int objc,
+  struct Tcl_Obj *const *objv
+)
+{
+  TclErrorCheck(NS(FactoryAdd)	(interp, 2, objv));
+  TclErrorCheck(NS(FactoryCall) (interp, 1, objv));
+  return TCL_OK;
 }
 
 /** \brief handle the \b msgque tcl command
@@ -376,6 +393,7 @@ static int NS(MsgqueCmd) (
     { "Init",		NS(InitCmd)	  },
     { "FactoryAdd",	NS(FactoryAdd)	  },  
     { "FactoryCall",	NS(FactoryCall)	  },  
+    { "FactoryNew",	NS(FactoryNew)	  },  
     { NULL,		NULL		  }
   };
 

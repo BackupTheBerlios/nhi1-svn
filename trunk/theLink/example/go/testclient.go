@@ -36,14 +36,14 @@ func Get(ctx *MqS) string {
 
 func main() {
   // create the object
-  c0	:= NewMqS(nil)
-  c00	:= NewMqS(nil)
-  c01	:= NewMqS(nil)
-  c000	:= NewMqS(nil)
-  c1	:= NewMqS(nil)
-  c10	:= NewMqS(nil)
-  c100	:= NewMqS(nil)
-  c101	:= NewMqS(nil)
+  c0	:= NewMqS(nil,nil)
+  c00	:= NewMqS(nil,nil)
+  c01	:= NewMqS(nil,nil)
+  c000	:= NewMqS(nil,nil)
+  c1	:= NewMqS(nil,nil)
+  c10	:= NewMqS(nil,nil)
+  c100	:= NewMqS(nil,nil)
+  c101	:= NewMqS(nil,nil)
 
   // catch errors and exit the app
   defer func() {

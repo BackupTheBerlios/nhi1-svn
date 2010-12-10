@@ -870,9 +870,8 @@ MQ_EXTERN void MQ_DECL MqFactoryAdd (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1)));
 
-MQ_EXTERN int MQ_DECL MqFactoryCall (
-  MQ_CST const name,
-  struct MqS **ctxP
+MQ_EXTERN struct MqS* MQ_DECL MqFactoryCall (
+  MQ_CST const name
 ) __attribute__((nonnull(1)));
 
 MQ_EXTERN struct MqFactoryItemS* MQ_DECL MqFactoryItemGet (

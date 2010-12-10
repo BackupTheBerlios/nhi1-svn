@@ -22,14 +22,8 @@ type Filter3 struct {
   // add server specific data 
 }
 
-func NewFilter3() *Filter3 {
-  ret := new(Filter3)
-  ret.MqS = NewMqS(ret)
-  return ret
-}
-
-func (this *Filter3) Factory() *MqS {
-  return NewFilter3().MqS
+func NewFilter3(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(Filter3))
 }
 
 func (this *Filter3) ServerSetup() {
@@ -41,14 +35,13 @@ func (this *Filter3) ServerSetup() {
 }
 
 func main() {
-  var srv = NewFilter3()
+  srv := FactoryNew("Filter3", NewFilter3)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("Filter3")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }

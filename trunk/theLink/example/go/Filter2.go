@@ -23,19 +23,13 @@ type Filter2 struct {
   // add server specific data 
 }
 
-func NewFilter2() *Filter2 {
-  ret := new(Filter2)
-  ret.MqS = NewMqS(ret)
-  return ret
+func NewFilter2(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(Filter2))
 }
 
 func (this *Filter2) ServerSetup() {
   this.ServiceCreate("+FTR", (*FTR)(this))
   this.ServiceProxy("+EOF")
-}
-
-func (this *Filter2) Factory() *MqS {
-  return NewFilter2().MqS
 }
 
 type FTR Filter2
@@ -44,14 +38,13 @@ type FTR Filter2
   }
 
 func main() {
-  var srv = NewFilter2()
+  srv := FactoryNew("filter", NewFilter2)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("filter")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }

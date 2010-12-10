@@ -22,14 +22,8 @@ type mulserver struct {
   // add server specific data 
 }
 
-func Newmulserver() *mulserver {
-  ret := new(mulserver)
-  ret.MqS = NewMqS(ret)
-  return ret
-}
-
-func (this *mulserver) Factory() *MqS {
-  return Newmulserver().MqS
+func Newmulserver(tmpl *MqS) *MqS {
+  return NewMqS(tmpl, new(mulserver))
 }
 
 func (this *mulserver) ServerSetup() {
@@ -44,14 +38,13 @@ type MMUL mulserver
   }
 
 func main() {
-  var srv = Newmulserver()
+  srv := FactoryNew("mulserver", Newmulserver)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("MyMulServer")
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }

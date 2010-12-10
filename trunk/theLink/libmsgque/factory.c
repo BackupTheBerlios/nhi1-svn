@@ -269,21 +269,19 @@ MqFactoryAdd (
   pFactoryAddHdl (name, Create, Delete);
 }
 
-int
+struct MqS *
 MqFactoryCall (
-  MQ_CST const name,
-  struct MqS **ctxP
+  MQ_CST const name
 )
 {
+  struct MqS * ctx = NULL;
   struct MqFactoryItemS * item = MqFactoryItemGet (name);
 
-  if (item == NULL || item->Create.fCall == NULL) goto error;
+  if (item != NULL && item->Create.fCall != NULL) {
+    (*item->Create.fCall) (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, &ctx);
+  }
 
-  (*item->Create.fCall) (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, ctxP);
-
-  return 0; // OK
-error:
-  return 1; // KO
+  return ctx;
 }
 
 END_C_DECLS
