@@ -30,14 +30,14 @@ type FTR MqS
   }
 
 func main() {
-  var srv = NewMqS(nil,nil)
+  srv := NewMqS(nil,nil)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
     }
     srv.Exit()
   }()
-  srv.ConfigSetName("ManFilter")
+  srv.ConfigSetDefaultFactory("ManFilter")
   srv.ConfigSetIsServer(true)
   srv.LinkCreate(os.Args...)
   srv.ServiceCreate("+FTR", (*FTR)(srv))

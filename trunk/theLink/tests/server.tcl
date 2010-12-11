@@ -707,9 +707,7 @@ proc ServerFactory {tmpl} {
 
 # only used to start the initial process
 tclmsgque Main {
-
   set srv [tclmsgque FactoryNew "server" ServerFactory]
-
   if {[catch {
     # create the initial parent-context and wait forever for events
     $srv LinkCreate {*}$argv

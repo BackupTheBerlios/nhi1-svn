@@ -319,8 +319,20 @@ type FactoryF func(*MqS) (*MqS)
 var lockFactory  = make(map[*FactoryF]bool)
 
 //export gomsgque_cFactoryCall
-func cFactoryCall(this *MqS, cb *FactoryF) (ret *MqS) {
-  ret = (*cb)(this)
+func cFactoryCall(tmpl *MqS, cb *FactoryF) (ret *MqS) {
+  defer func() {
+    if (tmpl != nil) {
+      if x := recover(); x != nil {
+	tmpl.ErrorSet(x)
+	ret = nil
+      }
+    }
+  }()
+  if (cb == nil) {
+    ret = NewMqS(tmpl,nil)
+  } else {
+    ret = (*cb)(tmpl)
+  }
   return
 }
 
@@ -342,6 +354,12 @@ func (this *MqS) ConfigSetFactory(ident string, cb FactoryF) {
   C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   lockFactory[&cb] = true
+}
+
+func (this *MqS) ConfigSetDefaultFactory(ident string) {
+  v := C.CString(ident)
+  C.gomsgque_ConfigSetDefaultFactory((*_Ctype_struct_MqS)(this), v, nil)
+  C.free(unsafe.Pointer(v))
 }
 
 func FactoryAdd(ident string, cb FactoryF) {

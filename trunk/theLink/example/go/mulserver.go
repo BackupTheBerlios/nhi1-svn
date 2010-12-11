@@ -22,8 +22,10 @@ type mulserver struct {
   // add server specific data 
 }
 
-func Newmulserver(tmpl *MqS) *MqS {
-  return NewMqS(tmpl, new(mulserver))
+func NewMulserver(tmpl *MqS) *MqS {
+  srv := new(mulserver)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *mulserver) ServerSetup() {
@@ -38,7 +40,7 @@ type MMUL mulserver
   }
 
 func main() {
-  srv := FactoryNew("mulserver", Newmulserver)
+  srv := FactoryNew("mulserver", NewMulserver)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

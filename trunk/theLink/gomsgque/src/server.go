@@ -84,7 +84,7 @@ type Client struct {
 func NewClient(tmpl *MqS) *Client {
   srv := new(Client)
   srv.MqS = NewMqS(tmpl, srv)
-  srv.ConfigSetFactory("test-client", ClientFactory)
+  srv.ConfigSetDefaultFactory("test-client")
   return srv
 }
 
@@ -116,12 +116,14 @@ type Server struct {
   *MqS
   buf *MqBufferS
   cl  [3]*Client
-  i   int32
+  i int32
   j int32
 }
 
 func NewServer(tmpl *MqS) *MqS {
-  return NewMqS(tmpl, new(Server))
+  srv := new(Server)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *Server) ServerCleanup() {

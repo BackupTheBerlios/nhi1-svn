@@ -23,7 +23,9 @@ type TestServer struct {
 }
 
 func NewTestServer(tmpl *MqS) *MqS {
-  return NewMqS(tmpl, new(TestServer))
+  srv := new(TestServer)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *TestServer) ServerSetup() {

@@ -23,7 +23,9 @@ type MyServer struct {
 }
 
 func NewMyServer(tmpl *MqS) *MqS {
-  return NewMqS(tmpl, new(MyServer))
+  srv := new(MyServer)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *MyServer) ServerSetup() {

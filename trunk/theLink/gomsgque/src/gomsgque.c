@@ -163,7 +163,7 @@ gomsgque_sFactoryCreate (
 
   // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCheck(MqSetupDup (*contextP, tmpl));
+    MqErrorCheck(MqSetupDup (mqctx, tmpl));
   }
 
   // child does not need an event-handler if not user supplied
@@ -202,6 +202,19 @@ gomsgque_sFactoryFree (
 {
   gomsgque_cFactoryFree((void**)(*dataP));
   *dataP = NULL;
+}
+
+void
+gomsgque_ConfigSetDefaultFactory (
+  struct MqS * const context,
+  MQ_CST const ident,
+  MQ_PTR data
+)
+{
+  MqConfigSetFactory(context, ident,
+    gomsgque_sFactoryCreate, NULL, gomsgque_sFactoryFree, 
+    gomsgque_sFactoryDelete, NULL, NULL
+  );
 }
 
 void

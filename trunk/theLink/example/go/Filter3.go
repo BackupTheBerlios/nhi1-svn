@@ -23,7 +23,9 @@ type Filter3 struct {
 }
 
 func NewFilter3(tmpl *MqS) *MqS {
-  return NewMqS(tmpl, new(Filter3))
+  srv := new(Filter3)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *Filter3) ServerSetup() {
