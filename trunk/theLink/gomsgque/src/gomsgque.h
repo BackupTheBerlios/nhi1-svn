@@ -34,3 +34,12 @@ enum MqErrorE gomsgque_SendEND_AND_CALLBACK (struct MqS * const, MQ_TOK const to
 enum MqErrorE gomsgque_SendEND_AND_CALLBACK2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);
 void gomsgque_SysServerThreadMain(struct MqSysServerThreadMainS *data, MQ_PTR chn);
 void gomsgque_FactoryAdd (MQ_CST const ident, MQ_PTR data);
+
+/*
+MQ_EXTERN enum MqErrorE MQ_DECL MqDummy (
+  struct MqS  * const ctx,
+  MQ_SIZE const id,
+  struct MqS ** const filter
+) __attribute__((nonnull(1)));
+*/
+

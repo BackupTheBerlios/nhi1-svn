@@ -295,6 +295,8 @@ pMqSelectStart (
 static void
 sIoFillArgvC (
   struct MqIoS * const io,	    ///< [in] the current io object
+  struct MqBufferS **start1,	    ///< [in] pointer to alfa1
+  struct MqBufferS **end1,	    ///< [in] end pointer to alfa1
   struct MqBufferLS * alfa2,	    ///< [in] after first #MQ_ALFA
   const MQ_SOCK sock,		    ///< [in] socket for the \e new parent
   char ** arg,			    ///< [out] the new argv array to fill
@@ -328,13 +330,18 @@ sIoFillArgvC (
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, startAs);
   }
 
-  // 5. copy the left over parts starting with the first MQ_ALFA
+  // 5. all alfa1 arguments starting with the first option
+  for (; start1 < end1; start1++) {
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, (*start1)->cur.C);
+  }
+
+  // 6. copy the left over parts starting with the first MQ_ALFA
   if (alfa2) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, MQ_ALFA_STR);
     start = alfa2->data;
     end = start+alfa2->cursize;
-    for (; start < end; start++,arg++) {
-      *arg = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
+    for (; start < end; start++) {
+      *arg++ = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
     }
   }
   *arg = NULL;
@@ -407,6 +414,7 @@ pIoStartServer (
 #endif
 
   MQ_CST  name = NULL;
+  MQ_CST  displayname = NULL;
 
   // select the code
 rescan:
@@ -439,7 +447,7 @@ rescan:
 	// get the id storage
 	idP = &io->id;
 	// this is the first entry in alfa1
-	name = alfa1->data[0]->cur.C;
+	name = displayname = alfa1->data[0]->cur.C;
 
 //printLC(name)
 
@@ -542,8 +550,10 @@ rescan:
 	}
 
 	// if started from "GenericServer" get the "name" from the "inital-server"
-	if (start_as_pipe == 0) {
-	  MqBufferLAppendC(alfa1, "--name");
+	MqBufferLAppendC(alfa1, "--name");
+	if (displayname) {
+	  MqBufferLAppendC(alfa1, displayname);
+	} else {
 	  MqBufferLAppendC(alfa1, context->config.name);
 	}
 
@@ -554,6 +564,7 @@ rescan:
 	// and not the "current-thread"
 	*sockP = sockUndef;
 
+//printLC(name)
 //MqBufferLLogS(context, alfa1, __func__, "alfa1");
 //MqBufferLLogS(context, alfa2, __func__, "alfa2");
 
@@ -588,8 +599,10 @@ rescan:
 	}
 
 	// if started from "GenericServer" get the "name" from the "inital-server"
-	if (start_as_pipe == 0) {
-	  MqBufferLAppendC(alfa1, "--name");
+	MqBufferLAppendC(alfa1, "--name");
+	if (displayname) {
+	  MqBufferLAppendC(alfa1, displayname);
+	} else {
 	  MqBufferLAppendC(alfa1, context->config.name);
 	}
 
@@ -605,6 +618,7 @@ rescan:
 #endif   /* HAVE_FORK */
     case MQ_START_SERVER_AS_SPAWN: {
 //printLC("MQ_START_SERVER_AS_SPAWN:")
+	struct MqBufferS **start, **end;
 	char **argV, **arg;
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
@@ -629,12 +643,11 @@ rescan:
 	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, MqInitBuf->data[i]->cur.C);
 	  }
 	} else {
-	  struct MqBufferS **start, **end;
-
-	  // copy everything befor the first MQ_ALFA
+	  // copy everything befor the first MQ_ALFA or option
 	  start = alfa1->data;
 	  end = start+alfa1->cursize;
 	  for (; start < end; start++) {
+	    if ((*start)->cur.C[0] == '-') break; // stop on first option
 	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
 	  }
 	}
@@ -646,7 +659,8 @@ rescan:
 	}
 
 	// fill arg with system-arguments
-	sIoFillArgvC(io, alfa2, *sockP, arg, "--spawn");
+	sIoFillArgvC(io, start, end, alfa2, *sockP, arg, "--spawn");
+
 	// start the server
 
 /*

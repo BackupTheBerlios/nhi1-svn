@@ -384,3 +384,11 @@ func FactoryNew(ident string, cb FactoryF) *MqS {
   return FactoryCall(ident)
 }
 
+/*
+func (this *MqS) Dummy(i int32) *MqS {
+  var ret *_Ctype_struct_MqS
+  this.iErrorMqToGoWithCheck(C.MqDummy((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i), &ret))
+  return (*MqS)(ret)
+}
+*/
+

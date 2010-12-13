@@ -211,6 +211,16 @@ proc envGet {VAR} {
     return ""
 }
 
+proc lng2startInit {} {
+  array set ret {}
+  foreach S $::env(SRV_LST) {
+    foreach {lng io start} [split $S .] break
+    if {$io eq "pipe" || $io eq "uds"} continue
+    lappend ret($lng) $start
+  }
+  return [array get ret]
+}
+
 # this code is needed to filter "VAR" list with "args" regexp
 proc filterGet {VAR args} {
   set NOT no
@@ -443,7 +453,7 @@ proc getExampleExecutable {srv} {
   return $RET
 }
 
-proc getExample {srv} {
+proc getExample {srv args} {
     global env
     set RET [list]
 
@@ -453,7 +463,7 @@ proc getExample {srv} {
     }
 
     # get executable
-    lappend RET {*}[getExampleExecutable $srv]
+    lappend RET {*}[getExampleExecutable $srv] {*}$args
 
     # postfix
     lappend RET {*}[getPostfix $srv]
@@ -616,6 +626,7 @@ if {![info exists env(LNG_LST)]} {
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
 }
+array set START_ID {fork 1 thread 2 spawn 3 c 3 tcl 3}
 if {![info exists env(SRV_LST)]} {
   set env(SRV_LST) {
     c.pipe.pipe

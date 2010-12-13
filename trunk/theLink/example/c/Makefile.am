@@ -13,7 +13,7 @@
 noinst_PROGRAMS = mulclient mulserver manfilter \
 		    testclient testserver \
 		      MyClient MyServer \
-			Filter1 Filter2 Filter3 Filter4
+			Filter1 Filter2 Filter3 Filter4 Filter5
 
 AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
 LDADD = -lm ../../libmsgque/libtmp.la
@@ -29,4 +29,5 @@ Filter1_SOURCES = Filter1.c
 Filter2_SOURCES = Filter2.c
 Filter3_SOURCES = Filter3.c
 Filter4_SOURCES = Filter4.c
+Filter5_SOURCES = Filter5.c
 

@@ -204,6 +204,9 @@ extern MQ_CST MqMessageText[MQ_MESSAGE_END];
 #  define MqThreadSetTLSCheck(k,v) pthread_setspecific(k,v)
 #  define MqThreadKeyType pthread_key_t
 #  define MqThreadKeyNULL PTHREAD_KEYS_MAX
+#  define MqThreadKeyCreate(key) if (pthread_key_create(&key, NULL) != 0) { \
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
+    }
 # else
 #  define MqThreadSelf() GetCurrentThreadId()
 #  define MqThreadGetTLS(k) TlsGetValue(k)
@@ -211,7 +214,16 @@ extern MQ_CST MqMessageText[MQ_MESSAGE_END];
 #  define MqThreadSetTLSCheck(k,v) (TlsSetValue(k,v) == 0)
 #  define MqThreadKeyType DWORD
 #  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
+#  define MqThreadKeyCreate(key) if ((key = TlsAlloc()) == TLS_OUT_OF_INDEXES) { \
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'"); \
+    }
+
 # endif
+#else
+#  define MqThreadKeyCreate(k)
+#  define MqThreadGetTLS(k) k
+#  define MqThreadSetTLS(k,v) k=v
+#  define MqThreadKeyNULL NULL
 #endif // MQ_HAS_THREAD
 
 END_C_DECLS

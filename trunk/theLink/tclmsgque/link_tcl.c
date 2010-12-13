@@ -78,7 +78,8 @@ int NS(LinkCreate) (NS_ARGS)
   if (objc-skip > 0) {
     int i;
     args = MqBufferLCreate (objc-skip+1);
-    MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
+    if (Tcl_GetString(objv[skip])[0] == '-')
+      MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
     for (i = skip; i < objc; i++) {
       MqBufferLAppendC (args, Tcl_GetString (objv[i]));
     }
@@ -106,12 +107,13 @@ int NS(LinkCreateChild) (NS_ARGS)
     skip++;
 
     // copy data entries
-    MqErrorCheck (MqSetupDup (mqctx, parent));
+    ErrorMqToTclWithCheck (MqSetupDup (mqctx, parent));
 
     // command-line arguments to MqBufferLS
     if (objc-skip > 0) {
       args = MqBufferLCreate (objc-skip+1);
-      MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
+      if (Tcl_GetString(objv[skip])[0] == '-')
+	MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
       for (i = skip; i < objc; i++) {
 	MqBufferLAppendC (args, Tcl_GetString (objv[i]));
       }

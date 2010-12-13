@@ -23,8 +23,14 @@ SetConstraints all
 ## init
 ##
 
+
+array set l2s [lng2startInit]
+
 set data1 [makeFile {xa:24:12345678987654321:5.78
 cg:89:98765432123456789:3.46} data1.[pid]]
+
+set data2 [makeFile {-A-:-B-
+-C-:-D-} data2.[pid]]
 
 ##
 ## -----------------------------------------------------------------------
@@ -45,7 +51,71 @@ test filter-2-$L {filter with tcl error} \
     -result	{CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
 S> (filter) \[*Error*] *my error*}
 
-} ; # end "F"
+test filter-3-$L {filter with default} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($L):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-A-:-B-
+F3:F3:$START_ID($L):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-C-:-D-"
+
+  foreach S $l2s($L) {
+
+test filter-4-$L-$S {filter with choose first} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($S):-A-:-B-
+F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($S):-C-:-D-"
+
+test filter-5-$L-$S {filter with choose middel} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 --$S @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($L):-A-:-B-
+F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($L):-C-:-D-"
+
+test filter-6-$L-$S {filter with choose last} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 --$S @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-A-:-B-
+F3:F3:$START_ID($S):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-C-:-D-"
+
+test filter-7-$L-$S {filter with choose middel and service-call-error} \
+    -body     {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 --$S @ F3
+    } \
+    -match    glob \
+    -result   {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|+FTR> <Num|220>
+C> (F1) \[service-call-error] <Tok|+FTR> <Num|220>
+C> (F2) \[service-call-error] <Tok|+FTR> <Num|220>
+S> (F3) \[MqServiceGetFilter] no filter is available
+C> (split) found in function "split" at file "asplit.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+test filter-8-$L-$S {filter with choose first and startup-error} \
+    -body     {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ DUMMY
+    } \
+    -result   {CHILDSTATUS-204-C> (F2) [MqLinkConnect] can not start server 'DUMMY'
+C> (F2) found in function "MqLinkConnect" at file "link.c"
+C> (F2) found in function "MqLinkCreate" at file "link.c"
+C> (F2) found in function "MqLinkDefault" at file "link.c"
+S> (F2) found in function "MqLinkCreate" at file "link.c"
+S> (F2) found in function "MqLinkDefault" at file "link.c"
+C> (split) found in function "pTokenCheckSystem" at file "token.c"
+C> (split) found in function "sMqEventStart" at file "service.c"
+C> (split) found in function "pEventStart" at file "event.c"
+C> (split) found in function "MqProcessEvent" at file "service.c"
+C> (split) found in function "sWaitForToken" at file "link.c"
+C> (split) found in function "MqLinkConnect" at file "link.c"
+C> (split) found in function "MqLinkCreate" at file "link.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+  } ; # end "S"
+} ; # end "L"
 
 ##
 ## -----------------------------------------------------------------------

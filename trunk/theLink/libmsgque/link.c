@@ -205,6 +205,7 @@ sMqCheckArg (
 	  if (!strncmp(argC, "string", 6)) {
 	    MqConfigSetIsString (context, MQ_YES);
 	  } else if (!strncmp(argC, "spawn", 5)) {
+//printLC("spawn")
 	    if (MqInitBuf == NULL) {
 	      return MqErrorDb (MQ_ERROR_NO_INIT);
 	    } else if (context->config.ignoreSpawn == MQ_YES) {
@@ -250,6 +251,7 @@ sMqCheckArg (
 	}
 	case 't': {
 	  if (!strncmp(argC, "thread", 6)) {
+//printLC("thread")
 	    if (context->config.ignoreThread == MQ_YES) {
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--thread");
 	    } else {
@@ -328,6 +330,7 @@ sMqCheckArg (
 	}
 	case 'f': {
 	  if (!strncmp(argC, "fork", 4)) {
+//printLC("fork")
 	    if (context->config.ignoreFork == MQ_YES) {
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--fork");
 	    } else {
