@@ -525,6 +525,7 @@ rescan:
       break;
 #if defined(MQ_HAS_THREAD)
     case MQ_START_SERVER_AS_THREAD: {
+	struct MqBufferLS * options;
 //printLC("MQ_START_SERVER_AS_THREAD:")
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
@@ -543,11 +544,14 @@ rescan:
 	  }
 	}
 
-	// empty alfa1 (GenericServer) starup -> init with MqInitBuf data
+	// empty alfa1 (GenericServer) starup -> init with MqInitBuf data from above
 	if (alfa1 == NULL) {
 	  alfa1 = MqBufferLCreate(20);
 	  MqBufferLAppendC(alfa1, name);
 	}
+
+	// extract all arguments after and including the first "-..." option
+	options = pBufferLExtractOptions(alfa1);
 
 	// if started from "GenericServer" get the "name" from the "inital-server"
 	MqBufferLAppendC(alfa1, "--name");
@@ -560,13 +564,16 @@ rescan:
 	// fill arg with system-arguments
 	sIoFillArgvU(io,*sockP,alfa1,"--thread");
 
+	// move the options to the end of alfa1, delete options
+	MqBufferLMove(alfa1, &options);
+
 	// special in "thread" mode, the server socket now belongs to the "new-thread"
 	// and not the "current-thread"
 	*sockP = sockUndef;
 
 //printLC(name)
-//MqBufferLLogS(context, alfa1, __func__, "alfa1");
-//MqBufferLLogS(context, alfa2, __func__, "alfa2");
+//printULS(alfa1);
+//printULS(alfa2);
 
 	// start the server
 	MqErrorCheck (MqSysServerThread (context, factory, &alfa1, &alfa2, name, thread_status, idP));
@@ -575,6 +582,7 @@ rescan:
 #endif /* MQ_HAS_THREAD */
 #if defined(HAVE_FORK)
     case MQ_START_SERVER_AS_FORK: {
+	struct MqBufferLS * options;
 //printLC("MQ_START_SERVER_AS_FORK:")
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
@@ -598,6 +606,9 @@ rescan:
 	  MqBufferLAppendC(alfa1, name);
 	}
 
+	// extract all arguments after and including the first "-..." option
+	options = pBufferLExtractOptions(alfa1);
+
 	// if started from "GenericServer" get the "name" from the "inital-server"
 	MqBufferLAppendC(alfa1, "--name");
 	if (displayname) {
@@ -608,6 +619,9 @@ rescan:
 
 	// fill arg with system-arguments
 	sIoFillArgvU(io,*sockP,alfa1,"--fork");
+
+	// move the options to the end of alfa1, delete options
+	MqBufferLMove(alfa1, &options);
 
 	// start the server
 	MqErrorCheck (MqSysServerFork (context, factory, &alfa1, &alfa2, name, idP));

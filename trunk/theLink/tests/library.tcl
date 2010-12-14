@@ -213,6 +213,9 @@ proc envGet {VAR} {
 
 proc lng2startInit {} {
   array set ret {}
+  foreach L $::env(LNG_LST) {
+    set ret($L) [list]
+  }
   foreach S $::env(SRV_LST) {
     foreach {lng io start} [split $S .] break
     if {$io eq "pipe" || $io eq "uds"} continue

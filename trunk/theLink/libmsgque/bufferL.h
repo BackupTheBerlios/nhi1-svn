@@ -17,7 +17,7 @@ BEGIN_C_DECLS
 
 enum MqErrorE pBufferLSplitAlfa (struct MqBufferLS **, struct MqBufferLS **);
 void pBufferLSetError (struct MqBufferLS * const, struct MqS * const);
-
+struct MqBufferLS * pBufferLExtractOptions (struct MqBufferLS * const);
 END_C_DECLS
 
 #endif // BUFFERL_H

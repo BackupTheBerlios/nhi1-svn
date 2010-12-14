@@ -1425,11 +1425,8 @@ main (
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
-  // add Factory 
-  MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
-
-  // call the initial factory to initialize the "config"
-  mqctx = MqFactoryCall("server");
+  // add and all Factory 
+  mqctx = MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
 
   // context not available -> an error happen
   if (mqctx == NULL) {

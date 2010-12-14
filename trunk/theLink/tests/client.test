@@ -143,13 +143,13 @@ test client-5 {server help} \
 
 test client-6z {client/server debug -1- message} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name client --debug 1 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -body    { Exec {*}[getClient client] --name client --debug 1 --num 1 @ {*}[getServerOnly c.pipe ] --name server } \
     -match   glob \
     -result  {NONE--S> (server:*) \[*] \[1-0-*-test]: this is the log test*}
 
 test client-6a {client/server debug -2- message} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name client --debug 2 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -body    { Exec {*}[getClient client] --name client --debug 2 --num 1 @ {*}[getServerOnly c.pipe ] --name server } \
     -match   glob \
     -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
@@ -159,7 +159,7 @@ C> (client:*) \[*] \[2-0-*-MqLinkCreate]: END string<no>, silent<no>, debug<2>, 
 
 test client-6b {client/server debug -3- message} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name client --debug 3 --num 1 @ {*}[getServer c.pipe ] --name server } \
+    -body    { Exec {*}[getClient client] --name client --debug 3 --num 1 @ {*}[getServerOnly c.pipe ] --name server } \
     -match   glob \
     -result  {NONE--C> (client:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (server:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
@@ -194,7 +194,7 @@ C> (client:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE }
 
 test client-6d {client/server debug -2- message with long names} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServerOnly c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss } \
     -match   glob \
     -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
@@ -207,7 +207,7 @@ C> (cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 test client-6e {client/server debug -2- message with 50c names} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name ssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -body    { Exec {*}[getClient client] --name cccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServerOnly c.pipe ] --name ssssssssssssssssssssssssssssssssssssssssssssssssss } \
     -match   glob \
     -result  {NONE--C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
 S> (ssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*] \[2-0-*-MqLinkCreate]: START: io->com<PIPE>
@@ -221,7 +221,7 @@ C> (cccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*] \[0-0-*-main]: en
 
 test client-6f {client/server debug -2- message with 51c names} \
     -constraints  c \
-    -body    { Exec {*}[getClient client] --name ccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServer c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssss } \
+    -body    { Exec {*}[getClient client] --name ccccccccccccccccccccccccccccccccccccccccccccccccccc --debug 2 --num 1 @ {*}[getServerOnly c.pipe ] --name sssssssssssssssssssssssssssssssssssssssssssssssssss } \
     -match   glob \
     -result  {NONE--C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkCreate\]: START: io->com<PIPE>
 S> (sssssssssssssssssssssssssssssssssssssssssssssssssss:*) \[*\] \[2-0-*-MqLinkCreate\]: START: io->com<PIPE>

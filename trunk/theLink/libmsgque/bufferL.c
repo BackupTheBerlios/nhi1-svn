@@ -687,6 +687,40 @@ MqBufferLSearchC (
   return -1;
 }
 
+struct MqBufferLS *
+pBufferLExtractOptions (
+  struct MqBufferLS * const bufL
+)
+{
+  struct MqBufferS ** arg = bufL->data;
+  struct MqBufferS ** const end = bufL->data + bufL->cursize;
+  struct MqBufferLS * ret;
+
+  // find first option
+  for ( ; arg < end; arg++) {
+    struct MqBufferS const * const val = *arg;
+    if (val->cursize && val->type == MQ_STRT && val->cur.C[0] == '-') {
+      break;
+    }
+  }
+  bufL->cursize -= (end-arg);
+  bufL->cur = bufL->data + bufL->cursize;
+
+  // move values from bufL to ret
+  ret = MqBufferLCreate(end-arg);
+  {
+    struct MqBufferS ** retarg = ret->data;
+    for ( ; arg < end ; arg++, retarg++) {
+	*(retarg) = *arg;
+	*arg = NULL;
+    }
+  }
+  ret->cursize = ret->size;
+  ret->cur = ret->data;
+
+  return ret;
+}
+
 enum MqErrorE
 MqBufferLGetU (
   struct MqS * const context,

@@ -125,7 +125,7 @@ SetConstraints all
 
 proc Start {server args} {
   set FH [tclmsgque MqS]
-  $FH {*}$args @ {*}[getServer $server.pipe]
+  $FH {*}$args @ {*}[getServerOnly $server.pipe]
   return $FH
 }
 
