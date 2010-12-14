@@ -89,7 +89,7 @@ test filter-7-$L-$S {filter with choose middel and service-call-error} \
     -result   {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|+FTR> <Num|220>
 C> (F1) \[service-call-error] <Tok|+FTR> <Num|220>
 C> (F2) \[service-call-error] <Tok|+FTR> <Num|220>
-S> (F3) \[MqServiceGetFilter] no filter is available
+S> (F3) \[MqServiceGetFilter*] no filter is available
 C> (split) found in function "split" at file "asplit.c"
 C> (split) found in function "SplitCreate" at file "asplit.c"
 C> (split) use '-h' or '--help' for usage}

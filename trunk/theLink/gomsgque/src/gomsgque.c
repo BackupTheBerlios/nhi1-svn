@@ -252,7 +252,7 @@ gomsgque_sService (
 )
 {
   gomsgque_cService((int*)context, (GoInterface*)data);
-  return MqErrorStack(context);
+  return MqErrorGetCode(context);
 }
 
 static void

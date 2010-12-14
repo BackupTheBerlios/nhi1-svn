@@ -142,7 +142,7 @@ func gomsgque_ThreadExit (num int32) {
 // static functions (namespace: gomsgque)
 //
 
-func Init(argv []string) {
+func Init(argv ... string) {
   initB := C.MqInitCreate()
   for _,arg := range argv {
       s := C.CString(arg)

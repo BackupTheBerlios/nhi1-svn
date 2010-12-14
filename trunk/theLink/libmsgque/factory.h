@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/libmsgque/token.h
- *  \brief      \$Id: token.h 250 2010-10-16 18:14:03Z aotto1968 $
+ *  \file       theLink/libmsgque/factory.h
+ *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 250 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

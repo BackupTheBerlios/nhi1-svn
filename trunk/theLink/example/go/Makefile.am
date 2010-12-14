@@ -60,6 +60,9 @@ Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 BUILT_SOURCES += Filter4$(EXEEXT)
 Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 
+BUILT_SOURCES += Filter5$(EXEEXT)
+Filter5$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
 ##
 ## ==========================================================================
 ## Main

@@ -259,7 +259,7 @@ SUFFIXES = .go .bin $(EXEEXT)
 BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) \
 	mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
 	testserver$(EXEEXT) testclient$(EXEEXT) Filter1$(EXEEXT) \
-	Filter2$(EXEEXT) Filter4$(EXEEXT)
+	Filter2$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT)
 CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = $(srcdir)/*.go
 all: $(BUILT_SOURCES)
@@ -473,6 +473,7 @@ testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter5$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

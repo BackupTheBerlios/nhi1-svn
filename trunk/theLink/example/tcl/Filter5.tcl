@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/example/tcl/Filter1.tcl
-#§  \brief      \$Id: Filter1.tcl 353 2010-12-09 19:10:11Z aotto1968 $
+#§  \file       theLink/example/tcl/Filter5.tcl
+#§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 353 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

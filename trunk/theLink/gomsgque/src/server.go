@@ -287,7 +287,7 @@ type INIT Server
     for i:=0; i<max; i++ {
       list[i] = this.ReadC()
     }
-    Init(list)
+    Init(list...)
     this.SendRETURN()
   }
 
