@@ -362,8 +362,8 @@ static int NS(FactoryNew) (
   struct Tcl_Obj *const *objv
 )
 {
-  TclErrorCheck(NS(FactoryAdd)	(interp, 2, objv));
-  TclErrorCheck(NS(FactoryCall) (interp, 1, objv));
+  TclErrorCheck(NS(FactoryAdd)	(interp, objc, objv));
+  TclErrorCheck(NS(FactoryCall) (interp, objc-1, objv));
   return TCL_OK;
 }
 
