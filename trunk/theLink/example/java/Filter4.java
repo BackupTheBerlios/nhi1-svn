@@ -16,14 +16,10 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.io.FileWriter;
 
-class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEvent, IService {
+class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IService {
 
   private Queue<byte[]> itms = new LinkedList<byte[]>();
   private FileWriter FH = null;
-
-  public MqS Factory() {
-    return new Filter4();
-  }
 
   public void ServerCleanup() throws MqSException {
     Filter4 ftr = (Filter4) ServiceGetFilter();
@@ -118,10 +114,9 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter4");
-    Filter4 srv = new Filter4();
+    Filter4 srv = MqFactoryS.New("transFilter", Filter4.class);
     try {
       srv.ConfigSetIgnoreExit(true);
-      srv.ConfigSetIdent("transFilter");
       srv.ConfigSetName("Filter4");
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -132,4 +127,5 @@ class Filter4 extends MqS implements IFactory, IServerSetup, IServerCleanup, IEv
     }
   }
 }
+
 

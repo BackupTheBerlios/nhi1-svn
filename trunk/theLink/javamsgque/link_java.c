@@ -43,10 +43,12 @@ JNIEXPORT void JNICALL NS(LinkCreate) (
     const char *str;
     int i;
     largv = MqBufferLCreate (argc+1);
-    MqBufferLAppendC(largv,context->config.name == NULL ? "java" : context->config.name);
     for (i=0; i<argc; i++) {
       obj = (*env)->GetObjectArrayElement(env, argv, i);
       str = JO2C_START(env, obj);
+      if (i==0 && (str[0] == '-' || str[0] == MQ_ALFA)) {
+	MqBufferLAppendC(largv,context->config.name == NULL ? "java" : context->config.name);
+      }
       MqBufferLAppendC(largv,str);
       JO2C_STOP(env,obj,str);
     }
@@ -76,10 +78,12 @@ JNIEXPORT void JNICALL NS(LinkCreateChild) (
     jobject obj;
     const char *str;
     largv = MqBufferLCreate (argc+1);
-    MqBufferLAppendC(largv,context->config.name == NULL ? "java" : context->config.name);
     for (i=0; i<argc; i++) {
       obj = (*env)->GetObjectArrayElement(env, argv, i);
       str = JO2C_START(env, obj);
+      if (i==0 && (str[0] == '-' || str[0] == MQ_ALFA)) {
+	MqBufferLAppendC(largv,context->config.name == NULL ? "java" : context->config.name);
+      }
       MqBufferLAppendC(largv,str);
       JO2C_STOP(env,obj,str);
     }

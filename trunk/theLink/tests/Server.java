@@ -16,13 +16,16 @@ import javamsgque.*;
 import java.util.List;
 import java.util.ArrayList;
 
-final class Client extends MqS implements ICallback, IFactory, IBgError {
+final class Client extends MqS implements ICallback, IBgError {
 
   public int i = 0;
 
-  public MqS Factory() {
-    return new Client();
+/*
+  Client(MqS tmpl) {
+    super(tmpl);
+    ConfigSetDefaultFactory("Client");
   }
+*/
 
   public void BgError () throws MqSException {
     MqS master = SlaveGetMaster();
@@ -58,14 +61,10 @@ final class ClientERR extends MqS implements ICallback {
   }
 }
 
-final class ClientERR2 extends MqS implements IFactory {
+final class ClientERR2 extends MqS {
 
   public int i = 0;
 
-  public MqS Factory() {
-    return new ClientERR2();
-  }
-  
   public void LinkCreate (int debug) throws MqSException {
     ConfigSetDebug (debug);
     ConfigSetName ("cl-err-1");
@@ -73,14 +72,15 @@ final class ClientERR2 extends MqS implements IFactory {
   }
 }
 
-final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory {
+final class Server extends MqS implements IServerSetup, IServerCleanup {
 
   private int i,j;
   private MqBufferS buf;
   private Client[] cl = new Client[3];
 
-  public MqS Factory() {
-    return new Server();
+  public Server(MqS tmpl) {
+    super(tmpl);
+    //System.out.println("Server -> 11111");
   }
 
   public void ServerCleanup() throws MqSException {
@@ -474,10 +474,8 @@ final class Server extends MqS implements IServerSetup, IServerCleanup, IFactory
 
   public static void main(String[] args) {
     MqS.Init("java", "example.Server");
-    Server srv = new Server();
+    Server srv = MqFactoryS.New("server", Server.class);
     try {
-      srv.ConfigSetName("server");
-      srv.ConfigSetIdent("test-server");
       srv.LinkCreate (args);
       srv.LogC("test",1,"this is the log test\n");
       srv.ProcessEvent(MqS.WAIT.FOREVER);

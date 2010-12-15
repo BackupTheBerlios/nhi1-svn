@@ -13,9 +13,10 @@ package example;
 
 import javamsgque.*;
 
-final class testserver extends MqS implements IServerSetup, IFactory {
-  public MqS Factory() {
-    return new testserver();
+final class testserver extends MqS implements IServerSetup {
+
+  public testserver(MqS tmpl) {
+    super(tmpl);
   }
 
   class GTCX implements IService {
@@ -41,7 +42,7 @@ final class testserver extends MqS implements IServerSetup, IFactory {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.testserver");
-    testserver srv = new testserver();
+    testserver srv = MqFactoryS.New("testserver", testserver.class);
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -52,6 +53,7 @@ final class testserver extends MqS implements IServerSetup, IFactory {
     }
   }
 }
+
 
 
 

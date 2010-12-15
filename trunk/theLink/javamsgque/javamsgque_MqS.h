@@ -129,6 +129,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoPipeSocket
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigSetDefaultFactory
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetDefaultFactory
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigGetIsServer
  * Signature: ()Z
  */
@@ -258,10 +266,10 @@ JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetIoPipeSocket
 /*
  * Class:     javamsgque_MqS
  * Method:    ContextCreate
- * Signature: ()V
+ * Signature: (Ljavamsgque/MqS;)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ContextCreate
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     javamsgque_MqS

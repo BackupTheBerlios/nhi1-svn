@@ -12,10 +12,10 @@
 package example;
 import javamsgque.*;
 
-class Filter3 extends MqS implements IFactory, IServerSetup {
+class Filter3 extends MqS implements IServerSetup {
 
-  public MqS Factory() {
-    return new Filter3();
+  public Filter3(MqS tmpl) {
+    super(tmpl);
   }
 
   public void ServerSetup() throws MqSException {
@@ -28,9 +28,8 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter3");
-    Filter3 srv = new Filter3();
+    Filter3 srv = MqFactoryS.New("Filter3", Filter3.class);
     try {
-      srv.ConfigSetName("Filter3");
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {
@@ -40,6 +39,4 @@ class Filter3 extends MqS implements IFactory, IServerSetup {
     }
   }
 }
-
-
 

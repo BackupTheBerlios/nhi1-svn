@@ -78,10 +78,12 @@ int NS(LinkCreate) (NS_ARGS)
   if (objc-skip > 0) {
     int i;
     args = MqBufferLCreate (objc-skip+1);
-    if (Tcl_GetString(objv[skip])[0] == '-')
-      MqBufferLAppendC (args, (const MQ_STR) Tcl_GetNameOfExecutable());
     for (i = skip; i < objc; i++) {
-      MqBufferLAppendC (args, Tcl_GetString (objv[i]));
+      MQ_CST str = Tcl_GetString(objv[i]);
+      if (i == skip && (str[0] == '-' || str[0] == MQ_ALFA)) {
+	MqBufferLAppendC (args, mqctx->config.name == NULL ? "tclsh" : mqctx->config.name);
+      }
+      MqBufferLAppendC (args, str);
     }
   }
 

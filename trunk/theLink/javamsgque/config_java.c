@@ -12,8 +12,10 @@
 
 #include "context_java.h"
 
-extern jclass	NS(Class_NullPointerException);
-extern jfieldID	NS(FID_MqS_hdl);
+extern jclass	  NS(Class_NullPointerException);
+//extern jclass	  NS(Class_MqS);
+extern jfieldID	  NS(FID_MqS_hdl);
+//extern jmethodID  NS(MID_MqS_INIT);
 
 #define SetC(T) JNIEXPORT void JNICALL NS(T) ( \
   JNIEnv    *env, \
@@ -139,4 +141,20 @@ JNIEXPORT jint JNICALL NS(pConfigGetStartAs) (
 {
   return MqConfigGetStartAs (CONTEXT);
 }
+
+/*
+JNIEXPORT void JNICALL NS(ConfigSetDefaultFactory) (
+  JNIEnv    *env,
+  jobject   self,
+  jstring   ident
+)
+{
+  const char * str = JO2C_START(env,ident);
+  MQ_PTR call = NS(ProcCreate)(env, NULL, NS(Class_MqS), NS(MID_MqS_INIT), NULL);
+  JavaErrorCheckNULL(call);
+  MqConfigSetFactory(CONTEXT, str, NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+error:
+  JO2C_STOP(env,ident,str);
+}
+*/
 

@@ -11,9 +11,9 @@
  */
 package example;
 import javamsgque.*;
-class manfilter extends MqS implements IFactory {
-  public MqS Factory() {
-    return new manfilter();
+class manfilter extends MqS {
+  public manfilter(MqS tmpl) {
+    super(tmpl);
   }
   private static class FTR implements IService {
     public void Service (MqS ctx) throws MqSException {
@@ -27,7 +27,7 @@ class manfilter extends MqS implements IFactory {
     }
   }
   public static void main(String[] argv) {
-    manfilter srv = new manfilter();
+    manfilter srv = MqFactoryS.New("manfilter", manfilter.class);
     try {
       srv.ConfigSetName("filter");
       srv.ConfigSetIsServer(true);
@@ -41,4 +41,5 @@ class manfilter extends MqS implements IFactory {
     srv.Exit();
   }
 }
+
 

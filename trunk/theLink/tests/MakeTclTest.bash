@@ -33,7 +33,7 @@ USAGE() {
 }
 
 PREFIX=""
-POSTFIX="cat"
+POSTFIX=""
 [[ $1 == "-h" ]] && USAGE
 [[ $1 == "-ur" ]] && {
   shift
@@ -41,7 +41,7 @@ POSTFIX="cat"
 }
 [[ $1 == "-vg" ]] && {
   PREFIX="valgrind --trace-children=yes --num-callers=36 --quiet"
-  POSTFIX="grep -v DWARF2"
+  POSTFIX="| grep -v DWARF2"
   shift
 }
 [[ $1 == "-gdb" ]] && {
@@ -86,7 +86,7 @@ ID=$CMD
 
 case "$CMD" in
   *.tcl|*.test)   EXE="$TCLSH";;
-  *.java)	  EXE="$JAVA"; CMD="$(basename $CMD .java)"; ID=$CMD;;
+  *.java)	  EXE="$JAVA"; CMD="${CMD%%.java}"; ID=$CMD;;
   *.py)		  EXE="$PYTHON";;
   *.pl)		  EXE="$PERL";;
   *.rb)		  EXE="$RUBY";;
@@ -102,9 +102,9 @@ esac
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
     T="$CMD $@"
-    $PREFIX $EXE -a "$T"   2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
+    $PREFIX $EXE -a "$T"   2>&1 $POSTFIX | tee /tmp/$(basename $ID).log
   else
-    $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
+    $PREFIX $EXE $CMD "$@" 2>&1 $POSTFIX | tee /tmp/$(basename $ID).log
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
@@ -115,7 +115,7 @@ set -x
     T="$@ $T"
     $PREFIX $EXE -a "$T"
   else
-    $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
+    exec $PREFIX $EXE $CMD "$@" 2>&1 $POSTFIX
   fi
 fi
 

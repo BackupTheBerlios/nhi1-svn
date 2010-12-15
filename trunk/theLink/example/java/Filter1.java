@@ -13,11 +13,11 @@ package example;
 import java.util.ArrayList;
 import javamsgque.*;
 
-class Filter1 extends MqS implements IFactory {
+class Filter1 extends MqS {
   private ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 
-  public MqS Factory() {
-    return new Filter1();
+  public Filter1(MqS tmpl) {
+    super(tmpl);
   }
 
   public static class FTR implements IService {
@@ -48,9 +48,8 @@ class Filter1 extends MqS implements IFactory {
   }
 
   public static void main(String[] argv) {
-    Filter1 srv = new Filter1();
+    Filter1 srv = MqFactoryS.New("Filter1", Filter1.class);
     try {
-      srv.ConfigSetName("filter");
       srv.ConfigSetIsServer(true);
       srv.LinkCreate(argv);
       srv.ServiceCreate("+FTR", new Filter1.FTR()); 
@@ -63,4 +62,5 @@ class Filter1 extends MqS implements IFactory {
     }
   }
 }
+
 

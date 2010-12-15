@@ -57,8 +57,8 @@ JNIEXPORT void JNICALL NS(ServiceCreate) (
   MQ_PTR call;
   const char *tokenC = JO2C_START(env, token);
 
-  ErrorMqToJavaWithCheck(
-    NS(ProcCreate)(context, service, (*env)->GetObjectClass(env, service), NS(MID_IService_Service), context->self, &call)
+  JavaErrorCheckNULL(
+    call = NS(ProcCreate)(env, service, (*env)->GetObjectClass(env, service), NS(MID_IService_Service), context->self)
   );
   ErrorMqToJavaWithCheck(MqServiceCreate(context, tokenC, NS(ProcCall), call, NS(ProcFree)));
 error:

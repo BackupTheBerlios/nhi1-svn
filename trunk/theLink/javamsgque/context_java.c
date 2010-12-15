@@ -32,7 +32,7 @@ jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService
 	    NS(MID_ICallback_Callback), NS(MID_Throwable_printStackTrace),
 	    NS(MID_StringWriter_INIT), NS(MID_PrintWriter_INIT), NS(MID_StringWriter_toString),
 	    NS(MID_MqSException_INIT), NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), 
-	    NS(MID_IFactory_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event);
+	    NS(MID_MqS_INIT), NS(MID_MqS_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event);
 
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *jvm, void *reserved)
@@ -61,7 +61,6 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkC(NS(Class_IServerSetup),	    "javamsgque/IServerSetup");
   checkC(NS(Class_IServerCleanup),	    "javamsgque/IServerCleanup");
   checkC(NS(Class_ICallback),		    "javamsgque/ICallback");
-  checkC(NS(Class_IFactory),		    "javamsgque/IFactory");
   checkC(NS(Class_IBgError),		    "javamsgque/IBgError");
   checkC(NS(Class_IEvent),		    "javamsgque/IEvent");
   checkC(NS(Class_RuntimeException),	    "java/lang/RuntimeException");
@@ -92,10 +91,10 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkM(NS(MID_PrintWriter_INIT),		NS(Class_PrintWriter),	  "<init>",		"(Ljava/io/Writer;)V");
   checkSM(NS(MID_System_exit),			NS(Class_System),	  "exit",		"(I)V");
   checkM(NS(MID_ICallback_Callback),		NS(Class_ICallback),	  "Callback",		"(Ljavamsgque/MqS;)V");
-  checkM(NS(MID_IFactory_Factory),		NS(Class_IFactory),	  "Factory",		"()Ljavamsgque/MqS;");
   checkM(NS(MID_MqSException_INIT),		NS(Class_MqSException),	  "<init>",		"(IILjava/lang/String;)V");
   checkM(NS(MID_MqBufferS_INIT),		NS(Class_MqBufferS),	  "<init>",		"(J)V");
   checkM(NS(MID_MqS_ErrorSet),			NS(Class_MqS),		  "ErrorSet",		"(Ljava/lang/Throwable;)V");
+  checkM(NS(MID_MqS_INIT),			NS(Class_MqS),		  "<init>",		"(Ljavamsgque/MqS;)V");
   checkM(NS(MID_IBgError_BgError),		NS(Class_IBgError),	  "BgError",		"()V");
   checkM(NS(MID_IEvent_Event),			NS(Class_IEvent),	  "Event",		"()V");
 
@@ -105,6 +104,14 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
 #undef checkSF
 #undef checkM
 
+  // create default factory
+  {
+    MQ_PTR call = NS(ProcCreate)(env, NULL, NS(Class_MqS), NS(MID_MqS_INIT), NULL);
+    JavaErrorCheckNULL(call);
+    MqFactoryAdd("javamsgque", NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+  }
+
+error:
   return JNI_VERSION_1_6;
 }
 
@@ -137,10 +144,10 @@ JNI_OnUnload(JavaVM *jvm, void *reserved)
   return;
 }
 
-static void MQ_DECL NS(FactoryDelete) (
+void MQ_DECL NS(FactoryDelete) (
   struct MqS * context,
   MQ_BOL dofactoryCleanup,
-  MQ_PTR data
+  struct MqFactoryItemS* const item
 )
 {
   SETUP_env;
@@ -148,14 +155,17 @@ static void MQ_DECL NS(FactoryDelete) (
   NS(ContextDelete) (env, self);
 }
 
-static enum MqErrorE MQ_DECL NS(FactoryCreate) (
+enum MqErrorE MQ_DECL NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR data,
+  struct MqFactoryItemS* const item,
   struct MqS  ** contextP
 )
 {
+  jobject tmplO = create == MQ_FACTORY_NEW_INIT ? NULL : tmpl->self;
+  struct MqS * mqctx;
   JNIEnv * env = NULL;
+  struct ProcCallS const * const call = (struct ProcCallS const * const) item->Create.data;
 
   // get env
   if (create == MQ_FACTORY_NEW_THREAD) {
@@ -163,24 +173,59 @@ static enum MqErrorE MQ_DECL NS(FactoryCreate) (
     if ((*cached_jvm)->AttachCurrentThread(cached_jvm, (void**)&env, (void**)&args) != JNI_OK) {
       return MqErrorC (tmpl, __func__, -1, "unable to 'AttachCurrentThread'");
     }
+  } else if (create == MQ_FACTORY_NEW_INIT) {
+    env = ((JNIEnv*) tmpl);
   } else {
     env = ((JNIEnv*) tmpl->threadData);
   }
 
   // create new object
-  *contextP = XCONTEXT((*env)->CallObjectMethod(env, (jobject)tmpl->self, NS(MID_IFactory_Factory)));
-  if((*env)->ExceptionCheck(env) == JNI_TRUE) {
-    (*env)->CallVoidMethod(env, tmpl->self, NS(MID_MqS_ErrorSet), (*env)->ExceptionOccurred(env));
-    (*env)->ExceptionClear(env);
-    return MqErrorStack(tmpl);
+printP(call)
+printP(call->class)
+printP(call->method)
+printP(tmplO)
+  jobject obj = (*env)->NewObject(env, call->class, call->method, tmplO);
+printP(obj)
+  if (obj == NULL) goto error1;
+  mqctx = XCONTEXT(obj);
+  if((*env)->ExceptionCheck(env) == JNI_TRUE) goto error1;
+
+  // copy setup data and initialize "setup" data
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCheck (MqSetupDup(mqctx, tmpl));
   }
 
-  MqConfigDup (*contextP, tmpl);
-  MqErrorCheck(MqSetupDup (*contextP, tmpl));
+  // child does not need an event-handler if not user supplied
+  if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
+    mqctx->setup.Event.fCall = NULL;
+  }
+
+  // set Factory on a new object
+  MqConfigSetFactoryItem (mqctx, item);
+
+  *contextP = mqctx;
   return MQ_OK;
+
 error:
-  MqErrorCopy(tmpl, *contextP);
-  return MqErrorStack(tmpl);
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCopy (tmpl, mqctx);
+    MqContextDelete (&mqctx);
+    return MqErrorStack(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+error1:
+  (*env)->ExceptionDescribe(env);
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    (*env)->CallVoidMethod(env, tmpl->self, NS(MID_MqS_ErrorSet), (*env)->ExceptionOccurred(env));
+    (*env)->ExceptionClear(env);
+    return MqErrorGetCode(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
 }
 
 static void 
@@ -244,10 +289,11 @@ JNIEXPORT void JNICALL NS(Init) (
 
 JNIEXPORT void JNICALL NS(ContextCreate) (
   JNIEnv  *env, 
-  jobject self
+  jobject self,
+  jobject tmpl
 )
 {
-  struct MqS *context = MqContextCreate (0, NULL);
+  struct MqS *context = MqContextCreate (0, tmpl ? XCONTEXT(tmpl) : NULL);
   MQ_PTR call;
 
   context->self = (MQ_PTR) (*env)->NewGlobalRef(env, self);
@@ -265,29 +311,28 @@ JNIEXPORT void JNICALL NS(ContextCreate) (
 
   // check for Server
   if ((*env)->IsInstanceOf(env, self, NS(Class_IServerSetup)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IServerSetup_ServerSetup), NULL, &call));
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IServerSetup_ServerSetup), NULL));
     MqConfigSetServerSetup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
   if ((*env)->IsInstanceOf(env, self, NS(Class_IServerCleanup)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IServerCleanup_ServerCleanup), NULL, &call));
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IServerCleanup_ServerCleanup), NULL));
     MqConfigSetServerCleanup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
 
-  // check for Factory
-  if ((*env)->IsInstanceOf(env, self, NS(Class_IFactory)) == JNI_TRUE) {
-    context->setup.Factory.Create.fCall = NS(FactoryCreate);
+  // set the "default" factory constructor
+  if (context->setup.factory == NULL) {
+    MqConfigSetIdent(context, "javamsgque");
   }
-  context->setup.Factory.Delete.fCall = NS(FactoryDelete);
 
   // check for BgError
   if ((*env)->IsInstanceOf(env, self, NS(Class_IBgError)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IBgError_BgError), NULL, &call));
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IBgError_BgError), NULL));
     MqConfigSetBgError (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
 
   // check for Event
   if ((*env)->IsInstanceOf(env, self, NS(Class_IEvent)) == JNI_TRUE) {
-    ErrorMqToJavaWithCheck (NS(ProcCreate)(context, self, NULL, NS(MID_IEvent_Event), NULL, &call));
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IEvent_Event), NULL));
     MqConfigSetEvent (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
   }
 
@@ -331,3 +376,51 @@ JNIEXPORT void JNICALL NS(LogC) (
   JO2C_STOP(env, prefixO, prefix);
 }
 
+/*
+JNIEXPORT void JNICALL NS(FactoryAdd) (
+  JNIEnv  *env, 
+  jclass  class,
+  jstring ident
+)
+{
+  MQ_PTR call;
+  jmethodID callback;
+  const char * str = JO2C_START(env,ident);
+  JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,class,"<init>","(Ljavamsgque/MqS;)V"));
+  JavaErrorCheckNULL(call = NS(ProcCreate)(env, NULL, class, callback, NULL));
+  MqFactoryAdd(str, NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+error:
+  JO2C_STOP(env,ident,str);
+}
+
+JNIEXPORT jobject JNICALL NS(FactoryCall) (
+  JNIEnv  *env, 
+  jclass  class,
+  jstring ident
+)
+{
+  struct MqS * mqctx;
+  const char * str;
+  str = JO2C_START(env,ident);
+  { 
+    struct MqFactoryItemS * item = MqFactoryItemGet(str);
+    if (item != NULL && item->Create.fCall != NULL) {
+      (*item->Create.fCall) ((struct MqS *)env, MQ_FACTORY_NEW_INIT, item, &mqctx);
+    }
+  }
+  JO2C_STOP(env,ident,str);
+  return mqctx ? mqctx->self : NULL;
+}
+
+JNIEXPORT jobject JNICALL NS(FactoryNew) (
+  JNIEnv  *env, 
+  jclass  class,
+  jstring ident
+)
+{
+  JavaErrorCheck(NS(FactoryAdd) (env, class, ident));
+  return (*env)->ExceptionCheck(env) != JNI_FALSE ? NULL : NS(FactoryCall) (env, class, ident);
+error:
+  return NULL;
+}
+*/

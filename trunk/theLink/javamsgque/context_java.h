@@ -23,9 +23,12 @@
 // public visible names with package prefix
 #define NS(n)	Java_javamsgque_MqS_ ## n
 #define NB(n)	Java_javamsgque_MqBufferS_ ## n
+#define NF(n)	Java_javamsgque_MqFactoryS_ ## n
 
 #include "javamsgque_MqS.h"
 #include "javamsgque_MqBufferS.h"
+
+#define MQ_CONTEXT_S context
 
 // on POSIX I use the -fvisibility=hidden switch
 // the default java JNIEXPORT have to be fixed
@@ -73,10 +76,12 @@ struct ProcCallS {
   jobject   data;
 };
 
-enum MqErrorE MQ_DECL NS(ProcCall)    ( struct MqS * const, MQ_PTR const);
-void          MQ_DECL NS(ProcFree)    ( struct MqS const * const, MQ_PTR*);
-enum MqErrorE MQ_DECL NS(ProcCopy)    ( struct MqS * const, MQ_PTR*);
-enum MqErrorE         NS(ProcCreate)  ( struct MqS * const, jobject, jclass, jmethodID, jobject, MQ_PTR*);
+enum MqErrorE MQ_DECL NS(ProcCall)	(struct MqS * const, MQ_PTR const);
+void          MQ_DECL NS(ProcFree)	(struct MqS const * const, MQ_PTR*);
+enum MqErrorE MQ_DECL NS(ProcCopy)	(struct MqS * const, MQ_PTR*);
+MQ_PTR		      NS(ProcCreate)	(JNIEnv*, jobject, jclass, jmethodID, jobject);
+void	      MQ_DECL NS(FactoryDelete) (struct MqS *, MQ_BOL, struct MqFactoryItemS* const);
+enum MqErrorE MQ_DECL NS(FactoryCreate) (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS* const, struct MqS**);
 
 
 /*****************************************************************************/
@@ -135,6 +140,12 @@ static mq_inline jstring JC2O(JNIEnv *env, MQ_CST c) {
 #define GetI(V) GetT(jint,     V)
 #define GetW(V) GetT(jlong,    V)
 #define GetO(V) GetT(jboolean, V)
+
+static inline void printJC(JNIEnv *env, jstring str) {
+  const char * s = JO2C_START(env,str);
+  printC(s);
+  JO2C_STOP(env,str,s);
+}
 
 #endif /* CONTEXT_JAVA__H */
 

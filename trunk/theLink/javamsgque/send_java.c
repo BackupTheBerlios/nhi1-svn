@@ -96,14 +96,11 @@ JNIEXPORT void JNICALL NS(SendEND_1AND_1CALLBACK) (
 {
   const char *str;
   enum MqErrorE ret;
-  jobject obj;
   MQ_PTR call;
   SETUP_context;
-  JavaErrorCheckNULL(obj = (*env)->NewGlobalRef(env, callback));
-  ErrorMqToJavaWithCheck(NS(ProcCreate)(context, obj, NULL, NS(MID_ICallback_Callback), self, &call));
+  JavaErrorCheckNULL(call = NS(ProcCreate)(env, callback, NULL, NS(MID_ICallback_Callback), self));
   str = JO2C_START(env,token);
   ret = MqSendEND_AND_CALLBACK(context, str, NS(ProcCall), call, NS(ProcFree));
-  JO2C_STOP(env,token,str);
   ErrorMqToJavaWithCheck(ret);
 error:
   return;

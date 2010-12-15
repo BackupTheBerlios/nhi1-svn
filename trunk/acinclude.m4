@@ -445,18 +445,20 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     #------------------------------------
     AC_MSG_CHECKING(get java support);echo
     #------------------------------------
-    JAVA=java$EXEEXT
-    JAVAC=javac$EXEEXT
-    AC_CHECK_CLASSPATH
+    AC_ARG_VAR([JAVA], [path to the 'java' tool])
+    AC_PATH_PROG([JAVA], [java]) 
+    AC_ARG_VAR([JAVAC], [path to the 'javac' tool])
+    AC_ARG_VAR([JAVAH], [path to the 'javah' tool])
+    AC_PATH_PROG([JAVAH], [javah]) 
+    AC_ARG_VAR([JAR], [path to the 'jar' tool])
+    AC_PATH_PROG([JAR], [jar]) 
     AC_PROG_JAVAC
+    AC_CHECK_CLASSPATH
     AC_JNI_INCLUDE_DIR
     for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
     do
       JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
     done
-    AC_PROG_JAVA
-    AC_PROG_JAVAH
-    AC_PROG_JAR
     AC_SUBST([JAVA_CPPFLAGS])
   fi
   AC_SUBST([USE_JAVA], $enable_java)

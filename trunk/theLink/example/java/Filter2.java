@@ -12,13 +12,12 @@
 package example;
 import javamsgque.*;
 
-class Filter2 extends MqS implements IFactory {
+class Filter2 extends MqS {
 
-  public MqS Factory() {
-    return new Filter2();
+  public Filter2(MqS tmpl) {
+    super(tmpl);
   }
 
-  // service definition from IFilter
   public static class FTR implements IService {
     public void Service(MqS ctx) throws MqSException {
       throw new RuntimeException("my error");
@@ -26,9 +25,8 @@ class Filter2 extends MqS implements IFactory {
   }
 
   public static void main(String[] argv) {
-    Filter2 srv = new Filter2();
+    Filter2 srv = MqFactoryS.New("filter", Filter2.class);
     try {
-      srv.ConfigSetName("filter");
       srv.ConfigSetIsServer(true);
       srv.LinkCreate(argv);
       srv.ServiceCreate("+FTR", new Filter2.FTR()); 
@@ -41,3 +39,4 @@ class Filter2 extends MqS implements IFactory {
     }
   }
 }
+

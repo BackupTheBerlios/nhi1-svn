@@ -13,7 +13,12 @@ package example;
 
 import javamsgque.*;
 
-final class MyServer extends MqS implements IServerSetup, IFactory {
+final class MyServer extends MqS implements IServerSetup {
+
+  // Factory Constructor
+  public MyServer(MqS tmpl) {
+    super(tmpl);
+  }
 
   // service to serve all incomming requests for token "HLWO"
   class MyFirstService implements IService {
@@ -29,14 +34,9 @@ final class MyServer extends MqS implements IServerSetup, IFactory {
     ServiceCreate("HLWO", new MyFirstService());
   }
 
-  // interface to create a new instance
-  public MqS Factory() {
-    return new MyServer();
-  }
-
   public static void main(String[] argv) {
     MqS.Init("java", "example.MyServer");
-    MyServer srv = new MyServer();
+    MyServer srv = MqFactoryS.New("MyServer", MyServer.class);
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -46,3 +46,4 @@ final class MyServer extends MqS implements IServerSetup, IFactory {
     srv.Exit();
   }
 }
+

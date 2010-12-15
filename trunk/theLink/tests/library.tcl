@@ -629,7 +629,7 @@ if {![info exists env(LNG_LST)]} {
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
 }
-array set START_ID {fork 1 thread 2 spawn 3 c 3 tcl 3 go 3}
+array set START_ID {fork 1 thread 2 spawn 3 c 3 tcl 3 go 3 java 3}
 if {![info exists env(SRV_LST)]} {
   set env(SRV_LST) {
     c.pipe.pipe

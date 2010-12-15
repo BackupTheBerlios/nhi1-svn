@@ -31,10 +31,14 @@ javamsgque_MqS.h: $(MQS_MAIN)
 javamsgque_MqBufferS.h: $(MQS_MAIN)
 	$(JAVAH) -classpath . -force -jni javamsgque.MqBufferS
 
+javamsgque_MqFactoryS.h: $(MQS_MAIN)
+	$(JAVAH) -classpath . -force -jni javamsgque.MqFactoryS
+
 libjavamsgque_la_SOURCES =  context_java.c context_java.h \
 			    read_java.c send_java.c service_java.c \
 			    misc_java.c config_java.c slave_java.c \
-			    MqBufferS_java.c error_java.c link_java.c
+			    MqBufferS_java.c error_java.c link_java.c \
+			    MqFactoryS_java.c
 
 # use this if you want to link again the dynmic library libmsgque...
 libjavamsgque_la_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(JAVA_CPPFLAGS) $(AM_CFLAGS) 
@@ -48,9 +52,9 @@ endif
 #####################################################################################
 ## JAR file
 
-JAVA_FILES = $(srcdir)/IBgError.java $(srcdir)/IFactory.java $(srcdir)/IServerSetup.java  \
+JAVA_FILES = $(srcdir)/IBgError.java $(srcdir)/IServerSetup.java  \
     $(srcdir)/MqBufferS.java $(srcdir)/MqS.java $(srcdir)/ICallback.java $(srcdir)/IServerCleanup.java \
-      $(srcdir)/IService.java $(srcdir)/MqSException.java $(srcdir)/IEvent.java
+      $(srcdir)/IService.java $(srcdir)/MqSException.java $(srcdir)/IEvent.java $(srcdir)/MqFactoryS.java
 
 MQS_MAIN = javamsgque/MqS.class
 
@@ -69,13 +73,13 @@ mqs_DATA = javamsgque.jar
 ## end
 
 pkglib_LTLIBRARIES = libjavamsgque.la
-BUILT_SOURCES = .vpath_hook $(mqs_DATA) javamsgque_MqS.h javamsgque_MqBufferS.h
+BUILT_SOURCES = .vpath_hook $(mqs_DATA) javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqFactoryS.h
 EXTRA_DIST = $(JAVA_FILES) $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h \
 		  javamsgque_MqS_START.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES) javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h \
 	      javamsgque_MqS_START.h javamsgque/*.class
 VPATH_FILES = javamsgque javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqS_WAIT.h \
-	      javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h javamsgque.jar
+	      javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h javamsgque.jar javamsgque_MqFactoryS.h
 
 
 distclean-local:

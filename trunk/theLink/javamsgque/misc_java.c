@@ -27,17 +27,15 @@ extern jclass	    NS(Class_MqSException);
 extern jclass	    NS(Class_StringWriter);
 extern jclass	    NS(Class_PrintWriter);
 
-enum MqErrorE
+MQ_PTR
 NS(ProcCreate) (
-  struct MqS * const context,
+  JNIEnv*   env,
   jobject   object,
   jclass    class,
   jmethodID method,
-  jobject   data,
-  MQ_PTR    *callP
+  jobject   data
 )
 {
-  JNIEnv* env = (JNIEnv*) context->threadData;
   struct ProcCallS * call = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*call));
   if (object != NULL) {
     JavaErrorCheckNULL (call->object = (*env)->NewGlobalRef(env, object));
@@ -49,11 +47,13 @@ NS(ProcCreate) (
     JavaErrorCheckNULL (call->data = (*env)->NewGlobalRef(env, data));
   }
   call->method = method;
-  *callP = (MQ_PTR) call;
-  return MQ_OK;
+  return call;
 error:
-  *callP = NULL;
-  return MqErrorC(context, __func__, -1, "unable to create global reference for a java object");
+  if (call->object) (*env)->DeleteGlobalRef(env, call->object);
+  if (call->class)  (*env)->DeleteGlobalRef(env, call->class);
+  if (call->data )  (*env)->DeleteGlobalRef(env, call->data);
+  MqSysFree(call);
+  return NULL;
 }
 
 
@@ -63,8 +63,12 @@ NS(ProcCopy) (
   MQ_PTR * const dataP
 )
 {
+  SETUP_env;
   struct ProcCallS * old = (struct ProcCallS *) *dataP;
-  return NS(ProcCreate) (context, old->object, old->class, old->method, old->data, dataP);
+  JavaErrorCheckNULL(*dataP = NS(ProcCreate) (env, old->object, old->class, old->method, old->data));
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, "unable to copy proc data");
 }
 
 void MQ_DECL 
@@ -73,15 +77,13 @@ NS(ProcFree) (
   MQ_PTR *dataP
 )
 {
-  JNIEnv *env = (JNIEnv*) context->threadData;
-  struct ProcCallS * call = (struct ProcCallS *) *dataP;
-
-//MqDLogX(context,"PF",0, "env<%p>, call<%p>, object<%p>, class<%p>, method<%p>, data<%p>\n",
-//	env, call, call->object, call->class, call->method, call->data);
-
-  if (call->object != NULL) (*env)->DeleteGlobalRef(env, call->object);
-  if (call->class  != NULL) (*env)->DeleteGlobalRef(env, call->class );
-  if (call->data   != NULL) (*env)->DeleteGlobalRef(env, call->data  );
+  if (context) {
+    JNIEnv *env = (JNIEnv*) context->threadData;
+    struct ProcCallS * call = (struct ProcCallS *) *dataP;
+    if (call->object != NULL) (*env)->DeleteGlobalRef(env, call->object);
+    if (call->class  != NULL) (*env)->DeleteGlobalRef(env, call->class );
+    if (call->data   != NULL) (*env)->DeleteGlobalRef(env, call->data  );
+  }
   MqSysFree(*dataP);
 }
 
@@ -100,12 +102,21 @@ NS(ProcCall) (
 
   // call the function
   if (call->class == NULL) {
+    // method call of the same class
     if (call->data == NULL) {
       (*env)->CallVoidMethod(env, call->object, call->method);
     } else {
       (*env)->CallVoidMethod(env, call->object, call->method, call->data);
     }
+  } else if (call->object == NULL) {
+    // static method call returning an object
+    if (call->data == NULL) {
+      (*env)->CallStaticObjectMethod(env, call->class, call->method);
+    } else {
+      (*env)->CallStaticObjectMethod(env, call->class, call->method, call->data);
+    }
   } else {
+    // method call of an other class
     if (call->data == NULL) {
       (*env)->CallNonvirtualVoidMethod(env, call->object, call->class, call->method);
     } else {

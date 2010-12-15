@@ -11,7 +11,10 @@
  */
 package example;
 import javamsgque.*;
-final class mulserver extends MqS implements IServerSetup, IFactory {
+final class mulserver extends MqS implements IServerSetup {
+  public mulserver(MqS tmpl) {
+    super(tmpl);
+  }
   class MMUL implements IService {
     public void Service (MqS ctx) throws MqSException {
       SendSTART();
@@ -22,12 +25,9 @@ final class mulserver extends MqS implements IServerSetup, IFactory {
   public void ServerSetup() throws MqSException {
     ServiceCreate("MMUL", new MMUL());
   }
-  public MqS Factory() {
-    return new mulserver();
-  }
   public static void main(String[] argv) {
     MqS.Init("java", "example.mulserver");
-    mulserver srv = new mulserver();
+    mulserver srv = MqFactoryS.New("mulserver", mulserver.class);
     try {
       srv.ConfigSetName("MyMulServer");
       srv.LinkCreate(argv);
@@ -38,3 +38,4 @@ final class mulserver extends MqS implements IServerSetup, IFactory {
     srv.Exit();
   }
 }
+

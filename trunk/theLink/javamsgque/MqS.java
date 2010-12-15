@@ -19,7 +19,7 @@
 package javamsgque;
 
 /// \brief \api #MqS
-public abstract class MqS {
+abstract public class MqS {
 
   static {
     System.loadLibrary("javamsgque");
@@ -59,7 +59,7 @@ public abstract class MqS {
   }
 
   /// \api #MqInitCreate
-  protected static native void	Init	      (String... argv);
+  public static native void	Init	      (String... argv);
 
   /// \api #MqConfigSetName
   public native void ConfigSetName	      (String val);
@@ -93,6 +93,8 @@ public abstract class MqS {
   public native void ConfigSetIoUdsFile	      (String file);
   /// \api #MqConfigSetIoPipeSocket
   public native void ConfigSetIoPipeSocket    (int socket);
+  /// \api #MqConfigSetDefaultFactory
+  public native void ConfigSetDefaultFactory  (String ident);
 
   /// \api #MqConfigGetIsServer
   public native boolean	ConfigGetIsServer     ();
@@ -141,12 +143,19 @@ public abstract class MqS {
 /// \brief \copybrief Mq_Context_C_API
 /// \copydoc Mq_Context_C_API
 
-  private native void ContextCreate();
+  private native void ContextCreate(MqS tmpl);
   private native void ContextDelete();
 
   /// \api #MqContextCreate
+  protected MqS(MqS tmpl) {
+    System.out.println("MqS -> 11111");
+    ContextCreate(tmpl);
+  }
+
+  /// \api #MqContextCreate
   protected MqS() {
-    ContextCreate();
+    System.out.println("MqS -> 22222");
+    ContextCreate(null);
   }
 
   /// \api #MqContextDelete
@@ -459,9 +468,5 @@ public abstract class MqS {
 }
 
 /// \} Mq_Java_API
-
-
-
-
 
 
