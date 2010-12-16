@@ -444,6 +444,9 @@ Tclmsgque_Init (
     MqBufferLAppendC(initB, Tcl_GetStringResult(interp));
   }
 
+  // create the default-factory
+  MqFactoryDefault("tclmsgque", NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
+
   return TCL_OK;
 }
 

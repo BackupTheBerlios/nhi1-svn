@@ -425,19 +425,23 @@ MqErrorCopy (
   struct MqS * const in
 )
 {
-  if (out != in) {
-    if (in->error.code == MQ_OK) {
-      MqErrorReset(out);
-      return MQ_OK;
-    } else if (out != in->config.master) {
-      pErrorSync (out, in);
-      if (out->config.master != NULL)
-	pErrorSync(out->config.master, out);
-      MqErrorReset(in);
+  if (MQ_ERROR_IS_POINTER(out)) {
+    if (out != in) {
+      if (in->error.code == MQ_OK) {
+	MqErrorReset(out);
+	return MQ_OK;
+      } else if (out != in->config.master) {
+	pErrorSync (out, in);
+	if (out->config.master != NULL)
+	  pErrorSync(out->config.master, out);
+	MqErrorReset(in);
+      }
     }
+    return out->error.code;
+  } else {
+    enum MqErrorE ret = in->error.code;
+    return ret;
   }
-
-  return out->error.code;
 }
 
 // report parent context

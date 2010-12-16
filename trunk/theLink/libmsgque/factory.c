@@ -16,6 +16,8 @@
 
 BEGIN_C_DECLS
 
+MQ_CST defaultFactory;
+
 #define pFactoryCmp(s1,s2) strcmp(s1,s2)
 
 /*****************************************************************************/
@@ -28,7 +30,6 @@ static struct pFactorySpaceS {
   struct MqFactoryItemS *items;	    ///< array of the items
   MQ_SIZE size;			    ///< max possible number of items
   MQ_SIZE used;			    ///< number of used entries in the items
-  MQ_INT sorted;		    ///< is the array sorted ?
 } space;
 
 #define SPACE_INIT_SIZE 10
@@ -43,13 +44,13 @@ static void sFactorySpaceAdd (
   MQ_SIZE const add
 );
 
-static void sFactorySpaceDelItem (
-  MQ_CST const name
+static void sFactorySpaceDelAll (
+  void
 );
 
 /*****************************************************************************/
 /*                                                                           */
-/*                              factory_memory                                 */
+/*                              factory_memory                                */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -58,14 +59,13 @@ FactorySpaceCreate (void)
 {
   space.items = (struct MqFactoryItemS *) MqSysCalloc (MQ_ERROR_PANIC, SPACE_INIT_SIZE, sizeof (*space.items));
   space.size = SPACE_INIT_SIZE;
-  space.used = 0;
-  space.sorted = 0;
+  space.used = 1;  // first item is always the default
 }
 
 void
 FactorySpaceDelete (void)
 {
-  sFactorySpaceDelItem ("-ALL");
+  sFactorySpaceDelAll ();
   MqSysFree (space.items);
 }
 
@@ -89,59 +89,47 @@ sFactorySpaceAdd (
   space.size = newsize;
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                              Add + Del                                    */
+/*                                                                           */
+/*****************************************************************************/
+
 static void
 sFactorySpaceDelItem (
-  MQ_CST const name
+  struct MqFactoryItemS *item
 )
 {
-  register struct MqFactoryItemS * start = space.items;
-           struct MqFactoryItemS * end = start + space.used;
-
-  if (strncmp (name, "-ALL", HDR_TOK_LEN)) {
-    // name != "-ALL"
-    start = MqFactoryItemGet (name);
-
-    if (unlikely (start == NULL))
-      MqErrorV (MQ_ERROR_PANIC, __func__, -1, "item '%s' not found", name);
-
-    // call the data item cleanup
-    if (start->Create.data && start->Create.fFree) {
-      (*start->Create.fFree) (MQ_ERROR_PANIC, &start->Create.data);
-    }
-    if (start->Delete.data && start->Delete.fFree) {
-      (*start->Delete.fFree) (MQ_ERROR_PANIC, &start->Delete.data);
-    }
-    // move all items !after! start one to the left
-    memmove(start, start+1, (end-start-1) * sizeof(*space.items));
-    // set the last item to zero
-    memset(end-1, '\0', sizeof(*space.items));
-    // one item less
-    space.used -= 1;
-  } else {
-    // name == "-ALL"
-    // delete the other name
-    while (start < end--) {
-      if (end->Create.data && end->Create.fFree) {
-	(*end->Create.fFree) (MQ_ERROR_PANIC, &end->Create.data);
-      }
-      if (end->Delete.data && end->Delete.fFree) {
-	(*end->Delete.fFree) (MQ_ERROR_PANIC, &end->Delete.data);
-      }
-    }
-    // set all items to zero
-    memset(start, '\0', space.used * sizeof(struct MqFactoryItemS));
-    space.used = 0;
+  if (item->Create.data && item->Create.fFree) {
+    (*item->Create.fFree) (MQ_ERROR_PANIC, &item->Create.data);
   }
+  if (item->Delete.data && item->Delete.fFree) {
+    (*item->Delete.fFree) (MQ_ERROR_PANIC, &item->Delete.data);
+  }
+  MqSysFree(item->name);
 }
 
-/*****************************************************************************/
-/*                                                                           */
-/*                              factory_misc                                 */
-/*                                                                           */
-/*****************************************************************************/
+static void
+sFactorySpaceDelAll (
+  void
+)
+{
+  struct MqFactoryItemS * start = space.items;
+  struct MqFactoryItemS * end = start + space.used;
+
+  // name == "-ALL"
+  // delete the other name
+  while (start < end--) {
+    sFactorySpaceDelItem (end);
+  }
+  // set all items to zero
+  memset(start, '\0', space.used * sizeof(struct MqFactoryItemS));
+  space.used = 1;
+  defaultFactory = NULL;
+}
 
 static void
-pFactoryAddHdl (
+pFactoryAddName (
   MQ_CST const name,
   struct MqFactoryCreateS Create,
   struct MqFactoryDeleteS Delete
@@ -164,7 +152,6 @@ pFactoryAddHdl (
     //free = space.items + space.used * sizeof(*space.items);
     free = space.items + space.used;
 
-    space.sorted = 0;
     space.used += 1;
 
     free->name = MqSysStrDup(MQ_ERROR_PANIC, name);
@@ -194,45 +181,6 @@ pFactoryMark (
   }
 }
 
-enum MqErrorE 
-pCallFactory (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* item,
-  struct MqS ** contextP
-)
-{
-  *contextP = NULL;
-
-  if (item != NULL) {
-    // check for 'fCall'
-    if (!item->Create.fCall) goto error2;
-
-    // call the factory
-    MqErrorCheck((item->Create.fCall)(tmpl, create, item, contextP));
-
-    // we need to !cleanup! the factory
-    (*contextP)->link.bits.doFactoryCleanup = MQ_YES;
-    // child inherit "ignoreExit" from "template"
-    if (tmpl != NULL && create == MQ_FACTORY_NEW_CHILD)
-      (*contextP)->setup.ignoreExit = tmpl->setup.ignoreExit;
-  } else {
-    goto error2;
-  }
-
-  return MQ_OK;
-
-error:
-  if (*contextP != NULL) {
-    MqErrorCopy(tmpl, *contextP);
-    MqContextDelete(contextP);
-  }
-  return MqErrorStack (tmpl);
-
-error2:
-  return MqErrorDbV2(tmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory");
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                 public                                    */
@@ -250,6 +198,56 @@ MqFactoryItemGet (
   return end >= start ? end : NULL;
 }
 
+enum MqErrorE 
+MqFactoryInvoke (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS ** contextP
+)
+{
+  struct MqS * mqctx;
+
+  if (item != NULL) {
+    // check for 'fCall'
+    if (!item->Create.fCall) goto error2;
+    // call the factory
+    MqErrorCheck((item->Create.fCall)(tmpl, create, item, &mqctx));
+    // we need to !cleanup! the factory
+    mqctx->link.bits.doFactoryCleanup = MQ_YES;
+    // child setup
+    if (create == MQ_FACTORY_NEW_CHILD) {
+      // child inherit "ignoreExit" from "template"
+      mqctx->setup.ignoreExit = tmpl->setup.ignoreExit;
+    }
+    // set Factory on a new object
+    MqConfigSetFactoryItem (mqctx, item);
+  } else {
+    goto error2;
+  }
+
+  *contextP = mqctx;
+  return MQ_OK;
+
+error:
+  {
+    *contextP = NULL;
+    struct MqS * const rtmpl = create != MQ_FACTORY_NEW_INIT ? MQ_ERROR_PANIC : tmpl;
+    if (mqctx != NULL) {
+      MqErrorCopy(rtmpl, mqctx);
+      MqContextDelete(&mqctx);
+    }
+    return MqErrorStack(tmpl);
+  }
+
+error2:
+  {
+    *contextP = NULL;
+    struct MqS * const rtmpl = create != MQ_FACTORY_NEW_INIT ? MQ_ERROR_PANIC : tmpl;
+    return MqErrorDbV2(rtmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory");
+  }
+}
+
 void
 MqFactoryAdd (
   MQ_CST           const name,
@@ -263,10 +261,35 @@ MqFactoryAdd (
 {
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
-  if (name == NULL) {
-    MqErrorV (MQ_ERROR_PANIC, __func__, -1, "factory definition incomplete name=%s not found", name);
+  if (name == NULL || fCreate == NULL) {
+    MqPanicC (MQ_ERROR_PANIC, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
   }
-  pFactoryAddHdl (name, Create, Delete);
+  pFactoryAddName (name, Create, Delete);
+}
+
+void
+MqFactoryDefault (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF
+)
+{
+  struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
+  struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
+  if (name == NULL || fCreate == NULL) {
+    MqPanicC (MQ_ERROR_PANIC, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
+  }
+  // Del
+  sFactorySpaceDelItem (&space.items[0]);
+  // Add
+  space.items[0].name = MqSysStrDup(MQ_ERROR_PANIC, name);
+  space.items[0].Create = Create;
+  space.items[0].Delete = Delete;
+  defaultFactory = space.items[0].name;
 }
 
 struct MqS *
@@ -278,7 +301,7 @@ MqFactoryCall (
   struct MqFactoryItemS * item = MqFactoryItemGet (name);
 
   if (item != NULL && item->Create.fCall != NULL) {
-    (*item->Create.fCall) (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, &ctx);
+    MqFactoryInvoke (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, &ctx);
   }
 
   return ctx;
@@ -300,5 +323,4 @@ MqFactoryNew (
 }
 
 END_C_DECLS
-
 

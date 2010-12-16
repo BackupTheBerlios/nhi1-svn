@@ -295,7 +295,7 @@ static enum MqErrorE SysServerFork (
     // and "pEventCreate" can not set the "MqContextDelete_LOCK"
     context->bits.MqContextDelete_LOCK = MQ_YES;
     // create the new context
-    MqErrorCheck1(pCallFactory (context, MQ_FACTORY_NEW_FORK, factory, &newctx));
+    MqErrorCheck1(MqFactoryInvoke (context, MQ_FACTORY_NEW_FORK, factory, &newctx));
     // add my configuration
     newctx->statusIs = (enum MqStatusIsE) (newctx->statusIs | MQ_STATUS_IS_FORK);
     // the new CONTEXT is always a SERVER
@@ -340,7 +340,7 @@ void MqSysServerThreadMain (
   // cleanup
   free(argP);
   // create the new context
-  MqErrorCheck(pCallFactory (tmpl, MQ_FACTORY_NEW_THREAD, factory, &newctx));
+  MqErrorCheck(MqFactoryInvoke (tmpl, MQ_FACTORY_NEW_THREAD, factory, &newctx));
   // add my configuration
   newctx->statusIs = (enum MqStatusIsE) (newctx->statusIs | MQ_STATUS_IS_THREAD);
   // the new CONTEXT is always a SERVER

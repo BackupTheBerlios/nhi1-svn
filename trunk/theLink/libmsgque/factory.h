@@ -21,20 +21,9 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-struct MqFactoryItemS* MqFactoryItemGet (
-  MQ_CST const name
-);
-
 void pFactoryMark (
   struct MqS * const context,
   MqMarkF markF
-);
-
-enum MqErrorE MQ_DECL pCallFactory (
-  struct MqS * const context,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* item,
-  struct MqS ** contextP
 );
 
 END_C_DECLS

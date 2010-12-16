@@ -539,28 +539,29 @@ NS(MqS_Init) (
 
   {
     struct TclContextS * tclctx = (struct TclContextS *) MqContextCreate(sizeof (*tclctx), tmpl);
-    struct MqBufferS * const buf = MQCTX->temp;
+    struct MqS * mqctx = MQCTX;
+    struct MqBufferS * const buf = mqctx->temp;
 
     // create tcl command
-    tclctx->mqctx.threadData = (MQ_PTR)interp;
+    mqctx->threadData = (MQ_PTR)interp;
     MqBufferSetV(buf, "<MqS-%p>", tclctx);
     tclctx->command = Tcl_CreateObjCommand (interp, buf->cur.C, NS(MqS_Cmd), tclctx, NS(MqS_Free));
-    tclctx->mqctx.self = (void*) Tcl_NewStringObj(buf->cur.C,-1);
+    mqctx->self = (void*) Tcl_NewStringObj(buf->cur.C,-1);
     Tcl_IncrRefCount(SELF);
     Tcl_SetObjResult (interp, SELF);
 
-    // set configuration data
-    tclctx->mqctx.setup.Child.fCreate   = MqLinkDefault;
-    tclctx->mqctx.setup.Parent.fCreate  = MqLinkDefault;
-    tclctx->mqctx.setup.fProcessExit    = NS(ProcessExit);
-    tclctx->mqctx.setup.fThreadExit     = NS(ThreadExit);
+    // set basic configuration data
+    MqConfigSetSetup (mqctx, 
+      MqLinkDefault, NULL, MqLinkDefault, NULL, NS(ProcessExit), NS(ThreadExit)
+    );
 
-    MqConfigSetFactory (MQCTX, "DEFAULT", NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL);
-    MqConfigSetEvent (MQCTX, NS(EventLink), NULL, NULL, NULL);
-
-    if (Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
-      MqConfigSetIgnoreFork (&tclctx->mqctx, MQ_YES);
+    // tcl does !not! support fork for a threaded interpreter
+    if (tmpl != NULL && Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
+      MqConfigSetIgnoreFork (mqctx, MQ_YES);
     }
+
+    // tcl-special -> default-event-handler
+    MqConfigSetEvent (mqctx, NS(EventLink), NULL, NULL, NULL);
   }
 
   RETURN_TCL

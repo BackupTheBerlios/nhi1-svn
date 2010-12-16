@@ -24,13 +24,13 @@ if {[info exists env(TS_LIBRARY)]} {
 #set tcl_traceExec 1
 
 set BLOCK_1 true
-#set BLOCK_1 false
+set BLOCK_1 false
 set BLOCK_2 true
 #set BLOCK_2 false
 set BLOCK_3 true
-#set BLOCK_3 false
+set BLOCK_3 false
 set BLOCK_4 true
-#set BLOCK_4 false
+set BLOCK_4 false
 
 ##
 ## -----------------------------------------------------------------------
@@ -293,9 +293,9 @@ C> (server-0) \[*sMqCheckArg] for the 'current' setup the option '--fork' is for
 
       test slave-X1-($I|$B|$C|$S) {error-1} \
 	  -body		  {
-	    Setup $I $B $C $S --setup-parent "
-	      Call \$FH_LAST SendEND_AND_WAIT SND2 SendC ERR-1 SendI 0
-	    "
+	    Setup $I $B $C $S --setup-parent {
+	      Call $FH_LAST SendEND_AND_WAIT SND2 SendC ERR-1 SendI 0
+	    }
 	  } \
 	  -returnCodes    error \
 	  -cleanup	  { Cleanup } \

@@ -190,6 +190,7 @@ printP(obj)
   mqctx = XCONTEXT(obj);
   if((*env)->ExceptionCheck(env) == JNI_TRUE) goto error1;
 
+/*
   // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
     MqErrorCheck (MqSetupDup(mqctx, tmpl));
@@ -199,6 +200,7 @@ printP(obj)
   if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
     mqctx->setup.Event.fCall = NULL;
   }
+*/
 
   // set Factory on a new object
   MqConfigSetFactoryItem (mqctx, item);

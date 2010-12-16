@@ -28,12 +28,15 @@ USAGE() {
   echo "usage $0 ?-ur? ?-vg|-gdb|-kdbg|-ddd|-lc|-sr|-sp|-st? args..."
   echo "   ur:  use-remote"
   echo "   st:  strace"
-  echo "   sp:  valgrind: --gen-suppressions"
+  echo "   vg:  valgrind:"
+  echo "   sp:  valgrind: gen-suppressions"
+  echo "   lc:  valgrind: leak-chec"
+  echo "   sr:  valgrind: leak-chec + show-reachable"
   exit 1
 }
 
 PREFIX=""
-POSTFIX=""
+POSTFIX="cat"
 [[ $1 == "-h" ]] && USAGE
 [[ $1 == "-ur" ]] && {
   shift
@@ -41,7 +44,7 @@ POSTFIX=""
 }
 [[ $1 == "-vg" ]] && {
   PREFIX="valgrind --trace-children=yes --num-callers=36 --quiet"
-  POSTFIX="| grep -v DWARF2"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-gdb" ]] && {
@@ -61,10 +64,12 @@ POSTFIX=""
 }
 [[ $1 == "-lc" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-sr" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --show-reachable=yes --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-st" ]] && {
@@ -73,6 +78,7 @@ POSTFIX=""
 }
 [[ $1 == "-sp" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-mdb" ]] && {
@@ -102,9 +108,9 @@ esac
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
     T="$CMD $@"
-    $PREFIX $EXE -a "$T"   2>&1 $POSTFIX | tee /tmp/$(basename $ID).log
+    exec $PREFIX $EXE -a "$T"   2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
   else
-    $PREFIX $EXE $CMD "$@" 2>&1 $POSTFIX | tee /tmp/$(basename $ID).log
+    exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
@@ -113,9 +119,9 @@ set -x
     set $EXE
     EXE="$1"; shift
     T="$@ $T"
-    $PREFIX $EXE -a "$T"
+    exec $PREFIX $EXE -a "$T"
   else
-    exec $PREFIX $EXE $CMD "$@" 2>&1 $POSTFIX
+    exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
   fi
 fi
 

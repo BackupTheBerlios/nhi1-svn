@@ -817,7 +817,7 @@ ClientCreateParent (
 {
   struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
-  MqConfigSetDefaultFactory(mqctx, "client");
+  //MqConfigSetDefaultFactory(mqctx, "client");
   MqConfigSetBgError(mqctx,BgError, NULL, NULL, NULL);
   MqErrorCheck(MqLinkCreate(mqctx,&args));
   MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
@@ -1138,8 +1138,7 @@ Ot_ERLS (
     MqConfigSet ## A (mqctx, I ## O);
 
 #define CFGTestC(A) \
-    CO = MqConfigGet ## A (mqctx); \
-    if (CO) CO = mq_strdup(CO); \
+    CO = MqSysStrDup(mqctx, MqConfigGet ## A (mqctx)); \
     MqErrorCheck (MqReadC (mqctx, &CV)); \
     MqConfigSet ## A (mqctx, CV); \
     MqErrorCheck (MqSendC (mqctx, MqConfigGet ## A (mqctx))); \
@@ -1176,8 +1175,7 @@ Ot_CFG1 (
     CFGTestC(SrvName)
   } else if (!strncmp (cmd, "Ident", 5)) {
     MQ_BOL check;
-    CO = MqConfigGetIdent (mqctx);
-    if (CO) CO = mq_strdup(CO);
+    CO = MqSysStrDup(mqctx, MqConfigGetIdent (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
     MqConfigSetIdent (mqctx, CV);
     MqErrorCheck (MqReadC (mqctx, &CV));
@@ -1396,7 +1394,7 @@ ServerFactory (
   struct MqS **contextP
 )
 { 
-  struct MqS * const mqctx = MqContextCreate(sizeof(struct ServerCtxS),tmpl);
+  struct MqS * const mqctx = *contextP = MqContextCreate(sizeof(struct ServerCtxS),tmpl);
   // we do not copy the "setup" because the "caller" could be something
   // !NOT! necessary an other "server" object
   mqctx->setup.Child.fCreate	    = MqLinkDefault;
@@ -1405,8 +1403,6 @@ ServerFactory (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = ServerSetup;
   mqctx->setup.ServerCleanup.fCall  = ServerCleanup;
-  MqConfigSetFactoryItem (mqctx, item);
-  *contextP = mqctx;
   return MQ_OK;
 }
 

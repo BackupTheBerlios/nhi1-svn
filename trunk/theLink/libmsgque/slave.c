@@ -172,7 +172,7 @@ pSlaveCreate (
       if (slave_parent == NULL) continue;
       // create the CHILD of a SLAVE
       // a SLAVE is allways a CLIENT
-      if (MqErrorCheckI(pCallFactory(slave_parent, MQ_FACTORY_NEW_CHILD, slave_parent->setup.factory, &newctx))) {
+      if (MqErrorCheckI(MqFactoryInvoke(slave_parent, MQ_FACTORY_NEW_CHILD, slave_parent->setup.factory, &newctx))) {
 	MqErrorCopy (context, slave_parent);
 	goto error;
       }
@@ -305,7 +305,7 @@ MqSlaveWorker (
     struct MqBufferLS * argv = (argvP == NULL ? NULL : *argvP);
     // argv is now "owend" by "MqSlaveWorker"
     if (argvP != NULL) *argvP = NULL;
-    MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_SLAVE, context->setup.factory, &newctx));
+    MqErrorCheck (MqFactoryInvoke (context, MQ_FACTORY_NEW_SLAVE, context->setup.factory, &newctx));
     pConfigSetMaster(newctx, context, id);
     MqConfigSetIgnoreExit(newctx, MQ_NO);
     if (argv == NULL) {

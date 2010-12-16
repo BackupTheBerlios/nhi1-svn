@@ -109,7 +109,7 @@ int NS(LinkCreateChild) (NS_ARGS)
     skip++;
 
     // copy data entries
-    ErrorMqToTclWithCheck (MqSetupDup (mqctx, parent));
+    //ErrorMqToTclWithCheck (MqSetupDup (mqctx, parent));
 
     // command-line arguments to MqBufferLS
     if (objc-skip > 0) {

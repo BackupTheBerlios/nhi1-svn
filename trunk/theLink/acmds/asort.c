@@ -289,12 +289,9 @@ SortFactory (
   struct MqS * const mqctx = MqContextCreate(sizeof(struct SortCtxS),tmpl);
   mqctx->setup.fHelp = SortHelp;
   MqConfigSetName(mqctx, "sort");
-  if (create != MQ_FACTORY_NEW_FILTER) {
-    MqConfigSetIsServer(mqctx, MQ_YES);
-    MqConfigSetIdent(mqctx, "sort");
-    mqctx->setup.Parent.fCreate = SortCreate;
-    mqctx->setup.Parent.fDelete = SortDelete;
-  }
+  MqConfigSetIsServer(mqctx, MQ_YES);
+  mqctx->setup.Parent.fCreate = SortCreate;
+  mqctx->setup.Parent.fDelete = SortDelete;
   *contextP = mqctx;
   return MQ_OK;
 }

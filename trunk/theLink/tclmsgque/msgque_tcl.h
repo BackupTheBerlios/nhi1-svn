@@ -288,7 +288,7 @@ int   NS(PrepareList)	    ( struct MqS const * const, Tcl_Obj * const, int const
 
 int   NS(ProcCheck)	    ( Tcl_Interp *, struct Tcl_Obj *, char const * const);
 void MQ_DECL NS(ProcFree)   ( struct MqS const * const, MQ_PTR *);
-enum MqErrorE MQ_DECL NS(ProcCopy) ( struct MqS * const, MQ_PTR *);
+void MQ_DECL NS(ProcCopy)   ( struct MqS * const, MQ_PTR *);
 enum MqErrorE MQ_DECL NS(ProcCall) ( struct MqS * const , MQ_PTR);
 enum MqErrorE   NS(ProcError)	    ( struct TclContextS * const, MQ_CST);
 

@@ -473,8 +473,8 @@ static void pMqCreate(void)
 {
   SysCreate ();
   GcCreate ();
-  ConfigCreate ();
   FactorySpaceCreate ();
+  ConfigCreate ();
   EventCreate ();
   SysComCreate ();
   ConfigCreate ();

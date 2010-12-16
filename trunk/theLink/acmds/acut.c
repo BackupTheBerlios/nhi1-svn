@@ -188,11 +188,8 @@ CutFactory (
   struct MqS * const mqctx = MqContextCreate(sizeof(struct CutCtxS),tmpl);
   mqctx->setup.fHelp = CutHelp;
   MqConfigSetName(mqctx, "cut");
-  if (create != MQ_FACTORY_NEW_FILTER) {
-    MqConfigSetIsServer(mqctx, MQ_YES);
-    MqConfigSetIdent(mqctx, "cut");
-    mqctx->setup.Parent.fCreate = CutCreate;
-  }
+  MqConfigSetIsServer(mqctx, MQ_YES);
+  mqctx->setup.Parent.fCreate = CutCreate;
   *contextP = mqctx;
   return MQ_OK;
 }

@@ -451,7 +451,7 @@ typedef void ( MQ_DECL
 );
 
 /// \brief prototype for a copy additional token data function
-typedef enum MqErrorE ( MQ_DECL
+typedef void ( MQ_DECL
   *MqTokenDataCopyF
 ) (
   struct MqS * const context,
@@ -868,7 +868,7 @@ MQ_EXTERN struct MqS * MQ_DECL MqFactoryNew (
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1)));
+) __attribute__((nonnull(1,2)));
 
 MQ_EXTERN void MQ_DECL MqFactoryAdd (
   MQ_CST           const name,
@@ -878,11 +878,28 @@ MQ_EXTERN void MQ_DECL MqFactoryAdd (
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1)));
+) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN void MQ_DECL MqFactoryDefault (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF
+) __attribute__((nonnull(1,2)));
 
 MQ_EXTERN struct MqS* MQ_DECL MqFactoryCall (
   MQ_CST const name
 ) __attribute__((nonnull(1)));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
+  struct MqS * const context,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS ** contextP
+);
 
 MQ_EXTERN struct MqFactoryItemS* MQ_DECL MqFactoryItemGet (
   MQ_CST const name
@@ -906,7 +923,14 @@ MQ_EXTERN void MQ_DECL MqConfigDup (
 );
 
 /// \brief copy the #MqS::setup data
-MQ_EXTERN enum MqErrorE MQ_DECL MqSetupDup (
+/// \detail \e MqSetupDup is an important function, because
+/// every new created object need to fill the #MqSetupS data.
+/// The typical software flow is:\n
+/// - \e Call-Factory -> #MqContextCreate (default setup) -> \e Object-Specific-Setup -> #MqSetupDup
+/// .
+/// #MqSetupDup has code to protect setup data filled in \e Object-Specific-Setup 
+// from neeing overwritten.
+MQ_EXTERN void MQ_DECL MqSetupDup (
   struct MqS * const to,
   struct MqS const * const from
 );

@@ -19,6 +19,8 @@
 
 BEGIN_C_DECLS
 
+extern MQ_CST defaultFactory;
+
 #define MQ_CONTEXT_S context
 
 /*****************************************************************************/
@@ -260,7 +262,11 @@ MqContextInit (
   memset(context,0,size);
   pConfigInit (context);
   context->temp = MqBufferCreate(context, 250);
-  MqConfigDup(context, tmpl);
+  if (tmpl == NULL) {
+    MqConfigSetIdent(context,defaultFactory);
+  } else {
+    MqConfigDup(context, tmpl);
+  }
   pErrorReset(context);
 }
 
@@ -391,13 +397,14 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.tcp.myhost);
   MqBufferDelete (&to->config.io.tcp.myport);
   MqBufferDelete (&to->config.io.uds.file);
-  to->config = from->config;
-  to->config.name    = MqSysStrDup(MQ_ERROR_PANIC, from->config.name);
-  to->config.srvname = NULL;
-  to->config.parent = NULL;
-  to->config.master = NULL;
-  to->config.master_id = 0;
-  to->statusIs = MQ_STATUS_IS_DUP;
+  to->config		= from->config;
+  to->config.name	= MqSysStrDup(MQ_ERROR_PANIC, from->config.name);
+  //to->config.name	= NULL;
+  to->config.srvname	= NULL;
+  to->config.parent	= NULL;
+  to->config.master	= NULL;
+  to->config.master_id	= 0;
+  to->statusIs		= MQ_STATUS_IS_DUP;
   pConfigInit (to);
 }
 
@@ -411,19 +418,22 @@ MqConfigDup (
     cb = oldcb; \
   } else if (cb.data != NULL && cb.fCopy != NULL) { \
     /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \
-    MqErrorCheck ((*cb.fCopy) (context, &cb.data)); \
+    (*cb.fCopy) (context, &cb.data); \
   } else { \
     /* if set in "Step 4", callback NOT set but needed (NO copy constructor) */ \
     /* -> already done */ \
   } \
 }
 
-enum MqErrorE
+void
 MqSetupDup (
   struct MqS * const context,
   struct MqS const * const from
 )
 {
+  // protect the code
+  if (from == NULL) return;
+
   // Step 1, save all "data" entries because these are already set by the 
   // Class-Constructor proper
   struct MqCallbackS Event = context->setup.Event;
@@ -435,19 +445,12 @@ MqSetupDup (
   MqSysFree(context->setup.ident);
   context->setup = from->setup;
   context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, from->setup.ident);
-  context->setup.factory = from->setup.factory;
 
   // reinitialize "data" entries which were !not! set by the class constructor
   sSetupDupHelper (context, context->setup.Event,          Event);
   sSetupDupHelper (context, context->setup.ServerSetup,    ServerSetup);
   sSetupDupHelper (context, context->setup.ServerCleanup,  ServerCleanup);
   sSetupDupHelper (context, context->setup.BgError,        BgError);
-
-  return MQ_OK;
-
-error:
-  return MqErrorStack(context);
-  
 }
 
 static enum MqErrorE
@@ -459,12 +462,10 @@ sDefaultFactory (
 )
 {
   *contextP = MqContextCreate (0, tmpl);
-  MqErrorCheck (MqSetupDup (*contextP, tmpl));
+  // I don't know anything about the target
+  // -> use the template as source of the setup
+  MqSetupDup (*contextP, tmpl);
   return MQ_OK;
-error:
-  MqErrorCopy(tmpl, *contextP);
-  MqContextDelete(contextP);
-  return MqErrorGetCodeI (tmpl);
 }
 
 /*****************************************************************************/
@@ -501,11 +502,13 @@ MqConfigSetIdent (
   struct MqS * const context,
   MQ_CST ident
 ) {
-  MqSysFree(context->setup.ident);
-  context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
-  context->setup.factory = MqFactoryItemGet(ident);
-  if (context->config.name == NULL || !strncmp(context->config.name, "DEFAULT", 7))
-    MqConfigSetName(context, ident);
+  if (context->setup.ident == NULL || strcmp(context->setup.ident, ident)) {
+    MqSysFree(context->setup.ident);
+    context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
+    context->setup.factory = MqFactoryItemGet(ident);
+    if (context->config.name == NULL || !strcmp(context->config.name,defaultFactory))
+      MqConfigSetName(context, ident);
+  }
 }
 
 void 
@@ -613,7 +616,7 @@ MqConfigSetFactoryItem (
   struct MqS * const context,
   struct MqFactoryItemS * const item
 ) {
-  if (item != NULL) {
+  if (context->setup.factory != item && item != NULL ) {
     MqConfigSetIdent(context, item->name);
   }
 }
@@ -1035,10 +1038,8 @@ void pSetupMark (
 void
 ConfigCreate (void)
 {
-  //MqFactoryCreate("DEFAULT", sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryDefault("libmsgque", sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
 }
 
 END_C_DECLS
-
-
 

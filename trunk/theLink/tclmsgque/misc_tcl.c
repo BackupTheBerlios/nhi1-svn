@@ -131,13 +131,12 @@ void NS(ProcFree) (
   *dataP = NULL;
 }
 
-enum MqErrorE NS(ProcCopy) (
+void NS(ProcCopy) (
   struct MqS * const msgque,
   MQ_PTR *dataP
 )
 {
   Tcl_IncrRefCount ( (Tcl_Obj*) *dataP);
-  return MQ_OK;
 }
 
 int NS(ProcCheck) (

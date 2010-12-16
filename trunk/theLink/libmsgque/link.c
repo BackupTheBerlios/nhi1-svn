@@ -38,6 +38,7 @@
 BEGIN_C_DECLS
 
 extern struct MqBufferLS * MqInitBuf;
+extern MQ_CST defaultFactory;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -173,7 +174,7 @@ sMqCheckArg (
       MqBufferLAppendC(initB, arg->cur.C);
     }
     // try to figure out a "good" name
-    if (context->config.name == NULL) {
+    if (context->config.name == NULL || !strcmp(context->config.name,defaultFactory)) {
       if (arg != NULL) {
 	pConfigSetName (context, MqSysBasename (arg->cur.C, MQ_NO));
       } else if (MqInitBuf != NULL) {
@@ -845,9 +846,10 @@ MqLinkCreate (
 	  MqBufferLAppendL (alfa, context->link.alfa, -1);
 
 	  // step 4, create the new context and fill the myFilter
-	  MqErrorCheck (pCallFactory (context, MQ_FACTORY_NEW_FILTER, context->setup.factory, &myFilter));
+	  MqErrorCheck (MqFactoryInvoke (context, MQ_FACTORY_NEW_FILTER, context->setup.factory, &myFilter));
 
 	  // step 5, configure "myFilter"
+	  MqConfigSetSetup(myFilter, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
 	  MqConfigSetServerSetup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetServerCleanup(myFilter, NULL, NULL, NULL, NULL);
 	  MqConfigSetEvent(myFilter, NULL, NULL, NULL, NULL);

@@ -78,10 +78,11 @@ enum MqErrorE NS(FactoryCreate) (
 
   // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCheck (MqSetupDup(mqctx, tmpl));
+    MqSetupDup(mqctx, tmpl);
   }
 
-  // child does not need an event-handler if not user supplied
+  // tcl-special: default event handler has !no! data and calling just the
+  // tcl-event-update function. CHILD does not need to call it too
   if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
     mqctx->setup.Event.fCall = NULL;
   }

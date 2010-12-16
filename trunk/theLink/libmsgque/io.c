@@ -632,7 +632,7 @@ rescan:
 #endif   /* HAVE_FORK */
     case MQ_START_SERVER_AS_SPAWN: {
 //printLC("MQ_START_SERVER_AS_SPAWN:")
-	struct MqBufferS **start, **end;
+	struct MqBufferS **start = NULL , **end = NULL;
 	char **argV, **arg;
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);

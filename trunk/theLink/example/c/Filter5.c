@@ -52,7 +52,6 @@ F1New (
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
-  MqConfigSetFactoryItem(ctx, item);
   MqConfigSetSetup(ctx, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
   MqConfigSetServerSetup(ctx, F1Setup, NULL, NULL, NULL);
   *contextP = ctx;
@@ -97,7 +96,6 @@ F2New (
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
-  MqConfigSetFactoryItem(ctx, item);
   MqConfigSetSetup(ctx, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
   MqConfigSetServerSetup(ctx, F2Setup, NULL, NULL, NULL);
   *contextP = ctx;
@@ -142,7 +140,6 @@ F3New (
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
-  MqConfigSetFactoryItem(ctx, item);
   MqConfigSetSetup(ctx, MqLinkDefault, NULL, MqLinkDefault, NULL, NULL, NULL);
   MqConfigSetServerSetup(ctx, F3Setup, NULL, NULL, NULL);
   *contextP = ctx;
