@@ -293,6 +293,7 @@ int NS(ConfigGetIoTcpMyHost) (NS_ARGS);
 int NS(ConfigGetIoTcpMyPort) (NS_ARGS);
 int NS(ConfigGetIoPipeSocket) (NS_ARGS);
 int NS(ConfigGetStartAs) (NS_ARGS);
+int NS(ConfigGetStatusIs) (NS_ARGS);
 
 int NS(LinkIsParent) (NS_ARGS);
 int NS(LinkIsConnected) (NS_ARGS);
@@ -432,6 +433,7 @@ int NS(MqS_Cmd) (
     { "ConfigGetIoTcpMyPort",	  NS(ConfigGetIoTcpMyPort)    },
     { "ConfigGetIoPipeSocket",	  NS(ConfigGetIoPipeSocket)   },
     { "ConfigGetStartAs",	  NS(ConfigGetStartAs)	      },
+    { "ConfigGetStatusIs",	  NS(ConfigGetStatusIs)	      },
 
 // SERVICE
 

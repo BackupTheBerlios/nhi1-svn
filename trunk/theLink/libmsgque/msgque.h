@@ -1316,6 +1316,12 @@ MQ_DECL MqConfigGetStartAs (
   struct MqS * const context
 );
 
+/// \brief return the #MqS::statusIs value
+MQ_EXTERN enum MqStatusIsE
+MQ_DECL MqConfigGetStatusIs (
+  struct MqS * const context
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                               Managed Context                             */

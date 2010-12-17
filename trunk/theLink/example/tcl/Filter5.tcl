@@ -21,6 +21,7 @@ proc F1 {ctx} {
   $ftr SendC "F1"
   $ftr SendC [$ftr ConfigGetName]
   $ftr SendC [$ftr ConfigGetStartAs]
+  $ftr SendC [$ctx ConfigGetStatusIs]
   while {[$ctx ReadItemExists]} {
     $ftr SendC [$ctx ReadC]
   }
@@ -48,6 +49,7 @@ proc F2 {ctx} {
   $ftr SendC "F2"
   $ftr SendC [$ftr ConfigGetName]
   $ftr SendC [$ftr ConfigGetStartAs]
+  $ftr SendC [$ctx ConfigGetStatusIs]
   while {[$ctx ReadItemExists]} {
     $ftr SendC [$ctx ReadC]
   }
@@ -75,6 +77,7 @@ proc F3 {ctx} {
   $ftr SendC "F3"
   $ftr SendC [$ftr ConfigGetName]
   $ftr SendC [$ftr ConfigGetStartAs]
+  $ftr SendC [$ctx ConfigGetStatusIs]
   while {[$ctx ReadItemExists]} {
     $ftr SendC [$ctx ReadC]
   }

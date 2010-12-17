@@ -406,49 +406,69 @@ MqConfigDup (
   pConfigInit (to);
 }
 
-#define sSetupDupHelper(context, cb, oldcb) { \
-/* printLV("cb.fFree<%p>, oldcb.data<%p>, cb.data<%p>\n", cb.fFree, oldcb.data, cb.data); */ \
-  if (oldcb.data != NULL && cb.data == NULL) { \
-    /* if set in "Step 1", callback set by factory -> use it */ \
-    cb = oldcb; \
-  } else if (oldcb.data != NULL && cb.data != NULL) { \
-    /* if set in "Step 2", callback set by copy and factory -> use factory */ \
-    cb = oldcb; \
-  } else if (cb.data != NULL && cb.fCopy != NULL) { \
-    /* if set in "Step 3", callback NOT set but needed (copy constructor) */  \
-    (*cb.fCopy) (context, &cb.data); \
-  } else { \
-    /* if set in "Step 4", callback NOT set but needed (NO copy constructor) */ \
-    /* -> already done */ \
-  } \
-}
+#define CheckCopyStr(P) \
+  if (context->setup.P == NULL && from->setup.P != NULL) \
+    context->setup.P = MqSysStrDup(MQ_ERROR_PANIC, from->setup.P)
+
+#define CheckCopyPtr(P) \
+  if (context->setup.P == NULL && from->setup.P != NULL) \
+    context->setup.P = from->setup.P
+
+#define CheckCopyData(P,C) \
+  if (context->setup.P == NULL && from->setup.P != NULL && from->setup.C != NULL) { \
+    context->setup.P = from->setup.P; \
+    (*from->setup.C) (context, &context->setup.P); \
+  }
+
+#define CheckCopyCallback(P) \
+  CheckCopyPtr(P.fCall); \
+  CheckCopyPtr(P.fFree); \
+  CheckCopyPtr(P.fCopy); \
+  CheckCopyData(P.data, P.fCopy)
 
 void
 MqSetupDup (
-  struct MqS * const context,
-  struct MqS const * const from
+  register struct MqS * const context,
+  register struct MqS const * const from
 )
 {
+  // !!attention!! copy only data from "from" to "context" not
+  // available in "context" -> this is called a "merge"
+
   // protect the code
   if (from == NULL) return;
 
-  // Step 1, save all "data" entries because these are already set by the 
-  // Class-Constructor proper
-  struct MqCallbackS Event = context->setup.Event;
-  struct MqCallbackS ServerSetup = context->setup.ServerSetup;
-  struct MqCallbackS ServerCleanup = context->setup.ServerCleanup;
-  struct MqCallbackS BgError = context->setup.BgError;
+  // 1. ident
+  CheckCopyStr(ident);
 
-  // Step 1,  copy "setup" 
-  MqSysFree(context->setup.ident);
-  context->setup = from->setup;
-  context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, from->setup.ident);
+  // 2. factory
+  CheckCopyPtr(factory);
 
-  // reinitialize "data" entries which were !not! set by the class constructor
-  sSetupDupHelper (context, context->setup.Event,          Event);
-  sSetupDupHelper (context, context->setup.ServerSetup,    ServerSetup);
-  sSetupDupHelper (context, context->setup.ServerCleanup,  ServerCleanup);
-  sSetupDupHelper (context, context->setup.BgError,        BgError);
+  // 3.	Child
+  CheckCopyPtr(Child.fCreate);
+  CheckCopyPtr(Child.fDelete);
+
+  // 4.	Parent
+  CheckCopyPtr(Parent.fCreate);
+  CheckCopyPtr(Parent.fDelete);
+
+  // 5. Callback's
+  CheckCopyCallback(BgError);
+  CheckCopyCallback(ServerSetup);
+  CheckCopyCallback(ServerCleanup);
+  CheckCopyCallback(Event);
+
+  // 6. Init-Proc's
+  CheckCopyPtr(fThreadInit);
+  CheckCopyPtr(fForkInit);
+  CheckCopyPtr(fSpawnInit);
+  CheckCopyPtr(fProcessExit);
+  CheckCopyPtr(fThreadExit);
+  CheckCopyPtr(fHelp);
+
+  // 7. misc
+  context->setup.isServer = from->setup.isServer;
+  context->setup.ignoreExit = from->setup.ignoreExit;
 }
 
 static enum MqErrorE
@@ -994,6 +1014,15 @@ MqConfigGetStartAs (
 {
   return context->config.startAs;
 }
+
+enum MqStatusIsE
+MqConfigGetStatusIs (
+  struct MqS * const context
+)
+{
+  return context->statusIs;
+}
+
 
 /*****************************************************************************/
 /*                                                                           */

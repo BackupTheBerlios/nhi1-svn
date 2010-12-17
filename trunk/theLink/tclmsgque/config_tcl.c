@@ -471,6 +471,13 @@ int NS(ConfigGetStartAs) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ConfigGetStatusIs) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStatusIs(&tclctx->mqctx)));
+  RETURN_TCL
+}
+
 
 
 
