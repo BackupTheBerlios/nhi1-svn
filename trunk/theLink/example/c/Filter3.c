@@ -72,7 +72,7 @@ main (
   mqctx->setup.Parent.fCreate	    = MqLinkDefault;
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = ServerSetup;
-  MqConfigSetDefaultFactory (mqctx, "Filter3");
+  MqConfigSetName (mqctx, "Filter3");
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

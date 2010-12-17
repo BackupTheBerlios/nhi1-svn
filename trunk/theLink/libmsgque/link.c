@@ -176,10 +176,10 @@ sMqCheckArg (
     // try to figure out a "good" name
     if (context->config.name == NULL || !strcmp(context->config.name,defaultFactory)) {
       if (arg != NULL) {
-	pConfigSetName (context, MqSysBasename (arg->cur.C, MQ_NO));
+	pConfigSetName(context, MqSysBasename (arg->cur.C, MQ_NO));
       } else if (MqInitBuf != NULL) {
-	pConfigSetName (context, MqSysBasename (MqInitBuf->data[0]->cur.C, MQ_NO));
-      } else {
+	pConfigSetName(context, MqSysBasename (MqInitBuf->data[0]->cur.C, MQ_NO));
+      } else if (context->config.name == NULL) {
 	MqConfigSetName (context, "unknown");
       }
     }

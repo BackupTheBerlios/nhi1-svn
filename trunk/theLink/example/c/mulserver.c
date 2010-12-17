@@ -28,7 +28,7 @@ int main (int argc, MQ_CST argv[])
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
   MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
-  MqConfigSetDefaultFactory (ctx, "MyMulServer");
+  MqConfigSetName (ctx, "MyMulServer");
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));

@@ -163,22 +163,11 @@ gomsgque_sFactoryCreate (
 
   // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCheck(MqSetupDup (mqctx, tmpl));
+    MqSetupDup (mqctx, tmpl);
   }
-
-  // child does not need an event-handler if not user supplied
-  if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
-    mqctx->setup.Event.fCall = NULL;
-  }
-
-  // set Factory on a new object
-  MqConfigSetFactoryItem (mqctx, item);
 
   *contextP = mqctx;
   return MQ_OK;
-error:
-  MqErrorCopy(tmpl, *contextP);
-  return MqErrorStack(tmpl);
 }
 
 // only necessary if we have to "unlock" an object

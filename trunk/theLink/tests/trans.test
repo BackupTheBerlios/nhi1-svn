@@ -23,6 +23,14 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
+set BLOCK_1 true
+#set BLOCK_1 false
+set BLOCK_2 true
+#set BLOCK_2 false
+set BLOCK_3 true
+#set BLOCK_3 false
+
+
 ##
 ## -----------------------------------------------------------------------
 ## define filter
@@ -35,6 +43,8 @@ set env(TS_FILTER_CLIENT)  NO
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
+
+if $BLOCK_1 {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [numGet 3] {
@@ -127,10 +137,14 @@ $J - HALLO"
  }; # Master/Child  
 unset -nocomplain I B C S
 
+}; # BLOCK_1
+
 ##  
 ## -----------------------------------------------------------------------
 ## additional tests
 ##
+
+if $BLOCK_2 {
 
 # 1,2, ... tclmsgque (parent/child)
 foreach I [numGet 3] {
@@ -368,6 +382,10 @@ $J - T3"
  }; # Master/Child  
 unset -nocomplain I B C S
 
+}; # BLOCK_2
+
+if $BLOCK_3 {
+
 test trans-Y1 {try to connect a "not-created" link} \
   -setup	    {
     set CTX   [tclmsgque MqS]
@@ -381,6 +399,8 @@ test trans-Y1 {try to connect a "not-created" link} \
   } \
   -returnCodes    error \
   -result         {C> (otto) [MqLinkConnect] the 'client-server-link' was not created}
+
+}; # BLOCK_3
 
 ##
 ## -----------------------------------------------------------------------

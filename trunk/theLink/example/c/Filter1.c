@@ -55,7 +55,7 @@ int main (int argc, MQ_CST argv[])
   struct MqS * ctx = MqContextCreate(0, NULL);
   myftr = MqBufferLCreate(10);
   MqConfigSetIsServer (ctx, MQ_YES);
-  MqConfigSetDefaultFactory (ctx, "filter");
+  MqConfigSetName (ctx, "filter");
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, "+FTR", FTR_F, NULL, NULL));
   MqErrorCheck (MqServiceCreate (ctx, "+EOF", EOF_F, NULL, NULL));

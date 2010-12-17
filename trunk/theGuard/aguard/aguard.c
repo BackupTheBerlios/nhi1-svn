@@ -203,7 +203,6 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = GuardSetup;
   mqctx->setup.ServerCleanup.fCall  = GuardCleanup;
-  MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));
