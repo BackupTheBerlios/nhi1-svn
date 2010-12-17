@@ -359,7 +359,6 @@ MqContextCreate (
   if (size == 0) size = (tmpl != NULL ? tmpl->contextsize : sizeof(struct MqS));
   context = (struct MqS *) MqSysMalloc(MQ_ERROR_PANIC,size);
   MqContextInit (context, size, tmpl);
-  context->statusIs = (tmpl == NULL ? MQ_STATUS_IS_INITIAL : MQ_STATUS_IS_DUP);
   context->contextsize = size;
   context->signature = MQ_MqS_SIGNATURE;
   MqDLogC(context,3,"CREATE\n");
@@ -399,7 +398,6 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.uds.file);
   to->config		= from->config;
   to->config.name	= MqSysStrDup(MQ_ERROR_PANIC, from->config.name);
-  //to->config.name	= NULL;
   to->config.srvname	= NULL;
   to->config.parent	= NULL;
   to->config.master	= NULL;
@@ -867,6 +865,7 @@ MqConfigGetIsSilent (
   return (context->config.isSilent == MQ_YES);
 }
 
+/*
 int
 MqConfigGetIsDupAndThread (
   struct MqS const * const context
@@ -874,6 +873,7 @@ MqConfigGetIsDupAndThread (
 {
   return ((context->statusIs & MQ_STATUS_IS_DUP) && (context->statusIs & MQ_STATUS_IS_THREAD));
 }
+*/
 
 MQ_CST 
 MqConfigGetName (

@@ -16,7 +16,7 @@ proc FTRcmd {ctx} {
 }
 set srv [tclmsgque MqS]
 $srv ConfigSetIsServer yes
-$srv ConfigSetDefaultFactory filter
+$srv ConfigSetName filter
 if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate "+FTR" FTRcmd

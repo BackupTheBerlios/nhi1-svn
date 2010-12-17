@@ -220,6 +220,8 @@ MqFactoryInvoke (
       // child inherit "ignoreExit" from "template"
       mqctx->setup.ignoreExit = tmpl->setup.ignoreExit;
     }
+    // ist the object the "first" object created?
+    mqctx->statusIs = create == MQ_FACTORY_NEW_INIT ? MQ_STATUS_IS_INITIAL : MQ_STATUS_IS_DUP;
     // set Factory on a new object
     MqConfigSetFactoryItem (mqctx, item);
   } else {
@@ -230,21 +232,23 @@ MqFactoryInvoke (
   return MQ_OK;
 
 error:
-  {
-    *contextP = NULL;
-    struct MqS * const rtmpl = create != MQ_FACTORY_NEW_INIT ? MQ_ERROR_PANIC : tmpl;
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
     if (mqctx != NULL) {
-      MqErrorCopy(rtmpl, mqctx);
+      MqErrorCopy(tmpl, mqctx);
       MqContextDelete(&mqctx);
     }
     return MqErrorStack(tmpl);
+  } else {
+    return MQ_ERROR;
   }
 
 error2:
-  {
-    *contextP = NULL;
-    struct MqS * const rtmpl = create != MQ_FACTORY_NEW_INIT ? MQ_ERROR_PANIC : tmpl;
-    return MqErrorDbV2(rtmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory");
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    return MqErrorDbV2(tmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory");
+  } else {
+    return MQ_ERROR;
   }
 }
 
@@ -298,13 +302,10 @@ MqFactoryCall (
 )
 {
   struct MqS * ctx = NULL;
-  struct MqFactoryItemS * item = MqFactoryItemGet (name);
-
-  if (item != NULL && item->Create.fCall != NULL) {
-    MqFactoryInvoke (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, &ctx);
-  }
-
+  MqErrorCheck(MqFactoryInvoke (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (name), &ctx));
   return ctx;
+error:
+  MqPanicV(MQ_ERROR_PANIC, __func__, -1, "unable to call main factory for identifer '%s'", name);
 }
 
 struct MqS *

@@ -22,7 +22,7 @@ proc ServerSetup {ctx} {
 
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetDefaultFactory MyServer
+  $srv ConfigSetName MyServer
   $srv ConfigSetServerSetup ServerSetup
   if {[catch {
     $srv LinkCreate {*}$argv

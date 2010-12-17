@@ -556,7 +556,7 @@ NS(MqS_Init) (
     );
 
     // tcl does !not! support fork for a threaded interpreter
-    if (tmpl != NULL && Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
+    if (tmpl == NULL && Tcl_GetVar2Ex(interp,"tcl_platform","threaded",TCL_GLOBAL_ONLY) != NULL) {
       MqConfigSetIgnoreFork (mqctx, MQ_YES);
     }
 

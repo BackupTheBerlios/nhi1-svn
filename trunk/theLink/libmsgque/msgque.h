@@ -559,9 +559,9 @@ struct MqLinkSetupS {
 
 /// \brief what kind of socket interface to use?
 enum MqIoComE { 
-    MQ_IO_PIPE,
-    MQ_IO_UDS, 
-    MQ_IO_TCP
+    MQ_IO_PIPE = 0,
+    MQ_IO_UDS  = 1, 
+    MQ_IO_TCP  = 2
 };
 
 /// \brief configure a context to use a \e uds-client-server-link
@@ -1213,13 +1213,13 @@ MQ_EXTERN int MQ_DECL MqConfigGetDoFactoryCleanup (
 );
  */
 
-/** \brief does the \e context object is \e Duplicate and \e Thread ?
+/* \brief does the \e context object is \e Duplicate and \e Thread ?
  *  \context
  *  \return the <TT>((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_IS_THREAD))</TT> value
- */
 MQ_EXTERN int MQ_DECL MqConfigGetIsDupAndThread (
   struct MqS const * const context
 ) __attribute__((nonnull));
+ */
 
 /** \brief get the \e name of the \e context object
  *  \context

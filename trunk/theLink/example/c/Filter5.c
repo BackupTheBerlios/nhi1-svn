@@ -24,6 +24,7 @@ static enum MqErrorE F1( struct MqS *ctx, MQ_PTR data) {
   MqErrorCheck (MqSendC(ftr, "F1"));
   MqErrorCheck (MqSendC(ftr, ftr->config.name));
   MqErrorCheck (MqSendI(ftr, ftr->config.startAs));
+  MqErrorCheck (MqSendI(ftr, ctx->statusIs));
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
     MqErrorCheck (MqSendC(ftr, str));
@@ -68,6 +69,7 @@ static enum MqErrorE F2( struct MqS *ctx, MQ_PTR data) {
   MqErrorCheck (MqSendC(ftr, "F2"));
   MqErrorCheck (MqSendC(ftr, ftr->config.name));
   MqErrorCheck (MqSendI(ftr, ftr->config.startAs));
+  MqErrorCheck (MqSendI(ftr, ctx->statusIs));
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
     MqErrorCheck (MqSendC(ftr, str));
@@ -112,6 +114,7 @@ static enum MqErrorE F3( struct MqS *ctx, MQ_PTR data) {
   MqErrorCheck (MqSendC(ftr, "F3"));
   MqErrorCheck (MqSendC(ftr, ftr->config.name));
   MqErrorCheck (MqSendI(ftr, ftr->config.startAs));
+  MqErrorCheck (MqSendI(ftr, ctx->statusIs));
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
     MqErrorCheck (MqSendC(ftr, str));

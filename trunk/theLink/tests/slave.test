@@ -24,13 +24,13 @@ if {[info exists env(TS_LIBRARY)]} {
 #set tcl_traceExec 1
 
 set BLOCK_1 true
-set BLOCK_1 false
+#set BLOCK_1 false
 set BLOCK_2 true
 #set BLOCK_2 false
 set BLOCK_3 true
-set BLOCK_3 false
+#set BLOCK_3 false
 set BLOCK_4 true
-set BLOCK_4 false
+#set BLOCK_4 false
 
 ##
 ## -----------------------------------------------------------------------
@@ -423,20 +423,6 @@ if $BLOCK_4 {
     foreach S [filterGet SRV_LST $C] {
 
       SetConstraints $I $B $S
-
-      # do the test
-      test slave-Z-ERR-1-($I|$B|$C|$S) {IFactory is not available} \
-	  -constraints	  { child } \
-	  -body           {
-	    Setup $I $B $C $S --setup-parent {
-	      Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE3 SendI 0
-	    }
-	  } \
-	  -cleanup	  { Cleanup } \
-	  -returnCodes    error \
-	  -match	  glob \
-	  -result         {C> (client-0) \[service-call-error] <Tok|_OKS> <Num|232>*
-C> (test-client) \[*pCallFactory] to use the 'Factory' feature the configuration 'MqSetupS::Factory' is required*}
 
       # start the slave
       Setup $I $B $C $S --setup-parent {

@@ -335,25 +335,18 @@ static int NS(FactoryCall) (
   struct Tcl_Obj *const *objv
 )
 {
-  struct MqS * mqctx;
+  struct MqS * mqctx = NULL;
   int skip = 2;
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  {
-    struct MqFactoryItemS * item = MqFactoryItemGet (ident);
-    if (item != NULL && item->Create.fCall != NULL) {
-      (*item->Create.fCall) ((struct MqS *)interp, MQ_FACTORY_NEW_INIT, item, &mqctx);
-    }
-  }
-  if (mqctx) {
-    Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
-    return TCL_OK;
-  } else {
+  MqErrorCheck(MqFactoryInvoke ((struct MqS *)interp, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (ident), &mqctx));
+  Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
+  return TCL_OK;
 error:
-    Tcl_SetResult(interp, "unable to call factory", TCL_STATIC);
-    return TCL_ERROR;
-  }
+  Tcl_ResetResult(interp);
+  Tcl_AppendResult(interp, "unable to call main factory '", ident, "'", NULL);
+  return TCL_ERROR;
 }
 
 static int NS(FactoryNew) (

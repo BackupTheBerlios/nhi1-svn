@@ -55,31 +55,39 @@ test filter-3-$L {filter with default} \
     -body       {
 	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 @ {*}[getATool join] -d :
     } \
-    -result	"F3:F3:$START_ID($L):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-A-:-B-
-F3:F3:$START_ID($L):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-C-:-D-"
+    -result	"F3:F3:$START_ID($L):9:F2:F2:$START_ID($L):9:F1:F1:$START_ID($L):9:-A-:-B-
+F3:F3:$START_ID($L):9:F2:F2:$START_ID($L):9:F1:F1:$START_ID($L):9:-C-:-D-"
 
   foreach S $l2s($L) {
+    
+    switch -exact $S {
+      thread  { set R1	3 }
+      fork    { set R1	5 }
+      spawn   { set R1	9 }
+      pipe    { set R1	9 }
+    }
+    set I0 9
 
 test filter-4-$L-$S {filter with choose first} \
     -body       {
-	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ F3 @ {*}[getATool join] -d :
+	ExecErr cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ F3 @ {*}[getATool join] -d :
     } \
-    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($S):-A-:-B-
-F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($S):-C-:-D-"
+    -result	"F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$I0:-A-:-B-
+F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$I0:-C-:-D-"
 
 test filter-5-$L-$S {filter with choose middel} \
     -body       {
 	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 --$S @ F3 @ {*}[getATool join] -d :
     } \
-    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($L):-A-:-B-
-F3:F3:$START_ID($S):F2:F2:$START_ID($S):F1:F1:$START_ID($L):-C-:-D-"
+    -result	"F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$I0:F1:F1:$START_ID($L):$I0:-A-:-B-
+F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$I0:F1:F1:$START_ID($L):$I0:-C-:-D-"
 
 test filter-6-$L-$S {filter with choose last} \
     -body       {
 	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 --$S @ {*}[getATool join] -d :
     } \
-    -result	"F3:F3:$START_ID($S):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-A-:-B-
-F3:F3:$START_ID($S):F2:F2:$START_ID($L):F1:F1:$START_ID($L):-C-:-D-"
+    -result	"F3:F3:$START_ID($S):$I0:F2:F2:$START_ID($L):$I0:F1:F1:$START_ID($L):$I0:-A-:-B-
+F3:F3:$START_ID($S):$I0:F2:F2:$START_ID($L):$I0:F1:F1:$START_ID($L):$I0:-C-:-D-"
 
 test filter-7-$L-$S {filter with choose middel and service-call-error} \
     -body     {

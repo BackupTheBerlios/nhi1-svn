@@ -1372,7 +1372,19 @@ proc Exec {args} {
     Print args
   }
   #if {[catch {exec {*}$args >&@stdout} ERR]} {}
-  if {[catch {exec {*}$args} ERR]} {
+  if {[catch {exec {*}$args } ERR]} {
+    return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
+  } else {
+    return "$ERR"
+  }
+}
+
+proc ExecErr {args} {
+  if {$::env(TS_SETUP)} {
+    Print args
+  }
+  #if {[catch {exec {*}$args >&@stdout} ERR]} {}
+  if {[catch {exec {*}$args 2>@stderr } ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {
     return "$ERR"

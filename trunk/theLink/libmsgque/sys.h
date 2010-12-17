@@ -22,7 +22,8 @@ enum MqErrorE SysUnlink (struct MqS * const, const MQ_STR);
 
 #define MqSysFork()   (*MqLal.SysFork)()
 #define MqSysAbort()  (*MqLal.SysAbort)()
-#define MqSysServerSpawn(context, argv, name, idP) (*MqLal.SysServerSpawn)(context, argv, name, idP)
+#define MqSysServerSpawn(context, argv, name, idP) \
+  (*MqLal.SysServerSpawn)(context, argv, name, idP)
 #define MqSysServerThread(context, factory, argvP, alfaP, name, state, idP) \
   (*MqLal.SysServerThread)(context, factory, argvP, alfaP, name, state, idP)
 #define MqSysServerFork(context, factory, argvP, alfaP, name, idP) \

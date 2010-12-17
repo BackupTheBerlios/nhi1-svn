@@ -213,9 +213,6 @@ sMqCheckArg (
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--spawn");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_SPAWN);
-	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP) {
-		context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_SPAWN);
-	      }
 	    }
 	  } else if (!strncmp(argC, "silent", 5)) {
 	    MqConfigSetIsSilent (context, MQ_YES);
@@ -257,8 +254,6 @@ sMqCheckArg (
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--thread");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_THREAD);
-	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP)
-		context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_THREAD);
 	    }
 	  } else if (!strncmp(argC, "timeout", 7)) {
 	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
@@ -336,8 +331,6 @@ sMqCheckArg (
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--fork");
 	    } else {
 	      MqConfigSetStartAs (context, MQ_START_FORK);
-	      if (MQ_IS_SERVER(context) && context->statusIs & MQ_STATUS_IS_DUP)
-		context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_FORK);
 	    }
 	  } else if (!strncmp(argC, "file", 4)) {
 	    ArgBUF(context->config.io.uds.file, "--file");
@@ -352,6 +345,8 @@ sMqCheckArg (
 	    context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_DUP);
 	    context->config.startAs = MQ_START_DEFAULT;
 	    context->config.io.com = MQ_IO_PIPE;
+	  } else if (!strncmp(argC, "-status-is-spawn", 16)) {
+	    context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_SPAWN);
 	  } else if (!strncmp(argC, "-threadData", 11)) {
 	    MQ_WID tmp;
 	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));

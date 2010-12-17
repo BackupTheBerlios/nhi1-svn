@@ -817,25 +817,7 @@ ClientCreateParent (
 {
   struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
-  //MqConfigSetDefaultFactory(mqctx, "client");
   MqConfigSetBgError(mqctx,BgError, NULL, NULL, NULL);
-  MqErrorCheck(MqLinkCreate(mqctx,&args));
-  MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
-  return MQ_OK;
-error:
-  MqBufferLDelete(&args);
-  return MqErrorCopy (errorctx, mqctx);
-}
-
-static enum MqErrorE
-ClientERRCreateParent (
-  struct MqS * const errorctx,
-  struct MqS * const mqctx,
-  MQ_INT debug
-)
-{
-  struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
-  MqConfigSetDebug(mqctx, debug);
   MqErrorCheck(MqLinkCreate(mqctx,&args));
   MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
   return MQ_OK;
@@ -984,10 +966,6 @@ Ot_SND2 (
     } else if (!strcmp(s,"CREATE2")) {
       struct MqS * clmqctx = MqContextCreate (sizeof (struct ClientCtxS), NULL);
       MqErrorCheck (ClientCreateParent(mqctx, clmqctx, mqctx->config.debug));
-      MqErrorCheck (MqSlaveCreate (mqctx, clid, clmqctx));
-    } else if (!strcmp(s,"CREATE3")) {
-      struct MqS * clmqctx = MqContextCreate (sizeof (struct ClientCtxS), NULL);
-      MqErrorCheck (ClientERRCreateParent(mqctx, clmqctx, mqctx->config.debug));
       MqErrorCheck (MqSlaveCreate (mqctx, clid, clmqctx));
     } else if (!strcmp(s,"DELETE")) {
       MqErrorCheck(MqSlaveDelete(mqctx, clid));

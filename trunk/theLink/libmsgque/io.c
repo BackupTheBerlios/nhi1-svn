@@ -307,6 +307,7 @@ sIoFillArgvC (
 
   // 3. add PIPE arguments
   *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "---duplicate");
+  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "---status-is-spawn");
   *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--socket");
   *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
   mq_snprintf((char*)*arg++,20,"%i",sock);
@@ -888,8 +889,4 @@ pIoLog (
 #endif
 
 END_C_DECLS
-
-
-
-
 

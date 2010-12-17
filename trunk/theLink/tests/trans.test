@@ -23,13 +23,18 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-set BLOCK_1 true
-#set BLOCK_1 false
-set BLOCK_2 true
-#set BLOCK_2 false
-set BLOCK_3 true
-#set BLOCK_3 false
-
+if ($env(USE_REMOTE)) {
+  set BLOCK_1 false
+  set BLOCK_2 false
+  set BLOCK_3 false
+} else {
+  set BLOCK_1 true
+  #set BLOCK_1 false
+  set BLOCK_2 true
+  #set BLOCK_2 false
+  set BLOCK_3 true
+  #set BLOCK_3 false
+}
 
 ##
 ## -----------------------------------------------------------------------
