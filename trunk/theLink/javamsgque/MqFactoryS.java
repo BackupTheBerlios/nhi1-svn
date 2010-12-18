@@ -18,8 +18,8 @@
 /// \brief The \b JavaMsgque Package
 package javamsgque;
 
-/// \brief \api #MqS
-public class MqFactoryS <T extends MqS> {
+/// \brief \api #MqFactoryS
+public class MqFactoryS <T extends MqS> extends MqS {
 
   public static native <T extends MqS> void Add  (String ident, Class<T> callback) 
     throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError ;

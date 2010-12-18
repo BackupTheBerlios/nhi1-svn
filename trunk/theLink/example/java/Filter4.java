@@ -21,6 +21,10 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
   private Queue<byte[]> itms = new LinkedList<byte[]>();
   private FileWriter FH = null;
 
+  public Filter4(MqS tmpl) {
+    super(tmpl);
+  }
+
   public void ServerCleanup() throws MqSException {
     Filter4 ftr = (Filter4) ServiceGetFilter();
     try {
@@ -117,7 +121,6 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
     Filter4 srv = MqFactoryS.New("transFilter", Filter4.class);
     try {
       srv.ConfigSetIgnoreExit(true);
-      srv.ConfigSetName("Filter4");
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
     } catch (Throwable e) {

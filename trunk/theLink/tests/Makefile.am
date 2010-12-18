@@ -78,7 +78,6 @@ RULE_JAVA_EXE = $(JAVAC) -classpath "../javamsgque/javamsgque.jar$(PATH_SEP)." $
 
 example/Server.class: Server.java ../javamsgque/javamsgque.jar .vpath_hook
 	$(RULE_JAVA_EXE)
-
 BUILT_SOURCES += example/Server.class
 
 endif

@@ -20,13 +20,6 @@ final class Client extends MqS implements ICallback, IBgError {
 
   public int i = 0;
 
-/*
-  Client(MqS tmpl) {
-    super(tmpl);
-    ConfigSetDefaultFactory("Client");
-  }
-*/
-
   public void BgError () throws MqSException {
     MqS master = SlaveGetMaster();
     if (master != null) {
@@ -41,23 +34,7 @@ final class Client extends MqS implements ICallback, IBgError {
   
   public void LinkCreate (int debug) throws MqSException {
     ConfigSetDebug (debug);
-    super.LinkCreate("@", "SELF", "--name", "test-server");
-  }
-}
-
-final class ClientERR extends MqS implements ICallback {
-
-  public int i = 0;
-
-  public void Callback (MqS ctx) throws MqSException {
-    i = ctx.ReadI();
-  }
-  
-  public void LinkCreate (int debug) throws MqSException {
-    ConfigSetDebug (debug);
-    ConfigSetName ("test-client");
-    ConfigSetSrvName ("test-server");
-    super.LinkCreate("@", "SELF");
+    super.LinkCreate("@", "server", "--name", "test-server");
   }
 }
 
@@ -309,7 +286,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	} else if (s.equals("START5")) {
 	  // the 'master' have to be a 'parent' without 'child' objects
 	  // 'slave' identifer out of range (0 <= 10000000 <= 1023)
-	  SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id, "--thread");
+	  SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id);
 	} else if (s.equals("STOP")) {
 	  cl[id].LinkDelete();
 	} else if (s.equals("SEND")) {
@@ -369,10 +346,6 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  SlaveWorker(id, LIST.toArray(new String[0]));
 	} else if (s.equals("CREATE2")) {
 	  Client c = new Client();
-	  c.LinkCreate(ConfigGetDebug());
-	  SlaveCreate(id, c);
-	} else if (s.equals("CREATE3")) {
-	  ClientERR c = new ClientERR();
 	  c.LinkCreate(ConfigGetDebug());
 	  SlaveCreate(id, c);
 	} else if (s.equals("DELETE")) {
@@ -476,6 +449,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
     MqS.Init("java", "example.Server");
     Server srv = MqFactoryS.New("server", Server.class);
     try {
+      srv.LogC("test",1,"HALLO\n");
       srv.LinkCreate (args);
       srv.LogC("test",1,"this is the log test\n");
       srv.ProcessEvent(MqS.WAIT.FOREVER);

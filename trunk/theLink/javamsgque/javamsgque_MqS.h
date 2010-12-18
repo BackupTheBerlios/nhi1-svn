@@ -217,6 +217,14 @@ JNIEXPORT jint JNICALL Java_javamsgque_MqS_pConfigGetStartAs
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigGetStatusIs
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqS_ConfigGetStatusIs
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigGetIoTcpHost
  * Signature: ()Ljava/lang/String;
  */

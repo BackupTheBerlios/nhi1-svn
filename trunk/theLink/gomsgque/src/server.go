@@ -34,30 +34,6 @@ func NewServer() *Server {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-type ClientERR struct {
-  *MqS
-  i int32
-}
-
-func NewClientERR() *ClientERR {
-  ret := new(ClientERR)
-  ret.MqS = NewMqS(nil, ret)
-  return ret
-}
-
-func (this *ClientERR) LinkCreate(debug int32) {
-  this.ConfigSetDebug(debug)
-  this.ConfigSetName("test-client")
-  this.ConfigSetSrvName("test-server")
-  this.MqS.LinkCreate(os.Args[0], "@", "server")
-}
-
-func (this *ClientERR) ECOI_CB(ctx *MqS) {
-  this.i = ctx.ReadI()
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 type ClientERR2 struct {
   *MqS
 }
@@ -455,11 +431,6 @@ type SND2 Server
       }
       case "CREATE2": {
 	c := NewClient(nil)
-	c.LinkCreate(this.ConfigGetDebug())
-	this.SlaveCreate(id, c.MqS)
-      }
-      case "CREATE3": {
-	c := NewClientERR()
 	c.LinkCreate(this.ConfigGetDebug())
 	this.SlaveCreate(id, c.MqS)
       }

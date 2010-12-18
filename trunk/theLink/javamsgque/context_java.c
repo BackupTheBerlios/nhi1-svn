@@ -108,7 +108,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   {
     MQ_PTR call = NS(ProcCreate)(env, NULL, NS(Class_MqS), NS(MID_MqS_INIT), NULL);
     JavaErrorCheckNULL(call);
-    MqFactoryAdd("javamsgque", NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+    MqFactoryDefault("javamsgque", NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
   }
 
 error:
@@ -180,30 +180,17 @@ enum MqErrorE MQ_DECL NS(FactoryCreate) (
   }
 
   // create new object
-printP(call)
-printP(call->class)
-printP(call->method)
-printP(tmplO)
-  jobject obj = (*env)->NewObject(env, call->class, call->method, tmplO);
-printP(obj)
-  if (obj == NULL) goto error1;
-  mqctx = XCONTEXT(obj);
-  if((*env)->ExceptionCheck(env) == JNI_TRUE) goto error1;
+  {
+    jobject obj = (*env)->NewObject(env, call->class, call->method, tmplO);
+    if (obj == NULL) goto error1;
+    mqctx = XCONTEXT(obj);
+    if((*env)->ExceptionCheck(env) == JNI_TRUE) goto error;
+  }
 
-/*
   // copy setup data and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCheck (MqSetupDup(mqctx, tmpl));
+    MqSetupDup(mqctx, tmpl);
   }
-
-  // child does not need an event-handler if not user supplied
-  if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
-    mqctx->setup.Event.fCall = NULL;
-  }
-*/
-
-  // set Factory on a new object
-  MqConfigSetFactoryItem (mqctx, item);
 
   *contextP = mqctx;
   return MQ_OK;
@@ -219,11 +206,9 @@ error:
   }
 
 error1:
-  (*env)->ExceptionDescribe(env);
   *contextP = NULL;
   if (create != MQ_FACTORY_NEW_INIT) {
-    (*env)->CallVoidMethod(env, tmpl->self, NS(MID_MqS_ErrorSet), (*env)->ExceptionOccurred(env));
-    (*env)->ExceptionClear(env);
+    NS(ErrorSet)(env, tmpl->self, (*env)->ExceptionOccurred(env));
     return MqErrorGetCode(tmpl);
   } else {
     return MQ_ERROR;
@@ -319,11 +304,6 @@ JNIEXPORT void JNICALL NS(ContextCreate) (
   if ((*env)->IsInstanceOf(env, self, NS(Class_IServerCleanup)) == JNI_TRUE) {
     JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IServerCleanup_ServerCleanup), NULL));
     MqConfigSetServerCleanup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
-  }
-
-  // set the "default" factory constructor
-  if (context->setup.factory == NULL) {
-    MqConfigSetIdent(context, "javamsgque");
   }
 
   // check for BgError

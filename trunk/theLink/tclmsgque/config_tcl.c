@@ -86,9 +86,6 @@ enum MqErrorE NS(FactoryCreate) (
   if (create == MQ_FACTORY_NEW_CHILD && mqctx->setup.Event.data == NULL) {
     mqctx->setup.Event.fCall = NULL;
   }
-
-  // set Factory on a new object
-  MqConfigSetFactoryItem (mqctx, item);
   
   *contextP = mqctx;
   return MQ_OK;

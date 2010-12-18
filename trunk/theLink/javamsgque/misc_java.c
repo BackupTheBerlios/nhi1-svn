@@ -57,7 +57,7 @@ error:
 }
 
 
-enum MqErrorE MQ_DECL
+void
 NS(ProcCopy) (
   struct MqS * const context,
   MQ_PTR * const dataP
@@ -66,9 +66,9 @@ NS(ProcCopy) (
   SETUP_env;
   struct ProcCallS * old = (struct ProcCallS *) *dataP;
   JavaErrorCheckNULL(*dataP = NS(ProcCreate) (env, old->object, old->class, old->method, old->data));
-  return MQ_OK;
+  return;
 error:
-  return MqErrorC(context, __func__, -1, "unable to copy proc data");
+  return MqPanicC(context, __func__, -1, "unable to copy proc data");
 }
 
 void MQ_DECL 
@@ -127,8 +127,7 @@ NS(ProcCall) (
   // check on error
   if((*env)->ExceptionCheck(env) != JNI_FALSE) {
     // is the EROOR from "java" or "javamsgque"
-    (*env)->CallVoidMethod(env, context->self, NS(MID_MqS_ErrorSet), (*env)->ExceptionOccurred(env));
-    (*env)->ExceptionClear(env);
+    NS(ErrorSet)(env, context->self, (*env)->ExceptionOccurred(env));
   }
   return MqErrorGetCodeI(context);
 }

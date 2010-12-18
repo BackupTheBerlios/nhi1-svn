@@ -11,6 +11,9 @@
  */
 
 #include "context_java.h"
+#include "javamsgque_MqBufferS.h"
+
+#define NB(n)	Java_javamsgque_MqBufferS_ ## n
 
 extern jfieldID NS(FID_MqBufferS_hdl);
 extern jclass	NS(Class_NullPointerException);

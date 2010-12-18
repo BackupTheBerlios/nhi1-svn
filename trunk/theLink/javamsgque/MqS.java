@@ -19,7 +19,7 @@
 package javamsgque;
 
 /// \brief \api #MqS
-abstract public class MqS {
+public class MqS {
 
   static {
     System.loadLibrary("javamsgque");
@@ -115,11 +115,13 @@ abstract public class MqS {
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
   /// \api #MqConfigGetStartAs
-  private native int	pConfigGetStartAs      ();
+  private native int	pConfigGetStartAs     ();
   /// \api #MqConfigGetStartAs
   public START	ConfigGetStartAs()  {
     return START.SetFlag(pConfigGetStartAs());
   }
+  /// \api #MqConfigGetStatusIs
+  public native int 	ConfigGetStatusIs     ();
   /// \api #MqConfigGetIoTcpHost
   public native String ConfigGetIoTcpHost     ();
   /// \api #MqConfigGetIoTcpPort
@@ -148,13 +150,13 @@ abstract public class MqS {
 
   /// \api #MqContextCreate
   protected MqS(MqS tmpl) {
-    System.out.println("MqS -> 11111");
+    //System.out.println("MqS -> 11111");
     ContextCreate(tmpl);
   }
 
   /// \api #MqContextCreate
   protected MqS() {
-    System.out.println("MqS -> 22222");
+    //System.out.println("MqS -> 22222");
     ContextCreate(null);
   }
 

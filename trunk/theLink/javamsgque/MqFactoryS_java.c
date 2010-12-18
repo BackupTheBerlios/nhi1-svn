@@ -13,6 +13,9 @@
 #define MSGQUE msgque
 
 #include "context_java.h"
+#include "javamsgque_MqFactoryS.h"
+
+#define NF(n)	Java_javamsgque_MqFactoryS_ ## n
 
 JNIEXPORT void JNICALL NF(Add) (
   JNIEnv  *env, 
@@ -39,15 +42,15 @@ JNIEXPORT jobject JNICALL NF(Call) (
 {
   struct MqS * mqctx;
   const char * str;
+  enum MqErrorE ret;
   str = JO2C_START(env,ident);
-  { 
-    struct MqFactoryItemS * item = MqFactoryItemGet(str);
-    if (item != NULL && item->Create.fCall != NULL) {
-      (*item->Create.fCall) ((struct MqS *)env, MQ_FACTORY_NEW_INIT, item, &mqctx);
-    }
-  }
+  ret = MqFactoryInvoke ((struct MqS *)env, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (str), &mqctx);
   JO2C_STOP(env,ident,str);
-  return mqctx ? mqctx->self : NULL;
+  MqErrorCheck(ret);
+  return mqctx->self;
+error:
+  ErrorStringToJava("unable to call main factory for identifer");
+  return NULL;  
 }
 
 JNIEXPORT jobject JNICALL NF(New) (
@@ -58,7 +61,7 @@ JNIEXPORT jobject JNICALL NF(New) (
 )
 {
   JavaErrorCheck(NF(Add) (env, class, ident, cbClass));
-  return (*env)->ExceptionCheck(env) != JNI_FALSE ? NULL : NF(Call) (env, class, ident);
+  return NF(Call) (env, class, ident);
 error:
   return NULL;
 }
