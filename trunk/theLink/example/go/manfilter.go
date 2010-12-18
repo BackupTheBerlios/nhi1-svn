@@ -37,7 +37,7 @@ func main() {
     }
     srv.Exit()
   }()
-  srv.ConfigSetDefaultFactory("ManFilter")
+  srv.ConfigSetName("ManFilter")
   srv.ConfigSetIsServer(true)
   srv.LinkCreate(os.Args...)
   srv.ServiceCreate("+FTR", (*FTR)(srv))

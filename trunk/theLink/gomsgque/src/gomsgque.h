@@ -16,7 +16,6 @@
 
 extern MQ_CST sGO;
 extern MQ_CST sERROR;
-extern MQ_CST sDEFAULT;
 
 //typedef struct { void *t; void *v; } GoInterface;
 

@@ -17,7 +17,6 @@
 
 MQ_CST sGO = "GO";
 MQ_CST sERROR = "Error";
-MQ_CST sDEFAULT = "DEFAULT";
 
 #define SETUP_data \
   GoInterface *data = (GoInterface*) MqSysMalloc(context, sizeof(GoInterface)); \
@@ -200,10 +199,7 @@ gomsgque_ConfigSetDefaultFactory (
   MQ_PTR data
 )
 {
-  MqConfigSetFactory(context, ident,
-    gomsgque_sFactoryCreate, NULL, gomsgque_sFactoryFree, 
-    gomsgque_sFactoryDelete, NULL, NULL
-  );
+  MqConfigSetFactory(context, ident, gomsgque_sFactoryCreate, NULL, NULL, gomsgque_sFactoryDelete, NULL, NULL);
 }
 
 void
@@ -426,5 +422,7 @@ void
 gomsgque_Init() {
   MqLal.SysServerThread	  =   gomsgque_SysServerThread;
   MqLal.SysWait		  =   gomsgque_SysWait;
+
+  MqFactoryDefault("gomsgque", gomsgque_sFactoryCreate, NULL, NULL, gomsgque_sFactoryDelete, NULL, NULL);
 }
 

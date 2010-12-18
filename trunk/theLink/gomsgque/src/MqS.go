@@ -49,11 +49,8 @@ type MqS _Ctype_struct_MqS
 func NewMqS(tmpl *MqS, ifc interface{}) *MqS {
   ctx := C.MqContextCreate(0,(*_Ctype_struct_MqS)(tmpl))
   ret := (*MqS)(ctx)
-  // cleanup "lock" after "object" is deleted
-  C.gomsgque_ConfigSetFactory(ctx, C.sDEFAULT, nil)
   // set default action for startup (check for "left over arguments")
   C.gomsgque_ConfigSetSetup(ctx)
-  // save the pointer, use "SetSelf" to create link to toplevel object
   // save the pointer, use "SetSelf" to create link to toplevel object
   ret.SetSelf(ifc)
   return ret

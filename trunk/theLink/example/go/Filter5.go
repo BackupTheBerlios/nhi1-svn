@@ -38,6 +38,7 @@ func (this *F1) Call() {
   ftr.SendC("F1")
   ftr.SendC(ftr.ConfigGetName())
   ftr.SendI(int32(ftr.ConfigGetStartAs()))
+  ftr.SendI(int32(this.ConfigGetStatusIs()))
   for this.ReadItemExists() {
     ftr.SendC(this.ReadC())
   }
@@ -66,6 +67,7 @@ func (this *F2) Call() {
   ftr.SendC("F2")
   ftr.SendC(ftr.ConfigGetName())
   ftr.SendI(int32(ftr.ConfigGetStartAs()))
+  ftr.SendI(int32(this.ConfigGetStatusIs()))
   for this.ReadItemExists() {
     ftr.SendC(this.ReadC())
   }
@@ -94,6 +96,7 @@ func (this *F3) Call() {
   ftr.SendC("F3")
   ftr.SendC(ftr.ConfigGetName())
   ftr.SendI(int32(ftr.ConfigGetStartAs()))
+  ftr.SendI(int32(this.ConfigGetStatusIs()))
   for this.ReadItemExists() {
     ftr.SendC(this.ReadC())
   }

@@ -47,6 +47,20 @@ func (this *MqS) ConfigGetStartAs() START {
   return START(C.MqConfigGetStartAs((*_Ctype_struct_MqS)(this)))
 }
 
+type STATUS_IS uint32
+
+const (
+  STATUS_IS_INITIAL STATUS_IS = C.MQ_STATUS_IS_INITIAL
+  STATUS_IS_DUP	    STATUS_IS = C.MQ_STATUS_IS_DUP
+  STATUS_IS_THREAD  STATUS_IS = C.MQ_STATUS_IS_THREAD
+  STATUS_IS_FORK    STATUS_IS = C.MQ_STATUS_IS_FORK
+  STATUS_IS_SPAWN   STATUS_IS = C.MQ_STATUS_IS_SPAWN
+)
+
+func (this *MqS) ConfigGetStatusIs() STATUS_IS {
+  return STATUS_IS(C.MqConfigGetStatusIs((*_Ctype_struct_MqS)(this)))
+}
+
 func (this *MqS) ConfigSetStartAs(val START) {
   C.MqConfigSetStartAs((*_Ctype_struct_MqS)(this), uint32(val))
 }
