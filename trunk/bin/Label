@@ -67,7 +67,8 @@ array set LABELIGNORE {
     ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
 				  MqS_Main.h Manifest.txt *.in *.stamp *.jar javamsgque_MqS.h
 				    javamsgque_MqS_WAIT.h javamsgque_MqConfigS.h javamsgque_MqBufferS.h 
-				      .vpath_hook }
+				      javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h javamsgque_MqFactoryS.h
+					.vpath_hook }
     ./theLink/ccmsgque		{ .libs .deps *.lo *.o *.in Makefile *.la tags *.sw* }
     ./theLink/csmsgque		{ Makefile *.in tags *.dll *.exe .vimrc .libs .deps libtest* *.mdb 
 				  *.sw* .vpath_hook }

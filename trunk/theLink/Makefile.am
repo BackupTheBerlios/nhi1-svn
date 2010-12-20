@@ -18,7 +18,7 @@ SUBDIRS += example/cc
 endif
 if USE_JAVA
 SUBDIRS += javamsgque
-#SUBDIRS += example/java
+SUBDIRS += example/java
 endif
 if USE_PYTHON
 SUBDIRS += pymsgque
