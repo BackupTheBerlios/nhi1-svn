@@ -14,10 +14,9 @@ using csmsgque;
 using System.Collections.Generic;
 
 namespace example {
-  sealed class Filter3 : MqS, IFactory, IServerSetup {
+  sealed class Filter3 : MqS, IServerSetup {
 
-    MqS IFactory.Factory () {
-      return new Filter3();
+    public Filter3(MqS tmpl) : base(tmpl) {
     }
 
     void IServerSetup.ServerSetup() {
@@ -29,9 +28,8 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter3 srv = new Filter3();
+      Filter3 srv = MqFactoryS<Filter3>.New();
       try {
-	srv.ConfigSetName("Filter3");
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {

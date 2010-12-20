@@ -50,7 +50,6 @@ namespace csmsgque {
 	  dataC.callI.Service(GetSelf(context));
 	}
       } catch (Exception ex) {
-
 	return MqErrorSet2 (context, ex);
       }
 
@@ -59,6 +58,7 @@ namespace csmsgque {
     }
 
     private static void ProcFree (IntPtr context, ref IntPtr data) {
+//DEBUG.P("data",data);
       GCHandle.FromIntPtr(data).Free();
       data = IntPtr.Zero;
     }

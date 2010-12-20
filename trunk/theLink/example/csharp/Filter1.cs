@@ -14,12 +14,13 @@ using csmsgque;
 using System.Collections.Generic;
 
 namespace example {
-  sealed class Filter1 : MqS, IFactory {
+  sealed class Filter1 : MqS {
 
     private List<List<string>> data = new List<List<string>>();
 
-    MqS IFactory.Factory () {
-      return new Filter1();
+    // constructor
+    public Filter1(MqS tmpl) : base(tmpl) {
+      ConfigSetIsServer(true);
     }
 
     // service definition
@@ -48,10 +49,8 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter1 srv = new Filter1();
+      Filter1 srv = MqFactoryS<Filter1>.New("filter");
       try {
-	srv.ConfigSetName("filter");
-	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv);
 	srv.ServiceCreate("+FTR", srv.FTR);
 	srv.ServiceCreate("+EOF", srv.EOF);

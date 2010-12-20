@@ -12,9 +12,8 @@
 using System;
 using csmsgque;
 namespace example {
-  sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Factory () {
-      return new manfilter();
+  sealed class manfilter : MqS {
+    public manfilter(MqS tmpl) : base(tmpl) {
     }
     void FTR () {
       MqS ftr = ServiceGetFilter();
@@ -26,9 +25,8 @@ namespace example {
       SendRETURN();
     }
     static void Main(string[] argv) {
-      manfilter srv = new manfilter();
+      manfilter srv = MqFactoryS<manfilter>.New("ManFilter");
       try {
-	srv.ConfigSetName("ManFilter");
 	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv);
 	srv.ServiceCreate("+FTR", srv.FTR);

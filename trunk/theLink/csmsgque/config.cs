@@ -25,11 +25,6 @@ namespace csmsgque {
     void ServerCleanup();
   }
 
-  /// \api #MqConfigSetFactory 
-  public interface IFactory {
-    MqS Factory();
-  }
-
   /// \api #MqConfigSetBgError 
   public interface IBgError {
     void BgError();
@@ -55,9 +50,14 @@ namespace csmsgque {
 /// \{
 
     static MqS() {
+
+      // init the application "spawn" starter
       IntPtr initB = MqInitCreate();
       if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
       MqBufferLAppendC(initB, APP);
+      
+      // init default factory
+      MqFactoryS<MqS>.Default ("csmsgque");
     }
 
     /// \api #MqInitCreate
@@ -125,11 +125,13 @@ namespace csmsgque {
     private static extern void MqConfigSetEvent([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
       [In]MqTokenDataFreeF dataFree, [In] IntPtr dataCopy);
 
+/*
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetFactory")]
     private static extern void MqConfigSetFactory([In]IntPtr context, 
       [In]MqFactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree, [In] IntPtr CreateCopy,
       [In]MqFactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree, [In] IntPtr DeleteCopy
     );
+*/
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSelf")]
     private static extern void MqConfigSetSelf([In]IntPtr context, [In]IntPtr self);
@@ -211,7 +213,7 @@ namespace csmsgque {
     private static extern int MqConfigGetDebug([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetSelf")]
-    private static extern IntPtr MqConfigGetSelf([In]IntPtr context);
+    internal static extern IntPtr MqConfigGetSelf([In]IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetTimeout")]
     private static extern long MqConfigGetTimeout([In]IntPtr context);
@@ -245,6 +247,9 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetStartAs")]
     private static extern int MqConfigGetStartAs([In]IntPtr context);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetStatusIs")]
+    private static extern int MqConfigGetStatusIs([In]IntPtr context);
 
   // PUBLIC
 
@@ -280,6 +285,8 @@ namespace csmsgque {
     public int	    ConfigGetIoPipeSocket() { return MqConfigGetIoPipeSocket(context); }
     /// \api #MqConfigGetStartAs
     public START    ConfigGetStartAs()	    { return (START)MqConfigGetStartAs(context); }
+    /// \api #MqConfigGetStatusIs
+    public int	    ConfigGetStatusIs()	    { return MqConfigGetStatusIs(context); }
 
 /// \}
 

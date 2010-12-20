@@ -34,7 +34,7 @@ namespace csmsgque {
     private static extern IntPtr MqContextCreate([In]int size, [In]IntPtr tmpl);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextDelete")]
-    private static extern void MqContextDelete([In,Out]ref IntPtr context);
+    internal static extern void MqContextDelete([In,Out]ref IntPtr context);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExitP")]
     private static extern void MqExitP([In]string prefix, [In]IntPtr context);
@@ -76,34 +76,28 @@ namespace csmsgque {
     public void LogC(string prefix, int level, string text) {
       MqLogC (context, prefix, level, text);
     }
+    /// \api #MqContextCreate
+    public MqS() : this(null) {
+    }
 
     /// \api #MqContextCreate
-    public MqS() {
-      context = MqContextCreate(0, IntPtr.Zero);
-    //DEBUG.P("context", context);
+    public MqS(MqS tmpl) {
+      context = MqContextCreate(0, tmpl != null ? tmpl.context : IntPtr.Zero);
       MqConfigSetSelf(context, (IntPtr) GCHandle.Alloc(this));
       MqConfigSetIgnoreFork(context, MQ_BOL.MQ_YES);
       MqConfigSetSetup(context, fDefaultLinkCreate, null, fDefaultLinkCreate, null, fProcessExit, fThreadExit);
-
-      if (this is IFactory) {
-	MqConfigSetFactory (context, 
-	  fFactoryCreate,  (IntPtr) GCHandle.Alloc(((IFactory) this)), fProcFree,  IntPtr.Zero,
-	  fFactoryDelete,  IntPtr.Zero,				      null,	  IntPtr.Zero);
-      } else {
-	MqConfigSetFactory (context, 
-	  null,		  IntPtr.Zero,				      null,	  IntPtr.Zero,
-	  fFactoryDelete,  IntPtr.Zero,				      null,	  IntPtr.Zero
-	);
-      }
+      MqConfigSetIdent(context, "csmsgque");
 
       if (this is IServerSetup) {
-	MqConfigSetServerSetup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerSetup) this).ServerSetup)), fProcFree, IntPtr.Zero);
+	IntPtr data = (IntPtr) GCHandle.Alloc(new ProcData((Callback)((IServerSetup) this).ServerSetup));
+//DEBUG.P("IServerSetup",data);
+	MqConfigSetServerSetup (context, fProcCall, data, fProcFree, IntPtr.Zero);
       }
 
       if (this is IServerCleanup) {
-	MqConfigSetServerCleanup (context, fProcCall, (IntPtr) GCHandle.Alloc(
-	  new ProcData((Callback)((IServerCleanup) this).ServerCleanup)), fProcFree, IntPtr.Zero);
+	IntPtr data = (IntPtr) GCHandle.Alloc(new ProcData((Callback)((IServerCleanup) this).ServerCleanup));
+//DEBUG.P("IServerCleanup",data);
+	MqConfigSetServerCleanup (context, fProcCall, data, fProcFree, IntPtr.Zero);
       }
 
       if (this is IBgError) {

@@ -114,18 +114,20 @@ sFactorySpaceDelAll (
   void
 )
 {
-  struct MqFactoryItemS * start = space.items;
-  struct MqFactoryItemS * end = start + space.used;
+  if (space.items != NULL) {
+    struct MqFactoryItemS * start = space.items;
+    struct MqFactoryItemS * end = start + space.used;
 
-  // name == "-ALL"
-  // delete the other name
-  while (start < end--) {
-    sFactorySpaceDelItem (end);
+    // name == "-ALL"
+    // delete the other name
+    while (start < end--) {
+      sFactorySpaceDelItem (end);
+    }
+    // set all items to zero
+    memset(start, '\0', space.used * sizeof(struct MqFactoryItemS));
+    space.used = 0;
+    defaultFactory = NULL;
   }
-  // set all items to zero
-  memset(start, '\0', space.used * sizeof(struct MqFactoryItemS));
-  space.used = 1;
-  defaultFactory = NULL;
 }
 
 static void
@@ -320,8 +322,34 @@ MqFactoryNew (
 )
 {
   MqFactoryAdd (name, fCreate, createData, createDatafreeF, fDelete, deleteData, deleteDatafreeF);
-  return MqFactoryCall (name); 
+  struct MqS* ctx = MqFactoryCall (name); 
+  return ctx;
 }
+
+MQ_PTR
+MqFactoryItemGetCreateData(
+  struct MqFactoryItemS  const * const item
+)
+{
+  return item->Create.data;
+}
+
+MQ_PTR
+MqFactoryItemGetDeleteData(
+  struct MqFactoryItemS  const * const item
+)
+{
+  return item->Delete.data;
+}
+
+/*
+void
+MqFactoryDelete(
+  void
+) {
+  FactorySpaceDelete();
+}
+*/
 
 END_C_DECLS
 

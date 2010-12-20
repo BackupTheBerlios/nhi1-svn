@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/csmsgque/csmsgque.cs
+ *  \file       theLink/csmsgque/MqS.cs
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
@@ -42,18 +42,18 @@ namespace csmsgque {
     public static void SF(string id) {
       System.Diagnostics.Process thisProc = System.Diagnostics.Process.GetCurrentProcess();
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(2);
-      Console.WriteLine(thisProc.Id + ":" + id + " -> " + sf.GetMethod() + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+      Console.Error.WriteLine(thisProc.Id + ":" + id + " -> " + sf.GetMethod() + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId);
     }
     public static void P(string name, IntPtr id) {
       System.Diagnostics.Process thisProc = System.Diagnostics.Process.GetCurrentProcess();
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
-      Console.WriteLine(thisProc.Id + ":" + name + " = 0x{0:x}" + 
+      Console.Error.WriteLine(thisProc.Id + ":" + name + " = 0x{0:x}" + 
 	  " -> " + sf.GetMethod().Name + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId, (int) id);
     }
     public static void O(string name, object id) {
       System.Diagnostics.Process thisProc = System.Diagnostics.Process.GetCurrentProcess();
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
-      Console.WriteLine(thisProc.Id + ":" + name + " = {0}" + 
+      Console.Error.WriteLine(thisProc.Id + ":" + name + " = {0}" + 
 	  " -> " + sf.GetMethod().Name + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId, id);
     }
     public static void M0() { SF("M0000000000000"); }
@@ -76,15 +76,6 @@ namespace csmsgque {
     MQ_ERROR
   };
 
-  internal enum MqFactoryE :int {
-    MQ_FACTORY_NEW_INIT,
-    MQ_FACTORY_NEW_CHILD,
-    MQ_FACTORY_NEW_SLAVE,
-    MQ_FACTORY_NEW_FORK,
-    MQ_FACTORY_NEW_THREAD,
-    MQ_FACTORY_NEW_FILTER
-  };
-
   internal enum MQ_BOL :byte {
     MQ_NO     = 0,
     MQ_YES    = 1
@@ -103,15 +94,13 @@ namespace csmsgque {
     private const string MSGQUE_DLL = "libmsgque";
     private static string APP = Assembly.GetEntryAssembly().Location;
 
-    private IntPtr context;
+    internal IntPtr context;
 
     /// save delegate to protect again deleting
-    static private MqExitF	    fProcessExit	= ProcessExit;
-    static private MqExitF	    fThreadExit		= ThreadExit;
-    static private MqTokenF	    fProcCall		= ProcCall;
-    static private MqTokenDataFreeF fProcFree		= ProcFree;
-    static private MqFactoryCreateF fFactoryCreate	= FactoryCreate;
-    static private MqFactoryDeleteF fFactoryDelete	= FactoryDelete;
+    static private MqExitF	      fProcessExit  = ProcessExit;
+    static private MqExitF	      fThreadExit   = ThreadExit;
+    static private MqTokenF	      fProcCall	    = ProcCall;
+    static internal MqTokenDataFreeF  fProcFree	    = ProcFree;
 
   /*****************************************************************************/
   /*                                                                           */
@@ -119,32 +108,12 @@ namespace csmsgque {
   /*                                                                           */
   /*****************************************************************************/
 
-    static private MqS GetSelf (IntPtr context) {
+    internal static MqS GetSelf (IntPtr context) {
       return ((MqS)GCHandle.FromIntPtr(MqConfigGetSelf(context)).Target);
     }
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigDup")]
     private static extern MqErrorE MqConfigDup([In]IntPtr context, [In]IntPtr tmpl);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSetupDup")]
-    private static extern MqErrorE MqSetupDup([In]IntPtr context, [In]IntPtr tmpl);
-
-    static private MqErrorE FactoryCreate (IntPtr tmpl, MqFactoryE create, IntPtr data, ref IntPtr contextP) {
-      try {
-	contextP = ((IFactory)GCHandle.FromIntPtr(data).Target).Factory().context;
-      } catch (Exception ex) {
-	return MqErrorSet2 (tmpl, ex);
-      }
-      MqConfigDup (contextP, tmpl);
-      MqSetupDup (contextP, tmpl);
-      return MqErrorE.MQ_OK;
-    }
-
-    static private void FactoryDelete (IntPtr context, MQ_BOL doFactoryCleanup, IntPtr data) {
-      IntPtr self = MqConfigGetSelf(context);
-      MqContextDelete (ref GetSelf(context).context);
-      GCHandle.FromIntPtr(self).Free();
-    }
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqDLogX")]
     private static extern void MqDLogX([In]IntPtr context, [In]string prefix, [In]int level, [In]string fmt, [In]string val );
@@ -153,9 +122,6 @@ namespace csmsgque {
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
       MqDLogX (context, sf.GetMethod().Name, level, "%s", val);
     }
-
-
-
   } // END - class "MqS"
 } // END - namespace "csmsgque"
 

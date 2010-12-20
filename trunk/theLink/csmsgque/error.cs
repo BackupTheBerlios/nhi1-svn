@@ -152,7 +152,7 @@ namespace csmsgque {
       return Marshal.PtrToStringAnsi(MqErrorGetText(context));
     }
 
-    static private MqErrorE MqErrorSet2 (IntPtr context, Exception ex) {
+    internal static MqErrorE MqErrorSet2 (IntPtr context, Exception ex) {
       if (ex is MqSException) {
 	MqSException exm = (MqSException) ex;
 	MqErrorSet (context, exm.num, exm.code, exm.txt, IntPtr.Zero);

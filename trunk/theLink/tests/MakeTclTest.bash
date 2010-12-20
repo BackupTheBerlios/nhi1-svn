@@ -21,7 +21,7 @@ if [[ ${WINDIR:-} != "" ]] ; then
   MONO=""
 else
   EXT=""
-  MONO=mono
+  MONO=$CLREXEC
 fi
 
 USAGE() {
@@ -114,14 +114,17 @@ if [[ $TEE == "yes" ]] ; then
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
-set -x
     T="$CMD $@"
     set $EXE
     EXE="$1"; shift
     T="$@ $T"
     exec $PREFIX $EXE -a "$T"
   else
-    exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
+    if [[ "$POSTFIX" == "cat" ]] ; then
+      exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
+    else
+      exec $PREFIX $EXE $CMD "$@"
+    fi
   fi
 fi
 

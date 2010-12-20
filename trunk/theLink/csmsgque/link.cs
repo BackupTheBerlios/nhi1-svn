@@ -93,7 +93,8 @@ namespace csmsgque {
       IntPtr largv = IntPtr.Zero;
       if (argv.Length != 0) {
 	largv = MqBufferLCreate(argv.Length+1);
-	MqBufferLAppendC(largv, APP);
+	if (argv[0][0] == '-' || argv[0][0] == '@')
+	  MqBufferLAppendC(largv, APP);
 	foreach (string a in argv) {
 	  MqBufferLAppendC(largv, a);
 	}
@@ -110,7 +111,8 @@ namespace csmsgque {
       IntPtr largv = IntPtr.Zero;
       if (argv.Length != 0) {
 	largv = MqBufferLCreate(argv.Length+1);
-	MqBufferLAppendC(largv, APP);
+	if (argv[0][0] == '-' || argv[0][0] == '@')
+	  MqBufferLAppendC(largv, APP);
 	foreach (string a in argv) {
 	  MqBufferLAppendC(largv, a);
 	}

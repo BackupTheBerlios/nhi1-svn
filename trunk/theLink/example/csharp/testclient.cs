@@ -76,11 +76,12 @@ namespace example {
 	Console.WriteLine(c10.Get());
 	Console.WriteLine(c100.Get());
 	Console.WriteLine(c101.Get());
-      } catch {
+      } catch (Exception ex) {
+	c0.ErrorSet(ex);
       } finally {
 	// do the cleanup
-	c0.LinkDelete();
 	c1.LinkDelete();
+	c0.Exit();
       }
     }
   }

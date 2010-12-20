@@ -14,10 +14,9 @@ using csmsgque;
 
 namespace example {
 
-  sealed class testserver : MqS, IServerSetup, IFactory {
+  sealed class testserver : MqS, IServerSetup {
 
-    MqS IFactory.Factory() {
-      return new testserver();
+    public testserver(MqS tmpl) : base(tmpl) {
     }
 
     public void GTCX () {
@@ -40,7 +39,7 @@ namespace example {
     }
 
     static void Main(string[] argv) {
-      testserver srv = new testserver();
+      testserver srv = MqFactoryS<testserver>.New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -51,6 +50,4 @@ namespace example {
     }
   }
 }
-
-
 

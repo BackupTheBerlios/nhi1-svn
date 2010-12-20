@@ -30,6 +30,7 @@ BEGIN_C_DECLS
 
 void EventCleanup (void);
 void GcDelete (void);
+void FactorySpaceDelete (void);
 struct MqBufferLS * MqInitBuf = NULL;
 
 static void pMqCreate (void) __attribute__ ((constructor));
@@ -347,10 +348,10 @@ MqExitP (
     // 3. delete all collected objects
     GcDelete();
 
-    // 4. call application specific exit function
+    // 5. call application specific exit function
     if (exitF) (*exitF) (num);
 
-    // 5. finally call libmsgque exit function
+    // 6. finally call libmsgque exit function
     MqSysExit(isThread, num);
   }
 }

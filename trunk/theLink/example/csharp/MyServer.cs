@@ -14,11 +14,11 @@ using csmsgque;
 
 namespace example {
 
-  sealed class MyServer : MqS, IServerSetup, IFactory {
+  sealed class MyServer : MqS, IServerSetup {
 
-    // create new intances
-    MqS IFactory.Factory() {
-      return new MyServer();
+    // constructor
+    public MyServer(MqS tmpl) : base(tmpl) {
+      ConfigSetIsServer(true);
     }
 
     // service to serve all incomming requests for token "HLWO"
@@ -34,7 +34,7 @@ namespace example {
     }
 
     static void Main(string[] argv) {
-      MyServer srv = new MyServer();
+      MyServer srv = MqFactoryS<MyServer>.New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

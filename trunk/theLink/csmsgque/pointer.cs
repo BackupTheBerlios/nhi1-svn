@@ -39,14 +39,6 @@ internal delegate void MqTokenDataFreeF ([In]IntPtr context, [In,Out] ref IntPtr
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 internal delegate MqErrorE MqEventF ([In]IntPtr context);
 
-/// \api \ref MqFactoryCreateF
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-internal delegate MqErrorE MqFactoryCreateF ([In]IntPtr tmpl, MqFactoryE create, [In]IntPtr data, [In,Out] ref IntPtr contextP);
-
-/// \api \ref MqFactoryDeleteF
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-internal delegate void MqFactoryDeleteF ([In]IntPtr context, [In] MQ_BOL doFactoryCleanup, [In]IntPtr data);
-
 public partial class MqS {
 
   /// \api public version from \ref MqTokenF

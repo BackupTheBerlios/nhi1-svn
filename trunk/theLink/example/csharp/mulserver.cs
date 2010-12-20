@@ -12,9 +12,9 @@
 using System;
 using csmsgque;
 namespace example {
-  sealed class mulserver : MqS, IServerSetup, IFactory {
-    MqS IFactory.Factory() {
-      return new mulserver();
+  sealed class mulserver : MqS, IServerSetup {
+    public mulserver(MqS tmpl) : base(tmpl) {
+      ConfigSetIsServer(true);
     }
     public void MMUL () {
       SendSTART();
@@ -25,9 +25,8 @@ namespace example {
       ServiceCreate("MMUL", MMUL);
     }
     static void Main(string[] argv) {
-      mulserver srv = new mulserver();
+      mulserver srv = MqFactoryS<mulserver>.New("MyMulServer");
       try {
-	srv.ConfigSetName("MyMulServer");
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {

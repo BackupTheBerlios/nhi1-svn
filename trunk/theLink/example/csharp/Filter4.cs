@@ -15,13 +15,12 @@ using System.Collections.Generic;
 using csmsgque;
 
 namespace example {
-  sealed class Filter4 : MqS, IFactory, IServerSetup, IServerCleanup, IEvent, IService {
+  sealed class Filter4 : MqS, IServerSetup, IServerCleanup, IEvent, IService {
 
     Queue<byte[]> itms = new Queue<byte[]>();
     StreamWriter FH = null;
 
-    MqS IFactory.Factory () {
-      return new Filter4();
+    public Filter4(MqS tmpl) : base(tmpl) {
     }
 
     void IService.Service (MqS ctx) {
@@ -94,11 +93,9 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter4 srv = new Filter4();
+      Filter4 srv = MqFactoryS<Filter4>.New("transFilter");
       try {
 	srv.ConfigSetIgnoreExit(true);
-	srv.ConfigSetIdent("transFilter");
-	srv.ConfigSetName("Filter4");
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
       } catch (Exception ex) {

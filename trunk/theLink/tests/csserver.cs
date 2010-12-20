@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace example {
 
-  sealed  class Client : MqS, IFactory, IBgError {
+  sealed  class Client : MqS, IBgError {
 
     public int i;
 
@@ -28,29 +28,9 @@ namespace example {
       }
     }
 
-    MqS IFactory.Factory () {
-      return new Client();
-    }
-
     public void LinkCreate (int debug) {
       ConfigSetDebug(debug);
-      base.LinkCreate("@", "SELF", "--name", "test-server");
-    }
-
-    public void ECOI_CB () {
-      i = ReadI();
-    }
-  }
-
-  sealed  class ClientERR : MqS {
-
-    public int i;
-
-    public void LinkCreate (int debug) {
-      ConfigSetDebug(debug);
-      ConfigSetName("test-client");
-      ConfigSetSrvName("test-server");
-      base.LinkCreate("@", "SELF");
+      base.LinkCreate("@", "server", "--name", "test-server");
     }
 
     public void ECOI_CB () {
@@ -67,15 +47,14 @@ namespace example {
     }
   }
 
-  sealed class Server : MqS, IServerSetup, IServerCleanup, IFactory {
+  sealed class Server : MqS, IServerSetup, IServerCleanup {
 
     private Client[] cl = new Client[3];
     private MqBufferS buf = null;
 
   // ########################################################################
 
-    MqS IFactory.Factory () {
-      return new Server();
+    public Server (MqS tmpl) : base(tmpl) {
     }
 
     void IServerCleanup.ServerCleanup () {
@@ -344,7 +323,7 @@ namespace example {
         } else if (s == "START5") {
           // the 'master' have to be a 'parent' without 'child' objects
 	  // 'slave' identifer out of range (0 <= 10000000 <= 1023)
-          SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id, "--thread");
+          SlaveWorker(id, "--name", "wk-cl-" + id, "--srvname", "wk-sv-" + id);
         } else if (s == "STOP") {
           cl[id].LinkDelete();
         } else if (s == "SEND") {
@@ -403,10 +382,6 @@ namespace example {
           SlaveWorker(id, LIST.ToArray());
         } else if (s == "CREATE2") {
 	  Client c = new Client();
-	  c.LinkCreate(ConfigGetDebug());
-	  SlaveCreate (id, c);
-        } else if (s == "CREATE3") {
-	  ClientERR c = new ClientERR();
 	  c.LinkCreate(ConfigGetDebug());
 	  SlaveCreate (id, c);
         } else if (s == "DELETE") {
@@ -719,12 +694,9 @@ namespace example {
 
   // ########################################################################
 
-    static void Main(string[] args)
-    {
-      Server srv = new Server();
+    static void Main(string[] args) {
+      Server srv = MqFactoryS<Server>.New("server");
       try {
-	srv.ConfigSetName("server");
-	srv.ConfigSetIdent("test-server");
 	srv.LinkCreate(args);
 	srv.LogC("test",1,"this is the log test\n");
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

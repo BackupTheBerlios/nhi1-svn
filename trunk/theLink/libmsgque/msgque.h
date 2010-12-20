@@ -860,6 +860,20 @@ struct MqSetupS {
 /*                                                                           */
 /*****************************************************************************/
 
+MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
+  struct MqFactoryItemS  const * const item
+);
+
+MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
+  struct MqFactoryItemS  const * const item
+);
+
+/*
+MQ_EXTERN void MQ_DECL MqFactoryDelete (
+  void
+);
+*/
+
 MQ_EXTERN struct MqS * MQ_DECL MqFactoryNew (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
