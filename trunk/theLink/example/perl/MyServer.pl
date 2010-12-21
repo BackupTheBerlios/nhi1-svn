@@ -33,7 +33,6 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetName("MyServer");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
-    $ctx->ConfigSetFactory(sub {new MyServer()});
     return $ctx;
   }
 

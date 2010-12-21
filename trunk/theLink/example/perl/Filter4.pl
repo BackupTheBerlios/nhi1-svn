@@ -108,18 +108,16 @@ use base qw(Net::PerlMsgque::MqS);
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetIgnoreExit(1);
-    $ctx->ConfigSetIdent("transFilter");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetServerCleanup(\&ServerCleanup);
     $ctx->ConfigSetEvent(\&Event);
-    $ctx->ConfigSetFactory(sub {new Filter4()});
     return $ctx;
   }
 
 
 package main;
 
-  our $srv = new Filter4();
+  our $srv = Net::PerlMsgque::FactoryNew("transfilter", "Filter4");
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

@@ -30,6 +30,11 @@ void pLinkDisConnect (
   struct MqS * const context
 );
 
+int
+pMqCheckOpt (
+  register struct MqBufferS * const arg
+);
+
 END_C_DECLS
 
 #endif /* MQ_LINK_H */

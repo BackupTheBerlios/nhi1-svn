@@ -16,6 +16,7 @@
 #include "error.h"
 #include "sys.h"
 #include "log.h"
+#include "link.h"
 
 BEGIN_C_DECLS
 
@@ -697,11 +698,7 @@ pBufferLExtractOptions (
   struct MqBufferLS * ret;
 
   // find first option
-  for ( ; arg < end; arg++) {
-    struct MqBufferS const * const val = *arg;
-    if (val->cursize && val->type == MQ_STRT && val->cur.C[0] == '-') {
-      break;
-    }
+  for ( ; arg < end && !pMqCheckOpt(*arg); arg++) {
   }
   bufL->cursize -= (end-arg);
   bufL->cur = bufL->data + bufL->cursize;

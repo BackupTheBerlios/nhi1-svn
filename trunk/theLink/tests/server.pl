@@ -23,7 +23,7 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = shift;
     my $debug = shift;
     $ctx->ConfigSetDebug($debug);
-    $ctx->SUPER::LinkCreate("@", "SELF", "--name", "test-server");
+    $ctx->SUPER::LinkCreate("@", "server", "--name", "test-server");
   }
 
   sub ECOI_CB {
@@ -44,24 +44,7 @@ use base qw(Net::PerlMsgque::MqS);
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetBgError(\&BgError);
-    $ctx->ConfigSetFactory(sub {new Client()});
     return $ctx;
-  }
-
-package ClientERR;
-use base qw(Net::PerlMsgque::MqS);
-
-  sub LinkCreate {
-    my $ctx = shift;
-    $ctx->ConfigSetDebug(shift);
-    $ctx->ConfigSetName("test-client");
-    $ctx->ConfigSetSrvName("test-server");
-    $ctx->SUPER::LinkCreate("@", "SELF");
-  }
-
-  sub ECOI_CB {
-    my $ctx = shift;
-    $ctx->DictSet("i", $ctx->ReadI());
   }
 
 package ClientERR2;
@@ -534,11 +517,6 @@ use base qw(Net::PerlMsgque::MqS);
 	$c->LinkCreate($ctx->ConfigGetDebug());
 	$ctx->SlaveCreate ($id, $c);
       } 
-      case "CREATE3" {
-	my $c = new ClientERR();
-	$c->LinkCreate($ctx->ConfigGetDebug());
-	$ctx->SlaveCreate ($id, $c);
-      } 
       case "DELETE" {
 	$ctx->SlaveDelete($id);
 	$ctx->SendC(defined($ctx->SlaveGet($id)) ? "ERROR" : "OK");
@@ -801,21 +779,14 @@ use base qw(Net::PerlMsgque::MqS);
   sub new {
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
-    $ctx->ConfigSetName("server");
-    $ctx->ConfigSetIdent("test-server");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetServerCleanup(\&ServerCleanup);
-    $ctx->ConfigSetFactory(
-      sub {
-	new Server()
-      }
-    );
     return $ctx;
   }
 
 package main;
 
-  our $srv = new Server();
+  our $srv = Net::PerlMsgque::FactoryNew("server", "Server");
 
   eval {
     $srv->LinkCreate(@ARGV);

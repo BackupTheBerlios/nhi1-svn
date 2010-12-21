@@ -132,6 +132,100 @@ error:
   return MqErrorStack (context);
 }
 
+#define ARG(s) #s,sizeof(#s)-1
+
+int
+pMqCheckOpt (
+  struct MqBufferS * const arg
+)
+{
+  MQ_CST argC = arg->cur.C;
+  // 1. test on "--..."
+  if (arg->cursize < 3 || argC[0] != '-' || argC[1] != '-') return 0;
+  // 2. skip "--"
+  argC += 2;
+  // 3. test on strings
+  switch (argC[0]) {
+    case 's': {
+      switch (argC[1]) {
+	case 'p': return !strncmp(argC, ARG(spawn)  );
+	case 'r': return !strncmp(argC, ARG(srvname));
+	case 't': return !strncmp(argC, ARG(string) );
+	case 'i': return !strncmp(argC, ARG(silent) );
+	case 'o': return !strncmp(argC, ARG(socket) );
+      }
+      return 0;
+    }
+    case 'd': {
+      switch (argC[1]) {
+	case 'e': return !strncmp(argC, ARG(debug)  );
+	case 'a': return !strncmp(argC, ARG(daemon) );
+      }
+      return 0;
+    }
+    case 't': {
+      switch (argC[1]) {
+	case 'c': return !strncmp(argC, ARG(tcp)    );
+	case 't': return !strncmp(argC, ARG(thread) );
+	case 'i': return !strncmp(argC, ARG(timeout));
+      }
+      return 0;
+    }
+    case 'n': {
+      return !strncmp(argC, ARG(name));
+    }
+    case 'b': {
+      return !strncmp(argC, ARG(buffersize));
+    }
+    case 'u': {
+      return !strncmp(argC, ARG(uds));
+    }
+    case 'p': {
+      switch (argC[1]) {
+	case 'i': return !strncmp(argC, ARG(pipe)   );
+	case 'o': return !strncmp(argC, ARG(port)   );
+      }
+      return 0;
+    }
+    case 'm': {
+      switch (argC[3]) {
+	case 'h': return !strncmp(argC, ARG(myhost) );
+	case 'p': return !strncmp(argC, ARG(myport) );
+      }
+      return 0;
+    }
+    case 'f': {
+      switch (argC[1]) {
+	case 'o': return !strncmp(argC, ARG(fork)   );
+	case 'i': return !strncmp(argC, ARG(file)   );
+      }
+      return 0;
+    }
+    case '-': {
+      switch (argC[2]) {
+	case 'd': return !strncmp(argC, ARG(-duplicate)	      );
+	case 's': return !strncmp(argC, ARG(-status-is-spawn) );
+	case 't': return !strncmp(argC, ARG(-threadData)      );
+      }
+      return 0;
+    }
+    case 'h': {
+      switch (argC[1]) {
+	case 'o': return !strncmp(argC, ARG(host) );
+	case 'e': {
+	  if (arg->cursize == 6) {
+	    return !strncmp(argC, ARG(help) );
+	  } else {
+	    return !strncmp(argC, ARG(help-msgque) );
+	  }
+	}
+      }
+      return 0;
+    }
+  }
+  return 0;
+}
+
 #define ArgBUF(V,T) \
   MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES)); \
   if (idx >= argv->cursize) return MqErrorDbV (MQ_ERROR_OPTION_ARG, T); \

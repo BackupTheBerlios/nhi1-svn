@@ -32,7 +32,10 @@ require XSLoader;
 XSLoader::load('Net::PerlMsgque', $VERSION);
 
 # Preloaded methods go here.
-Net::PerlMsgque::Init($^X, $0);
+Net::PerlMsgque::Init($^X, "-w", $0);
+
+# set default Factory
+Net::PerlMsgque::FactoryDefault("perlmsgque", "Net::PerlMsgque::MqS");
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
 

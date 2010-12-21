@@ -1,3 +1,8 @@
+
+#if defined(VERSION)
+#  undef VERSION
+#endif
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -167,7 +172,7 @@ ProcFree (
   SvREFCNT_dec(dataP);
 }
 
-static enum MqErrorE
+static void
 ProcCopy (
   struct MqS * const context,
   MQ_PTR *dataP
@@ -175,7 +180,6 @@ ProcCopy (
 {
   *dataP = newSVsv(*dataP);
   //return MqErrorC(context,__func__,-1,"perl requires that a 'callback' have to be defined in the object constructor");
-  return MQ_OK;
 }
 
 
@@ -195,14 +199,13 @@ ThreadExit (
 }
 
 static enum MqErrorE FactoryCreate (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  MQ_PTR data,
-  struct MqS ** contextP
+  struct MqS * const	  tmpl,
+  enum MqFactoryE	  create,
+  struct MqFactoryItemS * item,
+  struct MqS **		  contextP
 ) {
 
 #ifdef MQ_HAS_THREAD
-
   if (create == MQ_FACTORY_NEW_THREAD) {
     perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }
@@ -218,24 +221,31 @@ static enum MqErrorE FactoryCreate (
     SAVETMPS;
 
     PUSHMARK(SP);
+    XPUSHs((SV*)item->Create.data);
+    if (create != MQ_FACTORY_NEW_INIT) {
+      XPUSHs((SV*)tmpl->self);
+    }
+    PUTBACK;
 
-    count = call_sv ((SV*)data, G_SCALAR|G_NOARGS|G_EVAL);
+    count = call_method ("new", G_SCALAR|G_EVAL);
 
     SPAGAIN;
-    if ((ret = ProcError (aTHX_ tmpl, ERRSV)) == MQ_OK) {
-      if (count != 1) {
-	ret = MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
-      } else {
-	MqS * context = *contextP = get_MqS_NO_ERROR(POPs);
-	if (context != NULL) {
-	  MqConfigDup (context, tmpl);
-	  if ((ret = MqSetupDup (context, tmpl)) != MQ_OK) {
-	    *contextP = NULL;
-	    ret = MqErrorCopy (tmpl, context);
-	  }
-	} else {
-	  ret = MqErrorC(tmpl, __func__, -1, "factory return is not of type 'Net::PerlMsgque::MqS'");
+    if (count != 1) {
+      ret = MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
+    } else if (create != MQ_FACTORY_NEW_INIT) {
+      ret = ProcError (aTHX_ tmpl, ERRSV);
+    } else if (SvTRUE(ERRSV)) {
+      croak(SvPV_nolen(ERRSV));
+      ret = MQ_ERROR;
+    }
+    if (ret == MQ_OK) {
+      MqS * context = *contextP = get_MqS_NO_ERROR(POPs);
+      if (context != NULL) {
+	if (create != MQ_FACTORY_NEW_INIT) {
+	  MqSetupDup (context, tmpl);
 	}
+      } else {
+	ret = MqErrorC(tmpl, __func__, -1, "factory return is not of type 'Net::PerlMsgque::MqS'");
       }
     }
     PUTBACK;
@@ -249,7 +259,7 @@ static enum MqErrorE FactoryCreate (
 static void FactoryDelete (
   struct MqS * context,
   MQ_BOL doFactoryCleanup,
-  MQ_PTR data
+  struct MqFactoryItemS * const item
 ) { 
   enum MqStatusIsE statusIs = context->statusIs;
   PerlInterpreter *itp = context->threadData;
@@ -275,6 +285,64 @@ Init(...)
     }
 
 void
+FactoryDefault(MQ_CST string, SV* factoryF)
+  CODE:
+    MqFactoryDefault(string, FactoryCreate, (MQ_PTR) newSVsv(factoryF), ProcFree, FactoryDelete, NULL, NULL);
+
+void
+FactoryAdd(...)
+  PREINIT:
+    MQ_CST ident;
+    MQ_PTR class;
+  CODE:
+    if (items < 1 || items > 2) {
+      croak_xs_usage(cv, "?ident?, class");
+      XSRETURN(0);
+    } else if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(0));
+    } else {  // items == 2
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(1));
+    }
+    MqFactoryAdd(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL);
+
+void
+FactoryNew(...)
+  PREINIT:
+    MQ_CST ident;
+    MQ_PTR class;
+    MqS* ctx;
+  CODE:
+    if (items < 1 || items > 2) {
+      croak_xs_usage(cv, "?ident?, class");
+      XSRETURN(0);
+    } else if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(0));
+    } else {  // items == 2
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(1));
+    }
+    ctx = MqFactoryNew(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL);
+    ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
+    XSRETURN(1);
+
+void
+FactoryCall(MQ_CST ident)
+  PREINIT:
+    MqS* ctx;
+  CODE:
+    if (*ident == '\0') {
+      croak_xs_usage(cv, "ident");
+      XSRETURN(0);
+    } else {
+      ctx = MqFactoryCall(ident);
+      ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
+      XSRETURN(1);
+    }
+
+void
 PrintID(MqS *context)
   CODE:
     printID(context)
@@ -285,20 +353,25 @@ BOOT:
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS
 
 void
-new(SV* MqS_class)
+new(SV *MqS_class, ...)
+  PREINIT:
+    struct MqS * tmpl = NULL;
   PPCODE:
+    if (items == 2) {
+      tmpl = get_MqS(aTHX_ ST(1));
+    } else if (items != 1) {
+      croak("usage MqS->new(?tmpl?)");
+      XSRETURN(0);
+    }
     if (!SvROK(MqS_class)) {
       // called by a "class"
-      MqS *context = (MqS*) MqContextCreate(sizeof(struct PerlContextS), NULL);
+      MqS *context = (MqS*) MqContextCreate(sizeof(struct PerlContextS), tmpl);
       ST(0) = sv_newmortal();
       sv_setref_pv(ST(0), SvPV_nolen(MqS_class), (void*)context);
-      context->self			  = SvREFCNT_inc(ST(0));
-      context->setup.Child.fCreate	  = MqLinkDefault;
-      context->setup.Parent.fCreate	  = MqLinkDefault;
-      context->setup.fProcessExit	  = ProcessExit;
-      context->setup.fThreadExit	  = ThreadExit;
-      context->setup.Factory.Delete.fCall = FactoryDelete;
-      context->threadData		  = PERL_GET_CONTEXT;
+      context->threadData = PERL_GET_CONTEXT;
+      MqConfigSetSelf(context, SvREFCNT_inc(ST(0)));
+      MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
+      MqConfigSetIdent(context, "perlmsgque");
     } else {
       MqConfigReset (get_MqS (aTHX_ MqS_class));
     }
@@ -320,7 +393,7 @@ DESTROY(SV *sv)
     if (context != NULL && SvREFCNT(sv) == 1 && PERL_GET_CONTEXT == (PerlInterpreter*)context->threadData) {
       HV* hash = PERL_DATA;
       // the "Factory" is useless -> delete
-      context->setup.Factory.Delete.fCall = NULL;
+      context->setup.factory = NULL;
       // delete the context
       MqContextDelete(&context);
       // free the data
@@ -411,11 +484,15 @@ MqLinkCreate(MqS * context, ...)
     struct MqBufferLS * args = NULL;
   CODE:
     if (items > 1) {
+      MQ_CST str;
       int i;
       args = MqBufferLCreate (items);
-      MqBufferLAppendC (args, "perl");
       for (i=1; i<items; i++) {
-	MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
+	str = (char *)SvPV_nolen(ST(i));
+	if (i==1 && (str[0] == '-' || str[0] == MQ_ALFA)) {
+	  MqBufferLAppendC (args, "perl");
+	}
+	MqBufferLAppendC (args, str);
       }
     }
     ErrorMqToPerlWithCheck (MqLinkCreate(context, &args));
@@ -426,10 +503,14 @@ MqLinkCreateChild(MqS *context, MqS *parent, ...)
     struct MqBufferLS * args = NULL;
   CODE:
     if (items > 2) {
+      MQ_CST str;
       int i;
       args = MqBufferLCreate (items-1);
-      MqBufferLAppendC (args, "perl");
       for (i=2; i<items; i++) {
+	str = (char *)SvPV_nolen(ST(i));
+	if (i==2 && (str[0] == '-' || str[0] == MQ_ALFA)) {
+	  MqBufferLAppendC (args, "perl");
+	}
 	MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
       }
     }
@@ -524,6 +605,9 @@ MqConfigSetStartAs (MqS* context, MQ_INT startAs)
 MQ_INT
 MqConfigGetStartAs (MqS* context)
 
+MQ_INT
+MqConfigGetStatusIs (MqS* context)
+
 void
 MqConfigSetDaemon (MqS* context, MQ_CST pidfile)
 
@@ -559,11 +643,11 @@ MqConfigSetServerCleanup (MqS* context, SV* cleanupF)
     MqConfigSetServerCleanup (context, ProcCall, (MQ_PTR) newSVsv(cleanupF), ProcFree, ProcCopy);
 
 void
-MqConfigSetFactory (MqS* context, SV* factoryF)
+MqConfigSetFactory (MqS* context, MQ_CST ident, SV* factoryF)
   CODE:
-    MqConfigSetFactory (context, 
-      FactoryCreate, (MQ_PTR) newSVsv(factoryF), ProcFree, ProcCopy,
-      FactoryDelete, NULL,                       NULL,     NULL
+    MqConfigSetFactory (context, ident,
+      FactoryCreate, (MQ_PTR) newSVsv(factoryF), ProcFree,
+      FactoryDelete, NULL,                       NULL
     );
 
 void
@@ -575,13 +659,6 @@ void
 MqConfigSetEvent (MqS* context, SV* eventF)
   CODE:
     MqConfigSetEvent (context, ProcCall, (MQ_PTR) newSVsv(eventF), ProcFree, ProcCopy);
-
-
-
-
-
-
-
 
 
 void
@@ -1113,7 +1190,4 @@ GetB (MqBufferS *buffer)
     RETVAL = newSVpvn((MQ_CST)bin, len);
   OUTPUT:
     RETVAL
-
-
-
 

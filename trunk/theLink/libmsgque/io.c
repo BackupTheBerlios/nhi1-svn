@@ -661,8 +661,7 @@ rescan:
 	  // copy everything befor the first MQ_ALFA or option
 	  start = alfa1->data;
 	  end = start+alfa1->cursize;
-	  for (; start < end; start++) {
-	    if ((*start)->cur.C[0] == '-') break; // stop on first option
+	  for (; start < end && !pMqCheckOpt(*start); start++) {
 	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, (*start)->cur.C);
 	  }
 	}

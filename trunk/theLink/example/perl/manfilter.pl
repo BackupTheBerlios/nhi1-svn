@@ -30,7 +30,6 @@ package main;
   eval {
     $srv->ConfigSetName("ManFilter");
     $srv->ConfigSetIsServer(1);
-    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
     $srv->LinkCreate(@ARGV);
     $srv->ServiceCreate("+FTR", \&FTRcmd);
     $srv->ServiceProxy("+EOF");
