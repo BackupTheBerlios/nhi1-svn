@@ -781,6 +781,7 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = $class->SUPER::new(@_);
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetServerCleanup(\&ServerCleanup);
+    bless $ctx, $class;
     return $ctx;
   }
 

@@ -317,7 +317,7 @@ error1:
   MqBufferLDelete (argvP);
   MqBufferLDelete (alfaP);
   // do not create a "defunc" process
-  MqErrorCheck (SysIgnorSIGCHLD(context));
+  MqErrorCheck (MqSysIgnorSIGCHLD(context));
   return MQ_OK;
 
 error:
@@ -743,6 +743,9 @@ void SysCreate(void) {
   MqLal.SysSleep = SysSleep;
   MqLal.SysDaemonize = SysDaemonize;
   MqLal.SysExit = SysExit;
+
+  MqLal.SysIgnorSIGCHLD = SysIgnorSIGCHLD;
+  MqLal.SysAllowSIGCHLD = SysAllowSIGCHLD;
 };
 
 END_C_DECLS

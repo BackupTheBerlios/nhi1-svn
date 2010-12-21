@@ -31,6 +31,9 @@ our $VERSION = '4.8';
 require XSLoader;
 XSLoader::load('Net::PerlMsgque', $VERSION);
 
+# Initialize 'Sys'
+Net::PerlMsgque::InitializeSys();
+
 # Preloaded methods go here.
 Net::PerlMsgque::Init($^X, "-w", $0);
 

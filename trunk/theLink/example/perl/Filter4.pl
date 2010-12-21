@@ -22,14 +22,22 @@ use base qw(Net::PerlMsgque::MqS);
   sub ErrorWrite {
     my $ftr = shift;
     my $FH = $ftr->DictGet("FH");
-    print($FH "ERROR: " . $ftr->ErrorGetText() . "\n");
+    if (defined($FH)) {
+      print $FH "ERROR: " . $ftr->ErrorGetText() . "\n";
+    } else {
+      $ftr->Log("ErrorWrite", 0, $ftr->ErrorGetText() . "\n");
+    }
     $ftr->ErrorReset();
   }
 
   sub WRIT {
     my $ftr = shift;
     my $FH = $ftr->DictGet("FH");
-    print($FH $ftr->ReadC() . "\n");
+    if (defined($FH)) {
+      print $FH $ftr->ReadC() . "\n";
+    } else {
+      $ftr->Log("ErrorWrite", 0, $ftr->ReadC() . "\n");
+    }
     $ftr->SendRETURN();
   }
 
@@ -102,6 +110,7 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->ServiceGetFilter()->ServiceCreate("WRIT", \&WRIT);
     $ctx->DictSet("itms", []);
     $ctx->DictSet("FH", undef);
+
   }
 
   sub new {
@@ -111,13 +120,14 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->ConfigSetServerSetup(\&ServerSetup);
     $ctx->ConfigSetServerCleanup(\&ServerCleanup);
     $ctx->ConfigSetEvent(\&Event);
+    bless $ctx, $class;
     return $ctx;
   }
 
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryNew("transfilter", "Filter4");
+  our $srv = Net::PerlMsgque::FactoryNew("transFilter", "Filter4");
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

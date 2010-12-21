@@ -4351,6 +4351,14 @@ struct MqLalS {
   void (*SysAbort) (
     void
   ) __attribute__((noreturn));
+
+  enum MqErrorE (*SysIgnorSIGCHLD) (
+    struct MqS * const	  context 
+  );
+
+  enum MqErrorE (*SysAllowSIGCHLD) (
+    struct MqS * const	  context 
+  );
 };
 
 /// Language Abstraction Layer in duty

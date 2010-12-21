@@ -31,14 +31,14 @@ use base qw(Net::PerlMsgque::MqS);
   sub new {
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
-    $ctx->ConfigSetName("MyServer");
     $ctx->ConfigSetServerSetup(\&ServerSetup);
+    bless $ctx, $class;
     return $ctx;
   }
 
 package main;
 
-  our $srv = new MyServer();
+  our $srv = Net::PerlMsgque::FactoryNew("MyServer");
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

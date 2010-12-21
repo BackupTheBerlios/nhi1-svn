@@ -141,7 +141,7 @@ pMqCheckOpt (
 {
   MQ_CST argC = arg->cur.C;
   // 1. test on "--..."
-  if (arg->cursize < 3 || argC[0] != '-' || argC[1] != '-') return 0;
+  if (arg->cursize < 3 || arg->type != MQ_STRT || argC[0] != '-' || argC[1] != '-') return 0;
   // 2. skip "--"
   argC += 2;
   // 3. test on strings
@@ -166,7 +166,7 @@ pMqCheckOpt (
     case 't': {
       switch (argC[1]) {
 	case 'c': return !strncmp(argC, ARG(tcp)    );
-	case 't': return !strncmp(argC, ARG(thread) );
+	case 'h': return !strncmp(argC, ARG(thread) );
 	case 'i': return !strncmp(argC, ARG(timeout));
       }
       return 0;
@@ -188,7 +188,7 @@ pMqCheckOpt (
       return 0;
     }
     case 'm': {
-      switch (argC[3]) {
+      switch (argC[2]) {
 	case 'h': return !strncmp(argC, ARG(myhost) );
 	case 'p': return !strncmp(argC, ARG(myport) );
       }
@@ -202,7 +202,7 @@ pMqCheckOpt (
       return 0;
     }
     case '-': {
-      switch (argC[2]) {
+      switch (argC[1]) {
 	case 'd': return !strncmp(argC, ARG(-duplicate)	      );
 	case 's': return !strncmp(argC, ARG(-status-is-spawn) );
 	case 't': return !strncmp(argC, ARG(-threadData)      );

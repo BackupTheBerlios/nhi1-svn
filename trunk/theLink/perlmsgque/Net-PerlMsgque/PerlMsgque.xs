@@ -67,6 +67,13 @@ typedef struct MqS MqS;
 typedef struct MqSException MqSException;
 typedef struct MqBufferS MqBufferS;
 
+static enum MqErrorE DummyOK (
+  struct MqS * const context
+)
+{
+  return MQ_OK;
+}
+
 static MqS* get_MqS(pTHX_ SV* sv)
 {
   MqS *var = NULL;
@@ -274,14 +281,18 @@ static void FactoryDelete (
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque
 
 void
+InitializeSys()
+  CODE:
+    MqLal.SysIgnorSIGCHLD = DummyOK;
+    MqLal.SysAllowSIGCHLD = DummyOK;
+
+void
 Init(...)
   CODE:
-    if (items > 0) {
-      int i;
-      struct MqBufferLS * args = MqInitCreate ();
-      for (i=0; i<items; i++) {
-	MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
-      }
+    int i;
+    struct MqBufferLS * args = MqInitCreate ();
+    for (i=0; i<items; i++) {
+      MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
     }
 
 void
@@ -360,7 +371,7 @@ new(SV *MqS_class, ...)
     if (items == 2) {
       tmpl = get_MqS(aTHX_ ST(1));
     } else if (items != 1) {
-      croak("usage MqS->new(?tmpl?)");
+      croak_xs_usage(cv, "?tmpl?");
       XSRETURN(0);
     }
     if (!SvROK(MqS_class)) {
@@ -453,7 +464,8 @@ MqProcessEvent(MqS* context, ...)
     } else if (items == 1) {
       // do nothing
     } else {
-      croak ("usage: ProcessEvent(?timeout?, ?wait?)");
+      croak_xs_usage(cv, "?timeout?, ?wait?");
+      XSRETURN(0);
     }
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
@@ -671,7 +683,12 @@ MqSendEND_AND_WAIT (MqS* context, MQ_CST token, ...)
   PREINIT:
     MQ_TIME_T timeout = MQ_TIMEOUT_USER;
   CODE:
-    if (items > 2) timeout = SvIV(ST(2));
+    if (items > 3) {
+      croak_xs_usage(cv, "token, ?timeout?");
+      XSRETURN(0);
+    } else if (items == 3) {
+      timeout = SvIV(ST(2));
+    }
     ErrorMqToPerlWithCheck (MqSendEND_AND_WAIT(context, token, timeout));
 
 void
@@ -904,7 +921,12 @@ MqServiceGetFilter(MqS* context, ...)
     MqS* filter;
     MQ_SIZE id=0;
   PPCODE:
-    if (items > 1) id = SvIV(ST(1));
+    if (items > 2) {
+      croak_xs_usage(cv, "?id?");
+      XSRETURN(0);
+    } else if (items == 2) {
+      id = SvIV(ST(1));
+    }
     ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
     ST(0) = (SV*)filter->self;
     XSRETURN(1);
@@ -917,7 +939,12 @@ MqServiceProxy (MqS* context, MQ_CST token, ...)
   PREINIT:
     MQ_SIZE id=0;
   CODE:
-    if (items > 2) id = SvIV(ST(2));
+    if (items > 3) {
+      croak_xs_usage(cv, "token, ?id?");
+      XSRETURN(0);
+    } else if (items == 3) {
+      id = SvIV(ST(2));
+    }
     ErrorMqToPerlWithCheck (
       MqServiceProxy (context, token, id)
     );
@@ -1021,7 +1048,10 @@ MqReadL_START (MqS* context, ...)
   PREINIT:
     MQ_BUF buffer = NULL;
   CODE:
-    if (items > 1) {
+    if (items > 2) {
+      croak_xs_usage(cv, "?buffer?");
+      XSRETURN(0);
+    } else if (items == 2) {
       buffer = get_MqBufferS (aTHX_ ST(1));
     }
     ErrorMqToPerlWithCheck (MqReadL_START (context, buffer)); 

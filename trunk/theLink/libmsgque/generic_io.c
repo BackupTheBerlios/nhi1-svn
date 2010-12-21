@@ -133,7 +133,7 @@ GenericServer (
 #endif
      ) {
     // do not create a "defunc" process
-    MqErrorCheck (SysIgnorSIGCHLD(context));
+    MqErrorCheck (MqSysIgnorSIGCHLD(context));
   }
 
   // 1. create socket
@@ -234,7 +234,7 @@ GenericServer (
      * to remind people that ECHILD errors can occur on
      * some systems if SIGCHLD isn't in its default state.
      */
-    MqErrorCheck (SysAllowSIGCHLD(context));
+    MqErrorCheck (MqSysAllowSIGCHLD(context));
   }
 
   // 5, finish
