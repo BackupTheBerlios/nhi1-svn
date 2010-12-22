@@ -12,40 +12,95 @@
 
 #include "msgque_python.h"
 
+extern PyTypeObject NS(MqS);
+
 #define MQ_CONTEXT_S CONTEXT
 
-static enum MqErrorE
+enum MqErrorE
 NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  MQ_PTR data,
-  struct MqS  ** contextP
+  struct MqFactoryItemS *item,
+  struct MqS ** contextP
 )
 {
+  struct MqS * mqctx;
+  PyObject *args, *result;
+  PyTypeObject* type = (PyTypeObject*) item->Create.data;
+
   if (create == MQ_FACTORY_NEW_FORK) PyOS_AfterFork();
-  {
-    struct MqS * const context = *contextP = 
-	&((MqS_Obj*) PyObject_CallObject((PyObject*)data, NULL))->context;
-    if (context == NULL) {
-      NS(ErrorSet) ((PyObject*)tmpl->self);
-      return MqErrorStack(tmpl);
-    } else {
-      MqConfigDup(context, tmpl);
-      MqErrorCheck(MqSetupDup(context, tmpl));
-      return MQ_OK;
-error:
-      *contextP = NULL;
-      MqErrorCopy (tmpl, context);
-      return MqErrorStack(tmpl);
-    }
+
+  // setup args
+  if (create == MQ_FACTORY_NEW_INIT) {
+    args = PyTuple_New(0);
+  } else {
+    PyObject *tmplO = (PyObject*)SELFX(tmpl);
+    args = PyTuple_New(1);
+    PyTuple_SET_ITEM(args,0, tmplO);
+    Py_INCREF(tmplO);
   }
+
+  // call constructor
+  result = PyObject_Call((PyObject*)type, args, NULL);
+  Py_DECREF(args);
+
+  // call factory object 
+  if (result == NULL || PyErr_Occurred() != NULL) goto error1;
+
+  // right type
+  if (PyObject_IsInstance(result, (PyObject*) &NS(MqS))) {
+    mqctx = &((MqS_Obj*)result)->context;
+  } else {
+    goto error1;
+  }
+
+  // check for MQ error
+  MqErrorCheck(MqErrorGetCode(mqctx));
+
+  // copy and initialize "setup" data
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqSetupDup(mqctx, tmpl);
+  }
+
+  *contextP = mqctx;
+  return MQ_OK;
+
+error:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCopy (tmpl, mqctx);
+    MqContextDelete (&mqctx);
+    return MqErrorStack(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+error1:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    NS(ErrorSet) ((PyObject*)tmpl->self);
+    return MqErrorGetCode(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+/*
+error2:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
+  } else {
+    return MQ_ERROR;
+  }
+*/
+
 }
 
-static void
+void MQ_DECL
 NS(FactoryDelete)(
   struct MqS * context,
   MQ_BOL doFactoryDelete,
-  MQ_PTR data
+  struct MqFactoryItemS * const data
 )
 {
   SETUP_self
@@ -70,6 +125,7 @@ PyObject* NS(ConfigSetBuffersize) (
   }
   MqConfigSetBuffersize (&self->context, (MQ_INT) PyLong_AsLong(arg));
   Py_RETURN_NONE;
+
 }
 
 PyObject* NS(ConfigSetDebug) (
@@ -297,18 +353,22 @@ PyObject* NS(ConfigSetEvent) (
 }
 
 PyObject* NS(ConfigSetFactory) (
-  MqS_Obj *self,
-  PyObject	*arg
+  MqS_Obj   *self,
+  PyObject  *args
 )
 {
+  MQ_CST ident;
+  PyObject *arg;
+  if (!PyArg_ParseTuple(args, "zO:ConfigSetFactory", &ident, &arg)) {
+    return NULL;
+  }
   if (!PyCallable_Check(arg)) {
     PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetFactory' must be callable");
     return NULL;
   }
   Py_INCREF (arg);
-  MqConfigSetFactory(CONTEXT,
-    NS(FactoryCreate),	arg,  NS(ProcFree), NS(ProcCopy),
-    NS(FactoryDelete),	NULL, NULL,	    NULL
+  MqConfigSetFactory(CONTEXT, ident,
+    NS(FactoryCreate),	arg,  NS(ProcFree), NS(FactoryDelete),	NULL, NULL
   );
   Py_RETURN_NONE;
 }

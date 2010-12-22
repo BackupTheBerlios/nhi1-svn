@@ -29,15 +29,15 @@ enum MqErrorE NS(FactoryCreate) (
   struct MqFactoryItemS * const item,
   struct MqS ** contextP
 ) {
-  struct MqS * mqctx;
+  struct MqS * mqctx = NULL;
 
   Tcl_Interp * interp;
 
   if (create == MQ_FACTORY_NEW_THREAD) {
     interp = Tcl_CreateInterp();
-    TclErrorToMq (Tcl_Init(interp))
+    TclErrorToCtxWithReturn (tmpl, Tcl_Init(interp))
     Tcl_SetVar (interp, "MQ_STARTUP_IS_THREAD", "yes", TCL_GLOBAL_ONLY);
-    TclErrorToMq (Tcl_EvalFile(interp, MqInitGet()->data[1]->cur.C))
+    TclErrorToCtxWithReturn (tmpl, Tcl_EvalFile(interp, MqInitGet()->data[1]->cur.C))
   } else if (create == MQ_FACTORY_NEW_INIT) {
     interp = (Tcl_Interp *const) tmpl;
   } else {
@@ -70,13 +70,16 @@ enum MqErrorE NS(FactoryCreate) (
 
     // 4. cleanup
     for (i=0;i<num;i++) Tcl_DecrRefCount(lobjv[i]);
-    TclErrorCheck3(ret);
+    TclErrorCheckG1(ret);
 
     // 5. get context from the Factory return value
-    TclErrorCheck3(NS(GetClientData) (interp, Tcl_GetObjResult(interp), (MQ_PTR*) &mqctx));
+    TclErrorCheckG2(NS(GetClientData) (interp, Tcl_GetObjResult(interp), MQ_MqS_SIGNATURE, (MQ_PTR*) &mqctx));
   }
 
-  // copy setup data and initialize "setup" data
+  // check for MQ error
+  MqErrorCheck(MqErrorGetCode(mqctx));
+
+  // copy and initialize "setup" data
   if (create != MQ_FACTORY_NEW_INIT) {
     MqSetupDup(mqctx, tmpl);
   }
@@ -105,6 +108,14 @@ error1:
   if (create != MQ_FACTORY_NEW_INIT) {
     NS(ProcError) ((struct TclContextS * const)tmpl, "FactoryCreate");
     return MqErrorGetCode(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+error2:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
   } else {
     return MQ_ERROR;
   }
@@ -474,6 +485,7 @@ int NS(ConfigGetStatusIs) (NS_ARGS)
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStatusIs(&tclctx->mqctx)));
   RETURN_TCL
 }
+
 
 
 

@@ -18,19 +18,22 @@
 int NS(GetClientData) (
   Tcl_Interp * interp,
   Tcl_Obj * obj,
+  MQ_INT signature,
   MQ_PTR *out
 )
 {
+  MQ_INT *ret;
   Tcl_CmdInfo infoPtr;
   Tcl_Command command;
-
   *out = NULL;
-
   command = Tcl_GetCommandFromObj (interp, obj);
   if (command == NULL)
     return TCL_ERROR;
   Tcl_GetCommandInfoFromToken (command, &infoPtr);
-  *out = infoPtr.objClientData;
+  ret = infoPtr.objClientData;
+  if (ret == NULL || *ret != signature)
+    return TCL_ERROR;
+  *out = (MQ_PTR) ret;
   return TCL_OK;
 }
 

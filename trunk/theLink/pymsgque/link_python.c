@@ -100,8 +100,6 @@ PyObject* NS(LinkCreateChild)(
     SETUP_context
     struct MqS * const parent = &parentO->context;
     struct MqBufferLS * largv = NULL;
-
-    MqErrorCheck (MqSetupDup(context, parent));
     MqErrorCheck (ListToMqBufferLS (context, argsO, &largv));
     SETUP_CHECK_RETURN (MqLinkCreateChild(context, parent, &largv));
   }

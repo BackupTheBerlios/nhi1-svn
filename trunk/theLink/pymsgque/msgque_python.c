@@ -19,7 +19,9 @@ PyObject * NS(MqSException) = NULL;
 extern PyTypeObject NS(MqS);
 extern PyTypeObject NS(MqBufferS);
 
-#define Init_DOC		    "[list] initialize the arguments prefix"
+// ************************************************************
+
+#define Init_DOC  "[list] initialize the arguments prefix"
 
 static PyObject* NS(Init) (
   PyObject    *class,
@@ -43,9 +45,95 @@ static PyObject* NS(Init) (
   SETUP_RETURN
 }
 
+// ************************************************************
+
+#define FactoryAdd_DOC  "[ident,callback] add factory callback"
+
+static PyObject* NS(FactoryAdd) (
+  PyObject    *class,
+  PyObject    *args
+)
+{
+  enum MqErrorE ret;
+  MQ_CST ident;
+  PyObject *arg;
+  if (PyTuple_GET_SIZE(args) == 1) {
+    if (!PyArg_ParseTuple(args, "O!:FactoryAdd", &PyType_Type, &arg)) {
+      return NULL;
+    }
+    ident = ((PyTypeObject*)arg)->tp_name;
+  } else {
+    if (!PyArg_ParseTuple(args, "sO!:FactoryAdd", &ident, &PyType_Type, &arg)) {
+      return NULL;
+    }
+  }
+  Py_INCREF (arg);
+  ret = MqFactoryAdd(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+  if (MqErrorCheckI(ret)) {
+    PyErr_SetString(PyExc_RuntimeError, "unable to add factory");
+    return NULL;
+  }
+  Py_RETURN_NONE;
+}
+
+#define FactoryNew_DOC  "[ident,callback] add and call factory callback"
+
+static PyObject* NS(FactoryNew) (
+  PyObject    *class,
+  PyObject    *args
+)
+{
+  struct MqS *mqctx;
+  MQ_CST ident;
+  PyObject *arg;
+  if (PyTuple_GET_SIZE(args) == 1) {
+    if (!PyArg_ParseTuple(args, "O!:FactoryNew", &PyType_Type, &arg)) {
+      return NULL;
+    }
+    ident = ((PyTypeObject*)arg)->tp_name;
+  } else {
+    if (!PyArg_ParseTuple(args, "sO!:FactoryNew", &ident, &PyType_Type, &arg)) {
+      return NULL;
+    }
+  }
+  Py_INCREF (arg);
+  Py_INCREF (arg);
+  mqctx = MqFactoryNew(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+  if (mqctx == NULL) {
+    PyErr_SetString(PyExc_RuntimeError, "unable to add and call factory");
+    return NULL;
+  }
+  arg = ((PyObject *)SELFX(mqctx));
+  Py_INCREF(arg);
+  return arg;
+}
+
+#define FactoryCall_DOC  "[ident] call factory callback"
+
+static PyObject* NS(FactoryCall) (
+  PyObject    *class,
+  PyObject    *arg
+)
+{
+  struct MqS * mqctx;
+  MQ_STR ident = PyO2C_START (&arg);
+  if (PyErr_Occurred() != NULL) return NULL;
+  mqctx = MqFactoryCall(ident);
+  if (mqctx == NULL) {
+    PyErr_SetString(PyExc_RuntimeError, "unable to call factory");
+    return NULL;
+  }
+  arg = ((PyObject *)SELFX(mqctx));
+  Py_INCREF(arg);
+  return arg;
+}
+
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
 static PyMethodDef NS(Methods)[] = {
-    ARG(Init,	METH_O),
+    ARG(Init,	      METH_O),
+    ARG(FactoryAdd,   METH_VARARGS),
+    ARG(FactoryNew,   METH_VARARGS),
+    ARG(FactoryCall,  METH_O),
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 #undef ARG
@@ -53,7 +141,7 @@ static PyMethodDef NS(Methods)[] = {
 static PyModuleDef NS(Module) = {
   PyModuleDef_HEAD_INIT,
   "pymsgque",
-  "python language binding for: http://libmsgque.sourceforge.net/",
+  "python language binding for: http://developer.berlios.de/projects/nhi1/",
   -1,
   NS(Methods), 
   NULL, NULL, NULL, NULL
@@ -116,6 +204,9 @@ PyInit_pymsgque(void)
     Py_DECREF(list);
     Py_DECREF(sys);
   }
+
+  // init factory
+  MqFactoryDefault("pymsgque", NS(FactoryCreate), (MQ_PTR)&NS(MqS), NULL, NS(FactoryDelete), NULL, NULL);
 
   return m;
 

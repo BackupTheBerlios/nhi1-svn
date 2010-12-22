@@ -84,7 +84,8 @@ typedef struct MqS_Obj {
     ErrorMqToPython(); \
     return NULL;
 
-#define SELF ((MqS_Obj*)context->self)
+#define SELFX(c) ((MqS_Obj*)c->self)
+#define SELF SELFX(context)
 #define SETUP_self MqS_Obj* self = SELF;
 
 #undef printO
@@ -99,7 +100,18 @@ error: \
 
 enum MqErrorE MQ_DECL NS(ProcCall) (struct MqS * const , MQ_PTR const);
 void MQ_DECL NS(ProcFree) (struct MqS const * const , MQ_PTR*);
-enum MqErrorE MQ_DECL NS(ProcCopy) (struct MqS * const , MQ_PTR*);
+void MQ_DECL NS(ProcCopy) (struct MqS * const , MQ_PTR*);
+enum MqErrorE MQ_DECL NS(FactoryCreate) (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS *item,
+  struct MqS ** contextP
+);
+void MQ_DECL NS(FactoryDelete)( 
+  struct MqS * context, 
+  MQ_BOL doFactoryDelete, 
+  struct MqFactoryItemS * const data
+);
 void NS(pErrorFromMq) (struct MqS * const);
 enum MqErrorE ListToMqBufferLS (struct MqS * const, PyObject *, struct MqBufferLS **);
 

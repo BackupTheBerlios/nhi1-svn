@@ -98,7 +98,7 @@ int NS(LinkCreateChild) (NS_ARGS)
   struct MqS * parent;
 
   // get the parent tclctx
-  if (objc < 3 || NS(GetClientData) (interp, objv[skip], (MQ_PTR*) &parent) == TCL_ERROR) {
+  if (objc < 3 || NS(GetClientData) (interp, objv[skip], MQ_MqS_SIGNATURE, (MQ_PTR*) &parent) == TCL_ERROR) {
     Tcl_WrongNumArgs (interp, 2, objv, "parent ...");
     return TCL_ERROR;
   } else {

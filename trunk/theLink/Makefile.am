@@ -11,7 +11,7 @@
 #§
 
 SUBDIRS = libmsgque
-SUBDIRS += example/c
+#SUBDIRS += example/c
 if USE_CXX
 SUBDIRS += ccmsgque
 SUBDIRS += example/cc

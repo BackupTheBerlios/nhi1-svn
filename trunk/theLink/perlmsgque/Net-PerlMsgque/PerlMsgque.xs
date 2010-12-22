@@ -211,6 +211,9 @@ static enum MqErrorE FactoryCreate (
   struct MqFactoryItemS * item,
   struct MqS **		  contextP
 ) {
+  struct MqS * mqctx = NULL;
+  enum MqErrorE ret = MQ_OK;
+  int count;
 
 #ifdef MQ_HAS_THREAD
   if (create == MQ_FACTORY_NEW_THREAD) {
@@ -218,49 +221,78 @@ static enum MqErrorE FactoryCreate (
   }
 #endif
 
-  {
-    dSP;
-    enum MqErrorE ret = MQ_OK;
-    int count;
-    *contextP = NULL;
+  dSP;
+  *contextP = NULL;
 
-    ENTER;
-    SAVETMPS;
+  ENTER;
+  SAVETMPS;
 
-    PUSHMARK(SP);
-    XPUSHs((SV*)item->Create.data);
-    if (create != MQ_FACTORY_NEW_INIT) {
-      XPUSHs((SV*)tmpl->self);
-    }
-    PUTBACK;
-
-    count = call_method ("new", G_SCALAR|G_EVAL);
-
-    SPAGAIN;
-    if (count != 1) {
-      ret = MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
-    } else if (create != MQ_FACTORY_NEW_INIT) {
-      ret = ProcError (aTHX_ tmpl, ERRSV);
-    } else if (SvTRUE(ERRSV)) {
-      croak(SvPV_nolen(ERRSV));
-      ret = MQ_ERROR;
-    }
-    if (ret == MQ_OK) {
-      MqS * context = *contextP = get_MqS_NO_ERROR(POPs);
-      if (context != NULL) {
-	if (create != MQ_FACTORY_NEW_INIT) {
-	  MqSetupDup (context, tmpl);
-	}
-      } else {
-	ret = MqErrorC(tmpl, __func__, -1, "factory return is not of type 'Net::PerlMsgque::MqS'");
-      }
-    }
-    PUTBACK;
-    FREETMPS;
-    LEAVE;
-
-    return ret;
+  PUSHMARK(SP);
+  XPUSHs((SV*)item->Create.data);
+  if (create != MQ_FACTORY_NEW_INIT) {
+    XPUSHs((SV*)tmpl->self);
   }
+  PUTBACK;
+
+  count = call_method ("new", G_SCALAR|G_EVAL);
+
+  SPAGAIN;
+  if (SvTRUE(ERRSV)) {
+    goto error1;
+  } else if (count != 1) {
+    if (create != MQ_FACTORY_NEW_INIT) {
+      MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
+    } else {
+      croak("factory return more than one value!");
+    }
+    return MQ_ERROR;  
+  }
+
+  mqctx = get_MqS_NO_ERROR(POPs);
+  if (mqctx == NULL) goto error2;
+
+  // check for MQ error
+  MqErrorCheck(MqErrorGetCode(mqctx));
+
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqSetupDup (mqctx, tmpl);
+  }
+
+  PUTBACK;
+  FREETMPS;
+  LEAVE;
+
+  *contextP = mqctx;
+  return ret;
+
+error:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    MqErrorCopy (tmpl, mqctx);
+    MqContextDelete (&mqctx);
+    return MqErrorStack(tmpl);
+  } else {
+    return MQ_ERROR;
+  }
+
+error1:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    return ProcError (aTHX_ tmpl, ERRSV);
+  } else {
+    croak(SvPV_nolen(ERRSV));
+    return MQ_ERROR;
+  }
+
+error2:
+  *contextP = NULL;
+  if (create != MQ_FACTORY_NEW_INIT) {
+    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
+  } else {
+    croak("Factory return no MqS type");
+    return MQ_ERROR;
+  }
+
 }
 
 static void FactoryDelete (

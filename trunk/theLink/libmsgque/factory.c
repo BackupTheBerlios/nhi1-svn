@@ -130,7 +130,7 @@ sFactorySpaceDelAll (
   }
 }
 
-static void
+static enum MqErrorE
 pFactoryAddName (
   MQ_CST const name,
   struct MqFactoryCreateS Create,
@@ -142,7 +142,7 @@ pFactoryAddName (
   if (find != NULL) {
     // item already available, PANIC if callback is NOT equal
     if (memcmp(&Create, &find->Create, sizeof(Create)) || memcmp(&Delete, &find->Delete, sizeof(Delete))) {
-      MqPanicV(MQ_ERROR_PANIC,__FILE__,-1,"factory-entry '%s' already in use", name);
+      return MqErrorV(MQ_ERROR_PRINT,__FILE__,-1,"factory-entry '%s' already in use", name);
     }
     // OK, item available and in use ... nothing to do
   } else {
@@ -161,6 +161,7 @@ pFactoryAddName (
     free->Create = Create;
     free->Delete = Delete;
   }
+  return MQ_OK;
 }
 
 /*****************************************************************************/
@@ -242,19 +243,22 @@ error:
     }
     return MqErrorStack(tmpl);
   } else {
+    if (mqctx != NULL) {
+      MqErrorC(MQ_ERROR_PRINT, __func__, -1, MqErrorGetText(mqctx));
+    }
     return MQ_ERROR;
   }
 
 error2:
   *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
+  if (create != MQ_FACTORY_NEW_INIT || tmpl == MQ_ERROR_PRINT) {
     return MqErrorDbV2(tmpl, MQ_ERROR_CONFIGURATION_REQUIRED, "Factory", "MqSetupS::Factory");
   } else {
     return MQ_ERROR;
   }
 }
 
-void
+enum MqErrorE
 MqFactoryAdd (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
@@ -268,12 +272,12 @@ MqFactoryAdd (
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
   if (name == NULL || fCreate == NULL) {
-    MqPanicC (MQ_ERROR_PANIC, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
+    return MqErrorC (MQ_ERROR_PRINT, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
   }
-  pFactoryAddName (name, Create, Delete);
+  return pFactoryAddName (name, Create, Delete);
 }
 
-void
+enum MqErrorE
 MqFactoryDefault (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
@@ -287,7 +291,7 @@ MqFactoryDefault (
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
   if (name == NULL || fCreate == NULL) {
-    MqPanicC (MQ_ERROR_PANIC, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
+    return MqErrorC (MQ_ERROR_PRINT, __func__, -1, "factory definition incomplete 'name' or 'fCreate' not available");
   }
   // Del
   sFactorySpaceDelItem (&space.items[0]);
@@ -296,6 +300,7 @@ MqFactoryDefault (
   space.items[0].Create = Create;
   space.items[0].Delete = Delete;
   defaultFactory = space.items[0].name;
+  return MQ_OK;
 }
 
 struct MqS *
@@ -307,7 +312,8 @@ MqFactoryCall (
   MqErrorCheck(MqFactoryInvoke (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (name), &ctx));
   return ctx;
 error:
-  MqPanicV(MQ_ERROR_PANIC, __func__, -1, "unable to call main factory for identifer '%s'", name);
+  MqErrorV(MQ_ERROR_PRINT, __func__, -1, "unable to call main factory for identifer '%s'", name);
+  return NULL;
 }
 
 struct MqS *
@@ -321,9 +327,11 @@ MqFactoryNew (
   MqTokenDataFreeF const deleteDatafreeF
 )
 {
-  MqFactoryAdd (name, fCreate, createData, createDatafreeF, fDelete, deleteData, deleteDatafreeF);
-  struct MqS* ctx = MqFactoryCall (name); 
-  return ctx;
+  MqErrorCheck(MqFactoryAdd (name, fCreate, createData, createDatafreeF, 
+    fDelete, deleteData, deleteDatafreeF));
+  return MqFactoryCall (name); 
+error:
+  return NULL;
 }
 
 MQ_PTR

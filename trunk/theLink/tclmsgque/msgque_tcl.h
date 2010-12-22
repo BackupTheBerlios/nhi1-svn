@@ -58,11 +58,15 @@ error: \
   return TCL_ERROR;
 
 #define TclErrorCheck(cmd) if (cmd != TCL_OK) return TCL_ERROR
-#define TclErrorCheck2(cmd) if (cmd != TCL_OK) goto error
-#define TclErrorCheck3(cmd) if (cmd != TCL_OK) goto error1
-#define TclErrorToMq(cmd) if (cmd != TCL_OK) {\
+#define TclErrorCheckG(cmd) if (cmd != TCL_OK) goto error
+#define TclErrorCheckG1(cmd) if (cmd != TCL_OK) goto error1
+#define TclErrorCheckG2(cmd) if (cmd != TCL_OK) goto error2
+#define TclErrorToMq(ctx,cmd) if (cmd != TCL_OK) {\
   MqErrorC(mqctx,__func__,-1,Tcl_GetStringResult(interp)); \
   goto error; \
+}
+#define TclErrorToCtxWithReturn(ctx,cmd) if (cmd != TCL_OK) {\
+  return MqErrorC(ctx,__func__,-1,Tcl_GetStringResult(interp)); \
 }
 
 /// \brief T)hread L)ocal S)torage identifer (set by "configure")
@@ -113,26 +117,22 @@ error: \
     Tcl_WrongNumArgs(interp, skip, objv, #val " ...");\
     goto error;\
   } else { \
-    TclErrorCheck2(NS(ProcCheck)(interp,objv[skip], err)); \
+    TclErrorCheckG(NS(ProcCheck)(interp,objv[skip], err)); \
     val = objv[skip]; \
     skip++; \
   }
 
 #define CHECK_OPTIONAL_PROC(val, err) \
   if (skip < objc) {\
-    TclErrorCheck2(NS(ProcCheck)(interp,objv[skip], err)); \
+    TclErrorCheckG(NS(ProcCheck)(interp,objv[skip], err)); \
     val = objv[skip]; \
     skip++; \
   }
 
 #define CHECK_MQS(val) \
   val = NULL; \
-  if (skip < objc && Tcl_GetCommandFromObj(interp, objv[skip])) { \
-    MQ_PTR ctx = NULL; \
-    if (NS(GetClientData) (interp, objv[skip], &ctx) == TCL_OK) { \
-      val = (struct MqS *) ctx; \
-      if (val->signature != MQ_MqS_SIGNATURE) val = NULL; \
-    } \
+  if (skip < objc) { \
+    NS(GetClientData) (interp, objv[skip], MQ_MqS_SIGNATURE, (MQ_PTR*)&val); \
   } \
   if (val == NULL) { \
     Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
@@ -147,13 +147,7 @@ error: \
     if (objv[skip]->length == 0 && objv[skip]->typePtr == NULL) { \
       skip++; \
     } else { \
-      if (Tcl_GetCommandFromObj(interp, objv[skip])) { \
-	MQ_PTR ctx = NULL; \
-	if (NS(GetClientData) (interp, objv[skip], &ctx) == TCL_OK) { \
-	  val = (struct MqS *) ctx; \
-	  if (val->signature != MQ_MqS_SIGNATURE) val = NULL; \
-	} \
-      } \
+      NS(GetClientData) (interp, objv[skip], MQ_MqS_SIGNATURE, (MQ_PTR*)&val); \
       if (val == NULL) { \
 	Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
 	goto error; \
@@ -165,12 +159,8 @@ error: \
 
 #define CHECK_BUFFER(val) \
   val = NULL; \
-  if (skip < objc && Tcl_GetCommandFromObj(interp, objv[skip])) {\
-    MQ_PTR buffer = NULL; \
-    if (NS(GetClientData) (interp, objv[skip], &buffer) == TCL_OK) { \
-      val = (struct MqBufferS *) buffer; \
-      if (val->signature != MQ_MqBufferS_SIGNATURE) val = NULL; \
-    } \
+  if (skip < objc) {\
+    NS(GetClientData) (interp, objv[skip], MQ_MqBufferS_SIGNATURE, (MQ_PTR*)&val); \
   } \
   if (val == NULL) { \
     Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
@@ -203,7 +193,7 @@ error: \
     goto error;\
   } else { \
     ttype tmp; \
-    TclErrorCheck2(func(interp, objv[skip], &tmp)); \
+    TclErrorCheckG(func(interp, objv[skip], &tmp)); \
     val = (type) tmp; \
     skip++; \
   }
@@ -211,7 +201,7 @@ error: \
 #define CHECK_DEFTMPL(val,type,ttype,func) \
   if (skip < objc) {\
     ttype tmp; \
-    TclErrorCheck2(func(interp, objv[skip], &tmp)); \
+    TclErrorCheckG(func(interp, objv[skip], &tmp)); \
     val = (type) tmp; \
     skip++; \
   }
@@ -281,7 +271,7 @@ int   NS(MqBufferS_Pointer) ( Tcl_Interp *, struct MqBufferS *);
 
 int   NS(pErrorFromMq)	    ( Tcl_Interp*, struct MqS * const);
 int   NS(ErrorStringToTcl)  ( Tcl_Interp*, MQ_CST);
-int   NS(GetClientData)	    ( Tcl_Interp*, Tcl_Obj*, MQ_PTR*);
+int   NS(GetClientData)	    ( Tcl_Interp*, Tcl_Obj*, MQ_INT, MQ_PTR*);
 int   NS(ReadNext)	    ( struct MqReadS* const, Tcl_Obj **, Tcl_Obj **);
 int   NS(ReadAll)	    ( Tcl_Interp *, struct MqReadS * const, int, Tcl_Obj **);
 int   NS(PrepareList)	    ( struct MqS const * const, Tcl_Obj * const, int const);
@@ -296,5 +286,7 @@ enum MqErrorE   NS(ProcError)	    ( struct TclContextS * const, MQ_CST);
 
 
 #endif // MSGQUE_TCL_H
+
+
 
 

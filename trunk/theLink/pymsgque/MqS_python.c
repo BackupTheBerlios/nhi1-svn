@@ -12,20 +12,25 @@
 
 #include "msgque_python.h"
 
+extern PyTypeObject NS(MqS);
+
 #define MSGQUE msgque
 
 static PyObject *
 NS(MqS_new)(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
+  MqS_Obj *tmplO = NULL;
   MqS_Obj *self = (MqS_Obj*)type->tp_alloc(type, 0);
-  MqContextInit (&self->context, 0, NULL);
+  struct MqS * mqctx = &self->context;
+  if (!PyArg_ParseTuple(args, "|O!:__new__", &NS(MqS), &tmplO)) {
+    return NULL;
+  }
+  MqContextInit (mqctx, 0, tmplO ? &tmplO->context : NULL);
   Py_INCREF(self);
-//MqDLogX(&self->context,__func__,0,"self<%p>, refCount<%li>\n", self, ((PyObject*)self)->ob_refcnt);
-  MqConfigSetSelf (&self->context, self);
-  self->context.setup.Child.fCreate  = MqLinkDefault;
-  self->context.setup.Parent.fCreate = MqLinkDefault;
-  self->context.setup.fProcessExit = NS(ProcessExit);
-  MqConfigSetIgnoreThread (&self->context, MQ_YES);
+//printXLV(mqctx,"self<%p>, refCount<%li>\n", self, ((PyObject*)self)->ob_refcnt);
+  MqConfigSetSelf (mqctx, self);
+  MqConfigSetSetup(mqctx, MqLinkDefault, NULL, MqLinkDefault, NULL, NS(ProcessExit), NULL);
+  MqConfigSetIgnoreThread (mqctx, MQ_YES);
   return (PyObject *)self;
 }
 
@@ -209,9 +214,9 @@ PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIdent)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIoUdsFile)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIoUdsFile)      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIoPipeSocket)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetIoPipeSocket)   ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetStartAs)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetDaemon)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIsString)	      ( PyObject*, PyObject* );
@@ -386,7 +391,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
     ARG(ConfigSetIdent,		METH_O),
-    ARG(ConfigSetIoUdsFile,		METH_O),
+    ARG(ConfigSetIoUdsFile,	METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
     ARG(ConfigSetIoPipeSocket,	METH_O),
     ARG(ConfigSetStartAs,	METH_O),
@@ -399,11 +404,11 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetServerCleanup, METH_O),
     ARG(ConfigSetBgError,	METH_O),
     ARG(ConfigSetEvent,		METH_O),
-    ARG(ConfigSetFactory,	METH_O),
+    ARG(ConfigSetFactory,	METH_VARARGS),
     ARG(ConfigGetIsString,	METH_NOARGS),
     ARG(ConfigGetIsSilent,	METH_NOARGS),
     ARG(ConfigGetIsServer,	METH_NOARGS),
-    ARG(SlaveIs,	METH_NOARGS),
+    ARG(SlaveIs,		METH_NOARGS),
     ARG(ConfigGetDebug,		METH_NOARGS),
     ARG(ConfigGetTimeout,	METH_NOARGS),
     ARG(ConfigGetBuffersize,	METH_NOARGS),
@@ -417,7 +422,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIoTcpMyPort,	METH_NOARGS),
     ARG(ConfigGetIoPipeSocket,	METH_NOARGS),
     ARG(ConfigGetStartAs,	METH_NOARGS),
-    ARG(SlaveGetMaster,	METH_NOARGS),
+    ARG(SlaveGetMaster,		METH_NOARGS),
 
     ARG(ErrorC,			METH_VARARGS),
     ARG(ErrorSet,		METH_NOARGS),
@@ -492,14 +497,4 @@ PyTypeObject NS(MqS) = {
   0,				  /* tp_alloc */
   NS(MqS_new),			  /* tp_new */
 };
-
-
-
-
-
-
-
-
-
-
 

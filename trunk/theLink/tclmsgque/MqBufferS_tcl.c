@@ -195,7 +195,7 @@ int NS(MqBufferS_Init) (
   struct MqBufferS * bufCtx = MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof(*bufCtx));
   struct MqBufferS * tmpCtx;
 
-  if (objc != 3 || NS(GetClientData) (interp, objv[2], (MQ_PTR*) &tmpCtx) == TCL_ERROR) {
+  if (objc != 3 || NS(GetClientData) (interp, objv[2], MQ_MqBufferS_SIGNATURE, (MQ_PTR*) &tmpCtx) == TCL_ERROR) {
     Tcl_WrongNumArgs (interp, 0, NULL, "tclmsgque MqBufferS buffer");
     return TCL_ERROR;
   }

@@ -67,7 +67,7 @@ MQ_DECL NS(ProcFree) (
   *dataP = NULL;
 }
 
-enum MqErrorE
+void
 MQ_DECL NS(ProcCopy) (
   struct MqS * const context,
   MQ_PTR *dataP
@@ -77,11 +77,10 @@ MQ_DECL NS(ProcCopy) (
   PyObject* const function = PyMethod_Function(*dataP);
   if (function != NULL) {
     *dataP = (void*) PyMethod_New(function, (PyObject*)context->self);
-    if (*dataP == NULL) return MqErrorC(context,__func__,-1,"unable to 'PyMethod_New'");
+    if (*dataP == NULL) MqPanicC(context,__func__,-1,"unable to 'PyMethod_New'");
     // MQ_CST data = PyBytes_AsString(PyUnicode_AsASCIIString(PyObject_Repr(*dataP))); printC(data)
   }
   Py_INCREF(*dataP);
-  return MQ_OK;
 }
 
 void NS(pErrorFromMq) (

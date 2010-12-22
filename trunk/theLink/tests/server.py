@@ -18,31 +18,19 @@ from pymsgque import *
 class Client(MqS):
 
   def __init__(self):
-    self.ConfigSetFactory(lambda: Client())
     self.ConfigSetBgError(self.BgError)
     self.ConfigSetSrvName("test-server")
     MqS.__init__(self)
 
   def LinkCreate(self, debug):
     self.ConfigSetDebug(debug)
-    super().LinkCreate(["client", "@", "SELF"])
+    super().LinkCreate(["client", "@", "server"])
 
   def BgError(self):
     master = self.SlaveGetMaster();
     if (master != None):
       master.ErrorC ("BGERROR", self.ErrorGetNum(), self.ErrorGetText());
       master.SendERROR();
-
-class ClientERR(MqS):
-
-  def __init__(self):
-    self.ConfigSetSrvName("test-server")
-    self.ConfigSetName("test-client")
-    MqS.__init__(self)
-
-  def LinkCreate(self, debug):
-    self.ConfigSetDebug(debug)
-    super().LinkCreate(["client", "@", "SELF"])
 
 class ClientERR2(MqS):
 
@@ -57,11 +45,9 @@ class ClientERR2(MqS):
 class Server(MqS):
 
   def __init__(self):
-    self.ConfigSetName("server")
-    self.ConfigSetIdent("test-server")
+    #print("__init__ -----------", self)
     self.ConfigSetServerSetup(self.ServerSetup)
     self.ConfigSetServerCleanup(self.ServerCleanup)
-    self.ConfigSetFactory(lambda: Server())
     MqS.__init__(self)
 
   def ServerCleanup(self):
@@ -601,10 +587,6 @@ class Server(MqS):
       slv = Client()
       slv.LinkCreate(self.ConfigGetDebug())
       self.SlaveCreate(id, slv);
-    elif s == "CREATE3" :
-      slv = ClientERR()
-      slv.LinkCreate(self.ConfigGetDebug())
-      self.SlaveCreate(id, slv);
     elif s == "DELETE" :
       self.SlaveDelete(id);
       if (self.SlaveGet(id) == None):
@@ -658,7 +640,7 @@ class Server(MqS):
 #print("1111 >", MqS_WAIT_FOREVER)
 #sys.stdout.flush()
 
-srv = Server()
+srv = FactoryNew("server", Server);
 
 try:
   srv.LinkCreate(sys.argv)

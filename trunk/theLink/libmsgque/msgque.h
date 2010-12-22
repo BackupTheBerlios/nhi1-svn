@@ -884,7 +884,7 @@ MQ_EXTERN struct MqS * MQ_DECL MqFactoryNew (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
 
-MQ_EXTERN void MQ_DECL MqFactoryAdd (
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryAdd (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
@@ -894,7 +894,7 @@ MQ_EXTERN void MQ_DECL MqFactoryAdd (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
 
-MQ_EXTERN void MQ_DECL MqFactoryDefault (
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefault (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
