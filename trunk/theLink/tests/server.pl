@@ -708,7 +708,7 @@ use base qw(Net::PerlMsgque::MqS);
     for ($i=0;$i<3;$i++) {
       if ($ctx->DictExists($i)) {
 	#$ctx->Log("ServerCleanup", 0, ">>>>> cl-$i=" . $ctx->DictGet ($i) . "\n");
-	undef $ctx->DictUnset($i);
+	$ctx->DictUnset($i)->Delete();
 	#$ctx->Log("ServerCleanup", 0, "<<<<<\n");
       }
     }

@@ -540,6 +540,11 @@ void
 MqExit(MqS * context)
 
 void
+MqDelete (MqS* context)
+  CODE:
+    MqContextFree (context);
+
+void
 MqLogC(MqS * context, MQ_CST prefix, int level, MQ_CST text)
 
 void
