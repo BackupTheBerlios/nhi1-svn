@@ -14,8 +14,7 @@ import sys
 from pymsgque import *
 
 class manfilter(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: manfilter())
+  def __init__(self, tmpl=None):
     self.ConfigSetName("ManFilter")
     self.ConfigSetServerSetup(self.ServerSetup)
     self.data = []

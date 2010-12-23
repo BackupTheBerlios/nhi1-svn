@@ -17,7 +17,7 @@ from pymsgque import *
 
 class Client(MqS):
 
-  def __init__(self):
+  def __init__(self, tmpl=None):
     self.ConfigSetBgError(self.BgError)
     self.ConfigSetSrvName("test-server")
     MqS.__init__(self)
@@ -44,7 +44,7 @@ class ClientERR2(MqS):
 
 class Server(MqS):
 
-  def __init__(self):
+  def __init__(self, tmpl=None):
     #print("__init__ -----------", self)
     self.ConfigSetServerSetup(self.ServerSetup)
     self.ConfigSetServerCleanup(self.ServerCleanup)
@@ -536,7 +536,7 @@ class Server(MqS):
     elif s == "START4" :
       self.cl[id].SlaveWorker(0);
     elif s == "START5" :
-      self.SlaveWorker(id, ["--name", "wk-cl-" + str(id), "--srvname", "wk-sv-" + str(id), "--fork"]);
+      self.SlaveWorker(id, ["--name", "wk-cl-" + str(id), "--srvname", "wk-sv-" + str(id)]);
     elif s == "STOP" :
       #print("STOP -> self = ", self, ", cl = ", self.cl[id], ", type = ", type(self.cl[id]))
       self.cl[id].LinkDelete();

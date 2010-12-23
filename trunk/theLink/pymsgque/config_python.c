@@ -27,6 +27,7 @@ NS(FactoryCreate) (
   struct MqS * mqctx;
   PyObject *args, *result;
   PyTypeObject* type = (PyTypeObject*) item->Create.data;
+  PyObject *tmplO = NULL;
 
   if (create == MQ_FACTORY_NEW_FORK) PyOS_AfterFork();
 
@@ -34,9 +35,9 @@ NS(FactoryCreate) (
   if (create == MQ_FACTORY_NEW_INIT) {
     args = PyTuple_New(0);
   } else {
-    PyObject *tmplO = (PyObject*)SELFX(tmpl);
     args = PyTuple_New(1);
-    PyTuple_SET_ITEM(args,0, tmplO);
+    tmplO = (PyObject*)SELFX(tmpl);
+    PyTuple_SET_ITEM(args, 0, tmplO);
     Py_INCREF(tmplO);
   }
 
@@ -357,16 +358,7 @@ PyObject* NS(ConfigSetFactory) (
   PyObject  *args
 )
 {
-  MQ_CST ident;
-  PyObject *arg;
-  if (!PyArg_ParseTuple(args, "zO:ConfigSetFactory", &ident, &arg)) {
-    return NULL;
-  }
-  if (!PyCallable_Check(arg)) {
-    PyErr_SetString(PyExc_TypeError, "parameter for 'ConfigSetFactory' must be callable");
-    return NULL;
-  }
-  Py_INCREF (arg);
+  SETUP_FACTORY_ARG(ConfigSetFactory)
   MqConfigSetFactory(CONTEXT, ident,
     NS(FactoryCreate),	arg,  NS(ProcFree), NS(FactoryDelete),	NULL, NULL
   );
@@ -503,6 +495,13 @@ PyObject* NS(ConfigGetStartAs) (
 )
 {
   return PyLong_FromLong(MqConfigGetStartAs(&ICONTEXT));
+}
+
+PyObject* NS(ConfigGetStatusIs) (
+  PyObject    *self
+)
+{
+  return PyLong_FromLong(MqConfigGetStatusIs(&ICONTEXT));
 }
 
 PyObject* NS(ConfigSetDaemon) (

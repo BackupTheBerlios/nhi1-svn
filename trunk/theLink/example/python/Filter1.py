@@ -14,8 +14,7 @@ import sys
 from pymsgque import *
 
 class Filter1(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: Filter1())
+  def __init__(self, tmpl=None):
     self.ConfigSetName("filter")
     self.ConfigSetServerSetup(self.ServerSetup)
     self.data = []
@@ -47,7 +46,4 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-
-
-
 

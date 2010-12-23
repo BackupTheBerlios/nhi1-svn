@@ -14,8 +14,7 @@ import sys
 from pymsgque import *
 
 class Filter3(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: Filter3())
+  def __init__(self, tmpl=None):
     self.ConfigSetName("Filter3")
     self.ConfigSetServerSetup(self.ServerSetup)
     MqS.__init__(self)

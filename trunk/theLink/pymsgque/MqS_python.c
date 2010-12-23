@@ -19,13 +19,18 @@ extern PyTypeObject NS(MqS);
 static PyObject *
 NS(MqS_new)(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
+  struct MqS * tmpl = NULL;
   MqS_Obj *tmplO = NULL;
   MqS_Obj *self = (MqS_Obj*)type->tp_alloc(type, 0);
   struct MqS * mqctx = &self->context;
   if (!PyArg_ParseTuple(args, "|O!:__new__", &NS(MqS), &tmplO)) {
     return NULL;
   }
-  MqContextInit (mqctx, 0, tmplO ? &tmplO->context : NULL);
+  if (tmplO != NULL) {
+    tmpl = &tmplO->context;
+  }
+  
+  MqContextInit (mqctx, 0, tmpl);
   Py_INCREF(self);
 //printXLV(mqctx,"self<%p>, refCount<%li>\n", self, ((PyObject*)self)->ob_refcnt);
   MqConfigSetSelf (mqctx, self);
@@ -244,6 +249,7 @@ PyObject* NS(ConfigGetIoTcpMyHost)    ( PyObject* );
 PyObject* NS(ConfigGetIoTcpMyPort)    ( PyObject* );
 PyObject* NS(ConfigGetIoPipeSocket)   ( PyObject* );
 PyObject* NS(ConfigGetStartAs)	      ( PyObject* );
+PyObject* NS(ConfigGetStatusIs)	      ( PyObject* );
 PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 
 
@@ -283,6 +289,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigGetIoTcpMyPort_DOC    "[noARG] return the PyMqS 'tcp-myport-name' (str) of the object."
 #define ConfigGetIoPipeSocket_DOC   "[noARG] return the PyMqS 'pipe-socket-file-descriptor' (int) of the object."
 #define ConfigGetStartAs_DOC	    "[noARG] return the PyMqS 'start-kind-value' (int) of the object."
+#define ConfigGetStatusIs_DOC	    "[noARG] return the PyMqS 'status' (int) of the object."
 
 // from error_python.c
 
@@ -422,6 +429,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetIoTcpMyPort,	METH_NOARGS),
     ARG(ConfigGetIoPipeSocket,	METH_NOARGS),
     ARG(ConfigGetStartAs,	METH_NOARGS),
+    ARG(ConfigGetStatusIs,	METH_NOARGS),
     ARG(SlaveGetMaster,		METH_NOARGS),
 
     ARG(ErrorC,			METH_VARARGS),

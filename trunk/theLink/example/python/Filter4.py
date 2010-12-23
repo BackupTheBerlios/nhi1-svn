@@ -14,10 +14,8 @@ import sys
 from pymsgque import *
 
 class Filter4(MqS):
-  def __init__(ctx):
+  def __init__(ctx, tmpl=None):
     ctx.ConfigSetIgnoreExit(True)
-    ctx.ConfigSetIdent("transFilter")
-    ctx.ConfigSetFactory(lambda: Filter4())
     ctx.ConfigSetServerSetup(ctx.ServerSetup)
     ctx.ConfigSetServerCleanup(ctx.ServerCleanup)
     ctx.ConfigSetEvent(ctx.Event)
@@ -27,7 +25,7 @@ class Filter4(MqS):
   def ServerCleanup(ctx):
     ftr = ctx.ServiceGetFilter()
     if ftr.FH != None:
-      close (ftr.FH)
+      ftr.FH.close()
   def ServerSetup(ctx):
     ftr = ctx.ServiceGetFilter()
     ctx.ServiceCreate("LOGF", ctx.LOGF)
@@ -73,7 +71,7 @@ class Filter4(MqS):
     ctx.itms.append(ctx.ReadBDY())
     ctx.SendRETURN()
 try:
-  srv = Filter4()
+  srv = FactoryNew("transFilter", Filter4)
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)
 except:

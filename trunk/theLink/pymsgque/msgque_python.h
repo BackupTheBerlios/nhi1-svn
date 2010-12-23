@@ -84,6 +84,21 @@ typedef struct MqS_Obj {
     ErrorMqToPython(); \
     return NULL;
 
+#define SETUP_FACTORY_ARG(name) \
+  MQ_CST ident; \
+  PyObject *arg; \
+  if (PyTuple_GET_SIZE(args) == 1) { \
+    if (!PyArg_ParseTuple(args, "O!:" #name, &PyType_Type, &arg)) { \
+      return NULL; \
+    } \
+    ident = ((PyTypeObject*)arg)->tp_name; \
+  } else { \
+    if (!PyArg_ParseTuple(args, "sO!:" #name, &ident, &PyType_Type, &arg)) { \
+      return NULL; \
+    } \
+  } \
+  Py_INCREF (arg);
+
 #define SELFX(c) ((MqS_Obj*)c->self)
 #define SELF SELFX(context)
 #define SETUP_self MqS_Obj* self = SELF;

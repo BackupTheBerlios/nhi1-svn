@@ -55,22 +55,12 @@ static PyObject* NS(FactoryAdd) (
 )
 {
   enum MqErrorE ret;
-  MQ_CST ident;
-  PyObject *arg;
-  if (PyTuple_GET_SIZE(args) == 1) {
-    if (!PyArg_ParseTuple(args, "O!:FactoryAdd", &PyType_Type, &arg)) {
-      return NULL;
-    }
-    ident = ((PyTypeObject*)arg)->tp_name;
-  } else {
-    if (!PyArg_ParseTuple(args, "sO!:FactoryAdd", &ident, &PyType_Type, &arg)) {
-      return NULL;
-    }
-  }
-  Py_INCREF (arg);
+  SETUP_FACTORY_ARG(FactoryAdd)
   ret = MqFactoryAdd(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
   if (MqErrorCheckI(ret)) {
-    PyErr_SetString(PyExc_RuntimeError, "unable to add factory");
+    if (PyErr_Occurred() == NULL) {
+      PyErr_SetString(PyExc_RuntimeError, "unable to add factory");
+    }
     return NULL;
   }
   Py_RETURN_NONE;
@@ -84,23 +74,12 @@ static PyObject* NS(FactoryNew) (
 )
 {
   struct MqS *mqctx;
-  MQ_CST ident;
-  PyObject *arg;
-  if (PyTuple_GET_SIZE(args) == 1) {
-    if (!PyArg_ParseTuple(args, "O!:FactoryNew", &PyType_Type, &arg)) {
-      return NULL;
-    }
-    ident = ((PyTypeObject*)arg)->tp_name;
-  } else {
-    if (!PyArg_ParseTuple(args, "sO!:FactoryNew", &ident, &PyType_Type, &arg)) {
-      return NULL;
-    }
-  }
-  Py_INCREF (arg);
-  Py_INCREF (arg);
+  SETUP_FACTORY_ARG(FactoryNew)
   mqctx = MqFactoryNew(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
   if (mqctx == NULL) {
-    PyErr_SetString(PyExc_RuntimeError, "unable to add and call factory");
+    if (PyErr_Occurred() == NULL) {
+      PyErr_SetString(PyExc_RuntimeError, "unable to add and call factory");
+    }
     return NULL;
   }
   arg = ((PyObject *)SELFX(mqctx));
@@ -120,7 +99,9 @@ static PyObject* NS(FactoryCall) (
   if (PyErr_Occurred() != NULL) return NULL;
   mqctx = MqFactoryCall(ident);
   if (mqctx == NULL) {
-    PyErr_SetString(PyExc_RuntimeError, "unable to call factory");
+    if (PyErr_Occurred() == NULL) {
+      PyErr_SetString(PyExc_RuntimeError, "unable to call factory");
+    }
     return NULL;
   }
   arg = ((PyObject *)SELFX(mqctx));

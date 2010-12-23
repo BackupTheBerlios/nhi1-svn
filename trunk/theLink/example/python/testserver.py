@@ -28,11 +28,9 @@ class testserver(MqS):
     ctx.ServiceCreate("GTCX",ctx.GTCX)
 
 if __name__ == "__main__":
-  srv = testserver()
+  srv = FactoryNew(testserver)
   try:
-    srv.ConfigSetName("testserver")
     srv.ConfigSetServerSetup(srv.ServerConfig)
-    srv.ConfigSetFactory(lambda: testserver())
     srv.LinkCreate(sys.argv)
     srv.ProcessEvent(MqS_WAIT_FOREVER)
   except:
