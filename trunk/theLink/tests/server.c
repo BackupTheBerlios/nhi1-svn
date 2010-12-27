@@ -1400,7 +1400,7 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // add and all Factory 
-  if (MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, &mqctx) == MQ_FACTORY_RETURN_OK) {
+  if (MqFactoryCheckI(MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx))) {
     ServerHelp(MqSysBasename("server", MQ_NO));
   }
 

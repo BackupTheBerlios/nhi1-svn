@@ -892,7 +892,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryMsg (
 
 MQ_EXTERN void MQ_DECL MqFactoryPanic (
   enum MqFactoryReturnE ret
-);
+) __attribute__ ((noreturn));
 
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
   MQ_CST           const name,
@@ -902,6 +902,7 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF,
+  MQ_PTR data,
   struct MqS ** ctxP
 ) __attribute__((nonnull(1,2)));
 
@@ -927,6 +928,7 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
 
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
   MQ_CST const ident,
+  MQ_PTR const data,
   struct MqS ** ctxP
 ) __attribute__((nonnull(1)));
 
@@ -1009,7 +1011,13 @@ MQ_EXTERN void
 MQ_DECL MqConfigSetName (
   struct MqS * const context,
   MQ_CST  data
-);
+) __attribute__((nonnull));
+
+MQ_EXTERN void
+MQ_DECL MqConfigUpdateName (
+  struct MqS * const context,
+  MQ_CST  data
+) __attribute__((nonnull));
 
 /// \brief set the #MqConfigS::srvname value and cleanup old value
 MQ_EXTERN void

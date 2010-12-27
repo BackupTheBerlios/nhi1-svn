@@ -339,17 +339,17 @@ static int NS(FactoryCall) (
   struct Tcl_Obj *const *objv
 )
 {
-  struct MqS * mqctx = NULL;
+  struct MqS * mqctx;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_CALL_ERR;
   int skip = 2;
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  MqErrorCheck(MqFactoryInvoke ((struct MqS *)interp, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (ident), &mqctx));
+  MqFactoryCheck(ret = MqFactoryCall (ident, (MQ_PTR) interp, &mqctx));
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;
 error:
-  Tcl_ResetResult(interp);
-  Tcl_AppendResult(interp, "unable to call main factory '", ident, "'", NULL);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 

@@ -503,11 +503,25 @@ MqConfigSetName (
   struct MqS * const context,
   MQ_CST  data
 ) {
-  MqSysFree(context->config.name);
-  context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
+  if (context->config.name == NULL) {
+    context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
+  } else if (strcmp(context->config.name, data)) {
+    MqSysFree(context->config.name);
+    context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
+  }
   if (MQ_IS_SERVER(context)) {
     MqSysFree(context->config.srvname);
     context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, "LOCK");
+  }
+}
+
+void 
+MqConfigUpdateName (
+  struct MqS * const context,
+  MQ_CST  data
+) {
+  if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
+    MqConfigSetName(context, data);
   }
 }
 
@@ -982,13 +996,8 @@ MqFactoryCtxIdent (
   MQ_CST ident
 ) {
   enum MqFactoryReturnE ret;
-  MqFactoryCheck (MqFactoryItemGet(ident, &context->setup.factory));
-  if (context->setup.factory == NULL) {
-    return MqErrorV(context,__FILE__,-1,"unable to set Factory, '%s' is not available", ident);
-  }
-  if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
-    MqConfigSetName(context, ident);
-  }
+  MqFactoryCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
+  MqConfigUpdateName(context, ident);
   return MQ_OK;
 error:
   return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
@@ -1019,6 +1028,7 @@ MqFactoryCtxItem (
   struct MqFactoryItemS * const item
 ) {
   context->setup.factory = item;
+  MqConfigUpdateName(context, item->ident);
 }
 
 enum MqErrorE 

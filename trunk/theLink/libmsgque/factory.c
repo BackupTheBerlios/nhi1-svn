@@ -139,7 +139,7 @@ pFactoryAddName (
 {
   struct MqFactoryItemS *find;
 
-  if (MqFactoryCheckI(MqFactoryItemGet(ident,&find))) {
+  if (MqFactoryItemGet(ident,&find) == MQ_FACTORY_RETURN_OK) {
     // item already available, PANIC if callback is NOT equal
     if (memcmp(&Create, &find->Create, sizeof(Create)) || memcmp(&Delete, &find->Delete, sizeof(Delete))) {
       return MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR;
@@ -205,6 +205,7 @@ MqFactoryItemGet (
   } else {
     *itemP = NULL;
     return MQ_FACTORY_RETURN_ITEM_GET_ERR;
+  }
 }
 
 enum MqErrorE 
@@ -312,15 +313,20 @@ MqFactoryDefault (
 enum MqFactoryReturnE
 MqFactoryCall (
   MQ_CST const ident,
+  MQ_PTR const data,
   struct MqS ** ctxP
 )
 {
   enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_OK;
   struct MqFactoryItemS *item;
+  struct MqS * mqctx;
+  *ctxP = NULL;
   MqFactoryCheck (ret = MqFactoryItemGet (ident, &item));
-  if (MqErrorCheckI(MqFactoryInvoke (MQ_ERROR_PANIC, MQ_FACTORY_NEW_INIT, item, ctxP))) {
+  if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
     ret = MQ_FACTORY_RETURN_CALL_ERR;
   }
+  MqConfigUpdateName(mqctx, item->ident);
+  *ctxP = mqctx;
 error:
   return ret;
 }
@@ -334,6 +340,7 @@ MqFactoryNew (
   MqFactoryDeleteF const fDelete,
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF,
+  MQ_PTR data,
   struct MqS ** ctxP
 )
 {
@@ -341,8 +348,8 @@ MqFactoryNew (
   *ctxP = NULL;
   ret = MqFactoryAdd (ident, fCreate, createData, createDatafreeF, 
 			fDelete, deleteData, deleteDatafreeF);
-  if (ret) return ret;
-  return MqFactoryCall (ident, ctxP); 
+  if (MqFactoryCheckI(ret)) return ret;
+  return MqFactoryCall (ident, data, ctxP); 
 }
 
 MQ_PTR
@@ -361,15 +368,6 @@ MqFactoryItemGetDeleteData(
   return item->Delete.data;
 }
 
-/*
-void
-MqFactoryDelete(
-  void
-) {
-  FactorySpaceDelete();
-}
-*/
-
 MQ_CST MqFactoryMsg (
   enum MqFactoryReturnE ret
 )
@@ -383,6 +381,8 @@ MQ_CST MqFactoryMsg (
     return "factory identifer already in use";
    case MQ_FACTORY_RETURN_CALL_ERR:
     return "unable to call factory for identifer";
+   case MQ_FACTORY_RETURN_ITEM_GET_ERR:
+    return "unable to find factory for identifer";
    case MQ_FACTORY_RETURN_END:
     return "END";
    default:
@@ -394,7 +394,7 @@ void MqFactoryPanic (
   enum MqFactoryReturnE ret
 )
 {
-  MqPanicC(MQ_ERROR_PRINT, __func__, -1, MqFactoryMsg(ret));
+  MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryMsg(ret));
 }
 
 END_C_DECLS

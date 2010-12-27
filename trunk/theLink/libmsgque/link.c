@@ -765,6 +765,7 @@ MqLinkCreate (
   struct MqBufferLS ** argvP
 )
 {
+
   // avoid double link create
   if (unlikely(context->link.read != NULL)) {
     MqBufferLDelete (argvP);
