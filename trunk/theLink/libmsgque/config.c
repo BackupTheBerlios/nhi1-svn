@@ -19,7 +19,7 @@
 
 BEGIN_C_DECLS
 
-extern MQ_CST defaultFactory;
+extern struct MqFactoryItemS *defaultFactoryItem;
 
 #define MQ_CONTEXT_S context
 
@@ -263,7 +263,7 @@ MqContextInit (
   pConfigInit (context);
   context->temp = MqBufferCreate(context, 250);
   if (tmpl == NULL) {
-    MqConfigSetIdent(context,defaultFactory);
+    MqFactoryCtxItem(context,defaultFactoryItem);
   } else {
     MqConfigDup(context, tmpl);
   }
@@ -301,7 +301,6 @@ MqContextFree (
 
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);
-    MqSysFree(context->setup.ident);
 
     MqBufferDelete (&context->config.io.tcp.host);
     MqBufferDelete (&context->config.io.tcp.port);
@@ -438,9 +437,6 @@ MqSetupDup (
   // protect the code
   if (from == NULL) return;
 
-  // 1. ident
-  CheckCopyStr(ident);
-
   // 2. factory
   CheckCopyPtr(factory);
 
@@ -512,20 +508,6 @@ MqConfigSetName (
   if (MQ_IS_SERVER(context)) {
     MqSysFree(context->config.srvname);
     context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, "LOCK");
-  }
-}
-
-void 
-MqConfigSetIdent (
-  struct MqS * const context,
-  MQ_CST ident
-) {
-  if (context->setup.ident == NULL || strcmp(context->setup.ident, ident)) {
-    MqSysFree(context->setup.ident);
-    context->setup.ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
-    context->setup.factory = MqFactoryItemGet(ident);
-    if (context->config.name == NULL || !strcmp(context->config.name,defaultFactory))
-      MqConfigSetName(context, ident);
   }
 }
 
@@ -611,41 +593,6 @@ pConfigSetMaster (
   context->setup.isServer = MQ_NO;
   context->config.master = master;
   context->config.master_id = master_id;
-}
-
-void 
-MqConfigSetFactory (
-  struct MqS * const context,
-  MQ_CST	    ident,
-  MqFactoryCreateF  fCreate,
-  MQ_PTR	    CreateData,
-  MqTokenDataFreeF  fCreateFree,
-  MqFactoryDeleteF  fDelete,
-  MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree
-) {
-  MqSysFree(context->setup.ident);
-  MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree);
-  MqConfigSetIdent(context, ident);
-}
-
-void 
-MqConfigSetFactoryItem (
-  struct MqS * const context,
-  struct MqFactoryItemS * const item
-) {
-  if (context->setup.factory != item && item != NULL ) {
-    MqConfigSetIdent(context, item->name);
-  }
-}
-
-void 
-MqConfigSetDefaultFactory (
-  struct MqS * const context,
-  MQ_CST const ident
-) {
-  MqFactoryAdd(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
-  MqConfigSetIdent(context, ident);
 }
 
 void
@@ -908,7 +855,7 @@ MqConfigGetIdent (
   struct MqS const * const context
 )
 {
-  return context->setup.ident;
+  return context->setup.factory ? context->setup.factory->ident : "";
 }
 
 MQ_CST 
@@ -1023,6 +970,68 @@ MqConfigGetStatusIs (
   return context->statusIs;
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                                Factory                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqErrorE 
+MqFactoryCtxIdent (
+  struct MqS * const context,
+  MQ_CST ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryCheck (MqFactoryItemGet(ident, &context->setup.factory));
+  if (context->setup.factory == NULL) {
+    return MqErrorV(context,__FILE__,-1,"unable to set Factory, '%s' is not available", ident);
+  }
+  if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
+    MqConfigSetName(context, ident);
+  }
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+}
+
+enum MqErrorE 
+MqFactoryCtxNew (
+  struct MqS * const context,
+  MQ_CST	    ident,
+  MqFactoryCreateF  fCreate,
+  MQ_PTR	    CreateData,
+  MqTokenDataFreeF  fCreateFree,
+  MqFactoryDeleteF  fDelete,
+  MQ_PTR	    DeleteData,
+  MqTokenDataFreeF  fDeleteFree
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryCheck(ret = MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree));
+  MqFactoryCtxIdent(context, ident);
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+}
+
+void 
+MqFactoryCtxItem (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+) {
+  context->setup.factory = item;
+}
+
+enum MqErrorE 
+MqFactoryCtxDefault (
+  struct MqS * const context,
+  MQ_CST const ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryCheck(ret = MqFactoryDefault(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL));
+  MqFactoryCtxIdent(context, ident);
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+}
 
 /*****************************************************************************/
 /*                                                                           */

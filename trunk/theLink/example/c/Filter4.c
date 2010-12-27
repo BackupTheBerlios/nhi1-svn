@@ -250,7 +250,7 @@ main (
   mqctx->setup.ServerCleanup.fCall  = FilterCleanup;
   mqctx->setup.ignoreExit	    = MQ_YES;
 
-  MqConfigSetDefaultFactory (mqctx, "transFilter");
+  MqFactoryCtxDefault (mqctx, "transFilter");
   MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
 
   // create the link

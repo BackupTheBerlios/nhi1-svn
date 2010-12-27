@@ -194,15 +194,6 @@ int NS(ConfigSetSrvName) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIdent) (NS_ARGS)
-{
-  MQ_CST ident;
-  CHECK_C(ident)
-  CHECK_NOARGS
-  MqConfigSetIdent (MQCTX, ident);
-  RETURN_TCL
-}
-
 int NS(ConfigSetIsSilent) (NS_ARGS)
 {
   MQ_BOL isSilent;
@@ -279,24 +270,36 @@ int NS(ConfigSetBgError) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetFactory) (NS_ARGS)
+int NS(FactoryCtxIdent) (NS_ARGS)
 {
+  SETUP_mqctx;
   MQ_CST ident;
-  Tcl_Obj *factory;
   CHECK_C(ident)
-  CHECK_PROC(factory, "ConfigSetFactory ident factory-proc")
   CHECK_NOARGS
-  Tcl_IncrRefCount(factory);
-  MqConfigSetFactory(MQCTX, ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL);
+  ErrorMqToTclWithCheck (MqFactoryCtxIdent (mqctx, ident));
   RETURN_TCL
 }
 
-int NS(ConfigSetDefaultFactory) (NS_ARGS)
+int NS(FactoryCtxNew) (NS_ARGS)
 {
+  SETUP_mqctx;
+  MQ_CST ident;
+  Tcl_Obj *factory;
+  CHECK_C(ident)
+  CHECK_PROC(factory, "FactoryCtxNew ident factory-proc")
+  CHECK_NOARGS
+  Tcl_IncrRefCount(factory);
+  ErrorMqToTclWithCheck (MqFactoryCtxNew(mqctx, ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
+  RETURN_TCL
+}
+
+int NS(FactoryCtxDefault) (NS_ARGS)
+{
+  SETUP_mqctx;
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  MqConfigSetFactory(MQCTX, ident, NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
+  ErrorMqToTclWithCheck (MqFactoryCtxNew(mqctx, ident, NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL));
   RETURN_TCL
 }
 

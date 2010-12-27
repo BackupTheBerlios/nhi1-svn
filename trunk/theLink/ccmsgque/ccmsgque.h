@@ -43,13 +43,6 @@ namespace ccmsgque {
       virtual void Service (MqC * const ctx) = 0;
   };
 
-  /// \api #MqConfigSetFactory
-  class IFactory {
-    public:
-      /// \brief create a object of the top-most class
-      virtual MqC* Factory () const = 0;
-  };
-
   /// \api #MqConfigSetServerSetup
   class IServerSetup {
     public:
@@ -305,6 +298,8 @@ namespace ccmsgque {
       inline MQ_SOCK ConfigGetIoPipeSocket ()   { return MqConfigGetIoPipeSocket(&context); }
       /// \api #MqConfigGetStartAs
       inline enum MqStartE ConfigGetStartAs ()  { return MqConfigGetStartAs (&context); }
+      /// \api #MqConfigGetStatusIs
+      inline enum MqStatusIs ConfigGetStatusIs ()  { return MqConfigGetStatusIs (&context); }
     /// \}
 
     /// \defgroup Mq_Context_CC_API Mq_Context_CC_API
@@ -327,7 +322,6 @@ namespace ccmsgque {
 
     public:
       typedef void (MqC::*CallbackF) ();
-      typedef MqC* (MqC::*FactoryF) ();
 
     private:
       static inline MqC* GetThis(struct MqS const * const context) {
@@ -339,14 +333,14 @@ namespace ccmsgque {
       static enum MqErrorE FactoryCreate (
 	struct MqS * const tmpl,
 	enum MqFactoryE create,
-	MQ_PTR data,
+	struct MqFactoryItemS *item,
 	struct MqS  ** contextP
       );
 
       static void FactoryDelete (
 	struct MqS * ctx,
 	MQ_BOL doFactoryCleanup,
-	MQ_PTR data
+	struct MqFactoryItemS * const item,
       );
 
       struct ProcCallS {

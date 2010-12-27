@@ -1155,7 +1155,7 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqConfigGetIdent (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqConfigSetIdent (mqctx, CV);
+    MqErrorCheck (MqFactoryCtxIdent (mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
@@ -1163,7 +1163,7 @@ Ot_CFG1 (
     MqErrorCheck (MqSendC (mqctx, MqConfigGetIdent (mqctx)));
     MqErrorCheck (MqSendO (mqctx, check));
     // clenup
-    MqConfigSetIdent (mqctx, CO);
+    MqErrorCheck (MqFactoryCtxIdent (mqctx, CO));
     MqSysFree (CO);
   } else if (!strncmp (cmd, "IsSilent", 8)) {
     CFGTest(IsSilent,O)
@@ -1400,10 +1400,7 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // add and all Factory 
-  mqctx = MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL);
-
-  // context not available -> an error happen
-  if (mqctx == NULL) {
+  if (MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, &mqctx) == MQ_FACTORY_RETURN_OK) {
     ServerHelp(MqSysBasename("server", MQ_NO));
   }
 

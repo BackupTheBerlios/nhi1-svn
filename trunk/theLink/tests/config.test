@@ -22,7 +22,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 set Start_PREFIX {
-  $FH_LAST ConfigSetIdent otto
+  $FH_LAST FactoryCtxDefault otto
 }
 
 ##

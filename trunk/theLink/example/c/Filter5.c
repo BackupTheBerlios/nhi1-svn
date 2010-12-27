@@ -165,7 +165,7 @@ int main (int argc, MQ_CST argv[])
   MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL);
 
   // call the initial factory to initialize the "config"
-  if ((ctx = MqFactoryCall(argv[1])) == NULL) goto error;
+  if ((MqFactoryCall(argv[1], &ctx)) != MQ_FACTORY_RETURN_OK) goto error;
 
   // call entry point
   MqErrorCheck(MqLinkCreate(ctx, &largv));

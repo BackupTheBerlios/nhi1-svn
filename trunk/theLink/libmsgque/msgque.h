@@ -530,7 +530,7 @@ struct MqFactoryDeleteS {
 
 /// \brief data used to define a factory
 struct MqFactoryItemS {
-  MQ_CST name;			    ///< public known factory name
+  MQ_CST ident;			    ///< public known factory name
   struct MqFactoryCreateS Create;   ///< object creation function
   struct MqFactoryDeleteS Delete;   ///< object deletion function
 };
@@ -757,7 +757,7 @@ struct MqSetupS {
   /// (default: "DEFAULT")
   ///
   /// \attention: if this value changes the factory need to be updated too.
-  MQ_CST ident;
+  //MQ_CST ident;
   struct MqFactoryItemS* factory;
  
   /// \brief setup/cleanup a \e CHILD object
@@ -860,6 +860,15 @@ struct MqSetupS {
 /*                                                                           */
 /*****************************************************************************/
 
+enum MqFactoryReturnE {
+  /* 0 */ MQ_FACTORY_RETURN_OK,
+  /* 1 */ MQ_FACTORY_RETURN_ADD_DEF_ERR,
+  /* 2 */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
+  /* 3 */ MQ_FACTORY_RETURN_CALL_ERR,
+  /* 4 */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
+  /* 5 */ MQ_FACTORY_RETURN_END,
+};
+
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
   struct MqFactoryItemS  const * const item
 );
@@ -874,7 +883,29 @@ MQ_EXTERN void MQ_DECL MqFactoryDelete (
 );
 */
 
-MQ_EXTERN struct MqS * MQ_DECL MqFactoryNew (
+#define MqFactoryCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+#define MqFactoryCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
+
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryMsg (
+  enum MqFactoryReturnE ret
+);
+
+MQ_EXTERN void MQ_DECL MqFactoryPanic (
+  enum MqFactoryReturnE ret
+);
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF,
+  struct MqS ** ctxP
+) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
@@ -884,7 +915,7 @@ MQ_EXTERN struct MqS * MQ_DECL MqFactoryNew (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
 
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryAdd (
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
   MQ_PTR           const createData,
@@ -894,18 +925,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryAdd (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
 
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefault (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1,2)));
-
-MQ_EXTERN struct MqS* MQ_DECL MqFactoryCall (
-  MQ_CST const name
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
+  MQ_CST const ident,
+  struct MqS ** ctxP
 ) __attribute__((nonnull(1)));
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
@@ -915,9 +937,36 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
   struct MqS ** contextP
 );
 
-MQ_EXTERN struct MqFactoryItemS* MQ_DECL MqFactoryItemGet (
-  MQ_CST const name
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
+  MQ_CST const name,
+  struct MqFactoryItemS **itemP
 ) __attribute__((nonnull(1)));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactorySetIdent (
+  struct MqS * const context,
+  MQ_CST ident
+);
+
+MQ_EXTERN void MQ_DECL MqFactorySetNew (
+  struct MqS * const context,
+  MQ_CST	    ident,
+  MqFactoryCreateF  fCreate,
+  MQ_PTR	    CreateData,
+  MqTokenDataFreeF  fCreateFree,
+  MqFactoryDeleteF  fDelete,
+  MQ_PTR	    DeleteData,
+  MqTokenDataFreeF  fDeleteFree
+);
+
+MQ_EXTERN void MQ_DECL MqFactorySetItem (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+);
+
+MQ_EXTERN void MQ_DECL MqFactorySetDefault (
+  struct MqS * const context,
+  MQ_CST const ident
+);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -958,13 +1007,6 @@ MQ_EXTERN void MQ_DECL MqSetupDup (
 /// \brief set the #MqConfigS::name value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetName (
-  struct MqS * const context,
-  MQ_CST  data
-);
-
-/// \brief set the #MqSetupS::ident value and cleanup old value
-MQ_EXTERN void
-MQ_DECL MqConfigSetIdent (
   struct MqS * const context,
   MQ_CST  data
 );
@@ -1025,6 +1067,13 @@ MQ_DECL MqConfigSetIgnoreExit (
   MQ_BOL  data
 );
 
+/// \brief set the #MqSetupS::ident value and cleanup old value
+MQ_EXTERN enum MqErrorE
+MQ_DECL MqFactoryCtxIdent (
+  struct MqS * const context,
+  MQ_CST  data
+);
+
 /// \brief setup the \e factory pattern
 /// \context
 /// \param[in] ident the application identifier
@@ -1034,8 +1083,8 @@ MQ_DECL MqConfigSetIgnoreExit (
 /// \param[in] fDelete set the #MqSetupS::Factory - #MqFactoryDeleteS::fCall value
 /// \param[in] DeleteData set the #MqSetupS::Factory - #MqFactoryDeleteS::data value
 /// \param[in] fDeleteFree delete the \e DeleteData
-MQ_EXTERN void 
-MQ_DECL MqConfigSetFactory (
+MQ_EXTERN enum MqErrorE 
+MQ_DECL MqFactoryCtxNew (
   struct MqS * const context,
   MQ_CST	    ident,
 
@@ -1049,7 +1098,7 @@ MQ_DECL MqConfigSetFactory (
 );
 
 MQ_EXTERN void 
-MQ_DECL MqConfigSetFactoryItem (
+MQ_DECL MqFactoryCtxItem (
   struct MqS * const context,
   struct MqFactoryItemS * const item
 );
@@ -1059,8 +1108,8 @@ MQ_DECL MqConfigSetFactoryItem (
 ///
 /// The \e default factory is just a wrapper for #MqContextCreate with additional error management code.
 /// A simple application \e without an application specific \e factory use this configuration.
-MQ_EXTERN void 
-MQ_DECL MqConfigSetDefaultFactory (
+MQ_EXTERN enum MqErrorE 
+MQ_DECL MqFactoryCtxDefault (
   struct MqS * const context,
   MQ_CST const ident
 );

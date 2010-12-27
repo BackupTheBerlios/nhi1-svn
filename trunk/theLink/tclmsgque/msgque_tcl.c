@@ -318,6 +318,7 @@ static int NS(FactoryAdd) (
   struct Tcl_Obj *const *objv
 )
 {
+  enum MqFactoryReturnE ret;
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory;
@@ -325,8 +326,11 @@ static int NS(FactoryAdd) (
   CHECK_PROC(factory, "FactoryAdd ident factory-proc")
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
-  MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL);
-  RETURN_TCL
+  MqFactoryCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
+  return TCL_OK;
+error:
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryMsg(ret), TCL_STATIC);
+  return TCL_ERROR;
 }
 
 static int NS(FactoryCall) (

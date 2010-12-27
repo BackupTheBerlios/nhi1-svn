@@ -1067,8 +1067,8 @@ MqSendT_START (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (buf->numItems > 0) {
     return MqErrorDbV(MQ_ERROR_ITEM_IN_PACKAGE, "TRANSACTION", "first");
-  } else if (context->setup.ident == NULL) {
-    return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "ident");
+  } else if (context->setup.factory == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
     register struct MqBufferS * const buf = send->buf;
     pSendListStart (context);
@@ -1078,7 +1078,7 @@ MqSendT_START (
     buf->cur.B += HDR_TOK_LEN;
     *buf->cur.B++ = BUFFER_CHAR;
     buf->cursize += (HDR_TOK_LEN+1);
-    MqSendC(context, context->setup.ident);
+    MqSendC(context, context->setup.factory->ident);
     return MQ_OK;
   }
 }

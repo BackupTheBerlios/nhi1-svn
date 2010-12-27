@@ -72,7 +72,7 @@ if {$BLOCK_1} {
 # startup binary --------------------------
 Setup $I $B $C $S
 
-$FH_LAST ConfigSetIdent OTTO
+$FH_LAST FactoryCtxDefault OTTO
 
 # tests ----------------------------
 
@@ -265,7 +265,7 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
       Setup $I $B $C $S --filter-server Filter3
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
-      $FH_LAST ConfigSetIdent OTTO
+      $FH_LAST FactoryCtxDefault OTTO
     } \
     -body           {
       $FH_LAST SendSTART

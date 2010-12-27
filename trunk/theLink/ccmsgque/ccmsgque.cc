@@ -18,7 +18,20 @@
 
 namespace ccmsgque {
 
+  static private void libInit (void) {
+    static int flag = 0;
+    if (flag) return;
+    MqFactoryDefault("ccmsgque", FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL);
+  }
+
+  MqC::MqC (MqC& tmpl) {
+    libInit(); 
+    MqContextInit (&context, 0, &tmpl.context);
+    MqConfigSetSelf (&context, this);
+  }
+
   MqC::MqC () {
+    libInit(); 
     MqContextInit (&context, 0, NULL);
     MqConfigSetSelf (&context, this);
   }
@@ -35,6 +48,7 @@ namespace ccmsgque {
     context.setup.Child.fCreate = MqLinkDefault;
 
     // init the "factory" interface
+/*
     IFactory *const iFactory = dynamic_cast<IFactory*const>(this);
     if (iFactory != NULL) {
       context.setup.Factory.Create.fCall = FactoryCreate;
@@ -42,6 +56,7 @@ namespace ccmsgque {
     }
     // required -> slave-Z-ERR-1-
     context.setup.Factory.Delete.fCall = FactoryDelete;
+*/
 
     // init the server interface
     IServerSetup * const iSetup = dynamic_cast<IServerSetup*const>(this);

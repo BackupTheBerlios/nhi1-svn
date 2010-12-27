@@ -56,31 +56,6 @@ namespace example {
       Client () : MqC(), i(0) { }
   };
 
-  class ClientERR : public MqC, public IService {
-
-    private:
-      virtual void Service (MqC * const ctx) {
-	i = ctx->ReadI();
-      }
-
-    public:
-      int i;
-    
-      void LinkCreate (int debug) throw(MqCException) {
-	ConfigSetDebug (debug);
-	MqC::LinkCreateV("test-client", "@", "SELF", NULL); 
-      }
-
-      void LinkCreateChild (ClientERR& parent) {
-	MqC::LinkCreateChild(static_cast<MqC&>(parent), NULL); 
-      }
-
-      ClientERR () : MqC(), i(0) {
-	ConfigSetName ("test-client");
-	ConfigSetSrvName ("test-server");
-      }
-  };
-
   class ClientERR2 : public MqC {
 
     public:
@@ -104,7 +79,7 @@ namespace example {
       Client* cl[3];
 
     public:
-      Server() : MqC(), i(0), j(0), buf(NULL) {
+      Server(MqC& tmpl) : MqC(tmpl), i(0), j(0), buf(NULL) {
 	int i=0;
 	for (i=0; i<3; i++) {
 	  cl[i] = NULL;

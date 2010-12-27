@@ -535,7 +535,7 @@ proc Ot_CFG1 {ctx} {
     }
     "Ident" {
       set old [$ctx ConfigGetIdent] 
-      $ctx ConfigSetIdent [$ctx ReadC]
+      $ctx FactoryCtxIdent [$ctx ReadC]
       set check [expr {[$ctx LinkGetTargetIdent] eq [$ctx ReadC]}]
       $ctx SendSTART
       $ctx SendC [$ctx ConfigGetIdent]

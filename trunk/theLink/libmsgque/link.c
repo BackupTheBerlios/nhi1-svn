@@ -38,7 +38,7 @@
 BEGIN_C_DECLS
 
 extern struct MqBufferLS * MqInitBuf;
-extern MQ_CST defaultFactory;
+extern struct MqFactoryItemS *defaultFactoryItem;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -268,7 +268,7 @@ sMqCheckArg (
       MqBufferLAppendC(initB, arg->cur.C);
     }
     // try to figure out a "good" name
-    if (context->config.name == NULL || !strcmp(context->config.name,defaultFactory)) {
+    if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
       if (arg != NULL) {
 	pConfigSetName(context, MqSysBasename (arg->cur.C, MQ_NO));
       } else if (MqInitBuf != NULL) {
@@ -702,7 +702,7 @@ MqLinkConnect (
 #     endif
 
       /// send my ident
-      MqSendC (context, context->setup.ident);
+      MqSendC (context, context->setup.factory ? context->setup.factory->ident : "");
 
       // send the server name
       MqSendC (context, context->config.srvname);
@@ -830,7 +830,7 @@ MqLinkCreate (
 	  if (	context->setup.factory != NULL &&  // "factory" available ?
 		  context->setup.factory->Create.fCall != NULL  // constructor available ?
 	      ) {
-	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->name), 0);
+	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->ident), 0);
 	  } else {
 	    MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
 	  }

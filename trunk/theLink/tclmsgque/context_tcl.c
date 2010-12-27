@@ -261,7 +261,7 @@ int NS(ConfigSetDebug) (NS_ARGS);
 int NS(ConfigSetTimeout) (NS_ARGS);
 int NS(ConfigSetName) (NS_ARGS);
 int NS(ConfigSetSrvName) (NS_ARGS);
-int NS(ConfigSetIdent) (NS_ARGS);
+int NS(FactoryCtxIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
 int NS(ConfigSetIsServer) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
@@ -270,8 +270,8 @@ int NS(ConfigSetEvent) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
-int NS(ConfigSetFactory) (NS_ARGS);
-int NS(ConfigSetDefaultFactory) (NS_ARGS);
+int NS(FactoryCtxNew) (NS_ARGS);
+int NS(FactoryCtxDefault) (NS_ARGS);
 int NS(ConfigSetIoUdsFile) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
 int NS(ConfigSetIoPipeSocket) (NS_ARGS);
@@ -400,7 +400,7 @@ int NS(MqS_Cmd) (
     { "ConfigSetTimeout",	  NS(ConfigSetTimeout)	      },
     { "ConfigSetName",		  NS(ConfigSetName)	      },
     { "ConfigSetSrvName",	  NS(ConfigSetSrvName)	      },
-    { "ConfigSetIdent",		  NS(ConfigSetIdent)	      },
+    { "FactoryCtxIdent",	  NS(FactoryCtxIdent)	      },
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
     { "ConfigSetIsServer",	  NS(ConfigSetIsServer)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
@@ -409,8 +409,8 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
-    { "ConfigSetFactory",	  NS(ConfigSetFactory)	      },
-    { "ConfigSetDefaultFactory",  NS(ConfigSetDefaultFactory) },
+    { "FactoryCtxNew",		  NS(FactoryCtxNew)	      },
+    { "FactoryCtxDefault",	  NS(FactoryCtxDefault)	      },
     { "ConfigSetIoUdsFile",	  NS(ConfigSetIoUdsFile)      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },
     { "ConfigSetIoPipeSocket",	  NS(ConfigSetIoPipeSocket)   },
