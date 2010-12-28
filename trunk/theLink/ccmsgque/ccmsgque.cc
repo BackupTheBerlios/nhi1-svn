@@ -18,20 +18,16 @@
 
 namespace ccmsgque {
 
-  static private void libInit (void) {
-    static int flag = 0;
-    if (flag) return;
-    MqFactoryDefault("ccmsgque", FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL);
+  void MqC::libInit (void) {
+    MqFactoryC<MqC>::Default("ccmsgque");
   }
 
   MqC::MqC (MqC& tmpl) {
-    libInit(); 
     MqContextInit (&context, 0, &tmpl.context);
     MqConfigSetSelf (&context, this);
   }
 
   MqC::MqC () {
-    libInit(); 
     MqContextInit (&context, 0, NULL);
     MqConfigSetSelf (&context, this);
   }
@@ -40,7 +36,7 @@ namespace ccmsgque {
     MqContextFree (&context);
   }
 
-  void MqC::Init () {
+  void MqC::objInit () {
     // use "context.setup.Parent.fCreate" to ckeck in context was initialized
     if (context.setup.Parent.fCreate != NULL) return;
 
@@ -97,7 +93,7 @@ namespace ccmsgque {
     struct MqBufferLS * argv
   )
   {
-    Init ();
+    objInit ();
     ErrorCheck(MqLinkCreate (&context, &argv));
   }
 
@@ -118,7 +114,7 @@ namespace ccmsgque {
     struct MqBufferLS * args
   )
   {
-    Init ();
+    objInit ();
     ErrorCheck (MqLinkCreateChild(&context, &parent.context, &args));
   }
 

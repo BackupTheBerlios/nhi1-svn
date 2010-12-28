@@ -19,7 +19,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
     service.cc factory.cc \
     \
-    ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc \
+    ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc ccfactory.cc \
     \
     buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
@@ -42,7 +42,7 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
     service.cc factory.cc \
     \
-    ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc \
+    ccmsgque.cc cccontext.cc ccsend.cc ccmisc.cc ccservice.cc ccfactory.cc \
     \
     buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \

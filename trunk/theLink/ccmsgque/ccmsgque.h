@@ -212,9 +212,155 @@ namespace ccmsgque {
     /// \} Mq_Buffer_CC_API
   };
 
+  class MqFactoryCException : public exception
+  {
+    private:
+      enum MqFactoryReturnE err;
+    public:
+      MqFactoryCException(enum MqFactoryReturnE ret) : err (ret) { }
+      virtual MQ_CST what() const throw() { return MqFactoryErrorMsg(err); }
+  };
+
+  template <class T>
+  class MqFactoryC {
+
+    private:
+      static inline void ErrorCheck(enum MqFactoryReturnE ret) throw(MqCException) {
+	if (MqFactoryErrorCheckI(ret)) throw MqFactoryCException(ret);
+      }
+
+      static inline MqC* GetThis(struct MqS const * const context) {
+	return static_cast<MqC*>(context->self);
+      }
+
+      static enum MqErrorE FactoryCreate (
+	struct MqS * const tmpl,
+	enum MqFactoryE create,
+	struct MqFactoryItemS *item,
+	struct MqS  ** contextP
+      );
+
+      static void FactoryDelete (
+	struct MqS * ctx,
+	MQ_BOL doFactoryCleanup,
+	struct MqFactoryItemS * const item
+      );
+
+    public:
+      static void Add(MQ_CST ident) {
+	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
+      static void Default(MQ_CST ident) {
+	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
+      static T* Call(MQ_CST ident) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
+      static T* New(MQ_CST ident) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
+  };
+
   /// \ingroup Mq_Context_CC_API
   /// \api #MqS
   class MqC {
+
+    /// \defgroup Mq_Context_CC_API Mq_Context_CC_API
+    /// \ingroup Mq_CC_API
+    /// \brief \copybrief Mq_Context_C_API
+    /// \copydoc Mq_Context_C_API
+    /// \{
+
+    public:
+      /// \brief link between MqC and MqS
+      struct MqS context;
+
+    // Constructor
+
+    public:
+      /// \api #MqContextCreate
+      MQ_EXTERN MqC (MqC& tmpl);
+      /// \api #MqContextCreate
+      MQ_EXTERN MqC ();
+      /// \api #MqContextDelete
+      MQ_EXTERN virtual ~MqC ();
+
+    public:
+      typedef void (MqC::*CallbackF) ();
+
+    private:
+      static inline MqC* GetThis(struct MqS const * const context) {
+	return static_cast<MqC*>(context->self);
+      }
+  
+      static void libInit (void) __attribute__ ((constructor));
+
+      MQ_EXTERN void objInit ();
+
+      struct ProcCallS {
+	enum ProcCallE	{
+	  PC_CallbackF,
+	  PC_IService,
+	  PC_IEvent,
+	  PC_IServerSetup,
+	  PC_IServerCleanup,
+	  PC_IBgError
+	} type;
+	union ProcCallU {
+	  CallbackF	    Callback; 
+	  IService *	    Service;
+	  IEvent *	    Event;
+	  IServerSetup *    ServerSetup;
+	  IServerCleanup *  ServerCleanup;
+	  IBgError *	    BgError;
+	} call;
+      };
+
+      static enum MqErrorE MQ_DECL ProcCall (
+	struct MqS * const context, 
+	MQ_PTR const data
+      );
+
+      static void MQ_DECL ProcFree (
+	struct MqS const * const context, 
+	MQ_PTR *dataP
+      );
+
+      static void MQ_DECL ProcFreeISetup (
+	struct MqS const * const context, 
+	MQ_PTR *dataP
+      );
+
+    public:
+      /// \brief get access to an internal buffer
+      inline MQ_BUF GetTempBuffer() { return context.temp; }
+      /// \api #MqExit
+      inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
+      /// \api #MqSysSleep
+      inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
+      /// \api #MqSysUSleep
+      inline void USleep (unsigned int const usec) throw(MqCException) { ErrorCheck (MqSysUSleep(&context, usec)); }
+      /// \api #MqLogC
+      inline void LogC (MQ_CST const prefix, MQ_INT level, MQ_CST const str) { MqLogC(&context, prefix, level, str); }
+      /// \api #MqLogV
+      inline void LogV (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, ...) { 
+	if (level > context.config.debug) {
+	  return;
+	} else {
+	  va_list ap;
+	  va_start (ap, fmt);
+	  MqLogVL (&context, prefix, level, fmt, ap);
+	  va_end (ap);
+	}
+      }
+      /// \api #MqLogVL
+      inline void LogVL (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list ap) { MqLogVL(&context, prefix, level, fmt, ap); }
+
+    /// \} Mq_Context_CC_API
 
     /// \defgroup Mq_Config_CC_API Mq_Config_CC_API
     /// \ingroup Mq_CC_API
@@ -235,8 +381,6 @@ namespace ccmsgque {
       inline void ConfigSetName	      (MQ_CST data)	    { MqConfigSetName (&context, data); }
       /// \api #MqConfigSetSrvName
       inline void ConfigSetSrvName    (MQ_CST data)	    { MqConfigSetSrvName (&context, data); }
-      /// \api #MqConfigSetIdent
-      inline void ConfigSetIdent      (MQ_CST data)	    { MqConfigSetIdent (&context, data); }
       /// \api #MqConfigSetIsSilent
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
       /// \api #MqConfigSetIsServer
@@ -299,110 +443,8 @@ namespace ccmsgque {
       /// \api #MqConfigGetStartAs
       inline enum MqStartE ConfigGetStartAs ()  { return MqConfigGetStartAs (&context); }
       /// \api #MqConfigGetStatusIs
-      inline enum MqStatusIs ConfigGetStatusIs ()  { return MqConfigGetStatusIs (&context); }
+      inline enum MqStatusIsE ConfigGetStatusIs ()  { return MqConfigGetStatusIs (&context); }
     /// \}
-
-    /// \defgroup Mq_Context_CC_API Mq_Context_CC_API
-    /// \ingroup Mq_CC_API
-    /// \brief \copybrief Mq_Context_C_API
-    /// \copydoc Mq_Context_C_API
-    /// \{
-
-    public:
-      /// \brief link between MqC and MqS
-      struct MqS context;
-
-    // Constructor
-
-    public:
-      /// \api #MqContextCreate
-      MQ_EXTERN MqC ();
-      /// \api #MqContextDelete
-      MQ_EXTERN virtual ~MqC ();
-
-    public:
-      typedef void (MqC::*CallbackF) ();
-
-    private:
-      static inline MqC* GetThis(struct MqS const * const context) {
-	return static_cast<MqC*>(context->self);
-      }
-
-      MQ_EXTERN void Init ();
-      
-      static enum MqErrorE FactoryCreate (
-	struct MqS * const tmpl,
-	enum MqFactoryE create,
-	struct MqFactoryItemS *item,
-	struct MqS  ** contextP
-      );
-
-      static void FactoryDelete (
-	struct MqS * ctx,
-	MQ_BOL doFactoryCleanup,
-	struct MqFactoryItemS * const item,
-      );
-
-      struct ProcCallS {
-	enum ProcCallE	{
-	  PC_CallbackF,
-	  PC_IService,
-	  PC_IEvent,
-	  PC_IServerSetup,
-	  PC_IServerCleanup,
-	  PC_IBgError
-	} type;
-	union ProcCallU {
-	  CallbackF	    Callback; 
-	  IService *	    Service;
-	  IEvent *	    Event;
-	  IServerSetup *    ServerSetup;
-	  IServerCleanup *  ServerCleanup;
-	  IBgError *	    BgError;
-	} call;
-      };
-
-      static enum MqErrorE MQ_DECL ProcCall (
-	struct MqS * const context, 
-	MQ_PTR const data
-      );
-
-      static void MQ_DECL ProcFree (
-	struct MqS const * const context, 
-	MQ_PTR *dataP
-      );
-
-      static void MQ_DECL ProcFreeISetup (
-	struct MqS const * const context, 
-	MQ_PTR *dataP
-      );
-
-    public:
-      /// \brief get access to an internal buffer
-      inline MQ_BUF GetTempBuffer() { return context.temp; }
-      /// \api #MqExit
-      inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
-      /// \api #MqSysSleep
-      inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
-      /// \api #MqSysUSleep
-      inline void USleep (unsigned int const usec) throw(MqCException) { ErrorCheck (MqSysUSleep(&context, usec)); }
-      /// \api #MqLogC
-      inline void LogC (MQ_CST const prefix, MQ_INT level, MQ_CST const str) { MqLogC(&context, prefix, level, str); }
-      /// \api #MqLogV
-      inline void LogV (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, ...) { 
-	if (level > context.config.debug) {
-	  return;
-	} else {
-	  va_list ap;
-	  va_start (ap, fmt);
-	  MqLogVL (&context, prefix, level, fmt, ap);
-	  va_end (ap);
-	}
-      }
-      /// \api #MqLogVL
-      inline void LogVL (MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list ap) { MqLogVL(&context, prefix, level, fmt, ap); }
-
-    /// \} Mq_Context_CC_API
 
     /// \defgroup Mq_Link_CC_API Mq_Link_CC_API
     /// \ingroup Mq_CC_API
