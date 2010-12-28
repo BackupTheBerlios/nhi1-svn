@@ -1155,7 +1155,7 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqConfigGetIdent (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqErrorCheck (MqFactoryCtxIdent (mqctx, CV));
+    MqErrorCheck (MqFactoryCtxDefault(mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
@@ -1400,7 +1400,7 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // add and all Factory 
-  if (MqFactoryCheckI(MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx))) {
+  if (MqFactoryErrorCheckI(MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx))) {
     ServerHelp(MqSysBasename("server", MQ_NO));
   }
 

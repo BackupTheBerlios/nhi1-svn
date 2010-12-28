@@ -326,10 +326,10 @@ static int NS(FactoryAdd) (
   CHECK_PROC(factory, "FactoryAdd ident factory-proc")
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
-  MqFactoryCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
+  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
   return TCL_OK;
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -345,11 +345,11 @@ static int NS(FactoryCall) (
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  MqFactoryCheck(ret = MqFactoryCall (ident, (MQ_PTR) interp, &mqctx));
+  MqFactoryErrorCheck(ret = MqFactoryCall (ident, (MQ_PTR) interp, &mqctx));
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 

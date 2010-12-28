@@ -996,11 +996,11 @@ MqFactoryCtxIdent (
   MQ_CST ident
 ) {
   enum MqFactoryReturnE ret;
-  MqFactoryCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
+  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
   MqConfigUpdateName(context, ident);
   return MQ_OK;
 error:
-  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
 }
 
 enum MqErrorE 
@@ -1015,11 +1015,11 @@ MqFactoryCtxNew (
   MqTokenDataFreeF  fDeleteFree
 ) {
   enum MqFactoryReturnE ret;
-  MqFactoryCheck(ret = MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree));
+  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree));
   MqFactoryCtxIdent(context, ident);
   return MQ_OK;
 error:
-  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
 }
 
 void 
@@ -1037,10 +1037,11 @@ MqFactoryCtxDefault (
   MQ_CST const ident
 ) {
   enum MqFactoryReturnE ret;
-  MqFactoryCheck(ret = MqFactoryDefault(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL));
+  MqFactoryErrorCheck(ret = MqFactoryDefault(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL));
   MqFactoryCtxIdent(context, ident);
+  return MQ_OK;
 error:
-  return MqErrorC(context, __func__, -1, MqFactoryMsg(ret));
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
 }
 
 /*****************************************************************************/

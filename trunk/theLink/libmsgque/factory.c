@@ -321,7 +321,7 @@ MqFactoryCall (
   struct MqFactoryItemS *item;
   struct MqS * mqctx;
   *ctxP = NULL;
-  MqFactoryCheck (ret = MqFactoryItemGet (ident, &item));
+  MqFactoryErrorCheck (ret = MqFactoryItemGet (ident, &item));
   if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
     ret = MQ_FACTORY_RETURN_CALL_ERR;
   }
@@ -348,7 +348,7 @@ MqFactoryNew (
   *ctxP = NULL;
   ret = MqFactoryAdd (ident, fCreate, createData, createDatafreeF, 
 			fDelete, deleteData, deleteDatafreeF);
-  if (MqFactoryCheckI(ret)) return ret;
+  if (MqFactoryErrorCheckI(ret)) return ret;
   return MqFactoryCall (ident, data, ctxP); 
 }
 
@@ -368,7 +368,7 @@ MqFactoryItemGetDeleteData(
   return item->Delete.data;
 }
 
-MQ_CST MqFactoryMsg (
+MQ_CST MqFactoryErrorMsg (
   enum MqFactoryReturnE ret
 )
 {
@@ -390,11 +390,12 @@ MQ_CST MqFactoryMsg (
   }
 }
 
-void MqFactoryPanic (
+void MqFactoryErrorPanic (
   enum MqFactoryReturnE ret
 )
 {
-  MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryMsg(ret));
+  if (ret != MQ_FACTORY_RETURN_OK)
+    MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryErrorMsg(ret));
 }
 
 END_C_DECLS

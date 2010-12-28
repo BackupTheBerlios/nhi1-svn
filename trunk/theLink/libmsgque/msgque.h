@@ -883,16 +883,16 @@ MQ_EXTERN void MQ_DECL MqFactoryDelete (
 );
 */
 
-#define MqFactoryCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
-#define MqFactoryCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
+#define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
 
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryMsg (
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
   enum MqFactoryReturnE ret
 );
 
-MQ_EXTERN void MQ_DECL MqFactoryPanic (
+MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
   enum MqFactoryReturnE ret
-) __attribute__ ((noreturn));
+);
 
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
   MQ_CST           const name,
