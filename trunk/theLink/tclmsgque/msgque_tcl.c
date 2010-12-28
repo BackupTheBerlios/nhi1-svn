@@ -359,9 +359,22 @@ static int NS(FactoryNew) (
   struct Tcl_Obj *const *objv
 )
 {
-  TclErrorCheck(NS(FactoryAdd)	(interp, objc, objv));
-  TclErrorCheck(NS(FactoryCall) (interp, objc-1, objv));
+  struct MqS * mqctx;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_CALL_ERR;
+  int skip = 2;
+  MQ_CST ident;
+  Tcl_Obj *factory;
+  CHECK_C(ident)
+  CHECK_PROC(factory, "FactoryNew ident factory-proc")
+  CHECK_NOARGS
+  MqFactoryErrorCheck(ret = MqFactoryNew(ident, 
+    NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL, (MQ_PTR) interp, &mqctx)
+  );
+  Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;
+error:
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  return TCL_ERROR;
 }
 
 /** \brief handle the \b msgque tcl command

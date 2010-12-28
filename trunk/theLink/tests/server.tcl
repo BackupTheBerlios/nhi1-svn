@@ -235,7 +235,6 @@ proc BgError {ctx} {
 proc ClientCreateParent {ctx debug} {
   $ctx ConfigSetDebug $debug
   $ctx ConfigSetBgError BgError
-  $ctx ConfigSetDefaultFactory test-client
   $ctx LinkCreate @ server --name test-server
 }
 
@@ -535,7 +534,7 @@ proc Ot_CFG1 {ctx} {
     }
     "Ident" {
       set old [$ctx ConfigGetIdent] 
-      $ctx FactoryCtxIdent [$ctx ReadC]
+      $ctx FactoryCtxDefault [$ctx ReadC]
       set check [expr {[$ctx LinkGetTargetIdent] eq [$ctx ReadC]}]
       $ctx SendSTART
       $ctx SendC [$ctx ConfigGetIdent]
