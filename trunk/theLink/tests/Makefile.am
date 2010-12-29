@@ -60,7 +60,7 @@ client_LDADD = -lm $(LIBMSGQUE)
 
 if USE_CXX
 noinst_PROGRAMS += ccserver$(EXEEXT)
-ccserver_SOURCES = ccserver.cpp
+ccserver_SOURCES = ccserver.cc
 ccserver_CXXFLAGS = -I$(srcdir)/../ccmsgque -DMQ_IGNORE_EXTERN
 ccserver_LDADD = $(CCMSGQUE)
 endif

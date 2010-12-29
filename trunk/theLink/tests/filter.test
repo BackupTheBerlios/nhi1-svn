@@ -106,20 +106,21 @@ test filter-8-$L-$S {filter with choose first and startup-error} \
     -body     {
 	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ DUMMY
     } \
-    -result   {CHILDSTATUS-204-C> (F2) [MqLinkConnect] can not start server 'DUMMY'
-C> (F2) found in function "MqLinkConnect" at file "link.c"
-C> (F2) found in function "MqLinkCreate" at file "link.c"
-C> (F2) found in function "MqLinkDefault" at file "link.c"
-S> (F2) found in function "MqLinkCreate" at file "link.c"
-S> (F2) found in function "MqLinkDefault" at file "link.c"
-C> (split) found in function "pTokenCheckSystem" at file "token.c"
-C> (split) found in function "sMqEventStart" at file "service.c"
-C> (split) found in function "pEventStart" at file "event.c"
-C> (split) found in function "MqProcessEvent" at file "service.c"
-C> (split) found in function "sWaitForToken" at file "link.c"
-C> (split) found in function "MqLinkConnect" at file "link.c"
-C> (split) found in function "MqLinkCreate" at file "link.c"
-C> (split) found in function "SplitCreate" at file "asplit.c"
+    -match    glob \
+    -result   {CHILDSTATUS-204-C> (F2) \[MqLinkConnect] can not start server 'DUMMY'
+C> (F2) found in function "MqLinkConnect" at file "link.c*"
+C> (F2) found in function "MqLinkCreate" at file "link.c*"
+C> (F2) found in function "MqLinkDefault" at file "link.c*"
+S> (F2) found in function "MqLinkCreate" at file "link.c*"
+S> (F2) found in function "MqLinkDefault" at file "link.c*"
+C> (split) found in function "pTokenCheckSystem" at file "token.c*"
+C> (split) found in function "sMqEventStart" at file "service.c*"
+C> (split) found in function "pEventStart" at file "event.c*"
+C> (split) found in function "MqProcessEvent" at file "service.c*"
+C> (split) found in function "sWaitForToken" at file "link.c*"
+C> (split) found in function "MqLinkConnect" at file "link.c*"
+C> (split) found in function "MqLinkCreate" at file "link.c*"
+C> (split) found in function "SplitCreate" at file "asplit.c*"
 C> (split) use '-h' or '--help' for usage}
 
   } ; # end "S"
