@@ -98,7 +98,7 @@ case "$CMD" in
   *.rb)		  EXE="$RUBY";;
   *.php)	  EXE="$PHP";;
   *.exe)	  EXE="$MONO";;
-  *.cc)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
+  *.cpp)	  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *.c)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *)		  EXE="";;
 esac

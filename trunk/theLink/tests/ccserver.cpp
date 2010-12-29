@@ -24,14 +24,11 @@ using namespace ccmsgque;
 
 namespace example {
 
-  class Client : public MqC, public IService, public IFactory, public IBgError {
+  class Client : public MqC, public IService, public IBgError {
 
     private:
       virtual void Service (MqC * const ctx) {
 	i = ctx->ReadI();
-      }
-      virtual MqC* Factory () const  {
-	return new Client();
       }
       virtual void BgError () {
 	MqC *master = SlaveGetMaster();
@@ -46,7 +43,7 @@ namespace example {
     
       void LinkCreate (MQ_INT debug) {
 	ConfigSetDebug   (debug);
-	MqC::LinkCreateV ("test-client", "@", "SELF", "--name", "test-server", NULL); 
+	MqC::LinkCreateV ("test-client", "@", "server", "--name", "test-server", NULL); 
       }
 
       void LinkCreateChild (Client& parent) {
@@ -71,7 +68,7 @@ namespace example {
       }
   };
 
-  class Server : public MqC, public IService, public IServerSetup, public IServerCleanup, public IFactory {
+  class Server : public MqC, public IService, public IServerSetup, public IServerCleanup {
 
     private:
       MQ_INT i, j;
@@ -79,7 +76,7 @@ namespace example {
       Client* cl[3];
 
     public:
-      Server(MqC& tmpl) : MqC(tmpl), i(0), j(0), buf(NULL) {
+      Server(MqS *tmpl) : MqC(tmpl), i(0), j(0), buf(NULL) {
 	int i=0;
 	for (i=0; i<3; i++) {
 	  cl[i] = NULL;
@@ -398,10 +395,6 @@ namespace example {
 	    Client *slv = new Client();
 	    slv->LinkCreate(ConfigGetDebug());
 	    SlaveCreate (id, slv);
-	  } else if (!strcmp(s,"CREATE3")) {
-	    ClientERR *slv = new ClientERR();
-	    slv->LinkCreate(ConfigGetDebug());
-	    SlaveCreate (id, slv);
 	  } else if (!strcmp(s,"DELETE")) {
 	    SlaveDelete(id);
 	    SendC(SlaveGet(id) == NULL ? "OK" : "ERROR");
@@ -524,26 +517,26 @@ namespace example {
 	  SendW (ConfigGetTimeout());
 	  ConfigSetTimeout (old);
 	} else if (!strncmp(cmd, "Name", 4)) {
-	  MQ_CST old = mq_strdup_save(ConfigGetName());
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetName());
 	  ConfigSetName (ReadC());
 	  SendC (ConfigGetName());
 	  ConfigSetName (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "SrvName", 7)) {
-	  MQ_CST old = mq_strdup_save(ConfigGetSrvName());
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetSrvName());
 	  ConfigSetSrvName (ReadC());
 	  SendC (ConfigGetSrvName());
 	  ConfigSetSrvName (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "Ident", 5)) {
-	  MQ_CST old = mq_strdup_save(ConfigGetSrvName());
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetSrvName());
 	  MQ_BOL check;
-	  ConfigSetSrvName (ReadC());
+	  FactoryCtxDefault (ReadC());
 	  check = !strcmp(LinkGetTargetIdent(), ReadC());
 	  SendSTART();
-	  SendC (ConfigGetSrvName());
+	  SendC (ConfigGetIdent());
 	  SendO (check);
-	  ConfigSetSrvName (old);
+	  FactoryCtxIdent (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "IsSilent", 8)) {
 	  MQ_BOL old = ConfigGetIsSilent();
@@ -556,7 +549,7 @@ namespace example {
 	  SendO (ConfigGetIsString());
 	  ConfigSetIsString (old);
 	} else if (!strncmp(cmd, "IoUds", 5)) {
-	  MQ_CST old = mq_strdup_save(ConfigGetIoUdsFile());
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIoUdsFile());
 	  ConfigSetIoUdsFile (ReadC());
 	  SendC (ConfigGetIoUdsFile());
 	  ConfigSetIoUdsFile (old);
@@ -564,10 +557,10 @@ namespace example {
 	} else if (!strncmp(cmd, "IoTcp", 5)) {
 	  MQ_CST h,p,mh,mp;
 	  MQ_CST hv,pv,mhv,mpv;
-	  h  = mq_strdup_save(ConfigGetIoTcpHost ());
-	  p  = mq_strdup_save(ConfigGetIoTcpPort ());
-	  mh = mq_strdup_save(ConfigGetIoTcpMyHost ());
-	  mp = mq_strdup_save(ConfigGetIoTcpMyPort ());
+	  h  = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIoTcpHost ());
+	  p  = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIoTcpPort ());
+	  mh = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIoTcpMyHost ());
+	  mp = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIoTcpMyPort ());
 	  hv = ReadC();
 	  pv = ReadC();
 	  mhv = ReadC();
@@ -627,8 +620,6 @@ namespace example {
       }
 
     private:
-      // factory  used to create server object instances
-      MqC* Factory() const { return new Server(); }
 
       void ServerCleanup() {
 	// Cleanup context variables
@@ -713,20 +704,17 @@ using namespace example;
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static Server server;
+  Server *server = MqFactoryC<Server>::New(argv[0]);
   try {
-    server.ConfigSetName ("server");
-    server.ConfigSetIdent ("test-server");
-    server.LinkCreateVC (argc, argv);
-    server.LogC("test",1,"this is the log test\n");
-    server.ProcessEvent (MQ_WAIT_FOREVER);  
+    server->ConfigSetName ("server");
+    server->LinkCreateVC (argc, argv);
+    server->LogC("test",1,"this is the log test\n");
+    server->ProcessEvent (MQ_WAIT_FOREVER);  
   } catch (const exception& e) {
     // Convert the "exception" object in an "MqCException" object, "Exit" will report the error to the client
-    server.ErrorSet (e);
+    server->ErrorSet (e);
   }
   // report error to client, shutdown the link and exit the application
-  server.Exit ();
+  server->Exit ();
 }
-
-
 
