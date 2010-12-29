@@ -543,6 +543,15 @@ enum MqStartE {
   MQ_START_SPAWN       = 3,	    ///< create entity as \e spawn process
 };
 
+/// \brief Information about how the \e context was created
+enum MqStatusIsE {
+  MQ_STATUS_IS_INITIAL = 0,	    ///< context is the \e first context
+  MQ_STATUS_IS_DUP     = 1<<0,	    ///< context is created as a duplicate of an other context
+  MQ_STATUS_IS_THREAD  = 1<<1,	    ///< context is created as a thread
+  MQ_STATUS_IS_FORK    = 1<<2,	    ///< context is created as a fork
+  MQ_STATUS_IS_SPAWN   = 1<<3,	    ///< context is created as a spawn
+};
+
 /// \brief used for callback function pointer management
 struct MqCallbackS {
   MqTokenF		fCall;	    ///< callback method
@@ -916,6 +925,10 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
 
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopyDefault (
+  MQ_CST           const name
+) __attribute__((nonnull(1)));
+
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MQ_CST           const name,
   MqFactoryCreateF const fCreate,
@@ -975,6 +988,9 @@ MQ_EXTERN void MQ_DECL MqFactorySetDefault (
 /*                           create / delete                                 */
 /*                                                                           */
 /*****************************************************************************/
+
+MQ_EXTERN void MQ_DECL MqSetup (void) __attribute__ ((constructor));
+MQ_EXTERN void MQ_DECL MqCleanup (void) __attribute__ ((destructor));
 
 /// \brief clean the #MqS::config data
 MQ_EXTERN void MQ_DECL MqConfigReset (
@@ -1075,13 +1091,7 @@ MQ_DECL MqConfigSetIgnoreExit (
   MQ_BOL  data
 );
 
-/// \brief set the #MqSetupS::ident value and cleanup old value
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqFactoryCtxIdent (
-  struct MqS * const context,
-  MQ_CST  data
-);
-
+/*
 /// \brief setup the \e factory pattern
 /// \context
 /// \param[in] ident the application identifier
@@ -1104,12 +1114,7 @@ MQ_DECL MqFactoryCtxNew (
   MQ_PTR	    DeleteData,
   MqTokenDataFreeF  fDeleteFree
 );
-
-MQ_EXTERN void 
-MQ_DECL MqFactoryCtxItem (
-  struct MqS * const context,
-  struct MqFactoryItemS * const item
-);
+*/
 
 /// \brief setup the default \e factory pattern
 /// \context
@@ -1120,6 +1125,19 @@ MQ_EXTERN enum MqErrorE
 MQ_DECL MqFactoryCtxDefault (
   struct MqS * const context,
   MQ_CST const ident
+);
+
+/// \brief set the #MqSetupS::ident value and cleanup old value
+MQ_EXTERN enum MqErrorE
+MQ_DECL MqFactoryCtxIdent (
+  struct MqS * const context,
+  MQ_CST  data
+);
+
+MQ_EXTERN void 
+MQ_DECL MqFactoryCtxItem (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
 );
 
 /// \brief set the #MqConfigS::ignoreFork value
@@ -1275,22 +1293,6 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsString (
 MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
   struct MqS const * const context
 ) __attribute__((nonnull));
-
-/* \brief does the \e context object was created by \libmsgque
- *  \context
- *  \return the <TT>(context->config.doFactoryCleanup == MQ_YES)</TT> value
-MQ_EXTERN int MQ_DECL MqConfigGetDoFactoryCleanup (
-  struct MqS const * const context
-);
- */
-
-/* \brief does the \e context object is \e Duplicate and \e Thread ?
- *  \context
- *  \return the <TT>((config->statusIs & MQ_STATUS_IS_DUP) && (config->statusIs & MQ_STATUS_IS_THREAD))</TT> value
-MQ_EXTERN int MQ_DECL MqConfigGetIsDupAndThread (
-  struct MqS const * const context
-) __attribute__((nonnull));
- */
 
 /** \brief get the \e name of the \e context object
  *  \context
@@ -1479,15 +1481,6 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \if MSGQUE
 /// \anchor \NS{ContextLocalStorage}
 /// \endif
-
-/// \brief Information about how the \e context was created
-enum MqStatusIsE {
-  MQ_STATUS_IS_INITIAL = 0,	    ///< context is the \e first context
-  MQ_STATUS_IS_DUP     = 1<<0,	    ///< context is created as a duplicate of an other context
-  MQ_STATUS_IS_THREAD  = 1<<1,	    ///< context is created as a thread
-  MQ_STATUS_IS_FORK    = 1<<2,	    ///< context is created as a fork
-  MQ_STATUS_IS_SPAWN   = 1<<3,	    ///< context is created as a spawn
-};
 
 /// \brief signature marker used in #MqS::signature
 #define MQ_MqS_SIGNATURE 0x212CF91
@@ -4195,7 +4188,7 @@ typedef MQ_PTR (*MqSysMallocF) (MQ_SIZE);
 
 /// \brief \b strdup syscall
 /// \details additional info: <TT>man strdup</TT>
-typedef MQ_PTR (*MqSysStrDupF) (MQ_CST);
+typedef MQ_STR (*MqSysStrDupF) (MQ_CST);
 
 /// \brief \b realloc syscall
 /// \details additional info: <TT>man realloc</TT>

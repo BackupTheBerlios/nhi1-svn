@@ -38,7 +38,7 @@ array set LABELIGNORE {
     ./theLink/docs		{ * }
     ./theLink/tests		{ Makefile Makefile.in server client *.o .deps tags *.sw* 
 				  .libs *.in *.stamp *.la *.lo docs example .C  *.mdb tmp.* 
-				  .vimrc .kdbgrc.server ccserver *.xml .vpath_hook *.dll .COPY_JAVA }
+				  .vimrc .kdbgrc.* ccserver *.xml .vpath_hook *.dll .COPY_JAVA }
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
     ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }
     ./theLink/example/c		{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
@@ -82,7 +82,7 @@ config.guess    config.nice    CREDITS          missing       .libs  .deps
 config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs       run-tests.php *.lo}
 
     ./theBrain			{ Makefile.in Makefile }
-    ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc* check.* *.sw* }
+    ./theBrain/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client tc* check.* *.sw*}
     ./theBrain/libbrain		{ *.sw* *.c *.h *.lo *.o *.la .libs .deps Makefile.in depcomp Makefile tags }
     ./theBrain/abrain		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags abrain }
     ./theBrain/atrans		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags atrans }

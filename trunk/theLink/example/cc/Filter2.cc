@@ -17,10 +17,7 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter2 : public MqC, public IFactory {
-    MqC* Factory() const { 
-      return new Filter2(); 
-    }
+class Filter2 : public MqC {
   public:
     void fFTR () {
       throw runtime_error("my error");

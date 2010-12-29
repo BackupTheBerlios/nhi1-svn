@@ -17,11 +17,10 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter3 : public MqC, public IFactory, public IServerSetup {
+class Filter3 : public MqC, public IServerSetup {
+  public:
+    Filter3(MqS *tmpl) : MqC(tmpl) {}
   private:
-    MqC* Factory() const { 
-      return new Filter3(); 
-    }
     void ServerSetup() {
       MqC *ftr = ServiceGetFilter();
       ServiceProxy ("+ALL");
@@ -39,14 +38,12 @@ class Filter3 : public MqC, public IFactory, public IServerSetup {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static Filter3 filter;
+  Filter3 *filter = MqFactoryC<Filter3>::New("Filter3");
   try {
-    filter.ConfigSetIsServer(MQ_YES);
-    filter.ConfigSetName("Filter3");
-    filter.LinkCreateVC (argc, argv);
-    filter.ProcessEvent (MQ_WAIT_FOREVER);
+    filter->LinkCreateVC (argc, argv);
+    filter->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    filter.ErrorSet(e);
+    filter->ErrorSet(e);
   }
-  filter.Exit();
+  filter->Exit();
 }

@@ -270,7 +270,6 @@ int NS(ConfigSetEvent) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
-int NS(FactoryCtxNew) (NS_ARGS);
 int NS(FactoryCtxDefault) (NS_ARGS);
 int NS(ConfigSetIoUdsFile) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
@@ -409,7 +408,6 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
-    { "FactoryCtxNew",		  NS(FactoryCtxNew)	      },
     { "FactoryCtxDefault",	  NS(FactoryCtxDefault)	      },
     { "ConfigSetIoUdsFile",	  NS(ConfigSetIoUdsFile)      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },

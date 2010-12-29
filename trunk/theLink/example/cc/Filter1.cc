@@ -18,18 +18,14 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter1 : public MqC, public IFactory {
+class Filter1 : public MqC {
 
     typedef vector<MQ_CST> MQ_ROW;
     typedef vector<MQ_ROW> MQ_TAB;
     MQ_TAB data;
 
-    // factory  used to create server object instances
-    MqC* Factory() const { 
-      return new Filter1(); 
-    }
-
   public:
+
     // service definition
     void fFTR () {
       MQ_ROW d;
@@ -69,8 +65,8 @@ class Filter1 : public MqC, public IFactory {
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
   static Filter1 filter;
-  filter.ConfigSetIsServer(MQ_YES);
   try {
+    filter.ConfigSetIsServer(MQ_YES);
     filter.LinkCreateVC (argc, argv);
     filter.ServiceCreate ("+FTR", MqC::CallbackF(&Filter1::fFTR));
     filter.ServiceCreate ("+EOF", MqC::CallbackF(&Filter1::fEOF));

@@ -18,6 +18,7 @@
 #include <vector>
 #include <cstring>
 #include <cstdlib>
+#include <typeinfo>
 
 #if !defined(MQ_COMPILE_AS_CC)
 # define MQ_COMPILE_AS_CC
@@ -253,14 +254,14 @@ namespace ccmsgque {
     public:
       typedef void (MqC::*CallbackF) ();
 
+      MQ_EXTERN void objInit ();
+
     private:
       static inline MqC* GetThis(struct MqS const * const context) {
 	return static_cast<MqC*>(context->self);
       }
   
       static void libInit (void) __attribute__ ((constructor));
-
-      MQ_EXTERN void objInit ();
 
       struct ProcCallS {
 	enum ProcCallE	{
@@ -289,6 +290,11 @@ namespace ccmsgque {
       static void MQ_DECL ProcFree (
 	struct MqS const * const context, 
 	MQ_PTR *dataP
+      );
+
+      static void MQ_DECL ProcCopy (
+	struct MqS * const context, 
+	MQ_PTR * dataP
       );
 
       static void MQ_DECL ProcFreeISetup (
@@ -865,7 +871,7 @@ namespace ccmsgque {
 	struct MqS  ** contextP
       ) {
 	try { 
-	  struct MqS * mqctx = &static_cast<MqC*const>(new T(tmpl))->context;
+	  struct MqS * mqctx = &static_cast<T*const>(new T(tmpl))->context;
 	  if (MqErrorCheckI(MqErrorGetCode(mqctx))) {
 	    *contextP = NULL;
 	    if (create != MQ_FACTORY_NEW_INIT) {
@@ -876,6 +882,7 @@ namespace ccmsgque {
 	      return MQ_ERROR;
 	    }
 	  }
+	  GetThis(mqctx)->objInit();
 	  if (create != MQ_FACTORY_NEW_INIT) {
 	    MqSetupDup(mqctx, tmpl);
 	  }
@@ -913,17 +920,33 @@ namespace ccmsgque {
       static inline void Add(MQ_CST ident) throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      static inline void Add() throw (MqFactoryCException) {
+	ErrorCheck (MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
       static inline void Default(MQ_CST ident) throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
+      static inline void Default() throw (MqFactoryCException) {
+	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
       static inline T* Call(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
+      static inline T* Call() throw (MqFactoryCException) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryCall (typeid(T).name(), NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
       static inline T* New(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
+      static inline T* New() throw (MqFactoryCException) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryNew (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
   };

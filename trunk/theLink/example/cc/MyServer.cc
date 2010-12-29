@@ -14,31 +14,31 @@
 
 using namespace ccmsgque;
 
-class MyServer : public MqC, public IServerSetup, public IFactory {
+class MyServer : public MqC, public IServerSetup {
+  public:
+    MyServer(MqS *tmpl) : MqC(tmpl) {};
 
-  // service to serve all incomming requests for token "HLWO"
-  void MyFirstService () {
-    SendSTART();
-    SendC("Hello World");
-    SendRETURN();
-  }
+  private:
+    // service to serve all incomming requests for token "HLWO"
+    void MyFirstService () {
+      SendSTART();
+      SendC("Hello World");
+      SendRETURN();
+    }
 
-  // factory to create objects
-  MqC* Factory() const {return new MyServer();}
-
-  // define a service as link between the token "HLWO" and the callback "MyFirstService"
-  void ServerSetup() {
-    ServiceCreate("HLWO", CallbackF(&MyServer::MyFirstService));
-  }
+    // define a service as link between the token "HLWO" and the callback "MyFirstService"
+    void ServerSetup() {
+      ServiceCreate("HLWO", CallbackF(&MyServer::MyFirstService));
+    }
 };
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  static MyServer srv;
+  MyServer *srv = MqFactoryC<MyServer>::New();
   try {
-    srv.LinkCreateVC(argc, argv);
-    srv.ProcessEvent (MQ_WAIT_FOREVER);
+    srv->LinkCreateVC(argc, argv);
+    srv->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    srv.ErrorSet(e);
+    srv->ErrorSet(e);
   }
-  srv.Exit();
+  srv->Exit();
 }

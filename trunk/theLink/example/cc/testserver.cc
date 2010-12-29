@@ -14,7 +14,9 @@
 
 using namespace ccmsgque;
 
-class testserver : public MqC, public IServerSetup, public IFactory {
+class testserver : public MqC, public IServerSetup {
+  public:
+    testserver(MqS *tmpl) : MqC(tmpl) {}
   private:
     void GTCX () {
       SendSTART();
@@ -33,21 +35,17 @@ class testserver : public MqC, public IServerSetup, public IFactory {
     void ServerSetup() {
       ServiceCreate("GTCX", CallbackF(&testserver::GTCX));
     }
-    MqC* Factory() const { return new testserver(); }
 };
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static testserver ctx;
+  testserver *ctx = MqFactoryC<testserver>::New("testserver");
   try {
-    ctx.ConfigSetName ("testserver");
-    ctx.LinkCreateVC(argc, argv);
-    ctx.ProcessEvent (MQ_WAIT_FOREVER);
+    ctx->LinkCreateVC(argc, argv);
+    ctx->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    ctx.ErrorSet(e);
+    ctx->ErrorSet(e);
   }
-  ctx.Exit ();
+  ctx->Exit ();
 }
-
-
 

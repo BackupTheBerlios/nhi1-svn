@@ -39,7 +39,6 @@ namespace ccmsgque {
   )
   {
     struct ProcCallS const * const data = static_cast<struct ProcCallS const * const> (dataP);
-
     try {
 
       switch (data->type) {
@@ -72,6 +71,40 @@ namespace ccmsgque {
 
     // everything is OK
     return MqErrorGetCodeI(context);
+  }
+
+  void MQ_DECL MqC::ProcCopy (
+    struct MqS * const	context, 
+    MQ_PTR * dataP
+  )
+  {
+    struct ProcCallS * data = static_cast<struct ProcCallS *> (*dataP);
+    struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
+    struct MqC * tgt = GetThis(context);
+    ptr->type = data->type;
+    switch (data->type) {
+      case ProcCallS::PC_IEvent:
+	ptr->call.Event = dynamic_cast<IEvent*const>(tgt);
+	if (!ptr->call.Event) context->setup.Event.fCall = NULL;
+	break;
+      case ProcCallS::PC_IBgError:
+	ptr->call.BgError = dynamic_cast<IBgError*const>(tgt);
+	if (!ptr->call.BgError) context->setup.BgError.fCall = NULL;
+	break;
+      case ProcCallS::PC_IServerSetup:
+printXLP(context, data->call.ServerSetup)
+	ptr->call.ServerSetup = dynamic_cast<IServerSetup*const>(tgt);
+printXLP(context, ptr->call.ServerSetup)
+	if (!ptr->call.ServerSetup) context->setup.ServerSetup.fCall = NULL;
+	break;
+      case ProcCallS::PC_IServerCleanup:
+	ptr->call.ServerCleanup = dynamic_cast<IServerCleanup*const>(tgt);
+	if (!ptr->call.ServerCleanup) context->setup.ServerCleanup.fCall = NULL;
+	break;
+      default:
+	break;
+    }
+    *dataP = (MQ_PTR) ptr;
   }
 
 } // END - namespace "ccmsgque"

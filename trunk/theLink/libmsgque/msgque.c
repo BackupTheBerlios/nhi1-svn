@@ -33,9 +33,6 @@ void GcDelete (void);
 void FactorySpaceDelete (void);
 struct MqBufferLS * MqInitBuf = NULL;
 
-static void pMqCreate (void) __attribute__ ((constructor));
-static void pMqDelete (void) __attribute__ ((destructor));
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                private                                    */
@@ -427,6 +424,37 @@ MqLogData (
 /*                                                                           */
 /*****************************************************************************/
 
+void MqSetup(void)
+{
+  // do not run twice
+  static MQ_BOL done = MQ_NO;
+  if (done) return;
+  done = MQ_YES;
+
+  // work
+  SysCreate ();
+  GcCreate ();
+  FactorySpaceCreate ();
+  ConfigCreate ();
+  EventCreate ();
+  SysComCreate ();
+  ConfigCreate ();
+}
+
+void MqCleanup(void)
+{
+  // do not run twice
+  static MQ_BOL done = MQ_NO;
+  if (done) return;
+  done = MQ_YES;
+
+  // work
+  EventDelete ();
+  GcDelete ();
+  FactorySpaceDelete ();
+  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
+}
+
 #if defined(_MSC_VER)
 
 END_C_DECLS
@@ -469,25 +497,6 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #else
-
-static void pMqCreate(void)
-{
-  SysCreate ();
-  GcCreate ();
-  FactorySpaceCreate ();
-  ConfigCreate ();
-  EventCreate ();
-  SysComCreate ();
-  ConfigCreate ();
-}
-
-static void pMqDelete(void)
-{
-  EventDelete ();
-  GcDelete ();
-  FactorySpaceDelete ();
-  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
-}
 
 END_C_DECLS
 

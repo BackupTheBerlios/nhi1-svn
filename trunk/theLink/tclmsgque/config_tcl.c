@@ -280,26 +280,13 @@ int NS(FactoryCtxIdent) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(FactoryCtxNew) (NS_ARGS)
-{
-  SETUP_mqctx;
-  MQ_CST ident;
-  Tcl_Obj *factory;
-  CHECK_C(ident)
-  CHECK_PROC(factory, "FactoryCtxNew ident factory-proc")
-  CHECK_NOARGS
-  Tcl_IncrRefCount(factory);
-  ErrorMqToTclWithCheck (MqFactoryCtxNew(mqctx, ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
-  RETURN_TCL
-}
-
 int NS(FactoryCtxDefault) (NS_ARGS)
 {
   SETUP_mqctx;
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqFactoryCtxNew(mqctx, ident, NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL));
+  ErrorMqToTclWithCheck (MqFactoryCtxDefault(mqctx, ident));
   RETURN_TCL
 }
 

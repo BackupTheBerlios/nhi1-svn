@@ -15,10 +15,7 @@
 using namespace std;
 using namespace ccmsgque;
 
-class manfilter : public MqC, public IFactory {
-    MqC* Factory() const { 
-      return new manfilter(); 
-    }
+class manfilter : public MqC {
   public:
     void fFTR () {
       MqC *ftr = ServiceGetFilter();

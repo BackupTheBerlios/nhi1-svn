@@ -12,14 +12,14 @@
 
 noinst_LTLIBRARIES = libtmp.la
 
-libtmp_la_SOURCES = buffer.cpp cache.cpp event.cpp \
-    log.cpp send.cpp swap.cpp sys_com.cpp \
-    token.cpp uds_io.cpp bufferL.cpp error.cpp \
-    generic_io.cpp io.cpp msgque.cpp read.cpp \
-    sys.cpp tcp_io.cpp pipe_io.cpp trans.cpp slave.cpp config.cpp \
-    service.cpp factory.cpp link.cpp \
+libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
+    log.cc send.cc swap.cc sys_com.cc \
+    token.cc uds_io.cc bufferL.cc error.cc \
+    generic_io.cc io.cc msgque.cc read.cc \
+    sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
+    service.cc factory.cc link.cc \
     \
-    ccmsgque.cpp ccsend.cpp ccmisc.cpp ccservice.cpp \
+    ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
     buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
@@ -35,14 +35,14 @@ libtmp_la_LDFLAGS = -no-undefined
 
 lib_LTLIBRARIES = libccmsgque.la
 
-libccmsgque_la_SOURCES = buffer.cpp cache.cpp event.cpp \
-    log.cpp send.cpp swap.cpp sys_com.cpp \
-    token.cpp uds_io.cpp bufferL.cpp error.cpp \
-    generic_io.cpp io.cpp msgque.cpp read.cpp \
-    sys.cpp tcp_io.cpp pipe_io.cpp trans.cpp slave.cpp config.cpp \
-    service.cpp factory.cpp link.cpp \
+libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
+    log.cc send.cc swap.cc sys_com.cc \
+    token.cc uds_io.cc bufferL.cc error.cc \
+    generic_io.cc io.cc msgque.cc read.cc \
+    sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
+    service.cc factory.cc link.cc \
     \
-    ccmsgque.cpp ccsend.cpp ccmisc.cpp ccservice.cpp \
+    ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
     buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
     slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \

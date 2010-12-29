@@ -14,11 +14,10 @@
 
 using namespace ccmsgque;
 
-class mulserver : public MqC, public IServerSetup, public IFactory {
+class mulserver : public MqC, public IServerSetup {
+  public:
+    mulserver(MqS *tmpl) : MqC(tmpl) {}
   private:
-    MqC* Factory() const {
-      return new mulserver();
-    }
     void ServerSetup () {
       ServiceCreate("MMUL", CallbackF(&mulserver::MMUL));
     }
@@ -31,13 +30,12 @@ class mulserver : public MqC, public IServerSetup, public IFactory {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static mulserver ctx;
+  mulserver *ctx = MqFactoryC<mulserver>::New("MyMulServer");
   try {
-    ctx.ConfigSetName ("MyMulServer");
-    ctx.LinkCreateVC (argc, argv);
-    ctx.ProcessEvent (MQ_WAIT_FOREVER);
+    ctx->LinkCreateVC (argc, argv);
+    ctx->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    ctx.ErrorSet(e);
+    ctx->ErrorSet(e);
   }
-  ctx.Exit ();
+  ctx->Exit ();
 }

@@ -21,8 +21,7 @@
 using namespace std;
 using namespace ccmsgque;
 
-class Filter4 : public MqC, public IFactory, public IServerSetup,
-		  public IServerCleanup, public IEvent, public IService {
+class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public IEvent, public IService {
   private:
     struct FilterItmS {
       MQ_CBI  bdy;
@@ -30,10 +29,6 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
     };
     queue<struct FilterItmS> itms;
     FILE *FH;
-
-    MqC* Factory() const { 
-      return new Filter4(); 
-    }
 
     void ErrorWrite () {
       fprintf(FH, "ERROR: %s\n", ErrorGetText());
@@ -133,6 +128,11 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
       ftr->ServiceCreate ("WRIT", CallbackF(&Filter4::WRIT));
       ftr->FH = NULL;
     }
+
+  public:
+    Filter4(MqS * const tmpl) : MqC(tmpl) {
+      ConfigSetIgnoreExit(true);
+    }
 };
 
 /*****************************************************************************/
@@ -143,15 +143,13 @@ class Filter4 : public MqC, public IFactory, public IServerSetup,
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static Filter4 filter;
+  Filter4 *filter = MqFactoryC<Filter4>::New("transFilter");
   try {
-    filter.ConfigSetIgnoreExit(true);
-    filter.ConfigSetIdent("transFilter");
-    filter.LinkCreateVC (argc, argv);
-    filter.ProcessEvent (MQ_WAIT_FOREVER);
+    filter->LinkCreateVC (argc, argv);
+    filter->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    filter.ErrorSet(e);
+    filter->ErrorSet(e);
   }
-  filter.Exit();
+  filter->Exit();
 }
 

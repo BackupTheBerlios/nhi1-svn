@@ -990,19 +990,7 @@ MqConfigGetStatusIs (
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE 
-MqFactoryCtxIdent (
-  struct MqS * const context,
-  MQ_CST ident
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
-  MqConfigUpdateName(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
-}
-
+/*
 enum MqErrorE 
 MqFactoryCtxNew (
   struct MqS * const context,
@@ -1021,6 +1009,33 @@ MqFactoryCtxNew (
 error:
   return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
 }
+*/
+
+enum MqErrorE 
+MqFactoryCtxDefault (
+  struct MqS * const context,
+  MQ_CST const ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryErrorCheck(ret = MqFactoryCopyDefault(ident));
+  MqFactoryCtxIdent(context, ident);
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+}
+
+enum MqErrorE 
+MqFactoryCtxIdent (
+  struct MqS * const context,
+  MQ_CST ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
+  MqConfigUpdateName(context, ident);
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+}
 
 void 
 MqFactoryCtxItem (
@@ -1029,19 +1044,6 @@ MqFactoryCtxItem (
 ) {
   context->setup.factory = item;
   MqConfigUpdateName(context, item->ident);
-}
-
-enum MqErrorE 
-MqFactoryCtxDefault (
-  struct MqS * const context,
-  MQ_CST const ident
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck(ret = MqFactoryDefault(ident, sDefaultFactory, NULL, NULL, NULL, NULL, NULL));
-  MqFactoryCtxIdent(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
 }
 
 /*****************************************************************************/

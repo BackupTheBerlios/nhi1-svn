@@ -50,14 +50,14 @@ namespace ccmsgque {
       struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
       ptr->type = ProcCallS::PC_IServerSetup;
       ptr->call.ServerSetup = iSetup;
-      MqConfigSetServerSetup (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
+      MqConfigSetServerSetup (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, ProcCopy);
     }
     IServerCleanup * const iCleanup = dynamic_cast<IServerCleanup*const>(this);
     if (iCleanup != NULL) {
       struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
       ptr->type = ProcCallS::PC_IServerCleanup;
       ptr->call.ServerCleanup = iCleanup;
-      MqConfigSetServerCleanup (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
+      MqConfigSetServerCleanup (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, ProcCopy);
     }
 
     // init the error interface
@@ -66,7 +66,7 @@ namespace ccmsgque {
       struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
       ptr->type = ProcCallS::PC_IBgError;
       ptr->call.BgError = iBgError;
-      MqConfigSetBgError (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
+      MqConfigSetBgError (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, ProcCopy);
     }
 
     // init the event interface
@@ -75,7 +75,7 @@ namespace ccmsgque {
       struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
       ptr->type = ProcCallS::PC_IEvent;
       ptr->call.Event = iEvent;
-      MqConfigSetEvent (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, NULL);
+      MqConfigSetEvent (&context, ProcCall, static_cast<MQ_PTR>(ptr), ProcFree, ProcCopy);
     }
   }
 

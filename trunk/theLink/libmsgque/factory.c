@@ -97,16 +97,16 @@ sFactorySpaceAdd (
 
 static void
 sFactorySpaceDelItem (
-  struct MqFactoryItemS *item
+  MQ_SIZE id
 )
 {
-  if (item->Create.data && item->Create.fFree) {
-    (*item->Create.fFree) (MQ_ERROR_PANIC, &item->Create.data);
+  if (space.items[id].Create.data && space.items[id].Create.fFree) {
+    (*space.items[id].Create.fFree) (MQ_ERROR_PANIC, &space.items[id].Create.data);
   }
-  if (item->Delete.data && item->Delete.fFree) {
-    (*item->Delete.fFree) (MQ_ERROR_PANIC, &item->Delete.data);
+  if (space.items[id].Delete.data && space.items[id].Delete.fFree) {
+    (*space.items[id].Delete.fFree) (MQ_ERROR_PANIC, &space.items[id].Delete.data);
   }
-  MqSysFree(item->ident);
+  MqSysFree(space.items[id].ident);
 }
 
 static void
@@ -115,16 +115,15 @@ sFactorySpaceDelAll (
 )
 {
   if (space.items != NULL) {
-    struct MqFactoryItemS * start = space.items;
-    struct MqFactoryItemS * end = start + space.used;
+    MQ_SIZE id;
 
     // name == "-ALL"
     // delete the other name
-    while (start < end--) {
-      sFactorySpaceDelItem (end);
+    for (id=0; id<space.used; id++) {
+      sFactorySpaceDelItem (id);
     }
     // set all items to zero
-    memset(start, '\0', space.used * sizeof(struct MqFactoryItemS));
+    memset(space.items, '\0', space.used * sizeof(struct MqFactoryItemS));
     space.used = 0;
     defaultFactoryItem = NULL;
   }
@@ -285,6 +284,14 @@ MqFactoryAdd (
 }
 
 enum MqFactoryReturnE
+MqFactoryCopyDefault (
+  MQ_CST const ident
+)
+{
+  return pFactoryAddName (ident, space.items[0].Create, space.items[0].Delete);
+}
+
+enum MqFactoryReturnE
 MqFactoryDefault (
   MQ_CST           const ident,
   MqFactoryCreateF const fCreate,
@@ -301,7 +308,7 @@ MqFactoryDefault (
     return MQ_FACTORY_RETURN_ADD_DEF_ERR;
   }
   // Del
-  sFactorySpaceDelItem (&space.items[0]);
+  sFactorySpaceDelItem (0);
   // Add
   space.items[0].ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
   space.items[0].Create = Create;
