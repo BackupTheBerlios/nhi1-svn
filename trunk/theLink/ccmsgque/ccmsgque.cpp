@@ -19,11 +19,12 @@
 namespace ccmsgque {
 
   void MqC::libInit (void) {
+    MqSetup();
     MqFactoryC<MqC>::Default("ccmsgque");
   }
 
-  MqC::MqC (MqC& tmpl) {
-    MqContextInit (&context, 0, &tmpl.context);
+  MqC::MqC (struct MqS * const tmpl) {
+    MqContextInit (&context, 0, tmpl);
     MqConfigSetSelf (&context, this);
   }
 
@@ -42,17 +43,6 @@ namespace ccmsgque {
 
     context.setup.Parent.fCreate = MqLinkDefault;
     context.setup.Child.fCreate = MqLinkDefault;
-
-    // init the "factory" interface
-/*
-    IFactory *const iFactory = dynamic_cast<IFactory*const>(this);
-    if (iFactory != NULL) {
-      context.setup.Factory.Create.fCall = FactoryCreate;
-      context.setup.Factory.Create.data = iFactory;
-    }
-    // required -> slave-Z-ERR-1-
-    context.setup.Factory.Delete.fCall = FactoryDelete;
-*/
 
     // init the server interface
     IServerSetup * const iSetup = dynamic_cast<IServerSetup*const>(this);
@@ -164,6 +154,15 @@ namespace ccmsgque {
     va_end (ap);
 
     SlaveWorker (master_id, args);
+  }
+  
+  enum MqErrorE MqC::ErrorSet (const exception& e) {
+    MqCException const * const  mqex = dynamic_cast<MqCException const * const>(&e);
+    if (mqex != NULL) {
+      return MqErrorSet (&context, mqex->num(), mqex->code(), mqex->what(), NULL);
+    } else {
+      return MqErrorC (&context, __func__, -1, e.what());
+    }
   }
 
 } // END - namespace "ccmsgque"

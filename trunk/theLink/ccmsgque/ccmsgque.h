@@ -212,59 +212,6 @@ namespace ccmsgque {
     /// \} Mq_Buffer_CC_API
   };
 
-  class MqFactoryCException : public exception
-  {
-    private:
-      enum MqFactoryReturnE err;
-    public:
-      MqFactoryCException(enum MqFactoryReturnE ret) : err (ret) { }
-      virtual MQ_CST what() const throw() { return MqFactoryErrorMsg(err); }
-  };
-
-  template <class T>
-  class MqFactoryC {
-
-    private:
-      static inline void ErrorCheck(enum MqFactoryReturnE ret) throw(MqCException) {
-	if (MqFactoryErrorCheckI(ret)) throw MqFactoryCException(ret);
-      }
-
-      static inline MqC* GetThis(struct MqS const * const context) {
-	return static_cast<MqC*>(context->self);
-      }
-
-      static enum MqErrorE FactoryCreate (
-	struct MqS * const tmpl,
-	enum MqFactoryE create,
-	struct MqFactoryItemS *item,
-	struct MqS  ** contextP
-      );
-
-      static void FactoryDelete (
-	struct MqS * ctx,
-	MQ_BOL doFactoryCleanup,
-	struct MqFactoryItemS * const item
-      );
-
-    public:
-      static void Add(MQ_CST ident) {
-	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
-      }
-      static void Default(MQ_CST ident) {
-	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
-      }
-      static T* Call(MQ_CST ident) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
-      }
-      static T* New(MQ_CST ident) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
-      }
-  };
-
   /// \ingroup Mq_Context_CC_API
   /// \api #MqS
   class MqC {
@@ -283,11 +230,25 @@ namespace ccmsgque {
 
     public:
       /// \api #MqContextCreate
-      MQ_EXTERN MqC (MqC& tmpl);
+      MQ_EXTERN MqC (struct MqS * const tmpl);
       /// \api #MqContextCreate
       MQ_EXTERN MqC ();
       /// \api #MqContextDelete
       MQ_EXTERN virtual ~MqC ();
+
+    public:
+      /// \api #MqFactoryCtxDefault
+      inline void FactoryCtxDefault (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxDefault(&context, ident)); 
+      }
+      /// \api #MqFactoryCtxIdent
+      inline void FactoryCtxIdent (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxIdent(&context, ident)); 
+      }
+      /// \api #MqFactoryCtxItem
+      inline void FactoryCtxItem (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxIdent(&context, ident)); 
+      }
 
     public:
       typedef void (MqC::*CallbackF) ();
@@ -878,13 +839,97 @@ namespace ccmsgque {
     /// \} Mq_Slave_CC_API
   };
 
+  class MqFactoryCException : public exception
+  {
+    private:
+      enum MqFactoryReturnE err;
+    public:
+      MqFactoryCException(enum MqFactoryReturnE ret) : err (ret) { }
+      virtual MQ_CST what() const throw() { return MqFactoryErrorMsg(err); }
+  };
+
+  template <typename T>
+  class MqFactoryC {
+
+    private:
+      static inline void ErrorCheck(enum MqFactoryReturnE ret) throw(MqCException) {
+	if (MqFactoryErrorCheckI(ret)) throw MqFactoryCException(ret);
+      }
+      static inline T* GetThis(struct MqS const * const context) {
+	return static_cast<T*>(context->self);
+      }
+      static enum MqErrorE FactoryCreate ( 
+	struct MqS * const tmpl, 
+	enum MqFactoryE create, 
+	struct MqFactoryItemS * item, 
+	struct MqS  ** contextP
+      ) {
+	try { 
+	  struct MqS * mqctx = &static_cast<MqC*const>(new T(tmpl))->context;
+	  if (MqErrorCheckI(MqErrorGetCode(mqctx))) {
+	    *contextP = NULL;
+	    if (create != MQ_FACTORY_NEW_INIT) {
+	      MqErrorCopy (tmpl, mqctx);
+	      MqContextDelete (&mqctx);
+	      return MqErrorStack(tmpl);
+	    } else {
+	      return MQ_ERROR;
+	    }
+	  }
+	  if (create != MQ_FACTORY_NEW_INIT) {
+	    MqSetupDup(mqctx, tmpl);
+	  }
+	  *contextP = mqctx;
+	} catch (exception& ex) {
+	  *contextP = NULL;
+	  if (create != MQ_FACTORY_NEW_INIT) {
+	    return GetThis(tmpl)->ErrorSet(ex);
+	  } else {
+	    return MQ_ERROR;
+	  }
+	} catch (...) {
+	  *contextP = NULL;
+	  if (create != MQ_FACTORY_NEW_INIT) {
+	    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
+	  } else {
+	    return MQ_ERROR;
+	  }
+	}
+	return MQ_OK;
+      }
+      static void FactoryDelete (
+	struct MqS * context,
+	MQ_BOL doFactoryCleanup,
+	struct MqFactoryItemS * const item
+      ) {
+	if (doFactoryCleanup == MQ_YES) {
+	  delete GetThis(context);
+	} else {
+	  MqContextFree(context);
+	}
+      };
+
+    public:
+      static inline void Add(MQ_CST ident) throw (MqFactoryCException) {
+	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
+      static inline void Default(MQ_CST ident) throw (MqFactoryCException) {
+	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+      }
+      static inline T* Call(MQ_CST ident) throw (MqFactoryCException) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
+      static inline T* New(MQ_CST ident) throw (MqFactoryCException) {
+	struct MqS *mqctx;
+	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
+	return static_cast<T*>(mqctx->self);
+      }
+  };
 };  // END - namespace "ccmsgque"
 
 /// \} Mq_CC_API
 
 #endif /* MQ_CCMSGQUE_H */
-
-
-
-
 
