@@ -183,6 +183,15 @@ pFactoryMark (
   }
 }
 
+void 
+pFactoryCtxItemSet (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+) {
+  context->setup.factory = item;
+  MqConfigUpdateName(context, item->ident);
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                 public                                    */
@@ -232,7 +241,7 @@ MqFactoryInvoke (
     // ist the object the "first" object created?
     mqctx->statusIs = create == MQ_FACTORY_NEW_INIT ? MQ_STATUS_IS_INITIAL : MQ_STATUS_IS_DUP;
     // set Factory on a new object
-    MqFactoryCtxItem (mqctx, item);
+    pFactoryCtxItemSet (mqctx, item);
   } else {
     goto error2;
   }
@@ -403,6 +412,46 @@ void MqFactoryErrorPanic (
 {
   if (ret != MQ_FACTORY_RETURN_OK)
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryErrorMsg(ret));
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                context                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqErrorE 
+MqFactoryCtxDefaultSet (
+  struct MqS * const context,
+  MQ_CST const ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryErrorCheck(ret = MqFactoryCopyDefault(ident));
+  MqFactoryCtxIdentSet(context, ident);
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+}
+
+enum MqErrorE 
+MqFactoryCtxIdentSet (
+  struct MqS * const context,
+  MQ_CST ident
+) {
+  enum MqFactoryReturnE ret;
+  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
+  MqConfigUpdateName(context, ident);
+  return MQ_OK;
+error:
+  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+}
+
+MQ_CST 
+MqFactoryCtxIdentGet (
+  struct MqS const * const context
+)
+{
+  return context->setup.factory ? context->setup.factory->ident : "";
 }
 
 END_C_DECLS

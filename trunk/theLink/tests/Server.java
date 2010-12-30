@@ -157,11 +157,11 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
       } else if (cmd.equals("Ident")) {
-	String old = ConfigGetIdent();
-	ConfigSetIdent (ReadC());
+	String old = FactoryCtxIdentGet();
+	FactoryCtxIdentSet (ReadC());
 	boolean check = LinkGetTargetIdent().equals(ReadC());
 	SendSTART();
-	SendC (ConfigGetIdent());
+	SendC (FactoryCtxIdentGet());
 	SendO (check);
 	ConfigSetSrvName (old);
       } else if (cmd.equals("IsSilent")) {
@@ -848,6 +848,8 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
+
+
 
 
 

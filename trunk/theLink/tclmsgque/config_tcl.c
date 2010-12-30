@@ -270,26 +270,6 @@ int NS(ConfigSetBgError) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(FactoryCtxIdent) (NS_ARGS)
-{
-  SETUP_mqctx;
-  MQ_CST ident;
-  CHECK_C(ident)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqFactoryCtxIdent (mqctx, ident));
-  RETURN_TCL
-}
-
-int NS(FactoryCtxDefault) (NS_ARGS)
-{
-  SETUP_mqctx;
-  MQ_CST ident;
-  CHECK_C(ident)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqFactoryCtxDefault(mqctx, ident));
-  RETURN_TCL
-}
-
 int NS(ConfigSetIoUdsFile) (NS_ARGS)
 {
   SETUP_mqctx
@@ -406,15 +386,6 @@ int NS(ConfigGetSrvName) (NS_ARGS)
   MQ_CST str;
   CHECK_NOARGS
   str = MqConfigGetSrvName(&tclctx->mqctx);
-  Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
-  RETURN_TCL
-}
-
-int NS(ConfigGetIdent) (NS_ARGS)
-{
-  MQ_CST str;
-  CHECK_NOARGS
-  str = MqConfigGetIdent(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
   RETURN_TCL
 }

@@ -62,7 +62,7 @@ class Server < MqS
     #$stderr.puts("initialize-1 -----------" + self.to_s)
     #$stderr.flush
     ConfigSetName("server")
-    ConfigSetIdent("test-server")
+    FactoryCtxIdentSet("test-server")
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))
     ConfigSetFactory(lambda {Server.new})
@@ -276,13 +276,13 @@ class Server < MqS
         SendC(ConfigGetSrvName())
         ConfigSetSrvName(old)
       when "Ident"
-        old = ConfigGetIdent()
-        ConfigSetIdent(ReadC())
+        old = FactoryCtxIdentGet()
+        FactoryCtxIdentSet(ReadC())
         check = LinkGetTargetIdent() == ReadC()
         SendSTART()
-        SendC(ConfigGetIdent())
+        SendC(FactoryCtxIdentGet())
         SendO(check);
-        ConfigSetIdent(old)
+        FactoryCtxIdentSet(old)
       when "IsSilent"
         old = ConfigGetIsSilent()
         ConfigSetIsSilent(ReadO())
@@ -715,4 +715,6 @@ ensure
 end
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
+
 

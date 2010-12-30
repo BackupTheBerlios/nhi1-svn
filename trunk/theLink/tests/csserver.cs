@@ -163,13 +163,13 @@ namespace example {
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
       } else if (cmd == "Ident") {
-	string old = ConfigGetIdent();
-	ConfigSetIdent (ReadC());
+	string old = FactoryCtxIdentGet();
+	FactoryCtxIdentSet (ReadC());
 	bool check = LinkGetTargetIdent() == ReadC();
 	SendSTART();
-	SendC (ConfigGetIdent());
+	SendC (FactoryCtxIdentGet());
 	SendO (check);
-	ConfigSetIdent (old);
+	FactoryCtxIdentSet (old);
       } else if (cmd == "IsSilent") {
 	bool old = ConfigGetIsSilent();
 	ConfigSetIsSilent (ReadO());
@@ -718,6 +718,8 @@ namespace example {
   }
 
 } // finish namespace "example"
+
+
 
 
 

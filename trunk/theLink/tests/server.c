@@ -1153,17 +1153,17 @@ Ot_CFG1 (
     CFGTestC(SrvName)
   } else if (!strncmp (cmd, "Ident", 5)) {
     MQ_BOL check;
-    CO = MqSysStrDup(mqctx, MqConfigGetIdent (mqctx));
+    CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqErrorCheck (MqFactoryCtxDefault(mqctx, CV));
+    MqErrorCheck (MqFactoryCtxDefaultSet(mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
     MqSendSTART(mqctx);
-    MqErrorCheck (MqSendC (mqctx, MqConfigGetIdent (mqctx)));
+    MqErrorCheck (MqSendC (mqctx, MqFactoryCtxIdentGet (mqctx)));
     MqErrorCheck (MqSendO (mqctx, check));
     // clenup
-    MqErrorCheck (MqFactoryCtxIdent (mqctx, CO));
+    MqErrorCheck (MqFactoryCtxIdentSet (mqctx, CO));
     MqSysFree (CO);
   } else if (!strncmp (cmd, "IsSilent", 8)) {
     CFGTest(IsSilent,O)
@@ -1419,4 +1419,6 @@ error:
 }
 
 /** \} server */
+
+
 

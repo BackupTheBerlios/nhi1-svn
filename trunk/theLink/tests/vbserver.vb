@@ -224,13 +224,13 @@ Public Module example
           SendC(ConfigGetSrvName())
           ConfigSetSrvName(old)
         Case "Ident"
-          Dim old As String = ConfigGetIdent()
-          ConfigSetIdent(ReadC())
+          Dim old As String = FactoryCtxIdentGet()
+          FactoryCtxIdentSet(ReadC())
           Dim check As Boolean = LinkGetTargetIdent() = ReadC()
           SendSTART()
-          SendC(ConfigGetIdent())
+          SendC(FactoryCtxIdentGet())
           SendO(check)
-          ConfigSetIdent(old)
+          FactoryCtxIdentSet(old)
         Case "IsSilent"
           Dim old As Boolean = ConfigGetIsSilent()
           ConfigSetIsSilent(ReadO())
@@ -751,7 +751,7 @@ Public Module example
     Dim srv As New Server()
     Try
       srv.ConfigSetName("server")
-      srv.ConfigSetIdent("test-server")
+      srv.FactoryCtxIdentSet("test-server")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
@@ -761,6 +761,8 @@ Public Module example
     End Try
   End Sub
 End Module
+
+
 
 
 

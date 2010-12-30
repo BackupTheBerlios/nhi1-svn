@@ -529,14 +529,14 @@ namespace example {
 	  ConfigSetSrvName (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "Ident", 5)) {
-	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetIdent());
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,FactoryCtxIdentGet());
 	  MQ_BOL check;
-	  FactoryCtxDefault (ReadC());
+	  FactoryCtxDefaultSet (ReadC());
 	  check = !strcmp(LinkGetTargetIdent(), ReadC());
 	  SendSTART();
-	  SendC (ConfigGetIdent());
+	  SendC (FactoryCtxIdentGet());
 	  SendO (check);
-	  FactoryCtxIdent (old);
+	  FactoryCtxIdentSet (old);
 	  MqSysFree(old);
 	} else if (!strncmp(cmd, "IsSilent", 8)) {
 	  MQ_BOL old = ConfigGetIsSilent();
@@ -716,4 +716,5 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server->Exit ();
 }
+
 

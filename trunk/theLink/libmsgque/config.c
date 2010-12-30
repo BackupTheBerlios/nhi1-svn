@@ -263,7 +263,7 @@ MqContextInit (
   pConfigInit (context);
   context->temp = MqBufferCreate(context, 250);
   if (tmpl == NULL) {
-    MqFactoryCtxItem(context,defaultFactoryItem);
+    pFactoryCtxItemSet(context,defaultFactoryItem);
   } else {
     MqConfigDup(context, tmpl);
   }
@@ -865,14 +865,6 @@ MqConfigGetName (
 }
 
 MQ_CST 
-MqConfigGetIdent (
-  struct MqS const * const context
-)
-{
-  return context->setup.factory ? context->setup.factory->ident : "";
-}
-
-MQ_CST 
 MqConfigGetSrvName (
   struct MqS const * const context
 )
@@ -982,68 +974,6 @@ MqConfigGetStatusIs (
 )
 {
   return context->statusIs;
-}
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                Factory                                    */
-/*                                                                           */
-/*****************************************************************************/
-
-/*
-enum MqErrorE 
-MqFactoryCtxNew (
-  struct MqS * const context,
-  MQ_CST	    ident,
-  MqFactoryCreateF  fCreate,
-  MQ_PTR	    CreateData,
-  MqTokenDataFreeF  fCreateFree,
-  MqFactoryDeleteF  fDelete,
-  MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, fCreate, CreateData, fCreateFree, fDelete, DeleteData, fDeleteFree));
-  MqFactoryCtxIdent(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
-}
-*/
-
-enum MqErrorE 
-MqFactoryCtxDefault (
-  struct MqS * const context,
-  MQ_CST const ident
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck(ret = MqFactoryCopyDefault(ident));
-  MqFactoryCtxIdent(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
-}
-
-enum MqErrorE 
-MqFactoryCtxIdent (
-  struct MqS * const context,
-  MQ_CST ident
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
-  MqConfigUpdateName(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
-}
-
-void 
-MqFactoryCtxItem (
-  struct MqS * const context,
-  struct MqFactoryItemS * const item
-) {
-  context->setup.factory = item;
-  MqConfigUpdateName(context, item->ident);
 }
 
 /*****************************************************************************/

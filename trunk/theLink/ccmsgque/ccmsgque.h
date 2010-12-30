@@ -238,19 +238,23 @@ namespace ccmsgque {
       MQ_EXTERN virtual ~MqC ();
 
     public:
-      /// \api #MqFactoryCtxDefault
-      inline void FactoryCtxDefault (MQ_CST ident) throw(MqCException) { 
-	ErrorCheck (MqFactoryCtxDefault(&context, ident)); 
+      /// \api #MqFactoryCtxDefaultSet
+      inline void FactoryCtxDefaultSet (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxDefaultSet(&context, ident)); 
       }
-      /// \api #MqFactoryCtxIdent
-      inline void FactoryCtxIdent (MQ_CST ident) throw(MqCException) { 
-	ErrorCheck (MqFactoryCtxIdent(&context, ident)); 
+      /// \api #MqFactoryCtxIdentSet
+      inline void FactoryCtxIdentSet (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxIdentSet(&context, ident)); 
       }
-      /// \api #MqFactoryCtxItem
-      inline void FactoryCtxItem (MQ_CST ident) throw(MqCException) { 
-	ErrorCheck (MqFactoryCtxIdent(&context, ident)); 
+      /// \api #MqFactoryCtxIdentGet
+      inline MQ_CST FactoryCtxIdentGet () { 
+	return MqFactoryCtxIdentGet(&context); 
       }
 
+      /// \api #MqFactoryCtxItemSet
+      inline void FactoryCtxItemSet (MQ_CST ident) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxIdentSet(&context, ident)); 
+      }
     public:
       typedef void (MqC::*CallbackF) ();
 
@@ -387,8 +391,6 @@ namespace ccmsgque {
       inline MQ_CST ConfigGetName ()	    { return MqConfigGetName(&context); }
       /// \api #MqConfigGetSrvName
       inline MQ_CST ConfigGetSrvName ()	    { return MqConfigGetSrvName(&context); }
-      /// \api #MqConfigGetIdent
-      inline MQ_CST ConfigGetIdent ()	    { return MqConfigGetIdent(&context); }
       /// \api #MqConfigGetBuffersize
       inline MQ_INT ConfigGetBuffersize ()  { return MqConfigGetBuffersize(&context); }
       /// \api #MqConfigGetDebug

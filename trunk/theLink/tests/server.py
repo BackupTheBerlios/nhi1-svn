@@ -173,13 +173,13 @@ class Server(MqS):
       self.SendC (self.ConfigGetSrvName())
       self.ConfigSetSrvName (old)
     elif cmd == "Ident":
-      old = self.ConfigGetIdent()
-      self.ConfigSetIdent (self.ReadC())
+      old = self.FactoryCtxIdentGet()
+      self.FactoryCtxIdentSet (self.ReadC())
       check = self.LinkGetTargetIdent() == self.ReadC()
       self.SendSTART()
-      self.SendC (self.ConfigGetIdent())
+      self.SendC (self.FactoryCtxIdentGet())
       self.SendO (check);
-      self.ConfigSetIdent (old)
+      self.FactoryCtxIdentSet (old)
     elif cmd == "IsSilent":
       old = self.ConfigGetIsSilent()
       self.ConfigSetIsSilent (self.ReadO())
@@ -654,4 +654,6 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
+
+
 

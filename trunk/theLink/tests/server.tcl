@@ -533,11 +533,11 @@ proc Ot_CFG1 {ctx} {
       $ctx ConfigSetSrvName $old
     }
     "Ident" {
-      set old [$ctx ConfigGetIdent] 
+      set old [$ctx FactoryCtxIdentGet] 
       $ctx FactoryCtxDefault [$ctx ReadC]
       set check [expr {[$ctx LinkGetTargetIdent] eq [$ctx ReadC]}]
       $ctx SendSTART
-      $ctx SendC [$ctx ConfigGetIdent]
+      $ctx SendC [$ctx FactoryCtxIdentGet]
       $ctx SendO $check
       $ctx ConfigSetSrvName $old
     }
@@ -721,4 +721,5 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
+
 

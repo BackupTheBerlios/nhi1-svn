@@ -67,7 +67,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 
   public function __construct() {
     $this->ConfigSetName("server");
-    $this->ConfigSetIdent("test-server");
+    $this->FactoryCtxIdentSet("test-server");
     parent::__construct();
   }
 
@@ -541,13 +541,13 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
         $this->ConfigSetSrvName($old);
 	break;
       case "Ident":
-        $old = $this->ConfigGetIdent();
-        $this->ConfigSetIdent($this->ReadC());
+        $old = $this->FactoryCtxIdentGet();
+        $this->FactoryCtxIdentSet($this->ReadC());
         $check = $this->LinkGetTargetIdent() == $this->ReadC();
         $this->SendSTART();
-        $this->SendC($this->ConfigGetIdent());
+        $this->SendC($this->FactoryCtxIdentGet());
         $this->SendO($check);;
-        $this->ConfigSetIdent($old);
+        $this->FactoryCtxIdentSet($old);
 	break;
       case "IsSilent":
         $old = $this->ConfigGetIsSilent();
@@ -752,3 +752,5 @@ try {
 }
 $ctx->Exit();
 ?>
+
+

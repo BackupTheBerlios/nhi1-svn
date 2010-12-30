@@ -26,6 +26,11 @@ void pFactoryMark (
   MqMarkF markF
 );
 
+void pFactoryCtxItemSet (
+  struct MqS * const context,
+  struct MqFactoryItemS * const item
+);
+
 END_C_DECLS
 
 #endif /* FACTORY_H */

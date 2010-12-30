@@ -865,7 +865,7 @@ struct MqSetupS {
 
 /*****************************************************************************/
 /*                                                                           */
-/*                           factory                                         */
+/*                             factory-static                                */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -885,12 +885,6 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
   struct MqFactoryItemS  const * const item
 );
-
-/*
-MQ_EXTERN void MQ_DECL MqFactoryDelete (
-  void
-);
-*/
 
 #define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
 #define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
@@ -981,6 +975,41 @@ MQ_EXTERN void MQ_DECL MqFactorySetItem (
 MQ_EXTERN void MQ_DECL MqFactorySetDefault (
   struct MqS * const context,
   MQ_CST const ident
+);
+
+/// \brief setup the default \e factory pattern
+/// \context
+///
+/// The \e default factory is just a wrapper for #MqContextCreate with additional error management code.
+/// A simple application \e without an application specific \e factory use this configuration.
+MQ_EXTERN enum MqErrorE 
+MQ_DECL MqFactoryCtxDefaultSet (
+  struct MqS * const context,
+  MQ_CST const ident
+);
+
+/*****************************************************************************/
+/*                                                                           */
+/*                           factory-context                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+/// \brief get the \e ident of the \e factory object of the context
+/// \context
+/// \return the \c context.factory.ident value
+/// \attention the \e string is owned by \libmsgque -> do not free !!
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
+  struct MqS const * const context
+) __attribute__((nonnull));
+
+/// \brief set the \e ident of the \e factory object of the context
+/// \context
+/// \param[in] data the factory identifer
+/// \retException
+MQ_EXTERN enum MqErrorE
+MQ_DECL MqFactoryCtxIdentSet (
+  struct MqS * const context,
+  MQ_CST  data
 );
 
 /*****************************************************************************/
@@ -1089,55 +1118,6 @@ MQ_EXTERN void
 MQ_DECL MqConfigSetIgnoreExit (
   struct MqS * const context,
   MQ_BOL  data
-);
-
-/*
-/// \brief setup the \e factory pattern
-/// \context
-/// \param[in] ident the application identifier
-/// \param[in] fCreate set the #MqSetupS::Factory - #MqFactoryCreateS::fCall value
-/// \param[in] CreateData set the #MqSetupS::Factory - #MqFactoryCreateS::data value
-/// \param[in] fCreateFree free the \e CreateData
-/// \param[in] fDelete set the #MqSetupS::Factory - #MqFactoryDeleteS::fCall value
-/// \param[in] DeleteData set the #MqSetupS::Factory - #MqFactoryDeleteS::data value
-/// \param[in] fDeleteFree delete the \e DeleteData
-MQ_EXTERN enum MqErrorE 
-MQ_DECL MqFactoryCtxNew (
-  struct MqS * const context,
-  MQ_CST	    ident,
-
-  MqFactoryCreateF  fCreate,
-  MQ_PTR	    CreateData,
-  MqTokenDataFreeF  fCreateFree,
-
-  MqFactoryDeleteF  fDelete,
-  MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree
-);
-*/
-
-/// \brief setup the default \e factory pattern
-/// \context
-///
-/// The \e default factory is just a wrapper for #MqContextCreate with additional error management code.
-/// A simple application \e without an application specific \e factory use this configuration.
-MQ_EXTERN enum MqErrorE 
-MQ_DECL MqFactoryCtxDefault (
-  struct MqS * const context,
-  MQ_CST const ident
-);
-
-/// \brief set the #MqSetupS::ident value and cleanup old value
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqFactoryCtxIdent (
-  struct MqS * const context,
-  MQ_CST  data
-);
-
-MQ_EXTERN void 
-MQ_DECL MqFactoryCtxItem (
-  struct MqS * const context,
-  struct MqFactoryItemS * const item
 );
 
 /// \brief set the #MqConfigS::ignoreFork value
@@ -1300,15 +1280,6 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
  *  \attention the \e string is owned by \libmsgque -> do not free !!
  */
 MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetName (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
-/** \brief get the \e ident of the \e context object
- *  \context
- *  \return the \c context.config.ident value
- *  \attention the \e string is owned by \libmsgque -> do not free !!
- */
-MQ_EXTERN MQ_CST MQ_DECL MqConfigGetIdent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 

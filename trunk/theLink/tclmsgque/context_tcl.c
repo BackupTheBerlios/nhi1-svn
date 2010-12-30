@@ -261,7 +261,6 @@ int NS(ConfigSetDebug) (NS_ARGS);
 int NS(ConfigSetTimeout) (NS_ARGS);
 int NS(ConfigSetName) (NS_ARGS);
 int NS(ConfigSetSrvName) (NS_ARGS);
-int NS(FactoryCtxIdent) (NS_ARGS);
 int NS(ConfigSetIsSilent) (NS_ARGS);
 int NS(ConfigSetIsServer) (NS_ARGS);
 int NS(ConfigSetIsString) (NS_ARGS);
@@ -270,7 +269,6 @@ int NS(ConfigSetEvent) (NS_ARGS);
 int NS(ConfigSetServerSetup) (NS_ARGS);
 int NS(ConfigSetServerCleanup) (NS_ARGS);
 int NS(ConfigSetBgError) (NS_ARGS);
-int NS(FactoryCtxDefault) (NS_ARGS);
 int NS(ConfigSetIoUdsFile) (NS_ARGS);
 int NS(ConfigSetIoTcp) (NS_ARGS);
 int NS(ConfigSetIoPipeSocket) (NS_ARGS);
@@ -284,7 +282,6 @@ int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
 int NS(ConfigGetSrvName) (NS_ARGS);
-int NS(ConfigGetIdent) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
 int NS(ConfigGetIoTcpPort) (NS_ARGS);
@@ -328,6 +325,10 @@ int NS(SlaveDelete) (NS_ARGS);
 int NS(SlaveGet) (NS_ARGS);
 int NS(SlaveGetMaster) (NS_ARGS);
 int NS(SlaveIs) (NS_ARGS);
+
+int NS(FactoryCtxDefaultSet) (NS_ARGS);
+int NS(FactoryCtxIdentSet) (NS_ARGS);
+int NS(FactoryCtxIdentGet) (NS_ARGS);
 
 int NS(MqS_Cmd) (
   ClientData clientData,
@@ -399,7 +400,6 @@ int NS(MqS_Cmd) (
     { "ConfigSetTimeout",	  NS(ConfigSetTimeout)	      },
     { "ConfigSetName",		  NS(ConfigSetName)	      },
     { "ConfigSetSrvName",	  NS(ConfigSetSrvName)	      },
-    { "FactoryCtxIdent",	  NS(FactoryCtxIdent)	      },
     { "ConfigSetIsSilent",	  NS(ConfigSetIsSilent)	      },
     { "ConfigSetIsServer",	  NS(ConfigSetIsServer)	      },
     { "ConfigSetIsString",	  NS(ConfigSetIsString)	      },
@@ -408,7 +408,6 @@ int NS(MqS_Cmd) (
     { "ConfigSetServerSetup",	  NS(ConfigSetServerSetup)    },
     { "ConfigSetServerCleanup",	  NS(ConfigSetServerCleanup)  },
     { "ConfigSetBgError",	  NS(ConfigSetBgError)	      },
-    { "FactoryCtxDefault",	  NS(FactoryCtxDefault)	      },
     { "ConfigSetIoUdsFile",	  NS(ConfigSetIoUdsFile)      },
     { "ConfigSetIoTcp",		  NS(ConfigSetIoTcp)	      },
     { "ConfigSetIoPipeSocket",	  NS(ConfigSetIoPipeSocket)   },
@@ -423,7 +422,6 @@ int NS(MqS_Cmd) (
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
     { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
-    { "ConfigGetIdent",		  NS(ConfigGetIdent)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
     { "ConfigGetIoTcpPort",	  NS(ConfigGetIoTcpPort)      },
@@ -483,6 +481,12 @@ int NS(MqS_Cmd) (
     { "SlaveGet",		  NS(SlaveGet)		      },
     { "SlaveGetMaster",		  NS(SlaveGetMaster)	      },
     { "SlaveIs",		  NS(SlaveIs)		      },
+
+// FACTORY
+//
+    { "FactoryCtxDefaultSet",	  NS(FactoryCtxDefaultSet)    },
+    { "FactoryCtxIdentSet",	  NS(FactoryCtxIdentSet)      },
+    { "FactoryCtxIdentGet",	  NS(FactoryCtxIdentGet)      },
 
     { NULL,			  NULL			      }
   };
