@@ -399,8 +399,8 @@ MQ_CST MqFactoryErrorMsg (
     return "unable to call factory for identifer";
    case MQ_FACTORY_RETURN_ITEM_GET_ERR:
     return "unable to find factory for identifer";
-   case MQ_FACTORY_RETURN_END:
-    return "END";
+   case MQ_FACTORY_RETURN_NEW_ERR:
+    return "unable to create a new factory and return an object";
    default:
     return "nothing";
   }

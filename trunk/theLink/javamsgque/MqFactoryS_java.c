@@ -42,14 +42,14 @@ JNIEXPORT jobject JNICALL NF(Call) (
 {
   struct MqS * mqctx;
   const char * str;
-  enum MqErrorE ret;
+  enum MqFactoryReturnE ret;
   str = JO2C_START(env,ident);
-  ret = MqFactoryInvoke ((struct MqS *)env, MQ_FACTORY_NEW_INIT, MqFactoryItemGet (str), &mqctx);
+  ret = MqFactoryCall (str, (MQ_PTR)env, &mqctx);
   JO2C_STOP(env,ident,str);
-  MqErrorCheck(ret);
+  MqFactoryErrorCheck(ret);
   return mqctx->self;
 error:
-  ErrorStringToJava("unable to call main factory for identifer");
+  ErrorStringToJava(MqFactoryErrorMsg(ret));
   return NULL;  
 }
 
@@ -60,8 +60,19 @@ JNIEXPORT jobject JNICALL NF(New) (
   jclass  cbClass
 )
 {
-  JavaErrorCheck(NF(Add) (env, class, ident, cbClass));
-  return NF(Call) (env, class, ident);
+  MQ_PTR call;
+  jmethodID callback;
+  struct MqS * mqctx;
+  const char * str;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_NEW_ERR;
+  JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,cbClass,"<init>","(Ljavamsgque/MqS;)V"));
+  JavaErrorCheckNULL(call = NS(ProcCreate)(env, NULL, cbClass, callback, NULL));
+  str = JO2C_START(env,ident);
+  ret = MqFactoryNew (str, NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL, (MQ_PTR)env, &mqctx);
+  JO2C_STOP(env,ident,str);
+  MqFactoryErrorCheck(ret);
+  return mqctx->self;
 error:
-  return NULL;
+  ErrorStringToJava(MqFactoryErrorMsg(ret));
+  return NULL;  
 }

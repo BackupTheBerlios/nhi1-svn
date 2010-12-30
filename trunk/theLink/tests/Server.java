@@ -158,12 +158,12 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	ConfigSetSrvName (old);
       } else if (cmd.equals("Ident")) {
 	String old = FactoryCtxIdentGet();
-	FactoryCtxIdentSet (ReadC());
+	FactoryCtxDefaultSet (ReadC());
 	boolean check = LinkGetTargetIdent().equals(ReadC());
 	SendSTART();
 	SendC (FactoryCtxIdentGet());
 	SendO (check);
-	ConfigSetSrvName (old);
+	FactoryCtxIdentSet (old);
       } else if (cmd.equals("IsSilent")) {
 	boolean old = ConfigGetIsSilent();
 	ConfigSetIsSilent (ReadO());

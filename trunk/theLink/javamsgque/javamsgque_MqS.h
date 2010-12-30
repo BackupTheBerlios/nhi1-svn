@@ -33,14 +33,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetSrvName
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigSetIdent
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIdent
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigSetBuffersize
  * Signature: (I)V
  */
@@ -129,14 +121,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetIoPipeSocket
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ConfigSetDefaultFactory
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetDefaultFactory
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    ConfigGetIsServer
  * Signature: ()Z
  */
@@ -189,14 +173,6 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetName
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetSrvName
-  (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ConfigGetIdent
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetIdent
   (JNIEnv *, jobject);
 
 /*
@@ -934,6 +910,30 @@ JNIEXPORT jobject JNICALL Java_javamsgque_MqS_SlaveGetMaster
  */
 JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_SlaveIs
   (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    FactoryCtxIdentSet
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_FactoryCtxIdentSet
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    FactoryCtxIdentGet
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_FactoryCtxIdentGet
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    FactoryCtxDefaultSet
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_FactoryCtxDefaultSet
+  (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

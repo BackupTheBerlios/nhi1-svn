@@ -65,8 +65,6 @@ public class MqS {
   public native void ConfigSetName	      (String val);
   /// \api #MqConfigSetSrvName
   public native void ConfigSetSrvName	      (String val);
-  /// \api #MqConfigSetIdent
-  public native void ConfigSetIdent	      (String val);
   /// \api #MqConfigSetBuffersize
   public native void ConfigSetBuffersize      (int val);
   /// \api #MqConfigSetDebug
@@ -93,8 +91,6 @@ public class MqS {
   public native void ConfigSetIoUdsFile	      (String file);
   /// \api #MqConfigSetIoPipeSocket
   public native void ConfigSetIoPipeSocket    (int socket);
-  /// \api #MqConfigSetDefaultFactory
-  public native void ConfigSetDefaultFactory  (String ident);
 
   /// \api #MqConfigGetIsServer
   public native boolean	ConfigGetIsServer     ();
@@ -110,8 +106,6 @@ public class MqS {
   public native String	ConfigGetName	      ();
   /// \api #MqConfigGetSrvName
   public native String	ConfigGetSrvName      ();
-  /// \api #MqConfigGetIdent
-  public native String	ConfigGetIdent	      ();
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
   /// \api #MqConfigGetStartAs
@@ -467,8 +461,25 @@ public class MqS {
   public native boolean	SlaveIs		    ();
 
 /// \} Mq_Slave_Java_API
+
+//
+// ========================================================================
+/// \defgroup Mq_Factory_Java_API Mq_Factory_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_Factory_C_API
+/// \copydoc Mq_Factory_C_API
+//
+
+  /// \api #MqFactoryCtxIdentSet
+  public native void FactoryCtxIdentSet	      (String val);
+  /// \api #MqFactoryCtxIdentGet
+  public native String FactoryCtxIdentGet     ();
+  /// \api #MqConfigSetDefaultFactory
+  public native void FactoryCtxDefaultSet     (String ident);
+
+/// \} Mq_Factory_Java_API
 }
 
 /// \} Mq_Java_API
-
 

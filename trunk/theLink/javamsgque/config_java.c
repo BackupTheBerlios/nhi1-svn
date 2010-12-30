@@ -70,7 +70,6 @@ error: \
 
 SetC(ConfigSetName)
 SetC(ConfigSetSrvName)
-SetC(ConfigSetIdent)
 SetI(ConfigSetBuffersize)
 SetI(ConfigSetDebug)
 SetW(ConfigSetTimeout)
@@ -122,7 +121,6 @@ GetI(ConfigGetBuffersize)
 GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
-GetC(ConfigGetIdent)
 
 
 JNIEXPORT void JNICALL NS(pConfigSetStartAs) (
@@ -150,17 +148,12 @@ JNIEXPORT jint JNICALL NS(ConfigGetStatusIs) (
   return MqConfigGetStatusIs (CONTEXT);
 }
 
-JNIEXPORT void JNICALL NS(ConfigSetDefaultFactory) (
-  JNIEnv    *env,
-  jobject   self,
-  jstring   ident
-)
-{
-  const char * str = JO2C_START(env,ident);
-  MQ_PTR call = NS(ProcCreate)(env, NULL, NS(Class_MqS), NS(MID_MqS_INIT), NULL);
-  JavaErrorCheckNULL(call);
-  MqConfigSetFactory(CONTEXT, str, NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
-error:
-  JO2C_STOP(env,ident,str);
-}
+/*****************************************************************************/
+/*                                                                           */
+/*                                factory                                    */
+/*                                                                           */
+/*****************************************************************************/
 
+SetC(FactoryCtxIdentSet)
+GetC(FactoryCtxIdentGet)
+SetC(FactoryCtxDefaultSet)

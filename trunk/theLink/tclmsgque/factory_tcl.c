@@ -54,7 +54,7 @@ error:
 int NS(FactoryNew) (TCL_ARGS)
 {
   struct MqS * mqctx;
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_CALL_ERR;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_NEW_ERR;
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory;
