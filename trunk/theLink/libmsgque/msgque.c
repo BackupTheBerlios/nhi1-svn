@@ -411,12 +411,14 @@ MqLogData (
   void GcCreate (void);
   void EventCreate (void);
   void SysComCreate (void);
+  void GenericCreate (void);
   void FactorySpaceCreate (void);
-  void ConfigCreate (void);
 
+  void GenericDelete (void);
   void GcDelete (void);
   void EventDelete (void);
   void FactorySpaceDelete (void);
+
 
 /*****************************************************************************/
 /*                                                                           */
@@ -435,10 +437,9 @@ void MqSetup(void)
   SysCreate ();
   GcCreate ();
   FactorySpaceCreate ();
-  ConfigCreate ();
   EventCreate ();
+  GenericCreate();
   SysComCreate ();
-  ConfigCreate ();
 }
 
 void MqCleanup(void)
@@ -449,18 +450,16 @@ void MqCleanup(void)
   done = MQ_YES;
 
   // work
+  GenericDelete();
   EventDelete ();
   GcDelete ();
   FactorySpaceDelete ();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }
 
-#if defined(_MSC_VER)
-
 END_C_DECLS
 
-  void GenericCreate (void);
-  void GenericDelete (void);
+#if defined(_MSC_VER)
 
 BOOL WINAPI DllMain( 
     HINSTANCE hModule,
@@ -478,27 +477,13 @@ BOOL WINAPI DllMain(
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
-      SysCreate ();
-      GcCreate();
-      FactorySpaceCreate ();
-      ConfigCreate ();
-      EventCreate();
-      GenericCreate();
-      SysCreate();
-      SysComCreate();
+      MqSetup();
       break;
     case DLL_PROCESS_DETACH:
-      GenericDelete();
-      EventCleanup();
-      FactorySpaceDelete ();
-      GcDelete();
+      MqCleanup();
       break;
   }
   return TRUE;
 }
-#else
-
-END_C_DECLS
-
 #endif
 

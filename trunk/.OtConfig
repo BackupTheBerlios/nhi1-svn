@@ -11,7 +11,9 @@ fi
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
+		    --enable-cxx \
 		    --enable-java \
+		    --enable-csharp \
 \
 		    $ARGS $@
 

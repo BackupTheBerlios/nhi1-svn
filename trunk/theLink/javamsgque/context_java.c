@@ -104,14 +104,6 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
 #undef checkSF
 #undef checkM
 
-  // create default factory
-  {
-    MQ_PTR call = NS(ProcCreate)(env, NULL, NS(Class_MqS), NS(MID_MqS_INIT), NULL);
-    JavaErrorCheckNULL(call);
-    MqFactoryDefault("javamsgque", NS(FactoryCreate), call, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
-  }
-
-error:
   return JNI_VERSION_1_6;
 }
 

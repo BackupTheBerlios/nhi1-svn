@@ -19,13 +19,33 @@
 package javamsgque;
 
 /// \brief \api #MqFactoryS
-public class MqFactoryS <T extends MqS> extends MqS {
+public class MqFactoryS <T extends MqS> {
+  static {
+    if (DefaultIdent().equals("libmsgque")) {
+      Default("javamsgque", MqS.class);
+    }
+  }
 
+  public static native <T extends MqS> void Default  (String ident, Class<T> callback) 
+    throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError ;
+  public static <T extends MqS> void  Default  (Class<T> callback) 
+    throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError {
+    Default(callback.getName(), callback);
+  }
+  public static native <T extends MqS> String DefaultIdent ();
   public static native <T extends MqS> void Add  (String ident, Class<T> callback) 
     throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError ;
+  public static <T extends MqS> void  Add  (Class<T> callback) 
+    throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError {
+    Add(callback.getName(), callback);
+  }
   public static native <T extends MqS> T  Call (String ident);
   public static native <T extends MqS> T  New  (String ident, Class<T> callback) 
     throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError ;
+  public static <T extends MqS> T  New  (Class<T> callback) 
+    throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError {
+    return New(callback.getName(), callback);
+  }
 }
 
 /// \} Mq_Java_API

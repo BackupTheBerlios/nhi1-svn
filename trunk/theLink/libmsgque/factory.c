@@ -60,6 +60,8 @@ FactorySpaceCreate (void)
   space.items = (struct MqFactoryItemS *) MqSysCalloc (MQ_ERROR_PANIC, SPACE_INIT_SIZE, sizeof (*space.items));
   space.size = SPACE_INIT_SIZE;
   space.used = 1;  // first item is always the default
+
+  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL);
 }
 
 void
@@ -326,6 +328,28 @@ MqFactoryDefault (
   return MQ_FACTORY_RETURN_OK;
 }
 
+enum MqErrorE
+MqFactoryDefaultCreate (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS  ** contextP
+)
+{
+  *contextP = MqContextCreate (0, tmpl);
+  // I don't know anything about the target
+  // -> use the template as source of the setup
+  if (create != MQ_FACTORY_NEW_INIT) MqSetupDup (*contextP, tmpl);
+  return MQ_OK;
+}
+
+MQ_CST
+MqFactoryDefaultIdent (
+  void
+) {
+  return space.items[0].ident;
+}
+
 enum MqFactoryReturnE
 MqFactoryCall (
   MQ_CST const ident,
@@ -401,6 +425,10 @@ MQ_CST MqFactoryErrorMsg (
     return "unable to find factory for identifer";
    case MQ_FACTORY_RETURN_NEW_ERR:
     return "unable to create a new factory and return an object";
+   case MQ_FACTORY_RETURN_DEFAULT_ERR:
+    return "unable to create a new default factory";
+   case MQ_FACTORY_RETURN_ADD_ERR:
+    return "unable to add a new factory";
    default:
     return "nothing";
   }

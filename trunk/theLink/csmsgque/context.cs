@@ -86,7 +86,6 @@ namespace csmsgque {
       MqConfigSetSelf(context, (IntPtr) GCHandle.Alloc(this));
       MqConfigSetIgnoreFork(context, MQ_BOL.MQ_YES);
       MqConfigSetSetup(context, fDefaultLinkCreate, null, fDefaultLinkCreate, null, fProcessExit, fThreadExit);
-      MqConfigSetIdent(context, "csmsgque");
 
       if (this is IServerSetup) {
 	IntPtr data = (IntPtr) GCHandle.Alloc(new ProcData((Callback)((IServerSetup) this).ServerSetup));

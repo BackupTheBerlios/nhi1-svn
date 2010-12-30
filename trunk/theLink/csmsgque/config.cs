@@ -48,25 +48,6 @@ namespace csmsgque {
 /// \brief \copybrief Mq_Config_C_API
 /// \details \copydetails Mq_Config_C_API
 /// \{
-
-    static MqS() {
-
-      // init the application "spawn" starter
-      IntPtr initB = MqInitCreate();
-      if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
-      MqBufferLAppendC(initB, APP);
-      
-      // init default factory
-      MqFactoryS<MqS>.Default ("csmsgque");
-    }
-
-    /// \api #MqInitCreate
-    protected static void Init(params string[] argv) {
-      IntPtr initB = MqInitCreate();
-      foreach (string s in argv) {
-	MqBufferLAppendC(initB, s);
-      }
-    }
   
   // SET - PRIVATE
 
@@ -75,9 +56,6 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSrvName")]
     private static extern void MqConfigSetSrvName([In]IntPtr context, [In]string data);
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetIdent")]
-    private static extern void MqConfigSetIdent([In]IntPtr context, [In]string data);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetBuffersize")]
     private static extern void MqConfigSetBuffersize([In]IntPtr context, [In]int data);
@@ -125,14 +103,6 @@ namespace csmsgque {
     private static extern void MqConfigSetEvent([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
       [In]MqTokenDataFreeF dataFree, [In] IntPtr dataCopy);
 
-/*
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetFactory")]
-    private static extern void MqConfigSetFactory([In]IntPtr context, 
-      [In]MqFactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree, [In] IntPtr CreateCopy,
-      [In]MqFactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree, [In] IntPtr DeleteCopy
-    );
-*/
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSelf")]
     private static extern void MqConfigSetSelf([In]IntPtr context, [In]IntPtr self);
 
@@ -155,8 +125,6 @@ namespace csmsgque {
     public void   ConfigSetName		(string data) { MqConfigSetName		(context, data); }
     /// \api #MqConfigSetSrvName
     public void   ConfigSetSrvName	(string data) { MqConfigSetSrvName	(context, data); }
-    /// \api #MqConfigSetIdent
-    public void   ConfigSetIdent	(string data) { MqConfigSetIdent	(context, data); }
     /// \api #MqConfigSetBuffersize
     public void	  ConfigSetBuffersize	(int data)    { MqConfigSetBuffersize	(context, data); }
     /// \api #MqConfigSetDebug
@@ -221,9 +189,6 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetSrvName")]
     private static extern IntPtr MqConfigGetSrvName([In]IntPtr context);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetIdent")]
-    private static extern IntPtr MqConfigGetIdent([In]IntPtr context);
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetBuffersize")]
     private static extern int MqConfigGetBuffersize([In]IntPtr context);
 
@@ -263,8 +228,6 @@ namespace csmsgque {
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
     /// \api #MqConfigGetSrvName
     public string   ConfigGetSrvName()	    { return Marshal.PtrToStringAnsi(MqConfigGetSrvName(context)); }
-    /// \api #MqConfigGetIdent
-    public string   ConfigGetIdent()	    { return Marshal.PtrToStringAnsi(MqConfigGetIdent(context)); }
     /// \api #MqConfigGetDebug
     public int	    ConfigGetDebug()	    { return MqConfigGetDebug(context); }
     /// \api #MqConfigGetTimeout
@@ -287,6 +250,32 @@ namespace csmsgque {
     public START    ConfigGetStartAs()	    { return (START)MqConfigGetStartAs(context); }
     /// \api #MqConfigGetStatusIs
     public int	    ConfigGetStatusIs()	    { return MqConfigGetStatusIs(context); }
+
+/// \}
+
+/// \defgroup Mq_Factory_Cs_API Mq_Factory_Cs_API
+/// \ingroup Mq_Cs_API
+/// \brief \copybrief Mq_Factory_C_API
+/// \details \copydetails Mq_Factory_C_API
+/// \{
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxIdentSet")]
+    private static extern void MqFactoryCtxIdentSet([In]IntPtr context, [In]string data);
+
+    /// \api #MqFactoryCtxIdentSet
+    public void  FactoryCtxIdentSet (string ident) { MqFactoryCtxIdentSet(context, ident); }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxIdentGet")]
+    private static extern IntPtr MqFactoryCtxIdentGet([In]IntPtr context);
+
+    /// \api #MqFactoryCtxIdentGet
+    public string FactoryCtxIdentGet() { return Marshal.PtrToStringAnsi(MqFactoryCtxIdentGet(context)); }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxDefaultSet")]
+    private static extern void MqFactoryCtxDefaultSet([In]IntPtr context, [In]string data);
+
+    /// \api #MqFactoryCtxDefaultSet
+    public void  FactoryCtxDefaultSet (string ident) { MqFactoryCtxDefaultSet(context, ident); }
 
 /// \}
 

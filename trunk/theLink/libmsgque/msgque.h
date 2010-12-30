@@ -876,6 +876,8 @@ enum MqFactoryReturnE {
   /* 3 */ MQ_FACTORY_RETURN_CALL_ERR,
   /* 4 */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
   /* 5 */ MQ_FACTORY_RETURN_NEW_ERR,
+  /* 6 */ MQ_FACTORY_RETURN_DEFAULT_ERR,
+  /* 7 */ MQ_FACTORY_RETURN_ADD_ERR,
 };
 
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
@@ -932,6 +934,17 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MQ_PTR           const deleteData,
   MqTokenDataFreeF const deleteDatafreeF
 ) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS  ** contextP
+);
+
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
+  void
+);
 
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
   MQ_CST const ident,

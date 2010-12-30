@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqFactoryS
+ * Method:    Default
+ * Signature: (Ljava/lang/String;Ljava/lang/Class;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqFactoryS_Default
+  (JNIEnv *, jclass, jstring, jclass);
+
+/*
+ * Class:     javamsgque_MqFactoryS
+ * Method:    DefaultIdent
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqFactoryS_DefaultIdent
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     javamsgque_MqFactoryS
  * Method:    Add
  * Signature: (Ljava/lang/String;Ljava/lang/Class;)V
  */

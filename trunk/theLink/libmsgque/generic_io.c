@@ -32,29 +32,17 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
+void GenericCreate (void) {
 #if defined(_MSC_VER)
-void
-GenericCreate (
-  void
-)
-{
   SysWSAStartup (NULL);
-}
-
-void
-GenericDelete (
-  void
-)
-{
-  SysWSACleanup (NULL);
-}
 #endif
+}
 
-/*****************************************************************************/
-/*                                                                           */
-/*                                private                                    */
-/*                                                                           */
-/*****************************************************************************/
+void GenericDelete (void) {
+#if defined(_MSC_VER)
+  SysWSACleanup (NULL);
+#endif
+}
 
 /*****************************************************************************/
 /*                                                                           */

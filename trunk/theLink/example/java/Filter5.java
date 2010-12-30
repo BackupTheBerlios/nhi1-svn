@@ -104,14 +104,14 @@ class F3 extends MqS implements IServerSetup {
 
 // main ********************************************************
 
-final class Filter5 extends MqFactoryS {
+final class Filter5 {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter5");
-    Add("F1", F1.class);
-    Add("F2", F2.class);
-    Add("F3", F3.class);
-    MqS srv = Call(argv[0]);
+    MqFactoryS.Add("F1", F1.class);
+    MqFactoryS.Add("F2", F2.class);
+    MqFactoryS.Add("F3", F3.class);
+    MqS srv = MqFactoryS.Call(argv[0]);
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);

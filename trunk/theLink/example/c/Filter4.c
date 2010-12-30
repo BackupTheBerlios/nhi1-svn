@@ -236,6 +236,9 @@ main (
   MQ_CST argv[]
 )
 {
+  // setup default Factory
+  MqFactoryDefault ("transFilter", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL);
+
   // the parent-context
   struct MqS * const mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);
 
@@ -250,7 +253,6 @@ main (
   mqctx->setup.ServerCleanup.fCall  = FilterCleanup;
   mqctx->setup.ignoreExit	    = MQ_YES;
 
-  MqFactoryCtxDefaultSet (mqctx, "transFilter");
   MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
 
   // create the link

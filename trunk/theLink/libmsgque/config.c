@@ -467,21 +467,6 @@ MqSetupDup (
   context->setup.ignoreExit = from->setup.ignoreExit;
 }
 
-static enum MqErrorE
-sDefaultFactory (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* item,
-  struct MqS  ** contextP
-)
-{
-  *contextP = MqContextCreate (0, tmpl);
-  // I don't know anything about the target
-  // -> use the template as source of the setup
-  MqSetupDup (*contextP, tmpl);
-  return MQ_OK;
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                 init                                      */
@@ -1015,12 +1000,6 @@ void pSetupMark (
 /*                                 Setup                                     */
 /*                                                                           */
 /*****************************************************************************/
-
-void
-ConfigCreate (void)
-{
-  MqFactoryDefault("libmsgque", sDefaultFactory, NULL, NULL, NULL, NULL, NULL);
-}
 
 END_C_DECLS
 

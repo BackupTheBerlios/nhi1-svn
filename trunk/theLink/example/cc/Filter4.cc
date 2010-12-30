@@ -143,13 +143,15 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter4 *filter = MqFactoryC<Filter4>::New("transFilter");
+  MqFactoryC<Filter4>::Default("transFilter");
+
+  static Filter4 filter(NULL);
   try {
-    filter->LinkCreateVC (argc, argv);
-    filter->ProcessEvent (MQ_WAIT_FOREVER);
+    filter.LinkCreateVC (argc, argv);
+    filter.ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    filter->ErrorSet(e);
+    filter.ErrorSet(e);
   }
-  filter->Exit();
+  filter.Exit();
 }
 

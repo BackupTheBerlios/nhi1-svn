@@ -118,7 +118,8 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter4");
-    Filter4 srv = MqFactoryS.New("transFilter", Filter4.class);
+    MqFactoryS.Default("transFilter", Filter4.class);
+    Filter4 srv = new Filter4(null);
     try {
       srv.ConfigSetIgnoreExit(true);
       srv.LinkCreate(argv);

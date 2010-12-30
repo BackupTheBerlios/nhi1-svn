@@ -86,8 +86,13 @@ namespace csmsgque {
   public partial class MqS
   {
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqInitCreate")]
-    private static extern IntPtr MqInitCreate();
+    static MqS() {
+
+      // init the application "spawn" starter
+      IntPtr initB = MqInitCreate();
+      if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
+      MqBufferLAppendC(initB, APP);
+    }
 
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
@@ -121,6 +126,23 @@ namespace csmsgque {
     public void DLogC (int level, string val) {
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
       MqDLogX (context, sf.GetMethod().Name, level, "%s", val);
+    }
+
+  /*****************************************************************************/
+  /*                                                                           */
+  /*                                static                                     */
+  /*                                                                           */
+  /*****************************************************************************/
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqInitCreate")]
+    private static extern IntPtr MqInitCreate();
+
+    /// \api #MqInitCreate
+    protected static void Init(params string[] argv) {
+      IntPtr initB = MqInitCreate();
+      foreach (string s in argv) {
+	MqBufferLAppendC(initB, s);
+      }
     }
   } // END - class "MqS"
 } // END - namespace "csmsgque"

@@ -164,7 +164,7 @@ namespace example {
 	ConfigSetSrvName (old);
       } else if (cmd == "Ident") {
 	string old = FactoryCtxIdentGet();
-	FactoryCtxIdentSet (ReadC());
+	FactoryCtxDefaultSet (ReadC());
 	bool check = LinkGetTargetIdent() == ReadC();
 	SendSTART();
 	SendC (FactoryCtxIdentGet());
@@ -718,8 +718,4 @@ namespace example {
   }
 
 } // finish namespace "example"
-
-
-
-
 

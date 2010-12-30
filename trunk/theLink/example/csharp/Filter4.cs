@@ -93,7 +93,8 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter4 srv = MqFactoryS<Filter4>.New("transFilter");
+      MqFactoryS<Filter4>.Default("transFilter");
+      Filter4 srv = new Filter4(null);
       try {
 	srv.ConfigSetIgnoreExit(true);
 	srv.LinkCreate(argv);
