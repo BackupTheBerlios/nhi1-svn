@@ -347,7 +347,7 @@ MQ_CST
 MqFactoryDefaultIdent (
   void
 ) {
-  return space.items[0].ident;
+  return space.items[0].ident ? space.items[0].ident : "";
 }
 
 enum MqFactoryReturnE

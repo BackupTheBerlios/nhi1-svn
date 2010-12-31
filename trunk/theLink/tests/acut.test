@@ -29,7 +29,7 @@ set data1 [makeFile {xa:24:12345678987654321:5.78
 cg:89:98765432123456789:3.46} data1.[pid]]
 
  # start-type: fork, thread or spawn
-  foreach S [envGet START_LST] {
+  foreach S [getEnv START_LST] {
 
 test acut-4-($S) {simple cut} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut @ join -d , } \
@@ -135,5 +135,6 @@ S> (join) \[pBufferGetA4] size ERROR, can not convert 'xa' into an 'INT' object*
 ##
     
 freeTests
+
 
 

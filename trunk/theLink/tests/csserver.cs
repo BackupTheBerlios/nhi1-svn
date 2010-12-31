@@ -212,6 +212,8 @@ namespace example {
 	ConfigSetStartAs ((START)ReadI());
 	SendI ((int)ConfigGetStartAs());
 	ConfigSetStartAs (old);
+      } else if (cmd == "DefaultIdent") {
+	SendC (MqFactoryS<Server>.DefaultIdent());
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);
       }

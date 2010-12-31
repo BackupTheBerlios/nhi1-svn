@@ -31,16 +31,16 @@ if {$env(USE_REMOTE)} return
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 2] {
+ foreach I [getNum 2] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
       SetConstraints $I $B $S
 
@@ -149,6 +149,10 @@ unset I B C S
 ## finish
 ##
 freeTests
+
+
+
+
 
 
 

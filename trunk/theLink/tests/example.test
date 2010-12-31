@@ -99,7 +99,7 @@ test example-overview-2 {check the example 2 from the overview page} \
 position -> worker   : amount =  100.00 : pound
 position -> manager  : amount = 1000.00 : dollar}
 
-  foreach S [envGet SRV_LST] {
+  foreach S [getEnv SRV_LST] {
 
 test example-hlwo-1-($S) {hello world example} \
   -body		{Example $S MyClient MyServer} \
@@ -127,7 +127,7 @@ set data3 [makeFile {nobody 10
 manager 1000
 worker 100} data3.[pid]]
 
-foreach S [envGet SRV_LST] {
+foreach S [getEnv SRV_LST] {
 
 test example-e-2-($S) {example from the manpage} \
   -body		{Example $S mulclient mulserver} \
@@ -141,7 +141,7 @@ test example-f-2-($S) {example from the manpage with Filter3} \
 
 }; # SRV_LST
 
-foreach L [envGet LNG_LST] {
+foreach L [getEnv LNG_LST] {
 
 test example-e-3-($L) {example from the manpage} \
   -body         {Exec cat $data1 | \
@@ -175,7 +175,7 @@ C> (split) use '-h' or '--help' for usage}
 
 ## testclient
 
-foreach S [envGet SRV_LST] {
+foreach S [getEnv SRV_LST] {
 
 test example-t-1-($S) {testclient} \
   -constraints	{!filter} \
@@ -209,5 +209,6 @@ c101+3+1+s101:}
 ##
 
 freeTests
+
 
 

@@ -37,7 +37,7 @@ set data2 [makeFile {-A-:-B-
 ## filter test
 ##
 
-foreach L [envGet LNG_LST] {
+foreach L [getEnv LNG_LST] {
 
 test filter-1-$L {filter + eof ok} \
     -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getExample Filter1.$L] @ {*}[getATool join] -d :} \
@@ -132,4 +132,5 @@ C> (split) use '-h' or '--help' for usage}
 ##
 
 freeTests
+
 

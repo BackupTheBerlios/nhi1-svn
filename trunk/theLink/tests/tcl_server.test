@@ -38,16 +38,16 @@ set BLOCK_2 true
 if $BLOCK_1 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 2] {
+ foreach I [getNum 2] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C tcl] {
+    foreach S [filter SRV_LST $C tcl] {
 
 ##
 ## -----------------------------------------------------------------------
@@ -262,6 +262,10 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 ##
 
 freeTests
+
+
+
+
 
 
 

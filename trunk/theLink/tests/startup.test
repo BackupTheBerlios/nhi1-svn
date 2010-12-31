@@ -37,16 +37,16 @@ set BLOCK_3 true
 if $BLOCK_1 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 2] {
+ foreach I [getNum 2] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server.c server.tcl ...
-     foreach S [filterGet SRV_LST $C] {
+     foreach S [filter SRV_LST $C] {
 
 	SetConstraints $I $B $S
 
@@ -136,7 +136,7 @@ foreach C pipe {
 
   if $BLOCK_2 {
 
-      foreach S [filterGet SRV_LST $C] {
+      foreach S [filter SRV_LST $C] {
 
 	set F1  [Start $S LinkCreate --$C]
 	set r1	{binary sOc SERVER pOc PARENT}
@@ -220,9 +220,9 @@ foreach C pipe {
     test startup-$C-20 {wrong subcommand} \
 	-body   {tclmsgque xxx} \
 	-returnCodes error \
-	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, Init, FactoryAdd, FactoryCall, or FactoryNew}
+	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, Init, FactoryAdd, FactoryDefault, FactoryDefaultIdent, FactoryCall, or FactoryNew}
 
-    foreach S [filterGet SRV_LST pipe] {
+    foreach S [filter SRV_LST pipe] {
 
 	test startup-21-($S) {good startup} \
 	    -body {set FH0 [Start $S LinkCreate --pipe]} \
@@ -255,6 +255,10 @@ foreach C pipe {
 ##
 
 freeTests
+
+
+
+
 
 
 

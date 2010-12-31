@@ -52,17 +52,17 @@ set env(TS_FILTER_CLIENT)  NO
 if $BLOCK_1 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
    set J [expr {$I-1}]
 
  # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+  foreach B [filter BIN_LST binary] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [filterGet -or COM_LST tcp uds] {
+   foreach C [filter -or COM_LST tcp uds] {
 
     # server-type: server server.tcl
-    foreach S [list {*}[filterGet SRV_LST $C spawn] {*}[filterGet SRV_LST $C fork]] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
 # tests ----------------------------
 
@@ -152,14 +152,14 @@ unset -nocomplain I B C S
 if $BLOCK_2 {
 
 # 1,2, ... tclmsgque (parent/child)
-foreach I [numGet 3] {
+foreach I [getNum 3] {
   set J [expr {$I-1}]
 
   # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+  foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filterGet -or SRV_LST spawn fork] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
   test trans-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
@@ -272,14 +272,14 @@ $J - T3"
 unset -nocomplain I B C S
 
 # 1,2, ... tclmsgque (parent/child)
-foreach I [numGet 3] {
+foreach I [getNum 3] {
   set J [expr {$I-1}]
 
   # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+  foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filterGet -not SRV_LST pipe] {
+    foreach S [filter -not SRV_LST pipe] {
 
 test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
@@ -319,14 +319,14 @@ unset -nocomplain I B C S
 
 
 # 1,2, ... tclmsgque (parent/child)
-foreach I [numGet 3] {
+foreach I [getNum 3] {
   set J [expr {$I-1}]
 
   # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+  foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST pipe] {
+    foreach S [filter SRV_LST pipe] {
 
   test trans-X5-($I|$B|$S) {send error + valid data} \
     -setup	    {
@@ -413,4 +413,7 @@ test trans-Y1 {try to connect a "not-created" link} \
 ##
 
 freeTests
+
+
+
 

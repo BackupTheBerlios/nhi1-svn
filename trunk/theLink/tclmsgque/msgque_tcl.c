@@ -34,9 +34,11 @@ struct LookupKeyword {
   LookupKeywordF  keyF;
 };
 
-int NS(FactoryAdd)  (TCL_ARGS);
-int NS(FactoryCall) (TCL_ARGS);
-int NS(FactoryNew)  (TCL_ARGS);
+int NS(FactoryAdd)	    (TCL_ARGS);
+int NS(FactoryDefault)	    (TCL_ARGS);
+int NS(FactoryDefaultIdent) (TCL_ARGS);
+int NS(FactoryCall)	    (TCL_ARGS);
+int NS(FactoryNew)	    (TCL_ARGS);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -328,16 +330,18 @@ static int NS(MsgqueCmd) (
   int index;
 
   struct LookupKeyword keys[] = {
-    { "MqS",		NS(MqS_Init)	  },  
-    { "print",		NS(Print)	  },
-    { "Main",		NS(Main)          },
-    { "const",		NS(Const)	  },  
-    { "support",	NS(Support)	  },
-    { "Init",		NS(InitCmd)	  },
-    { "FactoryAdd",	NS(FactoryAdd)	  },  
-    { "FactoryCall",	NS(FactoryCall)	  },  
-    { "FactoryNew",	NS(FactoryNew)	  },  
-    { NULL,		NULL		  }
+    { "MqS",		      NS(MqS_Init)	      },
+    { "print",		      NS(Print)		      },
+    { "Main",		      NS(Main)		      },
+    { "const",		      NS(Const)		      },
+    { "support",	      NS(Support)	      },
+    { "Init",		      NS(InitCmd)	      },
+    { "FactoryAdd",	      NS(FactoryAdd)	      },
+    { "FactoryDefault",	      NS(FactoryDefault)      },
+    { "FactoryDefaultIdent",  NS(FactoryDefaultIdent) },
+    { "FactoryCall",	      NS(FactoryCall)	      },
+    { "FactoryNew",	      NS(FactoryNew)	      },
+    { NULL,		      NULL		      }
   };
 
   // read the index
@@ -388,7 +392,9 @@ Tclmsgque_Init (
   }
 
   // create the default-factory
-  MqFactoryDefault("tclmsgque", NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
+  if (!strcmp(MqFactoryDefaultIdent(),"libmsgque")) {
+    MqFactoryDefault("tclmsgque", NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
+  }
 
   return TCL_OK;
 }

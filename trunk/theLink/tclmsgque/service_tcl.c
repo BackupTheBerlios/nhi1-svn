@@ -48,7 +48,7 @@ int NS(ServiceCreate) (NS_ARGS)
   MQ_STR token;
   Tcl_Obj * service = NULL;
   CHECK_C(token)
-  CHECK_OPTIONAL_PROC(service, "CONTEXT ServiceCreate token tclproc")
+  CHECK_PROC_OPT(service, "CONTEXT ServiceCreate token tclproc")
   CHECK_NOARGS
   Tcl_IncrRefCount (service);
   if (service == NULL) {

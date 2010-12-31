@@ -40,16 +40,16 @@ set BLOCK_4 true
 if $BLOCK_1 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
     #set TIME [expr {[string match "*thread*" $S] ? 300 : 0}]
 
@@ -240,16 +240,16 @@ if $BLOCK_2 {
  foreach I 1 {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
       # startAs: fork thread spawn
-      foreach T [envGet START_LST] {
+      foreach T [getEnv START_LST] {
 
 	# set STATUS
 	switch -exact $T {
@@ -330,16 +330,16 @@ unset -nocomplain I B C S
 if $BLOCK_3 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
       # start the slave
       Setup $I $B $C $S --setup-parent {
@@ -411,16 +411,16 @@ unset -nocomplain I B C S
 if $BLOCK_4 {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
       SetConstraints $I $B $S
 
@@ -490,6 +490,10 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
+
+
+
 
 
 

@@ -206,6 +206,8 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	ConfigSetStartAs (START.SetFlag(ReadI()));
 	SendI (ConfigGetStartAs().GetFlag());
 	ConfigSetStartAs (old);
+      } else if (cmd.equals("DefaultIdent")) {
+	SendC (MqFactoryS.DefaultIdent());
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);
       }
@@ -848,8 +850,4 @@ class LST2 implements IService {
     ctx.SendRETURN();
   }
 }
-
-
-
-
 

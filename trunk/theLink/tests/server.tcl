@@ -583,6 +583,9 @@ proc Ot_CFG1 {ctx} {
       $ctx SendI [$ctx ConfigGetStartAs]
       $ctx ConfigSetStartAs $old
     }
+    "DefaultIdent" {
+      $ctx SendC [tclmsgque FactoryDefaultIdent]
+    }
     default {
       $ctx ErrorC CFG1 1 "invalid command: $cmd"
     }

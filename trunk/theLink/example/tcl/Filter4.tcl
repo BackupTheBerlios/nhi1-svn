@@ -97,13 +97,14 @@ proc FilterEvent {ctx} {
   }
 }
 
+tclmsgque FactoryDefault "transFilter"
+
 tclmsgque Main {
   set srv [tclmsgque MqS]
   $srv ConfigSetServerSetup FilterSetup
   $srv ConfigSetServerCleanup FilterCleanup
   $srv ConfigSetEvent FilterEvent
   $srv ConfigSetIgnoreExit yes
-  $srv FactoryCtxDefault "transFilter"
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER
@@ -112,6 +113,4 @@ tclmsgque Main {
   }
   $srv Exit
 }
-
-
 

@@ -931,6 +931,9 @@ namespace ccmsgque {
       static inline void Default() throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      static inline MQ_CST DefaultIdent() {
+	return MqFactoryDefaultIdent();
+      }
       static inline T* Call(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));

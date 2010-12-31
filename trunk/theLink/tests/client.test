@@ -232,7 +232,7 @@ C> (ccccccccccccccccccccccccccccccccccccccccccccccccccc:*) \[*\] \[2-0-*-MqLinkC
 
 
 # server-type: server server.tcl
- foreach S [envGet SRV_LST] {
+ foreach S [getEnv SRV_LST] {
 
     SetConstraints 1 binary $S
 
@@ -276,3 +276,4 @@ C> (client:*) \[*] \[0-0-0-*-main]: end: ---------------------------------------
 ##
     
 freeTests
+

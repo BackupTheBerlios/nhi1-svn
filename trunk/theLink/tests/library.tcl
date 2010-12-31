@@ -203,7 +203,7 @@ proc optSet {_argv opt def} {
   }
 }
 
-proc envGet {VAR} {
+proc getEnv {VAR} {
     global env
     if {[info exists env($VAR)]} {
 	return $env($VAR)
@@ -225,7 +225,7 @@ proc lng2startInit {} {
 }
 
 # this code is needed to filter "VAR" list with "args" regexp
-proc filterGet {VAR args} {
+proc filter {VAR args} {
   set NOT no
   set OR no
   while {[string index $VAR 0] == {-}} {
@@ -247,7 +247,7 @@ proc filterGet {VAR args} {
   }
   set RET [list]
   set LEN [llength $args]
-  foreach e [envGet $VAR] {
+  foreach e [getEnv $VAR] {
     set RESULT 0
     foreach f $args {
       incr RESULT [regexp "$f" $e]
@@ -280,7 +280,7 @@ proc filterGet {VAR args} {
   return $RET
 }
 
-proc numGet { num } {
+proc getNum { num } {
     set ret [list]
     if {$::env(PAR_LST)} {
 	set ret $::env(PAR_LST)
@@ -292,7 +292,7 @@ proc numGet { num } {
     return $ret
 }
 
-proc langGet {server} {
+proc getLng {server} {
   return [lindex [split $server .] 0]
 }
 
@@ -580,14 +580,14 @@ proc SetConstraints {args} {
     foreach c {parent child child2 child3} {
       testConstraint $c yes
     }
-    foreach c [envGet BIN_LST] {
+    foreach c [getEnv BIN_LST] {
       testConstraint $c yes
     }
     foreach c {c cc tcl java csharp python ruby perl php go} {
-      testConstraint $c [expr {[lsearch -glob [envGet SRV_LST] "$c.*"] != -1}]
+      testConstraint $c [expr {[lsearch -glob [getEnv SRV_LST] "$c.*"] != -1}]
     }
     foreach c {pipe uds tcp fork spawn thread server} {
-      testConstraint $c [expr {[lsearch -glob [envGet SRV_LST] "*$c*"] != -1}]
+      testConstraint $c [expr {[lsearch -glob [getEnv SRV_LST] "*$c*"] != -1}]
     }
   } else {
     # 1. cleanup all constraint
@@ -702,70 +702,70 @@ if {![info exists env(SRV_LST)]} {
 
 # windows has some restrictions :(
 if {$::tcl_platform(platform) eq "windows"} {
-  set env(SRV_LST) [filterGet -not SRV_LST uds]
-  set env(SRV_LST) [filterGet -not SRV_LST fork]
-  set env(COM_LST) [filterGet -not COM_LST uds]
+  set env(SRV_LST) [filter -not SRV_LST uds]
+  set env(SRV_LST) [filter -not SRV_LST fork]
+  set env(COM_LST) [filter -not COM_LST uds]
 }
 
 # without tcl thread support no tcl thread server
 if {[info exists ::tcl_platform(threaded)]} {
-  set env(SRV_LST)   [filterGet -not SRV_LST tcl fork]
+  set env(SRV_LST)   [filter -not SRV_LST tcl fork]
 } else {
-  set env(SRV_LST)   [filterGet -not SRV_LST tcl thread]
+  set env(SRV_LST)   [filter -not SRV_LST tcl thread]
 }
 
 # without --enable-java no java
 if {!$USE_JAVA} {
-  set env(SRV_LST) [filterGet -not SRV_LST java]
-  set env(LNG_LST) [filterGet -not LNG_LST java]
+  set env(SRV_LST) [filter -not SRV_LST java]
+  set env(LNG_LST) [filter -not LNG_LST java]
 }
 
 # without --enable-cxx no c++
 if {!$USE_CXX} {
-  set env(SRV_LST) [filterGet -not SRV_LST cc]
-  set env(LNG_LST) [filterGet -not LNG_LST cc]
+  set env(SRV_LST) [filter -not SRV_LST cc]
+  set env(LNG_LST) [filter -not LNG_LST cc]
 }
 
 # without --enable-python no python
 if {!$USE_PYTHON} {
-  set env(SRV_LST) [filterGet -not SRV_LST python]
-  set env(LNG_LST) [filterGet -not LNG_LST python]
+  set env(SRV_LST) [filter -not SRV_LST python]
+  set env(LNG_LST) [filter -not LNG_LST python]
 }
 
 # without --enable-ruby no ruby
 if {!$USE_RUBY} {
-  set env(SRV_LST) [filterGet -not SRV_LST ruby]
-  set env(LNG_LST) [filterGet -not LNG_LST ruby]
+  set env(SRV_LST) [filter -not SRV_LST ruby]
+  set env(LNG_LST) [filter -not LNG_LST ruby]
 }
 
 # without --enable-perl no perl
 if {!$USE_PERL} {
-  set env(SRV_LST) [filterGet -not SRV_LST perl]
-  set env(LNG_LST) [filterGet -not LNG_LST perl]
+  set env(SRV_LST) [filter -not SRV_LST perl]
+  set env(LNG_LST) [filter -not LNG_LST perl]
 }
 
 # without --enable-php no php
 if {!$USE_PHP} {
-  set env(SRV_LST) [filterGet -not SRV_LST php]
-  set env(LNG_LST) [filterGet -not LNG_LST php]
+  set env(SRV_LST) [filter -not SRV_LST php]
+  set env(LNG_LST) [filter -not LNG_LST php]
 }
 
 # without --enable-go no Go
 if {!$USE_GO} {
-  set env(SRV_LST) [filterGet -not SRV_LST go]
-  set env(LNG_LST) [filterGet -not LNG_LST go]
+  set env(SRV_LST) [filter -not SRV_LST go]
+  set env(LNG_LST) [filter -not LNG_LST go]
 }
 
 # without --enable-csharp no C#
 if {!$USE_CSHARP} {
-  set env(SRV_LST) [filterGet -not SRV_LST csharp]
-  set env(LNG_LST) [filterGet -not LNG_LST csharp]
+  set env(SRV_LST) [filter -not SRV_LST csharp]
+  set env(LNG_LST) [filter -not LNG_LST csharp]
 }
 
 # without --enable-vb no VB.NET
 if {!$USE_VB} {
-  set env(SRV_LST) [filterGet -not SRV_LST vb]
-  set env(LNG_LST) [filterGet -not LNG_LST vb]
+  set env(SRV_LST) [filter -not SRV_LST vb]
+  set env(LNG_LST) [filter -not LNG_LST vb]
 }
 
 # set default values
@@ -874,27 +874,27 @@ while {true} {
     "--only-cc" {
       set T		[string range $arg 7 end]
       set env(LNG_LST)	$T
-      set env(SRV_LST)	[filterGet SRV_LST "\\m$T\\M"]
+      set env(SRV_LST)	[filter SRV_LST "\\m$T\\M"]
     }
     "--only-uds" -
     "--only-pipe" -
     "--only-tcp" {
       set T		[string range $arg 7 end]
       set env(COM_LST)	$T
-      set env(SRV_LST)	[filterGet SRV_LST $T]
+      set env(SRV_LST)	[filter SRV_LST $T]
     }
     "--only-fork" -
     "--only-thread" -
     "--only-spawn" {
       set T		  [string range $arg 7 end]
-      set env(START_LST)  [filterGet START_LST $T]
-      set env(SRV_LST)	  [filterGet SRV_LST $T]
+      set env(START_LST)  [filter START_LST $T]
+      set env(SRV_LST)	  [filter SRV_LST $T]
     }
     "--use-fork" -
     "--use-thread" -
     "--use-spawn" {
       set T		      [string range $arg 6 end]
-      set env(START_LST)      [filterGet START_LST $T]
+      set env(START_LST)      [filter START_LST $T]
       set env(TS_STARTUP_AS)  --$T
     }
     "--only-num"  {
@@ -951,9 +951,9 @@ while {true} {
 } ;# no argv
 
 # delete everything from COM_LST which doesn't belongs to SRV_LST
-if {![llength [filterGet SRV_LST pipe]]} {
+if {![llength [filter SRV_LST pipe]]} {
   ## without "pipe" in "SRV_LST" we don't need "pipe" in "COM_LST"
-  set env(COM_LST) [filterGet -not COM_LST pipe]
+  set env(COM_LST) [filter -not COM_LST pipe]
 }
 
 package require tcltest
@@ -998,14 +998,14 @@ testConstraint has_thread [tclmsgque support thread]
 
 # does libmsgque support thread
 if {![tclmsgque support thread]} {
-  set env(SRV_LST) [filterGet -not SRV_LST thread]
-  set env(START_LST) [filterGet -not START_LST thread]
+  set env(SRV_LST) [filter -not SRV_LST thread]
+  set env(START_LST) [filter -not START_LST thread]
 }
 
 # does libmsgque support fork
 if {![tclmsgque support fork]} {
-  set env(SRV_LST) [filterGet -not SRV_LST fork]
-  set env(START_LST) [filterGet -not START_LST fork]
+  set env(SRV_LST) [filter -not SRV_LST fork]
+  set env(START_LST) [filter -not START_LST fork]
 }
 
 # check if list has still data
@@ -1166,15 +1166,15 @@ proc Setup {num mode com server args} {
     ## ...
     switch -exact -- $com {
       tcp	{
-	set PORT    [envGet TS_PORT]
+	set PORT    [getEnv TS_PORT]
 	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
 	lappend comargs --port [optV args --port $PORT]
 
 	# set host for client and server
-	lappend comargs --host [optV args --host [envGet TS_HOST]]
+	lappend comargs --host [optV args --host [getEnv TS_HOST]]
       }
       uds	{
-	set FILE    [envGet TS_FILE]
+	set FILE    [getEnv TS_FILE]
 	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
 	lappend comargs --file [optV args --file $FILE]
       }
@@ -1319,15 +1319,15 @@ proc Example {config client server args} {
     ## ...
     switch -exact -- $com {
       tcp	{
-	set PORT    [envGet TS_PORT]
+	set PORT    [getEnv TS_PORT]
 	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
 	lappend comargs --port [optV args --port $PORT]
 
 	# set host for client and server
-	lappend comargs --host [optV args --host [envGet TS_HOST]]
+	lappend comargs --host [optV args --host [getEnv TS_HOST]]
       }
       uds	{
-	set FILE    [envGet TS_FILE]
+	set FILE    [getEnv TS_FILE]
 	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
 	lappend comargs --file [optV args --file $FILE]
       }
@@ -1517,5 +1517,9 @@ proc RET_BG {ctx} {
   RET_add BG-TEXT $ctx ErrorGetText
   $ctx ErrorReset
 }
+
+
+
+
 
 

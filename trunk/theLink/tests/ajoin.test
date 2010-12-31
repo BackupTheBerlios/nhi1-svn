@@ -29,7 +29,7 @@ set data1 [makeFile {xa:24:12345678987654321:5.78
 cg:89:98765432123456789:3.46} data1.[pid]]
 
  # start-type: fork, thread or spawn
-  foreach S [envGet START_LST] {
+  foreach S [getEnv START_LST] {
 
 test ajoin-4-($S) {split and join} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ join -d , } \
@@ -133,6 +133,7 @@ test ajoin-16-($S) {join help} \
 ##
     
 freeTests
+
 
 
 

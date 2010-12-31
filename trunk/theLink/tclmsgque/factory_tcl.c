@@ -28,11 +28,37 @@ int NS(FactoryAdd) (TCL_ARGS)
   CHECK_PROC(factory, "FactoryAdd ident factory-proc")
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
-  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL));
+  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NS(ProcFree), NS(FactoryDelete), NULL, NULL));
   return TCL_OK;
 error:
   Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
   return TCL_ERROR;
+}
+
+int NS(FactoryDefault) (TCL_ARGS)
+{
+  enum MqFactoryReturnE ret;
+  int skip = 2;
+  MQ_CST ident;
+  Tcl_Obj *factory = NULL;
+  CHECK_C(ident)
+  CHECK_PROC_OPT(factory, "FactoryDefault ident ?factory-proc?")
+  CHECK_NOARGS
+  if (factory) Tcl_IncrRefCount(factory);
+  MqFactoryErrorCheck(ret = MqFactoryDefault(ident, NS(FactoryCreate), 
+    factory, factory ? NS(ProcFree) : NULL, NS(FactoryDelete), NULL, NULL));
+  return TCL_OK;
+error:
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  return TCL_ERROR;
+}
+
+int NS(FactoryDefaultIdent) (TCL_ARGS)
+{
+  int skip = 2;
+  CHECK_NOARGS
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryDefaultIdent(), TCL_STATIC);
+  RETURN_TCL
 }
 
 int NS(FactoryCall) (TCL_ARGS)
@@ -61,8 +87,9 @@ int NS(FactoryNew) (TCL_ARGS)
   CHECK_C(ident)
   CHECK_PROC(factory, "FactoryNew ident factory-proc")
   CHECK_NOARGS
+  Tcl_IncrRefCount(factory);
   MqFactoryErrorCheck(ret = MqFactoryNew(ident, 
-    NS(FactoryCreate), factory, NULL, NS(FactoryDelete), NULL, NULL, (MQ_PTR) interp, &mqctx)
+    NS(FactoryCreate), factory, NS(ProcFree), NS(FactoryDelete), NULL, NULL, (MQ_PTR) interp, &mqctx)
   );
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;

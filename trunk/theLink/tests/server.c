@@ -1159,7 +1159,6 @@ Ot_CFG1 (
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
-    MqSendSTART(mqctx);
     MqErrorCheck (MqSendC (mqctx, MqFactoryCtxIdentGet (mqctx)));
     MqErrorCheck (MqSendO (mqctx, check));
     // clenup
@@ -1196,6 +1195,8 @@ Ot_CFG1 (
     CFGTest(IoPipeSocket, I)
   } else if (!strncmp (cmd, "StartAs", 7)) {
     CFGTest(StartAs, I)
+  } else if (!strncmp (cmd, "DefaultIdent", 12)) {
+    MqSendC(mqctx, MqFactoryDefaultIdent());
   } else {
     MqErrorV(mqctx, __func__, 1, "invalid command: %s", cmd);
   }

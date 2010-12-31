@@ -27,22 +27,36 @@ set Start_PREFIX {
   $FH_LAST FactoryCtxDefault otto
 }
 
+array set factory {
+  c	  libmsgque
+  cc	  ccmsgque
+  java	  javamsgque
+  csharp  csmsgque
+  go	  gomsgque
+  perl	  perlmsgque
+  php	  phpmsgque
+  tcl	  tclmsgque
+  python  pymsgque
+  ruby	  rubymsgque
+  vb	  vbmsgque
+}
+
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 2] {
+ foreach I [getNum 2] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [filterGet COM_LST pipe] {
+   foreach C [filter COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
       SetConstraints all
 
@@ -122,6 +136,13 @@ test config-12-($I|$B|$C|$S) {Ident} \
       EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto
     } \
     -result         {myident 1}
+
+test config-13-($I|$B|$C|$S) {Ident} \
+    -constraints    {!filter} \
+    -body           {
+      EchoL $FH_LAST CFG1 SendC DefaultIdent
+    } \
+    -result         $factory([getLng $S])
  
 # cleanup ---------------------------
 
@@ -143,4 +164,5 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
 

@@ -105,7 +105,7 @@ error: \
     skip++; \
   }
 
-#define CHECK_OPTIONAL_OBJ(val) \
+#define CHECK_OBJ_OPT(val) \
   if (skip >= objc) {\
     val = NULL; \
   } else { \
@@ -123,7 +123,7 @@ error: \
     skip++; \
   }
 
-#define CHECK_OPTIONAL_PROC(val, err) \
+#define CHECK_PROC_OPT(val, err) \
   if (skip < objc) {\
     TclErrorCheckG(NS(ProcCheck)(interp,objv[skip], err)); \
     val = objv[skip]; \
@@ -150,8 +150,13 @@ error: \
     } else { \
       NS(GetClientData) (interp, objv[skip], MQ_MqS_SIGNATURE, (MQ_PTR*)&val); \
       if (val == NULL) { \
-	Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
-	goto error; \
+	if (strncmp(Tcl_GetStringFromObj(objv[skip], NULL), "NULL", 4)) { \
+	  Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
+	  goto error; \
+	} else { \
+	  Tcl_ResetResult(interp); \
+	  skip++; \
+	} \
       } else { \
 	skip++; \
       } \

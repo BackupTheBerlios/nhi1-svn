@@ -36,16 +36,16 @@ proc Sleep {} {
 if true {
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 1] {
+ foreach I [getNum 1] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server.c server.tcl
-     foreach S [filterGet SRV_LST $C] {
+     foreach S [filter SRV_LST $C] {
 
 ##
 ## -----------------------------------------------------------------------
@@ -121,13 +121,13 @@ set RAND {17382 13924 15308 25223 16932 30573 28977 23176 29716 8731 6728 14247 
 set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 
 # transport-type: string or binary
- foreach B [envGet BIN_LST] {
+ foreach B [getEnv BIN_LST] {
 
  # socket-type: uds or tcp
-  foreach C [envGet COM_LST] {
+  foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-     foreach S [filterGet SRV_LST $C] {
+     foreach S [filter SRV_LST $C] {
 
     ## this test will wait for (num * 0,1) seconds
     test async-F1-($B|$C|$S) {work on mass background events} \
@@ -189,7 +189,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
     test async-F2-($I|$B|$C|$S) {handel tcl events, rename command} \
 	-setup	    {
@@ -213,7 +213,7 @@ set max [expr {$env(TS_MAX) == -1 ? $max : $env(TS_MAX)}]
 	} \
 	-result         "4"
 
- }; # numGet
+ }; # getNum
 
 ##  
 ## -----------------------------------------------------------------------
@@ -231,6 +231,10 @@ unset B C S
 ##  
     
 freeTests
+
+
+
+
 
 
 

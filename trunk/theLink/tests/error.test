@@ -22,16 +22,16 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
  # transport-type: string or binary
-  foreach B [envGet BIN_LST] {
+  foreach B [getEnv BIN_LST] {
 
   # socket-type: uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server.c server.tcl
-     foreach S [filterGet SRV_LST $C] {
+     foreach S [filter SRV_LST $C] {
 
       # what is currently tested
        SetConstraints $I $B $S
@@ -306,9 +306,9 @@ C> (client) found in function "MqLinkCreate" at file "link.c"
 C> (client) use '-h' or '--help' for usage}
 
 # socket-type: uds or tcp
-foreach C [envGet COM_LST] {
+foreach C [getEnv COM_LST] {
   # server-type: server.c server.tcl
-  foreach S [filterGet SRV_LST $C] {
+  foreach S [filter SRV_LST $C] {
 
     SetConstraints $S
 
@@ -500,7 +500,7 @@ C> (client) use '-h' or '--help' for usage}
 #####################################################################
 ### server test
 
-foreach S [filterGet SRV_LST pipe] {
+foreach S [filter SRV_LST pipe] {
 
 test error-F9a-$S {startup -> wrong parent option} \
     -constraints    {local} \
@@ -540,7 +540,7 @@ c> (client) found in function "MqLinkDefault" at file "link.c"}
 }; # SRV_LST
 unset -nocomplain S
 
-foreach S [filterGet SRV_LST uds] {
+foreach S [filter SRV_LST uds] {
 
 test error-12-$S {server with UDS startup} \
     -constraints    {local win} \
@@ -555,7 +555,7 @@ S> (server) found in function "MqLinkDefault" at file "link.c"}
 }; # SRV_LST
 unset -nocomplain S
 
-foreach S [filterGet SRV_LST] {
+foreach S [filter SRV_LST] {
 
   foreach O {debug buffersize} {
 
@@ -614,4 +614,8 @@ test error-X3 {ServiceDelete without connected context} \
 ##
 
 freeTests
+
+
+
+
 

@@ -20,7 +20,9 @@ namespace ccmsgque {
 
   void MqC::libInit (void) {
     MqSetup();
-    MqFactoryC<MqC>::Default("ccmsgque");
+    if (!strcmp(MqFactoryC<MqC>::DefaultIdent(),"libmsgque")) {
+      MqFactoryC<MqC>::Default("ccmsgque");
+    }
   }
 
   MqC::MqC (struct MqS * const tmpl) {

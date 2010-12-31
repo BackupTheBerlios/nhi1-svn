@@ -31,7 +31,7 @@ aa:456:-3333333333333333:26262783.88
 } data1.[pid]]
 
  # start-type: fork, thread or spawn
-  foreach S [envGet START_LST] {
+  foreach S [getEnv START_LST] {
 
 test asort-4-($S) {simple cut} \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ sort @ join -d , } \
@@ -140,4 +140,5 @@ S> (sort) \[MqServiceGetFilter] no filter is available*}
 ##
     
 freeTests
+
 

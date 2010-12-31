@@ -585,6 +585,8 @@ namespace example {
 	  ConfigSetStartAs ((enum MqStartE)ReadI());
 	  SendI (ConfigGetStartAs());
 	  ConfigSetStartAs ((enum MqStartE)old);
+	} else if (!strncmp(cmd, "DefaultIdent", 12)) {
+	  SendC (MqFactoryC<Server>::DefaultIdent());
 	} else {
 	  ErrorV ("CFG1", 1, "invalid command: %s", cmd);
 	}
