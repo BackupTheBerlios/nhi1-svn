@@ -12,102 +12,9 @@
 
 #include "msgque_python.h"
 
-extern PyTypeObject NS(MqS);
+//extern PyTypeObject NS(MqS);
 
 #define MQ_CONTEXT_S CONTEXT
-
-enum MqErrorE
-NS(FactoryCreate) (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryItemS *item,
-  struct MqS ** contextP
-)
-{
-  struct MqS * mqctx;
-  PyObject *args, *result;
-  PyTypeObject* type = (PyTypeObject*) item->Create.data;
-  PyObject *tmplO = NULL;
-
-  if (create == MQ_FACTORY_NEW_FORK) PyOS_AfterFork();
-
-  // setup args
-  if (create == MQ_FACTORY_NEW_INIT) {
-    args = PyTuple_New(0);
-  } else {
-    args = PyTuple_New(1);
-    tmplO = (PyObject*)SELFX(tmpl);
-    PyTuple_SET_ITEM(args, 0, tmplO);
-    Py_INCREF(tmplO);
-  }
-
-  // call constructor
-  result = PyObject_Call((PyObject*)type, args, NULL);
-  Py_DECREF(args);
-
-  // call factory object 
-  if (result == NULL || PyErr_Occurred() != NULL) goto error1;
-
-  // right type
-  if (PyObject_IsInstance(result, (PyObject*) &NS(MqS))) {
-    mqctx = &((MqS_Obj*)result)->context;
-  } else {
-    goto error1;
-  }
-
-  // check for MQ error
-  MqErrorCheck(MqErrorGetCode(mqctx));
-
-  // copy and initialize "setup" data
-  if (create != MQ_FACTORY_NEW_INIT) {
-    MqSetupDup(mqctx, tmpl);
-  }
-
-  *contextP = mqctx;
-  return MQ_OK;
-
-error:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCopy (tmpl, mqctx);
-    MqContextDelete (&mqctx);
-    return MqErrorStack(tmpl);
-  } else {
-    return MQ_ERROR;
-  }
-
-error1:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    NS(ErrorSet) ((PyObject*)tmpl->self);
-    return MqErrorGetCode(tmpl);
-  } else {
-    return MQ_ERROR;
-  }
-
-/*
-error2:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
-  } else {
-    return MQ_ERROR;
-  }
-*/
-
-}
-
-void MQ_DECL
-NS(FactoryDelete)(
-  struct MqS * context,
-  MQ_BOL doFactoryDelete,
-  struct MqFactoryItemS * const data
-)
-{
-  SETUP_self
-  MqContextFree (context);
-  Py_DECREF (self);
-}
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
@@ -175,18 +82,6 @@ PyObject* NS(ConfigSetSrvName) (
   MQ_STR str = PyO2C_START (&arg);
   if (PyErr_Occurred() != NULL) return NULL;
   MqConfigSetSrvName (CONTEXT, str);
-  PyO2C_STOP (&arg);
-  Py_RETURN_NONE;
-}
-
-PyObject* NS(ConfigSetIdent) (
-  MqS_Obj    *self,
-  PyObject    *arg
-)
-{
-  MQ_STR str = PyO2C_START (&arg);
-  if (PyErr_Occurred() != NULL) return NULL;
-  MqConfigSetIdent (CONTEXT, str);
   PyO2C_STOP (&arg);
   Py_RETURN_NONE;
 }
@@ -353,18 +248,6 @@ PyObject* NS(ConfigSetEvent) (
   Py_RETURN_NONE;
 }
 
-PyObject* NS(ConfigSetFactory) (
-  MqS_Obj   *self,
-  PyObject  *args
-)
-{
-  SETUP_FACTORY_ARG(ConfigSetFactory)
-  MqConfigSetFactory(CONTEXT, ident,
-    NS(FactoryCreate),	arg,  NS(ProcFree), NS(FactoryDelete),	NULL, NULL
-  );
-  Py_RETURN_NONE;
-}
-
 PyObject* NS(ConfigGetDebug) (
   PyObject    *self
 )
@@ -433,14 +316,6 @@ PyObject* NS(ConfigGetSrvName) (
 )
 {
   return PyC2O(MqConfigGetSrvName(&ICONTEXT));
-}
-
-PyObject* NS(ConfigGetIdent) (
-  PyObject    *self,
-  PyObject    *args
-)
-{
-  return PyC2O(MqConfigGetIdent(&ICONTEXT));
 }
 
 PyObject* NS(ConfigGetIoUdsFile) (

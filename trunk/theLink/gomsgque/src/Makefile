@@ -17,7 +17,7 @@ MQOBJ  = $(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a
 
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
-	  service.go slave.go
+	  service.go slave.go factory.go
 
 CGO_CFLAGS=-I . -I $(abs_top_srcdir)/theLink/libmsgque -DMQ_IGNORE_EXTERN
 CGO_LDFLAGS= $(MQOBJ) _cgo_export.o gomsgque.o

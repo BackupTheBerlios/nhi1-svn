@@ -218,7 +218,6 @@ PyObject* NS(ConfigSetDebug)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetIdent)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoUdsFile)      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoPipeSocket)   ( PyObject*, PyObject* );
@@ -232,7 +231,6 @@ PyObject* NS(ConfigSetServerSetup)    ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetServerCleanup)  ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetBgError)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetEvent)	      ( PyObject*, PyObject* );
-PyObject* NS(ConfigSetFactory)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigGetDebug)	      ( PyObject* );
 PyObject* NS(ConfigGetTimeout)	      ( PyObject* );
 PyObject* NS(ConfigGetBuffersize)     ( PyObject* );
@@ -241,7 +239,6 @@ PyObject* NS(ConfigGetIsSilent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
-PyObject* NS(ConfigGetIdent)	      ( PyObject* );
 PyObject* NS(ConfigGetIoUdsFile)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpHost)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpPort)      ( PyObject* );
@@ -258,7 +255,6 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigSetTimeout_DOC	    "[seconds]"
 #define ConfigSetName_DOC	    "[string]"
 #define ConfigSetSrvName_DOC	    "[string]"
-#define ConfigSetIdent_DOC	    "[string]"
 #define ConfigSetIoUdsFile_DOC	    "[file-name]"
 #define ConfigSetIoTcp_DOC	    "[hots, port, myhost, myport]"
 #define ConfigSetIoPipeSocket_DOC	    "[socket]"
@@ -272,7 +268,6 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigSetServerCleanup_DOC  "[callable method]"
 #define ConfigSetBgError_DOC	    "[callable method]"
 #define ConfigSetEvent_DOC	    "[callable method]"
-#define ConfigSetFactory_DOC	    "[callable method]"
 #define ConfigGetIsString_DOC	    "[noARG] boolean, 'True' if the object is using the 'string' configuration."
 #define ConfigGetIsSilent_DOC	    "[noARG] boolean, 'True' if the object is using the 'silent' configuration."
 #define ConfigGetIsServer_DOC	    "[noARG] boolean, 'True' if the object belongs to a 'server'."
@@ -281,7 +276,6 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
 #define ConfigGetName_DOC	    "[noARG] return the PyMqS 'name' (str) of the object."
 #define ConfigGetSrvName_DOC	    "[noARG] return the PyMqS 'srvname' (str) of the object."
-#define ConfigGetIdent_DOC	    "[noARG] return the PyMqS 'ident' (str) of the object."
 #define ConfigGetIoUdsFile_DOC	    "[noARG] return the PyMqS 'uds-file-name' (str) of the object."
 #define ConfigGetIoTcpHost_DOC	    "[noARG] return the PyMqS 'tcp-host-name' (str) of the object."
 #define ConfigGetIoTcpPort_DOC	    "[noARG] return the PyMqS 'tcp-port-name' (str) of the object."
@@ -315,6 +309,15 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ErrorGetNum_DOC		    "return the 'pymsgque' error number"
 #define ErrorGetText_DOC	    "return the 'pymsgque' error text"
 
+// from factory_python.c
+
+PyObject* NS(FactoryCtxIdentSet)    ( PyObject*, PyObject* );
+PyObject* NS(FactoryCtxIdentGet)    ( PyObject* );
+PyObject* NS(FactoryCtxDefaultSet)  ( PyObject*, PyObject* );
+
+#define FactoryCtxIdentGet_DOC	    "[noARG] return the factory identifer or '' of the object"
+#define FactoryCtxIdentSet_DOC	    "[string] set the factory identifer of the object"
+#define FactoryCtxDefaultSet_DOC    "[string] create a copy of the default factory using string as identifer and link to the object"
 
 // Fill the Struct-Array
 
@@ -397,7 +400,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetTimeout,	METH_O),
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
-    ARG(ConfigSetIdent,		METH_O),
     ARG(ConfigSetIoUdsFile,	METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
     ARG(ConfigSetIoPipeSocket,	METH_O),
@@ -411,7 +413,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetServerCleanup, METH_O),
     ARG(ConfigSetBgError,	METH_O),
     ARG(ConfigSetEvent,		METH_O),
-    ARG(ConfigSetFactory,	METH_VARARGS),
     ARG(ConfigGetIsString,	METH_NOARGS),
     ARG(ConfigGetIsSilent,	METH_NOARGS),
     ARG(ConfigGetIsServer,	METH_NOARGS),
@@ -421,7 +422,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetBuffersize,	METH_NOARGS),
     ARG(ConfigGetName,		METH_NOARGS),
     ARG(ConfigGetSrvName,	METH_NOARGS),
-    ARG(ConfigGetIdent,		METH_NOARGS),
     ARG(ConfigGetIoUdsFile,	METH_NOARGS),
     ARG(ConfigGetIoTcpHost,	METH_NOARGS),
     ARG(ConfigGetIoTcpPort,	METH_NOARGS),
@@ -442,6 +442,10 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ErrorPrint,		METH_NOARGS),
     ARG(ErrorGetNum,		METH_NOARGS),
     ARG(ErrorGetText,		METH_NOARGS),
+
+    ARG(FactoryCtxIdentSet,	METH_VARARGS),
+    ARG(FactoryCtxIdentGet,	METH_NOARGS),
+    ARG(FactoryCtxDefaultSet,	METH_VARARGS),
     
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

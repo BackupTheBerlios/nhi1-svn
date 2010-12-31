@@ -174,7 +174,7 @@ class Server(MqS):
       self.ConfigSetSrvName (old)
     elif cmd == "Ident":
       old = self.FactoryCtxIdentGet()
-      self.FactoryCtxIdentSet (self.ReadC())
+      self.FactoryCtxDefaultSet (self.ReadC())
       check = self.LinkGetTargetIdent() == self.ReadC()
       self.SendSTART()
       self.SendC (self.FactoryCtxIdentGet())
@@ -220,6 +220,8 @@ class Server(MqS):
       self.ConfigSetStartAs (self.ReadI())
       self.SendI (self.ConfigGetStartAs())
       self.ConfigSetStartAs (old)
+    elif cmd == "DefaultIdent":
+      self.SendC (FactoryDefaultIdent())
     else:
       self.ErrorC ("CFG1", 1, "invalid command: " + cmd)
     self.SendRETURN();
@@ -637,9 +639,6 @@ class Server(MqS):
 ##    Main
 ##
 
-#print("1111 >", MqS_WAIT_FOREVER)
-#sys.stdout.flush()
-
 srv = FactoryNew("server", Server);
 
 try:
@@ -654,6 +653,3 @@ finally:
   srv.Exit()
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
-
-
-

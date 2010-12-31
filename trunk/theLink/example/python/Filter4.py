@@ -70,14 +70,14 @@ class Filter4(MqS):
   def FilterIn(ctx):
     ctx.itms.append(ctx.ReadBDY())
     ctx.SendRETURN()
+
+
+FactoryDefault("transFilter", Filter4)
+srv = Filter4()
 try:
-  srv = FactoryNew("transFilter", Filter4)
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)
 except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-
-
-

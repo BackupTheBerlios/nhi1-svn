@@ -109,16 +109,6 @@ func (this *MqS) ConfigSetSrvName(val string) {
   C.free(unsafe.Pointer(v))
 }
 
-func (this *MqS) ConfigGetIdent() string {
-  return C.GoString(C.MqConfigGetIdent((*_Ctype_struct_MqS)(this)))
-}
-
-func (this *MqS) ConfigSetIdent(val string) {
-  v := C.CString(val)
-  C.MqConfigSetIdent((*_Ctype_struct_MqS)(this), v)
-  C.free(unsafe.Pointer(v))
-}
-
 func (this *MqS) ConfigGetIsSilent() bool {
   return C.MqConfigGetIsSilent((*_Ctype_struct_MqS)(this)) == C.MQ_YES
 }
@@ -324,85 +314,4 @@ func (this *MqS) ConfigSetEvent(cb Event) {
   C.gomsgque_ConfigSetEvent((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
   lockEvent[&cb] = true
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-type FactoryF func(*MqS) (*MqS) 
-
-// global lock for "Factory" interfaces
-var lockFactory  = make(map[*FactoryF]bool)
-
-//export gomsgque_cFactoryCall
-func cFactoryCall(tmpl *MqS, cb *FactoryF) (ret *MqS) {
-  defer func() {
-    if (tmpl != nil) {
-      if x := recover(); x != nil {
-	tmpl.ErrorSet(x)
-	ret = nil
-      }
-    }
-  }()
-  if (cb == nil) {
-    ret = NewMqS(tmpl,nil)
-  } else {
-    ret = (*cb)(tmpl)
-  }
-  return
-}
-
-//export gomsgque_cFactoryDelete
-func cFactoryDelete(this *MqS, chnp *chan bool) {
-  ctxlock[this] = nil, false
-  if chnp != nil {
-    (*chnp) <- true
-  }
-}
-
-//export gomsgque_cFactoryFree
-func cFactoryFree(cb *FactoryF) {
-  lockFactory[cb] = false, false
-}
-
-func (this *MqS) ConfigSetFactory(ident string, cb FactoryF) {
-  v := C.CString(ident)
-  C.gomsgque_ConfigSetFactory((*_Ctype_struct_MqS)(this), v, C.MQ_PTR(&cb))
-  C.free(unsafe.Pointer(v))
-  lockFactory[&cb] = true
-}
-
-func (this *MqS) ConfigSetDefaultFactory(ident string) {
-  v := C.CString(ident)
-  C.gomsgque_ConfigSetDefaultFactory((*_Ctype_struct_MqS)(this), v, nil)
-  C.free(unsafe.Pointer(v))
-}
-
-func FactoryAdd(ident string, cb FactoryF) {
-  v := C.CString(ident)
-  C.gomsgque_FactoryAdd(v, C.MQ_PTR(&cb))
-  C.free(unsafe.Pointer(v))
-  lockFactory[&cb] = true
-}
-
-func FactoryCall(ident string) (*MqS) {
-  v := C.CString(ident)
-  ctx := C.MqFactoryCall(v)
-  C.free(unsafe.Pointer(v))
-  if (ctx == nil) {
-    panic("unable to call " + ident + " factory")
-  }
-  return (*MqS)(ctx)
-}
-
-func FactoryNew(ident string, cb FactoryF) *MqS {
-  FactoryAdd(ident, cb)
-  return FactoryCall(ident)
-}
-
-/*
-func (this *MqS) Dummy(i int32) *MqS {
-  var ret *_Ctype_struct_MqS
-  this.iErrorMqToGoWithCheck(C.MqDummy((*_Ctype_struct_MqS)(this), C.MQ_SIZE(i), &ret))
-  return (*MqS)(ret)
-}
-*/
 

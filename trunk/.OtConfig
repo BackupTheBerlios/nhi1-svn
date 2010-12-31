@@ -14,6 +14,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-cxx \
 		    --enable-java \
 		    --enable-csharp \
+		    --enable-python \
 \
 		    $ARGS $@
 

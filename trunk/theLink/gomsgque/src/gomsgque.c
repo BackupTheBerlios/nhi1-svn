@@ -192,40 +192,41 @@ gomsgque_sFactoryFree (
   *dataP = NULL;
 }
 
-void
-gomsgque_ConfigSetDefaultFactory (
-  struct MqS * const context,
-  MQ_CST const ident,
-  MQ_PTR data
-)
-{
-  MqConfigSetFactory(context, ident, gomsgque_sFactoryCreate, NULL, NULL, gomsgque_sFactoryDelete, NULL, NULL);
-}
-
-void
-gomsgque_ConfigSetFactory (
-  struct MqS * const context,
-  MQ_CST const ident,
-  MQ_PTR data
-)
-{
-  MqFactoryCreateF  fCreate = data != NULL ? gomsgque_sFactoryCreate : NULL;
-  MqConfigSetFactory(context, ident,
-    fCreate,		      data, gomsgque_sFactoryFree, 
-    gomsgque_sFactoryDelete,  NULL, NULL
-  );
-}
-
-void
+enum MqFacturyReturnE
 gomsgque_FactoryAdd (
   MQ_CST const ident,
   MQ_PTR data
 )
 {
-  MqFactoryAdd(ident,
+  return MqFactoryAdd(ident,
     gomsgque_sFactoryCreate, data, gomsgque_sFactoryFree, 
     gomsgque_sFactoryDelete, NULL, NULL
   );
+}
+
+struct FactoryCallReturn
+gomsgque_FactoryNew (
+  MQ_CST const ident,
+  MQ_PTR data
+)
+{
+  struct FactoryCallReturn ret;
+  ret.ret MqFactoryNew(ident,
+    gomsgque_sFactoryCreate, data, gomsgque_sFactoryFree, 
+    gomsgque_sFactoryDelete, NULL, NULL,
+    NULL, &ret.ctx
+  );
+  return ret;
+}
+
+struct FactoryCallReturn
+gomsgque_FactoryCall (
+  MQ_CST const ident
+)
+{
+  struct FactoryCallReturn ret;
+  ret.ret MqFactoryCall(ident, NULL, &ret.ctx);
+  return ret;
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
