@@ -16,6 +16,11 @@
   MqErrorV (context, __func__, errno, \
     "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
 
+#define ErrorFactoryToPerlWithCheck(RET) \
+  if (unlikely(MqFactoryErrorCheckI(RET))) { \
+    croak(MqFactoryErrorMsg(RET)); \
+  }
+
 #define ErrorMqToPerlWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
     SV* errsv = get_sv("@", TRUE); \
@@ -328,11 +333,6 @@ Init(...)
     }
 
 void
-FactoryDefault(MQ_CST string, SV* factoryF)
-  CODE:
-    MqFactoryDefault(string, FactoryCreate, (MQ_PTR) newSVsv(factoryF), ProcFree, FactoryDelete, NULL, NULL);
-
-void
 FactoryAdd(...)
   PREINIT:
     MQ_CST ident;
@@ -348,7 +348,36 @@ FactoryAdd(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    MqFactoryAdd(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL);
+    ErrorFactoryToPerlWithCheck(
+      MqFactoryAdd(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL)
+    );
+
+void
+FactoryDefault(...)
+  PREINIT:
+    MQ_CST ident;
+    MQ_PTR class;
+  CODE:
+    if (items < 1 || items > 2) {
+      croak_xs_usage(cv, "ident, ?class?");
+      XSRETURN(0);
+    } else if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+      class = newSVpv("Net::PerlMsgque::MqS",0);
+    } else {  // items == 2
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(1));
+    }
+    ErrorFactoryToPerlWithCheck (
+      MqFactoryDefault(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL)
+    );
+
+MQ_CST
+FactoryDefaultIdent()
+  CODE:
+    RETVAL = MqFactoryDefaultIdent();
+  OUTPUT:
+    RETVAL
 
 void
 FactoryNew(...)
@@ -367,7 +396,9 @@ FactoryNew(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    ctx = MqFactoryNew(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL);
+    ErrorFactoryToPerlWithCheck (
+      MqFactoryNew(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL, NULL, &ctx)
+    )
     ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
     XSRETURN(1);
 
@@ -376,14 +407,9 @@ FactoryCall(MQ_CST ident)
   PREINIT:
     MqS* ctx;
   CODE:
-    if (*ident == '\0') {
-      croak_xs_usage(cv, "ident");
-      XSRETURN(0);
-    } else {
-      ctx = MqFactoryCall(ident);
-      ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
-      XSRETURN(1);
-    }
+    ErrorFactoryToPerlWithCheck (MqFactoryCall(ident, NULL, &ctx));
+    ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
+    XSRETURN(1);
 
 void
 PrintID(MqS *context)
@@ -414,7 +440,6 @@ new(SV *MqS_class, ...)
       context->threadData = PERL_GET_CONTEXT;
       MqConfigSetSelf(context, SvREFCNT_inc(ST(0)));
       MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
-      MqConfigSetIdent(context, "perlmsgque");
     } else {
       MqConfigReset (get_MqS (aTHX_ MqS_class));
     }
@@ -610,12 +635,6 @@ MQ_NST
 MqConfigGetSrvName (MqS* context)
 
 void
-MqConfigSetIdent (MqS* context, MQ_NST ident)
-
-MQ_NST
-MqConfigGetIdent (MqS* context)
-
-void
 MqConfigSetIoUdsFile (MqS* context, MQ_NST udsfile)
   CODE:
     ErrorMqToPerlWithCheck(MqConfigSetIoUdsFile(context, udsfile))
@@ -692,14 +711,6 @@ MqConfigSetServerCleanup (MqS* context, SV* cleanupF)
     MqConfigSetServerCleanup (context, ProcCall, (MQ_PTR) newSVsv(cleanupF), ProcFree, ProcCopy);
 
 void
-MqConfigSetFactory (MqS* context, MQ_CST ident, SV* factoryF)
-  CODE:
-    MqConfigSetFactory (context, ident,
-      FactoryCreate, (MQ_PTR) newSVsv(factoryF), ProcFree,
-      FactoryDelete, NULL,                       NULL
-    );
-
-void
 MqConfigSetBgError (MqS* context, SV* bgerrorF)
   CODE:
     MqConfigSetBgError (context, ProcCall, (MQ_PTR) newSVsv(bgerrorF), ProcFree, ProcCopy);
@@ -708,6 +719,20 @@ void
 MqConfigSetEvent (MqS* context, SV* eventF)
   CODE:
     MqConfigSetEvent (context, ProcCall, (MQ_PTR) newSVsv(eventF), ProcFree, ProcCopy);
+
+
+MQ_CST
+MqFactoryCtxIdentGet (MqS* context)
+
+void
+MqFactoryCtxIdentSet (MqS* context, MQ_NST ident)
+  CODE:
+    ErrorMqToPerlWithCheck (MqFactoryCtxIdentSet (context, ident));
+
+void
+MqFactoryCtxDefaultSet (MqS* context, MQ_NST ident)
+  CODE:
+    ErrorMqToPerlWithCheck (MqFactoryCtxDefaultSet (context, ident));
 
 
 void

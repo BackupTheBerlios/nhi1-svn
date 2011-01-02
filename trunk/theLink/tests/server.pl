@@ -609,13 +609,12 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ConfigSetSrvName ($old);
       }
       case "Ident" {
-	my $old = $ctx->ConfigGetSrvName();
-	$ctx->ConfigSetSrvName ($ctx->ReadC());
+	my $old = $ctx->FactoryCtxIdentGet();
+	$ctx->FactoryCtxDefaultSet ($ctx->ReadC());
 	my $check = ($ctx->LinkGetTargetIdent eq $ctx->ReadC());
-	$ctx->SendSTART();
-	$ctx->SendC ($ctx->ConfigGetSrvName());
+	$ctx->SendC ($ctx->FactoryCtxIdentGet());
 	$ctx->SendO ($check);
-	$ctx->ConfigSetSrvName ($old);
+	$ctx->FactoryCtxIdentSet ($old);
       }
       case "IsSilent" {
 	my $old = $ctx->ConfigGetIsSilent();
@@ -662,6 +661,9 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ConfigSetStartAs ($ctx->ReadI());
 	$ctx->SendI ($ctx->ConfigGetStartAs());
 	$ctx->ConfigSetStartAs ($old);
+      }
+      case "DefaultIdent" {
+	$ctx->SendC (Net::PerlMsgque::FactoryDefaultIdent());
       }
       default {
 	$ctx->ErrorC ("CFG1", 1, "invalid command: $cmd");

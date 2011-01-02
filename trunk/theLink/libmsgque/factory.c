@@ -208,12 +208,15 @@ MqFactoryItemGet (
 {
 	   struct MqFactoryItemS * start = space.items;
   register struct MqFactoryItemS * end = start + space.used;
+  *itemP = NULL;
+  if (ident == NULL || *ident == '\0') {
+    return MQ_FACTORY_RETURN_INVALID_IDENT;
+  }
   while (start < end-- && strcmp(end->ident,ident)) {}
   if (end >= start) {
     *itemP = end;
     return MQ_FACTORY_RETURN_OK;
   } else {
-    *itemP = NULL;
     return MQ_FACTORY_RETURN_ITEM_GET_ERR;
   }
 }
@@ -288,8 +291,11 @@ MqFactoryAdd (
 {
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
-  if (ident == NULL || fCreate == NULL) {
-    return MQ_FACTORY_RETURN_ADD_DEF_ERR;
+  if (ident == NULL || *ident == '\0') {
+    return MQ_FACTORY_RETURN_INVALID_IDENT;
+  }
+  if (fCreate == NULL) {
+    return MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED;
   }
   return pFactoryAddName (ident, Create, Delete);
 }
@@ -299,6 +305,9 @@ MqFactoryCopyDefault (
   MQ_CST const ident
 )
 {
+  if (ident == NULL || *ident == '\0') {
+    return MQ_FACTORY_RETURN_INVALID_IDENT;
+  }
   return pFactoryAddName (ident, space.items[0].Create, space.items[0].Delete);
 }
 
@@ -315,8 +324,11 @@ MqFactoryDefault (
 {
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
-  if (ident == NULL || fCreate == NULL) {
-    return MQ_FACTORY_RETURN_ADD_DEF_ERR;
+  if (ident == NULL || *ident == '\0') {
+    return MQ_FACTORY_RETURN_INVALID_IDENT;
+  }
+  if (fCreate == NULL) {
+    return MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED;
   }
   // Del
   sFactorySpaceDelItem (0);
@@ -415,8 +427,8 @@ MQ_CST MqFactoryErrorMsg (
   switch (ret) {
    case MQ_FACTORY_RETURN_OK:		
     return "OK";
-   case MQ_FACTORY_RETURN_ADD_DEF_ERR:	
-    return "factory definition incomplete 'ident' or 'fCreate' not available";
+   case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:	
+    return "unable to define factory, create function is required";
    case MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR:
     return "factory identifer already in use";
    case MQ_FACTORY_RETURN_CALL_ERR:
@@ -429,6 +441,8 @@ MQ_CST MqFactoryErrorMsg (
     return "unable to create a new default factory";
    case MQ_FACTORY_RETURN_ADD_ERR:
     return "unable to add a new factory";
+   case MQ_FACTORY_RETURN_INVALID_IDENT:
+    return "invalid identifier, value have to be set to an non-empty string";
    default:
     return "nothing";
   }

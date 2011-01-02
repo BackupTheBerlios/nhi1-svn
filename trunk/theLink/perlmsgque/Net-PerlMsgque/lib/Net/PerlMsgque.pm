@@ -38,7 +38,7 @@ Net::PerlMsgque::InitializeSys();
 Net::PerlMsgque::Init($^X, "-w", $0);
 
 # set default Factory
-Net::PerlMsgque::FactoryDefault("perlmsgque", "Net::PerlMsgque::MqS");
+Net::PerlMsgque::FactoryDefault("perlmsgque");
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
 
