@@ -16,17 +16,14 @@
 
 $stderr = fopen("php://stderr", "w");
 
-class Client extends MqS implements iBgError, iFactory {
-  public function __construct() {
+class Client extends MqS implements iBgError {
+  public function __construct($tmpl=NULL) {
+    parent::__construct($tmpl);
     $this->ConfigSetSrvName("test-server");
-    parent::__construct();
-  }
-  public function Factory() {
-    return new Client();
   }
   public function LinkCreate($debug) {
     $this->ConfigSetDebug($debug);
-    parent::LinkCreate("client", "@", "SELF");
+    parent::LinkCreate("client", "@", "server");
   }
   public function BgError() {
     $master = $this->SlaveGetMaster();
@@ -37,22 +34,10 @@ class Client extends MqS implements iBgError, iFactory {
   }
 }
 
-class ClientERR extends MqS {
-  public function __construct() {
-    $this->ConfigSetSrvName("test-server");
-    $this->ConfigSetName("test-client");
-    parent::__construct();
-  }
-  public function LinkCreate($debug) {
-    $this->ConfigSetDebug($debug);
-    parent::LinkCreate("client", "@", "SELF");
-  }
-}
-
 class ClientERR2 extends MqS {
-  public function __construct() {
+  public function __construct($tmpl=NULL) {
+    parent::__construct($tmpl);
     $this->ConfigSetName("cl-err-1");
-    parent::__construct();
   }
   public function LinkCreate($debug) {
     $this->ConfigSetDebug($debug);
@@ -60,20 +45,10 @@ class ClientERR2 extends MqS {
   }
 }
 
-class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
+class Server extends MqS implements iServerSetup, iServerCleanup {
 
   public $cl = array();
   public $i  = NULL;
-
-  public function __construct() {
-    $this->ConfigSetName("server");
-    $this->FactoryCtxIdentSet("test-server");
-    parent::__construct();
-  }
-
-  public function Factory() {
-    return new Server();
-  }
 
   public function ServerCleanup() {
     for ($i=0;$i<2;$i++) {
@@ -201,11 +176,6 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 	break;
       case "CREATE2":
         $slv = new Client();
-        $slv->LinkCreate($this->ConfigGetDebug());
-        $this->SlaveCreate($id, $slv);
-	break;
-      case "CREATE3":
-        $slv = new ClientERR();
         $slv->LinkCreate($this->ConfigGetDebug());
         $this->SlaveCreate($id, $slv);
 	break;
@@ -542,7 +512,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 	break;
       case "Ident":
         $old = $this->FactoryCtxIdentGet();
-        $this->FactoryCtxIdentSet($this->ReadC());
+        $this->FactoryCtxDefaultSet($this->ReadC());
         $check = $this->LinkGetTargetIdent() == $this->ReadC();
         $this->SendSTART();
         $this->SendC($this->FactoryCtxIdentGet());
@@ -594,6 +564,9 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
         $this->ConfigSetStartAs($this->ReadI());
         $this->SendI($this->ConfigGetStartAs());
         $this->ConfigSetStartAs($old);
+	break;
+      case "DefaultIdent":
+        $this->SendC(FactoryDefaultIdent());
 	break;
       default:
         ErrorC("CFG1", 1, "invalid command: " + cmd);
@@ -741,7 +714,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup, iFactory {
 
 }
 
-$ctx = new Server();
+$ctx = FactoryNew('server', 'Server');
 
 try {
   $ctx->LinkCreate($argv);
@@ -752,5 +725,4 @@ try {
 }
 $ctx->Exit();
 ?>
-
 

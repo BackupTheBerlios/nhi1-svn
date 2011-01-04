@@ -11,15 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class Filter3 extends MqS implements iServerSetup, iFactory {
-  public function __construct() {
-    $this->ConfigSetName('filter');
-    $this->data = array();
-    parent::__construct();
-  }
-  public function Factory() {
-    return new Filter3();
-  }
+class Filter3 extends MqS implements iServerSetup {
   public function ServerSetup() {
     $ftr = $this->ServiceGetFilter();
     $this->ServiceProxy("+ALL");
@@ -28,7 +20,7 @@ class Filter3 extends MqS implements iServerSetup, iFactory {
     $ftr->ServiceProxy("+TRT");
   }
 }
-$srv = new Filter3();
+$srv = FactoryNew('Filter3');
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);
@@ -38,3 +30,4 @@ try {
 $srv->Exit();
 
 ?>
+

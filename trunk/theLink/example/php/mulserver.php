@@ -11,10 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class MulServer extends MqS implements iServerSetup, iFactory {
-  public function Factory() {
-    return new MulServer();
-  }
+class MulServer extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('MMUL', array(&$this, 'MMUL'));
   }

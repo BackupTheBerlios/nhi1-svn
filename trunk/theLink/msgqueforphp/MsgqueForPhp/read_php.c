@@ -79,7 +79,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadL_START)
   PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|o", &bufZ));
   if (bufZ) {
     CheckType(bufZ, NS(MqBufferS));
-    buf = VAL2MqBufferS(bufZ);
+    VAL2MqBufferS(buf, bufZ);
   }
   ErrorMqToPhpWithCheck(MqReadL_START(mqctx, buf));
   RETURN_NULL();
@@ -103,7 +103,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadT_START)
   PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|O", &bufZ, &bufC));
   if (bufZ) {
     if (!instanceof_function(bufC, NS(MqBufferS) TSRMLS_CC)) goto error;
-    buf = VAL2MqBufferS(bufZ);
+    VAL2MqBufferS(buf, bufZ);
   }
   ErrorMqToPhpWithCheck(MqReadT_START(mqctx, buf));
   RETURN_NULL();
@@ -121,18 +121,20 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadT_END)
 PHP_METHOD(MsgqueForPhp_MqS, ReadProxy)
 {
   SETUP_mqctx;
-  ARG2OBJ(ReadProxy, mqs);
-  ErrorMqToPhpWithCheck(MqReadProxy(mqctx, VAL2MqS(mqs)));
+  ARG2MqS(ReadProxy, mqs);
+  ErrorMqToPhpWithCheck(MqReadProxy(mqctx, mqs));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadGetNumItems)
 {
-  INT2VAL(return_value, MqReadGetNumItems(MQCTX));
+  SETUP_mqctx;
+  INT2VAL(return_value, MqReadGetNumItems(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadItemExists)
 {
-  BOL2VAL(return_value, MqReadItemExists(MQCTX));
+  SETUP_mqctx;
+  BOL2VAL(return_value, MqReadItemExists(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadUndo)
@@ -150,7 +152,4 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadUndo)
 
 void NS(MqS_Read_Init)(void) {
 }
-
-
-
 

@@ -22,14 +22,16 @@
 #define Get(K,T) \
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGet ## K) \
 { \
-  T ## 2VAL(return_value, MqConfigGet ## K (MQCTX)); \
+  SETUP_mqctx; \
+  T ## 2VAL(return_value, MqConfigGet ## K (mqctx)); \
 }
 
 #define Set(K,T) \
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSet ## K) \
 { \
+  SETUP_mqctx; \
   ARG2 ## T(K,val); \
-  MqConfigSet ## K (MQCTX, (MQ_ ## T) (val)); \
+  MqConfigSet ## K (mqctx, (MQ_ ## T) (val)); \
   RETURN_NULL(); \
 }
 #define All(K,T) \
@@ -58,13 +60,14 @@ Set(IgnoreExit,	  BOL)
 
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIoTcp)
 {
+  SETUP_mqctx;
   MQ_CST host, port, myhost, myport;
   MQ_INT hostL, portL, myhostL, myportL;
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssss", 
 	&host, &hostL, &port, &portL, &myhost, &myhostL, &myport, &myportL) == FAILURE) {
     RETURN_NULL();
   }
-  MqConfigSetIoTcp (MQCTX, host, port, myhost, myport);
+  MqConfigSetIoTcp (mqctx, host, port, myhost, myport);
   RETURN_NULL();
 }
 
@@ -76,6 +79,10 @@ PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIoTcp)
 
 void NS(MqS_Config_Init)(TSRMLS_D) {
 }
+
+
+
+
 
 
 

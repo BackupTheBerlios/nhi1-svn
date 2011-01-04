@@ -161,7 +161,7 @@ MqErrorSGenVL (
       if (context) {
 	MqBufferAppendV (text, "%c> (%s) ", ( MQ_IS_SERVER (context) ?
 	  (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C')),
-	  context->config.name ? context->config.name : "unknown"); 
+	  StringOrUnknown(context->config.name)); 
       }
       MqBufferAppendV (text, "[%s] ", prefix);
     }
@@ -239,7 +239,7 @@ MqErrorSAppendV (
   if (context) {
     struct MqBufferS * text = context->error.text;
     struct MqS * const master = context->config.master;
-    MQ_CST name = context->config.name ? context->config.name : "unknown";
+    MQ_CST name = StringOrUnknown(context->config.name);
     if (!context->error.append) return context->error.code;
     MqBufferAppendV (text, "\n%c> (%s) ", ( MQ_IS_SERVER (context) ?
 			(MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C')), name); 

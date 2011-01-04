@@ -49,8 +49,7 @@ extern zend_class_entry *NS(MqBufferS);
 */
 
 #define LIBMSGQUE_VERSION   "4.6"
-#define MQCTX               VAL2MqS(getThis())
-#define SETUP_mqctx         struct MqS * mqctx = MQCTX
+#define SETUP_mqctx         struct MqS * mqctx; VAL2MqS(mqctx,getThis());
 #define SELF                ((zval*)(mqctx)->self)
 #define SETUP_self          zval * self = SELF
 #define MQ_CONTEXT_S        mqctx
@@ -85,9 +84,26 @@ extern zend_class_entry *NS(MqBufferS);
 #define VAL2DBL(val)	    (MQ_DBL)Z_DVAL_P(val)
 #define VAL2CST(val)	    (MQ_CST)Z_STRVAL_P(val)
 #define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),(MQ_SIZE)Z_STRLEN_P(val)
-#define VAL2MqS(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
-#define VAL2MqBufferS(val)  (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
+#define VAL2MqS2(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
+#define VAL2MqBufferS2(val) (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
 
+#define VAL2MqS(tgt, src) { \
+  zval * zret = zend_read_property(NS(MqS), src, ID(__ctx), 0 TSRMLS_CC); \
+  if (Z_TYPE_P(zret) == IS_NULL) { \
+    RETURN_ERROR("MqS resource was not initialized, is the constructor not run ?"); \
+  } else { \
+    tgt = (struct MqS *) Z_RESVAL_P(zret); \
+  } \
+}
+
+#define VAL2MqBufferS(tgt, src) { \
+  zval * zret = zend_read_property(NS(MqBufferS), src, ID(__buf), 0 TSRMLS_CC); \
+  if (Z_TYPE_P(zret) == IS_NULL) { \
+    RETURN_ERROR("MqBufferS resource was not initialized, is the constructor not run ?"); \
+  } else { \
+    tgt = (struct MqBufferS *) Z_RESVAL_P(zret); \
+  } \
+}
 
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	BOL2VAL(zval,nat)	    ZVAL_BOOL(zval,nat)
@@ -143,6 +159,22 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &val) == FAILURE) { \
   RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
 }
 
+#define ARG2MqS(mth,val) \
+struct MqS *val;\
+zval *_val;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
+} \
+VAL2MqS(val,_val);
+
+#define ARG2MqBufferS(mth,val) \
+struct MqBufferS *val;\
+zval *_val;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
+} \
+VAL2MqBufferS(val,_val);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                  Misc's                                   */
@@ -187,6 +219,9 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
+
+
+
 
 
 

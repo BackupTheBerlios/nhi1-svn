@@ -493,6 +493,7 @@ MqConfigSetName (
   } else if (strcmp(context->config.name, data)) {
     MqSysFree(context->config.name);
     context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
+//printLV("config.name<%p>, data<%p>\n", context->config.name, data);
   }
   if (MQ_IS_SERVER(context)) {
     MqSysFree(context->config.srvname);

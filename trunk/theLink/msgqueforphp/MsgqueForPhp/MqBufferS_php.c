@@ -14,9 +14,8 @@
 
 zend_class_entry *NS(MqBufferS);
 
-#define BUF	      VAL2MqBufferS(getThis())
 #define CTX	      buf->context
-#define SETUP_buf     MQ_BUF buf = BUF
+#define SETUP_buf     MQ_BUF buf; VAL2MqBufferS(buf, getThis());
 #define ErrorBufToPhp() NS(MqSException_Raise)(buf->context TSRMLS_CC)
 #define ErrorBufToPhpWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
@@ -61,7 +60,8 @@ PHP_METHOD(MsgqueForPhp_MqBufferS, GetB)
 static
 PHP_METHOD(MsgqueForPhp_MqBufferS, GetType)
 {
-  MQ_STRB const str[2] = {MqBufferGetType(BUF), '\0'};
+  SETUP_buf;
+  MQ_STRB const str[2] = {MqBufferGetType(buf), '\0'};
   CST2VAL(return_value, str);
 }
 
@@ -103,7 +103,7 @@ void NS(MqBufferS_New) (zval *return_value, MQ_BUF buf TSRMLS_DC)
     RETURN_ERROR("unable to create an 'MqBufferS' instance.");
   }
   // link 'buf' with the object instance
-  zend_update_property_long(NS(MqBufferS), return_value, ID(__buf), (long) buf TSRMLS_CC);
+  add_property_resource_ex(return_value, ID2(__buf), (long) buf TSRMLS_CC);
   return;
 }
 
@@ -113,9 +113,6 @@ void NS(MqBufferS_Init) (TSRMLS_D) {
   // create class and make depend on "Exception"
   INIT_CLASS_ENTRY(me_ce,"MqBufferS", NS(MqBufferS_functions));
   NS(MqBufferS) = zend_register_internal_class(&me_ce TSRMLS_CC);
-
-  // define additional properties "buf" to save the "struct MqBufferS *" pointer
-  zend_declare_property_null(NS(MqBufferS), ID(__buf), ZEND_ACC_PRIVATE TSRMLS_CC);
 }
 
 

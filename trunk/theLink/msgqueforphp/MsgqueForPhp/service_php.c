@@ -20,12 +20,14 @@
 
 PHP_METHOD(MsgqueForPhp_MqS, ServiceGetToken)
 {
-  RETURN_STRING(MqServiceGetToken(MQCTX), 1);
+  SETUP_mqctx;
+  RETURN_STRING(MqServiceGetToken(mqctx), 1);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ServiceIsTransaction)
 {
-  RETURN_BOOL(MqServiceIsTransaction(MQCTX));
+  SETUP_mqctx;
+  RETURN_BOOL(MqServiceIsTransaction(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ServiceGetFilter)
@@ -110,8 +112,3 @@ error:
 
 void NS(MqS_Service_Init)(TSRMLS_D) {
 }
-
-
-
-
-

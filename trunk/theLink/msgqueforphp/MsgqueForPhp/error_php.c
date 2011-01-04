@@ -14,22 +14,25 @@
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorGetText)
 { 
-  CST2VAL(return_value, MqErrorGetText(MQCTX));
+  SETUP_mqctx;
+  CST2VAL(return_value, MqErrorGetText(mqctx));
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorGetNum)
 { 
-  INT2VAL(return_value, MqErrorGetNum(MQCTX));
+  SETUP_mqctx;
+  INT2VAL(return_value, MqErrorGetNum(mqctx));
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorC)
 { 
+  SETUP_mqctx;
   char* prefix;  int prefixlen;
   char* message; int messagelen;
   long errnum;
-  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, 
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
     "sls", &prefix, &prefixlen, &errnum, &message, &messagelen));
-  MqErrorC(MQCTX, prefix, (MQ_INT)errnum, message);
+  MqErrorC(mqctx, prefix, (MQ_INT)errnum, message);
   RETURN_NULL();
 error:
   RETURN_ERROR("usage: ErrorC(string: prefix, integer: errnum, string: message)");
@@ -37,44 +40,50 @@ error:
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorSet)
 { 
+  SETUP_mqctx;
   ARG2OBJ(ErrorSet,ex)
-  NS(MqSException_Set)(MQCTX, ex TSRMLS_CC);
+  NS(MqSException_Set)(mqctx, ex TSRMLS_CC);
   RETURN_NULL();
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorSetCONTINUE)
 { 
-  MqErrorSetCONTINUE(MQCTX);
+  SETUP_mqctx;
+  MqErrorSetCONTINUE(mqctx);
   RETURN_NULL();
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorSetEXIT)
 { 
   SETUP_mqctx;
-  ErrorMqToPhpWithCheck(MqErrorSetEXIT(MQCTX));
+  ErrorMqToPhpWithCheck(MqErrorSetEXIT(mqctx));
   RETURN_NULL();
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorIsEXIT)
 { 
-  BOL2VAL(return_value, MqErrorIsEXIT(MQCTX));
+  SETUP_mqctx;
+  BOL2VAL(return_value, MqErrorIsEXIT(mqctx));
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorReset)
 { 
-  MqErrorReset(MQCTX);
+  SETUP_mqctx;
+  MqErrorReset(mqctx);
   RETURN_NULL();
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorRaise)
 { 
-  NS(MqSException_Raise)(MQCTX TSRMLS_CC);
+  SETUP_mqctx;
+  NS(MqSException_Raise)(mqctx TSRMLS_CC);
   RETURN_NULL();
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorPrint)
 { 
-  MqErrorPrint(MQCTX);
+  SETUP_mqctx;
+  MqErrorPrint(mqctx);
   RETURN_NULL();
 } 
 
@@ -86,8 +95,4 @@ PHP_METHOD(MsgqueForPhp_MqS, ErrorPrint)
 
 void NS(MqS_Error_Init)(TSRMLS_D) {
 }
-
-
-
-
 

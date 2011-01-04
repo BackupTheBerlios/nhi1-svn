@@ -107,17 +107,22 @@
 
 #define MV(f,v) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      (void*) pthread_self(), v);fflush(stderr);
+#define MVP(f,v) fprintf(stderr,"%s(%s:%d:%d:%p) -> %p:" #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      (void*) pthread_self(), v, v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      (void*) pthread_self(), a);fflush(stderr);
 #else
 
 #define MV(f,v) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      v);fflush(stderr);
+#define MVP(f,v) fprintf(stderr,"%s(%s:%d:%d) -> %p:" #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      v,v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      a);fflush(stderr);
 #endif
 
 #define printI(var)	MV(MQ_FORMAT_I,	var)
+#define printUI(var)	MV("%u",	var)
 #define printY(var)	MV(MQ_FORMAT_Y,	var)
 #define printFo(var)	MV("%o",	var)
 #define printH(var)	MV("%c",	var)
@@ -125,7 +130,7 @@
 #define printP(var)	MV("%p",	(MQ_PTR)var)
 #define printD(var)	MV(MQ_FORMAT_D,	var)
 #define printF(var)	MV(MQ_FORMAT_F,	var)
-#define printC(var)	MV(MQ_FORMAT_C,	var)
+#define printC(var)	MVP(MQ_FORMAT_C,var)
 #define printc(var)	MV("%c",	var)
 #define printX(var)	MV("%x",	var)
 #define printO(var)	MVA("%s",	#var,	(var==MQ_YES?"yes":"no"));

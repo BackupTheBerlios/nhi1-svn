@@ -55,9 +55,11 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveCreate)
   SETUP_mqctx;
   long id;
   zval *mqs;
+  struct MqS * slavectx;
   PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lo", &id, &mqs));
   CheckType(mqs, NS(MqS))
-  ErrorMqToPhpWithCheck (MqSlaveCreate(mqctx, id, VAL2MqS(mqs)));
+  VAL2MqS(slavectx, mqs);
+  ErrorMqToPhpWithCheck (MqSlaveCreate(mqctx, id, slavectx));
   RETURN_NULL();
 error:
   RETURN_ERROR("usage: SlaveCreate(integer: id, MqS: ctx)");
@@ -73,18 +75,21 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveDelete)
 
 PHP_METHOD(MsgqueForPhp_MqS, SlaveGet)
 {
+  SETUP_mqctx;
   ARG2INT(SlaveGet,id);
-  MqS2VAL(return_value, MqSlaveGet(MQCTX,id));
+  MqS2VAL(return_value, MqSlaveGet(mqctx,id));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SlaveGetMaster)
 {
-  MqS2VAL(return_value, MqSlaveGetMaster(MQCTX));
+  SETUP_mqctx;
+  MqS2VAL(return_value, MqSlaveGetMaster(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SlaveIs)
 {
-  RETURN_BOOL(MqSlaveIs(MQCTX));
+  SETUP_mqctx;
+  RETURN_BOOL(MqSlaveIs(mqctx));
 }
 
 /*****************************************************************************/
@@ -95,8 +100,4 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveIs)
 
 void NS(MqS_Slave_Init)(TSRMLS_D) {
 }
-
-
-
-
 

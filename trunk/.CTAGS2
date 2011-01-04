@@ -83,7 +83,7 @@ cp $D/tags .
   find $HOME/src/php-5.3.3 -name "*.[ch]" | \
     xargs ctags -a $ADD
   find $HOME/ext/x86_64-suse-linux/thread/include/php -name "*.[h]" | \
-    xargs ctags -f php.tags $ADD
+    xargs ctags -f php.tags $ADD -I PHP_METHOD
 }
 
 [[ $(basename $PWD) == "rubymsgque" ]] && {

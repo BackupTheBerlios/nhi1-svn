@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/msgqueforphp/MsgqueForPhp/config_php.c
- *  \brief      \$Id: LbMain 244 2010-10-07 18:12:40Z aotto1968 $
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/factory_php.c
+ *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 244 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
@@ -71,7 +71,7 @@ FactoryCreate(
   }
   zval_add_ref(&ztmpl);
   params[0] = &ztmpl;
-  
+
   /* create object */
   MAKE_STD_ZVAL(zctx);
   if (object_init_ex(zctx, ce) == FAILURE) {
@@ -102,7 +102,12 @@ FactoryCreate(
   }
 
   /* extract MqS object */
-  if (MqErrorCheckI (MqErrorGetCode (mqctx = VAL2MqS(zctx)))) {
+  mqctx = VAL2MqS2(zctx);
+  if (mqctx == NULL) {
+    err = "MqS resource is not initialized, constructor not run ?";
+    goto end;
+  }
+  if (MqErrorCheckI (MqErrorGetCode (mqctx = VAL2MqS2(zctx)))) {
     if (create != MQ_FACTORY_NEW_INIT) {
       MqErrorCopy (tmpl, mqctx);
       mqret = MqErrorStack(tmpl);
@@ -121,7 +126,7 @@ end:
   *mqctxP = mqctx;
   if (zctx) zval_ptr_dtor(&zctx);
   if (zdummy) zval_ptr_dtor(&zdummy);
-  if (ztmpl) zval_ptr_dtor(&tmpl);
+  if (ztmpl) zval_ptr_dtor(&ztmpl);
   if (err) {
     if (create == MQ_FACTORY_NEW_INIT) {
       RaiseError(err);
@@ -155,20 +160,23 @@ FactoryDelete(
 
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentGet)
 {
-  CST2VAL(return_value, MqFactoryCtxIdentGet (MQCTX));
+  SETUP_mqctx;
+  CST2VAL(return_value, MqFactoryCtxIdentGet (mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
 {
+  SETUP_mqctx;
   ARG2CST(FactoryCtxIdentSet,val);
-  MqFactoryCtxIdentSet(MQCTX, (MQ_CST) (val));
+  MqFactoryCtxIdentSet(mqctx, (MQ_CST) (val));
   RETURN_NULL();
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
 {
+  SETUP_mqctx;
   ARG2CST(FactoryCtxIdentSet,val);
-  MqFactoryCtxDefaultSet(MQCTX, (MQ_CST) (val));
+  MqFactoryCtxDefaultSet(mqctx, (MQ_CST) (val));
   RETURN_NULL();
 }
 
@@ -296,4 +304,6 @@ end:
     return;
   }
 }
+
+
 

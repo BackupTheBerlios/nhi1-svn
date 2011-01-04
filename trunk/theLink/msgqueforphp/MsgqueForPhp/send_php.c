@@ -62,8 +62,8 @@ PHP_METHOD(MsgqueForPhp_MqS, SendBDY)
 PHP_METHOD(MsgqueForPhp_MqS, SendU)
 {
   SETUP_mqctx;
-  ARG2OBJ(SendU,buf);
-  ErrorMqToPhpWithCheck(MqSendU(mqctx,VAL2MqBufferS(buf)));
+  ARG2MqBufferS(SendU,buf);
+  ErrorMqToPhpWithCheck(MqSendU(mqctx,buf));
   RETURN_NULL();
 }
 
@@ -87,8 +87,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendEND_AND_WAIT)
   SETUP_mqctx;
   long timeout = MQ_TIMEOUT_USER;
   char *token; int tokenlen;
-  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, 
-      "s|l", &token, &tokenlen, &timeout) == FAILURE) {
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &token, &tokenlen, &timeout) == FAILURE) {
     RETURN_ERROR("usage: SendEND_AND_WAIT(string: token, integer: timeout)");
   }
   ErrorMqToPhpWithCheck(MqSendEND_AND_WAIT(mqctx, token, (MQ_TIME_T)timeout));
@@ -166,6 +165,9 @@ PHP_METHOD(MsgqueForPhp_MqS, SendERROR)
 
 void NS(MqS_Send_Init)(void) {
 }
+
+
+
 
 
 

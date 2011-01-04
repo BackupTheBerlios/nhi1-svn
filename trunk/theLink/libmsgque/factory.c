@@ -442,7 +442,7 @@ MQ_CST MqFactoryErrorMsg (
    case MQ_FACTORY_RETURN_ADD_ERR:
     return "unable to add a new factory";
    case MQ_FACTORY_RETURN_INVALID_IDENT:
-    return "invalid identifier, value have to be set to an non-empty string";
+    return "invalid identifier, value have to be set to a non-empty string";
    default:
     return "nothing";
   }

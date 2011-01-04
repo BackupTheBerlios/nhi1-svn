@@ -180,6 +180,10 @@ extern MQ_CST MqMessageText[MQ_MESSAGE_END];
 /*                                                                           */
 /*****************************************************************************/
 
+static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
+  return str ? str : "unknown";
+}
+
 #define str2wid		mq_strtoll
 #define str2int		strtol
 #if defined(HAVE_STRTOD)

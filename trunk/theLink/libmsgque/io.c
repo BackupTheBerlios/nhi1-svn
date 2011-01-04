@@ -512,7 +512,7 @@ rescan:
 	}
 	// continue with "spawn" (works allways)
 	if (context->config.ignoreSpawn == MQ_YES) {
-	  MqErrorDbV2(context, MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER,(name == NULL ? "unknown" : name));
+	  MqErrorDbV2(context, MQ_ERROR_CAN_NOT_START_NON_PIPE_SERVER,StringOrUnknown(name));
 	}
 //printLC("spawn")
 	startType = MQ_START_SERVER_AS_SPAWN;
@@ -681,7 +681,7 @@ rescan:
         {
 int i;
 char ** xarg = argV;
-//printLC(name)
+printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
   MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }

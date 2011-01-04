@@ -11,14 +11,11 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class Filter2 extends MqS implements iServerSetup, iFactory {
-  public function __construct() {
+class Filter2 extends MqS implements iServerSetup {
+  public function __construct($tmpl=NULL) {
+    parent::__construct($tmpl);
     $this->ConfigSetName('filter');
     $this->data = array();
-    parent::__construct();
-  }
-  public function Factory() {
-    return new Filter2();
   }
   public function ServerSetup() {
     $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
@@ -38,3 +35,4 @@ try {
 $srv->Exit();
 
 ?>
+

@@ -11,10 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class MyServer extends MqS implements iServerSetup, iFactory {
-  public function Factory() {
-    return new MyServer();
-  }
+class MyServer extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('HLWO', array(&$this, 'HLWO'));
   }

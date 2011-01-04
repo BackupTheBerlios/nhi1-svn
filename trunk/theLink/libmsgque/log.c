@@ -124,7 +124,7 @@ sLogVL (
   if (proc == NULL) proc = "UNKNOWN";
   if (MQ_ERROR_IS_POINTER(context)) {
     char t;
-    MQ_STR name = context->config.name;
+    MQ_CST name = StringOrUnknown(context->config.name);
     if (context->config.isSilent) return;
     t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
 #if defined(MQ_HAS_THREAD)

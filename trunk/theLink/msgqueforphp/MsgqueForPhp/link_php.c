@@ -38,7 +38,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkCreateChild)
   argv = emalloc(sizeof(zval**) * argc);
   zend_get_parameters_array_ex(argc, argv);
   CheckType(*argv[0], NS(MqS));
-  parent = VAL2MqS(*argv[0]);
+  VAL2MqS(parent, *argv[0]);
 
   // read other args
   if (argc > 1) {
@@ -59,7 +59,8 @@ error:
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkDelete)
 {
-  MqLinkDelete(MQCTX);
+  SETUP_mqctx;
+  MqLinkDelete(mqctx);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkConnect)
@@ -70,28 +71,33 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkConnect)
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkGetParent)
 {
-  struct MqS * const parent = MqLinkGetParentI(MQCTX);
+  SETUP_mqctx;
+  struct MqS * const parent = MqLinkGetParentI(mqctx);
   MqS2VAL(return_value, parent);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkIsParent)
 {
-  RETURN_BOOL(MqLinkIsParent(MQCTX));
+  SETUP_mqctx;
+  RETURN_BOOL(MqLinkIsParent(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkGetCtxId)
 {
-  RETURN_LONG(MqLinkGetCtxId(MQCTX));
+  SETUP_mqctx;
+  RETURN_LONG(MqLinkGetCtxId(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkIsConnected)
 {
-  RETURN_BOOL(MqLinkIsConnected(MQCTX));
+  SETUP_mqctx;
+  RETURN_BOOL(MqLinkIsConnected(mqctx));
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkGetTargetIdent)
 {
-  RETURN_STRING(MqLinkGetTargetIdent(MQCTX),1);
+  SETUP_mqctx;
+  RETURN_STRING(MqLinkGetTargetIdent(mqctx),1);
 }
 
 /*****************************************************************************/
@@ -102,6 +108,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkGetTargetIdent)
 
 void NS(MqS_Link_Init)(TSRMLS_D) {
 }
+
 
 
 

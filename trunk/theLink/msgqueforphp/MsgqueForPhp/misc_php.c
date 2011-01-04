@@ -87,10 +87,7 @@ enum MqErrorE NS(ProcCall) (
   // throw 'exception' on error
   zend_replace_error_handling(EH_THROW, zend_get_error_exception(TSRMLS_C), &original_error_handling TSRMLS_CC);
   // call function or method
-//MQ_I0
-//printVAL(data->ctor);
-  ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, 
-    param_count, params, 1, NULL TSRMLS_CC);
+  ret = call_user_function_ex(data->function_table, NULL, data->ctor, &result, param_count, params, 1, NULL TSRMLS_CC);
   // clear or save result
   if (result) {
     if (resultP) {
@@ -166,7 +163,7 @@ enum MqErrorE NS(ProcInit) (
     }
     // 4. belongs "object" to local "MqS" instance?
     ce = zend_get_class_entry(*obj TSRMLS_CC);
-    if (instanceof_function(ce, NS(MqS) TSRMLS_CC) && VAL2MqS(*obj) == mqctx) {
+    if (instanceof_function(ce, NS(MqS) TSRMLS_CC) &&  VAL2MqS2(*obj) == mqctx) {
       // YES, no "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallNoArg;
       *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;

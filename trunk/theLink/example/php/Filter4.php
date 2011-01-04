@@ -13,17 +13,12 @@
 
 #$stderr = fopen("php://stderr", "w");
 
-class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent, iFactory {
-  public function __construct() {
+class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
+  public function __construct($tmpl=NULL) {
+    parent::__construct($tmpl);
     $this->ConfigSetIgnoreExit(TRUE);
-    $this->ConfigSetIdent("transFilter");
-    $this->ConfigSetName('Filter4');
     $this->items = array();
     $this->fh = NULL;
-    parent::__construct();
-  }
-  public function Factory() {
-    return new Filter4();
   }
   public function ServerSetup() {
     $ftr = $this->ServiceGetFilter();
@@ -88,6 +83,7 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent, iFact
     $this->SendRETURN();
   }
 }
+FactoryDefault('transFilter', 'Filter4');
 $srv = new Filter4();
 try {
   $srv->LinkCreate($argv);
@@ -98,3 +94,4 @@ try {
 $srv->Exit();
 
 ?>
+

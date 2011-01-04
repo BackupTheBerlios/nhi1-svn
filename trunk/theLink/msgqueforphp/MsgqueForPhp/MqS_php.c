@@ -22,49 +22,26 @@ zend_class_entry *NS(iEvent);
 
 int le_MqS;
 
-static zend_object_value NS(MqS_new)(zend_class_entry *ce TSRMLS_DC)
-{
-  struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
-  zend_object *object;
-  zval retval;
-
-  /* Reuse Zend's generic object creator */
-  Z_OBJVAL(retval) = zend_objects_new(&object, ce TSRMLS_CC);
-  /* When overriding create_object,
-   * properties must be manually initialized */
-  ALLOC_HASHTABLE(object->properties);
-  zend_hash_init(object->properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-  /* Other object initialization may occur here */
-
-  // set configuration data
-  mqctx->setup.Child.fCreate   = MqLinkDefault;
-  mqctx->setup.Parent.fCreate  = MqLinkDefault;
-  MqConfigSetIgnoreThread(mqctx, MQ_YES);
-  TSRMLS_SET_CTX(mqctx->threadData) ;
-
-  // register resources
-  zend_update_property_long(NS(MqS), &retval, ID(__ctx), (long) mqctx TSRMLS_CC);
-
-  return Z_OBJVAL(retval);
-}
-
 static
 PHP_METHOD(MsgqueForPhp_MqS, Exit)
 {
-  MqExit(MQCTX);
+  SETUP_mqctx;
+  MqExit(mqctx);
   RETURN_NULL();
 }
 
 static
 PHP_METHOD(MsgqueForPhp_MqS, Delete)
 {
-  MqContextFree(MQCTX);
+  SETUP_mqctx;
+  MqContextFree(mqctx);
   RETURN_NULL();
 }
 
 static
 PHP_METHOD(MsgqueForPhp_MqS, LogC)
 {
+  SETUP_mqctx;
   char* prefix; int prefixlen;
   char* msg; int msglen;
   long level;
@@ -72,7 +49,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LogC)
 	&prefix, &prefixlen, &level, &msg, &msglen) == FAILURE) {
     RETURN_ERROR("usage: LogC(string: prefix, integer: level, string: message)");
   }
-  MqLogC(MQCTX, prefix, level, msg);
+  MqLogC(mqctx, prefix, level, msg);
 }
 
 static
@@ -113,8 +90,9 @@ PHP_METHOD(MsgqueForPhp_MqS, Init)
 static
 PHP_METHOD(MsgqueForPhp_MqS, __construct)
 {
-  SETUP_mqctx;
-  struct MqS * tmpl;
+  zval *objvar = getThis();
+  struct MqS *mqctx;
+  struct MqS *tmpl;
   zval *ztmpl = NULL;
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|z", &ztmpl) == FAILURE) {
     RETURN_ERROR("usage: MqS(?tmpl?)");
@@ -122,20 +100,29 @@ PHP_METHOD(MsgqueForPhp_MqS, __construct)
   if (ztmpl == NULL || Z_TYPE_P(ztmpl) == IS_NULL) {
     tmpl = NULL;
   } else if (instanceof_function(Z_OBJCE_P(ztmpl), NS(MqS) TSRMLS_CC)) {
-    tmpl = VAL2MqS(ztmpl);
+    VAL2MqS(tmpl, ztmpl);
   } else {
     RETURN_ERROR("usage: MqS(NULL|MqS tmpl)");
   }
 
+  // create context
+  mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), tmpl);
+
+  // set configuration data
+  mqctx->setup.Child.fCreate   = MqLinkDefault;
+  mqctx->setup.Parent.fCreate  = MqLinkDefault;
+  MqConfigSetIgnoreThread(mqctx, MQ_YES);
+  TSRMLS_SET_CTX(mqctx->threadData) ;
+
+  // register resources
+  add_property_resource_ex(objvar, ID2(__ctx), (long) mqctx TSRMLS_CC);
+
   // create link between 'php' and 'MqS'
-  mqctx->self = (MQ_PTR) getThis();
+  mqctx->self = (MQ_PTR) objvar;
 
   //refcount++
   INCR_REG(mqctx->self);
 
-  // copy template data
-  if (tmpl != NULL) MqConfigDup(mqctx, tmpl);
-  
   // add callback's
   CB(ServerSetup)
   CB(ServerCleanup)
@@ -534,10 +521,6 @@ void NS(MqS_Init) (TSRMLS_D)
   // create class "MqS"
   INIT_CLASS_ENTRY(cMqS,"MqS", NS(MqS_functions));
   NS(MqS) = zend_register_internal_class(&cMqS TSRMLS_CC);
-  NS(MqS)->create_object = NS(MqS_new);
-
-  // define additional properties "mqctx" to save the "struct MqS *" pointer
-  zend_declare_property_null(NS(MqS), ID(__ctx), ZEND_ACC_PRIVATE TSRMLS_CC);
 
   // create enum "MqS_WAIT"
   zend_declare_class_constant_long(NS(MqS), ID(WAIT_NO),	  0 TSRMLS_CC);
@@ -571,5 +554,8 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+
+
+
 
 

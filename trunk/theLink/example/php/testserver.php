@@ -11,10 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class TestServer extends MqS implements iServerSetup, iFactory {
-  public function Factory() {
-    return new TestServer();
-  }
+class TestServer extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('GTCX', array(&$this, 'GTCX'));
   }
@@ -33,7 +30,7 @@ class TestServer extends MqS implements iServerSetup, iFactory {
     $this->SendRETURN();
   }
 }
-$srv = new TestServer();
+$srv = FactoryNew('TestServer');
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

@@ -51,17 +51,17 @@ PHP_METHOD(MqSExceptionC,getTxt)
   _get_entry(TXT_PROP, return_value TSRMLS_CC);
 }
 
-inline static MQ_INT GetNumN(zval *this_ptr TSRMLS_DC)
+inline static MQ_INT GetNumN(zval *getThis() TSRMLS_DC)
 {
   return VAL2INT(NUM_PROP);
 }
 
-inline static enum MqErrorE GetCodeN(zval *this_ptr TSRMLS_DC)
+inline static enum MqErrorE GetCodeN(zval *getThis() TSRMLS_DC)
 {
   return VAL2INT(CODE_PROP);
 }
 
-inline static MQ_CST GetTxtN(zval *this_ptr TSRMLS_DC)
+inline static MQ_CST GetTxtN(zval *getThis() TSRMLS_DC)
 {
   return VAL2CST(TXT_PROP);
 }
@@ -137,6 +137,9 @@ void NS(MqSException_Init) (TSRMLS_D) {
   // define additional properties ("message" and "code" is covered by "Exception")
   zend_declare_property_null(MqSExceptionC, ID(num), ZEND_ACC_PROTECTED TSRMLS_CC);
 }
+
+
+
 
 
 

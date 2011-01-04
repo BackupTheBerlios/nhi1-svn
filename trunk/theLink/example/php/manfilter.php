@@ -11,14 +11,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-class ManFilter extends MqS implements iServerSetup, iFactory {
-  public function __construct() {
-    $this->ConfigSetName('filter');
-    parent::__construct();
-  }
-  public function Factory() {
-    return new ManFilter();
-  }
+class ManFilter extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
     $this->ServiceProxy('+EOF');
@@ -35,6 +28,7 @@ class ManFilter extends MqS implements iServerSetup, iFactory {
 }
 $srv = new ManFilter();
 try {
+  $srv->ConfigSetName('filter');
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);
 } catch (Exception $ex) {
@@ -43,3 +37,4 @@ try {
 $srv->Exit();
 
 ?>
+
