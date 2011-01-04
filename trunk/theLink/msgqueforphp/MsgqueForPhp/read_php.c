@@ -76,7 +76,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadL_START)
   SETUP_mqctx;
   MQ_BUF buf = NULL;
   zval *bufZ = NULL;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|o", &bufZ));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|o", &bufZ));
   if (bufZ) {
     CheckType(bufZ, NS(MqBufferS));
     buf = VAL2MqBufferS(bufZ);
@@ -84,8 +84,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadL_START)
   ErrorMqToPhpWithCheck(MqReadL_START(mqctx, buf));
   RETURN_NULL();
 error:
-  RaiseError("usage: ReadL_START(?MqBufferS: buf=NULL?)");
-  return;
+  RETURN_ERROR("usage: ReadL_START(?MqBufferS: buf=NULL?)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadL_END)
@@ -101,7 +100,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadT_START)
   MQ_BUF buf = NULL;
   zval *bufZ = NULL;
   zend_class_entry* bufC;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|O", &bufZ, &bufC));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|O", &bufZ, &bufC));
   if (bufZ) {
     if (!instanceof_function(bufC, NS(MqBufferS) TSRMLS_CC)) goto error;
     buf = VAL2MqBufferS(bufZ);
@@ -109,8 +108,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadT_START)
   ErrorMqToPhpWithCheck(MqReadT_START(mqctx, buf));
   RETURN_NULL();
 error:
-  RaiseError("usage: ReadT_START(?MqBufferS: buf=NULL?)");
-  return;
+  RETURN_ERROR("usage: ReadT_START(?MqBufferS: buf=NULL?)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadT_END)
@@ -152,6 +150,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadUndo)
 
 void NS(MqS_Read_Init)(void) {
 }
+
 
 
 

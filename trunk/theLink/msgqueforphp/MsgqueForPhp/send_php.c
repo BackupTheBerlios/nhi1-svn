@@ -87,10 +87,9 @@ PHP_METHOD(MsgqueForPhp_MqS, SendEND_AND_WAIT)
   SETUP_mqctx;
   long timeout = MQ_TIMEOUT_USER;
   char *token; int tokenlen;
-  if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, 
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, 
       "s|l", &token, &tokenlen, &timeout) == FAILURE) {
-    RaiseError("usage: SendEND_AND_WAIT(string: token, integer: timeout)");
-    return;
+    RETURN_ERROR("usage: SendEND_AND_WAIT(string: token, integer: timeout)");
   }
   ErrorMqToPhpWithCheck(MqSendEND_AND_WAIT(mqctx, token, (MQ_TIME_T)timeout));
   RETURN_NULL();
@@ -105,7 +104,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendEND_AND_CALLBACK)
   MqTokenF tokenF;
   MqTokenDataFreeF tokenDataFreeF;
   // get parameters
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
   // get the callbacks
   ErrorMqToPhpWithCheck (
     NS(ProcInit) (mqctx, callable, &data, &tokenF, &tokenDataFreeF, NULL TSRMLS_CC)
@@ -113,8 +112,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendEND_AND_CALLBACK)
   ErrorMqToPhpWithCheck(MqSendEND_AND_CALLBACK(mqctx, str, tokenF, data, tokenDataFreeF));
   RETURN_NULL();
 error:
-  RaiseError("usage: SendEND_AND_CALLBACK(string: token, string or array: callback)");
-  return;
+  RETURN_ERROR("usage: SendEND_AND_CALLBACK(string: token, string or array: callback)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SendL_START)
@@ -168,6 +166,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendERROR)
 
 void NS(MqS_Send_Init)(void) {
 }
+
 
 
 

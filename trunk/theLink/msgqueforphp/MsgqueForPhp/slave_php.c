@@ -47,8 +47,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveWorker)
   ErrorMqToPhpWithCheck (MqSlaveWorker(mqctx, id, &args));
   RETURN_NULL();
 error:
-  RaiseError("usage: SlaveWorker(integer: id, ...)");
-  return;
+  RETURN_ERROR("usage: SlaveWorker(integer: id, ...)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SlaveCreate)
@@ -56,12 +55,12 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveCreate)
   SETUP_mqctx;
   long id;
   zval *mqs;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "lo", &id, &mqs));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lo", &id, &mqs));
   CheckType(mqs, NS(MqS))
   ErrorMqToPhpWithCheck (MqSlaveCreate(mqctx, id, VAL2MqS(mqs)));
   RETURN_NULL();
 error:
-  RaiseError("usage: SlaveCreate(integer: id, MqS: ctx)");
+  RETURN_ERROR("usage: SlaveCreate(integer: id, MqS: ctx)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SlaveDelete)
@@ -96,6 +95,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveIs)
 
 void NS(MqS_Slave_Init)(TSRMLS_D) {
 }
+
 
 
 

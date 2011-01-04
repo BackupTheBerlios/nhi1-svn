@@ -107,8 +107,7 @@ void NS(MqSException_Raise) (struct MqS* mqctx TSRMLS_DC) {
   zval *MqSExceptionO = NULL;
   MAKE_STD_ZVAL(MqSExceptionO);
   if (object_init_ex(MqSExceptionO, MqSExceptionC) == FAILURE) {
-    RaiseError("unable to initialize 'MqSException' object");
-    return;
+    RETURN_ERROR("unable to initialize 'MqSException' object");
   }
   zend_update_property_string (default_exception_ce, MqSExceptionO, ID(message),  MqErrorGetText  (mqctx) TSRMLS_CC);
   zend_update_property_long   (default_exception_ce, MqSExceptionO, ID(code),	  MqErrorGetCodeI (mqctx) TSRMLS_CC);
@@ -138,6 +137,7 @@ void NS(MqSException_Init) (TSRMLS_D) {
   // define additional properties ("message" and "code" is covered by "Exception")
   zend_declare_property_null(MqSExceptionC, ID(num), ZEND_ACC_PROTECTED TSRMLS_CC);
 }
+
 
 
 

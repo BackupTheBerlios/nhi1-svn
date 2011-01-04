@@ -39,7 +39,7 @@ void NS(MqBufferLAppendZVal)(MQ_BFL bufL, zval* arg TSRMLS_DC) {
 	(apply_func_arg_t) MqBufferLAppendZValArrayItem, bufL TSRMLS_CC);
       break;
     default:
-      RaiseError("invalid argument type");
+      RETURN_ERROR("invalid argument type");
       break;
   }
 }
@@ -199,6 +199,7 @@ enum MqErrorE NS(ProcInit) (
 
 void NS(Misc_Init)(TSRMLS_D) {
 }
+
 
 
 

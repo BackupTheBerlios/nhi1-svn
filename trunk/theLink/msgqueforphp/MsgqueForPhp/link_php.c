@@ -54,8 +54,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkCreateChild)
   ErrorMqToPhpWithCheck (MqLinkCreateChild(mqctx, parent, &args));
   RETURN_NULL();
 error:
-  RaiseError("usage: LinkCreateChild(MqS: parent, ...)");
-  return;
+  RETURN_ERROR("usage: LinkCreateChild(MqS: parent, ...)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, LinkDelete)
@@ -103,6 +102,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkGetTargetIdent)
 
 void NS(MqS_Link_Init)(TSRMLS_D) {
 }
+
 
 
 

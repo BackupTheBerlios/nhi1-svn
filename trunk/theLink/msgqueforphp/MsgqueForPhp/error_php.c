@@ -27,13 +27,12 @@ PHP_METHOD(MsgqueForPhp_MqS, ErrorC)
   char* prefix;  int prefixlen;
   char* message; int messagelen;
   long errnum;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, 
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, 
     "sls", &prefix, &prefixlen, &errnum, &message, &messagelen));
   MqErrorC(MQCTX, prefix, (MQ_INT)errnum, message);
   RETURN_NULL();
 error:
-  RaiseError("usage: ErrorC(string: prefix, integer: errnum, string: message)");
-  return;
+  RETURN_ERROR("usage: ErrorC(string: prefix, integer: errnum, string: message)");
 } 
 
 PHP_METHOD(MsgqueForPhp_MqS, ErrorSet)
@@ -87,6 +86,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ErrorPrint)
 
 void NS(MqS_Error_Init)(TSRMLS_D) {
 }
+
 
 
 

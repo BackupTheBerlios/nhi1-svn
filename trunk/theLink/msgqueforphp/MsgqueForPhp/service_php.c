@@ -33,13 +33,12 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceGetFilter)
   SETUP_mqctx;
   struct MqS * filter;
   long id=0;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|l", &id));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &id));
   ErrorMqToPhpWithCheck(MqServiceGetFilter(mqctx, id, &filter));
   MqS2VAL(return_value,filter);
   return;
 error:
-  RaiseError("usage: ServiceGetFilter(?integer: id=0?)");
-  return;
+  RETURN_ERROR("usage: ServiceGetFilter(?integer: id=0?)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ServiceCreate)
@@ -51,7 +50,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceCreate)
   MqTokenF tokenF;
   MqTokenDataFreeF tokenDataFreeF;
   // get parameters
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
   // get the callbacks
   ErrorMqToPhpWithCheck (
     NS(ProcInit) (mqctx, callable, &data, &tokenF, &tokenDataFreeF, NULL TSRMLS_CC) \
@@ -59,8 +58,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceCreate)
   ErrorMqToPhpWithCheck(MqServiceCreate(mqctx, str, tokenF, data, tokenDataFreeF));
   RETURN_NULL();
 error:
-  RaiseError("usage: ServiceCreate(string: token, string or array: callback)");
-  return;
+  RETURN_ERROR("usage: ServiceCreate(string: token, string or array: callback)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ServiceDelete)
@@ -77,12 +75,11 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceProxy)
   char *str;
   int strlen;
   long id=0;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &str, &strlen, &id));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &str, &strlen, &id));
   ErrorMqToPhpWithCheck(MqServiceProxy(mqctx, str, id));
   RETURN_NULL();
 error:
-  RaiseError("usage: ServiceProxy(string: token, ?integer: id=0?");
-  return;
+  RETURN_ERROR("usage: ServiceProxy(string: token, ?integer: id=0?");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ProcessEvent)
@@ -91,7 +88,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ProcessEvent)
   MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
   enum MqWaitOnEventE wait = MQ_WAIT_NO;
   long arg1=0, arg2=0;
-  PhpErrorCheck(zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "|ll", &arg1, &arg2));
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|ll", &arg1, &arg2));
   if (ZEND_NUM_ARGS() == 1) {
     wait = arg1;
   }
@@ -102,8 +99,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ProcessEvent)
   ErrorMqToPhpWithCheck(MqProcessEvent(mqctx, timeout, wait));
   RETURN_NULL();
 error:
-  RaiseError("usage: ProcessEvent(?integer|MqS::TIMEOUT_(DEFAULT|USER|MAX): timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER): wait?)");
-  return;
+  RETURN_ERROR("usage: ProcessEvent(?integer|MqS::TIMEOUT_(DEFAULT|USER|MAX): timeout?, ?MqS::WAIT_(NO|ONCE|FOREVER): wait?)");
 }
 
 /*****************************************************************************/
@@ -114,6 +110,7 @@ error:
 
 void NS(MqS_Service_Init)(TSRMLS_D) {
 }
+
 
 
 

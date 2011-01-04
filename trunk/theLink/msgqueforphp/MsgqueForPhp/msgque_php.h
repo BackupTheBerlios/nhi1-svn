@@ -71,7 +71,8 @@ extern zend_class_entry *NS(MqBufferS);
   }
 #define PhpErrorCheck(val) if ((val) == FAILURE) goto error
 
-#define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),msg,1 TSRMLS_CC);
+#define RaiseError(msg)	    zend_throw_exception(zend_exception_get_default(TSRMLS_C),(MQ_STR)msg,1 TSRMLS_CC);
+#define RETURN_ERROR(msg)   RaiseError(msg);return;
 
 #define CheckType(val,typ) if (!instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) goto error;
 
@@ -107,8 +108,8 @@ if (nat != NULL) { \
 
 #define ARG2INT(mth,val) \
 long val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
-  RaiseError("usage: " #mth "(integer:" #val ")"); \
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(integer:" #val ")"); \
   return; \
 }
 #define ARG2BYT(mth,val) ARG2INT(mth,val)
@@ -117,8 +118,8 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
 
 #define ARG2DBL(mth,val) \
 double val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "d", &val) == FAILURE) { \
-  RaiseError("usage: " #mth "(double:" #val ")"); \
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(double:" #val ")"); \
   return; \
 }
 #define ARG2FLT(mth,val) ARG2DBL(mth,val)
@@ -126,23 +127,20 @@ if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC,
 
 #define ARG2CST(mth,val) \
 MQ_CST val; int val ## len;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, & val ## len) == FAILURE) { \
-  RaiseError("usage: " #mth "(string:" #val ")"); \
-  return; \
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, & val ## len) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(string:" #val ")"); \
 }
 
 #define ARG2BOL(mth,val) \
 zend_bool val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
-  RaiseError("usage: " #mth "(boolean:" #val ")"); \
-  return; \
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(boolean:" #val ")"); \
 }
 
 #define ARG2OBJ(mth,val) \
 zval *val;\
-if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS() TSRMLS_CC, "o", &val) == FAILURE) { \
-  RaiseError("usage: " #mth "(object:" #val ")"); \
-  return; \
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
 }
 
 /*****************************************************************************/
@@ -189,6 +187,7 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
+
 
 
 

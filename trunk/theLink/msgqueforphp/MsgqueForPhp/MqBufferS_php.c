@@ -68,7 +68,7 @@ PHP_METHOD(MsgqueForPhp_MqBufferS, GetType)
 static
 PHP_METHOD(MsgqueForPhp_MqBufferS, __construct)
 {
-  RaiseError("it is not allowed to create an instance og 'MqBufferS'.");
+  RETURN_ERROR("it is not allowed to create an instance og 'MqBufferS'.");
 }
 
 ZEND_BEGIN_ARG_INFO_EX(no_arg, 0, 0, 0)
@@ -100,8 +100,7 @@ void NS(MqBufferS_New) (zval *return_value, MQ_BUF buf TSRMLS_DC)
 {
   // convert to an object instance
   if (object_init_ex(return_value, NS(MqBufferS)) == FAILURE) {
-    RaiseError("unable to create an 'MqBufferS' instance.");
-    return;
+    RETURN_ERROR("unable to create an 'MqBufferS' instance.");
   }
   // link 'buf' with the object instance
   zend_update_property_long(NS(MqBufferS), return_value, ID(__buf), (long) buf TSRMLS_CC);
@@ -118,6 +117,7 @@ void NS(MqBufferS_Init) (TSRMLS_D) {
   // define additional properties "buf" to save the "struct MqBufferS *" pointer
   zend_declare_property_null(NS(MqBufferS), ID(__buf), ZEND_ACC_PRIVATE TSRMLS_CC);
 }
+
 
 
 

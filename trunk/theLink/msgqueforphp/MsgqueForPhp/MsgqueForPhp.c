@@ -20,14 +20,36 @@ ZEND_DECLARE_MODULE_GLOBALS(MsgqueForPhp)
 /* True global resources - no need for thread safety here */
 //static int le_MsgqueForPhp;
 
+PHP_FUNCTION(FactoryAdd);
+PHP_FUNCTION(FactoryDefault);
+PHP_FUNCTION(FactoryDefaultIdent);
+PHP_FUNCTION(FactoryNew);
+PHP_FUNCTION(FactoryCall);
+
 /* {{{ MsgqueForPhp_functions[]
  *
  * Every user visible function must have an entry in MsgqueForPhp_functions[].
  */
+  
+ZEND_BEGIN_ARG_INFO_EX(no_arg, 0, 0, 0)             
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(FactoryCreate_arg, 0, 0, 2)
+  ZEND_ARG_INFO(0, "ident")
+  ZEND_ARG_INFO(0, "class")
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(FactoryCall_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "ident")
+ZEND_END_ARG_INFO()
 
 const zend_function_entry NS(functions)[] = {
-	/* PHP_FE(confirm_MsgqueForPhp_compiled,	NULL)		// For testing, remove later. */
-	{NULL, NULL, NULL}								/* Must be the last line in MsgqueForPhp_functions[] */
+  PHP_FE(FactoryAdd,		    FactoryCreate_arg)
+  PHP_FE(FactoryDefault,	    FactoryCreate_arg)
+  PHP_FE(FactoryDefaultIdent,	    no_arg)
+  PHP_FE(FactoryNew,		    FactoryCreate_arg)
+  PHP_FE(FactoryCall,		    FactoryCall_arg)
+  {NULL, NULL, NULL}						/* Must be the last line in MsgqueForPhp_functions[] */
 };
 
 /* }}} */
@@ -42,11 +64,11 @@ zend_module_entry MsgqueForPhp_module_entry = {
 	NS(functions),
 	PHP_MINIT(MsgqueForPhp),
 	PHP_MSHUTDOWN(MsgqueForPhp),
-	PHP_RINIT(MsgqueForPhp),		/* Replace with NULL if there's nothing to do at request start */
-	PHP_RSHUTDOWN(MsgqueForPhp),	/* Replace with NULL if there's nothing to do at request end */
+	PHP_RINIT(MsgqueForPhp),	    /* Replace with NULL if there's nothing to do at request start */
+	PHP_RSHUTDOWN(MsgqueForPhp),	    /* Replace with NULL if there's nothing to do at request end */
 	PHP_MINFO(MsgqueForPhp),
 #if ZEND_MODULE_API_NO >= 20010901
-	LIBMSGQUE_VERSION,			/* Replace with version number for your extension */
+	LIBMSGQUE_VERSION,		    /* Replace with version number for your extension */
 #endif
 	STANDARD_MODULE_PROPERTIES
 };
@@ -80,22 +102,25 @@ static void php_MsgqueForPhp_init_globals(zend_MsgqueForPhp_globals *MsgqueForPh
 /* {{{ PHP_MINIT_FUNCTION
  */
 
-void NS(MqS_Init)			(TSRMLS_D);
+void NS(MqS_Init)	    (TSRMLS_D);
 void NS(MqSException_Init)  (TSRMLS_D);
 void NS(MqBufferS_Init)	    (TSRMLS_D);
+void NS(Factory_Init)	    (TSRMLS_D);
 
 PHP_MINIT_FUNCTION(MsgqueForPhp)
 {
   // we need the global variable $php_errormsg to act on errors
   //zend_alter_ini_entry(ID2(track_errors), ID(1), PHP_INI_SYSTEM, PHP_INI_STAGE_STARTUP);
 
-  NS(MqS_Init)			(TSRMLS_C);
+  NS(MqS_Init)		(TSRMLS_C);
   NS(MqSException_Init)	(TSRMLS_C);
   NS(MqBufferS_Init)	(TSRMLS_C);
+  NS(Factory_Init)	(TSRMLS_C);
 
   /* If you have INI entries, uncomment these lines 
   REGISTER_INI_ENTRIES();
   */
+
   return SUCCESS;
 }
 /* }}} */
