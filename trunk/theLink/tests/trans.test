@@ -170,8 +170,8 @@ foreach I [getNum 3] {
       set FTR	[list {*}[getFilter Filter4.$S] {*}$CON1 @ {*}$CON2]
     } \
     -body           {
-      Bg {*}$SRV
-      Bg {*}$FTR
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -203,8 +203,8 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
       set FTR	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
     } \
     -body           {
-      Bg {*}$SRV
-      Bg {*}$FTR
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -240,9 +240,9 @@ test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
       set FT2	[list {*}[getFilter Filter4.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
     } \
     -body           {
-      Bg {*}$SRV
-      Bg {*}$FT1
-      Bg {*}$FT2
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FT1
+      Bg @stdout {*}$FT2
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -292,9 +292,9 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
       set FT2	[list {*}[getFilter Filter4.$S] {*}$CON2 --timeout $env(TS_TIMEOUT) --name FT2 @ {*}$CON3]
     } \
     -body           {
-      Bg {*}$SRV
-      Bg {*}$FT1
-      Bg {*}$FT2
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FT1
+      Bg @stdout {*}$FT2
       foreach {FIRST LAST} [Create $I $CON1] break
       Echo0 $LAST LOGF SendC $TMP
       Echo0 $LAST PRNT SendC T1

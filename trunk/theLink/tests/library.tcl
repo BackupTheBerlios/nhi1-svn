@@ -407,7 +407,6 @@ proc getClient {args} {
 }
 
 proc getATool {arg} {
-    global env
     set RET [list]
 
     # prefix (debugger)
@@ -416,13 +415,13 @@ proc getATool {arg} {
     }
 
     # main executable
-    lappend RET atool $arg
+    lappend RET [file join $::linkbuilddir acmds atool] $arg
 
     # postfix
     lappend RET {*}[getPostfix c]
 
     # startup
-    if {$env(TS_STARTUP_AS) ne "NO"} {
+    if {$::env(TS_STARTUP_AS) ne "NO"} {
       lappend RET {*}$env(TS_STARTUP_AS)
     }
 
@@ -1193,7 +1192,7 @@ proc Setup {num mode com server args} {
       if {$env(TS_SETUP)} {
 	puts "Setup: start server"
       }
-      Bg {*}$sl
+      Bg @stdout {*}$sl
       after $::WAIT
     }
   }
@@ -1344,7 +1343,7 @@ proc Example {config client server args} {
       if {$env(TS_SETUP)} {
 	Print sl
       }
-      Bg {*}$sl
+      Bg @stdout {*}$sl
       after $::WAIT
     }
   }
@@ -1405,9 +1404,9 @@ proc MakeFile {init name} {
   return $RET
 }
 
-proc Bg {args} {
+proc Bg {out args} {
   if {$::env(TS_SETUP)} { Print args }
-  set PID [exec {*}$args >&@stdout &]
+  set PID [exec {*}$args >&$out &]
   if {$::env(TS_SETUP)} { Print PID }
   lappend ::CLEANUP_PID $PID
 }

@@ -95,7 +95,7 @@ finally:
 	}] pyserver.[pid]]
 	## start
 	set UDS [FindFreeFile uds]
-	Bg $PYTHON $pyserver --debug $env(TS_DEBUG) --uds --file $UDS --spawn
+	Bg @stdout $PYTHON $pyserver --debug $env(TS_DEBUG) --uds --file $UDS --spawn
     } \
     -cleanup	{
 	Cleanup

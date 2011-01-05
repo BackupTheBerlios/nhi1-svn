@@ -37,6 +37,8 @@ if test "$PHP_MSGQUEFORPHP" != "no"; then
 
   dnl --with-MsgqueForPhpSrc -> add include path
   PHP_ADD_INCLUDE($PHP_MSGQUEFORPHPSRC)
+  dnl PHP_ADD_LIBPATH($PHP_MSGQUEFORPHP,1)
+  dnl PHP_ADD_LIBRARY(libtmp.la, 1, 1)
  
   dnl PHP_SUBST(MSGQUEFORPHP_SHARED_LIBADD)
   dnl add extension 

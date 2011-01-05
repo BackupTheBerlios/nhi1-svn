@@ -194,6 +194,29 @@ pFactoryCtxItemSet (
   MqConfigUpdateName(context, item->ident);
 }
 
+static enum MqFactoryReturnE
+pFactoryCall (
+  MQ_CST const ident,
+  MQ_PTR const data,
+  MQ_BOL const called,
+  struct MqS ** ctxP
+)
+{
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_OK;
+  struct MqFactoryItemS *item;
+  struct MqS * mqctx;
+  *ctxP = NULL;
+  MqFactoryErrorCheck (ret = MqFactoryItemGet (ident, &item));
+  if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
+    ret = MQ_FACTORY_RETURN_CALL_ERR;
+  }
+  MqConfigUpdateName(mqctx, item->ident);
+  *ctxP = mqctx;
+  item->called = called;
+error:
+  return ret;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                 public                                    */
@@ -369,18 +392,7 @@ MqFactoryCall (
   struct MqS ** ctxP
 )
 {
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_OK;
-  struct MqFactoryItemS *item;
-  struct MqS * mqctx;
-  *ctxP = NULL;
-  MqFactoryErrorCheck (ret = MqFactoryItemGet (ident, &item));
-  if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
-    ret = MQ_FACTORY_RETURN_CALL_ERR;
-  }
-  MqConfigUpdateName(mqctx, item->ident);
-  *ctxP = mqctx;
-error:
-  return ret;
+  return pFactoryCall (ident, data, MQ_YES, ctxP);
 }
 
 enum MqFactoryReturnE
@@ -398,10 +410,9 @@ MqFactoryNew (
 {
   enum MqFactoryReturnE ret;
   *ctxP = NULL;
-  ret = MqFactoryAdd (ident, fCreate, createData, createDatafreeF, 
-			fDelete, deleteData, deleteDatafreeF);
+  ret = MqFactoryAdd (ident, fCreate, createData, createDatafreeF, fDelete, deleteData, deleteDatafreeF);
   if (MqFactoryErrorCheckI(ret)) return ret;
-  return MqFactoryCall (ident, data, ctxP); 
+  return pFactoryCall (ident, data, MQ_NO, ctxP);
 }
 
 MQ_PTR

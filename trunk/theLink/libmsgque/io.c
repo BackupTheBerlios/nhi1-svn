@@ -624,6 +624,8 @@ rescan:
 	// move the options to the end of alfa1, delete options
 	MqBufferLMove(alfa1, &options);
 
+//printULS(alfa1)
+
 	// start the server
 	MqErrorCheck (MqSysServerFork (context, factory, &alfa1, &alfa2, name, idP));
 	// cleanup socket of the child
@@ -668,6 +670,9 @@ rescan:
 
 	// if started from "GenericServer" get the "name" from the "inital-server"
 	if (start_as_pipe == 0) {
+	  if (context->setup.factory && context->setup.factory->called) {
+	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->setup.factory->ident);
+	  }
 	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
 	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
 	}
@@ -681,7 +686,7 @@ rescan:
         {
 int i;
 char ** xarg = argV;
-printLC(name)
+//printLC(name)
 for (i=0; *xarg != NULL; xarg++, i++) {
   MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
 }

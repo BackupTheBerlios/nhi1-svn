@@ -531,6 +531,7 @@ struct MqFactoryDeleteS {
 /// \brief data used to define a factory
 struct MqFactoryItemS {
   MQ_CST ident;			    ///< public known factory name
+  MQ_BOL called;		    ///< was the factory called?
   struct MqFactoryCreateS Create;   ///< object creation function
   struct MqFactoryDeleteS Delete;   ///< object deletion function
 };
