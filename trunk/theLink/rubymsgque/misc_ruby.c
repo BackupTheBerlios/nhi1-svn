@@ -28,8 +28,7 @@ VALUE NS(Rescue) (
   VALUE data
 )
 { 
-  VALUE val = rb_rescue2(proc, data, sRescueError, SELF, rb_eException, (VALUE)0);
-  return val;
+  return rb_rescue2(proc, data, sRescueError, SELF, rb_eException, (VALUE)0);
 }
 
 // ==========================================================================
@@ -93,7 +92,7 @@ void NS(ProcFree) (
   *dataP = NULL;
 }
 
-static enum MqErrorE ProcCopyProc (
+static void ProcCopyProc (
   struct MqS * const mqctx,
   MQ_PTR *dataP
 )
@@ -102,10 +101,9 @@ static enum MqErrorE ProcCopyProc (
   val = rb_funcall(val,id_clone,0,NULL);
   INCR_REF(val);
   *dataP = VAL2PTR(val);
-  return MQ_OK;
 }
 
-static enum MqErrorE ProcCopyMethod (
+static void ProcCopyMethod (
   struct MqS * const mqctx,
   MQ_PTR *dataP
 )
@@ -117,10 +115,9 @@ static enum MqErrorE ProcCopyMethod (
   val = rb_funcall(val,id_bind,1,self);
   INCR_REF(val);
   *dataP = VAL2PTR(val);
-  return MQ_OK;
 }
 
-static enum MqErrorE ProcCopyMethodWithArg (
+static void ProcCopyMethodWithArg (
   struct MqS * const mqctx,
   MQ_PTR *dataP
 )
@@ -131,7 +128,6 @@ static enum MqErrorE ProcCopyMethodWithArg (
   ary = rb_ary_new3(2,SELF,mth);
   INCR_REF(ary);
   *dataP = VAL2PTR(ary);
-  return MQ_OK;
 }
 
 enum MqErrorE NS(ProcInit) (
@@ -167,17 +163,28 @@ enum MqErrorE NS(ProcInit) (
   return MQ_OK;
 }
 
-MQ_BFL NS(argv2bufl) (struct MqBufferLS * args, int argc, VALUE *argv)
+MQ_BFL NS(argv2bufl) (struct MqS * const mqctx, struct MqBufferLS * args, int argc, VALUE *argv)
 {
   if (argc != 0) {
-    int i;
+    int i = 0;
     if (args == NULL) args = MqBufferLCreate (argc);
-    for (i = 0; i < argc; i++, argv++) {
+    
+    if (argc >= 2) {
+      VALUE v = rb_type(argv[1]) == T_ARRAY ? RARRAY_PTR(argv[1])[0] : argv[1];
+      if (!strcmp(VAL2CST(v), MqFactoryCtxIdentGet(mqctx))) {
+	argc--;
+	argv++;
+      }
+    }
+
+    for (i=0; i < argc; i++, argv++) {
       const VALUE argv2 = *argv;
       if (rb_type(argv2) == T_ARRAY) {
-	VALUE arg;
-	while ((arg = rb_ary_shift(argv2)) != Qnil) {
-	  MqBufferLAppendC (args, VAL2CST(arg));
+	int j;
+	const int argv2l = RARRAY_LEN(argv2);
+	VALUE *argv2P = RARRAY_PTR(argv2);
+	for (j=0; j<argv2l; j++, argv2P++) {
+	  MqBufferLAppendC (args, VAL2CST(*argv2P));
 	}
       } else {
 	MqBufferLAppendC (args, VALP2CST(argv));

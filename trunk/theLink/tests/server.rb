@@ -14,7 +14,6 @@ require "rubymsgque"
 
 class Client < MqS
   def initialize
-    ConfigSetFactory(lambda {Client.new})
     ConfigSetBgError(method(:BgError))
     ConfigSetSrvName("test-server")
     #ConfigSetName("client")
@@ -22,7 +21,7 @@ class Client < MqS
   end
   def LinkCreate(debug)
     ConfigSetDebug(debug)
-    super("client", "@", "SELF")
+    super("client", "@", "server")
   end
   def BgError
     master = SlaveGetMaster();
@@ -30,18 +29,6 @@ class Client < MqS
       master.ErrorC("BGERROR", ErrorGetNum(), ErrorGetText());
       master.SendERROR();
     end
-  end
-end
-
-class ClientERR < MqS
-  def initialize
-    ConfigSetSrvName("test-server")
-    ConfigSetName("test-client")
-    super()
-  end
-  def LinkCreate(debug)
-    ConfigSetDebug(debug)
-    super("client", "@", "SELF")
   end
 end
 
@@ -58,19 +45,17 @@ end
 
 class Server < MqS
   attr_reader :cl
-  def initialize
+  def initialize(tmpl = nil)
     #$stderr.puts("initialize-1 -----------" + self.to_s)
     #$stderr.flush
-    ConfigSetName("server")
-    FactoryCtxIdentSet("test-server")
+    super()
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))
-    ConfigSetFactory(lambda {Server.new})
     @buf = nil
-    super()
   end
 
   def ServerCleanup
+#LogC("ServerCleanup", 0, "111\n")
     for i in 0..2
       if @cl[i] != nil
         @cl[i].Delete()
@@ -80,6 +65,7 @@ class Server < MqS
   end
 
   def ServerSetup
+#LogC("ServerSetup", 0, "111\n")
     if (SlaveIs() == false)
 
       # initialize objects
@@ -277,7 +263,7 @@ class Server < MqS
         ConfigSetSrvName(old)
       when "Ident"
         old = FactoryCtxIdentGet()
-        FactoryCtxIdentSet(ReadC())
+        FactoryCtxDefaultSet(ReadC())
         check = LinkGetTargetIdent() == ReadC()
         SendSTART()
         SendC(FactoryCtxIdentGet())
@@ -323,6 +309,8 @@ class Server < MqS
         ConfigSetStartAs(ReadI())
         SendI(ConfigGetStartAs())
         ConfigSetStartAs(old)
+      when "DefaultIdent"
+        SendC(FactoryDefaultIdent())
       else
         ErrorC("CFG1", 1, "invalid command: " + cmd)
     end
@@ -382,10 +370,6 @@ class Server < MqS
         SlaveWorker(id, args)
       when "CREATE2"
         slv = Client.new
-        slv.LinkCreate(ConfigGetDebug())
-        SlaveCreate(id, slv);
-      when "CREATE3"
-        slv = ClientERR.new
         slv.LinkCreate(ConfigGetDebug())
         SlaveCreate(id, slv);
       when "DELETE"
@@ -471,7 +455,7 @@ class Server < MqS
       when "START4" 
         @cl[id].SlaveWorker(0)
       when "START5" 
-        SlaveWorker(id, "--name", "wk-cl-" + id.to_s, "--srvname", "wk-sv-" + id.to_s, "--spawn")
+        SlaveWorker(id, "--name", "wk-cl-" + id.to_s, "--srvname", "wk-sv-" + id.to_s)
       when "STOP" 
         @cl[id].LinkDelete()
       when "SEND" 
@@ -700,7 +684,7 @@ end
 ##    Main
 ##
 
-srv = Server.new
+srv = FactoryNew("server", Server)
 
 begin
   srv.LinkCreate($0,ARGV)
@@ -715,6 +699,3 @@ ensure
 end
 
 # vim: softtabstop=2:tabstop=8:shiftwidth=2:expandtab
-
-
-

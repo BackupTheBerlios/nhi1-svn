@@ -366,7 +366,9 @@ MqMark (
   MqMarkF markF
 )
 {
-  if (context == NULL) return;
+  if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) return;
+
+  MqDLogC(context, 6, "mark CONTEXT\n");
 
   // 1. mark child's
   pLinkMark(context, markF);

@@ -280,8 +280,27 @@ void pSlaveMark (
   if (slave == NULL) return;
   for (i=0; i<slave->used; i++) {
     sctx = slave->slaves[i];
-    if (sctx->self != NULL) (*markF)(sctx->self);
-    MqMark(sctx, markF);
+    if (sctx != NULL) {
+      if (sctx->self != NULL) (*markF)(sctx->self);
+    }
+  }
+}
+
+void
+pSlaveContextDeleteLOCK (
+  struct MqS * const context
+)
+{
+  struct MqLinkSlaveS * const slave = context->link.slave;
+  if (slave != NULL) {
+    struct MqS * ctx;
+    MQ_SIZE i;
+    for (i=0; i<slave->used; i++) {
+      ctx = slave->slaves[i];
+      if (ctx != NULL) {
+	pContextDeleteLOCK (ctx);
+      }
+    }
   }
 }
 
@@ -389,13 +408,3 @@ MqSlaveIs (
 }
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-

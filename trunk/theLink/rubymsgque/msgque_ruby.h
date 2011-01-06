@@ -38,24 +38,22 @@ extern VALUE globalRef;
 #define MQ_CONTEXT_S	    mqctx
 
 #define INCR_REF(val)	    
-//#define INCR_REF(val)	    INCR_REG(val)
-/*
-#define INCR_REF(val)	    if ((val)!=Qnil) { \
-  rb_gc_register_address(&val); \
-  MLVA(MQ_CONTEXT_S, "%p", INCR_REF, (MQ_PTR)val); \
-  MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); \
+
+#define INCR_REF2(val)	    if ((val)!=Qnil) { \
+  rb_gc_register_mark_object(val); \
+  /* rb_gc_register_address(&val); */ \
+  /* MLVA(MQ_CONTEXT_S, "%p", INCR_REF, (MQ_PTR)val); */ \
+  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
 }
-*/
 
 #define DECR_REF(val)	    
-//#define DECR_REF(val)	    DECR_REG(val)
-/*
-#define DECR_REF(val)	    if ((val)!=Qnil) { \
-  MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); \
-  MLVA(MQ_CONTEXT_S, "%p", DECR_REF, (MQ_PTR)val); \
-  rb_gc_unregister_address(&val); \
+
+#define DECR_REF2(val)	    if ((val)!=Qnil) { \
+  /* MVA(MQ_FORMAT_C, val, RSTRING_PTR(rb_obj_as_string(val))); */ \
+  /* MLVA(MQ_CONTEXT_S, "%p", DECR_REF, (MQ_PTR)val); */ \
+  /* rb_gc_unregister_address(&val); */ \
 } \
-*/
+
 
 #define ErrorMqToRuby() NS(MqSException_Raise)(mqctx)
 #define ErrorMqToRubyWithCheck(PROC) \
@@ -108,6 +106,7 @@ void NS(MqS_Config_Init)    (void);
 void NS(MqS_Service_Init)   (void);
 void NS(MqS_Link_Init)	    (void);
 void NS(MqS_Slave_Init)	    (void);
+void NS(MqS_Factory_Init)	    (void);
 void NS(MqS_Sys_Init)	    (void);
 
 void NS(MqSException_Init)  (void);
@@ -126,7 +125,7 @@ void NS(MqSException_Set)   (struct MqS*, VALUE);
 enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
-MQ_BFL NS(argv2bufl)	    (struct MqBufferLS*, int, VALUE*);
+MQ_BFL NS(argv2bufl)	    (struct MqS * const, struct MqBufferLS*, int, VALUE*);
 enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);
 VALUE NS(Rescue)	    (struct MqS * const, VALUE(*)(ANYARGS), VALUE);
 

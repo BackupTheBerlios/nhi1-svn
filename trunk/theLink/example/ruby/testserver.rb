@@ -13,6 +13,10 @@
 require "rubymsgque"
 
 class TestServer < MqS
+  def initialize(tmpl = nil)
+    super(tmpl)
+    ConfigSetServerSetup(method(:ServerConfig))
+  end
   def GTCX
     SendSTART()
     SendI(LinkGetCtxId())
@@ -31,10 +35,8 @@ class TestServer < MqS
     ServiceCreate("GTCX",method(:GTCX))
   end
 end
-srv = TestServer.new
+srv = FactoryNew(TestServer)
 begin
-  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
-  srv.ConfigSetFactory(lambda {TestServer.new})
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex

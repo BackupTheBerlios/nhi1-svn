@@ -22,7 +22,6 @@ srv = MqS.new
 begin
   srv.ConfigSetName("MyMulServer")
   srv.ConfigSetServerSetup(srv.method(:ServerConfig))
-  srv.ConfigSetFactory(lambda {MqS.new})
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex

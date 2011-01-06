@@ -828,9 +828,8 @@ MqLinkCreate (
       } else {
 	if (!strncmp(context->link.alfa->data[0]->cur.C, "SELF", 4)) {
 	  MqBufferLDeleteItem (MQ_ERROR_PANIC, context->link.alfa, 0, 1, MQ_YES);
-	  if (	context->setup.factory != NULL &&  // "factory" available ?
-		  context->setup.factory->Create.fCall != NULL  // constructor available ?
-	      ) {
+	  if (context->setup.factory != NULL) {
+	    // "factory" available ?
 	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->ident), 0);
 	  } else {
 	    MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
@@ -1163,8 +1162,28 @@ pLinkMark (
   if (child == NULL) return;
   for (; child != NULL; child=child->right) {
     cctx = child->context;
-    if (cctx->self != NULL) (*markF)(cctx->self);
-    MqMark (cctx, markF);
+    MqDLogC(cctx, 6, "mark child CONTEXT\n");
+    if (cctx != NULL) {
+      if (cctx->self != NULL) (*markF)(cctx->self);
+      //MqMark (cctx, markF);
+    }
+  }
+}
+
+void
+pLinkContextDeleteLOCK (
+  struct MqS * const context
+)
+{
+  struct pChildS * child = context->link.childs;
+  if (child != NULL) {
+    struct MqS * ctx;
+    for (; child != NULL; child=child->right) {
+      ctx = child->context;
+      if (ctx != NULL) {
+	pContextDeleteLOCK (ctx);
+      }
+    }
   }
 }
 

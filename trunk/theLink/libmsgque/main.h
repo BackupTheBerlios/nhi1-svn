@@ -230,6 +230,15 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
 #  define MqThreadKeyNULL NULL
 #endif // MQ_HAS_THREAD
 
+/*****************************************************************************/
+/*                                                                           */
+/*                                link                                       */
+/*                                                                           */
+/*****************************************************************************/
+
+void pContextDeleteLOCK(struct MqS * const);
+
+
 END_C_DECLS
 
 #endif // MAIN_H

@@ -271,12 +271,12 @@ static enum MqErrorE SysWait (
 }
 
 static enum MqErrorE SysServerFork (
-  struct MqS * const context,	///< [in,out] error handler
-  struct MqFactoryItemS* factory,///< [in,out] server configuration (memroy will be freed)
-  struct MqBufferLS ** argvP,	///< [in] command-line arguments befor #MQ_ALFA
-  struct MqBufferLS ** alfaP,	///< [in] command-line arguments after #MQ_ALFA
-  MQ_CST  name,			///< [in] the name of the process
-  struct MqIdS * idP		///< [out] the process identifer
+  struct MqS * const context,	  ///< [in,out] error handler
+  struct MqFactoryItemS* factory, ///< [in,out] server configuration (memroy will be freed)
+  struct MqBufferLS ** argvP,	  ///< [in] command-line arguments befor #MQ_ALFA
+  struct MqBufferLS ** alfaP,	  ///< [in] command-line arguments after #MQ_ALFA
+  MQ_CST  name,			  ///< [in] the name of the process
+  struct MqIdS * idP		  ///< [out] the process identifer
 )
 {
 #if defined(HAVE_FORK)

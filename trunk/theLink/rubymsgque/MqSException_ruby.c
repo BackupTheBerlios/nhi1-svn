@@ -82,7 +82,7 @@ void NS(MqSException_Set) (struct MqS* mqctx, VALUE ex) {
       MqErrorSAppendC(mqctx, VAL2CST(arg));
     }
   } else {
-    rb_raise(rb_eTypeError, "expect 'Exception' type as argument");
+    rb_exc_raise(ex);
   }
 }
 

@@ -866,169 +866,6 @@ struct MqSetupS {
 
 /*****************************************************************************/
 /*                                                                           */
-/*                             factory-static                                */
-/*                                                                           */
-/*****************************************************************************/
-
-enum MqFactoryReturnE {
-  /* 0 */ MQ_FACTORY_RETURN_OK,
-  /* 1 */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
-  /* 2 */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
-  /* 3 */ MQ_FACTORY_RETURN_CALL_ERR,
-  /* 4 */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
-  /* 5 */ MQ_FACTORY_RETURN_NEW_ERR,
-  /* 6 */ MQ_FACTORY_RETURN_DEFAULT_ERR,
-  /* 7 */ MQ_FACTORY_RETURN_ADD_ERR,
-  /* 8 */ MQ_FACTORY_RETURN_INVALID_IDENT,
-};
-
-MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
-  struct MqFactoryItemS  const * const item
-);
-
-MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
-  struct MqFactoryItemS  const * const item
-);
-
-#define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
-#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
-
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
-  enum MqFactoryReturnE ret
-);
-
-MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
-  enum MqFactoryReturnE ret
-);
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF,
-  MQ_PTR data,
-  struct MqS ** ctxP
-) __attribute__((nonnull(1,2)));
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1,2)));
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopyDefault (
-  MQ_CST           const name
-) __attribute__((nonnull(1)));
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1,2)));
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* item,
-  struct MqS  ** contextP
-);
-
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
-  void
-);
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
-  MQ_CST const ident,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-) __attribute__((nonnull(1)));
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
-  struct MqS * const context,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* item,
-  struct MqS ** contextP
-);
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
-  MQ_CST const name,
-  struct MqFactoryItemS **itemP
-) __attribute__((nonnull(1)));
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactorySetIdent (
-  struct MqS * const context,
-  MQ_CST ident
-);
-
-MQ_EXTERN void MQ_DECL MqFactorySetNew (
-  struct MqS * const context,
-  MQ_CST	    ident,
-  MqFactoryCreateF  fCreate,
-  MQ_PTR	    CreateData,
-  MqTokenDataFreeF  fCreateFree,
-  MqFactoryDeleteF  fDelete,
-  MQ_PTR	    DeleteData,
-  MqTokenDataFreeF  fDeleteFree
-);
-
-MQ_EXTERN void MQ_DECL MqFactorySetItem (
-  struct MqS * const context,
-  struct MqFactoryItemS * const item
-);
-
-MQ_EXTERN void MQ_DECL MqFactorySetDefault (
-  struct MqS * const context,
-  MQ_CST const ident
-);
-
-/// \brief setup the default \e factory pattern
-/// \context
-///
-/// The \e default factory is just a wrapper for #MqContextCreate with additional error management code.
-/// A simple application \e without an application specific \e factory use this configuration.
-MQ_EXTERN enum MqErrorE 
-MQ_DECL MqFactoryCtxDefaultSet (
-  struct MqS * const context,
-  MQ_CST const ident
-);
-
-/*****************************************************************************/
-/*                                                                           */
-/*                           factory-context                                 */
-/*                                                                           */
-/*****************************************************************************/
-
-/// \brief get the \e ident of the \e factory object of the context
-/// \context
-/// \return the \c context.factory.ident value
-/// \attention the \e string is owned by \libmsgque -> do not free !!
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
-  struct MqS const * const context
-) __attribute__((nonnull));
-
-/// \brief set the \e ident of the \e factory object of the context
-/// \context
-/// \param[in] data the factory identifer
-/// \retException
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqFactoryCtxIdentSet (
-  struct MqS * const context,
-  MQ_CST  data
-);
-
-/*****************************************************************************/
-/*                                                                           */
 /*                           create / delete                                 */
 /*                                                                           */
 /*****************************************************************************/
@@ -1432,9 +1269,161 @@ MQ_DECL MqConfigGetSelf (
 /// \endif
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 
+/// \brief get the process \e startup-prefix argument
+/// \return a pointer to the initialization buffer (Only C-API)
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 
 /// \} Mq_Config_C_API
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                    F A C T O R Y - A P I                        ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Factory_C_API Mq_Factory_C_API
+/// \{
+/// \brief object generation and application entry point
+///
+/// The factory is used ...
+
+/*****************************************************************************/
+/*                                                                           */
+/*                            factory-static                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqFactoryReturnE {
+  /* 0 */ MQ_FACTORY_RETURN_OK,
+  /* 1 */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
+  /* 2 */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
+  /* 3 */ MQ_FACTORY_RETURN_CALL_ERR,
+  /* 4 */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
+  /* 5 */ MQ_FACTORY_RETURN_NEW_ERR,
+  /* 6 */ MQ_FACTORY_RETURN_DEFAULT_ERR,
+  /* 7 */ MQ_FACTORY_RETURN_ADD_ERR,
+  /* 8 */ MQ_FACTORY_RETURN_INVALID_IDENT,
+};
+
+MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
+  struct MqFactoryItemS  const * const item
+);
+
+MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
+  struct MqFactoryItemS  const * const item
+);
+
+#define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
+
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
+  enum MqFactoryReturnE ret
+);
+
+MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
+  enum MqFactoryReturnE ret
+);
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF,
+  MQ_PTR data,
+  struct MqS ** ctxP
+) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF
+) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopyDefault (
+  MQ_CST           const name
+) __attribute__((nonnull(1)));
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
+  MQ_CST           const name,
+  MqFactoryCreateF const fCreate,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDatafreeF,
+  MqFactoryDeleteF const fDelete,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDatafreeF
+) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS  ** contextP
+);
+
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
+  void
+);
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
+  MQ_CST const ident,
+  MQ_PTR const data,
+  struct MqS ** ctxP
+) __attribute__((nonnull(1)));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
+  struct MqS * const context,
+  enum MqFactoryE create,
+  struct MqFactoryItemS* item,
+  struct MqS ** contextP
+);
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
+  MQ_CST const name,
+  struct MqFactoryItemS **itemP
+) __attribute__((nonnull(1)));
+
+/*****************************************************************************/
+/*                                                                           */
+/*                           factory-context                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+/// \brief create a copy of the default \e factory pattern using name \e ident
+/// \context
+/// \parem[in] ident new object identifer
+/// \retException
+MQ_EXTERN enum MqErrorE 
+MQ_DECL MqFactoryCtxDefaultSet (
+  struct MqS * const context,
+  MQ_CST const ident
+);
+
+/// \brief get the \e ident of the \e factory object of the context
+/// \context
+/// \return the \c context.factory.ident value or an empty string if no factory is available
+/// \attention the \e string is owned by \libmsgque -> do not free !!
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
+  struct MqS const * const context
+) __attribute__((nonnull));
+
+/// \brief link the object to a new \e factory object identified by \e ident
+/// \context
+/// \param[in] ident the factory identifer to link with
+/// \retException
+MQ_EXTERN enum MqErrorE
+MQ_DECL MqFactoryCtxIdentSet (
+  struct MqS * const context,
+  MQ_CST ident
+);
+
+/// \} Mq_Factory_C_API
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -4690,8 +4679,8 @@ The filter mode is related to a special usage of the \libmsgque software called 
 To define a filter create a \e server with:
  - \RNSC{isServer} or \RNSC{IServerSetup}
  .
-and add a factory interface:
- - \RNSC{IFactory}
+and add a factory:
+ - \RNS{Factory}
  .
 
 Every filter has \b two context one belongs to the \e left command and one belongs to the \e right command: \verbatim

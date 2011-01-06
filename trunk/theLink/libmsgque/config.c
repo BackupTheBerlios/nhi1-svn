@@ -181,8 +181,8 @@ pGcCreate (
       // reason: perl GarbageCollection will delete these "old" context on
       // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
       for (; start < end; start++) {
-	// block all "open" context
-	if (*start != NULL) (*start)->bits.MqContextDelete_LOCK = MQ_YES;
+	// LOCL all "open" context
+	pContextDeleteLOCK(*start);
       }
       // now reset the gc data
       sGcReset(sysgc);
@@ -311,6 +311,28 @@ MqContextFree (
     pGcDelete(context);
   }
 }
+
+void pLinkContextDeleteLOCK (struct MqS * const);
+void pSlaveContextDeleteLOCK (struct MqS * const);
+
+void
+pContextDeleteLOCK (
+  struct MqS * const context
+)
+{
+  if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) return;
+
+  MqDLogC(context,6, "set MqContextDelete_LOCK\n");
+
+  // LOCK the "toplevel" context
+  (context)->bits.MqContextDelete_LOCK = MQ_YES;
+  // a destructor of a static C++ class-object is called on exit -> don't do this
+  (context)->link.bits.onDelete = MQ_YES;
+
+  pLinkContextDeleteLOCK (context);
+  pSlaveContextDeleteLOCK (context);
+}
+
 
 void
 MqContextDelete (
@@ -689,7 +711,6 @@ MqConfigSetServerCleanup (
   MqTokenDataCopyF fCopy
 )
 {
-//MqDLogV(context,__func__,0,"data<%p>\n", data);
   if (context->setup.ServerCleanup.data && context->setup.ServerCleanup.fFree) {
     (*context->setup.ServerCleanup.fFree) (context, &context->setup.ServerCleanup.data);
   }
@@ -994,6 +1015,10 @@ void pSetupMark (
   sSetupMark (context->setup.ServerSetup);
   sSetupMark (context->setup.ServerCleanup);
   sSetupMark (context->setup.BgError);
+  if (context->setup.factory != NULL) {
+    sSetupMark (context->setup.factory->Create);
+    sSetupMark (context->setup.factory->Delete);
+  }
 }
 
 /*****************************************************************************/

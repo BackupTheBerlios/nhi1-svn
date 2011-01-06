@@ -474,7 +474,7 @@ C> (client) use '-h' or '--help' for usage"
 
 test error-10-(daemon) "'--daemon' option in a thread enabled interpreter" \
     -constraints    {has_thread local tcl fork} \
-    -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --daemon} \
+    -body           {Exec {*}[getClient client] --num 1 @ {*}[getServer tcl.pipe ] --daemon xx} \
     -match	    glob \
     -result         {CHILDSTATUS-204-S> (server) \[MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "link.c"

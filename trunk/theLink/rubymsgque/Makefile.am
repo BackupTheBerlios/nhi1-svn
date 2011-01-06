@@ -14,10 +14,11 @@ AM_LIBTOOLFLAGS = --tag=disable-static
 
 pkglib_LTLIBRARIES = rubymsgque.la
 
-rubymsgque_la_SOURCES =	context_ruby.c read_ruby.c send_ruby.c error_ruby.c \
+rubymsgque_la_SOURCES =	msgque_ruby.h context_ruby.c read_ruby.c send_ruby.c error_ruby.c \
 			  MqS_ruby.c MqSException_ruby.c MqBufferS_ruby.c \
 			    misc_ruby.c config_ruby.c service_ruby.c link_ruby.c \
-			      slave_ruby.c sys_ruby.c msgque_ruby.h
+			      slave_ruby.c sys_ruby.c factory_ruby.c
+
 
 # use this if you want to include the libmsgque files into the rubymsgque libraray
 rubymsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(RUBY_CPPFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN

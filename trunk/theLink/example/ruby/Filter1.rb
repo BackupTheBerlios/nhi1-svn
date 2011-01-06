@@ -15,7 +15,6 @@ require "rubymsgque"
 class Filter1 < MqS
   def initialize
     ConfigSetName("filter")
-    ConfigSetFactory(lambda {Filter1.new})
     ConfigSetServerSetup(method(:ServerSetup))
     @data = []
     super()

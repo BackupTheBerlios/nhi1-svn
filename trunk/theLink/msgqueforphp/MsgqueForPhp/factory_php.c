@@ -168,7 +168,7 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
 {
   SETUP_mqctx;
   ARG2CST(FactoryCtxIdentSet,val);
-  MqFactoryCtxIdentSet(mqctx, (MQ_CST) (val));
+  ErrorMqToPhpWithCheck(MqFactoryCtxIdentSet(mqctx, (MQ_CST) (val)));
   RETURN_NULL();
 }
 
@@ -176,7 +176,7 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
 {
   SETUP_mqctx;
   ARG2CST(FactoryCtxIdentSet,val);
-  MqFactoryCtxDefaultSet(mqctx, (MQ_CST) (val));
+  ErrorMqToPhpWithCheck(MqFactoryCtxDefaultSet(mqctx, (MQ_CST) (val)));
   RETURN_NULL();
 }
 

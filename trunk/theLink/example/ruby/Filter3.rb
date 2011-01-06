@@ -13,11 +13,9 @@
 require "rubymsgque"
 
 class Filter3 < MqS
-  def initialize
-    ConfigSetFactory(lambda {Filter3.new})
-    ConfigSetName("Filter3")
+  def initialize(tmpl = nil)
+    super(tmpl)
     ConfigSetServerSetup(method(:ServerSetup))
-    super()
   end
   def ServerSetup
     ftr = ServiceGetFilter()
@@ -27,7 +25,7 @@ class Filter3 < MqS
     ftr.ServiceProxy("+TRT")
   end
 end
-srv = Filter3.new
+srv = FactoryNew(Filter3)
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

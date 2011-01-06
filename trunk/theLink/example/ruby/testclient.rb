@@ -22,7 +22,7 @@ c10 = MqS.new
 c100 = MqS.new
 c101 = MqS.new
 ## setup object link
-c0.LinkCreate("c0",    "--srvname", "s0",  "--debug", ENV['TS_DEBUG'], "@", "ruby", server)
+c0.LinkCreate("c0",    "--srvname", "s0",  "--debug", ENV['TS_DEBUG'], "@", ENV['RUBY'], server)
 #c0.LinkCreate("c0",    "--srvname", "s0",  "--debug", ENV['TS_DEBUG'], "--tcp", "--port", "7777");
 c00.LinkCreateChild(c0,   "c00",   "--name", "c00", "--srvname", "s00")
 c01.LinkCreateChild(c0,	  "c01",   "--name", "c01", "--srvname", "s01")

@@ -37,7 +37,7 @@ static void sMark (void * ctx)
 static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
-  mqctx->setup.Factory.Delete.fCall = NULL;
+  mqctx->setup.factory = NULL;
   mqctx->setup.Event.fCall = NULL;
   mqctx->self = NULL;
   // delete the context
@@ -54,9 +54,21 @@ static enum MqErrorE sEvent (
 }
 
 
-static VALUE new(VALUE class)
+static VALUE new(int argc, VALUE *argv, VALUE class)
 {
-  struct MqS * mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), NULL);
+  struct MqS * mqctx = NULL;
+  struct MqS * tmpl = NULL;
+
+  if (argc < 0 || argc > 1) rb_raise(rb_eArgError, "usage: new(?MqS-Type-Arg?)");
+
+  if (argc == 1 && !NIL_P(argv[0]) ) {
+    CheckType(argv[0], cMqS, "usage: new(?MqS-Type-Arg?)");
+    tmpl = VAL2MqS(argv[0]);
+    //argc-=1;
+    //argv+=1;
+  }
+
+  mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), tmpl);
 
   // create a "ruby" object and link it to the "mqctx" class
   VALUE self = Data_Wrap_Struct(class, sMark, sFree, mqctx);
@@ -71,7 +83,7 @@ static VALUE new(VALUE class)
   MqConfigSetEvent(mqctx,sEvent,NULL,NULL,NULL);
 
   // call "initialize"
-  rb_obj_call_init(self, 0, NULL);
+  rb_obj_call_init(self, argc, argv);
 
   //MqConfigSetEvent (MQCTX, EventLink, NULL, NULL, NULL);
   
@@ -110,7 +122,7 @@ static VALUE USleep(VALUE self, VALUE usec)
 
 static VALUE Init(int argc, VALUE *argv, VALUE self)
 {
-  NS(argv2bufl) (MqInitCreate(), argc, argv);
+  NS(argv2bufl) (NULL, MqInitCreate(), argc, argv);
   return Qnil;
 }
 
@@ -125,7 +137,7 @@ void NS(MqS_Init) (void) {
   // define class MqS
   cMqS = rb_define_class("MqS", rb_cObject);
 
-  rb_define_singleton_method(cMqS, "new",  new,  0);
+  rb_define_singleton_method(cMqS, "new",  new,  -1);
   rb_define_method(cMqS, "Init", Init, -1);
 
   rb_define_method(cMqS, "Exit",    Exit,   0);
@@ -158,6 +170,7 @@ void NS(MqS_Init) (void) {
   NS(MqS_Service_Init)();
   NS(MqS_Link_Init)();
   NS(MqS_Slave_Init)();
+  NS(MqS_Factory_Init)();
 
   globalRef = rb_ary_new();
   rb_gc_register_mark_object(globalRef);

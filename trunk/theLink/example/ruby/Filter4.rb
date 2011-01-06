@@ -14,16 +14,14 @@ require "rubymsgque"
 
 class Filter4 < MqS
   attr_accessor :fh
-  def initialize
+  def initialize(tmpl=nil)
+    super(tmpl)
     ConfigSetIgnoreExit(true)
-    ConfigSetIdent("transFilter")
-    ConfigSetFactory(lambda {Filter4.new})
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))
     ConfigSetEvent(method(:Event))
     @itms = []
     @fh = nil
-    super()
   end
   def ServerCleanup
     ftr = ServiceGetFilter()
@@ -86,6 +84,7 @@ class Filter4 < MqS
     SendRETURN()
   end
 end
+FactoryDefault("transFilter", Filter4)
 srv = Filter4.new
 begin
   srv.LinkCreate($0,ARGV)

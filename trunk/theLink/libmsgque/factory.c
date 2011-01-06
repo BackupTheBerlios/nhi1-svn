@@ -504,7 +504,7 @@ MqFactoryCtxIdentGet (
   struct MqS const * const context
 )
 {
-  return context->setup.factory ? context->setup.factory->ident : "";
+  return context && context->setup.factory ? context->setup.factory->ident : "";
 }
 
 END_C_DECLS

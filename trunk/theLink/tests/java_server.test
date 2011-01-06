@@ -100,7 +100,7 @@ S> (server) found in function "MqLinkDefault" at file "link.c"}
 
 test java-server-X2 {start java server with --daemon} \
     -body       {
-	Exec {*}[getServer java] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
+	Exec {*}[getServer java] --tcp --port [FindFreePort] --daemon xxx
     } \
     -result	{CHILDSTATUS-222-S> (server) [MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden
 S> (server) found in function "sMqCheckArg" at file "link.c"

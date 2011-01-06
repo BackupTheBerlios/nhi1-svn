@@ -421,10 +421,7 @@ pEventCreate (
     // reason: perl GarbageCollection will delete these "old" context on
     // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
     for (; start < end; start++) {
-      // block all "open" context
-      (*start)->bits.MqContextDelete_LOCK = MQ_YES;
-      // a destructor of a static C++ class-object is called on exit -> don't do this
-      (*start)->link.bits.onDelete = MQ_YES;
+      pContextDeleteLOCK(*start);
     }
     // now reset the event data
     sEventReset(sysevent);
@@ -583,8 +580,3 @@ void pEventLog (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
