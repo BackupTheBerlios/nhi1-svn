@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,10 +15,6 @@ ccmsgque \- The CcMsgque Libraray.
 .RI "class \fBIService\fP"
 .br
 .R "Callback for a Service. "
-.ti -1c
-.RI "class \fBIFactory\fP"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP "
 .ti -1c
 .RI "class \fBIServerSetup\fP"
 .br
@@ -47,6 +43,12 @@ ccmsgque \- The CcMsgque Libraray.
 .RI "class \fBMqC\fP"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.ti -1c
+.RI "class \fBMqFactoryCException\fP"
+.br
+.ti -1c
+.RI "class \fBMqFactoryC\fP"
+.br
 .in -1c
 .SH "Detailed Description"
 .PP 

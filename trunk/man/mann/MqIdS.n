@@ -1,4 +1,4 @@
-.TH "MqIdS" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "MqIdS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,7 +10,7 @@ MqIdS \- data type for process/thread identification
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -28,20 +28,20 @@ data type for process/thread identification
 
 This struct is used as storage for the process or the thread identification handle. 
 .PP
-Definition at line 4119 of file msgque.h.
-.SH "Member Data Documentation"
+Definition at line 4303 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "enum \fBMqIdSE\fP \fBMqIdS.type\fP"
+.SS "enum \fBMqIdSE\fP \fBMqIdS::type\fP"
 .PP
 signal type of \fIval\fP data 
 .PP
-Definition at line 4120 of file msgque.h.
-.SS "\fBMQ_IDNT\fP \fBMqIdS.val\fP"
+Definition at line 4304 of file msgque.h.
+.SS "\fBMQ_IDNT\fP \fBMqIdS::val\fP"
 .PP
 process or thread handle 
 .PP
-Definition at line 4121 of file msgque.h.
+Definition at line 4305 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

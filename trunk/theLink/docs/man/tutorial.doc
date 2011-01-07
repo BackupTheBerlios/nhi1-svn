@@ -23,8 +23,8 @@ design rules:
 
 The \lang language binding provide the following basic components:
  - abstract class of the \rself object: \RNS{ContextCreate}
+ - interface: \RNS{Factory} to create a new application instance
  - interface: \RNSC{IServerSetup} and or \RNSC{IServerCleanup} to add server functionality
- - interface: \RNSC{IFactory} to create a new application instance
  - interface: \RNSC{IBgError} to act on asyncrone errors
  - interface: \RNSC{IEvent} to process background events
  - adding and removing \RNS{service} "services"
@@ -43,13 +43,10 @@ An example \b automake configuration file is available in: \c example/\lang/Make
 \dontinclude Makefile.am
 \if C
 \skip	noinst_PROGRAMS
-\until	Filter
+\until	LDADD
 ...
 \skip	MyClient_SOURCES
-\until	MyServer_LDADD
-...
-\skip	INCLUDES
-\until	INCLUDES
+\until	MyServer_SOURCES
 \elseif CC
 \skip	noinst_PROGRAMS
 \until	LDADD
@@ -104,8 +101,8 @@ The \b VisualExpress build environment is located in the directory \c win.
 A \rself server requires the following setup:
  -# file: \c example/\lang/MyServer.\fileextension
  -# an instance of the abstract class \RNS{ContextCreate}
+ -# the interface \RNS{Factory} to create a new application instance
  -# the interface \RNSC{IServerSetup} and or \RNSC{IServerCleanup}
- -# the interface \RNSC{IFactory} to create a new application instance
  .
 The \e minimal server looks like:
 \if CSHARP

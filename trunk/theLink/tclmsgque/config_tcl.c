@@ -26,7 +26,7 @@ enum MqErrorE NS(EventLink) (
 enum MqErrorE NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS * const item,
+  struct MqFactoryS * const item,
   struct MqS ** contextP
 ) {
   struct MqS * mqctx = NULL;
@@ -124,7 +124,7 @@ error2:
 void NS(FactoryDelete) (
   struct MqS * ctx,
   MQ_BOL doFactoryCleanup,
-  struct MqFactoryItemS *item
+  struct MqFactoryS *item
 ) {
   struct TclContextS * tclctx = (struct TclContextS *) ctx;
   enum MqStatusIsE statusIs = tclctx->mqctx.statusIs;
@@ -446,6 +446,7 @@ int NS(ConfigGetStatusIs) (NS_ARGS)
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStatusIs(&tclctx->mqctx)));
   RETURN_TCL
 }
+
 
 
 

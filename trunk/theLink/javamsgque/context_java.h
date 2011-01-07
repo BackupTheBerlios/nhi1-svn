@@ -77,8 +77,8 @@ enum MqErrorE MQ_DECL NS(ProcCall)	(struct MqS * const, MQ_PTR const);
 void          MQ_DECL NS(ProcFree)	(struct MqS const * const, MQ_PTR*);
 void	      MQ_DECL NS(ProcCopy)	(struct MqS * const, MQ_PTR*);
 MQ_PTR		      NS(ProcCreate)	(JNIEnv*, jobject, jclass, jmethodID, jobject);
-void	      MQ_DECL NS(FactoryDelete) (struct MqS *, MQ_BOL, struct MqFactoryItemS* const);
-enum MqErrorE MQ_DECL NS(FactoryCreate) (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS* const, struct MqS**);
+void	      MQ_DECL NS(FactoryDelete) (struct MqS *, MQ_BOL, struct MqFactoryS* const);
+enum MqErrorE MQ_DECL NS(FactoryCreate) (struct MqS * const, enum MqFactoryE, struct MqFactoryS* const, struct MqS**);
 
 
 /*****************************************************************************/

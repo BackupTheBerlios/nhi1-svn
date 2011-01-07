@@ -1,8 +1,8 @@
-.TH "MqFactoryCreateS" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "MqFactoryCreateS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqFactoryCreateS \- function pointer to \fIcreate\fP an object  
+MqFactoryCreateS \- interface for the \fIconstructor\fP  
 
 .PP
 .SH SYNOPSIS
@@ -10,13 +10,13 @@ MqFactoryCreateS \- function pointer to \fIcreate\fP an object
 .PP
 \fC#include <msgque.h>\fP
 .PP
-.SS "Public Attributes"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
 .RI "\fBMqFactoryCreateF\fP \fBfCall\fP"
 .br
-.R "create a new object "
+.R "create a new instance "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBdata\fP"
 .br
@@ -25,39 +25,30 @@ MqFactoryCreateS \- function pointer to \fIcreate\fP an object
 .RI "\fBMqTokenDataFreeF\fP \fBfFree\fP"
 .br
 .R "free additional data pointer "
-.ti -1c
-.RI "\fBMqTokenDataCopyF\fP \fBfCopy\fP"
-.br
-.R "copy additional data pointer "
 .in -1c
 .SH "Detailed Description"
 .PP 
-function pointer to \fIcreate\fP an object 
+interface for the \fIconstructor\fP 
 .PP
-Definition at line 517 of file msgque.h.
-.SH "Member Data Documentation"
+Definition at line 1319 of file msgque.h.
+.SH "Field Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS.data\fP"
+.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS::data\fP"
 .PP
 additional data pointer for the fCall 
 .PP
-Definition at line 519 of file msgque.h.
-.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS.fCall\fP"
+Definition at line 1321 of file msgque.h.
+.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS::fCall\fP"
 .PP
-create a new object 
+create a new instance 
 .PP
-Definition at line 518 of file msgque.h.
-.SS "\fBMqTokenDataCopyF\fP \fBMqFactoryCreateS.fCopy\fP"
-.PP
-copy additional data pointer 
-.PP
-Definition at line 521 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS.fFree\fP"
+Definition at line 1320 of file msgque.h.
+.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS::fFree\fP"
 .PP
 free additional data pointer 
 .PP
-Definition at line 520 of file msgque.h.
+Definition at line 1322 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

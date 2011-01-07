@@ -1,0 +1,531 @@
+.TH "Mq_Factory_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Factory_C_API \- provide an interface to create a new object  
+
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBMqFactoryCreateS\fP"
+.br
+.R "function pointer to \fIcreate\fP an object "
+.ti -1c
+.RI "struct \fBMqFactoryDeleteS\fP"
+.br
+.R "function pointer to \fIdelete\fP an object "
+.ti -1c
+.RI "struct \fBMqFactoryItemS\fP"
+.br
+.R "data used to define a factory "
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMqFactoryErrorCheckI\fP(cmd)   ((cmd) != MQ_FACTORY_RETURN_OK)"
+.br
+.R "check static Factory function return code on error "
+.ti -1c
+.RI "#define \fBMqFactoryErrorCheck\fP(cmd)   if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;"
+.br
+.R "check static Factory function return code on error and goto to error label on error "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef void(* \fBMqFactoryDeleteF\fP )(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, struct \fBMqFactoryItemS\fP *const item)"
+.br
+.R "type of a \fIfactory-object-destructor\fP "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP { \fBMQ_FACTORY_RETURN_OK\fP, \fBMQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED\fP, \fBMQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR\fP, \fBMQ_FACTORY_RETURN_CALL_ERR\fP, \fBMQ_FACTORY_RETURN_ITEM_GET_ERR\fP, \fBMQ_FACTORY_RETURN_NEW_ERR\fP, \fBMQ_FACTORY_RETURN_DEFAULT_ERR\fP, \fBMQ_FACTORY_RETURN_ADD_ERR\fP, \fBMQ_FACTORY_RETURN_INVALID_IDENT\fP }"
+.br
+.R "a static Factory function return this enum as status "
+.ti -1c
+.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
+.br
+.R "the \fIfactory\fP is called to create an object for ... "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetCreateData\fP (struct \fBMqFactoryItemS\fP const *const item)"
+.br
+.R "helper function to return MqFactoryItemS::Create::data "
+.ti -1c
+.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetDeleteData\fP (struct \fBMqFactoryItemS\fP const *const item)"
+.br
+.R "helper function to return MqFactoryItemS::Delete::data "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqFactoryErrorMsg\fP (enum \fBMqFactoryReturnE\fP ret)"
+.br
+.R "convert an static Factory function \fIreturn-status\fP into a human readable \fIerror-message\fP "
+.ti -1c
+.RI "void \fBMqFactoryErrorPanic\fP (enum \fBMqFactoryReturnE\fP ret)"
+.br
+.R "check an static Factory function return code an error and \fIpanic\fP on error "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryNew\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDataFreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDataFreeF, \fBMQ_PTR\fP data, struct \fBMqS\fP **ctxP)"
+.br
+.R "add a new factory interface and create a new top-level object "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryAdd\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDataFreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDataFreeF)"
+.br
+.R "add a new factory interface identified by \fIident\fP "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryDefault\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDatafreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDatafreeF)"
+.br
+.R "add a new \fIdefault\fP factory interface identified by \fIident\fP "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryCopyDefault\fP (\fBMQ_CST\fP const ident)"
+.br
+.R "add a new factory as \fIcopy\fP of the \fIdefault\fP factoty but with a new \fIident\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqFactoryDefaultCreate\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *item, struct \fBMqS\fP **contextP)"
+.br
+.R "the \fIdefault\fP factory constructor function "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqFactoryDefaultIdent\fP (void)"
+.br
+.R "return the identifier of the \fIdefault\fP factory "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryCall\fP (\fBMQ_CST\fP const ident, \fBMQ_PTR\fP const data, struct \fBMqS\fP **ctxP)"
+.br
+.R "call the factory constructor, identified by \fIident\fP, to create a new object "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqFactoryInvoke\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *item, struct \fBMqS\fP **contextP)"
+.br
+.R "call a factory \fIconstructor\fP defined by \fIitem\fP "
+.ti -1c
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryItemGet\fP (\fBMQ_CST\fP const ident, struct \fBMqFactoryItemS\fP **itemP)"
+.br
+.R "call a factory \fIconstructor\fP defined by \fIitem\fP "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqFactoryCtxDefaultSet\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const ident)"
+.br
+.R "create a copy of the default \fIfactory\fP pattern using name \fIident\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBMqFactoryCtxIdentGet\fP (struct \fBMqS\fP const *const context)"
+.br
+.R "get the \fIident\fP of the \fIfactory\fP object of the context "
+.ti -1c
+.RI "enum \fBMqErrorE\fP \fBMqFactoryCtxIdentSet\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP ident)"
+.br
+.R "link the object to a new \fIfactory\fP object identified by \fIident\fP "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "enum \fBMqErrorE\fP(* \fBMqFactoryCreateF\fP )(struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *const item, struct \fBMqS\fP **contextP)"
+.br
+.R "type of a \fIfactory-object-constructor\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+provide an interface to create a new object 
+
+The \fIfactory\fP is an important part of the object management and has the following basic features:
+.IP "1." 4
+create a new object identified by an \fIidentifier\fP or using an already available object as template
+.IP "2." 4
+cleanup and delete an object
+.IP "3." 4
+provide an \fIidentifier\fP for factory lookup and as an unique application name
+.IP "4." 4
+identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a remote context
+.PP
+
+.SH "Define Documentation"
+.PP 
+.SS "#define MqFactoryErrorCheck(cmd)   if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;"
+.PP
+check static Factory function return code on error and goto to error label on error 
+.PP
+Definition at line 1340 of file msgque.h.
+.SS "#define MqFactoryErrorCheckI(cmd)   ((cmd) != MQ_FACTORY_RETURN_OK)"
+.PP
+check static Factory function return code on error 
+.PP
+Definition at line 1337 of file msgque.h.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef void( * \fBMqFactoryDeleteF\fP)(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, struct \fBMqFactoryItemS\fP *const item)"
+.PP
+type of a \fIfactory-object-destructor\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIdoFactoryCleanup\fP was the object created by a factory? \fBMQ_YES\fP or \fBMQ_NO\fP 
+.br
+\fIitem\fP \fIfactory-interface\fP used to destroy the object 
+.RE
+.PP
+
+.PP
+Definition at line 1298 of file msgque.h.
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBMqFactoryE\fP"
+.PP
+the \fIfactory\fP is called to create an object for ... 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_FACTORY_NEW_INIT \fP\fP
+initial object , nothing else is known 
+.TP
+\fB\fIMQ_FACTORY_NEW_CHILD \fP\fP
+create object as a \fIchild\fP of an other object 
+.TP
+\fB\fIMQ_FACTORY_NEW_SLAVE \fP\fP
+create object as a \fIslave\fP of an other object 
+.TP
+\fB\fIMQ_FACTORY_NEW_FORK \fP\fP
+the object is used by a fork process 
+.TP
+\fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
+the object is used by a thread 
+.TP
+\fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
+the object is used as a new filter 
+.PP
+Definition at line 1268 of file msgque.h.
+.SS "enum \fBMqFactoryReturnE\fP"
+.PP
+a static Factory function return this enum as status 
+.PP
+Use the \fBMqFactoryErrorMsg\fP function to convert an static Factory function \fIreturn-status\fP into a human readable \fIerror-message\fP  
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_FACTORY_RETURN_OK \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_CALL_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ITEM_GET_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_NEW_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_DEFAULT_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ADD_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_INVALID_IDENT \fP\fP
+
+.PP
+Definition at line 1255 of file msgque.h.
+.SH "Function Documentation"
+.PP 
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryAdd (\fBMQ_CST\fP const  ident, \fBMqFactoryCreateF\fP const  createCallF, \fBMQ_PTR\fP const  createData, \fBMqTokenDataFreeF\fP const  createDataFreeF, \fBMqFactoryDeleteF\fP const  deleteCallF, \fBMQ_PTR\fP const  deleteData, \fBMqTokenDataFreeF\fP const  deleteDataFreeF)"
+.PP
+add a new factory interface identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP object constructor function 
+.br
+\fIcreateData\fP object constructor data 
+.br
+\fIcreateDataFreeF\fP object constructor data free function 
+.br
+\fIdeleteCallF\fP object constructor function 
+.br
+\fIdeleteData\fP object constructor data 
+.br
+\fIdeleteDataFreeF\fP object constructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryCall (\fBMQ_CST\fP const  ident, \fBMQ_PTR\fP const  data, struct \fBMqS\fP ** ctxP)"
+.PP
+call the factory constructor, identified by \fIident\fP, to create a new object 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier to call 
+.br
+\fIdata\fP environment specific data or \fCNULL\fP 
+.br
+\fIctxP\fP the new created object to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryCopyDefault (\fBMQ_CST\fP const  ident)"
+.PP
+add a new factory as \fIcopy\fP of the \fIdefault\fP factoty but with a new \fIident\fP 
+.PP
+The new factory is an ordinary factory 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqFactoryCtxDefaultSet (struct \fBMqS\fP *const  context, \fBMQ_CST\fP const  ident)"
+.PP
+create a copy of the default \fIfactory\fP pattern using name \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP new object identifer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqFactoryCtxIdentGet (struct \fBMqS\fP const *const  context)"
+.PP
+get the \fIident\fP of the \fIfactory\fP object of the context 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fCcontext.factory.ident\fP value or an empty string if no factory is available 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqFactoryCtxIdentSet (struct \fBMqS\fP *const  context, \fBMQ_CST\fP ident)"
+.PP
+link the object to a new \fIfactory\fP object identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP the factory identifer to link with 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryDefault (\fBMQ_CST\fP const  ident, \fBMqFactoryCreateF\fP const  createCallF, \fBMQ_PTR\fP const  createData, \fBMqTokenDataFreeF\fP const  createDatafreeF, \fBMqFactoryDeleteF\fP const  deleteCallF, \fBMQ_PTR\fP const  deleteData, \fBMqTokenDataFreeF\fP const  deleteDatafreeF)"
+.PP
+add a new \fIdefault\fP factory interface identified by \fIident\fP 
+.PP
+the default factory is always used to create an object if no other factory is available 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP object constructor function 
+.br
+\fIcreateData\fP object constructor data 
+.br
+\fIcreateDatafreeF\fP object constructor data free function 
+.br
+\fIdeleteCallF\fP object constructor function 
+.br
+\fIdeleteData\fP object constructor data 
+.br
+\fIdeleteDatafreeF\fP object constructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SS "enum \fBMqErrorE\fP MqFactoryDefaultCreate (struct \fBMqS\fP *const  tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP * item, struct \fBMqS\fP ** contextP)"
+.PP
+the \fIdefault\fP factory constructor function 
+.PP
+This is an constructor suitable to create \fIC\fP language objects. Other programming languages need ofther default constructors. This constructor will be initialized on library startup using the identifier 'libmsgque' 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItmpl\fP calling object to initialize the configuration data using \fBMqSetupDup\fP 
+.br
+\fIcreate\fP how is the factory constructor used 
+.br
+\fIitem\fP factory interface in use 
+.br
+\fIcontextP\fP the new object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SS "\fBMQ_CST\fP MqFactoryDefaultIdent (void)"
+.PP
+return the identifier of the \fIdefault\fP factory 
+.PP
+.SS "\fBMQ_CST\fP MqFactoryErrorMsg (enum \fBMqFactoryReturnE\fP ret)"
+.PP
+convert an static Factory function \fIreturn-status\fP into a human readable \fIerror-message\fP 
+.PP
+\fBAttention:\fP
+.RS 4
+the string belongs to \fBlibmsgque\fP do \fBnot\fP free the memory 
+.RE
+.PP
+
+.SS "void MqFactoryErrorPanic (enum \fBMqFactoryReturnE\fP ret)"
+.PP
+check an static Factory function return code an error and \fIpanic\fP on error 
+.PP
+.SS "enum \fBMqErrorE\fP MqFactoryInvoke (struct \fBMqS\fP *const  tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP * item, struct \fBMqS\fP ** contextP)"
+.PP
+call a factory \fIconstructor\fP defined by \fIitem\fP 
+.PP
+This is a low-level function to call a factory constructor 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItmpl\fP calling object to initialize the configuration data using \fBMqSetupDup\fP 
+.br
+\fIcreate\fP how is the factory constructor used 
+.br
+\fIitem\fP factory interface in use 
+.br
+\fIcontextP\fP the new object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryItemGet (\fBMQ_CST\fP const  ident, struct \fBMqFactoryItemS\fP ** itemP)"
+.PP
+call a factory \fIconstructor\fP defined by \fIitem\fP 
+.PP
+This is a low-level function to call a factory constructor 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP the factory identifier of the fatory interface 
+.br
+\fIitemP\fP the factory interface 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SS "\fBMQ_PTR\fP MqFactoryItemGetCreateData (struct \fBMqFactoryItemS\fP const *const  item)"
+.PP
+helper function to return MqFactoryItemS::Create::data 
+.PP
+.SS "\fBMQ_PTR\fP MqFactoryItemGetDeleteData (struct \fBMqFactoryItemS\fP const *const  item)"
+.PP
+helper function to return MqFactoryItemS::Delete::data 
+.PP
+.SS "enum \fBMqFactoryReturnE\fP MqFactoryNew (\fBMQ_CST\fP const  ident, \fBMqFactoryCreateF\fP const  createCallF, \fBMQ_PTR\fP const  createData, \fBMqTokenDataFreeF\fP const  createDataFreeF, \fBMqFactoryDeleteF\fP const  deleteCallF, \fBMQ_PTR\fP const  deleteData, \fBMqTokenDataFreeF\fP const  deleteDataFreeF, \fBMQ_PTR\fP data, struct \fBMqS\fP ** ctxP)"
+.PP
+add a new factory interface and create a new top-level object 
+.PP
+This function is a convinient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP object constructor function 
+.br
+\fIcreateData\fP object constructor data 
+.br
+\fIcreateDataFreeF\fP object constructor data free function 
+.br
+\fIdeleteCallF\fP object constructor function 
+.br
+\fIdeleteData\fP object constructor data 
+.br
+\fIdeleteDataFreeF\fP object constructor data free function 
+.br
+\fIdata\fP environment specific data or \fCNULL\fP used by \fIcreateCallF\fP 
+.br
+\fIctxP\fP the new created object to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "enum \fBMqErrorE\fP( * \fBMqFactoryCreateF\fP)(struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *const item, struct \fBMqS\fP **contextP)"
+.PP
+type of a \fIfactory-object-constructor\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItmpl\fP calling object to initialize the configuration data using \fBMqSetupDup\fP 
+.br
+\fIcreate\fP how is the factory constructor used 
+.br
+\fIitem\fP factory interface in use 
+.br
+\fIcontextP\fP the new object 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for libmsgque from the source code.

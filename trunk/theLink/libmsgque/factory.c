@@ -16,7 +16,7 @@
 
 BEGIN_C_DECLS
 
-struct MqFactoryItemS *defaultFactoryItem = NULL;
+struct MqFactoryS *defaultFactoryItem = NULL;
 
 #define pFactoryCmp(s1,s2) strcmp(s1,s2)
 
@@ -27,7 +27,7 @@ struct MqFactoryItemS *defaultFactoryItem = NULL;
 /*****************************************************************************/
 
 static struct pFactorySpaceS {
-  struct MqFactoryItemS *items;	    ///< array of the items
+  struct MqFactoryS *items;	    ///< array of the items
   MQ_SIZE size;			    ///< max possible number of items
   MQ_SIZE used;			    ///< number of used entries in the items
 } space;
@@ -57,7 +57,7 @@ static void sFactorySpaceDelAll (
 void
 FactorySpaceCreate (void)
 {
-  space.items = (struct MqFactoryItemS *) MqSysCalloc (MQ_ERROR_PANIC, SPACE_INIT_SIZE, sizeof (*space.items));
+  space.items = (struct MqFactoryS *) MqSysCalloc (MQ_ERROR_PANIC, SPACE_INIT_SIZE, sizeof (*space.items));
   space.size = SPACE_INIT_SIZE;
   space.used = 1;  // first item is always the default
 
@@ -85,7 +85,7 @@ sFactorySpaceAdd (
   newsize *= 2;
 
   // alloc new space
-  space.items = (struct MqFactoryItemS *)
+  space.items = (struct MqFactoryS *)
 	MqSysRealloc (MQ_ERROR_PANIC, space.items, (newsize * sizeof (*space.items)));
   memset(space.items+space.used, '\0', newsize-space.used);
   space.size = newsize;
@@ -125,7 +125,7 @@ sFactorySpaceDelAll (
       sFactorySpaceDelItem (id);
     }
     // set all items to zero
-    memset(space.items, '\0', space.used * sizeof(struct MqFactoryItemS));
+    memset(space.items, '\0', space.used * sizeof(struct MqFactoryS));
     space.used = 0;
     defaultFactoryItem = NULL;
   }
@@ -138,7 +138,7 @@ pFactoryAddName (
   struct MqFactoryDeleteS Delete
 )
 {
-  struct MqFactoryItemS *find;
+  struct MqFactoryS *find;
 
   if (MqFactoryItemGet(ident,&find) == MQ_FACTORY_RETURN_OK) {
     // item already available, PANIC if callback is NOT equal
@@ -148,7 +148,7 @@ pFactoryAddName (
     // OK, item available and in use ... nothing to do
   } else {
     // item not available, add new one
-    struct MqFactoryItemS *free;
+    struct MqFactoryS *free;
 
     sFactorySpaceAdd (1);
 
@@ -177,8 +177,8 @@ pFactoryMark (
   MqMarkF markF
 )
 {
-	   struct MqFactoryItemS * start = space.items;
-  register struct MqFactoryItemS * end = start + space.used;
+	   struct MqFactoryS * start = space.items;
+  register struct MqFactoryS * end = start + space.used;
   while (start < end--) {
     if (end->Create.data) (*markF)(end->Create.data);
     if (end->Delete.data) (*markF)(end->Delete.data);
@@ -188,7 +188,7 @@ pFactoryMark (
 void 
 pFactoryCtxItemSet (
   struct MqS * const context,
-  struct MqFactoryItemS * const item
+  struct MqFactoryS * const item
 ) {
   context->setup.factory = item;
   MqConfigUpdateName(context, item->ident);
@@ -203,7 +203,7 @@ pFactoryCall (
 )
 {
   enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_OK;
-  struct MqFactoryItemS *item;
+  struct MqFactoryS *item;
   struct MqS * mqctx;
   *ctxP = NULL;
   MqFactoryErrorCheck (ret = MqFactoryItemGet (ident, &item));
@@ -226,11 +226,11 @@ error:
 enum MqFactoryReturnE
 MqFactoryItemGet (
   MQ_CST const ident,
-  struct MqFactoryItemS **itemP
+  struct MqFactoryS **itemP
 )
 {
-	   struct MqFactoryItemS * start = space.items;
-  register struct MqFactoryItemS * end = start + space.used;
+	   struct MqFactoryS * start = space.items;
+  register struct MqFactoryS * end = start + space.used;
   *itemP = NULL;
   if (ident == NULL || *ident == '\0') {
     return MQ_FACTORY_RETURN_INVALID_IDENT;
@@ -248,7 +248,7 @@ enum MqErrorE
 MqFactoryInvoke (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* item,
+  struct MqFactoryS* item,
   struct MqS ** contextP
 )
 {
@@ -367,7 +367,7 @@ enum MqErrorE
 MqFactoryDefaultCreate (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* item,
+  struct MqFactoryS* item,
   struct MqS  ** contextP
 )
 {
@@ -417,7 +417,7 @@ MqFactoryNew (
 
 MQ_PTR
 MqFactoryItemGetCreateData(
-  struct MqFactoryItemS  const * const item
+  struct MqFactoryS  const * const item
 )
 {
   return item->Create.data;
@@ -425,7 +425,7 @@ MqFactoryItemGetCreateData(
 
 MQ_PTR
 MqFactoryItemGetDeleteData(
-  struct MqFactoryItemS  const * const item
+  struct MqFactoryS  const * const item
 )
 {
   return item->Delete.data;
@@ -454,17 +454,17 @@ MQ_CST MqFactoryErrorMsg (
     return "unable to add a new factory";
    case MQ_FACTORY_RETURN_INVALID_IDENT:
     return "invalid identifier, value have to be set to a non-empty string";
-   default:
-    return "nothing";
   }
+  return "nothing";
 }
 
 void MqFactoryErrorPanic (
   enum MqFactoryReturnE ret
 )
 {
-  if (ret != MQ_FACTORY_RETURN_OK)
+  if (ret != MQ_FACTORY_RETURN_OK) {
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryErrorMsg(ret));
+  }
 }
 
 /*****************************************************************************/
@@ -508,4 +508,5 @@ MqFactoryCtxIdentGet (
 }
 
 END_C_DECLS
+
 

@@ -265,8 +265,8 @@ void  NS(MqS_Free)	    ( ClientData );
 
 // from config_tcl.c
 
-void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, struct MqFactoryItemS* );
-enum MqErrorE  NS(FactoryCreate)  ( struct MqS * const, enum MqFactoryE, struct MqFactoryItemS*const, struct MqS **);
+void  NS(FactoryDelete)	    ( struct MqS *, MQ_BOL, struct MqFactoryS* );
+enum MqErrorE  NS(FactoryCreate)  ( struct MqS * const, enum MqFactoryE, struct MqFactoryS*const, struct MqS **);
 enum MqErrorE NS(EventLink) ( struct MqS * const, MQ_PTR const );
 
 // from MqBufferS_tcl.c
@@ -292,6 +292,7 @@ enum MqErrorE   NS(ProcError)	    ( struct TclContextS * const, MQ_CST);
 
 
 #endif // MSGQUE_TCL_H
+
 
 
 

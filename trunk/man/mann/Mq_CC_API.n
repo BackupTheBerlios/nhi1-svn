@@ -1,4 +1,4 @@
-.TH "Mq_CC_API" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_CC_API" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -24,16 +24,16 @@ Mq_CC_API \-
 .in +1c
 
 .ti -1c
-.RI "\fBMq_Config_CC_API\fP"
+.RI "\fBMq_Context_CC_API\fP"
 .br
-.R "configuration of a context  "
+.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
 .PP
 .in +1c
 
 .ti -1c
-.RI "\fBMq_Context_CC_API\fP"
+.RI "\fBMq_Config_CC_API\fP"
 .br
-.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
+.R "configuration of a context  "
 .PP
 .in +1c
 

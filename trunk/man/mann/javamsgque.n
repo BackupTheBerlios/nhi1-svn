@@ -1,4 +1,4 @@
-.TH "javamsgque" n "30 Nov 2010" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -24,10 +24,6 @@ javamsgque \- The \fBJavaMsgque\fP Package.
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP "
 .ti -1c
-.RI "interface \fBIFactory\fP"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetFactory\fP "
-.ti -1c
 .RI "interface \fBIServerCleanup\fP"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP "
@@ -43,6 +39,10 @@ javamsgque \- The \fBJavaMsgque\fP Package.
 .RI "class \fBMqBufferS\fP"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.ti -1c
+.RI "class \fBMqFactoryS< T extends MqS >\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqFactoryS "
 .ti -1c
 .RI "class \fBMqS\fP"
 .br

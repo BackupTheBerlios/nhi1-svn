@@ -1,4 +1,4 @@
-.TH "ccmsgque Tutorial" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The C++ language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBccmsgque\fP object: \fBMqC ctx; MqC *ctx=new MqC()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -50,9 +50,9 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 .nf
 noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilter$(EXEEXT) \
       testserver$(EXEEXT) testclient$(EXEEXT) MyClient$(EXEEXT)  MyServer$(EXEEXT) Filter2$(EXEEXT) \
-        Filter3$(EXEEXT) Filter4$(EXEEXT)
+        Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT)
 
-AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_LINK_WITH_LIBRARY_OBJECT_FILES
+AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_IGNORE_EXTERN
 LDADD = ../../ccmsgque/libtmp.la
 .fi
 .PP
@@ -74,9 +74,9 @@ file: \fCexample/C++/MyServer\fP.cc
 .IP "2." 4
 an instance of the abstract class \fBMqC ctx; MqC *ctx=new MqC()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -87,33 +87,33 @@ The \fIminimal\fP server looks like:
 
 using namespace ccmsgque;
 
-class MyServer : public MqC, public IServerSetup, public IFactory {
+class MyServer : public MqC, public IServerSetup {
+  public:
+    MyServer(MqS *tmpl) : MqC(tmpl) {};
 
-  // service to serve all incomming requests for token 'HLWO'
-  void MyFirstService () {
-    SendSTART();
-    SendC('Hello World');
-    SendRETURN();
-  }
+  private:
+    // service to serve all incomming requests for token 'HLWO'
+    void MyFirstService () {
+      SendSTART();
+      SendC('Hello World');
+      SendRETURN();
+    }
 
-  // factory to create objects
-  MqC* Factory() const {return new MyServer();}
-
-  // define a service as link between the token 'HLWO' and the callback 'MyFirstService'
-  void ServerSetup() {
-    ServiceCreate('HLWO', CallbackF(&MyServer::MyFirstService));
-  }
+    // define a service as link between the token 'HLWO' and the callback 'MyFirstService'
+    void ServerSetup() {
+      ServiceCreate('HLWO', CallbackF(&MyServer::MyFirstService));
+    }
 };
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  static MyServer srv;
+  MyServer *srv = MqFactoryC<MyServer>::New();
   try {
-    srv.LinkCreateVC(argc, argv);
-    srv.ProcessEvent (MQ_WAIT_FOREVER);
+    srv->LinkCreateVC(argc, argv);
+    srv->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    srv.ErrorSet(e);
+    srv->ErrorSet(e);
   }
-  srv.Exit();
+  srv->Exit();
 }
 .fi
 .PP
@@ -238,10 +238,7 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
 using namespace std;
 using namespace ccmsgque;
 
-class manfilter : public MqC, public IFactory {
-    MqC* Factory() const { 
-      return new manfilter(); 
-    }
+class manfilter : public MqC {
   public:
     void fFTR () {
       MqC *ftr = ServiceGetFilter();

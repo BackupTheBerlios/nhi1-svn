@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,10 +42,6 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBConfigSetSrvName\fP (string data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
-.ti -1c
-.RI "void \fBConfigSetIdent\fP (string data)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
 .ti -1c
 .RI "void \fBConfigSetBuffersize\fP (int data)"
 .br
@@ -111,10 +107,6 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
 .ti -1c
-.RI "string \fBConfigGetIdent\fP ()"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP "
-.ti -1c
 .RI "int \fBConfigGetDebug\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
@@ -155,6 +147,22 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .ti -1c
+.RI "int \fBConfigGetStatusIs\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP "
+.ti -1c
+.RI "void \fBFactoryCtxIdentSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.ti -1c
+.RI "string \fBFactoryCtxIdentGet\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.ti -1c
+.RI "void \fBFactoryCtxDefaultSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.ti -1c
 .RI "void \fBExit\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
@@ -167,8 +175,9 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
 .ti -1c
-.RI "void \fBDLogC\fP (int level, string val)"
+.RI "\fBMqS\fP (\fBMqS\fP tmpl)"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
 .ti -1c
 .RI "void \fBErrorC\fP (string proc, int num, string message)"
 .br
@@ -245,6 +254,9 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBLinkConnect\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBLinkConnect\fP "
+.ti -1c
+.RI "void \fBDLogC\fP (int level, string val)"
+.br
 .ti -1c
 .RI "delegate void \fBCallback\fP ()"
 .br
@@ -527,7 +539,12 @@ implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP
 .PP
 .SS "void csmsgque.MqS.DLogC (int level, string val)"
 .PP
-Definition at line 152 of file csmsgque.cs.
+Definition at line 126 of file MqS.cs.
+.SS "static void csmsgque.MqS.Init (params string[] argv)\fC [static, protected]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP 
+.PP
+Definition at line 141 of file MqS.cs.
 
 .SH "Author"
 .PP 

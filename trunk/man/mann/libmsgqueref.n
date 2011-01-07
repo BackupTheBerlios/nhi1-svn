@@ -1,4 +1,4 @@
-.TH "libmsgque" n "30 Nov 2010" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,6 +9,8 @@ libmsgque \- The \fBC\fP \fBApplication-Server\fP and \fBProgramming-Language-Mi
 .SH "INDEX"
 .PP
 \fBCONTEXT API\fP
+.br
+ \fBFACTORY API\fP
 .br
  \fBCONFIG API\fP
 .br
@@ -124,7 +126,7 @@ To delete an application is a difficult task because the \fIlink-target\fP have 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIprefix\fP identify the caller 
+\fIprefix\fP identify the caller (\fBMqExitP\fP only) 
 .br
 \fIctx\fP the context returned by \fBMqContextCreate\fP 
 .RE
@@ -187,13 +189,229 @@ Use the format and the restrictions from \fBMqLogC\fP.
 \fIvar_list\fP a variable argument list object 
 .RE
 .PP
+.SH "FACTORY API"
+.PP
+\fBMqFactoryDefault\fP
+.br
+ \fBMqFactoryDefaultIdent\fP
+.br
+ \fBMqFactoryAdd\fP
+.br
+ \fBMqFactoryNew\fP
+.br
+ \fBMqFactoryCall\fP
+.br
+ \fBMqFactoryCtxIdentSet\fP
+.br
+ \fBMqFactoryCtxIdentGet\fP
+.br
+ \fBMqFactoryCtxDefaultSet\fP
+.br
+.PP
+provide an interface to create a new instance 
+.PP
+The \fIfactory\fP is an important part of the object management and has the following basic features:
+.IP "1." 4
+create a new instance identified by an \fIidentifier\fP or using an already available instance as template
+.IP "2." 4
+cleanup and delete an instance
+.IP "3." 4
+provide an \fIidentifier\fP for factory lookup and as an unique application name
+.IP "4." 4
+identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a remote context
+.PP
+The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistant-Transactions\fP depend on this feature.
+.PP
+The relationsship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complecity of a \fBMqS\fP object will improve the server performance. In future more fields, defind in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
+.SS "MqFactoryDefault(MQ_CST ident, interface...)"
+\fBMqFactoryDefault\fP : add a new \fIdefault-factory-interface\fP identified by \fIident\fP 
+.PP
+The default factory is always used to create an instance if no other factory is available 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP instance constructor function 
+.br
+\fIcreateData\fP instance constructor data 
+.br
+\fIcreateDataFreeF\fP instance constructor data free function 
+.br
+\fIdeleteCallF\fP instance destructor function 
+.br
+\fIdeleteData\fP instance destructor data 
+.br
+\fIdeleteDataFreeF\fP instance destructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/c/Filter4.c\fP:  
+.PP
+.nf
+  MqFactoryDefault ('transFilter', MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL);
+
+.fi
+.PP
+.SS "MQ_CST MqFactoryDefaultIdent()"
+\fBMqFactoryDefaultIdent\fP : return the identifier of the \fIdefault\fP factory 
+.SS "MqFactoryAdd(MQ_CST ident, interface...)"
+\fBMqFactoryAdd\fP : add a new \fIfactory-interface\fP identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP instance constructor function 
+.br
+\fIcreateData\fP instance constructor data 
+.br
+\fIcreateDataFreeF\fP instance constructor data free function 
+.br
+\fIdeleteCallF\fP instance destructor function 
+.br
+\fIdeleteData\fP instance destructor data 
+.br
+\fIdeleteDataFreeF\fP instance destructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/c/Filter5.c\fP:  
+.PP
+.nf
+  MqFactoryAdd ('F1', F1New, NULL, NULL, NULL, NULL, NULL);
+
+.fi
+.PP
+.SS "MqFactoryNew(MQ_CST ident, interface..., MQ_PTR data, struct MqS *ctxP)"
+\fBMqFactoryNew\fP : add a new factory interface and create a new top-level instance 
+.PP
+This function is a convinient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP instance constructor function 
+.br
+\fIcreateData\fP instance constructor data 
+.br
+\fIcreateDataFreeF\fP instance constructor data free function 
+.br
+\fIdeleteCallF\fP instance destructor function 
+.br
+\fIdeleteData\fP instance destructor data 
+.br
+\fIdeleteDataFreeF\fP instance destructor data free function 
+.br
+\fIdata\fP environment specific data or \fCNULL\fP used by \fIcreateCallF\fP 
+.br
+\fIctxP\fP the new created instance to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/c/MyServer.c\fP:  
+.PP
+.nf
+    MqFactoryNew('MyServer', MyServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &ctx)
+
+.fi
+.PP
+.SS "MqFactoryCall(MQ_CST ident, MQ_PTR data, struct MqS *ctxP)"
+\fBMqFactoryCall\fP : call the factory constructor, identified by \fIident\fP, to create a new instance 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier to call 
+.br
+\fIdata\fP environment specific data or \fCNULL\fP 
+.br
+\fIctxP\fP the new created instance to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBMqFactoryReturnE\fP object 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/c/Filter5.c\fP:  
+.PP
+.nf
+  MqFactoryErrorPanic(MqFactoryCall(argv[1], NULL, &ctx));
+
+.fi
+.PP
+.SS "MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
+\fBMqFactoryCtxIdentSet\fP : link the context to a new \fIfactory-interface\fP identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP the factory identifer to link with 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+.SS "MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
+\fBMqFactoryCtxIdentGet\fP : get the \fIident\fP of the \fIfactory-interface\fP used for the context 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fCcontext.factory.ident\fP value or an empty string if no factory is available 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
+.RE
+.PP
+.SS "MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
+\fBMqFactoryCtxDefaultSet\fP : create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP the new factory identifer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBMqInit\fP
 .br
  \fBbuffersize\fP, \fBdebug\fP, \fBtimeout\fP
 .br
- \fBname\fP, \fBsrvname\fP, \fBident\fP
+ \fBname\fP, \fBsrvname\fP
 .br
  \fBisSilent\fP, \fBisString\fP, \fBisServer\fP
 .br
@@ -203,7 +421,7 @@ Use the format and the restrictions from \fBMqLogC\fP.
 .br
  \fBIServerSetup\fP, \fBIServerCleanup\fP
 .br
- \fBIFactory\fP, \fBIBgError\fP, \fBIEvent\fP
+ \fBIBgError\fP, \fBIEvent\fP
 .br
 .PP
 configuration of a context 
@@ -277,12 +495,6 @@ C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIP
 .fi
 .PP
  If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINULL\fP) 
-.SS "ident"
-\fBtype:\fP \fC\fBMQ_CST\fP\fP, \fBget:\fP \fC\fBMqConfigGetIdent\fP (struct \fBMqS\fP *ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIdent\fP (struct \fBMqS\fP *ctx, MQ_CST ident)\fP
-.PP
-set the application identifier 
-.PP
-The \fIapplication-identifier\fP is used to modify the client or filter behaviour depending on the \fIidentifier-value\fP of the \fIremote-context\fP. The \fIidentifier\fP is \fBnot\fP changeable by the user, like the \fBname\fP configuration option, because this is a 'build-in' feature set by the \fIprogrammer\fP. (default: \fINULL\fP) 
 .SS "command-line: --silent"
 \fBtype:\fP \fC\fBMQ_BOL\fP\fP, \fBget:\fP \fC\fBMqConfigGetIsSilent\fP (ctx)\fP , \fBset:\fP \fC\fBMqConfigSetIsSilent\fP (ctx, MQ_BOL bool)\fP
 .PP
@@ -371,7 +583,7 @@ create a new \fIapplication-context\fP as thread, spawn or fork
 .PP
 A new \fIapplication-context\fP is created if:
 .IP "\(bu" 2
-a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from a client. This require: \fBIFactory\fP and \fBIServerSetup\fP
+a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from a client. This require: \fBFACTORY API\fP and \fBIServerSetup\fP
 .IP "\(bu" 2
 a \fIfilter-context\fP create a new \fIfilter-instance\fP 
 .IP "\(bu" 2
@@ -424,28 +636,6 @@ By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
 This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBMqLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
-.SS "interface: MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
-The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
-.PP
-The \fIfactory-interface\fP is used to create a new:
-.IP "\(bu" 2
-\fIapplication-context\fP (C, TCL) or a new \fIclass-instance\fP (C++, C#, JAVA, PYTHON, PERL, VB.NET)
-.IP "\(bu" 2
-\fIserver-child-context\fP or \fIslave-child-context\fP using \fBMqLinkCreateChild\fP
-.IP "\(bu" 2
-\fIserver-parent-context\fP using the \fBstartAs\fP option \fI--thread\fP 
-.IP "\(bu" 2
-\fIslave-worker-context\fP using \fBMqSlaveWorker\fP
-.IP "\(bu" 2
-\fIfilter-parent-context\fP using the \fBstartAs\fP option \fI--fork\fP or \fI--thread\fP 
-.PP
- \fBExample:\fP 
-.PP
-.nf
- MqConfigSetDefaultFactory (ctx); 
-
-.fi
-.PP
 .SS "interface: MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
 A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBMqSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBMqErrorGetNum\fP and \fBMqErrorGetText\fP and can be cleared using \fBMqErrorReset\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
@@ -543,7 +733,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .PP
 
 .IP "\(bu" 2
-a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
+a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBMqProcessEvent\fP together with the \fBMQ_WAIT_FOREVER\fP.
 .PP
@@ -1832,9 +2022,9 @@ The filter mode is related to a special usage of the \fBlibmsgque\fP software ca
 .IP "\(bu" 2
 \fBisServer\fP or \fBIServerSetup\fP
 .PP
-and add a factory interface:
+and add a factory:
 .IP "\(bu" 2
-\fBIFactory\fP
+\fBFACTORY API\fP
 .PP
 Every filter has \fBtwo\fP context one belongs to the \fIleft\fP command and one belongs to the \fIright\fP command: 
 .PP
@@ -2007,9 +2197,8 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
-  MqConfigSetName (ctx, 'MyMulServer');
   MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
-  MqConfigSetDefaultFactory (ctx);
+  MqConfigSetName (ctx, 'MyMulServer');
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
@@ -2084,7 +2273,6 @@ int main (int argc, MQ_CST argv[])
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
   MqConfigSetName (ctx, 'ManFilter');
-  MqConfigSetDefaultFactory (ctx);
   MqConfigSetIsServer (ctx, MQ_YES);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, '+FTR', FTR, NULL, NULL));

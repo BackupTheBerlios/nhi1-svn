@@ -28,10 +28,10 @@
 #define MSGQUE msgque
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-enum MqErrorE SplitFactory (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
-enum MqErrorE CutFactory   (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
-enum MqErrorE SortFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
-enum MqErrorE JoinFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryItemS * const , struct MqS **);
+enum MqErrorE SplitFactory (struct MqS * const, enum MqFactoryE, struct MqFactoryS * const , struct MqS **);
+enum MqErrorE CutFactory   (struct MqS * const, enum MqFactoryE, struct MqFactoryS * const , struct MqS **);
+enum MqErrorE SortFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryS * const , struct MqS **);
+enum MqErrorE JoinFactory  (struct MqS * const, enum MqFactoryE, struct MqFactoryS * const , struct MqS **);
 #endif
 
 /*****************************************************************************/

@@ -21,14 +21,12 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-/** \brief creation of an  \e MqReadS object
- */
+/// \brief constructor of the #MqReadS object
 struct MqReadS* pReadCreate (
   struct MqS * const context
 );
 
-/** \brief deletion of an \e MqReadS object
- */
+/// \brief destructor of the #MqReadS object
 void pReadDelete (
   struct MqReadS ** readP
 ) __attribute__((nonnull));

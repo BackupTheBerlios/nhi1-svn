@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -81,7 +81,7 @@ log a plain string
 .PP
 
 .PP
-Definition at line 4509 of file msgque.h.
+Definition at line 4704 of file msgque.h.
 .SS "#define MqDLogCL(context, level, str)   if (unlikely(debugLevel >= level)) MqLogC(context,__func__,level,str)"
 .PP
 log a plain string using the \fIMqSetDebugLevel\fP definition 
@@ -97,7 +97,7 @@ log a plain string using the \fIMqSetDebugLevel\fP definition
 .PP
 
 .PP
-Definition at line 4516 of file msgque.h.
+Definition at line 4711 of file msgque.h.
 .SS "#define MqDLogV(context, level, fmt,  ...)   if (unlikely(MQ_ERROR_IS_POINTER(context) && context->config.debug >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level 
@@ -120,7 +120,7 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4525 of file msgque.h.
+Definition at line 4720 of file msgque.h.
 .SS "#define MqDLogVL(context, level, fmt,  ...)   if (unlikely(debugLevel >= level)) MqLogV(context,__func__,level,fmt,__VA_ARGS__)"
 .PP
 log a vararg string using formatting and checking for logging level using the \fIMqSetDebugLevel\fP definition 
@@ -143,19 +143,19 @@ the prefix string is the calling function name
 .PP
 
 .PP
-Definition at line 4534 of file msgque.h.
+Definition at line 4729 of file msgque.h.
 .SS "#define MqSetDebugLevel(context)   debugLevel = context->config.debug"
 .PP
 define a variable \fIdebugLevel\fP valid only in the current context 
 .PP
-Definition at line 4503 of file msgque.h.
+Definition at line 4698 of file msgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void MqLogC (struct \fBMqS\fP const *const  ctx, \fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  message)"
 .PP
 write a logging-message to stderr using the internal format 
 .PP
-The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIfalse\fP'\fP using the following format: 
+The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIMQ_NO\fP'\fP using the following format: 
 .PP
 .nf
 
@@ -167,7 +167,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -228,7 +228,7 @@ get the \fItype\fP member from an MqTypeE object in human readable form
 .PP
 \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS::type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -241,11 +241,11 @@ the 3 character name of the \fBMqTypeE\fP without the \fC'MQ_'\fP prefix and the
 .PP
 write a \fIprintf\fP style logging-message to stderr using the internal format 
 .PP
-Use the format and the restrictions from \fBLogC\fP. 
+Use the format and the restrictions from \fBMqLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -259,11 +259,11 @@ Use the format and the restrictions from \fBLogC\fP.
 .PP
 write a \fIvprintf\fP style logging-message to stderr using the internal format 
 .PP
-Use the format and the restrictions from \fBLogC\fP. 
+Use the format and the restrictions from \fBMqLogC\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBContextCreate\fP 
+\fIctx\fP the context returned by \fBMqContextCreate\fP 
 .br
 \fIprefix\fP used to identify the calling function or the environment 
 .br
@@ -277,4 +277,4 @@ Use the format and the restrictions from \fBLogC\fP.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

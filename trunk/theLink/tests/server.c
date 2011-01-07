@@ -1369,7 +1369,7 @@ enum MqErrorE
 ServerFactory (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS * const item,
+  struct MqFactoryS * const item,
   struct MqS **contextP
 )
 { 

@@ -1,0 +1,56 @@
+.TH "Mq_Factory_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mq_Factory_Cs_API \- object generation and application entry point   
+
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBcsmsgque.MqFactoryS< T >\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqFactoryS "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBcsmsgque::MqS.FactoryCtxIdentSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.ti -1c
+.RI "string \fBcsmsgque::MqS.FactoryCtxIdentGet\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.ti -1c
+.RI "void \fBcsmsgque::MqS.FactoryCtxDefaultSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+object generation and application entry point  
+
+The factory is used ...  
+.SH "Function Documentation"
+.PP 
+.SS "void csmsgque.MqS.FactoryCtxDefaultSet (string ident)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP 
+.PP
+Definition at line 278 of file config.cs.
+.SS "string csmsgque.MqS.FactoryCtxIdentGet ()\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP 
+.PP
+Definition at line 272 of file config.cs.
+.SS "void csmsgque.MqS.FactoryCtxIdentSet (string ident)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
+.PP
+Definition at line 266 of file config.cs.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

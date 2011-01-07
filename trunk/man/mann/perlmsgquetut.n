@@ -1,4 +1,4 @@
-.TH "perlmsgque Tutorial" n "30 Nov 2010" "Version 4.8" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The perl language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBperlmsgque\fP object: \fBour $ctx=new MqS()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -57,9 +57,9 @@ file: \fCexample/perl/MyServer.pl\fP
 .IP "2." 4
 an instance of the abstract class \fBour $ctx=new MqS()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -87,15 +87,14 @@ use base qw(Net::PerlMsgque::MqS);
   sub new {
     my $class = shift;
     my $ctx = $class->SUPER::new(@_);
-    $ctx->ConfigSetName('MyServer');
     $ctx->ConfigSetServerSetup(\&ServerSetup);
-    $ctx->ConfigSetFactory(sub {new MyServer()});
+    bless $ctx, $class;
     return $ctx;
   }
 
 package main;
 
-  our $srv = new MyServer();
+  our $srv = Net::PerlMsgque::FactoryNew('MyServer');
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
@@ -243,7 +242,6 @@ package main;
   eval {
     $srv->ConfigSetName('ManFilter');
     $srv->ConfigSetIsServer(1);
-    $srv->ConfigSetFactory(sub {new Net::PerlMsgque::MqS()});
     $srv->LinkCreate(@ARGV);
     $srv->ServiceCreate('+FTR', \&FTRcmd);
     $srv->ServiceProxy('+EOF');

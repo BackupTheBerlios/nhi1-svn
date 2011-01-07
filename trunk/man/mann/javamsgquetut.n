@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "30 Nov 2010" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The JAVA language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBjavamsgque\fP object: \fBMqS ctx=new MqS()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -79,9 +79,9 @@ file: \fCexample/JAVA/MyServer.java\fP
 .IP "2." 4
 an instance of the abstract class \fBMqS ctx=new MqS()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -92,7 +92,12 @@ package example;
 
 import javamsgque.*;
 
-final class MyServer extends MqS implements IServerSetup, IFactory {
+final class MyServer extends MqS implements IServerSetup {
+
+  // Factory Constructor
+  public MyServer(MqS tmpl) {
+    super(tmpl);
+  }
 
   // service to serve all incomming requests for token 'HLWO'
   class MyFirstService implements IService {
@@ -108,14 +113,9 @@ final class MyServer extends MqS implements IServerSetup, IFactory {
     ServiceCreate('HLWO', new MyFirstService());
   }
 
-  // interface to create a new instance
-  public MqS Factory() {
-    return new MyServer();
-  }
-
   public static void main(String[] argv) {
     MqS.Init('java', 'example.MyServer');
-    MyServer srv = new MyServer();
+    MyServer srv = MqFactoryS.New('MyServer', MyServer.class);
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -125,6 +125,7 @@ final class MyServer extends MqS implements IServerSetup, IFactory {
     srv.Exit();
   }
 }
+
 .fi
 .PP
 .PP
@@ -243,9 +244,9 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
 
 package example;
 import javamsgque.*;
-class manfilter extends MqS implements IFactory {
-  public MqS Factory() {
-    return new manfilter();
+class manfilter extends MqS {
+  public manfilter(MqS tmpl) {
+    super(tmpl);
   }
   private static class FTR implements IService {
     public void Service (MqS ctx) throws MqSException {
@@ -259,7 +260,7 @@ class manfilter extends MqS implements IFactory {
     }
   }
   public static void main(String[] argv) {
-    manfilter srv = new manfilter();
+    manfilter srv = MqFactoryS.New('manfilter', manfilter.class);
     try {
       srv.ConfigSetName('filter');
       srv.ConfigSetIsServer(true);
@@ -273,6 +274,7 @@ class manfilter extends MqS implements IFactory {
     srv.Exit();
   }
 }
+
 
 .fi
 .PP

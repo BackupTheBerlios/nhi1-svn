@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_CC_API" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_CC_API" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,52 +86,52 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferAppendC\fP 
 .PP
-Definition at line 211 of file ccmsgque.h.
+Definition at line 205 of file ccmsgque.h.
 .SS "vector<MQ_BINB>* ccmsgque::MqBufferC::GetB () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP 
 .PP
-Definition at line 203 of file ccmsgque.h.
+Definition at line 197 of file ccmsgque.h.
 .SS "void ccmsgque::MqBufferC::GetB (\fBMQ_BIN\fP * outP, \fBMQ_SIZE\fP * sizeP) const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetB\fP 
 .PP
-Definition at line 198 of file ccmsgque.h.
+Definition at line 192 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqBufferC::GetC () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetC\fP 
 .PP
-Definition at line 186 of file ccmsgque.h.
+Definition at line 180 of file ccmsgque.h.
 .SS "\fBMQ_DBL\fP ccmsgque::MqBufferC::GetD () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetD\fP 
 .PP
-Definition at line 179 of file ccmsgque.h.
+Definition at line 173 of file ccmsgque.h.
 .SS "\fBMQ_FLT\fP ccmsgque::MqBufferC::GetF () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetF\fP 
 .PP
-Definition at line 165 of file ccmsgque.h.
+Definition at line 159 of file ccmsgque.h.
 .SS "\fBMQ_INT\fP ccmsgque::MqBufferC::GetI () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetI\fP 
 .PP
-Definition at line 158 of file ccmsgque.h.
+Definition at line 152 of file ccmsgque.h.
 .SS "\fBMQ_BOL\fP ccmsgque::MqBufferC::GetO () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetO\fP 
 .PP
-Definition at line 144 of file ccmsgque.h.
+Definition at line 138 of file ccmsgque.h.
 .SS "\fBMQ_SRT\fP ccmsgque::MqBufferC::GetS () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetS\fP 
 .PP
-Definition at line 151 of file ccmsgque.h.
+Definition at line 145 of file ccmsgque.h.
 .SS "enum \fBMqTypeE\fP ccmsgque::MqBufferC::GetType () const\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferS::type\fP 
 .PP
-Definition at line 132 of file ccmsgque.h.
+Definition at line 126 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqBufferC::GetU () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 \fBReturns:\fP
@@ -141,25 +141,25 @@ handle
 .PP
 
 .PP
-Definition at line 193 of file ccmsgque.h.
+Definition at line 187 of file ccmsgque.h.
 .SS "\fBMQ_WID\fP ccmsgque::MqBufferC::GetW () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetW\fP 
 .PP
-Definition at line 172 of file ccmsgque.h.
+Definition at line 166 of file ccmsgque.h.
 .SS "\fBMQ_BYT\fP ccmsgque::MqBufferC::GetY () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferGetY\fP 
 .PP
-Definition at line 137 of file ccmsgque.h.
+Definition at line 131 of file ccmsgque.h.
 .SS "ccmsgque::MqBufferC::MqBufferC (struct \fBMqBufferS\fP * bufP)\fC [inline, inherited]\fP"
 .PP
-Definition at line 127 of file ccmsgque.h.
+Definition at line 121 of file ccmsgque.h.
 .SS "void ccmsgque::MqBufferC::Reset () const  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqBufferReset\fP 
 .PP
-Definition at line 216 of file ccmsgque.h.
+Definition at line 210 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

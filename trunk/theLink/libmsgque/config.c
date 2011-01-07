@@ -19,7 +19,7 @@
 
 BEGIN_C_DECLS
 
-extern struct MqFactoryItemS *defaultFactoryItem;
+extern struct MqFactoryS *defaultFactoryItem;
 
 #define MQ_CONTEXT_S context
 
@@ -347,7 +347,7 @@ MqContextDelete (
     MqDLogC(context,3,"DELETE protection\n");
     pGcCreate (context);
   } else if (context->setup.factory != NULL) {
-    struct MqFactoryItemS *item = context->setup.factory;
+    struct MqFactoryS *item = context->setup.factory;
     if (item->Delete.fCall != NULL) {
       MQ_BOL doFactoryCleanup = context->link.bits.doFactoryCleanup;
       context->link.bits.doFactoryCleanup = MQ_NO;
@@ -1028,4 +1028,5 @@ void pSetupMark (
 /*****************************************************************************/
 
 END_C_DECLS
+
 

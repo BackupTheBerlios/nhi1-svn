@@ -119,13 +119,13 @@ void MQ_DECL NS(ProcCopy) (struct MqS * const , MQ_PTR*);
 enum MqErrorE MQ_DECL NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS *item,
+  struct MqFactoryS *item,
   struct MqS ** contextP
 );
 void MQ_DECL NS(FactoryDelete)( 
   struct MqS * context, 
   MQ_BOL doFactoryDelete, 
-  struct MqFactoryItemS * const data
+  struct MqFactoryS * const data
 );
 void NS(pErrorFromMq) (struct MqS * const);
 enum MqErrorE ListToMqBufferLS (struct MqS * const, PyObject *, struct MqBufferLS **);

@@ -401,7 +401,7 @@ pIoStartServer (
 ) {
   struct MqS * const context = io->context;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
-  struct MqFactoryItemS * factory = NULL;
+  struct MqFactoryS * factory = NULL;
   struct MqBufferLS * alfa1 = NULL;
   struct MqBufferLS * alfa2 = NULL;
   int start_as_pipe = 0;
@@ -893,4 +893,5 @@ pIoLog (
 #endif
 
 END_C_DECLS
+
 

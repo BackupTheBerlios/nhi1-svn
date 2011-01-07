@@ -1,4 +1,4 @@
-.TH "pymsgque Tutorial" n "30 Nov 2010" "Version 4.8" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque Tutorial" n "7 Jan 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The PYTHON language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBpymsgque\fP object: \fBctx=MqS()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -57,9 +57,9 @@ file: \fCexample/PYTHON/MyServer.py\fP
 .IP "2." 4
 an instance of the abstract class \fBctx=MqS()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -202,8 +202,7 @@ import sys
 from pymsgque import *
 
 class manfilter(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: manfilter())
+  def __init__(self, tmpl=None):
     self.ConfigSetName('ManFilter')
     self.ConfigSetServerSetup(self.ServerSetup)
     self.data = []

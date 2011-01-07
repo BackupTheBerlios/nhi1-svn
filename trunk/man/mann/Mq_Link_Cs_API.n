@@ -1,4 +1,4 @@
-.TH "Mq_Link_Cs_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Link_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -112,7 +112,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .PP
 
 .IP "\(bu" 2
-a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
+a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS.WAIT.FOREVER\fP.
 .PP
@@ -158,7 +158,7 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP
 implement the \fBlibmsgque\fP API object: \fBLinkConnect\fP 
 .PP
-Definition at line 129 of file link.cs.
+Definition at line 131 of file link.cs.
 .SS "void csmsgque.MqS.LinkCreate (params string[] argv)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBLinkCreate\fP 
@@ -168,12 +168,12 @@ Definition at line 90 of file link.cs.
 .PP
 implement the \fBlibmsgque\fP API object: \fBLinkCreateChild\fP 
 .PP
-Definition at line 107 of file link.cs.
+Definition at line 108 of file link.cs.
 .SS "void csmsgque.MqS.LinkDelete ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBLinkDelete\fP 
 .PP
-Definition at line 124 of file link.cs.
+Definition at line 126 of file link.cs.
 .SS "int csmsgque.MqS.LinkGetCtxId ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBLinkGetCtxId\fP 

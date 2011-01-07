@@ -1,4 +1,4 @@
-.TH "Mq_Java_API" n "30 Nov 2010" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Java_API" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -8,6 +8,10 @@ Mq_Java_API \- public libmsgque API
 .SS "Classes"
 
 .in +1c
+.ti -1c
+.RI "class \fBjavamsgque.MqFactoryS< T extends MqS >\fP"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqFactoryS "
 .ti -1c
 .RI "class \fBjavamsgque.MqS\fP"
 .br
@@ -86,6 +90,13 @@ Mq_Java_API \- public libmsgque API
 .RI "\fBMq_Slave_Java_API\fP"
 .br
 .R "create and manage a slave context  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Factory_Java_API\fP"
+.br
+.R "object generation and application entry point  "
 .PP
 
 .in -1c

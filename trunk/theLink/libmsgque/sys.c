@@ -272,7 +272,7 @@ static enum MqErrorE SysWait (
 
 static enum MqErrorE SysServerFork (
   struct MqS * const context,	  ///< [in,out] error handler
-  struct MqFactoryItemS* factory, ///< [in,out] server configuration (memroy will be freed)
+  struct MqFactoryS* factory, ///< [in,out] server configuration (memroy will be freed)
   struct MqBufferLS ** argvP,	  ///< [in] command-line arguments befor #MQ_ALFA
   struct MqBufferLS ** alfaP,	  ///< [in] command-line arguments after #MQ_ALFA
   MQ_CST  name,			  ///< [in] the name of the process
@@ -333,7 +333,7 @@ void MqSysServerThreadMain (
 {
   // save data local
   struct MqS * tmpl  = argP->tmpl;
-  struct MqFactoryItemS * factory = argP->factory;
+  struct MqFactoryS * factory = argP->factory;
   struct MqBufferLS * argv  = argP->argv;
   struct MqBufferLS * alfa  = argP->alfa;
   struct MqS * newctx;
@@ -375,7 +375,7 @@ static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
 
 static enum MqErrorE SysServerThread (
   struct MqS * const context,
-  struct MqFactoryItemS* factory,
+  struct MqFactoryS* factory,
   struct MqBufferLS ** argvP,
   struct MqBufferLS ** alfaP,
   MQ_CST  name,		
@@ -749,4 +749,5 @@ void SysCreate(void) {
 };
 
 END_C_DECLS
+
 

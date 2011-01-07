@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqCException" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqCException" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,36 +45,36 @@ ccmsgque::MqCException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP 
 .PP
-Definition at line 79 of file ccmsgque.h.
+Definition at line 73 of file ccmsgque.h.
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "ccmsgque::MqCException::MqCException (struct \fBMqS\fP *const  context)"
 .PP
 .SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP mytxt)\fC [inline]\fP"
 .PP
-Definition at line 88 of file ccmsgque.h.
+Definition at line 82 of file ccmsgque.h.
 .SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_STR\fP mytxt)\fC [inline]\fP"
 .PP
-Definition at line 90 of file ccmsgque.h.
+Definition at line 84 of file ccmsgque.h.
 .SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP myfunc, \fBMQ_CST\fP myfile, const int myline, \fBMQ_CST\fP mytxt)"
 .PP
 .SS "ccmsgque::MqCException::MqCException (const \fBMqCException\fP & e)\fC [inline]\fP"
 .PP
-Definition at line 94 of file ccmsgque.h.
+Definition at line 88 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqCException::~MqCException ()  throw ()\fC [inline, virtual]\fP"
 .PP
-Definition at line 96 of file ccmsgque.h.
+Definition at line 90 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "virtual enum \fBMqErrorE\fP ccmsgque::MqCException::code () const  throw ()\fC [inline, virtual]\fP"
 .PP
-Definition at line 105 of file ccmsgque.h.
+Definition at line 99 of file ccmsgque.h.
 .SS "virtual \fBMQ_INT\fP ccmsgque::MqCException::num () const  throw ()\fC [inline, virtual]\fP"
 .PP
-Definition at line 102 of file ccmsgque.h.
+Definition at line 96 of file ccmsgque.h.
 .SS "virtual \fBMQ_CST\fP ccmsgque::MqCException::what () const  throw ()\fC [inline, virtual]\fP"
 .PP
-Definition at line 99 of file ccmsgque.h.
+Definition at line 93 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

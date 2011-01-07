@@ -1,0 +1,15 @@
+.TH "csmsgque::MqSFactoryException" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::MqSFactoryException \- 
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+Definition at line 54 of file MqFactoryS.cs.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

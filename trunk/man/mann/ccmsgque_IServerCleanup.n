@@ -1,4 +1,4 @@
-.TH "ccmsgque::IServerCleanup" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IServerCleanup" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,7 +21,7 @@ ccmsgque::IServerCleanup \- implement the \fBlibmsgque\fP API object: \fBMqConfi
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP 
 .PP
-Definition at line 60 of file ccmsgque.h.
+Definition at line 54 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "virtual void ccmsgque::IServerCleanup::ServerCleanup ()\fC [pure virtual]\fP"

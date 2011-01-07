@@ -1,0 +1,81 @@
+.TH "ccmsgque::MqFactoryC" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ccmsgque::MqFactoryC \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <ccmsgque.h>\fP
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBAdd\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static void \fBAdd\fP ()  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static void \fBDefault\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static void \fBDefault\fP ()  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static \fBMQ_CST\fP \fBDefaultIdent\fP ()"
+.br
+.ti -1c
+.RI "static T * \fBCall\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static T * \fBCall\fP ()  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static T * \fBNew\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
+.br
+.ti -1c
+.RI "static T * \fBNew\fP ()  throw (MqFactoryCException)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<typename T> class ccmsgque::MqFactoryC< T >"
+
+.PP
+Definition at line 860 of file ccmsgque.h.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Add ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 925 of file ccmsgque.h.
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Add (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 922 of file ccmsgque.h.
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::Call ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 942 of file ccmsgque.h.
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::Call (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 937 of file ccmsgque.h.
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Default ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 931 of file ccmsgque.h.
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Default (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 928 of file ccmsgque.h.
+.SS "template<typename T > static \fBMQ_CST\fP \fBccmsgque::MqFactoryC\fP< T >::DefaultIdent ()\fC [inline, static]\fP"
+.PP
+Definition at line 934 of file ccmsgque.h.
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::New ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 952 of file ccmsgque.h.
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::New (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+Definition at line 947 of file ccmsgque.h.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for ccmsgque from the source code.

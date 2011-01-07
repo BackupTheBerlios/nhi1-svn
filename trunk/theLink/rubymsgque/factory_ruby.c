@@ -46,7 +46,7 @@ static enum MqErrorE
 FactoryCreate(
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS *item,
+  struct MqFactoryS *item,
   struct MqS  ** mqctxP
 )
 {
@@ -98,7 +98,7 @@ static void
 FactoryDelete(
   struct MqS * mqctx,
   MQ_BOL doFactoryDelete,
-  struct MqFactoryItemS * const item
+  struct MqFactoryS * const item
 )
 {
   MqContextFree (mqctx);

@@ -20,7 +20,7 @@ enum MqErrorE
 NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS *item,
+  struct MqFactoryS *item,
   struct MqS ** contextP
 )
 {
@@ -101,7 +101,7 @@ void MQ_DECL
 NS(FactoryDelete)(
   struct MqS * context,
   MQ_BOL doFactoryDelete,
-  struct MqFactoryItemS * const data
+  struct MqFactoryS * const data
 )
 {
   SETUP_self

@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "30 Nov 2010" "Version 4.8" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The TCL language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBtclmsgque\fP object: \fBset ctx [tclmsgque MqS]\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -57,9 +57,9 @@ file: \fCexample/TCL/MyServer.tcl\fP
 .IP "2." 4
 an instance of the abstract class \fBset ctx [tclmsgque MqS]\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -78,7 +78,7 @@ proc ServerSetup {ctx} {
 
 tclmsgque Main {
   set srv [tclmsgque MqS]
-  $srv ConfigSetFactory
+  $srv ConfigSetName MyServer
   $srv ConfigSetServerSetup ServerSetup
   if {[catch {
     $srv LinkCreate {*}$argv
@@ -208,9 +208,8 @@ proc FTRcmd {ctx} {
   $ctx SendRETURN
 }
 set srv [tclmsgque MqS]
-$srv ConfigSetName ManFilter
 $srv ConfigSetIsServer yes
-$srv ConfigSetFactory
+$srv ConfigSetName ManFilter
 if {[catch {
   $srv LinkCreate {*}$argv
   $srv ServiceCreate '+FTR' FTRcmd

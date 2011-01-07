@@ -9,6 +9,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \section \NS{idx} INDEX
 
 \RNS{context}\n
+\RNS{Factory}\n
 \RNS{config}\n
 \RNS{ClientServerLink}\n
 \RNS{service}\n
@@ -53,7 +54,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \subsection	\NS{SetSelf}				\SetSelf
 Create a \e link between the toplevel object and the \TM object and check
 for the	availability of the following interfaces:
-- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNSC{IFactory}, \RNSC{IBgError}, \RNSC{IEvent}
+- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNS{Factory}, \RNSC{IBgError}, \RNSC{IEvent}
 .
 
 \subsection	\NS{GetSelf}				\GetSelf
@@ -110,15 +111,65 @@ tclmsgque Main {
 \endif
 
 
+\section	\NS{Factory}				FACTORY API
+
+\RNSA{FactoryDefault}\n
+\RNSA{FactoryDefaultIdent}\n
+\RNSA{FactoryAdd}\n
+\RNSA{FactoryNew}\n
+\RNSA{FactoryCall}\n
+\RNSA{FactoryCtxIdentSet}\n
+\RNSA{FactoryCtxIdentGet}\n
+\RNSA{FactoryCtxDefaultSet}\n
+
+\copydoc MqFactory
+
+\function{FactoryDefault,\FactoryDefault}
+
+\b Example from <TT>example/\fileextension/Filter4.\fileextension</TT>:
+\dontinclude Filter4.\fileextension
+\skip FactoryDefault
+\until FactoryDefault
+
+\function{FactoryDefaultIdent,\FactoryDefaultIdent}
+
+\function{FactoryAdd,\FactoryAdd}
+
+\b Example from <TT>example/\fileextension/Filter5.\fileextension</TT>:
+\dontinclude Filter5.\fileextension
+\skip FactoryAdd
+\until FactoryAdd
+
+\function{FactoryNew,\FactoryNew}
+
+\b Example from <TT>example/\fileextension/MyServer.\fileextension</TT>:
+\dontinclude MyServer.\fileextension
+\skip FactoryNew
+\until FactoryNew
+
+\function{FactoryCall,\FactoryCall}
+
+\b Example from <TT>example/\fileextension/Filter5.\fileextension</TT>:
+\dontinclude Filter5.\fileextension
+\skip FactoryCall
+\until FactoryCall
+
+\function{FactoryCtxIdentSet,\FactoryCtxIdentSet}
+
+\function{FactoryCtxIdentGet,\FactoryCtxIdentGet}
+
+\function{FactoryCtxDefaultSet,\FactoryCtxDefaultSet}
+
+
 \section	\NS{config}				CONFIG API
 \RNSA{Init}\n
 \RNSC{buffersize}, \RNSC{debug}, \RNSC{timeout}\n
-\RNSC{name}, \RNSC{srvname}, \RNSC{ident}\n
+\RNSC{name}, \RNSC{srvname}\n
 \RNSC{isSilent}, \RNSC{isString}, \RNSC{isServer}\n
 \RNSC{tcp}, \RNSC{uds}, \RNSC{pipe}\n
 \RNSC{startAs}, \RNSC{daemon}, \RNSC{ignoreExit}\n
 \RNSC{IServerSetup}, \RNSC{IServerCleanup}\n
-\RNSC{IFactory}, \RNSC{IBgError}, \RNSC{IEvent}\n
+\RNSC{IBgError}, \RNSC{IEvent}\n
 
 \copydoc Mq_Config_C_API
 
@@ -141,9 +192,6 @@ tclmsgque Main {
 
 \configsection{srvname, --srvname}
 \copydoc MqConfigS::srvname
-
-\configsection{ident}
-\copydoc MqSetupS::ident
 
 \configsection{isSilent,--silent}
 \copydoc MqConfigS::isSilent
@@ -186,10 +234,6 @@ Read more about how to define a \e callback at \RNS{ServiceCallback}.
 \interface{IServerCleanup}
 \copydetails MqSetupS::ServerCleanup
 Read more about how to define a \e callback at \RNS{ServiceCallback}.
-
-\interface{IFactory}
-\copydetails MqSetupS::Factory
-\b Example: \config_IFactory_example
 
 \interface{IBgError}
 \copydetails MqSetupS::BgError

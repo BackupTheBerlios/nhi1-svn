@@ -1,4 +1,4 @@
-.TH "csmsgque Tutorial" n "30 Nov 2010" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The C# language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBcsmsgque\fP object: \fBMqS ctx=new MqS()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -77,9 +77,9 @@ file: \fCexample/C#/MyServer\fP.cs
 .IP "2." 4
 an instance of the abstract class \fBMqS ctx=new MqS()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -91,11 +91,11 @@ using csmsgque;
 
 namespace example {
 
-  sealed class MyServer : MqS, IServerSetup, IFactory {
+  sealed class MyServer : MqS, IServerSetup {
 
-    // create new intances
-    MqS IFactory.Factory() {
-      return new MyServer();
+    // constructor
+    public MyServer(MqS tmpl) : base(tmpl) {
+      ConfigSetIsServer(true);
     }
 
     // service to serve all incomming requests for token 'HLWO'
@@ -111,7 +111,7 @@ namespace example {
     }
 
     static void Main(string[] argv) {
-      MyServer srv = new MyServer();
+      MyServer srv = MqFactoryS<MyServer>.New();
       try {
         srv.LinkCreate(argv);
         srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -246,9 +246,8 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
 using System;
 using csmsgque;
 namespace example {
-  sealed class manfilter : MqS, IFactory {
-    MqS IFactory.Factory () {
-      return new manfilter();
+  sealed class manfilter : MqS {
+    public manfilter(MqS tmpl) : base(tmpl) {
     }
     void FTR () {
       MqS ftr = ServiceGetFilter();
@@ -260,9 +259,8 @@ namespace example {
       SendRETURN();
     }
     static void Main(string[] argv) {
-      manfilter srv = new manfilter();
+      manfilter srv = MqFactoryS<manfilter>.New('ManFilter');
       try {
-        srv.ConfigSetName('ManFilter');
         srv.ConfigSetIsServer(true);
         srv.LinkCreate(argv);
         srv.ServiceCreate('+FTR', srv.FTR);

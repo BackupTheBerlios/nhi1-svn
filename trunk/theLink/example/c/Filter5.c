@@ -49,7 +49,7 @@ enum MqErrorE
 F1New (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* const item,
+  struct MqFactoryS* const item,
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
@@ -94,7 +94,7 @@ enum MqErrorE
 F2New (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* const item,
+  struct MqFactoryS* const item,
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
@@ -139,7 +139,7 @@ enum MqErrorE
 F3New (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* const item,
+  struct MqFactoryS* const item,
   struct MqS  ** contextP
 ) {
   struct MqS * ctx = MqContextCreate(0, tmpl);
@@ -165,7 +165,7 @@ int main (int argc, MQ_CST argv[])
   MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL);
 
   // call the initial factory to initialize the "config"
-  if ((MqFactoryCall(argv[1], NULL, &ctx)) != MQ_FACTORY_RETURN_OK) goto error;
+  MqFactoryErrorPanic(MqFactoryCall(argv[1], NULL, &ctx));
 
   // call entry point
   MqErrorCheck(MqLinkCreate(ctx, &largv));
@@ -176,3 +176,4 @@ int main (int argc, MQ_CST argv[])
 error:
   MqExit(ctx);
 }
+

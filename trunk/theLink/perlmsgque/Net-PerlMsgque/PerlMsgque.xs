@@ -213,7 +213,7 @@ ThreadExit (
 static enum MqErrorE FactoryCreate (
   struct MqS * const	  tmpl,
   enum MqFactoryE	  create,
-  struct MqFactoryItemS * item,
+  struct MqFactoryS * item,
   struct MqS **		  contextP
 ) {
   struct MqS * mqctx = NULL;
@@ -303,7 +303,7 @@ error2:
 static void FactoryDelete (
   struct MqS * context,
   MQ_BOL doFactoryCleanup,
-  struct MqFactoryItemS * const item
+  struct MqFactoryS * const item
 ) { 
   enum MqStatusIsE statusIs = context->statusIs;
   PerlInterpreter *itp = context->threadData;

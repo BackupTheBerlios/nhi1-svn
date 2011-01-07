@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "30 Nov 2010" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The C language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBlibmsgque\fP object: \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -51,24 +51,17 @@ The example from the tutorial is using the \fBautomake\fP build-environment from
 noinst_PROGRAMS = mulclient mulserver manfilter \
                     testclient testserver \
                       MyClient MyServer \
-                        Filter1 Filter2 Filter3 Filter4
+                        Filter1 Filter2 Filter3 Filter4 Filter5
+
+AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
+LDADD = -lm ../../libmsgque/libtmp.la
 .fi
 .PP
  ... 
 .PP
 .nf
 MyClient_SOURCES = MyClient.c
-MyClient_LDADD = -lm ../../libmsgque/libtmp.la
-
 MyServer_SOURCES = MyServer.c
-MyServer_LDADD = -lm ../../libmsgque/libtmp.la
-
-.fi
-.PP
- ... 
-.PP
-.nf
-INCLUDES = -I$(srcdir)/../../libmsgque
 
 .fi
 .PP
@@ -82,9 +75,9 @@ file: \fCexample/C/MyServer.c\fP
 .IP "2." 4
 an instance of the abstract class \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -101,19 +94,32 @@ static enum MqErrorE MyFirstService (struct MqS *ctx, MQ_PTR data) {
 static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_PTR data) {
   return MqServiceCreate(ctx,'HLWO', MyFirstService, NULL, NULL);
 }
+enum MqErrorE
+MyServerFactory (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryS * const item,
+  struct MqS **contextP
+)
+{ 
+  struct MqS * const ctx = *contextP = MqContextCreate(0,tmpl);
+  MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
+  return MQ_OK;
+}
 int main (int argc, MQ_CST argv[]) 
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
-  struct MqS * ctx = MqContextCreate(0, NULL);
-  MqConfigSetName (ctx, 'MyServer');
-  MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
-  MqConfigSetDefaultFactory (ctx);
+  struct MqS * ctx;
+  MqFactoryErrorPanic (
+    MqFactoryNew('MyServer', MyServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &ctx)
+  );
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));
 error:
   MqExit(ctx);
 }
+
 .fi
 .PP
 .PP
@@ -252,7 +258,6 @@ int main (int argc, MQ_CST argv[])
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
   MqConfigSetName (ctx, 'ManFilter');
-  MqConfigSetDefaultFactory (ctx);
   MqConfigSetIsServer (ctx, MQ_YES);
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqServiceCreate (ctx, '+FTR', FTR, NULL, NULL));

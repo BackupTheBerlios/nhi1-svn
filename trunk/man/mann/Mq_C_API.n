@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,6 +19,13 @@ Mq_C_API \- public libmsgque API
 .RI "\fBMq_Config_C_API\fP"
 .br
 .R "configuration of a context "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Factory_C_API\fP"
+.br
+.R "provide an interface to create a new instance "
 .PP
 .in +1c
 
@@ -120,4 +127,4 @@ propagate the error messages from the server to the client
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for libmsgque from the source code.

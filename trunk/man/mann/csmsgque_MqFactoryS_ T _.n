@@ -1,0 +1,85 @@
+.TH "csmsgque::MqFactoryS< T >" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::MqFactoryS< T > \- implement the \fBlibmsgque\fP API object: MqFactoryS  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBAdd\fP (string ident)"
+.br
+.ti -1c
+.RI "static void \fBAdd\fP ()"
+.br
+.ti -1c
+.RI "static void \fBDefault\fP (string ident)"
+.br
+.ti -1c
+.RI "static void \fBDefault\fP ()"
+.br
+.ti -1c
+.RI "static String \fBDefaultIdent\fP ()"
+.br
+.ti -1c
+.RI "static T \fBNew\fP (string ident)"
+.br
+.ti -1c
+.RI "static T \fBNew\fP ()"
+.br
+.ti -1c
+.RI "static T \fBCall\fP (string ident)"
+.br
+.ti -1c
+.RI "static T \fBCall\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<T> class csmsgque::MqFactoryS< T >"
+implement the \fBlibmsgque\fP API object: MqFactoryS 
+.PP
+\fBType Constraints\fP
+.TP
+\fIT\fP : \fI\fBMqS\fP\fP
+.PP
+Definition at line 70 of file MqFactoryS.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<T > static void csmsgque.MqFactoryS< T >.Add ()\fC [static]\fP"
+.PP
+Definition at line 194 of file MqFactoryS.cs.
+.SS "template<T > static void csmsgque.MqFactoryS< T >.Add (string ident)\fC [static]\fP"
+.PP
+Definition at line 188 of file MqFactoryS.cs.
+.SS "template<T > static T csmsgque.MqFactoryS< T >.Call ()\fC [static]\fP"
+.PP
+Definition at line 244 of file MqFactoryS.cs.
+.SS "template<T > static T csmsgque.MqFactoryS< T >.Call (string ident)\fC [static]\fP"
+.PP
+Definition at line 238 of file MqFactoryS.cs.
+.SS "template<T > static void csmsgque.MqFactoryS< T >.Default ()\fC [static]\fP"
+.PP
+Definition at line 207 of file MqFactoryS.cs.
+.SS "template<T > static void csmsgque.MqFactoryS< T >.Default (string ident)\fC [static]\fP"
+.PP
+Definition at line 200 of file MqFactoryS.cs.
+.SS "template<T > static String csmsgque.MqFactoryS< T >.DefaultIdent ()\fC [static]\fP"
+.PP
+Definition at line 214 of file MqFactoryS.cs.
+.SS "template<T > static T csmsgque.MqFactoryS< T >.New ()\fC [static]\fP"
+.PP
+Definition at line 229 of file MqFactoryS.cs.
+.SS "template<T > static T csmsgque.MqFactoryS< T >.New (string ident)\fC [static]\fP"
+.PP
+Definition at line 220 of file MqFactoryS.cs.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vbmsgque from the source code.

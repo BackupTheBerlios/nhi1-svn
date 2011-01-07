@@ -241,7 +241,7 @@ struct MqBufferS;
 union  MqBufferU;
 struct MqConfigS;
 struct MqEventS;
-struct MqFactoryItemS;
+struct MqFactoryS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -281,7 +281,7 @@ typedef MQ_WID MQ_TIME_T;
 /// handle data-type
 typedef int MQ_HDL;
 
-// "google go" can not uses nested typedef's -> use "#define" for the basic typ's
+// "google go" can not uses nested typedef's -> use "#define" for the basic types
 
 /// pointer basic data-type
 #define MQ_PTRB void
@@ -465,35 +465,6 @@ typedef void ( MQ_DECL
   MQ_CST 		///< the basename of the tool
 ) __attribute__ ((noreturn));
 
-/// \brief the \e factory is called to create an object for ...
-enum MqFactoryE {
-  MQ_FACTORY_NEW_INIT	= 0,
-  MQ_FACTORY_NEW_CHILD	= 1,
-  MQ_FACTORY_NEW_SLAVE	= 2,
-  MQ_FACTORY_NEW_FORK	= 3,
-  MQ_FACTORY_NEW_THREAD	= 4,
-  MQ_FACTORY_NEW_FILTER	= 5
-};
-
-/// \brief prototype for a Object-Creation factory function
-typedef enum MqErrorE ( MQ_DECL
-  *MqFactoryCreateF
-) (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryItemS* const item,
-  struct MqS  ** contextP
-);
-
-/// \brief prototype for a Object-Delete factory function
-typedef void ( MQ_DECL
-  *MqFactoryDeleteF
-) (
-  struct MqS  * context,
-  MQ_BOL doFactoryCleanup,
-  struct MqFactoryItemS* const item
-);
-
 /// \brief prototype for a Garbage-Collection mark function
 typedef void ( MQ_DECL
   *MqMarkF
@@ -513,28 +484,6 @@ typedef void ( MQ_DECL
 /// \brief used to setup (initialize) a new thread/fork/process created by \libmsgque
 ///        using the \c SysServer? style commands
 typedef void (MQ_DECL *MqSetupF) ( struct MqS * const );
-
-/// \brief function pointer to \e create an object
-struct MqFactoryCreateS {
-  MqFactoryCreateF	fCall;	    ///< create a new object
-  MQ_PTR		data;	    ///< additional data pointer for the fCall
-  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-};
-
-/// \brief function pointer to \e delete an object
-struct MqFactoryDeleteS {
-  MqFactoryDeleteF	fCall;	    ///< delete the object created with #MqFactoryCreateS
-  MQ_PTR		data;	    ///< additional data pointer for the fCreate
-  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-};
-
-/// \brief data used to define a factory
-struct MqFactoryItemS {
-  MQ_CST ident;			    ///< public known factory name
-  MQ_BOL called;		    ///< was the factory called?
-  struct MqFactoryCreateS Create;   ///< object creation function
-  struct MqFactoryDeleteS Delete;   ///< object deletion function
-};
 
 /// \brief User preferences on HOWTO start a new entity
 enum MqStartE {
@@ -659,7 +608,7 @@ struct MqConfigS {
   ///
   /// A new \e application-context is created if:
   /// - a \e tcp-uds-server listen on socket and get a \e connection-request from a client.
-  ///   This require: \RNSC{IFactory} and \RNSC{IServerSetup} 
+  ///   This require: \RNS{Factory} and \RNSC{IServerSetup} 
   /// - a \e filter-context create a new \e filter-instance
   /// - a \e server-context create a new \e worker-context using \RNSA{SlaveWorker}
   /// - a \e server-context start a new \e client-server-link using \e SELF as 
@@ -768,7 +717,7 @@ struct MqSetupS {
   ///
   /// \attention: if this value changes the factory need to be updated too.
   //MQ_CST ident;
-  struct MqFactoryItemS* factory;
+  struct MqFactoryS* factory;
  
   /// \brief setup/cleanup a \e CHILD object
   /// \attention always call this functions using #MqLinkCreate and #MqLinkDelete
@@ -885,13 +834,13 @@ MQ_EXTERN void MQ_DECL MqConfigDup (
 );
 
 /// \brief copy the #MqS::setup data
-/// \detail \e MqSetupDup is an important function, because
+/// \details \e MqSetupDup is an important function, because
 /// every new created object need to fill the #MqSetupS data.
 /// The typical software flow is:\n
 /// - \e Call-Factory -> #MqContextCreate (default setup) -> \e Object-Specific-Setup -> #MqSetupDup
 /// .
 /// #MqSetupDup has code to protect setup data filled in \e Object-Specific-Setup 
-// from neeing overwritten.
+// from being overwritten.
 MQ_EXTERN void MQ_DECL MqSetupDup (
   struct MqS * const to,
   struct MqS const * const from
@@ -1281,11 +1230,33 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/// \defgroup Mq_Factory_C_API Mq_Factory_C_API
+/// \defgroup MqFactory Mq_Factory_C_API
 /// \{
-/// \brief object generation and application entry point
+/// \brief provide an interface to create a new instance
 ///
-/// The factory is used ...
+/// The \e factory is an important part of the object management and has the
+/// following basic features:
+/// -# create a new instance identified by an \e identifier or using an already
+///    available instance as template
+/// -# cleanup and delete an instance
+/// -# provide an \e identifier for factory lookup and as an unique application name
+/// -# identify the server in the network available as #MqLinkGetTargetIdent on
+///    a remote context
+/// .
+/// The link between the \e Factory-Identifier and the \e Factory-Interface is
+/// important for the future development of \libmsgque. \e Message-Routing,
+/// \e Service-Location and \e Persistent-Transactions depend on this feature.
+///
+/// The relationship between the #MqFactoryS and the #MqS is the same as the
+/// relationship between a \e type and an \e instance of the \e type in a regular 
+/// programming language.
+/// The #MqFactoryS define the \e type of the server and the #MqS define a single
+/// instance of the server. Every kind of server has <B>only one</B> specific 
+/// #MqFactoryS object but every instance of a server has one #MqS object used 
+/// for object management. Decreasing the size and the complexity of a #MqS object 
+/// will improve the server performance.
+/// In future more fields, defined in the #MqSetupS attribute of the the #MqS 
+/// object, will move into #MqFactoryS object.
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1293,6 +1264,8 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief a static Factory function return this enum as status
+/// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
 enum MqFactoryReturnE {
   /* 0 */ MQ_FACTORY_RETURN_OK,
   /* 1 */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
@@ -1305,88 +1278,219 @@ enum MqFactoryReturnE {
   /* 8 */ MQ_FACTORY_RETURN_INVALID_IDENT,
 };
 
+/// \brief the \e factory is called to create an instance for ...
+enum MqFactoryE {
+  MQ_FACTORY_NEW_INIT	= 0,	///< initial instance , nothing else is known
+  MQ_FACTORY_NEW_CHILD	= 1,	///< create instance as a \e child of an other instance
+  MQ_FACTORY_NEW_SLAVE	= 2,	///< create instance as a \e slave of an other instance
+  MQ_FACTORY_NEW_FORK	= 3,	///< the instance is used by a fork process
+  MQ_FACTORY_NEW_THREAD	= 4,	///< the instance is used by a thread
+  MQ_FACTORY_NEW_FILTER	= 5	///< the instance is used as a new filter
+};
+
+/// \brief type of a \e factory-instance-constructor
+/// \param[in] tmpl	the calling instance to initialize the configuration data using #MqSetupDup
+/// \param[in] create   how is the factory constructor used
+/// \param[in] item	factory interface in use
+/// \param[out] contextP the new instance
+/// \retException
+typedef enum MqErrorE ( MQ_DECL
+  *MqFactoryCreateF
+) (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryS* const item,
+  struct MqS  ** contextP
+);
+
+/// \brief type of a \e factory-instance-destructor
+/// \context
+/// \param[in] doFactoryCleanup was the instance created by a factory? #MQ_YES or #MQ_NO
+/// \param[in] item \e factory-interface used to destroy the instance
+typedef void ( MQ_DECL
+  *MqFactoryDeleteF
+) (
+  struct MqS  * context,
+  MQ_BOL doFactoryCleanup,
+  struct MqFactoryS* const item
+);
+
+/// \brief interface for the \e constructor
+struct MqFactoryCreateS {
+  MqFactoryCreateF	fCall;	    ///< create a new instance
+  MQ_PTR		data;	    ///< additional data pointer for the fCall
+  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+};
+
+/// \brief interface for the \e destructor
+struct MqFactoryDeleteS {
+  MqFactoryDeleteF	fCall;	    ///< delete the instance created with #MqFactoryCreateS
+  MQ_PTR		data;	    ///< additional data pointer for the fCreate
+  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+};
+
+/// \brief data used to define a factory
+struct MqFactoryS {
+  MQ_CST ident;			    ///< public known factory name
+  MQ_BOL called;		    ///< was the factory called?
+  struct MqFactoryCreateS Create;   ///< instance constructor interface
+  struct MqFactoryDeleteS Delete;   ///< constructor destructor interface
+};
+
+/// \brief helper function to return MqFactoryS::Create::data
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
-  struct MqFactoryItemS  const * const item
+  struct MqFactoryS  const * const item
 );
 
+/// \brief helper function to return MqFactoryS::Delete::data
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
-  struct MqFactoryItemS  const * const item
+  struct MqFactoryS  const * const item
 );
 
+/// \brief check static Factory function return code on error
 #define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+
+/// \brief check static Factory function return code on error and goto to error label on error
 #define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
 
+/// \brief convert an static Factory function \e return-status into a human readable \e error-message
+/// \attention the string belongs to \libmsgque do \b not free the memory
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
   enum MqFactoryReturnE ret
 );
 
+/// \brief check an static Factory function return code an error and \e panic on error
 MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
   enum MqFactoryReturnE ret
 );
 
+/// \brief add a new factory interface and create a new top-level instance
+/// \details This function is a convenient function to combine the #MqFactoryAdd
+/// and the #MqFactoryCall functionality.
+/// \param[in] ident  factory identifier
+/// \param[in] createCallF instance constructor function
+/// \param[in] createData instance constructor data
+/// \param[in] createDataFreeF instance constructor data free function
+/// \param[in] deleteCallF instance destructor function
+/// \param[in] deleteData instance destructor data
+/// \param[in] deleteDataFreeF instance destructor data free function
+/// \param[in] data environment specific data or \c NULL used by \e createCallF
+/// \param[out] ctxP the new created instance to return
+/// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
+  MQ_CST           const ident,
+  MqFactoryCreateF const createCallF,
   MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
+  MqTokenDataFreeF const createDataFreeF,
+  MqFactoryDeleteF const deleteCallF,
   MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF,
+  MqTokenDataFreeF const deleteDataFreeF,
   MQ_PTR data,
   struct MqS ** ctxP
 ) __attribute__((nonnull(1,2)));
 
+/// \brief add a new \e factory-interface identified by \e ident
+/// \param[in] ident  factory identifier
+/// \param[in] createCallF instance constructor function
+/// \param[in] createData instance constructor data
+/// \param[in] createDataFreeF instance constructor data free function
+/// \param[in] deleteCallF instance destructor function
+/// \param[in] deleteData instance destructor data
+/// \param[in] deleteDataFreeF instance destructor data free function
+/// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
+  MQ_CST           const ident,
+  MqFactoryCreateF const createCallF,
   MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
+  MqTokenDataFreeF const createDataFreeF,
+  MqFactoryDeleteF const deleteCallF,
   MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
+  MqTokenDataFreeF const deleteDataFreeF
 ) __attribute__((nonnull(1,2)));
 
+/// \brief add a new \e default-factory-interface identified by \e ident
+/// \details The default factory is always used to create an instance if no other
+/// factory is available
+/// \param[in] ident  factory identifier
+/// \param[in] createCallF instance constructor function
+/// \param[in] createData instance constructor data
+/// \param[in] createDataFreeF instance constructor data free function
+/// \param[in] deleteCallF instance destructor function
+/// \param[in] deleteData instance destructor data
+/// \param[in] deleteDataFreeF instance destructor data free function
+/// \retFactoryException
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
+  MQ_CST           const ident,
+  MqFactoryCreateF const createCallF,
+  MQ_PTR           const createData,
+  MqTokenDataFreeF const createDataFreeF,
+  MqFactoryDeleteF const deleteCallF,
+  MQ_PTR           const deleteData,
+  MqTokenDataFreeF const deleteDataFreeF
+) __attribute__((nonnull(1,2)));
+
+/// \brief add a new factory as \e copy of the \e default factory but with a new \e ident
+/// \details The new factory is an ordinary factory
+/// \param[in] ident  factory identifier
+/// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopyDefault (
-  MQ_CST           const name
+  MQ_CST           const ident
 ) __attribute__((nonnull(1)));
 
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
-  MQ_CST           const name,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
-) __attribute__((nonnull(1,2)));
-
+/// \brief the \e default factory constructor function
+/// \details This is an constructor suitable to create \e C language instance.
+/// Other programming languages need other default constructors. This constructor 
+/// will be initialized on library startup using the identifier "libmsgque"
+/// \param[in] tmpl	calling instance to initialize the configuration data using #MqConfigDup
+/// \param[in] create   how is the factory constructor used
+/// \param[in] item	factory interface in use
+/// \param[out] contextP the new instance
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* item,
+  struct MqFactoryS* item,
   struct MqS  ** contextP
 );
 
+/// \brief return the identifier of the \e default factory
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
+/// \brief call the factory constructor, identified by \e ident, to create a new instance
+/// \param[in] ident factory identifier to call
+/// \param[in] data environment specific data or \c NULL
+/// \param[out] ctxP the new created instance to return
+/// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
   MQ_CST const ident,
   MQ_PTR const data,
   struct MqS ** ctxP
 ) __attribute__((nonnull(1)));
 
+/// \brief call a factory \e constructor defined by \e item
+/// \details This is a low-level function to call a factory constructor
+/// \param[in] tmpl	calling instance to initialize the configuration data using #MqConfigDup
+/// \param[in] create   how is the factory constructor used
+/// \param[in] item	factory interface in use
+/// \param[out] contextP the new object
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
-  struct MqS * const context,
+  struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* item,
+  struct MqFactoryS* item,
   struct MqS ** contextP
 );
 
+/// \brief call a factory \e constructor defined by \e item
+/// \details This is a low-level function to call a factory constructor
+/// \param[in] ident the factory identifier of the factory interface
+/// \param[out] itemP the factory interface
+/// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
-  MQ_CST const name,
-  struct MqFactoryItemS **itemP
+  MQ_CST const ident,
+  struct MqFactoryS **itemP
 ) __attribute__((nonnull(1)));
 
 /*****************************************************************************/
@@ -1395,9 +1499,9 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief create a copy of the default \e factory pattern using name \e ident
+/// \brief create a copy of the default \e factory-interface using the identifier \e ident
 /// \context
-/// \parem[in] ident new object identifer
+/// \param[in] ident the new factory identifier
 /// \retException
 MQ_EXTERN enum MqErrorE 
 MQ_DECL MqFactoryCtxDefaultSet (
@@ -1405,7 +1509,7 @@ MQ_DECL MqFactoryCtxDefaultSet (
   MQ_CST const ident
 );
 
-/// \brief get the \e ident of the \e factory object of the context
+/// \brief get the \e ident of the \e factory-interface used for the context
 /// \context
 /// \return the \c context.factory.ident value or an empty string if no factory is available
 /// \attention the \e string is owned by \libmsgque -> do not free !!
@@ -1413,9 +1517,9 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/// \brief link the object to a new \e factory object identified by \e ident
+/// \brief link the context to a new \e factory-interface identified by \e ident
 /// \context
-/// \param[in] ident the factory identifer to link with
+/// \param[in] ident the factory identifier to link with
 /// \retException
 MQ_EXTERN enum MqErrorE
 MQ_DECL MqFactoryCtxIdentSet (
@@ -1546,7 +1650,7 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// -# it is a \e panic-error to call #MqExit twice for the same object
 /// .
 /// \endif
-/// \param[in] prefix identify the caller
+/// \param[in] prefix identify the caller (#MqExitP only)
 /// \ctx
 MQ_EXTERN void MQ_DECL MqExitP (
   MQ_CST prefix,
@@ -1590,7 +1694,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqCheckForLeftOverArguments (
 );
 
 /// \brief Mark objects as \e used to avoid to free used external memory in an external Garbage-Collection
-/// \details An external Garbage-Collction (GC) need information about external objects 
+/// \details An external Garbage-Collection (GC) need information about external objects 
 /// referenced by \libmsgque. This objects are the <TT>MQ_PTR data</TT> parameter required
 /// by different functions.
 /// \context
@@ -1671,7 +1775,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// - in local mode new \e server-parent-context is started by the \e client-parent-context as \e pipe:
 ///\verbatim
 ///client @ server \endverbatim
-/// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNSC{IFactory} interface.
+/// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNS{Factory} interface.
 /// - a \e server-context have to enter the \e event-loop and wait for incoming \e service-request using
 ///   \RNSA{ProcessEvent} together with the \MQ_WAIT_FOREVER.
 /// .
@@ -1936,7 +2040,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceGetFilter (
 /// 
 /// \ctx
 /// \id
-/// \return the \e filter-context or \null if the \e context hs no \e filter-context
+/// \return the \e filter-context or \null if the \e context has no \e filter-context
 /// \attention if no filter is available an error-message is created in the context
 MQ_EXTERN struct MqS  * const MQ_DECL MqServiceGetFilter2 (
   struct MqS  * const ctx,
@@ -1985,7 +2089,7 @@ MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
 /// \param[in] data a user defined additional \e data-argument for the \e callback function (C-API only)
 /// \param[in] datafreeF the function to free the \e data-argument after use (C-API only)
 /// \retException
-/// \attention the link-setup (\RNSA{LinkCreate} or \RNSA{LinkCreateChild}) have to done \b befor using this function
+/// \attention the link-setup (\RNSA{LinkCreate} or \RNSA{LinkCreateChild}) have to done \b before using this function
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   struct MqS * const ctx, 
   MQ_TOK const token,
@@ -2440,7 +2544,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetC (
   MQ_CST * const out
 );
 
-/// \brief return the type from a #MQ_BUF object on character identifer
+/// \brief return the type from a #MQ_BUF object on character identifier
 /// \buf
 /// \return the type from a #MqTypeE object as single character value
 MQ_EXTERN char MQ_DECL MqBufferGetType (
@@ -2454,7 +2558,7 @@ MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
   struct MqBufferS * const buf
 );
 
-/// \brief return the type from a #MQ_BUF object as strint
+/// \brief return the type from a #MQ_BUF object as string
 /// \buf
 /// \return the #MqTypeE object as string
 MQ_EXTERN MQ_CST MQ_DECL MqBufferGetType3 (
@@ -3299,8 +3403,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
 
 /// \brief finish the current \e callback, return to \e toplevel and \RNSA{Exit} the application
 /// \details To exit a application from a callback is a difficult task because
-/// the code is \e in-duty. To achive this goal a special \e exit-error-object
-/// is created and reportet to the \e toplevel. If a \e transaction is ongoing
+/// the code is \e in-duty. To achieve this goal a special \e exit-error-object
+/// is created and reported to the \e toplevel. If a \e transaction is ongoing
 /// the \RNSA{SendRETURN} is \b not called and thus the transaction is not finished.
 /// The calling application is informed later by a \e socket-down event.
 #define MqErrorSetEXIT(ctx) MqErrorSetEXITP(ctx,__func__)
@@ -3547,7 +3651,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 ///
 /// A \e body is a \e byte-array with a defined \e length and including the \e number-of-items
 /// and the \e body-items as information. The \e body extracted can be saved into an external 
-/// storage or be used in a software tunnel (example: the \e agurad tool) and be ican send later 
+/// storage or be used in a software tunnel (example: the \e agurad tool) and be can send later 
 /// using \RNSA{SendBDY}. 
 /// \if C-STYLE
 /// The memory is \e dynamic-allocated and have to be freed using #MqSysFree.
@@ -3889,7 +3993,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
 ///   the link target
 /// - if the answer does not return any data no previous #MqSendSTART is required.
 /// - if no transaction is ongoing this function does just return. If an error is available
-///   report an asyncrone error to the link target.
+///   report an asynchronous error to the link target.
 /// .
 /// \ctx
 /// \retException
@@ -4139,18 +4243,18 @@ static mq_inline int MqSlaveIsI (
 
 /// \defgroup Mq_System_C_API Mq_System_C_API
 /// \{
-/// \brief L)anguage A)bstraction L)ayer defnition
+/// \brief L)anguage A)bstraction L)ayer definition
 ///
 /// The \b LAL is required to give the target of embedding a change 
 /// to modify the access to system functions. \e RUBY for example has it's
 /// own Thread-Creation function.
 /// 
-/// All wrappers to access the underlying OS,Languags and system functions
+/// All wrappers to access the underlying OS,Languages and system functions
 /// are located in this section. Every external Function has additional
 /// code to map the OS/System specific error codes/messages into
 /// #MqS specific error codes/messages
 
-/// process or thread identifer
+/// process or thread identifier
 typedef unsigned long MQ_IDNT;
 
 /// \brief \b calloc syscall
@@ -4175,16 +4279,16 @@ typedef void (*MqSysFreeF) (MQ_PTR);
 
 /// \brief \b select syscall
 /// \details read more at: <TT>man 2 select</TT>
-/// \param[in] max the maximim file descriptor + 1 from the \e read, \e write or \e except input data
-/// \param[in] read set of file descriptores
-/// \param[in] write set of file descriptores
-/// \param[in] except set of file descriptores
+/// \param[in] max the maximum file descriptor + 1 from the \e read, \e write or \e except input data
+/// \param[in] read set of file descriptors
+/// \param[in] write set of file descriptors
+/// \param[in] except set of file descriptors
 /// \param[in] timeout maximum time to wait for data
 typedef int (*MqSysSelectF) (int, void*, void*, void*, struct timeval*);
 
 /// \brief \b fork syscall
 /// \details additional info: <TT>man fork</TT>
-/// \retval the process identifer of the new child (in the parent process) or 0 (in the child process)
+/// \retval the process identifier of the new child (in the parent process) or 0 (in the child process)
 typedef MQ_IDNT (*MqSysForkF) (void);
 
 /// signal type of the \e MqIdS data \e val
@@ -4204,12 +4308,12 @@ struct MqIdS {
 /// \brief data used to initialize a new created thread
 struct MqSysServerThreadMainS {
   struct MqS * tmpl;		  ///< calling (parent) context
-  struct MqFactoryItemS * factory; ///< server configuration (memory belongs to caller)
-  struct MqBufferLS * argv;	  ///< command-line arguments befor \b MQ_ALFA, owned by SysServerThread
+  struct MqFactoryS * factory; ///< server configuration (memory belongs to caller)
+  struct MqBufferLS * argv;	  ///< command-line arguments before \b MQ_ALFA, owned by SysServerThread
   struct MqBufferLS * alfa;	  ///< command-line arguments after \b MQ_ALFA, owned by SysServerThread
 };
 
-/// \brief initialize a new created thred
+/// \brief initialize a new created thread
 /// \param[in] data configuration data for the new thread
 MQ_EXTERN void MQ_DECL MqSysServerThreadMain (
   struct MqSysServerThreadMainS *data
@@ -4236,7 +4340,7 @@ struct MqLalS {
   /// \context
   /// \param[in]	argv  command-line arguments
   /// \param[in]	name  the name of the process
-  /// \param[out]	idP   the process identifer
+  /// \param[out]	idP   the process identifier
   /// \retMqErrorE
   ///
   /// \b Example:
@@ -4255,11 +4359,11 @@ struct MqLalS {
   /// \syscall{thread server create}
   /// \context
   /// \param[in,out]  factory	server configuration (memory will be freed)
-  /// \param[in]	    argvP	command-line arguments befor #MQ_ALFA, owned by SysServerThread
+  /// \param[in]	    argvP	command-line arguments before #MQ_ALFA, owned by SysServerThread
   /// \param[in]	    alfaP	command-line arguments after #MQ_ALFA, owned by SysServerThread
   /// \param[in]	    name	the name of the thread
-  /// \param[in]	    state	detachstate of the thread \c PTHREAD_CREATE_DETACHED or \c PTHREAD_CREATE_JOINABLE
-  /// \param[out]	    idP		the thread identifer
+  /// \param[in]	    state	state of the thread \c PTHREAD_CREATE_DETACHED or \c PTHREAD_CREATE_JOINABLE
+  /// \param[out]	    idP		the thread identifier
   /// \retMqErrorE
   ///
   /// \b Example:
@@ -4270,7 +4374,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerThread) (
     struct MqS * const	  context, 
-    struct MqFactoryItemS* factory,
+    struct MqFactoryS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4281,10 +4385,10 @@ struct MqLalS {
   /// \syscall{fork server create}
   /// \context
   /// \param[in,out]  factory	server configuration (memory will be freed)
-  /// \param[in]	    argvP	command-line arguments befor #MQ_ALFA, owned by SysServerThread
+  /// \param[in]	    argvP	command-line arguments before #MQ_ALFA, owned by SysServerThread
   /// \param[in]	    alfaP	command-line arguments after #MQ_ALFA, owned by SysServerThread
   /// \param[in]	    name	the name of the thread
-  /// \param[out]	    idP		the process identifer
+  /// \param[out]	    idP		the process identifier
   /// \retMqErrorE
   ///
   /// \b Example:
@@ -4295,7 +4399,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerFork) (
     struct MqS * const	  context, 
-    struct MqFactoryItemS* factory,
+    struct MqFactoryS* factory,
     struct MqBufferLS **  argvP, 
     struct MqBufferLS **  alfaP, 
     MQ_CST		  name, 
@@ -4337,9 +4441,9 @@ struct MqLalS {
     struct MqS * const	  context, 
     unsigned int const	  sec
   );
-  /// \brief \b daemonize the current process and save the resulting pid into the \e pidfile
+  /// \brief \b demonize the current process and save the resulting PID into the \e pidfile
   /// \context
-  /// \param[in] pidfile	file to save the process identifer, can be used to kill the process later
+  /// \param[in] pidfile	file to save the process identifier, can be used to kill the process later
   /// \retMqErrorE
   ///
   /// \b Example:
@@ -4779,6 +4883,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 

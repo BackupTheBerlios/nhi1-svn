@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "30 Nov 2010" "Version 4.8" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "7 Jan 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The Go language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBgomsgque\fP object: \fBctx := NewMqS(top interface{})\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -81,9 +81,9 @@ file: \fCexample/Go/MyServer.go\fP
 .IP "2." 4
 an instance of the abstract class \fBctx := NewMqS(top interface{})\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -102,14 +102,10 @@ type MyServer struct {
   // add server specific data 
 }
 
-func NewMyServer() *MyServer {
-  ret := new(MyServer)
-  ret.MqS = NewMqS(ret)
-  return ret
-}
-
-func (this *MyServer) Factory() *MqS {
-  return NewMyServer().MqS
+func NewMyServer(tmpl *MqS) *MqS {
+  srv := new(MyServer)
+  srv.MqS = NewMqS(tmpl, srv)
+  return srv.MqS
 }
 
 func (this *MyServer) ServerSetup() {
@@ -124,7 +120,8 @@ type MyFirstService MyServer
   }
 
 func main() {
-  var srv = NewMyServer()
+  FactoryAdd('MyServer', NewMyServer)
+  srv := FactoryCall('MyServer')
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
@@ -134,6 +131,7 @@ func main() {
   srv.LinkCreate(os.Args...)
   srv.ProcessEvent(WAIT_FOREVER)
 }
+
 .fi
 .PP
 .PP
@@ -203,7 +201,7 @@ import (
 )
 
 func main() {
-  var ctx = NewMqS(nil)
+  var ctx = NewMqS(nil,nil)
   defer func() {
     if x := recover(); x != nil {
       ctx.ErrorSet(x)
@@ -262,11 +260,6 @@ import (
     'os'
 )
 
-type ManFilter MqS
-  func (this *ManFilter) Factory () *MqS {
-    return NewMqS(nil)
-  }
-
 type FTR MqS
   func (this *FTR) Call () {
     ctx := (*MqS)(this)
@@ -280,7 +273,7 @@ type FTR MqS
   }
 
 func main() {
-  var srv = NewMqS(nil)
+  srv := NewMqS(nil,nil)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)
@@ -289,7 +282,6 @@ func main() {
   }()
   srv.ConfigSetName('ManFilter')
   srv.ConfigSetIsServer(true)
-  srv.ConfigSetFactory((*ManFilter)(srv))
   srv.LinkCreate(os.Args...)
   srv.ServiceCreate('+FTR', (*FTR)(srv))
   srv.ServiceProxy('+EOF')

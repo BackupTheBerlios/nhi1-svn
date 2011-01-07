@@ -1,4 +1,4 @@
-.TH "msgqueforphp Tutorial" n "30 Nov 2010" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "msgqueforphp Tutorial" n "7 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The php language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBmsgqueforphp\fP object: \fB$ctx=new MqS()\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -57,19 +57,16 @@ file: \fCexample/php/MyServer.php\fP
 .IP "2." 4
 an instance of the abstract class \fB$ctx=new MqS()\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
  
 .PP
 .nf
-class MyServer extends MqS implements iServerSetup, iFactory {
-  public function Factory() {
-    return new MyServer();
-  }
+class MyServer extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('HLWO', array(&$this, 'HLWO'));
   }
@@ -200,14 +197,7 @@ The \fBFILTER MODE\fP is used to define a command pipeline. A \fIminimal\fP filt
  
 .PP
 .nf
-class ManFilter extends MqS implements iServerSetup, iFactory {
-  public function __construct() {
-    $this->ConfigSetName('filter');
-    parent::__construct();
-  }
-  public function Factory() {
-    return new ManFilter();
-  }
+class ManFilter extends MqS implements iServerSetup {
   public function ServerSetup() {
     $this->ServiceCreate('+FTR', array(&$this, 'FTRcmd'));
     $this->ServiceProxy('+EOF');
@@ -224,6 +214,7 @@ class ManFilter extends MqS implements iServerSetup, iFactory {
 }
 $srv = new ManFilter();
 try {
+  $srv->ConfigSetName('filter');
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);
 } catch (Exception $ex) {

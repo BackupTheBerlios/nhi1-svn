@@ -38,7 +38,7 @@
 BEGIN_C_DECLS
 
 extern struct MqBufferLS * MqInitBuf;
-extern struct MqFactoryItemS *defaultFactoryItem;
+extern struct MqFactoryS *defaultFactoryItem;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1211,6 +1211,7 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 
 
 

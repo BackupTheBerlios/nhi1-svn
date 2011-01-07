@@ -1,4 +1,4 @@
-.TH "Mq_Cs_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -26,6 +26,13 @@ Mq_Cs_API \- public libmsgque API
 .RI "\fBMq_Config_Cs_API\fP"
 .br
 .R "configuration of a context  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Factory_Cs_API\fP"
+.br
+.R "object generation and application entry point  "
 .PP
 .in +1c
 

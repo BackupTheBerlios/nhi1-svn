@@ -1,4 +1,4 @@
-.TH "pymsgque" n "30 Nov 2010" "Version 4.8" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "7 Jan 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,6 +9,8 @@ pymsgque \- The \fBPYTHON\fP \fBApplication-Server\fP and \fBProgramming-Languag
 .SH "INDEX"
 .PP
 \fBCONTEXT API\fP
+.br
+ \fBFACTORY API\fP
 .br
  \fBCONFIG API\fP
 .br
@@ -146,13 +148,16 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 \fImessage\fP string to log to stderr 
 .RE
 .PP
+.SH "FACTORY API"
+.PP
+interface{IFactory} copydetails MqSetupS::Factory b Example: config_IFactory_example
 .SH "CONFIG API"
 .PP
 \fBInit\fP
 .br
  \fBbuffersize\fP, \fBdebug\fP, \fBtimeout\fP
 .br
- \fBname\fP, \fBsrvname\fP, \fBident\fP
+ \fBname\fP, \fBsrvname\fP
 .br
  \fBisSilent\fP, \fBisString\fP, \fBisServer\fP
 .br
@@ -162,7 +167,7 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .br
  \fBIServerSetup\fP, \fBIServerCleanup\fP
 .br
- \fBIFactory\fP, \fBIBgError\fP, \fBIEvent\fP
+ \fBIBgError\fP, \fBIEvent\fP
 .br
 .PP
 configuration of a context 
@@ -233,12 +238,6 @@ C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIP
 .fi
 .PP
  If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINone\fP) 
-.SS "ident"
-\fBtype:\fP \fCPyUnicode\fP, \fBget:\fP \fCConfigGetIdent\fP , \fBset:\fP \fCConfigSetIdent\fP
-.PP
-set the application identifier 
-.PP
-The \fIapplication-identifier\fP is used to modify the client or filter behaviour depending on the \fIidentifier-value\fP of the \fIremote-context\fP. The \fIidentifier\fP is \fBnot\fP changeable by the user, like the \fBname\fP configuration option, because this is a 'build-in' feature set by the \fIprogrammer\fP. (default: \fINone\fP) 
 .SS "command-line: --silent"
 \fBtype:\fP \fCPyBool\fP, \fBget:\fP \fCConfigGetIsSilent\fP , \fBset:\fP \fCConfigSetIsSilent\fP
 .PP
@@ -327,7 +326,7 @@ create a new \fIapplication-context\fP as thread, spawn or fork
 .PP
 A new \fIapplication-context\fP is created if:
 .IP "\(bu" 2
-a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from a client. This require: \fBIFactory\fP and \fBIServerSetup\fP
+a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from a client. This require: \fBFACTORY API\fP and \fBIServerSetup\fP
 .IP "\(bu" 2
 a \fIfilter-context\fP create a new \fIfilter-instance\fP 
 .IP "\(bu" 2
@@ -380,32 +379,6 @@ By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \
 This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fITrue\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: ConfigSetServerCleanup(callback)"
 This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fITrue\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
-.SS "interface: ConfigSetFactory(callback)"
-The \fIfactory-interface\fP is used to create a new \fIserver-context\fP. Without the \fIfactory-interface\fP only the initial \fIstartup-context\fP is available to serve incoming requests. In general every \fIserver\fP need to provide a \fIfactory-interface\fP.
-.PP
-The \fIfactory-interface\fP is used to create a new:
-.IP "\(bu" 2
-\fIapplication-context\fP (C, TCL) or a new \fIclass-instance\fP (C++, C#, JAVA, PYTHON, PERL, VB.NET)
-.IP "\(bu" 2
-\fIserver-child-context\fP or \fIslave-child-context\fP using \fBLinkCreateChild\fP
-.IP "\(bu" 2
-\fIserver-parent-context\fP using the \fBstartAs\fP option \fI--thread\fP 
-.IP "\(bu" 2
-\fIslave-worker-context\fP using \fBSlaveWorker\fP
-.IP "\(bu" 2
-\fIfilter-parent-context\fP using the \fBstartAs\fP option \fI--fork\fP or \fI--thread\fP 
-.PP
- \fBExample:\fP 
-.PP
-.nf
- class Server(MqS): 
-   def __init__(self): 
-     self.ConfigSetFactory(lambda: Server()) 
-     ... 
- ... 
-
-.fi
-.PP
 .SS "interface: ConfigSetBgError(callback)"
 A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP.  Read more about how to define a \fIcallback\fP at \fBSERVICE CALLBACK\fP.
 .SS "interface: ConfigSetEvent(callback)"
@@ -503,7 +476,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .PP
 
 .IP "\(bu" 2
-a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBIFactory\fP interface.
+a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS_WAIT_FOREVER\fP.
 .PP
@@ -1783,9 +1756,9 @@ The filter mode is related to a special usage of the \fBlibmsgque\fP software ca
 .IP "\(bu" 2
 \fBisServer\fP or \fBIServerSetup\fP
 .PP
-and add a factory interface:
+and add a factory:
 .IP "\(bu" 2
-\fBIFactory\fP
+\fBFACTORY API\fP
 .PP
 Every filter has \fBtwo\fP context one belongs to the \fIleft\fP command and one belongs to the \fIright\fP command: 
 .PP
@@ -2007,8 +1980,7 @@ import sys
 from pymsgque import *
 
 class manfilter(MqS):
-  def __init__(self):
-    self.ConfigSetFactory(lambda: manfilter())
+  def __init__(self, tmpl=None):
     self.ConfigSetName('ManFilter')
     self.ConfigSetServerSetup(self.ServerSetup)
     self.data = []

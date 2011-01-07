@@ -139,7 +139,7 @@ JNI_OnUnload(JavaVM *jvm, void *reserved)
 void MQ_DECL NS(FactoryDelete) (
   struct MqS * context,
   MQ_BOL dofactoryCleanup,
-  struct MqFactoryItemS* const item
+  struct MqFactoryS* const item
 )
 {
   SETUP_env;
@@ -150,7 +150,7 @@ void MQ_DECL NS(FactoryDelete) (
 enum MqErrorE MQ_DECL NS(FactoryCreate) (
   struct MqS * const tmpl,
   enum MqFactoryE create,
-  struct MqFactoryItemS* const item,
+  struct MqFactoryS* const item,
   struct MqS  ** contextP
 )
 {
@@ -377,7 +377,7 @@ JNIEXPORT jobject JNICALL NS(FactoryCall) (
   const char * str;
   str = JO2C_START(env,ident);
   { 
-    struct MqFactoryItemS * item = MqFactoryItemGet(str);
+    struct MqFactoryS * item = MqFactoryItemGet(str);
     if (item != NULL && item->Create.fCall != NULL) {
       (*item->Create.fCall) ((struct MqS *)env, MQ_FACTORY_NEW_INIT, item, &mqctx);
     }

@@ -1,4 +1,4 @@
-.TH "Mq_Context_Cs_API" n "30 Nov 2010" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Context_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -26,6 +26,10 @@ Mq_Context_Cs_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
 .ti -1c
 .RI "\fBcsmsgque::MqS.MqS\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.ti -1c
+.RI "\fBcsmsgque::MqS.MqS\fP (\fBMqS\fP tmpl)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
 .in -1c
@@ -59,11 +63,16 @@ Definition at line 71 of file context.cs.
 implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
 .PP
 Definition at line 76 of file context.cs.
+.SS "csmsgque.MqS.MqS (\fBMqS\fP tmpl)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
+.PP
+Definition at line 84 of file context.cs.
 .SS "csmsgque.MqS.MqS ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
-Definition at line 81 of file context.cs.
+Definition at line 80 of file context.cs.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for vbmsgque from the source code.

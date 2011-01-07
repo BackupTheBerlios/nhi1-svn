@@ -869,7 +869,7 @@ namespace ccmsgque {
       static enum MqErrorE FactoryCreate ( 
 	struct MqS * const tmpl, 
 	enum MqFactoryE create, 
-	struct MqFactoryItemS * item, 
+	struct MqFactoryS * item, 
 	struct MqS  ** contextP
       ) {
 	try { 
@@ -909,7 +909,7 @@ namespace ccmsgque {
       static void FactoryDelete (
 	struct MqS * context,
 	MQ_BOL doFactoryCleanup,
-	struct MqFactoryItemS * const item
+	struct MqFactoryS * const item
       ) {
 	if (doFactoryCleanup == MQ_YES) {
 	  delete GetThis(context);

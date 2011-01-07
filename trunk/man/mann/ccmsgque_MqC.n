@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,13 +23,69 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "typedef void(MqC::* \fBCallbackF\fP )()"
 .br
-.ti -1c
-.RI "typedef \fBMqC\fP *(MqC::* \fBFactoryF\fP )()"
-.br
 .in -1c
 .SS "Public Member Functions"
 
 .in +1c
+.ti -1c
+.RI "\fBMqC\fP (struct \fBMqS\fP *const tmpl)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.ti -1c
+.RI "\fBMqC\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.ti -1c
+.RI "virtual \fB~MqC\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
+.ti -1c
+.RI "void \fBFactoryCtxDefaultSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.ti -1c
+.RI "void \fBFactoryCtxIdentSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.ti -1c
+.RI "\fBMQ_CST\fP \fBFactoryCtxIdentGet\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.ti -1c
+.RI "void \fBFactoryCtxItemSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: MqFactoryCtxItemSet "
+.ti -1c
+.RI "void \fBobjInit\fP ()"
+.br
+.ti -1c
+.RI "\fBMQ_BUF\fP \fBGetTempBuffer\fP ()"
+.br
+.R "get access to an internal buffer "
+.ti -1c
+.RI "void \fBExit\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.ti -1c
+.RI "void \fBSleep\fP (unsigned int const sec)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
+.ti -1c
+.RI "void \fBUSleep\fP (unsigned int const usec)  throw (MqCException)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
+.ti -1c
+.RI "void \fBLogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.ti -1c
+.RI "void \fBLogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
+.ti -1c
+.RI "void \fBLogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
 .ti -1c
 .RI "void \fBConfigSetBuffersize\fP (\fBMQ_INT\fP data)"
 .br
@@ -50,10 +106,6 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "void \fBConfigSetSrvName\fP (\fBMQ_CST\fP data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
-.ti -1c
-.RI "void \fBConfigSetIdent\fP (\fBMQ_CST\fP data)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIdent\fP "
 .ti -1c
 .RI "void \fBConfigSetIsSilent\fP (\fBMQ_BOL\fP data)"
 .br
@@ -111,10 +163,6 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
 .ti -1c
-.RI "\fBMQ_CST\fP \fBConfigGetIdent\fP ()"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIdent\fP "
-.ti -1c
 .RI "\fBMQ_INT\fP \fBConfigGetBuffersize\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP "
@@ -155,41 +203,9 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
 .ti -1c
-.RI "\fBMqC\fP ()"
+.RI "enum \fBMqStatusIsE\fP \fBConfigGetStatusIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
-.ti -1c
-.RI "virtual \fB~MqC\fP ()"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
-.ti -1c
-.RI "\fBMQ_BUF\fP \fBGetTempBuffer\fP ()"
-.br
-.R "get access to an internal buffer "
-.ti -1c
-.RI "void \fBExit\fP ()"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
-.ti -1c
-.RI "void \fBSleep\fP (unsigned int const sec)  throw (MqCException)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
-.ti -1c
-.RI "void \fBUSleep\fP (unsigned int const usec)  throw (MqCException)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
-.ti -1c
-.RI "void \fBLogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
-.ti -1c
-.RI "void \fBLogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
-.ti -1c
-.RI "void \fBLogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
+.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP "
 .ti -1c
 .RI "void \fBLinkCreateVC\fP (int const argc, \fBMQ_CST\fP argv[])"
 .br
@@ -598,7 +614,7 @@ ccmsgque::MqC \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqS\fP 
 .PP
-Definition at line 224 of file ccmsgque.h.
+Definition at line 218 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

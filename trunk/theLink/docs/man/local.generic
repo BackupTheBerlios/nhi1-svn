@@ -35,6 +35,7 @@ ALIASES		    += "buffer=\param[in] buffer a LibMsgque buffer object returned by 
 ALIASES		    += "configsection{2}=\subsection \NS{config_\1} command-line: \2\n\b type: <TT>\config_type_\1</TT>, \b get: <TT>\config_get_\1</TT>\n, \b set: <TT>\config_set_\1</TT>\n"
 ALIASES		    += "configsection{1}=\subsection \NS{config_\1} \1\n\b type: <TT>\config_type_\1</TT>, \b get: <TT>\config_get_\1</TT>\n, \b set: <TT>\config_set_\1</TT>\n"
 ALIASES		    += "interface{1}=\subsection \NS{config_\1} interface: \config_\1"
+ALIASES		    += "function{2}=\subsection \NS{\1} \2 \n \ref Mq\1 : \copydoc Mq\1"
 
 ALIASES		    += "RNS_PREFIX{1}=\1"
 ALIASES		    += "RNS{1}=\ref \NS{\1}"
@@ -48,6 +49,7 @@ ALIASES		    += "ext=ref"
 ALIASES		    += "rself=\ref \self\ext"
 ALIASES		    += "ctx=\param[in] ctx the context returned by \RNSA{ContextCreate}"
 ALIASES		    += "retException=\return an \RNS{ErrorObject} on error"
+ALIASES		    += "retFactoryException=\return an \FactoryReturn object"
 
 ALIASES		    += "example=\xrefitem examples \"Example\" \"Example List\""
 ALIASES		    += "change=\xrefitem changes \"Change\" \"Change List\""

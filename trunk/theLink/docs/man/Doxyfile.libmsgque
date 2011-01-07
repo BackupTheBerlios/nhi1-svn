@@ -39,6 +39,17 @@ struct MyCtxDataS { \n\
 struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
 \endcode"
 
+ALIASES		    += "FactoryReturn=#MqFactoryReturnE"
+ALIASES		    += "FactoryDefault=MqFactoryDefault(MQ_CST ident, interface...)"
+ALIASES		    += "FactoryDefaultIdent=MQ_CST MqFactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryAdd(MQ_CST ident, interface...)"
+ALIASES		    += "FactoryNew=MqFactoryNew(MQ_CST ident, interface..., MQ_PTR data, struct MqS *ctxP)"
+ALIASES		    += "FactoryCall=MqFactoryCall(MQ_CST ident, MQ_PTR data, struct MqS *ctxP)"
+
+ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
+ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
+ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
+
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
@@ -125,13 +136,8 @@ ALIASES		    += "config_get_pipe=#MqConfigGetIoPipeSocket"
 
 ALIASES             += "config_IServerSetup=MqConfigSetServerSetup (ctx, fFunc, data, fFree, fCopy)"
 ALIASES		    += "config_IServerCleanup=MqConfigSetServerCleanup (ctx, fFunc, data, fFree, fCopy)"
-ALIASES		    += "config_IFactory=MqConfigSetFactory (ctx, fCreate, cData, fcFree, fcCopy, fDelete, dData, fdFree, fdCopy)"
 ALIASES		    += "config_IBgError=MqConfigSetBgError (ctx, fFunc, Data, fFree, fCopy)"
 ALIASES		    += "config_IEvent=MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
-
-ALIASES		    += "config_IFactory_example=\code \n\
-MqConfigSetDefaultFactory (ctx); \n\
-\endcode"
 
 # LINK CREATION AND DELETION
 ALIASES		    += "LinkCreate=MqLinkCreate (struct MqS *ctx, struct MqBufferLS ** args)"

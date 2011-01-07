@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqC::ProcCallS::ProcCallU" n "30 Nov 2010" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqC::ProcCallS::ProcCallU" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -32,27 +32,27 @@ ccmsgque::MqC::ProcCallS::ProcCallU \-
 .in -1c
 .SH "Detailed Description"
 .PP 
-Definition at line 361 of file ccmsgque.h.
+Definition at line 279 of file ccmsgque.h.
 .SH "Field Documentation"
 .PP 
 .SS "\fBIBgError\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::BgError"
 .PP
-Definition at line 367 of file ccmsgque.h.
+Definition at line 285 of file ccmsgque.h.
 .SS "\fBCallbackF\fP ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Callback"
 .PP
-Definition at line 362 of file ccmsgque.h.
+Definition at line 280 of file ccmsgque.h.
 .SS "\fBIEvent\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Event"
 .PP
-Definition at line 364 of file ccmsgque.h.
+Definition at line 282 of file ccmsgque.h.
 .SS "\fBIServerCleanup\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::ServerCleanup"
 .PP
-Definition at line 366 of file ccmsgque.h.
+Definition at line 284 of file ccmsgque.h.
 .SS "\fBIServerSetup\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::ServerSetup"
 .PP
-Definition at line 365 of file ccmsgque.h.
+Definition at line 283 of file ccmsgque.h.
 .SS "\fBIService\fP* ccmsgque::MqC::MqC::ProcCallS::MqC::ProcCallS::ProcCallU::Service"
 .PP
-Definition at line 363 of file ccmsgque.h.
+Definition at line 281 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

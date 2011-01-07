@@ -1,4 +1,4 @@
-.TH "Mq_Service_Java_API" n "30 Nov 2010" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Service_Java_API" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -100,7 +100,7 @@ implement the \fBlibmsgque\fP API object: default TIMEOUT values
 \fB\fIMAX \fP\fP
 
 .PP
-Definition at line 229 of file MqS.java.
+Definition at line 234 of file MqS.java.
 .SS "enum \fBjavamsgque::MqS::WAIT\fP\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP 
@@ -115,29 +115,29 @@ implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP
 \fB\fIFOREVER \fP\fP
 
 .PP
-Definition at line 212 of file MqS.java.
+Definition at line 217 of file MqS.java.
 .SH "Function Documentation"
 .PP 
 .SS "void javamsgque.MqS.ProcessEvent ()  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 278 of file MqS.java.
+Definition at line 283 of file MqS.java.
 .SS "void javamsgque.MqS.ProcessEvent (\fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 274 of file MqS.java.
+Definition at line 279 of file MqS.java.
 .SS "void javamsgque.MqS.ProcessEvent (\fBTIMEOUT\fP timeout, \fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 270 of file MqS.java.
+Definition at line 275 of file MqS.java.
 .SS "void javamsgque.MqS.ProcessEvent (int timeout, \fBWAIT\fP flags)  throws MqSException \fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 266 of file MqS.java.
+Definition at line 271 of file MqS.java.
 .SS "native void javamsgque.MqS.ServiceCreate (String token, \fBIService\fP service)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 

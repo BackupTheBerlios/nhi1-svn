@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "30 Nov 2010" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "7 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,9 +30,9 @@ The RUBY language binding provide the following basic components:
 .IP "\(bu" 2
 abstract class of the \fBrubymsgque\fP object: \fBctx=MqS.new\fP
 .IP "\(bu" 2
-interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
+interface: \fBFACTORY API\fP to create a new application instance
 .IP "\(bu" 2
-interface: \fBIFactory\fP to create a new application instance
+interface: \fBIServerSetup\fP and or \fBIServerCleanup\fP to add server functionality
 .IP "\(bu" 2
 interface: \fBIBgError\fP to act on asyncrone errors
 .IP "\(bu" 2
@@ -57,9 +57,9 @@ file: \fCexample/RUBY/MyServer.rb\fP
 .IP "2." 4
 an instance of the abstract class \fBctx=MqS.new\fP
 .IP "3." 4
-the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
+the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
-the interface \fBIFactory\fP to create a new application instance
+the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
 The \fIminimal\fP server looks like:
 .PP
@@ -78,7 +78,6 @@ end
 srv = MqS.new
 begin
   srv.ConfigSetServerSetup(srv.method(:ServerConfig))
-  srv.ConfigSetFactory(lambda {MqS.new})
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex
@@ -206,7 +205,6 @@ require 'rubymsgque'
 class ManFilter < MqS
   def initialize
     ConfigSetName('filter')
-    ConfigSetFactory(lambda {ManFilter.new})
     ConfigSetServerSetup(method(:ServerSetup))
     super()
   end
