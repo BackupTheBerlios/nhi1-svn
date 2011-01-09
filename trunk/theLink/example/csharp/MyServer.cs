@@ -9,6 +9,7 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 using System;
 using csmsgque;
 
@@ -18,7 +19,6 @@ namespace example {
 
     // constructor
     public MyServer(MqS tmpl) : base(tmpl) {
-      ConfigSetIsServer(true);
     }
 
     // service to serve all incomming requests for token "HLWO"

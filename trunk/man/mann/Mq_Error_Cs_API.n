@@ -1,4 +1,4 @@
-.TH "Mq_Error_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Error_Cs_API" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -116,4 +116,4 @@ implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP
 Definition at line 121 of file error.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

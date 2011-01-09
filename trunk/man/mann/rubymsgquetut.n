@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "7 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "9 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -67,17 +67,24 @@ The \fIminimal\fP server looks like:
 .PP
 .nf
 require 'rubymsgque'
-def HLWO
-  SendSTART()
-  SendC('Hello World')
-  SendRETURN()
+
+class MyServer < MqS
+  def initialize(tmpl = nil)
+    super()
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def HLWO
+    SendSTART()
+    SendC('Hello World')
+    SendRETURN()
+  end
+  def ServerSetup
+    ServiceCreate('HLWO',method(:HLWO))
+  end
 end
-def ServerConfig
-  ServiceCreate('HLWO',method(:HLWO))
-end
-srv = MqS.new
+
+srv = FactoryNew('MyServer', MyServer)
 begin
-  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex

@@ -9,6 +9,7 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 using System;
 using csmsgque;
 namespace example {
@@ -39,4 +40,3 @@ namespace example {
     }
   }
 }
-

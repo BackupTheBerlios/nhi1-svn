@@ -11,6 +11,7 @@
 #§
 
 package require TclMsgque
+
 proc MyFirstService {ctx} {
   $ctx SendSTART
   $ctx SendC "Hello World"
@@ -19,8 +20,14 @@ proc MyFirstService {ctx} {
 proc ServerSetup {ctx} {
   $ctx ServiceCreate "HLWO" MyFirstService
 }
+proc MyServer {tmpl} {
+  set srv [tclmsgque MqS $tmpl]
+  $srv ConfigSetServerSetup ServerSetup
+  return $srv
+}
 
 tclmsgque Main {
+  set srv [tclmsgque FactoryNew MyServer]
   set srv [tclmsgque MqS]
   $srv ConfigSetName MyServer
   $srv ConfigSetServerSetup ServerSetup

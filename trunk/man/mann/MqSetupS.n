@@ -1,4 +1,4 @@
-.TH "MqSetupS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqSetupS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -32,7 +32,7 @@ MqSetupS \- application-programmer configuration data
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisServer\fP"
 .br
-.R "change the context to act as \fIserver-context\fP (\fIMQ_YES\fP) or not (\fIMQ_NO\fP) "
+.R "change the context to act as \fIserver-context\fP (\fITRUE\fP) or not (\fIFALSE\fP) "
 .ti -1c
 .RI "struct \fBMqCallbackS\fP \fBServerSetup\fP"
 .br
@@ -85,7 +85,7 @@ Definition at line 697 of file msgque.h.
 .PP
 define the \fIbackground-error-interface\fP 
 .PP
-A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBMqSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBMqErrorGetNum\fP and \fBMqErrorGetText\fP and can be cleared using \fBMqErrorReset\fP. 
+A background error is an error without a link to an \fIapplication-context\fP and happen if an \fBSendEND\fP call fails or if an other asynchronous task fails. if the interface is \fInot\fP defined the error is printed to stderr and the application continue to work. if the interface is defined the context is set to error and the callback is called to process this error. Inside the callback the error is available using \fBErrorGetNum\fP and \fBErrorGetText\fP and can be cleared using \fBErrorReset\fP. 
 .PP
 Definition at line 737 of file msgque.h.
 .SS "struct \fBMqLinkSetupS\fP \fBMqSetupS::Child\fP\fC [read]\fP"
@@ -108,7 +108,7 @@ Event-Handling is used to process instructions in the \fIbackground\fP to give t
 .PP
 \fBAttention:\fP
 .RS 4
-Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBMqErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBMqErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
+Together with \fBignoreExit\fP the Event-Handler is used to start background processing of tasks. Return the Event-Handler with \fBErrorSetCONTINUE\fP to signal that all tasks are finished and the process/thread is ready to exit. If \fBall\fP \fIchild\fP context Event-Handler return with \fBErrorSetCONTINUE\fP too and the client/server links is already shutdown the process/thread will \fBexit\fP. example: \fCtheLink/example/LANG/Filter4.EXT\fP 
 .RE
 .PP
 
@@ -124,11 +124,11 @@ The \fIapplication-identifier\fP is used to create a new:
 .IP "\(bu" 2
 \fIapplication-context\fP (C, TCL) or a new \fIclass-instance\fP (C++, C#, JAVA, PYTHON, PERL, VB.NET)
 .IP "\(bu" 2
-\fIserver-child-context\fP or \fIslave-child-context\fP using \fBMqLinkCreateChild\fP
+\fIserver-child-context\fP or \fIslave-child-context\fP using \fBLinkCreateChild\fP
 .IP "\(bu" 2
 \fIserver-parent-context\fP using the \fBstartAs\fP option \fI--thread\fP 
 .IP "\(bu" 2
-\fIslave-worker-context\fP using \fBMqSlaveWorker\fP
+\fIslave-worker-context\fP using \fBSlaveWorker\fP
 .IP "\(bu" 2
 \fIfilter-parent-context\fP using the \fBstartAs\fP option \fI--fork\fP or \fI--thread\fP 
 .PP
@@ -180,14 +180,14 @@ Definition at line 781 of file msgque.h.
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
-By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fIMQ_YES\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBMqErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIMQ_NO\fP) 
+By default the \fIserver-context\fP is deleted and the \fIserver-process\fP or \fIserver-thread\fP exit if the \fIclient\fP close the connection. If this option is set to \fITRUE\fP the \fIserver\fP will continue to work. Without \fIclient\fP connection only the internal event function (set with \fBIEvent\fP) is available to work on tasks. if \fIall\fP (parent and child) event functions return with \fBErrorSetCONTINUE\fP (nothing to do) the process finally exit. (default: \fIFALSE\fP) 
 .PP
 Definition at line 813 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqSetupS::isServer\fP"
 .PP
-change the context to act as \fIserver-context\fP (\fIMQ_YES\fP) or not (\fIMQ_NO\fP) 
+change the context to act as \fIserver-context\fP (\fITRUE\fP) or not (\fIFALSE\fP) 
 .PP
-A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIMQ_NO\fP) 
+A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIFALSE\fP) 
 .PP
 Definition at line 743 of file msgque.h.
 .SS "struct \fBMqLinkSetupS\fP \fBMqSetupS::Parent\fP\fC [read]\fP"
@@ -206,17 +206,17 @@ Definition at line 728 of file msgque.h.
 .PP
 define the \fIserver-cleanup-interface\fP 
 .PP
-This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBMqLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to cleanup an old \fIserver-context-link\fP, like a destructor, and is called at the beginning of \fBLinkDelete\fP to free \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fITRUE\fP. 
 .PP
 Definition at line 759 of file msgque.h.
 .SS "struct \fBMqCallbackS\fP \fBMqSetupS::ServerSetup\fP\fC [read]\fP"
 .PP
 define the \fIserver-setup-interface\fP 
 .PP
-This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBMqServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fIMQ_YES\fP. 
+This interface is used to configure a new \fIserver-context-link\fP, like a constructor, and is called at the end of \fBLinkCreate\fP or \fBLinkCreateChild\fP. This interface is called for every new incoming connection request and is used to define context specific services using \fBServiceCreate\fP or to initialize \fIcontext-specific\fP variables. As side-effect this interface set \fBisServer\fP to \fITRUE\fP. 
 .PP
 Definition at line 752 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

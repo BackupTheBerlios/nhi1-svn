@@ -24,10 +24,22 @@ ALIASES		    += "selftut=perlmsgquetut"
 ALIASES		    += "NS{1}=perl_\1"
 ALIASES		    += "lang=perl"
 ALIASES		    += "fileextension=pl"
+ALIASES		    += "dirname=perl"
 ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e 1"
 ALIASES		    += "no=\e 0"
 ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
+
+ALIASES		    += "FactoryReturn=croak(ErrorMessage)"
+ALIASES		    += "FactoryDefault=Net::PerlMsgque::FactoryDefault(ident,?class-package?)"
+ALIASES		    += "FactoryDefaultIdent=\C Net::PerlMsgque::FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=Net::PerlMsgque::FactoryAdd(?ident?,class-package)" 
+ALIASES		    += "FactoryNew=MqS Net::PerlMsgque::FactoryNew(?ident?,class-package)"
+ALIASES		    += "FactoryCall=MqS Net::PerlMsgque::FactoryCall(ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=$ctx->FactoryCtxIdentSet(ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C $ctx->FactoryCtxIdentGet()"
+ALIASES		    += "FactoryCtxDefaultSet=$ctx->FactoryCtxDefaultSet(ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

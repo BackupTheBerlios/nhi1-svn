@@ -18,7 +18,7 @@
 /// \brief The \b JavaMsgque Package
 package javamsgque;
 
-/// \brief \api #MqS
+/// \api #MqS
 public class MqS {
 
   static {
@@ -464,18 +464,14 @@ public class MqS {
 
 //
 // ========================================================================
-/// \defgroup Mq_Factory_Java_API Mq_Factory_Java_API
-/// \ingroup Mq_Java_API
+/// \ingroup Mq_Factory_API
 /// \{
-/// \brief \copybrief Mq_Factory_C_API
-/// \copydoc Mq_Factory_C_API
-//
 
   /// \api #MqFactoryCtxIdentSet
   public native void FactoryCtxIdentSet	      (String val);
   /// \api #MqFactoryCtxIdentGet
   public native String FactoryCtxIdentGet     ();
-  /// \api #MqConfigSetDefaultFactory
+  /// \api #FactoryCtxDefaultSet
   public native void FactoryCtxDefaultSet     (String ident);
 
 /// \} Mq_Factory_Java_API

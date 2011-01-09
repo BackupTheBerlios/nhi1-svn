@@ -1,4 +1,4 @@
-.TH "msgqueforphp" n "7 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "msgqueforphp" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -79,7 +79,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .br
  A \fIhigh-level-programming-language\fP like JAVA, C#, C++, Perl, Python, Ruby, Tcl or VB-NET is using a wrapper around this \fIdata-structure\fP as \fIapplication-handle\fP. The \fIapplication-specific-data\fP is available as \fBCONTEXT LOCAL STORAGE API\fP 
 .SS "$ctx=new MqS()"
-create a new context and initialize the default configuration data 
+C-API: \fBMqContextCreate\fP, create a new context and initialize the default configuration data 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -111,7 +111,7 @@ the new \fIcontext\fP, no error return because this function \fIpanic\fP on \fIo
 .fi
 .PP
 .SS "$ctx->Delete()"
-delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
+C-API: \fBMqContextDelete\fP, delete the \fBMqS\fP object and \fBall\fP depending data including the \fItoplevel\fP object self 
 .PP
 Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to \fIundef\fP. The \fIcontext\fP can \fBnot\fP be reused. 
 .PP
@@ -121,19 +121,19 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .RE
 .PP
 .SS "$ctx->Exit()"
-delete the \fIcontext\fP and exit the current process or thread 
+C-API: \fBMqExitP\fP, delete the \fIcontext\fP and exit the current process or thread 
 .PP
 To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
 .PP
 \fBParameters:\fP
 .RS 4
-\fIprefix\fP identify the caller 
+\fIprefix\fP identify the caller (\fBMqExitP\fP only) 
 .br
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 .SS "$ctx->LogC(string:prefix, integer:level, string:message)"
-write a logging-message to stderr using the internal format 
+C-API: \fBMqLogC\fP, write a logging-message to stderr using the internal format 
 .PP
 The logging is only done if '\fC\fBdebug\fP >= level\fP' and '\fC\fBisSilent\fP == \fIFALSE\fP'\fP using the following format: 
 .PP
@@ -158,7 +158,222 @@ C> (NAME:PID:THREADID) [YYYY-MM-DD:HH-MM-SS] [DEBUGLEVEL-CONTEXTID-REFCOUNT-CONT
 .PP
 .SH "FACTORY API"
 .PP
-interface{IFactory} copydetails MqSetupS::Factory b Example: config_IFactory_example
+\fBFactoryDefault\fP
+.br
+ \fBFactoryDefaultIdent\fP
+.br
+ \fBFactoryAdd\fP
+.br
+ \fBFactoryNew\fP
+.br
+ \fBFactoryCall\fP
+.br
+ \fBFactoryCtxIdentSet\fP
+.br
+ \fBFactoryCtxIdentGet\fP
+.br
+ \fBFactoryCtxDefaultSet\fP
+.br
+.PP
+provide an interface to create a new instance 
+.PP
+The \fIfactory\fP is an important part of the object management and has the following basic features:
+.IP "1." 4
+create a new instance identified by an \fIidentifier\fP or using an already available instance as template
+.IP "2." 4
+cleanup and delete an instance
+.IP "3." 4
+provide an \fIidentifier\fP for factory lookup and as an unique application name
+.IP "4." 4
+identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a remote context
+.PP
+The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
+.PP
+The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
+.SS "FactoryDefault(ident,?class?)"
+C-API: \fBMqFactoryDefault\fP, add a new \fIdefault-factory-interface\fP identified by \fIident\fP 
+.PP
+The default factory is always used to create an instance if no other factory is available 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP (C-API) instance constructor function 
+.br
+\fIcreateData\fP (C-API) instance constructor data 
+.br
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
+.br
+\fIdeleteCallF\fP (C-API) instance destructor function 
+.br
+\fIdeleteData\fP (C-API) instance destructor data 
+.br
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an raise(ErrorMessage) object on error 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/php/Filter4.php\fP:  
+.PP
+.nf
+FactoryDefault('transFilter', 'Filter4');
+
+.fi
+.PP
+.SS "string FactoryDefaultIdent()"
+C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory 
+.SS "FactoryAdd(?ident?,class)"
+C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP (C-API) instance constructor function 
+.br
+\fIcreateData\fP (C-API) instance constructor data 
+.br
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
+.br
+\fIdeleteCallF\fP (C-API) instance destructor function 
+.br
+\fIdeleteData\fP (C-API) instance destructor data 
+.br
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an raise(ErrorMessage) object on error 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/php/Filter5.php\fP:  
+.PP
+.nf
+FactoryAdd('F1');
+
+.fi
+.PP
+.SS "MqS FactoryNew(?ident?,class)"
+C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
+.PP
+This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier 
+.br
+\fIcreateCallF\fP (C-API) instance constructor function 
+.br
+\fIcreateData\fP (C-API) instance constructor data 
+.br
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
+.br
+\fIdeleteCallF\fP (C-API) instance destructor function 
+.br
+\fIdeleteData\fP (C-API) instance destructor data 
+.br
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
+.br
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP used by \fIcreateCallF\fP 
+.br
+\fIctxP\fP (C-API) the new created instance to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an raise(ErrorMessage) object on error 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/php/mulserver.php\fP:  
+.PP
+.nf
+$srv = FactoryNew('mulserver', 'MulServer');
+
+.fi
+.PP
+.SS "MqS FactoryCall(ident)"
+C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIident\fP factory identifier to call 
+.br
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP 
+.br
+\fIctxP\fP (C-API) the new created instance to return 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an raise(ErrorMessage) object on error 
+.RE
+.PP
+.PP
+\fBExample\fP from \fCexample/php/Filter5.php\fP:  
+.PP
+.nf
+$srv = FactoryCall($argv[0]);
+
+.fi
+.PP
+.SS "$ctx->FactoryCtxIdentSet(ident)"
+C-API: \fBMqFactoryCtxIdentSet\fP, link the context to a new \fIfactory-interface\fP identified by \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP the factory identifier to link with 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
+ 
+.SS "string $ctx->FactoryCtxIdentGet"
+C-API: \fBMqFactoryCtxIdentGet\fP, get the \fIident\fP of the \fIfactory-interface\fP used for the context 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the \fCcontext.factory.ident\fP value or an empty string if no factory is available 
+.RE
+.PP
+\fBAttention:\fP
+.RS 4
+the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
+.RE
+.PP
+ 
+.SS "$ctx->FactoryCtxDefaultSet(ident)"
+C-API: \fBMqFactoryCtxDefaultSet\fP, create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
+.br
+\fIident\fP the new factory identifier 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+an \fBERROR OBJECT\fP on error 
+.RE
+.PP
 .SH "CONFIG API"
 .PP
 \fBInit\fP
@@ -524,7 +739,7 @@ if a \fIcontext\fP is deleted (parent or child) the \fIdepending\fP context (par
 if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP
 .SS "$ctx->LinkCreate(args...)"
-make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
+C-API: \fBMqLinkCreate\fP, make \fIctx\fP to a \fIparent-context\fP and setup a new \fIclient-server-link\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -544,7 +759,7 @@ if the first argument after the \fB'@'\fP item is the string \fB'SELF'\fP an ind
 .RE
 .PP
 .SS "$ctx->LinkCreateChild(MqS:parent, args...)"
-make a \fIcontext\fP to a \fIchild-context\fP on-top of an existing \fIparent-client-server-link\fP 
+C-API: \fBMqLinkCreateChild\fP, make a \fIcontext\fP to a \fIchild-context\fP on-top of an existing \fIparent-client-server-link\fP 
 .PP
 A child is using the same process or thread as the parent but a different namespace. With a different namespace a child is able to act on different services on the shared server. 
 .PP
@@ -563,7 +778,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->LinkDelete()"
-close the \fIclient-server-link\fP 
+C-API: \fBMqLinkDelete\fP, close the \fIclient-server-link\fP 
 .PP
 On a client the \fIcontext\fP will be set to \fInot-connected\fP and the function \fBLinkIsConnected\fP will return \fIFALSE\fP. On a server the \fIcontext\fP will be deleted but only if \fBignoreExit\fP is \fInot\fP set to \fITRUE\fP. If the \fIlink\fP is already \fInot-connected\fP nothing will happen. 
 .PP
@@ -572,10 +787,11 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
+ 
 .SS "$ctx->LinkConnect()"
-re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
+C-API: \fBMqLinkConnect\fP, re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/php/Filter4.php\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -587,8 +803,9 @@ Do nothing if the \fIclient-server-link\fP is already connected. This function i
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "MqS $ctx->LinkGetParent()"
-get the \fIparent-context\fP from a client/server link 
+C-API: \fBMqLinkGetParent\fP, get the \fIparent-context\fP from a client/server link 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -600,8 +817,9 @@ get the \fIparent-context\fP from a client/server link
 the \fIparent-context\fP or \fIundef\fP if not a \fIchild-context\fP 
 .RE
 .PP
+ 
 .SS "integer $ctx->LinkGetCtxId()"
-get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
+C-API: \fBMqLinkGetCtxId\fP, get an identifier which is \fIunique\fP per \fIparent-or-child-context\fP 
 .PP
 The \fIcontext-identifier\fP is a number and is used in the protocol to link a \fIdata-package\fP to a \fIcontext-pointer\fP. This is necessary because the communication interface is shared between the \fIparent-context\fP and the \fIchild-context\fP. This number is \fIunique\fP. 
 .PP
@@ -615,8 +833,9 @@ The \fIcontext-identifier\fP is a number and is used in the protocol to link a \
 the identifier as number 
 .RE
 .PP
+ 
 .SS "boolean $ctx->LinkIsParent()"
-is the \fIcontext\fP a \fIparent-context\fP? 
+C-API: \fBMqLinkIsParent\fP, is the \fIcontext\fP a \fIparent-context\fP? 
 .PP
 A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\fP 
 .PP
@@ -630,8 +849,9 @@ A \fIcontext\fP is a \fIparent-context\fP if it was created with \fBLinkCreate\f
 a boolean value, \fITRUE\fP or \fIFALSE\fP 
 .RE
 .PP
+ 
 .SS "boolean $ctx->LinkIsConnected()"
-is the context connected? 
+C-API: \fBMqLinkIsConnected\fP, is the context connected? 
 .PP
 A context is connected if the \fBLinkCreate\fP command was successful. A context is \fInot\fP connected if:
 .IP "\(bu" 2
@@ -649,8 +869,9 @@ the link was deleted with \fBLinkDelete\fP
 a boolean value, \fITRUE\fP or \fIFALSE\fP 
 .RE
 .PP
+ 
 .SS "string $ctx->LinkGetTargetIdent()"
-get the \fIident\fP of the \fIlink-target\fP 
+C-API: \fBMqLinkGetTargetIdent\fP, get the \fIident\fP of the \fIlink-target\fP 
 .PP
 This function is only useful if the link is up and running. 
 .PP
@@ -747,7 +968,7 @@ function callback($ctx) {...
 .fi
 .PP
 .SS "string $ctx->ServiceGetToken()"
-get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
+C-API: \fBMqServiceGetToken\fP, get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
 This function is needed on the server to process a \fIservice-request\fP defined as \fI+ALL\fP or as an \fIalias\fP to extract the \fIcurrent\fP \fBTOKEN IDENTIFIER\fP. 
 .PP
@@ -761,8 +982,9 @@ This function is needed on the server to process a \fIservice-request\fP defined
 the \fBTOKEN IDENTIFIER\fP 
 .RE
 .PP
+ 
 .SS "boolean $ctx->ServiceIsTransaction()"
-check if the \fIongoing-service-call\fP belongs to a transaction 
+C-API: \fBMqServiceIsTransaction\fP, check if the \fIongoing-service-call\fP belongs to a transaction 
 .PP
 A \fIservice-call\fP can be \fIwith-transaction\fP (return \fITRUE\fP if the package was send with \fBSendEND_AND_WAIT\fP or \fBSendEND_AND_CALLBACK\fP) or can be \fIwithout-transaction\fP (return \fIFALSE\fP if the package was send with \fBSendEND\fP) 
 .PP
@@ -777,7 +999,7 @@ a boolean value, \fITRUE\fP or \fIFALSE\fP
 .RE
 .PP
 .SS "$filter=MqS $ctx->ServiceGetFilter()"
-get the \fIfilter-context\fP or the \fImaster-context\fP 
+C-API: \fBMqServiceGetFilter\fP, get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
 A \fIfilter-pipeline\fP has two context, one on the left and one on the right. The \fIleft-context\fP is linked with the \fImaster-context\fP and the \fIright-context\fP is linked to the \fIslave-context\fP. This function extract the \fIother-context\fP related to the initial \fIctx\fP argument using the following order:
 .IP "1." 4
@@ -802,7 +1024,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->ServiceCreate(string:token, callback)"
-create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
+C-API: \fBMqServiceCreate\fP, create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
 The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring $ctx->ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
@@ -826,11 +1048,11 @@ an \fBERROR OBJECT\fP on error
 .PP
 \fBAttention:\fP
 .RS 4
-the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefor\fP using this function 
+the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefore\fP using this function 
 .RE
 .PP
 .SS "$ctx->ServiceProxy(string:token, ?integer:id=0?)"
-create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
+C-API: \fBMqServiceProxy\fP, create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
 .PP
 This function is used to create a \fIproxy-service\fP to forward the \fIbody-data\fP from the \fIread-data-package\fP of the \fImaster\fP to the \fIsend-data-package\fP of the slave. The data is \fInot\fP changed. This function support the \fIreverse-operation\fP also. If the \fIctx\fP is a \fImaster-context\fP than the data is send to \fIslave\fP identified by \fIid\fP. If the \fIctx\fP is a \fIslave-context\fP than the data is send to the \fImaster\fP of the \fIslave\fP. Use \fIid=0\fP to send that data to the \fIfilter-context\fP. 
 .PP
@@ -848,8 +1070,9 @@ This function is used to create a \fIproxy-service\fP to forward the \fIbody-dat
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->ServiceDelete(string:token)"
-delete a service. 
+C-API: \fBMqServiceDelete\fP, delete a service. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -863,10 +1086,10 @@ delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.SS "$ctx->ProcessEvent(timeout=integer|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))"
-.SS "$ctx->ProcessEvent(wait=MqS::WAIT_(NO|ONCE|FOREVER))"
 .SS "$ctx->ProcessEvent()"
-enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
+.SS "$ctx->ProcessEvent(wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+.SS "$ctx->ProcessEvent(timeout=integer|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+C-API: \fBMqProcessEvent\fP, enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
 .br
@@ -940,7 +1163,8 @@ construct an outgoing \fIsend-data-package\fP.
 Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
- \fBExample:\fP send an integer and a list of float, string and a \fIbinary-string\fP: 
+.PP
+\fBExample:\fP send an integer and a list of float, string and a \fIbinary-string\fP: 
 .PP
 .nf
  $ctx->SendSTART();
@@ -955,7 +1179,7 @@ Sending data is an atomic task and should not be split. Only one \fIsend-data-pa
 .fi
 .PP
 .SS "$ctx->SendSTART()"
-initialize the \fIsend-data-package\fP. 
+C-API: \fBMqSendSTART\fP, initialize the \fIsend-data-package\fP. 
 .PP
 This function have to be the first statement in a \fIsend-data-block\fP. 
 .PP
@@ -969,8 +1193,9 @@ This function have to be the first statement in a \fIsend-data-block\fP.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendEND(string:token)"
-finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
+C-API: \fBMqSendEND\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot\fP expect a return. 
 .PP
 If an \fBerror\fP is raised on the server during the service-processing the error is send back as \fIasynchronous-error-event\fP and will be raised during the next enter into the event-loop. Use \fBIBgError\fP to control the \fIasynchronous-error-event\fP processing. 
 .PP
@@ -987,7 +1212,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->SendEND_AND_WAIT(string:token, ?integer:timeout=seconds?)"
-finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
+C-API: \fBMqSendEND_AND_WAIT\fP, finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP
 If an \fBerror\fP is raised on the server during the service-processing the function will return this error immediately. During waiting for the return the \fIevent-loop\fP is used to process other events. Use \fBIEvent\fP to add your tasks into the event loop. 
 .PP
@@ -1006,7 +1231,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->SendEND_AND_CALLBACK(string:token, callback)"
-finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
+C-API: \fBMqSendEND_AND_CALLBACK\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
 This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx->ProcessEvent(timeout=integer|MqSTIMEOUT_(DEFAULT|USER|MAX), wait=MqSWAIT_(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
@@ -1028,8 +1253,9 @@ This function will \fInever\fP block and return immediately. If \fIreturn-data\f
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendRETURN()"
-finish the \fIsend-data-block\fP on the server and optional return the results. 
+C-API: \fBMqSendRETURN\fP, finish the \fIsend-data-block\fP on the server and optional return the results. 
 .PP
 Every \fIservice-handler\fP have to use this function at the end to return the results or the error. If an \fIerror\fP is returned the local \fIerror-object\fP is reset. The following behaviour is used:
 .IP "\(bu" 2
@@ -1037,7 +1263,7 @@ if a shortterm transaction is ongoing this function return the data or the error
 .IP "\(bu" 2
 if the answer does not return any data no previous \fBMqSendSTART\fP is required.
 .IP "\(bu" 2
-if no transaction is ongoing this function does just return. If an error is available report an asyncrone error to the link target.
+if no transaction is ongoing this function does just return. If an error is available report an asynchronous error to the link target.
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1049,8 +1275,9 @@ if no transaction is ongoing this function does just return. If an error is avai
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendERROR()"
-send the data from the \fBERROR OBJECT\fP to the link target . 
+C-API: \fBMqSendERROR\fP, send the data from the \fBERROR OBJECT\fP to the link target . 
 .PP
 If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send to the link target. After send the error is reset. This function only raise an error if the sending self fails. 
 .PP
@@ -1064,8 +1291,9 @@ If an error is available the \fIerror-number\fP and the \fIerror-text\fP is send
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendTYPE(value)"
-append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
+C-API: \fBMqSendY\fP, append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1079,8 +1307,9 @@ append a native \fBTYPE IDENTIFIER\fP value to the \fIsend-data-package\fP.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendN(value)"
-append a \fIbody-item\fP to the \fIsend-data-package\fP. 
+C-API: \fBMqSendN\fP, append a \fIbody-item\fP to the \fIsend-data-package\fP. 
 .PP
 A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBByteArray $ctx->ReadN()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
@@ -1098,8 +1327,9 @@ A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIit
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "integer $ctx->SendBDY(value)"
-send the \fIentire-body\fP to the \fIlink-target\fP 
+C-API: \fBMqSendBDY\fP, send the \fIentire-body\fP to the \fIlink-target\fP 
 .PP
 The goal of this function is to send the \fIentire-body\fP of a service request to the \fIlink-target\fP. The \fIentire-body\fP is the result of a previous \fBReadBDY\fP function call and can be used to save the \fIentire-body\fP into an external storage or for an additional operation like encryption. The \fISendBDY\fP is a special kind of function because it combines the \fISendSTART\fP, \fISend\fP? and \fISendEND\fP... style of function into one single command. 
 .PP
@@ -1117,8 +1347,9 @@ The goal of this function is to send the \fIentire-body\fP of a service request 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendL_START()"
-start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+C-API: \fBMqSendL_START\fP, start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1130,8 +1361,9 @@ start to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendL_END()"
-finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
+C-API: \fBMqSendL_END\fP, finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1143,8 +1375,9 @@ finish to append an embedded \fIbody-list-item\fP to the \fIsend-data-package\fP
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->SendT_START(callback)"
-start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+C-API: \fBMqSendT_START\fP, start to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
 .PP
 In difference to \fBSendEND_AND_WAIT\fP and \fBSendEND_AND_CALLBACK\fP a \fIlongterm-transaction-call\fP have to survive an application restart. To achieve this goal two features have to be available to process the results:
 .IP "1." 4
@@ -1166,7 +1399,8 @@ The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
- \fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+\fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
 .PP
 .nf
  $ctx->SendSTART(); 
@@ -1178,8 +1412,9 @@ an \fBERROR OBJECT\fP on error
 
 .fi
 .PP
+ 
 .SS "$ctx->SendT_END()"
-finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
+C-API: \fBMqSendT_END\fP, finish to write a \fIlongterm-transaction-item\fP to the \fIsend-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1227,7 +1462,8 @@ extract data from an incoming \fIread-data-package\fP.
 Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an integer and a list of float, string and a binary-string: 
+.PP
+\fBExample:\fP read an integer and a list of float, string and a binary-string: 
 .PP
 .nf
  $num = $ctx->ReadI();
@@ -1240,7 +1476,7 @@ Reading data is an atomic task and should not be split. Only one \fIread-data-pa
 .fi
 .PP
 .SS "TYPE $ctx->ReadTYPE()"
-read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
+C-API: \fBMqReadY\fP, read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1254,8 +1490,9 @@ read a \fBTYPE IDENTIFIER\fP from the \fIread-data-package\fP
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ByteArray $ctx->ReadN()"
-extract a \fIbody-item\fP from the \fIread-data-package\fP 
+C-API: \fBMqReadN\fP, extract a \fIbody-item\fP from the \fIread-data-package\fP 
 .PP
 A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fIsize\fP, \fIdata-type\fP and the \fInative\fP data object as information. The \fIitem\fP extracted can be saved into an external storage and be send later using \fBSendN\fP. 
 .PP
@@ -1273,10 +1510,11 @@ A \fIbody-item\fP is a \fIbyte-array\fP with a defined \fIlength\fP and includin
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ByteArray $ctx->ReadBDY()"
-extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
+C-API: \fBMqReadBDY\fP, extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be ican send later using \fBSendBDY\fP.
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be can send later using \fBSendBDY\fP.
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1292,8 +1530,9 @@ A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "MqBufferS $ctx->ReadU()"
-extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
+C-API: \fBMqReadU\fP, extract a \fBtemporary\fP \fBBUFFER API\fP from the \fIread-data-package\fP 
 .PP
 The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP valid up to the next call of any \fBREAD API\fP function. If a long-term object is required use the C-API function: \fBMqBufferDup\fP. 
 .PP
@@ -1310,7 +1549,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->ReadL_START(?MqBufferS:buffer?)"
-start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+C-API: \fBMqReadL_START\fP, start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
 Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-object\fP. This command requires a final \fB$ctx->ReadL_END()\fP to finish the read. 
 .PP
@@ -1326,8 +1565,9 @@ Initialize the read with the current \fIbody-item\fP or an optional \fIbuffer-ob
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->ReadL_END()"
-finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
+C-API: \fBMqReadL_END\fP, finish to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1340,7 +1580,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "$ctx->ReadT_START(?MqBufferS:buffer?)"
-start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
+C-API: \fBMqReadT_START\fP, start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP
 Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\fP. The \fIcurrent-item\fP have to be the first item in the \fIread-data-package\fP. This command requires a final \fB$ctx->ReadL_END()\fP to finish the read. 
 .PP
@@ -1356,7 +1596,8 @@ Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
- \fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+\fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
 .PP
 .nf
  public function SRVR() { 
@@ -1368,8 +1609,9 @@ an \fBERROR OBJECT\fP on error
 
 .fi
 .PP
+ 
 .SS "$ctx->ReadT_END()"
-finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
+C-API: \fBMqReadT_END\fP, finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1381,8 +1623,9 @@ finish to extract a \fIlongterm-transaction-item\fP from the \fIread-data-packag
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "$ctx->ReadProxy(MqS:otherCtx)"
-link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
+C-API: \fBMqReadProxy\fP, link two \fIcontext-objects\fP to direct pass a data item from one object to the other. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1396,8 +1639,9 @@ link two \fIcontext-objects\fP to direct pass a data item from one object to the
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "integer $ctx->ReadGetNumItems()"
-get the number of items left in the \fIread-data-package\fP 
+C-API: \fBMqReadGetNumItems\fP, get the number of items left in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1409,8 +1653,9 @@ get the number of items left in the \fIread-data-package\fP
 the number of items as integer 
 .RE
 .PP
+ 
 .SS "boolean $ctx->ReadItemExists()"
-check if an item exists in the \fIread-data-package\fP 
+C-API: \fBMqReadItemExists\fP, check if an item exists in the \fIread-data-package\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1422,8 +1667,9 @@ check if an item exists in the \fIread-data-package\fP
 boolean, \fITRUE\fP or \fIFALSE\fP 
 .RE
 .PP
+ 
 .SS "$ctx->ReadUndo()"
-undo the last \fBREAD API\fP function call 
+C-API: \fBMqReadUndo\fP, undo the last \fBREAD API\fP function call 
 .PP
 Put the internal position-pointer to the start of the last read \fIbody-item\fP. The next read function call will extract the same item again. Only \fBone\fP undo level is supported. 
 .PP
@@ -1451,6 +1697,8 @@ an \fBERROR OBJECT\fP on error
 .br
  \fBSlaveIs\fP
 .br
+.PP
+create and manage a slave context 
 .PP
 The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
@@ -1519,7 +1767,7 @@ the \fIworker-context\fP is created using \fBSlaveWorker\fP
 the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \fC0\fP.
 .PP
 .SS "$ctx->SlaveWorker(integer:id, args...)"
-create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
+C-API: \fBMqSlaveWorker\fP, create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
 .PP
 The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 
 .PP
@@ -1537,8 +1785,7 @@ The slave-context is started as an independent process or thread based on the \f
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
-.PP
-\fBexample\fP create a worker with id 7 and name 'MyWorker' as thread. 
+ \fBexample\fP create a worker with id 7 and name 'MyWorker' as thread. 
 .PP
 .nf
  $ctx->SlaveWorker(7,'--thread','--silent','@','WORKER','--name','MyWorker'); 
@@ -1546,7 +1793,7 @@ an \fBERROR OBJECT\fP on error
 .fi
 .PP
 .SS "$ctx->SlaveCreate(integer:id, MqS:slave)"
-create a \fImaster/slave\fP link between the master-context object and the slave-context object 
+C-API: \fBMqSlaveCreate\fP, create a \fImaster/slave\fP link between the master-context object and the slave-context object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1567,8 +1814,9 @@ an \fBERROR OBJECT\fP on error
 The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no other external references should be used and the \fIslave-context\fP will be deleted if the \fImaster-context\fP is be deleted. 
 .RE
 .PP
+ 
 .SS "$ctx->SlaveDelete(integer:id)"
-Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
+C-API: \fBMqSlaveDelete\fP, Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
 .PP
 By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this function to delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
 .PP
@@ -1589,8 +1837,9 @@ an \fBERROR OBJECT\fP on error
 it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\fP but this will break the internal master/slave order. 
 .RE
 .PP
+ 
 .SS "MqS $ctx->SlaveGet(integer:id)"
-get the \fIslave-context\fP from a \fImaster-context\fP 
+C-API: \fBMqSlaveGet\fP, get the \fIslave-context\fP from a \fImaster-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1604,8 +1853,9 @@ get the \fIslave-context\fP from a \fImaster-context\fP
 the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP is not a \fImaster-context\fP. 
 .RE
 .PP
+ 
 .SS "MqS $ctx->SlaveGetMaster()"
-get the \fImaster-context\fP from the \fIslave-context\fP 
+C-API: \fBMqSlaveGetMaster\fP, get the \fImaster-context\fP from the \fIslave-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1617,8 +1867,9 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 the \fImaster-context\fP or \fIundef\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
+ 
 .SS "boolean $ctx->SlaveIs()"
-is the \fIcontext\fP a \fIslave-context\fP ? 
+C-API: \fBMqSlaveIs\fP, is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1724,19 +1975,25 @@ The \fIerror-object\fP (\fIclass MqSException $ex\fP) is used to transport the \
 .fi
 .PP
 .SS "string $ctx->ErrorGetText()"
+C-API: \fBMqErrorGetText\fP, 
+.PP
 \fBReturns:\fP
 .RS 4
 the \fIerror-message\fP from the \fIexception-object\fP 
 .RE
 .PP
+ 
 .SS "integer $ctx->ErrorGetNum()"
+C-API: \fBMqErrorGetNum\fP, 
+.PP
 \fBReturns:\fP
 .RS 4
 the \fIerror-number\fP from the \fIexception-object\fP. The number can be used as exit-code. 
 .RE
 .PP
+ 
 .SS "$ctx->ErrorC(string:prefix, integer:num, string:message)"
-set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJECT\fP 
+C-API: \fBMqErrorC\fP, set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJECT\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1752,17 +2009,17 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJEC
 .SS "$ctx->ErrorSet(MqSException:$ex)"
 convert a \fIclass MqSException $ex\fP into a msgqueforphp conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "$ctx->ErrorSetCONTINUE()"
-signal end of processing in an \fBIEvent\fP callback 
+C-API: \fBMqErrorSetCONTINUE\fP, signal end of processing in an \fBIEvent\fP callback  
 .SS "$ctx->ErrorSetEXIT()"
-finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
+C-API: \fBMqErrorSetEXIT\fP, finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
 .PP
-To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event. 
+To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achieve this goal a special \fIexit-error-object\fP is created and reported to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event.  
 .SS "boolean $ctx->ErrorIsEXIT()"
-check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP 
+C-API: \fBMqErrorIsEXIT\fP, check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP 
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
+ Read more using from the: \fCtheLink/example/php/Filter4.php\fP example 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP
@@ -1777,11 +2034,11 @@ A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an 
 .fi
 .PP
 .SS "$ctx->ErrorReset()"
-clear the \fIerror\fP and reset the \fIcontext\fP 
+C-API: \fBMqErrorReset\fP, clear the \fIerror\fP and reset the \fIcontext\fP 
 .SS "$ctx->ErrorRaise()"
 convert the error from an \fIcontext\fP into an \fBERROR OBJECT\fP and raise the object.
 .SS "$ctx->ErrorPrint()"
-print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
+C-API: \fBMqErrorPrint\fP, print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
 .SH "BINARY OBJECT"
 .PP
 No special \fIbinary-object\fP is used. All \fIbinary-data\fP is available as binary-string.
@@ -1963,7 +2220,8 @@ class MulServer extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-$srv = new MulServer();
+
+$srv = FactoryNew('mulserver', 'MulServer');
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

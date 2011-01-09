@@ -24,8 +24,13 @@ int NS(FactoryAdd) (TCL_ARGS)
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory;
-  CHECK_C(ident)
-  CHECK_PROC(factory, "FactoryAdd ident factory-proc")
+  if (objc == skip+1) {
+    CHECK_PROC(factory, "FactoryAdd ?ident? factory-proc")
+    ident = VAL2CST(factory);
+  } else {
+    CHECK_C(ident)
+    CHECK_PROC(factory, "FactoryAdd ?ident? factory-proc")
+  }
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
   MqFactoryErrorCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NS(ProcFree), NS(FactoryDelete), NULL, NULL));
@@ -84,8 +89,13 @@ int NS(FactoryNew) (TCL_ARGS)
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory;
-  CHECK_C(ident)
-  CHECK_PROC(factory, "FactoryNew ident factory-proc")
+  if (objc == skip+1) {
+    CHECK_PROC(factory, "FactoryNew ?ident? factory-proc")
+    ident = VAL2CST(factory);
+  } else {
+    CHECK_C(ident)
+    CHECK_PROC(factory, "FactoryNew ?ident? factory-proc")
+  }
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
   MqFactoryErrorCheck(ret = MqFactoryNew(ident, 

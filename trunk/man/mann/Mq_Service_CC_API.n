@@ -1,4 +1,4 @@
-.TH "Mq_Service_CC_API" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Service_CC_API" n "9 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -49,8 +49,6 @@ Mq_Service_CC_API \- create and manage services
 .PP 
 create and manage services  
 
-create and manage services 
-.PP
 To provide a \fIservice\fP is the main purpose of a server and the main-purpose of a \fIclient/server\fP connection is to call a service and to process the results. A service have to be defined on a server during \fIlink-setup\fP (\fBIServerSetup\fP) with the \fBServiceCreate\fP function. The cleanup is done implicit on \fIlink-delete\fP or explicit with the \fBServiceDelete\fP function.  
 .SH "Function Documentation"
 .PP 
@@ -58,12 +56,12 @@ To provide a \fIservice\fP is the main purpose of a server and the main-purpose 
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 781 of file ccmsgque.h.
+Definition at line 776 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ProcessEvent (\fBMQ_TIME_T\fP timeout, enum \fBMqWaitOnEventE\fP const  wait)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP 
 .PP
-Definition at line 773 of file ccmsgque.h.
+Definition at line 768 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ServiceCreate (\fBMQ_CST\fP const  token, \fBIService\fP *const  service)  throw (MqCException)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
@@ -80,22 +78,22 @@ implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP 
 .PP
-Definition at line 749 of file ccmsgque.h.
+Definition at line 744 of file ccmsgque.h.
 .SS "\fBMQ_CST\fP ccmsgque::MqC::ServiceGetToken ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP 
 .PP
-Definition at line 756 of file ccmsgque.h.
+Definition at line 751 of file ccmsgque.h.
 .SS "bool ccmsgque::MqC::ServiceIsTransaction ()\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP 
 .PP
-Definition at line 746 of file ccmsgque.h.
+Definition at line 741 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::ServiceProxy (\fBMQ_CST\fP const  token, \fBMQ_SIZE\fP id = \fC0\fP)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
 .PP
-Definition at line 768 of file ccmsgque.h.
+Definition at line 763 of file ccmsgque.h.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

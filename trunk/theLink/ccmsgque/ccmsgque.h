@@ -220,7 +220,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Context_CC_API Mq_Context_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Context_C_API
-    /// \copydoc Mq_Context_C_API
+    /// \details \copydetails Mq_Context_C_API
     /// \{
 
     public:
@@ -249,11 +249,6 @@ namespace ccmsgque {
       /// \api #MqFactoryCtxIdentGet
       inline MQ_CST FactoryCtxIdentGet () { 
 	return MqFactoryCtxIdentGet(&context); 
-      }
-
-      /// \api #MqFactoryCtxItemSet
-      inline void FactoryCtxItemSet (MQ_CST ident) throw(MqCException) { 
-	ErrorCheck (MqFactoryCtxIdentSet(&context, ident)); 
       }
     public:
       typedef void (MqC::*CallbackF) ();
@@ -336,7 +331,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Config_CC_API Mq_Config_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Config_C_API
-    /// \copydoc Mq_Config_C_API
+    /// \details \copydetails Mq_Config_C_API
     /// \{
     public:
 
@@ -418,7 +413,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Link_CC_API Mq_Link_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Link_C_API
-    /// \copydoc Mq_Link_C_API
+    /// \details \copydetails Mq_Link_C_API
     /// \{
     public:
       /// \api #MqLinkCreate
@@ -500,7 +495,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Error_CC_API Mq_Error_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Error_C_API
-    /// \copydoc Mq_Error_C_API
+    /// \details \copydetails Mq_Error_C_API
     /// \{
 
     public:
@@ -572,7 +567,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Read_CC_API Mq_Read_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Read_C_API
-    /// \copydoc Mq_Read_C_API
+    /// \details \copydetails Mq_Read_C_API
     /// \{
     public:
       /// \api #MqReadY
@@ -663,7 +658,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Send_CC_API Mq_Send_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Send_C_API
-    /// \copydoc Mq_Send_C_API
+    /// \details \copydetails Mq_Send_C_API
     /// \{
 
     public:
@@ -739,7 +734,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Service_CC_API Mq_Service_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Service_C_API
-    /// \copydoc Mq_Service_C_API
+    /// \details \copydetails Mq_Service_C_API
     /// \{
     public:
       /// \api #MqServiceIsTransaction
@@ -790,7 +785,7 @@ namespace ccmsgque {
     /// \defgroup Mq_Slave_CC_API Mq_Slave_CC_API
     /// \ingroup Mq_CC_API
     /// \brief \copybrief Mq_Slave_C_API
-    /// \copydoc Mq_Slave_C_API
+    /// \details \copydetails Mq_Slave_C_API
     /// \{
 
     public:
@@ -846,6 +841,12 @@ namespace ccmsgque {
       }
     /// \} Mq_Slave_CC_API
   };
+
+  /// \defgroup Mq_Factory_CC_API Mq_Factory_CC_API
+  /// \ingroup Mq_CC_API
+  /// \brief \copybrief MqFactory
+  /// \details \copydetails MqFactory
+  /// \{
 
   class MqFactoryCException : public exception
   {
@@ -919,42 +920,54 @@ namespace ccmsgque {
       };
 
     public:
+      /// \api #MqFactoryAdd
       static inline void Add(MQ_CST ident) throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      /// \api #MqFactoryAdd
       static inline void Add() throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      /// \api #MqFactoryDefault
       static inline void Default(MQ_CST ident) throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      /// \api #MqFactoryDefault
       static inline void Default() throw (MqFactoryCException) {
 	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
       }
+      /// \api #MqFactoryDefaultIdent
       static inline MQ_CST DefaultIdent() {
 	return MqFactoryDefaultIdent();
       }
+      /// \api #MqFactoryCall
       static inline T* Call(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
+      /// \api #MqFactoryCall
       static inline T* Call() throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryCall (typeid(T).name(), NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
+      /// \api #MqFactoryNew
       static inline T* New(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
+      /// \api #MqFactoryNew
       static inline T* New() throw (MqFactoryCException) {
 	struct MqS *mqctx;
 	ErrorCheck (MqFactoryNew (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
   };
+
+  /// \} Mq_Factory_CC_API
+
 };  // END - namespace "ccmsgque"
 
 /// \} Mq_CC_API

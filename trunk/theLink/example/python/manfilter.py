@@ -29,6 +29,7 @@ class manfilter(MqS):
       ftr.SendC("<" + ctx.ReadC() + ">")
     ftr.SendEND_AND_WAIT("+FTR")
     ctx.SendRETURN()
+
 srv = manfilter()
 try:
   srv.LinkCreate(sys.argv)
@@ -37,7 +38,3 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-
-
-
-

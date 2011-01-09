@@ -23,12 +23,23 @@ error:
 static enum MqErrorE ServerSetup (struct MqS *ctx, MQ_PTR data) {
   return MqServiceCreate(ctx,"MMUL", MMUL, NULL, NULL);
 }
+static enum MqErrorE
+MulServerFactory (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryS * const item,
+  struct MqS **contextP
+)
+{ 
+  struct MqS * const ctx = *contextP = MqContextCreate(0,tmpl);
+  MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
+  return MQ_OK;
+}
 int main (int argc, MQ_CST argv[]) 
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqContextCreate(0, NULL);
-  MqConfigSetServerSetup (ctx, ServerSetup, NULL, NULL, NULL);
-  MqConfigSetName (ctx, "MyMulServer");
+  MqFactoryErrorPanic(MqFactoryNew("mulserver", MulServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, &ctx));
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));
   MqErrorCheck (MqProcessEvent(ctx,MQ_TIMEOUT,MQ_WAIT_FOREVER));

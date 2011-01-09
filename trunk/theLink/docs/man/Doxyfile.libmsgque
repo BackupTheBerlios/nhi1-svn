@@ -24,20 +24,12 @@ ALIASES		    += "selftut=libmsgquetut"
 ALIASES		    += "NS{1}=c_\1"
 ALIASES		    += "lang=C"
 ALIASES		    += "fileextension=c"
+ALIASES		    += "dirname=c"
 ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"msgque.h\""
 ALIASES		    += "RNS_PREFIX{1}=Mq\1"
-
-# OBJECT CREATION AND DELETION
-ALIASES		    += "object_example=\code \n\
-struct MyCtxDataS { \n\
-  struct MqS mqctx; \n\
-  int mydata; \n\
-}; \n\
-struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
-\endcode"
 
 ALIASES		    += "FactoryReturn=#MqFactoryReturnE"
 ALIASES		    += "FactoryDefault=MqFactoryDefault(MQ_CST ident, interface...)"
@@ -49,6 +41,15 @@ ALIASES		    += "FactoryCall=MqFactoryCall(MQ_CST ident, MQ_PTR data, struct MqS
 ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
 ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
 ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+struct MyCtxDataS { \n\
+  struct MqS mqctx; \n\
+  int mydata; \n\
+}; \n\
+struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
+\endcode"
 
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
 ALIASES		    += "ContextCreateSection="
@@ -235,7 +236,7 @@ ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
 ALIASES		    += "MQ_TIMEOUT_DEFAULT=#MQ_TIMEOUT_DEFAULT"
 ALIASES		    += "MQ_TIMEOUT_USER=#MQ_TIMEOUT_USER"
 ALIASES		    += "MQ_TIMEOUT_MAX=#MQ_TIMEOUT_MAX"
-ALIASES		    += "ServiceGetFilter=struct MqS* MqServiceGetFilter(ctx, MQ_SIZE id, struct MqCtx **const filter)"
+ALIASES		    += "ServiceGetFilter=struct MqS* MqServiceGetFilter(ctx, MQ_SIZE id, struct MqS **const filter)"
 ALIASES		    += "ServiceIsTransaction=int MqServiceIsTransaction (ctx)"
 ALIASES		    += "ServiceGetToken=MQ_CST MqServiceGetToken (ctx)"
 

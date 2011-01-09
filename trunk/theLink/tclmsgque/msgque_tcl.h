@@ -175,12 +175,13 @@ error: \
     skip++; \
   }
 
+#define VAL2CST(val) Tcl_GetString(val)
 #define CHECK_C(val) \
   if (skip >= objc) {\
     Tcl_WrongNumArgs(interp, skip, objv, #val " ...");\
     goto error;\
   } else { \
-    val = Tcl_GetString(objv[skip]); \
+    val = VAL2CST(objv[skip]); \
     skip++; \
   }
 

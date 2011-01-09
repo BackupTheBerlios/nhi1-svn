@@ -1,4 +1,4 @@
-.TH "MqIoTcpConfigS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqIoTcpConfigS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -65,4 +65,4 @@ Definition at line 547 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

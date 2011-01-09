@@ -14,12 +14,13 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-/// \defgroup Mq_Cs_API Mq_Cs_API
-/// \brief \copybrief Mq_C_API
-/// \details \copydetails Mq_C_API
-/// \{
-
 namespace csmsgque {
+
+  /// \defgroup Mq_Factory_API Mq_Factory_API
+  /// \ingroup Mq_Cs_API
+  /// \brief \copybrief MqFactory
+  /// \details \copydetails MqFactory
+  /// \{
 
   internal enum MqFactoryE :int {
     MQ_FACTORY_NEW_INIT,
@@ -42,16 +43,16 @@ namespace csmsgque {
   };
 
 
-  /// \api \ref MqFactoryCreateF
+  /// \api #MqFactoryCreateF
   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-  internal delegate MqErrorE MqFactoryCreateF ([In]IntPtr tmpl, MqFactoryE create, [In]IntPtr item, [In,Out] ref IntPtr contextP);
+  internal delegate MqErrorE FactoryCreateF ([In]IntPtr tmpl, MqFactoryE create, [In]IntPtr item, [In,Out] ref IntPtr contextP);
 
-  /// \api \ref MqFactoryDeleteF
+  /// \api #MqFactoryDeleteF
   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-  internal delegate void MqFactoryDeleteF ([In]IntPtr context, [In] MQ_BOL doFactoryCleanup, [In]IntPtr data);
+  internal delegate void FactoryDeleteF ([In]IntPtr context, [In] MQ_BOL doFactoryCleanup, [In]IntPtr data);
 
-  /// \ingroup Mq_FactoryError_Cs_API
-  internal class MqSFactoryException : Exception
+  /// \api #MqFactoryReturnE
+  internal class MqFactorySException : Exception
   {
 
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
@@ -61,7 +62,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryErrorMsg")]
     private static extern IntPtr MqFactoryErrorMsg([In]MqFactoryReturnE ret);
 
-    internal MqSFactoryException(MqFactoryReturnE ret) : base(Marshal.PtrToStringAnsi(MqFactoryErrorMsg(ret))) {}
+    internal MqFactorySException(MqFactoryReturnE ret) : base(Marshal.PtrToStringAnsi(MqFactoryErrorMsg(ret))) {}
   }
 
 
@@ -87,8 +88,8 @@ namespace csmsgque {
     private const CharSet MSGQUE_CS = CharSet.Ansi;
     private const string MSGQUE_DLL = "libmsgque";
 
-    static private MqFactoryCreateF fFactoryCreate  = FactoryCreate;
-    static private MqFactoryDeleteF fFactoryDelete  = FactoryDelete;
+    static private FactoryCreateF fFactoryCreate  = FactoryCreate;
+    static private FactoryDeleteF fFactoryDelete  = FactoryDelete;
 
   /*****************************************************************************/
   /*                                                                           */
@@ -98,8 +99,8 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryDefault")]
     private static extern MqFactoryReturnE MqFactoryDefault(string ident,
-      [In]MqFactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
-      [In]MqFactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree
+      [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
+      [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree
     );
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryDefaultIdent")]
@@ -107,14 +108,14 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryAdd")]
     private static extern MqFactoryReturnE MqFactoryAdd(string ident,
-      [In]MqFactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
-      [In]MqFactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree
+      [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
+      [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree
     );
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryNew")]
     private static extern MqFactoryReturnE MqFactoryNew(string ident,
-      [In]MqFactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
-      [In]MqFactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree,
+      [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]MqTokenDataFreeF CreateFree,
+      [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]MqTokenDataFreeF DeleteFree,
       [In]IntPtr data, [In,Out]ref IntPtr context
     );
 
@@ -176,7 +177,7 @@ namespace csmsgque {
 
     private static void ErrorCheck(MqFactoryReturnE err) {
       if (err == MqFactoryReturnE.MQ_FACTORY_RETURN_OK) return;
-      throw new MqSFactoryException(err);
+      throw new MqFactorySException(err);
     }
 
   /*****************************************************************************/
@@ -185,18 +186,21 @@ namespace csmsgque {
   /*                                                                           */
   /*****************************************************************************/
 
+    /// \api #MqFactoryAdd
     public static void Add(string ident) {
       IntPtr data = getConstructor();
       // !attention, no "MqS.fProcFree" because the code will core at the end
       ErrorCheck(MqFactoryAdd(ident, fFactoryCreate, data, null, fFactoryDelete, IntPtr.Zero, null)); 
     }
 
+    /// \api #MqFactoryAdd
     public static void Add() {
       IntPtr data = getConstructor();
       // !attention, no "MqS.fProcFree" because the code will core at the end
       ErrorCheck(MqFactoryAdd(typeof(T).Name, fFactoryCreate, data, null, fFactoryDelete, IntPtr.Zero, null)); 
     }
 
+    /// \api #MqFactoryDefault
     public static void Default(string ident) {
       IntPtr data = getConstructor();
       // !attention, no "MqS.fProcFree" because the code will core at the end
@@ -204,6 +208,7 @@ namespace csmsgque {
       ErrorCheck(MqFactoryDefault(ident, fFactoryCreate, data, null, fFactoryDelete, IntPtr.Zero, null)); 
     }
 
+    /// \api #MqFactoryDefault
     public static void Default() {
       IntPtr data = getConstructor();
       // !attention, no "MqS.fProcFree" because the code will core at the end
@@ -211,12 +216,14 @@ namespace csmsgque {
       ErrorCheck(MqFactoryDefault(typeof(T).Name, fFactoryCreate, data, null, fFactoryDelete, IntPtr.Zero, null));
     }
 
+    /// \api #MqFactoryDefaultIdent
     public static String DefaultIdent() {
       String str = Marshal.PtrToStringAnsi(MqFactoryDefaultIdent());
 //DEBUG.O(str, typeof(T).Name);
       return str;
     }
 
+    /// \api #MqFactoryNew
     public static T New(string ident) {
       IntPtr mqctx = IntPtr.Zero;
       IntPtr data = getConstructor();
@@ -226,6 +233,7 @@ namespace csmsgque {
       return (T) MqS.GetSelf(mqctx);
     }
 
+    /// \api #MqFactoryNew
     public static T New() {
       IntPtr mqctx = IntPtr.Zero;
       IntPtr data = getConstructor();
@@ -235,12 +243,14 @@ namespace csmsgque {
       return (T) MqS.GetSelf(mqctx);
     }
 
+    /// \api #MqFactoryCall
     public static T Call(string ident) {
       IntPtr mqctx = IntPtr.Zero;
       ErrorCheck(MqFactoryCall(ident, IntPtr.Zero, ref mqctx));
       return (T) MqS.GetSelf(mqctx);
     }
 
+    /// \api #MqFactoryCall
     public static T Call() {
       IntPtr mqctx = IntPtr.Zero;
       ErrorCheck(MqFactoryCall(typeof(T).Name, IntPtr.Zero, ref mqctx));
@@ -248,7 +258,9 @@ namespace csmsgque {
     }
 
   } // END - class "MqFactoryS"
+
+  /// \}
+
 } // END - namespace "csmsgque"
 
-/// \}
 

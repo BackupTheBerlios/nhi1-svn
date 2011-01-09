@@ -1,4 +1,4 @@
-.TH "Mq_CC_API" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_CC_API" n "9 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -76,6 +76,13 @@ Mq_CC_API \-
 .RI "\fBMq_Slave_CC_API\fP"
 .br
 .R "create and manage a slave context  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Factory_CC_API\fP"
+.br
+.R "provide an interface to create a new instance  "
 .PP
 
 .in -1c

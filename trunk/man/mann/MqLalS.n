@@ -1,4 +1,4 @@
-.TH "MqLalS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqLalS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -68,7 +68,7 @@ MqLalS \- Interface between \fBMqS\fP and the Operating-System.
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysDaemonize\fP )(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .br
-.R "\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP "
+.R "\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP "
 .ti -1c
 .RI "void(* \fBSysExit\fP )(int isThread, int num)"
 .br
@@ -99,7 +99,7 @@ additional info: \fCman abort\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -123,18 +123,18 @@ additional info: \fCman calloc\fP
 Definition at line 4325 of file msgque.h.
 .SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .PP
-\fBdaemonize\fP the current process and save the resulting pid into the \fIpidfile\fP 
+\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIpidfile\fP file to save the process identifer, can be used to kill the process later 
+\fIpidfile\fP file to save the process identifier, can be used to kill the process later 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -215,7 +215,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 .PP
@@ -250,7 +250,7 @@ additional info: \fCman fork\fP
 .PP
 \fBReturn values:\fP
 .RS 4
-\fIthe\fP process identifer of the new child (in the parent process) or 0 (in the child process) 
+\fIthe\fP process identifier of the new child (in the parent process) or 0 (in the child process) 
 .RE
 .PP
  
@@ -287,13 +287,13 @@ read more at: \fCman 2 select\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fImax\fP the maximim file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
+\fImax\fP the maximum file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
 .br
-\fIread\fP set of file descriptores 
+\fIread\fP set of file descriptors 
 .br
-\fIwrite\fP set of file descriptores 
+\fIwrite\fP set of file descriptors 
 .br
-\fIexcept\fP set of file descriptores 
+\fIexcept\fP set of file descriptors 
 .br
 \fItimeout\fP maximum time to wait for data 
 .RE
@@ -311,18 +311,18 @@ Definition at line 4335 of file msgque.h.
 .br
 \fIfactory\fP server configuration (memory will be freed) 
 .br
-\fIargvP\fP command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+\fIargvP\fP command-line arguments before \fBMQ_ALFA\fP, owned by SysServerThread 
 .br
 \fIalfaP\fP command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
 .br
 \fIname\fP the name of the thread 
 .br
-\fIidP\fP the process identifer 
+\fIidP\fP the process identifier 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -400,12 +400,12 @@ error:
 .br
 \fIname\fP the name of the process 
 .br
-\fIidP\fP the process identifer 
+\fIidP\fP the process identifier 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -492,20 +492,20 @@ error:
 .br
 \fIfactory\fP server configuration (memory will be freed) 
 .br
-\fIargvP\fP command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+\fIargvP\fP command-line arguments before \fBMQ_ALFA\fP, owned by SysServerThread 
 .br
 \fIalfaP\fP command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread 
 .br
 \fIname\fP the name of the thread 
 .br
-\fIstate\fP detachstate of the thread \fCPTHREAD_CREATE_DETACHED\fP or \fCPTHREAD_CREATE_JOINABLE\fP 
+\fIstate\fP state of the thread \fCPTHREAD_CREATE_DETACHED\fP or \fCPTHREAD_CREATE_JOINABLE\fP 
 .br
-\fIidP\fP the thread identifer 
+\fIidP\fP the thread identifier 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP
 .RE
 .PP
 \fBExample:\fP  
@@ -652,7 +652,7 @@ error:
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 .PP
@@ -699,7 +699,7 @@ Definition at line 4331 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 .PP
@@ -739,7 +739,7 @@ static enum MqErrorE SysUSleep (
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 .PP
@@ -793,4 +793,4 @@ static enum MqErrorE SysWait (
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

@@ -41,5 +41,3 @@ class manfilter extends MqS {
     srv.Exit();
   }
 }
-
-

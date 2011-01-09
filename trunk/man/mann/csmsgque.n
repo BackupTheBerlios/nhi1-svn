@@ -1,4 +1,4 @@
-.TH "csmsgque" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,12 +42,13 @@ csmsgque \-
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
 .ti -1c
-.RI "class \fBMqSFactoryException\fP"
+.RI "class \fBMqFactorySException\fP"
 .br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryReturnE\fP "
 .ti -1c
 .RI "class \fBMqFactoryS< T >\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqFactoryS "
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP "
 .in -1c
 .SS "Enumerations"
 
@@ -69,11 +70,11 @@ csmsgque \-
 
 .in +1c
 .ti -1c
-.RI "internal delegate \fBMqErrorE\fP \fBMqFactoryCreateF\fP ([In]IntPtr tmpl, \fBMqFactoryE\fP create,[In]IntPtr item,[In, Out] ref IntPtr contextP)"
+.RI "internal delegate \fBMqErrorE\fP \fBFactoryCreateF\fP ([In]IntPtr tmpl, \fBMqFactoryE\fP create,[In]IntPtr item,[In, Out] ref IntPtr contextP)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCreateF\fP "
 .ti -1c
-.RI "internal delegate void \fBMqFactoryDeleteF\fP ([In]IntPtr context,[In] \fBMQ_BOL\fP doFactoryCleanup,[In]IntPtr data)"
+.RI "internal delegate void \fBFactoryDeleteF\fP ([In]IntPtr context,[In] \fBMQ_BOL\fP doFactoryCleanup,[In]IntPtr data)"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqFactoryDeleteF\fP "
 .ti -1c
@@ -127,48 +128,6 @@ Definition at line 79 of file MqS.cs.
 
 .PP
 Definition at line 73 of file MqS.cs.
-.SS "enum \fBcsmsgque::MqFactoryE\fP"
-.PP
-\fBEnumerator: \fP
-.in +1c
-.TP
-\fB\fIMQ_FACTORY_NEW_INIT \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_CHILD \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_SLAVE \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_FORK \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
-.TP
-\fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
-
-.PP
-Definition at line 24 of file MqFactoryS.cs.
-.SS "enum \fBcsmsgque::MqFactoryReturnE\fP"
-.PP
-\fBEnumerator: \fP
-.in +1c
-.TP
-\fB\fIMQ_FACTORY_RETURN_OK \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_ADD_DEF_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_CALL_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_ITEM_GET_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_NEW_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_DEFAULT_ERR \fP\fP
-.TP
-\fB\fIMQ_FACTORY_RETURN_ADD_ERR \fP\fP
-
-.PP
-Definition at line 33 of file MqFactoryS.cs.
 .SH "Function Documentation"
 .PP 
 .SS "internal delegate \fBMqErrorE\fP csmsgque.MqCreateF ([In] IntPtr context, [In, Out] ref IntPtr argv)"
@@ -187,14 +146,6 @@ implement the \fBlibmsgque\fP API object: \fBMqEventF\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqExitF\fP 
 .PP
-.SS "internal delegate \fBMqErrorE\fP csmsgque.MqFactoryCreateF ([In] IntPtr tmpl, \fBMqFactoryE\fP create, [In] IntPtr item, [In, Out] ref IntPtr contextP)"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryCreateF\fP 
-.PP
-.SS "internal delegate void csmsgque.MqFactoryDeleteF ([In] IntPtr context, [In] \fBMQ_BOL\fP doFactoryCleanup, [In] IntPtr data)"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryDeleteF\fP 
-.PP
 .SS "internal delegate void csmsgque.MqTokenDataFreeF ([In] IntPtr context, [In, Out] ref IntPtr data)"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqTokenDataFreeF\fP 
@@ -205,4 +156,4 @@ implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

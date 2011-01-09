@@ -10,15 +10,18 @@
  *              please contact AUTHORS for additional information
  */
 
-/// \defgroup Mq_Java_API Mq_Java_API
+//
+// ========================================================================
+/// \ingroup Mq_Java_API
+/// \defgroup Mq_Factory_API Mq_Factory_API
 /// \{
-/// \brief \copybrief Mq_C_API
-/// \copydoc Mq_C_API
+/// \brief \copybrief MqFactory
+/// \details \copydetails MqFactory
 
 /// \brief The \b JavaMsgque Package
 package javamsgque;
 
-/// \brief \api #MqFactoryS
+/// \api #MqFactoryS
 public class MqFactoryS <T extends MqS> {
   static {
     if (DefaultIdent().equals("libmsgque")) {

@@ -1,4 +1,4 @@
-.TH "MqBufferS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqBufferS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -57,7 +57,7 @@ MqBufferS \- a single object to store a \fInative-type-data-item\fP defined by \
 .PP 
 a single object to store a \fInative-type-data-item\fP defined by \fBTYPE IDENTIFIER\fP 
 
-The \fIbuffer-object\fP is returned by \fBMqReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
+The \fIbuffer-object\fP is returned by \fBReadU\fP and is used to save a \fItypeless-temporary-data-item\fP from the \fIread-data-package\fP. The lifetime of the \fIbuffer-object\fP is only the current callback up to the next read operation in the same \fIparent-context\fP. 
 .PP
 Definition at line 2310 of file msgque.h.
 .SH "Field Documentation"
@@ -117,4 +117,4 @@ Definition at line 2320 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

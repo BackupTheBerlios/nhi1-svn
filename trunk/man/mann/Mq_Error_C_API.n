@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -55,7 +55,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "#define \fBMqErrorSetEXIT\fP(ctx)   MqErrorSetEXITP(ctx,__func__)"
 .br
-.R "finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBMqExit\fP the application "
+.R "finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application "
 .ti -1c
 .RI "#define \fBMqErrorCheckI\fP(PROC)   (unlikely((PROC) >= MQ_ERROR))"
 .br
@@ -163,7 +163,7 @@ Mq_Error_C_API \- create and manage error messages.
 .ti -1c
 .RI "int \fBMqErrorIsEXIT\fP (struct \fBMqS\fP *const context)"
 .br
-.R "check for an \fIexit-error-object\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP "
+.R "check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqErrorDeleteEXIT\fP (struct \fBMqS\fP *const context)"
 .br
@@ -252,9 +252,9 @@ append a string to a \fBMqErrorS\fP
 Definition at line 3309 of file msgque.h.
 .SS "#define MqErrorSetEXIT(ctx)   MqErrorSetEXITP(ctx,__func__)"
 .PP
-finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBMqExit\fP the application 
+finish the current \fIcallback\fP, return to \fItoplevel\fP and \fBExit\fP the application 
 .PP
-To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achive this goal a special \fIexit-error-object\fP is created and reportet to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBMqSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event. 
+To exit a application from a callback is a difficult task because the code is \fIin-duty\fP. To achieve this goal a special \fIexit-error-object\fP is created and reported to the \fItoplevel\fP. If a \fItransaction\fP is ongoing the \fBSendRETURN\fP is \fBnot\fP called and thus the transaction is not finished. The calling application is informed later by a \fIsocket-down\fP event. 
 .PP
 Definition at line 3410 of file msgque.h.
 .SS "#define MqErrorStack(error)   MqErrorStackP(error, __func__, __FILE__)"
@@ -352,7 +352,7 @@ set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP raise an \fBERROR OBJEC
 .PP
 \fBParameters:\fP
 .RS 4
-\fIctx\fP the context returned by \fBMqContextCreate\fP 
+\fIctx\fP the context returned by \fBContextCreate\fP 
 .br
 \fIprefix\fP the error-location like the current function-call or operation 
 .br
@@ -428,11 +428,11 @@ the \fIerror-message\fP from the \fIexception-object\fP
 
 .SS "int MqErrorIsEXIT (struct \fBMqS\fP *const  context)"
 .PP
-check for an \fIexit-error-object\fP, return \fIMQ_YES\fP or \fIMQ_NO\fP 
+check for an \fIexit-error-object\fP, return \fITRUE\fP or \fIFALSE\fP 
 .PP
-A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBMqErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBMqLinkCreate\fP, \fBMqLinkCreateChild\fP, \fBMqLinkConnect\fP, \fBMqSendEND\fP, \fBMqSendEND_AND_WAIT\fP or \fBMqProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBMqErrorReset\fP and later do a reconnect using \fBMqLinkConnect\fP.
+A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
+ Read more using from the: \fCtheLink/example/php/Filter4.php\fP example 
 .SS "void MqErrorPrint (struct \fBMqS\fP *const  context)"
 .PP
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
@@ -454,7 +454,7 @@ append a vararg string to a \fBMqErrorS\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -477,7 +477,7 @@ set the value of the \fBMqErrorS\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -520,7 +520,7 @@ set a error-code in \fBMqErrorS\fP with vararg string argument
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -545,7 +545,7 @@ set an error-code in \fBMqErrorS\fP with vararg list argument
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -564,7 +564,7 @@ append a function and filename to the error-buffer
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -614,4 +614,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

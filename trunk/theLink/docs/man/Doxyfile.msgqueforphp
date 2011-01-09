@@ -24,10 +24,22 @@ ALIASES		    += "selftut=msgqueforphptut"
 ALIASES		    += "NS{1}=php_\1"
 ALIASES		    += "lang=php"
 ALIASES		    += "fileextension=php"
+ALIASES		    += "dirname=php"
 ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e TRUE"
 ALIASES		    += "no=\e FALSE"
 ALIASES		    += "package=# php.ini: extension=\"MsgqueForPhp.so\""
+
+ALIASES		    += "FactoryReturn=raise(ErrorMessage)"
+ALIASES		    += "FactoryDefault=FactoryDefault(ident,?class?)"
+ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=FactoryAdd(?ident?,class)" 
+ALIASES		    += "FactoryNew=MqS FactoryNew(?ident?,class)"
+ALIASES		    += "FactoryCall=MqS FactoryCall(ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=$ctx->FactoryCtxIdentSet(ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C $ctx->FactoryCtxIdentGet"
+ALIASES		    += "FactoryCtxDefaultSet=$ctx->FactoryCtxDefaultSet(ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

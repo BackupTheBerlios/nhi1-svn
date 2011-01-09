@@ -21,7 +21,7 @@ package javamsgque;
 /// \{
 //
 
-///\brief \api #MqBufferS
+///\brief #MqBufferS
 public class MqBufferS {
 
   private long hdl = 0L;

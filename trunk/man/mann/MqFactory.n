@@ -1,4 +1,4 @@
-.TH "Mq_Factory_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Factory_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -87,7 +87,7 @@ Mq_Factory_C_API \- provide an interface to create a new instance
 .ti -1c
 .RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryCopyDefault\fP (\fBMQ_CST\fP const ident)"
 .br
-.R "add a new factory as \fIcopy\fP of the \fIdefault\fP factoty but with a new \fIident\fP "
+.R "add a new factory as \fIcopy\fP of the \fIdefault\fP factory but with a new \fIident\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqFactoryDefaultCreate\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryS\fP *item, struct \fBMqS\fP **contextP)"
 .br
@@ -143,9 +143,9 @@ provide an \fIidentifier\fP for factory lookup and as an unique application name
 .IP "4." 4
 identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a remote context
 .PP
-The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistant-Transactions\fP depend on this feature.
+The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
 .PP
-The relationsship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complecity of a \fBMqS\fP object will improve the server performance. In future more fields, defind in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
+The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
 .SH "Define Documentation"
 .PP 
 .SS "#define MqFactoryErrorCheck(cmd)   if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;"
@@ -243,22 +243,22 @@ add a new \fIfactory-interface\fP identified by \fIident\fP
 .RS 4
 \fIident\fP factory identifier 
 .br
-\fIcreateCallF\fP instance constructor function 
+\fIcreateCallF\fP (C-API) instance constructor function 
 .br
-\fIcreateData\fP instance constructor data 
+\fIcreateData\fP (C-API) instance constructor data 
 .br
-\fIcreateDataFreeF\fP instance constructor data free function 
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
 .br
-\fIdeleteCallF\fP instance destructor function 
+\fIdeleteCallF\fP (C-API) instance destructor function 
 .br
-\fIdeleteData\fP instance destructor data 
+\fIdeleteData\fP (C-API) instance destructor data 
 .br
-\fIdeleteDataFreeF\fP instance destructor data free function 
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
@@ -270,20 +270,20 @@ call the factory constructor, identified by \fIident\fP, to create a new instanc
 .RS 4
 \fIident\fP factory identifier to call 
 .br
-\fIdata\fP environment specific data or \fCNULL\fP 
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP 
 .br
-\fIctxP\fP the new created instance to return 
+\fIctxP\fP (C-API) the new created instance to return 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
 .SS "enum \fBMqFactoryReturnE\fP MqFactoryCopyDefault (\fBMQ_CST\fP const  ident)"
 .PP
-add a new factory as \fIcopy\fP of the \fIdefault\fP factoty but with a new \fIident\fP 
+add a new factory as \fIcopy\fP of the \fIdefault\fP factory but with a new \fIident\fP 
 .PP
 The new factory is an ordinary factory 
 .PP
@@ -294,7 +294,7 @@ The new factory is an ordinary factory
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
@@ -306,7 +306,7 @@ create a copy of the default \fIfactory-interface\fP using the identifier \fIide
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIident\fP the new factory identifer 
+\fIident\fP the new factory identifier 
 .RE
 .PP
 \fBReturns:\fP
@@ -343,7 +343,7 @@ link the context to a new \fIfactory-interface\fP identified by \fIident\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
-\fIident\fP the factory identifer to link with 
+\fIident\fP the factory identifier to link with 
 .RE
 .PP
 \fBReturns:\fP
@@ -362,22 +362,22 @@ The default factory is always used to create an instance if no other factory is 
 .RS 4
 \fIident\fP factory identifier 
 .br
-\fIcreateCallF\fP instance constructor function 
+\fIcreateCallF\fP (C-API) instance constructor function 
 .br
-\fIcreateData\fP instance constructor data 
+\fIcreateData\fP (C-API) instance constructor data 
 .br
-\fIcreateDataFreeF\fP instance constructor data free function 
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
 .br
-\fIdeleteCallF\fP instance destructor function 
+\fIdeleteCallF\fP (C-API) instance destructor function 
 .br
-\fIdeleteData\fP instance destructor data 
+\fIdeleteData\fP (C-API) instance destructor data 
 .br
-\fIdeleteDataFreeF\fP instance destructor data free function 
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
@@ -385,7 +385,7 @@ an \fBMqFactoryReturnE\fP object
 .PP
 the \fIdefault\fP factory constructor function 
 .PP
-This is an constructor suitable to create \fIC\fP language instance. Other programming languages need ofther default constructors. This constructor will be initialized on library startup using the identifier 'libmsgque' 
+This is an constructor suitable to create \fIC\fP language instance. Other programming languages need other default constructors. This constructor will be initialized on library startup using the identifier 'libmsgque' 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -453,14 +453,14 @@ This is a low-level function to call a factory constructor
 .PP
 \fBParameters:\fP
 .RS 4
-\fIident\fP the factory identifier of the fatory interface 
+\fIident\fP the factory identifier of the factory interface 
 .br
 \fIitemP\fP the factory interface 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
@@ -476,32 +476,32 @@ helper function to return MqFactoryS::Delete::data
 .PP
 add a new factory interface and create a new top-level instance 
 .PP
-This function is a convinient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
+This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIident\fP factory identifier 
 .br
-\fIcreateCallF\fP instance constructor function 
+\fIcreateCallF\fP (C-API) instance constructor function 
 .br
-\fIcreateData\fP instance constructor data 
+\fIcreateData\fP (C-API) instance constructor data 
 .br
-\fIcreateDataFreeF\fP instance constructor data free function 
+\fIcreateDataFreeF\fP (C-API) instance constructor data free function 
 .br
-\fIdeleteCallF\fP instance destructor function 
+\fIdeleteCallF\fP (C-API) instance destructor function 
 .br
-\fIdeleteData\fP instance destructor data 
+\fIdeleteData\fP (C-API) instance destructor data 
 .br
-\fIdeleteDataFreeF\fP instance destructor data free function 
+\fIdeleteDataFreeF\fP (C-API) instance destructor data free function 
 .br
-\fIdata\fP environment specific data or \fCNULL\fP used by \fIcreateCallF\fP 
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP used by \fIcreateCallF\fP 
 .br
-\fIctxP\fP the new created instance to return 
+\fIctxP\fP (C-API) the new created instance to return 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an raise(ErrorMessage) object on error 
 .RE
 .PP
 
@@ -530,4 +530,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

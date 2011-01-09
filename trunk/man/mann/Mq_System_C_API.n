@@ -1,8 +1,8 @@
-.TH "Mq_System_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "Mq_System_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.  
+Mq_System_C_API \- L)anguage A)bstraction L)ayer definition.  
 
 .PP
 .SS "Data Structures"
@@ -68,7 +68,7 @@ Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.
 .ti -1c
 .RI "typedef unsigned long \fBMQ_IDNT\fP"
 .br
-.R "process or thread identifer "
+.R "process or thread identifier "
 .ti -1c
 .RI "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP )(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
 .br
@@ -112,7 +112,7 @@ Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.
 .ti -1c
 .RI "void \fBMqSysServerThreadMain\fP (struct \fBMqSysServerThreadMainS\fP *data)"
 .br
-.R "initialize a new created thred "
+.R "initialize a new created thread "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
@@ -168,11 +168,11 @@ Mq_System_C_API \- L)anguage A)bstraction L)ayer defnition.
 .in -1c
 .SH "Detailed Description"
 .PP 
-L)anguage A)bstraction L)ayer defnition. 
+L)anguage A)bstraction L)ayer definition. 
 
 The \fBLAL\fP is required to give the target of embedding a change to modify the access to system functions. \fIRUBY\fP for example has it's own Thread-Creation function.
 .PP
-All wrappers to access the underlying OS,Languags and system functions are located in this section. Every external Function has additional code to map the OS/System specific error codes/messages into \fBMqS\fP specific error codes/messages 
+All wrappers to access the underlying OS,Languages and system functions are located in this section. Every external Function has additional code to map the OS/System specific error codes/messages into \fBMqS\fP specific error codes/messages 
 .SH "Define Documentation"
 .PP 
 .SS "#define MQ_CDECL"
@@ -236,7 +236,7 @@ Definition at line 4543 of file msgque.h.
 .PP 
 .SS "typedef unsigned long \fBMQ_IDNT\fP"
 .PP
-process or thread identifer 
+process or thread identifier 
 .PP
 Definition at line 4258 of file msgque.h.
 .SS "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP)(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
@@ -254,7 +254,7 @@ additional info: \fCman fork\fP
 .PP
 \fBReturn values:\fP
 .RS 4
-\fIthe\fP process identifer of the new child (in the parent process) or 0 (in the child process) 
+\fIthe\fP process identifier of the new child (in the parent process) or 0 (in the child process) 
 .RE
 .PP
 
@@ -289,13 +289,13 @@ read more at: \fCman 2 select\fP
 .PP
 \fBParameters:\fP
 .RS 4
-\fImax\fP the maximim file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
+\fImax\fP the maximum file descriptor + 1 from the \fIread\fP, \fIwrite\fP or \fIexcept\fP input data 
 .br
-\fIread\fP set of file descriptores 
+\fIread\fP set of file descriptors 
 .br
-\fIwrite\fP set of file descriptores 
+\fIwrite\fP set of file descriptors 
 .br
-\fIexcept\fP set of file descriptores 
+\fIexcept\fP set of file descriptors 
 .br
 \fItimeout\fP maximum time to wait for data 
 .RE
@@ -389,7 +389,7 @@ a pointer to the new memory block initialized with '0'
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -427,7 +427,7 @@ additional info: \fCman gettimeofday\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -473,7 +473,7 @@ a pointer to the new memory block
 
 .SS "void MqSysServerThreadMain (struct \fBMqSysServerThreadMainS\fP * data)"
 .PP
-initialize a new created thred 
+initialize a new created thread 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -494,7 +494,7 @@ initialize a new created thred
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -532,7 +532,7 @@ a pointer to the new memory block
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -551,7 +551,7 @@ Definition at line 4575 of file msgque.h.
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -565,4 +565,4 @@ Language Abstraction Layer in duty.
 .PP
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

@@ -1,4 +1,4 @@
-.TH "MqIoUdsConfigS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fINULL\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fIundef\fP) 
 .RE
 .PP
 
@@ -39,4 +39,4 @@ Definition at line 532 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

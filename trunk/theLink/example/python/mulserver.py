@@ -9,26 +9,26 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 import sys
 from pymsgque import *
-def MMUL(ctx):
-  ctx.SendSTART()
-  ctx.SendD(ctx.ReadD() * ctx.ReadD())
-  ctx.SendRETURN()
-def ServerConfig(ctx):
-  ctx.ServiceCreate("MMUL",MMUL)
-srv = MqS()
+
+class MulServer(MqS):
+  def __init__(self, tmpl=None):
+    self.ConfigSetServerSetup(self.ServerSetup)
+    MqS.__init__(self)
+  def MMUL(self):
+    self.SendSTART()
+    self.SendD(self.ReadD() * self.ReadD())
+    self.SendRETURN()
+  def ServerSetup(self):
+    self.ServiceCreate("MMUL",self.MMUL)
+
+srv = FactoryNew("mulserver", MulServer);
 try:
-  srv.ConfigSetName("MyMulServer")
-  srv.ConfigSetServerSetup(ServerConfig)
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)
 except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-
-
-
-
-

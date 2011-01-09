@@ -11,18 +11,23 @@
 #§
 
 package require TclMsgque
+
 proc MMUL {ctx} {
   $ctx SendSTART
   $ctx SendD [expr {[$ctx ReadD] * [$ctx ReadD]}]
   $ctx SendRETURN
 }
-proc ServerConfig {ctx} {
+proc ServerSetup {ctx} {
   $ctx ServiceCreate "MMUL" MMUL
 }
+proc MulServer {tmpl} {
+  set srv [tclmsgque MqS $tmpl]
+  $srv ConfigSetServerSetup ServerSetup
+  return $srv
+}
+
 tclmsgque Main {
-  set srv [tclmsgque MqS]
-  $srv ConfigSetServerSetup ServerConfig
-  $srv ConfigSetName MyMulServer
+  set srv [tclmsgque FactoryNew "mulserver" MulServer]
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

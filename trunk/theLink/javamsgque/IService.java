@@ -13,7 +13,7 @@
 package javamsgque;
 
 /// \ingroup Mq_Service_Java_API
-/// \brief \api #MqTokenF
+/// \api #MqTokenF
 public interface IService {
   void Service (MqS ctx) throws MqSException;
 }

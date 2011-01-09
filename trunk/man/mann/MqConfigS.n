@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -16,11 +16,11 @@ MqConfigS \- end-user configuration data, also available as command-line options
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisSilent\fP"
 .br
-.R "write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any massages to stdout or stderr (default: \fIMQ_NO\fP) "
+.R "write (\fIFALSE\fP) or don't write (\fITRUE\fP) any massages to stdout or stderr (default: \fIFALSE\fP) "
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBisString\fP"
 .br
-.R "use the string-mode (\fIMQ_YES\fP) or the binary-mode (\fIMQ_NO\fP) to send \fInative-data\fP "
+.R "use the string-mode (\fITRUE\fP) or the binary-mode (\fIFALSE\fP) to send \fInative-data\fP "
 .ti -1c
 .RI "enum \fBMqStartE\fP \fBstartAs\fP"
 .br
@@ -102,12 +102,12 @@ Global configuration data belonging to 'io'.
 Definition at line 693 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isSilent\fP"
 .PP
-write (\fIMQ_NO\fP) or don't write (\fIMQ_YES\fP) any massages to stdout or stderr (default: \fIMQ_NO\fP) 
+write (\fIFALSE\fP) or don't write (\fITRUE\fP) any massages to stdout or stderr (default: \fIFALSE\fP) 
 .PP
 Definition at line 595 of file msgque.h.
 .SS "\fBMQ_BOL\fP \fBMqConfigS::isString\fP"
 .PP
-use the string-mode (\fIMQ_YES\fP) or the binary-mode (\fIMQ_NO\fP) to send \fInative-data\fP 
+use the string-mode (\fITRUE\fP) or the binary-mode (\fIFALSE\fP) to send \fInative-data\fP 
 .PP
 The items in a \fIdata-package\fP are defined as \fBTYPE IDENTIFIER\fP and can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast) data. The \fIstring-mode\fP is used for debugging purpose or if the \fIbinary-data-model\fP is different between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require the \fIstring-mode\fP. The option is only available for the \fIclient-parent-context\fP. (default: binary-mode) 
 .PP
@@ -162,7 +162,7 @@ Use the \fIserver-name\fP as a client specific prefix in the server debug/error/
 C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE 
 .fi
 .PP
- If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINULL\fP) 
+ If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fIundef\fP) 
 .PP
 Definition at line 663 of file msgque.h.
 .SS "enum \fBMqStartE\fP \fBMqConfigS::startAs\fP"
@@ -175,19 +175,19 @@ a \fItcp-uds-server\fP listen on socket and get a \fIconnection-request\fP from 
 .IP "\(bu" 2
 a \fIfilter-context\fP create a new \fIfilter-instance\fP 
 .IP "\(bu" 2
-a \fIserver-context\fP create a new \fIworker-context\fP using \fBMqSlaveWorker\fP
+a \fIserver-context\fP create a new \fIworker-context\fP using \fBSlaveWorker\fP
 .IP "\(bu" 2
-a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBMqLinkCreate\fP
+a \fIserver-context\fP start a new \fIclient-server-link\fP using \fISELF\fP as executable-name using \fBLinkCreate\fP
 .PP
 The allowed integer values are:
 .IP "\(bu" 2
-\fB\fBMQ_START_DEFAULT\fP\fP = 0, use application-context default entity creation
+\fB\fCMqS::START_DEFAULT\fP =\fP 0, use application-context default entity creation
 .IP "\(bu" 2
-\fB\fBMQ_START_FORK\fP\fP = 1, create entity as \fIfork\fP 
+\fB\fCMqS::START_FORK\fP =\fP 1, create entity as \fIfork\fP 
 .IP "\(bu" 2
-\fB\fBMQ_START_THREAD\fP\fP = 2, create entity as \fIthread\fP 
+\fB\fCMqS::START_THREAD\fP =\fP 2, create entity as \fIthread\fP 
 .IP "\(bu" 2
-\fB\fBMQ_START_SPAWN\fP\fP = 3, create entity as \fIspawn\fP process
+\fB\fCMqS::START_SPAWN\fP =\fP 3, create entity as \fIspawn\fP process
 .PP
 (default: do not create a new application-context) 
 .PP
@@ -195,4 +195,4 @@ Definition at line 626 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

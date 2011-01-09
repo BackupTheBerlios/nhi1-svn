@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -187,7 +187,7 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
 .br
-.R "return the type from a \fBMQ_BUF\fP object on character identifer "
+.R "return the type from a \fBMQ_BUF\fP object on character identifier "
 .ti -1c
 .RI "enum \fBMqTypeE\fP \fBMqBufferGetType2\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -195,7 +195,7 @@ Mq_Buffer_C_API \- create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqBufferGetType3\fP (struct \fBMqBufferS\fP *const buf)"
 .br
-.R "return the type from a \fBMQ_BUF\fP object as strint "
+.R "return the type from a \fBMQ_BUF\fP object as string "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -339,29 +339,29 @@ Definition at line 2293 of file msgque.h.
 .PP
 a collection of all \fInative-data-types\fP supported 
 .PP
-The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBMqReadTYPE\fP or \fBMqBufferGetTYPE\fP have to match the previous \fBMqSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the \fBMQ_CST\fP data-type (TYPE=C) is allowed. The following type identifier's are available:
+The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string data-type (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
-\fCY\fP : 1 byte signed character (\fBMQ_BYT\fP)
+\fCY\fP : 1 byte signed character (integer)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fIMQ_YES\fP or \fIMQ_NO\fP (\fBMQ_BOL\fP)
+\fCO\fP : 1 byte boolean value using \fITRUE\fP or \fIFALSE\fP (boolean)
 .IP "\(bu" 2
-\fCS\fP : 2 byte signed short (\fBMQ_SRT\fP)
+\fCS\fP : 2 byte signed short (integer)
 .IP "\(bu" 2
-\fCI\fP : 4 byte signed integer (\fBMQ_INT\fP)
+\fCI\fP : 4 byte signed integer (integer)
 .IP "\(bu" 2
-\fCW\fP : 8 byte signed long long integer (\fBMQ_WID\fP)
+\fCW\fP : 8 byte signed long long integer (integer)
 .IP "\(bu" 2
-\fCF\fP : 4 byte float (\fBMQ_FLT\fP)
+\fCF\fP : 4 byte float (float)
 .IP "\(bu" 2
-\fCD\fP : 8 byte double (\fBMQ_DBL\fP)
+\fCD\fP : 8 byte double (float)
 .IP "\(bu" 2
-\fCB\fP : unsigned char array used for binary data (\fBMQ_BIN\fP)
+\fCB\fP : unsigned char array used for binary data (binary-string)
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end (\fBMQ_CST\fP)
+\fCC\fP : string data using a \fC\\0\fP at the end (string)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
-\fCU\fP : typeless buffer able to hold a single item from above (\fBMQ_BUF\fP)
+\fCU\fP : typeless buffer able to hold a single item from above (\fBMqBufferS\fP)
 .PP
 
 .PP
@@ -470,7 +470,7 @@ change the type of an \fBMqBufferS\fP object to \fItype\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -724,7 +724,7 @@ function to read an \fBMQ_BIN\fP from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -749,7 +749,7 @@ function to read an \fBMQ_STR\fP from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 \fBAttention:\fP
@@ -786,7 +786,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -803,7 +803,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -820,7 +820,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -837,7 +837,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -854,13 +854,13 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
 .SS "char MqBufferGetType (struct \fBMqBufferS\fP *const  buf)"
 .PP
-return the type from a \fBMQ_BUF\fP object on character identifer 
+return the type from a \fBMQ_BUF\fP object on character identifier 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -890,7 +890,7 @@ the \fBMqTypeE\fP object
 
 .SS "\fBMQ_CST\fP MqBufferGetType3 (struct \fBMqBufferS\fP *const  buf)"
 .PP
-return the type from a \fBMQ_BUF\fP object as strint 
+return the type from a \fBMQ_BUF\fP object as string 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -916,7 +916,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
  
@@ -933,7 +933,7 @@ read native typed value from an \fBMQ_BUF\fP object
 .PP
 \fBReturns:\fP
 .RS 4
-the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBMqErrorObject\fP 
+the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\fP and an \fBErrorObject\fP 
 .RE
 .PP
 
@@ -1280,4 +1280,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

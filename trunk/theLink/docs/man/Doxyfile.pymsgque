@@ -25,10 +25,22 @@ ALIASES		    += "selftut=pymsgquetut"
 ALIASES		    += "NS{1}=py_\1"
 ALIASES		    += "lang=PYTHON"
 ALIASES		    += "fileextension=py"
+ALIASES		    += "dirname=python"
 ALIASES		    += "null=\e None"
 ALIASES		    += "yes=\e True"
 ALIASES		    += "no=\e False"
 ALIASES		    += "package=from pymsgque import *"
+
+ALIASES		    += "FactoryReturn=RuntimeError"
+ALIASES		    += "FactoryDefault=FactoryDefault(?\C ident,? Class cs)"
+ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=FactoryAdd(?\C ident,? Class cs)"
+ALIASES		    += "FactoryNew=FactoryNew(?\C ident,? Class cs)"
+ALIASES		    += "FactoryCall=FactoryCall(\C ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

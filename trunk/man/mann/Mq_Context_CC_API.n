@@ -1,4 +1,4 @@
-.TH "Mq_Context_CC_API" n "7 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "9 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -51,10 +51,6 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
 .ti -1c
-.RI "void \fBccmsgque::MqC::FactoryCtxItemSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
-.br
-.R "implement the \fBlibmsgque\fP API object: MqFactoryCtxItemSet "
-.ti -1c
 .RI "void \fBccmsgque::MqC::objInit\fP ()"
 .br
 .ti -1c
@@ -98,8 +94,6 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .PP 
 \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  
 
-\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
-.PP
 The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
 .nf
@@ -124,7 +118,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
 .PP
-Definition at line 313 of file ccmsgque.h.
+Definition at line 308 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::FactoryCtxDefaultSet (\fBMQ_CST\fP ident)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP 
@@ -140,31 +134,26 @@ Definition at line 250 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
 .PP
 Definition at line 246 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::FactoryCtxItemSet (\fBMQ_CST\fP ident)  throw (MqCException)\fC [inline, inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: MqFactoryCtxItemSet 
-.PP
-Definition at line 255 of file ccmsgque.h.
 .SS "\fBMQ_BUF\fP ccmsgque::MqC::GetTempBuffer ()\fC [inline, inherited]\fP"
 .PP
 get access to an internal buffer 
 .PP
-Definition at line 311 of file ccmsgque.h.
+Definition at line 306 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
 .PP
-Definition at line 319 of file ccmsgque.h.
+Definition at line 314 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogV\fP 
 .PP
-Definition at line 321 of file ccmsgque.h.
+Definition at line 316 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list ap)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP 
 .PP
-Definition at line 332 of file ccmsgque.h.
+Definition at line 327 of file ccmsgque.h.
 .SS "ccmsgque::MqC::MqC ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
@@ -179,12 +168,12 @@ implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP 
 .PP
-Definition at line 315 of file ccmsgque.h.
+Definition at line 310 of file ccmsgque.h.
 .SS "void ccmsgque::MqC::USleep (unsigned int const  usec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP 
 .PP
-Definition at line 317 of file ccmsgque.h.
+Definition at line 312 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqC::~MqC ()\fC [virtual, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 

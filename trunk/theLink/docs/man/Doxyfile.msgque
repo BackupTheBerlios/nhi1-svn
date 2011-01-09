@@ -28,6 +28,8 @@ ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "lang=C"
+ALIASES		    += "dirname=LNG"
+ALIASES		    += "fileextension=EXT"
 
 ALIASES             += "NS{1}=Mq\1"
 ALIASES             += "RNS{1}=\ref \NS{\1}"

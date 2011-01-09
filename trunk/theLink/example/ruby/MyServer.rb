@@ -9,18 +9,26 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 require "rubymsgque"
-def HLWO
-  SendSTART()
-  SendC("Hello World")
-  SendRETURN()
+
+class MyServer < MqS
+  def initialize(tmpl = nil)
+    super()
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def HLWO
+    SendSTART()
+    SendC("Hello World")
+    SendRETURN()
+  end
+  def ServerSetup
+    ServiceCreate("HLWO",method(:HLWO))
+  end
 end
-def ServerConfig
-  ServiceCreate("HLWO",method(:HLWO))
-end
-srv = MqS.new
+
+srv = FactoryNew(MyServer)
 begin
-  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex

@@ -1,4 +1,4 @@
-.TH "csmsgque::MqS" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -150,18 +150,6 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "int \fBConfigGetStatusIs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP "
-.ti -1c
-.RI "void \fBFactoryCtxIdentSet\fP (string ident)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
-.ti -1c
-.RI "string \fBFactoryCtxIdentGet\fP ()"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
-.ti -1c
-.RI "void \fBFactoryCtxDefaultSet\fP (string ident)"
-.br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
 .ti -1c
 .RI "void \fBExit\fP ()"
 .br
@@ -526,6 +514,20 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP "
 .in -1c
+.in +1c
+.ti -1c
+.RI "void \fBFactoryCtxIdentSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.ti -1c
+.RI "string \fBFactoryCtxIdentGet\fP ()"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.ti -1c
+.RI "void \fBFactoryCtxDefaultSet\fP (string ident)"
+.br
+.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.in -1c
 .SH "Detailed Description"
 .PP 
 implement the \fBlibmsgque\fP API object: \fBMqS\fP 
@@ -540,6 +542,21 @@ implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP
 .SS "void csmsgque.MqS.DLogC (int level, string val)"
 .PP
 Definition at line 126 of file MqS.cs.
+.SS "void csmsgque.MqS.FactoryCtxDefaultSet (string ident)"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP 
+.PP
+Definition at line 275 of file config.cs.
+.SS "string csmsgque.MqS.FactoryCtxIdentGet ()"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP 
+.PP
+Definition at line 269 of file config.cs.
+.SS "void csmsgque.MqS.FactoryCtxIdentSet (string ident)"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
+.PP
+Definition at line 263 of file config.cs.
 .SS "static void csmsgque.MqS.Init (params string[] argv)\fC [static, protected]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP 
@@ -548,4 +565,4 @@ Definition at line 141 of file MqS.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

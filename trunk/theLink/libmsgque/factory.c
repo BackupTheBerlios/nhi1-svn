@@ -209,6 +209,7 @@ pFactoryCall (
   MqFactoryErrorCheck (ret = MqFactoryItemGet (ident, &item));
   if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
     ret = MQ_FACTORY_RETURN_CALL_ERR;
+    goto error;
   }
   MqConfigUpdateName(mqctx, item->ident);
   *ctxP = mqctx;

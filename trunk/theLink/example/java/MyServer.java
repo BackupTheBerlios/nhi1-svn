@@ -9,6 +9,7 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
+
 package example;
 
 import javamsgque.*;
@@ -36,7 +37,7 @@ final class MyServer extends MqS implements IServerSetup {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.MyServer");
-    MyServer srv = MqFactoryS.New("MyServer", MyServer.class);
+    MyServer srv = MqFactoryS.New(MyServer.class);
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -46,4 +47,3 @@ final class MyServer extends MqS implements IServerSetup {
     srv.Exit();
   }
 }
-

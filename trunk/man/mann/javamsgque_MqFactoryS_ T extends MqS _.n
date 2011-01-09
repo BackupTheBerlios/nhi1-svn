@@ -1,8 +1,8 @@
-.TH "javamsgque::MqFactoryS< T extends MqS >" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqFactoryS< T extends MqS >" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-javamsgque::MqFactoryS< T extends MqS > \- implement the \fBlibmsgque\fP API object: MqFactoryS  
+javamsgque::MqFactoryS< T extends MqS > \- implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP  
 
 .PP
 .SH SYNOPSIS
@@ -45,30 +45,30 @@ javamsgque::MqFactoryS< T extends MqS > \- implement the \fBlibmsgque\fP API obj
 .in -1c
 .SH "Detailed Description"
 .PP 
-implement the \fBlibmsgque\fP API object: MqFactoryS 
+implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP 
 .PP
-Definition at line 22 of file MqFactoryS.java.
+Definition at line 25 of file MqFactoryS.java.
 .SH "Member Function Documentation"
 .PP 
 .SS "javamsgque.MqFactoryS< T extends \fBMqS\fP >.[static initializer] ()\fC [static, package]\fP"
 .PP
 .SS "static <TextendsMqS> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Add (Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 38 of file MqFactoryS.java.
+Definition at line 41 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Add (String ident, Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
 .SS "static native<T extends \fBMqS\fP> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.Call (String ident)\fC [static]\fP"
 .PP
 .SS "static <TextendsMqS> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Default (Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 31 of file MqFactoryS.java.
+Definition at line 34 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Default (String ident, Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
 .SS "static native<T extends \fBMqS\fP> String javamsgque.MqFactoryS< T extends \fBMqS\fP >.DefaultIdent ()\fC [static]\fP"
 .PP
 .SS "static <TextendsMqS> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.New (Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 45 of file MqFactoryS.java.
+Definition at line 48 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.New (String ident, Class< T > callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
 

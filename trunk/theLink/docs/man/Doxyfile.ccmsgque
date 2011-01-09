@@ -25,10 +25,30 @@ ALIASES		    += "selftut=ccmsgquetut"
 ALIASES		    += "NS{1}=cc_\1"
 ALIASES		    += "lang=C++"
 ALIASES		    += "fileextension=cc"
+ALIASES		    += "dirname=cc"
 ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
+
+ALIASES		    += "FactoryReturn=#ccmsgque::MqFactoryCException"
+ALIASES		    += "FactoryDefault=MqFactoryC<T>::Default(\C ident)"
+ALIASES		    += "FactoryDefault2=MqFactoryC<T>::Default()"
+ENABLED_SECTIONS    += FactoryDefault2
+ALIASES		    += "FactoryDefaultIdent=\C MqFactoryC<T>::DefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryC<T>::Add(\C ident)"
+ALIASES		    += "FactoryAdd2=MqFactoryC<T>::Add()"
+ENABLED_SECTIONS    += FactoryAdd2
+ALIASES		    += "FactoryNew=T* MqFactoryC<T>::New(\C ident)"
+ALIASES		    += "FactoryNew2=T* MqFactoryC<T>::New()"
+ENABLED_SECTIONS    += FactoryNew2
+ALIASES		    += "FactoryCall=T* MqFactoryC<T>::Call(\C ident)"
+ALIASES		    += "FactoryCall2=T* MqFactoryC<T>::Call()"
+ENABLED_SECTIONS    += FactoryCall2
+
+ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
+ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
+ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

@@ -1,4 +1,4 @@
-.TH "csmsgque Tutorial" n "7 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque Tutorial" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -95,7 +95,6 @@ namespace example {
 
     // constructor
     public MyServer(MqS tmpl) : base(tmpl) {
-      ConfigSetIsServer(true);
     }
 
     // service to serve all incomming requests for token 'HLWO'
@@ -273,7 +272,6 @@ namespace example {
     }
   }
 }
-
 .fi
 .PP
  Use \fImanfilter.exe\fP in a LibMsgque command pipeline: 

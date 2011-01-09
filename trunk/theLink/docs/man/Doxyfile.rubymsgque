@@ -25,10 +25,23 @@ ALIASES		    += "selftut=rubymsgquetut"
 ALIASES		    += "NS{1}=ruby_\1"
 ALIASES		    += "lang=RUBY"
 ALIASES		    += "fileextension=rb"
+ALIASES		    += "dirname=ruby"
 ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=require \"rubymsgque\""
+
+ALIASES		    += "FactoryReturn=RuntimeError"
+ALIASES		    += "FactoryDefault=FactoryDefault(?\C ident,? Class cs)"
+ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=FactoryAdd(?\C ident,? Class cs)"
+ALIASES		    += "FactoryNew=MqS FactoryNew(?\C ident,? Class cs)"
+ALIASES		    += "FactoryCall=MqS FactoryCall(\C ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
+
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

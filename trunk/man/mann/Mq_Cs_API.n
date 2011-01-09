@@ -1,4 +1,4 @@
-.TH "Mq_Cs_API" n "7 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Cs_API" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -30,13 +30,6 @@ Mq_Cs_API \- public libmsgque API
 .in +1c
 
 .ti -1c
-.RI "\fBMq_Factory_Cs_API\fP"
-.br
-.R "object generation and application entry point  "
-.PP
-.in +1c
-
-.ti -1c
 .RI "\fBMq_Context_Cs_API\fP"
 .br
 .R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
@@ -54,6 +47,13 @@ Mq_Cs_API \- public libmsgque API
 .RI "\fBMq_Link_Cs_API\fP"
 .br
 .R "setup and manage a \fIclient-server-link\fP  "
+.PP
+.in +1c
+
+.ti -1c
+.RI "\fBMq_Factory_API\fP"
+.br
+.R "provide an interface to create a new instance  "
 .PP
 .in +1c
 
@@ -106,4 +106,4 @@ propagate the error messages from the server to the client
  
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

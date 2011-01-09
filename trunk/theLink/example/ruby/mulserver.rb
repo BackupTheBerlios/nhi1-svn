@@ -9,19 +9,26 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 require "rubymsgque"
-def MMUL
-  SendSTART()
-  SendD(ReadD() * ReadD())
-  SendRETURN()
+
+class MulServer < MqS
+  def initialize(tmpl = nil)
+    super()
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def MMUL
+    SendSTART()
+    SendD(ReadD() * ReadD())
+    SendRETURN()
+  end
+  def ServerSetup()
+    ServiceCreate("MMUL",method(:MMUL))
+  end
 end
-def ServerConfig()
-  ServiceCreate("MMUL",method(:MMUL))
-end
-srv = MqS.new
+
+srv = FactoryNew("mulserver", MulServer)
 begin
-  srv.ConfigSetName("MyMulServer")
-  srv.ConfigSetServerSetup(srv.method(:ServerConfig))
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)
 rescue Exception => ex

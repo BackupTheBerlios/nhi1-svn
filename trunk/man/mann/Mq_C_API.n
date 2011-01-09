@@ -1,4 +1,4 @@
-.TH "Mq_C_API" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "Mq_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -95,7 +95,7 @@ Mq_C_API \- public libmsgque API
 .ti -1c
 .RI "\fBMq_System_C_API\fP"
 .br
-.R "L)anguage A)bstraction L)ayer defnition. "
+.R "L)anguage A)bstraction L)ayer definition. "
 .PP
 .in +1c
 
@@ -127,4 +127,4 @@ propagate the error messages from the server to the client
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

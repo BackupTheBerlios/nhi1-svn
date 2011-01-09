@@ -13,7 +13,7 @@
 use strict;
 use Net::PerlMsgque;
 
-package mulserver;
+package MulServer;
 use base qw(Net::PerlMsgque::MqS);
 
   sub MMUL {
@@ -37,7 +37,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryNew("mulserver");
+  our $srv = Net::PerlMsgque::FactoryNew("mulserver", "MulServer");
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

@@ -1,4 +1,4 @@
-.TH "MqSysServerThreadMainS" n "7 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "MqSysServerThreadMainS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -24,7 +24,7 @@ MqSysServerThreadMainS \- data used to initialize a new created thread
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBargv\fP"
 .br
-.R "command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread "
+.R "command-line arguments before \fBMQ_ALFA\fP, owned by SysServerThread "
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBalfa\fP"
 .br
@@ -44,7 +44,7 @@ command-line arguments after \fBMQ_ALFA\fP, owned by SysServerThread
 Definition at line 4313 of file msgque.h.
 .SS "struct \fBMqBufferLS\fP* \fBMqSysServerThreadMainS::argv\fP\fC [read]\fP"
 .PP
-command-line arguments befor \fBMQ_ALFA\fP, owned by SysServerThread 
+command-line arguments before \fBMQ_ALFA\fP, owned by SysServerThread 
 .PP
 Definition at line 4312 of file msgque.h.
 .SS "struct \fBMqFactoryS\fP* \fBMqSysServerThreadMainS::factory\fP\fC [read]\fP"
@@ -60,4 +60,4 @@ Definition at line 4310 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for libmsgque from the source code.
+Generated automatically by Doxygen for msgqueforphp from the source code.

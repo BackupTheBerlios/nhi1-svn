@@ -1,4 +1,4 @@
-.TH "javamsgque Tutorial" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque Tutorial" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -125,7 +125,6 @@ final class MyServer extends MqS implements IServerSetup {
     srv.Exit();
   }
 }
-
 .fi
 .PP
 .PP
@@ -274,8 +273,6 @@ class manfilter extends MqS {
     srv.Exit();
   }
 }
-
-
 .fi
 .PP
  Use \fImanfilter.java\fP in a LibMsgque command pipeline: 

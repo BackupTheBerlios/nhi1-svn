@@ -1368,14 +1368,14 @@ MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
 /// \details This function is a convenient function to combine the #MqFactoryAdd
 /// and the #MqFactoryCall functionality.
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF instance constructor function
-/// \param[in] createData instance constructor data
-/// \param[in] createDataFreeF instance constructor data free function
-/// \param[in] deleteCallF instance destructor function
-/// \param[in] deleteData instance destructor data
-/// \param[in] deleteDataFreeF instance destructor data free function
-/// \param[in] data environment specific data or \c NULL used by \e createCallF
-/// \param[out] ctxP the new created instance to return
+/// \param[in] createCallF (C-API) instance constructor function
+/// \param[in] createData (C-API) instance constructor data
+/// \param[in] createDataFreeF (C-API) instance constructor data free function
+/// \param[in] deleteCallF (C-API) instance destructor function
+/// \param[in] deleteData (C-API) instance destructor data
+/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
+/// \param[in] data (C-API) environment specific data or \c NULL used by \e createCallF
+/// \param[out] ctxP (C-API) the new created instance to return
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
   MQ_CST           const ident,
@@ -1391,12 +1391,12 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
 
 /// \brief add a new \e factory-interface identified by \e ident
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF instance constructor function
-/// \param[in] createData instance constructor data
-/// \param[in] createDataFreeF instance constructor data free function
-/// \param[in] deleteCallF instance destructor function
-/// \param[in] deleteData instance destructor data
-/// \param[in] deleteDataFreeF instance destructor data free function
+/// \param[in] createCallF (C-API) instance constructor function
+/// \param[in] createData (C-API) instance constructor data
+/// \param[in] createDataFreeF (C-API) instance constructor data free function
+/// \param[in] deleteCallF (C-API) instance destructor function
+/// \param[in] deleteData (C-API) instance destructor data
+/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
   MQ_CST           const ident,
@@ -1412,12 +1412,12 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
 /// \details The default factory is always used to create an instance if no other
 /// factory is available
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF instance constructor function
-/// \param[in] createData instance constructor data
-/// \param[in] createDataFreeF instance constructor data free function
-/// \param[in] deleteCallF instance destructor function
-/// \param[in] deleteData instance destructor data
-/// \param[in] deleteDataFreeF instance destructor data free function
+/// \param[in] createCallF (C-API) instance constructor function
+/// \param[in] createData (C-API) instance constructor data
+/// \param[in] createDataFreeF (C-API) instance constructor data free function
+/// \param[in] deleteCallF (C-API) instance destructor function
+/// \param[in] deleteData (C-API) instance destructor data
+/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MQ_CST           const ident,
@@ -1460,8 +1460,8 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
 
 /// \brief call the factory constructor, identified by \e ident, to create a new instance
 /// \param[in] ident factory identifier to call
-/// \param[in] data environment specific data or \c NULL
-/// \param[out] ctxP the new created instance to return
+/// \param[in] data (C-API) environment specific data or \c NULL
+/// \param[out] ctxP (C-API) the new created instance to return
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
   MQ_CST const ident,
@@ -1829,7 +1829,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
 /// Do nothing if the \e client-server-link is already connected.
 /// This function is only useful in an \e event-function (\RNSC{IEvent}) if the \e link-disconnect
 /// (\RNSA{ErrorIsEXIT}) is ignored (\RNSA{ErrorReset}). 
-/// Read more in the: <TT>/theLink/example/LNG/Filter4.EXT</TT> example.
+/// Read more from the: <TT>/theLink/example/\dirname/Filter4.\fileextension</TT> example.
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqLinkConnect (
@@ -3420,7 +3420,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
 /// The goal of this function is to act on an \e exit-error-object
 /// and is used to ignore this error using \RNSA{ErrorReset} and
 /// later do a reconnect using \RNSA{LinkConnect}.\n
-/// Read more using the code from <B><TT>theLink/example/LNG/Filter4.LNG</TT></B>
+/// Read more using from the: <TT>theLink/example/\dirname/Filter4.\fileextension</TT> example
 /// \ifnot MAN
 /// \b Example: catch and ignore an EXIT return-code
 /// \code
@@ -4883,9 +4883,4 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
-
-
-
 

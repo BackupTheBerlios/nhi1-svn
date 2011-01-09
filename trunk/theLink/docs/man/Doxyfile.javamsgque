@@ -23,10 +23,28 @@ ALIASES		    += "selftut=javamsgquetut"
 ALIASES		    += "NS{1}=java_\1"
 ALIASES		    += "lang=JAVA"
 ALIASES		    += "fileextension=java"
+ALIASES		    += "dirname=java"
 ALIASES		    += "null=\e null"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import javamsgque.*;"
+
+ALIASES		    += "FactoryReturn=\RNS{ErrorObject}"
+ALIASES		    += "FactoryDefault=MqFactoryS.Default(String ident, Class<T> callback)"
+ALIASES		    += "FactoryDefault2=MqFactoryS.Default(Class<T> callback)"
+ENABLED_SECTIONS    += FactoryDefault2
+ALIASES		    += "FactoryDefaultIdent=String MqFactoryS.DefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryS.Add(String ident, Class<T> callback)"
+ALIASES		    += "FactoryAdd2=MqFactoryS.Add(Class<T> callback)"
+ENABLED_SECTIONS    += FactoryAdd2
+ALIASES		    += "FactoryNew=T MqFactoryS.New(String ident, Class<T> callback)"
+ALIASES		    += "FactoryNew2=T MqFactoryS.New(Class<T> callback)"
+ENABLED_SECTIONS    += FactoryNew2
+ALIASES		    += "FactoryCall=T MqFactoryS.Call(String ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(String ident)"
+ALIASES		    += "FactoryCtxIdentGet=String ctx.FactoryCtxIdentGet()"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(String ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

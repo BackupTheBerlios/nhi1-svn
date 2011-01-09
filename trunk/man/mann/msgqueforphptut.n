@@ -1,4 +1,4 @@
-.TH "msgqueforphp Tutorial" n "7 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "msgqueforphp Tutorial" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -76,7 +76,8 @@ class MyServer extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-$srv = new MyServer();
+
+$srv = FactoryNew('MyServer');
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

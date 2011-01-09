@@ -1,8 +1,8 @@
-.TH "Mq_Factory_Java_API" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Factory_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Factory_Java_API \- object generation and application entry point   
+Mq_Factory_Java_API \-   
 
 .PP
 .SS "Functions"
@@ -19,20 +19,18 @@ Mq_Factory_Java_API \- object generation and application entry point
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.FactoryCtxDefaultSet\fP (String ident)"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqConfigSetDefaultFactory "
+.R "implement the \fBlibmsgque\fP API object: \fBFactoryCtxDefaultSet\fP "
 .in -1c
 .SH "Detailed Description"
 .PP 
-object generation and application entry point  
+ 
 
-object generation and application entry point 
-.PP
-The factory is used ...  
+ 
 .SH "Function Documentation"
 .PP 
 .SS "native void javamsgque.MqS.FactoryCtxDefaultSet (String ident)\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: MqConfigSetDefaultFactory 
+implement the \fBlibmsgque\fP API object: \fBFactoryCtxDefaultSet\fP 
 .PP
 .SS "native String javamsgque.MqS.FactoryCtxIdentGet ()\fC [inherited]\fP"
 .PP

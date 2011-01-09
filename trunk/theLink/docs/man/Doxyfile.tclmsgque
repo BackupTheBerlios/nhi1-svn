@@ -23,10 +23,23 @@ ALIASES		    += "selftut=tclmsgquetut"
 ALIASES		    += "NS{1}=tcl_\1"
 ALIASES		    += "lang=TCL"
 ALIASES		    += "fileextension=tcl"
+ALIASES		    += "dirname=tcl"
 ALIASES		    += "null=\e empty"
 ALIASES		    += "yes=\e yes"
 ALIASES		    += "no=\e no"
 ALIASES		    += "package=package require TclMsgque"
+
+ALIASES		    += "FactoryReturn=TCL_ERROR"
+ALIASES		    += "FactoryDefault=tclmsgque FactoryDefault ident ?factory-proc?"
+ALIASES		    += "FactoryDefaultIdent=\C [tclmsgque FactoryDefaultIdent]"
+ALIASES		    += "FactoryAdd=tclmsgque FactoryAdd ?ident? factory-proc" 
+ALIASES		    += "FactoryNew=MqS [tclmsgque FactoryNew ?ident? factory-proc]"
+ALIASES		    += "FactoryCall=MqS [tclmsgque FactoryCall ident]"
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet ident"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet ident"
+
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\

@@ -33,22 +33,19 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \copydoc Mq_Context_C_API
 
-\subsection	\NS{ContextCreate}			\ContextCreate
-\copydoc MqContextCreate
+\function{ContextCreate,\ContextCreate}
 \ContextCreateSection
 
 \b Example: create an \e application-context with \e mydata as \e application-specific-data:
 \object_example
 
-\subsection	\NS{ContextDelete}			\ContextDelete
 \if GC
-\copydoc MqContextFree
+\function{ContextDelete,\ContextDelete,MqContextFree}
 \else
-\copydoc MqContextDelete
+\function{ContextDelete,\ContextDelete,MqContextDelete}
 \endif
 
-\subsection	\NS{Exit}				\Exit
-\copydoc MqExitP
+\function{Exit,\Exit,MqExitP}
 
 \if SELF
 \subsection	\NS{SetSelf}				\SetSelf
@@ -68,17 +65,12 @@ back into a toplevel object.
 
 \endif
 
-\subsection	\NS{LogC}				\LogC
-\copydoc MqLogC
-
+\function{LogC,\LogC}
 \if HAS_LOGV
-\subsection	\NS{LogV}				\LogV
-\copydoc MqLogV
+\function{LogV,\LogV}
 \endif
-
 \if HAS_LOGVL
-\subsection	\NS{LogVL}				\LogVL
-\copydoc MqLogVL
+\function{LogVL,\LogVL}
 \endif
 
 \if TCL
@@ -124,40 +116,44 @@ tclmsgque Main {
 
 \copydoc MqFactory
 
+\function2{FactoryDefault2,\FactoryDefault2}
 \function{FactoryDefault,\FactoryDefault}
 
-\b Example from <TT>example/\fileextension/Filter4.\fileextension</TT>:
+\b Example from <TT>example/\dirname/Filter4.\fileextension</TT>:
 \dontinclude Filter4.\fileextension
-\skip FactoryDefault
-\until FactoryDefault
+\skip Default
+\until Default
 
 \function{FactoryDefaultIdent,\FactoryDefaultIdent}
-
+\function2{FactoryAdd2,\FactoryAdd2}
 \function{FactoryAdd,\FactoryAdd}
 
-\b Example from <TT>example/\fileextension/Filter5.\fileextension</TT>:
+\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
 \dontinclude Filter5.\fileextension
-\skip FactoryAdd
-\until FactoryAdd
+\skip Add
+\until Add
 
+\function2{FactoryNew2,\FactoryNew2}
 \function{FactoryNew,\FactoryNew}
 
-\b Example from <TT>example/\fileextension/MyServer.\fileextension</TT>:
-\dontinclude MyServer.\fileextension
-\skip FactoryNew
-\until FactoryNew
+\b Example from <TT>example/\dirname/mulserver.\fileextension</TT>:
+\dontinclude mulserver.\fileextension
+\skip New
+\until New
 
+\function2{FactoryCall2,\FactoryCall2}
 \function{FactoryCall,\FactoryCall}
 
-\b Example from <TT>example/\fileextension/Filter5.\fileextension</TT>:
+\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
 \dontinclude Filter5.\fileextension
-\skip FactoryCall
-\until FactoryCall
+\skip Add
+\skip Add
+\skip Add
+\skip Call
+\until Call
 
 \function{FactoryCtxIdentSet,\FactoryCtxIdentSet}
-
 \function{FactoryCtxIdentGet,\FactoryCtxIdentGet}
-
 \function{FactoryCtxDefaultSet,\FactoryCtxDefaultSet}
 
 
@@ -256,56 +252,26 @@ Read more about how to define a \e callback at \RNS{ServiceCallback}.
 
 \copydoc Mq_Link_C_API
 
-\subsection	  \NS{LinkCreate}			\LinkCreate
-\if LinkCreate2
-\subsection	  \NS{LinkCreate2}			\LinkCreate2
-\endif
-\if LinkCreate3
-\subsection	  \NS{LinkCreate3}			\LinkCreate3
-\endif
-\if LinkCreate4
-\subsection	  \NS{LinkCreate4}			\LinkCreate4
-\endif
-\if LinkCreate5
-\subsection	  \NS{LinkCreate5}			\LinkCreate5
-\endif
-\copydoc MqLinkCreate
+\function2{LinkCreate5,\LinkCreate5}
+\function2{LinkCreate4,\LinkCreate4}
+\function2{LinkCreate3,\LinkCreate3}
+\function2{LinkCreate2,\LinkCreate2}
+\function{LinkCreate,\LinkCreate}
 
-\subsection	  \NS{LinkCreateChild}			\LinkCreateChild
-\if LinkCreateChild2
-\subsection	  \NS{LinkCreateChild2}			\LinkCreateChild2
-\endif
-\if LinkCreateChild3
-\subsection	  \NS{LinkCreateChild3}			\LinkCreateChild3
-\endif
-\if LinkCreateChild4
-\subsection	  \NS{LinkCreateChild4}			\LinkCreateChild4
-\endif
-\if LinkCreateChild5
-\subsection	  \NS{LinkCreateChild5}			\LinkCreateChild5
-\endif
-\copydoc MqLinkCreateChild
+\function2{LinkCreateChild5,\LinkCreateChild5}
+\function2{LinkCreateChild4,\LinkCreateChild4}
+\function2{LinkCreateChild3,\LinkCreateChild3}
+\function2{LinkCreateChild2,\LinkCreateChild2}
+\function{LinkCreateChild,\LinkCreateChild}
 
-\subsection	  \NS{LinkDelete}			\LinkDelete
-\copydoc MqLinkDelete
+\function{LinkDelete,\LinkDelete}
+\function{LinkConnect,\LinkConnect}
+\function{LinkGetParent,\LinkGetParent}
+\function{LinkGetCtxId,\LinkGetCtxId}
+\function{LinkIsParent,\LinkIsParent}
+\function{LinkIsConnected,\LinkIsConnected}
+\function{LinkGetTargetIdent,\LinkGetTargetIdent}
 
-\subsection	  \NS{LinkConnect}			\LinkConnect
-\copydoc MqLinkConnect
-
-\subsection	  \NS{LinkGetParent}			\LinkGetParent
-\copydoc MqLinkGetParent
-
-\subsection	  \NS{LinkGetCtxId}			\LinkGetCtxId
-\copydoc MqLinkGetCtxId
-
-\subsection	  \NS{LinkIsParent}			\LinkIsParent
-\copydoc MqLinkIsParent
-
-\subsection	  \NS{LinkIsConnected}			\LinkIsConnected
-\copydoc MqLinkIsConnected
-
-\subsection	  \NS{LinkGetTargetIdent}		\LinkGetTargetIdent
-\copydoc MqLinkGetTargetIdent
 
 \section	\NS{service}				SERVICE API
 \RNSA{ServiceIdentifier}\n
@@ -412,44 +378,20 @@ callbacks not belonging to a \e sub-type of the original \e context-type.
 UNKNOWN
 \endif
 
-\subsection	  \NS{ServiceGetToken}			\ServiceGetToken
-\copydoc MqServiceGetToken
+\function{ServiceGetToken,\ServiceGetToken}
+\function{ServiceIsTransaction,\ServiceIsTransaction}
+\function2{ServiceGetFilter2,\ServiceGetFilter2}
+\function{ServiceGetFilter,\ServiceGetFilter}
+\function2{ServiceCreate2,\ServiceCreate2}
+\function{ServiceCreate,\ServiceCreate}
+\function2{ServiceProxy2,\ServiceProxy2}
+\function{ServiceProxy,\ServiceProxy}
+\function{ServiceDelete,\ServiceDelete}
+\function2{ProcessEvent4,\ProcessEvent4}
+\function2{ProcessEvent3,\ProcessEvent3}
+\function2{ProcessEvent2,\ProcessEvent2}
+\function{ProcessEvent,\ProcessEvent}
 
-\subsection	  \NS{ServiceIsTransaction}		\ServiceIsTransaction
-\copydoc MqServiceIsTransaction
-
-\subsection	  \NS{ServiceGetFilter}			\ServiceGetFilter
-\if ServiceGetFilter2
-\subsection	  \NS{ServiceGetFilter2}		\ServiceGetFilter2
-\endif
-\copydoc MqServiceGetFilter
-
-\subsection	  \NS{ServiceCreate}			\ServiceCreate
-\if ServiceCreate2
-\subsection	  \NS{ServiceCreate2}			\ServiceCreate2
-\endif
-\copydoc MqServiceCreate
-
-\subsection       \NS{ServiceProxy}			\ServiceProxy
-\if ServiceProxy2
-\subsection       \NS{ServiceProxy2}			\ServiceProxy2
-\endif
-\copydoc MqServiceProxy
-
-\subsection	  \NS{ServiceDelete}			\ServiceDelete
-\copydoc MqServiceDelete
-
-\subsection	  \NS{ProcessEvent}			\ProcessEvent
-\if ProcessEvent2
-\subsection	  \NS{ProcessEvent2}			\ProcessEvent2
-\endif
-\if ProcessEvent3
-\subsection	  \NS{ProcessEvent3}			\ProcessEvent3
-\endif
-\if ProcessEvent4
-\subsection	  \NS{ProcessEvent4}			\ProcessEvent4
-\endif
-\copydoc MqProcessEvent
 
 \section	\NS{SendData}				SEND API
 \RNSA{SendSTART}\n
@@ -467,53 +409,27 @@ UNKNOWN
 \RNSA{SendT_END}\n
 
 \copydoc Mq_Send_C_API
+
 \b Example: send an \I and a list of \D, \C and a \e \TB: \send_example
 
-\subsection	  \NS{SendSTART}			\SendSTART
-\copydoc MqSendSTART
+\function{SendSTART,\SendSTART}
+\function{SendEND,\SendEND}
+\function2{SendEND_AND_WAIT2,\SendEND_AND_WAIT2}
+\function{SendEND_AND_WAIT,\SendEND_AND_WAIT}
+\function2{SendEND_AND_CALLBACK2,\SendEND_AND_CALLBACK2}
+\function{SendEND_AND_CALLBACK,\SendEND_AND_CALLBACK}
+\function{SendRETURN,\SendRETURN}
+\function{SendERROR,\SendERROR}
+\function{SendTYPE,\SendTYPE,MqSendY}
+\function{SendN,\SendN}
+\function{SendBDY,\SendBDY}
+\function{SendL_START,\SendL_START}
+\function{SendL_END,\SendL_END}
+\function{SendT_START,\SendT_START}
 
-\subsection	  \NS{SendEND}				\SendEND
-\copydoc MqSendEND
-
-\subsection	  \NS{SendEND_AND_WAIT}			\SendEND_AND_WAIT
-\if SendEND_AND_WAIT2
-\subsection	  \NS{SendEND_AND_WAIT2}		\SendEND_AND_WAIT2
-\endif
-\copydoc MqSendEND_AND_WAIT
-
-\subsection	  \NS{SendEND_AND_CALLBACK}		\SendEND_AND_CALLBACK
-\if SendEND_AND_CALLBACK2
-\subsection	  \NS{SendEND_AND_CALLBACK2}		\SendEND_AND_CALLBACK2
-\endif
-\copydoc MqSendEND_AND_CALLBACK
-
-\subsection	  \NS{SendRETURN}			\SendRETURN
-\copydoc MqSendRETURN
-
-\subsection	  \NS{SendERROR}			\SendERROR
-\copydoc MqSendERROR
-
-\subsection	  \NS{SendTYPE}				\SendTYPE
-\copydoc MqSendY
-
-\subsection	  \NS{SendN}				\SendN
-\copydoc MqSendN
-
-\subsection	  \NS{SendBDY}				\SendBDY
-\copydoc MqSendBDY
-
-\subsection	  \NS{SendL_START}			\SendL_START
-\copydoc MqSendL_START
-
-\subsection	  \NS{SendL_END}			\SendL_END
-\copydoc MqSendL_END
-
-\subsection	  \NS{SendT_START}			\SendT_START
-\copydoc MqSendT_START
 \b Example: make a \e service-call with \e transaction-support: \SendT_example
+\function{SendT_END,\SendT_END}
 
-\subsection	  \NS{SendT_END}			\SendT_END
-\copydoc MqSendT_END
 
 \section	  \NS{ReadData}				READ API
 \RNSA{ReadTYPE}\n
@@ -530,56 +446,28 @@ UNKNOWN
 \RNSA{ReadUndo}\n
 
 \copydoc Mq_Read_C_API
+
 \b Example: read an \I and a list of \D, \C and a \TB: \read_example
 
-\subsection	  \NS{ReadTYPE}				\ReadTYPE
-\copydoc MqReadY
+\function{ReadTYPE,\ReadTYPE,MqReadY}
+\function{ReadN,\ReadN}
+\function{ReadBDY,\ReadBDY}
+\function{ReadU,\ReadU}
+\function2{ReadL_START3,\ReadL_START3}
+\function2{ReadL_START2,\ReadL_START2}
+\function{ReadL_START,\ReadL_START}
+\function{ReadL_END,\ReadL_END}
+\function2{ReadT_START3,\ReadT_START3}
+\function2{ReadT_START2,\ReadT_START2}
+\function{ReadT_START,\ReadT_START}
 
-\subsection	  \NS{ReadN}				\ReadN
-\copydoc MqReadN
-
-\subsection	  \NS{ReadBDY}				\ReadBDY
-\copydoc MqReadBDY
-
-\subsection	  \NS{ReadU}				\ReadU
-\copydoc MqReadU
-
-\subsection	  \NS{ReadL_START}			\ReadL_START
-\if ReadL_START2
-\subsection	  \NS{ReadL_START2}			\ReadL_START2
-\endif
-\if ReadL_START3
-\subsection	  \NS{ReadL_START3}			\ReadL_START3
-\endif
-\copydoc MqReadL_START
-
-\subsection	  \NS{ReadL_END}			\ReadL_END
-\copydoc MqReadL_END
-
-\subsection	  \NS{ReadT_START}			\ReadT_START
-\if ReadT_START2
-\subsection	  \NS{ReadT_START2}			\ReadT_START2
-\endif
-\if ReadT_START3
-\subsection	  \NS{ReadT_START3}			\ReadT_START3
-\endif
-\copydoc MqReadT_START
 \b Example: read the results from a \e service-call with \e transaction-support: \ReadT_example
+\function{ReadT_END,\ReadT_END}
+\function{ReadProxy,\ReadProxy}
+\function{ReadGetNumItems,\ReadGetNumItems}
+\function{ReadItemExists,\ReadItemExists}
+\function{ReadUndo,\ReadUndo}
 
-\subsection	  \NS{ReadT_END}			\ReadT_END
-\copydoc MqReadT_END
-
-\subsection	  \NS{ReadProxy}			\ReadProxy
-\copydoc MqReadProxy
-
-\subsection	  \NS{ReadGetNumItems}			\ReadGetNumItems
-\copydoc MqReadGetNumItems
-
-\subsection	  \NS{ReadItemExists}			\ReadItemExists
-\copydoc MqReadItemExists
-
-\subsection	  \NS{ReadUndo}				\ReadUndo
-\copydoc MqReadUndo
 
 \section        \NS{SlaveContext}			SLAVE API
 \RNSA{SlaveWorker}\n
@@ -589,43 +477,23 @@ UNKNOWN
 \RNSA{SlaveGetMaster}\n
 \RNSA{SlaveIs}\n
 
-\copydetails Mq_Slave_C_API
+\copydoc Mq_Slave_C_API
 
-\subsection	  \NS{SlaveWorker}			\SlaveWorker
-\if LinkCreate2
-\subsection	  \NS{SlaveWorker2}			\SlaveWorker2
-\endif
-\if LinkCreate3
-\subsection	  \NS{SlaveWorker3}			\SlaveWorker3
-\endif
-\if LinkCreate4
-\subsection	  \NS{SlaveWorker4}			\SlaveWorker4
-\endif
-\if LinkCreate5
-\subsection	  \NS{SlaveWorker5}			\SlaveWorker5
-\endif
-\if LinkCreate6
-\subsection	  \NS{SlaveWorker6}			\SlaveWorker6
-\endif
-\copydoc MqSlaveWorker
-
+\function2{SlaveWorker6,\SlaveWorker6}
+\function2{SlaveWorker5,\SlaveWorker5}
+\function2{SlaveWorker4,\SlaveWorker4}
+\function2{SlaveWorker3,\SlaveWorker3}
+\function2{SlaveWorker2,\SlaveWorker2}
+\function{SlaveWorker,\SlaveWorker}
 \b example create a worker with id 7 and name "MyWorker" as thread.
 \SlaveWorker_example
 
-\subsection	  \NS{SlaveCreate}			\SlaveCreate
-\copydoc MqSlaveCreate
+\function{SlaveCreate,\SlaveCreate}
+\function{SlaveDelete,\SlaveDelete}
+\function{SlaveGet,\SlaveGet}
+\function{SlaveGetMaster,\SlaveGetMaster}
+\function{SlaveIs,\SlaveIs}
 
-\subsection	  \NS{SlaveDelete}			\SlaveDelete
-\copydoc MqSlaveDelete
-
-\subsection	  \NS{SlaveGet}				\SlaveGet
-\copydoc MqSlaveGet
-
-\subsection	  \NS{SlaveGetMaster}			\SlaveGetMaster
-\copydoc MqSlaveGetMaster
-
-\subsection	  \NS{SlaveIs}				\SlaveIs
-\copydoc MqSlaveIs
 
 \section        \NS{BufferObject}			BUFFER API
 \RNSA{BufferIdentifer}\n
@@ -664,39 +532,28 @@ The \e error-object (\ErrorObject) is used to transport the \e error from the
 
 \b Example: catch an error and write the message to stdout: \error_example
 
-\subsection	\NS{ErrorGetText}			\ErrorGetText
-\copydoc MqErrorGetText
-
-\subsection	\NS{ErrorGetNum}			\ErrorGetNum
-\copydoc MqErrorGetNum
-
-\subsection	\NS{ErrorC}				\ErrorC
-\copydoc MqErrorC
+\function{ErrorGetText,\ErrorGetText}
+\function{ErrorGetNum,\ErrorGetNum}
+\function{ErrorC,\ErrorC}
 
 \subsection	\NS{ErrorSet}				\ErrorSet
 convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
 additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the error was
 caught and before the application exit or the object is deleted.
 
-\subsection	\NS{ErrorSetCONTINUE}			\ErrorSetCONTINUE
-\copybrief MqErrorSetCONTINUE
-
-\subsection	\NS{ErrorSetEXIT}			\ErrorSetEXIT
-\copydoc MqErrorSetEXIT
-
-\subsection	\NS{ErrorIsEXIT}			\ErrorIsEXIT
-\copydoc MqErrorIsEXIT
+\function{ErrorSetCONTINUE,\ErrorSetCONTINUE}
+\function{ErrorSetEXIT,\ErrorSetEXIT}
+\function{ErrorIsEXIT,\ErrorIsEXIT}
 
 \b Example: catch and ignore an EXIT return-code: \ErrorIsEXIT_example
 
-\subsection	\NS{ErrorReset}				\ErrorReset
-\copydoc MqErrorReset
+\function{ErrorReset,\ErrorReset}
 
 \subsection	\NS{ErrorRaise}				\ErrorRaise
 convert the error from an \e context into an \RNS{ErrorObject} and raise the object.
 
-\subsection	\NS{ErrorPrint}				\ErrorPrint
-\copydoc MqErrorPrint
+\function{ErrorPrint,\ErrorPrint}
+
 
 \section	\NS{BinaryObject}			BINARY OBJECT
 \if BINARY

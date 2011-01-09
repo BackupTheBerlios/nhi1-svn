@@ -168,7 +168,8 @@ PyObject* NS(FactoryAdd) (
   MqFactoryErrorCheck(ret);
   Py_RETURN_NONE;
 error:
-  PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
+  if (PyErr_Occurred() == NULL)
+    PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
   return NULL;
 }
 
@@ -195,7 +196,8 @@ PyObject* NS(FactoryDefault) (
   MqFactoryErrorCheck(ret);
   Py_RETURN_NONE;
 error:
-  PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
+  if (PyErr_Occurred() == NULL)
+    PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
   return NULL;
 }
 
@@ -220,7 +222,8 @@ PyObject* NS(FactoryNew) (
   Py_INCREF(arg);
   return arg;
 error:
-  PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
+  if (PyErr_Occurred() == NULL)
+    PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
   return NULL;
 }
 
@@ -242,7 +245,8 @@ PyObject* NS(FactoryCall) (
   Py_INCREF(arg);
   return arg;
 error:
-  PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
+  if (PyErr_Occurred() == NULL)
+    PyErr_SetString(PyExc_RuntimeError, MqFactoryErrorMsg(ret));
   return NULL;
 }
 

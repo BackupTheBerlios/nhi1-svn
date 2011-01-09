@@ -253,10 +253,7 @@ namespace csmsgque {
 
 /// \}
 
-/// \defgroup Mq_Factory_Cs_API Mq_Factory_Cs_API
-/// \ingroup Mq_Cs_API
-/// \brief \copybrief Mq_Factory_C_API
-/// \details \copydetails Mq_Factory_C_API
+/// \ingroup Mq_Factory_Cs_API
 /// \{
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxIdentSet")]

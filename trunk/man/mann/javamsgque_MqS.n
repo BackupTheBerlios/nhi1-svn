@@ -1,4 +1,4 @@
-.TH "javamsgque::MqS" n "7 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqS" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -483,6 +483,13 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .RI "native boolean \fBSlaveIs\fP ()"
 .br
 .R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.in -1c
+.PP
+.RI "\fB\fP"
+.br
+
+.in +1c
+.in +1c
 .ti -1c
 .RI "native void \fBFactoryCtxIdentSet\fP (String val)"
 .br
@@ -494,7 +501,8 @@ javamsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "native void \fBFactoryCtxDefaultSet\fP (String ident)"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqConfigSetDefaultFactory "
+.R "implement the \fBlibmsgque\fP API object: \fBFactoryCtxDefaultSet\fP "
+.in -1c
 .in -1c
 .SS "Static Public Member Functions"
 
