@@ -1,10 +1,10 @@
-.TH "Mq_Filter_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "Mq_Filter_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Filter_C_API \- modify data using filter technology  
-
+Mq_Filter_C_API \- 
 .PP
+modify data using filter technology  
 modify data using filter technology 
 
 The filter mode is related to a special usage of the \fBlibmsgque\fP software called a command pipeline. To define a filter create a \fIserver\fP with:
@@ -161,4 +161,4 @@ A one-directional filter is a special form of a bi-directional filter and allow 
 and send every data item with \fBSendEND_AND_WAIT\fP. 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

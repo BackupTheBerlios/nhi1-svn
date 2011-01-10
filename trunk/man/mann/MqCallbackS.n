@@ -1,58 +1,59 @@
-.TH "MqCallbackS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqCallbackS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqCallbackS \- used for callback function pointer management  
-
+MqCallbackS \- 
 .PP
+used for callback function pointer management  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMqTokenF\fP \fBfCall\fP"
 .br
-.R "callback method "
+.RI "\fIcallback method \fP"
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBdata\fP"
 .br
-.R "additional data for the callback function "
+.RI "\fIadditional data for the callback function \fP"
 .ti -1c
 .RI "\fBMqTokenDataFreeF\fP \fBfFree\fP"
 .br
-.R "free additional data pointer "
+.RI "\fIfree additional data pointer \fP"
 .ti -1c
 .RI "\fBMqTokenDataCopyF\fP \fBfCopy\fP"
 .br
-.R "copy additional data pointer, used in a \fBMqSetupDup\fP "
+.RI "\fIcopy additional data pointer, used in a \fBMqSetupDup\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
 used for callback function pointer management 
 .PP
 Definition at line 506 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqCallbackS::data\fP"
+.SS "\fBMQ_PTR\fP \fBMqCallbackS.data\fP"
 .PP
 additional data for the callback function 
 .PP
 Definition at line 508 of file msgque.h.
-.SS "\fBMqTokenF\fP \fBMqCallbackS::fCall\fP"
+.SS "\fBMqTokenF\fP \fBMqCallbackS.fCall\fP"
 .PP
 callback method 
 .PP
 Definition at line 507 of file msgque.h.
-.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS::fCopy\fP"
+.SS "\fBMqTokenDataCopyF\fP \fBMqCallbackS.fCopy\fP"
 .PP
 copy additional data pointer, used in a \fBMqSetupDup\fP 
 .PP
 Definition at line 510 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS::fFree\fP"
+.SS "\fBMqTokenDataFreeF\fP \fBMqCallbackS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
@@ -60,4 +61,4 @@ Definition at line 509 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

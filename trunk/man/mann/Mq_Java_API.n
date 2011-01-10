@@ -1,17 +1,18 @@
-.TH "Mq_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Java_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Java_API \- public libmsgque API   
-
+Mq_Java_API \- 
 .PP
+public libmsgque API   
+
 .SS "Classes"
 
 .in +1c
 .ti -1c
 .RI "class \fBjavamsgque.MqS\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqS\fP \fP"
 .in -1c
 .SS "Packages"
 
@@ -19,9 +20,9 @@ Mq_Java_API \- public libmsgque API
 .ti -1c
 .RI "package \fBjavamsgque\fP"
 .br
-.R "The \fBJavaMsgque\fP Package. "
 .PP
 
+.RI "\fIThe \fBJavaMsgque\fP Package. \fP"
 .in -1c
 .SS "Modules"
 
@@ -29,72 +30,63 @@ Mq_Java_API \- public libmsgque API
 .ti -1c
 .RI "\fBMq_Buffer_Java_API\fP"
 .br
-.R "create and manage dynamic, generic, mixed typed data.  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage dynamic, generic, mixed typed data.  \fP"
 .ti -1c
 .RI "\fBMq_Factory_API\fP"
 .br
-.R "provide an interface to create a new instance  "
 .PP
-.in +1c
 
+.RI "\fIprovide an interface to create a new instance  \fP"
 .ti -1c
 .RI "\fBMq_Config_Java_API\fP"
 .br
-.R "configuration of a context  "
 .PP
-.in +1c
 
+.RI "\fIconfiguration of a context  \fP"
 .ti -1c
 .RI "\fBMq_Context_Java_API\fP"
 .br
-.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
 .PP
-.in +1c
 
+.RI "\fI\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  \fP"
 .ti -1c
 .RI "\fBMq_Link_Java_API\fP"
 .br
-.R "setup and manage a \fIclient-server-link\fP  "
 .PP
-.in +1c
 
+.RI "\fIsetup and manage a \fIclient-server-link\fP  \fP"
 .ti -1c
 .RI "\fBMq_Service_Java_API\fP"
 .br
-.R "create and manage services  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage services  \fP"
 .ti -1c
 .RI "\fBMq_Error_Java_API\fP"
 .br
-.R "create and manage error messages.  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage error messages.  \fP"
 .ti -1c
 .RI "\fBMq_Read_Java_API\fP"
 .br
-.R "extract data from an incoming \fIread-data-package\fP.  "
 .PP
-.in +1c
 
+.RI "\fIextract data from an incoming \fIread-data-package\fP.  \fP"
 .ti -1c
 .RI "\fBMq_Send_Java_API\fP"
 .br
-.R "construct an outgoing \fIsend-data-package\fP.  "
 .PP
-.in +1c
 
+.RI "\fIconstruct an outgoing \fIsend-data-package\fP.  \fP"
 .ti -1c
 .RI "\fBMq_Slave_Java_API\fP"
 .br
-.R "create and manage a slave context  "
 .PP
 
+.RI "\fIcreate and manage a slave context  \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 

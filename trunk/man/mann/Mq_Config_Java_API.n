@@ -1,33 +1,34 @@
-.TH "Mq_Config_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Config_Java_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Config_Java_API \- configuration of a context   
-
+Mq_Config_Java_API \- 
 .PP
+configuration of a context   
+
 .SS "Classes"
 
 .in +1c
 .ti -1c
 .RI "interface \fBjavamsgque.IBgError\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP \fP"
 .ti -1c
 .RI "interface \fBjavamsgque.ICallback\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqCallbackS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqCallbackS\fP \fP"
 .ti -1c
 .RI "interface \fBjavamsgque.IEvent\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP \fP"
 .ti -1c
 .RI "interface \fBjavamsgque.IServerCleanup\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP \fP"
 .ti -1c
 .RI "interface \fBjavamsgque.IServerSetup\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP \fP"
 .in -1c
 .SS "Enumerations"
 
@@ -35,7 +36,7 @@ Mq_Config_Java_API \- configuration of a context
 .ti -1c
 .RI "enum \fBjavamsgque::MqS.START\fP { \fBjavamsgque::MqS.DEFAULT\fP = (0), \fBjavamsgque::MqS.FORK\fP = (1), \fBjavamsgque::MqS.THREAD\fP = (2), \fBjavamsgque::MqS.SPAWN\fP = (3) }"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqStartE\fP \fP"
 .in -1c
 .SS "Functions"
 
@@ -43,123 +44,123 @@ Mq_Config_Java_API \- configuration of a context
 .ti -1c
 .RI "static native void \fBjavamsgque::MqS.Init\fP (String...argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetName\fP (String val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetSrvName\fP (String val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetBuffersize\fP (int val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetDebug\fP (int val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetTimeout\fP (long val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIsSilent\fP (boolean val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIsServer\fP (boolean val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIsString\fP (boolean val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIgnoreExit\fP (boolean val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP \fP"
 .ti -1c
 .RI "void \fBjavamsgque::MqS.ConfigSetStartAs\fP (START val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIoTcp\fP (String host, String port, String myhost, String myport)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIoUdsFile\fP (String file)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.ConfigSetIoPipeSocket\fP (int socket)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.ConfigGetIsServer\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.ConfigGetIsString\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.ConfigGetIsSilent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP \fP"
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.ConfigGetBuffersize\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP \fP"
 .ti -1c
 .RI "native long \fBjavamsgque::MqS.ConfigGetTimeout\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetName\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetSrvName\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP \fP"
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.ConfigGetDebug\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP \fP"
 .ti -1c
 .RI "START \fBjavamsgque::MqS.ConfigGetStartAs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP \fP"
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.ConfigGetStatusIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetIoTcpHost\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetIoTcpPort\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetIoTcpMyHost\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetIoTcpMyPort\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.ConfigGetIoUdsFile\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP \fP"
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.ConfigGetIoPipeSocket\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -192,55 +193,42 @@ Definition at line 40 of file MqS.java.
 .SS "native int javamsgque.MqS.ConfigGetBuffersize ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP 
-.PP
 .SS "native int javamsgque.MqS.ConfigGetDebug ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP 
-.PP
 .SS "native int javamsgque.MqS.ConfigGetIoPipeSocket ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetIoTcpHost ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetIoTcpMyHost ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetIoTcpMyPort ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetIoTcpPort ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetIoUdsFile ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP 
-.PP
 .SS "native boolean javamsgque.MqS.ConfigGetIsServer ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP 
-.PP
 .SS "native boolean javamsgque.MqS.ConfigGetIsSilent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP 
-.PP
 .SS "native boolean javamsgque.MqS.ConfigGetIsString ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetName ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP 
-.PP
 .SS "native String javamsgque.MqS.ConfigGetSrvName ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP 
-.PP
 .SS "START javamsgque.MqS.ConfigGetStartAs ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP 
@@ -249,68 +237,53 @@ Definition at line 114 of file MqS.java.
 .SS "native int javamsgque.MqS.ConfigGetStatusIs ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP 
-.PP
 .SS "native long javamsgque.MqS.ConfigGetTimeout ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetBuffersize (int val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetBuffersize (intval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetDebug (int val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetDebug (intval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIgnoreExit (boolean val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIgnoreExit (booleanval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIoPipeSocket (int socket)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIoPipeSocket (intsocket)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIoTcp (String host, String port, String myhost, String myport)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIoTcp (Stringhost, Stringport, Stringmyhost, Stringmyport)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIoUdsFile (String file)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIoUdsFile (Stringfile)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIsServer (boolean val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIsServer (booleanval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIsSilent (boolean val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIsSilent (booleanval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetIsString (boolean val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetIsString (booleanval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetName (String val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetName (Stringval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP 
-.PP
-.SS "native void javamsgque.MqS.ConfigSetSrvName (String val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetSrvName (Stringval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP 
-.PP
-.SS "void javamsgque.MqS.ConfigSetStartAs (\fBSTART\fP val)\fC [inherited]\fP"
+.SS "void javamsgque.MqS.ConfigSetStartAs (\fBSTART\fPval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP 
 .PP
 Definition at line 85 of file MqS.java.
-.SS "native void javamsgque.MqS.ConfigSetTimeout (long val)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.ConfigSetTimeout (longval)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP 
-.PP
-.SS "static native void javamsgque.MqS.Init (String... argv)\fC [static, inherited]\fP"
+.SS "static native void javamsgque.MqS.Init (String...argv)\fC [static, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP 
-.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for javamsgque from the source code.

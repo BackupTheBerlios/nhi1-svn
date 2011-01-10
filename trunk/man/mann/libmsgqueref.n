@@ -1,4 +1,4 @@
-.TH "libmsgque" n "9 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque" n "10 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -247,7 +247,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an \fBMqFactoryReturnE\fP object on error 
 .RE
 .PP
 .PP
@@ -282,7 +282,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an \fBMqFactoryReturnE\fP object on error 
 .RE
 .PP
 .PP
@@ -321,7 +321,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an \fBMqFactoryReturnE\fP object on error 
 .RE
 .PP
 .PP
@@ -339,14 +339,14 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .RS 4
 \fIident\fP factory identifier to call 
 .br
-\fIdata\fP environment specific data or \fCNULL\fP 
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP 
 .br
-\fIctxP\fP the new created instance to return 
+\fIctxP\fP (C-API) the new created instance to return 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBMqFactoryReturnE\fP object 
+an \fBMqFactoryReturnE\fP object on error 
 .RE
 .PP
 .PP
@@ -372,6 +372,7 @@ C-API: \fBMqFactoryCtxIdentSet\fP, link the context to a new \fIfactory-interfac
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
 C-API: \fBMqFactoryCtxIdentGet\fP, get the \fIident\fP of the \fIfactory-interface\fP used for the context 
 .PP
@@ -390,6 +391,7 @@ the \fCcontext.factory.ident\fP value or an empty string if no factory is availa
 the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
 .RE
 .PP
+ 
 .SS "MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
 C-API: \fBMqFactoryCtxDefaultSet\fP, create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
 .PP
@@ -825,7 +827,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 .SS "MqLinkConnect(struct MqS *ctx)"
 C-API: \fBMqLinkConnect\fP, re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBMqErrorIsEXIT\fP) is ignored (\fBMqErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBMqErrorIsEXIT\fP) is ignored (\fBMqErrorReset\fP). Read more from the: \fC/theLink/example/c/Filter4.c\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1171,7 +1173,8 @@ construct an outgoing \fIsend-data-package\fP.
 Sending data is an atomic task and should not be split. Only one \fIsend-data-package\fP is always in duty. As basic rule do the processing first and send all the data afterwards. If the function \fBMqSendEND_AND_WAIT\fP is used the application enter the event-loop and is still able to work on other client/server links. 
 .RE
 .PP
- \fBExample:\fP send an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fI\fBMQ_BIN\fP:\fP 
+.PP
+\fBExample:\fP send an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fI\fBMQ_BIN\fP:\fP 
 .PP
 .nf
  MqSendSTART(ctx);
@@ -1406,7 +1409,8 @@ The \fItransaction-item\fP have to be the first item in the \fIdata-package\fP. 
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
- \fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+\fBExample:\fP make a \fIservice-call\fP with \fItransaction-support\fP: 
 .PP
 .nf
  MqErrorCheck (MqSendSTART (mqctx)); 
@@ -1468,7 +1472,8 @@ extract data from an incoming \fIread-data-package\fP.
 Reading data is an atomic task and should not be split. Only one \fIread-data-package\fP is always in duty. As basic rule read first all data and start the processing afterwards. 
 .RE
 .PP
- \fBExample:\fP read an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fBMQ_BIN\fP: 
+.PP
+\fBExample:\fP read an \fBMQ_INT\fP and a list of \fBMQ_DBL\fP, \fBMQ_CST\fP and a \fBMQ_BIN\fP: 
 .PP
 .nf
  MqErrorCheck(MqReadI(ctx, &i));
@@ -1603,7 +1608,8 @@ Initialize the read with the \fIcurrent-item\fP or an optional \fIbuffer-object\
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
- \fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
+.PP
+\fBExample:\fP read the results from a \fIservice-call\fP with \fItransaction-support\fP: 
 .PP
 .nf
  static enum MqErrorE SRVR ( 
@@ -1710,6 +1716,8 @@ an \fBERROR OBJECT\fP on error
 .br
  \fBMqSlaveIs\fP
 .br
+.PP
+create and manage a slave context 
 .PP
 The \fImaster-slave-link\fP is used to create a mesh of nodes defined by different \fIparent-context\fP. \fBThe master control the slave.\fP
 .PP
@@ -2027,7 +2035,9 @@ C-API: \fBMqErrorIsEXIT\fP, check for an \fIexit-error-object\fP, return \fIMQ_Y
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBMqErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBMqLinkCreate\fP, \fBMqLinkCreateChild\fP, \fBMqLinkConnect\fP, \fBMqSendEND\fP, \fBMqSendEND_AND_WAIT\fP or \fBMqProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBMqErrorReset\fP and later do a reconnect using \fBMqLinkConnect\fP.
 .br
- Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP  \fBExample:\fP catch and ignore an EXIT return-code: 
+ Read more using from the: \fCtheLink/example/c/Filter4.c\fP example 
+.PP
+\fBExample:\fP catch and ignore an EXIT return-code: 
 .PP
 .nf
  if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, 'TOKS', MQ_TIMEOUT_USER))) { 

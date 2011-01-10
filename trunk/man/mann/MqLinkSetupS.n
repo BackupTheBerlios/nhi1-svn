@@ -1,40 +1,41 @@
-.TH "MqLinkSetupS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqLinkSetupS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqLinkSetupS \- used to Create/Delete of object  
-
+MqLinkSetupS \- 
 .PP
+used to Create/Delete of object  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMqCreateF\fP \fBfCreate\fP"
 .br
-.R "create a new object "
+.RI "\fIcreate a new object \fP"
 .ti -1c
 .RI "\fBMqDeleteF\fP \fBfDelete\fP"
 .br
-.R "delete a object "
+.RI "\fIdelete a object \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
 used to Create/Delete of object 
 .PP
 Definition at line 514 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMqCreateF\fP \fBMqLinkSetupS::fCreate\fP"
+.SS "\fBMqCreateF\fP \fBMqLinkSetupS.fCreate\fP"
 .PP
 create a new object 
 .PP
 Definition at line 515 of file msgque.h.
-.SS "\fBMqDeleteF\fP \fBMqLinkSetupS::fDelete\fP"
+.SS "\fBMqDeleteF\fP \fBMqLinkSetupS.fDelete\fP"
 .PP
 delete a object 
 .PP
@@ -42,4 +43,4 @@ Definition at line 516 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

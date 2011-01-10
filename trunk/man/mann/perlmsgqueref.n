@@ -1,4 +1,4 @@
-.TH "perlmsgque" n "9 Jan 2011" "Version 4.8" "perlmsgque" \" -*- nroff -*-
+.TH "perlmsgque" n "10 Jan 2011" "Version 4.8" "perlmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -196,7 +196,7 @@ identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a 
 The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
 .PP
 The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
-.SS "Net::PerlMsgque::FactoryDefault ident ?class-package?"
+.SS "Net::PerlMsgque::FactoryDefault(ident,?class-package?)"
 C-API: \fBMqFactoryDefault\fP, add a new \fIdefault-factory-interface\fP identified by \fIident\fP 
 .PP
 The default factory is always used to create an instance if no other factory is available 
@@ -231,9 +231,9 @@ an croak(ErrorMessage) object on error
 
 .fi
 .PP
-.SS "string Net::PerlMsgque::FactoryDefaultIdent"
+.SS "string Net::PerlMsgque::FactoryDefaultIdent()"
 C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory 
-.SS "Net::PerlMsgque::FactoryAdd ?ident? class-package"
+.SS "Net::PerlMsgque::FactoryAdd(?ident?,class-package)"
 C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -266,7 +266,7 @@ an croak(ErrorMessage) object on error
 
 .fi
 .PP
-.SS "MqS Net::PerlMsgque::FactoryNew ?ident? class-package]"
+.SS "MqS Net::PerlMsgque::FactoryNew(?ident?,class-package)"
 C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
 .PP
 This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
@@ -305,7 +305,7 @@ an croak(ErrorMessage) object on error
 
 .fi
 .PP
-.SS "MqS Net::PerlMsgque::FactoryCall ident"
+.SS "MqS Net::PerlMsgque::FactoryCall(ident)"
 C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
 .PP
 \fBParameters:\fP
@@ -330,7 +330,7 @@ an croak(ErrorMessage) object on error
 
 .fi
 .PP
-.SS "ctx->FactoryCtxIdentSet ident"
+.SS "$ctx->FactoryCtxIdentSet(ident)"
 C-API: \fBMqFactoryCtxIdentSet\fP, link the context to a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -346,7 +346,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
  
-.SS "string ctx->FactoryCtxIdentGet"
+.SS "string $ctx->FactoryCtxIdentGet()"
 C-API: \fBMqFactoryCtxIdentGet\fP, get the \fIident\fP of the \fIfactory-interface\fP used for the context 
 .PP
 \fBParameters:\fP
@@ -365,7 +365,7 @@ the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !!
 .RE
 .PP
  
-.SS "ctx->FactoryCtxDefaultSet ident"
+.SS "$ctx->FactoryCtxDefaultSet(ident)"
 C-API: \fBMqFactoryCtxDefaultSet\fP, create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
 .PP
 \fBParameters:\fP

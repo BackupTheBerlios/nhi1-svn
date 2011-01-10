@@ -1,17 +1,18 @@
-.TH "Mq_Buffer_List_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "Mq_Buffer_List_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.  
-
+Mq_Buffer_List_C_API \- 
 .PP
-.SS "Data Structures"
+create and manage a list of \fBMqBufferS\fP objects.  
+
+.SS "Classes"
 
 .in +1c
 .ti -1c
 .RI "struct \fBMqBufferLS\fP"
 .br
-.R "the object to manage an array of \fBMqBufferS\fP items. "
+.RI "\fIthe object to manage an array of \fBMqBufferS\fP items. \fP"
 .in -1c
 .SS "Functions"
 
@@ -19,43 +20,43 @@ Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreate\fP (\fBMQ_SIZE\fP const size)"
 .br
-.R "create and initialize a \fBMqBufferLS\fP object "
+.RI "\fIcreate and initialize a \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgs\fP (int const argc, \fBMQ_CST\fP argv[])"
 .br
-.R "create and initialize a \fBMqBufferLS\fP object with argc/argv data "
+.RI "\fIcreate and initialize a \fBMqBufferLS\fP object with argc/argv data \fP"
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVA\fP (struct \fBMqS\fP *const context, va_list ap)"
 .br
-.R "create and return a \fBMqBufferLS\fP object using a \fIva_list\fP argument "
+.RI "\fIcreate and return a \fBMqBufferLS\fP object using a \fIva_list\fP argument \fP"
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsV\fP (struct \fBMqS\fP *const context,...)"
 .br
-.R "create and return a \fBMqBufferLS\fP object using \fIvarargs\fP arguments end with \fCNULL\fP "
+.RI "\fIcreate and return a \fBMqBufferLS\fP object using \fIvarargs\fP arguments end with \fCNULL\fP \fP"
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLCreateArgsVC\fP (struct \fBMqS\fP *const context, int const argc, \fBMQ_CST\fP argv[])"
 .br
-.R "create and return a a \fBMqBufferLS\fP object using \fImain\fP startup arguments "
+.RI "\fIcreate and return a a \fBMqBufferLS\fP object using \fImain\fP startup arguments \fP"
 .ti -1c
 .RI "struct \fBMqBufferLS\fP * \fBMqBufferLDup\fP (struct \fBMqBufferLS\fP const *const in)"
 .br
-.R "create an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object "
+.RI "\fIcreate an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "void \fBMqBufferLDelete\fP (struct \fBMqBufferLS\fP **bufP)"
 .br
-.R "delete a dynamically created \fBMqBufferLS\fP object "
+.RI "\fIdelete a dynamically created \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "void \fBMqBufferLAppend\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferS\fP *const in, \fBMQ_SIZE\fP const position)"
 .br
-.R "append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP "
+.RI "\fIappend a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP \fP"
 .ti -1c
 .RI "void \fBMqBufferLAppendL\fP (register struct \fBMqBufferLS\fP *const bufL, struct \fBMqBufferLS\fP *const in, \fBMQ_SIZE\fP position)"
 .br
-.R "copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP "
+.RI "\fIcopy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP \fP"
 .ti -1c
 .RI "void \fBMqBufferLAppendY\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BYT\fP const val)"
 .br
-.R "append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object "
+.RI "\fIappend a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "void \fBMqBufferLAppendO\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BOL\fP const val)"
 .br
@@ -77,19 +78,19 @@ Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.
 .ti -1c
 .RI "void \fBMqBufferLAppendC\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const val)"
 .br
-.R "append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.RI "\fIappend an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "void \fBMqBufferLAppendU\fP (struct \fBMqBufferLS\fP *const bufL, \fBMQ_BUF\fP const val)"
 .br
-.R "append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object "
+.RI "\fIappend an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionO\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BOL\fP *const var)"
 .br
-.R "search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value "
+.RI "\fIsearch for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionY\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BYT\fP *const valP)"
 .br
-.R "search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object "
+.RI "\fIsearch for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionS\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_SRT\fP *const valP)"
 .br
@@ -108,34 +109,34 @@ Mq_Buffer_List_C_API \- create and manage a list of \fBMqBufferS\fP objects.
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionC\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_STR\fP *const var)"
 .br
-.R "search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object "
+.RI "\fIsearch for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLCheckOptionU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_CST\fP const opt, \fBMQ_BUF\fP *const var)"
 .br
-.R "search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object "
+.RI "\fIsearch for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "void \fBMqBufferLMove\fP (struct \fBMqBufferLS\fP *const to, struct \fBMqBufferLS\fP **fromP)"
 .br
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLDeleteItem\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, const \fBMQ_SIZE\fP index, const \fBMQ_SIZE\fP numitems, const \fBMQ_BOL\fP doDelete)"
 .br
-.R "delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object "
+.RI "\fIdelete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object \fP"
 .ti -1c
 .RI "\fBMQ_SIZE\fP \fBMqBufferLSearchC\fP (struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const str, \fBMQ_SIZE\fP const len, \fBMQ_SIZE\fP const startindex)"
 .br
-.R "search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP "
+.RI "\fIsearch \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP \fP"
 .ti -1c
 .RI "void \fBMqBufferLLog\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func)"
 .br
-.R "output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.RI "\fIoutput a \fBMqBufferLS\fP object for debugging purpose to stderr \fP"
 .ti -1c
 .RI "void \fBMqBufferLLogS\fP (struct \fBMqS\fP const *const context, struct \fBMqBufferLS\fP const *const bufL, \fBMQ_CST\fP const func, \fBMQ_CST\fP const varname)"
 .br
-.R "\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr "
+.RI "\fI\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqBufferLGetU\fP (struct \fBMqS\fP *const context, struct \fBMqBufferLS\fP *const bufL, \fBMQ_SIZE\fP const index, struct \fBMqBufferS\fP **const var)"
 .br
-.R "get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP "
+.RI "\fIget an \fBMqBufferS\fP object from the buffer list \fIbuf\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -144,11 +145,9 @@ create and manage a list of \fBMqBufferS\fP objects.
 the memory is allocated and extended dynamically. 
 .SH "Function Documentation"
 .PP 
-.SS "void MqBufferLAppend (register struct \fBMqBufferLS\fP *const  bufL, struct \fBMqBufferS\fP *const  in, \fBMQ_SIZE\fP const  position)"
+.SS "void MqBufferLAppend (register struct \fBMqBufferLS\fP *constbufL, struct \fBMqBufferS\fP *constin, \fBMQ_SIZE\fP constposition)"
 .PP
-append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP 
-.PP
-\fBParameters:\fP
+append a \fBMqBufferS\fP item into an \fBMqBufferLS\fP object on \fIposition\fP \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -163,11 +162,9 @@ Set \fIposition\fP to \fB0\fP to append to the beginning or set position to \fB-
 .RE
 .PP
 
-.SS "void MqBufferLAppendC (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  val)"
+.SS "void MqBufferLAppendC (struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constval)"
 .PP
-append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -175,9 +172,7 @@ append an \fBMQ_STR\fP object to the \fBend\fP of an \fBMqBufferLS\fP object
 .RE
 .PP
 
-.SS "void MqBufferLAppendD (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_DBL\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendD (struct \fBMqBufferLS\fP *constbufL, \fBMQ_DBL\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -187,9 +182,7 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendF (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_FLT\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendF (struct \fBMqBufferLS\fP *constbufL, \fBMQ_FLT\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -199,9 +192,7 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendI (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_INT\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendI (struct \fBMqBufferLS\fP *constbufL, \fBMQ_INT\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -211,11 +202,9 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendL (register struct \fBMqBufferLS\fP *const  bufL, struct \fBMqBufferLS\fP *const  in, \fBMQ_SIZE\fP position)"
+.SS "void MqBufferLAppendL (register struct \fBMqBufferLS\fP *constbufL, struct \fBMqBufferLS\fP *constin, \fBMQ_SIZE\fPposition)"
 .PP
-copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP 
-.PP
-\fBParameters:\fP
+copy a \fBMqBufferLS\fP list into an \fBMqBufferLS\fP object on \fIposition\fP \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -230,9 +219,7 @@ Set \fIposition\fP to \fB0\fP to append to the beginning or set position to \fB-
 .RE
 .PP
 
-.SS "void MqBufferLAppendO (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BOL\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendO (struct \fBMqBufferLS\fP *constbufL, \fBMQ_BOL\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -242,9 +229,7 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendS (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_SRT\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendS (struct \fBMqBufferLS\fP *constbufL, \fBMQ_SRT\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -254,11 +239,9 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendU (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BUF\fP const  val)"
+.SS "void MqBufferLAppendU (struct \fBMqBufferLS\fP *constbufL, \fBMQ_BUF\fP constval)"
 .PP
-append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+append an \fBMQ_BUF\fP object to the \fBend\fP of an \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -271,9 +254,7 @@ after the insert the buffer is owed by the \fIbuf\fP object -> do \fBnot\fP free
 .RE
 .PP
 
-.SS "void MqBufferLAppendW (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_WID\fP const  val)"
-.PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
+.SS "void MqBufferLAppendW (struct \fBMqBufferLS\fP *constbufL, \fBMQ_WID\fP constval)"append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -283,11 +264,9 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
  
-.SS "void MqBufferLAppendY (struct \fBMqBufferLS\fP *const  bufL, \fBMQ_BYT\fP const  val)"
+.SS "void MqBufferLAppendY (struct \fBMqBufferLS\fP *constbufL, \fBMQ_BYT\fP constval)"
 .PP
-append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -295,11 +274,9 @@ append a native typed value to the \fBend\fP of a \fBMqBufferLS\fP object
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionC (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_STR\fP *const  var)"
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionC (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_STR\fP *constvar)"
 .PP
-search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+search for an \fIoption\fP with an \fBMQ_STR\fP argument in an \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -325,9 +302,7 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionD (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_DBL\fP *const  valP)"
-.PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionD (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_DBL\fP *constvalP)"search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -351,9 +326,7 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
   
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionF (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_FLT\fP *const  valP)"
-.PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionF (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_FLT\fP *constvalP)"search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -377,9 +350,7 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
   
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionI (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_INT\fP *const  valP)"
-.PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionI (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_INT\fP *constvalP)"search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -403,11 +374,9 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionO (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BOL\fP *const  var)"
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionO (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_BOL\fP *constvar)"
 .PP
-search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value 
-.PP
-\fBParameters:\fP
+search for boolean \fIoption\fP in \fBMqBufferLS\fP list and fill \fIvar\fP with \fBMQ_BOL\fP value \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -432,9 +401,7 @@ if \fIoption\fP is found the entry is deleted from the \fBMqBufferLS\fP object
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionS (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_SRT\fP *const  valP)"
-.PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionS (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_SRT\fP *constvalP)"search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -458,11 +425,9 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
  
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionU (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BUF\fP *const  var)"
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionU (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_BUF\fP *constvar)"
 .PP
-search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+search for an \fIoption\fP with an \fBMQ_BUF\fP argument in an \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -484,9 +449,7 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionW (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_WID\fP *const  valP)"
-.PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionW (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_WID\fP *constvalP)"search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -510,11 +473,9 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
   
-.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionY (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_CST\fP const  opt, \fBMQ_BYT\fP *const  valP)"
+.SS "enum \fBMqErrorE\fP MqBufferLCheckOptionY (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_CST\fP constopt, \fBMQ_BYT\fP *constvalP)"
 .PP
-search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+search for an \fIoption\fP with native typed argument in an \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -536,11 +497,9 @@ if \fIoption\fP is found, the entry \fBand\fP his argument will be deleted from 
 .RE
 .PP
 
-.SS "struct \fBMqBufferLS\fP* MqBufferLCreate (\fBMQ_SIZE\fP const  size)\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreate (\fBMQ_SIZE\fP constsize)\fC [read]\fP"
 .PP
-create and initialize a \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+create and initialize a \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIsize\fP create the object with a predefined list size 
 .RE
@@ -551,11 +510,9 @@ the new created and initialized \fBMqBufferLS\fP object
 .RE
 .PP
 
-.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgs (int const  argc, \fBMQ_CST\fP argv[])\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgs (int constargc, \fBMQ_CST\fPargv[])\fC [read]\fP"
 .PP
-create and initialize a \fBMqBufferLS\fP object with argc/argv data 
-.PP
-\fBParameters:\fP
+create and initialize a \fBMqBufferLS\fP object with argc/argv data \fBParameters:\fP
 .RS 4
 \fIargc\fP the argc from the initial \fBmain\fP function 
 .br
@@ -583,23 +540,18 @@ main ( int argc, char **argv)
 .fi
 .PP
  
-.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsV (struct \fBMqS\fP *const  context,  ...)\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsV (struct \fBMqS\fP *constcontext, ...)\fC [read]\fP"
 .PP
 create and return a \fBMqBufferLS\fP object using \fIvarargs\fP arguments end with \fCNULL\fP 
-.PP
-.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVA (struct \fBMqS\fP *const  context, va_list ap)\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVA (struct \fBMqS\fP *constcontext, va_listap)\fC [read]\fP"
 .PP
 create and return a \fBMqBufferLS\fP object using a \fIva_list\fP argument 
-.PP
-.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVC (struct \fBMqS\fP *const  context, int const  argc, \fBMQ_CST\fP argv[])\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLCreateArgsVC (struct \fBMqS\fP *constcontext, int constargc, \fBMQ_CST\fPargv[])\fC [read]\fP"
 .PP
 create and return a a \fBMqBufferLS\fP object using \fImain\fP startup arguments 
+.SS "void MqBufferLDelete (struct \fBMqBufferLS\fP **bufP)"
 .PP
-.SS "void MqBufferLDelete (struct \fBMqBufferLS\fP ** bufP)"
-.PP
-delete a dynamically created \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+delete a dynamically created \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIbufP\fP the pointer to an struct \fBMqBufferLS\fP * object 
 .RE
@@ -610,11 +562,9 @@ The memory will be freed and the object-pointer will be set to \fBNULL\fP. If th
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLDeleteItem (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, const \fBMQ_SIZE\fP index, const \fBMQ_SIZE\fP numitems, const \fBMQ_BOL\fP doDelete)"
+.SS "enum \fBMqErrorE\fP MqBufferLDeleteItem (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, const \fBMQ_SIZE\fPindex, const \fBMQ_SIZE\fPnumitems, const \fBMQ_BOL\fPdoDelete)"
 .PP
-delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+delete the \fIindex'th\fP list item from the \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -633,11 +583,9 @@ the \fBMqErrorE\fP return status \fBMQ_OK\fP, \fBMQ_CONTINUE\fP or \fBMQ_ERROR\f
 .RE
 .PP
 
-.SS "struct \fBMqBufferLS\fP* MqBufferLDup (struct \fBMqBufferLS\fP const *const  in)\fC [read]\fP"
+.SS "struct \fBMqBufferLS\fP* MqBufferLDup (struct \fBMqBufferLS\fP const *constin)\fC [read]\fP"
 .PP
-create an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object 
-.PP
-\fBParameters:\fP
+create an \fBMqBufferLS\fP object as copy from an existing \fBMqBufferLS\fP object \fBParameters:\fP
 .RS 4
 \fIin\fP the \fBMqBufferLS\fP object to copy from 
 .RE
@@ -648,11 +596,9 @@ out the \fBMqBufferLS\fP object to create
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqBufferLGetU (struct \fBMqS\fP *const  context, struct \fBMqBufferLS\fP *const  bufL, \fBMQ_SIZE\fP const  index, struct \fBMqBufferS\fP **const  var)"
+.SS "enum \fBMqErrorE\fP MqBufferLGetU (struct \fBMqS\fP *constcontext, struct \fBMqBufferLS\fP *constbufL, \fBMQ_SIZE\fP constindex, struct \fBMqBufferS\fP **constvar)"
 .PP
-get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP 
-.PP
-\fBParameters:\fP
+get an \fBMqBufferS\fP object from the buffer list \fIbuf\fP \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -682,11 +628,9 @@ if \fIbufL\fP is \fBnot\fP \fCNULL\fP the object from \fIbufL\fP will be deleted
 .RE
 .PP
 
-.SS "void MqBufferLLog (struct \fBMqS\fP const *const  context, struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  func)"
+.SS "void MqBufferLLog (struct \fBMqS\fP const *constcontext, struct \fBMqBufferLS\fP const *constbufL, \fBMQ_CST\fP constfunc)"
 .PP
-output a \fBMqBufferLS\fP object for debugging purpose to stderr 
-.PP
-\fBParameters:\fP
+output a \fBMqBufferLS\fP object for debugging purpose to stderr \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -696,11 +640,9 @@ output a \fBMqBufferLS\fP object for debugging purpose to stderr
 .RE
 .PP
 
-.SS "void MqBufferLLogS (struct \fBMqS\fP const *const  context, struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  func, \fBMQ_CST\fP const  varname)"
+.SS "void MqBufferLLogS (struct \fBMqS\fP const *constcontext, struct \fBMqBufferLS\fP const *constbufL, \fBMQ_CST\fP constfunc, \fBMQ_CST\fP constvarname)"
 .PP
-\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr 
-.PP
-\fBParameters:\fP
+\fIshort\fP output a \fBMqBufferLS\fP object for debugging purpose to stderr \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -712,13 +654,10 @@ output a \fBMqBufferLS\fP object for debugging purpose to stderr
 .RE
 .PP
 
-.SS "void MqBufferLMove (struct \fBMqBufferLS\fP *const  to, struct \fBMqBufferLS\fP ** fromP)"
+.SS "void MqBufferLMove (struct \fBMqBufferLS\fP *constto, struct \fBMqBufferLS\fP **fromP)"
+.SS "\fBMQ_SIZE\fP MqBufferLSearchC (struct \fBMqBufferLS\fP const *constbufL, \fBMQ_CST\fP conststr, \fBMQ_SIZE\fP constlen, \fBMQ_SIZE\fP conststartindex)"
 .PP
-.SS "\fBMQ_SIZE\fP MqBufferLSearchC (struct \fBMqBufferLS\fP const *const  bufL, \fBMQ_CST\fP const  str, \fBMQ_SIZE\fP const  len, \fBMQ_SIZE\fP const  startindex)"
-.PP
-search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP 
-.PP
-\fBParameters:\fP
+search \fBMQ_STR\fP item from a \fBMqBufferLS\fP object starting at \fIstartindex\fP \fBParameters:\fP
 .RS 4
 \fIbufL\fP the \fBMqBufferLS\fP object to work on 
 .br
@@ -753,4 +692,4 @@ The size of \fIstr\fP have to be at least 4 bytes
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

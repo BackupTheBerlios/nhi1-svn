@@ -1,16 +1,17 @@
-.TH "MqIoUdsConfigS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqIoUdsConfigS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqIoUdsConfigS \- configure a context to use a \fIuds-client-server-link\fP  
-
+MqIoUdsConfigS \- 
 .PP
+configure a context to use a \fIuds-client-server-link\fP  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
@@ -25,18 +26,18 @@ The \fIuds-socket\fP (http://en.wikipedia.org/wiki/Unix_domain_socket) is usuall
 .PP
 \fBParameters:\fP
 .RS 4
-\fIfile\fP name of a \fIuds-socket-file\fP (default: \fIundef\fP) 
+\fIfile\fP name of a \fIuds-socket-file\fP (default: \fInull\fP) 
 .RE
 .PP
 
 .PP
 Definition at line 531 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS::file\fP"
+.SS "\fBMQ_BUF\fP \fBMqIoUdsConfigS.file\fP"
 .PP
 Definition at line 532 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

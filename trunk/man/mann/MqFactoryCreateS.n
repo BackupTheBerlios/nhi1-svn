@@ -1,49 +1,50 @@
-.TH "MqFactoryCreateS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqFactoryCreateS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqFactoryCreateS \- interface for the \fIconstructor\fP  
-
+MqFactoryCreateS \- 
 .PP
+interface for the \fIconstructor\fP  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMqFactoryCreateF\fP \fBfCall\fP"
 .br
-.R "create a new instance "
+.RI "\fIcreate a new instance \fP"
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBdata\fP"
 .br
-.R "additional data pointer for the fCall "
+.RI "\fIadditional data pointer for the fCall \fP"
 .ti -1c
 .RI "\fBMqTokenDataFreeF\fP \fBfFree\fP"
 .br
-.R "free additional data pointer "
+.RI "\fIfree additional data pointer \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
 interface for the \fIconstructor\fP 
 .PP
 Definition at line 1319 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS::data\fP"
+.SS "\fBMQ_PTR\fP \fBMqFactoryCreateS.data\fP"
 .PP
 additional data pointer for the fCall 
 .PP
 Definition at line 1321 of file msgque.h.
-.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS::fCall\fP"
+.SS "\fBMqFactoryCreateF\fP \fBMqFactoryCreateS.fCall\fP"
 .PP
 create a new instance 
 .PP
 Definition at line 1320 of file msgque.h.
-.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS::fFree\fP"
+.SS "\fBMqTokenDataFreeF\fP \fBMqFactoryCreateS.fFree\fP"
 .PP
 free additional data pointer 
 .PP
@@ -51,4 +52,4 @@ Definition at line 1322 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

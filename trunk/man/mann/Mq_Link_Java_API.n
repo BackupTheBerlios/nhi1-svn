@@ -1,49 +1,50 @@
-.TH "Mq_Link_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Link_Java_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Link_Java_API \- setup and manage a \fIclient-server-link\fP   
-
+Mq_Link_Java_API \- 
 .PP
+setup and manage a \fIclient-server-link\fP   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkCreate\fP (String...args)  throws MqSException"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkCreateChild\fP (\fBMqS\fP parent, String...args)  throws MqSException"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkDelete\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkConnect\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP \fP"
 .ti -1c
 .RI "native \fBMqS\fP \fBjavamsgque::MqS.LinkGetParent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP \fP"
 .ti -1c
 .RI "native String \fBjavamsgque::MqS.LinkGetTargetIdent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.LinkIsParent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkIsParent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkIsParent\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.LinkIsConnected\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkIsConnected\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkIsConnected\fP \fP"
 .ti -1c
 .RI "native int \fBjavamsgque::MqS.LinkGetCtxId\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -118,7 +119,6 @@ a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTO
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS.WAIT.FOREVER\fP.
 .PP
-.PP
 \fBDefinition of a 'parent-context'\fP
 .br
 .PP
@@ -159,39 +159,30 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .SS "native void javamsgque.MqS.LinkConnect ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP 
-.PP
-.SS "native void javamsgque.MqS.LinkCreate (String... args)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.LinkCreate (String...args)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
-.PP
-.SS "native void javamsgque.MqS.LinkCreateChild (\fBMqS\fP parent, String... args)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.LinkCreateChild (\fBMqS\fPparent, String...args)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 
-.PP
 .SS "native void javamsgque.MqS.LinkDelete ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkDelete\fP 
-.PP
 .SS "native int javamsgque.MqS.LinkGetCtxId ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetCtxId\fP 
-.PP
 .SS "native \fBMqS\fP javamsgque.MqS.LinkGetParent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetParent\fP 
-.PP
 .SS "native String javamsgque.MqS.LinkGetTargetIdent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP 
-.PP
 .SS "native boolean javamsgque.MqS.LinkIsConnected ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkIsConnected\fP 
-.PP
 .SS "native boolean javamsgque.MqS.LinkIsParent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkIsParent\fP 
-.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for javamsgque from the source code.

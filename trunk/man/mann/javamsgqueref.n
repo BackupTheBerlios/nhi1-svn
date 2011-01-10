@@ -1,11 +1,11 @@
-.TH "javamsgque" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 javamsgque \- The \fBJAVA\fP \fBApplication-Server\fP and \fBProgramming-Language-Micro-Kernel\fP Project
 .SH "SYNOPSIS"
 .PP
-\fBimport \fBjavamsgque\fP.*;\fP
+\fBimport javamsgque.*;\fP
 .SH "INDEX"
 .PP
 \fBCONTEXT API\fP
@@ -61,8 +61,7 @@ propagate the error messages from the server to the client
 .br
  \fBLogC\fP
 .br
-.PP
-\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+ \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 .PP
 The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
@@ -120,7 +119,7 @@ Shutdown the \fIclient-server-link\fP, free the memory and set the \fIctx\fP to 
 .SS "ctx.Exit()"
 C-API: \fBMqExitP\fP, delete the \fIcontext\fP and exit the current process or thread 
 .PP
-To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -187,8 +186,8 @@ identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a 
 The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
 .PP
 The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
-.SS "FactoryDefault(Class<T> callback)"
-.SS "FactoryDefault(String ident, Class<T> callback)"
+.SS "MqFactoryS.Default(Class<T> callback)"
+.SS "MqFactoryS.Default(String ident, Class<T> callback)"
 C-API: \fBMqFactoryDefault\fP, add a new \fIdefault-factory-interface\fP identified by \fIident\fP 
 .PP
 The default factory is always used to create an instance if no other factory is available 
@@ -212,7 +211,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object 
+an \fBERROR OBJECT\fP object on error 
 .RE
 .PP
 .PP
@@ -223,10 +222,10 @@ an \fBERROR OBJECT\fP object
 
 .fi
 .PP
-.SS "String FactoryDefaultIdent()"
-C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory 
-.SS "FactoryAdd(Class<T> callback)"
-.SS "FactoryAdd(String ident, Class<T> callback)"
+.SS "String MqFactoryS.DefaultIdent()"
+C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory  
+.SS "MqFactoryS.Add(Class<T> callback)"
+.SS "MqFactoryS.Add(String ident, Class<T> callback)"
 C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -248,7 +247,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object 
+an \fBERROR OBJECT\fP object on error 
 .RE
 .PP
 .PP
@@ -259,8 +258,8 @@ an \fBERROR OBJECT\fP object
 
 .fi
 .PP
-.SS "T FactoryNew(Class<T> callback)"
-.SS "T FactoryNew(String ident, Class<T> callback)"
+.SS "T MqFactoryS.New(Class<T> callback)"
+.SS "T MqFactoryS.New(String ident, Class<T> callback)"
 C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
 .PP
 This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
@@ -288,7 +287,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object 
+an \fBERROR OBJECT\fP object on error 
 .RE
 .PP
 .PP
@@ -299,21 +298,21 @@ an \fBERROR OBJECT\fP object
 
 .fi
 .PP
-.SS "T FactoryCall(String ident)"
+.SS "T MqFactoryS.Call(String ident)"
 C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
 .PP
 \fBParameters:\fP
 .RS 4
 \fIident\fP factory identifier to call 
 .br
-\fIdata\fP environment specific data or \fCNULL\fP 
+\fIdata\fP (C-API) environment specific data or \fCNULL\fP 
 .br
-\fIctxP\fP the new created instance to return 
+\fIctxP\fP (C-API) the new created instance to return 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object 
+an \fBERROR OBJECT\fP object on error 
 .RE
 .PP
 .PP
@@ -339,6 +338,7 @@ C-API: \fBMqFactoryCtxIdentSet\fP, link the context to a new \fIfactory-interfac
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "String ctx.FactoryCtxIdentGet()"
 C-API: \fBMqFactoryCtxIdentGet\fP, get the \fIident\fP of the \fIfactory-interface\fP used for the context 
 .PP
@@ -357,6 +357,7 @@ the \fCcontext.factory.ident\fP value or an empty string if no factory is availa
 the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !! 
 .RE
 .PP
+ 
 .SS "ctx.FactoryCtxDefaultSet(String ident)"
 C-API: \fBMqFactoryCtxDefaultSet\fP, create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
 .PP
@@ -420,21 +421,21 @@ It is not possible to initialize the \fIstartup-prefix\fP during \fIpackage-load
 .RE
 .PP
 .SS "command-line:  --buffersize"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetBuffersize\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetBuffersize\fP\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetBuffersize\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetBuffersize\fP
 .PP
 set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
 .SS "command-line:  --debug"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetDebug\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetDebug\fP\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetDebug\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetDebug\fP
 .PP
 set the \fIdebug-level\fP of the \fIcontext\fP 
 .PP
 Valid values are 0 <= \fIdebug-level\fP <= 9 using 0 for \fIno-debug\fP and 9 for \fImaximum-debug\fP. (default: 0) 
 .SS "command-line:  --timeout"
-\fBtype:\fP \fClong\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetTimeout\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetTimeout\fP\fP
+\fBtype:\fP \fClong\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetTimeout\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetTimeout\fP
 .PP
 user defined timeout to terminate a blocking function call (default: 90 sec) 
 .SS "command-line:  --name"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetName\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetName\fP\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetName\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetName\fP
 .PP
 set the human-readable name of the \fIlocal-context\fP 
 .PP
@@ -455,7 +456,7 @@ use the basename of the \fIfirst\fP entry from the \fIcommand-line-arguments\fP,
 use the \fI--name\fP argument from the \fIcommand-line-arguments\fP 
 .PP
 .SS "command-line:  --srvname"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetSrvName\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetSrvName\fP\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetSrvName\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetSrvName\fP
 .PP
 set the human-readable name of the \fIserver-context\fP 
 .PP
@@ -467,23 +468,23 @@ C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIP
 .PP
  If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fInull\fP) 
 .SS "command-line: --silent"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsSilent\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsSilent\fP\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsSilent\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsSilent\fP
 .PP
 write (\fIfalse\fP) or don't write (\fItrue\fP) any massages to stdout or stderr (default: \fIfalse\fP) 
 .SS "command-line: --string"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsString\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsString\fP\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsString\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsString\fP
 .PP
 use the string-mode (\fItrue\fP) or the binary-mode (\fIfalse\fP) to send \fInative-data\fP 
 .PP
 The items in a \fIdata-package\fP are defined as \fBTYPE IDENTIFIER\fP and can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast) data. The \fIstring-mode\fP is used for debugging purpose or if the \fIbinary-data-model\fP is different between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require the \fIstring-mode\fP. The option is only available for the \fIclient-parent-context\fP. (default: binary-mode) 
 .SS "isServer"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsServer\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsServer\fP\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsServer\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsServer\fP
 .PP
 change the context to act as \fIserver-context\fP (\fItrue\fP) or not (\fIfalse\fP) 
 .PP
 A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIfalse\fP) 
 .SS "command-line: --tcp --host --port --myhost --myport"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoTcpHost\fP/Port/MyHost/MyPort\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoTcp\fP (host, port, myhost, myport)\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)\fP
 .PP
 configure a context to use a \fItcp-client-server-link\fP 
 .PP
@@ -510,7 +511,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoUdsFile\fP (file)\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoUdsFile\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoUdsFile (file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -529,7 +530,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoPipeSocket\fP (socket)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoPipeSocket\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoPipeSocket (socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP
@@ -548,7 +549,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetStartAs\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetStartAs\fP (startAs)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetStartAs\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetStartAs (startAs)\fP
 .PP
 create a new \fIapplication-context\fP as thread, spawn or fork 
 .PP
@@ -576,9 +577,9 @@ The allowed integer values are:
 .SS "command-line:  --daemon"
 \fBtype:\fP \fCNO\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fCNO\fP
 .PP
-This option is \fBnot\fP available for \fBjavamsgque\fP.
+This option is \fBnot\fP available for javamsgque.
 .SS "ignoreExit"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIgnoreExit\fP\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIgnoreExit\fP
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP
@@ -688,7 +689,6 @@ a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTO
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS.WAIT.FOREVER\fP.
 .PP
-.PP
 \fBDefinition of a 'parent-context'\fP
 .br
 .PP
@@ -730,7 +730,7 @@ C-API: \fBMqLinkCreate\fP, make \fIctx\fP to a \fIparent-context\fP and setup a 
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-command-line-arguments\fP for the \fI--pipe\fP setup.
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-command-line-arguments\fP for the \fI--pipe\fP setup. 
 .RE
 .PP
 \fBReturns:\fP
@@ -754,7 +754,7 @@ A child is using the same process or thread as the parent but a different namesp
 .br
 \fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
 .br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item. 
 .RE
 .PP
 \fBReturns:\fP
@@ -776,7 +776,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 .SS "ctx.LinkConnect()"
 C-API: \fBMqLinkConnect\fP, re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/java/Filter4.java\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -922,9 +922,7 @@ The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\f
 .SS "SERVICE CALLBACK"
 function used as \fIservice-handle\fP 
 .PP
-A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
-.PP
-The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP
+A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function.  The callback is implemented using Interface: IService method \fIService(MqS ctx)\fP
 .SS "String ctx.ServiceGetToken()"
 C-API: \fBMqServiceGetToken\fP, get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
@@ -956,6 +954,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fItrue\fP if the pac
 a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
+ 
 .SS "MqS ctx.ServiceGetFilter([int id=0])"
 C-API: \fBMqServiceGetFilter\fP, get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
@@ -981,6 +980,7 @@ return a 'filter not available' error
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ServiceCreate(String token, IService callback)"
 C-API: \fBMqServiceCreate\fP, create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
@@ -1009,6 +1009,7 @@ an \fBERROR OBJECT\fP on error
 the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefore\fP using this function 
 .RE
 .PP
+ 
 .SS "ctx.ServiceProxy(String token, [int id=0])"
 C-API: \fBMqServiceProxy\fP, create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
 .PP
@@ -1044,6 +1045,7 @@ C-API: \fBMqServiceDelete\fP, delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ProcessEvent()"
 .SS "ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
 .SS "ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
@@ -1170,6 +1172,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.SendEND_AND_WAIT(String token, [int timeout])"
 C-API: \fBMqSendEND_AND_WAIT\fP, finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP
@@ -1189,6 +1192,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.SendEND_AND_CALLBACK(String token, IService callback)"
 C-API: \fBMqSendEND_AND_CALLBACK\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
@@ -1473,7 +1477,7 @@ an \fBERROR OBJECT\fP on error
 .SS "byte[] ctx.ReadBDY()"
 C-API: \fBMqReadBDY\fP, extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be can send later using \fBSendBDY\fP.
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be can send later using \fBSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1507,6 +1511,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ReadL_START(MqBufferS buffer)"
 .SS "ctx.ReadL_START()"
 C-API: \fBMqReadL_START\fP, start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
@@ -1539,6 +1544,7 @@ C-API: \fBMqReadL_END\fP, finish to extract a \fIlist-items\fP from the \fIread-
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ReadT_START(MqBufferS buffer)"
 .SS "ctx.ReadT_START()"
 C-API: \fBMqReadT_START\fP, start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
@@ -1968,7 +1974,7 @@ C-API: \fBMqErrorC\fP, set the \fIcontext\fP to an \fIerror\fP but do \fBnot\fP 
 .RE
 .PP
 .SS "ctx.ErrorSet(Exception ex)"
-convert a \fIclass MqSException\fP into a \fBjavamsgque\fP conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
+convert a \fIclass MqSException\fP into a javamsgque conform error using the \fIctx\fP object. This method is used to enable additional error processing capabilities from \fBLinkDelete\fP or \fBExit\fP after the error was caught and before the application exit or the object is deleted.
 .SS "ctx.ErrorSetCONTINUE()"
 C-API: \fBMqErrorSetCONTINUE\fP, signal end of processing in an \fBIEvent\fP callback  
 .SS "ctx.ErrorSetEXIT()"
@@ -1980,7 +1986,7 @@ C-API: \fBMqErrorIsEXIT\fP, check for an \fIexit-error-object\fP, return \fItrue
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
+ Read more using from the: \fCtheLink/example/java/Filter4.java\fP example 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP

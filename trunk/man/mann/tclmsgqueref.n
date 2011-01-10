@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "9 Jan 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "10 Jan 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -234,7 +234,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an TCL_ERROR object 
+an TCL_ERROR object on error 
 .RE
 .PP
 .PP
@@ -269,7 +269,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an TCL_ERROR object 
+an TCL_ERROR object on error 
 .RE
 .PP
 .PP
@@ -280,7 +280,7 @@ an TCL_ERROR object
 
 .fi
 .PP
-.SS "MqS [FactoryNew ?ident? factory-proc]"
+.SS "MqS [tclmsgque FactoryNew ?ident? factory-proc]"
 C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
 .PP
 This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
@@ -308,7 +308,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an TCL_ERROR object 
+an TCL_ERROR object on error 
 .RE
 .PP
 .PP
@@ -319,7 +319,7 @@ an TCL_ERROR object
 
 .fi
 .PP
-.SS "MqS [FactoryCall ident]"
+.SS "MqS [tclmsgque FactoryCall ident]"
 C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
 .PP
 \fBParameters:\fP
@@ -333,7 +333,7 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .PP
 \fBReturns:\fP
 .RS 4
-an TCL_ERROR object 
+an TCL_ERROR object on error 
 .RE
 .PP
 .PP

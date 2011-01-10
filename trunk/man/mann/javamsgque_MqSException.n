@@ -1,10 +1,11 @@
-.TH "javamsgque::MqSException" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::MqSException" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-javamsgque::MqSException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
-
+javamsgque::MqSException \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
+
 .SH SYNOPSIS
 .br
 .PP

@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "7 Jan 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "10 Jan 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -66,7 +66,7 @@ dummy:  all
 .PP
 .PP
 .nf
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
 MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 .fi

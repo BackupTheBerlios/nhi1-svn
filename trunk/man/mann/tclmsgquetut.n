@@ -1,4 +1,4 @@
-.TH "tclmsgque Tutorial" n "9 Jan 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque Tutorial" n "10 Jan 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -83,7 +83,7 @@ proc MyServer {tmpl} {
 }
 
 tclmsgque Main {
-  set srv [tclmsgque FactoryNew 'MyServer' MyServer]
+  set srv [tclmsgque FactoryNew MyServer]
   set srv [tclmsgque MqS]
   $srv ConfigSetName MyServer
   $srv ConfigSetServerSetup ServerSetup

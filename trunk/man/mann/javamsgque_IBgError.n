@@ -1,10 +1,11 @@
-.TH "javamsgque::IBgError" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::IBgError" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-javamsgque::IBgError \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP  
-
+javamsgque::IBgError \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -23,8 +24,6 @@ Definition at line 17 of file IBgError.java.
 .SH "Member Function Documentation"
 .PP 
 .SS "void javamsgque.IBgError.BgError ()  throws \fBMqSException\fP\fC [package]\fP"
-.PP
-
 
 .SH "Author"
 .PP 

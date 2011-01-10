@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "9 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "10 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -83,7 +83,7 @@ class MyServer < MqS
   end
 end
 
-srv = FactoryNew('MyServer', MyServer)
+srv = FactoryNew(MyServer)
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

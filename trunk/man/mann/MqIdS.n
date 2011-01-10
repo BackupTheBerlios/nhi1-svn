@@ -1,26 +1,27 @@
-.TH "MqIdS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqIdS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqIdS \- data type for process/thread identification  
-
+MqIdS \- 
 .PP
+data type for process/thread identification  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "enum \fBMqIdSE\fP \fBtype\fP"
 .br
-.R "signal type of \fIval\fP data "
+.RI "\fIsignal type of \fIval\fP data \fP"
 .ti -1c
 .RI "\fBMQ_IDNT\fP \fBval\fP"
 .br
-.R "process or thread handle "
+.RI "\fIprocess or thread handle \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -29,14 +30,14 @@ data type for process/thread identification
 This struct is used as storage for the process or the thread identification handle. 
 .PP
 Definition at line 4303 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "enum \fBMqIdSE\fP \fBMqIdS::type\fP"
+.SS "enum \fBMqIdSE\fP \fBMqIdS.type\fP"
 .PP
 signal type of \fIval\fP data 
 .PP
 Definition at line 4304 of file msgque.h.
-.SS "\fBMQ_IDNT\fP \fBMqIdS::val\fP"
+.SS "\fBMQ_IDNT\fP \fBMqIdS.val\fP"
 .PP
 process or thread handle 
 .PP
@@ -44,4 +45,4 @@ Definition at line 4305 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

@@ -1,8 +1,8 @@
-.TH "msgque.h" n "7 Jan 2011" "Version 4.8" "msgque" \" -*- nroff -*-
+.TH "msgque.h" n "10 Jan 2011" "Version 4.8" "msgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $  
+msgque.h \- $Id: \fBmsgque.h\fP 401 2011-01-09 18:03:37Z aotto1968 $  
 
 .PP
 .SH SYNOPSIS
@@ -32,18 +32,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .RI "struct \fBMqErrorS\fP"
 .br
 .R "error-object data type "
-.ti -1c
-.RI "struct \fBMqFactoryCreateS\fP"
-.br
-.R "function pointer to \fIcreate\fP an object "
-.ti -1c
-.RI "struct \fBMqFactoryDeleteS\fP"
-.br
-.R "function pointer to \fIdelete\fP an object "
-.ti -1c
-.RI "struct \fBMqFactoryItemS\fP"
-.br
-.R "data used to define a factory "
 .ti -1c
 .RI "struct \fBMqCallbackS\fP"
 .br
@@ -76,6 +64,18 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .RI "struct \fBMqSetupS\fP"
 .br
 .R "application-programmer configuration data "
+.ti -1c
+.RI "struct \fBMqFactoryCreateS\fP"
+.br
+.R "interface for the \fIconstructor\fP "
+.ti -1c
+.RI "struct \fBMqFactoryDeleteS\fP"
+.br
+.R "interface for the \fIdestructor\fP "
+.ti -1c
+.RI "struct \fBMqFactoryS\fP"
+.br
+.R "data used to define a factory "
 .ti -1c
 .RI "struct \fBMqS\fP"
 .br
@@ -245,11 +245,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "#define \fBMqFactoryErrorCheckI\fP(cmd)   ((cmd) != MQ_FACTORY_RETURN_OK)"
 .br
-.R "check static Factory functions return code on error "
+.R "check static Factory function return code on error "
 .ti -1c
 .RI "#define \fBMqFactoryErrorCheck\fP(cmd)   if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;"
 .br
-.R "check static Factory functions return code on error and goto to error label on error "
+.R "check static Factory function return code on error and goto to error label on error "
 .ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
@@ -483,10 +483,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .br
 .R "application specific help function type "
 .ti -1c
-.RI "typedef void(* \fBMqFactoryDeleteF\fP )(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, struct \fBMqFactoryItemS\fP *const item)"
-.br
-.R "prototype for a Object-Delete factory function "
-.ti -1c
 .RI "typedef void(* \fBMqMarkF\fP )(\fBMQ_PTR\fP data)"
 .br
 .R "prototype for a Garbage-Collection mark function "
@@ -499,6 +495,10 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .br
 .R "used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands "
 .ti -1c
+.RI "typedef void(* \fBMqFactoryDeleteF\fP )(struct \fBMqS\fP *context, \fBMQ_BOL\fP doFactoryCleanup, struct \fBMqFactoryS\fP *const item)"
+.br
+.R "type of a \fIfactory-instance-destructor\fP "
+.ti -1c
 .RI "typedef \fBMQ_CST\fP \fBMQ_TOK\fP"
 .br
 .R "a 4 byte string to identify different services "
@@ -509,7 +509,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "typedef unsigned long \fBMQ_IDNT\fP"
 .br
-.R "process or thread identifer "
+.R "process or thread identifier "
 .ti -1c
 .RI "typedef \fBMQ_PTR\fP(* \fBMqSysCallocF\fP )(\fBMQ_SIZE\fP, \fBMQ_SIZE\fP)"
 .br
@@ -547,10 +547,6 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .br
 .R "collection for the different error-codes "
 .ti -1c
-.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
-.br
-.R "the \fIfactory\fP is called to create an object for ... "
-.ti -1c
 .RI "enum \fBMqStartE\fP { \fBMQ_START_DEFAULT\fP =  0, \fBMQ_START_FORK\fP =  1, \fBMQ_START_THREAD\fP =  2, \fBMQ_START_SPAWN\fP =  3 }"
 .br
 .R "User preferences on HOWTO start a new entity. "
@@ -565,7 +561,11 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqFactoryReturnE\fP { \fBMQ_FACTORY_RETURN_OK\fP, \fBMQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED\fP, \fBMQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR\fP, \fBMQ_FACTORY_RETURN_CALL_ERR\fP, \fBMQ_FACTORY_RETURN_ITEM_GET_ERR\fP, \fBMQ_FACTORY_RETURN_NEW_ERR\fP, \fBMQ_FACTORY_RETURN_DEFAULT_ERR\fP, \fBMQ_FACTORY_RETURN_ADD_ERR\fP, \fBMQ_FACTORY_RETURN_INVALID_IDENT\fP }"
 .br
-.R "static Factory functions return this enum as error code "
+.R "a static Factory function return this enum as status "
+.ti -1c
+.RI "enum \fBMqFactoryE\fP { \fBMQ_FACTORY_NEW_INIT\fP =  0, \fBMQ_FACTORY_NEW_CHILD\fP =  1, \fBMQ_FACTORY_NEW_SLAVE\fP =  2, \fBMQ_FACTORY_NEW_FORK\fP =  3, \fBMQ_FACTORY_NEW_THREAD\fP =  4, \fBMQ_FACTORY_NEW_FILTER\fP =  5 }"
+.br
+.R "the \fIfactory\fP is called to create an instance for ... "
 .ti -1c
 .RI "enum \fBMqWaitOnEventE\fP { \fBMQ_WAIT_NO\fP =  0, \fBMQ_WAIT_ONCE\fP =  1, \fBMQ_WAIT_FOREVER\fP =  2 }"
 .br
@@ -772,39 +772,39 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .br
 .R "get the process \fIstartup-prefix\fP argument "
 .ti -1c
-.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetCreateData\fP (struct \fBMqFactoryItemS\fP const *const item)"
+.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetCreateData\fP (struct \fBMqFactoryS\fP const *const item)"
 .br
-.R "helper function to return MqFactoryItemS::Create::data "
+.R "helper function to return MqFactoryS::Create::data "
 .ti -1c
-.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetDeleteData\fP (struct \fBMqFactoryItemS\fP const *const item)"
+.RI "\fBMQ_PTR\fP \fBMqFactoryItemGetDeleteData\fP (struct \fBMqFactoryS\fP const *const item)"
 .br
-.R "helper function to return MqFactoryItemS::Delete::data "
+.R "helper function to return MqFactoryS::Delete::data "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqFactoryErrorMsg\fP (enum \fBMqFactoryReturnE\fP ret)"
 .br
-.R "convert an static Factory functions return code into a human readable error "
+.R "convert an static Factory function \fIreturn-status\fP into a human readable \fIerror-message\fP "
 .ti -1c
 .RI "void \fBMqFactoryErrorPanic\fP (enum \fBMqFactoryReturnE\fP ret)"
 .br
-.R "check an static Factory functions return code an error and \fIpanic\fP on error "
+.R "check an static Factory function return code an error and \fIpanic\fP on error "
 .ti -1c
-.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryNew\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDatafreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDatafreeF, \fBMQ_PTR\fP data, struct \fBMqS\fP **ctxP)"
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryNew\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDataFreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDataFreeF, \fBMQ_PTR\fP data, struct \fBMqS\fP **ctxP)"
 .br
-.R "add a new factory interface and create a new top-level object "
+.R "add a new factory interface and create a new top-level instance "
 .ti -1c
-.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryAdd\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDatafreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDatafreeF,)"
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryAdd\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDataFreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDataFreeF)"
 .br
-.R "add a new factory interface identified by \fIident\fP "
+.R "add a new \fIfactory-interface\fP identified by \fIident\fP "
 .ti -1c
-.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryDefault\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDatafreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDatafreeF,)"
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryDefault\fP (\fBMQ_CST\fP const ident, \fBMqFactoryCreateF\fP const createCallF, \fBMQ_PTR\fP const createData, \fBMqTokenDataFreeF\fP const createDataFreeF, \fBMqFactoryDeleteF\fP const deleteCallF, \fBMQ_PTR\fP const deleteData, \fBMqTokenDataFreeF\fP const deleteDataFreeF)"
 .br
-.R "add a new \fIdefault\fP factory interface identified by \fIident\fP "
+.R "add a new \fIdefault-factory-interface\fP identified by \fIident\fP "
 .ti -1c
 .RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryCopyDefault\fP (\fBMQ_CST\fP const ident)"
 .br
-.R "add a new factory as \fIcopy\fP of the \fIdefault\fP factoty but with a new \fIident\fP "
+.R "add a new factory as \fIcopy\fP of the \fIdefault\fP factory but with a new \fIident\fP "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqFactoryDefaultCreate\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *item, struct \fBMqS\fP **contextP)"
+.RI "enum \fBMqErrorE\fP \fBMqFactoryDefaultCreate\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryS\fP *item, struct \fBMqS\fP **contextP)"
 .br
 .R "the \fIdefault\fP factory constructor function "
 .ti -1c
@@ -814,27 +814,27 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryCall\fP (\fBMQ_CST\fP const ident, \fBMQ_PTR\fP const data, struct \fBMqS\fP **ctxP)"
 .br
-.R "call the \fIdefault\fP factory constructor to create a new object "
+.R "call the factory constructor, identified by \fIident\fP, to create a new instance "
 .ti -1c
-.RI "enum \fBMqErrorE\fP \fBMqFactoryInvoke\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *item, struct \fBMqS\fP **contextP)"
+.RI "enum \fBMqErrorE\fP \fBMqFactoryInvoke\fP (struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryS\fP *item, struct \fBMqS\fP **contextP)"
 .br
 .R "call a factory \fIconstructor\fP defined by \fIitem\fP "
 .ti -1c
-.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryItemGet\fP (\fBMQ_CST\fP const ident, struct \fBMqFactoryItemS\fP **itemP)"
+.RI "enum \fBMqFactoryReturnE\fP \fBMqFactoryItemGet\fP (\fBMQ_CST\fP const ident, struct \fBMqFactoryS\fP **itemP)"
 .br
 .R "call a factory \fIconstructor\fP defined by \fIitem\fP "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqFactoryCtxDefaultSet\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP const ident)"
 .br
-.R "create a copy of the default \fIfactory\fP pattern using name \fIident\fP "
+.R "create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP "
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqFactoryCtxIdentGet\fP (struct \fBMqS\fP const *const context)"
 .br
-.R "get the \fIident\fP of the \fIfactory\fP object of the context "
+.R "get the \fIident\fP of the \fIfactory-interface\fP used for the context "
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqFactoryCtxIdentSet\fP (struct \fBMqS\fP *const context, \fBMQ_CST\fP ident)"
 .br
-.R "link the object to a new \fIfactory\fP object identified by \fIident\fP "
+.R "link the context to a new \fIfactory-interface\fP identified by \fIident\fP "
 .ti -1c
 .RI "void \fBMqContextInit\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP size, struct \fBMqS\fP const *const tmpl)"
 .br
@@ -1070,7 +1070,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "char \fBMqBufferGetType\fP (struct \fBMqBufferS\fP *const buf)"
 .br
-.R "return the type from a \fBMQ_BUF\fP object on character identifer "
+.R "return the type from a \fBMQ_BUF\fP object on character identifier "
 .ti -1c
 .RI "enum \fBMqTypeE\fP \fBMqBufferGetType2\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -1078,7 +1078,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "\fBMQ_CST\fP \fBMqBufferGetType3\fP (struct \fBMqBufferS\fP *const buf)"
 .br
-.R "return the type from a \fBMQ_BUF\fP object as strint "
+.R "return the type from a \fBMQ_BUF\fP object as string "
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqBufferGetContext\fP (struct \fBMqBufferS\fP *const buf)"
 .br
@@ -1557,7 +1557,7 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .ti -1c
 .RI "void \fBMqSysServerThreadMain\fP (struct \fBMqSysServerThreadMainS\fP *data)"
 .br
-.R "initialize a new created thred "
+.R "initialize a new created thread "
 .ti -1c
 .RI "\fBMQ_PTR\fP \fBMqSysCalloc\fP (struct \fBMqS\fP *const context, \fBMQ_SIZE\fP nmemb, \fBMQ_SIZE\fP size)"
 .br
@@ -1643,9 +1643,9 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .br
 .R "prototype for an object method function "
 .ti -1c
-.RI "enum \fBMqErrorE\fP(* \fBMqFactoryCreateF\fP )(struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryItemS\fP *const item, struct \fBMqS\fP **contextP)"
+.RI "enum \fBMqErrorE\fP(* \fBMqFactoryCreateF\fP )(struct \fBMqS\fP *const tmpl, enum \fBMqFactoryE\fP create, struct \fBMqFactoryS\fP *const item, struct \fBMqS\fP **contextP)"
 .br
-.R "prototype for a Object-Creation factory function "
+.R "type of a \fIfactory-instance-constructor\fP "
 .ti -1c
 .RI "struct \fBMqLalS\fP \fBMqLal\fP"
 .br
@@ -1653,13 +1653,13 @@ msgque.h \- $Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $
 .in -1c
 .SH "Detailed Description"
 .PP 
-$Id: \fBmsgque.h\fP 399 2011-01-06 17:37:07Z aotto1968 $ 
+$Id: \fBmsgque.h\fP 401 2011-01-09 18:03:37Z aotto1968 $ 
 
 (C) 2004 - NHI - #1 - Project - Group
 .PP
 \fBVersion:\fP
 .RS 4
-$Rev: 399 $ 
+$Rev: 401 $ 
 .RE
 .PP
 \fBAuthor:\fP

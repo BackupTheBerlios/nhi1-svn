@@ -1,4 +1,4 @@
-.TH "ccmsgque" n "9 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -252,7 +252,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBccmsgque::MqFactoryCException\fP object 
+an \fBccmsgque::MqFactoryCException\fP object on error 
 .RE
 .PP
 .PP
@@ -288,7 +288,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBccmsgque::MqFactoryCException\fP object 
+an \fBccmsgque::MqFactoryCException\fP object on error 
 .RE
 .PP
 .PP
@@ -328,7 +328,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBccmsgque::MqFactoryCException\fP object 
+an \fBccmsgque::MqFactoryCException\fP object on error 
 .RE
 .PP
 .PP
@@ -354,7 +354,7 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBccmsgque::MqFactoryCException\fP object 
+an \fBccmsgque::MqFactoryCException\fP object on error 
 .RE
 .PP
 .PP
@@ -843,7 +843,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 .SS "ctx.LinkConnect()"
 C-API: \fBMqLinkConnect\fP, re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more in the: \fC/theLink/example/LNG/Filter4.EXT\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/cc/Filter4.cc\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -2076,7 +2076,7 @@ C-API: \fBMqErrorIsEXIT\fP, check for an \fIexit-error-object\fP, return \fIMQ_Y
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using the code from \fB\fCtheLink/example/LNG/Filter4.LNG\fP\fP 
+ Read more using from the: \fCtheLink/example/cc/Filter4.cc\fP example 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP

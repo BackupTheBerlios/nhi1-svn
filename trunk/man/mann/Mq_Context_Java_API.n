@@ -1,33 +1,34 @@
-.TH "Mq_Context_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Context_Java_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Context_Java_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
-
+Mq_Context_Java_API \- 
 .PP
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBjavamsgque::MqS.MqS\fP (\fBMqS\fP tmpl)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "\fBjavamsgque::MqS.MqS\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "void \fBjavamsgque::MqS.finalize\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.Exit\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqExit\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LogC\fP (String prefix, int level, String text)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLogC\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -54,26 +55,24 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .SS "native void javamsgque.MqS.Exit ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
-.PP
 .SS "void javamsgque.MqS.finalize ()\fC [protected, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
 .PP
 Definition at line 158 of file MqS.java.
-.SS "native void javamsgque.MqS.LogC (String prefix, int level, String text)\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.LogC (Stringprefix, intlevel, Stringtext)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
+.SS "javamsgque.MqS.MqS (\fBMqS\fPtmpl)\fC [protected, inherited]\fP"
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
+.PP
+Definition at line 146 of file MqS.java.
 .SS "javamsgque.MqS.MqS ()\fC [protected, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
 .PP
 Definition at line 152 of file MqS.java.
-.SS "javamsgque.MqS.MqS (\fBMqS\fP tmpl)\fC [protected, inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
-.PP
-Definition at line 146 of file MqS.java.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for javamsgque from the source code.

@@ -1,4 +1,4 @@
-.TH "rubymsgque" n "9 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque" n "10 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -208,7 +208,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -243,7 +243,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -254,7 +254,7 @@ FactoryAdd(F1)
 
 .fi
 .PP
-.SS "FactoryNew(?String ident,? Class cs)"
+.SS "MqS FactoryNew(?String ident,? Class cs)"
 C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
 .PP
 This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
@@ -282,7 +282,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -293,7 +293,7 @@ srv = FactoryNew('mulserver', MulServer)
 
 .fi
 .PP
-.SS "FactoryCall(String ident)"
+.SS "MqS FactoryCall(String ident)"
 C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
 .PP
 \fBParameters:\fP
@@ -307,7 +307,7 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP

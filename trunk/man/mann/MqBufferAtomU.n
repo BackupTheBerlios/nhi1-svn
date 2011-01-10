@@ -1,130 +1,131 @@
-.TH "MqBufferAtomU" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqBufferAtomU" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqBufferAtomU \- union used to set or modify native data from an \fBMqBufferS\fP object  
-
+MqBufferAtomU \- 
 .PP
+union used to set or modify native data from an \fBMqBufferS\fP object  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMQ_BYT\fP \fBY\fP"
 .br
-.R "1 byte byte data "
+.RI "\fI1 byte byte data \fP"
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBO\fP"
 .br
-.R "1 byte boolean data "
+.RI "\fI1 byte boolean data \fP"
 .ti -1c
 .RI "\fBMQ_SRT\fP \fBS\fP"
 .br
-.R "2 byte short data "
+.RI "\fI2 byte short data \fP"
 .ti -1c
 .RI "\fBMQ_INT\fP \fBI\fP"
 .br
-.R "4 byte integer data "
+.RI "\fI4 byte integer data \fP"
 .ti -1c
 .RI "\fBMQ_FLT\fP \fBF\fP"
 .br
-.R "4 byte float data "
+.RI "\fI4 byte float data \fP"
 .ti -1c
 .RI "\fBMQ_WID\fP \fBW\fP"
 .br
-.R "8 byte integer data "
+.RI "\fI8 byte integer data \fP"
 .ti -1c
 .RI "\fBMQ_DBL\fP \fBD\fP"
 .br
-.R "8 byte double data "
+.RI "\fI8 byte double data \fP"
 .ti -1c
 .RI "MQ_BINB \fBB\fP [8]"
 .br
-.R "8 byte ARRAY used for copy "
+.RI "\fI8 byte ARRAY used for copy \fP"
 .ti -1c
 .RI "MQ_BINB \fBB8\fP [8]"
 .br
-.R "8 byte ARRAY used for copy "
+.RI "\fI8 byte ARRAY used for copy \fP"
 .ti -1c
 .RI "MQ_BINB \fBB4\fP [4]"
 .br
-.R "4 byte ARRAY used for copy "
+.RI "\fI4 byte ARRAY used for copy \fP"
 .ti -1c
 .RI "MQ_BINB \fBB2\fP [2]"
 .br
-.R "2 byte ARRAY used for copy "
+.RI "\fI2 byte ARRAY used for copy \fP"
 .ti -1c
 .RI "MQ_BINB \fBB1\fP [1]"
 .br
-.R "1 byte ARRAY used for copy "
+.RI "\fI1 byte ARRAY used for copy \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
 union used to set or modify native data from an \fBMqBufferS\fP object 
 .PP
 Definition at line 2260 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "MQ_BINB \fBMqBufferAtomU::B\fP[8]"
+.SS "MQ_BINB \fBMqBufferAtomU.B\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
 Definition at line 2268 of file msgque.h.
-.SS "MQ_BINB \fBMqBufferAtomU::B1\fP[1]"
+.SS "MQ_BINB \fBMqBufferAtomU.B1\fP[1]"
 .PP
 1 byte ARRAY used for copy 
 .PP
 Definition at line 2272 of file msgque.h.
-.SS "MQ_BINB \fBMqBufferAtomU::B2\fP[2]"
+.SS "MQ_BINB \fBMqBufferAtomU.B2\fP[2]"
 .PP
 2 byte ARRAY used for copy 
 .PP
 Definition at line 2271 of file msgque.h.
-.SS "MQ_BINB \fBMqBufferAtomU::B4\fP[4]"
+.SS "MQ_BINB \fBMqBufferAtomU.B4\fP[4]"
 .PP
 4 byte ARRAY used for copy 
 .PP
 Definition at line 2270 of file msgque.h.
-.SS "MQ_BINB \fBMqBufferAtomU::B8\fP[8]"
+.SS "MQ_BINB \fBMqBufferAtomU.B8\fP[8]"
 .PP
 8 byte ARRAY used for copy 
 .PP
 Definition at line 2269 of file msgque.h.
-.SS "\fBMQ_DBL\fP \fBMqBufferAtomU::D\fP"
+.SS "\fBMQ_DBL\fP \fBMqBufferAtomU.D\fP"
 .PP
 8 byte double data 
 .PP
 Definition at line 2267 of file msgque.h.
-.SS "\fBMQ_FLT\fP \fBMqBufferAtomU::F\fP"
+.SS "\fBMQ_FLT\fP \fBMqBufferAtomU.F\fP"
 .PP
 4 byte float data 
 .PP
 Definition at line 2265 of file msgque.h.
-.SS "\fBMQ_INT\fP \fBMqBufferAtomU::I\fP"
+.SS "\fBMQ_INT\fP \fBMqBufferAtomU.I\fP"
 .PP
 4 byte integer data 
 .PP
 Definition at line 2264 of file msgque.h.
-.SS "\fBMQ_BOL\fP \fBMqBufferAtomU::O\fP"
+.SS "\fBMQ_BOL\fP \fBMqBufferAtomU.O\fP"
 .PP
 1 byte boolean data 
 .PP
 Definition at line 2262 of file msgque.h.
-.SS "\fBMQ_SRT\fP \fBMqBufferAtomU::S\fP"
+.SS "\fBMQ_SRT\fP \fBMqBufferAtomU.S\fP"
 .PP
 2 byte short data 
 .PP
 Definition at line 2263 of file msgque.h.
-.SS "\fBMQ_WID\fP \fBMqBufferAtomU::W\fP"
+.SS "\fBMQ_WID\fP \fBMqBufferAtomU.W\fP"
 .PP
 8 byte integer data 
 .PP
 Definition at line 2266 of file msgque.h.
-.SS "\fBMQ_BYT\fP \fBMqBufferAtomU::Y\fP"
+.SS "\fBMQ_BYT\fP \fBMqBufferAtomU.Y\fP"
 .PP
 1 byte byte data 
 .PP
@@ -132,4 +133,4 @@ Definition at line 2261 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

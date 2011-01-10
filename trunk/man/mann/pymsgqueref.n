@@ -1,4 +1,4 @@
-.TH "pymsgque" n "9 Jan 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "10 Jan 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -206,7 +206,7 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -241,7 +241,7 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -280,7 +280,7 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP
@@ -305,7 +305,7 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .PP
 \fBReturns:\fP
 .RS 4
-an RuntimeError object 
+an RuntimeError object on error 
 .RE
 .PP
 .PP

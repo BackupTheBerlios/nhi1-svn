@@ -1,21 +1,22 @@
-.TH "Mq_Type_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "Mq_Type_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Type_C_API \- a collection of common used data types and definitions  
-
+Mq_Type_C_API \- 
 .PP
-.SS "Data Structures"
+a collection of common used data types and definitions  
+
+.SS "Classes"
 
 .in +1c
 .ti -1c
 .RI "struct \fBMqLinkS\fP"
 .br
-.R "object responsible to manage a client/server link data "
+.RI "\fIobject responsible to manage a client/server link data \fP"
 .ti -1c
 .RI "struct \fBMqErrorS\fP"
 .br
-.R "error-object data type "
+.RI "\fIerror-object data type \fP"
 .in -1c
 .SS "Defines"
 
@@ -32,91 +33,91 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .ti -1c
 .RI "#define \fBlikely\fP(x)   __builtin_expect((x),1)"
 .br
-.R "gcc jump optimization "
+.RI "\fIgcc jump optimization \fP"
 .ti -1c
 .RI "#define \fBunlikely\fP(x)   __builtin_expect((x),0)"
 .br
-.R "gcc jump optimization "
+.RI "\fIgcc jump optimization \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT\fP   900"
 .br
-.R "maximum timeout in sec (900 sec) "
+.RI "\fImaximum timeout in sec (900 sec) \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT5\fP   (MQ_TIMEOUT/5)"
 .br
-.R "long timeout in sec (180 sec) "
+.RI "\fIlong timeout in sec (180 sec) \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT10\fP   (MQ_TIMEOUT/10  < 1 ? 1 : MQ_TIMEOUT/10)"
 .br
-.R "normal timeout in sec (90 sec) "
+.RI "\fInormal timeout in sec (90 sec) \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT45\fP   (MQ_TIMEOUT/45  < 1 ? 1 : MQ_TIMEOUT/45)"
 .br
-.R "short timeout in sec (20 sec) "
+.RI "\fIshort timeout in sec (20 sec) \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT90\fP   (MQ_TIMEOUT/90  < 1 ? 1 : MQ_TIMEOUT/90)"
 .br
-.R "shorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' "
+.RI "\fIshorter timeout in sec (10 sec) This TIMEOUT is used for socket connection with 'connect' \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT180\fP   (MQ_TIMEOUT/180 < 1 ? 1 : MQ_TIMEOUT/180)"
 .br
-.R "very short timeout in sec (5 sec) "
+.RI "\fIvery short timeout in sec (5 sec) \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_DEFAULT\fP   -1"
 .br
-.R "request the default timeout value "
+.RI "\fIrequest the default timeout value \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_USER\fP   -2"
 .br
-.R "request the user defined timeout value from the \fBtimeout\fP configuration value "
+.RI "\fIrequest the user defined timeout value from the \fBtimeout\fP configuration value \fP"
 .ti -1c
 .RI "#define \fBMQ_TIMEOUT_MAX\fP   -3"
 .br
-.R "request the maximum possible (infinite) timeout value "
+.RI "\fIrequest the maximum possible (infinite) timeout value \fP"
 .ti -1c
 .RI "#define \fBMQ_EXTERN\fP"
 .br
-.R "define the external binding "
+.RI "\fIdefine the external binding \fP"
 .ti -1c
 .RI "#define \fBMQ_CPPXSTR\fP(s)   MQ_CPPSTR(s)"
 .br
-.R "connecting of expressions, step 1 "
+.RI "\fIconnecting of expressions, step 1 \fP"
 .ti -1c
 .RI "#define \fBMQ_CPPSTR\fP(s)   #s"
 .br
-.R "connecting of expressions, step 2 "
+.RI "\fIconnecting of expressions, step 2 \fP"
 .ti -1c
 .RI "#define \fBMQ_ALFA\fP   '@'"
 .br
-.R "MQ_ALFA the command-line separator between server and client. "
+.RI "\fIMQ_ALFA the command-line separator between server and client. \fP"
 .ti -1c
 .RI "#define \fBMQ_ALFA_STR\fP   '@'"
 .br
-.R "MQ_ALFA the command-line separator as string. "
+.RI "\fIMQ_ALFA the command-line separator as string. \fP"
 .ti -1c
 .RI "#define \fBMQ_PTRB\fP   void"
 .br
-.R "pointer basic data-type "
+.RI "\fIpointer basic data-type \fP"
 .ti -1c
 .RI "#define \fBMQ_STRB\fP   char"
 .br
-.R "string basic data-type "
+.RI "\fIstring basic data-type \fP"
 .ti -1c
 .RI "#define \fBMQ_BINB\fP   unsigned char"
 .br
-.R "\fIbyte-array\fP basic data-type "
+.RI "\fI\fIbyte-array\fP basic data-type \fP"
 .ti -1c
 .RI "#define \fBMQ_LSTB\fP   unsigned char"
 .br
-.R "list basic data-type "
+.RI "\fIlist basic data-type \fP"
 .ti -1c
 .RI "#define \fBMQ_NO\fP   0"
 .br
-.R "boolean NO "
+.RI "\fIboolean NO \fP"
 .ti -1c
 .RI "#define \fBMQ_YES\fP   1"
 .br
-.R "boolean YES "
+.RI "\fIboolean YES \fP"
 .in -1c
 .SS "Typedefs"
 
@@ -124,95 +125,95 @@ Mq_Type_C_API \- a collection of common used data types and definitions
 .ti -1c
 .RI "typedef signed char \fBMQ_BYT\fP"
 .br
-.R "1 byte \fBbyte\fP data-type "
+.RI "\fI1 byte \fBbyte\fP data-type \fP"
 .ti -1c
 .RI "typedef unsigned char \fBMQ_BOL\fP"
 .br
-.R "1 byte \fBboolean\fP data-type "
+.RI "\fI1 byte \fBboolean\fP data-type \fP"
 .ti -1c
 .RI "typedef signed short \fBMQ_SRT\fP"
 .br
-.R "2 byte \fBshort\fP data-type "
+.RI "\fI2 byte \fBshort\fP data-type \fP"
 .ti -1c
 .RI "typedef signed int \fBMQ_INT\fP"
 .br
-.R "4 byte \fBinteger\fP data-type "
+.RI "\fI4 byte \fBinteger\fP data-type \fP"
 .ti -1c
 .RI "typedef float \fBMQ_FLT\fP"
 .br
-.R "4 byte \fBfloat\fP data-type "
+.RI "\fI4 byte \fBfloat\fP data-type \fP"
 .ti -1c
 .RI "typedef long long int \fBMQ_WID\fP"
 .br
-.R "8 byte \fBwide\fP integer data-type "
+.RI "\fI8 byte \fBwide\fP integer data-type \fP"
 .ti -1c
 .RI "typedef double \fBMQ_DBL\fP"
 .br
-.R "8 byte \fBdouble\fP data-type "
+.RI "\fI8 byte \fBdouble\fP data-type \fP"
 .ti -1c
 .RI "typedef union \fBMqBufferAtomU\fP \fBMQ_ATO\fP"
 .br
-.R "8 byte \fBatom\fP data-type "
+.RI "\fI8 byte \fBatom\fP data-type \fP"
 .ti -1c
 .RI "typedef int \fBMQ_SIZE\fP"
 .br
-.R "array size data-type "
+.RI "\fIarray size data-type \fP"
 .ti -1c
 .RI "typedef \fBMQ_WID\fP \fBMQ_TIME_T\fP"
 .br
-.R "OS wide MQ_TIME_T. "
+.RI "\fIOS wide MQ_TIME_T. \fP"
 .ti -1c
 .RI "typedef int \fBMQ_HDL\fP"
 .br
-.R "handle data-type "
+.RI "\fIhandle data-type \fP"
 .ti -1c
 .RI "typedef MQ_PTRB * \fBMQ_PTR\fP"
 .br
-.R "generic pointer data-type "
+.RI "\fIgeneric pointer data-type \fP"
 .ti -1c
 .RI "typedef MQ_STRB * \fBMQ_STR\fP"
 .br
-.R "string pointer data-type "
+.RI "\fIstring pointer data-type \fP"
 .ti -1c
 .RI "typedef MQ_STRB const * \fBMQ_CST\fP"
 .br
-.R "const string pointer data-type "
+.RI "\fIconst string pointer data-type \fP"
 .ti -1c
 .RI "typedef MQ_BINB * \fBMQ_BIN\fP"
 .br
-.R "\fIbyte-array\fP pointer data-type "
+.RI "\fI\fIbyte-array\fP pointer data-type \fP"
 .ti -1c
 .RI "typedef MQ_BINB const * \fBMQ_CBI\fP"
 .br
-.R "\fIconst\fP byte-array pointer data-type "
+.RI "\fI\fIconst\fP byte-array pointer data-type \fP"
 .ti -1c
 .RI "typedef MQ_LSTB * \fBMQ_LST\fP"
 .br
-.R "list pointer data-type "
+.RI "\fIlist pointer data-type \fP"
 .ti -1c
 .RI "typedef struct \fBMqBufferS\fP * \fBMQ_BUF\fP"
 .br
-.R "Buffer pointer data-type. "
+.RI "\fIBuffer pointer data-type. \fP"
 .ti -1c
 .RI "typedef struct \fBMqBufferLS\fP * \fBMQ_BFL\fP"
 .br
-.R "Buffer-List pointer data-type. "
+.RI "\fIBuffer-List pointer data-type. \fP"
 .ti -1c
 .RI "typedef struct \fBMqS\fP * \fBMQ_CTX\fP"
 .br
-.R "Context pointer data-type. "
+.RI "\fIContext pointer data-type. \fP"
 .ti -1c
 .RI "typedef \fBMQ_INT\fP \fBMQ_SOCK\fP"
 .br
-.R "data type for a socket handle "
+.RI "\fIdata type for a socket handle \fP"
 .ti -1c
 .RI "typedef void(* \fBMqExitF\fP )(int num)"
 .br
-.R "prototype for exit a process or thread "
+.RI "\fIprototype for exit a process or thread \fP"
 .ti -1c
 .RI "typedef void(* \fBMqSetupF\fP )(struct \fBMqS\fP *const )"
 .br
-.R "used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands "
+.RI "\fIused to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP using the \fCSysServer\fP? style commands \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -417,9 +418,7 @@ generic pointer data-type
 Definition at line 296 of file msgque.h.
 .SS "typedef int \fBMQ_SIZE\fP"
 .PP
-array size data-type 
-.PP
-\fBAttention:\fP
+array size data-type \fBAttention:\fP
 .RS 4
 -> need signed integer in pReadWord -> need int because of pSwapI in pReadHDR 
 .RE
@@ -464,4 +463,4 @@ used to setup (initialize) a new thread/fork/process created by \fBlibmsgque\fP 
 Definition at line 486 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

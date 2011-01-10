@@ -1,37 +1,38 @@
-.TH "Mq_Slave_Java_API" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Slave_Java_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Slave_Java_API \- create and manage a slave context   
-
+Mq_Slave_Java_API \- 
 .PP
+create and manage a slave context   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.SlaveWorker\fP (int id, String...args)  throws MqSException"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.SlaveCreate\fP (int id, \fBMqS\fP slave)  throws MqSException"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.SlaveDelete\fP (int id)  throws MqSException"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP \fP"
 .ti -1c
 .RI "native \fBMqS\fP \fBjavamsgque::MqS.SlaveGet\fP (int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP \fP"
 .ti -1c
 .RI "native \fBMqS\fP \fBjavamsgque::MqS.SlaveGetMaster\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP \fP"
 .ti -1c
 .RI "native boolean \fBjavamsgque::MqS.SlaveIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -108,30 +109,24 @@ the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \
  
 .SH "Function Documentation"
 .PP 
-.SS "native void javamsgque.MqS.SlaveCreate (int id, \fBMqS\fP slave)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.SlaveCreate (intid, \fBMqS\fPslave)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
-.PP
-.SS "native void javamsgque.MqS.SlaveDelete (int id)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.SlaveDelete (intid)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
-.PP
-.SS "native \fBMqS\fP javamsgque.MqS.SlaveGet (int id)\fC [inherited]\fP"
+.SS "native \fBMqS\fP javamsgque.MqS.SlaveGet (intid)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
-.PP
 .SS "native \fBMqS\fP javamsgque.MqS.SlaveGetMaster ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP 
-.PP
 .SS "native boolean javamsgque.MqS.SlaveIs ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
-.PP
-.SS "native void javamsgque.MqS.SlaveWorker (int id, String... args)  throws MqSException\fC [inherited]\fP"
+.SS "native void javamsgque.MqS.SlaveWorker (intid, String...args)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
-.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for javamsgque from the source code.

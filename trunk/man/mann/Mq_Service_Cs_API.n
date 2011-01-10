@@ -1,4 +1,4 @@
-.TH "Mq_Service_Cs_API" n "9 Jan 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Service_Cs_API" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -172,4 +172,4 @@ implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP
 Definition at line 90 of file service.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

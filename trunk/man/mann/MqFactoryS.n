@@ -1,58 +1,59 @@
-.TH "MqFactoryS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqFactoryS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqFactoryS \- data used to define a factory  
-
+MqFactoryS \- 
 .PP
+data used to define a factory  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMQ_CST\fP \fBident\fP"
 .br
-.R "public known factory name "
+.RI "\fIpublic known factory name \fP"
 .ti -1c
 .RI "\fBMQ_BOL\fP \fBcalled\fP"
 .br
-.R "was the factory called? "
+.RI "\fIwas the factory called? \fP"
 .ti -1c
 .RI "struct \fBMqFactoryCreateS\fP \fBCreate\fP"
 .br
-.R "instance constructor interface "
+.RI "\fIinstance constructor interface \fP"
 .ti -1c
 .RI "struct \fBMqFactoryDeleteS\fP \fBDelete\fP"
 .br
-.R "constructor destructor interface "
+.RI "\fIconstructor destructor interface \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
 data used to define a factory 
 .PP
 Definition at line 1333 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_BOL\fP \fBMqFactoryS::called\fP"
+.SS "\fBMQ_BOL\fP \fBMqFactoryS.called\fP"
 .PP
 was the factory called? 
 .PP
 Definition at line 1335 of file msgque.h.
-.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS::Create\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryCreateS\fP \fBMqFactoryS.Create\fP"
 .PP
 instance constructor interface 
 .PP
 Definition at line 1336 of file msgque.h.
-.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS::Delete\fP\fC [read]\fP"
+.SS "struct \fBMqFactoryDeleteS\fP \fBMqFactoryS.Delete\fP"
 .PP
 constructor destructor interface 
 .PP
 Definition at line 1337 of file msgque.h.
-.SS "\fBMQ_CST\fP \fBMqFactoryS::ident\fP"
+.SS "\fBMQ_CST\fP \fBMqFactoryS.ident\fP"
 .PP
 public known factory name 
 .PP
@@ -60,4 +61,4 @@ Definition at line 1334 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

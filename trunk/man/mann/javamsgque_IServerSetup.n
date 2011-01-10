@@ -1,10 +1,11 @@
-.TH "javamsgque::IServerSetup" n "9 Jan 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque::IServerSetup" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-javamsgque::IServerSetup \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP  
-
+javamsgque::IServerSetup \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -23,8 +24,6 @@ Definition at line 17 of file IServerSetup.java.
 .SH "Member Function Documentation"
 .PP 
 .SS "void javamsgque.IServerSetup.ServerSetup ()  throws \fBMqSException\fP \fC [package]\fP"
-.PP
-
 
 .SH "Author"
 .PP 

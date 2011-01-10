@@ -1,17 +1,18 @@
-.TH "Mq_Slave_C_API" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "Mq_Slave_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Slave_C_API \- create and manage a slave context  
-
+Mq_Slave_C_API \- 
 .PP
+create and manage a slave context  
+
 .SS "Defines"
 
 .in +1c
 .ti -1c
 .RI "#define \fBMQ_SLAVE_MAX\fP   1024"
 .br
-.R "the maximum number of slave objects per master "
+.RI "\fIthe maximum number of slave objects per master \fP"
 .in -1c
 .SS "Functions"
 
@@ -19,30 +20,30 @@ Mq_Slave_C_API \- create and manage a slave context
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSlaveWorker\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqBufferLS\fP **args)"
 .br
-.R "create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. "
+.RI "\fIcreate a \fImaster/slave\fP link using the image of the \fIctx\fP object self. \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSlaveCreate\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id, struct \fBMqS\fP *const slave)"
 .br
-.R "create a \fImaster/slave\fP link between the master-context object and the slave-context object "
+.RI "\fIcreate a \fImaster/slave\fP link between the master-context object and the slave-context object \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP \fBMqSlaveDelete\fP (struct \fBMqS\fP *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. "
+.RI "\fIDelete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. \fP"
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqSlaveGet\fP (struct \fBMqS\fP const *const ctx, \fBMQ_SIZE\fP const id)"
 .br
-.R "get the \fIslave-context\fP from a \fImaster-context\fP "
+.RI "\fIget the \fIslave-context\fP from a \fImaster-context\fP \fP"
 .ti -1c
 .RI "struct \fBMqS\fP * \fBMqSlaveGetMaster\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "get the \fImaster-context\fP from the \fIslave-context\fP "
+.RI "\fIget the \fImaster-context\fP from the \fIslave-context\fP \fP"
 .ti -1c
 .RI "static struct \fBMqS\fP * \fBMqSlaveGetMasterI\fP (struct \fBMqS\fP const *const ctx)"
 .br
 .ti -1c
 .RI "int \fBMqSlaveIs\fP (struct \fBMqS\fP const *const ctx)"
 .br
-.R "is the \fIcontext\fP a \fIslave-context\fP ? "
+.RI "\fIis the \fIcontext\fP a \fIslave-context\fP ? \fP"
 .ti -1c
 .RI "static int \fBMqSlaveIsI\fP (struct \fBMqS\fP const *const ctx)"
 .br
@@ -122,9 +123,7 @@ the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \
 .PP 
 .SS "#define MQ_SLAVE_MAX   1024"
 .PP
-the maximum number of slave objects per master 
-.PP
-\fBAttention:\fP
+the maximum number of slave objects per master \fBAttention:\fP
 .RS 4
 this number can be changed but \fBlibmsgque\fP have to be recompiled after 
 .RE
@@ -134,11 +133,9 @@ this number can be changed but \fBlibmsgque\fP have to be recompiled after
 Definition at line 4147 of file msgque.h.
 .SH "Function Documentation"
 .PP 
-.SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqS\fP *const  slave)"
+.SS "enum \fBMqErrorE\fP MqSlaveCreate (struct \fBMqS\fP *constctx, \fBMQ_SIZE\fP constid, struct \fBMqS\fP *constslave)"
 .PP
-create a \fImaster/slave\fP link between the master-context object and the slave-context object 
-.PP
-\fBParameters:\fP
+create a \fImaster/slave\fP link between the master-context object and the slave-context object \fBParameters:\fP
 .RS 4
 \fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
@@ -158,11 +155,9 @@ The \fIslave-context\fP is owned by the \fImaster-context\fP. This mean that no 
 .RE
 .PP
 
-.SS "enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id)"
+.SS "enum \fBMqErrorE\fP MqSlaveDelete (struct \fBMqS\fP *constctx, \fBMQ_SIZE\fP constid)"
 .PP
-Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. 
-.PP
-By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this function to delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
+Delete a \fIslave\fP object from a \fImaster/slave\fP link identified by \fIid\fP. By default the \fIslave-context\fP object will be deleted if the \fImaster-context\fP is deleted. Use this function to delete the \fIparent-slave-context\fP explicit and brake the \fImaster/slave\fP link. If \fIid\fP is invalid nothing will happen. It is an \fIerror\fP to delete a \fIchild-slave-context\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -182,11 +177,9 @@ it is still possible to delete a \fIchild-slave-context\fP using \fBLinkDelete\f
 .RE
 .PP
 
-.SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *const  ctx, \fBMQ_SIZE\fP const  id)\fC [read]\fP"
+.SS "struct \fBMqS\fP* MqSlaveGet (struct \fBMqS\fP const *constctx, \fBMQ_SIZE\fP constid)\fC [read]\fP"
 .PP
-get the \fIslave-context\fP from a \fImaster-context\fP 
-.PP
-\fBParameters:\fP
+get the \fIslave-context\fP from a \fImaster-context\fP \fBParameters:\fP
 .RS 4
 \fIctx\fP the \fImaster\fP context object as PARENT without a CHILD 
 .br
@@ -199,24 +192,20 @@ the \fIslave-context\fP or \fCNULL\fP if \fIid\fP is not valid or \fIcontext\fP 
 .RE
 .PP
 
-.SS "struct \fBMqS\fP* MqSlaveGetMaster (struct \fBMqS\fP const *const  ctx)\fC [read]\fP"
+.SS "struct \fBMqS\fP* MqSlaveGetMaster (struct \fBMqS\fP const *constctx)\fC [read]\fP"
 .PP
-get the \fImaster-context\fP from the \fIslave-context\fP 
-.PP
-\fBParameters:\fP
+get the \fImaster-context\fP from the \fIslave-context\fP \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fIundef\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fInull\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
 
-.SS "static struct \fBMqS\fP* MqSlaveGetMasterI (struct \fBMqS\fP const *const  ctx)\fC [static, read]\fP"
-.PP
-get the \fImaster-context\fP from the \fIslave-context\fP 
+.SS "static struct \fBMqS\fP* MqSlaveGetMasterI (struct \fBMqS\fP const *constctx)\fC [static, read]\fP"get the \fImaster-context\fP from the \fIslave-context\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -225,30 +214,26 @@ get the \fImaster-context\fP from the \fIslave-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fImaster-context\fP or \fIundef\fP if the \fIcontext\fP is no \fIslave-context\fP 
+the \fImaster-context\fP or \fInull\fP if the \fIcontext\fP is no \fIslave-context\fP 
 .RE
 .PP
  
 .PP
 Definition at line 4215 of file msgque.h.
-.SS "int MqSlaveIs (struct \fBMqS\fP const *const  ctx)"
+.SS "int MqSlaveIs (struct \fBMqS\fP const *constctx)"
 .PP
-is the \fIcontext\fP a \fIslave-context\fP ? 
-.PP
-\fBParameters:\fP
+is the \fIcontext\fP a \fIslave-context\fP ? \fBParameters:\fP
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .RE
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fITRUE\fP or \fIFALSE\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
 
-.SS "static int MqSlaveIsI (struct \fBMqS\fP const *const  ctx)\fC [inline, static]\fP"
-.PP
-is the \fIcontext\fP a \fIslave-context\fP ? 
+.SS "static int MqSlaveIsI (struct \fBMqS\fP const *constctx)\fC [static]\fP"is the \fIcontext\fP a \fIslave-context\fP ? 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -257,17 +242,15 @@ is the \fIcontext\fP a \fIslave-context\fP ?
 .PP
 \fBReturns:\fP
 .RS 4
-a boolean value, \fITRUE\fP or \fIFALSE\fP 
+a boolean value, \fItrue\fP or \fIfalse\fP 
 .RE
 .PP
  
 .PP
 Definition at line 4229 of file msgque.h.
-.SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *const  ctx, \fBMQ_SIZE\fP const  id, struct \fBMqBufferLS\fP ** args)"
+.SS "enum \fBMqErrorE\fP MqSlaveWorker (struct \fBMqS\fP *constctx, \fBMQ_SIZE\fP constid, struct \fBMqBufferLS\fP **args)"
 .PP
-create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. 
-.PP
-The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 
+create a \fImaster/slave\fP link using the image of the \fIctx\fP object self. The slave-context is started as an independent process or thread based on the \fBstartAs\fP argument. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -286,4 +269,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

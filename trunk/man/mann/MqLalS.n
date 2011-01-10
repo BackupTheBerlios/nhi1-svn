@@ -1,82 +1,83 @@
-.TH "MqLalS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqLalS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqLalS \- Interface between \fBMqS\fP and the Operating-System.  
-
+MqLalS \- 
 .PP
+Interface between \fBMqS\fP and the Operating-System.  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMqSysCallocF\fP \fBSysCalloc\fP"
 .br
-.R "\fBcalloc\fP syscall  "
+.RI "\fI\fBcalloc\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysMallocF\fP \fBSysMalloc\fP"
 .br
-.R "\fBmalloc\fP syscall  "
+.RI "\fI\fBmalloc\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysReallocF\fP \fBSysRealloc\fP"
 .br
-.R "\fBrealloc\fP syscall  "
+.RI "\fI\fBrealloc\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysStrDupF\fP \fBSysStrDup\fP"
 .br
-.R "\fBstrdup\fP syscall  "
+.RI "\fI\fBstrdup\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysFreeF\fP \fBSysFree\fP"
 .br
-.R "\fBfree\fP syscall  "
+.RI "\fI\fBfree\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysSelectF\fP \fBSysSelect\fP"
 .br
-.R "\fBselect\fP syscall  "
+.RI "\fI\fBselect\fP syscall  \fP"
 .ti -1c
 .RI "\fBMqSysForkF\fP \fBSysFork\fP"
 .br
-.R "\fBfork\fP syscall  "
+.RI "\fI\fBfork\fP syscall  \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysServerSpawn\fP )(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .br
-.R "\fBspawn server create\fP syscall with \fBMqS\fP error plugin "
+.RI "\fI\fBspawn server create\fP syscall with \fBMqS\fP error plugin \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysServerThread\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
 .br
-.R "\fBthread server create\fP syscall with \fBMqS\fP error plugin "
+.RI "\fI\fBthread server create\fP syscall with \fBMqS\fP error plugin \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysServerFork\fP )(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .br
-.R "\fBfork server create\fP syscall with \fBMqS\fP error plugin "
+.RI "\fI\fBfork server create\fP syscall with \fBMqS\fP error plugin \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysWait\fP )(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
 .br
-.R "\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  "
+.RI "\fI\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysUSleep\fP )(struct \fBMqS\fP *const context, unsigned int const usec)"
 .br
-.R "\fBusleep\fP syscall with \fBMqS\fP error plugin  "
+.RI "\fI\fBusleep\fP syscall with \fBMqS\fP error plugin  \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysSleep\fP )(struct \fBMqS\fP *const context, unsigned int const sec)"
 .br
-.R "\fBsleep\fP syscall with \fBMqS\fP error plugin  "
+.RI "\fI\fBsleep\fP syscall with \fBMqS\fP error plugin  \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysDaemonize\fP )(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .br
-.R "\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP "
+.RI "\fI\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP \fP"
 .ti -1c
 .RI "void(* \fBSysExit\fP )(int isThread, int num)"
 .br
-.R "\fBexit\fP syscall with \fBMqS\fP error plugin  "
+.RI "\fI\fBexit\fP syscall with \fBMqS\fP error plugin  \fP"
 .ti -1c
 .RI "void(* \fBSysAbort\fP )(void)"
 .br
-.R "\fBabort\fP syscall "
+.RI "\fI\fBabort\fP syscall \fP"
 .ti -1c
 .RI "enum \fBMqErrorE\fP(* \fBSysIgnorSIGCHLD\fP )(struct \fBMqS\fP *const context)"
 .br
@@ -89,13 +90,11 @@ MqLalS \- Interface between \fBMqS\fP and the Operating-System.
 Interface between \fBMqS\fP and the Operating-System. 
 .PP
 Definition at line 4323 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "void(* \fBMqLalS::SysAbort\fP)(void)"
+.SS "void(* \fBMqLalS.SysAbort\fP)(void)"
 .PP
-\fBabort\fP syscall 
-.PP
-additional info: \fCman abort\fP 
+\fBabort\fP syscall additional info: \fCman abort\fP 
 .PP
 \fBReturns:\fP
 .RS 4
@@ -112,20 +111,19 @@ __attribute__((noreturn)) static void SysAbort (void) {
 .fi
 .PP
  
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysAllowSIGCHLD\fP)(struct \fBMqS\fP *const context)"
 .PP
-.SS "\fBMqSysCallocF\fP \fBMqLalS::SysCalloc\fP"
+Definition at line 4480 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysAllowSIGCHLD\fP)(struct \fBMqS\fP *const context)"
 .PP
-\fBcalloc\fP syscall  
+Definition at line 4488 of file msgque.h.
+.SS "\fBMqSysCallocF\fP \fBMqLalS.SysCalloc\fP"
 .PP
-additional info: \fCman calloc\fP  
+\fBcalloc\fP syscall  additional info: \fCman calloc\fP  
 .PP
 Definition at line 4325 of file msgque.h.
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysDaemonize\fP)(struct \fBMqS\fP *const context, \fBMQ_CST\fP pidfile)"
 .PP
-\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP 
-.PP
-\fBParameters:\fP
+\fBdemonize\fP the current process and save the resulting PID into the \fIpidfile\fP \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -202,11 +200,11 @@ error:
 .fi
 .PP
  
-.SS "void(* \fBMqLalS::SysExit\fP)(int isThread, int num)"
 .PP
-\fBexit\fP syscall with \fBMqS\fP error plugin  
+Definition at line 4455 of file msgque.h.
+.SS "void(* \fBMqLalS.SysExit\fP)(int isThread, int num)"
 .PP
-\fBParameters:\fP
+\fBexit\fP syscall with \fBMqS\fP error plugin  \fBParameters:\fP
 .RS 4
 \fIisThread\fP exit a thread? 
 .br
@@ -242,11 +240,11 @@ __attribute__((noreturn)) static void SysExit (
 .fi
 .PP
  
-.SS "\fBMqSysForkF\fP \fBMqLalS::SysFork\fP"
 .PP
-\fBfork\fP syscall  
+Definition at line 4467 of file msgque.h.
+.SS "\fBMqSysForkF\fP \fBMqLalS.SysFork\fP"
 .PP
-additional info: \fCman fork\fP 
+\fBfork\fP syscall  additional info: \fCman fork\fP 
 .PP
 \fBReturn values:\fP
 .RS 4
@@ -256,34 +254,27 @@ additional info: \fCman fork\fP
  
 .PP
 Definition at line 4337 of file msgque.h.
-.SS "\fBMqSysFreeF\fP \fBMqLalS::SysFree\fP"
+.SS "\fBMqSysFreeF\fP \fBMqLalS.SysFree\fP"
 .PP
-\fBfree\fP syscall  
-.PP
-additional info: \fCman free\fP  
+\fBfree\fP syscall  additional info: \fCman free\fP  
 .PP
 Definition at line 4333 of file msgque.h.
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysIgnorSIGCHLD\fP)(struct \fBMqS\fP *const context)"
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysIgnorSIGCHLD\fP)(struct \fBMqS\fP *const context)"
 .PP
-.SS "\fBMqSysMallocF\fP \fBMqLalS::SysMalloc\fP"
+Definition at line 4484 of file msgque.h.
+.SS "\fBMqSysMallocF\fP \fBMqLalS.SysMalloc\fP"
 .PP
-\fBmalloc\fP syscall  
-.PP
-additional info: \fCman malloc\fP  
+\fBmalloc\fP syscall  additional info: \fCman malloc\fP  
 .PP
 Definition at line 4327 of file msgque.h.
-.SS "\fBMqSysReallocF\fP \fBMqLalS::SysRealloc\fP"
+.SS "\fBMqSysReallocF\fP \fBMqLalS.SysRealloc\fP"
 .PP
-\fBrealloc\fP syscall  
-.PP
-additional info: \fCman realloc\fP  
+\fBrealloc\fP syscall  additional info: \fCman realloc\fP  
 .PP
 Definition at line 4329 of file msgque.h.
-.SS "\fBMqSysSelectF\fP \fBMqLalS::SysSelect\fP"
+.SS "\fBMqSysSelectF\fP \fBMqLalS.SysSelect\fP"
 .PP
-\fBselect\fP syscall  
-.PP
-read more at: \fCman 2 select\fP 
+\fBselect\fP syscall  read more at: \fCman 2 select\fP 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -301,11 +292,9 @@ read more at: \fCman 2 select\fP
  
 .PP
 Definition at line 4335 of file msgque.h.
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerFork\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
-\fBfork server create\fP syscall with \fBMqS\fP error plugin 
-.PP
-\fBParameters:\fP
+\fBfork server create\fP syscall with \fBMqS\fP error plugin \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -388,11 +377,11 @@ error:
 .fi
 .PP
  
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerSpawn\fP)(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
-\fBspawn server create\fP syscall with \fBMqS\fP error plugin 
+Definition at line 4400 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerSpawn\fP)(struct \fBMqS\fP *const context, char **argv, \fBMQ_CST\fP name, struct \fBMqIdS\fP *idP)"
 .PP
-\fBParameters:\fP
+\fBspawn server create\fP syscall with \fBMqS\fP error plugin \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -482,11 +471,11 @@ error:
 .fi
 .PP
  
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysServerThread\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
 .PP
-\fBthread server create\fP syscall with \fBMqS\fP error plugin 
+Definition at line 4352 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysServerThread\fP)(struct \fBMqS\fP *const context, struct \fBMqFactoryS\fP *factory, struct \fBMqBufferLS\fP **argvP, struct \fBMqBufferLS\fP **alfaP, \fBMQ_CST\fP name, int state, struct \fBMqIdS\fP *idP)"
 .PP
-\fBParameters:\fP
+\fBthread server create\fP syscall with \fBMqS\fP error plugin \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -639,11 +628,11 @@ error:
 .fi
 .PP
  
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysSleep\fP)(struct \fBMqS\fP *const context, unsigned int const sec)"
 .PP
-\fBsleep\fP syscall with \fBMqS\fP error plugin  
+Definition at line 4375 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysSleep\fP)(struct \fBMqS\fP *const context, unsigned int const sec)"
 .PP
-\fBParameters:\fP
+\fBsleep\fP syscall with \fBMqS\fP error plugin  \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -679,18 +668,16 @@ static enum MqErrorE SysSleep (
 .fi
 .PP
  
-.SS "\fBMqSysStrDupF\fP \fBMqLalS::SysStrDup\fP"
 .PP
-\fBstrdup\fP syscall  
+Definition at line 4440 of file msgque.h.
+.SS "\fBMqSysStrDupF\fP \fBMqLalS.SysStrDup\fP"
 .PP
-additional info: \fCman strdup\fP  
+\fBstrdup\fP syscall  additional info: \fCman strdup\fP  
 .PP
 Definition at line 4331 of file msgque.h.
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysUSleep\fP)(struct \fBMqS\fP *const context, unsigned int const usec)"
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysUSleep\fP)(struct \fBMqS\fP *const context, unsigned int const usec)"
 .PP
-\fBusleep\fP syscall with \fBMqS\fP error plugin  
-.PP
-\fBParameters:\fP
+\fBusleep\fP syscall with \fBMqS\fP error plugin  \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -726,11 +713,11 @@ static enum MqErrorE SysUSleep (
 .fi
 .PP
  
-.SS "enum \fBMqErrorE\fP(* \fBMqLalS::SysWait\fP)(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
 .PP
-\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  
+Definition at line 4428 of file msgque.h.
+.SS "enum \fBMqErrorE\fP(* \fBMqLalS.SysWait\fP)(struct \fBMqS\fP *const context, const struct \fBMqIdS\fP *idP)"
 .PP
-\fBParameters:\fP
+\fBwait for process or thread\fP syscall with \fBMqS\fP error plugin  \fBParameters:\fP
 .RS 4
 \fIcontext\fP the initial \fBMqS\fP object created by \fBMqContextCreate\fP 
 .br
@@ -790,7 +777,9 @@ static enum MqErrorE SysWait (
 .fi
 .PP
  
+.PP
+Definition at line 4416 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.

@@ -1,22 +1,23 @@
-.TH "MqIoPipeConfigS" n "9 Jan 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "MqIoPipeConfigS" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-MqIoPipeConfigS \- configure a context to use a \fIpipe-client-server-link\fP  
-
+MqIoPipeConfigS \- 
 .PP
+configure a context to use a \fIpipe-client-server-link\fP  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <msgque.h>\fP
 .PP
-.SS "Data Fields"
+\fC#include <msgque.h>\fP
+.SS "Public Attributes"
 
 .in +1c
 .ti -1c
 .RI "\fBMQ_SOCK\fP \fBsocket\fP [2]"
 .br
-.R "result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP "
+.RI "\fIresult from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -32,9 +33,9 @@ The \fIsocket\fP option is special because it is used only for internal purpose 
 
 .PP
 Definition at line 561 of file msgque.h.
-.SH "Field Documentation"
+.SH "Member Data Documentation"
 .PP 
-.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS::socket\fP[2]"
+.SS "\fBMQ_SOCK\fP \fBMqIoPipeConfigS.socket\fP[2]"
 .PP
 result from a \fIsocketpair\fP function-call, [0] for the \fIclient-socket\fP and [1] for the \fIserver-socket\fP 
 .PP
@@ -42,4 +43,4 @@ Definition at line 562 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for msgqueforphp from the source code.
+Generated automatically by Doxygen for javamsgque from the source code.
