@@ -208,8 +208,8 @@ type ServerSetup interface {
   ServerSetup()
 }
 
-//export gomsgque_cServerSetup
-func (this *MqS) cServerSetup(cb *ServerSetup) {
+//export cServerSetup
+func cServerSetup(this *MqS, cb *ServerSetup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -218,7 +218,7 @@ func (this *MqS) cServerSetup(cb *ServerSetup) {
   (*cb).ServerSetup()
 }
 
-//export gomsgque_cServerSetupFree
+//export cServerSetupFree
 func cServerSetupFree(cb *ServerSetup) {
   lockServerSetup[cb] = false, false
 }
@@ -237,8 +237,8 @@ type ServerCleanup interface {
   ServerCleanup()
 }
 
-//export gomsgque_cServerCleanup
-func (this *MqS) cServerCleanup(cb *ServerCleanup) {
+//export cServerCleanup
+func cServerCleanup(this *MqS, cb *ServerCleanup) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -247,7 +247,7 @@ func (this *MqS) cServerCleanup(cb *ServerCleanup) {
   (*cb).ServerCleanup()
 }
 
-//export gomsgque_cServerCleanupFree
+//export cServerCleanupFree
 func cServerCleanupFree(cb *ServerCleanup) {
   lockServerCleanup[cb] = false, false
 }
@@ -266,8 +266,8 @@ type BgError interface {
   BgError()
 }
 
-//export gomsgque_cBgError
-func (this *MqS) cBgError(cb *BgError) {
+//export cBgError
+func cBgError(this *MqS, cb *BgError) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -276,7 +276,7 @@ func (this *MqS) cBgError(cb *BgError) {
   (*cb).BgError()
 }
 
-//export gomsgque_cBgErrorFree
+//export cBgErrorFree
 func cBgErrorFree(cb *BgError) {
   lockBgError[cb] = false, false
 }
@@ -295,8 +295,8 @@ type Event interface {
   Event()
 }
 
-//export gomsgque_cEvent
-func (this *MqS) cEvent(cb *Event) {
+//export cEvent
+func cEvent(this *MqS, cb *Event) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -305,7 +305,7 @@ func (this *MqS) cEvent(cb *Event) {
   (*cb).Event()
 }
 
-//export gomsgque_cEventFree
+//export cEventFree
 func cEventFree(cb *Event) {
   lockEvent[cb] = false, false
 }
@@ -314,4 +314,7 @@ func (this *MqS) ConfigSetEvent(cb Event) {
   C.gomsgque_ConfigSetEvent((*_Ctype_struct_MqS)(this), unsafe.Pointer(&cb))
   lockEvent[&cb] = true
 }
+
+
+
 

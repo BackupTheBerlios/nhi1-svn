@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "10 Jan 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "Mon Jan 10 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -44,9 +44,7 @@ adding and removing \fBservices\fP
 .PP
 The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
 .SS "UNIX"
-The example from the tutorial is using the \fBautomake\fP build-environment from the \fBrubymsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/RUBY/Makefile.am\fP 
-.PP
-\fBno\fP build necessary
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBrubymsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/RUBY/Makefile.am\fP  \fBno\fP build necessary
 .SS "WINDOWS"
 The \fBVisualExpress\fP build environment is located in the directory \fCwin\fP.
 .SH "SERVER"
@@ -61,9 +59,7 @@ the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
 the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
-The \fIminimal\fP server looks like:
-.PP
- 
+The \fIminimal\fP server looks like:  
 .PP
 .nf
 require 'rubymsgque'
@@ -96,21 +92,20 @@ end
 .fi
 .PP
 .PP
-The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
-.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request: 
 .PP
 .nf
 
 > ruby MyServer.rb --tcp --port 2345 --thread
+
 .fi
 .PP
-.PP
-If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
-.PP
+ If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port: 
 .PP
 .nf
 
 > ruby MyServer.rb --uds --file /path/to/any/file.uds --thread
+
 .fi
 .PP
 .PP
@@ -149,9 +144,7 @@ A \fBrubymsgque\fP client requires the following setup:
 .IP "1." 4
 an instance of the abstract class \fBctx=MqS.new\fP
 .PP
-The \fIminimal\fP client looks like:
-.PP
- 
+The \fIminimal\fP client looks like:  
 .PP
 .nf
 require 'rubymsgque'
@@ -172,33 +165,31 @@ end
 .fi
 .PP
 .PP
-To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
-.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use: 
 .PP
 .nf
 
 > ruby MyClient.rb --tcp --port 2345
 > Hello World
+
 .fi
 .PP
-.PP
-To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
-.PP
+ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use: 
 .PP
 .nf
 
 > ruby MyClient.rb --uds --file /path/to/any/file.uds
 > Hello World
+
 .fi
 .PP
-.PP
-To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
-.PP
+ To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use: 
 .PP
 .nf
 
 > ruby MyClient.rb @ ruby MyServer.rb
 > Hello World
+
 .fi
 .PP
 .SH "FILTER"

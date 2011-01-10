@@ -175,7 +175,7 @@ public class MqS {
 /// \brief \copybrief Mq_Link_C_API
 /// \copydoc Mq_Link_C_API
 
-  /// \api #MqLinkCreate
+  /// \api MqLinkCreate
   public native void LinkCreate (String... args) throws MqSException;
 
   /// \api #MqLinkCreateChild
@@ -471,7 +471,7 @@ public class MqS {
   public native void FactoryCtxIdentSet	      (String val);
   /// \api #MqFactoryCtxIdentGet
   public native String FactoryCtxIdentGet     ();
-  /// \api #FactoryCtxDefaultSet
+  /// \api #MqFactoryCtxDefaultSet
   public native void FactoryCtxDefaultSet     (String ident);
 
 /// \} Mq_Factory_Java_API

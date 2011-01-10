@@ -13,32 +13,32 @@
 include ../MakeGoMsgque.inc
 include $(GOROOT)/src/Make.inc
 
-MQOBJ  = $(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a
-
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
 	  service.go slave.go factory.go
+#CGO_OFILES=$(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a gomsgque.o
+#CGO_OFILES=$(wildcard $(abs_top_builddir)/theLink/libmsgque/.libs/libtmp*.o) gomsgque.o
+CGO_OFILES=gomsgque.o
 
 CGO_CFLAGS=-I . -I $(abs_top_srcdir)/theLink/libmsgque -DMQ_IGNORE_EXTERN
-CGO_LDFLAGS= $(MQOBJ) _cgo_export.o gomsgque.o
-CGO_DEPS=$(MQOBJ) _cgo_export.o gomsgque.o 
+CGO_LDFLAGS=-lpthread $(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a
+#CGO_DEPS=$(abs_top_builddir)/theLink/libmsgque/.libs/libtmp.a
 
 include $(GOROOT)/src/Make.pkg
 
-gomsgque.o: gomsgque.c gomsgque.h _cgo_export.h
-	gcc $(_CGO_CFLAGS_$(GOARCH)) -o gomsgque.o -c -fPIC $(CFLAGS) $(CGO_CFLAGS) gomsgque.c
+#gomsgque.o: gomsgque.c gomsgque.h _cgo_export.h
+#	gcc $(_CGO_CFLAGS_$(GOARCH)) -o gomsgque.o -c -fPIC $(CFLAGS) $(CGO_CFLAGS) gomsgque.c
 
-goinstall: install
-	test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"
-	cp $(CGOTARG).so "$(DESTDIR)$(pkglibdir)"
-	cp _obj/$(TARG).a "$(DESTDIR)$(pkglibdir)"
 
-gouninstall:
-	rm "$(DESTDIR)$(pkglibdir)/$(CGOTARG).so"
-	rm "$(DESTDIR)$(pkglibdir)/$(TARG).a"
+#goinstall: install
+#	test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"
+#	cp $(CGOTARG).so "$(DESTDIR)$(pkglibdir)"
+#	cp _obj/$(TARG).a "$(DESTDIR)$(pkglibdir)"
+#
+#gouninstall:
+#	rm "$(DESTDIR)$(pkglibdir)/$(CGOTARG).so"
+#	rm "$(DESTDIR)$(pkglibdir)/$(TARG).a"
 
-%: install %.go
-	$(GC) $*.go
-	$(LD) -o $@ $*.$O
-
-all: _obj/gomsgque.a server
+#%: install %.go
+#	$(GC) $*.go
+#	$(LD) -o $@ $*.$O

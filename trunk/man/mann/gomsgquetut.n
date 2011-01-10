@@ -1,4 +1,4 @@
-.TH "gomsgque Tutorial" n "10 Jan 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque Tutorial" n "Mon Jan 10 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -44,31 +44,15 @@ adding and removing \fBservices\fP
 .PP
 The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
 .SS "UNIX"
-The example from the tutorial is using the \fBautomake\fP build-environment from the \fBgomsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/Go/Makefile.am\fP 
-.PP
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBgomsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/Go/Makefile.am\fP  
 .PP
 .nf
-include $(GOROOT)/src/Make.inc
 
-SUFFIXES = .go .bin $(EXEEXT)
-
-dummy:  all
-
-.go.bin:
-        $(GC) -o $@ $<
-
-.bin$(EXEEXT):
-        $(LD) -o $@ $<
-
-## all executables depend on our new created 'gomsgque.a' library
 .fi
 .PP
 .PP
 .PP
 .nf
-BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
-MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 .fi
 .PP
 .SS "WINDOWS"
@@ -85,8 +69,7 @@ the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
 the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
-The \fIminimal\fP server looks like:
-.PP
+The \fIminimal\fP server looks like: 
 .PP
 .nf
 
@@ -132,24 +115,24 @@ func main() {
   srv.ProcessEvent(WAIT_FOREVER)
 }
 
+
 .fi
 .PP
 .PP
-The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
-.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request: 
 .PP
 .nf
 
 > MyServer --tcp --port 2345 --thread
+
 .fi
 .PP
-.PP
-If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
-.PP
+ If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port: 
 .PP
 .nf
 
 > MyServer --uds --file /path/to/any/file.uds --thread
+
 .fi
 .PP
 .PP
@@ -188,8 +171,7 @@ A \fBgomsgque\fP client requires the following setup:
 .IP "1." 4
 an instance of the abstract class \fBctx := NewMqS(top interface{})\fP
 .PP
-The \fIminimal\fP client looks like:
-.PP
+The \fIminimal\fP client looks like: 
 .PP
 .nf
 
@@ -214,36 +196,35 @@ func main() {
   ctx.SendEND_AND_WAIT('HLWO', 5)
   println(ctx.ReadC())
 }
+
 .fi
 .PP
 .PP
-To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
-.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use: 
 .PP
 .nf
 
 > MyClient --tcp --port 2345
 > Hello World
+
 .fi
 .PP
-.PP
-To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
-.PP
+ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use: 
 .PP
 .nf
 
 > MyClient --uds --file /path/to/any/file.uds
 > Hello World
+
 .fi
 .PP
-.PP
-To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
-.PP
+ To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use: 
 .PP
 .nf
 
 > MyClient @ MyServer
 > Hello World
+
 .fi
 .PP
 .SH "FILTER"

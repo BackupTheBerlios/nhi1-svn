@@ -1,4 +1,4 @@
-.TH "Mq_Context_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Context_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -20,7 +20,7 @@ Mq_Context_C_API \-
 .ti -1c
 .RI "#define \fBMQ_MqS_SIGNATURE\fP   0x212CF91"
 .br
-.RI "\fIsignature marker used in #MqS::signature \fP"
+.RI "\fIsignature marker used in \fBMqS.signature\fP \fP"
 .ti -1c
 .RI "#define \fBMqExit\fP(ctx)   MqExitP(__func__, ctx)"
 .br
@@ -83,7 +83,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP 
 .SS "#define MQ_MqS_SIGNATURE   0x212CF91"
 .PP
-signature marker used in #MqS::signature 
+signature marker used in \fBMqS.signature\fP 
 .PP
 Definition at line 1565 of file msgque.h.
 .SS "#define MqExit(ctx)   MqExitP(__func__, ctx)"
@@ -186,4 +186,4 @@ Mark objects as \fIused\fP to avoid to free used external memory in an external 
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

@@ -12,7 +12,7 @@ setup and manage a \fIclient-server-link\fP
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkCreate\fP (String...args)  throws MqSException"
 .br
-.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP \fP"
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkCreate \fP"
 .ti -1c
 .RI "native void \fBjavamsgque::MqS.LinkCreateChild\fP (\fBMqS\fP parent, String...args)  throws MqSException"
 .br
@@ -161,7 +161,7 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 implement the \fBlibmsgque\fP API object: \fBMqLinkConnect\fP 
 .SS "native void javamsgque.MqS.LinkCreate (String...args)  throws MqSException\fC [inherited]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP 
+implement the \fBlibmsgque\fP API object: MqLinkCreate 
 .SS "native void javamsgque.MqS.LinkCreateChild (\fBMqS\fPparent, String...args)  throws MqSException\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLinkCreateChild\fP 

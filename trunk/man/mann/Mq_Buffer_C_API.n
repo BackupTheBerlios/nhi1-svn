@@ -1,4 +1,4 @@
-.TH "Mq_Buffer_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Buffer_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -48,11 +48,11 @@ create and manage dynamic, generic, mixed typed data.
 .ti -1c
 .RI "#define \fBMQ_BLS_SIZE\fP   50"
 .br
-.RI "\fIinitial size of the #MqBufferS::bls object \fP"
+.RI "\fIinitial size of the \fBMqBufferS.bls\fP object \fP"
 .ti -1c
 .RI "#define \fBMQ_MqBufferS_SIGNATURE\fP   0x6021139"
 .br
-.RI "\fIsignature used in #MqBufferS::signature \fP"
+.RI "\fIsignature used in \fBMqBufferS.signature\fP \fP"
 .in -1c
 .SS "Enumerations"
 
@@ -281,12 +281,12 @@ The \fBMqBufferS\fP struct is used to store and manage \fBMqTypeE\fP typed data 
 .PP 
 .SS "#define MQ_BLS_SIZE   50"
 .PP
-initial size of the #MqBufferS::bls object 
+initial size of the \fBMqBufferS.bls\fP object 
 .PP
 Definition at line 2299 of file msgque.h.
 .SS "#define MQ_MqBufferS_SIGNATURE   0x6021139"
 .PP
-signature used in #MqBufferS::signature 
+signature used in \fBMqBufferS.signature\fP 
 .PP
 Definition at line 2302 of file msgque.h.
 .SS "#define MQ_TYPE_IS_1_BYTE   (1<<0)"
@@ -337,11 +337,11 @@ dynamic allocation (e.g. SysMalloc, ...)
 Definition at line 2293 of file msgque.h.
 .SS "enum \fBMqTypeE\fP"
 .PP
-a collection of all \fInative-data-types\fP supported The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the String data-type (TYPE=C) is allowed. The following type identifier's are available:
+a collection of all \fInative-data-types\fP supported The \fItype-identifier\fP (TYPE) is a \fIone-character-value\fP (Y,O,S,I,W,F,D,B,C,L,U) for every \fInative-data-type\fP supported. A \fIbuffer-data-package\fP is type safe, this mean that every item has a \fItype-prefix\fP and every \fBReadTYPE\fP or \fBBufferGetTYPE\fP have to match the previous \fBSendTYPE\fP with the same \fITYPE\fP. One exception is allowed, the cast from and to the string data-type (TYPE=C) is allowed. The following type identifier's are available:
 .IP "\(bu" 2
 \fCY\fP : 1 byte signed character (byte)
 .IP "\(bu" 2
-\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (boolean)
+\fCO\fP : 1 byte boolean value using \fItrue\fP or \fIfalse\fP (bool)
 .IP "\(bu" 2
 \fCS\fP : 2 byte signed short (short)
 .IP "\(bu" 2
@@ -355,7 +355,7 @@ a collection of all \fInative-data-types\fP supported The \fItype-identifier\fP 
 .IP "\(bu" 2
 \fCB\fP : unsigned char array used for binary data (byte[])
 .IP "\(bu" 2
-\fCC\fP : string data using a \fC\\0\fP at the end (String)
+\fCC\fP : string data using a \fC\\0\fP at the end (string)
 .IP "\(bu" 2
 \fCL\fP : list type able to hold a list of all items from above
 .IP "\(bu" 2
@@ -455,7 +455,7 @@ change the type of an \fBMqBufferS\fP object to \fItype\fP \fBParameters:\fP
 .RS 4
 \fIbuf\fP the \fBMqBufferS\fP object to work on 
 .br
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like #MqBufferS::type 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -1168,4 +1168,4 @@ extract a MQ_WID from a \fBMqBufferS\fP object \fBParameters:\fP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

@@ -1,10 +1,11 @@
-.TH "ccmsgque" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque \- The CcMsgque Libraray.  
-
+ccmsgque \- 
 .PP
+The CcMsgque Libraray.  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -14,35 +15,35 @@ ccmsgque \- The CcMsgque Libraray.
 .ti -1c
 .RI "class \fBIService\fP"
 .br
-.R "Callback for a Service. "
+.RI "\fICallback for a Service. \fP"
 .ti -1c
 .RI "class \fBIServerSetup\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP \fP"
 .ti -1c
 .RI "class \fBIServerCleanup\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetServerCleanup\fP \fP"
 .ti -1c
 .RI "class \fBIBgError\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetBgError\fP \fP"
 .ti -1c
 .RI "class \fBIEvent\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP \fP"
 .ti -1c
 .RI "class \fBMqCException\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorS\fP \fP"
 .ti -1c
 .RI "class \fBMqBufferC\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqBufferS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqBufferS\fP \fP"
 .ti -1c
 .RI "class \fBMqC\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqS\fP \fP"
 .ti -1c
 .RI "class \fBMqFactoryCException\fP"
 .br
@@ -53,7 +54,6 @@ ccmsgque \- The CcMsgque Libraray.
 .SH "Detailed Description"
 .PP 
 The CcMsgque Libraray. 
-.PP
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for ccmsgque from the source code.

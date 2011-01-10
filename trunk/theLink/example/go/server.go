@@ -60,7 +60,6 @@ type Client struct {
 func NewClient(tmpl *MqS) *Client {
   srv := new(Client)
   srv.MqS = NewMqS(tmpl, srv)
-  srv.ConfigSetDefaultFactory("test-client")
   return srv
 }
 
@@ -626,13 +625,13 @@ type CFG1 Server
 	this.ConfigSetSrvName (old)
       }
       case "Ident": {
-	old := this.ConfigGetIdent()
-	this.ConfigSetIdent (this.ReadC())
+	old := this.FactoryCtxIdentGet()
+	this.FactoryCtxDefaultSet (this.ReadC())
 	check := this.LinkGetTargetIdent() == this.ReadC()
 	this.SendSTART()
-	this.SendC (this.ConfigGetIdent())
+	this.SendC (this.FactoryCtxIdentGet())
 	this.SendO (check)
-	this.ConfigSetIdent (old)
+	this.FactoryCtxIdentSet(old)
       }
       case "IsSilent": {
 	old := this.ConfigGetIsSilent()

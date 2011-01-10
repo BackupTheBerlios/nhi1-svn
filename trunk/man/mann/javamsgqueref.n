@@ -421,21 +421,21 @@ It is not possible to initialize the \fIstartup-prefix\fP during \fIpackage-load
 .RE
 .PP
 .SS "command-line:  --buffersize"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetBuffersize\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetBuffersize\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetBuffersize\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetBuffersize\fP\fP
 .PP
 set the OS specific value for the \fIsocket-operation-buffer\fP (default: OS specific) 
 .SS "command-line:  --debug"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetDebug\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetDebug\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetDebug\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetDebug\fP\fP
 .PP
 set the \fIdebug-level\fP of the \fIcontext\fP 
 .PP
 Valid values are 0 <= \fIdebug-level\fP <= 9 using 0 for \fIno-debug\fP and 9 for \fImaximum-debug\fP. (default: 0) 
 .SS "command-line:  --timeout"
-\fBtype:\fP \fClong\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetTimeout\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetTimeout\fP
+\fBtype:\fP \fClong\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetTimeout\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetTimeout\fP\fP
 .PP
 user defined timeout to terminate a blocking function call (default: 90 sec) 
 .SS "command-line:  --name"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetName\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetName\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetName\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetName\fP\fP
 .PP
 set the human-readable name of the \fIlocal-context\fP 
 .PP
@@ -456,7 +456,7 @@ use the basename of the \fIfirst\fP entry from the \fIcommand-line-arguments\fP,
 use the \fI--name\fP argument from the \fIcommand-line-arguments\fP 
 .PP
 .SS "command-line:  --srvname"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetSrvName\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetSrvName\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetSrvName\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetSrvName\fP\fP
 .PP
 set the human-readable name of the \fIserver-context\fP 
 .PP
@@ -468,23 +468,23 @@ C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIP
 .PP
  If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fInull\fP) 
 .SS "command-line: --silent"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsSilent\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsSilent\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsSilent\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsSilent\fP\fP
 .PP
 write (\fIfalse\fP) or don't write (\fItrue\fP) any massages to stdout or stderr (default: \fIfalse\fP) 
 .SS "command-line: --string"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsString\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsString\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsString\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsString\fP\fP
 .PP
 use the string-mode (\fItrue\fP) or the binary-mode (\fIfalse\fP) to send \fInative-data\fP 
 .PP
 The items in a \fIdata-package\fP are defined as \fBTYPE IDENTIFIER\fP and can be transmitted as \fIstring\fP (slow) or as \fIbinary\fP (fast) data. The \fIstring-mode\fP is used for debugging purpose or if the \fIbinary-data-model\fP is different between the client and the server. The difference in endianness (http://en.wikipedia.org/wiki/Endian) is handled by \fBlibmsgque\fP and does not require the \fIstring-mode\fP. The option is only available for the \fIclient-parent-context\fP. (default: binary-mode) 
 .SS "isServer"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIsServer\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIsServer\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIsServer\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIsServer\fP\fP
 .PP
 change the context to act as \fIserver-context\fP (\fItrue\fP) or not (\fIfalse\fP) 
 .PP
 A \fIserver-context\fP is responsible to answer \fIservice-requests\fP. This options is also set as side-effect in a \fBIServerSetup\fP or \fBIServerCleanup\fP function-call. (default: \fIfalse\fP) 
 .SS "command-line: --tcp --host --port --myhost --myport"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoTcpHost/Port/MyHost/MyPort\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoTcp (host, port, myhost, myport)\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoTcpHost\fP /Port/MyHost/MyPort\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoTcp\fP (host, port, myhost, myport)\fP
 .PP
 configure a context to use a \fItcp-client-server-link\fP 
 .PP
@@ -511,7 +511,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --uds --file"
-\fBtype:\fP \fCString\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoUdsFile\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoUdsFile (file)\fP
+\fBtype:\fP \fCString\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoUdsFile\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoUdsFile\fP (file)\fP
 .PP
 configure a context to use a \fIuds-client-server-link\fP 
 .PP
@@ -530,7 +530,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --pipe --socket"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetIoPipeSocket\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIoPipeSocket (socket)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetIoPipeSocket\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIoPipeSocket\fP (socket)\fP
 .PP
 configure a context to use a \fIpipe-client-server-link\fP 
 .PP
@@ -549,7 +549,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
 .SS "command-line: --thread --spawn --fork"
-\fBtype:\fP \fCint\fP, \fBget:\fP \fC#javamsgque.MqS.ConfigGetStartAs\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetStartAs (startAs)\fP
+\fBtype:\fP \fCint\fP, \fBget:\fP \fC\fBjavamsgque.MqS.ConfigGetStartAs\fP\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetStartAs\fP (startAs)\fP
 .PP
 create a new \fIapplication-context\fP as thread, spawn or fork 
 .PP
@@ -579,7 +579,7 @@ The allowed integer values are:
 .PP
 This option is \fBnot\fP available for javamsgque.
 .SS "ignoreExit"
-\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC#javamsgque.MqS.ConfigSetIgnoreExit\fP
+\fBtype:\fP \fCboolean\fP, \fBget:\fP \fCNO\fP , \fBset:\fP \fC\fBjavamsgque.MqS.ConfigSetIgnoreExit\fP\fP
 .PP
 do not delete the \fIserver-context\fP on \fIclient-server-link\fP shutdown 
 .PP

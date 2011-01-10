@@ -37,7 +37,7 @@ func incrServiceRef(ifc *Service) {
   }
 }
 
-//export gomsgque_decrServiceRef
+//export decrServiceRef
 func decrServiceRef(ifc *Service) {
   if count,ok := lockService[ifc]; ok {
     if count > 1 {
@@ -52,8 +52,8 @@ type Service interface {
   Call()
 }
 
-//export gomsgque_cService
-func (this *MqS) cService(cb *Service) {
+//export cService
+func cService(this *MqS, cb *Service) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -83,7 +83,7 @@ func incrService2Ref(ifc *Service2) {
   }
 }
 
-//export gomsgque_decrService2Ref
+//export decrService2Ref
 func decrService2Ref(ifc *Service2) {
   if count,ok := lockService2[ifc]; ok {
     if count > 1 {
@@ -98,8 +98,8 @@ type Service2 interface {
   Call(*MqS)
 }
 
-//export gomsgque_cService2
-func (this *MqS) cService2(cb *Service2) {
+//export cService2
+func cService2(this *MqS, cb *Service2) {
   defer func() {
     if x := recover(); x != nil {
       this.ErrorSet(x)
@@ -157,3 +157,6 @@ func (this *MqS) ServiceProxy2(token string, i int32) {
   this.iErrorMqToGoWithCheck(C.MqServiceProxy((*_Ctype_struct_MqS)(this), t, C.MQ_SIZE(i)))
   C.free(unsafe.Pointer(t))
 }
+
+
+

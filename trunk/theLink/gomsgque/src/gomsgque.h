@@ -38,6 +38,6 @@ struct FactoryCallReturn {
   enum MqFactoryReturnE ret;
 };
 
-enum MqFacturyReturnE gomsgque_FactoryAdd (MQ_CST const ident, MQ_PTR data);
+enum MqFactoryReturnE gomsgque_FactoryAdd (MQ_CST const ident, MQ_PTR data);
 struct FactoryCallReturn gomsgque_FactoryNew (MQ_CST const ident, MQ_PTR data);
 struct FactoryCallReturn gomsgque_FactoryCall (MQ_CST const ident);

@@ -1,15 +1,16 @@
-.TH "ccmsgque::MqCException" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqCException" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque::MqCException \- implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
-
+ccmsgque::MqCException \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <ccmsgque.h>\fP
 .PP
+\fC#include <ccmsgque.h>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -48,17 +49,15 @@ implement the \fBlibmsgque\fP API object: \fBMqErrorS\fP
 Definition at line 73 of file ccmsgque.h.
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "ccmsgque::MqCException::MqCException (struct \fBMqS\fP *const  context)"
-.PP
-.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP mytxt)\fC [inline]\fP"
+.SS "ccmsgque::MqCException::MqCException (struct \fBMqS\fP *constcontext)"
+.SS "ccmsgque::MqCException::MqCException (intmynum, enum \fBMqErrorE\fPmycode, \fBMQ_CST\fPmytxt)\fC [inline]\fP"
 .PP
 Definition at line 82 of file ccmsgque.h.
-.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_STR\fP mytxt)\fC [inline]\fP"
+.SS "ccmsgque::MqCException::MqCException (intmynum, enum \fBMqErrorE\fPmycode, \fBMQ_STR\fPmytxt)\fC [inline]\fP"
 .PP
 Definition at line 84 of file ccmsgque.h.
-.SS "ccmsgque::MqCException::MqCException (int mynum, enum \fBMqErrorE\fP mycode, \fBMQ_CST\fP myfunc, \fBMQ_CST\fP myfile, const int myline, \fBMQ_CST\fP mytxt)"
-.PP
-.SS "ccmsgque::MqCException::MqCException (const \fBMqCException\fP & e)\fC [inline]\fP"
+.SS "ccmsgque::MqCException::MqCException (intmynum, enum \fBMqErrorE\fPmycode, \fBMQ_CST\fPmyfunc, \fBMQ_CST\fPmyfile, const intmyline, \fBMQ_CST\fPmytxt)"
+.SS "ccmsgque::MqCException::MqCException (const \fBMqCException\fP &e)\fC [inline]\fP"
 .PP
 Definition at line 88 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqCException::~MqCException ()  throw ()\fC [inline, virtual]\fP"

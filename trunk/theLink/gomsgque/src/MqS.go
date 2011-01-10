@@ -31,6 +31,7 @@ func init() {
 }
 
 type TIMEOUT  C.MQ_TIME_T
+
 type WAIT     uint32
 
 const (
@@ -107,8 +108,8 @@ func (this *MqS) Exit() {
 // this lock is used by the thread-starter to wait for the exit of the thread-started
 var lockThread = make(map[*chan bool]bool)
 
-//export gomsgque_CreateThread
-func gomsgque_CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) *chan bool {
+//export CreateThread
+func CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) *chan bool {
   chn := make(chan bool)
   lockThread[&chn] = true
   go func() {
@@ -118,19 +119,19 @@ func gomsgque_CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) *chan bo
   return &chn
 }
 
-//export gomsgque_WaitForThread
-func gomsgque_WaitForThread(chnp *chan bool) {
+//export WaitForThread
+func WaitForThread(chnp *chan bool) {
   <-(*chnp)
   lockThread[chnp] = false, false
 }
 
-//export gomsgque_ProcessExit
-func gomsgque_ProcessExit (num int32) {
+//export ProcessExit
+func ProcessExit (num int32) {
   os.Exit(int(num))
 }
 
-//export gomsgque_ThreadExit
-func gomsgque_ThreadExit (num int32) {
+//export ThreadExit
+func ThreadExit (num int32) {
   runtime.Goexit()
 }
 
@@ -155,4 +156,7 @@ func (this *MqS) Dummy(i int32) *MqS {
   return (*MqS)(ret)
 }
 */
+
+
+
 

@@ -1,4 +1,4 @@
-.TH "libmsgque Tutorial" n "10 Jan 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
+.TH "libmsgque Tutorial" n "Mon Jan 10 2011" "Version 4.8" "libmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -44,24 +44,24 @@ adding and removing \fBservices\fP
 .PP
 The build is different between \fIUNIX\fP and \fIWINDOWS\fP. On \fIUNIX\fP the \fBautomake\fP (info automake) build environment is used and on \fIWINDOWS\fP the \fBVisualExpress\fP tools from \fIMicrosoft\fP are used. The \fBautomake\fP build on \fIWINDOWS\fP is possible but not supported.
 .SS "UNIX"
-The example from the tutorial is using the \fBautomake\fP build-environment from the \fBlibmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/C/Makefile.am\fP 
-.PP
+The example from the tutorial is using the \fBautomake\fP build-environment from the \fBlibmsgque\fP tool. An example \fBautomake\fP configuration file is available in: \fCexample/C/Makefile.am\fP  
 .PP
 .nf
-noinst_PROGRAMS = mulclient mulserver manfilter \
-                    testclient testserver \
-                      MyClient MyServer \
-                        Filter1 Filter2 Filter3 Filter4 Filter5
+noinst_PROGRAMS = server$(EXEEXT) client$(EXEEXT)
 
-AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
-LDADD = -lm ../../libmsgque/libtmp.la
+HTMLFILES = docs/server.help docs/client.help docs/debug.out docs/client.perf
+
+html: $(HTMLFILES)
+
+server_SOURCES = server.c 
+server_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
+server_LDADD = -lm $(LIBMSGQUE)
+
 .fi
 .PP
  ... 
 .PP
 .nf
-MyClient_SOURCES = MyClient.c
-MyServer_SOURCES = MyServer.c
 
 .fi
 .PP
@@ -79,8 +79,7 @@ the interface \fBFACTORY API\fP to create a new application instance
 .IP "4." 4
 the interface \fBIServerSetup\fP and or \fBIServerCleanup\fP
 .PP
-The \fIminimal\fP server looks like:
-.PP
+The \fIminimal\fP server looks like: 
 .PP
 .nf
 
@@ -120,24 +119,24 @@ error:
   MqExit(ctx);
 }
 
+
 .fi
 .PP
 .PP
-The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request:
-.PP
+The server is started as network visible \fITCP\fP server listen on \fIPORT\fP 2345 using a \fITHREAD\fP for every new connection request: 
 .PP
 .nf
 
 > MyServer --tcp --port 2345 --thread
+
 .fi
 .PP
-.PP
-If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port:
-.PP
+ If you are using \fIUNIX\fP and if you want to setup a high-performance local server then use the build-in \fIUDS\fP (Unix-Domain-Sockets) capability to listen on the \fIFILE\fP /path/to/any/file.uds instead on a network port: 
 .PP
 .nf
 
 > MyServer --uds --file /path/to/any/file.uds --thread
+
 .fi
 .PP
 .PP
@@ -176,8 +175,7 @@ A \fBlibmsgque\fP client requires the following setup:
 .IP "1." 4
 an instance of the abstract class \fBstruct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)\fP
 .PP
-The \fIminimal\fP client looks like:
-.PP
+The \fIminimal\fP client looks like: 
 .PP
 .nf
 
@@ -198,36 +196,35 @@ int main (int argc, MQ_CST argv[])
 error:
   MqExit(ctx);
 }
+
 .fi
 .PP
 .PP
-To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use:
-.PP
+To call a network visible \fITCP\fP server listen on \fIPORT\fP 2345 use: 
 .PP
 .nf
 
 > MyClient --tcp --port 2345
 > Hello World
+
 .fi
 .PP
-.PP
-To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use:
-.PP
+ To call a network visible \fIUDP\fP server listen on \fIFILE\fP /path/to/any/file.uds use: 
 .PP
 .nf
 
 > MyClient --uds --file /path/to/any/file.uds
 > Hello World
+
 .fi
 .PP
-.PP
-To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use:
-.PP
+ To call a \fIlocal\fP server started by the client using \fIPIPE\fP communication use: 
 .PP
 .nf
 
 > MyClient @ MyServer
 > Hello World
+
 .fi
 .PP
 .SH "FILTER"

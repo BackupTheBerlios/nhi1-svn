@@ -1,15 +1,16 @@
-.TH "ccmsgque::IService" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IService" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque::IService \- Callback for a Service.  
-
+ccmsgque::IService \- 
 .PP
+Callback for a Service.  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <ccmsgque.h>\fP
 .PP
+\fC#include <ccmsgque.h>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -24,9 +25,7 @@ Callback for a Service.
 Definition at line 42 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
-.SS "virtual void ccmsgque::IService::Service (\fBMqC\fP *const  ctx)\fC [pure virtual]\fP"
-.PP
-
+.SS "virtual void ccmsgque::IService::Service (\fBMqC\fP *constctx)\fC [pure virtual]\fP"
 
 .SH "Author"
 .PP 

@@ -23,11 +23,9 @@ endif
 if USE_GUARD
 SUBDIRS += theGuard
 endif
-mann_MANS =  $(srcdir)/man/mann/*.n
+dist_man_MANS =  $(srcdir)/man/mann/*.n
 
 CTAGSFLAGS = --c-kinds=+p
-
-EXTRA_DIST = $(mann_MANS)
 
 install-data-local:
 	echo $$(pwd)

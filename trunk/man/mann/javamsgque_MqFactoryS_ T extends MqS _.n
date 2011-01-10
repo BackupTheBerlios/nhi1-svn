@@ -3,6 +3,9 @@
 .nh
 .SH NAME
 javamsgque::MqFactoryS< T extends MqS > \- 
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -43,23 +46,25 @@ javamsgque::MqFactoryS< T extends MqS > \-
 .in -1c
 .SH "Detailed Description"
 .PP 
-Definition at line 26 of file MqFactoryS.java.
+implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP 
+.PP
+Definition at line 25 of file MqFactoryS.java.
 .SH "Member Function Documentation"
 .PP 
 .SS "javamsgque.MqFactoryS< T extends \fBMqS\fP >.[static initializer] ()\fC [static, package]\fP"
 .SS "static native<T extends \fBMqS\fP> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Add (Stringident, Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .SS "static <TextendsMqS> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Add (Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 42 of file MqFactoryS.java.
+Definition at line 41 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.Call (Stringident)\fC [static]\fP"
 .SS "static native<T extends \fBMqS\fP> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Default (Stringident, Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .SS "static <TextendsMqS> void javamsgque.MqFactoryS< T extends \fBMqS\fP >.Default (Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 35 of file MqFactoryS.java.
+Definition at line 34 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> String javamsgque.MqFactoryS< T extends \fBMqS\fP >.DefaultIdent ()\fC [static]\fP"
 .SS "static <TextendsMqS> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.New (Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 .PP
-Definition at line 49 of file MqFactoryS.java.
+Definition at line 48 of file MqFactoryS.java.
 .SS "static native<T extends \fBMqS\fP> T javamsgque.MqFactoryS< T extends \fBMqS\fP >.New (Stringident, Class< T >callback)  throws NoSuchMethodError, ExceptionInInitializerError, OutOfMemoryError \fC [static]\fP"
 
 .SH "Author"

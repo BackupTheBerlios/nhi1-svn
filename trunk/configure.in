@@ -15,7 +15,7 @@
 # > win/env.sh
 AC_INIT([NHI1],[0.10],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([tar-ustar no-dist-gzip dist-bzip2])
 AC_CONFIG_HEADER([mqconfig.h])
 
 # set libmsgque VERSION information also in:

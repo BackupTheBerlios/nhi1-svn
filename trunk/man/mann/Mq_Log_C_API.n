@@ -1,4 +1,4 @@
-.TH "Mq_Log_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Log_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -211,7 +211,7 @@ the string \fISERVER\fP or \fICLIENT\fP
 .PP
 get the \fItype\fP member from an MqTypeE object in human readable form \fBParameters:\fP
 .RS 4
-\fItype\fP the type of on object from MqTypeE used in various functions and structs like #MqBufferS::type 
+\fItype\fP the type of on object from MqTypeE used in various functions and structs like \fBMqBufferS.type\fP 
 .RE
 .PP
 \fBReturns:\fP
@@ -256,4 +256,4 @@ write a \fIvprintf\fP style logging-message to stderr using the internal format 
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

@@ -1,0 +1,113 @@
+.TH "csmsgque::MqFactoryS-g" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+csmsgque::MqFactoryS-g \- 
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBAdd\fP (string ident)"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP \fP"
+.ti -1c
+.RI "static void \fBAdd\fP ()"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP \fP"
+.ti -1c
+.RI "static void \fBDefault\fP (string ident)"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP \fP"
+.ti -1c
+.RI "static void \fBDefault\fP ()"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP \fP"
+.ti -1c
+.RI "static String \fBDefaultIdent\fP ()"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefaultIdent\fP \fP"
+.ti -1c
+.RI "static T \fBNew\fP (string ident)"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP \fP"
+.ti -1c
+.RI "static T \fBNew\fP ()"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP \fP"
+.ti -1c
+.RI "static T \fBCall\fP (string ident)"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP \fP"
+.ti -1c
+.RI "static T \fBCall\fP ()"
+.br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<T> class csmsgque::MqFactoryS< T >"
+implement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP 
+.PP
+\fBType Constraints\fP
+.TP
+\fIT\fP : \fI\fBMqS\fP\fP
+.PP
+Definition at line 71 of file MqFactoryS.cs.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<T > static void \fBcsmsgque.MqFactoryS\fP< T >.Add (stringident)\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP 
+.PP
+Definition at line 190 of file MqFactoryS.cs.
+.SS "template<T > static void \fBcsmsgque.MqFactoryS\fP< T >.Add ()\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP 
+.PP
+Definition at line 197 of file MqFactoryS.cs.
+.SS "template<T > static T \fBcsmsgque.MqFactoryS\fP< T >.Call ()\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP 
+.PP
+Definition at line 254 of file MqFactoryS.cs.
+.SS "template<T > static T \fBcsmsgque.MqFactoryS\fP< T >.Call (stringident)\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP 
+.PP
+Definition at line 247 of file MqFactoryS.cs.
+.SS "template<T > static void \fBcsmsgque.MqFactoryS\fP< T >.Default ()\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP 
+.PP
+Definition at line 212 of file MqFactoryS.cs.
+.SS "template<T > static void \fBcsmsgque.MqFactoryS\fP< T >.Default (stringident)\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP 
+.PP
+Definition at line 204 of file MqFactoryS.cs.
+.SS "template<T > static String \fBcsmsgque.MqFactoryS\fP< T >.DefaultIdent ()\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryDefaultIdent\fP 
+.PP
+Definition at line 220 of file MqFactoryS.cs.
+.SS "template<T > static T \fBcsmsgque.MqFactoryS\fP< T >.New (stringident)\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP 
+.PP
+Definition at line 227 of file MqFactoryS.cs.
+.SS "template<T > static T \fBcsmsgque.MqFactoryS\fP< T >.New ()\fC [static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP 
+.PP
+Definition at line 237 of file MqFactoryS.cs.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for csmsgque from the source code.

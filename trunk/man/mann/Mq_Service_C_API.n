@@ -1,4 +1,4 @@
-.TH "Mq_Service_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Service_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -170,7 +170,7 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 
 .SS "enum \fBMqErrorE\fP MqServiceCreate (struct \fBMqS\fP *constctx, \fBMQ_TOK\fP consttoken, \fBMqServiceCallbackF\fP constcallback, \fBMQ_PTR\fPdata, \fBMqTokenDataFreeF\fPdatafreeF)"
 .PP
-create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBString ctx.ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
+create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP The \fItoken\fP have to be unique but the \fIcallback\fP not, this is called an \fIalias\fP. Use \fBstring ServiceGetToken()\fP to get the current token in an \fIincoming-service-call\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -315,4 +315,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

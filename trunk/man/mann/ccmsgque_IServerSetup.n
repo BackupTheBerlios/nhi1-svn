@@ -1,15 +1,16 @@
-.TH "ccmsgque::IServerSetup" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::IServerSetup" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-ccmsgque::IServerSetup \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP  
-
+ccmsgque::IServerSetup \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetServerSetup\fP  
+
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <ccmsgque.h>\fP
 .PP
+\fC#include <ccmsgque.h>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -25,8 +26,6 @@ Definition at line 48 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
 .SS "virtual void ccmsgque::IServerSetup::ServerSetup ()\fC [pure virtual]\fP"
-.PP
-
 
 .SH "Author"
 .PP 

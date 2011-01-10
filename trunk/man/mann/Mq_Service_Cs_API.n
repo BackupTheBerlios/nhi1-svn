@@ -1,21 +1,22 @@
-.TH "Mq_Service_Cs_API" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Service_Cs_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Service_Cs_API \- create and manage services   
-
+Mq_Service_Cs_API \- 
 .PP
+create and manage services   
+
 .SS "Enumerations"
 
 .in +1c
 .ti -1c
 .RI "enum \fBcsmsgque::MqS.WAIT\fP { \fBcsmsgque::MqS.NO\fP =  0, \fBcsmsgque::MqS.ONCE\fP =  1, \fBcsmsgque::MqS.FOREVER\fP =  2 }"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP \fP"
 .ti -1c
 .RI "enum \fBcsmsgque::MqS.TIMEOUT\fP { \fBcsmsgque::MqS.DEFAULT\fP =  -1, \fBcsmsgque::MqS.USER\fP =  -2, \fBcsmsgque::MqS.MAX\fP =  -3 }"
 .br
-.R "implement the \fBlibmsgque\fP API object: timeout default values "
+.RI "\fIimplement the \fBlibmsgque\fP API object: timeout default values \fP"
 .in -1c
 .SS "Functions"
 
@@ -23,51 +24,51 @@ Mq_Service_Cs_API \- create and manage services
 .ti -1c
 .RI "string \fBcsmsgque::MqS.ServiceGetToken\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP \fP"
 .ti -1c
 .RI "bool \fBcsmsgque::MqS.ServiceIsTransaction\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBcsmsgque::MqS.ServiceGetFilter\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ServiceCreate\fP (string token, Callback call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ServiceCreate\fP (string token, IService call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ServiceDelete\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ServiceProxy\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ServiceProxy\fP (string token, int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP (long timeout, WAIT wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP (TIMEOUT timeout, WAIT wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP (WAIT wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ProcessEvent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -110,37 +111,37 @@ implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP
 Definition at line 100 of file service.cs.
 .SH "Function Documentation"
 .PP 
+.SS "void csmsgque.MqS.ProcessEvent (longtimeout, \fBWAIT\fPwait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error 
+.PP
+Definition at line 114 of file service.cs.
+.SS "void csmsgque.MqS.ProcessEvent (\fBTIMEOUT\fPtimeout, \fBWAIT\fPwait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error 
+.PP
+Definition at line 118 of file service.cs.
+.SS "void csmsgque.MqS.ProcessEvent (\fBWAIT\fPwait)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP 
+.PP
+Definition at line 122 of file service.cs.
 .SS "void csmsgque.MqS.ProcessEvent ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event 
 .PP
 Definition at line 126 of file service.cs.
-.SS "void csmsgque.MqS.ProcessEvent (\fBWAIT\fP wait)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP 
-.PP
-Definition at line 122 of file service.cs.
-.SS "void csmsgque.MqS.ProcessEvent (\fBTIMEOUT\fP timeout, \fBWAIT\fP wait)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error 
-.PP
-Definition at line 118 of file service.cs.
-.SS "void csmsgque.MqS.ProcessEvent (long timeout, \fBWAIT\fP wait)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error 
-.PP
-Definition at line 114 of file service.cs.
-.SS "void csmsgque.MqS.ServiceCreate (string token, \fBIService\fP call)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
-.PP
-Definition at line 80 of file service.cs.
-.SS "void csmsgque.MqS.ServiceCreate (string token, Callback call)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ServiceCreate (stringtoken, Callbackcall)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
 .PP
 Definition at line 75 of file service.cs.
-.SS "void csmsgque.MqS.ServiceDelete (string token)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ServiceCreate (stringtoken, \fBIService\fPcall)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP 
+.PP
+Definition at line 80 of file service.cs.
+.SS "void csmsgque.MqS.ServiceDelete (stringtoken)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP 
 .PP
@@ -160,16 +161,16 @@ Definition at line 58 of file service.cs.
 implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP 
 .PP
 Definition at line 63 of file service.cs.
-.SS "void csmsgque.MqS.ServiceProxy (string token, int id)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
-.PP
-Definition at line 95 of file service.cs.
-.SS "void csmsgque.MqS.ServiceProxy (string token)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ServiceProxy (stringtoken)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
 .PP
 Definition at line 90 of file service.cs.
+.SS "void csmsgque.MqS.ServiceProxy (stringtoken, intid)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP 
+.PP
+Definition at line 95 of file service.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

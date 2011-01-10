@@ -43,6 +43,7 @@ The \fBJavaMsgque\fP Package.
 .ti -1c
 .RI "class \fBMqFactoryS< T extends MqS >\fP"
 .br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP \fP"
 .ti -1c
 .RI "class \fBMqS\fP"
 .br

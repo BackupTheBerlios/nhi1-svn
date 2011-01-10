@@ -1,19 +1,20 @@
-.TH "Mq_Context_CC_API" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Context_CC_API" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
-
+Mq_Context_CC_API \- 
 .PP
+\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP   
+
 .SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "class \fBccmsgque::MqC\fP"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqS\fP \fP"
 .ti -1c
-.RI "struct \fBccmsgque::MqC::MqC::ProcCallS\fP"
+.RI "struct \fBccmsgque::MqC::ProcCallS\fP"
 .br
 .in -1c
 .SS "Typedefs"
@@ -29,58 +30,58 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .ti -1c
 .RI "\fBccmsgque::MqC::MqC\fP (struct \fBMqS\fP *const tmpl)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "\fBccmsgque::MqC::MqC\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "virtual \fBccmsgque::MqC::~MqC\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::FactoryCtxDefaultSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::FactoryCtxIdentSet\fP (\fBMQ_CST\fP ident)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP \fP"
 .ti -1c
 .RI "\fBMQ_CST\fP \fBccmsgque::MqC::FactoryCtxIdentGet\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::objInit\fP ()"
 .br
 .ti -1c
 .RI "\fBMQ_BUF\fP \fBccmsgque::MqC::GetTempBuffer\fP ()"
 .br
-.R "get access to an internal buffer "
+.RI "\fIget access to an internal buffer \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::Exit\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqExit\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::Sleep\fP (unsigned int const sec)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::USleep\fP (unsigned int const usec)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::LogC\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const str)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLogC\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::LogV\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt,...)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogV\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLogV\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::LogVL\fP (\fBMQ_CST\fP const prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const fmt, va_list ap)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLogVL\fP \fP"
 .in -1c
 .SS "Variables"
 
@@ -88,7 +89,7 @@ Mq_Context_CC_API \- \fIcontext\fP, the top-level data structure and \fIapplicat
 .ti -1c
 .RI "struct \fBMqS\fP \fBccmsgque::MqC::context\fP"
 .br
-.R "link between \fBMqC\fP and \fBMqS\fP "
+.RI "\fIlink between \fBMqC\fP and \fBMqS\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -112,6 +113,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 .PP 
 .SS "typedef void(MqC::* \fBccmsgque::MqC::CallbackF\fP)()\fC [inherited]\fP"
 .PP
+Definition at line 254 of file ccmsgque.h.
 .SH "Function Documentation"
 .PP 
 .SS "void ccmsgque::MqC::Exit ()\fC [inline, inherited]\fP"
@@ -119,7 +121,7 @@ The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted
 implement the \fBlibmsgque\fP API object: \fBMqExit\fP 
 .PP
 Definition at line 308 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::FactoryCtxDefaultSet (\fBMQ_CST\fP ident)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::FactoryCtxDefaultSet (\fBMQ_CST\fPident)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP 
 .PP
@@ -129,7 +131,7 @@ Definition at line 242 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP 
 .PP
 Definition at line 250 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::FactoryCtxIdentSet (\fBMQ_CST\fP ident)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::FactoryCtxIdentSet (\fBMQ_CST\fPident)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
 .PP
@@ -139,17 +141,17 @@ Definition at line 246 of file ccmsgque.h.
 get access to an internal buffer 
 .PP
 Definition at line 306 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  str)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogC (\fBMQ_CST\fP constprefix, \fBMQ_INT\fPlevel, \fBMQ_CST\fP conststr)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogC\fP 
 .PP
 Definition at line 314 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt,  ...)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogV (\fBMQ_CST\fP constprefix, \fBMQ_INT\fPlevel, \fBMQ_CST\fP constfmt, ...)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogV\fP 
 .PP
 Definition at line 316 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP const  prefix, \fBMQ_INT\fP level, \fBMQ_CST\fP const  fmt, va_list ap)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::LogVL (\fBMQ_CST\fP constprefix, \fBMQ_INT\fPlevel, \fBMQ_CST\fP constfmt, va_listap)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqLogVL\fP 
 .PP
@@ -157,19 +159,16 @@ Definition at line 327 of file ccmsgque.h.
 .SS "ccmsgque::MqC::MqC ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
-.PP
-.SS "ccmsgque::MqC::MqC (struct \fBMqS\fP *const  tmpl)\fC [inherited]\fP"
+.SS "ccmsgque::MqC::MqC (struct \fBMqS\fP *consttmpl)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP 
-.PP
 .SS "void ccmsgque::MqC::objInit ()\fC [inherited]\fP"
-.PP
-.SS "void ccmsgque::MqC::Sleep (unsigned int const  sec)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::Sleep (unsigned int constsec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSysSleep\fP 
 .PP
 Definition at line 310 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::USleep (unsigned int const  usec)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::USleep (unsigned int constusec)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSysUSleep\fP 
 .PP
@@ -177,10 +176,9 @@ Definition at line 312 of file ccmsgque.h.
 .SS "virtual ccmsgque::MqC::~MqC ()\fC [virtual, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqContextDelete\fP 
-.PP
 .SH "Variable Documentation"
 .PP 
-.SS "struct \fBMqS\fP \fBccmsgque::MqC::context\fP\fC [read, inherited]\fP"
+.SS "struct \fBMqS\fP \fBccmsgque::MqC::context\fP\fC [inherited]\fP"
 .PP
 link between \fBMqC\fP and \fBMqS\fP 
 .PP

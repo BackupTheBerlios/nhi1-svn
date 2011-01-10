@@ -1,10 +1,11 @@
-.TH "csmsgque::IEvent" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::IEvent" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-csmsgque::IEvent \- implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP  
-
+csmsgque::IEvent \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqConfigSetEvent\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -23,9 +24,7 @@ Definition at line 34 of file config.cs.
 .SH "Member Function Documentation"
 .PP 
 .SS "void csmsgque.IEvent.Event ()"
-.PP
-
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

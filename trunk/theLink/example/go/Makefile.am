@@ -29,7 +29,10 @@ dummy:	all
 
 ## all executables depend on our new created "gomsgque.a" library
 
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT)
+BUILT_SOURCES = server$(EXEEXT)
+server$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+
+BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
 MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 

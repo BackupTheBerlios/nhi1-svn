@@ -1,4 +1,4 @@
-.TH "Mq_Link_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -177,7 +177,7 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP 
 .SS "enum \fBMqErrorE\fP MqLinkConnect (struct \fBMqS\fP *constctx)"
 .PP
-re-connect a \fIclient-server-link\fP after a server crash or a network downtime Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/java/Filter4.java\fP example. 
+re-connect a \fIclient-server-link\fP after a server crash or a network downtime Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/csharp/Filter4.cs\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -231,7 +231,7 @@ an \fBERROR OBJECT\fP on error
 
 .SS "enum \fBMqErrorE\fP MqLinkDefault (struct \fBMqS\fP *constctx, struct \fBMqBufferLS\fP **args)"
 .PP
-helper: wrapper for \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP with additional \fIerror-check\fP code The function have to be used as argument to #MqSetupS::Child, #MqSetupS::Parent or \fBMqConfigSetSetup\fP as default \fIcontext-create\fP function. Return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found. 
+helper: wrapper for \fBMqLinkCreate\fP or \fBMqLinkCreateChild\fP with additional \fIerror-check\fP code The function have to be used as argument to \fBMqSetupS.Child\fP, \fBMqSetupS.Parent\fP or \fBMqConfigSetSetup\fP as default \fIcontext-create\fP function. Return an \fIerror\fP if an unknown \fIcommand-line-argument\fP was found. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -384,4 +384,4 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 Definition at line 1921 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

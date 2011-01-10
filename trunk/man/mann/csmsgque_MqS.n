@@ -1,10 +1,11 @@
-.TH "csmsgque::MqS" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqS" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP  
-
+csmsgque::MqS \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqS\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -21,15 +22,15 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "enum \fBSTART\fP { \fBDEFAULT\fP =  0, \fBFORK\fP =  1, \fBTHREAD\fP =  2, \fBSPAWN\fP =  3 }"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqStartE\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqStartE\fP \fP"
 .ti -1c
 .RI "enum \fBWAIT\fP { \fBNO\fP =  0, \fBONCE\fP =  1, \fBFOREVER\fP =  2 }"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqWaitOnEventE\fP \fP"
 .ti -1c
 .RI "enum \fBTIMEOUT\fP { \fBDEFAULT\fP =  -1, \fBUSER\fP =  -2, \fBMAX\fP =  -3 }"
 .br
-.R "implement the \fBlibmsgque\fP API object: timeout default values "
+.RI "\fIimplement the \fBlibmsgque\fP API object: timeout default values \fP"
 .in -1c
 .SS "Public Member Functions"
 
@@ -37,474 +38,474 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "void \fBConfigSetName\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetName\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetSrvName\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetSrvName\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetBuffersize\fP (int data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetBuffersize\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetDebug\fP (int data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetDebug\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetTimeout\fP (long data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetTimeout\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIsSilent\fP (bool data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsSilent\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIsServer\fP (bool data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsServer\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIsString\fP (bool data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIsString\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIgnoreExit\fP (bool data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIgnoreExit\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIoTcp\fP (string host, string port, string myhost, string myport)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoTcp\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIoUdsFile\fP (string data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoUdsFile\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetIoPipeSocket\fP (int data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetIoPipeSocket\fP \fP"
 .ti -1c
 .RI "void \fBConfigSetStartAs\fP (\fBSTART\fP data)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigSetStartAs\fP \fP"
 .ti -1c
 .RI "bool \fBConfigGetIsServer\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsServer\fP \fP"
 .ti -1c
 .RI "bool \fBConfigGetIsString\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsString\fP \fP"
 .ti -1c
 .RI "bool \fBConfigGetIsSilent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIsSilent\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetName\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetName\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetSrvName\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetSrvName\fP \fP"
 .ti -1c
 .RI "int \fBConfigGetDebug\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetDebug\fP \fP"
 .ti -1c
 .RI "long \fBConfigGetTimeout\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetTimeout\fP \fP"
 .ti -1c
 .RI "int \fBConfigGetBuffersize\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetBuffersize\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetIoTcpHost\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpHost\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetIoTcpPort\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpPort\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetIoTcpMyHost\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyHost\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetIoTcpMyPort\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoTcpMyPort\fP \fP"
 .ti -1c
 .RI "string \fBConfigGetIoUdsFile\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoUdsFile\fP \fP"
 .ti -1c
 .RI "int \fBConfigGetIoPipeSocket\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetIoPipeSocket\fP \fP"
 .ti -1c
 .RI "\fBSTART\fP \fBConfigGetStartAs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetStartAs\fP \fP"
 .ti -1c
 .RI "int \fBConfigGetStatusIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqConfigGetStatusIs\fP \fP"
 .ti -1c
 .RI "void \fBExit\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqExit\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqExit\fP \fP"
 .ti -1c
 .RI "void \fBLogC\fP (string prefix, int level, string text)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLogC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLogC\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP (\fBMqS\fP tmpl)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqContextCreate\fP \fP"
 .ti -1c
 .RI "void \fBErrorC\fP (string proc, int num, string message)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorC\fP \fP"
 .ti -1c
 .RI "void \fBErrorSetCONTINUE\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorSetCONTINUE\fP \fP"
 .ti -1c
 .RI "void \fBErrorSetEXIT\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorSetEXIT\fP \fP"
 .ti -1c
 .RI "bool \fBErrorIsEXIT\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorIsEXIT\fP \fP"
 .ti -1c
 .RI "void \fBErrorRaise\fP ()"
 .br
-.R "throw an \fBcsmsgque.MqSException\fP with the data from \fBMqErrorS\fP "
+.RI "\fIthrow an \fBcsmsgque.MqSException\fP with the data from \fBMqErrorS\fP \fP"
 .ti -1c
 .RI "void \fBErrorReset\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorReset\fP \fP"
 .ti -1c
 .RI "void \fBErrorPrint\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorPrint\fP \fP"
 .ti -1c
 .RI "int \fBErrorGetNum\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorGetNum\fP \fP"
 .ti -1c
 .RI "string \fBErrorGetText\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorGetText\fP \fP"
 .ti -1c
 .RI "void \fBErrorSet\fP (Exception ex)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqErrorSet\fP \fP"
 .ti -1c
 .RI "string \fBLinkGetTargetIdent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqLinkGetTargetIdent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkGetTargetIdent \fP"
 .ti -1c
 .RI "bool \fBLinkIsParent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkIsParent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkIsParent \fP"
 .ti -1c
 .RI "bool \fBLinkIsConnected\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkIsConnected\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkIsConnected \fP"
 .ti -1c
 .RI "int \fBLinkGetCtxId\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkGetCtxId\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkGetCtxId \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBLinkGetParent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkGetParent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkGetParent \fP"
 .ti -1c
 .RI "void \fBLinkCreate\fP (params string[] argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkCreate \fP"
 .ti -1c
 .RI "void \fBLinkCreateChild\fP (\fBMqS\fP parent, params string[] argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkCreateChild\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkCreateChild \fP"
 .ti -1c
 .RI "void \fBLinkDelete\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkDelete \fP"
 .ti -1c
 .RI "void \fBLinkConnect\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBLinkConnect\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkConnect \fP"
 .ti -1c
 .RI "void \fBDLogC\fP (int level, string val)"
 .br
 .ti -1c
 .RI "delegate void \fBCallback\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP \fP"
 .ti -1c
 .RI "byte \fBReadY\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadY\fP \fP"
 .ti -1c
 .RI "bool \fBReadO\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadO\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadO\fP \fP"
 .ti -1c
 .RI "short \fBReadS\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadS\fP \fP"
 .ti -1c
 .RI "int \fBReadI\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadI\fP \fP"
 .ti -1c
 .RI "float \fBReadF\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadF\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadF\fP \fP"
 .ti -1c
 .RI "long \fBReadW\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadW\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadW\fP \fP"
 .ti -1c
 .RI "double \fBReadD\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadD\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadD\fP \fP"
 .ti -1c
 .RI "byte[] \fBReadB\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadB\fP \fP"
 .ti -1c
 .RI "byte[] \fBReadN\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadN\fP \fP"
 .ti -1c
 .RI "byte[] \fBReadBDY\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP \fP"
 .ti -1c
 .RI "\fBMqBufferS\fP \fBReadU\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadU\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadU\fP \fP"
 .ti -1c
 .RI "string \fBReadC\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadC\fP \fP"
 .ti -1c
 .RI "void \fBReadProxy\fP (\fBMqS\fP ctx)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP \fP"
 .ti -1c
 .RI "void \fBReadL_START\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP \fP"
 .ti -1c
 .RI "void \fBReadL_START\fP (\fBMqBufferS\fP buffer)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument \fP"
 .ti -1c
 .RI "void \fBReadL_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP \fP"
 .ti -1c
 .RI "void \fBReadT_START\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP \fP"
 .ti -1c
 .RI "void \fBReadT_START\fP (\fBMqBufferS\fP buffer)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument \fP"
 .ti -1c
 .RI "void \fBReadT_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP \fP"
 .ti -1c
 .RI "int \fBReadGetNumItems\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP \fP"
 .ti -1c
 .RI "bool \fBReadItemExists\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP \fP"
 .ti -1c
 .RI "void \fBReadUndo\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP \fP"
 .ti -1c
 .RI "void \fBSendSTART\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendSTART\fP \fP"
 .ti -1c
 .RI "void \fBSendEND\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendEND\fP \fP"
 .ti -1c
 .RI "void \fBSendEND_AND_WAIT\fP (string token, long timeout)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP \fP"
 .ti -1c
 .RI "void \fBSendEND_AND_WAIT\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_WAIT\fP \fP"
 .ti -1c
 .RI "void \fBSendEND_AND_CALLBACK\fP (string token, Callback call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP \fP"
 .ti -1c
 .RI "void \fBSendEND_AND_CALLBACK\fP (string token, \fBIService\fP call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendEND_AND_CALLBACK\fP \fP"
 .ti -1c
 .RI "void \fBSendRETURN\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendRETURN\fP \fP"
 .ti -1c
 .RI "void \fBSendERROR\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendERROR\fP \fP"
 .ti -1c
 .RI "void \fBSendY\fP (byte val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendY\fP \fP"
 .ti -1c
 .RI "void \fBSendO\fP (bool val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendO\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendO\fP \fP"
 .ti -1c
 .RI "void \fBSendS\fP (short val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendS\fP \fP"
 .ti -1c
 .RI "void \fBSendI\fP (int val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendI\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendI\fP \fP"
 .ti -1c
 .RI "void \fBSendF\fP (float val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendF\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendF\fP \fP"
 .ti -1c
 .RI "void \fBSendW\fP (long val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendW\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendW\fP \fP"
 .ti -1c
 .RI "void \fBSendD\fP (double val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendD\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendD\fP \fP"
 .ti -1c
 .RI "void \fBSendB\fP (byte[] val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendB\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendB\fP \fP"
 .ti -1c
 .RI "void \fBSendN\fP (byte[] val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendN\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendN\fP \fP"
 .ti -1c
 .RI "void \fBSendBDY\fP (byte[] val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendBDY\fP \fP"
 .ti -1c
 .RI "void \fBSendU\fP (\fBMqBufferS\fP buffer)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendU\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendU\fP \fP"
 .ti -1c
 .RI "void \fBSendC\fP (string val)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendC\fP \fP"
 .ti -1c
 .RI "void \fBSendL_START\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendL_START\fP \fP"
 .ti -1c
 .RI "void \fBSendL_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendL_END\fP \fP"
 .ti -1c
 .RI "void \fBSendT_START\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendT_START\fP \fP"
 .ti -1c
 .RI "void \fBSendT_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSendT_END\fP \fP"
 .ti -1c
 .RI "string \fBServiceGetToken\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceGetToken\fP \fP"
 .ti -1c
 .RI "bool \fBServiceIsTransaction\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceIsTransaction\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBServiceGetFilter\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceGetFilter\fP \fP"
 .ti -1c
 .RI "void \fBServiceCreate\fP (string token, Callback call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP \fP"
 .ti -1c
 .RI "void \fBServiceCreate\fP (string token, \fBIService\fP call)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceCreate\fP \fP"
 .ti -1c
 .RI "void \fBServiceDelete\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceDelete\fP \fP"
 .ti -1c
 .RI "void \fBServiceProxy\fP (string token)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP \fP"
 .ti -1c
 .RI "void \fBServiceProxy\fP (string token, int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqServiceProxy\fP \fP"
 .ti -1c
 .RI "void \fBProcessEvent\fP (long timeout, \fBWAIT\fP wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fItimeout\fP seconds and process event or raise an error \fP"
 .ti -1c
 .RI "void \fBProcessEvent\fP (\fBTIMEOUT\fP timeout, \fBWAIT\fP wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait for \fITIMEOUT\fP seconds and process event or raise an error \fP"
 .ti -1c
 .RI "void \fBProcessEvent\fP (\fBWAIT\fP wait)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, wait application default time \fBMQ_TIMEOUT_DEFAULT\fP \fP"
 .ti -1c
 .RI "void \fBProcessEvent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqProcessEvent\fP, don't wait just check for an event \fP"
 .ti -1c
 .RI "void \fBSlaveWorker\fP (int master_id, params string[] argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqSlaveWorker "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqSlaveWorker \fP"
 .ti -1c
 .RI "void \fBSlaveCreate\fP (int id, \fBMqS\fP slave)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP \fP"
 .ti -1c
 .RI "void \fBSlaveDelete\fP (int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBSlaveGet\fP (int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP \fP"
 .ti -1c
 .RI "bool \fBSlaveIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBSlaveGetMaster\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP \fP"
 .in -1c
 .SS "Static Protected Member Functions"
 
@@ -512,21 +513,23 @@ csmsgque::MqS \- implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "static void \fBInit\fP (params string[] argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP \fP"
 .in -1c
+.SS ""
+
 .in +1c
 .ti -1c
 .RI "void \fBFactoryCtxIdentSet\fP (string ident)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP \fP"
 .ti -1c
 .RI "string \fBFactoryCtxIdentGet\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP \fP"
 .ti -1c
 .RI "void \fBFactoryCtxDefaultSet\fP (string ident)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -538,11 +541,10 @@ Definition at line 24 of file buffer.cs.
 .SS "delegate void csmsgque.MqS.Callback ()"
 .PP
 implement the \fBlibmsgque\fP API object: public version from \fBMqTokenF\fP 
-.PP
-.SS "void csmsgque.MqS.DLogC (int level, string val)"
+.SS "void csmsgque.MqS.DLogC (intlevel, stringval)"
 .PP
 Definition at line 126 of file MqS.cs.
-.SS "void csmsgque.MqS.FactoryCtxDefaultSet (string ident)"
+.SS "void csmsgque.MqS.FactoryCtxDefaultSet (stringident)"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP 
 .PP
@@ -552,12 +554,12 @@ Definition at line 275 of file config.cs.
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP 
 .PP
 Definition at line 269 of file config.cs.
-.SS "void csmsgque.MqS.FactoryCtxIdentSet (string ident)"
+.SS "void csmsgque.MqS.FactoryCtxIdentSet (stringident)"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
 .PP
 Definition at line 263 of file config.cs.
-.SS "static void csmsgque.MqS.Init (params string[] argv)\fC [static, protected]\fP"
+.SS "static void csmsgque.MqS.Init (params string[]argv)\fC [static, protected]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqInitCreate\fP 
 .PP
@@ -565,4 +567,4 @@ Definition at line 141 of file MqS.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

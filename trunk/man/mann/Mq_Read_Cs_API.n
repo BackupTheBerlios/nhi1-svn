@@ -1,101 +1,102 @@
-.TH "Mq_Read_Cs_API" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Read_Cs_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Read_Cs_API \- extract data from an incoming \fIread-data-package\fP.   
-
+Mq_Read_Cs_API \- 
 .PP
+extract data from an incoming \fIread-data-package\fP.   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "byte \fBcsmsgque::MqS.ReadY\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadY\fP \fP"
 .ti -1c
 .RI "bool \fBcsmsgque::MqS.ReadO\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadO\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadO\fP \fP"
 .ti -1c
 .RI "short \fBcsmsgque::MqS.ReadS\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadS\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadS\fP \fP"
 .ti -1c
 .RI "int \fBcsmsgque::MqS.ReadI\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadI\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadI\fP \fP"
 .ti -1c
 .RI "float \fBcsmsgque::MqS.ReadF\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadF\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadF\fP \fP"
 .ti -1c
 .RI "long \fBcsmsgque::MqS.ReadW\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadW\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadW\fP \fP"
 .ti -1c
 .RI "double \fBcsmsgque::MqS.ReadD\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadD\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadD\fP \fP"
 .ti -1c
 .RI "byte[] \fBcsmsgque::MqS.ReadB\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadB\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadB\fP \fP"
 .ti -1c
 .RI "byte[] \fBcsmsgque::MqS.ReadN\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadN\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadN\fP \fP"
 .ti -1c
 .RI "byte[] \fBcsmsgque::MqS.ReadBDY\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadBDY\fP \fP"
 .ti -1c
 .RI "\fBMqBufferS\fP \fBcsmsgque::MqS.ReadU\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadU\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadU\fP \fP"
 .ti -1c
 .RI "string \fBcsmsgque::MqS.ReadC\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadC\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadC\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadProxy\fP (\fBMqS\fP ctx)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadL_START\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadL_START\fP (\fBMqBufferS\fP buffer)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadL_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadT_START\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadT_START\fP (\fBMqBufferS\fP buffer)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadT_END\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP \fP"
 .ti -1c
 .RI "int \fBcsmsgque::MqS.ReadGetNumItems\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadGetNumItems\fP \fP"
 .ti -1c
 .RI "bool \fBcsmsgque::MqS.ReadItemExists\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadItemExists\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.ReadUndo\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqReadUndo\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -156,16 +157,16 @@ Definition at line 215 of file read.cs.
 implement the \fBlibmsgque\fP API object: \fBMqReadL_END\fP 
 .PP
 Definition at line 190 of file read.cs.
-.SS "void csmsgque.MqS.ReadL_START (\fBMqBufferS\fP buffer)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument 
-.PP
-Definition at line 185 of file read.cs.
 .SS "void csmsgque.MqS.ReadL_START ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP 
 .PP
 Definition at line 180 of file read.cs.
+.SS "void csmsgque.MqS.ReadL_START (\fBMqBufferS\fPbuffer)\fC [inherited]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqReadL_START\fP with \fBMqBufferS\fP argument 
+.PP
+Definition at line 185 of file read.cs.
 .SS "byte [] csmsgque.MqS.ReadN ()\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadN\fP 
@@ -176,7 +177,7 @@ Definition at line 140 of file read.cs.
 implement the \fBlibmsgque\fP API object: \fBMqReadO\fP 
 .PP
 Definition at line 88 of file read.cs.
-.SS "void csmsgque.MqS.ReadProxy (\fBMqS\fP ctx)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ReadProxy (\fBMqS\fPctx)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadProxy\fP 
 .PP
@@ -191,7 +192,7 @@ Definition at line 95 of file read.cs.
 implement the \fBlibmsgque\fP API object: \fBMqReadT_END\fP 
 .PP
 Definition at line 205 of file read.cs.
-.SS "void csmsgque.MqS.ReadT_START (\fBMqBufferS\fP buffer)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.ReadT_START (\fBMqBufferS\fPbuffer)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqReadT_START\fP with \fBMqBufferS\fP argument 
 .PP
@@ -223,4 +224,4 @@ implement the \fBlibmsgque\fP API object: \fBMqReadY\fP
 Definition at line 81 of file read.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

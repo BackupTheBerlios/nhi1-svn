@@ -106,7 +106,6 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_SEP = @FILE_SEP@
-GOROOT = @GOROOT@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -255,10 +254,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUFFIXES = .go .bin $(EXEEXT)
-BUILT_SOURCES = MyClient$(EXEEXT) MyServer$(EXEEXT) Filter3$(EXEEXT) \
-	mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
-	testserver$(EXEEXT) testclient$(EXEEXT) Filter1$(EXEEXT) \
-	Filter2$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT)
+BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
+	Filter3$(EXEEXT) mulclient$(EXEEXT) mulserver$(EXEEXT) \
+	manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \
+	Filter1$(EXEEXT) Filter2$(EXEEXT) Filter4$(EXEEXT) \
+	Filter5$(EXEEXT)
 CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = $(srcdir)/*.go
 all: $(BUILT_SOURCES)
@@ -461,6 +461,7 @@ dummy:	all
 
 .bin$(EXEEXT):
 	$(LD) -o $@ $<
+server$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
 Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a

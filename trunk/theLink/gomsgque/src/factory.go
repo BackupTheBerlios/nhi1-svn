@@ -29,12 +29,19 @@ import (
 /*                                                                           */
 /*****************************************************************************/
 
-type FactoryF func(*MqS) (*MqS) 
+type FactoryF func(*MqS) (*MqS)
 
 // global lock for "Factory" interfaces
 var lockFactory  = make(map[*FactoryF]bool)
 
-//export gomsgque_cFactoryCall
+// factory erro-handling
+func iErrorFactoryToGoWithCheck(ret uint32) {
+  if ret != C.MQ_FACTORY_RETURN_OK {
+    panic(C.GoString(C.MqFactoryErrorMsg(ret)));
+  }
+}
+
+//export cFactoryCall
 func cFactoryCall(tmpl *MqS, cb *FactoryF) (ret *MqS) {
   defer func() {
     if (tmpl != nil) {
@@ -52,7 +59,7 @@ func cFactoryCall(tmpl *MqS, cb *FactoryF) (ret *MqS) {
   return
 }
 
-//export gomsgque_cFactoryDelete
+//export cFactoryDelete
 func cFactoryDelete(this *MqS, chnp *chan bool) {
   ctxlock[this] = nil, false
   if chnp != nil {
@@ -60,7 +67,7 @@ func cFactoryDelete(this *MqS, chnp *chan bool) {
   }
 }
 
-//export gomsgque_cFactoryFree
+//export cFactoryFree
 func cFactoryFree(cb *FactoryF) {
   lockFactory[cb] = false, false
 }
@@ -82,7 +89,7 @@ func (this *MqS) FactoryCtxIdentSet(val string) {
   this.iErrorMqToGoWithCheck(r)
 }
 
-func (this *MqS) MqFactoryCtxDefaultSet(ident string) {
+func (this *MqS) FactoryCtxDefaultSet(ident string) {
   v := C.CString(ident)
   r := C.MqFactoryCtxDefaultSet((*_Ctype_struct_MqS)(this), v)
   C.free(unsafe.Pointer(v))
@@ -99,10 +106,11 @@ func FactoryAdd(ident string, cb FactoryF) {
   v := C.CString(ident)
   r := C.gomsgque_FactoryAdd(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
-  this.iErrorFactoryToGoWithCheck(r)
+  iErrorFactoryToGoWithCheck(r)
   lockFactory[&cb] = true
 }
 
+/*
 func FactoryDefault(ident string, cb FactoryF) {
   v := C.CString(ident)
   r := C.gomsgque_FactoryDefault(v, C.MQ_PTR(&cb))
@@ -110,25 +118,29 @@ func FactoryDefault(ident string, cb FactoryF) {
   this.iErrorFactoryToGoWithCheck(r)
   lockFactory[&cb] = true
 }
+*/
 
 func FactoryDefaultIdent() string {
-  return C.GoString(C.gomsgque_MqFactoryDefaultIdent())
+  return C.GoString(C.MqFactoryDefaultIdent())
 }
 
 func FactoryCall(ident string) (*MqS) {
   v := C.CString(ident)
-  ctx, r := C.gomsgque_FactoryCall(v)
+  out := C.gomsgque_FactoryCall(v)
   C.free(unsafe.Pointer(v))
-  this.iErrorFactoryToGoWithCheck(r)
-  return (*MqS)(ctx)
+  iErrorFactoryToGoWithCheck(out.ret)
+  return (*MqS)(out.ctx)
 }
 
 func FactoryNew(ident string, cb FactoryF) *MqS {
   v := C.CString(ident)
-  ctx, r := C.gomsgque_FactoryNew(v, C.MQ_PTR(&cb))
+  out := C.gomsgque_FactoryNew(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
-  this.iErrorFactoryToGoWithCheck(r)
+  iErrorFactoryToGoWithCheck(out.ret)
   lockFactory[&cb] = true
-  return (*MqS)(ctx)
+  return (*MqS)(out.ctx)
 }
+
+
+
 

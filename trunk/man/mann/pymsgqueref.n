@@ -1,4 +1,4 @@
-.TH "pymsgque" n "10 Jan 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
+.TH "pymsgque" n "Mon Jan 10 2011" "Version 4.8" "pymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -61,8 +61,7 @@ propagate the error messages from the server to the client
 .br
  \fBLogC\fP
 .br
-.PP
-\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
+ \fIcontext\fP, the top-level data structure and \fIapplication-handle\fP 
 .PP
 The \fIcontext-data-structure\fP is created with \fBContextCreate\fP and deleted with \fBContextDelete\fP. The structure has a \fIlibmsgque-specific-part\fP and an \fIapplication-specific-part\fP. Both parts are linked together. The \fIlibmsgque-specific-part\fP has all data required to manage a \fIclient-server-link\fP. The \fIapplication-specific-part\fP as all data required by the application. The following C-API example demonstrate the layout of the \fIcontext-data-structure\fP. 
 .PP
@@ -115,7 +114,7 @@ Shutdown the \fIclient-server-link\fP and free the related memory. The \fItoplev
 .SS "ctx.Exit()"
 C-API: \fBMqExitP\fP, delete the \fIcontext\fP and exit the current process or thread 
 .PP
-To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application.
+To delete an application is a difficult task because the \fIlink-target\fP have to be informed. This information is send as \fIshutdown-event\fP and finally as \fIsocket-exit\fP after \fIapplication-exit\fP. This library tries to perform this two steps even if the default \fBexit\fP function is called. This is no problem because the second step (\fIsocket-exit\fP) is enough to signal a \fIlink-down\fP. It is \fBnot\fP secure to depend only on \fIsocket-exit\fP for application exit because sometimes the sockets stop working or the \fIlink-target\fP does not get a \fIsocket-exit\fP. For example the \fIpipe-link\fP on windows. The client can not exit and create a \fIsocket-exit\fP error on the \fIserver\fP because the \fIserver\fP is still running without receiving a \fIshutdown-event\fP. A second argument for using the \fBExit\fP function is, that it can be used for process \fBand\fP thread exit. A thread, started by \fBlibmsgque\fP, does exit but the process continue to work. To make it short use \fBExit\fP to exit your application. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -218,7 +217,7 @@ FactoryDefault('transFilter', Filter4)
 .fi
 .PP
 .SS "PyUnicode FactoryDefaultIdent()"
-C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory 
+C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory  
 .SS "FactoryAdd(?PyUnicode ident,? Class cs)"
 C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
@@ -695,7 +694,6 @@ a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTO
 .IP "\(bu" 2
 a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS_WAIT_FOREVER\fP.
 .PP
-.PP
 \fBDefinition of a 'parent-context'\fP
 .br
 .PP
@@ -737,7 +735,7 @@ C-API: \fBMqLinkCreate\fP, make \fIctx\fP to a \fIparent-context\fP and setup a 
 .RS 4
 \fIctx\fP the context returned by \fBContextCreate\fP 
 .br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-command-line-arguments\fP for the \fI--pipe\fP setup.
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP including the \fB'@'\fP item to add \fIserver-command-line-arguments\fP for the \fI--pipe\fP setup. 
 .RE
 .PP
 \fBReturns:\fP
@@ -761,7 +759,7 @@ A child is using the same process or thread as the parent but a different namesp
 .br
 \fIparent\fP the \fIparent-context\fP defined with \fBLinkCreate\fP 
 .br
-\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item.
+\fIargs\fP \fIcommand-line-arguments\fP to configure the \fIclient-server-link\fP without the \fB'@'\fP item. 
 .RE
 .PP
 \fBReturns:\fP
@@ -928,9 +926,7 @@ The \fItoken-identifier\fP is defined by the programmer using \fBServiceCreate\f
 .SS "SERVICE CALLBACK"
 function used as \fIservice-handle\fP 
 .PP
-A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function. 
-.PP
-The callback is implemented using Interface: IService method \fIService(ctx)\fP
+A service is using a \fIcallback\fP to act on an incoming \fIservice-request\fP. The \fIcallback\fP is linked to a \fBTOKEN IDENTIFIER\fP with \fBServiceCreate\fP or is used as argument to the \fBSendEND_AND_CALLBACK\fP function.  The callback is implemented using Interface: IService method \fIService(ctx)\fP
 .SS "PyUnicode ctx.ServiceGetToken()"
 C-API: \fBMqServiceGetToken\fP, get the \fBTOKEN IDENTIFIER\fP from an \fIongoing-service-call\fP 
 .PP
@@ -962,6 +958,7 @@ A \fIservice-call\fP can be \fIwith-transaction\fP (return \fITrue\fP if the pac
 a boolean value, \fITrue\fP or \fIFalse\fP 
 .RE
 .PP
+ 
 .SS "MqS ctx.ServiceGetFilter([id=0])"
 C-API: \fBMqServiceGetFilter\fP, get the \fIfilter-context\fP or the \fImaster-context\fP 
 .PP
@@ -987,6 +984,7 @@ return a 'filter not available' error
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ServiceCreate(token,callback)"
 C-API: \fBMqServiceCreate\fP, create a link between a \fBTOKEN IDENTIFIER\fP and a \fBSERVICE CALLBACK\fP 
 .PP
@@ -1015,6 +1013,7 @@ an \fBERROR OBJECT\fP on error
 the link-setup (\fBLinkCreate\fP or \fBLinkCreateChild\fP) have to done \fBbefore\fP using this function 
 .RE
 .PP
+ 
 .SS "ctx.ServiceProxy(token,?id=0?)"
 C-API: \fBMqServiceProxy\fP, create a service to link a \fImaster-context\fP with a \fIslave-context\fP. 
 .PP
@@ -1050,6 +1049,7 @@ C-API: \fBMqServiceDelete\fP, delete a service.
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ProcessEvent()"
 .SS "ctx.ProcessEvent(wait=MqS_WAIT_(NO|ONCE|FOREVER))"
 .SS "ctx.ProcessEvent(timeout=(PyLong|MqS_TIMEOUT_(DEFAULT|USER|MAX)), wait=MqS_WAIT_(NO|ONCE|FOREVER))"
@@ -1175,6 +1175,7 @@ If an \fBerror\fP is raised on the server during the service-processing the erro
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)"
 C-API: \fBMqSendEND_AND_WAIT\fP, finish the \fIsend-data-block\fP, call the remote service and do \fIwait\fP for return. 
 .PP
@@ -1194,6 +1195,7 @@ If an \fBerror\fP is raised on the server during the service-processing the func
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.SendEND_AND_CALLBACK(token,callback)"
 C-API: \fBMqSendEND_AND_CALLBACK\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
@@ -1478,7 +1480,7 @@ an \fBERROR OBJECT\fP on error
 .SS "ByteArray ctx.ReadBDY()"
 C-API: \fBMqReadBDY\fP, extract the entire \fIbody-package\fP from the \fIread-data-package\fP 
 .PP
-A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be can send later using \fBSendBDY\fP.
+A \fIbody\fP is a \fIbyte-array\fP with a defined \fIlength\fP and including the \fInumber-of-items\fP and the \fIbody-items\fP as information. The \fIbody\fP extracted can be saved into an external storage or be used in a software tunnel (example: the \fIagurad\fP tool) and be can send later using \fBSendBDY\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1512,6 +1514,7 @@ The object returned is owned by the \fIread-data-package\fP and is \fBonly\fP va
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ReadL_START(?buffer?)"
 C-API: \fBMqReadL_START\fP, start to extract a \fIlist-items\fP from the \fIread-data-package\fP. 
 .PP
@@ -1543,6 +1546,7 @@ C-API: \fBMqReadL_END\fP, finish to extract a \fIlist-items\fP from the \fIread-
 an \fBERROR OBJECT\fP on error 
 .RE
 .PP
+ 
 .SS "ctx.ReadT_START(?buffer?)"
 C-API: \fBMqReadT_START\fP, start to extract a \fIlongterm-transaction-item\fP from the \fIread-data-package\fP. 
 .PP

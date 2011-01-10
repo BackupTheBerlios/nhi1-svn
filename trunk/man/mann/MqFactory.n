@@ -1,4 +1,4 @@
-.TH "Mq_Factory_C_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Factory_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -270,7 +270,7 @@ add a new \fIfactory-interface\fP identified by \fIident\fP \fBParameters:\fP
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
@@ -287,7 +287,7 @@ call the factory constructor, identified by \fIident\fP, to create a new instanc
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
@@ -302,7 +302,7 @@ add a new factory as \fIcopy\fP of the \fIdefault\fP factory but with a new \fIi
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
@@ -377,7 +377,7 @@ add a new \fIdefault-factory-interface\fP identified by \fIident\fP The default 
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
@@ -450,7 +450,7 @@ call a factory \fIconstructor\fP defined by \fIitem\fP This is a low-level funct
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
@@ -487,10 +487,10 @@ add a new factory interface and create a new top-level instance This function is
 .PP
 \fBReturns:\fP
 .RS 4
-an \fBERROR OBJECT\fP object on error 
+an \fBcsmsgque.MqFactorySException\fP object on error 
 .RE
 .PP
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

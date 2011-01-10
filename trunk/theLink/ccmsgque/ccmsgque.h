@@ -122,7 +122,7 @@ namespace ccmsgque {
 	hdl = bufP;
       }
 
-      /// \api #MqBufferS::type
+      /// \api \ref MqBufferS::type
       inline enum MqTypeE GetType () const {
 	return hdl->type;
       }

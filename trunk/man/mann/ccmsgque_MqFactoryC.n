@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqFactoryC" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqFactoryC" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,47 +6,47 @@ ccmsgque::MqFactoryC \-
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <ccmsgque.h>\fP
 .PP
+\fC#include <ccmsgque.h>\fP
 .SS "Static Public Member Functions"
 
 .in +1c
 .ti -1c
 .RI "static void \fBAdd\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP \fP"
 .ti -1c
 .RI "static void \fBAdd\fP ()  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP \fP"
 .ti -1c
 .RI "static void \fBDefault\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP \fP"
 .ti -1c
 .RI "static void \fBDefault\fP ()  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP \fP"
 .ti -1c
 .RI "static \fBMQ_CST\fP \fBDefaultIdent\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryDefaultIdent\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDefaultIdent\fP \fP"
 .ti -1c
 .RI "static T * \fBCall\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP \fP"
 .ti -1c
 .RI "static T * \fBCall\fP ()  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP \fP"
 .ti -1c
 .RI "static T * \fBNew\fP (\fBMQ_CST\fP ident)  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP \fP"
 .ti -1c
 .RI "static T * \fBNew\fP ()  throw (MqFactoryCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -57,32 +57,32 @@ ccmsgque::MqFactoryC \-
 Definition at line 861 of file ccmsgque.h.
 .SH "Member Function Documentation"
 .PP 
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Add (\fBMQ_CST\fPident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP 
+.PP
+Definition at line 924 of file ccmsgque.h.
 .SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Add ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP 
 .PP
 Definition at line 928 of file ccmsgque.h.
-.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Add (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::Call (\fBMQ_CST\fPident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryAdd\fP 
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP 
 .PP
-Definition at line 924 of file ccmsgque.h.
+Definition at line 944 of file ccmsgque.h.
 .SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::Call ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP 
 .PP
 Definition at line 950 of file ccmsgque.h.
-.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::Call (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryCall\fP 
-.PP
-Definition at line 944 of file ccmsgque.h.
 .SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Default ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP 
 .PP
 Definition at line 936 of file ccmsgque.h.
-.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Default (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.SS "template<typename T > static void \fBccmsgque::MqFactoryC\fP< T >::Default (\fBMQ_CST\fPident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryDefault\fP 
 .PP
@@ -92,16 +92,16 @@ Definition at line 932 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqFactoryDefaultIdent\fP 
 .PP
 Definition at line 940 of file ccmsgque.h.
+.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::New (\fBMQ_CST\fPident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
+.PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP 
+.PP
+Definition at line 956 of file ccmsgque.h.
 .SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::New ()  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP 
 .PP
 Definition at line 962 of file ccmsgque.h.
-.SS "template<typename T > static T* \fBccmsgque::MqFactoryC\fP< T >::New (\fBMQ_CST\fP ident)  throw (\fBMqFactoryCException\fP)\fC [inline, static]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryNew\fP 
-.PP
-Definition at line 956 of file ccmsgque.h.
 
 .SH "Author"
 .PP 

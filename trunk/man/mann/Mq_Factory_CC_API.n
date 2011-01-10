@@ -1,10 +1,11 @@
-.TH "Mq_Factory_CC_API" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Factory_CC_API" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Factory_CC_API \- provide an interface to create a new instance   
-
+Mq_Factory_CC_API \- 
 .PP
+provide an interface to create a new instance   
+
 .SS "Data Structures"
 
 .in +1c

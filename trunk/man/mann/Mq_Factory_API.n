@@ -1,4 +1,4 @@
-.TH "Mq_Factory_API" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "Mq_Factory_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,38 +10,35 @@ provide an interface to create a new instance
 
 .in +1c
 .ti -1c
-.RI "class \fBjavamsgque.MqFactoryS< T extends MqS >\fP"
+.RI "class \fBcsmsgque.MqFactorySException\fP"
 .br
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryReturnE\fP \fP"
 .ti -1c
-.RI "class \fBMqFactoryST\fP"
+.RI "class \fBcsmsgque.MqFactoryS< T >\fP"
 .br
 .RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryS\fP \fP"
 .in -1c
-.SS "Packages"
+.SS "Enumerations"
 
 .in +1c
 .ti -1c
-.RI "package \fBjavamsgque\fP"
+.RI "enum \fBcsmsgque.MqFactoryE\fP { \fBcsmsgque.MQ_FACTORY_NEW_INIT\fP, \fBcsmsgque.MQ_FACTORY_NEW_CHILD\fP, \fBcsmsgque.MQ_FACTORY_NEW_SLAVE\fP, \fBcsmsgque.MQ_FACTORY_NEW_FORK\fP, \fBcsmsgque.MQ_FACTORY_NEW_THREAD\fP, \fBcsmsgque.MQ_FACTORY_NEW_FILTER\fP }"
 .br
-.PP
-
-.RI "\fIThe \fBJavaMsgque\fP Package. \fP"
+.ti -1c
+.RI "enum \fBcsmsgque.MqFactoryReturnE\fP { \fBcsmsgque.MQ_FACTORY_RETURN_OK\fP, \fBcsmsgque.MQ_FACTORY_RETURN_ADD_DEF_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_CALL_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_ITEM_GET_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_NEW_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_DEFAULT_ERR\fP, \fBcsmsgque.MQ_FACTORY_RETURN_ADD_ERR\fP }"
+.br
 .in -1c
-.SS ""
+.SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "native void \fBjavamsgque::MqS.FactoryCtxIdentSet\fP (String val)"
+.RI "internal delegate \fBMqErrorE\fP \fBcsmsgque.FactoryCreateF\fP ([In]IntPtr tmpl, \fBMqFactoryE\fP create,[In]IntPtr item,[In, Out] ref IntPtr contextP)"
 .br
-.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP \fP"
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCreateF\fP \fP"
 .ti -1c
-.RI "native String \fBjavamsgque::MqS.FactoryCtxIdentGet\fP ()"
+.RI "internal delegate void \fBcsmsgque.FactoryDeleteF\fP ([In]IntPtr context,[In] \fBMQ_BOL\fP doFactoryCleanup,[In]IntPtr data)"
 .br
-.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP \fP"
-.ti -1c
-.RI "native void \fBjavamsgque::MqS.FactoryCtxDefaultSet\fP (String ident)"
-.br
-.RI "\fIimplement the \fBlibmsgque\fP API object: #FactoryCtxDefaultSet \fP"
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryDeleteF\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -60,17 +57,58 @@ identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a 
 The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
 .PP
 The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object.  
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcsmsgque::MqFactoryE\fP"
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_FACTORY_NEW_INIT \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_CHILD \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_SLAVE \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_FORK \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_THREAD \fP\fP
+.TP
+\fB\fIMQ_FACTORY_NEW_FILTER \fP\fP
+
+.PP
+Definition at line 25 of file MqFactoryS.cs.
+.SS "enum \fBcsmsgque::MqFactoryReturnE\fP"
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIMQ_FACTORY_RETURN_OK \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ADD_DEF_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_CALL_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ITEM_GET_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_NEW_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_DEFAULT_ERR \fP\fP
+.TP
+\fB\fIMQ_FACTORY_RETURN_ADD_ERR \fP\fP
+
+.PP
+Definition at line 34 of file MqFactoryS.cs.
 .SH "Function Documentation"
 .PP 
-.SS "native void javamsgque.MqS.FactoryCtxDefaultSet (Stringident)\fC [inherited]\fP"
+.SS "internal delegate \fBMqErrorE\fP csmsgque.FactoryCreateF ([In] IntPtrtmpl, \fBMqFactoryE\fPcreate, [In] IntPtritem, [In, Out] ref IntPtrcontextP)"
 .PP
-implement the \fBlibmsgque\fP API object: #FactoryCtxDefaultSet 
-.SS "native String javamsgque.MqS.FactoryCtxIdentGet ()\fC [inherited]\fP"
+implement the \fBlibmsgque\fP API object: \fBMqFactoryCreateF\fP 
+.SS "internal delegate void csmsgque.FactoryDeleteF ([In] IntPtrcontext, [In] \fBMQ_BOL\fPdoFactoryCleanup, [In] IntPtrdata)"
 .PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentGet\fP 
-.SS "native void javamsgque.MqS.FactoryCtxIdentSet (Stringval)\fC [inherited]\fP"
-.PP
-implement the \fBlibmsgque\fP API object: \fBMqFactoryCtxIdentSet\fP 
+implement the \fBlibmsgque\fP API object: \fBMqFactoryDeleteF\fP 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for javamsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

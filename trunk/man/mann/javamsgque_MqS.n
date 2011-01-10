@@ -155,7 +155,7 @@ implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "native void \fBLinkCreate\fP (String...args)  throws MqSException"
 .br
-.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqLinkCreate\fP \fP"
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqLinkCreate \fP"
 .ti -1c
 .RI "native void \fBLinkCreateChild\fP (\fBMqS\fP parent, String...args)  throws MqSException"
 .br
@@ -502,7 +502,7 @@ implement the \fBlibmsgque\fP API object: \fBMqS\fP
 .ti -1c
 .RI "native void \fBFactoryCtxDefaultSet\fP (String ident)"
 .br
-.RI "\fIimplement the \fBlibmsgque\fP API object: #FactoryCtxDefaultSet \fP"
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqFactoryCtxDefaultSet\fP \fP"
 .in -1c
 .in -1c
 .SS "Static Public Member Functions"

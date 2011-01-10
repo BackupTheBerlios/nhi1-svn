@@ -1,37 +1,38 @@
-.TH "Mq_Slave_Cs_API" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_Cs_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Slave_Cs_API \- create and manage a slave context   
-
+Mq_Slave_Cs_API \- 
 .PP
+create and manage a slave context   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "void \fBcsmsgque::MqS.SlaveWorker\fP (int master_id, params string[] argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: MqSlaveWorker "
+.RI "\fIimplement the \fBlibmsgque\fP API object: MqSlaveWorker \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.SlaveCreate\fP (int id, \fBMqS\fP slave)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP \fP"
 .ti -1c
 .RI "void \fBcsmsgque::MqS.SlaveDelete\fP (int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBcsmsgque::MqS.SlaveGet\fP (int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP \fP"
 .ti -1c
 .RI "bool \fBcsmsgque::MqS.SlaveIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP \fP"
 .ti -1c
 .RI "\fBMqS\fP \fBcsmsgque::MqS.SlaveGetMaster\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -106,17 +107,17 @@ the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \
  
 .SH "Function Documentation"
 .PP 
-.SS "void csmsgque.MqS.SlaveCreate (int id, \fBMqS\fP slave)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.SlaveCreate (intid, \fBMqS\fPslave)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
 .PP
 Definition at line 66 of file slave.cs.
-.SS "void csmsgque.MqS.SlaveDelete (int id)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.SlaveDelete (intid)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
 .PP
 Definition at line 71 of file slave.cs.
-.SS "\fBMqS\fP csmsgque.MqS.SlaveGet (int id)\fC [inherited]\fP"
+.SS "\fBMqS\fP csmsgque.MqS.SlaveGet (intid)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
 .PP
@@ -131,11 +132,11 @@ Definition at line 87 of file slave.cs.
 implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
 .PP
 Definition at line 82 of file slave.cs.
-.SS "void csmsgque.MqS.SlaveWorker (int master_id, params string[] argv)\fC [inherited]\fP"
+.SS "void csmsgque.MqS.SlaveWorker (intmaster_id, params string[]argv)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: MqSlaveWorker 
 .PP
 Definition at line 51 of file slave.cs.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

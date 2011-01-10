@@ -1,10 +1,11 @@
-.TH "csmsgque::MqFactorySException" n "10 Jan 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
+.TH "csmsgque::MqFactorySException" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-csmsgque::MqFactorySException \- implement the \fBlibmsgque\fP API object: \fBMqFactoryReturnE\fP  
-
+csmsgque::MqFactorySException \- 
 .PP
+implement the \fBlibmsgque\fP API object: \fBMqFactoryReturnE\fP  
+
 .SH SYNOPSIS
 .br
 .PP
@@ -16,4 +17,4 @@ Definition at line 55 of file MqFactoryS.cs.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for vbmsgque from the source code.
+Generated automatically by Doxygen for csmsgque from the source code.

@@ -1,4 +1,4 @@
-.TH "ccmsgque::MqFactoryCException" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "ccmsgque::MqFactoryCException" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,8 +6,8 @@ ccmsgque::MqFactoryCException \-
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <ccmsgque.h>\fP
 .PP
+\fC#include <ccmsgque.h>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -23,7 +23,7 @@ ccmsgque::MqFactoryCException \-
 Definition at line 851 of file ccmsgque.h.
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "ccmsgque::MqFactoryCException::MqFactoryCException (enum \fBMqFactoryReturnE\fP ret)\fC [inline]\fP"
+.SS "ccmsgque::MqFactoryCException::MqFactoryCException (enum \fBMqFactoryReturnE\fPret)\fC [inline]\fP"
 .PP
 Definition at line 856 of file ccmsgque.h.
 .SH "Member Function Documentation"

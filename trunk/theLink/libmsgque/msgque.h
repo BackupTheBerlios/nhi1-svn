@@ -822,18 +822,18 @@ struct MqSetupS {
 MQ_EXTERN void MQ_DECL MqSetup (void) __attribute__ ((constructor));
 MQ_EXTERN void MQ_DECL MqCleanup (void) __attribute__ ((destructor));
 
-/// \brief clean the #MqS::config data
+/// \brief clean the \ref MqS::config data
 MQ_EXTERN void MQ_DECL MqConfigReset (
   struct MqS * const context
 );
 
-/// \brief copy the #MqS::config data
+/// \brief copy the \ref MqS::config data
 MQ_EXTERN void MQ_DECL MqConfigDup (
   struct MqS * const to,
   struct MqS const * const from
 );
 
-/// \brief copy the #MqS::setup data
+/// \brief copy the \ref MqS::setup data
 /// \details \e MqSetupDup is an important function, because
 /// every new created object need to fill the #MqSetupS data.
 /// The typical software flow is:\n
@@ -852,7 +852,7 @@ MQ_EXTERN void MQ_DECL MqSetupDup (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief set the #MqConfigS::name value and cleanup old value
+/// \brief set the \ref MqConfigS::name value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetName (
   struct MqS * const context,
@@ -865,77 +865,77 @@ MQ_DECL MqConfigUpdateName (
   MQ_CST  data
 ) __attribute__((nonnull));
 
-/// \brief set the #MqConfigS::srvname value and cleanup old value
+/// \brief set the \ref MqConfigS::srvname value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetSrvName (
   struct MqS * const context,
   MQ_CST  data
 );
 
-/// \brief set the #MqIoConfigS::buffersize value
+/// \brief set the \ref MqIoConfigS::buffersize value
 MQ_EXTERN void
 MQ_DECL MqConfigSetBuffersize (
   struct MqS * const context,
   MQ_INT  data
 );
 
-/// \brief set the #MqConfigS::debug value
+/// \brief set the \ref MqConfigS::debug value
 MQ_EXTERN void
 MQ_DECL MqConfigSetDebug (
   struct MqS * const context,
   MQ_INT  data
 );
 
-/// \brief set the #MqIoConfigS::timeout value
+/// \brief set the \ref MqIoConfigS::timeout value
 MQ_EXTERN void
 MQ_DECL MqConfigSetTimeout (
   struct MqS * const context,
   MQ_TIME_T  data
 );
 
-/// \brief set the #MqConfigS::isSilent value
+/// \brief set the \ref MqConfigS::isSilent value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIsSilent (
   struct MqS * const context,
   MQ_BOL  data
 );
 
-/// \brief set the #MqSetupS::isServer value
+/// \brief set the \ref MqSetupS::isServer value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIsServer (
   struct MqS * const context,
   MQ_BOL  data
 );
 
-/// \brief set the #MqConfigS::isString value
+/// \brief set the \ref MqConfigS::isString value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIsString (
   struct MqS * const context,
   MQ_BOL  data
 );
 
-/// \brief set the #MqSetupS::ignoreExit value
+/// \brief set the \ref MqSetupS::ignoreExit value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIgnoreExit (
   struct MqS * const context,
   MQ_BOL  data
 );
 
-/// \brief set the #MqConfigS::ignoreFork value
+/// \brief set the \ref MqConfigS::ignoreFork value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIgnoreFork (
   struct MqS * const context,
   MQ_BOL data
 );
 
-/// \brief set the #MqConfigS::ignoreThread value
+/// \brief set the \ref MqConfigS::ignoreThread value
 MQ_EXTERN void
 MQ_DECL MqConfigSetIgnoreThread (
   struct MqS * const context,
   MQ_BOL data
 );
 
-/// \brief set the #MqConfigS::startAs value
+/// \brief set the \ref MqConfigS::startAs value
 MQ_EXTERN void
 MQ_DECL MqConfigSetStartAs (
   struct MqS * const context,
@@ -954,7 +954,7 @@ MQ_DECL MqConfigSetSetup (
   MqExitF   fThreadExit
 );
 
-/// \brief set the #MqSetupS::Event
+/// \brief set the \ref MqSetupS::Event
 MQ_EXTERN void
 MQ_DECL MqConfigSetEvent (
   struct MqS * const context,
@@ -964,7 +964,7 @@ MQ_DECL MqConfigSetEvent (
   MqTokenDataCopyF fCopy
 );
 
-/// \brief set the #MqSetupS::ServerSetup
+/// \brief set the \ref MqSetupS::ServerSetup
 MQ_EXTERN void
 MQ_DECL MqConfigSetServerSetup (
   struct MqS * const context,
@@ -974,7 +974,7 @@ MQ_DECL MqConfigSetServerSetup (
   MqTokenDataCopyF fCopy
 );
 
-/// \brief set the #MqSetupS::ServerCleanup
+/// \brief set the \ref MqSetupS::ServerCleanup
 MQ_EXTERN void
 MQ_DECL MqConfigSetServerCleanup (
   struct MqS * const context,
@@ -984,7 +984,7 @@ MQ_DECL MqConfigSetServerCleanup (
   MqTokenDataCopyF fCopy
 );
 
-/// \brief set the #MqSetupS::BgError
+/// \brief set the \ref MqSetupS::BgError
 MQ_EXTERN void
 MQ_DECL MqConfigSetBgError (
   struct MqS * const context,
@@ -1117,31 +1117,31 @@ MQ_EXTERN MQ_TIME_T MQ_DECL MqConfigGetTimeout (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
-/// \brief return the #MqIoUdsConfigS::file value
+/// \brief return the \ref MqIoUdsConfigS::file value
 MQ_EXTERN MQ_CST
 MQ_DECL MqConfigGetIoUdsFile (
   struct MqS * const context
 );
 
-/// \brief get the #MqIoTcpConfigS::host configuration data
+/// \brief get the \ref MqIoTcpConfigS::host configuration data
 MQ_EXTERN MQ_CST
 MQ_DECL MqConfigGetIoTcpHost (
   struct MqS * const context
 );
 
-/// \brief get the #MqIoTcpConfigS::port configuration data
+/// \brief get the \ref MqIoTcpConfigS::port configuration data
 MQ_EXTERN MQ_CST
 MQ_DECL MqConfigGetIoTcpPort (
   struct MqS * const context
 );
 
-/// \brief get the #MqIoTcpConfigS::myhost configuration data
+/// \brief get the \ref MqIoTcpConfigS::myhost configuration data
 MQ_EXTERN MQ_CST
 MQ_DECL MqConfigGetIoTcpMyHost (
   struct MqS * const context
 );
 
-/// \brief get the #MqIoTcpConfigS::myport configuration data
+/// \brief get the \ref MqIoTcpConfigS::myport configuration data
 MQ_EXTERN MQ_CST
 MQ_DECL MqConfigGetIoTcpMyPort (
   struct MqS * const context
@@ -1155,13 +1155,13 @@ MQ_DECL MqConfigGetIoPipeSocket (
   struct MqS * const context
 );
 
-/// \brief return the #MqConfigS::startAs value
+/// \brief return the \ref MqConfigS::startAs value
 MQ_EXTERN enum MqStartE
 MQ_DECL MqConfigGetStartAs (
   struct MqS * const context
 );
 
-/// \brief return the #MqS::statusIs value
+/// \brief return the \ref MqS::statusIs value
 MQ_EXTERN enum MqStatusIsE
 MQ_DECL MqConfigGetStatusIs (
   struct MqS * const context
@@ -1173,7 +1173,7 @@ MQ_DECL MqConfigGetStatusIs (
 /*                                                                           */
 /*****************************************************************************/
 
-/** \brief set the #MqS::self value
+/** \brief set the \ref MqS::self value
  *  \context
  *  \param[in] self a pointer to the managed context usually \e self or \e this
  */
@@ -1183,7 +1183,7 @@ MQ_DECL MqConfigSetSelf (
   void * self
 );
 
-/** \brief get the #MqS::self value
+/** \brief get the \ref MqS::self value
  *  \context
  */
 MQ_EXTERN void*
@@ -1561,7 +1561,7 @@ MQ_DECL MqFactoryCtxIdentSet (
 /// \anchor \NS{ContextLocalStorage}
 /// \endif
 
-/// \brief signature marker used in #MqS::signature
+/// \brief signature marker used in \ref MqS::signature
 #define MQ_MqS_SIGNATURE 0x212CF91
 
 #if !defined(MQ_PRIVATE_CONFIG_CONST)
@@ -1645,7 +1645,7 @@ MQ_EXTERN void MQ_DECL MqContextDelete (
 /// \ifnot MAN
 /// The following steps are performed:
 /// -# delete the \e client-server-link using: #MqLinkDelete
-/// -# if available call the \e context-specific-exit-handler: #MqSetupS::fProcessExit
+/// -# if available call the \e context-specific-exit-handler: \ref MqSetupS::fProcessExit
 /// -# or call \e application-default-exit-handler
 /// -# it is a \e panic-error to call #MqExit twice for the same object
 /// .
@@ -1856,8 +1856,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
 );
 
 /// \brief helper: wrapper for #MqLinkCreate or #MqLinkCreateChild with additional \e error-check code
-/// \details The function have to be used as argument to #MqSetupS::Child,
-/// #MqSetupS::Parent or #MqConfigSetSetup as default \e context-create function.
+/// \details The function have to be used as argument to \ref MqSetupS::Child,
+/// \ref MqSetupS::Parent or #MqConfigSetSetup as default \e context-create function.
 /// Return an \e error if an unknown \e command-line-argument was found.
 /// \ctx
 /// \param[in] args  \e command-line-arguments to configure the \e client-server-link
@@ -2295,10 +2295,10 @@ enum MqAllocE {
   MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. SysMalloc, ...)
 };
 
-/// \brief initial size of the #MqBufferS::bls object
+/// \brief initial size of the \ref MqBufferS::bls object
 #define MQ_BLS_SIZE 50
 
-/// \brief signature used in #MqBufferS::signature
+/// \brief signature used in \ref MqBufferS::signature
 #define MQ_MqBufferS_SIGNATURE 0x6021139
 
 /// \brief a single object to store a \e native-type-data-item defined by \RNS{BufferIdentifer}
@@ -3480,8 +3480,8 @@ MQ_EXTERN void MQ_DECL MqErrorLog (
 #endif
 
 /// \brief copy a #MqErrorS from \a in to \a out
-/// \param out the #MqS::error object created by #MqLinkCreate
-/// \param in  the #MqS::error object created by #MqLinkCreate
+/// \param out the \ref MqS::error object created by #MqLinkCreate
+/// \param in  the \ref MqS::error object created by #MqLinkCreate
 MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
   struct MqS * const out,
   struct MqS * const in
@@ -4883,4 +4883,11 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
+
+
+
+
+
 

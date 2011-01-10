@@ -60,33 +60,33 @@ namespace csmsgque {
 
   // PUBLIC
 
-    /// \api #MqLinkGetTargetIdent
+    /// \api MqLinkGetTargetIdent
     public string LinkGetTargetIdent()	    { 
       return Marshal.PtrToStringAnsi(MqLinkGetTargetIdent(context)); 
     }
 
-    /// \api #LinkIsParent
+    /// \api MqLinkIsParent
     public bool	    LinkIsParent()	    { 
       return MqLinkIsParent(context) == MQ_BOL.MQ_YES; 
     }
 
-    /// \api #LinkIsConnected
+    /// \api MqLinkIsConnected
     public bool	    LinkIsConnected()	    { 
       return MqLinkIsConnected(context) == MQ_BOL.MQ_YES; 
     }
 
-    /// \api #LinkGetCtxId
+    /// \api MqLinkGetCtxId
     public int	    LinkGetCtxId()	    { 
       return MqLinkGetCtxId(context); 
     }
 
-    /// \api #LinkGetParent
+    /// \api MqLinkGetParent
     public MqS	    LinkGetParent()	    { 
       IntPtr parentP = MqLinkGetParent(context);
       return (parentP == IntPtr.Zero ? null : GetSelf(parentP));
     }
 
-    /// \api #LinkCreate
+    /// \api MqLinkCreate
     public void LinkCreate(params string[] argv) {
 
       // fill the argv/alfa
@@ -104,7 +104,7 @@ namespace csmsgque {
       ErrorMqToCsWithCheck (MqLinkCreate(context, ref largv));
     }
 
-    /// \api #LinkCreateChild
+    /// \api MqLinkCreateChild
     public void LinkCreateChild(MqS parent, params string[] argv) {
 
       // fill the argv/alfa
@@ -122,12 +122,12 @@ namespace csmsgque {
       ErrorMqToCsWithCheck (MqLinkCreateChild(context, parent.context, ref largv));
     }
 
-    /// \api #LinkDelete
+    /// \api MqLinkDelete
     public void LinkDelete() {
       MqLinkDelete (context);
     }
 
-    /// \api #LinkConnect
+    /// \api MqLinkConnect
     public void LinkConnect() {
       ErrorMqToCsWithCheck (MqLinkConnect (context));
     }

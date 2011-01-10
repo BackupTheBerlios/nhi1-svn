@@ -1,4 +1,4 @@
-.TH "Mq_CC_API" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_CC_API" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,9 +9,9 @@ Mq_CC_API \-
 .ti -1c
 .RI "namespace \fBccmsgque\fP"
 .br
-.R "The CcMsgque Libraray. "
 .PP
 
+.RI "\fIThe CcMsgque Libraray. \fP"
 .in -1c
 .SS "Modules"
 
@@ -19,72 +19,63 @@ Mq_CC_API \-
 .ti -1c
 .RI "\fBMq_Buffer_CC_API\fP"
 .br
-.R "create and manage dynamic, generic, mixed typed data.  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage dynamic, generic, mixed typed data.  \fP"
 .ti -1c
 .RI "\fBMq_Context_CC_API\fP"
 .br
-.R "\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  "
 .PP
-.in +1c
 
+.RI "\fI\fIcontext\fP, the top-level data structure and \fIapplication-handle\fP  \fP"
 .ti -1c
 .RI "\fBMq_Config_CC_API\fP"
 .br
-.R "configuration of a context  "
 .PP
-.in +1c
 
+.RI "\fIconfiguration of a context  \fP"
 .ti -1c
 .RI "\fBMq_Link_CC_API\fP"
 .br
-.R "setup and manage a \fIclient-server-link\fP  "
 .PP
-.in +1c
 
+.RI "\fIsetup and manage a \fIclient-server-link\fP  \fP"
 .ti -1c
 .RI "\fBMq_Error_CC_API\fP"
 .br
-.R "create and manage error messages.  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage error messages.  \fP"
 .ti -1c
 .RI "\fBMq_Read_CC_API\fP"
 .br
-.R "extract data from an incoming \fIread-data-package\fP.  "
 .PP
-.in +1c
 
+.RI "\fIextract data from an incoming \fIread-data-package\fP.  \fP"
 .ti -1c
 .RI "\fBMq_Send_CC_API\fP"
 .br
-.R "construct an outgoing \fIsend-data-package\fP.  "
 .PP
-.in +1c
 
+.RI "\fIconstruct an outgoing \fIsend-data-package\fP.  \fP"
 .ti -1c
 .RI "\fBMq_Service_CC_API\fP"
 .br
-.R "create and manage services  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage services  \fP"
 .ti -1c
 .RI "\fBMq_Slave_CC_API\fP"
 .br
-.R "create and manage a slave context  "
 .PP
-.in +1c
 
+.RI "\fIcreate and manage a slave context  \fP"
 .ti -1c
 .RI "\fBMq_Factory_CC_API\fP"
 .br
-.R "provide an interface to create a new instance  "
 .PP
 
+.RI "\fIprovide an interface to create a new instance  \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 

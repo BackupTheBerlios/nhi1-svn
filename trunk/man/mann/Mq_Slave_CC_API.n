@@ -1,53 +1,54 @@
-.TH "Mq_Slave_CC_API" n "10 Jan 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
+.TH "Mq_Slave_CC_API" n "Mon Jan 10 2011" "Version 4.8" "ccmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-Mq_Slave_CC_API \- create and manage a slave context   
-
+Mq_Slave_CC_API \- 
 .PP
+create and manage a slave context   
+
 .SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "MqC * \fBccmsgque::MqC::SlaveGet\fP (const int id)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP \fP"
 .ti -1c
 .RI "MqC * \fBccmsgque::MqC::SlaveGetMaster\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveGetMaster\fP \fP"
 .ti -1c
 .RI "bool \fBccmsgque::MqC::SlaveIs\fP ()"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveCreate\fP (const int id, MqC *const slave)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveWorker\fP (const int id, struct \fBMqBufferLS\fP *args=NULL)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveWorkerVC\fP (const int id, int const argc, \fBMQ_CST\fP *argv)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveWorkerVA\fP (const int id, va_list ap)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveWorkerV\fP (const int id,...)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveWorkerVT\fP (const int id, vector< \fBMQ_CST\fP > &args)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP \fP"
 .ti -1c
 .RI "void \fBccmsgque::MqC::SlaveDelete\fP (const int id)  throw (MqCException)"
 .br
-.R "implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP "
+.RI "\fIimplement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP \fP"
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -122,17 +123,17 @@ the \fIworker-context\fP is identified by a \fIunique\fP integer starting with \
  
 .SH "Function Documentation"
 .PP 
-.SS "void ccmsgque::MqC::SlaveCreate (const int id, \fBMqC\fP *const  slave)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveCreate (const intid, \fBMqC\fP *constslave)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveCreate\fP 
 .PP
 Definition at line 810 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::SlaveDelete (const int id)  throw (MqCException)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveDelete (const intid)  throw (MqCException)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveDelete\fP 
 .PP
 Definition at line 839 of file ccmsgque.h.
-.SS "MqC* ccmsgque::MqC::SlaveGet (const int id)\fC [inline, inherited]\fP"
+.SS "MqC* ccmsgque::MqC::SlaveGet (const intid)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveGet\fP 
 .PP
@@ -147,26 +148,25 @@ Definition at line 799 of file ccmsgque.h.
 implement the \fBlibmsgque\fP API object: \fBMqSlaveIs\fP 
 .PP
 Definition at line 805 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::SlaveWorker (const int id, struct \fBMqBufferLS\fP * args = \fCNULL\fP)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveWorker (const intid, struct \fBMqBufferLS\fP *args = \fCNULL\fP)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
 Definition at line 816 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::SlaveWorkerV (const int id,  ...)\fC [inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveWorkerV (const intid, ...)\fC [inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
-.PP
-.SS "void ccmsgque::MqC::SlaveWorkerVA (const int id, va_list ap)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveWorkerVA (const intid, va_listap)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
 Definition at line 826 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::SlaveWorkerVC (const int id, int const  argc, \fBMQ_CST\fP * argv)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveWorkerVC (const intid, int constargc, \fBMQ_CST\fP *argv)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
 Definition at line 821 of file ccmsgque.h.
-.SS "void ccmsgque::MqC::SlaveWorkerVT (const int id, vector< \fBMQ_CST\fP > & args)\fC [inline, inherited]\fP"
+.SS "void ccmsgque::MqC::SlaveWorkerVT (const intid, vector< \fBMQ_CST\fP > &args)\fC [inline, inherited]\fP"
 .PP
 implement the \fBlibmsgque\fP API object: \fBMqSlaveWorker\fP 
 .PP
