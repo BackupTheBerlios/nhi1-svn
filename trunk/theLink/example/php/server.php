@@ -1,6 +1,6 @@
 <?php
 #+
-#§  \file       theLink/tests/server.php
+#§  \file       theLink/example/php/server.php
 #§  \brief      \$Id$
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group

@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tests/client.c
+ *  \file       theLink/example/c/client.c
  *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group

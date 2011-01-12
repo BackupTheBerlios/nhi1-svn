@@ -15,6 +15,7 @@ package main
 import (
   . "gomsgque"
   "os"
+  "fmt"
 )
 
 func main() {
@@ -29,5 +30,5 @@ func main() {
   ctx.SendSTART()
   ctx.SendI(100)
   ctx.SendEND_AND_WAIT("HLWO", 5)
-  println(ctx.ReadC())
+  fmt.Fprintln(os.Stdout,ctx.ReadC())
 }

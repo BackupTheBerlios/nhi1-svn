@@ -220,6 +220,31 @@ static int NS(Support) (
   return TCL_OK;
 }
 
+/** \brief create the <B>msgque help</B> subcommand
+ *
+ *  \tclmsgque_man
+ *
+ * \param[in] interp current Tcl interpreter
+ * \param[in] objc number of objects in \e objv
+ * \param[in] objv array of \e Tcl_Obj objects
+ * \return Tcl error-code
+ */
+static int NS(Help) (
+  Tcl_Interp * interp,
+  int objc,
+  struct Tcl_Obj *const *objv
+)
+{
+  MQ_CST str;
+  struct MqBufferS *buf = MqBufferCreate(MQ_ERROR_PANIC, 1000);
+  MqBufferAppendC(buf, "usage: tclmsgque help\n\n");
+  MqBufferAppendC(buf, MqHelpMsgque());
+  MqBufferGetC(buf, &str);
+  Tcl_SetResult (interp, (MQ_STR)str, TCL_VOLATILE);
+  MqBufferDelete(&buf);
+  return TCL_OK;
+}
+
 /** \brief create the <B>tclmsgque Init</B> subcommand
  *
  *  \tclmsgque_man
@@ -335,6 +360,7 @@ static int NS(MsgqueCmd) (
     { "Main",		      NS(Main)		      },
     { "const",		      NS(Const)		      },
     { "support",	      NS(Support)	      },
+    { "help",		      NS(Help)		      },
     { "Init",		      NS(InitCmd)	      },
     { "FactoryAdd",	      NS(FactoryAdd)	      },
     { "FactoryDefault",	      NS(FactoryDefault)      },

@@ -40,8 +40,7 @@ type MyFirstService MyServer
   }
 
 func main() {
-  FactoryAdd("MyServer", NewMyServer)
-  srv := FactoryCall("MyServer")
+  srv := FactoryNew("MyServer", NewMyServer)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

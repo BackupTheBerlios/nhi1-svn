@@ -81,7 +81,6 @@ pGenericDelete (
     struct GenericS * const generiC = *genericP;
     struct MqS * const context = generiC->context;
     SysCloseSocket (context, __func__, MQ_YES, &generiC->sock);
-    MqErrorPrint(context);
     MqSysFree (*genericP);
   }
 }

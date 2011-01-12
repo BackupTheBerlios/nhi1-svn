@@ -17,11 +17,11 @@
 
 #+
 #§  \file       theLink/example/php/Makefile.am
-#§  \brief      \$Id: Makefile.am 270 2010-11-04 18:49:36Z aotto1968 $
+#§  \brief      \$Id: Makefile.am 409 2011-01-12 09:57:19Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 270 $
+#§  \version    \$Rev: 409 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

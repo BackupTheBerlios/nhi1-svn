@@ -16,7 +16,7 @@ import (
   . "gomsgque"
     "os"
     "path"
-    //"fmt"
+    "fmt"
 )
 
 func Get(ctx *MqS) string {
@@ -69,14 +69,14 @@ func main() {
   c101.LinkCreateChild(c10, os.Args[0], "--name", "c101", "--srvname", "s101")
 
   // do the tests
-  println(Get(c0))
-  println(Get(c00))
-  println(Get(c01))
-  println(Get(c000))
-  println(Get(c1))
-  println(Get(c10))
-  println(Get(c100))
-  println(Get(c101))
+  fmt.Fprintln(os.Stdout,Get(c0))
+  fmt.Fprintln(os.Stdout,Get(c00))
+  fmt.Fprintln(os.Stdout,Get(c01))
+  fmt.Fprintln(os.Stdout,Get(c000))
+  fmt.Fprintln(os.Stdout,Get(c1))
+  fmt.Fprintln(os.Stdout,Get(c10))
+  fmt.Fprintln(os.Stdout,Get(c100))
+  fmt.Fprintln(os.Stdout,Get(c101))
 
   // cleanup
   c0.LinkDelete()

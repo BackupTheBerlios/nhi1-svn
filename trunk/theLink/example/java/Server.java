@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tests/Server.java
+ *  \file       theLink/example/java/Server.java
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

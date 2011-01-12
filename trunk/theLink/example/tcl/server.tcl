@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/tests/server.tcl
+#§  \file       theLink/example/tcl/server.tcl
 #§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group

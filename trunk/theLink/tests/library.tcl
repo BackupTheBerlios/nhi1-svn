@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#set tcl_traceExec 1
+#set tcl_traceExec 2
 
 if {![info exists env(TS_LIBRARY)]} {
   set env(TS_LIBRARY) [info script]
@@ -797,97 +797,96 @@ set args [list -verbose {start pass body error}]
 while {true} {
   set arg [Pop argv]
   switch -regexp $arg {
-    "--testing"	{
+    {^--testing$} {
       set argv [list --only-pipe --only-binary --max 5 --only-num 1 {*}$argv]
     }
-    "--mem-testing" {
+    {^--mem-testing$} {
       set argv [list --only-pipe --only-binary --max 5 {*}$argv]
     }
-    "--full-testing" {
+    {^--full-testing$} {
       set argv [list --only-binary --max 5 {*}$argv]
     }
-    "--thread-testing" {
+    {^--thread-testing$} {
       set argv [list --only-binary --max 5 --only-thread --only-tcp {*}$argv]
     }
-    "--fork-testing" {
+    {^--fork-testing$} {
       set argv [list --only-binary --max 5 --only-fork --only-uds {*}$argv]
     }
-    "--spawn-testing" {
+    {^--spawn-testing$} {
       set argv [list --only-binary --max 5 --only-spawn --only-tcp {*}$argv]
     }
-    "--remote-testing" {
+    {^--remote-testing$} {
       set argv [list --only-tcp --port 7777 --only-thread --only-binary --use-remote --max 5 {*}$argv]
     }
-    "--use-remote" {
+    {^--use-remote$} {
       set env(USE_REMOTE) true
     }
-    "--debug" {
+    {^--debug$} {
       set env(TS_DEBUG)	  [Pop argv]
     }
-    "--timeout" {
+    {^--timeout$} {
       set env(TS_TIMEOUT) [Pop argv]
     }
-    "--setup" {
+    {^--setup$} {
       set env(TS_SETUP)	  true
     }
-    "--host" {
+    {^--host$} {
       set env(TS_HOST)	  [Pop argv]
     }
-    "--port" {
+    {^--port$} {
       set env(TS_PORT)	  [Pop argv]
     }
-    "--file" {
+    {^--file$} {
       set env(TS_FILE)	  [Pop argv]
     }
-    "--pid" {
+    {^--pid$} {
       set env(TS_PID)	  [Pop argv]
     }
-    "--max" {
+    {^--max$} {
       set env(TS_MAX)	  [Pop argv]
     }
-    "--filter" {
+    {^--filter$} {
       set env(TS_FILTER)  [Pop argv]
     }
-    "--filter-server" {
+    {^--filter-server$} {
       set env(TS_FILTER_SERVER)  [Pop argv]
     }
-    "--filter-client" {
+    {^--filter-client$} {
       set env(TS_FILTER_CLIENT)  [Pop argv]
     }
-    "--only(-binary|-string)" {
+    {^--only(-binary|-string)$} {
       set env(BIN_LST) [string range $arg 7 end]
     }
-    "--server" {
+    {^--server$} {
       set env(SRV_LST) [Pop argv]
     }
-    "--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc)+" {
+    {^--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc)+$} {
       set T		  [lrange [split $arg -] 3 end]
-      set env(LNG_LST)	  {*}$T
+      set env(LNG_LST)	  $T
       # "c" matches multiple targets -> add word border definition
       set IDX		  [lsearch -exact $T c]
       if {$IDX != -1}	  { set T [lreplace $T $IDX $IDX "\\mc\\M"] }
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--only(-uds|-pipe|-tcp)+" {
+    {^--only(-uds|-pipe|-tcp)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(COM_LST)	  {*}$T
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--only(-fork|-thread|-spawn)+" {
+    {^--only(-fork|-thread|-spawn)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(START_LST)  [filter -or START_LST {*}$T]
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--use(-fork|-thread|-spawn)" {
+    {^--use(-fork|-thread|-spawn)$} {
       set T		      [string range $arg 6 end]
       set env(START_LST)      [filter START_LST $T]
       set env(TS_STARTUP_AS)  --$T
     }
-    "--only-num"  {
+    {^--only-num$} {
       set env(PAR_LST)	[Pop argv]
     }
-    "-h" -
-    "--help" {
+    {^-(h|-help)$} {
       puts "USAGE [file tail $argv0]: OPTIONS ...."
       puts ""
       puts " testing ARRAGEMENTS"
@@ -927,7 +926,7 @@ while {true} {
       puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
       exit 1
     }
-    "--help-msgque" {
+    {^--help-msgque$} {
       set TS_HELP_MSGQUE true
     }
     default {
@@ -980,7 +979,7 @@ customMatch expr _expr
 package require TclMsgque
 
 if {$TS_HELP_MSGQUE} {
-  puts [tclmsgque MqS --help-msgque]
+  puts [tclmsgque help]
   exit 0
 }
 

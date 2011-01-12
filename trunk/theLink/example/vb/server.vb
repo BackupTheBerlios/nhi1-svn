@@ -1,5 +1,5 @@
 REM
-REM  \file       theLink/tests/vbserver.vb
+REM  \file       theLink/example/vb/server.vb
 REM  \brief      \$Id$
 REM  
 REM  (C) 2009 - NHI - #1 - Project - Group

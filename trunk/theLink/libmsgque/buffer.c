@@ -383,17 +383,12 @@ _pBufferNewSize (
   MQ_SIZE const newSize
 )
 {
-
-/*
-if (newSize == buf->size+1) {
-  printLog (msgque, "buffer SIZE warning: newSize<%i> = buf->size<%i> + 1 !!\n",
-    newSize, buf->size);
-}
-*/
+//if (newSize == buf->size+1) {
+//  printXLV (MQ_ERROR_PRINT, "buffer SIZE warning: newSize<%i> = buf->size<%i> + 1 !!\n", newSize, buf->size);
+//}
 
   MQ_SIZE size = newSize + (newSize / 3);  // + 1/3 reserve
-  // don't use buf->cursize, because this can be invalid at the time this function is called
-  MQ_SIZE cursize = (buf->cur.B - buf->data);
+
   if (unlikely (buf->alloc == MQ_ALLOC_DYNAMIC)) {
     // this is "MQ_ALLOC_DYNAMIC"
     // the buf->size+1 is used to fit a string with '\0' and strlen() size into the buffer
@@ -404,11 +399,10 @@ if (newSize == buf->size+1) {
     buf->alloc = MQ_ALLOC_DYNAMIC;
   }
   buf->size = size;
-  buf->cur.B = buf->data + cursize;
-  memset (buf->cur.B, '\0', (buf->size - cursize));
-
+  buf->cur.B = buf->data + buf->cursize;
+  memset (buf->cur.B, '\0', (buf->size - buf->cursize));
   // additional debugging output
-  //MqDLogV (msgque, header, 5, "increase buffer size to " MQ_FORMAT_Z " bytes\n", buf->size);
+  //printXLV (buf->context, "increase buffer size to " MQ_FORMAT_Z " bytes\n", buf->size);
 }
 
 /*****************************************************************************/

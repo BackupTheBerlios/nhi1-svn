@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/tests/server.py
+#§  \file       theLink/example/python/server.py
 #§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group

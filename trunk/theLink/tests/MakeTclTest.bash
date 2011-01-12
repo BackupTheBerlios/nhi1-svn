@@ -49,6 +49,7 @@ POSTFIX="cat"
 }
 [[ $1 == "-gdb" ]] && {
   PREFIX="gdb -d ../perlmsgque/Net*/ --tui --args"
+  POSTFIX=""
   TEE=no
   shift
 }

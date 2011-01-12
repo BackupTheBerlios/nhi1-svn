@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/server.go
+ *  \file       theLink/example/go/server.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -678,6 +678,9 @@ type CFG1 Server
 	this.ConfigSetStartAs (START(this.ReadI()))
 	this.SendI (int32(this.ConfigGetStartAs()))
 	this.ConfigSetStartAs (old)
+      }
+      case "DefaultIdent": {
+	this.SendC (FactoryDefaultIdent())
       }
       default: {
 	this.ErrorC ("CFG1", 1, "invalid command: ")

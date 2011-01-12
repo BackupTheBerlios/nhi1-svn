@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/tests/server.rb
+#§  \file       theLink/example/ruby/server.rb
 #§  \brief      \$Id$
 #§  
 #§  (C) 2010 - NHI - #1 - Project - Group

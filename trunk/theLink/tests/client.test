@@ -122,6 +122,44 @@ the second argument (argv) of 'MqLinkCreate'
   --pipe             use Socket-Pair Sockets             (default: yes)
 }
 
+test client-4c {tclmsgque help} \
+    -constraints  tcl \
+    -body       { tclmsgque help } \
+    -result	{usage: tclmsgque help
+
+ msgque wrapper [OPTION]:
+  --name str         the display name of the msgque      (default: executable)
+  --srvname str      the display name of the server      (default: executable)
+  --string           use string based protocol           (default: no=binary)
+  --silent           use silent mode                     (default: no)
+  --debug #          use debug level (0-9)               (default: 0)
+  --daemon pidfile   start as daemon and save the pid    (default: no)
+
+ generic tcp/uds io [OPTION]:
+  --timeout #        timeout for connect                 (default: 10 sec)
+  --buffersize #     buffer size in bytes                (default: 4096)
+
+ create a new entity as [OPTION]:
+  --fork             new process using 'fork'            (default: no)
+  --thread           new thread                          (default: no)
+  --spawn            new process using 'spawn'           (default: no)
+
+ tcp specific [OPTION]:
+  --tcp              use a Tcp Sockets                   (default: no)
+   --host str        use 'str' as remote host name       (default: empty)
+   --port str        use 'str' as remote port name       (default: empty)
+   --myhost str      use 'str' as local host name        (default: empty)
+   --myport str      use 'str' as local port name        (default: empty)
+
+ uds specific [OPTION]:
+  --uds              use Unix Domain Sockets             (default: no)
+   --file str        use 'str' as filename               (default: empty)
+
+ pipe specific [OPTION]:
+  --pipe             use Socket-Pair Sockets             (default: yes)
+
+}
+
 test client-5 {server help} \
     -constraints  c \
     -body       { Exec {*}[getServer c] --help } \

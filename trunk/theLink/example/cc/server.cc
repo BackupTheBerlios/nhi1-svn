@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/tests/ccserver.cc
- *  \brief      \$Id: ccserver.cc -1   $
+ *  \file       theLink/example/cc/server.cc
+ *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: -1 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

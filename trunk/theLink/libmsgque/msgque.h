@@ -1675,6 +1675,10 @@ MQ_EXTERN MQ_STR MQ_DECL MqHelp (
   MQ_CST  tool 
 );
 
+MQ_EXTERN MQ_STR MQ_DECL MqHelpMsgque ( 
+  void
+);
+
 /** check for left over arguments from parameter \e argv of #MqLinkCreate
  *  \context
  *  \param[in,out] argvP a pointer to the argv, the memory will be freed and the value will be set to \c NULL

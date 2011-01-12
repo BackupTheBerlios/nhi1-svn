@@ -16,33 +16,34 @@ LibMsgque Test Environment
 
 
 The scripts used in this directory are used to verify the libmsgque
-library inclusing the tcl, java and python language binding. 
+library including the the other language bindings. 
 Testing is done using the tcltest feature of the tcl distribution.
-The tests are done using 3 different approaches:
 
   1. using the test feature of the build environment
+	> cd NHI1-X.X
 	> make check (not available for windows)
 
-  2. invoke an individual test script
-	> tclsh tests/int.test (example)
+  2. invoke an individual test script for language "python" and "perl"
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash int.test --only-python-perl
 
-  3. invoke all tests
-	> tclsh tests/all.tcl
+  3. invoke all tests for language "go" using "threads" and only "binary" data
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ./all.tcl --only-go --only-threads --only-binary
 
-  4. example: invoke all tests but only using the "python" interpreter
-	> tclsh tests/all.tcl --only-python
-
-  5. example: invoke all tests but only using the "tcp/ip" server
-	> tclsh tests/all.tcl --only-tcp
+  4. start "tcl" server using "tcp" and listing on port "7777" and "spawn"
+     for every new connection a new server
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ../example/tcl/server.tcl --tcp --port 7777 --spawn
 
 Help is available with the following commands:
 
   1. test specific help
-	> tclsh tests/all.tcl --help
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ./all.tcl --help
+     or
+	> ./MakeTclTest.bash ./all.tcl --help-msgque
 
   2. tcltest specific help
 	> man tcltest
 
-Development-Tests are done using
-
-  1. MakeTclTest.bash

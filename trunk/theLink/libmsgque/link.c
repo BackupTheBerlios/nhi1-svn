@@ -52,17 +52,11 @@ sInitGetFirst (void)
   return (MqInitBuf && MqInitBuf->cursize > 0 ? MqInitBuf->data[0]->cur.C : "unknown");
 }
 
-static MQ_STR
-sHelp (void)
+MQ_STR
+MqHelpMsgque ()
 {
     MqBufferCreateStatic (buf, 2000);
 
-    MqBufferAppendV (buf, "\n");
-    MqBufferAppendV (buf, "'--help-msgque' summarize:\n");
-    MqBufferAppendV (buf, "\n");
-    MqBufferAppendV (buf, "These are the options for the 'libmsgque' library passed by\n");
-    MqBufferAppendV (buf, "the second argument (argv) of 'MqLinkCreate'\n");
-    MqBufferAppendV (buf, "\n");
     MqBufferAppendV (buf, " msgque wrapper [OPTION]:\n");
     MqBufferAppendV (buf, "  --name str         the display name of the msgque      (default: executable)\n");
     MqBufferAppendV (buf, "  --srvname str      the display name of the server      (default: executable)\n");
@@ -456,7 +450,13 @@ sMqCheckArg (
 	    ArgBUF(context->config.io.tcp.host, "--host");
 	    continue;
 	  } else if (!strncmp(argC, "help-msgque", 11)) {
-	    fputs(sHelp(),stderr);
+	    fputs ("\n",stderr);
+	    fputs ("'--help-msgque' summarize:\n",stderr);
+	    fputs ("\n",stderr);
+	    fputs ("These are the options for the 'libmsgque' library passed by\n",stderr);
+	    fputs ("the second argument (argv) of 'MqLinkCreate'\n",stderr);
+	    fputs ("\n",stderr);
+	    fputs(MqHelpMsgque(),stderr);
 	    MqSysExit(0,EXIT_SUCCESS);
 	  } else if (!strncmp(argC, "help", 4)) {
 	    if (context->setup.fHelp) {

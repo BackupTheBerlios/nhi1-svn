@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tests/csserver.cs
+ *  \file       theLink/example/csharp/server.cs
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

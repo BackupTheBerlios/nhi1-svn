@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tests/stat.h
+ *  \file       theLink/example/c/stat.h
  *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group

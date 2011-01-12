@@ -1,5 +1,5 @@
 #+
-#§  \file       theLink/tests/server.pl
+#§  \file       theLink/example/perl/server.pl
 #§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
