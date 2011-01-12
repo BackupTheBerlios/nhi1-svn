@@ -59,7 +59,7 @@ ALIASES		    += "change=\xrefitem changes \"Change\" \"Change List\""
 
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css
-GENERATE_MAN	    = YES
+GENERATE_MAN	    = NO
 MAN_EXTENSION	    = .n
 MAN_OUTPUT	    = $(SRCDIR)/../man
 

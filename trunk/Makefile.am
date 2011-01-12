@@ -23,7 +23,6 @@ endif
 if USE_GUARD
 SUBDIRS += theGuard
 endif
-dist_man_MANS =  $(srcdir)/man/mann/*.n
 
 CTAGSFLAGS = --c-kinds=+p
 
