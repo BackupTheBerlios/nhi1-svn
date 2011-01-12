@@ -17,8 +17,8 @@ BEGIN_C_DECLS
 
 struct MqEventS;
 
-void pEventAdd ( struct MqS * const , MQ_SOCK * const);
-void pEventDel ( struct MqS const * const );
+void pEventAdd ( MQ_CST, struct MqS * const , MQ_SOCK * const);
+void pEventDel ( MQ_CST, struct MqS const * const );
 
 enum MqErrorE pEventCheck (struct MqS*const, struct MqEventS*, enum MqIoSelectE const, struct timeval*const);
 enum MqErrorE pEventStart (struct MqS*const, struct MqEventS*, struct timeval const*const, EventCreateF const);

@@ -1,4 +1,4 @@
-.TH "MqConfigS" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "MqConfigS" n "Tue Jan 11 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -153,7 +153,7 @@ set the human-readable name of the \fIserver-context\fP Use the \fIserver-name\f
 C> (server-name) [2009-01-12:16-22-27] [4-0-sIoCheckArg]: option:  io->com = PIPE 
 .fi
 .PP
- If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fInull\fP) 
+ If the \fIserver-name\fP is not defined on the \fIclient\fP the \fIserver\fP is using \fBname\fP to create a usable name. (default: \fINothing\fP) 
 .PP
 Definition at line 663 of file msgque.h.
 .SS "enum \fBMqStartE\fP \fBMqConfigS.startAs\fP"
@@ -184,4 +184,4 @@ Definition at line 626 of file msgque.h.
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

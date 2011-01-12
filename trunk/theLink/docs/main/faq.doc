@@ -155,7 +155,7 @@ and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
  - a new parent context on the server is in fact a struct able to store every per-context data.
  - For \tclmsgque the new context struct is a command and every new Server-Parent-Context is a new interpreter.
  - For \javamsgque the new context is a #javamsgque.MqS object and every new Server-Parent-Context is a new thread.
- - For \pymsgque the new context is a #pymsgque.MqS type and every new Server-Parent-Context is a new interpreter.
+ - For \pymsgque the new context is a pymsgque.MqS type and every new Server-Parent-Context is a new interpreter.
  .
 
 \section _8a 8.a When libmsgque was first being mentioned, it was described as a replacement for shared libraries.

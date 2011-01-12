@@ -1,4 +1,4 @@
-.TH "rubymsgque Tutorial" n "Mon Jan 10 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
+.TH "rubymsgque Tutorial" n "Tue Jan 11 2011" "Version 4.8" "rubymsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -125,7 +125,7 @@ Last: submit the a data package to the link target using one of:
 .IP "  \(bu" 4
 \fBctx.SendEND(token)\fP
 .IP "  \(bu" 4
-\fBctx.SendEND_AND_WAIT(token,?timeout=MQ_TIMEOUT_USER?)\fP
+\fBctx.SendEND_AND_WAIT(token,?timeout=TIMEOUT_USER?)\fP
 .IP "  \(bu" 4
 \fBctx.SendEND_AND_CALLBACK(token,callback)\fP
 .IP "  \(bu" 4

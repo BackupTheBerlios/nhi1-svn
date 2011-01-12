@@ -108,7 +108,7 @@ PipeServer (
 )
 {
   // listen for events on the "server" socket of the socketpair
-  return pIoEventAdd(pipe->io, &pipe->config->socket[1]);
+  return pIoEventAdd(__func__, pipe->io, &pipe->config->socket[1]);
 }
 
 enum MqErrorE
@@ -117,7 +117,7 @@ PipeConnect (
 )
 {
   // listen for event on the "client" socket of the socketpair
-  return pIoEventAdd(pipe->io, &pipe->config->socket[0]);
+  return pIoEventAdd(__func__, pipe->io, &pipe->config->socket[0]);
 }
 
 /*****************************************************************************/

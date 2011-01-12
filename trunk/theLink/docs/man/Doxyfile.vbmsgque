@@ -23,10 +23,30 @@ ALIASES		    += "selftut=vbmsgquetut"
 ALIASES		    += "NS{1}=vb_\1"
 ALIASES		    += "lang=VB.NET"
 ALIASES		    += "fileextension=vb"
+ALIASES		    += "dirname=vb"
 ALIASES		    += "null=\e Nothing"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=Imports csmsgque"
+
+ALIASES		    += "FactoryReturn=\ref csmsgque::MqFactorySException"
+ALIASES		    += "FactoryDefault=MqFactoryC<T>::Default(\C ident)"
+ALIASES		    += "FactoryDefault2=MqFactoryC<T>::Default()"
+ENABLED_SECTIONS    += FactoryDefault2
+ALIASES		    += "FactoryDefaultIdent=MqFactoryC<T>::DefaultIdent() As \C"
+ALIASES		    += "FactoryAdd=MqFactoryC<T>::Add(\C ident)"
+ALIASES		    += "FactoryAdd2=MqFactoryC<T>::Add()"
+ENABLED_SECTIONS    += FactoryAdd2
+ALIASES		    += "FactoryNew=MqFactoryC<T>::New(\C ident) As T*"
+ALIASES		    += "FactoryNew2=MqFactoryC<T>::New() As T*"
+ENABLED_SECTIONS    += FactoryNew2
+ALIASES		    += "FactoryCall=MqFactoryC<T>::Call(\C ident) As T*"
+ALIASES		    += "FactoryCall2=MqFactoryC<T>::Call() As T*"
+ENABLED_SECTIONS    += FactoryCall2
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=ctx.MqFactoryCtxIdentGet() As \C"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -217,9 +237,9 @@ ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token As String, AddressOf callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token As String, [id=0 As Integer])"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
-ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout As Integer, MqS.WAIT.(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
-ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout As Integer, \MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(\MQ_TIMEOUT_DEFAULT(|USER|MAX), \MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(\MQ_WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "ProcessEvent4=ctx.ProcessEvent()"
 ENABLED_SECTIONS    += ProcessEvent2
 ENABLED_SECTIONS    += ProcessEvent3

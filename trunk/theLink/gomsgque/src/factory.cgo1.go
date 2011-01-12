@@ -80,6 +80,13 @@ func FactoryAdd(ident string, cb FactoryF) {
 	lockFactory[&cb] = true
 }
 
+func FactoryDefault(ident string, cb FactoryF) {
+	v := _Cfunc_CString(ident)
+	r := _Cfunc_gomsgque_FactoryDefault(v, _Ctypedef_MQ_PTR(&cb))
+	_Cfunc_free(unsafe.Pointer(v))
+	iErrorFactoryToGoWithCheck(r)
+	lockFactory[&cb] = true
+}
 
 func FactoryDefaultIdent() string {
 	return _Cfunc_GoString(_Cfunc_MqFactoryDefaultIdent())

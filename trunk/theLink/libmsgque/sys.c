@@ -73,7 +73,7 @@
 
 BEGIN_C_DECLS
 
-struct MqLalS MqLal;
+MQ_EXTERN struct MqLalS MqLal;
 
 /*****************************************************************************/
 /*                                                                           */

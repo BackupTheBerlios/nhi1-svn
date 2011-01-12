@@ -610,7 +610,7 @@ error1:
 	      context->refCount--;
 	      return pErrorSetExitWithCheck(context);
 	    } else {
-	      pMqShutdown(context,__func__);
+	      pMqShutdown(__func__, context);
 	    }
 	  }
 	  break;

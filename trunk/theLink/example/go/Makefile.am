@@ -22,49 +22,51 @@ SUFFIXES = .go .bin $(EXEEXT)
 dummy:	all
 
 .go.bin:
-	$(GC) -o $@ $<
+	$(GC) -I $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
 
 .bin$(EXEEXT):
-	$(LD) -o $@ $<
+	$(LD) -L $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
+
+GOMSGQUE = $(abs_top_srcdir)/theLink/gomsgque/src/_obj/gomsgque.a
 
 ## all executables depend on our new created "gomsgque.a" library
 
 BUILT_SOURCES = server$(EXEEXT)
-server$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+server$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
-MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+MyClient$(EXEEXT): $(GOMSGQUE)
+MyServer$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += Filter3$(EXEEXT)
-Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter3$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += mulclient$(EXEEXT)
-mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulclient$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += mulserver$(EXEEXT)
-mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+mulserver$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += manfilter$(EXEEXT)
-manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+manfilter$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += testserver$(EXEEXT)
-testserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testserver$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += testclient$(EXEEXT)
-testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+testclient$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += Filter1$(EXEEXT)
-Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter1$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += Filter2$(EXEEXT)
-Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter2$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += Filter4$(EXEEXT)
-Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter4$(EXEEXT): $(GOMSGQUE)
 
 BUILT_SOURCES += Filter5$(EXEEXT)
-Filter5$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+Filter5$(EXEEXT): $(GOMSGQUE)
 
 ##
 ## ==========================================================================

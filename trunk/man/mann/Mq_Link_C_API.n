@@ -1,4 +1,4 @@
-.TH "Mq_Link_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Link_C_API" n "Tue Jan 11 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -177,7 +177,7 @@ if a \fIcontext\fP is deleted the \fIdepending\fP context-tree is deleted too.
 .PP 
 .SS "enum \fBMqErrorE\fP MqLinkConnect (struct \fBMqS\fP *constctx)"
 .PP
-re-connect a \fIclient-server-link\fP after a server crash or a network downtime Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/csharp/Filter4.cs\fP example. 
+re-connect a \fIclient-server-link\fP after a server crash or a network downtime Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/vb/Filter4.vb\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -297,7 +297,7 @@ get the \fIparent-context\fP from a client/server link \fBParameters:\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fInull\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
 .RE
 .PP
 
@@ -310,7 +310,7 @@ the \fIparent-context\fP or \fInull\fP if not a \fIchild-context\fP
 .PP
 \fBReturns:\fP
 .RS 4
-the \fIparent-context\fP or \fInull\fP if not a \fIchild-context\fP 
+the \fIparent-context\fP or \fINothing\fP if not a \fIchild-context\fP 
 .RE
 .PP
  
@@ -327,7 +327,7 @@ get the \fIident\fP of the \fIlink-target\fP This function is only useful if the
 .PP
 \fBReturns:\fP
 .RS 4
-get the \fIident\fP of the \fIlink-target\fP or \fInull\fP if not connected 
+get the \fIident\fP of the \fIlink-target\fP or \fINothing\fP if not connected 
 .RE
 .PP
 
@@ -384,4 +384,4 @@ a boolean value, \fItrue\fP or \fIfalse\fP
 Definition at line 1921 of file msgque.h.
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

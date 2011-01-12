@@ -333,9 +333,11 @@ MqErrorPrint (
   struct MqS * const context
 )
 {
-  fprintf(stderr, "BACKGROUND ERROR: %s\n", (MQ_STR) context->error.text->data);
-  fflush(stderr);
-  MqErrorReset(context);
+  if (MqErrorCheckI(MqErrorGetCodeI(context))) {
+    fprintf(stderr, "BACKGROUND ERROR: %s\n", (MQ_STR) context->error.text->data);
+    fflush(stderr);
+    MqErrorReset(context);
+  }
 }
 
 enum MqErrorE

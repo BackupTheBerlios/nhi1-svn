@@ -98,6 +98,7 @@ case "$CMD" in
   *.rb)		  EXE="$RUBY";;
   *.php)	  EXE="$PHP";;
   *.exe)	  EXE="$MONO";;
+  *.go)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *.cc)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *.c)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
   *)		  EXE="";;

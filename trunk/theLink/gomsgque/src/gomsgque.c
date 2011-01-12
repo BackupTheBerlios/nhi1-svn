@@ -204,6 +204,18 @@ gomsgque_FactoryAdd (
   );
 }
 
+enum MqFactoryReturnE
+gomsgque_FactoryDefault (
+  MQ_CST const ident,
+  MQ_PTR data
+)
+{
+  return MqFactoryDefault(ident,
+    sFactoryCreate, data, sFactoryFree, 
+    sFactoryDelete, NULL, NULL
+  );
+}
+
 struct FactoryCallReturn
 gomsgque_FactoryNew (
   MQ_CST const ident,
@@ -426,7 +438,4 @@ gomsgque_Init() {
 
   MqFactoryDefault("gomsgque", sFactoryCreate, NULL, NULL, sFactoryDelete, NULL, NULL);
 }
-
-
-
 

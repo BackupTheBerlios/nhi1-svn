@@ -140,7 +140,7 @@ pSlaveItemShutdown (
   // attention !! SLAVE set "slave->slaves[id]" use a teporary variable as work-around
   slave_context = slave->slaves[id];
   MqDLogV(slave->context, 5, "shutdown SLAVE <%p>\n", (void*) slave_context);
-  pMqShutdown (slave_context,__func__);
+  pMqShutdown (__func__, slave_context);
 }
 
 enum MqErrorE

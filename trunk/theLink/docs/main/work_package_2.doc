@@ -72,7 +72,7 @@ With the help of the \AllLngTxt{filter,Filter} technology a pipeline (still sync
 client <--> filter1 <--> ... <--> filterN <--> server
 \endverbatim
 
-With the help of the already implemented server identification configuration option \AllLngTxtC{ident}
+With the help of the already implemented server identification configuration option \AllLngTxt{FactoryCtxIdentGet}
 the technology of message routing is possible. The \e server register himself to a router and the 
 \e client send the message to the router using \b only the \b ident value for target identification. 
 The router is responsible to send the message to the \e server.

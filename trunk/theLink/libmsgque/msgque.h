@@ -2137,19 +2137,19 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
  *  \param[in] timeout the maximum \e wait-time in seconds until a \e timeout-error is raised,
  *    possible values are:
  *  - \b >0, use this value as number of seconds.
- *  - <B>\MQ_TIMEOUT_DEFAULT = -1</B>, \copydoc MQ_TIMEOUT_DEFAULT.  \MQ_TIMEOUT_USER for \MQ_WAIT_ONCE
- *    or \MQ_TIMEOUT_MAX for \MQ_WAIT_FOREVER. \b default
- *  - <B>\MQ_TIMEOUT_USER = -2</B>, \copydoc MQ_TIMEOUT_USER
- *  - <B>\MQ_TIMEOUT_MAX = -3</B>, \copydoc MQ_TIMEOUT_MAX
+ *  - <B><TT>\MQ_TIMEOUT_DEFAULT</TT> = -1</B>, <TT>\MQ_TIMEOUT_USER</TT> for <TT>\MQ_WAIT_ONCE</TT>
+ *    or <TT>\MQ_TIMEOUT_MAX</TT> for <TT>\MQ_WAIT_FOREVER</TT>. \b default, \copybrief MQ_TIMEOUT_DEFAULT
+ *  - <B><TT>\MQ_TIMEOUT_USER</TT> = -2</B>, \copybrief MQ_TIMEOUT_USER
+ *  - <B><TT>\MQ_TIMEOUT_MAX</TT> = -3</B>, \copybrief MQ_TIMEOUT_MAX
  *  .
  *  \param[in] wait the \e operation-mode used to define the behaviour,
  *    possible values are:
- *  - <B>\MQ_WAIT_NO = 0</B>, don't wait for an event just do the check and comeback. if an
+ *  - <B><TT>\MQ_WAIT_NO</TT> = 0</B>, don't wait for an event just do the check and comeback. if an
  *      Event is available process the event, but only one. If no Event is available
  *      return with #MQ_CONTINUE. \b default
- *  - <B>\MQ_WAIT_ONCE = 1</B>, wait maximum \e timeout seconds for only \e one event or raise
+ *  - <B><TT>\MQ_WAIT_ONCE</TT> = 1</B>, wait maximum \e timeout seconds for only \e one event or raise
  *      a \e timeout-error if no event was found.
- *  - <B>\MQ_WAIT_FOREVER = 2</B>, wait maximum \e timeout seconds for a event. If an event was found
+ *  - <B><TT>\MQ_WAIT_FOREVER</TT> = 2</B>, wait maximum \e timeout seconds for a event. If an event was found
  *      process the event. If no event was found, raise a \e timeout-error. After the event was
  *      processed continue to listen for a the new event. 
  *      The function will only come back on \e error or on \e exit.

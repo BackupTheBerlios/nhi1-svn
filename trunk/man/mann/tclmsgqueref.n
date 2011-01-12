@@ -1,4 +1,4 @@
-.TH "tclmsgque" n "Mon Jan 10 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
+.TH "tclmsgque" n "Tue Jan 11 2011" "Version 4.8" "tclmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -720,7 +720,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fC-wait FOREVER\fP.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the -wait FOREVER.
 .PP
 \fBDefinition of a 'parent-context'\fP
 .br
@@ -1096,7 +1096,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fB\fC-timeout DEFAULT\fP = -1\fP, request the default timeout value . \fC-timeout USER\fP for \fC-wait ONCE\fP or \fC-timeout MAX\fP for \fC-wait FOREVER\fP. \fBdefault\fP 
+\fB\fC-timeout DEFAULT\fP = -1\fP, \fC-timeout USER\fP for \fC-wait ONCE\fP or \fC-timeout MAX\fP for \fC-wait FOREVER\fP. \fBdefault\fP, request the default timeout value 
 .IP "\(bu" 2
 \fB\fC-timeout USER\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2

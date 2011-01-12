@@ -22,7 +22,7 @@ __cgo_size_assert(double, 8)
 #include <string.h>
 
 void
-_cgo_24cdbd206446_Cfunc_MqFactoryErrorMsg(void *v)
+_cgo_be8099d53211_Cfunc_MqFactoryErrorMsg(void *v)
 {
 	struct {
 		enum MqFactoryReturnE p0;
@@ -34,7 +34,7 @@ _cgo_24cdbd206446_Cfunc_MqFactoryErrorMsg(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_MqFactoryDefaultIdent(void *v)
+_cgo_be8099d53211_Cfunc_MqFactoryDefaultIdent(void *v)
 {
 	struct {
 		MQ_CST r;
@@ -44,7 +44,20 @@ _cgo_24cdbd206446_Cfunc_MqFactoryDefaultIdent(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_MqFactoryCtxIdentGet(void *v)
+_cgo_be8099d53211_Cfunc_gomsgque_FactoryDefault(void *v)
+{
+	struct {
+		MQ_CST p0;
+		MQ_PTR p1;
+		enum MqFactoryReturnE r;
+		char __pad20[4];
+	}
+ *a = v;
+	a->r = gomsgque_FactoryDefault(a->p0, a->p1);
+}
+
+void
+_cgo_be8099d53211_Cfunc_MqFactoryCtxIdentGet(void *v)
 {
 	struct {
 		struct MqS* p0;
@@ -55,7 +68,7 @@ _cgo_24cdbd206446_Cfunc_MqFactoryCtxIdentGet(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_gomsgque_FactoryCall(void *v)
+_cgo_be8099d53211_Cfunc_gomsgque_FactoryCall(void *v)
 {
 	struct {
 		MQ_CST p0;
@@ -66,7 +79,7 @@ _cgo_24cdbd206446_Cfunc_gomsgque_FactoryCall(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_gomsgque_FactoryNew(void *v)
+_cgo_be8099d53211_Cfunc_gomsgque_FactoryNew(void *v)
 {
 	struct {
 		MQ_CST p0;
@@ -78,7 +91,7 @@ _cgo_24cdbd206446_Cfunc_gomsgque_FactoryNew(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_MqFactoryCtxDefaultSet(void *v)
+_cgo_be8099d53211_Cfunc_MqFactoryCtxDefaultSet(void *v)
 {
 	struct {
 		struct MqS* p0;
@@ -91,7 +104,7 @@ _cgo_24cdbd206446_Cfunc_MqFactoryCtxDefaultSet(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_gomsgque_FactoryAdd(void *v)
+_cgo_be8099d53211_Cfunc_gomsgque_FactoryAdd(void *v)
 {
 	struct {
 		MQ_CST p0;
@@ -104,7 +117,7 @@ _cgo_24cdbd206446_Cfunc_gomsgque_FactoryAdd(void *v)
 }
 
 void
-_cgo_24cdbd206446_Cfunc_MqFactoryCtxIdentSet(void *v)
+_cgo_be8099d53211_Cfunc_MqFactoryCtxIdentSet(void *v)
 {
 	struct {
 		struct MqS* p0;

@@ -191,6 +191,7 @@ EventCleanup(void)
 /// \attention this function set "context->link.io->sockP"
 void
 pEventAdd (
+  MQ_CST caller,
   struct MqS * const context,
   MQ_SOCK * const sockP
 )
@@ -418,7 +419,7 @@ pEventCreate (
     struct MqS **start = sysevent->DataL;
     struct MqS **end   = sysevent->DataL + sysevent->DataLCur;
     // make all "old" context undelete-able
-    // reason: perl GarbageCollection will delete these "old" context on
+    // reason: GarbageCollection will delete these "old" context on
     // exit and will trigger a "full" transaction delete -> "test: slave-Y-1-"
     for (; start < end; start++) {
       pContextDeleteLOCK(*start);
@@ -441,6 +442,7 @@ error:
 /// \attention this function free "context->link.io->sockP"
 void
 pEventDel (
+  MQ_CST caller,
   struct MqS const * const context
 )
 {
@@ -470,6 +472,9 @@ rescan:
     sock = *((*start)->link.io->sockP);
     if (*start == context) {
       delsock = (sock < 0 ? -sock : sock);
+
+//printLV("caller<%s>, sock<%d>\n", caller, delsock);
+
       // free fdset
       FD_CLR (delsock, &event->fdset);
       // move following data 'one' to the left
@@ -541,7 +546,7 @@ pEventDelete (
     if (MQ_IS_SERVER(context)) {
       sEventDeleteAllClient(context->link.io->event);
     } else {
-      pEventDel (context);
+      pEventDel (__func__, context);
     }
   }
 

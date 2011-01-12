@@ -57,10 +57,7 @@ void pIoShutdown (
 /*                                                                           */
 /*****************************************************************************/
 
-void pIoCloseSocket (
-  struct MqIoS * const io,
-  MQ_CST const caller
-);
+void pIoCloseSocket (MQ_CST, struct MqIoS * const);
 
 enum MqErrorE pIoRead (
   struct MqIoS const * const io,
@@ -141,10 +138,7 @@ MQ_CST pIoLogCom (
   enum MqIoComE com
 );
 
-enum MqErrorE pIoEventAdd (
-  struct MqIoS * const io,
-  MQ_SOCK * sockP
-);
+enum MqErrorE pIoEventAdd (MQ_CST, struct MqIoS * const, MQ_SOCK *);
 
 struct MqS const * pIoGetMsgqueFromSocket (
   struct MqIoS * const	io,

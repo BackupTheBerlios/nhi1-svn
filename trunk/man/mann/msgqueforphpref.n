@@ -1,4 +1,4 @@
-.TH "msgqueforphp" n "Mon Jan 10 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
+.TH "msgqueforphp" n "Tue Jan 11 2011" "Version 4.8" "msgqueforphp" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -700,7 +700,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCMqS::WAIT_FOREVER\fP.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the MqS::WAIT_FOREVER.
 .PP
 \fBDefinition of a 'parent-context'\fP
 .br
@@ -1087,8 +1087,8 @@ an \fBERROR OBJECT\fP on error
 .PP
  
 .SS "$ctx->ProcessEvent()"
-.SS "$ctx->ProcessEvent(wait=MqS::WAIT_(NO|ONCE|FOREVER))"
-.SS "$ctx->ProcessEvent(timeout=integer|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))"
+.SS "$ctx->ProcessEvent(wait=WAIT_NO(|ONCE|FOREVER))"
+.SS "$ctx->ProcessEvent(timeout=integer|TIMEOUT_DEFAULT(|USER|MAX), wait=WAIT_NO(|ONCE|FOREVER))"
 C-API: \fBMqProcessEvent\fP, enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
@@ -1103,7 +1103,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fB\fCMqS::TIMEOUT_DEFAULT\fP = -1\fP, request the default timeout value . \fCMqS::TIMEOUT_USER\fP for \fCMqS::WAIT_ONCE\fP or \fCMqS::TIMEOUT_MAX\fP for \fCMqS::WAIT_FOREVER\fP. \fBdefault\fP 
+\fB\fCMqS::TIMEOUT_DEFAULT\fP = -1\fP, \fCMqS::TIMEOUT_USER\fP for \fCMqS::WAIT_ONCE\fP or \fCMqS::TIMEOUT_MAX\fP for \fCMqS::WAIT_FOREVER\fP. \fBdefault\fP, request the default timeout value 
 .IP "\(bu" 2
 \fB\fCMqS::TIMEOUT_USER\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
@@ -1235,7 +1235,7 @@ an \fBERROR OBJECT\fP on error
 .SS "$ctx->SendEND_AND_CALLBACK(string:token, callback)"
 C-API: \fBMqSendEND_AND_CALLBACK\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx->ProcessEvent(timeout=integer|MqS::TIMEOUT_(DEFAULT|USER|MAX), wait=MqS::WAIT_(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fB$ctx->ProcessEvent(timeout=integer|TIMEOUT_DEFAULT(|USER|MAX), wait=WAIT_NO(|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4

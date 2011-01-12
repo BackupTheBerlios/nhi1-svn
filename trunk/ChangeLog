@@ -189,15 +189,15 @@ step because the \e GC have to cooperate with the \RNSA{syn,callback-language}
 memory cleanup technology.
 To achive this goal a very \e conservative strategy was applied. \b No cleanup
 of lost objects is performed (this is the job of the \e callback-languages).
-Only deleted objects (\RNSA{ContextDelete}) with a #MqS::refCount > 0
+Only deleted objects (\RNSA{ContextDelete}) with a MqS::refCount > 0
 are added into the \e GC-Pool. The cleanup is done with the following conditions:
 - \RNSA{ProcessEvent} with the \e FOREVER flag (this is the \e main-loop)
   after an event was processed.
 - \RNSA{Exit}, on thread or process exit
 - on application-exit
 .
-The #MqS::refCount is increased with \b ++ and decreased with \b --. The
-default #MqS::refCount is \b 0. \n
+The MqS::refCount is increased with \b ++ and decreased with \b --. The
+default MqS::refCount is \b 0. \n
 The refCount is modified to protect the calling object:
 - during a \RNSA{ProcessEvent} call
 - in a \e callback
@@ -264,7 +264,7 @@ These two functions can be used together with \RNSC{ignoreExit},
 \subsubsection V0_5_ident_def Definition
 
 A \e link-target is the direct neighbour and the identification of the \e link-target is used to
-modify the local behaviour. In different to \RNSC{name} the \RNSC{ident} is set by the
+modify the local behaviour. In different to \RNSC{name} the \b ident is set by the
 programmer and can \b not be changed by the user. The goal is to give every major 
 \e application a unique name like: \c "PayrollServer-V1.7" or \c "DocuStoreClient-V1.7-USR-aotto1968". 
 This ident is exchanged during \e link-startup and can be retrieved with

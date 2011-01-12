@@ -14,7 +14,6 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-
 ENABLED_SECTIONS    += GO
 EXAMPLE_PATH	    += $(SRCDIR)/example/go
 
@@ -23,12 +22,24 @@ ALIASES		    += "selftut=gomsgquetut"
 ALIASES		    += "NS{1}=go_\1"
 ALIASES		    += "lang=Go"
 ALIASES		    += "fileextension=go"
+ALIASES		    += "dirname=go"
 ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import . \"gomsgque\""
 
 ENABLED_SECTIONS    += GC
+
+ALIASES		    += "FactoryReturn=panic(ErrorMessage)"
+ALIASES		    += "FactoryDefault=MqFactoryDefault(\C ident, cb FactoryF)"
+ALIASES		    += "FactoryDefaultIdent=\C MqFactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryAdd(\C ident, cb FactoryF)"
+ALIASES		    += "FactoryNew=MqS* FactoryNew(\C ident, cb FactoryF)";
+ALIASES		    += "FactoryCall=MqS* FactoryCall(\C ident)"
+
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
+ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -255,12 +266,12 @@ ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token \C)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(wait WAIT)"
 ENABLED_SECTIONS    += ProcessEvent2
 ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(timeout TIMEOUT, wait WAIT)"
-ALIASES		    += "MQ_WAIT_NO=\c WAIT_NO"
-ALIASES		    += "MQ_WAIT_ONCE=\c WAIT_ONCE"
-ALIASES		    += "MQ_WAIT_FOREVER=\c WAIT_FOREVER"
-ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c TIMEOUT_DEFAULT"
-ALIASES		    += "MQ_TIMEOUT_USER=\c TIMEOUT_USER"
-ALIASES		    += "MQ_TIMEOUT_MAX=\c TIMEOUT_MAX"
+ALIASES		    += "MQ_WAIT_NO=WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=TIMEOUT_MAX"
 ALIASES		    += "ServiceGetToken=ServiceGetToken() \C"
 ALIASES		    += "ServiceGetFilter=ServiceGetFilter() \TM"
 ENABLED_SECTIONS    += ServiceGetFilter2

@@ -106,6 +106,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_SEP = @FILE_SEP@
+GOROOT = @GOROOT@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -253,9 +254,9 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = manfilter.php mulclient.php mulserver.php MyClient.php  \
+EXTRA_DIST = manfilter.php mulclient.php mulserver.php MyClient.php \
 	      MyServer.php testclient.php testserver.php Filter1.php \
-		Filter2.php Filter3.php Filter4.php
+		Filter2.php Filter3.php Filter4.php server.php
 
 all: all-am
 

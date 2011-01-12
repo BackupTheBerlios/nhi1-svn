@@ -17,11 +17,11 @@
 
 #+
 #§  \file       theLink/example/go/Makefile.am
-#§  \brief      \$Id: Makefile.am 361 2010-12-14 12:24:07Z aotto1968 $
+#§  \brief      \$Id: Makefile.am 403 2011-01-10 19:08:57Z aotto1968 $
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 361 $
+#§  \version    \$Rev: 403 $
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -106,6 +106,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_SEP = @FILE_SEP@
+GOROOT = @GOROOT@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -254,6 +255,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUFFIXES = .go .bin $(EXEEXT)
+GOMSGQUE = $(abs_top_srcdir)/theLink/gomsgque/src/_obj/gomsgque.a
 BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
 	Filter3$(EXEEXT) mulclient$(EXEEXT) mulserver$(EXEEXT) \
 	manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \
@@ -457,23 +459,23 @@ include $(GOROOT)/src/Make.inc
 dummy:	all
 
 .go.bin:
-	$(GC) -o $@ $<
+	$(GC) -I $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
 
 .bin$(EXEEXT):
-	$(LD) -o $@ $<
-server$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-MyClient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-MyServer$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter3$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-mulclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-mulserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-manfilter$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-testserver$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-testclient$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter1$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter2$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter4$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
-Filter5$(EXEEXT): $(QUOTED_GOROOT)/pkg/$(GOOS)_$(GOARCH)/gomsgque.a
+	$(LD) -L $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
+server$(EXEEXT): $(GOMSGQUE)
+MyClient$(EXEEXT): $(GOMSGQUE)
+MyServer$(EXEEXT): $(GOMSGQUE)
+Filter3$(EXEEXT): $(GOMSGQUE)
+mulclient$(EXEEXT): $(GOMSGQUE)
+mulserver$(EXEEXT): $(GOMSGQUE)
+manfilter$(EXEEXT): $(GOMSGQUE)
+testserver$(EXEEXT): $(GOMSGQUE)
+testclient$(EXEEXT): $(GOMSGQUE)
+Filter1$(EXEEXT): $(GOMSGQUE)
+Filter2$(EXEEXT): $(GOMSGQUE)
+Filter4$(EXEEXT): $(GOMSGQUE)
+Filter5$(EXEEXT): $(GOMSGQUE)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

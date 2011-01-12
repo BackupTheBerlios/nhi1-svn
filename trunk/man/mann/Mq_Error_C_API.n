@@ -1,4 +1,4 @@
-.TH "Mq_Error_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Error_C_API" n "Tue Jan 11 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -399,7 +399,7 @@ the \fIerror-message\fP from the \fIexception-object\fP
 .PP
 check for an \fIexit-error-object\fP, return \fItrue\fP or \fIfalse\fP A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using from the: \fCtheLink/example/csharp/Filter4.cs\fP example 
+ Read more using from the: \fCtheLink/example/vb/Filter4.vb\fP example 
 .SS "void MqErrorPrint (struct \fBMqS\fP *constcontext)"
 .PP
 print the \fIerror\fP from the \fIcontext\fP to stderr and clear the \fIerror\fP afterwards 
@@ -561,4 +561,4 @@ this function will never return
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

@@ -78,7 +78,10 @@ pGenericDelete (
   if (unlikely(genericP == NULL || *genericP == NULL)) {
     return;
   } else {
-    SysCloseSocket (MQ_ERROR_IGNORE, __func__, MQ_YES, &(*genericP)->sock);
+    struct GenericS * const generiC = *genericP;
+    struct MqS * const context = generiC->context;
+    SysCloseSocket (context, __func__, MQ_YES, &generiC->sock);
+    MqErrorPrint(context);
     MqSysFree (*genericP);
   }
 }
@@ -94,6 +97,8 @@ GenericCreateSocket (
 {
   // create socket
   MqErrorCheck (SysSocket (MQ_CONTEXT_S, domain, type, protocol, &generiC->sock));
+
+//printLI(generiC->sock)
 
 error:
   return MqErrorStack (MQ_CONTEXT_S);
@@ -133,7 +138,7 @@ GenericServer (
   // 2a. add listener socket to the select list
 /*
   if (serverStartup) {
-    pEventAdd(context, &generiC->sock);
+    pEventAdd(__func__, context, &generiC->sock);
     // allow the call to the 'Event' proc
     context->link.bits.onCreateEnd = MQ_YES;
   }
@@ -207,7 +212,7 @@ GenericServer (
   generiC->sock = child_sock;
 
   // 3. add child socket to the select list and configure the new socket
-  pIoEventAdd(generiC->io, &generiC->sock);
+  pIoEventAdd(__func__, generiC->io, &generiC->sock);
 
   // 4. the fork-server should "allow" the SIGCHLD
   if (	    context->config.startAs == MQ_START_SPAWN
@@ -239,15 +244,23 @@ GenericConnect (
 )
 {
   struct MqS * const context = MQ_CONTEXT_S;
+  //int status = 1;
 
   // 1. config socket
   MqErrorCheck (SysSetAsync (context, generiC->sock));
+
+  // 2. reuse socket after socket was closed
+/*
+  MqErrorCheck (
+    SysSetSockOpt(context, generiC->sock, SOL_SOCKET, SO_REUSEADDR, (MQ_sockopt_optval_T) &status, sizeof (status))
+  );
+*/
 
   // 2. connect to server
   MqErrorCheck (SysConnect (context, generiC->sock, sockaddr, sockaddrlen, timeout));
 
   // 3. add Event to Listen on
-  pIoEventAdd(generiC->io, &generiC->sock);
+  pIoEventAdd(__func__, generiC->io, &generiC->sock);
 
 error:
   return MqErrorStack (context);

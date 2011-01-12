@@ -1,4 +1,4 @@
-.TH "Mq_Send_C_API" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "Mq_Send_C_API" n "Tue Jan 11 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -202,7 +202,7 @@ an \fBERROR OBJECT\fP on error
 
 .SS "enum \fBMqErrorE\fP MqSendEND_AND_CALLBACK (struct \fBMqS\fP *constctx, \fBMQ_TOK\fP consttoken, \fBMqServiceCallbackF\fP constcallback, \fBMQ_PTR\fPdata, \fBMqTokenDataFreeF\fPdatafreeF)"
 .PP
-finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(int timeout, MqS.WAIT.(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
+finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(timeout As Integer, \fCMqS.WAIT.NO\fP(|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -335,7 +335,7 @@ an \fBERROR OBJECT\fP on error
 
 .SS "enum \fBMqErrorE\fP MqSendN (struct \fBMqS\fP *constctx, \fBMQ_CBI\fP constvalue, \fBMQ_SIZE\fP constlen)"
 .PP
-append a \fIbody-item\fP to the \fIsend-data-package\fP. A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBbyte[] ctx.ReadN()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
+append a \fIbody-item\fP to the \fIsend-data-package\fP. A \fIbody-item\fP is a \fIbyte-array\fP and including the \fIitem-size\fP, \fIitem-type\fP and the \fIitem-data\fP as value. The \fIbody-item\fP is the result of a previous \fBctx.ReadN() As Byte()\fP function call and can be used for saving into an external storage or for an additional operation like encryption. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -523,4 +523,4 @@ an \fBERROR OBJECT\fP on error
 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

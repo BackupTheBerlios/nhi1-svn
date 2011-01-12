@@ -1,4 +1,4 @@
-.TH "csmsgque" n "Mon Jan 10 2011" "Version 4.8" "csmsgque" \" -*- nroff -*-
+.TH "csmsgque" n "Tue Jan 11 2011" "Version 4.8" "vbmsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -150,4 +150,4 @@ implement the \fBlibmsgque\fP API object: \fBMqTokenDataFreeF\fP
 implement the \fBlibmsgque\fP API object: \fBMqTokenF\fP 
 .SH "Author"
 .PP 
-Generated automatically by Doxygen for csmsgque from the source code.
+Generated automatically by Doxygen for vbmsgque from the source code.

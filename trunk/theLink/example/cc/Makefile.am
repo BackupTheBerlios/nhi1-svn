@@ -17,7 +17,7 @@
 
 noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilter$(EXEEXT) \
       testserver$(EXEEXT) testclient$(EXEEXT) MyClient$(EXEEXT)  MyServer$(EXEEXT) Filter2$(EXEEXT) \
-	Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT)
+	Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) server$(EXEEXT)
 
 AM_CXXFLAGS = -I$(srcdir)/../../ccmsgque -DMQ_IGNORE_EXTERN
 LDADD = ../../ccmsgque/libtmp.la
@@ -34,4 +34,5 @@ MyClient_SOURCES = MyClient.cc
 MyServer_SOURCES = MyServer.cc
 testclient_SOURCES = testclient.cc
 testserver_SOURCES = testserver.cc
+server_SOURCES = server.cc
 

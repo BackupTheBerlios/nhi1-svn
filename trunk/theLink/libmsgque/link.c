@@ -487,8 +487,8 @@ error:
 
 void
 pMqShutdown (
-  struct MqS * const context,
-  MQ_CST prefix
+  MQ_CST caller,
+  struct MqS * const context
 )
 {
   if (context->link.bits.onShutdown == MQ_YES) {
@@ -496,7 +496,7 @@ pMqShutdown (
   } else {
     struct pChildS * child;
 
-    MqDLogV(context,4,"START - called from '%s'\n",prefix);
+    MqDLogV(context,4,"START - called from '%s'\n",caller);
     context->link.bits.onShutdown = MQ_YES;
 
     // shutdown all childs
@@ -505,7 +505,7 @@ pMqShutdown (
       // "context->link.childs->context->link.self->context" are identical. The last one is 
       // free'd during the following "MqLinkDelete" too and a double-free error
       // will happen
-      pMqShutdown (child->context,__func__);
+      pMqShutdown (__func__, child->context);
     }
 
     // shutdown all slaves
@@ -654,7 +654,7 @@ MqLinkConnect (
       MqDLogCL(context,4,"send token<_OKS>\n");
       if (MqErrorCheckI (MqSendEND_AND_WAIT (parent, "_OKS", MQ_TIMEOUT_USER))) {
 	MqErrorCopy (context, parent);
-	pIoCloseSocket (context->link.io, __func__);
+	pIoCloseSocket (__func__, context->link.io);
 	goto error;
       }
 
@@ -1033,7 +1033,7 @@ MqLinkDelete (
     }
 
     // shutdown depending context
-    pMqShutdown (context,__func__);
+    pMqShutdown (__func__, context);
 
     // shutdown all childs
     while (context->link.childs) {

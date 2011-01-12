@@ -118,21 +118,21 @@ pIoShutdown (
   if (unlikely(io == NULL)) {
     return;
   } else {
-    pEventDel (io->context);
+    pEventDel (__func__, io->context);
   }
 }
 
 void
 pIoCloseSocket (
-  struct MqIoS * const io,
-  MQ_CST const caller
+  MQ_CST caller,
+  struct MqIoS * const io
 )
 {
   if (unlikely(io == NULL)) {
     return;
   } else {
     struct MqS * const context = io->context;
-    pEventDel (context);
+    pEventDel (__func__, context);
     SysCloseSocket (context, caller, MQ_YES, io->sockP);
     // set "initial" parent and all child to "NO"
     pLinkDisConnect (context->link.ctxIdP);
@@ -799,6 +799,7 @@ pIoLogCom (
 
 enum MqErrorE
 pIoEventAdd(
+  MQ_CST caller,		///< [in] who call this function?
   struct MqIoS * const io,	///< [in] io interface data
   MQ_SOCK * sockP		///< [in] socket pointer
 )
@@ -850,7 +851,7 @@ pIoEventAdd(
   MqErrorCheck (SysSetAsync (context, sock));
 
   // 4. save
-  pEventAdd (io->context, sockP);
+  pEventAdd (__func__, io->context, sockP);
 
 error:
   return MqErrorStack(context);

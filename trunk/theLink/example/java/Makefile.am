@@ -76,6 +76,10 @@ BUILT_SOURCES += example/testserver.class
 example/testserver.class: $(srcdir)/testserver.java ../../javamsgque/javamsgque.jar
 	$(RULE_JAVA_EXE)
 
+BUILT_SOURCES += example/Server.class
+example/Server.class: $(srcdir)/Server.java ../../javamsgque/javamsgque.jar
+	$(RULE_JAVA_EXE)
+
 ##
 ## ==========================================================================
 ## Main

@@ -1,4 +1,4 @@
-.TH "gomsgque" n "Mon Jan 10 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
+.TH "gomsgque" n "Tue Jan 11 2011" "Version 4.8" "gomsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -209,7 +209,7 @@ identify the server in the network available as \fBMqLinkGetTargetIdent\fP on a 
 The link between the \fIFactory-Identifier\fP and the \fIFactory-Interface\fP is important for the future development of \fBlibmsgque\fP. \fIMessage-Routing\fP, \fIService-Location\fP and \fIPersistent-Transactions\fP depend on this feature.
 .PP
 The relationship between the \fBMqFactoryS\fP and the \fBMqS\fP is the same as the relationship between a \fItype\fP and an \fIinstance\fP of the \fItype\fP in a regular programming language. The \fBMqFactoryS\fP define the \fItype\fP of the server and the \fBMqS\fP define a single instance of the server. Every kind of server has \fBonly one\fP specific \fBMqFactoryS\fP object but every instance of a server has one \fBMqS\fP object used for object management. Decreasing the size and the complexity of a \fBMqS\fP object will improve the server performance. In future more fields, defined in the \fBMqSetupS\fP attribute of the the \fBMqS\fP object, will move into \fBMqFactoryS\fP object. 
-.SS "\\FactoryDefault"
+.SS "MqFactoryDefault(string ident, cb FactoryF)"
 C-API: \fBMqFactoryDefault\fP, add a new \fIdefault-factory-interface\fP identified by \fIident\fP 
 .PP
 The default factory is always used to create an instance if no other factory is available 
@@ -233,19 +233,19 @@ The default factory is always used to create an instance if no other factory is 
 .PP
 \fBReturns:\fP
 .RS 4
-an  object on error 
+an panic(ErrorMessage) object on error 
 .RE
 .PP
 .PP
-\fBExample\fP from \fCexample//Filter4.go\fP:  
+\fBExample\fP from \fCexample/go/Filter4.go\fP:  
 .PP
 .nf
 
 .fi
 .PP
-.SS "\\FactoryDefaultIdent"
+.SS "string MqFactoryDefaultIdent()"
 C-API: \fBMqFactoryDefaultIdent\fP, return the identifier of the \fIdefault\fP factory  
-.SS "\\FactoryAdd"
+.SS "MqFactoryAdd(string ident, cb FactoryF)"
 C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -267,18 +267,18 @@ C-API: \fBMqFactoryAdd\fP, add a new \fIfactory-interface\fP identified by \fIid
 .PP
 \fBReturns:\fP
 .RS 4
-an  object on error 
+an panic(ErrorMessage) object on error 
 .RE
 .PP
 .PP
-\fBExample\fP from \fCexample//Filter5.go\fP:  
+\fBExample\fP from \fCexample/go/Filter5.go\fP:  
 .PP
 .nf
   FactoryAdd('F1', F1New)
 
 .fi
 .PP
-.SS "\\FactoryNew"
+.SS "MqS* FactoryNew(string ident, cb FactoryF) ;"
 C-API: \fBMqFactoryNew\fP, add a new factory interface and create a new top-level instance 
 .PP
 This function is a convenient function to combine the \fBMqFactoryAdd\fP and the \fBMqFactoryCall\fP functionality. 
@@ -306,18 +306,18 @@ This function is a convenient function to combine the \fBMqFactoryAdd\fP and the
 .PP
 \fBReturns:\fP
 .RS 4
-an  object on error 
+an panic(ErrorMessage) object on error 
 .RE
 .PP
 .PP
-\fBExample\fP from \fCexample//mulserver.go\fP:  
+\fBExample\fP from \fCexample/go/mulserver.go\fP:  
 .PP
 .nf
 func NewMulserver(tmpl *MqS) *MqS {
 
 .fi
 .PP
-.SS "\\FactoryCall"
+.SS "MqS* FactoryCall(string ident)"
 C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident\fP, to create a new instance 
 .PP
 \fBParameters:\fP
@@ -331,18 +331,18 @@ C-API: \fBMqFactoryCall\fP, call the factory constructor, identified by \fIident
 .PP
 \fBReturns:\fP
 .RS 4
-an  object on error 
+an panic(ErrorMessage) object on error 
 .RE
 .PP
 .PP
-\fBExample\fP from \fCexample//Filter5.go\fP:  
+\fBExample\fP from \fCexample/go/Filter5.go\fP:  
 .PP
 .nf
   srv := FactoryCall(os.Args[1])
 
 .fi
 .PP
-.SS "\\FactoryCtxIdentSet"
+.SS "ctx.FactoryCtxIdentSet(string ident)"
 C-API: \fBMqFactoryCtxIdentSet\fP, link the context to a new \fIfactory-interface\fP identified by \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -358,7 +358,7 @@ an \fBERROR OBJECT\fP on error
 .RE
 .PP
  
-.SS "\\FactoryCtxIdentGet"
+.SS "string ctx.FactoryCtxIdentGet()"
 C-API: \fBMqFactoryCtxIdentGet\fP, get the \fIident\fP of the \fIfactory-interface\fP used for the context 
 .PP
 \fBParameters:\fP
@@ -377,7 +377,7 @@ the \fIstring\fP is owned by \fBlibmsgque\fP -> do not free !!
 .RE
 .PP
  
-.SS "\\FactoryCtxDefaultSet"
+.SS "ctx.FactoryCtxDefaultSet(string ident)"
 C-API: \fBMqFactoryCtxDefaultSet\fP, create a copy of the default \fIfactory-interface\fP using the identifier \fIident\fP 
 .PP
 \fBParameters:\fP
@@ -699,7 +699,7 @@ in local mode new \fIserver-parent-context\fP is started by the \fIclient-parent
 .IP "\(bu" 2
 a \fIserver-context\fP have to implement the \fBIServerSetup\fP and the \fBFACTORY API\fP interface.
 .IP "\(bu" 2
-a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the \fCWAIT_FOREVER\fP.
+a \fIserver-context\fP have to enter the \fIevent-loop\fP and wait for incoming \fIservice-request\fP using \fBProcessEvent\fP together with the WAIT_FOREVER.
 .PP
 \fBDefinition of a 'parent-context'\fP
 .br
@@ -788,7 +788,7 @@ On a client the \fIcontext\fP will be set to \fInot-connected\fP and the functio
 .SS "ctx.LinkConnect()"
 C-API: \fBMqLinkConnect\fP, re-connect a \fIclient-server-link\fP after a server crash or a network downtime 
 .PP
-Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example//Filter4.go\fP example. 
+Do nothing if the \fIclient-server-link\fP is already connected. This function is only useful in an \fIevent-function\fP (\fBIEvent\fP) if the \fIlink-disconnect\fP (\fBErrorIsEXIT\fP) is ignored (\fBErrorReset\fP). Read more from the: \fC/theLink/example/go/Filter4.go\fP example. 
 .PP
 \fBParameters:\fP
 .RS 4
@@ -1091,7 +1091,7 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fB\fCTIMEOUT_DEFAULT\fP = -1\fP, request the default timeout value . \fCTIMEOUT_USER\fP for \fCWAIT_ONCE\fP or \fCTIMEOUT_MAX\fP for \fCWAIT_FOREVER\fP. \fBdefault\fP 
+\fB\fCTIMEOUT_DEFAULT\fP = -1\fP, \fCTIMEOUT_USER\fP for \fCWAIT_ONCE\fP or \fCTIMEOUT_MAX\fP for \fCWAIT_FOREVER\fP. \fBdefault\fP, request the default timeout value 
 .IP "\(bu" 2
 \fB\fCTIMEOUT_USER\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
@@ -2015,7 +2015,7 @@ C-API: \fBMqErrorIsEXIT\fP, check for an \fIexit-error-object\fP, return \fItrue
 .PP
 A \fI\fIexit-error-object\fP is\fP set to signal a fatal error which require an \fIapplication-exit\fP. The \fIonly\fP source of this kind of error is a \fIlink-target-abnormal-exit\fP like a server/network crash or an \fBErrorSetEXIT\fP function call. The \fIlink-target-abnormal-exit\fP can only happen for functions doing a network-request like: \fBLinkCreate\fP, \fBLinkCreateChild\fP, \fBLinkConnect\fP, \fBSendEND\fP, \fBSendEND_AND_WAIT\fP or \fBProcessEvent\fP. The goal of this function is to act on an \fIexit-error-object\fP and is used to ignore this error using \fBErrorReset\fP and later do a reconnect using \fBLinkConnect\fP.
 .br
- Read more using from the: \fCtheLink/example//Filter4.go\fP example 
+ Read more using from the: \fCtheLink/example/go/Filter4.go\fP example 
 .PP
 \fBExample:\fP catch and ignore an EXIT return-code: 
 .PP

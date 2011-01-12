@@ -222,18 +222,17 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "valueC=\param value the #MQ_STR argument to send " \
                          "valueB=\param value the #MQ_BIN argument to send " \
                          "valueU=\param value the pointer to a #MqBufferS object to send " \
-                         "retMqBufferS=\retval the new initialized MqBufferS object " \
-                         "buf=\param buf the MqBufferS object to work on " \
+                         "buf=\param buf the #MqBufferS object to work on " \
                          "bufL=\param bufL the MqBufferLS object to work on " \
-                         "bufL0=\param[in] bufL the MqBufferLS object to work on or \c NULL" \
-                         "bufU=\param bufU the MqBufferU object to work on " \
+                         "bufL0=\param[in] bufL the #MqBufferLS object to work on or \c NULL" \
+                         "bufU=\param bufU the #MqBufferU object to work on " \
                          "size=\param size the size of the \e buf from \ref MqBufferS::cursize (this is used for converting from #MQ_STR to check if \b all characters were converted " \
                          "type=\param type the type of on object from MqTypeE used in various functions and structs like \ref MqBufferS::type " \
                          "sta_context=\param context the statistic context object #StatCtxS to work on " \
                          "sta_timer=\param timer the statistic timer object #StatTimerS to work on (created by #StatCreate) " \
                          "opt_pFlag=\param pFlag the array with defined options " \
                          "opt_Len=\param Len the size of the \e pFlag array " \
-                         "buf_generic=\param val union used to modify or create an MqBufferS object;\param size the size of the \e val object;\param type the type used for the object in the \e val union " \
+                         "buf_generic=\param val union used to modify or create an #MqBufferS object;\param size the size of the \e val object;\param type the type used for the object in the \e val union " \
                          "format=\param[in] fmt a \b printf like format string " \
                          "level=\param[in] level debug level: 0 <= level <= 9" \
                          "var_list=\param[in] var_list a variable argument list object " \

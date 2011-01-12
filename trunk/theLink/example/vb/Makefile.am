@@ -48,16 +48,26 @@ Filter2.exe: Filter2.vb ../../csmsgque/csmsgque.dll
 Filter3.exe: Filter3.vb ../../csmsgque/csmsgque.dll
 	@echo "WARNING: compile file '$@' on windows"
 
+Filter4.exe: Filter4.vb ../../csmsgque/csmsgque.dll
+	@echo "WARNING: compile file '$@' on windows"
+
+Filter5.exe: Filter5.vb ../../csmsgque/csmsgque.dll
+	@echo "WARNING: compile file '$@' on windows"
+
 testclient.exe: testclient.vb ../../csmsgque/csmsgque.dll
 	@echo "WARNING: compile file '$@' on windows"
 
 testserver.exe: testserver.vb ../../csmsgque/csmsgque.dll
 	@echo "WARNING: compile file '$@' on windows"
 
+server.exe: server.vb ../../csmsgque/csmsgque.dll
+	@echo "WARNING: compile file '$@' on windows"
+
 endif
 
 BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
-		  MyClient.exe Filter1.exe Filter2.exe testclient.exe testserver.exe
+		  MyClient.exe Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
+		    testclient.exe testserver.exe server.exe
 
 ##
 ## ==========================================================================
@@ -68,8 +78,8 @@ CLEANFILES = *.mdb
 EXTRA_DIST = $(srcdir)/*.vb $(srcdir)/*.exe
 MAINTAINERCLEANFILES = *.exe
 VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
-                  MyClient.exe Filter1.exe Filter2.exe testclient.exe \
-		      testserver.exe
+                  MyClient.exe Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
+			testclient.exe testserver.exe server.exe
 
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)

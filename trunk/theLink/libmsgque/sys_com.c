@@ -349,10 +349,10 @@ SysSelect (
 	    if (sockmq == NULL) {
 	      return sSysMqErrorMsg (context, __func__, "select");
 	    } else if (sockmq == context) {
-	      pIoCloseSocket (context->link.io, __func__);
+	      pIoCloseSocket (__func__, context->link.io);
 	      return pErrorSetExitWithCheck (context);
 	    } else {
-	      pIoCloseSocket (sockmq->link.io, __func__);
+	      pIoCloseSocket (__func__, sockmq->link.io);
 	      return MQ_CONTINUE;
 	    }
 	  }
@@ -474,7 +474,7 @@ SysSend (
 	      trycount -= 1;
 	      continue; // with "do" loop
 	    case MQ_ERROR:
-	      pIoCloseSocket (context->link.io, __func__);
+	      pIoCloseSocket (__func__, context->link.io);
 	      return MqErrorStack (context);
 	  }
 	  ldata = 0;
@@ -482,11 +482,11 @@ SysSend (
 	}
 	case WIN32_WSA (ECONNRESET):
 	case WIN32_WSA (EBADF): {
-	  pIoCloseSocket (context->link.io, __func__);
+	  pIoCloseSocket (__func__, context->link.io);
 	  return pErrorSetExitWithCheck (context);
 	}
         default:
-          pIoCloseSocket (context->link.io, __func__);
+          pIoCloseSocket (__func__, context->link.io);
           return sSysMqErrorMsg (context, __func__, "send");
       }
     }
@@ -532,7 +532,7 @@ SysRecv (
 		case MQ_CONTINUE:
 		  return MqErrorDbV (MQ_ERROR_TIMEOUT, timeout);
 		case MQ_ERROR:
-		  pIoCloseSocket (context->link.io, __func__);
+		  pIoCloseSocket (__func__, context->link.io);
 		  return MqErrorStack(context);
 	      }
 	      ldata = 0;
@@ -540,15 +540,15 @@ SysRecv (
 	    }
 	    case WIN32_WSA (ECONNRESET):
 	    case WIN32_WSA (EBADF): {
-	      pIoCloseSocket (context->link.io, __func__);
+	      pIoCloseSocket (__func__, context->link.io);
 	      return pErrorSetExitWithCheck (context);
 	    }
 	    default:
-	      pIoCloseSocket (context->link.io, __func__);
+	      pIoCloseSocket (__func__, context->link.io);
 	      return sSysMqErrorMsg (context, __func__, "recv");
 	  }
 	} else if (ldata == 0) {
-	  pIoCloseSocket (context->link.io, __func__);
+	  pIoCloseSocket (__func__, context->link.io);
 	  return pErrorSetExitWithCheck (context);
 	}
     }

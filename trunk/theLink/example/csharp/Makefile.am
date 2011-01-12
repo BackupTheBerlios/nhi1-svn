@@ -62,9 +62,12 @@ testclient.exe: $(srcdir)/testclient.cs ../../csmsgque/csmsgque.dll
 testserver.exe: $(srcdir)/testserver.cs ../../csmsgque/csmsgque.dll
 	$(RULE_CS_EXE)
 
+server.exe: $(srcdir)/server.cs ../../csmsgque/csmsgque.dll
+	$(RULE_CS_EXE)
+
 BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
 		  MyClient.exe Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-		    testclient.exe testserver.exe
+		    testclient.exe testserver.exe server.exe
 
 ##
 ## ==========================================================================

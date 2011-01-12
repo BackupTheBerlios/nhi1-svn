@@ -1,4 +1,4 @@
-.TH "javamsgque" n "Mon Jan 10 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
+.TH "javamsgque" n "Tue Jan 11 2011" "Version 4.8" "javamsgque" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -1047,9 +1047,9 @@ an \fBERROR OBJECT\fP on error
 .PP
  
 .SS "ctx.ProcessEvent()"
-.SS "ctx.ProcessEvent(MqS.WAIT.(NO|ONCE|FOREVER))"
-.SS "ctx.ProcessEvent(MqS.TIMEOUT.(DEFAULT|USER|MAX), MqS.WAIT.(NO|ONCE|FOREVER))"
-.SS "ctx.ProcessEvent(int timeout, MqS.WAIT.(NO|ONCE|FOREVER))"
+.SS "ctx.ProcessEvent(\\c MqS.WAIT.NO(|ONCE|FOREVER))"
+.SS "ctx.ProcessEvent(\\c MqS.TIMEOUT.DEFAULT(|USER|MAX), \\c MqS.WAIT.NO(|ONCE|FOREVER))"
+.SS "ctx.ProcessEvent(int timeout, \\c MqS.WAIT.NO(|ONCE|FOREVER))"
 C-API: \fBMqProcessEvent\fP, enter the \fIevent-loop\fP and wait for an incoming \fIservice-request\fP. 
 .PP
 This function is used to enter the \fIevent-loop\fP and start listen on open \fIfile-handles\fP and to call \fBIEvent\fP on idle.
@@ -1064,20 +1064,20 @@ This function is used to enter the \fIevent-loop\fP and start listen on open \fI
 .IP "\(bu" 2
 \fB>0\fP, use this value as number of seconds.
 .IP "\(bu" 2
-\fB\fCMqS.TIMEOUT.DEFAULT\fP = -1\fP, request the default timeout value . \fCMqS.TIMEOUT.USER\fP for \fCMqS.WAIT.ONCE\fP or \fCMqS.TIMEOUT.MAX\fP for \fCMqS.WAIT.FOREVER\fP. \fBdefault\fP 
+\fB\fC\fCMqS.TIMEOUT.DEFAULT\fP\fP = -1\fP, \fC\fCMqS.TIMEOUT.USER\fP\fP for \fC\fCMqS.WAIT.ONCE\fP\fP or \fC\fCMqS.TIMEOUT.MAX\fP\fP for \fC\fCMqS.WAIT.FOREVER\fP\fP. \fBdefault\fP, request the default timeout value 
 .IP "\(bu" 2
-\fB\fCMqS.TIMEOUT.USER\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
+\fB\fC\fCMqS.TIMEOUT.USER\fP\fP = -2\fP, request the user defined timeout value from the \fBtimeout\fP configuration value 
 .IP "\(bu" 2
-\fB\fCMqS.TIMEOUT.MAX\fP = -3\fP, request the maximum possible (infinite) timeout value 
+\fB\fC\fCMqS.TIMEOUT.MAX\fP\fP = -3\fP, request the maximum possible (infinite) timeout value 
 .PP
 .br
 \fIwait\fP the \fIoperation-mode\fP used to define the behaviour, possible values are:
 .IP "\(bu" 2
-\fB\fCMqS.WAIT.NO\fP = 0\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
+\fB\fC\fCMqS.WAIT.NO\fP\fP = 0\fP, don't wait for an event just do the check and comeback. if an Event is available process the event, but only one. If no Event is available return with \fBMQ_CONTINUE\fP. \fBdefault\fP 
 .IP "\(bu" 2
-\fB\fCMqS.WAIT.ONCE\fP = 1\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
+\fB\fC\fCMqS.WAIT.ONCE\fP\fP = 1\fP, wait maximum \fItimeout\fP seconds for only \fIone\fP event or raise a \fItimeout-error\fP if no event was found.
 .IP "\(bu" 2
-\fB\fCMqS.WAIT.FOREVER\fP = 2\fP, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
+\fB\fC\fCMqS.WAIT.FOREVER\fP\fP = 2\fP, wait maximum \fItimeout\fP seconds for a event. If an event was found process the event. If no event was found, raise a \fItimeout-error\fP. After the event was processed continue to listen for a the new event. The function will only come back on \fIerror\fP or on \fIexit\fP.
 .PP
 .RE
 .PP
@@ -1196,7 +1196,7 @@ an \fBERROR OBJECT\fP on error
 .SS "ctx.SendEND_AND_CALLBACK(String token, IService callback)"
 C-API: \fBMqSendEND_AND_CALLBACK\fP, finish the \fIsend-data-block\fP, call the remote service and do \fInot-wait\fP for return. 
 .PP
-This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(int timeout, MqS.WAIT.(NO|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
+This function will \fInever\fP block and return immediately. If \fIreturn-data\fP or an error is available the \fIcallback-function\fP is called for processing. Use \fBctx.ProcessEvent(int timeout, \fCMqS.WAIT.NO\fP(|ONCE|FOREVER))\fP to enter the \fIevent-loop\fP. 
 .PP
 \fBParameters:\fP
 .RS 4
