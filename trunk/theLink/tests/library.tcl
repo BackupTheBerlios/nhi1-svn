@@ -319,18 +319,18 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    csharp  [list {*}$CLREXEC [file join $linksrcdir tests csserver.exe]] \
-    vb	    [list {*}$CLREXEC [file join $linksrcdir tests vbserver.exe]] \
-    python  [list {*}$PYTHON  [file join $linksrcdir tests server.py]]	  \
-    ruby    [list {*}$RUBY    [file join $linksrcdir tests server.rb]]	  \
-    java    [list {*}$JAVA    example.Server]				  \
-    tcl	    [list {*}$TCLSH   [file join $linksrcdir tests server.tcl]]	  \
-    perl    [list {*}$PERL -w [file join $linksrcdir tests server.pl]]	  \
-    php	    [list {*}$PHP     [file join $linksrcdir tests server.php]]	  \
-    go	    [file normalize [file join $linkbuilddir gomsgque src server$::EXEEXT] ] \
-    jdb	    [list jdb	      Server]					  \
-    cc	    ccserver$::EXEEXT						  \
-    c	    server$::EXEEXT						  \
+    csharp  [list {*}$CLREXEC [file join $linksrcdir example csharp server.exe]]	\
+    vb	    [list {*}$CLREXEC [file join $linksrcdir example vb server.exe]]		\
+    python  [list {*}$PYTHON  [file join $linksrcdir example python server.py]]		\
+    ruby    [list {*}$RUBY    [file join $linksrcdir example ruby server.rb]]		\
+    java    [list {*}$JAVA    example.Server]						\
+    tcl	    [list {*}$TCLSH   [file join $linksrcdir example tcl server.tcl]]		\
+    perl    [list {*}$PERL -w [file join $linksrcdir example perl server.pl]]		\
+    php	    [list {*}$PHP     [file join $linksrcdir example php server.php]]		\
+    go	    [file join $linkbuilddir example go server$::EXEEXT]			\
+    jdb	    [list jdb	      Server]							\
+    cc	    [file join $linkbuilddir example cc server$::EXEEXT]			\
+    c	    [file join $linkbuilddir example c server$::EXEEXT]				\
   ]
 }
 
@@ -385,7 +385,7 @@ proc getServerOnly {srv} {
   return $::TS_SERVER([lindex [split $srv .] 0])
 }
 
-proc getClient {args} {
+proc getClient {cmd} {
   global env
   set RET [list]
 
@@ -393,7 +393,7 @@ proc getClient {args} {
   lappend RET {*}[getPrefix c]
 
   # main executable
-  lappend RET {*}$args
+  lappend RET [file join $::linkbuilddir example c $cmd$::EXEEXT]
 
   # postfix
   lappend RET {*}[getPostfix c]
@@ -496,6 +496,7 @@ proc FindFreePort {} {
   while true {
     incr portNUM
     if {[catch {socket -server dummy_server $portNUM} FH ]} {
+Print FH
       Print FH
       incr TRY -1
       if {$TRY < 0} {
@@ -655,11 +656,6 @@ if {![info exists env(SRV_LST)]} {
     python.tcp.fork
     python.uds.spawn
     python.uds.fork
-    ruby.pipe.pipe
-    ruby.tcp.spawn
-    ruby.tcp.fork
-    ruby.uds.spawn
-    ruby.uds.fork
     csharp.pipe.pipe
     csharp.tcp.thread
     csharp.uds.thread
@@ -684,6 +680,11 @@ if {![info exists env(SRV_LST)]} {
     php.tcp.fork
     php.uds.spawn
     php.uds.fork
+    ruby.pipe.pipe
+    ruby.tcp.spawn
+    ruby.tcp.fork
+    ruby.uds.spawn
+    ruby.uds.fork
     go.pipe.pipe
     go.tcp.spawn
     go.tcp.fork
@@ -795,7 +796,7 @@ set TS_HELP_MSGQUE false
 set args [list -verbose {start pass body error}]
 while {true} {
   set arg [Pop argv]
-  switch -exact $arg {
+  switch -regexp $arg {
     "--testing"	{
       set argv [list --only-pipe --only-binary --max 5 --only-num 1 {*}$argv]
     }
@@ -853,45 +854,31 @@ while {true} {
     "--filter-client" {
       set env(TS_FILTER_CLIENT)  [Pop argv]
     }
-    "--only-string" -
-    "--only-binary" {
+    "--only(-binary|-string)" {
       set env(BIN_LST) [string range $arg 7 end]
     }
     "--server" {
       set env(SRV_LST) [Pop argv]
     }
-    "--only-c" -
-    "--only-tcl" -
-    "--only-java" -
-    "--only-csharp" -
-    "--only-vb" -
-    "--only-python" -
-    "--only-ruby" -
-    "--only-perl" -
-    "--only-php" -
-    "--only-go" -
-    "--only-cc" {
-      set T		[string range $arg 7 end]
-      set env(LNG_LST)	$T
-      set env(SRV_LST)	[filter SRV_LST "\\m$T\\M"]
+    "--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc)+" {
+      set T		  [lrange [split $arg -] 3 end]
+      set env(LNG_LST)	  {*}$T
+      # "c" matches multiple targets -> add word border definition
+      set IDX		  [lsearch -exact $T c]
+      if {$IDX != -1}	  { set T [lreplace $T $IDX $IDX "\\mc\\M"] }
+      set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--only-uds" -
-    "--only-pipe" -
-    "--only-tcp" {
-      set T		[string range $arg 7 end]
-      set env(COM_LST)	$T
-      set env(SRV_LST)	[filter SRV_LST $T]
+    "--only(-uds|-pipe|-tcp)+" {
+      set T		  [lrange [split $arg -] 3 end]
+      set env(COM_LST)	  {*}$T
+      set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--only-fork" -
-    "--only-thread" -
-    "--only-spawn" {
-      set T		  [string range $arg 7 end]
-      set env(START_LST)  [filter START_LST $T]
-      set env(SRV_LST)	  [filter SRV_LST $T]
+    "--only(-fork|-thread|-spawn)+" {
+      set T		  [lrange [split $arg -] 3 end]
+      set env(START_LST)  [filter -or START_LST {*}$T]
+      set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    "--use-fork" -
-    "--use-thread" -
-    "--use-spawn" {
+    "--use(-fork|-thread|-spawn)" {
       set T		      [string range $arg 6 end]
       set env(START_LST)      [filter START_LST $T]
       set env(TS_STARTUP_AS)  --$T
@@ -948,6 +935,10 @@ while {true} {
     }
   }
 } ;# no argv
+
+#Print env(START_LST)
+#Print env(SRV_LST)
+#exit
 
 # delete everything from COM_LST which doesn't belongs to SRV_LST
 if {![llength [filter SRV_LST pipe]]} {

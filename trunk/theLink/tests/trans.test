@@ -78,7 +78,7 @@ test trans-1-($I|$B|$C|$S) {send data with error} \
       WaitOnFileToken $TMP "<DUM2>"
     } \
     -cleanup	    {
-      Cleanup
+      Cleanup -force yes
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -100,7 +100,7 @@ test trans-2-($I|$B|$C|$S) {send valid data} \
       WaitOnFileToken $TMP HALLO
     } \
     -cleanup	    {
-      Cleanup
+      Cleanup -force yes
     } \
     -returnCodes    ok \
     -result         "START
@@ -118,7 +118,7 @@ test trans-3-($I|$B|$C|$S) {send error + valid data} \
       WaitOnFileToken $TMP HALLO
     } \
     -cleanup	    {
-      Cleanup
+      Cleanup -force yes
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -184,8 +184,9 @@ foreach I [getNum 3] {
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      Cleanup -force yes
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -219,8 +220,9 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      Cleanup -force yes
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -256,8 +258,9 @@ test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
+      Cleanup -force yes
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -304,8 +307,9 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
       WaitOnFileToken $TMP T1
     } \
     -cleanup	    {
+      Cleanup -force yes
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -344,8 +348,9 @@ foreach I [getNum 3] {
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      Cleanup -force yes
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -372,8 +377,9 @@ $J - T3"
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
+      Cleanup -force yes
+puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
-      Cleanup
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -413,7 +419,4 @@ test trans-Y1 {try to connect a "not-created" link} \
 ##
 
 freeTests
-
-
-
 
