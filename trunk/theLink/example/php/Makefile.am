@@ -17,5 +17,5 @@
 
 EXTRA_DIST = manfilter.php mulclient.php mulserver.php MyClient.php \
 	      MyServer.php testclient.php testserver.php Filter1.php \
-		Filter2.php Filter3.php Filter4.php server.php
+		Filter2.php Filter3.php Filter4.php Filter5.php server.php
 

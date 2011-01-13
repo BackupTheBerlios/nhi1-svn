@@ -36,16 +36,16 @@ array set DB {
 ##
 
 # 1,2, ... tclmsgque (parent/child)
- foreach I [numGet 3] {
+ foreach I [getNum 3] {
 
  # transport-type: string or binary
-  foreach B [filterGet BIN_LST binary] {
+  foreach B [filter BIN_LST binary] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [envGet COM_LST] {
+   foreach C [getEnv COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filterGet SRV_LST $C] {
+    foreach S [filter SRV_LST $C] {
 
 ##
 ## -----------------------------------------------------------------------

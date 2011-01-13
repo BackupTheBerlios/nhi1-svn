@@ -255,7 +255,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUFFIXES = .go .bin $(EXEEXT)
-GOMSGQUE = $(abs_top_srcdir)/theLink/gomsgque/src/_obj/gomsgque.a
+GOMSGQUE = $(abs_top_builddir)/theLink/gomsgque/src/_obj/gomsgque.a
 BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
 	Filter3$(EXEEXT) mulclient$(EXEEXT) mulserver$(EXEEXT) \
 	manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \

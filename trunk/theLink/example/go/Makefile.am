@@ -27,7 +27,7 @@ dummy:	all
 .bin$(EXEEXT):
 	$(LD) -L $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
 
-GOMSGQUE = $(abs_top_srcdir)/theLink/gomsgque/src/_obj/gomsgque.a
+GOMSGQUE = $(abs_top_builddir)/theLink/gomsgque/src/_obj/gomsgque.a
 
 ## all executables depend on our new created "gomsgque.a" library
 

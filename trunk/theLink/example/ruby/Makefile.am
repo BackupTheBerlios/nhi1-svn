@@ -17,5 +17,5 @@
 
 EXTRA_DIST = manfilter.rb mulclient.rb mulserver.rb MyClient.rb MyServer.rb \
 		testclient.rb testserver.rb server.rb \
-		  Filter1.rb Filter2.rb Filter3.rb Filter4.rb
+		  Filter1.rb Filter2.rb Filter3.rb Filter4.rb Filter5.rb
 

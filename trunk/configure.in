@@ -13,7 +13,7 @@
 # set NHI1 VERSION information also in:
 # > win/mqconfig.h
 # > win/env.sh
-AC_INIT([NHI1],[0.10],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_INIT([NHI1],[0.11],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([tar-ustar no-dist-gzip dist-bzip2])
 AC_CONFIG_HEADER([mqconfig.h])
@@ -21,10 +21,10 @@ AC_CONFIG_HEADER([mqconfig.h])
 # set libmsgque VERSION information also in:
 # > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
 # > win/mqconfig.h
-# > theLink/csmsgque/csmsgque.cs
+# > theLink/csmsgque/MqS.cs
 # > win/win/win.vsprops
-AC_SUBST([LIBMSGQUE_VERSION], ["4.8"])
-AC_DEFINE([LIBMSGQUE_VERSION], ["4.8"], [version of the 'libmsgque' package])
+AC_SUBST([LIBMSGQUE_VERSION], ["5.0"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["5.0"], [version of the 'libmsgque' package])
 
 #  Updating library version information
 #  ====================================
@@ -68,7 +68,7 @@ AC_DEFINE([LIBMSGQUE_VERSION], ["4.8"], [version of the 'libmsgque' package])
 #  use the `-release' flag (*note Release numbers::), but be warned that
 #  every release of your package will not be binary compatible with any
 #  other release.
-AC_SUBST([VERSION_INFO], [18:0:0])
+AC_SUBST([VERSION_INFO], [19:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
 

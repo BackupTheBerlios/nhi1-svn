@@ -210,7 +210,7 @@ foreach C pipe {
 	-cleanup      {rename $FH0 ""} \
 	-returnCodes  error \
 	-match	      glob \
-	-result	      {C> (otto) \[*\] can not start server 'unknown_server_executable'}
+	-result	      {C> (otto) \[*\] can not start server 'unknown_server_executable'*}
 
     test startup-$C-19 {no subcommand} \
 	-body   {tclmsgque} \

@@ -40,13 +40,13 @@ dist-hook:
 	rm -fr $(distdir)/html
 	cp -pr $(srcdir)/html $(distdir)
 
-#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
-#      --enable-python --enable-perl --enable-guard --enable-brain \
-#	--enable-csharp --enable-java --enable-ruby --enable-php \
-#	  --enable-go --enable-threads
-
-DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl
+DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
+      --enable-python --enable-perl --enable-guard --enable-brain \
+	--enable-csharp --enable-java --enable-ruby --enable-php \
 	  --enable-go --enable-threads
+
+#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl
+#	  --enable-go --enable-threads
 
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl \
 #	--enable-go --enable-threads

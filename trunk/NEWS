@@ -10,6 +10,35 @@
 #§              please contact AUTHORS for additional information
 #§
 
+14 Jan 2010: v NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+
+This release add support for the "Factory" design pattern.
+
+The "Factory" is an important part of the object management and has the
+following basic features:
+ * create a new instance identified by an "Identifier" or using an already
+   available instance as template
+ * cleanup and delete an instance
+ * provide an "Identifier" for factory lookup and as an unique application name
+ * identify the server in the network
+.
+The link between the "Factory-Identifier" and the "Factory-Interface" is
+important for the future development of "libmsgque". Message-Routing,
+Service-Location and Persistent-Transactions depend on this feature.
+
+The relationship between the "MqFactoryS" and the "MqS" is the same as the
+relationship between a "type" and an "instance" of the "type" in a regular 
+programming language.
+The "MqFactoryS" define the "type" of the server and the "MqS" define a single
+instance of the server. Every kind of server has !!only one!! specific 
+"MqFactoryS" object but every instance of a server has one "MqS" object used 
+for object management. Decreasing the size and the complexity of a "MqS" object 
+will improve the server performance.
+In future more fields, defined in the "MqSetupS" attribute of the the "MqS" 
+object, will move into "MqFactoryS" object.
+
+
+
 29 Nov 2010: v NHI1-0.10, PLMK-1.8 und libmsgque-4.8
 
 This release add support for the new programming-language "Go" from Google.

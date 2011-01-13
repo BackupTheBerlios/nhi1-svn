@@ -1515,7 +1515,7 @@ MQ_DECL MqFactoryCtxDefaultSet (
 /// \attention the \e string is owned by \libmsgque -> do not free !!
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
   struct MqS const * const context
-) __attribute__((nonnull));
+);
 
 /// \brief link the context to a new \e factory-interface identified by \e ident
 /// \context
