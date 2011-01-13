@@ -52,16 +52,22 @@ ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
+using namespace ccmsgque; \n\
 class MyClass : public MqC { \n\
-  private int mydata; \n\
+  private: \n\
+    int mydata; \n\
+  public: \n\
+    MyClass(MqS *tmpl) : MqC(tmpl) {}; \n\
   ... \n\
 }; \n\
 int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
-  MyClass ctx; ... \n\
+  MyClass *ctx = MqFactoryC<MyClass>::New(); \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=MqC ctx; MqC *ctx=new MqC()"
+ALIASES		    += "ContextCreate=MqC *ctx=new MqC(struct MqS * const tmpl)"
+ENABLED_SECTIONS    += ContextCreate2
+ALIASES		    += "ContextCreate2=MqC *ctx=new MqC()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=delete(ctx)"
 ALIASES		    += "Exit=ctx.Exit()"

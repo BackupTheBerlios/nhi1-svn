@@ -185,7 +185,6 @@ foreach I [getNum 3] {
     } \
     -cleanup	    {
       Cleanup -force yes
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \
@@ -221,7 +220,6 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     } \
     -cleanup	    {
       Cleanup -force yes
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \
@@ -258,7 +256,6 @@ test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
       WaitOnFileToken $TMP T3
     } \
     -cleanup	    {
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
       Cleanup -force yes
     } \
@@ -308,7 +305,6 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
     } \
     -cleanup	    {
       Cleanup -force yes
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \
@@ -349,7 +345,6 @@ foreach I [getNum 3] {
     } \
     -cleanup	    {
       Cleanup -force yes
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \
@@ -378,7 +373,6 @@ $J - T3"
     } \
     -cleanup	    {
       Cleanup -force yes
-puts "client<$FIRST> cleanup"
       if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \

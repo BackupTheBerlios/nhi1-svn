@@ -43,11 +43,16 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet ident"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-set ctx [tclmsgque MqS] \n\
-$ctx dict set mydata 0 \n\
+package require TclMsgque \n\
+proc MyClass {tmpl} { \n\
+  set ctx [tclmsgque MqS $tmpl] \n\
+  $ctx dict set mydata 0 \n\
+  return $ctx \n\
+} \n\
+set ctx [tclmsgque FactoryNew MyClass] \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS]"
+ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS ?tmpl?]"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=rename $ctx \"\""
 ALIASES		    += "Exit=$ctx Exit"

@@ -126,7 +126,7 @@ error:
   return MqErrorStack (context);
 }
 
-#define ARG(s) #s,sizeof(#s)-1
+#define MQ_ARG(s) #s,sizeof(#s)-1
 
 int
 pMqCheckOpt (
@@ -142,75 +142,75 @@ pMqCheckOpt (
   switch (argC[0]) {
     case 's': {
       switch (argC[1]) {
-	case 'p': return !strncmp(argC, ARG(spawn)  );
-	case 'r': return !strncmp(argC, ARG(srvname));
-	case 't': return !strncmp(argC, ARG(string) );
-	case 'i': return !strncmp(argC, ARG(silent) );
-	case 'o': return !strncmp(argC, ARG(socket) );
+	case 'p': return !strncmp(argC, MQ_ARG(spawn)  );
+	case 'r': return !strncmp(argC, MQ_ARG(srvname));
+	case 't': return !strncmp(argC, MQ_ARG(string) );
+	case 'i': return !strncmp(argC, MQ_ARG(silent) );
+	case 'o': return !strncmp(argC, MQ_ARG(socket) );
       }
       return 0;
     }
     case 'd': {
       switch (argC[1]) {
-	case 'e': return !strncmp(argC, ARG(debug)  );
-	case 'a': return !strncmp(argC, ARG(daemon) );
+	case 'e': return !strncmp(argC, MQ_ARG(debug)  );
+	case 'a': return !strncmp(argC, MQ_ARG(daemon) );
       }
       return 0;
     }
     case 't': {
       switch (argC[1]) {
-	case 'c': return !strncmp(argC, ARG(tcp)    );
-	case 'h': return !strncmp(argC, ARG(thread) );
-	case 'i': return !strncmp(argC, ARG(timeout));
+	case 'c': return !strncmp(argC, MQ_ARG(tcp)    );
+	case 'h': return !strncmp(argC, MQ_ARG(thread) );
+	case 'i': return !strncmp(argC, MQ_ARG(timeout));
       }
       return 0;
     }
     case 'n': {
-      return !strncmp(argC, ARG(name));
+      return !strncmp(argC, MQ_ARG(name));
     }
     case 'b': {
-      return !strncmp(argC, ARG(buffersize));
+      return !strncmp(argC, MQ_ARG(buffersize));
     }
     case 'u': {
-      return !strncmp(argC, ARG(uds));
+      return !strncmp(argC, MQ_ARG(uds));
     }
     case 'p': {
       switch (argC[1]) {
-	case 'i': return !strncmp(argC, ARG(pipe)   );
-	case 'o': return !strncmp(argC, ARG(port)   );
+	case 'i': return !strncmp(argC, MQ_ARG(pipe)   );
+	case 'o': return !strncmp(argC, MQ_ARG(port)   );
       }
       return 0;
     }
     case 'm': {
       switch (argC[2]) {
-	case 'h': return !strncmp(argC, ARG(myhost) );
-	case 'p': return !strncmp(argC, ARG(myport) );
+	case 'h': return !strncmp(argC, MQ_ARG(myhost) );
+	case 'p': return !strncmp(argC, MQ_ARG(myport) );
       }
       return 0;
     }
     case 'f': {
       switch (argC[1]) {
-	case 'o': return !strncmp(argC, ARG(fork)   );
-	case 'i': return !strncmp(argC, ARG(file)   );
+	case 'o': return !strncmp(argC, MQ_ARG(fork)   );
+	case 'i': return !strncmp(argC, MQ_ARG(file)   );
       }
       return 0;
     }
     case '-': {
       switch (argC[1]) {
-	case 'd': return !strncmp(argC, ARG(-duplicate)	      );
-	case 's': return !strncmp(argC, ARG(-status-is-spawn) );
-	case 't': return !strncmp(argC, ARG(-threadData)      );
+	case 'd': return !strncmp(argC, MQ_ARG(-duplicate)	      );
+	case 's': return !strncmp(argC, MQ_ARG(-status-is-spawn) );
+	case 't': return !strncmp(argC, MQ_ARG(-threadData)      );
       }
       return 0;
     }
     case 'h': {
       switch (argC[1]) {
-	case 'o': return !strncmp(argC, ARG(host) );
+	case 'o': return !strncmp(argC, MQ_ARG(host) );
 	case 'e': {
 	  if (arg->cursize == 6) {
-	    return !strncmp(argC, ARG(help) );
+	    return !strncmp(argC, MQ_ARG(help) );
 	  } else {
-	    return !strncmp(argC, ARG(help-msgque) );
+	    return !strncmp(argC, MQ_ARG(help-msgque) );
 	  }
 	}
       }

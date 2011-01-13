@@ -45,19 +45,20 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
+require \"rubymsgque\" \n\
 class MyClass < MqS \n\
   ... \n\
   def initialize \n\
-    mydata = nil \n\
     super() \n\
+    mydata = nil \n\
   end \n\
   ... \n\
 end \n\
-ctx = MyClass.new \n\
+ctx = FactoryNew(MyClass) \n\
 ... \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=ctx=MqS.new"
+ALIASES		    += "ContextCreate=ctx=MqS.new(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"

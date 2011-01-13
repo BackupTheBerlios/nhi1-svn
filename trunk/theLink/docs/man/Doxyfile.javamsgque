@@ -48,16 +48,22 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(String ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
+package MyCompany; \n\
+import javamsgque.*; \n\
 final class MyClass extends MqS { \n\
   private int mydata; \n\
+  public MyClass(MqS tmpl) { super(tmpl); } \n\
   ... \n\
 } \n\
 public static void main(String[] args) { \n\
-  MyClass ctx = new MyClass(); ... \n\
+  MqS.Init(\"java\", \"MyCompany.MyClass\"); \n\
+  MyClass ctx = MqFactoryS.New(MyClass.class); \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextCreate=MqS ctx=new MqS(MqS tmpl)"
+ENABLED_SECTIONS    += ContextCreate2
+ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"

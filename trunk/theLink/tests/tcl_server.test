@@ -109,7 +109,7 @@ test tcl-server-5-($I|$B|$C|$S) {ErrorC without string} \
     -returnCodes  error \
     -match	  glob \
     -result	  {[cC]> (client-0) \[service-call-error] <Tok|EVAL> <Num|9>*
-[sS]> (server-0) \[myprefix] this is an error}
+[sS]> (server-0) \[myprefix] this is an error*}
 
 # cleanup ---------------------------
 

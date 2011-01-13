@@ -267,7 +267,6 @@ SysSocket (
   if (unlikely ((*sock = socket (domain, type, protocol)) == INVALID_SOCKET)) {
     return sSysMqErrorMsg (context, __func__, "socket");
   }
-
   return MQ_OK;
 }
 

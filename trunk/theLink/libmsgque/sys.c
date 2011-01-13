@@ -65,9 +65,9 @@
   MqErrorV (context, __func__, errno, \
     "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
 
-#define MqErrorSysAppend(cmd) \
+#define MqErrorSysAppend(cmd,num) \
   MqErrorSAppendV (context,\
-    "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
+    "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (num))
 
 #define MQ_CONTEXT_S context
 
@@ -430,7 +430,7 @@ static enum MqErrorE SysServerThread (
 
   if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadInit, argP, 0, NULL)) == 0)) {
     MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
-    MqErrorSysAppend (_beginthreadex);
+    MqErrorSysAppend (_beginthreadex, errno);
     goto error;
   }
 
@@ -460,13 +460,26 @@ static enum MqErrorE SysServerSpawn (
 )
 {
   pid_t pid;
-  
+  int err=0;
+
   // spawn setup !before! a spawn is created
   if (context->setup.fSpawnInit) (*context->setup.fSpawnInit)(context);
 
+  // perl !need! sigschiled enabled at startup make it the default
+
 #if defined(HAVE_POSIX_SPAWN)
-  if (unlikely (posix_spawnp(&pid, name, NULL, NULL, (char *const *) argv, __environ) != 0)) {
-    goto error;
+  {
+    posix_spawnattr_t sa;
+    if ((err=posix_spawnattr_init(&sa)) != 0) {
+      goto error;
+    }
+    if (unlikely ((err=posix_spawnp(&pid, name, NULL, &sa, (char *const *) argv, __environ)) != 0)) {
+      posix_spawnattr_destroy(&sa);
+      goto error;
+    }
+    if ((err=posix_spawnattr_destroy(&sa)) != 0) {
+      goto error;
+    }
   }
   goto ok;
 
@@ -517,7 +530,11 @@ ok:
   return MQ_OK;
 
 error:
-  return MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+  MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
+  if (err != 0) {
+    MqErrorSysAppend (__func__, err);
+  }
+  return MqErrorGetCodeI(context);
 }
 
 static enum MqErrorE SysUSleep (

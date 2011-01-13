@@ -106,7 +106,8 @@ func (this *Filter4) ErrorWrite() {
 }
 
 func main() {
-  srv := FactoryNew("transFilter", NewFilter4)
+  FactoryDefault("transFilter", NewFilter4)
+  srv := NewFilter4(nil)
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

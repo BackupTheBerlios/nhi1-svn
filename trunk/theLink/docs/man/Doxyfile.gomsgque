@@ -43,24 +43,26 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
+import . "gomsgque" \n\
+... \n\
 type MyClass struct { \n\
   *MqS \n\
   mydata int \n\
   ... \n\
 } \n\
 ... \n\
-func NewMyClass() *MyClass { \n\
+func NewMyClass(tmpl *MqS) *MyClass { \n\
   srv := new(MyClass) \n\
-  srv.MqS = NewMqS(srv) \n\
+  srv.MqS = NewMqS(tmpl, srv) \n\
   return srv \n\
 } \n\
 ... \n\
 func main() \n\
-  ctx := NewMyClass() ... \n\
+  ctx := FactoryNew(\"MyClass\", NewMyClass) \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=ctx := NewMqS(top interface{})"
+ALIASES		    += "ContextCreate=ctx := NewMqS(tmpl *MqS, top interface{})"
 ALIASES		    += "ContextCreateSection= \n\
 \e Go does not support class dependencies. To access the toplevel object from a \TM type function \n\
 the toplevel interface is require. The reference can be set with the \e top argument of \e NewCtx \n\

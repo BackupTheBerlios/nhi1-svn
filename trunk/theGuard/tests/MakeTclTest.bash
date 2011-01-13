@@ -1,5 +1,5 @@
 #+
-#§  \file       theGuard/tests/MakeTclTest.bash
+#§  \file       theLink/tests/MakeTclTest.bash
 #§  \brief      \$Id$
 #§  
 #§  (C) 2009 - NHI - #1 - Project - Group
@@ -21,17 +21,22 @@ if [[ ${WINDIR:-} != "" ]] ; then
   MONO=""
 else
   EXT=""
-  MONO=mono
+  MONO=$CLREXEC
 fi
 
 USAGE() {
-  echo "usage $0 ?-ur? ?-vg|-gdb|-lc|-sr|-sp|-st? args..."
+  echo "usage $0 ?-ur? ?-vg|-gdb|-kdbg|-ddd|-lc|-sr|-sp|-st? args..."
   echo "   ur:  use-remote"
   echo "   st:  strace"
+  echo "   vg:  valgrind:"
+  echo "   sp:  valgrind: gen-suppressions"
+  echo "   lc:  valgrind: leak-chec"
+  echo "   sr:  valgrind: leak-chec + show-reachable"
   exit 1
 }
 
 PREFIX=""
+POSTFIX="cat"
 [[ $1 == "-h" ]] && USAGE
 [[ $1 == "-ur" ]] && {
   shift
@@ -39,10 +44,12 @@ PREFIX=""
 }
 [[ $1 == "-vg" ]] && {
   PREFIX="valgrind --trace-children=yes --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-gdb" ]] && {
   PREFIX="gdb -d ../perlmsgque/Net*/ --tui --args"
+  POSTFIX=""
   TEE=no
   shift
 }
@@ -51,12 +58,19 @@ PREFIX=""
   TEE=no
   shift
 }
+[[ $1 == "-kdbg" ]] && {
+  PREFIX="/opt/kde3/bin/kdbg"
+  TEE=no
+  shift
+}
 [[ $1 == "-lc" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-sr" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --show-reachable=yes --num-callers=36 --quiet"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-st" ]] && {
@@ -65,6 +79,7 @@ PREFIX=""
 }
 [[ $1 == "-sp" ]] && {
   PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
+  POSTFIX="grep -v DWARF2"
   shift
 }
 [[ $1 == "-mdb" ]] && {
@@ -74,21 +89,44 @@ PREFIX=""
 (( $# == 0 )) && USAGE
 
 CMD=$1; shift
+ID=$CMD
 
 case "$CMD" in
-  *.tcl|*.test)   PREFIX="$PREFIX tclsh$EXT $CMD";;
-  *.java)	  PREFIX="$PREFIX java$EXT $(basename $CMD .java)";;
-  *.py)		  PREFIX="$PREFIX python$EXT $CMD";;
-  *.pl)		  PREFIX="$PREFIX perl$EXT $CMD";;
-  *.exe)	  PREFIX="$PREFIX $MONO $CMD";;
-  *.cc)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;
-  *.c)		  PREFIX="$PREFIX ${CMD%\.*}$EXT";;
-  *)		  PREFIX="$PREFIX $CMD";;
+  *.tcl|*.test)   EXE="$TCLSH";;
+  *.java)	  EXE="$JAVA"; CMD="${CMD%%.java}"; ID=$CMD;;
+  *.py)		  EXE="$PYTHON";;
+  *.pl)		  EXE="$PERL";;
+  *.rb)		  EXE="$RUBY";;
+  *.php)	  EXE="$PHP";;
+  *.exe)	  EXE="$MONO";;
+  *.go)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
+  *.cc)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
+  *.c)		  EXE="${CMD%\.*}$EXT"; ID=$CMD; CMD="";;
+  *)		  EXE="";;
 esac
 
+#set -x 
+
 if [[ $TEE == "yes" ]] ; then
-  exec $PREFIX "$@" 2>&1 | tee /tmp/$(basename $CMD).log
+  if [[ $PREFIX == *kdbg* ]] ; then
+    T="$CMD $@"
+    exec $PREFIX $EXE -a "$T"   2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
+  else
+    exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX | tee /tmp/$(basename $ID).log
+  fi
 else
-  exec $PREFIX "$@"
+  if [[ $PREFIX == *kdbg* ]] ; then
+    T="$CMD $@"
+    set $EXE
+    EXE="$1"; shift
+    T="$@ $T"
+    exec $PREFIX $EXE -a "$T"
+  else
+    if [[ "$POSTFIX" == "cat" ]] ; then
+      exec $PREFIX $EXE $CMD "$@" 2>&1 | $POSTFIX
+    else
+      exec $PREFIX $EXE $CMD "$@"
+    fi
+  fi
 fi
 

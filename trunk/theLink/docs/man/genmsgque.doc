@@ -33,6 +33,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \copydoc Mq_Context_C_API
 
+\function2{ContextCreate2,\ContextCreate2}
 \function{ContextCreate,\ContextCreate}
 \ContextCreateSection
 

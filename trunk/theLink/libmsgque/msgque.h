@@ -1359,7 +1359,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
   enum MqFactoryReturnE ret
 );
 
-/// \brief check an static Factory function return code an error and \e panic on error
+/// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
 MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
   enum MqFactoryReturnE ret
 );
@@ -1612,7 +1612,7 @@ MQ_EXTERN void MQ_DECL MqContextFree (
 /// \brief create a new context and initialize the default configuration data
 /// \param[in] size (C-API) the number of bytes in the \e context-data-structure as returned by <TT>sizeof(struct MyCtxDataS)</TT>
 ///                  (default: \e 0, use only \e libmsgque-specific-data and no \e application-specific-data)
-/// \param[in] tmpl (C-API) an other \e context-data-structure used as template to initialize the configuration data. 
+/// \param[in] tmpl an other \e context-data-structure used as template to initialize the configuration data. 
 ///                  This template is used for a \e child to get the configuration data from the \e parent. 
 ///                  (default: \e NULL, create an initial context)
 /// \return the new \e context, no error return because this function \e panic on \e out-of-memory-error
@@ -1675,6 +1675,7 @@ MQ_EXTERN MQ_STR MQ_DECL MqHelp (
   MQ_CST  tool 
 );
 
+/// \brief return a page with the usage of all \libmsgque specific options
 MQ_EXTERN MQ_STR MQ_DECL MqHelpMsgque ( 
   void
 );

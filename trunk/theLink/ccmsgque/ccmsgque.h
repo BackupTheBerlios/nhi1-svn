@@ -223,7 +223,10 @@ namespace ccmsgque {
     /// \details \copydetails Mq_Context_C_API
     /// \{
 
-    public:
+    template<class T>
+    friend class MqFactoryC;
+
+    private:
       /// \brief link between MqC and MqS
       struct MqS context;
 

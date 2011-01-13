@@ -44,11 +44,24 @@ ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-struct MyCtxDataS { \n\
+struct MyClassDataS { \n\
   struct MqS mqctx; \n\
   int mydata; \n\
 }; \n\
-struct MqS * const ctx = MqContextCreate(sizeof(struct MyCtxDataS), NULL); \n\
+enum MqErrorE MyClassFactory ( \n\
+  struct MqS * const tmpl, \n\
+  enum MqFactoryE create, \n\
+  struct MqFactoryS * const item, \n\
+  struct MqS **contextP \n\
+) { \n\
+  struct MqS * const ctx = *contextP = MqContextCreate(sizeof(struct MyCtxDataS),tmpl); \n\
+  ... \n\
+  return MQ_OK; \n\
+} \n\
+struct MqS * ctx; \n\
+MqFactoryErrorPanic ( \n\
+  MqFactoryNew(\"MyClass\", MyClassFactory, NULL, NULL, NULL, NULL, NULL, NULL, &ctx) \n\
+); \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"

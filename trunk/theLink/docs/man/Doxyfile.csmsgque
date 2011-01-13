@@ -50,16 +50,22 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
-sealed class MyClass : MqS { \n\
-  private int mydata; \n\
-  ... \n\
-} \n\
-static void Main(string[] args) \n\
-  MyClass ctx = new MyClass(); ... \n\
+using csmsgque; \n\
+namespace MyCompany { \n\
+  sealed class MyClass : MqS { \n\
+    private int mydata; \n\
+    public MyClass(MqS tmpl) : base(tmpl) {} \n\
+    ... \n\
+  } \n\
+  static void Main(string[] args) \n\
+    MyClass srv = MqFactoryS<MyClass>.New(); \n\
+  } \n\
 } \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=MqS ctx=new MqS()"
+ALIASES		    += "ContextCreate=MqS ctx=new MqS(MqS tmpl)"
+ENABLED_SECTIONS    += ContextCreate2
+ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"

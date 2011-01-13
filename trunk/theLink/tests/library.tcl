@@ -873,7 +873,7 @@ while {true} {
       set env(COM_LST)	  {*}$T
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
-    {^--only(-fork|-thread|-spawn)+$} {
+    {^--only(-fork|-thread|-spawn|-pipe)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(START_LST)  [filter -or START_LST {*}$T]
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
@@ -1445,10 +1445,12 @@ proc WaitOnFileToken {file token} {
       gets $fh line
       lappend RET $line
       if {[string first $token $line] != -1} {
+	close $fh
 	return [join $RET \n]
       } 
       if {[clock seconds] >= $end} {
 	lappend RET "timeout ($::env(TS_TIMEOUT) sec)"
+	close $fh
 	return [join $RET \n]
       }
     }

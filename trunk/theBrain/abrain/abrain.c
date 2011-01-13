@@ -542,7 +542,6 @@ main (
   mqctx->setup.isServer		    = MQ_YES;
   mqctx->setup.ServerSetup.fCall    = BrainSetup;
   mqctx->setup.ServerCleanup.fCall  = BrainCleanup;
-  MqConfigSetDefaultFactory (mqctx);
 
   // create the ServerCtxS
   MqErrorCheck(MqLinkCreate (mqctx, &args));

@@ -61,7 +61,9 @@ Sub Main(ByVal args() As String) \n\
 End Sub \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=Dim ctx As New MqS()"
+ALIASES		    += "ContextCreate=Dim ctx As New MqS(tmpl As MqS)"
+ENABLED_SECTIONS    += ContextCreate2
+ALIASES		    += "ContextCreate2=Dim ctx As New MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
@@ -196,8 +198,8 @@ ctx.SendT_START(\"SRVR\") \n\
 ctx.SendC(\"myEnvironment\") \n\
 ctx.SendT_END() \n\
 ctx.SendC(\"myData\") \n\
-ctx.SendEND_AND_WAIT("SRVC")\endcode"
-
+ctx.SendEND_AND_WAIT(\"SRVC\")\n\
+\endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code \n\

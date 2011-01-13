@@ -44,17 +44,18 @@ ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
+from pymsgque import * \n\
 class MyClass(MqS): \n\
   ... \n\
-  def __init__(self): \n\
+  def __init__(self, tmpl=None): \n\
     self.mydata = None \n\
     MqS.__init__(self) \n\
   ... \n\
-ctx = MyClass() \n\
+ctx = FactoryNew(\"MyClass\", MyClass); \n\
 ... \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=ctx=MqS()"
+ALIASES		    += "ContextCreate=ctx=MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"

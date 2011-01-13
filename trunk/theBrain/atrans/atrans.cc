@@ -35,18 +35,19 @@
 using namespace std;
 using namespace ccmsgque;
 
-class atrans : public MqC, public IFactory, public IServerSetup,
+class atrans : public MqC, public IServerSetup,
 		  public IServerCleanup, public IEvent {
+  public:
+    atrans(MqS *tmpl) : MqC(tmpl) {
+      ConfigSetIgnoreExit (true);
+    }
+
   private:
     struct FilterItmS {
       MQ_CBI  bdy;
       MQ_SIZE len;
     };
     queue<struct FilterItmS> itms;
-
-    MqC* Factory() const { 
-      return new atrans(); 
-    }
 
     void ErrorWrite () {
       fprintf(stderr, "ERROR: %s\n", ErrorGetText());
@@ -156,7 +157,7 @@ class atrans : public MqC, public IFactory, public IServerSetup,
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  static atrans filter;
+  atrans *filter = MqFactoryC<atrans>::New("transFilter");
   try {
     MQ_STR datadir = NULL;
     struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
@@ -164,21 +165,19 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     // setup direktory
     MqBufferLCheckOptionC(MQ_ERROR_PANIC, args, "-datadir", &datadir);
     if (datadir != NULL) {
-      filter.SysChDir (datadir);
+      filter->SysChDir (datadir);
       MqSysFree (datadir);
     }
-    filter.SysMkDir ("atrans", 00700);
-    filter.SysMkDir ("atrans" mq_pathsep "IN", 00700);
-    filter.SysMkDir ("atrans" mq_pathsep "OUT", 00700);
+    filter->SysMkDir ("atrans", 00700);
+    filter->SysMkDir ("atrans" mq_pathsep "IN", 00700);
+    filter->SysMkDir ("atrans" mq_pathsep "OUT", 00700);
 
     // setup link
-    filter.ConfigSetIgnoreExit (true);
-    filter.ConfigSetIdent ("transFilter");
-    filter.LinkCreate (args);
-    filter.ProcessEvent (MQ_WAIT_FOREVER);
+    filter->LinkCreate (args);
+    filter->ProcessEvent (MQ_WAIT_FOREVER);
   } catch (const exception& e) {
-    filter.ErrorSet(e);
+    filter->ErrorSet(e);
   }
-  filter.Exit();
+  filter->Exit();
 }
 
