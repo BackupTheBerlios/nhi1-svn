@@ -19,6 +19,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-python \
 		    --enable-perl \
 		    --enable-php \
+		    --enable-go \
 		    --enable-brain \
 		    --enable-guard \
 \

@@ -26,7 +26,7 @@ rm -fr binary-build
 mkdir binary-build
 cd binary-build
 
-tar -xf ../$PACKAGE-$PACKAGE_VERSION.tar.gz
+tar -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2
 
 cd $PACKAGE-$PACKAGE_VERSION
 
