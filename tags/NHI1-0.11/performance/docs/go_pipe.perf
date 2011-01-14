@@ -1,0 +1,10 @@
+> thread/NHI1-0.11/theLink/example/c/client --all @ thread/NHI1-0.11/theLink/example/go/server
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-52] [0-0-0-0x629b50-main]: start: --------------------------------------
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-52] [0-0-0-0x629b50-statistics]:                      MqSendEND:       6.07
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-53] [0-0-0-0x629b50-statistics]:         MqSendEND_AND_CALLBACK:       8.83
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:             MqSendEND_AND_WAIT:      22.28
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                  parent create:    1810.96
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                  parent delete:     153.99
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                   child create:     172.92
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                   child delete:      48.31
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-main]: end: ----------------------------------------

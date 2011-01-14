@@ -1,0 +1,10 @@
+> thread/NHI1-0.11/theLink/example/c/client --all @ java example.Server
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-04] [0-0-0-0x629c50-main]: start: --------------------------------------
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-04] [0-0-0-0x629c50-statistics]:                      MqSendEND:       5.23
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-05] [0-0-0-0x629c50-statistics]:         MqSendEND_AND_CALLBACK:       8.67
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-08] [0-0-0-0x629c50-statistics]:             MqSendEND_AND_WAIT:      21.25
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                  parent create:  103423.84
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                  parent delete:    1894.92
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                   child create:     176.12
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                   child delete:      28.86
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-main]: end: ----------------------------------------

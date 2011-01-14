@@ -1,0 +1,11 @@
+> nothread/NHI1-0.11/theLink/example/cc/server --tcp --host localhost --port 7782 --spawn
+> nothread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7782
+C> (client:17797) [2011-01-14:08-41-54] [0-0-0-0x628e70-main]: start: --------------------------------------
+C> (client:17797) [2011-01-14:08-41-54] [0-0-0-0x628e70-statistics]:                      MqSendEND:       3.55
+C> (client:17797) [2011-01-14:08-41-54] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:       5.23
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      26.80
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-statistics]:                  parent create:    1413.46
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-statistics]:                  parent delete:     167.61
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-statistics]:                   child create:      83.59
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-statistics]:                   child delete:      47.41
+C> (client:17797) [2011-01-14:08-41-58] [0-0-0-0x628e70-main]: end: ----------------------------------------

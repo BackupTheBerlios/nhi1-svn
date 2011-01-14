@@ -1,0 +1,417 @@
+#+
+#§  \file       NEWS
+#§  \brief      \$Id$
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+14 Jan 2010: v NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+
+This release add support for the "Factory" design pattern.
+
+The "Factory" is an important part of the object management and has the
+following basic features:
+ * create a new instance identified by an "Identifier" or using an already
+   available instance as template
+ * cleanup and delete an instance
+ * provide an "Identifier" for factory lookup and as an unique application name
+ * identify the server in the network
+.
+The link between the "Factory-Identifier" and the "Factory-Interface" is
+important for the future development of "libmsgque". Message-Routing,
+Service-Location and Persistent-Transactions depend on this feature.
+
+The relationship between the "MqFactoryS" and the "MqS" is the same as the
+relationship between a "type" and an "instance" of the "type" in a regular 
+programming language.
+The "MqFactoryS" define the "type" of the server and the "MqS" define a single
+instance of the server. Every kind of server has !!only one!! specific 
+"MqFactoryS" object but every instance of a server has one "MqS" object used 
+for object management. Decreasing the size and the complexity of a "MqS" object 
+will improve the server performance.
+In future more fields, defined in the "MqSetupS" attribute of the the "MqS" 
+object, will move into "MqFactoryS" object.
+
+
+
+29 Nov 2010: v NHI1-0.10, PLMK-1.8 und libmsgque-4.8
+
+This release add support for the new programming-language "Go" from Google.
+
+
+08 Nov 2010: v NHI1-0.9, PLMK-1.7 und libmsgque-4.7
+
+This version adds the ability to:
+
+* PHP language support.
+* a new interface of the "ProcessEvent" function and the "startAs" configuration option.
+* terminate an application from a callback with the "ErrorSetEXIT" function.
+
+The PHP language is characterized by an extensive but undocumented C API. The number of 
+features combined with a growing and moving language made the extension programming difficult
+and lengthy. The successful PHP extension shows the flexibility and adaptability of NHI1.
+
+
+
+22 Oct 2010: v NHI1-0.8, PLMK-1.6 und libmsgque-4.6
+
+This release adds the ability to:
+
+* Ruby language support (LNG)
+* L)anguage A)bstraction L)ayer (LaL)
+* G)arbage C)ollection (GC) Object-Mark
+
+Ruby is an object-oriented programming language like Python. 
+The new 'libmsgque' function (MqMark) was added to the GC support and marks all objects 
+that are referenced within 'libmsgque'. The programmer now has the opportunity to replace 
+internal functions such as: SysCalloc, SysMalloc, SysRealloc, SysFree, SysSelect, SysFork, 
+SysServerSpawn, SysServerThread, SysServerFork, SysWait, SysUSleep, SysSleep, SysDaemonize, 
+SYSEXIT, SysAbort to adapt to the environment (Lal).
+
+
+
+08 Mar 2010: v NHI1-0.7, PLMK-1.6 and libmsgque-4.5
+
+This is a 'major-feature-release' to add 'longtime-transaction' support.
+
+A 'longtime-transaction' is a transaction with an infinite time period between the start
+and the end. A 'longtime-transaction' is always a 'persistent-transaction'
+too. The 'persistent' support is available as an in-memory solution on the 'application-server'
+or in an additional 'bidirectional-filter' available for the next release.
+
+A typical scenario for a 'longtime-transaction' is:
+
+* A user with a client connect to the server and start a 'longtime-transaction' job.
+  After a while the user shutdown the client and leave the office. At the next morning the
+  user start the client again and the results are send from the server to the client.
+* On a space mission the time-overhead between transaction start and end is large. It is
+  usually not possible to keep the client-server-connection open all the time.
+* On a military action-system the enemy try to interrupted the client-server-connection
+  to disable data communication.
+
+To use a 'longtime-transaction' the results are send to a 'client-service' registered with
+MqerviceCreate. This service and addtional data (I call this data 'local-context-data')
+have to be added to the 'longterm-transaction' package to be available in the result. On the
+'link-target' the 'local-context-data' is initial stripped from the 'data-package' and is
+later added to the results again.
+
+The 'local-context-data' is added to the 'data-package' with MqSendT_START and MqSendT_END. 
+The 'local-context-data' is read from the 'data-package' with MqReadT_START and MqReadT_END.
+
+
+\subsection V0_7_sp service proxy support
+
+A \e service-proxy (\RNSA{ServiceProxy}) is used to forward the entire \e data-package from one
+context to an other context and is used in a \e filter like environment.
+
+17 Feb 2010: v NHI1-0.6, PLMK-1.5 and libmsgque-4.4
+
+This is a 'major-feature-release' to prepare the environment
+for the new 'milestone-release' coming soon. 
+
+ - theLink (libmsgque), PMLK
+  + Performing memory cleanup using Garbage-Collection
+      Find a safe moment to free unused memory
+  + New message-logging API:
+      MqLogC .... write string style message to stderr
+      MqLogV .... write printf style message to stderr
+      MqLogVL ... write vprintf style message to stderr
+
+
+02 Feb 2010: v NHI1-0.5, PLMK-1.4 and libmsgque-4.3
+
+This is a 'feature-release' to prepare the environment for the new 
+'milestone-release' coming soon
+
+ - theLink (libmsgque)
+  + new feature - Recover from a Server or a Network downtime
+      read more: html/theLink/changelog.htm
+  + API addition:
+      MqLinkGetTargetIdent ... identify the link-target
+      MqLinkConnect .......... reconnect a broken client-server-link
+      MqErrorIsEXIT .......... catch application-exit
+  + update documentation and fix missing information
+  + extend the test file: theLink/tests/trans.test
+
+
+v NHI1-0.4, PLMK-1.3 and libmsgque-4.2
+
+This is a 'maintenance' and 'reorganization' release to prepare the
+environment for the new 'milestone' release coming soon
+
+ - 15 Jan 2010
+  + API reorganization:
+      MqConfigGetFilter -> MqServiceGetFilter
+      MqConfigGetIsTransaction -> MqServiceIsTransaction
+      MqConfigGetToken -> MqServiceGetToken
+      MqConfigGetParent -> MqLinkGetParent
+      MqConfigGetCtxId -> MqLinkGetCtxId
+      MqConfigGetIsConnected -> MqLinkIsConnected
+      MqConfigGetMaster -> MqSlaveGetMaster
+      MqConfigGetIsSlave -> MqSlaveIs
+  + update documentation, reorganize the structure
+      MAN: the API reference is now called with an "ref" postfix
+	> man (lib|cc|cs|java|py|perl|vb|tcl)msgqueref
+      LINK: the file 'theLink/libmsgque/msgque.h' is now root source
+        of documentation data and used to feed the MAN and the HTML docs
+      HTML: centralize the 'context' documentation
+  + add new 'public' API 'IEvent' or 'MqConfigSetEvent' to provide a function
+    to be called on idle. Together with the new API functions
+    'MqConfigSetIgnoreExit' and 'MqErrorSetCONTINUE' the server is now able
+    to 'ignore' an application 'exit' and continue to work on events.
+    The 'IEvent-API' get significant more power in future releases.
+    Check out the example: 'theLink/example/LANG/Filter4.EXT'
+ - 5 Jan 2010
+  + change default value for 'wait' in ccmsgque function MqC::ProcessEvent
+    from MQ_WAIT_ONCE to MQ_WAIT_FOREVER
+ - 1 Jan 2010
+  + switch the special token to delete 'all' token in MqServiceDelete from
+    '_ALL' to '-ALL'. 
+    -> Reason: the '_???' syntax is for internal use only.
+
+
+v NHI1-0.3, PLMK-1.2 and libmsgque-4.1
+
+Major - Feature - Improvement !!
+
+- libmsgque/PLMK: add new technology "bi-directional filter"
+  > the technology is used to extend an existing application without having
+    the application source-code available.
+  * http://nhi1.berlios.de/theLink/filter.htm
+- NHI: add new tool "theGuard"
+  > "theGuard" is used to protect the data traffic using data encryption
+    and is based on the new bi-directional filter technology of libmsgque. 
+  * http://openfacts2.berlios.de/wikien/index.php/BerliosProject:NHI1_-_TheGuard
+
+
+v 0.2
+
+This release is used for deeper integration of the Software "Tokyo Cabinet".
+The software was forked and integrated into "theBrain" subdirectory "librain"
+using "automake/libtool" technology. The project library dependencies were
+changed to "automake convenience libraries". "theBrain" got new token's for
+transaction support and database reorganization and was added into the
+performance testing environment.
+
+
+v 0.1
+
+This is the first public release of "NHI1". The goal is to create the first 
+"Non Human Intelligence" until 2040. The Project is the "master" project of 
+several sub-projects like "theLink" (former known as libmsgque) or "theBrain" 
+a persistent storage able to save a "theLink" data package without transfor-
+mation. The next development cycle will be used to deep integrate "theLink" 
+with "theBrain" to get the best link/brain combination available in business.
+
+
+## OLD news from "libmsgque"
+
+v 3.8
+
+- BUG fix and CODE cleanup release
+  complete the design of the configuration interface to "libmsgque"
+  > now, all command-line configuration options are available as functions <
+    Example: define an TCP server in the source with MqConfigSetIoTcp
+  > configuration modifications are now possible at any time < 
+
+v 3.7
+
+- Add new programming language "VB.NET"
+  Well "VB.NET" is using the CLR runtime and one goal was to prove if the
+  promise of "Language Independent Programming" works -> YES
+  Now supporting: C, C++, C#, Java, Python, Tcl, Perl, VB.NET
+- Not surprising is the "VB.NET" has the same performance figures as "C#"
+  and -> outperform <- Java, Python, Tcl, Perl
+- PHP support was skipped because no "public" documentation is available 
+  for the "Zend Engine 2.0" software (the base of PHP). This is interesting
+  because "Zend" is a "commercial" company and it seems that the clause:
+  "NO results are better than BAD results" is used.
+- After adding of "VB.NET" was so easy I spend my time to improve the
+  BUILD environment. Now language independent files like JAVA "class"
+  and "jar" files or CLR "exe" and "dll" files were added to the distribution.
+- Now I had to "convince" automake to use this files, even for a VPATH
+  build. Automake does not do this by default but I was able to "teach"
+  automake to do this.
+- The rest of the time I used to add a new documentation block called
+  "Tutorial" and is available for every supported programming languages.
+
+v 3.6
+
+- Add new programming language "Perl"
+  The new language is added if the "--enable-perl" configure switch is used.
+  Create and Install new perl module "Net::PerlMsgque".
+  Use native perl "MakeMaker" build environment to create Perl-Conform build
+  and perform a Perl_Conform installation.
+- The dependency for Tcl is now optional
+  The Tcl language is added if the "--enable-tcl" configure switch is used.
+  Be aware that the test-environment depend on Tcl
+- Add asynchronous background handler
+  This handler is used to process errors not belonging to a transaction in
+  a centralized manner. The feature was implemented as Interface (C++,Java
+  ,C#) or as configuration option (C,Perl,Python,Tcl).
+- Add signature based type checking
+  Non-Typed languages without usable class or inheritance type checking now
+  using this feature to create type-save code. This feature is used for Tcl
+  and Perl.
+- Add new Performance Test environment
+  The new environment using a separated directory "performance" and does
+  create better results combined with a clearly arranged result-table. Read
+  more in "performance/README"
+
+
+v 3.5
+
+- Add new programming language "C++" :
+  The new language is added if the "--enable-cxx" configure switch is used.
+- C++ add a new design pattern to libmsgque based on the language requirements:
+  1.  In "C++" a constructor can not call a "virtual" method. This is the main
+      difference between "C++" and "C#" or "JAVA". This require that
+      "Object" creation/deletion and "Link" creation/deletion have to be se-
+      parated into two different tasks. The former (C# and JAVA) implementation 
+      was to use a "feature-rich" constructor to setup a "Link" during object 
+      creation. This was changed.
+      A new methods "LinkCreate(..)" and "LinkCreateChild(..)" are introduced 
+      for "Link" setup as counterpart for the "LinkDelete()" method. A new method
+      "ConfigGetIsConnected()" return the "Link-Status" of the Object-Instance.
+      With the new "Pattern" it is now possible to "reuse" a object-instance.
+  2.  In "C++" a RTTI based Object-Creation is not possible. This task was
+      shifted into a "Factory" pattern. A "virtual" method called:
+		  "virtual MqC* Factory() const"
+      is used to return a new object instance of the top-most class.
+      The "Factory" pattern was used as "default" design pattern because of:
+        - far more easy as the RTTI design pattern
+        - available for every programming language
+- change the default visibility for GCC functions to hidden "-fvisibility=hidden".
+    -> This support the "Windows" binary design on Linux to create faster code.
+- redesign of the main "struct MqS" and delete many of the data pointers
+    -> create smarter and faster code
+    -> only *one* pointer is used to used the entire API
+- the "Filter" mode was redesigned and is using now the "Master/Slave" pattern
+    -> code cleanup and	standardization
+    -> the IFilterFTR / IFilterEOF does now support a "pipelining" as "default"
+- the "Error" handling was redesigned and moved into an independent "object"
+  or "class". This was necessary to "transport" an "error" through the error
+  stack of the "embedded" programming language.
+
+
+v 3.4   28 June 2009
+
+- Mayor Feature Improvement, add MASTER - SLAVE - GRID
+   Now able to Create, Manage and Control a MESH of
+   Processes or Threads.
+- Mayor Feature Improvement, add WORKER jobs
+   Distribute work on multiple jobs of the same kind
+- Mayor Bug-Fix, improve process shutdown and cleanup
+
+
+v 3.3	12 June 2009
+
+- Add new programming language "C#"
+- Add new method "Init" to initialize the spawn startup executable
+   -> now JAVA got the long missing "--spawn" support
+- Add new method "ErrorC" to create a libmsgque conform error
+- Improve Event-Loop to cleanup items on Io error
+- Update the performance figures including new C# results
+- Add native windows build using "Visual C# 2008 Express Edition"
+
+
+v 3.2   21 May 2009
+
+- Switch windows build from GNU to Visual C++ 2008 Express
+- Improved libmsgque performance
+- Misc bug fixes and feature updates
+
+
+v 3.1	12 May 2009
+
+- Add Python 3.01 support
+- New Tcl and Java Library binding
+- C library improvement including better error checking support
+- Add new test hardware, apple iBook (ppc) running Debian 5
+- Re-Add big/little endian support
+- Improve 32Bit/64Bit support
+- Add new documentation
+
+
+v 3.0   9 Apr 2009
+
+- Add JAVA 1.6 support
+- Add support for additional native types
+  signed char, boolean, signed short and float
+- Add more type-save interface functions to the programmer interface
+- Delete link between libmsgque and MqBufferS and MqBufferLS
+- No external transaction pointer required anymore
+- Embedded list data type
+- Update of documentation
+  Add JAVA tutorial and JAVA examples to other documentation
+  Update performance overview
+
+
+V 2.8   11 Mar 2009
+
+- add "callback" support to do an asynchronous service-call
+  libmsgque: MqSendEND_AND_CALLBACK(...)
+  tclmsgque: $ctx send -callback tclProc ....
+- add the options "buffersize" and "timeout" to "MqConfigS"
+- add function "MqCurrentTokenIs" 
+- disable the tclmsqque event integration:
+ - delete the "MqEventCheck" and "MqEventCheckAll" functions.
+ - libmsgque events are only processed using the following tasks:
+  1. using send wait: "$ctx send -wait ..."
+  2. using event loop: "$ctx processEvent ..."
+  3. if a server was defined: "msgque create -server ..."
+- delete the "checktime" configuration option
+
+V 2.7	28 Feb 2009
+
+- Add "thread" support, a new entity can now be created with
+  one of "--thread", "--fork" or "--spawn".
+- The tool "astarter" was replaced with the option "--spawn":
+  OLD:     astarter 7777 myserver ...
+  NEW:     myserver --tcp --port 7777 --spawn
+- To start a sub-command, "atool" uses "--fork" on UNIX 
+  and "--thread" on WINDOWS as default.
+- A lot of internal code cleanup and API improvements
+
+
+V 2.6   28 Jan 2009
+
+- add new tool "atool" to supersede the tools "aplit", "ajoin",
+  "acut" and "asort"
+- change default-value to check the connection between "server"
+  and "client" to 1h
+- add new option "--srvname" to the client startup options
+  to prefix all log and error messages with a client specific
+  identifier
+- add new options to the performance measurement tool "client"
+ - "--transaction-perf" measure the transaction performance
+ - "--parent-perf" measure the parent-context-setup performance
+ - "--child-perf" measure the child-context-setup performance
+- fix BUG in tclmsgque to crash in application cleanup
+- fix BUG in libmsgque to not cleanup events under high load
+
+
+V 2.5   20 Jan 2009
+
+- minor feature release with support for: 
+ - pipes (based on socketpair)
+ - fork (for a server listen on a tcp port or an uds file)
+ - and a lot of new documentation
+
+
+V 2.4	23 aug 2007
+
+- major release with support for native windows and alignment
+
+
+V 2.3   8 mar 2007
+
+- first public release
+- setup GNU build environment but use doxygen for docs
+
+

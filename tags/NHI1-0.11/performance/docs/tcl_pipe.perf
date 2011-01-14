@@ -1,0 +1,10 @@
+> nothread/NHI1-0.11/theLink/example/c/client --all @ tclsh nothread/NHI1-0.11/theLink/example/tcl/server.tcl
+C> (client:18318) [2011-01-14:08-42-15] [0-0-0-0x628c50-main]: start: --------------------------------------
+C> (client:18318) [2011-01-14:08-42-15] [0-0-0-0x628c50-statistics]:                      MqSendEND:       5.77
+C> (client:18318) [2011-01-14:08-42-15] [0-0-0-0x628c50-statistics]:         MqSendEND_AND_CALLBACK:       9.03
+C> (client:18318) [2011-01-14:08-42-19] [0-0-0-0x628c50-statistics]:             MqSendEND_AND_WAIT:      22.76
+C> (client:18318) [2011-01-14:08-42-20] [0-0-0-0x628c50-statistics]:                  parent create:   10265.99
+C> (client:18318) [2011-01-14:08-42-20] [0-0-0-0x628c50-statistics]:                  parent delete:     226.59
+C> (client:18318) [2011-01-14:08-42-20] [0-0-0-0x628c50-statistics]:                   child create:     259.59
+C> (client:18318) [2011-01-14:08-42-20] [0-0-0-0x628c50-statistics]:                   child delete:      36.30
+C> (client:18318) [2011-01-14:08-42-20] [0-0-0-0x628c50-main]: end: ----------------------------------------

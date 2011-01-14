@@ -1,0 +1,65 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+TAGFILES            = 
+ENABLED_SECTIONS    += MAN
+INPUT               =
+FILE_PATTERNS       = 
+EXAMPLE_PATH	    = $(SRCDIR)/tests $(SRCDIR)/libmsgque
+STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque 
+STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
+SHOW_USED_FILES	    = NO
+SHOW_FILES	    = NO
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION = NO
+
+PREDEFINED	    += MQ_EXTERN
+
+ALIASES		    += "libmsgque=\b libmsgque"
+
+ALIASES		    += "timeout=\param[in] timeout don't wait more than TIMEOUT seconds to get an answer from the server. If no answer is available an error is raised. (default: \RNS{config_timeout})"
+ALIASES		    += "buffer=\param[in] buffer a LibMsgque buffer object returned by \c ReadU"
+ALIASES		    += "configsection{2}=\subsection \NS{config_\1} command-line: \2\n\b type: <TT>\config_type_\1</TT>, \b get: <TT>\config_get_\1</TT>\n, \b set: <TT>\config_set_\1</TT>\n"
+ALIASES		    += "configsection{1}=\subsection \NS{config_\1} \1\n\b type: <TT>\config_type_\1</TT>, \b get: <TT>\config_get_\1</TT>\n, \b set: <TT>\config_set_\1</TT>\n"
+ALIASES		    += "interface{1}=\subsection \NS{config_\1} interface: \config_\1"
+ALIASES		    += "function{2}=\subsection \NS{\1} \2 \n C-API: \ref Mq\1, \copydoc Mq\1"
+ALIASES		    += "function{3}=\subsection \NS{\1} \2 \n C-API: \ref \3, \copydoc \3"
+ALIASES		    += "function2{2}=\if \1 \n \subsection \NS{\1} \2 \n \endif"
+
+ALIASES		    += "RNS_PREFIX{1}=\1"
+ALIASES		    += "RNS{1}=\ref \NS{\1}"
+ALIASES             += "RNSA{1}=\ref \NS{\1} \"\RNS_PREFIX{\1}\""
+ALIASES             += "RNSA{2}=\ref \NS{\1} \"\RNS_PREFIX{\2}\""
+ALIASES             += "RNSC{1}=\ref \NS{config_\1} \"\1\""
+ALIASES		    += "NST{1}=\NS{tut_\1}"
+ALIASES		    += "RNST{1}=\ref \NST{\1}"
+
+ALIASES		    += "ext=ref"
+ALIASES		    += "rself=\ref \self\ext"
+ALIASES		    += "ctx=\param[in] ctx the context returned by \RNSA{ContextCreate}"
+ALIASES		    += "retException=\return an \RNS{ErrorObject} on error"
+ALIASES		    += "retFactoryException=\return an \FactoryReturn object on error"
+
+ALIASES		    += "example=\xrefitem examples \"Example\" \"Example List\""
+ALIASES		    += "change=\xrefitem changes \"Change\" \"Change List\""
+
+
+GENERATE_HTML	    = YES
+HTML_STYLESHEET	    = customdoxygen.css
+GENERATE_MAN	    = NO
+MAN_EXTENSION	    = .n
+MAN_OUTPUT	    = $(SRCDIR)/../man
+

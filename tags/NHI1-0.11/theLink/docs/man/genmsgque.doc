@@ -1,0 +1,866 @@
+/**
+\defgroup \self\ext \self
+
+The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Project
+
+\section \NS{syn} SYNOPSIS
+<B>\package</B>
+
+\section \NS{idx} INDEX
+
+\RNS{context}\n
+\RNS{Factory}\n
+\RNS{config}\n
+\RNS{ClientServerLink}\n
+\RNS{service}\n
+\RNS{SendData}\n
+\RNS{ReadData}\n
+\RNS{SlaveContext}\n
+\RNS{BufferObject}\n
+\RNS{ErrorObject}\n
+\RNS{BinaryObject}\n
+\RNS{filter}\n
+\RNS{ContextLocalStorage}
+
+\section	\NS{desc}				INTRODUCTION
+\copydoc Mq_C_API
+
+\section	\NS{context}				CONTEXT API
+\RNSA{ContextCreate}\n
+\RNSA{ContextDelete}\n
+\RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
+\RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
+
+\copydoc Mq_Context_C_API
+
+\function2{ContextCreate2,\ContextCreate2}
+\function{ContextCreate,\ContextCreate}
+\ContextCreateSection
+
+\b Example: create an \e application-context with \e mydata as \e application-specific-data:
+\object_example
+
+\if GC
+\function{ContextDelete,\ContextDelete,MqContextFree}
+\else
+\function{ContextDelete,\ContextDelete,MqContextDelete}
+\endif
+
+\function{Exit,\Exit,MqExitP}
+
+\if SELF
+\subsection	\NS{SetSelf}				\SetSelf
+Create a \e link between the toplevel object and the \TM object and check
+for the	availability of the following interfaces:
+- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNS{Factory}, \RNSC{IBgError}, \RNSC{IEvent}
+.
+
+\subsection	\NS{GetSelf}				\GetSelf
+convert the \TM object, returned by:
+- \RNSA{LinkGetParent}, \RNSA{ServiceGetFilter}, \RNSA{SlaveGet}, \RNSA{SlaveGetMaster}
+.
+back into a toplevel object.
+
+\b Example: convert an \TM object into a toplevel \e *Server object
+\GetSelfExample
+
+\endif
+
+\function{LogC,\LogC}
+\if HAS_LOGV
+\function{LogV,\LogV}
+\endif
+\if HAS_LOGVL
+\function{LogVL,\LogVL}
+\endif
+
+\if TCL
+\subsection	\NS{Main}				\Main
+Tcl has a special requirement, for every new \e server-thread a new interpreter is created and
+this interpreter source the toplevel file for initialization. This file is set on library startup and
+can be changed with \RNSA{Init}. The problem is the server startup code from the toplevel. For internal
+purpose this code should only be executed on \e application-startup (like the C \b main function) 
+and not for every thread again, use \RNSA{Main} to achieve this.
+\verbatim
+package require TclMsgque
+...
+proc ServerSetup {ctx} ...
+proc ServerCleanup {ctx} ...
+...
+tclmsgque Main {
+  set srv [tclmsgque MqS]
+  $srv ConfigSetServerSetup ServerSetup
+  $srv ConfigSetServerCleanup ServerCleanup
+  $srv ConfigSetFactory
+  if {[catch {
+    $srv LinkCreate {*}$argv
+    $srv ProcessEvent -wait FOREVER
+  }]} {
+    $srv ErrorSet
+  }
+  $srv Exit
+}
+\endverbatim
+\endif
+
+
+\section	\NS{Factory}				FACTORY API
+
+\RNSA{FactoryDefault}\n
+\RNSA{FactoryDefaultIdent}\n
+\RNSA{FactoryAdd}\n
+\RNSA{FactoryNew}\n
+\RNSA{FactoryCall}\n
+\RNSA{FactoryCtxIdentSet}\n
+\RNSA{FactoryCtxIdentGet}\n
+\RNSA{FactoryCtxDefaultSet}\n
+
+\copydoc MqFactory
+
+\function2{FactoryDefault2,\FactoryDefault2}
+\function{FactoryDefault,\FactoryDefault}
+
+\b Example from <TT>example/\dirname/Filter4.\fileextension</TT>:
+\dontinclude Filter4.\fileextension
+\skip Default
+\until Default
+
+\function{FactoryDefaultIdent,\FactoryDefaultIdent}
+\function2{FactoryAdd2,\FactoryAdd2}
+\function{FactoryAdd,\FactoryAdd}
+
+\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
+\dontinclude Filter5.\fileextension
+\skip Add
+\until Add
+
+\function2{FactoryNew2,\FactoryNew2}
+\function{FactoryNew,\FactoryNew}
+
+\b Example from <TT>example/\dirname/mulserver.\fileextension</TT>:
+\dontinclude mulserver.\fileextension
+\skip New
+\until New
+
+\function2{FactoryCall2,\FactoryCall2}
+\function{FactoryCall,\FactoryCall}
+
+\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
+\dontinclude Filter5.\fileextension
+\skip Add
+\skip Add
+\skip Add
+\skip Call
+\until Call
+
+\function{FactoryCtxIdentSet,\FactoryCtxIdentSet}
+\function{FactoryCtxIdentGet,\FactoryCtxIdentGet}
+\function{FactoryCtxDefaultSet,\FactoryCtxDefaultSet}
+
+
+\section	\NS{config}				CONFIG API
+\RNSA{Init}\n
+\RNSC{buffersize}, \RNSC{debug}, \RNSC{timeout}\n
+\RNSC{name}, \RNSC{srvname}\n
+\RNSC{isSilent}, \RNSC{isString}, \RNSC{isServer}\n
+\RNSC{tcp}, \RNSC{uds}, \RNSC{pipe}\n
+\RNSC{startAs}, \RNSC{daemon}, \RNSC{ignoreExit}\n
+\RNSC{IServerSetup}, \RNSC{IServerCleanup}\n
+\RNSC{IBgError}, \RNSC{IEvent}\n
+
+\copydoc Mq_Config_C_API
+
+\subsection \NS{Init} static: \Init
+\copydoc MqInitCreate
+
+\b Example: initialize the \e stratup-prefix with \e myExecutable and \e myFirstArgument \init_example
+
+\configsection{buffersize, --buffersize}
+\copydoc MqIoConfigS::buffersize
+
+\configsection{debug, --debug}
+\copydoc MqConfigS::debug
+
+\configsection{timeout, --timeout}
+\copydoc MqIoConfigS::timeout
+
+\configsection{name, --name}
+\copydoc MqConfigS::name
+
+\configsection{srvname, --srvname}
+\copydoc MqConfigS::srvname
+
+\configsection{isSilent,--silent}
+\copydoc MqConfigS::isSilent
+
+\configsection{isString,--string}
+\copydoc MqConfigS::isString
+
+\configsection{isServer}
+\copydoc MqSetupS::isServer
+
+\configsection{tcp,--tcp --host --port --myhost --myport}
+\copydoc MqIoTcpConfigS
+\retException
+
+\configsection{uds,--uds --file}
+\copydoc MqIoUdsConfigS
+\retException
+
+\configsection{pipe,--pipe --socket}
+\copydoc MqIoPipeConfigS
+\retException
+
+\configsection{startAs,--thread --spawn --fork}
+\copydoc MqConfigS::startAs
+
+\configsection{daemon, --daemon}
+\if DAEMON
+\copydoc MqConfigSetDaemon
+\else
+This option is \b not available for \self.
+\endif
+
+\configsection{ignoreExit}
+\copydoc MqSetupS::ignoreExit
+
+\interface{IServerSetup}
+\copydetails MqSetupS::ServerSetup
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
+
+\interface{IServerCleanup}
+\copydetails MqSetupS::ServerCleanup
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
+
+\interface{IBgError}
+\copydetails MqSetupS::BgError
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
+
+\interface{IEvent}
+\copydetails MqSetupS::Event
+Read more about how to define a \e callback at \RNS{ServiceCallback}.
+
+\section	\NS{ClientServerLink}			LINK API
+\RNSA{LinkCreate}\n
+\RNSA{LinkCreateChild}\n
+\RNSA{LinkDelete}\n
+\RNSA{LinkConnect}\n
+\RNSA{LinkGetParent}\n
+\RNSA{LinkIsParent}\n
+\RNSA{LinkGetCtxId}\n
+\RNSA{LinkIsConnected}\n
+\RNSA{LinkGetTargetIdent}\n
+
+\copydoc Mq_Link_C_API
+
+\function2{LinkCreate5,\LinkCreate5}
+\function2{LinkCreate4,\LinkCreate4}
+\function2{LinkCreate3,\LinkCreate3}
+\function2{LinkCreate2,\LinkCreate2}
+\function{LinkCreate,\LinkCreate}
+
+\function2{LinkCreateChild5,\LinkCreateChild5}
+\function2{LinkCreateChild4,\LinkCreateChild4}
+\function2{LinkCreateChild3,\LinkCreateChild3}
+\function2{LinkCreateChild2,\LinkCreateChild2}
+\function{LinkCreateChild,\LinkCreateChild}
+
+\function{LinkDelete,\LinkDelete}
+\function{LinkConnect,\LinkConnect}
+\function{LinkGetParent,\LinkGetParent}
+\function{LinkGetCtxId,\LinkGetCtxId}
+\function{LinkIsParent,\LinkIsParent}
+\function{LinkIsConnected,\LinkIsConnected}
+\function{LinkGetTargetIdent,\LinkGetTargetIdent}
+
+
+\section	\NS{service}				SERVICE API
+\RNSA{ServiceIdentifier}\n
+\RNSA{ServiceCallback}\n
+\RNSA{ServiceGetToken}\n
+\RNSA{ServiceIsTransaction}\n
+\RNSA{ServiceGetFilter}\n
+\RNSA{ServiceCreate}\n
+\RNSA{ServiceDelete}\n
+\RNSA{ServiceProxy}\n
+\RNSA{ProcessEvent}\n
+
+\copydoc Mq_Service_C_API
+
+\b Example: define the service \e SRV1 on the \e server-link-setup: \service_example
+
+\subsection	  \NS{ServiceIdentifier}		TOKEN IDENTIFIER
+\copydoc MQ_TOK
+
+\subsection	  \NS{ServiceCallback}			SERVICE CALLBACK
+\copydoc MqServiceCallbackF
+\if CSHARP
+The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
+using a delegate of type <I>void Callback()</I>.
+\elseif VB
+The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I> or
+using a delegate of type <I>Sub Callback()</I>.
+\elseif JAVA
+The callback is implemented using \ServiceInterface method <I>Service(MqS ctx)</I>
+\elseif PYTHON
+The callback is implemented using \ServiceInterface method <I>Service(ctx)</I>
+\elseif RUBY
+The \e callback is implemented using <I>\ServiceInterface</I>. \n
+If the \e callback belongs to the calling context no callback-argument is provided:
+\verbatim
+class MyClass < MqS
+  def initialize
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def ServerSetup
+    ServiceCreate("MYTK", method(:MyTkMethod))
+  end
+  def MyTkMethod
+    ...
+  end
+end
+\endverbatim
+If the \e callback belongs \b not to the calling context one callback-argument (the context) is provided:
+\verbatim
+class Other
+  def MyTkMethod(ctx)
+    ...
+  end
+end
+other = Other.new
+class MyClass < MqS
+  def initialize
+    ConfigSetServerSetup(method(:ServerSetup))
+  end
+  def ServerSetup
+    ServiceCreate("MYTK", other.method(:MyTkMethod))
+  end
+end
+\endverbatim
+\elseif TCL
+The callback is implemented as callback using <I>proc Service {ctx} ...</I>
+\elseif PERL
+The callback is implemented as callback using <I>sub Service {my ctx = shift;...}</I>
+\elseif PHP
+The callback can be a \e method:
+\code
+$ctx->ServiceCreate('TOK1', array(&$this, 'callback'));
+\endcode
+or a \e function:
+\code
+$ctx->ServiceCreate('TOK1', 'callback');
+\endcode
+If the callback belongs to the calling object the interface is defined as:
+\code
+function callback() {...
+\endcode
+If the callback does \b not belongs to the calling object an additional argument
+(the calling context) is added to the callback interface:
+\code
+function callback($ctx) {...
+\endcode
+\elseif CC
+The callback is implemented using \ServiceInterface method <I>Service(MqC ctx)</I> or
+as callback using <I>void CallbackF()</I>.
+\elseif C
+The callback is implemented as a set of functions and data suitable for #MqCallbackS.
+\elseif GO
+The callback is implemented using one form of the two interfaces:
+\code
+type Service interface { Call() }
+\endcode
+and
+\code
+type Service2 interface { Call(*MqS) }
+\endcode
+The second interface provide the \e context-in-duty as argument and is used to call
+callbacks not belonging to a \e sub-type of the original \e context-type.
+\else
+UNKNOWN
+\endif
+
+\function{ServiceGetToken,\ServiceGetToken}
+\function{ServiceIsTransaction,\ServiceIsTransaction}
+\function2{ServiceGetFilter2,\ServiceGetFilter2}
+\function{ServiceGetFilter,\ServiceGetFilter}
+\function2{ServiceCreate2,\ServiceCreate2}
+\function{ServiceCreate,\ServiceCreate}
+\function2{ServiceProxy2,\ServiceProxy2}
+\function{ServiceProxy,\ServiceProxy}
+\function{ServiceDelete,\ServiceDelete}
+\function2{ProcessEvent4,\ProcessEvent4}
+\function2{ProcessEvent3,\ProcessEvent3}
+\function2{ProcessEvent2,\ProcessEvent2}
+\function{ProcessEvent,\ProcessEvent}
+
+
+\section	\NS{SendData}				SEND API
+\RNSA{SendSTART}\n
+\RNSA{SendEND}\n
+\RNSA{SendEND_AND_WAIT}\n
+\RNSA{SendEND_AND_CALLBACK}\n
+\RNSA{SendRETURN}\n
+\RNSA{SendERROR}\n
+\RNSA{SendTYPE}\n
+\RNSA{SendN}\n
+\RNSA{SendBDY}\n
+\RNSA{SendL_START}\n
+\RNSA{SendL_END}\n
+\RNSA{SendT_START}\n
+\RNSA{SendT_END}\n
+
+\copydoc Mq_Send_C_API
+
+\b Example: send an \I and a list of \D, \C and a \e \TB: \send_example
+
+\function{SendSTART,\SendSTART}
+\function{SendEND,\SendEND}
+\function2{SendEND_AND_WAIT2,\SendEND_AND_WAIT2}
+\function{SendEND_AND_WAIT,\SendEND_AND_WAIT}
+\function2{SendEND_AND_CALLBACK2,\SendEND_AND_CALLBACK2}
+\function{SendEND_AND_CALLBACK,\SendEND_AND_CALLBACK}
+\function{SendRETURN,\SendRETURN}
+\function{SendERROR,\SendERROR}
+\function{SendTYPE,\SendTYPE,MqSendY}
+\function{SendN,\SendN}
+\function{SendBDY,\SendBDY}
+\function{SendL_START,\SendL_START}
+\function{SendL_END,\SendL_END}
+\function{SendT_START,\SendT_START}
+
+\b Example: make a \e service-call with \e transaction-support: \SendT_example
+\function{SendT_END,\SendT_END}
+
+
+\section	  \NS{ReadData}				READ API
+\RNSA{ReadTYPE}\n
+\RNSA{ReadN}\n
+\RNSA{ReadBDY}\n
+\RNSA{ReadU}\n
+\RNSA{ReadL_START}\n
+\RNSA{ReadL_END}\n
+\RNSA{ReadT_START}\n
+\RNSA{ReadT_END}\n
+\RNSA{ReadProxy}\n
+\RNSA{ReadGetNumItems}\n
+\RNSA{ReadItemExists}\n
+\RNSA{ReadUndo}\n
+
+\copydoc Mq_Read_C_API
+
+\b Example: read an \I and a list of \D, \C and a \TB: \read_example
+
+\function{ReadTYPE,\ReadTYPE,MqReadY}
+\function{ReadN,\ReadN}
+\function{ReadBDY,\ReadBDY}
+\function{ReadU,\ReadU}
+\function2{ReadL_START3,\ReadL_START3}
+\function2{ReadL_START2,\ReadL_START2}
+\function{ReadL_START,\ReadL_START}
+\function{ReadL_END,\ReadL_END}
+\function2{ReadT_START3,\ReadT_START3}
+\function2{ReadT_START2,\ReadT_START2}
+\function{ReadT_START,\ReadT_START}
+
+\b Example: read the results from a \e service-call with \e transaction-support: \ReadT_example
+\function{ReadT_END,\ReadT_END}
+\function{ReadProxy,\ReadProxy}
+\function{ReadGetNumItems,\ReadGetNumItems}
+\function{ReadItemExists,\ReadItemExists}
+\function{ReadUndo,\ReadUndo}
+
+
+\section        \NS{SlaveContext}			SLAVE API
+\RNSA{SlaveWorker}\n
+\RNSA{SlaveCreate}\n
+\RNSA{SlaveDelete}\n
+\RNSA{SlaveGet}\n
+\RNSA{SlaveGetMaster}\n
+\RNSA{SlaveIs}\n
+
+\copydoc Mq_Slave_C_API
+
+\function2{SlaveWorker6,\SlaveWorker6}
+\function2{SlaveWorker5,\SlaveWorker5}
+\function2{SlaveWorker4,\SlaveWorker4}
+\function2{SlaveWorker3,\SlaveWorker3}
+\function2{SlaveWorker2,\SlaveWorker2}
+\function{SlaveWorker,\SlaveWorker}
+\b example create a worker with id 7 and name "MyWorker" as thread.
+\SlaveWorker_example
+
+\function{SlaveCreate,\SlaveCreate}
+\function{SlaveDelete,\SlaveDelete}
+\function{SlaveGet,\SlaveGet}
+\function{SlaveGetMaster,\SlaveGetMaster}
+\function{SlaveIs,\SlaveIs}
+
+
+\section        \NS{BufferObject}			BUFFER API
+\RNSA{BufferIdentifer}\n
+\RNSA{BufferGetTYPE}\n
+\RNSA{BufferType}\n
+
+\copydoc MqBufferS
+
+\b Example: read a \e buffer-object and check for \e string-type. 
+\buffer_example
+
+\subsection	  \NS{BufferIdentifer}			TYPE IDENTIFIER
+\copydoc MqTypeE
+
+\subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
+return the data form the buffer using the \RNS{BufferIdentifer}.
+
+\subsection	  \NS{BufferType}			\BufferType
+return the type as single character of the item stored in the buffer object.
+
+
+\section	\NS{ErrorObject}			ERROR OBJECT
+\RNSA{ErrorGetText}\n
+\RNSA{ErrorGetNum}\n
+\RNSA{ErrorC}\n
+\RNSA{ErrorSet}\n
+\RNSA{ErrorSetCONTINUE}\n
+\RNSA{ErrorSetEXIT}\n
+\RNSA{ErrorIsEXIT}\n
+\RNSA{ErrorReset}\n
+\RNSA{ErrorRaise}\n
+\RNSA{ErrorPrint}\n
+
+The \e error-object (\ErrorObject) is used to transport the \e error from the
+\libmsgque context using the \e programming-language error-handling-code.
+
+\b Example: catch an error and write the message to stdout: \error_example
+
+\function{ErrorGetText,\ErrorGetText}
+\function{ErrorGetNum,\ErrorGetNum}
+\function{ErrorC,\ErrorC}
+
+\subsection	\NS{ErrorSet}				\ErrorSet
+convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
+additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the error was
+caught and before the application exit or the object is deleted.
+
+\function{ErrorSetCONTINUE,\ErrorSetCONTINUE}
+\function{ErrorSetEXIT,\ErrorSetEXIT}
+\function{ErrorIsEXIT,\ErrorIsEXIT}
+
+\b Example: catch and ignore an EXIT return-code: \ErrorIsEXIT_example
+
+\function{ErrorReset,\ErrorReset}
+
+\subsection	\NS{ErrorRaise}				\ErrorRaise
+convert the error from an \e context into an \RNS{ErrorObject} and raise the object.
+
+\function{ErrorPrint,\ErrorPrint}
+
+
+\section	\NS{BinaryObject}			BINARY OBJECT
+\if BINARY
+The \TB is use to transport binary data defined by a \e pointer and a \e data-size.
+The object self is \b temporary. Data belongs to libmsgque and is only valid for
+the next transaction. The \TB is used by: \RNSA{ReadTYPE,ReadB}, \RNSA{ReadN}, \RNSA{ReadBDY},
+\RNSA{SendTYPE,SendB}, \RNSA{SendN}, \RNSA{SendBDY}.
+
+\subsection	\NS{BinaryGet}				\BinaryGet
+Convert a \e temporary \TB object into a permanent \B object.
+
+\subsection	\NS{BinarySet}				\BinarySet
+Set a \e temporary \TB object fom a permanent \B object.
+\else
+No special \e binary-object is used. All \e binary-data is available as \B.
+\endif
+
+\section	\NS{ContextLocalStorage}		CONTEXT LOCAL STORAGE API
+\if DATA
+The CONTEXT LOCAL STORAGE is required to bind the \e application-specific-data to the \self context
+
+\subsection	\NS{DictSet}				\DictSet
+Add \e data using \e key into the local storage and return the \e data afterwards.
+
+\subsection	\NS{DictGet}				\DictGet
+return the \e data associated with \e key or \DictUndef if \e key does not exists.
+
+\subsection	\NS{DictExists}				\DictExists
+return \yes if \e key exists or \no if not.
+
+\subsection	\NS{DictUnset}				\DictUnset
+Remove the \e key and the associated \e data from the local storage.
+\else
+The \e application-specific-data is available as \e class-data-member.
+\endif
+\if PERL
+The following code is valid for an object reference:
+\code
+undef $ctx->DictUnset($key);
+\endcode
+\endif
+
+\section	\NS{filter}				FILTER MODE
+\copydoc Mq_Filter_C_API
+
+\section	\NS{portability}			PORTABILITY ISSUES
+The library was tested on Linux, FreeBSD and WindowsXP using a x86_64, ppc
+or i686 processor from the VritualBox emulator.
+
+\section	\NS{example}				EXAMPLES
+
+\subsection \NS{e1} 1. create a server to multiplicate 2 double values and return the result
+\if PYTHON
+\dontinclude mulserver.py
+\skip import
+\until Exit
+Start \e mulserver.py using \e TCP port \e 7777 and create a \e fork for every incoming connection
+\verbatim
+> python mulserver.py --tcp --port 7777 --fork
+\endverbatim
+\elseif RUBY
+\dontinclude mulserver.rb
+\skip require
+\until Exit
+\until end
+Start \e mulserver.rb using \e TCP port \e 7777 and create a \e fork for every incoming connection
+\verbatim
+> ruby mulserver.rb --tcp --port 7777 --fork
+\endverbatim
+\elseif JAVA
+\include mulserver.java
+Start \e mulserver.java using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> java example.mulserver --tcp --port 7777 --thread
+\endverbatim
+\elseif GO
+\include mulserver.go
+Start \e mulserver using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mulserver --tcp --port 7777 --thread
+\endverbatim
+\elseif CSHARP
+\include mulserver.cs
+Start \e mulserver.exe using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mono mulserver.exe --tcp --port 7777 --thread
+\endverbatim
+\elseif VB
+\dontinclude mulserver.vb
+\skip Imports
+\until End Module
+Start \e mulserver.exe using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mono mulserver.exe --tcp --port 7777 --thread
+\endverbatim
+\elseif TCL
+\dontinclude mulserver.tcl
+\skip TclMsgque
+\until Exit
+\until }
+Start \e mulserver.tcl using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> tclsh mulserver.tcl --tcp --port 7777 --thread
+\endverbatim
+\elseif PERL
+\dontinclude mulserver.pl
+\skip strict
+\until Exit
+Start \e mulserver.pl using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> perl mulserver.pl --tcp --port 7777 --thread
+\endverbatim
+\elseif PHP
+\dontinclude mulserver.php
+\skip class
+\until Exit
+Start \e mulserver.cwphppl using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> php mulserver.php --tcp --port 7777 --thread
+\endverbatim
+\elseif C
+\include mulserver.c
+Start \e mulserver.c using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mulserver --tcp --port 7777 --thread
+\endverbatim
+\elseif CC
+\include mulserver.cc
+Start \e mulserver.cc using \e TCP port \e 7777 and create a \e thread for every incoming connection
+\verbatim
+> mulserver --tcp --port 7777 --thread
+\endverbatim
+\endif
+
+\subsection \NS{e2} 2. in a client call the service from 1.
+\if PYTHON
+\dontinclude mulclient.py
+\skip import
+\until Exit
+Use \e mulclient.py to connect to \e mulserver.py using \e TCP port \e 7777:
+\verbatim
+> python mulclient.py --tcp --port 7777
+\endverbatim
+\elseif RUBY
+\dontinclude mulclient.rb
+\skip require
+\until Exit
+\until end
+Use \e mulclient.rb to connect to \e mulserver.rb using \e TCP port \e 7777:
+\verbatim
+> ruby mulclient.rb --tcp --port 7777
+\endverbatim
+\elseif JAVA
+\include mulclient.java
+Use \e mulclient.java to connect to \e mulserver.java using \e TCP port \e 7777:
+\verbatim
+> java example.mulclient --tcp --port 7777
+\endverbatim
+\elseif GO
+\include mulclient.go
+Use \e mulclient to connect to \e mulserver.exe using \e TCP port \e 7777:
+\verbatim
+> mulclient --tcp --port 7777
+\endverbatim
+\elseif CSHARP
+\include mulclient.cs
+Use \e mulclient.exe to connect to \e mulserver.exe using \e TCP port \e 7777:
+\verbatim
+> mono mulclient.exe --tcp --port 7777
+\endverbatim
+\elseif VB
+\dontinclude mulclient.vb
+\skip Imports
+\until End Module
+Use \e mulclient.exe to connect to \e mulserver.exe using \e TCP port \e 7777:
+\verbatim
+> mono mulclient.exe --tcp --port 7777
+\endverbatim
+\elseif TCL
+\dontinclude mulclient.tcl
+\skip TclMsgque
+\until Exit
+Use \e mulclient.tcl to connect to \e mulserver.tcl using \e TCP port \e 7777:
+\verbatim
+> tclsh mulclient.tcl --tcp --port 7777
+\endverbatim
+\elseif PERL
+\dontinclude mulclient.pl
+\skip strict
+\until Exit
+Use \e mulclient.pl to connect to \e mulserver.pl using \e TCP port \e 7777:
+\verbatim
+> perl mulclient.pl --tcp --port 7777
+\endverbatim
+\elseif PHP
+\dontinclude mulclient.php
+\skip MqS
+\until Exit
+Use \e mulclient.php to connect to \e mulserver.php using \e TCP port \e 7777:
+\verbatim
+> php mulclient.php --tcp --port 7777
+\endverbatim
+\elseif C
+\include mulclient.c
+Use \e mulclient.c to connect to \e mulserver.c using \e TCP port \e 7777:
+\verbatim
+> mulclient --tcp --port 7777
+\endverbatim
+\elseif CC
+\include mulclient.cc
+Use \e mulclient.cc to connect to \e mulserver.cc using \e TCP port \e 7777:
+\verbatim
+> mulclient --tcp --port 7777
+\endverbatim
+\endif
+
+\subsection \NS{e3} 3. create a filter to wrap every column in a '<>' pair
+\if PYTHON
+\dontinclude manfilter.py
+\skip import
+\until Exit
+Use \e manfilter.py in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
+\endverbatim
+\elseif RUBY
+\dontinclude manfilter.rb
+\skip require
+\until Exit
+\until end
+Use \e manfilter.rb in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ ruby manfilter.rb @ atool join -d :
+\endverbatim
+\elseif JAVA
+\include manfilter.java
+Use \e manfilter.java in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
+\endverbatim
+\elseif GO
+\include manfilter.go
+Use \e manfilter in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\elseif CSHARP
+\include manfilter.cs
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif VB
+\dontinclude manfilter.vb
+\skip Imports
+\until End Module
+Use \e manfilter.exe in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
+\endverbatim
+\elseif TCL
+\dontinclude manfilter.tcl
+\skip TclMsgque
+\until Exit
+Use \e manfilter.tcl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ tclsh manfilter.tcl @ atool join -d :
+\endverbatim
+\elseif PERL
+\dontinclude manfilter.pl
+\skip strict
+\until Exit
+Use \e manfilter.pl in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
+\endverbatim
+\elseif PHP
+\dontinclude manfilter.php
+\skip class
+\until Exit
+Use \e manfilter.php in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ php manfilter.php @ atool join -d :
+\endverbatim
+\elseif C
+\include manfilter.c
+Use \e manfilter.c in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\elseif CC
+\include manfilter.cc
+Use \e manfilter.cc in a LibMsgque command pipeline:
+\verbatim
+> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
+\endverbatim
+\endif
+
+\section	\NS{also}				SEE ALSO
+\lang, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), 
+PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), 
+RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
+
+\section	\NS{keywords}				KEYWORDS
+\lang, unix, socket, message, msgque
+
+
+*/
+
