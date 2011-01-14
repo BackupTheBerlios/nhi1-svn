@@ -1,11 +1,11 @@
-> python nothread/NHI1-0.10/theLink/tests/server.py --uds --file ./socket.uds --fork
-> nothread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:30816) [2010-11-29:20-13-50] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:30816) [2010-11-29:20-13-50] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       4.59
-C> (client:30816) [2010-11-29:20-13-50] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       9.14
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      23.12
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-statistics]:                  parent create:     838.83
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-statistics]:                  parent delete:    3717.05
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-statistics]:                   child create:     127.53
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-statistics]:                   child delete:      38.14
-C> (client:30816) [2010-11-29:20-13-54] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> python nothread/NHI1-0.11/theLink/example/python/server.py --uds --file ./socket.uds --fork
+> nothread/NHI1-0.11/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:23730) [2011-01-14:08-44-31] [0-0-0-0x628c50-main]: start: --------------------------------------
+C> (client:23730) [2011-01-14:08-44-32] [0-0-0-0x628c50-statistics]:                      MqSendEND:       4.82
+C> (client:23730) [2011-01-14:08-44-32] [0-0-0-0x628c50-statistics]:         MqSendEND_AND_CALLBACK:      10.55
+C> (client:23730) [2011-01-14:08-44-35] [0-0-0-0x628c50-statistics]:             MqSendEND_AND_WAIT:      24.53
+C> (client:23730) [2011-01-14:08-44-36] [0-0-0-0x628c50-statistics]:                  parent create:     827.05
+C> (client:23730) [2011-01-14:08-44-36] [0-0-0-0x628c50-statistics]:                  parent delete:    4490.88
+C> (client:23730) [2011-01-14:08-44-36] [0-0-0-0x628c50-statistics]:                   child create:     130.17
+C> (client:23730) [2011-01-14:08-44-36] [0-0-0-0x628c50-statistics]:                   child delete:      38.99
+C> (client:23730) [2011-01-14:08-44-36] [0-0-0-0x628c50-main]: end: ----------------------------------------

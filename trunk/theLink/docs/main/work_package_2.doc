@@ -2,7 +2,7 @@
 \page wp2 "Work Package II"
 
 <center>
-\b Version 1
+\b Version 2
 </center>
 
 This documentation define the next steps of the NHI1 development. The main goal of \b WPII is
@@ -21,8 +21,6 @@ Three of them are on the list to extend the already available \AllLng{syn} langu
 
 \b ruby is the first language binding for \b WPII. I'm really interested how it compares with \b python.
 
--> \b DONE, 22 Oct 2010
-
 \subsection wp2_php php
 
 \b php is the gorilla for web programming and the only one with a missing C-API documentation as well.
@@ -38,6 +36,10 @@ in the execution speed.
 \b SQlite will play a major role in the future of the \b NHI1 development. The code will be embedded and I expect
 a significant improvement for both projects. \e SQlite will get a client/server stack and I will get a persistent
 layer and an OS abstraction layer with memory management.
+
+\subsection wp2_Factory Factory
+
+Add the \b self-programming capability to \libmsgque
 
 \subsection wp2_SQLite sqlite
 

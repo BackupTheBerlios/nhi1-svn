@@ -1,11 +1,11 @@
-> mono thread/NHI1-0.10/theLink/tests/csserver.exe --tcp --host localhost --port 7793 --spawn
-> thread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7793
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-51] [0-0-0-0x625bc0-main]: start: --------------------------------------
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-51] [0-0-0-0x625bc0-statistics]:                      MqSendEND:       4.22
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-51] [0-0-0-0x625bc0-statistics]:         MqSendEND_AND_CALLBACK:       7.29
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-55] [0-0-0-0x625bc0-statistics]:             MqSendEND_AND_WAIT:      26.81
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-57] [0-0-0-0x625bc0-statistics]:                  parent create:   24346.49
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-57] [0-0-0-0x625bc0-statistics]:                  parent delete:    2662.89
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-57] [0-0-0-0x625bc0-statistics]:                   child create:     135.39
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-58] [0-0-0-0x625bc0-statistics]:                   child delete:      37.56
-C> (client:521:0x7f2a13982700) [2010-11-29:20-14-58] [0-0-0-0x625bc0-main]: end: ----------------------------------------
+> mono thread/NHI1-0.11/theLink/example/csharp/server.exe --tcp --host localhost --port 7793 --spawn
+> thread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7793
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-34] [0-0-0-0x629e70-main]: start: --------------------------------------
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-34] [0-0-0-0x629e70-statistics]:                      MqSendEND:       4.31
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-35] [0-0-0-0x629e70-statistics]:         MqSendEND_AND_CALLBACK:       6.39
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-38] [0-0-0-0x629e70-statistics]:             MqSendEND_AND_WAIT:      27.12
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-41] [0-0-0-0x629e70-statistics]:                  parent create:   30916.98
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-41] [0-0-0-0x629e70-statistics]:                  parent delete:    2145.51
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-41] [0-0-0-0x629e70-statistics]:                   child create:     157.66
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-42] [0-0-0-0x629e70-statistics]:                   child delete:      38.11
+C> (client:25917:0x7f1da016d700) [2011-01-14:08-45-42] [0-0-0-0x629e70-main]: end: ----------------------------------------

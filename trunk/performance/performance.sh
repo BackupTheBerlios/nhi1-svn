@@ -260,20 +260,20 @@ for SRV in $R; do
       CLIENT="$BRAIN_DIR/tests/client"
     ;;
     *python*)	
-      SERVER="python $LINK_DIR/tests/server.py"	    
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="python $LINK_DIR/example/python/server.py"	    
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *ruby*)	
-      SERVER="ruby $LINK_DIR/tests/server.rb"
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="ruby $LINK_DIR/example/ruby/server.rb"
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *csharp*)	
-      SERVER="mono $LINK_DIR/tests/csserver.exe"	    
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="mono $LINK_DIR/example/csharp/server.exe"	    
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *vb*)	
-      SERVER="mono $LINK_DIR/tests/vbserver.exe"	    
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="mono $LINK_DIR/example/vb/vbserver.exe"	    
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     total)	
       SERVER=""	    
@@ -281,35 +281,35 @@ for SRV in $R; do
     ;;
     *java*)	
       SERVER="java example.Server" 
-      CLIENT="$LINK_DIR/tests/client"
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *perl*)	
-      SERVER="perl $LINK_DIR/tests/server.pl" 
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="perl $LINK_DIR/example/perl/server.pl" 
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *php*)	
       if [[ "$ENV" == "thread" ]] ; then
-	SERVER="php -c \"thread/lib/NHI1/php.ini\" $LINK_DIR/tests/server.php" 
+	SERVER="php -c \"thread/lib/NHI1/php.ini\" $LINK_DIR/example/php/server.php" 
       else
-	SERVER="php -c \"nothread/lib/NHI1/php.ini\" $LINK_DIR/tests/server.php" 
+	SERVER="php -c \"nothread/lib/NHI1/php.ini\" $LINK_DIR/example/php/server.php" 
       fi
-      CLIENT="$LINK_DIR/tests/client"
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *tcl*)	
-      SERVER="tclsh $LINK_DIR/tests/server.tcl" 
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="tclsh $LINK_DIR/example/tcl/server.tcl" 
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *go*)	
-      SERVER="$LINK_DIR/gomsgque/src/server" 
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="$LINK_DIR/example/go/server" 
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *cc*)	
-      SERVER="$LINK_DIR/tests/ccserver" 
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="$LINK_DIR/example/cc/server" 
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *c*)	
-      SERVER="$LINK_DIR/tests/server"
-      CLIENT="$LINK_DIR/tests/client"
+      SERVER="$LINK_DIR/example/c/server"
+      CLIENT="$LINK_DIR/example/c/client"
     ;;
     *)
       echo "ERROR invalid server '$SRV'" 1>&1

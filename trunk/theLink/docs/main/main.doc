@@ -2,14 +2,12 @@
 
 <CENTER>
 
-\section nw  NEWS, from 29 Nov 2010
+\section nw  NEWS, from 14 Jan 2011
 
-Finish release \b 3 of \ref wp2 with adding \ref wp2_go support. \n
-Read more at: \ref V0_10 "ChangeLog" \n
+Finish release \b 4 of \ref wp2 with adding \RNSA{Factory} support. \n
 \n
-<B><I>It takes 2 years and a team of qualified software developers to implement</I></B> \n
-<B><I>a new programming language,</I></B> \n 
-<B><I>but it takes only 2 weeks to add a \e micro-kernel</I></B> \n
+The \b Factory add the ability to create \b NEW server-types on-the-fly \n
+and introduce the \b self-programming capability to \b NHI1 \n
 
 \section intro Introduction
 

@@ -1,11 +1,11 @@
 > java example.Server --uds --file ./socket.uds --spawn
-> thread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-10] [0-0-0-0x6259a0-main]: start: --------------------------------------
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-10] [0-0-0-0x6259a0-statistics]:                      MqSendEND:       4.88
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-11] [0-0-0-0x6259a0-statistics]:         MqSendEND_AND_CALLBACK:       7.17
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-14] [0-0-0-0x6259a0-statistics]:             MqSendEND_AND_WAIT:      20.17
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-23] [0-0-0-0x6259a0-statistics]:                  parent create:   96074.22
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-24] [0-0-0-0x6259a0-statistics]:                  parent delete:    1913.16
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-24] [0-0-0-0x6259a0-statistics]:                   child create:     169.50
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-24] [0-0-0-0x6259a0-statistics]:                   child delete:      28.42
-C> (client:29197:0x7f5d18bbe700) [2010-11-29:20-13-24] [0-0-0-0x6259a0-main]: end: ----------------------------------------
+> thread/NHI1-0.11/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-43-50] [0-0-0-0x629c50-main]: start: --------------------------------------
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-43-50] [0-0-0-0x629c50-statistics]:                      MqSendEND:       4.99
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-43-51] [0-0-0-0x629c50-statistics]:         MqSendEND_AND_CALLBACK:       7.20
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-43-54] [0-0-0-0x629c50-statistics]:             MqSendEND_AND_WAIT:      20.79
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-44-05] [0-0-0-0x629c50-statistics]:                  parent create:  106847.35
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-44-05] [0-0-0-0x629c50-statistics]:                  parent delete:    1787.05
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-44-05] [0-0-0-0x629c50-statistics]:                   child create:     165.94
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-44-05] [0-0-0-0x629c50-statistics]:                   child delete:      31.10
+C> (client:22111:0x7f07684a4700) [2011-01-14:08-44-05] [0-0-0-0x629c50-main]: end: ----------------------------------------

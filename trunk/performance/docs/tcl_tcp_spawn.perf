@@ -1,11 +1,11 @@
-> tclsh nothread/NHI1-0.10/theLink/tests/server.tcl --tcp --host localhost --port 7785 --spawn
-> nothread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7785
-C> (client:25886) [2010-11-29:20-11-58] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:25886) [2010-11-29:20-11-59] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       6.57
-C> (client:25886) [2010-11-29:20-11-59] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.66
-C> (client:25886) [2010-11-29:20-12-03] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      29.80
-C> (client:25886) [2010-11-29:20-12-04] [0-0-0-0x624bc0-statistics]:                  parent create:   11536.34
-C> (client:25886) [2010-11-29:20-12-04] [0-0-0-0x624bc0-statistics]:                  parent delete:     259.96
-C> (client:25886) [2010-11-29:20-12-04] [0-0-0-0x624bc0-statistics]:                   child create:     249.83
-C> (client:25886) [2010-11-29:20-12-04] [0-0-0-0x624bc0-statistics]:                   child delete:      46.04
-C> (client:25886) [2010-11-29:20-12-04] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.11/theLink/example/tcl/server.tcl --tcp --host localhost --port 7785 --spawn
+> nothread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7785
+C> (client:18812) [2011-01-14:08-42-37] [0-0-0-0x628e70-main]: start: --------------------------------------
+C> (client:18812) [2011-01-14:08-42-37] [0-0-0-0x628e70-statistics]:                      MqSendEND:       6.27
+C> (client:18812) [2011-01-14:08-42-37] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:      11.51
+C> (client:18812) [2011-01-14:08-42-41] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      30.56
+C> (client:18812) [2011-01-14:08-42-42] [0-0-0-0x628e70-statistics]:                  parent create:   10423.81
+C> (client:18812) [2011-01-14:08-42-42] [0-0-0-0x628e70-statistics]:                  parent delete:     269.51
+C> (client:18812) [2011-01-14:08-42-42] [0-0-0-0x628e70-statistics]:                   child create:     262.92
+C> (client:18812) [2011-01-14:08-42-42] [0-0-0-0x628e70-statistics]:                   child delete:      46.10
+C> (client:18812) [2011-01-14:08-42-42] [0-0-0-0x628e70-main]: end: ----------------------------------------

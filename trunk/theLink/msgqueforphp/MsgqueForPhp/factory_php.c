@@ -239,8 +239,13 @@ end:
 
 PHP_FUNCTION(FactoryNew)
 {
+#ifdef ZTS
+  MQ_PTR data = (MQ_PTR)tsrm_ls;
+#else
+  MQ_PTR data = NULL;
+#endif
   FactorySetup(FactoryNew);
-  ret = MqFactoryNew(ident, FactoryCreate, (MQ_PTR) ce, NULL, FactoryDelete, NULL, NULL, (MQ_PTR)tsrm_ls, &mqctx);
+  ret = MqFactoryNew(ident, FactoryCreate, (MQ_PTR) ce, NULL, FactoryDelete, NULL, NULL, data, &mqctx);
   if (MqFactoryErrorCheckI(ret)) {
     err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
   }
@@ -256,10 +261,15 @@ end:
 
 PHP_FUNCTION(FactoryCall)
 {
+#ifdef ZTS
+  MQ_PTR data = (MQ_PTR)tsrm_ls;
+#else
+  MQ_PTR data = NULL;
+#endif
   struct MqS * mqctx = NULL;
   enum MqFactoryReturnE ret;
   ARG2CST(FactoryCall,ident);
-  ret = MqFactoryCall(ident, (MQ_PTR)tsrm_ls, &mqctx);
+  ret = MqFactoryCall(ident, data, &mqctx);
   if (MqFactoryErrorCheckI(ret)) {
     RETURN_ERROR(MqFactoryErrorMsg(ret));
   } else {

@@ -146,7 +146,6 @@ namespace csmsgque {
 	contextP = ((MqS)((ConstructorInfo)GCHandle.FromIntPtr(data).Target).Invoke(args)).context;
       } catch (Exception ex) {
 	if (create == MqFactoryE.MQ_FACTORY_NEW_INIT) {
-	  DEBUG.O("Factory", ex);
 	  return MqErrorE.MQ_ERROR;
 	} else {
 	  return MqS.MqErrorSet2 (tmpl, ex);

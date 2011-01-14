@@ -1,11 +1,11 @@
-> perl thread/NHI1-0.10/theLink/tests/server.pl --tcp --host localhost --port 7795 --thread
-> thread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7795
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-46] [0-0-0-0x625bc0-main]: start: --------------------------------------
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-47] [0-0-0-0x625bc0-statistics]:                      MqSendEND:       9.11
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-47] [0-0-0-0x625bc0-statistics]:         MqSendEND_AND_CALLBACK:      13.31
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-51] [0-0-0-0x625bc0-statistics]:             MqSendEND_AND_WAIT:      33.83
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-52] [0-0-0-0x625bc0-statistics]:                  parent create:    5865.03
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-52] [0-0-0-0x625bc0-statistics]:                  parent delete:     296.17
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-52] [0-0-0-0x625bc0-statistics]:                   child create:     133.89
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-52] [0-0-0-0x625bc0-statistics]:                   child delete:      47.85
-C> (client:1870:0x7fb0e9bc6700) [2010-11-29:20-15-52] [0-0-0-0x625bc0-main]: end: ----------------------------------------
+> perl thread/NHI1-0.11/theLink/example/perl/server.pl --tcp --host localhost --port 7795 --thread
+> thread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7795
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-32] [0-0-0-0x629e70-main]: start: --------------------------------------
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-33] [0-0-0-0x629e70-statistics]:                      MqSendEND:       9.18
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-34] [0-0-0-0x629e70-statistics]:         MqSendEND_AND_CALLBACK:      13.75
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-37] [0-0-0-0x629e70-statistics]:             MqSendEND_AND_WAIT:      33.60
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                  parent create:    5482.03
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                  parent delete:     289.84
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                   child create:     132.08
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                   child delete:      48.88
+C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-main]: end: ----------------------------------------

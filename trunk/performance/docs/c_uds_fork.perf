@@ -1,11 +1,11 @@
-> nothread/NHI1-0.10/theLink/tests/server --uds --file ./socket.uds --fork
-> nothread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:24214) [2010-11-29:20-10-44] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:24214) [2010-11-29:20-10-44] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       2.61
-C> (client:24214) [2010-11-29:20-10-44] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       4.16
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      18.03
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-statistics]:                  parent create:     286.11
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-statistics]:                  parent delete:      92.38
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-statistics]:                   child create:      72.81
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-statistics]:                   child delete:      28.84
-C> (client:24214) [2010-11-29:20-10-47] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.11/theLink/example/c/server --uds --file ./socket.uds --fork
+> nothread/NHI1-0.11/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:17025) [2011-01-14:08-41-22] [0-0-0-0x628c50-main]: start: --------------------------------------
+C> (client:17025) [2011-01-14:08-41-22] [0-0-0-0x628c50-statistics]:                      MqSendEND:       2.73
+C> (client:17025) [2011-01-14:08-41-22] [0-0-0-0x628c50-statistics]:         MqSendEND_AND_CALLBACK:       4.70
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-statistics]:             MqSendEND_AND_WAIT:      18.29
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-statistics]:                  parent create:     289.30
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-statistics]:                  parent delete:      99.53
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-statistics]:                   child create:      73.37
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-statistics]:                   child delete:      30.33
+C> (client:17025) [2011-01-14:08-41-25] [0-0-0-0x628c50-main]: end: ----------------------------------------

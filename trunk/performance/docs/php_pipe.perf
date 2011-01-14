@@ -1,10 +1,10 @@
-> nothread/NHI1-0.10/theLink/tests/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.10/theLink/tests/server.php
-C> (client:3475) [2010-11-29:20-17-45] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:3475) [2010-11-29:20-17-45] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       6.51
-C> (client:3475) [2010-11-29:20-17-46] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      11.25
-C> (client:3475) [2010-11-29:20-17-49] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      25.14
-C> (client:3475) [2010-11-29:20-17-50] [0-0-0-0x624bc0-statistics]:                  parent create:    7122.34
-C> (client:3475) [2010-11-29:20-17-50] [0-0-0-0x624bc0-statistics]:                  parent delete:     275.10
-C> (client:3475) [2010-11-29:20-17-50] [0-0-0-0x624bc0-statistics]:                   child create:     199.23
-C> (client:3475) [2010-11-29:20-17-50] [0-0-0-0x624bc0-statistics]:                   child delete:      51.84
-C> (client:3475) [2010-11-29:20-17-50] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> nothread/NHI1-0.11/theLink/example/c/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.11/theLink/example/php/server.php
+C> (client:29935) [2011-01-14:08-48-36] [0-0-0-0x628e70-main]: start: --------------------------------------
+C> (client:29935) [2011-01-14:08-48-36] [0-0-0-0x628e70-statistics]:                      MqSendEND:       6.76
+C> (client:29935) [2011-01-14:08-48-37] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:      13.20
+C> (client:29935) [2011-01-14:08-48-40] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      25.17
+C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                  parent create:    7093.20
+C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                  parent delete:     274.41
+C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                   child create:     184.66
+C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                   child delete:      46.53
+C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-main]: end: ----------------------------------------

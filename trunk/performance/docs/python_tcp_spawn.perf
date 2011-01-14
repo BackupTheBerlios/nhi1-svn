@@ -1,11 +1,11 @@
-> python nothread/NHI1-0.10/theLink/tests/server.py --tcp --host localhost --port 7789 --spawn
-> nothread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7789
-C> (client:30685) [2010-11-29:20-13-40] [0-0-0-0x624bc0-main]: start: --------------------------------------
-C> (client:30685) [2010-11-29:20-13-40] [0-0-0-0x624bc0-statistics]:                      MqSendEND:       5.61
-C> (client:30685) [2010-11-29:20-13-41] [0-0-0-0x624bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.47
-C> (client:30685) [2010-11-29:20-13-44] [0-0-0-0x624bc0-statistics]:             MqSendEND_AND_WAIT:      31.14
-C> (client:30685) [2010-11-29:20-13-47] [0-0-0-0x624bc0-statistics]:                  parent create:   29409.62
-C> (client:30685) [2010-11-29:20-13-48] [0-0-0-0x624bc0-statistics]:                  parent delete:    2378.80
-C> (client:30685) [2010-11-29:20-13-48] [0-0-0-0x624bc0-statistics]:                   child create:     132.68
-C> (client:30685) [2010-11-29:20-13-48] [0-0-0-0x624bc0-statistics]:                   child delete:      46.29
-C> (client:30685) [2010-11-29:20-13-48] [0-0-0-0x624bc0-main]: end: ----------------------------------------
+> python nothread/NHI1-0.11/theLink/example/python/server.py --tcp --host localhost --port 7789 --spawn
+> nothread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7789
+C> (client:23599) [2011-01-14:08-44-22] [0-0-0-0x628e70-main]: start: --------------------------------------
+C> (client:23599) [2011-01-14:08-44-22] [0-0-0-0x628e70-statistics]:                      MqSendEND:       5.62
+C> (client:23599) [2011-01-14:08-44-23] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:      12.03
+C> (client:23599) [2011-01-14:08-44-26] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      31.33
+C> (client:23599) [2011-01-14:08-44-29] [0-0-0-0x628e70-statistics]:                  parent create:   29310.93
+C> (client:23599) [2011-01-14:08-44-29] [0-0-0-0x628e70-statistics]:                  parent delete:    2116.66
+C> (client:23599) [2011-01-14:08-44-29] [0-0-0-0x628e70-statistics]:                   child create:     130.03
+C> (client:23599) [2011-01-14:08-44-29] [0-0-0-0x628e70-statistics]:                   child delete:      46.96
+C> (client:23599) [2011-01-14:08-44-29] [0-0-0-0x628e70-main]: end: ----------------------------------------

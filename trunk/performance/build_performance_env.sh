@@ -20,7 +20,7 @@ test ! -f ./env.sh && {
 set -x
 . ./env.sh
 
-## create: $PACKAGE-$PACKAGE_VERSION.tar.gz
+## create: $PACKAGE-$PACKAGE_VERSION.tar.bz2
 (cd ..; make dist) || exit 1
 
 ## config/build/install
@@ -30,7 +30,7 @@ Build() {
     rm -fr $BUILD
     mkdir $BUILD
     cd $BUILD
-    tar -xzf ../../$PACKAGE-$PACKAGE_VERSION.tar.gz || exit 1
+    tar -xjf ../../$PACKAGE-$PACKAGE_VERSION.tar.bz2 || exit 1
 
     (
       cd $PACKAGE-$PACKAGE_VERSION

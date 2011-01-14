@@ -1,11 +1,11 @@
-> nothread/NHI1-0.10/theLink/tests/ccserver --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.10/theLink/tests/client --all --uds --file ./socket.uds
-C> (client:25377) [2010-11-29:20-11-32] [0-0-0-0x6249a0-main]: start: --------------------------------------
-C> (client:25377) [2010-11-29:20-11-32] [0-0-0-0x6249a0-statistics]:                      MqSendEND:       2.61
-C> (client:25377) [2010-11-29:20-11-33] [0-0-0-0x6249a0-statistics]:         MqSendEND_AND_CALLBACK:       4.21
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-statistics]:             MqSendEND_AND_WAIT:      17.89
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-statistics]:                  parent create:    1276.22
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-statistics]:                  parent delete:     141.22
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-statistics]:                   child create:      75.48
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-statistics]:                   child delete:      29.38
-C> (client:25377) [2010-11-29:20-11-36] [0-0-0-0x6249a0-main]: end: ----------------------------------------
+> nothread/NHI1-0.11/theLink/example/cc/server --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.11/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:18190) [2011-01-14:08-42-11] [0-0-0-0x628c50-main]: start: --------------------------------------
+C> (client:18190) [2011-01-14:08-42-11] [0-0-0-0x628c50-statistics]:                      MqSendEND:       2.81
+C> (client:18190) [2011-01-14:08-42-11] [0-0-0-0x628c50-statistics]:         MqSendEND_AND_CALLBACK:       4.79
+C> (client:18190) [2011-01-14:08-42-14] [0-0-0-0x628c50-statistics]:             MqSendEND_AND_WAIT:      18.35
+C> (client:18190) [2011-01-14:08-42-14] [0-0-0-0x628c50-statistics]:                  parent create:    1280.47
+C> (client:18190) [2011-01-14:08-42-14] [0-0-0-0x628c50-statistics]:                  parent delete:     152.72
+C> (client:18190) [2011-01-14:08-42-15] [0-0-0-0x628c50-statistics]:                   child create:      76.43
+C> (client:18190) [2011-01-14:08-42-15] [0-0-0-0x628c50-statistics]:                   child delete:      29.68
+C> (client:18190) [2011-01-14:08-42-15] [0-0-0-0x628c50-main]: end: ----------------------------------------

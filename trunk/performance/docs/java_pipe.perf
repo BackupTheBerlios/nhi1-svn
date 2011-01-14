@@ -1,28 +1,10 @@
-> thread/NHI1-0.10/theLink/tests/client --all @ java example.Server
-+ ENV=thread
-+++ dirname ./performance_thread.env
-++ cd .
-++ pwd
-+ PERFDIR=/home/dev1usr/Project/NHI1/performance
-+ . /home/dev1usr/Project/NHI1/performance/env.sh
-++ abs_top_builddir=/home/dev1usr/Project/NHI1
-++ PACKAGE=NHI1
-++ PACKAGE_VERSION=0.10
-+ export ENVHOME=/home/dev1usr/ext/x86_64-suse-linux/performance_thread
-+ ENVHOME=/home/dev1usr/ext/x86_64-suse-linux/performance_thread
-+ export ENVHOME2=/home/dev1usr/ext/x86_64-suse-linux
-+ ENVHOME2=/home/dev1usr/ext/x86_64-suse-linux
-+ export PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/bin:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/bin/local:/home/dev1usr/bin/generic:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/ext/x86_64-suse-linux/sbin:/usr/local/bin:.:/home/dev1usr/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin
-+ PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/bin:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/bin/local:/home/dev1usr/bin/generic:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/ext/x86_64-suse-linux/sbin:/usr/local/bin:.:/home/dev1usr/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin
-+ export LD_LIBRARY_PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:
-+ LD_LIBRARY_PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:
-+ ./local.env thread/NHI1-0.10/theLink/tests/client --all @ java example.Server
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-26] [0-0-0-0x6259a0-main]: start: --------------------------------------
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-26] [0-0-0-0x6259a0-statistics]:                      MqSendEND:       4.74
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-26] [0-0-0-0x6259a0-statistics]:         MqSendEND_AND_CALLBACK:       6.96
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-29] [0-0-0-0x6259a0-statistics]:             MqSendEND_AND_WAIT:      20.10
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-39] [0-0-0-0x6259a0-statistics]:                  parent create:   96991.11
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-39] [0-0-0-0x6259a0-statistics]:                  parent delete:    1939.36
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-39] [0-0-0-0x6259a0-statistics]:                   child create:     167.74
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-39] [0-0-0-0x6259a0-statistics]:                   child delete:      27.54
-C> (client:26420:0x7fdf13d85700) [2010-11-29:20-12-39] [0-0-0-0x6259a0-main]: end: ----------------------------------------
+> thread/NHI1-0.11/theLink/example/c/client --all @ java example.Server
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-04] [0-0-0-0x629c50-main]: start: --------------------------------------
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-04] [0-0-0-0x629c50-statistics]:                      MqSendEND:       5.23
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-05] [0-0-0-0x629c50-statistics]:         MqSendEND_AND_CALLBACK:       8.67
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-08] [0-0-0-0x629c50-statistics]:             MqSendEND_AND_WAIT:      21.25
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                  parent create:  103423.84
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                  parent delete:    1894.92
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                   child create:     176.12
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-statistics]:                   child delete:      28.86
+C> (client:19334:0x7f797b9f4700) [2011-01-14:08-43-18] [0-0-0-0x629c50-main]: end: ----------------------------------------

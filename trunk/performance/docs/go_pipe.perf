@@ -1,28 +1,10 @@
-> thread/NHI1-0.10/theLink/tests/client --all @ thread/NHI1-0.10/theLink/gomsgque/src/server
-+ ENV=thread
-+++ dirname ./performance_thread.env
-++ cd .
-++ pwd
-+ PERFDIR=/home/dev1usr/Project/NHI1/performance
-+ . /home/dev1usr/Project/NHI1/performance/env.sh
-++ abs_top_builddir=/home/dev1usr/Project/NHI1
-++ PACKAGE=NHI1
-++ PACKAGE_VERSION=0.10
-+ export ENVHOME=/home/dev1usr/ext/x86_64-suse-linux/performance_thread
-+ ENVHOME=/home/dev1usr/ext/x86_64-suse-linux/performance_thread
-+ export ENVHOME2=/home/dev1usr/ext/x86_64-suse-linux
-+ ENVHOME2=/home/dev1usr/ext/x86_64-suse-linux
-+ export PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/bin:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/bin/local:/home/dev1usr/bin/generic:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/ext/x86_64-suse-linux/sbin:/usr/local/bin:.:/home/dev1usr/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin
-+ PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/bin:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/bin/local:/home/dev1usr/bin/generic:/home/dev1usr/ext/x86_64-suse-linux/bin:/home/dev1usr/ext/x86_64-suse-linux/sbin:/usr/local/bin:.:/home/dev1usr/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/opt/kde3/bin
-+ export LD_LIBRARY_PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:
-+ LD_LIBRARY_PATH=/home/dev1usr/ext/x86_64-suse-linux/performance_thread/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:/home/dev1usr/ext/x86_64-suse-linux/lib:
-+ ./local.env thread/NHI1-0.10/theLink/tests/client --all @ thread/NHI1-0.10/theLink/gomsgque/src/server
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-37] [0-0-0-0x6258a0-main]: start: --------------------------------------
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-37] [0-0-0-0x6258a0-statistics]:                      MqSendEND:       5.95
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-37] [0-0-0-0x6258a0-statistics]:         MqSendEND_AND_CALLBACK:       8.34
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-40] [0-0-0-0x6258a0-statistics]:             MqSendEND_AND_WAIT:      21.84
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-41] [0-0-0-0x6258a0-statistics]:                  parent create:    2022.24
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-41] [0-0-0-0x6258a0-statistics]:                  parent delete:     160.70
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-41] [0-0-0-0x6258a0-statistics]:                   child create:     178.35
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-41] [0-0-0-0x6258a0-statistics]:                   child delete:      49.62
-C> (client:7386:0x7f4ec8453700) [2010-11-30:08-08-41] [0-0-0-0x6258a0-main]: end: ----------------------------------------
+> thread/NHI1-0.11/theLink/example/c/client --all @ thread/NHI1-0.11/theLink/example/go/server
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-52] [0-0-0-0x629b50-main]: start: --------------------------------------
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-52] [0-0-0-0x629b50-statistics]:                      MqSendEND:       6.07
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-53] [0-0-0-0x629b50-statistics]:         MqSendEND_AND_CALLBACK:       8.83
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:             MqSendEND_AND_WAIT:      22.28
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                  parent create:    1810.96
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                  parent delete:     153.99
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                   child create:     172.92
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-statistics]:                   child delete:      48.31
+C> (client:29034:0x7fe2804f4700) [2011-01-14:08-47-56] [0-0-0-0x629b50-main]: end: ----------------------------------------

@@ -13,13 +13,19 @@
 
 \page changelog ChangeLog
 
+\n
+\n
+
 \section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
 
-This release add support for the "Factory" design pattern.
+This release add support for the \AllLngTxt{Factory} design pattern.
 
+\verbatim
+svn diff --summarize -r '{2010-11-30}:{2011-01-14}'
+\endverbatim
 
-
-
+\n
+\n
 
 \section V0_10 29 Nov 2010 - NHI1-0.10, PLMK-1.8 und libmsgque-4.8
 

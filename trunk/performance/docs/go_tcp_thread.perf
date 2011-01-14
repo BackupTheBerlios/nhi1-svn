@@ -1,11 +1,11 @@
-> thread/NHI1-0.10/theLink/gomsgque/src/server --tcp --host localhost --port 7778 --thread
-> thread/NHI1-0.10/theLink/tests/client --all --tcp --host localhost --port 7778
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-50] [0-0-0-0x625bc0-main]: start: --------------------------------------
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-50] [0-0-0-0x625bc0-statistics]:                      MqSendEND:       6.09
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-50] [0-0-0-0x625bc0-statistics]:         MqSendEND_AND_CALLBACK:      10.07
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-statistics]:             MqSendEND_AND_WAIT:      30.35
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-statistics]:                  parent create:     468.23
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-statistics]:                  parent delete:      90.69
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-statistics]:                   child create:     179.50
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-statistics]:                   child delete:      55.47
-C> (client:7635:0x7f08e783a700) [2010-11-30:08-08-54] [0-0-0-0x625bc0-main]: end: ----------------------------------------
+> thread/NHI1-0.11/theLink/example/go/server --tcp --host localhost --port 7798 --thread
+> thread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7798
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-05] [0-0-0-0x629e70-main]: start: --------------------------------------
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-05] [0-0-0-0x629e70-statistics]:                      MqSendEND:       7.03
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-06] [0-0-0-0x629e70-statistics]:         MqSendEND_AND_CALLBACK:      10.91
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-statistics]:             MqSendEND_AND_WAIT:      30.41
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-statistics]:                  parent create:     446.23
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-statistics]:                  parent delete:      93.91
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-statistics]:                   child create:     184.44
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-statistics]:                   child delete:      56.88
+C> (client:29283:0x7f19ef9e4700) [2011-01-14:08-48-10] [0-0-0-0x629e70-main]: end: ----------------------------------------

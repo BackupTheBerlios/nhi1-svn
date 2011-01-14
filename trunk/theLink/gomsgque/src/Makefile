@@ -24,7 +24,7 @@ CGO_LDFLAGS=-L$(abs_top_builddir)/theLink/libmsgque/.libs -lmsgque
 include $(GOROOT)/src/Make.pkg
 
 goinstall: install
-	test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"
+	-test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"
 	cp _obj/$(TARG).a "$(DESTDIR)$(pkglibdir)"
 
 gouninstall:
