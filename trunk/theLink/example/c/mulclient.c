@@ -9,8 +9,10 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-#include "string.h"
+
 #include "msgque.h"
+#include "string.h"
+
 int main (int argc, MQ_CST argv[]) 
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);

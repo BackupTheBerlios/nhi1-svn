@@ -20,8 +20,12 @@
 
 #if defined(_MSC_VER)
 // need for "getpid"
-#  include <process.h>
+# include <process.h>
+#else
+// need for timeval
+# include <sys/time.h>
 #endif
+
 
 #define SEEK(ptr,pos) ptr->cur.B = (ptr->data + pos); *(ptr->cur.C-1) = BUFFER_CHAR;
 
@@ -77,7 +81,7 @@ sLogTime (
 )
 {
   struct tm *t;
-  struct mq_timeval tv;
+  struct timeval tv;
   time_t time;
 
   MqSysGetTimeOfDay(NULL, &tv, NULL);

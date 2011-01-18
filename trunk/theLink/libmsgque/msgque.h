@@ -55,7 +55,6 @@
 # define __func__ __FUNCTION__
 # define va_copy(a,b) a = b
 # define mq_strtoll _strtoi64
-# define mq_strdup _strdup
 # define mq_getpid _getpid
 # define mq_unlink _unlink
 # define mq_snprintf _snprintf
@@ -74,8 +73,6 @@
 
 /// \ingroup Mq_System_C_API
 # define mq_strtoll strtoll
-/// \ingroup Mq_System_C_API
-# define mq_strdup strdup
 /// \ingroup Mq_System_C_API
 # define mq_getpid getpid
 /// \ingroup Mq_System_C_API
@@ -125,14 +122,12 @@
    to nothing for earlier compilers.  */
 
 #if defined(_MSC_VER) || (__GNUC__ == 2 && __GNUC_MINOR__ < 96)
-#   define __builtin_expect(x, expected_value) (x)
-#endif
-
-/// \brief gcc jump optimization
 #define likely(x)       __builtin_expect((x),1)
-
-/// \brief gcc jump optimization
 #define unlikely(x)     __builtin_expect((x),0)
+#else
+#define likely(x)       !!(x)
+#define unlikely(x)     !!(x)
+#endif
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -153,6 +148,7 @@ struct mq_timezone {
   int  tz_minuteswest;      ///< minutes W of Greenwich
   int  tz_dsttime;          ///< type of dst correction
 };
+
 #else
 /// \ingroup Mq_System_C_API
 #define mq_timeval timeval

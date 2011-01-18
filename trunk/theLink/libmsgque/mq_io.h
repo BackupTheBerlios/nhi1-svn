@@ -21,6 +21,11 @@
 
 BEGIN_C_DECLS
 
+#if defined(MQ_IS_POSIX)
+// used for "fd_set"
+#   include <sys/select.h>
+#endif
+
 /// \brief everything \e io need for local storage
 struct MqIoS {
   struct MqS * context;             ///< link to the 'msgque' object

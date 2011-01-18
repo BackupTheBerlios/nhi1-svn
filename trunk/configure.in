@@ -164,8 +164,8 @@ else
 fi
 AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
 
-AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile 
-	theLink/docs/Makefile win/Makefile bin/Makefile
+AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
+	theLink/docs/Makefile win/Makefile bin/Makefile 
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
 	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl

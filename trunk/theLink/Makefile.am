@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-SUBDIRS = libmsgque
+SUBDIRS = sqlite libmsgque
 SUBDIRS += example/c
 if USE_CXX
 SUBDIRS += ccmsgque

@@ -10,9 +10,9 @@
  *              please contact AUTHORS for additional information
  */
 
-#include "string.h"
 #include "msgque.h"
 #include "debug.h"
+#include "string.h"
 
 // F1 **************************************************************************
 

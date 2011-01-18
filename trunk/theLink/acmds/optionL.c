@@ -123,7 +123,7 @@ OptLDelete (
     for (; start < end; start++) {
       MqBufferDelete (&(start->val));
     }
-    free (opt->data);
+    MqSysFree (opt->data);
     MqSysFree (*out);
   }
 }

@@ -9,10 +9,11 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-#include <stdlib.h>
-#include <string.h>
+
 #include "msgque.h"
 #include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define MQ_CONTEXT_S ctx
 

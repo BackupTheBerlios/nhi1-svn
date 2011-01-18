@@ -10,10 +10,9 @@
  *              please contact AUTHORS for additional information
  */
 
-#include <stdlib.h>
-
 #include "msgque.h"
 #include "debug.h"
+#include <stdlib.h>
 
 /// link to the MqErrorS object
 #define ARGS  struct MqS * const mqctx, void *data

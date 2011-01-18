@@ -10,11 +10,10 @@
  *              please contact AUTHORS for additional information
  */
 
-#include <stdlib.h>
-#include <string.h>
-
 #include "msgque.h"
 #include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define ARGS  struct MqS * const mqctx, void *data
 #define TRANSCTX ((struct FilterCtxS*const)mqctx)

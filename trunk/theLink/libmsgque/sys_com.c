@@ -276,7 +276,7 @@ SysSetAsync (
   MQ_SOCK socket
 )
 {
-  u_long curMqState = 1;
+  unsigned long curMqState = 1;
 
   if (unlikely (WIN32_socket (ioctl) (socket, FIONBIO, &curMqState) == -1)) {
     return sSysMqErrorMsg (context, __func__, "ioctl");
@@ -611,6 +611,7 @@ SysGetTcpInfo(
   return MQ_OK;
 }
 
+/*
 enum MqErrorE
 SysInetAton (
      struct MqS * const context,	    ///< handle error
@@ -630,6 +631,7 @@ SysInetAton (
 
   return MQ_OK;
 }
+*/
 
 enum MqErrorE
 SysSocketPair (

@@ -14,10 +14,10 @@
  * \{
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include "msgque.h"
 #include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define CUTCTX ((struct CutCtxS * const)mqctx)
 

@@ -15,6 +15,12 @@
 
 BEGIN_C_DECLS
 
+/*****************************************************************************/
+/*                                                                           */
+/*                     definition used for config.c                          */
+/*                                                                           */
+/*****************************************************************************/
+
 void pConfigSetParent (
   struct MqS * const context,
   struct MqS * const parent

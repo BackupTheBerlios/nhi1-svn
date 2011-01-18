@@ -18,6 +18,7 @@
 
 #if defined(MQ_IS_POSIX)
 #   include <sys/socket.h>
+#   include <sys/select.h>
 #   include <netdb.h>
 #   include <netinet/in.h>
 #   include <arpa/inet.h>

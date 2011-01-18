@@ -9,8 +9,10 @@
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
  */
-#include "string.h"
+
 #include "msgque.h"
+#include "string.h"
+
 static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MQ_CST str;
   struct MqS * ftr;

@@ -125,7 +125,7 @@ cp $D/tags .
   ctags -a $ADD ../tokyocabinet/*.[ch]
 }
 
-[[ $DO == "yes" ]] && ctags -a $ADD -I NS *.[ch] 
+[[ $DO == "yes" ]] && ctags -a $ADD -I NS *.[ch] ../sqlite/sqlite3.c
 
 exit 0
 

@@ -87,7 +87,7 @@ getline (char **lineptr, size_t *n, FILE *fp)
   if (*lineptr == NULL || *n == 0)
     {
       *n = 120;
-      *lineptr = (char *) malloc (*n);
+      *lineptr = (char *) MqSysMalloc (MQ_ERROR_PANIC, *n);
       if (*lineptr == NULL)
     {
       result = -1;
@@ -122,7 +122,7 @@ getline (char **lineptr, size_t *n, FILE *fp)
           goto unlock_return;
         }
 
-      new_lineptr = (char *) realloc (*lineptr, needed);
+      new_lineptr = (char *) MqSysRealloc (MQ_ERROR_PANIC, *lineptr, needed);
       if (new_lineptr == NULL)
         {
           result = -1;
@@ -210,7 +210,7 @@ split (
   }
 
 error:
-  MqSysFree (line);
+  free (line);
   return MqErrorStack (mqctx);
 } 
 
@@ -222,7 +222,7 @@ SplitCreate (
 )
 {
   MQ_BUF buf = NULL;
-  MQ_STR delimiter = mq_strdup("\t");	// the delimiter-char to split from
+  MQ_STR delimiter = MqSysStrDup(ctx, "\t");	// the delimiter-char to split from
 
   // create Msgque
   MqErrorCheck (MqLinkCreate (ctx, argvP));

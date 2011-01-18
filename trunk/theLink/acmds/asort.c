@@ -14,6 +14,9 @@
  * \{
  */
 
+#include "msgque.h"
+#include "debug.h"
+
 #ifdef MQ_IS_POSIX
 # include <unistd.h>
 #endif
@@ -21,8 +24,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include "msgque.h"
-#include "debug.h"
+
 #include "optionL.h"
 
 /// link to the MqErrorS object

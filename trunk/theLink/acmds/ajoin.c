@@ -14,10 +14,10 @@
  * \{
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include "msgque.h"
 #include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 #include "optionL.h"
 
 #define JOINCTX ((struct JoinCtxS *const)mqctx)
@@ -137,8 +137,8 @@ JoinDelete (
   struct JoinCtxS * joinctx = JOINCTX;
   MQ_STR *freeP = joinctx->free;
 
-  while (*freeP) {
-    free(*freeP++);
+  for (;*freeP;freeP++) {
+    MqSysFree(*freeP);
   }
 
   OptLDelete (&joinctx->formatlist);
@@ -163,7 +163,7 @@ JoinCreate (
   MqErrorCheck (MqServiceCreate (mqctx, "+EOF", NULL,    NULL, NULL));
   
   // initial values
-  joinctx->delimiter = mq_strdup(" ");
+  joinctx->delimiter = MqSysStrDup(mqctx, " ");
 
   // get the delimiter
   MqErrorCheck (MqBufferLCheckOptionC (mqctx, *argvP, "-d", &joinctx->delimiter));

@@ -10,8 +10,9 @@
  *              please contact AUTHORS for additional information
  */
 
-#include "string.h"
 #include "msgque.h"
+#include "string.h"
+
 static enum MqErrorE  GTCX( struct MqS *ctx, MQ_PTR data) {
   MqErrorCheck(MqSendSTART(ctx));
   MqSendI(ctx, MqLinkGetCtxId(ctx));

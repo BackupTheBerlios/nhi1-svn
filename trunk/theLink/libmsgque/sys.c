@@ -15,6 +15,7 @@
 #include "sys.h"
 #include "error.h"
 #include "factory.h"
+#include "sqlite3.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -338,7 +339,7 @@ void MqSysServerThreadMain (
   struct MqBufferLS * alfa  = argP->alfa;
   struct MqS * newctx;
   // cleanup
-  free(argP);
+  MqSysFree(argP);
   // create the new context
   MqErrorCheck(MqFactoryInvoke (tmpl, MQ_FACTORY_NEW_THREAD, factory, &newctx));
   // add my configuration
@@ -589,7 +590,7 @@ MQ_STR MqSysBasename (
     return fname;
 #else
   if (in == NULL) return MqSysStrDup(MQ_ERROR_PANIC, "");
-  // double mq_strdup is necessary because LINUX may modify the input string
+  // double MqSysStrDup is necessary because LINUX may modify the input string
   // and FREEBSD modify the output string in future call's to 'basename'
   // ... Is This POSIX ?
   MQ_STR t1 = MqSysStrDup(MQ_ERROR_PANIC, (MQ_STR) in);
@@ -736,17 +737,48 @@ void MqSysFreeP(MQ_PTR data) {
 
 /*****************************************************************************/
 /*                                                                           */
+/*                           sqlite wrapper                                  */
+/*                                                                           */
+/*****************************************************************************/
+
+static MQ_PTR sqlite3_calloc (
+  MQ_SIZE  nelem, 
+  MQ_SIZE  elsize
+) {
+  register MQ_PTR ptr;  
+
+  if (nelem == 0 || elsize == 0)
+    nelem = elsize = 1;
+  
+  ptr = sqlite3_malloc (nelem * elsize);
+  if (ptr) memset(ptr,'\0', nelem * elsize);
+  
+  return ptr;
+}
+
+static MQ_STR sqlite3_strdup (
+  MQ_CST s
+) {
+  MQ_STR result = (MQ_STR) sqlite3_malloc (strlen(s) + 1);
+  if (result == (MQ_STR)0)
+    return (MQ_STR)0;
+  strcpy(result, s);
+  return result;
+}
+
+/*****************************************************************************/
+/*                                                                           */
 /*                                MQ-LAL                                     */
 /*                    (Language Abstraction Layer)                           */
 /*                                                                           */
 /*****************************************************************************/
 
 void SysCreate(void) {
-  MqLal.SysCalloc	= (MqSysCallocF)  calloc;
-  MqLal.SysMalloc	= (MqSysMallocF)  malloc;
-  MqLal.SysStrDup	= (MqSysStrDupF)  mq_strdup;
-  MqLal.SysRealloc	= (MqSysReallocF) realloc;
-  MqLal.SysFree		= (MqSysFreeF)	  free;
+  MqLal.SysCalloc	= (MqSysCallocF)  sqlite3_calloc;
+  MqLal.SysMalloc	= (MqSysMallocF)  sqlite3_malloc;
+  MqLal.SysStrDup	= (MqSysStrDupF)  sqlite3_strdup;
+  MqLal.SysRealloc	= (MqSysReallocF) sqlite3_realloc;
+  MqLal.SysFree		= (MqSysFreeF)	  sqlite3_free;
 #if defined(HAVE_FORK)
   MqLal.SysFork		= (MqSysForkF)	  fork;
 #endif
@@ -766,5 +798,4 @@ void SysCreate(void) {
 };
 
 END_C_DECLS
-
 
