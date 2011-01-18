@@ -13,6 +13,7 @@
 #include "main.h"
 #include "factory.h"
 #include "error.h"
+#include "sqlite3.h"
 
 BEGIN_C_DECLS
 
@@ -48,6 +49,16 @@ static void sFactorySpaceDelAll (
   void
 );
 
+static MQ_STR sFactoryStrDup (
+  MQ_CST s
+) {
+  MQ_STR result = (MQ_STR) sqlite3_malloc (strlen(s) + 1);
+  if (result == (MQ_STR)0)
+    return (MQ_STR)0;
+  strcpy(result, s);
+  return result;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              factory_memory                                */
@@ -68,7 +79,7 @@ void
 FactorySpaceDelete (void)
 {
   sFactorySpaceDelAll ();
-  MqSysFree (space.items);
+  sqlite3_free (space.items);
 }
 
 static void
@@ -108,7 +119,7 @@ sFactorySpaceDelItem (
   if (space.items[id].Delete.data && space.items[id].Delete.fFree) {
     (*space.items[id].Delete.fFree) (MQ_ERROR_PANIC, &space.items[id].Delete.data);
   }
-  MqSysFree(space.items[id].ident);
+  sqlite3_free((void*)space.items[id].ident);
 }
 
 static void
@@ -157,7 +168,7 @@ pFactoryAddName (
 
     space.used += 1;
 
-    free->ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
+    free->ident = sFactoryStrDup(ident);
 
     free->Create = Create;
     free->Delete = Delete;
@@ -357,7 +368,7 @@ MqFactoryDefault (
   // Del
   sFactorySpaceDelItem (0);
   // Add
-  space.items[0].ident = MqSysStrDup(MQ_ERROR_PANIC, ident);
+  space.items[0].ident = sFactoryStrDup(ident);
   space.items[0].Create = Create;
   space.items[0].Delete = Delete;
   defaultFactoryItem = &space.items[0];

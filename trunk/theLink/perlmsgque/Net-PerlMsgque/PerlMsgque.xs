@@ -27,7 +27,7 @@
     MqSException *ex = (MqSException*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*ex)); \
     ex->num = MqErrorGetNum(context); \
     ex->code = MqErrorGetCodeI(context); \
-    ex->text = mq_strdup(MqErrorGetText(context)); \
+    ex->text = MqSysStrDup(MQ_ERROR_PRINT, MqErrorGetText(context)); \
     sv_setref_pv(errsv, "Net::PerlMsgque::MqSException", (void*)ex); \
     MqErrorReset(context); \
     croak(NULL); \
@@ -40,7 +40,7 @@
     MqSException *ex = (MqSException*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*ex)); \
     ex->num = MqErrorGetNum(context); \
     ex->code = MqErrorGetCodeI(context); \
-    ex->text = mq_strdup(MqErrorGetText(context)); \
+    ex->text = MqSysStrDup(MQ_ERROR_PRINT, MqErrorGetText(context)); \
     sv_setref_pv(errsv, "Net::PerlMsgque::MqSException", (void*)ex); \
     MqErrorReset(context); \
     croak(NULL); \

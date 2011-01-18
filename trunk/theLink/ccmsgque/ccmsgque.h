@@ -80,13 +80,13 @@ namespace ccmsgque {
     public:
       MQ_EXTERN MqCException(struct MqS *const context);
       MqCException(int mynum, enum MqErrorE mycode, MQ_CST mytxt) : 
-	p_message (mq_strdup(mytxt)), p_num (mynum), p_code (mycode) { }
+	p_message (MqSysStrDup(MQ_ERROR_PANIC, mytxt)), p_num (mynum), p_code (mycode) { }
       MqCException(int mynum, enum MqErrorE mycode, MQ_STR mytxt) : 
 	p_message (mytxt), p_num (mynum), p_code (mycode) { }
       MQ_EXTERN MqCException(int mynum, enum MqErrorE mycode, MQ_CST myfunc, 
 		    MQ_CST myfile, const int myline, MQ_CST mytxt);
       MqCException(const MqCException& e) : 
-	p_message (mq_strdup(e.p_message)), p_num (e.p_num), p_code (e.p_code) { }
+	p_message (MqSysStrDup(MQ_ERROR_PANIC, e.p_message)), p_num (e.p_num), p_code (e.p_code) { }
       virtual ~MqCException() throw() {
 	MqSysFree (p_message);
       }
@@ -843,6 +843,24 @@ namespace ccmsgque {
 	ErrorCheck (MqSlaveDelete(&context,id)); 
       }
     /// \} Mq_Slave_CC_API
+
+    /// \defgroup Mq_Sys_CC_API Mq_Sys_CC_API
+    /// \ingroup Mq_CC_API
+    /// \brief \copybrief Mq_Sys_C_API
+    /// \details \copydetails Mq_Sys_C_API
+    /// \{
+
+      /// \api #MqSysStrDup
+      inline MQ_STR SysStrDup (MQ_CST str) {
+        return MqSysStrDup(&context, str);
+      }
+
+      /// \api #MqSysFree
+      inline void SysFree (MQ_PTR tgt) {
+        (*MqLal.SysFree)((MQ_PTR)tgt);
+      }
+    
+    /// \} Mq_Sys_CC_API
   };
 
   /// \defgroup Mq_Factory_CC_API Mq_Factory_CC_API

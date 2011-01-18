@@ -31,7 +31,7 @@ class Filter1 : public MqC {
       MQ_ROW d;
       MQ_BUF buf = GetTempBuffer();
       while (ReadItemExists()) {
-	d.push_back(mq_strdup(MqBufferSetV (buf, "<%s>", ReadC())->cur.C));
+	d.push_back(SysStrDup(MqBufferSetV (buf, "<%s>", ReadC())->cur.C));
       }
       data.push_back(d);
       SendRETURN();
@@ -46,7 +46,7 @@ class Filter1 : public MqC {
 	ftr->SendSTART();
 	for (itm = (*row).begin(); itm < (*row).end(); itm++) {
 	  ftr->SendC(*itm);
-	  free((void*)*itm);
+	  SysFree((void*)*itm);
 	}
 	ftr->SendEND_AND_WAIT("+FTR");
       }

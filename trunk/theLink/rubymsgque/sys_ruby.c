@@ -180,8 +180,6 @@ static enum MqErrorE SysWait (
 
 void NS(MqS_Sys_Init)(void) {
 
-  //id_join = rb_intern("join");
-
   // update LAL
   MqLal.SysCalloc   = (MqSysCallocF)  xcalloc	  ;
   MqLal.SysMalloc   = (MqSysMallocF)  xmalloc	  ;

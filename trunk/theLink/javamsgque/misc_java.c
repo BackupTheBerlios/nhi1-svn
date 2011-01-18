@@ -196,11 +196,11 @@ NS(pGetClassName)(
 
   // call the "getName" on "class"
   jstring getNameO = (*env)->CallObjectMethod(env, class, NS(MID_Class_getName));
-  if (getNameO == NULL) return mq_strdup("");
+  if (getNameO == NULL) return MqSysStrDup(MQ_ERROR_PRINT, "");
   
   // get the "string" out of "getNameO"
   msg = JO2C_START(env, getNameO);
-  ret = mq_strdup(msg);
+  ret = MqSysStrDup(MQ_ERROR_PRINT, msg);
   JO2C_STOP(env, getNameO, msg);
 
   return ret;

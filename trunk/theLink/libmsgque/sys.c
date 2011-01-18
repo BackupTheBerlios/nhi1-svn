@@ -750,7 +750,7 @@ static MQ_PTR sqlite3_calloc (
   if (nelem == 0 || elsize == 0)
     nelem = elsize = 1;
   
-  ptr = sqlite3_malloc (nelem * elsize);
+  ptr = (*MqLal.SysMalloc) (nelem * elsize);
   if (ptr) memset(ptr,'\0', nelem * elsize);
   
   return ptr;
@@ -759,7 +759,7 @@ static MQ_PTR sqlite3_calloc (
 static MQ_STR sqlite3_strdup (
   MQ_CST s
 ) {
-  MQ_STR result = (MQ_STR) sqlite3_malloc (strlen(s) + 1);
+  MQ_STR result = (MQ_STR) (*MqLal.SysMalloc) (strlen(s) + 1);
   if (result == (MQ_STR)0)
     return (MQ_STR)0;
   strcpy(result, s);

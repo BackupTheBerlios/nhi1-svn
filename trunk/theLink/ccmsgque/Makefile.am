@@ -27,8 +27,9 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     generic_io.h main.h msgque_private.h send.h sys_com.h token.h \
     link.h config.h factory.h
 
-libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN $(AM_CFLAGS)
+libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN -I../sqlite $(AM_CFLAGS)
 libtmp_la_LDFLAGS = -no-undefined
+libtmp_la_LIBADD = ../sqlite/libtmp.la
 
 
 # ordinary libraray
@@ -51,7 +52,8 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     link.h config.h factory.h
 
 
-libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL $(AM_CFLAGS)
+libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I../sqlite $(AM_CFLAGS)
 libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
+libccmsgque_la_LIBADD = ../sqlite/libtmp.la
 
 include_HEADERS = ccmsgque.h

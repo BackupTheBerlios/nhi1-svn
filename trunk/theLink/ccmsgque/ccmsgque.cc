@@ -127,7 +127,7 @@ namespace ccmsgque {
   }
 
   MqCException::MqCException(struct MqS *const context) {
-    p_message = mq_strdup(MqErrorGetText(context)); 
+    p_message = MqSysStrDup(MQ_ERROR_PANIC, MqErrorGetText(context)); 
     p_num = MqErrorGetNumI(context);
     p_code = MqErrorGetCodeI(context);
     MqErrorReset (context);
