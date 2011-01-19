@@ -137,7 +137,7 @@ MqServiceCreate(
   MQ_TOK const token,
   MqTokenF const proc,
   MQ_PTR data,
-  MqTokenDataFreeF datafreeF
+  MqDataFreeF datafreeF
 )
 {
   struct MqCallbackS cb = {proc, data, datafreeF, NULL};
@@ -303,4 +303,5 @@ error:
 }
 
 END_C_DECLS
+
 

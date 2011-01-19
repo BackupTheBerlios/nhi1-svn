@@ -59,20 +59,35 @@ static MQ_STR sFactoryStrDup (
   return result;
 }
 
+static MQ_PTR sFactoryCalloc (
+  MQ_SIZE  nelem, 
+  MQ_SIZE  elsize
+) {
+  register MQ_PTR ptr;  
+
+  if (nelem == 0 || elsize == 0)
+    nelem = elsize = 1;
+  
+  ptr = sqlite3_malloc (nelem * elsize);
+  if (ptr) memset(ptr,'\0', nelem * elsize);
+  
+  return ptr;
+}
+
 /*****************************************************************************/
 /*                                                                           */
-/*                              factory_memory                                */
+/*                              factory_memory                               */
 /*                                                                           */
 /*****************************************************************************/
 
 void
 FactorySpaceCreate (void)
 {
-  space.items = (struct MqFactoryS *) MqSysCalloc (MQ_ERROR_PANIC, SPACE_INIT_SIZE, sizeof (*space.items));
+  space.items = (struct MqFactoryS *) sFactoryCalloc (SPACE_INIT_SIZE, sizeof (*space.items));
   space.size = SPACE_INIT_SIZE;
   space.used = 1;  // first item is always the default
 
-  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 }
 
 void
@@ -97,7 +112,7 @@ sFactorySpaceAdd (
 
   // alloc new space
   space.items = (struct MqFactoryS *)
-	MqSysRealloc (MQ_ERROR_PANIC, space.items, (newsize * sizeof (*space.items)));
+	sqlite3_realloc (space.items, (newsize * sizeof (*space.items)));
   memset(space.items+space.used, '\0', newsize-space.used);
   space.size = newsize;
 }
@@ -114,10 +129,10 @@ sFactorySpaceDelItem (
 )
 {
   if (space.items[id].Create.data && space.items[id].Create.fFree) {
-    (*space.items[id].Create.fFree) (MQ_ERROR_PANIC, &space.items[id].Create.data);
+    (*space.items[id].Create.fFree) (&space.items[id].Create.data);
   }
   if (space.items[id].Delete.data && space.items[id].Delete.fFree) {
-    (*space.items[id].Delete.fFree) (MQ_ERROR_PANIC, &space.items[id].Delete.data);
+    (*space.items[id].Delete.fFree) (&space.items[id].Delete.data);
   }
   sqlite3_free((void*)space.items[id].ident);
 }
@@ -315,17 +330,19 @@ error2:
 
 enum MqFactoryReturnE
 MqFactoryAdd (
-  MQ_CST           const ident,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const fCreate,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDatafreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const fDelete,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDatafreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF
 )
 {
-  struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
-  struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
+  struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF, createDataCopyF};
+  struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF, deleteDataCopyF};
   if (ident == NULL || *ident == '\0') {
     return MQ_FACTORY_RETURN_INVALID_IDENT;
   }
@@ -342,23 +359,34 @@ MqFactoryCopyDefault (
 {
   if (ident == NULL || *ident == '\0') {
     return MQ_FACTORY_RETURN_INVALID_IDENT;
+  } else {
+    struct MqFactoryCreateS Create = space.items[0].Create;
+    struct MqFactoryDeleteS Delete = space.items[0].Delete;
+    if (Create.data != NULL && Create.fCopy != NULL) {
+      (*Create.fCopy) (&Create.data);
+    }
+    if (Delete.data != NULL && Delete.fCopy != NULL) {
+      (*Delete.fCopy) (&Delete.data);
+    }
+    return pFactoryAddName (ident, Create, Delete);
   }
-  return pFactoryAddName (ident, space.items[0].Create, space.items[0].Delete);
 }
 
 enum MqFactoryReturnE
 MqFactoryDefault (
-  MQ_CST           const ident,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const fCreate,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDataFreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const fDelete,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDataFreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF
 )
 {
-  struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF};
-  struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF};
+  struct MqFactoryCreateS Create = {fCreate, createData, createDataFreeF, createDataCopyF};
+  struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDataFreeF, deleteDataCopyF};
   if (ident == NULL || *ident == '\0') {
     return MQ_FACTORY_RETURN_INVALID_IDENT;
   }
@@ -409,20 +437,25 @@ MqFactoryCall (
 
 enum MqFactoryReturnE
 MqFactoryNew (
-  MQ_CST           const ident,
-  MqFactoryCreateF const fCreate,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDatafreeF,
-  MqFactoryDeleteF const fDelete,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDatafreeF,
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const fCreate,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDataFreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const fDelete,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDataFreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF,
   MQ_PTR data,
   struct MqS ** ctxP
 )
 {
   enum MqFactoryReturnE ret;
   *ctxP = NULL;
-  ret = MqFactoryAdd (ident, fCreate, createData, createDatafreeF, fDelete, deleteData, deleteDatafreeF);
+  ret = MqFactoryAdd (ident, 
+    fCreate, createData, createDataFreeF, createDataCopyF,
+    fDelete, deleteData, deleteDataFreeF, deleteDataCopyF
+  );
   if (MqFactoryErrorCheckI(ret)) return ret;
   return pFactoryCall (ident, data, MQ_NO, ctxP);
 }
@@ -520,5 +553,6 @@ MqFactoryCtxIdentGet (
 }
 
 END_C_DECLS
+
 
 

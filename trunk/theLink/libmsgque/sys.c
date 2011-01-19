@@ -741,7 +741,7 @@ void MqSysFreeP(MQ_PTR data) {
 /*                                                                           */
 /*****************************************************************************/
 
-static MQ_PTR sqlite3_calloc (
+static MQ_PTR sys_calloc (
   MQ_SIZE  nelem, 
   MQ_SIZE  elsize
 ) {
@@ -756,7 +756,7 @@ static MQ_PTR sqlite3_calloc (
   return ptr;
 }
 
-static MQ_STR sqlite3_strdup (
+static MQ_STR sys_strdup (
   MQ_CST s
 ) {
   MQ_STR result = (MQ_STR) (*MqLal.SysMalloc) (strlen(s) + 1);
@@ -774,9 +774,9 @@ static MQ_STR sqlite3_strdup (
 /*****************************************************************************/
 
 void SysCreate(void) {
-  MqLal.SysCalloc	= (MqSysCallocF)  sqlite3_calloc;
+  MqLal.SysCalloc	= (MqSysCallocF)  sys_calloc;
   MqLal.SysMalloc	= (MqSysMallocF)  sqlite3_malloc;
-  MqLal.SysStrDup	= (MqSysStrDupF)  sqlite3_strdup;
+  MqLal.SysStrDup	= (MqSysStrDupF)  sys_strdup;
   MqLal.SysRealloc	= (MqSysReallocF) sqlite3_realloc;
   MqLal.SysFree		= (MqSysFreeF)	  sqlite3_free;
 #if defined(HAVE_FORK)

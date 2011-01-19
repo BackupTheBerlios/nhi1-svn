@@ -93,7 +93,9 @@
 // memory after it is freed, writing off the ends of a memory allocation, freeing memory 
 // not previously obtained from the memory allocator, or failing to initialize newly 
 // allocated memory. 
-#define SQLITE_MEMDEBUG
+#ifdef _DEBUG
+# define SQLITE_MEMDEBUG 1
+#endif
 
 // This option omits the entire extension loading mechanism from SQLite, including 
 // sqlite3_enable_load_extension() and sqlite3_load_extension() interfaces. 

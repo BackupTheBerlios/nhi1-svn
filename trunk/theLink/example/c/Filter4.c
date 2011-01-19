@@ -236,7 +236,7 @@ main (
 )
 {
   // setup default Factory
-  MqFactoryDefault ("transFilter", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryDefault ("transFilter", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
   // the parent-context
   struct MqS * const mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);

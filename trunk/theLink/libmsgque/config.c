@@ -670,8 +670,8 @@ MqConfigSetServerSetup (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 )
 {
   if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
@@ -689,8 +689,8 @@ MqConfigSetEvent (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 )
 {
   if (context->setup.Event.data && context->setup.Event.fFree) {
@@ -707,8 +707,8 @@ MqConfigSetServerCleanup (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 )
 {
   if (context->setup.ServerCleanup.data && context->setup.ServerCleanup.fFree) {
@@ -726,8 +726,8 @@ MqConfigSetBgError (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 )
 {
   if (context->setup.BgError.data && context->setup.BgError.fFree) {
@@ -1028,5 +1028,7 @@ void pSetupMark (
 /*****************************************************************************/
 
 END_C_DECLS
+
+
 
 

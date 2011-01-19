@@ -147,7 +147,7 @@
 #define printLC(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_C, var)
 #define printLH(var)	MLV(MQ_CONTEXT_S, "%c",        var)
 #define printR(var)	MLVA(MQ_CONTEXT_S, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
-#define printLV(fmt,args...)  MqDLogV(MQ_CONTEXT_S,0,fmt,args)
+#define printLV(fmt,args...)  MqLogV(MQ_CONTEXT_S,__func__,0,fmt,args)
 
 #define printXLP(x,var)	  MLV(x, "%p"       , var)
 #define printXLI(x,var)	  MLV(x, MQ_FORMAT_I, var)
@@ -155,7 +155,7 @@
 #define printXLW(x,var)	  MLV(x, MQ_FORMAT_W, var)
 #define printXLO(x,var)	  MLV(x, MQ_FORMAT_C, var == MQ_YES ? "yes" : "no" )
 #define printXR(x,var)	  MLVA(x, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
-#define printXLV(x,fmt,args...)  MqDLogV(x,0,fmt,args)
+#define printXLV(x,fmt,args...)  MqLogV(x,__func__,0,fmt,args)
 
 #define printC2(var,len)  fprintf(stderr,"%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(var,len));fflush(stderr);
 #define printC3(buf) fprintf(stderr, "%s->" #buf " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(MqBufferGetC(buf),buf->cursize));fflush(stderr);

@@ -18,6 +18,21 @@
 /*                                                                           */
 /*****************************************************************************/
 
+static void NS(FactoryFree) (
+  MQ_PTR *dataP
+)
+{
+  Tcl_DecrRefCount ( (Tcl_Obj*) *dataP);
+  *dataP = NULL;
+}
+
+static void NS(FactoryCopy) (
+  MQ_PTR *dataP
+)
+{
+  Tcl_IncrRefCount ( (Tcl_Obj*) *dataP);
+}
+
 int NS(FactoryAdd) (TCL_ARGS)
 {
   enum MqFactoryReturnE ret;
@@ -33,7 +48,9 @@ int NS(FactoryAdd) (TCL_ARGS)
   }
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
-  MqFactoryErrorCheck(ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NS(ProcFree), NS(FactoryDelete), NULL, NULL));
+  MqFactoryErrorCheck(
+    ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NS(FactoryFree), NS(FactoryFree), NS(FactoryDelete), NULL, NULL, NULL)
+  );
   return TCL_OK;
 error:
   Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
@@ -49,9 +66,16 @@ int NS(FactoryDefault) (TCL_ARGS)
   CHECK_C(ident)
   CHECK_PROC_OPT(factory, "FactoryDefault ident ?factory-proc?")
   CHECK_NOARGS
-  if (factory) Tcl_IncrRefCount(factory);
-  MqFactoryErrorCheck(ret = MqFactoryDefault(ident, NS(FactoryCreate), 
-    factory, factory ? NS(ProcFree) : NULL, NS(FactoryDelete), NULL, NULL));
+  if (factory) {
+    Tcl_IncrRefCount(factory);
+    MqFactoryErrorCheck(ret = MqFactoryDefault(ident, NS(FactoryCreate), 
+      factory, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
+    );
+  } else {
+    MqFactoryErrorCheck(ret = MqFactoryDefault(ident, NS(FactoryCreate), 
+      NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL)
+    );
+  }
   return TCL_OK;
 error:
   Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
@@ -99,7 +123,9 @@ int NS(FactoryNew) (TCL_ARGS)
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
   MqFactoryErrorCheck(ret = MqFactoryNew(ident, 
-    NS(FactoryCreate), factory, NS(ProcFree), NS(FactoryDelete), NULL, NULL, (MQ_PTR) interp, &mqctx)
+    NS(FactoryCreate), factory, NS(FactoryFree), NS(FactoryCopy), 
+    NS(FactoryDelete), NULL, NULL, NULL,
+    (MQ_PTR) interp, &mqctx)
   );
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;

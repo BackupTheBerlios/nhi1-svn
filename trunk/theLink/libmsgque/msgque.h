@@ -440,7 +440,7 @@ typedef enum MqErrorE ( MQ_DECL
 
 /// \brief prototype for a free additional token data function
 typedef void ( MQ_DECL
-  *MqTokenDataFreeF
+  *MqDataFreeF
 ) (
   struct MqS const * const context,
   MQ_PTR *dataP
@@ -448,7 +448,7 @@ typedef void ( MQ_DECL
 
 /// \brief prototype for a copy additional token data function
 typedef void ( MQ_DECL
-  *MqTokenDataCopyF
+  *MqDataCopyF
 ) (
   struct MqS * const context,
   MQ_PTR *dataP
@@ -502,8 +502,8 @@ enum MqStatusIsE {
 struct MqCallbackS {
   MqTokenF		fCall;	    ///< callback method
   MQ_PTR		data;	    ///< additional data for the callback function
-  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
-  MqTokenDataCopyF	fCopy;	    ///< copy additional data pointer, used in a #MqSetupDup
+  MqDataFreeF	fFree;	    ///< free additional data pointer
+  MqDataCopyF	fCopy;	    ///< copy additional data pointer, used in a #MqSetupDup
 };
 
 /// \brief used to Create/Delete of object
@@ -956,8 +956,8 @@ MQ_DECL MqConfigSetEvent (
   struct MqS * const context,
   MqTokenF fCall,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 );
 
 /// \brief set the \ref MqSetupS::ServerSetup
@@ -966,8 +966,8 @@ MQ_DECL MqConfigSetServerSetup (
   struct MqS * const context,
   MqTokenF fCall,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 );
 
 /// \brief set the \ref MqSetupS::ServerCleanup
@@ -976,8 +976,8 @@ MQ_DECL MqConfigSetServerCleanup (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 );
 
 /// \brief set the \ref MqSetupS::BgError
@@ -986,8 +986,8 @@ MQ_DECL MqConfigSetBgError (
   struct MqS * const context,
   MqTokenF fTok,
   MQ_PTR data,
-  MqTokenDataFreeF fFree,
-  MqTokenDataCopyF fCopy
+  MqDataFreeF fFree,
+  MqDataCopyF fCopy
 );
 
 /// \brief \copybrief MqIoUdsConfigS
@@ -1311,18 +1311,34 @@ typedef void ( MQ_DECL
   struct MqFactoryS* const item
 );
 
+/// \brief prototype for a free additional factory data function
+typedef void ( MQ_DECL
+  *MqFactoryDataFreeF
+) (
+  MQ_PTR *dataP
+);
+
+/// \brief prototype for a copy additional factory data function
+typedef void ( MQ_DECL
+  *MqFactoryDataCopyF
+) (
+  MQ_PTR *dataP
+);
+
 /// \brief interface for the \e constructor
 struct MqFactoryCreateS {
-  MqFactoryCreateF	fCall;	    ///< create a new instance
-  MQ_PTR		data;	    ///< additional data pointer for the fCall
-  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+  MqFactoryCreateF    fCall;	    ///< create a new instance
+  MQ_PTR	      data;	    ///< additional data pointer for the fCall
+  MqFactoryDataFreeF  fFree;	    ///< free additional data pointer
+  MqFactoryDataCopyF  fCopy;	    ///< copy additional data pointer
 };
 
 /// \brief interface for the \e destructor
 struct MqFactoryDeleteS {
-  MqFactoryDeleteF	fCall;	    ///< delete the instance created with #MqFactoryCreateS
-  MQ_PTR		data;	    ///< additional data pointer for the fCreate
-  MqTokenDataFreeF	fFree;	    ///< free additional data pointer
+  MqFactoryDeleteF    fCall;	    ///< delete the instance created with #MqFactoryCreateS
+  MQ_PTR	      data;	    ///< additional data pointer for the fCreate
+  MqFactoryDataFreeF  fFree;	    ///< free additional data pointer
+  MqFactoryDataCopyF  fCopy;	    ///< copy additional data pointer
 };
 
 /// \brief data used to define a factory
@@ -1364,65 +1380,77 @@ MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
 /// \details This function is a convenient function to combine the #MqFactoryAdd
 /// and the #MqFactoryCall functionality.
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF (C-API) instance constructor function
-/// \param[in] createData (C-API) instance constructor data
-/// \param[in] createDataFreeF (C-API) instance constructor data free function
-/// \param[in] deleteCallF (C-API) instance destructor function
-/// \param[in] deleteData (C-API) instance destructor data
-/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
+/// \param[in] createCallF	(C-API) instance constructor function
+/// \param[in] createData	(C-API) instance constructor data
+/// \param[in] createDataFreeF	(C-API) instance constructor data free function
+/// \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
+/// \param[in] deleteCallF	(C-API) instance destructor function
+/// \param[in] deleteData	(C-API) instance destructor data
+/// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
+/// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
 /// \param[in] data (C-API) environment specific data or \c NULL used by \e createCallF
 /// \param[out] ctxP (C-API) the new created instance to return
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
-  MQ_CST           const ident,
-  MqFactoryCreateF const createCallF,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDataFreeF,
-  MqFactoryDeleteF const deleteCallF,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDataFreeF,
-  MQ_PTR data,
-  struct MqS ** ctxP
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const createCallF,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDataFreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const deleteCallF,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDataFreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF,
+  MQ_PTR	      data,
+  struct MqS	      ** ctxP
 ) __attribute__((nonnull(1,2)));
 
 /// \brief add a new \e factory-interface identified by \e ident
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF (C-API) instance constructor function
-/// \param[in] createData (C-API) instance constructor data
-/// \param[in] createDataFreeF (C-API) instance constructor data free function
-/// \param[in] deleteCallF (C-API) instance destructor function
-/// \param[in] deleteData (C-API) instance destructor data
-/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
+/// \param[in] createCallF	(C-API) instance constructor function
+/// \param[in] createData	(C-API) instance constructor data
+/// \param[in] createDataFreeF	(C-API) instance constructor data free function
+/// \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
+/// \param[in] deleteCallF	(C-API) instance destructor function
+/// \param[in] deleteData	(C-API) instance destructor data
+/// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
+/// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
-  MQ_CST           const ident,
-  MqFactoryCreateF const createCallF,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDataFreeF,
-  MqFactoryDeleteF const deleteCallF,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDataFreeF
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const createCallF,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDataFreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const deleteCallF,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDataFreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF
 ) __attribute__((nonnull(1,2)));
 
 /// \brief add a new \e default-factory-interface identified by \e ident
 /// \details The default factory is always used to create an instance if no other
 /// factory is available
 /// \param[in] ident  factory identifier
-/// \param[in] createCallF (C-API) instance constructor function
-/// \param[in] createData (C-API) instance constructor data
-/// \param[in] createDataFreeF (C-API) instance constructor data free function
-/// \param[in] deleteCallF (C-API) instance destructor function
-/// \param[in] deleteData (C-API) instance destructor data
-/// \param[in] deleteDataFreeF (C-API) instance destructor data free function
+/// \param[in] createCallF	(C-API) instance constructor function
+/// \param[in] createData	(C-API) instance constructor data
+/// \param[in] createDataFreeF	(C-API) instance constructor data free function
+/// \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
+/// \param[in] deleteCallF	(C-API) instance destructor function
+/// \param[in] deleteData	(C-API) instance destructor data
+/// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
+/// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
 /// \retFactoryException
 MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
-  MQ_CST           const ident,
-  MqFactoryCreateF const createCallF,
-  MQ_PTR           const createData,
-  MqTokenDataFreeF const createDataFreeF,
-  MqFactoryDeleteF const deleteCallF,
-  MQ_PTR           const deleteData,
-  MqTokenDataFreeF const deleteDataFreeF
+  MQ_CST	      const ident,
+  MqFactoryCreateF    const createCallF,
+  MQ_PTR	      const createData,
+  MqFactoryDataFreeF  const createDataFreeF,
+  MqFactoryDataCopyF  const createDataCopyF,
+  MqFactoryDeleteF    const deleteCallF,
+  MQ_PTR	      const deleteData,
+  MqFactoryDataFreeF  const deleteDataFreeF,
+  MqFactoryDataCopyF  const deleteDataCopyF
 ) __attribute__((nonnull(1,2)));
 
 /// \brief add a new factory as \e copy of the \e default factory but with a new \e ident
@@ -2096,7 +2124,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceCreate (
   MQ_TOK const token,
   MqServiceCallbackF const callback,
   MQ_PTR data,
-  MqTokenDataFreeF datafreeF
+  MqDataFreeF datafreeF
 ) __attribute__((nonnull(1)));
 
 /// \brief create a service to link a \e master-context with a \e slave-context.
@@ -3983,7 +4011,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendEND_AND_CALLBACK (
   MQ_TOK const token,
   MqServiceCallbackF const callback,
   MQ_PTR data,
-  MqTokenDataFreeF datafreeF
+  MqDataFreeF datafreeF
 );
 
 /// \brief finish the \e send-data-block on the server and optional return the results.
@@ -4884,11 +4912,6 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
-
-
-
 
 
 

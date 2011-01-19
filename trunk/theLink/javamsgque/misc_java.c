@@ -46,6 +46,7 @@ NS(ProcCreate) (
   if (data != NULL) {
     JavaErrorCheckNULL (call->data = (*env)->NewGlobalRef(env, data));
   }
+  call->env = env;
   call->method = method;
   return call;
 error:
@@ -56,16 +57,14 @@ error:
   return NULL;
 }
 
-
 void
 NS(ProcCopy) (
   struct MqS * const context,
   MQ_PTR * const dataP
 )
 {
-  SETUP_env;
   struct ProcCallS * old = (struct ProcCallS *) *dataP;
-  JavaErrorCheckNULL(*dataP = NS(ProcCreate) (env, old->object, old->class, old->method, old->data));
+  JavaErrorCheckNULL(*dataP = NS(ProcCreate) (old->env, old->object, old->class, old->method, old->data));
   return;
 error:
   return MqPanicC(context, __func__, -1, "unable to copy proc data");
@@ -77,13 +76,11 @@ NS(ProcFree) (
   MQ_PTR *dataP
 )
 {
-  if (context) {
-    JNIEnv *env = (JNIEnv*) context->threadData;
-    struct ProcCallS * call = (struct ProcCallS *) *dataP;
-    if (call->object != NULL) (*env)->DeleteGlobalRef(env, call->object);
-    if (call->class  != NULL) (*env)->DeleteGlobalRef(env, call->class );
-    if (call->data   != NULL) (*env)->DeleteGlobalRef(env, call->data  );
-  }
+  struct ProcCallS * call = (struct ProcCallS *) *dataP;
+  JNIEnv *env = call->env;
+  if (call->object != NULL) (*env)->DeleteGlobalRef(env, call->object);
+  if (call->class  != NULL) (*env)->DeleteGlobalRef(env, call->class );
+  if (call->data   != NULL) (*env)->DeleteGlobalRef(env, call->data  );
   MqSysFree(*dataP);
 }
 
@@ -93,8 +90,8 @@ NS(ProcCall) (
   MQ_PTR const callP
 )
 {
-  JNIEnv *env = (JNIEnv*) context->threadData;
   struct ProcCallS const * const call = (struct ProcCallS const * const) callP;
+  JNIEnv *env = call->env;
 
   // clean JAVA and libmsgque error
   //(*env)->ExceptionClear(env);
@@ -205,7 +202,4 @@ NS(pGetClassName)(
 
   return ret;
 }
-
-
-
 

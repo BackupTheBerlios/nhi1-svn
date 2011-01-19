@@ -419,7 +419,7 @@ Tclmsgque_Init (
 
   // create the default-factory
   if (!strcmp(MqFactoryDefaultIdent(),"libmsgque")) {
-    MqFactoryDefault("tclmsgque", NS(FactoryCreate), NULL, NULL, NS(FactoryDelete), NULL, NULL);
+    MqFactoryDefault("tclmsgque", NS(FactoryCreate), NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL);
   }
 
   return TCL_OK;
