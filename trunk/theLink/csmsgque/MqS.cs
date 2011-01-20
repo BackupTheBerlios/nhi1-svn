@@ -105,7 +105,7 @@ namespace csmsgque {
     static private MqExitF	      fProcessExit  = ProcessExit;
     static private MqExitF	      fThreadExit   = ThreadExit;
     static private MqTokenF	      fProcCall	    = ProcCall;
-    static internal MqTokenDataFreeF  fProcFree	    = ProcFree;
+    static internal MqDataFreeF	      fProcFree	    = ProcFree;
 
   /*****************************************************************************/
   /*                                                                           */

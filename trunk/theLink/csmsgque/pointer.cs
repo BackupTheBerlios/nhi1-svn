@@ -31,9 +31,9 @@ internal delegate void MqExitF ([In]int num);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 internal delegate MqErrorE MqTokenF ([In]IntPtr context, [In]IntPtr data);
 
-/// \api \ref MqTokenDataFreeF
+/// \api \ref MqDataFreeF
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-internal delegate void MqTokenDataFreeF ([In]IntPtr context, [In,Out] ref IntPtr data);
+internal delegate void MqDataFreeF ([In]IntPtr context, [In,Out] ref IntPtr data);
 
 /// \api \ref MqEventF
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

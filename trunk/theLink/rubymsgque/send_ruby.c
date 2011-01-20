@@ -89,7 +89,7 @@ static VALUE SendEND_AND_CALLBACK (VALUE self, VALUE token, VALUE callback) {
   SETUP_mqctx
   MqServiceCallbackF procCall;
   MQ_PTR procData;
-  MqTokenDataCopyF procCopy;
+  MqDataCopyF procCopy;
   CheckType(callback, rb_cMethod, "usage SendEND_AND_CALLBACK Method-Type-Arg");
   ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, callback, &procCall, &procData, &procCopy));
   ErrorMqToRubyWithCheck(MqSendEND_AND_CALLBACK(mqctx, VAL2CST(token), 

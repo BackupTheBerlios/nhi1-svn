@@ -89,19 +89,19 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetServerSetup")]
     private static extern void MqConfigSetServerSetup([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
-      [In]MqTokenDataFreeF dataFree, [In]IntPtr dataCopy);
+      [In]MqDataFreeF dataFree, [In]IntPtr dataCopy);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetServerCleanup")]
     private static extern void MqConfigSetServerCleanup([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
-      [In]MqTokenDataFreeF dataFree, [In] IntPtr dataCopy);
+      [In]MqDataFreeF dataFree, [In] IntPtr dataCopy);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetBgError")]
     private static extern void MqConfigSetBgError([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
-      [In]MqTokenDataFreeF dataFree, [In] IntPtr dataCopy);
+      [In]MqDataFreeF dataFree, [In] IntPtr dataCopy);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetEvent")]
     private static extern void MqConfigSetEvent([In]IntPtr context, [In]MqTokenF fToken, [In]IntPtr data, 
-      [In]MqTokenDataFreeF dataFree, [In] IntPtr dataCopy);
+      [In]MqDataFreeF dataFree, [In] IntPtr dataCopy);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSelf")]
     private static extern void MqConfigSetSelf([In]IntPtr context, [In]IntPtr self);

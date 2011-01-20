@@ -13,6 +13,8 @@
 #ifndef CONFIG_H
 #   define CONFIG_H
 
+#include "mqconfig.h"
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                sqlite                                     */
@@ -95,6 +97,25 @@
 // allocated memory. 
 #ifdef _DEBUG
 # define SQLITE_MEMDEBUG 1
+#endif
+
+// When this option is defined in the amalgamation, version 3 of the full-text search 
+// engine is added to the build automatically. 
+#define SQLITE_ENABLE_FTS3
+
+// This option causes SQLite to include support for the R*Tree index extension. 
+//#define SQLITE_ENABLE_RTREE
+
+// This option controls whether or not code is included in SQLite to enable it to operate 
+// safely in a multithreaded environment. The default is SQLITE_THREADSAFE=1 which is safe 
+// for use in a multithreaded environment. When compiled with SQLITE_THREADSAFE=0 all 
+// mutexing code is omitted and it is unsafe to use SQLite in a multithreaded program. When 
+// compiled with SQLITE_THREADSAFE=2, SQLite can be used in a multithreaded program so long 
+// as no two threads attempt to use the same database connection at the same time.
+#if defined(MQ_HAS_THREAD) && defined(HAVE_PTHREAD)
+# define SQLITE_THREADSAFE 2
+#else
+# define SQLITE_THREADSAFE 0
 #endif
 
 // This option omits the entire extension loading mechanism from SQLite, including 

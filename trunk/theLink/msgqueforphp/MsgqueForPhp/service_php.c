@@ -50,7 +50,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceCreate)
   zval *callable;
   void *data;
   MqTokenF tokenF;
-  MqTokenDataFreeF tokenDataFreeF;
+  MqDataFreeF tokenDataFreeF;
   // get parameters
   PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
   // get the callbacks
@@ -112,3 +112,4 @@ error:
 
 void NS(MqS_Service_Init)(TSRMLS_D) {
 }
+

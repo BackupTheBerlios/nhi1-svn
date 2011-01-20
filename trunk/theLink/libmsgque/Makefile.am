@@ -22,9 +22,9 @@ libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
     mq_io.h read.h swap.h tcp_io.h pipe_io.h uds_io.h slave.h \
     service.c link.c link.h factory.c factory.h
 
-libtmp_la_CFLAGS = -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I../sqlite $(AM_CFLAGS)
+libtmp_la_CFLAGS = -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libtmp_la_LDFLAGS = -no-undefined
-libtmp_la_LIBADD = ../sqlite/libtmp.la
+libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
 html: libtmp.la
 
@@ -40,9 +40,9 @@ libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
     mq_io.h read.h swap.h tcp_io.h pipe_io.h uds_io.h slave.h \
     service.c link.c link.h factory.c factory.h
 
-libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I../sqlite $(AM_CFLAGS)
+libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
-libmsgque_la_LIBADD = ../sqlite/libtmp.la
+libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
 include_HEADERS = msgque.h
 

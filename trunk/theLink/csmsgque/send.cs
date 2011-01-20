@@ -40,7 +40,7 @@ public partial class MqS
   private static extern MqErrorE MqSendEND_AND_WAIT(IntPtr context, string token, long timeout);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendEND_AND_CALLBACK")]
   private static extern MqErrorE MqSendEND_AND_CALLBACK(IntPtr context, string token, 
-	    MqTokenF callback, IntPtr data, MqTokenDataFreeF datafreeF);
+	    MqTokenF callback, IntPtr data, MqDataFreeF datafreeF);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendRETURN")]
   private static extern MqErrorE MqSendRETURN(IntPtr context);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendERROR")]

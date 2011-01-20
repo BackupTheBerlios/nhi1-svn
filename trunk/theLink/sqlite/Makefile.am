@@ -16,7 +16,4 @@ noinst_LTLIBRARIES = libtmp.la
 
 libtmp_la_SOURCES = config.h sqlite3.h sqlite3ext.h sqlite3.c
 
-#libtmp_la_CFLAGS = -DSQLITE_EXTERN -D_HAVE_SQLITE_CONFIG_H $(AM_CFLAGS)
-
 libtmp_la_CFLAGS = -D_HAVE_SQLITE_CONFIG_H $(AM_CFLAGS)
-

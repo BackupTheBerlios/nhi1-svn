@@ -101,7 +101,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendEND_AND_CALLBACK)
   zval *callable;
   void *data;
   MqTokenF tokenF;
-  MqTokenDataFreeF tokenDataFreeF;
+  MqDataFreeF tokenDataFreeF;
   // get parameters
   PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sz", &str, &strlen, &callable));
   // get the callbacks
@@ -165,6 +165,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SendERROR)
 
 void NS(MqS_Send_Init)(void) {
 }
+
 
 
 

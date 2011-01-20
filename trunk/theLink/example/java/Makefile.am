@@ -91,7 +91,7 @@ EXTRA_DIST = $(srcdir)/*.java
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)
 
-dist-hook: $(BUILT_SOURCES)
+dist-hook: .vpath_hook
 	$(VPATH_HOOK_DIST)
 	mkdir $(distdir)/example
 	chmod u+w $(distdir)/example

@@ -109,6 +109,23 @@ NS(FactoryDelete)(
   Py_DECREF (self);
 }
 
+static void MQ_DECL 
+NS(FactoryFree) (
+  MQ_PTR *dataP
+)
+{
+  Py_DECREF(*dataP);
+  *dataP = NULL;
+}
+
+static void MQ_DECL 
+NS(FactoryCopy) (
+  MQ_PTR *dataP
+)
+{
+  Py_INCREF(*dataP);
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 ///
 ///				 context
@@ -164,7 +181,9 @@ PyObject* NS(FactoryAdd) (
 {
   enum MqFactoryReturnE ret;
   SETUP_FACTORY_ARG(FactoryAdd)
-  ret = MqFactoryAdd(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+  ret = MqFactoryAdd(ident, 
+    NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL
+  );
   MqFactoryErrorCheck(ret);
   Py_RETURN_NONE;
 error:
@@ -192,7 +211,9 @@ PyObject* NS(FactoryDefault) (
     }
   }
   Py_INCREF (arg);
-  ret = MqFactoryDefault(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL);
+  ret = MqFactoryDefault(ident, 
+    NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL
+  );
   MqFactoryErrorCheck(ret);
   Py_RETURN_NONE;
 error:
@@ -216,7 +237,9 @@ PyObject* NS(FactoryNew) (
   enum MqFactoryReturnE ret;
   struct MqS *mqctx;
   SETUP_FACTORY_ARG(FactoryNew)
-  ret = MqFactoryNew(ident, NS(FactoryCreate), arg, NS(ProcFree), NS(FactoryDelete), NULL, NULL, NULL, &mqctx);
+  ret = MqFactoryNew(ident, 
+    NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL, NULL, &mqctx
+  );
   MqFactoryErrorCheck(ret);
   arg = ((PyObject *)SELFX(mqctx));
   Py_INCREF(arg);

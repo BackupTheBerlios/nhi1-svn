@@ -35,7 +35,7 @@ static void NS(FactoryCopy) (
 
 int NS(FactoryAdd) (TCL_ARGS)
 {
-  enum MqFactoryReturnE ret;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_ADD_ERR;
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory;
@@ -59,7 +59,7 @@ error:
 
 int NS(FactoryDefault) (TCL_ARGS)
 {
-  enum MqFactoryReturnE ret;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_DEFAULT_ERR;
   int skip = 2;
   MQ_CST ident;
   Tcl_Obj *factory = NULL;

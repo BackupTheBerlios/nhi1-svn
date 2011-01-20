@@ -45,7 +45,7 @@ rb_define_method(cMqS, MQ_CPPXSTR(Config ## T ## K), Config ## T ## K, A); \
   SETUP_mqctx; \
   MqServiceCallbackF procCall; \
   MQ_PTR procData; \
-  MqTokenDataCopyF procCopy; \
+  MqDataCopyF procCopy; \
   CheckType(callback, rb_cMethod, "usage: ConfigSet" #T " Method-Type-Arg"); \
   ErrorMqToRubyWithCheck(NS(ProcInit) (mqctx, callback, &procCall, &procData, &procCopy)); \
   MqConfigSet ## T (mqctx,  procCall, procData, NS(ProcFree), procCopy); \

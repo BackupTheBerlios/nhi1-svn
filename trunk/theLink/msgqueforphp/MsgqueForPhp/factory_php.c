@@ -224,7 +224,7 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
 PHP_FUNCTION(FactoryAdd)
 {
   FactorySetup(FactoryAdd);
-  ret = MqFactoryAdd(ident, FactoryCreate, (MQ_PTR) ce, NULL, FactoryDelete, NULL, NULL);
+  ret = MqFactoryAdd(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL);
   if (MqFactoryErrorCheckI(ret)) {
     err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
   }
@@ -245,7 +245,7 @@ PHP_FUNCTION(FactoryNew)
   MQ_PTR data = NULL;
 #endif
   FactorySetup(FactoryNew);
-  ret = MqFactoryNew(ident, FactoryCreate, (MQ_PTR) ce, NULL, FactoryDelete, NULL, NULL, data, &mqctx);
+  ret = MqFactoryNew(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL, data, &mqctx);
   if (MqFactoryErrorCheckI(ret)) {
     err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
   }
@@ -281,7 +281,7 @@ PHP_FUNCTION(FactoryCall)
 PHP_FUNCTION(FactoryDefault)
 {
   FactorySetup(FactoryDefault);
-  ret = MqFactoryDefault(ident, FactoryCreate, (MQ_PTR) ce, NULL, FactoryDelete, NULL, NULL);
+  ret = MqFactoryDefault(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL);
   if (MqFactoryErrorCheckI(ret)) {
     err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
   }
@@ -303,7 +303,7 @@ PHP_FUNCTION(FactoryDefaultIdent)
 void NS(Factory_Init)(TSRMLS_D) {
   MQ_CST err = NULL;
   enum MqFactoryReturnE ret;
-  ret = MqFactoryDefault("phpmsgque", FactoryCreate, (MQ_PTR) NS(MqS), NULL, FactoryDelete, NULL, NULL);
+  ret = MqFactoryDefault("phpmsgque", FactoryCreate, (MQ_PTR) NS(MqS), NULL, NULL, FactoryDelete, NULL, NULL, NULL);
   if (MqFactoryErrorCheckI(ret)) {
     err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
   }
@@ -314,6 +314,4 @@ end:
     return;
   }
 }
-
-
 

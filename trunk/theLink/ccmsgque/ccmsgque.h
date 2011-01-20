@@ -844,10 +844,10 @@ namespace ccmsgque {
       }
     /// \} Mq_Slave_CC_API
 
-    /// \defgroup Mq_Sys_CC_API Mq_Sys_CC_API
+    /// \defgroup Mq_System_CC_API Mq_System_CC_API
     /// \ingroup Mq_CC_API
-    /// \brief \copybrief Mq_Sys_C_API
-    /// \details \copydetails Mq_Sys_C_API
+    /// \brief \copybrief Mq_System_C_API
+    /// \details \copydetails Mq_System_C_API
     /// \{
 
       /// \api #MqSysStrDup
@@ -943,19 +943,19 @@ namespace ccmsgque {
     public:
       /// \api #MqFactoryAdd
       static inline void Add(MQ_CST ident) throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryAdd
       static inline void Add() throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+	ErrorCheck (MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
       static inline void Default(MQ_CST ident) throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
       static inline void Default() throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL));
+	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefaultIdent
       static inline MQ_CST DefaultIdent() {
@@ -976,13 +976,13 @@ namespace ccmsgque {
       /// \api #MqFactoryNew
       static inline T* New(MQ_CST ident) throw (MqFactoryCException) {
 	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
+	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
       /// \api #MqFactoryNew
       static inline T* New() throw (MqFactoryCException) {
 	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (typeid(T).name(), FactoryCreate, NULL, NULL, FactoryDelete, NULL, NULL, NULL, &mqctx));
+	ErrorCheck (MqFactoryNew (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
       }
   };

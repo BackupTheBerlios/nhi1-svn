@@ -110,7 +110,6 @@ FactoryDelete(
 }
 
 void FactoryFree (
-  struct MqS const * const mqctx,
   MQ_PTR *dataP
 )
 {
@@ -118,6 +117,15 @@ void FactoryFree (
     DECR_REF((VALUE) *dataP);
   }
   *dataP = NULL;
+}
+
+void FactoryCopy (
+  MQ_PTR *dataP
+)
+{
+  if (*dataP != NULL) {
+    INCR_REF((VALUE) *dataP);
+  }
 }
 
 /*****************************************************************************/
@@ -165,7 +173,7 @@ static VALUE FactoryAdd (int argc, VALUE *argv, VALUE self)
 
   INCR_REF2(meth);
   ErrorFactoryToRubyWithCheck(
-    MqFactoryAdd(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryDelete, NULL, NULL)
+    MqFactoryAdd(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
 
   return Qnil;
@@ -184,7 +192,7 @@ static VALUE FactoryDefault (int argc, VALUE *argv, VALUE self)
 
   INCR_REF2(meth);
   ErrorFactoryToRubyWithCheck(
-    MqFactoryDefault(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryDelete, NULL, NULL)
+    MqFactoryDefault(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
 
   return Qnil;
@@ -209,7 +217,7 @@ static VALUE FactoryNew (int argc, VALUE *argv, VALUE self)
 
   INCR_REF2(meth);
   ErrorFactoryToRubyWithCheck(
-    MqFactoryNew(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryDelete, NULL, NULL, NULL, &mqctx)
+    MqFactoryNew(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx)
   );
 
   return MqS2VAL(mqctx);
@@ -243,6 +251,6 @@ void NS(MqS_Factory_Init)(void) {
   
   // Initialize "default" factory
   INCR_REF2(meth);
-  MqFactoryDefault("rubymsgque", FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryDelete, NULL, NULL);
+  MqFactoryDefault("rubymsgque", FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
 }
 

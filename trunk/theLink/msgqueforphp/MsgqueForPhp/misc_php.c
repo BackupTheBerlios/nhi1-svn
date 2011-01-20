@@ -138,8 +138,8 @@ enum MqErrorE NS(ProcInit) (
   zval *	      callable,
   void **	      dataP,
   MqTokenF *	      tokenFP,
-  MqTokenDataFreeF *  tokenDataFreeFP,
-  MqTokenDataCopyF *  tokenDataCopyFP
+  MqDataFreeF *  tokenDataFreeFP,
+  MqDataCopyF *  tokenDataCopyFP
   TSRMLS_DC
 )
 {
@@ -166,20 +166,20 @@ enum MqErrorE NS(ProcInit) (
     if (instanceof_function(ce, NS(MqS) TSRMLS_CC) &&  VAL2MqS2(*obj) == mqctx) {
       // YES, no "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallNoArg;
-      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
+      *tokenDataFreeFP	= (MqDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqDataCopyF) NULL;
     } else {
       // NO, "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallOneArg;
-      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
+      *tokenDataFreeFP	= (MqDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqDataCopyF) NULL;
     }
     data->function_table = &ce->function_table;
   } else {
     // NO
       *tokenFP		= (MqTokenF) ProcCallOneArg;
-      *tokenDataFreeFP	= (MqTokenDataFreeF) ProcFree;
-      if (tokenDataCopyFP) *tokenDataCopyFP = (MqTokenDataCopyF) NULL;
+      *tokenDataFreeFP	= (MqDataFreeF) ProcFree;
+      if (tokenDataCopyFP) *tokenDataCopyFP = (MqDataCopyF) NULL;
     data->function_table = CG(function_table);
   }
   INCR_REG(callable);
@@ -196,6 +196,8 @@ enum MqErrorE NS(ProcInit) (
 
 void NS(Misc_Init)(TSRMLS_D) {
 }
+
+
 
 
 

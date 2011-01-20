@@ -135,7 +135,7 @@ enum MqErrorE NS(ProcInit) (
   VALUE		      val, 
   MqServiceCallbackF  *procCall, 
   MQ_PTR	      *procData,
-  MqTokenDataCopyF    *procCopy
+  MqDataCopyF	      *procCopy
 ) {
   SETUP_self
   VALUE dataVal;

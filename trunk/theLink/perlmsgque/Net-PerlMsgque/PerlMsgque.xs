@@ -182,6 +182,7 @@ ProcFree (
 )
 {
   SvREFCNT_dec(dataP);
+  *dataP = NULL;
 }
 
 static void
@@ -192,6 +193,23 @@ ProcCopy (
 {
   *dataP = newSVsv(*dataP);
   //return MqErrorC(context,__func__,-1,"perl requires that a 'callback' have to be defined in the object constructor");
+}
+
+static void
+FactoryFree (
+  MQ_PTR *dataP
+)
+{
+  SvREFCNT_dec(dataP);
+  *dataP = NULL;
+}
+
+static void
+FactoryCopy (
+  MQ_PTR *dataP
+)
+{
+  *dataP = newSVsv(*dataP);
 }
 
 
@@ -349,7 +367,7 @@ FactoryAdd(...)
       class = newSVsv(ST(1));
     }
     ErrorFactoryToPerlWithCheck(
-      MqFactoryAdd(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL)
+      MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
     );
 
 void
@@ -369,7 +387,7 @@ FactoryDefault(...)
       class = newSVsv(ST(1));
     }
     ErrorFactoryToPerlWithCheck (
-      MqFactoryDefault(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL)
+      MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
     );
 
 MQ_CST
@@ -397,7 +415,7 @@ FactoryNew(...)
       class = newSVsv(ST(1));
     }
     ErrorFactoryToPerlWithCheck (
-      MqFactoryNew(ident, FactoryCreate, class, ProcFree, FactoryDelete, NULL, NULL, NULL, &ctx)
+      MqFactoryNew(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL, NULL, &ctx)
     )
     ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
     XSRETURN(1);

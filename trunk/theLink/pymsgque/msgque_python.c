@@ -150,7 +150,7 @@ PyInit_pymsgque(void)
 
   // init factory
   if (!strcmp(MqFactoryDefaultIdent(), "libmsgque"))
-    MqFactoryDefault("pymsgque", NS(FactoryCreate), (MQ_PTR)&NS(MqS), NULL, NS(FactoryDelete), NULL, NULL);
+    MqFactoryDefault("pymsgque", NS(FactoryCreate), (MQ_PTR)&NS(MqS), NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL);
 
   return m;
 

@@ -57,8 +57,8 @@ NS(FactoryFree) (
   MQ_PTR *dataP
 )
 {
-  struct FactoryCallS * call = (struct FactoryCallS *) *dataP;
-  JNIEnv *env = call->env;
+  //struct FactoryCallS * call = (struct FactoryCallS *) *dataP;
+  //JNIEnv *env = call->env;
   // this function will be called on !exit! but "java" is already gone -> no java cleanup
   //(*env)->DeleteGlobalRef(env, call->class);
   MqSysFree(*dataP);

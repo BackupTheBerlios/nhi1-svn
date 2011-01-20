@@ -184,12 +184,19 @@ sFactoryDelete (
 
 static void
 sFactoryFree (
-  struct MqS const * const context,
   MQ_PTR *dataP
 )
 {
-  cFactoryFree((void**)(*dataP));
+  decrFactoryRef((void**)(*dataP));
   *dataP = NULL;
+}
+
+static void
+sFactoryCopy (
+  MQ_PTR *dataP
+)
+{
+  incrFactoryRef((void**)(*dataP));
 }
 
 enum MqFactoryReturnE
@@ -199,8 +206,8 @@ gomsgque_FactoryAdd (
 )
 {
   return MqFactoryAdd(ident,
-    sFactoryCreate, data, sFactoryFree, 
-    sFactoryDelete, NULL, NULL
+    sFactoryCreate, data, sFactoryFree, sFactoryCopy,
+    sFactoryDelete, NULL, NULL, NULL
   );
 }
 
@@ -211,8 +218,8 @@ gomsgque_FactoryDefault (
 )
 {
   return MqFactoryDefault(ident,
-    sFactoryCreate, data, sFactoryFree, 
-    sFactoryDelete, NULL, NULL
+    sFactoryCreate, data, sFactoryFree, sFactoryCopy,
+    sFactoryDelete, NULL, NULL, NULL
   );
 }
 
@@ -224,8 +231,8 @@ gomsgque_FactoryNew (
 {
   struct FactoryCallReturn ret;
   ret.ret = MqFactoryNew(ident,
-    sFactoryCreate, data, sFactoryFree, 
-    sFactoryDelete, NULL, NULL,
+    sFactoryCreate, data, sFactoryFree, sFactoryCopy,
+    sFactoryDelete, NULL, NULL, NULL,
     NULL, &ret.ctx
   );
   return ret;
@@ -436,6 +443,6 @@ gomsgque_Init() {
   MqLal.SysServerThread	  =   SysServerThread;
   MqLal.SysWait		  =   SysWait;
 
-  MqFactoryDefault("gomsgque", sFactoryCreate, NULL, NULL, sFactoryDelete, NULL, NULL);
+  MqFactoryDefault("gomsgque", sFactoryCreate, NULL, NULL, NULL, sFactoryDelete, NULL, NULL, NULL);
 }
 

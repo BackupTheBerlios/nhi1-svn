@@ -381,7 +381,7 @@ pReadHDR (
 
     // 5. if in a longterm-transaction, read the transaction-item
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
-      MQ_CBI itm; MQ_SIZE len;
+      MQ_CBI itm = NULL; MQ_SIZE len = 0;
       enum MqErrorE ret;
       MqErrorCheck (MqReadN (context, &itm, &len));
       // answer first call with an empty return package

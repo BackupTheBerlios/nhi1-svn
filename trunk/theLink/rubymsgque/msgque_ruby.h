@@ -126,7 +126,7 @@ enum MqErrorE NS(ProcCall)  (struct MqS * const , MQ_PTR const);
 void NS(ProcFree)	    (struct MqS const * const, MQ_PTR *);
 enum MqErrorE NS(ProcCopy)  (struct MqS * const, MQ_PTR *);
 MQ_BFL NS(argv2bufl)	    (struct MqS * const, struct MqBufferLS*, int, VALUE*);
-enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqTokenDataCopyF*);
+enum MqErrorE NS(ProcInit)  (struct MqS*, VALUE, MqServiceCallbackF*, MQ_PTR*, MqDataCopyF*);
 VALUE NS(Rescue)	    (struct MqS * const, VALUE(*)(ANYARGS), VALUE);
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;

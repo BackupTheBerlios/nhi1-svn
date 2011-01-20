@@ -32,7 +32,27 @@ import (
 type FactoryF func(*MqS) (*MqS)
 
 // global lock for "Factory" interfaces
-var lockFactory  = make(map[*FactoryF]bool)
+var lockFactory  = make(map[*FactoryF]int)
+
+//export incrFactoryRef
+func incrFactoryRef(cb *FactoryF) {
+  if count,ok := lockFactory[cb]; ok {
+    lockFactory[cb] = count+1
+  } else {
+    lockFactory[cb] = 1
+  }
+}
+
+//export decrFactoryRef
+func decrFactoryRef(cb *FactoryF) {
+  if count,ok := lockFactory[cb]; ok {
+    if count > 1 {
+      lockFactory[cb]--
+    } else {
+      lockFactory[cb] = 0,false
+    }
+  }
+}
 
 // factory erro-handling
 func iErrorFactoryToGoWithCheck(ret uint32) {
@@ -65,11 +85,6 @@ func cFactoryDelete(this *MqS, chnp *chan bool) {
   if chnp != nil {
     (*chnp) <- true
   }
-}
-
-//export cFactoryFree
-func cFactoryFree(cb *FactoryF) {
-  lockFactory[cb] = false, false
 }
 
 /*****************************************************************************/
@@ -107,7 +122,7 @@ func FactoryAdd(ident string, cb FactoryF) {
   r := C.gomsgque_FactoryAdd(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   iErrorFactoryToGoWithCheck(r)
-  lockFactory[&cb] = true
+  incrFactoryRef(&cb)
 }
 
 func FactoryDefault(ident string, cb FactoryF) {
@@ -115,7 +130,7 @@ func FactoryDefault(ident string, cb FactoryF) {
   r := C.gomsgque_FactoryDefault(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   iErrorFactoryToGoWithCheck(r)
-  lockFactory[&cb] = true
+  incrFactoryRef(&cb)
 }
 
 func FactoryDefaultIdent() string {
@@ -135,7 +150,7 @@ func FactoryNew(ident string, cb FactoryF) *MqS {
   out := C.gomsgque_FactoryNew(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   iErrorFactoryToGoWithCheck(out.ret)
-  lockFactory[&cb] = true
+  incrFactoryRef(&cb)
   return (*MqS)(out.ctx)
 }
 

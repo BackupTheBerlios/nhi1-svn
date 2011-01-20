@@ -204,8 +204,8 @@ enum MqErrorE NS(ProcInit) (
   zval *		    callable,
   void **		    dataP,
   MqTokenF *		    tokenFP,
-  MqTokenDataFreeF *	    tokenDataFreeFP,
-  MqTokenDataCopyF *	    tokenDataCopyFP
+  MqDataFreeF *	    tokenDataFreeFP,
+  MqDataCopyF *	    tokenDataCopyFP
   TSRMLS_DC
 );
 
@@ -219,6 +219,8 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
+
+
 
 
 

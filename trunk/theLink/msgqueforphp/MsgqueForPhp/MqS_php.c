@@ -52,6 +52,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LogC)
   MqLogC(mqctx, prefix, level, msg);
 }
 
+#ifdef _DEBUG
 static
 PHP_METHOD(MsgqueForPhp_MqS, Info)
 {
@@ -60,6 +61,7 @@ PHP_METHOD(MsgqueForPhp_MqS, Info)
   MqLogData(mqctx, prefix);
   MqLogV(mqctx,prefix,0,"refCount = %d\n", Z_REFCOUNT_P(mqctx->self));
 }
+#endif
 
 static
 PHP_METHOD(MsgqueForPhp_MqS, Init)
@@ -73,8 +75,8 @@ PHP_METHOD(MsgqueForPhp_MqS, Init)
     zval *ctor; \
     void *data; \
     MqTokenF tokenF; \
-    MqTokenDataFreeF tokenDataFreeF; \
-    MqTokenDataCopyF tokenDataCopyF; \
+    MqDataFreeF tokenDataFreeF; \
+    MqDataCopyF tokenDataCopyF; \
     MAKE_STD_ZVAL(ctor); \
     array_init(ctor); \
     INCR_REG(mqctx->self); \
@@ -340,7 +342,9 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, Exit,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, Delete,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, LogC,		    LogC_arg,		  ZEND_ACC_PUBLIC)
+#ifdef _DEBUG
   PHP_ME(MsgqueForPhp_MqS, Info,		    val_arg,		  ZEND_ACC_PUBLIC)
+#endif
   PHP_ME(MsgqueForPhp_MqS, Init,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 
   PHP_ME(MsgqueForPhp_MqS, FactoryCtxIdentGet,	    NULL,		  ZEND_ACC_PUBLIC)
@@ -554,6 +558,8 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+
+
 
 
 

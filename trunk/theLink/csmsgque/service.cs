@@ -32,7 +32,7 @@ namespace csmsgque {
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceCreate")]
     private static extern MqErrorE MqServiceCreate([In]IntPtr context, [In]string token, 
-	[In]MqTokenF srvcall, [In]IntPtr data, [In]MqTokenDataFreeF srvfree);
+	[In]MqTokenF srvcall, [In]IntPtr data, [In]MqDataFreeF srvfree);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceDelete")]
     private static extern MqErrorE MqServiceDelete([In]IntPtr context, [In]string token);
