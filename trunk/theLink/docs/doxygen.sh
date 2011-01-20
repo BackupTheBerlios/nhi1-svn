@@ -32,7 +32,7 @@ export HAVE_DOT=NO
     HAVE_DOT=YES
     shift
 }
-[[ $1 == "-release" && ! -z "$DOT" ]] && {
+[[ $1 == "-release" ]] && {
     RELEASE=YES
     shift
 }

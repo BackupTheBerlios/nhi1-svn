@@ -1,10 +1,10 @@
 > nothread/NHI1-0.11/theLink/example/c/client --all @ nothread/NHI1-0.11/theLink/example/c/server
-C> (client:16512) [2011-01-14:08-40-58] [0-0-0-0x628b50-main]: start: --------------------------------------
-C> (client:16512) [2011-01-14:08-40-58] [0-0-0-0x628b50-statistics]:                      MqSendEND:       2.72
-C> (client:16512) [2011-01-14:08-40-59] [0-0-0-0x628b50-statistics]:         MqSendEND_AND_CALLBACK:       4.66
-C> (client:16512) [2011-01-14:08-41-01] [0-0-0-0x628b50-statistics]:             MqSendEND_AND_WAIT:      18.13
-C> (client:16512) [2011-01-14:08-41-02] [0-0-0-0x628b50-statistics]:                  parent create:     854.07
-C> (client:16512) [2011-01-14:08-41-02] [0-0-0-0x628b50-statistics]:                  parent delete:     101.22
-C> (client:16512) [2011-01-14:08-41-02] [0-0-0-0x628b50-statistics]:                   child create:      71.98
-C> (client:16512) [2011-01-14:08-41-02] [0-0-0-0x628b50-statistics]:                   child delete:      30.57
-C> (client:16512) [2011-01-14:08-41-02] [0-0-0-0x628b50-main]: end: ----------------------------------------
+C> (client:20749) [2011-01-20:17-21-26] [0-0-0-0x6e3c28-main]: start: --------------------------------------
+C> (client:20749) [2011-01-20:17-21-26] [0-0-0-0x6e3c28-statistics]:                      MqSendEND:       2.76
+C> (client:20749) [2011-01-20:17-21-26] [0-0-0-0x6e3c28-statistics]:         MqSendEND_AND_CALLBACK:       4.69
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:             MqSendEND_AND_WAIT:      18.51
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:                  parent create:     776.75
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:                  parent delete:      91.32
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:                   child create:      75.55
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:                   child delete:      30.82
+C> (client:20749) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-main]: end: ----------------------------------------

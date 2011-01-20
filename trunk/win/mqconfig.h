@@ -89,7 +89,7 @@
 /* #undef HAVE_VFORK */
 
 /* version of the 'libmsgque' package */
-#define LIBMSGQUE_VERSION "5.0"
+#define LIBMSGQUE_VERSION "5.1"
 
 /* Define to 1 if you have the `_stricmp' function. */
 #define HAVE__STRICMP 1
@@ -123,13 +123,13 @@
 #define PACKAGE_NAME "NHI1"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "NHI1 0.11"
+#define PACKAGE_STRING "NHI1 0.12"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "NHI1"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.11"
+#define PACKAGE_VERSION "0.12"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -139,7 +139,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.11"
+#define VERSION "0.12"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

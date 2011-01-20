@@ -35,7 +35,7 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/acmds/aexec
 
 html: $(DX_DEPEND) $(DX_DIST)
-	${SHELL} doxygen.sh -usedot -release ALL
+	${SHELL} doxygen.sh -release ALL
 
 EXTRA_DIST = $(DX_DIST)
 

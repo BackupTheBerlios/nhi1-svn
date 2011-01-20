@@ -1,12 +1,12 @@
     Tests from:       |                  
- 2011-01-14 08:40:58  |   PUT      GET   
+ 2011-01-20 17:21:25  |   PUT      GET   
  -------------------  | -------- --------
 
  pipe:
-    memory hash       |    18.71    19.01                                              
-    memory btree      |    22.40    22.88                                              
-    file hash         |    19.95    20.26                                              
-    file btree        |   124.71   154.79                                              
+    memory hash       |    18.68    19.16                                              
+    memory btree      |    22.34    22.52                                              
+    file hash         |    21.34    20.39                                              
+    file btree        |   146.43   155.36                                              
 
  tcp_fork:
     memory hash       |    26.38    26.63                                              

@@ -18,6 +18,17 @@
 
 \section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
 
+This release embed "sqlite" support into the PLMK kernel.
+
+\verbatim
+svn diff --summarize -r '{2011-01-14}:{2011-01-21}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+
 This release add support for the \AllLngTxt{Factory} design pattern.
 
 \verbatim

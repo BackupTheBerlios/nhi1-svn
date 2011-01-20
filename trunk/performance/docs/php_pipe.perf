@@ -1,10 +1,10 @@
 > nothread/NHI1-0.11/theLink/example/c/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.11/theLink/example/php/server.php
-C> (client:29935) [2011-01-14:08-48-36] [0-0-0-0x628e70-main]: start: --------------------------------------
-C> (client:29935) [2011-01-14:08-48-36] [0-0-0-0x628e70-statistics]:                      MqSendEND:       6.76
-C> (client:29935) [2011-01-14:08-48-37] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:      13.20
-C> (client:29935) [2011-01-14:08-48-40] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      25.17
-C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                  parent create:    7093.20
-C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                  parent delete:     274.41
-C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                   child create:     184.66
-C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-statistics]:                   child delete:      46.53
-C> (client:29935) [2011-01-14:08-48-41] [0-0-0-0x628e70-main]: end: ----------------------------------------
+C> (client:23304) [2011-01-20:17-22-44] [0-0-0-0x6e3f68-main]: start: --------------------------------------
+C> (client:23304) [2011-01-20:17-22-44] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       6.60
+C> (client:23304) [2011-01-20:17-22-45] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:      12.24
+C> (client:23304) [2011-01-20:17-22-48] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      26.67
+C> (client:23304) [2011-01-20:17-22-49] [0-0-0-0x6e3f68-statistics]:                  parent create:    7223.52
+C> (client:23304) [2011-01-20:17-22-49] [0-0-0-0x6e3f68-statistics]:                  parent delete:     284.13
+C> (client:23304) [2011-01-20:17-22-49] [0-0-0-0x6e3f68-statistics]:                   child create:     193.46
+C> (client:23304) [2011-01-20:17-22-49] [0-0-0-0x6e3f68-statistics]:                   child delete:      47.38
+C> (client:23304) [2011-01-20:17-22-49] [0-0-0-0x6e3f68-main]: end: ----------------------------------------

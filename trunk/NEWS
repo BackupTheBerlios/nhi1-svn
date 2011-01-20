@@ -10,7 +10,13 @@
 #§              please contact AUTHORS for additional information
 #§
 
-14 Jan 2010: v NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+20 Jan 2010: v NHI1-0.12, PLMK-2.1 and libmsgque-5.1
+
+This release embed "sqlite" support into the PLMK kernel.
+As first step only the memory management is used.
+
+
+14 Jan 2010: v NHI1-0.11, PLMK-2.0 and libmsgque-5.0
 
 This release add support for the "Factory" design pattern.
 
@@ -39,12 +45,12 @@ object, will move into "MqFactoryS" object.
 
 
 
-29 Nov 2010: v NHI1-0.10, PLMK-1.8 und libmsgque-4.8
+29 Nov 2010: v NHI1-0.10, PLMK-1.8 and libmsgque-4.8
 
 This release add support for the new programming-language "Go" from Google.
 
 
-08 Nov 2010: v NHI1-0.9, PLMK-1.7 und libmsgque-4.7
+08 Nov 2010: v NHI1-0.9, PLMK-1.7 and libmsgque-4.7
 
 This version adds the ability to:
 
@@ -58,7 +64,7 @@ and lengthy. The successful PHP extension shows the flexibility and adaptability
 
 
 
-22 Oct 2010: v NHI1-0.8, PLMK-1.6 und libmsgque-4.6
+22 Oct 2010: v NHI1-0.8, PLMK-1.6 and libmsgque-4.6
 
 This release adds the ability to:
 
