@@ -1377,12 +1377,16 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
 /// \brief convert an static Factory function \e return-status into a human readable \e error-message
 /// \attention the string belongs to \libmsgque do \b not free the memory
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
-  enum MqFactoryReturnE ret
+  struct MqFactoryS const * const item
+);
+
+MQ_CST MqFactoryReturnMsg (
+  enum MqFactoryReturnE const ret
 );
 
 /// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
 MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
-  enum MqFactoryReturnE ret
+  struct MqFactoryS const * const item
 );
 
 /// \brief add a new factory interface and create a new top-level instance

@@ -58,7 +58,7 @@ static void sFactorySpaceDelAll (
   void
 );
 
-static void sFactorySaveError (
+static enum MqFactoryReturnE sFactorySaveError (
   struct MqFactoryS * const item,
   enum MqFactoryReturnE ret,
   MQ_CST const error
@@ -66,6 +66,14 @@ static void sFactorySaveError (
   strncpy(item->error, error, MQ_FACTORY_BUF-1);
   item->ret = ret;
   item->error[MQ_FACTORY_BUF-1] = '\0';
+  return ret;
+}
+
+static enum MqFactoryReturnE sFactorySaveReturn (
+  struct MqFactoryS * const item,
+  enum MqFactoryReturnE ret
+) {
+  return sFactorySaveError(item, ret, MqFactoryReturnMsg(ret));
 }
 
 static MQ_STR sFactoryStrDup (
@@ -106,6 +114,21 @@ MQ_PTR sFactoryCallocItem (
     sFactorySaveError(item, MQ_FACTORY_RETURN_CALLOC_ERR, strerror (errno));
   }
   return ptr;
+}
+
+void sFactoryInit (
+  struct MqFactoryS * const item,
+  MQ_CST ident,
+  struct MqFactoryCreateS Create,
+  struct MqFactoryDeleteS Delete
+)
+{
+  item->ident = sFactoryStrDup(ident);
+  item->called = MQ_NO;
+  item->Create = Create;
+  item->Delete = Delete;
+  item->ret = MQ_FACTORY_RETURN_OK;
+  *item->error = '\0';
 }
 
 /*****************************************************************************/
@@ -277,6 +300,7 @@ pFactoryAddName (
   if (MqFactoryItemGet(ident,&find) == MQ_FACTORY_RETURN_OK) {
     // item already available, PANIC if callback is NOT equal
     if (memcmp(&Create, &find->Create, sizeof(Create)) || memcmp(&Delete, &find->Delete, sizeof(Delete))) {
+      return sFactorySaveError(item, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR, "unable to call factory for identifer");
       return MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR;
     }
     // OK, item available and in use ... nothing to do
@@ -337,15 +361,14 @@ pFactoryCallItem (
   struct MqS ** ctxP
 )
 {
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_OK;
   *ctxP = NULL;
   if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
-    ret = MQ_FACTORY_RETURN_CALL_ERR;
-    goto error;
+    sFactorySaveError(item, MQ_FACTORY_RETURN_CALL_ERR, "unable to call factory for identifer");
+    goto end;
   }
   MqConfigUpdateName(*ctxP, item->ident);
-error:
-  return ret;
+end:
+  return item->ret;
 }
 
 static enum MqFactoryReturnE
@@ -355,11 +378,11 @@ pFactoryCallIdent (
   struct MqS ** ctxP
 )
 {
+  enum MqFactoryReturnE ret;
   struct MqFactoryS *item;
-  enum MqFactoryReturnE ret = MqFactoryItemGet (ident, &item);
-  if (ret == MQ_FACTORY_RETURN_OK) {
-    ret = pFactoryCallItem(item, data, ctxP);
-  }
+  check_Factory(ret = MqFactoryItemGet (ident, &item)) goto end;
+  check_Factory(ret = pFactoryCallItem(item, data, ctxP)) goto end;
+end:
   return ret;
 }
 
@@ -513,12 +536,8 @@ MqFactoryDefault (
   if (fCreate == NULL) {
     return MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED;
   }
-  // Del
   sFactorySpaceDelItem (0);
-  // Add
-  space.items[0].ident = sFactoryStrDup(ident);
-  space.items[0].Create = Create;
-  space.items[0].Delete = Delete;
+  sFactoryInit (&space.items[0], ident, Create, Delete);
   defaultFactoryItem = &space.items[0];
   return MQ_FACTORY_RETURN_OK;
 }
@@ -583,14 +602,12 @@ MqFactoryNew (
   enum MqFactoryReturnE ret;
   struct MqFactoryS * item;
   *ctxP = NULL;
-  ret = MqFactoryAdd (ident, 
+  check_Factory (ret = MqFactoryAdd (ident, 
     fCreate, createData, createDataFreeF, createDataCopyF,
     fDelete, deleteData, deleteDataFreeF, deleteDataCopyF,
     &item
-  );
-  if (ret == MQ_FACTORY_RETURN_OK) {
-    ret = pFactoryCallItem (item, data, ctxP);
-  }
+  ));
+  check_Factory (ret = pFactoryCallItem (item, data, ctxP));
   return ret;
 }
 
@@ -605,15 +622,13 @@ MqFactoryItemGetCreateData(
 MQ_PTR
 MqFactoryItemGetDeleteData(
   struct MqFactoryS  const * const item
-)
-{
+) {
   return item->Delete.data;
 }
 
-MQ_CST MqFactoryErrorMsg (
-  enum MqFactoryReturnE ret
-)
-{
+MQ_CST MqFactoryReturnMsg (
+  enum MqFactoryReturnE const ret
+) {
   switch (ret) {
    case MQ_FACTORY_RETURN_OK:		
     return "OK";
@@ -641,19 +656,15 @@ MQ_CST MqFactoryErrorMsg (
   return "nothing";
 }
 
-void MqFactoryErrorPanic (
-  enum MqFactoryReturnE ret
-)
-{
-  if (ret != MQ_FACTORY_RETURN_OK) {
-    MqPanicC(MQ_ERROR_PANIC, __func__, -1, MqFactoryErrorMsg(ret));
-  }
+MQ_CST MqFactoryErrorMsg (
+  struct MqFactoryS const * const item
+) {
+  return item->error;
 }
 
-void MqFactoryExit (
-  struct MqFactoryS * item
-)
-{
+void MqFactoryErrorPanic (
+  struct MqFactoryS const * const item
+) {
   if (item->ret != MQ_FACTORY_RETURN_OK) {
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, item->error);
   }
@@ -703,7 +714,7 @@ MqFactoryCtxDefaultSet (
   MqFactoryCtxIdentSet(context, ident);
   return MQ_OK;
 error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+  return MqErrorC(context, __func__, -1, MqFactoryReturnMsg(ret));
 }
 
 enum MqErrorE 
@@ -716,7 +727,7 @@ MqFactoryCtxIdentSet (
   MqConfigUpdateName(context, ident);
   return MQ_OK;
 error:
-  return MqErrorC(context, __func__, -1, MqFactoryErrorMsg(ret));
+  return MqErrorC(context, __func__, -1, MqFactoryReturnMsg(ret));
 }
 
 MQ_CST 
