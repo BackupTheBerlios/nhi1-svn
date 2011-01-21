@@ -1,0 +1,9 @@
+set -x
+export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
+../configure    --prefix=$HOME/ext/$MACHTYPE/thread \
+                --enable-symbols \
+                --enable-threads \
+                $@
+
+#               --enable-static
+

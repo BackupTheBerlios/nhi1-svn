@@ -1,0 +1,8 @@
+Name: javamsgque/
+Sealed: true
+Specification-Title: Java-Msgque interface for Lib-Msgque library
+Specification-Version: @PACKAGE_VERSION@
+Specification-Vendor: (C) Andreas Otto, Ulmenstrasse 3, D-34289 Zierenberg
+Implementation-Title: javamsgque
+Implementation-Version: final
+Implementation-Vendor: (C) Andreas Otto, Ulmenstrasse 3, D-34289 Zierenberg

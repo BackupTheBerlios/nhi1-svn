@@ -1,0 +1,11 @@
+> tclsh nothread/NHI1-0.12/theLink/example/tcl/server.tcl --tcp --host localhost --port 7783 --fork
+> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7783
+C> (client:29162) [2011-01-21:09-05-12] [0-0-0-0x6e3f68-main]: start: --------------------------------------
+C> (client:29162) [2011-01-21:09-05-12] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       5.80
+C> (client:29162) [2011-01-21:09-05-13] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:      10.54
+C> (client:29162) [2011-01-21:09-05-16] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      29.87
+C> (client:29162) [2011-01-21:09-05-16] [0-0-0-0x6e3f68-statistics]:                  parent create:    1073.70
+C> (client:29162) [2011-01-21:09-05-16] [0-0-0-0x6e3f68-statistics]:                  parent delete:     306.76
+C> (client:29162) [2011-01-21:09-05-17] [0-0-0-0x6e3f68-statistics]:                   child create:     263.73
+C> (client:29162) [2011-01-21:09-05-17] [0-0-0-0x6e3f68-statistics]:                   child delete:      45.88
+C> (client:29162) [2011-01-21:09-05-17] [0-0-0-0x6e3f68-main]: end: ----------------------------------------

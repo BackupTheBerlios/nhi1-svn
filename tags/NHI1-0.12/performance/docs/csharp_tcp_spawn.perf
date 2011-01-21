@@ -1,0 +1,11 @@
+> mono thread/NHI1-0.12/theLink/example/csharp/server.exe --tcp --host localhost --port 7793 --spawn
+> thread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7793
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-03] [0-0-0-0x6e8fa8-main]: start: --------------------------------------
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-03] [0-0-0-0x6e8fa8-statistics]:                      MqSendEND:       3.51
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-03] [0-0-0-0x6e8fa8-statistics]:         MqSendEND_AND_CALLBACK:       6.27
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-07] [0-0-0-0x6e8fa8-statistics]:             MqSendEND_AND_WAIT:      27.26
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-10] [0-0-0-0x6e8fa8-statistics]:                  parent create:   31323.51
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-10] [0-0-0-0x6e8fa8-statistics]:                  parent delete:    2189.91
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-10] [0-0-0-0x6e8fa8-statistics]:                   child create:     165.04
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-10] [0-0-0-0x6e8fa8-statistics]:                   child delete:      42.69
+C> (client:32735:0x7fbc7f56f700) [2011-01-21:09-07-10] [0-0-0-0x6e8fa8-main]: end: ----------------------------------------

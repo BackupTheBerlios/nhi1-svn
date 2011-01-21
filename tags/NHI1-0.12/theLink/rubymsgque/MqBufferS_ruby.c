@@ -1,0 +1,91 @@
+/**
+ *  \file       theLink/rubymsgque/MqBufferS_ruby.c
+ *  \brief      \$Id$
+ *  
+ *  (C) 2010 - NHI - #1 - Project - Group
+ *  
+ *  \version    \$Rev$
+ *  \author     EMail: aotto1968 at users.berlios.de
+ *  \attention  this software has GPL permissions to copy
+ *              please contact AUTHORS for additional information
+ */
+
+#include "msgque_ruby.h"
+
+VALUE cMqBufferS;
+
+#define BUF	      VAL2MqBufferS(self)
+#define SETUP_buf     MQ_BUF buf = BUF;
+#define ErrorBufToRuby() NS(MqSException_Raise)(buf->context)
+#define ErrorBufToRubyWithCheck(PROC) \
+  if (unlikely(MqErrorCheckI(PROC))) { \
+    ErrorBufToRuby(); \
+  }
+
+#define GET(T,M) \
+static VALUE Get ## T (VALUE self) { \
+  SETUP_buf \
+  MQ_ ## M ret; \
+  ErrorBufToRubyWithCheck(MqBufferGet ## T (buf, &ret)); \
+  return M ## 2VAL (ret); \
+}
+
+#define Mth(T) \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0); \
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                private                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+GET(Y,BYT);
+GET(O,BOL);
+GET(S,SRT);
+GET(I,INT);
+GET(W,WID);
+GET(F,FLT);
+GET(D,DBL);
+GET(C,CST);
+
+static VALUE GetB (VALUE self) {
+  MQ_BIN val;
+  MQ_SIZE len;
+  SETUP_buf
+  ErrorBufToRubyWithCheck(MqBufferGetB(buf, &val, &len));
+  return BIN2VAL(val,len);
+}
+
+static VALUE GetType (VALUE self) {
+  MQ_STRB const str[2] = {MqBufferGetType(BUF), '\0'};
+  return CST2VAL(str);
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                public                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+VALUE NS(MqBufferS_New) (MQ_BUF buf) {
+  return Data_Wrap_Struct(cMqBufferS, NULL, NULL, buf);
+}
+
+void NS(MqBufferS_Init) (void) {
+  cMqBufferS = rb_define_class("MqBufferS", rb_cObject);
+
+  // make class note create-able
+  rb_funcall(cMqBufferS, rb_intern("private_class_method"), 1, CST2VAL("new"));
+
+  Mth(Y)  
+  Mth(O)  
+  Mth(S)  
+  Mth(I)  
+  Mth(W)  
+  Mth(F)  
+  Mth(D)  
+  Mth(C)  
+  Mth(B)  
+  Mth(Type)  
+}
+

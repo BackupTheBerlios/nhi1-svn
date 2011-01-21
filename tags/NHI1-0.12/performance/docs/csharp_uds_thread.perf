@@ -1,0 +1,11 @@
+> mono thread/NHI1-0.12/theLink/example/csharp/server.exe --uds --file ./socket.uds --thread
+> thread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-12] [0-0-0-0x6e8d48-main]: start: --------------------------------------
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-12] [0-0-0-0x6e8d48-statistics]:                      MqSendEND:       3.43
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-13] [0-0-0-0x6e8d48-statistics]:         MqSendEND_AND_CALLBACK:       5.84
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-statistics]:             MqSendEND_AND_WAIT:      19.87
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-statistics]:                  parent create:     297.56
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-statistics]:                  parent delete:     405.48
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-statistics]:                   child create:     212.28
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-statistics]:                   child delete:      30.39
+C> (client:710:0x7f256884e700) [2011-01-21:09-07-16] [0-0-0-0x6e8d48-main]: end: ----------------------------------------

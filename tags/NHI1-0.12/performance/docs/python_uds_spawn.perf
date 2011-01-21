@@ -1,0 +1,11 @@
+> python nothread/NHI1-0.12/theLink/example/python/server.py --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:19961) [2011-01-21:08-53-36] [0-0-0-0x6e3d48-main]: start: --------------------------------------
+C> (client:19961) [2011-01-21:08-53-37] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       4.92
+C> (client:19961) [2011-01-21:08-53-37] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:      12.00
+C> (client:19961) [2011-01-21:08-53-41] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      24.33
+C> (client:19961) [2011-01-21:08-53-43] [0-0-0-0x6e3d48-statistics]:                  parent create:   29295.82
+C> (client:19961) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-statistics]:                  parent delete:    2052.46
+C> (client:19961) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-statistics]:                   child create:     127.44
+C> (client:19961) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-statistics]:                   child delete:      39.69
+C> (client:19961) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
