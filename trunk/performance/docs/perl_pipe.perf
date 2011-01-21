@@ -1,10 +1,10 @@
-> nothread/NHI1-0.11/theLink/example/c/client --all @ perl nothread/NHI1-0.11/theLink/example/perl/server.pl
-C> (client:23069) [2011-01-20:17-22-13] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:23069) [2011-01-20:17-22-14] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       8.42
-C> (client:23069) [2011-01-20:17-22-14] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:      10.87
-C> (client:23069) [2011-01-20:17-22-17] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      24.07
-C> (client:23069) [2011-01-20:17-22-38] [0-0-0-0x6e3d48-statistics]:                  parent create:  208919.55
-C> (client:23069) [2011-01-20:17-22-38] [0-0-0-0x6e3d48-statistics]:                  parent delete:     315.04
-C> (client:23069) [2011-01-20:17-22-38] [0-0-0-0x6e3d48-statistics]:                   child create:     117.85
-C> (client:23069) [2011-01-20:17-22-38] [0-0-0-0x6e3d48-statistics]:                   child delete:      38.23
-C> (client:23069) [2011-01-20:17-22-38] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theLink/example/c/client --all @ perl nothread/NHI1-0.12/theLink/example/perl/server.pl
+C> (client:23038) [2011-01-21:08-54-56] [0-0-0-0x6e3d48-main]: start: --------------------------------------
+C> (client:23038) [2011-01-21:08-54-56] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       8.53
+C> (client:23038) [2011-01-21:08-54-57] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:      12.72
+C> (client:23038) [2011-01-21:08-55-00] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      25.70
+C> (client:23038) [2011-01-21:08-55-22] [0-0-0-0x6e3d48-statistics]:                  parent create:  211427.20
+C> (client:23038) [2011-01-21:08-55-22] [0-0-0-0x6e3d48-statistics]:                  parent delete:     318.53
+C> (client:23038) [2011-01-21:08-55-22] [0-0-0-0x6e3d48-statistics]:                   child create:     117.66
+C> (client:23038) [2011-01-21:08-55-22] [0-0-0-0x6e3d48-statistics]:                   child delete:      38.94
+C> (client:23038) [2011-01-21:08-55-22] [0-0-0-0x6e3d48-main]: end: ----------------------------------------

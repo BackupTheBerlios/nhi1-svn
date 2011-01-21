@@ -1,10 +1,10 @@
-> nothread/NHI1-0.11/theLink/example/c/client --all @ tclsh nothread/NHI1-0.11/theLink/example/tcl/server.tcl
-C> (client:20979) [2011-01-20:17-21-33] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:20979) [2011-01-20:17-21-33] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       5.80
-C> (client:20979) [2011-01-20:17-21-34] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:      11.80
-C> (client:20979) [2011-01-20:17-21-37] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      23.20
-C> (client:20979) [2011-01-20:17-21-38] [0-0-0-0x6e3d48-statistics]:                  parent create:   10367.63
-C> (client:20979) [2011-01-20:17-21-38] [0-0-0-0x6e3d48-statistics]:                  parent delete:     218.69
-C> (client:20979) [2011-01-20:17-21-38] [0-0-0-0x6e3d48-statistics]:                   child create:     252.90
-C> (client:20979) [2011-01-20:17-21-38] [0-0-0-0x6e3d48-statistics]:                   child delete:      37.67
-C> (client:20979) [2011-01-20:17-21-38] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theLink/example/c/client --all @ tclsh nothread/NHI1-0.12/theLink/example/tcl/server.tcl
+C> (client:29044) [2011-01-21:09-05-05] [0-0-0-0x6e3d48-main]: start: --------------------------------------
+C> (client:29044) [2011-01-21:09-05-05] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       5.78
+C> (client:29044) [2011-01-21:09-05-05] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       9.19
+C> (client:29044) [2011-01-21:09-05-08] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      22.97
+C> (client:29044) [2011-01-21:09-05-09] [0-0-0-0x6e3d48-statistics]:                  parent create:   10331.37
+C> (client:29044) [2011-01-21:09-05-09] [0-0-0-0x6e3d48-statistics]:                  parent delete:     215.38
+C> (client:29044) [2011-01-21:09-05-10] [0-0-0-0x6e3d48-statistics]:                   child create:     255.31
+C> (client:29044) [2011-01-21:09-05-10] [0-0-0-0x6e3d48-statistics]:                   child delete:      37.90
+C> (client:29044) [2011-01-21:09-05-10] [0-0-0-0x6e3d48-main]: end: ----------------------------------------

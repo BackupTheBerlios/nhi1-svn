@@ -1,11 +1,11 @@
-> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.11/theLink/example/php/server.php --tcp --host localhost --port 7800 --fork
-> nothread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7800
-C> (client:30053) [2011-01-14:08-48-43] [0-0-0-0x628e70-main]: start: --------------------------------------
-C> (client:30053) [2011-01-14:08-48-43] [0-0-0-0x628e70-statistics]:                      MqSendEND:       6.85
-C> (client:30053) [2011-01-14:08-48-44] [0-0-0-0x628e70-statistics]:         MqSendEND_AND_CALLBACK:      13.20
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-statistics]:             MqSendEND_AND_WAIT:      33.18
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-statistics]:                  parent create:     809.33
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-statistics]:                  parent delete:     313.90
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-statistics]:                   child create:     196.59
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-statistics]:                   child delete:      55.83
-C> (client:30053) [2011-01-14:08-48-48] [0-0-0-0x628e70-main]: end: ----------------------------------------
+> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.12/theLink/example/php/server.php --tcp --host localhost --port 7800 --fork
+> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7800
+C> (client:2781) [2011-01-21:09-08-35] [0-0-0-0x6e3f68-main]: start: --------------------------------------
+C> (client:2781) [2011-01-21:09-08-36] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       6.55
+C> (client:2781) [2011-01-21:09-08-36] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:      11.87
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      32.50
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-statistics]:                  parent create:     781.70
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-statistics]:                  parent delete:     299.44
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-statistics]:                   child create:     197.92
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-statistics]:                   child delete:      52.51
+C> (client:2781) [2011-01-21:09-08-40] [0-0-0-0x6e3f68-main]: end: ----------------------------------------

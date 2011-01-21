@@ -1,10 +1,10 @@
-> nothread/NHI1-0.11/theLink/example/c/client --all @ ruby nothread/NHI1-0.11/theLink/example/ruby/server.rb
-C> (client:22435) [2011-01-20:17-22-00] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:22435) [2011-01-20:17-22-01] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       4.21
-C> (client:22435) [2011-01-20:17-22-01] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       7.19
-C> (client:22435) [2011-01-20:17-22-04] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      21.48
-C> (client:22435) [2011-01-20:17-22-05] [0-0-0-0x6e3d48-statistics]:                  parent create:   13760.15
-C> (client:22435) [2011-01-20:17-22-06] [0-0-0-0x6e3d48-statistics]:                  parent delete:     464.25
-C> (client:22435) [2011-01-20:17-22-06] [0-0-0-0x6e3d48-statistics]:                   child create:     131.50
-C> (client:22435) [2011-01-20:17-22-06] [0-0-0-0x6e3d48-statistics]:                   child delete:      79.48
-C> (client:22435) [2011-01-20:17-22-06] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theLink/example/c/client --all @ ruby nothread/NHI1-0.12/theLink/example/ruby/server.rb
+C> (client:20095) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-main]: start: --------------------------------------
+C> (client:20095) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       4.25
+C> (client:20095) [2011-01-21:08-53-45] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       7.22
+C> (client:20095) [2011-01-21:08-53-48] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      21.57
+C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                  parent create:   13800.99
+C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                  parent delete:     470.53
+C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                   child create:     131.55
+C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                   child delete:      79.07
+C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-main]: end: ----------------------------------------

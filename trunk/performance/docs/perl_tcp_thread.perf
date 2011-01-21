@@ -1,11 +1,11 @@
-> perl thread/NHI1-0.11/theLink/example/perl/server.pl --tcp --host localhost --port 7795 --thread
-> thread/NHI1-0.11/theLink/example/c/client --all --tcp --host localhost --port 7795
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-32] [0-0-0-0x629e70-main]: start: --------------------------------------
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-33] [0-0-0-0x629e70-statistics]:                      MqSendEND:       9.18
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-34] [0-0-0-0x629e70-statistics]:         MqSendEND_AND_CALLBACK:      13.75
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-37] [0-0-0-0x629e70-statistics]:             MqSendEND_AND_WAIT:      33.60
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                  parent create:    5482.03
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                  parent delete:     289.84
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                   child create:     132.08
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-statistics]:                   child delete:      48.88
-C> (client:27472:0x7f83a4a73700) [2011-01-14:08-46-38] [0-0-0-0x629e70-main]: end: ----------------------------------------
+> perl thread/NHI1-0.12/theLink/example/perl/server.pl --tcp --host localhost --port 7795 --thread
+> thread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7795
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-36] [0-0-0-0x6e8fa8-main]: start: --------------------------------------
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-37] [0-0-0-0x6e8fa8-statistics]:                      MqSendEND:      10.70
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-38] [0-0-0-0x6e8fa8-statistics]:         MqSendEND_AND_CALLBACK:      16.35
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-41] [0-0-0-0x6e8fa8-statistics]:             MqSendEND_AND_WAIT:      37.27
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-42] [0-0-0-0x6e8fa8-statistics]:                  parent create:    6832.98
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-42] [0-0-0-0x6e8fa8-statistics]:                  parent delete:     391.58
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-42] [0-0-0-0x6e8fa8-statistics]:                   child create:     149.18
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-42] [0-0-0-0x6e8fa8-statistics]:                   child delete:      65.12
+C> (client:1741:0x7fa001727700) [2011-01-21:09-07-42] [0-0-0-0x6e8fa8-main]: end: ----------------------------------------

@@ -1,12 +1,12 @@
-> nothread/NHI1-0.11/theBrain/abrain/abrain --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.11/theBrain/tests/client --all --uds --file ./socket.uds
-C> (client:30847) [2011-01-14:08-52-22] [0-0-0-0x627980-main]: start: --------------------------------------
-C> (client:30847) [2011-01-14:08-52-23] [0-0-0-0x627980-statistics]:              memory hash - PUT:      19.22
-C> (client:30847) [2011-01-14:08-52-24] [0-0-0-0x627980-statistics]:              memory hash - GET:      19.11
-C> (client:30847) [2011-01-14:08-52-25] [0-0-0-0x627980-statistics]:             memory btree - PUT:      22.64
-C> (client:30847) [2011-01-14:08-52-27] [0-0-0-0x627980-statistics]:             memory btree - GET:      23.21
-C> (client:30847) [2011-01-14:08-52-28] [0-0-0-0x627980-statistics]:                file hash - PUT:      20.36
-C> (client:30847) [2011-01-14:08-52-29] [0-0-0-0x627980-statistics]:                file hash - GET:      21.02
-C> (client:30847) [2011-01-14:08-52-39] [0-0-0-0x627980-statistics]:               file btree - PUT:     200.27
-C> (client:30847) [2011-01-14:08-52-47] [0-0-0-0x627980-statistics]:               file btree - GET:     161.15
-C> (client:30847) [2011-01-14:08-52-47] [0-0-0-0x627980-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theBrain/abrain/abrain --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.12/theBrain/tests/client --all --uds --file ./socket.uds
+C> (client:27110) [2011-01-21:09-00-47] [0-0-0-0x6e3a58-main]: start: --------------------------------------
+C> (client:27110) [2011-01-21:09-00-48] [0-0-0-0x6e3a58-statistics]:              memory hash - PUT:      19.04
+C> (client:27110) [2011-01-21:09-00-49] [0-0-0-0x6e3a58-statistics]:              memory hash - GET:      19.37
+C> (client:27110) [2011-01-21:09-00-50] [0-0-0-0x6e3a58-statistics]:             memory btree - PUT:      22.42
+C> (client:27110) [2011-01-21:09-00-51] [0-0-0-0x6e3a58-statistics]:             memory btree - GET:      22.93
+C> (client:27110) [2011-01-21:09-00-52] [0-0-0-0x6e3a58-statistics]:                file hash - PUT:      20.31
+C> (client:27110) [2011-01-21:09-00-53] [0-0-0-0x6e3a58-statistics]:                file hash - GET:      21.22
+C> (client:27110) [2011-01-21:09-01-02] [0-0-0-0x6e3a58-statistics]:               file btree - PUT:     147.06
+C> (client:27110) [2011-01-21:09-01-10] [0-0-0-0x6e3a58-statistics]:               file btree - GET:     157.70
+C> (client:27110) [2011-01-21:09-01-10] [0-0-0-0x6e3a58-main]: end: ----------------------------------------

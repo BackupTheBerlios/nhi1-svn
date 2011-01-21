@@ -1,10 +1,10 @@
-> nothread/NHI1-0.11/theLink/example/c/client --all @ nothread/NHI1-0.11/theLink/example/cc/server
-C> (client:20864) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-main]: start: --------------------------------------
-C> (client:20864) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:                      MqSendEND:       2.75
-C> (client:20864) [2011-01-20:17-21-29] [0-0-0-0x6e3c28-statistics]:         MqSendEND_AND_CALLBACK:       4.60
-C> (client:20864) [2011-01-20:17-21-32] [0-0-0-0x6e3c28-statistics]:             MqSendEND_AND_WAIT:      18.76
-C> (client:20864) [2011-01-20:17-21-32] [0-0-0-0x6e3c28-statistics]:                  parent create:    1357.04
-C> (client:20864) [2011-01-20:17-21-32] [0-0-0-0x6e3c28-statistics]:                  parent delete:     151.58
-C> (client:20864) [2011-01-20:17-21-33] [0-0-0-0x6e3c28-statistics]:                   child create:      82.11
-C> (client:20864) [2011-01-20:17-21-33] [0-0-0-0x6e3c28-statistics]:                   child delete:      32.74
-C> (client:20864) [2011-01-20:17-21-33] [0-0-0-0x6e3c28-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theLink/example/c/client --all @ nothread/NHI1-0.12/theLink/example/cc/server
+C> (client:28143) [2011-01-21:09-04-26] [0-0-0-0x6e3c28-main]: start: --------------------------------------
+C> (client:28143) [2011-01-21:09-04-26] [0-0-0-0x6e3c28-statistics]:                      MqSendEND:       2.67
+C> (client:28143) [2011-01-21:09-04-27] [0-0-0-0x6e3c28-statistics]:         MqSendEND_AND_CALLBACK:       4.54
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-statistics]:             MqSendEND_AND_WAIT:      18.59
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-statistics]:                  parent create:    1349.11
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-statistics]:                  parent delete:     143.21
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-statistics]:                   child create:      81.17
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-statistics]:                   child delete:      30.97
+C> (client:28143) [2011-01-21:09-04-30] [0-0-0-0x6e3c28-main]: end: ----------------------------------------

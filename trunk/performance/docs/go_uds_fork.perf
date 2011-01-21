@@ -1,11 +1,11 @@
-> thread/NHI1-0.11/theLink/example/go/server --uds --file ./socket.uds --fork
-> thread/NHI1-0.11/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-19] [0-0-0-0x629c50-main]: start: --------------------------------------
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-19] [0-0-0-0x629c50-statistics]:                      MqSendEND:       6.84
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-20] [0-0-0-0x629c50-statistics]:         MqSendEND_AND_CALLBACK:       8.88
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-statistics]:             MqSendEND_AND_WAIT:      22.36
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-statistics]:                  parent create:     639.68
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-statistics]:                  parent delete:     157.11
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-statistics]:                   child create:     173.69
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-statistics]:                   child delete:      49.00
-C> (client:29545:0x7fb0d4d84700) [2011-01-14:08-48-23] [0-0-0-0x629c50-main]: end: ----------------------------------------
+> thread/NHI1-0.12/theLink/example/go/server --uds --file ./socket.uds --fork
+> thread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-20] [0-0-0-0x6e8d48-main]: start: --------------------------------------
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-20] [0-0-0-0x6e8d48-statistics]:                      MqSendEND:       5.91
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-20] [0-0-0-0x6e8d48-statistics]:         MqSendEND_AND_CALLBACK:       8.76
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-23] [0-0-0-0x6e8d48-statistics]:             MqSendEND_AND_WAIT:      22.93
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-23] [0-0-0-0x6e8d48-statistics]:                  parent create:     663.54
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-24] [0-0-0-0x6e8d48-statistics]:                  parent delete:     147.72
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-24] [0-0-0-0x6e8d48-statistics]:                   child create:     172.14
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-24] [0-0-0-0x6e8d48-statistics]:                   child delete:      60.06
+C> (client:25763:0x7f5a52b2c700) [2011-01-21:08-57-24] [0-0-0-0x6e8d48-main]: end: ----------------------------------------

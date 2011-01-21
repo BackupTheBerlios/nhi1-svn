@@ -1,10 +1,10 @@
-> nothread/NHI1-0.11/theLink/example/c/client --all @ python nothread/NHI1-0.11/theLink/example/python/server.py
-C> (client:22320) [2011-01-20:17-21-53] [0-0-0-0x6e3df8-main]: start: --------------------------------------
-C> (client:22320) [2011-01-20:17-21-53] [0-0-0-0x6e3df8-statistics]:                      MqSendEND:       4.71
-C> (client:22320) [2011-01-20:17-21-54] [0-0-0-0x6e3df8-statistics]:         MqSendEND_AND_CALLBACK:       9.38
-C> (client:22320) [2011-01-20:17-21-57] [0-0-0-0x6e3df8-statistics]:             MqSendEND_AND_WAIT:      24.01
-C> (client:22320) [2011-01-20:17-22-00] [0-0-0-0x6e3df8-statistics]:                  parent create:   29335.69
-C> (client:22320) [2011-01-20:17-22-00] [0-0-0-0x6e3df8-statistics]:                  parent delete:    2059.07
-C> (client:22320) [2011-01-20:17-22-00] [0-0-0-0x6e3df8-statistics]:                   child create:     126.06
-C> (client:22320) [2011-01-20:17-22-00] [0-0-0-0x6e3df8-statistics]:                   child delete:      39.90
-C> (client:22320) [2011-01-20:17-22-00] [0-0-0-0x6e3df8-main]: end: ----------------------------------------
+> nothread/NHI1-0.12/theLink/example/c/client --all @ python nothread/NHI1-0.12/theLink/example/python/server.py
+C> (client:19445) [2011-01-21:08-53-03] [0-0-0-0x6e3df8-main]: start: --------------------------------------
+C> (client:19445) [2011-01-21:08-53-04] [0-0-0-0x6e3df8-statistics]:                      MqSendEND:       4.71
+C> (client:19445) [2011-01-21:08-53-04] [0-0-0-0x6e3df8-statistics]:         MqSendEND_AND_CALLBACK:      11.07
+C> (client:19445) [2011-01-21:08-53-07] [0-0-0-0x6e3df8-statistics]:             MqSendEND_AND_WAIT:      24.43
+C> (client:19445) [2011-01-21:08-53-10] [0-0-0-0x6e3df8-statistics]:                  parent create:   29852.85
+C> (client:19445) [2011-01-21:08-53-11] [0-0-0-0x6e3df8-statistics]:                  parent delete:    2045.98
+C> (client:19445) [2011-01-21:08-53-11] [0-0-0-0x6e3df8-statistics]:                   child create:     128.63
+C> (client:19445) [2011-01-21:08-53-11] [0-0-0-0x6e3df8-statistics]:                   child delete:      38.67
+C> (client:19445) [2011-01-21:08-53-11] [0-0-0-0x6e3df8-main]: end: ----------------------------------------
