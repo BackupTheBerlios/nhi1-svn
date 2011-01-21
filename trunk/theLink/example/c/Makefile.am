@@ -10,27 +10,16 @@
 #§              please contact AUTHORS for additional information
 #§
 
-noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
-		    testclient$(EXEEXT) testserver$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
-			Filter1$(EXEEXT) Filter2$(EXEEXT) Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) \
-			    server$(EXEEXT) client$(EXEEXT)
+#noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
+#		    testclient$(EXEEXT) testserver$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
+#			Filter1$(EXEEXT) Filter2$(EXEEXT) Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) \
+#			    server$(EXEEXT) client$(EXEEXT)
+
+noinst_PROGRAMS = server$(EXEEXT) client$(EXEEXT)
 
 AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
 LDADD = -lm ../../libmsgque/libtmp.la
 
-mulclient_SOURCES = mulclient.c
-mulserver_SOURCES = mulserver.c
-manfilter_SOURCES = manfilter.c
-testclient_SOURCES = testclient.c
-testserver_SOURCES = testserver.c
-MyClient_SOURCES = MyClient.c
-MyServer_SOURCES = MyServer.c
-Filter1_SOURCES = Filter1.c
-Filter2_SOURCES = Filter2.c
-Filter3_SOURCES = Filter3.c
-Filter4_SOURCES = Filter4.c
-Filter5_SOURCES = Filter5.c
-server_SOURCES = server.c
 client_SOURCES = client.c stat.c stat.h
 
 docs/server.help: server$(EXEEXT)

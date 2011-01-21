@@ -124,7 +124,19 @@ cp $D/tags .
   ctags -a $ADD ../tokyocabinet/*.[ch]
 }
 
-[[ $DO == "yes" ]] && ctags -a $ADD -I NS *.[ch] ../sqlite/sqlite3.c
+[[ $(basename $PWD) == "atrans" ]] && {
+  ctags -a $ADD *.cc
+}
+
+# add all "c" and "h" files in the local directory
+if [[ $DO == "yes" ]] ; then
+  set *.[ch]
+  test -f $1 && ctags -a $ADD -I NS "$@"
+fi
+
+## add
+
+## add
 
 exit 0
 

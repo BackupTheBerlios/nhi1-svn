@@ -10,18 +10,7 @@ fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
-		    --enable-static \
 		    --enable-tcl \
-		    --enable-java \
-		    --enable-cxx \
-		    --enable-ruby \
-		    --enable-csharp \
-		    --enable-python \
-		    --enable-perl \
-		    --enable-php \
-		    --enable-go \
-		    --enable-brain \
-		    --enable-guard \
 \
 		    $ARGS $@
 

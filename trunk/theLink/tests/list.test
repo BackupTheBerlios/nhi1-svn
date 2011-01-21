@@ -187,6 +187,18 @@ test list-17-($I|$B|$C|$S) {read list from non-list} \
     -body           { EchoL $FH_LAST ECOL SendL [list SendI 1 SendC hallo] } \
     -result         {{1 hallo}}
 
+test list-e-1-($I|$B|$C|$S) {SendL_END without SendL_START} \
+    -constraints    {c pipe} \
+    -body           {
+      $FH_LAST SendSTART 
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT DUMY
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
+[cC]> (client-0) found in function "MqSendL_END" at file "send.c"}
+
 # cleanup ---------------------------
 Cleanup
 

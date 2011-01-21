@@ -998,7 +998,7 @@ pSendListStart (
   buf->cur.B += HDR_INT_LEN+1;
 }
 
-static void
+static enum MqErrorE
 pSendListEnd (
   struct MqS * const context,
   enum MqTypeE const type
@@ -1006,7 +1006,9 @@ pSendListEnd (
 {
   register struct MqSendS * const send = context->link.send;
   register struct SendSaveS * const save = send->save;
-  if (save != NULL) {
+  if (save == NULL) {
+    return MqErrorDbV(MQ_ERROR_START_ITEM_REQUIRED, "MqSend?_START");
+  } else {
     register struct MqBufferS * const buf = send->buf;
     register MQ_BIN ist = (buf->data + save->cursize);
     MQ_BOL const isString = context->config.isString;
@@ -1026,6 +1028,8 @@ pSendListEnd (
 
     // free memory /ATTENTION send->save will be set ABOVE
     pCachePush (send->cache, save);
+
+    return MQ_OK;
   }
 }
 
@@ -1049,8 +1053,9 @@ MqSendL_END (
 {
   if (context->link.send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (MqErrorCheckI(pSendListEnd (context, MQ_LSTT))) {
+    return MqErrorStack(context);
   } else {
-    pSendListEnd (context, MQ_LSTT);
     return MQ_OK;
   }
 }
@@ -1090,8 +1095,9 @@ MqSendT_END (
 {
   if (context->link.send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (MqErrorCheckI(pSendListEnd (context, MQ_TRAT))) {
+    return MqErrorStack(context);
   } else {
-    pSendListEnd (context, MQ_TRAT);
     return MQ_OK;
   }
 }

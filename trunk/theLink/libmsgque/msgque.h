@@ -1263,15 +1263,17 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \brief a static Factory function return this enum as status
 /// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
 enum MqFactoryReturnE {
-  /* 0 */ MQ_FACTORY_RETURN_OK,
-  /* 1 */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
-  /* 2 */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
-  /* 3 */ MQ_FACTORY_RETURN_CALL_ERR,
-  /* 4 */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
-  /* 5 */ MQ_FACTORY_RETURN_NEW_ERR,
-  /* 6 */ MQ_FACTORY_RETURN_DEFAULT_ERR,
-  /* 7 */ MQ_FACTORY_RETURN_ADD_ERR,
-  /* 8 */ MQ_FACTORY_RETURN_INVALID_IDENT,
+  /* 0  */ MQ_FACTORY_RETURN_OK,
+  /* 1  */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
+  /* 2  */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
+  /* 3  */ MQ_FACTORY_RETURN_CALL_ERR,
+  /* 4  */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
+  /* 5  */ MQ_FACTORY_RETURN_NEW_ERR,
+  /* 6  */ MQ_FACTORY_RETURN_DEFAULT_ERR,
+  /* 7  */ MQ_FACTORY_RETURN_ADD_ERR,
+  /* 8  */ MQ_FACTORY_RETURN_INVALID_IDENT,
+  /* 9  */ MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR,
+  /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR
 };
 
 /// \brief the \e factory is called to create an instance for ...
@@ -1341,12 +1343,19 @@ struct MqFactoryDeleteS {
   MqFactoryDataCopyF  fCopy;	    ///< copy additional data pointer
 };
 
+/// \brief interface for the \e transaction storage
+struct MqFactoryTransS;
+
 /// \brief data used to define a factory
 struct MqFactoryS {
   MQ_CST ident;			    ///< public known factory name
   MQ_BOL called;		    ///< was the factory called?
+  enum MqFactoryReturnE ret;	    ///< exit status of last factory command
+#define MQ_FACTORY_BUF 255
+  MQ_STRB error[MQ_FACTORY_BUF];    ///< error message buffer
   struct MqFactoryCreateS Create;   ///< instance constructor interface
   struct MqFactoryDeleteS Delete;   ///< constructor destructor interface
+  struct MqFactoryTransS  *Trans;   ///< transaction storage management
 };
 
 /// \brief helper function to return MqFactoryS::Create::data
@@ -1425,7 +1434,8 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
   MqFactoryDeleteF    const deleteCallF,
   MQ_PTR	      const deleteData,
   MqFactoryDataFreeF  const deleteDataFreeF,
-  MqFactoryDataCopyF  const deleteDataCopyF
+  MqFactoryDataCopyF  const deleteDataCopyF,
+  struct MqFactoryS ** factoryP
 ) __attribute__((nonnull(1,2)));
 
 /// \brief add a new \e default-factory-interface identified by \e ident
@@ -1487,11 +1497,18 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
 /// \param[in] data (C-API) environment specific data or \c NULL
 /// \param[out] ctxP (C-API) the new created instance to return
 /// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCallIdent (
   MQ_CST const ident,
   MQ_PTR const data,
   struct MqS ** ctxP
 ) __attribute__((nonnull(1)));
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCallItem (
+  struct MqFactoryS * const item,
+  MQ_PTR const data,
+  struct MqS ** ctxP
+) __attribute__((nonnull(1)));
+
 
 /// \brief call a factory \e constructor defined by \e item
 /// \details This is a low-level function to call a factory constructor
@@ -1516,6 +1533,22 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
   MQ_CST const ident,
   struct MqFactoryS **itemP
 ) __attribute__((nonnull(1)));
+
+/*****************************************************************************/
+/*                                                                           */
+/*                             set / get                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetCalled (
+  struct MqFactoryS * const item,
+  MQ_BOL const called
+);
+
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetTrans (
+  struct MqFactoryS * const item,
+  MQ_CST const storageDir
+);
 
 /*****************************************************************************/
 /*                                                                           */

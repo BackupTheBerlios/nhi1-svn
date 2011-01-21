@@ -1396,13 +1396,30 @@ main (
 )
 {
   struct MqS *mqctx = NULL;
+  struct MqFactoryS *factory = NULL;
 
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
-  // add and all Factory 
-  if (MqFactoryErrorCheckI(MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx))) {
+  // add Factory 
+M0
+  if (MqFactoryErrorCheckI(MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &factory))) {
+M1
     ServerHelp(MqSysBasename("server", MQ_NO));
+  }
+
+  // add transaction storage
+M2
+  if (MqFactoryErrorCheckI(MqFactorySetTrans(factory, ":memory:"))) {
+M3
+    MqFactoryExit(factory);
+  }
+
+  // call Factory 
+M4
+  if (MqFactoryErrorCheckI(MqFactoryCallItem(factory, NULL, &mqctx))) {
+M5
+    MqFactoryExit(factory);
   }
 
   // create the ServerCtxS
@@ -1420,6 +1437,4 @@ error:
 }
 
 /** \} server */
-
-
 

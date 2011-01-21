@@ -76,7 +76,8 @@ $FH_LAST FactoryCtxDefault OTTO
 
 # tests ----------------------------
 
-test transaction-1-($I|$B|$C|$S) {wrong item position} \
+test transaction-e-1-($I|$B|$C|$S) {wrong item position} \
+    -constraints    {c pipe} \
     -body           {
       $FH_LAST SendSTART
       $FH_LAST SendI 1
@@ -88,6 +89,18 @@ test transaction-1-($I|$B|$C|$S) {wrong item position} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_START] the 'TRANSACTION' item have to be the 'first' item in the data package}
+
+test transaction-e-2-($I|$B|$C|$S) {SendT_END without SendT_START} \
+    -constraints    {c pipe} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_END
+      $FH_LAST SendEND_AND_WAIT TRNS
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
+[cC]> (client-0) found in function "MqSendT_END" at file "send.c"}
 
 test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {

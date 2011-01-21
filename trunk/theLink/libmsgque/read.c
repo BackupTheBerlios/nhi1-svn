@@ -50,7 +50,7 @@ struct MqReadS {
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
   struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
   struct MqBufferS * cur;	    ///< used as reference on \e bdy with the current data
-  enum MqHandShakeE handShake;	    ///< what kind aof call is it?
+  enum MqHandShakeE handShake;	    ///< what kind of call is it?
   MQ_INT returnNum;		    ///< Return-Number
   struct MqCacheS * saveCache;	    ///< cache of <TT>struct ReadSaveS</TT> data
   struct ReadSaveS * save;	    ///< need for List objects
