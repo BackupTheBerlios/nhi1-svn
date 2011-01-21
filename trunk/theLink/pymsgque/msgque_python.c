@@ -39,8 +39,8 @@ static PyObject* NS(Init) (
     if ((utf8 = PyUnicode_AsUTF8String(item)) == NULL) goto error;
     MqBufferLAppendC(initB, PyBytes_AsString(utf8));
     Py_DECREF(utf8);
-    Py_DECREF(list);
   }
+  Py_DECREF(list);
 
   SETUP_RETURN
 }

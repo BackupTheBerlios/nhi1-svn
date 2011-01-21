@@ -117,8 +117,7 @@ cp $D/tags .
 }
 
 [[ $(basename $PWD) == "tests" ]] && {
-  find $JAVA_HOME/include -name "*.h" | xargs ctags -a $ADD
-  ctags -a $ADD ../../theLink/tests/*.tcl *.test *.java ../javamsgque/*.java ../csmsgque/*.cs
+  ctags -a $ADD ../../theLink/tests/*.tcl *.test
 }
 
 [[ $(basename $PWD) == "libbrain" ]] && {

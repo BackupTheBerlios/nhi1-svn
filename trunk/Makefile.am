@@ -45,6 +45,8 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
 	--enable-csharp --enable-java --enable-ruby --enable-php \
 	  --enable-go --enable-threads
 
+#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-python --enable-threads --enable-guard --enable-brain
+
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads
 
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl \

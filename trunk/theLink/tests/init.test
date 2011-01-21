@@ -58,7 +58,7 @@ proc MapServer {t} {
 
 # tests ----------------------------
 
-test init-1-($I|$B|$C|$S) {init $bin_server.exe} \
+test init-1-($I|$B|$C|$S) {init server.exe} \
     -setup	    {Setup $I $B $C $S} \
     -body           {
       Call $FH_LAST SendEND_AND_WAIT INIT {*}$SRV
