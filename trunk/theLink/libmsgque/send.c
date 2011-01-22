@@ -39,12 +39,11 @@ BEGIN_C_DECLS
 #define SEND_I(string,ptr,data) \
     if(unlikely(string)) { \
         sprintf((MQ_STR)ptr, MQ_FORMAT_XI(HDR_INT_LEN), (MQ_INT) data); \
-	ptr += HDR_INT_LEN; \
     } else { \
 	memcpy (ptr,&data,sizeof(MQ_INT)); \
 	memcpy (ptr+4,"\0\0\0\0",sizeof(MQ_INT)); \
-	ptr += HDR_INT_LEN; \
-    }
+    } \
+    ptr += HDR_INT_LEN;
 
 #define SEND_IS(char,cur,data,len) \
     sprintf(cur, MQ_FORMAT_XI(len), (MQ_INT) data); \
@@ -58,19 +57,20 @@ BEGIN_C_DECLS
 
 #define MQ_CONTEXT_S context
 
-/** -brief special data needed for list objects
+/** special data needed for list objects
  */
 struct SendSaveS {
-  MQ_INT numItems;		///< number of objects in the msgque body
   struct SendSaveS * save;      ///< this is needed for recursion
+  MQ_INT numItems;		///< number of objects in the msgque body
   MQ_SIZE cursize;              ///< the current size of \e bdy->data
 };
 
-/** -brief everything needed for sending msgque packages
+/** everything needed for sending msgque packages
  */
 struct MqSendS {
   struct MqS * context;	///< ...
   struct MqBufferS * buf;       ///< the sending buffer object
+  struct MqBufferS * trans;     ///< transaction buffer object, will be mapped into database
   struct SendSaveS * save;      ///< need for List objects
   struct MqCacheS * cache;	///< ...
   MQ_BOL haveStart;		///< #MqSendEND checks if #MqSendSTART was used
@@ -118,6 +118,7 @@ pSendCreate (
 //MqDLogV(msgque, 0, ">>>>>>>>>>>>> CREATE send<%p>\n", send);
 
   send->buf = MqBufferCreate (context, 10000);
+  send->trans = MqBufferCreate (context, 256);
   send->haveStart = MQ_NO;
 
   ptr = (MQ_STR) send->buf->data;
@@ -151,6 +152,7 @@ pSendDelete (
 
   pCacheDelete (&send->cache);
   MqBufferDelete (&send->buf);
+  MqBufferDelete (&send->trans);
   MqSysFree (*sendP);
 }
 
@@ -1033,6 +1035,69 @@ pSendListEnd (
   }
 }
 
+static void
+pSendTransStart (
+  struct MqS * const context
+)
+{
+  register struct MqSendS * const send = context->link.send;
+  register struct MqBufferS * const buf = send->buf;
+  register struct SendSaveS * save;
+
+  pBufferAddSize (buf, BUFFER_P2_LIST);
+// MK1
+  buf->cursize	+= BUFFER_P2_PRENUM;
+  buf->cur.B	+= BUFFER_P2_PRENUM;
+
+  // zustand sichern !
+  save = (struct SendSaveS*) pCachePop (send->cache);
+  save->save	  = send->save;
+  save->numItems  = buf->numItems;
+  save->cursize	  = buf->cursize;
+
+  send->save = save;
+
+  // Init
+  buf->numItems = 0;
+  buf->cursize += HDR_INT_LEN+1;
+  buf->cur.B += HDR_INT_LEN+1;
+}
+
+static enum MqErrorE
+pSendTransEnd (
+  struct MqS * const context,
+  enum MqTypeE const type
+)
+{
+  register struct MqSendS * const send = context->link.send;
+  register struct SendSaveS * const save = send->save;
+  if (save == NULL) {
+    return MqErrorDbV(MQ_ERROR_START_ITEM_REQUIRED, "MqSend?_START");
+  } else {
+    register struct MqBufferS * const buf = send->buf;
+    register MQ_BIN ist = (buf->data + save->cursize);
+    MQ_BOL const isString = context->config.isString;
+    MQ_INT const bodyLen = (MQ_INT) (buf->cursize - save->cursize);
+
+    // set numItems
+    SEND_I (isString, ist, buf->numItems);
+
+    // restore "save" 
+    send->save = save->save;
+    buf->numItems = save->numItems;
+    buf->cursize = save->cursize;
+    buf->cur.B = buf->data + buf->cursize;
+
+    // master setzen
+    sSendLen (buf, bodyLen, type, isString);
+
+    // free memory /ATTENTION send->save will be set ABOVE
+    pCachePush (send->cache, save);
+
+    return MQ_OK;
+  }
+}
+
 enum MqErrorE
 MqSendL_START (
   struct MqS * const context
@@ -1075,7 +1140,16 @@ MqSendT_START (
   } else if (context->setup.factory == NULL) {
     return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
-    register struct MqBufferS * const buf = send->buf;
+    register struct MqBufferS * const buf = send->trans;
+    // step 1. reverse buffer
+    send->trans = send->buf;
+    send->buf = buf;
+    // step 2. initialize buffer
+    buf->numItems = 0;
+    buf->cursize = 0;
+    buf->type = send->trans->type;
+    buf->cur.B = buf->data;
+    // step 3. initialize transaction
     pSendListStart (context);
     *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
     pBufferAddSize (buf, HDR_TOK_LEN+1);
@@ -1199,10 +1273,4 @@ error:
 }
 
 END_C_DECLS
-
-
-
-
-
-
 

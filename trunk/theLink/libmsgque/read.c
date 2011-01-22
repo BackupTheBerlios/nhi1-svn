@@ -698,7 +698,6 @@ MqReadC (
     MqErrorCheck (MqBufferGetC (cur, out));
     read->canUndo = MQ_YES;
     return MQ_OK;
-
 error:
     return MqErrorStack (context);
   }
@@ -878,8 +877,9 @@ MqReadUndo (
 
     if (read->canUndo == MQ_NO) {
       return MqErrorDb(MQ_ERROR_UNDO_FORBIDDEN);
+    } else {
+      read->canUndo = MQ_NO;
     }
-    read->canUndo = MQ_NO;
     
     bdy->numItems++; 
     bdy->cur.B -= ( 2 + cur->cursize + 1 +

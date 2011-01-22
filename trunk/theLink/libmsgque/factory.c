@@ -23,6 +23,8 @@ struct MqFactoryS *defaultFactoryItem = NULL;
 struct MqFactoryTransS {
   MQ_CST  storageDir;   ///< main directory used for database files
   sqlite3 *db;		///< sqlite database connection handle
+  sqlite3_stmt *insert;	///< prepared sql statement
+  sqlite3_stmt *select;	///< prepared sql statement
 };
 
 #define pFactoryCmp(s1,s2) strcmp(s1,s2)
@@ -57,6 +59,18 @@ static enum MqFactoryReturnE sFactoryErrorTxt (
   item->error[MQ_FACTORY_BUF-1] = '\0';
   return ret;
 }
+
+#define sFactoryErrorSql(item, ret) \
+  (MqSqliteError(MQ_ERROR_PRINT, item->Trans),sFactoryErrorTxt(item, ret, sqlite3_errmsg(item->Trans->db)))
+
+/*
+static enum MqFactoryReturnE sFactoryErrorSql (
+  struct MqFactoryS * const item,
+  enum MqFactoryReturnE ret
+) {
+  return sFactoryErrorTxt (item, ret, sqlite3_errmsg(item->Trans->db));
+}
+*/
 
 static enum MqFactoryReturnE sFactoryErrorNum (
   struct MqFactoryS * const item,
@@ -143,16 +157,27 @@ sFactoryDelTrans (
   struct MqFactoryS * const item
 )
 {
-  if (item->Trans != NULL) {
-    if (item->Trans->storageDir != NULL) {
-      sqlite3_free((void*)item->Trans->storageDir);
+  register struct MqFactoryTransS *trans = item->Trans;
+  if (trans != NULL) {
+    if (trans->storageDir != NULL) {
+      sqlite3_free((void*)trans->storageDir);
     }
-    if (item->Trans->db != NULL) {
-      check_sqlite(sqlite3_close(item->Trans->db)) {
-	MqSqliteError(MQ_ERROR_PRINT, item->Trans->db);
+    if (trans->insert != NULL) {
+      check_sqlite(sqlite3_finalize(trans->insert)) {
+	MqSqliteError(MQ_ERROR_PRINT, trans);
       }
     }
-    sqlite3_free((void*)item->Trans);
+    if (trans->select != NULL) {
+      check_sqlite(sqlite3_finalize(trans->select)) {
+	MqSqliteError(MQ_ERROR_PRINT, trans);
+      }
+    }
+    if (trans->db != NULL) {
+      check_sqlite(sqlite3_close(trans->db)) {
+	MqSqliteError(MQ_ERROR_PRINT, trans);
+      }
+    }
+    sqlite3_free((void*)trans);
     item->Trans = NULL;
   }
   return item->ret;
@@ -169,7 +194,9 @@ sFactoryAddTrans (
   struct MqFactoryTransS *trans = item->Trans = sFactoryCallocItem(item, 1, sizeof(*item->Trans));
 
   // transaction storage, as transaction-id the ROWID is used
-  const static char SQL_CT[] = "CREATE TABLE IF NOT EXISTS trans ( tData BLOB );";
+  const static char SQL_CT[] = "CREATE TABLE IF NOT EXISTS trans ( numItems INTEGER, cursize INTEGER, data BLOB );";
+  const static char SQL_WT[] = "INSERT INTO trans (numItems, cursize, data) VALUES (?, ?, ?);";
+  const static char SQL_ST[] = "SELECT numItems, cursize, data FROM trans WHERE rowid = ?;";
 
   check_NULL (item->Trans) goto end;
 
@@ -181,6 +208,16 @@ sFactoryAddTrans (
   check_sqlite (sqlite3_exec(trans->db, SQL_CT, NULL, NULL, &errmsg)) {
     sFactoryErrorTxt(item, errnum, errmsg);
     sqlite3_free(errmsg);
+    goto end;
+  } 
+
+  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_WT, -1, &trans->insert, NULL)) {
+    sFactoryErrorSql(item, errnum);
+    goto end;
+  } 
+
+  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_ST, -1, &trans->select, NULL)) {
+    sFactoryErrorSql(item, errnum);
     goto end;
   } 
 

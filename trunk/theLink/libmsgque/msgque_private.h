@@ -163,8 +163,8 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
 //  Definition:                 bodyItem         + numItem     + CHAR  
 #   define BUFFER_P2_LIST      (BUFFER_P2_PRENUM + HDR_INT_LEN + 1   )
  
-//  Definition:                 bodyItem       + Token       + CHAR  
-#   define BUFFER_P2_TRANS     (BUFFER_P2_LIST + HDR_TOK_LEN + 1   )
+//  Definition:                 bodyItem         + Token       + CHAR  
+#   define BUFFER_P2_TRANS     (BUFFER_P2_LIST   + HDR_TOK_LEN + 1   )
 
 /*
  *	Misc stuff
