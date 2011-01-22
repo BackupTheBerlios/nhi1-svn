@@ -1272,7 +1272,7 @@ enum MqFactoryReturnE {
   /* 6  */ MQ_FACTORY_RETURN_DEFAULT_ERR,
   /* 7  */ MQ_FACTORY_RETURN_ADD_ERR,
   /* 8  */ MQ_FACTORY_RETURN_INVALID_IDENT,
-  /* 9  */ MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR,
+  /* 9  */ MQ_FACTORY_RETURN_ADD_TRANS_ERR,
   /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR
 };
 
@@ -1358,7 +1358,6 @@ struct MqFactoryS {
   struct MqFactoryTransS  *Trans;   ///< transaction storage management
 };
 
-/// \brief helper function to return MqFactoryS::Create::data
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
   struct MqFactoryS  const * const item
 );
@@ -1368,11 +1367,14 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
   struct MqFactoryS  const * const item
 );
 
-/// \brief check static Factory function return code on error
-#define MqFactoryErrorCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+/// \brief check static Factory function return code
+#define MqFactoryCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
+
+/// \brief check static Factory function return code and execute "{}" handler
+#define MqFactoryCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK)
 
 /// \brief check static Factory function return code on error and goto to error label on error
-#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error;
+#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error
 
 /// \brief convert an static Factory function \e return-status into a human readable \e error-message
 /// \attention the string belongs to \libmsgque do \b not free the memory
@@ -1385,7 +1387,12 @@ MQ_CST MqFactoryReturnMsg (
 );
 
 /// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
-MQ_EXTERN void MQ_DECL MqFactoryErrorPanic (
+MQ_EXTERN void MQ_DECL MqFactoryPanicReturn (
+  enum MqFactoryReturnE const ret
+);
+
+/// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
+MQ_EXTERN void MQ_DECL MqFactoryPanicItem (
   struct MqFactoryS const * const item
 );
 
@@ -1559,16 +1566,6 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetTrans (
 /*                           factory-context                                 */
 /*                                                                           */
 /*****************************************************************************/
-
-/// \brief create a copy of the default \e factory-interface using the identifier \e ident
-/// \context
-/// \param[in] ident the new factory identifier
-/// \retException
-MQ_EXTERN enum MqErrorE 
-MQ_DECL MqFactoryCtxDefaultSet (
-  struct MqS * const context,
-  MQ_CST const ident
-);
 
 /// \brief get the \e ident of the \e factory-interface used for the context
 /// \context

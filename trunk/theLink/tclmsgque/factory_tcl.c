@@ -18,6 +18,72 @@
 /*                                                                           */
 /*****************************************************************************/
 
+typedef int (
+  *LookupKeywordF
+) (
+  Tcl_Interp  *		      interp,
+  struct MqFactoryS * const   buf
+);
+
+struct LookupKeyword {
+  const char	  *key;
+  LookupKeywordF  keyF;
+};
+
+static int NS(MqFactoryS_Cmd) (
+  ClientData clientData,
+  Tcl_Interp * interp,
+  int objc,
+  Tcl_Obj * const objv[]
+)
+{
+  int index;
+  struct MqFactoryS * item = (struct MqFactoryS *) clientData;
+
+  const static struct LookupKeyword keys[] = {
+    { NULL,	    NULL	  }
+  };
+
+  if (objc != 2) {
+    Tcl_WrongNumArgs (interp, 1, objv, "Get...");
+    return TCL_ERROR;
+  }
+
+  TclErrorCheck (Tcl_GetIndexFromObjStruct (interp, objv[1], &keys, 
+      sizeof(struct LookupKeyword), "subcommand", 0, &index));
+
+  return (*keys[index].keyF) (interp, item);
+}
+
+static void NS(MqFactoryS_Free) (
+  ClientData clientData
+)
+{
+  struct MqFactoryS *item = (struct MqFactoryS *) clientData;
+  Tcl_DeleteExitHandler (NS(MqFactoryS_Free), item);
+}
+
+static int NS(MqFactoryS_Pointer) (
+  Tcl_Interp * interp,
+  struct MqFactoryS * item
+)
+{
+  char buffer[100];
+  sprintf(buffer, "<MqFactoryS-%p>", item);
+  Tcl_CreateObjCommand (interp, buffer, NS(MqFactoryS_Cmd), item, NS(MqFactoryS_Free));
+
+  Tcl_SetResult (interp, buffer, TCL_VOLATILE);
+  Tcl_CreateExitHandler (NS(MqFactoryS_Free), item);
+
+  return TCL_OK;
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                             factory-static                                */
+/*                                                                           */
+/*****************************************************************************/
+
 static void NS(FactoryFree) (
   MQ_PTR *dataP
 )
@@ -35,6 +101,7 @@ static void NS(FactoryCopy) (
 
 int NS(FactoryAdd) (TCL_ARGS)
 {
+  struct MqFactoryS *item;
   enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_ADD_ERR;
   int skip = 2;
   MQ_CST ident;
@@ -49,11 +116,15 @@ int NS(FactoryAdd) (TCL_ARGS)
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
   MqFactoryErrorCheck(
-    ret = MqFactoryAdd(ident, NS(FactoryCreate), factory, NS(FactoryFree), NS(FactoryFree), NS(FactoryDelete), NULL, NULL, NULL)
+    ret = MqFactoryAdd (ident, 
+      NS(FactoryCreate), factory, NS(FactoryFree), NS(FactoryCopy), 
+      NS(FactoryDelete), NULL, NULL, NULL, 
+      &item
+    )
   );
-  return TCL_OK;
+  return NS(MqFactoryS_Pointer) (interp, item);
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryReturnMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -78,7 +149,21 @@ int NS(FactoryDefault) (TCL_ARGS)
   }
   return TCL_OK;
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryReturnMsg(ret), TCL_STATIC);
+  return TCL_ERROR;
+}
+
+int NS(FactoryCopyDefault) (TCL_ARGS)
+{
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_DEFAULT_ERR;
+  int skip = 2;
+  MQ_CST ident;
+  CHECK_C(ident)
+  CHECK_NOARGS
+  MqFactoryErrorCheck(ret = MqFactoryCopyDefault(ident));
+  return TCL_OK;
+error:
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryReturnMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -98,11 +183,11 @@ int NS(FactoryCall) (TCL_ARGS)
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS
-  MqFactoryErrorCheck(ret = MqFactoryCall (ident, (MQ_PTR) interp, &mqctx));
+  MqFactoryErrorCheck(ret = MqFactoryCallIdent (ident, (MQ_PTR) interp, &mqctx));
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryReturnMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -130,7 +215,7 @@ int NS(FactoryNew) (TCL_ARGS)
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   return TCL_OK;
 error:
-  Tcl_SetResult(interp, (MQ_STR) MqFactoryErrorMsg(ret), TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) MqFactoryReturnMsg(ret), TCL_STATIC);
   return TCL_ERROR;
 }
 
@@ -157,12 +242,3 @@ int NS(FactoryCtxIdentGet) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(FactoryCtxDefaultSet) (NS_ARGS)
-{
-  SETUP_mqctx;
-  MQ_CST ident;
-  CHECK_C(ident)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqFactoryCtxDefaultSet(mqctx, ident));
-  RETURN_TCL
-}

@@ -27,9 +27,6 @@ struct MqFactoryTransS {
 
 #define pFactoryCmp(s1,s2) strcmp(s1,s2)
 
-// transaction storage, as transaction-id the ROWID is used
-const static char SQL_CT[] = "CREATE TABLE IF NOT EXIST trans ( tData BLOB )";
-
 /*****************************************************************************/
 /*                                                                           */
 /*                               factory_define                              */
@@ -46,19 +43,11 @@ static struct pFactorySpaceS {
 
 /*****************************************************************************/
 /*                                                                           */
-/*                          factory_static                                     */
+/*                              private                                      */
 /*                                                                           */
 /*****************************************************************************/
 
-static void sFactorySpaceAdd (
-  MQ_SIZE const add
-);
-
-static void sFactorySpaceDelAll (
-  void
-);
-
-static enum MqFactoryReturnE sFactorySaveError (
+static enum MqFactoryReturnE sFactoryErrorTxt (
   struct MqFactoryS * const item,
   enum MqFactoryReturnE ret,
   MQ_CST const error
@@ -69,12 +58,14 @@ static enum MqFactoryReturnE sFactorySaveError (
   return ret;
 }
 
-static enum MqFactoryReturnE sFactorySaveReturn (
+static enum MqFactoryReturnE sFactoryErrorNum (
   struct MqFactoryS * const item,
   enum MqFactoryReturnE ret
 ) {
-  return sFactorySaveError(item, ret, MqFactoryReturnMsg(ret));
+  return sFactoryErrorTxt(item, ret, MqFactoryReturnMsg(ret));
 }
+
+// *********************************************************
 
 static MQ_STR sFactoryStrDup (
   MQ_CST s
@@ -111,7 +102,7 @@ MQ_PTR sFactoryCallocItem (
 {
   MQ_PTR ptr = sFactoryCalloc(nmemb, size);
   if (unlikely (ptr == NULL)) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_CALLOC_ERR, strerror (errno));
+    sFactoryErrorTxt(item, MQ_FACTORY_RETURN_CALLOC_ERR, strerror (errno));
   }
   return ptr;
 }
@@ -133,9 +124,19 @@ void sFactoryInit (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                              factory_memory                               */
+/*                             private Add / Del                             */
 /*                                                                           */
 /*****************************************************************************/
+
+static void sFactoryAddSpace (
+  MQ_SIZE const add
+);
+
+static void sFactorySpaceDelAll (
+  void
+);
+
+// *********************************************************
 
 static enum MqFactoryReturnE
 sFactoryDelTrans (
@@ -147,8 +148,9 @@ sFactoryDelTrans (
       sqlite3_free((void*)item->Trans->storageDir);
     }
     if (item->Trans->db != NULL) {
-      sqlite3_close(item->Trans->db);
-      sqlite3_shutdown();
+      check_sqlite(sqlite3_close(item->Trans->db)) {
+	MqSqliteError(MQ_ERROR_PRINT, item->Trans->db);
+      }
     }
     sqlite3_free((void*)item->Trans);
     item->Trans = NULL;
@@ -162,31 +164,28 @@ sFactoryAddTrans (
   MQ_CST const storageDir
 )
 {
+  const static enum MqFactoryReturnE errnum = MQ_FACTORY_RETURN_ADD_TRANS_ERR;
   char *errmsg = NULL;
   struct MqFactoryTransS *trans = item->Trans = sFactoryCallocItem(item, 1, sizeof(*item->Trans));
 
+  // transaction storage, as transaction-id the ROWID is used
+  const static char SQL_CT[] = "CREATE TABLE IF NOT EXISTS trans ( tData BLOB );";
+
   check_NULL (item->Trans) goto end;
 
-  check_sqlite (sqlite3_initialize()) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR, "unable to use 'sqlite3_initialize'");
-    goto end;
-  } 
-
   check_sqlite (sqlite3_open(storageDir, &trans->db)) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR, "unable to use 'sqlite3_open'");
+    sFactoryErrorTxt(item, errnum, sqlite3_errmsg(trans->db));
     goto end;
   } 
 
   check_sqlite (sqlite3_exec(trans->db, SQL_CT, NULL, NULL, &errmsg)) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR, errmsg);
+    sFactoryErrorTxt(item, errnum, errmsg);
     sqlite3_free(errmsg);
     goto end;
   } 
 
-  trans->storageDir = sFactoryStrDup(storageDir);
-
-  check_NULL (trans->storageDir) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR, "unable to duplicate 'storageDir' string");
+  check_NULL (trans->storageDir = sFactoryStrDup(storageDir)) {
+    sFactoryErrorTxt(item, errnum, "unable to duplicate 'storageDir' string");
     goto end;
   } 
 
@@ -194,31 +193,8 @@ end:
   return item->ret;
 }
 
-/*****************************************************************************/
-/*                                                                           */
-/*                              factory_memory                               */
-/*                                                                           */
-/*****************************************************************************/
-
-void
-FactorySpaceCreate (void)
-{
-  space.items = (struct MqFactoryS *) sFactoryCalloc (SPACE_INIT_SIZE, sizeof (*space.items));
-  space.size = SPACE_INIT_SIZE;
-  space.used = 1;  // first item is always the default
-
-  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-}
-
-void
-FactorySpaceDelete (void)
-{
-  sFactorySpaceDelAll ();
-  sqlite3_free (space.items);
-}
-
 static void
-sFactorySpaceAdd (
+sFactoryAddSpace (
   MQ_SIZE const add
 )
 {
@@ -237,12 +213,6 @@ sFactorySpaceAdd (
   space.size = newsize;
 }
 
-/*****************************************************************************/
-/*                                                                           */
-/*                              Add + Del                                    */
-/*                                                                           */
-/*****************************************************************************/
-
 static void
 sFactorySpaceDelItem (
   MQ_SIZE id
@@ -255,16 +225,7 @@ sFactorySpaceDelItem (
     (*space.items[id].Delete.fFree) (&space.items[id].Delete.data);
   }
   sqlite3_free((void*)space.items[id].ident);
-  if (space.items[id].Trans != NULL) {
-    if (space.items[id].Trans->storageDir != NULL) {
-      sqlite3_free((void*)space.items[id].Trans->storageDir);
-    }
-    if (space.items[id].Trans->db != NULL) {
-      sqlite3_close(space.items[id].Trans->db);
-      sqlite3_shutdown();
-    }
-    sqlite3_free((void*)space.items[id].Trans);
-  }
+  sFactoryDelTrans(&space.items[id]);
 }
 
 static void
@@ -288,27 +249,20 @@ sFactorySpaceDelAll (
 }
 
 static enum MqFactoryReturnE
-pFactoryAddName (
+sFactoryAddName (
   MQ_CST const ident,
   struct MqFactoryCreateS Create,
   struct MqFactoryDeleteS Delete,
   struct MqFactoryS ** factoryP
 )
 {
-  struct MqFactoryS *find;
+  struct MqFactoryS *free;
 
-  if (MqFactoryItemGet(ident,&find) == MQ_FACTORY_RETURN_OK) {
-    // item already available, PANIC if callback is NOT equal
-    if (memcmp(&Create, &find->Create, sizeof(Create)) || memcmp(&Delete, &find->Delete, sizeof(Delete))) {
-      return sFactorySaveError(item, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR, "unable to call factory for identifer");
-      return MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR;
-    }
-    // OK, item available and in use ... nothing to do
+  if (MqFactoryItemGet(ident,&free) == MQ_FACTORY_RETURN_OK) {
+    return sFactoryErrorNum(free, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR);
   } else {
     // item not available, add new one
-    struct MqFactoryS *free;
-
-    sFactorySpaceAdd (1);
+    sFactoryAddSpace (1);
 
     //free = space.items + space.used * sizeof(*space.items);
     free = space.items + space.used;
@@ -322,7 +276,9 @@ pFactoryAddName (
 
     if (factoryP != NULL) *factoryP = free;
   }
-  return MQ_FACTORY_RETURN_OK;
+
+  // add the default-transaction-storage -> in memory
+  return sFactoryAddTrans (free, ":memory:");
 }
 
 /*****************************************************************************/
@@ -363,7 +319,7 @@ pFactoryCallItem (
 {
   *ctxP = NULL;
   if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
-    sFactorySaveError(item, MQ_FACTORY_RETURN_CALL_ERR, "unable to call factory for identifer");
+    sFactoryErrorNum(item, MQ_FACTORY_RETURN_CALL_ERR);
     goto end;
   }
   MqConfigUpdateName(*ctxP, item->ident);
@@ -380,38 +336,17 @@ pFactoryCallIdent (
 {
   enum MqFactoryReturnE ret;
   struct MqFactoryS *item;
-  check_Factory(ret = MqFactoryItemGet (ident, &item)) goto end;
-  check_Factory(ret = pFactoryCallItem(item, data, ctxP)) goto end;
+  MqFactoryCheck(ret = MqFactoryItemGet (ident, &item)) goto end;
+  MqFactoryCheck(ret = pFactoryCallItem(item, data, ctxP)) goto end;
 end:
   return ret;
 }
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                 public                                    */
+/*                               public misc                                 */
 /*                                                                           */
 /*****************************************************************************/
-
-enum MqFactoryReturnE
-MqFactoryItemGet (
-  MQ_CST const ident,
-  struct MqFactoryS **itemP
-)
-{
-	   struct MqFactoryS * start = space.items;
-  register struct MqFactoryS * end = start + space.used;
-  *itemP = NULL;
-  if (ident == NULL || *ident == '\0') {
-    return MQ_FACTORY_RETURN_INVALID_IDENT;
-  }
-  while (start < end-- && strcmp(end->ident,ident)) {}
-  if (end >= start) {
-    *itemP = end;
-    return MQ_FACTORY_RETURN_OK;
-  } else {
-    return MQ_FACTORY_RETURN_ITEM_GET_ERR;
-  }
-}
 
 enum MqErrorE 
 MqFactoryInvoke (
@@ -470,6 +405,95 @@ error2:
   }
 }
 
+enum MqErrorE
+MqFactoryDefaultCreate (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryS* item,
+  struct MqS  ** contextP
+)
+{
+  *contextP = MqContextCreate (0, tmpl);
+  // I don't know anything about the target
+  // -> use the template as source of the setup
+  if (create != MQ_FACTORY_NEW_INIT) MqSetupDup (*contextP, tmpl);
+  return MQ_OK;
+}
+
+MQ_CST MqFactoryReturnMsg (
+  enum MqFactoryReturnE const ret
+) {
+  switch (ret) {
+   case MQ_FACTORY_RETURN_OK:		
+    return "OK";
+   case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:	
+    return "unable to define factory, create function is required";
+   case MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR:
+    return "factory identifer already in use";
+   case MQ_FACTORY_RETURN_CALL_ERR:
+    return "unable to call factory for identifer";
+   case MQ_FACTORY_RETURN_ITEM_GET_ERR:
+    return "unable to find factory for identifer";
+   case MQ_FACTORY_RETURN_NEW_ERR:
+    return "unable to create a new factory and return an object";
+   case MQ_FACTORY_RETURN_DEFAULT_ERR:
+    return "unable to create a new default factory";
+   case MQ_FACTORY_RETURN_ADD_ERR:
+    return "unable to add a new factory";
+   case MQ_FACTORY_RETURN_INVALID_IDENT:
+    return "invalid identifier, value have to be set to a non-empty string";
+   case MQ_FACTORY_RETURN_ADD_TRANS_ERR:
+    return "unable to use the storage directory";
+   case MQ_FACTORY_RETURN_CALLOC_ERR:
+    return "unable to add transaction storage";
+  }
+  return "nothing";
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                              public ident                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+MQ_CST
+MqFactoryDefaultIdent (
+  void
+) {
+  return space.items[0].ident ? space.items[0].ident : "";
+}
+
+enum MqFactoryReturnE
+MqFactoryCallIdent (
+  MQ_CST const ident,
+  MQ_PTR const data,
+  struct MqS ** ctxP
+)
+{
+  return pFactoryCallIdent (ident, data, ctxP);
+}
+
+enum MqFactoryReturnE
+MqFactoryItemGet (
+  MQ_CST const ident,
+  struct MqFactoryS **itemP
+)
+{
+	   struct MqFactoryS * start = space.items;
+  register struct MqFactoryS * end = start + space.used;
+  *itemP = NULL;
+  if (ident == NULL || *ident == '\0') {
+    return MQ_FACTORY_RETURN_INVALID_IDENT;
+  }
+  while (start < end-- && strcmp(end->ident,ident)) {}
+  if (end >= start) {
+    *itemP = end;
+    return MQ_FACTORY_RETURN_OK;
+  } else {
+    return MQ_FACTORY_RETURN_ITEM_GET_ERR;
+  }
+}
+
 enum MqFactoryReturnE
 MqFactoryAdd (
   MQ_CST	      const ident,
@@ -492,7 +516,7 @@ MqFactoryAdd (
   if (fCreate == NULL) {
     return MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED;
   }
-  return pFactoryAddName (ident, Create, Delete, factoryP);
+  return sFactoryAddName (ident, Create, Delete, factoryP);
 }
 
 enum MqFactoryReturnE
@@ -511,7 +535,7 @@ MqFactoryCopyDefault (
     if (Delete.data != NULL && Delete.fCopy != NULL) {
       (*Delete.fCopy) (&Delete.data);
     }
-    return pFactoryAddName (ident, Create, Delete, NULL);
+    return sFactoryAddName (ident, Create, Delete, NULL);
   }
 }
 
@@ -542,48 +566,6 @@ MqFactoryDefault (
   return MQ_FACTORY_RETURN_OK;
 }
 
-enum MqErrorE
-MqFactoryDefaultCreate (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryS* item,
-  struct MqS  ** contextP
-)
-{
-  *contextP = MqContextCreate (0, tmpl);
-  // I don't know anything about the target
-  // -> use the template as source of the setup
-  if (create != MQ_FACTORY_NEW_INIT) MqSetupDup (*contextP, tmpl);
-  return MQ_OK;
-}
-
-MQ_CST
-MqFactoryDefaultIdent (
-  void
-) {
-  return space.items[0].ident ? space.items[0].ident : "";
-}
-
-enum MqFactoryReturnE
-MqFactoryCallIdent (
-  MQ_CST const ident,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  return pFactoryCallIdent (ident, data, ctxP);
-}
-
-enum MqFactoryReturnE
-MqFactoryCallItem (
-  struct MqFactoryS * const item,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  return pFactoryCallItem (item, data, ctxP);
-}
-
 enum MqFactoryReturnE
 MqFactoryNew (
   MQ_CST	      const ident,
@@ -602,13 +584,29 @@ MqFactoryNew (
   enum MqFactoryReturnE ret;
   struct MqFactoryS * item;
   *ctxP = NULL;
-  check_Factory (ret = MqFactoryAdd (ident, 
+  MqFactoryCheck (ret = MqFactoryAdd (ident, 
     fCreate, createData, createDataFreeF, createDataCopyF,
     fDelete, deleteData, deleteDataFreeF, deleteDataCopyF,
     &item
   ));
-  check_Factory (ret = pFactoryCallItem (item, data, ctxP));
+  MqFactoryCheck (ret = pFactoryCallItem (item, data, ctxP));
   return ret;
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                               public item                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqFactoryReturnE
+MqFactoryCallItem (
+  struct MqFactoryS * const item,
+  MQ_PTR const data,
+  struct MqS ** ctxP
+)
+{
+  return pFactoryCallItem (item, data, ctxP);
 }
 
 MQ_PTR
@@ -626,53 +624,31 @@ MqFactoryItemGetDeleteData(
   return item->Delete.data;
 }
 
-MQ_CST MqFactoryReturnMsg (
-  enum MqFactoryReturnE const ret
-) {
-  switch (ret) {
-   case MQ_FACTORY_RETURN_OK:		
-    return "OK";
-   case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:	
-    return "unable to define factory, create function is required";
-   case MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR:
-    return "factory identifer already in use";
-   case MQ_FACTORY_RETURN_CALL_ERR:
-    return "unable to call factory for identifer";
-   case MQ_FACTORY_RETURN_ITEM_GET_ERR:
-    return "unable to find factory for identifer";
-   case MQ_FACTORY_RETURN_NEW_ERR:
-    return "unable to create a new factory and return an object";
-   case MQ_FACTORY_RETURN_DEFAULT_ERR:
-    return "unable to create a new default factory";
-   case MQ_FACTORY_RETURN_ADD_ERR:
-    return "unable to add a new factory";
-   case MQ_FACTORY_RETURN_INVALID_IDENT:
-    return "invalid identifier, value have to be set to a non-empty string";
-   case MQ_FACTORY_RETURN_SET_STORAGE_DIR_ERROR:
-    return "unable to use the storage directory";
-   case MQ_FACTORY_RETURN_CALLOC_ERR:
-    return "unable to calloc memory";
-  }
-  return "nothing";
-}
-
 MQ_CST MqFactoryErrorMsg (
   struct MqFactoryS const * const item
 ) {
   return item->error;
 }
 
-void MqFactoryErrorPanic (
+void MqFactoryPanicReturn (
+  enum MqFactoryReturnE const ret
+) {
+  if (ret != MQ_FACTORY_RETURN_OK) {
+    MqPanicC(MQ_ERROR_PANIC, __func__, ret, MqFactoryReturnMsg(ret))
+  }
+}
+
+void MqFactoryPanicItem (
   struct MqFactoryS const * const item
 ) {
   if (item->ret != MQ_FACTORY_RETURN_OK) {
-    MqPanicC(MQ_ERROR_PANIC, __func__, -1, item->error);
+    MqPanicC(MQ_ERROR_PANIC, __func__, item->ret, item->error);
   }
 }
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                set/get                                    */
+/*                            public Set / Get                               */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -692,30 +668,17 @@ MqFactorySetTrans (
   MQ_CST const storageDir
 )
 {
-  check_Factory (sFactoryDelTrans(item)) goto end;
-  check_Factory (sFactoryAddTrans(item, storageDir)) goto end;
+  MqFactoryCheck (sFactoryDelTrans(item)) goto end;
+  MqFactoryCheck (sFactoryAddTrans(item, storageDir)) goto end;
 end:
   return item->ret;
 }
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                context                                    */
+/*                             public context                                */
 /*                                                                           */
 /*****************************************************************************/
-
-enum MqErrorE 
-MqFactoryCtxDefaultSet (
-  struct MqS * const context,
-  MQ_CST const ident
-) {
-  enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck(ret = MqFactoryCopyDefault(ident));
-  MqFactoryCtxIdentSet(context, ident);
-  return MQ_OK;
-error:
-  return MqErrorC(context, __func__, -1, MqFactoryReturnMsg(ret));
-}
 
 enum MqErrorE 
 MqFactoryCtxIdentSet (
@@ -723,7 +686,7 @@ MqFactoryCtxIdentSet (
   MQ_CST ident
 ) {
   enum MqFactoryReturnE ret;
-  MqFactoryErrorCheck (ret = MqFactoryItemGet(ident, &context->setup.factory));
+  MqFactoryCheck (ret = MqFactoryItemGet(ident, &context->setup.factory)) goto error;
   MqConfigUpdateName(context, ident);
   return MQ_OK;
 error:
@@ -736,6 +699,37 @@ MqFactoryCtxIdentGet (
 )
 {
   return context && context->setup.factory ? context->setup.factory->ident : "";
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                           protected setup                                 */
+/*                                                                           */
+/*****************************************************************************/
+
+void
+FactorySpaceCreate (void)
+{
+  check_sqlite (sqlite3_initialize()) {
+    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_initialize'");
+  }   
+
+  space.items = (struct MqFactoryS *) sFactoryCalloc (SPACE_INIT_SIZE, sizeof (*space.items));
+  space.size = SPACE_INIT_SIZE;
+  space.used = 1;  // first item is always the default
+
+  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+}
+
+void
+FactorySpaceDelete (void)
+{
+  sFactorySpaceDelAll ();
+  sqlite3_free (space.items);
+
+  check_sqlite (sqlite3_shutdown()) {
+    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_shutdown'");
+  }   
 }
 
 END_C_DECLS

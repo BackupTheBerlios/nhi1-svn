@@ -326,7 +326,6 @@ int NS(SlaveGet) (NS_ARGS);
 int NS(SlaveGetMaster) (NS_ARGS);
 int NS(SlaveIs) (NS_ARGS);
 
-int NS(FactoryCtxDefaultSet) (NS_ARGS);
 int NS(FactoryCtxIdentSet) (NS_ARGS);
 int NS(FactoryCtxIdentGet) (NS_ARGS);
 
@@ -484,7 +483,6 @@ int NS(MqS_Cmd) (
 
 // FACTORY
 //
-    { "FactoryCtxDefaultSet",	  NS(FactoryCtxDefaultSet)    },
     { "FactoryCtxIdentSet",	  NS(FactoryCtxIdentSet)      },
     { "FactoryCtxIdentGet",	  NS(FactoryCtxIdentGet)      },
 

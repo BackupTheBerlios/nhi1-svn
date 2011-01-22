@@ -23,9 +23,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ## init
 ##
 
-set Start_PREFIX {
-  $FH_LAST FactoryCtxDefault otto
-}
+tclmsgque FactoryDefault otto
 
 array set factory {
   c	  libmsgque

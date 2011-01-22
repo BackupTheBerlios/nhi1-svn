@@ -42,6 +42,8 @@ proc ECOI {ctx} {
   $ctx SendRETURN
 }
 
+tclmsgque FactoryCopyDefault OTTO
+
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
@@ -72,7 +74,7 @@ if {$BLOCK_1} {
 # startup binary --------------------------
 Setup $I $B $C $S
 
-$FH_LAST FactoryCtxDefault OTTO
+$FH_LAST FactoryCtxIdentSet OTTO
 
 # tests ----------------------------
 
@@ -278,7 +280,7 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
       Setup $I $B $C $S --filter-server Filter3
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
-      $FH_LAST FactoryCtxDefault OTTO
+      $FH_LAST FactoryCtxIdentSet OTTO
     } \
     -body           {
       $FH_LAST SendSTART

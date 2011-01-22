@@ -177,7 +177,7 @@ int NS(MqBufferS_Pointer) (
   Tcl_SetResult (interp, buffer, TCL_VOLATILE);
   Tcl_CreateExitHandler (NS(MqBufferS_Free), buf);
 
-  return MQ_OK;
+  return TCL_OK;
 }
 
 /* \brief create a buffer object 

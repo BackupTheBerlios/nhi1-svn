@@ -1155,7 +1155,8 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqErrorCheck (MqFactoryCtxDefaultSet(mqctx, CV));
+    MqFactoryCopyDefault(CV);
+    MqErrorCheck (MqFactoryCtxIdentSet(mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send
@@ -1396,33 +1397,16 @@ main (
 )
 {
   struct MqS *mqctx = NULL;
-  struct MqFactoryS *factory = NULL;
 
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
-  // add Factory 
-M0
-  if (MqFactoryErrorCheckI(MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &factory))) {
-M1
+  // call Factory 
+  MqFactoryCheck (MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx)) {
     ServerHelp(MqSysBasename("server", MQ_NO));
   }
 
-  // add transaction storage
-M2
-  if (MqFactoryErrorCheckI(MqFactorySetTrans(factory, ":memory:"))) {
-M3
-    MqFactoryExit(factory);
-  }
-
-  // call Factory 
-M4
-  if (MqFactoryErrorCheckI(MqFactoryCallItem(factory, NULL, &mqctx))) {
-M5
-    MqFactoryExit(factory);
-  }
-
-  // create the ServerCtxS
+  // setup the link, parse command-line arguments
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // test debug output

@@ -244,8 +244,7 @@ void pContextDeleteLOCK(struct MqS * const);
 #define check_sqlite(E) if (unlikely((E) != SQLITE_OK))
 #define check_NULL(E) if (unlikely((E) == NULL))
 #define check_INT(E) if (unlikely((E) != 0))
-#define check_Factory(E) if (unlikely((E) != MQ_FACTORY_RETURN_OK))
-
+#define MqSqliteError(ctx,db) MqErrorC(ctx, __func__, sqlite3_errcode(db), sqlite3_errmsg(db))
 
 END_C_DECLS
 
