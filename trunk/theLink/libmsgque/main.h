@@ -84,7 +84,9 @@ enum MqMessageNumE {
     /* 36 */ MQ_ERROR_ITEM_IN_PACKAGE,
     /* 37 */ MQ_ERROR_NOT_SUPPORTED,
     /* 38 */ MQ_ERROR_START_ITEM_REQUIRED,
-    /* 39 */ MQ_MESSAGE_END,
+    /* 39 */ MQ_ERROR_FACTORY,
+    /* 40 */ MQ_ERROR_TRANSACTION_REQUIRED,
+    /* 41 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -169,6 +171,10 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the feature is not supported in the current setup",
     /* MQ_ERROR_START_ITEM_REQUIRED */
 	"the required item '%s' is not available in the data package",
+    /* MQ_ERROR_FACTORY */
+	"FACTORY - %s",
+    /* MQ_ERROR_TRANSACTION_REQUIRED */
+	"found ReadT_START but no TRANSACTION is available",
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };

@@ -67,6 +67,12 @@ void pErrorReset (struct MqS * const);
 #define MqErrorDbV2(context,item, ...) \
     MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item], __VA_ARGS__)
 
+#define MqErrorDbFactoryMsg(context,msg) \
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(MQ_ERROR_FACTORY),MqMessageText[MQ_ERROR_FACTORY],msg)
+
+#define MqErrorDbFactoryNum(context,num) \
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(MQ_ERROR_FACTORY),MqMessageText[MQ_ERROR_FACTORY],MqFactoryReturnMsg(num))
+
 END_C_DECLS
 
 #endif /* ERROR_H */

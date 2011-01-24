@@ -463,7 +463,7 @@ rescan:
 	  factory = context->setup.factory;
 	} else if (
 	  // check for factory using "name"
-	  MqFactoryItemGet(name, &factory) == MQ_FACTORY_RETURN_OK
+	  (factory = MqFactoryItemGet(name)) != NULL
 	) {
 	  // -> found
 

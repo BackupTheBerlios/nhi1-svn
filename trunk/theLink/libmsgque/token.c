@@ -419,10 +419,8 @@ pTokenDefaultTRT (
 ) 
 {
   switch (pReadGetHandShake (context)) {
-    case MQ_HANDSHAKE_OK: {
-      pTokenSetCurrent (context->link.srvT, pReadGetTransactionToken(context));
-      return pTokenInvoke (context->link.srvT);
-    }
+    case MQ_HANDSHAKE_OK:
+      return pReadTransaction (context);
     case MQ_HANDSHAKE_ERROR: {
       MQ_INT retNum;
       MQ_CST msg;
@@ -435,8 +433,10 @@ pTokenDefaultTRT (
       pReadSetReturnNum (context, retNum);
       
       // write HEADER
+/*
       MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
 	pReadGetTransactionToken(context), retNum);
+*/
       // write ERROR-STACK
       while (MqReadItemExists (context)) {
 	MqErrorCheck (MqReadC (context, &msg));

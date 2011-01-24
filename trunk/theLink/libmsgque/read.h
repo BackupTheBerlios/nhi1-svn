@@ -58,15 +58,11 @@ void pReadSetHandShake (
   enum MqHandShakeE hs
 );
 
-void pReadInitTransactionItem (
+enum MqErrorE pReadInitTransactionItem (
   struct MqS * const context
 );
 
-void pReadCleanupTransactionItem (
-  struct MqS * const context
-);
-
-MQ_CST pReadGetTransactionToken (
+enum MqErrorE pReadTransaction (
   struct MqS * const context
 );
 

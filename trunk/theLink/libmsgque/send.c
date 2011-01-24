@@ -24,6 +24,7 @@
 #include "cache.h"
 #include "read.h"
 #include "token.h"
+#include "factory.h"
 
 BEGIN_C_DECLS
 
@@ -69,8 +70,9 @@ struct SendSaveS {
  */
 struct MqSendS {
   struct MqS * context;	///< ...
-  struct MqBufferS * buf;       ///< the sending buffer object
-  struct MqBufferS * trans;     ///< transaction buffer object, will be mapped into database
+  struct MqBufferS * buf;       ///< buffer in duty, will be "sendBuf" or "tranBuf"
+  struct MqBufferS * tranBuf;   ///< transaction buffer, will be mapped into database
+  struct MqBufferS * sendBuf;   ///< send buffer, will be used for socket io
   struct SendSaveS * save;      ///< need for List objects
   struct MqCacheS * cache;	///< ...
   MQ_BOL haveStart;		///< #MqSendEND checks if #MqSendSTART was used
@@ -117,9 +119,10 @@ pSendCreate (
 
 //MqDLogV(msgque, 0, ">>>>>>>>>>>>> CREATE send<%p>\n", send);
 
-  send->buf = MqBufferCreate (context, 10000);
-  send->trans = MqBufferCreate (context, 256);
+  send->sendBuf = MqBufferCreate (context, 10000);
+  send->tranBuf = MqBufferCreate (context, 256);
   send->haveStart = MQ_NO;
+  send->buf = send->sendBuf;  // buffer in duty
 
   ptr = (MQ_STR) send->buf->data;
 
@@ -151,8 +154,8 @@ pSendDelete (
   if (unlikely (send == NULL)) return;
 
   pCacheDelete (&send->cache);
-  MqBufferDelete (&send->buf);
-  MqBufferDelete (&send->trans);
+  MqBufferDelete (&send->sendBuf);
+  MqBufferDelete (&send->tranBuf);
   MqSysFree (*sendP);
 }
 
@@ -726,12 +729,13 @@ MqSendSTART (
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    register struct MqBufferS * const buf = send->buf;
+    register struct MqBufferS * const buf = send->sendBuf;
     register struct HdrS * const cur = (struct HdrS *) buf->data;
 
     buf->numItems = 0;
     send->haveStart = MQ_YES;
     send->save = NULL;
+    send->buf = send->sendBuf;  // reset buffer in duty
 
     // add FLAG data
     if (unlikely(context->config.isString)) {
@@ -755,9 +759,7 @@ MqSendSTART (
     buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
 
     // add transaction item if available
-    pReadInitTransactionItem (context);
-
-    return MQ_OK;
+    return pReadInitTransactionItem (context);
   }
 }
 
@@ -823,9 +825,6 @@ pSendEND (
 	  buf->cur.B -= BDY_SIZE;
       }
     }
-
-    // cleanup transaction item if available
-    pReadCleanupTransactionItem (context);
 
   /*
   if (MQ_IS_SERVER(msgque)) {
@@ -1035,69 +1034,6 @@ pSendListEnd (
   }
 }
 
-static void
-pSendTransStart (
-  struct MqS * const context
-)
-{
-  register struct MqSendS * const send = context->link.send;
-  register struct MqBufferS * const buf = send->buf;
-  register struct SendSaveS * save;
-
-  pBufferAddSize (buf, BUFFER_P2_LIST);
-// MK1
-  buf->cursize	+= BUFFER_P2_PRENUM;
-  buf->cur.B	+= BUFFER_P2_PRENUM;
-
-  // zustand sichern !
-  save = (struct SendSaveS*) pCachePop (send->cache);
-  save->save	  = send->save;
-  save->numItems  = buf->numItems;
-  save->cursize	  = buf->cursize;
-
-  send->save = save;
-
-  // Init
-  buf->numItems = 0;
-  buf->cursize += HDR_INT_LEN+1;
-  buf->cur.B += HDR_INT_LEN+1;
-}
-
-static enum MqErrorE
-pSendTransEnd (
-  struct MqS * const context,
-  enum MqTypeE const type
-)
-{
-  register struct MqSendS * const send = context->link.send;
-  register struct SendSaveS * const save = send->save;
-  if (save == NULL) {
-    return MqErrorDbV(MQ_ERROR_START_ITEM_REQUIRED, "MqSend?_START");
-  } else {
-    register struct MqBufferS * const buf = send->buf;
-    register MQ_BIN ist = (buf->data + save->cursize);
-    MQ_BOL const isString = context->config.isString;
-    MQ_INT const bodyLen = (MQ_INT) (buf->cursize - save->cursize);
-
-    // set numItems
-    SEND_I (isString, ist, buf->numItems);
-
-    // restore "save" 
-    send->save = save->save;
-    buf->numItems = save->numItems;
-    buf->cursize = save->cursize;
-    buf->cur.B = buf->data + buf->cursize;
-
-    // master setzen
-    sSendLen (buf, bodyLen, type, isString);
-
-    // free memory /ATTENTION send->save will be set ABOVE
-    pCachePush (send->cache, save);
-
-    return MQ_OK;
-  }
-}
-
 enum MqErrorE
 MqSendL_START (
   struct MqS * const context
@@ -1127,12 +1063,11 @@ MqSendL_END (
 
 enum MqErrorE
 MqSendT_START (
-  struct MqS * const context,
-  MQ_TOK const callback
+  struct MqS * const context
 )
 {
   struct MqSendS * const send = context->link.send;
-  struct MqBufferS * const buf = send->buf;
+  register struct MqBufferS * buf = send->buf;
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (buf->numItems > 0) {
@@ -1140,40 +1075,52 @@ MqSendT_START (
   } else if (context->setup.factory == NULL) {
     return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
-    register struct MqBufferS * const buf = send->trans;
-    // step 1. reverse buffer
-    send->trans = send->buf;
-    send->buf = buf;
-    // step 2. initialize buffer
+
+    // step 1. set header to transaction
+    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
+
+    // step 2. "tranBuf" is buffer in duty
+    send->buf = buf = send->tranBuf;
+
+    // step 3. initialize buffer
     buf->numItems = 0;
     buf->cursize = 0;
-    buf->type = send->trans->type;
+    buf->type = send->sendBuf->type;
     buf->cur.B = buf->data;
-    // step 3. initialize transaction
-    pSendListStart (context);
-    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
-    pBufferAddSize (buf, HDR_TOK_LEN+1);
-    strncpy(buf->cur.C, callback, HDR_TOK_LEN);
-    buf->cur.B += HDR_TOK_LEN;
-    *buf->cur.B++ = BUFFER_CHAR;
-    buf->cursize += (HDR_TOK_LEN+1);
-    MqSendC(context, context->setup.factory->ident);
+
     return MQ_OK;
   }
 }
 
 enum MqErrorE
 MqSendT_END (
-  struct MqS * const context
+  struct MqS * const context,
+  MQ_TOK const callback
 )
 {
-  if (context->link.send == NULL) {
+  struct MqSendS * const send = context->link.send;
+  if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (MqErrorCheckI(pSendListEnd (context, MQ_TRAT))) {
-    return MqErrorStack(context);
   } else {
+    register struct MqBufferS * buf = send->buf;
+    MQ_WID transId;
+
+    // step 1. save data into the transaction database
+    MqErrorCheck (pFactoryCtxInsertSendTrans(context, callback, buf, &transId));
+
+    // step 2. "sendBuf" is buffer in duty
+    send->buf = send->sendBuf;
+
+    // step 3. add factory identifier
+    MqErrorCheck (MqSendC(context, context->setup.factory->ident));
+
+    // step 4. add transaction-identifer
+    MqErrorCheck (MqSendW(context, transId));
+
     return MQ_OK;
   }
+error:
+  return MqErrorStack(context);
 }
 
 /*****************************************************************************/
@@ -1192,7 +1139,6 @@ MqSendERROR (
   } else if (MqErrorGetCodeI(context) == MQ_ERROR) {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
-    pReadCleanupTransactionItem (context);
     MqErrorCheck(MqSendSTART (context));
     MqSendI (context, MqErrorGetNumI (context));
     MqSendC (context, MqErrorGetText (context));
@@ -1211,12 +1157,11 @@ MqSendRETURN (
 )
 {
   struct MqSendS * const send = context->link.send;
-  enum MqHandShakeE hs = pReadGetHandShake (context);
 
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    switch (hs) {
+    switch (pReadGetHandShake (context)) {
       case MQ_HANDSHAKE_START: {
 	// without "shortterm-transaction" no return
 	if (context->link._trans == 0) 

@@ -213,18 +213,18 @@ int NS(SendL_END) (NS_ARGS)
 int NS(SendT_START) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_STR callback;
-  CHECK_C(callback)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqSendT_START(mqctx, callback));
+  ErrorMqToTclWithCheck(MqSendT_START(mqctx));
   RETURN_TCL
 }
 
 int NS(SendT_END) (NS_ARGS)
 {
+  MQ_STR callback;
   SETUP_mqctx
+  CHECK_C(callback)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqSendT_END(mqctx));
+  ErrorMqToTclWithCheck(MqSendT_END(mqctx, callback));
   RETURN_TCL
 }
 

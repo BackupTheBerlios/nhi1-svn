@@ -1273,7 +1273,8 @@ enum MqFactoryReturnE {
   /* 7  */ MQ_FACTORY_RETURN_ADD_ERR,
   /* 8  */ MQ_FACTORY_RETURN_INVALID_IDENT,
   /* 9  */ MQ_FACTORY_RETURN_ADD_TRANS_ERR,
-  /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR
+  /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR,
+  /* 11 */ MQ_FACTORY_RETURN_ITEM_IS_NULL
 };
 
 /// \brief the \e factory is called to create an instance for ...
@@ -1396,6 +1397,11 @@ MQ_EXTERN void MQ_DECL MqFactoryPanicItem (
   struct MqFactoryS const * const item
 );
 
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopy (
+  struct MqFactoryS * const item,
+  MQ_CST const ident
+);
+
 /// \brief add a new factory interface and create a new top-level instance
 /// \details This function is a convenient function to combine the #MqFactoryAdd
 /// and the #MqFactoryCall functionality.
@@ -1474,14 +1480,6 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MqFactoryDataCopyF  const deleteDataCopyF
 ) __attribute__((nonnull(1,2)));
 
-/// \brief add a new factory as \e copy of the \e default factory but with a new \e ident
-/// \details The new factory is an ordinary factory
-/// \param[in] ident  factory identifier
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopyDefault (
-  MQ_CST           const ident
-) __attribute__((nonnull(1)));
-
 /// \brief the \e default factory constructor function
 /// \details This is an constructor suitable to create \e C language instance.
 /// Other programming languages need other default constructors. This constructor 
@@ -1535,15 +1533,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
   struct MqS ** contextP
 );
 
-/// \brief call a factory \e constructor defined by \e item
-/// \details This is a low-level function to call a factory constructor
-/// \param[in] ident the factory identifier of the factory interface
-/// \param[out] itemP the factory interface
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryItemGet (
-  MQ_CST const ident,
-  struct MqFactoryS **itemP
-) __attribute__((nonnull(1)));
+/// \brief return the \e factory-item
+/// \param[in] ident the \e factory-identifier or \e NULL / \e "" for \e default-factory
+/// \return the \e factory-item or \e NULL if nothing was found
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryItemGet (
+  MQ_CST const ident
+);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3519,8 +3514,8 @@ case MQ_OK: break; case MQ_ERROR: goto error; case MQ_CONTINUE: return MQ_CONTIN
 }
 /// \brief process error message
 #define MqErrorReturn(PROC) switch (PROC) {\
-case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; case MQ_ERROR: return MqErrorStack (MQ_CONTEXT_S);\
-}; return MQ_OK;
+case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; default: return MqErrorStack (MQ_CONTEXT_S);\
+};
 /// \brief check on error and goto label \e error1
 #define MqErrorCheck1(PROC) if (MqErrorCheckI(PROC)) goto error1
 /// \brief check on error and goto label \a JUMP
@@ -4130,15 +4125,15 @@ Use \RNSA{ReadT_START} and \RNSA{ReadT_END} to extract the data.
 \retException
 */
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
-  struct MqS * const ctx,
-  MQ_TOK const callback
+  struct MqS * const ctx
 );
 
 /// \brief finish to write a \e longterm-transaction-item to the \e send-data-package.
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
-  struct MqS * const ctx
+  struct MqS * const ctx,
+  MQ_TOK const callback
 );
 
 /** \} Mq_Send_C_API */

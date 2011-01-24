@@ -21,6 +21,7 @@
 #include "token.h"
 #include "swap.h"
 #include "cache.h"
+#include "factory.h"
 
 BEGIN_C_DECLS
 
@@ -48,16 +49,17 @@ struct MqReadS {
   struct MqS * context;		    ///< link to the msgque object
   struct MqBufferS * hdrorig;	    ///< in a context->switch, poit to the original header data, need in "MqReadBDY"
   struct MqBufferS * hdr;	    ///< used for HDR data (static)
-  struct MqBufferS * bdy;	    ///< used for BDY data (dynamic)
+  struct MqBufferS * bdy;	    ///< buffer in duty, will be "readBuf" or "tranBuf"
   struct MqBufferS * cur;	    ///< used as reference on \e bdy with the current data
+  struct MqBufferS * readBuf;	    ///< read socket buffer, will be used for socket io
+  struct MqBufferS * tranBuf;	    ///< transaction buffer, will be mapped into database
   enum MqHandShakeE handShake;	    ///< what kind of call is it?
   MQ_INT returnNum;		    ///< Return-Number
   struct MqCacheS * saveCache;	    ///< cache of <TT>struct ReadSaveS</TT> data
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
-  MQ_CBI trans_item;		    ///< transaction item
-  MQ_SIZE trans_size;		    ///< transaction size
+  MQ_WID transId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
 };
 
 /*****************************************************************************/
@@ -94,9 +96,11 @@ pReadCreate (
 //MqDLogV(read->context,__func__,-1,"read<%p>\n", read);
 
   read->hdr = MqBufferCreate (context, HDR_SIZE + 1);
-  read->bdy = MqBufferCreate (context, 10000);
+  read->readBuf = MqBufferCreate (context, 10000);
+  read->tranBuf = MqBufferCreate (context, 256);
   read->canUndo = MQ_NO;
   read->handShake = MQ_HANDSHAKE_START;
+  read->bdy = read->readBuf;
 
   // references
   read->cur = pBufferCreateRef (read->bdy);
@@ -218,8 +222,8 @@ MqReadT_START (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (buf == NULL && MqErrorCheckI(MqReadU(context,&buf))) {
     return MqErrorStack(context);
-  } else if (buf->type != MQ_TRAT) {
-    return MqErrorDbV(MQ_ERROR_TYPE, MqLogTypeName(MQ_TRAT), MqLogTypeName(buf->type));
+  } else if (read->transId == 0LL) {
+    return MqErrorDb(MQ_ERROR_TRANSACTION_REQUIRED);
   } else {
     MQ_CST tmp;
     sReadListStart (context, buf);
@@ -257,6 +261,26 @@ void pReadL_CLEANUP (
 /*                                read_native                                */
 /*                                                                           */
 /*****************************************************************************/
+
+enum MqErrorE
+pReadTransaction (
+  register struct MqS  * context
+)
+{
+  struct MqReadS * read = context->link.read;
+  MQ_CST ident;
+  MqErrorCheck (MqReadC (context, &ident));
+  if (!strcmp(ident, context->setup.factory->ident)) {
+    return MqErrorV(context,__func__,-1,
+      "internal error expect ident '%s' but got ident '%s'", 
+	context->setup.factory->ident, ident);
+  }
+  MqErrorCheck (MqReadW (context, &read->transId));
+  MqErrorCheck (pFactoryCtxSelectSendTrans (context, read->transId, read->tranBuf));
+  return MQ_OK;
+error:
+  return MqErrorStack(context);
+}
 
 enum MqErrorE
 pReadHDR (
@@ -342,7 +366,7 @@ pReadHDR (
   read->returnNum = 0;
   // MqReadBDY need the original "header", save this header in the current context
   read->hdrorig = hdr;
-  bdy = read->bdy;
+  bdy = read->bdy = read->readBuf;
 
   // 8. read token
   pTokenSetCurrent (context->link.srvT, cur->tok);
@@ -380,12 +404,15 @@ pReadHDR (
       pLogBDY (context, __func__, 7, bdy);
 
     // 5. if in a longterm-transaction, read the transaction-item
+    read->transId = 0LL;
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
-      MQ_CBI itm = NULL; MQ_SIZE len = 0;
-      enum MqErrorE ret;
-      MqErrorCheck (MqReadN (context, &itm, &len));
+      MQ_CST ident; MQ_WID rmtTransId;
+      MqErrorCheck (MqReadC (context, &ident));
+      MqErrorCheck (MqReadW (context, &rmtTransId));
+      MqErrorCheck (pFactoryCtxInsertReadTrans (context, ident, rmtTransId, read->transId, &read->transId));
       // answer first call with an empty return package
       if (context->link._trans != 0) {
+	enum MqErrorE ret;
 	MqErrorCheck (MqSendSTART  (context));
 	read->handShake = MQ_HANDSHAKE_START;
 	ret = MqSendRETURN (context);
@@ -393,8 +420,6 @@ pReadHDR (
 	MqErrorCheck (ret);
 	context->link._trans = 0;
       }
-      read->trans_item = itm; 
-      read->trans_size = len;
     }
   }
 
@@ -919,11 +944,7 @@ pReadGetHandShake (
   struct MqS const * const context
 )
 {
-  if (context->link.read != NULL) {
-    return context->link.read->handShake;
-  } else {
-    return MQ_HANDSHAKE_START;
-  }
+  return context->link.read != NULL ? context->link.read->handShake : MQ_HANDSHAKE_START;
 }
 
 void
@@ -944,35 +965,14 @@ pReadSetReturnNum (
   context->link.read->returnNum = retNum;
 }
 
-void
+enum MqErrorE
 pReadInitTransactionItem (
   struct MqS * const context
 )
 {
   struct MqReadS *read = context->link.read;
-  if (read->trans_item != NULL) {
-    MqSendN (context, read->trans_item, read->trans_size);
-  }
-}
-
-void
-pReadCleanupTransactionItem (
-  struct MqS * const context
-)
-{
-  struct MqReadS *read = context->link.read;
-  if (read->trans_item != NULL) {
-    read->trans_item = NULL;
-    read->trans_size = 0;
-  }
-}
-
-MQ_CST
-pReadGetTransactionToken (
-  struct MqS * const context
-)
-{
-  return (MQ_CST) context->link.read->bdy->data + BDY_SIZE + BUFFER_P2_LIST;
+  if (read->transId == 0LL) return MQ_OK;
+  return pFactoryCtxSelectReadTrans1(context,read->transId);
 }
 
 /*****************************************************************************/

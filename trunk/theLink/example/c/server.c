@@ -1250,9 +1250,9 @@ Ot_TRNS (
   struct ServerCtxS *srvctx = (struct ServerCtxS*) mqctx;
   MQ_INT i;
   MqErrorCheck (MqSendSTART (mqctx));
-  MqErrorCheck (MqSendT_START (mqctx, "TRN2"));
+  MqErrorCheck (MqSendT_START (mqctx));
   MqErrorCheck (MqSendI (mqctx, 9876));
-  MqErrorCheck (MqSendT_END (mqctx));
+  MqErrorCheck (MqSendT_END (mqctx, "TRN2"));
   MqErrorCheck (MqReadI (mqctx, &i));
   MqErrorCheck (MqSendI (mqctx, i));
   MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "ECOI", MQ_TIMEOUT_USER));
