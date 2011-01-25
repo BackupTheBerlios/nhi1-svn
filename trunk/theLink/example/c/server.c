@@ -713,7 +713,6 @@ Ot_BUF1 (
     case MQ_STRT:
       MqSendC(mqctx, buf->cur.C); break;
     case MQ_LSTT:
-    case MQ_TRAT:
       break;
   }
   return MqSendRETURN(mqctx);
@@ -1155,7 +1154,7 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqFactoryCopy(MqFactoryItemGet(NULL), CV);
+    MqFactoryCopy(MqFactoryGet(NULL), CV);
     MqErrorCheck (MqFactoryCtxIdentSet(mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);

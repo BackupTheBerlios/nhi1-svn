@@ -264,9 +264,6 @@ int NS(ReadALL) (NS_ARGS)
 	OBJ = Tcl_GetObjResult(interp);
 	break;
       }
-      case MQ_TRAT: {
-	break;
-      }
     }
     if (OBJ != NULL) Tcl_ListObjAppendElement(interp, RET, OBJ);
   }

@@ -264,7 +264,7 @@ pReadTransaction (
   struct MqReadS * read = context->link.read;
   MQ_CST ident;
   MqErrorCheck (MqReadC (context, &ident));
-  if (!strcmp(ident, context->setup.factory->ident)) {
+  if (strcmp(ident, context->setup.factory->ident)) {
     return MqErrorV(context,__func__,-1,
       "internal error expect ident '%s' but got ident '%s'", 
 	context->setup.factory->ident, ident);
@@ -400,10 +400,11 @@ pReadHDR (
     // 5. if in a longterm-transaction, read the transaction-item on the !server!
     read->transId = 0LL;
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
-      MQ_CST ident; MQ_WID rmtTransId;
+      MQ_CST ident; MQ_WID rmtTransId, transId;
       MqErrorCheck (MqReadC (context, &ident));
       MqErrorCheck (MqReadW (context, &rmtTransId));
-      MqErrorCheck (pFactoryCtxInsertReadTrans (context, ident, rmtTransId, read->transId, &read->transId));
+      // need tmp for "transId" besause the following "MqSendSTART" send data !without! transaction package data
+      MqErrorCheck (pFactoryCtxInsertReadTrans (context, ident, rmtTransId, read->transId, &transId));
       // answer first call with an empty return package
       if (context->link._trans != 0) {
 	enum MqErrorE ret;
@@ -414,6 +415,8 @@ pReadHDR (
 	MqErrorCheck (ret);
 	context->link._trans = 0;
       }
+      // now the "transId" is "official" in use
+      read->transId = transId;
     }
   }
 

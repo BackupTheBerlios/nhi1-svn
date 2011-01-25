@@ -42,7 +42,7 @@ proc ECOI {ctx} {
   $ctx SendRETURN
 }
 
-tclmsgque FactoryCopyDefault OTTO
+[tclmsgque FactoryGet] Copy OTTO
 
 ##
 ## -----------------------------------------------------------------------
@@ -83,9 +83,9 @@ test transaction-e-1-($I|$B|$C|$S) {wrong item position} \
     -body           {
       $FH_LAST SendSTART
       $FH_LAST SendI 1
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendEND_AND_WAIT TRNS
     } \
     -returnCodes    error \
@@ -96,13 +96,12 @@ test transaction-e-2-($I|$B|$C|$S) {SendT_END without SendT_START} \
     -constraints    {c pipe} \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendEND_AND_WAIT TRNS
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
-[cC]> (client-0) found in function "MqSendT_END" at file "send.c"}
+    -result         {[cC]> (client-0) \[MqSendT_END] the required item 'MqSendT_START' is not available in the data package}
 
 test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {
@@ -111,9 +110,9 @@ test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_WAIT ECOI
       $FH_LAST ProcessEvent -wait ONCE
@@ -134,9 +133,9 @@ test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} 
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_CALLBACK ECOI CB
       $FH_LAST ProcessEvent -wait ONCE; # wait for callback
@@ -158,9 +157,9 @@ test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendI 1
       $FH_LAST SendEND ECOI
       $FH_LAST ProcessEvent -wait ONCE; # wait for transaction
@@ -179,9 +178,9 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendW 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendW 1
       $FH_LAST SendEND_AND_WAIT ECOI
       $FH_LAST ProcessEvent -wait ONCE
@@ -224,9 +223,9 @@ test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendI 1
       $FH_LAST SendEND ERRT
       $FH_LAST ProcessEvent -wait ONCE; # wait for transaction

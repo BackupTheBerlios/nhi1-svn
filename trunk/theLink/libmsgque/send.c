@@ -629,7 +629,6 @@ MqSendU (
 	MqReadL_END(context);
 	break;
       }
-      case MQ_TRAT: MqPanicSYS(context);
     }
     return MQ_OK;
   }
@@ -1100,10 +1099,12 @@ MqSendT_END (
 )
 {
   struct MqSendS * const send = context->link.send;
+  register struct MqBufferS * buf = send->buf;
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (buf !=  send->tranBuf) {
+    return MqErrorDbV(MQ_ERROR_START_ITEM_REQUIRED, "MqSendT_START");
   } else {
-    register struct MqBufferS * buf = send->buf;
     MQ_WID transId;
 
     // step 1. save data into the transaction database

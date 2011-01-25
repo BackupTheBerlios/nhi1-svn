@@ -17,6 +17,8 @@
 #include "sqlite3.h"
 #include "errno.h"
 
+#define MQ_CONTEXT_S context
+
 BEGIN_C_DECLS
 
 struct MqFactoryS *defaultFactoryItem = NULL;
@@ -157,6 +159,17 @@ static void sFactorySpaceDelAll (
 
 // *********************************************************
 
+static void sFactoryPrepSqlFinalize (
+  sqlite3 *db,
+  sqlite3_stmt *prepSql
+)
+{
+  if (prepSql == NULL) return;
+  check_sqlite(sqlite3_finalize(prepSql)) {
+    MqErrorC(MQ_ERROR_PRINT, __func__, MQ_ERROR_FACTORY, sqlite3_errmsg(db));
+  }
+}
+
 static enum MqFactoryReturnE
 sFactoryDelTrans (
   struct MqFactoryS * const item
@@ -167,16 +180,14 @@ sFactoryDelTrans (
     if (trans->storageDir != NULL) {
       sqlite3_free((void*)trans->storageDir);
     }
-    if (trans->sendInsert != NULL) {
-      check_sqlite(sqlite3_finalize(trans->sendInsert)) {
-	MqSqliteError(MQ_ERROR_PRINT, trans);
-      }
-    }
-    if (trans->sendSelect != NULL) {
-      check_sqlite(sqlite3_finalize(trans->sendSelect)) {
-	MqSqliteError(MQ_ERROR_PRINT, trans);
-      }
-    }
+
+    sFactoryPrepSqlFinalize (trans->db, trans->sendInsert);
+    sFactoryPrepSqlFinalize (trans->db, trans->sendSelect);
+    sFactoryPrepSqlFinalize (trans->db, trans->readInsert);
+    sFactoryPrepSqlFinalize (trans->db, trans->readSelect1);
+    sFactoryPrepSqlFinalize (trans->db, trans->readSelect2);
+    sFactoryPrepSqlFinalize (trans->db, trans->readDelete);
+
     if (trans->db != NULL) {
       check_sqlite(sqlite3_close(trans->db)) {
 	MqSqliteError(MQ_ERROR_PRINT, trans);
@@ -729,6 +740,12 @@ MqFactoryCtxIdentGet (
   return context && context->setup.factory ? context->setup.factory->ident : "";
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                    protected context - sql layer                          */
+/*                                                                           */
+/*****************************************************************************/
+
 enum MqErrorE
 pFactoryCtxInsertSendTrans (
   struct MqS * const context, 
@@ -782,10 +799,10 @@ pFactoryCtxSelectSendTrans (
     default:
       return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
   }
-  pTokenSetCurrent(context->link.srvT, (MQ_CST const)sqlite3_column_text(hdl, 1));
-  MqBufferSetB(buf, sqlite3_column_blob(hdl, 4), sqlite3_column_bytes(hdl, 3));
-  buf->numItems = sqlite3_column_int(hdl, 2);
-  buf->type = sqlite3_column_int(hdl, 3);
+  pTokenSetCurrent(context->link.srvT, (MQ_CST const)sqlite3_column_text(hdl, 0));
+  MqBufferSetB(buf, sqlite3_column_blob(hdl, 3), sqlite3_column_bytes(hdl, 3));
+  buf->numItems = sqlite3_column_int(hdl, 1);
+  buf->type = sqlite3_column_int(hdl, 2);
   return MQ_OK;
 error:
   return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
@@ -797,7 +814,7 @@ pFactoryCtxInsertReadTrans (
   MQ_CST const ident, 
   MQ_WID const rmtTransId, 
   MQ_WID const oldTransId, 
-  MQ_WID *transId
+  MQ_WID *transIdP
 )
 {
   struct MqFactoryTransS *trans = context->setup.factory->Trans;
@@ -815,7 +832,7 @@ pFactoryCtxInsertReadTrans (
   if (sqlite3_step(hdl) != SQLITE_DONE) {
     return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
   }
-  *transId = sqlite3_last_insert_rowid(trans->db);
+  *transIdP = sqlite3_last_insert_rowid(trans->db);
   return MQ_OK;
 error:
   return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
@@ -844,8 +861,8 @@ pFactoryCtxSelectReadTrans (
     default:
       return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
   }
-  MqErrorCheck1 (MqSendC (context, (MQ_CST) sqlite3_column_text	(hdl, 1)));
-  MqErrorCheck1 (MqSendW (context, sqlite3_column_int64	(hdl, 2)));
+  MqErrorCheck1 (MqSendC (context, (MQ_CST) sqlite3_column_text	(hdl, 0)));
+  MqErrorCheck1 (MqSendW (context, sqlite3_column_int64	(hdl, 1)));
   return MQ_OK;
 error:
   return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
@@ -879,7 +896,7 @@ pFactoryCtxDeleteReadTrans (
     default:
       return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
   }
-  *oldTransId = sqlite3_column_int64 (hdl, 1);
+  *oldTransId = sqlite3_column_int64 (hdl, 0);
   // delete row
   check_NULL(del) {
     const static char sql[] = "DELETE FROM readTrans WHERE rowid = ?;";

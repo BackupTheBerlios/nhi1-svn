@@ -766,7 +766,6 @@ MqBufferGetType (
     case MQ_SRTT: return 'S';
     case MQ_FLTT: return 'F';
     case MQ_LSTT: return 'L';
-    case MQ_TRAT: return 'T';
   }
   return '*';
 }
@@ -795,7 +794,6 @@ MqBufferGetType3 (
     case MQ_SRTT: return "S";
     case MQ_FLTT: return "F";
     case MQ_LSTT: return "L";
-    case MQ_TRAT: return "T";
   }
   return "*";
 }
@@ -1245,9 +1243,6 @@ MqBufferLogS (
       break;
     case MQ_LSTT:
       MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_L ">\n", buf->cur.L);
-      break;
-    case MQ_TRAT:
-      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_L ">\n", buf->cur.T);
       break;
   }
 #undef MY_MAX

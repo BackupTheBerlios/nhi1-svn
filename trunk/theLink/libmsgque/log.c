@@ -256,9 +256,6 @@ sLogDynItem (
 	case MQ_LSTT:
 	  mq_snprintf(ptr, size, ">>>> ");
 	  break;
-	case MQ_TRAT:
-	  mq_snprintf(ptr, size, ">>>> ");
-	  break;
 	case MQ_BINT: 
 	  mq_snprintf(ptr, size, "%s", "?binary?");
 	  break;
@@ -282,29 +279,6 @@ sLogDynItem (
 	  sLogDynItem	(context, hd, prefix, level, space);
 	  MqBufferPop	(space, "   ");
 	  break;
-	case MQ_TRAT: {
-	  MQ_STRB token[HDR_TOK_LEN+1];
-
-	  // set binary or string
-	  hd->type = MQ_STRING_TYPE(context->config.isString);
-
-	  // read numItems
-	  hd->cur.B = hd->data;
-	  hd->numItems = (hd->type==MQ_BINT ? MqBufU2INT(hd->cur) : str2int(hd->cur.C,NULL,16));
-	  hd->cur.B += (HDR_INT_LEN+1);
-	  strncpy(token,hd->cur.C,HDR_TOK_LEN);
-	  token[HDR_TOK_LEN] = '\0';
-	  hd->cur.B += (HDR_TOK_LEN+1);
-
-	  // start-msg
-	  MqLogV (context, prefix, level, "%stoken<%s>, numItems<" MQ_FORMAT_Z ">\n", buf, token, hd->numItems);
-
-	  // print item-list
-	  MqBufferPush	(space, "   ");
-	  sLogDynItem	(context, hd, prefix, level, space);
-	  MqBufferPop	(space, "   ");
-	  break;
-	}
 	default:
 	  MqLogV (context, prefix, level, "%s\n", buf);
 	  break;
@@ -456,7 +430,6 @@ MqLogTypeName (
     case MQ_WIDT: return "WID";
     case MQ_DBLT: return "DBL";
     case MQ_LSTT: return "LST";
-    case MQ_TRAT: return "TRA";
   }
   return "UNKNOWN";
 }

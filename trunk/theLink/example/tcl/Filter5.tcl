@@ -106,7 +106,7 @@ tclmsgque Main {
   tclmsgque FactoryAdd F2 NewF2
   tclmsgque FactoryAdd F3 NewF3
 
-  set srv [tclmsgque FactoryCall [lindex $argv 0]]
+  set srv [[tclmsgque FactoryGet [lindex $argv 0]] New]
 
   if {[catch {
     $srv LinkCreate {*}$argv

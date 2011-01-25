@@ -81,7 +81,7 @@ static int FS(Cmd) (
     { NULL,	    NULL	  }
   };
 
-  if (objc != 2) {
+  if (objc < 2) {
     Tcl_WrongNumArgs (interp, 1, objv, "subcommand ...");
     return TCL_ERROR;
   }
@@ -197,9 +197,9 @@ int NS(FactoryGet) (TCL_ARGS)
 {
   enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_GET_ERR;
   int skip = 2;
-  MQ_CST ident;
+  MQ_CST ident = NULL;
   struct MqFactoryS * item;
-  CHECK_C(ident)
+  CHECK_C_OPT(ident)
   CHECK_NOARGS
   if ( (item = MqFactoryGet(ident)) == NULL) goto error;
   return FS(Create) (interp, item);

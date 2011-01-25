@@ -91,7 +91,7 @@ main (
     MqFactoryPanicReturn (MqFactoryAdd("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
     // call the initial factory to initialize the "config"
-    MqFactoryCheck (MqFactoryCallIdent(argv[1], NULL, &ctx)) {
+    MqFactoryCheck (MqFactoryCall(MqFactoryGet(argv[1]), NULL, &ctx)) {
       ToolHelp(MqSysBasename(argv[0], MQ_NO));
     }
 

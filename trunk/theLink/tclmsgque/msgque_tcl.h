@@ -197,6 +197,12 @@ error: \
     skip++; \
   }
 
+#define CHECK_C_OPT(val) \
+  if (skip < objc) {\
+    val = VAL2CST(objv[skip]); \
+    skip++; \
+  }
+
 #define CHECK_B(val,len) \
   if (skip >= objc) {\
     Tcl_WrongNumArgs(interp, skip, objv, #val " ...");\
