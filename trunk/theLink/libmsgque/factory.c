@@ -22,13 +22,14 @@ BEGIN_C_DECLS
 struct MqFactoryS *defaultFactoryItem = NULL;
 
 struct MqFactoryTransS {
-  MQ_CST  storageDir;	    ///< main directory used for database files
-  sqlite3 *db;		    ///< sqlite database connection handle
-  sqlite3_stmt *sendInsert; ///< prepared sql statement
-  sqlite3_stmt *sendSelect; ///< prepared sql statement
-  sqlite3_stmt *readInsert; ///< prepared sql statement
-  sqlite3_stmt *readSelect1; ///< prepared sql statement
-  sqlite3_stmt *readSelect2; ///< prepared sql statement
+  MQ_CST  storageDir;	      ///< main directory used for database files
+  sqlite3 *db;		      ///< sqlite database connection handle
+  sqlite3_stmt *sendInsert;   ///< prepared sql statement
+  sqlite3_stmt *sendSelect;   ///< prepared sql statement
+  sqlite3_stmt *readInsert;   ///< prepared sql statement
+  sqlite3_stmt *readSelect1;  ///< prepared sql statement
+  sqlite3_stmt *readSelect2;  ///< prepared sql statement
+  sqlite3_stmt *readDelete;   ///< prepared sql statement
 };
 
 #define pFactoryCmp(s1,s2) strcmp(s1,s2)
@@ -199,12 +200,7 @@ sFactoryAddTrans (
 
   // transaction storage, as transaction-id the ROWID is used
   const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans ( callback TEXT, numItems INTEGER, type INTEGER, data BLOB );";
-  const static char SQL_SIT[] = "INSERT INTO sendTrans (callback, numItems, type, data) VALUES (?, ?, ?, ?);";
-  const static char SQL_SST[] = "SELECT callback, numItems, type, data FROM sendTrans WHERE rowid = ?;";
-  const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans ( ident TEXT, rmtTransId INTEGER, oldTransId INTEGER );";
-  const static char SQL_RIT[] = "INSERT INTO readTrans (ident, rmtTransId, oldTransId ) VALUES (?, ?, ?);";
-  const static char SQL_RS1T[] = "SELECT ident, rmtTransId FROM readTrans WHERE rowid = ?;";
-  const static char SQL_RS2T[] = "SELECT oldTransId FROM readTrans WHERE rowid = ?;";
+  const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (ident TEXT,ctxId INTEGER,rmtTransId INTEGER,oldTransId INTEGER);";
 
   check_NULL (item->Trans) goto end;
 
@@ -219,34 +215,9 @@ sFactoryAddTrans (
     goto end;
   } 
 
-  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_SIT, -1, &trans->sendInsert, NULL)) {
-    sFactoryErrorSql(item, errnum);
-    goto end;
-  } 
-
-  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_SST, -1, &trans->sendSelect, NULL)) {
-    sFactoryErrorSql(item, errnum);
-    goto end;
-  } 
-
   check_sqlite (sqlite3_exec(trans->db, SQL_RCT, NULL, NULL, &errmsg)) {
     sFactoryErrorTxt(item, errnum, errmsg);
     sqlite3_free(errmsg);
-    goto end;
-  } 
-
-  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_RIT, -1, &trans->readInsert, NULL)) {
-    sFactoryErrorSql(item, errnum);
-    goto end;
-  } 
-
-  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_RS1T, -1, &trans->readSelect1, NULL)) {
-    sFactoryErrorSql(item, errnum);
-    goto end;
-  } 
-
-  check_sqlite (sqlite3_prepare_v2(trans->db, SQL_RS2T, -1, &trans->readSelect2, NULL)) {
-    sFactoryErrorSql(item, errnum);
     goto end;
   } 
 
@@ -322,7 +293,7 @@ sFactoryAddName (
   struct MqFactoryS ** factoryP
 )
 {
-  struct MqFactoryS *free = MqFactoryItemGet(ident);
+  struct MqFactoryS *free = MqFactoryGet(ident);
 
   if (free != NULL) {
     // item is available, -> error
@@ -336,6 +307,7 @@ sFactoryAddName (
 
     space.used += 1;
 
+    free->signature = MQ_MqFactoryS_SIGNATURE;
     free->ident = sFactoryStrDup(ident);
 
     free->Create = Create;
@@ -375,35 +347,6 @@ pFactoryCtxItemSet (
 ) {
   context->setup.factory = item;
   MqConfigUpdateName(context, item->ident);
-}
-
-static enum MqFactoryReturnE
-pFactoryCallItem (
-  struct MqFactoryS * const item,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  *ctxP = NULL;
-  if (item == NULL) {
-    return MQ_FACTORY_RETURN_ITEM_IS_NULL;
-  } else if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
-    sFactoryErrorNum(item, MQ_FACTORY_RETURN_CALL_ERR);
-    goto end;
-  }
-  MqConfigUpdateName(*ctxP, item->ident);
-end:
-  return item->ret;
-}
-
-static enum MqFactoryReturnE
-pFactoryCallIdent (
-  MQ_CST const ident,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  return pFactoryCallItem(MqFactoryItemGet(ident), data, ctxP);
 }
 
 /*****************************************************************************/
@@ -512,6 +455,8 @@ MQ_CST MqFactoryReturnMsg (
     return "unable to add transaction storage";
    case MQ_FACTORY_RETURN_ITEM_IS_NULL:
     return "item is NULL";
+   case MQ_FACTORY_RETURN_GET_ERR:
+    return "unable to get factory for ident";
   }
   return "nothing";
 }
@@ -529,18 +474,8 @@ MqFactoryDefaultIdent (
   return space.items[0].ident ? space.items[0].ident : "";
 }
 
-enum MqFactoryReturnE
-MqFactoryCallIdent (
-  MQ_CST const ident,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  return pFactoryCallIdent (ident, data, ctxP);
-}
-
 struct MqFactoryS *
-MqFactoryItemGet (
+MqFactoryGet (
   MQ_CST const ident
 )
 {
@@ -627,9 +562,8 @@ MqFactoryNew (
     fCreate, createData, createDataFreeF, createDataCopyF,
     fDelete, deleteData, deleteDataFreeF, deleteDataCopyF,
     &item
-  ));
-  MqFactoryCheck (ret = pFactoryCallItem (item, data, ctxP));
-  return ret;
+  )) return ret;
+  return MqFactoryCall (item, data, ctxP);
 }
 
 /*****************************************************************************/
@@ -639,13 +573,22 @@ MqFactoryNew (
 /*****************************************************************************/
 
 enum MqFactoryReturnE
-MqFactoryCallItem (
+MqFactoryCall (
   struct MqFactoryS * const item,
   MQ_PTR const data,
   struct MqS ** ctxP
 )
 {
-  return pFactoryCallItem (item, data, ctxP);
+  *ctxP = NULL;
+  if (item == NULL) {
+    return MQ_FACTORY_RETURN_ITEM_IS_NULL;
+  } else if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
+    sFactoryErrorNum(item, MQ_FACTORY_RETURN_CALL_ERR);
+    goto end;
+  }
+  MqConfigUpdateName(*ctxP, item->ident);
+end:
+  return item->ret;
 }
 
 MQ_PTR
@@ -691,7 +634,9 @@ MqFactoryCopy (
   MQ_CST const ident
 )
 {
-  if (ident == NULL || *ident == '\0') {
+  if (item == NULL) {
+    return MQ_FACTORY_RETURN_ITEM_IS_NULL;
+  } else if (ident == NULL || *ident == '\0') {
     return MQ_FACTORY_RETURN_INVALID_IDENT;
   } else {
     struct MqFactoryCreateS Create = item->Create;
@@ -741,11 +686,33 @@ end:
 /*****************************************************************************/
 
 enum MqErrorE 
+MqFactoryCtxSet (
+  struct MqS * const context,
+  struct MqFactoryS * const item
+) {
+  check_NULL(item) {
+    return MqErrorDbFactoryNum(context,MQ_FACTORY_RETURN_ITEM_IS_NULL);
+  } else {
+    context->setup.factory = item;
+    MqConfigUpdateName(context, item->ident);
+    return MQ_OK;
+  }
+}
+
+struct MqFactoryS * const
+MqFactoryCtxGet (
+  struct MqS const * const context
+)
+{
+  return context->setup.factory;
+}
+
+enum MqErrorE 
 MqFactoryCtxIdentSet (
   struct MqS * const context,
   MQ_CST ident
 ) {
-  struct MqFactoryS * const item = MqFactoryItemGet(ident);
+  struct MqFactoryS * const item = MqFactoryGet(ident);
   check_NULL(item) {
     return MqErrorDbFactoryNum(context,MQ_FACTORY_RETURN_ITEM_IS_NULL);
   }
@@ -772,6 +739,11 @@ pFactoryCtxInsertSendTrans (
 {
   struct MqFactoryTransS *trans = context->setup.factory->Trans;
   register sqlite3_stmt *hdl= trans->sendInsert;
+  check_NULL(hdl) {
+    const static char sql[] = "INSERT INTO sendTrans (callback, numItems, type, data) VALUES (?, ?, ?, ?);";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->sendInsert, NULL)) goto error;
+    hdl = trans->sendInsert;
+  }
   check_sqlite (sqlite3_reset	   (hdl))					    goto error;
   check_sqlite (sqlite3_bind_text  (hdl,1,callback,HDR_TOK_LEN,SQLITE_TRANSIENT))   goto error;
   check_sqlite (sqlite3_bind_int   (hdl,2,buf->numItems))			    goto error;
@@ -795,6 +767,11 @@ pFactoryCtxSelectSendTrans (
 {
   struct MqFactoryTransS *trans = context->setup.factory->Trans;
   register sqlite3_stmt * hdl = trans->sendSelect;
+  check_NULL(hdl) {
+    const static char sql[] = "SELECT callback, numItems, type, data FROM sendTrans WHERE rowid = ?;";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->sendSelect, NULL)) goto error;
+    hdl = trans->sendSelect;
+  }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
   check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
   switch (sqlite3_step(hdl)) {
@@ -825,10 +802,16 @@ pFactoryCtxInsertReadTrans (
 {
   struct MqFactoryTransS *trans = context->setup.factory->Trans;
   register sqlite3_stmt *hdl= trans->readInsert;
+  check_NULL(hdl) {
+    const static char sql[] = "INSERT INTO readTrans (ident, ctxId, rmtTransId, oldTransId ) VALUES (?, ?, ?, ?);";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->readInsert, NULL)) goto error;
+    hdl = trans->readInsert;
+  }
   check_sqlite(sqlite3_reset	  (hdl))			      goto error;
   check_sqlite(sqlite3_bind_text  (hdl,1,ident,-1,SQLITE_TRANSIENT))  goto error;
-  check_sqlite(sqlite3_bind_int64 (hdl,2,rmtTransId))		      goto error;
-  check_sqlite(sqlite3_bind_int64 (hdl,3,oldTransId))		      goto error;
+  check_sqlite(sqlite3_bind_int   (hdl,2,context->link.ctxId))	      goto error;
+  check_sqlite(sqlite3_bind_int64 (hdl,3,rmtTransId))		      goto error;
+  check_sqlite(sqlite3_bind_int64 (hdl,4,oldTransId))		      goto error;
   if (sqlite3_step(hdl) != SQLITE_DONE) {
     return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
   }
@@ -839,13 +822,18 @@ error:
 }
 
 enum MqErrorE
-pFactoryCtxSelectReadTrans1 (
+pFactoryCtxSelectReadTrans (
   struct MqS * const context, 
   MQ_WID transId
 )
 {
   struct MqFactoryTransS *trans = context->setup.factory->Trans;
   register sqlite3_stmt * hdl = trans->readSelect1;
+  check_NULL(hdl) {
+    const static char sql[] = "SELECT ident, rmtTransId FROM readTrans WHERE rowid = ?;";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->readSelect1, NULL)) goto error;
+    hdl = trans->readSelect1;
+  }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
   check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
   switch (sqlite3_step(hdl)) {
@@ -863,6 +851,49 @@ error:
   return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
 error1:
   return MqErrorStack(context);
+}
+
+enum MqErrorE
+pFactoryCtxDeleteReadTrans (
+  struct MqS * const context, 
+  MQ_WID transId,
+  MQ_WID *oldTransId
+)
+{
+  struct MqFactoryTransS *trans = context->setup.factory->Trans;
+  register sqlite3_stmt * hdl = trans->readSelect2;
+  register sqlite3_stmt * del = trans->readDelete;
+  check_NULL(hdl) {
+    const static char sql[] = "SELECT oldTransId FROM readTrans WHERE rowid = ?;";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->readSelect2, NULL)) goto error;
+    hdl = trans->readSelect2;
+  }
+  // get oldTransId
+  check_sqlite (sqlite3_reset(hdl))		    goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  switch (sqlite3_step(hdl)) {
+    case SQLITE_ROW:
+      break;
+    case SQLITE_DONE:
+      return MqErrorV(context,__func__,MQ_ERROR_FACTORY,"transaction-id '%lld' not found",transId);
+    default:
+      return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
+  }
+  *oldTransId = sqlite3_column_int64 (hdl, 1);
+  // delete row
+  check_NULL(del) {
+    const static char sql[] = "DELETE FROM readTrans WHERE rowid = ?;";
+    check_sqlite (sqlite3_prepare_v2(trans->db, sql, -1, &trans->readDelete, NULL)) goto error;
+    del = trans->readDelete;
+  }
+  check_sqlite (sqlite3_reset(del))		    goto error;
+  check_sqlite (sqlite3_bind_int64(del,1,transId))  goto error;
+  if (sqlite3_step(hdl) != SQLITE_DONE) {
+    return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
+  }
+  return MqErrorGetCodeI(context);
+error:
+  return MqErrorDbFactoryMsg(context,sqlite3_errmsg(trans->db));
 }
 
 /*****************************************************************************/

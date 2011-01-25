@@ -412,15 +412,17 @@ error:
   return MqErrorStack(context);
 }
 
+// this code is used on a client to read the answer of a \e longterm-transaction
 static enum MqErrorE
 pTokenDefaultTRT (
   struct MqS * const context,
   MQ_PTR const data
 ) 
 {
+  MqErrorCheck (pReadTransaction (context));
   switch (pReadGetHandShake (context)) {
     case MQ_HANDSHAKE_OK:
-      return pReadTransaction (context);
+      return pTokenInvoke (context->link.srvT);
     case MQ_HANDSHAKE_ERROR: {
       MQ_INT retNum;
       MQ_CST msg;
@@ -433,23 +435,22 @@ pTokenDefaultTRT (
       pReadSetReturnNum (context, retNum);
       
       // write HEADER
-/*
       MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
-	pReadGetTransactionToken(context), retNum);
-*/
+			    pTokenGetCurrent(context->link.srvT), retNum);
+
       // write ERROR-STACK
       while (MqReadItemExists (context)) {
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
-error:
-      return MQ_ERROR;
     }
     case MQ_HANDSHAKE_START:
     case MQ_HANDSHAKE_TRANSACTION:
       break;
   }
   return MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
+error:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
@@ -662,7 +663,3 @@ pTokenMark (
 }
 
 END_C_DECLS
-
-
-
-

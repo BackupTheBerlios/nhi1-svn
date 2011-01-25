@@ -14,9 +14,9 @@ AM_LIBTOOLFLAGS = --tag=disable-static
 
 pkglib_LTLIBRARIES = tclmsgque.la
 
-tclmsgque_la_SOURCES =	context_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_tcl.c \
+tclmsgque_la_SOURCES =	MqS_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_tcl.c \
 			  config_tcl.c service_tcl.c msgque_tcl.h slave_tcl.c \
-			    MqBufferS_tcl.c error_tcl.c link_tcl.c factory_tcl.c
+			    MqBufferS_tcl.c error_tcl.c link_tcl.c MqFactoryS_tcl.c
 
 # use this if you want to link again the dynmic libraray libmsgque...
 #tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS)

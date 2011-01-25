@@ -1260,6 +1260,9 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief signature used in \ref MqFactoryS::signature
+#define MQ_MqFactoryS_SIGNATURE 0x47129019
+
 /// \brief a static Factory function return this enum as status
 /// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
 enum MqFactoryReturnE {
@@ -1274,7 +1277,8 @@ enum MqFactoryReturnE {
   /* 8  */ MQ_FACTORY_RETURN_INVALID_IDENT,
   /* 9  */ MQ_FACTORY_RETURN_ADD_TRANS_ERR,
   /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR,
-  /* 11 */ MQ_FACTORY_RETURN_ITEM_IS_NULL
+  /* 11 */ MQ_FACTORY_RETURN_ITEM_IS_NULL,
+  /* 12 */ MQ_FACTORY_RETURN_GET_ERR
 };
 
 /// \brief the \e factory is called to create an instance for ...
@@ -1349,6 +1353,7 @@ struct MqFactoryTransS;
 
 /// \brief data used to define a factory
 struct MqFactoryS {
+  MQ_INT signature;		    ///< should be #MQ_MqFactoryS_SIGNATURE
   MQ_CST ident;			    ///< public known factory name
   MQ_BOL called;		    ///< was the factory called?
   enum MqFactoryReturnE ret;	    ///< exit status of last factory command
@@ -1501,22 +1506,11 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
-/// \brief call the factory constructor, identified by \e ident, to create a new instance
-/// \param[in] ident factory identifier to call
-/// \param[in] data (C-API) environment specific data or \c NULL
-/// \param[out] ctxP (C-API) the new created instance to return
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCallIdent (
-  MQ_CST const ident,
-  MQ_PTR const data,
-  struct MqS ** ctxP
-) __attribute__((nonnull(1)));
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCallItem (
+MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
   struct MqFactoryS * const item,
   MQ_PTR const data,
   struct MqS ** ctxP
-) __attribute__((nonnull(1)));
+);
 
 
 /// \brief call a factory \e constructor defined by \e item
@@ -1536,7 +1530,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
 /// \brief return the \e factory-item
 /// \param[in] ident the \e factory-identifier or \e NULL / \e "" for \e default-factory
 /// \return the \e factory-item or \e NULL if nothing was found
-MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryItemGet (
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
   MQ_CST const ident
 );
 
@@ -1562,6 +1556,22 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetTrans (
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief get the \e factory-interface used for the context
+/// \context
+/// \return the \e factory-interface
+MQ_EXTERN struct MqFactoryS * const MQ_DECL MqFactoryCtxGet (
+  struct MqS const * const context
+);
+
+/// \brief link the context to a new \e factory-interface
+/// \context
+/// \param[in] factory the \e factory-interface to link with
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCtxSet (
+  struct MqS * const context,
+  struct MqFactoryS * const factory
+);
+
 /// \brief get the \e ident of the \e factory-interface used for the context
 /// \context
 /// \return the \c context.factory.ident value or an empty string if no factory is available
@@ -1574,8 +1584,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
 /// \context
 /// \param[in] ident the factory identifier to link with
 /// \retException
-MQ_EXTERN enum MqErrorE
-MQ_DECL MqFactoryCtxIdentSet (
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCtxIdentSet (
   struct MqS * const context,
   MQ_CST ident
 );
@@ -1623,7 +1632,7 @@ MQ_DECL MqFactoryCtxIdentSet (
 
 /// \brief data structure for the \e libmsgque-specific-data
 struct MqS {
-  MQ_INT signature;		    ///< used to verify the \e pointer-data-type in a type-less programming languages
+  MQ_INT signature;		    ///< should be #MQ_MqS_SIGNATURE
   MQ_PRIVATE_CONFIG_CONST
     struct MqConfigS config;	    ///< the configuration data is used for "end-user" configuration
   struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
@@ -2366,7 +2375,7 @@ enum MqAllocE {
 /// The lifetime of the \e buffer-object is only the current callback up to the next
 /// read operation in the same \e parent-context.
 struct MqBufferS {
-  MQ_INT signature;		///< used to verify the \e pointer-data-type in a type-less programming languages
+  MQ_INT signature;		///< should be #MQ_MqBufferS_SIGNATURE
   struct MqS *context;		///< error object of the related msgque
   MQ_BIN data;                  ///< always point to the beginning of the data-segment
   MQ_SIZE size;                 ///< the size of the data-segment
@@ -3599,12 +3608,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL_END (
 /// The \e current-item have to be the first item in the \e read-data-package.
 /// This command requires a final \RNS{ReadL_END} to finish the read.
 /// \ctx
-/// \param[in] buffer an optional \e buffer-object as result from a previous \RNSA{ReadU} call or \null to
-///   use the next item from the \e read-data-package.
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_START (
-  struct MqS * const ctx,
-  struct MqBufferS * buffer
+  struct MqS * const ctx
 );
 
 /// \brief finish to extract a \e longterm-transaction-item from the \e read-data-package.

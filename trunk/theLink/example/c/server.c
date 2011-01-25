@@ -1155,7 +1155,7 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqFactoryCopyDefault(CV);
+    MqFactoryCopy(MqFactoryItemGet(NULL), CV);
     MqErrorCheck (MqFactoryCtxIdentSet(mqctx, CV));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
@@ -1231,7 +1231,7 @@ static enum MqErrorE Ot_TRN2 (
 )
 {
   struct ServerCtxS *srvctx = (struct ServerCtxS*) mqctx;
-  MqErrorCheck (MqReadT_START (mqctx, NULL));
+  MqErrorCheck (MqReadT_START (mqctx));
   MqErrorCheck (MqReadI (mqctx, &srvctx->i));
   MqErrorCheck (MqReadT_END (mqctx));
   MqErrorCheck (MqReadI (mqctx, &srvctx->j));

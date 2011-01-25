@@ -213,22 +213,16 @@ MqReadL_END (
 
 enum MqErrorE
 MqReadT_START (
-  struct MqS * const context,
-  struct MqBufferS * buf
+  struct MqS * const context
 )
 {
   register struct MqReadS * const read = context->link.read;
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (buf == NULL && MqErrorCheckI(MqReadU(context,&buf))) {
-    return MqErrorStack(context);
   } else if (read->transId == 0LL) {
     return MqErrorDb(MQ_ERROR_TRANSACTION_REQUIRED);
   } else {
-    MQ_CST tmp;
-    sReadListStart (context, buf);
-    read->bdy->cur.B += (HDR_TOK_LEN+1);
-    MqReadC(context, &tmp);
+    read->bdy = read->tranBuf;
     return MQ_OK;
   }
 }
@@ -242,7 +236,7 @@ MqReadT_END (
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    sReadListEnd (context);
+    read->bdy = read->readBuf;
     return MQ_OK;
   }
 }
@@ -403,7 +397,7 @@ pReadHDR (
     if (unlikely (debug >= 7 && size > BDY_SIZE))
       pLogBDY (context, __func__, 7, bdy);
 
-    // 5. if in a longterm-transaction, read the transaction-item
+    // 5. if in a longterm-transaction, read the transaction-item on the !server!
     read->transId = 0LL;
     if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
       MQ_CST ident; MQ_WID rmtTransId;
@@ -965,14 +959,21 @@ pReadSetReturnNum (
   context->link.read->returnNum = retNum;
 }
 
-enum MqErrorE
-pReadInitTransactionItem (
+MQ_WID
+pReadGetTransId (
   struct MqS * const context
 )
 {
-  struct MqReadS *read = context->link.read;
-  if (read->transId == 0LL) return MQ_OK;
-  return pFactoryCtxSelectReadTrans1(context,read->transId);
+  return context->link.read->transId;
+}
+
+enum MqErrorE
+pReadDeleteTrans (
+  struct MqS * const context 
+)
+{
+  struct MqReadS * const read = context->link.read;
+  return pFactoryCtxDeleteReadTrans(context,read->transId,&read->transId);
 }
 
 /*****************************************************************************/
@@ -1006,15 +1007,4 @@ pReadLog (
 #endif
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
 

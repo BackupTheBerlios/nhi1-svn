@@ -175,6 +175,18 @@ error: \
     skip++; \
   }
 
+#define CHECK_FACTORY(val) \
+  val = NULL; \
+  if (skip < objc) {\
+    NS(GetClientData) (interp, objv[skip], MQ_MqFactoryS_SIGNATURE, (MQ_PTR*)&val); \
+  } \
+  if (val == NULL) { \
+    Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
+    goto error; \
+  } else { \
+    skip++; \
+  }
+
 #define VAL2CST(val) Tcl_GetString(val)
 #define CHECK_C(val) \
   if (skip >= objc) {\

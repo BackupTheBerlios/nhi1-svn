@@ -58,7 +58,7 @@ void pReadSetHandShake (
   enum MqHandShakeE hs
 );
 
-enum MqErrorE pReadInitTransactionItem (
+MQ_WID pReadGetTransId (
   struct MqS * const context
 );
 
@@ -69,6 +69,11 @@ enum MqErrorE pReadTransaction (
 void pReadSetReturnNum (
   struct MqS const * const context,
   MQ_INT retNum
+);
+
+enum MqErrorE
+pReadDeleteTrans (
+  struct MqS * const context 
 );
 
 /// \brief reading from a dynamic \e MqBufferS

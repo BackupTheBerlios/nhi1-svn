@@ -54,9 +54,16 @@ pFactoryCtxInsertReadTrans (
 );
 
 enum MqErrorE
-pFactoryCtxSelectReadTrans1 (
+pFactoryCtxSelectReadTrans (
   struct MqS * const context, 
   MQ_WID transId
+);
+
+enum MqErrorE
+pFactoryCtxDeleteReadTrans (
+  struct MqS * const context, 
+  MQ_WID transId,
+  MQ_WID *oldTransId
 );
 
 END_C_DECLS

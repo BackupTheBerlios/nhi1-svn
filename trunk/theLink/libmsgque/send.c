@@ -731,6 +731,7 @@ MqSendSTART (
   } else {
     register struct MqBufferS * const buf = send->sendBuf;
     register struct HdrS * const cur = (struct HdrS *) buf->data;
+    MQ_WID transId = pReadGetTransId(context);
 
     buf->numItems = 0;
     send->haveStart = MQ_YES;
@@ -759,7 +760,7 @@ MqSendSTART (
     buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
 
     // add transaction item if available
-    return pReadInitTransactionItem (context);
+    return transId == 0LL ? MQ_OK : pFactoryCtxSelectReadTrans(context,transId);
   }
 }
 
@@ -1206,7 +1207,9 @@ MqSendRETURN (
 	  case MQ_CONTINUE:
 	    MqPanicSYS (context);
 	}
-	return pSendEND (context, "+TRT", 0);
+	MqErrorCheck(pSendEND (context, "+TRT", 0));
+	MqErrorCheck(pReadDeleteTrans (context));
+	return MqErrorGetCodeI(context);
       }
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
