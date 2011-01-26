@@ -1266,19 +1266,20 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \brief a static Factory function return this enum as status
 /// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
 enum MqFactoryReturnE {
-  /* 0  */ MQ_FACTORY_RETURN_OK,
-  /* 1  */ MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
-  /* 2  */ MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
-  /* 3  */ MQ_FACTORY_RETURN_CALL_ERR,
-  /* 4  */ MQ_FACTORY_RETURN_ITEM_GET_ERR,
-  /* 5  */ MQ_FACTORY_RETURN_NEW_ERR,
-  /* 6  */ MQ_FACTORY_RETURN_DEFAULT_ERR,
-  /* 7  */ MQ_FACTORY_RETURN_ADD_ERR,
-  /* 8  */ MQ_FACTORY_RETURN_INVALID_IDENT,
-  /* 9  */ MQ_FACTORY_RETURN_ADD_TRANS_ERR,
-  /* 10 */ MQ_FACTORY_RETURN_CALLOC_ERR,
-  /* 11 */ MQ_FACTORY_RETURN_ITEM_IS_NULL,
-  /* 12 */ MQ_FACTORY_RETURN_GET_ERR
+  MQ_FACTORY_RETURN_OK,
+  MQ_FACTORY_RETURN_ERR,
+  MQ_FACTORY_RETURN_ADD_ERR,
+  MQ_FACTORY_RETURN_ADD_TRANS_ERR,
+  MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
+  MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
+  MQ_FACTORY_RETURN_CALL_ERR,
+  MQ_FACTORY_RETURN_COPY_ERR,
+  MQ_FACTORY_RETURN_ITEM_IS_NULL,
+  MQ_FACTORY_RETURN_INVALID_IDENT,
+  MQ_FACTORY_RETURN_CALLOC_ERR,
+  MQ_FACTORY_RETURN_SQL_ERR,
+  MQ_FACTORY_RETURN_DEFAULT_ERR,
+  MQ_FACTORY_RETURN_GET_ERR
 };
 
 /// \brief the \e factory is called to create an instance for ...
@@ -1357,8 +1358,6 @@ struct MqFactoryS {
   MQ_CST ident;			    ///< public known factory name
   MQ_BOL called;		    ///< was the factory called?
   enum MqFactoryReturnE ret;	    ///< exit status of last factory command
-#define MQ_FACTORY_BUF 255
-  MQ_STRB error[MQ_FACTORY_BUF];    ///< error message buffer
   struct MqFactoryCreateS Create;   ///< instance constructor interface
   struct MqFactoryDeleteS Delete;   ///< constructor destructor interface
   struct MqFactoryTransS  *Trans;   ///< transaction storage management

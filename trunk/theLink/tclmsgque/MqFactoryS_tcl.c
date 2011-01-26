@@ -40,7 +40,7 @@ struct LookupKeyword {
 
 static int FS(Copy) (FACTORY_ARGS)
 {
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_DEFAULT_ERR;
+  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_COPY_ERR;
   MQ_CST ident;
   CHECK_C(ident)
   CHECK_NOARGS

@@ -56,35 +56,28 @@ static struct pFactorySpaceS {
 /*                                                                           */
 /*****************************************************************************/
 
-static enum MqFactoryReturnE sFactoryErrorTxt (
+static enum MqFactoryReturnE sFactoryError (
+  MQ_CST const prefix,
+  struct MqS * const context,
   struct MqFactoryS * const item,
   enum MqFactoryReturnE ret,
   MQ_CST const error
 ) {
-  strncpy(item->error, error, MQ_FACTORY_BUF-1);
   item->ret = ret;
-  item->error[MQ_FACTORY_BUF-1] = '\0';
+  MqErrorC(context, prefix, MQ_ERROR_FACTORY, error);
   return ret;
 }
 
-#define sFactoryErrorSql(item, ret) \
-  (MqSqliteError(MQ_ERROR_PRINT, item->Trans),sFactoryErrorTxt(item, ret, sqlite3_errmsg(item->Trans->db)))
-
-/*
-static enum MqFactoryReturnE sFactoryErrorSql (
-  struct MqFactoryS * const item,
-  enum MqFactoryReturnE ret
-) {
-  return sFactoryErrorTxt (item, ret, sqlite3_errmsg(item->Trans->db));
-}
-*/
-
-static enum MqFactoryReturnE sFactoryErrorNum (
-  struct MqFactoryS * const item,
-  enum MqFactoryReturnE ret
-) {
-  return sFactoryErrorTxt(item, ret, MqFactoryReturnMsg(ret));
-}
+#define pFactoryErrorSql(ctx,item,trans) \
+	  sFactoryError(__func__, ctx, item, MQ_FACTORY_RETURN_SQL_ERR, sqlite3_errmsg(trans->db))
+#define pFactoryErrorRetSql(ctx,item,ret,trans)	\
+	  sFactoryError(__func__, ctx, item, ret, sqlite3_errmsg(trans->db))
+#define pFactoryErrorRet(ctx,item,ret) \
+	  sFactoryError(__func__, ctx, item, ret, MqFactoryReturnMsg(ret))
+#define pFactoryErrorTxt(ctx,item,txt) \
+	  sFactoryError(__func__, ctx, item, MQ_FACTORY_RETURN_ERR, txt)
+#define pFactoryErrorRetTxt(ctx,item,ret,txt) \
+	  sFactoryError(__func__, ctx, item, ret, txt)
 
 // *********************************************************
 
@@ -123,7 +116,7 @@ MQ_PTR sFactoryCallocItem (
 {
   MQ_PTR ptr = sFactoryCalloc(nmemb, size);
   if (unlikely (ptr == NULL)) {
-    sFactoryErrorTxt(item, MQ_FACTORY_RETURN_CALLOC_ERR, strerror (errno));
+    pFactoryErrorRetTxt(MQ_ERROR_PRINT, item, MQ_FACTORY_RETURN_CALLOC_ERR, strerror (errno));
   }
   return ptr;
 }
@@ -140,7 +133,6 @@ void sFactoryInit (
   item->Create = Create;
   item->Delete = Delete;
   item->ret = MQ_FACTORY_RETURN_OK;
-  *item->error = '\0';
 }
 
 /*****************************************************************************/
@@ -190,7 +182,7 @@ sFactoryDelTrans (
 
     if (trans->db != NULL) {
       check_sqlite(sqlite3_close(trans->db)) {
-	MqSqliteError(MQ_ERROR_PRINT, trans);
+	pFactoryErrorSql(MQ_ERROR_PRINT, item, trans);
       }
     }
     sqlite3_free((void*)trans);
@@ -216,24 +208,24 @@ sFactoryAddTrans (
   check_NULL (item->Trans) goto end;
 
   check_sqlite (sqlite3_open(storageDir, &trans->db)) {
-    sFactoryErrorTxt(item, errnum, sqlite3_errmsg(trans->db));
+    pFactoryErrorRetSql(MQ_ERROR_PRINT, item, errnum, trans);
     goto end;
   } 
 
   check_sqlite (sqlite3_exec(trans->db, SQL_SCT, NULL, NULL, &errmsg)) {
-    sFactoryErrorTxt(item, errnum, errmsg);
+    pFactoryErrorRetTxt(MQ_ERROR_PRINT, item, errnum, errmsg);
     sqlite3_free(errmsg);
     goto end;
   } 
 
   check_sqlite (sqlite3_exec(trans->db, SQL_RCT, NULL, NULL, &errmsg)) {
-    sFactoryErrorTxt(item, errnum, errmsg);
+    pFactoryErrorRetTxt(MQ_ERROR_PRINT, item, errnum, errmsg);
     sqlite3_free(errmsg);
     goto end;
   } 
 
   check_NULL (trans->storageDir = sFactoryStrDup(storageDir)) {
-    sFactoryErrorTxt(item, errnum, "unable to duplicate 'storageDir' string");
+    pFactoryErrorRetTxt(MQ_ERROR_PRINT, item, errnum, "unable to duplicate 'storageDir' string");
     goto end;
   } 
 
@@ -308,7 +300,7 @@ sFactoryAddName (
 
   if (free != NULL) {
     // item is available, -> error
-    return sFactoryErrorNum(free, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR);
+    return pFactoryErrorRet(MQ_ERROR_PRINT, free, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR);
   } else {
     // item not available, add new one
     sFactoryAddSpace (1);
@@ -442,20 +434,16 @@ MQ_CST MqFactoryReturnMsg (
   enum MqFactoryReturnE const ret
 ) {
   switch (ret) {
-   case MQ_FACTORY_RETURN_OK:		
+   case MQ_FACTORY_RETURN_OK:
     return "OK";
+   case MQ_FACTORY_RETURN_ERR:
+    return "inspecified factory error";
    case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:	
     return "unable to define factory, create function is required";
    case MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR:
     return "factory identifer already in use";
    case MQ_FACTORY_RETURN_CALL_ERR:
     return "unable to call factory for identifer";
-   case MQ_FACTORY_RETURN_ITEM_GET_ERR:
-    return "unable to find factory for identifer";
-   case MQ_FACTORY_RETURN_NEW_ERR:
-    return "unable to create a new factory and return an object";
-   case MQ_FACTORY_RETURN_DEFAULT_ERR:
-    return "unable to create a new default factory";
    case MQ_FACTORY_RETURN_ADD_ERR:
     return "unable to add a new factory";
    case MQ_FACTORY_RETURN_INVALID_IDENT:
@@ -466,8 +454,14 @@ MQ_CST MqFactoryReturnMsg (
     return "unable to add transaction storage";
    case MQ_FACTORY_RETURN_ITEM_IS_NULL:
     return "item is NULL";
+   case MQ_FACTORY_RETURN_SQL_ERR:
+    return "factory sql error";
+   case MQ_FACTORY_RETURN_COPY_ERR:
+    return "unable to copy factory";
+   case MQ_FACTORY_RETURN_DEFAULT_ERR:
+    return "unable to create the default factory";
    case MQ_FACTORY_RETURN_GET_ERR:
-    return "unable to get factory for ident";
+    return "unable to get factory";
   }
   return "nothing";
 }
@@ -594,12 +588,10 @@ MqFactoryCall (
   if (item == NULL) {
     return MQ_FACTORY_RETURN_ITEM_IS_NULL;
   } else if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
-    sFactoryErrorNum(item, MQ_FACTORY_RETURN_CALL_ERR);
-    goto end;
+    return pFactoryErrorRet(MQ_ERROR_PRINT, item, MQ_FACTORY_RETURN_CALL_ERR);
   }
   MqConfigUpdateName(*ctxP, item->ident);
-end:
-  return item->ret;
+  return MQ_FACTORY_RETURN_OK;
 }
 
 MQ_PTR
@@ -617,12 +609,6 @@ MqFactoryItemGetDeleteData(
   return item->Delete.data;
 }
 
-MQ_CST MqFactoryErrorMsg (
-  struct MqFactoryS const * const item
-) {
-  return item->error;
-}
-
 void MqFactoryPanicReturn (
   enum MqFactoryReturnE const ret
 ) {
@@ -635,7 +621,7 @@ void MqFactoryPanicItem (
   struct MqFactoryS const * const item
 ) {
   if (item->ret != MQ_FACTORY_RETURN_OK) {
-    MqPanicC(MQ_ERROR_PANIC, __func__, item->ret, item->error);
+    MqPanicC(MQ_ERROR_PANIC, __func__, item->ret, MqFactoryReturnMsg(item->ret));
   }
 }
 
