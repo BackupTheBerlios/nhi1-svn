@@ -62,7 +62,11 @@ MQ_WID pReadGetTransId (
   struct MqS * const context
 );
 
-enum MqErrorE pReadTransaction (
+enum MqErrorE pReadCreateTransId  (
+  struct MqS * const context
+);
+
+void pReadDeleteTransId  (
   struct MqS * const context
 );
 

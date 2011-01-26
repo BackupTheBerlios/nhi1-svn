@@ -1136,26 +1136,40 @@ MqSendERROR (
   register struct MqS * const context
 )
 {
+  struct MqSendS * const send = context->link.send;
   if (MQ_IS_CLIENT(context)) {
     return MqErrorStack(context);
+  } else if (send == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (MqErrorGetCodeI(context) == MQ_ERROR) {
     pSendL_CLEANUP (context);
     pReadL_CLEANUP (context);
     MqErrorCheck(MqSendSTART (context));
-    MqSendI (context, MqErrorGetNumI (context));
-    MqSendC (context, MqErrorGetText (context));
+    MqErrorCheck(MqSendI (context, MqErrorGetNumI (context)));
+    MqErrorCheck(MqSendC (context, MqErrorGetText (context)));
     MqErrorReset (context);
-    return MqSendEND (context, "_ERR");
-error:
-    return MqErrorStack(context);
+    switch (pReadGetHandShake (context)) {
+      case MQ_HANDSHAKE_START:
+	return pSendEND (context, "_ERR", 0);
+      case MQ_HANDSHAKE_TRANSACTION:
+	*(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
+	MqErrorCheck(pSendEND (context, "+TRT", 0));
+	MqErrorCheck(pReadDeleteTrans (context));
+	return MQ_OK;
+      case MQ_HANDSHAKE_OK:
+      case MQ_HANDSHAKE_ERROR:
+	return MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
+    }
   } else {
     return MQ_OK;
   }
+error:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
 MqSendRETURN (
-  struct MqS * const context
+  register struct MqS * const context
 )
 {
   struct MqSendS * const send = context->link.send;
@@ -1214,7 +1228,7 @@ MqSendRETURN (
       }
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-	break;
+	return MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
     }
   }
 error:

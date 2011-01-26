@@ -188,16 +188,22 @@ sMqEventStart (
     case MQ_ERROR:
       // on EXIT do return nothing and just report EXIT to the TOPLEVEL
       if (MqErrorIsEXIT(a_context)) goto error;
-      // in a transaction, "MqSendRETURN" will convert the context error 
-      // into an "error" package and send this package back to the client
-      if (MqErrorCheckI (MqSendRETURN (a_context))) {
-	if (pIoCheck (a_context->link.io)) {
-	  // outsite of a transaction we have to send a "real" error,
-	  // but "only" if the connection "pIoCheck" is still available
-	  MqErrorCheck (MqSendERROR (a_context));
-	} else {
-	  // report the error to the top-level
-	  goto error;
+      // on a client the error will be reported to the toplevel
+      if (MQ_IS_CLIENT(context)) {
+	goto error;
+      } else {
+	// on a server the error will be reported to the client
+	// in a transaction, "MqSendRETURN" will convert the context error 
+	// into an "error" package and send this package back to the client
+	if (MqErrorCheckI (MqSendRETURN (a_context))) {
+	  if (pIoCheck (a_context->link.io)) {
+	    // outsite of a transaction we have to send a "real" error,
+	    // but "only" if the connection "pIoCheck" is still available
+	    MqErrorCheck (MqSendERROR (a_context));
+	  } else {
+	    // report the error to the top-level
+	    goto error;
+	  }
 	}
       }
       break;

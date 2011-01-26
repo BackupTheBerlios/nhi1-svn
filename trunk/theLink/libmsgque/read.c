@@ -257,7 +257,7 @@ void pReadL_CLEANUP (
 /*****************************************************************************/
 
 enum MqErrorE
-pReadTransaction (
+pReadCreateTransId (
   register struct MqS  * context
 )
 {
@@ -274,6 +274,14 @@ pReadTransaction (
   return MQ_OK;
 error:
   return MqErrorStack(context);
+}
+
+void
+pReadDeleteTransId (
+  register struct MqS  * context
+)
+{
+  context->link.read->transId = 0LL;
 }
 
 enum MqErrorE
@@ -976,7 +984,13 @@ pReadDeleteTrans (
 )
 {
   struct MqReadS * const read = context->link.read;
-  return pFactoryCtxDeleteReadTrans(context,read->transId,&read->transId);
+  if (read->transId != 0LL) {
+    MqLogV (context, __func__, 5, "delete transaction <%lld>\n", read->transId);
+    read->handShake = MQ_HANDSHAKE_START;
+    return pFactoryCtxDeleteReadTrans(context,read->transId,&read->transId);
+  } else {
+    return MQ_OK;
+  }
 }
 
 /*****************************************************************************/

@@ -419,23 +419,23 @@ pTokenDefaultTRT (
   MQ_PTR const data
 ) 
 {
-  MqErrorCheck (pReadTransaction (context));
+  enum MqErrorE ret;
+  MqErrorCheck (pReadCreateTransId (context));
   switch (pReadGetHandShake (context)) {
     case MQ_HANDSHAKE_OK:
-      return pTokenInvoke (context->link.srvT);
+      ret = pTokenInvoke (context->link.srvT);
+      break;
     case MQ_HANDSHAKE_ERROR: {
       MQ_INT retNum;
       MQ_CST msg;
-      MQ_BUF tmp;
 
       // (*callback.fCall) is never called
       MqDLogC(context,5,"got ERROR return code\n");
-      MqErrorCheck (MqReadU (context, &tmp));
       MqErrorCheck (MqReadI (context, &retNum));
       pReadSetReturnNum (context, retNum);
       
       // write HEADER
-      MqErrorV (context, "callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
+      MqErrorV (context, "transaction-callback-error", retNum, "<Token|%s>, <Num|%i>\n", 
 			    pTokenGetCurrent(context->link.srvT), retNum);
 
       // write ERROR-STACK
@@ -443,13 +443,18 @@ pTokenDefaultTRT (
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
+      ret = MQ_ERROR;
+      break;
     }
     case MQ_HANDSHAKE_START:
     case MQ_HANDSHAKE_TRANSACTION:
+      ret = MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
       break;
   }
-  return MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
+  pReadDeleteTransId (context);
+  return ret;
 error:
+  pReadDeleteTransId (context);
   return MqErrorStack(context);
 }
 
@@ -478,7 +483,7 @@ pTokenCheckSystem (
     {   
 	curr++;
 	switch (*curr) {
-	    case 'R': {		// _ERR: CLIENT on error in SERVER
+	    case 'R': {		// _ERR: CLIENT, fatal error in SERVER
 	      MQ_CST errtext;
 	      MQ_INT errnum;
 	      MqErrorCheck (MqReadI (context, &errnum));

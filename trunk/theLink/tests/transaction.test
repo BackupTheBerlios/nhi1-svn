@@ -103,7 +103,7 @@ test transaction-e-2-($I|$B|$C|$S) {SendT_END without SendT_START} \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_END] the required item 'MqSendT_START' is not available in the data package}
 
-test transaction-2-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
+test transaction-2a-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -191,7 +191,7 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[cC]> (client-0) \[callback-error] <Token|TEST>, <Num|1>
+    -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|1>
 [sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
 [sS]> (server-0) found in function "*sReadA4" at file "read.c*"
 [cC]> (client-0) found in function "sMqEventStart" at file "service.c"
@@ -236,8 +236,8 @@ test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result         {[sS]> (server-0) \[MYERR] 1
-[cC]> (client-0) found in function "pTokenCheckSystem" at file "token.c"
+    -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|9>
+[sS]> (server-0) \[MYERR] 1
 [cC]> (client-0) found in function "sMqEventStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
@@ -283,9 +283,9 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
     } \
     -body           {
       $FH_LAST SendSTART
-      $FH_LAST SendT_START TEST
+      $FH_LAST SendT_START
       $FH_LAST SendI 9978
-      $FH_LAST SendT_END
+      $FH_LAST SendT_END TEST
       $FH_LAST SendI 1
       $FH_LAST SendEND_AND_WAIT ECOI
       $FH_LAST ProcessEvent -wait ONCE
@@ -309,11 +309,4 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
-
-
-
-
-
-
-
 
