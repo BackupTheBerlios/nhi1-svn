@@ -416,6 +416,7 @@ pIoStartServer (
 
   MQ_CST  name = NULL;
   MQ_CST  displayname = NULL;
+  MQ_BUF  tmpName = NULL;
 
   // select the code
 rescan:
@@ -458,7 +459,8 @@ rescan:
 	  if (MqInitBuf && MqInitBuf->cursize >= 1)
 	    name = MqInitBuf->data[0]->cur.C;
 	  // replace "WORKER" itself on position "0"
-	  MqErrorCheck (MqBufferLDeleteItem (context, alfa1, 0, 1, MQ_YES));
+	  // can not delete the buffer because the string is used in "name" and "displayname"
+	  MqErrorCheck (MqBufferLGetU (context, alfa1, 0, &tmpName));
 	  // add startup entry function
 	  factory = context->setup.factory;
 	} else if (
@@ -539,7 +541,8 @@ rescan:
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
 	if (name == NULL) {
 	  if (MqInitBuf == NULL) {
-	    return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    goto cleanup;
 	  } else {
 	    name = MqInitBuf->data[0]->cur.C;
 	  }
@@ -595,7 +598,8 @@ rescan:
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
 	if (name == NULL) {
 	  if (MqInitBuf == NULL) {
-	    return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    goto cleanup;
 	  } else {
 	    name = MqInitBuf->data[0]->cur.C;
 	  }
@@ -647,7 +651,8 @@ rescan:
 	// init main
 	if (name == NULL) {
 	  if (MqInitBuf == NULL) {
-	    return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    goto cleanup;
 	  } else {
 	    name = MqInitBuf->data[0]->cur.C;
 	  }
@@ -706,7 +711,8 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 //printLC("MQ_START_SERVER_AS_INLINE_FORK:")
 	if (name == NULL) {
 	  if (MqInitBuf == NULL) {
-	    return MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
+	    goto cleanup;
 	  } else {
 	    name = MqInitBuf->data[0]->cur.C;
 	  }
@@ -721,7 +727,8 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 	  context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_FORK);
 	  // we don't need to cleanup argv1/2 because the INLINE_FORK is done
 	  // with an empty "alfa"
-	  return MQ_OK;
+	  MqErrorReset(context);
+	  goto cleanup;
 	}
 	// cleanup socket of the child
 	MqErrorCheck(SysCloseSocket (context, __func__, MQ_NO, sockP));
@@ -740,10 +747,14 @@ for (i=0; *xarg != NULL; xarg++, i++) {
 
   // cleanup alfa1/2
 error:
+  MqErrorStack (context);
+
+cleanup:
+  MqBufferDelete  (&tmpName);
   MqBufferLDelete (&alfa1);
   MqBufferLDelete (&alfa2);
 
-  return MqErrorStack (context);
+  return MqErrorGetCodeI (context);
 }
 
 MQ_CST

@@ -734,7 +734,6 @@ MqBufferLGetU (
   } else {
     return MqErrorV (context, __func__, -1, "index '" MQ_FORMAT_Z "' is not available", index);
   }
-
   return MQ_OK;
 }
 
