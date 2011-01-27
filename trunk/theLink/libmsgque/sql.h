@@ -1,10 +1,10 @@
 /**
  *  \file       theLink/libmsgque/factory.h
- *  \brief      \$Id$
+ *  \brief      \$Id: factory.h 435 2011-01-25 12:34:06Z aotto1968 $
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev$
+ *  \version    \$Rev: 435 $
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

@@ -30,7 +30,7 @@ BEGIN_C_DECLS
 
 void EventCleanup (void);
 void GcDelete (void);
-void FactorySpaceDelete (void);
+void FactoryThreadDelete (void);
 struct MqBufferLS * MqInitBuf = NULL;
 
 /*****************************************************************************/
@@ -345,6 +345,9 @@ MqExitP (
     // 3. delete all collected objects
     GcDelete();
 
+    // 4. cleanup factory-thread data (only for a thread)
+    if (isThread) FactoryThreadDelete();
+
     // 5. call application specific exit function
     if (exitF) (*exitF) (num);
 
@@ -414,12 +417,12 @@ MqLogData (
   void EventCreate (void);
   void SysComCreate (void);
   void GenericCreate (void);
-  void FactorySpaceCreate (void);
+  void FactoryCreate (void);
 
   void GenericDelete (void);
   void GcDelete (void);
   void EventDelete (void);
-  void FactorySpaceDelete (void);
+  void FactoryDelete (void);
 
 
 /*****************************************************************************/
@@ -438,7 +441,7 @@ void MqSetup(void)
   // work
   SysCreate ();
   GcCreate ();
-  FactorySpaceCreate ();
+  FactoryCreate ();
   EventCreate ();
   GenericCreate();
   SysComCreate ();
@@ -455,7 +458,7 @@ void MqCleanup(void)
   GenericDelete();
   EventDelete ();
   GcDelete ();
-  FactorySpaceDelete ();
+  FactoryDelete ();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }
 

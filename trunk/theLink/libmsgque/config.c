@@ -31,23 +31,13 @@ extern struct MqFactoryS *defaultFactoryItem;
 
 /// \brief everything \e io need for local storage
 struct MqGcS {
-#if defined (MQ_HAS_THREAD)
-# if defined(HAVE_PTHREAD)
-  pthread_t thread;		///< the thread gc link to
-# else
-  DWORD thread;			///< the thread gc link to
-# endif
-#endif
+  MqThreadType thread;		///< the thread gc link to
   struct MqS ** DataL;          ///< list of #MqS objects
   MQ_SIZE DataLNum;             ///< size of \e DataL
   MQ_SIZE DataLCur;             ///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
 };
 
-#if defined (MQ_HAS_THREAD)
 static MqThreadKeyType gc_key = MqThreadKeyNULL;
-#else
-static struct MqGcS * sysgc = NULL;
-#endif
 
 static void
 sGcDeleteAll (
@@ -70,9 +60,7 @@ GcRun (
   struct MqS * const context
 )
 {
-#if defined (MQ_HAS_THREAD)
   struct MqGcS * sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key);
-#endif
   if (sysgc != NULL) {
     MQ_INT MqSetDebugLevel(context);
     MQ_SIZE i;
@@ -91,23 +79,12 @@ GcRun (
 void
 GcCreate(void)
 {
-#if defined (MQ_HAS_THREAD)
-# if defined(HAVE_PTHREAD)
-    if (pthread_key_create(&gc_key, NULL) != 0) {
-      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'");
-    }
-# else
-    if ((gc_key = TlsAlloc()) == TLS_OUT_OF_INDEXES) {
-      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'");
-    }
-# endif
-#endif
+  MqThreadKeyCreate(gc_key);
 }
 
 void
 GcDelete(void)
 {
-#if defined (MQ_HAS_THREAD)
   if (gc_key == MqThreadKeyNULL) {
     return;
   } else {
@@ -119,13 +96,6 @@ GcDelete(void)
       MqSysFree(sysgc);
     }
   }
-#else
-  if (sysgc != NULL) {
-    sGcDeleteAll(sysgc);
-    MqSysFree(sysgc->DataL);
-    MqSysFree(sysgc);
-  }
-#endif
 }
 
 static struct MqGcS*
@@ -133,7 +103,6 @@ sGcAlloc(
   struct MqS * const context
 )
 {
-#if defined (MQ_HAS_THREAD)
   struct MqGcS * sysgc = NULL;
   MqErrorReset(context);
   if ((sysgc = (struct MqGcS *) MqThreadGetTLS(gc_key)) == NULL) {
@@ -144,12 +113,6 @@ sGcAlloc(
       MqPanicC (context, __func__, -1, "unable to alloc Thread-Local-Storage data");
     }
   }
-#else
-  MqErrorReset(context);
-  if (sysgc == NULL) {
-    sysgc = (struct MqGcS*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof (*sysgc));
-  }
-#endif
   //MqDLogV(MqErrorGetMsgque(context), 4, "create EVENT<%p>\n", sysgc);
   return sysgc;
 }
@@ -174,7 +137,7 @@ pGcCreate (
     struct MqGcS *sysgc = sGcAlloc(context);
 
     // if the context was created by a "fork" cleanup gcs first
-    if (MQ_IS_PARENT(context) && context->statusIs & MQ_STATUS_IS_FORK) {
+    if (MQ_IS_PARENT(context) && MQ_IS_FORK(context)) {
       struct MqS **start = sysgc->DataL;
       struct MqS **end   = sysgc->DataL + sysgc->DataLCur;
       // make all "old" context undelete-able

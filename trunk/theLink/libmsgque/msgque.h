@@ -347,6 +347,7 @@ struct MqLinkS {
   struct pTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
   struct MqCacheS * readCache;	    ///< cache for MqReadS
+  struct MqFactoryThreadS *factory; ///< thread specific factory data
 
   /// \brief bit-field to represent the boolean values
   struct {
@@ -1263,25 +1264,6 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \brief signature used in \ref MqFactoryS::signature
 #define MQ_MqFactoryS_SIGNATURE 0x47129019
 
-/// \brief a static Factory function return this enum as status
-/// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
-enum MqFactoryReturnE {
-  MQ_FACTORY_RETURN_OK,
-  MQ_FACTORY_RETURN_ERR,
-  MQ_FACTORY_RETURN_ADD_ERR,
-  MQ_FACTORY_RETURN_ADD_TRANS_ERR,
-  MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR,
-  MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED,
-  MQ_FACTORY_RETURN_CALL_ERR,
-  MQ_FACTORY_RETURN_COPY_ERR,
-  MQ_FACTORY_RETURN_ITEM_IS_NULL,
-  MQ_FACTORY_RETURN_INVALID_IDENT,
-  MQ_FACTORY_RETURN_CALLOC_ERR,
-  MQ_FACTORY_RETURN_SQL_ERR,
-  MQ_FACTORY_RETURN_DEFAULT_ERR,
-  MQ_FACTORY_RETURN_GET_ERR
-};
-
 /// \brief the \e factory is called to create an instance for ...
 enum MqFactoryE {
   MQ_FACTORY_NEW_INIT	= 0,	///< initial instance , nothing else is known
@@ -1357,10 +1339,8 @@ struct MqFactoryS {
   MQ_INT signature;		    ///< should be #MQ_MqFactoryS_SIGNATURE
   MQ_CST ident;			    ///< public known factory name
   MQ_BOL called;		    ///< was the factory called?
-  enum MqFactoryReturnE ret;	    ///< exit status of last factory command
   struct MqFactoryCreateS Create;   ///< instance constructor interface
   struct MqFactoryDeleteS Delete;   ///< constructor destructor interface
-  struct MqFactoryTransS  *Trans;   ///< transaction storage management
 };
 
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
@@ -1387,53 +1367,10 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
   struct MqFactoryS const * const item
 );
 
-MQ_CST MqFactoryReturnMsg (
-  enum MqFactoryReturnE const ret
-);
-
-/// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
-MQ_EXTERN void MQ_DECL MqFactoryPanicReturn (
-  enum MqFactoryReturnE const ret
-);
-
-/// \brief check the static Factory function return code, \e panic if code != #MQ_FACTORY_RETURN_OK
-MQ_EXTERN void MQ_DECL MqFactoryPanicItem (
-  struct MqFactoryS const * const item
-);
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCopy (
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryCopy (
   struct MqFactoryS * const item,
   MQ_CST const ident
 );
-
-/// \brief add a new factory interface and create a new top-level instance
-/// \details This function is a convenient function to combine the #MqFactoryAdd
-/// and the #MqFactoryCall functionality.
-/// \param[in] ident  factory identifier
-/// \param[in] createCallF	(C-API) instance constructor function
-/// \param[in] createData	(C-API) instance constructor data
-/// \param[in] createDataFreeF	(C-API) instance constructor data free function
-/// \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
-/// \param[in] deleteCallF	(C-API) instance destructor function
-/// \param[in] deleteData	(C-API) instance destructor data
-/// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
-/// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \param[in] data (C-API) environment specific data or \c NULL used by \e createCallF
-/// \param[out] ctxP (C-API) the new created instance to return
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
-  MQ_CST	      const ident,
-  MqFactoryCreateF    const createCallF,
-  MQ_PTR	      const createData,
-  MqFactoryDataFreeF  const createDataFreeF,
-  MqFactoryDataCopyF  const createDataCopyF,
-  MqFactoryDeleteF    const deleteCallF,
-  MQ_PTR	      const deleteData,
-  MqFactoryDataFreeF  const deleteDataFreeF,
-  MqFactoryDataCopyF  const deleteDataCopyF,
-  MQ_PTR	      data,
-  struct MqS	      ** ctxP
-) __attribute__((nonnull(1,2)));
 
 /// \brief add a new \e factory-interface identified by \e ident
 /// \param[in] ident  factory identifier
@@ -1445,8 +1382,8 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryNew (
 /// \param[in] deleteData	(C-API) instance destructor data
 /// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
 /// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
+/// \return the new factory object
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
   MQ_CST	      const ident,
   MqFactoryCreateF    const createCallF,
   MQ_PTR	      const createData,
@@ -1455,9 +1392,8 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
   MqFactoryDeleteF    const deleteCallF,
   MQ_PTR	      const deleteData,
   MqFactoryDataFreeF  const deleteDataFreeF,
-  MqFactoryDataCopyF  const deleteDataCopyF,
-  struct MqFactoryS ** factoryP
-) __attribute__((nonnull(1,2)));
+  MqFactoryDataCopyF  const deleteDataCopyF
+);
 
 /// \brief add a new \e default-factory-interface identified by \e ident
 /// \details The default factory is always used to create an instance if no other
@@ -1471,8 +1407,8 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryAdd (
 /// \param[in] deleteData	(C-API) instance destructor data
 /// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
 /// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \retFactoryException
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
+/// \return the new default factory object
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryDefault (
   MQ_CST	      const ident,
   MqFactoryCreateF    const createCallF,
   MQ_PTR	      const createData,
@@ -1482,7 +1418,7 @@ MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryDefault (
   MQ_PTR	      const deleteData,
   MqFactoryDataFreeF  const deleteDataFreeF,
   MqFactoryDataCopyF  const deleteDataCopyF
-) __attribute__((nonnull(1,2)));
+);
 
 /// \brief the \e default factory constructor function
 /// \details This is an constructor suitable to create \e C language instance.
@@ -1505,7 +1441,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactoryCall (
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCall (
   struct MqFactoryS * const item,
   MQ_PTR const data,
   struct MqS ** ctxP
@@ -1539,14 +1475,9 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetCalled (
+MQ_EXTERN void MQ_DECL MqFactorySetCalled (
   struct MqFactoryS * const item,
   MQ_BOL const called
-);
-
-MQ_EXTERN enum MqFactoryReturnE MQ_DECL MqFactorySetTrans (
-  struct MqFactoryS * const item,
-  MQ_CST const storageDir
 );
 
 /*****************************************************************************/

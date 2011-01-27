@@ -890,6 +890,9 @@ MqLinkCreate (
     // ready to create the SLAVE objects
     MqErrorCheck (pSlaveCreate (context, &context->link.slave));
 
+    // add factory - thread data
+    MqErrorCheck (pFactoryThreadCreate (context, &context->link.factory));
+
     // context specific initialization
     if (MQ_IS_CLIENT (context)) {   // CLIENT
 
@@ -1073,6 +1076,7 @@ MqLinkDelete (
     pCacheDelete (&context->link.readCache);
 
     // delete my helper's
+    pFactoryThreadDelete (&context->link.factory);
     pSlaveDelete (&context->link.slave);
     pTransDelete (&context->link.trans);
     pTokenDelete (&context->link.srvT);

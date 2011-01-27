@@ -175,34 +175,44 @@ static void sFactorySpaceDelAll (
 
 static void sFactoryPrepSqlFinalize (
   sqlite3 *db,
-  sqlite3_stmt *prepSql
+  sqlite3_stmt **prepSql
 )
 {
-  if (prepSql == NULL) return;
-  check_sqlite(sqlite3_finalize(prepSql)) {
+  if (prepSql == NULL || *prepSql == NULL) return;
+  check_sqlite(sqlite3_finalize(*prepSql)) {
     MqErrorDbFactorySql(MQ_ERROR_PRINT, db);
   }
+  *prepSql = NULL;
 }
 
 static enum MqErrorE
 sFactoryDelDb (
-  struct MqS * const context
+  struct MqS * const context,
+  struct MqFactoryThreadS * const factory_sys
 )
 {
-  struct MqFactoryThreadS * const factory_sys = context->link.factory;
   if (factory_sys != NULL) {
+    sqlite3 * const db = factory_sys->db;
+
+    sFactoryPrepSqlFinalize (db, &factory_sys->sendInsert);
+    sFactoryPrepSqlFinalize (db, &factory_sys->sendSelect);
+    sFactoryPrepSqlFinalize (db, &factory_sys->readInsert);
+    sFactoryPrepSqlFinalize (db, &factory_sys->readSelect1);
+    sFactoryPrepSqlFinalize (db, &factory_sys->readSelect2);
+    sFactoryPrepSqlFinalize (db, &factory_sys->readDelete);
+
     if (factory_sys->storageDir != NULL) {
       sqlite3_free((void*)factory_sys->storageDir);
       factory_sys->storageDir = NULL;
     }
     if (factory_sys->db != NULL) {
-      check_sqlite(sqlite3_close(factory_sys->db)) {
-	return MqErrorDbFactorySql(context, factory_sys->db);
+      check_sqlite(sqlite3_close(db)) {
+	return MqErrorDbFactorySql(context, db);
       }
       factory_sys->db = NULL;
     }
   }
-  return MqErrorGetCodeI(context);
+  return MQ_OK;
 }
 
 static enum MqErrorE
@@ -610,7 +620,7 @@ MqFactoryCtxSetDb (
   MQ_CST const storageDir
 )
 {
-  MqErrorCheck (sFactoryDelDb(context));
+  MqErrorCheck (sFactoryDelDb(context, context->link.factory));
   MqErrorCheck (sFactoryAddDb(context, storageDir));
   return MqErrorGetCodeI(context);
 error:
@@ -865,31 +875,6 @@ error1:
 
 static MqThreadKeyType factory_key = MqThreadKeyNULL;
 
-static void FactoryThreadCreate(void)
-{
-  MqThreadKeyCreate(factory_key);
-}
-
-void FactoryThreadDelete(void)
-{
-  struct MqFactoryThreadS * factory_sys;
-  if (factory_key == MqThreadKeyNULL) {
-    return;
-  } else if ((factory_sys = (struct MqFactoryThreadS *) MqThreadGetTLS(factory_key)) != NULL) {
-    sqlite3 * const db = factory_sys->db;
-
-    sFactoryPrepSqlFinalize (db, factory_sys->sendInsert);
-    sFactoryPrepSqlFinalize (db, factory_sys->sendSelect);
-    sFactoryPrepSqlFinalize (db, factory_sys->readInsert);
-    sFactoryPrepSqlFinalize (db, factory_sys->readSelect1);
-    sFactoryPrepSqlFinalize (db, factory_sys->readSelect2);
-    sFactoryPrepSqlFinalize (db, factory_sys->readDelete);
-
-    MqThreadSetTLS(factory_key, NULL);
-    MqSysFree(factory_sys);
-  }
-}
-
 static struct MqFactoryThreadS*
 sFactoryThreadAlloc(
   struct MqS * const context
@@ -940,36 +925,31 @@ pFactoryThreadDelete (
 void
 FactoryCreate (void)
 {
-  // setup main proc TLS data
-  FactoryThreadCreate();
-  
   // setup sqlite 
   check_sqlite (sqlite3_initialize()) {
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_initialize'");
   }   
 
-  // setup main proc global data ! not thread safe !
-  space.items = (struct MqFactoryS *) sFactoryCalloc (SPACE_INIT_SIZE, sizeof (*space.items));
-  space.size = SPACE_INIT_SIZE;
-  space.used = 1;  // first item is always the default
-
-  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  // setup main proc TLS data
+  MqThreadKeyCreate(factory_key);
 }
 
 void
 FactoryDelete (void)
 {
-  // delete main proc global data ! not thread safe !
-  sFactorySpaceDelAll ();
-  sqlite3_free (space.items);
+
+  // delete main proc TLS data
+  struct MqFactoryThreadS * factory_sys;
+  if (factory_key != MqThreadKeyNULL) {
+    sFactoryDelDb (NQ_ERROR_PRINT, MqThreadGetTLS(factory_key));
+    MqThreadSetTLS(factory_key, NULL);
+    MqSysFree(factory_sys);
+  }
 
   // delete sqlite 
   check_sqlite (sqlite3_shutdown()) {
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_shutdown'");
   }   
-
-  // delete main proc TLS data
-  FactoryThreadDelete();
 }
 
 END_C_DECLS

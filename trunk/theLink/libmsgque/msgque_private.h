@@ -47,6 +47,7 @@ struct MqTransItemS;
 #define MQ_IS_CHILD(msgque)  (msgque->config.parent != NULL)
 #define MQ_IS_SLAVE(msgque)  (msgque->config.master != NULL)
 #define MQ_IS_PARENT(msgque) (msgque->config.parent == NULL)
+#define MQ_IS_FORK(msgque) (msgque->statusIs & MQ_STATUS_IS_FORK)
 
 #define MQ_STRING_TYPE(isString) (unlikely(isString) ? MQ_STRT : MQ_BINT)
 

@@ -84,8 +84,8 @@ enum MqMessageNumE {
     /* 36 */ MQ_ERROR_ITEM_IN_PACKAGE,
     /* 37 */ MQ_ERROR_NOT_SUPPORTED,
     /* 38 */ MQ_ERROR_START_ITEM_REQUIRED,
-    /* 39 */ MQ_ERROR_FACTORY,
-    /* 40 */ MQ_ERROR_TRANSACTION_REQUIRED,
+    /* 39 */ MQ_ERROR_TRANSACTION_REQUIRED,
+    /* 40 */ MQ_ERROR_ID_NOT_FOUND,
     /* 41 */ MQ_MESSAGE_END,
 };
 
@@ -171,10 +171,10 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the feature is not supported in the current setup",
     /* MQ_ERROR_START_ITEM_REQUIRED */
 	"the required item '%s' is not available in the data package",
-    /* MQ_ERROR_FACTORY */
-	"FACTORY - %s",
     /* MQ_ERROR_TRANSACTION_REQUIRED */
 	"found ReadT_START but no TRANSACTION is available",
+    /* MQ_ERROR_ID_NOT_FOUND */
+	"%s-id '%lld' not found",
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };
@@ -210,33 +210,38 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
 #endif
 
 #if defined (MQ_HAS_THREAD)
-# if defined(HAVE_PTHREAD)
+# if defined(HAVE_PTHREAD) /* unix thread */
 #  define MqThreadSelf() pthread_self()
 #  define MqThreadGetTLS(k) pthread_getspecific(k)
 #  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
-#  define MqThreadSetTLSCheck(k,v) pthread_setspecific(k,v)
+#  define MqThreadSetTLSCheck(k,v) (unlikely (pthread_setspecific(k,v) != 0))
 #  define MqThreadKeyType pthread_key_t
+#  define MqThreadType pthread_t
 #  define MqThreadKeyNULL PTHREAD_KEYS_MAX
 #  define MqThreadKeyCreate(key) if (pthread_key_create(&key, NULL) != 0) { \
       MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
     }
-# else
+# else /* windows THREAD */
 #  define MqThreadSelf() GetCurrentThreadId()
 #  define MqThreadGetTLS(k) TlsGetValue(k)
 #  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
-#  define MqThreadSetTLSCheck(k,v) (TlsSetValue(k,v) == 0)
+#  define MqThreadSetTLSCheck(k,v) ((unlikely (TlsSetValue(k,v) == 0))
 #  define MqThreadKeyType DWORD
+#  define MqThreadType DWORD
 #  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
 #  define MqThreadKeyCreate(key) if ((key = TlsAlloc()) == TLS_OUT_OF_INDEXES) { \
       MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'"); \
     }
-
 # endif
-#else
+#else /* no THREAD */
 #  define MqThreadKeyCreate(k)
 #  define MqThreadGetTLS(k) k
 #  define MqThreadSetTLS(k,v) k=v
+#  define MqThreadSetTLSCheck(k,v) (unlikely ((k=v) == NULL))
 #  define MqThreadKeyNULL NULL
+#  define MqThreadKeyType void*
+#  define MqThreadType void*
+#  define MqThreadSelf() NULL
 #endif // MQ_HAS_THREAD
 
 /*****************************************************************************/

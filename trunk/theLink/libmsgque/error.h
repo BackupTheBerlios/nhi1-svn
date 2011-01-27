@@ -67,11 +67,17 @@ void pErrorReset (struct MqS * const);
 #define MqErrorDbV2(context,item, ...) \
     MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(item),MqMessageText[item], __VA_ARGS__)
 
-#define MqErrorDbFactoryMsg(context,msg) \
-    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(MQ_ERROR_FACTORY),MqMessageText[MQ_ERROR_FACTORY],msg)
+#define MqErrorDbFactoryMsg(context,num,msg) \
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(num+100),"%s",msg)
+
+#define MqErrorDbFactorySql(context,db) \
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(sqlite3_extended_errcode(db)+100),"%s",sqlite3_errmsg(db))
+
+#define MqErrorDbFactorySql2(context,db,msg) \
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(sqlite3_extended_errcode(db)+100),"%s",msg)
 
 #define MqErrorDbFactoryNum(context,num) \
-    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(MQ_ERROR_FACTORY),MqMessageText[MQ_ERROR_FACTORY],MqFactoryReturnMsg(num))
+    MqErrorSGenV(context,__func__,MQ_ERROR,MqMessageNum(num+100),"%s",sFactoryReturnMsg(num))
 
 END_C_DECLS
 

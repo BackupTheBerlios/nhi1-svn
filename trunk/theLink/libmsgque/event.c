@@ -27,14 +27,7 @@ struct MqEventS {
   struct MqS ** DataL;		///< list of #MqS objects
   MQ_SIZE DataLNum;		///< size of \e DataL
   MQ_SIZE DataLCur;		///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>
-#if defined (MQ_HAS_THREAD)
-# if defined(HAVE_PTHREAD)
-  pthread_t thread;		///< the thread event link to
-# else
-  DWORD thread;		///< the thread event link to
-# endif
-#endif
-  
+  MqThreadType thread;		///< the thread event link to
 };
 
 //######################################################################
@@ -66,8 +59,6 @@ sEventDeleteAllClient (
     if (i >= event->DataLCur) break;
   }
 }
-
-#if defined (MQ_HAS_THREAD)
 
 /// \brief Thread-Specific-Data (TSD) key
 static MqThreadKeyType event_key = MqThreadKeyNULL;
@@ -102,15 +93,7 @@ sEventAlloc(
 void
 EventCreate(void)
 {
-#if defined(HAVE_PTHREAD)
-  if (pthread_key_create(&event_key, NULL) != 0) {
-    MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'");
-  }
-#else
-  if ((event_key = TlsAlloc()) == TLS_OUT_OF_INDEXES) {
-    MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'");
-  }
-#endif
+  MqThreadKeyCreate(event_key);
 }
 
 void
@@ -137,54 +120,6 @@ EventCleanup(void)
     }
   }
 }
-#undef PREFIX
-
-//######################################################################
-#else	/* ! MQ_HAS_THREAD */
-
-static struct MqEventS * sysevent = NULL;
-
-static enum MqErrorE
-sEventAlloc(
-  struct MqS * const context,
-  struct MqEventS ** eventP
-)
-{
-  MqErrorReset(context);
-  if (sysevent == NULL) {
-    sysevent = (struct MqEventS*) MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof (*sysevent));
-    sysevent->fdmax = -1;
-  }
-  *eventP = sysevent;
-  return MQ_OK;
-}
-
-void
-EventCreate(void)
-{
-}
-
-void
-EventDelete(void)
-{
-  if (sysevent != NULL) {
-    sEventDeleteAllClient(sysevent);
-    MqSysFree(sysevent->DataL);
-    MqSysFree(sysevent);
-  }
-}
-
-void
-EventCleanup(void)
-{
-  if (sysevent != NULL) {
-    sEventDeleteAllClient(sysevent);
-  }
-}
-  
-#define MqThreadSelf() 0L
-
-#endif   /* ! MQ_HAS_THREAD */
 
 //######################################################################
 /// \attention only call this function for a \e PARENT context
@@ -415,7 +350,7 @@ pEventCreate (
   MqErrorCheck(sEventAlloc(context, &sysevent));
 
   // if the context was created by a "fork" cleanup events first
-  if (MQ_IS_PARENT(context) && context->statusIs & MQ_STATUS_IS_FORK) {
+  if (MQ_IS_PARENT(context) && MQ_IS_FORK(context)) {
     struct MqS **start = sysevent->DataL;
     struct MqS **end   = sysevent->DataL + sysevent->DataLCur;
     // make all "old" context undelete-able
