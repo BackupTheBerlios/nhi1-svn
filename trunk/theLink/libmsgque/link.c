@@ -11,25 +11,6 @@
  */
 
 #include "main.h"
-#include "link.h"
-#include "buffer.h"
-#include "token.h"
-#include "error.h"
-#include "sys.h"
-#include "bufferL.h"
-#include "log.h"
-#include "mq_io.h"
-#include "send.h"
-#include "read.h"
-#include "trans.h"
-#include "cache.h"
-#include "slave.h"
-#include "config.h"
-#include "sql.h"
-
-//#ifdef HAVE_STRINGS_H
-//#  include <strings.h>
-//#endif
 
 #define MQ_CONTEXT_S context
 

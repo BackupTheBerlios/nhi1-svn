@@ -11,21 +11,7 @@
  */
 
 #include "main.h"
-
-#include "mq_io.h"
-#include "error.h"
-#include "buffer.h"
-#include "bufferL.h"
-#include "sys.h"
 #include "sys_com.h"
-#include "uds_io.h"
-#include "tcp_io.h"
-#include "pipe_io.h"
-#include "log.h"
-#include "send.h"
-#include "event.h"
-#include "link.h"
-#include "factory.h"
 
 BEGIN_C_DECLS
 

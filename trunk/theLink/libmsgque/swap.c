@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-#include "swap.h"
 #include "buffer.h"
 #include "log.h"
 

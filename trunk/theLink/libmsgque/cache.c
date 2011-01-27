@@ -11,9 +11,6 @@
  */
 
 #include "main.h"
-#include "cache.h"
-#include "sys.h"
-#include "log.h"
 
 BEGIN_C_DECLS
 

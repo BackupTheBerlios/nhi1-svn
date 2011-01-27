@@ -11,12 +11,6 @@
  */
 
 #include "main.h"
-#include "sys.h"
-#include "error.h"
-#include "log.h"
-#include "read.h"
-#include "cache.h"
-#include "trans.h"
 
 BEGIN_C_DECLS
 

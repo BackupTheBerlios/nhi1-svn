@@ -11,14 +11,7 @@
  */
 
 #include "main.h"
-#include "tcp_io.h"
-#include "generic_io.h"
-#include "mq_io.h"
-#include "error.h"
-#include "log.h"
-#include "sys.h"
-#include "buffer.h"
-#include "bufferL.h"
+#include "sys_com.h"
 
 #define MQ_CONTEXT_S tcp->io->context
 

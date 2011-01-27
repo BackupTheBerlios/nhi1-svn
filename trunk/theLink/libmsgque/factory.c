@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-#include "factory.h"
 #include "error.h"
 #include "errno.h"
 #include "sqlite3.h"

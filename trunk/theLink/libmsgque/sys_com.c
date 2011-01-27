@@ -13,7 +13,6 @@
 #include "main.h"
 #include "sys_com.h"
 #include "error.h"
-#include "mq_io.h"
 
 #if defined(MQ_IS_POSIX)
 #   define SHUTDOWN_BOTH SHUT_RDWR

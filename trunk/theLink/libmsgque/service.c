@@ -13,9 +13,7 @@
 #include "main.h"
 #include "error.h"
 #include "token.h"
-#include "read.h"
 #include "send.h"
-#include "mq_io.h"
 #include <limits.h>
 
 #define MQ_CONTEXT_S context

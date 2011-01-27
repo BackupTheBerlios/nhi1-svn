@@ -13,12 +13,6 @@
 #define MQ_PRIVATE_IS_MAIN 1
 
 #include "main.h"
-#include "link.h"
-#include "buffer.h"
-#include "mq_io.h"
-#include "token.h"
-#include "error.h"
-#include "sys.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>

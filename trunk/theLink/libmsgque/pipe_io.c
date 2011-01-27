@@ -11,24 +11,9 @@
  */
 
 #include "main.h"
-#include "pipe_io.h"
-#include "mq_io.h"
-#include "error.h"
 #include "sys_com.h"
 
-/*###########################################################################*/
-/*###                                                                     ###*/
-/*###                              posix                                  ###*/
-/*###                                                                     ###*/
-/*###########################################################################*/
-
-#   include "generic_io.h"
-#   include "log.h"
-#   include "sys.h"
-#   include "buffer.h"
-#   include "bufferL.h"
-
-#   define MQ_CONTEXT_S  pipe->io->context
+#define MQ_CONTEXT_S  pipe->io->context
 
 BEGIN_C_DECLS
 

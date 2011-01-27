@@ -11,13 +11,6 @@
  */
 
 #include "main.h"
-#include "slave.h"
-#include "error.h"
-#include "bufferL.h"
-#include "link.h"
-#include "config.h"
-#include "sys.h"
-#include "factory.h"
 
 #define MQ_CONTEXT_S context
 

@@ -11,12 +11,11 @@
  */
 
 #include "main.h"
+#include "sys_com.h"
+
+#define MQ_CONTEXT_S  uds->io->context
 
 #if defined(MQ_IS_POSIX)
-
-#include "uds_io.h"
-#include "mq_io.h"
-#include "error.h"
 
 /*###########################################################################*/
 /*###                                                                     ###*/
@@ -24,15 +23,8 @@
 /*###                                                                     ###*/
 /*###########################################################################*/
 
-#include "generic_io.h"
-#include "log.h"
-#include "sys.h"
-#include "buffer.h"
-#include "bufferL.h"
-
 #include <sys/un.h>
 
-#define MQ_CONTEXT_S  uds->io->context
 
 BEGIN_C_DECLS
 

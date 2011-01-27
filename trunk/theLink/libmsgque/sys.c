@@ -11,10 +11,6 @@
  */
 
 #include "main.h"
-
-#include "sys.h"
-#include "error.h"
-#include "factory.h"
 #include "sqlite3.h"
 
 #include <errno.h>

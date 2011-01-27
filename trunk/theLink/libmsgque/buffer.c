@@ -11,10 +11,6 @@
  */
 
 #include "main.h"
-#include "buffer.h"
-#include "error.h"
-#include "sys.h"
-#include "log.h"
 
 #include <errno.h>
 #include <math.h>

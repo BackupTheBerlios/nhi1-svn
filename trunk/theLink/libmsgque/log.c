@@ -11,12 +11,6 @@
  */
 
 #include "main.h"
-#include "log.h"
-#include "buffer.h"
-#include "read.h"
-#include "error.h"
-#include "sys.h"
-#include "token.h"
 
 #if defined(_MSC_VER)
 // need for "getpid"

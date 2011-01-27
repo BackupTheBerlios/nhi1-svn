@@ -12,13 +12,6 @@
 
 #include "main.h"
 
-#include "error.h"
-#include "buffer.h"
-#include "send.h"
-#include "log.h"
-#include "sys.h"
-#include "mq_io.h"
-
 #define MQ_CONTEXT_S context
 
 BEGIN_C_DECLS

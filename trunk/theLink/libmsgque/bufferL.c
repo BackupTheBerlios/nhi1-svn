@@ -11,12 +11,6 @@
  */
 
 #include "main.h"
-#include "bufferL.h"
-#include "buffer.h"
-#include "error.h"
-#include "sys.h"
-#include "log.h"
-#include "link.h"
 
 BEGIN_C_DECLS
 

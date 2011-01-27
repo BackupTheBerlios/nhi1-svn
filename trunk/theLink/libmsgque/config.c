@@ -10,12 +10,7 @@
  *              please contact AUTHORS for additional information
  */
 
-// make MqS::config "write-able"
 #include "main.h"
-#include "error.h"
-#include "token.h"
-#include "sys.h"
-#include "factory.h"
 
 BEGIN_C_DECLS
 

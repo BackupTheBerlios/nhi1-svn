@@ -11,20 +11,6 @@
  */
 
 #include "main.h"
-#include "send.h"
-#include "error.h"
-#include "buffer.h"
-#include "sys.h"
-#include "log.h"
-#include "mq_io.h"
-#include "token.h"
-#include "swap.h"
-#include "read.h"
-#include "trans.h"
-#include "cache.h"
-#include "read.h"
-#include "token.h"
-#include "sql.h"
 
 BEGIN_C_DECLS
 

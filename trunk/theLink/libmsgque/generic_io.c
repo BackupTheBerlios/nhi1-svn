@@ -11,16 +11,7 @@
  */
 
 #include "main.h"
-
-#include "generic_io.h"
-#include "mq_io.h"
-#include "buffer.h"
-#include "bufferL.h"
-#include "error.h"
-#include "sys.h"
-#include "log.h"
-#include "send.h"
-#include "event.h"
+#include "sys_com.h"
 
 #define MQ_CONTEXT_S  generiC->context
 
