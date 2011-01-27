@@ -21,7 +21,7 @@
 #include "token.h"
 #include "swap.h"
 #include "cache.h"
-#include "factory.h"
+#include "sql.h"
 
 BEGIN_C_DECLS
 
@@ -270,7 +270,7 @@ pReadCreateTransId (
 	context->setup.factory->ident, ident);
   }
   MqErrorCheck (MqReadW (context, &read->transId));
-  MqErrorCheck (pFactoryCtxSelectSendTrans (context, read->transId, read->tranBuf));
+  MqErrorCheck (pSqlSelectSendTrans (context, read->transId, read->tranBuf));
   return MQ_OK;
 error:
   return MqErrorStack(context);
@@ -412,7 +412,7 @@ pReadHDR (
       MqErrorCheck (MqReadC (context, &ident));
       MqErrorCheck (MqReadW (context, &rmtTransId));
       // need tmp for "transId" besause the following "MqSendSTART" send data !without! transaction package data
-      MqErrorCheck (pFactoryCtxInsertReadTrans (context, ident, rmtTransId, read->transId, &transId));
+      MqErrorCheck (pSqlInsertReadTrans (context, ident, rmtTransId, read->transId, &transId));
       // answer first call with an empty return package
       if (context->link._trans != 0) {
 	enum MqErrorE ret;
@@ -987,7 +987,7 @@ pReadDeleteTrans (
   if (read->transId != 0LL) {
     MqLogV (context, __func__, 5, "delete transaction <%lld>\n", read->transId);
     read->handShake = MQ_HANDSHAKE_START;
-    return pFactoryCtxDeleteReadTrans(context,read->transId,&read->transId);
+    return pSqlDeleteReadTrans(context,read->transId,&read->transId);
   } else {
     return MQ_OK;
   }

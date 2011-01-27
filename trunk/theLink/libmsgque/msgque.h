@@ -347,7 +347,7 @@ struct MqLinkS {
   struct pTokenS * srvT;	    ///< identifier for the 'service' token handle
   MQ_CST targetIdent;		    ///< 'ident' of the link target
   struct MqCacheS * readCache;	    ///< cache for MqReadS
-  struct MqFactoryThreadS *factory; ///< thread specific factory data
+  struct MqSqlS *sql;		    ///< thread specific sql data
 
   /// \brief bit-field to represent the boolean values
   struct {

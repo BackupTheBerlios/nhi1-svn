@@ -1,13 +1,4 @@
 /**
- *  \file       theLink/libmsgque/factory.h
- *  \brief      \$Id: factory.h 435 2011-01-25 12:34:06Z aotto1968 $
- *  
- *  (C) 2004 - NHI - #1 - Project - Group
- *  
- *  \version    \$Rev: 435 $
- *  \author     EMail: aotto1968 at users.berlios.de
- *  \attention  this software has GPL permissions to copy
- *              please contact AUTHORS for additional information
  */
 
 #ifndef FACTORY_H
@@ -15,37 +6,20 @@
 
 BEGIN_C_DECLS
 
-/*****************************************************************************/
-/*                                                                           */
-/*                              token_misc                                   */
-/*                                                                           */
-/*****************************************************************************/
-
-void pFactoryMark (
-  struct MqS * const context,
-  MqMarkF markF
-);
-
-void pFactoryCtxItemSet (
-  struct MqS * const context,
-  struct MqFactoryS * const item
-);
-
-enum MqErrorE pFactoryCtxInsertSendTrans (
+enum MqErrorE pSqlInsertSendTrans (
   struct MqS * const context, 
   MQ_TOK const callback, 
   MQ_BUF buf, 
   MQ_WID *transId
 );
 
-enum MqErrorE pFactoryCtxSelectSendTrans (
+enum MqErrorE pSqlSelectSendTrans (
   struct MqS * const context,
   MQ_WID transId,
   MQ_BUF buf
 );
 
-enum MqErrorE
-pFactoryCtxInsertReadTrans (
+enum MqErrorE pSqlInsertReadTrans (
   struct MqS * const context, 
   MQ_CST const ident, 
   MQ_WID const rmtTransId, 
@@ -53,28 +27,24 @@ pFactoryCtxInsertReadTrans (
   MQ_WID *transId
 );
 
-enum MqErrorE
-pFactoryCtxSelectReadTrans (
+enum MqErrorE pSqlSelectReadTrans (
   struct MqS * const context, 
   MQ_WID transId
 );
 
-enum MqErrorE
-pFactoryCtxDeleteReadTrans (
+enum MqErrorE pSqlDeleteReadTrans (
   struct MqS * const context, 
   MQ_WID transId,
   MQ_WID *oldTransId
 );
 
-enum MqErrorE
-pFactoryThreadCreate (
+enum MqErrorE pSqlCreate (
   struct MqS * const context,
-  struct MqFactoryThreadS ** const thread
+  struct MqSqlS ** const sql
 );
 
-void
-pFactoryThreadDelete (
-  struct MqFactoryThreadS ** thread
+void pSqlDelete (
+  struct MqSqlS ** thread
 );
 
 END_C_DECLS

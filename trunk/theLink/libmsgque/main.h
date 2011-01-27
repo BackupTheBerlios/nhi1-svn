@@ -86,7 +86,8 @@ enum MqMessageNumE {
     /* 38 */ MQ_ERROR_START_ITEM_REQUIRED,
     /* 39 */ MQ_ERROR_TRANSACTION_REQUIRED,
     /* 40 */ MQ_ERROR_ID_NOT_FOUND,
-    /* 41 */ MQ_MESSAGE_END,
+    /* 41 */ MQ_ERROR_FEATURE_NOT_AVAILABLE,
+    /* 42 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -175,6 +176,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"found ReadT_START but no TRANSACTION is available",
     /* MQ_ERROR_ID_NOT_FOUND */
 	"%s-id '%lld' not found",
+    /* MQ_ERROR_FEATURE_NOT_AVAILABLE */
+	"the feature '%s' is not available",
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };

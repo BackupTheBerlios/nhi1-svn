@@ -25,7 +25,7 @@
 #include "cache.h"
 #include "slave.h"
 #include "config.h"
-#include "factory.h"
+#include "sql.h"
 
 //#ifdef HAVE_STRINGS_H
 //#  include <strings.h>
@@ -891,7 +891,7 @@ MqLinkCreate (
     MqErrorCheck (pSlaveCreate (context, &context->link.slave));
 
     // add factory - thread data
-    MqErrorCheck (pFactoryThreadCreate (context, &context->link.factory));
+    MqErrorCheck (pSqlCreate (context, &context->link.sql));
 
     // context specific initialization
     if (MQ_IS_CLIENT (context)) {   // CLIENT
@@ -1076,7 +1076,7 @@ MqLinkDelete (
     pCacheDelete (&context->link.readCache);
 
     // delete my helper's
-    pFactoryThreadDelete (&context->link.factory);
+    pSqlDelete	 (&context->link.sql);
     pSlaveDelete (&context->link.slave);
     pTransDelete (&context->link.trans);
     pTokenDelete (&context->link.srvT);
@@ -1215,11 +1215,4 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
-
 

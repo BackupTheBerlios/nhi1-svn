@@ -24,7 +24,7 @@
 #include "cache.h"
 #include "read.h"
 #include "token.h"
-#include "factory.h"
+#include "sql.h"
 
 BEGIN_C_DECLS
 
@@ -759,7 +759,7 @@ MqSendSTART (
     buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
 
     // add transaction item if available
-    return transId == 0LL ? MQ_OK : pFactoryCtxSelectReadTrans(context,transId);
+    return transId == 0LL ? MQ_OK : pSqlSelectReadTrans(context,transId);
   }
 }
 
@@ -1108,7 +1108,7 @@ MqSendT_END (
     MQ_WID transId;
 
     // step 1. save data into the transaction database
-    MqErrorCheck (pFactoryCtxInsertSendTrans(context, callback, buf, &transId));
+    MqErrorCheck (pSqlInsertSendTrans(context, callback, buf, &transId));
 
     // step 2. "sendBuf" is buffer in duty
     send->buf = send->sendBuf;

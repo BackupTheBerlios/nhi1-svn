@@ -418,11 +418,13 @@ MqLogData (
   void SysComCreate (void);
   void GenericCreate (void);
   void FactoryCreate (void);
+  void SqlCreate (void);
 
   void GenericDelete (void);
   void GcDelete (void);
   void EventDelete (void);
   void FactoryDelete (void);
+  void SqlDelete (void);
 
 
 /*****************************************************************************/
@@ -442,6 +444,7 @@ void MqSetup(void)
   SysCreate ();
   GcCreate ();
   FactoryCreate ();
+  SqlCreate ();
   EventCreate ();
   GenericCreate();
   SysComCreate ();
@@ -458,6 +461,7 @@ void MqCleanup(void)
   GenericDelete();
   EventDelete ();
   GcDelete ();
+  SqlDelete ();
   FactoryDelete ();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }
