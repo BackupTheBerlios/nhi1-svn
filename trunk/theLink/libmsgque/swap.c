@@ -11,8 +11,6 @@
  */
 
 #include "main.h"
-#include "buffer.h"
-#include "log.h"
 
 BEGIN_C_DECLS
 

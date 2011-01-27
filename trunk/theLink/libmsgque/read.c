@@ -265,12 +265,12 @@ error:
   return MqErrorStack(context);
 }
 
-void
+enum MqErrorE
 pReadDeleteTransId (
   register struct MqS  * context
 )
 {
-  context->link.read->transId = 0LL;
+  return pSqlDeleteSendTrans (context, &context->link.read->transId);
 }
 
 enum MqErrorE
@@ -976,7 +976,7 @@ pReadDeleteTrans (
   if (read->transId != 0LL) {
     MqLogV (context, __func__, 5, "delete transaction <%lld>\n", read->transId);
     read->handShake = MQ_HANDSHAKE_START;
-    return pSqlDeleteReadTrans(context,read->transId,&read->transId);
+    return pSqlDeleteReadTrans(context,&read->transId,&read->transId);
   } else {
     return MQ_OK;
   }

@@ -238,6 +238,7 @@ test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
     -match	    glob \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|9>
 [sS]> (server-0) \[MYERR] 1
+[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
 [cC]> (client-0) found in function "sMqEventStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}

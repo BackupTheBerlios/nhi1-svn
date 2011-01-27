@@ -85,15 +85,13 @@ main (
     MqBufferLAppendC(initB, argv[0]);
 
     // add Factory 
-    MqFactoryPanicReturn (MqFactoryAdd("split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanicReturn (MqFactoryAdd("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanicReturn (MqFactoryAdd("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanicReturn (MqFactoryAdd("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+    MqFactoryPanic (MqFactoryAdd ("split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+    MqFactoryPanic (MqFactoryAdd ("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+    MqFactoryPanic (MqFactoryAdd ("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+    MqFactoryPanic (MqFactoryAdd ("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
     // call the initial factory to initialize the "config"
-    MqFactoryCheck (MqFactoryCall(MqFactoryGet(argv[1]), NULL, &ctx)) {
-      ToolHelp(MqSysBasename(argv[0], MQ_NO));
-    }
+    MqErrorCheck (MqFactoryNew (MqFactoryGet(argv[1]), NULL, &ctx));
 
     // call entry point
     MqErrorCheck(MqLinkCreate(ctx, &largv));

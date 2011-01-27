@@ -2,20 +2,19 @@
  */
 
 #include "main.h"
-#include "error.h"
-#include "token.h"
+
 #include "sqlite3.h"
 
 #define MQ_CONTEXT_S context
 
 BEGIN_C_DECLS
 
-/// \brief everything \e io need for local storage
 struct MqSqlS {
   MQ_CST  storageDir;		///< main directory used for database files
   sqlite3 *db;			///< sqlite database connection handle
   sqlite3_stmt *sendInsert;	///< prepared sql statement
   sqlite3_stmt *sendSelect;	///< prepared sql statement
+  sqlite3_stmt *sendDelete;	///< prepared sql statement
   sqlite3_stmt *readInsert;	///< prepared sql statement
   sqlite3_stmt *readSelect1;	///< prepared sql statement
   sqlite3_stmt *readSelect2;	///< prepared sql statement
@@ -51,6 +50,7 @@ sSqlDelDb (
 
     sSqlFinalize (db, &sql_sys->sendInsert);
     sSqlFinalize (db, &sql_sys->sendSelect);
+    sSqlFinalize (db, &sql_sys->sendDelete);
     sSqlFinalize (db, &sql_sys->readInsert);
     sSqlFinalize (db, &sql_sys->readSelect1);
     sSqlFinalize (db, &sql_sys->readSelect2);
@@ -208,6 +208,35 @@ error1:
 }
 
 enum MqErrorE
+pSqlDeleteSendTrans (
+  struct MqS * const context, 
+  MQ_WID *transIdP
+)
+{
+  struct MqSqlS * const sql_sys = context->link.sql;
+  register sqlite3_stmt * hdl = sql_sys->sendDelete;
+  check_NULL(sql_sys->db) {
+    MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
+  }
+  check_NULL(hdl) {
+    const static char sql[] = "DELETE FROM sendTrans WHERE rowid = ?;";
+    check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->sendDelete, NULL)) goto error;
+    hdl = sql_sys->sendDelete;
+  }
+  check_sqlite (sqlite3_reset(hdl))		     goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,*transIdP)) goto error;
+  if (sqlite3_step(hdl) != SQLITE_DONE) {
+    return MqErrorDbSql(context,sql_sys->db);
+  }
+  *transIdP = 0LL;
+  return MqErrorGetCodeI(context);
+error:
+  return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
+}
+
+enum MqErrorE
 pSqlInsertReadTrans (
   struct MqS * const context, 
   MQ_CST const ident, 
@@ -280,13 +309,12 @@ error1:
 enum MqErrorE
 pSqlDeleteReadTrans (
   struct MqS * const context, 
-  MQ_WID transId,
+  MQ_WID *transIdP,
   MQ_WID *oldTransId
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt * hdl = sql_sys->readSelect2;
-  register sqlite3_stmt * del = sql_sys->readDelete;
   check_NULL(sql_sys->db) {
     MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
   }
@@ -296,28 +324,30 @@ pSqlDeleteReadTrans (
     hdl = sql_sys->readSelect2;
   }
   // get oldTransId
-  check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  check_sqlite (sqlite3_reset(hdl))		      goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,*transIdP))  goto error;
   switch (sqlite3_step(hdl)) {
     case SQLITE_ROW:
       break;
     case SQLITE_DONE:
-      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",transId);
+      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",*transIdP);
     default:
       return MqErrorDbSql(context,sql_sys->db);
   }
   *oldTransId = sqlite3_column_int64 (hdl, 0);
   // delete row
-  check_NULL(del) {
+  hdl = sql_sys->readDelete;
+  check_NULL(hdl) {
     const static char sql[] = "DELETE FROM readTrans WHERE rowid = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->readDelete, NULL)) goto error;
-    del = sql_sys->readDelete;
+    hdl = sql_sys->readDelete;
   }
-  check_sqlite (sqlite3_reset(del))		    goto error;
-  check_sqlite (sqlite3_bind_int64(del,1,transId))  goto error;
+  check_sqlite (sqlite3_reset(hdl))		      goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,*transIdP))  goto error;
   if (sqlite3_step(hdl) != SQLITE_DONE) {
     return MqErrorDbSql(context,sql_sys->db);
   }
+  *transIdP = 0LL;
   return MqErrorGetCodeI(context);
 error:
   return MqErrorDbSql(context,sql_sys->db);

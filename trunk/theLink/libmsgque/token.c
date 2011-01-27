@@ -436,11 +436,11 @@ pTokenDefaultTRT (
       ret = MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
       break;
   }
-  pReadDeleteTransId (context);
+  MqErrorCheck (pReadDeleteTransId (context));
   return ret;
 error:
   pReadDeleteTransId (context);
-  return MqErrorStack(context);
+  return MqErrorStack (context);
 }
 
 enum MqErrorE

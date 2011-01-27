@@ -1401,9 +1401,11 @@ main (
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // call Factory 
-  MqFactoryCheck (MqFactoryNew("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &mqctx)) {
-    ServerHelp(MqSysBasename("server", MQ_NO));
-  }
+  MqErrorCheck (
+    MqFactoryNew (
+      MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL), NULL, &mqctx
+    )
+  );
 
   // setup the link, parse command-line arguments
   MqErrorCheck(MqLinkCreate (mqctx, &args));

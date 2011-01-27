@@ -160,15 +160,15 @@ int main (int argc, MQ_CST argv[])
   MqBufferLAppendC(MqInitCreate(), argv[0]);
 
   // add Factory
-  MqFactoryAdd ("F1", F1New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-  MqFactoryAdd ("F2", F2New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-  MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryPanic (MqFactoryAdd ("F1", F1New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+  MqFactoryPanic (MqFactoryAdd ("F2", F2New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+  MqFactoryPanic (MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
   // call the initial factory to initialize the "config"
-  MqFactoryErrorPanic(MqFactoryCall(argv[1], NULL, &ctx));
+  MqErrorCheck (MqFactoryNew (MqFactoryGet (argv[1]), NULL, &ctx));
 
   // call entry point
-  MqErrorCheck(MqLinkCreate(ctx, &largv));
+  MqErrorCheck (MqLinkCreate (ctx, &largv));
 
   // start event-loop and wait forever
   MqProcessEvent (ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);

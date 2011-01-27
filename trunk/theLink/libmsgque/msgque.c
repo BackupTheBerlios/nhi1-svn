@@ -23,8 +23,22 @@
 BEGIN_C_DECLS
 
 void EventCleanup (void);
-void GcDelete (void);
 void FactoryThreadDelete (void);
+
+void SysCreate (void);
+void GcCreate (void);
+void EventCreate (void);
+void SysComCreate (void);
+void GenericCreate (void);
+void FactoryCreate (void);
+void SqlCreate (void);
+
+void GenericDelete (void);
+void GcDelete (void);
+void EventDelete (void);
+void FactoryDelete (void);
+void SqlDelete (void);
+
 struct MqBufferLS * MqInitBuf = NULL;
 
 /*****************************************************************************/
@@ -293,7 +307,7 @@ MqExitP (
 )
 {
   if (context == NULL) {
-    // exit on empty context
+    MqErrorV(MQ_ERROR_PRINT, __func__, MqMessageNum(MQ_ERROR_EXIT), "exit '%s' on empty context", prefix);
     MqSysExit (0,0);
   } else if (context->bits.onExit == MQ_YES) {
     // do not allow !! double calling of MqExit
@@ -340,7 +354,7 @@ MqExitP (
     GcDelete();
 
     // 4. cleanup factory-thread data (only for a thread)
-    if (isThread) FactoryThreadDelete();
+    if (isThread) SqlDelete();
 
     // 5. call application specific exit function
     if (exitF) (*exitF) (num);
@@ -405,20 +419,6 @@ MqLogData (
   MqLogV (context, prefix, 0, "<<<< MqS\n");
 }
 #endif /* _DEBUG */
-
-  void SysCreate (void);
-  void GcCreate (void);
-  void EventCreate (void);
-  void SysComCreate (void);
-  void GenericCreate (void);
-  void FactoryCreate (void);
-  void SqlCreate (void);
-
-  void GenericDelete (void);
-  void GcDelete (void);
-  void EventDelete (void);
-  void FactoryDelete (void);
-  void SqlDelete (void);
 
 
 /*****************************************************************************/

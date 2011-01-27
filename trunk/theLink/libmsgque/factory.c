@@ -428,7 +428,7 @@ MqFactoryDefault (
 /*****************************************************************************/
 
 enum MqErrorE
-MqFactoryCall (
+MqFactoryNew (
   struct MqFactoryS * const item,
   MQ_PTR const data,
   struct MqS ** ctxP

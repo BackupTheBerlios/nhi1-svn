@@ -27,7 +27,7 @@ proc MyServer {tmpl} {
 }
 
 tclmsgque Main {
-  set srv [tclmsgque FactoryNew MyServer]
+  set srv [[tclmsgque FactoryAdd MyServer] New]
   $srv ConfigSetName MyServer
   $srv ConfigSetServerSetup ServerSetup
   if {[catch {

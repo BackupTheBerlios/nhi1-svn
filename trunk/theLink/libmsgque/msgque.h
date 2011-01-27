@@ -1264,6 +1264,8 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \brief signature used in \ref MqFactoryS::signature
 #define MQ_MqFactoryS_SIGNATURE 0x47129019
 
+#define MqFactoryPanic(item) if (item == NULL) MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to create factory object");
+
 /// \brief the \e factory is called to create an instance for ...
 enum MqFactoryE {
   MQ_FACTORY_NEW_INIT	= 0,	///< initial instance , nothing else is known
@@ -1352,15 +1354,6 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
   struct MqFactoryS  const * const item
 );
 
-/// \brief check static Factory function return code
-#define MqFactoryCheckI(cmd) ((cmd) != MQ_FACTORY_RETURN_OK)
-
-/// \brief check static Factory function return code and execute "{}" handler
-#define MqFactoryCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK)
-
-/// \brief check static Factory function return code on error and goto to error label on error
-#define MqFactoryErrorCheck(cmd) if ((cmd) != MQ_FACTORY_RETURN_OK) goto error
-
 /// \brief convert an static Factory function \e return-status into a human readable \e error-message
 /// \attention the string belongs to \libmsgque do \b not free the memory
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
@@ -1441,7 +1434,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCall (
+MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryNew (
   struct MqFactoryS * const item,
   MQ_PTR const data,
   struct MqS ** ctxP

@@ -27,7 +27,7 @@ proc MulServer {tmpl} {
 }
 
 tclmsgque Main {
-  set srv [tclmsgque FactoryNew "mulserver" MulServer]
+  set srv [[tclmsgque FactoryAdd "mulserver" MulServer] New]
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

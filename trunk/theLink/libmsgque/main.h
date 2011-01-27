@@ -709,7 +709,7 @@ enum MqHandShakeE pReadGetHandShake ( struct MqS const * const);
 void pReadSetHandShake ( struct MqS const * const, enum MqHandShakeE);
 MQ_WID pReadGetTransId ( struct MqS * const);
 enum MqErrorE pReadCreateTransId  ( struct MqS * const);
-void pReadDeleteTransId  ( struct MqS * const);
+enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
 void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
@@ -805,8 +805,8 @@ void pSlaveShutdown (struct MqLinkSlaveS * const);
 /*                                                                           */
 /*****************************************************************************/
 
-void pFactoryMark ( struct MqS * const, MqMarkF markF);
-void pFactoryCtxItemSet ( struct MqS * const, struct MqFactoryS * const item);
+void pFactoryMark ( struct MqS * const, MqMarkF);
+void pFactoryCtxItemSet ( struct MqS * const, struct MqFactoryS * const);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -822,7 +822,7 @@ struct pChildS {
 
 void pMqShutdown (MQ_CST, struct MqS * const);
 void pLinkDisConnect ( struct MqS * const);
-int pMqCheckOpt ( register struct MqBufferS * const arg);
+int pMqCheckOpt ( register struct MqBufferS * const);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -839,14 +839,14 @@ enum MqTransE {
 
 enum MqErrorE pTransCreate (struct MqS * const, struct MqTransS ** const );
 void pTransDelete (struct MqTransS ** const);
-MQ_HDL pTransPop ( struct MqTransS const * const trans, struct MqCallbackS callback);
-void pTransPush ( struct MqTransS const * const trans, MQ_HDL transId) __attribute__((nonnull));
-int pTransCheckStart ( struct MqTransS const * const trans, const MQ_HDL transId);
-MQ_HDL pTransGetLast ( struct MqTransS const * const trans, const MQ_HDL transId);
-struct MqReadS * pTransGetResult ( struct MqTransS const * const trans, const MQ_HDL transId);
-enum MqTransE pTransGetStatus ( struct MqTransS const * const trans, const MQ_HDL transId);
-enum MqHandShakeE pTransGetHandShake ( struct MqTransS const * const trans, const MQ_HDL transId);
-enum MqErrorE pTransSetResult ( struct MqTransS const * const trans, enum MqTransE const status, struct MqReadS * const result);
+MQ_HDL pTransPop ( struct MqTransS const * const , struct MqCallbackS);
+void pTransPush ( struct MqTransS const * const, MQ_HDL) __attribute__((nonnull));
+int pTransCheckStart ( struct MqTransS const * const, const MQ_HDL);
+MQ_HDL pTransGetLast ( struct MqTransS const * const, const MQ_HDL);
+struct MqReadS * pTransGetResult ( struct MqTransS const * const, const MQ_HDL);
+enum MqTransE pTransGetStatus ( struct MqTransS const * const, const MQ_HDL);
+enum MqHandShakeE pTransGetHandShake ( struct MqTransS const * const, const MQ_HDL);
+enum MqErrorE pTransSetResult ( struct MqTransS const * const, enum MqTransE const, struct MqReadS * const);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -856,15 +856,12 @@ enum MqErrorE pTransSetResult ( struct MqTransS const * const trans, enum MqTran
 
 enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_WID*);
 enum MqErrorE pSqlSelectSendTrans ( struct MqS * const, MQ_WID, MQ_BUF);
+enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_WID*);
 enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_CST const, MQ_WID const, MQ_WID const, MQ_WID*); 
 enum MqErrorE pSqlSelectReadTrans ( struct MqS * const, MQ_WID);
-enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID, MQ_WID*);
+enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID*, MQ_WID*);
 enum MqErrorE pSqlCreate ( struct MqS * const, struct MqSqlS ** const);
 void pSqlDelete (struct MqSqlS **);
-
-
-
-
 
 END_C_DECLS
 
