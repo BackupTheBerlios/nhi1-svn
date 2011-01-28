@@ -576,6 +576,7 @@ proc SetConstraints {args} {
   } else {
     Error "expect 'all' or 3 arguments to SetConstraints: one NUMBER, BIN_LST and SRV_LST item"
   }
+  testConstraint leakcheck [expr {[lsearch -exact $env(TS_EXEC_PREFIX) --leak-check=full] != -1}]
   if {$ALL} {
     foreach c {parent child child2 child3} {
       testConstraint $c yes
@@ -616,6 +617,10 @@ proc SetConstraints {args} {
 ## -----------------------------------------------------------------------
 ## init
 ## 
+
+if {![info exists env(TS_EXEC_PREFIX)]} {
+  set env(TS_EXEC_PREFIX) [list]
+}
 
 if {![info exists env(BIN_LST)]} {
   set env(BIN_LST) {string binary}
@@ -883,6 +888,21 @@ while {true} {
       set env(START_LST)      [filter START_LST $T]
       set env(TS_STARTUP_AS)  --$T
     }
+    {^--use(-valgrind|-leakcheck)$} {
+      switch -exact [string range $arg 6 end] {
+	valgrind {
+	  set env(TS_EXEC_PREFIX)  [list valgrind --trace-children=yes --num-callers=36 --quiet]
+	}
+	leakcheck {
+	  set env(TS_EXEC_PREFIX)  [list valgrind --trace-children=yes --leak-check=full --num-callers=36 \
+		--error-exitcode=1 --quiet --gen-suppressions=all ]
+	  if {![catch {glob ~/.suppressions} T]} {
+	    lappend env(TS_EXEC_PREFIX) "--suppressions=$T"
+	    unset T
+	  }
+	}
+      }
+    }
     {^--only-num$} {
       set env(PAR_LST)	[Pop argv]
     }
@@ -895,16 +915,19 @@ while {true} {
       puts "  COM  = pipe|uds|tcp ....................... communication-layer"
       puts "  TYPE = string|binary ...................... package-type"
       puts "  MODE = fork|thread|spawn .................. startup-mode"
+      puts "  CHECK = valgrind|leakcheck ................ check code"
       puts ""
       puts " testing OPTIONS"
       puts "  --only-TYPE ...... only use 'package-type' for testing"
       puts "  --only-COM ....... only use 'communication-layer' for testing"
       puts "  --only-LANG ...... only use 'programming-language' for testing"
       puts "  --only-MODE ...... only use 'startup-mode' for server+pipe starup"
-      puts "  --use-MODE ....... only use 'startup-mode' for server startup"
+      puts "  --use-MODE ....... use 'startup-mode' for server startup"
+      puts "  --use-CHECK ...... use 'valgrind check' for server startup"
       puts ""
       puts "  --only-num # ..... test only with parent/child number #"
       puts "  --use-remote ..... use remote server for tcp/udp connection"
+      puts "  --use-valgrind|leakcheck.... check code with valgrind"
       puts "  --max # .......... set the maximun of allowed processes to #"
       puts "  --debug # ........ set debug level between 0 and 9"
       puts "  --host STR ....... use host as TCP/IP connection host"
@@ -1357,11 +1380,12 @@ proc Example {config client server args} {
 }
 
 proc Exec {args} {
-  if {$::env(TS_SETUP)} {
-    Print args
+  global env
+  if {$env(TS_SETUP)} {
+    Print env(TS_EXEC_PREFIX) args
   }
   #if {[catch {exec {*}$args >&@stdout} ERR]} {}
-  if {[catch {exec {*}$args } ERR]} {
+  if {[catch {exec {*}$env(TS_EXEC_PREFIX) {*}$args } ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {
     return "$ERR"
@@ -1373,7 +1397,7 @@ proc ExecErr {args} {
     Print args
   }
   #if {[catch {exec {*}$args >&@stdout} ERR]} {}
-  if {[catch {exec {*}$args 2>@stderr } ERR]} {
+  if {[catch {exec {*}$::env(TS_EXEC_PREFIX) {*}$args 2>@stderr } ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {
     return "$ERR"
@@ -1395,9 +1419,10 @@ proc MakeFile {init name} {
 }
 
 proc Bg {out args} {
-  if {$::env(TS_SETUP)} { Print args }
-  set PID [exec {*}$args >&$out &]
-  if {$::env(TS_SETUP)} { Print PID }
+  global env
+  if {$env(TS_SETUP)} { Print env(TS_EXEC_PREFIX) args }
+  set PID [exec {*}$env(TS_EXEC_PREFIX) {*}$args >&$out &]
+  if {$env(TS_SETUP)} { Print PID }
   lappend ::CLEANUP_PID $PID
 }
 
@@ -1508,9 +1533,4 @@ proc RET_BG {ctx} {
   RET_add BG-TEXT $ctx ErrorGetText
   $ctx ErrorReset
 }
-
-
-
-
-
 

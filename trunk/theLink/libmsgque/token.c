@@ -515,6 +515,7 @@ pTokenCheckSystem (
 
 	    // read the other endian and set my context->link.bits.endian
 	    MqReadC(context, &name);
+	    MqSysFree (context->link.targetIdent);
 	    context->link.targetIdent = MqSysStrDup(MQ_ERROR_PANIC, name);
 
 	    // read server name

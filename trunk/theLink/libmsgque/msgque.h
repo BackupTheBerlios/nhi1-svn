@@ -1462,6 +1462,10 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
   MQ_CST const ident
 );
 
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGetCalled (
+  MQ_CST const ident
+);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                             set / get                                     */

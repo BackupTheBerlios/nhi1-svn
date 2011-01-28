@@ -367,6 +367,18 @@ MqFactoryGet (
 }
 
 struct MqFactoryS *
+MqFactoryGetCalled (
+  MQ_CST const ident
+)
+{
+  struct MqFactoryS * item = MqFactoryGet(ident);
+  if (item != NULL) {
+    item->called = MQ_YES;
+  }
+  return item;
+}
+
+struct MqFactoryS *
 MqFactoryAdd (
   MQ_CST	      const ident,
   MqFactoryCreateF    const fCreate,

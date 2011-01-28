@@ -228,7 +228,9 @@ C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: send token<_SHD>
 C> (client:*) \[*] \[4-0-0-*-pEventDel]: sock<*> DataLCur<0>
 C> (client:*) \[*] \[4-0-0-*-pMqShutdown]: END shutdown
 C> (client:*) \[*] \[4-0-0-*-pEventDel]: sock<-1> DataLCur<0>
-C> (client:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE }
+C> (client:*) \[*] \[2-0-0-*-MqLinkDelete]: DELETE 
+C> (client:*) \[*] \[3-0-0-*-MqContextDelete]: DELETE
+C> (client:*) \[*] \[3-0-0-*-MqContextFree]: FREE}
 
 test client-6d {client/server debug -2- message with long names} \
     -constraints  c \

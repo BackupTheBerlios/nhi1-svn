@@ -413,31 +413,18 @@ pSqlDelete (
 void
 SqlCreate (void)
 {
-  // setup sqlite 
-  check_sqlite (sqlite3_initialize()) {
-    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_initialize'");
-  }   
-
-  // setup main proc TLS data
   MqThreadKeyCreate(sql_key);
 }
 
 void
 SqlDelete (void)
 {
-
-  // delete main proc TLS data
   if (sql_key != MqThreadKeyNULL) {
     struct MqSqlS * sql_sys = MqThreadGetTLS(sql_key);
     sSqlDelDb (MQ_ERROR_PRINT, sql_sys);
     MqThreadSetTLS(sql_key, NULL);
     MqSysFree(sql_sys);
   }
-
-  // delete sqlite 
-  check_sqlite (sqlite3_shutdown()) {
-    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_shutdown'");
-  }   
 }
 
 END_C_DECLS

@@ -42,7 +42,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 test error-1-($I|$B|$C|$S) {fatal error} \
-    -constraints    { unix c local } \
+    -constraints    { unix && c && local && !leakcheck } \
     -setup          { 
       Setup $I $B $C $S --bgerror RET_BG --server-silent
       #Setup $I $B $C $S --bgerror RET_BG
@@ -77,7 +77,7 @@ test error-1b-($I|$B|$C|$S) {return value + error} \
 [sS]> (server-0) \[Ot_ERR2\] some error*}
 
 test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
-    -constraints    {local && !csharp && !vb} \
+    -constraints    {local && !csharp && !vb && !leakcheck} \
     -setup          { Setup $I $B $C $S } \
     -cleanup	    { Cleanup } \
     -body           { 
@@ -88,7 +88,7 @@ test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
     -result         {[cC]> * \[SysRecv] application EXIT request*}
 
 test error-1b3-($I|$B|$C|$S) {double send after broken file-handle} \
-    -constraints    {local && !csharp && !vb} \
+    -constraints    {local && !csharp && !vb && !leakcheck} \
     -setup          { Setup $I $B $C $S } \
     -cleanup	    { Cleanup } \
     -body           { 
@@ -288,7 +288,7 @@ unset I B C S
 
 test error-2 {low level port} \
     -body           {Exec {*}[getClient client] --name client --tcp --port 10 --timeout 1 --error} \
-    -constraints    {c tcp parent} \
+    -constraints    {c && tcp && parent && !leakcheck} \
     -result         {CHILDSTATUS-200-C> (client) [SysConnect] TIMEOUT after '1' sec
 C> (client) found in function "GenericConnect" at file "generic_io.c"
 C> (client) found in function "TcpConnect" at file "tcp_io.c"
@@ -299,7 +299,7 @@ C> (client) use '-h' or '--help' for usage}
 
 test error-3 {low ssh (tcp-22) port} \
     -body           {Exec {*}[getClient client] --name client --tcp --port echo --timeout 1 --error} \
-    -constraints    {c tcp parent} \
+    -constraints    {c && tcp && parent && !leakcheck} \
     -result	    {CHILDSTATUS-204-C> (client) [MqLinkConnect] can not start server 'remote-connect'
 C> (client) found in function "MqLinkConnect" at file "link.c"
 C> (client) found in function "MqLinkCreate" at file "link.c"

@@ -165,7 +165,9 @@ int main (int argc, MQ_CST argv[])
   MqFactoryPanic (MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
   // call the initial factory to initialize the "config"
-  MqErrorCheck (MqFactoryNew (MqFactoryGet (argv[1]), NULL, &ctx));
+  MqErrorCheck (MqFactoryNew (MqFactoryGetCalled (argv[1]), NULL, &ctx));
+
+  // add for future spawn
 
   // call entry point
   MqErrorCheck (MqLinkCreate (ctx, &largv));

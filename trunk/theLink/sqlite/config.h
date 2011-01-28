@@ -122,5 +122,14 @@
 // sqlite3_enable_load_extension() and sqlite3_load_extension() interfaces. 
 #define SQLITE_OMIT_LOAD_EXTENSION 1
 
+// For backwards compatibility with older versions of SQLite that lack the sqlite3_initialize() 
+// interface, the sqlite3_initialize() interface is called automatically upon entry to certain 
+// key interfaces such as sqlite3_open(), sqlite3_vfs_register(), and sqlite3_mprintf(). The 
+// overhead of invoking sqlite3_initialize() automatically in this way may be omitted by building 
+// SQLite with the SQLITE_OMIT_AUTOINIT C-preprocessor macro. When built using SQLITE_OMIT_AUTOINIT, 
+// SQLite will not automatically initialize itself and the application is required to invoke 
+// sqlite3_initialize() directly prior to beginning use of the SQLite library.
+#define SQLITE_OMIT_AUTOINIT 1
+
 #endif /* CONFIG_H */
 

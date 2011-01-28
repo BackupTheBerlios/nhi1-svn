@@ -817,6 +817,7 @@ ClientCreateParent (
   struct MqBufferLS * args = MqBufferLCreateArgsV(mqctx, "test-client", "@", "server", "--name", "test-server", NULL);
   MqConfigSetDebug(mqctx, debug);
   MqConfigSetBgError(mqctx,BgError, NULL, NULL, NULL);
+  MqConfigSetStartAs(mqctx,MqConfigGetStartAs(errorctx));
   MqErrorCheck(MqLinkCreate(mqctx,&args));
   MqErrorCheck(MqCheckForLeftOverArguments(mqctx,&args));
   return MQ_OK;

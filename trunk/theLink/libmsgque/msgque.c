@@ -33,6 +33,7 @@ void GenericCreate (void);
 void FactoryCreate (void);
 void SqlCreate (void);
 
+void SysDelete (void);
 void GenericDelete (void);
 void GcDelete (void);
 void EventDelete (void);
@@ -317,7 +318,7 @@ MqExitP (
     // do the exit
     int num;
     MqExitF exitF;
-    MQ_BOL isThread;
+    MQ_BOL isThread, deleteContext;
 
     context->bits.onExit = MQ_YES;
     context->setup.ignoreExit = MQ_NO;
@@ -336,10 +337,11 @@ MqExitP (
     num = MqErrorGetNumI(context);
 
     // MQ_ERROR_EXIT is a "normal" exit 
-    if (num == (200+MQ_ERROR_EXIT)) num = EXIT_SUCCESS;
+    if (num == (MqMessageNum(MQ_ERROR_EXIT))) num = EXIT_SUCCESS;
 
     // if context was started as thread?
     isThread = ((context->statusIs & MQ_STATUS_IS_THREAD) != 0);
+    deleteContext = (MQ_IS_CLIENT(context) && context->link.bits.doFactoryCleanup == MQ_NO);
 
     // get the right application specific exit function
     exitF = (isThread ? context->setup.fThreadExit : context->setup.fProcessExit);
@@ -356,10 +358,13 @@ MqExitP (
     // 4. cleanup factory-thread data (only for a thread)
     if (isThread) SqlDelete();
 
-    // 5. call application specific exit function
+    // 5. client-context have to be deleted explicit
+    if (deleteContext) MqContextDelete(&context);
+
+    // 6. call application specific exit function
     if (exitF) (*exitF) (num);
 
-    // 6. finally call libmsgque exit function
+    // 7. finally call libmsgque exit function
     MqSysExit(isThread, num);
   }
 }
@@ -454,9 +459,10 @@ void MqCleanup(void)
   // work
   GenericDelete();
   EventDelete ();
-  GcDelete ();
   SqlDelete ();
   FactoryDelete ();
+  GcDelete ();
+  SysDelete ();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }
 

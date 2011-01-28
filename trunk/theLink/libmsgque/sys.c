@@ -770,6 +770,11 @@ static MQ_STR sys_strdup (
 /*****************************************************************************/
 
 void SysCreate(void) {
+
+  check_sqlite (sqlite3_initialize()) {
+    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_initialize'");
+  }   
+
   MqLal.SysCalloc	= (MqSysCallocF)  sys_calloc;
   MqLal.SysMalloc	= (MqSysMallocF)  sqlite3_malloc;
   MqLal.SysStrDup	= (MqSysStrDupF)  sys_strdup;
@@ -792,6 +797,12 @@ void SysCreate(void) {
   MqLal.SysIgnorSIGCHLD = SysIgnorSIGCHLD;
   MqLal.SysAllowSIGCHLD = SysAllowSIGCHLD;
 };
+
+void SysDelete(void) {
+  check_sqlite (sqlite3_shutdown()) {
+    MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_shutdown'");
+  }   
+}
 
 END_C_DECLS
 

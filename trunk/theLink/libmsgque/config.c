@@ -475,9 +475,8 @@ MqConfigSetName (
     context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
 //printLV("config.name<%p>, data<%p>\n", context->config.name, data);
   }
-  if (MQ_IS_SERVER(context)) {
-    MqSysFree(context->config.srvname);
-    context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, "LOCK");
+  if (MQ_IS_SERVER(context)) { 
+    MqConfigSetSrvName (context, "LOCK");
   }
 }
 

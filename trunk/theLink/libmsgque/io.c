@@ -505,10 +505,10 @@ rescan:
 //printLC("spawn")
 	startType = MQ_START_SERVER_AS_SPAWN;
 	// only SPAWN need all arguments from MqInitBuf
-	if (factory != NULL) {
+
+	if (context->setup.factory->called && factory != NULL) {
 	  MqBufferLAppendL(alfa1, MqInitBuf, 0);
 	}
-
 	goto rescan;
       }
       break;

@@ -441,7 +441,13 @@ sMqCheckArg (
 	    MqSysExit(0,EXIT_SUCCESS);
 	  } else if (!strncmp(argC, "help", 4)) {
 	    if (context->setup.fHelp) {
-	      (*context->setup.fHelp)(context->config.name);
+	      struct MqBufferLS * targv = argv;
+	      MQ_CST name = context->config.name;
+	      context->config.name = NULL;
+	      MqBufferLDelete (&targv);
+	      MqContextFree(context);
+	      (*context->setup.fHelp)(name);
+	      MqExit(context);
 	    }
 	  } else {
 	    continue;

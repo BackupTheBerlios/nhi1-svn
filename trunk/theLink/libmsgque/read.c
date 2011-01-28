@@ -123,7 +123,8 @@ pReadDelete (
   pCacheDelete (&read->saveCache);
 
   MqBufferDelete (&read->hdr);
-  MqBufferDelete (&read->bdy);
+  MqBufferDelete (&read->readBuf);
+  MqBufferDelete (&read->tranBuf);
 
   // references
   MqBufferDelete (&read->cur);
