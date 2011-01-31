@@ -204,14 +204,14 @@ test slave-7-($I|$B|$C|$S) {check ctxId} \
     -body           {Echo1 $FH_LAST SND2 ReadI SendC MqSendEND_AND_WAIT SendI 0 SendC GTCX} \
     -result         [expr {$I-1}]
 
-test slave-8-($I|$B|$C|$S) {check startAs} \
+test slave-8-filter-($I|$B|$C|$S) {check startAs} \
     -constraints    {c && parent && filter} \
     -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
     -result         {DUP-SPAWN-}
 
-test slave-8-($I|$B|$C|$S) {check startAs} \
+test slave-8-nofilter-($I|$B|$C|$S) {check startAs} \
     -constraints    {c && parent && !filter} \
-    -body           {Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI} \
+    -body           { Echo1 $FH_LAST SND2 ReadC SendC MqSendEND_AND_WAIT SendI 0 SendC GTSI } \
     -result         $STATUS_IS
 
 test slave-9-($I|$B|$C|$S) {check isSlave} \
@@ -292,6 +292,7 @@ C> (server-0) \[*sMqCheckArg] for the 'current' setup the option '--fork' is for
       }; # START_LST
 
       test slave-X1-($I|$B|$C|$S) {error-1} \
+	  -constraints	  {!leakcheck} \
 	  -body		  {
 	    Setup $I $B $C $S --setup-parent {
 	      Call $FH_LAST SendEND_AND_WAIT SND2 SendC ERR-1 SendI 0

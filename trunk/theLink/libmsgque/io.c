@@ -408,10 +408,12 @@ pIoStartServer (
 rescan:
   switch (startType) {
     case MQ_START_SERVER_AS_PIPE: {
+	MQ_BOL del_first_on_spawn = MQ_NO;
 	start_as_pipe = 1;
 	// alfa is owned by this proc
 	alfa1 = MqBufferLDup(context->link.alfa);
 //printLC("MQ_START_SERVER_AS_PIPE:")
+//printULS(alfa1)
 	// case 2: this is used if the function is called from MqLinkCreate. The
 	// context->alfa argument has the startup arguments of the MQ_IO_PIPE server.
 	// MQ_IO_TCP and MQ_IO_UDS is ignored and it is an error if context->alfa is
@@ -442,11 +444,10 @@ rescan:
 	// check if we use the "WORKER" keyword
 	if (context->link.bits.isWORKER) {
 	  // replace "WORKER" with "MqInitBuf" data
-	  if (MqInitBuf && MqInitBuf->cursize >= 1)
+	  if (MqInitBuf && MqInitBuf->cursize >= 1) {
 	    name = MqInitBuf->data[0]->cur.C;
-	  // replace "WORKER" itself on position "0"
-	  // can not delete the buffer because the string is used in "name" and "displayname"
-	  MqErrorCheck (MqBufferLGetU (context, alfa1, 0, &tmpName));
+	    del_first_on_spawn = MQ_YES;
+	  }
 	  // add startup entry function
 	  factory = context->setup.factory;
 	} else if (
@@ -458,8 +459,10 @@ rescan:
 	  // well we need the "name-of-the-executable" binary name
 	  // > atool split ... @ cut ... @ join ...
 	  // name is "cut" and next line will replace the name with "atool"
-	  if (MqInitBuf && MqInitBuf->cursize >= 1)
+	  if (MqInitBuf && MqInitBuf->cursize >= 1) {
 	    name = MqInitBuf->data[0]->cur.C;
+	    del_first_on_spawn = MQ_YES;
+	  }
 	}
 
 //printLC(name)
@@ -473,10 +476,6 @@ rescan:
 		context->config.startAs == MQ_START_FORK)) {
 //printLC("fork")
 	    startType = MQ_START_SERVER_AS_FORK;
-	    // if bits.isWORKER than the startup is like a "GenericServer" and not like a "pipe"
-	    if (context->link.bits.isWORKER == MQ_YES) {
-	      MqBufferLAppend(alfa1, MqBufferCreateC(MQ_ERROR_PANIC, name), 0);
-	    }
 	    goto rescan;
 	  }
 #endif
@@ -487,10 +486,6 @@ rescan:
 		context->config.startAs == MQ_START_THREAD)) {
 //printLC("thread")
 	    startType = MQ_START_SERVER_AS_THREAD;
-	    // if bits.isWORKER than the startup is like a "GenericServer" and not like a "pipe"
-	    if (context->link.bits.isWORKER == MQ_YES) {
-	      MqBufferLAppend(alfa1, MqBufferCreateC(MQ_ERROR_PANIC, name), 0);
-	    }
 #if defined(HAVE_PTHREAD)
 	    thread_status = PTHREAD_CREATE_JOINABLE;
 #endif
@@ -506,7 +501,16 @@ rescan:
 	startType = MQ_START_SERVER_AS_SPAWN;
 	// only SPAWN need all arguments from MqInitBuf
 
-	if (context->setup.factory->called && factory != NULL) {
+	//if (context->setup.factory && context->setup.factory->called && factory != NULL) {
+	if (factory != NULL) {
+	  // delete "ITEM" itself on position "0" -> if not called
+	  // can not delete the buffer because "alfa1->data[0]" is used in "name" and "displayname"
+	  // we are using the "called" flag from the factory-in-use and !not! from
+	  // the factory-who-will-be-used
+	  if (del_first_on_spawn && context->setup.factory && !context->setup.factory->called) {
+	    MqErrorCheck (MqBufferLGetU (context, alfa1, 0, &tmpName));
+	  }
+//printULS(MqInitBuf)
 	  MqBufferLAppendL(alfa1, MqInitBuf, 0);
 	}
 	goto rescan;
@@ -674,14 +678,14 @@ rescan:
 	// start the server
 
 /*
-        {
-int i;
-char ** xarg = argV;
-//printLC(name)
-for (i=0; *xarg != NULL; xarg++, i++) {
-  MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
+{
+  int i;
+  char ** xarg = argV;
+  //printLC(name)
+  for (i=0; *xarg != NULL; xarg++, i++) {
+    MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
+  }
 }
-        }
 */
 
 	MqErrorCheck (MqSysServerSpawn (context, argV, name, idP));

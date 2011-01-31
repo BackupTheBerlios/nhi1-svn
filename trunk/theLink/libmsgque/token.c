@@ -530,11 +530,7 @@ pTokenCheckSystem (
 # else
 	    MqSendO (context, MQ_NO);
 # endif
-	    if (context->setup.factory) {
-	      MqSendC (context, context->setup.factory->ident);
-	    } else {
-	      MqSendC (context, "");
-	    }
+	    MqSendC (context, MqFactoryCtxIdentGet(context));
 	    MqErrorCheck (pSendSYSTEM_RETR (context));
 
 	    // set the binary mode

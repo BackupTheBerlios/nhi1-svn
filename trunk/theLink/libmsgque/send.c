@@ -1090,6 +1090,8 @@ MqSendT_END (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (buf !=  send->tranBuf) {
     return MqErrorDbV(MQ_ERROR_START_ITEM_REQUIRED, "MqSendT_START");
+  } else if (context->setup.factory == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
     MQ_WID transId;
 

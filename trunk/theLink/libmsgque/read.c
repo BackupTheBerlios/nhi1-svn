@@ -254,7 +254,7 @@ pReadCreateTransId (
   struct MqReadS * read = context->link.read;
   MQ_CST ident;
   MqErrorCheck (MqReadC (context, &ident));
-  if (strcmp(ident, context->setup.factory->ident)) {
+  if (context->setup.factory && strcmp(ident, context->setup.factory->ident)) {
     return MqErrorV(context,__func__,-1,
       "internal error expect ident '%s' but got ident '%s'", 
 	context->setup.factory->ident, ident);

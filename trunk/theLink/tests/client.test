@@ -58,7 +58,7 @@ C> (client:*) \[*\] \[0-0-*-statistics\]:*MqSendEND_AND_WAIT:*
 C> (client:*) \[*\] \[0-0-*-main\]: end: ---*}
 
 test client-4 {client help} \
-    -constraints  c \
+    -constraints  {c && !leakcheck} \
     -body       { Exec {*}[getClient client] --name client --help } \
     -match	glob \
     -result	{NONE--usage: *client \[OPTION\]... \[ARGUMENT\]...*
@@ -81,7 +81,7 @@ test client-4 {client help} \
 }
 
 test client-4b {libmsgque help} \
-    -constraints  c \
+    -constraints  {c && !leakcheck} \
     -body       { Exec {*}[getClient client] --name client --help-msgque } \
     -match	glob \
     -result	{NONE--
