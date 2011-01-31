@@ -42,9 +42,7 @@ static void ClientHelp ( const char * ) __attribute__ ((noreturn));
 
 static MQ_INT callnum = 0;
 
-static enum MqErrorE 
-RET_ECUL
-(
+static enum MqErrorE RET_ECUL (
   struct MqS * const mqctx,
   MQ_PTR data
 ) {
@@ -53,7 +51,37 @@ RET_ECUL
   MQ_INT valI;
   MQ_WID valW;
   MQ_BUF buf;
+
   callnum++;
+
+  MqErrorCheck (MqReadY (mqctx, &valY));
+  MqErrorCheck (MqReadS (mqctx, &valS));
+  MqErrorCheck (MqReadI (mqctx, &valI));
+  MqErrorCheck (MqReadW (mqctx, &valW));
+  MqErrorCheck (MqReadU (mqctx, &buf));
+  return MQ_OK;
+
+error:
+  return MqErrorStack(mqctx);
+}
+
+static enum MqErrorE RET_SDTR (
+  struct MqS * const mqctx,
+  MQ_PTR data
+) {
+  MQ_INT id;
+  MQ_BYT valY;
+  MQ_SRT valS;
+  MQ_INT valI;
+  MQ_WID valW;
+  MQ_BUF buf;
+
+  callnum++;
+
+  MqErrorCheck (MqReadT_START (mqctx));
+  MqErrorCheck (MqReadI (mqctx, &id));
+  MqErrorCheck (MqReadT_END (mqctx));
+
   MqErrorCheck (MqReadY (mqctx, &valY));
   MqErrorCheck (MqReadS (mqctx, &valS));
   MqErrorCheck (MqReadI (mqctx, &valI));
@@ -95,6 +123,9 @@ ClientHelp ( const char * base  )
     fputs("  --send-and-callback-perf\n",stderr);
     fputs("    Same as '--send-perf' but use 'MqSendEND_AND_CALLBACK'\n", stderr);
     fputs("\n", stderr);
+    fputs("  --send-transaction-perf\n",stderr);
+    fputs("    Use a persistent-transaction together with 'MqSendEND_AND_WAIT'\n", stderr);
+    fputs("\n", stderr);
     fputs("  --parent-perf\n",stderr);
     fputs("    Creation of '--num' (default: " MQ_CPPXSTR(NUM_PARENT) ") parent-context\n", stderr);
     fputs("\n", stderr);
@@ -134,12 +165,13 @@ ClientMain (
   struct MqBufferLS * parentArgv = MqBufferLDup(largv);
 
   // what should be tested ?
-  MQ_BOL sendB;		// test MqSendEND time?
-  MQ_BOL sendAndWait;	// test MqSendEND_AND_WAIT round-trip time?
-  MQ_BOL sendAndCall;	// test MqSendEND_AND_CALLBACK round-trip time?
-  MQ_BOL parent;	// test parent-context creation time?
-  MQ_BOL child;		// test child-context creation time?
-  MQ_BOL all;		// test all
+  MQ_BOL sendB;		  // test MqSendEND time?
+  MQ_BOL sendAndWait;	  // test MqSendEND_AND_WAIT round-trip time?
+  MQ_BOL sendAndCall;	  // test MqSendEND_AND_CALLBACK round-trip time?
+  MQ_BOL sendTransaction; // test MqSendEND_AND_WAIT together with persistent transactions round-trip time?
+  MQ_BOL parent;	  // test parent-context creation time?
+  MQ_BOL child;		  // test child-context creation time?
+  MQ_BOL all;		  // test all
   MQ_INT num = -1;
 #define SIZE 1000
   MQ_BIN data = MqSysMalloc (MQ_ERROR_PANIC, (SIZE));
@@ -157,12 +189,13 @@ ClientMain (
   MqBufferLCheckOptionO (mqctx, largv, "--send-perf", &sendB);
   MqBufferLCheckOptionO (mqctx, largv, "--send-and-wait-perf", &sendAndWait);
   MqBufferLCheckOptionO (mqctx, largv, "--send-and-callback-perf", &sendAndCall);
+  MqBufferLCheckOptionO (mqctx, largv, "--send-transaction-perf", &sendTransaction);
   MqBufferLCheckOptionO (mqctx, largv, "--parent-perf", &parent);
   MqBufferLCheckOptionO (mqctx, largv, "--child-perf", &child);
   MqBufferLCheckOptionO (mqctx, largv, "--all", &all);
   if (all) {
-    sendB = sendAndWait = sendAndCall = parent = child = MQ_YES;
-  } else if (sendB == MQ_NO && sendAndWait == MQ_NO && sendAndCall == MQ_NO
+    sendB = sendAndWait = sendAndCall = sendTransaction = parent = child = MQ_YES;
+  } else if (sendB == MQ_NO && sendAndWait == MQ_NO && sendAndCall == MQ_NO && sendTransaction == MQ_NO
 		&& parent == MQ_NO && child == MQ_NO ) {
     sendAndWait = MQ_YES;
   }
@@ -247,6 +280,7 @@ ClientMain (
       MQ_INT valI = INT_MIN;
       MQ_WID valW = LLONG_MIN;
       int i; 
+      callnum = 0;
       StatInit (itemT);
 	for (i=0; i<lnum; i++) {
 	  MqSendSTART (mqctx);
@@ -331,7 +365,61 @@ ClientMain (
     // cleanup
     StatDelete (&itemT);
 
-  } /* finish the transaction-performance test */
+  } /* finish the MqSendEND_AND_WAIT performance test */
+
+  if (sendTransaction) {
+
+    // if necessary apply the default number of transactions
+    MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
+
+    StatTimerSP itemT = StatCreate (mqctx);
+
+    {
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendTRANSACTION", 0);
+      const MQ_BYT stepY = 1;
+      const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
+      const MQ_INT stepI = ((INT_MAX/lnum)*2);
+      const MQ_WID stepW = ((LLONG_MAX/lnum)*2);
+      MQ_BYT valY = SCHAR_MIN;
+      MQ_SRT valS = SHRT_MIN;
+      MQ_INT valI = INT_MIN;
+      MQ_WID valW = LLONG_MIN;
+      int i; 
+      callnum = 0;
+      MqErrorCheck(MqServiceCreate(mqctx, "SDTR", RET_SDTR, NULL ,NULL));
+      StatInit (itemT);
+	for (i=0; i<lnum; i++) {
+	  MqSendSTART (mqctx);
+	  MqSendT_START(mqctx);
+	  MqSendI (mqctx, 999);
+	  MqSendT_END(mqctx, "SDTR");
+	  MqSendY (mqctx, valY);
+	  MqSendS (mqctx, valS);
+	  MqSendI (mqctx, valI);
+	  MqSendW (mqctx, valW);
+	  MqSendB (mqctx, data, ((i%SIZE)+1));
+	  MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "ECUL", MQ_TIMEOUT10));
+	  valY += stepY;
+	  valS += stepS;
+	  valI += stepI;
+	  valW += stepW;
+	};
+
+      // wait untill all callbacks are processed
+      while (callnum != lnum)
+	MqErrorCheck(MqProcessEvent(mqctx, 3, MQ_WAIT_ONCE));
+
+      StatCtxCalc (stat, itemT);
+      stat->val /= lnum;
+      StatCtxPrint (stat);
+      StatCtxDelete (&stat);
+      MqServiceDelete(mqctx, "SDTR");
+    }
+
+    // cleanup
+    StatDelete (&itemT);
+
+  } /* finish the MqSendTRANSACTION performance test */
 
   // start the parent-context creation test
   if (parent) {

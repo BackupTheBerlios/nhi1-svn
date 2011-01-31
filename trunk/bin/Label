@@ -40,10 +40,11 @@ array set LABELIGNORE {
 				  .libs *.in *.stamp *.la *.lo docs example .C  *.mdb tmp.* 
 				  .vimrc .kdbgrc.* ccserver *.xml .vpath_hook *.dll .COPY_JAVA }
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
+    ./theLink/sqlite		{ Makefile Makefile.in .deps .libs sqlite3.c sqlite3.h sqlite3ext.h tags libtmp* }
     ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }
     ./theLink/example/c		{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
 				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3 Filter4 Filter5
-				  client server }
+				  client server docs }
     ./theLink/example/cc	{ *.o .deps tags mulclient mulserver manfilter testserver testclient Makefile
 				  *.sw* MyClient MyServer Makefile.in Filter1 Filter2 Filter3 Filter4 Filter5
 				  server }

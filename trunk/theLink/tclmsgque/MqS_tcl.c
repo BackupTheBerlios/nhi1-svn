@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tclmsgque/context_tcl.c
+ *  \file       theLink/tclmsgque/MqS_tcl.c
  *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group

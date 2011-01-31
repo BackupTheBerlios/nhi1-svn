@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/tclmsgque/factory_tcl.c
+ *  \file       theLink/tclmsgque/MqFactoryS_tcl.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

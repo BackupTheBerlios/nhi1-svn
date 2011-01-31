@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/libmsgque/Makefile.am
-#§  \brief      \$Id: Makefile.am 392 2010-12-30 18:50:45Z aotto1968 $
+#§  \file       theLink/sqlite/Makefile.am
+#§  \brief      \$Id$
 #§  
 #§  (C) 2007 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 392 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information

@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/libmsgque/config.h
- *  \brief      \$Id: config.h 251 2010-10-18 18:06:55Z aotto1968 $
+ *  \file       theLink/sqlite/config.h
+ *  \brief      \$Id$
  *  
  *  (C) 2004 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 251 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
