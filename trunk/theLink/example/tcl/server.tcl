@@ -232,8 +232,9 @@ proc BgError {ctx} {
   }
 }
 
-proc ClientCreateParent {ctx debug} {
+proc ClientCreateParent {ctx debug startAs} {
   $ctx ConfigSetDebug $debug
+  $ctx ConfigSetStartAs $startAs
   $ctx ConfigSetBgError BgError
   $ctx LinkCreate @ server --name test-server
 }
@@ -272,12 +273,12 @@ proc Ot_SND1 {ctx} {
       if {$parent ne "" && [[$parent dict get $id] LinkIsConnected]} {
 	ClientCreateChild $cl [$parent dict get $id]
       } else {
-	ClientCreateParent $cl [$ctx ConfigGetDebug]
+	ClientCreateParent $cl [$ctx ConfigGetDebug] [$ctx ConfigGetStartAs]
       }
     }
     START2 {
-      ClientCreateParent $cl [$ctx ConfigGetDebug]
-      ClientCreateParent $cl [$ctx ConfigGetDebug]
+      ClientCreateParent $cl [$ctx ConfigGetDebug] [$ctx ConfigGetStartAs]
+      ClientCreateParent $cl [$ctx ConfigGetDebug] [$ctx ConfigGetStartAs]
     }
     START3 {
       ClientCreateChild $cl [tclmsgque MqS]
@@ -346,7 +347,7 @@ proc Ot_SND2 {ctx} {
     }
     CREATE2 {
       set c [tclmsgque MqS]
-      ClientCreateParent $c [$ctx ConfigGetDebug]
+      ClientCreateParent $c [$ctx ConfigGetDebug] [$ctx ConfigGetStartAs]
       $ctx SlaveCreate $id $c
     }
     CREATE3 {
@@ -534,12 +535,13 @@ proc Ot_CFG1 {ctx} {
     }
     "Ident" {
       set old [$ctx FactoryCtxIdentGet] 
-      $ctx FactoryCtxDefault [$ctx ReadC]
+      set ident [$ctx ReadC]
+      $ctx FactoryCtxSet [[tclmsgque FactoryGet] Copy $ident]
       set check [expr {[$ctx LinkGetTargetIdent] eq [$ctx ReadC]}]
       $ctx SendSTART
       $ctx SendC [$ctx FactoryCtxIdentGet]
       $ctx SendO $check
-      $ctx ConfigSetSrvName $old
+      $ctx FactoryCtxIdentSet $old
     }
     "IsSilent" {
       set old [$ctx ConfigGetIsSilent] 
@@ -602,9 +604,9 @@ proc Ot_PRNT {ctx} {
 
 proc Ot_TRNS {ctx} {
   $ctx SendSTART
-  $ctx SendT_START "TRN2"
+  $ctx SendT_START
   $ctx SendI 9876
-  $ctx SendT_END
+  $ctx SendT_END "TRN2"
   $ctx SendI [$ctx ReadI]
   $ctx SendEND_AND_WAIT "ECOI"
   $ctx ProcessEvent -wait ONCE

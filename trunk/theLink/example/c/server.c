@@ -1155,8 +1155,7 @@ Ot_CFG1 (
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));
     MqErrorCheck (MqReadC (mqctx, &CV));
-    MqFactoryCopy(MqFactoryGet(NULL), CV);
-    MqErrorCheck (MqFactoryCtxIdentSet(mqctx, CV));
+    MqErrorCheck (MqFactoryCtxSet (mqctx, MqFactoryCopy(MqFactoryGet(NULL), CV)));
     MqErrorCheck (MqReadC (mqctx, &CV));
     check = !strcmp(MqLinkGetTargetIdent (mqctx),CV);
     // send

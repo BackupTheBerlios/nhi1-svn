@@ -1714,6 +1714,12 @@ MQ_EXTERN void MQ_DECL MqLogChild (
   struct MqS const * const context,
   MQ_CST const prefix
 );
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
+  struct MqS * const context,
+  MQ_CST const storageDir
+);
+
 #endif // _DEBUG
 
 /** \} Mq_Context_C_API */

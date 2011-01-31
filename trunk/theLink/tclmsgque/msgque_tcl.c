@@ -36,6 +36,7 @@ struct LookupKeyword {
 
 int NS(FactoryAdd)	    (TCL_ARGS);
 int NS(FactoryGet)	    (TCL_ARGS);
+int NS(FactoryGetCalled)    (TCL_ARGS);
 int NS(FactoryDefault)	    (TCL_ARGS);
 int NS(FactoryDefaultIdent) (TCL_ARGS);
 
@@ -363,6 +364,7 @@ static int NS(MsgqueCmd) (
     { "Init",		      NS(InitCmd)	      },
     { "FactoryAdd",	      NS(FactoryAdd)	      },
     { "FactoryGet",	      NS(FactoryGet)	      },
+    { "FactoryGetCalled",     NS(FactoryGetCalled)    },
     { "FactoryDefault",	      NS(FactoryDefault)      },
     { "FactoryDefaultIdent",  NS(FactoryDefaultIdent) },
     { NULL,		      NULL		      }

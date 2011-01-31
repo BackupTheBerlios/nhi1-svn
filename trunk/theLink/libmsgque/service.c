@@ -185,7 +185,7 @@ sMqEventStart (
       // on EXIT do return nothing and just report EXIT to the TOPLEVEL
       if (MqErrorIsEXIT(a_context)) goto error;
       // on a client the error will be reported to the toplevel
-      if (MQ_IS_CLIENT(context)) {
+      if (MQ_IS_CLIENT(a_context) && a_context->link._trans == 0) {
 	goto error;
       } else {
 	// on a server the error will be reported to the client

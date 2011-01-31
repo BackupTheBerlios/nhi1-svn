@@ -805,11 +805,11 @@ while {true} {
     {^--testing$} {
       set argv [list --only-pipe --only-binary --max 5 --only-num 1 {*}$argv]
     }
-    {^--mem-testing$} {
-      set argv [list --only-pipe --only-binary --max 5 {*}$argv]
-    }
     {^--full-testing$} {
       set argv [list --only-binary --max 5 {*}$argv]
+    }
+    {^--pipe-testing$} {
+      set argv [list --only-pipe --only-binary --max 5 {*}$argv]
     }
     {^--thread-testing$} {
       set argv [list --only-binary --max 5 --only-thread --only-tcp {*}$argv]
@@ -941,12 +941,13 @@ while {true} {
       puts "  --help / -h ...... get help"
       puts ""
       puts " compound OPTIONS"
-      puts "  --testing  ....... --only-binary --only-pipe --max 5 --only-num 1"
-      puts "  --mem-testing .... --only-binary --only-pipe --max 5"
-      puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
+      puts "  --testing  ....... --only-binary --max 5 --only-pipe --only-num 1"
+      puts "  --full-testing ... --only-binary --max 5"
+      puts "  --pipe-testing .... --only-binary --max 5 --only-pipe"
       puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
       puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
       puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
+      puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
       exit 1
     }
     {^--help-msgque$} {

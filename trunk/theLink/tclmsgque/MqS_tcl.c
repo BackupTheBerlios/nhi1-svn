@@ -92,6 +92,16 @@ NS(ThreadExit) (
 /*                                                                           */
 /*****************************************************************************/
 
+static int NS(SqlSetDb) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_CST file = NULL;
+  CHECK_C(file)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqSqlSetDb (mqctx, file));
+  RETURN_TCL
+}
+
 static int NS(LogC) (NS_ARGS)
 {
   MQ_CST str,proc;
@@ -326,6 +336,8 @@ int NS(SlaveGet) (NS_ARGS);
 int NS(SlaveGetMaster) (NS_ARGS);
 int NS(SlaveIs) (NS_ARGS);
 
+int NS(FactoryCtxSet) (NS_ARGS);
+int NS(FactoryCtxGet) (NS_ARGS);
 int NS(FactoryCtxIdentSet) (NS_ARGS);
 int NS(FactoryCtxIdentGet) (NS_ARGS);
 
@@ -446,6 +458,8 @@ int NS(MqS_Cmd) (
     { "Exit",			  NS(Exit)		      },
     { "Delete",			  NS(Delete)		      },
     { "LogC",			  NS(LogC)		      },
+    { "SqlSetDb",		  NS(SqlSetDb)		      },
+
     { "dict",			  NS(dict)		      },
 
 // Link
@@ -483,6 +497,8 @@ int NS(MqS_Cmd) (
 
 // FACTORY
 //
+    { "FactoryCtxSet",		  NS(FactoryCtxSet)	      },
+    { "FactoryCtxGet",		  NS(FactoryCtxGet)	      },
     { "FactoryCtxIdentSet",	  NS(FactoryCtxIdentSet)      },
     { "FactoryCtxIdentGet",	  NS(FactoryCtxIdentGet)      },
 
