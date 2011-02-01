@@ -32,6 +32,8 @@
 #   include <time.h>
 #   include <string.h>
 
+struct sockaddr;
+struct sockaddr_in;
 
 BEGIN_C_DECLS
 
@@ -337,8 +339,6 @@ enum MqErrorE pBufferGetA8( struct MqBufferS * const, union MqBufferAtomU * cons
 /*****************************************************************************/
 
 #define GENERIC_SAVE_ERROR(generiC) ((generiC)&&(generiC)->error?(generiC)->error:MQ_ERROR_IGNORE)
-
-struct sockaddr;
 
 struct GenericS {
   struct MqIoS * io;		///< link to 'io' object
@@ -742,8 +742,6 @@ void pSwapBDY ( register MQ_BIN);
 /*****************************************************************************/
 
 #define TCP_SAVE_ERROR(tcp) ((tcp)?IO_SAVE_ERROR((tcp)->io):NULL)
-
-struct sockaddr_in;
 
 enum MqErrorE TcpCreate ( struct MqIoS * const, struct TcpS ** const);
 void TcpDelete ( struct TcpS ** const) __attribute__((nonnull));

@@ -30,7 +30,7 @@ class mulserver : public MqC, public IServerSetup {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  mulserver *ctx = MqFactoryC<mulserver>::New("MyMulServer");
+  mulserver *ctx = MqFactoryC<mulserver>::Add("MyMulServer").New();
   try {
     ctx->LinkCreateVC (argc, argv);
     ctx->ProcessEvent (MQ_WAIT_FOREVER);

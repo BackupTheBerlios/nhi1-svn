@@ -33,7 +33,7 @@ class MyServer : public MqC, public IServerSetup {
 };
 
 int MQ_CDECL main(int argc, MQ_CST argv[]) {
-  MyServer *srv = MqFactoryC<MyServer>::New();
+  MyServer *srv = MqFactoryC<MyServer>::Add().New();
   try {
     srv->LinkCreateVC(argc, argv);
     srv->ProcessEvent (MQ_WAIT_FOREVER);

@@ -87,6 +87,12 @@ test acut-9-($S) {cut: -f -2} \
     -result {xa,24,12345678987654321
 cg,89,98765432123456789}
 
+test acut-9b-($S) {cut: -f -2 + sort} \
+    -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut -f -2 @ sort -0 C @ join -d , } \
+    -returnCodes ok \
+    -result {cg,89,98765432123456789
+xa,24,12345678987654321}
+
 test acut-10-($S) {cut: -f nothing } \
     -body   { Exec cat $data1 | {*}[getATool split] --$S -d : @ cut -f @ join -d , } \
     -returnCodes ok \

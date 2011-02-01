@@ -38,7 +38,7 @@ class Filter3 : public MqC, public IServerSetup {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Filter3 *filter = MqFactoryC<Filter3>::New("Filter3");
+  Filter3 *filter = MqFactoryC<Filter3>::Add("Filter3").New();
   try {
     filter->LinkCreateVC (argc, argv);
     filter->ProcessEvent (MQ_WAIT_FOREVER);

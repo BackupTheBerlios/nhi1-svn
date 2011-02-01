@@ -17,19 +17,19 @@
 #include <fcntl.h>
 
 #if defined(MQ_IS_POSIX)
-#   include <sys/socket.h>
-#   include <sys/select.h>
-#   include <netdb.h>
-#   include <netinet/in.h>
-#   include <arpa/inet.h>
+# include <sys/socket.h>
+# include <sys/select.h>
+# include <netdb.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
 #elif defined(MQ_IS_WIN32)
 //  we require WindowsXP or higher -> used for "getaddrinfo"
-#		if !defined(_MSC_VER)
-#			define WINVER WindowsXP
-#			include <w32api.h>
-#		endif
-#   include <winsock2.h>
-#   include <Ws2tcpip.h>
+# if !defined(_MSC_VER)
+#   define WINVER WindowsXP
+#   include <w32api.h>
+# endif
+# include <winsock2.h>
+# include <Ws2tcpip.h>
 #endif
 
 struct sockaddr;

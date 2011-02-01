@@ -41,8 +41,9 @@ namespace example {
     public:
       int i;
     
-      void LinkCreate (MQ_INT debug) {
+      void LinkCreate (MQ_INT debug, enum MqStartE startAs) {
 	ConfigSetDebug   (debug);
+	ConfigSetStartAs (startAs);
 	MqC::LinkCreateV ("test-client", "@", "server", "--name", "test-server", NULL); 
       }
 
@@ -210,12 +211,12 @@ namespace example {
 	    if (parent != NULL && parent->cl[id]->LinkIsConnected()) {
 	      cl[id]->LinkCreateChild(*parent->cl[id]);
 	    } else {
-	      cl[id]->LinkCreate(ConfigGetDebug());
+	      cl[id]->LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	    }
 	  } else if (!strcmp(s,"START2")) {
 	    // object already connected ERROR
-	    cl[id]->LinkCreate(ConfigGetDebug());
-	    cl[id]->LinkCreate(ConfigGetDebug());
+	    cl[id]->LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
+	    cl[id]->LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	  } else if (!strcmp(s,"START3")) {
 	    Client parent;
 	    cl[id]->LinkCreateChild(parent);
@@ -341,7 +342,6 @@ namespace example {
 	    break;
 	  }
 	  case MQ_LSTT: break;
-	  case MQ_TRAT: break;
 	}
 	SendRETURN();
       }
@@ -393,7 +393,7 @@ namespace example {
 	    SlaveWorkerVT (id, LIST);
 	  } else if (!strcmp(s,"CREATE2")) {
 	    Client *slv = new Client();
-	    slv->LinkCreate(ConfigGetDebug());
+	    slv->LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	    SlaveCreate (id, slv);
 	  } else if (!strcmp(s,"DELETE")) {
 	    SlaveDelete(id);
@@ -531,7 +531,7 @@ namespace example {
 	} else if (!strncmp(cmd, "Ident", 5)) {
 	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,FactoryCtxIdentGet());
 	  MQ_BOL check;
-	  FactoryCtxDefaultSet (ReadC());
+	  FactoryCtxSet (MqFactoryC<Server>::Get().Copy(ReadC()).factory);
 	  check = !strcmp(LinkGetTargetIdent(), ReadC());
 	  SendSTART();
 	  SendC (FactoryCtxIdentGet());
@@ -602,9 +602,9 @@ namespace example {
 
       void TRNS () {
 	SendSTART ();
-	SendT_START ("TRN2");
+	SendT_START ();
 	SendI (9876);
-	SendT_END ();
+	SendT_END ("TRN2");
 	SendI ( ReadI() );
 	SendEND_AND_WAIT ("ECOI", MQ_TIMEOUT_USER);
 	ProcessEvent (MQ_TIMEOUT_USER, MQ_WAIT_ONCE);
@@ -706,7 +706,7 @@ using namespace example;
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  Server *server = MqFactoryC<Server>::New("server");
+  Server *server = MqFactoryC<Server>::Add("server").New();
   try {
     server->LinkCreateVC (argc, argv);
     server->LogC("test",1,"this is the log test\n");

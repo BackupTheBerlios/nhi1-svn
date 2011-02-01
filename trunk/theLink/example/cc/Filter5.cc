@@ -110,7 +110,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
 
   // call factory usong the !second! argument,
   // first argument is the executable self
-  MqC *filter = MqFactoryC<MqC>::Call(argv[1]);
+  MqC *filter = MqFactoryC<MqC>::GetCalled(argv[1]).New();
   try {
     filter->LinkCreateVC (argc-1, argv+1);
     filter->ProcessEvent (MQ_WAIT_FOREVER);

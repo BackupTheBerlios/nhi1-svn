@@ -1,1 +1,0 @@
-../libmsgque/trans.h

@@ -504,9 +504,10 @@ rescan:
 	//if (context->setup.factory && context->setup.factory->called && factory != NULL) {
 	if (factory != NULL) {
 	  // delete "ITEM" itself on position "0" -> if not called
-	  // can not delete the buffer because "alfa1->data[0]" is used in "name" and "displayname"
-	  // we are using the "called" flag from the factory-in-use and !not! from
-	  // the factory-who-will-be-used
+	  // can not delete the buffer because "alfa1->data[0]" is used in "name" and "displayname".
+	  // We are using the "called" flag from the factory-in-use and !not! from
+	  // the factory-who-will-be-used. This trick works because the factory-in-use is always
+	  // a spawned-factory too.
 	  if (del_first_on_spawn && context->setup.factory && !context->setup.factory->called) {
 	    MqErrorCheck (MqBufferLGetU (context, alfa1, 0, &tmpName));
 	  }

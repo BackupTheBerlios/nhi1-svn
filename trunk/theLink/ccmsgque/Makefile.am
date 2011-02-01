@@ -17,15 +17,11 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     token.cc uds_io.cc bufferL.cc error.cc \
     generic_io.cc io.cc msgque.cc read.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
-    service.cc factory.cc link.cc \
+    service.cc factory.cc link.cc sql.cc \
     \
     ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
-    buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
-    slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
-    log.h msgque.h read.h swap.h tcp_io.h uds_io.h cache.h debug.h \
-    generic_io.h main.h msgque_private.h send.h sys_com.h token.h \
-    link.h config.h factory.h
+    ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
 
 libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libtmp_la_LDFLAGS = -no-undefined
@@ -41,15 +37,11 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     token.cc uds_io.cc bufferL.cc error.cc \
     generic_io.cc io.cc msgque.cc read.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
-    service.cc factory.cc link.cc \
+    service.cc factory.cc link.cc sql.cc \
     \
     ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
-    buffer.h ccmsgque.h error.h mq_io.h pipe_io.h \
-    slave.h sys.h trans.h bufferL.h ccmsgque_private.h event.h \
-    log.h msgque.h read.h swap.h tcp_io.h uds_io.h cache.h debug.h \
-    generic_io.h main.h msgque_private.h send.h sys_com.h token.h \
-    link.h config.h factory.h
+    ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
 
 
 libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../sqlite $(AM_CFLAGS)

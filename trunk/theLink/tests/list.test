@@ -72,7 +72,7 @@ test list-0-a-($I|$B|$C|$S) {list SendL_END without start} \
     -match          glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|LST1> <Num|238>
 [sS]> (server-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
-[sS]> (server-0) found in function "MqSendL_END" at file "send.c"}
+[sS]> (server-0) found in function "MqSendL_END" at file "send.c*"}
 
 test list-0-b-($I|$B|$C|$S) {list ReadL_END without start} \
     -body           { EchoL $FH_LAST LST2 SendC hallo SendW 365 } \

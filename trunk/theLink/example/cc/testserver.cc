@@ -39,7 +39,7 @@ class testserver : public MqC, public IServerSetup {
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  testserver *ctx = MqFactoryC<testserver>::New("testserver");
+  testserver *ctx = MqFactoryC<testserver>::Add("testserver").New();
   try {
     ctx->LinkCreateVC(argc, argv);
     ctx->ProcessEvent (MQ_WAIT_FOREVER);

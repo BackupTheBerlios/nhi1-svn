@@ -206,9 +206,9 @@ pSqlSelectSendTrans (
       return MqErrorDbSql(context,sql_sys->db);
   }
   pTokenSetCurrent(context->link.srvT, (MQ_CST const)sqlite3_column_text(hdl, 0));
-  MqBufferSetB(buf, sqlite3_column_blob(hdl, 3), sqlite3_column_bytes(hdl, 3));
+  MqBufferSetB(buf, (const unsigned char*)sqlite3_column_blob(hdl, 3), sqlite3_column_bytes(hdl, 3));
   buf->numItems = sqlite3_column_int(hdl, 1);
-  buf->type = sqlite3_column_int(hdl, 2);
+  buf->type = (enum MqTypeE) sqlite3_column_int(hdl, 2);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -429,7 +429,7 @@ void
 SqlDelete (void)
 {
   if (sql_key != MqThreadKeyNULL) {
-    struct MqSqlS * sql_sys = MqThreadGetTLS(sql_key);
+    struct MqSqlS * sql_sys = (struct MqSqlS *) MqThreadGetTLS(sql_key);
     sSqlDelDb (MQ_ERROR_PRINT, sql_sys);
     MqThreadSetTLS(sql_key, NULL);
     MqSysFree(sql_sys);

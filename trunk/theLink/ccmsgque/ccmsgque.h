@@ -37,6 +37,7 @@ namespace ccmsgque {
 
   class MqC;
   class MqCException;
+  template<class T> class MqFactoryC;
 
   /// \brief Callback for a Service
   class IService {
@@ -241,9 +242,13 @@ namespace ccmsgque {
       MQ_EXTERN virtual ~MqC ();
 
     public:
-      /// \api #MqFactoryCtxDefaultSet
-      inline void FactoryCtxDefaultSet (MQ_CST ident) throw(MqCException) { 
-	ErrorCheck (MqFactoryCtxDefaultSet(&context, ident)); 
+      /// \api #MqFactoryCtxSet
+      inline void FactoryCtxSet (struct MqFactoryS *factory) throw(MqCException) { 
+	ErrorCheck (MqFactoryCtxSet(&context, factory)); 
+      }
+      /// \api #MqFactoryCtxGet
+      inline struct MqFactoryS* FactoryCtxGet () { 
+	return MqFactoryCtxGet(&context); 
       }
       /// \api #MqFactoryCtxIdentSet
       inline void FactoryCtxIdentSet (MQ_CST ident) throw(MqCException) { 
@@ -634,14 +639,8 @@ namespace ccmsgque {
 	{ ErrorCheck (MqReadL_END(&context)); }
 
       /// \api #MqReadT_START
-      inline void ReadT_START(MQ_BUF buf = NULL) throw(MqCException) 
-	{ ErrorCheck (MqReadT_START(&context, buf)); }
-      /// \api #MqReadT_START
-      inline void ReadT_START(const MqBufferC& buf) throw(MqCException) 
-	{ ErrorCheck (MqReadT_START(&context, buf.GetU())); }
-      /// \api #MqReadT_START
-      inline void ReadT_START(MqBufferC * const buf) throw(MqCException)
-	{ ErrorCheck (MqReadT_START(&context, buf->GetU())); }
+      inline void ReadT_START() throw(MqCException) 
+	{ ErrorCheck (MqReadT_START(&context)); }
       /// \api #MqReadT_END
       inline void ReadT_END() throw(MqCException) 
 	{ ErrorCheck (MqReadT_END(&context)); }
@@ -724,13 +723,13 @@ namespace ccmsgque {
 	ErrorCheck (MqSendB (&context, &(*val->begin()) , (int) val->size())); 
       }
       /// \api #MqSendL_START
-      inline void SendL_START() throw(MqCException)      { ErrorCheck (MqSendL_START(&context)); }
+      inline void SendL_START() throw(MqCException)	      { ErrorCheck (MqSendL_START(&context)); }
       /// \api #MqSendL_END
-      inline void SendL_END() throw(MqCException)	 { ErrorCheck (MqSendL_END(&context)); }
+      inline void SendL_END() throw(MqCException)	      { ErrorCheck (MqSendL_END(&context)); }
       /// \api #MqSendT_START
-      inline void SendT_START(MQ_CST token) throw(MqCException)	{ ErrorCheck (MqSendT_START(&context, token)); }
+      inline void SendT_START() throw(MqCException)	      { ErrorCheck (MqSendT_START(&context)); }
       /// \api #MqSendT_END
-      inline void SendT_END() throw(MqCException)	 { ErrorCheck (MqSendT_END(&context)); }
+      inline void SendT_END(MQ_CST token) throw(MqCException) { ErrorCheck (MqSendT_END(&context, token)); }
 
     /// \} Mq_Send_CC_API
 
@@ -871,20 +870,19 @@ namespace ccmsgque {
 
   class MqFactoryCException : public exception
   {
-    private:
-      enum MqFactoryReturnE err;
     public:
-      MqFactoryCException(enum MqFactoryReturnE ret) : err (ret) { }
-      virtual MQ_CST what() const throw() { return MqFactoryErrorMsg(err); }
+      MqFactoryCException() { }
+      virtual MQ_CST what() const throw() { return "MqFactoryC exception"; }
   };
 
   template <typename T>
   class MqFactoryC {
 
     private:
-      static inline void ErrorCheck(enum MqFactoryReturnE ret) throw(MqCException) {
-	if (MqFactoryErrorCheckI(ret)) throw MqFactoryCException(ret);
+      inline void ErrorCheck(enum MqErrorE err) const throw(MqCException) {
+	if (MqErrorCheckI(err)) throw MqFactoryCException();
       }
+
       static inline T* GetThis(struct MqS const * const context) {
 	return static_cast<T*>(context->self);
       }
@@ -940,50 +938,53 @@ namespace ccmsgque {
 	}
       };
 
+      // disable constructor/destructor
+      inline MqFactoryC(struct MqFactoryS *item) {factory = item;}
+
     public:
+      struct MqFactoryS *factory;
+
       /// \api #MqFactoryAdd
-      static inline void Add(MQ_CST ident) throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryAdd (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+      static inline MqFactoryC<T> Add(MQ_CST ident) {
+	return MqFactoryC(MqFactoryAdd (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryAdd
-      static inline void Add() throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+      static inline MqFactoryC<T> Add() {
+	return MqFactoryC(MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
-      static inline void Default(MQ_CST ident) throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryDefault (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+      static inline MqFactoryC<T> Default(MQ_CST ident) {
+	return MqFactoryC(MqFactoryDefault (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
-      static inline void Default() throw (MqFactoryCException) {
-	ErrorCheck (MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+      static inline MqFactoryC<T> Default() {
+	return MqFactoryC(MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefaultIdent
       static inline MQ_CST DefaultIdent() {
 	return MqFactoryDefaultIdent();
       }
-      /// \api #MqFactoryCall
-      static inline T* Call(MQ_CST ident) throw (MqFactoryCException) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryCall (ident, NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
+      /// \api #MqFactoryGet
+      static inline MqFactoryC<T> Get(MQ_CST ident) {
+	return MqFactoryC(MqFactoryGet(ident));
       }
-      /// \api #MqFactoryCall
-      static inline T* Call() throw (MqFactoryCException) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryCall (typeid(T).name(), NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
+      /// \api #MqFactoryGet
+      static inline MqFactoryC<T> Get() {
+	return MqFactoryC(MqFactoryGet(NULL));
       }
-      /// \api #MqFactoryNew
-      static inline T* New(MQ_CST ident) throw (MqFactoryCException) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
+      /// \api #MqFactoryGetCalled
+      static inline MqFactoryC<T> GetCalled(MQ_CST ident) {
+	return MqFactoryC(MqFactoryGetCalled(ident));
       }
       /// \api #MqFactoryNew
-      static inline T* New() throw (MqFactoryCException) {
+      inline T* New() throw (MqFactoryCException) {
 	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx));
+	ErrorCheck (MqFactoryNew (factory, NULL, &mqctx));
 	return static_cast<T*>(mqctx->self);
+      }
+      /// \api #MqFactoryCopy
+      inline MqFactoryC<T> Copy(MQ_CST ident) {
+	return MqFactoryC (MqFactoryCopy (factory, ident));
       }
   };
 

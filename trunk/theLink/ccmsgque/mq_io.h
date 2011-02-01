@@ -1,1 +1,0 @@
-../libmsgque/mq_io.h
