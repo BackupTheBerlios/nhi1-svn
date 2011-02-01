@@ -141,7 +141,18 @@ error:
 
 JNIEXPORT void JNICALL NS(SendT_1START) (
   JNIEnv *	env, 
-  jobject	self,
+  jobject	self
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck (MqSendT_START(context));
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(SendT_1END) (
+  JNIEnv *	env, 
+  jobject	self ,
   jstring	token
 )
 {
@@ -149,20 +160,9 @@ JNIEXPORT void JNICALL NS(SendT_1START) (
   enum MqErrorE ret;
   SETUP_context;
   str = JO2C_START(env,token);
-  ret = MqSendT_START(context,str);
+  ret = MqSendT_END(context, str);
   JO2C_STOP(env,token,str);
-  ErrorMqToJavaWithCheck(ret);
-error:
-  return;
-}
-
-JNIEXPORT void JNICALL NS(SendT_1END) (
-  JNIEnv *	env, 
-  jobject	self 
-)
-{
-  SETUP_context;
-  ErrorMqToJavaWithCheck(MqSendT_END(context));
+  ErrorMqToJavaWithCheck(ret)
 error:
   return;
 }

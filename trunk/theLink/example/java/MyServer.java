@@ -37,7 +37,7 @@ final class MyServer extends MqS implements IServerSetup {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.MyServer");
-    MyServer srv = MqFactoryS.New(MyServer.class);
+    MyServer srv = MqFactoryS.Add(MyServer.class).New();
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);

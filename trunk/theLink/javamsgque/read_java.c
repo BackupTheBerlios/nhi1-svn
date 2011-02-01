@@ -61,30 +61,13 @@ error:
   return;
 }
 
-JNIEXPORT void JNICALL NS(ReadT_1START__) (
+JNIEXPORT void JNICALL NS(ReadT_1START) (
   JNIEnv *	env, 
   jobject	self
 )
 {
   SETUP_context;
-  ErrorMqToJavaWithCheck(MqReadT_START(context, NULL));
-error:
-  return;
-}
-
-JNIEXPORT void JNICALL NS(ReadT_1START__Ljavamsgque_MqBufferS_2) (
-  JNIEnv *	env, 
-  jobject	self,
-  jobject	bufO
-)
-{
-  SETUP_context;
-  struct MqBufferS * buf = ((struct MqBufferS *) (*env)->GetLongField(env,bufO,NS(FID_MqBufferS_hdl)));
-  if (buf == NULL) {
-    (*env)->ThrowNew(env, NS(Class_NullPointerException), "javamsgque buffer object already deleted");
-    goto error;
-  }
-  ErrorMqToJavaWithCheck(MqReadT_START(context, buf));
+  ErrorMqToJavaWithCheck(MqReadT_START(context));
 error:
   return;
 }

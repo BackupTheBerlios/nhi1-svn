@@ -15,10 +15,15 @@
 #include "context_java.h"
 #include "javamsgque_MqFactoryS.h"
 
-#define NF(n)	Java_javamsgque_MqFactoryS_ ## n
+#define NF(n)	    Java_javamsgque_MqFactoryS_ ## n
 
-extern JavaVM *cached_jvm;
+extern JavaVM	    *cached_jvm;
+extern jclass	    NS(Class_MqS);
 extern jfieldID	    NS(FID_MqS_hdl);
+extern jfieldID	    NS(FID_MqFactoryS_hdl);
+extern jclass       NS(Class_MqFactoryS);
+extern jmethodID    NS(MID_MqFactoryS_INIT);
+extern jmethodID    NS(MID_MqS_INIT);
 
 struct FactoryCallS {
   JNIEnv      *env;
@@ -135,50 +140,86 @@ error1:
   }
 }
 
-JNIEXPORT void JNICALL NF(Add) (
+JNIEXPORT jobject JNICALL NF(Add) (
   JNIEnv  *env, 
   jclass  class,
   jstring ident,
   jclass  cbClass
 )
 {
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_ADD_ERR;
+  jobject self;
+  struct MqFactoryS * factory;
   MQ_PTR call;
   jmethodID callback;
   const char * str;
   JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,cbClass,"<init>","(Ljavamsgque/MqS;)V"));
   JavaErrorCheckNULL(call = NS(FactorySetup)(env, cbClass, callback));
   str = JO2C_START(env,ident);
-  ret = MqFactoryAdd(str, NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
+  factory = MqFactoryAdd(str, NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
   JO2C_STOP(env,ident,str);
-  MqFactoryErrorCheck(ret);
-  return;
+  self = (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) factory);
+  return self;
 error:
-  ErrorStringToJava(MqFactoryErrorMsg(ret));
-  return;  
+  MqFactorySException();
+  return NULL;  
 }
 
-JNIEXPORT void JNICALL NF(Default) (
+JNIEXPORT jobject JNICALL NF(Default) (
   JNIEnv  *env, 
   jclass  class,
   jstring ident,
   jclass  cbClass
 )
 {
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_DEFAULT_ERR;
+  struct MqFactoryS * factory;
   MQ_PTR call;
   jmethodID callback;
   const char * str;
   JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,cbClass,"<init>","(Ljavamsgque/MqS;)V"));
   JavaErrorCheckNULL(call = NS(FactorySetup)(env, cbClass, callback));
   str = JO2C_START(env,ident);
-  ret = MqFactoryDefault(str, NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
+  factory = MqFactoryDefault(str, NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
   JO2C_STOP(env,ident,str);
-  MqFactoryErrorCheck(ret);
-  return;
+  return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) factory);
 error:
-  ErrorStringToJava(MqFactoryErrorMsg(ret));
-  return;  
+  MqFactorySException();
+  return NULL;  
+}
+
+JNIEXPORT jobject JNICALL NF(Get__Ljava_lang_String_2) (
+  JNIEnv  *env, 
+  jclass  class,
+  jstring ident
+)
+{
+  struct MqFactoryS * factory;
+  const char * str;
+  str = JO2C_START(env,ident);
+  factory = MqFactoryGet(str);
+  JO2C_STOP(env,ident,str);
+  return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) factory);
+}
+
+JNIEXPORT jobject JNICALL NF(Get__) (
+  JNIEnv  *env, 
+  jclass  class
+)
+{
+  return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) MqFactoryGet(NULL));
+}
+
+JNIEXPORT jobject JNICALL NF(GetCalled) (
+  JNIEnv  *env, 
+  jclass  class,
+  jstring ident
+)
+{
+  struct MqFactoryS * factory;
+  const char * str;
+  str = JO2C_START(env,ident);
+  factory = MqFactoryGetCalled(str);
+  JO2C_STOP(env,ident,str);
+  return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) factory);
 }
 
 JNIEXPORT jstring JNICALL NF(DefaultIdent) (
@@ -190,46 +231,43 @@ JNIEXPORT jstring JNICALL NF(DefaultIdent) (
   return JC2O(env,str);
 }
 
-JNIEXPORT jobject JNICALL NF(Call) (
+JNIEXPORT jobject JNICALL NF(New) (
   JNIEnv  *env, 
-  jclass  class,
-  jstring ident
+  jobject self
 )
 {
+  SETUP_factory;
   struct MqS * mqctx;
-  const char * str;
-  enum MqFactoryReturnE ret;
-  str = JO2C_START(env,ident);
-  ret = MqFactoryCall (str, (MQ_PTR)env, &mqctx);
-  JO2C_STOP(env,ident,str);
-  MqFactoryErrorCheck(ret);
+  MqErrorCheck (MqFactoryNew (factory, (MQ_PTR)env, &mqctx));
   return mqctx->self;
 error:
-  ErrorStringToJava(MqFactoryErrorMsg(ret));
+  MqFactorySException();
   return NULL;  
 }
 
-JNIEXPORT jobject JNICALL NF(New) (
+JNIEXPORT jobject JNICALL NF(Copy) (
   JNIEnv  *env, 
-  jclass  class,
-  jstring ident,
-  jclass  cbClass
+  jobject self,
+  jstring ident
 )
 {
-  MQ_PTR call;
-  jmethodID callback;
-  struct MqS * mqctx;
   const char * str;
-  enum MqFactoryReturnE ret = MQ_FACTORY_RETURN_NEW_ERR;
-  JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,cbClass,"<init>","(Ljavamsgque/MqS;)V"));
-  JavaErrorCheckNULL(call = NS(FactorySetup)(env, cbClass, callback));
+  SETUP_factory;
+  struct MqFactoryS * ret;
   str = JO2C_START(env,ident);
-  ret = MqFactoryNew (str, NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), 
-	  NS(FactoryDelete), NULL, NULL, NULL, NULL, &mqctx);
+  ret = MqFactoryCopy (factory, str);
   JO2C_STOP(env,ident,str);
-  MqFactoryErrorCheck(ret);
-  return mqctx->self;
-error:
-  ErrorStringToJava(MqFactoryErrorMsg(ret));
-  return NULL;  
+  return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) ret);
 }
+
+void FactoryInit(JNIEnv *env) {
+  MQ_PTR call;
+  if (strcmp(MqFactoryDefaultIdent(),"libmsgque")) return;
+  call = NS(FactorySetup)(env, NS(Class_MqS), NS(MID_MqS_INIT));
+  if (call != NULL) {
+    MqFactoryDefault("javamsgque", NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
+  } else {
+    MqFactorySException();
+  }
+}
+

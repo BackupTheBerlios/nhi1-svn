@@ -28,7 +28,7 @@ class Filter3 extends MqS implements IServerSetup {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.Filter3");
-    Filter3 srv = MqFactoryS.New("Filter3", Filter3.class);
+    Filter3 srv = MqFactoryS.Add("Filter3", Filter3.class).New();
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);

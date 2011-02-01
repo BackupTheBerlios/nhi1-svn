@@ -42,7 +42,7 @@ final class testserver extends MqS implements IServerSetup {
 
   public static void main(String[] argv) {
     MqS.Init("java", "example.testserver");
-    testserver srv = MqFactoryS.New("testserver", testserver.class);
+    testserver srv = MqFactoryS.Add("testserver", testserver.class).New();
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -53,7 +53,4 @@ final class testserver extends MqS implements IServerSetup {
     }
   }
 }
-
-
-
 

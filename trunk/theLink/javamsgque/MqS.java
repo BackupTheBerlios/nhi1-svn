@@ -368,8 +368,6 @@ public class MqS {
   public native void	ReadL_END	    ()	throws MqSException;
   /// \api #MqReadT_START
   public native void	ReadT_START	    ()	throws MqSException;
-  /// \api #MqReadT_START
-  public native void	ReadT_START (MqBufferS buf)	throws MqSException;
   /// \api #MqReadT_END
   public native void	ReadT_END	    ()	throws MqSException;
   /// \api #MqReadGetNumItems
@@ -432,9 +430,9 @@ public class MqS {
   /// \api #MqSendL_END
   public native void	SendL_END		()  throws MqSException;
   /// \api #MqSendT_START
-  public native void	SendT_START		(String token)  throws MqSException;
+  public native void	SendT_START		()  throws MqSException;
   /// \api #MqSendT_END
-  public native void	SendT_END		()  throws MqSException;
+  public native void	SendT_END		(String token)  throws MqSException;
 
 /// \} Mq_Send_Java_API
 
@@ -467,12 +465,15 @@ public class MqS {
 /// \ingroup Mq_Factory_API
 /// \{
 
+  /// \api #MqFactoryCtxSet
+  public native void FactoryCtxSet	      (long val);
+  /// \api #MqFactoryCtxGet
+  public native long FactoryCtxGet	      ();
+
   /// \api #MqFactoryCtxIdentSet
   public native void FactoryCtxIdentSet	      (String val);
   /// \api #MqFactoryCtxIdentGet
   public native String FactoryCtxIdentGet     ();
-  /// \api #MqFactoryCtxDefaultSet
-  public native void FactoryCtxDefaultSet     (String ident);
 
 /// \} Mq_Factory_Java_API
 }

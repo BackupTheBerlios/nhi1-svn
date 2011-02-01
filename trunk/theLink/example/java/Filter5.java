@@ -111,7 +111,7 @@ final class Filter5 {
     MqFactoryS.Add("F1", F1.class);
     MqFactoryS.Add("F2", F2.class);
     MqFactoryS.Add("F3", F3.class);
-    MqS srv = MqFactoryS.Call(argv[0]);
+    MqS srv = MqFactoryS.GetCalled(argv[0]).New();
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -122,4 +122,3 @@ final class Filter5 {
     }
   }
 }
-

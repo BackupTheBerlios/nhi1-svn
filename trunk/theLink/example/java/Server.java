@@ -32,8 +32,9 @@ final class Client extends MqS implements ICallback, IBgError {
     i = ctx.ReadI();
   }
   
-  public void LinkCreate (int debug) throws MqSException {
+  public void LinkCreate (int debug, START startAs) throws MqSException {
     ConfigSetDebug (debug);
+    ConfigSetStartAs (startAs);
     super.LinkCreate("@", "server", "--name", "test-server");
   }
 }
@@ -158,7 +159,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	ConfigSetSrvName (old);
       } else if (cmd.equals("Ident")) {
 	String old = FactoryCtxIdentGet();
-	FactoryCtxDefaultSet (ReadC());
+	FactoryCtxSet (MqFactoryS.Get().Copy(ReadC()).factory);
 	boolean check = LinkGetTargetIdent().equals(ReadC());
 	SendSTART();
 	SendC (FactoryCtxIdentGet());
@@ -272,12 +273,12 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  if (parent != null && parent.cl[id].LinkIsConnected()) {
 	    cl[id].LinkCreateChild(parent.cl[id]);
 	  } else {
-	    cl[id].LinkCreate(ConfigGetDebug());
+	    cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	  }
 	} else if (s.equals("START2")) {
 	  // object already created ERROR
-	  cl[id].LinkCreate(ConfigGetDebug());
-	  cl[id].LinkCreate(ConfigGetDebug());
+	  cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
+	  cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	} else if (s.equals("START3")) {
 	  // parent not connected ERROR
 	  Client parent = new Client();
@@ -348,7 +349,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  SlaveWorker(id, LIST.toArray(new String[0]));
 	} else if (s.equals("CREATE2")) {
 	  Client c = new Client();
-	  c.LinkCreate(ConfigGetDebug());
+	  c.LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	  SlaveCreate(id, c);
 	} else if (s.equals("DELETE")) {
 	  SlaveDelete(id);
@@ -425,9 +426,9 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
   class TRNS implements IService {
     public void Service (MqS ctx) throws MqSException {
       SendSTART ();
-      SendT_START ("TRN2");
+      SendT_START ();
       SendI (9876);
-      SendT_END ();
+      SendT_END ("TRN2");
       SendI ( ReadI() );
       SendEND_AND_WAIT ("ECOI");
       ProcessEvent (MqS.WAIT.ONCE);
@@ -449,7 +450,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 
   public static void main(String[] args) {
     MqS.Init("java", "example.Server");
-    Server srv = MqFactoryS.New("server", Server.class);
+    Server srv = MqFactoryS.Add("server", Server.class).New();
     try {
       srv.LogC("test",1,"HALLO\n");
       srv.LinkCreate (args);

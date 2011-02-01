@@ -40,6 +40,7 @@
 /*                                                                           */
 /*****************************************************************************/
 
+#define MqFactorySException() NS(pErrorFromString)(env, __func__, __FILE__, __LINE__, "MqFactoryS exception")
 #define ErrorStringToJava(err) NS(pErrorFromString)(env, __func__, __FILE__, __LINE__, err)
 #define ErrorMqToJava() NS(pErrorFromMq)(env, context)
 #define ErrorMqBufferToJava() NS(pErrorFromMq)(env, buf->context)
@@ -88,8 +89,12 @@ MQ_PTR		      NS(ProcCreate)	(JNIEnv*, jobject, jclass, jmethodID, jobject);
 
 #define XCONTEXT(x)	  ((struct MqS *) (*env)->GetLongField(env,x,NS(FID_MqS_hdl)))
 #define CONTEXT		  XCONTEXT(self)
-
 #define SETUP_context	  struct MqS * const context = CONTEXT
+
+#define XFACTORY(x)	  ((struct MqFactoryS *) (*env)->GetLongField(env,x,NS(FID_MqFactoryS_hdl)))
+#define FACTORY		  XFACTORY(self)
+#define SETUP_factory	  struct MqFactoryS * const factory = FACTORY
+
 #define SET_context(val)  (*env)->SetLongField(env,self,NS(FID_MqS_hdl),(jlong)val)
 
 #define ENV		  ((JNIEnv*) context->threadData)

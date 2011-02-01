@@ -9,10 +9,18 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqFactoryS
- * Method:    Default
- * Signature: (Ljava/lang/String;Ljava/lang/Class;)V
+ * Method:    Add
+ * Signature: (Ljava/lang/String;Ljava/lang/Class;)Ljavamsgque/MqFactoryS;
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqFactoryS_Default
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Add
+  (JNIEnv *, jclass, jstring, jclass);
+
+/*
+ * Class:     javamsgque_MqFactoryS
+ * Method:    Default
+ * Signature: (Ljava/lang/String;Ljava/lang/Class;)Ljavamsgque/MqFactoryS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Default
   (JNIEnv *, jclass, jstring, jclass);
 
 /*
@@ -25,27 +33,43 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqFactoryS_DefaultIdent
 
 /*
  * Class:     javamsgque_MqFactoryS
- * Method:    Add
- * Signature: (Ljava/lang/String;Ljava/lang/Class;)V
+ * Method:    Get
+ * Signature: (Ljava/lang/String;)Ljavamsgque/MqFactoryS;
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqFactoryS_Add
-  (JNIEnv *, jclass, jstring, jclass);
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Get__Ljava_lang_String_2
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     javamsgque_MqFactoryS
- * Method:    Call
- * Signature: (Ljava/lang/String;)Ljavamsgque/MqS;
+ * Method:    Get
+ * Signature: ()Ljavamsgque/MqFactoryS;
  */
-JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Call
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Get__
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     javamsgque_MqFactoryS
+ * Method:    GetCalled
+ * Signature: (Ljava/lang/String;)Ljavamsgque/MqFactoryS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_GetCalled
   (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     javamsgque_MqFactoryS
  * Method:    New
- * Signature: (Ljava/lang/String;Ljava/lang/Class;)Ljavamsgque/MqS;
+ * Signature: ()Ljavamsgque/MqS;
  */
 JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_New
-  (JNIEnv *, jclass, jstring, jclass);
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqFactoryS
+ * Method:    Copy
+ * Signature: (Ljava/lang/String;)Ljavamsgque/MqFactoryS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqFactoryS_Copy
+  (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

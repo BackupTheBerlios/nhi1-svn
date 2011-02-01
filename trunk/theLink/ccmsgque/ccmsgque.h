@@ -938,11 +938,12 @@ namespace ccmsgque {
 	}
       };
 
-      // disable constructor/destructor
-      inline MqFactoryC(struct MqFactoryS *item) {factory = item;}
-
     public:
       struct MqFactoryS *factory;
+
+      inline MqFactoryC(struct MqFactoryS *item) {
+	factory = item;
+      }
 
       /// \api #MqFactoryAdd
       static inline MqFactoryC<T> Add(MQ_CST ident) {

@@ -636,16 +636,8 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadL_1END
  * Method:    ReadT_START
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1START__
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1START
   (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    ReadT_START
- * Signature: (Ljavamsgque/MqBufferS;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadT_1START__Ljavamsgque_MqBufferS_2
-  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     javamsgque_MqS
@@ -850,18 +842,18 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendL_1END
 /*
  * Class:     javamsgque_MqS
  * Method:    SendT_START
- * Signature: (Ljava/lang/String;)V
+ * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendT_1START
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     javamsgque_MqS
  * Method:    SendT_END
- * Signature: ()V
+ * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendT_1END
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     javamsgque_MqS
@@ -913,6 +905,22 @@ JNIEXPORT jboolean JNICALL Java_javamsgque_MqS_SlaveIs
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    FactoryCtxSet
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_FactoryCtxSet
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    FactoryCtxGet
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_FactoryCtxGet
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    FactoryCtxIdentSet
  * Signature: (Ljava/lang/String;)V
  */
@@ -926,14 +934,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_FactoryCtxIdentSet
  */
 JNIEXPORT jstring JNICALL Java_javamsgque_MqS_FactoryCtxIdentGet
   (JNIEnv *, jobject);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    FactoryCtxDefaultSet
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_FactoryCtxDefaultSet
-  (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

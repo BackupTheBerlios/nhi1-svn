@@ -27,7 +27,7 @@ class manfilter extends MqS {
     }
   }
   public static void main(String[] argv) {
-    manfilter srv = MqFactoryS.New("manfilter", manfilter.class);
+    manfilter srv = MqFactoryS.Add("manfilter", manfilter.class).New();
     try {
       srv.ConfigSetName("filter");
       srv.ConfigSetIsServer(true);

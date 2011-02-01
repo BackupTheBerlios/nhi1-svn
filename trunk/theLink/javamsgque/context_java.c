@@ -14,6 +14,8 @@
 
 #include "context_java.h"
 
+void FactoryInit(JNIEnv*);
+
 /// global data
 JavaVM	    *cached_jvm;
 
@@ -22,9 +24,9 @@ jclass	    NS(Class_MqS), NS(Class_IServerSetup), NS(Class_IServerCleanup),
 	    NS(Class_NullPointerException), NS(Class_System), NS(Class_RuntimeException),
 	    NS(Class_ICallback), NS(Class_StackTraceElement), NS(Class_StringWriter),
 	    NS(Class_PrintWriter), NS(Class_MqBufferS), NS(Class_MqSException), 
-	    NS(Class_IFactory), NS(Class_IBgError), NS(Class_IEvent);
+	    NS(Class_IFactory), NS(Class_IBgError), NS(Class_IEvent), NS(Class_MqFactoryS);
 
-jfieldID    NS(FID_MqBufferS_hdl), NS(FID_MqS_hdl), NS(FID_MqSException_num), 
+jfieldID    NS(FID_MqFactoryS_hdl), NS(FID_MqBufferS_hdl), NS(FID_MqS_hdl), NS(FID_MqSException_num), 
 	    NS(FID_MqSException_code), NS(FID_MqSException_txt);
 
 jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService_Service),
@@ -32,7 +34,8 @@ jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService
 	    NS(MID_ICallback_Callback), NS(MID_Throwable_printStackTrace),
 	    NS(MID_StringWriter_INIT), NS(MID_PrintWriter_INIT), NS(MID_StringWriter_toString),
 	    NS(MID_MqSException_INIT), NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), 
-	    NS(MID_MqS_INIT), NS(MID_MqS_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event);
+	    NS(MID_MqS_INIT), NS(MID_MqS_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event),
+	    NS(MID_MqFactoryS_INIT);
 
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *jvm, void *reserved)
@@ -56,6 +59,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   // setup "jclass"
   checkC(NS(Class_MqS),			    "javamsgque/MqS");
   checkC(NS(Class_MqBufferS),		    "javamsgque/MqBufferS");
+  checkC(NS(Class_MqFactoryS),		    "javamsgque/MqFactoryS");
   checkC(NS(Class_MqSException),	    "javamsgque/MqSException");
   checkC(NS(Class_IService),		    "javamsgque/IService");
   checkC(NS(Class_IServerSetup),	    "javamsgque/IServerSetup");
@@ -73,11 +77,12 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkC(NS(Class_PrintWriter),		    "java/io/PrintWriter");
 
   // setup "jfieldID"
-  checkF(NS(FID_MqS_hdl),		    NS(Class_MqS),	    "hdl",		"J");
-  checkF(NS(FID_MqBufferS_hdl),		    NS(Class_MqBufferS),    "hdl",		"J");
-  checkF(NS(FID_MqSException_num),	    NS(Class_MqSException), "p_num",		"I");
-  checkF(NS(FID_MqSException_code),	    NS(Class_MqSException), "p_code",		"I");
-  checkF(NS(FID_MqSException_txt),	    NS(Class_MqSException), "p_txt",		"Ljava/lang/String;");
+  checkF(NS(FID_MqS_hdl),			NS(Class_MqS),		  "hdl",		"J");
+  checkF(NS(FID_MqBufferS_hdl),			NS(Class_MqBufferS),	  "hdl",		"J");
+  checkF(NS(FID_MqFactoryS_hdl),		NS(Class_MqFactoryS),	  "factory",		"J");
+  checkF(NS(FID_MqSException_num),		NS(Class_MqSException),	  "p_num",		"I");
+  checkF(NS(FID_MqSException_code),		NS(Class_MqSException),	  "p_code",		"I");
+  checkF(NS(FID_MqSException_txt),		NS(Class_MqSException),	  "p_txt",		"Ljava/lang/String;");
 
   // setup "jmethodID"
   checkM(NS(MID_Throwable_getMessage),		NS(Class_Throwable),	  "getMessage",		"()Ljava/lang/String;");
@@ -93,6 +98,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
   checkM(NS(MID_ICallback_Callback),		NS(Class_ICallback),	  "Callback",		"(Ljavamsgque/MqS;)V");
   checkM(NS(MID_MqSException_INIT),		NS(Class_MqSException),	  "<init>",		"(IILjava/lang/String;)V");
   checkM(NS(MID_MqBufferS_INIT),		NS(Class_MqBufferS),	  "<init>",		"(J)V");
+  checkM(NS(MID_MqFactoryS_INIT),		NS(Class_MqFactoryS),	  "<init>",		"(J)V");
   checkM(NS(MID_MqS_ErrorSet),			NS(Class_MqS),		  "ErrorSet",		"(Ljava/lang/Throwable;)V");
   checkM(NS(MID_MqS_INIT),			NS(Class_MqS),		  "<init>",		"(Ljavamsgque/MqS;)V");
   checkM(NS(MID_IBgError_BgError),		NS(Class_IBgError),	  "BgError",		"()V");
@@ -103,6 +109,8 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
 #undef checkF
 #undef checkSF
 #undef checkM
+
+  FactoryInit(env);
 
   return JNI_VERSION_1_6;
 }

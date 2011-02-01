@@ -27,7 +27,7 @@ final class mulserver extends MqS implements IServerSetup {
   }
   public static void main(String[] argv) {
     MqS.Init("java", "example.mulserver");
-    mulserver srv = MqFactoryS.New("mulserver", mulserver.class);
+    mulserver srv = MqFactoryS.Add("mulserver", mulserver.class).New();
     try {
       srv.LinkCreate(argv);
       srv.ProcessEvent(MqS.WAIT.FOREVER);

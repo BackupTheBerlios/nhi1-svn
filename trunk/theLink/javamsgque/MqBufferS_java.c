@@ -15,8 +15,8 @@
 
 #define NB(n)	Java_javamsgque_MqBufferS_ ## n
 
-extern jfieldID NS(FID_MqBufferS_hdl);
 extern jclass	NS(Class_NullPointerException);
+extern jfieldID	NS(FID_MqBufferS_hdl);
 
 JNIEXPORT jchar JNICALL NB(GetType) (
   JNIEnv *  env, 

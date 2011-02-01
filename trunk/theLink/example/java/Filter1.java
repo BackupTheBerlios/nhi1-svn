@@ -48,7 +48,7 @@ class Filter1 extends MqS {
   }
 
   public static void main(String[] argv) {
-    Filter1 srv = MqFactoryS.New("Filter1", Filter1.class);
+    Filter1 srv = MqFactoryS.Add("Filter1", Filter1.class).New();
     try {
       srv.ConfigSetIsServer(true);
       srv.LinkCreate(argv);

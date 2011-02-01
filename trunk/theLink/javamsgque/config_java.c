@@ -122,7 +122,6 @@ GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
 
-
 JNIEXPORT void JNICALL NS(pConfigSetStartAs) (
   JNIEnv    *env,
   jobject   self,
@@ -154,6 +153,26 @@ JNIEXPORT jint JNICALL NS(ConfigGetStatusIs) (
 /*                                                                           */
 /*****************************************************************************/
 
+JNIEXPORT void JNICALL NS(FactoryCtxSet) (
+  JNIEnv    *env,
+  jobject   self,
+  jlong     data
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck (MqFactoryCtxSet (context, (struct MqFactoryS *) data));
+error:
+  return;
+}
+
+JNIEXPORT jlong JNICALL NS(FactoryCtxGet) (
+  JNIEnv    *env,
+  jobject   self
+)
+{
+  return (jlong) MqFactoryCtxGet (CONTEXT);
+}
+
 SetC(FactoryCtxIdentSet)
 GetC(FactoryCtxIdentGet)
-SetC(FactoryCtxDefaultSet)
+
