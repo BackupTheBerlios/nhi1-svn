@@ -26,7 +26,7 @@ namespace example {
       SendRETURN();
     }
     static void Main(string[] argv) {
-      manfilter srv = MqFactoryS<manfilter>.New("ManFilter");
+      manfilter srv = MqFactoryS<manfilter>.Add("ManFilter").New();
       try {
 	srv.ConfigSetIsServer(true);
 	srv.LinkCreate(argv);

@@ -34,7 +34,7 @@ namespace example {
     }
 
     static void Main(string[] argv) {
-      MyServer srv = MqFactoryS<MyServer>.New();
+      MyServer srv = MqFactoryS<MyServer>.Add().New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

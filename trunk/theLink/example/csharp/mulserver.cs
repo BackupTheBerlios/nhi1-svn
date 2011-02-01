@@ -25,7 +25,7 @@ namespace example {
       ServiceCreate("MMUL", MMUL);
     }
     static void Main(string[] argv) {
-      mulserver srv = MqFactoryS<mulserver>.New("MyMulServer");
+      mulserver srv = MqFactoryS<mulserver>.Add("MyMulServer").New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

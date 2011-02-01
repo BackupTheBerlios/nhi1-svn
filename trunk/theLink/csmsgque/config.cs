@@ -256,6 +256,22 @@ namespace csmsgque {
 /// \ingroup Mq_Factory_Cs_API
 /// \{
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxSet")]
+    private static extern MqErrorE MqFactoryCtxSet([In]IntPtr context, [In]IntPtr item);
+
+    /// \api #MqFactoryCtxSet
+    public void  FactoryCtxSet (IntPtr item) { 
+      ErrorMqToCsWithCheck (MqFactoryCtxSet (context, item)); 
+    }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxGet")]
+    private static extern IntPtr MqFactoryCtxGet([In]IntPtr context);
+
+    /// \api #MqFactoryCtxGet
+    public IntPtr FactoryCtxGet() { 
+      return MqFactoryCtxGet(context);
+    }
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxIdentSet")]
     private static extern void MqFactoryCtxIdentSet([In]IntPtr context, [In]string data);
 
@@ -267,12 +283,6 @@ namespace csmsgque {
 
     /// \api #MqFactoryCtxIdentGet
     public string FactoryCtxIdentGet() { return Marshal.PtrToStringAnsi(MqFactoryCtxIdentGet(context)); }
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCtxDefaultSet")]
-    private static extern void MqFactoryCtxDefaultSet([In]IntPtr context, [In]string data);
-
-    /// \api #MqFactoryCtxDefaultSet
-    public void  FactoryCtxDefaultSet (string ident) { MqFactoryCtxDefaultSet(context, ident); }
 
 /// \}
 

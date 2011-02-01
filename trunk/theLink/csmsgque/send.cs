@@ -75,9 +75,9 @@ public partial class MqS
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendL_END")]
   private static extern MqErrorE MqSendL_END(IntPtr context);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendT_START")]
-  private static extern MqErrorE MqSendT_START(IntPtr context, string token);
+  private static extern MqErrorE MqSendT_START(IntPtr context);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendT_END")]
-  private static extern MqErrorE MqSendT_END(IntPtr context);
+  private static extern MqErrorE MqSendT_END(IntPtr context, string token);
   
 
   // PUBLIC
@@ -195,13 +195,13 @@ public partial class MqS
   }
 
   /// \api #MqSendT_START
-  public void SendT_START(string token) {
-    ErrorMqToCsWithCheck(MqSendT_START(context, token));
+  public void SendT_START() {
+    ErrorMqToCsWithCheck(MqSendT_START(context));
   }
 
   /// \api #MqSendT_END
-  public void SendT_END() {
-    ErrorMqToCsWithCheck(MqSendT_END(context));
+  public void SendT_END(string token) {
+    ErrorMqToCsWithCheck(MqSendT_END(context, token));
   }
 
 /// \} Mq_Send_Cs_API

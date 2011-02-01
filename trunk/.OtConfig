@@ -11,14 +11,14 @@ fi
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-symbols \
 		    --enable-tcl \
-		    --enable-java \
+		    --enable-csharp \
 \
 		    $ARGS $@
 
 #		    --enable-cxx \
 #		    --enable-java \
-#		    --enable-ruby \
 #		    --enable-csharp \
+#		    --enable-ruby \
 #		    --enable-python \
 #		    --enable-perl \
 #		    --enable-php \

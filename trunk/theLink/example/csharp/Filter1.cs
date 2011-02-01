@@ -49,7 +49,7 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter1 srv = MqFactoryS<Filter1>.New("filter");
+      Filter1 srv = MqFactoryS<Filter1>.Add("filter").New();
       try {
 	srv.LinkCreate(argv);
 	srv.ServiceCreate("+FTR", srv.FTR);

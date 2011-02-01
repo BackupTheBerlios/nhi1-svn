@@ -28,7 +28,7 @@ namespace example {
     }
 
     public static void Main(string[] argv) {
-      Filter3 srv = MqFactoryS<Filter3>.New();
+      Filter3 srv = MqFactoryS<Filter3>.Add().New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);
@@ -39,6 +39,4 @@ namespace example {
     }
   }
 }
-
-
 

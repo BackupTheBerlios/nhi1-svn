@@ -26,7 +26,7 @@ namespace example {
     }
 
     public static void Main(String[] argv) {
-      Filter2 srv = MqFactoryS<Filter2>.New("filter");
+      Filter2 srv = MqFactoryS<Filter2>.Add("filter").New();
       try {
 	srv.LinkCreate(argv); 
 	srv.ServiceCreate("+FTR", srv.FTR);

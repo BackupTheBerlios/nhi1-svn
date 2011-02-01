@@ -359,7 +359,10 @@ MqExitP (
     if (isThread) SqlDelete();
 
     // 5. client-context have to be deleted explicit
-    if (deleteContext) MqContextDelete(&context);
+    // we can not delete (MqContextDelete) the context because GC (GarbageCollection)
+    // languages (like csharp) have still a reference to the object. MqContextFree
+    // free as much as possible memory but the object self is still alive.
+    if (deleteContext) MqContextFree(context);
 
     // 6. call application specific exit function
     if (exitF) (*exitF) (num);

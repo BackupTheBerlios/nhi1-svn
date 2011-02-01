@@ -100,7 +100,7 @@ namespace example {
       MqFactoryS<F1>.Add();
       MqFactoryS<F2>.Add();
       MqFactoryS<F3>.Add();
-      MqS srv = MqFactoryS<MqS>.Call(argv[0]);
+      MqS srv = MqFactoryS<MqS>.GetCalled(argv[0]).New();
       try {
 	srv.LinkCreate(argv);
 	srv.ProcessEvent(MqS.WAIT.FOREVER);

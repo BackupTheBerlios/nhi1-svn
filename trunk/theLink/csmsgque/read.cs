@@ -61,7 +61,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadL_END")]
     private static extern MqErrorE MqReadL_END(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadT_START")]
-    private static extern MqErrorE MqReadT_START(IntPtr context, IntPtr buf);
+    private static extern MqErrorE MqReadT_START(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadT_END")]
     private static extern MqErrorE MqReadT_END(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadGetNumItems")]
@@ -193,12 +193,7 @@ namespace csmsgque {
 
     /// \api #MqReadT_START
     public void ReadT_START() {
-      ErrorMqToCsWithCheck(MqReadT_START(context, IntPtr.Zero));
-    }
-
-    /// \api #MqReadT_START with #MqBufferS argument
-    public void ReadT_START(MqBufferS buffer) {
-      ErrorMqToCsWithCheck(MqReadT_START(context, buffer.buf));
+      ErrorMqToCsWithCheck(MqReadT_START(context));
     }
 
     /// \api #MqReadT_END

@@ -28,8 +28,9 @@ namespace example {
       }
     }
 
-    public void LinkCreate (int debug) {
+    public void LinkCreate (int debug, START startAs) {
       ConfigSetDebug(debug);
+      ConfigSetStartAs(startAs);
       base.LinkCreate("@", "server", "--name", "test-server");
     }
 
@@ -164,7 +165,7 @@ namespace example {
 	ConfigSetSrvName (old);
       } else if (cmd == "Ident") {
 	string old = FactoryCtxIdentGet();
-	FactoryCtxDefaultSet (ReadC());
+	FactoryCtxSet (MqFactoryS<Server>.Get().Copy(ReadC()).factory);
 	bool check = LinkGetTargetIdent() == ReadC();
 	SendSTART();
 	SendC (FactoryCtxIdentGet());
@@ -309,12 +310,12 @@ namespace example {
           if (parent != null && parent.cl[id].LinkIsConnected()) {
             cl[id].LinkCreateChild(parent.cl[id]);
           } else {
-            cl[id].LinkCreate(ConfigGetDebug());
+            cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
           }
         } else if (s == "START2") {
           // object already created ERROR
-          cl[id].LinkCreate(ConfigGetDebug());
-          cl[id].LinkCreate(ConfigGetDebug());
+          cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
+          cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
         } else if (s == "START3") {
 	  Client parent = new Client();
           // parent not connected ERROR
@@ -384,7 +385,7 @@ namespace example {
           SlaveWorker(id, LIST.ToArray());
         } else if (s == "CREATE2") {
 	  Client c = new Client();
-	  c.LinkCreate(ConfigGetDebug());
+	  c.LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	  SlaveCreate (id, c);
         } else if (s == "DELETE") {
           SlaveDelete(id);
@@ -675,9 +676,9 @@ namespace example {
 
     void TRNS () {
       SendSTART ();
-      SendT_START ("TRN2");
+      SendT_START ();
       SendI (9876);
-      SendT_END ();
+      SendT_END ("TRN2");
       SendI ( ReadI() );
       SendEND_AND_WAIT ("ECOI");
       ProcessEvent (MqS.WAIT.ONCE);
@@ -697,7 +698,7 @@ namespace example {
   // ########################################################################
 
     static void Main(string[] args) {
-      Server srv = MqFactoryS<Server>.New("server");
+      Server srv = MqFactoryS<Server>.Add("server").New();
       try {
 	srv.LinkCreate(args);
 	srv.LogC("test",1,"this is the log test\n");
