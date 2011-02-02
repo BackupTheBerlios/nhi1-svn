@@ -40,7 +40,7 @@ type FTR Filter2
   }
 
 func main() {
-  srv := FactoryNew("filter", NewFilter2)
+  srv := FactoryAdd("filter", NewFilter2).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

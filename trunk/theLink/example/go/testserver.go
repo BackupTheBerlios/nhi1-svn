@@ -49,7 +49,7 @@ type GTCX TestServer
   }
 
 func main() {
-  srv := FactoryNew("TestServer", NewTestServer)
+  srv := FactoryAdd("TestServer", NewTestServer).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

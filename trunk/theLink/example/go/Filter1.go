@@ -60,7 +60,7 @@ type EOF Filter1
   }
 
 func main() {
-  srv := FactoryNew("Filter1", NewFilter1)
+  srv := FactoryAdd("Filter1", NewFilter1).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

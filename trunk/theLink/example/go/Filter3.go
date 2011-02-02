@@ -37,7 +37,7 @@ func (this *Filter3) ServerSetup() {
 }
 
 func main() {
-  srv := FactoryNew("Filter3", NewFilter3)
+  srv := FactoryAdd("Filter3", NewFilter3).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

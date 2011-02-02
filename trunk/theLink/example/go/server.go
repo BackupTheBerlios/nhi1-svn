@@ -75,8 +75,9 @@ func (this *Client) BgError() {
   }
 }
 
-func (this *Client) LinkCreate(debug int32) {
+func (this *Client) LinkCreate(debug int32, startAs START) {
   this.ConfigSetDebug(debug)
+  this.ConfigSetStartAs(startAs)
   this.MqS.LinkCreate(os.Args[0], "@", "server", "--name", "test-server")
 }
 
@@ -183,7 +184,7 @@ type RDUL Server
 
 type TRN2 Server
   func (this *TRN2) Call() {
-    this.ReadT_START(nil)
+    this.ReadT_START()
     this.i = this.ReadI()
     this.ReadT_END()
     this.j = this.ReadI()
@@ -192,9 +193,9 @@ type TRN2 Server
 type TRNS Server
   func (this *TRNS) Call() {
     this.SendSTART ()
-    this.SendT_START ("TRN2")
+    this.SendT_START ()
     this.SendI (9876)
-    this.SendT_END ()
+    this.SendT_END ("TRN2")
     this.SendI ( this.ReadI() )
     this.SendEND_AND_WAIT2 ("ECOI")
     this.ProcessEvent (WAIT_ONCE)
@@ -343,13 +344,13 @@ type SND1 Server
 	if (parent != nil && parent.GetSelf().(*Server).cl[id].LinkIsConnected()) {
 	  this.cl[id].LinkCreateChild(parent.GetSelf().(*Server).cl[id].MqS)
 	} else {
-	  this.cl[id].LinkCreate(this.ConfigGetDebug())
+	  this.cl[id].LinkCreate(this.ConfigGetDebug(), this.ConfigGetStartAs())
 	}
       }
       case "START2": {
 	// object already created ERROR
-	this.cl[id].LinkCreate(this.ConfigGetDebug())
-	this.cl[id].LinkCreate(this.ConfigGetDebug())
+	this.cl[id].LinkCreate(this.ConfigGetDebug(), this.ConfigGetStartAs())
+	this.cl[id].LinkCreate(this.ConfigGetDebug(), this.ConfigGetStartAs())
       }
       case "START3": {
 	parent := NewClient(nil)
@@ -430,7 +431,7 @@ type SND2 Server
       }
       case "CREATE2": {
 	c := NewClient(nil)
-	c.LinkCreate(this.ConfigGetDebug())
+	c.LinkCreate(this.ConfigGetDebug(), this.ConfigGetStartAs())
 	this.SlaveCreate(id, c.MqS)
       }
       case "DELETE": {
@@ -626,7 +627,7 @@ type CFG1 Server
       }
       case "Ident": {
 	old := this.FactoryCtxIdentGet()
-	this.FactoryCtxDefaultSet (this.ReadC())
+	this.FactoryCtxSet (FactoryGet("").Copy(this.ReadC()))
 	check := this.LinkGetTargetIdent() == this.ReadC()
 	this.SendSTART()
 	this.SendC (this.FactoryCtxIdentGet())
@@ -818,7 +819,7 @@ type ECUL Server
   }
 
 func main() {
-  srv := FactoryNew("server", NewServer)
+  srv := FactoryAdd("server", NewServer).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

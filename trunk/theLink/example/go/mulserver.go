@@ -40,7 +40,7 @@ type MMUL mulserver
   }
 
 func main() {
-  srv := FactoryNew("mulserver", NewMulserver)
+  srv := FactoryAdd("mulserver", NewMulserver).New()
   defer func() {
     if x := recover(); x != nil {
       srv.ErrorSet(x)

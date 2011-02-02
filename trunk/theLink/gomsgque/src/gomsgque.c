@@ -199,7 +199,7 @@ sFactoryCopy (
   incrFactoryRef((void**)(*dataP));
 }
 
-enum MqFactoryReturnE
+struct MqFactoryS * 
 gomsgque_FactoryAdd (
   MQ_CST const ident,
   MQ_PTR data
@@ -211,7 +211,7 @@ gomsgque_FactoryAdd (
   );
 }
 
-enum MqFactoryReturnE
+struct MqFactoryS * 
 gomsgque_FactoryDefault (
   MQ_CST const ident,
   MQ_PTR data
@@ -223,28 +223,13 @@ gomsgque_FactoryDefault (
   );
 }
 
-struct FactoryCallReturn
+struct MqFactoryReturnS
 gomsgque_FactoryNew (
-  MQ_CST const ident,
-  MQ_PTR data
+  struct MqFactoryS * const item
 )
 {
-  struct FactoryCallReturn ret;
-  ret.ret = MqFactoryNew(ident,
-    sFactoryCreate, data, sFactoryFree, sFactoryCopy,
-    sFactoryDelete, NULL, NULL, NULL,
-    NULL, &ret.ctx
-  );
-  return ret;
-}
-
-struct FactoryCallReturn
-gomsgque_FactoryCall (
-  MQ_CST const ident
-)
-{
-  struct FactoryCallReturn ret;
-  ret.ret = MqFactoryCall(ident, NULL, &ret.ctx);
+  struct MqFactoryReturnS ret;
+  ret.err = MqFactoryNew(item, NULL, &ret.ctx);
   return ret;
 }
 

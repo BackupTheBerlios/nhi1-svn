@@ -110,7 +110,7 @@ func main() {
   FactoryAdd("F1", F1New)
   FactoryAdd("F2", F2New)
   FactoryAdd("F3", F3New)
-  srv := FactoryCall(os.Args[1])
+  srv := FactoryGetCalled(os.Args[1]).New()
   Init(os.Args[0])
   defer func() {
     if x := recover(); x != nil {

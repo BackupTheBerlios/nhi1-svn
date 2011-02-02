@@ -106,8 +106,8 @@ func (this *MqS) ReadL_END() {
   this.iErrorMqToGoWithCheck(C.MqReadL_END((*_Ctype_struct_MqS)(this)))
 }
 
-func (this *MqS) ReadT_START(buf *MqBufferS) {
-  this.iErrorMqToGoWithCheck(C.MqReadT_START((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqBufferS)(buf)))
+func (this *MqS) ReadT_START() {
+  this.iErrorMqToGoWithCheck(C.MqReadT_START((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ReadT_END() {

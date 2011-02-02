@@ -136,13 +136,14 @@ func (this *MqS) SendL_END() {
   this.iErrorMqToGoWithCheck(C.MqSendL_END((*_Ctype_struct_MqS)(this)))
 }
 
-func (this *MqS) SendT_START(tok string) {
+func (this *MqS) SendT_START() {
+  this.iErrorMqToGoWithCheck(C.MqSendT_START((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) SendT_END(tok string) {
   t := C.CString(tok)
-  r := C.MqSendT_START((*_Ctype_struct_MqS)(this), C.MQ_TOK(t))
+  r := C.MqSendT_END((*_Ctype_struct_MqS)(this), t)
   C.free(unsafe.Pointer(t))
   this.iErrorMqToGoWithCheck(r)
 }
 
-func (this *MqS) SendT_END() {
-  this.iErrorMqToGoWithCheck(C.MqSendT_END((*_Ctype_struct_MqS)(this)))
-}
