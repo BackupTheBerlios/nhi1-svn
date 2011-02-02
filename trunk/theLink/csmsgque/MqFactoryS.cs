@@ -58,17 +58,9 @@ namespace csmsgque {
   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
   internal delegate void FactoryDeleteF ([In]IntPtr context, [In] MQ_BOL doFactoryCleanup, [In]IntPtr data);
 
-  /// \api #MqFactoryReturnE
+  /// \brief Factory exception
   internal class MqFactorySException : Exception
   {
-
-    private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
-    private const CharSet MSGQUE_CS = CharSet.Ansi;
-    private const string MSGQUE_DLL = "libmsgque";
-
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryErrorMsg")]
-    private static extern IntPtr MqFactoryErrorMsg([In]MqFactoryReturnE ret);
-
     internal MqFactorySException() : base("MqFactoryS exception") {}
   }
 
@@ -138,7 +130,7 @@ namespace csmsgque {
   // INSTANCE
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryNew")]
-    private static extern MqErrorE MqFactoryNew([In]IntPtr item, [In]IntPtr data, [In,Out]ref IntPtr context);
+    private static extern IntPtr MqFactoryNew([In]IntPtr error, [In]IntPtr data, [In]IntPtr item);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCopy")]
     private static extern IntPtr MqFactoryCopy([In]IntPtr item, [In]string ident);
@@ -199,11 +191,6 @@ namespace csmsgque {
       } else {
 	return (IntPtr) GCHandle.Alloc(constr);
       }
-    }
-
-    private static void ErrorCheck(MqErrorE err) {
-      if (err <= MqErrorE.MQ_CONTINUE) return;
-      throw new MqFactorySException();
     }
 
   /*****************************************************************************/
@@ -276,9 +263,12 @@ namespace csmsgque {
 
     /// \api #MqFactoryNew
     public T New() {
-      IntPtr mqctx = IntPtr.Zero;
-      ErrorCheck (MqFactoryNew(factory, IntPtr.Zero, ref mqctx));
-      return (T) MqS.GetSelf(mqctx);
+      IntPtr mqctx = MqFactoryNew(new IntPtr(0x2), IntPtr.Zero, factory);
+      if (mqctx == IntPtr.Zero) {
+	throw new MqFactorySException();
+      } else {
+	return (T) MqS.GetSelf(mqctx);
+      }
     }
 
     /// \api #MqFactoryCopy

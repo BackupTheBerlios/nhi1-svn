@@ -879,10 +879,6 @@ namespace ccmsgque {
   class MqFactoryC {
 
     private:
-      inline void ErrorCheck(enum MqErrorE err) const throw(MqCException) {
-	if (MqErrorCheckI(err)) throw MqFactoryCException();
-      }
-
       static inline T* GetThis(struct MqS const * const context) {
 	return static_cast<T*>(context->self);
       }
@@ -979,9 +975,12 @@ namespace ccmsgque {
       }
       /// \api #MqFactoryNew
       inline T* New() throw (MqFactoryCException) {
-	struct MqS *mqctx;
-	ErrorCheck (MqFactoryNew (factory, NULL, &mqctx));
-	return static_cast<T*>(mqctx->self);
+	struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PRINT, NULL, factory);
+	if (mqctx == NULL) {
+	  throw MqFactoryCException();
+	} else {
+	  return static_cast<T*>(mqctx->self);
+	}
       }
       /// \api #MqFactoryCopy
       inline MqFactoryC<T> Copy(MQ_CST ident) {

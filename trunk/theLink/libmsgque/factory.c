@@ -439,28 +439,27 @@ MqFactoryDefault (
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE
+struct MqS*
 MqFactoryNew (
-  struct MqFactoryS * const item,
+  struct MqS * error,
   MQ_PTR const data,
-  struct MqS ** ctxP
-)
-{
-  *ctxP = NULL;
+  struct MqFactoryS * const item
+) {
+  struct MqS* mqctx = NULL;
   if (item == NULL) {
-    return MqErrorDbFactoryNum(MQ_ERROR_PRINT,MQ_FACTORY_RETURN_ITEM_IS_NULL);
-  } else if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, ctxP))) {
-    return MqErrorDbFactoryNum(MQ_ERROR_PRINT,MQ_FACTORY_RETURN_CALL_ERR);
+    MqErrorDbFactoryNum(error,MQ_FACTORY_RETURN_ITEM_IS_NULL);
+  } else if (MqErrorCheckI(MqFactoryInvoke ((struct MqS * const)data, MQ_FACTORY_NEW_INIT, item, &mqctx))) {
+    MqErrorDbFactoryNum(error,MQ_FACTORY_RETURN_CALL_ERR);
+  } else {
+    MqConfigUpdateName(mqctx, item->ident);
   }
-  MqConfigUpdateName(*ctxP, item->ident);
-  return MQ_OK;
+  return mqctx;
 }
 
 MQ_PTR
 MqFactoryItemGetCreateData(
   struct MqFactoryS  const * const item
-)
-{
+) {
   return item->Create.data;
 }
 

@@ -1434,10 +1434,11 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryNew (
-  struct MqFactoryS * const item,
+/// \attention the programmer \b have-to check the return value on \C NULL pointer
+MQ_EXTERN struct MqS* MQ_DECL MqFactoryNew (
+  struct MqS * error,
   MQ_PTR const data,
-  struct MqS ** ctxP
+  struct MqFactoryS * const item
 );
 
 

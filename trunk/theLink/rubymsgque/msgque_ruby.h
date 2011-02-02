@@ -74,6 +74,7 @@ extern VALUE globalRef;
 #define VAL2BIN(val)	    (MQ_CBI)RSTRING_PTR(val),RSTRING_LEN(val)
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
 #define VAL2MqS(val)	    ((struct MqS*)DATA_PTR(val))
+#define VAL2MqFactoryS(val) ((struct MqFactoryS*)DATA_PTR(val))
 
 #define	BYT2VAL(nat)	    INT2FIX((MQ_BYT)nat)
 #define	BOL2VAL(nat)	    ((nat)?Qtrue:Qfalse)
@@ -86,6 +87,8 @@ extern VALUE globalRef;
 #define	PTR2VAL(nat)	    (nat != NULL ? (VALUE)(nat) : Qnil)
 #define BIN2VAL(ptr,len)    rb_str_buf_cat(rb_str_buf_new(0),(char*)ptr,len)
 #define	MqS2VAL(nat)	    (nat != NULL ? ((VALUE)(nat)->self) : Qnil)
+#define	MqFactoryS2VAL(nat) NS(MqFactoryS_New)(nat)
+#define	MqBufferS2VAL(nat)  NS(MqBufferS_New)(nat)
 
 #define CheckType(val,typ,err) \
   if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
@@ -112,7 +115,8 @@ void NS(MqS_Sys_Init)	    (void);
 void NS(MqSException_Init)  (void);
 
 void NS(MqBufferS_Init)	    (void);
-VALUE NS(MqBufferS_New)	    (MQ_BUF);
+VALUE NS(MqBufferS_New)	    (struct MqBufferS *);
+VALUE NS(MqFactoryS_New)    (struct MqFactoryS *);
 
 /*****************************************************************************/
 /*                                                                           */

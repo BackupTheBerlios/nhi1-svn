@@ -91,7 +91,7 @@ main (
     MqFactoryPanic (MqFactoryAdd ("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
     // call the initial factory to initialize the "config"
-    MqErrorCheck (MqFactoryNew (MqFactoryGetCalled(argv[1]), NULL, &ctx));
+    ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, MqFactoryGetCalled(argv[1]));
 
     // call entry point
     MqErrorCheck(MqLinkCreate(ctx, &largv));

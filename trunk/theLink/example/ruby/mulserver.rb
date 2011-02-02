@@ -27,7 +27,7 @@ class MulServer < MqS
   end
 end
 
-srv = FactoryNew("mulserver", MulServer)
+srv = FactoryAdd("mulserver", MulServer).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

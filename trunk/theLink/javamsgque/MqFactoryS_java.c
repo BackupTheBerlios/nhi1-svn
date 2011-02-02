@@ -237,12 +237,13 @@ JNIEXPORT jobject JNICALL NF(New) (
 )
 {
   SETUP_factory;
-  struct MqS * mqctx;
-  MqErrorCheck (MqFactoryNew (factory, (MQ_PTR)env, &mqctx));
-  return mqctx->self;
-error:
-  MqFactorySException();
-  return NULL;  
+  struct MqS * mqctx = MqFactoryNew (MQ_ERROR_PRINT, (MQ_PTR)env, factory);
+  if (mqctx == NULL) {
+    MqFactorySException();
+    return NULL;  
+  } else {
+    return mqctx->self;
+  }
 }
 
 JNIEXPORT jobject JNICALL NF(Copy) (

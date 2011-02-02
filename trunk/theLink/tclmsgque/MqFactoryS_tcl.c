@@ -111,7 +111,8 @@ static int FS(New) (FACTORY_ARGS)
 {
   struct MqS * mqctx;
   CHECK_NOARGS
-  MqErrorCheck(MqFactoryNew (item, (MQ_PTR) interp, &mqctx));
+  mqctx = MqFactoryNew (MQ_ERROR_PRINT, (MQ_PTR) interp, item);
+  if (mqctx == NULL) goto error;
   Tcl_SetObjResult(interp, (Tcl_Obj*) mqctx->self);
   RETURN_TCL;
 }

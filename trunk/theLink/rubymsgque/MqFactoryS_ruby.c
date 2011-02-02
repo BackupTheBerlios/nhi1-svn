@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/rubymsgque/factory_ruby.c
+ *  \file       theLink/rubymsgque/MqFactoryS_ruby.c
  *  \brief      \$Id$
  *  
  *  (C) 2011 - NHI - #1 - Project - Group
@@ -14,21 +14,13 @@
 
 extern VALUE cMqS;
 
-VALUE cMqFactoryS;
+static VALUE cMqFactoryS;
 
 /*****************************************************************************/
 /*                                                                           */
 /*                                private                                    */
 /*                                                                           */
 /*****************************************************************************/
-
-#define ErrorFactoryToRubyWithCheck(p) { \
-  enum MqFactoryReturnE ret; \
-  if ((ret = (p)) != MQ_FACTORY_RETURN_OK) { \
-    rb_raise(rb_eRuntimeError, MqFactoryErrorMsg(ret)); \
-    return Qnil; \
-  } \
-}
 
 static VALUE sFactoryError (VALUE vtmpl, VALUE ex) {
   if (NIL_P(vtmpl)) {
@@ -136,6 +128,19 @@ void FactoryCopy (
 /*                                                                           */
 /*****************************************************************************/
 
+static VALUE FactoryCtxGet (VALUE self)
+{
+  SETUP_mqctx;
+  return MqFactoryS2VAL(MqFactoryCtxGet (mqctx));
+}
+
+static VALUE FactoryCtxSet (VALUE self, VALUE item)
+{
+  SETUP_mqctx;
+  ErrorMqToRubyWithCheck(MqFactoryCtxSet(mqctx, VAL2MqFactoryS(item)));
+  return Qnil;
+}
+
 static VALUE FactoryCtxIdentGet (VALUE self)
 {
   SETUP_mqctx;
@@ -146,13 +151,6 @@ static VALUE FactoryCtxIdentSet (VALUE self, VALUE ident)
 {
   SETUP_mqctx;
   ErrorMqToRubyWithCheck(MqFactoryCtxIdentSet(mqctx, (MQ_CST) (VAL2CST(ident))));
-  return Qnil;
-}
-
-static VALUE FactoryCtxDefaultSet (VALUE self, VALUE ident)
-{
-  SETUP_mqctx;
-  ErrorMqToRubyWithCheck(MqFactoryCtxDefaultSet(mqctx, (MQ_CST) (VAL2CST(ident))));
   return Qnil;
 }
 
@@ -174,11 +172,9 @@ static VALUE FactoryAdd (int argc, VALUE *argv, VALUE self)
   meth = rb_obj_method(class, CST2VAL("new"));
 
   INCR_REF2(meth);
-  ErrorFactoryToRubyWithCheck(
+  return MqFactoryS2VAL(
     MqFactoryAdd(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
-
-  return Qnil;
 }
 
 static VALUE FactoryDefault (int argc, VALUE *argv, VALUE self)
@@ -193,11 +189,9 @@ static VALUE FactoryDefault (int argc, VALUE *argv, VALUE self)
   meth = rb_obj_method(class, CST2VAL("new"));
 
   INCR_REF2(meth);
-  ErrorFactoryToRubyWithCheck(
+  return MqFactoryS2VAL(
     MqFactoryDefault(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
-
-  return Qnil;
 }
 
 static VALUE FactoryDefaultIdent (VALUE self)
@@ -205,31 +199,30 @@ static VALUE FactoryDefaultIdent (VALUE self)
   return CST2VAL(MqFactoryDefaultIdent());
 }
 
-static VALUE FactoryNew (int argc, VALUE *argv, VALUE self)
+static VALUE FactoryGet (VALUE self, VALUE ident)
 {
-  struct MqS *mqctx = NULL;
-  VALUE meth, ident, class;
-
-  if (argc < 1 || argc > 2) rb_raise(rb_eArgError, "usage: FactoryNew(?ident?, class)");
-
-  ident = argv[0];
-  class = argc == 1 ? argv[0] : argv[1];
-  CheckType(class, rb_cClass, "usage: FactoryNew(?ident?, class)");
-  meth = rb_obj_method(class, CST2VAL("new"));
-
-  INCR_REF2(meth);
-  ErrorFactoryToRubyWithCheck(
-    MqFactoryNew(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL, NULL, &mqctx)
-  );
-
-  return MqS2VAL(mqctx);
+  return MqFactoryS2VAL(MqFactoryGet(VAL2CST(ident)));
 }
 
-static VALUE FactoryCall (VALUE self, VALUE ident)
+static VALUE FactoryGetCalled (VALUE self, VALUE ident)
 {
-  struct MqS *mqctx = NULL;
-  ErrorFactoryToRubyWithCheck(MqFactoryCall(VAL2CST(ident), NULL, &mqctx));
-  return MqS2VAL(mqctx);
+  return MqFactoryS2VAL(MqFactoryGetCalled(VAL2CST(ident)));
+}
+
+static VALUE New (VALUE self)
+{
+  struct MqS *mqctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, VAL2MqFactoryS(self));
+  if (mqctx == NULL) {
+    rb_raise(rb_eRuntimeError, "MqFactoryS exception");
+    return Qnil;
+  } else {
+    return MqS2VAL(mqctx);
+  }
+}
+
+static VALUE Copy (VALUE self, VALUE ident)
+{
+  return MqFactoryS2VAL(MqFactoryCopy(VAL2MqFactoryS(self), VAL2CST(ident)));
 }
 
 /*****************************************************************************/
@@ -238,21 +231,31 @@ static VALUE FactoryCall (VALUE self, VALUE ident)
 /*                                                                           */
 /*****************************************************************************/
 
+VALUE NS(MqFactoryS_New) (struct MqFactoryS *item) {
+  return Data_Wrap_Struct(cMqFactoryS, NULL, NULL, item);
+}
+
 void NS(MqS_Factory_Init)(void) {
   VALUE meth = rb_obj_method(cMqS, CST2VAL("new"));
+  cMqFactoryS = rb_define_class("MqFactoryS", rb_cObject);
 
+  rb_define_method(cMqFactoryS, "New",  New,  0);
+  rb_define_method(cMqFactoryS, "Copy", Copy, 1);
+
+  rb_define_method(cMqS, "FactoryCtxGet",	  FactoryCtxGet,	0);
+  rb_define_method(cMqS, "FactoryCtxSet",	  FactoryCtxSet,	1);
   rb_define_method(cMqS, "FactoryCtxIdentGet",	  FactoryCtxIdentGet,	0);
   rb_define_method(cMqS, "FactoryCtxIdentSet",	  FactoryCtxIdentSet,	1);
-  rb_define_method(cMqS, "FactoryCtxDefaultSet",  FactoryCtxDefaultSet,	1);
 
   rb_define_global_function("FactoryAdd",	    FactoryAdd,		  -1);
   rb_define_global_function("FactoryDefault",	    FactoryDefault,	  -1);
   rb_define_global_function("FactoryDefaultIdent",  FactoryDefaultIdent,  0);
-  rb_define_global_function("FactoryNew",	    FactoryNew,		  -1);
-  rb_define_global_function("FactoryCall",	    FactoryCall,	  1);
+  rb_define_global_function("FactoryGet",	    FactoryGet,		  1);
+  rb_define_global_function("FactoryGetCalled",	    FactoryGetCalled,	  1);
   
   // Initialize "default" factory
   INCR_REF2(meth);
-  MqFactoryDefault("rubymsgque", FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+  if (!strcmp(MqFactoryDefaultIdent(),"libmsgque"))
+    MqFactoryDefault("rubymsgque", FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
 }
 

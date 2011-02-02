@@ -110,15 +110,15 @@ static VALUE SendL_END (VALUE self) {
   return Qnil;
 }
 
-static VALUE SendT_START (VALUE self, VALUE token) {
+static VALUE SendT_START (VALUE self) {
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqSendT_START(mqctx, VAL2CST(token)));
+  ErrorMqToRubyWithCheck(MqSendT_START(mqctx));
   return Qnil;
 }
 
-static VALUE SendT_END (VALUE self) {
+static VALUE SendT_END (VALUE self, VALUE token) {
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqSendT_END(mqctx));
+  ErrorMqToRubyWithCheck(MqSendT_END(mqctx, VAL2CST(token)));
   return Qnil;
 }
 
@@ -159,8 +159,8 @@ void NS(MqS_Send_Init)(void) {
   rb_define_method(cMqS, "SendEND_AND_CALLBACK",  SendEND_AND_CALLBACK, 2);
   rb_define_method(cMqS, "SendL_START",		  SendL_START,		0);
   rb_define_method(cMqS, "SendL_END",		  SendL_END,		0);
-  rb_define_method(cMqS, "SendT_START",		  SendT_START,		1);
-  rb_define_method(cMqS, "SendT_END",		  SendT_END,		0);
+  rb_define_method(cMqS, "SendT_START",		  SendT_START,		0);
+  rb_define_method(cMqS, "SendT_END",		  SendT_END,		1);
   rb_define_method(cMqS, "SendRETURN",		  SendRETURN,		0);
   rb_define_method(cMqS, "SendERROR",		  SendERROR,		0);
 }

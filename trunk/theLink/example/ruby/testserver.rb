@@ -35,7 +35,7 @@ class TestServer < MqS
     ServiceCreate("GTCX",method(:GTCX))
   end
 end
-srv = FactoryNew(TestServer)
+srv = FactoryAdd(TestServer).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

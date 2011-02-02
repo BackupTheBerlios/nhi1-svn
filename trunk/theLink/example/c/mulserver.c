@@ -40,11 +40,8 @@ MulServerFactory (
 int main (int argc, MQ_CST argv[]) 
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
-  struct MqS * ctx = NULL;
-  MqErrorCheck (
-    MqFactoryNew(
-      MqFactoryAdd ("mulserver", MulServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL), NULL, &ctx
-    )
+  struct MqS * ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
+    MqFactoryAdd ("mulserver", MulServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));

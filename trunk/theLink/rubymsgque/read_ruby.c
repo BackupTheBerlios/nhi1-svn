@@ -95,16 +95,9 @@ static VALUE ReadL_END (VALUE self) {
   return Qnil;
 }
 
-static VALUE ReadT_START (int argc, VALUE *argv, VALUE self) {
-  MQ_BUF MqBufferS_object = NULL;
+static VALUE ReadT_START (VALUE self) {
   SETUP_mqctx
-  if (argc < 0 || argc > 1)
-    rb_raise(rb_eArgError,"usage: ReadT_START ?MqBufferS-Type-Arg?");
-  if (argc == 1) {
-    CheckType(argv[0],cMqBufferS,"usage: ReadT_START ?MqBufferS-Type-Arg?")
-    MqBufferS_object = VAL2MqBufferS(argv[0]);
-  }
-  ErrorMqToRubyWithCheck(MqReadT_START(mqctx, MqBufferS_object));
+  ErrorMqToRubyWithCheck(MqReadT_START(mqctx));
   return Qnil;
 }
 
@@ -159,7 +152,7 @@ void NS(MqS_Read_Init)(void) {
   rb_define_method(cMqS, "ReadU",	      ReadU,		0);
   rb_define_method(cMqS, "ReadL_START",	      ReadL_START,	-1);
   rb_define_method(cMqS, "ReadL_END",	      ReadL_END,	0);
-  rb_define_method(cMqS, "ReadT_START",	      ReadT_START,	-1);
+  rb_define_method(cMqS, "ReadT_START",	      ReadT_START,	0);
   rb_define_method(cMqS, "ReadT_END",	      ReadT_END,	0);
   rb_define_method(cMqS, "ReadProxy",	      ReadProxy,	1);
   rb_define_method(cMqS, "ReadGetNumItems",   ReadGetNumItems,	0);

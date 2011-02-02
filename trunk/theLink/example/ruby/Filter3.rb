@@ -25,7 +25,7 @@ class Filter3 < MqS
     ftr.ServiceProxy("+TRT")
   end
 end
-srv = FactoryNew(Filter3)
+srv = FactoryAdd(Filter3).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

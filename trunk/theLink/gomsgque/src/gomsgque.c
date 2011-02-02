@@ -223,14 +223,12 @@ gomsgque_FactoryDefault (
   );
 }
 
-struct MqFactoryReturnS
+struct MqS *
 gomsgque_FactoryNew (
   struct MqFactoryS * const item
 )
 {
-  struct MqFactoryReturnS ret;
-  ret.err = MqFactoryNew(item, NULL, &ret.ctx);
-  return ret;
+  return MqFactoryNew(MQ_ERROR_PRINT, NULL, item);
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

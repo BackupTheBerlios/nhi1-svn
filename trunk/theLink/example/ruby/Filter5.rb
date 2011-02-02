@@ -96,7 +96,7 @@ FactoryAdd(F1)
 FactoryAdd(F2) 
 FactoryAdd(F3) 
 
-srv = FactoryCall(ARGV[0])
+srv = FactoryGetCalled(ARGV[0]).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

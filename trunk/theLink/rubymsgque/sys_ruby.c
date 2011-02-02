@@ -181,10 +181,6 @@ static enum MqErrorE SysWait (
 void NS(MqS_Sys_Init)(void) {
 
   // update LAL
-  MqLal.SysCalloc   = (MqSysCallocF)  xcalloc	  ;
-  MqLal.SysMalloc   = (MqSysMallocF)  xmalloc	  ;
-  MqLal.SysRealloc  = (MqSysReallocF) xrealloc	  ;
-  MqLal.SysFree	    = (MqSysFreeF)    xfree	  ;
   MqLal.SysFork	    = (MqSysForkF)    SysFork	  ;
 
   //MqLal.SysServerThread = SysServerThread;

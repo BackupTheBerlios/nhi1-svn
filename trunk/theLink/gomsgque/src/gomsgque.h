@@ -32,12 +32,7 @@ enum MqErrorE gomsgque_SendEND_AND_CALLBACK (struct MqS * const, MQ_TOK const to
 enum MqErrorE gomsgque_SendEND_AND_CALLBACK2 (struct MqS * const, MQ_TOK const token, MQ_PTR data);
 void gomsgque_SysServerThreadMain(struct MqSysServerThreadMainS *data, MQ_PTR chn);
 
-struct MqFactoryReturnS {
-  enum MqErrorE	err;
-  struct MqS * ctx;
-};
-
 struct MqFactoryS * gomsgque_FactoryAdd (MQ_CST const ident, MQ_PTR data);
 struct MqFactoryS * gomsgque_FactoryDefault (MQ_CST const ident, MQ_PTR data);
-struct MqFactoryReturnS gomsgque_FactoryNew (struct MqFactoryS * const item);
+struct MqS * gomsgque_FactoryNew (struct MqFactoryS * const item);
 

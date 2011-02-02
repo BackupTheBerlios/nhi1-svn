@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/factory.go
+ *  \file       theLink/gomsgque/src/MqFactoryS.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -51,13 +51,6 @@ func decrFactoryRef(cb *FactoryF) {
     } else {
       lockFactory[cb] = 0,false
     }
-  }
-}
-
-// factory erro-handling
-func iErrorFactoryToGoWithCheck(ret uint32) {
-  if ret >= C.MQ_CONTINUE {
-    panic("MqFactoryS exception");
   }
 }
 
@@ -163,8 +156,10 @@ type MqFactoryS _Ctype_struct_MqFactoryS
 
 func (this *MqFactoryS) New() (*MqS) {
   r := C.gomsgque_FactoryNew((*_Ctype_struct_MqFactoryS)(this))
-  iErrorFactoryToGoWithCheck(r.err)
-  return (*MqS)(r.ctx)
+  if (r != nil) {
+    return (*MqS)(r)
+  }
+  panic("MqFactoryS exception");
 }
 
 func (this *MqFactoryS) Copy(ident string) (*MqFactoryS) {

@@ -1395,16 +1395,12 @@ main (
   MQ_CST argv[]
 )
 {
-  struct MqS *mqctx = NULL;
-
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
 
   // call Factory 
-  MqErrorCheck (
-    MqFactoryNew (
-      MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL), NULL, &mqctx
-    )
+  struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
+    MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
 
   // setup the link, parse command-line arguments

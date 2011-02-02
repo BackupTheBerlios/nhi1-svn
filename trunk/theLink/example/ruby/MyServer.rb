@@ -27,7 +27,7 @@ class MyServer < MqS
   end
 end
 
-srv = FactoryNew(MyServer)
+srv = FactoryAdd(MyServer).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

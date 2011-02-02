@@ -19,8 +19,9 @@ class Client < MqS
     #ConfigSetName("client")
     super()
   end
-  def LinkCreate(debug)
+  def LinkCreate(debug, startAs)
     ConfigSetDebug(debug)
+    ConfigSetStartAs(startAs)
     super("client", "@", "server")
   end
   def BgError
@@ -263,7 +264,7 @@ class Server < MqS
         ConfigSetSrvName(old)
       when "Ident"
         old = FactoryCtxIdentGet()
-        FactoryCtxDefaultSet(ReadC())
+        FactoryCtxSet(FactoryGet("").Copy(ReadC()))
         check = LinkGetTargetIdent() == ReadC()
         SendSTART()
         SendC(FactoryCtxIdentGet())
@@ -370,7 +371,7 @@ class Server < MqS
         SlaveWorker(id, args)
       when "CREATE2"
         slv = Client.new
-        slv.LinkCreate(ConfigGetDebug())
+        slv.LinkCreate(ConfigGetDebug(),ConfigGetStartAs())
         SlaveCreate(id, slv);
       when "DELETE"
         SlaveDelete(id);
@@ -444,11 +445,11 @@ class Server < MqS
         if parent != nil and parent.cl[id].LinkIsConnected()  
           @cl[id].LinkCreateChild(parent.cl[id])
         else
-          @cl[id].LinkCreate(ConfigGetDebug())
+          @cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs())
         end
       when "START2" 
-        @cl[id].LinkCreate(ConfigGetDebug())
-        @cl[id].LinkCreate(ConfigGetDebug())
+        @cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs())
+        @cl[id].LinkCreate(ConfigGetDebug(),ConfigGetStartAs())
       when "START3" 
         parent = Client.new
         @cl[id].LinkCreateChild(parent)
@@ -536,9 +537,9 @@ class Server < MqS
 
   def TRNS
     SendSTART()
-    SendT_START("TRN2")
+    SendT_START()
     SendI(9876)
-    SendT_END()
+    SendT_END("TRN2")
     SendI( ReadI() )
     SendEND_AND_WAIT("ECOI")
     ProcessEvent(MqS::WAIT_ONCE)
@@ -684,7 +685,7 @@ end
 ##    Main
 ##
 
-srv = FactoryNew("server", Server)
+srv = FactoryAdd("server", Server).New()
 
 begin
   srv.LinkCreate($0,ARGV)

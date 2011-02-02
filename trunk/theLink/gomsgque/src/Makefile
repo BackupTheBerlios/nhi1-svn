@@ -15,7 +15,7 @@ include $(GOROOT)/src/Make.inc
 
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
-	  service.go slave.go factory.go
+	  service.go slave.go MqFactoryS.go
 CGO_OFILES=gomsgque.o
 
 CGO_CFLAGS=-I . -I $(abs_top_srcdir)/theLink/libmsgque -DPIC
