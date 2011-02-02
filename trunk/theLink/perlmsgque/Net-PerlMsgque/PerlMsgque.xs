@@ -16,11 +16,6 @@
   MqErrorV (context, __func__, errno, \
     "can not '%s' -> ERR<%s>", MQ_CPPXSTR(cmd), strerror (errno))
 
-#define ErrorFactoryToPerlWithCheck(RET) \
-  if (unlikely(MqFactoryErrorCheckI(RET))) { \
-    croak(MqFactoryErrorMsg(RET)); \
-  }
-
 #define ErrorMqToPerlWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
     SV* errsv = get_sv("@", TRUE); \
@@ -71,12 +66,29 @@ struct PerlContextS {
 typedef struct MqS MqS;
 typedef struct MqSException MqSException;
 typedef struct MqBufferS MqBufferS;
+typedef struct MqFactoryS MqFactoryS;
 
 static enum MqErrorE DummyOK (
   struct MqS * const context
 )
 {
   return MQ_OK;
+}
+
+static MqS* get_MqS_NO_ERROR(SV* sv)
+{
+  MqS *var = NULL;
+  if (SvROK(sv)) {
+    sv = (SV*)SvRV(sv);
+    if (SvIOK(sv)) {
+      IV tiv = SvIV(sv);
+      var = INT2PTR(MqS*,tiv);
+      if (var->signature != MQ_MqS_SIGNATURE) {
+	var = NULL;
+      }
+    }
+  }
+  return var;
 }
 
 static MqS* get_MqS(pTHX_ SV* sv)
@@ -98,22 +110,6 @@ static MqS* get_MqS(pTHX_ SV* sv)
   return var;
 }
 
-static MqS* get_MqS_NO_ERROR(SV* sv)
-{
-  MqS *var = NULL;
-  if (SvROK(sv)) {
-    sv = (SV*)SvRV(sv);
-    if (SvIOK(sv)) {
-      IV tiv = SvIV(sv);
-      var = INT2PTR(MqS*,tiv);
-      if (var->signature != MQ_MqS_SIGNATURE) {
-	var = NULL;
-      }
-    }
-  }
-  return var;
-}
-
 static MqBufferS* get_MqBufferS(pTHX_ SV* sv)
 {
   MqBufferS *var = NULL;
@@ -129,6 +125,25 @@ static MqBufferS* get_MqBufferS(pTHX_ SV* sv)
   }
   if (var == NULL) {
     Perl_croak(aTHX_ "object is not of type Net::PerlMsgque::MqBufferS");
+  }
+  return var;
+}
+
+static MqFactoryS* get_MqFactoryS(pTHX_ SV* sv)
+{
+  MqFactoryS *var = NULL;
+  if (SvROK(sv)) {
+    sv = (SV*)SvRV(sv);
+    if (SvIOK(sv)) {
+      IV tiv = SvIV(sv);
+      var = INT2PTR(MqFactoryS*,tiv);
+      if (var->signature != MQ_MqFactoryS_SIGNATURE) {
+	var = NULL;
+      }
+    }
+  }
+  if (var == NULL) {
+    Perl_croak(aTHX_ "object is not of type Net::PerlMsgque::MqFactoryS");
   }
   return var;
 }
@@ -333,7 +348,7 @@ static void FactoryDelete (
   }
 }
 
-MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque
+MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque PREFIX = Mq
 
 void
 InitializeSys()
@@ -351,6 +366,11 @@ Init(...)
     }
 
 void
+PrintID(MqS *context)
+  CODE:
+    printID(context)
+
+MqFactoryS*
 FactoryAdd(...)
   PREINIT:
     MQ_CST ident;
@@ -358,7 +378,6 @@ FactoryAdd(...)
   CODE:
     if (items < 1 || items > 2) {
       croak_xs_usage(cv, "?ident?, class");
-      XSRETURN(0);
     } else if (items == 1) {
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(0));
@@ -366,11 +385,11 @@ FactoryAdd(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    ErrorFactoryToPerlWithCheck(
-      MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
-    );
+    RETVAL = MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+  OUTPUT:
+    RETVAL
 
-void
+MqFactoryS*
 FactoryDefault(...)
   PREINIT:
     MQ_CST ident;
@@ -378,7 +397,6 @@ FactoryDefault(...)
   CODE:
     if (items < 1 || items > 2) {
       croak_xs_usage(cv, "ident, ?class?");
-      XSRETURN(0);
     } else if (items == 1) {
       ident = SvPV_nolen(ST(0));
       class = newSVpv("Net::PerlMsgque::MqS",0);
@@ -386,9 +404,9 @@ FactoryDefault(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    ErrorFactoryToPerlWithCheck (
-      MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
-    );
+    RETVAL = MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+  OUTPUT:
+    RETVAL
 
 MQ_CST
 FactoryDefaultIdent()
@@ -397,42 +415,29 @@ FactoryDefaultIdent()
   OUTPUT:
     RETVAL
 
-void
-FactoryNew(...)
+MqFactoryS*
+MqFactoryGet(...)
   PREINIT:
-    MQ_CST ident;
-    MQ_PTR class;
-    MqS* ctx;
+    MQ_CST ident = NULL;
   CODE:
-    if (items < 1 || items > 2) {
-      croak_xs_usage(cv, "?ident?, class");
-      XSRETURN(0);
-    } else if (items == 1) {
+    if (items == 1) {
       ident = SvPV_nolen(ST(0));
-      class = newSVsv(ST(0));
-    } else {  // items == 2
-      ident = SvPV_nolen(ST(0));
-      class = newSVsv(ST(1));
     }
-    ErrorFactoryToPerlWithCheck (
-      MqFactoryNew(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL, NULL, &ctx)
-    )
-    ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
-    XSRETURN(1);
+    RETVAL = MqFactoryGet(ident);
+  OUTPUT:
+    RETVAL
 
-void
-FactoryCall(MQ_CST ident)
+MqFactoryS*
+MqFactoryGetCalled(...)
   PREINIT:
-    MqS* ctx;
+    MQ_CST ident = NULL;
   CODE:
-    ErrorFactoryToPerlWithCheck (MqFactoryCall(ident, NULL, &ctx));
-    ST(0) = (ctx != NULL? (SV*)ctx->self : &PL_sv_undef);
-    XSRETURN(1);
-
-void
-PrintID(MqS *context)
-  CODE:
-    printID(context)
+    if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+    }
+    RETVAL = MqFactoryGetCalled(ident);
+  OUTPUT:
+    RETVAL
 
 BOOT:
   MqLal.SysFork = (MqSysForkF) my_fork;
@@ -485,6 +490,26 @@ DESTROY(SV *sv)
       // free the data
       if (hash) hv_undef (hash);
     }
+
+
+MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqFactoryS  PREFIX = MqFactory
+
+void
+MqFactoryNew(MqFactoryS* factory)
+  PREINIT:
+    struct MqS * ctx = NULL;
+  PPCODE:
+    ctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
+    if (ctx == NULL) {
+      croak("MqFactoryS exception");
+      XSRETURN(0);
+    } else {
+      ST(0) = (SV*)ctx->self;
+      XSRETURN(1);
+    }
+
+MqFactoryS*
+MqFactoryCopy(MqFactoryS* factory, MQ_CST ident)
 
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS  PREFIX = Mq
@@ -739,6 +764,15 @@ MqConfigSetEvent (MqS* context, SV* eventF)
     MqConfigSetEvent (context, ProcCall, (MQ_PTR) newSVsv(eventF), ProcFree, ProcCopy);
 
 
+
+MqFactoryS*
+MqFactoryCtxGet (MqS* context)
+
+void
+MqFactoryCtxSet (MqS* context, MqFactoryS* factory)
+  CODE:
+    ErrorMqToPerlWithCheck (MqFactoryCtxSet (context, factory));
+
 MQ_CST
 MqFactoryCtxIdentGet (MqS* context)
 
@@ -746,11 +780,6 @@ void
 MqFactoryCtxIdentSet (MqS* context, MQ_NST ident)
   CODE:
     ErrorMqToPerlWithCheck (MqFactoryCtxIdentSet (context, ident));
-
-void
-MqFactoryCtxDefaultSet (MqS* context, MQ_NST ident)
-  CODE:
-    ErrorMqToPerlWithCheck (MqFactoryCtxDefaultSet (context, ident));
 
 
 void
@@ -977,15 +1006,12 @@ MqSendU (MqS* context, MqBufferS *buffer)
   CODE:
     ErrorMqToPerlWithCheck (MqSendU (context, buffer));
 
-void
+MqBufferS*
 MqReadU (MqS* context)
-  PREINIT:
-    MqBufferS *ret;
-  PPCODE:
-    ST(0) = sv_newmortal();
-    ErrorMqToPerlWithCheck (MqReadU (context, &ret));
-    sv_setref_pv(ST(0), "Net::PerlMsgque::MqBufferS", (void*)ret);
-    XSRETURN(1);
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadU (context, &RETVAL));
+  OUTPUT:
+    RETVAL
 
 void
 MqReadProxy (MqS* context, MqS* target)
@@ -1114,14 +1140,14 @@ MqSendL_END (MqS* context)
     ErrorMqToPerlWithCheck (MqSendL_END(context));
 
 void
-MqSendT_START (MqS* context, MQ_CST token)
+MqSendT_START (MqS* context)
   CODE:
-    ErrorMqToPerlWithCheck (MqSendT_START(context, token));
+    ErrorMqToPerlWithCheck (MqSendT_START(context));
 
 void
-MqSendT_END (MqS* context)
+MqSendT_END (MqS* context, MQ_CST ident)
   CODE:
-    ErrorMqToPerlWithCheck (MqSendT_END(context));
+    ErrorMqToPerlWithCheck (MqSendT_END(context, ident));
 
 void
 MqReadL_START (MqS* context, ...)
@@ -1142,14 +1168,9 @@ MqReadL_END (MqS* context)
     ErrorMqToPerlWithCheck (MqReadL_END(context));
 
 void
-MqReadT_START (MqS* context, ...)
-  PREINIT:
-    MQ_BUF buffer = NULL;
+MqReadT_START (MqS* context)
   CODE:
-    if (items > 1) {
-      buffer = get_MqBufferS (aTHX_ ST(1));
-    }
-    ErrorMqToPerlWithCheck (MqReadT_START (context, buffer)); 
+    ErrorMqToPerlWithCheck (MqReadT_START (context)); 
 
 void
 MqReadT_END (MqS* context)

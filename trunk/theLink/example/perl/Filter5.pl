@@ -120,7 +120,7 @@ package main;
   Net::PerlMsgque::FactoryAdd("F2");
   Net::PerlMsgque::FactoryAdd("F3");
 
-  our $srv = Net::PerlMsgque::FactoryCall($ARGV[0]);
+  our $srv = Net::PerlMsgque::FactoryGetCalled($ARGV[0])->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

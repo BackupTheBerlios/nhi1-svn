@@ -22,7 +22,9 @@ use base qw(Net::PerlMsgque::MqS);
   sub LinkCreate {
     my $ctx = shift;
     my $debug = shift;
+    my $startAs = shift;
     $ctx->ConfigSetDebug($debug);
+    $ctx->ConfigSetStartAs($startAs);
     $ctx->SUPER::LinkCreate("@", "server", "--name", "test-server");
   }
 
@@ -434,13 +436,13 @@ use base qw(Net::PerlMsgque::MqS);
 	  if (defined($parent) && $parent->DictGet($id)->LinkIsConnected()) {
 	    $cl->LinkCreateChild($parent->DictGet($id));
 	  } else {
-	    $cl->LinkCreate($ctx->ConfigGetDebug());
+	    $cl->LinkCreate($ctx->ConfigGetDebug(),$ctx->ConfigGetStartAs());
 	  }
 	}
 	case "START2" {
 	  # object already created ERROR
-	  $cl->LinkCreate($ctx->ConfigGetDebug());
-	  $cl->LinkCreate($ctx->ConfigGetDebug());
+	  $cl->LinkCreate($ctx->ConfigGetDebug(),$ctx->ConfigGetStartAs());
+	  $cl->LinkCreate($ctx->ConfigGetDebug(),$ctx->ConfigGetStartAs());
 	}
 	case "START3" {
 	  my $parent = new Client();
@@ -514,7 +516,7 @@ use base qw(Net::PerlMsgque::MqS);
       } 
       case "CREATE2" {
 	my $c = new Client();
-	$c->LinkCreate($ctx->ConfigGetDebug());
+	$c->LinkCreate($ctx->ConfigGetDebug(),$ctx->ConfigGetStartAs());
 	$ctx->SlaveCreate ($id, $c);
       } 
       case "DELETE" {
@@ -610,7 +612,7 @@ use base qw(Net::PerlMsgque::MqS);
       }
       case "Ident" {
 	my $old = $ctx->FactoryCtxIdentGet();
-	$ctx->FactoryCtxDefaultSet ($ctx->ReadC());
+	$ctx->FactoryCtxSet (Net::PerlMsgque::FactoryGet()->Copy($ctx->ReadC()));
 	my $check = ($ctx->LinkGetTargetIdent eq $ctx->ReadC());
 	$ctx->SendC ($ctx->FactoryCtxIdentGet());
 	$ctx->SendO ($check);
@@ -683,9 +685,9 @@ use base qw(Net::PerlMsgque::MqS);
   sub TRNS {
     my $ctx = shift;
     $ctx->SendSTART ();
-    $ctx->SendT_START ("TRN2");
+    $ctx->SendT_START ();
     $ctx->SendI (9876);
-    $ctx->SendT_END ();
+    $ctx->SendT_END ("TRN2");
     $ctx->SendI ( $ctx->ReadI() );
     $ctx->SendEND_AND_WAIT ("ECOI");
     $ctx->ProcessEvent (Net::PerlMsgque::WAIT_ONCE);
@@ -789,7 +791,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryNew("server", "Server");
+  our $srv = Net::PerlMsgque::FactoryAdd("server", "Server")->New();
 
   eval {
     $srv->LinkCreate(@ARGV);

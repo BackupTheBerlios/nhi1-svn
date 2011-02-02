@@ -36,7 +36,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 
 package main;
-  our $srv = Net::PerlMsgque::FactoryNew("Filter3");
+  our $srv = Net::PerlMsgque::FactoryAdd("Filter3")->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

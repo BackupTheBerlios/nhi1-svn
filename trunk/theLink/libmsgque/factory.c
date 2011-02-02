@@ -128,6 +128,7 @@ static void sFactoryInit (
   item->called = MQ_NO;
   item->Create = Create;
   item->Delete = Delete;
+  item->signature = MQ_MqFactoryS_SIGNATURE;
 }
 
 /*****************************************************************************/
