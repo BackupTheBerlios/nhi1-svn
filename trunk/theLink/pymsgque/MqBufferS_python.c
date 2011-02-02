@@ -14,8 +14,6 @@
 
 #define MSGQUE msgque
 
-static void	  NS(MqBufferS_dealloc)	(MqBufferS_Obj*);
-
 //////////////////////////////////////////////////////////////////////////////////
 ///
 ///				 Method definition
@@ -84,7 +82,6 @@ static PyObject* NS(GetType) (
   return PyC2O(str);
 }
 
-
 #define GetType_DOC	    "return the type of object saved in the buffer"
 #define GetY_DOC	    "return a MQ_BYT object from a buffer"
 #define GetO_DOC	    "return a MQ_BOL object from a buffer"
@@ -123,6 +120,12 @@ static PyMethodDef NS(MqBufferS_Methods)[] = {
 //////////////////////////////////////////////////////////////////////////////////
 
 #define MqBufferS_DOC	"libmsgque MqBufferS object"
+
+static void
+NS(MqBufferS_dealloc)(MqBufferS_Obj* self)
+{
+  Py_TYPE(self)->tp_free((PyObject*)self);
+}
 
 PyTypeObject NS(MqBufferS) = {
   {PyObject_HEAD_INIT(NULL)},
@@ -167,43 +170,12 @@ PyTypeObject NS(MqBufferS) = {
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
-///				 Private API
-///
-//////////////////////////////////////////////////////////////////////////////////
-
-/*
-static PyObject *
-NS(MqBufferS_new)(PyTypeObject *type, PyObject *args, PyObject *kwds)
-{
-  MqBufferS_Obj * bufO = NULL;
-  static char *kwlist[] = {"duplicate", NULL};
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!:MqBufferS", kwlist,
-	&NS(MqBufferS),		&bufO
-    )) {
-    return NULL;
-  } else {
-    MqBufferS_Obj *self = (MqBufferS_Obj*)type->tp_alloc(type, 0);
-    self->buf = MqBufferDup (bufO->buf);
-    self->persistent = 1;
-    return (PyObject *)self;
-  }
-}
-*/
-
-static void
-NS(MqBufferS_dealloc)(MqBufferS_Obj* self)
-{
-  Py_TYPE(self)->tp_free((PyObject*)self);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-///
 ///				 Public API
 ///
 //////////////////////////////////////////////////////////////////////////////////
 
 PyObject *
-MqBufferS_Obj_From_MQ_BUF (
+MqBufferS_Obj_From_PTR (
   MQ_BUF bufP
 )
 {

@@ -28,7 +28,7 @@ class testserver(MqS):
     ctx.ServiceCreate("GTCX",ctx.GTCX)
 
 if __name__ == "__main__":
-  srv = FactoryNew(testserver)
+  srv = FactoryAdd(testserver).New()
   try:
     srv.ConfigSetServerSetup(srv.ServerConfig)
     srv.LinkCreate(sys.argv)

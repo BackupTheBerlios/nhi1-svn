@@ -17,7 +17,7 @@ pkglib_LTLIBRARIES = pymsgque.la
 pymsgque_la_SOURCES = MqS_python.c MqBufferS_python.c \
   msgque_python.c msgque_python.h misc_python.c send_python.c read_python.c \
     service_python.c error_python.c config_python.c slave_python.c context_python.c \
-      link_python.c factory_python.c
+      link_python.c MqFactoryS_python.c
 
 pymsgque_la_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(PYTHON_CPPFLAGS) -fno-strict-aliasing $(AM_CFLAGS)
 pymsgque_la_LIBADD = ../libmsgque/libtmp.la $(PYTHON_EXTRA_LIBS)

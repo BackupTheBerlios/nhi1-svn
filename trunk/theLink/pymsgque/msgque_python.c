@@ -18,6 +18,7 @@ PyObject * NS(MqSException) = NULL;
 
 extern PyTypeObject NS(MqS);
 extern PyTypeObject NS(MqBufferS);
+extern PyTypeObject NS(MqFactoryS);
 
 // ************************************************************
 
@@ -47,11 +48,11 @@ static PyObject* NS(Init) (
 
 // ************************************************************
 
-#define FactoryAdd_DOC  "[?ident?,class] add a factory class"
+#define FactoryAdd_DOC  "[?ident?,class] add a factory class and return the MqFactoryS instance"
 
 PyObject* NS(FactoryAdd) ( PyObject    *class, PyObject    *args);
 
-#define FactoryDefault_DOC  "[?ident?,class] add a default factory class"
+#define FactoryDefault_DOC  "[?ident?,class] add a default factory class and return the MqFactoryS instance"
 
 PyObject* NS(FactoryDefault) ( PyObject    *class, PyObject    *args);
 
@@ -59,13 +60,13 @@ PyObject* NS(FactoryDefault) ( PyObject    *class, PyObject    *args);
 
 PyObject* NS(FactoryDefaultIdent) ( PyObject    *class, PyObject    *args);
 
-#define FactoryNew_DOC  "[?ident?,class] add and call a factory class"
+#define FactoryGet_DOC  "[string] get the MqFactoryS instance from the factory-identifier"
 
-PyObject* NS(FactoryNew) ( PyObject    *class, PyObject    *args);
+PyObject* NS(FactoryGet) ( PyObject    *class, PyObject   *args);
 
-#define FactoryCall_DOC  "[ident] call a factory class"
+#define FactoryGetCalled_DOC  "[string] get the MqFactoryS instance (in called mode) from the factory-identifier"
 
-PyObject* NS(FactoryCall) ( PyObject    *class, PyObject   *args);
+PyObject* NS(FactoryGetCalled) ( PyObject    *class, PyObject   *args);
 
 // ************************************************************
 
@@ -75,8 +76,8 @@ static PyMethodDef NS(Methods)[] = {
     ARG(FactoryAdd,	      METH_VARARGS),
     ARG(FactoryDefault,	      METH_VARARGS),
     ARG(FactoryDefaultIdent,  METH_NOARGS),
-    ARG(FactoryNew,	      METH_VARARGS),
-    ARG(FactoryCall,	      METH_VARARGS),
+    ARG(FactoryGet,	      METH_VARARGS),
+    ARG(FactoryGetCalled,     METH_VARARGS),
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 #undef ARG
@@ -103,6 +104,10 @@ PyInit_pymsgque(void)
   NS(MqBufferS).ob_base.ob_base.ob_type = &PyType_Type;
   PyErrorCheck (PyType_Ready(&NS(MqBufferS)));
 
+  // get 'MqFactoryS'
+  NS(MqFactoryS).ob_base.ob_base.ob_type = &PyType_Type;
+  PyErrorCheck (PyType_Ready(&NS(MqFactoryS)));
+
   // get 'MqSException'
   dict = PyDict_New();
   PyDict_SetItemString (dict, "text", Py_None);
@@ -115,9 +120,11 @@ PyInit_pymsgque(void)
 
   Py_INCREF(&NS(MqS));
   Py_INCREF(&NS(MqBufferS));
+  Py_INCREF(&NS(MqFactoryS));
   Py_INCREF(NS(MqSException));
   PyErrorCheck(PyModule_AddObject(m, "MqS",		(PyObject *)&NS(MqS)));
   PyErrorCheck(PyModule_AddObject(m, "MqBufferS",	(PyObject *)&NS(MqBufferS)));
+  PyErrorCheck(PyModule_AddObject(m, "MqFactoryS",	(PyObject *)&NS(MqFactoryS)));
   PyErrorCheck(PyModule_AddObject(m, "MqSException",	NS(MqSException)));
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_DEFAULT",  -1));
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_USER",     -2));

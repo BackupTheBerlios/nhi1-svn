@@ -1360,6 +1360,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
   struct MqFactoryS const * const item
 );
 
+/// \brief create a copy of a MqFactoryS instance using a new factory-identifer
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryCopy (
   struct MqFactoryS * const item,
   MQ_CST const ident
@@ -1434,6 +1435,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
   void
 );
 
+/// \brief create a new MqS instance from a MqFactoryS instance
 /// \attention the programmer \b have-to check the return value on \C NULL pointer
 MQ_EXTERN struct MqS* MQ_DECL MqFactoryNew (
   struct MqS * error,

@@ -24,7 +24,7 @@ class MyServer(MqS):
   def ServerSetup(self):
     self.ServiceCreate("HLWO",self.HLWO)
 
-srv = FactoryNew("MyServer", MyServer);
+srv = FactoryAdd("MyServer", MyServer).New();
 try:
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)

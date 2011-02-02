@@ -22,8 +22,9 @@ class Client(MqS):
     self.ConfigSetSrvName("test-server")
     MqS.__init__(self)
 
-  def LinkCreate(self, debug):
+  def LinkCreate(self, debug, startAs):
     self.ConfigSetDebug(debug)
+    self.ConfigSetStartAs(startAs)
     super().LinkCreate(["client", "@", "server"])
 
   def BgError(self):
@@ -119,9 +120,9 @@ class Server(MqS):
 
   def TRNS (self):
     self.SendSTART ()
-    self.SendT_START ("TRN2")
+    self.SendT_START ()
     self.SendI (9876)
-    self.SendT_END ()
+    self.SendT_END ("TRN2")
     self.SendI ( self.ReadI() )
     self.SendEND_AND_WAIT ("ECOI")
     self.ProcessEvent (MqS_WAIT_ONCE)
@@ -174,7 +175,7 @@ class Server(MqS):
       self.ConfigSetSrvName (old)
     elif cmd == "Ident":
       old = self.FactoryCtxIdentGet()
-      self.FactoryCtxDefaultSet (self.ReadC())
+      self.FactoryCtxSet (FactoryGet().Copy (self.ReadC()))
       check = self.LinkGetTargetIdent() == self.ReadC()
       self.SendSTART()
       self.SendC (self.FactoryCtxIdentGet())
@@ -528,10 +529,10 @@ class Server(MqS):
         self.cl[id].LinkCreateChild(parent.cl[id]);
       else:
         #print("PARENT");sys.stdout.flush()
-        self.cl[id].LinkCreate(self.ConfigGetDebug());
+        self.cl[id].LinkCreate(self.ConfigGetDebug(),self.ConfigGetStartAs());
     elif s == "START2" :
-      self.cl[id].LinkCreate(self.ConfigGetDebug());
-      self.cl[id].LinkCreate(self.ConfigGetDebug());
+      self.cl[id].LinkCreate(self.ConfigGetDebug(),self.ConfigGetStartAs());
+      self.cl[id].LinkCreate(self.ConfigGetDebug(),self.ConfigGetStartAs());
     elif s == "START3" :
       parent = Client()
       self.cl[id].LinkCreateChild(parent);
@@ -587,7 +588,7 @@ class Server(MqS):
       self.SlaveWorker(id, args)
     elif s == "CREATE2" :
       slv = Client()
-      slv.LinkCreate(self.ConfigGetDebug())
+      slv.LinkCreate(self.ConfigGetDebug(),self.ConfigGetStartAs())
       self.SlaveCreate(id, slv);
     elif s == "DELETE" :
       self.SlaveDelete(id);
@@ -639,7 +640,7 @@ class Server(MqS):
 ##    Main
 ##
 
-srv = FactoryNew("server", Server);
+srv = FactoryAdd("server", Server).New();
 
 try:
   srv.LinkCreate(sys.argv)

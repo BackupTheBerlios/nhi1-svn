@@ -46,7 +46,15 @@ typedef struct MqBufferS_Obj {
   struct MqBufferS * buf;
 } MqBufferS_Obj;
 
-PyObject * MqBufferS_Obj_From_MQ_BUF ( MQ_BUF );
+PyObject * MqBufferS_Obj_From_PTR ( struct MqBufferS* );
+
+/// \brief python MqFactoryS Object
+typedef struct MqFactoryS_Obj {
+  PyObject_HEAD
+  struct MqFactoryS * item;
+} MqFactoryS_Obj;
+
+PyObject * MqFactoryS_Obj_From_PTR ( struct MqFactoryS* );
 
 /// \brief python MqS Object
 typedef struct MqS_Obj {
@@ -66,9 +74,13 @@ typedef struct MqS_Obj {
 
 #define ICONTEXT (((MqS_Obj*)self)->context)
 #define CONTEXT &ICONTEXT
-
 #define SETUP_context \
   struct MqS * const context = CONTEXT;
+
+#define IFACTORY (((MqFactoryS_Obj*)self)->item)
+#define FACTORY &IFACTORY
+#define SETUP_factory \
+  struct MqFactoryS * const factory = FACTORY;
 
 #define ErrorMqToPython() NS(pErrorFromMq)(context)
 #define ErrorMqToPythonWithCheck(PROC) \

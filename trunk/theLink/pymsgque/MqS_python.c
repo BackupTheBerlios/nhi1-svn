@@ -311,13 +311,15 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 
 // from factory_python.c
 
+PyObject* NS(FactoryCtxSet)	    ( PyObject*, PyObject* );
+PyObject* NS(FactoryCtxGet)	    ( PyObject* );
 PyObject* NS(FactoryCtxIdentSet)    ( PyObject*, PyObject* );
 PyObject* NS(FactoryCtxIdentGet)    ( PyObject* );
-PyObject* NS(FactoryCtxDefaultSet)  ( PyObject*, PyObject* );
 
-#define FactoryCtxIdentGet_DOC	    "[noARG] return the factory identifer or '' of the object"
-#define FactoryCtxIdentSet_DOC	    "[string] set the factory identifer of the object"
-#define FactoryCtxDefaultSet_DOC    "[string] create a copy of the default factory using string as identifer and link to the object"
+#define FactoryCtxGet_DOC	    "[noARG] return the MqFactoryS instance from the MqS instance"
+#define FactoryCtxSet_DOC	    "[MqFactoryS] set the MqFactoryS instance of the MqS instance"
+#define FactoryCtxIdentGet_DOC	    "[noARG] return the factory-identifer or '' of the MqS instance"
+#define FactoryCtxIdentSet_DOC	    "[string] set the factory-identifer of the MqS instance"
 
 // Fill the Struct-Array
 
@@ -347,8 +349,8 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(SendERROR,		METH_NOARGS),
     ARG(SendL_START,		METH_NOARGS),
     ARG(SendL_END,		METH_NOARGS),
-    ARG(SendT_START,		METH_VARARGS),
-    ARG(SendT_END,		METH_NOARGS),
+    ARG(SendT_START,		METH_NOARGS),
+    ARG(SendT_END,		METH_VARARGS),
     ARG(SendY,			METH_VARARGS),
     ARG(SendO,			METH_VARARGS),
     ARG(SendS,			METH_VARARGS),
@@ -364,7 +366,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
 
     ARG(ReadL_START,		METH_VARARGS),
     ARG(ReadL_END,		METH_NOARGS),
-    ARG(ReadT_START,		METH_VARARGS),
+    ARG(ReadT_START,		METH_NOARGS),
     ARG(ReadT_END,		METH_NOARGS),
     ARG(ReadY,			METH_NOARGS),
     ARG(ReadO,			METH_NOARGS),
@@ -443,9 +445,10 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ErrorGetNum,		METH_NOARGS),
     ARG(ErrorGetText,		METH_NOARGS),
 
+    ARG(FactoryCtxSet,		METH_VARARGS),
+    ARG(FactoryCtxGet,		METH_NOARGS),
     ARG(FactoryCtxIdentSet,	METH_VARARGS),
     ARG(FactoryCtxIdentGet,	METH_NOARGS),
-    ARG(FactoryCtxDefaultSet,	METH_VARARGS),
     
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

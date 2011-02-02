@@ -24,7 +24,7 @@ class MulServer(MqS):
   def ServerSetup(self):
     self.ServiceCreate("MMUL",self.MMUL)
 
-srv = FactoryNew("mulserver", MulServer);
+srv = FactoryAdd("mulserver", MulServer).New();
 try:
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)
