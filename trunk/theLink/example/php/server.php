@@ -21,8 +21,9 @@ class Client extends MqS implements iBgError {
     parent::__construct($tmpl);
     $this->ConfigSetSrvName("test-server");
   }
-  public function LinkCreate($debug) {
+  public function LinkCreate($debug,$startAs) {
     $this->ConfigSetDebug($debug);
+    $this->ConfigSetStartAs($startAs);
     parent::LinkCreate("client", "@", "server");
   }
   public function BgError() {
@@ -176,7 +177,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	break;
       case "CREATE2":
         $slv = new Client();
-        $slv->LinkCreate($this->ConfigGetDebug());
+        $slv->LinkCreate($this->ConfigGetDebug(),$this->ConfigGetStartAs());
         $this->SlaveCreate($id, $slv);
 	break;
       case "DELETE":
@@ -261,12 +262,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 #var_dump($this->cl[$id]);
           $this->cl[$id]->LinkCreateChild($parent->cl[$id]);
         } else {
-          $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
+          $this->cl[$id]->LinkCreate($this->ConfigGetDebug(),$this->ConfigGetStartAs());
         }
 	break;
       case "START2":
-        $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
-        $this->cl[$id]->LinkCreate($this->ConfigGetDebug());
+        $this->cl[$id]->LinkCreate($this->ConfigGetDebug(),$this->ConfigGetStartAs());
+        $this->cl[$id]->LinkCreate($this->ConfigGetDebug(),$this->ConfigGetStartAs());
 	break;
       case "START3":
         $parent = new Client();
@@ -333,9 +334,9 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 
   public function TRNS() {
     $this->SendSTART();
-    $this->SendT_START("TRN2");
+    $this->SendT_START();
     $this->SendI(9876);
-    $this->SendT_END();
+    $this->SendT_END("TRN2");
     $this->SendI($this->ReadI());
     $this->SendEND_AND_WAIT("ECOI");
     $this->ProcessEvent(MqS::WAIT_ONCE);
@@ -512,7 +513,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	break;
       case "Ident":
         $old = $this->FactoryCtxIdentGet();
-        $this->FactoryCtxDefaultSet($this->ReadC());
+        $this->FactoryCtxSet(FactoryGet()->Copy($this->ReadC()));
         $check = $this->LinkGetTargetIdent() == $this->ReadC();
         $this->SendSTART();
         $this->SendC($this->FactoryCtxIdentGet());
@@ -714,7 +715,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 
 }
 
-$ctx = FactoryNew('server', 'Server');
+$ctx = FactoryAdd('server', 'Server')->New();
 
 try {
   $ctx->LinkCreate($argv);

@@ -127,7 +127,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  MqFactoryS::Default("transFilter", "Filter4");
+  Net::PerlMsgque::MqFactoryS::Default("transFilter", "Filter4");
   our $srv = new Filter4();
   eval {
     $srv->LinkCreate(@ARGV);

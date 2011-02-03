@@ -20,7 +20,7 @@ class Filter3 extends MqS implements iServerSetup {
     $ftr->ServiceProxy("+TRT");
   }
 }
-$srv = FactoryNew('Filter3');
+$srv = FactoryAdd('Filter3')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

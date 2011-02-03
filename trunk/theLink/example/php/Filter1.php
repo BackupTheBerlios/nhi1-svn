@@ -43,7 +43,7 @@ class Filter1 extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-$srv = FactoryNew('filter', 'Filter1');
+$srv = FactoryAdd('filter', 'Filter1')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

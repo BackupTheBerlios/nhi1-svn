@@ -42,7 +42,7 @@ if test "$PHP_MSGQUEFORPHP" != "no"; then
  
   dnl PHP_SUBST(MSGQUEFORPHP_SHARED_LIBADD)
   dnl add extension 
-  PHP_NEW_EXTENSION(MsgqueForPhp, MsgqueForPhp.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c send_php.c read_php.c MqBufferS_php.c error_php.c factory_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
+  PHP_NEW_EXTENSION(MsgqueForPhp, MsgqueForPhp.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c send_php.c read_php.c MqBufferS_php.c error_php.c MqFactoryS_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
 fi
 
 AC_MSG_CHECKING([for build with symbols])

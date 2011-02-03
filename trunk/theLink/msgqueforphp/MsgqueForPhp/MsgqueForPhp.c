@@ -23,8 +23,8 @@ ZEND_DECLARE_MODULE_GLOBALS(MsgqueForPhp)
 PHP_FUNCTION(FactoryAdd);
 PHP_FUNCTION(FactoryDefault);
 PHP_FUNCTION(FactoryDefaultIdent);
-PHP_FUNCTION(FactoryNew);
-PHP_FUNCTION(FactoryCall);
+PHP_FUNCTION(FactoryGet);
+PHP_FUNCTION(FactoryGetCalled);
 
 /* {{{ MsgqueForPhp_functions[]
  *
@@ -39,7 +39,7 @@ ZEND_BEGIN_ARG_INFO_EX(FactoryCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "class")
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(FactoryCall_arg, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(ident_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "ident")
 ZEND_END_ARG_INFO()
 
@@ -47,8 +47,8 @@ const zend_function_entry NS(functions)[] = {
   PHP_FE(FactoryAdd,		    FactoryCreate_arg)
   PHP_FE(FactoryDefault,	    FactoryCreate_arg)
   PHP_FE(FactoryDefaultIdent,	    no_arg)
-  PHP_FE(FactoryNew,		    FactoryCreate_arg)
-  PHP_FE(FactoryCall,		    FactoryCall_arg)
+  PHP_FE(FactoryGet,		    ident_arg)
+  PHP_FE(FactoryGetCalled,	    ident_arg)
   {NULL, NULL, NULL}						/* Must be the last line in MsgqueForPhp_functions[] */
 };
 
@@ -105,7 +105,7 @@ static void php_MsgqueForPhp_init_globals(zend_MsgqueForPhp_globals *MsgqueForPh
 void NS(MqS_Init)	    (TSRMLS_D);
 void NS(MqSException_Init)  (TSRMLS_D);
 void NS(MqBufferS_Init)	    (TSRMLS_D);
-void NS(Factory_Init)	    (TSRMLS_D);
+void NS(MqFactoryS_Init)    (TSRMLS_D);
 
 PHP_MINIT_FUNCTION(MsgqueForPhp)
 {
@@ -115,7 +115,7 @@ PHP_MINIT_FUNCTION(MsgqueForPhp)
   NS(MqS_Init)		(TSRMLS_C);
   NS(MqSException_Init)	(TSRMLS_C);
   NS(MqBufferS_Init)	(TSRMLS_C);
-  NS(Factory_Init)	(TSRMLS_C);
+  NS(MqFactoryS_Init)	(TSRMLS_C);
 
   /* If you have INI entries, uncomment these lines 
   REGISTER_INI_ENTRIES();

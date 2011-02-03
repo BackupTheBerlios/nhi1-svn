@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/pymsgque/factory_python.c
+ *  \file       theLink/pymsgque/MqFactoryS_python.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

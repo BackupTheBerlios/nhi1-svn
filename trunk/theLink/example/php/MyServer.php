@@ -22,7 +22,7 @@ class MyServer extends MqS implements iServerSetup {
   }
 }
 
-$srv = FactoryNew('MyServer');
+$srv = FactoryAdd('MyServer')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

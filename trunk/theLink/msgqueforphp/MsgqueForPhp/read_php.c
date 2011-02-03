@@ -68,7 +68,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadU)
   MQ_BUF buf = NULL;
   SETUP_mqctx;
   ErrorMqToPhpWithCheck(MqReadU(mqctx, &buf));
-  NS(MqBufferS_New) (return_value, buf TSRMLS_CC);
+  MqBufferS2VAL(return_value, buf);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadL_START)
@@ -97,18 +97,8 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadL_END)
 PHP_METHOD(MsgqueForPhp_MqS, ReadT_START)
 {
   SETUP_mqctx;
-  MQ_BUF buf = NULL;
-  zval *bufZ = NULL;
-  zend_class_entry* bufC;
-  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|O", &bufZ, &bufC));
-  if (bufZ) {
-    if (!instanceof_function(bufC, NS(MqBufferS) TSRMLS_CC)) goto error;
-    VAL2MqBufferS(buf, bufZ);
-  }
-  ErrorMqToPhpWithCheck(MqReadT_START(mqctx, buf));
+  ErrorMqToPhpWithCheck(MqReadT_START(mqctx));
   RETURN_NULL();
-error:
-  RETURN_ERROR("usage: ReadT_START(?MqBufferS: buf=NULL?)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadT_END)

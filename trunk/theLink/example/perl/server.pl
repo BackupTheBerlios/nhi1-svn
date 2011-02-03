@@ -665,7 +665,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ConfigSetStartAs ($old);
       }
       case "DefaultIdent" {
-	$ctx->SendC (MqFactoryS::DefaultIdent());
+	$ctx->SendC (Net::PerlMsgque::MqFactoryS::DefaultIdent());
       }
       default {
 	$ctx->ErrorC ("CFG1", 1, "invalid command: $cmd");

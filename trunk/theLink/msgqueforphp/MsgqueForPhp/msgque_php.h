@@ -86,6 +86,7 @@ extern zend_class_entry *NS(MqBufferS);
 #define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),(MQ_SIZE)Z_STRLEN_P(val)
 #define VAL2MqS2(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
 #define VAL2MqBufferS2(val) (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
+#define VAL2MqFactoryS2(val) (struct MqFactoryS*)Z_LVAL_P(zend_read_property(NS(MqFactoryS), val, ID(__factory), 0 TSRMLS_CC))
 
 #define VAL2MqS(tgt, src) { \
   zval * zret = zend_read_property(NS(MqS), src, ID(__ctx), 0 TSRMLS_CC); \
@@ -105,6 +106,15 @@ extern zend_class_entry *NS(MqBufferS);
   } \
 }
 
+#define VAL2MqFactoryS(tgt, src) { \
+  zval * zret = zend_read_property(NS(MqFactoryS), src, ID(__factory), 0 TSRMLS_CC); \
+  if (Z_TYPE_P(zret) == IS_NULL) { \
+    RETURN_ERROR("MqFactoryS resource was not initialized, is the constructor not run ?"); \
+  } else { \
+    tgt = (struct MqFactoryS *) Z_RESVAL_P(zret); \
+  } \
+}
+
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	BOL2VAL(zval,nat)	    ZVAL_BOOL(zval,nat)
 #define	SRT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
@@ -121,6 +131,8 @@ if (nat != NULL) { \
 } else { \
   ZVAL_NULL(val); \
 }
+#define MqFactoryS2VAL(zval,ptr)    NS(MqFactoryS_New) (zval, ptr TSRMLS_CC);
+#define MqBufferS2VAL(zval,ptr)	    NS(MqBufferS_New) (zval, ptr TSRMLS_CC);
 
 #define ARG2INT(mth,val) \
 long val;\
@@ -146,6 +158,10 @@ MQ_CST val; int val ## len;\
 if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, & val ## len) == FAILURE) { \
   RETURN_ERROR("usage: " #mth "(string:" #val ")"); \
 }
+
+#define ARG2CST_OPT(val, def) \
+MQ_CST val = def; int val ## len;\
+if (ZEND_NUM_ARGS()) zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &val, & val ## len)
 
 #define ARG2BOL(mth,val) \
 zend_bool val;\
@@ -175,6 +191,14 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
 } \
 VAL2MqBufferS(val,_val);
 
+#define ARG2MqFactoryS(mth,val) \
+struct MqFactoryS *val;\
+zval *_val;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
+} \
+VAL2MqFactoryS(val,_val);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                  Misc's                                   */
@@ -185,7 +209,8 @@ void NS(MqSException_Raise)	  (struct MqS* TSRMLS_DC);
 void NS(MqSException_Set)	  (struct MqS*, zval* TSRMLS_DC);
 MQ_BFL NS(Argument2MqBufferLS)	  (struct MqBufferLS *, int numArgs TSRMLS_DC);
 void NS(MqBufferLAppendZVal)	  (MQ_BFL, zval* TSRMLS_DC);
-void NS(MqBufferS_New)		  (zval *, MQ_BUF TSRMLS_DC);
+void NS(MqBufferS_New)		  (zval *, struct MqBufferS* TSRMLS_DC);
+void NS(MqFactoryS_New)		  (zval *, struct MqFactoryS* TSRMLS_DC);
 
 
 /*****************************************************************************/

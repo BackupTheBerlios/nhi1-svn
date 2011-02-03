@@ -265,9 +265,10 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveGet);
 PHP_METHOD(MsgqueForPhp_MqS, SlaveGetMaster);
 PHP_METHOD(MsgqueForPhp_MqS, SlaveIs);
 
+PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxGet);
+PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxSet);
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentGet);
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet);
-PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet);
 
 /* {{{ MsgqueForPhp_MqS_functions[]
  *
@@ -336,6 +337,14 @@ ZEND_BEGIN_ARG_INFO_EX(ErrorC_arg, 0, 0, 3)
   ZEND_ARG_INFO(0, "message")
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(MqFactoryS_arg, 0, 0, 1)
+  ZEND_ARG_OBJ_INFO(0, factory, MqFactoryS, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(ident_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "ident")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, __construct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(MsgqueForPhp_MqS, __destruct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
@@ -347,9 +356,10 @@ static const zend_function_entry NS(MqS_functions)[] = {
 #endif
   PHP_ME(MsgqueForPhp_MqS, Init,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 
-  PHP_ME(MsgqueForPhp_MqS, FactoryCtxIdentGet,	    NULL,		  ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, FactoryCtxIdentSet,	    NULL,		  ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, FactoryCtxDefaultSet,    NULL,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, FactoryCtxGet,	    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, FactoryCtxSet,	    MqFactoryS_arg,	  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, FactoryCtxIdentGet,	    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, FactoryCtxIdentSet,	    ident_arg,		  ZEND_ACC_PUBLIC)
 
   PHP_ME(MsgqueForPhp_MqS, ReadY,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadO,		    no_arg,               ZEND_ACC_PUBLIC)
@@ -365,7 +375,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ReadU,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_START,		    NULL,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_END,		    no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, ReadT_START,		    NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ReadT_START,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadT_END,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadGetNumItems,	    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadItemExists,	    no_arg,               ZEND_ACC_PUBLIC)
@@ -393,10 +403,10 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, SendN,		    value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendBDY,		    value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendU,		    MqBufferS_arg,        ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SendL_START,		    no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SendL_END,		    no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, SendL_START,		    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, SendL_END,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendT_START,		    no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SendT_END,		    no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, SendT_END,		    value_arg,            ZEND_ACC_PUBLIC)
 //  PHP_ME(MsgqueForPhp_MqS, SendAll,		    NULL,                 ZEND_ACC_PUBLIC)
 
 //  PHP_ME(MsgqueForPhp_MqS, ConfigReset,	    NULL,                 ZEND_ACC_PUBLIC)

@@ -30,7 +30,7 @@ class TestServer extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-$srv = FactoryNew('TestServer');
+$srv = FactoryAdd('TestServer')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

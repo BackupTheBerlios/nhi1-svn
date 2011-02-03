@@ -88,7 +88,7 @@ FactoryAdd('F3');
 # first argument (the script-name) is not needed
 array_shift($argv);
 
-$srv = FactoryCall($argv[0]);
+$srv = FactoryGetCalled($argv[0])->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

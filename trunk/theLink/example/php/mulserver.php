@@ -22,7 +22,7 @@ class MulServer extends MqS implements iServerSetup {
   }
 }
 
-$srv = FactoryNew('mulserver', 'MulServer');
+$srv = FactoryAdd('mulserver', 'MulServer')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

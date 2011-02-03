@@ -17,14 +17,14 @@ our @ISA = qw(Exporter);
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
+  MqFactoryS::DefaultIdent
+  MqFactoryS::Default
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
   MqFactoryS::Add
-  MqFactoryS::Default
-  MqFactoryS::DefaultIdent
   MqFactoryS::Get
   MqFactoryS::GetCalled
 );

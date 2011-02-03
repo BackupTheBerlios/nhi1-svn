@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/msgqueforphp/MsgqueForPhp/factory_php.c
+ *  \file       theLink/msgqueforphp/MsgqueForPhp/MqFactoryS_php.c
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
@@ -13,6 +13,13 @@
 #include "msgque_php.h"
 #include "zend_exceptions.h"
 #include "standard/php_string.h"
+
+zend_class_entry *NS(MqFactoryS);
+
+#define SETUP_factory struct MqFactoryS *factory; VAL2MqFactoryS(factory, getThis());
+#define ErrorFactoryToPhpWithCheck(PROC) if (unlikely((PROC) == NULL)) { RETURN_ERROR("MqFactoryS exception"); }
+
+//  if (unlikely((PROC) == NULL)) { zend_throw_exception(NULL,"MqFactoryS exception" TSRMLS_CC); }
 
 /*****************************************************************************/
 /*                                                                           */
@@ -158,6 +165,20 @@ FactoryDelete(
 /*                                                                           */
 /*****************************************************************************/
 
+PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxGet)
+{
+  SETUP_mqctx;
+  MqFactoryS2VAL(return_value, MqFactoryCtxGet (mqctx));
+}
+
+PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxSet)
+{
+  SETUP_mqctx;
+  ARG2MqFactoryS(FactoryCtxSet,val);
+  ErrorMqToPhpWithCheck(MqFactoryCtxSet(mqctx, val));
+  RETURN_NULL();
+}
+
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentGet)
 {
   SETUP_mqctx;
@@ -172,14 +193,6 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
   RETURN_NULL();
 }
 
-PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
-{
-  SETUP_mqctx;
-  ARG2CST(FactoryCtxIdentSet,val);
-  ErrorMqToPhpWithCheck(MqFactoryCtxDefaultSet(mqctx, (MQ_CST) (val)));
-  RETURN_NULL();
-}
-
 /*****************************************************************************/
 /*                                                                           */
 /*                                static                                     */
@@ -187,21 +200,12 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
 /*****************************************************************************/
 
 #define FactorySetup(N) \
-  MQ_CST err = NULL; \
-  struct MqS * mqctx = NULL; \
-  enum MqFactoryReturnE ret; \
   zend_class_entry *ce; \
   zend_class_entry **cep; \
   char *class=NULL, *ident=NULL; \
   int classlen, identlen; \
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|s", &ident, &identlen, &class, &classlen) == FAILURE) { \
-    err = "usage: " #N "(?ident?, class)"; \
-    goto end; \
-  } \
-  /* check/setup 'ident' */ \
-  if (ident == NULL) { \
-    err = MqFactoryErrorMsg(MQ_FACTORY_RETURN_INVALID_IDENT); \
-    goto end; \
+    RETURN_ERROR("usage: " #N "(?ident?, class)"); \
   } \
   /* check/setup 'class' */ \
   if (class == NULL) { \
@@ -213,105 +217,132 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxDefaultSet)
   php_strtolower(class, classlen); \
   /* does the class names exists ? */ \
   if (zend_lookup_class(class, classlen, &cep TSRMLS_CC) == FAILURE) { \
-    err = "Class does not exist."; goto end; \
+    if (class) efree(class); \
+    RETURN_ERROR("Class does not exist."); \
   } \
   ce = *cep; \
   /* check if the constructor is available */ \
   if (ce->constructor == NULL) { \
-    err = "Class constructor does not exist."; goto end; \
-  } \
+    if (class) efree(class); \
+    RETURN_ERROR("Class constructor does not exist."); \
+  }
 
 PHP_FUNCTION(FactoryAdd)
 {
   FactorySetup(FactoryAdd);
-  ret = MqFactoryAdd(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL);
-  if (MqFactoryErrorCheckI(ret)) {
-    err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
-  }
-end:
-  if (class) efree(class);
-  if (err) {
-    RETURN_ERROR(err)
-  } else {
-    RETURN_NULL();
-  }
-}
-
-PHP_FUNCTION(FactoryNew)
-{
-#ifdef ZTS
-  MQ_PTR data = (MQ_PTR)tsrm_ls;
-#else
-  MQ_PTR data = NULL;
-#endif
-  FactorySetup(FactoryNew);
-  ret = MqFactoryNew(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL, data, &mqctx);
-  if (MqFactoryErrorCheckI(ret)) {
-    err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
-  }
-end:
-  if (class) efree(class);
-  if (err) {
-    RETURN_ERROR(err)
-  } else {
-    MqS2VAL(return_value, mqctx);
-    return;
-  }
-}
-
-PHP_FUNCTION(FactoryCall)
-{
-#ifdef ZTS
-  MQ_PTR data = (MQ_PTR)tsrm_ls;
-#else
-  MQ_PTR data = NULL;
-#endif
-  struct MqS * mqctx = NULL;
-  enum MqFactoryReturnE ret;
-  ARG2CST(FactoryCall,ident);
-  ret = MqFactoryCall(ident, data, &mqctx);
-  if (MqFactoryErrorCheckI(ret)) {
-    RETURN_ERROR(MqFactoryErrorMsg(ret));
-  } else {
-    MqS2VAL(return_value, mqctx);
-    return;
-  }
+  MqFactoryS2VAL(return_value,
+    MqFactoryAdd(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
+  );
 }
 
 PHP_FUNCTION(FactoryDefault)
 {
   FactorySetup(FactoryDefault);
-  ret = MqFactoryDefault(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL);
-  if (MqFactoryErrorCheckI(ret)) {
-    err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
-  }
-end:
-  if (class) efree(class);
-  if (err) {
-    RETURN_ERROR(err)
-  } else {
-    RETURN_NULL();
-  }
+  MqFactoryS2VAL(return_value,
+    MqFactoryDefault(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
+  );
 }
 
 PHP_FUNCTION(FactoryDefaultIdent)
 {
   CST2VAL(return_value, MqFactoryDefaultIdent());
-  return;
 }
 
-void NS(Factory_Init)(TSRMLS_D) {
-  MQ_CST err = NULL;
-  enum MqFactoryReturnE ret;
-  ret = MqFactoryDefault("phpmsgque", FactoryCreate, (MQ_PTR) NS(MqS), NULL, NULL, FactoryDelete, NULL, NULL, NULL);
-  if (MqFactoryErrorCheckI(ret)) {
-    err = (MQ_STR) MqFactoryErrorMsg(ret); goto end;
-  }
-end:
-  if (err) {
-    RETURN_ERROR(err)
+PHP_FUNCTION(FactoryGet)
+{
+  ARG2CST_OPT(ident, NULL);
+  MqFactoryS2VAL(return_value, MqFactoryGet(ident));
+}
+
+PHP_FUNCTION(FactoryGetCalled)
+{
+  ARG2CST_OPT(ident, NULL);
+  MqFactoryS2VAL(return_value, MqFactoryGetCalled(ident));
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                instance                                   */
+/*                                                                           */
+/*****************************************************************************/
+
+PHP_METHOD(MsgqueForPhp_MqFactoryS, New)
+{
+#ifdef ZTS
+  MQ_PTR data = (MQ_PTR)tsrm_ls;
+#else
+  MQ_PTR data = NULL;
+#endif
+  SETUP_factory;
+  MqS2VAL(return_value, MqFactoryNew(MQ_ERROR_PRINT, data, factory));
+}
+
+PHP_METHOD(MsgqueForPhp_MqFactoryS, Copy)
+{
+  SETUP_factory;
+  ARG2CST(Copy,ident);
+  MqFactoryS2VAL(return_value, MqFactoryCopy(factory, ident));
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                  class                                    */
+/*                                                                           */
+/*****************************************************************************/
+
+static
+PHP_METHOD(MsgqueForPhp_MqFactoryS, __construct)
+{
+  RETURN_ERROR("it is not allowed to create an instance og 'MqFactoryS'.");
+}
+
+ZEND_BEGIN_ARG_INFO_EX(no_arg, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(ident_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "ident")
+ZEND_END_ARG_INFO()
+
+static const zend_function_entry NS(MqFactoryS_functions)[] = {
+  PHP_ME(MsgqueForPhp_MqFactoryS, __construct,	NULL,	      ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+  PHP_ME(MsgqueForPhp_MqFactoryS, New,		no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqFactoryS, Copy,		ident_arg,    ZEND_ACC_PUBLIC)
+
+  {NULL, NULL, NULL}
+};
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                public                                     */
+/*                                                                           */
+/*****************************************************************************/
+
+void NS(MqFactoryS_New) (zval *return_value, struct MqFactoryS *factory TSRMLS_DC)
+{
+  if (factory == NULL) {
+    RETURN_ERROR("unable to create a empty 'MqFactoryS' instance.");
   } else {
-    return;
+    // convert to an object instance
+    if (object_init_ex(return_value, NS(MqFactoryS)) == FAILURE) {
+      RETURN_ERROR("unable to create an 'MqFactoryS' instance.");
+    }
+    // link 'buf' with the object instance
+    add_property_resource_ex(return_value, ID2(__factory), (long) factory TSRMLS_CC);
+  }
+}
+
+void NS(MqFactoryS_Init) (TSRMLS_D) {
+  struct MqFactoryS *item;
+  zend_class_entry me_ce;
+
+  // create class and make depend on "Exception"
+  INIT_CLASS_ENTRY(me_ce,"MqFactoryS", NS(MqFactoryS_functions));
+  NS(MqFactoryS) = zend_register_internal_class(&me_ce TSRMLS_CC);
+
+  // add default factory
+  item = MqFactoryDefault("phpmsgque", FactoryCreate, (MQ_PTR) NS(MqS), NULL, NULL, FactoryDelete, NULL, NULL, NULL);
+  if (item == NULL) {
+    RETURN_ERROR("MqFactoryS exception");
   }
 }
 

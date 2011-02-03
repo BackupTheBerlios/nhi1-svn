@@ -131,15 +131,15 @@ PHP_METHOD(MsgqueForPhp_MqS, SendL_END)
 PHP_METHOD(MsgqueForPhp_MqS, SendT_START)
 {
   SETUP_mqctx;
-  ARG2CST(SendT_START, token);
-  ErrorMqToPhpWithCheck(MqSendT_START(mqctx, token));
+  ErrorMqToPhpWithCheck(MqSendT_START(mqctx));
   RETURN_NULL();
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, SendT_END)
 {
   SETUP_mqctx;
-  ErrorMqToPhpWithCheck(MqSendT_END(mqctx));
+  ARG2CST(SendT_START, token);
+  ErrorMqToPhpWithCheck(MqSendT_END(mqctx,token));
   RETURN_NULL();
 }
 
