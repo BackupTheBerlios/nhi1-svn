@@ -370,75 +370,6 @@ PrintID(MqS *context)
   CODE:
     printID(context)
 
-MqFactoryS*
-FactoryAdd(...)
-  PREINIT:
-    MQ_CST ident;
-    MQ_PTR class;
-  CODE:
-    if (items < 1 || items > 2) {
-      croak_xs_usage(cv, "?ident?, class");
-    } else if (items == 1) {
-      ident = SvPV_nolen(ST(0));
-      class = newSVsv(ST(0));
-    } else {  // items == 2
-      ident = SvPV_nolen(ST(0));
-      class = newSVsv(ST(1));
-    }
-    RETVAL = MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
-  OUTPUT:
-    RETVAL
-
-MqFactoryS*
-FactoryDefault(...)
-  PREINIT:
-    MQ_CST ident;
-    MQ_PTR class;
-  CODE:
-    if (items < 1 || items > 2) {
-      croak_xs_usage(cv, "ident, ?class?");
-    } else if (items == 1) {
-      ident = SvPV_nolen(ST(0));
-      class = newSVpv("Net::PerlMsgque::MqS",0);
-    } else {  // items == 2
-      ident = SvPV_nolen(ST(0));
-      class = newSVsv(ST(1));
-    }
-    RETVAL = MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
-  OUTPUT:
-    RETVAL
-
-MQ_CST
-FactoryDefaultIdent()
-  CODE:
-    RETVAL = MqFactoryDefaultIdent();
-  OUTPUT:
-    RETVAL
-
-MqFactoryS*
-MqFactoryGet(...)
-  PREINIT:
-    MQ_CST ident = NULL;
-  CODE:
-    if (items == 1) {
-      ident = SvPV_nolen(ST(0));
-    }
-    RETVAL = MqFactoryGet(ident);
-  OUTPUT:
-    RETVAL
-
-MqFactoryS*
-MqFactoryGetCalled(...)
-  PREINIT:
-    MQ_CST ident = NULL;
-  CODE:
-    if (items == 1) {
-      ident = SvPV_nolen(ST(0));
-    }
-    RETVAL = MqFactoryGetCalled(ident);
-  OUTPUT:
-    RETVAL
-
 BOOT:
   MqLal.SysFork = (MqSysForkF) my_fork;
 
@@ -493,6 +424,53 @@ DESTROY(SV *sv)
 
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqFactoryS  PREFIX = MqFactory
+
+MqFactoryS*
+MqFactoryAdd(...)
+  PREINIT:
+    MQ_CST ident;
+    MQ_PTR class;
+  CODE:
+    if (items < 1 || items > 2) {
+      croak_xs_usage(cv, "?ident?, class");
+    } else if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(0));
+    } else {  // items == 2
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(1));
+    }
+    RETVAL = MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+  OUTPUT:
+    RETVAL
+
+MqFactoryS*
+MqFactoryDefault(...)
+  PREINIT:
+    MQ_CST ident;
+    MQ_PTR class;
+  CODE:
+    if (items < 1 || items > 2) {
+      croak_xs_usage(cv, "ident, ?class?");
+    } else if (items == 1) {
+      ident = SvPV_nolen(ST(0));
+      class = newSVpv("Net::PerlMsgque::MqS",0);
+    } else {  // items == 2
+      ident = SvPV_nolen(ST(0));
+      class = newSVsv(ST(1));
+    }
+    RETVAL = MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+  OUTPUT:
+    RETVAL
+
+MQ_CST
+MqFactoryDefaultIdent()
+
+MqFactoryS*
+MqFactoryGet(MQ_CST ident = NULL)
+
+MqFactoryS*
+MqFactoryGetCalled(MQ_CST ident = NULL)
 
 void
 MqFactoryNew(MqFactoryS* factory)
@@ -788,16 +766,8 @@ MqSendSTART (MqS* context)
     ErrorMqToPerlWithCheck (MqSendSTART (context));
 
 void
-MqSendEND_AND_WAIT (MqS* context, MQ_CST token, ...)
-  PREINIT:
-    MQ_TIME_T timeout = MQ_TIMEOUT_USER;
+MqSendEND_AND_WAIT (MqS* context, MQ_CST token, MQ_TIME_T timeout = MQ_TIMEOUT_USER)
   CODE:
-    if (items > 3) {
-      croak_xs_usage(cv, "token, ?timeout?");
-      XSRETURN(0);
-    } else if (items == 3) {
-      timeout = SvIV(ST(2));
-    }
     ErrorMqToPerlWithCheck (MqSendEND_AND_WAIT(context, token, timeout));
 
 void
@@ -1022,17 +992,10 @@ MQ_NST
 MqServiceGetToken (MqS* context)
 
 void
-MqServiceGetFilter(MqS* context, ...)
+MqServiceGetFilter(MqS* context, MQ_SIZE id = 0)
   PREINIT:
-    MqS* filter;
-    MQ_SIZE id=0;
+    struct MqS * filter = NULL;
   PPCODE:
-    if (items > 2) {
-      croak_xs_usage(cv, "?id?");
-      XSRETURN(0);
-    } else if (items == 2) {
-      id = SvIV(ST(1));
-    }
     ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
     ST(0) = (SV*)filter->self;
     XSRETURN(1);
@@ -1041,19 +1004,9 @@ bool
 MqServiceIsTransaction (MqS* context)
     
 void
-MqServiceProxy (MqS* context, MQ_CST token, ...)
-  PREINIT:
-    MQ_SIZE id=0;
+MqServiceProxy (MqS* context, MQ_CST token, MQ_SIZE id = 0)
   CODE:
-    if (items > 3) {
-      croak_xs_usage(cv, "token, ?id?");
-      XSRETURN(0);
-    } else if (items == 3) {
-      id = SvIV(ST(2));
-    }
-    ErrorMqToPerlWithCheck (
-      MqServiceProxy (context, token, id)
-    );
+    ErrorMqToPerlWithCheck (MqServiceProxy (context, token, id));
     
 void
 MqServiceCreate (MqS* context, MQ_CST token, SV* serviceF)
@@ -1150,16 +1103,8 @@ MqSendT_END (MqS* context, MQ_CST ident)
     ErrorMqToPerlWithCheck (MqSendT_END(context, ident));
 
 void
-MqReadL_START (MqS* context, ...)
-  PREINIT:
-    MQ_BUF buffer = NULL;
+MqReadL_START (MqS* context, MqBufferS* buffer = NULL)
   CODE:
-    if (items > 2) {
-      croak_xs_usage(cv, "?buffer?");
-      XSRETURN(0);
-    } else if (items == 2) {
-      buffer = get_MqBufferS (aTHX_ ST(1));
-    }
     ErrorMqToPerlWithCheck (MqReadL_START (context, buffer)); 
 
 void

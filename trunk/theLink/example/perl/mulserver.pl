@@ -37,7 +37,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryAdd("mulserver", "MulServer")->New();
+  our $srv = MqFactoryS::Add("mulserver", "MulServer")->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

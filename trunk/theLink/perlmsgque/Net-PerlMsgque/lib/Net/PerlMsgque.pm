@@ -17,13 +17,16 @@ our @ISA = qw(Exporter);
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-	
+  MqFactoryS::Add
+  MqFactoryS::Default
+  MqFactoryS::DefaultIdent
+  MqFactoryS::Get
+  MqFactoryS::GetCalled
 );
 
 our $VERSION = '5.1';
@@ -38,7 +41,7 @@ Net::PerlMsgque::InitializeSys();
 Net::PerlMsgque::Init($^X, "-w", $0);
 
 # set default Factory
-Net::PerlMsgque::FactoryDefault("perlmsgque");
+Net::PerlMsgque::MqFactoryS::Default("perlmsgque");
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
 

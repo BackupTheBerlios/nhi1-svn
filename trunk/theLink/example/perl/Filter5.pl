@@ -116,11 +116,11 @@ sub new {
 
 package main;
 
-  Net::PerlMsgque::FactoryAdd("F1");
-  Net::PerlMsgque::FactoryAdd("F2");
-  Net::PerlMsgque::FactoryAdd("F3");
+  MqFactoryS::Add("F1");
+  MqFactoryS::Add("F2");
+  MqFactoryS::Add("F3");
 
-  our $srv = Net::PerlMsgque::FactoryGetCalled($ARGV[0])->New();
+  our $srv = MqFactoryS::GetCalled($ARGV[0])->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);

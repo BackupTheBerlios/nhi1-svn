@@ -38,7 +38,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryAdd("MyServer")->New();
+  our $srv = MqFactoryS::Add("MyServer")->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
@@ -47,8 +47,4 @@ package main;
     $srv->ErrorSet($@);
   }
   $srv->Exit();
-
-
-
-
 

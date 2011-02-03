@@ -612,7 +612,7 @@ use base qw(Net::PerlMsgque::MqS);
       }
       case "Ident" {
 	my $old = $ctx->FactoryCtxIdentGet();
-	$ctx->FactoryCtxSet (Net::PerlMsgque::FactoryGet()->Copy($ctx->ReadC()));
+	$ctx->FactoryCtxSet (MqFactoryS::Get()->Copy($ctx->ReadC()));
 	my $check = ($ctx->LinkGetTargetIdent eq $ctx->ReadC());
 	$ctx->SendC ($ctx->FactoryCtxIdentGet());
 	$ctx->SendO ($check);
@@ -665,7 +665,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->ConfigSetStartAs ($old);
       }
       case "DefaultIdent" {
-	$ctx->SendC (Net::PerlMsgque::FactoryDefaultIdent());
+	$ctx->SendC (MqFactoryS::DefaultIdent());
       }
       default {
 	$ctx->ErrorC ("CFG1", 1, "invalid command: $cmd");
@@ -791,7 +791,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  our $srv = Net::PerlMsgque::FactoryAdd("server", "Server")->New();
+  our $srv = MqFactoryS::Add("server", "Server")->New();
 
   eval {
     $srv->LinkCreate(@ARGV);
