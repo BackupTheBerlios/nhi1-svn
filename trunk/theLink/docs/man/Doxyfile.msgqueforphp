@@ -30,16 +30,19 @@ ALIASES		    += "yes=\e TRUE"
 ALIASES		    += "no=\e FALSE"
 ALIASES		    += "package=# php.ini: extension=\"MsgqueForPhp.so\""
 
-ALIASES		    += "FactoryReturn=raise(ErrorMessage)"
-ALIASES		    += "FactoryDefault=FactoryDefault(ident,?class?)"
+ALIASES		    += "FactoryDefault=MqFactoryS FactoryDefault(ident,?class?)"
 ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=FactoryAdd(?ident?,class)" 
-ALIASES		    += "FactoryNew=MqS FactoryNew(?ident?,class)"
-ALIASES		    += "FactoryCall=MqS FactoryCall(ident)"
+ALIASES		    += "FactoryAdd=MqFactoryS FactoryAdd(?ident?,class)" 
+ALIASES		    += "FactoryGet=MqFactoryS FactoryGet(ident)" 
+ALIASES		    += "FactoryGetCalled=MqFactoryS FactoryGetCalled(ident)" 
 
+ALIASES		    += "FactoryNew=MqS $factory->New()"
+ALIASES		    += "FactoryCopy=MqFactoryS $factory->Copy(ident)"
+
+ALIASES		    += "FactoryCtxSet=$ctx->FactoryCtxSet(factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS $ctx->FactoryCtxGet"
 ALIASES		    += "FactoryCtxIdentSet=$ctx->FactoryCtxIdentSet(ident)"
 ALIASES		    += "FactoryCtxIdentGet=\C $ctx->FactoryCtxIdentGet"
-ALIASES		    += "FactoryCtxDefaultSet=$ctx->FactoryCtxDefaultSet(ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -51,7 +54,7 @@ class MyClass extends MqS { \n\
   } \n\
   ... \n\
 } \n\
-$ctx = new MyClass(); \n\
+$ctx = FactoryAdd('MqClass')->New(); \n\
 ... \n\
 \endcode"
 
@@ -59,6 +62,7 @@ ALIASES		    += "ContextCreate=$ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=$ctx->Delete()"
 ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageDir)"
 ALIASES		    += "LogC=$ctx->LogC(\C:prefix, \I:level, \C:message)"
 
 # OBJECT CONFIGURATION

@@ -29,22 +29,27 @@ ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import javamsgque.*;"
 
-ALIASES		    += "FactoryReturn=\RNS{ErrorObject}"
-ALIASES		    += "FactoryDefault=MqFactoryS.Default(String ident, Class<T> callback)"
-ALIASES		    += "FactoryDefault2=MqFactoryS.Default(Class<T> callback)"
+ALIASES		    += "FactoryDefault=MqFactoryS MqFactoryS.Default(String ident, Class<T> callback)"
+ALIASES		    += "FactoryDefault2=MqFactoryS MqFactoryS.Default(Class<T> callback)"
 ENABLED_SECTIONS    += FactoryDefault2
 ALIASES		    += "FactoryDefaultIdent=String MqFactoryS.DefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryS.Add(String ident, Class<T> callback)"
-ALIASES		    += "FactoryAdd2=MqFactoryS.Add(Class<T> callback)"
+ALIASES		    += "FactoryAdd=MqFactoryS MqFactoryS.Add(String ident, Class<T> callback)"
+ALIASES		    += "FactoryAdd2=MqFactoryS MqFactoryS.Add(Class<T> callback)"
 ENABLED_SECTIONS    += FactoryAdd2
-ALIASES		    += "FactoryNew=T MqFactoryS.New(String ident, Class<T> callback)"
-ALIASES		    += "FactoryNew2=T MqFactoryS.New(Class<T> callback)"
-ENABLED_SECTIONS    += FactoryNew2
-ALIASES		    += "FactoryCall=T MqFactoryS.Call(String ident)"
+ALIASES		    += "FactoryGet=MqFactoryS MqFactoryS.Get(\C ident)"
+ALIASES		    += "FactoryGet2=long MqFactoryS.Get(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGet2
+ALIASES		    += "FactoryGetCalled=MqFactoryS MqFactoryS.GetCalled(\C ident)"
+ALIASES		    += "FactoryGetCalled2=long MqFactoryS.GetCalled(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGetCalled2
 
-ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(String ident)"
-ALIASES		    += "FactoryCtxIdentGet=String ctx.FactoryCtxIdentGet()"
-ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(String ident)"
+ALIASES		    += "FactoryNew=MqS factory.New()"
+ALIASES		    += "FactoryCopy=MqFactoryS factory.Copy(\C ident)"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(long factory)"
+ALIASES		    += "FactoryCtxGet=long ctx.FactoryCtxGet()"
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -57,7 +62,7 @@ final class MyClass extends MqS { \n\
 } \n\
 public static void main(String[] args) { \n\
   MqS.Init(\"java\", \"MyCompany.MyClass\"); \n\
-  MyClass ctx = MqFactoryS.New(MyClass.class); \n\
+  MyClass ctx = MqFactoryS.Add(MyClass.class).New(); \n\
 } \n\
 \endcode"
 
@@ -67,6 +72,7 @@ ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
 ALIASES		    += "LogC=ctx.LogC(String prefix, int level, String message)"
 
 # OBJECT CONFIGURATION

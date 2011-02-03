@@ -31,24 +31,27 @@ ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
 
-ALIASES		    += "FactoryReturn=\ref ccmsgque::MqFactoryCException"
-ALIASES		    += "FactoryDefault=MqFactoryC<T>::Default(\C ident)"
-ALIASES		    += "FactoryDefault2=MqFactoryC<T>::Default()"
+ALIASES		    += "FactoryDefault=MqFactoryC<T> MqFactoryC<T>::Default(\C ident)"
+ALIASES		    += "FactoryDefault2=MqFactoryC<T> MqFactoryC<T>::Default()"
 ENABLED_SECTIONS    += FactoryDefault2
 ALIASES		    += "FactoryDefaultIdent=\C MqFactoryC<T>::DefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryC<T>::Add(\C ident)"
-ALIASES		    += "FactoryAdd2=MqFactoryC<T>::Add()"
+ALIASES		    += "FactoryAdd=MqFactoryC<T> MqFactoryC<T>::Add(\C ident)"
+ALIASES		    += "FactoryAdd2=MqFactoryC<T> MqFactoryC<T>::Add()"
 ENABLED_SECTIONS    += FactoryAdd2
-ALIASES		    += "FactoryNew=T* MqFactoryC<T>::New(\C ident)"
-ALIASES		    += "FactoryNew2=T* MqFactoryC<T>::New()"
-ENABLED_SECTIONS    += FactoryNew2
-ALIASES		    += "FactoryCall=T* MqFactoryC<T>::Call(\C ident)"
-ALIASES		    += "FactoryCall2=T* MqFactoryC<T>::Call()"
-ENABLED_SECTIONS    += FactoryCall2
+ALIASES		    += "FactoryGet=MqFactoryC<T> MqFactoryC<T>::Get(\C ident)"
+ALIASES		    += "FactoryGet2=struct MqFactoryS* MqFactoryC<T>::Get(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGet2
+ALIASES		    += "FactoryGetCalled=MqFactoryC<T> MqFactoryC<T>::GetCalled(\C ident)"
+ALIASES		    += "FactoryGetCalled2=struct MqFactoryS* MqFactoryC<T>::GetCalled(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGetCalled2
 
-ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
-ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
-ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
+ALIASES		    += "FactoryNew=MqC* factory.New()"
+ALIASES		    += "FactoryCopy=MqFactoryC<T> factory.Copy(\C ident)"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(struct MqFactoryS* factory)"
+ALIASES		    += "FactoryCtxGet=struct MqFactoryS* ctx.FactoryCtxGet()"
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -61,7 +64,7 @@ class MyClass : public MqC { \n\
   ... \n\
 }; \n\
 int MQ_CDECL main (int argc, MQ_CST argv[]) { \n\
-  MyClass *ctx = MqFactoryC<MyClass>::New(); \n\
+  MyClass *ctx = MqFactoryC<MyClass>::Add(\"MyClass\")->New(); \n\
 } \n\
 \endcode"
 
@@ -71,6 +74,7 @@ ALIASES		    += "ContextCreate2=MqC *ctx=new MqC()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=delete(ctx)"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
 ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
 ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=ctx.LogV(MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
@@ -321,18 +325,18 @@ ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
 ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE("
 ALIASES		    += "BufferType=enum MqTypeE buffer.GetType()"
 
-ALIASES		    += "Y=#MQ_BYT"
-ALIASES		    += "O=#MQ_BOL"
-ALIASES		    += "S=#MQ_SRT"
-ALIASES		    += "I=#MQ_INT"
-ALIASES		    += "F=#MQ_FLT"
-ALIASES		    += "W=#MQ_WID"
-ALIASES		    += "D=#MQ_DBL"
-ALIASES		    += "C=#MQ_CST"
-ALIASES		    += "B=#MQ_BIN"
-ALIASES		    += "U=#MQ_BUF"
+ALIASES		    += "Y=MQ_BYT"
+ALIASES		    += "O=MQ_BOL"
+ALIASES		    += "S=MQ_SRT"
+ALIASES		    += "I=MQ_INT"
+ALIASES		    += "F=MQ_FLT"
+ALIASES		    += "W=MQ_WID"
+ALIASES		    += "D=MQ_DBL"
+ALIASES		    += "C=MQ_CST"
+ALIASES		    += "B=MQ_BIN"
+ALIASES		    += "U=MQ_BUF"
 ALIASES		    += "TM=MqC*"
-ALIASES		    += "TB=#MQ_BIN"
+ALIASES		    += "TB=MQ_BIN"
 ALIASES		    += "TE=MqCException*"
 
 # ERROR OBJECT

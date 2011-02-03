@@ -30,16 +30,19 @@ ALIASES		    += "yes=\e 1"
 ALIASES		    += "no=\e 0"
 ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
 
-ALIASES		    += "FactoryReturn=croak(ErrorMessage)"
-ALIASES		    += "FactoryDefault=Net::PerlMsgque::FactoryDefault(ident,?class-package?)"
-ALIASES		    += "FactoryDefaultIdent=\C Net::PerlMsgque::FactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=Net::PerlMsgque::FactoryAdd(?ident?,class-package)" 
-ALIASES		    += "FactoryNew=MqS Net::PerlMsgque::FactoryNew(?ident?,class-package)"
-ALIASES		    += "FactoryCall=MqS Net::PerlMsgque::FactoryCall(ident)"
+ALIASES		    += "FactoryDefault=MqFactoryS MqFactoryS::Default(ident,?class-package?)"
+ALIASES		    += "FactoryDefaultIdent=\C MqFactoryS::DefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryS MqFactoryS::Add(?ident?,class-package)" 
+ALIASES		    += "FactoryGet=MqFactoryS MqFactoryS::Get(ident)" 
+ALIASES		    += "FactoryGetCalled=MqFactoryS MqFactoryS::GetCalled(ident)" 
 
+ALIASES		    += "FactoryNew=MqS $factory->New()"
+ALIASES		    += "FactoryCopy=MqFactoryS $factory->Copy(ident)"
+
+ALIASES		    += "FactoryCtxSet=$ctx->FactoryCtxSet(factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS $ctx->FactoryCtxGet()"
 ALIASES		    += "FactoryCtxIdentSet=$ctx->FactoryCtxIdentSet(ident)"
 ALIASES		    += "FactoryCtxIdentGet=\C $ctx->FactoryCtxIdentGet()"
-ALIASES		    += "FactoryCtxDefaultSet=$ctx->FactoryCtxDefaultSet(ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -57,13 +60,14 @@ sub new { \n\
 } \n\
 ... \n\
 package main; \n\
-  our $ctx = Net::PerlMsgque::FactoryNew(\"MyClass\"); \n\
+  our $ctx = MqFactoryS::Add(\"MyClass\")->New(); \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=our $ctx=new MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=$ctx->Delete()"
 ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageDir)"
 ALIASES		    += "LogC=$ctx->LogC(prefix,level,message)"
 
 # OBJECT CONFIGURATION

@@ -31,16 +31,19 @@ ALIASES		    += "yes=\e True"
 ALIASES		    += "no=\e False"
 ALIASES		    += "package=from pymsgque import *"
 
-ALIASES		    += "FactoryReturn=RuntimeError"
-ALIASES		    += "FactoryDefault=FactoryDefault(?\C ident,? Class cs)"
+ALIASES		    += "FactoryDefault=MqFactoryS FactoryDefault(?\C ident,? Class cs)"
 ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=FactoryAdd(?\C ident,? Class cs)"
-ALIASES		    += "FactoryNew=FactoryNew(?\C ident,? Class cs)"
-ALIASES		    += "FactoryCall=FactoryCall(\C ident)"
+ALIASES		    += "FactoryAdd=MqFactoryS FactoryAdd(?\C ident,? Class cs)"
+ALIASES		    += "FactoryGet=MqFactoryS FactoryGet(\C ident)"
+ALIASES		    += "FactoryGetCalled=MqFactoryS FactoryGetCalled(\C ident)"
 
+ALIASES		    += "FactoryNew=MqS factory.New(\C ident)"
+ALIASES		    += "FactoryCopy=MqFactoryS factory.Copy(\C ident)"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(MqFactoryS factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS ctx.FactoryCtxGet()"
 ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
 ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
-ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -51,7 +54,7 @@ class MyClass(MqS): \n\
     self.mydata = None \n\
     MqS.__init__(self) \n\
   ... \n\
-ctx = FactoryNew(\"MyClass\", MyClass); \n\
+ctx = FactoryAdd(\"MyClass\", MyClass).New(); \n\
 ... \n\
 \endcode"
 
@@ -59,6 +62,7 @@ ALIASES		    += "ContextCreate=ctx=MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
 
 # OBJECT CONFIGURATION

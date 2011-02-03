@@ -30,16 +30,19 @@ ALIASES		    += "package=import . \"gomsgque\""
 
 ENABLED_SECTIONS    += GC
 
-ALIASES		    += "FactoryReturn=panic(ErrorMessage)"
-ALIASES		    += "FactoryDefault=MqFactoryDefault(\C ident, cb FactoryF)"
+ALIASES		    += "FactoryDefault=MqFactoryS* MqFactoryDefault(\C ident, cb FactoryF)"
 ALIASES		    += "FactoryDefaultIdent=\C MqFactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryAdd(\C ident, cb FactoryF)"
-ALIASES		    += "FactoryNew=MqS* FactoryNew(\C ident, cb FactoryF)";
-ALIASES		    += "FactoryCall=MqS* FactoryCall(\C ident)"
+ALIASES		    += "FactoryAdd=MqFactoryS* MqFactoryAdd(\C ident, cb FactoryF)"
+ALIASES		    += "FactoryGet=MqFactoryS* MqFactoryGet(\C ident)"
+ALIASES		    += "FactoryGetCalled=MqFactoryS* MqFactoryGetCalled(\C ident)"
 
+ALIASES		    += "FactoryNew=MqS* factory.New(\C ident)";
+ALIASES		    += "FactoryCopy=MqFactoryS* factory.Copy(\C ident)";
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(MqFactoryS* factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS* ctx.FactoryCtxGet()"
 ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
 ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
-ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -58,7 +61,7 @@ func NewMyClass(tmpl *MqS) *MyClass { \n\
 } \n\
 ... \n\
 func main() \n\
-  ctx := FactoryNew(\"MyClass\", NewMyClass) \n\
+  ctx := FactoryAdd(\"MyClass\", NewMyClass).New() \n\
 } \n\
 \endcode"
 
@@ -69,6 +72,7 @@ the toplevel interface is require. The reference can be set with the \e top argu
 or with the \RNSA{SetSelf} method"
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
 ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
 ENABLED_SECTIONS    += SELF
 ALIASES		    += "SetSelf=ctx.SetSelf(ifc interface{})"

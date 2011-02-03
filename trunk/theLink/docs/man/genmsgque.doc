@@ -28,6 +28,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \section	\NS{context}				CONTEXT API
 \RNSA{ContextCreate}\n
 \RNSA{ContextDelete}\n
+\RNSA{SqlSetDb}\n
 \RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
 \RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
 
@@ -66,6 +67,7 @@ back into a toplevel object.
 
 \endif
 
+\function{SqlSetDb,\SqlSetDb}
 \function{LogC,\LogC}
 \if HAS_LOGV
 \function{LogV,\LogV}
@@ -109,11 +111,14 @@ tclmsgque Main {
 \RNSA{FactoryDefault}\n
 \RNSA{FactoryDefaultIdent}\n
 \RNSA{FactoryAdd}\n
+\RNSA{FactoryGet}\n
+\RNSA{FactoryGetCalled}\n
 \RNSA{FactoryNew}\n
-\RNSA{FactoryCall}\n
+\RNSA{FactoryCopy}\n
+\RNSA{FactoryCtxSet}\n
+\RNSA{FactoryCtxGet}\n
 \RNSA{FactoryCtxIdentSet}\n
 \RNSA{FactoryCtxIdentGet}\n
-\RNSA{FactoryCtxDefaultSet}\n
 
 \copydoc MqFactory
 
@@ -134,28 +139,34 @@ tclmsgque Main {
 \skip Add
 \until Add
 
-\function2{FactoryNew2,\FactoryNew2}
-\function{FactoryNew,\FactoryNew}
+\function2{FactoryGet2,\FactoryGet2}
+\function{FactoryGet,\FactoryGet}
 
-\b Example from <TT>example/\dirname/mulserver.\fileextension</TT>:
-\dontinclude mulserver.\fileextension
-\skip New
-\until New
-
-\function2{FactoryCall2,\FactoryCall2}
-\function{FactoryCall,\FactoryCall}
-
+\function2{FactoryGetCalled2,\FactoryGetCalled2}
+\function{FactoryGetCalled,\FactoryGetCalled}
 \b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
 \dontinclude Filter5.\fileextension
 \skip Add
 \skip Add
 \skip Add
-\skip Call
-\until Call
+\skip GetCalled
+\until GetCalled
 
+\function{FactoryNew,\FactoryNew}
+\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
+\dontinclude Filter5.\fileextension
+\skip Add
+\skip Add
+\skip Add
+\skip GetCalled
+\until GetCalled
+
+\function{FactoryCopy,\FactoryCopy}
+
+\function{FactoryCtxSet,     \FactoryCtxSet}
+\function{FactoryCtxGet,     \FactoryCtxGet}
 \function{FactoryCtxIdentSet,\FactoryCtxIdentSet}
 \function{FactoryCtxIdentGet,\FactoryCtxIdentGet}
-\function{FactoryCtxDefaultSet,\FactoryCtxDefaultSet}
 
 
 \section	\NS{config}				CONFIG API

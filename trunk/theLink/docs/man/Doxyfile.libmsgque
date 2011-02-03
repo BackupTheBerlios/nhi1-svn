@@ -31,16 +31,19 @@ ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"msgque.h\""
 ALIASES		    += "RNS_PREFIX{1}=Mq\1"
 
-ALIASES		    += "FactoryReturn=#MqFactoryReturnE"
-ALIASES		    += "FactoryDefault=MqFactoryDefault(MQ_CST ident, interface...)"
+ALIASES		    += "FactoryDefault=MqFactoryDefault(struct MqS *error, MQ_CST ident, interface...)"
 ALIASES		    += "FactoryDefaultIdent=MQ_CST MqFactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryAdd(MQ_CST ident, interface...)"
-ALIASES		    += "FactoryNew=MqFactoryNew(MQ_CST ident, interface..., MQ_PTR data, struct MqS *ctxP)"
-ALIASES		    += "FactoryCall=MqFactoryCall(MQ_CST ident, MQ_PTR data, struct MqS *ctxP)"
+ALIASES		    += "FactoryAdd=MqFactoryAdd(struct MqS *error, MQ_CST ident, interface...)"
+ALIASES		    += "FactoryGet=struct MqFactoryS* MqFactoryGet(MQ_CST ident)"
+ALIASES		    += "FactoryGetCalled=struct MqFactoryS* MqFactoryGetCalled(MQ_CST ident)"
 
+ALIASES		    += "FactoryNew=struct MqS* MqFactoryNew(struct MqS *error, MQ_PTR data, struct MqFactoryS * item)"
+ALIASES		    += "FactoryCopy=struct MqFactoryS* MqFactoryCopy(struct MqFactoryS * item, MQ_CST ident)"
+
+ALIASES		    += "FactoryCtxSet=MqFactoryCtxSet(struct MqS *ctx, struct MqFactoryS *factory)"
+ALIASES		    += "FactoryCtxGet=struct MqFactoryS* MqFactoryCtxGet(struct MqS *ctx)"
 ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
 ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
-ALIASES		    += "FactoryCtxDefaultSet=MqFactoryCtxDefaultSet(struct MqS *ctx, MQ_CST ident)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -54,13 +57,12 @@ enum MqErrorE MyClassFactory ( \n\
   struct MqFactoryS * const item, \n\
   struct MqS **contextP \n\
 ) { \n\
-  struct MqS * const ctx = *contextP = MqContextCreate(sizeof(struct MyCtxDataS),tmpl); \n\
+  struct MqS * const ctx = *contextP = MqContextCreate(sizeof(struct MyClassDataS),tmpl); \n\
   ... \n\
   return MQ_OK; \n\
 } \n\
-struct MqS * ctx; \n\
-MqFactoryErrorPanic ( \n\
-  MqFactoryNew(\"MyClass\", MyClassFactory, NULL, NULL, NULL, NULL, NULL, NULL, &ctx) \n\
+struct MqS * ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, \n\
+  MqFactoryAdd(MQ_ERROR_PANIC, \"MyClass\", MyClassFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL) \n\
 ); \n\
 \endcode"
 
@@ -73,6 +75,7 @@ ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL
 ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
+ALIASES		    += "SqlSetDb=MqSqlSetDb(struct MqS* ctx, MQ_CST storageDir)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"

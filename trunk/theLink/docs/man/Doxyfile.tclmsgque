@@ -29,16 +29,19 @@ ALIASES		    += "yes=\e yes"
 ALIASES		    += "no=\e no"
 ALIASES		    += "package=package require TclMsgque"
 
-ALIASES		    += "FactoryReturn=TCL_ERROR"
-ALIASES		    += "FactoryDefault=tclmsgque FactoryDefault ident ?factory-proc?"
+ALIASES		    += "FactoryDefault=MqFactoryS [tclmsgque FactoryDefault ident ?factory-proc?]"
 ALIASES		    += "FactoryDefaultIdent=\C [tclmsgque FactoryDefaultIdent]"
-ALIASES		    += "FactoryAdd=tclmsgque FactoryAdd ?ident? factory-proc" 
-ALIASES		    += "FactoryNew=MqS [tclmsgque FactoryNew ?ident? factory-proc]"
-ALIASES		    += "FactoryCall=MqS [tclmsgque FactoryCall ident]"
+ALIASES		    += "FactoryAdd=MqFactoryS [tclmsgque FactoryAdd ?ident? factory-proc]"
+ALIASES		    += "FactoryGet=MqFactoryS [tclmsgque FactoryGet ?ident?]"
+ALIASES		    += "FactoryGetCalled=MqFactoryS [tclmsgque FactoryGetCalled ?ident?]"
 
+ALIASES		    += "FactoryNew=MqS [$factory New]"
+ALIASES		    += "FactoryCopy=MqFactoryS [$factory Copy ident]"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet factory"
+ALIASES		    += "FactoryCtxGet=MqFactoryS [ctx.FactoryCtxGet]"
 ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet ident"
-ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet"
-ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet ident"
+ALIASES		    += "FactoryCtxIdentGet=\C [ctx.FactoryCtxIdentGet]"
 
 
 # OBJECT CREATION AND DELETION
@@ -49,13 +52,14 @@ proc MyClass {tmpl} { \n\
   $ctx dict set mydata 0 \n\
   return $ctx \n\
 } \n\
-set ctx [tclmsgque FactoryNew MyClass] \n\
+set ctx [[tclmsgque FactoryAdd MyClass] New] \n\
 \endcode"
 
 ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS ?tmpl?]"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=rename $ctx \"\""
 ALIASES		    += "Exit=$ctx Exit"
+ALIASES		    += "SqlSetDb=$ctx SqlSetDb storageDir"
 ALIASES		    += "LogC=$ctx LogC prefix level message"
 ALIASES		    += "Main=tclmsgque Main {code}"
 

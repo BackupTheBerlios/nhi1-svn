@@ -29,24 +29,27 @@ ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=using csmsgque;"
 
-ALIASES		    += "FactoryReturn=\ref csmsgque::MqFactorySException"
-ALIASES		    += "FactoryDefault=MqFactoryC<T>::Default(\C ident)"
-ALIASES		    += "FactoryDefault2=MqFactoryC<T>::Default()"
+ALIASES		    += "FactoryDefault=MqFactoryS<T> MqFactoryS<T>::Default(\C ident)"
+ALIASES		    += "FactoryDefault2=MqFactoryS<T> MqFactoryS<T>::Default()"
 ENABLED_SECTIONS    += FactoryDefault2
-ALIASES		    += "FactoryDefaultIdent=\C MqFactoryC<T>::DefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryC<T>::Add(\C ident)"
-ALIASES		    += "FactoryAdd2=MqFactoryC<T>::Add()"
+ALIASES		    += "FactoryDefaultIdent=\C MqFactoryS<T>::DefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryS<T> MqFactoryS<T>::Add(\C ident)"
+ALIASES		    += "FactoryAdd2=MqFactoryS<T> MqFactoryS<T>::Add()"
 ENABLED_SECTIONS    += FactoryAdd2
-ALIASES		    += "FactoryNew=T* MqFactoryC<T>::New(\C ident)"
-ALIASES		    += "FactoryNew2=T* MqFactoryC<T>::New()"
-ENABLED_SECTIONS    += FactoryNew2
-ALIASES		    += "FactoryCall=T* MqFactoryC<T>::Call(\C ident)"
-ALIASES		    += "FactoryCall2=T* MqFactoryC<T>::Call()"
-ENABLED_SECTIONS    += FactoryCall2
+ALIASES		    += "FactoryGet=MqFactoryS<T> MqFactoryS<T>::Get(\C ident)"
+ALIASES		    += "FactoryGet2=IntPtr MqFactoryS<T>::Get(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGet2
+ALIASES		    += "FactoryGetCalled=MqFactoryS<T> MqFactoryS<T>::GetCalled(\C ident)"
+ALIASES		    += "FactoryGetCalled2=IntPtr MqFactoryS<T>::GetCalled(\C ident).factory"
+ENABLED_SECTIONS    += FactoryGetCalled2
 
+ALIASES		    += "FactoryNew=MqS factory.New()"
+ALIASES		    += "FactoryNew=MqFactoryS<T> factory.Copy(\C ident)"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(IntPtr factory)"
+ALIASES		    += "FactoryCtxGet=IntPtr ctx.FactoryCtxGet()"
 ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
-ALIASES		    += "FactoryCtxIdentGet=\C ctx.MqFactoryCtxIdentGet()"
-ALIASES		    += "FactoryCtxDefaultSet=ctx.FactoryCtxDefaultSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -58,7 +61,7 @@ namespace MyCompany { \n\
     ... \n\
   } \n\
   static void Main(string[] args) \n\
-    MyClass srv = MqFactoryS<MyClass>.New(); \n\
+    MyClass srv = MqFactoryS<MyClass>.Add().New(); \n\
   } \n\
 } \n\
 \endcode"
@@ -69,6 +72,7 @@ ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
 ALIASES		    += "LogC=ctx.LogC(string prefix, int level, string message)"
 
 # OBJECT CONFIGURATION

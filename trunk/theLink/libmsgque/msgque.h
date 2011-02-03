@@ -1229,18 +1229,16 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 
 /// \defgroup MqFactory Mq_Factory_C_API
 /// \{
-/// \brief provide an interface to create a new instance
+/// \brief provide an interface to create a new \e MqS-instance
 ///
 /// The \e factory is an important part of the object management and has the
 /// following basic features:
-/// -# create a new instance identified by an \e identifier or using an already
-///    available instance as template
-/// -# cleanup and delete an instance
-/// -# provide an \e identifier for factory lookup and as an unique application name
-/// -# identify the server in the network available as #MqLinkGetTargetIdent on
-///    a remote context
+/// -# create/delete a \e MqS-instance defined by a \e MqFactoryS-instance
+/// -# multiple \e MqFactoryS-instance to allow different servers hosting in a single executable
+/// -# provide an \e identifier used for \e factory-lookup and as an \e unique-application-name
+/// -# identification of a \e client and a \e server in an \e application-link
 /// .
-/// The link between the \e Factory-Identifier and the \e Factory-Interface is
+/// The link between the \e MqFactoryS-identifier and the \e MqFactoryS-instance is
 /// important for the future development of \libmsgque. \e Message-Routing,
 /// \e Service-Location and \e Persistent-Transactions depend on this feature.
 ///
@@ -1353,8 +1351,8 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
 );
 
 /// \brief add a new \e MqFactoryS-instance identified by \e ident
-/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
-///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
 /// \param[in] ident  the factory identifier
 /// \param[in] createCallF	(C-API) instance constructor function
 /// \param[in] createData	(C-API) instance constructor data
@@ -1381,8 +1379,8 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
 /// \brief add a new \e default-MqFactoryS-instance identified by \e ident
 /// \details The default factory is always used to create an instance if no other
 /// factory is available
-/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
-///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
 /// \param[in] ident  the factory identifier
 /// \param[in] createCallF	(C-API) instance constructor function
 /// \param[in] createData	(C-API) instance constructor data
@@ -1435,9 +1433,11 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
 );
 
 /// \brief return the \e MqFactoryS-instance in \e called mode
-/// \details The called mode is used if \b multiple (>1) \e MqFactory-instance are available and the
-/// \e instance-in-use is selected by the \b second command-line argument. Use the \e Filter5 file,
-/// from the example directory, as example.
+/// \details The called mode have to be used if \b multiple (>1) \e MqFactory-instance are available and the
+/// \e instance-in-use is selected by the \b second command-line argument. Only if additional processes
+/// are #MQ_START_SPAWN an additional command line argument, the \e name-of-the-executable, will
+/// be added on the \e first position. The \e name-of-the-executable is taken from the vales set by \RNSA{Init}.
+/// Use the \e Filter5 file as example.
 /// \param[in] ident the \e factory-identifier or \e NULL / \e "" for the \e default-MqFactoryS-instance
 /// \return the \e MqFactoryS-instance or \e NULL if nothing was found
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGetCalled (
@@ -1445,8 +1445,8 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGetCalled (
 );
 
 /// \brief create a new \e MqS-instance from a \e MqFactoryS-instance
-/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
-///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
 /// \param[in] data  (C-API only) an environment specific data pointer
 /// \param[in] item  a \e MqFactoryS-instance used to create a \e MqS-instance
 /// \return the new \e MqS-instance or NULL on error
@@ -1684,6 +1684,15 @@ MQ_EXTERN void MQ_DECL MqMark (
   MqMarkF markF
 );
 
+/// \brief switch to a \e file-based-transaction-database
+/// \context
+/// \param[in] storageDir the directory used to create the \e transaction-database files
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
+  struct MqS * const context,
+  MQ_CST const storageDir
+);
+
 #if defined(_DEBUG)
 /// \brief convenience function to log \e MqS configuration data
 /// \context
@@ -1699,11 +1708,6 @@ MQ_EXTERN void MQ_DECL MqLogData (
 MQ_EXTERN void MQ_DECL MqLogChild (
   struct MqS const * const context,
   MQ_CST const prefix
-);
-
-MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
-  struct MqS * const context,
-  MQ_CST const storageDir
 );
 
 #endif // _DEBUG
@@ -4025,35 +4029,37 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
   struct MqS * const ctx
 );
 
-/** 
-\brief start to write a \e longterm-transaction-item to the \e send-data-package.
-
-In difference to \RNSA{SendEND_AND_WAIT} and \RNSA{SendEND_AND_CALLBACK} a
-\e longterm-transaction-call have to survive an application restart. To achieve
-this goal two features have to be available to process the results:
--# a callback as \e known service created with \RNSA{ServiceCreate}
--# one or more \e data-item(s) to initialise the environment in the callback
-.
-The \e transaction-item have to be the first item in the \e data-package.
-The callback is a \RNSA{ServiceIdentifier} and have to be defined 
-with \RNSA{ServiceCreate} in the application setup code (like \RNSC{IServerSetup}) 
-to be available after an application restart.
-This command requires a final \RNSA{SendT_END} to finish the write.
-The list of \e data-items between \e START and \e END have to be provided by the programmer 
-and is used to initialise the environment in the \e callback. The data
-is send to the \e link-target and returned as first item in the \e result-data-package.
-Use \RNSA{ReadT_START} and \RNSA{ReadT_END} to extract the data.
-\ctx
-\param[in] callback a \RNSA{ServiceIdentifier} to identify the target
-                    to process the results
-\retException
-*/
+/// \brief open a \e longterm-transaction-item
+/// \details Every \e longterm-transaction-item have to be closed with \RNSA{SendT_END}.
+/// Between \RNSA{SendT_START} and \RNSA{SendT_END}, a non specified number of other items
+/// can be added. These items are saved in a \b local database (in-memory or file-based)
+/// and the \b rowid is send as \e transaction-id to the \e link-target. By Default
+/// only the \e in-memory-database is used. To switch to a file-based database
+/// use the \RNSA{SqlSetDb} function.
+/// \ctx
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
   struct MqS * const ctx
 );
 
-/// \brief finish to write a \e longterm-transaction-item to the \e send-data-package.
+/// \brief closed a \e longterm-transaction-item
+/// \details In difference to \RNSA{SendEND_AND_WAIT} and \RNSA{SendEND_AND_CALLBACK} a
+/// \e longterm-transaction-call have to survive an application restart. To achieve
+/// this goal two features have to be available to process the results:
+/// -# a callback as a \e known service created with \RNSA{ServiceCreate}
+/// -# one or more \e data-item(s) to initialise the environment in the callback
+/// .
+/// The \e transaction-item have to be the first item in the \e data-package.
+/// The callback is a \RNSA{ServiceIdentifier} and have to be defined 
+/// with \RNSA{ServiceCreate} in the application setup code (like \RNSC{IServerSetup}) 
+/// to be available after an application restart.
+/// This command requires a final \RNSA{SendT_END} to finish the write.
+/// The list of \e data-items between \e START and \e END have to be provided by the programmer 
+/// and is used to initialise the environment in the \e callback. The data
+/// is send to the \e link-target and returned as first item in the \e result-data-package.
+/// Use \RNSA{ReadT_START} and \RNSA{ReadT_END} to extract the data.
 /// \ctx
+/// \param[in] callback a \RNSA{ServiceIdentifier} to identify the target to process the results
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
   struct MqS * const ctx,
