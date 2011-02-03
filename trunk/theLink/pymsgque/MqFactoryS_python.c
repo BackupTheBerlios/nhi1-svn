@@ -139,7 +139,8 @@ PyObject* NS(FactoryAdd) (
 {
   SETUP_FACTORY_ARG(FactoryAdd)
   return MqFactoryS_Obj_From_PTR(
-    MqFactoryAdd(ident, NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PRINT, ident, 
+      NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
   );
 }
 
@@ -162,7 +163,8 @@ PyObject* NS(FactoryDefault) (
   }
   Py_INCREF (arg);
   return MqFactoryS_Obj_From_PTR (
-    MqFactoryDefault(ident, NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
+    MqFactoryDefault(MQ_ERROR_PRINT, ident, 
+      NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
   );
 }
 

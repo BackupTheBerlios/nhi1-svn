@@ -37,7 +37,7 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS * ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, 
-    MqFactoryAdd("MyServer", MyServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PANIC, "MyServer", MyServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
   MqErrorCheck (MqLinkCreate (ctx, &largv));
   MqErrorCheck (MqCheckForLeftOverArguments(ctx, &largv));

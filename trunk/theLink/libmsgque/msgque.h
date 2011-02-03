@@ -1264,16 +1264,16 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /// \brief signature used in \ref MqFactoryS::signature
 #define MQ_MqFactoryS_SIGNATURE 0x47129019
 
-#define MqFactoryPanic(item) if (item == NULL) MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to create factory object");
+#define MqFactoryPanic(item) if (item == NULL) MqPanicC(MQ_ERROR_PANIC, __func__, -1, "MqFactoryS exception");
 
 /// \brief the \e factory is called to create an instance for ...
 enum MqFactoryE {
-  MQ_FACTORY_NEW_INIT	= 0,	///< initial instance , nothing else is known
+  MQ_FACTORY_NEW_INIT	= 0,	///< initial instance, nothing else is known
   MQ_FACTORY_NEW_CHILD	= 1,	///< create instance as a \e child of an other instance
   MQ_FACTORY_NEW_SLAVE	= 2,	///< create instance as a \e slave of an other instance
-  MQ_FACTORY_NEW_FORK	= 3,	///< the instance is used by a fork process
-  MQ_FACTORY_NEW_THREAD	= 4,	///< the instance is used by a thread
-  MQ_FACTORY_NEW_FILTER	= 5	///< the instance is used as a new filter
+  MQ_FACTORY_NEW_FORK	= 3,	///< create instance as a \e fork process
+  MQ_FACTORY_NEW_THREAD	= 4,	///< create instance as a \e thread
+  MQ_FACTORY_NEW_FILTER	= 5	///< create instance as a \e filter
 };
 
 /// \brief type of a \e factory-instance-constructor
@@ -1333,9 +1333,6 @@ struct MqFactoryDeleteS {
   MqFactoryDataCopyF  fCopy;	    ///< copy additional data pointer
 };
 
-/// \brief interface for the \e transaction storage
-struct MqFactoryTransS;
-
 /// \brief data used to define a factory
 struct MqFactoryS {
   MQ_INT signature;		    ///< should be #MQ_MqFactoryS_SIGNATURE
@@ -1345,6 +1342,7 @@ struct MqFactoryS {
   struct MqFactoryDeleteS Delete;   ///< constructor destructor interface
 };
 
+/// \brief helper function to return MqFactoryS::Create::data
 MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetCreateData (
   struct MqFactoryS  const * const item
 );
@@ -1354,20 +1352,10 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
   struct MqFactoryS  const * const item
 );
 
-/// \brief convert an static Factory function \e return-status into a human readable \e error-message
-/// \attention the string belongs to \libmsgque do \b not free the memory
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryErrorMsg (
-  struct MqFactoryS const * const item
-);
-
-/// \brief create a copy of a MqFactoryS instance using a new factory-identifer
-MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryCopy (
-  struct MqFactoryS * const item,
-  MQ_CST const ident
-);
-
-/// \brief add a new \e factory-interface identified by \e ident
-/// \param[in] ident  factory identifier
+/// \brief add a new \e MqFactoryS-instance identified by \e ident
+/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] ident  the factory identifier
 /// \param[in] createCallF	(C-API) instance constructor function
 /// \param[in] createData	(C-API) instance constructor data
 /// \param[in] createDataFreeF	(C-API) instance constructor data free function
@@ -1376,8 +1364,9 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryCopy (
 /// \param[in] deleteData	(C-API) instance destructor data
 /// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
 /// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \return the new factory object
+/// \return the new \e MqFactoryS-instance or \c NULL on error
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
+  struct MqS *	      const error,
   MQ_CST	      const ident,
   MqFactoryCreateF    const createCallF,
   MQ_PTR	      const createData,
@@ -1389,10 +1378,12 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
   MqFactoryDataCopyF  const deleteDataCopyF
 );
 
-/// \brief add a new \e default-factory-interface identified by \e ident
+/// \brief add a new \e default-MqFactoryS-instance identified by \e ident
 /// \details The default factory is always used to create an instance if no other
 /// factory is available
-/// \param[in] ident  factory identifier
+/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] ident  the factory identifier
 /// \param[in] createCallF	(C-API) instance constructor function
 /// \param[in] createData	(C-API) instance constructor data
 /// \param[in] createDataFreeF	(C-API) instance constructor data free function
@@ -1401,8 +1392,9 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
 /// \param[in] deleteData	(C-API) instance destructor data
 /// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
 /// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \return the new default factory object
+/// \return the new \e MqFactoryS-instance or \c NULL on error
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryDefault (
+  struct MqS *	      const error,
   MQ_CST	      const ident,
   MqFactoryCreateF    const createCallF,
   MQ_PTR	      const createData,
@@ -1414,13 +1406,18 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryDefault (
   MqFactoryDataCopyF  const deleteDataCopyF
 );
 
-/// \brief the \e default factory constructor function
+/// \brief return the \e factory-identifier of the \e default-MqFactoryS-instance
+MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
+  void
+);
+
+/// \brief the \e default-factory-constructor function
 /// \details This is an constructor suitable to create \e C language instance.
 /// Other programming languages need other default constructors. This constructor 
-/// will be initialized on library startup using the identifier "libmsgque"
-/// \param[in] tmpl	calling instance to initialize the configuration data using #MqConfigDup
+/// will be initialized on library startup using the default-identifier "libmsgque"
+/// \param[in] tmpl    calling instance to initialize the configuration data using #MqConfigDup
 /// \param[in] create   how is the factory constructor used
-/// \param[in] item	factory interface in use
+/// \param[in] item    factory interface in use
 /// \param[out] contextP the new instance
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
@@ -1430,12 +1427,29 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryDefaultCreate (
   struct MqS  ** contextP
 );
 
-/// \brief return the identifier of the \e default factory
-MQ_EXTERN MQ_CST MQ_DECL MqFactoryDefaultIdent (
-  void
+/// \brief return the \e MqFactoryS-instance
+/// \param[in] ident the \e factory-identifier or \e NULL / \e "" for the \e default-MqFactoryS-instance
+/// \return the \e MqFactoryS-instance or \e NULL if nothing was found
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
+  MQ_CST const ident
 );
 
-/// \brief create a new MqS instance from a MqFactoryS instance
+/// \brief return the \e MqFactoryS-instance in \e called mode
+/// \details The called mode is used if \b multiple (>1) \e MqFactory-instance are available and the
+/// \e instance-in-use is selected by the \b second command-line argument. Use the \e Filter5 file,
+/// from the example directory, as example.
+/// \param[in] ident the \e factory-identifier or \e NULL / \e "" for the \e default-MqFactoryS-instance
+/// \return the \e MqFactoryS-instance or \e NULL if nothing was found
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGetCalled (
+  MQ_CST const ident
+);
+
+/// \brief create a new \e MqS-instance from a \e MqFactoryS-instance
+/// \param[in] error (C-API only) flag to fignal how to report an error. valid values are: #MQ_ERROR_PANIC,
+///                  #MQ_ERROR_PRINT, #MQ_ERROR_NONE or an other \e MqS-instance
+/// \param[in] data  (C-API only) an environment specific data pointer
+/// \param[in] item  a \e MqFactoryS-instance used to create a \e MqS-instance
+/// \return the new \e MqS-instance or NULL on error
 /// \attention the programmer \b have-to check the return value on \C NULL pointer
 MQ_EXTERN struct MqS* MQ_DECL MqFactoryNew (
   struct MqS * error,
@@ -1443,41 +1457,10 @@ MQ_EXTERN struct MqS* MQ_DECL MqFactoryNew (
   struct MqFactoryS * const item
 );
 
-
-/// \brief call a factory \e constructor defined by \e item
-/// \details This is a low-level function to call a factory constructor
-/// \param[in] tmpl	calling instance to initialize the configuration data using #MqConfigDup
-/// \param[in] create   how is the factory constructor used
-/// \param[in] item	factory interface in use
-/// \param[out] contextP the new object
-/// \retException
-MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryInvoke (
-  struct MqS * const tmpl,
-  enum MqFactoryE create,
-  struct MqFactoryS* item,
-  struct MqS ** contextP
-);
-
-/// \brief return the \e factory-item
-/// \param[in] ident the \e factory-identifier or \e NULL / \e "" for \e default-factory
-/// \return the \e factory-item or \e NULL if nothing was found
-MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGet (
-  MQ_CST const ident
-);
-
-MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryGetCalled (
-  MQ_CST const ident
-);
-
-/*****************************************************************************/
-/*                                                                           */
-/*                             set / get                                     */
-/*                                                                           */
-/*****************************************************************************/
-
-MQ_EXTERN void MQ_DECL MqFactorySetCalled (
+/// \brief create a copy of a \e MqFactoryS-instance using a new \e factory-identifer
+MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryCopy (
   struct MqFactoryS * const item,
-  MQ_BOL const called
+  MQ_CST const ident
 );
 
 /*****************************************************************************/
@@ -1486,33 +1469,33 @@ MQ_EXTERN void MQ_DECL MqFactorySetCalled (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief get the \e factory-interface used for the context
+/// \brief get the \e MqFactoryS-instance used by the \e MqS-instance
 /// \context
-/// \return the \e factory-interface
+/// \return the \e MqFactoryS-instance
 MQ_EXTERN struct MqFactoryS * const MQ_DECL MqFactoryCtxGet (
   struct MqS const * const context
 );
 
-/// \brief link the context to a new \e factory-interface
+/// \brief link the context to a new \e MqFactoryS-instance
 /// \context
-/// \param[in] factory the \e factory-interface to link with
+/// \param[in] factory the \e MqFactoryS-instance to link with
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCtxSet (
   struct MqS * const context,
   struct MqFactoryS * const factory
 );
 
-/// \brief get the \e ident of the \e factory-interface used for the context
+/// \brief get the \e ident of the \e MqFactoryS-instance used by the \e MqS-instance
 /// \context
-/// \return the \c context.factory.ident value or an empty string if no factory is available
+/// \return the \e identifer or an empty string if no factory is available
 /// \attention the \e string is owned by \libmsgque -> do not free !!
 MQ_EXTERN MQ_CST MQ_DECL MqFactoryCtxIdentGet (
   struct MqS const * const context
 );
 
-/// \brief link the context to a new \e factory-interface identified by \e ident
+/// \brief link the \e MqS-instance to a new \e MqFactoryS-instance identified by \e ident
 /// \context
-/// \param[in] ident the factory identifier to link with
+/// \param[in] ident the \e factory-identifier to link with
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqFactoryCtxIdentSet (
   struct MqS * const context,

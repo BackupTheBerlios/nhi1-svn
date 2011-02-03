@@ -173,7 +173,8 @@ static VALUE FactoryAdd (int argc, VALUE *argv, VALUE self)
 
   INCR_REF2(meth);
   return MqFactoryS2VAL(
-    MqFactoryAdd(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PRINT, VAL2CST(ident), 
+      FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
 }
 
@@ -190,7 +191,8 @@ static VALUE FactoryDefault (int argc, VALUE *argv, VALUE self)
 
   INCR_REF2(meth);
   return MqFactoryS2VAL(
-    MqFactoryDefault(VAL2CST(ident), FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
+    MqFactoryDefault(MQ_ERROR_PRINT, VAL2CST(ident), 
+      FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL)
   );
 }
 
@@ -211,13 +213,7 @@ static VALUE FactoryGetCalled (VALUE self, VALUE ident)
 
 static VALUE New (VALUE self)
 {
-  struct MqS *mqctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, VAL2MqFactoryS(self));
-  if (mqctx == NULL) {
-    rb_raise(rb_eRuntimeError, "MqFactoryS exception");
-    return Qnil;
-  } else {
-    return MqS2VAL(mqctx);
-  }
+  return MqS2VAL(MqFactoryNew(MQ_ERROR_PRINT, NULL, VAL2MqFactoryS(self)));
 }
 
 static VALUE Copy (VALUE self, VALUE ident)
@@ -232,7 +228,12 @@ static VALUE Copy (VALUE self, VALUE ident)
 /*****************************************************************************/
 
 VALUE NS(MqFactoryS_New) (struct MqFactoryS *item) {
-  return Data_Wrap_Struct(cMqFactoryS, NULL, NULL, item);
+  if (item == NULL) {
+    rb_raise(rb_eRuntimeError, "MqFactoryS exception");
+    return Qnil;
+  } else {
+    return Data_Wrap_Struct(cMqFactoryS, NULL, NULL, item);
+  }
 }
 
 void NS(MqS_Factory_Init)(void) {
@@ -256,6 +257,9 @@ void NS(MqS_Factory_Init)(void) {
   // Initialize "default" factory
   INCR_REF2(meth);
   if (!strcmp(MqFactoryDefaultIdent(),"libmsgque"))
-    MqFactoryDefault("rubymsgque", FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+    if (MqFactoryDefault(MQ_ERROR_PRINT, "rubymsgque", 
+      FactoryCreate, (MQ_PTR)meth, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL) == NULL) {
+      rb_raise(rb_eRuntimeError, "MqFactoryS exception");
+    }
 }
 

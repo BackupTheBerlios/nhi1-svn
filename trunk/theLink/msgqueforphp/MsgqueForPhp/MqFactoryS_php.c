@@ -231,7 +231,8 @@ PHP_FUNCTION(FactoryAdd)
 {
   FactorySetup(FactoryAdd);
   MqFactoryS2VAL(return_value,
-    MqFactoryAdd(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PRINT, ident, 
+      FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
   );
 }
 
@@ -239,7 +240,8 @@ PHP_FUNCTION(FactoryDefault)
 {
   FactorySetup(FactoryDefault);
   MqFactoryS2VAL(return_value,
-    MqFactoryDefault(ident, FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
+    MqFactoryDefault(MQ_ERROR_PRINT, ident, 
+      FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
   );
 }
 
@@ -340,9 +342,10 @@ void NS(MqFactoryS_Init) (TSRMLS_D) {
   NS(MqFactoryS) = zend_register_internal_class(&me_ce TSRMLS_CC);
 
   // add default factory
-  item = MqFactoryDefault("phpmsgque", FactoryCreate, (MQ_PTR) NS(MqS), NULL, NULL, FactoryDelete, NULL, NULL, NULL);
-  if (item == NULL) {
-    RETURN_ERROR("MqFactoryS exception");
-  }
+  if (!strcmp(MqFactoryDefaultIdent(),"libmsgque"))
+    if (MqFactoryDefault(MQ_ERROR_PRINT, "phpmsgque", 
+	  FactoryCreate, (MQ_PTR) NS(MqS), NULL, NULL, FactoryDelete, NULL, NULL, NULL) == NULL) {
+      RETURN_ERROR("MqFactoryS exception");
+    }
 }
 

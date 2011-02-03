@@ -160,9 +160,9 @@ int main (int argc, MQ_CST argv[])
   MqBufferLAppendC(MqInitCreate(), argv[0]);
 
   // add Factory
-  MqFactoryPanic (MqFactoryAdd ("F1", F1New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-  MqFactoryPanic (MqFactoryAdd ("F2", F2New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-  MqFactoryPanic (MqFactoryAdd ("F3", F3New, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+  MqFactoryAdd (MQ_ERROR_PANIC, "F1", F1New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryAdd (MQ_ERROR_PANIC, "F2", F2New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryAdd (MQ_ERROR_PANIC, "F3", F3New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
   // call the initial factory to initialize the "config"
   ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, MqFactoryGetCalled (argv[1]));

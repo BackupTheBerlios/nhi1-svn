@@ -116,6 +116,9 @@ func FactoryAdd(ident string, cb FactoryF) *MqFactoryS {
   r := C.gomsgque_FactoryAdd(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   incrFactoryRef(&cb)
+  if (r == nil) {
+    panic("MqFactoryS exception");
+  }
   return (*MqFactoryS)(r)
 }
 
@@ -124,6 +127,9 @@ func FactoryDefault(ident string, cb FactoryF) *MqFactoryS {
   r := C.gomsgque_FactoryDefault(v, C.MQ_PTR(&cb))
   C.free(unsafe.Pointer(v))
   incrFactoryRef(&cb)
+  if (r == nil) {
+    panic("MqFactoryS exception");
+  }
   return (*MqFactoryS)(r)
 }
 

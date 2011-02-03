@@ -40,7 +40,8 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define MqFactorySException() NS(pErrorFromString)(env, __func__, __FILE__, __LINE__, "MqFactoryS exception")
+#define MqFactorySException() \
+  if ((*env)->ExceptionCheck(env) == JNI_FALSE) NS(pErrorFromString)(env, __func__, __FILE__, __LINE__, "MqFactoryS exception")
 #define ErrorStringToJava(err) NS(pErrorFromString)(env, __func__, __FILE__, __LINE__, err)
 #define ErrorMqToJava() NS(pErrorFromMq)(env, context)
 #define ErrorMqBufferToJava() NS(pErrorFromMq)(env, buf->context)

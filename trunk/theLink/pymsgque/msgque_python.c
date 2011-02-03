@@ -157,10 +157,12 @@ PyInit_pymsgque(void)
 
   // init factory
   if (!strcmp(MqFactoryDefaultIdent(), "libmsgque"))
-    MqFactoryDefault("pymsgque", NS(FactoryCreate), (MQ_PTR)&NS(MqS), NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL);
-
+    if (MqFactoryDefault(MQ_ERROR_PRINT, "pymsgque", 
+	  NS(FactoryCreate), (MQ_PTR)&NS(MqS), NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL) == NULL) {
+      PyErr_SetString(PyExc_RuntimeError, "MqFactoryS exception");
+      return NULL;
+    }
   return m;
-
 error:
   return NULL;
 }

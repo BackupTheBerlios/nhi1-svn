@@ -62,7 +62,8 @@ static VALUE ErrorReset(VALUE self)
 
 static VALUE ErrorRaise(VALUE self)
 { 
-  NS(MqSException_Raise)(MQCTX);
+  SETUP_mqctx;
+  ErrorMqToRubyWithCheck(MqErrorGetCodeI(mqctx));
   return Qnil;
 } 
 

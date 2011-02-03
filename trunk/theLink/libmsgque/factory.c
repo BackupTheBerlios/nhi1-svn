@@ -21,8 +21,6 @@ BEGIN_C_DECLS
 
 struct MqFactoryS *defaultFactoryItem = NULL;
 
-/// \brief a static Factory function return this enum as status
-/// \details Use the #MqFactoryErrorMsg function to \copybrief MqFactoryErrorMsg
 enum MqFactoryReturnE {
   MQ_FACTORY_RETURN_OK,
   MQ_FACTORY_RETURN_ERR,
@@ -46,7 +44,7 @@ MQ_CST sFactoryReturnMsg (
     return "OK";
    case MQ_FACTORY_RETURN_ERR:
     return "inspecified factory error";
-   case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:	
+   case MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED:    
     return "unable to define factory, create function is required";
    case MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR:
     return "factory identifer already in use";
@@ -203,6 +201,7 @@ sFactorySpaceDelAll (
 
 static struct MqFactoryS *
 sFactoryAddName (
+  struct MqS * const error,
   MQ_CST const ident,
   struct MqFactoryCreateS Create,
   struct MqFactoryDeleteS Delete
@@ -212,7 +211,7 @@ sFactoryAddName (
 
   if (free != NULL) {
     // item is available, -> error
-    MqErrorDbFactoryNum(MQ_ERROR_PRINT, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR);
+    MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_ADD_IDENT_IN_USE_ERR);
     return NULL;
   } else {
     // item not available, add new one
@@ -381,6 +380,7 @@ MqFactoryGetCalled (
 
 struct MqFactoryS *
 MqFactoryAdd (
+  struct MqS *	      const error,
   MQ_CST	      const ident,
   MqFactoryCreateF    const fCreate,
   MQ_PTR	      const createData,
@@ -395,18 +395,19 @@ MqFactoryAdd (
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF, createDataCopyF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF, deleteDataCopyF};
   if (ident == NULL || *ident == '\0') {
-    MqErrorDbFactoryNum(MQ_ERROR_PRINT, MQ_FACTORY_RETURN_INVALID_IDENT);
+    MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_INVALID_IDENT);
     return NULL;
   }
   if (fCreate == NULL) {
-    MqErrorDbFactoryNum(MQ_ERROR_PRINT, MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED);
+    MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED);
     return NULL;
   }
-  return sFactoryAddName (ident, Create, Delete);
+  return sFactoryAddName (error, ident, Create, Delete);
 }
 
 struct MqFactoryS *
 MqFactoryDefault (
+  struct MqS *	      const error,
   MQ_CST	      const ident,
   MqFactoryCreateF    const fCreate,
   MQ_PTR	      const createData,
@@ -421,11 +422,11 @@ MqFactoryDefault (
   struct MqFactoryCreateS Create = {fCreate, createData, createDataFreeF, createDataCopyF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDataFreeF, deleteDataCopyF};
   if (ident == NULL || *ident == '\0') {
-    MqErrorDbFactoryNum(MQ_ERROR_PRINT, MQ_FACTORY_RETURN_INVALID_IDENT);
+    MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_INVALID_IDENT);
     return NULL;
   }
   if (fCreate == NULL) {
-    MqErrorDbFactoryNum(MQ_ERROR_PRINT, MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED);
+    MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED);
     return NULL;
   }
   sFactorySpaceDelItem (0);
@@ -492,23 +493,8 @@ MqFactoryCopy (
     if (Delete.data != NULL && Delete.fCopy != NULL) {
       (*Delete.fCopy) (&Delete.data);
     }
-    return sFactoryAddName (ident, Create, Delete);
+    return sFactoryAddName (MQ_ERROR_PRINT, ident, Create, Delete);
   }
-}
-
-/*****************************************************************************/
-/*                                                                           */
-/*                            public Set / Get                               */
-/*                                                                           */
-/*****************************************************************************/
-
-void
-MqFactorySetCalled (
-  struct MqFactoryS * const item,
-  MQ_BOL const called
-)
-{
-  item->called = called;
 }
 
 /*****************************************************************************/
@@ -575,7 +561,7 @@ FactoryCreate (void)
   space.size = SPACE_INIT_SIZE;
   space.used = 1;  // first item is always the default
 
-  MqFactoryDefault("libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  MqFactoryDefault(MQ_ERROR_PANIC, "libmsgque", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 }
 
 void

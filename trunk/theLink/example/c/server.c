@@ -1400,7 +1400,7 @@ main (
 
   // call Factory 
   struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
-    MqFactoryAdd("server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PANIC, "server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
 
   // setup the link, parse command-line arguments

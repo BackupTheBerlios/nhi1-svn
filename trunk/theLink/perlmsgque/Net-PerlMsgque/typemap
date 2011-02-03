@@ -39,7 +39,11 @@ T_MqBufferS
         sv_setref_pv($arg, \"Net::PerlMsgque::MqBufferS\", (void*)$var);
 
 T_MqFactoryS
-        sv_setref_pv($arg, \"Net::PerlMsgque::MqFactoryS\", (void*)$var);
+	if ($var == NULL) {
+	  croak("MqFactoryS exception");
+	} else {
+	  sv_setref_pv($arg, \"Net::PerlMsgque::MqFactoryS\", (void*)$var);
+	}
 
 T_MqSException
         sv_setref_pv($arg, \"Net::PerlMsgque::MqSException\", (void*)$var);

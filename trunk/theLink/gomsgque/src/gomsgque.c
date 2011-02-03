@@ -205,7 +205,7 @@ gomsgque_FactoryAdd (
   MQ_PTR data
 )
 {
-  return MqFactoryAdd(ident,
+  return MqFactoryAdd(MQ_ERROR_PRINT, ident,
     sFactoryCreate, data, sFactoryFree, sFactoryCopy,
     sFactoryDelete, NULL, NULL, NULL
   );
@@ -217,7 +217,7 @@ gomsgque_FactoryDefault (
   MQ_PTR data
 )
 {
-  return MqFactoryDefault(ident,
+  return MqFactoryDefault(MQ_ERROR_PRINT, ident,
     sFactoryCreate, data, sFactoryFree, sFactoryCopy,
     sFactoryDelete, NULL, NULL, NULL
   );
@@ -426,6 +426,8 @@ gomsgque_Init() {
   MqLal.SysServerThread	  =   SysServerThread;
   MqLal.SysWait		  =   SysWait;
 
-  MqFactoryDefault("gomsgque", sFactoryCreate, NULL, NULL, NULL, sFactoryDelete, NULL, NULL, NULL);
+  if (!strcmp(MqFactoryDefaultIdent(),"libmsgque"))
+    MqFactoryDefault(MQ_ERROR_PANIC, "gomsgque", 
+      sFactoryCreate, NULL, NULL, NULL, sFactoryDelete, NULL, NULL, NULL);
 }
 

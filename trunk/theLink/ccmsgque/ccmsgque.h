@@ -938,24 +938,32 @@ namespace ccmsgque {
       struct MqFactoryS *factory;
 
       inline MqFactoryC(struct MqFactoryS *item) {
-	factory = item;
+	if (item == NULL) {
+	  throw MqFactoryCException();
+	} else {
+	  factory = item;
+	}
       }
 
       /// \api #MqFactoryAdd
       static inline MqFactoryC<T> Add(MQ_CST ident) {
-	return MqFactoryC(MqFactoryAdd (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+	return MqFactoryC(MqFactoryAdd (MQ_ERROR_PRINT, ident, 
+	  FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryAdd
       static inline MqFactoryC<T> Add() {
-	return MqFactoryC(MqFactoryAdd (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+	return MqFactoryC(MqFactoryAdd (MQ_ERROR_PRINT, typeid(T).name(), 
+	  FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
       static inline MqFactoryC<T> Default(MQ_CST ident) {
-	return MqFactoryC(MqFactoryDefault (ident, FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+	return MqFactoryC(MqFactoryDefault (MQ_ERROR_PRINT, ident, 
+	  FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefault
       static inline MqFactoryC<T> Default() {
-	return MqFactoryC(MqFactoryDefault (typeid(T).name(), FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
+	return MqFactoryC(MqFactoryDefault (MQ_ERROR_PRINT, typeid(T).name(), 
+	  FactoryCreate, NULL, NULL, NULL, FactoryDelete, NULL, NULL, NULL));
       }
       /// \api #MqFactoryDefaultIdent
       static inline MQ_CST DefaultIdent() {

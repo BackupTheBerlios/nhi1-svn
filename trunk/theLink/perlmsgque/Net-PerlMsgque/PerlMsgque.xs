@@ -440,7 +440,8 @@ MqFactoryAdd(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    RETVAL = MqFactoryAdd(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+    RETVAL = MqFactoryAdd(MQ_ERROR_PRINT, ident, 
+	      FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
   OUTPUT:
     RETVAL
 
@@ -459,7 +460,8 @@ MqFactoryDefault(...)
       ident = SvPV_nolen(ST(0));
       class = newSVsv(ST(1));
     }
-    RETVAL = MqFactoryDefault(ident, FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+    RETVAL = MqFactoryDefault(MQ_ERROR_PRINT, ident, 
+	      FactoryCreate, class, FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
   OUTPUT:
     RETVAL
 

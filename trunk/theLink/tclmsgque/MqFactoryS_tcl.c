@@ -152,7 +152,7 @@ int NS(FactoryAdd) (TCL_ARGS)
   }
   CHECK_NOARGS
   Tcl_IncrRefCount(factory);
-  return FS(Create) (interp, MqFactoryAdd (ident, 
+  return FS(Create) (interp, MqFactoryAdd (MQ_ERROR_PRINT, ident, 
     NS(FactoryCreate), factory, NS(FactoryFree), NS(FactoryCopy), 
     NS(FactoryDelete), NULL, NULL, NULL)
   );
@@ -170,11 +170,11 @@ int NS(FactoryDefault) (TCL_ARGS)
   CHECK_NOARGS
   if (factory) {
     Tcl_IncrRefCount(factory);
-    return FS(Create) (interp, MqFactoryDefault(ident, NS(FactoryCreate), 
+    return FS(Create) (interp, MqFactoryDefault(MQ_ERROR_PRINT, ident, NS(FactoryCreate), 
       factory, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
     );
   } else {
-    return FS(Create) (interp, MqFactoryDefault(ident, NS(FactoryCreate), 
+    return FS(Create) (interp, MqFactoryDefault(MQ_ERROR_PRINT, ident, NS(FactoryCreate), 
       NULL, NULL, NULL, NS(FactoryDelete), NULL, NULL, NULL)
     );
   }

@@ -85,10 +85,10 @@ main (
     MqBufferLAppendC(initB, argv[0]);
 
     // add Factory 
-    MqFactoryPanic (MqFactoryAdd ("split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanic (MqFactoryAdd ("cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanic (MqFactoryAdd ("sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-    MqFactoryPanic (MqFactoryAdd ("join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+    MqFactoryAdd (MQ_ERROR_PANIC, "split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryAdd (MQ_ERROR_PANIC, "cut",   CutFactory,   NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryAdd (MQ_ERROR_PANIC, "sort",  SortFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    MqFactoryAdd (MQ_ERROR_PANIC, "join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // call the initial factory to initialize the "config"
     ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, MqFactoryGetCalled(argv[1]));

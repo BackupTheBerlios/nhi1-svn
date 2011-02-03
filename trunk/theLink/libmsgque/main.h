@@ -805,6 +805,7 @@ void pSlaveShutdown (struct MqLinkSlaveS * const);
 
 void pFactoryMark ( struct MqS * const, MqMarkF);
 void pFactoryCtxItemSet ( struct MqS * const, struct MqFactoryS * const);
+enum MqErrorE MqFactoryInvoke ( struct MqS * const, enum MqFactoryE, struct MqFactoryS*, struct MqS **);
 
 /*****************************************************************************/
 /*                                                                           */
