@@ -170,8 +170,16 @@ func (this *Server) ServerSetup() {
     this.ServiceCreate("TRNS", (*TRNS)(this))
     this.ServiceCreate("TRN2", (*TRN2)(this))
     this.ServiceCreate("RDUL", (*RDUL)(this))
+    this.ServiceCreate("STDB", (*STDB)(this))
   }
 }
+
+type STDB Server
+  func (this *STDB) Call() {
+    this.SendSTART()
+    this.SqlSetDb(this.ReadC())
+    this.SendRETURN()
+  }
 
 type RDUL Server
   func (this *RDUL) Call() {

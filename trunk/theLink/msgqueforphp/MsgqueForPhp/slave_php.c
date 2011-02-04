@@ -28,7 +28,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveWorker)
 
   // get id
   if (argc < 1) goto error;
-  argv = emalloc(sizeof(zval*) * argc);
+  argv = MqSysMalloc(MQ_ERROR_PANIC,sizeof(zval*) * argc);
   zend_get_parameters_array_ex(argc, argv);
   convert_to_long(*argv[0]);
   id = VAL2INT(*argv[0]);
@@ -41,7 +41,7 @@ PHP_METHOD(MsgqueForPhp_MqS, SlaveWorker)
       NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }
   }
-  efree(argv);
+  MqSysFree(argv);
 
   // create Worker
   ErrorMqToPhpWithCheck (MqSlaveWorker(mqctx, id, &args));

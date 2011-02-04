@@ -621,6 +621,12 @@ namespace example {
 	j = ReadI ();
       }
 
+      void STDB () {
+	SendSTART();
+	SqlSetDb(ReadC());
+	SendRETURN();
+      }
+
     private:
 
       void ServerCleanup() {
@@ -691,6 +697,7 @@ namespace example {
 	  ServiceCreate("PRNT", CallbackF(&Server::PRNT));
 	  ServiceCreate("TRNS", CallbackF(&Server::TRNS));
 	  ServiceCreate("TRN2", CallbackF(&Server::TRN2));
+	  ServiceCreate("STDB", CallbackF(&Server::STDB));
 	}
       }
   };

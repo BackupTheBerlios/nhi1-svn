@@ -117,6 +117,12 @@ class Server(MqS):
       self.ServiceCreate("PRNT", self.PRNT)
       self.ServiceCreate("TRNS", self.TRNS)
       self.ServiceCreate("TRN2", self.TRN2)
+      self.ServiceCreate("STDB", self.STDB)
+
+  def STDB (self):
+    self.SendSTART ()
+    self.SqlSetDb (self.ReadC())
+    self.SendRETURN ()
 
   def TRNS (self):
     self.SendSTART ()

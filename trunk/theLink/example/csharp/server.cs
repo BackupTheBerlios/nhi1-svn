@@ -120,6 +120,7 @@ namespace example {
 	ServiceCreate("PRNT", PRNT);
 	ServiceCreate("TRNS", TRNS);
 	ServiceCreate("TRN2", TRN2);
+	ServiceCreate("STDB", STDB);
       }
     }
 
@@ -693,6 +694,12 @@ namespace example {
       i = ReadI ();
       ReadT_END ();
       j = ReadI ();
+    }
+
+    void STDB () {
+      SendSTART();
+      SqlSetDb(ReadC());
+      SendRETURN();
     }
 
   // ########################################################################

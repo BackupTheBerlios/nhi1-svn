@@ -125,6 +125,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       ServiceCreate("PRNT", new PRNT());
       ServiceCreate("TRNS", new TRNS());
       ServiceCreate("TRN2", new TRN2());
+      ServiceCreate("STDB", new STDB());
     }
   }
 
@@ -445,6 +446,14 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       i = ReadI ();
       ReadT_END ();
       j = ReadI ();
+    }
+  }
+
+  class STDB implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      ctx.SendSTART();
+      ctx.SqlSetDb(ReadC());
+      ctx.SendRETURN();
     }
   }
 

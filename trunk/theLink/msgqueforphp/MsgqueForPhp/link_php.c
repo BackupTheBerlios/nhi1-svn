@@ -35,7 +35,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkCreateChild)
 
   // get parent
   if (argc < 1) goto error;
-  argv = emalloc(sizeof(zval**) * argc);
+  argv = MqSysMalloc(MQ_ERROR_PANIC, sizeof(zval**) * argc);
   zend_get_parameters_array_ex(argc, argv);
   CheckType(*argv[0], NS(MqS));
   VAL2MqS(parent, *argv[0]);
@@ -48,7 +48,7 @@ PHP_METHOD(MsgqueForPhp_MqS, LinkCreateChild)
       NS(MqBufferLAppendZVal) (args, *argv[i] TSRMLS_CC);
     }
   }
-  efree(argv);
+  MqSysFree(argv);
 
   // create Context
   ErrorMqToPhpWithCheck (MqLinkCreateChild(mqctx, parent, &args));

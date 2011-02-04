@@ -116,6 +116,22 @@ MQ_STR MqSysStrDup (
   }
 }
 
+MQ_STR MqSysStrNDup (
+  struct MqS * const context,
+  MQ_CST str,
+  MQ_SIZE len
+)
+{
+  if (str == NULL) {
+    return NULL;
+  } else {
+    MQ_STR ret = (*MqLal.SysStrNDup) (str, len);
+    if (unlikely (ret == NULL))
+      MqErrorC (context, __func__, errno, strerror (errno));
+    return ret;
+  }
+}
+
 MQ_PTR MqSysRealloc (
   struct MqS * const context,
   MQ_PTR buf,
@@ -762,6 +778,18 @@ static MQ_STR sys_strdup (
   return result;
 }
 
+static MQ_STR sys_strndup (
+  MQ_CST s,
+  MQ_SIZE l
+) {
+  const MQ_SIZE len = l+1;
+  MQ_STR result = (MQ_STR) (*MqLal.SysMalloc) (len);
+  if (result == (MQ_STR)0)
+    return (MQ_STR)0;
+  strncpy(result, s, len);
+  return result;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                MQ-LAL                                     */
@@ -778,6 +806,7 @@ void SysCreate(void) {
   MqLal.SysCalloc	= (MqSysCallocF)  sys_calloc;
   MqLal.SysMalloc	= (MqSysMallocF)  sqlite3_malloc;
   MqLal.SysStrDup	= (MqSysStrDupF)  sys_strdup;
+  MqLal.SysStrNDup	= (MqSysStrNDupF) sys_strndup;
   MqLal.SysRealloc	= (MqSysReallocF) sqlite3_realloc;
   MqLal.SysFree		= (MqSysFreeF)	  sqlite3_free;
 #if defined(HAVE_FORK)

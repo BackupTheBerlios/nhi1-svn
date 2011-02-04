@@ -121,7 +121,14 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
       $this->ServiceCreate("ERLS", array(&$this, 'ERLS'));
       $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
       $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
+      $this->ServiceCreate("STDB", array(&$this, 'STDB'));
     }
+  }
+
+  public function STDB() {
+    $this->SendSTART();
+    $this->SqlSetDb($this->ReadC());
+    $this->SendRETURN();
   }
 
   public function RDUL() {

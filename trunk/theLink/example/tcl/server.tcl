@@ -623,6 +623,12 @@ proc Ot_TRN2 {ctx} {
   $ctx dict set "j" [$ctx ReadI]
 }
 
+proc Ot_STDB {ctx} {
+  $ctx SendSTART
+  $ctx SqlSetDb [$ctx ReadC]
+  $ctx SendRETURN
+}
+
 proc ServerSetup {ctx} {
 
   if {[$ctx SlaveIs]} {
@@ -688,6 +694,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate PRNT Ot_PRNT
     $ctx ServiceCreate TRN2 Ot_TRN2
     $ctx ServiceCreate TRNS Ot_TRNS
+    $ctx ServiceCreate STDB Ot_STDB
   }
 }
 

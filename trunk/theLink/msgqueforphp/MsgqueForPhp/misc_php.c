@@ -55,14 +55,14 @@ MQ_BFL NS(Argument2MqBufferLS)(struct MqBufferLS * args, const int numArgs TSRML
     int i;
     zval ***arguments;
     if (args == NULL) args = MqBufferLCreate(numArgs);
-    arguments = emalloc(sizeof(zval**) * numArgs);
+    arguments = MqSysMalloc(MQ_ERROR_PANIC,sizeof(zval**) * numArgs);
     if (zend_get_parameters_array_ex(numArgs,arguments)) {
       ZEND_WRONG_PARAM_COUNT_WITH_RETVAL(args);
     }
     for (i=0; i<numArgs; i++) {
       NS(MqBufferLAppendZVal) (args, *arguments[i] TSRMLS_CC);
     }
-    efree(arguments);
+    MqSysFree(arguments);
   }
 
   return args;
@@ -129,7 +129,7 @@ static void ProcFree (struct MqS const * const mqctx, struct NS(ProcDataS) ** da
   TSRMLS_FETCH_FROM_CTX(mqctx->threadData);
   //TSRMLS_FETCH();
   zval_ptr_dtor(&(*dataP)->ctor);
-  efree(*dataP);
+  MqSysFree(*dataP);
   *dataP = NULL;
 }
 
@@ -147,7 +147,7 @@ enum MqErrorE NS(ProcInit) (
   // PHP_METHOD(MsgqueForPhp_MqS, __construct) set the callback's during construct -> allways
   // up-to-data -> no "copy" constructor needed
   char *error;
-  struct NS(ProcDataS) *data = (*dataP) = emalloc(sizeof(struct NS(ProcDataS)));
+  struct NS(ProcDataS) *data = (*dataP) = MqSysMalloc(MQ_ERROR_PANIC,sizeof(struct NS(ProcDataS)));
   // 1. is the "callable" call-able?
   if (!zend_is_callable_ex(callable, NULL, 0, NULL, NULL, NULL, &error TSRMLS_CC)) {
     return MqErrorC(mqctx, __func__, -1, error);

@@ -213,17 +213,17 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
     classlen = identlen; \
   } \
   /* class names are stored in lowercase */ \
-  class = estrndup(class, classlen); \
+  class = MqSysStrNDup(MQ_ERROR_PANIC, class, classlen); \
   php_strtolower(class, classlen); \
   /* does the class names exists ? */ \
   if (zend_lookup_class(class, classlen, &cep TSRMLS_CC) == FAILURE) { \
-    if (class) efree(class); \
+    if (class) MqSysFree(class); \
     RETURN_ERROR("Class does not exist."); \
   } \
   ce = *cep; \
   /* check if the constructor is available */ \
   if (ce->constructor == NULL) { \
-    if (class) efree(class); \
+    if (class) MqSysFree(class); \
     RETURN_ERROR("Class constructor does not exist."); \
   }
 

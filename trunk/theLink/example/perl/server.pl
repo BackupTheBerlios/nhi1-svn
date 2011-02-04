@@ -705,6 +705,13 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->DictSet ("j", $ctx->ReadI ());
   }
 
+  sub STDB {
+    my $ctx = shift;
+    $ctx->SendSTART();
+    $ctx->SqlSetDb($ctx->ReadC());
+    $ctx->SendRETURN();
+  }
+
   sub ServerCleanup {
     my $ctx = shift;
     my $i;
@@ -777,6 +784,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("PRNT", \&PRNT);
       $ctx->ServiceCreate("TRNS", \&TRNS);
       $ctx->ServiceCreate("TRN2", \&TRN2);
+      $ctx->ServiceCreate("STDB", \&STDB);
     }
   }
 

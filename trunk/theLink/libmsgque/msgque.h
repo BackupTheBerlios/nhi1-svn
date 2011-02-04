@@ -4257,6 +4257,10 @@ typedef MQ_PTR (*MqSysMallocF) (MQ_SIZE);
 /// \details additional info: <TT>man strdup</TT>
 typedef MQ_STR (*MqSysStrDupF) (MQ_CST);
 
+/// \brief \b strndup syscall
+/// \details additional info: <TT>man strndup</TT>
+typedef MQ_STR (*MqSysStrNDupF) (MQ_CST,MQ_SIZE);
+
 /// \brief \b realloc syscall
 /// \details additional info: <TT>man realloc</TT>
 typedef MQ_PTR (*MqSysReallocF) (MQ_PTR, MQ_SIZE);
@@ -4315,6 +4319,8 @@ struct MqLalS {
   MqSysMallocF		  SysMalloc;
   /// \copyall{MqSysReallocF}
   MqSysReallocF		  SysRealloc;
+  /// \copyall{MqSysStrNDupF}
+  MqSysStrNDupF		  SysStrNDup;
   /// \copyall{MqSysStrDupF}
   MqSysStrDupF		  SysStrDup;
   /// \copyall{MqSysFreeF}
@@ -4512,6 +4518,19 @@ MQ_EXTERN MQ_STR MQ_DECL MqSysStrDup (
   struct MqS * const context,
   MQ_CST str
 );
+
+/// \syscall{strndup}
+/// \details additional info: <TT>man strdup</TT>
+///  \context
+/// \param[in] str the string to duplicate
+/// \param[in] len the length of the string
+/// \return a pointer to the new memory block
+MQ_EXTERN MQ_STR MQ_DECL MqSysStrNDup (
+  struct MqS * const context,
+  MQ_CST str,
+  MQ_SIZE len
+);
+
 
 /// \syscall{realloc}
 /// \details additional info: <TT>man realloc</TT>

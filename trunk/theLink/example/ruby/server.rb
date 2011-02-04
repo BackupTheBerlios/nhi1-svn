@@ -126,7 +126,14 @@ class Server < MqS
       ServiceCreate("ERLS", method(:ERLS))
       ServiceCreate("ECUL", method(:ECUL))
       ServiceCreate("RDUL", method(:RDUL))
+      ServiceCreate("STDB", method(:STDB))
     end
+  end
+
+  def STDB
+    SendSTART()
+    SqlSetDb(ReadC())
+    SendRETURN()
   end
 
   def RDUL

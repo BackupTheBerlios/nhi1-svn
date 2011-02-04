@@ -157,7 +157,7 @@ class atrans : public MqC, public IServerSetup,
 
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
-  atrans *filter = MqFactoryC<atrans>::New("transFilter");
+  atrans *filter = MqFactoryC<atrans>::Add("transFilter").New();
   try {
     MQ_STR datadir = NULL;
     struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
