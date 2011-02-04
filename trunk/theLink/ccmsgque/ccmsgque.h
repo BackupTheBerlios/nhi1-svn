@@ -314,6 +314,8 @@ namespace ccmsgque {
       inline MQ_BUF GetTempBuffer() { return context.temp; }
       /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
+      /// \api #MqSqlSetDb
+      inline void SqlSetDb (MQ_CST storageDir) throw(MqCException) { ErrorCheck (MqSqlSetDb(&context, storageDir)); } 
       /// \api #MqSysSleep
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
       /// \api #MqSysUSleep

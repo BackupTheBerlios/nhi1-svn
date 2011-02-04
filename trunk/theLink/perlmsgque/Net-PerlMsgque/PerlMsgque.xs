@@ -620,6 +620,11 @@ void
 MqExit(MqS * context)
 
 void
+MqSqlSetDb (MqS* context, MQ_CST storageFile)
+  CODE:
+    ErrorMqToPerlWithCheck (MqSqlSetDb (context, storageFile));
+
+void
 MqDelete (MqS* context)
   CODE:
     MqContextFree (context);

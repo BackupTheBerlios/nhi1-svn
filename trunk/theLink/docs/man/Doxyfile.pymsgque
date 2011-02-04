@@ -62,7 +62,7 @@ ALIASES		    += "ContextCreate=ctx=MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
 
 # OBJECT CONFIGURATION
@@ -324,4 +324,5 @@ except: \n\
   if ctx.ErrorIsEXIT(): \n\
     ctx.ErrorReset() \n\
 \endcode"
+
 

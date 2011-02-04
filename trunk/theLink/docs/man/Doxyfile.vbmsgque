@@ -71,7 +71,7 @@ ALIASES		    += "ContextCreate2=Dim ctx As New MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(prefix As String, level As Integer, message As String)"
 
 ALIASES		    += "init_example=\
@@ -326,4 +326,5 @@ Catch e As Exception \n\
   End If \n\
 End Try \n\
 \endcode"
+
 

@@ -95,10 +95,10 @@ NS(ThreadExit) (
 static int NS(SqlSetDb) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_CST file = NULL;
-  CHECK_C(file)
+  MQ_CST storageDir = NULL;
+  CHECK_C(storageDir)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqSqlSetDb (mqctx, file));
+  ErrorMqToTclWithCheck (MqSqlSetDb (mqctx, storageDir));
   RETURN_TCL
 }
 
@@ -456,9 +456,9 @@ int NS(MqS_Cmd) (
 
     { "RenameTo",		  NS(RenameTo)		      },
     { "Exit",			  NS(Exit)		      },
+    { "SqlSetDb",		  NS(SqlSetDb)		      },
     { "Delete",			  NS(Delete)		      },
     { "LogC",			  NS(LogC)		      },
-    { "SqlSetDb",		  NS(SqlSetDb)		      },
 
     { "dict",			  NS(dict)		      },
 

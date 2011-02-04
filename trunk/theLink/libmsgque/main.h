@@ -89,7 +89,8 @@ enum MqMessageNumE {
     /* 39 */ MQ_ERROR_TRANSACTION_REQUIRED,
     /* 40 */ MQ_ERROR_ID_NOT_FOUND,
     /* 41 */ MQ_ERROR_FEATURE_NOT_AVAILABLE,
-    /* 42 */ MQ_MESSAGE_END,
+    /* 42 */ MQ_ERROR_NULL_NOT_ALLOWED,
+    /* 43 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -180,6 +181,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"%s-id '%lld' not found",
     /* MQ_ERROR_FEATURE_NOT_AVAILABLE */
 	"the feature '%s' is not available",
+    /* MQ_ERROR_NULL_NOT_ALLOWED */
+	"the value 'NULL' is not allowed for parameter '%s'"
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };

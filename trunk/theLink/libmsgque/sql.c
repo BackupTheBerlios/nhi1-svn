@@ -19,7 +19,7 @@
 BEGIN_C_DECLS
 
 struct MqSqlS {
-  MQ_CST  storageDir;		///< main directory used for database files
+  MQ_CST  storageFile;		///< main directory used for database files
   sqlite3 *db;			///< sqlite database connection handle
   sqlite3_stmt *sendInsert;	///< prepared sql statement
   sqlite3_stmt *sendSelect;	///< prepared sql statement
@@ -57,19 +57,20 @@ sSqlDelDb (
   if (sql_sys != NULL) {
     sqlite3 * const db = sql_sys->db;
 
-    sSqlFinalize (db, &sql_sys->sendInsert);
-    sSqlFinalize (db, &sql_sys->sendSelect);
-    sSqlFinalize (db, &sql_sys->sendDelete);
-    sSqlFinalize (db, &sql_sys->readInsert);
-    sSqlFinalize (db, &sql_sys->readSelect1);
-    sSqlFinalize (db, &sql_sys->readSelect2);
-    sSqlFinalize (db, &sql_sys->readDelete);
-
-    if (sql_sys->storageDir != NULL) {
-      sqlite3_free((void*)sql_sys->storageDir);
-      sql_sys->storageDir = NULL;
+    if (sql_sys->storageFile != NULL) {
+      sqlite3_free((void*)sql_sys->storageFile);
+      sql_sys->storageFile = NULL;
     }
     if (sql_sys->db != NULL) {
+
+      sSqlFinalize (db, &sql_sys->sendInsert);
+      sSqlFinalize (db, &sql_sys->sendSelect);
+      sSqlFinalize (db, &sql_sys->sendDelete);
+      sSqlFinalize (db, &sql_sys->readInsert);
+      sSqlFinalize (db, &sql_sys->readSelect1);
+      sSqlFinalize (db, &sql_sys->readSelect2);
+      sSqlFinalize (db, &sql_sys->readDelete);
+
       check_sqlite(sqlite3_close(db)) {
 	return MqErrorDbSql(context, db);
       }
@@ -82,7 +83,7 @@ sSqlDelDb (
 static enum MqErrorE
 sSqlAddDb (
   struct MqS * const context, 
-  MQ_CST const storageDir
+  MQ_CST const storageFile
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
@@ -92,11 +93,15 @@ sSqlAddDb (
   const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans (callback TEXT, numItems INTEGER, type INTEGER, data BLOB);";
   const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (ident TEXT,ctxId INTEGER,rmtTransId INTEGER,oldTransId INTEGER);";
 
+  if (storageFile == NULL || *storageFile == '\0') {
+    return MqErrorDbV(MQ_ERROR_NULL_NOT_ALLOWED, "storageFile");
+  }
+
   check_NULL (sql_sys) {
     return MqErrorDbV(MQ_ERROR_FEATURE_NOT_AVAILABLE, "sql link");
   }
 
-  check_sqlite (sqlite3_open(storageDir, &sql_sys->db)) {
+  check_sqlite (sqlite3_open(storageFile, &sql_sys->db)) {
     return MqErrorDbSql(context, sql_sys->db);
   } 
 
@@ -112,7 +117,7 @@ sSqlAddDb (
     return MqErrorGetCodeI(context);
   } 
 
-  check_NULL (sql_sys->storageDir = MqSysStrDup(context, storageDir)) {
+  check_NULL (sql_sys->storageFile = MqSysStrDup(context, storageFile)) {
     return MqErrorStack(context);
   } 
 
@@ -128,11 +133,17 @@ sSqlAddDb (
 enum MqErrorE
 MqSqlSetDb (
   struct MqS * const context,
-  MQ_CST const storageDir
+  MQ_CST const storageFile
 )
 {
-  MqErrorCheck (sSqlDelDb(context, context->link.sql));
-  MqErrorCheck (sSqlAddDb(context, storageDir));
+  check_NULL (context->link.sql) {
+    return MqErrorDbV(MQ_ERROR_FEATURE_NOT_AVAILABLE, "sql link");
+  } else if (storageFile == NULL || context->link.sql->storageFile == NULL || 
+	      strcmp(context->link.sql->storageFile,storageFile)) {
+    // only change database if  "storageFile" is new
+    MqErrorCheck (sSqlDelDb(context, context->link.sql));
+    MqErrorCheck (sSqlAddDb(context, storageFile));
+  }
   return MqErrorGetCodeI(context);
 error:
   return MqErrorStack(context);
@@ -437,4 +448,5 @@ SqlDelete (void)
 }
 
 END_C_DECLS
+
 

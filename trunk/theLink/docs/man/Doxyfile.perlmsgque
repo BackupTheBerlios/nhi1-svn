@@ -67,7 +67,7 @@ ALIASES		    += "ContextCreate=our $ctx=new MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=$ctx->Delete()"
 ALIASES		    += "Exit=$ctx->Exit()"
-ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageDir)"
+ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageFile)"
 ALIASES		    += "LogC=$ctx->LogC(prefix,level,message)"
 
 # OBJECT CONFIGURATION
@@ -329,4 +329,5 @@ if ($@) { \n\
   if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
 } \n\
 \endcode"
+
 

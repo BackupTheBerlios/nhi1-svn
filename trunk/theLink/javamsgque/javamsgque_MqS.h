@@ -273,6 +273,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    SqlSetDb
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_SqlSetDb
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    LogC
  * Signature: (Ljava/lang/String;ILjava/lang/String;)V
  */

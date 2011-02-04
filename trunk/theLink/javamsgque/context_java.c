@@ -171,6 +171,23 @@ JNIEXPORT void JNICALL NS(Exit) (
   MqExit(CONTEXT);
 }
 
+JNIEXPORT void JNICALL NS(SqlSetDb) (
+  JNIEnv *	env, 
+  jobject	self, 
+  jstring	storageFile
+)
+{
+  const char * str;
+  enum MqErrorE ret;
+  SETUP_context;
+  str = JO2C_START(env,storageFile);
+  ret = MqSqlSetDb(context, str);
+  JO2C_STOP(env,storageFile,str);
+  ErrorMqToJavaWithCheck(ret);
+error:
+  return;
+}
+
 JNIEXPORT void JNICALL NS(pProcessEvent) (
   JNIEnv *	env, 
   jobject	self, 

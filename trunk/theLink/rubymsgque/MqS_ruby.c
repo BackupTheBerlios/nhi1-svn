@@ -96,6 +96,13 @@ static VALUE Exit(VALUE self)
   return Qnil;
 }
 
+static VALUE SqlSetDb(VALUE self, VALUE storageFile)
+{
+  SETUP_mqctx
+  ErrorMqToRubyWithCheck (MqSqlSetDb (mqctx, VAL2CST (storageFile)));
+  return Qnil;
+}
+
 static VALUE Delete(VALUE self)
 {
   MqContextFree (MQCTX);
@@ -140,11 +147,12 @@ void NS(MqS_Init) (void) {
   rb_define_singleton_method(cMqS, "new",  new,  -1);
   rb_define_method(cMqS, "Init", Init, -1);
 
-  rb_define_method(cMqS, "Exit",    Exit,   0);
-  rb_define_method(cMqS, "Delete",  Delete, 0);
-  rb_define_method(cMqS, "LogC",    LogC,   3);
-  rb_define_method(cMqS, "Sleep",   Sleep,  1);
-  rb_define_method(cMqS, "USleep",  USleep, 1);
+  rb_define_method(cMqS, "Exit",      Exit,	0);
+  rb_define_method(cMqS, "SqlSetDb",  SqlSetDb, 1);
+  rb_define_method(cMqS, "Delete",    Delete,	0);
+  rb_define_method(cMqS, "LogC",      LogC,	3);
+  rb_define_method(cMqS, "Sleep",     Sleep,	1);
+  rb_define_method(cMqS, "USleep",    USleep,	1);
 
   // Timeout
   rb_define_const(cMqS, "TIMEOUT_DEFAULT",  INT2VAL(-1));

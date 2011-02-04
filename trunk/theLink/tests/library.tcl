@@ -297,8 +297,7 @@ proc getLng {server} {
 }
 
 proc getPrefix {srv} {
-    global env
-    set RET [list]
+    set RET $::env(TS_EXEC_PREFIX)
 
     # prefix (debugger)
     if {[string match {*strace*} $srv]} {
@@ -1381,12 +1380,8 @@ proc Example {config client server args} {
 }
 
 proc Exec {args} {
-  global env
-  if {$env(TS_SETUP)} {
-    Print env(TS_EXEC_PREFIX) args
-  }
-  #if {[catch {exec {*}$args >&@stdout} ERR]} {}
-  if {[catch {exec {*}$env(TS_EXEC_PREFIX) {*}$args } ERR]} {
+  if {$::env(TS_SETUP)} { Print args }
+  if {[catch {exec {*}$args } ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {
     return "$ERR"
@@ -1394,11 +1389,9 @@ proc Exec {args} {
 }
 
 proc ExecErr {args} {
-  if {$::env(TS_SETUP)} {
-    Print args
-  }
+  if {$::env(TS_SETUP)} { Print args }
   #if {[catch {exec {*}$args >&@stdout} ERR]} {}
-  if {[catch {exec {*}$::env(TS_EXEC_PREFIX) {*}$args 2>@stderr } ERR]} {
+  if {[catch {exec {*}$args 2>@stderr } ERR]} {
     return [lindex $::errorCode 0]-[lindex $::errorCode 2]-$ERR
   } else {
     return "$ERR"
@@ -1420,10 +1413,9 @@ proc MakeFile {init name} {
 }
 
 proc Bg {out args} {
-  global env
-  if {$env(TS_SETUP)} { Print env(TS_EXEC_PREFIX) args }
-  set PID [exec {*}$env(TS_EXEC_PREFIX) {*}$args >&$out &]
-  if {$env(TS_SETUP)} { Print PID }
+  if {$::env(TS_SETUP)} { Print args }
+  set PID [exec {*}$args >&$out &]
+  if {$::env(TS_SETUP)} { Print PID }
   lappend ::CLEANUP_PID $PID
 }
 

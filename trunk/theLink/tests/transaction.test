@@ -28,6 +28,12 @@ set BLOCK_2 true
 
 #set tcl_traceExec 1
 
+set t [makeFile {} storageFile]
+file delete -force $t
+set storageFiles [list ":memory:" $t]
+unset t
+
+
 proc CB_I {ctx} {
   global RET
   $ctx ReadT_START
@@ -66,9 +72,12 @@ if {$BLOCK_1} {
       # what is currently tested
        SetConstraints $I $B $S
 
+      # server-type: server server.tcl
+      foreach D $storageFiles {
+
 ##
 ## -----------------------------------------------------------------------
-## int
+## transactions...
 ##
 
 # startup binary --------------------------
@@ -76,9 +85,12 @@ Setup $I $B $C $S
 
 $FH_LAST FactoryCtxIdentSet OTTO
 
+Echo0 $FH_LAST STDB SendC $D
+set D [file tail $D]
+
 # tests ----------------------------
 
-test transaction-e-1-($I|$B|$C|$S) {wrong item position} \
+test transaction-e-1-($I|$B|$C|$S|$D) {wrong item position} \
     -constraints    {c pipe} \
     -body           {
       $FH_LAST SendSTART
@@ -92,7 +104,7 @@ test transaction-e-1-($I|$B|$C|$S) {wrong item position} \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_START] the 'TRANSACTION' item have to be the 'first' item in the data package}
 
-test transaction-e-2-($I|$B|$C|$S) {SendT_END without SendT_START} \
+test transaction-e-2-($I|$B|$C|$S|$D) {SendT_END without SendT_START} \
     -constraints    {c pipe} \
     -body           {
       $FH_LAST SendSTART
@@ -103,7 +115,7 @@ test transaction-e-2-($I|$B|$C|$S) {SendT_END without SendT_START} \
     -match	    glob \
     -result         {[cC]> (client-0) \[MqSendT_END] the required item 'MqSendT_START' is not available in the data package}
 
-test transaction-2a-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
+test transaction-2a-($I|$B|$C|$S|$D) {basic test - SendEND_AND_WAIT OK return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -123,7 +135,7 @@ test transaction-2a-($I|$B|$C|$S) {basic test - SendEND_AND_WAIT OK return} \
     } \
     -result         {9978 1}
 
-test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} \
+test transaction-2b-($I|$B|$C|$S|$D) {basic test - SendEND_AND_CALLBACK OK return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -147,7 +159,7 @@ test transaction-2b-($I|$B|$C|$S) {basic test - SendEND_AND_CALLBACK OK return} 
     } \
     -result         {CB 9978 1}
 
-test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
+test transaction-2c-($I|$B|$C|$S|$D) {basic test - SendEND OK return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -170,7 +182,7 @@ test transaction-2c-($I|$B|$C|$S) {basic test - SendEND OK return} \
     } \
     -result         {9978 1}
 
-test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
+test transaction-3-($I|$B|$C|$S|$D) {basic test - ERROR return} \
     -constraints    {binary} \
     -setup	    {
       set RET [list]
@@ -198,7 +210,7 @@ test transaction-3-($I|$B|$C|$S) {basic test - ERROR return} \
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
 
-test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
+test transaction-4-($I|$B|$C|$S|$D) {basic test - ERROR return} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate ECOI ECOI
@@ -213,7 +225,7 @@ test transaction-4-($I|$B|$C|$S) {basic test - ERROR return} \
     -match	    glob \
     -result         {9876 345}
 
-test transaction-5-($I|$B|$C|$S) {MqSendERROR test} \
+test transaction-5-($I|$B|$C|$S|$D) {MqSendERROR test} \
     -setup	    {
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
@@ -274,7 +286,7 @@ if {$BLOCK_2} {
     # server-type: server server.tcl
     foreach S [filter SRV_LST $C] {
 
-test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
+test transaction-X1-($I|$B|$C|$S|$D) {Read/Send BDY test} \
     -constraints    {!filter-test} \
     -setup	    {
       Setup $I $B $C $S --filter-server Filter3
@@ -297,6 +309,7 @@ test transaction-X1-($I|$B|$C|$S) {Read/Send BDY test} \
     } \
     -result         {9978 1}
    
+     }; # storageFiles
     }; # SRV_LST
    }; # COM_LST
   }; # BIN_LST

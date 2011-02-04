@@ -1238,6 +1238,21 @@ error:
   return MqErrorStack (mqctx);
 }
 
+/// \brief set the \e persistant-transaction-database-file
+/// \service
+static enum MqErrorE Ot_STDB (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_CST str;
+  MqErrorCheck (MqSendSTART(mqctx));
+  MqErrorCheck (MqReadC(mqctx, &str));
+  MqErrorCheck (MqSqlSetDb (mqctx, str));
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /// \brief print data to file
 /// \service
 static enum MqErrorE
@@ -1353,6 +1368,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRNS", Ot_TRNS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRN2", Ot_TRN2, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "STDB", Ot_STDB, NULL, NULL));
   }
 
 error:

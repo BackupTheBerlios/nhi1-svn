@@ -31,6 +31,15 @@ PHP_METHOD(MsgqueForPhp_MqS, Exit)
 }
 
 static
+PHP_METHOD(MsgqueForPhp_MqS, SqlSetDb)
+{
+  SETUP_mqctx;
+  ARG2CST(SqlSetDb,storageDir);
+  ErrorMqToPhpWithCheck(MqSqlSetDb(mqctx,storageDir));
+  RETURN_NULL();
+}
+
+static
 PHP_METHOD(MsgqueForPhp_MqS, Delete)
 {
   SETUP_mqctx;
@@ -345,10 +354,15 @@ ZEND_BEGIN_ARG_INFO_EX(ident_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "ident")
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(storageFile_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "storageFile")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, __construct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(MsgqueForPhp_MqS, __destruct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(MsgqueForPhp_MqS, Exit,		    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, SqlSetDb,		    storageFile_arg,	  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, Delete,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, LogC,		    LogC_arg,		  ZEND_ACC_PUBLIC)
 #ifdef _DEBUG

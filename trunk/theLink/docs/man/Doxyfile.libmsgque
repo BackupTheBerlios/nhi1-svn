@@ -75,7 +75,7 @@ ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL
 ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
-ALIASES		    += "SqlSetDb=MqSqlSetDb(struct MqS* ctx, MQ_CST storageDir)"
+ALIASES		    += "SqlSetDb=MqSqlSetDb(struct MqS* ctx, MQ_CST storageFile)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
@@ -314,4 +314,5 @@ if (MqErrorCheckI (MqSendEND_AND_WAIT (ctx, \"TOKS\", MQ_TIMEOUT_USER))) { \n\
   if (MqErrorIsEXIT (ctx)) MqErrorReset (ctx); \n\
 } \n\
 \endcode"
+
 

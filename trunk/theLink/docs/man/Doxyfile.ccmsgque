@@ -74,7 +74,7 @@ ALIASES		    += "ContextCreate2=MqC *ctx=new MqC()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=delete(ctx)"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
 ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=ctx.LogV(MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
@@ -369,4 +369,5 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
 

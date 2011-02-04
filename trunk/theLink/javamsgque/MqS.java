@@ -162,6 +162,9 @@ public class MqS {
   /// \api #MqExit
   public native void Exit ();
 
+  /// \api #MqSqlSetDb
+  public native void SqlSetDb (String storageFile);
+
   /// \api #MqLogC
   public native void LogC (String prefix, int level, String text);
 

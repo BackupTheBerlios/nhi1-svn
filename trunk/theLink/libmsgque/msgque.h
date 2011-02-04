@@ -1686,11 +1686,11 @@ MQ_EXTERN void MQ_DECL MqMark (
 
 /// \brief switch to a \e file-based-transaction-database
 /// \context
-/// \param[in] storageDir the directory used to create the \e transaction-database files
+/// \param[in] storageFile the file used to create the \e transaction-database
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
   struct MqS * const context,
-  MQ_CST const storageDir
+  MQ_CST const storageFile
 );
 
 #if defined(_DEBUG)
@@ -4871,6 +4871,7 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
 
 
 

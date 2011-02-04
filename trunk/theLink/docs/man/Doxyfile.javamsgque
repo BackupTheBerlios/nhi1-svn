@@ -72,7 +72,7 @@ ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=deleted by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(String prefix, int level, String message)"
 
 # OBJECT CONFIGURATION
@@ -330,4 +330,5 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
 

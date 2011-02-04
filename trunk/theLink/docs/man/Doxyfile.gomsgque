@@ -72,7 +72,7 @@ the toplevel interface is require. The reference can be set with the \e top argu
 or with the \RNSA{SetSelf} method"
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageDir)"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
 ENABLED_SECTIONS    += SELF
 ALIASES		    += "SetSelf=ctx.SetSelf(ifc interface{})"
@@ -356,4 +356,5 @@ ENABLED_SECTIONS    += BINARY
 
 ALIASES		    += "BinarySet=binary.Set(data \B)"
 ALIASES		    += "BinaryGet=binary.Get() \B"
+
 

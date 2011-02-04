@@ -59,7 +59,7 @@ ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS ?tmpl?]"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=rename $ctx \"\""
 ALIASES		    += "Exit=$ctx Exit"
-ALIASES		    += "SqlSetDb=$ctx SqlSetDb storageDir"
+ALIASES		    += "SqlSetDb=$ctx SqlSetDb storageFile"
 ALIASES		    += "LogC=$ctx LogC prefix level message"
 ALIASES		    += "Main=tclmsgque Main {code}"
 
@@ -308,4 +308,5 @@ if {[catch { \n\
   } \n\
 } \n\
 \endcode"
+
 
