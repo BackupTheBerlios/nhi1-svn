@@ -93,7 +93,7 @@ sSqlAddDb (
   const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans (callback TEXT, numItems INTEGER, type INTEGER, data BLOB);";
   const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (ident TEXT,ctxId INTEGER,rmtTransId INTEGER,oldTransId INTEGER);";
 
-  if (storageFile == NULL || *storageFile == '\0') {
+  check_NULL (storageFile) {
     return MqErrorDbV(MQ_ERROR_NULL_NOT_ALLOWED, "storageFile");
   }
 
@@ -284,6 +284,7 @@ pSqlInsertReadTrans (
     return MqErrorDbSql(context,sql_sys->db);
   }
   *transIdP = sqlite3_last_insert_rowid(sql_sys->db);
+  MqLogV (context, __func__, 5, "create transaction <%lld>\n", *transIdP);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -329,7 +330,7 @@ error1:
 enum MqErrorE
 pSqlDeleteReadTrans (
   struct MqS * const context, 
-  MQ_WID *transIdP,
+  MQ_WID transIdP,
   MQ_WID *oldTransId
 )
 {
@@ -345,12 +346,12 @@ pSqlDeleteReadTrans (
   }
   // get oldTransId
   check_sqlite (sqlite3_reset(hdl))		      goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,*transIdP))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,transIdP))  goto error;
   switch (sqlite3_step(hdl)) {
     case SQLITE_ROW:
       break;
     case SQLITE_DONE:
-      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",*transIdP);
+      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",transIdP);
     default:
       return MqErrorDbSql(context,sql_sys->db);
   }
@@ -363,11 +364,11 @@ pSqlDeleteReadTrans (
     hdl = sql_sys->readDelete;
   }
   check_sqlite (sqlite3_reset(hdl))		      goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,*transIdP))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,transIdP))   goto error;
   if (sqlite3_step(hdl) != SQLITE_DONE) {
     return MqErrorDbSql(context,sql_sys->db);
   }
-  *transIdP = 0LL;
+  MqLogV (context, __func__, 5, "delete transaction <%lld>\n", transIdP);
   return MqErrorGetCodeI(context);
 error:
   return MqErrorDbSql(context,sql_sys->db);

@@ -975,9 +975,8 @@ pReadDeleteTrans (
 {
   struct MqReadS * const read = context->link.read;
   if (read->transId != 0LL) {
-    MqLogV (context, __func__, 5, "delete transaction <%lld>\n", read->transId);
     read->handShake = MQ_HANDSHAKE_START;
-    return pSqlDeleteReadTrans(context,&read->transId,&read->transId);
+    return pSqlDeleteReadTrans(context,read->transId,&read->transId);
   } else {
     return MQ_OK;
   }

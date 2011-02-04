@@ -29,7 +29,7 @@ our @EXPORT = qw(
   MqFactoryS::GetCalled
 );
 
-our $VERSION = '5.1';
+our $VERSION = '5.2';
 
 require XSLoader;
 XSLoader::load('Net::PerlMsgque', $VERSION);

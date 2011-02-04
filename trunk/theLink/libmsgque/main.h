@@ -861,7 +861,7 @@ enum MqErrorE pSqlSelectSendTrans ( struct MqS * const, MQ_WID, MQ_BUF);
 enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_WID*);
 enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_CST const, MQ_WID const, MQ_WID const, MQ_WID*); 
 enum MqErrorE pSqlSelectReadTrans ( struct MqS * const, MQ_WID);
-enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID*, MQ_WID*);
+enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID, MQ_WID*);
 enum MqErrorE pSqlCreate ( struct MqS * const, struct MqSqlS ** const);
 void pSqlDelete (struct MqSqlS **);
 

@@ -32,6 +32,8 @@
 #define NUM_PARENT  100
 #define NUM_CHILD   1000
 
+#define MQ_CONTEXT_S mqctx
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                     main                                  */
@@ -123,7 +125,7 @@ ClientHelp ( const char * base  )
     fputs("  --send-and-callback-perf\n",stderr);
     fputs("    Same as '--send-perf' but use 'MqSendEND_AND_CALLBACK'\n", stderr);
     fputs("\n", stderr);
-    fputs("  --send-transaction-perf\n",stderr);
+    fputs("  --send-persistent-perf\n",stderr);
     fputs("    Use a persistent-transaction together with 'MqSendEND_AND_WAIT'\n", stderr);
     fputs("\n", stderr);
     fputs("  --parent-perf\n",stderr);
@@ -168,7 +170,7 @@ ClientMain (
   MQ_BOL sendB;		  // test MqSendEND time?
   MQ_BOL sendAndWait;	  // test MqSendEND_AND_WAIT round-trip time?
   MQ_BOL sendAndCall;	  // test MqSendEND_AND_CALLBACK round-trip time?
-  MQ_BOL sendTransaction; // test MqSendEND_AND_WAIT together with persistent transactions round-trip time?
+  MQ_BOL sendPersistent; // test MqSendEND_AND_WAIT together with persistent transactions round-trip time?
   MQ_BOL parent;	  // test parent-context creation time?
   MQ_BOL child;		  // test child-context creation time?
   MQ_BOL all;		  // test all
@@ -189,13 +191,13 @@ ClientMain (
   MqBufferLCheckOptionO (mqctx, largv, "--send-perf", &sendB);
   MqBufferLCheckOptionO (mqctx, largv, "--send-and-wait-perf", &sendAndWait);
   MqBufferLCheckOptionO (mqctx, largv, "--send-and-callback-perf", &sendAndCall);
-  MqBufferLCheckOptionO (mqctx, largv, "--send-transaction-perf", &sendTransaction);
+  MqBufferLCheckOptionO (mqctx, largv, "--send-persistent-perf", &sendPersistent);
   MqBufferLCheckOptionO (mqctx, largv, "--parent-perf", &parent);
   MqBufferLCheckOptionO (mqctx, largv, "--child-perf", &child);
   MqBufferLCheckOptionO (mqctx, largv, "--all", &all);
   if (all) {
-    sendB = sendAndWait = sendAndCall = sendTransaction = parent = child = MQ_YES;
-  } else if (sendB == MQ_NO && sendAndWait == MQ_NO && sendAndCall == MQ_NO && sendTransaction == MQ_NO
+    sendB = sendAndWait = sendAndCall = sendPersistent = parent = child = MQ_YES;
+  } else if (sendB == MQ_NO && sendAndWait == MQ_NO && sendAndCall == MQ_NO && sendPersistent == MQ_NO
 		&& parent == MQ_NO && child == MQ_NO ) {
     sendAndWait = MQ_YES;
   }
@@ -314,7 +316,7 @@ ClientMain (
     // cleanup
     StatDelete (&itemT);
 
-    MqSysSleep (MQ_ERROR_IGNORE, 2);
+    //MqSysSleep (MQ_ERROR_IGNORE, 2);
 
   } /* finish the MqSendEND_AND_CALLBACK test */
 
@@ -367,15 +369,15 @@ ClientMain (
 
   } /* finish the MqSendEND_AND_WAIT performance test */
 
-  if (sendTransaction) {
+  if (sendPersistent) {
 
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
+    MQ_INT lnum = (num == -1 ? NUM_TRANS / 5000 : num);
 
     StatTimerSP itemT = StatCreate (mqctx);
 
     {
-      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendTRANSACTION", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendPERSISTENT", 0);
       const MQ_BYT stepY = 1;
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
@@ -385,8 +387,27 @@ ClientMain (
       MQ_INT valI = INT_MIN;
       MQ_WID valW = LLONG_MIN;
       int i; 
-      callnum = 0;
+      // setup the callback
       MqErrorCheck(MqServiceCreate(mqctx, "SDTR", RET_SDTR, NULL ,NULL));
+      unlink("testDb");
+      // set transaction-database name
+      MqErrorCheck(MqSendSTART(mqctx));
+      MqErrorCheck(MqSendC(mqctx,"testDb"));
+      MqErrorCheck(MqSendEND_AND_WAIT(mqctx,"STDB",MQ_TIMEOUT_USER));
+      // prepare sql queries
+      MqSendSTART (mqctx);
+      MqSendT_START(mqctx);
+      MqSendI (mqctx, 999);
+      MqSendT_END(mqctx, "SDTR");
+      MqSendY (mqctx, valY);
+      MqSendS (mqctx, valS);
+      MqSendI (mqctx, valI);
+      MqSendW (mqctx, valW);
+      MqSendB (mqctx, data, 10);
+      MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "ECUL", MQ_TIMEOUT10));
+      MqErrorCheck(MqProcessEvent(mqctx, 3, MQ_WAIT_ONCE));
+      // start the test
+      callnum = 0;
       StatInit (itemT);
 	for (i=0; i<lnum; i++) {
 	  MqSendSTART (mqctx);
@@ -406,18 +427,20 @@ ClientMain (
 	};
 
       // wait untill all callbacks are processed
-      while (callnum != lnum)
+      while (callnum != lnum) {
 	MqErrorCheck(MqProcessEvent(mqctx, 3, MQ_WAIT_ONCE));
+      }
 
       StatCtxCalc (stat, itemT);
       stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
-      MqServiceDelete(mqctx, "SDTR");
+      MqErrorCheck(MqServiceDelete(mqctx, "SDTR"));
     }
 
     // cleanup
     StatDelete (&itemT);
+    unlink("testDb");
 
   } /* finish the MqSendTRANSACTION performance test */
 

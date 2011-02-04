@@ -1686,7 +1686,11 @@ MQ_EXTERN void MQ_DECL MqMark (
 
 /// \brief switch to a \e file-based-transaction-database
 /// \context
-/// \param[in] storageFile the file used to create the \e transaction-database
+/// \param[in] storageFile the file used to create the \e transaction-database. Allowed values are: 
+///            -# the string \c :memory: (default) for a \e in-memory-database
+///            -# the string \c filename for a \e persistent-database-file
+///            -# an \c empty string for a \e temporary-database-file
+///            .
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
   struct MqS * const context,

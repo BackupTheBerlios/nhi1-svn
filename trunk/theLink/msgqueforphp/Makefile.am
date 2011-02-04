@@ -90,7 +90,7 @@ EXTRA_DIST = \
 	MsgqueForPhp/error_php.c \
 	MsgqueForPhp/misc_php.c \
 	MsgqueForPhp/send_php.c \
-	MsgqueForPhp/factory_php.c \
+	MsgqueForPhp/MqFactoryS_php.c \
 	MsgqueForPhp/slave_php.c
 
 

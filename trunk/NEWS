@@ -10,6 +10,30 @@
 #§              please contact AUTHORS for additional information
 #§
 
+05 Feb 2011: v NHI1-0.13, PLMK-2.2 und libmsgque-5.2
+
+ -> "SqLite, one additional step in the right direction"
+
+This release add persistent-transaction-support-part-1 and an improved factory-interface.
+In addition some code/documentation errors were fixed.
+
+The following commands were A)dded / D)eleted / C)hanged:
+
+  A SqlSetDb,
+  A FactoryCtxGet
+  A FactoryCtxSet
+  D FactoryCtxDefaultSet
+  C FactoryNew
+  C FactoryAdd
+  C FactoryDefault
+  A FactoryCopy
+  A FactoryGet
+  A FactoryGetCalled
+  C SendT_START
+  C SendT_END
+  C ReadT_START
+
+
 20 Jan 2010: v NHI1-0.12, PLMK-2.1 and libmsgque-5.1
 
 This release embed "sqlite" support into the PLMK kernel.

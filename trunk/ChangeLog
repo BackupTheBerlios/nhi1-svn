@@ -9,6 +9,7 @@
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
+
 /**
 
 \page changelog ChangeLog
@@ -16,7 +17,19 @@
 \n
 \n
 
-\section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+\section V0_13 05 Feb 2011 - NHI1-0.13, PLMK-2.2 und libmsgque-5.2
+
+This release add \e persistent-transaction-support-part-1 and an improved \e factory-interface.
+In addition some code/documentation errors were fixed.
+
+\verbatim
+svn diff --summarize -r '{2011-01-21}:{2011-02-05}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_12 21 Jan 2011 - NHI1-0.12, PLMK-2.1 und libmsgque-5.1
 
 This release embed "sqlite" support into the PLMK kernel.
 

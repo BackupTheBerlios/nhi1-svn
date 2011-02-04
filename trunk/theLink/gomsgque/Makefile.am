@@ -50,7 +50,7 @@ $(srcdir)/src/link.go \
 $(srcdir)/src/config.go \
 $(srcdir)/src/service.go\
 $(srcdir)/src/slave.go\
-$(srcdir)/src/factory.go\
+$(srcdir)/src/MqFactoryS.go\
 $(srcdir)/src/gomsgque.h \
 $(srcdir)/src/gomsgque.c \
 $(srcdir)/src/Makefile \

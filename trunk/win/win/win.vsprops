@@ -45,6 +45,6 @@
 	/>
 	<UserMacro
 		Name="LIBMSGQUE_VERSION"
-		Value="5.1"
+		Value="5.2"
 	/>
 </VisualStudioPropertySheet>
