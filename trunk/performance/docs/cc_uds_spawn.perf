@@ -1,11 +1,12 @@
-> nothread/NHI1-0.12/theLink/example/cc/server --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:28916) [2011-01-21:09-05-01] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:28916) [2011-01-21:09-05-01] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       2.64
-C> (client:28916) [2011-01-21:09-05-01] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       4.49
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      18.68
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-statistics]:                  parent create:    1332.66
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-statistics]:                  parent delete:     153.13
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-statistics]:                   child create:      81.24
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-statistics]:                   child delete:      32.05
-C> (client:28916) [2011-01-21:09-05-04] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> nothread/NHI1-0.13/theLink/example/cc/server --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:11875) [2011-02-04:19-18-24] [0-0-0-0x6e6d98-main]: start: --------------------------------------
+C> (client:11875) [2011-02-04:19-18-24] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:       2.73
+C> (client:11875) [2011-02-04:19-18-24] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:       4.53
+C> (client:11875) [2011-02-04:19-18-25] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:      18.88
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:     212979
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-statistics]:                  parent create:    1311.62
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-statistics]:                  parent delete:     158.38
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-statistics]:                   child create:      81.98
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-statistics]:                   child delete:      33.16
+C> (client:11875) [2011-02-04:19-18-28] [0-0-0-0x6e6d98-main]: end: ----------------------------------------

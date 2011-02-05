@@ -1,11 +1,12 @@
-> nothread/NHI1-0.12/theLink/example/c/server --tcp --host localhost --port 7779 --spawn
-> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7779
-C> (client:27622) [2011-01-21:09-04-06] [0-0-0-0x6e3f68-main]: start: --------------------------------------
-C> (client:27622) [2011-01-21:09-04-06] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       2.68
-C> (client:27622) [2011-01-21:09-04-06] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:       5.18
-C> (client:27622) [2011-01-21:09-04-09] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      25.96
-C> (client:27622) [2011-01-21:09-04-10] [0-0-0-0x6e3f68-statistics]:                  parent create:     843.98
-C> (client:27622) [2011-01-21:09-04-10] [0-0-0-0x6e3f68-statistics]:                  parent delete:     123.99
-C> (client:27622) [2011-01-21:09-04-10] [0-0-0-0x6e3f68-statistics]:                   child create:      82.88
-C> (client:27622) [2011-01-21:09-04-10] [0-0-0-0x6e3f68-statistics]:                   child delete:      39.11
-C> (client:27622) [2011-01-21:09-04-10] [0-0-0-0x6e3f68-main]: end: ----------------------------------------
+> nothread/NHI1-0.13/theLink/example/c/server --tcp --host localhost --port 7779 --spawn
+> nothread/NHI1-0.13/theLink/example/c/client --all --tcp --host localhost --port 7779
+C> (client:10581) [2011-02-04:19-17-16] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
+C> (client:10581) [2011-02-04:19-17-16] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:       2.64
+C> (client:10581) [2011-02-04:19-17-16] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:       5.00
+C> (client:10581) [2011-02-04:19-17-18] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:      26.07
+C> (client:10581) [2011-02-04:19-17-20] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:     216761
+C> (client:10581) [2011-02-04:19-17-20] [0-0-0-0x6e6fb8-statistics]:                  parent create:     835.82
+C> (client:10581) [2011-02-04:19-17-20] [0-0-0-0x6e6fb8-statistics]:                  parent delete:     129.62
+C> (client:10581) [2011-02-04:19-17-21] [0-0-0-0x6e6fb8-statistics]:                   child create:     179.69
+C> (client:10581) [2011-02-04:19-17-21] [0-0-0-0x6e6fb8-statistics]:                   child delete:      40.27
+C> (client:10581) [2011-02-04:19-17-21] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------

@@ -433,7 +433,7 @@ ClientMain (
 
       StatCtxCalc (stat, itemT);
       stat->val /= lnum;
-      StatCtxPrint (stat);
+      StatCtxPrint0 (stat);
       StatCtxDelete (&stat);
       MqErrorCheck(MqServiceDelete(mqctx, "SDTR"));
     }

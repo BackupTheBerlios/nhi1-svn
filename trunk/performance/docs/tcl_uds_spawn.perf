@@ -1,11 +1,12 @@
-> tclsh nothread/NHI1-0.12/theLink/example/tcl/server.tcl --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:29819) [2011-01-21:09-05-48] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:29819) [2011-01-21:09-05-48] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       5.79
-C> (client:29819) [2011-01-21:09-05-49] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       9.55
-C> (client:29819) [2011-01-21:09-05-52] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      23.59
-C> (client:29819) [2011-01-21:09-05-53] [0-0-0-0x6e3d48-statistics]:                  parent create:   10270.51
-C> (client:29819) [2011-01-21:09-05-53] [0-0-0-0x6e3d48-statistics]:                  parent delete:     224.66
-C> (client:29819) [2011-01-21:09-05-53] [0-0-0-0x6e3d48-statistics]:                   child create:     257.46
-C> (client:29819) [2011-01-21:09-05-53] [0-0-0-0x6e3d48-statistics]:                   child delete:      38.47
-C> (client:29819) [2011-01-21:09-05-53] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.13/theLink/example/tcl/server.tcl --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:12779) [2011-02-04:19-19-19] [0-0-0-0x6e6d98-main]: start: --------------------------------------
+C> (client:12779) [2011-02-04:19-19-19] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:       5.74
+C> (client:12779) [2011-02-04:19-19-19] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:       9.30
+C> (client:12779) [2011-02-04:19-19-21] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:      23.13
+C> (client:12779) [2011-02-04:19-19-23] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:     217921
+C> (client:12779) [2011-02-04:19-19-24] [0-0-0-0x6e6d98-statistics]:                  parent create:   11487.54
+C> (client:12779) [2011-02-04:19-19-24] [0-0-0-0x6e6d98-statistics]:                  parent delete:     239.98
+C> (client:12779) [2011-02-04:19-19-25] [0-0-0-0x6e6d98-statistics]:                   child create:     267.46
+C> (client:12779) [2011-02-04:19-19-25] [0-0-0-0x6e6d98-statistics]:                   child delete:      38.34
+C> (client:12779) [2011-02-04:19-19-25] [0-0-0-0x6e6d98-main]: end: ----------------------------------------

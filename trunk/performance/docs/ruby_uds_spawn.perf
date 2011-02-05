@@ -1,11 +1,12 @@
-> ruby nothread/NHI1-0.12/theLink/example/ruby/server.rb --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.12/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:21217) [2011-01-21:08-54-12] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:21217) [2011-01-21:08-54-12] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       4.29
-C> (client:21217) [2011-01-21:08-54-12] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       8.18
-C> (client:21217) [2011-01-21:08-54-16] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      22.15
-C> (client:21217) [2011-01-21:08-54-17] [0-0-0-0x6e3d48-statistics]:                  parent create:   13899.44
-C> (client:21217) [2011-01-21:08-54-17] [0-0-0-0x6e3d48-statistics]:                  parent delete:     460.19
-C> (client:21217) [2011-01-21:08-54-17] [0-0-0-0x6e3d48-statistics]:                   child create:     132.17
-C> (client:21217) [2011-01-21:08-54-17] [0-0-0-0x6e3d48-statistics]:                   child delete:      78.93
-C> (client:21217) [2011-01-21:08-54-17] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> ruby nothread/NHI1-0.13/theLink/example/ruby/server.rb --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:18704) [2011-02-04:19-21-48] [0-0-0-0x6e6d98-main]: start: --------------------------------------
+C> (client:18704) [2011-02-04:19-21-49] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:       4.22
+C> (client:18704) [2011-02-04:19-21-49] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:       7.17
+C> (client:18704) [2011-02-04:19-21-50] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:      21.32
+C> (client:18704) [2011-02-04:19-21-54] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:     317282
+C> (client:18704) [2011-02-04:19-21-55] [0-0-0-0x6e6d98-statistics]:                  parent create:   13729.90
+C> (client:18704) [2011-02-04:19-21-55] [0-0-0-0x6e6d98-statistics]:                  parent delete:     461.24
+C> (client:18704) [2011-02-04:19-21-55] [0-0-0-0x6e6d98-statistics]:                   child create:     136.83
+C> (client:18704) [2011-02-04:19-21-55] [0-0-0-0x6e6d98-statistics]:                   child delete:      70.71
+C> (client:18704) [2011-02-04:19-21-55] [0-0-0-0x6e6d98-main]: end: ----------------------------------------

@@ -1,10 +1,11 @@
-> nothread/NHI1-0.12/theLink/example/c/client --all @ ruby nothread/NHI1-0.12/theLink/example/ruby/server.rb
-C> (client:20095) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-main]: start: --------------------------------------
-C> (client:20095) [2011-01-21:08-53-44] [0-0-0-0x6e3d48-statistics]:                      MqSendEND:       4.25
-C> (client:20095) [2011-01-21:08-53-45] [0-0-0-0x6e3d48-statistics]:         MqSendEND_AND_CALLBACK:       7.22
-C> (client:20095) [2011-01-21:08-53-48] [0-0-0-0x6e3d48-statistics]:             MqSendEND_AND_WAIT:      21.57
-C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                  parent create:   13800.99
-C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                  parent delete:     470.53
-C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                   child create:     131.55
-C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-statistics]:                   child delete:      79.07
-C> (client:20095) [2011-01-21:08-53-49] [0-0-0-0x6e3d48-main]: end: ----------------------------------------
+> nothread/NHI1-0.13/theLink/example/c/client --all @ ruby nothread/NHI1-0.13/theLink/example/ruby/server.rb
+C> (client:17583) [2011-02-04:19-21-16] [0-0-0-0x6e6d98-main]: start: --------------------------------------
+C> (client:17583) [2011-02-04:19-21-16] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:       4.07
+C> (client:17583) [2011-02-04:19-21-17] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:       6.92
+C> (client:17583) [2011-02-04:19-21-18] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:      21.19
+C> (client:17583) [2011-02-04:19-21-21] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:     267370
+C> (client:17583) [2011-02-04:19-21-22] [0-0-0-0x6e6d98-statistics]:                  parent create:   13699.74
+C> (client:17583) [2011-02-04:19-21-22] [0-0-0-0x6e6d98-statistics]:                  parent delete:     466.54
+C> (client:17583) [2011-02-04:19-21-22] [0-0-0-0x6e6d98-statistics]:                   child create:     137.89
+C> (client:17583) [2011-02-04:19-21-22] [0-0-0-0x6e6d98-statistics]:                   child delete:      70.72
+C> (client:17583) [2011-02-04:19-21-22] [0-0-0-0x6e6d98-main]: end: ----------------------------------------

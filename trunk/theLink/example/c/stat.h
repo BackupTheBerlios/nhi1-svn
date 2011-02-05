@@ -98,6 +98,10 @@ void StatCtxPrint (
   StatCtxSP context
 );
 
+void StatCtxPrint0 (
+  StatCtxSP context
+);
+
 void StatCtxCalc (
   StatCtxSP context,
   StatTimerSP const timer

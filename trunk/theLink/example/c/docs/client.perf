@@ -1,9 +1,10 @@
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-53] [0-0-0-0x71fee0-main]: start: --------------------------------------
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-54] [0-0-0-0x71fee0-statistics]:                      MqSendEND:       3.91
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-54] [0-0-0-0x71fee0-statistics]:         MqSendEND_AND_CALLBACK:       7.40
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-57] [0-0-0-0x71fee0-statistics]:             MqSendEND_AND_WAIT:      19.37
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-57] [0-0-0-0x71fee0-statistics]:                  parent create:    1087.57
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-57] [0-0-0-0x71fee0-statistics]:                  parent delete:     327.02
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-57] [0-0-0-0x71fee0-statistics]:                   child create:     223.06
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-58] [0-0-0-0x71fee0-statistics]:                   child delete:     213.97
-C> (client:10738:0x2b2672127b20) [2011-01-31:10-30-58] [0-0-0-0x71fee0-main]: end: ----------------------------------------
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-14] [0-0-0-0x720ee0-main]: start: --------------------------------------
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-14] [0-0-0-0x720ee0-statistics]:                      MqSendEND:       2.89
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-14] [0-0-0-0x720ee0-statistics]:         MqSendEND_AND_CALLBACK:       4.95
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-15] [0-0-0-0x720ee0-statistics]:             MqSendEND_AND_WAIT:      18.58
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-statistics]:               MqSendPERSISTENT:     232233
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-statistics]:                  parent create:     970.77
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-statistics]:                  parent delete:     248.65
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-statistics]:                   child create:     293.42
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-statistics]:                   child delete:     142.51
+C> (client:24629:0x2b8ba58e8b20) [2011-02-04:19-33-18] [0-0-0-0x720ee0-main]: end: ----------------------------------------

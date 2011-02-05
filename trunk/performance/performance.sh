@@ -27,13 +27,13 @@ NUM=" --num 10 "
 NUM=" "
 
 ## setup the TOTAL - LINK perf
-FSL=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
-FIL=" %-20s | %8s %8s %8s %9s %8s %8s %8s\n"
+FSL=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
+FIL=" %-20s | %8s %8s %8s %8s %9s %8s %8s %8s\n"
 exec 3>docs/total_link.perf
 DATE=$(date +"%Y-%m-%d %H:%M:%S")
-printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
-printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " create  " " delete " " create " " delete " 1>&3
-printf "$FSL" -------------------   --------   --------   --------   ---------   --------   --------   --------  1>&3
+printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
+printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " PERSIS " " create  " " delete " " create " " delete " 1>&3
+printf "$FSL" -------------------   --------   --------   --------   --------   ---------   --------   --------   --------  1>&3
 
 ## setup the TOTAL - BRAIN perf
 FSB=" %-20s | %-8s %-8s\n"
@@ -358,7 +358,7 @@ done
 # calculate the total
 for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
   echo -e "\n $TST:" 1>&3
-  for LNG in c cc csharp java go perl python ruby tcl vb php; do
+  for LNG in c cc csharp java go perl python ruby tcl php; do
     TotalLink ${LNG} ${TST}
   done
   echo -e "\n $TST:" 1>&4

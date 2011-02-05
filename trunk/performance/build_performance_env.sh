@@ -21,11 +21,12 @@ set -x
 . ./env.sh
 
 ## create: $PACKAGE-$PACKAGE_VERSION.tar.bz2
-(cd ..; make dist) || exit 1
+(cd ..; performance/performance_thread.env make dist) || exit 1
 
 ## config/build/install
 Build() {
   (
+set -x
     BUILD=$1; shift
     rm -fr $BUILD
     mkdir $BUILD

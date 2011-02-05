@@ -2,9 +2,14 @@
 
 <CENTER>
 
-\section nw  NEWS, from 21 Jan 2011
+\section nw  NEWS, from 05 Feb 2011
 
-Finish release \b 5 of \ref wp2 with adding \ref wp2_SQLite support. \n
+Finish release \b 6 of \ref wp2 \n
+<TT>"SqLite, one additional step in the right direction"</TT> \n
+This release add \b persistent-transaction-support-part-1, \n
+an improved \b factory-interface, \n
+and a fixing of some code/documentation errors
+
 
 \section intro Introduction
 

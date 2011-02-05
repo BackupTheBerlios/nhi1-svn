@@ -198,6 +198,17 @@ StatCtxPrint (
            0, "%30s: %10.2f\n", context->name->data, context->val);
 }
 
+/// \brief log the data of a StatCtxS object to stderr
+/// \sta_context
+void
+StatCtxPrint0 (
+  StatCtxSP context
+)
+{
+  MqLogV (context->mqctx, "statistics",
+           0, "%30s: %10.0f\n", context->name->data, context->val);
+}
+
 /// \brief update #StatCtxS statistical data using #StatTimerS timer object
 /// \sta_context
 /// \sta_timer

@@ -23,6 +23,9 @@ usage: client [OPTION]... [ARGUMENT]...
   --send-and-callback-perf
     Same as '--send-perf' but use 'MqSendEND_AND_CALLBACK'
 
+  --send-persistent-perf
+    Use a persistent-transaction together with 'MqSendEND_AND_WAIT'
+
   --parent-perf
     Creation of '--num' (default: 100) parent-context
 

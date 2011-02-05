@@ -1,11 +1,12 @@
-> nothread/NHI1-0.12/theLink/example/cc/server --tcp --host localhost --port 7780 --fork
-> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7780
-C> (client:28261) [2011-01-21:09-04-32] [0-0-0-0x6e3f68-main]: start: --------------------------------------
-C> (client:28261) [2011-01-21:09-04-32] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       2.64
-C> (client:28261) [2011-01-21:09-04-32] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:       5.07
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      25.92
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-statistics]:                  parent create:     431.16
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-statistics]:                  parent delete:     200.40
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-statistics]:                   child create:      88.40
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-statistics]:                   child delete:      38.95
-C> (client:28261) [2011-01-21:09-04-36] [0-0-0-0x6e3f68-main]: end: ----------------------------------------
+> nothread/NHI1-0.13/theLink/example/cc/server --tcp --host localhost --port 7780 --fork
+> nothread/NHI1-0.13/theLink/example/c/client --all --tcp --host localhost --port 7780
+C> (client:11220) [2011-02-04:19-17-47] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
+C> (client:11220) [2011-02-04:19-17-47] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:       2.63
+C> (client:11220) [2011-02-04:19-17-47] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:       5.12
+C> (client:11220) [2011-02-04:19-17-49] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:      26.21
+C> (client:11220) [2011-02-04:19-17-51] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:     211731
+C> (client:11220) [2011-02-04:19-17-51] [0-0-0-0x6e6fb8-statistics]:                  parent create:     436.22
+C> (client:11220) [2011-02-04:19-17-51] [0-0-0-0x6e6fb8-statistics]:                  parent delete:     212.83
+C> (client:11220) [2011-02-04:19-17-52] [0-0-0-0x6e6fb8-statistics]:                   child create:     260.23
+C> (client:11220) [2011-02-04:19-17-52] [0-0-0-0x6e6fb8-statistics]:                   child delete:      41.16
+C> (client:11220) [2011-02-04:19-17-52] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------

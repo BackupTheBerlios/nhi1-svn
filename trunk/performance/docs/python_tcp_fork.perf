@@ -1,11 +1,12 @@
-> python nothread/NHI1-0.12/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
-> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7788
-C> (client:31350) [2011-01-21:09-06-18] [0-0-0-0x6e3f68-main]: start: --------------------------------------
-C> (client:31350) [2011-01-21:09-06-19] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       5.54
-C> (client:31350) [2011-01-21:09-06-19] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:       9.77
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      31.04
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-statistics]:                  parent create:     989.49
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-statistics]:                  parent delete:    3687.24
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-statistics]:                   child create:     137.39
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-statistics]:                   child delete:      48.42
-C> (client:31350) [2011-01-21:09-06-23] [0-0-0-0x6e3f68-main]: end: ----------------------------------------
+> python nothread/NHI1-0.13/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
+> nothread/NHI1-0.13/theLink/example/c/client --all --tcp --host localhost --port 7788
+C> (client:17059) [2011-02-04:19-20-40] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
+C> (client:17059) [2011-02-04:19-20-41] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:       5.79
+C> (client:17059) [2011-02-04:19-20-41] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:      10.75
+C> (client:17059) [2011-02-04:19-20-43] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:      31.36
+C> (client:17059) [2011-02-04:19-20-46] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:     286412
+C> (client:17059) [2011-02-04:19-20-46] [0-0-0-0x6e6fb8-statistics]:                  parent create:    1050.20
+C> (client:17059) [2011-02-04:19-20-47] [0-0-0-0x6e6fb8-statistics]:                  parent delete:    3831.57
+C> (client:17059) [2011-02-04:19-20-47] [0-0-0-0x6e6fb8-statistics]:                   child create:     139.16
+C> (client:17059) [2011-02-04:19-20-47] [0-0-0-0x6e6fb8-statistics]:                   child delete:      48.53
+C> (client:17059) [2011-02-04:19-20-47] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------

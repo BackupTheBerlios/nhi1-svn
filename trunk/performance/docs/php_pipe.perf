@@ -1,10 +1,11 @@
-> nothread/NHI1-0.12/theLink/example/c/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.12/theLink/example/php/server.php
-C> (client:26153) [2011-01-21:08-57-37] [0-0-0-0x6e3f68-main]: start: --------------------------------------
-C> (client:26153) [2011-01-21:08-57-38] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       6.21
-C> (client:26153) [2011-01-21:08-57-38] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:      12.48
-C> (client:26153) [2011-01-21:08-57-41] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      25.24
-C> (client:26153) [2011-01-21:08-57-42] [0-0-0-0x6e3f68-statistics]:                  parent create:    7119.57
-C> (client:26153) [2011-01-21:08-57-42] [0-0-0-0x6e3f68-statistics]:                  parent delete:     270.60
-C> (client:26153) [2011-01-21:08-57-42] [0-0-0-0x6e3f68-statistics]:                   child create:     190.85
-C> (client:26153) [2011-01-21:08-57-42] [0-0-0-0x6e3f68-statistics]:                   child delete:      47.17
-C> (client:26153) [2011-01-21:08-57-42] [0-0-0-0x6e3f68-main]: end: ----------------------------------------
+> nothread/NHI1-0.13/theLink/example/c/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.13/theLink/example/php/server.php
+C> (client:23516) [2011-02-04:19-25-36] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
+C> (client:23516) [2011-02-04:19-25-37] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:       6.23
+C> (client:23516) [2011-02-04:19-25-37] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:      10.56
+C> (client:23516) [2011-02-04:19-25-39] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:      25.20
+C> (client:23516) [2011-02-04:19-25-41] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:     215721
+C> (client:23516) [2011-02-04:19-25-42] [0-0-0-0x6e6fb8-statistics]:                  parent create:    7126.43
+C> (client:23516) [2011-02-04:19-25-42] [0-0-0-0x6e6fb8-statistics]:                  parent delete:     279.34
+C> (client:23516) [2011-02-04:19-25-42] [0-0-0-0x6e6fb8-statistics]:                   child create:     199.07
+C> (client:23516) [2011-02-04:19-25-42] [0-0-0-0x6e6fb8-statistics]:                   child delete:      51.33
+C> (client:23516) [2011-02-04:19-25-42] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------
