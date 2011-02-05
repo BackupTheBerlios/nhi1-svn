@@ -1,0 +1,52 @@
+TYPEMAP
+MqS*		T_MqS
+MqSException*	T_MqSException
+MqBufferS*	T_MqBufferS
+MqFactoryS*	T_MqFactoryS
+MQ_BOL		T_BOOL
+MQ_BYT		T_CHAR
+MQ_SRT		T_IV
+MQ_INT		T_IV
+MQ_WID		T_IV
+MQ_FLT		T_FLOAT
+MQ_DBL		T_DOUBLE
+MQ_CST		T_PV
+MQ_BIN		T_PV
+MQ_STR		T_PV
+MQ_SIZE		T_IV
+MQ_TIME_T	T_IV
+MQ_NST          T_NPV
+
+INPUT
+T_MqS
+	$var = get_MqS (aTHX_ $arg);
+
+T_MqBufferS
+	$var = get_MqBufferS (aTHX_ $arg);
+
+T_MqFactoryS
+	$var = get_MqFactoryS (aTHX_ $arg);
+
+T_NPV
+        $var = (SvOK($arg) ? ($type)SvPV_nolen($arg) : NULL);
+
+
+OUTPUT
+T_MqS
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqS\", (void*)$var);
+
+T_MqBufferS
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqBufferS\", (void*)$var);
+
+T_MqFactoryS
+	if ($var == NULL) {
+	  croak("MqFactoryS exception");
+	} else {
+	  sv_setref_pv($arg, \"Net::PerlMsgque::MqFactoryS\", (void*)$var);
+	}
+
+T_MqSException
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqSException\", (void*)$var);
+
+T_NPV
+        ($var != NULL ? sv_setpv((SV*)$arg, $var) : &PL_sv_undef);

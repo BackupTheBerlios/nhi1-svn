@@ -1,0 +1,226 @@
+#+
+#§  \file       theLink/tests/list.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+proc MkLst {L} {
+    set ret [list]
+    foreach l $L {
+        if {[llength $l] > 1} {
+            lappend ret SendL [MkLst $l]
+        } elseif {[string is integer -strict $l]} {
+            lappend ret SendI $l
+        } elseif {[string length $l]} {
+            lappend ret SendL [MkLst $l]
+        } else {
+            lappend ret SendC ""
+        }
+    }
+    return $ret
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 2] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filter SRV_LST $C] {
+
+	SetConstraints $I $B $S
+
+##
+## -----------------------------------------------------------------------
+## list-data
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test list-0-a-($I|$B|$C|$S) {list SendL_END without start} \
+    -body           { EchoL $FH_LAST LST1 SendC hallo SendW 365 } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|LST1> <Num|238>*
+[sS]> (server-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
+[sS]> (server-0) found in function "MqSendL_END" at file "send.c*"}
+
+test list-0-b-($I|$B|$C|$S) {list ReadL_END without start} \
+    -body           { EchoL $FH_LAST LST2 SendC hallo SendW 365 } \
+    -result         {}
+
+test list-1-($I|$B|$C|$S) {list with int} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [list SendI 123] } \
+    -returnCodes    ok \
+    -result         {124}
+
+test list-1b-($I|$B|$C|$S) {read error in double list} \
+    -constraints    binary \
+    -body           { EchoL $FH_LAST ERLR SendL [list SendI 123] } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|ERLR> <Num|212>*
+[sS]> (server-0) \[*MqReadL_START] invalid type, expect 'LST' but got 'INT'*}
+
+test list-1c-($I|$B|$C|$S) {send error in double list} \
+    -constraints    binary \
+    -body           { EchoL $FH_LAST ERLS SendD 5.4 SendC "otto" } \
+    -result         {{5.4 otto}}
+
+test list-2-($I|$B|$C|$S) {list with str} \
+    -constraints    {binary} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [list SendW 123] } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|ECLI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object*}
+
+test list-2-($I|$B|$C|$S) {list with str} \
+    -constraints    {string} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [list SendW 123] } \
+    -returnCodes    ok \
+    -result	    124
+
+test list-3-($I|$B|$C|$S) {list with str} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [list SendC 123] } \
+    -returnCodes    ok \
+    -result         {124}
+
+test list-5-($I|$B|$C|$S) {list with dbl} \
+    -body           { EchoL $FH_LAST ECLI SendL [list SendD 0.12345678] } \
+    -returnCodes    ok \
+    -match          expr \
+    -result         0.12345678
+ 
+test list-6-($I|$B|$C|$S) {list with lst} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL {SendL {SendI 11}} } \
+    -returnCodes    ok \
+    -result         {12}
+
+test list-7-($I|$B|$C|$S) {list with 2 lst} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL {SendL {SendI 11} SendL {SendI 22}} } \
+    -returnCodes    ok \
+    -result         {{12 23}}
+
+test list-8-($I|$B|$C|$S) {list with 3 lst} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL {SendL {SendI 11 SendL {SendI 22 SendI 33}}} } \
+    -returnCodes    ok \
+    -result         {{{12 {23 34}}}}
+
+test list-9-($I|$B|$C|$S) {list 3 data} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [MkLst {1 2 3}] } \
+    -returnCodes    ok \
+    -result         {{2 3 4}}
+
+test list-10-($I|$B|$C|$S) {list 3 data in lst} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [MkLst {1 {10 20 30} 2 3}] } \
+    -returnCodes    ok \
+    -result         {{2 {11 21 31} 3 4}}
+
+test list-11-($I|$B|$C|$S) {list return data} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [MkLst {1 {10 20 30} 2 {30 40 50} 3}] } \
+    -returnCodes    ok \
+    -result         {{2 {11 21 31} 3 {31 41 51} 4}}
+
+test list-12-($I|$B|$C|$S) {lst 3 data in lst in lst} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [MkLst {{{100 200 300} 10 20 30} 1 2 3}] } \
+    -returnCodes    ok \
+    -result         {{{{101 201 301} 11 21 31} 2 3 4}}
+
+test list-13-($I|$B|$C|$S) {lst in lst in lst 3 data} \
+    -body           { EchoL $FH_LAST ECLI SendC --incr SendL [MkLst {1 2 3 {10 20 30 {100 200 300}}}] } \
+    -returnCodes    ok \
+    -result         {{2 3 4 {11 21 31 {101 201 301}}}}
+
+test list-14-($I|$B|$C|$S) {lst with empty lst} \
+    -body           { EchoL $FH_LAST ECLI SendW 678 SendL [MkLst {1 2 3 {}}] } \
+    -returnCodes    ok \
+    -result         {678 {1 2 3 {}}}
+
+test list-15-($I|$B|$C|$S) {lst in lst in lst all empty} \
+    -body           { EchoL $FH_LAST ECLI SendI 1 SendL [MkLst {{{{}}}}] } \
+    -returnCodes    ok \
+    -result         {1 {{{{}}}}}
+
+test list-16-($I|$B|$C|$S) {read list from non-list} \
+    -constraints    {binary} \
+    -body           { EchoL $FH_LAST ECOL SendI 1 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>*
+[sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'INT'*}
+
+test list-16-($I|$B|$C|$S) {read list from non-list} \
+    -constraints    {string} \
+    -body           { EchoL $FH_LAST ECOL SendI 1 } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOL> <Num|212>*
+[sS]> (server-0) \[*MqReadL_START\] invalid type, expect 'LST' but got 'STR'*}
+
+test list-17-($I|$B|$C|$S) {read list from non-list} \
+    -body           { EchoL $FH_LAST ECOL SendL [list SendI 1 SendC hallo] } \
+    -result         {{1 hallo}}
+
+test list-e-1-($I|$B|$C|$S) {SendL_END without SendL_START} \
+    -constraints    {c pipe} \
+    -body           {
+      $FH_LAST SendSTART 
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT DUMY
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[pSendListEnd] the required item 'MqSend?_START' is not available in the data package
+[cC]> (client-0) found in function "MqSendL_END" at file "send.c"}
+
+# cleanup ---------------------------
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+

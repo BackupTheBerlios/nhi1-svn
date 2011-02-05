@@ -1,0 +1,85 @@
+#+
+#§  \file       theLink/tests/mass.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##  
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+#set tcl_traceExec 1
+
+if {$tcl_platform(platform) eq "windows"} {
+    set NUM 35
+} elseif {$tcl_platform(os) eq "Darwin"} {
+    set NUM 15
+} elseif {$tcl_platform(os) eq "FreeBSD"} {
+    set NUM 35
+} else {
+    set NUM 100
+}
+
+set NUM [expr {$env(TS_MAX) == -1 ? $NUM : $env(TS_MAX)}]
+
+##
+## -----------------------------------------------------------------------
+## mass test
+##
+
+ # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+test mass-1-($C|$S) "do $NUM parent echo" \
+    -setup	    {
+	Setup [list $NUM 10] $B $C $S --timeout 50
+    } \
+    -body           {
+	foreach n [lsort [array names FH]] {
+	  set RET [Echo1 $FH($n) ECON ReadC SendC $n]
+	  set EXP "$n-server-[lindex [split $n -] 0]"
+	  if {$RET ne $EXP} {
+	    error "expect $EXP but got $RET"
+	  }
+	}
+    } \
+    -cleanup	    {
+	Cleanup
+    } \
+    -returnCodes    ok
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+
+unset -nocomplain B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+

@@ -1,0 +1,312 @@
+# Doxyfile 1.5
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+ENABLED_SECTIONS    += TCL
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/tcl
+
+ALIASES		    += "self=tclmsgque"
+ALIASES		    += "selftut=tclmsgquetut"
+ALIASES		    += "NS{1}=tcl_\1"
+ALIASES		    += "lang=TCL"
+ALIASES		    += "fileextension=tcl"
+ALIASES		    += "dirname=tcl"
+ALIASES		    += "null=\e empty"
+ALIASES		    += "yes=\e yes"
+ALIASES		    += "no=\e no"
+ALIASES		    += "package=package require TclMsgque"
+
+ALIASES		    += "FactoryDefault=MqFactoryS [tclmsgque FactoryDefault ident ?factory-proc?]"
+ALIASES		    += "FactoryDefaultIdent=\C [tclmsgque FactoryDefaultIdent]"
+ALIASES		    += "FactoryAdd=MqFactoryS [tclmsgque FactoryAdd ?ident? factory-proc]"
+ALIASES		    += "FactoryGet=MqFactoryS [tclmsgque FactoryGet ?ident?]"
+ALIASES		    += "FactoryGetCalled=MqFactoryS [tclmsgque FactoryGetCalled ?ident?]"
+
+ALIASES		    += "FactoryNew=MqS [$factory New]"
+ALIASES		    += "FactoryCopy=MqFactoryS [$factory Copy ident]"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet factory"
+ALIASES		    += "FactoryCtxGet=MqFactoryS [ctx.FactoryCtxGet]"
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet ident"
+ALIASES		    += "FactoryCtxIdentGet=\C [ctx.FactoryCtxIdentGet]"
+
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+package require TclMsgque \n\
+proc MyClass {tmpl} { \n\
+  set ctx [tclmsgque MqS $tmpl] \n\
+  $ctx dict set mydata 0 \n\
+  return $ctx \n\
+} \n\
+set ctx [[tclmsgque FactoryAdd MyClass] New] \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=set ctx [tclmsgque MqS ?tmpl?]"
+ALIASES		    += "ContextCreateSection="
+ALIASES		    += "ContextDelete=rename $ctx \"\""
+ALIASES		    += "Exit=$ctx Exit"
+ALIASES		    += "SqlSetDb=$ctx SqlSetDb storageFile"
+ALIASES		    += "LogC=$ctx LogC prefix level message"
+ALIASES		    += "Main=tclmsgque Main {code}"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=tclmsgque Init ...args"
+ALIASES		    += "init_example=\
+\code \n\
+tclmsgque Init tclsh myExecutable.tcl myFirstArgument \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=int"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=int"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=int"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=string"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=string"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=string"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=boolean"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=boolean"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=boolean"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_isServer=boolean"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_startAs=integer"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs startAs"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c FORK"
+ALIASES		    += "MQ_START_THREAD=\c THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c SPAWN"
+
+ALIASES		    += "config_type_daemon=string"
+ALIASES		    += "config_set_daemon=ConfigSetStartAs pidfile"
+ALIASES		    += "config_get_daemon=ConfigGetStartAs"
+
+ALIASES		    += "config_type_tcp=string"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp host port myhost myport"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=string"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile pidfile"
+ALIASES		    += "config_get_uds=ConfigGetIoUds"
+
+ALIASES		    += "config_type_pipe=integer"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket socket"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipe"
+
+ALIASES             += "config_IServerSetup=$ctx ConfigSetServerSetup callback"
+ALIASES		    += "config_IServerCleanup=$ctx ConfigSetServerCleanup callback"
+ALIASES		    += "config_IFactory=$ctx ConfigSetFactory"
+ALIASES             += "config_IBgError=$ctx ConfigSetBgError callback"
+ALIASES		    += "config_IEvent=$ctx ConfigSetEvent callback"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+tclmsgque Main { \n\
+  set srv [tclmsgque MqS] \n\
+  ... \n\
+  $srv ConfigSetFactory \n\
+  ... \n\
+} \n\
+\endcode"
+
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=$ctx LinkCreate args..."
+ALIASES		    += "LinkCreateChild=$ctx LinkCreateChild parent args..."
+ALIASES		    += "LinkDelete=$ctx LinkDelete"
+ALIASES		    += "LinkGetParent=MqS [$ctx LinkGetParent]"
+ALIASES		    += "LinkGetCtxId=\I [$ctx LinkGetCtxId]"
+ALIASES		    += "LinkIsParent=\O [$ctx LinkIsParent]"
+ALIASES		    += "LinkIsConnected=\O [$ctx LinkIsConnected]"
+ALIASES		    += "LinkGetTargetIdent=\C [$ctx LinkGetTargetIdent]"
+ALIASES		    += "LinkConnect=$ctx LinkConnect"
+
+# SEND DATA
+ALIASES		    += "send_example=\code $ctx SendSTART\n$ctx SendI $num\n$ctx SendL_START\n  $ctx SendD $balance\n  $ctx SendC \"name of the owner\"\n  $ctx SendB $signature\n$ctx SendL_END\n$ctx SendEND_AND_WAIT \"SRV1\"\endcode"
+ALIASES		    += "SendSTART=$ctx SendSTART"
+ALIASES		    += "SendEND=$ctx SendEND token"
+ALIASES		    += "SendEND_AND_WAIT=$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOUT_USER?"
+ALIASES		    += "SendEND_AND_CALLBACK=$ctx SendEND_AND_CALLBACK token callback"
+ALIASES		    += "SendRETURN=$ctx SendRETURN"
+ALIASES		    += "SendERROR=$ctx SendERROR"
+ALIASES		    += "SendTYPE=$ctx SendTYPE value"
+ALIASES		    += "SendL_START=$ctx SendL_START"
+ALIASES		    += "SendL_END=$ctx SendL_END"
+ALIASES		    += "SendN=$ctx SendN value"
+ALIASES		    += "SendBDY=\I [$ctx SendBDY value]"
+ALIASES		    += "SendT_START=$ctx SendT_START callback"
+ALIASES		    += "SendT_END=$ctx SendT_END"
+ALIASES		    += "SendT_example=\code \n\
+$ctx SendSTART \n\
+$ctx SendT_START \"SRVR\" \n\
+$ctx SendC \"myEnvironment\" \n\
+$ctx SendT_END \n\
+$ctx SendC \"mydata\" \n\
+$ctx SendEND_AND_WAIT \"ECOI\" \endcode"
+
+
+# READ DATE
+ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
+ALIASES		    += "ReadTYPE=TYPE [$ctx ReadTYPE]"
+ALIASES		    += "ReadU=\U [$ctx ReadU]"
+ALIASES		    += "ReadN=\B [$ctx ReadN]"
+ALIASES		    += "ReadBDY=\B [$ctx ReadBDY]"
+ALIASES		    += "ReadProxy=$ctx ReadProxy otherCtx"
+ALIASES		    += "ReadGetNumItems=\I [$ctx ReadGetNumItems]"
+ALIASES		    += "ReadItemExists=\O [$ctx ReadItemExists]"
+ALIASES		    += "ReadUndo=$ctx ReadUndo()"
+ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
+ALIASES		    += "ReadL_END=$ctx ReadL_END"
+ALIASES		    += "ReadT_START=$ctx ReadT_START ?buffer?"
+ALIASES		    += "ReadT_END=$ctx ReadT_END"
+ALIASES		    += "ReadT_example=\code \n\
+proc SRVR {ctx} { \n\
+  $ctx ReadT_START \n\
+  set myEnvironment [$ctx ReadC] \n\
+  $ctx ReadT_END \n\
+  set theResult [$ctx ReadC] \n\
+}\endcode"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+proc ServerSetup {ctx} { \n\
+  $ctx ServiceCreate \"SRV1\" serviceF \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=$ctx ServiceCreate token callback"
+ALIASES		    += "ServiceProxy=$ctx ServiceProxy token ?id=0?"
+ALIASES		    += "ServiceDelete=$ctx ServiceDelete token"
+ALIASES		    += "ProcessEvent=$ctx ProcessEvent -timeout (\I|DEFAULT|USER|MAX) -wait (NO|ONCE|FOREVER)"
+ALIASES		    += "ProcessEvent2=$ctx ProcessEvent -wait (NO|ONCE|FOREVER)"
+ALIASES		    += "ProcessEvent3=$ctx ProcessEvent"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ALIASES		    += "MQ_WAIT_NO=-wait NO"
+ALIASES		    += "MQ_WAIT_ONCE=-wait ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=-wait FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=-timeout DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=-timeout USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=-timeout MAX"
+ALIASES		    += "ServiceGetFilter=MqS [$ctx ServiceGetFilter ?id=0?]"
+ALIASES		    += "ServiceIsTransaction=\O [$ctx ServiceIsTransaction]"
+ALIASES		    += "ServiceGetToken=\C [$ctx ServiceGetToken]"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker_example=\code$ctx SlaveWorker 7 --thread --silent @ WORKER --name MyWorker\endcode"
+
+ALIASES		    += "SlaveWorker=$ctx SlaveWorker id ..."
+ALIASES		    += "SlaveCreate=$ctx SlaveCreate id slave"
+ALIASES		    += "SlaveDelete=$ctx SlaveDelete id"
+ALIASES		    += "SlaveGet=MqS [$ctx SlaveGet id]"
+ALIASES		    += "SlaveGetMaster=MqS [$ctx SlaveGetMaster]"
+ALIASES		    += "SlaveIs=\O [$ctx SlaveIs]"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+set buf [$ctx ReadU] \n\
+if {[$buf GetType] == 'C'} { \n\
+  puts [$buf GetC] \n\
+} \n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
+ALIASES		    += "BufferGetTYPE=TYPE [$buffer GetTYPE]"
+ALIASES		    += "BufferType=\C [$buffer GetType]"
+
+ALIASES		    += "Y=IntObj"
+ALIASES		    += "O=BooleanObj"
+ALIASES		    += "S=IntObj"
+ALIASES		    += "I=IntObj"
+ALIASES		    += "F=DoubleObj"
+ALIASES		    += "W=WideIntObj"
+ALIASES		    += "D=DoubleObj"
+ALIASES		    += "C=StringObj"
+ALIASES		    += "B=ByteArrayObj"
+ALIASES		    += "U=CmdObj"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=\B"
+ALIASES		    += "TE=TCLMSGQUE errorCode"
+
+# CONTEXT LOCAL STORAGE
+ENABLED_SECTIONS    += DATA
+ALIASES		    += "DictSet=$ctx dict set key... data"
+ALIASES		    += "DictGet=$ctx dict get key..."
+ALIASES		    += "DictExists=$ctx dict exists key..."
+ALIASES		    += "DictUnset=$ctx dict unset key..."
+ALIASES		    += "DictUndef=nothing"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+if {[catch { \n\
+ i = $ctx ReadI(); \n\
+}]} { \n\
+ $ctx ErrorSet \n\
+ puts [$ctx ErrorGetText] \n\
+ $ctx ErrorReset \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>TCLMSGQUE errorCode</I>"
+ALIASES		    += "ErrorGetText=[lindex $errorCode 3] or $ctx ErrorGetText"
+ALIASES		    += "ErrorGetNum=[lindex $errorCode 1] or $ctx ErrorGetNum"
+ALIASES		    += "ErrorC=$ctx ErrorC prefix errnum message"
+ALIASES		    += "ErrorSet=$ctx ErrorSet"
+ALIASES		    += "ErrorSetCONTINUE=$ctx ErrorSetCONTINUE"
+ALIASES		    += "ErrorSetEXIT=$ctx ErrorSetEXIT"
+ALIASES		    += "ErrorIsEXIT=$ctx ErrorIsEXIT"
+ALIASES		    += "ErrorReset=$ctx ErrorReset"
+ALIASES		    += "ErrorRaise=$ctx ErrorRaise"
+ALIASES		    += "ErrorPrint=$ctx ErrorPrint"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+if {[catch { \n\
+  $ctx SendEND_AND_WAIT \"TOKS\" \n\
+}]} { \n\
+  $ctx ErrorSet \n\
+  if {[$ctx ErrorIsEXIT]} {\n\
+    $ctx ErrorReset \n\
+  } \n\
+} \n\
+\endcode"
+
+

@@ -1,0 +1,317 @@
+/**
+\page faq The libmsgque Project FAQ
+
+\section faq_toc Table Of Contents
+ - \ref _1
+ - \ref _2
+ - \ref _3
+ - \ref _4
+ - \ref _5
+ - \ref _6
+ - \ref _7
+ - \ref _8
+  - \ref _8a
+  - \ref _8b
+  .
+ - \ref _9
+  - \ref _9a
+  - \ref _9b
+  - \ref _9c
+  - \ref _9d
+  .
+ - \ref _10
+  - \ref _10a
+  .
+ - \ref _11
+  - \ref _11a
+  .
+ - \ref _12
+ .
+
+\section _1 1. How to make different services communicate?
+ - every \libmsgque communication link is a link between one \e client and one \e server
+ - the link is created and maintained by \libmsgque as a \e socket communication using 
+   \e unix-domain-sockets or \e inet-domain-sockets
+ - \e client and \e server are using the same communication library called \e libmsgque
+ .
+
+\section _2 2. What exactly does 'libmsgque'?
+ - find and start the \e service (e.g. server)
+ - setup and maintain the socket communication interface between client and server
+ - choose the right byte-order (little/big endian)
+ - verify 'service' api version
+ - if an error happen, propagate the error to the client
+ - do all the \e send and \e recv stuff
+ - do (if necessary) the casting of different types
+ - provide an event-loop to smoothly integrate multiple tasks
+ - after the work was done do a \e clean shutdown of the communication
+ .
+
+\section _3 3. How does one service do to understand the data another service is sending to it?
+ - DEFINITION: <EM>\b understand means knowing the exact definition of the procedure called.</EM>
+ - \e client and \e server using the same protocol as part of \libmsgque
+   and this protocol include the service called together with the arguments provided in a
+   \libmsgque package. The type of a argument can be \e string, \e binary, \e list or \e native. 
+   The \e native type is defined in #MqBufferAtomU. The type \e string is casted into \e native
+   if the application require this.
+ - the protocol layer is totally hidden to the programmer
+ - the server provides a service identified as a 4 byte character string
+ - the client is calling the service with the arguments included (example calling service <tt>ECOI</tt>):\n
+<B>using \libmsgque code</B> 
+\code
+MqSendSTART (ctx->send);
+MqSendI (ctx->send, 567);
+MqErrorCheck (MqSendEND_AND_WAIT (ctx->send, "ECOI", 10));
+\endcode
+<B>using \ccmsgque code</B> 
+\code
+ctx.SendSTART ();
+ctx.SendI (567);
+ctx.SendEND_AND_WAIT ("ECOI", 10);
+\endcode
+<B>using \csmsgque code</B> 
+\code
+ctx.SendSTART ();
+ctx.SendI (567);
+ctx.SendEND_AND_WAIT ("ECOI", 10);
+\endcode
+<B>using \tclmsgque code</B> 
+\verbatim
+$ctx SendSTART
+$ctx SendI 567
+$ctx SendEND_AND_WAIT ECOI 10
+\endverbatim
+<B>using \javamsgque code</B> 
+\verbatim
+ctx.SendSTART();
+ctx.SendI(567);
+ctx.SendEND_AND_WAIT("ECOI", 10);
+\endverbatim
+<B>using \pymsgque code</B> 
+\verbatim
+ctx.SendSTART()
+ctx.SendI(567)
+ctx.SendEND_AND_WAIT("ECOI", 10)
+\endverbatim
+<B>using \rubymsgque code</B> 
+\verbatim
+ctx.SendSTART()
+ctx.SendI(567)
+ctx.SendEND_AND_WAIT("ECOI", 10)
+\endverbatim
+<B>using \perlmsgque code</B> 
+\verbatim
+$ctx->SendSTART();
+$ctx->SendI(567);
+$ctx->SendEND_AND_WAIT("ECOI", 10);
+\endverbatim
+<B>using \vbmsgque code</B> 
+\verbatim
+ctx.SendSTART()
+ctx.SendI(567)
+ctx.SendEND_AND_WAIT("ECOI", 10)
+\endverbatim
+
+and wait (#MqSendEND_AND_WAIT) or does not wait (#MqSendEND) for an answer.
+ - the server reply the client-service-call with the return data.
+ - the number and the type of the call-arguments and the number and the type of the reply-arguments
+   are \b not agreed by the protocol but the type checking is \e strict. \e strict mean that
+   every argument \e send type have to be read by the \e same type with the exception that
+   a cast from and to type \ref MQ_STRT "C" is supported. Every type mismatch will result
+   in an error even if the send value will fit into the target type.
+ .
+
+\section _4 4. It is likely that libmsgque will similarly need a common basic format?
+ - yes, the \e data-package-format is defined and \libmsgque is used on the both
+   endpoints of the communication to read this format.
+ .
+
+\section _5 5. What does libmsgque not do?
+ - no login verification
+ - no encoding or decoding of binary data
+ - no encryption or decryption of binary data
+ .
+
+\section _6 6. What is the overhead of libmsgque?
+ - the latest information is available at: \ref performance
+ .
+
+\section _7 7. It's not clear to me how many instances of a server might exist
+ - \RNS{ClientServerLink}
+ - every \e client-parent-context start its own \e server
+ - every started \e server is totally independent from the other \e server might exist
+  - advantage: easy load balancing because every server process is able to use an other processor
+  - advantage: no namespace pollution by the server
+  - advantage: no \b crash dependency between the client and the server. (If the server crashes the
+    client still continue to work)
+  - advantage: using different programming languages between client and server
+  .
+ .
+
+\section _8 8. It's not clear where the state for a service resides
+ - DEFINITION: <EM>The "state" ought to be the totality of everything that can make two identical sequences of \libmsgque library commands return different results. A typical case could be if one wants to wrap a Tcl shell up as a \libmsgque service; this then has an internal state (values of variables, commands defined, etc.), and it would have to be part of the total state of the service. </EM>
+ - INTRO: \RNS{ClientServerLink}
+ - every client creating a new parent-context is creating a new parent-context on the server.
+ - a new parent context on the server is in fact a struct able to store every per-context data.
+ - For \tclmsgque the new context struct is a command and every new Server-Parent-Context is a new interpreter.
+ - For \javamsgque the new context is a #javamsgque.MqS object and every new Server-Parent-Context is a new thread.
+ - For \pymsgque the new context is a pymsgque.MqS type and every new Server-Parent-Context is a new interpreter.
+ .
+
+\section _8a 8.a When libmsgque was first being mentioned, it was described as a replacement for shared libraries.
+ - from the \e client point of view it is an replacement
+ - OLD: I have to link with \e libXXX.so
+ - NEW: I have to link with \e libmsgque.so and using service \e XXX
+ - NEW: no need for \e libXXX.so, no linking, no searching for the right library 
+	for my OS, no errors on linking again a wrong version of library, no need 
+	for installing all libraries on my host and last but not least your tcl 
+	event-loop will always been working
+ .
+
+\section _8b 8.b My expectations were conditioned by how I understand shared libraries operate.  It is now more clear that libmsgque is an alternative to shared libraries that has characteristics much different from them.
+ - I personal call it a \b network shared library or just a \b service
+ - from a programming point of view writing applications based on \e services 
+    is much more easy as writing applications based on shared libraries
+ - reuse \e service based code is a lot easier as reusing shared library 
+    based code\n
+    (Example: libXXX.so need a libperlXXX.so, libtclXXX.so, libphpXXX.so, 
+    libjavaXXX.so. libc#XXX.so, infinite long ... interface library but 
+    only one libmsgque.so interface library)
+ .
+
+\section _9 9. It's not clear how services are shared
+ - DEFINITION: <EM> \b shared as think of it means that the same code can be used by multiple threads of execution simultaneously.</EM>
+ - a \e service usually has: libSomthing.(a|lib|so|dll) + libmsgque.(a|lib|so|dll) + main.c + context.c + ... *.c
+ - sharing \e code means using \e dynamic linking (so|dll) rather than \e static linking (a|lib)
+ - sharing a \e running service is available as:
+   - only \e one client connect to \e one server
+   - every client has \e one parent-context but multiple child-context
+   - an advanced event-queue is available to serve multiple requests at the same time
+   .
+ .
+
+\section _9a 9.a One interpretation is that multiple clients connect to the same server. The server might have a common resource (e.g. a database) that the clients want to share. How does one go ahead with that?
+ - INTRO: \RNS{ClientServerLink}
+ - DEFINITION \b server:
+   - <EM>a \b server is an application which can handle multiple client connections and serve some kind of services, with the help of a \e server-API, to the client (example: Sybase/Oracle/Db2/... database, Ars, SAP, PeopleSoft, ... infinite long ...)</EM>
+   - <EM>a \libmsgque - server is a wrapper around the \e server-API form 1. to disconnect the \e client from the \e server-API</EM>
+   .
+ - in \libmsgque \b one \libmsgque - server supports \b one \e client but every \e client supports multiple \libmsgque - server.
+   - \libmsgque was designed to replace server specific API's (as static or dynamic libraries)
+   - \libmsgque was designed to be very simple and easy to use for programming purpose
+   - \libmsgque was designed to solve the <EM>every 'scripting' language maintain its own link between application API's and language API's</EM> problem
+   .
+ - example: <B><EM>Ars</EM></B> (http://en.wikipedia.org/wiki/Action_Request_System) is an application server using a \e SQL database to serve a work-flow like applications. <B><EM>Ars</EM></B> has its own user management and providing it's own API for \e login, \e query, \e modify ... . the ArsService created by \libmsgque does not replace the <B><EM>Ars</EM></B> server. a \libmsgque ArsService is used to replace the <B><EM>Ars</EM></B> specific protocol and the <B><EM>Ars</EM></B> specific API with a common usable API. in this case you can call it a protocol-converter with additional features to pre-process the data.
+\verbatim
+OLD:               Database       NEW:       Database                                      *
+                       |                         |                                         *
+                   ArsServer                 ArsServer                                     *
+                   |       |                 |       |           <- Ars-Protocol           *
+Ars-Protocol ->    |       |           ArsService1  ArsService2  <- libmsgque-API + Ars-API *
+                   |       |                 |       |           <- libmsgque-Protocol      *
+Ars-API      -> Client1 Client2           Client1 Client2        <- libmsgque-API           *
+\endverbatim
+ - \b OLD: your client depend on <B><EM>Ars</EM></B> - Api
+ - \b NEW: your client depend on \libmsgque - Api
+ - \b OLD: if you keep in mind that every application (e.g. <B><EM>Ars</EM></B>, SAP, Peoplesoft, Oracle, Sybase, MqSeries, ... infinite long) providing its own API you will recognize that your application(s) will depend on all these API's
+ - \b NEW: it doesn't matter which application you are using, there is only \b ONE API -> \libmsgque
+ - to use a new, already available, \libmsgque - service in TCL you only have to write a wrapper in TCL and \b NOT in C using the, already available, \tclmsgque API
+ .
+
+\section _9b 9.b Does the above mean that the communication between e.g. ArsService and ArsServer is something that libmsgque cannot handle, because that communication can be many clients to one server?
+ - the connection between the ArsServiceX and the ArsServer is just an traditional software engineering project. \libmsgque
+   is providing a solution to connect the client to the ArsService not to the ArsServer because the ArsServer is
+   Ars specific and usually hidden to external programmers.
+ - the difference between \e OLD and \e NEW is that:
+   - \b OLD: ClientX is using the <B><EM>Ars</EM></B> - API direct
+   - \b NEW: ClientX is using the \libmsgque - API and ArsServiceX is using the \libmsgque - API \b plus the <B><EM>Ars</EM></B> - API
+   .
+ .
+
+\section _9c 9.c what is the difference between Ars - API and libmsgque - API?
+ - <B><EM>Ars</EM></B> - API: handle the communication between \e ArsServiceX and \e ArsServer using the <B><EM>Ars</EM></B> - Protocol (every application-API providing methods like \e init (ARInitialization), \e login (ARVerifyUser), \e send something (ARSetEntry,...) and \e read something (ARGetEntry,...))
+ - <B><EM>Ars</EM></B> - API: is part of the <B><EM>Ars</EM></B> distribution of \e Remedy and is a \e closed source library
+ - \libmsgque - API: handle the communication between \e ClientX and \e ArsServiceX using the \libmsgque - Protocol
+ .
+
+\section _9d 9.d does this mean I always have to provide an independent process like ArsServiceX to use an already available application?
+ - \b YES and \b NO
+ - \b YES: if the application is 'closed' source (e.g. commercial) you have no chance to integrate the \libmsgque - API into the application
+ - \b NO: if the application is 'open' source you can integrate the \libmsgque - API direct into the application:
+\verbatim
+               YES:    'closed'          NO:     'open'                       *
+                      Application              Application                    *
+Application-API: ->   |         |              |         |                    *
+                   Service1 Service2           |         |   <- libmsgque-API *
+libmsgque-API:   ->   |         |              |         |                    *
+                   Client1   Client2        Client1   Client2                 *
+\endverbatim
+ - \b NO: \libmsgque is able to use an \e external created file-descriptor as argument to the <TT>"--pipe --socket #"</TT> #MqLinkCreate configuration option for socket communication
+ .
+
+\section _10 10. Are services supposed to be re-entrant or serially reusable
+ - INTRO: \RNS{ClientServerLink}
+ - DEFINITION: <EM>Re-entrant means that the same body of code can be used by multiple threads of control at once, provided that each thread supplies its own data segment for the code to use.</EM>
+ - Every Context (\parent_context and \child_context) has its own services and data.
+ - DEFINITION: <EM>Serially reusable means that the same body of code can be used by multiple threads of control, provided that execution of the code is allowed to complete before another thread can use the shared body of code.</EM>
+ - The body of a service-function get the according context as first parameter of type #MqS.
+   This parameter is used to read package data (example: #MqReadU) and to answer the service-request (example: #MqSendU)
+ .
+
+\section _10a 10.a Can an already started server be reused for new requests?
+ - INTRO: \RNS{ClientServerLink}
+ - Every server has exact \b one \parent_context but multiple \child_context.
+ - Every \parent_context is a process or a thread.
+ - If a \parent_context is closed all \child_context are closed too and the server is shut down.
+ - If a \child_context is closed the server continue to serve the other context.
+ - Multiple \parent_context are created with the \ref MqConfigS::startAs "--fork", \ref MqConfigS::startAs "--thread"
+   or \ref MqConfigS::startAs "--spawn" option using \e tcp and \e uds communication \verbatim
+server --tcp --port 7777 --fork
+\endverbatim
+ - For \e pipe communication multiple \parent_context are created as default.
+ .
+ 
+\section _11 11. Do services have to be locked so that they can complete processing complete requests
+ - DEFINITION: <EM>In this case locked means prevented from execution.</EM>
+ - Every \parent_context is a process or a thread.
+ - Every \child_context of this \parent_context is part of this single process too.
+ - One single process can handle only one request per time but is able to listen on other
+   incoming requests if the original request is waiting on an external resource. This \e waiting
+   is done in the #MqSendEND_AND_WAIT and the #MqProcessEvent function.
+ - \libmsgque was designed to act as an event based scheduler doing \e io in a \e parallel manner.\n
+ - Example: \b multiple parent-context (\b CTX1, \b CTX2, \b CTX3) : <B>using 'Tcl' code</B>
+\verbatim
+# SLEP ... service doing a 'sleep' system-call on the server -> blocking the server
+# client is doing the following 3 jobs
+after 100 "$CTX1 send -wait SLEP 10";	# test-case: service sleeps 10 seconds
+after 100 "$CTX2 send -wait SLEP 5";	# test-case: service sleeps 5 seconds
+after 100 "$CTX3 send -wait SLEP 8";	# test-case: service sleeps 8 seconds
+# wait on finish all 3 jobs
+\endverbatim
+the example needs \b 10 seconds to finish and \b not 23 \n
+ - Example: \b single parent-context (\b CTX) : <B>using 'Tcl' code</B>
+\verbatim
+# SLEP ... service doing a 'sleep' system-call on the server -> blocking the server
+# client is doing the following 3 jobs
+after 100 "$CTX send -wait SLEP 10";	# test-case: service sleeps 10 seconds
+after 100 "$CTX send -wait SLEP 5";	# test-case: service sleeps 5 seconds
+after 100 "$CTX send -wait SLEP 8";	# test-case: service sleeps 8 seconds
+# wait on finish all 3 jobs
+\endverbatim
+the example needs \b 23 seconds to finish and \b not 10
+ .
+
+\section _11a 11.a How does a 'service' detect different 'context' requests''
+ - INTRO: \RNS{ClientServerLink}
+ - The \e client-parent-context is linked with the \e server-parent-context.
+ - The \e data-package-format has an \e data-entry for the context in duty (\e HdrS::ctxId).
+ .
+
+\section _12 12. How do they signal success or failure
+ - INTRO: \RNS{ClientServerLink}
+ - Every \e transaction submit a return-code \c MQ_RETURN_OK or \c MQ_RETURN_ERROR to the caller.
+ - The return-code is part of the package header (\e HdrS::code) and is processed in
+   the #MqSendEND_AND_WAIT function.
+ - The function #MqSendEND_AND_WAIT will return an error of type #MqErrorE if the return-code is \c MQ_RETURN_ERROR.
+ .
+*/

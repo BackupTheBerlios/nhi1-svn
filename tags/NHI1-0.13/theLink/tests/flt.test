@@ -1,0 +1,222 @@
+#+
+#§  \file       theLink/tests/flt.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set MAX    [tclmsgque const maxF]
+set MIN    [tclmsgque const minF]
+
+proc FF {float} {
+  return [format {%1.7e} $float]
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+ 
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 2] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filter SRV_LST $C] {
+ 
+##
+## -----------------------------------------------------------------------
+## int 
+##
+ 
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test flt-1-($I|$B|$C|$S) {echo datatype (MQ_FLT)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadF SendF $MAX]
+} "double"
+
+test flt-2-($I|$B|$C|$S) {(MQ_WID to MQ_FLT) fit max} \
+    -body           {FF [Echo1 $FH_LAST ECOF ReadF SendF $MAX]} \
+    -returnCodes    ok \
+    -result         [FF $MAX]
+ 
+test flt-3-($I|$B|$C|$S) {(MQ_WID to MQ_FLT) fit min} \
+    -body           {FF [Echo1 $FH_LAST ECOF ReadF SendF $MIN]} \
+    -returnCodes    ok \
+    -result         [FF $MIN]
+
+test flt-4-($I|$B|$C|$S) {(MQ_STR to MQ_FLT) fit max} \
+    -body           {FF [Echo1 $FH_LAST ECOF ReadF SendF $MAX]} \
+    -returnCodes    ok \
+    -result         [FF $MAX]
+
+test flt-5-($I|$B|$C|$S) {(MQ_STR to MQ_FLT) fit min} \
+    -body           {FF [Echo1 $FH_LAST ECOF ReadF SendF $MIN]} \
+    -returnCodes    ok \
+    -result         [FF $MIN]
+
+test flt-6-($I|$B|$C|$S) {(MQ_STR to MQ_FLT) error size} \
+    -body           {Echo1 $FH_LAST ECOF ReadF SendC 1234a} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] size ERROR, can not convert '1234a' into an 'FLT' object*}
+
+test flt-7-($I|$B|$C|$S) {range error underflow} \
+    -body           {Echo1 $FH_LAST ECOF ReadF SendC ${MIN}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] underflow ERROR, can not convert '*' into an 'FLT' object*}
+
+test flt-8-($I|$B|$C|$S) {range error overflow} \
+    -body           {Echo1 $FH_LAST ECOF ReadF SendC ${MAX}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] overflow ERROR, can not convert '*' into an 'FLT' object*}
+
+test flt-8b-($I|$B|$C|$S) {range error -overflow} \
+    -body           {Echo1 $FH_LAST ECOF ReadF SendC -${MAX}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] overflow ERROR, can not convert '*' into an 'FLT' object*}
+ 
+if {$B eq "binary"} {
+    test flt-9-($I|$B|$C|$S) {(MQ_INT to MQ_FLT) error INT type} \
+	-body           {Echo1 $FH_LAST ECOF ReadF SendI 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'INT' object into an 'FLT' object*}
+} else {
+    test flt-9-($I|$B|$C|$S) {(MQ_INT to MQ_FLT) error INT type} \
+	-body           {Echo1 $FH_LAST ECOF ReadF SendI 1234} \
+	-returnCodes    ok \
+	-match		glob \
+	-result         1234.0
+}
+
+if {$B eq "binary"} { 
+    test flt-10-($I|$B|$C|$S) {(MQ_WID to MQ_FLT) error WID type} \
+	-body           {Echo1 $FH_LAST ECOF ReadF SendW 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'WID' object into an 'FLT' object*}
+} else {
+    test flt-10-($I|$B|$C|$S) {(MQ_WID to MQ_FLT) error WID type} \
+	-body           {Echo1 $FH_LAST ECOF ReadF SendW 1234} \
+	-returnCodes    ok \
+	-match		glob \
+	-result         1234.0
+}
+ 
+test flt-11-($I|$B|$C|$S) {(MQ_LST to MQ_FLT) error LST type} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOF
+      $FH_LAST ReadF
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4\] type ERROR, it is not allowed to convert an 'LST' object into an 'FLT' object*}
+
+test flt-12-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOF
+      $FH_LAST ReadF
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOF> <Num|213>*
+[sS]> (server-0) \[*sReadA4\] request more arguments than available*}
+
+test flt-13-($I|$B|$C|$S) {set/get context data} \
+    -constraints {$I <= 2} \
+    -setup	 {
+	set DATA [list 5278.3628 0.0035345999]
+    } \
+    -body        {
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendF [lindex $DATA $i]
+	  $ctx SendEND SETU
+	}
+	for {set i 0} {$i < $I} {incr i} {
+	  set dat [FF [lindex $DATA $i]]
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendEND_AND_WAIT GETU
+	  set ret [FF [$ctx ReadF]]
+	  if {$dat != $ret} {
+	    error "expect value '$dat' but got '$ret'"
+	  }
+	}
+	return OK
+    } \
+    -cleanup	{
+	unset DATA
+    } \
+    -result	{OK}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+

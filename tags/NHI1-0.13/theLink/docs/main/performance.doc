@@ -1,0 +1,345 @@
+/** 
+
+\page performance Performance Comparison
+
+\section performance_toc Table Of Contents
+
+ - \ref performance_intro
+ - \ref performance_summary
+ - Detail Setup Information:<TABLE>
+    <TR>
+      <TD>\ref perf-c "C"</TD>
+      <TD>\ref perf-cc "C++"</TD>
+      <TD>\ref perf-csharp "C#"</TD>
+      <TD>\ref perf-java "Java"</TD>
+      <TD>\ref perf-go "Go"</TD>
+      <TD>\ref perf-perl "Perl"</TD>
+      <TD>\ref perf-php "PHP"</TD>
+      <TD>\ref perf-python "Python"</TD>
+      <TD>\ref perf-ruby "Ruby"</TD>
+      <TD>\ref perf-tcl "Tcl"</TD>
+      <TD>\ref perf-vb "VB.NET"</TD>
+    </TR>
+    <TR>
+      <TD>\ref perf-c-pipe "pipe"</TD>
+      <TD>\ref perf-cc-pipe "pipe"</TD>
+      <TD>\ref perf-csharp-pipe "pipe"</TD>
+      <TD>\ref perf-java-pipe "pipe"</TD>
+      <TD>\ref perf-go-pipe "pipe"</TD>
+      <TD>\ref perf-perl-pipe "pipe"</TD>
+      <TD>\ref perf-php-pipe "pipe"</TD>
+      <TD>\ref perf-python-pipe "pipe"</TD>
+      <TD>\ref perf-ruby-pipe "pipe"</TD>
+      <TD>\ref perf-tcl-pipe "pipe"</TD>
+      <TD>\ref perf-vb-pipe "pipe"</TD>
+    </TR>
+    <TR>
+      <TD>\ref perf-c-uds "uds"</TD>
+      <TD>\ref perf-cc-uds "uds"</TD>
+      <TD>\ref perf-csharp-uds "uds"</TD>
+      <TD>\ref perf-java-uds "uds"</TD>
+      <TD>\ref perf-go-uds "uds"</TD>
+      <TD>\ref perf-perl-uds "uds"</TD>
+      <TD>\ref perf-php-uds "uds"</TD>
+      <TD>\ref perf-python-uds "uds"</TD>
+      <TD>\ref perf-ruby-uds "uds"</TD>
+      <TD>\ref perf-tcl-uds "uds"</TD>
+      <TD>\ref perf-vb-uds "uds"</TD>
+    </TR>
+    <TR>
+      <TD>\ref perf-c-tcp "tcp"</TD>
+      <TD>\ref perf-cc-tcp "tcp"</TD>
+      <TD>\ref perf-csharp-tcp "tcp"</TD>
+      <TD>\ref perf-java-tcp "tcp"</TD>
+      <TD>\ref perf-go-tcp "tcp"</TD>
+      <TD>\ref perf-perl-tcp "tcp"</TD>
+      <TD>\ref perf-php-tcp "tcp"</TD>
+      <TD>\ref perf-python-tcp "tcp"</TD>
+      <TD>\ref perf-ruby-tcp "tcp"</TD>
+      <TD>\ref perf-tcl-tcp "tcp"</TD>
+      <TD>\ref perf-vb-tcp "tcp"</TD>
+    </TR>
+   </TABLE>
+ .
+
+\section performance_intro Introduction
+
+The performance is measured with the tool \e client and a programming language specific \e server
+in the subdirectory \c performance.
+ - <TT>performance/README</TT>
+ .
+The performance test is separated in a test <B>with thread support</B> and \b without.
+A test <B>with thread support</B> is performed with a thread enabled base language and a thread enabled \libmsgque library.
+
+
+The performance-tests are divided into 2 major test-groups:
+ -# test the transaction performance (#MqSendEND, #MqSendEND_AND_CALLBACK, #MqSendEND_AND_WAIT)
+ -# test the context creation performance (parent/child create/delete)
+ . 
+
+The server-setup is divided into 2 major setup-groups:
+ -# \e pipe , the server is started by the client using the <TT>client @ server</TT> syntax
+ -# \e tcp or \e uds , the server is started as a stand-alone server and the client is connecting to this server.
+ .
+
+The following information is important:
+ - the test was done on Linux using the following CPU
+  - Intel(R) Core(TM)2 CPU  6600  @ 2.40GHz
+  .
+ - for C# the \e mono tools were used
+ - for JAVA the \e sun tools were used
+ - \e parent-create/delete using \e pipe \b or \e uds-spawn \b or \e tcp-spawn
+  - create: An entire new process is created and the startup time of the new process is included.
+   - \e process-create + \e language-interpreter-create + \e child-create
+   .
+  - delete: The whole process is delete.
+    - \e child-delete + \e language-interpreter-delete + \e process-delete
+    .
+  .
+ - \e parent-create using \e tcl and \e tcp-thread or \e uds-thread
+  - Tcl allow \b multiple interpreter per process. 
+  - For every new parent-context one new thread is created.
+  - For every new thread one new tcl interpreter is created.
+  .
+ - \e parent-create using \e java and \e tcp-thread or \e uds-thread
+  - Java allow only \b one JVM per process. 
+  - For every new parent-context a new thread is created.
+  - For every new thread the initial JVM is attached.
+  .
+ - parent-create using C# and tcp-thread or uds-thread
+  - Using the same "design" as for JAVA was done
+  .
+ - \e tcl is using a different interpreter depending on thread used or not:
+  - thread disabled: \e pipe, \e spawn , \e fork
+  - thread enabled: \e thread
+  .
+ - the results are time-value per transaction -> as bigger, as slower
+ - \e VB.NET is using the \e CLR dll from \e C#
+  - one goal was to prove if the \e CLR language compatibility works -> it does !!
+ .
+
+\section performance_summary Summary
+
+\verbinclude total_link.perf
+
+\section perf-c Detail C Setup
+
+\subsection perf-c-pipe Using PIPE
+
+ - Using PIPE \dontinclude c_pipe.perf \until --all
+ .
+
+\subsection perf-c-uds Using UDS
+
+ - Using UDS and Spawn  \dontinclude c_uds_spawn.perf \until --all
+ - Using UDS and Fork   \dontinclude c_uds_fork.perf \until --all
+ - Using UDS and Thread \dontinclude c_uds_thread.perf \until --all
+ .
+
+\subsection perf-c-tcp Using TCP
+
+ - Using TCP and Spawn  \dontinclude c_tcp_spawn.perf \until --all
+ - Using TCP and Fork   \dontinclude c_tcp_fork.perf \until --all
+ - Using TCP and Thread \dontinclude c_tcp_thread.perf \until --all
+ .
+
+\section perf-cc Detail C++ Setup
+
+\subsection perf-cc-pipe Using PIPE
+
+ - Using PIPE \dontinclude cc_pipe.perf \until --all
+ .
+
+\subsection perf-cc-uds Using UDS
+
+ - Using UDS and Spawn  \dontinclude cc_uds_spawn.perf \until --all
+ - Using UDS and Fork   \dontinclude cc_uds_fork.perf \until --all
+ - Using UDS and Thread \dontinclude cc_uds_thread.perf \until --all
+ .
+
+\subsection perf-cc-tcp Using TCP
+
+ - Using TCP and Spawn  \dontinclude cc_tcp_spawn.perf \until --all
+ - Using TCP and Fork   \dontinclude cc_tcp_fork.perf \until --all
+ - Using TCP and Thread \dontinclude cc_tcp_thread.perf \until --all
+ .
+
+\section perf-csharp Detail C# Setup
+
+\subsection perf-csharp-pipe Using PIPE
+
+ - Using PIPE \dontinclude csharp_pipe.perf \until --all
+ .
+
+\subsection perf-csharp-uds Using UDS
+
+ - Using UDS and Spawn \dontinclude csharp_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude csharp_uds_thread.perf \until --all
+ .
+
+\subsection perf-csharp-tcp Using TCP
+
+ - Using TCP and Spawn \dontinclude csharp_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude csharp_tcp_thread.perf \until --all
+ .
+
+\section perf-java Detail Java Setup
+
+\subsection perf-java-pipe Using PIPE
+
+ - Using PIPE \dontinclude java_pipe.perf \until --all
+ .
+
+\subsection perf-java-uds Using UDS
+
+ - Using UDS and Spawn \dontinclude java_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude java_uds_thread.perf \until --all
+ .
+
+\subsection perf-java-tcp Using TCP
+
+ - Using TCP and Spawn \dontinclude java_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude java_tcp_thread.perf \until --all
+ .
+
+\section perf-go Detail Perl Setup
+
+\subsection perf-go-pipe Using PIPE
+
+ - Using PIPE \dontinclude go_pipe.perf \until --all
+ .
+
+\subsection perf-go-uds Using UDS
+
+ - Using UDS and Fork \dontinclude go_uds_fork.perf \until --all
+ - Using UDS and Spawn \dontinclude go_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude go_uds_thread.perf \until --all
+ .
+
+\subsection perf-go-tcp Using TCP
+
+ - Using TCP and Fork \dontinclude go_tcp_fork.perf \until --all
+ - Using TCP and Spawn \dontinclude go_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude go_tcp_thread.perf \until --all
+ .
+
+\section perf-perl Detail Perl Setup
+
+\subsection perf-perl-pipe Using PIPE
+
+ - Using PIPE \dontinclude perl_pipe.perf \until --all
+ .
+
+\subsection perf-perl-uds Using UDS
+
+ - Using UDS and Fork \dontinclude perl_uds_fork.perf \until --all
+ - Using UDS and Spawn \dontinclude perl_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude perl_uds_thread.perf \until --all
+ .
+
+\subsection perf-perl-tcp Using TCP
+
+ - Using TCP and Fork \dontinclude perl_tcp_fork.perf \until --all
+ - Using TCP and Spawn \dontinclude perl_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude perl_tcp_thread.perf \until --all
+ .
+
+\section perf-php Detail Perl Setup
+
+\subsection perf-php-pipe Using PIPE
+
+ - Using PIPE \dontinclude php_pipe.perf \until --all
+ .
+
+\subsection perf-php-uds Using UDS
+
+ - Using UDS and Fork \dontinclude php_uds_fork.perf \until --all
+ - Using UDS and Spawn \dontinclude php_uds_spawn.perf \until --all
+ .
+
+\subsection perf-php-tcp Using TCP
+
+ - Using TCP and Fork \dontinclude php_tcp_fork.perf \until --all
+ - Using TCP and Spawn \dontinclude php_tcp_spawn.perf \until --all
+ .
+
+\section perf-python Detail Python Setup
+
+\subsection perf-python-pipe Using PIPE
+
+ - Using PIPE \dontinclude python_pipe.perf \until --all
+ .
+
+\subsection perf-python-uds Using UDS
+
+ - Using UDS and Spawn \dontinclude python_uds_spawn.perf \until --all
+ - Using UDS and Fork \dontinclude python_uds_fork.perf \until --all
+ .
+
+\subsection perf-python-tcp Using TCP
+
+ - Using TCP and Spawn \dontinclude python_tcp_spawn.perf \until --all
+ - Using TCP and Fork \dontinclude python_tcp_fork.perf \until --all
+ .
+
+\section perf-ruby Detail Python Setup
+
+\subsection perf-ruby-pipe Using PIPE
+
+ - Using PIPE \dontinclude ruby_pipe.perf \until --all
+ .
+
+\subsection perf-ruby-uds Using UDS
+
+ - Using UDS and Spawn \dontinclude ruby_uds_spawn.perf \until --all
+ - Using UDS and Fork \dontinclude ruby_uds_fork.perf \until --all
+ .
+
+\subsection perf-ruby-tcp Using TCP
+
+ - Using TCP and Spawn \dontinclude ruby_tcp_spawn.perf \until --all
+ - Using TCP and Fork \dontinclude ruby_tcp_fork.perf \until --all
+ .
+
+\section perf-tcl Detail Tcl Setup
+
+\subsection perf-tcl-pipe Using PIPE
+
+ - Using PIPE \dontinclude tcl_pipe.perf \until --all
+ .
+
+\subsection perf-tcl-uds Using UDS
+
+ - Using UDS and Spawn  \dontinclude tcl_uds_spawn.perf \until --all
+ - Using UDS and Fork   \dontinclude tcl_uds_fork.perf \until --all
+ - Using UDS and Thread \dontinclude tcl_uds_thread.perf \until --all
+ .
+
+\subsection perf-tcl-tcp Using TCP
+
+ - Using TCP and Spawn  \dontinclude tcl_tcp_spawn.perf \until --all
+ - Using TCP and Fork   \dontinclude tcl_tcp_fork.perf \until --all
+ - Using TCP and Thread \dontinclude tcl_tcp_thread.perf \until --all
+ .
+
+\section perf-vb Detail VB.NET Setup
+
+\subsection perf-vb-pipe Using PIPE
+
+ - Using PIPE \dontinclude vb_pipe.perf \until --all
+ .
+
+\subsection perf-vb-uds Using UDS
+
+ - Using UDS and Spawn  \dontinclude vb_uds_spawn.perf \until --all
+ - Using UDS and Thread \dontinclude vb_uds_thread.perf \until --all
+ .
+
+\subsection perf-vb-tcp Using TCP
+
+ - Using TCP and Spawn  \dontinclude vb_tcp_spawn.perf \until --all
+ - Using TCP and Thread \dontinclude vb_tcp_thread.perf \until --all
+ .
+
+**/
+

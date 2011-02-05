@@ -1,0 +1,334 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += PHP
+ENABLED_SECTIONS    += DAEMON
+EXAMPLE_PATH	    += $(SRCDIR)/example/php
+
+ALIASES		    += "self=msgqueforphp"
+ALIASES		    += "selftut=msgqueforphptut"
+ALIASES		    += "NS{1}=php_\1"
+ALIASES		    += "lang=php"
+ALIASES		    += "fileextension=php"
+ALIASES		    += "dirname=php"
+ALIASES		    += "null=\e undef"
+ALIASES		    += "yes=\e TRUE"
+ALIASES		    += "no=\e FALSE"
+ALIASES		    += "package=# php.ini: extension=\"MsgqueForPhp.so\""
+
+ALIASES		    += "FactoryDefault=MqFactoryS FactoryDefault(ident,?class?)"
+ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryS FactoryAdd(?ident?,class)" 
+ALIASES		    += "FactoryGet=MqFactoryS FactoryGet(ident)" 
+ALIASES		    += "FactoryGetCalled=MqFactoryS FactoryGetCalled(ident)" 
+
+ALIASES		    += "FactoryNew=MqS $factory->New()"
+ALIASES		    += "FactoryCopy=MqFactoryS $factory->Copy(ident)"
+
+ALIASES		    += "FactoryCtxSet=$ctx->FactoryCtxSet(factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS $ctx->FactoryCtxGet"
+ALIASES		    += "FactoryCtxIdentSet=$ctx->FactoryCtxIdentSet(ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C $ctx->FactoryCtxIdentGet"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+class MyClass extends MqS { \n\
+  ... \n\
+  public function __construct() { \n\
+    $this->mydata = NULL; \n\
+    parent::__construct(); \n\
+  } \n\
+  ... \n\
+} \n\
+$ctx = FactoryAdd('MqClass')->New(); \n\
+... \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=$ctx=new MqS()"
+ALIASES		    += "ContextCreateSection="
+ALIASES		    += "ContextDelete=$ctx->Delete()"
+ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageFile)"
+ALIASES		    += "LogC=$ctx->LogC(\C:prefix, \I:level, \C:message)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=MqS::Init(...)"
+ALIASES		    += "init_example=\
+\code \n\
+MqS::Init(\"php\", \"-c\", \"/path/to/php.ini\", \"myExecutable.php\", \"myFirstArgument\"); \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=\I"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=\I"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=seconds"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=\C"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=\C"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_ident=\C"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=\O"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=\O"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=\O"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_daemon=\C"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=\I"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c MqS::START_DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c MqS::START_FORK"
+ALIASES		    += "MQ_START_THREAD=\c MqS::START_THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c MqS::START_SPAWN"
+
+ALIASES		    += "config_type_tcp=\C"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=\C"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=\I"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=\O"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isSlave=\O"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_master=MqS"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES             += "config_IServerSetup=IServerSetup::ServerSetup()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup::ServerCleanup()"
+ALIASES		    += "config_IFactory=IFactory::Factory()"
+ALIASES             += "config_IBgError=IBgError::BgError()"
+ALIASES             += "config_IEvent=IEvent::Event()"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+class MyClass extends MqS implements iFactory { \n\
+  ... \n\
+  public function Factory() { \n\
+    return new MyClass(); \n\
+  } \n\
+} \n\
+... \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES             += "LinkCreate=$ctx->LinkCreate(args...)"
+ALIASES             += "LinkCreateChild=$ctx->LinkCreateChild(MqS:parent, args...)"
+ALIASES		    += "LinkDelete=$ctx->LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS $ctx->LinkGetParent()"
+ALIASES		    += "LinkIsParent=\O $ctx->LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=\I $ctx->LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=\O $ctx->LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C $ctx->LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=$ctx->LinkConnect()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code \n\
+$ctx->SendSTART();\n\
+$ctx->SendI($num);\n\
+$ctx->SendL_START();\n\
+$ctx->SendD($balance);\n\
+$ctx->SendC(\"name of the owner\");\n\
+$ctx->SendB($signature);\n\
+$ctx->SendL_END();\n\
+$ctx->SendEND_AND_WAIT(\"SRV1\");\n\
+\endcode"
+ALIASES		    += "SendSTART=$ctx->SendSTART()"
+ALIASES		    += "SendEND=$ctx->SendEND(\C:token)"
+ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(\C:token, ?\I:timeout=seconds?)"
+ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(\C:token, callback)"
+ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
+ALIASES		    += "SendERROR=$ctx->SendERROR()"
+ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
+ALIASES		    += "SendL_START=$ctx->SendL_START()"
+ALIASES		    += "SendL_END=$ctx->SendL_END()"
+ALIASES		    += "SendN=$ctx->SendN(value)"
+ALIASES		    += "SendBDY=\I $ctx->SendBDY(value)"
+ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
+ALIASES		    += "SendT_END=$ctx->SendT_END()"
+ALIASES		    += "SendT_example=\code \n\
+$ctx->SendSTART(); \n\
+$ctx->SendT_START(\"SRVR\"); \n\
+$ctx->SendC(\"myEnvironment\"); \n\
+$ctx->SendT_END(); \n\
+$ctx->SendC(\"myData\"); \n\
+$ctx->SendEND_AND_WAIT(\"SRVC\");\endcode"
+
+# READ DATE
+ALIASES		    += "read_example=\code \n\
+$num = $ctx->ReadI();\n\
+$ctx->ReadL_START();\n\
+$balance = $ctx->ReadD();\n\
+$owner = $ctx->ReadC();\n\
+$signature = $ctx->ReadB();\n\
+$ctx->ReadL_END();\n\
+\endcode"
+ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
+ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
+ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
+ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
+ALIASES		    += "ReadProxy=$ctx->ReadProxy(MqS:otherCtx)"
+ALIASES		    += "ReadGetNumItems=\I $ctx->ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=\O $ctx->ReadItemExists()"
+ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
+ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS:buffer?)"
+ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
+ALIASES		    += "ReadT_START=$ctx->ReadT_START(?MqBufferS:buffer?)"
+ALIASES		    += "ReadT_END=$ctx->ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+public function SRVR() { \n\
+  $this->ReadT_START(); \n\
+  $myEnvironment = $this->ReadC(); \n\
+  $this->ReadT_END(); \n\
+  $myResult = $this->ReadC(); \n\
+}\endcode"
+
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+public function ServerSetup() { \n\
+  $this->ServiceCreate(\"SRV1\", array(&$this, 'serviceF')); \n\
+} \n\
+\endcode"
+ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(\C:token, callback)"
+ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(\C:token, ?\I:id=0?)"
+ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(\C:token)"
+ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(timeout=\I|TIMEOUT_DEFAULT(|USER|MAX), wait=WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=$ctx->ProcessEvent(wait=WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=$ctx->ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ALIASES		    += "MQ_WAIT_NO=MqS::WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=MqS::WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=MqS::WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=MqS::TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=MqS::TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=MqS::TIMEOUT_MAX"
+ALIASES		    += "ServiceGetToken=\C $ctx->ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=$filter=MqS $ctx->ServiceGetFilter()"
+ALIASES		    += "ServiceIsTransaction=\O $ctx->ServiceIsTransaction()"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(\I:id, args...)"
+ALIASES		    += "SlaveWorker_example=\code $ctx->SlaveWorker(7,\"--thread\",\"--silent\",\"@\",\"WORKER\",\"--name\",\"MyWorker\"); \endcode"
+ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(\I:id, MqS:slave)"
+ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(\I:id)"
+ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(\I:id)"
+ALIASES		    += "SlaveGetMaster=MqS $ctx->SlaveGetMaster()"
+ALIASES		    += "SlaveIs=\O $ctx->SlaveIs()"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+$buf = $ctx->ReadU(); \n\
+if {$buf->GetType() eq 'C'} { \n\
+  print $buf->GetC(); \n\
+} \n\
+\endcode"
+
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
+ALIASES		    += "BufferType=char $buffer->GetType()"
+
+ALIASES		    += "Y=integer"
+ALIASES		    += "O=boolean"
+ALIASES		    += "S=integer"
+ALIASES		    += "I=integer"
+ALIASES		    += "F=float"
+ALIASES		    += "W=integer"
+ALIASES		    += "D=float"
+ALIASES		    += "C=string"
+ALIASES		    += "B=binary-string"
+ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=binary-string"
+ALIASES		    += "TE=MqSException"
+
+# CONTEXT LOCAL STORAGE
+#ENABLED_SECTIONS    += DATA
+#ALIASES		    += "DictSet=$ctx->DictSet(key, data)"
+#ALIASES		    += "DictGet=$ctx->DictGet(key)"
+#ALIASES		    += "DictExists=$ctx->DictExists(key)"
+#ALIASES		    += "DictUnset=$ctx->DictUnset(key)"
+#ALIASES		    += "DictUndef=undef"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+try { \n\
+ $i = $ctx->ReadI(); \n\
+} catch (Exception $ex) { \n\
+ $ctx->ErrorSet($ex); \n\
+ print($ctx->ErrorGetText() . "\n"); \n\
+ $ctx->ErrorReset(); \n\
+} \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqSException $ex</I>"
+ALIASES		    += "ErrorGetText=\C $ctx->ErrorGetText()"
+ALIASES		    += "ErrorGetNum=\I $ctx->ErrorGetNum()"
+ALIASES		    += "ErrorC=$ctx->ErrorC(\C:prefix, \I:num, \C:message)"
+ALIASES		    += "ErrorSet=$ctx->ErrorSet(MqSException:$ex)"
+ALIASES		    += "ErrorSetCONTINUE=$ctx->ErrorSetCONTINUE()"
+ALIASES		    += "ErrorSetEXIT=$ctx->ErrorSetEXIT()"
+ALIASES		    += "ErrorIsEXIT=\O $ctx->ErrorIsEXIT()"
+ALIASES		    += "ErrorReset=$ctx->ErrorReset()"
+ALIASES		    += "ErrorRaise=$ctx->ErrorRaise()"
+ALIASES		    += "ErrorPrint=$ctx->ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+try { \n\
+  $ctx->SendEND_AND_WAIT(\"TOKS\"); \n\
+} catch (Exception $ex) {\n\
+  $ctx->ErrorSet($@); \n\
+  if ($ctx->ErrorIsEXIT()) $ctx->ErrorReset(); \n\
+} \n\
+\endcode"
+
+

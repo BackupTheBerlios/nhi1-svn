@@ -1,0 +1,11 @@
+> perl nothread/NHI1-0.12/theLink/example/perl/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/NHI1-0.12/theLink/example/c/client --all --tcp --host localhost --port 7794
+C> (client:1300) [2011-01-21:09-07-27] [0-0-0-0x6e3f68-main]: start: --------------------------------------
+C> (client:1300) [2011-01-21:09-07-28] [0-0-0-0x6e3f68-statistics]:                      MqSendEND:       8.85
+C> (client:1300) [2011-01-21:09-07-28] [0-0-0-0x6e3f68-statistics]:         MqSendEND_AND_CALLBACK:      12.21
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-statistics]:             MqSendEND_AND_WAIT:      33.05
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-statistics]:                  parent create:    1455.92
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-statistics]:                  parent delete:     395.46
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-statistics]:                   child create:     127.98
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-statistics]:                   child delete:      59.51
+C> (client:1300) [2011-01-21:09-07-32] [0-0-0-0x6e3f68-main]: end: ----------------------------------------
