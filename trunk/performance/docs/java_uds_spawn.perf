@@ -1,12 +1,12 @@
 > java example.Server --uds --file ./socket.uds --spawn
 > thread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-15] [0-0-0-0x6ebd98-main]: start: --------------------------------------
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-15] [0-0-0-0x6ebd98-statistics]:                      MqSendEND:       4.87
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-15] [0-0-0-0x6ebd98-statistics]:         MqSendEND_AND_CALLBACK:       8.72
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-16] [0-0-0-0x6ebd98-statistics]:             MqSendEND_AND_WAIT:      21.29
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-20] [0-0-0-0x6ebd98-statistics]:               MqSendPERSISTENT:     251959
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-29] [0-0-0-0x6ebd98-statistics]:                  parent create:   98095.97
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-30] [0-0-0-0x6ebd98-statistics]:                  parent delete:    1932.62
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-30] [0-0-0-0x6ebd98-statistics]:                   child create:     202.79
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-30] [0-0-0-0x6ebd98-statistics]:                   child delete:      33.86
-C> (client:15688:0x7fad9eea4700) [2011-02-04:19-20-30] [0-0-0-0x6ebd98-main]: end: ----------------------------------------
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-39] [0-0-0-0x6ebd98-main]: start: --------------------------------------
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-39] [0-0-0-0x6ebd98-statistics]:                      MqSendEND:   2.11e+05
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-39] [0-0-0-0x6ebd98-statistics]:         MqSendEND_AND_CALLBACK:   1.18e+05
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-40] [0-0-0-0x6ebd98-statistics]:             MqSendEND_AND_WAIT:   4.77e+04
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-43] [0-0-0-0x6ebd98-statistics]:               MqSendPERSISTENT:   3.95e+00
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-53] [0-0-0-0x6ebd98-statistics]:                  parent create:   1.02e+01
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-53] [0-0-0-0x6ebd98-statistics]:                  parent delete:   5.49e+02
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-53] [0-0-0-0x6ebd98-statistics]:                   child create:   5.27e+03
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-54] [0-0-0-0x6ebd98-statistics]:                   child delete:   2.91e+04
+C> (client:19725:0x7f002ceda700) [2011-02-05:12-26-54] [0-0-0-0x6ebd98-main]: end: ----------------------------------------

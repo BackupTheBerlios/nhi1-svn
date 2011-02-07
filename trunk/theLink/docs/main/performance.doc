@@ -68,16 +68,17 @@ The performance is measured with the tool \e client and a programming language s
 in the subdirectory \c performance.
  - <TT>performance/README</TT>
  .
-The performance test is separated in a test <B>with thread support</B> and \b without.
-A test <B>with thread support</B> is performed with a thread enabled base language and a thread enabled \libmsgque library.
+The performance test is separated into a test <B>with thread support</B> and \b without.\n
+A test <B>with thread support</B> is performed with a thread enabled base language and a thread enabled \libmsgque library. \n
+The performance is measured in <B>requests per second</B>.
 
 
 The performance-tests are divided into 2 major test-groups:
- -# test the transaction performance (#MqSendEND, #MqSendEND_AND_CALLBACK, #MqSendEND_AND_WAIT)
- -# test the context creation performance (parent/child create/delete)
+ -# test the transaction performance (#MqSendEND, #MqSendEND_AND_CALLBACK, #MqSendEND_AND_WAIT, #MqSendT_END)
+ -# test the instance create/delete performance (parent/child)
  . 
 
-The server-setup is divided into 2 major setup-groups:
+The \e server-instance-setup is divided into 2 major setup-groups:
  -# \e pipe , the server is started by the client using the <TT>client @ server</TT> syntax
  -# \e tcp or \e uds , the server is started as a stand-alone server and the client is connecting to this server.
  .

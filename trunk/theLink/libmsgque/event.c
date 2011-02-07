@@ -223,8 +223,7 @@ enum MqErrorE
 pEventStart (
   struct MqS * const context,
   struct MqEventS * event,
-  struct timeval const * const timeout,
-  EventCreateF const proc
+  struct timeval const * const timeout
 )
 {
   // init
@@ -261,7 +260,7 @@ pEventStart (
     // found valid socket -> call it
     eventctx->refCount++;
 //printLV("eventctx<%p>, sock<%d>\n", eventctx, sock);
-    ret = (*proc)(eventctx);
+    ret = pServiceStart(eventctx, pReadHDR);
     eventctx->refCount--;
     switch (ret) {
       case MQ_OK:

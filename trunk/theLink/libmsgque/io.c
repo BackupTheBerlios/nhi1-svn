@@ -263,13 +263,12 @@ pIoSelectAll (
 }
 
 enum MqErrorE
-pMqSelectStart (
+pIoSelectStart (
   struct MqS * const context,
-  struct timeval const * const timeout,
-  EventCreateF const proc
+  struct timeval const * const timeout
 )
 {
-  return pEventStart (context, context->link.io->event, timeout, proc);
+  return pEventStart (context, context->link.io->event, timeout);
 }
 
 /*****************************************************************************/

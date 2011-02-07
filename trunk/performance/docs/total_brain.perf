@@ -1,18 +1,18 @@
     Tests from:       |                  
- 2011-02-04 19:30:32  |   PUT      GET   
+ 2011-02-05 12:23:21  |   PUT      GET   
  -------------------  | -------- --------
 
  pipe:
-    memory hash       |    18.72    19.13                                                       
-    memory btree      |    21.82    22.25                                                       
-    file hash         |    19.96    20.32                                                       
-    file btree        |   123.45   153.71                                                       
+    memory hash       |    18.56    18.89                                                       
+    memory btree      |    21.46    22.08                                                       
+    file hash         |    19.68    20.21                                                       
+    file btree        |   123.30   154.68                                                       
 
  tcp_fork:
-    memory hash       |    26.70    26.72                                                       
-    memory btree      |    29.89    30.40                                                       
-    file hash         |    27.83    27.93                                                       
-    file btree        |   169.21   161.45                                                       
+    memory hash       |    26.29    26.42                                                       
+    memory btree      |    29.62    30.03                                                       
+    file hash         |    27.49    27.85                                                       
+    file btree        |   173.31   161.65                                                       
 
  tcp_thread:
     f8-statistics]: memory |     PUT:     GET:                                                       
@@ -21,16 +21,16 @@
     f8-statistics]: file |     PUT:     GET:                                                       
 
  tcp_spawn:
-    memory hash       |    26.61    26.79                                                       
-    memory btree      |    30.04    30.22                                                       
-    file hash         |    27.87    27.97                                                       
-    file btree        |   131.92   163.95                                                       
+    memory hash       |    26.44    26.40                                                       
+    memory btree      |    29.63    29.98                                                       
+    file hash         |    27.59    27.96                                                       
+    file btree        |   136.81   162.01                                                       
 
  uds_fork:
-    memory hash       |    18.99    19.36                                                       
-    memory btree      |    22.10    22.51                                                       
-    file hash         |    20.16    20.63                                                       
-    file btree        |   152.32   154.04                                                       
+    memory hash       |    18.92    19.14                                                       
+    memory btree      |    22.06    22.37                                                       
+    file hash         |    20.05    20.44                                                       
+    file btree        |   123.84   198.81                                                       
 
  uds_thread:
     a8-statistics]: memory |     PUT:     GET:                                                       
@@ -39,7 +39,7 @@
     a8-statistics]: file |     PUT:     GET:                                                       
 
  uds_spawn:
-    memory hash       |    19.14    19.25                                                       
-    memory btree      |    22.25    22.64                                                       
-    file hash         |    20.37    20.63                                                       
-    file btree        |   192.99   153.22                                                       
+    memory hash       |    19.11    19.45                                                       
+    memory btree      |    22.05    22.63                                                       
+    file hash         |    20.25    20.69                                                       
+    file btree        |   125.06   189.30                                                       

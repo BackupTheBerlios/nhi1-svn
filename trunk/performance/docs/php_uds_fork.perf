@@ -1,12 +1,12 @@
 > php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.13/theLink/example/php/server.php --uds --file ./socket.uds --fork
 > nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:23896) [2011-02-04:19-26-02] [0-0-0-0x6e6d98-main]: start: --------------------------------------
-C> (client:23896) [2011-02-04:19-26-02] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:       6.34
-C> (client:23896) [2011-02-04:19-26-03] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:      10.63
-C> (client:23896) [2011-02-04:19-26-04] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:      25.46
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:     268799
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-statistics]:                  parent create:     678.76
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-statistics]:                  parent delete:     276.69
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-statistics]:                   child create:     753.00
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-statistics]:                   child delete:      50.30
-C> (client:23896) [2011-02-04:19-26-08] [0-0-0-0x6e6d98-main]: end: ----------------------------------------
+C> (client:27928) [2011-02-05:12-32-17] [0-0-0-0x6e6d98-main]: start: --------------------------------------
+C> (client:27928) [2011-02-05:12-32-18] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:   1.61e+05
+C> (client:27928) [2011-02-05:12-32-18] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:   9.44e+04
+C> (client:27928) [2011-02-05:12-32-20] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:   3.92e+04
+C> (client:27928) [2011-02-05:12-32-22] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:   4.90e+00
+C> (client:27928) [2011-02-05:12-32-22] [0-0-0-0x6e6d98-statistics]:                  parent create:   1.48e+03
+C> (client:27928) [2011-02-05:12-32-22] [0-0-0-0x6e6d98-statistics]:                  parent delete:   3.67e+03
+C> (client:27928) [2011-02-05:12-32-23] [0-0-0-0x6e6d98-statistics]:                   child create:   3.41e+03
+C> (client:27928) [2011-02-05:12-32-23] [0-0-0-0x6e6d98-statistics]:                   child delete:   1.96e+04
+C> (client:27928) [2011-02-05:12-32-23] [0-0-0-0x6e6d98-main]: end: ----------------------------------------

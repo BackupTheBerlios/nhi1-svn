@@ -32,6 +32,8 @@
 #   include <time.h>
 #   include <string.h>
 
+#include "sqlite3.h"
+
 struct sockaddr;
 struct sockaddr_in;
 
@@ -90,7 +92,8 @@ enum MqMessageNumE {
     /* 40 */ MQ_ERROR_ID_NOT_FOUND,
     /* 41 */ MQ_ERROR_FEATURE_NOT_AVAILABLE,
     /* 42 */ MQ_ERROR_NULL_NOT_ALLOWED,
-    /* 43 */ MQ_MESSAGE_END,
+    /* 43 */ MQ_ERROR_INVALID_SIZE,
+    /* 44 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -183,6 +186,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the feature '%s' is not available",
     /* MQ_ERROR_NULL_NOT_ALLOWED */
 	"the value 'NULL' is not allowed for parameter '%s'"
+    /* MQ_ERROR_INVALID_SIZE */
+	"invalid '%s' size, expect '%d' but got '%d'"
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY"
 };
@@ -571,7 +576,7 @@ void pEventAdd ( MQ_CST, struct MqS * const , MQ_SOCK * const);
 void pEventDel ( MQ_CST, struct MqS const * const );
 
 enum MqErrorE pEventCheck (struct MqS*const, struct MqEventS*, enum MqIoSelectE const, struct timeval*const);
-enum MqErrorE pEventStart (struct MqS*const, struct MqEventS*, struct timeval const*const, EventCreateF const);
+enum MqErrorE pEventStart (struct MqS*const, struct MqEventS*, struct timeval const*const);
 enum MqErrorE pEventCreate (struct MqS*const, struct MqEventS**const);
 void pEventDelete ( struct MqS const * const );
 struct MqS const * pEventSocketFind (struct MqS const * const, MQ_SOCK );
@@ -619,7 +624,8 @@ enum MqErrorE pIoSend ( struct MqIoS const * const, struct MqBufferS const * con
 enum MqErrorE pIoConnect ( struct MqIoS * const);
 enum MqErrorE pIoSelect ( struct MqIoS * const, enum MqIoSelectE const, struct timeval * const);
 enum MqErrorE pIoSelectAll ( struct MqIoS * const, enum MqIoSelectE const, struct timeval * const);
-enum MqErrorE pMqSelectStart ( struct MqS * const, struct timeval const * const, EventCreateF const);
+enum MqErrorE pIoSelectStart ( struct MqS * const, struct timeval const * const);
+enum MqErrorE pReadInsertRmtTransId  ( struct MqS * const);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -705,7 +711,8 @@ pIoLog (
 
 struct MqReadS* pReadCreate ( struct MqS * const);
 void pReadDelete ( struct MqReadS **) __attribute__((nonnull));
-enum MqErrorE pReadHDR ( register struct MqS *, struct MqS**);
+enum MqErrorE pReadHDR (register struct MqS*, struct MqS**);
+enum MqErrorE pReadTRA (register struct MqS*, struct MqS**);
 void pReadSetType( struct MqS * const, MQ_BOL const);
 void pReadL_CLEANUP (register struct MqS * const); 
 enum MqHandShakeE pReadGetHandShake ( struct MqS const * const);
@@ -802,6 +809,14 @@ void pSlaveShutdown (struct MqLinkSlaveS * const);
 
 /*****************************************************************************/
 /*                                                                           */
+/*                                service.h                                  */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqErrorE pServiceStart (struct MqS * const, EventReadF const);
+
+/*****************************************************************************/
+/*                                                                           */
 /*                                factory.h                                  */
 /*                                                                           */
 /*****************************************************************************/
@@ -856,12 +871,24 @@ enum MqErrorE pTransSetResult ( struct MqTransS const * const, enum MqTransE con
 /*                                                                           */
 /*****************************************************************************/
 
+struct MqSqlS {
+  MQ_CST  storageFile;		///< main directory used for database files
+  sqlite3 *db;			///< sqlite database connection handle
+  sqlite3_stmt *sendInsert;	///< prepared sql statement
+  sqlite3_stmt *sendSelect;	///< prepared sql statement
+  sqlite3_stmt *sendDelete;	///< prepared sql statement
+  sqlite3_stmt *readInsert;	///< prepared sql statement
+  sqlite3_stmt *readSelect1;	///< prepared sql statement
+  sqlite3_stmt *readSelect2;	///< prepared sql statement
+  sqlite3_stmt *readDelete;	///< prepared sql statement
+};
+
 enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_WID*);
 enum MqErrorE pSqlSelectSendTrans ( struct MqS * const, MQ_WID, MQ_BUF);
-enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_WID*);
-enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_CST const, MQ_WID const, MQ_WID const, MQ_WID*); 
-enum MqErrorE pSqlSelectReadTrans ( struct MqS * const, MQ_WID);
-enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID, MQ_WID*);
+enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_WID, MQ_WID*);
+enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_WID const, MQ_WID const, MQ_BUF const, MQ_BUF const, MQ_WID*);
+enum MqErrorE pSqlSelectReadTrans ( struct MqS * const);
+enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID, MQ_WID*, MQ_WID*);
 enum MqErrorE pSqlCreate ( struct MqS * const, struct MqSqlS ** const);
 void pSqlDelete (struct MqSqlS **);
 

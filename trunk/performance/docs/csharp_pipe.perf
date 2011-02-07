@@ -1,11 +1,11 @@
 > thread/NHI1-0.13/theLink/example/c/client --all @ mono thread/NHI1-0.13/theLink/example/csharp/server.exe
-C> (client:18933:0x7fd583689700) [2011-02-04:19-21-55] [0-0-0-0x6ebd98-main]: start: --------------------------------------
-C> (client:18933:0x7fd583689700) [2011-02-04:19-21-56] [0-0-0-0x6ebd98-statistics]:                      MqSendEND:       3.40
-C> (client:18933:0x7fd583689700) [2011-02-04:19-21-56] [0-0-0-0x6ebd98-statistics]:         MqSendEND_AND_CALLBACK:       5.92
-C> (client:18933:0x7fd583689700) [2011-02-04:19-21-57] [0-0-0-0x6ebd98-statistics]:             MqSendEND_AND_WAIT:      20.13
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-00] [0-0-0-0x6ebd98-statistics]:               MqSendPERSISTENT:     264869
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-03] [0-0-0-0x6ebd98-statistics]:                  parent create:   31267.64
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-04] [0-0-0-0x6ebd98-statistics]:                  parent delete:    2109.85
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-04] [0-0-0-0x6ebd98-statistics]:                   child create:     162.11
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-04] [0-0-0-0x6ebd98-statistics]:                   child delete:      33.17
-C> (client:18933:0x7fd583689700) [2011-02-04:19-22-04] [0-0-0-0x6ebd98-main]: end: ----------------------------------------
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-17] [0-0-0-0x6ebd98-main]: start: --------------------------------------
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-17] [0-0-0-0x6ebd98-statistics]:                      MqSendEND:   2.81e+05
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-17] [0-0-0-0x6ebd98-statistics]:         MqSendEND_AND_CALLBACK:   1.67e+05
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-18] [0-0-0-0x6ebd98-statistics]:             MqSendEND_AND_WAIT:   5.02e+04
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-21] [0-0-0-0x6ebd98-statistics]:               MqSendPERSISTENT:   4.86e+00
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-24] [0-0-0-0x6ebd98-statistics]:                  parent create:   3.20e+01
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-24] [0-0-0-0x6ebd98-statistics]:                  parent delete:   4.73e+02
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-24] [0-0-0-0x6ebd98-statistics]:                   child create:   6.22e+03
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-24] [0-0-0-0x6ebd98-statistics]:                   child delete:   3.00e+04
+C> (client:22953:0x7f89460a4700) [2011-02-05:12-28-24] [0-0-0-0x6ebd98-main]: end: ----------------------------------------

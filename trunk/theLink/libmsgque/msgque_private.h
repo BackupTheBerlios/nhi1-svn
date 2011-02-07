@@ -64,12 +64,8 @@ enum MqIoSelectE {
   MQ_SELECT_SEND = (1 << 1),	///< 'select' for writing
 } ;
 
-/// \brief prototype for an Event-Callback function
-typedef enum MqErrorE (
-  *EventCreateF
-) (
-  struct MqS * const
-);
+/// \brief prototype for an Event-Reader function
+typedef enum MqErrorE ( *EventReadF) ( register struct MqS *, struct MqS **);
 
 /// \brief the \e hand-shake of a \e service-call
 enum MqHandShakeE {

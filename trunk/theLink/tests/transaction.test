@@ -30,7 +30,7 @@ set BLOCK_2 true
 
 set t [makeFile {} storageFile]
 file delete -force $t
-set storageFiles [list ":memory:" "" $t]
+set storageFiles [list ":memory:" ":tmpdb:" $t]
 unset t
 
 
@@ -81,9 +81,7 @@ if {$BLOCK_1} {
 ##
 
 # startup binary --------------------------
-Setup $I $B $C $S
-
-$FH_LAST FactoryCtxIdentSet OTTO
+Setup $I $B $C $S --ident OTTO
 
 Echo0 $FH_LAST STDB SendC $D
 set D [file tail $D]
@@ -289,10 +287,9 @@ if {$BLOCK_2} {
 test transaction-X1-($I|$B|$C|$S|$D) {Read/Send BDY test} \
     -constraints    {!filter-test} \
     -setup	    {
-      Setup $I $B $C $S --filter-server Filter3
+      Setup $I $B $C $S --filter-server Filter3 --ident OTTO
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
-      $FH_LAST FactoryCtxIdentSet OTTO
     } \
     -body           {
       $FH_LAST SendSTART

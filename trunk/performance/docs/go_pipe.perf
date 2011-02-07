@@ -1,11 +1,11 @@
 > thread/NHI1-0.13/theLink/example/c/client --all @ thread/NHI1-0.13/theLink/example/go/server
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-45] [0-0-0-0x6ebcb8-main]: start: --------------------------------------
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-45] [0-0-0-0x6ebcb8-statistics]:                      MqSendEND:       5.93
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-45] [0-0-0-0x6ebcb8-statistics]:         MqSendEND_AND_CALLBACK:       8.48
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-47] [0-0-0-0x6ebcb8-statistics]:             MqSendEND_AND_WAIT:      22.76
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-statistics]:               MqSendPERSISTENT:     249836
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-statistics]:                  parent create:    1890.50
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-statistics]:                  parent delete:     173.49
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-statistics]:                   child create:     361.04
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-statistics]:                   child delete:      56.72
-C> (client:22607:0x7f2141c62700) [2011-02-04:19-24-50] [0-0-0-0x6ebcb8-main]: end: ----------------------------------------
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-01] [0-0-0-0x6ebcb8-main]: start: --------------------------------------
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-02] [0-0-0-0x6ebcb8-statistics]:                      MqSendEND:   1.68e+05
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-02] [0-0-0-0x6ebcb8-statistics]:         MqSendEND_AND_CALLBACK:   1.17e+05
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-03] [0-0-0-0x6ebcb8-statistics]:             MqSendEND_AND_WAIT:   4.40e+04
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-statistics]:               MqSendPERSISTENT:   3.78e+00
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-statistics]:                  parent create:   5.38e+02
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-statistics]:                  parent delete:   6.18e+03
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-statistics]:                   child create:   5.58e+03
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-statistics]:                   child delete:   1.75e+04
+C> (client:26646:0x7f8dea580700) [2011-02-05:12-31-07] [0-0-0-0x6ebcb8-main]: end: ----------------------------------------

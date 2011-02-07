@@ -220,12 +220,12 @@ ClientMain (
 
   if (sendB) {
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
+    MQ_INT const lnum = (num == -1 ? NUM_TRANS : num);
 
     StatTimerSP itemT = StatCreate (mqctx);
 
     {
-      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND", lnum);
       const MQ_BYT stepY = 1;
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
@@ -255,7 +255,6 @@ ClientMain (
 	MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "ECOI", 10));
 	MqErrorCheck (MqReadI(mqctx,&valI));
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
     }
@@ -267,12 +266,12 @@ ClientMain (
 
   if (sendAndCall) {
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
+    MQ_INT const lnum = (num == -1 ? NUM_TRANS : num);
 
     StatTimerSP itemT = StatCreate (mqctx);
 
     {
-      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND_AND_CALLBACK", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND_AND_CALLBACK", lnum);
       const MQ_BYT stepY = 1;
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
@@ -308,7 +307,6 @@ ClientMain (
 	MqErrorCheck(MqProcessEvent(mqctx, 3, MQ_WAIT_ONCE));
 
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
     }
@@ -323,12 +321,12 @@ ClientMain (
   if (sendAndWait) {
 
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_TRANS : num);
+    MQ_INT const lnum = (num == -1 ? NUM_TRANS : num);
 
     StatTimerSP itemT = StatCreate (mqctx);
 
     {
-      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND_AND_WAIT", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendEND_AND_WAIT", lnum);
       const MQ_BYT stepY = 1;
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
@@ -359,7 +357,6 @@ ClientMain (
 	  valW += stepW;
 	};
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
     }
@@ -372,12 +369,12 @@ ClientMain (
   if (sendPersistent) {
 
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_TRANS / 5000 : num);
+    MQ_INT const lnum = (num == -1 ? NUM_TRANS / 5000 : num);
 
     StatTimerSP itemT = StatCreate (mqctx);
 
     {
-      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendPERSISTENT", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "MqSendPERSISTENT", lnum);
       const MQ_BYT stepY = 1;
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
@@ -432,8 +429,7 @@ ClientMain (
       }
 
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
-      StatCtxPrint0 (stat);
+      StatCtxPrint (stat);
       StatCtxDelete (&stat);
       MqErrorCheck(MqServiceDelete(mqctx, "SDTR"));
     }
@@ -450,7 +446,7 @@ ClientMain (
     StatTimerSP itemT;
 
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_PARENT : num);
+    MQ_INT const lnum = (num == -1 ? NUM_PARENT : num);
     
     struct MqS** msgqueA = (struct MqS**) MqSysMalloc(MQ_ERROR_PANIC, lnum * sizeof(struct MqS*));
     struct MqBufferLS** largvA = (struct MqBufferLS**) MqSysMalloc(MQ_ERROR_PANIC, lnum * sizeof(struct MqBufferLS*));
@@ -464,15 +460,14 @@ ClientMain (
 
     {
       // loop to create the parent context
-      StatCtxSP stat = StatCtxCreate (mqctx, "parent create", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "parent create", lnum);
       StatInit (itemT);
       for (n=0; n<lnum; n++) {
 	msgqueA[n] = MqContextCreate(0, mqctx);
 	if (MqLinkCreate (msgqueA[n], &largvA[n]) == MQ_ERROR) {
 	  MqContextDelete (&mqctx);
 	  mqctx = msgqueA[n];
-	  lnum = n-1;
-	  for (n=0; n < lnum; n++) {
+	  for (n=0; n < n-1; n++) {
 	    MqContextDelete (&msgqueA[n]);
 	  }
 	  goto error;
@@ -480,18 +475,16 @@ ClientMain (
 	MqBufferLDelete(&largvA[n]);
       }
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
 
       // loop to delete the parent context
-      stat = StatCtxCreate (mqctx, "parent delete", 0);
+      stat = StatCtxCreate (mqctx, "parent delete", lnum);
       StatInit (itemT);
       for (n=0; n<lnum; n++) {
 	MqContextDelete (&msgqueA[n]);
       }
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
     }
@@ -508,7 +501,7 @@ ClientMain (
     StatTimerSP itemT;
 
     // if necessary apply the default number of transactions
-    MQ_INT lnum = (num == -1 ? NUM_CHILD : num);
+    MQ_INT const lnum = (num == -1 ? NUM_CHILD : num);
     
     struct MqS** contextA = (struct MqS**) MqSysMalloc(MQ_ERROR_PANIC, lnum * sizeof(struct MqS*));
 
@@ -522,7 +515,7 @@ ClientMain (
 
     {
       // loop to create the parent context
-      StatCtxSP stat = StatCtxCreate (mqctx, "child create", 0);
+      StatCtxSP stat = StatCtxCreate (mqctx, "child create", lnum);
       StatInit (itemT);
       for (n=0; n<lnum; n++) {
 	contextA[n] = MqContextCreate(0,template);
@@ -532,18 +525,16 @@ ClientMain (
 	}
       }
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
 
       // loop to delete the parent context
-      stat = StatCtxCreate (mqctx, "child delete", 0);
+      stat = StatCtxCreate (mqctx, "child delete", lnum);
       StatInit (itemT);
       for (n=0; n<lnum; n++) {
 	MqContextDelete (&contextA[n]);
       }
       StatCtxCalc (stat, itemT);
-      stat->val /= lnum;
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
     }

@@ -13,7 +13,6 @@
 #include "main.h"
 #include "error.h"
 #include "errno.h"
-#include "sqlite3.h"
 
 #define MQ_CONTEXT_S context
 
@@ -510,6 +509,10 @@ MqFactoryCtxSet (
 ) {
   check_NULL(item) {
     return MqErrorDbFactoryNum(context,MQ_FACTORY_RETURN_ITEM_IS_NULL);
+  } else if (context->link.send != NULL) {
+    // if "link" is up the "context->link.targetIdent" of the link-target
+    // is already filled replaceing the factory would create an inconsistant state
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "already");
   } else {
     context->setup.factory = item;
     MqConfigUpdateName(context, item->ident);
@@ -533,10 +536,15 @@ MqFactoryCtxIdentSet (
   struct MqFactoryS * const item = MqFactoryGet(ident);
   check_NULL(item) {
     return MqErrorDbFactoryNum(context,MQ_FACTORY_RETURN_ITEM_IS_NULL);
+  } else if (context->link.send != NULL) {
+    // if "link" is up the "context->link.targetIdent" of the link-target 
+    // is already filled replaceing the factory would create an inconsistant state
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "already");
+  } else {
+    context->setup.factory = item;
+    MqConfigUpdateName(context, ident);
+    return MQ_OK;
   }
-  context->setup.factory = item;
-  MqConfigUpdateName(context, ident);
-  return MQ_OK;
 }
 
 MQ_CST 

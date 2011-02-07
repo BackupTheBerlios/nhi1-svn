@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-#include "sqlite3.h"
 
 #include <errno.h>
 #include <fcntl.h>

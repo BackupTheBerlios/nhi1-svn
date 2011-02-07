@@ -732,6 +732,7 @@ MqBufferGetC (
 
   buf->cur.B = buf->data;
   switch (buf->type) {
+    case MQ_STRT:   stringP = buf->cur.C; break;
     case MQ_BYTT:   sprintf (stringP, MQ_FORMAT_Y, MqBufU2BYT(buf->cur)); break;
     case MQ_BOLT:   sprintf (stringP, MQ_FORMAT_O, MqBufU2BOL(buf->cur)); break;
     case MQ_SRTT:   sprintf (stringP, MQ_FORMAT_S, MqBufU2SRT(buf->cur)); break;
@@ -739,7 +740,6 @@ MqBufferGetC (
     case MQ_FLTT:   sprintf (stringP, MQ_FORMAT_F, MqBufU2FLT(buf->cur)); break;
     case MQ_WIDT:   sprintf (stringP, MQ_FORMAT_W, MqBufU2WID(buf->cur)); break;
     case MQ_DBLT:   sprintf (stringP, MQ_FORMAT_D, MqBufU2DBL(buf->cur)); break;
-    case MQ_STRT:   stringP = buf->cur.C; break;
     default:	    return TYPE_E(MQ_STRT, buf->type);
   }
   *out = stringP;

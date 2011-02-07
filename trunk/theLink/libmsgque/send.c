@@ -716,7 +716,6 @@ MqSendSTART (
   } else {
     register struct MqBufferS * const buf = send->sendBuf;
     register struct HdrS * const cur = (struct HdrS *) buf->data;
-    MQ_WID transId = pReadGetTransId(context);
 
     buf->numItems = 0;
     send->haveStart = MQ_YES;
@@ -745,7 +744,7 @@ MqSendSTART (
     buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
 
     // add transaction item if available
-    return transId == 0LL ? MQ_OK : pSqlSelectReadTrans(context,transId);
+    return pReadInsertRmtTransId(context);
   }
 }
 
@@ -1101,10 +1100,7 @@ MqSendT_END (
     // step 2. "sendBuf" is buffer in duty
     send->buf = send->sendBuf;
 
-    // step 3. add factory identifier
-    MqErrorCheck (MqSendC(context, context->setup.factory->ident));
-
-    // step 4. add transaction-identifer
+    // step 3. add transaction-identifer
     MqErrorCheck (MqSendW(context, transId));
 
     return MQ_OK;

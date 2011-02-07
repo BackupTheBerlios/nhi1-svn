@@ -39,8 +39,8 @@ performance.sh:
     > ./performance.sh perl
 
     only do java thread tests:
-    > ./performance "java*thread"
+    > ./performance.sh "java*thread"
 
     get all tests accepted by the command-line:
-    > ./performance --help-tests
+    > ./performance.sh --help-tests
 

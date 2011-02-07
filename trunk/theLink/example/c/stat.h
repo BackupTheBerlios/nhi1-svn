@@ -34,9 +34,9 @@
 /// #StatCtxS::val object.
 ///
 typedef struct StatCtxS {
-  struct MqS * mqctx;  ///< link to the #MqS object
+  struct MqS * mqctx;	      ///> link
   struct MqBufferS * name;    ///< identify the measurement point
-  MQ_INT count;		      ///< the number of times this measurement point was calculated
+  MQ_DBL count;		      ///< the number of times this measurement point was calculated
   MQ_DBL val;		      ///< the average time value
 } StatCtxS;
 
@@ -95,10 +95,6 @@ void StatCtxDelete (
 );
 
 void StatCtxPrint (
-  StatCtxSP context
-);
-
-void StatCtxPrint0 (
   StatCtxSP context
 );
 

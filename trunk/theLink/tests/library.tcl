@@ -1090,7 +1090,7 @@ proc EchoL { ctx token args } {
 ## procs
 ##
 
-proc Start {mode isError id cl {clname ""} {srvname ""}} {
+proc Start {mode isError id cl ident {clname ""} {srvname ""}} {
   global env FH FH_LAST Start_PREFIX
   if {$env(TS_SETUP)} { Print id cl }
   if {[info exists FH($id)]} {
@@ -1101,6 +1101,9 @@ proc Start {mode isError id cl {clname ""} {srvname ""}} {
   $FH($id) ConfigSetDebug $env(TS_DEBUG)
   $FH($id) ConfigSetTimeout $env(TS_TIMEOUT)
   $FH($id) ConfigSetIsString [expr {$mode eq "string"}]
+  if {$ident != ""} {
+    $FH($id) FactoryCtxIdentSet $ident
+  }
   if {$clname ne ""} {
     $FH($id) ConfigSetName $clname
   }
@@ -1142,6 +1145,7 @@ proc Setup {num mode com server args} {
   set setup_parent  [optV args --setup-parent]
   set bgerror	    [optV args --bgerror]
   set filter	    [optV args --filter NO]
+  set ident	    [optV args --ident]
   if {$filter ne "NO"} {
     set filter_server $filter
     set filter_client $filter
@@ -1233,7 +1237,7 @@ proc Setup {num mode com server args} {
 	if {$serverSilent} { lappend cl --silent }
       }
     }
-    Start $mode $isError $PNO-0 $cl client-$PNO server-$PNO
+    Start $mode $isError $PNO-0 $cl $ident client-$PNO server-$PNO
     if {$bgerror ne ""} {
       $FH_LAST ConfigSetBgError $bgerror
     }
@@ -1249,7 +1253,7 @@ proc Setup {num mode com server args} {
       ## prepare child arguments
       set cl [list LinkCreateChild $FH_LAST]
       ## start the child 
-      Start $mode yes $PNO-$CNO $cl 
+      Start $mode yes $PNO-$CNO $cl $ident
       if {$bgerror ne ""} {
 	$FH_LAST ConfigSetBgError $bgerror
       }

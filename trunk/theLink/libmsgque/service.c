@@ -158,9 +158,10 @@ MqServiceDelete(
   return (pTokenDelHdl (context->link.srvT, token));
 }
 
-static enum MqErrorE
-sMqEventStart (
-  struct MqS * const context
+enum MqErrorE
+pServiceStart (
+  struct MqS * const context,
+  EventReadF const reader
 )
 {
   struct MqS * a_context = context;
@@ -169,7 +170,7 @@ sMqEventStart (
   MqDLogCL(context,6,"START\n");
 
   // ##################### READ HEADER #####################
-  switch (pReadHDR (context, &a_context)) {
+  switch ((*reader) (context, &a_context)) {
     case MQ_OK:	      break;
     case MQ_CONTINUE: return MqErrorReset(context);
     case MQ_ERROR:    goto error;
@@ -279,7 +280,7 @@ MqProcessEvent (
     }
 
     // ##################### Process Events #####################
-    ret = pMqSelectStart(context, &tv, sMqEventStart);
+    ret = pIoSelectStart(context, &tv);
     MqErrorCheck (ret);
 
     // clean up delete objects

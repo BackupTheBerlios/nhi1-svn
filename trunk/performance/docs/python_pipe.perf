@@ -1,11 +1,11 @@
 > nothread/NHI1-0.13/theLink/example/c/client --all @ python nothread/NHI1-0.13/theLink/example/python/server.py
-C> (client:16941) [2011-02-04:19-20-30] [0-0-0-0x6e6e48-main]: start: --------------------------------------
-C> (client:16941) [2011-02-04:19-20-30] [0-0-0-0x6e6e48-statistics]:                      MqSendEND:       4.88
-C> (client:16941) [2011-02-04:19-20-31] [0-0-0-0x6e6e48-statistics]:         MqSendEND_AND_CALLBACK:      10.44
-C> (client:16941) [2011-02-04:19-20-32] [0-0-0-0x6e6e48-statistics]:             MqSendEND_AND_WAIT:      23.91
-C> (client:16941) [2011-02-04:19-20-35] [0-0-0-0x6e6e48-statistics]:               MqSendPERSISTENT:     256932
-C> (client:16941) [2011-02-04:19-20-38] [0-0-0-0x6e6e48-statistics]:                  parent create:   29290.61
-C> (client:16941) [2011-02-04:19-20-38] [0-0-0-0x6e6e48-statistics]:                  parent delete:    1970.87
-C> (client:16941) [2011-02-04:19-20-38] [0-0-0-0x6e6e48-statistics]:                   child create:     128.79
-C> (client:16941) [2011-02-04:19-20-38] [0-0-0-0x6e6e48-statistics]:                   child delete:      40.01
-C> (client:16941) [2011-02-04:19-20-38] [0-0-0-0x6e6e48-main]: end: ----------------------------------------
+C> (client:20964) [2011-02-05:12-26-54] [0-0-0-0x6e6e48-main]: start: --------------------------------------
+C> (client:20964) [2011-02-05:12-26-54] [0-0-0-0x6e6e48-statistics]:                      MqSendEND:   2.13e+05
+C> (client:20964) [2011-02-05:12-26-54] [0-0-0-0x6e6e48-statistics]:         MqSendEND_AND_CALLBACK:   1.11e+05
+C> (client:20964) [2011-02-05:12-26-56] [0-0-0-0x6e6e48-statistics]:             MqSendEND_AND_WAIT:   4.20e+04
+C> (client:20964) [2011-02-05:12-26-59] [0-0-0-0x6e6e48-statistics]:               MqSendPERSISTENT:   4.03e+00
+C> (client:20964) [2011-02-05:12-27-02] [0-0-0-0x6e6e48-statistics]:                  parent create:   3.42e+01
+C> (client:20964) [2011-02-05:12-27-02] [0-0-0-0x6e6e48-statistics]:                  parent delete:   5.09e+02
+C> (client:20964) [2011-02-05:12-27-02] [0-0-0-0x6e6e48-statistics]:                   child create:   7.78e+03
+C> (client:20964) [2011-02-05:12-27-02] [0-0-0-0x6e6e48-statistics]:                   child delete:   2.51e+04
+C> (client:20964) [2011-02-05:12-27-02] [0-0-0-0x6e6e48-main]: end: ----------------------------------------

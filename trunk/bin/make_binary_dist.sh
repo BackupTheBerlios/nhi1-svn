@@ -31,7 +31,7 @@ tar -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2
 cd $PACKAGE-$PACKAGE_VERSION
 
 PKG=${PACKAGE}-${PACKAGE_VERSION}-${host}
-FINAL_PKG=$abs_top_builddir/binary-dist/$PKG.zip
+FINAL_PKG=$abs_top_builddir/binary-dist/$PKG.tar.bz2
 
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 
@@ -61,7 +61,7 @@ make DESTDIR=/tmp/$PKG/ install || exit 1
 
 test -f $FINAL_PKG && rm $FINAL_PKG
 
-(cd /tmp; zip -r $FINAL_PKG $PKG)
+(cd /tmp; tar --format=ustar -chf - "$PKG" | bzip2 -9 -c >"$FINAL_PKG")
 
 make DESTDIR=/tmp/$PKG/ uninstall
 

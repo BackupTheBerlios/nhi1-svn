@@ -1,12 +1,12 @@
 > perl nothread/NHI1-0.13/theLink/example/perl/server.pl --tcp --host localhost --port 7796 --spawn
 > nothread/NHI1-0.13/theLink/example/c/client --all --tcp --host localhost --port 7796
-C> (client:21177) [2011-02-04:19-23-28] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
-C> (client:21177) [2011-02-04:19-23-28] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:       7.61
-C> (client:21177) [2011-02-04:19-23-29] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:      11.27
-C> (client:21177) [2011-02-04:19-23-30] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:      30.99
-C> (client:21177) [2011-02-04:19-23-33] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:     216393
-C> (client:21177) [2011-02-04:19-23-54] [0-0-0-0x6e6fb8-statistics]:                  parent create:  212631.02
-C> (client:21177) [2011-02-04:19-23-54] [0-0-0-0x6e6fb8-statistics]:                  parent delete:     412.08
-C> (client:21177) [2011-02-04:19-23-55] [0-0-0-0x6e6fb8-statistics]:                   child create:     129.65
-C> (client:21177) [2011-02-04:19-23-55] [0-0-0-0x6e6fb8-statistics]:                   child delete:      47.50
-C> (client:21177) [2011-02-04:19-23-55] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------
+C> (client:25197) [2011-02-05:12-29-46] [0-0-0-0x6e6fb8-main]: start: --------------------------------------
+C> (client:25197) [2011-02-05:12-29-46] [0-0-0-0x6e6fb8-statistics]:                      MqSendEND:   1.32e+05
+C> (client:25197) [2011-02-05:12-29-46] [0-0-0-0x6e6fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.49e+04
+C> (client:25197) [2011-02-05:12-29-48] [0-0-0-0x6e6fb8-statistics]:             MqSendEND_AND_WAIT:   3.23e+04
+C> (client:25197) [2011-02-05:12-29-51] [0-0-0-0x6e6fb8-statistics]:               MqSendPERSISTENT:   4.66e+00
+C> (client:25197) [2011-02-05:12-30-12] [0-0-0-0x6e6fb8-statistics]:                  parent create:   4.70e+00
+C> (client:25197) [2011-02-05:12-30-12] [0-0-0-0x6e6fb8-statistics]:                  parent delete:   2.40e+03
+C> (client:25197) [2011-02-05:12-30-12] [0-0-0-0x6e6fb8-statistics]:                   child create:   7.72e+03
+C> (client:25197) [2011-02-05:12-30-12] [0-0-0-0x6e6fb8-statistics]:                   child delete:   2.09e+04
+C> (client:25197) [2011-02-05:12-30-12] [0-0-0-0x6e6fb8-main]: end: ----------------------------------------

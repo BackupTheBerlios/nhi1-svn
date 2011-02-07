@@ -501,8 +501,8 @@ enum MqStatusIsE {
 
 /// \brief used for callback function pointer management
 struct MqCallbackS {
-  MqTokenF		fCall;	    ///< callback method
-  MQ_PTR		data;	    ///< additional data for the callback function
+  MqTokenF	fCall;	    ///< callback method
+  MQ_PTR	data;	    ///< additional data for the callback function
   MqDataFreeF	fFree;	    ///< free additional data pointer
   MqDataCopyF	fCopy;	    ///< copy additional data pointer, used in a #MqSetupDup
 };
@@ -1687,10 +1687,10 @@ MQ_EXTERN void MQ_DECL MqMark (
 /// \brief switch to a \e file-based-transaction-database
 /// \context
 /// \param[in] storageFile the file used to create the \e transaction-database. Allowed values are: 
-///            -# the string \c :memory: (default) for a \e in-memory-database
-///            -# the string \c filename for a \e persistent-database-file
-///            -# an \c empty string for a \e temporary-database-file
-///            .
+///   -# the string \c ":memory:" for a \e in-memory-database (default)
+///   -# the string \c ":tmpdb:"  for a \e temporary-database-file
+///   -# the string \c filename   for a \e persistent-database-file
+///   .
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
   struct MqS * const context,

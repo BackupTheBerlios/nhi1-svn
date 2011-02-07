@@ -49,6 +49,8 @@ struct MqReadS {
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
   MQ_WID transId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
+  MQ_WID rmtTransId;		    ///< remote transaction-id (rowid from the remote readTrans table)
+				    ///< if ">0LL" -> the value to use or "OLL" -> get value from the database
 };
 
 /*****************************************************************************/
@@ -252,13 +254,6 @@ pReadCreateTransId (
 )
 {
   struct MqReadS * read = context->link.read;
-  MQ_CST ident;
-  MqErrorCheck (MqReadC (context, &ident));
-  if (context->setup.factory && strcmp(ident, context->setup.factory->ident)) {
-    return MqErrorV(context,__func__,-1,
-      "internal error expect ident '%s' but got ident '%s'", 
-	context->setup.factory->ident, ident);
-  }
   MqErrorCheck (MqReadW (context, &read->transId));
   MqErrorCheck (pSqlSelectSendTrans (context, read->transId, read->tranBuf));
   return MQ_OK;
@@ -271,12 +266,13 @@ pReadDeleteTransId (
   register struct MqS  * context
 )
 {
-  return pSqlDeleteSendTrans (context, &context->link.read->transId);
+  struct MqReadS * read = context->link.read;
+  return pSqlDeleteSendTrans (context, read->transId, &read->transId);
 }
 
 enum MqErrorE
 pReadHDR (
-  register struct MqS  * context,
+  register struct MqS * context,
   struct MqS ** a_context
 )
 {
@@ -338,7 +334,7 @@ pReadHDR (
     // original context
     context = context->link.ctxIdP->link.ctxIdA[ctxId];
     // check if entry was already deleted
-    if (!context) return MQ_CONTINUE;
+    if (context == NULL) return MQ_CONTINUE;
     *a_context = context;
   }
 //MqDLogV (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
@@ -364,7 +360,8 @@ pReadHDR (
   pTokenSetCurrent (context->link.srvT, cur->tok);
 
   // 9. read BDY
-  if ((bdy->cursize = size)) {
+  bdy->cursize = size;
+  if (size > 0) {
     bdy->type = MQ_STRING_TYPE(string);
     if (unlikely (debug >= 6))
       MqLogV (context, __func__, 6, "BDY -> " MQ_FORMAT_Z " bytes\n", size);
@@ -372,7 +369,7 @@ pReadHDR (
     // 1. read
     MqErrorSwitch (pIoRead (context->link.io, bdy, bdy->cursize));
 
-    // 2. read 'HDR'
+    // 2. read 'BDY' header
 #ifdef MQ_SAVE
     if (unlikely (strncmp (bdy->cur.C, "BDY", 3))) {
       return MqErrorV (context, __func__, "expect 'BDY' but got '%s'", bdy->cur.C);
@@ -396,13 +393,22 @@ pReadHDR (
       pLogBDY (context, __func__, 7, bdy);
 
     // 5. if in a longterm-transaction, read the transaction-item on the !server!
-    read->transId = 0LL;
-    if (read->handShake == MQ_HANDSHAKE_TRANSACTION) {
-      MQ_CST ident; MQ_WID rmtTransId, transId;
-      MqErrorCheck (MqReadC (context, &ident));
+    if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
+      MQ_WID rmtTransId, transId;
       MqErrorCheck (MqReadW (context, &rmtTransId));
-      // need tmp for "transId" besause the following "MqSendSTART" send data !without! transaction package data
-      MqErrorCheck (pSqlInsertReadTrans (context, ident, rmtTransId, read->transId, &transId));
+      // use temporary variable "transId" because the following "MqSendSTART" have to send data 
+      // !without! transaction id
+      MqErrorCheck (
+	// collect all data necessary to setup the transaction !after! a crash
+	pSqlInsertReadTrans (context, 
+	  read->transId,		  /* old transaction id (used for "stack" transaction) */
+	  read->rmtTransId,		  /* old remote transaction id (used for "stack" transaction) */
+	  hdr,				  /* header data used by MqReadBDY (size = HDR_SIZE) */
+	  bdy,				  /* body data (size = bdy->cursize) */
+	  &transId
+	)
+      );
+      read->transId = 0LL;
       // answer first call with an empty return package
       if (context->link._trans != 0) {
 	enum MqErrorE ret;
@@ -415,6 +421,122 @@ pReadHDR (
       }
       // now the "transId" is "official" in use
       read->transId = transId;
+      read->rmtTransId = rmtTransId;
+    } else {
+      read->transId = 0LL;
+      read->rmtTransId = 0LL;
+    }
+  }
+
+  // reset data
+  read->canUndo = MQ_NO;
+  read->save = NULL;
+  
+  // 11. check if it's a System-pToken
+  // this line have to use the 'return' because pTokenCheckSystem usually return
+  // MQ_CONTINUE if a system token (_*) was found
+  return pTokenCheckSystem (context->link.srvT);
+
+error:
+  return MqErrorStack (context);
+}
+
+enum MqErrorE
+pReadTRA (
+  register struct MqS  * context,
+  struct MqS ** a_context
+)
+{
+  // called by "pSqlSelectReadTrans", readSelect1 already set
+  register sqlite3_stmt *hdl= context->link.sql->readSelect1;
+
+  // get data from database
+  register 
+  MQ_BOL  string  = (MQ_BOL)  sqlite3_column_int(hdl,0);
+  MQ_BOL  endian  = (MQ_BOL)  sqlite3_column_int(hdl,1);
+  MQ_BOL  transId = (MQ_BOL)  sqlite3_column_int64(hdl,2);
+  MQ_BIN  hdrB	  = (MQ_BIN)  sqlite3_column_blob(hdl,3);
+  MQ_SIZE hdrlen  = (MQ_SIZE) sqlite3_column_bytes(hdl,3);
+  MQ_BIN  bdyB	  = (MQ_BIN)  sqlite3_column_blob(hdl,4);
+  MQ_SIZE bdylen  = (MQ_SIZE) sqlite3_column_bytes(hdl,4);
+
+  struct MqReadS * read = context->link.read;
+  register struct HdrS * cur = (struct HdrS *) hdrB;
+  int debug = context->config.debug;
+  struct MqBufferS * bdy;
+
+  // no context switch necessary becasue the select in "pSqlSelectReadTrans"
+  // already select only the data with the right context
+  *a_context = context;
+
+  // 1. check environment context
+  if (string != context->config.isString) {
+    return MqErrorC(context,__func__,-1,"invalid configuration -> isString");
+  }
+
+  // MqReadBDY need the original "header", save this header in the current context
+  read->hdrorig = MqBufferSetB (read->hdr, hdrB, hdrlen);
+
+  // 6. log message
+  if (unlikely (debug >= 5)) {
+    read->hdr->type = MQ_STRING_TYPE(string);
+    pLogHDR (context, __func__, 5, read->hdr);
+  }
+
+  // 7. setup read
+  read->handShake = (enum MqHandShakeE) cur->code;
+  read->returnNum = 0;
+
+  // is a shortterm transaction is ongoing?
+  if (likely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
+    // a "longterm-transaction" (persistent) is "never" a "shortterm-transaction"
+    // pReadHDR has already send the "answer"
+    context->link._trans = 0;
+  } else {
+    context->link._trans = cur->trans;
+  }
+
+  // setup "bdy"
+  bdy = read->bdy = MqBufferSetB(read->readBuf, bdyB, bdylen);
+
+  // 8. read token
+  pTokenSetCurrent (context->link.srvT, cur->tok);
+
+  // 9. read BDY
+  if (bdylen > 0) {
+    bdy->type = MQ_STRING_TYPE(string);
+    if (unlikely (debug >= 6))
+      MqLogV (context, __func__, 6, "BDY -> " MQ_FORMAT_Z " bytes\n", bdylen);
+
+    bdy->cur.B += BDY_NumItems_S;
+
+    // 3. read NumItems
+    if (unlikely(string)) {
+      bdy->numItems = str2int(bdy->cur.C,NULL,16);
+    } else {
+      // if endian has changed -> swap bdy again (first swap was done in pReadHDR)
+      if (endian != context->link.bits.endian) {
+	pSwapBDY(bdy->data);
+      }
+      // body data already swapped !! (pSwapBDY...)
+      bdy->numItems = iBufU2INT(bdy->cur);
+    }
+    bdy->cur.B = (bdy->data + BDY_SIZE);
+
+    // 4. if required, log package
+    if (unlikely (debug >= 7 && bdylen > BDY_SIZE))
+      pLogBDY (context, __func__, 7, bdy);
+
+    // 5. if in a longterm-transaction, read the transaction-item on the !server!
+    if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
+      MQ_WID rmtTransId;
+      MqErrorCheck (MqReadW (context, &rmtTransId));
+      // now the "transId" is "official" in use
+      read->transId = transId;
+      read->rmtTransId = rmtTransId;
+    } else {
+      read->transId = 0LL;
+      read->rmtTransId = 0LL;
     }
   }
 
@@ -450,6 +572,7 @@ error:
   /* if type is native than "lsize" has the length of the native type */ \
   /* if type is *not* native than "lsize" has the value of '0' */ \
   if (lsize == 0) { \
+    /* if *not* native, one additional field is available -> the length */ \
     lsize = (buf->type == MQ_BINT ? iBufU2INT(bcur) : str2int(bcur.C, NULL, 16)); \
     bcur.B += (HDR_INT_LEN + 1); \
   } \
@@ -819,13 +942,14 @@ MqReadBDY (
   } else {
     MQ_SIZE const lbdy = read->bdy->cursize;
     MQ_SIZE const llen = HDR_SIZE + lbdy;
-    MQ_BIN data = (MQ_BIN) MqSysMalloc (MQ_ERROR_PANIC, llen);
+    MQ_BIN data = (MQ_BIN) MqSysMalloc (context, llen);
+    if (data == NULL) return MqErrorStack(context);
     memcpy (data, read->hdrorig->data, HDR_SIZE);
     memcpy (data+HDR_SIZE, read->bdy->data, lbdy);
     *out = data;
     *len = llen;
     // in a "longterm-transaction" with "MqReadBDY" no return transaction is
-    // required because the transaction is forwarded
+    // possible because the transaction is forwarded
     read->handShake = MQ_HANDSHAKE_START;
     return MQ_OK;
   }
@@ -976,10 +1100,24 @@ pReadDeleteTrans (
   struct MqReadS * const read = context->link.read;
   if (read->transId != 0LL) {
     read->handShake = MQ_HANDSHAKE_START;
-    return pSqlDeleteReadTrans(context,read->transId,&read->transId);
+    return pSqlDeleteReadTrans(context,read->transId,&read->transId,&read->rmtTransId);
   } else {
     return MQ_OK;
   }
+}
+
+enum MqErrorE
+pReadInsertRmtTransId (
+  struct MqS * const context
+)
+{
+  struct MqReadS * const read = context->link.read;
+  if (read->rmtTransId != 0LL) {
+    MqErrorCheck (MqSendW (context, read->rmtTransId));
+  }
+  return MQ_OK;
+error:
+  return MqErrorStack (context);
 }
 
 /*****************************************************************************/

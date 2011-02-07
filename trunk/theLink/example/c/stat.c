@@ -194,19 +194,7 @@ StatCtxPrint (
   StatCtxSP context
 )
 {
-  MqLogV (context->mqctx, "statistics",
-           0, "%30s: %10.2f\n", context->name->data, context->val);
-}
-
-/// \brief log the data of a StatCtxS object to stderr
-/// \sta_context
-void
-StatCtxPrint0 (
-  StatCtxSP context
-)
-{
-  MqLogV (context->mqctx, "statistics",
-           0, "%30s: %10.0f\n", context->name->data, context->val);
+  MqLogV (context->mqctx, "statistics", 0, "%30s: %10.2e\n", context->name->data, context->val);
 }
 
 /// \brief update #StatCtxS statistical data using #StatTimerS timer object
@@ -218,36 +206,24 @@ StatCtxCalc (
   StatTimerSP const timer
 )
 {
-  register MQ_INT dsec;
-  register MQ_INT dusec;
+  struct mq_timeval diff;
   struct mq_timeval tv;
   struct mq_timezone tz;
-  MQ_DBL count, count1;
 
   if (!timer->tv.tv_sec) return;
 
   MqSysGetTimeOfDay (NULL, &tv, &tz);
 
-  dsec = tv.tv_sec - timer->tv.tv_sec;
-  dusec = tv.tv_usec - timer->tv.tv_usec;
+  diff.tv_sec = tv.tv_sec - timer->tv.tv_sec;
+  diff.tv_usec = tv.tv_usec - timer->tv.tv_usec;
 
-  if (dusec < 0) {
-    dsec--;
-    dusec += 1000000;
+  if (diff.tv_usec < 0) {
+    diff.tv_sec--;
+    diff.tv_usec += 1000000;
   }
-  dusec += dsec * 1000000;
+  diff.tv_usec += diff.tv_sec * 1000000;
 
-  count = context->count;
-  count1 = count + 1;
-
-  // 1. skip first value
-  if (context->count == -1) {
-    context->count = 0;
-    return;
-  }
-
-  context->val = ((context->val * count + dusec) / count1);
-  context->count++;
+  context->val = ((context->count * 1000000) / diff.tv_usec);
 }
 
 /// \brief log a statistic timer object StatTimerS to stderr

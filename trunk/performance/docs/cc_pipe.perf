@@ -1,11 +1,11 @@
 > nothread/NHI1-0.13/theLink/example/c/client --all @ nothread/NHI1-0.13/theLink/example/cc/server
-C> (client:11102) [2011-02-04:19-17-40] [0-0-0-0x6e6c78-main]: start: --------------------------------------
-C> (client:11102) [2011-02-04:19-17-40] [0-0-0-0x6e6c78-statistics]:                      MqSendEND:       2.73
-C> (client:11102) [2011-02-04:19-17-40] [0-0-0-0x6e6c78-statistics]:         MqSendEND_AND_CALLBACK:       4.57
-C> (client:11102) [2011-02-04:19-17-41] [0-0-0-0x6e6c78-statistics]:             MqSendEND_AND_WAIT:      18.64
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-statistics]:               MqSendPERSISTENT:     314014
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-statistics]:                  parent create:    1324.68
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-statistics]:                  parent delete:     149.06
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-statistics]:                   child create:     133.73
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-statistics]:                   child delete:      32.80
-C> (client:11102) [2011-02-04:19-17-45] [0-0-0-0x6e6c78-main]: end: ----------------------------------------
+C> (client:15142) [2011-02-05:12-24-07] [0-0-0-0x6e6c78-main]: start: --------------------------------------
+C> (client:15142) [2011-02-05:12-24-07] [0-0-0-0x6e6c78-statistics]:                      MqSendEND:   3.69e+05
+C> (client:15142) [2011-02-05:12-24-08] [0-0-0-0x6e6c78-statistics]:         MqSendEND_AND_CALLBACK:   2.24e+05
+C> (client:15142) [2011-02-05:12-24-09] [0-0-0-0x6e6c78-statistics]:             MqSendEND_AND_WAIT:   5.38e+04
+C> (client:15142) [2011-02-05:12-24-11] [0-0-0-0x6e6c78-statistics]:               MqSendPERSISTENT:   4.62e+00
+C> (client:15142) [2011-02-05:12-24-11] [0-0-0-0x6e6c78-statistics]:                  parent create:   7.60e+02
+C> (client:15142) [2011-02-05:12-24-11] [0-0-0-0x6e6c78-statistics]:                  parent delete:   6.53e+03
+C> (client:15142) [2011-02-05:12-24-11] [0-0-0-0x6e6c78-statistics]:                   child create:   1.11e+04
+C> (client:15142) [2011-02-05:12-24-12] [0-0-0-0x6e6c78-statistics]:                   child delete:   3.02e+04
+C> (client:15142) [2011-02-05:12-24-12] [0-0-0-0x6e6c78-main]: end: ----------------------------------------
