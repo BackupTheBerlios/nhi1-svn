@@ -835,13 +835,13 @@ MqSendEND_AND_WAIT (
   MQ_TIME_T timeout
 )
 {
+  MQ_HDL trans_save = context->link._trans;
   struct MqTransS * const trans = context->link.trans;
   enum MqTransE status;
   static struct MqCallbackS empty = {NULL, NULL, NULL, NULL};
   struct MqReadS * read;
   MQ_TIME_T endT;
   enum MqHandShakeE hs;
-  MQ_HDL trans_save = context->link._trans;
 
   // 1. create the transaktion
   MQ_HDL transH =  pTransPop (trans, empty);
@@ -1163,7 +1163,7 @@ MqSendRETURN (
   } else {
     switch (pReadGetHandShake (context)) {
       case MQ_HANDSHAKE_START: {
-	// without "shortterm-transaction" no return
+	// without "shortterm-transaction" nothing to do
 	if (context->link._trans == 0) 
 	  return MqErrorGetCodeI(context);
 	// "normal" service call -> normal return

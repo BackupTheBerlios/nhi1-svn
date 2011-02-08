@@ -711,8 +711,8 @@ pIoLog (
 
 struct MqReadS* pReadCreate ( struct MqS * const);
 void pReadDelete ( struct MqReadS **) __attribute__((nonnull));
-enum MqErrorE pReadHDR (register struct MqS*, struct MqS**);
-enum MqErrorE pReadTRA (register struct MqS*, struct MqS**);
+enum MqErrorE pReadHDR (MQ_PTR, struct MqS**);
+enum MqErrorE pReadTRA (MQ_PTR, struct MqS**);
 void pReadSetType( struct MqS * const, MQ_BOL const);
 void pReadL_CLEANUP (register struct MqS * const); 
 enum MqHandShakeE pReadGetHandShake ( struct MqS const * const);
@@ -724,6 +724,7 @@ void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
 void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, MQ_BINB* const) __attribute__((nonnull(1)));
+enum MqErrorE pReadInsert ( register struct MqS*, MQ_WID*);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -813,7 +814,7 @@ void pSlaveShutdown (struct MqLinkSlaveS * const);
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE pServiceStart (struct MqS * const, EventReadF const);
+enum MqErrorE pServiceStart (struct MqS * const, EventReadF const, MQ_PTR);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -872,15 +873,17 @@ enum MqErrorE pTransSetResult ( struct MqTransS const * const, enum MqTransE con
 /*****************************************************************************/
 
 struct MqSqlS {
-  MQ_CST  storageFile;		///< main directory used for database files
-  sqlite3 *db;			///< sqlite database connection handle
-  sqlite3_stmt *sendInsert;	///< prepared sql statement
-  sqlite3_stmt *sendSelect;	///< prepared sql statement
-  sqlite3_stmt *sendDelete;	///< prepared sql statement
-  sqlite3_stmt *readInsert;	///< prepared sql statement
-  sqlite3_stmt *readSelect1;	///< prepared sql statement
-  sqlite3_stmt *readSelect2;	///< prepared sql statement
-  sqlite3_stmt *readDelete;	///< prepared sql statement
+  MQ_CST  storageFile;		      ///< main directory used for database files
+  sqlite3 *db;			      ///< sqlite database connection handle
+  sqlite3_stmt *sendInsert;	      ///< prepared sql statement
+  sqlite3_stmt *sendSelect;	      ///< prepared sql statement
+  sqlite3_stmt *sendDelete;	      ///< prepared sql statement
+  sqlite3_stmt *readInsert;	      ///< prepared sql statement
+  sqlite3_stmt *pSqlSelectReadTrans;  ///< prepared sql statement
+  sqlite3_stmt *readSelect2;	      ///< prepared sql statement
+  sqlite3_stmt *readDelete;	      ///< prepared sql statement
+  sqlite3_stmt *MqStorageSelect1;     ///< prepared sql statement
+  sqlite3_stmt *MqStorageSelect2;     ///< prepared sql statement
 };
 
 enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_WID*);

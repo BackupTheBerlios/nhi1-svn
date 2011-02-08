@@ -88,19 +88,64 @@ NS(ThreadExit) (
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                 public                                    */
+/*                             public storage                                */
 /*                                                                           */
 /*****************************************************************************/
 
-static int NS(SqlSetDb) (NS_ARGS)
+static int NS(StorageOpen) (NS_ARGS)
 {
   SETUP_mqctx
   MQ_CST storageDir = NULL;
   CHECK_C(storageDir)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck (MqSqlSetDb (mqctx, storageDir));
+  ErrorMqToTclWithCheck (MqStorageOpen (mqctx, storageDir));
   RETURN_TCL
 }
+
+static int NS(StorageClose) (NS_ARGS)
+{
+  SETUP_mqctx
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqStorageClose (mqctx));
+  RETURN_TCL
+}
+
+static int NS(StorageInsert) (NS_ARGS)
+{
+  MQ_WID transId;
+  SETUP_mqctx
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqStorageInsert (mqctx, &transId));
+  Tcl_SetObjResult(interp, Tcl_NewWideIntObj(transId));
+  RETURN_TCL
+}
+
+static int NS(StorageSelect) (NS_ARGS)
+{
+  MQ_WID transId = 0LL;
+  SETUP_mqctx
+  CHECK_W_OPT(transId)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqStorageSelect (mqctx, &transId));
+  Tcl_SetObjResult(interp, Tcl_NewWideIntObj(transId));
+  RETURN_TCL
+}
+
+static int NS(StorageDelete) (NS_ARGS)
+{
+  MQ_WID transId;
+  SETUP_mqctx
+  CHECK_W(transId)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqStorageDelete (mqctx, transId));
+  RETURN_TCL
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                 public                                    */
+/*                                                                           */
+/*****************************************************************************/
 
 static int NS(LogC) (NS_ARGS)
 {
@@ -240,6 +285,7 @@ int NS(ReadItemExists) (NS_ARGS);
 int NS(ReadUndo) (NS_ARGS);
 int NS(ReadALL) (NS_ARGS);
 int NS(ReadProxy) (NS_ARGS);
+int NS(ReadBdyProxy) (NS_ARGS);
 
 int NS(SendSTART) (NS_ARGS);
 int NS(SendEND) (NS_ARGS);
@@ -376,6 +422,7 @@ int NS(MqS_Cmd) (
     { "ReadUndo",	      NS(ReadUndo)		},
     { "ReadAll",	      NS(ReadALL)		},
     { "ReadProxy",	      NS(ReadProxy)		},
+    { "ReadBdyProxy",	      NS(ReadBdyProxy)		},
 
 // SEND
 
@@ -456,11 +503,17 @@ int NS(MqS_Cmd) (
 
     { "RenameTo",		  NS(RenameTo)		      },
     { "Exit",			  NS(Exit)		      },
-    { "SqlSetDb",		  NS(SqlSetDb)		      },
     { "Delete",			  NS(Delete)		      },
     { "LogC",			  NS(LogC)		      },
 
     { "dict",			  NS(dict)		      },
+
+// Storage
+    { "StorageOpen",		  NS(StorageOpen)	      },
+    { "StorageClose",		  NS(StorageClose)	      },
+    { "StorageInsert",		  NS(StorageInsert)	      },
+    { "StorageSelect",		  NS(StorageSelect)	      },
+    { "StorageDelete",		  NS(StorageDelete)	      },
 
 // Link
 

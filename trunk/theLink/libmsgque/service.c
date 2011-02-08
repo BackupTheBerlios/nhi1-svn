@@ -85,36 +85,11 @@ sServiceProxy (
   struct MqS * const context,
   MQ_PTR const data
 ) {
-  MQ_BINB hs;
-  MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
-  MqErrorCheck(MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
-
-  MqErrorCheck1 (MqSendSTART (ftrctx));
-
-  pReadBDY (context, &bdy, &len, &hs);
-  pSendBDY (ftrctx,   bdy,  len,  hs);
-
-  // continue with the original transaction
-  if (MqServiceIsTransaction (context)) {
-    // use a transaction protection
-    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, MqServiceGetToken(context), MQ_TIMEOUT_USER));
-    // send the answer
-    MqSendSTART (context);
-    // BDY in + out
-    pReadBDY (ftrctx,  &bdy, &len, &hs);
-    pSendBDY (context,  bdy,  len,  hs);
-  } else {
-    // use a transaction protection
-    MqErrorCheck1 (MqSendEND (ftrctx, MqServiceGetToken(context)));
-  }
-
+  MqErrorCheck (MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
+  MqErrorCheck (MqReadBdyProxy     (context, ftrctx));
 error:
   return MqSendRETURN(context);
-
-error1:
-  MqErrorCopy (context, ftrctx);
-  goto error;
 }
 
 enum MqErrorE 
@@ -161,7 +136,8 @@ MqServiceDelete(
 enum MqErrorE
 pServiceStart (
   struct MqS * const context,
-  EventReadF const reader
+  EventReadF const reader,
+  MQ_PTR env
 )
 {
   struct MqS * a_context = context;
@@ -170,7 +146,7 @@ pServiceStart (
   MqDLogCL(context,6,"START\n");
 
   // ##################### READ HEADER #####################
-  switch ((*reader) (context, &a_context)) {
+  switch ((*reader) (env, &a_context)) {
     case MQ_OK:	      break;
     case MQ_CONTINUE: return MqErrorReset(context);
     case MQ_ERROR:    goto error;

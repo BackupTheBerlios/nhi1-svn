@@ -1248,7 +1248,7 @@ static enum MqErrorE Ot_STDB (
   MQ_CST str;
   MqErrorCheck (MqSendSTART(mqctx));
   MqErrorCheck (MqReadC(mqctx, &str));
-  MqErrorCheck (MqSqlSetDb (mqctx, str));
+  MqErrorCheck (MqStorageOpen (mqctx, str));
 error:
   return MqSendRETURN (mqctx);
 }

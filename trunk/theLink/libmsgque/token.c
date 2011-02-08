@@ -460,34 +460,33 @@ pTokenCheckSystem (
   // 3. work on msgque-system-token
   curr++;
   switch (*curr) {
-    case 'R': {                // _RET: return from a service
+    case 'R': {		      // _RET: return from a service
       MqErrorCheck(pTransSetResult (context->link.trans, MQ_TRANS_END, context->link.read));
       break;
     }
-    case 'E':
-    {   
-	curr++;
-	switch (*curr) {
-	    case 'R': {		// _ERR: CLIENT, fatal error in SERVER
-	      MQ_CST errtext;
-	      MQ_INT errnum;
-	      MqErrorCheck (MqReadI (context, &errnum));
-	      MqErrorCheck (MqReadC (context, &errtext));
-	      if (context->config.master != NULL) {
-		MqErrorSet (context->config.master, errnum, MQ_ERROR, errtext, NULL);
-		MqSendERROR (context->config.master);
-	      } else {
-		MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
-		if (context->setup.BgError.fCall != NULL) {
-		  MqDLogCL (context, 5, "call BqError\n");
-		  MqErrorCheck (MqCallbackCall(context, context->setup.BgError));
-		}
-		// check "error.code" again because "setup.BgError.fCall" could clean it
-		MqErrorCheck (context->error.code);
-	      }
-	      break;
+    case 'E': {   
+      curr++;
+      switch (*curr) {
+	case 'R': {	      // _ERR: CLIENT, fatal error in SERVER
+	  MQ_CST errtext;
+	  MQ_INT errnum;
+	  MqErrorCheck (MqReadI (context, &errnum));
+	  MqErrorCheck (MqReadC (context, &errtext));
+	  if (context->config.master != NULL) {
+	    MqErrorSet (context->config.master, errnum, MQ_ERROR, errtext, NULL);
+	    MqSendERROR (context->config.master);
+	  } else {
+	    MqErrorSet (context, errnum, MQ_ERROR, errtext, NULL);
+	    if (context->setup.BgError.fCall != NULL) {
+	      MqDLogCL (context, 5, "call BqError\n");
+	      MqErrorCheck (MqCallbackCall(context, context->setup.BgError));
 	    }
+	    // check "error.code" again because "setup.BgError.fCall" could clean it
+	    MqErrorCheck (context->error.code);
+	  }
+	  break;
 	}
+      }
       break;
     }
     case 'I': 

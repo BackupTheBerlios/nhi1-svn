@@ -210,6 +210,16 @@ int NS(ReadProxy) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ReadBdyProxy) (NS_ARGS)
+{
+  SETUP_mqctx
+  struct MqS * MqS_object;
+  CHECK_MQS (MqS_object)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadBdyProxy(mqctx, MqS_object));
+  RETURN_TCL
+}
+
 int NS(ReadALL) (NS_ARGS)
 {
   SETUP_mqctx

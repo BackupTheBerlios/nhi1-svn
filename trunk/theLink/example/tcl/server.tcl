@@ -625,7 +625,7 @@ proc Ot_TRN2 {ctx} {
 
 proc Ot_STDB {ctx} {
   $ctx SendSTART
-  $ctx SqlSetDb [$ctx ReadC]
+  $ctx StorageOpen [$ctx ReadC]
   $ctx SendRETURN
 }
 

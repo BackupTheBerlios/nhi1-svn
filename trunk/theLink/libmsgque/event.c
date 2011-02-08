@@ -260,7 +260,7 @@ pEventStart (
     // found valid socket -> call it
     eventctx->refCount++;
 //printLV("eventctx<%p>, sock<%d>\n", eventctx, sock);
-    ret = pServiceStart(eventctx, pReadHDR);
+    ret = pServiceStart(eventctx, pReadHDR, NULL);
     eventctx->refCount--;
     switch (ret) {
       case MQ_OK:

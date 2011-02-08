@@ -1684,19 +1684,6 @@ MQ_EXTERN void MQ_DECL MqMark (
   MqMarkF markF
 );
 
-/// \brief switch to a \e file-based-transaction-database
-/// \context
-/// \param[in] storageFile the file used to create the \e transaction-database. Allowed values are: 
-///   -# the string \c ":memory:" for a \e in-memory-database (default)
-///   -# the string \c ":tmpdb:"  for a \e temporary-database-file
-///   -# the string \c filename   for a \e persistent-database-file
-///   .
-/// \retException
-MQ_EXTERN enum MqErrorE MQ_DECL MqSqlSetDb (
-  struct MqS * const context,
-  MQ_CST const storageFile
-);
-
 #if defined(_DEBUG)
 /// \brief convenience function to log \e MqS configuration data
 /// \context
@@ -1717,6 +1704,50 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 #endif // _DEBUG
 
 /** \} Mq_Context_C_API */
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                       S T O R E - A P I                         ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Store_C_API Mq_Store_C_API
+/// \{
+/// \brief setup and manage a storage used to persist \e data-packages
+
+/// \brief switch to a \e file-based-transaction-database
+/// \context
+/// \param[in] storageFile the file used to create the \e transaction-database. Allowed values are: 
+///   -# \c ":memory:" for a \e in-memory-database (default)
+///   -# \c ":tmpdb:"  for a \e temporary-database-file
+///   -# \c filename   for a \e persistent-database-file
+///   .
+/// \retException
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageOpen (
+  struct MqS * const context,
+  MQ_CST const storageFile
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageClose (
+  struct MqS * const context
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
+  struct MqS * const context,
+  MQ_WID *transIdP
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageSelect (
+  struct MqS * const context,
+  MQ_WID *transIdP
+);
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageDelete (
+  struct MqS * const context,
+  MQ_WID transId
+);
+
+/** \} Mq_Store_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -1974,7 +2005,11 @@ MQ_EXTERN MQ_CST MQ_DECL MqLinkGetTargetIdent (
 /// to access the services.\n
 /// For internal purpose some special \e token are predefined:
 ///  - <B>_???</B> - all \e token starting with a \b "_" are for \b internal usage only
-///  - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to listen on \b all token not handled by other \e token more precise
+///  - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to setup an \e event-handler
+///              able to listen on \b all token not handled by an other \e token more precise.
+///  - \b +STO - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to setup an \e event-handler
+///              able to store the data on \b all token not handled by an other \e token more precise
+///              into the transaction database defined with \RNSA{SqlSetDb}.
 ///  - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
 ///  - \b +FTR and \b +EOF - used for \e one-directional-filter
 /// \if MSGQUE
@@ -3688,7 +3723,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
   struct MqS * const ctx,
   struct MqS * const otherCtx
-) __attribute__((nonnull(1)));
+) __attribute__((nonnull));
+
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadBdyProxy (
+  struct MqS * const ctx,
+  struct MqS * const otherCtx
+) __attribute__((nonnull));
 
 /*****************************************************************************/
 /*                                                                           */

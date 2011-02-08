@@ -179,11 +179,6 @@
 #define printUL(var) MqBufferLLog(MQ_CONTEXT_S, var, #var);
 #define printXULS(x,var) MqBufferLLogS(x, var, __func__ , #var);
 #define printULS(var) printXULS(MQ_CONTEXT_S, var);
-#define printV(var,ap) \
-    fprintf(stderr, "%s->" #var " = <", __func__);\
-    vprintf( var,ap);\
-    fprintf(stderr, ">\n");\
-    fflush(stderr);
 
 #define printThread(str) fprintf(stderr,"%s(%s:%d) -> pid<%i>, id<%li> -> " #str "\n", __func__, __FILE__, __LINE__,\
       mq_getpid(), pthread_self());fflush(stderr);

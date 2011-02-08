@@ -65,7 +65,7 @@ enum MqIoSelectE {
 } ;
 
 /// \brief prototype for an Event-Reader function
-typedef enum MqErrorE ( *EventReadF) ( register struct MqS *, struct MqS **);
+typedef enum MqErrorE ( *EventReadF) ( MQ_PTR env, struct MqS **);
 
 /// \brief the \e hand-shake of a \e service-call
 enum MqHandShakeE {
