@@ -38,7 +38,6 @@ proc EXIT {ctx} {
 }
 
 proc WRIT {ftr} {
-puts "WRIT ============================================================"
   set FH [$ftr dict get FH]
   puts $FH [$ftr ReadC]
   flush $FH
@@ -46,7 +45,6 @@ puts "WRIT ============================================================"
 }
 
 proc FilterIn {ctx} {
-puts "FilterIn ============================================================"
   $ctx StorageInsert
   $ctx SendRETURN
 }
@@ -69,34 +67,34 @@ proc FilterCleanup {ctx} {
 }
 
 proc FilterEvent {ctx} {
-  set Id  [$ctx StorageSelect]
-puts "FilterEvent ($Id) ============================================================"
-  if {$Id == 0} {
+  if {[$ctx StorageCount] == 0} {
     # no data -> nothing to do
     $ctx ErrorSetCONTINUE
-    return
   } elseif {[catch {
     # with data -> try to send
     set ftr [$ctx ServiceGetFilter]
     # try to connect if not already connected
     $ftr LinkConnect
+    # setup Read package from storage
+    set Id  [$ctx StorageSelect]
     # send entire BDY data to the link-target
     $ctx ReadBdyProxy $ftr
+    # on "success" or on "error" delete item from storage
+    $ctx StorageDelete $Id
   }]} {
     # on "error" do the following:
     $ftr ErrorSet
     if {[$ftr ErrorIsEXIT]} {
       # on "exit-error" -> ignore and return
       $ftr ErrorReset
-      return
     } else {
       # on "normal-error" -> write message to file and ignore
       # continue and delete data in next step
       ErrorWrite $ftr
+      # on "success" or on "error" delete item from storage
+      $ctx StorageDelete $Id
     }
   }
-  # on "success" or on "error" delete item from storage
-  $ctx StorageDelete $Id
 }
 
 tclmsgque FactoryDefault "transFilter"

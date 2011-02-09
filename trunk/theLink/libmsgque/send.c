@@ -771,7 +771,7 @@ pSendEND (
     register struct MqSendS * const send = context->link.send;
     register struct MqBufferS * const buf = send->buf;
 
-  //MqDLogV(msgque,0,"trans<%p>\n", trans);
+//printLV("token<%s>, trans<%d>\n", token, trans);
 
     MQ_SIZE cursize = buf->cursize - HDR_SIZE;
     register struct HdrSendS * const cur = (struct HdrSendS *) buf->data;

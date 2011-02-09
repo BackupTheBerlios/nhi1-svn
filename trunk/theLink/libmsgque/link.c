@@ -488,10 +488,10 @@ pMqShutdown (
 
     // shutdown all childs
     for (child = context->link.childs; child != NULL; child = child->right ) {
-      // the next line is necessary because the item "context->link.childs->context" and
-      // "context->link.childs->context->link.self->context" are identical. The last one is 
-      // free'd during the following "MqLinkDelete" too and a double-free error
-      // will happen
+      // OLD: the next line is necessary because the item "context->link.childs->context" and
+      // OLD: "context->link.childs->context->link.self->context" are identical. The last one is 
+      // OLD: free'd during the following "MqLinkDelete" too and a double-free error
+      // OLD: will happen
       pMqShutdown (__func__, child->context);
     }
 
@@ -510,6 +510,7 @@ pMqShutdown (
       } else if (MQ_IS_SERVER (context) && context->link._trans != 0 &&
 	  pTokenCheck(context->link.srvT,"_SHD")) {
 	// return the "_SHD"
+	MqDLogC(context,4,"answer token<_SHD>\n");
 	MqSendSTART(context);
 	MqSendRETURN(context);
       }

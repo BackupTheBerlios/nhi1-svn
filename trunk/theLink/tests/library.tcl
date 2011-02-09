@@ -1463,10 +1463,8 @@ proc WaitOnFileToken {file token} {
   while {true} {
     set RET [list]
     set fh [open $file r]
-puts sssssssssssssssssssssssssssssssssssssssssssssssssss
     while {![eof $fh]} {
       gets $fh line
-Print line
       lappend RET $line
       if {[string first $token $line] != -1} {
 	close $fh

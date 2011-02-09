@@ -884,6 +884,7 @@ struct MqSqlS {
   sqlite3_stmt *readDelete;	      ///< prepared sql statement
   sqlite3_stmt *MqStorageSelect1;     ///< prepared sql statement
   sqlite3_stmt *MqStorageSelect2;     ///< prepared sql statement
+  sqlite3_stmt *MqStorageCount;	      ///< prepared sql statement
 };
 
 enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_WID*);

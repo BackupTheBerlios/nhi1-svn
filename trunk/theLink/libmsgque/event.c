@@ -259,7 +259,7 @@ pEventStart (
     if (sock < 0 || !FD_ISSET (sock, &fds)) continue;
     // found valid socket -> call it
     eventctx->refCount++;
-//printLV("eventctx<%p>, sock<%d>\n", eventctx, sock);
+//printLV("eventctx<%p>, eventctx->refCount<%d>, sock<%d>\n", eventctx, eventctx->refCount, sock);
     ret = pServiceStart(eventctx, pReadHDR, NULL);
     eventctx->refCount--;
     switch (ret) {

@@ -58,6 +58,7 @@ sSqlDelDb (
       sSqlFinalize (db, &sql_sys->readDelete);
       sSqlFinalize (db, &sql_sys->MqStorageSelect1);
       sSqlFinalize (db, &sql_sys->MqStorageSelect2);
+      sSqlFinalize (db, &sql_sys->MqStorageCount);
 
       check_sqlite(sqlite3_close(db)) {
 	return MqErrorDbSql(context, db);
@@ -507,6 +508,34 @@ error:
   return MqErrorDbSql(context,sql_sys->db);
 error1:
   return MqErrorStack(context);
+}
+
+enum MqErrorE
+MqStorageCount (
+  struct MqS * const context,
+  MQ_WID *countP
+)
+{
+  struct MqSqlS * const sql_sys = context->link.sql;
+  register sqlite3_stmt *hdl;
+  *countP = 0LL;
+  check_NULL(sql_sys->db) {
+    // without database available -> nothing to select
+    return MQ_OK;
+  }
+  check_NULL(hdl=sql_sys->MqStorageCount) {
+    const static char sql[] = "SELECT count(transId) FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ?;";
+    check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->MqStorageCount, NULL)) goto error;
+    hdl = sql_sys->MqStorageCount;
+  }
+  check_sqlite (sqlite3_reset(hdl))						      goto error;
+  check_sqlite (sqlite3_bind_text(hdl,1,context->link.targetIdent,-1,SQLITE_STATIC))  goto error;
+  check_sqlite (sqlite3_bind_int(hdl,2,context->link.ctxId))			      goto error;
+  STEP_ROW_DONE_OK(1)
+  *countP = sqlite3_column_int64(hdl,0);
+  return MQ_OK;
+error:
+  return MqErrorDbSql(context,sql_sys->db);
 }
 
 /*****************************************************************************/

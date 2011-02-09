@@ -1747,6 +1747,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageDelete (
   MQ_WID transId
 );
 
+MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
+  struct MqS * const context,
+  MQ_WID *countP
+);
+
 /** \} Mq_Store_C_API */
 
 /* ####################################################################### */

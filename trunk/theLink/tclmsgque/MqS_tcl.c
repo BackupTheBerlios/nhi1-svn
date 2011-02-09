@@ -120,6 +120,16 @@ static int NS(StorageInsert) (NS_ARGS)
   RETURN_TCL
 }
 
+static int NS(StorageCount) (NS_ARGS)
+{
+  MQ_WID count;
+  SETUP_mqctx
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqStorageCount (mqctx, &count));
+  Tcl_SetObjResult(interp, Tcl_NewWideIntObj(count));
+  RETURN_TCL
+}
+
 static int NS(StorageSelect) (NS_ARGS)
 {
   MQ_WID transId = 0LL;
@@ -512,6 +522,7 @@ int NS(MqS_Cmd) (
     { "StorageOpen",		  NS(StorageOpen)	      },
     { "StorageClose",		  NS(StorageClose)	      },
     { "StorageInsert",		  NS(StorageInsert)	      },
+    { "StorageCount",		  NS(StorageCount)	      },
     { "StorageSelect",		  NS(StorageSelect)	      },
     { "StorageDelete",		  NS(StorageDelete)	      },
 
