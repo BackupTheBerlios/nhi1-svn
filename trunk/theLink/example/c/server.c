@@ -712,7 +712,7 @@ Ot_BUF1 (
       MqSendB(mqctx, buf->cur.B, buf->cursize); break;
     case MQ_STRT:
       MqSendC(mqctx, buf->cur.C); break;
-    case MQ_LSTT:
+    case MQ_LSTT: case MQ_TRAT:
       break;
   }
   return MqSendRETURN(mqctx);

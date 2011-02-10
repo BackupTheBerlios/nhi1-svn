@@ -36,7 +36,7 @@ int NS(SendEND_AND_WAIT) (NS_ARGS)
   MQ_STR token;
   MQ_INT timeout=MQ_TIMEOUT_USER;
   CHECK_C(token)
-  CHECK_DI(timeout)
+  CHECK_I_OPT(timeout)
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqSendEND_AND_WAIT(mqctx,token,timeout));
   RETURN_TCL
@@ -170,17 +170,6 @@ int NS(SendN) (NS_ARGS)
   CHECK_B(val,len)
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqSendN(mqctx, val, len));
-  RETURN_TCL
-}
-
-int NS(SendBDY) (NS_ARGS)
-{
-  SETUP_mqctx
-  MQ_BIN val;
-  MQ_SIZE len;
-  CHECK_B(val,len)
-  CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqSendBDY(mqctx, val, len));
   RETURN_TCL
 }
 

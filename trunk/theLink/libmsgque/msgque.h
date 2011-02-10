@@ -3700,11 +3700,27 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \param[out] val the \e body as \e byte-array
 /// \param[out] len the \e byte-array-length of the \e val
 /// \retException
-MQ_EXTERN enum MqErrorE MQ_DECL MqReadBDY (
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const ctx,
   MQ_BIN  * const val,
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
+
+
+/// \brief load the \e entire-body into the \e read-buffer
+/// \details The \e entire-body is the result of a previous \RNSA{ReadDUMP} function call 
+/// and can be used to save the \e entire-body into an external storage or for an additional 
+/// operation like encryption.
+/// \ctx
+/// \param[in] value the \e entire-body for appending
+/// \param[in] len the size of the \e entire-body-byte-array (C-API only)
+/// \retException 
+/// \attention the data returned is owned by the caller and have to be freed with #MqSysFree
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
+  struct MqS * const context,
+  MQ_CBI  in,
+  MQ_SIZE len
+) __attribute__((nonnull(1,2)));
 
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
@@ -3740,7 +3756,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
   struct MqS * const otherCtx
 ) __attribute__((nonnull));
 
-MQ_EXTERN enum MqErrorE MQ_DECL MqReadBdyProxy (
+
+/// \attention a transaction return data to the \e calling-client. To handle this data a 
+/// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
+/// together with the transaction token \b +TRT to add this feature
+MQ_EXTERN enum MqErrorE MQ_DECL MqReadForward (
   struct MqS * const ctx,
   struct MqS * const otherCtx
 ) __attribute__((nonnull));
@@ -3928,6 +3948,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
 /// \param[in] value the \e entire-body for appending
 /// \param[in] len the size of the \e entire-body-byte-array (C-API only)
 /// \retException 
+/// \attention a transaction return data to the \e calling-client. To handle this data a 
+/// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
+/// together with the transaction token \b +TRT to add this feature
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
   struct MqS * const ctx,
   MQ_CBI  value,

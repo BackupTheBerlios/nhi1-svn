@@ -403,7 +403,7 @@ void pSendDelete ( struct MqSendS **) __attribute__((nonnull));
 enum MqErrorE pSendSYSTEM ( struct MqS * const, MQ_TOK const);
 enum MqErrorE pSendEND ( struct MqS * const, MQ_TOK const, const MQ_HDL);
 enum MqErrorE pSendSYSTEM_RETR ( struct MqS * const);
-void pSendBDY ( struct MqS * const, MQ_BINB const * const, MQ_SIZE const, enum MqHandShakeE const, MQ_SIZE, MQ_WID const);
+void pSendBDY ( struct MqS * const, MQ_BINB const * const, MQ_SIZE const, enum MqHandShakeE const, MQ_SIZE);
 enum MqErrorE pSendT (struct MqS * const context, const MQ_TRA);
 
 /*****************************************************************************/
@@ -740,7 +740,7 @@ enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
 void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
-void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE * const, MQ_WID * const) __attribute__((nonnull(1)));
+void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE * const) __attribute__((nonnull(1)));
 enum MqErrorE pReadInsert ( register struct MqS*, MQ_WID*);
 enum MqErrorE pReadT ( struct MqS * const, MQ_TRA * const);
 

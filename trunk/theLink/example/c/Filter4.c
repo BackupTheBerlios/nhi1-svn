@@ -76,15 +76,20 @@ static enum MqErrorE FilterEvent (
     // extract the first (oldest) item from the store
     itm = ctx->itm[ctx->rIdx];
 
+    // fill the read-buffer from storage
+    MqErrorCheck1 (MqReadLOAD (mqctx, itm->data, itm->len));
+
     // send BDY data to the link-target, on error write message but do not stop processing
-    if (MqErrorCheckI (MqSendBDY(ftr, itm->data, itm->len))) {
+    if (MqErrorCheckI (MqReadForward(mqctx, ftr))) {
       if (MqErrorIsEXIT(ftr)) {
 	return MqErrorDeleteEXIT(ftr);
       } else {
 	ErrorWrite (ftr);
       }
+      goto end;
     }
     // reset the item-storage
+end:
     MqSysFree(itm->data);
     ctx->rIdx++;
     return MQ_OK;
@@ -133,7 +138,7 @@ static enum MqErrorE FilterIn ( ARGS ) {
   MQ_SIZE len;
   SETUP_ctx;
   register struct FilterItmS * it;
-  MqErrorCheck(MqReadBDY(mqctx, &bdy, &len));
+  MqErrorCheck(MqReadDUMP(mqctx, &bdy, &len));
   
   // add space if space is empty
   if (ctx->rIdx-1==ctx->wIdx || (ctx->rIdx==0 && ctx->wIdx==ctx->size-1)) {

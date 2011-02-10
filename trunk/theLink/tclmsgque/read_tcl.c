@@ -152,15 +152,26 @@ int NS(ReadN) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadBDY) (NS_ARGS)
+int NS(ReadDUMP) (NS_ARGS)
 {
   SETUP_mqctx
   MQ_BIN val;
   MQ_SIZE len;
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqReadBDY(mqctx, &val, &len));
+  ErrorMqToTclWithCheck(MqReadDUMP(mqctx, &val, &len));
   Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(val,len));
   MqSysFree (val);
+  RETURN_TCL
+}
+
+int NS(ReadLOAD) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_B(val,len)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck(MqReadLOAD(mqctx, val, len));
   RETURN_TCL
 }
 
@@ -210,13 +221,13 @@ int NS(ReadProxy) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadBdyProxy) (NS_ARGS)
+int NS(ReadForward) (NS_ARGS)
 {
   SETUP_mqctx
-  struct MqS * MqS_object;
-  CHECK_MQS (MqS_object)
+  struct MqS * target;
+  CHECK_MQS (target)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqReadBdyProxy(mqctx, MqS_object));
+  ErrorMqToTclWithCheck(MqReadForward(mqctx, target));
   RETURN_TCL
 }
 
@@ -273,6 +284,9 @@ int NS(ReadALL) (NS_ARGS)
 	MqReadL_END(mqctx);
 	OBJ = Tcl_GetObjResult(interp);
 	break;
+      }
+      case MQ_TRAT: {
+	MqPanicSYS(mqctx);
       }
     }
     if (OBJ != NULL) Tcl_ListObjAppendElement(interp, RET, OBJ);

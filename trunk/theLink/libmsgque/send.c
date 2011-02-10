@@ -531,8 +531,7 @@ pSendBDY (
   MQ_BINB const * const in,
   MQ_SIZE const len,
   enum MqHandShakeE const hs,
-  MQ_SIZE numItems,
-  MQ_TRA const transId
+  MQ_SIZE numItems
 )
 {
   struct MqSendS * const send = context->link.send;
@@ -552,19 +551,13 @@ pSendBDY (
   }
   // set handshake
   *(buf->data + HDR_Code_S) = (MQ_BINB) hs;
-  // set inverse transId (if required) -> to signal a "forwarded" transaction
-  if (transId != 0LL) {
-    //buf->cur.B = buf->data + START_SIZE;
-    //pSendT(context,-transId);
-    // the data is "MqReadBDY" after the initial "transId" was skiped -> need to add "1"
-    // numItems++;
-  }
   // fill buffer accounting data
   buf->numItems = numItems;
   buf->cursize = newlen;
   buf->cur.B = end;
 }
 
+/*
 enum MqErrorE
 MqSendBDY (
   struct MqS * const context,
@@ -576,7 +569,6 @@ MqSendBDY (
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    MQ_TRA transId = 0LL;
     MQ_SIZE numItems;
     union MqBufferU tin;
     struct HdrSendS const * cur = (struct HdrSendS const *) in;
@@ -585,14 +577,9 @@ MqSendBDY (
     // read NumItems -> attention no ENDIAN conversion
     tin.B = (MQ_BIN) in + BDY_NumItems_S;
     numItems = U2INT(!context->config.isString,tin);
-    // read transId
-    if (cur->hdr.code == MQ_HANDSHAKE_TRANSACTION) {
-      tin.B = (MQ_BIN) in + BDY_SIZE + BUFFER_P2_NATIVE;
-      transId = iBufU2TRA(tin);
-    }
     // send data
     MqSendSTART (context);
-    pSendBDY (context, in, len, cur->hdr.code, numItems, transId);
+    pSendBDY (context, in, len, cur->hdr.code, numItems);
     switch (cur->hdr.code) {
       case MQ_HANDSHAKE_START:
 	// used for "MqServiceIsTransaction" to return the right values (aguard)
@@ -610,6 +597,7 @@ MqSendBDY (
   }
   return MqErrorStack(context);
 }
+*/
 
 enum MqErrorE
 MqSendU (

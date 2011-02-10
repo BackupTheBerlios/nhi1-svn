@@ -206,7 +206,7 @@ pSqlInsertSendTrans (
   check_sqlite (sqlite3_bind_int   (hdl,4,buf->type))				    goto error;
   check_sqlite (sqlite3_bind_blob  (hdl,5,buf->data,buf->cursize,SQLITE_TRANSIENT)) goto error;
   STEP_DONE(1);
-  *transId = sqlite3_last_insert_rowid(sql_sys->db);
+  *transId = -sqlite3_last_insert_rowid(sql_sys->db);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -233,7 +233,7 @@ pSqlSelectSendTrans (
     hdl = sql_sys->sendSelect;
   }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,-transId)) goto error;
   STEP_ROW_DONE_ERROR(1);
   pTokenSetCurrent(context->link.srvT, (MQ_CST const)sqlite3_column_text(hdl, 0));
   MqBufferSetB(buf, (const unsigned char*)sqlite3_column_blob(hdl, 3), sqlite3_column_bytes(hdl, 3));
@@ -263,7 +263,7 @@ pSqlDeleteSendTrans (
     hdl = sql_sys->sendDelete;
   }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,-transId)) goto error;
   STEP_DONE(1)
   *oldTransIdP = 0LL;
   return MqErrorGetCodeI(context);

@@ -22,7 +22,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 set BLOCK_1 true
-set BLOCK_1 false
+#set BLOCK_1 false
 set BLOCK_2 true
 #set BLOCK_2 false
 

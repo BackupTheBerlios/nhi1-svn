@@ -284,7 +284,8 @@ int NS(ReadD) (NS_ARGS);
 int NS(ReadC) (NS_ARGS);
 int NS(ReadB) (NS_ARGS);
 int NS(ReadN) (NS_ARGS);
-int NS(ReadBDY) (NS_ARGS);
+int NS(ReadDUMP) (NS_ARGS);
+int NS(ReadLOAD) (NS_ARGS);
 int NS(ReadU) (NS_ARGS);
 int NS(ReadL_START) (NS_ARGS);
 int NS(ReadL_END) (NS_ARGS);
@@ -295,7 +296,7 @@ int NS(ReadItemExists) (NS_ARGS);
 int NS(ReadUndo) (NS_ARGS);
 int NS(ReadALL) (NS_ARGS);
 int NS(ReadProxy) (NS_ARGS);
-int NS(ReadBdyProxy) (NS_ARGS);
+int NS(ReadForward) (NS_ARGS);
 
 int NS(SendSTART) (NS_ARGS);
 int NS(SendEND) (NS_ARGS);
@@ -313,7 +314,6 @@ int NS(SendD) (NS_ARGS);
 int NS(SendC) (NS_ARGS);
 int NS(SendB) (NS_ARGS);
 int NS(SendN) (NS_ARGS);
-int NS(SendBDY) (NS_ARGS);
 int NS(SendU) (NS_ARGS);
 int NS(SendL_START) (NS_ARGS);
 int NS(SendL_END) (NS_ARGS);
@@ -422,7 +422,8 @@ int NS(MqS_Cmd) (
     { "ReadC",		      NS(ReadC)			},
     { "ReadB",		      NS(ReadB)			},
     { "ReadN",		      NS(ReadN)			},
-    { "ReadBDY",	      NS(ReadBDY)		},
+    { "ReadDUMP",	      NS(ReadDUMP)		},
+    { "ReadLOAD",	      NS(ReadLOAD)		},
     { "ReadU",		      NS(ReadU)			},
     { "ReadL_START",	      NS(ReadL_START)		},
     { "ReadL_END",	      NS(ReadL_END)		},
@@ -433,7 +434,7 @@ int NS(MqS_Cmd) (
     { "ReadUndo",	      NS(ReadUndo)		},
     { "ReadAll",	      NS(ReadALL)		},
     { "ReadProxy",	      NS(ReadProxy)		},
-    { "ReadBdyProxy",	      NS(ReadBdyProxy)		},
+    { "ReadForward",	      NS(ReadForward)		},
 
 // SEND
 
@@ -453,7 +454,6 @@ int NS(MqS_Cmd) (
     { "SendC",		      NS(SendC)			},
     { "SendB",		      NS(SendB)			},
     { "SendN",		      NS(SendN)			},
-    { "SendBDY",	      NS(SendBDY)		},
     { "SendU",		      NS(SendU)			},
     { "SendL_START",	      NS(SendL_START)		},
     { "SendL_END",	      NS(SendL_END)		},

@@ -231,14 +231,6 @@ error: \
     skip++; \
   }
 
-#define CHECK_DEFTMPL(val,type,ttype,func) \
-  if (skip < objc) {\
-    ttype tmp; \
-    TclErrorCheckG(func(interp, objv[skip], &tmp)); \
-    val = (type) tmp; \
-    skip++; \
-  }
-
 #define CHECK_ARGS(argv) \
   argv = (objc-skip > 0 ? MqBufferLCreate (objc-skip) : NULL); \
   { \
@@ -257,8 +249,7 @@ error: \
 #define CHECK_D(val) CHECK_TMPL(val,MQ_DBL,double,Tcl_GetDoubleFromObj)
 
 #define CHECK_W_OPT(val) CHECK_TMPL_OPT(val,MQ_WID,Tcl_WideInt,Tcl_GetWideIntFromObj)
-
-#define CHECK_DI(val) CHECK_DEFTMPL(val,MQ_INT,int,Tcl_GetIntFromObj)
+#define CHECK_I_OPT(val) CHECK_TMPL_OPT(val,MQ_INT,int,Tcl_GetIntFromObj)
 
 /*****************************************************************************/
 /*                                                                           */

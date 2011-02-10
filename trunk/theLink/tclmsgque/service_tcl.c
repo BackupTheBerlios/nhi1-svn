@@ -17,7 +17,7 @@ int NS(ServiceGetFilter) (NS_ARGS)
   SETUP_mqctx
   struct MqS * ftr;
   MQ_SIZE id=0;
-  CHECK_DI(id);
+  CHECK_I_OPT(id);
   CHECK_NOARGS
   ErrorMqToTclWithCheck (MqServiceGetFilter(mqctx, id, &ftr));
   if (ftr != NULL) {
@@ -75,7 +75,7 @@ int NS(ServiceProxy) (NS_ARGS)
   MQ_STR token;
   MQ_SIZE id=0;
   CHECK_C(token)
-  CHECK_DI(id)
+  CHECK_I_OPT(id)
   CHECK_NOARGS
   ErrorMqToTclWithCheck (MqServiceProxy (mqctx, token, id));
   RETURN_TCL

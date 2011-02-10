@@ -45,17 +45,19 @@ proc WRIT {ftr} {
 }
 
 proc FilterIn {ctx} {
-  $ctx dict lappend Itms [$ctx ReadBDY]
+  $ctx dict lappend Itms [$ctx ReadDUMP]
   $ctx SendRETURN
 }
 
 proc FilterSetup {ctx} {
+  set $ftr [$ctx ServiceGetFilter]
   $ctx dict set Itms [list]
   $ctx dict set FH ""
   $ctx ServiceCreate "LOGF" LOGF
   $ctx ServiceCreate "EXIT" EXIT
   $ctx ServiceCreate "+ALL" FilterIn
-  [$ctx ServiceGetFilter] ServiceCreate "WRIT" WRIT
+  $ftr ServiceCreate "WRIT" WRIT
+  $ftr ServiceProxy  "+TRT"
 }
 
 proc FilterCleanup {ctx} {
@@ -78,8 +80,12 @@ proc FilterEvent {ctx} {
     if {[catch {
       # try to connect if not already connected
       $ftr LinkConnect
+      # setup the BDY data from storage
+      $ctx ReadLOAD $data
       # send BDY data to the link-target
-      $ftr SendBDY $data
+      $ftr SendSTART
+      $ctx ReadForward $ftr
+      $ftr Send
     }]} {
       # on "error" do the following:
       $ftr ErrorSet

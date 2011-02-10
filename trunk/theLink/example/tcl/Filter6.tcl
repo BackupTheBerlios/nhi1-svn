@@ -76,8 +76,8 @@ proc FilterEvent {ctx} {
     $ftr LinkConnect
     # setup Read package from storage
     set Id  [$ctx StorageSelect]
-    # send entire BDY data to the link-target
-    $ctx ReadBdyProxy $ftr
+    # forward the entire BDY data to the ftr-target
+    $ctx ReadForward $ftr
     # on "success" or on "error" delete item from storage
     $ctx StorageDelete $Id
   }]} {
