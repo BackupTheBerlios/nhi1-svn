@@ -186,7 +186,7 @@ pSqlInsertSendTrans (
   struct MqS * const context, 
   MQ_TOK const callback, 
   MQ_BUF buf, 
-  MQ_WID *transId
+  MQ_TRA *transId
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
@@ -217,7 +217,7 @@ error1:
 enum MqErrorE
 pSqlSelectSendTrans (
   struct MqS * const context, 
-  MQ_WID transId,
+  MQ_TRA transId,
   MQ_BUF buf 
 )
 {
@@ -247,8 +247,8 @@ error:
 enum MqErrorE
 pSqlDeleteSendTrans (
   struct MqS * const context, 
-  MQ_WID transId,
-  MQ_WID *oldTransIdP
+  MQ_TRA transId,
+  MQ_TRA *oldTransIdP
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
@@ -274,13 +274,14 @@ error:
 enum MqErrorE
 pSqlInsertReadTrans (
   struct MqS * const context, 
-  MQ_WID const oldTransId, 
-  MQ_WID const oldRmtTransId, 
+  MQ_TRA const oldTransId, 
+  MQ_TRA const oldRmtTransId, 
   MQ_BUF const hdr,
   MQ_BUF const bdy,
-  MQ_WID *transIdP
+  MQ_TRA *transIdP
 )
 {
+  MQ_TRA transId;
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl= sql_sys->readInsert;
   check_NULL(sql_sys->db) {
@@ -302,8 +303,9 @@ pSqlInsertReadTrans (
   check_sqlite(sqlite3_bind_blob  (hdl,8,hdr->data, hdr->cursize, SQLITE_TRANSIENT))      goto error;
   check_sqlite(sqlite3_bind_blob  (hdl,9,bdy->data, bdy->cursize, SQLITE_TRANSIENT))      goto error;
   STEP_DONE(1);
-  *transIdP = sqlite3_last_insert_rowid(sql_sys->db);
-  MqLogV (context, __func__, 5, "create transaction <%lld>\n", *transIdP);
+  transId = sqlite3_last_insert_rowid(sql_sys->db);
+  if (transIdP != NULL) *transIdP = transId;
+  MqLogV (context, __func__, 5, "create transaction <%lld>\n", transId);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -342,9 +344,9 @@ error:
 enum MqErrorE
 pSqlDeleteReadTrans (
   struct MqS * const context, 
-  MQ_WID transId,
-  MQ_WID *oldTransId,
-  MQ_WID *oldRmtTransId
+  MQ_TRA transId,
+  MQ_TRA *oldTransId,
+  MQ_TRA *oldRmtTransId
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
@@ -468,12 +470,12 @@ error:
 enum MqErrorE
 MqStorageSelect (
   struct MqS * const context,
-  MQ_WID *transIdP
+  MQ_TRA *transIdP
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl;
-  MQ_WID transId = *transIdP;
+  MQ_TRA transId = *transIdP;
   *transIdP = 0LL;
   check_NULL(sql_sys->db) {
     // without database available -> nothing to select
@@ -513,7 +515,7 @@ error1:
 enum MqErrorE
 MqStorageCount (
   struct MqS * const context,
-  MQ_WID *countP
+  MQ_TRA *countP
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;

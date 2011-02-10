@@ -216,11 +216,13 @@
 
 #if defined(MQ_IS_POSIX)
 # define MQ_FORMAT_W	  "%lli"
+# define MQ_FORMAT_T	  "%lli"
 # define MQ_FORMAT_X	  "%llx"
 # define MQ_FORMAT_Xn(n)  "%"	MQ_CPPSTR(n) "llx"
 # define MQ_FORMAT_Wn(n)  "%"	MQ_CPPSTR(n) "lli"
 #elif defined(MQ_IS_WIN32)
 # define MQ_FORMAT_W	  "%I64i"
+# define MQ_FORMAT_T	  "%I64i"
 # define MQ_FORMAT_X	  "%I64x"
 # define MQ_FORMAT_Xn(n)  "%"	MQ_CPPSTR(n) "I64x"
 # define MQ_FORMAT_Wn(n)  "%"	MQ_CPPSTR(n) "I64i"

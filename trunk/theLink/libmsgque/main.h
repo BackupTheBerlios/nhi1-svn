@@ -269,6 +269,8 @@ void pContextDeleteLOCK(struct MqS * const);
 #define check_NULL(E) if (unlikely((E) == NULL))
 #define check_INT(E) if (unlikely((E) != 0))
 
+#define U2INT(isBin,U) (likely(isBin) ? iBufU2INT(U) : str2int(U.C,NULL,16))
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                 config.h                                  */
@@ -294,9 +296,22 @@ static mq_inline MQ_INT iBufU2INT (
   a.B[1] = (*buf.A).B[1];
   a.B[2] = (*buf.A).B[2];
   a.B[3] = (*buf.A).B[3];
-  return a.S;
+  return a.I;
 #else
   return (*buf.A).I;
+#endif
+}
+
+// can be ((*buf->cur.A).T)
+static mq_inline MQ_INT iBufU2TRA (
+  union MqBufferU buf
+) {
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+  MQ_ATO a;
+  memcpy(&a,buf.B,sizeof(MQ_TRA));
+  return a.W;
+#else
+  return (*buf.A).T;
 #endif
 }
 
@@ -320,6 +335,7 @@ enum MqErrorE pBufferGetA1 ( struct MqBufferS * const, union MqBufferAtomU * con
 enum MqErrorE pBufferGetA2( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);
 enum MqErrorE pBufferGetA4( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);
 enum MqErrorE pBufferGetA8( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);
+MQ_TRA pBufU2TRA ( union MqBufferU buf);
 #define pBufferNewSize(buf, newSize) \
 	if (unlikely(newSize > buf->size)) _pBufferNewSize(buf, __func__, newSize)
 #define pBufferAddSize(buf, addSize) \
@@ -387,7 +403,8 @@ void pSendDelete ( struct MqSendS **) __attribute__((nonnull));
 enum MqErrorE pSendSYSTEM ( struct MqS * const, MQ_TOK const);
 enum MqErrorE pSendEND ( struct MqS * const, MQ_TOK const, const MQ_HDL);
 enum MqErrorE pSendSYSTEM_RETR ( struct MqS * const);
-void pSendBDY ( struct MqS * const, MQ_BINB const * const, MQ_SIZE const, MQ_BINB);
+void pSendBDY ( struct MqS * const, MQ_BINB const * const, MQ_SIZE const, enum MqHandShakeE const, MQ_SIZE, MQ_WID const);
+enum MqErrorE pSendT (struct MqS * const context, const MQ_TRA);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -717,14 +734,15 @@ void pReadSetType( struct MqS * const, MQ_BOL const);
 void pReadL_CLEANUP (register struct MqS * const); 
 enum MqHandShakeE pReadGetHandShake ( struct MqS const * const);
 void pReadSetHandShake ( struct MqS const * const, enum MqHandShakeE);
-MQ_WID pReadGetTransId ( struct MqS * const);
+MQ_TRA pReadGetTransId ( struct MqS * const);
 enum MqErrorE pReadCreateTransId  ( struct MqS * const);
 enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
 void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
-void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, MQ_BINB* const) __attribute__((nonnull(1)));
+void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE * const, MQ_WID * const) __attribute__((nonnull(1)));
 enum MqErrorE pReadInsert ( register struct MqS*, MQ_WID*);
+enum MqErrorE pReadT ( struct MqS * const, MQ_TRA * const);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -887,12 +905,12 @@ struct MqSqlS {
   sqlite3_stmt *MqStorageCount;	      ///< prepared sql statement
 };
 
-enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_WID*);
-enum MqErrorE pSqlSelectSendTrans ( struct MqS * const, MQ_WID, MQ_BUF);
-enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_WID, MQ_WID*);
-enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_WID const, MQ_WID const, MQ_BUF const, MQ_BUF const, MQ_WID*);
+enum MqErrorE pSqlInsertSendTrans ( struct MqS * const, MQ_TOK const, MQ_BUF, MQ_TRA*);
+enum MqErrorE pSqlSelectSendTrans ( struct MqS * const, MQ_TRA, MQ_BUF);
+enum MqErrorE pSqlDeleteSendTrans ( struct MqS * const, MQ_TRA, MQ_TRA*);
+enum MqErrorE pSqlInsertReadTrans ( struct MqS * const, MQ_TRA const, MQ_TRA const, MQ_BUF const, MQ_BUF const, MQ_TRA*);
 enum MqErrorE pSqlSelectReadTrans ( struct MqS * const);
-enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_WID, MQ_WID*, MQ_WID*);
+enum MqErrorE pSqlDeleteReadTrans ( struct MqS * const, MQ_TRA, MQ_TRA*, MQ_TRA*);
 enum MqErrorE pSqlCreate ( struct MqS * const, struct MqSqlS ** const);
 void pSqlDelete (struct MqSqlS **);
 

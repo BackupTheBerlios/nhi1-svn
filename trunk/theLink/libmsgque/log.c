@@ -244,6 +244,9 @@ sLogDynItem (
 	case MQ_WIDT:
 	  mq_snprintf(ptr, size, MQ_FORMAT_W, MqBufU2WID(hd->cur));
 	  break;
+	case MQ_TRAT:
+	  mq_snprintf(ptr, size, MQ_FORMAT_T, pBufU2TRA(hd->cur));
+	  break;
 	case MQ_DBLT:
 	  mq_snprintf(ptr, size, MQ_FORMAT_D, MqBufU2DBL(hd->cur));
 	  break;
@@ -422,6 +425,7 @@ MqLogTypeName (
     case MQ_INTT: return "INT";
     case MQ_FLTT: return "FLT";
     case MQ_WIDT: return "WID";
+    case MQ_TRAT: return "TRA";
     case MQ_DBLT: return "DBL";
     case MQ_LSTT: return "LST";
   }
@@ -463,8 +467,4 @@ pLogAscii (
 }
 
 END_C_DECLS
-
-
-
-
 

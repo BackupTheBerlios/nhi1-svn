@@ -10,12 +10,12 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
-#		    testclient$(EXEEXT) testserver$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
-#			Filter1$(EXEEXT) Filter2$(EXEEXT) Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) \
-#			    server$(EXEEXT) client$(EXEEXT)
+noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
+		    testclient$(EXEEXT) testserver$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
+			Filter1$(EXEEXT) Filter2$(EXEEXT) Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) \
+			    server$(EXEEXT) client$(EXEEXT)
 
-noinst_PROGRAMS = server$(EXEEXT)
+#noinst_PROGRAMS = server$(EXEEXT)
 
 #noinst_PROGRAMS = server$(EXEEXT) client$(EXEEXT)
 

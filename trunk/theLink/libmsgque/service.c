@@ -102,6 +102,25 @@ MqServiceProxy(
   return MqServiceCreate (context, token, sServiceProxy, (void*)(long)id,  NULL);
 }
 
+static enum MqErrorE 
+sServiceStorage (
+  struct MqS * const context,
+  MQ_PTR const data
+) {
+  MqErrorCheck (MqStorageInsert (context, NULL));
+error:
+  return MqSendRETURN(context);
+}
+
+enum MqErrorE 
+MqServiceStorage(
+  struct MqS * const context, 
+  MQ_TOK const token
+)
+{
+  return MqServiceCreate (context, token, sServiceStorage, NULL,  NULL);
+}
+
 enum MqErrorE 
 MqServiceCreate(
   struct MqS * const context, 

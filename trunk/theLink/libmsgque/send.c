@@ -343,27 +343,27 @@ sSendA8 (
 	}
 	sSendLen(buf, len, MQ_STRT, MQ_YES);
     } else {
-  #pragma pack(1)
+#pragma pack(1)
 	register struct istS {
 	  MQ_BINB type;
 	  MQ_BINB c0;
-  #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
 	  MQ_BINB B8[8];
-  #else
+#else
 	  MQ_WID  W;
-  #endif
+#endif
 	  MQ_BINB c1;
 	} *ist;
-  #pragma pack()
+#pragma pack()
 	pBufferAddSize (buf, (BUFFER_P2_NATIVE+8));
 	ist = (struct istS*) buf->cur.B;
 	ist->type = type;
 	ist->c0	= BUFFER_CHAR;
-  #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
 	memcpy(ist->B8, in.B8, 8);
-  #else
+#else
 	ist->W = in.W;
-  #endif
+#endif
 	ist->c1	= BUFFER_CHAR;
 	buf->numItems++;
 	buf->cur.B += sizeof(*ist);
@@ -437,6 +437,18 @@ MqSendW (
   union MqBufferAtomU ato;
   ato.W = in;
   return sSendA8(context->link.send,ato,context->config.isString,MQ_WIDT);
+}
+
+enum MqErrorE
+pSendT (
+  struct MqS * const context,
+  const MQ_TRA in
+)
+{
+  union MqBufferAtomU ato;
+  ato.T = in;
+  // the transaction ID is always binary
+  return sSendA8(context->link.send,ato,MQ_NO,MQ_TRAT);
 }
 
 enum MqErrorE
@@ -518,32 +530,39 @@ pSendBDY (
   struct MqS * const context,
   MQ_BINB const * const in,
   MQ_SIZE const len,
-  MQ_BINB hs
+  enum MqHandShakeE const hs,
+  MQ_SIZE numItems,
+  MQ_TRA const transId
 )
 {
   struct MqSendS * const send = context->link.send;
   register struct MqBufferS * const buf = send->buf;
+  MQ_SIZE newlen;
+  MQ_BIN end;
+  // is BDY data available ?
   if (len > 0) {
-    register MQ_SIZE const newlen = HDR_SIZE + len;
-    MQ_BIN bdy;
+    newlen = HDR_SIZE + len;
     pBufferNewSize (buf, newlen);
-    bdy = buf->data + HDR_SIZE;
-    memcpy (bdy, in, len);
-    // read NumItems -> attention no ENDIAN conversion
-    buf->cur.B = bdy + BDY_NumItems_S;
-    if (unlikely(context->config.isString)) {
-      buf->numItems = str2int(buf->cur.C,NULL,16);
-    } else {
-      buf->numItems = iBufU2INT(buf->cur);
-    }
-    // finish
-    buf->cursize = newlen;
-    buf->cur.B = buf->data + newlen;
+    buf->cur.B = buf->data + HDR_SIZE;
+    memcpy (buf->cur.B, in, len);
+    end = buf->data + newlen;
   } else {
-    buf->numItems = 0;
+    newlen = START_SIZE;
+    end = buf->data + START_SIZE;
   }
   // set handshake
-  *(buf->data + HDR_Code_S) = hs;
+  *(buf->data + HDR_Code_S) = (MQ_BINB) hs;
+  // set inverse transId (if required) -> to signal a "forwarded" transaction
+  if (transId != 0LL) {
+    //buf->cur.B = buf->data + START_SIZE;
+    //pSendT(context,-transId);
+    // the data is "MqReadBDY" after the initial "transId" was skiped -> need to add "1"
+    // numItems++;
+  }
+  // fill buffer accounting data
+  buf->numItems = numItems;
+  buf->cursize = newlen;
+  buf->cur.B = end;
 }
 
 enum MqErrorE
@@ -557,24 +576,35 @@ MqSendBDY (
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct HdrS const * cur = (struct HdrS const *) in;
+    MQ_TRA transId = 0LL;
+    MQ_SIZE numItems;
+    union MqBufferU tin;
+    struct HdrSendS const * cur = (struct HdrSendS const *) in;
     in  += HDR_SIZE;
     len -= HDR_SIZE;
+    // read NumItems -> attention no ENDIAN conversion
+    tin.B = (MQ_BIN) in + BDY_NumItems_S;
+    numItems = U2INT(!context->config.isString,tin);
+    // read transId
+    if (cur->hdr.code == MQ_HANDSHAKE_TRANSACTION) {
+      tin.B = (MQ_BIN) in + BDY_SIZE + BUFFER_P2_NATIVE;
+      transId = iBufU2TRA(tin);
+    }
     // send data
     MqSendSTART (context);
-    pSendBDY (context, in, len, cur->code);
-    switch (cur->code) {
+    pSendBDY (context, in, len, cur->hdr.code, numItems, transId);
+    switch (cur->hdr.code) {
       case MQ_HANDSHAKE_START:
 	// used for "MqServiceIsTransaction" to return the right values (aguard)
-	context->link._trans = cur->trans;
+	context->link._trans = cur->hdr.trans;
       case MQ_HANDSHAKE_TRANSACTION:
-	cur->trans != 0 ?
-	  MqSendEND_AND_WAIT (context, cur->tok, MQ_TIMEOUT_USER) :
-	    pSendEND(context, cur->tok, 0);
+	cur->hdr.trans != 0 ?
+	  MqSendEND_AND_WAIT (context, cur->hdr.tok, MQ_TIMEOUT_USER) :
+	    pSendEND(context, cur->hdr.tok, 0);
 	break;
       case MQ_HANDSHAKE_OK:
       case MQ_HANDSHAKE_ERROR:
-	pSendEND (context, cur->tok, cur->trans);
+	pSendEND (context, cur->hdr.tok, cur->hdr.trans);
 	break;
     }
   }
@@ -615,6 +645,8 @@ MqSendU (
 	MqReadL_END(context);
 	break;
       }
+      case MQ_TRAT:
+	MqPanicSYS(context);
     }
     return MQ_OK;
   }
@@ -740,8 +772,8 @@ MqSendSTART (
 
     // intitialize the return-code
     cur->code = MQ_HANDSHAKE_START;
-    buf->cur.B = (((MQ_BIN)cur) + sizeof(struct HdrS) + BDY_SIZE);
-    buf->cursize = (sizeof(struct HdrS) + BDY_SIZE);
+    buf->cur.B = (buf->data + START_SIZE);
+    buf->cursize = START_SIZE;
 
     // add transaction item if available
     return pReadInsertRmtTransId(context);
@@ -946,7 +978,7 @@ pSendSYSTEM_RETR (
   struct MqS * const context
 )
 {
-  *(context->link.send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
+  *(context->link.send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_OK;
   MqErrorReturn (pSendEND (context, "_SRT", context->link._trans));
 }
 
@@ -1062,7 +1094,7 @@ MqSendT_START (
   } else {
 
     // step 1. set header to transaction
-    *(buf->data + HDR_Code_S) = (char) MQ_HANDSHAKE_TRANSACTION;
+    *(buf->data + HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_TRANSACTION;
 
     // step 2. "tranBuf" is buffer in duty
     send->buf = buf = send->tranBuf;
@@ -1092,7 +1124,7 @@ MqSendT_END (
   } else if (context->setup.factory == NULL) {
     return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
-    MQ_WID transId;
+    MQ_TRA transId;
 
     // step 1. save data into the transaction database
     MqErrorCheck (pSqlInsertSendTrans(context, callback, buf, &transId));
@@ -1101,7 +1133,7 @@ MqSendT_END (
     send->buf = send->sendBuf;
 
     // step 3. add transaction-identifer
-    MqErrorCheck (MqSendW(context, transId));
+    MqErrorCheck (pSendT(context, transId));
 
     return MQ_OK;
   }
@@ -1136,7 +1168,7 @@ MqSendERROR (
       case MQ_HANDSHAKE_START:
 	return pSendEND (context, "_ERR", 0);
       case MQ_HANDSHAKE_TRANSACTION:
-	*(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
+	*(send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_ERROR;
 	MqErrorCheck(pSendEND (context, "+TRT", 0));
 	MqErrorCheck(pReadDeleteTrans (context));
 	return MQ_OK;
@@ -1172,11 +1204,11 @@ MqSendRETURN (
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK: 
 	    pSendSTART_CHECK(context);
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
+	    *(send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_OK;
 	    break;
 	  case MQ_ERROR:
 	    MqErrorCheck(MqSendSTART (context));
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
+	    *(send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_ERROR;
 	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
 	    MqSendI (context, MqErrorGetNumI (context));
 	    MqSendC (context, MqErrorGetText (context));
@@ -1193,11 +1225,11 @@ MqSendRETURN (
 	switch (MqErrorGetCodeI (context)) {
 	  case MQ_OK:
 	    pSendSTART_CHECK(context);
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_OK;
+	    *(send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_OK;
 	    break;
 	  case MQ_ERROR:
 	    MqErrorCheck(MqSendSTART (context));
-	    *(send->buf->data+HDR_Code_S) = (char) MQ_HANDSHAKE_ERROR;
+	    *(send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_ERROR;
 	    MqDLogC(context,5,"send ERROR to LINK target and RESET\n");
 	    MqSendI (context, MqErrorGetNumI (context));
 	    MqSendC (context, MqErrorGetText (context));

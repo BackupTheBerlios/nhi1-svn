@@ -29,11 +29,11 @@ if ($env(USE_REMOTE)) {
   set BLOCK_3 false
 } else {
   set BLOCK_1 true
-  #set BLOCK_1 false
+  set BLOCK_1 false
   set BLOCK_2 true
   #set BLOCK_2 false
   set BLOCK_3 true
-  #set BLOCK_3 false
+  set BLOCK_3 false
 }
 
 ##
@@ -168,6 +168,7 @@ foreach I [getNum 3] {
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
       set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      
     } \
     -body           {
       Bg @stdout {*}$SRV
@@ -258,6 +259,50 @@ test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
     -cleanup	    {
       if {$I > 1} {$FIRST Delete}
       Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1
+$J - T2
+$J - T3"
+
+  test trans2-T1-($I|$B|$S) {send error + valid data + transaction} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH [$ctx ReadAll]
+	$ctx ReadT_END
+	puts $FH [$ctx ReadAll]
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      #Echo0 $CTX PRNT SendC T1
+      #EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      Echo0 $CTX PRNT SendC T2
+      $CTX Delete
+
+      WaitOnFileToken $TMP T2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
     } \
     -returnCodes    ok \
     -match	    glob \

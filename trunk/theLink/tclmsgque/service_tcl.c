@@ -81,6 +81,16 @@ int NS(ServiceProxy) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ServiceStorage) (NS_ARGS)
+{
+  SETUP_mqctx
+  MQ_STR token;
+  CHECK_C(token)
+  CHECK_NOARGS
+  ErrorMqToTclWithCheck (MqServiceStorage (mqctx, token));
+  RETURN_TCL
+}
+
 int NS(ProcessEvent) (NS_ARGS)
 {
   SETUP_mqctx

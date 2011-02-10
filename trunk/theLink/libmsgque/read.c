@@ -48,8 +48,8 @@ struct MqReadS {
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
-  MQ_WID transId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
-  MQ_WID rmtTransId;		    ///< remote transaction-id (rowid from the remote readTrans table)
+  MQ_TRA transId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
+  MQ_TRA rmtTransId;		    ///< remote transaction-id (rowid from the remote readTrans table)
 				    ///< if ">0LL" -> the value to use or "OLL" -> get value from the database
 };
 
@@ -152,7 +152,7 @@ sReadListStart (
   bdy->data = bdy->cur.B = buf->data;
   bdy->size = buf->size;
   bdy->cursize = buf->cursize;
-  bdy->numItems = (read->type==MQ_BINT ? iBufU2INT(bdy->cur) : str2int(bdy->cur.C,NULL,16));
+  bdy->numItems = U2INT(read->type==MQ_BINT, bdy->cur);
   bdy->cur.B += (HDR_INT_LEN + 1);
 }
 
@@ -254,7 +254,7 @@ pReadCreateTransId (
 )
 {
   struct MqReadS * read = context->link.read;
-  MqErrorCheck (MqReadW (context, &read->transId));
+  MqErrorCheck (pReadT (context, &read->transId));
   MqErrorCheck (pSqlSelectSendTrans (context, read->transId, read->tranBuf));
   return MQ_OK;
 error:
@@ -273,23 +273,28 @@ pReadDeleteTransId (
 enum MqErrorE
 MqStorageInsert (
   struct MqS * const context,
-  MQ_WID *transIdP
+  MQ_TRA *transIdP
 )
 {
   struct MqReadS * read = context->link.read;
   if (unlikely(read->transId != 0LL)) {
     // this request is a logterm-transaction-request and this request is
     // already stored into the database
-    *transIdP = read->transId;
+    if (transIdP != NULL) *transIdP = read->transId;
+    // the current transaction is now in the storage and have to be deleted.
+    // the MqStorageSelect will setup the transaction again
+    read->transId = 0LL;
+    read->rmtTransId = 0LL;
+    read->handShake = MQ_HANDSHAKE_START;
   } else {
     // this request is a shortterm-transaction-request and this request need
     // to be saved into the database
     MqErrorCheck (
       pSqlInsertReadTrans (context, 
-	read->transId,		  /* old transaction id (used for "stack" transaction) */
-	read->rmtTransId,	  /* old remote transaction id (used for "stack" transaction) */
-	read->hdrorig,		  /* header data used by MqReadBDY (size = HDR_SIZE) */
-	read->bdy,		  /* body data (size = bdy->cursize) */
+	0LL,		    /* old transaction id (used for "stack" transaction) */
+	0LL,		    /* old remote transaction id (used for "stack" transaction) */
+	read->hdrorig,	    /* header data used by MqReadBDY (size = HDR_SIZE) */
+	read->bdy,	    /* body data (size = bdy->cursize) */
 	transIdP
       )
     );
@@ -302,7 +307,7 @@ error:
 enum MqErrorE
 MqStorageDelete (
   struct MqS * const context,
-  MQ_WID transId
+  MQ_TRA transId
 )
 {
   if (context->link.read->transId != transId) {
@@ -440,8 +445,8 @@ pReadHDR (
 
     // 5. if in a longterm-transaction, read the transaction-item on the !server!
     if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
-      MQ_WID rmtTransId, transId;
-      MqErrorCheck (MqReadW (context, &rmtTransId));
+      MQ_TRA rmtTransId, transId;
+      MqErrorCheck (pReadT (context, &rmtTransId));
       // use temporary variable "transId" because the following "MqSendSTART" have to send data 
       // !without! transaction id
       MqErrorCheck (
@@ -454,9 +459,9 @@ pReadHDR (
 	  &transId
 	)
       );
-      read->transId = 0LL;
       // answer first call with an empty return package
       if (context->link._trans != 0) {
+	read->transId = 0LL;
 	enum MqErrorE ret;
 	MqErrorCheck (MqSendSTART  (context));
 	read->handShake = MQ_HANDSHAKE_START;
@@ -502,7 +507,7 @@ pReadTRA (
 
     // get data from database
     register 
-    MQ_WID  transId = (MQ_WID)  sqlite3_column_int64(hdl,0);
+    MQ_TRA  transId = (MQ_TRA)  sqlite3_column_int64(hdl,0);
     MQ_BOL  string  = (MQ_BOL)  sqlite3_column_int(hdl,1);
     MQ_BOL  endian  = (MQ_BOL)  sqlite3_column_int(hdl,2);
     MQ_BIN  hdrB    = (MQ_BIN)  sqlite3_column_blob(hdl,3);
@@ -577,7 +582,7 @@ pReadTRA (
 
       // 5. if in a longterm-transaction, read the transaction-item on the !server!
       if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
-	MQ_WID rmtTransId;
+	MQ_TRA rmtTransId;
 	MqErrorCheck (MqReadW (context, &rmtTransId));
 	// now the "transId" is "official" in use
 	read->transId = transId;
@@ -622,7 +627,7 @@ error:
   /* if type is *not* native than "lsize" has the value of '0' */ \
   if (lsize == 0) { \
     /* if *not* native, one additional field is available -> the length */ \
-    lsize = (buf->type == MQ_BINT ? iBufU2INT(bcur) : str2int(bcur.C, NULL, 16)); \
+    lsize = U2INT(buf->type==MQ_BINT,bcur); \
     bcur.B += (HDR_INT_LEN + 1); \
   } \
  \
@@ -647,7 +652,6 @@ pReadWord (
   MQ_SIZE lsize;
   // check if an argument is available? and decrease the number of arguments //
   // buf->numItems have to be an \b int !! because --0 have to be < 0 //
-printI(buf->numItems);
   if ((--buf->numItems) < 0) {
     return MqErrorDb2 (context,MQ_ERROR_REQUEST_ARGUMENTS);
   }
@@ -661,12 +665,9 @@ printI(buf->numItems);
   // if type is native than "lsize" has the length of the native type //
   // if type is *not* native than "lsize" has the value of '0' //
   if (lsize == 0) {
-printC(bcur.C)
-printO(buf->type == MQ_BINT)
-    lsize = (buf->type == MQ_BINT ? iBufU2INT(bcur) : str2int(bcur.C, NULL, 16));
+    lsize = U2INT(buf->type==MQ_BINT,bcur);
     bcur.B += (HDR_INT_LEN + 1);
   }
-printI(lsize)
 
   // read argument //
   out->data = out->cur.B = bcur.B;
@@ -866,6 +867,15 @@ MqReadW (
 }
 
 enum MqErrorE
+pReadT (
+  struct MqS * const context,
+  MQ_TRA * const valP
+)
+{
+  return sReadA8(context, (union MqBufferAtomU * const) valP, MQ_TRAT);
+}
+
+enum MqErrorE
 MqReadD (
   struct MqS * const context,
   MQ_DBL * const valP
@@ -948,7 +958,7 @@ MqReadN (
     /* if type is native than "lsize" has the length of the native type */
     /* if type is *not* native than "lsize" has the value of '0' */
     if (lsize == 0) {
-      lsize = (buf->type == MQ_BINT ? iBufU2INT(bcur) : str2int(bcur.C, NULL, 16));
+      lsize = U2INT(buf->type==MQ_BINT,bcur);
       bcur.B += (HDR_INT_LEN + 1);
     }
  
@@ -966,15 +976,20 @@ pReadBDY (
   struct MqS * const context,
   MQ_BIN * const out,
   MQ_SIZE * const len,
-  MQ_BINB * const hs
+  enum MqHandShakeE * const hs,
+  MQ_SIZE * const num,
+  MQ_TRA * const transId
 )
 {
   struct MqReadS * const read = context->link.read;
   *out = read->bdy->data;
   *len = read->bdy->cursize;
-  *hs = (MQ_BINB) read->handShake;
+  *hs  = read->handShake;
+  // the transId was already read in pReadHDR / pReadTRA -> need to add this item
+  *num = read->handShake == MQ_HANDSHAKE_TRANSACTION ? read->bdy->numItems + 1 : read->bdy->numItems;
+  *transId = read->transId;
   // in a "longterm-transaction" with "MqReadBDY" no return transaction is
-  // required because the transaction is forwarded
+  // required because the transaction is stored/forwarded
   read->handShake = MQ_HANDSHAKE_START;
 }
 
@@ -1056,13 +1071,13 @@ MqReadBdyProxy (
   struct MqS * const sendctx
 ) {
   MQ_TOK const token = MqServiceGetToken(readctx);
-  MQ_BINB hs;
-  MQ_BIN bdy; MQ_SIZE len;
+  enum MqHandShakeE hs;
+  MQ_BIN bdy; MQ_SIZE len, num; MQ_TRA transId;
 
   MqErrorCheck1 (MqSendSTART (sendctx));
 
-  pReadBDY (readctx, &bdy, &len, &hs);
-  pSendBDY (sendctx,  bdy,  len,  hs);
+  pReadBDY (readctx, &bdy, &len, &hs, &num, &transId);
+  pSendBDY (sendctx,  bdy,  len,  hs, num,  transId);
 
   // continue with the original transaction
   if (readctx->link._trans != 0) {
@@ -1071,8 +1086,8 @@ MqReadBdyProxy (
     // send the answer
     MqErrorCheck(MqSendSTART (readctx));
     // BDY in + out
-    pReadBDY (sendctx,  &bdy, &len, &hs);
-    pSendBDY (readctx,  bdy,  len,  hs);
+    pReadBDY (sendctx,  &bdy, &len, &hs, &num, &transId);
+    pSendBDY (readctx,  bdy,  len,  hs,  num,  transId);
   } else {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND (sendctx, token));
@@ -1167,7 +1182,7 @@ pReadSetReturnNum (
   context->link.read->returnNum = retNum;
 }
 
-MQ_WID
+MQ_TRA
 pReadGetTransId (
   struct MqS * const context
 )
@@ -1197,7 +1212,7 @@ pReadInsertRmtTransId (
 {
   struct MqReadS * const read = context->link.read;
   if (read->rmtTransId != 0LL) {
-    MqErrorCheck (MqSendW (context, read->rmtTransId));
+    MqErrorCheck (pSendT (context, read->rmtTransId));
   }
   return MQ_OK;
 error:

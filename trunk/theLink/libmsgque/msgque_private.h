@@ -145,6 +145,8 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
 #define BDY_NumItems_S	    (3				    + 1)	    ///< 4  : "BODY_ITEM_SIZE" integer
 #define BDY_SIZE	    (BDY_NumItems_S + HDR_INT_LEN   + 1)	    ///< 13 : "END" body
 
+#define START_SIZE	    (HDR_SIZE + BDY_SIZE)
+
 /*
  *      Body-Item-Header (BOH)
  */

@@ -22,7 +22,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ##
 
 set BLOCK_1 true
-#set BLOCK_1 false
+set BLOCK_1 false
 set BLOCK_2 true
 #set BLOCK_2 false
 
@@ -31,6 +31,7 @@ set BLOCK_2 true
 set t [makeFile {} storageFile]
 file delete -force $t
 set storageFiles [list ":memory:" ":tmpdb:" $t]
+set storageFiles [list ":memory:" ]
 unset t
 
 
@@ -72,8 +73,8 @@ if {$BLOCK_1} {
       # what is currently tested
        SetConstraints $I $B $S
 
-      # server-type: server server.tcl
-      foreach D $storageFiles {
+      # storage
+      foreach D storageFiles {
 
 ##
 ## -----------------------------------------------------------------------
@@ -204,7 +205,7 @@ test transaction-3-($I|$B|$C|$S|$D) {basic test - ERROR return} \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|1>
 [sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'WID' object into an 'INT' object
 [sS]> (server-0) found in function "*sReadA4" at file "read.c*"
-[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pServiceStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
 
@@ -249,7 +250,7 @@ test transaction-5-($I|$B|$C|$S|$D) {MqSendERROR test} \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|9>
 [sS]> (server-0) \[MYERR] 1
 [cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
-[cC]> (client-0) found in function "sMqEventStart" at file "service.c"
+[cC]> (client-0) found in function "pServiceStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
  
@@ -257,6 +258,7 @@ test transaction-5-($I|$B|$C|$S|$D) {MqSendERROR test} \
 
 Cleanup
    
+     }; # storage
     }; # SRV_LST
    }; # COM_LST
   }; # BIN_LST
@@ -284,12 +286,16 @@ if {$BLOCK_2} {
     # server-type: server server.tcl
     foreach S [filter SRV_LST $C] {
 
+     # storage
+     foreach D $storageFiles {
+
 test transaction-X1-($I|$B|$C|$S|$D) {Read/Send BDY test} \
     -constraints    {!filter-test} \
     -setup	    {
       Setup $I $B $C $S --filter-server Filter3 --ident OTTO
       set RET [list]
       $FH_LAST ServiceCreate TEST CB_I
+      Echo0 $FH_LAST STDB SendC $D
     } \
     -body           {
       $FH_LAST SendSTART
@@ -305,6 +311,35 @@ test transaction-X1-($I|$B|$C|$S|$D) {Read/Send BDY test} \
       Cleanup
     } \
     -result         {9978 1}
+
+test transaction-X2-($I|$B|$C|$S|$D) {Read/Send BDY test with ERROR} \
+    -constraints    {!filter-test} \
+    -setup	    {
+      Setup $I $B $C $S --filter-server Filter3 --ident OTTO
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+      Echo0 $FH_LAST STDB SendC $D
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END TEST
+      $FH_LAST SendEND_AND_WAIT ECOI
+      $FH_LAST ProcessEvent -wait ONCE
+      set RET
+    } \
+    -cleanup {
+      Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|213>
+[sS]> (server-0) \[sReadA4] request more arguments than available
+[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
+[cC]> (client-0) found in function "pServiceStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"}
    
      }; # storageFiles
     }; # SRV_LST

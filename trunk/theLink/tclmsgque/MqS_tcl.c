@@ -371,6 +371,7 @@ int NS(ServiceGetToken) (NS_ARGS);
 int NS(ServiceIsTransaction) (NS_ARGS);
 int NS(ServiceGetFilter) (NS_ARGS);
 int NS(ServiceProxy) (NS_ARGS);
+int NS(ServiceStorage) (NS_ARGS);
 int NS(ServiceCreate) (NS_ARGS);
 int NS(ServiceDelete) (NS_ARGS);
 int NS(ProcessEvent) (NS_ARGS);
@@ -505,6 +506,7 @@ int NS(MqS_Cmd) (
     { "ServiceIsTransaction",	  NS(ServiceIsTransaction)    },
     { "ServiceGetToken",	  NS(ServiceGetToken)	      },
     { "ServiceProxy",		  NS(ServiceProxy)	      },
+    { "ServiceStorage",		  NS(ServiceStorage)	      },
     { "ServiceCreate",		  NS(ServiceCreate)	      },
     { "ServiceDelete",		  NS(ServiceDelete)	      },
     { "ProcessEvent",		  NS(ProcessEvent)	      },

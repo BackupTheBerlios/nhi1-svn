@@ -116,6 +116,19 @@ MQ_WID MqBufU2WID (
 #endif
 }
 
+// can be ((*buf->cur.A).W)
+MQ_TRA pBufU2TRA (
+  union MqBufferU buf
+) {
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+  MQ_TRA w;
+  memcpy(&w,buf.B,sizeof(MQ_TRA));
+  return w;
+#else
+  return (*buf.A).T;
+#endif
+}
+
 // can be (*((MQ_DBL const *)(bin)))
 MQ_DBL MqBufU2DBL (
   union MqBufferU buf
@@ -444,12 +457,12 @@ pBufferGetA1 (
   enum MqTypeE const type 
 )
 {
-	buf->cur.B = buf->data;
-  if (type == buf->type) {
+  buf->cur.B = buf->data;
+  if (likely(type == buf->type)) {
     (*ato).Y = (*buf->cur.A).Y;
   } else if ( buf->type == MQ_STRT) {
     if (type == MQ_BYTT) {
-			long ret;
+      long ret;
       MQ_STR end;
       errno = 0;
       ret = str2int (buf->cur.C, &end, 0);
@@ -493,7 +506,7 @@ pBufferGetA2 (
 )
 {
   buf->cur.B = buf->data;
-  if (type == buf->type) {
+  if (likely(type == buf->type)) {
 #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
     memcpy(ato,buf->cur.B,2);
 #else
@@ -535,7 +548,7 @@ pBufferGetA4 (
 )
 {
   buf->cur.B = buf->data;
-  if (type == buf->type) {
+  if (likely(type == buf->type)) {
 #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
     memcpy(ato,buf->cur.B,4);
 #else
@@ -606,7 +619,7 @@ pBufferGetA8 (
 )
 {
   buf->cur.B = buf->data;
-  if (type == buf->type) {
+  if (likely(type == buf->type)) {
 #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
     memcpy(ato,buf->cur.B,8);
 #else
@@ -762,6 +775,7 @@ MqBufferGetType (
     case MQ_SRTT: return 'S';
     case MQ_FLTT: return 'F';
     case MQ_LSTT: return 'L';
+    case MQ_TRAT: return 'T';
   }
   return '*';
 }
@@ -790,6 +804,7 @@ MqBufferGetType3 (
     case MQ_SRTT: return "S";
     case MQ_FLTT: return "F";
     case MQ_LSTT: return "L";
+    case MQ_TRAT: return "T";
   }
   return "*";
 }
@@ -1233,6 +1248,9 @@ MqBufferLogS (
       break;
     case MQ_WIDT:
       MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_W ">\n", MqBufU2WID(buf->cur));
+      break;
+    case MQ_TRAT:
+      MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_T ">\n", pBufU2TRA(buf->cur));
       break;
     case MQ_DBLT:
       MqLogV (context, prefix, 0, "cur      = <" MQ_FORMAT_D ">\n", MqBufU2DBL(buf->cur));

@@ -258,8 +258,10 @@ typedef float MQ_FLT;
 /// 8 byte \b wide integer data-type
 #if defined(_MSC_VER)
 typedef __int64 MQ_WID;
+typedef __int64 MQ_TRA;
 #else
 typedef long long int MQ_WID;
+typedef long long int MQ_TRA;
 #endif
 /// 8 byte \b double data-type
 typedef double MQ_DBL;
@@ -1732,6 +1734,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageClose (
   struct MqS * const context
 );
 
+/// transIdP=NULL allowed -> no return
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
   struct MqS * const context,
   MQ_WID *transIdP
@@ -2149,6 +2152,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   MQ_SIZE const id
 ) __attribute__((nonnull(1)));
 
+MQ_EXTERN enum MqErrorE MQ_DECL MqServiceStorage (
+  struct MqS * const ctx, 
+  MQ_TOK const token
+) __attribute__((nonnull(1)));
+
 /// \brief delete a service.
 /// \ctx
 /// \token
@@ -2284,9 +2292,10 @@ enum MqTypeE {
   MQ_FLTT = (5<<4 | MQ_TYPE_IS_4_BYTE),  ///< F: 4 byte 'float' type
   MQ_WIDT = (6<<4 | MQ_TYPE_IS_8_BYTE),  ///< W: 8 byte 'long long int' type
   MQ_DBLT = (7<<4 | MQ_TYPE_IS_8_BYTE),  ///< D: 8 byte 'double' type
-  MQ_BINT = (8<<4                    ),  ///< B: \e byte-array type
-  MQ_STRT = (9<<4                    ),  ///< C: \e string type (e.g. with a \\0 at the end)
-  MQ_LSTT = (10<<4                   ),  ///< L: list object type
+  MQ_TRAT = (8<<4 | MQ_TYPE_IS_8_BYTE),  ///< T: 8 byte 'transaction' type
+  MQ_BINT = (9<<4                    ),  ///< B: \e byte-array type
+  MQ_STRT = (10<<4                   ),  ///< C: \e string type (e.g. with a \\0 at the end)
+  MQ_LSTT = (11<<4                   ),  ///< L: list object type
 };
 
 /// \brief union used to set or modify native data from an MqBufferS object
@@ -2298,6 +2307,7 @@ union MqBufferAtomU {
   MQ_FLT    F;			///< 4 byte float data
   MQ_WID    W;			///< 8 byte integer data
   MQ_DBL    D;			///< 8 byte double data
+  MQ_TRA    T;			///< 8 byte transaction data
   MQ_BINB   B[8];		///< 8 byte ARRAY used for copy
   MQ_BINB   B8[8];		///< 8 byte ARRAY used for copy
   MQ_BINB   B4[4];		///< 4 byte ARRAY used for copy

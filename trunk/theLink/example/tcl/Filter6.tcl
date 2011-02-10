@@ -50,10 +50,10 @@ proc FilterIn {ctx} {
 }
 
 proc FilterSetup {ctx} {
-  $ctx dict set Itms [list]
   $ctx dict set FH ""
   $ctx ServiceCreate "LOGF" LOGF
   $ctx ServiceCreate "EXIT" EXIT
+  $ctx ServiceStorage "PRNT"
   $ctx ServiceCreate "+ALL" FilterIn
   [$ctx ServiceGetFilter] ServiceCreate "WRIT" WRIT
 }
@@ -61,7 +61,6 @@ proc FilterSetup {ctx} {
 proc FilterCleanup {ctx} {
   set ftr [$ctx ServiceGetFilter]
   set FH  [$ftr dict get FH]
-  $ctx dict unset Itms
   $ctx dict unset FH
   if {$FH ne ""} {close $FH}
 }

@@ -1074,6 +1074,15 @@ proc Echo1 { ctx token read args} {
     return  [$ctx $read]
 }
   
+proc EchoT { ctx ltok rtok largs rargs} {
+    $ctx SendSTART
+    $ctx SendT_START
+    SendL $ctx $largs
+    $ctx SendT_END $ltok
+    SendL $ctx $rargs
+    $ctx SendEND_AND_WAIT $rtok
+}
+  
 proc CallCB { ctx token cb args} {
     $ctx SendSTART
     SendL $ctx $args
