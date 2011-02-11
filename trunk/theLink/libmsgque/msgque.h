@@ -3476,11 +3476,6 @@ MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );
 
-/// \brief cleanup an \e exit-error
-MQ_EXTERN enum MqErrorE MqErrorDeleteEXIT (
-  struct MqS * const context
-);
-
 /*****************************************************************************/
 /*                                                                           */
 /*                              error_is/check                               */
@@ -3504,7 +3499,9 @@ case MQ_OK: return MQ_OK; case MQ_CONTINUE: return MQ_CONTINUE; default: return 
 /// \brief check on error and goto label \e error1
 #define MqErrorCheck1(PROC) if (MqErrorCheckI(PROC)) goto error1
 /// \brief check on error and goto label \a JUMP
-#define MqErrorCheck2(PROC,JUMP) if (MqErrorCheckI(PROC)) goto JUMP
+#define MqErrorCheck2(PROC) if (MqErrorCheckI(PROC)) goto error2
+/// \brief check on error and goto label \a JUMP
+#define MqErrorCheckJ(PROC,JUMP) if (MqErrorCheckI(PROC)) goto JUMP
 
 /*****************************************************************************/
 /*                                                                           */

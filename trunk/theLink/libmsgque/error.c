@@ -393,13 +393,6 @@ MqErrorIsEXIT (
   return (MqMessageNum(MQ_ERROR_EXIT) == context->error.num);
 };
 
-enum MqErrorE MqErrorDeleteEXIT (
-  struct MqS * const context
-)
-{
-  return MqErrorReset(context);
-}
-
 void
 pErrorSync (
   struct MqS * const out,
@@ -460,7 +453,7 @@ pErrorReport(
       }
       MqBufferDelete (&err);
     } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-      pLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
+      pLog (stderr, "pErrorReport: %s\n", (MQ_STR) context->error.text->data);
     }
   }
   pErrorReset(context);

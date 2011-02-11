@@ -838,9 +838,6 @@ pSendEND (
   MqDLogV (msgque, __func__, 0, "body-prefix<%s>\n", buf->data+sizeof(struct HdrS));
   MqDLogV (msgque, __func__, 0, "body-item<%s>\n", buf->data+sizeof(struct HdrS)+sizeof(struct BdyS)+1);
   }
-
-  I1
-  printLP(msgque)
     pLogHEX(context, __func__, buf->data, (buf->cursize > 1100 ? 1100 : buf->cursize));
   */
 

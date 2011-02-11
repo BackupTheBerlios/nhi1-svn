@@ -77,14 +77,14 @@ static enum MqErrorE FilterEvent (
     itm = ctx->itm[ctx->rIdx];
 
     // fill the read-buffer from storage
-    MqErrorCheck1 (MqReadLOAD (mqctx, itm->data, itm->len));
+    MqErrorCheck2 (MqReadLOAD (mqctx, itm->data, itm->len));
 
     // send BDY data to the link-target, on error write message but do not stop processing
     if (MqErrorCheckI (MqReadForward(mqctx, ftr))) {
-      if (MqErrorIsEXIT(ftr)) {
-	return MqErrorDeleteEXIT(ftr);
+      if (MqErrorIsEXIT(mqctx)) {
+	return MqErrorReset(mqctx);
       } else {
-	ErrorWrite (ftr);
+	ErrorWrite (mqctx);
       }
       goto end;
     }
@@ -94,7 +94,9 @@ end:
     ctx->rIdx++;
     return MQ_OK;
 error1:
-    ErrorWrite (ftr);
+    MqErrorCopy(mqctx,ftr);
+error2:
+    ErrorWrite (mqctx);
     return MQ_OK;
   }
 error:
@@ -102,18 +104,15 @@ error:
 }
 
 static enum MqErrorE LOGF ( ARGS ) {
-  MQ_CST file;
+  SETUP_ctx;
   struct MqS * ftr;
-  struct FilterCtxS *ftrctx;
   MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
-  ftrctx = (struct FilterCtxS*const)ftr;
-  MqErrorCheck (MqReadC (mqctx, &file));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
-    MqErrorCheck (MqSendSTART(ftr));
-    MqErrorCheck (MqSendC(ftr, file));
-    MqErrorCheck (MqSendEND_AND_WAIT(ftr, "LOGF", MQ_TIMEOUT_USER));
+    MqErrorCheck (MqReadForward(mqctx, ftr));
   } else {
-    ftrctx->FH = fopen (file, "a");
+    MQ_CST file;
+    MqErrorCheck (MqReadC (mqctx, &file));
+    ctx->FH = fopen (file, "a");
   }
 error:
   return MqSendRETURN(mqctx);
@@ -121,7 +120,8 @@ error:
 
 static enum MqErrorE WRIT ( ARGS ) {
   MQ_CST str;
-  SETUP_ctx;
+  struct FilterCtxS *ctx;
+  MqErrorCheck(MqServiceGetFilter(mqctx, 0, (struct MqS**) &ctx));
   MqErrorCheck (MqReadC (mqctx, &str));
   fprintf(ctx->FH, "%s\n", str);
   fflush(ctx->FH);

@@ -53,21 +53,6 @@ struct MqReadS {
 				    ///< if ">0LL" -> the value to use or "OLL" -> get value from the database
 };
 
-#pragma pack(1)
-struct MqReadDmpS {
-  MQ_TRA    transId;
-  MQ_BOL    isString;
-  MQ_BOL    endian;
-  MQ_SIZE   hdrlen;
-  MQ_SIZE   bdylen;
-};
-#pragma pack()
-
-const static MQ_SIZE DMP_STA = 0;
-const static MQ_SIZE DMP_HDR = sizeof(struct MqReadDmpS);
-const static MQ_SIZE DMP_BDY = sizeof(struct MqReadDmpS) + sizeof(struct HdrS);
-
-
 /*****************************************************************************/
 /*                                                                           */
 /*                               read_static                                 */
@@ -345,13 +330,12 @@ pReadHDR (
 )
 {
   register struct MqS * context = *a_context;
-  struct MqReadS * read = context->link.read;
-  MQ_SIZE ctxId;
-  MQ_SIZE size;
+  register struct MqReadS * read = context->link.read;
   register int const string = context->config.isString;
   register struct HdrS * cur;
-  int debug;
   register struct MqBufferS * bdy;
+  MQ_SIZE ctxId, size;
+  int debug;
   struct MqBufferS * hdr = read->hdr;
 
   // 2. read
@@ -519,7 +503,7 @@ sReadGEN (
   MQ_SIZE bdylen
 )
 {
-  struct MqReadS * read = context->link.read;
+  register struct MqReadS * read = context->link.read;
   register struct HdrS * cur = (struct HdrS *) hdrB;
   int debug = context->config.debug;
   struct MqBufferS * bdy;
@@ -632,6 +616,20 @@ pReadTRA (
     );
   }
 }
+
+#pragma pack(1)
+struct MqReadDmpS {
+  MQ_TRA    transId;
+  MQ_BOL    isString;
+  MQ_BOL    endian;
+  MQ_SIZE   hdrlen;
+  MQ_SIZE   bdylen;
+};
+#pragma pack()
+
+const static MQ_SIZE DMP_STA = 0;
+const static MQ_SIZE DMP_HDR = sizeof(struct MqReadDmpS);
+const static MQ_SIZE DMP_BDY = sizeof(struct MqReadDmpS) + sizeof(struct HdrS);
 
 enum MqErrorE
 pReadLOAD (
@@ -1168,6 +1166,7 @@ MqReadForward (
   return MQ_OK;
 error1:
   MqErrorCopy (readctx, sendctx);
+  pErrorReset(sendctx);
 error:
   return MqErrorStack(readctx);
 }

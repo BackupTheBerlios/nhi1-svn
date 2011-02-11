@@ -12,23 +12,20 @@
 
 package require TclMsgque
 
-proc ErrorWrite {ftr} {
-  set FH [$ftr dict get FH]
-  puts $FH "ERROR: [$ftr ErrorGetText]"
+proc ErrorWrite {ctx} {
+  set FH [$ctx dict get FH]
+  puts $FH "ERROR: [$ctx ErrorGetText]"
   flush $FH
-  $ftr ErrorReset
+  $ctx ErrorReset
 }
 
 proc LOGF {ctx} {
   set ftr [$ctx ServiceGetFilter]
-  set file [$ctx ReadC]
   if {[$ftr LinkGetTargetIdent] == "transFilter"} {
-    $ftr SendSTART
-    $ftr SendC $file
-    $ftr SendEND_AND_WAIT "LOGF"
+    $ctx ReadForward $ftr
   } else {
-    set FH [open $file a]
-    $ftr dict set FH $FH
+    set FH [open [$ctx ReadC] a]
+    $ctx dict set FH $FH
   }
   $ctx SendRETURN
 }
@@ -38,7 +35,8 @@ proc EXIT {ctx} {
 }
 
 proc WRIT {ftr} {
-  set FH [$ftr dict get FH]
+  set ctx [$ftr ServiceGetFilter]
+  set FH [$ctx dict get FH]
   puts $FH [$ftr ReadC]
   flush $FH
   $ftr SendRETURN
@@ -50,7 +48,7 @@ proc FilterIn {ctx} {
 }
 
 proc FilterSetup {ctx} {
-  set $ftr [$ctx ServiceGetFilter]
+  set ftr [$ctx ServiceGetFilter]
   $ctx dict set Itms [list]
   $ctx dict set FH ""
   $ctx ServiceCreate "LOGF" LOGF
@@ -83,19 +81,17 @@ proc FilterEvent {ctx} {
       # setup the BDY data from storage
       $ctx ReadLOAD $data
       # send BDY data to the link-target
-      $ftr SendSTART
       $ctx ReadForward $ftr
-      $ftr Send
     }]} {
       # on "error" do the following:
-      $ftr ErrorSet
-      if {[$ftr ErrorIsEXIT]} {
+      $ctx ErrorSet
+      if {[$ctx ErrorIsEXIT]} {
 	# on "exit-error" -> ignore and return
-	$ftr ErrorReset
+	$ctx ErrorReset
 	return
       } else {
 	# on "normal-error" -> write message to file and ignore
-	ErrorWrite $ftr
+	ErrorWrite $ctx
       }
     }
     # on "success" or on "normal-error" delete item from list
