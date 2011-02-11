@@ -453,7 +453,7 @@ pErrorReport(
       }
       MqBufferDelete (&err);
     } else if (context->config.isSilent == MQ_NO && context->config.master == NULL) {
-      pLog (stderr, "pErrorReport: %s\n", (MQ_STR) context->error.text->data);
+      pLog (stderr, "%s\n", (MQ_STR) context->error.text->data);
     }
   }
   pErrorReset(context);

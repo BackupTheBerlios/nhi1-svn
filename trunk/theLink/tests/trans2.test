@@ -309,12 +309,12 @@ $J - T3"
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-0 - T1
+$J - T1
 T=local-1
 R=789
 T=local-2
 R=889
-0 - T2"
+$J - T2"
 
    }; # SRV_LST
   }; # BIN_LST
