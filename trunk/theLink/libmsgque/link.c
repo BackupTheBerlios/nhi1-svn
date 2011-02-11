@@ -507,7 +507,7 @@ pMqShutdown (
 	MqDLogC(context,4,"send token<_SHD>\n");
 	MqSendSTART (context);
 	MqSendEND_AND_WAIT (context, "_SHD", MQ_TIMEOUT_USER);
-      } else if (MQ_IS_SERVER (context) && context->link._trans != 0 &&
+      } else if (MQ_IS_SERVER (context) && context->link.transSId != 0 &&
 	  pTokenCheck(context->link.srvT,"_SHD")) {
 	// return the "_SHD"
 	MqDLogC(context,4,"answer token<_SHD>\n");
@@ -1206,4 +1206,5 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
 

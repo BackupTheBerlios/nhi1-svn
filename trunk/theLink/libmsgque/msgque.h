@@ -372,7 +372,7 @@ struct MqLinkS {
 
   // the next 3 items are used to map the transactionID (int) to the transaction pointer
   struct MqTransS * trans;	    ///< link to the trans object
-  MQ_HDL _trans;		    ///< storage for the Transaction object from the package header
+  MQ_HDL transSId;		    ///< storage for the \e shortterm-transaction from the package header
 
   // the following lines manage the link between the parent and the child,
   // to be able to delete all child's if the parent is deleted
@@ -1734,20 +1734,20 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageClose (
   struct MqS * const context
 );
 
-/// transIdP=NULL allowed -> no return
+/// transLIdP=NULL allowed -> no return
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
   struct MqS * const context,
-  MQ_WID *transIdP
+  MQ_WID *transLIdP
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageSelect (
   struct MqS * const context,
-  MQ_WID *transIdP
+  MQ_WID *transLIdP
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageDelete (
   struct MqS * const context,
-  MQ_WID transId
+  MQ_WID transLId
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
@@ -4969,6 +4969,8 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 
 
 

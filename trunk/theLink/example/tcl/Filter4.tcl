@@ -35,8 +35,7 @@ proc EXIT {ctx} {
 }
 
 proc WRIT {ftr} {
-  set ctx [$ftr ServiceGetFilter]
-  set FH [$ctx dict get FH]
+  set FH [[$ftr ServiceGetFilter] dict get FH]
   puts $FH [$ftr ReadC]
   flush $FH
   $ftr SendRETURN
@@ -71,32 +70,31 @@ proc FilterEvent {ctx} {
   if {[llength $Itms] == 0} {
     # no data -> nothing to do
     $ctx ErrorSetCONTINUE
-  } else {
+    return
+  } elseif {[catch {
     # with data -> try to send
     set data [lindex $Itms 0]
     set ftr [$ctx ServiceGetFilter]
-    if {[catch {
-      # try to connect if not already connected
-      $ftr LinkConnect
-      # setup the BDY data from storage
-      $ctx ReadLOAD $data
-      # send BDY data to the link-target
-      $ctx ReadForward $ftr
-    }]} {
-      # on "error" do the following:
-      $ctx ErrorSet
-      if {[$ctx ErrorIsEXIT]} {
-	# on "exit-error" -> ignore and return
-	$ctx ErrorReset
-	return
-      } else {
-	# on "normal-error" -> write message to file and ignore
-	ErrorWrite $ctx
-      }
+    # try to connect if not already connected
+    $ftr LinkConnect
+    # setup the BDY data from storage
+    $ctx ReadLOAD $data
+    # send BDY data to the link-target
+    $ctx ReadForward $ftr
+  }]} {
+    # on "error" do the following:
+    $ctx ErrorSet
+    if {[$ctx ErrorIsEXIT]} {
+      # on "exit-error" -> ignore and return
+      $ctx ErrorReset
+      return
+    } else {
+      # on "normal-error" -> write message to file and ignore
+      ErrorWrite $ctx
     }
-    # on "success" or on "normal-error" delete item from list
-    $ctx dict set Itms [lrange [$ctx dict get Itms] 1 end]
   }
+  # on "success" or on "normal-error" delete item from list
+  $ctx dict set Itms [lrange [$ctx dict get Itms] 1 end]
 }
 
 tclmsgque FactoryDefault "transFilter"

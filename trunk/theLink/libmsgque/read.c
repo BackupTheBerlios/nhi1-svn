@@ -48,7 +48,7 @@ struct MqReadS {
   struct ReadSaveS * save;	    ///< need for List objects
   enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
   MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
-  MQ_TRA transId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
+  MQ_TRA transLId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
   MQ_TRA rmtTransId;		    ///< remote transaction-id (rowid from the remote readTrans table)
 				    ///< if ">0LL" -> the value to use or "OLL" -> get value from the database
 };
@@ -211,7 +211,7 @@ MqReadT_START (
   register struct MqReadS * const read = context->link.read;
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else if (read->transId == 0LL) {
+  } else if (read->transLId == 0LL) {
     return MqErrorDb(MQ_ERROR_TRANSACTION_REQUIRED);
   } else {
     read->bdy = read->tranBuf;
@@ -254,8 +254,8 @@ pReadCreateTransId (
 )
 {
   struct MqReadS * read = context->link.read;
-  MqErrorCheck (pReadT (context, &read->transId));
-  MqErrorCheck (pSqlSelectSendTrans (context, read->transId, read->tranBuf));
+  MqErrorCheck (pReadT (context, &read->transLId));
+  MqErrorCheck (pSqlSelectSendTrans (context, read->transLId, read->tranBuf));
   return MQ_OK;
 error:
   return MqErrorStack(context);
@@ -267,23 +267,23 @@ pReadDeleteTransId (
 )
 {
   struct MqReadS * read = context->link.read;
-  return pSqlDeleteSendTrans (context, read->transId, &read->transId);
+  return pSqlDeleteSendTrans (context, read->transLId, &read->transLId);
 }
 
 enum MqErrorE
 MqStorageInsert (
   struct MqS * const context,
-  MQ_TRA *transIdP
+  MQ_TRA *transLIdP
 )
 {
   struct MqReadS * read = context->link.read;
-  if (unlikely(read->transId != 0LL)) {
+  if (unlikely(read->transLId != 0LL)) {
     // this request is a logterm-transaction-request and this request is
     // already stored into the database
-    if (transIdP != NULL) *transIdP = read->transId;
+    if (transLIdP != NULL) *transLIdP = read->transLId;
     // the current transaction is now in the storage and have to be deleted.
     // the MqStorageSelect will setup the transaction again
-    read->transId = 0LL;
+    read->transLId = 0LL;
     read->rmtTransId = 0LL;
     read->handShake = MQ_HANDSHAKE_START;
   } else {
@@ -295,7 +295,7 @@ MqStorageInsert (
 	0LL,		    /* old remote transaction id (used for "stack" transaction) */
 	read->hdrorig,	    /* header data used by MqReadDUMP (size = HDR_SIZE) */
 	read->bdy,	    /* body data (size = bdy->cursize) */
-	transIdP
+	transLIdP
       )
     );
   }
@@ -307,17 +307,17 @@ error:
 enum MqErrorE
 MqStorageDelete (
   struct MqS * const context,
-  MQ_TRA transId
+  MQ_TRA transLId
 )
 {
-  if (context->link.read->transId != transId) {
+  //if (context->link.read->transLId != transLId) {
     MQ_WID oldTransIdDummy, oldRmtTransIdDummy;
     // a longterm-transaction-request will be deleted in MqSendRETURN or MqSendERROR using
     // pReadDeleteTrans. Only the shortterm-transaction-request need to be deleted.
     // do not change the longterm-transaction-request data, because in the mean-time between
     // MqStoreInsert and MqStoreDelete a new longterm-transaction-request could be arrived
-    MqErrorCheck(pSqlDeleteReadTrans(context,transId,&oldTransIdDummy,&oldRmtTransIdDummy));
-  }
+    MqErrorCheck(pSqlDeleteReadTrans(context,transLId,&oldTransIdDummy,&oldRmtTransIdDummy));
+  //}
   return MQ_OK;
 error:
   return MqErrorStack(context);
@@ -387,10 +387,11 @@ pReadHDR (
     if (context == NULL) return MQ_CONTINUE;
     *a_context = context;
   }
+
 //MqDLogV (context, __func__, 0, "cur->ctxId.B<%i>, context->context.ctxId<%i>\n", cur->ctxId.B, context->context.ctxId);
 //MqDLogV (context, __func__, 0, "hex\n<%s>\n", pLogHEX (hdr->data, sizeof (struct HdrS)));
   debug = context->config.debug;
-  context->link._trans = cur->trans;
+  context->link.transSId = cur->trans;
 
   // 6. log message
   if (unlikely (debug >= 5)) {
@@ -444,36 +445,36 @@ pReadHDR (
 
     // 5. if in a longterm-transaction, read the transaction-item on the !server!
     if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
-      MQ_TRA rmtTransId, transId;
+      MQ_TRA rmtTransId, transLId;
       MqErrorCheck (pReadT (context, &rmtTransId));
-      // use temporary variable "transId" because the following "MqSendSTART" have to send data 
+      // use temporary variable "transLId" because the following "MqSendSTART" have to send data 
       // !without! transaction id
       MqErrorCheck (
 	// collect all data necessary to setup the transaction !after! a crash
 	pSqlInsertReadTrans (context, 
-	  read->transId,		  /* old transaction id (used for "stack" transaction) */
+	  read->transLId,		  /* old transaction id (used for "stack" transaction) */
 	  read->rmtTransId,		  /* old remote transaction id (used for "stack" transaction) */
 	  hdr,				  /* header data used by MqReadDUMP (size = HDR_SIZE) */
 	  bdy,				  /* body data (size = bdy->cursize) */
-	  &transId
+	  &transLId
 	)
       );
       // answer first call with an empty return package
-      if (context->link._trans != 0) {
-	read->transId = 0LL;
+      if (context->link.transSId != 0) {
+	read->transLId = 0LL;
 	enum MqErrorE ret;
 	MqErrorCheck (MqSendSTART  (context));
 	read->handShake = MQ_HANDSHAKE_START;
 	ret = MqSendRETURN (context);
 	read->handShake = MQ_HANDSHAKE_TRANSACTION;
 	MqErrorCheck (ret);
-	context->link._trans = 0;
+	context->link.transSId = 0;
       }
-      // now the "transId" is "official" in use
-      read->transId = transId;
+      // now the "transLId" is "official" in use
+      read->transLId = transLId;
       read->rmtTransId = rmtTransId;
     } else {
-      read->transId = 0LL;
+      read->transLId = 0LL;
       read->rmtTransId = 0LL;
     }
   }
@@ -494,7 +495,7 @@ error:
 static enum MqErrorE
 sReadGEN (
   register struct MqS *context,
-  MQ_TRA  transId,
+  MQ_TRA  transLId,
   MQ_BOL  string,
   MQ_BOL  endian,
   MQ_BIN  hdrB,
@@ -513,37 +514,31 @@ sReadGEN (
     return MqErrorC(context,__func__,-1,"invalid configuration -> isString");
   }
 
-  // MqReadDUMP need the original "header", save this header in the current context
+  // 2. MqReadDUMP need the original "header", save this header in the current context
   read->hdrorig = MqBufferSetB (read->hdr, hdrB, hdrlen);
 
-  // 6. log message
+  // 3. log message
   if (unlikely (debug >= 5)) {
     read->hdr->type = MQ_STRING_TYPE(string);
     pLogHDR (context, __func__, 5, read->hdr);
   }
 
-  // 7. setup read
+  // 4. setup read
   read->handShake = (enum MqHandShakeE) cur->code;
   read->returnNum = 0;
 
-  // is a shortterm transaction ongoing?
-  // after a transaction was send to storage, it is !not! garanteed that
-  // the initial context still exists. only a longterm-transaction is able
-  // to forward results back to the initial context.
-  // -> make the shortterm-transaction invalid
-  if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
-    context->link._trans = 0;
-  } else {
-    context->link._trans = cur->trans;
-  }
+  // 5. after load from storage the "OLD" shortterm-transaction is invalid.
+  // but we need the information later to forward data proper.
+  // choose "-1" to signal this
+  context->link.transSId = cur->trans > 0 ? -1 : 0;
 
-  // setup "bdy"
+  // 6. setup "bdy"
   bdy = read->bdy = MqBufferSetB(read->readBuf, bdyB, bdylen);
 
-  // 8. read token
+  // 7. read token
   pTokenSetCurrent (context->link.srvT, cur->tok);
 
-  // 9. read BDY
+  // 8. read BDY
   if (bdylen > 0) {
     bdy->type = MQ_STRING_TYPE(string);
     if (unlikely (debug >= 6)) {
@@ -551,7 +546,7 @@ sReadGEN (
     }
     bdy->cur.B += BDY_NumItems_S;
 
-    // 3. read NumItems
+    // 8a. read NumItems
     if (unlikely(string)) {
       bdy->numItems = str2int(bdy->cur.C,NULL,16);
     } else {
@@ -564,25 +559,25 @@ sReadGEN (
     }
     bdy->cur.B = (bdy->data + BDY_SIZE);
 
-    // 4. if required, log package
+    // 8b. if required, log package
     if (unlikely (debug >= 7 && bdylen > BDY_SIZE)) {
       pLogBDY (context, __func__, 7, bdy);
     }
 
-    // 5. if in a longterm-transaction, read the transaction-item on the !server!
+    // 8c. if in a longterm-transaction, read the transaction-item on the !server!
     if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
       MQ_TRA rmtTransId;
       MqErrorCheck (pReadT (context, &rmtTransId));
-      // now the "transId" is "official" in use
-      read->transId = transId;
+      // now the "transLId" is "official" in use
+      read->transLId = transLId;
       read->rmtTransId = rmtTransId;
     } else {
-      read->transId = 0LL;
+      read->transLId = 0LL;
       read->rmtTransId = 0LL;
     }
   }
 
-  // reset data
+  // 9. reset data
   read->canUndo = MQ_NO;
   read->save = NULL;
   
@@ -606,7 +601,7 @@ pReadTRA (
 
     // process data from database
     return sReadGEN (context, 
-      (MQ_TRA)  sqlite3_column_int64(hdl,0),	/* transId  */
+      (MQ_TRA)  sqlite3_column_int64(hdl,0),	/* transLId  */
       (MQ_BOL)  sqlite3_column_int(hdl,1),	/* string   */
       (MQ_BOL)  sqlite3_column_int(hdl,2),	/* endian   */
       (MQ_BIN)  sqlite3_column_blob(hdl,3),	/* hdrB	    */
@@ -619,7 +614,7 @@ pReadTRA (
 
 #pragma pack(1)
 struct MqReadDmpS {
-  MQ_TRA    transId;
+  MQ_TRA    transLId;
   MQ_BOL    isString;
   MQ_BOL    endian;
   MQ_SIZE   hdrlen;
@@ -646,7 +641,7 @@ pReadLOAD (
 
     // process data from MqReadDmpS buffer
     return sReadGEN (context, 
-      dump->transId,
+      dump->transLId,
       dump->isString,
       dump->endian, 
       (MQ_BIN)env+DMP_HDR,
@@ -669,7 +664,7 @@ MqReadDUMP (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
     struct MqReadDmpS dump = {
-      read->transId, 
+      read->transLId, 
       context->config.isString, 
       context->link.bits.endian,
       read->hdrorig->cursize,
@@ -1083,7 +1078,7 @@ pReadBDY (
   *out = read->bdy->data;
   *len = read->bdy->cursize;
   *hs  = read->handShake;
-  // the transId was already read in pReadHDR / sReadGEN -> need to add this item
+  // the transLId was already read in pReadHDR / sReadGEN -> need to add this item
   *num = read->handShake == MQ_HANDSHAKE_TRANSACTION ? read->bdy->numItems + 1 : read->bdy->numItems;
   // in a "longterm-transaction" with "MqReadDUMP" no return transaction is
   // required because the transaction is stored/forwarded
@@ -1144,25 +1139,38 @@ MqReadForward (
   MQ_TOK const token = MqServiceGetToken(readctx);
   enum MqHandShakeE hs;
   MQ_BIN bdy; MQ_SIZE len, num;
+  MQ_HDL transSId = readctx->link.transSId;
 
   MqErrorCheck1 (MqSendSTART (sendctx));
 
   pReadBDY (readctx, &bdy, &len, &hs, &num);
-  pSendBDY (sendctx,  bdy,  len,  hs, num);
+  pSendBDY (sendctx,  bdy,  len,  hs,  num);
 
   // continue with the original transaction
-  if (readctx->link._trans != 0) {
+  if (	
+    transSId != 0			&&	/* shortterm-transaction */
+    (
+      hs == MQ_HANDSHAKE_START		||	/* client -> server call */
+      hs == MQ_HANDSHAKE_TRANSACTION
+    )
+  ) {
     // use a transaction protection
     MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
-    // send the answer
-    MqErrorCheck(MqSendSTART (readctx));
-    // BDY in + out
-    pReadBDY (sendctx,  &bdy, &len, &hs, &num);
-    pSendBDY (readctx,  bdy,  len,  hs,  num);
+
+    // only a !real! shortterm-transaction result (transSId != -1) and
+    // not a longterm-transaction -> process the result
+    if (transSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
+      // send the answer
+      MqErrorCheck(MqSendSTART (readctx));
+      // BDY in + out
+      pReadBDY (sendctx, &bdy, &len, &hs, &num);
+      pSendBDY (readctx,  bdy,  len,  hs,  num);
+    }
   } else {
     // use a transaction protection
-    MqErrorCheck1 (MqSendEND (sendctx, token));
+    MqErrorCheck1 (pSendEND (sendctx, token, 0));
   }
+
   return MQ_OK;
 error1:
   MqErrorCopy (readctx, sendctx);
@@ -1259,7 +1267,7 @@ pReadGetTransId (
   struct MqS * const context
 )
 {
-  return context->link.read->transId;
+  return context->link.read->transLId;
 }
 
 enum MqErrorE
@@ -1268,9 +1276,9 @@ pReadDeleteTrans (
 )
 {
   struct MqReadS * const read = context->link.read;
-  if (read->transId != 0LL) {
+  if (read->transLId != 0LL) {
     read->handShake = MQ_HANDSHAKE_START;
-    MqErrorCheck(pSqlDeleteReadTrans(context,read->transId,&read->transId,&read->rmtTransId));
+    MqErrorCheck(pSqlDeleteReadTrans(context,read->transLId,&read->transLId,&read->rmtTransId));
   }
   return MQ_OK;
 error:
@@ -1322,4 +1330,6 @@ pReadLog (
 #endif
 
 END_C_DECLS
+
+
 

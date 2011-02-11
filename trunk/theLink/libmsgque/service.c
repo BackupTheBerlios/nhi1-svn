@@ -60,7 +60,7 @@ MqServiceIsTransaction (
   struct MqS const * const context
 )
 {
-  return context->link._trans != 0;
+  return context->link.transSId != 0;
 }
 
 MQ_CST 
@@ -181,7 +181,7 @@ pServiceStart (
       // on EXIT do return nothing and just report EXIT to the TOPLEVEL
       if (MqErrorIsEXIT(a_context)) goto error;
       // on a client the error will be reported to the toplevel
-      if (MQ_IS_CLIENT(a_context) && a_context->link._trans == 0) {
+      if (MQ_IS_CLIENT(a_context) && a_context->link.transSId == 0) {
 	goto error;
       } else {
 	// on a server the error will be reported to the client
@@ -243,8 +243,8 @@ MqProcessEvent (
   int debugLevel;
 
   // save master transaction
-  MQ_HDL master_trans = (context->config.master != NULL ? context->config.master->link._trans : 0);
-  MQ_HDL trans = context->link._trans;
+  MQ_HDL mastertransSId = (context->config.master != NULL ? context->config.master->link.transSId : 0);
+  MQ_HDL trans = context->link.transSId;
   enum MqHandShakeE hs = pReadGetHandShake(context);
 
   // protection code
@@ -289,8 +289,8 @@ MqProcessEvent (
 end:
   // restore the "master" transaction
   context->refCount--;
-  if (context->config.master != NULL) context->config.master->link._trans = master_trans;
-  context->link._trans = trans;
+  if (context->config.master != NULL) context->config.master->link.transSId = mastertransSId;
+  context->link.transSId = trans;
   pReadSetHandShake (context, hs);
   return ret;
 
@@ -301,5 +301,6 @@ error:
 }
 
 END_C_DECLS
+
 
 

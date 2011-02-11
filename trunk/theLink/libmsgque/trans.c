@@ -130,7 +130,7 @@ pTransPop (
   item->trans = trans;
   item->start = time (NULL);
   item->callback = callback;
-  item->last = trans->context->link._trans;
+  item->last = trans->context->link.transSId;
 
   trans->transIdA[item->transId] = item;
 
@@ -231,11 +231,11 @@ pTransSetResult (
 )
 {
   struct MqS * const context = trans->context;
-  MQ_HDL _trans = context->link._trans;
+  MQ_HDL transSId = context->link.transSId;
   struct MqTransItemS * item;
-  if (unlikely(_trans < 0 || _trans > trans->transIdR)) 
-      return MqErrorV (context, __func__, -1, "invalid transaction-id '%i'", _trans);
-  item = trans->transIdA[_trans];
+  if (unlikely(transSId < 0 || transSId > trans->transIdR)) 
+      return MqErrorV (context, __func__, -1, "invalid transaction-id '%i'", transSId);
+  item = trans->transIdA[transSId];
   if (item == NULL) return MQ_OK;
   item->status = status;
   if (unlikely (item->callback.fCall != NULL)) {
@@ -244,7 +244,7 @@ pTransSetResult (
 	enum MqErrorE ret;
 	// from: MqSendEND_AND_CALLBACK
 	ret = (*item->callback.fCall)(context, item->callback.data);
-	pTransPush(trans, _trans);
+	pTransPush(trans, transSId);
 	MqErrorCheck(ret);
 	return MQ_OK;
       }
@@ -253,7 +253,7 @@ pTransSetResult (
 	MQ_CST msg;
 
 	// (*callback.fCall) is never called
-	pTransPush(trans, _trans);
+	pTransPush(trans, transSId);
 	MqDLogC(context,5,"got ERROR return code\n");
 	MqErrorCheck1 (MqReadI (context, &retNum));
 	pReadSetReturnNum (context, retNum);
@@ -300,4 +300,5 @@ void pTransMark (
 }
 
 END_C_DECLS
+
 

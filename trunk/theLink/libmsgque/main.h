@@ -740,7 +740,7 @@ enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
 void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
-void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE * const) __attribute__((nonnull(1)));
+void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE* const) __attribute__((nonnull(1)));
 enum MqErrorE pReadInsert ( register struct MqS*, MQ_WID*);
 enum MqErrorE pReadT ( struct MqS * const, MQ_TRA * const);
 

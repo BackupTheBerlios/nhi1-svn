@@ -314,16 +314,15 @@ pLogHDR (
   }
 
   SEEK (hd, HDR_Trans_S);
-  mq_snprintf (hd->cur.C, 4, "%d", hd->cur.A->I);
+  mq_snprintf (hd->cur.C, 5, "%4d", hd->cur.A->I);
   hd->data[HDR_Code_S-1] = BUFFER_CHAR;
   hd->data[HDR_SIZE] = '\0';
 
   // fix \0
   t = (MQ_STR) hd->data;
   e = (MQ_STR) (hd->data + buf->cursize);
-  while (t < e) {
+  for (;t<e;t++) {
     if (!isprint (*t)) *t = (*t == 0 ? '+' : '?');
-    t++;
   }
 
   MqLogV (context, prefix, level, "HEADER <%s> ...\n", hd->data);

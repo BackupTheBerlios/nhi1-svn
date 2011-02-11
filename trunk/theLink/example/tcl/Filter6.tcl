@@ -12,23 +12,20 @@
 
 package require TclMsgque
 
-proc ErrorWrite {ftr} {
-  set FH [$ftr dict get FH]
-  puts $FH "ERROR: [$ftr ErrorGetText]"
+proc ErrorWrite {ctx} {
+  set FH [$ctx dict get FH]
+  puts $FH "ERROR: [$ctx ErrorGetText]"
   flush $FH
-  $ftr ErrorReset
+  $ctx ErrorReset
 }
 
 proc LOGF {ctx} {
   set ftr [$ctx ServiceGetFilter]
-  set file [$ctx ReadC]
   if {[$ftr LinkGetTargetIdent] == "transFilter"} {
-    $ftr SendSTART
-    $ftr SendC $file
-    $ftr SendEND_AND_WAIT "LOGF"
+    $ctx ReadForward $ftr
   } else {
-    set FH [open $file a]
-    $ftr dict set FH $FH
+    set FH [open [$ctx ReadC] a]
+    $ctx dict set FH $FH
   }
   $ctx SendRETURN
 }
@@ -38,7 +35,7 @@ proc EXIT {ctx} {
 }
 
 proc WRIT {ftr} {
-  set FH [$ftr dict get FH]
+  set FH [[$ftr ServiceGetFilter] dict get FH]
   puts $FH [$ftr ReadC]
   flush $FH
   $ftr SendRETURN
@@ -50,12 +47,14 @@ proc FilterIn {ctx} {
 }
 
 proc FilterSetup {ctx} {
+  set ftr [$ctx ServiceGetFilter]
   $ctx dict set FH ""
   $ctx ServiceCreate "LOGF" LOGF
   $ctx ServiceCreate "EXIT" EXIT
   $ctx ServiceStorage "PRNT"
   $ctx ServiceCreate "+ALL" FilterIn
-  [$ctx ServiceGetFilter] ServiceCreate "WRIT" WRIT
+  $ftr ServiceCreate "WRIT" WRIT
+  $ftr ServiceProxy  "+TRT"
 }
 
 proc FilterCleanup {ctx} {
@@ -69,6 +68,7 @@ proc FilterEvent {ctx} {
   if {[$ctx StorageCount] == 0} {
     # no data -> nothing to do
     $ctx ErrorSetCONTINUE
+    return
   } elseif {[catch {
     # with data -> try to send
     set ftr [$ctx ServiceGetFilter]
@@ -78,22 +78,21 @@ proc FilterEvent {ctx} {
     set Id  [$ctx StorageSelect]
     # forward the entire BDY data to the ftr-target
     $ctx ReadForward $ftr
-    # on "success" or on "error" delete item from storage
-    $ctx StorageDelete $Id
   }]} {
     # on "error" do the following:
-    $ftr ErrorSet
-    if {[$ftr ErrorIsEXIT]} {
+    $ctx ErrorSet
+    if {[$ctx ErrorIsEXIT]} {
       # on "exit-error" -> ignore and return
-      $ftr ErrorReset
+      $ctx ErrorReset
+      return
     } else {
       # on "normal-error" -> write message to file and ignore
       # continue and delete data in next step
-      ErrorWrite $ftr
-      # on "success" or on "error" delete item from storage
-      $ctx StorageDelete $Id
+      ErrorWrite $ctx
     }
   }
+  # on "success" or on "error" delete item from storage
+  $ctx StorageDelete $Id
 }
 
 tclmsgque FactoryDefault "transFilter"

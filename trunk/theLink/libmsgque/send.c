@@ -583,7 +583,7 @@ MqSendBDY (
     switch (cur->hdr.code) {
       case MQ_HANDSHAKE_START:
 	// used for "MqServiceIsTransaction" to return the right values (aguard)
-	context->link._trans = cur->hdr.trans;
+	context->link.transSId = cur->hdr.trans;
       case MQ_HANDSHAKE_TRANSACTION:
 	cur->hdr.trans != 0 ?
 	  MqSendEND_AND_WAIT (context, cur->hdr.tok, MQ_TIMEOUT_USER) :
@@ -798,7 +798,7 @@ pSendEND (
 
     // check if START was used 
     if (send->haveStart == MQ_NO) {
-      context->link._trans = 0;
+      context->link.transSId = 0;
       return MqErrorDb(MQ_ERROR_SEND_END_WITHOUT_START);
     }
     send->haveStart = MQ_NO;
@@ -852,7 +852,7 @@ MqSendEND_AND_WAIT (
   MQ_TIME_T timeout
 )
 {
-  MQ_HDL trans_save = context->link._trans;
+  MQ_HDL trans_save = context->link.transSId;
   struct MqTransS * const trans = context->link.trans;
   enum MqTransE status;
   static struct MqCallbackS empty = {NULL, NULL, NULL, NULL};
@@ -879,7 +879,7 @@ MqSendEND_AND_WAIT (
   // 3. wait until the transaction has finished
   timeout = pGetTimeout (context, timeout, MQ_WAIT_ONCE);
   endT = time(NULL) + timeout;
-  context->link._trans = 0;
+  context->link.transSId = 0;
   do {
     if (MqErrorCheckI (MqProcessEvent (context, timeout, MQ_WAIT_ONCE))) {
       pTransPush (trans, transH);
@@ -888,7 +888,7 @@ MqSendEND_AND_WAIT (
     timeout = endT - time(NULL);
   }
   while (pTransCheckStart (trans, transH) && timeout > 0);
-  context->link._trans = pTransGetLast (trans, transH);
+  context->link.transSId = pTransGetLast (trans, transH);
 
   // 4. replace 'read'
   read = pTransGetResult (trans, transH);
@@ -930,7 +930,7 @@ MqSendEND_AND_WAIT (
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
-      context->link._trans = trans_save;
+      context->link.transSId = trans_save;
       return MQ_ERROR;
     }
     case MQ_HANDSHAKE_START:
@@ -939,7 +939,7 @@ MqSendEND_AND_WAIT (
   }
 
 error:
-  context->link._trans = trans_save;
+  context->link.transSId = trans_save;
   return MqErrorStack (context);
 }
 
@@ -964,7 +964,7 @@ pSendSYSTEM_RETR (
 )
 {
   *(context->link.send->buf->data+HDR_Code_S) = (MQ_BINB) MQ_HANDSHAKE_OK;
-  MqErrorReturn (pSendEND (context, "_SRT", context->link._trans));
+  MqErrorReturn (pSendEND (context, "_SRT", context->link.transSId));
 }
 
 /*****************************************************************************/
@@ -1109,16 +1109,16 @@ MqSendT_END (
   } else if (context->setup.factory == NULL) {
     return MqErrorDbV(MQ_ERROR_CONFIGURATION_REQUIRED, "TRANSACTION", "factory");
   } else {
-    MQ_TRA transId;
+    MQ_TRA transLId;
 
     // step 1. save data into the transaction database
-    MqErrorCheck (pSqlInsertSendTrans(context, callback, buf, &transId));
+    MqErrorCheck (pSqlInsertSendTrans(context, callback, buf, &transLId));
 
     // step 2. "sendBuf" is buffer in duty
     send->buf = send->sendBuf;
 
     // step 3. add transaction-identifer
-    MqErrorCheck (pSendT(context, transId));
+    MqErrorCheck (pSendT(context, transLId));
 
     return MQ_OK;
   }
@@ -1181,7 +1181,7 @@ MqSendRETURN (
     switch (pReadGetHandShake (context)) {
       case MQ_HANDSHAKE_START: {
 	// without "shortterm-transaction" nothing to do
-	if (context->link._trans == 0) 
+	if (context->link.transSId == 0) 
 	  return MqErrorGetCodeI(context);
 	// "normal" service call -> normal return
 	pSendL_CLEANUP (context);
@@ -1202,7 +1202,7 @@ MqSendRETURN (
 	  case MQ_CONTINUE:
 	    MqPanicSYS (context);
 	}
-	return pSendEND (context, "_RET", context->link._trans);
+	return pSendEND (context, "_RET", context->link.transSId);
       }
       case MQ_HANDSHAKE_TRANSACTION: {
 	pSendL_CLEANUP (context);

@@ -79,8 +79,8 @@ sSqlAddDb (
   char *errmsg = NULL;
 
   // transaction storage, as transaction-id the ROWID is used
-  const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans (transId INTEGER PRIMARY KEY AUTOINCREMENT, callback TEXT, numItems INTEGER, type INTEGER, data BLOB);";
-  const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (transId INTEGER PRIMARY KEY AUTOINCREMENT, ident TEXT,ctxId INTEGER,string INTEGER,endian INTEGER,oldTransId INTEGER,oldRmtTransId INTEGER,hdr BLOB,bdy BLOB);";
+  const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans (transLId INTEGER PRIMARY KEY AUTOINCREMENT, callback TEXT, numItems INTEGER, type INTEGER, data BLOB);";
+  const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (transLId INTEGER PRIMARY KEY AUTOINCREMENT, ident TEXT,ctxId INTEGER,string INTEGER,endian INTEGER,oldTransId INTEGER,oldRmtTransId INTEGER,hdr BLOB,bdy BLOB);";
   const static char SQL_RIX[] = "CREATE INDEX IF NOT EXISTS readTransI ON readTrans (ident,ctxId);";
 
   if (storageFile == NULL || *storageFile == '\0') {
@@ -140,7 +140,7 @@ label_step_ ## num: \
     case SQLITE_BUSY: \
       goto label_step_ ## num; \
     case SQLITE_DONE: \
-      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",transId); \
+      return MqErrorDbV(MQ_ERROR_ID_NOT_FOUND,"transaction",transLId); \
     default: \
       return MqErrorDbSql(context,sql_sys->db); \
   }
@@ -186,7 +186,7 @@ pSqlInsertSendTrans (
   struct MqS * const context, 
   MQ_TOK const callback, 
   MQ_BUF buf, 
-  MQ_TRA *transId
+  MQ_TRA *transLId
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
@@ -195,7 +195,7 @@ pSqlInsertSendTrans (
     MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
   }
   check_NULL(hdl) {
-    const static char sql[] = "INSERT INTO sendTrans (transId, callback, numItems, type, data) VALUES (?, ?, ?, ?, ?);";
+    const static char sql[] = "INSERT INTO sendTrans (transLId, callback, numItems, type, data) VALUES (?, ?, ?, ?, ?);";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->sendInsert, NULL)) goto error;
     hdl = sql_sys->sendInsert;
   }
@@ -206,7 +206,7 @@ pSqlInsertSendTrans (
   check_sqlite (sqlite3_bind_int   (hdl,4,buf->type))				    goto error;
   check_sqlite (sqlite3_bind_blob  (hdl,5,buf->data,buf->cursize,SQLITE_TRANSIENT)) goto error;
   STEP_DONE(1);
-  *transId = -sqlite3_last_insert_rowid(sql_sys->db);
+  *transLId = -sqlite3_last_insert_rowid(sql_sys->db);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -217,7 +217,7 @@ error1:
 enum MqErrorE
 pSqlSelectSendTrans (
   struct MqS * const context, 
-  MQ_TRA transId,
+  MQ_TRA transLId,
   MQ_BUF buf 
 )
 {
@@ -228,12 +228,12 @@ pSqlSelectSendTrans (
     return MQ_OK;
   }
   check_NULL(hdl=sql_sys->sendSelect) {
-    const static char sql[] = "SELECT callback, numItems, type, data FROM sendTrans WHERE transId = ?;";
+    const static char sql[] = "SELECT callback, numItems, type, data FROM sendTrans WHERE transLId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->sendSelect, NULL)) goto error;
     hdl = sql_sys->sendSelect;
   }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,-transId)) goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,-transLId)) goto error;
   STEP_ROW_DONE_ERROR(1);
   pTokenSetCurrent(context->link.srvT, (MQ_CST const)sqlite3_column_text(hdl, 0));
   MqBufferSetB(buf, (const unsigned char*)sqlite3_column_blob(hdl, 3), sqlite3_column_bytes(hdl, 3));
@@ -247,7 +247,7 @@ error:
 enum MqErrorE
 pSqlDeleteSendTrans (
   struct MqS * const context, 
-  MQ_TRA transId,
+  MQ_TRA transLId,
   MQ_TRA *oldTransIdP
 )
 {
@@ -258,12 +258,12 @@ pSqlDeleteSendTrans (
     return MQ_OK;
   }
   check_NULL(hdl=sql_sys->sendDelete) {
-    const static char sql[] = "DELETE FROM sendTrans WHERE transId = ?;";
+    const static char sql[] = "DELETE FROM sendTrans WHERE transLId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->sendDelete, NULL)) goto error;
     hdl = sql_sys->sendDelete;
   }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,-transId)) goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,-transLId)) goto error;
   STEP_DONE(1)
   *oldTransIdP = 0LL;
   return MqErrorGetCodeI(context);
@@ -278,17 +278,17 @@ pSqlInsertReadTrans (
   MQ_TRA const oldRmtTransId, 
   MQ_BUF const hdr,
   MQ_BUF const bdy,
-  MQ_TRA *transIdP
+  MQ_TRA *transLIdP
 )
 {
-  MQ_TRA transId;
+  MQ_TRA transLId;
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl= sql_sys->readInsert;
   check_NULL(sql_sys->db) {
     MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
   }
   check_NULL(hdl) {
-    const static char sql[] = "INSERT INTO readTrans (transId,ident,ctxId,string,endian,oldTransId,oldRmtTransId,hdr,bdy) VALUES (?,?,?,?,?,?,?,?,?);";
+    const static char sql[] = "INSERT INTO readTrans (transLId,ident,ctxId,string,endian,oldTransId,oldRmtTransId,hdr,bdy) VALUES (?,?,?,?,?,?,?,?,?);";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->readInsert, NULL)) goto error;
     hdl = sql_sys->readInsert;
   }
@@ -303,9 +303,9 @@ pSqlInsertReadTrans (
   check_sqlite(sqlite3_bind_blob  (hdl,8,hdr->data, hdr->cursize, SQLITE_TRANSIENT))      goto error;
   check_sqlite(sqlite3_bind_blob  (hdl,9,bdy->data, bdy->cursize, SQLITE_TRANSIENT))      goto error;
   STEP_DONE(1);
-  transId = sqlite3_last_insert_rowid(sql_sys->db);
-  if (transIdP != NULL) *transIdP = transId;
-  MqLogV (context, __func__, 5, "create transaction <%lld>\n", transId);
+  transLId = sqlite3_last_insert_rowid(sql_sys->db);
+  if (transLIdP != NULL) *transLIdP = transLId;
+  MqDLogV (context, 5, "create transaction <%lld>\n", transLId);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -325,7 +325,7 @@ pSqlSelectReadTrans (
     return MQ_OK;
   }
   check_NULL(hdl=sql_sys->pSqlSelectReadTrans) {
-    const static char sql[] = "SELECT transId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? and ctxId = ?;";
+    const static char sql[] = "SELECT transLId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? and ctxId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->pSqlSelectReadTrans, NULL)) goto error;
     hdl = sql_sys->pSqlSelectReadTrans;
   }
@@ -344,7 +344,7 @@ error:
 enum MqErrorE
 pSqlDeleteReadTrans (
   struct MqS * const context, 
-  MQ_TRA transId,
+  MQ_TRA transLId,
   MQ_TRA *oldTransId,
   MQ_TRA *oldRmtTransId
 )
@@ -356,27 +356,28 @@ pSqlDeleteReadTrans (
     return MQ_OK;
   }
   check_NULL(hdl=sql_sys->readSelect2) {
-    const static char sql[] = "SELECT oldTransId, oldRmtTransId FROM readTrans WHERE transId = ?;";
+    const static char sql[] = "SELECT oldTransId, oldRmtTransId FROM readTrans WHERE transLId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->readSelect2, NULL)) goto error;
     hdl = sql_sys->readSelect2;
   }
   // get oldTransId
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,transLId))  goto error;
   STEP_ROW_DONE_ERROR(1);
+
   *oldTransId = sqlite3_column_int64 (hdl, 0);
   *oldRmtTransId = sqlite3_column_int64 (hdl, 1);
   // delete row
   hdl = sql_sys->readDelete;
   check_NULL(hdl) {
-    const static char sql[] = "DELETE FROM readTrans WHERE transId = ?;";
+    const static char sql[] = "DELETE FROM readTrans WHERE transLId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->readDelete, NULL)) goto error;
     hdl = sql_sys->readDelete;
   }
   check_sqlite (sqlite3_reset(hdl))		    goto error;
-  check_sqlite (sqlite3_bind_int64(hdl,1,transId))  goto error;
+  check_sqlite (sqlite3_bind_int64(hdl,1,transLId))  goto error;
   STEP_DONE(2);
-  MqLogV (context, __func__, 5, "delete transaction <%lld>\n", transId);
+  MqDLogV (context, 5, "delete transaction <%lld>\n", transLId);
   return MqErrorGetCodeI(context);
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -470,26 +471,26 @@ error:
 enum MqErrorE
 MqStorageSelect (
   struct MqS * const context,
-  MQ_TRA *transIdP
+  MQ_TRA *transLIdP
 )
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl;
-  MQ_TRA transId = *transIdP;
-  *transIdP = 0LL;
+  MQ_TRA transLId = *transLIdP;
+  *transLIdP = 0LL;
   check_NULL(sql_sys->db) {
     // without database available -> nothing to select
     return MQ_OK;
   }
-  if (transId == 0LL) {
+  if (transLId == 0LL) {
     check_NULL(hdl=sql_sys->MqStorageSelect1) {
-      const static char sql[] = "SELECT transId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ? ORDER BY transId ASC LIMIT 1;";
+      const static char sql[] = "SELECT transLId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ? ORDER BY transLId ASC LIMIT 1;";
       check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->MqStorageSelect1, NULL)) goto error;
       hdl = sql_sys->MqStorageSelect1;
     }
   } else {
     check_NULL(hdl=sql_sys->MqStorageSelect2) {
-      const static char sql[] = "SELECT transId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ? AND transId = ?;";
+      const static char sql[] = "SELECT transLId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ? AND transLId = ?;";
       check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->MqStorageSelect2, NULL)) goto error;
       hdl = sql_sys->MqStorageSelect2;
     }
@@ -497,14 +498,16 @@ MqStorageSelect (
   check_sqlite (sqlite3_reset(hdl))						      goto error;
   check_sqlite (sqlite3_bind_text(hdl,1,context->link.targetIdent,-1,SQLITE_STATIC))  goto error;
   check_sqlite (sqlite3_bind_int(hdl,2,context->link.ctxId))			      goto error;
-  if (transId != 0LL) {
-    check_sqlite (sqlite3_bind_int(hdl,3,transId))				      goto error;
+  if (transLId != 0LL) {
+    check_sqlite (sqlite3_bind_int(hdl,3,transLId))				      goto error;
   }
   STEP_ROW_DONE_OK(1)
+  transLId = sqlite3_column_int64(hdl,0);
+  MqDLogV (context, 5, "load transaction <%lld>\n", transLId);
   // setup the "read" package but do NOT execute the token
   MqErrorCheck1 (pReadTRA (hdl, (struct MqS**)&context));
-  // get transId to return
-  *transIdP = sqlite3_column_int64(hdl,0);
+  // get transLId to return
+  *transLIdP = transLId;
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -526,7 +529,7 @@ MqStorageCount (
     return MQ_OK;
   }
   check_NULL(hdl=sql_sys->MqStorageCount) {
-    const static char sql[] = "SELECT count(transId) FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ?;";
+    const static char sql[] = "SELECT count(transLId) FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ?;";
     check_sqlite (sqlite3_prepare_v2(sql_sys->db, sql, -1, &sql_sys->MqStorageCount, NULL)) goto error;
     hdl = sql_sys->MqStorageCount;
   }
