@@ -3723,7 +3723,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
 ///
 /// The object returned is owned by the \e read-data-package and is \b only valid
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
-/// use the C-API function: #MqBufferDup.
+/// use \RNS{BufferDup}
 /// \ctx
 /// \param[out] val the buffer
 /// \retException

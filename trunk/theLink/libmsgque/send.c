@@ -42,20 +42,16 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-#define MQ_CONTEXT_S context
-
-/** special data needed for list objects
- */
+/// special data needed for list objects
 struct SendSaveS {
   struct SendSaveS * save;      ///< this is needed for recursion
   MQ_INT numItems;		///< number of objects in the msgque body
   MQ_SIZE cursize;              ///< the current size of \e bdy->data
 };
 
-/** everything needed for sending msgque packages
- */
+/// everything needed for sending msgque packages
 struct MqSendS {
-  struct MqS * context;	///< ...
+  struct MqS * context;		///< ...
   struct MqBufferS * buf;       ///< buffer in duty, will be "sendBuf" or "tranBuf"
   struct MqBufferS * tranBuf;   ///< transaction buffer, will be mapped into database
   struct MqBufferS * sendBuf;   ///< send buffer, will be used for socket io
@@ -63,6 +59,8 @@ struct MqSendS {
   struct MqCacheS * cache;	///< ...
   MQ_BOL haveStart;		///< #MqSendEND checks if #MqSendSTART was used
 };
+
+#define MQ_CONTEXT_S context
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1178,7 +1176,7 @@ MqSendRETURN (
   if (send == NULL) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    switch (pReadGetHandShake (context)) {
+    switch (pReadGetHandShake(context)) {
       case MQ_HANDSHAKE_START: {
 	// without "shortterm-transaction" nothing to do
 	if (context->link.transSId == 0) 

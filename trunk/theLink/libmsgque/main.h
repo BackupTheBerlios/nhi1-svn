@@ -726,14 +726,37 @@ pIoLog (
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief special data needed to save the current-status for a LST object
+struct ReadSaveS {
+  struct ReadSaveS * save;	    ///< this is needed for recursion
+  struct MqBufferS bdy;		    ///< used for BDY data (dynamic)
+};
+
+struct MqReadS {
+  struct MqS * context;		    ///< link to the msgque object
+  struct MqBufferS * hdrorig;	    ///< in a context->switch, poit to the original header data, need in "MqReadDUMP"
+  struct MqBufferS * hdr;	    ///< used for HDR data (static)
+  struct MqBufferS * bdy;	    ///< buffer in duty, will be "readBuf" or "tranBuf"
+  struct MqBufferS * cur;	    ///< used as reference on \e bdy with the current data
+  struct MqBufferS * readBuf;	    ///< read socket buffer, will be used for socket io
+  struct MqBufferS * tranBuf;	    ///< transaction buffer, will be mapped into database
+  enum MqHandShakeE handShake;	    ///< what kind of call is it?
+  MQ_INT returnNum;		    ///< Return-Number
+  struct MqCacheS * saveCache;	    ///< cache of <TT>struct ReadSaveS</TT> data
+  struct ReadSaveS * save;	    ///< need for List objects
+  enum MqTypeE type;		    ///< type of the item stored into the data-segment (InitialSet)
+  MQ_BOL canUndo;		    ///< is an MqReadUndo allowed ?
+  MQ_TRA transLId;		    ///< transaction-id (rowid from readTrans table) used for persistent-transaction
+  MQ_TRA rmtTransId;		    ///< remote transaction-id (rowid from the remote readTrans table)
+				    ///< if ">0LL" -> the value to use or "OLL" -> get value from the database
+};
+
 struct MqReadS* pReadCreate ( struct MqS * const);
 void pReadDelete ( struct MqReadS **) __attribute__((nonnull));
 enum MqErrorE pReadHDR (MQ_PTR, struct MqS**);
 enum MqErrorE pReadTRA (MQ_PTR, struct MqS**);
 void pReadSetType( struct MqS * const, MQ_BOL const);
 void pReadL_CLEANUP (register struct MqS * const); 
-enum MqHandShakeE pReadGetHandShake ( struct MqS const * const);
-void pReadSetHandShake ( struct MqS const * const, enum MqHandShakeE);
 MQ_TRA pReadGetTransId ( struct MqS * const);
 enum MqErrorE pReadCreateTransId  ( struct MqS * const);
 enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
@@ -743,17 +766,36 @@ enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register
 void pReadBDY ( struct MqS * const, MQ_BIN* const, MQ_SIZE* const, enum MqHandShakeE* const, MQ_SIZE* const) __attribute__((nonnull(1)));
 enum MqErrorE pReadInsert ( register struct MqS*, MQ_WID*);
 enum MqErrorE pReadT ( struct MqS * const, MQ_TRA * const);
+void pReadLog ( register struct MqS const * const, MQ_CST const);
 
-/*****************************************************************************/
-/*                                                                           */
-/*                                 read.log                                  */
-/*                                                                           */
-/*****************************************************************************/
+static mq_inline enum MqHandShakeE
+pReadGetHandShake (
+  struct MqS const * const context
+)
+{
+  return context->link.read->handShake;
+}
 
-void pReadLog (
-  register struct MqS const * const context,
-  MQ_CST const prefix
-);
+static mq_inline void
+pReadSetHandShake (
+  struct MqS const * const context,
+  enum MqHandShakeE hs
+)
+{
+  context->link.read->handShake = hs;
+}
+
+static mq_inline enum MqHandShakeE
+pReadSwapHandShake (
+  struct MqS const * const context,
+  enum MqHandShakeE hs
+)
+{
+  struct MqReadS * const read = context->link.read;
+  enum MqHandShakeE const ret = read->handShake;
+  read->handShake = hs;
+  return ret;
+}
 
 /*****************************************************************************/
 /*                                                                           */

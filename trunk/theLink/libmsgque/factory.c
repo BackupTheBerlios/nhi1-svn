@@ -274,7 +274,7 @@ MqFactoryInvoke (
   struct MqS ** contextP
 )
 {
-  struct MqS * mqctx;
+  struct MqS * mqctx = NULL;
 
   if (item != NULL) {
     // check for 'fCall'

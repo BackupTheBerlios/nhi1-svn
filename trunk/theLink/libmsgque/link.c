@@ -875,7 +875,7 @@ MqLinkCreate (
     context->link.srvT = pTokenCreate(context);
     MqErrorCheck (pTransCreate (context, &context->link.trans));
 
-    // create the cache data
+    // create the read-cache data
     pCacheCreate ((CacheCF) pReadCreate, (CacheDF) pReadDelete, context, &context->link.readCache);
 
     // ready to create the SLAVE objects

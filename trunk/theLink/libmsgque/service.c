@@ -175,28 +175,34 @@ pServiceStart (
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
   switch (pTokenInvoke (a_context->link.srvT)) {
-    case MQ_OK:       
+    case MQ_OK:
+      // we need to close the longterm-transaction it still open
+      if (pReadGetHandShake (a_context) == MQ_HANDSHAKE_TRANSACTION) {
+	return MqSendRETURN(a_context);
+      }
       break;
     case MQ_ERROR:
       // on EXIT do return nothing and just report EXIT to the TOPLEVEL
-      if (MqErrorIsEXIT(a_context)) goto error;
-      // on a client the error will be reported to the toplevel
-      if (MQ_IS_CLIENT(a_context) && a_context->link.transSId == 0) {
+      if (MqErrorIsEXIT(a_context)) {
+	goto error;
+      // on a client (withaout shortterm-transaction) the error will be 
+      // reported to the toplevel
+      } else if (MQ_IS_CLIENT(a_context) && a_context->link.transSId == 0) {
 	goto error;
       } else {
-	// on a server the error will be reported to the client
-	// in a transaction, "MqSendRETURN" will convert the context error 
-	// into an "error" package and send this package back to the client
-	if (MqErrorCheckI (MqSendRETURN (a_context))) {
-	  if (pIoCheck (a_context->link.io)) {
-	    // outsite of a transaction we have to send a "real" error,
-	    // but "only" if the connection "pIoCheck" is still available
-	    MqErrorCheck (MqSendERROR (a_context));
-	  } else {
-	    // report the error to the top-level
-	    goto error;
-	  }
-	}
+        // on a server the error will be reported to the client
+        // in a transaction, "MqSendRETURN" will convert the context error 
+        // into an "error" package and send this package back to the client
+        if (MqErrorCheckI (MqSendRETURN (a_context))) {
+          if (pIoCheck (a_context->link.io)) {
+            // outsite of a transaction we have to send a "real" error,
+            // but "only" if the connection "pIoCheck" is still available
+            MqErrorCheck (MqSendERROR (a_context));
+          } else {
+            // report the error to the top-level
+            goto error;
+          }
+        }
       }
       break;
     case MQ_CONTINUE: 
@@ -278,7 +284,7 @@ MqProcessEvent (
     ret = pIoSelectStart(context, &tv);
     MqErrorCheck (ret);
 
-    // clean up delete objects
+    // clean up deleted objects
     if (forever) GcRun (context);
   }
   while (forever);
@@ -291,7 +297,9 @@ end:
   context->refCount--;
   if (context->config.master != NULL) context->config.master->link.transSId = mastertransSId;
   context->link.transSId = trans;
-  pReadSetHandShake (context, hs);
+  if (context->link.read != NULL) {
+    pReadSetHandShake (context, hs);
+  }
   return ret;
 
 error:
@@ -301,6 +309,4 @@ error:
 }
 
 END_C_DECLS
-
-
 

@@ -308,12 +308,12 @@ pTokenInvoke (
     }
 
     // search "+ALL" items
-    if (space->all.fCall != NULL) {
+    if (likely(space->all.fCall != NULL)) {
       return (space->all.fCall (context, space->all.data));
+    } else {
+      // nothing found -> break
+      return MqErrorV (context, __func__, -1, "token <%s> not found", token->current);
     }
-
-    // nothing found -> break
-    return MqErrorV (context, __func__, -1, "token <%s> not found", token->current);
   };
 
   space->lastItem = item;
@@ -323,7 +323,7 @@ pTokenInvoke (
 	token->current, currentPtr->callback.fCall, currentPtr->callback.data);
 */
   
-  if (item->callback.fCall != NULL) {
+  if (likely(item->callback.fCall != NULL)) {
     return MqCallbackCall (context, item->callback);
   } else {
     return MqSendRETURN(context);

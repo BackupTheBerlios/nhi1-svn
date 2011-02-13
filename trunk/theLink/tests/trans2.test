@@ -267,7 +267,150 @@ $J - T1
 $J - T2
 $J - T3"
 
-  test trans2-T1-($I|$B|$S) {send error + valid data + transaction} \
+  test trans2-T1a-($I|$B|$S) {send valid data + transaction} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC T1
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      Echo0 $CTX PRNT SendC T2
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP T2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - T1
+T=local-1
+R=789
+T=local-2
+R=889
+$J - T2"
+
+  test trans2-T1b-($I|$B|$S) {send valid data + transaction} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC T2
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP T2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+T=local-1
+R=789
+T=local-2
+R=889
+$J - T1
+$J - T2"
+
+  test trans2-T1c-($I|$B|$S) {send valid data + transaction + SETU} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      EchoT $CTX OTTO SETU {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO GETU {SendC local-2} {}
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP 789
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+T=local-1
+R=
+T=local-2
+R=789"
+
+  test trans2-T2-($I|$B|$S) {send + transaction server error} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
       set CON1	[FindFreeConnection $S]

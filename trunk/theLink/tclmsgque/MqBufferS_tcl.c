@@ -108,6 +108,12 @@ static HDB(GetC)
   RETURN_TCL
 }
 
+static HDB(Dup)
+{
+  NS(MqBufferS_Pointer) (interp, MqBufferDup(buf));
+  return TCL_OK;
+}
+
 /** \brief create the \b $buffer tcl command
  *
  *  \tclmsgque
@@ -139,6 +145,7 @@ static int NS(MqBufferS_Cmd) (
     { "GetD",	    NS(GetD)	  },
     { "GetB",	    NS(GetB)	  },
     { "GetC",	    NS(GetC)	  },
+    { "Dup",	    NS(Dup)	  },
     { NULL,	    NULL	  }
   };
 

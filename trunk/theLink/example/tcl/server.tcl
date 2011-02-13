@@ -206,7 +206,7 @@ proc Ot_EVAL {ctx} {
 }
 
 proc Ot_SETU {ctx} {
-  $ctx dict set buf [$ctx ReadU]
+  $ctx dict set buf [[$ctx ReadU] Dup]
 }
 
 proc Ot_GETU {ctx} {

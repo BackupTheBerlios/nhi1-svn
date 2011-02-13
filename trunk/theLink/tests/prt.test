@@ -54,7 +54,30 @@ Setup $I $B $C $S --bgerror RET_BG --setup-parent {
 
 # tests ----------------------------
 
-test prt-1-($I|$B|$C|$S) {SEND + WAIT with error} \
+test prt-1a1-($I|$B|$C|$S) {SEND + WAIT with error} \
+    -constraints    binary \
+    -body           {
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND_AND_WAIT ECOI SendD 1.1
+      RET_add 222 Echo1 $FH_LAST ECOI ReadI SendF 2.2
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:1
+111-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+111-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>
+[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+222-CATCH:1
+222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
+222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
+END}
+
+test prt-1a2-($I|$B|$C|$S) {SEND + WAIT with error} \
     -constraints    binary \
     -body           {
       RET_start

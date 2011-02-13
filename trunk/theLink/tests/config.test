@@ -122,14 +122,14 @@ test config-11-($I|$B|$C|$S) {StartAs} \
     -result         {3}
 
 test config-12-($I|$B|$C|$S) {Ident} \
-    -constraints    {filter} \
+    -constraints    {filter bug} \
     -body           {
       EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto
     } \
     -result         {myident 0}
 
 test config-12-($I|$B|$C|$S) {Ident} \
-    -constraints    {!filter} \
+    -constraints    {!filter && bug} \
     -body           {
       EchoL $FH_LAST CFG1 SendC Ident SendC myident SendC otto
     } \
