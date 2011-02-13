@@ -329,6 +329,7 @@ static mq_inline MQ_ATO iBufU2ATO (
 }
 
 struct MqBufferS * pBufferCreateRef ( struct MqBufferS const * const);
+void pBufferDeleteRef ( struct MqBufferS ** const);
 void _pBufferNewSize ( register struct MqBufferS * const, MQ_CST const, MQ_SIZE const);
 typedef enum MqErrorE ( *pBufferGetAF) ( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);
 enum MqErrorE pBufferGetA1 ( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);

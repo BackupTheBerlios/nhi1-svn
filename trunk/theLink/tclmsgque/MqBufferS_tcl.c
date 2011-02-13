@@ -114,6 +114,15 @@ static HDB(Dup)
   return TCL_OK;
 }
 
+static HDB(Delete)
+{
+  char buffer[30];
+  sprintf(buffer, "<MqBufferS-%p>", buf);
+  MqBufferDelete((MQ_BUF*)&buf);
+  Tcl_DeleteCommand (interp, buffer);
+  return TCL_OK;
+}
+
 /** \brief create the \b $buffer tcl command
  *
  *  \tclmsgque
@@ -146,6 +155,7 @@ static int NS(MqBufferS_Cmd) (
     { "GetB",	    NS(GetB)	  },
     { "GetC",	    NS(GetC)	  },
     { "Dup",	    NS(Dup)	  },
+    { "Delete",	    NS(Delete)	  },
     { NULL,	    NULL	  }
   };
 
@@ -177,7 +187,7 @@ int NS(MqBufferS_Pointer) (
   struct MqBufferS * buf
 )
 {
-  char buffer[100];
+  char buffer[30];
   sprintf(buffer, "<MqBufferS-%p>", buf);
   Tcl_CreateObjCommand (interp, buffer, NS(MqBufferS_Cmd), buf, NS(MqBufferS_Free));
 

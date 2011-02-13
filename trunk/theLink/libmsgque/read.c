@@ -104,7 +104,7 @@ pReadDelete (
   MqBufferDelete (&read->tranBuf);
 
   // references
-  MqBufferDelete (&read->cur);
+  pBufferDeleteRef (&read->cur);
 
   MqSysFree (*readP);
 }

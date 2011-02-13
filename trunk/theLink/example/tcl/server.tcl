@@ -210,8 +210,10 @@ proc Ot_SETU {ctx} {
 }
 
 proc Ot_GETU {ctx} {
+  set buf [$ctx dict get buf]
   $ctx SendSTART
-  $ctx SendU [$ctx dict get buf]
+  $ctx SendU $buf
+  $buf Delete
   $ctx SendRETURN
 }
 

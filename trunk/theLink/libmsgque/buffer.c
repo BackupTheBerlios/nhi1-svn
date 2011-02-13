@@ -243,15 +243,24 @@ pBufferCreateRef (
 }
 
 void
+pBufferDeleteRef (
+  struct MqBufferS ** const bufP
+)
+{
+  if (unlikely (bufP == NULL || *bufP == NULL)) return;
+  (*bufP)->signature = 0;
+  MqSysFree (*bufP);
+}
+
+void
 MqBufferDelete (
   struct MqBufferS ** const bufP
 )
 {
   struct MqBufferS *buf;
-  if (unlikely (bufP == NULL || *bufP == NULL)) return;
-  buf = *bufP;
+  if (unlikely (bufP == NULL || (buf=*bufP) == NULL || buf->alloc == MQ_ALLOC_STATIC)) return;
 
-  if (buf->data && buf->alloc == MQ_ALLOC_DYNAMIC && buf->data != buf->bls) {
+  if (buf->data && buf->data != buf->bls) {
     MqSysFree (buf->data);
   }
   buf->signature = 0;

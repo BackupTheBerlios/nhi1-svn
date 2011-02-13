@@ -58,10 +58,9 @@ proc FilterSetup {ctx} {
 }
 
 proc FilterCleanup {ctx} {
-  set ftr [$ctx ServiceGetFilter]
-  set FH  [$ftr dict get FH]
-  $ctx dict unset FH
+  set FH  [$ctx dict get FH]
   if {$FH ne ""} {close $FH}
+  $ctx dict unset FH
 }
 
 proc FilterEvent {ctx} {

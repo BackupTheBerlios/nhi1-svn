@@ -282,7 +282,7 @@ sLogDynItem (
       }
     }
 
-    MqBufferDelete (&hd);
+    pBufferDeleteRef (&hd);
 
     return;
 

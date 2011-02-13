@@ -29,6 +29,7 @@
 #define MQCTX(ctx) ((struct MqS*const)ctx)
 #define CLIENTCTX(ctx) ((struct ClientCtxS*const)ctx)
 #define MQ_CONTEXT_S mqctx
+#define SETUP_srvctx struct ServerCtxS * const srvctx = SRVCTX;
 
 /// \brief the local \b context of the \ref server tool
 /// \mqctx
@@ -629,7 +630,11 @@ Ot_SETU (
   MQ_PTR data
 )
 {
-  return MqReadU(mqctx, &SRVCTX->val);
+  SETUP_srvctx;
+  MqErrorCheck (MqReadU (mqctx, &srvctx->val));
+  srvctx->val = MqBufferDup (srvctx->val);
+error:
+  return MqErrorStack(mqctx);
 }
 
 /// \brief get context specific data
@@ -640,8 +645,11 @@ Ot_GETU (
   MQ_PTR data
 )
 {
-  MqSendSTART (mqctx);
-  MqSendU (mqctx, SRVCTX->val);
+  SETUP_srvctx;
+  MqErrorCheck (MqSendSTART (mqctx));
+  MqErrorCheck (MqSendU (mqctx, srvctx->val));
+  MqBufferDelete (&srvctx->val);
+error:
   return MqSendRETURN (mqctx);
 }
 

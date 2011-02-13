@@ -29,11 +29,11 @@ if ($env(USE_REMOTE)) {
   set BLOCK_3 false
 } else {
   set BLOCK_1 true
-  set BLOCK_1 false
+  #set BLOCK_1 false
   set BLOCK_2 true
   #set BLOCK_2 false
   set BLOCK_3 true
-  set BLOCK_3 false
+  #set BLOCK_3 false
 }
 
 ##
@@ -62,7 +62,7 @@ if $BLOCK_1 {
    foreach C [filter -or COM_LST tcp uds] {
 
     # server-type: server server.tcl
-    foreach S [filter SRV_LST {tcl[.].*[.](spawn|fork)}] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
 # tests ----------------------------
 
@@ -85,7 +85,7 @@ test trans2-1-($I|$B|$C|$S) {send data with error} \
     -result         {START
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
-[Ss]> (fs) found in function "MqReadBdyProxy" at file "read.c*"
+[Ss]> (fs) found in function "MqReadForward" at file "read.c*"
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
@@ -125,7 +125,7 @@ test trans2-3-($I|$B|$C|$S) {send error + valid data} \
     -result         "START
 ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
 \[sS]> (server-0) \\\[*pTokenInvoke] token <DUM1> not found
-\[sS]> (fs) found in function \"MqReadBdyProxy\" at file \"read.c*\"
+\[sS]> (fs) found in function \"MqReadForward\" at file \"read.c*\"
 $J - HALLO"
 
 # cleanup ---------------------------
@@ -159,7 +159,7 @@ foreach I [getNum 3] {
   foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filter SRV_LST {tcl[.].*[.](spawn|fork)}] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
   test trans2-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
@@ -267,6 +267,39 @@ $J - T1
 $J - T2
 $J - T3"
 
+  test trans2-T0-($I|$B|$S) {send nothing} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         ""
+
   test trans2-T1a-($I|$B|$S) {send valid data + transaction} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
@@ -304,7 +337,7 @@ $J - T3"
     } \
     -cleanup	    {
       Cleanup -force yes
-      if {$I > 1} {$FIRST Delete}
+      $FIRST Delete
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -353,7 +386,7 @@ $J - T2"
     } \
     -cleanup	    {
       Cleanup -force yes
-      if {$I > 1} {$FIRST Delete}
+      $FIRST Delete
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -400,7 +433,7 @@ $J - T2"
     } \
     -cleanup	    {
       Cleanup -force yes
-      if {$I > 1} {$FIRST Delete}
+      $FIRST Delete
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -447,7 +480,7 @@ R=789"
     } \
     -cleanup	    {
       Cleanup -force yes
-      if {$I > 1} {$FIRST Delete}
+      $FIRST Delete
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -472,7 +505,7 @@ foreach I [getNum 3] {
   foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filter SRV_LST {tcl[.].*[.](spawn|fork)}] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
 test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {

@@ -1737,22 +1737,22 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageClose (
 /// transLIdP=NULL allowed -> no return
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
   struct MqS * const context,
-  MQ_WID *transLIdP
+  MQ_TRA *transLIdP
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageSelect (
   struct MqS * const context,
-  MQ_WID *transLIdP
+  MQ_TRA *transLIdP
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageDelete (
   struct MqS * const context,
-  MQ_WID transLId
+  MQ_TRA transLId
 );
 
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
   struct MqS * const context,
-  MQ_WID *countP
+  MQ_TRA *countP
 );
 
 /** \} Mq_Store_C_API */
@@ -2427,6 +2427,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCopy (
 /// \brief create an new object as duplication of an existing object
 /// \param srce source of the duplication
 /// \retval the new object
+/// \attention the new object have to be deleted with \RNS{BufferDelete}
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferDup (
   struct MqBufferS const * const srce
 );
