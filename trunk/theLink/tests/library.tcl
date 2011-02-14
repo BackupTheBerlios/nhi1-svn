@@ -1059,6 +1059,13 @@ proc SendL { ctx list } {
     }
 }
   
+proc CallWithCatch { ctx send token args } {
+    $ctx SendSTART
+    SendL $ctx $args
+    catch {$ctx $send $token} RET
+    return $RET
+}
+  
 proc Call { ctx send token args } {
     $ctx SendSTART
     SendL $ctx $args
@@ -1158,9 +1165,11 @@ proc Setup {num mode com server args} {
   if {$filter ne "NO"} {
     set filter_server $filter
     set filter_client $filter
+    set filter_args   [list]
   } else {
     set filter_server [optV args --filter-server $env(TS_FILTER_SERVER)]
     set filter_client [optV args --filter-client $env(TS_FILTER_CLIENT)]
+    set filter_args   [optV args --filter-args	 [list]]
   }
   unset -nocomplain SERVER_OUTPUT
 
@@ -1210,7 +1219,7 @@ proc Setup {num mode com server args} {
     if {$serverSilent} { lappend sargs --silent }
     if {!$env(USE_REMOTE)} {
       if {$filter_server ne "NO"} {
-	set sl [list {*}[getFilter $filter_server.$server] {*}$DAEMON]
+	set sl [list {*}[getFilter $filter_server.$server] {*}$filter_args {*}$DAEMON]
 	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
 	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
@@ -1232,13 +1241,13 @@ proc Setup {num mode com server args} {
 
     ## prepare parent arguments
     if {$filter_client ne "NO"} {
-      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client.$server] --name fc @ {*}$comargs]
+      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client.$server] {*}$filter_args --name fc @ {*}$comargs]
     } else {
       set cl [list LinkCreate {*}$cargs {*}$comargs]
     }
     if {$com eq "pipe"} { 
       if {$filter_server ne "NO"} {
-	lappend cl @ {*}[getFilter $filter_server.$server] --name fs {*}$comargs
+	lappend cl @ {*}[getFilter $filter_server.$server] {*}$filter_args --name fs {*}$comargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {

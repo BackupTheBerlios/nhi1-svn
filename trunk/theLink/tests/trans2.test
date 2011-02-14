@@ -554,7 +554,7 @@ foreach I [getNum 3] {
   foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filter SRV_LST {tcl[.].*[.](pipe)}] {
+    foreach S [filter SRV_LST pipe] {
 
   test trans2-X5-($I|$B|$S) {send error + valid data} \
     -setup	    {
@@ -631,11 +631,11 @@ foreach I [getNum 3] {
      foreach C [filter COM_LST] {
 
       # server-type: server server.tcl
-      foreach S [filter SRV_LST] {
+      foreach S [filter SRV_LST $C] {
 
 # startup binary --------------------------
 
-  test trans2-TE1-($I|$B|$S) {transaction database error} \
+  test trans2-TE1-($I|$B|$C|$S) {transaction database error} \
     -setup	    {
       Setup $I $B $C $S --server-arg {--storage ""}
       set TMP	[MakeFile "START" tmpTE1.txt]
@@ -668,6 +668,71 @@ foreach I [getNum 3] {
 [cC]> (client-0) found in function "pEventStart" at file "event.c"
 [cC]> (client-0) found in function "MqProcessEvent" at file "service.c"
 [cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"}
+
+  test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
+    -setup	    {
+      Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOI {SendC local-1} {SendI TT1}
+      Call  $FH_LAST SendEND EXIT
+      EchoT $FH_LAST OTTO ECOI {SendC local-2} {SendI TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[SysRecv] application EXIT request*}
+
+  test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
+    -setup	    {
+      Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
+      CallWithCatch $FH_LAST SendEND_AND_WAIT EXIT
+      $FH_LAST LinkConnect
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP TT2
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -result         {START
+T=local-1
+R=TT1
+T=local-2
+R=TT2}
 
     }; # SRV_LST
    }; # COM_LST

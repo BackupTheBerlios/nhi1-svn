@@ -285,7 +285,8 @@ sIoFillArgvC (
   struct MqBufferLS * alfa2,	    ///< [in] after first #MQ_ALFA
   const MQ_SOCK sock,		    ///< [in] socket for the \e new parent
   char ** arg,			    ///< [out] the new argv array to fill
-  MQ_CST startAs		    ///< [in] start as specifier
+  MQ_CST startAs,		    ///< [in] start as specifier
+  MQ_CST storage		    ///< [in] storage file-name
 ) {
   struct MqS const * const context = MQ_CONTEXT_S;
   struct MqBufferS **start, **end;
@@ -308,9 +309,9 @@ sIoFillArgvC (
     *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
     mq_snprintf((char*)*arg++,20,"%lli",io->config->timeout);
   }
-  if (strcmp(context->config.storage,storage_DEFAULT)) {
+  if (storage != NULL && strcmp(storage,storage_DEFAULT)) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--storage");
-    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.storage);
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, storage);
   }
   if (context->config.isSilent) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--silent");
@@ -347,7 +348,8 @@ sIoFillArgvU (
   struct MqIoS * const io,	    ///< [in] the current io object
   const MQ_SOCK sock,		    ///< [in] socket for the \e new parent
   struct MqBufferLS * argv,	    ///< [out] the new argv array to fill
-  MQ_CST startAs		    ///< [in] start as specifier
+  MQ_CST startAs,		    ///< [in] start as specifier
+  MQ_CST storage		    ///< [in] storage file-name
 ) {
   struct MqS const * const context = io->context;
   MqBufferLAppendC(argv, "---duplicate");
@@ -361,9 +363,9 @@ sIoFillArgvU (
     MqBufferLAppendC(argv, "--timeout");
     MqBufferLAppendW(argv, io->config->timeout);
   }
-  if (strcmp(context->config.storage,storage_DEFAULT)) {
+  if (storage != NULL && strcmp(storage,storage_DEFAULT)) {
     MqBufferLAppendC(argv, "--storage");
-    MqBufferLAppendC(argv, context->config.storage);
+    MqBufferLAppendC(argv, storage);
   }
   if (context->config.isSilent) {
     MqBufferLAppendC(argv, "--silent");
@@ -401,6 +403,7 @@ pIoStartServer (
   struct MqIdS * idP
 ) {
   struct MqS * const context = io->context;
+  MQ_CST storage = context->config.storage;
 #if defined(MQ_HAS_THREAD) || defined(HAVE_FORK)
   struct MqFactoryS * factory = NULL;
   struct MqBufferLS * alfa1 = NULL;
@@ -425,6 +428,9 @@ rescan:
     case MQ_START_SERVER_AS_PIPE: {
 	MQ_BOL del_first_on_spawn = MQ_NO;
 	start_as_pipe = 1;
+	// storage is local only generic server startup apps should get storage localtion
+	// from starting-app
+	storage = NULL;
 	// alfa is owned by this proc
 	alfa1 = MqBufferLDup(context->link.alfa);
 //printLC("MQ_START_SERVER_AS_PIPE:")
@@ -572,7 +578,7 @@ rescan:
 	}
 
 	// fill arg with system-arguments
-	sIoFillArgvU(io,*sockP,alfa1,"--thread");
+	sIoFillArgvU(io,*sockP,alfa1,"--thread",storage);
 
 	// move the options to the end of alfa1, delete options
 	MqBufferLMove(alfa1, &options);
@@ -629,7 +635,7 @@ rescan:
 	}
 
 	// fill arg with system-arguments
-	sIoFillArgvU(io,*sockP,alfa1,"--fork");
+	sIoFillArgvU(io,*sockP,alfa1,"--fork",storage);
 
 	// move the options to the end of alfa1, delete options
 	MqBufferLMove(alfa1, &options);
@@ -690,7 +696,7 @@ rescan:
 	}
 
 	// fill arg with system-arguments
-	sIoFillArgvC(io, start, end, alfa2, *sockP, arg, "--spawn");
+	sIoFillArgvC(io,start,end,alfa2,*sockP,arg,"--spawn",storage);
 
 	// start the server
 
@@ -698,7 +704,7 @@ rescan:
 {
   int i;
   char ** xarg = argV;
-  //printLC(name)
+  printLC(name)
   for (i=0; *xarg != NULL; xarg++, i++) {
     MqDLogV (context, 0, "alfa1[%2i]=%s\n",i, *xarg);
   }
