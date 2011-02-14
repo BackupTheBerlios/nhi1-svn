@@ -480,7 +480,9 @@ MqConfigSetName (
     context->config.name = MqSysStrDup(MQ_ERROR_PANIC, data);
 //printLV("config.name<%p>, data<%p>\n", context->config.name, data);
   }
+
   if (MQ_IS_SERVER(context)) { 
+    //MqDLogC(context,9,"set LOCK\n");
     MqConfigSetSrvName (context, "LOCK");
   }
 }

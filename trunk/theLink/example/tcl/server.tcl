@@ -535,6 +535,12 @@ proc Ot_CFG1 {ctx} {
       $ctx SendC [$ctx ConfigGetSrvName]
       $ctx ConfigSetSrvName $old
     }
+    "Storage" {
+      set old [$ctx ConfigGetStorage] 
+      $ctx ConfigSetStorage [$ctx ReadC]
+      $ctx SendC [$ctx ConfigGetStorage]
+      $ctx ConfigSetStorage $old
+    }
     "Ident" {
       set old [$ctx FactoryCtxIdentGet] 
       set ident [$ctx ReadC]
@@ -721,7 +727,6 @@ proc ServerFactory {tmpl} {
 # only used to start the initial process
 tclmsgque Main {
   set srv [[tclmsgque FactoryAdd "server" ServerFactory] New]
-
   if {[catch {
     # create the initial parent-context and wait forever for events
     $srv LinkCreate {*}$argv

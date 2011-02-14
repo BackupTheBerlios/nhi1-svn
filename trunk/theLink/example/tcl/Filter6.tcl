@@ -94,14 +94,17 @@ proc FilterEvent {ctx} {
   $ctx StorageDelete $Id
 }
 
-tclmsgque FactoryDefault "transFilter"
-
-tclmsgque Main {
-  set srv [tclmsgque MqS]
+proc Filter6Factory {tmpl} {
+  set srv [tclmsgque MqS $tmpl]
   $srv ConfigSetServerSetup FilterSetup
   $srv ConfigSetServerCleanup FilterCleanup
   $srv ConfigSetEvent FilterEvent
   $srv ConfigSetIgnoreExit yes
+  return $srv
+}
+
+tclmsgque Main {
+  set srv [[tclmsgque FactoryAdd "transFilter" Filter6Factory] New]
   if {[catch {
     $srv LinkCreate {*}$argv
     $srv ProcessEvent -wait FOREVER

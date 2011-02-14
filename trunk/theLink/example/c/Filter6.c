@@ -164,6 +164,27 @@ error:
   return MqErrorStack(mqctx);
 }
 
+enum MqErrorE
+Filter6Factory (
+  struct MqS * const tmpl,
+  enum MqFactoryE create,
+  struct MqFactoryS * const item,
+  struct MqS **contextP
+)
+{ 
+  struct MqS * const mqctx = *contextP = MqContextCreate(sizeof(struct FilterCtxS),tmpl);
+  
+  mqctx->setup.Child.fCreate	    = MqLinkDefault;
+  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
+  mqctx->setup.isServer		    = MQ_YES;
+  mqctx->setup.ServerSetup.fCall    = FilterSetup;
+  mqctx->setup.ServerCleanup.fCall  = FilterCleanup;
+  mqctx->setup.ignoreExit	    = MQ_YES;
+
+  MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
+  return MQ_OK;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                  main                                     */
@@ -176,24 +197,13 @@ main (
   MQ_CST argv[]
 )
 {
-  // setup default Factory
-  MqFactoryDefault (MQ_ERROR_PANIC, "transFilter", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
-  // the parent-context
-  struct MqS * const mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);
-
   // parse the command-line
   MQ_BFL args = MqBufferLCreateArgs (argc, argv);
 
-  // add config data
-  mqctx->setup.Child.fCreate	    = MqLinkDefault;
-  mqctx->setup.Parent.fCreate	    = MqLinkDefault;
-  mqctx->setup.isServer		    = MQ_YES;
-  mqctx->setup.ServerSetup.fCall    = FilterSetup;
-  mqctx->setup.ServerCleanup.fCall  = FilterCleanup;
-  mqctx->setup.ignoreExit	    = MQ_YES;
-
-  MqConfigSetEvent (mqctx, FilterEvent, NULL, NULL, NULL);
+  // call Factory 
+  struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
+    MqFactoryAdd(MQ_ERROR_PANIC, "transFilter", Filter6Factory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+  );
 
   // create the link
   MqErrorCheck(MqLinkCreate (mqctx, &args));

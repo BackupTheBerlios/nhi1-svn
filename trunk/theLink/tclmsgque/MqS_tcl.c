@@ -348,6 +348,7 @@ int NS(ConfigGetDebug) (NS_ARGS);
 int NS(ConfigGetBuffersize) (NS_ARGS);
 int NS(ConfigGetTimeout) (NS_ARGS);
 int NS(ConfigGetName) (NS_ARGS);
+int NS(ConfigGetSrvName) (NS_ARGS);
 int NS(ConfigGetStorage) (NS_ARGS);
 int NS(ConfigGetIoUdsFile) (NS_ARGS);
 int NS(ConfigGetIoTcpHost) (NS_ARGS);
@@ -492,6 +493,7 @@ int NS(MqS_Cmd) (
     { "ConfigGetTimeout",	  NS(ConfigGetTimeout)	      },
     { "ConfigGetDebug",		  NS(ConfigGetDebug)	      },
     { "ConfigGetName",		  NS(ConfigGetName)	      },
+    { "ConfigGetSrvName",	  NS(ConfigGetSrvName)	      },
     { "ConfigGetStorage",	  NS(ConfigGetStorage)	      },
     { "ConfigGetIoUdsFile",	  NS(ConfigGetIoUdsFile)      },
     { "ConfigGetIoTcpHost",	  NS(ConfigGetIoTcpHost)      },
