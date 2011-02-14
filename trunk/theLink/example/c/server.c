@@ -1159,6 +1159,8 @@ Ot_CFG1 (
     CFGTestC(Name)
   } else if (!strncmp (cmd, "SrvName", 7)) {
     CFGTestC(SrvName)
+  } else if (!strncmp (cmd, "Storage", 7)) {
+    CFGTestC(Storage)
   } else if (!strncmp (cmd, "Ident", 5)) {
     MQ_BOL check;
     CO = MqSysStrDup(mqctx, MqFactoryCtxIdentGet (mqctx));

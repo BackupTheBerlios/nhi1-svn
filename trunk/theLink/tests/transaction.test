@@ -31,8 +31,6 @@ set BLOCK_2 true
 set t [makeFile {} storageFile]
 file delete -force $t
 set storageFiles [list ":memory:" ":tmpdb:" $t]
-set storageFiles [list ":memory:" ]
-unset t
 
 
 proc CB_I {ctx} {
@@ -354,5 +352,6 @@ unset -nocomplain I B C S
 ## -----------------------------------------------------------------------
 ## finish
 ##
+file delete -force $t
 freeTests
 

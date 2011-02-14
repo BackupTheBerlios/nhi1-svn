@@ -83,6 +83,8 @@ sSqlAddDb (
   const static char SQL_RCT[] = "CREATE TABLE IF NOT EXISTS readTrans (transLId INTEGER PRIMARY KEY AUTOINCREMENT, ident TEXT,ctxId INTEGER,string INTEGER,endian INTEGER,oldTransId INTEGER,oldRmtTransId INTEGER,hdr BLOB,bdy BLOB);";
   const static char SQL_RIX[] = "CREATE INDEX IF NOT EXISTS readTransI ON readTrans (ident,ctxId);";
 
+  MqDLogV(context,5,"try to open database '%s'\n", storageFile);
+
   if (storageFile == NULL || *storageFile == '\0') {
     return MqErrorDbV(MQ_ERROR_NULL_NOT_ALLOWED, "storageFile");
   }
@@ -192,7 +194,7 @@ pSqlInsertSendTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl= sql_sys->sendInsert;
   check_NULL(sql_sys->db) {
-    MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl) {
     const static char sql[] = "INSERT INTO sendTrans (transLId, callback, numItems, type, data) VALUES (?, ?, ?, ?, ?);";
@@ -285,7 +287,7 @@ pSqlInsertReadTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl= sql_sys->readInsert;
   check_NULL(sql_sys->db) {
-    MqErrorCheck1 (sSqlAddDb (context, ":memory:"));
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl) {
     const static char sql[] = "INSERT INTO readTrans (transLId,ident,ctxId,string,endian,oldTransId,oldRmtTransId,hdr,bdy) VALUES (?,?,?,?,?,?,?,?,?);";

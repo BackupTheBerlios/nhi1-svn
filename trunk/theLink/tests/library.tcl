@@ -1183,7 +1183,7 @@ proc Setup {num mode com server args} {
   set sargs	[list]
 
   if {$serverArg ne ""} {
-    lappend sargs $serverArg
+    lappend sargs {*}$serverArg
   }
 
   ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once

@@ -141,6 +141,10 @@ test config-13-($I|$B|$C|$S) {Ident} \
       EchoL $FH_LAST CFG1 SendC DefaultIdent
     } \
     -result         $factory([getLng $S])
+
+test config-14-($I|$B|$C|$S) {Storage} \
+    -body           {Echo1 $FH_LAST CFG1 ReadC SendC Storage SendC ottoS} \
+    -result         ottoS
  
 # cleanup ---------------------------
 

@@ -306,7 +306,7 @@ XI0(pMqGetFirstParent(eventctx->error.errctx))
 	  // case 3. -> a server error have to be reported
 	  // we have an MQ error
 	  // check to be in a transaction or not
-	  if (MqServiceIsTransaction(eventctx)) {
+	  if (eventctx->link.transSId != 0) {
 	    // in a transaction
 	    // return a "server" error using a "_RET" package -> reset the error
 	    MqSendSTART(eventctx);

@@ -27,6 +27,7 @@ if ($env(USE_REMOTE)) {
   set BLOCK_1 false
   set BLOCK_2 false
   set BLOCK_3 false
+  set BLOCK_4 false
 } else {
   set BLOCK_1 true
   #set BLOCK_1 false
@@ -34,6 +35,8 @@ if ($env(USE_REMOTE)) {
   #set BLOCK_2 false
   set BLOCK_3 true
   #set BLOCK_3 false
+  set BLOCK_4 true
+  #set BLOCK_4 false
 }
 
 ##
@@ -41,8 +44,7 @@ if ($env(USE_REMOTE)) {
 ## define filter
 ##
 
-set env(TS_FILTER_SERVER)  Filter6
-set env(TS_FILTER_CLIENT)  NO
+set testdb [makeFile {} testdb.[pid]]
 
 ##
 ## -----------------------------------------------------------------------
@@ -68,8 +70,8 @@ if $BLOCK_1 {
 
 test trans2-1-($I|$B|$C|$S) {send data with error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      set TMP	[MakeFile "START" tmp1.txt]
+      Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -91,8 +93,8 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 
 test trans2-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      set TMP	[MakeFile "START" tmp2.txt]
+      Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -108,8 +110,8 @@ $J - HALLO"
 
 test trans2-3-($I|$B|$C|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      set TMP	[MakeFile "START" tmp3.txt]
+      Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -163,7 +165,7 @@ foreach I [getNum 3] {
 
   test trans2-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX1.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -176,13 +178,13 @@ foreach I [getNum 3] {
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TTT1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T2
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TTT2
+      Echo0 $CTX PRNT SendC TTT3
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TTT3
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -191,13 +193,13 @@ foreach I [getNum 3] {
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TTT1
+$J - TTT2
+$J - TTT3"
 
 test trans2-X2-($I|$B|$S) {send multiple error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX2.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
@@ -209,15 +211,15 @@ test trans2-X2-($I|$B|$S) {send multiple error + valid data} \
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TTT1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TTT3
       Call  $CTX SendEND ERR4
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TTT3
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -226,13 +228,13 @@ test trans2-X2-($I|$B|$S) {send multiple error + valid data} \
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TTT1
+$J - TTT2
+$J - TTT3"
 
 test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX3.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -247,14 +249,14 @@ test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TTT1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TTT3
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TTT3
     } \
     -cleanup	    {
       if {$I > 1} {$FIRST Delete}
@@ -263,13 +265,13 @@ test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TTT1
+$J - TTT2
+$J - TTT3"
 
   test trans2-T0-($I|$B|$S) {send nothing} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpT0.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -302,7 +304,7 @@ $J - T3"
 
   test trans2-T1a-($I|$B|$S) {send valid data + transaction} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpT1a.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -325,15 +327,15 @@ $J - T3"
       $CTX ServiceCreate OTTO CB_OTTO
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TTT1
       EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
       EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT2
 
       $CTX ProcessEvent -wait ONCE
       $CTX ProcessEvent -wait ONCE
 
-      WaitOnFileToken $TMP T2
+      WaitOnFileToken $TMP TTT2
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -342,16 +344,16 @@ $J - T3"
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
+$J - TTT1
 T=local-1
 R=789
 T=local-2
 R=889
-$J - T2"
+$J - TTT2"
 
   test trans2-T1b-($I|$B|$S) {send valid data + transaction} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpT1b.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -376,13 +378,13 @@ $J - T2"
 
       EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
       EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
-      Echo0 $CTX PRNT SendC T1
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT1
+      Echo0 $CTX PRNT SendC TTT2
 
       $CTX ProcessEvent -wait ONCE
       $CTX ProcessEvent -wait ONCE
 
-      WaitOnFileToken $TMP T2
+      WaitOnFileToken $TMP TTT2
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -395,12 +397,12 @@ T=local-1
 R=789
 T=local-2
 R=889
-$J - T1
-$J - T2"
+$J - TTT1
+$J - TTT2"
 
   test trans2-T1c-($I|$B|$S) {send valid data + transaction + SETU} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpT1c.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -443,9 +445,9 @@ R=
 T=local-2
 R=789"
 
-  test trans2-T2-($I|$B|$S) {send + transaction server error} \
+  test trans2-T2a-($I|$B|$S) {send + transaction server error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpT2a.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -468,29 +470,29 @@ R=789"
       $CTX ServiceCreate OTTO CB_OTTO
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
-      EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      Echo0 $CTX PRNT SendC TTT1
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendD 1.1}
       EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT2
 
       $CTX ProcessEvent -wait ONCE
       $CTX ProcessEvent -wait ONCE
 
-      WaitOnFileToken $TMP T2
+      WaitOnFileToken $TMP TTT2
     } \
     -cleanup	    {
       Cleanup -force yes
       $FIRST Delete
     } \
-    -returnCodes    ok \
+    -returnCodes    error \
     -match	    glob \
-    -result         "START
-$J - T1
-T=local-1
-R=789
-T=local-2
-R=889
-$J - T2"
+    -result         {[cC]> (client) \[transaction-callback-error] <Token|OTTO>, <Num|1>
+[sS]> (server) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
+[sS]> (server) found in function "sReadA4" at file "read.c"
+[cC]> (client) found in function "pTokenDefaultTRT" at file "token.c"
+[cC]> (client) found in function "pServiceStart" at file "service.c"
+[cC]> (client) found in function "pEventStart" at file "event.c"
+[cC]> (client) found in function "MqProcessEvent" at file "service.c"*}
 
    }; # SRV_LST
   }; # BIN_LST
@@ -509,7 +511,7 @@ foreach I [getNum 3] {
 
 test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX4.txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -523,11 +525,11 @@ test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
       Bg @stdout {*}$FT2
       foreach {FIRST LAST} [Create $I $CON1] break
       Echo0 $LAST LOGF SendC $TMP
-      Echo0 $LAST PRNT SendC T1
-      WaitOnFileToken $TMP T1
+      Echo0 $LAST PRNT SendC TTT1
+      WaitOnFileToken $TMP TTT1
       Call  $LAST SendEND EXIT
       $LAST Delete
-      WaitOnFileToken $TMP T1
+      WaitOnFileToken $TMP TTT1
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -536,7 +538,7 @@ test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1"
+$J - TTT1"
 
    }; # SRV_LST
   }; # BIN_LST
@@ -556,18 +558,18 @@ foreach I [getNum 3] {
 
   test trans2-X5-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX5.txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
-      Echo0 $CTX PRNT SendC T2
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TTT1
+      Echo0 $CTX PRNT SendC TTT2
+      Echo0 $CTX PRNT SendC TTT3
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TTT3
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -576,26 +578,26 @@ foreach I [getNum 3] {
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TTT1
+$J - TTT2
+$J - TTT3"
 
   test trans2-X6-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" tmpX6.txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TTT1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TTT2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TTT3
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TTT3
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -604,9 +606,9 @@ $J - T3"
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TTT1
+$J - TTT2
+$J - TTT3"
 
    }; # SRV_LST
   }; # BIN_LST
@@ -615,7 +617,67 @@ unset -nocomplain I B C S
 
 }; # BLOCK_2
 
+
 if $BLOCK_3 {
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [getNum 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+    # socket-type: pipe, uds or tcp
+     foreach C [filter COM_LST] {
+
+      # server-type: server server.tcl
+      foreach S [filter SRV_LST] {
+
+# startup binary --------------------------
+
+  test trans2-TE1-($I|$B|$S) {transaction database error} \
+    -setup	    {
+      Setup $I $B $C $S --server-arg {--storage ""}
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOI {SendC local-1} {SendI 1}
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[transaction-callback-error] <Token|OTTO>, <Num|242>
+[sS]> (server-0) \[sSqlAddDb] the value 'NULL' is not allowed for parameter 'storageFile'
+[sS]> (server-0) found in function "pSqlInsertReadTrans" at file "sql.c"
+[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
+[cC]> (client-0) found in function "pServiceStart" at file "service.c"
+[cC]> (client-0) found in function "pEventStart" at file "event.c"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"
+[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"}
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # BLOCK_3
+
+if $BLOCK_4 {
 
 test trans2-Y1 {try to connect a "not-created" link} \
   -setup	    {
@@ -631,7 +693,7 @@ test trans2-Y1 {try to connect a "not-created" link} \
   -returnCodes    error \
   -result         {C> (otto) [MqLinkConnect] the 'client-server-link' was not created}
 
-}; # BLOCK_3
+}; # BLOCK_4
 
 ##
 ## -----------------------------------------------------------------------
@@ -639,4 +701,3 @@ test trans2-Y1 {try to connect a "not-created" link} \
 ##
 
 freeTests
-

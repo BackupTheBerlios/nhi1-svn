@@ -194,6 +194,15 @@ int NS(ConfigSetSrvName) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ConfigSetStorage) (NS_ARGS)
+{
+  MQ_CST storage;
+  CHECK_C(storage)
+  CHECK_NOARGS
+  MqConfigSetStorage (MQCTX, storage);
+  RETURN_TCL
+}
+
 int NS(ConfigSetIsSilent) (NS_ARGS)
 {
   MQ_BOL isSilent;
@@ -377,7 +386,7 @@ int NS(ConfigGetIsServer) (NS_ARGS)
 int NS(ConfigGetName) (NS_ARGS)
 {
   CHECK_NOARGS
-  Tcl_SetResult(interp, tclctx->mqctx.config.name, TCL_STATIC);
+  Tcl_SetResult(interp, (MQ_STR) tclctx->mqctx.config.name, TCL_STATIC);
   RETURN_TCL
 }
 
@@ -387,6 +396,13 @@ int NS(ConfigGetSrvName) (NS_ARGS)
   CHECK_NOARGS
   str = MqConfigGetSrvName(&tclctx->mqctx);
   Tcl_SetResult(interp, (MQ_STR) (str ? str : ""), TCL_STATIC);
+  RETURN_TCL
+}
+
+int NS(ConfigGetStorage) (NS_ARGS)
+{
+  CHECK_NOARGS
+  Tcl_SetResult(interp, (MQ_STR) MqConfigGetStorage(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 

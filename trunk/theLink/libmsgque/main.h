@@ -185,11 +185,11 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
     /* MQ_ERROR_FEATURE_NOT_AVAILABLE */
 	"the feature '%s' is not available",
     /* MQ_ERROR_NULL_NOT_ALLOWED */
-	"the value 'NULL' is not allowed for parameter '%s'"
+	"the value 'NULL' is not allowed for parameter '%s'",
     /* MQ_ERROR_INVALID_SIZE */
-	"invalid '%s' size, expect '%d' but got '%d'"
+	"invalid '%s' size, expect '%d' but got '%d'",
     /* MQ_MESSAGE_END */
-	"END OF TEXT MESSAGE ARRAY"
+	"END OF TEXT MESSAGE ARRAY",
 };
 
 #else
@@ -276,6 +276,10 @@ void pContextDeleteLOCK(struct MqS * const);
 /*                                 config.h                                  */
 /*                                                                           */
 /*****************************************************************************/
+
+#define buffersize_DEFAULT 4096
+#define timeout_DEFAULT MQ_TIMEOUT10
+#define storage_DEFAULT ":memory:"
 
 void pConfigSetParent ( struct MqS * const, struct MqS * const);
 void pConfigSetMaster ( struct MqS * const, struct MqS * const, int);

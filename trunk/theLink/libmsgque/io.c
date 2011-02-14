@@ -296,14 +296,22 @@ sIoFillArgvC (
   *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--socket");
   *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
   mq_snprintf((char*)*arg++,20,"%i",sock);
-  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--buffersize");
-  *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
-  mq_snprintf((char*)*arg++,20,"%i",io->config->buffersize);
-  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--timeout");
-  *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
-  mq_snprintf((char*)*arg++,20,"%lli",io->config->timeout);
 
   // 4. add context stuff
+  if (io->config->buffersize != buffersize_DEFAULT) {
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--buffersize");
+    *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
+    mq_snprintf((char*)*arg++,20,"%i",io->config->buffersize);
+  }
+  if (io->config->timeout != timeout_DEFAULT) {
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--timeout");
+    *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
+    mq_snprintf((char*)*arg++,20,"%lli",io->config->timeout);
+  }
+  if (strcmp(context->config.storage,storage_DEFAULT)) {
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--storage");
+    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.storage);
+  }
   if (context->config.isSilent) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--silent");
   }
@@ -345,10 +353,18 @@ sIoFillArgvU (
   MqBufferLAppendC(argv, "---duplicate");
   MqBufferLAppendC(argv, "--socket");
   MqBufferLAppendI(argv, sock);
-  MqBufferLAppendC(argv, "--buffersize");
-  MqBufferLAppendI(argv, io->config->buffersize);
-  MqBufferLAppendC(argv, "--timeout");
-  MqBufferLAppendW(argv, io->config->timeout);
+  if (io->config->buffersize != buffersize_DEFAULT) {
+    MqBufferLAppendC(argv, "--buffersize");
+    MqBufferLAppendI(argv, io->config->buffersize);
+  }
+  if (io->config->timeout != timeout_DEFAULT) {
+    MqBufferLAppendC(argv, "--timeout");
+    MqBufferLAppendW(argv, io->config->timeout);
+  }
+  if (strcmp(context->config.storage,storage_DEFAULT)) {
+    MqBufferLAppendC(argv, "--storage");
+    MqBufferLAppendC(argv, context->config.storage);
+  }
   if (context->config.isSilent) {
     MqBufferLAppendC(argv, "--silent");
   }
@@ -631,6 +647,7 @@ rescan:
 //printLC("MQ_START_SERVER_AS_SPAWN:")
 	struct MqBufferS **start = NULL , **end = NULL;
 	char **argV, **arg;
+
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
 	// add 20 item's as additional space

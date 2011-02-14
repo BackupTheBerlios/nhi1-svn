@@ -125,7 +125,11 @@ pMqCheckOpt (
       switch (argC[1]) {
 	case 'p': return !strncmp(argC, "spawn", sizeof("spawn")-1  );
 	case 'r': return !strncmp(argC, "srvname", sizeof("srvname")-1);
-	case 't': return !strncmp(argC, "string", sizeof("string")-1 );
+	case 't': 
+	  switch (argC[2]) {
+	    case 'r' : return !strncmp(argC, "string", sizeof("string")-1 );
+	    case 'o' : return !strncmp(argC, "storage", sizeof("storage")-1 );
+	  }
 	case 'i': return !strncmp(argC, "silent", sizeof("silent")-1 );
 	case 'o': return !strncmp(argC, "socket", sizeof("socket")-1 );
       }
@@ -294,6 +298,11 @@ sMqCheckArg (
 	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
 	    if (idx >= argv->cursize) return MqErrorDbV (MQ_ERROR_OPTION_ARG, "--socket");
 	    MqErrorCheck (MqBufferGetI(argv->data[idx], &context->config.io.pipe.socket[1]));
+	  } else if (!strncmp(argC, "storage", 7)) {
+	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
+	    if (idx >= argv->cursize) return MqErrorDbV (MQ_ERROR_OPTION_ARG, "--storage");
+	    MqErrorCheck (MqBufferGetC(argv->data[idx], &strV));
+	    MqConfigSetStorage (context, strV);
 	  } else {
 	    continue;
 	  }

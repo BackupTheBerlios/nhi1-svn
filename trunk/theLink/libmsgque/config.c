@@ -191,9 +191,9 @@ pConfigInit (
 )
 {
   if (context->config.io.buffersize == 0) 
-    context->config.io.buffersize = 4096;
+    context->config.io.buffersize = buffersize_DEFAULT;
   if (context->config.io.timeout == 0) 
-    context->config.io.timeout = MQ_TIMEOUT10;
+    context->config.io.timeout = timeout_DEFAULT;
   context->config.io.com = MQ_IO_PIPE;
   context->config.io.uds.file = NULL;
   context->config.io.tcp.host = NULL;
@@ -202,6 +202,8 @@ pConfigInit (
   context->config.io.tcp.myport = NULL;
   context->config.io.pipe.socket[0] = -1;
   context->config.io.pipe.socket[1] = -1;
+  if (context->config.storage == NULL)
+    context->config.storage = MqSysStrDup(context,storage_DEFAULT);
 #if !defined(MQ_HAS_THREAD)
   context->config.ignoreThread = MQ_YES;
 #endif
@@ -259,6 +261,7 @@ MqContextFree (
 
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);
+    MqSysFree(context->config.storage);
 
     MqBufferDelete (&context->config.io.tcp.host);
     MqBufferDelete (&context->config.io.tcp.port);
@@ -370,6 +373,7 @@ MqConfigDup (
   if (from == NULL) return;
   MqSysFree(to->config.name);
   MqSysFree(to->config.srvname);
+  MqSysFree(to->config.storage);
   MqBufferDelete (&to->config.io.tcp.host);
   MqBufferDelete (&to->config.io.tcp.port);
   MqBufferDelete (&to->config.io.tcp.myhost);
@@ -377,6 +381,7 @@ MqConfigDup (
   MqBufferDelete (&to->config.io.uds.file);
   to->config		= from->config;
   to->config.name	= MqSysStrDup(MQ_ERROR_PANIC, from->config.name);
+  to->config.storage	= MqSysStrDup(MQ_ERROR_PANIC, from->config.storage);
   to->config.srvname	= NULL;
   to->config.parent	= NULL;
   to->config.master	= NULL;
@@ -497,6 +502,15 @@ MqConfigSetSrvName (
 ) {
   MqSysFree(context->config.srvname);
   context->config.srvname = MqSysStrDup(MQ_ERROR_PANIC, data);
+}
+
+void 
+MqConfigSetStorage (
+  struct MqS * const context,
+  MQ_CST  data
+) {
+  MqSysFree(context->config.storage);
+  context->config.storage = MqSysStrDup(MQ_ERROR_PANIC, data?data:"");
 }
 
 void 
@@ -834,6 +848,14 @@ MqConfigGetSrvName (
 )
 {
   return context->config.srvname;
+}
+
+MQ_CST 
+MqConfigGetStorage (
+  struct MqS const * const context
+)
+{
+  return context->config.storage;
 }
 
 MQ_INT

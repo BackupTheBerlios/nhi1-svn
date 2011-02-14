@@ -424,16 +424,24 @@ pReadHDR (
       MqErrorCheck (pReadT (context, &rmtTransId));
       // use temporary variable "transLId" because the following "MqSendSTART" have to send data 
       // !without! transaction id
-      MqErrorCheck (
-	// collect all data necessary to setup the transaction !after! a crash
-	pSqlInsertReadTrans (context, 
-	  read->transLId,		  /* old transaction id (used for "stack" transaction) */
-	  read->rmtTransId,		  /* old remote transaction id (used for "stack" transaction) */
-	  hdr,				  /* header data used by MqReadDUMP (size = HDR_SIZE) */
-	  bdy,				  /* body data (size = bdy->cursize) */
-	  &transLId
-	)
-      );
+      if ( 
+	MqErrorCheckI (
+	  // collect all data necessary to setup the transaction !after! a crash
+	  pSqlInsertReadTrans (context, 
+	    read->transLId,		  /* old transaction id (used for "stack" transaction) */
+	    read->rmtTransId,		  /* old remote transaction id (used for "stack" transaction) */
+	    hdr,				  /* header data used by MqReadDUMP (size = HDR_SIZE) */
+	    bdy,				  /* body data (size = bdy->cursize) */
+	    &transLId
+	  )
+	) 
+      ) {
+	// now the "transLId" is "official" in use
+	read->transLId = transLId;
+	read->rmtTransId = rmtTransId;
+	MqSendSTART(context);
+	return MqSendRETURN (context);
+      };
       // answer first call with an empty return package
       if (context->link.transSId != 0) {
 	read->transLId = 0LL;

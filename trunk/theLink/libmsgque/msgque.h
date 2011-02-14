@@ -643,7 +643,7 @@ struct MqConfigS {
 ///   - to initialize this value with a static string use: \code MqConfigSetName(context, "myString"); \endcode
 ///   .
 /// \endif
-  MQ_STR name;
+  MQ_CST name;
 
 /// \brief set the human-readable name of the \e server-context
 ///
@@ -659,7 +659,7 @@ struct MqConfigS {
 ///   - to initialize this value with a static string use: \code MqConfigSetSrvName(context, "myString"); \endcode
 ///   .
 /// \endif
-  MQ_STR srvname;
+  MQ_CST srvname;
 
   /// \brief set the \e debug-level of the \e context
   /// \details Valid values are 0 <= \e debug-level <= 9 using 0 for \e no-debug and 9 for \e maximum-debug. (default: 0)
@@ -690,6 +690,12 @@ struct MqConfigS {
 
   /// \brief Global configuration data belonging to "io"
   struct MqIoConfigS io;
+
+  /// \brief storage file used as default if a database is requested
+  /// \details Valid values are \c :memory: , \c :tmpdb: or a writeable \c filename.
+  /// \c :memory: is the default.
+  /// \attention an empty string \c "" will disable transaction at all
+  MQ_CST storage;
 };
 
 /// \brief application-programmer configuration data
@@ -867,6 +873,13 @@ MQ_DECL MqConfigUpdateName (
 /// \brief set the \ref MqConfigS::srvname value and cleanup old value
 MQ_EXTERN void
 MQ_DECL MqConfigSetSrvName (
+  struct MqS * const context,
+  MQ_CST  data
+);
+
+/// \brief set the \ref MqConfigS::storage value and cleanup old value
+MQ_EXTERN void
+MQ_DECL MqConfigSetStorage (
   struct MqS * const context,
   MQ_CST  data
 );
@@ -1079,7 +1092,7 @@ MQ_EXTERN int MQ_DECL MqConfigGetIsSilent (
  *  \return the \c context.config.name value
  *  \attention the \e string is owned by \libmsgque -> do not free !!
  */
-MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetName (
+MQ_EXTERN MQ_CST MQ_DECL MqConfigGetName (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1088,7 +1101,16 @@ MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetName (
  *  \return the \c context.config.srvname value
  *  \attention the \e string is owned by \libmsgque -> do not free !!
  */
-MQ_EXTERN MQ_CST  MQ_DECL MqConfigGetSrvName (
+MQ_EXTERN MQ_CST MQ_DECL MqConfigGetSrvName (
+  struct MqS const * const context
+) __attribute__((nonnull));
+
+/** \brief get the \e storage of the \e context object
+ *  \context
+ *  \return the \c context.config.storage value
+ *  \attention the \e string is owned by \libmsgque -> do not free !!
+ */
+MQ_EXTERN MQ_CST MQ_DECL MqConfigGetStorage (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
