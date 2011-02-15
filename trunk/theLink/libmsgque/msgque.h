@@ -3468,11 +3468,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
 );
 
 /// \brief finish the current \e callback, return to \e toplevel and \RNSA{Exit} the application
-/// \details To exit a application from a callback is a difficult task because
+/// \details To exit a application in a callback is a difficult task because
 /// the code is \e in-duty. To achieve this goal a special \e exit-error-object
 /// is created and reported to the \e toplevel. If a \e transaction is ongoing
 /// the \RNSA{SendRETURN} is \b not called and thus the transaction is not finished.
 /// The calling application is informed later by a \e socket-down event.
+/// This only works for a \e parent-context. An exit in a \e child-context is ignored.
 #define MqErrorSetEXIT(ctx) MqErrorSetEXITP(ctx,__func__)
 
 /// \brief check for an \e exit-error-object, return \yes or \no
@@ -3722,7 +3723,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const ctx,
-  MQ_BIN  * const val,
+  MQ_CBI  * const val,
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
 
@@ -3738,8 +3739,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
 /// \attention the data returned is owned by the caller and have to be freed with #MqSysFree
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
   struct MqS * const context,
-  MQ_CBI  in,
-  MQ_SIZE len
+  MQ_CBI  const in,
+  MQ_SIZE const len
 ) __attribute__((nonnull(1,2)));
 
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package

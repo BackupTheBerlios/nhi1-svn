@@ -41,13 +41,6 @@ if ($env(USE_REMOTE)) {
 
 ##
 ## -----------------------------------------------------------------------
-## define filter
-##
-
-set testdb [makeFile {} testdb.[pid]]
-
-##
-## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
@@ -488,11 +481,11 @@ R=789"
     -match	    glob \
     -result         {[cC]> (client) \[transaction-callback-error] <Token|OTTO>, <Num|1>
 [sS]> (server) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-[sS]> (server) found in function "sReadA4" at file "read.c"
-[cC]> (client) found in function "pTokenDefaultTRT" at file "token.c"
-[cC]> (client) found in function "pServiceStart" at file "service.c"
-[cC]> (client) found in function "pEventStart" at file "event.c"
-[cC]> (client) found in function "MqProcessEvent" at file "service.c"*}
+[sS]> (server) found in function "sReadA4" at file "read.c*"
+[cC]> (client) found in function "pTokenDefaultTRT" at file "token.c*"
+[cC]> (client) found in function "pServiceStart" at file "service.c*"
+[cC]> (client) found in function "pEventStart" at file "event.c*"
+[cC]> (client) found in function "MqProcessEvent" at file "service.c*"*}
 
    }; # SRV_LST
   }; # BIN_LST
@@ -633,9 +626,12 @@ foreach I [getNum 3] {
       # server-type: server server.tcl
       foreach S [filter SRV_LST $C] {
 
+	SetConstraints $I $B $S
+
 # startup binary --------------------------
 
-  test trans2-TE1-($I|$B|$C|$S) {transaction database error} \
+  test trans2-TE0-($I|$B|$C|$S) {transaction database error} \
+    -constraints    {!thread} \
     -setup	    {
       Setup $I $B $C $S --server-arg {--storage ""}
       set TMP	[MakeFile "START" tmpTE1.txt]
@@ -662,15 +658,18 @@ foreach I [getNum 3] {
     -match	    glob \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|OTTO>, <Num|242>
 [sS]> (server-0) \[sSqlAddDb] the value 'NULL' is not allowed for parameter 'storageFile'
-[sS]> (server-0) found in function "pSqlInsertReadTrans" at file "sql.c"
-[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
-[cC]> (client-0) found in function "pServiceStart" at file "service.c"
-[cC]> (client-0) found in function "pEventStart" at file "event.c"
-[cC]> (client-0) found in function "MqProcessEvent" at file "service.c"
-[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c"}
+[sS]> (server-0) found in function "pSqlInsertReadTrans" at file "sql.c*"
+[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c*"
+[cC]> (client-0) found in function "pServiceStart" at file "service.c*"
+[cC]> (client-0) found in function "pEventStart" at file "event.c*"
+[cC]> (client-0) found in function "MqProcessEvent" at file "service.c*"
+[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c*"}
 
-  test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
+  test trans2-TE1-($I|$B|$C|$S) {send OK} \
+    -constraints    {!thread} \
     -setup	    {
+      set testdb [makeFile {} testdb.TE1]
+      set joundb [makeFile {} ${testdb}-journal]
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
       set TMP	[MakeFile "START" tmpTE1.txt]
       proc CB_OTTO {ctx} {
@@ -686,9 +685,40 @@ foreach I [getNum 3] {
       $FH_LAST ServiceCreate OTTO CB_OTTO
     } \
     -body           {
-      EchoT $FH_LAST OTTO ECOI {SendC local-1} {SendI TT1}
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -match	    glob \
+    -result         {}
+
+  test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
+    -constraints    {!thread} \
+    -setup	    {
+      set testdb [makeFile {} testdb.TE2]
+      set joundb [makeFile {} ${testdb}-journal]
+      Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
       Call  $FH_LAST SendEND EXIT
-      EchoT $FH_LAST OTTO ECOI {SendC local-2} {SendI TT2}
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
       $FH_LAST ProcessEvent -wait ONCE
       $FH_LAST ProcessEvent -wait ONCE
     } \
@@ -700,7 +730,10 @@ foreach I [getNum 3] {
     -result         {[cC]> (client-0) \[SysRecv] application EXIT request*}
 
   test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
+    -constraints    {!thread} \
     -setup	    {
+      set testdb [makeFile {} testdb.TE3]
+      set joundb [makeFile {} ${testdb}-journal]
       Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]
       set TMP	[MakeFile "START" tmpTE1.txt]
       proc CB_OTTO {ctx} {

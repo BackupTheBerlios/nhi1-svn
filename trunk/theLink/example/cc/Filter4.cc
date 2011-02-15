@@ -44,24 +44,26 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
       } else {
 	// extract the first (oldest) item from the store
 	struct FilterItmS it = itms.front();
-	// get the filter-context
-	Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
 	// an item is available, try to send the data
 	try {
+	  // get the filter-context
+	  MqC *ftr = ServiceGetFilter();
 	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
-	  // send the data
-	  ftr->SendBDY(it.bdy, it.len);
-	// on error, check if an "exit" happen
+	  // setup the BDY data from storage
+	  ReadLOAD(it.bdy, it.len);
+	  // send BDY data to the link-target
+	  ReadForward(ftr);
 	} catch (const exception& e) {
-	  ftr->ErrorSet (e);
-	  if (ftr->ErrorIsEXIT()) {
+	  ErrorSet (e);
+	  // on error, check if an "exit" happen
+	  if (ErrorIsEXIT()) {
 	    // on exit ignore the error but do !not! forget the data
-	    ftr->ErrorReset();
+	    ErrorReset();
 	    return;
 	  } else {
 	    // on error write the error-text and "forget" the data
-	    ftr->ErrorWrite();
+	    ErrorWrite();
 	  }
 	}
 	// reset the item-storage
@@ -72,16 +74,12 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
     }
 
     void Service (MqC * const ctx) {
-      MQ_BIN bdy;
-      MQ_SIZE len;
-      register struct FilterItmS it;
+      struct FilterItmS it;
 
       // read the body-item
-      ReadBDY(&bdy, &len);
+      ReadDUMP(&it.bdy, &it.len);
 
       // fill the item data
-      it.bdy = bdy;
-      it.len = len;
       itms.push (it);
 
       SendRETURN();
@@ -89,23 +87,23 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 
     void LOGF () {
       // get the "link-target"
-      Filter4 *ftr = static_cast<Filter4*>(ServiceGetFilter());
+      MqC *ftr = ServiceGetFilter();
       // check "Ident" from the "link-target"
       if (!strcmp(ftr->LinkGetTargetIdent (),"transFilter")) {
 	// if "Ident" is "transFilter" send the data to the "link-target"
-	ftr->SendSTART();
-	ftr->SendC(ReadC());
-	ftr->SendEND_AND_WAIT("LOGF");
+	ReadForward(ftr);
       } else {
 	// if "Ident" is not "transFilter" use the data as file-name to open a file 
-	ftr->FH = fopen (ReadC(), "a");
+	FH = fopen (ReadC(), "a");
       }
       SendRETURN();
     }
 
     void WRIT () {
-      fprintf (FH, "%s\n", ReadC());
-      fflush (FH);
+      // get the "master"
+      Filter4 *ctx = static_cast<Filter4*>(ServiceGetFilter());
+      fprintf (ctx->FH, "%s\n", ReadC());
+      fflush (ctx->FH);
       SendRETURN();
     }
 

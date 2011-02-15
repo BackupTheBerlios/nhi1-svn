@@ -209,7 +209,7 @@ pServiceStart (
       MqPanicSYS(context);
   }
 
-  MqDLogCL(a_context,6,"END-OK\n");
+  MqDLogCL(context,6,"END-OK\n");
   return MQ_OK;
 
 error:

@@ -31,7 +31,7 @@ proc LOGF {ctx} {
 }
 
 proc EXIT {ctx} {
-  $ctx ErrorSetEXIT
+  exit 1
 }
 
 proc WRIT {ftr} {
@@ -46,23 +46,6 @@ proc FilterIn {ctx} {
   $ctx SendRETURN
 }
 
-proc FilterSetup {ctx} {
-  set ftr [$ctx ServiceGetFilter]
-  $ctx dict set FH ""
-  $ctx ServiceCreate "LOGF" LOGF
-  $ctx ServiceCreate "EXIT" EXIT
-  $ctx ServiceStorage "PRNT"
-  $ctx ServiceCreate "+ALL" FilterIn
-  $ftr ServiceCreate "WRIT" WRIT
-  $ftr ServiceProxy  "+TRT"
-}
-
-proc FilterCleanup {ctx} {
-  set FH  [$ctx dict get FH]
-  if {$FH ne ""} {close $FH}
-  $ctx dict unset FH
-}
-
 proc FilterEvent {ctx} {
   if {[$ctx StorageCount] == 0} {
     # no data -> nothing to do
@@ -73,7 +56,7 @@ proc FilterEvent {ctx} {
     set ftr [$ctx ServiceGetFilter]
     # try to connect if not already connected
     $ftr LinkConnect
-    # setup Read package from storage
+    # read package from storage
     set Id  [$ctx StorageSelect]
     # forward the entire BDY data to the ftr-target
     $ctx ReadForward $ftr
@@ -92,6 +75,23 @@ proc FilterEvent {ctx} {
   }
   # on "success" or on "error" delete item from storage
   $ctx StorageDelete $Id
+}
+
+proc FilterSetup {ctx} {
+  set ftr [$ctx ServiceGetFilter]
+  $ctx dict set FH ""
+  $ctx ServiceCreate "LOGF" LOGF
+  $ctx ServiceCreate "EXIT" EXIT
+  $ctx ServiceCreate "+ALL" FilterIn
+  $ctx ServiceStorage "PRNT"
+  $ftr ServiceCreate "WRIT" WRIT
+  $ftr ServiceProxy  "+TRT"
+}
+
+proc FilterCleanup {ctx} {
+  set FH  [$ctx dict get FH]
+  if {$FH ne ""} {close $FH}
+  $ctx dict unset FH
 }
 
 proc Filter6Factory {tmpl} {

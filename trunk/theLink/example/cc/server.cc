@@ -73,7 +73,7 @@ namespace example {
 
     private:
       MQ_INT i, j;
-      MQ_BUF buf;
+      MqBufferC *buf;
       Client* cl[3];
 
     public:
@@ -138,8 +138,17 @@ namespace example {
 	SendERROR();
       }
 
-      void SETU () { buf = ReadU(); }
-      void GETU () { SendSTART(); SendU(buf); SendRETURN(); }
+      void SETU () { 
+	buf = (new MqBufferC(ReadU()))->Dup(); 
+      }
+
+      void GETU () { 
+	SendSTART(); 
+	SendU(buf->GetU()); 
+	delete buf;
+	buf = NULL;
+	SendRETURN(); 
+      }
 
       void ECOL_Item (int incr) {
 	while (ReadItemExists()) {
@@ -341,7 +350,7 @@ namespace example {
 	    SendB(b, len); 
 	    break;
 	  }
-	  case MQ_LSTT: break;
+	  case MQ_LSTT: case MQ_TRAT: break;
 	}
 	SendRETURN();
       }
@@ -528,6 +537,12 @@ namespace example {
 	  SendC (ConfigGetSrvName());
 	  ConfigSetSrvName (old);
 	  MqSysFree(old);
+	} else if (!strncmp(cmd, "Storage", 7)) {
+	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,ConfigGetStorage());
+	  ConfigSetStorage (ReadC());
+	  SendC (ConfigGetStorage());
+	  ConfigSetStorage (old);
+	  MqSysFree(old);
 	} else if (!strncmp(cmd, "Ident", 5)) {
 	  MQ_CST old = MqSysStrDup(MQ_ERROR_PANIC,FactoryCtxIdentGet());
 	  MQ_BOL check;
@@ -623,7 +638,7 @@ namespace example {
 
       void STDB () {
 	SendSTART();
-	SqlSetDb(ReadC());
+	StorageOpen(ReadC());
 	SendRETURN();
       }
 

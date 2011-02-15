@@ -282,7 +282,7 @@ XI0(pMqGetFirstParent(context))
 XI0(pMqGetFirstParent(eventctx->error.errctx))
 */
 	  if (
-	      /* every exit in a client is reported, but only if the ignoreExit is NOt set for the target */
+	      /* every exit in a client is reported, but only if the ignoreExit is NOT set for the target */
 	      (MQ_IS_CLIENT(eventctx->error.errctx) && context->setup.ignoreExit == MQ_NO) ||
 	      (MQ_IS_CLIENT(context) && pMqGetFirstParent(context) == pMqGetFirstParent(eventctx->error.errctx))
 	  ) {
@@ -290,8 +290,15 @@ XI0(pMqGetFirstParent(eventctx->error.errctx))
 	    // report "link-down-error" from a "parent-context" to a "client-context"
 	    MqErrorCopy (context, eventctx);
 	    goto error;
+/*
+	  } else if (MQ_IS_CHILD(eventctx->error.errctx)) {
+M2
+	    // error in child -> what to do? -> don't know -> not good test case
+	    MqContextDelete(eventctx->error.errctx);
+	    MqErrorReset (context);
+*/
 	  } else {
-//M2
+//M3
 	    // the GC have to handle this
 	    MqErrorReset (context);
 	  }

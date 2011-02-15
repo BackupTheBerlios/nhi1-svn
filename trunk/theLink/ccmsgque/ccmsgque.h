@@ -123,6 +123,10 @@ namespace ccmsgque {
 	hdl = bufP;
       }
 
+      virtual ~MqBufferC () {
+	if (hdl->context->temp != hdl) MqBufferDelete(&hdl);
+      }
+
       /// \api \ref MqBufferS::type
       inline enum MqTypeE GetType () const {
 	return hdl->type;
@@ -185,7 +189,7 @@ namespace ccmsgque {
       }
 
       /// \return handle
-      inline MQ_BUF GetU () const throw(MqCException) {
+      inline MQ_BUF GetU () const {
 	return hdl;
       }
 
@@ -211,6 +215,12 @@ namespace ccmsgque {
       inline void Reset () const throw(MqCException) {
 	MqBufferReset (hdl);
       }
+
+      /// \api #MqBufferDup
+      inline MqBufferC* Dup () const throw(MqCException) {
+	return new MqBufferC(MqBufferDup (hdl));
+      }
+
     /// \} Mq_Buffer_CC_API
   };
 
@@ -314,8 +324,6 @@ namespace ccmsgque {
       inline MQ_BUF GetTempBuffer() { return context.temp; }
       /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
-      /// \api #MqSqlSetDb
-      inline void SqlSetDb (MQ_CST storageDir) throw(MqCException) { ErrorCheck (MqSqlSetDb(&context, storageDir)); } 
       /// \api #MqSysSleep
       inline void Sleep (unsigned int const sec) throw(MqCException) { ErrorCheck (MqSysSleep(&context, sec)); }
       /// \api #MqSysUSleep
@@ -344,6 +352,43 @@ namespace ccmsgque {
     /// \details \copydetails Mq_Config_C_API
     /// \{
     public:
+      /// \api #MqStorageOpen
+      inline void StorageOpen (MQ_CST storageDir) throw(MqCException) { ErrorCheck (MqStorageOpen(&context, storageDir)); } 
+      /// \api #MqStorageClose
+      inline void StorageClose () throw(MqCException) { ErrorCheck (MqStorageClose(&context)); } 
+      /// \api #MqStorageClose
+      inline MQ_TRA StorageInsert () throw(MqCException) { 
+	MQ_TRA transLId;
+	ErrorCheck (MqStorageInsert(&context,&transLId));
+	return transLId;
+      }
+      /// \api #MqStorageSelect
+      inline MQ_TRA StorageSelect () throw(MqCException) { 
+	MQ_TRA transLId = 0LL;
+	ErrorCheck (MqStorageSelect(&context,&transLId)); 
+	return transLId;
+      }
+      /// \api #MqStorageSelect
+      inline MQ_TRA StorageSelect (MQ_TRA transLId) throw(MqCException) { 
+	ErrorCheck (MqStorageSelect(&context,&transLId)); 
+	return transLId;
+      }
+      /// \api #MqStorageDelete
+      inline void StorageDelete (MQ_TRA transLId) throw(MqCException) { ErrorCheck (MqStorageDelete(&context,transLId)); } 
+      /// \api #MqStorageCount
+      inline MQ_TRA StorageCount () throw(MqCException) { 
+	MQ_TRA count;
+	ErrorCheck (MqStorageCount(&context,&count)); 
+	return count;
+      } 
+    /// \}
+
+    /// \defgroup Mq_Config_CC_API Mq_Config_CC_API
+    /// \ingroup Mq_CC_API
+    /// \brief \copybrief Mq_Config_C_API
+    /// \details \copydetails Mq_Config_C_API
+    /// \{
+    public:
 
       // SET configuration data
 
@@ -357,6 +402,8 @@ namespace ccmsgque {
       inline void ConfigSetName	      (MQ_CST data)	    { MqConfigSetName (&context, data); }
       /// \api #MqConfigSetSrvName
       inline void ConfigSetSrvName    (MQ_CST data)	    { MqConfigSetSrvName (&context, data); }
+      /// \api #MqConfigSetStorage
+      inline void ConfigSetStorage    (MQ_CST data)	    { MqConfigSetStorage (&context, data); }
       /// \api #MqConfigSetIsSilent
       inline void ConfigSetIsSilent   (MQ_BOL data)	    { MqConfigSetIsSilent (&context, data); }
       /// \api #MqConfigSetIsServer
@@ -396,6 +443,8 @@ namespace ccmsgque {
       inline MQ_CST ConfigGetName ()	    { return MqConfigGetName(&context); }
       /// \api #MqConfigGetSrvName
       inline MQ_CST ConfigGetSrvName ()	    { return MqConfigGetSrvName(&context); }
+      /// \api #MqConfigGetStorage
+      inline MQ_CST ConfigGetStorage ()	    { return MqConfigGetStorage(&context); }
       /// \api #MqConfigGetBuffersize
       inline MQ_INT ConfigGetBuffersize ()  { return MqConfigGetBuffersize(&context); }
       /// \api #MqConfigGetDebug
@@ -613,9 +662,21 @@ namespace ccmsgque {
       inline void ReadN(MQ_CBI * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
 	ErrorCheck (MqReadN(&context, valP, lenP)); 
       }
-      /// \api #MqReadBDY
-      inline void ReadBDY(MQ_BIN * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
-	ErrorCheck (MqReadBDY(&context, valP, lenP)); 
+      /// \api #MqReadDUMP
+      inline void ReadDUMP(MQ_CBI * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
+	ErrorCheck (MqReadDUMP(&context, valP, lenP)); 
+      }
+      /// \api #MqReadLOAD
+      inline void ReadLOAD(MQ_CBI const val, MQ_SIZE const len) throw(MqCException) { 
+	ErrorCheck (MqReadLOAD(&context, val, len)); 
+      }
+      /// \api #MqReadForward
+      inline void ReadForward(MqC * const ftr) throw(MqCException) { 
+	ErrorCheck (MqReadForward(&context, &ftr->context)); 
+      }
+      /// \api #MqReadForward
+      inline void ReadForward(MqC &ftr) throw(MqCException) { 
+	ErrorCheck (MqReadForward(&context, &ftr.context)); 
       }
       /// \api #MqReadU
       inline MQ_BUF ReadU() throw(MqCException) 
@@ -714,10 +775,6 @@ namespace ccmsgque {
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
       /// \api #MqSendN
       inline void SendN (MQ_CBI val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
-      /// \api #MqSendBDY
-      inline void SendBDY (MQ_CBI val, MQ_SIZE len) throw(MqCException) { 
-	ErrorCheck (MqSendBDY (&context, val, len));
-      }
       /// \api #MqSendB
       inline void SendB (MQ_CBI const val, MQ_SIZE const len) throw(MqCException) { ErrorCheck (MqSendB (&context, val, len)); }
       /// \api #MqSendB
@@ -766,6 +823,11 @@ namespace ccmsgque {
       /// \api #MqServiceProxy
       inline void ServiceProxy (MQ_CST const token, MQ_SIZE id=0) throw(MqCException) { 
 	ErrorCheck (MqServiceProxy (&context, token, id));
+      }
+
+      /// \api #MqServiceStorage
+      inline void ServiceStorage (MQ_CST const token) throw(MqCException) { 
+	ErrorCheck (MqServiceStorage (&context, token));
       }
 
       /// \api #MqProcessEvent

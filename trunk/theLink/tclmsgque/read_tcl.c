@@ -155,7 +155,7 @@ int NS(ReadN) (NS_ARGS)
 int NS(ReadDUMP) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE len;
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqReadDUMP(mqctx, &val, &len));
@@ -167,7 +167,7 @@ int NS(ReadDUMP) (NS_ARGS)
 int NS(ReadLOAD) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_BIN val;
+  MQ_CBI val;
   MQ_SIZE len;
   CHECK_B(val,len)
   CHECK_NOARGS

@@ -638,7 +638,7 @@ pReadLOAD (
 enum MqErrorE
 MqReadDUMP (
   struct MqS * const context,
-  MQ_BIN  * const out,
+  MQ_CBI  * const out,
   MQ_SIZE * const len
 )
 {
@@ -672,8 +672,8 @@ MqReadDUMP (
 enum MqErrorE
 MqReadLOAD (
   struct MqS * context,
-  MQ_CBI  in,
-  MQ_SIZE len
+  MQ_CBI  const in,
+  MQ_SIZE const len
 )
 {
   MqErrorCheck(pReadLOAD((MQ_PTR)in, &context));
