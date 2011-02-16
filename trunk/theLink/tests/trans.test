@@ -38,14 +38,6 @@ if ($env(USE_REMOTE)) {
 
 ##
 ## -----------------------------------------------------------------------
-## define filter
-##
-
-set env(TS_FILTER_SERVER)  Filter4
-set env(TS_FILTER_CLIENT)  NO
-
-##
-## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
@@ -59,17 +51,17 @@ if $BLOCK_1 {
   foreach B [filter BIN_LST binary] {
 
   # socket-type: pipe, uds or tcp
-   foreach C [filter -or COM_LST tcp uds] {
+   foreach C [filter COM_LST] {
 
     # server-type: server server.tcl
-    foreach S [filter -or SRV_LST spawn fork] {
+    foreach S [filter SRV_LST $C] {
 
 # tests ----------------------------
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -92,7 +84,7 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -109,7 +101,7 @@ $J - HALLO"
 test trans-3-($I|$B|$C|$S) {send error + valid data} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
-      Setup $I $B $C $S
+      Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
     -body           {
@@ -279,7 +271,7 @@ foreach I [getNum 3] {
   foreach B [filter BIN_LST binary] {
 
     # server-type: server server.tcl
-    foreach S [filter -not SRV_LST pipe] {
+    foreach S [filter -or SRV_LST spawn fork] {
 
 test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {

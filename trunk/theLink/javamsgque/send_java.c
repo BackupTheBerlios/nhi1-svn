@@ -298,35 +298,14 @@ error:
   return;
 }
 
-JNIEXPORT void JNICALL NS(SendBDY) (
-  JNIEnv *	env, 
-  jobject	self,
-  jbyteArray	b
-)
-{
-  enum MqErrorE ret = MQ_ERROR;
-  jbyte * tmp;
-  SETUP_context;
-  tmp = (*env)->GetByteArrayElements(env,b,NULL);
-  ret = MqSendBDY(context,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
-  (*env)->ReleaseByteArrayElements(env,b,tmp,0);
-  ErrorMqToJavaWithCheck(ret);
-error:
-  return;
-}
-
 JNIEXPORT void JNICALL NS(SendU) (
   JNIEnv *	env, 
   jobject	self,
   jobject	bufO
 )
 {
-  struct MqBufferS * buf = ((struct MqBufferS *) (*env)->GetLongField(env,bufO,NS(FID_MqBufferS_hdl)));
   SETUP_context;
-  if (buf == NULL) {
-    (*env)->ThrowNew(env, NS(Class_NullPointerException), "javamsgque buffer object already deleted");
-    goto error;
-  }
+  SETUP_buf(bufO);
   ErrorMqToJavaWithCheck(MqSendU(context,buf));
 error:
   return;

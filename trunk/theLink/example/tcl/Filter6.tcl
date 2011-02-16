@@ -50,31 +50,32 @@ proc FilterEvent {ctx} {
   if {[$ctx StorageCount] == 0} {
     # no data -> nothing to do
     $ctx ErrorSetCONTINUE
-    return
-  } elseif {[catch {
-    # with data -> try to send
-    set ftr [$ctx ServiceGetFilter]
-    # try to connect if not already connected
-    $ftr LinkConnect
-    # read package from storage
-    set Id  [$ctx StorageSelect]
-    # forward the entire BDY data to the ftr-target
-    $ctx ReadForward $ftr
-  }]} {
-    # on "error" do the following:
-    $ctx ErrorSet
-    if {[$ctx ErrorIsEXIT]} {
-      # on "exit-error" -> ignore and return
-      $ctx ErrorReset
-      return
-    } else {
-      # on "normal-error" -> write message to file and ignore
-      # continue and delete data in next step
-      ErrorWrite $ctx
+  } else {
+    if {[catch {
+      # with data -> try to send
+      set ftr [$ctx ServiceGetFilter]
+      # try to connect if not already connected
+      $ftr LinkConnect
+      # read package from storage
+      set Id  [$ctx StorageSelect]
+      # forward the entire BDY data to the ftr-target
+      $ctx ReadForward $ftr
+    }]} {
+      # on "error" do the following:
+      $ctx ErrorSet
+      if {[$ctx ErrorIsEXIT]} {
+	# on "exit-error" -> ignore and return
+	$ctx ErrorReset
+	return
+      } else {
+	# on "normal-error" -> write message to file and ignore
+	# continue and delete data in next step
+	ErrorWrite $ctx
+      }
     }
+    # on "success" or on "error" delete item from storage
+    $ctx StorageDelete $Id
   }
-  # on "success" or on "error" delete item from storage
-  $ctx StorageDelete $Id
 }
 
 proc FilterSetup {ctx} {

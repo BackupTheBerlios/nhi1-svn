@@ -27,7 +27,6 @@ if ($env(USE_REMOTE)) {
   set BLOCK_1 false
   set BLOCK_2 false
   set BLOCK_3 false
-  set BLOCK_4 false
 } else {
   set BLOCK_1 true
   #set BLOCK_1 false
@@ -35,8 +34,6 @@ if ($env(USE_REMOTE)) {
   #set BLOCK_2 false
   set BLOCK_3 true
   #set BLOCK_3 false
-  set BLOCK_4 true
-  #set BLOCK_4 false
 }
 
 ##
@@ -774,24 +771,6 @@ R=TT2}
 unset -nocomplain I B C S
 
 }; # BLOCK_3
-
-if $BLOCK_4 {
-
-test trans2-Y1 {try to connect a "not-created" link} \
-  -setup	    {
-    set CTX   [tclmsgque MqS]
-    $CTX ConfigSetName otto
-  } \
-  -body           {
-    $CTX  LinkConnect
-  } \
-  -cleanup	    {
-    $CTX Delete
-  } \
-  -returnCodes    error \
-  -result         {C> (otto) [MqLinkConnect] the 'client-server-link' was not created}
-
-}; # BLOCK_4
 
 ##
 ## -----------------------------------------------------------------------

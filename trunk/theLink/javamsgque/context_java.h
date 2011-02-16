@@ -104,10 +104,17 @@ MQ_PTR		      NS(ProcCreate)	(JNIEnv*, jobject, jclass, jmethodID, jobject);
 #define SELF		  ((jobject) context->self)
 #define SETUP_self	  jobject self = SELF
 
-#define SETUP_buf \
-  struct MqBufferS * const buf = ((struct MqBufferS *) (*env)->GetLongField(env,self,NS(FID_MqBufferS_hdl))); \
+#define SETUP_buf(obj) \
+  struct MqBufferS * const buf = ((struct MqBufferS *) (*env)->GetLongField(env,obj,NS(FID_MqBufferS_hdl))); \
   if (buf == NULL) { \
     (*env)->ThrowNew(env, NS(Class_NullPointerException), "javamsgque buffer object already deleted");\
+    goto error; \
+  }
+
+#define SETUP_dump(obj) \
+  struct MqDumpS *dump = (struct MqDumpS *) (*env)->GetLongField(env,obj,NS(FID_MqDumpS_hdl)); \
+  if (dump == NULL) { \
+    (*env)->ThrowNew(env, NS(Class_NullPointerException), "javamsgque dump object already deleted");\
     goto error; \
   }
 

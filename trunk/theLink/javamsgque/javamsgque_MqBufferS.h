@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqBufferS
+ * Method:    Delete
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqBufferS_Delete
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqBufferS
+ * Method:    Dup
+ * Signature: ()Ljavamsgque/MqBufferS;
+ */
+JNIEXPORT jobject JNICALL Java_javamsgque_MqBufferS_Dup
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqBufferS
  * Method:    GetType
  * Signature: ()C
  */

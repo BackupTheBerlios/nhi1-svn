@@ -65,6 +65,8 @@ public class MqS {
   public native void ConfigSetName	      (String val);
   /// \api #MqConfigSetSrvName
   public native void ConfigSetSrvName	      (String val);
+  /// \api #MqConfigSetStorage
+  public native void ConfigSetStorage	      (String val);
   /// \api #MqConfigSetBuffersize
   public native void ConfigSetBuffersize      (int val);
   /// \api #MqConfigSetDebug
@@ -106,6 +108,8 @@ public class MqS {
   public native String	ConfigGetName	      ();
   /// \api #MqConfigGetSrvName
   public native String	ConfigGetSrvName      ();
+  /// \api #MqConfigGetStorage
+  public native String	ConfigGetStorage      ();
   /// \api #MqConfigGetDebug
   public native int	ConfigGetDebug	      ();
   /// \api #MqConfigGetStartAs
@@ -162,13 +166,42 @@ public class MqS {
   /// \api #MqExit
   public native void Exit ();
 
-  /// \api #MqSqlSetDb
-  public native void SqlSetDb (String storageFile);
-
   /// \api #MqLogC
   public native void LogC (String prefix, int level, String text);
 
 /// \} Mq_Context_Java_API
+
+//
+// ========================================================================
+/// \defgroup Mq_Storage_Java_API Mq_Storage_Java_API
+/// \ingroup Mq_Java_API
+/// \{
+/// \brief \copybrief Mq_Storage_C_API
+/// \copydoc Mq_Context_C_API
+
+  /// \api #MqStorageOpen
+  public native void StorageOpen (String storageFile);
+
+  /// \api #MqStorageClose
+  public native void StorageClose ();
+
+  /// \api #MqStorageInsert
+  public native long StorageInsert ();
+
+  /// \api #MqStorageSelect
+  public native long StorageSelect ();
+
+  /// \api #MqStorageSelect
+  public native long StorageSelect (long transLId);
+
+  /// \api #MqStorageDelete
+  public native void StorageDelete (long transLId);
+
+  /// \api #MqStorageCount
+  public native long StorageCount ();
+
+
+/// \} Mq_Storage_Java_API
 
 //
 // ========================================================================
@@ -265,6 +298,8 @@ public class MqS {
   public native void	ServiceProxy	    (String token)  throws MqSException;
   /// \api #MqServiceProxy
   public native void	ServiceProxy	    (String token, int id)  throws MqSException;
+  /// \api #MqServiceStore
+  public native void	ServiceStore	    (String token)  throws MqSException;
   /// \api #MqServiceDelete
   public native void	ServiceDelete	    (String token)  throws MqSException;
 
@@ -357,8 +392,12 @@ public class MqS {
   public native byte[]	ReadB		    ()	throws MqSException;
   /// \api #MqReadN
   public native byte[]	ReadN		    ()	throws MqSException;
-  /// \api #MqReadBDY
-  public native byte[]	ReadBDY		    ()	throws MqSException;
+  /// \api #MqReadDUMP
+  public native MqDumpS	ReadDUMP	    ()	throws MqSException;
+  /// \api #MqReadLOAD
+  public native void	ReadLOAD (MqDumpS dump)	throws MqSException;
+  /// \api #MqReadForward
+  public native void	ReadForward  (MqS ftr)	throws MqSException;
   /// \api #MqReadU
   public native MqBufferS ReadU		    ()	throws MqSException;
   /// \api #MqReadProxy
@@ -424,8 +463,6 @@ public class MqS {
   public native void	SendB			(byte[] b)  throws MqSException;
   /// \api #MqSendN
   public native void	SendN			(byte[] b)  throws MqSException;
-  /// \api #MqSendBDY
-  public native void	SendBDY			(byte[] b)  throws MqSException;
   /// \api #MqSendU
   public native void	SendU			(MqBufferS buf)	throws MqSException;
   /// \api #MqSendL_START

@@ -72,10 +72,12 @@ JNIEXPORT void JNICALL NS(ServiceDelete) (
   jstring   token
 )
 {
+  enum MqErrorE ret;
   SETUP_context;
   const char *tokenC = JO2C_START(env, token);
-  ErrorMqToJavaWithCheck(MqServiceDelete(context, tokenC));
+  ret = MqServiceDelete(context, tokenC);
   JO2C_STOP(env, token, tokenC);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
@@ -86,10 +88,12 @@ JNIEXPORT void JNICALL NS(ServiceProxy__Ljava_lang_String_2) (
   jstring   token
 )
 {
+  enum MqErrorE ret;
   SETUP_context;
   const char *tokenC = JO2C_START(env, token);
-  ErrorMqToJavaWithCheck(MqServiceProxy(context, tokenC, 0));
+  ret = MqServiceProxy(context, tokenC, 0);
   JO2C_STOP(env, token, tokenC);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
@@ -101,11 +105,28 @@ JNIEXPORT void JNICALL NS(ServiceProxy__Ljava_lang_String_2I) (
   jint	    id
 )
 {
+  enum MqErrorE ret;
   SETUP_context;
   const char *tokenC = JO2C_START(env, token);
-  ErrorMqToJavaWithCheck(MqServiceProxy(context, tokenC, id));
+  ret = MqServiceProxy(context, tokenC, id);
   JO2C_STOP(env, token, tokenC);
+  ErrorMqToJavaWithCheck(ret);
 error:
   return;
 }
 
+JNIEXPORT void JNICALL NS(ServiceStorage) (
+  JNIEnv *  env, 
+  jobject   self, 
+  jstring   token
+)
+{
+  enum MqErrorE ret;
+  SETUP_context;
+  const char *tokenC = JO2C_START(env, token);
+  ret = MqServiceStorage(context, tokenC);
+  JO2C_STOP(env, token, tokenC);
+  ErrorMqToJavaWithCheck(ret);
+error:
+  return;
+}

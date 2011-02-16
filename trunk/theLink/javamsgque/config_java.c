@@ -70,6 +70,7 @@ error: \
 
 SetC(ConfigSetName)
 SetC(ConfigSetSrvName)
+SetC(ConfigSetStorage)
 SetI(ConfigSetBuffersize)
 SetI(ConfigSetDebug)
 SetW(ConfigSetTimeout)
@@ -121,6 +122,7 @@ GetI(ConfigGetBuffersize)
 GetW(ConfigGetTimeout)
 GetC(ConfigGetName)
 GetC(ConfigGetSrvName)
+GetC(ConfigGetStorage)
 
 JNIEXPORT void JNICALL NS(pConfigSetStartAs) (
   JNIEnv    *env,

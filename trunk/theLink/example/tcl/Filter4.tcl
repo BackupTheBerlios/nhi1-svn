@@ -46,6 +46,46 @@ proc FilterIn {ctx} {
   $ctx SendRETURN
 }
 
+proc FilterEvent {ctx} {
+  set Itms [$ctx dict get Itms]
+  if {[llength $Itms] == 0} {
+    # no data -> nothing to do
+    $ctx ErrorSetCONTINUE
+  } else {
+    if {[catch {
+      # with data -> try to send
+      set data [lindex $Itms 0]
+      set ftr [$ctx ServiceGetFilter]
+      # try to connect if not already connected
+      $ftr LinkConnect
+      # setup the BDY data from storage
+      $ctx ReadLOAD $data
+      # send BDY data to the link-target
+      $ctx ReadForward $ftr
+    }]} {
+      # on "error" do the following:
+      $ctx ErrorSet
+      if {[$ctx ErrorIsEXIT]} {
+	# on "exit-error" -> ignore and return
+	$ctx ErrorReset
+	return
+      } else {
+	# on "normal-error" -> write message to file and ignore
+	ErrorWrite $ctx
+      }
+    }
+    # on "success" or on "normal-error" delete item from list
+    $ctx dict set Itms [lrange [$ctx dict get Itms] 1 end]
+  }
+}
+
+proc FilterCleanup {ctx} {
+  set FH  [$ctx dict get FH]
+  if {$FH ne ""} {close $FH}
+  $ctx dict unset Itms
+  $ctx dict unset FH
+}
+
 proc FilterSetup {ctx} {
   set ftr [$ctx ServiceGetFilter]
   $ctx dict set Itms [list]
@@ -55,46 +95,6 @@ proc FilterSetup {ctx} {
   $ctx ServiceCreate "+ALL" FilterIn
   $ftr ServiceCreate "WRIT" WRIT
   $ftr ServiceProxy  "+TRT"
-}
-
-proc FilterCleanup {ctx} {
-  set ftr [$ctx ServiceGetFilter]
-  set FH  [$ftr dict get FH]
-  $ctx dict unset Itms
-  $ctx dict unset FH
-  if {$FH ne ""} {close $FH}
-}
-
-proc FilterEvent {ctx} {
-  set Itms [$ctx dict get Itms]
-  if {[llength $Itms] == 0} {
-    # no data -> nothing to do
-    $ctx ErrorSetCONTINUE
-    return
-  } elseif {[catch {
-    # with data -> try to send
-    set data [lindex $Itms 0]
-    set ftr [$ctx ServiceGetFilter]
-    # try to connect if not already connected
-    $ftr LinkConnect
-    # setup the BDY data from storage
-    $ctx ReadLOAD $data
-    # send BDY data to the link-target
-    $ctx ReadForward $ftr
-  }]} {
-    # on "error" do the following:
-    $ctx ErrorSet
-    if {[$ctx ErrorIsEXIT]} {
-      # on "exit-error" -> ignore and return
-      $ctx ErrorReset
-      return
-    } else {
-      # on "normal-error" -> write message to file and ignore
-      ErrorWrite $ctx
-    }
-  }
-  # on "success" or on "normal-error" delete item from list
-  $ctx dict set Itms [lrange [$ctx dict get Itms] 1 end]
 }
 
 tclmsgque FactoryDefault "transFilter"

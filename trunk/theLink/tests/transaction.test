@@ -72,7 +72,7 @@ if {$BLOCK_1} {
        SetConstraints $I $B $S
 
       # storage
-      foreach D storageFiles {
+      foreach D $storageFiles {
 
 ##
 ## -----------------------------------------------------------------------

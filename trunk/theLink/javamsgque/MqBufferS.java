@@ -26,11 +26,21 @@ public class MqBufferS {
 
   private long hdl = 0L;
 
+  private native long Delete();
+
   // INTERNAL
 
   private MqBufferS (long data) {
     hdl = data;
   }
+
+  /// \copybrief MqBufferDelete
+  public void finalize () {
+    hdl = Delete();
+  }
+
+  /// \copybrief MqBufferDup
+  public native MqBufferS Dup ();
 
   // PUBLIC
 

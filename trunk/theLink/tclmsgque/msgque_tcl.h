@@ -187,6 +187,18 @@ error: \
     skip++; \
   }
 
+#define CHECK_DUMP(val) \
+  val = NULL; \
+  if (skip < objc) {\
+    NS(GetClientData) (interp, objv[skip], MQ_MqDumpS_SIGNATURE, (MQ_PTR*)&val); \
+  } \
+  if (val == NULL) { \
+    Tcl_WrongNumArgs(interp, skip, objv, #val " ..."); \
+    goto error; \
+  } else { \
+    skip++; \
+  }
+
 #define VAL2CST(val) Tcl_GetString(val)
 #define CHECK_C(val) \
   if (skip >= objc) {\
@@ -291,7 +303,11 @@ enum MqErrorE NS(EventLink) ( struct MqS * const, MQ_PTR const );
 
 // from MqBufferS_tcl.c
 
-int   NS(MqBufferS_Pointer) ( Tcl_Interp *, struct MqBufferS *);
+void   NS(MqBufferS_New) ( Tcl_Interp *, struct MqBufferS *);
+
+// from MqDumpS_tcl.c
+
+void   NS(MqDumpS_New) ( Tcl_Interp *, struct MqDumpS *);
 
 // from misc_tcl.c
 
@@ -312,6 +328,8 @@ enum MqErrorE   NS(ProcError)	    ( struct TclContextS * const, MQ_CST);
 
 
 #endif // MSGQUE_TCL_H
+
+
 
 
 

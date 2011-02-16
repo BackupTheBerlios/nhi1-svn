@@ -110,7 +110,7 @@ static HDB(GetC)
 
 static HDB(Dup)
 {
-  NS(MqBufferS_Pointer) (interp, MqBufferDup(buf));
+  NS(MqBufferS_New) (interp, MqBufferDup(buf));
   return TCL_OK;
 }
 
@@ -182,7 +182,7 @@ static void NS(MqBufferS_Free) (
   Tcl_DeleteExitHandler (NS(MqBufferS_Free), buf);
 }
 
-int NS(MqBufferS_Pointer) (
+void NS(MqBufferS_New) (
   Tcl_Interp * interp,
   struct MqBufferS * buf
 )
@@ -193,8 +193,6 @@ int NS(MqBufferS_Pointer) (
 
   Tcl_SetResult (interp, buffer, TCL_VOLATILE);
   Tcl_CreateExitHandler (NS(MqBufferS_Free), buf);
-
-  return TCL_OK;
 }
 
 /* \brief create a buffer object 
@@ -219,9 +217,11 @@ int NS(MqBufferS_Init) (
   bufCtx->buf = MqBufferDup(((struct MqBufferS *)&tmpCtx)->buf);
   bufCtx->persistent = MQ_YES;
 
-  return NS(MqBufferS_Pointer) (interp, bufCtx);
+  return NS(MqBufferS_New) (interp, bufCtx);
 }
  **/
+
+
 
 
 

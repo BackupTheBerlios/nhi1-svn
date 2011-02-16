@@ -33,6 +33,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetSrvName
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigSetStorage
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ConfigSetStorage
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigSetBuffersize
  * Signature: (I)V
  */
@@ -177,6 +185,14 @@ JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetSrvName
 
 /*
  * Class:     javamsgque_MqS
+ * Method:    ConfigGetStorage
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_javamsgque_MqS_ConfigGetStorage
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
  * Method:    ConfigGetDebug
  * Signature: ()I
  */
@@ -273,19 +289,67 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_Exit
 
 /*
  * Class:     javamsgque_MqS
- * Method:    SqlSetDb
- * Signature: (Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SqlSetDb
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     javamsgque_MqS
  * Method:    LogC
  * Signature: (Ljava/lang/String;ILjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_LogC
   (JNIEnv *, jobject, jstring, jint, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageOpen
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_StorageOpen
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageClose
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_StorageClose
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageInsert
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_StorageInsert
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageSelect
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_StorageSelect__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageSelect
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_StorageSelect__J
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageDelete
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_StorageDelete
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    StorageCount
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_javamsgque_MqS_StorageCount
+  (JNIEnv *, jobject);
 
 /*
  * Class:     javamsgque_MqS
@@ -414,6 +478,14 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
   (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ServiceStore
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceStore
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     javamsgque_MqS
@@ -593,11 +665,27 @@ JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadN
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ReadBDY
- * Signature: ()[B
+ * Method:    ReadDUMP
+ * Signature: ()Ljavamsgque/MqDumpS;
  */
-JNIEXPORT jbyteArray JNICALL Java_javamsgque_MqS_ReadBDY
+JNIEXPORT jobject JNICALL Java_javamsgque_MqS_ReadDUMP
   (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadLOAD
+ * Signature: (Ljavamsgque/MqDumpS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadLOAD
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadForward
+ * Signature: (Ljavamsgque/MqS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadForward
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     javamsgque_MqS
@@ -813,14 +901,6 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_SendB
  * Signature: ([B)V
  */
 JNIEXPORT void JNICALL Java_javamsgque_MqS_SendN
-  (JNIEnv *, jobject, jbyteArray);
-
-/*
- * Class:     javamsgque_MqS
- * Method:    SendBDY
- * Signature: ([B)V
- */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_SendBDY
   (JNIEnv *, jobject, jbyteArray);
 
 /*

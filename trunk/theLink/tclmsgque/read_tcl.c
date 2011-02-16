@@ -155,23 +155,20 @@ int NS(ReadN) (NS_ARGS)
 int NS(ReadDUMP) (NS_ARGS)
 {
   SETUP_mqctx
-  MQ_CBI val;
-  MQ_SIZE len;
+  struct MqDumpS *val;
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqReadDUMP(mqctx, &val, &len));
-  Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(val,len));
-  MqSysFree (val);
+  ErrorMqToTclWithCheck(MqReadDUMP(mqctx, &val));
+  NS(MqDumpS_New)(interp, val);
   RETURN_TCL
 }
 
 int NS(ReadLOAD) (NS_ARGS)
 {
+  struct MqDumpS *dump;
   SETUP_mqctx
-  MQ_CBI val;
-  MQ_SIZE len;
-  CHECK_B(val,len)
+  CHECK_DUMP(dump);
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqReadLOAD(mqctx, val, len));
+  ErrorMqToTclWithCheck(MqReadLOAD(mqctx, dump));
   RETURN_TCL
 }
 
@@ -181,7 +178,7 @@ int NS(ReadU) (NS_ARGS)
   struct MqBufferS * buf = NULL;
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqReadU(mqctx, &buf));
-  NS(MqBufferS_Pointer) (interp, buf);
+  NS(MqBufferS_New) (interp, buf);
   return TCL_OK;
 error:
   return TCL_ERROR;
@@ -294,5 +291,4 @@ int NS(ReadALL) (NS_ARGS)
   Tcl_SetObjResult(interp, RET);
   RETURN_TCL
 }
-
 

@@ -23,11 +23,7 @@ using namespace ccmsgque;
 
 class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public IEvent, public IService {
   private:
-    struct FilterItmS {
-      MQ_CBI  bdy;
-      MQ_SIZE len;
-    };
-    queue<struct FilterItmS> itms;
+    queue<struct MqDumpS*> itms;
     FILE *FH;
 
     void ErrorWrite () {
@@ -43,7 +39,7 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	ErrorSetCONTINUE();
       } else {
 	// extract the first (oldest) item from the store
-	struct FilterItmS it = itms.front();
+	struct MqDumpS *bdy = itms.front();
 	// an item is available, try to send the data
 	try {
 	  // get the filter-context
@@ -51,7 +47,7 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
 	  // setup the BDY data from storage
-	  ReadLOAD(it.bdy, it.len);
+	  ReadLOAD(bdy);
 	  // send BDY data to the link-target
 	  ReadForward(ftr);
 	} catch (const exception& e) {
@@ -67,20 +63,20 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	  }
 	}
 	// reset the item-storage
-	MqSysFree(it.bdy);
+	MqSysFree(bdy);
 	// delete the data, will contine with next item
 	itms.pop();
       }
     }
 
     void Service (MqC * const ctx) {
-      struct FilterItmS it;
+      struct MqDumpS *bdy;
 
       // read the body-item
-      ReadDUMP(&it.bdy, &it.len);
+      ReadDUMP(&bdy);
 
       // fill the item data
-      itms.push (it);
+      itms.push (bdy);
 
       SendRETURN();
     }

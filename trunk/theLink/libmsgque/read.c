@@ -595,8 +595,15 @@ pReadTRA (
   }
 }
 
+/*****************************************************************************/
+/*                                                                           */
+/*                                read_dump                                  */
+/*                                                                           */
+/*****************************************************************************/
+
 #pragma pack(1)
-struct MqReadDmpS {
+struct MqDumpS {
+  MQ_INT    signature;
   MQ_TRA    transLId;
   MQ_BOL    isString;
   MQ_BOL    endian;
@@ -606,8 +613,8 @@ struct MqReadDmpS {
 #pragma pack()
 
 const static MQ_SIZE DMP_STA = 0;
-const static MQ_SIZE DMP_HDR = sizeof(struct MqReadDmpS);
-const static MQ_SIZE DMP_BDY = sizeof(struct MqReadDmpS) + sizeof(struct HdrS);
+const static MQ_SIZE DMP_HDR = sizeof(struct MqDumpS);
+const static MQ_SIZE DMP_BDY = sizeof(struct MqDumpS) + sizeof(struct HdrS);
 
 enum MqErrorE
 pReadLOAD (
@@ -620,9 +627,9 @@ pReadLOAD (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
     // called by "pSqlSelectReadTrans", hdl as environment
-    register struct MqReadDmpS * dump = (struct MqReadDmpS*) env;
+    register struct MqDumpS * dump = (struct MqDumpS*) env;
 
-    // process data from MqReadDmpS buffer
+    // process data from MqDumpS buffer
     return sReadGEN (context, 
       dump->transLId,
       dump->isString,
@@ -638,15 +645,15 @@ pReadLOAD (
 enum MqErrorE
 MqReadDUMP (
   struct MqS * const context,
-  MQ_CBI  * const out,
-  MQ_SIZE * const len
+  struct MqDumpS ** const out
 )
 {
   struct MqReadS * const read = context->link.read;
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct MqReadDmpS dump = {
+    struct MqDumpS dump = {
+      MQ_MqDumpS_SIGNATURE,
       read->transLId, 
       context->config.isString, 
       context->link.bits.endian,
@@ -654,14 +661,13 @@ MqReadDUMP (
       read->bdy->cursize
     };
     MQ_SIZE const lbdy = read->bdy->cursize;
-    MQ_SIZE const llen = sizeof(struct MqReadDmpS) + HDR_SIZE + lbdy;
+    MQ_SIZE const llen = sizeof(struct MqDumpS) + HDR_SIZE + lbdy;
     MQ_BIN data = (MQ_BIN) MqSysMalloc (context, llen);
     check_NULL(data) return MqErrorStack(context);
     memcpy (data+DMP_STA, &dump,		DMP_HDR);
     memcpy (data+DMP_HDR, read->hdrorig->data,	read->hdrorig->cursize);
     memcpy (data+DMP_BDY, read->bdy->data,	read->bdy->cursize);
-    *out = data;
-    *len = llen;
+    *out = (struct MqDumpS *)data;
     // in a "longterm-transaction" with "MqReadDUMP" no return transaction is
     // possible because the transaction is stored or forwarded
     read->handShake = MQ_HANDSHAKE_START;
@@ -672,8 +678,7 @@ MqReadDUMP (
 enum MqErrorE
 MqReadLOAD (
   struct MqS * context,
-  MQ_CBI  const in,
-  MQ_SIZE const len
+  struct MqDumpS * const in
 )
 {
   MqErrorCheck(pReadLOAD((MQ_PTR)in, &context));
@@ -682,7 +687,19 @@ error:
   return MqErrorStack(context);
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MQ_SIZE
+MqDumpSize (
+  struct MqDumpS * const dump
+)
+{
+  return sizeof(struct MqDumpS) + HDR_SIZE + dump->bdylen;
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                read_atom                                  */
+/*                                                                           */
+/*****************************************************************************/
 
 #define pReadWordM(context, buf, out) { \
   register union MqBufferU bcur = buf->cur; \
@@ -755,36 +772,6 @@ pReadWord (
 */
 
   return MQ_OK;
-}
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                read_atom                                  */
-/*                                                                           */
-/*****************************************************************************/
-
-enum MqErrorE
-MqReadL (
-  struct MqS * const context,
-  struct MqBufferLS ** const out
-)
-{
-  struct MqReadS * const read = context->link.read;
-  if (unlikely(read == NULL)) {
-    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else {
-    struct MqBufferLS * const line = (*out == NULL ? MqBufferLCreate (read->bdy->numItems) : *out);
-    struct MqBufferS * buf = NULL;
-    while (read->bdy->numItems) {
-      MqErrorCheck (MqReadU (context, &buf));
-      MqBufferLAppend (line, MqBufferDup(buf), -1);
-    }
-    *out = line;
-    read->canUndo = MQ_NO;
-    return MQ_OK;
-error:
-    return MqErrorStack (context);
-  }
 }
 
 static enum MqErrorE
@@ -885,9 +872,33 @@ error:
 
 /*****************************************************************************/
 /*                                                                           */
-/*                               read functions                              */
+/*                               read public                                 */
 /*                                                                           */
 /*****************************************************************************/
+
+enum MqErrorE
+MqReadL (
+  struct MqS * const context,
+  struct MqBufferLS ** const out
+)
+{
+  struct MqReadS * const read = context->link.read;
+  if (unlikely(read == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    struct MqBufferLS * const line = (*out == NULL ? MqBufferLCreate (read->bdy->numItems) : *out);
+    struct MqBufferS * buf = NULL;
+    while (read->bdy->numItems) {
+      MqErrorCheck (MqReadU (context, &buf));
+      MqBufferLAppend (line, MqBufferDup(buf), -1);
+    }
+    *out = line;
+    read->canUndo = MQ_NO;
+    return MQ_OK;
+error:
+    return MqErrorStack (context);
+  }
+}
 
 enum MqErrorE
 MqReadY (

@@ -14,9 +14,12 @@
 
 extern jfieldID	    NS(FID_MqS_hdl);
 extern jfieldID	    NS(FID_MqBufferS_hdl);
+extern jfieldID	    NS(FID_MqDumpS_hdl);
 extern jclass	    NS(Class_NullPointerException);
 extern jclass       NS(Class_MqBufferS);
+extern jclass       NS(Class_MqDumpS);
 extern jmethodID    NS(MID_MqBufferS_INIT);
+extern jmethodID    NS(MID_MqDumpS_INIT);
 
 ///
 ///  READ
@@ -221,22 +224,30 @@ error:
   return NULL;
 }
 
-JNIEXPORT jbyteArray JNICALL NS(ReadBDY) (
+JNIEXPORT jobject JNICALL NS(ReadDUMP) (
   JNIEnv *	env, 
   jobject	self
 )
 {
   SETUP_context;
-  MQ_BIN b;
-  MQ_SIZE len;
-  jbyteArray tmp;
-  ErrorMqToJavaWithCheck(MqReadBDY(context, &b, &len));
-  tmp = (*env)->NewByteArray(env,len);
-  (*env)->SetByteArrayRegion(env,tmp,0,len,(jbyte*)b);
-  MqSysFree(b);
-  return tmp;
+  struct MqDumpS *bdy;
+  ErrorMqToJavaWithCheck(MqReadDUMP(context, &bdy));
+  return (*env)->NewObject(env, NS(Class_MqDumpS), NS(MID_MqDumpS_INIT), (jlong) bdy);
 error:
   return NULL;
+}
+
+JNIEXPORT void JNICALL NS(ReadLOAD) (
+  JNIEnv *	env, 
+  jobject	self,
+  jobject	dumpO
+)
+{
+  SETUP_context;
+  SETUP_dump(dumpO);
+  ErrorMqToJavaWithCheck(MqReadLOAD(context,dump));
+error:
+  return;
 }
 
 JNIEXPORT jobject JNICALL NS(ReadU) (
@@ -260,6 +271,18 @@ JNIEXPORT void JNICALL NS(ReadProxy) (
 {
   SETUP_context;
   ErrorMqToJavaWithCheck(MqReadProxy(context, XCONTEXT(ctx)));
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(ReadForward) (
+  JNIEnv *      env,
+  jobject       self,
+  jobject	ctx
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck(MqReadForward(context, XCONTEXT(ctx)));
 error:
   return;
 }

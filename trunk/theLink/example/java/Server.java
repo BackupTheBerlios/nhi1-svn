@@ -158,6 +158,11 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	ConfigSetSrvName (ReadC());
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
+      } else if (cmd.equals("Storage")) {
+	String old = ConfigGetStorage();
+	ConfigSetStorage (ReadC());
+	SendC (ConfigGetStorage());
+	ConfigSetStorage (old);
       } else if (cmd.equals("Ident")) {
 	String old = FactoryCtxIdentGet();
 	FactoryCtxSet (MqFactoryS.Get().Copy(ReadC()).factory);
@@ -412,7 +417,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 
   class SETU implements IService {
     public void Service (MqS ctx) throws MqSException {
-      buf = ctx.ReadU();
+      buf = ctx.ReadU().Dup();
     }
   }
 
@@ -420,6 +425,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
     public void Service (MqS ctx) throws MqSException {
       ctx.SendSTART();
       ctx.SendU(buf);
+      buf = null;
       ctx.SendRETURN();
     }
   }
@@ -452,7 +458,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
   class STDB implements IService {
     public void Service (MqS ctx) throws MqSException {
       ctx.SendSTART();
-      ctx.SqlSetDb(ReadC());
+      ctx.StorageOpen(ReadC());
       ctx.SendRETURN();
     }
   }

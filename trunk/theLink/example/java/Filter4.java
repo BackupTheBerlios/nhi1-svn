@@ -18,49 +18,11 @@ import java.io.FileWriter;
 
 class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IService {
 
-  private Queue<byte[]> itms = new LinkedList<byte[]>();
+  private Queue<MqDumpS> itms = new LinkedList<MqDumpS>();
   private FileWriter FH = null;
 
   public Filter4(MqS tmpl) {
     super(tmpl);
-  }
-
-  public void ServerCleanup() throws MqSException {
-    Filter4 ftr = (Filter4) ServiceGetFilter();
-    try {
-      if (ftr.FH != null) ftr.FH.close();
-    } catch (Throwable ex) {
-      ErrorPrint(ex);
-    }
-  }
-
-  public void ServerSetup() throws MqSException {
-    ServiceCreate("+ALL", this); 
-    ServiceCreate("LOGF", new LOGF()); 
-    ServiceCreate("EXIT", new EXIT()); 
-    ServiceGetFilter().ServiceCreate("WRIT", new WRIT());
-  }
-
-  public void Event() throws MqSException {
-    byte[] it = itms.peek();
-    if (it == null) {
-      ErrorSetCONTINUE();
-    } else {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
-      try {
-	ftr.LinkConnect();
-	ftr.SendBDY(it);
-      } catch (Throwable ex) {
-	ftr.ErrorSet(ex);
-	if (ftr.ErrorIsEXIT()) {
-	  ftr.ErrorReset();
-	  return;
-	} else {
-	  ftr.ErrorWrite();
-	}
-      }
-      itms.remove();
-    }
   }
 
   private void ErrorWrite() {
@@ -74,29 +36,14 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
     }
   }
 
-  private class WRIT implements IService {
-    public void Service (MqS ctx) throws MqSException {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
-      try {
-	ftr.FH.write(ftr.ReadC() + "\n");
-	ftr.FH.flush();
-      } catch (Throwable ex) {
-	ErrorPrint(ex);
-      }
-      ftr.SendRETURN();
-    }
-  }
-
   private class LOGF implements IService {
     public void Service (MqS ctx) throws MqSException {
       Filter4 ftr = (Filter4) ServiceGetFilter();
       if (ftr.LinkGetTargetIdent().equals("transFilter")) {
-	ftr.SendSTART();
-	ftr.SendC(ReadC());
-	ftr.SendEND_AND_WAIT("LOGF");
+	ReadForward(ftr);
       } else {
 	try {
-	  ftr.FH = new FileWriter(ReadC(), true);
+	  FH = new FileWriter(ReadC(), true);
 	} catch (Throwable ex) {
 	  ErrorPrint(ex);
 	}
@@ -107,13 +54,65 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
 
   private class EXIT implements IService {
     public void Service (MqS ctx) throws MqSException {
-      ErrorSetEXIT();
+      System.exit(1);
     }
   }
 
-  public void Service(MqS ctx) throws MqSException {
-    itms.add(ReadBDY());
+  private class WRIT implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      try {
+	FH.write(ctx.ReadC() + "\n");
+	FH.flush();
+      } catch (Throwable ex) {
+	ErrorPrint(ex);
+      }
+      ctx.SendRETURN();
+    }
+  }
+
+  public void Service (MqS ctx) throws MqSException {
+    itms.add(ReadDUMP());
     SendRETURN();
+  }
+
+  public void Event() throws MqSException {
+    MqDumpS it = itms.peek();
+    if (it == null) {
+      ErrorSetCONTINUE();
+    } else {
+      try {
+	MqS ftr = ServiceGetFilter();
+	ftr.LinkConnect();
+	ReadLOAD(it);
+	ReadForward(ftr);
+      } catch (Throwable ex) {
+	ErrorSet(ex);
+	if (ErrorIsEXIT()) {
+	  ErrorReset();
+	  return;
+	} else {
+	  ErrorWrite();
+	}
+      }
+      itms.remove();
+    }
+  }
+
+  public void ServerCleanup() throws MqSException {
+    try {
+      if (FH != null) FH.close();
+    } catch (Throwable ex) {
+      ErrorPrint(ex);
+    }
+  }
+
+  public void ServerSetup() throws MqSException {
+    MqS ftr = ServiceGetFilter();
+    ServiceCreate("LOGF", new LOGF()); 
+    ServiceCreate("EXIT", new EXIT()); 
+    ServiceCreate("+ALL", this); 
+    ftr.ServiceCreate("WRIT", new WRIT());
+    ftr.ServiceProxy("+TRT");
   }
 
   public static void main(String[] argv) {
@@ -131,5 +130,4 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
     }
   }
 }
-
 

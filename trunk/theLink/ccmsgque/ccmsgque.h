@@ -663,12 +663,12 @@ namespace ccmsgque {
 	ErrorCheck (MqReadN(&context, valP, lenP)); 
       }
       /// \api #MqReadDUMP
-      inline void ReadDUMP(MQ_CBI * const valP, MQ_SIZE * const lenP) throw(MqCException) { 
-	ErrorCheck (MqReadDUMP(&context, valP, lenP)); 
+      inline void ReadDUMP(struct MqDumpS ** const valP) throw(MqCException) { 
+	ErrorCheck (MqReadDUMP(&context, valP)); 
       }
       /// \api #MqReadLOAD
-      inline void ReadLOAD(MQ_CBI const val, MQ_SIZE const len) throw(MqCException) { 
-	ErrorCheck (MqReadLOAD(&context, val, len)); 
+      inline void ReadLOAD(struct MqDumpS * const val) throw(MqCException) { 
+	ErrorCheck (MqReadLOAD(&context, val)); 
       }
       /// \api #MqReadForward
       inline void ReadForward(MqC * const ftr) throw(MqCException) { 

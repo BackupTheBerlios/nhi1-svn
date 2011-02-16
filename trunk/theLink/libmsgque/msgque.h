@@ -238,6 +238,7 @@ union  MqBufferU;
 struct MqConfigS;
 struct MqEventS;
 struct MqFactoryS;
+struct MqDumpS;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3708,6 +3709,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
 
+/// \brief signature used in \ref MqFactoryS::signature
+#define MQ_MqDumpS_SIGNATURE 0x00127364
+
 /// \brief extract the entire \e body-package from the \e read-data-package
 ///
 /// A \e body is a \e byte-array with a defined \e length and including the \e number-of-items
@@ -3715,16 +3719,14 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// storage or be used in a software tunnel (example: the \e agurad tool) and be can send later 
 /// using \RNSA{SendBDY}. 
 /// \if C-STYLE
-/// The memory is \e dynamic-allocated and have to be freed using #MqSysFree.
+/// The memory is \e dynamic-allocated and have to be freed using \RNS{ReadFree}.
 /// \endif
 /// \ctx
-/// \param[out] val the \e body as \e byte-array
-/// \param[out] len the \e byte-array-length of the \e val
+/// \param[out] val the \e read-package-data
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const ctx,
-  MQ_CBI  * const val,
-  MQ_SIZE * const len
+  struct MqDumpS ** const out
 ) __attribute__((nonnull(1)));
 
 
@@ -3734,14 +3736,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
 /// operation like encryption.
 /// \ctx
 /// \param[in] value the \e entire-body for appending
-/// \param[in] len the size of the \e entire-body-byte-array (C-API only)
 /// \retException 
 /// \attention the data returned is owned by the caller and have to be freed with #MqSysFree
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
   struct MqS * const context,
-  MQ_CBI  const in,
-  MQ_SIZE const len
+  struct MqDumpS * const in
 ) __attribute__((nonnull(1,2)));
+
+MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
+  struct MqDumpS * const dump
+) __attribute__((nonnull));
 
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
