@@ -259,12 +259,21 @@ MqBufferDelete (
 {
   struct MqBufferS *buf;
   if (unlikely (bufP == NULL || (buf=*bufP) == NULL || buf->alloc == MQ_ALLOC_STATIC)) return;
-
   if (buf->data && buf->data != buf->bls) {
     MqSysFree (buf->data);
   }
   buf->signature = 0;
   MqSysFree (*bufP);
+}
+
+struct MqBufferS*
+MqBufferDeleteSave (
+  struct MqBufferS * buf
+)
+{
+  if (buf != NULL && buf->context->temp != buf && buf->alloc != MQ_ALLOC_STATIC) 
+    MqBufferDelete(&buf);
+  return NULL;
 }
 
 void

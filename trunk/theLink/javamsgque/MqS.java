@@ -299,7 +299,7 @@ public class MqS {
   /// \api #MqServiceProxy
   public native void	ServiceProxy	    (String token, int id)  throws MqSException;
   /// \api #MqServiceStore
-  public native void	ServiceStore	    (String token)  throws MqSException;
+  public native void	ServiceStorage	    (String token)  throws MqSException;
   /// \api #MqServiceDelete
   public native void	ServiceDelete	    (String token)  throws MqSException;
 

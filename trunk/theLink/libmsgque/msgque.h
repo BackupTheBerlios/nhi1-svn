@@ -261,8 +261,8 @@ typedef float MQ_FLT;
 typedef __int64 MQ_WID;
 typedef __int64 MQ_TRA;
 #else
-typedef long long int MQ_WID;
-typedef long long int MQ_TRA;
+typedef long long MQ_WID;
+typedef long long MQ_TRA;
 #endif
 /// 8 byte \b double data-type
 typedef double MQ_DBL;
@@ -2430,6 +2430,11 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreate (
 /// \attention \attDelete
 MQ_EXTERN void MQ_DECL MqBufferDelete (
   struct MqBufferS ** const bufP
+);
+
+/// \attention this funcation can \b only be called as long as the \e biffer-context is \b alive
+MQ_EXTERN struct MqBufferS*  MQ_DECL MqBufferDeleteSave (
+  struct MqBufferS * buf
 );
 
 /// \brief reset a #MqBufferS to the length zero

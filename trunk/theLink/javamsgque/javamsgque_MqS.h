@@ -481,10 +481,10 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceProxy__Ljava_lang_String_2I
 
 /*
  * Class:     javamsgque_MqS
- * Method:    ServiceStore
+ * Method:    ServiceStorage
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceStore
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ServiceStorage
   (JNIEnv *, jobject, jstring);
 
 /*

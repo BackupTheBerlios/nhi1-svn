@@ -57,6 +57,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetSrvName")]
     private static extern void MqConfigSetSrvName([In]IntPtr context, [In]string data);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetStorage")]
+    private static extern void MqConfigSetStorage([In]IntPtr context, [In]string data);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigSetBuffersize")]
     private static extern void MqConfigSetBuffersize([In]IntPtr context, [In]int data);
 
@@ -125,6 +128,8 @@ namespace csmsgque {
     public void   ConfigSetName		(string data) { MqConfigSetName		(context, data); }
     /// \api #MqConfigSetSrvName
     public void   ConfigSetSrvName	(string data) { MqConfigSetSrvName	(context, data); }
+    /// \api #MqConfigSetStorage
+    public void   ConfigSetStorage	(string data) { MqConfigSetStorage	(context, data); }
     /// \api #MqConfigSetBuffersize
     public void	  ConfigSetBuffersize	(int data)    { MqConfigSetBuffersize	(context, data); }
     /// \api #MqConfigSetDebug
@@ -189,6 +194,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetSrvName")]
     private static extern IntPtr MqConfigGetSrvName([In]IntPtr context);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetStorage")]
+    private static extern IntPtr MqConfigGetStorage([In]IntPtr context);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigGetBuffersize")]
     private static extern int MqConfigGetBuffersize([In]IntPtr context);
 
@@ -228,6 +236,8 @@ namespace csmsgque {
     public string   ConfigGetName()	    { return Marshal.PtrToStringAnsi(MqConfigGetName(context)); }
     /// \api #MqConfigGetSrvName
     public string   ConfigGetSrvName()	    { return Marshal.PtrToStringAnsi(MqConfigGetSrvName(context)); }
+    /// \api #MqConfigGetStorage
+    public string   ConfigGetStorage()	    { return Marshal.PtrToStringAnsi(MqConfigGetStorage(context)); }
     /// \api #MqConfigGetDebug
     public int	    ConfigGetDebug()	    { return MqConfigGetDebug(context); }
     /// \api #MqConfigGetTimeout

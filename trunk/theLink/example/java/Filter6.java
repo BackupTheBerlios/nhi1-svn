@@ -110,6 +110,7 @@ class Filter6 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
     ServiceCreate("LOGF", new LOGF()); 
     ServiceCreate("EXIT", new EXIT()); 
     ServiceCreate("+ALL", this); 
+    ServiceStorage("PRNT"); 
     ftr.ServiceCreate("WRIT", new WRIT());
     ftr.ServiceProxy("+TRT");
   }

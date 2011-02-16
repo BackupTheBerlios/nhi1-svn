@@ -40,6 +40,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceProxy")]
     private static extern MqErrorE MqServiceProxy([In]IntPtr context, [In]string token, [In]int id);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceStorage")]
+    private static extern MqErrorE MqServiceStorage([In]IntPtr context, [In]string token);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqServiceGetToken")]
     private static extern IntPtr MqServiceGetToken([In]IntPtr context);
 
@@ -94,6 +97,11 @@ namespace csmsgque {
     /// \api #MqServiceProxy
     public void ServiceProxy(string token, int id) {
       ErrorMqToCsWithCheck(MqServiceProxy(context, token, id));
+    }
+
+    /// \api #MqServiceStorage
+    public void ServiceStorage(string token) {
+      ErrorMqToCsWithCheck(MqServiceStorage(context, token));
     }
 
     /// \api #MqWaitOnEventE

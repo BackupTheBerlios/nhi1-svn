@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/csmsgque/buffer.cs
+ *  \file       theLink/csmsgque/MqBufferS.cs
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group
@@ -52,6 +52,13 @@ namespace csmsgque {
       buf = data;
     }
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDeleteSave")]
+    private  static extern IntPtr MqBufferDeleteSave([In] IntPtr buf);
+
+    public void Delete () {
+      buf = MqBufferDeleteSave(buf);
+    }
+
     // PRIVAT
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferGetY")]
@@ -72,6 +79,9 @@ namespace csmsgque {
     private  static extern MqErrorE MqBufferGetB([In]IntPtr buf, out IntPtr outV, out int size);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferGetC")]
     private  static extern MqErrorE MqBufferGetC([In]IntPtr buf, out IntPtr outV);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDup")]
+    private  static extern IntPtr MqBufferDup([In]IntPtr buf);
 
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferGetContext")]
     private static extern IntPtr MqBufferGetContext(IntPtr bufP);
@@ -169,6 +179,11 @@ namespace csmsgque {
       ErrorBufToCsWithCheck(MqBufferGetC(buf, out outV));
       return Marshal.PtrToStringAnsi(outV);
     }}
+
+    /// \api #MqBufferDup
+    public MqBufferS Dup() {
+      return new MqBufferS (MqBufferDup (buf));
+    }
 
 /// \} Mq_Buffer_Cs_API
 

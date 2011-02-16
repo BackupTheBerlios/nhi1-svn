@@ -38,7 +38,7 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
 
   private class LOGF implements IService {
     public void Service (MqS ctx) throws MqSException {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
+      MqS ftr = ServiceGetFilter();
       if (ftr.LinkGetTargetIdent().equals("transFilter")) {
 	ReadForward(ftr);
       } else {

@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/example/csharp/Filter4.cs
- *  \brief      \$Id: Filter4.cs 92 2009-12-21 11:58:07Z aotto1968 $
+ *  \file       theLink/example/csharp/Filter6.cs
+ *  \brief      \$Id$
  *  
- *  (C) 2009 - NHI - #1 - Project - Group
+ *  (C) 2011 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 92 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information
@@ -15,12 +15,11 @@ using System.Collections.Generic;
 using csmsgque;
 
 namespace example {
-  sealed class Filter4 : MqS, IServerSetup, IServerCleanup, IEvent, IService {
+  sealed class Filter6 : MqS, IServerSetup, IServerCleanup, IEvent, IService {
 
-    Queue<MqDumpS> itms = new Queue<MqDumpS>();
     StreamWriter FH = null;
 
-    public Filter4(MqS tmpl) : base(tmpl) {
+    public Filter6(MqS tmpl) : base(tmpl) {
     }
 
     void ErrorWrite () {
@@ -44,26 +43,26 @@ namespace example {
     }
 
     void WRIT () {
-      Filter4 master = (Filter4) ServiceGetFilter();
+      Filter6 master = (Filter6) ServiceGetFilter();
       master.FH.WriteLine(ReadC());
       master.FH.Flush();
       SendRETURN();
     }
 
     void IService.Service (MqS ctx) {
-      itms.Enqueue(ReadDUMP());
+      StorageInsert();
       SendRETURN();
     }
 
     void IEvent.Event () {
-      if (itms.Count <= 0) {
+      if (StorageCount() == 0) {
 	ErrorSetCONTINUE();
       } else {
-	MqDumpS dump = itms.Peek();
+	long Id = 0L;
 	try  {
 	  MqS ftr = ServiceGetFilter();
 	  ftr.LinkConnect();
-	  ReadLOAD(dump);
+	  Id = StorageSelect();
 	  ReadForward(ftr);
 	} catch (Exception ex) {
 	  ErrorSet (ex);
@@ -74,7 +73,7 @@ namespace example {
 	    ErrorWrite();
 	  }
 	}
-	itms.Dequeue();
+	StorageDelete(Id);
       }
     }
 
@@ -83,17 +82,17 @@ namespace example {
     }
 
     void IServerSetup.ServerSetup() {
-      Filter4 ftr = (Filter4) ServiceGetFilter();
+      Filter6 ftr = (Filter6) ServiceGetFilter();
       ServiceCreate("LOGF", LOGF);
       ServiceCreate("EXIT", EXIT);
       ServiceCreate("+ALL", this);
+      ServiceStorage("PRNT");
       ftr.ServiceCreate("WRIT", ftr.WRIT);
       ftr.ServiceProxy("+TRT");
     }
 
     public static void Main(string[] argv) {
-      MqFactoryS<Filter4>.Default("transFilter");
-      Filter4 srv = new Filter4(null);
+      Filter6 srv = MqFactoryS<Filter6>.Add("transFilter").New();
       try {
 	srv.ConfigSetIgnoreExit(true);
 	srv.LinkCreate(argv);

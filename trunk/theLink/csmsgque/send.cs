@@ -64,8 +64,6 @@ public partial class MqS
   private static extern MqErrorE MqSendB(IntPtr context, byte[] val, int size);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendN")]
   private static extern MqErrorE MqSendN(IntPtr context, byte[] val, int size);
-  [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendBDY")]
-  private static extern MqErrorE MqSendBDY(IntPtr context, byte[] val, int size);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendU")]
   private static extern MqErrorE MqSendU(IntPtr context, IntPtr val);
   [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSendC")]
@@ -169,11 +167,6 @@ public partial class MqS
     ErrorMqToCsWithCheck(MqSendN(context, val, val.Length));
   }
 
-  /// \api #MqSendBDY
-  public void SendBDY(byte[] val) {
-    ErrorMqToCsWithCheck (MqSendBDY(context, val, val.Length));
-  }
-
   /// \api #MqSendU
   public void SendU(MqBufferS buffer) {
     ErrorMqToCsWithCheck(MqSendU(context, buffer.buf));
@@ -211,4 +204,3 @@ public partial class MqS
 
 // END - NameSpace csmsgque
 }
-

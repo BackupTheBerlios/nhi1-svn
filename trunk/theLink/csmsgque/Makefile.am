@@ -24,9 +24,10 @@
 
 SUFFIXES = .cs .dll .exe
 
-CSHARP_FILES = $(srcdir)/buffer.cs $(srcdir)/config.cs $(srcdir)/MqS.cs $(srcdir)/MqFactoryS.cs \
+CSHARP_FILES = $(srcdir)/MqBufferS.cs $(srcdir)/MqDumpS.cs $(srcdir)/MqS.cs $(srcdir)/MqFactoryS.cs \
 	$(srcdir)/link.cs $(srcdir)/pointer.cs $(srcdir)/send.cs $(srcdir)/slave.cs $(srcdir)/context.cs \
-	  $(srcdir)/error.cs $(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs
+	  $(srcdir)/error.cs $(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs $(srcdir)/config.cs \
+	    $(srcdir)/storage.cs
 
 if USE_CSHARP
 csmsgque.dll: $(CSHARP_FILES) .vpath_hook

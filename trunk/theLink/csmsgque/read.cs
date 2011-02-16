@@ -50,8 +50,6 @@ namespace csmsgque {
     private static extern MqErrorE MqReadB(IntPtr context, out IntPtr outV, out int sizeV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadN")]
     private static extern MqErrorE MqReadN(IntPtr context, out IntPtr outV, out int sizeV);
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadBDY")]
-    private static extern MqErrorE MqReadBDY(IntPtr context, out IntPtr outV, out int sizeV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadU")]
     private static extern MqErrorE MqReadU(IntPtr context, out IntPtr outV);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadC")]
@@ -72,8 +70,31 @@ namespace csmsgque {
     private static extern MqErrorE MqReadUndo(IntPtr context);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadProxy")]
     private static extern MqErrorE MqReadProxy(IntPtr contextMsgque, IntPtr sendMsgque);
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSysFreeP")]
-    private static extern void MqSysFreeP([In]IntPtr ptr);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadForward")]
+    private static extern MqErrorE MqReadForward([In]IntPtr contextMsgque, [In]IntPtr sendMsgque);
+
+    // ----------------------------------------------------------------------------------------------
+    // DUMP
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadDUMP")]
+    private static extern MqErrorE MqReadDUMP([In]IntPtr context, out IntPtr dump);
+
+    /// \api #MqDumpExport
+    public MqDumpS ReadDUMP() {
+      IntPtr dump;
+      ErrorMqToCsWithCheck(MqReadDUMP(context, out dump));
+      return new MqDumpS(dump);
+    }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadLOAD")]
+    private static extern MqErrorE MqReadLOAD([In]IntPtr context, [In] IntPtr dump);
+
+    /// \api #MqDumpImport
+    public void ReadLOAD(MqDumpS dump) {
+      ErrorMqToCsWithCheck(MqReadLOAD(context, dump.hdl));
+    }
+
+    // ----------------------------------------------------------------------------------------------
 
     // PUBLIC
 
@@ -146,17 +167,6 @@ namespace csmsgque {
       return outB;
     }
 
-    /// \api #MqReadBDY
-    public byte[] ReadBDY() {
-      IntPtr outV;
-      int size;
-      ErrorMqToCsWithCheck(MqReadBDY(context, out outV, out size));
-      byte[] outB = new byte[size];
-      Marshal.Copy(outV,outB,0,size);
-      MqSysFreeP(outV);
-      return outB;
-    }
-
     /// \api #MqReadU
     public MqBufferS ReadU() {
       IntPtr outV;
@@ -174,6 +184,11 @@ namespace csmsgque {
     /// \api #MqReadProxy
     public void ReadProxy(MqS ctx) {
       ErrorMqToCsWithCheck(MqReadProxy(context, ctx.context));
+    }
+
+    /// \api #MqReadForward
+    public void ReadForward(MqS ctx) {
+      ErrorMqToCsWithCheck(MqReadForward(context, ctx.context));
     }
 
     /// \api #MqReadL_START

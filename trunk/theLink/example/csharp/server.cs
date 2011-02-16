@@ -121,6 +121,7 @@ namespace example {
 	ServiceCreate("TRNS", TRNS);
 	ServiceCreate("TRN2", TRN2);
 	ServiceCreate("STDB", STDB);
+	ServiceCreate("DMPL", DMPL);
       }
     }
 
@@ -164,6 +165,11 @@ namespace example {
 	ConfigSetSrvName (ReadC());
 	SendC (ConfigGetSrvName());
 	ConfigSetSrvName (old);
+      } else if (cmd == "Storage") {
+	string old = ConfigGetStorage();
+	ConfigSetStorage (ReadC());
+	SendC (ConfigGetStorage());
+	ConfigSetStorage (old);
       } else if (cmd == "Ident") {
 	string old = FactoryCtxIdentGet();
 	FactoryCtxSet (MqFactoryS<Server>.Get().Copy(ReadC()).factory);
@@ -666,12 +672,13 @@ namespace example {
     }
 
     void SETU () {
-      buf = ReadU();
+      buf = ReadU().Dup();
     }
 
     void GETU () {
       SendSTART();
       SendU(buf);
+      buf.Delete();
       SendRETURN();
     }
 
@@ -699,6 +706,12 @@ namespace example {
     void STDB () {
       SendSTART();
       SqlSetDb(ReadC());
+      SendRETURN();
+    }
+
+    void DMPL () {
+      SendSTART();
+      SendI(ReadDUMP().Size());
       SendRETURN();
     }
 
