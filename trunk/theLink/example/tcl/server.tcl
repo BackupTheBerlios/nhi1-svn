@@ -637,6 +637,12 @@ proc Ot_STDB {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_DMPL {ctx} {
+  $ctx SendSTART
+  $ctx SendI [[$ctx ReadDUMP] Size]
+  $ctx SendRETURN
+}
+
 proc ServerSetup {ctx} {
 
   if {[$ctx SlaveIs]} {
@@ -703,6 +709,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate TRN2 Ot_TRN2
     $ctx ServiceCreate TRNS Ot_TRNS
     $ctx ServiceCreate STDB Ot_STDB
+    $ctx ServiceCreate DMPL Ot_DMPL
   }
 }
 

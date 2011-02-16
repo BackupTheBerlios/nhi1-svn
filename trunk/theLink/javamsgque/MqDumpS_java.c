@@ -18,7 +18,7 @@
 extern jclass	NS(Class_NullPointerException);
 extern jfieldID	NS(FID_MqDumpS_hdl);
 
-JNIEXPORT jlong JNICALL ND(DumpFree) (
+JNIEXPORT jlong JNICALL ND(Free) (
   JNIEnv *  env, 
   jobject   self
 )
@@ -27,5 +27,16 @@ JNIEXPORT jlong JNICALL ND(DumpFree) (
   MqSysFree(dump);
 error:
   return 0L;
+}
+
+JNIEXPORT jint JNICALL ND(Size) (
+  JNIEnv *  env, 
+  jobject   self
+)
+{
+  SETUP_dump(self);
+  return MqDumpSize (dump);
+error:
+  return 0;
 }
 

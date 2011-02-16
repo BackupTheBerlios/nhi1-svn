@@ -25,14 +25,15 @@ public class MqDumpS {
 
   private long hdl = 0L;
   
-  private native long DumpFree();
+  private native long Free();
+  public  native int  Size();
 
   private MqDumpS (long data) {
     hdl = data;
   }
 
   public void finalize () {
-    hdl = DumpFree();
+    hdl = Free();
   }
 }
 

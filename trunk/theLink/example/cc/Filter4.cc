@@ -70,14 +70,7 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
     }
 
     void Service (MqC * const ctx) {
-      struct MqDumpS *bdy;
-
-      // read the body-item
-      ReadDUMP(&bdy);
-
-      // fill the item data
-      itms.push (bdy);
-
+      itms.push (ReadDUMP());
       SendRETURN();
     }
 

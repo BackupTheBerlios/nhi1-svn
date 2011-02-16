@@ -38,6 +38,7 @@
 		    int skip, int objc, struct Tcl_Obj *const *objv
 #define TCL_ARGS Tcl_Interp * interp, int objc, struct Tcl_Obj *const *objv
 #define HDB(name) int NS(name) ( Tcl_Interp * interp, struct MqBufferS * const buf )
+#define HDD(name) int NS(name) ( Tcl_Interp * interp, struct MqDumpS * const dump )
 
 #define SETUP_mqctx	struct MqS * const mqctx = (struct MqS * const) tclctx;
 #define SETUP_tclctx	struct TclContextS * const tclctx = (struct TclContextS * const) mqctx;

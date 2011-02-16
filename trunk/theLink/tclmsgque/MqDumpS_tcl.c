@@ -15,8 +15,8 @@
 typedef int (
   *LookupKeywordF
 ) (
-  Tcl_Interp  *		      interp,
-  struct MqDumpS * const    buf
+  Tcl_Interp  *		    interp,
+  struct MqDumpS * const    dump
 );
 
 struct LookupKeyword {
@@ -24,7 +24,13 @@ struct LookupKeyword {
   LookupKeywordF  keyF;
 };
 
-/** \brief create the \b $buffer tcl command
+static HDD(Size)
+{
+  Tcl_SetObjResult(interp, Tcl_NewIntObj (MqDumpSize (dump)));
+  return TCL_OK;
+}
+
+/** \brief create the \b $dump tcl command
  *
  *  \tclmsgque
  *
@@ -42,9 +48,10 @@ static int NS(MqDumpS_Cmd) (
 )
 {
   int index;
-  struct MqDumpS * buf = (struct MqDumpS *) clientData;
+  struct MqDumpS * dump = (struct MqDumpS *) clientData;
 
-  static struct LookupKeyword keys[] = {
+  const static struct LookupKeyword keys[] = {
+    { "Size",	    NS(Size)	  },
     { NULL,	    NULL	  }
   };
 
@@ -56,10 +63,10 @@ static int NS(MqDumpS_Cmd) (
   TclErrorCheck (Tcl_GetIndexFromObjStruct (interp, objv[1], &keys, 
       sizeof(struct LookupKeyword), "subcommand", 0, &index));
 
-  return (*keys[index].keyF) (interp, buf);
+  return (*keys[index].keyF) (interp, dump);
 }
 
-/** \brief delete a \e MqDumpS object (called by "rename $buf {}")
+/** \brief delete a \e MqDumpS object (called by "rename $dump {}")
  *
  *  \param[in] clientData command specific data, a \e MqDumpS object in this case
  **/
@@ -67,19 +74,20 @@ static void NS(MqDumpS_Free) (
   ClientData clientData
 )
 {
-  struct MqDumpS *buf = (struct MqDumpS *) clientData;
-  Tcl_DeleteExitHandler (NS(MqDumpS_Free), buf);
+  struct MqDumpS *dump = (struct MqDumpS *) clientData;
+  Tcl_DeleteExitHandler (NS(MqDumpS_Free), dump);
+  MqSysFree(dump);
 }
 
 void NS(MqDumpS_New) (
   Tcl_Interp * interp,
-  struct MqDumpS * buf
+  struct MqDumpS * dump
 )
 {
   char buffer[30];
-  sprintf(buffer, "<MqDumpS-%p>", buf);
-  Tcl_CreateObjCommand (interp, buffer, NS(MqDumpS_Cmd), buf, NS(MqDumpS_Free));
+  sprintf(buffer, "<MqDumpS-%p>", dump);
+  Tcl_CreateObjCommand (interp, buffer, NS(MqDumpS_Cmd), dump, NS(MqDumpS_Free));
 
   Tcl_SetResult (interp, buffer, TCL_VOLATILE);
-  Tcl_CreateExitHandler (NS(MqDumpS_Free), buf);
+  Tcl_CreateExitHandler (NS(MqDumpS_Free), dump);
 }

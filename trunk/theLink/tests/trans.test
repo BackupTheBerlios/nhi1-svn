@@ -120,6 +120,19 @@ ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
 \[Ss]> (fs) found in function \"MqReadForward\" at file \"read.c*\"
 $J - HALLO"
 
+test trans-4-($I|$B|$C|$S) {dump size} \
+    -setup	    {
+      Setup $I $B $C $S
+    } \
+    -body           {
+      Echo1 $FH_LAST DMPL ReadI SendI 111 SendC "Hallo Otto" SendD 623873.437
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -result         {109}
+
 # cleanup ---------------------------
 #Cleanup
 

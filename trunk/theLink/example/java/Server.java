@@ -126,6 +126,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       ServiceCreate("TRNS", new TRNS());
       ServiceCreate("TRN2", new TRN2());
       ServiceCreate("STDB", new STDB());
+      ServiceCreate("DMPL", new DMPL());
     }
   }
 
@@ -459,6 +460,14 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
     public void Service (MqS ctx) throws MqSException {
       ctx.SendSTART();
       ctx.StorageOpen(ReadC());
+      ctx.SendRETURN();
+    }
+  }
+
+  class DMPL implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      ctx.SendSTART();
+      ctx.SendI(ReadDUMP().Size());
       ctx.SendRETURN();
     }
   }

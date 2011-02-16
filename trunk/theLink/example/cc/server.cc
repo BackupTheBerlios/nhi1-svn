@@ -642,6 +642,14 @@ namespace example {
 	SendRETURN();
       }
 
+      void DMPL () {
+	struct MqDumpS * dump = ReadDUMP();
+	SendSTART();
+	SendI(DumpSize(dump));
+	MqSysFree(dump);
+	SendRETURN();
+      }
+
     private:
 
       void ServerCleanup() {
@@ -713,6 +721,7 @@ namespace example {
 	  ServiceCreate("TRNS", CallbackF(&Server::TRNS));
 	  ServiceCreate("TRN2", CallbackF(&Server::TRN2));
 	  ServiceCreate("STDB", CallbackF(&Server::STDB));
+	  ServiceCreate("DMPL", CallbackF(&Server::DMPL));
 	}
       }
   };

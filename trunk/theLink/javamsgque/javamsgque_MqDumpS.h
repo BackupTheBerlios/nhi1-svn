@@ -9,10 +9,18 @@ extern "C" {
 #endif
 /*
  * Class:     javamsgque_MqDumpS
- * Method:    DumpFree
+ * Method:    Free
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_javamsgque_MqDumpS_DumpFree
+JNIEXPORT jlong JNICALL Java_javamsgque_MqDumpS_Free
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     javamsgque_MqDumpS
+ * Method:    Size
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_javamsgque_MqDumpS_Size
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
