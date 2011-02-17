@@ -56,7 +56,7 @@ array set LABELIGNORE {
     ./theLink/example/php	{ *.sw* Makefile.in Makefile}
     ./theLink/example/go	{ *.sw* Makefile.in Makefile *.log MyClient MyServer Filter3 mulclient
 				  manfilter mulserver testserver testclient Filter1 Filter2 Filter4 Filter5
-				  server }
+				  server Filter6 }
     ./theLink/example/vb	{ *.sw* Makefile.in Makefile *.xml .vpath_hook *.dll }
     ./theLink/example		{ tags }
 
