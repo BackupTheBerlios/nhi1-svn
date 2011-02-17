@@ -50,13 +50,6 @@ static VALUE SendN (VALUE self, VALUE val) {
   return Qnil;
 }
 
-static VALUE SendBDY (VALUE self, VALUE val) {
-  SETUP_mqctx
-  StringValue(val);
-  ErrorMqToRubyWithCheck(MqSendBDY(mqctx,VAL2BIN(val)));
-  return Qnil;
-}
-
 static VALUE SendU (VALUE self, VALUE buf) {
   SETUP_mqctx
   CheckType(buf, cMqBufferS, "usage: SendU MqBufferS-Type-Arg");
@@ -151,7 +144,6 @@ void NS(MqS_Send_Init)(void) {
   rb_define_method(cMqS, "SendC",		  SendC,		1);
   rb_define_method(cMqS, "SendB",		  SendB,		1);
   rb_define_method(cMqS, "SendN",		  SendN,		1);
-  rb_define_method(cMqS, "SendBDY",		  SendBDY,		1);
   rb_define_method(cMqS, "SendU",		  SendU,		1);
   rb_define_method(cMqS, "SendSTART",		  SendSTART,		0);
   rb_define_method(cMqS, "SendEND",		  SendEND,		1);

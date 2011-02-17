@@ -66,6 +66,12 @@ static VALUE ServiceProxy (int argc, VALUE *argv, VALUE self) {
   return Qnil;
 }
 
+static VALUE ServiceStorage (VALUE self, VALUE token) {
+  SETUP_mqctx
+  ErrorMqToRubyWithCheck(MqServiceStorage(mqctx, VAL2CST(token)));
+  return Qnil;
+}
+
 static VALUE ProcessEvent (int argc, VALUE *argv, VALUE self) {
   SETUP_mqctx
   MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
@@ -97,6 +103,7 @@ void NS(MqS_Service_Init)(void) {
   rb_define_method(cMqS, "ServiceCreate",	  ServiceCreate,	2);
   rb_define_method(cMqS, "ServiceDelete",	  ServiceDelete,	1);
   rb_define_method(cMqS, "ServiceProxy",	  ServiceProxy,		-1);
+  rb_define_method(cMqS, "ServiceStorage",	  ServiceStorage,	1);
   rb_define_method(cMqS, "ProcessEvent",	  ProcessEvent,		-1);
 }
 

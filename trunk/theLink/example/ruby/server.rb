@@ -127,12 +127,19 @@ class Server < MqS
       ServiceCreate("ECUL", method(:ECUL))
       ServiceCreate("RDUL", method(:RDUL))
       ServiceCreate("STDB", method(:STDB))
+      ServiceCreate("DMPL", method(:DMPL))
     end
+  end
+
+  def DMPL
+    SendSTART()
+    SendI(ReadDUMP().Size())
+    SendRETURN()
   end
 
   def STDB
     SendSTART()
-    SqlSetDb(ReadC())
+    StorageOpen(ReadC())
     SendRETURN()
   end
 
@@ -155,13 +162,14 @@ class Server < MqS
   end
 
   def SETU
-    @buf = ReadU()
+    @buf = ReadU().Dup()
   end
 
   def GETU
     SendSTART()
     SendU(@buf)
     SendRETURN()
+    @buf.Delete()
     @buf = nil
     Sleep(1)
   end
@@ -269,6 +277,11 @@ class Server < MqS
         ConfigSetSrvName(ReadC())
         SendC(ConfigGetSrvName())
         ConfigSetSrvName(old)
+      when "Storage"
+        old = ConfigGetStorage()
+        ConfigSetStorage(ReadC())
+        SendC(ConfigGetStorage())
+        ConfigSetStorage(old)
       when "Ident"
         old = FactoryCtxIdentGet()
         FactoryCtxSet(FactoryGet("").Copy(ReadC()))

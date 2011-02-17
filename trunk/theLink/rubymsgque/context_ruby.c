@@ -29,6 +29,11 @@ VALUE id_bind;
 //}
 #endif
 
+void NS(MqS_Init)	    (void);
+void NS(MqSException_Init)  (void);
+void NS(MqBufferS_Init)	    (void);
+void NS(MqDumpS_Init)	    (void);
+
 RUBYMQ_EXTERN void Init_rubymsgque() {
 
   // Register system
@@ -40,6 +45,7 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
   NS(MqS_Init)();
   NS(MqSException_Init)();
   NS(MqBufferS_Init)();
+  NS(MqDumpS_Init)();
 
   // get the script name
   VALUE a0 = rb_gv_get("$0");

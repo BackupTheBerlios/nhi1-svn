@@ -96,13 +96,6 @@ static VALUE Exit(VALUE self)
   return Qnil;
 }
 
-static VALUE SqlSetDb(VALUE self, VALUE storageFile)
-{
-  SETUP_mqctx
-  ErrorMqToRubyWithCheck (MqSqlSetDb (mqctx, VAL2CST (storageFile)));
-  return Qnil;
-}
-
 static VALUE Delete(VALUE self)
 {
   MqContextFree (MQCTX);
@@ -139,6 +132,17 @@ static VALUE Init(int argc, VALUE *argv, VALUE self)
 /*                                                                           */
 /*****************************************************************************/
 
+void NS(MqS_Error_Init)	    (void);
+void NS(MqS_Read_Init)	    (void);
+void NS(MqS_Send_Init)	    (void);
+void NS(MqS_Config_Init)    (void);
+void NS(MqS_Service_Init)   (void);
+void NS(MqS_Link_Init)	    (void);
+void NS(MqS_Slave_Init)	    (void);
+void NS(MqS_Factory_Init)   (void);
+void NS(MqS_Sys_Init)	    (void);
+void NS(MqS_Storage_Init)   (void);
+
 void NS(MqS_Init) (void) {
 
   // define class MqS
@@ -148,7 +152,6 @@ void NS(MqS_Init) (void) {
   rb_define_method(cMqS, "Init", Init, -1);
 
   rb_define_method(cMqS, "Exit",      Exit,	0);
-  rb_define_method(cMqS, "SqlSetDb",  SqlSetDb, 1);
   rb_define_method(cMqS, "Delete",    Delete,	0);
   rb_define_method(cMqS, "LogC",      LogC,	3);
   rb_define_method(cMqS, "Sleep",     Sleep,	1);
@@ -178,6 +181,7 @@ void NS(MqS_Init) (void) {
   NS(MqS_Service_Init)();
   NS(MqS_Link_Init)();
   NS(MqS_Slave_Init)();
+  NS(MqS_Storage_Init)();
   NS(MqS_Factory_Init)();
 
   globalRef = rb_ary_new();

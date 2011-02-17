@@ -1,18 +1,9 @@
 #+
-#§  \file       theLink/example/ruby/Filter4.rb
-#§  \brief      \$Id: LbMain 26 2009-12-03 11:48:43Z aotto1968 $
-#§  
-#§  (C) 2010 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 26 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
 #§
 
 require "rubymsgque"
 
-class Filter4 < MqS
+class Filter6 < MqS
   attr_accessor :fh
   def initialize(tmpl=nil)
     super(tmpl)
@@ -20,7 +11,6 @@ class Filter4 < MqS
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))
     ConfigSetEvent(method(:Event))
-    @itms = []
     @fh = nil
   end
   def ServerCleanup
@@ -32,6 +22,7 @@ class Filter4 < MqS
     ServiceCreate("LOGF", method(:LOGF))
     ServiceCreate("EXIT", method(:EXIT))
     ServiceCreate("+ALL", method(:FilterIn))
+    ServiceStorage("PRNT")
     ftr.ServiceCreate("WRIT", ftr.method(:WRIT))
     ftr.ServiceProxy("+TRT")
   end
@@ -59,13 +50,14 @@ class Filter4 < MqS
     Process.exit!(1)
   end
   def Event
-    if @itms.length == 0 then
+    if StorageCount() == 0 then
       ErrorSetCONTINUE()
     else
+      id = 0
       begin
 	ftr = ServiceGetFilter()
         ftr.LinkConnect
-	ReadLOAD(@itms[0])
+	id = StorageSelect()
 	ReadForward(ftr)
       rescue Exception => ex
         ErrorSet(ex)
@@ -76,16 +68,15 @@ class Filter4 < MqS
           ErrorWrite()
 	end
       end
-      @itms.shift
+      StorageDelete(id)
     end
   end
   def FilterIn
-    @itms.push(ReadDUMP())
+    StorageInsert()
     SendRETURN()
   end
 end
-FactoryDefault("transFilter", Filter4)
-srv = Filter4.new
+srv = FactoryAdd("transFilter", Filter6).New()
 begin
   srv.LinkCreate($0,ARGV)
   srv.ProcessEvent(MqS::WAIT_FOREVER)

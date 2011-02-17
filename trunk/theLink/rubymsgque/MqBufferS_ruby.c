@@ -61,6 +61,16 @@ static VALUE GetType (VALUE self) {
   return CST2VAL(str);
 }
 
+static VALUE Dup (VALUE self) {
+  return MqBufferS2VAL(MqBufferDup(BUF));
+}
+
+static VALUE Delete (VALUE self) {
+  SETUP_buf
+  MqBufferDelete(&buf);
+  return Qnil;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                public                                     */
@@ -76,6 +86,9 @@ void NS(MqBufferS_Init) (void) {
 
   // make class note create-able
   rb_funcall(cMqBufferS, rb_intern("private_class_method"), 1, CST2VAL("new"));
+
+  rb_define_method(cMqBufferS, "Dup",	  Dup,	  0);
+  rb_define_method(cMqBufferS, "Delete",  Delete, 0);
 
   Mth(Y)  
   Mth(O)  

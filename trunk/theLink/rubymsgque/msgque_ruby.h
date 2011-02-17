@@ -75,6 +75,7 @@ extern VALUE globalRef;
 #define VAL2MqBufferS(val)  (MQ_BUF)DATA_PTR(val)
 #define VAL2MqS(val)	    ((struct MqS*)DATA_PTR(val))
 #define VAL2MqFactoryS(val) ((struct MqFactoryS*)DATA_PTR(val))
+#define VAL2MqDumpS(val)    ((struct MqDumpS*)DATA_PTR(val))
 
 #define	BYT2VAL(nat)	    INT2FIX((MQ_BYT)nat)
 #define	BOL2VAL(nat)	    ((nat)?Qtrue:Qfalse)
@@ -89,6 +90,7 @@ extern VALUE globalRef;
 #define	MqS2VAL(nat)	    (nat != NULL ? ((VALUE)(nat)->self) : Qnil)
 #define	MqFactoryS2VAL(nat) NS(MqFactoryS_New)(nat)
 #define	MqBufferS2VAL(nat)  NS(MqBufferS_New)(nat)
+#define	MqDumpS2VAL(nat)    NS(MqDumpS_New)(nat)
 
 #define CheckType(val,typ,err) \
   if (rb_obj_is_kind_of(val, typ) == Qfalse) rb_raise(rb_eTypeError, err);
@@ -101,22 +103,9 @@ extern VALUE globalRef;
 /*                                                                           */
 /*****************************************************************************/
 
-void NS(MqS_Init)	    (void);
-void NS(MqS_Error_Init)	    (void);
-void NS(MqS_Read_Init)	    (void);
-void NS(MqS_Send_Init)	    (void);
-void NS(MqS_Config_Init)    (void);
-void NS(MqS_Service_Init)   (void);
-void NS(MqS_Link_Init)	    (void);
-void NS(MqS_Slave_Init)	    (void);
-void NS(MqS_Factory_Init)	    (void);
-void NS(MqS_Sys_Init)	    (void);
-
-void NS(MqSException_Init)  (void);
-
-void NS(MqBufferS_Init)	    (void);
 VALUE NS(MqBufferS_New)	    (struct MqBufferS *);
 VALUE NS(MqFactoryS_New)    (struct MqFactoryS *);
+VALUE NS(MqDumpS_New)	    (struct MqDumpS *);
 
 /*****************************************************************************/
 /*                                                                           */

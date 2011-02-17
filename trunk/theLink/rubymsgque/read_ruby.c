@@ -55,14 +55,23 @@ static VALUE ReadN (VALUE self) {
   return BIN2VAL(val,len);
 }
 
-static VALUE ReadBDY (VALUE self) {
-  MQ_BIN val;
-  MQ_SIZE len;
-  VALUE ret;
+static VALUE ReadDUMP (VALUE self) {
+  struct MqDumpS *ret;
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadBDY(mqctx, &val, &len));
-  ret = BIN2VAL(val,len);
-  return ret;
+  ErrorMqToRubyWithCheck(MqReadDUMP(mqctx, &ret));
+  return MqDumpS2VAL(ret);
+}
+
+static VALUE ReadLOAD (VALUE self, VALUE dump) {
+  SETUP_mqctx
+  ErrorMqToRubyWithCheck(MqReadLOAD(mqctx, VAL2MqDumpS(dump)));
+  return Qnil;
+}
+
+static VALUE ReadForward (VALUE self, VALUE context) {
+  SETUP_mqctx
+  ErrorMqToRubyWithCheck(MqReadForward(mqctx, VAL2MqS(context)));
+  return Qnil;
 }
 
 static VALUE ReadU (VALUE self) {
@@ -148,7 +157,9 @@ void NS(MqS_Read_Init)(void) {
   rb_define_method(cMqS, "ReadB",	      ReadB,		0);
 
   rb_define_method(cMqS, "ReadN",	      ReadN,		0);
-  rb_define_method(cMqS, "ReadBDY",	      ReadBDY,		0);
+  rb_define_method(cMqS, "ReadDUMP",	      ReadDUMP,		0);
+  rb_define_method(cMqS, "ReadLOAD",	      ReadLOAD,		1);
+  rb_define_method(cMqS, "ReadForward",	      ReadForward,	1);
   rb_define_method(cMqS, "ReadU",	      ReadU,		0);
   rb_define_method(cMqS, "ReadL_START",	      ReadL_START,	-1);
   rb_define_method(cMqS, "ReadL_END",	      ReadL_END,	0);
