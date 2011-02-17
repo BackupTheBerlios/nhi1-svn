@@ -93,7 +93,8 @@ enum MqMessageNumE {
     /* 41 */ MQ_ERROR_FEATURE_NOT_AVAILABLE,
     /* 42 */ MQ_ERROR_NULL_NOT_ALLOWED,
     /* 43 */ MQ_ERROR_INVALID_SIZE,
-    /* 44 */ MQ_MESSAGE_END,
+    /* 44 */ MQ_ERROR_CALLBACK_REQUIRED,
+    /* 45 */ MQ_MESSAGE_END,
 };
 
 #if defined(MQ_PRIVATE_IS_MAIN)
@@ -188,6 +189,8 @@ MQ_CST MqMessageText[MQ_MESSAGE_END+1] = {
 	"the value 'NULL' is not allowed for parameter '%s'",
     /* MQ_ERROR_INVALID_SIZE */
 	"invalid '%s' size, expect '%d' but got '%d'",
+    /* MQ_ERROR_CALLBACK_REQUIRED */
+	"only use the function in a callback",
     /* MQ_MESSAGE_END */
 	"END OF TEXT MESSAGE ARRAY",
 };
@@ -879,7 +882,7 @@ void pSlaveShutdown (struct MqLinkSlaveS * const);
 /*                                                                           */
 /*****************************************************************************/
 
-enum MqErrorE pServiceStart (struct MqS * const, EventReadF const, MQ_PTR);
+enum MqErrorE pServiceStart (register struct MqS * const, EventReadF const, MQ_PTR);
 
 /*****************************************************************************/
 /*                                                                           */

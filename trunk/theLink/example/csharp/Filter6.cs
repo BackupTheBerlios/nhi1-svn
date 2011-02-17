@@ -23,6 +23,7 @@ namespace example {
     }
 
     void ErrorWrite () {
+      FH.BaseStream.Seek(0, SeekOrigin.End);
       FH.WriteLine("ERROR: " + ErrorGetText());
       FH.Flush();
       ErrorReset();
@@ -44,6 +45,7 @@ namespace example {
 
     void WRIT () {
       Filter6 master = (Filter6) ServiceGetFilter();
+      master.FH.BaseStream.Seek(0, SeekOrigin.End);
       master.FH.WriteLine(ReadC());
       master.FH.Flush();
       SendRETURN();

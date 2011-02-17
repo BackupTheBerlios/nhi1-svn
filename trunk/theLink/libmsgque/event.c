@@ -232,7 +232,6 @@ pEventStart (
   struct MqS ** end;
   register struct MqS * eventctx = NULL;
   register MQ_SOCK sock;
-  enum MqErrorE ret;
 
   // are sockets available? if not do nothing
   if (!event || event->fdmax < 0)
@@ -242,8 +241,7 @@ pEventStart (
   fds = event->fdset;
 
   // do the select and process the results
-  ret = SysSelect (context, event->fdmax + 1, &fds, NULL, timeout);
-  switch (ret) {
+  switch (SysSelect (context, event->fdmax + 1, &fds, NULL, timeout)) {
     case MQ_CONTINUE: return MQ_CONTINUE;
     case MQ_OK:	      break;
     case MQ_ERROR:    goto error;
@@ -258,11 +256,8 @@ pEventStart (
     // is the context still in duty ? (sock >= 0)
     if (sock < 0 || !FD_ISSET (sock, &fds)) continue;
     // found valid socket -> call it
-    eventctx->refCount++;
 //printLV("eventctx<%p>, eventctx->refCount<%d>, sock<%d>\n", eventctx, eventctx->refCount, sock);
-    ret = pServiceStart(eventctx, pReadHDR, NULL);
-    eventctx->refCount--;
-    switch (ret) {
+    switch (pServiceStart(eventctx, pReadHDR, NULL)) {
       case MQ_OK:
 	return MQ_OK;
       case MQ_ERROR: {

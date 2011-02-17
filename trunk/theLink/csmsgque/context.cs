@@ -39,9 +39,6 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqExitP")]
     private static extern void MqExitP([In]string prefix, [In]IntPtr context);
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSqlSetDb")]
-    private static extern MqErrorE MqSqlSetDb([In]IntPtr context, [In]string storageFile);
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqLogData")]
     private static extern void MqLogData([In]IntPtr context, [In]string prefix);
 
@@ -73,11 +70,6 @@ namespace csmsgque {
     /// \api #MqExit
     public void Exit() {
       MqExitP ("Exit", context);
-    }
-
-    /// \api #MqSqlSetDb
-    public void SqlSetDb(string storageDir) {
-      ErrorMqToCsWithCheck(MqSqlSetDb (context, storageDir));
     }
 
     /// \api #MqLogC

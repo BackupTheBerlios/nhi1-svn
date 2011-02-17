@@ -705,7 +705,7 @@ namespace example {
 
     void STDB () {
       SendSTART();
-      SqlSetDb(ReadC());
+      StorageOpen(ReadC());
       SendRETURN();
     }
 

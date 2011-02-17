@@ -281,7 +281,7 @@ pTokenInvoke (
   struct pTokenS const * const token
 )
 {
-  struct MqS * const context = token->context;
+  register struct MqS * const context = token->context;
   register struct pTokenItemS * item = NULL;
   register struct pTokenSpaceS * const space = token->loc;
   const MQ_INT icurrent = pByte2INT(token->current);
@@ -309,7 +309,13 @@ pTokenInvoke (
 
     // search "+ALL" items
     if (likely(space->all.fCall != NULL)) {
-      return (space->all.fCall (context, space->all.data));
+      enum MqErrorE ret;
+      context->bits.onCallback = MQ_YES;
+      context->refCount++;
+      ret = (space->all.fCall (context, space->all.data));
+      context->refCount--;
+      context->bits.onCallback = MQ_NO;
+      return ret;
     } else {
       // nothing found -> break
       return MqErrorV (context, __func__, -1, "token <%s> not found", token->current);
@@ -324,7 +330,11 @@ pTokenInvoke (
 */
   
   if (likely(item->callback.fCall != NULL)) {
-    return MqCallbackCall (context, item->callback);
+    enum MqErrorE ret;
+    context->bits.onCallback = MQ_YES;
+    ret = MqCallbackCall (context, item->callback);
+    context->bits.onCallback = MQ_NO;
+    return ret;
   } else {
     return MqSendRETURN(context);
   }

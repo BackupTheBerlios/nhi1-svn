@@ -154,18 +154,22 @@ MqServiceDelete(
 
 enum MqErrorE
 pServiceStart (
-  struct MqS * const context,
+  register struct MqS * const context,
   EventReadF const reader,
   MQ_PTR env
 )
 {
+  enum MqErrorE ret;
   struct MqS * a_context = context;
   const int MqSetDebugLevel(context);
 
   MqDLogCL(context,6,"START\n");
 
   // ##################### READ HEADER #####################
-  switch ((*reader) (env, &a_context)) {
+  context->refCount++;
+  ret = (*reader) (env, &a_context);
+  context->refCount--;
+  switch (ret) {
     case MQ_OK:	      break;
     case MQ_CONTINUE: return MqErrorReset(context);
     case MQ_ERROR:    goto error;
@@ -174,9 +178,11 @@ pServiceStart (
   // ##################### TOKEN Handler #####################
   // The following code will "only" run on the "server" site.
   // An error in a service-handler will !not! shutdown the server
+
+  // "refCount" will be increased in "
   switch (pTokenInvoke (a_context->link.srvT)) {
     case MQ_OK:
-      // we need to close the longterm-transaction it still open
+      // we need to close the longterm-transaction started with MqSendSTART, it still open
       if (pReadGetHandShake (a_context) == MQ_HANDSHAKE_TRANSACTION) {
 	return MqSendRETURN(a_context);
       }

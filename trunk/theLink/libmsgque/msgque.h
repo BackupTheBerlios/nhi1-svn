@@ -1582,7 +1582,8 @@ struct MqS {
     MQ_BOL MqContextDelete_LOCK :1; ///< protect MqContextDelete against double-call
     MQ_BOL MqContextFree_LOCK	:1; ///< protect MqContextFree against double-call
     MQ_BOL EventProc_LOCK	:1; ///< protect sCallEventProc against double-call
-    MQ_BOL onExit	        :1; ///< is already an "exit" ongoing?
+    MQ_BOL onExit	        :1; ///< is already an \e exit is ongoing?
+    MQ_BOL onCallback	        :1; ///< is already a \e callback is ongoing ?
   } bits;			    ///< boolean bit-fields
   MQ_PTR threadData;		    ///< application specific thread data
   MQ_PTR self;			    ///< link to the managed object

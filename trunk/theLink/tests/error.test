@@ -607,6 +607,11 @@ test error-X3 {ServiceDelete without connected context} \
     -returnCodes  error \
     -result	  {C> (tclmsgque) [MqServiceDelete] the 'msgque' object link is 'not' connected}
 
+test error-X4 {Storage insert without a callback} \
+    -constraints  {local tcl} \
+    -body	  { [tclmsgque MqS] StorageInsert } \
+    -returnCodes  error \
+    -result	  {C> (tclmsgque) [MqStorageInsert] only use the function in a callback}
 
 ##
 ## -----------------------------------------------------------------------
@@ -614,8 +619,3 @@ test error-X3 {ServiceDelete without connected context} \
 ##
 
 freeTests
-
-
-
-
-

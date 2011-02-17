@@ -252,7 +252,9 @@ MqStorageInsert (
 )
 {
   struct MqReadS * read = context->link.read;
-  if (unlikely(read->transLId != 0LL)) {
+  if (context->bits.onCallback == MQ_NO) {
+    return MqErrorDb(MQ_ERROR_CALLBACK_REQUIRED);
+  } else if (unlikely(read->transLId != 0LL)) {
     // this request is a logterm-transaction-request and this request is
     // already stored into the database
     if (transLIdP != NULL) *transLIdP = read->transLId;
