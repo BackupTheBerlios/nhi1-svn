@@ -145,8 +145,8 @@ namespace example {
       void GETU () { 
 	SendSTART(); 
 	SendU(buf->GetU()); 
-	delete buf;
-	buf = NULL;
+	buf->Delete();
+	delete(buf);
 	SendRETURN(); 
       }
 

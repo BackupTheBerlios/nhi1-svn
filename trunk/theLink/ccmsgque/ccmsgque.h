@@ -221,6 +221,11 @@ namespace ccmsgque {
 	return new MqBufferC(MqBufferDup (hdl));
       }
 
+      /// \api #MqBufferDelete
+      inline void Delete () throw(MqCException) {
+	MqBufferDelete(&hdl);
+      }
+
     /// \} Mq_Buffer_CC_API
   };
 

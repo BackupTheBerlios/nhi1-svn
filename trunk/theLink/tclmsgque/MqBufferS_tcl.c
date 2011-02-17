@@ -180,7 +180,6 @@ static void NS(MqBufferS_Free) (
 {
   struct MqBufferS *buf = (struct MqBufferS *) clientData;
   Tcl_DeleteExitHandler (NS(MqBufferS_Free), buf);
-  if (buf->context->temp != buf) MqBufferDelete(&buf);
 }
 
 void NS(MqBufferS_New) (

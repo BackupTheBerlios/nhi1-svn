@@ -13,6 +13,7 @@ bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-tcl \
 		    --enable-csharp \
 		    --enable-java \
+		    --enable-cxx \
 \
 		    $ARGS $@
 

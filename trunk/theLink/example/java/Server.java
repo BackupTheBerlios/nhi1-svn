@@ -426,7 +426,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
     public void Service (MqS ctx) throws MqSException {
       ctx.SendSTART();
       ctx.SendU(buf);
-      buf = null;
+      buf.Delete();
       ctx.SendRETURN();
     }
   }

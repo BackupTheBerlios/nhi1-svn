@@ -149,15 +149,16 @@ error:
   return NULL;
 }
 
-JNIEXPORT jlong JNICALL NB(Delete) (
+JNIEXPORT void JNICALL NB(Delete) (
   JNIEnv    *env, 
   jobject   self 
 )
 {
   SETUP_buf(self);
-  if (buf->context->temp != buf) MqBufferDelete((struct MqBufferS **)&buf);
+  MqBufferDelete((struct MqBufferS **)&buf);
+  (*env)->SetLongField(env,self,NS(FID_MqBufferS_hdl), 0L);
 error:
-  return 0LL;
+  return;
 }
 
 JNIEXPORT jobject JNICALL NB(Dup) (
