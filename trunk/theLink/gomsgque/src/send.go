@@ -113,10 +113,6 @@ func (this *MqS) SendB(val *MqBinary) {
   this.iErrorMqToGoWithCheck(C.MqSendB((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }
 
-func (this *MqS) SendBDY(val *MqBinary) {
-  this.iErrorMqToGoWithCheck(C.MqSendBDY((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
-}
-
 func (this *MqS) SendN(val *MqBinary) {
   this.iErrorMqToGoWithCheck(C.MqSendN((*_Ctype_struct_MqS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }

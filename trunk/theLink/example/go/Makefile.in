@@ -260,7 +260,7 @@ BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) MyServer$(EXEEXT) \
 	Filter3$(EXEEXT) mulclient$(EXEEXT) mulserver$(EXEEXT) \
 	manfilter$(EXEEXT) testserver$(EXEEXT) testclient$(EXEEXT) \
 	Filter1$(EXEEXT) Filter2$(EXEEXT) Filter4$(EXEEXT) \
-	Filter5$(EXEEXT)
+	Filter5$(EXEEXT) Filter6$(EXEEXT)
 CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = $(srcdir)/*.go
 all: $(BUILT_SOURCES)
@@ -476,6 +476,7 @@ Filter1$(EXEEXT): $(GOMSGQUE)
 Filter2$(EXEEXT): $(GOMSGQUE)
 Filter4$(EXEEXT): $(GOMSGQUE)
 Filter5$(EXEEXT): $(GOMSGQUE)
+Filter6$(EXEEXT): $(GOMSGQUE)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

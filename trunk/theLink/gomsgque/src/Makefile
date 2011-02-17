@@ -15,13 +15,17 @@ include $(GOROOT)/src/Make.inc
 
 TARG=gomsgque
 CGOFILES=MqS.go MqSException.go MqBufferS.go MqBinary.go send.go read.go link.go config.go \
-	  service.go slave.go MqFactoryS.go
+	  service.go slave.go MqFactoryS.go MqDumpS.go storage.go
 CGO_OFILES=gomsgque.o
 
 CGO_CFLAGS=-I . -I $(abs_top_srcdir)/theLink/libmsgque -DPIC
 CGO_LDFLAGS=-L$(abs_top_builddir)/theLink/libmsgque/.libs -lmsgque
 
 include $(GOROOT)/src/Make.pkg
+
+_cgo_run: $(CGOFILES)
+	-CGOPKGPATH=$(dir) cgo -- $(CGO_CFLAGS) $(CGOFILES)
+	touch _cgo_run
 
 goinstall: install
 	-test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"

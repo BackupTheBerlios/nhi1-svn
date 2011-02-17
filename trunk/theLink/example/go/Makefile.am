@@ -68,6 +68,9 @@ Filter4$(EXEEXT): $(GOMSGQUE)
 BUILT_SOURCES += Filter5$(EXEEXT)
 Filter5$(EXEEXT): $(GOMSGQUE)
 
+BUILT_SOURCES += Filter6$(EXEEXT)
+Filter6$(EXEEXT): $(GOMSGQUE)
+
 ##
 ## ==========================================================================
 ## Main

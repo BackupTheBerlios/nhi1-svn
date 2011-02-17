@@ -158,5 +158,8 @@ func (this *MqS) ServiceProxy2(token string, i int32) {
   C.free(unsafe.Pointer(t))
 }
 
-
-
+func (this *MqS) ServiceStorage(token string) {
+  t := C.CString(token)
+  this.iErrorMqToGoWithCheck(C.MqServiceStorage((*_Ctype_struct_MqS)(this), t))
+  C.free(unsafe.Pointer(t))
+}

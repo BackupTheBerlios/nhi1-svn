@@ -171,13 +171,23 @@ func (this *Server) ServerSetup() {
     this.ServiceCreate("TRN2", (*TRN2)(this))
     this.ServiceCreate("RDUL", (*RDUL)(this))
     this.ServiceCreate("STDB", (*STDB)(this))
+    this.ServiceCreate("DMPL", (*DMPL)(this))
   }
 }
+
+type DMPL Server
+  func (this *DMPL) Call() {
+    dump := this.ReadDUMP()
+    this.SendSTART()
+    this.SendI(dump.Size())
+    this.SendRETURN()
+    dump.Delete()
+  }
 
 type STDB Server
   func (this *STDB) Call() {
     this.SendSTART()
-    this.SqlSetDb(this.ReadC())
+    this.StorageOpen(this.ReadC())
     this.SendRETURN()
   }
 
@@ -633,6 +643,12 @@ type CFG1 Server
 	this.SendC (this.ConfigGetSrvName())
 	this.ConfigSetSrvName (old)
       }
+      case "Storage": {
+	old := this.ConfigGetStorage()
+	this.ConfigSetStorage (this.ReadC())
+	this.SendC (this.ConfigGetStorage())
+	this.ConfigSetStorage (old)
+      }
       case "Ident": {
 	old := this.FactoryCtxIdentGet()
 	this.FactoryCtxSet (FactoryGet("").Copy(this.ReadC()))
@@ -763,13 +779,14 @@ type ECOF Server
 
 type SETU Server
   func (this *SETU) Call() {
-    this.buf = this.ReadU()
+    this.buf = this.ReadU().Dup()
   }
 
 type GETU Server
   func (this *GETU) Call() {
     this.SendSTART()
     this.SendU(this.buf)
+    this.buf.Delete()
     this.SendRETURN()
   }
 

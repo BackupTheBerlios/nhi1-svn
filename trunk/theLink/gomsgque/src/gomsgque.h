@@ -14,6 +14,17 @@
 #include "msgque.h"
 #include "debug.h"
 
+#pragma pack(1)
+struct MqDumpS {
+  MQ_INT    signature;
+  MQ_TRA    transLId;
+  MQ_BOL    isString;
+  MQ_BOL    endian;
+  MQ_SIZE   hdrlen;
+  MQ_SIZE   bdylen;
+};
+#pragma pack()
+
 extern MQ_CST sGO;
 extern MQ_CST sERROR;
 

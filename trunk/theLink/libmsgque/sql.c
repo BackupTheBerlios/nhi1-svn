@@ -93,10 +93,14 @@ sSqlAddDb (
     return MqErrorDbV(MQ_ERROR_FEATURE_NOT_AVAILABLE, "sql link");
   }
 
-  // a "temporary" database require, by sqlite default, an "empty-string".
-  // for me an "empty-string" is an error, I prefer ":tmpdb:"
-  if (!strcmp(storageFile,":tmpdb:")) {
-    storageFile = "";
+  if (storageFile[0] == '#') {
+    // a "temporary" database require, by sqlite default, an "empty-string".
+    // for me an "empty-string" is an error, I prefer "#tmpdb#"
+    if (!strcmp(storageFile,"#tmpdb#")) {
+      storageFile = "";
+    } else if (!strcmp(storageFile,"#memdb#")) {
+      storageFile = ":memory:";
+    }
   }
 
   check_sqlite (sqlite3_open(storageFile, &sql_sys->db)) {

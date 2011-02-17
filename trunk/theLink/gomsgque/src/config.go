@@ -109,6 +109,16 @@ func (this *MqS) ConfigSetSrvName(val string) {
   C.free(unsafe.Pointer(v))
 }
 
+func (this *MqS) ConfigGetStorage() string {
+  return C.GoString(C.MqConfigGetStorage((*_Ctype_struct_MqS)(this)))
+}
+
+func (this *MqS) ConfigSetStorage(val string) {
+  v := C.CString(val)
+  C.MqConfigSetStorage((*_Ctype_struct_MqS)(this), v)
+  C.free(unsafe.Pointer(v))
+}
+
 func (this *MqS) ConfigGetIsSilent() bool {
   return C.MqConfigGetIsSilent((*_Ctype_struct_MqS)(this)) == C.MQ_YES
 }

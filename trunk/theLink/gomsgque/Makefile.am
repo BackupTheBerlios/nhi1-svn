@@ -22,7 +22,6 @@ setup:
 	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
 
 all-local: setup
-	-cd src && $(MAKE) $(MAKEARGS)
 	cd src && $(MAKE) $(MAKEARGS)
 
 clean-local: setup

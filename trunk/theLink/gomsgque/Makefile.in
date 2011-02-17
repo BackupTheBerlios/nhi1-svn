@@ -474,7 +474,6 @@ uninstall-am: uninstall-local
 @USE_GO_TRUE@	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
 
 @USE_GO_TRUE@all-local: setup
-@USE_GO_TRUE@	-cd src && $(MAKE) $(MAKEARGS)
 @USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS)
 
 @USE_GO_TRUE@clean-local: setup

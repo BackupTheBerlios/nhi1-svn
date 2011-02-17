@@ -1744,8 +1744,8 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /// \brief switch to a \e file-based-transaction-database
 /// \context
 /// \param[in] storageFile the file used to create the \e transaction-database. Allowed values are: 
-///   -# \c ":memory:" for a \e in-memory-database (default)
-///   -# \c ":tmpdb:"  for a \e temporary-database-file
+///   -# \c "#memdb#"  for a \e in-memory-database (default)
+///   -# \c "#tmpdb#"  for a \e temporary-database-file
 ///   -# \c filename   for a \e persistent-database-file
 ///   .
 /// \retException

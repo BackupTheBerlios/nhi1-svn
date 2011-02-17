@@ -29,6 +29,15 @@ func (this *MqBufferS)  iErrorBufToGoWithCheck(ex uint32) {
   }
 }
 
+func (this *MqBufferS)  Dup() *MqBufferS {
+  return (*MqBufferS)(C.MqBufferDup((*_Ctype_struct_MqBufferS)(this)))
+}
+
+func (this *MqBufferS)  Delete() {
+  tmp := (*_Ctype_struct_MqBufferS)(this)
+  C.MqBufferDelete(&tmp)
+}
+
 func (this *MqBufferS)  GetO() bool {
   var tmp C.MQ_BOL
   this.iErrorBufToGoWithCheck(C.MqBufferGetO((*_Ctype_struct_MqBufferS)(this), &tmp))

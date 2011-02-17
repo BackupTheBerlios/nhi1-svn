@@ -31,11 +31,67 @@ func NewFilter4(tmpl *MqS) *MqS {
   return ret.MqS
 }
 
+func (this *Filter4) ErrorWrite() {
+  this.FH.WriteString("ERROR: " + this.ErrorGetText() + "\n")
+  this.ErrorReset()
+}
+
+type LOGF Filter4
+  func (this *LOGF) Call() {
+    ftr := this.ServiceGetFilter()
+    if (ftr.LinkGetTargetIdent() == "transFilter") {
+      this.ReadForward(ftr)
+    } else {
+      this.FH,_ = os.Open(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
+    }
+    this.SendRETURN()
+  }
+
+type EXIT Filter4
+  func (this *EXIT) Call() {
+    os.Exit(1)
+  }
+
+type WRIT Filter4
+  func (this *WRIT) Call() {
+    this.ServiceGetFilter().GetSelf().(*Filter4).FH.WriteString(this.ReadC() + "\n")
+    this.SendRETURN()
+  }
+
+type ALLS Filter4
+  func (this *ALLS) Call() {
+    this.itms.PushBack(this.ReadDUMP())
+    this.SendRETURN()
+  }
+
+func (this *Filter4) Event() {
+  if (this.itms.Len() <= 0) {
+    this.ErrorSetCONTINUE()
+  } else {
+    it := this.itms.Front()
+    defer func() {
+      if x := recover(); x != nil {
+	this.ErrorSet(x)
+	if this.ErrorIsEXIT() {
+	  this.ErrorReset()
+	  return;
+	} else {
+	  this.ErrorWrite()
+	}
+      }
+      this.itms.Remove(it)
+    }()
+    ftr := this.ServiceGetFilter()
+    ftr.LinkConnect()
+    this.ReadLOAD(it.Value.(*MqDumpS))
+    this.ReadForward(ftr)
+  }
+}
+
 func (this *Filter4) ServerCleanup() {
-  ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
-  if (ftr.FH != nil) {
-    ftr.FH.Close()
-    ftr.FH = nil
+  if (this.FH != nil) {
+    this.FH.Close()
+    this.FH = nil
   }
 }
 
@@ -45,64 +101,7 @@ func (this *Filter4) ServerSetup() {
   this.ServiceCreate("EXIT", (*EXIT)(this))
   this.ServiceCreate("+ALL", (*ALLS)(this))
   ftr.ServiceCreate("WRIT", (*WRIT)(ftr))
-}
-
-type ALLS Filter4
-  func (this *ALLS) Call() {
-    this.itms.PushBack(this.ReadBDY().Get())
-    this.SendRETURN()
-  }
-
-func (this *Filter4) Event() {
-  if (this.itms.Len() <= 0) {
-    this.ErrorSetCONTINUE()
-  } else {
-    it := this.itms.Front()
-    ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
-    defer func() {
-      if x := recover(); x != nil {
-	ftr.ErrorSet(x)
-	if ftr.ErrorIsEXIT() {
-	  ftr.ErrorReset()
-	  return;
-	} else {
-	  ftr.ErrorWrite()
-	}
-      }
-      this.itms.Remove(it)
-    }()
-    ftr.LinkConnect()
-    ftr.SendBDY(new(MqBinary).Set(it.Value.([]byte)))
-  }
-}
-
-type LOGF Filter4
-  func (this *LOGF) Call() {
-    ftr := this.ServiceGetFilter().GetSelf().(*Filter4)
-    if (ftr.LinkGetTargetIdent() == "transFilter") {
-      ftr.SendSTART()
-      ftr.SendC(this.ReadC())
-      ftr.SendEND_AND_WAIT2("LOGF")
-    } else {
-      ftr.FH,_ = os.Open(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
-    }
-    this.SendRETURN()
-  }
-
-type EXIT Filter4
-  func (this *EXIT) Call() {
-    this.ErrorSetEXIT()
-  }
-
-type WRIT Filter4
-  func (this *WRIT) Call() {
-    this.FH.WriteString(this.ReadC() + "\n")
-    this.SendRETURN()
-  }
-
-func (this *Filter4) ErrorWrite() {
-  this.FH.WriteString("ERROR: " + this.ErrorGetText() + "\n")
-  this.ErrorReset()
+  ftr.ServiceProxy("+TRT")
 }
 
 func main() {
