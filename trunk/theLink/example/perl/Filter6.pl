@@ -1,10 +1,10 @@
 #+
-#§  \file       theLink/example/perl/Filter4.pl
-#§  \brief      \$Id: Filter4.pl 92 2009-12-21 11:58:07Z aotto1968 $
+#§  \file       theLink/example/perl/Filter6.pl
+#§  \brief      \$Id$
 #§  
-#§  (C) 2009 - NHI - #1 - Project - Group
+#§  (C) 2011 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 92 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
@@ -16,7 +16,7 @@ use FileHandle;
 
 $| = 1;
 
-package Filter4;
+package Filter6;
 use base qw(Net::PerlMsgque::MqS);
 
   sub ErrorWrite {
@@ -60,15 +60,14 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub Event {
     my $ctx = shift;
-    my $itms = $ctx->DictGet("itms");
-    my $it = @{$itms}[0];
-    if (!defined($it)) {
+    if ($ctx->StorageCount() == 0) {
       $ctx->ErrorSetCONTINUE();
     } else {
+      my $id = 0;
       eval {
 	my $ftr = $ctx->ServiceGetFilter();
 	$ftr->LinkConnect();
-	$ctx->ReadLOAD($it);
+	$id = $ctx->StorageSelect();
 	$ctx->ReadForward($ftr);
       };
       if ($@) {
@@ -80,14 +79,13 @@ use base qw(Net::PerlMsgque::MqS);
 	  $ctx->ErrorWrite();
 	}
       }
-      shift(@{$itms});
+      $ctx->StorageDelete($id);
     }
   }
 
   sub FilterIn {
     my $ctx = shift;
-    my $itms = $ctx->DictGet("itms");
-    push(@{$itms}, $ctx->ReadDUMP());
+    $ctx->StorageInsert();
     $ctx->SendRETURN();
   }
 
@@ -103,11 +101,11 @@ use base qw(Net::PerlMsgque::MqS);
     my $ctx = shift;
     my $ftr = $ctx->ServiceGetFilter();
     $ctx->ServiceCreate("+ALL", \&FilterIn);
+    $ctx->ServiceStorage("PRNT");
     $ctx->ServiceCreate("LOGF", \&LOGF);
     $ctx->ServiceCreate("EXIT", \&EXIT);
     $ftr->ServiceCreate("WRIT", \&WRIT);
     $ftr->ServiceProxy("+TRT");
-    $ctx->DictSet("itms", []);
     $ctx->DictSet("FH", undef);
 
   }
@@ -126,8 +124,7 @@ use base qw(Net::PerlMsgque::MqS);
 
 package main;
 
-  Net::PerlMsgque::MqFactoryS::Default("transFilter", "Filter4");
-  our $srv = new Filter4();
+  our $srv = MqFactoryS::Add("transFilter", "Filter6")->New();
   eval {
     $srv->LinkCreate(@ARGV);
     $srv->ProcessEvent(Net::PerlMsgque::WAIT_FOREVER);
@@ -138,6 +135,3 @@ package main;
   $srv->Exit();
 
 1;
-
-
-

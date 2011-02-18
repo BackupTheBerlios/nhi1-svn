@@ -1,6 +1,6 @@
 
 #if defined(VERSION)
-#  undef VERSION
+#undef VERSION
 #endif
 
 #include "EXTERN.h"
@@ -11,6 +11,10 @@
 #include "mqconfig.h"
 #include "msgque.h"
 #include "debug.h"
+
+#ifndef USE_64_BIT_INT
+#error perl compile option "USE_64_BIT_INT" is required
+#endif
 
 #define MqErrorSys(cmd) \
   MqErrorV (context, __func__, errno, \
@@ -64,9 +68,14 @@ struct PerlContextS {
 #define PERL_DATA (((struct PerlContextS*)context)->data)
 
 typedef struct MqS MqS;
+typedef struct MqS MqSelf;
 typedef struct MqSException MqSException;
 typedef struct MqBufferS MqBufferS;
+typedef struct MqBufferS MqBufferSelf;
+typedef struct MqDumpS MqDumpS;
+typedef struct MqDumpS MqDumpSelf;
 typedef struct MqFactoryS MqFactoryS;
+typedef struct MqFactoryS MqFactorySelf;
 
 static enum MqErrorE DummyOK (
   struct MqS * const context
@@ -75,14 +84,13 @@ static enum MqErrorE DummyOK (
   return MQ_OK;
 }
 
-static MqS* get_MqS_NO_ERROR(SV* sv)
+static mq_inline MqS* get_MqS_NO_ERROR(SV* sv)
 {
   MqS *var = NULL;
   if (SvROK(sv)) {
     sv = (SV*)SvRV(sv);
     if (SvIOK(sv)) {
-      IV tiv = SvIV(sv);
-      var = INT2PTR(MqS*,tiv);
+      var = INT2PTR(MqS*,SvIV(sv));
       if (var->signature != MQ_MqS_SIGNATURE) {
 	var = NULL;
       }
@@ -97,8 +105,7 @@ static MqS* get_MqS(pTHX_ SV* sv)
   if (SvROK(sv)) {
     sv = (SV*)SvRV(sv);
     if (SvIOK(sv)) {
-      IV tiv = SvIV(sv);
-      var = INT2PTR(MqS*,tiv);
+      var = INT2PTR(MqS*,SvIV(sv));
       if (var->signature != MQ_MqS_SIGNATURE) {
 	var = NULL;
       }
@@ -110,14 +117,18 @@ static MqS* get_MqS(pTHX_ SV* sv)
   return var;
 }
 
+static mq_inline MqSelf* get_MqSelf(pTHX_ SV* sv)
+{
+  return INT2PTR(MqSelf*,SvIV((SV*)SvRV(sv)));
+}
+
 static MqBufferS* get_MqBufferS(pTHX_ SV* sv)
 {
   MqBufferS *var = NULL;
   if (SvROK(sv)) {
     sv = (SV*)SvRV(sv);
     if (SvIOK(sv)) {
-      IV tiv = SvIV(sv);
-      var = INT2PTR(MqBufferS*,tiv);
+      var = INT2PTR(MqBufferS*,SvIV(sv));
       if (var->signature != MQ_MqBufferS_SIGNATURE) {
 	var = NULL;
       }
@@ -129,14 +140,18 @@ static MqBufferS* get_MqBufferS(pTHX_ SV* sv)
   return var;
 }
 
+static mq_inline MqBufferSelf* get_MqBufferSelf(pTHX_ SV* sv)
+{
+  return INT2PTR(MqBufferSelf*,SvIV((SV*)SvRV(sv)));
+}
+
 static MqFactoryS* get_MqFactoryS(pTHX_ SV* sv)
 {
   MqFactoryS *var = NULL;
   if (SvROK(sv)) {
     sv = (SV*)SvRV(sv);
     if (SvIOK(sv)) {
-      IV tiv = SvIV(sv);
-      var = INT2PTR(MqFactoryS*,tiv);
+      var = INT2PTR(MqFactoryS*,SvIV(sv));
       if (var->signature != MQ_MqFactoryS_SIGNATURE) {
 	var = NULL;
       }
@@ -146,6 +161,35 @@ static MqFactoryS* get_MqFactoryS(pTHX_ SV* sv)
     Perl_croak(aTHX_ "object is not of type Net::PerlMsgque::MqFactoryS");
   }
   return var;
+}
+
+static mq_inline MqFactorySelf* get_MqFactorySelf(pTHX_ SV* sv)
+{
+  return INT2PTR(MqFactorySelf*,SvIV((SV*)SvRV(sv)));
+}
+
+static MqDumpS* get_MqDumpS(pTHX_ SV* sv)
+{
+  MQ_INT *var = NULL;
+  if (SvROK(sv)) {
+    sv = (SV*)SvRV(sv);
+    if (SvIOK(sv)) {
+      IV tiv = SvIV(sv);
+      var = INT2PTR(MQ_INT*,tiv);
+      if (*var != MQ_MqDumpS_SIGNATURE) {
+	var = NULL;
+      }
+    }
+  }
+  if (var == NULL) {
+    Perl_croak(aTHX_ "object is not of type Net::PerlMsgque::MqDumpS");
+  }
+  return (MqDumpS*) var;
+}
+
+static mq_inline MqDumpSelf* get_MqDumpSelf(pTHX_ SV* sv)
+{
+  return INT2PTR(MqDumpSelf*,SvIV((SV*)SvRV(sv)));
 }
 
 static enum MqErrorE
@@ -475,7 +519,7 @@ MqFactoryS*
 MqFactoryGetCalled(MQ_CST ident = NULL)
 
 void
-MqFactoryNew(MqFactoryS* factory)
+MqFactoryNew(MqFactorySelf* factory)
   PREINIT:
     struct MqS * ctx = NULL;
   PPCODE:
@@ -489,49 +533,49 @@ MqFactoryNew(MqFactoryS* factory)
     }
 
 MqFactoryS*
-MqFactoryCopy(MqFactoryS* factory, MQ_CST ident)
+MqFactoryCopy(MqFactorySelf* factory, MQ_CST ident)
 
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS  PREFIX = Mq
 
 void
-MqErrorSet(MqS* context, SV* err)
+MqErrorSet(MqSelf* context, SV* err)
   CODE:
     ProcError (aTHX_ context, err);
 
 void
-MqErrorSetCONTINUE(MqS* context)
+MqErrorSetCONTINUE(MqSelf* context)
 
 void
-MqErrorSetEXIT(MqS* context)
+MqErrorSetEXIT(MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck(MqErrorSetEXIT(context))
 
 bool
-MqErrorIsEXIT(MqS* context)
+MqErrorIsEXIT(MqSelf* context)
 
 void
-MqErrorPrint(MqS* context)
+MqErrorPrint(MqSelf* context)
 
 void
-MqErrorReset(MqS* context)
+MqErrorReset(MqSelf* context)
 
 void
-MqErrorRaise(MqS* context)
+MqErrorRaise(MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck(MqErrorGetCodeI(context))
 
 void
-MqErrorC (MqS* context, MQ_CST prefix, MQ_INT error_number, MQ_CST error_text)
+MqErrorC (MqSelf* context, MQ_CST prefix, MQ_INT error_number, MQ_CST error_text)
 
 MQ_INT
-MqErrorGetNum (MqS* context)
+MqErrorGetNum (MqSelf* context)
 
 MQ_CST
-MqErrorGetText (MqS* context)
+MqErrorGetText (MqSelf* context)
 
 void
-MqProcessEvent(MqS* context, ...)
+MqProcessEvent(MqSelf* context, ...)
   PREINIT:
     MQ_TIME_T timeout = MQ_TIMEOUT_DEFAULT;
     enum MqWaitOnEventE wait = MQ_WAIT_NO;
@@ -550,7 +594,7 @@ MqProcessEvent(MqS* context, ...)
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
 void
-LinkGetParent(MqS* context)
+LinkGetParent(MqSelf* context)
   PREINIT:
     MqS* parent;
   PPCODE:
@@ -559,16 +603,16 @@ LinkGetParent(MqS* context)
     XSRETURN(1);
 
 MQ_CST
-MqLinkGetTargetIdent (MqS* context)
+MqLinkGetTargetIdent (MqSelf* context)
 
 bool
-MqLinkIsConnected (MqS* context)
+MqLinkIsConnected (MqSelf* context)
 
 bool
-MqLinkIsParent (MqS* context)
+MqLinkIsParent (MqSelf* context)
 
 int
-MqLinkGetCtxId (MqS* context)
+MqLinkGetCtxId (MqSelf* context)
 
 void
 MqLinkCreate(MqS * context, ...)
@@ -612,7 +656,7 @@ void
 MqLinkDelete(MqS *context)
 
 void
-MqLinkConnect (MqS* context)
+MqLinkConnect (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqLinkConnect (context));
 
@@ -620,12 +664,7 @@ void
 MqExit(MqS * context)
 
 void
-MqSqlSetDb (MqS* context, MQ_CST storageFile)
-  CODE:
-    ErrorMqToPerlWithCheck (MqSqlSetDb (context, storageFile));
-
-void
-MqDelete (MqS* context)
+MqDelete (MqSelf* context)
   CODE:
     MqContextFree (context);
 
@@ -633,292 +672,274 @@ void
 MqLogC(MqS * context, MQ_CST prefix, int level, MQ_CST text)
 
 void
-MqConfigSetBuffersize (MqS* context, int buffersize)
+MqConfigSetBuffersize (MqSelf* context, int buffersize)
 
 int
-MqConfigGetBuffersize (MqS* context)
+MqConfigGetBuffersize (MqSelf* context)
 
 void
-MqConfigSetDebug (MqS* context, int debug)
+MqConfigSetDebug (MqSelf* context, int debug)
 
 int
-MqConfigGetDebug (MqS* context)
+MqConfigGetDebug (MqSelf* context)
 
 void
-MqConfigSetTimeout (MqS* context, int timeout)
+MqConfigSetTimeout (MqSelf* context, int timeout)
 
 int
-MqConfigGetTimeout (MqS* context)
+MqConfigGetTimeout (MqSelf* context)
 
 void
-MqConfigSetName (MqS* context, MQ_NST name)
+MqConfigSetName (MqSelf* context, MQ_NST name)
 
 MQ_NST
-MqConfigGetName (MqS* context)
+MqConfigGetName (MqSelf* context)
 
 void
-MqConfigSetSrvName (MqS* context, MQ_NST srvname)
+MqConfigSetSrvName (MqSelf* context, MQ_NST srvname)
 
 MQ_NST
-MqConfigGetSrvName (MqS* context)
+MqConfigGetSrvName (MqSelf* context)
 
 void
-MqConfigSetIoUdsFile (MqS* context, MQ_NST udsfile)
+MqConfigSetStorage (MqSelf* context, MQ_NST storageFile)
+
+MQ_NST
+MqConfigGetStorage (MqSelf* context)
+
+void
+MqConfigSetIoUdsFile (MqSelf* context, MQ_NST udsfile)
   CODE:
     ErrorMqToPerlWithCheck(MqConfigSetIoUdsFile(context, udsfile))
 
 MQ_NST
-MqConfigGetIoUdsFile (MqS* context)
+MqConfigGetIoUdsFile (MqSelf* context)
 
 void
-MqConfigSetIoTcp (MqS* context, MQ_NST host, MQ_NST port, MQ_NST myhost, MQ_NST myport)
+MqConfigSetIoTcp (MqSelf* context, MQ_NST host, MQ_NST port, MQ_NST myhost, MQ_NST myport)
   CODE:
     ErrorMqToPerlWithCheck(MqConfigSetIoTcp(context, host, port, myhost, myport))
 
 MQ_NST
-MqConfigGetIoTcpHost (MqS* context)
+MqConfigGetIoTcpHost (MqSelf* context)
 
 MQ_NST
-MqConfigGetIoTcpPort (MqS* context)
+MqConfigGetIoTcpPort (MqSelf* context)
 
 MQ_NST
-MqConfigGetIoTcpMyHost (MqS* context)
+MqConfigGetIoTcpMyHost (MqSelf* context)
 
 MQ_NST
-MqConfigGetIoTcpMyPort (MqS* context)
+MqConfigGetIoTcpMyPort (MqSelf* context)
 
 void
-MqConfigSetIoPipeSocket (MqS* context, MQ_INT socket)
+MqConfigSetIoPipeSocket (MqSelf* context, MQ_INT socket)
   CODE:
     ErrorMqToPerlWithCheck(MqConfigSetIoPipeSocket(context, socket))
 
 MQ_INT
-MqConfigGetIoPipeSocket (MqS* context)
+MqConfigGetIoPipeSocket (MqSelf* context)
 
 void
-MqConfigSetStartAs (MqS* context, MQ_INT startAs)
+MqConfigSetStartAs (MqSelf* context, MQ_INT startAs)
 
 MQ_INT
-MqConfigGetStartAs (MqS* context)
+MqConfigGetStartAs (MqSelf* context)
 
 MQ_INT
-MqConfigGetStatusIs (MqS* context)
+MqConfigGetStatusIs (MqSelf* context)
 
 void
-MqConfigSetDaemon (MqS* context, MQ_CST pidfile)
+MqConfigSetDaemon (MqSelf* context, MQ_CST pidfile)
 
 void
-MqConfigSetIsSilent (MqS* context, bool isSilent)
+MqConfigSetIsSilent (MqSelf* context, bool isSilent)
 
 bool
-MqConfigGetIsSilent (MqS* context)
+MqConfigGetIsSilent (MqSelf* context)
 
 void
-MqConfigSetIsString (MqS* context, bool isString)
+MqConfigSetIsString (MqSelf* context, bool isString)
 
 void
-MqConfigSetIgnoreExit (MqS* context, bool ignoreExit)
+MqConfigSetIgnoreExit (MqSelf* context, bool ignoreExit)
 
 bool
-MqConfigGetIsString (MqS* context)
+MqConfigGetIsString (MqSelf* context)
 
 void
-MqConfigSetIsServer (MqS* context, bool isServer)
+MqConfigSetIsServer (MqSelf* context, bool isServer)
 
 bool
-MqConfigGetIsServer (MqS* context)
+MqConfigGetIsServer (MqSelf* context)
 
 void
-MqConfigSetServerSetup (MqS* context, SV* setupF)
+MqConfigSetServerSetup (MqSelf* context, SV* setupF)
   CODE:
     MqConfigSetServerSetup (context, ProcCall, (MQ_PTR) newSVsv(setupF), ProcFree, ProcCopy);
 
 void
-MqConfigSetServerCleanup (MqS* context, SV* cleanupF)
+MqConfigSetServerCleanup (MqSelf* context, SV* cleanupF)
   CODE:
     MqConfigSetServerCleanup (context, ProcCall, (MQ_PTR) newSVsv(cleanupF), ProcFree, ProcCopy);
 
 void
-MqConfigSetBgError (MqS* context, SV* bgerrorF)
+MqConfigSetBgError (MqSelf* context, SV* bgerrorF)
   CODE:
     MqConfigSetBgError (context, ProcCall, (MQ_PTR) newSVsv(bgerrorF), ProcFree, ProcCopy);
 
 void
-MqConfigSetEvent (MqS* context, SV* eventF)
+MqConfigSetEvent (MqSelf* context, SV* eventF)
   CODE:
     MqConfigSetEvent (context, ProcCall, (MQ_PTR) newSVsv(eventF), ProcFree, ProcCopy);
 
 
 
 MqFactoryS*
-MqFactoryCtxGet (MqS* context)
+MqFactoryCtxGet (MqSelf* context)
 
 void
-MqFactoryCtxSet (MqS* context, MqFactoryS* factory)
+MqFactoryCtxSet (MqSelf* context, MqFactoryS* factory)
   CODE:
     ErrorMqToPerlWithCheck (MqFactoryCtxSet (context, factory));
 
 MQ_CST
-MqFactoryCtxIdentGet (MqS* context)
+MqFactoryCtxIdentGet (MqSelf* context)
 
 void
-MqFactoryCtxIdentSet (MqS* context, MQ_NST ident)
+MqFactoryCtxIdentSet (MqSelf* context, MQ_NST ident)
   CODE:
     ErrorMqToPerlWithCheck (MqFactoryCtxIdentSet (context, ident));
 
 
 void
-MqSendSTART (MqS* context)
+MqSendSTART (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendSTART (context));
 
 void
-MqSendEND_AND_WAIT (MqS* context, MQ_CST token, MQ_TIME_T timeout = MQ_TIMEOUT_USER)
+MqSendEND_AND_WAIT (MqSelf* context, MQ_CST token, MQ_TIME_T timeout = MQ_TIMEOUT_USER)
   CODE:
     ErrorMqToPerlWithCheck (MqSendEND_AND_WAIT(context, token, timeout));
 
 void
-MqSendEND_AND_CALLBACK (MqS* context, MQ_CST token, SV* callbackF)
+MqSendEND_AND_CALLBACK (MqSelf* context, MQ_CST token, SV* callbackF)
   CODE:
     ErrorMqToPerlWithCheck (MqSendEND_AND_CALLBACK(context, token, ProcCall, (MQ_PTR) newSVsv(callbackF), ProcFree));
 
 void
-MqSendEND (MqS* context, MQ_CST token)
+MqSendEND (MqSelf* context, MQ_CST token)
   CODE:
     ErrorMqToPerlWithCheck (MqSendEND(context, token));
 
 void
-MqSendRETURN (MqS* context)
+MqSendRETURN (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendRETURN (context));
 
 void
-MqSendERROR (MqS* context)
+MqSendERROR (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendERROR (context));
 
 void
-MqSendO (MqS* context, MQ_BOL boolean_val)
+MqSendO (MqSelf* context, MQ_BOL boolean_val)
   CODE:
     ErrorMqToPerlWithCheck (MqSendO (context, boolean_val));
 
 MQ_BOL
-MqReadO (MqS* context)
+MqReadO (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadO (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendY (MqS* context, MQ_BYT byte)
+MqSendY (MqSelf* context, MQ_BYT byte)
   CODE:
     ErrorMqToPerlWithCheck (MqSendY (context, byte));
 
 MQ_BYT
-MqReadY (MqS* context)
+MqReadY (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadY (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendS (MqS* context, MQ_SRT short_int)
+MqSendS (MqSelf* context, MQ_SRT short_int)
   CODE:
     ErrorMqToPerlWithCheck (MqSendS (context, short_int));
 
 MQ_SRT
-MqReadS (MqS* context)
+MqReadS (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadS (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendI (MqS* context, MQ_INT integer)
+MqSendI (MqSelf* context, MQ_INT integer)
   CODE:
     ErrorMqToPerlWithCheck (MqSendI (context, integer));
 
 MQ_INT
-MqReadI (MqS* context)
+MqReadI (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadI (context, &RETVAL));
   OUTPUT:
     RETVAL
 
-#if MAXINT == MAXLONG
-
 void
-MqSendW (MqS* context, MQ_CST wide_int)
-  PREINIT:
-    MQ_WID w;
-  CODE:
-    ErrorMqToPerlWithCheck (MqBufferGetW (MqBufferSetC (context->temp, wide_int), &w));
-    ErrorMqToPerlWithCheck (MqSendW (context, w));
-
-MQ_CST
-MqReadW (MqS* context)
-  PREINIT:
-    MQ_WID w;
-  CODE:
-    ErrorMqToPerlWithCheck (MqReadW (context, &w));
-    ErrorMqToPerlWithCheck (MqBufferGetC (MqBufferSetW (context->temp, w), &RETVAL));
-  OUTPUT:
-    RETVAL
-
-#else
-
-void
-MqSendW (MqS* context, MQ_WID wide_int)
+MqSendW (MqSelf* context, MQ_WID wide_int)
   CODE:
     ErrorMqToPerlWithCheck (MqSendW (context, wide_int));
 
 MQ_WID
-MqReadW (MqS* context)
+MqReadW (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadW (context, &RETVAL));
   OUTPUT:
     RETVAL
 
-#endif
-
 void
-MqSendF (MqS* context, MQ_FLT float_val)
+MqSendF (MqSelf* context, MQ_FLT float_val)
   CODE:
     ErrorMqToPerlWithCheck (MqSendF (context, float_val));
 
 MQ_FLT
-MqReadF (MqS* context)
+MqReadF (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadF (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendD (MqS* context, MQ_DBL double_val)
+MqSendD (MqSelf* context, MQ_DBL double_val)
   CODE:
     ErrorMqToPerlWithCheck (MqSendD (context, double_val));
 
 MQ_DBL
-MqReadD (MqS* context)
+MqReadD (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadD (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendC (MqS* context, MQ_CST string)
+MqSendC (MqSelf* context, MQ_CST string)
   CODE:
     ErrorMqToPerlWithCheck (MqSendC (context, string));
 
 MQ_CST
-MqReadC (MqS* context)
+MqReadC (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadC (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqSendB (MqS* context, SV* binary)
+MqSendB (MqSelf* context, SV* binary)
   INIT:
     MQ_CBI bin;
     STRLEN len;
@@ -926,26 +947,8 @@ MqSendB (MqS* context, SV* binary)
     bin = (MQ_BIN)SvPVbyte (binary, len);
     ErrorMqToPerlWithCheck (MqSendB (context, bin, (MQ_SIZE)len));
 
-void
-MqSendN (MqS* context, SV* binary)
-  INIT:
-    MQ_CBI bin;
-    STRLEN len;
-  CODE:
-    bin = (MQ_BIN)SvPVbyte (binary, len);
-    ErrorMqToPerlWithCheck (MqSendN (context, bin, (MQ_SIZE)len));
-
-void
-MqSendBDY (MqS* context, SV* binary)
-  INIT:
-    MQ_CBI bin;
-    STRLEN len;
-  CODE:
-    bin = (MQ_BIN)SvPVbyte (binary, len);
-    ErrorMqToPerlWithCheck (MqSendBDY (context, bin, (MQ_SIZE)len));
-
 SV*
-MqReadB (MqS* context)
+MqReadB (MqSelf* context)
   INIT:
     MQ_BIN bin;
     MQ_SIZE len;
@@ -955,8 +958,17 @@ MqReadB (MqS* context)
   OUTPUT:
     RETVAL
 
+void
+MqSendN (MqSelf* context, SV* binary)
+  INIT:
+    MQ_CBI bin;
+    STRLEN len;
+  CODE:
+    bin = (MQ_BIN)SvPVbyte (binary, len);
+    ErrorMqToPerlWithCheck (MqSendN (context, bin, (MQ_SIZE)len));
+
 SV*
-MqReadN (MqS* context)
+MqReadN (MqSelf* context)
   INIT:
     MQ_CBI bin;
     MQ_SIZE len;
@@ -966,40 +978,45 @@ MqReadN (MqS* context)
   OUTPUT:
     RETVAL
 
-SV*
-MqReadBDY (MqS* context)
-  INIT:
-    MQ_BIN bin;
-    MQ_SIZE len;
-  CODE:
-    ErrorMqToPerlWithCheck (MqReadBDY (context, &bin, &len));
-    RETVAL = newSVpvn((MQ_CST)bin, len);
-    MqSysFree(bin);
-  OUTPUT:
-    RETVAL
-
 void
-MqSendU (MqS* context, MqBufferS *buffer)
+MqSendU (MqSelf* context, MqBufferS *buffer)
   CODE:
     ErrorMqToPerlWithCheck (MqSendU (context, buffer));
 
 MqBufferS*
-MqReadU (MqS* context)
+MqReadU (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadU (context, &RETVAL));
   OUTPUT:
     RETVAL
 
 void
-MqReadProxy (MqS* context, MqS* target)
+MqReadProxy (MqSelf* context, MqS* target)
   CODE:
     ErrorMqToPerlWithCheck (MqReadProxy (context, target));
 
-MQ_NST
-MqServiceGetToken (MqS* context)
+MqDumpS*
+MqReadDUMP (MqSelf* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadDUMP (context, &RETVAL));
+  OUTPUT:
+    RETVAL
 
 void
-MqServiceGetFilter(MqS* context, MQ_SIZE id = 0)
+MqReadLOAD (MqSelf* context, MqDumpS* dump)
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadLOAD (context, dump));
+
+void
+MqReadForward (MqSelf* context, MqS* ftr)
+  CODE:
+    ErrorMqToPerlWithCheck (MqReadForward (context, ftr));
+
+MQ_NST
+MqServiceGetToken (MqSelf* context)
+
+void
+MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
   PREINIT:
     struct MqS * filter = NULL;
   PPCODE:
@@ -1008,22 +1025,68 @@ MqServiceGetFilter(MqS* context, MQ_SIZE id = 0)
     XSRETURN(1);
 
 bool
-MqServiceIsTransaction (MqS* context)
+MqServiceIsTransaction (MqSelf* context)
     
 void
-MqServiceProxy (MqS* context, MQ_CST token, MQ_SIZE id = 0)
+MqServiceProxy (MqSelf* context, MQ_CST token, MQ_SIZE id = 0)
   CODE:
     ErrorMqToPerlWithCheck (MqServiceProxy (context, token, id));
     
 void
-MqServiceCreate (MqS* context, MQ_CST token, SV* serviceF)
+MqServiceStorage (MqSelf* context, MQ_CST token)
+  CODE:
+    ErrorMqToPerlWithCheck (MqServiceStorage (context, token));
+    
+void
+MqServiceCreate (MqSelf* context, MQ_CST token, SV* serviceF)
   CODE:
     ErrorMqToPerlWithCheck (
       MqServiceCreate (context, token, ProcCall, (MQ_PTR) newSVsv(serviceF), ProcFree)
     );
 
+# -------------------------------------------------------------------------------------
+    
+void
+MqStorageOpen (MqSelf* context, MQ_CST storageFile)
+  CODE:
+    ErrorMqToPerlWithCheck (MqStorageOpen (context, storageFile));
+    
+void
+MqStorageClose (MqSelf* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqStorageClose (context));
+    
+MQ_TRA
+MqStorageInsert (MqSelf* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqStorageInsert (context, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+MQ_TRA
+MqStorageSelect (MqSelf* context, MQ_TRA transLId = 0)
+  CODE:
+    RETVAL = transLId;
+    ErrorMqToPerlWithCheck (MqStorageSelect (context, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+void
+MqStorageDelete (MqSelf* context, MQ_TRA transLId)
+  CODE:
+    ErrorMqToPerlWithCheck (MqStorageDelete (context, transLId));
+    
+MQ_TRA
+MqStorageCount (MqSelf* context)
+  CODE:
+    ErrorMqToPerlWithCheck (MqStorageCount (context, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+# -------------------------------------------------------------------------------------
+
 SV*
-DictSet (MqS* context, MQ_CST key, SV* data)
+DictSet (MqSelf* context, MQ_CST key, SV* data)
   PREINIT:
     SV** svP = NULL;
   CODE:
@@ -1043,7 +1106,7 @@ DictSet (MqS* context, MQ_CST key, SV* data)
     RETVAL
 
 SV*
-DictGet (MqS* context, MQ_CST key)
+DictGet (MqSelf* context, MQ_CST key)
   PREINIT:
     SV** svP = NULL;
   CODE:
@@ -1055,7 +1118,7 @@ DictGet (MqS* context, MQ_CST key)
     RETVAL
 
 SV*
-DictUnset (MqS* context, MQ_CST key)
+DictUnset (MqSelf* context, MQ_CST key)
   PREINIT:
     SV* sv = NULL;
   CODE:
@@ -1067,7 +1130,7 @@ DictUnset (MqS* context, MQ_CST key)
     RETVAL
 
 bool
-DictExists (MqS* context, MQ_CST key)
+DictExists (MqSelf* context, MQ_CST key)
   PREINIT:
     bool exists = FALSE;
   CODE:
@@ -1079,63 +1142,63 @@ DictExists (MqS* context, MQ_CST key)
     RETVAL
 
 bool
-MqReadItemExists(MqS* context)
+MqReadItemExists(MqSelf* context)
 
 MQ_SIZE
-MqReadGetNumItems(MqS* context)
+MqReadGetNumItems(MqSelf* context)
 
 void
-MqReadUndo(MqS* context)
+MqReadUndo(MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadUndo (context));
 
 void
-MqSendL_START (MqS* context)
+MqSendL_START (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendL_START(context));
 
 void
-MqSendL_END (MqS* context)
+MqSendL_END (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendL_END(context));
 
 void
-MqSendT_START (MqS* context)
+MqSendT_START (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqSendT_START(context));
 
 void
-MqSendT_END (MqS* context, MQ_CST ident)
+MqSendT_END (MqSelf* context, MQ_CST ident)
   CODE:
     ErrorMqToPerlWithCheck (MqSendT_END(context, ident));
 
 void
-MqReadL_START (MqS* context, MqBufferS* buffer = NULL)
+MqReadL_START (MqSelf* context, MqBufferS* buffer = NULL)
   CODE:
     ErrorMqToPerlWithCheck (MqReadL_START (context, buffer)); 
 
 void
-MqReadL_END (MqS* context)
+MqReadL_END (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadL_END(context));
 
 void
-MqReadT_START (MqS* context)
+MqReadT_START (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadT_START (context)); 
 
 void
-MqReadT_END (MqS* context)
+MqReadT_END (MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck (MqReadT_END(context));
 
 void
-MqSysUSleep (MqS* context, unsigned int usec)
+MqSysUSleep (MqSelf* context, unsigned int usec)
   CODE:
     ErrorMqToPerlWithCheck (MqSysUSleep(context, usec));
 
 void
-MqSlaveWorker (MqS* context, MQ_SIZE id, ...)
+MqSlaveWorker (MqSelf* context, MQ_SIZE id, ...)
   PREINIT:
     struct MqBufferLS * args = NULL;
   CODE:
@@ -1149,17 +1212,17 @@ MqSlaveWorker (MqS* context, MQ_SIZE id, ...)
     ErrorMqToPerlWithCheck (MqSlaveWorker(context, id, &args));
 
 void
-MqSlaveCreate (MqS* context, MQ_SIZE id, MqS* slave)
+MqSlaveCreate (MqSelf* context, MQ_SIZE id, MqS* slave)
   CODE:
     ErrorMqToPerlWithCheck (MqSlaveCreate(context, id, slave));
 
 void
-MqSlaveDelete (MqS* context, MQ_SIZE id)
+MqSlaveDelete (MqSelf* context, MQ_SIZE id)
   CODE:
     ErrorMqToPerlWithCheck (MqSlaveDelete(context, id));
 
 void
-MqSlaveGet (MqS* context, MQ_SIZE id)
+MqSlaveGet (MqSelf* context, MQ_SIZE id)
   PREINIT:
     MqS* slave;
   PPCODE:
@@ -1168,7 +1231,7 @@ MqSlaveGet (MqS* context, MQ_SIZE id)
     XSRETURN(1);
 
 void
-SlaveGetMaster(MqS* context)
+SlaveGetMaster(MqSelf* context)
   PREINIT:
     MqS* master;
   PPCODE:
@@ -1177,94 +1240,103 @@ SlaveGetMaster(MqS* context)
     XSRETURN(1);
 
 bool
-MqSlaveIs (MqS* context)
+MqSlaveIs (MqSelf* context)
 
 void
-MqLog (MqS* context, MQ_CST prefix, MQ_INT level, MQ_CST str)
+MqLog (MqSelf* context, MQ_CST prefix, MQ_INT level, MQ_CST str)
   CODE:
     MqLogC(context,prefix,level,str);
 
 
+MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqDumpS
+
+MQ_INT
+Size (MqDumpSelf *dump)
+  CODE:
+    RETVAL = MqDumpSize(dump);
+  OUTPUT:
+    RETVAL
+
+
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqBufferS
 
+MqBufferS*
+Dup (MqBufferSelf *buffer)
+  CODE:
+    RETVAL = MqBufferDup(buffer);
+  OUTPUT:
+    RETVAL
+
+void
+Delete (MqBufferSelf *buffer)
+  CODE:
+    MqBufferDelete(&buffer);
+
 char
-GetType (MqBufferS *buffer)
+GetType (MqBufferSelf *buffer)
   CODE:
     RETVAL = MqBufferGetType(buffer);
   OUTPUT:
     RETVAL
 
 MQ_BYT
-GetY (MqBufferS *buffer)
+GetY (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetY(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 MQ_BOL
-GetO (MqBufferS *buffer)
+GetO (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetO(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 MQ_SRT
-GetS (MqBufferS *buffer)
+GetS (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetS(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 MQ_INT
-GetI (MqBufferS *buffer)
+GetI (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetI(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
-#if MAXINT == MAXLONG
-
-MQ_CST
-GetW (MqBufferS *buffer)
-  CODE:
-    ErrorBufferToPerlWithCheck(MqBufferGetC(buffer, &RETVAL));
-  OUTPUT:
-    RETVAL
-
-#else
-
 MQ_WID
-GetW (MqBufferS *buffer)
+GetW (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetW(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
-#endif
-
 MQ_FLT
-GetF (MqBufferS *buffer)
+GetF (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetF(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 MQ_DBL
-GetD (MqBufferS *buffer)
+GetD (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetD(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 MQ_CST
-GetC (MqBufferS *buffer)
+GetC (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetC(buffer, &RETVAL));
   OUTPUT:
     RETVAL
 
 SV*
-GetB (MqBufferS *buffer)
+GetB (MqBufferSelf *buffer)
   INIT:
     MQ_BIN bin;
     MQ_SIZE len;

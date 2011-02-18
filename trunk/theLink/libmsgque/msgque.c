@@ -93,9 +93,10 @@ MqInitGet ()
 
 static enum MqErrorE
 sCallEventProc (
-  struct MqS * const context
+  register struct MqS * const context
 )
 {
+  enum MqErrorE ret;
   struct MqS * cldCtx;
   MQ_INT NUM=1, CONTINUE=0;
   struct pChildS * child;
@@ -104,7 +105,9 @@ sCallEventProc (
 	context->link.bits.onCreateEnd == MQ_YES &&
 	  context->setup.Event.fCall != NULL) {
     context->bits.EventProc_LOCK = MQ_YES;
-    switch (MqCallbackCall(context, context->setup.Event)) {
+    ret = MqCallbackCall(context, context->setup.Event);
+    context->bits.EventProc_LOCK = MQ_NO;
+    switch (ret) {
       case MQ_OK:
 	break;
       case MQ_CONTINUE:
@@ -114,10 +117,8 @@ sCallEventProc (
 	MqErrorReset(context);
 	break;
       case MQ_ERROR:
-	context->bits.EventProc_LOCK = MQ_NO;
 	goto error;
     }
-    context->bits.EventProc_LOCK = MQ_NO;
   }
   // call the event-proc's of my child's
   for (child = context->link.childs; child != NULL; child=child->right) {
@@ -156,7 +157,6 @@ pWaitOnEvent (
   const MQ_TIME_T timeout
 )
 {
-  struct MqS * const parent = pMqGetFirstParent (context);
   const MQ_TIME_T startT = time (NULL);
   register MQ_TIME_T nowT;
 
@@ -187,6 +187,8 @@ pWaitOnEvent (
 
     // 2. call external event-proc
     if (context->setup.Event.fCall != NULL) {
+      struct MqS * const parent = pMqGetFirstParent (context);
+
       // this guarding with "____" is important to detect and break-out-of "nested" event calls
       // pWaitOnEvent
       //   -> guard 

@@ -219,14 +219,16 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub SETU {
     my $ctx = shift;
-    my $ret = $ctx->DictSet ("buf", $ctx->ReadU ());
+    my $ret = $ctx->DictSet ("buf", $ctx->ReadU()->Dup());
   }
 
   sub GETU {
     my $ctx = shift;
+    my $buf = $ctx->DictGet ("buf");
     $ctx->SendSTART();
-    $ctx->SendU ($ctx->DictGet ("buf"));
+    $ctx->SendU ($buf);
     $ctx->SendRETURN();
+    $buf->Delete();
   }
 
   sub GTTO {
@@ -610,6 +612,12 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->SendC ($ctx->ConfigGetSrvName());
 	$ctx->ConfigSetSrvName ($old);
       }
+      case "Storage" {
+	my $old = $ctx->ConfigGetStorage();
+	$ctx->ConfigSetStorage ($ctx->ReadC());
+	$ctx->SendC ($ctx->ConfigGetStorage());
+	$ctx->ConfigSetStorage ($old);
+      }
       case "Ident" {
 	my $old = $ctx->FactoryCtxIdentGet();
 	$ctx->FactoryCtxSet (MqFactoryS::Get()->Copy($ctx->ReadC()));
@@ -708,7 +716,14 @@ use base qw(Net::PerlMsgque::MqS);
   sub STDB {
     my $ctx = shift;
     $ctx->SendSTART();
-    $ctx->SqlSetDb($ctx->ReadC());
+    $ctx->StorageOpen($ctx->ReadC());
+    $ctx->SendRETURN();
+  }
+
+  sub DMPL {
+    my $ctx = shift;
+    $ctx->SendSTART();
+    $ctx->SendC($ctx->ReadDUMP()->Size());
     $ctx->SendRETURN();
   }
 
@@ -785,6 +800,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("TRNS", \&TRNS);
       $ctx->ServiceCreate("TRN2", \&TRN2);
       $ctx->ServiceCreate("STDB", \&STDB);
+      $ctx->ServiceCreate("DMPL", \&DMPL);
     }
   }
 
