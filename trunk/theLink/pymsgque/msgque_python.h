@@ -34,6 +34,8 @@
 #define MQ_IS_POSIX
 #include "debug.h"
 
+#define MQ_CONTEXT_S context
+
 /*****************************************************************************/
 /*                                                                           */
 /*                              Object_API				     */
@@ -46,7 +48,15 @@ typedef struct MqBufferS_Obj {
   struct MqBufferS * buf;
 } MqBufferS_Obj;
 
-PyObject * MqBufferS_Obj_From_PTR ( struct MqBufferS* );
+PyObject * MqBufferS_New ( struct MqBufferS* );
+
+/// \brief python MqDumpS Object
+typedef struct MqDumpS_Obj {
+  PyObject_HEAD
+  struct MqDumpS * dump;
+} MqDumpS_Obj;
+
+PyObject * MqDumpS_New ( struct MqDumpS* );
 
 /// \brief python MqFactoryS Object
 typedef struct MqFactoryS_Obj {
@@ -54,7 +64,7 @@ typedef struct MqFactoryS_Obj {
   struct MqFactoryS * item;
 } MqFactoryS_Obj;
 
-PyObject * MqFactoryS_Obj_From_PTR ( struct MqFactoryS* );
+PyObject * MqFactoryS_New ( struct MqFactoryS* );
 
 /// \brief python MqS Object
 typedef struct MqS_Obj {
@@ -176,4 +186,5 @@ static mq_inline PyObject* PyC2O(MQ_CST v) {
 }
 
 #endif /* MSGQUE_PYTHON_H */
+
 

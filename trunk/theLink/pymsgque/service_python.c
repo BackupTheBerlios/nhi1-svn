@@ -87,8 +87,23 @@ PyObject* NS(ServiceProxy) (
   if (!PyArg_ParseTuple(args, "s|i:ServiceProxy", &token, &id)) {
     return NULL;
   }
-
   ErrorMqToPythonWithCheck(MqServiceProxy(context, token, id));
+  Py_RETURN_NONE;
+error:
+  return NULL;
+}
+
+PyObject* NS(ServiceStorage) (
+  PyObject  *self, 
+  PyObject  *args
+)
+{
+  MQ_CST token;
+  SETUP_context;
+  if (!PyArg_ParseTuple(args, "s:ServiceStorage", &token)) {
+    return NULL;
+  }
+  ErrorMqToPythonWithCheck(MqServiceStorage(context, token));
   Py_RETURN_NONE;
 error:
   return NULL;

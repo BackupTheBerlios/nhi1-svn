@@ -118,10 +118,16 @@ class Server(MqS):
       self.ServiceCreate("TRNS", self.TRNS)
       self.ServiceCreate("TRN2", self.TRN2)
       self.ServiceCreate("STDB", self.STDB)
+      self.ServiceCreate("DMPL", self.DMPL)
+
+  def DMPL (self):
+    self.SendSTART ()
+    self.SendI (self.ReadDUMP().Size())
+    self.SendRETURN ()
 
   def STDB (self):
     self.SendSTART ()
-    self.SqlSetDb (self.ReadC())
+    self.StorageOpen (self.ReadC())
     self.SendRETURN ()
 
   def TRNS (self):
@@ -179,6 +185,11 @@ class Server(MqS):
       self.ConfigSetSrvName (self.ReadC())
       self.SendC (self.ConfigGetSrvName())
       self.ConfigSetSrvName (old)
+    elif cmd == "Storage":
+      old = self.ConfigGetStorage()
+      self.ConfigSetStorage (self.ReadC())
+      self.SendC (self.ConfigGetStorage())
+      self.ConfigSetStorage (old)
     elif cmd == "Ident":
       old = self.FactoryCtxIdentGet()
       self.FactoryCtxSet (FactoryGet().Copy (self.ReadC()))
@@ -511,12 +522,13 @@ class Server(MqS):
     self.SendRETURN()
 
   def SETU(self):
-    self.buf = self.ReadU()
+    self.buf = self.ReadU().Dup()
 
   def GETU(self):
     self.SendSTART()
     self.SendU(self.buf)
     self.SendRETURN()
+    self.buf.Delete()
     self.buf = None
 
   def Callback (self, ctx):

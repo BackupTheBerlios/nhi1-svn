@@ -14,6 +14,7 @@
 
 extern PyTypeObject NS(MqS);
 extern PyTypeObject NS(MqBufferS);
+extern PyTypeObject NS(MqDumpS);
 
 ///
 ///  READ
@@ -192,30 +193,50 @@ error:
   return NULL;
 }
 
-PyObject* NS(ReadBDY) (
+PyObject* NS(ReadDUMP) (
   PyObject*	self
 )
 {
   SETUP_context
-  MQ_BIN b;
-  MQ_SIZE len;
-  PyObject *ret;
-  ErrorMqToPythonWithCheck(MqReadBDY(context, &b, &len));
-  ret = PyByteArray_FromStringAndSize((const char*)b, len);
-  MqSysFree (b);
-  return ret;
+  struct MqDumpS *dump;
+  ErrorMqToPythonWithCheck(MqReadDUMP(context, &dump));
+  return MqDumpS_New(dump);
 error:
   return NULL;
 }
 
+PyObject* NS(ReadLOAD) (
+  PyObject*	self,
+  PyObject*	args
+)
+{
+  SETUP_context
+  MqDumpS_Obj *dumpO = NULL;
+  PyErrorCheck (PyArg_ParseTuple(args, "O!:ReadLOAD", &NS(MqDumpS), &dumpO));
+  ErrorMqToPythonWithCheck(MqReadLOAD(context, dumpO->dump));
+  SETUP_RETURN;
+}
+
+PyObject* NS(ReadForward) (
+  PyObject*	self,
+  PyObject*	args
+)
+{
+  SETUP_context
+  MqS_Obj *ctxO = NULL;
+  PyErrorCheck (PyArg_ParseTuple(args, "O!:ReadForward", &NS(MqS), &ctxO));
+  ErrorMqToPythonWithCheck(MqReadForward(context, &ctxO->context));
+  SETUP_RETURN;
+}
+
 PyObject* NS(ReadU) (
-  PyObject*	self
+  PyObject*     self
 )
 {
   SETUP_context
   MQ_BUF buffer;
   ErrorMqToPythonWithCheck(MqReadU(context, &buffer));
-  return MqBufferS_Obj_From_PTR(buffer);
+  return MqBufferS_New(buffer);
 error:
   return NULL;
 }
@@ -263,6 +284,7 @@ PyObject* NS(ReadProxy) (
 error:
   return NULL;
 }
+
 
 
 

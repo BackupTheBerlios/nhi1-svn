@@ -82,6 +82,23 @@ static PyObject* NS(GetType) (
   return PyC2O(str);
 }
 
+static PyObject* NS(Dup) (
+  MqBufferS_Obj*  self
+)
+{
+  return MqBufferS_New(MqBufferDup(self->buf));
+}
+
+static PyObject* NS(Delete) (
+  MqBufferS_Obj*  self
+)
+{
+  MqBufferDelete(&self->buf);
+  Py_RETURN_NONE;
+}
+
+#define Dup_DOC		    "return the duplicate of the MqBufferS object"
+#define Delete_DOC	    "Delete the MqBufferS object created with 'Dup'"
 #define GetType_DOC	    "return the type of object saved in the buffer"
 #define GetY_DOC	    "return a MQ_BYT object from a buffer"
 #define GetO_DOC	    "return a MQ_BOL object from a buffer"
@@ -98,6 +115,8 @@ static PyObject* NS(GetType) (
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
 static PyMethodDef NS(MqBufferS_Methods)[] = {
 
+    ARG(Dup,		METH_NOARGS),
+    ARG(Delete,		METH_NOARGS),
     ARG(GetType,	METH_NOARGS),
     ARG(GetY,		METH_NOARGS),
     ARG(GetO,		METH_NOARGS),
@@ -175,7 +194,7 @@ PyTypeObject NS(MqBufferS) = {
 //////////////////////////////////////////////////////////////////////////////////
 
 PyObject *
-MqBufferS_Obj_From_PTR (
+MqBufferS_New (
   MQ_BUF bufP
 )
 {
@@ -183,6 +202,7 @@ MqBufferS_Obj_From_PTR (
   bufO->buf = bufP;
   return (PyObject*)bufO;
 }
+
 
 
 

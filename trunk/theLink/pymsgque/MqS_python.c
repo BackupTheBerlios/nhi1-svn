@@ -57,13 +57,11 @@ NS(MqS_dealloc)(MqS_Obj* self)
 PyObject* NS(ProcessEvent)	    ( PyObject*, PyObject* );
 PyObject* NS(Delete)		    ( PyObject*		   );
 PyObject* NS(Exit)		    ( PyObject*            );
-PyObject* NS(SqlSetDb)		    ( PyObject*, PyObject* );
 PyObject* NS(LogC)		    ( PyObject*, PyObject* );
 
 #define ProcessEvent_DOC	    "[[timeout(sec),MqS::WAIT_(NO|ONCE|FOREVER)]]\nStart the eventloop and wait for incomming messages."
 #define Delete_DOC		    "[noARG] Delete the LibMsgque object, but keep the PyMqS object alive."
 #define Exit_DOC		    "exit the application or thread"
-#define SqlSetDb_DOC		    "set the persistent-transaction-database-file"
 #define LogC_DOC		    "write log-messages to stderr"
 
 // from link_python.c
@@ -110,7 +108,6 @@ PyObject* NS(SendD)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendC)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendB)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendN)		    ( PyObject*, PyObject*  );
-PyObject* NS(SendBDY)		    ( PyObject*, PyObject*  );
 PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 
 #define SendSTART_DOC		  "[noARG] Start to build a SEND package."
@@ -129,7 +126,6 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 #define SendC_DOC		  "[value] Send a utf8 string as (char array with \0 at the end)."
 #define SendB_DOC		  "[value] Send a byte array as (unsigned char array, \0 is allowed)."
 #define SendN_DOC		  "[value] Send a libmsgque package item"
-#define SendBDY_DOC		  "[value] Send a libmsgque package body"
 #define SendU_DOC		  "[value] Send a PyMqS buffer object."
 #define	SendL_START_DOC		  "[noARG] Start to Send an embedded List-Item."
 #define	SendL_END_DOC		  "[noARG] End to Send an embedded List-Item."
@@ -140,6 +136,7 @@ PyObject* NS(SendU)		    ( PyObject*, PyObject*  );
 
 PyObject* NS(ServiceCreate)	      ( PyObject*, PyObject*  );
 PyObject* NS(ServiceProxy)	      ( PyObject*, PyObject*  );
+PyObject* NS(ServiceStorage)	      ( PyObject*, PyObject*  );
 PyObject* NS(ServiceDelete)	      ( PyObject*, PyObject*  );
 PyObject* NS(ServiceGetToken)	      ( PyObject* );
 PyObject* NS(ServiceIsTransaction)    ( PyObject* );
@@ -147,6 +144,7 @@ PyObject* NS(ServiceGetFilter)	      ( PyObject*, PyObject* );
 
 #define ServiceCreate_DOC	      "[token, callable] Create a new service"
 #define ServiceProxy_DOC	      "[token, ?id?] Create a proxy service"
+#define ServiceStorage_DOC	      "[token] write the read-data-package int the package-database"
 #define ServiceDelete_DOC	      "[token] Delete a service"
 #define ServiceIsTransaction_DOC      "[noARG] boolean, 'True' if the service is part of a transaction."
 #define ServiceGetToken_DOC	      "[noARG] return the PyMqS 'token' (str) of the current transaction."
@@ -180,7 +178,9 @@ PyObject* NS(ReadD)		  ( PyObject* );
 PyObject* NS(ReadC)		  ( PyObject* );
 PyObject* NS(ReadB)		  ( PyObject* );
 PyObject* NS(ReadN)		  ( PyObject* );
-PyObject* NS(ReadBDY)		  ( PyObject* );
+PyObject* NS(ReadDUMP)		  ( PyObject* );
+PyObject* NS(ReadLOAD)		  ( PyObject*, PyObject* );
+PyObject* NS(ReadForward)	  ( PyObject*, PyObject* );
 PyObject* NS(ReadU)		  ( PyObject* );
 PyObject* NS(ReadL_START)	  ( PyObject*, PyObject* );
 PyObject* NS(ReadL_END)		  ( PyObject* );
@@ -201,7 +201,9 @@ PyObject* NS(ReadProxy)		  ( PyObject*, PyObject* );
 #define ReadC_DOC		  "[noARG] Read a a UTF8 string from the current PyMqS package."
 #define ReadB_DOC		  "[noARG] Read a byte array from the current PyMqS package."
 #define ReadN_DOC		  "[noARG] Read a PyMqS package item."
-#define ReadBDY_DOC		  "[noARG] Read the PyMqS package body."
+#define ReadDUMP_DOC		  "[noARG] export the read-data-package."
+#define ReadLOAD_DOC		  "[dump] import the read-data-package."
+#define ReadForward_DOC		  "[MqS] forward the read-data-package."
 #define ReadU_DOC		  "[noARG] Read a PyMqS buffer from the current PyMqS package."
 #define ReadL_START_DOC		  "[noARG] Start to read an embedded list item from the current PyMqS package."
 #define ReadL_END_DOC		  "[noARG] End to read an embedded list item from the current PyMqS package."
@@ -220,6 +222,7 @@ PyObject* NS(ConfigSetDebug)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetTimeout)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetName)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetSrvName)	      ( PyObject*, PyObject* );
+PyObject* NS(ConfigSetStorage)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoUdsFile)      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoTcp)	      ( PyObject*, PyObject* );
 PyObject* NS(ConfigSetIoPipeSocket)   ( PyObject*, PyObject* );
@@ -241,6 +244,7 @@ PyObject* NS(ConfigGetIsSilent)	      ( PyObject* );
 PyObject* NS(ConfigGetIsServer)	      ( PyObject* );
 PyObject* NS(ConfigGetName)	      ( PyObject* );
 PyObject* NS(ConfigGetSrvName)	      ( PyObject* );
+PyObject* NS(ConfigGetStorage)	      ( PyObject* );
 PyObject* NS(ConfigGetIoUdsFile)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpHost)      ( PyObject* );
 PyObject* NS(ConfigGetIoTcpPort)      ( PyObject* );
@@ -257,6 +261,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigSetTimeout_DOC	    "[seconds]"
 #define ConfigSetName_DOC	    "[string]"
 #define ConfigSetSrvName_DOC	    "[string]"
+#define ConfigSetStorage_DOC	    "[storageFile]"
 #define ConfigSetIoUdsFile_DOC	    "[file-name]"
 #define ConfigSetIoTcp_DOC	    "[hots, port, myhost, myport]"
 #define ConfigSetIoPipeSocket_DOC	    "[socket]"
@@ -278,6 +283,7 @@ PyObject* NS(ConfigGetDaemon)	      ( PyObject* );
 #define ConfigGetBuffersize_DOC	    "[noARG] Return the buffersize from the underlying socket connection."
 #define ConfigGetName_DOC	    "[noARG] return the PyMqS 'name' (str) of the object."
 #define ConfigGetSrvName_DOC	    "[noARG] return the PyMqS 'srvname' (str) of the object."
+#define ConfigGetStorage_DOC	    "[noARG] return the storageFile."
 #define ConfigGetIoUdsFile_DOC	    "[noARG] return the PyMqS 'uds-file-name' (str) of the object."
 #define ConfigGetIoTcpHost_DOC	    "[noARG] return the PyMqS 'tcp-host-name' (str) of the object."
 #define ConfigGetIoTcpPort_DOC	    "[noARG] return the PyMqS 'tcp-port-name' (str) of the object."
@@ -311,7 +317,7 @@ PyObject* NS(ErrorGetText)	    ( PyObject*		    );
 #define ErrorGetNum_DOC		    "return the 'pymsgque' error number"
 #define ErrorGetText_DOC	    "return the 'pymsgque' error text"
 
-// from factory_python.c
+// from MqFactoryS_python.c
 
 PyObject* NS(FactoryCtxSet)	    ( PyObject*, PyObject* );
 PyObject* NS(FactoryCtxGet)	    ( PyObject* );
@@ -323,6 +329,22 @@ PyObject* NS(FactoryCtxIdentGet)    ( PyObject* );
 #define FactoryCtxIdentGet_DOC	    "[noARG] return the factory-identifer or '' of the MqS instance"
 #define FactoryCtxIdentSet_DOC	    "[string] set the factory-identifer of the MqS instance"
 
+// from storage_python.c
+
+PyObject* NS(StorageOpen)	    ( PyObject*, PyObject* );
+PyObject* NS(StorageClose)	    ( PyObject* );
+PyObject* NS(StorageInsert)	    ( PyObject* );
+PyObject* NS(StorageSelect)	    ( PyObject*, PyObject* );
+PyObject* NS(StorageDelete)	    ( PyObject*, PyObject* );
+PyObject* NS(StorageCount)	    ( PyObject* );
+
+#define StorageOpen_DOC		    "[storageFile] open the new package-database"
+#define StorageClose_DOC	    "[noArg] close the package-database"
+#define StorageInsert_DOC	    "[noArg] write the read-data-package into the package-database"
+#define StorageSelect_DOC	    "[?transLId?] read the read-data-package from the package-database"
+#define StorageDelete_DOC	    "[transLId] delete the read-data-package from the package-database"
+#define StorageCount_DOC	    "[noArg] count the read-data-package in the package-database"
+
 // Fill the Struct-Array
 
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
@@ -331,7 +353,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ProcessEvent,		METH_VARARGS),
     ARG(Delete,			METH_NOARGS),
     ARG(Exit,			METH_NOARGS),
-    ARG(SqlSetDb,		METH_VARARGS),
     ARG(LogC,			METH_VARARGS),
 
     ARG(LinkCreate,		METH_VARARGS),
@@ -364,7 +385,6 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(SendC,			METH_VARARGS),
     ARG(SendB,			METH_VARARGS),
     ARG(SendN,			METH_VARARGS),
-    ARG(SendBDY,		METH_VARARGS),
     ARG(SendU,			METH_VARARGS),
 
     ARG(ReadL_START,		METH_VARARGS),
@@ -381,7 +401,9 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ReadC,			METH_NOARGS),
     ARG(ReadB,			METH_NOARGS),
     ARG(ReadN,			METH_NOARGS),
-    ARG(ReadBDY,		METH_NOARGS),
+    ARG(ReadDUMP,		METH_NOARGS),
+    ARG(ReadLOAD,		METH_VARARGS),
+    ARG(ReadForward,		METH_VARARGS),
     ARG(ReadU,			METH_NOARGS),
     ARG(ReadGetNumItems,	METH_NOARGS),
     ARG(ReadItemExists,		METH_NOARGS),
@@ -390,6 +412,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
 
     ARG(ServiceCreate,		METH_VARARGS),
     ARG(ServiceProxy,		METH_VARARGS),
+    ARG(ServiceStorage,		METH_VARARGS),
     ARG(ServiceDelete,		METH_VARARGS),
     ARG(ServiceGetToken,	METH_NOARGS),
     ARG(ServiceGetFilter,	METH_VARARGS),
@@ -405,6 +428,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigSetTimeout,	METH_O),
     ARG(ConfigSetName,		METH_O),
     ARG(ConfigSetSrvName,	METH_O),
+    ARG(ConfigSetStorage,	METH_O),
     ARG(ConfigSetIoUdsFile,	METH_O),
     ARG(ConfigSetIoTcp,		METH_VARARGS),
     ARG(ConfigSetIoPipeSocket,	METH_O),
@@ -427,6 +451,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(ConfigGetBuffersize,	METH_NOARGS),
     ARG(ConfigGetName,		METH_NOARGS),
     ARG(ConfigGetSrvName,	METH_NOARGS),
+    ARG(ConfigGetStorage,	METH_NOARGS),
     ARG(ConfigGetIoUdsFile,	METH_NOARGS),
     ARG(ConfigGetIoTcpHost,	METH_NOARGS),
     ARG(ConfigGetIoTcpPort,	METH_NOARGS),
@@ -452,6 +477,13 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(FactoryCtxGet,		METH_NOARGS),
     ARG(FactoryCtxIdentSet,	METH_VARARGS),
     ARG(FactoryCtxIdentGet,	METH_NOARGS),
+
+    ARG(StorageOpen,		METH_VARARGS),
+    ARG(StorageClose,		METH_NOARGS),
+    ARG(StorageInsert,		METH_NOARGS),
+    ARG(StorageSelect,		METH_VARARGS),
+    ARG(StorageDelete,		METH_VARARGS),
+    ARG(StorageCount,		METH_NOARGS),
     
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

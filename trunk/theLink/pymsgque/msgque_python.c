@@ -19,6 +19,7 @@ PyObject * NS(MqSException) = NULL;
 extern PyTypeObject NS(MqS);
 extern PyTypeObject NS(MqBufferS);
 extern PyTypeObject NS(MqFactoryS);
+extern PyTypeObject NS(MqDumpS);
 
 // ************************************************************
 
@@ -108,6 +109,10 @@ PyInit_pymsgque(void)
   NS(MqFactoryS).ob_base.ob_base.ob_type = &PyType_Type;
   PyErrorCheck (PyType_Ready(&NS(MqFactoryS)));
 
+  // get 'MqDumpS'
+  NS(MqDumpS).ob_base.ob_base.ob_type = &PyType_Type;
+  PyErrorCheck (PyType_Ready(&NS(MqDumpS)));
+
   // get 'MqSException'
   dict = PyDict_New();
   PyDict_SetItemString (dict, "text", Py_None);
@@ -121,10 +126,12 @@ PyInit_pymsgque(void)
   Py_INCREF(&NS(MqS));
   Py_INCREF(&NS(MqBufferS));
   Py_INCREF(&NS(MqFactoryS));
+  Py_INCREF(&NS(MqDumpS));
   Py_INCREF(NS(MqSException));
   PyErrorCheck(PyModule_AddObject(m, "MqS",		(PyObject *)&NS(MqS)));
   PyErrorCheck(PyModule_AddObject(m, "MqBufferS",	(PyObject *)&NS(MqBufferS)));
   PyErrorCheck(PyModule_AddObject(m, "MqFactoryS",	(PyObject *)&NS(MqFactoryS)));
+  PyErrorCheck(PyModule_AddObject(m, "MqDumpS",		(PyObject *)&NS(MqDumpS)));
   PyErrorCheck(PyModule_AddObject(m, "MqSException",	NS(MqSException)));
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_DEFAULT",  -1));
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_TIMEOUT_USER",     -2));

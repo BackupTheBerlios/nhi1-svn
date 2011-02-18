@@ -14,8 +14,6 @@
 
 //extern PyTypeObject NS(MqS);
 
-#define MQ_CONTEXT_S CONTEXT
-
 //////////////////////////////////////////////////////////////////////////////////
 ///
 ///				 Method definition
@@ -82,6 +80,18 @@ PyObject* NS(ConfigSetSrvName) (
   MQ_STR str = PyO2C_START (&arg);
   if (PyErr_Occurred() != NULL) return NULL;
   MqConfigSetSrvName (CONTEXT, str);
+  PyO2C_STOP (&arg);
+  Py_RETURN_NONE;
+}
+
+PyObject* NS(ConfigSetStorage) (
+  MqS_Obj    *self,
+  PyObject    *arg
+)
+{
+  MQ_STR str = PyO2C_START (&arg);
+  if (PyErr_Occurred() != NULL) return NULL;
+  MqConfigSetStorage (CONTEXT, str);
   PyO2C_STOP (&arg);
   Py_RETURN_NONE;
 }
@@ -316,6 +326,14 @@ PyObject* NS(ConfigGetSrvName) (
 )
 {
   return PyC2O(MqConfigGetSrvName(&ICONTEXT));
+}
+
+PyObject* NS(ConfigGetStorage) (
+  PyObject    *self,
+  PyObject    *args
+)
+{
+  return PyC2O(MqConfigGetStorage(&ICONTEXT));
 }
 
 PyObject* NS(ConfigGetIoUdsFile) (

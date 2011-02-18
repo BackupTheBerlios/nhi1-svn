@@ -1,19 +1,20 @@
 #+
-#§  \file       theLink/example/python/Filter4.py
-#§  \brief      \$Id: Filter4.py 25 2009-12-04 11:05:46Z aotto1968 $
+#§  \file       theLink/example/python/Filter6.py
+#§  \brief      \$Id$
 #§  
-#§  (C) 2009 - NHI - #1 - Project - Group
+#§  (C) 2011 - NHI - #1 - Project - Group
 #§  
-#§  \version    \$Rev: 25 $
+#§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
 #§  \attention  this software has GPL permissions to copy
 #§              please contact AUTHORS for additional information
 #§
 
 import sys
+import os
 from pymsgque import *
 
-class Filter4(MqS):
+class Filter6(MqS):
   def __init__(ctx, tmpl=None):
     ctx.ConfigSetIgnoreExit(True)
     ctx.ConfigSetServerSetup(ctx.ServerSetup)
@@ -30,6 +31,7 @@ class Filter4(MqS):
     ctx.ServiceCreate("LOGF", ctx.LOGF)
     ctx.ServiceCreate("EXIT", ctx.EXIT)
     ctx.ServiceCreate("+ALL", ctx.FilterIn)
+    ctx.ServiceStorage("PRNT")
     ftr.ServiceCreate("WRIT", ftr.WRIT)
     ftr.ServiceProxy("+TRT")
   def ErrorWrite(ctx):
@@ -51,13 +53,14 @@ class Filter4(MqS):
   def EXIT(ctx):
     os._exit(1)
   def Event(ctx):
-    if len(ctx.itms) == 0:
+    if ctx.StorageCount() == 0:
       ctx.ErrorSetCONTINUE()
     else:
+      id = 0
       try:
         ftr = ctx.ServiceGetFilter()
         ftr.LinkConnect()
-        ctx.ReadLOAD(ctx.itms[0])
+        id = ctx.StorageSelect()
         ctx.ReadForward(ftr)
       except:
         ctx.ErrorSet()
@@ -66,13 +69,12 @@ class Filter4(MqS):
           return
         else:
           ctx.ErrorWrite()
-      ctx.itms.pop(0)
+      ctx.StorageDelete(id)
   def FilterIn(ctx):
-    ctx.itms.append(ctx.ReadDUMP())
+    ctx.StorageInsert()
     ctx.SendRETURN()
 
-FactoryDefault("transFilter", Filter4)
-srv = Filter4()
+srv = FactoryAdd("transFilter", Filter6).New();
 try:
   srv.LinkCreate(sys.argv)
   srv.ProcessEvent(MqS_WAIT_FOREVER)

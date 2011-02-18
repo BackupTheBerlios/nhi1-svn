@@ -73,20 +73,6 @@ PyObject* NS(Exit)(
   Py_RETURN_NONE;
 }
 
-PyObject* NS(SqlSetDb) (
-  PyObject	*self,
-  PyObject	*args
-)
-{
-  SETUP_context
-  const char *c;
-  if (!PyArg_ParseTuple(args, "s:SqlSetDb", &c)) {
-    return NULL;
-  }
-  ErrorMqToPythonWithCheck (MqSqlSetDb(context,c));
-  SETUP_RETURN
-}
-
 PyObject* NS(LogC)(
   PyObject  *self,
   PyObject  *args

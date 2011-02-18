@@ -248,70 +248,74 @@ MqProcessEvent (
   enum MqWaitOnEventE const wait
 )
 {
-  enum MqErrorE ret = MQ_OK;
-  const int forever = (wait >= MQ_WAIT_FOREVER);
-  const int once = (wait >= MQ_WAIT_ONCE);
-  struct mq_timeval tv = {0L, 0L};
-  int debugLevel;
+  if (context->link.srvT == NULL) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    enum MqErrorE ret = MQ_OK;
+    const int forever = (wait >= MQ_WAIT_FOREVER);
+    const int once = (wait >= MQ_WAIT_ONCE);
+    struct mq_timeval tv = {0L, 0L};
+    int debugLevel;
 
-  // save master transaction
-  MQ_HDL mastertransSId = (context->config.master != NULL ? context->config.master->link.transSId : 0);
-  MQ_HDL trans = context->link.transSId;
-  enum MqHandShakeE hs = pReadGetHandShake(context);
+    // save master transaction
+    MQ_HDL mastertransSId = (context->config.master != NULL ? context->config.master->link.transSId : 0);
+    MQ_HDL trans = context->link.transSId;
+    enum MqHandShakeE hs = pReadGetHandShake(context);
 
-  // protection code
-  MqSetDebugLevel(context);
+    // protection code
+    MqSetDebugLevel(context);
 
-  // first announce that the event-handling is active
-  if (forever) {
-    MqDLogC(context,4,"send token<_PEO>\n");
-    MqSendSTART (context);
-    MqErrorCheck (MqSendEND (context, "_PEO"));
-  }
-
-  // set the default for timeout
-  timeout = pGetTimeout (context, timeout, wait);
-
-  // check for an event
-  MqDLogCL(context,6,"START\n");
-  context->refCount++;
-  MqErrorReset(context);
-  do {
-    // ################ CHECK TO BE READABLE ##################
-    if (once) {
-      switch (ret = pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
-        case MQ_OK:	  break;
-        case MQ_CONTINUE: continue;
-        case MQ_ERROR:	  goto error;
-      }
+    // first announce that the event-handling is active
+    if (forever) {
+      MqDLogC(context,4,"send token<_PEO>\n");
+      MqSendSTART (context);
+      MqErrorCheck (MqSendEND (context, "_PEO"));
     }
 
-    // ##################### Process Events #####################
-    ret = pIoSelectStart(context, &tv);
-    MqErrorCheck (ret);
+    // set the default for timeout
+    timeout = pGetTimeout (context, timeout, wait);
 
-    // clean up deleted objects
-    if (forever) GcRun (context);
-  }
-  while (forever);
+    // check for an event
+    MqDLogCL(context,6,"START\n");
+    context->refCount++;
+    MqErrorReset(context);
+    do {
+      // ################ CHECK TO BE READABLE ##################
+      if (once) {
+	switch (ret = pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
+	  case MQ_OK:	  break;
+	  case MQ_CONTINUE: continue;
+	  case MQ_ERROR:	  goto error;
+	}
+      }
 
-  // restore master transaction
-  MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(MqErrorGetCode(context)));
+      // ##################### Process Events #####################
+      ret = pIoSelectStart(context, &tv);
+      MqErrorCheck (ret);
+
+      // clean up deleted objects
+      if (forever) GcRun (context);
+    }
+    while (forever);
+
+    // restore master transaction
+    MqDLogVL(context,6,"END-%s\n", MqLogErrorCode(MqErrorGetCode(context)));
 
 end:
-  // restore the "master" transaction
-  context->refCount--;
-  if (context->config.master != NULL) context->config.master->link.transSId = mastertransSId;
-  context->link.transSId = trans;
-  if (context->link.read != NULL) {
-    pReadSetHandShake (context, hs);
-  }
-  return ret;
+    // restore the "master" transaction
+    context->refCount--;
+    if (context->config.master != NULL) context->config.master->link.transSId = mastertransSId;
+    context->link.transSId = trans;
+    if (context->link.read != NULL) {
+      pReadSetHandShake (context, hs);
+    }
+    return ret;
 
 error:
-  // on "error" add stack-trace
-  ret = MqErrorStack (context);
-  goto end;
+    // on "error" add stack-trace
+    ret = MqErrorStack (context);
+    goto end;
+  }
 }
 
 END_C_DECLS

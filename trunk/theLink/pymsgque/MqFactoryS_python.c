@@ -14,8 +14,6 @@
 
 extern PyTypeObject NS(MqS);
 
-#define MQ_CONTEXT_S CONTEXT
-
 enum MqErrorE
 NS(FactoryCreate) (
   struct MqS * const tmpl,
@@ -138,7 +136,7 @@ PyObject* NS(FactoryAdd) (
 )
 {
   SETUP_FACTORY_ARG(FactoryAdd)
-  return MqFactoryS_Obj_From_PTR(
+  return MqFactoryS_New(
     MqFactoryAdd(MQ_ERROR_PRINT, ident, 
       NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
   );
@@ -162,7 +160,7 @@ PyObject* NS(FactoryDefault) (
     }
   }
   Py_INCREF (arg);
-  return MqFactoryS_Obj_From_PTR (
+  return MqFactoryS_New (
     MqFactoryDefault(MQ_ERROR_PRINT, ident, 
       NS(FactoryCreate), arg, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL)
   );
@@ -184,7 +182,7 @@ PyObject* NS(FactoryGet) (
   if (!PyArg_ParseTuple(args, "|s:FactoryGet", &ident)) {
     return NULL;
   }
-  return MqFactoryS_Obj_From_PTR (MqFactoryGet (ident));
+  return MqFactoryS_New (MqFactoryGet (ident));
 }
 
 PyObject* NS(FactoryGetCalled) (
@@ -196,7 +194,7 @@ PyObject* NS(FactoryGetCalled) (
   if (!PyArg_ParseTuple(args, "|s:FactoryGetCalled", &ident)) {
     return NULL;
   }
-  return MqFactoryS_Obj_From_PTR (MqFactoryGetCalled (ident));
+  return MqFactoryS_New (MqFactoryGetCalled (ident));
 }
 
 static PyObject* NS(New) (
@@ -224,7 +222,7 @@ static PyObject* NS(Copy) (
   if (!PyArg_ParseTuple(args, "s:Copy", &ident)) {
     return NULL;
   }
-  return MqFactoryS_Obj_From_PTR (MqFactoryCopy (self->item, ident));
+  return MqFactoryS_New (MqFactoryCopy (self->item, ident));
 }
 
 #define New_DOC	    "create a new MqS instance from a MqFactoryS instance"
@@ -304,7 +302,7 @@ PyTypeObject NS(MqFactoryS) = {
 //////////////////////////////////////////////////////////////////////////////////
 
 PyObject *
-MqFactoryS_Obj_From_PTR (
+MqFactoryS_New (
   struct MqFactoryS *item
 )
 {
@@ -341,7 +339,7 @@ PyObject* NS(FactoryCtxGet) (
   PyObject    *self
 )
 {
-  return MqFactoryS_Obj_From_PTR (MqFactoryCtxGet (CONTEXT));
+  return MqFactoryS_New (MqFactoryCtxGet (CONTEXT));
 }
 
 PyObject* NS(FactoryCtxIdentSet) (
@@ -364,4 +362,5 @@ PyObject* NS(FactoryCtxIdentGet) (
 {
   return PyC2O(MqFactoryCtxIdentGet(CONTEXT));
 }
+
 

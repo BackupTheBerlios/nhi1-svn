@@ -274,20 +274,6 @@ PyObject* NS(SendN) (
   SETUP_RETURN
 }
 
-PyObject* NS(SendBDY) (
-  PyObject	*self,
-  PyObject	*args
-)
-{
-  SETUP_context
-  PyObject *o;
-  if (!PyArg_ParseTuple(args, "O!:SendBDY", &PyByteArray_Type, &o)) {
-    return NULL;
-  }
-  ErrorMqToPythonWithCheck (MqSendBDY(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
-  SETUP_RETURN
-}
-
 PyObject* NS(SendU) (
   PyObject  *self,
   PyObject  *args
