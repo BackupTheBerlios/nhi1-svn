@@ -138,13 +138,13 @@ PHP_METHOD(MsgqueForPhp_MqS, __destruct)
   SETUP_mqctx;
   if (!mqctx) return;
   if (mqctx->self) {
+    add_property_resource_ex(mqctx->self, ID2(__ctx), (long) NULL TSRMLS_CC);
     DECR_REG(mqctx->self);
     mqctx->self = NULL;
   }
   mqctx->setup.factory = NULL;
   mqctx->setup.Event.fCall = NULL;
-  //MqContextDelete(&mqctx);
-  MqContextFree(mqctx);
+  MqContextDelete(&mqctx);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadY);

@@ -76,8 +76,9 @@ test error-1b-($I|$B|$C|$S) {return value + error} \
     -result         {[cC]> (client-0) \[service-call-error\] <Tok|ERR2> <Num|10>*
 [sS]> (server-0) \[Ot_ERR2\] some error*}
 
+#    -constraints    {local && !csharp && !vb && !leakcheck} 
+
 test error-1b2-($I|$B|$C|$S) {send after broken file-handle} \
-    -constraints    {local && !csharp && !vb && !leakcheck} \
     -setup          { Setup $I $B $C $S } \
     -cleanup	    { Cleanup } \
     -body           { 

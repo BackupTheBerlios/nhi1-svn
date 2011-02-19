@@ -34,14 +34,8 @@ our $VERSION = '5.2';
 require XSLoader;
 XSLoader::load('Net::PerlMsgque', $VERSION);
 
-# Initialize 'Sys'
-Net::PerlMsgque::InitializeSys();
-
 # Preloaded methods go here.
 Net::PerlMsgque::Init($^X, "-w", $0);
-
-# set default Factory
-Net::PerlMsgque::MqFactoryS::Default("perlmsgque");
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
 
@@ -58,6 +52,10 @@ use constant {
   WAIT_ONCE	  => 1,
   WAIT_FOREVER	  => 2,
 };
+
+END {
+  Net::PerlMsgque::Cleanup();  
+}
 
 1;
 __END__

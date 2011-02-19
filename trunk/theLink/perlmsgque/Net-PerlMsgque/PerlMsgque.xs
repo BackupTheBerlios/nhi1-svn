@@ -91,7 +91,7 @@ static mq_inline MqS* get_MqS_NO_ERROR(SV* sv)
     sv = (SV*)SvRV(sv);
     if (SvIOK(sv)) {
       var = INT2PTR(MqS*,SvIV(sv));
-      if (var->signature != MQ_MqS_SIGNATURE) {
+      if (var != NULL && var->signature != MQ_MqS_SIGNATURE) {
 	var = NULL;
       }
     }
@@ -388,17 +388,22 @@ static void FactoryDelete (
     perl_destruct (itp);
     perl_free (itp);
   } else {
-    SvREFCNT_dec((SV*)context->self);
+    sv_unref((SV*)context->self);
+    MqContextFree(context);
   }
 }
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque PREFIX = Mq
 
+BOOT:
+MqLal.SysIgnorSIGCHLD = DummyOK;
+MqLal.SysAllowSIGCHLD = DummyOK;
+// default factory
+MqFactoryDefault(MQ_ERROR_PRINT, "perlmsgque", FactoryCreate, newSVpv("Net::PerlMsgque::MqS",0), 
+    FactoryFree, FactoryCopy, FactoryDelete, NULL, NULL, NULL);
+
 void
-InitializeSys()
-  CODE:
-    MqLal.SysIgnorSIGCHLD = DummyOK;
-    MqLal.SysAllowSIGCHLD = DummyOK;
+MqCleanup()
 
 void
 Init(...)
@@ -458,6 +463,10 @@ DESTROY(SV *sv)
     //	  current interpreter
     if (context != NULL && SvREFCNT(sv) == 1 && PERL_GET_CONTEXT == (PerlInterpreter*)context->threadData) {
       HV* hash = PERL_DATA;
+      // set context to NULL
+      if (context->self != NULL) {
+	sv_setref_pv((SV*)context->self, "", (void*)NULL);
+      }
       // the "Factory" is useless -> delete
       context->setup.factory = NULL;
       // delete the context
@@ -626,7 +635,8 @@ MqLinkCreate(MqS * context, ...)
       for (i=1; i<items; i++) {
 	str = (char *)SvPV_nolen(ST(i));
 	if (i==1 && (str[0] == '-' || str[0] == MQ_ALFA)) {
-	  MqBufferLAppendC (args, "perl");
+	  // "MqInitGet" set in lib/Net/PerlMsgque.pm -> Init
+	  MqBufferLAppendC (args, MqInitGet()->data[2]->cur.C);
 	}
 	MqBufferLAppendC (args, str);
       }
@@ -645,7 +655,8 @@ MqLinkCreateChild(MqS *context, MqS *parent, ...)
       for (i=2; i<items; i++) {
 	str = (char *)SvPV_nolen(ST(i));
 	if (i==2 && (str[0] == '-' || str[0] == MQ_ALFA)) {
-	  MqBufferLAppendC (args, "perl");
+	  // "MqInitGet" set in lib/Net/PerlMsgque.pm -> Init
+	  MqBufferLAppendC (args, MqInitGet()->data[2]->cur.C);
 	}
 	MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
       }

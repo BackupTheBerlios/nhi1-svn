@@ -37,9 +37,13 @@ static void sMark (void * ctx)
 static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
+  if (mqctx == NULL) return
   mqctx->setup.factory = NULL;
   mqctx->setup.Event.fCall = NULL;
-  mqctx->self = NULL;
+  if (mqctx->self != NULL) {
+    DATA_PTR(mqctx->self) = NULL;
+    mqctx->self = NULL;
+  }
   // delete the context
   MqContextDelete(&mqctx);
 }
