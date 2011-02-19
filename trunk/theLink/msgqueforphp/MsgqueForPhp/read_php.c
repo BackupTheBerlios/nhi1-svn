@@ -54,13 +54,28 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadN)
   BIN2VAL(return_value, val,len);
 }
 
-PHP_METHOD(MsgqueForPhp_MqS, ReadBDY)
+PHP_METHOD(MsgqueForPhp_MqS, ReadDUMP)
 {
-  MQ_BIN val;
-  MQ_SIZE len;
+  struct MqDumpS *dump;
   SETUP_mqctx;
-  ErrorMqToPhpWithCheck(MqReadBDY(mqctx, &val, &len));
-  BIN2VAL(return_value, val,len);
+  ErrorMqToPhpWithCheck(MqReadDUMP(mqctx, &dump));
+  MqDumpS2VAL(return_value, dump);
+}
+
+PHP_METHOD(MsgqueForPhp_MqS, ReadLOAD)
+{
+  SETUP_mqctx;
+  ARG2MqDumpS(ReadLOAD,dump)
+  ErrorMqToPhpWithCheck(MqReadLOAD(mqctx, dump));
+  RETURN_NULL();
+}
+
+PHP_METHOD(MsgqueForPhp_MqS, ReadForward)
+{
+  SETUP_mqctx;
+  ARG2MqS(ReadForward,context)
+  ErrorMqToPhpWithCheck(MqReadForward(mqctx, context));
+  RETURN_NULL();
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadU)

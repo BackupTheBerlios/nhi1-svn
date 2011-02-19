@@ -446,10 +446,10 @@ void MqSetup(void)
 
   // work
   SysCreate ();
-  GcCreate ();
   FactoryCreate ();
   SqlCreate ();
   EventCreate ();
+  GcCreate ();
   GenericCreate();
   SysComCreate ();
 }
@@ -463,10 +463,10 @@ void MqCleanup(void)
 
   // work
   GenericDelete();
+  GcDelete ();
   EventDelete ();
   SqlDelete ();
   FactoryDelete ();
-  GcDelete ();
   SysDelete ();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }

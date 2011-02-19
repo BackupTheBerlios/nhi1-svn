@@ -163,7 +163,7 @@ enum MqErrorE NS(ProcInit) (
     }
     // 4. belongs "object" to local "MqS" instance?
     ce = zend_get_class_entry(*obj TSRMLS_CC);
-    if (instanceof_function(ce, NS(MqS) TSRMLS_CC) &&  VAL2MqS2(*obj) == mqctx) {
+    if (instanceof_function(ce, NS(MqS) TSRMLS_CC) &&  VAL2MqSelf(*obj) == mqctx) {
       // YES, no "this" argument needed
       *tokenFP		= (MqTokenF) ProcCallNoArg;
       *tokenDataFreeFP	= (MqDataFreeF) ProcFree;

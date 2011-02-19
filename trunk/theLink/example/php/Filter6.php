@@ -1,9 +1,9 @@
 <?php
 #+
-#§  \file       theLink/example/php/Filter4.php
+#§  \file       theLink/example/php/Filter6.php
 #§  \brief      \$Id$
 #§  
-#§  (C) 2010 - NHI - #1 - Project - Group
+#§  (C) 2011 - NHI - #1 - Project - Group
 #§  
 #§  \version    \$Rev$
 #§  \author     EMail: aotto1968 at users.berlios.de
@@ -13,11 +13,10 @@
 
 #$stderr = fopen("php://stderr", "w");
 
-class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
+class Filter6 extends MqS implements iServerSetup, iServerCleanup, iEvent {
   public function __construct($tmpl=NULL) {
     parent::__construct($tmpl);
     $this->ConfigSetIgnoreExit(TRUE);
-    $this->items = array();
     $this->fh = NULL;
   }
   public function ServerSetup() {
@@ -25,6 +24,7 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
     $this->ServiceCreate("LOGF", array(&$this, 'LOGF'));
     $this->ServiceCreate("EXIT", array(&$this, 'EXITX'));
     $this->ServiceCreate("+ALL", array(&$this, 'FilterIn'));
+    $this->ServiceStorage("PRNT");
     $ftr->ServiceCreate("WRIT",  array(&$ftr , 'WRIT'));
     $ftr->ServiceProxy("+TRT");
   }
@@ -58,13 +58,14 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
     exit(1);
   }
   public function Event() {
-    if (count($this->items) == 0) {
+    if ($this->StorageCount() == 0) {
       $this->ErrorSetCONTINUE();
     } else {
+      $id = 0;
       try {
 	$ftr = $this->ServiceGetFilter();
         $ftr->LinkConnect();
-        $this->ReadLOAD($this->items[0]);
+	$id = $this->StorageSelect();
 	$this->ReadForward($ftr);
       } catch (Exception $ex) {
         $this->ErrorSet($ex);
@@ -75,16 +76,15 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
           $this->ErrorWrite();
 	}
       }
-      array_shift($this->items);
+      $this->StorageDelete($id);
     }
   }
   public function FilterIn() {
-    $this->items[] = $this->ReadDUMP();
+    $this->StorageInsert();
     $this->SendRETURN();
   }
 }
-FactoryDefault('transFilter', 'Filter4');
-$srv = new Filter4();
+$srv = FactoryAdd('transFilter', 'Filter6')->New();
 try {
   $srv->LinkCreate($argv);
   $srv->ProcessEvent(MqS::WAIT_FOREVER);

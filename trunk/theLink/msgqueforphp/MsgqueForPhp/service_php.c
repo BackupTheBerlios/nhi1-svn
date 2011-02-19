@@ -84,6 +84,16 @@ error:
   RETURN_ERROR("usage: ServiceProxy(string: token, ?integer: id=0?");
 }
 
+PHP_METHOD(MsgqueForPhp_MqS, ServiceStorage)
+{
+  SETUP_mqctx;
+  ARG2CST(ServiceStorage,token);
+  ErrorMqToPhpWithCheck(MqServiceStorage(mqctx, token));
+  RETURN_NULL();
+error:
+  RETURN_ERROR("usage: ServiceStorage(string: token");
+}
+
 PHP_METHOD(MsgqueForPhp_MqS, ProcessEvent)
 {
   SETUP_mqctx;

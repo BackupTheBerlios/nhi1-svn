@@ -198,7 +198,7 @@
 #define MQ_FORMAT_In(n)	"%"	MQ_CPPSTR(n) "i"
 #define MQ_FORMAT_XI(n) "%"	MQ_CPPSTR(n) "x"
 #define MQ_FORMAT_Dn(n)	"%1."	MQ_CPPSTR(n) "e"
-#define MQ_FORMAT_Cn(n)  "%"	MQ_CPPSTR(n) "s"
+#define MQ_FORMAT_Cn(n) "%"	MQ_CPPSTR(n) "s"
 
 #define MQ_FORMAT_Y	"%hi"
 #define MQ_FORMAT_O	"%hi"
@@ -213,6 +213,8 @@
 #define MQ_FORMAT_P	"%p"
 #define MQ_FORMAT_H	"%c"
 
+
+// if "MQ_FORMAT_W" error than "mqconfig.h" is missing
 
 #if defined(MQ_IS_POSIX)
 # define MQ_FORMAT_W	  "%lli"

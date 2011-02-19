@@ -26,6 +26,8 @@ dnl Otherwise use enable:
 if test "$PHP_MSGQUEFORPHP" != "no"; then
   dnl libmsgque sources
 
+  PHP_CHECK_64BIT([AC_MSG_ERROR([MsgqueForPHP require 64 Bit !!])], [])
+
   if test "$PHP_MSGQUEFORPHP" == "yes"; then
     PHP_MSGQUEFORPHP=../../libmsgque
   fi
@@ -37,12 +39,13 @@ if test "$PHP_MSGQUEFORPHP" != "no"; then
 
   dnl --with-MsgqueForPhpSrc -> add include path
   PHP_ADD_INCLUDE($PHP_MSGQUEFORPHPSRC)
+  PHP_ADD_INCLUDE(../../..)
   dnl PHP_ADD_LIBPATH($PHP_MSGQUEFORPHP,1)
   dnl PHP_ADD_LIBRARY(libtmp.la, 1, 1)
  
   dnl PHP_SUBST(MSGQUEFORPHP_SHARED_LIBADD)
   dnl add extension 
-  PHP_NEW_EXTENSION(MsgqueForPhp, MsgqueForPhp.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c send_php.c read_php.c MqBufferS_php.c error_php.c MqFactoryS_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
+  PHP_NEW_EXTENSION(MsgqueForPhp, MsgqueForPhp.c MqS_php.c MqSException_php.c link_php.c config_php.c misc_php.c slave_php.c service_php.c send_php.c read_php.c MqBufferS_php.c error_php.c MqFactoryS_php.c MqDumpS_php.c storage_php.c, $ext_shared,,-DMQ_IGNORE_EXTERN)
 fi
 
 AC_MSG_CHECKING([for build with symbols])

@@ -31,15 +31,6 @@ PHP_METHOD(MsgqueForPhp_MqS, Exit)
 }
 
 static
-PHP_METHOD(MsgqueForPhp_MqS, SqlSetDb)
-{
-  SETUP_mqctx;
-  ARG2CST(SqlSetDb,storageDir);
-  ErrorMqToPhpWithCheck(MqSqlSetDb(mqctx,storageDir));
-  RETURN_NULL();
-}
-
-static
 PHP_METHOD(MsgqueForPhp_MqS, Delete)
 {
   SETUP_mqctx;
@@ -152,7 +143,8 @@ PHP_METHOD(MsgqueForPhp_MqS, __destruct)
   }
   mqctx->setup.factory = NULL;
   mqctx->setup.Event.fCall = NULL;
-  MqContextDelete(&mqctx);
+  //MqContextDelete(&mqctx);
+  MqContextFree(mqctx);
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadY);
@@ -165,7 +157,9 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadD);
 PHP_METHOD(MsgqueForPhp_MqS, ReadC);
 PHP_METHOD(MsgqueForPhp_MqS, ReadB);
 PHP_METHOD(MsgqueForPhp_MqS, ReadN);
-PHP_METHOD(MsgqueForPhp_MqS, ReadBDY);
+PHP_METHOD(MsgqueForPhp_MqS, ReadDUMP);
+PHP_METHOD(MsgqueForPhp_MqS, ReadLOAD);
+PHP_METHOD(MsgqueForPhp_MqS, ReadForward);
 PHP_METHOD(MsgqueForPhp_MqS, ReadU);
 PHP_METHOD(MsgqueForPhp_MqS, ReadL_START);
 PHP_METHOD(MsgqueForPhp_MqS, ReadL_END);
@@ -193,7 +187,6 @@ PHP_METHOD(MsgqueForPhp_MqS, SendD);
 PHP_METHOD(MsgqueForPhp_MqS, SendC);
 PHP_METHOD(MsgqueForPhp_MqS, SendB);
 PHP_METHOD(MsgqueForPhp_MqS, SendN);
-PHP_METHOD(MsgqueForPhp_MqS, SendBDY);
 PHP_METHOD(MsgqueForPhp_MqS, SendU);
 PHP_METHOD(MsgqueForPhp_MqS, SendL_START);
 PHP_METHOD(MsgqueForPhp_MqS, SendL_END);
@@ -207,6 +200,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ConfigSetDebug);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetTimeout);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetName);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetSrvName);
+PHP_METHOD(MsgqueForPhp_MqS, ConfigSetStorage);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIsSilent);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIsServer);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigSetIsString);
@@ -229,6 +223,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ConfigGetBuffersize);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetTimeout);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetName);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetSrvName);
+PHP_METHOD(MsgqueForPhp_MqS, ConfigGetStorage);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetIoUdsFile);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetIoTcpHost);
 PHP_METHOD(MsgqueForPhp_MqS, ConfigGetIoTcpPort);
@@ -252,6 +247,7 @@ PHP_METHOD(MsgqueForPhp_MqS, ServiceGetToken);
 PHP_METHOD(MsgqueForPhp_MqS, ServiceIsTransaction);
 PHP_METHOD(MsgqueForPhp_MqS, ServiceGetFilter);
 PHP_METHOD(MsgqueForPhp_MqS, ServiceProxy);
+PHP_METHOD(MsgqueForPhp_MqS, ServiceStorage);
 PHP_METHOD(MsgqueForPhp_MqS, ServiceCreate);
 PHP_METHOD(MsgqueForPhp_MqS, ServiceDelete);
 PHP_METHOD(MsgqueForPhp_MqS, ProcessEvent);
@@ -279,6 +275,13 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxSet);
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentGet);
 PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet);
 
+PHP_METHOD(MsgqueForPhp_MqS, StorageOpen);
+PHP_METHOD(MsgqueForPhp_MqS, StorageClose);
+PHP_METHOD(MsgqueForPhp_MqS, StorageInsert);
+PHP_METHOD(MsgqueForPhp_MqS, StorageSelect);
+PHP_METHOD(MsgqueForPhp_MqS, StorageDelete);
+PHP_METHOD(MsgqueForPhp_MqS, StorageCount);
+
 /* {{{ MsgqueForPhp_MqS_functions[]
  *
  * Every class method must have an entry in MsgqueForPhp_MqS_functions[].
@@ -303,6 +306,10 @@ ZEND_BEGIN_ARG_INFO_EX(MqS_arg, 0, 0, 1)
   ZEND_ARG_OBJ_INFO(0, mqs, MqS, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(MqDumpS_arg, 0, 0, 1)
+  ZEND_ARG_OBJ_INFO(0, dump, MqDumpS, 0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(SlaveCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "id")
   ZEND_ARG_OBJ_INFO(0, slave, MqS, 0)
@@ -311,10 +318,6 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(ServiceCreate_arg, 0, 0, 2)
   ZEND_ARG_INFO(0, "token")
   ZEND_ARG_INFO(0, "callback")
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(ServiceDelete_arg, 0, 0, 2)
-  ZEND_ARG_INFO(0, "token")
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(id_arg, 0, 0, 1)
@@ -327,7 +330,7 @@ ZEND_BEGIN_ARG_INFO_EX(LogC_arg, 0, 0, 3)
   ZEND_ARG_INFO(0, "message")
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(SendEND_arg, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(token_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "token")
 ZEND_END_ARG_INFO()
 
@@ -358,11 +361,14 @@ ZEND_BEGIN_ARG_INFO_EX(storageFile_arg, 0, 0, 1)
   ZEND_ARG_INFO(0, "storageFile")
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(transLId_arg, 0, 0, 1)
+  ZEND_ARG_INFO(0, "transLId")
+ZEND_END_ARG_INFO()
+
 static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, __construct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(MsgqueForPhp_MqS, __destruct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(MsgqueForPhp_MqS, Exit,		    no_arg,		  ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SqlSetDb,		    storageFile_arg,	  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, Delete,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, LogC,		    LogC_arg,		  ZEND_ACC_PUBLIC)
 #ifdef _DEBUG
@@ -385,7 +391,9 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ReadC,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadB,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadN,		    no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, ReadBDY,		    no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ReadDUMP,		    no_arg,               ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ReadLOAD,		    MqDumpS_arg,          ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ReadForward,		    MqS_arg,              ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadU,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_START,		    NULL,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_END,		    no_arg,               ZEND_ACC_PUBLIC)
@@ -400,7 +408,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ReadProxy,		    MqS_arg,              ZEND_ACC_PUBLIC)
 
   PHP_ME(MsgqueForPhp_MqS, SendSTART,		    no_arg,               ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SendEND,		    SendEND_arg,          ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, SendEND,		    token_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendEND_AND_WAIT,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendEND_AND_CALLBACK,    SendEND_A_CB_arg,     ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendRETURN,		    no_arg,               ZEND_ACC_PUBLIC)
@@ -415,7 +423,6 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, SendC,		    value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendB,		    value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendN,		    value_arg,            ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, SendBDY,		    value_arg,            ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendU,		    MqBufferS_arg,        ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendL_START,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SendL_END,		    no_arg,		  ZEND_ACC_PUBLIC)
@@ -429,6 +436,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ConfigSetTimeout,	    val_arg,              ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigSetName,	    val_arg,              ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigSetSrvName,	    val_arg,              ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ConfigSetStorage,	    storageFile_arg,      ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigSetIsSilent,	    val_arg,              ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigSetIsServer,	    val_arg,              ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigSetIsString,	    val_arg,              ZEND_ACC_PUBLIC)
@@ -453,6 +461,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ConfigGetTimeout,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigGetName,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigGetSrvName,	    NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ConfigGetStorage,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigGetIoUdsFile,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigGetIoTcpHost,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ConfigGetIoTcpPort,	    NULL,                 ZEND_ACC_PUBLIC)
@@ -476,8 +485,9 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ServiceIsTransaction,    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ServiceGetFilter,	    NULL,                 ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ServiceProxy,	    NULL,                 ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ServiceStorage,	    token_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ServiceCreate,	    ServiceCreate_arg,    ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, ServiceDelete,	    ServiceDelete_arg,    ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ServiceDelete,	    token_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ProcessEvent,	    NULL,                 ZEND_ACC_PUBLIC)
 
   PHP_ME(MsgqueForPhp_MqS, ErrorC,		    ErrorC_arg,           ZEND_ACC_PUBLIC)
@@ -499,6 +509,13 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, SlaveGet,		    id_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SlaveGetMaster,	    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, SlaveIs,		    no_arg,               ZEND_ACC_PUBLIC)
+
+  PHP_ME(MsgqueForPhp_MqS, StorageOpen,		    storageFile_arg,	  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, StorageClose,	    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, StorageInsert,	    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, StorageSelect,	    NULL,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, StorageDelete,	    transLId_arg,	  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, StorageCount,	    no_arg,		  ZEND_ACC_PUBLIC)
 
   {NULL, NULL, NULL}
 };

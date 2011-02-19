@@ -109,12 +109,12 @@ FactoryCreate(
   }
 
   /* extract MqS object */
-  mqctx = VAL2MqS2(zctx);
+  mqctx = VAL2MqSelf(zctx);
   if (mqctx == NULL) {
     err = "MqS resource is not initialized, constructor not run ?";
     goto end;
   }
-  if (MqErrorCheckI (MqErrorGetCode (mqctx = VAL2MqS2(zctx)))) {
+  if (MqErrorCheckI (MqErrorGetCode (mqctx = VAL2MqSelf(zctx)))) {
     if (create != MQ_FACTORY_NEW_INIT) {
       MqErrorCopy (tmpl, mqctx);
       mqret = MqErrorStack(tmpl);

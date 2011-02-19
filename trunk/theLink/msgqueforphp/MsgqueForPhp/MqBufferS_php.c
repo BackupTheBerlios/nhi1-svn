@@ -15,7 +15,8 @@
 zend_class_entry *NS(MqBufferS);
 
 #define CTX	      buf->context
-#define SETUP_buf     MQ_BUF buf; VAL2MqBufferS(buf, getThis());
+#define BUF	      VAL2MqBufferSelf(getThis())
+#define SETUP_buf     MQ_BUF buf = BUF;
 #define ErrorBufToPhp() NS(MqSException_Raise)(buf->context TSRMLS_CC)
 #define ErrorBufToPhpWithCheck(PROC) \
   if (unlikely(MqErrorCheckI(PROC))) { \
@@ -60,9 +61,21 @@ PHP_METHOD(MsgqueForPhp_MqBufferS, GetB)
 static
 PHP_METHOD(MsgqueForPhp_MqBufferS, GetType)
 {
-  SETUP_buf;
-  MQ_STRB const str[2] = {MqBufferGetType(buf), '\0'};
+  MQ_STRB const str[2] = {MqBufferGetType(BUF), '\0'};
   CST2VAL(return_value, str);
+}
+
+static
+PHP_METHOD(MsgqueForPhp_MqBufferS, Dup)
+{
+  MqBufferS2VAL(return_value, MqBufferDup(BUF));
+}
+
+static
+PHP_METHOD(MsgqueForPhp_MqBufferS, Delete)
+{
+  SETUP_buf;
+  MqBufferDelete(&buf);
 }
 
 static
@@ -85,7 +98,9 @@ static const zend_function_entry NS(MqBufferS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqBufferS, GetD,		no_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqBufferS, GetC,		no_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqBufferS, GetB,		no_arg,	      ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqBufferS, GetType,		no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqBufferS, GetType,	no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqBufferS, Dup,		no_arg,	      ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqBufferS, Delete,	no_arg,	      ZEND_ACC_PUBLIC)
 
   {NULL, NULL, NULL}
 };
@@ -114,7 +129,3 @@ void NS(MqBufferS_Init) (TSRMLS_D) {
   INIT_CLASS_ENTRY(me_ce,"MqBufferS", NS(MqBufferS_functions));
   NS(MqBufferS) = zend_register_internal_class(&me_ce TSRMLS_CC);
 }
-
-
-
-

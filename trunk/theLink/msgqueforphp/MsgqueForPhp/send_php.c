@@ -51,14 +51,6 @@ PHP_METHOD(MsgqueForPhp_MqS, SendN)
   RETURN_NULL();
 }
 
-PHP_METHOD(MsgqueForPhp_MqS, SendBDY)
-{
-  SETUP_mqctx;
-  ARG2CST(SendBDY,val);
-  ErrorMqToPhpWithCheck(MqSendBDY(mqctx,val,vallen));
-  RETURN_NULL();
-}
-
 PHP_METHOD(MsgqueForPhp_MqS, SendU)
 {
   SETUP_mqctx;

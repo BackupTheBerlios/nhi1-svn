@@ -828,6 +828,7 @@ struct MqSetupS {
 MQ_EXTERN void MQ_DECL MqSetup (void) __attribute__ ((constructor));
 MQ_EXTERN void MQ_DECL MqCleanup (void) __attribute__ ((destructor));
 
+
 /// \brief clean the \ref MqS::config data
 MQ_EXTERN void MQ_DECL MqConfigReset (
   struct MqS * const context

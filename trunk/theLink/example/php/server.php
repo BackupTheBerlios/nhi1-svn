@@ -122,12 +122,19 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
       $this->ServiceCreate("ECUL", array(&$this, 'ECUL'));
       $this->ServiceCreate("RDUL", array(&$this, 'RDUL'));
       $this->ServiceCreate("STDB", array(&$this, 'STDB'));
+      $this->ServiceCreate("DMPL", array(&$this, 'DMPL'));
     }
+  }
+
+  public function DMPL() {
+    $this->SendSTART();
+    $this->SendI($this->ReadDUMP()->Size());
+    $this->SendRETURN();
   }
 
   public function STDB() {
     $this->SendSTART();
-    $this->SqlSetDb($this->ReadC());
+    $this->StorageOpen($this->ReadC());
     $this->SendRETURN();
   }
 
@@ -518,6 +525,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
         $this->SendC($this->ConfigGetSrvName());
         $this->ConfigSetSrvName($old);
 	break;
+      case "Storage":
+        $old = $this->ConfigGetStorage();
+        $this->ConfigSetStorage($this->ReadC());
+        $this->SendC($this->ConfigGetStorage());
+        $this->ConfigSetStorage($old);
+	break;
       case "Ident":
         $old = $this->FactoryCtxIdentGet();
         $this->FactoryCtxSet(FactoryGet()->Copy($this->ReadC()));
@@ -710,12 +723,13 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
   }
 
   public function SETU() {
-    $this->buf = $this->ReadU();
+    $this->buf = $this->ReadU()->Dup();
   }
 
   public function GETU() {
     $this->SendSTART();
     $this->SendU($this->buf);
+    $this->buf->Delete();
     $this->SendRETURN();
     $this->buf = NULL;
   }

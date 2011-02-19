@@ -299,7 +299,7 @@ void
 MqContextDelete (
   struct MqS ** contextP
 ) {
-  struct MqS * context = *contextP;
+  register struct MqS * context = *contextP;
   *contextP = NULL;
   if (context == NULL || context->bits.MqContextDelete_LOCK == MQ_YES) {
     return;

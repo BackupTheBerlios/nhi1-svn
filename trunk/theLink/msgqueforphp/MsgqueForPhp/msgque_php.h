@@ -10,6 +10,15 @@
  *              please contact AUTHORS for additional information
  */
 
+#include "mqconfig.h"
+
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -21,6 +30,7 @@
 #include "zend_interfaces.h"
 #include "zend_exceptions.h"
 #include "php_MsgqueForPhp.h"
+
 #include "msgque.h"
 #include "debug.h"
 
@@ -34,6 +44,7 @@
 
 extern zend_class_entry *NS(MqS);
 extern zend_class_entry *NS(MqBufferS);
+extern zend_class_entry *NS(MqDumpS);
 
 #define INCR_REG(val)	    zval_addref_p(val)
 #define DECR_REG(val)	    zval_delref_p(val)
@@ -48,8 +59,7 @@ extern zend_class_entry *NS(MqBufferS);
   zval_delref_p(val)
 */
 
-#define LIBMSGQUE_VERSION   "4.6"
-#define SETUP_mqctx         struct MqS * mqctx; VAL2MqS(mqctx,getThis());
+#define SETUP_mqctx         struct MqS * mqctx = VAL2MqSelf(getThis());
 #define SELF                ((zval*)(mqctx)->self)
 #define SETUP_self          zval * self = SELF
 #define MQ_CONTEXT_S        mqctx
@@ -75,18 +85,27 @@ extern zend_class_entry *NS(MqBufferS);
 
 #define CheckType(val,typ) if (!instanceof_function(Z_OBJCE_P(val), typ TSRMLS_CC)) goto error;
 
-#define VAL2BYT(val)	    (MQ_BYT)Z_LVAL_P(val)
-#define VAL2BOL(val)	    (MQ_BOL)Z_BVAL_P(val)
-#define VAL2SRT(val)	    (MQ_SRT)Z_LVAL_P(val)
-#define VAL2INT(val)	    (MQ_INT)Z_LVAL_P(val)
-#define VAL2WID(val)	    (MQ_WID)Z_LVAL_P(val)
-#define VAL2FLT(val)	    (MQ_FLT)Z_DVAL_P(val)
-#define VAL2DBL(val)	    (MQ_DBL)Z_DVAL_P(val)
-#define VAL2CST(val)	    (MQ_CST)Z_STRVAL_P(val)
-#define VAL2BIN(val)	    (MQ_CBI)Z_STRVAL_P(val),(MQ_SIZE)Z_STRLEN_P(val)
-#define VAL2MqS2(val)	    (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
-#define VAL2MqBufferS2(val) (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
-#define VAL2MqFactoryS2(val) (struct MqFactoryS*)Z_LVAL_P(zend_read_property(NS(MqFactoryS), val, ID(__factory), 0 TSRMLS_CC))
+#define VAL2BYT(val)	      (MQ_BYT)Z_LVAL_P(val)
+#define VAL2BOL(val)	      (MQ_BOL)Z_BVAL_P(val)
+#define VAL2SRT(val)	      (MQ_SRT)Z_LVAL_P(val)
+#define VAL2INT(val)	      (MQ_INT)Z_LVAL_P(val)
+#define VAL2WID(val)	      (MQ_WID)Z_LVAL_P(val)
+#define VAL2FLT(val)	      (MQ_FLT)Z_DVAL_P(val)
+#define VAL2DBL(val)	      (MQ_DBL)Z_DVAL_P(val)
+#define VAL2CST(val)	      (MQ_CST)Z_STRVAL_P(val)
+#define VAL2BIN(val)	      (MQ_CBI)Z_STRVAL_P(val),(MQ_SIZE)Z_STRLEN_P(val)
+
+#define VAL2MqSelf(val) \
+  (struct MqS*)Z_LVAL_P(zend_read_property(NS(MqS), val, ID(__ctx), 0 TSRMLS_CC))
+
+#define VAL2MqBufferSelf(val) \
+  (struct MqBufferS*)Z_LVAL_P(zend_read_property(NS(MqBufferS), val, ID(__buf), 0 TSRMLS_CC))
+
+#define VAL2MqFactorySelf(val) \
+  (struct MqFactoryS*)Z_LVAL_P(zend_read_property(NS(MqFactoryS), val, ID(__factory), 0 TSRMLS_CC))
+
+#define VAL2MqDumpSelf(val) \
+  (struct MqDumpS*)Z_LVAL_P(zend_read_property(NS(MqDumpS), val, ID(__dump), 0 TSRMLS_CC))
 
 #define VAL2MqS(tgt, src) { \
   zval * zret = zend_read_property(NS(MqS), src, ID(__ctx), 0 TSRMLS_CC); \
@@ -115,6 +134,15 @@ extern zend_class_entry *NS(MqBufferS);
   } \
 }
 
+#define VAL2MqDumpS(tgt, src) { \
+  zval * zret = zend_read_property(NS(MqDumpS), src, ID(__dump), 0 TSRMLS_CC); \
+  if (Z_TYPE_P(zret) == IS_NULL) { \
+    RETURN_ERROR("MqDumpS resource was not initialized, is the constructor not run ?"); \
+  } else { \
+    tgt = (struct MqDumpS *) Z_RESVAL_P(zret); \
+  } \
+}
+
 #define	BYT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
 #define	BOL2VAL(zval,nat)	    ZVAL_BOOL(zval,nat)
 #define	SRT2VAL(zval,nat)	    ZVAL_LONG(zval,(long)nat)
@@ -133,16 +161,30 @@ if (nat != NULL) { \
 }
 #define MqFactoryS2VAL(zval,ptr)    NS(MqFactoryS_New) (zval, ptr TSRMLS_CC);
 #define MqBufferS2VAL(zval,ptr)	    NS(MqBufferS_New) (zval, ptr TSRMLS_CC);
+#define MqDumpS2VAL(zval,ptr)	    NS(MqDumpS_New) (zval, ptr TSRMLS_CC);
 
-#define ARG2INT(mth,val) \
-long val;\
-if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &val) == FAILURE) { \
+#define ARG2TMPL(mth,type,val) \
+type val; long __tmp;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &__tmp) == FAILURE) { \
   RETURN_ERROR("usage: " #mth "(integer:" #val ")"); \
   return; \
-}
-#define ARG2BYT(mth,val) ARG2INT(mth,val)
-#define ARG2SRT(mth,val) ARG2INT(mth,val)
-#define ARG2WID(mth,val) ARG2INT(mth,val)
+} \
+val = (type)__tmp;
+
+#define ARG2BYT(mth,val) ARG2TMPL(mth,MQ_BYT,val)
+#define ARG2SRT(mth,val) ARG2TMPL(mth,MQ_SRT,val)
+#define ARG2INT(mth,val) ARG2TMPL(mth,MQ_INT,val)
+#define ARG2WID(mth,val) ARG2TMPL(mth,MQ_WID,val)
+
+#define ARG2INT_OPT(mth,type,val) \
+type val; long __tmp = 0L;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &__tmp) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(integer:" #val ")"); \
+  return; \
+} \
+val = (type)__tmp;
+
+#define ARG2WID_OPT(mth,val) ARG2INT_OPT(mth,MQ_WID,val)
 
 #define ARG2DBL(mth,val) \
 double val;\
@@ -199,6 +241,14 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
 } \
 VAL2MqFactoryS(val,_val);
 
+#define ARG2MqDumpS(mth,val) \
+struct MqDumpS *val;\
+zval *_val;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o", &_val) == FAILURE) { \
+  RETURN_ERROR("usage: " #mth "(object:" #val ")"); \
+} \
+VAL2MqDumpS(val,_val);
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                  Misc's                                   */
@@ -211,7 +261,7 @@ MQ_BFL NS(Argument2MqBufferLS)	  (struct MqBufferLS *, int numArgs TSRMLS_DC);
 void NS(MqBufferLAppendZVal)	  (MQ_BFL, zval* TSRMLS_DC);
 void NS(MqBufferS_New)		  (zval *, struct MqBufferS* TSRMLS_DC);
 void NS(MqFactoryS_New)		  (zval *, struct MqFactoryS* TSRMLS_DC);
-
+void NS(MqDumpS_New)		  (zval *, struct MqDumpS* TSRMLS_DC);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -244,12 +294,4 @@ enum MqErrorE NS(ProcCall) (
 
 
 #define NIL_Check(v)	    if (NIL_P(v)) goto error;
-
-
-
-
-
-
-
-
 

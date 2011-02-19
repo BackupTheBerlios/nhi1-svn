@@ -106,9 +106,12 @@ void NS(MqS_Init)	    (TSRMLS_D);
 void NS(MqSException_Init)  (TSRMLS_D);
 void NS(MqBufferS_Init)	    (TSRMLS_D);
 void NS(MqFactoryS_Init)    (TSRMLS_D);
+void NS(MqDumpS_Init)	    (TSRMLS_D);
 
 PHP_MINIT_FUNCTION(MsgqueForPhp)
 {
+  MqSetup();
+
   // we need the global variable $php_errormsg to act on errors
   //zend_alter_ini_entry(ID2(track_errors), ID(1), PHP_INI_SYSTEM, PHP_INI_STAGE_STARTUP);
 
@@ -116,6 +119,7 @@ PHP_MINIT_FUNCTION(MsgqueForPhp)
   NS(MqSException_Init)	(TSRMLS_C);
   NS(MqBufferS_Init)	(TSRMLS_C);
   NS(MqFactoryS_Init)	(TSRMLS_C);
+  NS(MqDumpS_Init)	(TSRMLS_C);
 
   /* If you have INI entries, uncomment these lines 
   REGISTER_INI_ENTRIES();
@@ -129,10 +133,11 @@ PHP_MINIT_FUNCTION(MsgqueForPhp)
  */
 PHP_MSHUTDOWN_FUNCTION(MsgqueForPhp)
 {
-	/* uncomment this line if you have INI entries
-	UNREGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+
+  /* uncomment this line if you have INI entries
+  UNREGISTER_INI_ENTRIES();
+  */
+  return SUCCESS;
 }
 /* }}} */
 
@@ -176,7 +181,8 @@ PHP_RINIT_FUNCTION(MsgqueForPhp)
  */
 PHP_RSHUTDOWN_FUNCTION(MsgqueForPhp)
 {
-	return SUCCESS;
+  MqCleanup();
+  return SUCCESS;
 }
 /* }}} */
 

@@ -345,7 +345,7 @@ static int NS(Main) (
  * \param[in] objv argument list as \e Tcl_Obj array
  * \return Tcl error-code
  */
-static int NS(MsgqueCmd) (
+static int NS(MsgqueSetup) (
   ClientData clientData,
   Tcl_Interp * interp,
   int objc,
@@ -382,6 +382,17 @@ static int NS(MsgqueCmd) (
   return (*keys[index].keyF) (interp, objc, objv);
 }
 
+/** \brief cleanup the \b msgque tcl command
+ *
+ * \param[in] clientData Tcl mandatory field, not used
+ */
+static void NS(MsgqueCleanup) (
+  ClientData clientData
+)
+{
+  MqCleanup();
+}
+
 /** \brief initialize the tclmsgque package
  *
  * The tclmsgque package is created and one new command "msgque"
@@ -399,12 +410,13 @@ Tclmsgque_Init (
     return TCL_ERROR;
   }
 
+  MqSetup();
+
   // announce my package
   TclErrorCheck (Tcl_PkgProvide (interp, "TclMsgque", LIBMSGQUE_VERSION));
 
   // provide "msgque" as only public cammand of the package
-  Tcl_CreateObjCommand (interp, "tclmsgque", NS(MsgqueCmd), (ClientData) NULL,
-                        (Tcl_CmdDeleteProc *) NULL);
+  Tcl_CreateObjCommand (interp, "tclmsgque", NS(MsgqueSetup), (ClientData) NULL, NS(MsgqueCleanup));
 
   // init libmsgque global data
   if (MqInitGet() == NULL && Tcl_GetNameOfExecutable() != NULL) {
