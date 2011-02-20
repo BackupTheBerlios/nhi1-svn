@@ -608,7 +608,7 @@ struct MqConfigS {
   ///
   /// A new \e application-context is created if:
   /// - a \e tcp-uds-server listen on socket and get a \e connection-request from a client.
-  ///   This require: \RNS{Factory} and \RNSC{IServerSetup} 
+  ///   This require: \RNSO{Factory} and \RNSC{IServerSetup} 
   /// - a \e filter-context create a new \e filter-instance
   /// - a \e server-context create a new \e worker-context using \RNSA{SlaveWorker}
   /// - a \e server-context start a new \e client-server-link using \e SELF as 
@@ -693,9 +693,7 @@ struct MqConfigS {
   struct MqIoConfigS io;
 
   /// \brief storage file used as default if a database is requested
-  /// \details Valid values are \c :memory: , \c :tmpdb: or a writeable \c filename.
-  /// \c :memory: is the default.
-  /// \attention an empty string \c "" will disable transaction at all
+  /// \copydetails Mq_Storage_C_API
   MQ_CST storage;
 };
 
@@ -826,10 +824,14 @@ struct MqSetupS {
 /*****************************************************************************/
 
 /// \brief setup \libmsgque internal memory
+/// \e MqSetup can only be called once, additional call's will be ignored until a
+/// #MqCleanup is called.
 MQ_EXTERN void MQ_DECL MqSetup (void) __attribute__ ((constructor));
 
 /// \brief cleanup \libmsgque internal memory
-/// \attention the cleanup will \b only performed if it is call in the same thread as #MqSetup.
+/// \e MqCleanup can only be called once and will be ignored if not called in the same thread as #MqSetup.
+/// after a call to #MqSetup the call to \e MqCleanup is possible again.
+/// \attention during cleanup objects will be deleted too -> the language interpreter have to be active
 MQ_EXTERN void MQ_DECL MqCleanup (void) __attribute__ ((destructor));
 
 
@@ -1742,9 +1744,19 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/// \defgroup Mq_Store_C_API Mq_Store_C_API
+/// \defgroup Mq_Storage_C_API Mq_Storage_C_API
 /// \{
 /// \brief setup and manage a storage used to persist \e data-packages
+///
+/// - The \e package-storage can be used to save all kind of \e package-data.
+/// - The \e longterm-transaction-package-data is allways saved.
+/// - By default only an \e in-memory storage is in use, but this can be changed
+///   with \RNSA{StorageOpen}.
+/// - The \e default-storage is set with \RNSC{storage}
+/// - An entire incomming \e service-call can be saved with \RNSA{ServiceStorage}
+/// - In a \e service-call the \e data-package can be saved with \RNSA{StorageInsert}
+/// - The \e package-data can be loaded again with \RNSA{StorageSelect}
+/// .
 
 /// \brief switch to a \e file-based-transaction-database
 /// \context
@@ -1759,26 +1771,48 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageOpen (
   MQ_CST const storageFile
 );
 
+/// \brief close the \e storage.
+/// \details the \e next storage request will open the storage agion with the location from
+/// \RNSC{storage}
+/// \context
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageClose (
   struct MqS * const context
 );
 
-/// transLIdP=NULL allowed -> no return
+/// \brief insert the \e read-data-package into the storage
+/// \context
+/// \param[out] transLIdP if <TT>transLIdP != NULL</TT> return the \e storage-id
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
   struct MqS * const context,
   MQ_TRA *transLIdP
 );
 
+/// \brief read and set the \e read-data-package from the storage
+/// \context
+/// \param[in,out] transLIdP if not \c 0LL return the \e read-data-package identified
+///     with the \e storage-id. if \c 0LL read the \e top-most (FIFO) \e read-data-package
+///     and set the \e transLIdP to the \e storage-id.
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageSelect (
   struct MqS * const context,
   MQ_TRA *transLIdP
 );
 
+/// \brief delete the \e storage-row identified by \e transLId
+/// \context
+/// \param[in] transLId \e storage-id to delete or
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageDelete (
   struct MqS * const context,
   MQ_TRA transLId
 );
 
+/// \brief count the number of \e storage-rows 
+/// \context
+/// \param[out] countP number of rows, \c OLL if nothing is available
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
   struct MqS * const context,
   MQ_TRA *countP
@@ -1837,7 +1871,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
 /// - in local mode new \e server-parent-context is started by the \e client-parent-context as \e pipe:
 ///\verbatim
 ///client @ server \endverbatim
-/// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNS{Factory} interface.
+/// - a \e server-context have to implement the \RNSC{IServerSetup} and the \RNSO{Factory} interface.
 /// - a \e server-context have to enter the \e event-loop and wait for incoming \e service-request using
 ///   \RNSA{ProcessEvent} together with the \MQ_WAIT_FOREVER.
 /// .
@@ -2046,7 +2080,7 @@ MQ_EXTERN MQ_CST MQ_DECL MqLinkGetTargetIdent (
 ///              able to listen on \b all token not handled by an other \e token more precise.
 ///  - \b +STO - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to setup an \e event-handler
 ///              able to store the data on \b all token not handled by an other \e token more precise
-///              into the transaction database defined with \RNSA{SqlSetDb}.
+///              into the transaction database defined with \RNSA{StorageOpen}.
 ///  - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
 ///  - \b +FTR and \b +EOF - used for \e one-directional-filter
 /// \if MSGQUE
@@ -2181,17 +2215,23 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceProxy (
   MQ_SIZE const id
 ) __attribute__((nonnull(1)));
 
+/// \brief save the \e read-data-package from the service into the \RNS{Storage} "Storage"
+/// \details In a \e shortterm-transaction-syncrone-service-call the service will return an \e empty data package.
+/// In a \e longterm-transaction-syncrone-service-call the data will return as normal.
+/// \context
+/// \token
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceStorage (
-  struct MqS * const ctx, 
+  struct MqS * const context, 
   MQ_TOK const token
 ) __attribute__((nonnull(1)));
 
 /// \brief delete a service.
-/// \ctx
+/// \context
 /// \token
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
-  struct MqS * const ctx, 
+  struct MqS * const context, 
   MQ_TOK const token
 ) __attribute__((nonnull(1)));
 
@@ -2622,23 +2662,20 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetC (
   MQ_CST * const out
 );
 
-/// \brief return the type from a #MQ_BUF object on character identifier
+/// \brief return the \e type from a #MQ_BUF object as single character value
 /// \buf
-/// \return the type from a #MqTypeE object as single character value
 MQ_EXTERN char MQ_DECL MqBufferGetType (
   struct MqBufferS * const buf
 );
 
-/// \brief return the type from a #MQ_BUF object
+/// \brief return the #MqTypeE from a #MQ_BUF object
 /// \buf
-/// \return the #MqTypeE object 
 MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
   struct MqBufferS * const buf
 );
 
-/// \brief return the type from a #MQ_BUF object as string
+/// \brief return the \e type from a #MQ_BUF object as single character string
 /// \buf
-/// \return the #MqTypeE object as string
 MQ_EXTERN MQ_CST MQ_DECL MqBufferGetType3 (
   struct MqBufferS * const buf
 );
@@ -3567,6 +3604,23 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /* ####################################################################### */
 /* ###                                                                 ### */
+/* ###                        D U M P - A P I                          ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Dump_C_API Mq_Dump_C_API
+/// \{
+/// \brief binary package format used for \e export (\RNSA{ReadDUMP}) and \e import (\RNSA{ReadLOAD})
+
+/// return the package size from the \e dump data package
+MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
+  struct MqDumpS * const dump
+) __attribute__((nonnull));
+
+/// \} Mq_Dump_C_API
+
+/* ####################################################################### */
+/* ###                                                                 ### */
 /* ###                        R E A D - A P I                          ### */
 /* ###                                                                 ### */
 /* ####################################################################### */
@@ -3723,40 +3777,35 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \brief signature used in \ref MqFactoryS::signature
 #define MQ_MqDumpS_SIGNATURE 0x00127364
 
-/// \brief extract the entire \e body-package from the \e read-data-package
+/// \brief dump the \e read-data-package suitable to store into an external storage
 ///
-/// A \e body is a \e byte-array with a defined \e length and including the \e number-of-items
-/// and the \e body-items as information. The \e body extracted can be saved into an external 
-/// storage or be used in a software tunnel (example: the \e agurad tool) and be can send later 
-/// using \RNSA{SendBDY}. 
-/// \if C-STYLE
-/// The memory is \e dynamic-allocated and have to be freed using \RNS{ReadFree}.
-/// \endif
-/// \ctx
-/// \param[out] val the \e read-package-data
+/// The \e dump is a \e byte-array with all data included necessary to be imported later as
+/// \e read-data-package again. After the import with \RNSA{ReadLOAD}, tha data can be used like 
+/// the orginal data package.
+/// The \e export can be saved into an external storage or be used in a \e network-tunnel 
+/// (example: the \e agurad tool).
+/// \context
+/// \param[out] out the \e read-package-data to save
 /// \retException
+/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{SysFree}.
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
-  struct MqS * const ctx,
+  struct MqS * const context,
   struct MqDumpS ** const out
 ) __attribute__((nonnull(1)));
 
 
-/// \brief load the \e entire-body into the \e read-buffer
-/// \details The \e entire-body is the result of a previous \RNSA{ReadDUMP} function call 
-/// and can be used to save the \e entire-body into an external storage or for an additional 
-/// operation like encryption.
-/// \ctx
-/// \param[in] value the \e entire-body for appending
+/// \brief load the \e dump into the \e read-data-package
+///
+/// The \e dump is the result of a previous \RNSA{ReadDUMP} function call.
+/// After the \e load an package is suitable for all kind of \RNS{ReadData} function.
+/// \context
+/// \param[in] in the \e read-package-data to read from
 /// \retException 
-/// \attention the data returned is owned by the caller and have to be freed with #MqSysFree
+/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{SysFree}.
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
   struct MqS * const context,
   struct MqDumpS * const in
 ) __attribute__((nonnull(1,2)));
-
-MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
-  struct MqDumpS * const dump
-) __attribute__((nonnull));
 
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
@@ -3793,6 +3842,10 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
 ) __attribute__((nonnull));
 
 
+/// \brief send the entire \e read-package-data to the \e link-target
+///
+/// The goal of this function is to send the \e read-package-data of a service
+/// request to the \e link-target.
 /// \attention a transaction return data to the \e calling-client. To handle this data a 
 /// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
 /// together with the transaction token \b +TRT to add this feature
@@ -3973,29 +4026,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
   MQ_SIZE const len
 );
 
-/// \brief send the \e entire-body to the \e link-target
-/// \details The goal of this function is to send the \e entire-body of a service
-/// request to the \e link-target. The \e entire-body is the result of a previous 
-/// \RNSA{ReadBDY} function call and can be used to save the \e entire-body into an 
-/// external storage or for an additional operation like encryption.
-/// The \e SendBDY is a special kind of function because it combines the \e SendSTART, 
-/// \e Send? and \e SendEND... style of function into one single command.
-/// \ctx
-/// \param[in] value the \e entire-body for appending
-/// \param[in] len the size of the \e entire-body-byte-array (C-API only)
-/// \retException 
-/// \attention a transaction return data to the \e calling-client. To handle this data a 
-/// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
-/// together with the transaction token \b +TRT to add this feature
-MQ_EXTERN enum MqErrorE MQ_DECL MqSendBDY (
-  struct MqS * const ctx,
-  MQ_CBI  value,
-  MQ_SIZE len
-);
-
 /// \brief append a #MQ_BUF object to the \e Send-Buffer object
 /// \context
-/// \param in the pointer to an #MqBufferS object to send
+/// \param[in] in the pointer to an #MqBufferS object to send
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendU (
   struct MqS * const context,
@@ -4153,7 +4186,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendL_END (
 /// can be added. These items are saved in a \b local database (in-memory or file-based)
 /// and the \b rowid is send as \e transaction-id to the \e link-target. By Default
 /// only the \e in-memory-database is used. To switch to a file-based database
-/// use the \RNSA{SqlSetDb} function.
+/// use the \RNSA{StorageOpen} function.
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
@@ -4664,12 +4697,12 @@ MQ_EXTERN MQ_PTR MQ_DECL MqSysRealloc (
 
 /// \brief \b free syscall
 /// \details additional info: <TT>man free</TT>
-/// \param[in,out] tgt the memory block to delete and set to NULL
-#define MqSysFree(tgt) \
+/// \param[in,out] pointer the memory block to delete, the ponter will be set to \c NULL
+#define MqSysFree(pointer) \
     do { \
-	if ( likely((tgt) != (NULL)) ) { \
-	    (*MqLal.SysFree)((MQ_PTR)tgt); \
-	    (tgt) = (NULL); \
+	if ( likely((pointer) != (NULL)) ) { \
+	    (*MqLal.SysFree)((MQ_PTR)pointer); \
+	    (pointer) = (NULL); \
 	} \
     } while (0)
 
@@ -4820,7 +4853,7 @@ MQ_EXTERN void MQ_DECL MqLogVL (
 #else
 
 /// \brief define a variable \e debugLevel valid only in the current context
-#define MqSetDebugLevel(context) debugLevel = context->config.debug
+#define MqSetDebugLevel(context) debugLevel = MQ_ERROR_IS_POINTER(context) ? context->config.debug : 0
 
 /// \brief log a plain string 
 /// \context
@@ -4909,7 +4942,7 @@ To define a filter create a \e server with:
  - \RNSC{isServer} or \RNSC{IServerSetup}
  .
 and add a factory:
- - \RNS{Factory}
+ - \RNSO{Factory}
  .
 
 Every filter has \b two context one belongs to the \e left command and one belongs to the \e right command: \verbatim
@@ -4970,13 +5003,16 @@ To define a \e bi-directional filter a couple of commands provide support:
   - \b with-transaction: the package was send with \RNSA{SendEND_AND_WAIT} or \RNSA{SendEND_AND_CALLBACK}
   - \b without-transaction: the package was send with \RNSA{SendEND}
   .
- - \RNSA{ReadBDY}
-  - read and return the entire body as binary array. Use this array to apply a transformation to the body at all like
-    encryption (example: \c aguard) or to save the body in a persistent storage for later use like transaction support
-    (example: \c atrans)
+ - \RNSA{ReadDUMP}
+  - read and return the \e read-data-package as \RNS{DumpObject}. Use this dump to apply a transformation 
+    to the data, like encryption (example: \c aguard), or to save the body in a persistent storage for 
+    later use \RNSA{ReadLOAD}.
   .
- - \RNSA{SendBDY}
-  - send a binary array, as returned by \b ReadBDY, to the filter target.
+ - \RNSA{ReadLOAD}
+  - load the \RNS{DumpObject} into the \e read-data-package
+  .
+ - \RNSA{ReadForward}
+  - send a binary array, as returned by \RNSA{ReadDUMP}, to the filter target.
   .
  .
 
@@ -5008,9 +5044,4 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
-
-
-
-
-
 

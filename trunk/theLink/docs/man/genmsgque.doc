@@ -8,29 +8,37 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 
 \section \NS{idx} INDEX
 
-\RNS{context}\n
-\RNS{Factory}\n
-\RNS{config}\n
-\RNS{ClientServerLink}\n
-\RNS{service}\n
-\RNS{SendData}\n
-\RNS{ReadData}\n
-\RNS{SlaveContext}\n
-\RNS{BufferObject}\n
-\RNS{ErrorObject}\n
-\RNS{BinaryObject}\n
-\RNS{filter}\n
-\RNS{ContextLocalStorage}
+\subsection \NS{idx_object} OBJECT
+\RNS{MqObject} "MqS",
+\RNS{FactoryObject} "MqFactoryS",
+\RNS{DumpObject} "MqDumpS",
+\RNS{BufferObject} "MqBufferS",
+\RNS{ErrorObject} "MqErrorS",
+\RNS{BinaryObject} "MqBinaryS"
+
+\subsection \NS{idx_api} API
+\RNS{config} "Config",
+\RNS{ClientServerLink} "Link",
+\RNS{service} "Service",
+\RNS{SendData} "Send",
+\RNS{ReadData} "Read",
+\RNS{SlaveContext} "Slave",
+\RNS{Storage} "Storage"
+
+\subsection \NS{idx_misc} MISC
+\RNS{ContextLocalStorage} "LocalData",
+\RNS{filter} "Filter",
+\RNS{example} "Examples"
 
 \section	\NS{desc}				INTRODUCTION
 \copydoc Mq_C_API
 
-\section	\NS{context}				CONTEXT API
+\section	\NS{MqObject}				MqS OBJECT
 \RNSA{ContextCreate}\n
 \RNSA{ContextDelete}\n
-\RNSA{SqlSetDb}\n
 \RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
 \RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
+\RNSA{SysFree}
 
 \copydoc Mq_Context_C_API
 
@@ -48,6 +56,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \endif
 
 \function{Exit,\Exit,MqExitP}
+\function{SysFree,\SysFree}
 
 \if SELF
 \subsection	\NS{SetSelf}				\SetSelf
@@ -67,7 +76,6 @@ back into a toplevel object.
 
 \endif
 
-\function{SqlSetDb,\SqlSetDb}
 \function{LogC,\LogC}
 \if HAS_LOGV
 \function{LogV,\LogV}
@@ -106,7 +114,7 @@ tclmsgque Main {
 \endif
 
 
-\section	\NS{Factory}				FACTORY API
+\section	\NS{FactoryObject}		MqFactoryS OBJECT
 
 \RNSA{FactoryDefault}\n
 \RNSA{FactoryDefaultIdent}\n
@@ -169,6 +177,102 @@ tclmsgque Main {
 \function{FactoryCtxIdentGet,\FactoryCtxIdentGet}
 
 
+\section        \NS{DumpObject}				MqDumpS OBJECT
+\RNSA{DumpExport}\n
+\RNSA{DumpImport}\n
+\RNSA{DumpSize}\n
+
+\copydoc Mq_Dump_C_API
+
+\function{DumpExport, \ReadDUMP, MqReadDUMP}
+\function{DumpImport, \ReadLOAD, MqReadLOAD}
+\function{DumpSize, \DumpSize}
+
+
+\section        \NS{BufferObject}			MqBufferS OBJECT
+\RNSA{BufferIdentifer}\n
+\RNSA{BufferGetTYPE}\n
+\RNSA{BufferGetType}\n
+\RNSA{BufferDup}\n
+\RNSA{BufferDelete}\n
+\RNSA{BufferRead}\n
+\RNSA{BufferSend}\n
+
+\copydoc MqBufferS
+
+\b Example: read a \e buffer-object and check for \e string-type. 
+\buffer_example
+
+\subsection	  \NS{BufferIdentifer}			TYPE IDENTIFIER
+\copydoc MqTypeE
+
+\subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
+return the data form the buffer using the \RNS{BufferIdentifer}.
+
+\function{BufferGetType, \BufferGetType}
+\function{BufferDup, \BufferDup}
+\function{BufferDelete, \BufferDelete}
+\function{BufferRead, \ReadU, MqReadU}
+\function{BufferSend, \SendU, MqSendU}
+
+
+\section	\NS{ErrorObject}			MqErrorS OBJECT
+\RNSA{ErrorGetText}\n
+\RNSA{ErrorGetNum}\n
+\RNSA{ErrorC}\n
+\RNSA{ErrorSet}\n
+\RNSA{ErrorSetCONTINUE}\n
+\RNSA{ErrorSetEXIT}\n
+\RNSA{ErrorIsEXIT}\n
+\RNSA{ErrorReset}\n
+\RNSA{ErrorRaise}\n
+\RNSA{ErrorPrint}\n
+
+The \e error-object (\ErrorObject) is used to transport the \e error from the
+\libmsgque context using the \e programming-language error-handling-code.
+
+\b Example: catch an error and write the message to stdout: \error_example
+
+\function{ErrorGetText,\ErrorGetText}
+\function{ErrorGetNum,\ErrorGetNum}
+\function{ErrorC,\ErrorC}
+
+\subsection	\NS{ErrorSet}				\ErrorSet
+convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
+additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the error was
+caught and before the application exit or the object is deleted.
+
+\function{ErrorSetCONTINUE,\ErrorSetCONTINUE}
+\function{ErrorSetEXIT,\ErrorSetEXIT}
+\function{ErrorIsEXIT,\ErrorIsEXIT}
+
+\b Example: catch and ignore an EXIT return-code: \ErrorIsEXIT_example
+
+\function{ErrorReset,\ErrorReset}
+
+\subsection	\NS{ErrorRaise}				\ErrorRaise
+convert the error from an \e context into an \RNS{ErrorObject} and raise the object.
+
+\function{ErrorPrint,\ErrorPrint}
+
+
+\section	\NS{BinaryObject}			MqBinaryS OBJECT
+\if BINARY
+The \TB is use to transport binary data defined by a \e pointer and a \e data-size.
+The object self is \b temporary. Data belongs to libmsgque and is only valid for
+the next transaction. The \TB is used by: \RNSA{ReadTYPE,ReadB}, \RNSA{ReadN}, 
+\RNSA{SendTYPE,SendB}, \RNSA{SendN}.
+
+\subsection	\NS{BinaryGet}				\BinaryGet
+Convert a \e temporary \TB object into a permanent \B object.
+
+\subsection	\NS{BinarySet}				\BinarySet
+Set a \e temporary \TB object fom a permanent \B object.
+\else
+No special \e binary-object is used. All \e binary-data is available as \B.
+\endif
+
+
 \section	\NS{config}				CONFIG API
 \RNSA{Init}\n
 \RNSC{buffersize}, \RNSC{debug}, \RNSC{timeout}\n
@@ -200,6 +304,9 @@ tclmsgque Main {
 
 \configsection{srvname, --srvname}
 \copydoc MqConfigS::srvname
+
+\configsection{storage, --storage}
+\copydoc MqConfigS::storage
 
 \configsection{isSilent,--silent}
 \copydoc MqConfigS::isSilent
@@ -294,6 +401,7 @@ Read more about how to define a \e callback at \RNS{ServiceCallback}.
 \RNSA{ServiceCreate}\n
 \RNSA{ServiceDelete}\n
 \RNSA{ServiceProxy}\n
+\RNSA{ServiceStorage}\n
 \RNSA{ProcessEvent}\n
 
 \copydoc Mq_Service_C_API
@@ -398,6 +506,7 @@ UNKNOWN
 \function{ServiceCreate,\ServiceCreate}
 \function2{ServiceProxy2,\ServiceProxy2}
 \function{ServiceProxy,\ServiceProxy}
+\function{ServiceStorage,\ServiceStorage}
 \function{ServiceDelete,\ServiceDelete}
 \function2{ProcessEvent4,\ProcessEvent4}
 \function2{ProcessEvent3,\ProcessEvent3}
@@ -414,7 +523,7 @@ UNKNOWN
 \RNSA{SendERROR}\n
 \RNSA{SendTYPE}\n
 \RNSA{SendN}\n
-\RNSA{SendBDY}\n
+\RNSA{SendU}\n
 \RNSA{SendL_START}\n
 \RNSA{SendL_END}\n
 \RNSA{SendT_START}\n
@@ -434,7 +543,7 @@ UNKNOWN
 \function{SendERROR,\SendERROR}
 \function{SendTYPE,\SendTYPE,MqSendY}
 \function{SendN,\SendN}
-\function{SendBDY,\SendBDY}
+\function{SendU,\SendU}
 \function{SendL_START,\SendL_START}
 \function{SendL_END,\SendL_END}
 \function{SendT_START,\SendT_START}
@@ -446,7 +555,9 @@ UNKNOWN
 \section	  \NS{ReadData}				READ API
 \RNSA{ReadTYPE}\n
 \RNSA{ReadN}\n
-\RNSA{ReadBDY}\n
+\RNSA{ReadDUMP}\n
+\RNSA{ReadLOAD}\n
+\RNSA{ReadForward}\n
 \RNSA{ReadU}\n
 \RNSA{ReadL_START}\n
 \RNSA{ReadL_END}\n
@@ -463,7 +574,9 @@ UNKNOWN
 
 \function{ReadTYPE,\ReadTYPE,MqReadY}
 \function{ReadN,\ReadN}
-\function{ReadBDY,\ReadBDY}
+\function{ReadDUMP,\ReadDUMP}
+\function{ReadLOAD,\ReadLOAD}
+\function{ReadForward,\ReadForward}
 \function{ReadU,\ReadU}
 \function2{ReadL_START3,\ReadL_START3}
 \function2{ReadL_START2,\ReadL_START2}
@@ -507,81 +620,24 @@ UNKNOWN
 \function{SlaveIs,\SlaveIs}
 
 
-\section        \NS{BufferObject}			BUFFER API
-\RNSA{BufferIdentifer}\n
-\RNSA{BufferGetTYPE}\n
-\RNSA{BufferType}\n
+\section        \NS{Storage}			STORAGE API
+\RNSA{StorageOpen}\n
+\RNSA{StorageClose}\n
+\RNSA{StorageInsert}\n
+\RNSA{StorageSelect}\n
+\RNSA{StorageDelete}\n
+\RNSA{StorageCount}\n
+\RNSA{StorageService}\n
 
-\copydoc MqBufferS
+\copydoc Mq_Storage_C_API
 
-\b Example: read a \e buffer-object and check for \e string-type. 
-\buffer_example
-
-\subsection	  \NS{BufferIdentifer}			TYPE IDENTIFIER
-\copydoc MqTypeE
-
-\subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
-return the data form the buffer using the \RNS{BufferIdentifer}.
-
-\subsection	  \NS{BufferType}			\BufferType
-return the type as single character of the item stored in the buffer object.
-
-
-\section	\NS{ErrorObject}			ERROR OBJECT
-\RNSA{ErrorGetText}\n
-\RNSA{ErrorGetNum}\n
-\RNSA{ErrorC}\n
-\RNSA{ErrorSet}\n
-\RNSA{ErrorSetCONTINUE}\n
-\RNSA{ErrorSetEXIT}\n
-\RNSA{ErrorIsEXIT}\n
-\RNSA{ErrorReset}\n
-\RNSA{ErrorRaise}\n
-\RNSA{ErrorPrint}\n
-
-The \e error-object (\ErrorObject) is used to transport the \e error from the
-\libmsgque context using the \e programming-language error-handling-code.
-
-\b Example: catch an error and write the message to stdout: \error_example
-
-\function{ErrorGetText,\ErrorGetText}
-\function{ErrorGetNum,\ErrorGetNum}
-\function{ErrorC,\ErrorC}
-
-\subsection	\NS{ErrorSet}				\ErrorSet
-convert a \ErrorObject into a \self conform error using the \e ctx object. This method is used to enable
-additional error processing capabilities from \RNSA{LinkDelete} or \RNSA{Exit} after the error was
-caught and before the application exit or the object is deleted.
-
-\function{ErrorSetCONTINUE,\ErrorSetCONTINUE}
-\function{ErrorSetEXIT,\ErrorSetEXIT}
-\function{ErrorIsEXIT,\ErrorIsEXIT}
-
-\b Example: catch and ignore an EXIT return-code: \ErrorIsEXIT_example
-
-\function{ErrorReset,\ErrorReset}
-
-\subsection	\NS{ErrorRaise}				\ErrorRaise
-convert the error from an \e context into an \RNS{ErrorObject} and raise the object.
-
-\function{ErrorPrint,\ErrorPrint}
-
-
-\section	\NS{BinaryObject}			BINARY OBJECT
-\if BINARY
-The \TB is use to transport binary data defined by a \e pointer and a \e data-size.
-The object self is \b temporary. Data belongs to libmsgque and is only valid for
-the next transaction. The \TB is used by: \RNSA{ReadTYPE,ReadB}, \RNSA{ReadN}, \RNSA{ReadBDY},
-\RNSA{SendTYPE,SendB}, \RNSA{SendN}, \RNSA{SendBDY}.
-
-\subsection	\NS{BinaryGet}				\BinaryGet
-Convert a \e temporary \TB object into a permanent \B object.
-
-\subsection	\NS{BinarySet}				\BinarySet
-Set a \e temporary \TB object fom a permanent \B object.
-\else
-No special \e binary-object is used. All \e binary-data is available as \B.
-\endif
+\function{StorageOpen,\StorageOpen}
+\function{StorageClose,\StorageClose}
+\function{StorageInsert,\StorageInsert}
+\function{StorageSelect,\StorageSelect}
+\function{StorageDelete,\StorageDelete}
+\function{StorageCount,\StorageCount}
+\function{StorageService,\ServiceStorage,MqServiceStorage}
 
 \section	\NS{ContextLocalStorage}		CONTEXT LOCAL STORAGE API
 \if DATA

@@ -340,7 +340,9 @@ void NS(MqFactoryS_Init) (TSRMLS_D) {
   // create class and make depend on "Exception"
   INIT_CLASS_ENTRY(me_ce,"MqFactoryS", NS(MqFactoryS_functions));
   NS(MqFactoryS) = zend_register_internal_class(&me_ce TSRMLS_CC);
+}
 
+void NS(MqFactoryS_Setup) (TSRMLS_D) {
   // add default factory
   if (!strcmp(MqFactoryDefaultIdent(),"libmsgque"))
     if (MqFactoryDefault(MQ_ERROR_PRINT, "phpmsgque", 

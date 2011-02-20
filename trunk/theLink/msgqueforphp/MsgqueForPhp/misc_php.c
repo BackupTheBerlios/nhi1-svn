@@ -196,9 +196,3 @@ enum MqErrorE NS(ProcInit) (
 
 void NS(Misc_Init)(TSRMLS_D) {
 }
-
-
-
-
-
-

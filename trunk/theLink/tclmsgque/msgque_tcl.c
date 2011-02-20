@@ -389,7 +389,8 @@ static int NS(MsgqueSetup) (
 static void NS(MsgqueCleanup) (
   ClientData clientData
 )
-{
+{ 
+  // cleanup libmsgque
   MqCleanup();
 }
 
@@ -410,6 +411,7 @@ Tclmsgque_Init (
     return TCL_ERROR;
   }
 
+  // setup libmsgque
   MqSetup();
 
   // announce my package

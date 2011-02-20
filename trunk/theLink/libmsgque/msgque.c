@@ -437,14 +437,14 @@ MqLogData (
 /*                                                                           */
 /*****************************************************************************/
 
+static MQ_BOL	    setupDone = MQ_NO;
 static MqThreadType setupThread;
 
 void MqSetup(void)
 {
   // do not run twice
-  static MQ_BOL done = MQ_NO;
-  if (done) return;
-  done = MQ_YES;
+  if (setupDone) return;
+  setupDone = MQ_YES;
   setupThread = MqThreadSelf();
 
   // work
@@ -460,9 +460,8 @@ void MqSetup(void)
 void MqCleanup(void)
 {
   // do not run twice
-  static MQ_BOL done = MQ_NO;
-  if (done || setupThread != MqThreadSelf()) return;
-  done = MQ_YES;
+  if (setupDone == MQ_NO || setupThread != MqThreadSelf()) return;
+  setupDone = MQ_NO;
 
   // work
   GenericDelete();

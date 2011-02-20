@@ -75,7 +75,7 @@ ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL
 ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
-ALIASES		    += "SqlSetDb=MqSqlSetDb(struct MqS* ctx, MQ_CST storageFile)"
+ALIASES		    += "SysFree=MqSysFree(void *pointer)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
@@ -106,6 +106,10 @@ ALIASES		    += "config_get_name=#MqConfigGetName (ctx)"
 ALIASES		    += "config_type_srvname=#MQ_CST"
 ALIASES		    += "config_set_srvname=#MqConfigSetSrvName (ctx, MQ_CST srvName)"
 ALIASES		    += "config_get_srvname=#MqConfigGetSrvName (ctx)"
+
+ALIASES		    += "config_type_storage=#MQ_CST"
+ALIASES		    += "config_set_storage=#MqConfigSetStorage (ctx, MQ_CST storageFile)"
+ALIASES		    += "config_get_storage=#MqConfigGetStorage (ctx)"
 
 ALIASES		    += "config_type_ident=#MQ_CST"
 ALIASES		    += "config_set_ident=#MqConfigSetIdent (struct MqS *ctx, MQ_CST ident)"
@@ -179,19 +183,19 @@ MqSendL_START(ctx);\n\
 MqSendL_END(ctx);\n\
 MqErrorCheck(MqSendEND_AND_WAIT(ctx,\"SRV1\",MQ_TIMEOUT_USER));\endcode"
 
-ALIASES		    += "SendSTART=MqSendSTART(ctx)"
-ALIASES		    += "SendEND=MqSendEND(ctx,MQ_TOK token)"
-ALIASES		    += "SendEND_AND_WAIT=MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T timeout)"
-ALIASES		    += "SendEND_AND_CALLBACK=MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
-ALIASES		    += "SendRETURN=MqSendRETURN(ctx)"
-ALIASES		    += "SendERROR=MqSendERROR(ctx)"
-ALIASES		    += "SendTYPE=MqSendTYPE(ctx,value)"
-ALIASES		    += "SendN=MqSendN(ctx,MQ_CBI const value,MQ_SIZE const len)"
-ALIASES		    += "SendBDY=enum MqErrorE MqSendBDY(ctx,MQ_CBI const value,MQ_SIZE const len)"
-ALIASES		    += "SendL_START=MqSendL_START(ctx)"
-ALIASES		    += "SendL_END=MqSendL_END(ctx)"
-ALIASES		    += "SendT_START=MqSendT_START(ctx, MQ_CST callback)"
-ALIASES		    += "SendT_END=MqSendT_END(ctx)"
+ALIASES		    += "SendSTART=enum MqErrorE MqSendSTART(ctx)"
+ALIASES		    += "SendEND=enum MqErrorE MqSendEND(ctx,MQ_TOK token)"
+ALIASES		    += "SendEND_AND_WAIT=enum MqErrorE MqSendEND_AND_WAIT(ctx,MQ_TOK token,MQ_TIME_T timeout)"
+ALIASES		    += "SendEND_AND_CALLBACK=enum MqErrorE MqSendEND_AND_CALLBACK(ctx,MQ_TOK token,fCallback,data,fFree)"
+ALIASES		    += "SendRETURN=enum MqErrorE MqSendRETURN(ctx)"
+ALIASES		    += "SendERROR=enum MqErrorE MqSendERROR(ctx)"
+ALIASES		    += "SendTYPE=enum MqErrorE MqSendTYPE(ctx,value)"
+ALIASES		    += "SendN=enum MqErrorE MqSendN(ctx,MQ_CBI const value,MQ_SIZE const len)"
+ALIASES		    += "SendU=enum MqErrorE MqSendU(ctx,struct MqBufferS * const in)"
+ALIASES		    += "SendL_START=enum MqErrorE MqSendL_START(ctx)"
+ALIASES		    += "SendL_END=enum MqErrorE MqSendL_END(ctx)"
+ALIASES		    += "SendT_START=enum MqErrorE MqSendT_START(ctx, MQ_CST callback)"
+ALIASES		    += "SendT_END=enum MqErrorE MqSendT_END(ctx)"
 ALIASES		    += "SendT_example=\code \n\
 MqErrorCheck (MqSendSTART (mqctx)); \n\
 MqErrorCheck (MqSendT_START (mqctx, \"SRVR\")); \n\
@@ -202,18 +206,20 @@ MqErrorCheck (MqSendEND_AND_WAIT (mqctx, \"SRVC\", MQ_TIMEOUT_USER)); \endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code MqErrorCheck(MqReadI(ctx, &i));\nMqErrorCheck(MqReadL_START(ctx, NULL));\n  MqErrorCheck(MqReadD(ctx, &balance));\n  MqErrorCheck(MqReadC(ctx, &owner));\n  MqErrorCheck(MqReadB(ctx, &signature));\nMqReadL_END(ctx);\endcode"
-ALIASES		    += "ReadTYPE=MqReadTYPE(ctx, TYPE *val)"
-ALIASES		    += "ReadN=MqReadN(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
-ALIASES		    += "ReadBDY=MqReadBDY(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
-ALIASES		    += "ReadU=MqReadU(ctx)"
-ALIASES		    += "ReadProxy=MqReadProxy(ctx, struct MqS *otherCtx)"
+ALIASES		    += "ReadTYPE=enum MqErrorE MqReadTYPE(ctx, TYPE *val)"
+ALIASES		    += "ReadN=enum MqErrorE MqReadN(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
+ALIASES		    += "ReadDUMP=enum MqErrorE MqReadDUMP(ctx, struct MqDumpS ** const dump)"
+ALIASES		    += "ReadLOAD=enum MqErrorE MqReadLOAD(ctx, struct MqDumpS * const dump)"
+ALIASES		    += "ReadForward=enum MqErrorE MqReadForward(ctx, struct MqS * const otherCtx)"
+ALIASES		    += "ReadU=enum MqErrorE MqReadU(ctx)"
+ALIASES		    += "ReadProxy=enum MqErrorE MqReadProxy(ctx, struct MqS *otherCtx)"
 ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"
 ALIASES		    += "ReadItemExists=MQ_BOL MqReadItemExists(ctx)"
-ALIASES		    += "ReadUndo=MqReadUndo(ctx)"
-ALIASES		    += "ReadL_START=MqReadL_START(ctx, struct MqBufferS *buffer=NULL)"
-ALIASES		    += "ReadL_END=MqReadL_END(ctx)"
-ALIASES		    += "ReadT_START=MqReadT_START(ctx, struct MqBufferS *buffer=NULL)"
-ALIASES		    += "ReadT_END=MqReadT_END(ctx)"
+ALIASES		    += "ReadUndo=enum MqErrorE MqReadUndo(ctx)"
+ALIASES		    += "ReadL_START=enum MqErrorE MqReadL_START(ctx, struct MqBufferS *buffer=NULL)"
+ALIASES		    += "ReadL_END=enum MqErrorE MqReadL_END(ctx)"
+ALIASES		    += "ReadT_START=enum MqErrorE MqReadT_START(ctx, struct MqBufferS *buffer=NULL)"
+ALIASES		    += "ReadT_END=enum MqErrorE MqReadT_END(ctx)"
 ALIASES		    += "ReadT_example=\code \n\
 static enum MqErrorE SRVR ( \n\
   struct MqS * const mqctx, \n\
@@ -230,8 +236,6 @@ error: \n\
 } \endcode"
 
 
-
-
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\
 enum MqErrorE ServerSetup(struct MqS * msgque) { \n\
@@ -242,28 +246,41 @@ error: \n\
 } \n\
 \endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=MqServiceCreate(ctx,MQ_TOK token,callback,data,fFree)"
-ALIASES		    += "ServiceProxy=MqServiceProxy(ctx,MQ_TOK token, MQ_SIZE id=0)"
-ALIASES		    += "ServiceDelete=MqServiceDelete(ctx,MQ_TOK token)"
-ALIASES		    += "ProcessEvent=MqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ServiceCreate=enum MqErrorE MqServiceCreate(ctx,MQ_TOK token,callback,data,fFree)"
+ALIASES		    += "ServiceProxy=enum MqErrorE MqServiceProxy(ctx,MQ_TOK token, MQ_SIZE id=0)"
+ALIASES		    += "ServiceStorage=enum MqErrorE MqServiceStorage(ctx,MQ_TOK token)"
+ALIASES		    += "ServiceDelete=enum MqErrorE MqServiceDelete(ctx,MQ_TOK token)"
+ALIASES		    += "ProcessEvent=enum MqErrorE MqProcessEvent(ctx,MQ_TIME_T timeout,MQ_WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
 ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
 ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
 ALIASES		    += "MQ_TIMEOUT_DEFAULT=#MQ_TIMEOUT_DEFAULT"
 ALIASES		    += "MQ_TIMEOUT_USER=#MQ_TIMEOUT_USER"
 ALIASES		    += "MQ_TIMEOUT_MAX=#MQ_TIMEOUT_MAX"
-ALIASES		    += "ServiceGetFilter=struct MqS* MqServiceGetFilter(ctx, MQ_SIZE id, struct MqS **const filter)"
+ALIASES		    += "ServiceGetFilter=enum MqErrorE MqServiceGetFilter(ctx, MQ_SIZE id, struct MqS **const filter)"
 ALIASES		    += "ServiceIsTransaction=int MqServiceIsTransaction (ctx)"
 ALIASES		    += "ServiceGetToken=MQ_CST MqServiceGetToken (ctx)"
 
 # SLAVE CREATION AND DELETION
-ALIASES		    += "SlaveWorker=MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"
+ALIASES		    += "SlaveWorker=enum MqErrorE MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"
 ALIASES		    += "SlaveWorker_example=\code \nMqErrorCheck(MqSlaveWorker (ctx, 7,\n   MqBufferLCreateArgsV(ctx, \"--thread\", \"--silent\", \"@\", \"--name\", \"MyWorker\", NULL)\n);\endcode"
-ALIASES		    += "SlaveCreate=MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
-ALIASES		    += "SlaveDelete=MqSlaveDelete(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveCreate=enum MqErrorE MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
+ALIASES		    += "SlaveDelete=enum MqErrorE MqSlaveDelete(ctx, MQ_SIZE id)"
 ALIASES		    += "SlaveGet=struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
 ALIASES		    += "SlaveGetMaster=struct MqS* MqSlaveGetMaster(ctx)"
 ALIASES		    += "SlaveIs=MQ_BOL MqSlaveIs(ctx)"
+
+# STORAGE
+ALIASES		    += "StorageOpen=enum MqErrorE MqStorageOpen(ctx, MQ_CST storageFile)"
+ALIASES		    += "StorageClose=enum MqErrorE MqStorageClose(ctx)"
+ALIASES		    += "StorageInsert=enum MqErrorE MqStorageInsert(ctx, MQ_TRA *transLIdP)"
+ALIASES		    += "StorageSelect=enum MqErrorE MqStorageSelect(ctx, MQ_TRA *transLIdP)"
+ALIASES		    += "StorageDelete=enum MqErrorE MqStorageDelete(ctx, MQ_TRA transLId)"
+ALIASES		    += "StorageCount=enum MqErrorE MqStorageCount(ctx, MQ_TRA *countP)"
+
+# THE DUMP OBJECT
+
+ALIASES		    += "DumpSize=MQ_SIZE MqDumpSize(dump)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -274,7 +291,9 @@ if (buf->type == MQ_STRT) \n\
 
 ALIASES		    += "BufferObject=<I>struct MqBufferS*</I>"
 ALIASES		    += "BufferGetTYPE=TYPE MqBufferGetTYPE(MQ_BUF buffer)"
-ALIASES		    += "BufferType=buffer->type"
+ALIASES		    += "BufferGetType=MqBufferGetType(buffer) or buffer->type"
+ALIASES		    += "BufferDup=struct MqBufferS* MqBufferDup(MQ_BUF buffer)"
+ALIASES		    += "BufferDelete=MqBufferDelete(MQ_BUF *bufferP)"
 
 ALIASES		    += "Y=#MQ_BYT"
 ALIASES		    += "O=#MQ_BOL"

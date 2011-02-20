@@ -106,11 +106,11 @@ void NS(MqS_Init)	    (TSRMLS_D);
 void NS(MqSException_Init)  (TSRMLS_D);
 void NS(MqBufferS_Init)	    (TSRMLS_D);
 void NS(MqFactoryS_Init)    (TSRMLS_D);
+void NS(MqFactoryS_Setup)   (TSRMLS_D);
 void NS(MqDumpS_Init)	    (TSRMLS_D);
 
 PHP_MINIT_FUNCTION(MsgqueForPhp)
 {
-  MqSetup();
 
   // we need the global variable $php_errormsg to act on errors
   //zend_alter_ini_entry(ID2(track_errors), ID(1), PHP_INI_SYSTEM, PHP_INI_STAGE_STARTUP);
@@ -149,17 +149,21 @@ PHP_RINIT_FUNCTION(MsgqueForPhp)
   zval **_SERVER;
   zval **SCRIPT_FILENAME;
 
-  /* fetch the script name */
-  zval *a0 = cfg_get_entry(ID(cfg_file_path) + 1);
-  convert_to_string(a0);
+  // initialize libmsgque
+  MqSetup();
+  NS(MqFactoryS_Setup)	(TSRMLS_C);
 
-  /* Fetch $_SERVER from the global scope */
+  // Fetch $_SERVER from the global scope
   zend_hash_find(&EG(symbol_table), ID(_SERVER)+1, (void**)&_SERVER);
 
-  /* FETCH $_SERVER['SCRIPT_FILENAME'] */
+  // FETCH $_SERVER['SCRIPT_FILENAME']
   if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID(SCRIPT_FILENAME)+1, (void **) &SCRIPT_FILENAME)) {
 
-    /* init libmsgque global data */
+    // fetch the script name
+    zval *a0 = cfg_get_entry(ID(cfg_file_path) + 1);
+    convert_to_string(a0);
+
+    // init libmsgque global data, but only in not done before
     if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
       struct MqBufferLS * initB = MqInitCreate();
       MqBufferLAppendC(initB, sapi_module.executable_location ? sapi_module.executable_location : "php");
@@ -181,7 +185,9 @@ PHP_RINIT_FUNCTION(MsgqueForPhp)
  */
 PHP_RSHUTDOWN_FUNCTION(MsgqueForPhp)
 {
+  // cleanup libmsgque
   MqCleanup();
+
   return SUCCESS;
 }
 /* }}} */
@@ -190,13 +196,13 @@ PHP_RSHUTDOWN_FUNCTION(MsgqueForPhp)
  */
 PHP_MINFO_FUNCTION(MsgqueForPhp)
 {
-	php_info_print_table_start();
-	php_info_print_table_header(2, "MsgqueForPhp support", "enabled");
-	php_info_print_table_end();
+  php_info_print_table_start();
+  php_info_print_table_header(2, "MsgqueForPhp support", "enabled");
+  php_info_print_table_end();
 
-	/* Remove comments if you have entries in php.ini
-	DISPLAY_INI_ENTRIES();
-	*/
+  /* Remove comments if you have entries in php.ini
+  DISPLAY_INI_ENTRIES();
+  */
 }
 /* }}} */
 

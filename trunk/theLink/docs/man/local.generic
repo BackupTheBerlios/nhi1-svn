@@ -41,6 +41,7 @@ ALIASES		    += "function2{2}=\if \1 \n \subsection \NS{\1} \2 \n \endif"
 
 ALIASES		    += "RNS_PREFIX{1}=\1"
 ALIASES		    += "RNS{1}=\ref \NS{\1}"
+ALIASES		    += "RNSO{1}=\ref \NS{\1}Object"
 ALIASES             += "RNSA{1}=\ref \NS{\1} \"\RNS_PREFIX{\1}\""
 ALIASES             += "RNSA{2}=\ref \NS{\1} \"\RNS_PREFIX{\2}\""
 ALIASES             += "RNSC{1}=\ref \NS{config_\1} \"\1\""
