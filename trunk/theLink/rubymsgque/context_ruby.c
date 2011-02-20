@@ -41,6 +41,9 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
 //  MqInitSysAPI(NS(fork),NULL);
 #endif
 
+  // Initialize libmsgque
+  MqSetup
+
   // Initialize components
   NS(MqS_Init)();
   NS(MqSException_Init)();
