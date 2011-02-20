@@ -437,12 +437,15 @@ MqLogData (
 /*                                                                           */
 /*****************************************************************************/
 
+static MqThreadType setupThread;
+
 void MqSetup(void)
 {
   // do not run twice
   static MQ_BOL done = MQ_NO;
   if (done) return;
   done = MQ_YES;
+  setupThread = MqThreadSelf();
 
   // work
   SysCreate ();
@@ -458,7 +461,7 @@ void MqCleanup(void)
 {
   // do not run twice
   static MQ_BOL done = MQ_NO;
-  if (done) return;
+  if (done || setupThread != MqThreadSelf()) return;
   done = MQ_YES;
 
   // work

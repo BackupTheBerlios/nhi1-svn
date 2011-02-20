@@ -290,7 +290,7 @@ ThreadExit (
 static enum MqErrorE FactoryCreate (
   struct MqS * const	  tmpl,
   enum MqFactoryE	  create,
-  struct MqFactoryS * item,
+  struct MqFactoryS *	  item,
   struct MqS **		  contextP
 ) {
   struct MqS * mqctx = NULL;
@@ -310,6 +310,7 @@ static enum MqErrorE FactoryCreate (
   SAVETMPS;
 
   PUSHMARK(SP);
+
   XPUSHs((SV*)item->Create.data);
   if (create != MQ_FACTORY_NEW_INIT) {
     XPUSHs((SV*)tmpl->self);

@@ -49,6 +49,8 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
     return JNI_ERR; /* JNI version not supported */
   }
 
+  MqSetup();
+
 #define check(v,c) if ((v=(c))==NULL) return JNI_ERR
 #define checkC(v,n) check(cls, (*env)->FindClass(env, n));\
     check(v, (*env)->NewGlobalRef(env, cls));
@@ -127,6 +129,11 @@ JNI_OnUnload(JavaVM *jvm, void *reserved)
   if ((*jvm)->GetEnv(jvm, &val, JNI_VERSION_1_6)) {
     return;
   }
+
+  // cleanup libmsgque
+  MqCleanup();
+
+  // cleanup global variables
   env = (JNIEnv*) val;
   (*env)->DeleteGlobalRef(env, NS(Class_MqS));
   (*env)->DeleteGlobalRef(env, NS(Class_MqBufferS));

@@ -825,7 +825,11 @@ struct MqSetupS {
 /*                                                                           */
 /*****************************************************************************/
 
+/// \brief setup \libmsgque internal memory
 MQ_EXTERN void MQ_DECL MqSetup (void) __attribute__ ((constructor));
+
+/// \brief cleanup \libmsgque internal memory
+/// \attention the cleanup will \b only performed if it is call in the same thread as #MqSetup.
 MQ_EXTERN void MQ_DECL MqCleanup (void) __attribute__ ((destructor));
 
 

@@ -890,16 +890,16 @@ while {true} {
     {^--use(-valgrind|-leakcheck)$} {
       switch -exact [string range $arg 6 end] {
 	valgrind {
-	  set env(TS_EXEC_PREFIX)  [list valgrind --trace-children=yes --num-callers=36 --quiet]
+	  set env(TS_EXEC_PREFIX)  [list valgrind --trace-children=yes --num-callers=36 --quiet --gen-suppressions=all]
 	}
 	leakcheck {
 	  set env(TS_EXEC_PREFIX)  [list valgrind --trace-children=yes --leak-check=full --num-callers=36 \
 		--error-exitcode=1 --quiet --gen-suppressions=all ]
-	  if {![catch {glob ~/.suppressions} T]} {
-	    lappend env(TS_EXEC_PREFIX) "--suppressions=$T"
-	    unset T
-	  }
 	}
+      }
+      if {![catch {glob ~/.suppressions} T]} {
+	lappend env(TS_EXEC_PREFIX) "--suppressions=$T"
+	unset T
       }
     }
     {^--only-num$} {
