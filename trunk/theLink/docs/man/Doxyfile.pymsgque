@@ -92,6 +92,10 @@ ALIASES		    += "config_type_srvname=PyUnicode"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
+ALIASES		    += "config_type_storage=PyUnicode"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
 ALIASES		    += "config_type_ident=PyUnicode"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
@@ -197,7 +201,7 @@ ALIASES		    += "SendTYPE=ctx.SendTYPE(value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value)"
-ALIASES		    += "SendBDY=ctx.SendBDY(value)"
+ALIASES		    += "SendU=ctx.SendU(\TU value)"
 ALIASES		    += "SendT_START=ctx.SendT_START(callback)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -222,7 +226,9 @@ ctx.ReadL_END() \n\
 ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
 ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
 ALIASES		    += "ReadN=ByteArray ctx.ReadN()"
-ALIASES		    += "ReadBDY=ByteArray ctx.ReadBDY()"
+ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
+ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx)"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
 ALIASES		    += "ReadGetNumItems=PyLong ctx.ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=PyBool ctx.ReadItemExists()"
@@ -246,6 +252,7 @@ def ServerSetup(ctx): \n\
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
+ALIASES		    += "ServiceStorage=ctx.ServiceProxy(token)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout=(\I|\MQ_TIMEOUT_DEFAULT(|USER|MAX)), wait=\MQ_WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(wait=\MQ_WAIT_NO(|ONCE|FOREVER))"
@@ -271,6 +278,18 @@ ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"
 ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster(id)"
 ALIASES		    += "SlaveIs=\O ctx.SlaveIs(id)"
 
+# STORAGE
+ALIASES		    += "StorageOpen=ctx.MqStorageOpen(\C storageFile)"
+ALIASES		    += "StorageClose=ctx.StorageClose()"
+ALIASES		    += "StorageInsert=\W ctx.StorageInsert()"
+ALIASES		    += "StorageSelect=\W ctx.StorageSelect(\W transLId)"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(\W transLId)"
+ALIASES		    += "StorageCount=\W ctx.StorageCount()"
+
+# THE DUMP OBJECT
+ALIASES		    += "DumpSize=int dump.Size()"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
+
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
 buf = ctx.ReadU() \n\
@@ -279,7 +298,9 @@ if buf.GetType() == 'C' : \n\
 \endcode"
 ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
 ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
-ALIASES		    += "BufferType=PyUnicode buffer.GetType()"
+ALIASES		    += "BufferGetType=PyUnicode buffer.GetType()"
+ALIASES		    += "BufferDup=\TU buffer.Dup()"
+ALIASES		    += "BufferDelete=buffer.Delete()"
 
 ALIASES		    += "Y=PyLong"
 ALIASES		    += "O=PyBool"
@@ -294,6 +315,8 @@ ALIASES		    += "U=MqBufferS"
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=PyByteArray"
 ALIASES		    += "TE=MqSException"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

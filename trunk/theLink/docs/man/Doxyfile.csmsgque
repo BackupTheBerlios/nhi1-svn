@@ -70,7 +70,7 @@ ALIASES		    += "ContextCreate=MqS ctx=new MqS(MqS tmpl)"
 ENABLED_SECTIONS    += ContextCreate2
 ALIASES		    += "ContextCreate2=MqS ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
-ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "ContextDelete=ContextDelete: called by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(string prefix, int level, string message)"
@@ -101,6 +101,10 @@ ALIASES		    += "config_get_name=\ref csmsgque.MqS.ConfigGetName"
 ALIASES		    += "config_type_srvname=string"
 ALIASES		    += "config_set_srvname=\ref csmsgque.MqS.ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=\ref csmsgque.MqS.ConfigGetSrvName"
+
+ALIASES		    += "config_type_storage=string"
+ALIASES		    += "config_set_storage=\ref csmsgque.MqS.ConfigSetStorage"
+ALIASES		    += "config_get_storage=\ref csmsgque.MqS.ConfigGetStorage"
 
 ALIASES		    += "config_type_ident=string"
 ALIASES		    += "config_set_ident=\ref csmsgque.MqS.ConfigSetIdent"
@@ -184,7 +188,7 @@ ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(byte[] value)"
-ALIASES		    += "SendBDY=\I ctx.SendBDY(byte[] value)"
+ALIASES		    += "SendU=ctx.SendU(\TU buffer)"
 ALIASES		    += "SendT_START=ctx.SendT_START(string token)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -200,7 +204,9 @@ ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  ba
 ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
 ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
 ALIASES		    += "ReadN=byte[] ctx.ReadN()"
-ALIASES		    += "ReadBDY=byte[] ctx.ReadBDY()"
+ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
+ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otheCtx)"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
 ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=bool ctx.ReadItemExists()"
@@ -228,9 +234,10 @@ public void IServerSetup.ServerSetup() { \n\
 } \n\
 \endcode"
 ALIASES		    += "ServiceInterface=Interface: IService"
-ALIASES		    += "ServiceCreate=ctx.ServiceCreate(string token, IService callback)"
-ALIASES		    += "ServiceProxy=ctx.ServiceProxy(string token, [int id=0])"
-ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(\C token, IService callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(\C token, [int id=0])"
+ALIASES		    += "ServiceStorage=ctx.ServiceStorage(\C token)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(\C token)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(int timeout, \MQ_WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(\MQ_TIMEOUT_DEFAULT(|USER|MAX), \MQ_WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(\MQ_WAIT_NO(|ONCE|FOREVER))"
@@ -257,6 +264,19 @@ ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(int id)"
 ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster()"
 ALIASES		    += "SlaveIs=MqS ctx.SlaveIs()"
 
+# STORAGE
+ALIASES		    += "StorageOpen=ctx.MqStorageOpen(\C storageFile)"
+ALIASES		    += "StorageClose=ctx.StorageClose()"
+ALIASES		    += "StorageInsert=long ctx.StorageInsert()"
+ALIASES		    += "StorageSelect=long ctx.StorageSelect(long transLId)"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(long transLId)"
+ALIASES		    += "StorageCount=long ctx.StorageCount()"
+
+# THE DUMP OBJECT
+
+ALIASES		    += "DumpSize=int dump.Size()"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
+
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
 MqBufferS buf = ctx.ReadU();\n\
@@ -266,7 +286,9 @@ if (buf.Type == 'C')\n\
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE buffer.TYPE"
-ALIASES		    += "BufferType=char buffer.Type"
+ALIASES		    += "BufferGetType=char buffer.Type"
+ALIASES		    += "BufferDup=\TU buffer.Dup()"
+ALIASES		    += "BufferDelete=buffer.Delete()"
 
 ALIASES		    += "Y=byte"
 ALIASES		    += "O=bool"
@@ -281,6 +303,8 @@ ALIASES		    += "U=MqBufferS"
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=byte[]"
 ALIASES		    += "TE=MqSException"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -312,5 +336,3 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
-
-

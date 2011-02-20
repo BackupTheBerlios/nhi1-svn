@@ -75,7 +75,6 @@ ENABLED_SECTIONS    += HAS_LOGV
 ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL
 ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
-ALIASES		    += "SysFree=MqSysFree(void *pointer)"
 
 # OBJECT CONFIGURATION
 ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
@@ -281,6 +280,7 @@ ALIASES		    += "StorageCount=enum MqErrorE MqStorageCount(ctx, MQ_TRA *countP)"
 # THE DUMP OBJECT
 
 ALIASES		    += "DumpSize=MQ_SIZE MqDumpSize(dump)"
+ALIASES		    += "DumpDelete=MqDumpDelete(\TD *dumpP)"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -305,9 +305,11 @@ ALIASES		    += "D=#MQ_DBL"
 ALIASES		    += "C=#MQ_CST"
 ALIASES		    += "B=#MQ_BIN"
 ALIASES		    += "U=#MQ_BUF"
-ALIASES		    += "TM=MqS*"
+ALIASES		    += "TM=struct MqS*"
 ALIASES		    += "TB=#MQ_BIN"
-ALIASES		    += "TE=MqS*"
+ALIASES		    += "TE=struct MqS*"
+ALIASES		    += "TD=struct MqDumpS*"
+ALIASES		    += "TU=struct MqBufferS*"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

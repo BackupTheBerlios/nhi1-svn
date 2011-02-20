@@ -102,6 +102,33 @@ namespace ccmsgque {
       }
   };
  
+  /// \ingroup Mq_Dump_CC_API
+  class MqDumpC {
+    /// \defgroup Mq_Dump_CC_API Mq_Dump_CC_API
+    /// \ingroup Mq_CC_API
+    /// \brief \copybrief Mq_Dump_C_API
+    /// \details \copydetails Mq_Dump_C_API
+    /// \{
+    public:
+      struct MqDumpS * hdl;
+
+      MqDumpC (struct MqDumpS *bufP) {
+	hdl = bufP;
+      }
+
+      /// \api #MqDumpDelete
+      virtual ~MqDumpC () {
+	MqDumpDelete(&hdl);
+      }
+
+      /// \api #MqDumpSize
+      inline MQ_SIZE Size() { 
+	return MqDumpSize(hdl); 
+      }
+
+    /// \} Mq_Dump_CC_API
+  };
+ 
   /// \ingroup Mq_Buffer_CC_API
   /// \api #MqBufferS
   class MqBufferC {
@@ -351,10 +378,10 @@ namespace ccmsgque {
 
     /// \} Mq_Context_CC_API
 
-    /// \defgroup Mq_Config_CC_API Mq_Config_CC_API
+    /// \defgroup Mq_Storage_CC_API Mq_Storage_CC_API
     /// \ingroup Mq_CC_API
-    /// \brief \copybrief Mq_Config_C_API
-    /// \details \copydetails Mq_Config_C_API
+    /// \brief \copybrief Mq_Storage_C_API
+    /// \details \copydetails Mq_Storage_C_API
     /// \{
     public:
       /// \api #MqStorageOpen
@@ -668,18 +695,14 @@ namespace ccmsgque {
 	ErrorCheck (MqReadN(&context, valP, lenP)); 
       }
       /// \api #MqReadDUMP
-      inline struct MqDumpS* ReadDUMP() throw(MqCException) { 
+      inline MqDumpC* ReadDUMP() throw(MqCException) { 
 	struct MqDumpS* dump;
 	ErrorCheck (MqReadDUMP(&context, &dump)); 
-	return dump;
+	return new MqDumpC(dump);
       }
       /// \api #MqReadLOAD
-      inline void ReadLOAD(struct MqDumpS * const val) throw(MqCException) { 
-	ErrorCheck (MqReadLOAD(&context, val)); 
-      }
-      /// \api #MqDumpSize
-      inline MQ_SIZE DumpSize(struct MqDumpS * const val) { 
-	return MqDumpSize(val); 
+      inline void ReadLOAD(MqDumpC * const val) throw(MqCException) { 
+	ErrorCheck (MqReadLOAD(&context, val->hdl)); 
       }
       /// \api #MqReadForward
       inline void ReadForward(MqC * const ftr) throw(MqCException) { 

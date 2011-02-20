@@ -13,7 +13,7 @@
 /// \defgroup Mq_Java_API Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_C_API
-/// \copydoc Mq_C_API
+/// \details \copydetails Mq_C_API
 
 /// \brief The \b JavaMsgque Package
 package javamsgque;
@@ -33,7 +33,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Config_C_API
-/// \copydoc Mq_Config_C_API
+/// \details \copydetails Mq_Config_C_API
 //
 
   /// \api #MqStartE
@@ -141,7 +141,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Context_C_API
-/// \copydoc Mq_Context_C_API
+/// \details \copydetails Mq_Context_C_API
 
   private native void ContextCreate(MqS tmpl);
   private native void ContextDelete();
@@ -177,7 +177,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Storage_C_API
-/// \copydoc Mq_Context_C_API
+/// \details \copydetails Mq_Storage_C_API
 
   /// \api #MqStorageOpen
   public native void StorageOpen (String storageFile);
@@ -209,7 +209,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Link_C_API
-/// \copydoc Mq_Link_C_API
+/// \details \copydetails Mq_Link_C_API
 
   /// \api MqLinkCreate
   public native void LinkCreate (String... args) throws MqSException;
@@ -246,7 +246,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Service_C_API
-/// \copydoc Mq_Service_C_API
+/// \details \copydetails Mq_Service_C_API
 ///
 
   /// \api #MqWaitOnEventE
@@ -298,7 +298,7 @@ public class MqS {
   public native void	ServiceProxy	    (String token)  throws MqSException;
   /// \api #MqServiceProxy
   public native void	ServiceProxy	    (String token, int id)  throws MqSException;
-  /// \api #MqServiceStore
+  /// \api #MqServiceStorage
   public native void	ServiceStorage	    (String token)  throws MqSException;
   /// \api #MqServiceDelete
   public native void	ServiceDelete	    (String token)  throws MqSException;
@@ -369,7 +369,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Read_C_API
-/// \copydoc Mq_Read_C_API
+/// \details \copydetails Mq_Read_C_API
 //
 
   /// \api #MqReadI
@@ -427,7 +427,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Send_C_API
-/// \copydoc Mq_Send_C_API
+/// \details \copydetails Mq_Send_C_API
 
   /// \api #MqSendSTART
   public native void	SendSTART		();
@@ -482,7 +482,7 @@ public class MqS {
 /// \ingroup Mq_Java_API
 /// \{
 /// \brief \copybrief Mq_Slave_C_API
-/// \copydoc Mq_Slave_C_API
+/// \details \copydetails Mq_Slave_C_API
 //
 
   /// \api #MqSlaveWorker

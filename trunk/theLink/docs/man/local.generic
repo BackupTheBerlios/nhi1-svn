@@ -58,6 +58,28 @@ ALIASES		    += "example=\xrefitem examples \"Example\" \"Example List\""
 ALIASES		    += "change=\xrefitem changes \"Change\" \"Change List\""
 
 
+ALIASES		    += "ReadU=#UNKNOWN"
+ALIASES		    += "SendU=#UNKNOWN"
+ALIASES		    += "ReadDUMP=#UNKNOWN"
+ALIASES		    += "ReadForward=#UNKNOWN"
+ALIASES		    += "SendLOAD=#UNKNOWN"
+ALIASES		    += "StorageOpen=#UNKNOWN"
+ALIASES		    += "StorageClose=#UNKNOWN"
+ALIASES		    += "StorageInsert=#UNKNOWN"
+ALIASES		    += "StorageSelect=#UNKNOWN"
+ALIASES		    += "StorageDelete=#UNKNOWN"
+ALIASES		    += "StorageCount=#UNKNOWN"
+ALIASES		    += "BufferDup=#UNKNOWN"
+ALIASES		    += "BufferDelete=#UNKNOWN"
+ALIASES		    += "SysFree=#UNKNOWN"
+ALIASES		    += "DumpSize=#UNKNOWN"
+ALIASES		    += "BufferGetType=#UNKNOWN"
+ALIASES		    += "ServiceStorage=#UNKNOWN"
+ALIASES		    += "DumpDelete=#UNKNOWN"
+ALIASES		    += "TD=#UNKNOWN"
+ALIASES		    += "TU=#UNKNOWN"
+
+
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css
 GENERATE_MAN	    = NO

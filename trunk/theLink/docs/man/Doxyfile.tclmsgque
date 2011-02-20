@@ -90,6 +90,10 @@ ALIASES		    += "config_type_srvname=string"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
+ALIASES		    += "config_type_storage=string"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
 ALIASES		    += "config_type_ident=string"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
@@ -173,7 +177,7 @@ ALIASES		    += "SendTYPE=$ctx SendTYPE value"
 ALIASES		    += "SendL_START=$ctx SendL_START"
 ALIASES		    += "SendL_END=$ctx SendL_END"
 ALIASES		    += "SendN=$ctx SendN value"
-ALIASES		    += "SendBDY=\I [$ctx SendBDY value]"
+ALIASES		    += "SendU=$ctx SendU buffer"
 ALIASES		    += "SendT_START=$ctx SendT_START callback"
 ALIASES		    += "SendT_END=$ctx SendT_END"
 ALIASES		    += "SendT_example=\code \n\
@@ -190,7 +194,9 @@ ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  se
 ALIASES		    += "ReadTYPE=TYPE [$ctx ReadTYPE]"
 ALIASES		    += "ReadU=\U [$ctx ReadU]"
 ALIASES		    += "ReadN=\B [$ctx ReadN]"
-ALIASES		    += "ReadBDY=\B [$ctx ReadBDY]"
+ALIASES		    += "ReadDUMP=\TD [$ctx ReadDUMP]"
+ALIASES		    += "ReadLOAD=$ctx ReadDUMP dump"
+ALIASES		    += "ReadForward=$ctx ReadForward otherCtx"
 ALIASES		    += "ReadProxy=$ctx ReadProxy otherCtx"
 ALIASES		    += "ReadGetNumItems=\I [$ctx ReadGetNumItems]"
 ALIASES		    += "ReadItemExists=\O [$ctx ReadItemExists]"
@@ -216,6 +222,7 @@ proc ServerSetup {ctx} { \n\
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=$ctx ServiceCreate token callback"
 ALIASES		    += "ServiceProxy=$ctx ServiceProxy token ?id=0?"
+ALIASES		    += "ServiceStorage=$ctx ServiceStorage token"
 ALIASES		    += "ServiceDelete=$ctx ServiceDelete token"
 ALIASES		    += "ProcessEvent=$ctx ProcessEvent -timeout (\I|DEFAULT|USER|MAX) -wait (NO|ONCE|FOREVER)"
 ALIASES		    += "ProcessEvent2=$ctx ProcessEvent -wait (NO|ONCE|FOREVER)"
@@ -252,7 +259,9 @@ if {[$buf GetType] == 'C'} { \n\
 
 ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
 ALIASES		    += "BufferGetTYPE=TYPE [$buffer GetTYPE]"
-ALIASES		    += "BufferType=\C [$buffer GetType]"
+ALIASES		    += "BufferGetType=\C [$buffer GetType]"
+ALIASES		    += "BufferDup=\TU [$buffer Dup]"
+ALIASES		    += "BufferDelete=$buffer Delete"
 
 ALIASES		    += "Y=IntObj"
 ALIASES		    += "O=BooleanObj"
@@ -267,6 +276,8 @@ ALIASES		    += "U=CmdObj"
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=\B"
 ALIASES		    += "TE=TCLMSGQUE errorCode"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
@@ -275,6 +286,18 @@ ALIASES		    += "DictGet=$ctx dict get key..."
 ALIASES		    += "DictExists=$ctx dict exists key..."
 ALIASES		    += "DictUnset=$ctx dict unset key..."
 ALIASES		    += "DictUndef=nothing"
+
+# STORAGE
+ALIASES		    += "StorageOpen=$ctx MqStorageOpen storageFile"
+ALIASES		    += "StorageClose=$ctx StorageClose"
+ALIASES		    += "StorageInsert=\W [$ctx StorageInsert]"
+ALIASES		    += "StorageSelect=\W [$ctx StorageSelect transLId]"
+ALIASES		    += "StorageDelete=$ctx StorageDelete transLId"
+ALIASES		    += "StorageCount=\W [$ctx StorageCount]"
+
+# THE DUMP OBJECT
+ALIASES		    += "DumpSize=int [$dump Size]"
+ALIASES		    += "DumpDelete=rename $dump \"\""
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

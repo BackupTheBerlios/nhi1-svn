@@ -38,7 +38,6 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \RNSA{ContextDelete}\n
 \RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
 \RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
-\RNSA{SysFree}
 
 \copydoc Mq_Context_C_API
 
@@ -56,13 +55,12 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \endif
 
 \function{Exit,\Exit,MqExitP}
-\function{SysFree,\SysFree}
 
 \if SELF
 \subsection	\NS{SetSelf}				\SetSelf
 Create a \e link between the toplevel object and the \TM object and check
 for the	availability of the following interfaces:
-- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNS{Factory}, \RNSC{IBgError}, \RNSC{IEvent}
+- \RNSC{IServerSetup}, \RNSC{IServerCleanup}, \RNSC{IBgError}, \RNSC{IEvent}
 .
 
 \subsection	\NS{GetSelf}				\GetSelf
@@ -181,12 +179,14 @@ tclmsgque Main {
 \RNSA{DumpExport}\n
 \RNSA{DumpImport}\n
 \RNSA{DumpSize}\n
+\RNSA{DumpDelete}\n
 
 \copydoc Mq_Dump_C_API
 
 \function{DumpExport, \ReadDUMP, MqReadDUMP}
 \function{DumpImport, \ReadLOAD, MqReadLOAD}
 \function{DumpSize, \DumpSize}
+\function{DumpDelete, \DumpDelete}
 
 
 \section        \NS{BufferObject}			MqBufferS OBJECT

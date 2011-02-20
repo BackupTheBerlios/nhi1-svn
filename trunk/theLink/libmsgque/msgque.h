@@ -1744,19 +1744,40 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /* ###                                                                 ### */
 /* ####################################################################### */
 
-/// \defgroup Mq_Storage_C_API Mq_Storage_C_API
-/// \{
-/// \brief setup and manage a storage used to persist \e data-packages
-///
-/// - The \e package-storage can be used to save all kind of \e package-data.
-/// - The \e longterm-transaction-package-data is allways saved.
-/// - By default only an \e in-memory storage is in use, but this can be changed
-///   with \RNSA{StorageOpen}.
-/// - The \e default-storage is set with \RNSC{storage}
-/// - An entire incomming \e service-call can be saved with \RNSA{ServiceStorage}
-/// - In a \e service-call the \e data-package can be saved with \RNSA{StorageInsert}
-/// - The \e package-data can be loaded again with \RNSA{StorageSelect}
-/// .
+/**
+\defgroup Mq_Storage_C_API Mq_Storage_C_API
+\{
+\brief setup and manage a storage used to persist \e data-packages
+
+- The \e package-storage can be used to save all kind of \e package-data.
+- The \e longterm-transaction-package-data is allways saved.
+- By default only an \e in-memory storage is in use, but this can be changed
+  with \RNSA{StorageOpen}.
+- The \e default-storage is set with \RNSC{storage}
+- An entire incomming \e service-call can be saved with \RNSA{ServiceStorage}
+- In a \e service-call the \e data-package can be saved with \RNSA{StorageInsert}
+- The \e package-data can be loaded again with \RNSA{StorageSelect}
+.
+The storage is typical used in the following scenario:
+\verbatim
+<----- AT CALLING CLIENT ----->|<----- AT RECEIVING SERVER ----->
+                               |
+    *setup transaction         |
+    make service-reqiest      -->    *start service-handler
+                               |     save reqest into storage
+    wait for confirmation     <--    confirm data receiving
+                               |     *stop service-handler
+
+  ====================  enter event loop  =====================
+
+                               |     *start event-handler
+                               |     load reqest from storage
+                               |     process data
+    *start transaction        <--    send result-data
+    process result-data        |     *stop event-handler
+    *stop transaction          |
+\endverbatim
+**/
 
 /// \brief switch to a \e file-based-transaction-database
 /// \context
@@ -2501,7 +2522,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCopy (
 /// \brief create an new object as duplication of an existing object
 /// \param srce source of the duplication
 /// \retval the new object
-/// \attention the new object have to be deleted with \RNS{BufferDelete}
+/// \attention the new object have to be deleted with \RNSA{BufferDelete}
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferDup (
   struct MqBufferS const * const srce
 );
@@ -3604,23 +3625,6 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorCopy (
 
 /* ####################################################################### */
 /* ###                                                                 ### */
-/* ###                        D U M P - A P I                          ### */
-/* ###                                                                 ### */
-/* ####################################################################### */
-
-/// \defgroup Mq_Dump_C_API Mq_Dump_C_API
-/// \{
-/// \brief binary package format used for \e export (\RNSA{ReadDUMP}) and \e import (\RNSA{ReadLOAD})
-
-/// return the package size from the \e dump data package
-MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
-  struct MqDumpS * const dump
-) __attribute__((nonnull));
-
-/// \} Mq_Dump_C_API
-
-/* ####################################################################### */
-/* ###                                                                 ### */
 /* ###                        R E A D - A P I                          ### */
 /* ###                                                                 ### */
 /* ####################################################################### */
@@ -3787,7 +3791,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \context
 /// \param[out] out the \e read-package-data to save
 /// \retException
-/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{SysFree}.
+/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{DumpDelete}.
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const context,
   struct MqDumpS ** const out
@@ -3801,7 +3805,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
 /// \context
 /// \param[in] in the \e read-package-data to read from
 /// \retException 
-/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{SysFree}.
+/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{DumpDelete}.
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
   struct MqS * const context,
   struct MqDumpS * const in
@@ -4788,6 +4792,30 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 /// \}    Mq-LAL-API
 
 /// \} Mq_System_C_API
+
+/* ####################################################################### */
+/* ###                                                                 ### */
+/* ###                        D U M P - A P I                          ### */
+/* ###                                                                 ### */
+/* ####################################################################### */
+
+/// \defgroup Mq_Dump_C_API Mq_Dump_C_API
+/// \{
+/// \brief binary package format used for \e export (\RNSA{ReadDUMP}) and \e import (\RNSA{ReadLOAD})
+
+/// return the package size from the \e dump data package
+MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
+  struct MqDumpS * const dump
+) __attribute__((nonnull));
+
+/// free the \e dump data package and set the object to \null
+static mq_inline void MqDumpDelete (
+  struct MqDumpS ** const dumpP
+) {
+  MqSysFree(*dumpP);
+}
+
+/// \} Mq_Dump_C_API
 
 /* ####################################################################### */
 /* ###                                                                 ### */

@@ -79,7 +79,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadDUMP")]
     private static extern MqErrorE MqReadDUMP([In]IntPtr context, out IntPtr dump);
 
-    /// \api #MqDumpExport
+    /// \api #MqReadDUMP
     public MqDumpS ReadDUMP() {
       IntPtr dump;
       ErrorMqToCsWithCheck(MqReadDUMP(context, out dump));
@@ -89,7 +89,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadLOAD")]
     private static extern MqErrorE MqReadLOAD([In]IntPtr context, [In] IntPtr dump);
 
-    /// \api #MqDumpImport
+    /// \api #MqReadLOAD
     public void ReadLOAD(MqDumpS dump) {
       ErrorMqToCsWithCheck(MqReadLOAD(context, dump.hdl));
     }

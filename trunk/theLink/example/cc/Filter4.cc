@@ -23,7 +23,7 @@ using namespace ccmsgque;
 
 class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public IEvent, public IService {
   private:
-    queue<struct MqDumpS*> itms;
+    queue<MqDumpC*> itms;
     FILE *FH;
 
     void ErrorWrite () {
@@ -39,7 +39,7 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	ErrorSetCONTINUE();
       } else {
 	// extract the first (oldest) item from the store
-	struct MqDumpS *bdy = itms.front();
+	MqDumpC *bdy = itms.front();
 	// an item is available, try to send the data
 	try {
 	  // get the filter-context

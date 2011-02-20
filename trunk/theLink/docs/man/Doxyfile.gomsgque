@@ -72,7 +72,6 @@ the toplevel interface is require. The reference can be set with the \e top argu
 or with the \RNSA{SetSelf} method"
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
-ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
 ENABLED_SECTIONS    += SELF
 ALIASES		    += "SetSelf=ctx.SetSelf(ifc interface{})"
@@ -107,6 +106,10 @@ ALIASES		    += "config_get_name=ctx.ConfigGetName"
 ALIASES		    += "config_type_srvname=\C"
 ALIASES		    += "config_set_srvname=ctx.ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ctx.ConfigGetSrvName"
+
+ALIASES		    += "config_type_storage=\C"
+ALIASES		    += "config_set_storage=ctx.ConfigSetStorage"
+ALIASES		    += "config_get_storage=ctx.ConfigGetStorage"
 
 ALIASES		    += "config_type_ident=\C"
 ALIASES		    += "config_set_ident=ctx.ConfigSetIdent"
@@ -212,7 +215,7 @@ ALIASES		    += "SendTYPE=ctx.SendTYPE(value TYPE)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value \TB)"
-ALIASES		    += "SendBDY=ctx.SendBDY(value \TB)"
+ALIASES		    += "SendU=ctx.SendU(value \TU)"
 ALIASES		    += "SendT_START=ctx.SendT_START(token \C)"
 ALIASES		    += "SendT_END=ctx.SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -235,7 +238,9 @@ ctx.ReadL_END() \n\
 ALIASES		    += "ReadTYPE=ctx.ReadTYPE() TYPE"
 ALIASES		    += "ReadU=ctx.ReadU() \U"
 ALIASES		    += "ReadN=ctx.ReadN() \TB"
-ALIASES		    += "ReadBDY=ctx.ReadBDY() \TB"
+ALIASES		    += "ReadDUMP=ctx.ReadDUMP() \TD"
+ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx)"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx \TM)"
 ALIASES		    += "ReadGetNumItems=ctx.ReadGetNumItems() \I"
 ALIASES		    += "ReadItemExists=ctx.ReadItemExists() \O"
@@ -268,6 +273,7 @@ ALIASES		    += "ServiceCreate2=ctx.ServiceCreate(token \C, callback Service2)"
 ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token \C)"
 ENABLED_SECTIONS    += ServiceProxy2
 ALIASES		    += "ServiceProxy2=ctx.ServiceProxy2(token \C, id \I)"
+ALIASES		    += "ServiceStorage=ctx.ServiceStorage(token \C)"
 ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token \C)"
 ALIASES		    += "ProcessEvent=ctx.ProcessEvent(wait WAIT)"
 ENABLED_SECTIONS    += ProcessEvent2
@@ -293,6 +299,20 @@ ALIASES		    += "SlaveGet=ctx.SlaveGet(id \I) \TM"
 ALIASES		    += "SlaveGetMaster=ctx.SlaveGetMaster() \TM"
 ALIASES		    += "SlaveIs=ctx.SlaveIs() \O"
 
+# STORAGE
+ALIASES		    += "StorageOpen=ctx.MqStorageOpen(\C storageFile)"
+ALIASES		    += "StorageClose=ctx.StorageClose()"
+ALIASES		    += "StorageInsert=int64 ctx.StorageInsert()"
+ALIASES		    += "StorageSelect=int64 ctx.StorageSelect(int64 transLId)"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(int64 transLId)"
+ALIASES		    += "StorageCount=int64 ctx.StorageCount()"
+
+# THE DUMP OBJECT
+
+ALIASES		    += "DumpSize=int32 dump.Size()"
+ALIASES		    += "DumpDelete=dump.Delete()"
+
+
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
 MqBufferS buf = ctx.ReadU() \n\
@@ -303,7 +323,9 @@ if buf.GetType() == 'C' { \n\
 
 ALIASES		    += "BufferObject=<I>type \TM</I>"
 ALIASES		    += "BufferGetTYPE=buffer.GetTYPE() TYPE"
-ALIASES		    += "BufferType=buffer.GetType() \C"
+ALIASES		    += "BufferGetType=buffer.GetType() \C"
+ALIASES		    += "BufferDup=\TU buffer.Dup()"
+ALIASES		    += "BufferDelete=buffer.Delete()"
 
 ALIASES		    += "Y=int8"
 ALIASES		    += "O=bool"
@@ -318,6 +340,8 @@ ALIASES		    += "U=*MqBufferS"
 ALIASES		    += "TM=*MqS"
 ALIASES		    += "TB=*MqBinary"
 ALIASES		    += "TE=*MqSException"
+ALIASES		    += "TD=*MqDumpS"
+ALIASES		    += "TU=*MqBufferS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

@@ -16,16 +16,18 @@ package javamsgque;
 // ========================================================================
 /// \ingroup Mq_Java_API
 /// \defgroup Mq_Dump_Java_API Mq_Dump_Java_API
-/// \brief package data dump object type
 /// \{
+/// \brief \copybrief Mq_Dump_C_API
+/// \details \copydetails Mq_Dump_C_API
 //
 
-///\brief #MqDumpS
 public class MqDumpS {
 
   private long hdl = 0L;
   
   private native long Free();
+
+  /// \api #MqDumpSize
   public  native int  Size();
 
   private MqDumpS (long data) {

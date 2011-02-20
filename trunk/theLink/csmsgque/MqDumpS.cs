@@ -21,8 +21,6 @@ using System.Runtime.InteropServices;
 
 namespace csmsgque {
 
-  /// \ingroup Mq_Dump_Cs_API
-  /// \api #MqDumpS
   public class MqDumpS
   {
 

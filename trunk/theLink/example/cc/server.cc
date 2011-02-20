@@ -643,10 +643,10 @@ namespace example {
       }
 
       void DMPL () {
-	struct MqDumpS * dump = ReadDUMP();
+	MqDumpC * dump = ReadDUMP();
 	SendSTART();
-	SendI(DumpSize(dump));
-	MqSysFree(dump);
+	SendI(dump->Size());
+	delete dump;
 	SendRETURN();
       }
 
