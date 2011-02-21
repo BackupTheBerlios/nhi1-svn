@@ -40,13 +40,6 @@ struct GenericS;
 struct MqCacheS;
 struct MqTransItemS;
 
-#define MQ_IS_SERVER(msgque) (msgque->setup.isServer == MQ_YES)
-#define MQ_IS_SERVER_PARENT(msgque) (MQ_IS_SERVER(msgque) && MQ_IS_PARENT(msgque))
-#define MQ_IS_CLIENT(msgque) (msgque->setup.isServer == MQ_NO)
-#define MQ_IS_CLIENT_PARENT(msgque) (MQ_IS_CLIENT(msgque) && MQ_IS_PARENT(msgque))
-#define MQ_IS_CHILD(msgque)  (msgque->config.parent != NULL)
-#define MQ_IS_SLAVE(msgque)  (msgque->config.master != NULL)
-#define MQ_IS_PARENT(msgque) (msgque->config.parent == NULL)
 #define MQ_IS_FORK(msgque) (msgque->statusIs & MQ_STATUS_IS_FORK)
 
 #define MQ_STRING_TYPE(isString) (unlikely(isString) ? MQ_STRT : MQ_BINT)
@@ -69,8 +62,10 @@ typedef enum MqErrorE ( *EventReadF) ( MQ_PTR env, struct MqS **);
 
 /// \brief the \e hand-shake of a \e service-call
 enum MqHandShakeE {
+  // direction: client -> server
   MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
   MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
+  // direction: server -> client
   MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
   MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
 };

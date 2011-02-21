@@ -921,9 +921,9 @@ Use \e manfilter.cc in a LibMsgque command pipeline:
 \endif
 
 \section	\NS{also}				SEE ALSO
-\lang, C: libmsgqueref(n), C++: ccmsgqueref(n), C#: csmsgqueref(n), JAVA: javamsgqueref(n), 
-PYTHON: pymsgqueref(n), TCL: tclmsgqueref(n), PERL: perlmsgqueref(n), PHP: msgqueforphpref(n), 
-RUBY: rubymsgqueref(n), VB.NET: vbmsgqueref(n)
+libmsgque, ccmsgque, csmsgque, javamsgque, gomsgque, pymsgque, rubymsgque,
+tclmsgque, perlmsgque, msgqueforphp, vbmsgque
+
 
 \section	\NS{keywords}				KEYWORDS
 \lang, unix, socket, message, msgque

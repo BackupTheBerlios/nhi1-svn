@@ -37,7 +37,7 @@ static void sMark (void * ctx)
 static void sFree (void * ctx)
 {
   struct MqS *mqctx = (struct MqS *) ctx;
-  if (mqctx == NULL) return
+  if (mqctx == NULL) return;
   mqctx->setup.factory = NULL;
   mqctx->setup.Event.fCall = NULL;
   if (mqctx->self != NULL) {

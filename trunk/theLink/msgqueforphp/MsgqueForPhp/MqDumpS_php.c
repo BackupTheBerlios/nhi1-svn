@@ -39,7 +39,8 @@ static
 PHP_METHOD(MsgqueForPhp_MqDumpS, __destruct)
 {
   SETUP_dump;
-  MqSysFree(dump);
+  MqDumpDelete(&dump);
+  zend_update_property_long(NS(MqDumpS), getThis(), ID(__ctx), NULL TSRMLS_CC);
 }
 
 ZEND_BEGIN_ARG_INFO_EX(no_arg, 0, 0, 0)

@@ -93,7 +93,7 @@ static enum MqErrorE LOGF ( ARGS ) {
   struct MqS * ftr;
   MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
-    MqErrorCheck (MqReadForward(mqctx, ftr));
+    return MqReadForward(mqctx, ftr);
   } else {
     MQ_CST file;
     MqErrorCheck (MqReadC (mqctx, &file));

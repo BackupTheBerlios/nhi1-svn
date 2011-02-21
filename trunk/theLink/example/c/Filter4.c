@@ -24,14 +24,9 @@
     return MqErrorV (mqctx, __func__, -1, "usage: %s (%s)\n", __func__, s); \
   }
 
-struct FilterItmS {
-  MQ_CBI  data;
-  MQ_SIZE len;
-};
-
 struct FilterCtxS {
   struct MqS	    mqctx;
-  struct FilterItmS **itm;
+  struct MqDumpS    **itm;
   MQ_INT	    rIdx;
   MQ_INT	    wIdx;
   MQ_INT	    size;
@@ -66,18 +61,14 @@ static enum MqErrorE FilterEvent (
     // no transaction available
     return MqErrorSetCONTINUE(mqctx);
   } else {
-    register struct FilterItmS * itm;
     struct MqS * ftr;
     MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
 
     // if connection is down -> connect again
     MqErrorCheck1 (MqLinkConnect (ftr));
 
-    // extract the first (oldest) item from the store
-    itm = ctx->itm[ctx->rIdx];
-
     // fill the read-buffer from storage
-    MqErrorCheck2 (MqReadLOAD (mqctx, itm->data, itm->len));
+    MqErrorCheck2 (MqReadLOAD (mqctx, ctx->itm[ctx->rIdx]));
 
     // send BDY data to the link-target, on error write message but do not stop processing
     if (MqErrorCheckI (MqReadForward(mqctx, ftr))) {
@@ -90,7 +81,7 @@ static enum MqErrorE FilterEvent (
     }
     // reset the item-storage
 end:
-    MqSysFree(itm->data);
+    MqDumpDelete(&ctx->itm[ctx->rIdx]);
     ctx->rIdx++;
     return MQ_OK;
 error1:
@@ -108,7 +99,7 @@ static enum MqErrorE LOGF ( ARGS ) {
   struct MqS * ftr;
   MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
-    MqErrorCheck (MqReadForward(mqctx, ftr));
+    return MqReadForward(mqctx, ftr);
   } else {
     MQ_CST file;
     MqErrorCheck (MqReadC (mqctx, &file));
@@ -130,38 +121,25 @@ error:
 }
 
 static enum MqErrorE EXIT ( ARGS ) {
-  return MqErrorSetEXIT(mqctx);
+  exit(1);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {
-  MQ_BIN bdy;
-  MQ_SIZE len;
-  SETUP_ctx;
-  register struct FilterItmS * it;
-  MqErrorCheck(MqReadDUMP(mqctx, &bdy, &len));
+  register struct FilterCtxS*const ctx = TRANSCTX;
   
   // add space if space is empty
-  if (ctx->rIdx-1==ctx->wIdx || (ctx->rIdx==0 && ctx->wIdx==ctx->size-1)) {
+  if (ctx->wIdx==ctx->size-1) {
     MQ_SIZE i;
-    MqSysRealloc(MQ_ERROR_PANIC, ctx->itm, sizeof(struct FilterItmS*)*ctx->size*2);
-    for (i=0;i<ctx->rIdx;i++) {
-      ctx->itm[ctx->wIdx++] = ctx->itm[i];
-      ctx->itm[i] = NULL;
-    }
+    ctx->size*=2;
+    MqSysRealloc(MQ_ERROR_PANIC, ctx->itm, sizeof(struct MqDumpS*)*ctx->size);
     for (i=ctx->wIdx;i<ctx->size;i++) {
       ctx->itm[i] = NULL;
     }
-    ctx->size*=2;
   }
 
-  it = ctx->itm[ctx->wIdx];
+  // save data to storage
+  MqErrorCheck(MqReadDUMP(mqctx, &ctx->itm[ctx->wIdx]));
 
-  // create storage if NULL
-  if (it == NULL) {
-    ctx->itm[ctx->wIdx] = it = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(struct FilterItmS));
-  }
-  it->data = bdy;
-  it->len = len;
   ctx->wIdx++;
 error:
   return MqSendRETURN(mqctx);
@@ -181,23 +159,17 @@ FilterCleanup (
 {
   MQ_SIZE i;
   SETUP_ctx;
-  struct MqS * ftr;
-  struct FilterCtxS *ftrctx;
 
   for (i=0;i<ctx->size;i++) {
     if (ctx->itm[i] != NULL) {
-      MqSysFree(ctx->itm[i]->data);
-      MqSysFree(ctx->itm[i]);
+      MqDumpDelete(&ctx->itm[i]);
     }
   }
   MqSysFree (ctx->itm);
 
-  MqErrorCheck (MqServiceGetFilter(mqctx, 0, &ftr));
-  ftrctx = (struct FilterCtxS*const)ftr;
-  if (ftrctx->FH != NULL) fclose(ftrctx->FH);
+  if (ctx->FH != NULL) fclose(ctx->FH);
 
-error:
-  return MqErrorStack(mqctx);
+  return MQ_OK;
 }
 
 static enum MqErrorE
@@ -211,18 +183,21 @@ FilterSetup (
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftr));
 
   // init the cache
-  ctx->itm = (struct FilterItmS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct FilterItmS*));
-  ctx->rIdx = 0;
-  ctx->wIdx = 0;
-  ctx->size = 100;
+  if (MQ_IS_SERVER(mqctx)) {
+    ctx->itm = (struct MqDumpS**)MqSysCalloc(MQ_ERROR_PANIC,100,sizeof(struct MqDumpS*));
+    ctx->rIdx = 0;
+    ctx->wIdx = 0;
+    ctx->size = 100;
+    ctx->FH = NULL;
+  }
 
   // SERVER: listen on every token (+ALL)
   MqErrorCheck (MqServiceCreate (mqctx, "LOGF", LOGF, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "EXIT", EXIT, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "+ALL", FilterIn, NULL, NULL));
   MqErrorCheck (MqServiceCreate (ftr,   "WRIT", WRIT, NULL, NULL));
+  MqErrorCheck (MqServiceProxy  (ftr,   "+TRT", 0));
 
-  ctx->FH = NULL;
 
 error:
   return MqErrorStack(mqctx);

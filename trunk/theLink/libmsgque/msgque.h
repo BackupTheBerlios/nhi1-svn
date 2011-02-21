@@ -1251,6 +1251,17 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
 /// \return a pointer to the initialization buffer (Only C-API)
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 
+/// \brief extract boolean information from context
+/// \{
+#define MQ_IS_SERVER(msgque) (msgque->setup.isServer == MQ_YES)
+#define MQ_IS_SERVER_PARENT(msgque) (MQ_IS_SERVER(msgque) && MQ_IS_PARENT(msgque))
+#define MQ_IS_CLIENT(msgque) (msgque->setup.isServer == MQ_NO)
+#define MQ_IS_CLIENT_PARENT(msgque) (MQ_IS_CLIENT(msgque) && MQ_IS_PARENT(msgque))
+#define MQ_IS_CHILD(msgque)  (msgque->config.parent != NULL)
+#define MQ_IS_SLAVE(msgque)  (msgque->config.master != NULL)
+#define MQ_IS_PARENT(msgque) (msgque->config.parent == NULL)
+/// \}
+
 /// \} Mq_Config_C_API
 
 /* ####################################################################### */
@@ -1811,6 +1822,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageInsert (
 );
 
 /// \brief read and set the \e read-data-package from the storage
+/// \details The \e read-data-package is set and the \e storage-id is returned.
+/// This \e id is used to delete the package from the database using the \RNSA{StorageDelete}
+/// function.
 /// \context
 /// \param[in,out] transLIdP if not \c 0LL return the \e read-data-package identified
 ///     with the \e storage-id. if \c 0LL read the \e top-most (FIFO) \e read-data-package
@@ -1821,7 +1835,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageSelect (
   MQ_TRA *transLIdP
 );
 
-/// \brief delete the \e storage-row identified by \e transLId
+/// \brief delete the \e storage-row identified by the \e storage-id
+/// \details the \e storage-id is returned from a previous \RNSA{StorageSelect}
+/// function call.
 /// \context
 /// \param[in] transLId \e storage-id to delete or
 /// \retException
@@ -2099,9 +2115,6 @@ MQ_EXTERN MQ_CST MQ_DECL MqLinkGetTargetIdent (
 ///  - <B>_???</B> - all \e token starting with a \b "_" are for \b internal usage only
 ///  - \b +ALL - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to setup an \e event-handler
 ///              able to listen on \b all token not handled by an other \e token more precise.
-///  - \b +STO - used in \RNSA{ServiceCreate} and \RNSA{ServiceDelete} to setup an \e event-handler
-///              able to store the data on \b all token not handled by an other \e token more precise
-///              into the transaction database defined with \RNSA{StorageOpen}.
 ///  - \b -ALL - used in \RNSA{ServiceDelete} to delete \b all token
 ///  - \b +FTR and \b +EOF - used for \e one-directional-filter
 /// \if MSGQUE
@@ -3849,7 +3862,9 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
 /// \brief send the entire \e read-package-data to the \e link-target
 ///
 /// The goal of this function is to send the \e read-package-data of a service
-/// request to the \e link-target.
+/// request to the \e link-target. This can be used for the <I>client -> server</I>
+/// abd the <I>server -> client</I> direction. For the later on \b no \RNSA{SendRETURN}
+/// is required.
 /// \attention a transaction return data to the \e calling-client. To handle this data a 
 /// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
 /// together with the transaction token \b +TRT to add this feature

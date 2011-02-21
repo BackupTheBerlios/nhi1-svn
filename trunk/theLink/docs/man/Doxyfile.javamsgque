@@ -18,6 +18,10 @@
 ENABLED_SECTIONS    += JAVA
 EXAMPLE_PATH	    += $(SRCDIR)/example/java
 
+OPTIMIZE_OUTPUT_JAVA    = YES
+OPTIMIZE_OUTPUT_FOR_C   = NO
+
+
 ALIASES		    += "self=javamsgque"
 ALIASES		    += "selftut=javamsgquetut"
 ALIASES		    += "NS{1}=java_\1"
@@ -290,7 +294,7 @@ ALIASES		    += "StorageDelete=ctx.StorageDelete(\W transLId)"
 ALIASES		    += "StorageCount=\W ctx.StorageCount()"
 
 # THE DUMP OBJECT
-ALIASES		    += "DumpSize=int dump.Size()"
+ALIASES		    += "DumpSize=\I dump.Size()"
 ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
 
 # THE BUFFER OBJECT

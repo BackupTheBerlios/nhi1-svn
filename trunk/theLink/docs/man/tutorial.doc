@@ -9,6 +9,7 @@
 \RNST{server}\n
 \RNST{client}\n
 \RNST{filter}\n
+\RNST{storage}\n
 
 
 \section \NST{intro} INTRODUCTION
@@ -40,13 +41,10 @@ used. The \b automake build on \e WINDOWS is possible but not supported.
 
 The example from the tutorial is using the \b automake build-environment from the \rself tool. 
 An example \b automake configuration file is available in: \c example/\lang/Makefile.am
-\dontinclude Makefile.am
+\dontinclude c/Makefile.am
 \if C
 \skip	noinst_PROGRAMS
 \until	LDADD
-...
-\skip	MyClient_SOURCES
-\until	MyServer_SOURCES
 \elseif CC
 \skip	noinst_PROGRAMS
 \until	LDADD
@@ -503,6 +501,73 @@ Use \e manfilter.\fileextension in a LibMsgque command pipeline:
 > echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
 \endverbatim
 \endif
+
+\section \NST{storage} STORAGE
+
+\libmsgque operate on two independent message buffer:
+-# the receiving message buffer
+-# the sending message buffer
+.
+Only the \e receiving-message-buffer can be \RNS{Storage} "stored" or \RNS{DumpObject} "dumped"
+and reused later.
+
+The storage can be devided into 2 main catagories:
+-# a  \RNST{storage_local}
+-# an \RNST{storage_external}
+.
+
+The \e local-buildin-database has 3 subtypes:
+-# an \RNST{storage_local_mem}
+-# a  \RNST{storage_local_tmp}
+-# a  \RNST{storage_local_file}
+.
+
+\subsection \NST{storage_local} local buildin database
+
+The \e local database depend on \b SQLite. 
+The \e receiving-message-buffer is saved into the database using the two functions:
+-# \RNSA{ServiceStorage}, setup a service listen on a \RNS{ServiceIdentifier} and save all receiving
+packages into the \RNS{Storage} "STORAGE".
+-# \RNSA{StorageInsert}, used in a \e service-handler to save the current \e receiving-package into 
+the \RNS{Storage} "STORAGE".
+.
+Later the \e receiving-message-buffer can be loaded again. This usually happen in an \RNSC{IEvent}
+"Event Handler".\n
+To load the \e receiving-message-buffer use \RNSA{StorageSelect}.
+
+\subsubsection \NST{storage_local_default} default database
+
+The \e default-database is set with the configuration parameter \RNSC{storage} and defaults to \b "#memdb#".
+If a package have to be saved into the database and the database is \b not open the \e default-database
+id used. The open will always be performed. If an explicit database is required the default can be changed
+or a database can explicit be opened with \RNSA{StorageOpen}. Keep in mind that the \e default-database is
+a \e per-context configuration but only \e one database per process or thread is currently supported.
+
+
+\subsubsection \NST{storage_local_mem} in memory database
+
+This is the default database and can explicit be set with \RNSA{StorageOpen} with the parameter \b "#memdb#". 
+
+\subsubsection \NST{storage_local_tmp} temporaray database
+
+This database is like an \e in-memory-database but export data to the filesystem if the application run out
+of memory. This database can explicit be set with \RNSA{StorageOpen} with the parameter \b "#tmpdb#".
+
+\subsubsection \NST{storage_local_file} file based database
+
+This database always work on files. Only this database is persistent and can explicit be set with 
+\RNSA{StorageOpen} with the used defined \b storageFile parameter.
+
+\subsection \NST{storage_external} external database
+
+\libmsgque has the ability to \RNS{DumpObject} "dump" the \e receiving-message-buffer as binary using:
+- \RNSA{ReadDUMP}
+.
+and load this buffer again with:
+- \RNSA{ReadLOAD}
+.
+This dump can be saved into an external database.
+
 
 */
 

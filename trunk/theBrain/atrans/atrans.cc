@@ -43,11 +43,7 @@ class atrans : public MqC, public IServerSetup,
     }
 
   private:
-    struct FilterItmS {
-      MQ_CBI  bdy;
-      MQ_SIZE len;
-    };
-    queue<struct FilterItmS> itms;
+    queue<MqDumpC*> itms;
 
     void ErrorWrite () {
       fprintf(stderr, "ERROR: %s\n", ErrorGetText());
@@ -62,63 +58,43 @@ class atrans : public MqC, public IServerSetup,
 	ErrorSetCONTINUE();
       } else {
 	// extract the first (oldest) item from the store
-	struct FilterItmS it = itms.front();
+	MqDumpC* it = itms.front();
 	// get the filter-context
-	atrans *ftr = static_cast<atrans*>(ServiceGetFilter());
+	MqC *ftr = ServiceGetFilter();
 	// an item is available, try to send the data
 	try {
 	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
+	  // load dump package
+	  ReadLOAD(it);
 	  // send the data
-	  ftr->SendBDY(it.bdy, it.len);
+	  ReadForward(ftr);
 	// on error, check if an "exit" happen
 	} catch (const exception& e) {
-	  ftr->ErrorSet (e);
-	  if (ftr->ErrorIsEXIT()) {
+	  ErrorSet (e);
+	  if (ErrorIsEXIT()) {
 	    // on exit ignore the error but do !not! forget the data
-	    ftr->ErrorReset();
+	    ErrorReset();
 	    return;
 	  } else {
 	    // on error write the error-text and "forget" the data
-	    ftr->ErrorWrite();
+	    ErrorWrite();
 	  }
 	}
 	// reset the item-storage
-	MqSysFree(it.bdy);
+	delete it;
 	// delete the data, will contine with next item
 	itms.pop();
       }
     }
 
     void ServiceALL (MqC * const ctx) {
-      MQ_BIN bdy;
-      MQ_SIZE len;
-      register struct FilterItmS it;
-
-      // read the body-item
-      ReadBDY(&bdy, &len);
-
-      // fill the item data
-      it.bdy = bdy;
-      it.len = len;
-      itms.push (it);
-
+      itms.push (ReadDUMP());
       SendRETURN();
     }
 
     void ServiceTRT (MqC * const ctx) {
-      MQ_BIN bdy;
-      MQ_SIZE len;
-      register struct FilterItmS it;
-
-      // read the body-item
-      ReadBDY(&bdy, &len);
-
-      // fill the item data
-      it.bdy = bdy;
-      it.len = len;
-      itms.push (it);
-
+      itms.push (ReadDUMP());
       SendRETURN();
     }
 

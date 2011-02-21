@@ -18,7 +18,7 @@ TAGFILES            =
 ENABLED_SECTIONS    += MAN
 INPUT               =
 FILE_PATTERNS       = 
-EXAMPLE_PATH	    = $(SRCDIR)/tests $(SRCDIR)/libmsgque
+EXAMPLE_PATH	    = $(SRCDIR)/tests $(SRCDIR)/libmsgque $(SRCDIR)/example
 STRIP_FROM_PATH	    = $(SRCDIR)/libmsgque 
 STRIP_FROM_INC_PATH = $(SRCDIR)/libmsgque
 SHOW_USED_FILES	    = NO
@@ -78,7 +78,6 @@ ALIASES		    += "ServiceStorage=#UNKNOWN"
 ALIASES		    += "DumpDelete=#UNKNOWN"
 ALIASES		    += "TD=#UNKNOWN"
 ALIASES		    += "TU=#UNKNOWN"
-
 
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css

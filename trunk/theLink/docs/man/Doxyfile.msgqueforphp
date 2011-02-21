@@ -92,6 +92,10 @@ ALIASES		    += "config_type_srvname=\C"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
+ALIASES		    += "config_type_storage=\C"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
 ALIASES		    += "config_type_ident=\C"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
@@ -191,8 +195,8 @@ ALIASES		    += "SendERROR=$ctx->SendERROR()"
 ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
 ALIASES		    += "SendL_START=$ctx->SendL_START()"
 ALIASES		    += "SendL_END=$ctx->SendL_END()"
-ALIASES		    += "SendN=$ctx->SendN(value)"
-ALIASES		    += "SendBDY=\I $ctx->SendBDY(value)"
+ALIASES		    += "SendN=$ctx->SendN(ByteArray:value)"
+ALIASES		    += "SendU=$ctx->SendU(\TU:value)"
 ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
 ALIASES		    += "SendT_END=$ctx->SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -213,10 +217,12 @@ $signature = $ctx->ReadB();\n\
 $ctx->ReadL_END();\n\
 \endcode"
 ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
-ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
+ALIASES		    += "ReadU=\TU $ctx->ReadU()"
 ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
-ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
-ALIASES		    += "ReadProxy=$ctx->ReadProxy(MqS:otherCtx)"
+ALIASES		    += "ReadDUMP=\TD $ctx->ReadDUMP()"
+ALIASES		    += "ReadLOAD=$ctx->ReadLOAD(\TD:dump)"
+ALIASES		    += "ReadForward=$ctx->ReadForward(\TM:ctx)"
+ALIASES		    += "ReadProxy=$ctx->ReadProxy(\TM:otherCtx)"
 ALIASES		    += "ReadGetNumItems=\I $ctx->ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=\O $ctx->ReadItemExists()"
 ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
@@ -241,6 +247,7 @@ public function ServerSetup() { \n\
 \endcode"
 ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(\C:token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(\C:token, ?\I:id=0?)"
+ALIASES		    += "ServiceStorage=$ctx->ServiceStorage(\C:token)"
 ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(\C:token)"
 ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(timeout=\I|TIMEOUT_DEFAULT(|USER|MAX), wait=WAIT_NO(|ONCE|FOREVER))"
 ALIASES		    += "ProcessEvent2=$ctx->ProcessEvent(wait=WAIT_NO(|ONCE|FOREVER))"
@@ -260,11 +267,23 @@ ALIASES		    += "ServiceIsTransaction=\O $ctx->ServiceIsTransaction()"
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=$ctx->SlaveWorker(\I:id, args...)"
 ALIASES		    += "SlaveWorker_example=\code $ctx->SlaveWorker(7,\"--thread\",\"--silent\",\"@\",\"WORKER\",\"--name\",\"MyWorker\"); \endcode"
-ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(\I:id, MqS:slave)"
+ALIASES		    += "SlaveCreate=$ctx->SlaveCreate(\I:id, \TM:slave)"
 ALIASES		    += "SlaveDelete=$ctx->SlaveDelete(\I:id)"
 ALIASES		    += "SlaveGet=MqS $ctx->SlaveGet(\I:id)"
 ALIASES		    += "SlaveGetMaster=MqS $ctx->SlaveGetMaster()"
 ALIASES		    += "SlaveIs=\O $ctx->SlaveIs()"
+
+# STORAGE
+ALIASES		    += "StorageOpen=$ctx->MqStorageOpen(\C:storageFile)"
+ALIASES		    += "StorageClose=$ctx->StorageClose()"
+ALIASES		    += "StorageInsert=\W $ctx->StorageInsert()"
+ALIASES		    += "StorageSelect=\W $ctx->StorageSelect(\W:transLId)"
+ALIASES		    += "StorageDelete=$ctx->StorageDelete(\W:transLId)"
+ALIASES		    += "StorageCount=\W $ctx->StorageCount()"
+
+# THE DUMP OBJECT
+ALIASES		    += "DumpSize=\I $dump->Size()"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
 
 # THE BUFFER OBJECT
 ALIASES		    += "buffer_example=\code \n\
@@ -276,7 +295,9 @@ if {$buf->GetType() eq 'C'} { \n\
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
-ALIASES		    += "BufferType=char $buffer->GetType()"
+ALIASES		    += "BufferGetType=char $buffer->GetType()"
+ALIASES		    += "BufferDup=\TU $buffer->Dup()"
+ALIASES		    += "BufferDelete=$buffer->Delete()"
 
 ALIASES		    += "Y=integer"
 ALIASES		    += "O=boolean"
@@ -290,7 +311,8 @@ ALIASES		    += "B=binary-string"
 ALIASES		    += "U=MqBufferS"
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=binary-string"
-ALIASES		    += "TE=MqSException"
+ALIASES		    += "TD=MqDumpS"
+ALIASES		    += "TU=MqBufferS"
 
 # CONTEXT LOCAL STORAGE
 #ENABLED_SECTIONS    += DATA

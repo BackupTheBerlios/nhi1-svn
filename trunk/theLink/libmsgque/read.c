@@ -1142,29 +1142,31 @@ MqReadForward (
   pReadBDY (readctx, &bdy, &len, &hs, &num);
   pSendBDY (sendctx,  bdy,  len,  hs,  num);
 
-  // continue with the original transaction
-  if (	
-    transSId != 0			&&	/* shortterm-transaction */
-    (
-      hs == MQ_HANDSHAKE_START		||	/* client -> server call */
-      hs == MQ_HANDSHAKE_TRANSACTION
-    )
-  ) {
-    // use a transaction protection
-    MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
+  // direction: client -> server
+  if (hs == MQ_HANDSHAKE_START || hs == MQ_HANDSHAKE_TRANSACTION) {
+    if (transSId != 0) { // shortterm-transaction
+      // use a transaction protection
+      MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
 
-    // only a !real! shortterm-transaction result (transSId != -1) and
-    // not a longterm-transaction -> process the result
-    if (transSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
-      // send the answer
-      MqErrorCheck(MqSendSTART (readctx));
-      // BDY in + out
-      pReadBDY (sendctx, &bdy, &len, &hs, &num);
-      pSendBDY (readctx,  bdy,  len,  hs,  num);
+      // "transSId != -1" set in "pReadTRA" if read-package com from an storage.
+      // no answer possible because the initial call is already gone.
+      // only if a !real! shortterm-transaction result (transSId != -1) and
+      // not a longterm-transaction -> process the result
+      if (transSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
+	// send the answer
+	MqErrorCheck(MqSendSTART (readctx));
+	// BDY in + out
+	pReadBDY (sendctx, &bdy, &len, &hs, &num);
+	pSendBDY (readctx,  bdy,  len,  hs,  num);
+	MqErrorCheck(MqSendRETURN (readctx));
+      }
+    } else { // no-transaction
+      // use a transaction protection
+      MqErrorCheck1 (pSendEND (sendctx, token, 0));
     }
+  // direction: server -> client
   } else {
-    // use a transaction protection
-    MqErrorCheck1 (pSendEND (sendctx, token, 0));
+    MqErrorCheck1 (MqSendRETURN (sendctx));
   }
 
   return MQ_OK;

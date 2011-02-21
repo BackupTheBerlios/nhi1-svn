@@ -42,7 +42,7 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
 #endif
 
   // Initialize libmsgque
-  MqSetup
+  MqSetup();
 
   // Initialize components
   NS(MqS_Init)();
