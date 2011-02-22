@@ -77,6 +77,7 @@ sSqlAddDb (
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   char *errmsg = NULL;
+  MQ_CST storage = storageFile;
 
   // transaction storage, as transaction-id the ROWID is used
   const static char SQL_SCT[] = "CREATE TABLE IF NOT EXISTS sendTrans (transLId INTEGER PRIMARY KEY AUTOINCREMENT, callback TEXT, numItems INTEGER, type INTEGER, data BLOB);";
@@ -93,17 +94,17 @@ sSqlAddDb (
     return MqErrorDbV(MQ_ERROR_FEATURE_NOT_AVAILABLE, "sql link");
   }
 
-  if (storageFile[0] == '#') {
+  if (storage[0] == '#') {
     // a "temporary" database require, by sqlite default, an "empty-string".
     // for me an "empty-string" is an error, I prefer "#tmpdb#"
-    if (!strcmp(storageFile,"#tmpdb#")) {
-      storageFile = "";
-    } else if (!strcmp(storageFile,"#memdb#")) {
-      storageFile = ":memory:";
+    if (!strcmp(storage,"#tmpdb#")) {
+      storage = "";
+    } else if (!strcmp(storage,"#memdb#")) {
+      storage = ":memory:";
     }
   }
 
-  check_sqlite (sqlite3_open(storageFile, &sql_sys->db)) {
+  check_sqlite (sqlite3_open(storage, &sql_sys->db)) {
     return MqErrorDbSql(context, sql_sys->db);
   } 
 

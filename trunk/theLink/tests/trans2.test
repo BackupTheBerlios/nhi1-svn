@@ -23,7 +23,7 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-if ($env(USE_REMOTE)) {
+if {$env(USE_REMOTE) || [testConstraint filter-test]} {
   set env(BLOCK_LST) [list]
 }
 
@@ -311,10 +311,10 @@ $J - TTT3"
       Echo0 $CTX PRNT SendC TTT1
       EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
       EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
       Echo0 $CTX PRNT SendC TTT2
 
-      $CTX ProcessEvent -wait ONCE
-      $CTX ProcessEvent -wait ONCE
 
       WaitOnFileToken $TMP TTT2
     } \

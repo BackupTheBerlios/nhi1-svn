@@ -432,8 +432,8 @@ pReadHDR (
 	  pSqlInsertReadTrans (context, 
 	    read->transLId,		  /* old transaction id (used for "stack" transaction) */
 	    read->rmtTransId,		  /* old remote transaction id (used for "stack" transaction) */
-	    hdr,				  /* header data used by MqReadDUMP (size = HDR_SIZE) */
-	    bdy,				  /* body data (size = bdy->cursize) */
+	    hdr,			  /* header data used by MqReadDUMP (size = HDR_SIZE) */
+	    bdy,			  /* body data (size = bdy->cursize) */
 	    &transLId
 	  )
 	) 
@@ -1160,7 +1160,7 @@ MqReadForward (
 	// BDY in + out
 	pReadBDY (sendctx, &bdy, &len, &hs, &num);
 	pSendBDY (readctx,  bdy,  len,  hs,  num);
-	MqErrorCheck(MqSendRETURN (readctx));
+	//MqErrorCheck(MqSendRETURN (readctx));
       }
     } else { // no-transaction
       MqErrorCheck1 (pSendEND (sendctx, token, 0));

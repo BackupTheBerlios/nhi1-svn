@@ -3594,6 +3594,8 @@ MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
 #define MqErrorCheckI(PROC) (unlikely((PROC) >= MQ_ERROR))
 /// \brief check \e return-code and <I>goto error</I> on error
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
+/// \brief check \e return-code and <I>break</I> on error
+#define MqErrorBreak(PROC) if (MqErrorCheckI(PROC)) break
 
 /// \brief process error message
 #define MqErrorSwitch(PROC) switch (PROC) {\

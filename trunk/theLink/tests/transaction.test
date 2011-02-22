@@ -26,6 +26,7 @@ if {[info exists env(TS_LIBRARY)]} {
 set t [makeFile {} storageFile]
 file delete -force $t
 set storageFiles [list "#memdb#" "#tmpdb#" $t]
+set storageFiles [list "#memdb#" ]
 
 
 proc CB_I {ctx} {
@@ -49,7 +50,7 @@ proc ECOI {ctx} {
 ## Master/Child + Binary yes/no
 ##
 
-if {{[Block 1]}} {
+if {[Block 1]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -265,7 +266,7 @@ unset -nocomplain I B C S
 ## additional testes
 ##
 
-if {{[Block 2]}} {
+if {[Block 2]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {

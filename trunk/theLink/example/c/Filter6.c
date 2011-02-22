@@ -40,6 +40,7 @@ static void ErrorWrite (
 )
 {
   SETUP_ctx;
+  fseek(ctx->FH, 0L, SEEK_END);
   fprintf(ctx->FH, "ERROR: %s\n", MqErrorGetText(mqctx));
   fflush(ctx->FH);
   MqErrorReset (mqctx);
@@ -108,6 +109,7 @@ static enum MqErrorE WRIT ( ARGS ) {
   struct FilterCtxS *ctx;
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, (struct MqS**) &ctx));
   MqErrorCheck (MqReadC (mqctx, &str));
+  fseek(ctx->FH, 0L, SEEK_END);
   fprintf(ctx->FH, "%s\n", str);
   fflush(ctx->FH);
 error:

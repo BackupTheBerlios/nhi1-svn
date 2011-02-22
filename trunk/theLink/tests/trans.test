@@ -23,7 +23,7 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-if ($env(USE_REMOTE)) {
+if {$env(USE_REMOTE) || [testConstraint filter-test]} {
   set env(BLOCK_LST) [list]
 }
 

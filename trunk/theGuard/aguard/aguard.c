@@ -71,10 +71,10 @@ PkgToGuard (
 )
 {
   MQ_HDL transSId = mqctx->link.transSId;
-  MQ_BIN bdy;
-  MQ_SIZE len;
+  MQ_BUF tmp, buf;
   struct MqDumpS *dump;
   struct MqS *ftrctx;
+  MQ_BIN bdy; MQ_SIZE len;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
@@ -91,9 +91,10 @@ PkgToGuard (
 
   // continue with the original transaction
   if (MqServiceIsTransaction (mqctx)) {
-    MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
-    guard_crypt (bdy, len, DECRYPT);
-    MqErrorCheck1 (MqReadLOAD (ftrctx, (struct MqDumpS*) bdy));
+    MqErrorCheck1 (MqReadU (ftrctx, &buf));
+    tmp = MqBufferSetU(ftrctx->temp, buf);
+    guard_crypt (tmp->data, tmp->cursize, DECRYPT);
+    MqErrorCheck1 (MqReadLOAD (ftrctx, (struct MqDumpS*) tmp->data));
     ftrctx->link.transSId = transSId;
     return MqReadForward (ftrctx, mqctx);
   }
@@ -113,24 +114,36 @@ GuardToPkg (
   MQ_PTR data
 )
 {
-  MQ_HDL transSId;	 ///< storage for the \e shortterm-transaction from the package header
+  MQ_HDL transSId;
   struct MqDumpS *dump;
-  MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
   enum MqErrorE ret;
+  MQ_BUF tmp, buf;
+  MQ_BIN bdy; MQ_SIZE len;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
-  MqErrorCheck (MqReadB (mqctx, &bdy, &len));
-  guard_crypt (bdy, len, DECRYPT);
+  MqErrorCheck (MqReadU (mqctx, &buf));
+  tmp = MqBufferSetU(mqctx->temp, buf);
+  guard_crypt (tmp->data, tmp->cursize, DECRYPT);
   // protect the transaction for later use
   transSId = mqctx->link.transSId; 
-  MqErrorCheck (MqReadLOAD (mqctx, (struct MqDumpS*)bdy));
-  // after "MqReadLOAD" the "mqctx->link.transSId" is "0" or "-1" -> "MqReadForward" will 
-  // NOT forward the result
-  ret = MqReadForward (mqctx, ftrctx);
+  while (1) {
+    MqErrorBreak (ret = MqReadLOAD (mqctx, (struct MqDumpS*)tmp->data));
+    // after "MqReadLOAD" the "mqctx->link.transSId" is "0" or "-1" -> "MqReadForward" will 
+    // NOT forward the result
+    MqErrorBreak (ret = MqReadForward (mqctx, ftrctx));
+    // no loop
+    break;
+  }
   // now the real link.transSId is in duty
-  mqctx->link.transSId = transSId;
+  // we need the old "mqctx->link.transSId" because we have to decide if a "answer"
+  // have to be read.
+  {
+    MQ_HDL tmp = mqctx->link.transSId;
+    mqctx->link.transSId = transSId;
+    transSId = tmp;
+  }
   MqErrorCheck (ret);
 
   // check for a short-term-transaction and return the results

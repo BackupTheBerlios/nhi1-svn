@@ -282,7 +282,7 @@ void pContextDeleteLOCK(struct MqS * const);
 
 #define buffersize_DEFAULT 4096
 #define timeout_DEFAULT MQ_TIMEOUT10
-#define storage_DEFAULT ":memory:"
+#define storage_DEFAULT "#memdb#"
 
 void pConfigSetParent ( struct MqS * const, struct MqS * const);
 void pConfigSetMaster ( struct MqS * const, struct MqS * const, int);
