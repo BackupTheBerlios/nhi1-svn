@@ -490,7 +490,7 @@ sReadGEN (
 )
 {
   register struct MqReadS * read = context->link.read;
-  register struct HdrS * cur = (struct HdrS *) hdrB;
+  register struct HdrS * cur;
   int debug = context->config.debug;
   struct MqBufferS * bdy;
 
@@ -501,6 +501,7 @@ sReadGEN (
 
   // 2. MqReadDUMP need the original "header", save this header in the current context
   read->hdrorig = MqBufferSetB (read->hdr, hdrB, hdrlen);
+  cur = (struct HdrS*) read->hdrorig->data;
 
   // 3. log message
   if (unlikely (debug >= 5)) {
@@ -1135,7 +1136,8 @@ MqReadForward (
   MQ_TOK const token = MqServiceGetToken(readctx);
   enum MqHandShakeE hs;
   MQ_BIN bdy; MQ_SIZE len, num;
-  MQ_HDL transSId = readctx->link.transSId;
+  MQ_HDL RtransSId = readctx->link.transSId;
+  MQ_HDL StransSId = sendctx->link.transSId;
 
   MqErrorCheck1 (MqSendSTART (sendctx));
 
@@ -1144,7 +1146,7 @@ MqReadForward (
 
   // direction: client -> server
   if (hs == MQ_HANDSHAKE_START || hs == MQ_HANDSHAKE_TRANSACTION) {
-    if (transSId != 0) { // shortterm-transaction
+    if (RtransSId != 0) { // shortterm-transaction
       // use a transaction protection
       MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
 
@@ -1152,7 +1154,7 @@ MqReadForward (
       // no answer possible because the initial call is already gone.
       // only if a !real! shortterm-transaction result (transSId != -1) and
       // not a longterm-transaction -> process the result
-      if (transSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
+      if (RtransSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
 	// send the answer
 	MqErrorCheck(MqSendSTART (readctx));
 	// BDY in + out
@@ -1161,12 +1163,20 @@ MqReadForward (
 	MqErrorCheck(MqSendRETURN (readctx));
       }
     } else { // no-transaction
-      // use a transaction protection
       MqErrorCheck1 (pSendEND (sendctx, token, 0));
     }
+
   // direction: server -> client
+
   } else {
-    MqErrorCheck1 (MqSendRETURN (sendctx));
+    if (!strncmp(token,"+TRT",4) ) {
+      // only send return for a !real! request
+      MqErrorCheck1 (pSendEND (sendctx, "+TRT", 0));
+    } else if (StransSId != -1) {
+      // only send return for a !real! request
+      MqErrorCheck1 (pSendEND (sendctx, token, StransSId));
+    }
+
   }
 
   return MQ_OK;

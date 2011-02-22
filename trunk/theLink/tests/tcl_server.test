@@ -25,17 +25,12 @@ if {$env(USE_REMOTE) || ![testConstraint tcl]} return
 ## init
 ##
 
-set BLOCK_1 true
-#set BLOCK_1 false
-set BLOCK_2 true
-#set BLOCK_2 false
-
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
-if $BLOCK_1 {
+if {[Block 1]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 2] {
@@ -128,7 +123,7 @@ unset -nocomplain I B C S
 
 } ; ## false
 
-if $BLOCK_2 {
+if {[Block 2]} {
 
 SetConstraints all
 
@@ -262,6 +257,8 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 ##
 
 freeTests
+
+
 
 
 

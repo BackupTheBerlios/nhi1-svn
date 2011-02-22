@@ -21,11 +21,6 @@ if {[info exists env(TS_LIBRARY)]} {
 ## init
 ##
 
-set BLOCK_1 true
-#set BLOCK_1 false
-set BLOCK_2 true
-#set BLOCK_2 false
-
 #set tcl_traceExec 1
 
 set t [makeFile {} storageFile]
@@ -54,7 +49,7 @@ proc ECOI {ctx} {
 ## Master/Child + Binary yes/no
 ##
 
-if {$BLOCK_1} {
+if {{[Block 1]}} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -270,7 +265,7 @@ unset -nocomplain I B C S
 ## additional testes
 ##
 
-if {$BLOCK_2} {
+if {{[Block 2]}} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -354,4 +349,6 @@ unset -nocomplain I B C S
 ##
 file delete -force $t
 freeTests
+
+
 

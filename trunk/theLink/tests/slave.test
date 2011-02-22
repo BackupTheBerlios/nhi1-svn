@@ -23,21 +23,12 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-set BLOCK_1 true
-#set BLOCK_1 false
-set BLOCK_2 true
-#set BLOCK_2 false
-set BLOCK_3 true
-#set BLOCK_3 false
-set BLOCK_4 true
-#set BLOCK_4 false
-
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
 ##
 
-if $BLOCK_1 {
+if {[Block 1]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -234,7 +225,7 @@ unset -nocomplain I B C S
 ## Master/Worker - start as "fork", "thread" or "spawn"
 ##
 
-if $BLOCK_2 {
+if {[Block 2]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I 1 {
@@ -328,7 +319,7 @@ unset -nocomplain I B C S
 ## Master/Worker - multiple slave - one master
 ##
 
-if $BLOCK_3 {
+if {[Block 3]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -409,7 +400,7 @@ unset -nocomplain I B C S
 ## Master/Slave - multiple slave - one master
 ##
 
-if $BLOCK_4 {
+if {[Block 4]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -491,6 +482,10 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
+
+
+
 
 
 

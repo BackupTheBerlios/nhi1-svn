@@ -612,6 +612,10 @@ proc SetConstraints {args} {
   }
 }
 
+proc Block {num} {
+  return [expr {[lsearch -exact -sorted -integer -increasing $::env(BLOCK_LST) $num] != -1}]
+}
+
 ##
 ## -----------------------------------------------------------------------
 ## init
@@ -629,6 +633,9 @@ if {![info exists env(COM_LST)]} {
 }
 if {![info exists env(LNG_LST)]} {
   set env(LNG_LST) {c cc tcl python ruby java csharp perl php go vb}
+}
+if {![info exists env(BLOCK_LST)]} {
+  set env(BLOCK_LST) {1 2 3 4 5}
 }
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
@@ -864,6 +871,10 @@ while {true} {
     {^--server$} {
       set env(SRV_LST) [Pop argv]
     }
+    {^--block(-1|-2|-3|-4|-5)+$} {
+      set T		  [lrange [split $arg -] 3 end]
+      set env(BLOCK_LST)  [lsort -integer -increasing -unique $T]
+    }
     {^--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(LNG_LST)	  $T
@@ -935,6 +946,7 @@ while {true} {
       puts "  --pid STR ........ use file as --daemon pid file"
       puts "  --server LANG.COM(.MODE) ... only use this server"
       puts "  --setup .......... print additional setup information"
+      puts "  --block(-[1-5])+.. test block X, default all"
       puts "  --filter exec .... use 'exec' as filter"
       puts "  --help-msgque .... get libmsgque specific help"
       puts "  --help / -h ...... get help"

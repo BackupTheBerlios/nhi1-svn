@@ -117,6 +117,7 @@ GuardToPkg (
   struct MqDumpS *dump;
   MQ_BIN bdy; MQ_SIZE len;
   struct MqS * ftrctx;
+  enum MqErrorE ret;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
@@ -127,9 +128,10 @@ GuardToPkg (
   MqErrorCheck (MqReadLOAD (mqctx, (struct MqDumpS*)bdy));
   // after "MqReadLOAD" the "mqctx->link.transSId" is "0" or "-1" -> "MqReadForward" will 
   // NOT forward the result
-  MqErrorCheck (MqReadForward (mqctx, ftrctx));
+  ret = MqReadForward (mqctx, ftrctx);
   // now the real link.transSId is in duty
   mqctx->link.transSId = transSId;
+  MqErrorCheck (ret);
 
   // check for a short-term-transaction and return the results
   // should be always != 0 because "PkgToGuard" use "MqSendEND_AND_WAIT"

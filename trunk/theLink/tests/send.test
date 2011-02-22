@@ -23,13 +23,6 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-set BLOCK_1 true
-#set BLOCK_1 false
-set BLOCK_2 true
-#set BLOCK_2 false
-set BLOCK_3 true
-#set BLOCK_3 false
-
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
@@ -56,7 +49,7 @@ set BLOCK_3 true
 ## int
 ##
 
-if $BLOCK_1 {
+if {[Block 1]} {
 
 # startup binary --------------------------
 
@@ -160,11 +153,11 @@ Call $FH_LAST SendEND_AND_WAIT SND1 SendC STOP SendI 0
 
 Cleanup
 
-} ; # END - $BLOCK_1
+} ; # END - {[Block 1]}
 
 # extended test ---------------------------
 
-if $BLOCK_2 {
+if {[Block 2]} {
 
 test send-X1-($I|$B|$C|$S) {close single parent server-client connection} \
     -setup	    {
@@ -361,7 +354,7 @@ test send-X12-($I|$B|$C|$S) {master_id in use} \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|SND1> <Num|228>*
 S> (server-0) \[*pSlaveChildCreate] 'slave' identifer '0' is already in use*}
 
-} ; # END - $BLOCK_2
+} ; # END - {[Block 2]}
 
 ##  
 ## -----------------------------------------------------------------------
@@ -375,7 +368,7 @@ S> (server-0) \[*pSlaveChildCreate] 'slave' identifer '0' is already in use*}
 unset I B C S
 
 
-if $BLOCK_3 {
+if {[Block 3]} {
 
  # transport-type: string or binary
   foreach B [getEnv BIN_LST] {
@@ -434,6 +427,9 @@ unset B C S
 ## finish
 ##
 freeTests
+
+
+
 
 
 

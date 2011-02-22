@@ -24,16 +24,7 @@ if {[info exists env(TS_LIBRARY)]} {
 #set tcl_traceExec 1
 
 if ($env(USE_REMOTE)) {
-  set BLOCK_1 false
-  set BLOCK_2 false
-  set BLOCK_3 false
-} else {
-  set BLOCK_1 true
-  #set BLOCK_1 false
-  set BLOCK_2 true
-  #set BLOCK_2 false
-  set BLOCK_3 true
-  #set BLOCK_3 false
+  set env(BLOCK_LST) [list]
 }
 
 ##
@@ -41,7 +32,7 @@ if ($env(USE_REMOTE)) {
 ## Master/Child + Binary yes/no
 ##
 
-if $BLOCK_1 {
+if {[Block 1]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 3] {
@@ -141,7 +132,7 @@ unset -nocomplain I B C S
 ## additional tests
 ##
 
-if $BLOCK_2 {
+if {[Block 2]} {
 
 # 1,2, ... tclmsgque (parent/child)
 foreach I [getNum 3] {
@@ -608,7 +599,7 @@ unset -nocomplain I B C S
 }; # BLOCK_2
 
 
-if $BLOCK_3 {
+if {[Block 3]} {
 
 # 1,2, ... tclmsgque (parent/child)
 foreach I [getNum 3] {
@@ -778,3 +769,6 @@ unset -nocomplain I B C S
 ##
 
 freeTests
+
+
+
