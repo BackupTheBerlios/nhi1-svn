@@ -645,7 +645,7 @@ foreach I [getNum 3] {
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|OTTO>, <Num|242>
-[sS]> (server-0) \[sSqlAddDb] the value 'NULL' is not allowed for parameter 'storageFile'
+[sS]> (server-0) \[sSqlAddDb] the value 'NULL' is invalid for object 'storageFile'
 [sS]> (server-0) found in function "pSqlInsertReadTrans" at file "sql.c*"
 [cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c*"
 [cC]> (client-0) found in function "pServiceStart" at file "service.c*"

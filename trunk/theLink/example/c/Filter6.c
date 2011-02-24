@@ -69,7 +69,7 @@ static enum MqErrorE FilterEvent (
     MqErrorCheck2 (MqStorageSelect (mqctx, &Id));
 
     // send BDY data to the link-target, on error write message but do not stop processing
-    if (MqErrorCheckI (MqReadForward(mqctx, ftr))) {
+    if (MqErrorCheckI (MqReadForward(mqctx, ftr, NULL))) {
       if (MqErrorIsEXIT(mqctx)) {
 	return MqErrorReset(mqctx);
       } else {
@@ -94,7 +94,7 @@ static enum MqErrorE LOGF ( ARGS ) {
   struct MqS * ftr;
   MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
-    MqErrorCheck (MqReadForward(mqctx, ftr));
+    MqErrorCheck (MqReadForward(mqctx, ftr, NULL));
   } else {
     MQ_CST file;
     MqErrorCheck (MqReadC (mqctx, &file));

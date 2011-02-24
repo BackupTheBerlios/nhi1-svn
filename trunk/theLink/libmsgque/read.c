@@ -632,6 +632,10 @@ pReadLOAD (
     // called by "pSqlSelectReadTrans", hdl as environment
     register struct MqDumpS * dump = (struct MqDumpS*) env;
 
+    if (dump->signature != MQ_MqDumpS_SIGNATURE) {
+      return MqErrorDbV(MQ_ERROR_VALUE_INVALID, "signature", "MqDumpS");
+    }
+
     // process data from MqDumpS buffer
     return sReadGEN (context, 
       dump->transLId,
@@ -1128,29 +1132,79 @@ error:
   return MqErrorGetCodeI(readctx);
 }
 
+#define st(str) str==MQ_YES?"string=yes":"string=no"
+#define et(str) end==MQ_YES?"endian=yes":"endian=no"
+
 enum MqErrorE 
 MqReadForward (
   struct MqS * const readctx,
-  struct MqS * const sendctx
+  struct MqS * const sendctx,
+  struct MqDumpS * const dump
 ) {
-  MQ_TOK const token = MqServiceGetToken(readctx);
+  MQ_TOK token;
   enum MqHandShakeE hs;
-  MQ_BIN bdy; MQ_SIZE len, num;
-  MQ_HDL RtransSId = readctx->link.transSId;
+  MQ_BIN bdy; MQ_SIZE len;
+  MQ_HDL RtransSId;
   MQ_HDL StransSId = sendctx->link.transSId;
-
+  MQ_ATO num;
+  
+  // start to send package
   MqErrorCheck1 (MqSendSTART (sendctx));
 
-  pReadBDY (readctx, &bdy, &len, &hs, &num);
-  pSendBDY (sendctx,  bdy,  len,  hs,  num);
+  // is the "dump" parameter available?
+  if (dump == NULL) {
+    // NO -> read data from the "read-buffer"
+    token = MqServiceGetToken(readctx);
+    RtransSId = readctx->link.transSId; // "0" = no-transaction  or "-1" = shortterm-transaction
 
-  // direction: client -> server
+    pReadBDY (readctx, &bdy, &len, &hs, &num.I);
+  } else if (sendctx->link.send == NULL) {
+    return MqErrorDbV2(readctx,MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (dump->signature != MQ_MqDumpS_SIGNATURE) {
+    return MqErrorDbV2(readctx,MQ_ERROR_VALUE_INVALID, "signature", "MqDumpS");
+  } else if (dump->isString != sendctx->config.isString) {
+    return MqErrorDbV2(readctx,MQ_ERROR_VALUE_INVALID, st(dump->isString), "MqDumpS");
+/*
+  } else if (dump->endian != sendctx->bits.endian) {
+    return MqErrorDbV2(readctx,MQ_ERROR_VALUE_INVALID, et(dump->endian), "MqDumpS");
+*/
+  } else {
+    // YES -> read data from the "dump-buffer"
+    struct HdrSendS const * cur = (struct HdrSendS const *) (((MQ_BIN)dump) + DMP_HDR);
+    token = cur->hdr.tok;
+    hs = cur->hdr.code;
+    bdy = ((MQ_BIN)dump)+DMP_BDY;
+    len = dump->bdylen;
+    RtransSId = cur->hdr.trans == 0 ? 0 : -1; // "0" = no-transaction  or "-1" = shortterm-transaction
+    // read the bdy->numItems
+    if (unlikely(dump->isString)) {
+      num.I = str2int(cur->bdy.num.S,NULL,16);
+    } else {
+      if (dump->endian != sendctx->link.bits.endian) {
+	pSwapBDY(bdy);
+      }
+#if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
+      num.B[0] = cur->bdy.num.E[0];
+      num.B[1] = cur->bdy.num.E[1];
+      num.B[2] = cur->bdy.num.E[2];
+      num.B[3] = cur->bdy.num.E[3];
+#else
+      num.I = cur->bdy.num.B;
+#endif
+    }
+    // if the package is a "longterm-transaction increase the number
+    if (hs == MQ_HANDSHAKE_TRANSACTION) ++num.I;
+  }
+  // fill the "send-buffer"
+  pSendBDY (sendctx, bdy, len, hs, num.I);
+
+  // direction: client -> server = call a service
   if (hs == MQ_HANDSHAKE_START || hs == MQ_HANDSHAKE_TRANSACTION) {
     if (RtransSId != 0) { // shortterm-transaction
       // use a transaction protection
       MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
 
-      // "transSId != -1" set in "pReadTRA" if read-package com from an storage.
+      // "transSId != -1" set in "pReadTRA" if read-package come from a storage.
       // no answer possible because the initial call is already gone.
       // only if a !real! shortterm-transaction result (transSId != -1) and
       // not a longterm-transaction -> process the result
@@ -1158,16 +1212,15 @@ MqReadForward (
 	// send the answer
 	MqErrorCheck(MqSendSTART (readctx));
 	// BDY in + out
-	pReadBDY (sendctx, &bdy, &len, &hs, &num);
-	pSendBDY (readctx,  bdy,  len,  hs,  num);
+	pReadBDY (sendctx, &bdy, &len, &hs, &num.I);
+	pSendBDY (readctx,  bdy,  len,  hs,  num.I);
 	//MqErrorCheck(MqSendRETURN (readctx));
       }
     } else { // no-transaction
       MqErrorCheck1 (pSendEND (sendctx, token, 0));
     }
 
-  // direction: server -> client
-
+  // direction: server -> client = answer from the service
   } else {
     if (!strncmp(token,"+TRT",4) ) {
       // only send return for a !real! request
@@ -1176,7 +1229,6 @@ MqReadForward (
       // only send return for a !real! request
       MqErrorCheck1 (pSendEND (sendctx, token, StransSId));
     }
-
   }
 
   return MQ_OK;
@@ -1189,35 +1241,9 @@ error:
 
 /*****************************************************************************/
 /*                                                                           */
-/*                                 read.high                                 */
+/*                                 protected                                 */
 /*                                                                           */
 /*****************************************************************************/
-
-enum MqErrorE
-MqReadUndo (
-  struct MqS * const context
-)
-{
-  struct MqReadS * const read = context->link.read;
-  if (unlikely(read == NULL)) {
-    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
-  } else {
-    struct MqBufferS * const bdy = read->bdy;
-    struct MqBufferS * const cur = read->cur;
-
-    if (read->canUndo == MQ_NO) {
-      return MqErrorDb(MQ_ERROR_UNDO_FORBIDDEN);
-    } else {
-      read->canUndo = MQ_NO;
-    }
-    
-    bdy->numItems++; 
-    bdy->cur.B -= ( 2 + cur->cursize + 1 +
-      (cur->type & MQ_TYPE_IS_NATIVE ? 0 : HDR_INT_LEN + 1)
-    );
-    return MQ_OK;
-  }
-}
 
 void
 pReadSetType(
@@ -1226,22 +1252,6 @@ pReadSetType(
 )
 {
   context->link.read->type = MQ_STRING_TYPE(type);
-}
-
-MQ_SIZE
-MqReadGetNumItems (
-  struct MqS const * const context
-)
-{
-  return (context->link.read ? context->link.read->bdy->numItems : 0);
-}
-
-MQ_BOL
-MqReadItemExists (
-  struct MqS const * const context
-)
-{
-  return (context->link.read && context->link.read->bdy->numItems != 0 ? MQ_YES : MQ_NO);
 }
 
 void
@@ -1290,6 +1300,62 @@ pReadInsertRmtTransId (
   return MQ_OK;
 error:
   return MqErrorStack (context);
+}
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                  public                                   */
+/*                                                                           */
+/*****************************************************************************/
+
+enum MqErrorE
+MqReadUndo (
+  struct MqS * const context
+)
+{
+  struct MqReadS * const read = context->link.read;
+  if (unlikely(read == NULL)) {
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else {
+    struct MqBufferS * const bdy = read->bdy;
+    struct MqBufferS * const cur = read->cur;
+
+    if (read->canUndo == MQ_NO) {
+      return MqErrorDb(MQ_ERROR_UNDO_FORBIDDEN);
+    } else {
+      read->canUndo = MQ_NO;
+    }
+    
+    bdy->numItems++; 
+    bdy->cur.B -= ( 2 + cur->cursize + 1 +
+      (cur->type & MQ_TYPE_IS_NATIVE ? 0 : HDR_INT_LEN + 1)
+    );
+    return MQ_OK;
+  }
+}
+
+MQ_SIZE
+MqReadGetNumItems (
+  struct MqS const * const context
+)
+{
+  return (context->link.read ? context->link.read->bdy->numItems : 0);
+}
+
+MQ_BOL
+MqReadItemExists (
+  struct MqS const * const context
+)
+{
+  return (context->link.read && context->link.read->bdy->numItems != 0 ? MQ_YES : MQ_NO);
+}
+
+enum MqHandShakeE
+MqReadGetHandShake (
+  struct MqS const * const context
+)
+{
+  return context->link.read->handShake;
 }
 
 /*****************************************************************************/

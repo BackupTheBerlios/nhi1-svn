@@ -222,9 +222,11 @@ int NS(ReadForward) (NS_ARGS)
 {
   SETUP_mqctx
   struct MqS * target;
+  struct MqDumpS * dump = NULL;
   CHECK_MQS (target)
+  CHECK_DUMP_OPT (dump)
   CHECK_NOARGS
-  ErrorMqToTclWithCheck(MqReadForward(mqctx, target));
+  ErrorMqToTclWithCheck(MqReadForward(mqctx, target, dump));
   RETURN_TCL
 }
 

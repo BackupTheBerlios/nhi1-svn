@@ -199,6 +199,23 @@ error:
 }
 // END-C-SERVICE-PROC
 
+/// \brief wait an echo a #MQ_INT object
+/// \service
+static enum MqErrorE
+Ot_ECIW (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_INT l;
+  MqSendSTART (mqctx);
+  MqErrorCheck (MqReadI (mqctx, &l));
+  MqSendI (mqctx, l);
+  sleep(1);
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /// \brief echo a #MQ_SRT object
 /// \service
 static enum MqErrorE
@@ -1357,6 +1374,7 @@ ServerSetup (
     // START-C-SERVICE-DEFINITION
     MqErrorCheck (MqServiceCreate (mqctx, "ECOI", Ot_ECOI, NULL, NULL));
     // END-C-SERVICE-DEFINITION
+    MqErrorCheck (MqServiceCreate (mqctx, "ECIW", Ot_ECIW, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECOY", Ot_ECOY, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECOO", Ot_ECOO, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ECOS", Ot_ECOS, NULL, NULL));

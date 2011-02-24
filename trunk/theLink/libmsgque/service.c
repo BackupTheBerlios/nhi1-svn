@@ -87,7 +87,7 @@ sServiceProxy (
 ) {
   struct MqS * ftrctx;
   MqErrorCheck (MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
-  MqErrorCheck (MqReadForward(context, ftrctx));
+  MqErrorCheck (MqReadForward(context, ftrctx, NULL));
 error:
   return MqSendRETURN(context);
 }

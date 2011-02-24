@@ -26,7 +26,7 @@
 
 #define ENCRYPT MQ_YES
 #define DECRYPT MQ_NO
-static void guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
+static MQ_BIN guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
   MQ_BIN key = KEY_DATA;
   const MQ_BIN keyend = KEY_DATA+KEY_LENGTH;
   const MQ_BIN dataend = data+size;
@@ -40,6 +40,7 @@ static void guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
       *data -= *key;
     }
   }
+  return data;
 }
 
 /// \brief display help using \b -h or \b --help command-line option
@@ -70,18 +71,19 @@ PkgToGuard (
   MQ_PTR data
 )
 {
-  MQ_HDL transSId = mqctx->link.transSId;
-  MQ_BUF tmp, buf;
   struct MqDumpS *dump;
   struct MqS *ftrctx;
-  MQ_BIN bdy; MQ_SIZE len;
+  MQ_BIN bdy = NULL; MQ_SIZE len;
+  enum MqHandShakeE hs = MqReadGetHandShake(mqctx);
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadDUMP (mqctx, &dump));
   bdy = (MQ_BIN) dump;
   len = MqDumpSize(dump);
+printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
   guard_crypt (bdy, len, ENCRYPT);
+printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
 
   // build "+GRD" package and send as shortterm-transaction
   MqErrorCheck1 (MqSendSTART (ftrctx));
@@ -90,20 +92,21 @@ PkgToGuard (
   MqDumpDelete (&dump);
 
   // continue with the original transaction
-  if (MqServiceIsTransaction (mqctx)) {
-    MqErrorCheck1 (MqReadU (ftrctx, &buf));
-    tmp = MqBufferSetU(ftrctx->temp, buf);
-    guard_crypt (tmp->data, tmp->cursize, DECRYPT);
-    MqErrorCheck1 (MqReadLOAD (ftrctx, (struct MqDumpS*) tmp->data));
-    ftrctx->link.transSId = transSId;
-    return MqReadForward (ftrctx, mqctx);
+  // a "longterm-transaction client->server call" return 2 packages. A "_RET" and than a "+TRT",
+  // the "_RET" have to be ignored
+  if (hs == MQ_HANDSHAKE_TRANSACTION) {
+    return MQ_OK;
+  } else if (MqServiceIsTransaction (mqctx)) {
+    MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
+    guard_crypt (bdy, len, DECRYPT);
+    return MqReadForward (ftrctx, mqctx, (struct MqDumpS*) bdy);
   }
 
 error:
   return MqSendRETURN(mqctx);
 
 error1:
-  MqDumpDelete ((struct MqDumpS**)&bdy);
+  MqDumpDelete (&dump);
   MqErrorCopy(mqctx, ftrctx);
   return MqErrorStack(mqctx);
 }
@@ -114,54 +117,39 @@ GuardToPkg (
   MQ_PTR data
 )
 {
-  MQ_HDL transSId;
-  struct MqDumpS *dump;
+  struct MqDumpS *dump = NULL;
   struct MqS * ftrctx;
-  enum MqErrorE ret;
-  MQ_BUF tmp, buf;
   MQ_BIN bdy; MQ_SIZE len;
+  enum MqHandShakeE hs = MQ_HANDSHAKE_START;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
-  MqErrorCheck (MqReadU (mqctx, &buf));
-  tmp = MqBufferSetU(mqctx->temp, buf);
-  guard_crypt (tmp->data, tmp->cursize, DECRYPT);
-  // protect the transaction for later use
-  transSId = mqctx->link.transSId; 
-  while (1) {
-    MqErrorBreak (ret = MqReadLOAD (mqctx, (struct MqDumpS*)tmp->data));
-    // after "MqReadLOAD" the "mqctx->link.transSId" is "0" or "-1" -> "MqReadForward" will 
-    // NOT forward the result
-    MqErrorBreak (ret = MqReadForward (mqctx, ftrctx));
-    // no loop
-    break;
-  }
-  // now the real link.transSId is in duty
-  // we need the old "mqctx->link.transSId" because we have to decide if a "answer"
-  // have to be read.
-  {
-    MQ_HDL tmp = mqctx->link.transSId;
-    mqctx->link.transSId = transSId;
-    transSId = tmp;
-  }
-  MqErrorCheck (ret);
+  MqErrorCheck (MqReadB (mqctx, &bdy, &len));
+  MqErrorCheck (MqReadForward (mqctx, ftrctx, (struct MqDumpS*) guard_crypt (bdy, len, DECRYPT)));
 
-  // check for a short-term-transaction and return the results
-  // should be always != 0 because "PkgToGuard" use "MqSendEND_AND_WAIT"
-  if (transSId != 0) {
-    // read all results from ftr
-    MqErrorCheck1 (MqReadDUMP (ftrctx, &dump));
-    bdy = (MQ_BIN)dump;
-    len = MqDumpSize(dump);
-    // encrypt
-    guard_crypt  (bdy, len, ENCRYPT);
-    // prepare binary package
-    MqErrorCheck (MqSendSTART (mqctx));
-    MqErrorCheck (MqSendB (mqctx, bdy, len));
-    MqDumpDelete(&dump);
+//printH(hs)
+
+  // a "longterm-transaction" return 2 packages "_RET" and "+TRT" -> ignore the "_RET"
+  if (hs == MQ_HANDSHAKE_TRANSACTION) {
+    return MQ_OK;
+  } else {
+    // check for a short-term-transaction and return the results
+    // should be always != 0 because "PkgToGuard" use "MqSendEND_AND_WAIT"
+    if (mqctx->link.transSId != 0) {
+      // read all results from ftr
+      MqErrorCheck1 (MqReadDUMP (ftrctx, &dump));
+      bdy = (MQ_BIN)dump;
+      len = MqDumpSize(dump);
+      // encrypt
+      guard_crypt  (bdy, len, ENCRYPT);
+      // prepare binary package
+      MqErrorCheck (MqSendSTART (mqctx));
+      MqErrorCheck (MqSendB (mqctx, bdy, len));
+    }
   }
 
 error:
+  MqDumpDelete(&dump);
   // aswer the "+GRD" service call
   return MqSendRETURN(mqctx);
 

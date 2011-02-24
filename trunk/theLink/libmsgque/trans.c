@@ -26,6 +26,9 @@ struct MqTransS {
   MQ_SIZE   transIdZ;		    ///< the size of the tranIdA array
   struct MqTransItemS ** transIdA;  ///< array of struct MqTransItemS * pointer's
   struct MqCacheS * transCache;	    ///< cache for MqTransItemSP
+#ifdef _DEBUG
+  MQ_HDL    shift;		    ///< shift transaction to random number
+#endif
 };
 
 struct MqTransItemS {
@@ -39,6 +42,14 @@ struct MqTransItemS {
   MQ_TOK token;			    ///< callback token
   enum MqHandShakeE hs;		    ///< save the handshake
 };
+
+#ifdef _DEBUG
+# define pu2pr(id) ((id)-trans->shift)
+# define pr2pu(id) ((id)+trans->shift)
+#else
+# define pu2pr(id) (id)
+# define pr2pu(id) (id)
+#endif
 
 /*****************************************************************************/
 /*                                                                           */
@@ -87,6 +98,10 @@ pTransCreate (
   struct MqTransS * const trans = (struct MqTransS *) MqSysCalloc (MQ_ERROR_PANIC, 1, sizeof (*trans));
   *out = trans;
   trans->context = context;
+#ifdef _DEBUG
+  // this should be some kind of random
+  trans->shift = (MQ_HDL) ((((long)context>>7) + ((long)trans>>7) + ((long)MqThreadSelf()>>7) + (long) mq_getpid()) & 127);
+#endif
 
   pCacheCreate ((CacheCF) pTransItemCreate, (CacheDF) pTransItemDelete, trans, &trans->transCache);
 
@@ -130,14 +145,14 @@ pTransPop (
   item->trans = trans;
   item->start = time (NULL);
   item->callback = callback;
-  item->last = trans->context->link.transSId;
+  item->last = pu2pr(trans->context->link.transSId);
 
   trans->transIdA[item->transId] = item;
 
 //if (!strncmp(trans->context->config.name,"fs",2))
 //  MqDLogV(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, item->transId);
 
-  return item->transId;
+  return pr2pu(item->transId);
 }
 
 void
@@ -149,7 +164,9 @@ pTransPush (
 //if (!strncmp(trans->context->config.name,"fs",2))
 //  MqDLogV(trans->context,__func__,0,"trans<%p>, transH<%d>\n", trans, transId);
 
-  struct MqTransItemS * const item = trans->transIdA[transId];
+  struct MqTransItemS * item;
+  transId = pu2pr(transId);
+  item = trans->transIdA[transId];
   if (unlikely(item == NULL)) return;
   if (item->callback.data && item->callback.fFree)
     (*item->callback.fFree)(trans->context, &item->callback.data);
@@ -169,7 +186,7 @@ pTransCheckStart (
   const MQ_HDL transId
 )
 {
-  return (trans->transIdA[transId]->status == MQ_TRANS_START);
+  return (trans->transIdA[pu2pr(transId)]->status == MQ_TRANS_START);
 }
 
 /*****************************************************************************/
@@ -184,7 +201,7 @@ pTransGetLast (
   const MQ_HDL transId
 )
 {
-  return trans->transIdA[transId]->last;
+  return trans->transIdA[pu2pr(transId)]->last;
 }
 
 struct MqReadS *
@@ -193,7 +210,7 @@ pTransGetResult (
   const MQ_HDL transId
 )
 {
-  struct MqTransItemS * const item = trans->transIdA[transId];
+  struct MqTransItemS * const item = trans->transIdA[pu2pr(transId)];
   struct MqReadS * const ret = item->result;
   item->result = NULL;
   return ret;
@@ -205,7 +222,7 @@ pTransGetStatus (
   const MQ_HDL transId
 )
 {
-  return trans->transIdA[transId]->status;
+  return trans->transIdA[pu2pr(transId)]->status;
 }
 
 enum MqHandShakeE
@@ -214,7 +231,7 @@ pTransGetHandShake (
   const MQ_HDL transId
 )
 {
-  return trans->transIdA[transId]->hs;
+  return trans->transIdA[pu2pr(transId)]->hs;
 }
 
 /*****************************************************************************/
@@ -231,7 +248,8 @@ pTransSetResult (
 )
 {
   struct MqS * const context = trans->context;
-  MQ_HDL transSId = context->link.transSId;
+  MQ_HDL puTrId = context->link.transSId;
+  MQ_HDL transSId = pu2pr(puTrId);
   struct MqTransItemS * item;
   if (unlikely(transSId < 0 || transSId > trans->transIdR)) 
       return MqErrorV (context, __func__, -1, "invalid transaction-id '%i'", transSId);
@@ -244,7 +262,7 @@ pTransSetResult (
 	enum MqErrorE ret;
 	// from: MqSendEND_AND_CALLBACK
 	ret = (*item->callback.fCall)(context, item->callback.data);
-	pTransPush(trans, transSId);
+	pTransPush(trans, puTrId);
 	MqErrorCheck(ret);
 	return MQ_OK;
       }
@@ -253,7 +271,7 @@ pTransSetResult (
 	MQ_CST msg;
 
 	// (*callback.fCall) is never called
-	pTransPush(trans, transSId);
+	pTransPush(trans, puTrId);
 	MqDLogC(context,5,"got ERROR return code\n");
 	MqErrorCheck1 (MqReadI (context, &retNum));
 	pReadSetReturnNum (context, retNum);

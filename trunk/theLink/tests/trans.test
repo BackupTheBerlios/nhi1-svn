@@ -358,14 +358,14 @@ $J - T3"
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter4.$S] @ {*}[getServer $S]]] break
       Echo0 $CTX LOGF SendC $TMP
 
-      Echo0 $CTX PRNT SendC T1
+      Echo0 $CTX PRNT SendC TT1
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T2
+      Echo0 $CTX PRNT SendC TT2
       Call  $CTX SendEND ERR4
-      Echo0 $CTX PRNT SendC T3
+      Echo0 $CTX PRNT SendC TT3
       $CTX Delete
 
-      WaitOnFileToken $TMP T3
+      WaitOnFileToken $TMP TT3
     } \
     -cleanup	    {
       Cleanup -force yes
@@ -374,9 +374,9 @@ $J - T3"
     -returnCodes    ok \
     -match	    glob \
     -result         "START
-$J - T1
-$J - T2
-$J - T3"
+$J - TT1
+$J - TT2
+$J - TT3"
 
    }; # SRV_LST
   }; # BIN_LST

@@ -1138,6 +1138,8 @@ proc Start {mode isError id cl ident {clname ""} {srvname ""}} {
   if {$srvname ne ""} {
     $FH($id) ConfigSetSrvName $srvname
   }
+  set ::ARG_LAST $cl
+  set ::ID_LAST $id
   set FH_LAST $FH($id)
   if {[info exists Start_PREFIX]} {
     eval $Start_PREFIX
@@ -1296,7 +1298,7 @@ proc Setup {num mode com server args} {
 
 proc Cleanup {args} {
 #Print args
-  global CLEANUP_PID CLEANUP_FILES PIDFILE FH FH_LAST env SERVER_OUTPUT
+  global CLEANUP_PID CLEANUP_FILES PIDFILE FH env SERVER_OUTPUT
 
   array set OPT {-wait 0 -force 0}
   array set OPT $args
@@ -1313,7 +1315,9 @@ proc Cleanup {args} {
       $FH($num) ConfigReset
     }
   }
-  unset -nocomplain FH_LAST
+  unset -nocomplain ::FH_LAST
+  unset -nocomplain ::ID_LAST
+  unset -nocomplain ::ARG_LAST
 ## 3. if a separate server was startet (NON-PIPE communication) kill this server
   if {!$::env(USE_REMOTE)} {
     if {[info exists PIDFILE]} {

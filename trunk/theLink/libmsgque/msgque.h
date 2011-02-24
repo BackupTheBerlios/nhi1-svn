@@ -3806,7 +3806,10 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// \context
 /// \param[out] out the \e read-package-data to save
 /// \retException
-/// \attention The memory is \e dynamic-allocated and have to be freed using \RNSA{DumpDelete}.
+/// \attention 
+/// -# The memory is \e dynamic-allocated and have to be freed using \RNSA{DumpDelete}.
+/// -# The goal of this function is to create a \e dump to be loaded in the \e same context later
+/// .
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const context,
   struct MqDumpS ** const out
@@ -3870,10 +3873,15 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadProxy (
 /// \attention a transaction return data to the \e calling-client. To handle this data a 
 /// \e Proxy have to be available for the \e filter-client. Use \RNSA{ServiceProxy} 
 /// together with the transaction token \b +TRT to add this feature
+/// \ctx and the source of the copy
+/// \param[in] otherCtx the \e other-context-object and the target of the copy
+/// \param[in] dump \b optional parameter, value return from \RNSA{ReadDUMP}. \c NULL allowed
+/// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadForward (
   struct MqS * const ctx,
-  struct MqS * const otherCtx
-) __attribute__((nonnull));
+  struct MqS * const otherCtx,
+  struct MqDumpS * const dump
+) __attribute__((nonnull(1,2)));
 
 /*****************************************************************************/
 /*                                                                           */
@@ -3904,6 +3912,21 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqReadGetNumItems (
 /// \return boolean, \yes or \no
 MQ_EXTERN MQ_BOL MQ_DECL MqReadItemExists (
   struct MqS const * const ctx
+);
+
+/// \brief the \e hand-shake of a \e service-call
+enum MqHandShakeE {
+  // direction: client -> server
+  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
+  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
+  // direction: server -> client
+  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
+  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
+};
+
+/// \brief return the \e HandShake identifer
+MQ_EXTERN enum MqHandShakeE MQ_DECL MqReadGetHandShake (
+  struct MqS const * const context
 );
 
 /** \} Mq_Read_C_API */

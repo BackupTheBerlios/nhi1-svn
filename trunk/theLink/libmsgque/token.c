@@ -601,13 +601,18 @@ error1:
         case 'H':		// _SHD: SERVER shutdown request from remote Mq
 	  // delete link, but without memory free
 	  if (context->bits.onExit == MQ_NO) {
+	    // send a "shutdown" sequence
+	    pMqShutdown(__func__, context);
+	    // if an exit is allowd return an exit sequence
 	    if (context->setup.ignoreExit == MQ_NO) {
+/*
+// we can not use "MqLinkDelete" because code (like a slave) can be in use
+// and the "MqLinkDelete" will delete memory in use too
 	      context->refCount++;
 	      MqLinkDelete(context);
 	      context->refCount--;
-	      return pErrorSetExitWithCheck(context);
-	    } else {
-	      pMqShutdown(__func__, context);
+*/
+	      return MqErrorSetEXIT(context);
 	    }
 	  }
 	  break;

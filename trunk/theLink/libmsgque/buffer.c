@@ -997,9 +997,9 @@ MqBufferSetC (
 )
 {
   MQ_SIZE len = strlen(in);
+  pBufferNewSize (buf, len);
   // reset the cur pointer to the start of the buffer
   buf->cur.B = buf->data;
-  pBufferNewSize (buf, len);
   strcpy (buf->cur.C, in);
   buf->cursize = len;
   buf->type = MQ_STRT;
@@ -1013,9 +1013,9 @@ MqBufferSetB (
   MQ_SIZE const len
 )
 {
+  pBufferNewSize (buf, len);
   // reset the cur pointer to the start of the buffer
   buf->cur.B = buf->data;
-  pBufferNewSize (buf, len);
   memcpy (buf->cur.B, in, len);
   buf->cursize = len;
   buf->type = MQ_BINT;
@@ -1028,9 +1028,9 @@ MqBufferSetU (
   struct MqBufferS const * const in
 )
 {
+  pBufferNewSize (buf, in->cursize);
   // reset the cur pointer to the start of the buffer
   buf->cur.B = buf->data;
-  pBufferNewSize (buf, in->cursize);
   // the +1 is for the string \0 byte
   memcpy (buf->cur.B, in->data, (in->cursize+1));
   buf->cursize = in->cursize;

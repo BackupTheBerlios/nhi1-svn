@@ -556,28 +556,26 @@ pSendBDY (
 }
 
 /*
+
+#define st(str) str==MQ_YES?"string=yes":"string=no"
+#define et(str) end==MQ_YES?"endian=yes":"endian=no"
+
 enum MqErrorE
-MqSendBDY (
+MqSendDUMP (
   struct MqS * const context,
-  MQ_CBI  in,
-  MQ_SIZE len
+  struct MqDumpS * const dump
 )
 {
   struct MqSendS * const send = context->link.send;
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (dump->signature != MQ_MqDumpS_SIGNATURE) {
+    return MqErrorDbV(MQ_ERROR_VALUE_INVALID, "signature", "MqDumpS");
+  } else if (dump->isString != context->config.isString) {
+    return MqErrorDbV(MQ_ERROR_VALUE_INVALID, st(dump->isString), "MqDumpS");
+  } else if (dump->endian != context->bits.endian) {
+    return MqErrorDbV(MQ_ERROR_VALUE_INVALID, et(dump->endian), "MqDumpS");
   } else {
-    MQ_SIZE numItems;
-    union MqBufferU tin;
-    struct HdrSendS const * cur = (struct HdrSendS const *) in;
-    in  += HDR_SIZE;
-    len -= HDR_SIZE;
-    // read NumItems -> attention no ENDIAN conversion
-    tin.B = (MQ_BIN) in + BDY_NumItems_S;
-    numItems = U2INT(!context->config.isString,tin);
-    // send data
-    MqSendSTART (context);
-    pSendBDY (context, in, len, cur->hdr.code, numItems);
     switch (cur->hdr.code) {
       case MQ_HANDSHAKE_START:
 	// used for "MqServiceIsTransaction" to return the right values (aguard)

@@ -60,16 +60,6 @@ enum MqIoSelectE {
 /// \brief prototype for an Event-Reader function
 typedef enum MqErrorE ( *EventReadF) ( MQ_PTR env, struct MqS **);
 
-/// \brief the \e hand-shake of a \e service-call
-enum MqHandShakeE {
-  // direction: client -> server
-  MQ_HANDSHAKE_START	    = 'S',  ///< start  \b shortterm-service-call
-  MQ_HANDSHAKE_TRANSACTION  = 'T',  ///< start  \b logterm-service-call
-  // direction: server -> client
-  MQ_HANDSHAKE_OK	    = 'O',  ///< return \b ok from a service-call (token: "_RET" or "+TRT")
-  MQ_HANDSHAKE_ERROR	    = 'E',  ///< return \b error from a service-call (token: "_RET" or "+TRT")
-};
-
 /*****************************************************************************/
 /*                                                                           */
 /*                          protocol reference                               */
@@ -182,8 +172,9 @@ RETURN_NUMBER+RETURN_MESSAGE_SIZE+...data...
 
 /// \brief \e integer representation
 union HdrIU {
-    MQ_INT	B		; ///< \e binary representation of a integer
-    MQ_STRB	S[HDR_INT_LEN]	; ///< \e string representation of a integer
+  MQ_INT	B		; ///< \e binary representation of a integer
+  MQ_STRB	S[HDR_INT_LEN]	; ///< \e string representation of a integer
+  MQ_BINB	E[4]		; ///< \e binary representation used for alignment access
 };
 
 /// \brief The protocol HEADER mapped to a \e struct

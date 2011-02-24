@@ -67,11 +67,8 @@ static enum MqErrorE FilterEvent (
     // if connection is down -> connect again
     MqErrorCheck1 (MqLinkConnect (ftr));
 
-    // fill the read-buffer from storage
-    MqErrorCheck2 (MqReadLOAD (mqctx, ctx->itm[ctx->rIdx]));
-
     // send BDY data to the link-target, on error write message but do not stop processing
-    if (MqErrorCheckI (MqReadForward(mqctx, ftr))) {
+    if (MqErrorCheckI (MqReadForward(mqctx, ftr, ctx->itm[ctx->rIdx]))) {
       if (MqErrorIsEXIT(mqctx)) {
 	return MqErrorReset(mqctx);
       } else {
@@ -86,9 +83,6 @@ end:
     return MQ_OK;
 error1:
     MqErrorCopy(mqctx,ftr);
-error2:
-    ErrorWrite (mqctx);
-    return MQ_OK;
   }
 error:
   return MqErrorStack(mqctx);
@@ -99,7 +93,7 @@ static enum MqErrorE LOGF ( ARGS ) {
   struct MqS * ftr;
   MqErrorCheck(MqServiceGetFilter(mqctx, 0, &ftr));
   if (!strcmp(MqLinkGetTargetIdent (ftr),"transFilter")) {
-    MqErrorCheck (MqReadForward(mqctx, ftr));
+    MqErrorCheck (MqReadForward(mqctx, ftr, NULL));
   } else {
     MQ_CST file;
     MqErrorCheck (MqReadC (mqctx, &file));

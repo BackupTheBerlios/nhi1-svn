@@ -23,9 +23,9 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-set t [makeFile {} storageFile]
-file delete -force $t
-set storageFiles [list "#memdb#" "#tmpdb#" $t]
+set testdb [makeFile {} storageFile]
+file delete -force $testdb
+set storageFiles [list "#memdb#" "#tmpdb#" $testdb]
 set storageFiles [list "#memdb#" ]
 
 
@@ -344,12 +344,59 @@ unset -nocomplain I B C S
 
 }
 
+if {[Block 3]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [filter -not COM_LST pipe] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+test transaction-Y1-($I|$B|$C|$S) {shutdown during SendEND_AND_WAIT} \
+    -constraints    {bug} \
+    -setup	    {
+      Setup $I $B $C $S --ident OTTO --filter-server Filter3
+      set RET [list]
+      $FH_LAST ServiceCreate TEST CB_I
+    } \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendT_START
+      $FH_LAST SendI 9978
+      $FH_LAST SendT_END TEST
+      $FH_LAST SendI 1
+      $FH_LAST SendEND_AND_WAIT ECIW
+      $FH_LAST LinkDelete
+if 0 {
+      after 1000
+Print ARG_LAST
+      $FH_LAST LinkCreate {*}$ARG_LAST
+      $FH_LAST ProcessEvent -wait ONCE
+}
+    } \
+    -cleanup {
+      Cleanup
+    } \
+    -result         {9978 1}
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}
+
 ##
 ## -----------------------------------------------------------------------
 ## finish
 ##
-file delete -force $t
+file delete -force $testdb
 freeTests
-
-
 

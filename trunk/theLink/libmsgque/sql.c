@@ -87,7 +87,7 @@ sSqlAddDb (
   MqDLogV(context,5,"try to open database '%s'\n", storageFile);
 
   if (storageFile == NULL || *storageFile == '\0') {
-    return MqErrorDbV(MQ_ERROR_NULL_NOT_ALLOWED, "storageFile");
+    return MqErrorDbV(MQ_ERROR_VALUE_INVALID, "NULL", "storageFile");
   }
 
   check_NULL (sql_sys) {
@@ -231,8 +231,7 @@ pSqlSelectSendTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to select
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl=sql_sys->sendSelect) {
     const static char sql[] = "SELECT callback, numItems, type, data FROM sendTrans WHERE transLId = ?;";
@@ -249,6 +248,8 @@ pSqlSelectSendTrans (
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
@@ -261,8 +262,7 @@ pSqlDeleteSendTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt * hdl;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to select
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl=sql_sys->sendDelete) {
     const static char sql[] = "DELETE FROM sendTrans WHERE transLId = ?;";
@@ -276,6 +276,8 @@ pSqlDeleteSendTrans (
   return MqErrorGetCodeI(context);
 error:
   return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
@@ -328,8 +330,7 @@ pSqlSelectReadTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to select
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl=sql_sys->pSqlSelectReadTrans) {
     const static char sql[] = "SELECT transLId,string,endian,hdr,bdy FROM readTrans INDEXED BY readTransI WHERE ident = ? and ctxId = ?;";
@@ -346,6 +347,8 @@ pSqlSelectReadTrans (
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
 }
 
 enum MqErrorE
@@ -359,8 +362,7 @@ pSqlDeleteReadTrans (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt * hdl;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to delete
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl=sql_sys->readSelect2) {
     const static char sql[] = "SELECT oldTransId, oldRmtTransId FROM readTrans WHERE transLId = ?;";
@@ -388,6 +390,8 @@ pSqlDeleteReadTrans (
   return MqErrorGetCodeI(context);
 error:
   return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
 }
 
 /*****************************************************************************/
@@ -486,8 +490,7 @@ MqStorageSelect (
   MQ_TRA transLId = *transLIdP;
   *transLIdP = 0LL;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to select
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   if (transLId == 0LL) {
     check_NULL(hdl=sql_sys->MqStorageSelect1) {
@@ -532,8 +535,7 @@ MqStorageCount (
   register sqlite3_stmt *hdl;
   *countP = 0LL;
   check_NULL(sql_sys->db) {
-    // without database available -> nothing to select
-    return MQ_OK;
+    MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
   check_NULL(hdl=sql_sys->MqStorageCount) {
     const static char sql[] = "SELECT count(transLId) FROM readTrans INDEXED BY readTransI WHERE ident = ? AND ctxId = ?;";
@@ -548,6 +550,8 @@ MqStorageCount (
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
+error1:
+  return MqErrorStack(context);
 }
 
 /*****************************************************************************/
