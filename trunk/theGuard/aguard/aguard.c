@@ -73,14 +73,12 @@ PkgToGuard (
   struct MqDumpS *dump;
   struct MqS *ftrctx;
   MQ_BIN bdy = NULL; MQ_SIZE len;
-  int isT;
-  char gtH;
+  int isT = MqServiceIsTransaction(mqctx);
+  enum MqHandShakeE hs = MqReadGetHandShake(mqctx);
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadDUMP (mqctx, &dump));
-  isT = MqDumpIsTransaction(dump);
-  gtH = MqDumpGetHandShake(dump);
 
   bdy = (MQ_BIN) dump;
   len = MqDumpSize(dump);
@@ -98,7 +96,7 @@ PkgToGuard (
     // continue with the original transaction
     // a "longterm-transaction client->server call" return 2 packages. A "_RET" and than a "+TRT",
     // the "_RET" have to be ignored
-    if (gtH == 'T') {
+    if (hs == MQ_HANDSHAKE_TRANSACTION) {
       return MQ_OK;
     } else {
       MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
@@ -128,7 +126,7 @@ GuardToPkg (
   struct MqDumpS *dump = NULL, *rdump;
   struct MqS * ftrctx;
   MQ_BIN bdy; MQ_SIZE len;
-  int isT;
+  int isT = MqServiceIsTransaction(mqctx);
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
@@ -138,7 +136,7 @@ GuardToPkg (
   rdump = (struct MqDumpS*) bdy;
   // dump is using the "read-buffer". this buffer is likely to be overwritten
   // -> do as soon as possible save our information
-  isT = MqDumpIsTransaction(rdump);
+  //isT = MqDumpIsTransaction(rdump);
 //printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
   MqErrorCheck (MqReadForward (mqctx, ftrctx, rdump));
 
