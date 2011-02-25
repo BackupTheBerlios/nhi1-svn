@@ -73,10 +73,15 @@ PkgToGuard (
   struct MqDumpS *dump;
   struct MqS *ftrctx;
   MQ_BIN bdy = NULL; MQ_SIZE len;
+  int isT;
+  char gtH;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadDUMP (mqctx, &dump));
+  isT = MqDumpIsTransaction(dump);
+  gtH = MqDumpGetHandShake(dump);
+
   bdy = (MQ_BIN) dump;
   len = MqDumpSize(dump);
 //printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
@@ -87,13 +92,13 @@ PkgToGuard (
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
 
-  if (MqDumpIsTransaction(dump)) {
+  if (isT) {
     MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
 
     // continue with the original transaction
     // a "longterm-transaction client->server call" return 2 packages. A "_RET" and than a "+TRT",
     // the "_RET" have to be ignored
-    if (MqDumpGetHandShake(dump) == 'T') {
+    if (gtH == 'T') {
       return MQ_OK;
     } else {
       MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
@@ -123,6 +128,7 @@ GuardToPkg (
   struct MqDumpS *dump = NULL, *rdump;
   struct MqS * ftrctx;
   MQ_BIN bdy; MQ_SIZE len;
+  int isT;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
@@ -130,11 +136,14 @@ GuardToPkg (
 //printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
   guard_crypt (bdy, len, DECRYPT);
   rdump = (struct MqDumpS*) bdy;
+  // dump is using the "read-buffer". this buffer is likely to be overwritten
+  // -> do as soon as possible save our information
+  isT = MqDumpIsTransaction(rdump);
 //printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
   MqErrorCheck (MqReadForward (mqctx, ftrctx, rdump));
 
   // if a "shortterm-transaction" is ongoing, process the results
-  if (MqDumpIsTransaction(rdump)) {
+  if (isT) {
     // check for a short-term-transaction and return the results
     // should be always != 0 because "PkgToGuard" use "MqSendEND_AND_WAIT"
     // read all results from ftr

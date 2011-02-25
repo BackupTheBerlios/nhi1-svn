@@ -206,7 +206,7 @@ MqErrorStackP(
 {
   if (MQ_ERROR_IS_POINTER(context)) {
     if (MqErrorCheckI(context->error.code)) {
-//MqLogV(context,func,0,"ERROR->%s\n",MqErrorGetText(context));
+      MqLogV(context,func,7,"ERROR->%s\n",MqErrorGetText(context));
       MQ_STR basename = MqSysBasename(file, MQ_YES);
       MQ_CST type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
       if (unlikely(context->config.debug >= 5)) 

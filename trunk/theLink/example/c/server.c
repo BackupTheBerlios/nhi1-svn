@@ -1296,7 +1296,7 @@ error:
   return MqSendRETURN (mqctx);
 }
 
-/// \brief print data to file
+/// \brief print server->client longterm-transaction
 /// \service
 static enum MqErrorE
 Ot_TRNS (
