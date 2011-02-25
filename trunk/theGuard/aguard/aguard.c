@@ -26,7 +26,7 @@
 
 #define ENCRYPT MQ_YES
 #define DECRYPT MQ_NO
-static MQ_BIN guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
+static void guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
   MQ_BIN key = KEY_DATA;
   const MQ_BIN keyend = KEY_DATA+KEY_LENGTH;
   const MQ_BIN dataend = data+size;
@@ -40,7 +40,6 @@ static MQ_BIN guard_crypt (MQ_BIN data, MQ_SIZE size, MQ_BOL flag) {
       *data -= *key;
     }
   }
-  return data;
 }
 
 /// \brief display help using \b -h or \b --help command-line option
@@ -74,35 +73,39 @@ PkgToGuard (
   struct MqDumpS *dump;
   struct MqS *ftrctx;
   MQ_BIN bdy = NULL; MQ_SIZE len;
-  enum MqHandShakeE hs = MqReadGetHandShake(mqctx);
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadDUMP (mqctx, &dump));
   bdy = (MQ_BIN) dump;
   len = MqDumpSize(dump);
-printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
+//printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
   guard_crypt (bdy, len, ENCRYPT);
-printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
+//printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
 
   // build "+GRD" package and send as shortterm-transaction
   MqErrorCheck1 (MqSendSTART (ftrctx));
   MqErrorCheck1 (MqSendB (ftrctx, bdy, len));
-  MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
-  MqDumpDelete (&dump);
 
-  // continue with the original transaction
-  // a "longterm-transaction client->server call" return 2 packages. A "_RET" and than a "+TRT",
-  // the "_RET" have to be ignored
-  if (hs == MQ_HANDSHAKE_TRANSACTION) {
-    return MQ_OK;
-  } else if (MqServiceIsTransaction (mqctx)) {
-    MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
-    guard_crypt (bdy, len, DECRYPT);
-    return MqReadForward (ftrctx, mqctx, (struct MqDumpS*) bdy);
+  if (MqDumpIsTransaction(dump)) {
+    MqErrorCheck1 (MqSendEND_AND_WAIT (ftrctx, "+GRD", MQ_TIMEOUT_USER));
+
+    // continue with the original transaction
+    // a "longterm-transaction client->server call" return 2 packages. A "_RET" and than a "+TRT",
+    // the "_RET" have to be ignored
+    if (MqDumpGetHandShake(dump) == 'T') {
+      return MQ_OK;
+    } else {
+      MqErrorCheck1 (MqReadB (ftrctx, &bdy, &len));
+      guard_crypt (bdy, len, DECRYPT);
+      return MqReadForward (ftrctx, mqctx, (struct MqDumpS*) bdy);
+    }
+  } else {
+    MqErrorCheck1 (MqSendEND (ftrctx, "+GRD"));
   }
 
 error:
+  MqDumpDelete (&dump);
   return MqSendRETURN(mqctx);
 
 error1:
@@ -117,35 +120,31 @@ GuardToPkg (
   MQ_PTR data
 )
 {
-  struct MqDumpS *dump = NULL;
+  struct MqDumpS *dump = NULL, *rdump;
   struct MqS * ftrctx;
   MQ_BIN bdy; MQ_SIZE len;
-  enum MqHandShakeE hs = MQ_HANDSHAKE_START;
 
   MqErrorCheck (MqServiceGetFilter (mqctx, 0, &ftrctx));
 
   MqErrorCheck (MqReadB (mqctx, &bdy, &len));
-  MqErrorCheck (MqReadForward (mqctx, ftrctx, (struct MqDumpS*) guard_crypt (bdy, len, DECRYPT)));
+//printLV("1. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
+  guard_crypt (bdy, len, DECRYPT);
+  rdump = (struct MqDumpS*) bdy;
+//printLV("2. DUMP: sig<%x>, len<%i>\n", *(int*)bdy, len);
+  MqErrorCheck (MqReadForward (mqctx, ftrctx, rdump));
 
-//printH(hs)
-
-  // a "longterm-transaction" return 2 packages "_RET" and "+TRT" -> ignore the "_RET"
-  if (hs == MQ_HANDSHAKE_TRANSACTION) {
-    return MQ_OK;
-  } else {
+  // if a "shortterm-transaction" is ongoing, process the results
+  if (MqDumpIsTransaction(rdump)) {
     // check for a short-term-transaction and return the results
     // should be always != 0 because "PkgToGuard" use "MqSendEND_AND_WAIT"
-    if (mqctx->link.transSId != 0) {
-      // read all results from ftr
-      MqErrorCheck1 (MqReadDUMP (ftrctx, &dump));
-      bdy = (MQ_BIN)dump;
-      len = MqDumpSize(dump);
-      // encrypt
-      guard_crypt  (bdy, len, ENCRYPT);
-      // prepare binary package
-      MqErrorCheck (MqSendSTART (mqctx));
-      MqErrorCheck (MqSendB (mqctx, bdy, len));
-    }
+    // read all results from ftr
+    MqErrorCheck1 (MqReadDUMP (ftrctx, &dump));
+    bdy = (MQ_BIN)dump;
+    len = MqDumpSize(dump);
+    // encrypt
+    guard_crypt  (bdy, len, ENCRYPT);
+    // prepare binary package
+    MqErrorCheck (MqSendB (mqctx, bdy, len));
   }
 
 error:
@@ -154,6 +153,7 @@ error:
   return MqSendRETURN(mqctx);
 
 error1:
+  MqDumpDelete(&dump);
   MqErrorCopy(mqctx, ftrctx);
   return MqErrorStack(mqctx);
 }

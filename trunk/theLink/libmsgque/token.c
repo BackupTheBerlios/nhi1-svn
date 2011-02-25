@@ -414,11 +414,10 @@ pTokenDefaultTRT (
   MQ_PTR const data
 ) 
 {
-  enum MqErrorE ret;
   MqErrorCheck (pReadCreateTransId (context));
   switch (pReadGetHandShake (context)) {
     case MQ_HANDSHAKE_OK:
-      ret = pTokenInvoke (context->link.srvT);
+      MqErrorCheck(pTokenInvoke (context->link.srvT));
       break;
     case MQ_HANDSHAKE_ERROR: {
       MQ_INT retNum;
@@ -438,16 +437,13 @@ pTokenDefaultTRT (
 	MqErrorCheck (MqReadC (context, &msg));
 	pErrorAppendC (context, msg);
       }
-      ret = MQ_ERROR;
       break;
     }
     case MQ_HANDSHAKE_START:
     case MQ_HANDSHAKE_TRANSACTION:
-      ret = MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
+      MqErrorDb2(context, MQ_ERROR_HANDSHAKE);
       break;
   }
-  MqErrorCheck (pReadDeleteTransId (context));
-  return ret;
 error:
   pReadDeleteTransId (context);
   return MqErrorStack (context);

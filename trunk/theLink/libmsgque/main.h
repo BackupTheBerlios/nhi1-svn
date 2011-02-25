@@ -943,7 +943,7 @@ enum MqErrorE pTransSetResult ( struct MqTransS const * const, enum MqTransE con
 struct MqSqlS {
   MQ_CST  storageFile;		      ///< main directory used for database files
   sqlite3 *db;			      ///< sqlite database connection handle
-  sqlite3_stmt *sendInsert;	      ///< prepared sql statement
+  sqlite3_stmt *pSqlInsertSendTrans;  ///< prepared sql statement
   sqlite3_stmt *sendSelect;	      ///< prepared sql statement
   sqlite3_stmt *sendDelete;	      ///< prepared sql statement
   sqlite3_stmt *readInsert;	      ///< prepared sql statement

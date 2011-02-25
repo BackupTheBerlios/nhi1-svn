@@ -217,4 +217,3 @@ main (
 error:
   MqExit (mqctx);
 }
-

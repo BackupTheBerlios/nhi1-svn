@@ -3833,7 +3833,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
 ///
 /// The object returned is owned by the \e read-data-package and is \b only valid
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
-/// use \RNS{BufferDup}
+/// use \RNS{BufferDup} and \RNS{BufferDelete} later.
 /// \ctx
 /// \param[out] val the buffer
 /// \retException
@@ -4845,6 +4845,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 
 /// return the package size from the \e dump data package
 MQ_EXTERN MQ_SIZE MQ_DECL MqDumpSize (
+  struct MqDumpS * const dump
+) __attribute__((nonnull));
+
+/// return boolean, is the dump include a \e shortterm-transaction
+MQ_EXTERN int MQ_DECL MqDumpIsTransaction (
+  struct MqDumpS * const dump
+) __attribute__((nonnull));
+
+/// return the #MqHandShakeE as character
+MQ_EXTERN MQ_STRB MQ_DECL MqDumpGetHandShake (
   struct MqDumpS * const dump
 ) __attribute__((nonnull));
 

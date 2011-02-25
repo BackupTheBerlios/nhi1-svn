@@ -25,8 +25,8 @@ if {[info exists env(TS_LIBRARY)]} {
 
 set testdb [makeFile {} storageFile]
 file delete -force $testdb
-set storageFiles [list "#memdb#" "#tmpdb#" $testdb]
 set storageFiles [list "#memdb#" ]
+set storageFiles [list "#memdb#" "#tmpdb#" $testdb]
 
 
 proc CB_I {ctx} {

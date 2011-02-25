@@ -122,7 +122,7 @@ test trans-4-($I|$B|$C|$S) {dump size} \
       Cleanup -force yes
     } \
     -returnCodes    ok \
-    -result         {109}
+    -result         {113}
 
 # cleanup ---------------------------
 #Cleanup

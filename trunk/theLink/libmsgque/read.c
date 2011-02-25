@@ -606,12 +606,15 @@ pReadTRA (
 
 #pragma pack(1)
 struct MqDumpS {
-  MQ_INT    signature;
-  MQ_TRA    transLId;
-  MQ_BOL    isString;
-  MQ_BOL    endian;
-  MQ_SIZE   hdrlen;
-  MQ_SIZE   bdylen;
+  MQ_INT      signature;
+  MQ_SIZE     size;
+  MQ_TRA      transLId;
+  MQ_BOL      isString;
+  MQ_BOL      endian;
+  MQ_SIZE     bdylen;
+  MQ_SIZE     hdrlen;
+  struct HdrS hdr;
+  struct BdyS bdy;
 };
 #pragma pack()
 
@@ -641,9 +644,9 @@ pReadLOAD (
       dump->transLId,
       dump->isString,
       dump->endian, 
-      (MQ_BIN)env+DMP_HDR,
+      (MQ_BIN) &dump->hdr,
       dump->hdrlen,
-      (MQ_BIN)env+DMP_BDY,
+      (MQ_BIN) &dump->bdy,
       dump->bdylen
     );
   }
@@ -659,24 +662,24 @@ MqReadDUMP (
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct MqDumpS dump = {
-      MQ_MqDumpS_SIGNATURE,
-      read->transLId, 
-      context->config.isString, 
-      context->link.bits.endian,
-      read->hdrorig->cursize,
-      read->bdy->cursize
-    };
-    MQ_SIZE const lbdy = read->bdy->cursize;
-    MQ_SIZE const llen = sizeof(struct MqDumpS) + HDR_SIZE + lbdy;
-    MQ_BIN data = (MQ_BIN) MqSysMalloc (context, llen);
-    check_NULL(data) return MqErrorStack(context);
-    memcpy (data+DMP_STA, &dump,		DMP_HDR);
-    memcpy (data+DMP_HDR, read->hdrorig->data,	read->hdrorig->cursize);
-    memcpy (data+DMP_BDY, read->bdy->data,	read->bdy->cursize);
-    *out = (struct MqDumpS *)data;
+    MQ_BUF hdr = read->hdrorig;
+    MQ_BUF bdy = read->bdy;
+    MQ_SIZE const llen = sizeof(struct MqDumpS) + read->bdy->cursize - sizeof(struct BdyS);
+    register struct MqDumpS *dump = *out = (struct MqDumpS *) MqSysMalloc (context, llen);
+    check_NULL(dump) return MqErrorStack(context);
+    dump->signature   =	MQ_MqDumpS_SIGNATURE;
+    dump->size	      = llen;
+    dump->transLId    =	read->transLId;
+    dump->isString    =	context->config.isString;
+    dump->endian      = context->link.bits.endian;
+    dump->hdrlen      =	hdr->cursize;
+    dump->hdr	      = *(struct HdrS*)hdr->data;
+    dump->bdylen      =	bdy->cursize;
+    memcpy (&dump->bdy, bdy->data, bdy->cursize);
     // in a "longterm-transaction" with "MqReadDUMP" no return transaction is
     // possible because the transaction is stored or forwarded
+    // with "MQ_HANDSHAKE_TRANSACTION" the transaction will be deleted
+    // in "MqSendRETURN"
     read->handShake = MQ_HANDSHAKE_START;
     return MQ_OK;
   }
@@ -699,7 +702,23 @@ MqDumpSize (
   struct MqDumpS * const dump
 )
 {
-  return sizeof(struct MqDumpS) + HDR_SIZE + dump->bdylen;
+  return dump->size;
+}
+
+int
+MqDumpIsTransaction (
+  struct MqDumpS * const dump
+)
+{
+    return (dump->hdr.trans != 0);
+}
+
+MQ_STRB
+MqDumpGetHandShake (
+  struct MqDumpS * const dump
+)
+{
+    return dump->hdr.code;
 }
 
 /*****************************************************************************/
@@ -1144,9 +1163,17 @@ MqReadForward (
   MQ_TOK token;
   enum MqHandShakeE hs;
   MQ_BIN bdy; MQ_SIZE len;
-  MQ_HDL RtransSId;
-  MQ_HDL StransSId = sendctx->link.transSId;
+  MQ_HDL RtransSId, StransSId;
   MQ_ATO num;
+
+  if (sendctx->link.send == NULL) {
+    return MqErrorDbV2(readctx,MQ_ERROR_CONNECTED, "msgque", "not");
+  }
+
+  // we need to know if the result is for a "shortterm-transaction"
+  // a value < 0 signal an out-of-duty id, this happen if the read-buffer was
+  // read from a storage and the original id is invalid.
+  StransSId = sendctx->link.transSId > 0 ? sendctx->link.transSId : 0;
   
   // start to send package
   MqErrorCheck1 (MqSendSTART (sendctx));
@@ -1158,8 +1185,6 @@ MqReadForward (
     RtransSId = readctx->link.transSId; // "0" = no-transaction  or "-1" = shortterm-transaction
 
     pReadBDY (readctx, &bdy, &len, &hs, &num.I);
-  } else if (sendctx->link.send == NULL) {
-    return MqErrorDbV2(readctx,MQ_ERROR_CONNECTED, "msgque", "not");
   } else if (dump->signature != MQ_MqDumpS_SIGNATURE) {
     return MqErrorDbV2(readctx,MQ_ERROR_VALUE_INVALID, "signature", "MqDumpS");
   } else if (dump->isString != sendctx->config.isString) {
@@ -1170,26 +1195,25 @@ MqReadForward (
 */
   } else {
     // YES -> read data from the "dump-buffer"
-    struct HdrSendS const * cur = (struct HdrSendS const *) (((MQ_BIN)dump) + DMP_HDR);
-    token = cur->hdr.tok;
-    hs = cur->hdr.code;
-    bdy = ((MQ_BIN)dump)+DMP_BDY;
+    token = dump->hdr.tok;
+    hs = dump->hdr.code;
+    bdy = (MQ_BIN) &dump->bdy;
     len = dump->bdylen;
-    RtransSId = cur->hdr.trans == 0 ? 0 : -1; // "0" = no-transaction  or "-1" = shortterm-transaction
+    RtransSId = dump->hdr.trans == 0 ? 0 : -1; // "0" = no-transaction  or "-1" = shortterm-transaction
     // read the bdy->numItems
     if (unlikely(dump->isString)) {
-      num.I = str2int(cur->bdy.num.S,NULL,16);
+      num.I = str2int(dump->bdy.num.S,NULL,16);
     } else {
       if (dump->endian != sendctx->link.bits.endian) {
 	pSwapBDY(bdy);
       }
 #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
-      num.B[0] = cur->bdy.num.E[0];
-      num.B[1] = cur->bdy.num.E[1];
-      num.B[2] = cur->bdy.num.E[2];
-      num.B[3] = cur->bdy.num.E[3];
+      num.B[0] = dump->bdy.num.E[0];
+      num.B[1] = dump->bdy.num.E[1];
+      num.B[2] = dump->bdy.num.E[2];
+      num.B[3] = dump->bdy.num.E[3];
 #else
-      num.I = cur->bdy.num.B;
+      num.I = dump->bdy.num.B;
 #endif
     }
     // if the package is a "longterm-transaction increase the number
@@ -1204,13 +1228,17 @@ MqReadForward (
       // use a transaction protection
       MqErrorCheck1 (MqSendEND_AND_WAIT (sendctx, token, MQ_TIMEOUT_USER));
 
-      // "transSId != -1" set in "pReadTRA" if read-package come from a storage.
-      // no answer possible because the initial call is already gone.
-      // only if a !real! shortterm-transaction result (transSId != -1) and
-      // not a longterm-transaction -> process the result
+      // start the answer
+      MqErrorCheck(MqSendSTART (readctx));
+
+      // if the "transSId != -1" was set than the data came from a !dump!.
+      // no answer is possible because the initial call is already gone.
+      // only for a !real! "shortterm-transaction" result (transSId != 0 and -1)
+      // the results are important. as a silent agreement a "longterm-transaction"
+      // only report an empty "_RET" first -> ignore the read/send -> this is faster.
+      // an other silent agreement is that a "shortterm-transaction", used from 
+      // a storage, only report an empty  "_RET" too!!
       if (RtransSId != -1 && hs != MQ_HANDSHAKE_TRANSACTION) {
-	// send the answer
-	MqErrorCheck(MqSendSTART (readctx));
 	// BDY in + out
 	pReadBDY (sendctx, &bdy, &len, &hs, &num.I);
 	pSendBDY (readctx,  bdy,  len,  hs,  num.I);
@@ -1222,13 +1250,8 @@ MqReadForward (
 
   // direction: server -> client = answer from the service
   } else {
-    if (!strncmp(token,"+TRT",4) ) {
-      // only send return for a !real! request
-      MqErrorCheck1 (pSendEND (sendctx, "+TRT", 0));
-    } else if (StransSId != -1) {
-      // only send return for a !real! request
-      MqErrorCheck1 (pSendEND (sendctx, token, StransSId));
-    }
+    // only send return for a !real! request
+    MqErrorCheck1 (pSendEND (sendctx, token, StransSId));
   }
 
   return MQ_OK;

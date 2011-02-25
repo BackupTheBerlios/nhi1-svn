@@ -837,7 +837,7 @@ pSendEND (
     pLogHEX(context, __func__, buf->data, (buf->cursize > 1100 ? 1100 : buf->cursize));
   */
 
-    MqDLogV(context,5,"send token<%s>\n",token);
+    MqDLogV(context,5,"send token<%s>, trans<%i>\n",token,trans);
     MqErrorReturn (pIoSend (context->link.io, buf));
   }
 }
