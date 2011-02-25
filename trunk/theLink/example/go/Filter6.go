@@ -37,7 +37,7 @@ type LOGF Filter6
   func (this *LOGF) Call() {
     ftr := this.ServiceGetFilter()
     if (ftr.LinkGetTargetIdent() == "transFilter") {
-      this.ReadForward(ftr)
+      this.ReadForward(ftr, nil)
     } else {
       this.FH,_ = os.Open(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
     }
@@ -81,7 +81,7 @@ func (this *Filter6) Event() {
     ftr := this.ServiceGetFilter()
     ftr.LinkConnect()
     Id = this.StorageSelect()
-    this.ReadForward(ftr)
+    this.ReadForward(ftr, nil)
   }
 }
 

@@ -684,8 +684,16 @@ JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadLOAD
  * Method:    ReadForward
  * Signature: (Ljavamsgque/MqS;)V
  */
-JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadForward
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadForward__Ljavamsgque_MqS_2
   (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     javamsgque_MqS
+ * Method:    ReadForward
+ * Signature: (Ljavamsgque/MqS;Ljavamsgque/MqDumpS;)V
+ */
+JNIEXPORT void JNICALL Java_javamsgque_MqS_ReadForward__Ljavamsgque_MqS_2Ljavamsgque_MqDumpS_2
+  (JNIEnv *, jobject, jobject, jobject);
 
 /*
  * Class:     javamsgque_MqS

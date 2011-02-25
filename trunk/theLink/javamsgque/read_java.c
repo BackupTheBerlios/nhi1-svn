@@ -275,14 +275,28 @@ error:
   return;
 }
 
-JNIEXPORT void JNICALL NS(ReadForward) (
+JNIEXPORT void JNICALL NS(ReadForward__Ljavamsgque_MqS_2) (
   JNIEnv *      env,
   jobject       self,
   jobject	ctx
 )
 {
   SETUP_context;
-  ErrorMqToJavaWithCheck(MqReadForward(context, XCONTEXT(ctx)));
+  ErrorMqToJavaWithCheck(MqReadForward(context, XCONTEXT(ctx), NULL));
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(ReadForward__Ljavamsgque_MqS_2Ljavamsgque_MqDumpS_2) (
+  JNIEnv *      env,
+  jobject       self,
+  jobject	ctx,
+  jobject	dumpO
+)
+{
+  SETUP_context;
+  SETUP_dump(dumpO);
+  ErrorMqToJavaWithCheck(MqReadForward(context, XCONTEXT(ctx), dump));
 error:
   return;
 }

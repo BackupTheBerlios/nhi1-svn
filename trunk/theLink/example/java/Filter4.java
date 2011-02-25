@@ -83,8 +83,7 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
       try {
 	MqS ftr = ServiceGetFilter();
 	ftr.LinkConnect();
-	ReadLOAD(it);
-	ReadForward(ftr);
+	ReadForward(ftr,it);
       } catch (Throwable ex) {
 	ErrorSet(ex);
 	if (ErrorIsEXIT()) {

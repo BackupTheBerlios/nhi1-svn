@@ -63,8 +63,7 @@ namespace example {
 	try  {
 	  MqS ftr = ServiceGetFilter();
 	  ftr.LinkConnect();
-	  ReadLOAD(dump);
-	  ReadForward(ftr);
+	  ReadForward(ftr, dump);
 	} catch (Exception ex) {
 	  ErrorSet (ex);
 	  if (ErrorIsEXIT()) {

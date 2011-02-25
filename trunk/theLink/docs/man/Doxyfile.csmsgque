@@ -206,7 +206,11 @@ ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
 ALIASES		    += "ReadN=byte[] ctx.ReadN()"
 ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
 ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
-ALIASES		    += "ReadForward=ctx.ReadForward(\TM otheCtx)"
+
+ALIASES		    += "ReadForward2=ctx.ReadForward(\TM otherCtx)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx, \TD dump)"
+ENABLED_SECTIONS    += ReadForward
+
 ALIASES		    += "ReadProxy=ctx.ReadProxy(MqS otherCtx)"
 ALIASES		    += "ReadGetNumItems=int ctx.ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=bool ctx.ReadItemExists()"

@@ -1196,7 +1196,7 @@ MqReadForward (
   } else {
     // YES -> read data from the "dump-buffer"
     token = dump->hdr.tok;
-    hs = dump->hdr.code;
+    hs = (enum MqHandShakeE) dump->hdr.code;
     bdy = (MQ_BIN) &dump->bdy;
     len = dump->bdylen;
     RtransSId = dump->hdr.trans == 0 ? 0 : -1; // "0" = no-transaction  or "-1" = shortterm-transaction

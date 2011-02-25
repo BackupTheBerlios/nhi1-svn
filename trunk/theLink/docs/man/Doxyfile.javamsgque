@@ -224,7 +224,11 @@ ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
 ALIASES		    += "ReadN=\B ctx.ReadN()"
 ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
 ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
-ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx)"
+
+ALIASES		    += "ReadForward2=ctx.ReadForward(\TM otherCtx)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx, \TD dump)"
+ENABLED_SECTIONS    += ReadForward2
+
 ALIASES		    += "ReadU=\U ctx.ReadU()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(\TM otherCtx)"
 ALIASES		    += "ReadGetNumItems=\I ctx.ReadGetNumItems()"

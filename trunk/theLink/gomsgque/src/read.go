@@ -121,8 +121,8 @@ func (this *MqS) ReadProxy(ctx *MqS) {
   this.iErrorMqToGoWithCheck(C.MqReadProxy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx)))
 }
 
-func (this *MqS) ReadForward(ctx *MqS) {
-  this.iErrorMqToGoWithCheck(C.MqReadForward((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx)))
+func (this *MqS) ReadForward(ctx *MqS, dump *MqDumpS) {
+  this.iErrorMqToGoWithCheck(C.MqReadForward((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx), (*_Ctype_struct_MqDumpS)(dump)))
 }
 
 func (this *MqS) ReadGetNumItems() uint32 {

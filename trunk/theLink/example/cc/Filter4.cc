@@ -46,10 +46,8 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	  MqC *ftr = ServiceGetFilter();
 	  // reconnect to the server or do nothing if the server is already connected
 	  ftr->LinkConnect();
-	  // setup the BDY data from storage
-	  ReadLOAD(bdy);
 	  // send BDY data to the link-target
-	  ReadForward(ftr);
+	  ReadForward(ftr, bdy);
 	} catch (const exception& e) {
 	  ErrorSet (e);
 	  // on error, check if an "exit" happen
@@ -63,7 +61,7 @@ class Filter4 : public MqC, public IServerSetup, public IServerCleanup, public I
 	  }
 	}
 	// reset the item-storage
-	MqSysFree(bdy);
+	delete bdy;
 	// delete the data, will contine with next item
 	itms.pop();
       }

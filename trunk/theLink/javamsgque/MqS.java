@@ -398,6 +398,8 @@ public class MqS {
   public native void	ReadLOAD (MqDumpS dump)	throws MqSException;
   /// \api #MqReadForward
   public native void	ReadForward  (MqS ftr)	throws MqSException;
+  /// \api #MqReadForward
+  public native void	ReadForward  (MqS ftr, MqDumpS dump)	throws MqSException;
   /// \api #MqReadU
   public native MqBufferS ReadU		    ()	throws MqSException;
   /// \api #MqReadProxy

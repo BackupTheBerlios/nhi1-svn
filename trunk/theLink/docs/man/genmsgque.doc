@@ -576,6 +576,9 @@ UNKNOWN
 \function{ReadN,\ReadN}
 \function{ReadDUMP,\ReadDUMP}
 \function{ReadLOAD,\ReadLOAD}
+\function2{ReadForward4,\ReadForward4}
+\function2{ReadForward3,\ReadForward3}
+\function2{ReadForward2,\ReadForward2}
 \function{ReadForward,\ReadForward}
 \function{ReadU,\ReadU}
 \function2{ReadL_START3,\ReadL_START3}

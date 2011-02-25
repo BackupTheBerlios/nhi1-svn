@@ -71,7 +71,7 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadProxy")]
     private static extern MqErrorE MqReadProxy(IntPtr contextMsgque, IntPtr sendMsgque);
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqReadForward")]
-    private static extern MqErrorE MqReadForward([In]IntPtr contextMsgque, [In]IntPtr sendMsgque);
+    private static extern MqErrorE MqReadForward([In]IntPtr contextMsgque, [In]IntPtr sendMsgque, [In]IntPtr dump);
 
     // ----------------------------------------------------------------------------------------------
     // DUMP
@@ -188,7 +188,12 @@ namespace csmsgque {
 
     /// \api #MqReadForward
     public void ReadForward(MqS ctx) {
-      ErrorMqToCsWithCheck(MqReadForward(context, ctx.context));
+      ErrorMqToCsWithCheck(MqReadForward(context, ctx.context, IntPtr.Zero));
+    }
+
+    /// \api #MqReadForward
+    public void ReadForward(MqS ctx, MqDumpS dump) {
+      ErrorMqToCsWithCheck(MqReadForward(context, ctx.context, dump.hdl));
     }
 
     /// \api #MqReadL_START

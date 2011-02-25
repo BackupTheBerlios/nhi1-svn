@@ -705,12 +705,20 @@ namespace ccmsgque {
 	ErrorCheck (MqReadLOAD(&context, val->hdl)); 
       }
       /// \api #MqReadForward
+      inline void ReadForward(MqC * const ftr, MqDumpC * const dump) throw(MqCException) { 
+	ErrorCheck (MqReadForward(&context, &ftr->context, dump->hdl)); 
+      }
+      /// \api #MqReadForward
       inline void ReadForward(MqC * const ftr) throw(MqCException) { 
-	ErrorCheck (MqReadForward(&context, &ftr->context)); 
+	ErrorCheck (MqReadForward(&context, &ftr->context, NULL)); 
+      }
+      /// \api #MqReadForward
+      inline void ReadForward(MqC &ftr, MqDumpC * const dump) throw(MqCException) { 
+	ErrorCheck (MqReadForward(&context, &ftr.context, dump->hdl)); 
       }
       /// \api #MqReadForward
       inline void ReadForward(MqC &ftr) throw(MqCException) { 
-	ErrorCheck (MqReadForward(&context, &ftr.context)); 
+	ErrorCheck (MqReadForward(&context, &ftr.context, NULL)); 
       }
       /// \api #MqReadU
       inline MQ_BUF ReadU() throw(MqCException) 
