@@ -92,6 +92,6 @@ dist-hook: $(MQS_MAIN)
 	$(VPATH_HOOK_DIST)
 	mkdir "$(distdir)/javamsgque"
 	chmod u+w "$(distdir)/javamsgque"
-	cp javamsgque/*.class "$(distdir)/javamsgque"
+	cp $(srcdir)/javamsgque/*.class "$(distdir)/javamsgque"
 	chmod u+w $(distdir)/javamsgque/*.class
 

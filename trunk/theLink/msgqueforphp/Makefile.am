@@ -82,6 +82,7 @@ EXTRA_DIST = \
 	MsgqueForPhp/MsgqueForPhp.c \
 	MsgqueForPhp/MqS_php.c \
 	MsgqueForPhp/MqBufferS_php.c \
+	MsgqueForPhp/MqDumpS_php.c \
 	MsgqueForPhp/MqSException_php.c \
 	MsgqueForPhp/config_php.c \
 	MsgqueForPhp/link_php.c \
@@ -90,6 +91,7 @@ EXTRA_DIST = \
 	MsgqueForPhp/error_php.c \
 	MsgqueForPhp/misc_php.c \
 	MsgqueForPhp/send_php.c \
+	MsgqueForPhp/storage_php.c \
 	MsgqueForPhp/MqFactoryS_php.c \
 	MsgqueForPhp/slave_php.c
 

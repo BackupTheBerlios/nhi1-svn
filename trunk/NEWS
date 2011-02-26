@@ -10,6 +10,12 @@
 #§              please contact AUTHORS for additional information
 #§
 
+26 Feb 2011: v NHI1-0.14, PLMK-2.3 und libmsgque-5.3
+
+ -> "deeper integration of SqLite"
+
+
+
 05 Feb 2011: v NHI1-0.13, PLMK-2.2 und libmsgque-5.2
 
  -> "SqLite, one additional step in the right direction"

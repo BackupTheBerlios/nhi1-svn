@@ -43,12 +43,14 @@ $(srcdir)/src/MqS.go \
 $(srcdir)/src/MqSException.go \
 $(srcdir)/src/MqBufferS.go \
 $(srcdir)/src/MqBinary.go \
+$(srcdir)/src/MqDumpS.go \
 $(srcdir)/src/send.go \
 $(srcdir)/src/read.go \
 $(srcdir)/src/link.go \
 $(srcdir)/src/config.go \
 $(srcdir)/src/service.go\
 $(srcdir)/src/slave.go\
+$(srcdir)/src/storage.go\
 $(srcdir)/src/MqFactoryS.go\
 $(srcdir)/src/gomsgque.h \
 $(srcdir)/src/gomsgque.c \
