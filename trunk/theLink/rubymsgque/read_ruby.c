@@ -14,6 +14,7 @@
 
 extern VALUE cMqS;
 extern VALUE cMqBufferS;
+extern VALUE cMqDumpS;
 
 #define READ(T,M) \
 static VALUE Read ## T (VALUE self) { \
@@ -64,14 +65,29 @@ static VALUE ReadDUMP (VALUE self) {
 
 static VALUE ReadLOAD (VALUE self, VALUE dump) {
   SETUP_mqctx
+  CheckType(dump, cMqDumpS, "usage: ReadLOAD(MqS dump)");
   ErrorMqToRubyWithCheck(MqReadLOAD(mqctx, VAL2MqDumpS(dump)));
   return Qnil;
 }
 
-static VALUE ReadForward (VALUE self, VALUE context) {
+static VALUE ReadForward (int argc, VALUE *argv, VALUE self, VALUE context) {
+  struct MqS *ctx = NULL;
+  struct MqDumpS *dump = NULL;
   SETUP_mqctx
-  ErrorMqToRubyWithCheck(MqReadForward(mqctx, VAL2MqS(context)));
+  if (argc < 1 || argc > 2) {
+    goto error;
+  } else {
+    if (rb_obj_is_kind_of(argv[0], cMqS) == Qfalse) goto error;
+    ctx = VAL2MqS(argv[0]);
+    if (argc == 2) {
+      if (rb_obj_is_kind_of(argv[1], cMqDumpS) == Qfalse) goto error;
+      dump = VAL2MqDumpS(argv[1]);
+    }
+  }
+  ErrorMqToRubyWithCheck(MqReadForward(mqctx, ctx, dump));
   return Qnil;
+error:
+  rb_raise(rb_eArgError,"usage: ReadForward(MqS otherCtx,?MqDumpS dump?)");
 }
 
 static VALUE ReadU (VALUE self) {
@@ -95,7 +111,7 @@ static VALUE ReadL_START (int argc, VALUE *argv, VALUE self) {
   ErrorMqToRubyWithCheck(MqReadL_START(mqctx, MqBufferS_object));
   return Qnil;
 error:
-  rb_raise(rb_eArgError,"usage: ReadL_START ?MqBufferS-Type-Arg?");
+  rb_raise(rb_eArgError,"usage: ReadL_START(?MqBufferS-Type-Arg?)");
 }
 
 static VALUE ReadL_END (VALUE self) {
@@ -118,7 +134,7 @@ static VALUE ReadT_END (VALUE self) {
 
 static VALUE ReadProxy (VALUE self, VALUE mqs) {
   SETUP_mqctx
-  CheckType(mqs, cMqS, "usage: ReadProxy MqS-Type-Arg");
+  CheckType(mqs, cMqS, "usage: ReadProxy(MqS otherCtx)");
   ErrorMqToRubyWithCheck(MqReadProxy(mqctx, VAL2MqS(mqs)));
   return Qnil;
 }
@@ -159,7 +175,7 @@ void NS(MqS_Read_Init)(void) {
   rb_define_method(cMqS, "ReadN",	      ReadN,		0);
   rb_define_method(cMqS, "ReadDUMP",	      ReadDUMP,		0);
   rb_define_method(cMqS, "ReadLOAD",	      ReadLOAD,		1);
-  rb_define_method(cMqS, "ReadForward",	      ReadForward,	1);
+  rb_define_method(cMqS, "ReadForward",	      ReadForward,	-1);
   rb_define_method(cMqS, "ReadU",	      ReadU,		0);
   rb_define_method(cMqS, "ReadL_START",	      ReadL_START,	-1);
   rb_define_method(cMqS, "ReadL_END",	      ReadL_END,	0);

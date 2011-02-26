@@ -65,8 +65,7 @@ class Filter4 < MqS
       begin
 	ftr = ServiceGetFilter()
         ftr.LinkConnect
-	ReadLOAD(@itms[0])
-	ReadForward(ftr)
+	ReadForward(ftr,@itms[0])
       rescue Exception => ex
         ErrorSet(ex)
         if ErrorIsEXIT() then

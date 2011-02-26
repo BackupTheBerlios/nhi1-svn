@@ -189,7 +189,7 @@ test error-1d-($I|$B|$C|$S) {wrong MqS reference} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[service-call-error] <Tok|ERR5> <Num|1>*
-[sS]> (server-0) \[Ruby-Error] #<TypeError: usage: ReadProxy MqS-Type-Arg>
+[sS]> (server-0) \[Ruby-Error] #<TypeError: usage: ReadProxy(MqS otherCtx)>
 [sS]> (server-0) */server.rb:*:in `ReadProxy'
 [sS]> (server-0) */server.rb:*:in `ERRX'*}
 

@@ -2505,7 +2505,11 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreate (
   MQ_SIZE size
 );
 
-/// \brief delete a new #MqBufferS 
+/// \brief delete a #MqBufferS object.
+/// There is no \e Garbage-Collection id duty because a \e MqBufferS-object can be linked to a
+/// \e MqS-object (\RNSA{ReadU}) and during a deletion of the \e MqS-object the internal memory 
+/// of the \e MqBufferS-object is invalid. The \RNSA{BufferDelete} is only usefull if the 
+/// \e MqBufferS-object was created explicit using #MqBufferCreate or \RNSA{BufferDup}.
 /// \param bufP a pointer to an struct MqBufferS * object
 /// \attention \attDelete
 MQ_EXTERN void MQ_DECL MqBufferDelete (
@@ -3820,6 +3824,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
 ///
 /// The \e dump is the result of a previous \RNSA{ReadDUMP} function call.
 /// After the \e load an package is suitable for all kind of \RNS{ReadData} function.
+/// To just forward the package use the \RNSA{ReadForward} function.
 /// \context
 /// \param[in] in the \e read-package-data to read from
 /// \retException 
@@ -4070,7 +4075,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
   MQ_SIZE const len
 );
 
-/// \brief append a #MQ_BUF object to the \e Send-Buffer object
+/// \brief append a #MqBufferS object to the \e Send-Buffer object
 /// \context
 /// \param[in] in the pointer to an #MqBufferS object to send
 /// \retMqErrorE

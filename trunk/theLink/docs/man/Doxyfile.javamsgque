@@ -227,7 +227,7 @@ ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
 
 ALIASES		    += "ReadForward2=ctx.ReadForward(\TM otherCtx)"
 ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx, \TD dump)"
-ENABLED_SECTIONS    += ReadForward2
+ENABLED_SECTIONS    += ReadForward
 
 ALIASES		    += "ReadU=\U ctx.ReadU()"
 ALIASES		    += "ReadProxy=ctx.ReadProxy(\TM otherCtx)"

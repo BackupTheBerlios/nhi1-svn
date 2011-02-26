@@ -1020,9 +1020,9 @@ MqReadLOAD (MqSelf* context, MqDumpS* dump)
     ErrorMqToPerlWithCheck (MqReadLOAD (context, dump));
 
 void
-MqReadForward (MqSelf* context, MqS* ftr)
+MqReadForward (MqSelf* context, MqS* ftr, MqDumpS* dump = NULL)
   CODE:
-    ErrorMqToPerlWithCheck (MqReadForward (context, ftr));
+    ErrorMqToPerlWithCheck (MqReadForward (context, ftr, dump));
 
 MQ_NST
 MqServiceGetToken (MqSelf* context)
@@ -1262,13 +1262,17 @@ MqLog (MqSelf* context, MQ_CST prefix, MQ_INT level, MQ_CST str)
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqDumpS
 
+void
+DESTROY(MqDumpSelf *dump)
+  CODE:
+    MqDumpDelete(&dump);
+
 MQ_INT
 Size (MqDumpSelf *dump)
   CODE:
     RETVAL = MqDumpSize(dump);
   OUTPUT:
     RETVAL
-
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqBufferS
 

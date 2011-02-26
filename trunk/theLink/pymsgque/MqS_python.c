@@ -203,7 +203,7 @@ PyObject* NS(ReadProxy)		  ( PyObject*, PyObject* );
 #define ReadN_DOC		  "[noARG] Read a PyMqS package item."
 #define ReadDUMP_DOC		  "[noARG] export the read-data-package."
 #define ReadLOAD_DOC		  "[dump] import the read-data-package."
-#define ReadForward_DOC		  "[MqS] forward the read-data-package."
+#define ReadForward_DOC		  "[MqS, ?MqDumpS?] forward the read-data-package or a dump package."
 #define ReadU_DOC		  "[noARG] Read a PyMqS buffer from the current PyMqS package."
 #define ReadL_START_DOC		  "[noARG] Start to read an embedded list item from the current PyMqS package."
 #define ReadL_END_DOC		  "[noARG] End to read an embedded list item from the current PyMqS package."

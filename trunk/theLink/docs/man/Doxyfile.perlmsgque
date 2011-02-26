@@ -97,6 +97,10 @@ ALIASES		    += "config_type_srvname=\C"
 ALIASES		    += "config_set_srvname=ConfigSetSrvName"
 ALIASES		    += "config_get_srvname=ConfigGetSrvName"
 
+ALIASES		    += "config_type_storage=\C"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
 ALIASES		    += "config_type_ident=\C"
 ALIASES		    += "config_set_ident=ConfigSetIdent"
 ALIASES		    += "config_get_ident=ConfigGetIdent"
@@ -190,10 +194,10 @@ ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(token, callback
 ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
 ALIASES		    += "SendERROR=$ctx->SendERROR()"
 ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
+ALIASES		    += "SendU=$ctx->SendU(\TU value)"
 ALIASES		    += "SendL_START=$ctx->SendL_START()"
 ALIASES		    += "SendL_END=$ctx->SendL_END()"
 ALIASES		    += "SendN=$ctx->SendN(value)"
-ALIASES		    += "SendBDY=\I $ctx->SendBDY(value)"
 ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
 ALIASES		    += "SendT_END=$ctx->SendT_END()"
 ALIASES		    += "SendT_example=\code \n\
@@ -207,16 +211,18 @@ $ctx->SendEND_AND_WAIT (\"SRVC\");\endcode"
 # READ DATE
 ALIASES		    += "read_example=\code$num = $ctx->ReadI();\n$ctx->ReadL_START();\n  $balance = $ctx->ReadD();\n  $owner = $ctx->ReadC();\n  $signature = $ctx->ReadB();\n$ctx->ReadL_END();\endcode"
 ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
-ALIASES		    += "ReadU=MqBufferS $ctx->ReadU()"
-ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
-ALIASES		    += "ReadBDY=ByteArray $ctx->ReadBDY()"
-ALIASES		    += "ReadProxy=$ctx->ReadProxy(otherCtx)"
+ALIASES		    += "ReadU=\TU $ctx->ReadU()"
+ALIASES		    += "ReadN=\TB $ctx->ReadN()"
+ALIASES		    += "ReadDUMP=\TD $ctx->ReadDUMP()"
+ALIASES		    += "ReadLOAD=$ctx->ReadLOAD(\TD dump)"
+ALIASES		    += "ReadProxy=$ctx->ReadProxy(\TM otherCtx)"
+ALIASES		    += "ReadForward=$ctx->ReadForward(\TM otherCtx, ?\TD dump?)"
 ALIASES		    += "ReadGetNumItems=\I $ctx->ReadGetNumItems()"
 ALIASES		    += "ReadItemExists=\O $ctx->ReadItemExists()"
 ALIASES		    += "ReadUndo=$ctx->ReadUndo()"
-ALIASES		    += "ReadL_START=$ctx->ReadL_START(?MqBufferS buffer?)"
+ALIASES		    += "ReadL_START=$ctx->ReadL_START(?\TU buffer?)"
 ALIASES		    += "ReadL_END=$ctx->ReadL_END()"
-ALIASES		    += "ReadT_START=$ctx->ReadT_START(?MqBufferS buffer?)"
+ALIASES		    += "ReadT_START=$ctx->ReadT_START(?\TU buffer?)"
 ALIASES		    += "ReadT_END=$ctx->ReadT_END()"
 ALIASES		    += "ReadT_example=\code \n\
 sub SRVR { \n\
@@ -238,6 +244,7 @@ sub ServerSetup { \n\
 ALIASES		    += "ServiceInterface=Interface: IService"
 ALIASES		    += "ServiceCreate=$ctx->ServiceCreate(token, callback)"
 ALIASES		    += "ServiceProxy=$ctx->ServiceProxy(token, id=0)"
+ALIASES		    += "ServiceStorage=$ctx->ServiceStorage(token)"
 ALIASES		    += "ServiceDelete=$ctx->ServiceDelete(token)"
 ALIASES		    += "ProcessEvent=$ctx->ProcessEvent(timeout, wait)"
 ALIASES		    += "ProcessEvent2=$ctx->ProcessEvent(wait)"
@@ -273,7 +280,9 @@ if {$buf->GetType() eq 'C'} { \n\
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
 ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
-ALIASES		    += "BufferType=char $buffer->GetType()"
+ALIASES		    += "BufferGetType=char $buffer->GetType()"
+ALIASES		    += "BufferDup=\TU buffer.Dup()"
+ALIASES		    += "BufferDelete=$buffer->Delete()"
 
 ALIASES		    += "Y=char"
 ALIASES		    += "O=bool"
@@ -288,6 +297,8 @@ ALIASES		    += "U=MqBufferS"
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=byteArray"
 ALIASES		    += "TE=MqSException"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA
@@ -296,6 +307,18 @@ ALIASES		    += "DictGet=$ctx->DictGet(key)"
 ALIASES		    += "DictExists=$ctx->DictExists(key)"
 ALIASES		    += "DictUnset=$ctx->DictUnset(key)"
 ALIASES		    += "DictUndef=undef"
+
+# STORAGE
+ALIASES		    += "StorageOpen=$ctx->MqStorageOpen(\C storageFile)"
+ALIASES		    += "StorageClose=$ctx->StorageClose()"
+ALIASES		    += "StorageInsert=\W $ctx->StorageInsert()"
+ALIASES		    += "StorageSelect=\W $ctx->StorageSelect(\W transLId)"
+ALIASES		    += "StorageDelete=$ctx->StorageDelete(\W transLId)"
+ALIASES		    += "StorageCount=\W $ctx->StorageCount()"
+
+# THE DUMP OBJECT
+ALIASES		    += "DumpSize=int $dump->Size()"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -329,5 +352,4 @@ if ($@) { \n\
   if ($ctx->ErrorIsEXIT) $ctx->ErrorReset; \n\
 } \n\
 \endcode"
-
 

@@ -224,8 +224,9 @@ PyObject* NS(ReadForward) (
 {
   SETUP_context
   MqS_Obj *ctxO = NULL;
-  PyErrorCheck (PyArg_ParseTuple(args, "O!:ReadForward", &NS(MqS), &ctxO));
-  ErrorMqToPythonWithCheck(MqReadForward(context, &ctxO->context));
+  MqDumpS_Obj *dumpO = NULL;
+  PyErrorCheck (PyArg_ParseTuple(args, "O!|O!:ReadForward", &NS(MqS), &ctxO, &NS(MqDumpS), &dumpO));
+  ErrorMqToPythonWithCheck(MqReadForward(context, &ctxO->context, dumpO == NULL ? NULL : dumpO->dump));
   SETUP_RETURN;
 }
 
@@ -284,7 +285,4 @@ PyObject* NS(ReadProxy) (
 error:
   return NULL;
 }
-
-
-
 

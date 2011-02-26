@@ -68,8 +68,7 @@ use base qw(Net::PerlMsgque::MqS);
       eval {
 	my $ftr = $ctx->ServiceGetFilter();
 	$ftr->LinkConnect();
-	$ctx->ReadLOAD($it);
-	$ctx->ReadForward($ftr);
+	$ctx->ReadForward($ftr,$it);
       };
       if ($@) {
 	$ctx->ErrorSet($@);

@@ -57,8 +57,7 @@ class Filter4(MqS):
       try:
         ftr = ctx.ServiceGetFilter()
         ftr.LinkConnect()
-        ctx.ReadLOAD(ctx.itms[0])
-        ctx.ReadForward(ftr)
+        ctx.ReadForward(ftr,ctx.itms[0])
       except:
         ctx.ErrorSet()
         if ctx.ErrorIsEXIT():

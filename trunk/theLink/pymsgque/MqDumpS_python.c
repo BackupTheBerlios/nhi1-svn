@@ -51,7 +51,7 @@ static PyMethodDef NS(MqDumpS_Methods)[] = {
 static void
 NS(MqDumpS_dealloc)(MqDumpS_Obj* self)
 {
-  MqSysFree(self->dump);
+  MqDumpDelete(&self->dump);
   Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
