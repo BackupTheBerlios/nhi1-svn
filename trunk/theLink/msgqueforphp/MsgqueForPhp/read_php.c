@@ -73,9 +73,20 @@ PHP_METHOD(MsgqueForPhp_MqS, ReadLOAD)
 PHP_METHOD(MsgqueForPhp_MqS, ReadForward)
 {
   SETUP_mqctx;
-  ARG2MqS(ReadForward,context)
-  ErrorMqToPhpWithCheck(MqReadForward(mqctx, context));
+  struct MqDumpS *dump = NULL;
+  struct MqS *otherCtx = NULL;
+  zval *dumpZ = NULL, *otherCtxZ = NULL;
+  PhpErrorCheck(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "o|o", &otherCtxZ, &dumpZ));
+  CheckType(otherCtxZ, NS(MqS));
+  VAL2MqS(otherCtx, otherCtxZ);
+  if (dumpZ) {
+    CheckType(dumpZ, NS(MqDumpS));
+    VAL2MqDumpS(dump, dumpZ);
+  }
+  ErrorMqToPhpWithCheck(MqReadForward(mqctx, otherCtx, dump));
   RETURN_NULL();
+error:
+  RETURN_ERROR("usage: ReadForward(MqS: otherCtx, ?MqDumpS: dump=NULL?)");
 }
 
 PHP_METHOD(MsgqueForPhp_MqS, ReadU)

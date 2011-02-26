@@ -1272,6 +1272,7 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 
 /// \defgroup MqFactory Mq_Factory_C_API
 /// \{
+/// \anchor MqFactoryObject
 /// \brief provide an interface to create a new \e MqS-instance
 ///
 /// The \e factory is an important part of the object management and has the
@@ -1758,6 +1759,7 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 /**
 \defgroup Mq_Storage_C_API Mq_Storage_C_API
 \{
+\anchor MqStorage
 \brief setup and manage a storage used to persist \e data-packages
 
 - The \e package-storage can be used to save all kind of \e package-data.
@@ -1855,7 +1857,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqStorageCount (
   MQ_TRA *countP
 );
 
-/** \} Mq_Store_C_API */
+/** \} Mq_Storage_C_API */
 
 /* ####################################################################### */
 /* ###                                                                 ### */
@@ -4846,6 +4848,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 
 /// \defgroup Mq_Dump_C_API Mq_Dump_C_API
 /// \{
+/// \anchor MqDumpObject
 /// \brief binary package format used for \e export (\RNSA{ReadDUMP}) and \e import (\RNSA{ReadLOAD})
 
 /// return the package size from the \e dump data package
@@ -5095,7 +5098,7 @@ To define a \e bi-directional filter a couple of commands provide support:
   - load the \RNS{DumpObject} into the \e read-data-package
   .
  - \RNSA{ReadForward}
-  - send a binary array, as returned by \RNSA{ReadDUMP}, to the filter target.
+  - send the \e read-buffer or a \RNS{DumpObject}, as returned by \RNSA{ReadDUMP}, to the filter target.
   .
  .
 

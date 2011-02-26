@@ -272,8 +272,8 @@ ALIASES		    += "SlaveIs=MqS ctx.SlaveIs()"
 ALIASES		    += "StorageOpen=ctx.MqStorageOpen(\C storageFile)"
 ALIASES		    += "StorageClose=ctx.StorageClose()"
 ALIASES		    += "StorageInsert=long ctx.StorageInsert()"
-ALIASES		    += "StorageSelect=long ctx.StorageSelect(long transLId)"
-ALIASES		    += "StorageDelete=ctx.StorageDelete(long transLId)"
+ALIASES		    += "StorageSelect=long ctx.StorageSelect(transLId \W)"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(transLId \W)"
 ALIASES		    += "StorageCount=long ctx.StorageCount()"
 
 # THE DUMP OBJECT

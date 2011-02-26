@@ -36,8 +36,7 @@ ALIASES             += "RNS{1}=\ref \NS{\1}"
 ALIASES             += "RNSA{1}=\ref \NS{\1}"
 ALIASES             += "RNSA{2}=\ref \NS{\1} \"\2\""
 ALIASES             += "RNSC{1}=\config_\1"
-
-ALIASES		    += "MqFactory=Mq_Factory_C_API"
+ALIASES             += "RNSO{1}=\ref \NS{\1}Object"
 
 ALIASES		    += "config_ignoreExit=\ref MqSetupS::ignoreExit"
 ALIASES		    += "config_startAs=\ref MqConfigS::startAs"
@@ -50,6 +49,7 @@ ALIASES		    += "config_isServer=\ref MqSetupS::isServer"
 ALIASES		    += "config_IServerCleanup=#MqConfigSetServerSetup"
 ALIASES		    += "config_name=\ref MqConfigS::name"
 ALIASES		    += "config_srvname=\ref MqConfigS::srvname"
+ALIASES		    += "config_storage=\ref MqConfigS::storage"
 ALIASES		    += "config_debug=\ref MqConfigS::debug"
 ALIASES		    += "config_isSilent=\ref MqConfigS::isSilent"
 

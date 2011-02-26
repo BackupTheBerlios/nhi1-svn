@@ -138,7 +138,7 @@ PHP_METHOD(MsgqueForPhp_MqS, __destruct)
   SETUP_mqctx;
   if (!mqctx) return;
   if (mqctx->self) {
-    zend_update_property_long(NS(MqDumpS), mqctx->self, ID(__ctx), NULL TSRMLS_CC);
+    zend_update_property_long(NS(MqDumpS), mqctx->self, ID(__ctx), 0L TSRMLS_CC);
     DECR_REG(mqctx->self);
     mqctx->self = NULL;
   }
@@ -393,7 +393,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, ReadN,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadDUMP,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadLOAD,		    MqDumpS_arg,          ZEND_ACC_PUBLIC)
-  PHP_ME(MsgqueForPhp_MqS, ReadForward,		    MqS_arg,              ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ReadForward,		    NULL,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadU,		    no_arg,               ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_START,		    NULL,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, ReadL_END,		    no_arg,               ZEND_ACC_PUBLIC)
