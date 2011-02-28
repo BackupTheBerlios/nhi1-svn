@@ -21,7 +21,9 @@ ALIASES		    += "self=gomsgque"
 ALIASES		    += "selftut=gomsgquetut"
 ALIASES		    += "NS{1}=go_\1"
 ALIASES		    += "lang=Go"
-ALIASES		    += "fileextension=go"
+ALIASES		    += "fileextension=.go"
+ALIASES		    += "exeextension="
+ALIASES		    += "executable="
 ALIASES		    += "dirname=go"
 ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
@@ -211,18 +213,26 @@ ENABLED_SECTIONS    += SendEND_AND_CALLBACK2
 ALIASES		    += "SendEND_AND_CALLBACK2=ctx.SendEND_AND_CALLBACK2(token \C, callback Service2)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendTYPE=ctx.SendTYPE(value TYPE)"
+ALIASES		    += "SendO=ctx.SendO(value \O)"
+ALIASES		    += "SendY=ctx.SendY(value \Y)"
+ALIASES		    += "SendS=ctx.SendS(value \S)"
+ALIASES		    += "SendI=ctx.SendI(value \I)"
+ALIASES		    += "SendW=ctx.SendW(value \W)"
+ALIASES		    += "SendF=ctx.SendF(value \F)"
+ALIASES		    += "SendD=ctx.SendD(value \D)"
+ALIASES		    += "SendC=ctx.SendC(value \C)"
+ALIASES		    += "SendB=ctx.SendB(value \B)"
+ALIASES		    += "SendU=ctx.SendU(value \TU)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value \TB)"
-ALIASES		    += "SendU=ctx.SendU(value \TU)"
-ALIASES		    += "SendT_START=ctx.SendT_START(token \C)"
-ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END(\C token)"
 ALIASES		    += "SendT_example=\code \n\
 ctx.SendSTART () \n\
-ctx.SendT_START (\"SRVR\") \n\
+ctx.SendT_START () \n\
 ctx.SendC (\"myEnvironment\") \n\
-ctx.SendT_END () \n\
+ctx.SendT_END (\"ENV1\") \n\
 ctx.SendC (\"myData\") \n\
 ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
 
@@ -235,7 +245,15 @@ ctx.ReadL_START() \n\
   signature = ctx.ReadB() \n\
 ctx.ReadL_END() \n\
 \endcode"
-ALIASES		    += "ReadTYPE=ctx.ReadTYPE() TYPE"
+ALIASES		    += "ReadO=ctx.ReadO() \O"
+ALIASES		    += "ReadY=ctx.ReadY() \Y"
+ALIASES		    += "ReadS=ctx.ReadS() \S"
+ALIASES		    += "ReadI=ctx.ReadI() \I"
+ALIASES		    += "ReadW=ctx.ReadW() \W"
+ALIASES		    += "ReadF=ctx.ReadF() \F"
+ALIASES		    += "ReadD=ctx.ReadD() \D"
+ALIASES		    += "ReadC=ctx.ReadC() \C"
+ALIASES		    += "ReadB=ctx.ReadB() \B"
 ALIASES		    += "ReadU=ctx.ReadU() \U"
 ALIASES		    += "ReadN=ctx.ReadN() \TB"
 ALIASES		    += "ReadDUMP=ctx.ReadDUMP() \TD"
@@ -322,7 +340,15 @@ if buf.GetType() == 'C' { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>type \TM</I>"
-ALIASES		    += "BufferGetTYPE=buffer.GetTYPE() TYPE"
+ALIASES		    += "BufferGetO=buffer.GetO() \O"
+ALIASES		    += "BufferGetY=buffer.GetY() \Y"
+ALIASES		    += "BufferGetS=buffer.GetS() \S"
+ALIASES		    += "BufferGetI=buffer.GetI() \I"
+ALIASES		    += "BufferGetW=buffer.GetW() \W"
+ALIASES		    += "BufferGetF=buffer.GetF() \F"
+ALIASES		    += "BufferGetD=buffer.GetD() \D"
+ALIASES		    += "BufferGetC=buffer.GetC() \C"
+ALIASES		    += "BufferGetB=buffer.GetB() \B"
 ALIASES		    += "BufferGetType=buffer.GetType() \C"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -381,4 +407,13 @@ ENABLED_SECTIONS    += BINARY
 ALIASES		    += "BinarySet=binary.Set(data \B)"
 ALIASES		    += "BinaryGet=binary.Get() \B"
 
+ALIASES		    += "tut_build=\skip   include\n\
+\until  ## all\n\
+\n\
+\skip   MyClient\n\
+\until  MyServer\n\
+\until  MyServer"
+ALIASES		    += "tut_server=\skip package\n\until ProcessEvent\n\until }"
+ALIASES		    += "tut_client=\skip package\n\until Fprintln\n\until }"
+ALIASES		    += "tut_filter=\skip package\n\until ProcessEvent\n\until }"
 

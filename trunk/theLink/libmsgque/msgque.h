@@ -1271,8 +1271,10 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
 /* ####################################################################### */
 
 /// \defgroup MqFactory Mq_Factory_C_API
+/// \if MSGQUE
+/// \anchor \NS{FactoryObject}
+/// \endif
 /// \{
-/// \anchor MqFactoryObject
 /// \brief provide an interface to create a new \e MqS-instance
 ///
 /// The \e factory is an important part of the object management and has the
@@ -1758,8 +1760,10 @@ MQ_EXTERN void MQ_DECL MqLogChild (
 
 /**
 \defgroup Mq_Storage_C_API Mq_Storage_C_API
+\if MSGQUE
+\anchor \NS{Storage}
+\endif
 \{
-\anchor MqStorage
 \brief setup and manage a storage used to persist \e data-packages
 
 - The \e package-storage can be used to save all kind of \e package-data.
@@ -1964,7 +1968,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreate (
 /// Do nothing if the \e client-server-link is already connected.
 /// This function is only useful in an \e event-function (\RNSC{IEvent}) if the \e link-disconnect
 /// (\RNSA{ErrorIsEXIT}) is ignored (\RNSA{ErrorReset}). 
-/// Read more from the: <TT>/theLink/example/\dirname/Filter4.\fileextension</TT> example.
+/// Read more from the: <TT>/theLink/example/\dirname/Filter4\fileextension</TT> example.
 /// \ctx
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqLinkConnect (
@@ -2363,7 +2367,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 /// The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
 /// \e native-data-type supported.
 /// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
-/// \RNSA{ReadTYPE} or \RNSA{BufferGetTYPE} have to match the previous \RNSA{SendTYPE} with the same 
+/// \RNSA{ReadO,Read[T]} or \RNSA{BufferGetO,BufferGet[T]} have to match the previous \RNSA{SendO,Read[T]} with the same 
 /// \e TYPE. One exception is allowed, the cast from and to the \C data-type (TYPE=C) is allowed.
 /// The following type identifier's are available:
 ///  - \c Y : 1 byte signed character (\Y) 
@@ -2632,62 +2636,62 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateU (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief read native typed value from an #MQ_BUF object
-/// \buf
-/// \param[out] valP a pointer of the value to read
+/// \brief read a \RNS{BufferIdentifer} from a \RNS{BufferObject}
+/// \buffer
+/// \param[out] value the value to read from the object or an error
 /// \retMqErrorE
 /// \if MSGQUE
 /// \anchor \NS{BufferGetTYPE}
 /// \endif
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetY (
-  struct MqBufferS * const buf,
-  MQ_BYT * const valP
+  struct MqBufferS * const buffer,
+  MQ_BYT * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetO (
-  struct MqBufferS * const buf,
-  MQ_BOL * const valP
+  struct MqBufferS * const buffer,
+  MQ_BOL * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetS (
-  struct MqBufferS * const buf,
-  MQ_SRT * const valP
+  struct MqBufferS * const buffer,
+  MQ_SRT * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetI (
-  struct MqBufferS * const buf,
-  MQ_INT * const valP
+  struct MqBufferS * const buffer,
+  MQ_INT * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetF (
-  struct MqBufferS * const buf,
-  MQ_FLT * const valP
+  struct MqBufferS * const buffer,
+  MQ_FLT * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetW (
-  struct MqBufferS * const buf,
-  MQ_WID * const valP
+  struct MqBufferS * const buffer,
+  MQ_WID * const value
 );
 
 /// \copydoc MqBufferGetY
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetD (
-  struct MqBufferS * const buf,
-  MQ_DBL * const valP
+  struct MqBufferS * const buffer,
+  MQ_DBL * const value
 );
 
 /// \brief function to read an #MQ_BIN from an #MQ_BUF object
-/// \buf
+/// \buffer
 /// \retval out the pointer to an MQ_BIN array object
 /// \retval size the size of the array the array pointer
 /// \retMqErrorE
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetB (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_BIN  * const out,
   MQ_SIZE * const size
 );
@@ -3576,7 +3580,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
 /// The goal of this function is to act on an \e exit-error-object
 /// and is used to ignore this error using \RNSA{ErrorReset} and
 /// later do a reconnect using \RNSA{LinkConnect}.\n
-/// Read more using from the: <TT>theLink/example/\dirname/Filter4.\fileextension</TT> example
+/// Read more using from the: <TT>theLink/example/\dirname/Filter4\fileextension</TT> example
 /// \ifnot MAN
 /// \b Example: catch and ignore an EXIT return-code
 /// \code
@@ -4248,7 +4252,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
 /// \details In difference to \RNSA{SendEND_AND_WAIT} and \RNSA{SendEND_AND_CALLBACK} a
 /// \e longterm-transaction-call have to survive an application restart. To achieve
 /// this goal two features have to be available to process the results:
-/// -# a callback as a \e known service created with \RNSA{ServiceCreate}
+/// -# a token as a \e known service created with \RNSA{ServiceCreate}
 /// -# one or more \e data-item(s) to initialise the environment in the callback
 /// .
 /// The \e transaction-item have to be the first item in the \e data-package.
@@ -4261,11 +4265,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_START (
 /// is send to the \e link-target and returned as first item in the \e result-data-package.
 /// Use \RNSA{ReadT_START} and \RNSA{ReadT_END} to extract the data.
 /// \ctx
-/// \param[in] callback a \RNSA{ServiceIdentifier} to identify the target to process the results
+/// \param[in] token a \RNSA{ServiceIdentifier} to identify the target to process the results
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
   struct MqS * const ctx,
-  MQ_TOK const callback
+  MQ_TOK const token
 );
 
 /** \} Mq_Send_C_API */
@@ -4847,8 +4851,10 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
 /* ####################################################################### */
 
 /// \defgroup Mq_Dump_C_API Mq_Dump_C_API
+/// \if MSGQUE
+/// \anchor \NS{DumpObject}
+/// \endif
 /// \{
-/// \anchor MqDumpObject
 /// \brief binary package format used for \e export (\RNSA{ReadDUMP}) and \e import (\RNSA{ReadLOAD})
 
 /// return the package size from the \e dump data package

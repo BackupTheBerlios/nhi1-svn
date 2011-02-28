@@ -23,7 +23,9 @@ ALIASES		    += "self=msgqueforphp"
 ALIASES		    += "selftut=msgqueforphptut"
 ALIASES		    += "NS{1}=php_\1"
 ALIASES		    += "lang=php"
-ALIASES		    += "fileextension=php"
+ALIASES		    += "fileextension=.php"
+ALIASES		    += "exeextension=.php"
+ALIASES		    += "executable=php"
 ALIASES		    += "dirname=php"
 ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e TRUE"
@@ -192,18 +194,26 @@ ALIASES		    += "SendEND_AND_WAIT=$ctx->SendEND_AND_WAIT(\C:token, ?\I:timeout=s
 ALIASES		    += "SendEND_AND_CALLBACK=$ctx->SendEND_AND_CALLBACK(\C:token, callback)"
 ALIASES		    += "SendRETURN=$ctx->SendRETURN()"
 ALIASES		    += "SendERROR=$ctx->SendERROR()"
-ALIASES		    += "SendTYPE=$ctx->SendTYPE(value)"
+ALIASES		    += "SendO=$ctx->SendO(\O:value)"
+ALIASES		    += "SendY=$ctx->SendY(\Y:value)"
+ALIASES		    += "SendS=$ctx->SendS(\S:value)"
+ALIASES		    += "SendI=$ctx->SendI(\I:value)"
+ALIASES		    += "SendW=$ctx->SendW(\W:value)"
+ALIASES		    += "SendF=$ctx->SendF(\F:value)"
+ALIASES		    += "SendD=$ctx->SendD(\D:value)"
+ALIASES		    += "SendC=$ctx->SendC(\C:value)"
+ALIASES		    += "SendB=$ctx->SendB(\B:value)"
+ALIASES		    += "SendU=$ctx->SendU(\TU:value)"
 ALIASES		    += "SendL_START=$ctx->SendL_START()"
 ALIASES		    += "SendL_END=$ctx->SendL_END()"
 ALIASES		    += "SendN=$ctx->SendN(ByteArray:value)"
-ALIASES		    += "SendU=$ctx->SendU(\TU:value)"
-ALIASES		    += "SendT_START=$ctx->SendT_START(callback)"
-ALIASES		    += "SendT_END=$ctx->SendT_END()"
+ALIASES		    += "SendT_START=$ctx->SendT_START()"
+ALIASES		    += "SendT_END=$ctx->SendT_END(\C:token)"
 ALIASES		    += "SendT_example=\code \n\
 $ctx->SendSTART(); \n\
-$ctx->SendT_START(\"SRVR\"); \n\
+$ctx->SendT_START(); \n\
 $ctx->SendC(\"myEnvironment\"); \n\
-$ctx->SendT_END(); \n\
+$ctx->SendT_END(\"ENV1\"); \n\
 $ctx->SendC(\"myData\"); \n\
 $ctx->SendEND_AND_WAIT(\"SRVC\");\endcode"
 
@@ -216,7 +226,15 @@ $owner = $ctx->ReadC();\n\
 $signature = $ctx->ReadB();\n\
 $ctx->ReadL_END();\n\
 \endcode"
-ALIASES		    += "ReadTYPE=TYPE $ctx->ReadTYPE()"
+ALIASES		    += "ReadO=\O $ctx->ReadO()"
+ALIASES		    += "ReadY=\Y $ctx->ReadY()"
+ALIASES		    += "ReadS=\S $ctx->ReadS()"
+ALIASES		    += "ReadI=\I $ctx->ReadI()"
+ALIASES		    += "ReadW=\W $ctx->ReadW()"
+ALIASES		    += "ReadF=\F $ctx->ReadF()"
+ALIASES		    += "ReadD=\D $ctx->ReadD()"
+ALIASES		    += "ReadC=\C $ctx->ReadC()"
+ALIASES		    += "ReadB=\B $ctx->ReadB()"
 ALIASES		    += "ReadU=\TU $ctx->ReadU()"
 ALIASES		    += "ReadN=ByteArray $ctx->ReadN()"
 ALIASES		    += "ReadDUMP=\TD $ctx->ReadDUMP()"
@@ -294,7 +312,15 @@ if {$buf->GetType() eq 'C'} { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
-ALIASES		    += "BufferGetTYPE=TYPE $buffer->GetTYPE()"
+ALIASES		    += "BufferGetO=\O $buffer->GetO()"
+ALIASES		    += "BufferGetY=\Y $buffer->GetY()"
+ALIASES		    += "BufferGetS=\S $buffer->GetS()"
+ALIASES		    += "BufferGetI=\I $buffer->GetI()"
+ALIASES		    += "BufferGetW=\W $buffer->GetW()"
+ALIASES		    += "BufferGetF=\F $buffer->GetF()"
+ALIASES		    += "BufferGetD=\D $buffer->GetD()"
+ALIASES		    += "BufferGetC=\C $buffer->GetC()"
+ALIASES		    += "BufferGetB=\B $buffer->GetB()"
 ALIASES		    += "BufferGetType=char $buffer->GetType()"
 ALIASES		    += "BufferDup=\TU $buffer->Dup()"
 ALIASES		    += "BufferDelete=$buffer->Delete()"
@@ -353,4 +379,8 @@ try { \n\
 } \n\
 \endcode"
 
+ALIASES		    += "tut_build=\b no build necessary"
+ALIASES		    += "tut_server=\skip class\n\until Exit"
+ALIASES		    += "tut_client=\skip new\n\until Exit"
+ALIASES		    += "tut_filter=\skip class\n\until Exit"
 

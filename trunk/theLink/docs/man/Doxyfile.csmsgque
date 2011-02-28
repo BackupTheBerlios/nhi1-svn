@@ -22,7 +22,9 @@ ALIASES		    += "self=csmsgque"
 ALIASES		    += "selftut=csmsgquetut"
 ALIASES		    += "NS{1}=cs_\1"
 ALIASES		    += "lang=C#"
-ALIASES		    += "fileextension=cs"
+ALIASES		    += "fileextension=.cs"
+ALIASES		    += "exeextension=.exe"
+ALIASES		    += "executable=mono"
 ALIASES		    += "dirname=csharp"
 ALIASES		    += "null=\e null"
 ALIASES		    += "yes=\e true"
@@ -184,26 +186,42 @@ ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(string token, [int timeou
 ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(string token, IService callback)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendTYPE=ctx.SendTYPE(TYPE value)"
+ALIASES		    += "SendO=ctx.SendO(\O value)"
+ALIASES		    += "SendY=ctx.SendY(\Y value)"
+ALIASES		    += "SendS=ctx.SendS(\S value)"
+ALIASES		    += "SendI=ctx.SendI(\I value)"
+ALIASES		    += "SendW=ctx.SendW(\W value)"
+ALIASES		    += "SendF=ctx.SendF(\F value)"
+ALIASES		    += "SendD=ctx.SendD(\D value)"
+ALIASES		    += "SendC=ctx.SendC(\C value)"
+ALIASES		    += "SendB=ctx.SendB(\B value)"
+ALIASES		    += "SendU=ctx.SendU(\TU buffer)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(byte[] value)"
-ALIASES		    += "SendU=ctx.SendU(\TU buffer)"
-ALIASES		    += "SendT_START=ctx.SendT_START(string token)"
-ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END(\C token)"
 ALIASES		    += "SendT_example=\code \n\
 ctx.SendSTART (); \n\
-ctx.SendT_START (\"SRVR\"); \n\
+ctx.SendT_START (); \n\
 ctx.SendC (\"myEnvironment\"); \n\
-ctx.SendT_END (); \n\
+ctx.SendT_END (\"ENV1\"); \n\
 ctx.SendC (\"myData\"); \n\
 ctx.SendEND_AND_WAIT (\"SRVC\");\endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code num = ctx.ReadI();\nctx.ReadL_START();\n  balance = ctx.ReadD();\n  owner = ctx.ReadC();\n  signature = ctx.ReadB();\nctx.ReadL_END();\endcode"
-ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
-ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
-ALIASES		    += "ReadN=byte[] ctx.ReadN()"
+ALIASES		    += "ReadO=\O ctx.ReadO()"
+ALIASES		    += "ReadY=\Y ctx.ReadY()"
+ALIASES		    += "ReadS=\S ctx.ReadS()"
+ALIASES		    += "ReadI=\I ctx.ReadI()"
+ALIASES		    += "ReadW=\W ctx.ReadW()"
+ALIASES		    += "ReadF=\F ctx.ReadF()"
+ALIASES		    += "ReadD=\D ctx.ReadD()"
+ALIASES		    += "ReadC=\C ctx.ReadC()"
+ALIASES		    += "ReadB=\B ctx.ReadB()"
+ALIASES		    += "ReadU=\TU ctx.ReadU()"
+ALIASES		    += "ReadN=\TB ctx.ReadN()"
 ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
 ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
 
@@ -289,7 +307,15 @@ if (buf.Type == 'C')\n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
-ALIASES		    += "BufferGetTYPE=TYPE buffer.TYPE"
+ALIASES		    += "BufferGetO=\O buffer.O"
+ALIASES		    += "BufferGetY=\Y buffer.Y"
+ALIASES		    += "BufferGetS=\S buffer.S"
+ALIASES		    += "BufferGetI=\I buffer.I"
+ALIASES		    += "BufferGetW=\W buffer.W"
+ALIASES		    += "BufferGetF=\F buffer.F"
+ALIASES		    += "BufferGetD=\D buffer.D"
+ALIASES		    += "BufferGetC=\C buffer.C"
+ALIASES		    += "BufferGetB=\B buffer.B"
 ALIASES		    += "BufferGetType=char buffer.Type"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -340,3 +366,17 @@ try { \n\
   if (ctx.ErrorIsEXIT()) ctx.ErrorReset(); \n\
 } \n\
 \endcode"
+
+ALIASES		    += "tut_build=\skip   RULE_CS_EXE\n\
+\until  RULE_CS_EXE\n\
+...\n\
+\skip   MyServer.exe\n\
+\until  RULE_CS_EXE\n\
+...\n\
+\skip   MyClient.exe\n\
+\until  RULE_CS_EXE"
+ALIASES		    += "tut_server=\skip using\n\until Exit\n\until }\n\until }\n\until }"
+ALIASES		    += "tut_client=\skip using\n\until Exit\n\until }\n\until }\n\until }"
+ALIASES		    += "tut_filter=\skip using\n\until Exit\n\until }\n\until }\n\until }"
+
+

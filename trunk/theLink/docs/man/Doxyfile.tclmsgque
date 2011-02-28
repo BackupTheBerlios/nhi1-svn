@@ -22,7 +22,9 @@ ALIASES		    += "self=tclmsgque"
 ALIASES		    += "selftut=tclmsgquetut"
 ALIASES		    += "NS{1}=tcl_\1"
 ALIASES		    += "lang=TCL"
-ALIASES		    += "fileextension=tcl"
+ALIASES		    += "fileextension=.tcl"
+ALIASES		    += "exeextension=.tcl"
+ALIASES		    += "executable=tclsh"
 ALIASES		    += "dirname=tcl"
 ALIASES		    += "null=\e empty"
 ALIASES		    += "yes=\e yes"
@@ -173,37 +175,53 @@ ALIASES		    += "SendEND_AND_WAIT=$ctx SendEND_AND_WAIT token ?timeout=MQ_TIMEOU
 ALIASES		    += "SendEND_AND_CALLBACK=$ctx SendEND_AND_CALLBACK token callback"
 ALIASES		    += "SendRETURN=$ctx SendRETURN"
 ALIASES		    += "SendERROR=$ctx SendERROR"
-ALIASES		    += "SendTYPE=$ctx SendTYPE value"
 ALIASES		    += "SendL_START=$ctx SendL_START"
 ALIASES		    += "SendL_END=$ctx SendL_END"
-ALIASES		    += "SendN=$ctx SendN value"
-ALIASES		    += "SendU=$ctx SendU buffer"
-ALIASES		    += "SendT_START=$ctx SendT_START callback"
-ALIASES		    += "SendT_END=$ctx SendT_END"
+ALIASES		    += "SendO=$ctx SendO \O:value"
+ALIASES		    += "SendY=$ctx SendY \Y:value"
+ALIASES		    += "SendS=$ctx SendS \S:value"
+ALIASES		    += "SendI=$ctx SendI \I:value"
+ALIASES		    += "SendW=$ctx SendW \W:value"
+ALIASES		    += "SendF=$ctx SendF \F:value"
+ALIASES		    += "SendD=$ctx SendD \D:value"
+ALIASES		    += "SendC=$ctx SendC \C:value"
+ALIASES		    += "SendB=$ctx SendB \B:value"
+ALIASES		    += "SendU=$ctx SendU \TB:buffer"
+ALIASES		    += "SendN=$ctx SendN \TU:value"
+ALIASES		    += "SendT_START=$ctx SendT_START"
+ALIASES		    += "SendT_END=$ctx SendT_END \C:token"
 ALIASES		    += "SendT_example=\code \n\
 $ctx SendSTART \n\
-$ctx SendT_START \"SRVR\" \n\
+$ctx SendT_START \n\
 $ctx SendC \"myEnvironment\" \n\
-$ctx SendT_END \n\
+$ctx SendT_END \"ENV1\" \n\
 $ctx SendC \"mydata\" \n\
 $ctx SendEND_AND_WAIT \"ECOI\" \endcode"
 
 
 # READ DATE
 ALIASES		    += "read_example=\code set num [$ctx ReadI]\n$ctx ReadL_START\n  set balance [$ctx ReadD]\n  set owner [$ctx ReadC]\n  set signature [$ctx ReadB]\n$ctx ReadL_END\endcode"
-ALIASES		    += "ReadTYPE=TYPE [$ctx ReadTYPE]"
-ALIASES		    += "ReadU=\U [$ctx ReadU]"
+ALIASES		    += "ReadO=\O [$ctx ReadO]"
+ALIASES		    += "ReadY=\Y [$ctx ReadY]"
+ALIASES		    += "ReadS=\S [$ctx ReadS]"
+ALIASES		    += "ReadI=\I [$ctx ReadI]"
+ALIASES		    += "ReadW=\W [$ctx ReadW]"
+ALIASES		    += "ReadF=\F [$ctx ReadF]"
+ALIASES		    += "ReadD=\D [$ctx ReadD]"
+ALIASES		    += "ReadC=\C [$ctx ReadC]"
+ALIASES		    += "ReadB=\B [$ctx ReadB]"
+ALIASES		    += "ReadU=\TU [$ctx ReadU]"
 ALIASES		    += "ReadN=\B [$ctx ReadN]"
 ALIASES		    += "ReadDUMP=\TD [$ctx ReadDUMP]"
-ALIASES		    += "ReadLOAD=$ctx ReadDUMP dump"
-ALIASES		    += "ReadForward=$ctx ReadForward otherCtx"
+ALIASES		    += "ReadLOAD=$ctx ReadDUMP \TD:dump"
+ALIASES		    += "ReadForward=$ctx ReadForward \TM:otherCtx ?\TD:dump?"
 ALIASES		    += "ReadProxy=$ctx ReadProxy otherCtx"
 ALIASES		    += "ReadGetNumItems=\I [$ctx ReadGetNumItems]"
 ALIASES		    += "ReadItemExists=\O [$ctx ReadItemExists]"
 ALIASES		    += "ReadUndo=$ctx ReadUndo()"
-ALIASES		    += "ReadL_START=$ctx ReadL_START ?buffer?"
+ALIASES		    += "ReadL_START=$ctx ReadL_START ?\TU:buffer?"
 ALIASES		    += "ReadL_END=$ctx ReadL_END"
-ALIASES		    += "ReadT_START=$ctx ReadT_START ?buffer?"
+ALIASES		    += "ReadT_START=$ctx ReadT_START ?\TU:buffer?"
 ALIASES		    += "ReadT_END=$ctx ReadT_END"
 ALIASES		    += "ReadT_example=\code \n\
 proc SRVR {ctx} { \n\
@@ -258,7 +276,15 @@ if {[$buf GetType] == 'C'} { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
-ALIASES		    += "BufferGetTYPE=TYPE [$buffer GetTYPE]"
+ALIASES		    += "BufferGetO=\O [$buffer GetO]"
+ALIASES		    += "BufferGetY=\Y [$buffer GetY]"
+ALIASES		    += "BufferGetS=\S [$buffer GetS]"
+ALIASES		    += "BufferGetI=\I [$buffer GetI]"
+ALIASES		    += "BufferGetW=\W [$buffer GetW]"
+ALIASES		    += "BufferGetF=\F [$buffer GetF]"
+ALIASES		    += "BufferGetD=\D [$buffer GetD]"
+ALIASES		    += "BufferGetC=\C [$buffer GetC]"
+ALIASES		    += "BufferGetB=\B [$buffer GetB]"
 ALIASES		    += "BufferGetType=\C [$buffer GetType]"
 ALIASES		    += "BufferDup=\TU [$buffer Dup]"
 ALIASES		    += "BufferDelete=$buffer Delete"
@@ -332,4 +358,8 @@ if {[catch { \n\
 } \n\
 \endcode"
 
+ALIASES		    += "tut_build=\b no build necessary"
+ALIASES		    += "tut_server=\skip package\n\until Exit\n\until }"
+ALIASES		    += "tut_client=\skip package\n\until Exit"
+ALIASES		    += "tut_filter=\skip TclMsgque\n\until Exit"
 

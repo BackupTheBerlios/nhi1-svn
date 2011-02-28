@@ -131,8 +131,8 @@ tclmsgque Main {
 \function2{FactoryDefault2,\FactoryDefault2}
 \function{FactoryDefault,\FactoryDefault}
 
-\b Example from <TT>example/\dirname/Filter4.\fileextension</TT>:
-\dontinclude Filter4.\fileextension
+\b Example from <TT>example/\dirname/Filter4\fileextension</TT>:
+\dontinclude Filter4\fileextension
 \skip Default
 \until Default
 
@@ -140,8 +140,8 @@ tclmsgque Main {
 \function2{FactoryAdd2,\FactoryAdd2}
 \function{FactoryAdd,\FactoryAdd}
 
-\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
-\dontinclude Filter5.\fileextension
+\b Example from <TT>example/\dirname/Filter5\fileextension</TT>:
+\dontinclude Filter5\fileextension
 \skip Add
 \until Add
 
@@ -150,8 +150,8 @@ tclmsgque Main {
 
 \function2{FactoryGetCalled2,\FactoryGetCalled2}
 \function{FactoryGetCalled,\FactoryGetCalled}
-\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
-\dontinclude Filter5.\fileextension
+\b Example from <TT>example/\dirname/Filter5\fileextension</TT>:
+\dontinclude Filter5\fileextension
 \skip Add
 \skip Add
 \skip Add
@@ -159,8 +159,8 @@ tclmsgque Main {
 \until GetCalled
 
 \function{FactoryNew,\FactoryNew}
-\b Example from <TT>example/\dirname/Filter5.\fileextension</TT>:
-\dontinclude Filter5.\fileextension
+\b Example from <TT>example/\dirname/Filter5\fileextension</TT>:
+\dontinclude Filter5\fileextension
 \skip Add
 \skip Add
 \skip Add
@@ -191,7 +191,7 @@ tclmsgque Main {
 
 \section        \NS{BufferObject}			MqBufferS OBJECT
 \RNSA{BufferIdentifer}\n
-\RNSA{BufferGetTYPE}\n
+\RNSA{BufferGetO,BufferGet[T]}\n
 \RNSA{BufferGetType}\n
 \RNSA{BufferDup}\n
 \RNSA{BufferDelete}\n
@@ -206,9 +206,17 @@ tclmsgque Main {
 \subsection	  \NS{BufferIdentifer}			TYPE IDENTIFIER
 \copydoc MqTypeE
 
-\subsection	  \NS{BufferGetTYPE}			\BufferGetTYPE
-return the data form the buffer using the \RNS{BufferIdentifer}.
-
+\function3{BufferGetO,\BufferGetO}
+\function3{BufferGetY,\BufferGetY}
+\function3{BufferGetS,\BufferGetS}
+\function3{BufferGetI,\BufferGetI}
+\function3{BufferGetW,\BufferGetW}
+\function3{BufferGetF,\BufferGetF}
+\function3{BufferGetD,\BufferGetD}
+\function3{BufferGetC,\BufferGetC}
+\subsection \NS{BufferGetB} \BufferGetB
+C-API: #MqBufferGetO, #MqBufferGetY, #MqBufferGetS, #MqBufferGetI, #MqBufferGetW, #MqBufferGetF, #MqBufferGetD, #MqBufferGetC, #MqBufferGetB\n
+\copydoc MqBufferGetY
 \function{BufferGetType, \BufferGetType}
 \function{BufferDup, \BufferDup}
 \function{BufferDelete, \BufferDelete}
@@ -260,8 +268,8 @@ convert the error from an \e context into an \RNS{ErrorObject} and raise the obj
 \if BINARY
 The \TB is use to transport binary data defined by a \e pointer and a \e data-size.
 The object self is \b temporary. Data belongs to libmsgque and is only valid for
-the next transaction. The \TB is used by: \RNSA{ReadTYPE,ReadB}, \RNSA{ReadN}, 
-\RNSA{SendTYPE,SendB}, \RNSA{SendN}.
+the next transaction. The \TB is used by: \RNSA{ReadB}, \RNSA{ReadN}, 
+\RNSA{SendB}, \RNSA{SendN}.
 
 \subsection	\NS{BinaryGet}				\BinaryGet
 Convert a \e temporary \TB object into a permanent \B object.
@@ -521,9 +529,7 @@ UNKNOWN
 \RNSA{SendEND_AND_CALLBACK}\n
 \RNSA{SendRETURN}\n
 \RNSA{SendERROR}\n
-\RNSA{SendTYPE}\n
-\RNSA{SendN}\n
-\RNSA{SendU}\n
+\RNSA{SendO,Send[T]}\n
 \RNSA{SendL_START}\n
 \RNSA{SendL_END}\n
 \RNSA{SendT_START}\n
@@ -541,9 +547,20 @@ UNKNOWN
 \function{SendEND_AND_CALLBACK,\SendEND_AND_CALLBACK}
 \function{SendRETURN,\SendRETURN}
 \function{SendERROR,\SendERROR}
-\function{SendTYPE,\SendTYPE,MqSendY}
+The \e Send style functions have a single fuction for every \RNS{BufferIdentifer}
+\function3{SendO,\SendO}
+\function3{SendY,\SendY}
+\function3{SendS,\SendS}
+\function3{SendI,\SendI}
+\function3{SendW,\SendW}
+\function3{SendF,\SendF}
+\function3{SendD,\SendD}
+\function3{SendC,\SendC}
+\function3{SendB,\SendB}
+\subsection \NS{SendU} \SendU
+C-API: #MqSendO, #MqSendY, #MqSendS, #MqSendI, #MqSendW, #MqSendF, #MqSendD, #MqSendC, #MqSendB, #MqSendU\n
+\copydoc MqSendY
 \function{SendN,\SendN}
-\function{SendU,\SendU}
 \function{SendL_START,\SendL_START}
 \function{SendL_END,\SendL_END}
 \function{SendT_START,\SendT_START}
@@ -553,12 +570,11 @@ UNKNOWN
 
 
 \section	  \NS{ReadData}				READ API
-\RNSA{ReadTYPE}\n
+\RNSA{ReadO,Read[T]}\n
 \RNSA{ReadN}\n
 \RNSA{ReadDUMP}\n
 \RNSA{ReadLOAD}\n
 \RNSA{ReadForward}\n
-\RNSA{ReadU}\n
 \RNSA{ReadL_START}\n
 \RNSA{ReadL_END}\n
 \RNSA{ReadT_START}\n
@@ -572,7 +588,19 @@ UNKNOWN
 
 \b Example: read an \I and a list of \D, \C and a \TB: \read_example
 
-\function{ReadTYPE,\ReadTYPE,MqReadY}
+\function3{ReadO,\ReadO}
+\function3{ReadY,\ReadY}
+\function3{ReadS,\ReadS}
+\function3{ReadI,\ReadI}
+\function3{ReadW,\ReadW}
+\function3{ReadF,\ReadF}
+\function3{ReadD,\ReadD}
+\function3{ReadC,\ReadC}
+\function3{ReadB,\ReadB}
+\subsection \NS{ReadU} \ReadU
+C-API: #MqReadO, #MqReadY, #MqReadS, #MqReadI, #MqReadW, #MqReadF, #MqReadD, #MqReadC, #MqReadB, #MqReadU\n
+\copydoc MqReadY
+
 \function{ReadN,\ReadN}
 \function{ReadDUMP,\ReadDUMP}
 \function{ReadLOAD,\ReadLOAD}
@@ -580,7 +608,6 @@ UNKNOWN
 \function2{ReadForward3,\ReadForward3}
 \function2{ReadForward2,\ReadForward2}
 \function{ReadForward,\ReadForward}
-\function{ReadU,\ReadU}
 \function2{ReadL_START3,\ReadL_START3}
 \function2{ReadL_START2,\ReadL_START2}
 \function{ReadL_START,\ReadL_START}

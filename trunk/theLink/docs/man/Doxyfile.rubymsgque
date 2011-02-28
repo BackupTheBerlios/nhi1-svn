@@ -24,7 +24,9 @@ ALIASES		    += "self=rubymsgque"
 ALIASES		    += "selftut=rubymsgquetut"
 ALIASES		    += "NS{1}=ruby_\1"
 ALIASES		    += "lang=RUBY"
-ALIASES		    += "fileextension=rb"
+ALIASES		    += "fileextension=.rb"
+ALIASES		    += "exeextension=.rb"
+ALIASES		    += "executable=ruby"
 ALIASES		    += "dirname=ruby"
 ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
@@ -202,18 +204,26 @@ ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=TIMEOUT_US
 ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token,callback)"
 ALIASES		    += "SendRETURN=ctx.SendRETURN()"
 ALIASES		    += "SendERROR=ctx.SendERROR()"
-ALIASES		    += "SendTYPE=ctx.SendTYPE(value)"
+ALIASES		    += "SendO=ctx.SendO(\O value)"
+ALIASES		    += "SendY=ctx.SendY(\Y value)"
+ALIASES		    += "SendS=ctx.SendS(\S value)"
+ALIASES		    += "SendI=ctx.SendI(\I value)"
+ALIASES		    += "SendW=ctx.SendW(\W value)"
+ALIASES		    += "SendF=ctx.SendF(\F value)"
+ALIASES		    += "SendD=ctx.SendD(\D value)"
+ALIASES		    += "SendC=ctx.SendC(\C value)"
+ALIASES		    += "SendB=ctx.SendB(\B value)"
+ALIASES		    += "SendU=ctx.SendU(\TU value)"
 ALIASES		    += "SendL_START=ctx.SendL_START()"
 ALIASES		    += "SendL_END=ctx.SendL_END()"
 ALIASES		    += "SendN=ctx.SendN(value)"
-ALIASES		    += "SendU=ctx.SendU(\TU value)"
-ALIASES		    += "SendT_START=ctx.SendT_START(callback)"
-ALIASES		    += "SendT_END=ctx.SendT_END()"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END(\C:token)"
 ALIASES		    += "SendT_example=\code \n\
 ctx.SendSTART() \n\
-ctx.SendT_START(\"SRVR\") \n\
+ctx.SendT_START() \n\
 ctx.SendC(\"myEnvironment\") \n\
-ctx.SendT_END() \n\
+ctx.SendT_END(\"ENV1\") \n\
 ctx.SendC(\"myData\") \n\
 ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
 
@@ -228,9 +238,17 @@ signature = ctx.ReadB() \n\
 ctx.ReadL_END() \n\
 \endcode"
 
-ALIASES		    += "ReadTYPE=TYPE ctx.ReadTYPE()"
-ALIASES		    += "ReadU=MqBufferS ctx.ReadU()"
-ALIASES		    += "ReadN=ByteArray ctx.ReadN()"
+ALIASES		    += "ReadO=\O ctx.ReadO()"
+ALIASES		    += "ReadY=\Y ctx.ReadY()"
+ALIASES		    += "ReadS=\S ctx.ReadS()"
+ALIASES		    += "ReadI=\I ctx.ReadI()"
+ALIASES		    += "ReadW=\W ctx.ReadW()"
+ALIASES		    += "ReadF=\F ctx.ReadF()"
+ALIASES		    += "ReadD=\D ctx.ReadD()"
+ALIASES		    += "ReadC=\C ctx.ReadC()"
+ALIASES		    += "ReadB=\B ctx.ReadB()"
+ALIASES		    += "ReadU=\TU ctx.ReadU()"
+ALIASES		    += "ReadN=\B ctx.ReadN()"
 ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
 ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
 ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx, ?\TD dump?)"
@@ -306,7 +324,15 @@ if buf.GetType() == 'C' \n\
 end \n\
 \endcode"
 ALIASES		    += "BufferObject=<I>MqBufferS()</I>"
-ALIASES		    += "BufferGetTYPE=TYPE buffer.GetTYPE()"
+ALIASES		    += "BufferGetO=\O buffer.GetO()"
+ALIASES		    += "BufferGetY=\Y buffer.GetY()"
+ALIASES		    += "BufferGetS=\S buffer.GetS()"
+ALIASES		    += "BufferGetI=\I buffer.GetI()"
+ALIASES		    += "BufferGetW=\W buffer.GetW()"
+ALIASES		    += "BufferGetF=\F buffer.GetF()"
+ALIASES		    += "BufferGetD=\D buffer.GetD()"
+ALIASES		    += "BufferGetC=\C buffer.GetC()"
+ALIASES		    += "BufferGetB=\B buffer.GetB()"
 ALIASES		    += "BufferGetType=String buffer.GetType()"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -360,4 +386,8 @@ rescue Exception => ex \n\
 end \n\
 \endcode"
 
+ALIASES		    += "tut_build=\b no build necessary"
+ALIASES		    += "tut_server=\skip require\n\until Exit\n\until end"
+ALIASES		    += "tut_client=\skip require\n\until Exit\n\until end"
+ALIASES		    += "tut_filter=\skip require\n\until Exit\n\until end"
 

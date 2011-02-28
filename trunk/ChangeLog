@@ -17,6 +17,18 @@
 \n
 \n
 
+\section V0_14 27 Feb 2011 - NHI1-0.14, PLMK-2.3 und libmsgque-5.3
+
+This release add \e persistent-transaction-support-part-2. The \RNS{Storage}
+interface was added to store/retrieve a \e data-package from/to the database.
+
+\verbatim
+svn diff --summarize -r '{2011-02-05}:{2011-02-27}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
 \section V0_13 05 Feb 2011 - NHI1-0.13, PLMK-2.2 und libmsgque-5.2
 
 This release add \e persistent-transaction-support-part-1 and an improved \e factory-interface.
@@ -42,7 +54,7 @@ svn diff --summarize -r '{2011-01-14}:{2011-01-21}' svn+ssh://svn.berlios.de/svn
 
 \section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
 
-This release add support for the \AllLngTxt{Factory} design pattern.
+This release add support for the \AllLngTxt{FactoryObject} design pattern.
 
 \verbatim
 svn diff --summarize -r '{2010-11-30}:{2011-01-14}'

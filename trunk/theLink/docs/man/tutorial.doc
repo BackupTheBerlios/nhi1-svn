@@ -6,10 +6,12 @@
 
 \RNST{intro}\n
 \RNST{build}\n
+\RNST{service}\n
+\RNST{storage}\n
+\RNST{transaction}\n
 \RNST{server}\n
 \RNST{client}\n
 \RNST{filter}\n
-\RNST{storage}\n
 
 
 \section \NST{intro} INTRODUCTION
@@ -26,7 +28,7 @@ The \lang language binding provide the following basic components:
  - abstract class of the \rself object: \RNS{ContextCreate}
  - interface: \RNSO{Factory} to create a new application instance
  - interface: \RNSC{IServerSetup} and or \RNSC{IServerCleanup} to add server functionality
- - interface: \RNSC{IBgError} to act on asyncrone errors
+ - interface: \RNSC{IBgError} to act on asynchronous errors
  - interface: \RNSC{IEvent} to process background events
  - adding and removing \RNS{service} "services"
  .
@@ -40,467 +42,123 @@ used. The \b automake build on \e WINDOWS is possible but not supported.
 \subsection \NST{build_unix} UNIX
 
 The example from the tutorial is using the \b automake build-environment from the \rself tool. 
-An example \b automake configuration file is available in: \c example/\lang/Makefile.am
-\dontinclude c/Makefile.am
-\if C
-\skip	noinst_PROGRAMS
-\until	LDADD
-\elseif CC
-\skip	noinst_PROGRAMS
-\until	LDADD
-...
-\skip	MyClient_SOURCES
-\until	MyServer_SOURCES
-\elseif GO
-\skip   include
-\until  ## all
+An example \b automake configuration file is available in: \c example/\dirname/Makefile.am
 
-\skip	MyClient
-\until	MyServer
-\until	MyServer
-\elseif CSHARP
-\skip	RULE_CS_EXE
-\until	RULE_CS_EXE
-...
-\skip	MyServer.exe
-\until	RULE_CS_EXE
-...
-\skip	MyClient.exe
-\until	RULE_CS_EXE
-\elseif JAVA
-\skip	RULE_JAVA_EXE
-\until	RULE_JAVA_EXE
-...
-\skip	MyClient.class
-\until	RULE_JAVA_EXE
-...
-\skip	MyServer.class
-\until	RULE_JAVA_EXE
-\elseif TCL
-\b no build necessary
-\elseif PERL
-\b no build necessary
-\elseif PHP
-\b no build necessary
-\elseif PYTHON
-\b no build necessary
-\elseif RUBY
-\b no build necessary
-\elseif VB
-\b no UNIX build possible, mono tool \b vbnc is still in development
-\endif
+\dontinclude \dirname/Makefile.am
+\tut_build
 
 \subsection \NST{build_windows} WINDOWS
 
 The \b VisualExpress build environment is located in the directory \c win.
 
-\section \NST{server} SERVER
+\section \NST{service} SERVICE CALL
 
-A \rself server requires the following setup:
- -# file: \c example/\lang/MyServer.\fileextension
- -# an instance of the abstract class \RNS{ContextCreate}
- -# the interface \RNSO{Factory} to create a new application instance
- -# the interface \RNSC{IServerSetup} and or \RNSC{IServerCleanup}
+\subsection \NST{service_asyncrone} ASYNCRONE service-call
+
+A \e asncrone-service-call is a service call with an expected result or not who will \b not wait for 
+a result.
+- \RNS{SendEND}
+- \RNS{SendEND_AND_CALLBACK}
+.
+
+\subsection \NST{service_syncrone} SYNCRONE service-call
+
+A \e sncrone-service-call is a service call with an expected result who will always wait for an answer.
+- \RNS{SendEND_AND_WAIT}
+.
+
+\subsection \NST{service-send} SENDING data
+
+A data-package is \e send in two different scenarios:
+  -# on a \e client to call a service on the server
+  -# on a \e server to answer a service call from the client
+
+Sending data is an \b active task. Active mean, that the sending have to be triggered by
+the software-workflow.
+Sending data is a sequence of commands to prepare a data-package and one command
+to send this package.
+
+on a client: perform a service call (example using an integer and a string data-item)
+ - \RNS{SendSTART}
+ - \RNS{SendI}
+ - \RNS{SendC}
+ - \RNS{SendEND}
  .
-The \e minimal server looks like:
-\if CSHARP
-\include MyServer.\fileextension
-\elseif VB
-\dontinclude MyServer.\fileextension
-\skip Imports
-\until End Module
-\elseif JAVA
-\include MyServer.\fileextension
-\elseif TCL
-\dontinclude MyServer.\fileextension
-\skip package
-\until Exit
-\elseif PERL
-\dontinclude MyServer.\fileextension
-\skip use strict
-\until Exit
-\elseif PHP
-\dontinclude MyServer.\fileextension
-\skip class MyServer
-\until Exit
-\elseif PYTHON
-\dontinclude MyServer.\fileextension
-\skip import
-\until Exit
-\elseif RUBY
-\dontinclude MyServer.\fileextension
-\skip require
-\until Exit
-\until end
-\else
-\include MyServer.\fileextension
-\endif
+on a server: answer a service call (example using an integer and a string data-item)
+ - \RNS{SendSTART}
+ - \RNS{SendI}
+ - \RNS{SendC}
+ - \RNS{SendRETURN}
+.
 
-The server is started as network visible \e TCP server listen on \e PORT 2345 using a \e THREAD for every 
-new connection request:
-\if CSHARP
-\verbatim
-> mono MyServer.exe --tcp --port 2345 --thread
-\endverbatim
-\elseif VB
-\verbatim
-> mono MyServer.exe --tcp --port 2345 --thread
-\endverbatim
-\elseif JAVA
-\verbatim
-> java example.MyServer --tcp --port 2345 --thread
-\endverbatim
-\elseif TCL
-\verbatim
-> tclsh MyServer.tcl --tcp --port 2345 --thread
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyServer.pl --tcp --port 2345 --thread
-\endverbatim
-\elseif PHP
-\verbatim
-> php -c /path/to/php.ini MyServer.php --tcp --port 2345 --thread
-\endverbatim
-\elseif PYTHON
-\verbatim
-> python MyServer.py --tcp --port 2345 --thread
-\endverbatim
-\elseif RUBY
-\verbatim
-> ruby MyServer.rb --tcp --port 2345 --thread
-\endverbatim
-\else
-\verbatim
-> MyServer --tcp --port 2345 --thread
-\endverbatim
-\endif
-If you are using \e UNIX and if you want to setup a high-performance local server then use the build-in
-\e UDS (Unix-Domain-Sockets) capability to listen on the \e FILE /path/to/any/file.uds instead on a network
-port:
-\if CSHARP
-\verbatim
-> mono MyServer.exe --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif vb
-\verbatim
-> mono MyServer.exe --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif JAVA
-\verbatim
-> java example.MyServer --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif TCL
-\verbatim
-> tclsh MyServer.tcl --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyServer.pl --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif PHP
-\verbatim
-> php -c /path/to/php.ini MyServer.php --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif PYTHON
-\verbatim
-> python MyServer.py --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\elseif RUBY
-\verbatim
-> ruby MyServer.rb --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\else
-\verbatim
-> MyServer --uds --file /path/to/any/file.uds --thread
-\endverbatim
-\endif
+Important in the code from above is the last command #MqSendEND because this
+is just one of three possibilities:
+<TABLE>
+  <TR>
+    <TH>command</TH>
+    <TH>description</TH>
+  </TR>
+  <TR>
+    <TD>\RNSA{SendEND}</TD>
+    <TD>Do a asynchronous service-call without return data</TD>
+  </TR>
+  <TR>
+    <TD>\RNSA{SendEND_AND_WAIT}</TD>
+    <TD>Do a synchronous service-call with return data</TD>
+  </TR>
+  <TR>
+    <TD>\RNSA{SendEND_AND_CALLBACK}</TD>
+    <TD>Do a asynchronous service-call with return data</TD>
+  </TR>
+</TABLE>
 
-Three things are important:
- -# the \RNS{SendData} "send" style of functions
- -# the \RNS{ServiceCreate} function
- -# a \RNS{LinkCreate} "connected" context of type \RNS{ContextCreate}
+To send a data-package is one task, to send it to the \e right receiver is an other one.
+The \e right receiver is identified with the \e token parameter argument.
+This parameter have to be a \b 4 character string.
+You'll probably ask "why 4?" the answer is that this string have should be "human" readable
+and easy to "compare". As solution this string is mapped to a 4 byte
+integer used to find the proper key/value entry in the service-hash-table on the server.
+(in short: to search an \e integer is much faster as to search a \e string)
+
+
+\subsection \NST{service-read} RECEIVING data
+
+A data-package is \e read in two different scenarios:
+  -# on a \e server to serve an incoming service-call from the client
+  -# on a \e client to process the return-data from a previous service-call
+  .
+Reading data is a \b passive task in opposite to sending data which is an \b active task.
+Passive mean that the \e read is triggered by an incoming data-package and not by the
+software-workflow.
+
+To setup a \e passive task two requirements are necessary:
+  -# adding the service
+  -# start the event-loop to listen on the incoming packages
+  .
+
+\subsection \NST{service-read-service} add a service
+
+setup a service able to listen on a token
+ - \RNS{ServiceCreate}
  .
-Sending data is done using a minimum of 2 steps:
- -# First: start a data package with \RNS{SendSTART}
- -# Last: submit the a data package to the link target using one of:
-  - \RNS{SendEND}
-  - \RNS{SendEND_AND_WAIT}
-  - \RNS{SendEND_AND_CALLBACK}
-  - \RNS{SendRETURN}
+setup a service able to receiving results from a previous service call
+ - \RNS{SendEND_AND_CALLBACK}
  .
 
-The first three \b SendEND... functions are used to \b call a remote service and
-the last one is used to answer an incoming service call. In-between \SendSTART
-and \SendEND ... other \RNS{SendData} style commands are available to fill the data 
-package with data.
+To start the event-loop and wait for an incoming package,
 
-Services are created with the \RNS{ServiceCreate} function. The first
-parameter is a \b 4 byte Token as public name. 4 byte is required because this
-string is mapped to a 4 byte integer for speed reason. The second parameter
-is an object providing the \RNS{ServiceCallback} interface.
-
-The \RNS{ServiceCallback} is called for every incoming \e service-request which 
-belongs to token.
-
-\section \NST{client} CLIENT
-
-A \rself client requires the following setup:
- -# an instance of the abstract class \RNS{ContextCreate}
+ - \RNS{ProcessEvent}
  .
-The \e minimal client looks like:
-\if CSHARP
-\include MyClient.\fileextension
-\elseif VB
-\dontinclude MyClient.\fileextension
-\skip Imports
-\until End Module
-\elseif JAVA
-\include MyClient.\fileextension
-\elseif TCL
-\dontinclude MyClient.\fileextension
-\skip package
-\until Exit
-\elseif PERL
-\dontinclude MyClient.\fileextension
-\skip use strict
-\until Exit
-\elseif PHP
-\dontinclude MyClient.\fileextension
-\skip new MqS
-\until Exit
-\elseif PYTHON
-\dontinclude MyClient.\fileextension
-\skip import
-\until Exit
-\elseif RUBY
-\dontinclude MyClient.\fileextension
-\skip require
-\until Exit
-\until end
-\else
-\include MyClient.\fileextension
-\endif
 
-To call a network visible \e TCP server listen on \e PORT 2345 use:
-\if CSHARP
-\verbatim
-> mono MyClient.exe --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif VB
-\verbatim
-> mono MyClient.exe --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif JAVA
-\verbatim
-> java example.MyClient --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif TCL
-\verbatim
-> tclsh MyClient.tcl --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyClient.pl --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyClient.pl --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif PHP
-\verbatim
-> php -c /path/to/php.ini MyClient.php --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif PYTHON
-\verbatim
-> python MyClient.py --tcp --port 2345
-> Hello World
-\endverbatim
-\elseif RUBY
-\verbatim
-> ruby MyClient.rb --tcp --port 2345
-> Hello World
-\endverbatim
-\else
-\verbatim
-> MyClient --tcp --port 2345
-> Hello World
-\endverbatim
-\endif
-To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds use:
-\if CSHARP
-\verbatim
-> mono MyClient.exe --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif VB
-\verbatim
-> mono MyClient.exe --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif JAVA
-\verbatim
-> java example.MyClient --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif TCL
-\verbatim
-> tclsh MyClient.tcl --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyClient.pl --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif PHP
-\verbatim
-> php -c /path/to/php.ini MyClient.php --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif PYTHON
-\verbatim
-> python MyClient.py --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\elseif RUBY
-\verbatim
-> ruby MyClient.rb --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\else
-\verbatim
-> MyClient --uds --file /path/to/any/file.uds
-> Hello World
-\endverbatim
-\endif
-To call a \e local server started by the client using \e PIPE communication use:
-\if CSHARP
-\verbatim
-> mono MyClient.exe @ mono MyServer.exe
-> Hello World
-\endverbatim
-\elseif VB
-\verbatim
-> mono MyClient.exe @ mono MyServer.exe
-> Hello World
-\endverbatim
-\elseif JAVA
-\verbatim
-> java example.MyClient @ java example.MyServer
-> Hello World
-\endverbatim
-\elseif TCL
-\verbatim
-> tclsh MyClient.tcl @ tclsh MyServer.tcl
-> Hello World
-\endverbatim
-\elseif PERL
-\verbatim
-> perl MyClient.pl @ perl MyServer.pl
-> Hello World
-\endverbatim
-\elseif PHP
-\verbatim
-> php -c /path/to/php.ini MyClient.php @ perl -c /path/to/php.ini MyServer.php
-> Hello World
-\endverbatim
-\elseif PYTHON
-\verbatim
-> python MyClient.py @ python MyServer.py
-> Hello World
-\endverbatim
-\elseif RUBY
-\verbatim
-> ruby MyClient.rb @ ruby MyServer.rb
-> Hello World
-\endverbatim
-\else
-\verbatim
-> MyClient @ MyServer
-> Hello World
-\endverbatim
-\endif
+\subsection \NST{service-read-main} read data from a package (example from above)
 
-\section \NST{filter} FILTER
+ - \RNS{ReadI}
+ - \RNS{ReadC}
+ .
 
-The \RNS{filter} is used to define a command pipeline. A \e minimal filter looks like:
-
-\if PYTHON
-\dontinclude manfilter.py
-\skip import
-\until Exit
-Use \e manfilter.py in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ python manfilter.py @ atool join -d :
-\endverbatim
-\elseif RUBY
-\dontinclude manfilter.rb
-\skip require
-\until Exit
-\until end
-Use \e manfilter.rb in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ ruby manfilter.rb @ atool join -d :
-\endverbatim
-\elseif JAVA
-\include manfilter.java
-Use \e manfilter.java in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ java example.manfilter @ atool join -d :
-\endverbatim
-\elseif CSHARP
-\include manfilter.cs
-Use \e manfilter.exe in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
-\endverbatim
-\elseif VB
-\dontinclude manfilter.vb
-\skip Imports
-\until End Module
-Use \e manfilter.exe in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ mono manfilter.exe @ atool join -d :
-\endverbatim
-\elseif TCL
-\dontinclude manfilter.tcl
-\skip TclMsgque
-\until Exit
-Use \e manfilter.tcl in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ tclsh manfilter.tcl @ atool join -d :
-\endverbatim
-\elseif PERL
-\dontinclude manfilter.pl
-\skip strict
-\until Exit
-Use \e manfilter.pl in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ perl manfilter.pl @ atool join -d :
-\endverbatim
-\elseif PHP
-\dontinclude manfilter.php
-\skip class ManFilter
-\until Exit
-Use \e manfilter.php in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ php -c /path/to/php.ini  manfilter.php @ atool join -d :
-\endverbatim
-\else
-\include manfilter.\fileextension
-Use \e manfilter.\fileextension in a LibMsgque command pipeline:
-\verbatim
-> echo -e "1:2:3\na:b:c" | atool split -d : @ manfilter @ atool join -d :
-\endverbatim
-\endif
+The \libmsgque API is type-save and create an \e error if the requested
+type like \c MqReadI is not compatible with the next available type in the
+data-package.
 
 \section \NST{storage} STORAGE
 
@@ -511,7 +169,7 @@ Use \e manfilter.\fileextension in a LibMsgque command pipeline:
 Only the \e receiving-message-buffer can be \RNS{Storage} "stored" or \RNS{DumpObject} "dumped"
 and reused later.
 
-The storage can be devided into 2 main catagories:
+The storage can be divided into 2 main categories:
 -# a  \RNST{storage_local}
 -# an \RNST{storage_external}
 .
@@ -548,7 +206,7 @@ a \e per-context configuration but only \e one database per process or thread is
 
 This is the default database and can explicit be set with \RNSA{StorageOpen} with the parameter \b "#memdb#". 
 
-\subsubsection \NST{storage_local_tmp} temporaray database
+\subsubsection \NST{storage_local_tmp} temporary database
 
 This database is like an \e in-memory-database but export data to the filesystem if the application run out
 of memory. This database can explicit be set with \RNSA{StorageOpen} with the parameter \b "#tmpdb#".
@@ -556,18 +214,159 @@ of memory. This database can explicit be set with \RNSA{StorageOpen} with the pa
 \subsubsection \NST{storage_local_file} file based database
 
 This database always work on files. Only this database is persistent and can explicit be set with 
-\RNSA{StorageOpen} with the used defined \b storageFile parameter.
+\RNSA{StorageOpen} with the \b storageFile parameter.
 
 \subsection \NST{storage_external} external database
 
 \libmsgque has the ability to \RNS{DumpObject} "dump" the \e receiving-message-buffer as binary using:
-- \RNSA{ReadDUMP}
+- \RNS{ReadDUMP}
 .
 and load this buffer again with:
-- \RNSA{ReadLOAD}
+- \RNS{ReadLOAD}
+- \RNS{ReadForward}
 .
 This dump can be saved into an external database.
 
+
+\section \NST{transaction} PERSISTENT TRANSACTION
+
+A \e persistent-transaction is a \e service-call with guaranteed delivery. \e guaranteed mean that
+this \e transaction using a \RNS{Storage} to keep every step persistent being able to recover a step 
+if something unexpected happen.
+
+A \e persistent-transaction using a \ref \NST{service_syncrone} or a \ref \NST{service_asyncrone}
+to transport the data to the new storage.
+
+To link the answer to a previous \e service-call a special \e transaction-item is used. This \e item
+is saved locally in the storage by the \e service-caller and the identifying \e transaction-id is appended
+to the \e service-call. The result has this id appended too and the \e service-called setup the environment
+from the storage.
+
+To create a \e persistent-transaction an \RNS{Storage} have to be available. By default an \e in-memory 
+\RNS{Storage} is used. 
+
+To get a \e persistent \RNS{Storage} use:
+ - \RNS{StorageOpen}
+ .
+To perform a \e persistent-transaction on top of a \RNST{service_syncrone} using a \e double and a 
+\e boolean to identify my local environment and to as a \e byte and a \e binary \e data-item:
+ - \RNS{SendSTART}
+ - \RNS{SendT_START}
+ - \RNS{SendD}
+ - \RNS{SendO}
+ - \RNS{SendT_END}
+ - \RNS{SendY}
+ - \RNS{SendB}
+ - \RNS{SendEND_AND_WAIT}
+ .
+The result of this \e service-call is send to a \b token. This service have to be created with:
+ - \RNS{ServiceCreate}
+ .
+After the result has arrived the service is called and the previous environment can be stored:
+ - \RNS{ReadT_START}
+ - \RNS{ReadD}
+ - \RNS{ReadO}
+ - \RNS{ReadT_END}
+ - \RNS{ReadI}
+ . 
+The \e D and the \e O is the environment and the \e I is the result of the \e service-call.
+Keep in mind that the \e environment-data is private and is \b never send to the \e link-target.
+
+\section \NST{server} SERVER
+
+A \rself server requires the following setup:
+ -# file: \c example/\lang/MyServer\fileextension
+ -# an instance of the abstract class \RNS{ContextCreate}
+ -# the interface \RNSO{Factory} to create a new application instance
+ -# the interface \RNSC{IServerSetup} and or \RNSC{IServerCleanup}
+ .
+The \e minimal server looks like:
+
+\dontinclude MyServer\fileextension
+\tut_server
+
+The server is started as network visible \e TCP server listen on \e PORT 2345 using a \e THREAD for every 
+new connection request:
+<TT>
+- \executable \exeprefix{MyServer}\exeextension --tcp --port 2345 --thread
+.
+</TT>
+If you are using \e UNIX and if you want to setup a high-performance local server then use the build-in
+\e UDS (Unix-Domain-Sockets) capability to listen on the \e FILE /path/to/any/file.uds instead on a network
+port:
+<TT>
+- \executable \exeprefix{MyServer}\exeextension --uds --file /path/to/any/file.uds --thread
+.
+</TT>
+
+Three things are important:
+ -# the \RNS{SendData} "send" style of functions
+ -# the \RNS{ServiceCreate} function
+ -# a \RNS{LinkCreate} "connected" context of type \RNS{ContextCreate}
+ .
+Sending data is done using a minimum of 2 steps:
+ -# First: start a data package with \RNS{SendSTART}
+ -# Last: submit the a data package to the link target using one of:
+  - \RNS{SendEND}
+  - \RNS{SendEND_AND_WAIT}
+  - \RNS{SendEND_AND_CALLBACK}
+  - \RNS{SendRETURN}
+ .
+
+The first three \b SendEND... functions are used to \b call a remote service and
+the last one is used to answer an incoming service call. In-between \SendSTART
+and \SendEND ... other \RNS{SendData} style commands are available to fill the data 
+package with data.
+
+Services are created with the \RNS{ServiceCreate} function. The first
+parameter is a \b 4 byte Token as public name. 4 byte is required because this
+string is mapped to a 4 byte integer for speed reason. The second parameter
+is an object providing the \RNS{ServiceCallback} interface.
+
+The \RNS{ServiceCallback} is called for every incoming \e service-request which 
+belongs to token.
+
+\section \NST{client} CLIENT
+
+A \rself client requires the following setup:
+ -# an instance of the abstract class \RNS{ContextCreate}
+ .
+The \e minimal client looks like:
+
+\dontinclude MyClient\fileextension
+\tut_client
+
+To call a network visible \e TCP server listen on \e PORT 2345 use:
+<TT>
+- \executable \exeprefix{MyClient}\exeextension --tcp --port 2345
+- Hello World
+.
+</TT>
+To call a network visible \e UDP server listen on \e FILE /path/to/any/file.uds use:
+<TT>
+- \executable \exeprefix{MyClient}\exeextension --uds --file /path/to/any/file.uds
+- Hello World
+.
+</TT>
+To call a \e local server started by the client using \e PIPE communication use:
+<TT>
+- \executable \exeprefix{MyClient}\exeextension @ \executable \exeprefix{MyServer}\exeextension
+- Hello World
+.
+</TT>
+
+\section \NST{filter} FILTER
+
+The \RNS{filter} is used to define a command pipeline. A \e minimal filter looks like:
+
+\dontinclude manfilter\fileextension
+\tut_filter
+
+Use \e \exeprefix{manfilter}\exeextension in a LibMsgque command pipeline:
+<TT>
+- echo -e "1:2:3\na:b:c" | atool split -d : @ \executable \exeprefix{manfilter}\exeextension @ atool join -d :
+.
+</TT>
 
 */
 

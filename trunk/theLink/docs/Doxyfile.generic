@@ -222,7 +222,8 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "valueC=\param value the #MQ_STR argument to send " \
                          "valueB=\param value the #MQ_BIN argument to send " \
                          "valueU=\param value the pointer to a #MqBufferS object to send " \
-                         "buf=\param buf the #MqBufferS object to work on " \
+                         "buf=\param[in] buf the #MqBufferS object to work on " \
+                         "buffer=\param[in] buffer the #MqBufferS object to work on " \
                          "bufL=\param bufL the MqBufferLS object to work on " \
                          "bufL0=\param[in] bufL the #MqBufferLS object to work on or \c NULL" \
                          "bufU=\param bufU the #MqBufferU object to work on " \

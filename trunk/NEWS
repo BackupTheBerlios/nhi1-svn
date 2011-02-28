@@ -10,10 +10,33 @@
 #§              please contact AUTHORS for additional information
 #§
 
-26 Feb 2011: v NHI1-0.14, PLMK-2.3 und libmsgque-5.3
 
- -> "deeper integration of SqLite"
+27 Feb 2011: v NHI1-0.14, PLMK-2.3 und libmsgque-5.3
 
+ -> "SqLite, a deeper integration including a 'Storage' API"
+
+This release add persistent-transaction-support-part-2. The 'Storage'
+API was added to store/retrieve a data-package from/to the database.
+In addition a 'Dump' API was added to export/import data into/from
+external storage.
+
+The following commands were A)dded / D)eleted / C)hanged:
+
+  D SqlSetDb,
+  A StorageOpen
+  A StorageClose
+  A StorageInsert
+  A StorageSelect
+  A StorageDelete
+  A StorageCount
+  A StorageService
+  A ReadDUMP
+  A ReadLOAD
+  A ReadForward
+  D ReadBDY
+  D SendBDY
+  A ConfigSetStorage
+  A ConfigGetStorage
 
 
 05 Feb 2011: v NHI1-0.13, PLMK-2.2 und libmsgque-5.2
