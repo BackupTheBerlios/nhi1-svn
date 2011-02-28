@@ -1,12 +1,12 @@
-> nothread/NHI1-0.13/theBrain/abrain/abrain --tcp --host localhost --port 7802 --fork
-> nothread/NHI1-0.13/theBrain/tests/client --all --tcp --host localhost --port 7802
-C> (client:28205) [2011-02-05:12-32-53] [0-0-0-0x6e5bb8-main]: start: --------------------------------------
-C> (client:28205) [2011-02-05:12-32-55] [0-0-0-0x6e5bb8-statistics]:              memory hash - PUT:      26.29
-C> (client:28205) [2011-02-05:12-32-56] [0-0-0-0x6e5bb8-statistics]:              memory hash - GET:      26.42
-C> (client:28205) [2011-02-05:12-32-58] [0-0-0-0x6e5bb8-statistics]:             memory btree - PUT:      29.62
-C> (client:28205) [2011-02-05:12-32-59] [0-0-0-0x6e5bb8-statistics]:             memory btree - GET:      30.03
-C> (client:28205) [2011-02-05:12-33-00] [0-0-0-0x6e5bb8-statistics]:                file hash - PUT:      27.49
-C> (client:28205) [2011-02-05:12-33-02] [0-0-0-0x6e5bb8-statistics]:                file hash - GET:      27.85
-C> (client:28205) [2011-02-05:12-33-11] [0-0-0-0x6e5bb8-statistics]:               file btree - PUT:     173.31
-C> (client:28205) [2011-02-05:12-33-19] [0-0-0-0x6e5bb8-statistics]:               file btree - GET:     161.65
-C> (client:28205) [2011-02-05:12-33-19] [0-0-0-0x6e5bb8-main]: end: ----------------------------------------
+> nothread/NHI1-0.14/theBrain/abrain/abrain --tcp --host localhost --port 7802 --fork
+> nothread/NHI1-0.14/theBrain/tests/client --all --tcp --host localhost --port 7802
+C> (client:28321) [2011-02-28:18-40-57] [0-0-0-0x6e7bb8-main]: start: --------------------------------------
+C> (client:28321) [2011-02-28:18-40-58] [0-0-0-0x6e7bb8-statistics]:              memory hash - PUT:      26.51
+C> (client:28321) [2011-02-28:18-40-59] [0-0-0-0x6e7bb8-statistics]:              memory hash - GET:      26.68
+C> (client:28321) [2011-02-28:18-41-01] [0-0-0-0x6e7bb8-statistics]:             memory btree - PUT:      29.85
+C> (client:28321) [2011-02-28:18-41-02] [0-0-0-0x6e7bb8-statistics]:             memory btree - GET:      30.15
+C> (client:28321) [2011-02-28:18-41-04] [0-0-0-0x6e7bb8-statistics]:                file hash - PUT:      27.95
+C> (client:28321) [2011-02-28:18-41-05] [0-0-0-0x6e7bb8-statistics]:                file hash - GET:      27.98
+C> (client:28321) [2011-02-28:18-41-12] [0-0-0-0x6e7bb8-statistics]:               file btree - PUT:     131.65
+C> (client:28321) [2011-02-28:18-41-20] [0-0-0-0x6e7bb8-statistics]:               file btree - GET:     163.18
+C> (client:28321) [2011-02-28:18-41-20] [0-0-0-0x6e7bb8-main]: end: ----------------------------------------

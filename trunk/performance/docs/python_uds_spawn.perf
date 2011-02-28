@@ -1,12 +1,12 @@
-> python nothread/NHI1-0.13/theLink/example/python/server.py --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:21475) [2011-02-05:12-27-31] [0-0-0-0x6e6d98-main]: start: --------------------------------------
-C> (client:21475) [2011-02-05:12-27-31] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:   2.10e+05
-C> (client:21475) [2011-02-05:12-27-32] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:   1.08e+05
-C> (client:21475) [2011-02-05:12-27-33] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:   4.19e+04
-C> (client:21475) [2011-02-05:12-27-35] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:   4.86e+00
-C> (client:21475) [2011-02-05:12-27-38] [0-0-0-0x6e6d98-statistics]:                  parent create:   3.43e+01
-C> (client:21475) [2011-02-05:12-27-38] [0-0-0-0x6e6d98-statistics]:                  parent delete:   4.93e+02
-C> (client:21475) [2011-02-05:12-27-39] [0-0-0-0x6e6d98-statistics]:                   child create:   7.75e+03
-C> (client:21475) [2011-02-05:12-27-39] [0-0-0-0x6e6d98-statistics]:                   child delete:   2.57e+04
-C> (client:21475) [2011-02-05:12-27-39] [0-0-0-0x6e6d98-main]: end: ----------------------------------------
+> python nothread/NHI1-0.14/theLink/example/python/server.py --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.14/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:21593) [2011-02-28:18-34-49] [0-0-0-0x6e8d98-main]: start: --------------------------------------
+C> (client:21593) [2011-02-28:18-34-49] [0-0-0-0x6e8d98-statistics]:                      MqSendEND:   2.13e+05
+C> (client:21593) [2011-02-28:18-34-49] [0-0-0-0x6e8d98-statistics]:         MqSendEND_AND_CALLBACK:   1.08e+05
+C> (client:21593) [2011-02-28:18-34-51] [0-0-0-0x6e8d98-statistics]:             MqSendEND_AND_WAIT:   4.23e+04
+C> (client:21593) [2011-02-28:18-34-53] [0-0-0-0x6e8d98-statistics]:               MqSendPERSISTENT:   4.64e+00
+C> (client:21593) [2011-02-28:18-34-56] [0-0-0-0x6e8d98-statistics]:                  parent create:   3.40e+01
+C> (client:21593) [2011-02-28:18-34-57] [0-0-0-0x6e8d98-statistics]:                  parent delete:   4.90e+02
+C> (client:21593) [2011-02-28:18-34-57] [0-0-0-0x6e8d98-statistics]:                   child create:   7.55e+03
+C> (client:21593) [2011-02-28:18-34-57] [0-0-0-0x6e8d98-statistics]:                   child delete:   3.90e+04
+C> (client:21593) [2011-02-28:18-34-57] [0-0-0-0x6e8d98-main]: end: ----------------------------------------

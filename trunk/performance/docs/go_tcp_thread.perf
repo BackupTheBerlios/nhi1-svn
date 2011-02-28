@@ -1,12 +1,12 @@
-> thread/NHI1-0.13/theLink/example/go/server --tcp --host localhost --port 7798 --thread
-> thread/NHI1-0.13/theLink/example/c/client --all --tcp --host localhost --port 7798
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-17] [0-0-0-0x6ebff8-main]: start: --------------------------------------
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-17] [0-0-0-0x6ebff8-statistics]:                      MqSendEND:   1.59e+05
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-18] [0-0-0-0x6ebff8-statistics]:         MqSendEND_AND_CALLBACK:   9.74e+04
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-19] [0-0-0-0x6ebff8-statistics]:             MqSendEND_AND_WAIT:   3.26e+04
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-statistics]:               MqSendPERSISTENT:   3.64e+00
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-statistics]:                  parent create:   2.22e+03
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-statistics]:                  parent delete:   8.14e+03
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-statistics]:                   child create:   5.49e+03
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-statistics]:                   child delete:   1.58e+04
-C> (client:26896:0x7f5628f64700) [2011-02-05:12-31-23] [0-0-0-0x6ebff8-main]: end: ----------------------------------------
+> thread/NHI1-0.14/theLink/example/go/server --tcp --host localhost --port 7798 --thread
+> thread/NHI1-0.14/theLink/example/c/client --all --tcp --host localhost --port 7798
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-04] [0-0-0-0x6ecff8-main]: start: --------------------------------------
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-04] [0-0-0-0x6ecff8-statistics]:                      MqSendEND:   1.67e+05
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-05] [0-0-0-0x6ecff8-statistics]:         MqSendEND_AND_CALLBACK:   9.58e+04
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-06] [0-0-0-0x6ecff8-statistics]:             MqSendEND_AND_WAIT:   3.31e+04
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-statistics]:               MqSendPERSISTENT:   2.77e+00
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-statistics]:                  parent create:   2.17e+03
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-statistics]:                  parent delete:   9.03e+03
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-statistics]:                   child create:   4.72e+03
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-statistics]:                   child delete:   2.71e+04
+C> (client:27008:0x7fd2eeb10700) [2011-02-28:18-39-11] [0-0-0-0x6ecff8-main]: end: ----------------------------------------

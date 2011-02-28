@@ -1,11 +1,11 @@
-> nothread/NHI1-0.13/theLink/example/c/client --all @ perl nothread/NHI1-0.13/theLink/example/perl/server.pl
-C> (client:24514) [2011-02-05:12-28-59] [0-0-0-0x6e6d98-main]: start: --------------------------------------
-C> (client:24514) [2011-02-05:12-28-59] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:   1.34e+05
-C> (client:24514) [2011-02-05:12-29-00] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:   1.03e+05
-C> (client:24514) [2011-02-05:12-29-01] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:   4.25e+04
-C> (client:24514) [2011-02-05:12-29-04] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:   4.65e+00
-C> (client:24514) [2011-02-05:12-29-25] [0-0-0-0x6e6d98-statistics]:                  parent create:   4.71e+00
-C> (client:24514) [2011-02-05:12-29-25] [0-0-0-0x6e6d98-statistics]:                  parent delete:   3.53e+03
-C> (client:24514) [2011-02-05:12-29-25] [0-0-0-0x6e6d98-statistics]:                   child create:   8.28e+03
-C> (client:24514) [2011-02-05:12-29-25] [0-0-0-0x6e6d98-statistics]:                   child delete:   2.57e+04
-C> (client:24514) [2011-02-05:12-29-25] [0-0-0-0x6e6d98-main]: end: ----------------------------------------
+> nothread/NHI1-0.14/theLink/example/c/client --all @ perl nothread/NHI1-0.14/theLink/example/perl/server.pl
+C> (client:24646) [2011-02-28:18-36-33] [0-0-0-0x6e8d98-main]: start: --------------------------------------
+C> (client:24646) [2011-02-28:18-36-33] [0-0-0-0x6e8d98-statistics]:                      MqSendEND:   1.55e+05
+C> (client:24646) [2011-02-28:18-36-33] [0-0-0-0x6e8d98-statistics]:         MqSendEND_AND_CALLBACK:   1.22e+05
+C> (client:24646) [2011-02-28:18-36-35] [0-0-0-0x6e8d98-statistics]:             MqSendEND_AND_WAIT:   4.49e+04
+C> (client:24646) [2011-02-28:18-36-39] [0-0-0-0x6e8d98-statistics]:               MqSendPERSISTENT:   2.80e+00
+C> (client:24646) [2011-02-28:18-37-01] [0-0-0-0x6e8d98-statistics]:                  parent create:   4.62e+00
+C> (client:24646) [2011-02-28:18-37-01] [0-0-0-0x6e8d98-statistics]:                  parent delete:   2.06e+03
+C> (client:24646) [2011-02-28:18-37-01] [0-0-0-0x6e8d98-statistics]:                   child create:   8.20e+03
+C> (client:24646) [2011-02-28:18-37-01] [0-0-0-0x6e8d98-statistics]:                   child delete:   4.28e+04
+C> (client:24646) [2011-02-28:18-37-01] [0-0-0-0x6e8d98-main]: end: ----------------------------------------

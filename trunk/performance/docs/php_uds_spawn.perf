@@ -1,12 +1,12 @@
-> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.13/theLink/example/php/server.php --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.13/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:28059) [2011-02-05:12-32-25] [0-0-0-0x6e6d98-main]: start: --------------------------------------
-C> (client:28059) [2011-02-05:12-32-25] [0-0-0-0x6e6d98-statistics]:                      MqSendEND:   1.60e+05
-C> (client:28059) [2011-02-05:12-32-26] [0-0-0-0x6e6d98-statistics]:         MqSendEND_AND_CALLBACK:   9.48e+04
-C> (client:28059) [2011-02-05:12-32-27] [0-0-0-0x6e6d98-statistics]:             MqSendEND_AND_WAIT:   3.94e+04
-C> (client:28059) [2011-02-05:12-32-30] [0-0-0-0x6e6d98-statistics]:               MqSendPERSISTENT:   3.82e+00
-C> (client:28059) [2011-02-05:12-32-31] [0-0-0-0x6e6d98-statistics]:                  parent create:   1.49e+02
-C> (client:28059) [2011-02-05:12-32-31] [0-0-0-0x6e6d98-statistics]:                  parent delete:   3.55e+03
-C> (client:28059) [2011-02-05:12-32-31] [0-0-0-0x6e6d98-statistics]:                   child create:   5.03e+03
-C> (client:28059) [2011-02-05:12-32-31] [0-0-0-0x6e6d98-statistics]:                   child delete:   1.94e+04
-C> (client:28059) [2011-02-05:12-32-31] [0-0-0-0x6e6d98-main]: end: ----------------------------------------
+> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.14/theLink/example/php/server.php --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.14/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:28175) [2011-02-28:18-40-27] [0-0-0-0x6e8d98-main]: start: --------------------------------------
+C> (client:28175) [2011-02-28:18-40-27] [0-0-0-0x6e8d98-statistics]:                      MqSendEND:   1.40e+05
+C> (client:28175) [2011-02-28:18-40-27] [0-0-0-0x6e8d98-statistics]:         MqSendEND_AND_CALLBACK:   9.30e+04
+C> (client:28175) [2011-02-28:18-40-29] [0-0-0-0x6e8d98-statistics]:             MqSendEND_AND_WAIT:   3.93e+04
+C> (client:28175) [2011-02-28:18-40-33] [0-0-0-0x6e8d98-statistics]:               MqSendPERSISTENT:   2.69e+00
+C> (client:28175) [2011-02-28:18-40-34] [0-0-0-0x6e8d98-statistics]:                  parent create:   1.47e+02
+C> (client:28175) [2011-02-28:18-40-34] [0-0-0-0x6e8d98-statistics]:                  parent delete:   3.46e+03
+C> (client:28175) [2011-02-28:18-40-34] [0-0-0-0x6e8d98-statistics]:                   child create:   4.93e+03
+C> (client:28175) [2011-02-28:18-40-34] [0-0-0-0x6e8d98-statistics]:                   child delete:   3.86e+04
+C> (client:28175) [2011-02-28:18-40-34] [0-0-0-0x6e8d98-main]: end: ----------------------------------------

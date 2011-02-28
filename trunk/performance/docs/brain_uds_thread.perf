@@ -1,12 +1,12 @@
-> thread/NHI1-0.13/theBrain/abrain/abrain --uds --file ./socket.uds --thread
-> thread/NHI1-0.13/theBrain/tests/client --all --uds --file ./socket.uds
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-41] [0-0-0-0x6eaaa8-main]: start: --------------------------------------
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-42] [0-0-0-0x6eaaa8-statistics]:              memory hash - PUT:      19.79
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-43] [0-0-0-0x6eaaa8-statistics]:              memory hash - GET:      20.20
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-44] [0-0-0-0x6eaaa8-statistics]:             memory btree - PUT:      22.65
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-46] [0-0-0-0x6eaaa8-statistics]:             memory btree - GET:      24.03
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-48] [0-0-0-0x6eaaa8-statistics]:                file hash - PUT:      21.70
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-49] [0-0-0-0x6eaaa8-statistics]:                file hash - GET:      22.15
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-34-57] [0-0-0-0x6eaaa8-statistics]:               file btree - PUT:     141.82
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-35-06] [0-0-0-0x6eaaa8-statistics]:               file btree - GET:     186.48
-C> (client:28329:0x7fdf5afc1700) [2011-02-05:12-35-06] [0-0-0-0x6eaaa8-main]: end: ----------------------------------------
+> thread/NHI1-0.14/theBrain/abrain/abrain --uds --file ./socket.uds --thread
+> thread/NHI1-0.14/theBrain/tests/client --all --uds --file ./socket.uds
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-43] [0-0-0-0x6ebaa8-main]: start: --------------------------------------
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-44] [0-0-0-0x6ebaa8-statistics]:              memory hash - PUT:      19.53
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-45] [0-0-0-0x6ebaa8-statistics]:              memory hash - GET:      19.98
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-46] [0-0-0-0x6ebaa8-statistics]:             memory btree - PUT:      22.54
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-47] [0-0-0-0x6ebaa8-statistics]:             memory btree - GET:      23.38
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-48] [0-0-0-0x6ebaa8-statistics]:                file hash - PUT:      21.45
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-49] [0-0-0-0x6ebaa8-statistics]:                file hash - GET:      21.98
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-42-58] [0-0-0-0x6ebaa8-statistics]:               file btree - PUT:     179.29
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-43-08] [0-0-0-0x6ebaa8-statistics]:               file btree - GET:     185.90
+C> (client:28445:0x7f3e9cbf3700) [2011-02-28:18-43-08] [0-0-0-0x6ebaa8-main]: end: ----------------------------------------
