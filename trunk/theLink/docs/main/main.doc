@@ -2,13 +2,14 @@
 
 <CENTER>
 
-\section nw  NEWS, from 05 Feb 2011
+\section nw  NEWS, from 28 Feb 2011
 
-Finish release \b 6 of \ref wp2 \n
-<TT>"SqLite, one additional step in the right direction"</TT> \n
-This release add \b persistent-transaction-support-part-1, \n
-an improved \b factory-interface, \n
-and a fixing of some code/documentation errors
+Finish release \b 7 of \ref wp2 \n
+<TT>"SqLite, a deeper integration including a 'Storage' API"</TT> \n
+This release add \b persistent-transaction-support-part-2, including:\n
+a \RNS{Storage} API\n
+a \RNS{DumpObject} API\n
+and a new \RNS{Tutorial}.
 
 
 \section intro Introduction
@@ -62,7 +63,7 @@ setup and maintaining the link and is responsible for: \n
   </TR>
   <TR>  
     <TD>Tutorial</TD> 
-    <TD>\tut{lib,YES}</TD>
+    <TD>\tut{c,YES}</TD>
     <TD>\tut{cc,YES}</TD>
     <TD>\tut{cs,YES}</TD>
     <TD>\tut{java,YES}</TD>
@@ -71,7 +72,7 @@ setup and maintaining the link and is responsible for: \n
     <TD>\tut{ruby,YES}</TD>
     <TD>\tut{tcl,YES}</TD>
     <TD>\tut{perl,YES}</TD>
-    <TD>\tutfor{php,YES}</TD>
+    <TD>\tut{php,YES}</TD>
     <TD>\tut{vb,YES}</TD>
   </TR>
   <TR>  
