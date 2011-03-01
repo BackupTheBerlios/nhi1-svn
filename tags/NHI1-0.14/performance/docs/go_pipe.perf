@@ -1,0 +1,11 @@
+> thread/NHI1-0.14/theLink/example/c/client --all @ thread/NHI1-0.14/theLink/example/go/server
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-45] [0-0-0-0x6eccb8-main]: start: --------------------------------------
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-45] [0-0-0-0x6eccb8-statistics]:                      MqSendEND:   1.76e+05
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-46] [0-0-0-0x6eccb8-statistics]:         MqSendEND_AND_CALLBACK:   1.17e+05
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-47] [0-0-0-0x6eccb8-statistics]:             MqSendEND_AND_WAIT:   4.43e+04
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-51] [0-0-0-0x6eccb8-statistics]:               MqSendPERSISTENT:   2.78e+00
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-52] [0-0-0-0x6eccb8-statistics]:                  parent create:   5.35e+02
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-52] [0-0-0-0x6eccb8-statistics]:                  parent delete:   6.24e+03
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-52] [0-0-0-0x6eccb8-statistics]:                   child create:   5.82e+03
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-52] [0-0-0-0x6eccb8-statistics]:                   child delete:   3.82e+04
+C> (client:26759:0x7fdd08a43700) [2011-02-28:18-38-52] [0-0-0-0x6eccb8-main]: end: ----------------------------------------

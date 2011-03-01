@@ -1,0 +1,8 @@
+set -x
+export PATH=$HOME/ext/$MACHTYPE/nothread/bin:$PATH
+../configure	--prefix=$HOME/ext/$MACHTYPE/nothread \
+		--enable-symbols \
+		$@
+
+#		--enable-static
+#		--enable-threads

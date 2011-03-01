@@ -1,0 +1,2 @@
+> mono thread/NHI1-0.9/theLink/tests/vbserver.exe --tcp --host localhost --port 7794 --thread
+> thread/NHI1-0.9/theLink/tests/client --all --tcp --host localhost --port 7794

@@ -1,0 +1,49 @@
+#+
+#§  \file       theLink/tests/README.tests
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+LibMsgque Test Environment
+==========================
+
+
+The scripts used in this directory are used to verify the libmsgque
+library including the the other language bindings. 
+Testing is done using the tcltest feature of the tcl distribution.
+
+  1. using the test feature of the build environment
+	> cd NHI1-X.X
+	> make check (not available for windows)
+
+  2. invoke an individual test script for language "python" and "perl"
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash int.test --only-python-perl
+
+  3. invoke all tests for language "go" using "threads" and only "binary" data
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ./all.tcl --only-go --only-threads --only-binary
+
+  4. start "tcl" server using "tcp" and listing on port "7777" and "spawn"
+     for every new connection a new server
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ../example/tcl/server.tcl --tcp --port 7777 --spawn
+
+Help is available with the following commands:
+
+  1. test specific help
+	> cd NHI1-X.X/theLink/tests
+	> ./MakeTclTest.bash ./all.tcl --help
+     or
+	> ./MakeTclTest.bash ./all.tcl --help-msgque
+
+  2. tcltest specific help
+	> man tcltest
+

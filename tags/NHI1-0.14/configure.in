@@ -1,0 +1,187 @@
+#+
+#§  \file       configure.in
+#§  \brief      \$Id$
+#§  
+#§  (C) 2007 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+# set NHI1 VERSION information also in:
+# > win/mqconfig.h
+# > win/env.sh
+AC_INIT([NHI1],[0.14],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE([tar-ustar no-dist-gzip dist-bzip2])
+AC_CONFIG_HEADER([mqconfig.h])
+
+# set libmsgque VERSION information also in:
+# > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+# > win/mqconfig.h
+# > theLink/csmsgque/MqS.cs
+# > win/win/win.vsprops
+AC_SUBST([LIBMSGQUE_VERSION], ["5.3"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["5.3"], [version of the 'libmsgque' package])
+
+#  Updating library version information
+#  ====================================
+#
+#  If you want to use libtool's versioning system, then you must specify
+#  the version information to libtool using the `-version-info' flag
+#  during link mode (*note Link mode::).
+#
+#     This flag accepts an argument of the form
+#  `CURRENT[:REVISION[:AGE]]'.  So, passing `-version-info 3:12:1' sets
+#  CURRENT to 3, REVISION to 12, and AGE to 1.
+#
+#     If either REVISION or AGE are omitted, they default to 0.  Also note
+#  that AGE must be less than or equal to the CURRENT interface number.
+#
+#     Here are a set of rules to help you update your library version
+#  information:
+#
+#    1. Start with version information of `0:0:0' for each libtool library.
+#
+#    2. Update the version information only immediately before a public
+#       release of your software.  More frequent updates are unnecessary,
+#       and only guarantee that the current interface number gets larger
+#       faster.
+#
+#    3. If the library source code has changed at all since the last
+#       update, then increment REVISION (`C:R:A' becomes `C:r+1:A').
+#
+#    4. If any interfaces have been added, removed, or changed since the
+#       last update, increment CURRENT, and set REVISION to 0.
+#
+#    5. If any interfaces have been added since the last public release,
+#       then increment AGE.
+#
+#    6. If any interfaces have been removed since the last public release,
+#       then set AGE to 0.
+#
+#     *_Never_* try to set the interface numbers so that they correspond
+#  to the release number of your package.  This is an abuse that only
+#  fosters misunderstanding of the purpose of library versions.  Instead,
+#  use the `-release' flag (*note Release numbers::), but be warned that
+#  every release of your package will not be binary compatible with any
+#  other release.
+AC_SUBST([VERSION_INFO], [21:0:0])
+
+AC_CONFIG_MACRO_DIR([m4])
+
+AM_PROG_CC_C_O
+
+GCC=yes
+#LDFLAGS="-no-undefined"
+AC_PROG_CXX
+AC_PROG_CC_C99
+AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
+  AC_MSG_ERROR([require c99 mode to compile])
+])
+CFLAGS="-Wall -Wcast-align -fvisibility=hidden"
+CXXFLAGS="-Wall -fvisibility=hidden"
+SC_ENABLE_THREADS
+
+#------------------------------------
+AC_MSG_CHECKING(get libtool support);echo
+#------------------------------------
+AC_DISABLE_STATIC
+AC_LIBTOOL_WIN32_DLL
+
+AC_PROG_LIBTOOL
+
+#------------------------------------
+AC_MSG_CHECKING(programs);echo
+#------------------------------------
+AC_C_BIGENDIAN
+SC_SET_VPATH_HOOK
+SC_ENABLE_SYMBOLS
+SC_ENABLE_CXX
+SC_ENABLE_JAVA
+SC_ENABLE_PYTHON
+SC_ENABLE_CSHARP
+SC_ENABLE_PHP
+SC_ENABLE_PERL
+SC_ENABLE_TCL
+SC_ENABLE_VB
+SC_ENABLE_RUBY
+SC_ENABLE_GO
+SC_ENABLE_BRAIN
+SC_ENABLE_GUARD
+
+#------------------------------------
+AC_MSG_CHECKING(for doxygen support);echo
+#------------------------------------
+AC_ARG_VAR([DOXYGEN], [path to the doxygen tool])
+AC_ARG_VAR([DOT], [path to the dot tool])
+AC_ARG_VAR([DOXYPERL], [path to the perl tool])
+AC_PATH_PROG([DOXYGEN], [doxygen]) 
+AC_PATH_PROG([DOT], [dot]) 
+AC_PATH_PROG([DOXYPERL], [perl])
+
+#------------------------------------
+AC_MSG_CHECKING([for special portability support]);echo
+#------------------------------------
+AC_CHECK_FUNCS([signal])
+AC_CHECK_HEADERS([signal.h])
+AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
+AC_CHECK_FUNCS([getline])
+if test "$build_os" = "cygwin" ; then
+  if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll ; then
+    AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
+  fi
+  LIBS="$LIBS -lws2_32"
+else
+  AC_CHECK_HEADERS([sys/filio.h])
+  AC_SEARCH_LIBS([bind], [socket nsl])
+  AC_SEARCH_LIBS([gethostbyname], [socket nsl])
+  AC_SEARCH_LIBS([inet_aton], [socket nsl resolv])
+  AC_CHECK_FUNCS([fork posix_spawn vfork execvp])
+  AC_CHECK_FUNCS([socketpair])
+fi
+
+#------------------------------------
+AC_MSG_CHECKING(define system environment settings);echo
+#------------------------------------
+TYPE_SOCKLEN_T
+TYPE_HUGE_VAL
+AX_CHECK_ALIGNED_ACCESS_REQUIRED
+
+AC_MSG_CHECKING([for windows build])
+if test "$build_os" = "cygwin" ; then
+  AC_MSG_RESULT([yes])
+  AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
+  AC_SUBST([FILE_SEP], [\\\\])
+  AC_SUBST([PATH_SEP], [\;])
+else
+  AC_MSG_RESULT([no])
+  AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
+  AC_SUBST([FILE_SEP], [/])
+  AC_SUBST([PATH_SEP], [:])
+fi
+AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
+
+AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
+	theLink/docs/Makefile win/Makefile bin/Makefile 
+	  theLink/libmsgque/Makefile theLink/example/c/Makefile
+	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
+	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl
+		theLink/javamsgque/Makefile theLink/example/java/Makefile theLink/javamsgque/Manifest.txt
+		  theLink/pymsgque/Makefile theLink/example/python/Makefile
+		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
+		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
+			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
+			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
+			    theLink/gomsgque/Makefile theLink/gomsgque/MakeGoMsgque.inc theLink/example/go/Makefile 
+			      theLink/example/vb/Makefile
+				performance/Makefile performance/env.sh
+				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+				    theBrain/libbrain/Makefile theBrain/tests/Makefile
+				      theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+
+
+AC_OUTPUT
+

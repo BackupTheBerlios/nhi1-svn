@@ -1,0 +1,12 @@
+> thread/NHI1-0.14/theLink/example/cc/server --tcp --host localhost --port 7781 --thread
+> thread/NHI1-0.14/theLink/example/c/client --all --tcp --host localhost --port 7781
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-07] [0-0-0-0x6ecff8-main]: start: --------------------------------------
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-07] [0-0-0-0x6ecff8-statistics]:                      MqSendEND:   3.27e+05
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-07] [0-0-0-0x6ecff8-statistics]:         MqSendEND_AND_CALLBACK:   1.76e+05
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-09] [0-0-0-0x6ecff8-statistics]:             MqSendEND_AND_WAIT:   3.80e+04
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-statistics]:               MqSendPERSISTENT:   2.85e+00
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-statistics]:                  parent create:   3.76e+03
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-statistics]:                  parent delete:   1.10e+04
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-statistics]:                   child create:   4.18e+03
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-statistics]:                   child delete:   2.78e+04
+C> (client:15508:0x7f65ef1f9700) [2011-02-28:18-31-13] [0-0-0-0x6ecff8-main]: end: ----------------------------------------

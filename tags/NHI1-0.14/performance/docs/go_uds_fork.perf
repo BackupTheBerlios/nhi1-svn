@@ -1,0 +1,12 @@
+> thread/NHI1-0.14/theLink/example/go/server --uds --file ./socket.uds --fork
+> thread/NHI1-0.14/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-22] [0-0-0-0x6ecd98-main]: start: --------------------------------------
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-22] [0-0-0-0x6ecd98-statistics]:                      MqSendEND:   1.75e+05
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-23] [0-0-0-0x6ecd98-statistics]:         MqSendEND_AND_CALLBACK:   1.14e+05
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-24] [0-0-0-0x6ecd98-statistics]:             MqSendEND_AND_WAIT:   4.36e+04
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-statistics]:               MqSendPERSISTENT:   2.67e+00
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-statistics]:                  parent create:   1.39e+03
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-statistics]:                  parent delete:   7.01e+03
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-statistics]:                   child create:   3.32e+03
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-statistics]:                   child delete:   3.59e+04
+C> (client:27270:0x7faeb32bf700) [2011-02-28:18-39-29] [0-0-0-0x6ecd98-main]: end: ----------------------------------------

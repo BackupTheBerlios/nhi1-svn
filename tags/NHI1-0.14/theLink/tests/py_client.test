@@ -1,0 +1,178 @@
+#+
+#§  \file       theLink/tests/py_client.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint python]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+test py-client-ErrorSet-1 {wrong TYPE} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+srv = pymsgque.MqS()
+try:
+  srv.LinkCreate(sys.argv)
+  srv.ProcessEvent("KK")
+except Exception as e:
+  srv.ErrorSet()
+finally:
+  srv.Delete()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {C> (client) \[pymsgque_ErrorSet\] Traceback (most recent call last):
+  File "*", line 7, in <module>
+    srv.ProcessEvent("KK")
+TypeError: an integer is required*}
+
+test py-client-ErrorSet-2 {ProcessEvent error with WRONG arg} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+
+srv = pymsgque.MqS()
+try:
+  srv.LinkCreate(sys.argv)
+  srv.ProcessEvent(10,"KK")
+except Exception:
+  srv.ErrorSet()
+finally:
+  srv.Delete()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {C> (client) \[pymsgque_ErrorSet] Traceback (most recent call last):
+  File "*", line 8, in <module>
+    srv.ProcessEvent(10,"KK")
+TypeError: an integer is required*}
+
+test py-client-ErrorSet-3 {error with default as exception object} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+srv = pymsgque.MqS()
+try:
+  srv.LinkCreate()
+except:
+  srv.ErrorSet()
+finally:
+  srv.Exit()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {C> (pymsgque) \[pIoStartServer\] can not start PIPE client without '@ server ...' as argument
+C> (pymsgque) found in function "MqLinkConnect" at file "link.c"
+C> (pymsgque) found in function "MqLinkCreate" at file "link.c"
+C> (pymsgque) found in function "MqLinkDefault" at file "link.c"*}
+
+test py-client-ErrorSet-4 {error without LINK} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+srv = pymsgque.MqS()
+try:
+  srv.ProcessEvent(pymsgque.MqS_WAIT_FOREVER)
+except:
+  srv.ErrorSet()
+finally:
+  srv.Exit()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -result	  {C> (pymsgque) [MqProcessEvent] the 'msgque' object link is 'not' connected}
+
+test py-client-ErrorSet-5 {no error - without link} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+srv = pymsgque.MqS()
+srv.ErrorSet()
+srv.Exit()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -result	  {C> (pymsgque) [pymsgque_ErrorSet] No active exception to reraise}
+
+test py-client-ErrorSet-6 {no error - with link} \
+    -constraints  {local} \
+    -setup	  {
+	set pyclient [makeFile {
+import sys
+import pymsgque
+srv = pymsgque.MqS()
+srv.LinkCreate(sys.argv)
+srv.ErrorSet()
+srv.Exit()
+	} client.[pid]]
+    } \
+    -body	  {
+	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+    } \
+    -returnCodes  error \
+    -match	  glob \
+    -result	  {C> (client) \[pymsgque_ErrorSet\] No active exception to reraise*}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
