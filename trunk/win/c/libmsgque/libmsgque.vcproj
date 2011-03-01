@@ -41,7 +41,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
 				WarningLevel="3"
 				WarnAsError="true"
@@ -171,14 +171,6 @@
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\buffer.c"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\bufferL.c"
@@ -201,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\factory.c"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\generic_io.c"
 				>
 			</File>
@@ -209,7 +205,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\theLink\libmsgque\link.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\link.c"
 				>
 			</File>
 			<File
@@ -233,7 +229,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\theLink\libmsgque\service.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\service.c"
 				>
 			</File>
 			<File
@@ -241,7 +237,11 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sql.c"
+				>
+			</File>
+			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\sqlite\sqlite3.c"
 				>
 			</File>
 			<File
@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\libmsgque\debug.h"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\error.h"
 				>
 			</File>
@@ -311,7 +315,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\theLink\libmsgque\link.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\link.h"
 				>
 			</File>
 			<File
@@ -327,7 +331,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\theLink\libmsgque\msgque.h"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\msgque.h"
 				>
 			</File>
 			<File

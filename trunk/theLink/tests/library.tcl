@@ -72,15 +72,15 @@ switch -exact $tcl_platform(platform) {
 	lappend PATH {C:\cygwin\bin}
 	lappend PATH {C:\cygwin\usr\bin}
 	lappend PATH {C:\cygwin\usr\X11R6\bin}
-	set KILL tskill.exe
+	set KILL [list taskkill.exe /F /PID]
     }
     unix {
 	lappend PATH /bin
 	lappend PATH /usr/bin
-	set KILL kill
+	set KILL [list kill -9]
     }
     default { 
-	set KILL kill
+	set KILL [list kill -9]
     }
 }
 set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
@@ -298,7 +298,9 @@ proc getLng {server} {
 
 proc getPrefix {srv} {
     set RET $::env(TS_EXEC_PREFIX)
-
+    if {$RET eq "NO"} {
+      set RET [list]
+    }
     # prefix (debugger)
     if {[string match {*strace*} $srv]} {
 	lappend RET strace -f -F
@@ -622,9 +624,8 @@ proc Block {num} {
 ## 
 
 if {![info exists env(TS_EXEC_PREFIX)]} {
-  set env(TS_EXEC_PREFIX) [list]
+  set env(TS_EXEC_PREFIX) {NO}
 }
-
 if {![info exists env(BIN_LST)]} {
   set env(BIN_LST) {string binary}
 }
@@ -1515,7 +1516,9 @@ proc WaitOnFileToken {file token} {
 }
 
 proc Kill {P} {
-  catch {exec $::KILL -9 $P}
+  puts -nonewline "$::KILL $P -> "
+  catch {exec {*}$::KILL $P} ERR
+  puts $ERR
 }
 
 proc Create {I CON} {

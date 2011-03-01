@@ -184,11 +184,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\javamsgque\link_java.c"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\misc_java.c"
 				>
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\MqBufferS_java.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\javamsgque\MqDumpS_java.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\javamsgque\MqFactoryS_java.c"
 				>
 			</File>
 			<File
@@ -207,6 +219,10 @@
 				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\slave_java.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\theLink\javamsgque\storage_java.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Headerdateien"
@@ -222,15 +238,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\javamsgque\javamsgque_MqDumpS.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\javamsgque\javamsgque_MqFactoryS.h"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqS.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqS_WAIT.h"
+				RelativePath="..\..\..\theLink\javamsgque\javamsgque_MqS_START.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\misc_java.h"
+				RelativePath="..\..\..\theLink\javamsgque\javamsgque_MqS_TIMEOUT.h"
+				>
+			</File>
+			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\javamsgque\theLink\javamsgque_MqS_WAIT.h"
 				>
 			</File>
 		</Filter>

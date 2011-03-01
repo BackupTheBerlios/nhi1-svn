@@ -211,7 +211,7 @@ Ot_ECIW (
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadI (mqctx, &l));
   MqSendI (mqctx, l);
-  sleep(1);
+  MqSysSleep (mqctx, 1);
 error:
   return MqSendRETURN (mqctx);
 }

@@ -225,7 +225,7 @@ void pReadL_CLEANUP (
 
 enum MqErrorE
 pReadCreateTransId (
-  register struct MqS  * context
+  register struct MqS * const context
 )
 {
   struct MqReadS * read = context->link.read;
@@ -238,7 +238,7 @@ error:
 
 enum MqErrorE
 pReadDeleteTransId (
-  register struct MqS  * context
+  register struct MqS * const context
 )
 {
   struct MqReadS * read = context->link.read;
@@ -446,8 +446,8 @@ pReadHDR (
       };
       // answer first call with an empty return package
       if (context->link.transSId != 0) {
-	read->transLId = 0LL;
 	enum MqErrorE ret;
+	read->transLId = 0LL;
 	MqErrorCheck (MqSendSTART  (context));
 	read->handShake = MQ_HANDSHAKE_START;
 	ret = MqSendRETURN (context);
@@ -687,11 +687,11 @@ MqReadDUMP (
 
 enum MqErrorE
 MqReadLOAD (
-  struct MqS * context,
+  struct MqS * const context,
   struct MqDumpS * const in
 )
 {
-  MqErrorCheck(pReadLOAD((MQ_PTR)in, &context));
+  MqErrorCheck(pReadLOAD((MQ_PTR)in, (struct MqS**) &context));
   return MQ_OK;
 error:
   return MqErrorStack(context);

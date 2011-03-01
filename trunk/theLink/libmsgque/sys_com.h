@@ -13,7 +13,7 @@
 #ifndef SYS_COM_H
 #define SYS_COM_H
 
-#include "error.h"
+//#include "error.h"
 #include <fcntl.h>
 
 #if defined(MQ_IS_POSIX)
@@ -28,6 +28,7 @@
 #   define WINVER WindowsXP
 #   include <w32api.h>
 # endif
+# undef socklen_t
 # include <winsock2.h>
 # include <Ws2tcpip.h>
 #endif

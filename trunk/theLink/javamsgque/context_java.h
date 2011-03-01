@@ -78,7 +78,7 @@ struct ProcCallS {
 
 enum MqErrorE MQ_DECL NS(ProcCall)	(struct MqS * const, MQ_PTR const);
 void          MQ_DECL NS(ProcFree)	(struct MqS const * const, MQ_PTR*);
-void	      MQ_DECL NS(ProcCopy)	(struct MqS * const, MQ_PTR*);
+void	      MQ_DECL NS(ProcCopy)	(struct MqS * const, MQ_PTR * const);
 MQ_PTR		      NS(ProcCreate)	(JNIEnv*, jobject, jclass, jmethodID, jobject);
 
 
@@ -150,11 +150,13 @@ static mq_inline jstring JC2O(JNIEnv *env, MQ_CST c) {
 #define GetW(V) GetT(jlong,    V)
 #define GetO(V) GetT(jboolean, V)
 
-static inline void printJC(JNIEnv *env, jstring str) {
+/*
+static mq_inline void printJC(JNIEnv *env, jstring str) {
   const char * s = JO2C_START(env,str);
   printC(s);
   JO2C_STOP(env,str,s);
 }
+*/
 
 #endif /* CONTEXT_JAVA__H */
 

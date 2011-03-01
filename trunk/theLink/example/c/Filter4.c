@@ -209,14 +209,18 @@ main (
   MQ_CST argv[]
 )
 {
+  // the parent-context
+  struct MqS * mqctx;
+  MQ_BFL args;
+
   // setup default Factory
   MqFactoryDefault (MQ_ERROR_PANIC, "transFilter", MqFactoryDefaultCreate, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
   // the parent-context
-  struct MqS * const mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);
+  mqctx = MqContextCreate(sizeof(struct FilterCtxS), NULL);
 
   // parse the command-line
-  MQ_BFL args = MqBufferLCreateArgs (argc, argv);
+  args = MqBufferLCreateArgs (argc, argv);
 
   // add config data
   mqctx->setup.Child.fCreate	    = MqLinkDefault;

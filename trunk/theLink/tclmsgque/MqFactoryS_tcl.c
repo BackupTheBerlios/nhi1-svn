@@ -220,8 +220,8 @@ int NS(FactoryDefaultIdent) (TCL_ARGS)
 
 int NS(FactoryCtxSet) (NS_ARGS)
 {
-  SETUP_mqctx;
   struct MqFactoryS *factory;
+  SETUP_mqctx;
   CHECK_FACTORY(factory)
   CHECK_NOARGS
   ErrorMqToTclWithCheck (MqFactoryCtxSet (mqctx, factory));
@@ -238,8 +238,8 @@ error:
 
 int NS(FactoryCtxIdentSet) (NS_ARGS)
 {
-  SETUP_mqctx;
   MQ_CST ident;
+  SETUP_mqctx;
   CHECK_C(ident)
   CHECK_NOARGS
   ErrorMqToTclWithCheck (MqFactoryCtxIdentSet (mqctx, ident));

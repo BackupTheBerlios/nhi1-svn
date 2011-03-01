@@ -47,7 +47,7 @@ error:
   return NULL;
 }
 
-static void
+static void MQ_DECL
 NS(FactoryCopy) (
   MQ_PTR *dataP
 )

@@ -23,7 +23,9 @@
 
 
 #   include <stdlib.h>
-#if !defined(_MSC_VER)
+#if defined(_MSC_VER)
+#   define  socklen_t int
+#else
 #   include <unistd.h>
 #endif
 #   include <sys/types.h>
@@ -241,7 +243,7 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
 #  define MqThreadSelf() GetCurrentThreadId()
 #  define MqThreadGetTLS(k) TlsGetValue(k)
 #  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
-#  define MqThreadSetTLSCheck(k,v) ((unlikely (TlsSetValue(k,v) == 0))
+#  define MqThreadSetTLSCheck(k,v) (unlikely (TlsSetValue(k,v) == 0))
 #  define MqThreadKeyType DWORD
 #  define MqThreadType DWORD
 #  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
@@ -310,7 +312,7 @@ static mq_inline MQ_INT iBufU2INT (
 }
 
 // can be ((*buf->cur.A).T)
-static mq_inline MQ_INT iBufU2TRA (
+static mq_inline MQ_TRA iBufU2TRA (
   union MqBufferU buf
 ) {
 #if defined(HAVE_ALIGNED_ACCESS_REQUIRED)
@@ -766,8 +768,8 @@ enum MqErrorE pReadTRA (MQ_PTR, struct MqS**);
 void pReadSetType( struct MqS * const, MQ_BOL const);
 void pReadL_CLEANUP (register struct MqS * const); 
 MQ_TRA pReadGetTransId ( struct MqS * const);
-enum MqErrorE pReadCreateTransId  ( struct MqS * const);
-enum MqErrorE pReadDeleteTransId  ( struct MqS * const);
+enum MqErrorE pReadCreateTransId  ( register struct MqS * const);
+enum MqErrorE pReadDeleteTransId  ( register struct MqS * const);
 void pReadSetReturnNum ( struct MqS const * const, MQ_INT);
 enum MqErrorE pReadDeleteTrans ( struct MqS * const);
 enum MqErrorE pReadWord ( struct MqS * const, struct MqBufferS * const, register struct MqBufferS * const);
@@ -857,12 +859,12 @@ enum MqErrorE UdsDelete ( struct UdsS ** const) __attribute__((nonnull));
 enum MqErrorE UdsServer ( register struct UdsS * const);
 enum MqErrorE UdsConnect ( register struct UdsS * const);
 
-#else /* MQ_IS_POSIX */
+#else /* MQ_IS_WIN32 */
 
-#define UdsCreate(io,udsPtr)
-#define UdsDelete(udsP) 
-#define UdsServer(uds)
-#define UdsConnect(uds)
+#define UdsCreate(io,udsPtr) MQ_ERROR
+#define UdsDelete(udsP) MQ_ERROR
+#define UdsServer(uds) MQ_ERROR
+#define UdsConnect(uds) MQ_ERROR
 
 #endif /* MQ_IS_POSIX */
 

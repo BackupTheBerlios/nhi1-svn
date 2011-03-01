@@ -206,9 +206,9 @@ MqErrorStackP(
 {
   if (MQ_ERROR_IS_POINTER(context)) {
     if (MqErrorCheckI(context->error.code)) {
-      MqLogV(context,func,7,"ERROR->%s\n",MqErrorGetText(context));
       MQ_STR basename = MqSysBasename(file, MQ_YES);
       MQ_CST type = context->error.num == MqMessageNum(MQ_ERROR_EXIT) ? "EXIT" : "ERROR";
+      MqLogV(context,func,7,"ERROR->%s\n",MqErrorGetText(context));
       if (unlikely(context->config.debug >= 5)) 
 	MqLogV (context, func, 5, "detect %s in file '%s'\n", type, basename);
       MqErrorSAppendV(context, "found in function \"%s\" at file \"%s\"", func, basename);

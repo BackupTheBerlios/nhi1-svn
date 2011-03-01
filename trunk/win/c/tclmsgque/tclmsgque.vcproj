@@ -183,15 +183,11 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\context_tcl.c"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\error_tcl.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\theLink\tclmsgque\link_tcl.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\link_tcl.c"
 				>
 			</File>
 			<File
@@ -200,6 +196,18 @@
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\MqBufferS_tcl.c"
+				>
+			</File>
+			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\MqDumpS_tcl.c"
+				>
+			</File>
+			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\MqFactoryS_tcl.c"
+				>
+			</File>
+			<File
+				RelativePath="$(TOP_BUILD_DIR)\theLink\tclmsgque\MqS_tcl.c"
 				>
 			</File>
 			<File

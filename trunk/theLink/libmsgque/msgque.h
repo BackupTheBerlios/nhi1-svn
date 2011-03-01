@@ -4691,7 +4691,7 @@ struct MqLalS {
 };
 
 /// Language Abstraction Layer in duty
-extern struct MqLalS MqLal;
+MQ_EXTERN struct MqLalS MqLal;
 
 /// \syscall{calloc}
 /// \details additional info: <TT>man calloc</TT>

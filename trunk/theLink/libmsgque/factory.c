@@ -11,7 +11,6 @@
  */
 
 #include "main.h"
-#include "error.h"
 #include "errno.h"
 
 #define MQ_CONTEXT_S context

@@ -512,7 +512,7 @@ MqStorageSelect (
   check_sqlite (sqlite3_bind_text(hdl,1,context->link.targetIdent,-1,SQLITE_STATIC))  goto error;
   check_sqlite (sqlite3_bind_int(hdl,2,context->link.ctxId))			      goto error;
   if (transLId != 0LL) {
-    check_sqlite (sqlite3_bind_int(hdl,3,transLId))				      goto error;
+    check_sqlite (sqlite3_bind_int64(hdl,3,transLId))				      goto error;
   }
   STEP_ROW_DONE_OK(1)
   transLId = sqlite3_column_int64(hdl,0);

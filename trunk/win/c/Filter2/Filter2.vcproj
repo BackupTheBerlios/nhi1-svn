@@ -172,7 +172,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\theLink\example\c\Filter2.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\example\c\Filter2.c"
 				>
 			</File>
 		</Filter>

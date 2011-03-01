@@ -10,10 +10,13 @@
 #§              please contact AUTHORS for additional information
 #§
 
+set PACKAGE_VERSION {0.14}
 set PYTHON {python.exe}
+set RUBY {}
 set JAVA {java.exe}
 set TCLSH {tclsh.exe}
 set PERL {perl.exe}
+set PHP {}
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
 set CLREXEC {}
@@ -23,15 +26,27 @@ set PATH_SEP {;}
 set EXEEXT {.exe}
 set srcdir {.}
 
+array set env [list   \
+  PYTHON    $PYTHON   \
+  RUBY      $RUBY     \
+  JAVA      $JAVA     \
+  TCLSH     $TCLSH    \
+  PERL      $PERL     \
+  PHP       $PHP      \
+  CLREXEC   $CLREXEC  \
+]
 
 set USE_TCL {yes}
-set USE_PERL {no}
+set USE_PERL {yes}
+set USE_PHP {yes}
 set USE_CSHARP {yes}
-set USE_VB {yes}
+set USE_GO {yes}
+set USE_VB {no}
 set USE_PYTHON {yes}
+set USE_RUBY {yes}
 set USE_JAVA {yes}
 set USE_CXX {yes}
-set USE_PHP {no}
-set USE_BRAIN {no}
+set USE_PHP {yes}
+set USE_BRAIN {yes}
 set USE_GUARD {yes}
 

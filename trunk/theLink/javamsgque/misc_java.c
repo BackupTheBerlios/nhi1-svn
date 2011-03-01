@@ -57,7 +57,7 @@ error:
   return NULL;
 }
 
-void
+void MQ_DECL
 NS(ProcCopy) (
   struct MqS * const context,
   MQ_PTR * const dataP
@@ -67,7 +67,7 @@ NS(ProcCopy) (
   JavaErrorCheckNULL(*dataP = NS(ProcCreate) (old->env, old->object, old->class, old->method, old->data));
   return;
 error:
-  return MqPanicC(context, __func__, -1, "unable to copy proc data");
+  MqPanicC(context, __func__, -1, "unable to copy proc data");
 }
 
 void MQ_DECL 

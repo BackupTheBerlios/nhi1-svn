@@ -448,12 +448,12 @@ void MqSetup(void)
   setupThread = MqThreadSelf();
 
   // work
+  GenericCreate();
   SysCreate ();
   FactoryCreate ();
   SqlCreate ();
   EventCreate ();
   GcCreate ();
-  GenericCreate();
   SysComCreate ();
 }
 
@@ -464,12 +464,12 @@ void MqCleanup(void)
   setupDone = MQ_NO;
 
   // work
-  GenericDelete();
   GcDelete ();
   EventDelete ();
   SqlDelete ();
   FactoryDelete ();
   SysDelete ();
+  GenericDelete();
   if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
 }
 

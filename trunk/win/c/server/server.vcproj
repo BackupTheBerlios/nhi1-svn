@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\theLink\tests"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\c"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
@@ -174,7 +174,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\tests\server.c"
+				RelativePath="$(TOP_BUILD_DIR)\theLink\example\c\server.c"
 				>
 			</File>
 		</Filter>

@@ -27,20 +27,37 @@ PERL5LIB="$TL/perlmsgque/Net-PerlMsgque/blib/lib"
 
 export PATH LD_LIBRARY_PATH TCLLIBPATH PYTHONPATH CLASSPATH MONO_PATH PERL5LIB
 
-
 PACKAGE='NHI1'
 PACKAGE_VERSION='0.14'
 PYTHON='python.exe'
 JAVA='java.exe'
 TCLSH='tclsh.exe'
 PERL='perl.exe'
+PHP=''
+DOT=''
+DOXYGEN=''
+RUBY=''
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
-#set CSEXEC ''
-CSEXEC='mono.exe'
+#set CLREXEC ''
+CLREXEC='mono.exe'
+
+USE_TCL='yes'
+USE_PERL='yes'
+USE_PHP='yes'
+USE_CSHARP='yes'
+USE_GO='yes'
+USE_VB='no'
+USE_PYTHON='yes'
+USE_RUBY='yes'
+USE_JAVA='yes'
+USE_CXX='yes'
+USE_PHP='yes'
+USE_BRAIN='yes'
+USE_GUARD='yes'
 
 PATH_SEP=';'
 EXEEXT='.exe'
 
-export PACKAGE PACKAGE_VERSION PYTHON JAVA TCLSH PATH_SEP EXEEXT PERL
-
+export PACKAGE PACKAGE_VERSION host build PERL DOT \
+        DOXYGEN PYTHON RUBY PHP JAVA TCLSH PATH_SEP EXEEXT

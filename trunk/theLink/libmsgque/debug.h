@@ -22,9 +22,44 @@
 # define mq_getpid() 1
 #endif
 
-#if defined(MQ_HAS_THREAD)
+#if defined(MQ_HAS_THREAD) && defined(MQ_IS_POSIX)
 # include <pthread.h>
 #endif
+
+#if defined (MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD) /* unix thread */
+#  define MqThreadSelf() pthread_self()
+#  define MqThreadGetTLS(k) pthread_getspecific(k)
+#  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
+#  define MqThreadSetTLSCheck(k,v) (unlikely (pthread_setspecific(k,v) != 0))
+#  define MqThreadKeyType pthread_key_t
+#  define MqThreadType pthread_t
+#  define MqThreadKeyNULL PTHREAD_KEYS_MAX
+#  define MqThreadKeyCreate(key) if (pthread_key_create(&key, NULL) != 0) { \
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
+    }
+# else /* windows THREAD */
+#  define MqThreadSelf() GetCurrentThreadId()
+#  define MqThreadGetTLS(k) TlsGetValue(k)
+#  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
+#  define MqThreadSetTLSCheck(k,v) (unlikely (TlsSetValue(k,v) == 0))
+#  define MqThreadKeyType DWORD
+#  define MqThreadType DWORD
+#  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
+#  define MqThreadKeyCreate(key) if ((key = TlsAlloc()) == TLS_OUT_OF_INDEXES) { \
+      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'"); \
+    }
+# endif
+#else /* no THREAD */
+#  define MqThreadKeyCreate(k)
+#  define MqThreadGetTLS(k) k
+#  define MqThreadSetTLS(k,v) k=v
+#  define MqThreadSetTLSCheck(k,v) (unlikely ((k=v) == NULL))
+#  define MqThreadKeyNULL NULL
+#  define MqThreadKeyType void*
+#  define MqThreadType void*
+#  define MqThreadSelf() NULL
+#endif // MQ_HAS_THREAD
 
 /*****************************************************************************/
 /*                                                                           */
@@ -34,7 +69,7 @@
 
 #if defined(MQ_HAS_THREAD)
 # define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
-	      (void*) pthread_self(), #s);fflush(stderr);
+	      (void*) MqThreadSelf(), #s);fflush(stderr);
 #else
 # define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
 #endif
@@ -106,11 +141,11 @@
 #if defined(MQ_HAS_THREAD)
 
 #define MV(f,v) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
-	      (void*) pthread_self(), v);fflush(stderr);
+	      (void*) MqThreadSelf(), v);fflush(stderr);
 #define MVP(f,v) fprintf(stderr,"%s(%s:%d:%d:%p) -> %p:" #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
-	      (void*) pthread_self(), v, v);fflush(stderr);
+	      (void*) MqThreadSelf(), v, v);fflush(stderr);
 #define MVA(f,v,a) fprintf(stderr,"%s(%s:%d:%d:%p) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
-	      (void*) pthread_self(), a);fflush(stderr);
+	      (void*) MqThreadSelf(), a);fflush(stderr);
 #else
 
 #define MV(f,v) fprintf(stderr,"%s(%s:%d:%d) -> " #v "<" f ">\n", __func__, __FILE__, __LINE__, mq_getpid(), \
@@ -147,7 +182,7 @@
 #define printLC(var)	MLV(MQ_CONTEXT_S, MQ_FORMAT_C, var)
 #define printLH(var)	MLV(MQ_CONTEXT_S, "%c",        var)
 #define printR(var)	MLVA(MQ_CONTEXT_S, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
-#define printLV(fmt,args...)  MqLogV(MQ_CONTEXT_S,__func__,0,fmt,args)
+#define printLV(fmt,...)  MqLogV(MQ_CONTEXT_S,__func__,0,fmt,__VA_ARGS__)
 
 #define printXLP(x,var)	  MLV(x, "%p"       , var)
 #define printXLI(x,var)	  MLV(x, MQ_FORMAT_I, var)
@@ -155,7 +190,7 @@
 #define printXLW(x,var)	  MLV(x, MQ_FORMAT_W, var)
 #define printXLO(x,var)	  MLV(x, MQ_FORMAT_C, var == MQ_YES ? "yes" : "no" )
 #define printXR(x,var)	  MLVA(x, MQ_FORMAT_C, RET, MqLogErrorCode(ret))
-#define printXLV(x,fmt,args...)  MqLogV(x,__func__,0,fmt,args)
+#define printXLV(x,fmt,...)  MqLogV(x,__func__,0,fmt,__VA_ARGS__)
 
 #define printC2(var,len)  fprintf(stderr,"%s->" #var " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(var,len));fflush(stderr);
 #define printC3(buf) fprintf(stderr, "%s->" #buf " = <" MQ_FORMAT_C  ">\n", __func__, MqLogC(MqBufferGetC(buf),buf->cursize));fflush(stderr);
@@ -165,9 +200,9 @@
 
 #define CL(code) if (MQ_IS_CLIENT(MQ_CONTEXT_S)) {code}
 
-#define bufLog(fmt,args...) {\
+#define bufLog(fmt,...) {\
     char buf[1000];\
-    snprintf(buf,1000,"echo '%-5i - %-30s : " fmt "' >> /tmp/buf.log",getpid(),__func__,args);\
+    snprintf(buf,1000,"echo '%-5i - %-30s : " fmt "' >> /tmp/buf.log",getpid(),__func__,__VA_ARGS__);\
     system(buf);\
 }
 
@@ -181,13 +216,13 @@
 #define printULS(var) printXULS(MQ_CONTEXT_S, var);
 
 #define printThread(str) fprintf(stderr,"%s(%s:%d) -> pid<%i>, id<%li> -> " #str "\n", __func__, __FILE__, __LINE__,\
-      mq_getpid(), pthread_self());fflush(stderr);
+      mq_getpid(), MqThreadSelf());fflush(stderr);
 
 #define PRT(id) fprintf(stderr,"%s(%s:%d) -> " #id " - pid<%i>, thread<%p>\n", __func__, __FILE__, __LINE__, getpid(), \
-			    (void*)pthread_self());fflush(stderr);
+			    (void*)MqThreadSelf());fflush(stderr);
 
 #define PRT1(id,ptr) fprintf(stderr,"%s(%s:%d) -> " #id " - pid<%i>, thread<%p>, " #ptr "<%p>\n", \
-  __func__, __FILE__, __LINE__, getpid(), (void*)pthread_self(), (void*)ptr);fflush(stderr);
+  __func__, __FILE__, __LINE__, getpid(), (void*)MqThreadSelf(), (void*)ptr);fflush(stderr);
 
 /*****************************************************************************/
 /*                                                                           */

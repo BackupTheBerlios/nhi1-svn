@@ -69,8 +69,6 @@
 
 BEGIN_C_DECLS
 
-MQ_EXTERN struct MqLalS MqLal;
-
 /*****************************************************************************/
 /*                                                                           */
 /*                               sys_memory                                  */
@@ -517,6 +515,7 @@ static enum MqErrorE SysServerSpawn (
   goto ok;
 
 #elif defined(MQ_IS_WIN32)
+  {
   char buf[2048];
   char *nbuf=buf;
 
@@ -531,7 +530,7 @@ static enum MqErrorE SysServerSpawn (
     goto error;
   }
   goto ok;
-
+  }
 #else
 # error unable to SysServerSpawn
 #endif

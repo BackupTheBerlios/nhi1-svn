@@ -386,7 +386,7 @@ ClientMain (
       int i; 
       // setup the callback
       MqErrorCheck(MqServiceCreate(mqctx, "SDTR", RET_SDTR, NULL ,NULL));
-      unlink("testDb");
+      mq_unlink("testDb");
       // set transaction-database name
       MqErrorCheck(MqSendSTART(mqctx));
       MqErrorCheck(MqSendC(mqctx,"testDb"));
@@ -436,7 +436,7 @@ ClientMain (
 
     // cleanup
     StatDelete (&itemT);
-    unlink("testDb");
+    mq_unlink("testDb");
 
   } /* finish the MqSendTRANSACTION performance test */
 
@@ -477,6 +477,7 @@ ClientMain (
       StatCtxCalc (stat, itemT);
       StatCtxPrint (stat);
       StatCtxDelete (&stat);
+
 
       // loop to delete the parent context
       stat = StatCtxCreate (mqctx, "parent delete", lnum);
