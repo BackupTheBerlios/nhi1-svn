@@ -622,7 +622,7 @@ foreach I [getNum 3] {
     -constraints    {!thread} \
     -setup	    {
       Setup $I $B $C $S --server-arg {--storage ""}
-      set TMP	[MakeFile "START" tmpTE1.txt]
+      set TMP	[MakeFile "START" tmpTE0.txt]
       proc CB_OTTO {ctx} {
 	global TMP
 	set FH [open $TMP a]
@@ -658,6 +658,7 @@ foreach I [getNum 3] {
     -setup	    {
       set testdb [makeFile {} testdb.TE1]
       set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
       set TMP	[MakeFile "START" tmpTE1.txt]
       proc CB_OTTO {ctx} {
@@ -689,6 +690,7 @@ foreach I [getNum 3] {
     -setup	    {
       set testdb [makeFile {} testdb.TE2]
       set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
       set TMP	[MakeFile "START" tmpTE1.txt]
       proc CB_OTTO {ctx} {
@@ -722,6 +724,7 @@ foreach I [getNum 3] {
     -setup	    {
       set testdb [makeFile {} testdb.TE3]
       set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]
       set TMP	[MakeFile "START" tmpTE1.txt]
       proc CB_OTTO {ctx} {

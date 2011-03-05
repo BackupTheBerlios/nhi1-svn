@@ -206,11 +206,12 @@ split (
       *cep = '\0';
       MqSendC (mqctx, cur);
     }
+    MqSysFree(line);
     MqErrorCheck (MqSendEND_AND_WAIT (mqctx, "+FTR", MQ_TIMEOUT_USER));
   }
 
 error:
-  free (line);
+  MqSysFree (line);
   return MqErrorStack (mqctx);
 } 
 

@@ -947,7 +947,7 @@ while {true} {
       puts "  --pid STR ........ use file as --daemon pid file"
       puts "  --server LANG.COM(.MODE) ... only use this server"
       puts "  --setup .......... print additional setup information"
-      puts "  --block(-[1-5])+.. test block X, default all"
+      puts "  --block(-\[1-5])+.. test block X, default all"
       puts "  --filter exec .... use 'exec' as filter"
       puts "  --help-msgque .... get libmsgque specific help"
       puts "  --help / -h ...... get help"
