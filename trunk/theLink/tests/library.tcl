@@ -1516,9 +1516,9 @@ proc WaitOnFileToken {file token} {
 }
 
 proc Kill {P} {
-  puts -nonewline "$::KILL $P -> "
+  #puts -nonewline "$::KILL $P -> "
   catch {exec {*}$::KILL $P} ERR
-  puts $ERR
+  #puts $ERR
 }
 
 proc Create {I CON} {

@@ -456,11 +456,11 @@ SysSend (
     if (unlikely (ldata == -1)) {
 //printLV("ERROR sock<%i>, numBytes<%i>, errnum<%i>, str<%s>\n", hdl, numBytes, sSysGetErrorNum, strerror(errno));
       switch (sSysGetErrorNum) {
-	case WIN32_WSA (EWOULDBLOCK): {
+        case WIN32_WSA (EWOULDBLOCK): {
 	  // waiting for "send" is buggy -> just use 0.01 sec and try send again on "timeout" (MQ_CONTINUE)
 	  struct timeval tv = {(long) 0L, 10000L};
 	  fd_set fds;
-	  if (trycount <= 0) return MqErrorDbV (MQ_ERROR_TIMEOUT, timeout);
+          if (trycount <= 0) return MqErrorDbV (MQ_ERROR_TIMEOUT, timeout);
 	  // now wait until the socket become send-able
 	  FD_ZERO(&fds);
 	  FD_SET(hdl, &fds);
@@ -479,7 +479,7 @@ SysSend (
 	}
 	case WIN32_WSA (ECONNRESET):
 	case WIN32_WSA (EBADF): {
-	  pIoCloseSocket (__func__, context->link.io);
+          pIoCloseSocket (__func__, context->link.io);
 	  return pErrorSetExitWithCheck (context);
 	}
         default:

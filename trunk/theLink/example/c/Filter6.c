@@ -117,7 +117,9 @@ error:
 }
 
 static enum MqErrorE EXIT ( ARGS ) {
-  exit(1);
+  MqExit(mqctx);
+  return MQ_OK;
+  //exit(1);
 }
 
 static enum MqErrorE FilterIn ( ARGS ) {

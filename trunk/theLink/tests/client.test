@@ -214,7 +214,7 @@ C> (client:*) \[*] \[2-0-0-*-MqLinkCreate]: START: io->com<PIPE>
 C> (client:*) \[*] \[4-0-0-*-pEventCreate]: TLS-Id<*>
 C> (client:*) \[*] \[4-0-0-*-PipeCreate]: create SOCKETPAIR -> sock\[0]<*>, sock\[1]<*>
 C> (client:*) \[*] \[4-0-0-*-MqLinkConnect]: START
-C> (client:*) \[*] \[4-0-0-*-pIoStartServer]: finish start server '*server' as 'spawn' with ID '*'
+C> (client:*) \[*] \[4-0-0-*-pIoStartServer]: finish start server '*server*' as 'spawn' with ID '*'
 C> (client:*) \[*] \[4-0-0-*-pEventAdd]: TLS-Id<*> Socket<*> DataLCur<0>
 C> (client:*) \[*] \[4-0-0-*-MqLinkConnect]: send token<_IAA>
 C> (client:*) \[*] \[4-0-0-*-sWaitForToken]: wait for token<_PEO>

@@ -833,6 +833,7 @@ pIoEventAdd(
   const MQ_SOCK sock = *sockP;
   MQ_INT current = 0;
   socklen_t len;
+  //const int yes=1;
 
 //MqDLogV(context,__func__,0,"1. buffersize<%d>, current<%d>\n", buffersize, current);
 
@@ -866,6 +867,9 @@ pIoEventAdd(
 
 //MqDLogV(context,__func__,0,"4. buffersize<%d>, current<%d>\n", buffersize, current);
 
+  // set keep alive
+  // MqErrorCheck (SysSetSockOpt (context, sock, SOL_SOCKET, SO_KEEPALIVE, (MQ_sockopt_optval_T) &yes, sizeof(yes)));
+    
 
   if (current < io->config->buffersize) {
     io->config->buffersize = current;

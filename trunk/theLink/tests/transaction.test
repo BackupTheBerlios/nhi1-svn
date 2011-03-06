@@ -397,6 +397,6 @@ unset -nocomplain I B C S
 ## -----------------------------------------------------------------------
 ## finish
 ##
-file delete -force $testdb
+catch {file delete -force $testdb}
 freeTests
 
