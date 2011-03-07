@@ -18,11 +18,15 @@
 
 namespace ccmsgque {
 
-  void MqC::libInit (void) {
+  void MqC::Setup (void) {
     MqSetup();
     if (!strcmp(MqFactoryC<MqC>::DefaultIdent(),"libmsgque")) {
       MqFactoryC<MqC>::Default("ccmsgque");
     }
+  }
+
+  void MqC::Cleanup (void) {
+    MqCleanup();
   }
 
   MqC::MqC (struct MqS * const tmpl) {
@@ -166,6 +170,28 @@ namespace ccmsgque {
       return MqErrorC (&context, __func__, -1, e.what());
     }
   }
-
 } // END - namespace "ccmsgque"
 
+#if defined(_MSC_VER)
+
+BOOL WINAPI DllMain(
+    HINSTANCE hModule,
+    DWORD  ul_reason_for_call,
+    LPVOID lpReserved
+)
+{
+  switch (ul_reason_for_call)
+  {
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+      return FALSE;
+    case DLL_PROCESS_ATTACH:
+      ccmsgque::MqC::Setup();
+      break;
+    case DLL_PROCESS_DETACH:
+      ccmsgque::MqC::Cleanup();
+      break;
+  }
+  return TRUE;
+}
+#endif

@@ -7,7 +7,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;"
+		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;;&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
 		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS"
 		RuntimeLibrary="2"
 		CompileAs="1"

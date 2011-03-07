@@ -45,7 +45,7 @@ class Filter6 : public MqC, public IServerSetup, public IServerCleanup, public I
     }
 
     void EXIT () {
-      exit(1);
+      Exit();
     }
 
     void WRIT () {

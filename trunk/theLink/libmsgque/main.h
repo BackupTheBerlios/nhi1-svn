@@ -15,6 +15,7 @@
 
 #   include "mqconfig.h"
 
+#   define MQ_PRIVATE
 #   define MQ_PRIVATE_CONFIG_CONST
 
 #   include "msgque.h"

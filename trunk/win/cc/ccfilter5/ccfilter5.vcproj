@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="ccfilter5"
-	ProjectGUID="{8A0F17E6-5496-4423-87B1-D34156E3E2D3}"
+	ProjectGUID="{E5F29D4D-F850-4D44-8258-31254378040C}"
 	RootNamespace="ccfilter5"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\Filter4.exe"
+				OutputFile="$(OutDir)\Filter5.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\Filter4.exe"
+				OutputFile="$(OutDir)\Filter5.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -181,7 +181,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\theLink\example\cc\Filter4.cc"
+				RelativePath="..\..\..\theLink\example\cc\Filter5.cc"
 				>
 			</File>
 		</Filter>

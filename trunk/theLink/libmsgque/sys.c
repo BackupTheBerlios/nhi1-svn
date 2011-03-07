@@ -810,7 +810,7 @@ void SysCreate(void) {
 #if defined(HAVE_FORK)
   MqLal.SysFork		= (MqSysForkF)	  fork;
 #endif
-  MqLal.SysAbort	= abort;
+  MqLal.SysAbort	= (void (MQ_DECL*)(void))abort;
 
   MqLal.SysServerSpawn = SysServerSpawn;
   MqLal.SysServerThread = SysServerThread;

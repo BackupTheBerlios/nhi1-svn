@@ -304,13 +304,14 @@ namespace ccmsgque {
       typedef void (MqC::*CallbackF) ();
 
       MQ_EXTERN void objInit ();
+      static void Setup (void) __attribute__ ((constructor));
+      static void Cleanup (void) __attribute__ ((destructor));
 
     private:
       static inline MqC* GetThis(struct MqS const * const context) {
 	return static_cast<MqC*>(context->self);
       }
   
-      static void libInit (void) __attribute__ ((constructor));
 
       struct ProcCallS {
 	enum ProcCallE	{

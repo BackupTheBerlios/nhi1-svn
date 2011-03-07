@@ -80,7 +80,7 @@ namespace ccmsgque {
   {
     struct ProcCallS * data = static_cast<struct ProcCallS *> (*dataP);
     struct ProcCallS * ptr = (struct ProcCallS *) MqSysMalloc(MQ_ERROR_PANIC, sizeof(*ptr));
-    struct MqC * tgt = GetThis(context);
+    MqC * tgt = GetThis(context);
     ptr->type = data->type;
     switch (data->type) {
       case ProcCallS::PC_IEvent:

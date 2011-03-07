@@ -475,7 +475,7 @@ void MqCleanup(void)
 
 END_C_DECLS
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(MQ_COMPILE_AS_CC)
 
 BOOL WINAPI DllMain( 
     HINSTANCE hModule,
@@ -483,17 +483,12 @@ BOOL WINAPI DllMain(
     LPVOID lpReserved
 )
 {
-# ifdef MQ_COMPILE_AS_CC
-    using namespace libmsgque;
-# endif
-  
   switch (ul_reason_for_call)
   {
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
-      MqSetup();
       break;
     case DLL_PROCESS_DETACH:
       MqCleanup();

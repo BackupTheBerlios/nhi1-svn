@@ -329,7 +329,7 @@ test transaction-X2-($I|$B|$C|$S|$D) {Read/Send BDY test with ERROR} \
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|TEST>, <Num|213>
-[sS]> (server-0) \[sReadA4] request more arguments than available
+[sS]> (server-0) \[*sReadA4] request more arguments than available
 [cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c"
 [cC]> (client-0) found in function "pServiceStart" at file "service.c"
 [cC]> (client-0) found in function "pEventStart" at file "event.c"

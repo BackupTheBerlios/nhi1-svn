@@ -67,9 +67,9 @@ test prt-1a1-($I|$B|$C|$S) {SEND + WAIT with error} \
     -result         {START
 111-CATCH:1
 111-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
 111-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
-[sS]> (server-0) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
 222-CATCH:1
 222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
 [sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*

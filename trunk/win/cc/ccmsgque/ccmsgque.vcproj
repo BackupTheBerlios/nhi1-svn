@@ -189,10 +189,6 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\cccontext.cc"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\ccmisc.cc"
 				>
 			</File>
@@ -218,6 +214,10 @@
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\event.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\libmsgque\factory.c"
 				>
 			</File>
 			<File
@@ -259,6 +259,31 @@
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.c"
 				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\libmsgque\sql.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\sqlite\sqlite3.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CallingConvention="2"
+						CompileAs="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\swap.c"
@@ -347,6 +372,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\theLink\libmsgque\msgque.h"
+				>
+			</File>
+			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\msgque_private.h"
 				>
 			</File>
@@ -364,6 +393,10 @@
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\theLink\sqlite\sqlite3.h"
 				>
 			</File>
 			<File

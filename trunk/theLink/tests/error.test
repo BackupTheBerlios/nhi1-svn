@@ -272,9 +272,9 @@ test error-8-($I|$B|$C|$S) {invalid option found} \
     } \
     -returnCodes    error \
     -match	    glob \
-    -result	    {S> (server-0) \[MqCheckForLeftOverArguments] invalid \[OPTION]... found:
+    -result	    {S> (server-0) \[*MqCheckForLeftOverArguments] invalid \[OPTION]... found:
 S> (server-0) => --wrong-option
-S> (server-0) found in function "MqLinkDefault" at file "link.*"*}
+S> (server-0) found in function "*MqLinkDefault" at file "link.*"*}
 
 ##
 ## -----------------------------------------------------------------------
@@ -317,24 +317,24 @@ foreach C [getEnv COM_LST] {
       -constraints  uds \
       -body         { Exec {*}[getServer $S] --uds --file /some/thing/use/less } \
       -match	    glob \
-      -result       {CHILDSTATUS-2-S> (server) \[SysBind] can not 'bind' -> ERRNO<2> ERR<No such file or directory>
-S> (server) found in function "GenericBind" at file "generic_io.c*"
-S> (server) found in function "GenericServer" at file "generic_io.c*"
-S> (server) found in function "UdsServer" at file "uds_io.c*"
-S> (server) found in function "pIoCreate" at file "io.c*"
-S> (server) found in function "MqLinkCreate" at file "link.c*"
-S> (server) found in function "MqLinkDefault" at file "link.c*"}
+      -result       {CHILDSTATUS-2-S> (server) \[*SysBind] can not 'bind' -> ERRNO<2> ERR<No such file or directory>
+S> (server) found in function "*GenericBind" at file "generic_io.c*"
+S> (server) found in function "*GenericServer" at file "generic_io.c*"
+S> (server) found in function "*UdsServer" at file "uds_io.c*"
+S> (server) found in function "*pIoCreate" at file "io.c*"
+S> (server) found in function "*MqLinkCreate" at file "link.c*"
+S> (server) found in function "*MqLinkDefault" at file "link.c*"}
 
     test error-4-($C|$S) {port with wrong service-name} \
-      -constraints  tcp \
+      -constraints  {tcp unix} \
       -body         { Exec {*}[getServer $S] --tcp --port something_useless } \
       -match	    glob \
-      -result       {CHILDSTATUS-1-S> (server) \[SysGetAddrInfo] getaddrinfo -> ERRNO<-8> ERR<Servname not supported for ai_socktype>
-S> (server) found in function "sTcpCreateAddrInfo" at file "tcp_io.c*"
-S> (server) found in function "TcpCreate" at file "tcp_io.c*"
-S> (server) found in function "pIoCreate" at file "io.c*"
-S> (server) found in function "MqLinkCreate" at file "link.c*"
-S> (server) found in function "MqLinkDefault" at file "link.c*"}
+      -result       {CHILDSTATUS-1-S> (server) \[*SysGetAddrInfo] getaddrinfo -> ERRNO<-8> ERR<Servname not supported for ai_socktype>
+S> (server) found in function "*sTcpCreateAddrInfo" at file "tcp_io.c*"
+S> (server) found in function "*TcpCreate" at file "tcp_io.c*"
+S> (server) found in function "*pIoCreate" at file "io.c*"
+S> (server) found in function "*MqLinkCreate" at file "link.c*"
+S> (server) found in function "*MqLinkDefault" at file "link.c*"}
 
   }
 }

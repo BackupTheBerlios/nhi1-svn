@@ -68,7 +68,7 @@ test trans2-1-($I|$B|$C|$S) {send data with error} \
     -result         {START
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
-[Ss]> (fs) found in function "MqReadForward" at file "read.c*"
+[Ss]> (fs) found in function "*MqReadForward" at file "read.c*"
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
@@ -108,7 +108,7 @@ test trans2-3-($I|$B|$C|$S) {send error + valid data} \
     -result         "START
 ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
 \[sS]> (server-0) \\\[*pTokenInvoke] token <DUM1> not found
-\[sS]> (fs) found in function \"MqReadForward\" at file \"read.c*\"
+\[sS]> (fs) found in function \"*MqReadForward\" at file \"read.c*\"
 $J - HALLO"
 
 # cleanup ---------------------------
@@ -468,12 +468,12 @@ R=789"
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client) \[transaction-callback-error] <Token|OTTO>, <Num|1>
-[sS]> (server) \[pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
-[sS]> (server) found in function "sReadA4" at file "read.c*"
-[cC]> (client) found in function "pTokenDefaultTRT" at file "token.c*"
-[cC]> (client) found in function "pServiceStart" at file "service.c*"
-[cC]> (client) found in function "pEventStart" at file "event.c*"
-[cC]> (client) found in function "MqProcessEvent" at file "service.c*"*}
+[sS]> (server) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
+[sS]> (server) found in function "*sReadA4" at file "read.c*"
+[cC]> (client) found in function "*pTokenDefaultTRT" at file "token.c*"
+[cC]> (client) found in function "*pServiceStart" at file "service.c*"
+[cC]> (client) found in function "*pEventStart" at file "event.c*"
+[cC]> (client) found in function "*MqProcessEvent" at file "service.c*"*}
 
    }; # SRV_LST
   }; # BIN_LST
@@ -645,13 +645,13 @@ foreach I [getNum 3] {
     -returnCodes    error \
     -match	    glob \
     -result         {[cC]> (client-0) \[transaction-callback-error] <Token|OTTO>, <Num|242>
-[sS]> (server-0) \[sSqlAddDb] the value 'NULL' is invalid for object 'storageFile'
-[sS]> (server-0) found in function "pSqlInsertReadTrans" at file "sql.c*"
-[cC]> (client-0) found in function "pTokenDefaultTRT" at file "token.c*"
-[cC]> (client-0) found in function "pServiceStart" at file "service.c*"
-[cC]> (client-0) found in function "pEventStart" at file "event.c*"
-[cC]> (client-0) found in function "MqProcessEvent" at file "service.c*"
-[cC]> (client-0) found in function "MqSendEND_AND_WAIT" at file "send.c*"}
+[sS]> (server-0) \[*sSqlAddDb] the value 'NULL' is invalid for object 'storageFile'
+[sS]> (server-0) found in function "*pSqlInsertReadTrans" at file "sql.c*"
+[cC]> (client-0) found in function "*pTokenDefaultTRT" at file "token.c*"
+[cC]> (client-0) found in function "*pServiceStart" at file "service.c*"
+[cC]> (client-0) found in function "*pEventStart" at file "event.c*"
+[cC]> (client-0) found in function "*MqProcessEvent" at file "service.c*"
+[cC]> (client-0) found in function "*MqSendEND_AND_WAIT" at file "send.c*"}
 
   test trans2-TE1-($I|$B|$C|$S) {send OK} \
     -constraints    {!thread} \
