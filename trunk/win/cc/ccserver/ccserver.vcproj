@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(TOP_BUILD_DIR)\theLink\tests"
+			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\cc"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops;..\ccmsgque\ccmsgque.vsprops"
@@ -61,6 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib"
+				OutputFile="$(OutDir)\server.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
