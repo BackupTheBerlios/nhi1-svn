@@ -47,17 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\theLink\csmsgque\buffer.cs">
-      <Link>buffer.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\config.cs">
       <Link>config.cs</Link>
     </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\context.cs">
       <Link>context.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\theLink\csmsgque\csmsgque.cs">
-      <Link>csmsgque.cs</Link>
     </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\error.cs">
       <Link>error.cs</Link>
@@ -67,6 +61,18 @@
     </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\misc.cs">
       <Link>misc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\theLink\csmsgque\MqBufferS.cs">
+      <Link>MqBufferS.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\theLink\csmsgque\MqDumpS.cs">
+      <Link>MqDumpS.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\theLink\csmsgque\MqFactoryS.cs">
+      <Link>MqFactoryS.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\theLink\csmsgque\MqS.cs">
+      <Link>MqS.cs</Link>
     </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\pointer.cs">
       <Link>pointer.cs</Link>
@@ -82,6 +88,9 @@
     </Compile>
     <Compile Include="..\..\..\theLink\csmsgque\slave.cs">
       <Link>slave.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\theLink\csmsgque\storage.cs">
+      <Link>storage.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
