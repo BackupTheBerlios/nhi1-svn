@@ -489,6 +489,7 @@ BOOL WINAPI DllMain(
     case DLL_THREAD_DETACH:
       return FALSE;
     case DLL_PROCESS_ATTACH:
+      MqSetup();
       break;
     case DLL_PROCESS_DETACH:
       MqCleanup();
