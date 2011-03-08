@@ -190,7 +190,7 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-// if the source of libmsgque is direct used in external library
+//  the source of libmsgque is direct used in external library
 // (without dynamic linking) and this library should *not* export
 // the symbol's of libmsgque then the flag MQ_IGNORE_EXTERN have
 // to be set
@@ -200,20 +200,29 @@ BEGIN_C_DECLS
         // does we build the libmsgque library ?
 #	if defined(MQ_BUILD_LIBMSGQUE_DLL)
 #	    define MQ_EXTERN __declspec(dllexport)
-#	    define MQ_EXTERN_DATA __declspec(dllexport)
 #	else
 #	    define MQ_EXTERN __declspec(dllimport)
-#	    define MQ_EXTERN_DATA __declspec(dllimport)
 #	endif
 #   else
       // no DLL
       /// \brief architecture specific extern specifier
 #     define MQ_EXTERN __attribute__ ((visibility("default")))
-#     define MQ_EXTERN_DATA extern
 #   endif
 #else
 /// define the external binding
 #   define MQ_EXTERN
+#endif
+
+// external data lookup
+#if defined(MQ_PRIVATE_IS_MAIN)
+#   define MQ_EXTERN_DATA MQ_EXTERN
+#elif defined(MQ_PRIVATE)
+#   define MQ_EXTERN_DATA extern
+#elif defined(MQ_IGNORE_EXTERN)
+#   define MQ_EXTERN_DATA extern
+#elif defined(PIC) && defined(DLL_EXPORT)
+#   define MQ_EXTERN_DATA __declspec(dllimport)
+#else
 #   define MQ_EXTERN_DATA extern
 #endif
 
@@ -4695,11 +4704,7 @@ struct MqLalS {
 };
 
 /// Language Abstraction Layer in duty
-#if defined(MQ_PRIVATE_IS_MAIN)
-  MQ_EXTERN struct MqLalS MqLal;
-#else
-  MQ_EXTERN_DATA struct MqLalS MqLal;
-#endif
+MQ_EXTERN_DATA struct MqLalS MqLal;
 
 /// \syscall{calloc}
 /// \details additional info: <TT>man calloc</TT>
