@@ -200,17 +200,21 @@ BEGIN_C_DECLS
         // does we build the libmsgque library ?
 #	if defined(MQ_BUILD_LIBMSGQUE_DLL)
 #	    define MQ_EXTERN __declspec(dllexport)
+#	    define MQ_EXTERN_DATA __declspec(dllexport)
 #	else
 #	    define MQ_EXTERN __declspec(dllimport)
+#	    define MQ_EXTERN_DATA __declspec(dllimport)
 #	endif
 #   else
       // no DLL
       /// \brief architecture specific extern specifier
 #     define MQ_EXTERN __attribute__ ((visibility("default")))
+#     define MQ_EXTERN_DATA extern
 #   endif
 #else
 /// define the external binding
 #   define MQ_EXTERN
+#   define MQ_EXTERN_DATA extern
 #endif
 
 /*****************************************************************************/
@@ -4691,10 +4695,10 @@ struct MqLalS {
 };
 
 /// Language Abstraction Layer in duty
-#if !defined(MQ_PRIVATE) || defined(MQ_PRIVATE_IS_MAIN)
+#if defined(MQ_PRIVATE_IS_MAIN)
   MQ_EXTERN struct MqLalS MqLal;
 #else
-  extern struct MqLalS MqLal;
+  MQ_EXTERN_DATA struct MqLalS MqLal;
 #endif
 
 /// \syscall{calloc}

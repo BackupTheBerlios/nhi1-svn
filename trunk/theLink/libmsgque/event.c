@@ -192,7 +192,8 @@ pEventCheck (
     return MQ_CONTINUE;
 
   // fill fd_set for use in 'select'
-  memcpy (&fds, &event->fdset, sizeof (fd_set));
+  //memcpy (&fds, &event->fdset, sizeof (fd_set));
+  fds = event->fdset;
 
   // composit
   switch (typ) {
