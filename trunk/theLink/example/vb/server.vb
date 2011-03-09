@@ -18,14 +18,8 @@ Public Module example
 
   Private NotInheritable Class Client
     Inherits MqS
-    Implements IFactory
     Implements IBgError
     Public i As Integer
-
-
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Factory
-      Return New Client()
-    End Function
 
     Public Sub BgError() Implements csmsgque.IBgError.BgError
       Dim master As MqS = SlaveGetMaster()
@@ -83,13 +77,13 @@ Public Module example
     Inherits MqS
     Implements IServerSetup
     Implements IServerCleanup
-    Implements IFactory
     Private cl(3) As Client
     Private buf As MqBufferS
 
-    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New Server()
-    End Function
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+    End Sub
 
     Private Sub ServerCleanup() Implements IServerCleanup.ServerCleanup
       For i As Integer = 0 To 2
@@ -165,9 +159,9 @@ Public Module example
 
     Private Sub TRNS()
       SendSTART()
-      SendT_START("TRN2")
+      SendT_START()
       SendI(9876)
-      SendT_END()
+      SendT_END("TRN2")
       SendI(ReadI())
       SendEND_AND_WAIT("ECOI")
       ProcessEvent(MqS.WAIT.ONCE)
@@ -269,8 +263,8 @@ Public Module example
           SendI(ConfigGetIoPipeSocket())
           ConfigSetIoPipeSocket(old)
         Case "StartAs"
-          Dim old As Integer = ConfigGetStartAs()
-          ConfigSetStartAs(ReadI())
+          Dim old As START = ConfigGetStartAs()
+          ConfigSetStartAs(CType(ReadI(), START))
           SendI(ConfigGetStartAs())
           ConfigSetStartAs(old)
         Case Else
@@ -748,11 +742,10 @@ Public Module example
 
 
   Sub Main(ByVal args() As String)
-    Dim srv As New Server()
+    Dim srv As Server = MqFactoryS(Of Server).Add("server").[New]()
     Try
-      srv.ConfigSetName("server")
-      srv.FactoryCtxIdentSet("test-server")
       srv.LinkCreate(args)
+      srv.LogC("test", 1, "this is the log test\n")
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception
       srv.ErrorSet(ex)

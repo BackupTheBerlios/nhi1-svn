@@ -17,12 +17,11 @@ Public Module example
   Private Class MyServer
     Inherits MqS
     Implements IServerSetup
-    Implements IFactory
-
-    ' service definition
-    Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Factory
-      Return New MyServer()
-    End Function
+    
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+    End Sub
 
     ' service to serve all incomming requests for token "HLWO"
     Private Sub MyFirstService()
@@ -38,9 +37,8 @@ Public Module example
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New MyServer()
+    Dim srv As MyServer = MqFactoryS(Of MyServer).Add("").[New]()
     Try
-      srv.ConfigSetName("MyServer")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception

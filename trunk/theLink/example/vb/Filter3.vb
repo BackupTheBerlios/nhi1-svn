@@ -17,7 +17,6 @@ Imports System.Collections.Generic
 Public Module example
   Private Class Filter3
     Inherits MqS
-    Implements IFactory
     Implements IServerSetup
 
     Private Sub ServerSetup() Implements IServerSetup.ServerSetup
@@ -28,13 +27,15 @@ Public Module example
       ftr.ServiceProxy("+TRT")
     End Sub
 
-    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New Filter3()
-    End Function
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+      ConfigSetIsServer(True)
+    End Sub
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New Filter3()
+    Dim srv As Filter3 = MqFactoryS(Of Filter3).Add().[New]()
     Try
       srv.ConfigSetName("filter")
       srv.LinkCreate(args)

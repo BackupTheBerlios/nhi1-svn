@@ -17,22 +17,24 @@ Imports csmsgque
 Public Module example
   Private Class Filter2
     Inherits MqS
-    Implements IFactory
-
+    
     Private data As New List(Of List(Of String))
+
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+      ConfigSetIsServer(True)
+    End Sub
 
     ' service definition
     Public Sub FilterFTR()
       Throw New ApplicationException("my error")
     End Sub
 
-    Public Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New Filter2()
-    End Function
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New Filter2()
+    Dim srv As Filter2 = MqFactoryS(Of Filter2).Add("filter").[New]()
     Try
       srv.ConfigSetName("filter")
       srv.ConfigSetIsServer(True)

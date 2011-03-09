@@ -17,7 +17,11 @@ Imports System.Collections.Generic
 Public Module example
   Private Class manfilter
     Inherits MqS
-    Implements IFactory
+
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+    End Sub
 
     Public Sub FilterFTR()
       Dim ftr As MqS = ServiceGetFilter()
@@ -29,15 +33,11 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function [Call]() As csmsgque.MqS Implements IFactory.Factory
-      Return New manfilter()
-    End Function
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New manfilter()
+    Dim srv As manfilter = MqFactoryS(Of manfilter).Add("ManFilter").[New]()
     Try
-      srv.ConfigSetName("ManFilter")
       srv.ConfigSetIsServer(True)
       srv.LinkCreate(args)
       srv.ServiceCreate("+FTR", AddressOf srv.FilterFTR)

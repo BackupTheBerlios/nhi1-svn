@@ -18,39 +18,22 @@ Imports System.Collections.Generic
 Public Module example
   Private Class Filter4
     Inherits MqS
-    Implements IFactory
     Implements IServerSetup
     Implements IEvent
     Implements IService
 
-    Dim itms As New Queue(Of Byte())
+    Dim itms As New Queue(Of MqDumpS)
     Dim FH As StreamWriter = Nothing
 
-    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New Filter4()
-    End Function
-
-    ' service definition
-    Private Sub Filter()
-      Dim ftr As MqS = ServiceGetFilter()
-      ftr.SendSTART()
-      ftr.SendBDY(ReadBDY)
-      If ServiceIsTransaction() Then
-        ftr.SendEND_AND_WAIT(ServiceGetToken())
-        SendSTART()
-        SendBDY(ftr.ReadBDY())
-      Else
-        ftr.SendEND(ServiceGetToken())
-      End If
-      SendRETURN()
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
     End Sub
 
     Private Sub LOGF()
       Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
       If (ftr.LinkGetTargetIdent() = "transFilter") Then
-        ftr.SendSTART()
-        ftr.SendC(ReadC())
-        ftr.SendEND_AND_WAIT("LOGF")
+        ReadForward(ftr)
       Else
         ftr.FH = File.AppendText(ReadC())
       End If
@@ -58,7 +41,7 @@ Public Module example
     End Sub
 
     Private Sub EXI2()
-      Me.ErrorSetEXIT()
+      [Exit]()
     End Sub
 
     Private Sub WRIT()
@@ -75,26 +58,27 @@ Public Module example
 
     Private Sub ServerSetup() Implements IServerSetup.ServerSetup
       Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
-      ServiceCreate("+ALL", Me)
       ServiceCreate("EXIT", AddressOf EXI2)
       ServiceCreate("LOGF", AddressOf LOGF)
+      ServiceCreate("+ALL", Me)
       ftr.ServiceCreate("WRIT", AddressOf ftr.WRIT)
+      ftr.ServiceProxy("+TRT")
     End Sub
 
     Private Sub EventF() Implements IEvent.Event
       If (itms.Count > 0) Then
-        Dim it As Byte() = itms.Peek()
+        Dim dump As MqDumpS = itms.Peek()
         Dim ftr As Filter4 = CType(ServiceGetFilter(), Filter4)
         Try
           ftr.LinkConnect()
-          ftr.SendBDY(it)
+          ReadForward(ftr, dump)
         Catch ex As Exception
-          ftr.ErrorSet(ex)
-          If (ftr.ErrorIsEXIT()) Then
-            ftr.ErrorReset()
+          ErrorSet(ex)
+          If (ErrorIsEXIT()) Then
+            ErrorReset()
             Return
           Else
-            ftr.ErrorWrite()
+            ErrorWrite()
           End If
         End Try
         itms.Dequeue()
@@ -104,17 +88,15 @@ Public Module example
     End Sub
 
     Private Sub Service(ByVal ctx As csmsgque.MqS) Implements IService.Service
-      itms.Enqueue(ReadBDY())
+      itms.Enqueue(ReadDUMP())
       SendRETURN()
     End Sub
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New Filter4()
+    Dim srv As Filter4 = MqFactoryS(Of Filter4).Add("transFilter").[New]()
     Try
       srv.ConfigSetIgnoreExit(True)
-      srv.ConfigSetName("Filter4")
-      srv.ConfigSetIdent("transFilter")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception

@@ -17,15 +17,17 @@ using csmsgque;
 namespace example {
   sealed class Filter6 : MqS, IServerSetup, IServerCleanup, IEvent, IService {
 
-    StreamWriter FH = null;
+    string FN = null;
 
     public Filter6(MqS tmpl) : base(tmpl) {
     }
 
     void ErrorWrite () {
+      StreamWriter FH = File.AppendText(FN);
       FH.BaseStream.Seek(0, SeekOrigin.End);
       FH.WriteLine("ERROR: " + ErrorGetText());
       FH.Flush();
+      FH.Close();
       ErrorReset();
     }
 
@@ -34,20 +36,23 @@ namespace example {
       if (ftr.LinkGetTargetIdent() == "transFilter") {
 	ReadForward(ftr);
       } else {
-	FH = File.AppendText(ReadC());
+	//FH = File.AppendText(ReadC());
+      FN = ReadC();
       }
       SendRETURN();
     }
 
     void EXIT () {
-      Environment.Exit (1);
+      Exit();
     }
 
     void WRIT () {
       Filter6 master = (Filter6) ServiceGetFilter();
-      master.FH.BaseStream.Seek(0, SeekOrigin.End);
-      master.FH.WriteLine(ReadC());
-      master.FH.Flush();
+      StreamWriter FH = File.AppendText(master.FN);
+      FH.BaseStream.Seek(0, SeekOrigin.End);
+      FH.WriteLine(ReadC());
+      FH.Flush();
+      FH.Close();
       SendRETURN();
     }
 
@@ -80,7 +85,6 @@ namespace example {
     }
 
     void IServerCleanup.ServerCleanup() {
-      if (FH != null) FH.Close();
     }
 
     void IServerSetup.ServerSetup() {

@@ -144,6 +144,50 @@ namespace csmsgque {
 	MqBufferLAppendC(initB, s);
       }
     }
+
+  /*****************************************************************************/
+  /*                                                                           */
+  /*                                static                                     */
+  /*                                                                           */
+  /*****************************************************************************/
+
+          [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryAdd")]
+    internal static extern IntPtr MqFactoryAdd([In]IntPtr error, [In]string ident,
+      [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]FactoryDataFreeF CreateFree, [In]FactoryDataCopyF CreateCopy,
+      [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]FactoryDataFreeF DeleteFree, [In]FactoryDataCopyF DeleteCopy
+    );
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryDefault")]
+    internal static extern IntPtr MqFactoryDefault([In]IntPtr error, [In]string ident,
+      [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]FactoryDataFreeF CreateFree, [In]FactoryDataCopyF CreateCopy,
+      [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]FactoryDataFreeF DeleteFree, [In]FactoryDataCopyF DeleteCopy
+    );
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryDefaultIdent")]
+    internal static extern IntPtr MqFactoryDefaultIdent();
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryGet")]
+    internal static extern IntPtr MqFactoryGet([In]string ident);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryGetCalled")]
+    internal static extern IntPtr MqFactoryGetCalled([In]string ident);
+
+  // INSTANCE
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryNew")]
+    internal static extern IntPtr MqFactoryNew([In]IntPtr error, [In]IntPtr data, [In]IntPtr item);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryCopy")]
+    internal static extern IntPtr MqFactoryCopy([In]IntPtr item, [In]string ident);
+
+  // OTHER
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqSetupDup")]
+    internal static extern MqErrorE MqSetupDup([In]IntPtr context, [In]IntPtr tmpl);
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryItemGetCreateData")]
+    internal static extern IntPtr MqFactoryItemGetCreateData([In]IntPtr item);
+
   } // END - class "MqS"
 } // END - namespace "csmsgque"
 

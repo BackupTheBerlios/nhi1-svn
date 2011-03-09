@@ -17,11 +17,11 @@ Public Module example
   Private Class testserver
     Inherits MqS
     Implements IServerSetup
-    Implements IFactory
-
-    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New testserver()
-    End Function
+    
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+    End Sub
 
     Private Sub GTCX()
       SendSTART()
@@ -44,7 +44,7 @@ Public Module example
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New testserver()
+    Dim srv As testserver = MqFactoryS(Of testserver).Add().[New]()
     Try
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)

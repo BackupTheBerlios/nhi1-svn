@@ -40,7 +40,7 @@ namespace example {
     }
 
     void EXIT () {
-      Environment.Exit (1);
+      Exit();
     }
 
     void WRIT () {

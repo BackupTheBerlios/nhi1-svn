@@ -17,11 +17,11 @@ Public Module example
   Private Class mulserver
     Inherits MqS
     Implements IServerSetup
-    Implements IFactory
 
-    Private Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New mulserver()
-    End Function
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+    End Sub
 
     Private Sub MMUL()
       SendSTART()
@@ -35,9 +35,8 @@ Public Module example
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New mulserver()
+    Dim srv As mulserver = MqFactoryS(Of mulserver).Add("MyMulServer").[New]()
     Try
-      srv.ConfigSetName("MyMulServer")
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)
     Catch ex As Exception

@@ -315,7 +315,6 @@ $J - TTT3"
       $CTX ProcessEvent -wait ONCE
       Echo0 $CTX PRNT SendC TTT2
 
-
       WaitOnFileToken $TMP TTT2
     } \
     -cleanup	    {

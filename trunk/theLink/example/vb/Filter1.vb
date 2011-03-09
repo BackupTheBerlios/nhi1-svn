@@ -17,9 +17,14 @@ Imports System.Collections.Generic
 Public Module example
   Private Class Filter1
     Inherits MqS
-    Implements IFactory
-
+    
     Private data As New List(Of List(Of String))
+
+    ' constructor
+    Public Sub New(ByVal tmpl As MqS)
+      MyBase.New(tmpl)
+      ConfigSetIsServer(True)
+    End Sub
 
     ' service definition
     Public Sub FilterEOF()
@@ -46,14 +51,10 @@ Public Module example
       SendRETURN()
     End Sub
 
-    Public Function Factory() As csmsgque.MqS Implements IFactory.Factory
-      Return New Filter1()
-    End Function
-
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As New Filter1()
+    Dim srv As Filter1 = MqFactoryS(Of Filter1).Add("filter").[New]()
     Try
       srv.ConfigSetName("filter")
       srv.ConfigSetIsServer(True)
