@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-#set tcl_traceExec 2
+set tcl_traceExec 2
 
 if {![info exists env(TS_LIBRARY)]} {
   set env(TS_LIBRARY) [info script]
@@ -497,7 +497,6 @@ proc FindFreePort {} {
   while true {
     incr portNUM
     if {[catch {socket -server dummy_server $portNUM} FH ]} {
-Print FH
       Print FH
       incr TRY -1
       if {$TRY < 0} {
@@ -585,7 +584,7 @@ proc SetConstraints {args} {
     foreach c [getEnv BIN_LST] {
       testConstraint $c yes
     }
-    foreach c {c cc tcl java csharp python ruby perl php go} {
+    foreach c {c cc tcl java csharp vb python ruby perl php go} {
       testConstraint $c [expr {[lsearch -glob [getEnv SRV_LST] "$c.*"] != -1}]
     }
     foreach c {pipe uds tcp fork spawn thread server} {
@@ -593,7 +592,7 @@ proc SetConstraints {args} {
     }
   } else {
     # 1. cleanup all constraint
-    foreach c {string binary uds tcp pipe c cc tcl java csharp python ruby perl php go fork
+    foreach c {string binary uds tcp pipe c cc tcl java csharp vb python ruby perl php go fork
 		  thread spawn server parent child child2 child3} {
       testConstraint $c no
     }
@@ -641,7 +640,7 @@ if {![info exists env(BLOCK_LST)]} {
 if {![info exists env(START_LST)]} {
   set env(START_LST) {fork thread spawn}
 }
-array set START_ID {fork 1 thread 2 spawn 3 c 3 tcl 3 go 3 java 3 csharp 3 perl 3 python 3 cc 3 php 3 ruby 3}
+array set START_ID {fork 1 thread 2 spawn 3 c 3 tcl 3 go 3 java 3 csharp 3 perl 3 python 3 cc 3 php 3 ruby 3 vb 3}
 if {![info exists env(SRV_LST)]} {
   set env(SRV_LST) {
     c.pipe.pipe
@@ -673,6 +672,11 @@ if {![info exists env(SRV_LST)]} {
     csharp.uds.thread
     csharp.tcp.spawn
     csharp.uds.spawn
+    vb.pipe.pipe
+    vb.tcp.thread
+    vb.uds.thread
+    vb.tcp.spawn
+    vb.uds.spawn
     cc.pipe.pipe
     cc.tcp.fork
     cc.tcp.thread
@@ -876,7 +880,7 @@ while {true} {
       set T		  [lrange [split $arg -] 3 end]
       set env(BLOCK_LST)  [lsort -integer -increasing -unique $T]
     }
-    {^--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc)+$} {
+    {^--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc|-vb)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(LNG_LST)	  $T
       # "c" matches multiple targets -> add word border definition

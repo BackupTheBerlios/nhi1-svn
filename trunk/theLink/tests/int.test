@@ -21,7 +21,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ## init
 ##
 
-#set tcl_traceExec 1
+#set tcl_traceExec 2
 
 set MAX_INT    [tclmsgque const maxI]
 set MIN_INT    [tclmsgque const minI]
