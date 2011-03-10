@@ -37,7 +37,7 @@ Public Module example
   End Class
 
   Sub Main(ByVal args() As String)
-    Dim srv As MyServer = MqFactoryS(Of MyServer).Add("").[New]()
+    Dim srv As MyServer = MqFactoryS(Of MyServer).Add().[New]()
     Try
       srv.LinkCreate(args)
       srv.ProcessEvent(MqS.WAIT.FOREVER)

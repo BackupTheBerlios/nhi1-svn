@@ -36,8 +36,7 @@ namespace example {
       if (ftr.LinkGetTargetIdent() == "transFilter") {
 	ReadForward(ftr);
       } else {
-	//FH = File.AppendText(ReadC());
-      FN = ReadC();
+	  FN = ReadC();
       }
       SendRETURN();
     }

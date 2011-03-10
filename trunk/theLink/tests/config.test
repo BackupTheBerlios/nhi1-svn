@@ -36,7 +36,7 @@ array set factory {
   tcl	  tclmsgque
   python  pymsgque
   ruby	  rubymsgque
-  vb	  vbmsgque
+  vb	  csmsgque
 }
 
 ##

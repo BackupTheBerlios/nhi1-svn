@@ -672,11 +672,6 @@ if {![info exists env(SRV_LST)]} {
     csharp.uds.thread
     csharp.tcp.spawn
     csharp.uds.spawn
-    vb.pipe.pipe
-    vb.tcp.thread
-    vb.uds.thread
-    vb.tcp.spawn
-    vb.uds.spawn
     cc.pipe.pipe
     cc.tcp.fork
     cc.tcp.thread

@@ -31,7 +31,7 @@ Public Module example
 
     Public Overloads Sub LinkCreate(ByVal debug As Integer)
       ConfigSetDebug(debug)
-      MyBase.LinkCreate("@", "SELF", "--name", "test-server")
+      MyBase.LinkCreate("@", "server", "--name", "test-server")
     End Sub
 
     Public Sub ECOI_CB()
@@ -153,8 +153,22 @@ Public Module example
         ServiceCreate("PRNT", AddressOf PRNT)
         ServiceCreate("TRNS", AddressOf TRNS)
         ServiceCreate("TRN2", AddressOf TRN2)
+        ServiceCreate("DMPL", AddressOf DMPL)
+        ServiceCreate("STDB", AddressOf STDB)
 
       End If
+    End Sub
+
+    Private Sub STDB()
+      SendSTART()
+      StorageOpen(ReadC())
+      SendRETURN()
+    End Sub
+
+    Private Sub DMPL()
+      SendSTART()
+      SendI(ReadDUMP().Size())
+      SendRETURN()
     End Sub
 
     Private Sub TRNS()
@@ -176,7 +190,6 @@ Public Module example
       i = ReadI()
       ReadT_END()
       j = ReadI()
-      SendRETURN()
     End Sub
 
     Private Sub PRNT()
@@ -217,6 +230,11 @@ Public Module example
           ConfigSetSrvName(ReadC())
           SendC(ConfigGetSrvName())
           ConfigSetSrvName(old)
+        Case "Storage"
+          Dim old As String = ConfigGetStorage()
+          ConfigSetStorage(ReadC())
+          SendC(ConfigGetStorage())
+          ConfigSetStorage(old)
         Case "Ident"
           Dim old As String = FactoryCtxIdentGet()
           FactoryCtxIdentSet(ReadC())
@@ -267,6 +285,8 @@ Public Module example
           ConfigSetStartAs(CType(ReadI(), START))
           SendI(ConfigGetStartAs())
           ConfigSetStartAs(old)
+        Case "DefaultIdent"
+          SendC(MqFactoryS(Of Server).DefaultIdent())
         Case Else
           ErrorC("CFG1", 1, "invalid command: " + cmd)
       End Select
@@ -702,12 +722,13 @@ Public Module example
     End Sub
 
     Public Sub SETU()
-      buf = ReadU()
+      buf = ReadU().Dup()
     End Sub
 
     Public Sub GETU()
       SendSTART()
       SendU(buf)
+      buf.Delete()
       SendRETURN()
     End Sub
 
