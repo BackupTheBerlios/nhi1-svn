@@ -41,7 +41,7 @@ set USE_PERL {yes}
 set USE_PHP {yes}
 set USE_CSHARP {yes}
 set USE_GO {yes}
-set USE_VB {no}
+set USE_VB {yes}
 set USE_PYTHON {yes}
 set USE_RUBY {yes}
 set USE_JAVA {yes}

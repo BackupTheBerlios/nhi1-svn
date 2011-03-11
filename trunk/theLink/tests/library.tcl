@@ -10,7 +10,7 @@
 #§              please contact AUTHORS for additional information
 #§
 
-set tcl_traceExec 2
+#set tcl_traceExec 2
 
 if {![info exists env(TS_LIBRARY)]} {
   set env(TS_LIBRARY) [info script]

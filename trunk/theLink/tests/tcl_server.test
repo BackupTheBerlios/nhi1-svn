@@ -153,7 +153,7 @@ test tcl-server-X3 {server with defined UDS handle normal startup} \
     } \
     -cleanup	{
 	$ctx Delete
-	catch {exec $::KILL $PID}
+	Kill $PID
 	file delete -force $UDS
     } \
     -body       {
@@ -190,7 +190,7 @@ test tcl-server-X4 {server with defined UDS handle problem startup} \
     } \
     -cleanup	{
 	$ctx Delete
-	catch {exec $::KILL $PID}
+	Kill $PID
 	file delete -force $UDS
     } \
     -body       {
@@ -225,7 +225,7 @@ test tcl-server-X5 {server with defined TCP handle problem startup} \
     } \
     -cleanup	{
 	catch {$ctx Delete}
-	catch {exec $::KILL $PID}
+	Kill $PID
     } \
     -body       {
 	$ctx LinkCreate --name client --tcp --port $PORT --debug $env(TS_DEBUG)
