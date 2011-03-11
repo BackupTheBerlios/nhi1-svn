@@ -255,20 +255,19 @@ MqContextFree (
     if (context->setup.BgError.data && context->setup.BgError.fFree) {
       (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
     }
-
     pErrorCleanup(context);
     MqBufferDelete(&context->temp);
-
+    
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);
     MqSysFree(context->config.storage);
-
+    
     MqBufferDelete (&context->config.io.tcp.host);
     MqBufferDelete (&context->config.io.tcp.port);
     MqBufferDelete (&context->config.io.tcp.myhost);
     MqBufferDelete (&context->config.io.tcp.myport);
     MqBufferDelete (&context->config.io.uds.file);
-
+    
     pGcDelete(context);
   }
 }
@@ -650,6 +649,7 @@ MqConfigSetServerSetup (
   if (context->setup.ServerSetup.data && context->setup.ServerSetup.fFree) {
     (*context->setup.ServerSetup.fFree) (context, &context->setup.ServerSetup.data);
   }
+  
   context->setup.isServer	   = MQ_YES;
   context->setup.ServerSetup.fCall = fTok;
   context->setup.ServerSetup.data  = data;

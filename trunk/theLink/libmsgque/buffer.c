@@ -1286,7 +1286,7 @@ MqBufferLogS (
 /*                                                                           */
 /*****************************************************************************/
 
-#if defined _DEBUG
+//#if defined _DEBUG
 void
 MqBufferLog (
   struct MqS const * const context,
@@ -1318,7 +1318,7 @@ MqBufferLog (
   MqSysFree(tmp);
 }
 
-#endif
+//#endif
 
 END_C_DECLS
 

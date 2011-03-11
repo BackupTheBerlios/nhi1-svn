@@ -33,7 +33,7 @@
 	/>
 	<UserMacro
 		Name="JAVA_DIR"
-		Value="C:\Programme\Java\jdk1.6.0_13\"
+		Value="C:\Programme\Java\jdk1.6.0_24\"
 	/>
 	<UserMacro
 		Name="PERL_DIR"

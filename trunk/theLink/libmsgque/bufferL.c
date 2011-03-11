@@ -753,7 +753,7 @@ pBufferLSetError (
 /*                                                                           */
 /*****************************************************************************/
 
-#if defined _DEBUG
+//#if defined _DEBUG
 void
 MqBufferLLog (
   struct MqS const * const context,
@@ -805,7 +805,7 @@ MqBufferLLogS (
   }
 }
 
-#endif /* _DEBUG */
+//#endif /* _DEBUG */
 
 END_C_DECLS
 

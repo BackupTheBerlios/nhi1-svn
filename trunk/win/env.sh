@@ -39,15 +39,15 @@ DOXYGEN=''
 RUBY=''
 
 # C# works with "mono" (mono.exec) or with windows native (NATIVE)
-#set CLREXEC ''
-CLREXEC='mono.exe'
+CLREXEC=''
+#CLREXEC='mono.exe'
 
 USE_TCL='yes'
 USE_PERL='yes'
 USE_PHP='yes'
 USE_CSHARP='yes'
 USE_GO='yes'
-USE_VB='no'
+USE_VB='yes'
 USE_PYTHON='yes'
 USE_RUBY='yes'
 USE_JAVA='yes'
@@ -60,4 +60,4 @@ PATH_SEP=';'
 EXEEXT='.exe'
 
 export PACKAGE PACKAGE_VERSION host build PERL DOT \
-        DOXYGEN PYTHON RUBY PHP JAVA TCLSH PATH_SEP EXEEXT
+        DOXYGEN PYTHON RUBY PHP JAVA TCLSH PATH_SEP EXEEXT CLREXEC

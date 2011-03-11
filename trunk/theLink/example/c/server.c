@@ -1465,6 +1465,8 @@ main (
   );
 
   // setup the link, parse command-line arguments
+  M0
+  printULS(args)
   MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // test debug output

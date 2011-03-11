@@ -321,7 +321,6 @@ MqExitP (
     int num;
     MqExitF exitF;
     MQ_BOL isThread, deleteContext;
-
     context->bits.onExit = MQ_YES;
     context->setup.ignoreExit = MQ_NO;
     MqDLogV(context,3,"called from '%s'\n", prefix);
