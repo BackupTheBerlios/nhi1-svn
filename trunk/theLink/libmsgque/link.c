@@ -762,8 +762,6 @@ MqLinkCreate (
   struct MqBufferLS ** argvP
 )
 {
-  printULS(*argvP)
-
   // avoid double link create
   if (unlikely(context->link.read != NULL)) {
     MqBufferLDelete (argvP);
@@ -783,14 +781,11 @@ MqLinkCreate (
   }
 
   // try to invoke the "CreateHandler" first
-M0
   if (context->link.bits.onCreateStart == MQ_NO) {
-    M1
     context->link.bits.onCreateStart = MQ_YES;
     context->link.bits.onCreateEnd = MQ_NO;
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       enum MqErrorE ret;
-      M2
       context->refCount++;
       ret = (*context->setup.Child.fCreate) (context, argvP);
       context->refCount--;

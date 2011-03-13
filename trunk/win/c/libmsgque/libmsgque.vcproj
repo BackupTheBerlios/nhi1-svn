@@ -41,10 +41,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
+				Optimization="0"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
 				WarningLevel="3"
-				WarnAsError="true"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
@@ -112,7 +113,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
 				WarningLevel="3"
@@ -283,15 +283,7 @@
 			Name="Headerdateien"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\bufferL.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\cache.h"
+				RelativePath="..\..\..\theLink\sqlite\config.h"
 				>
 			</File>
 			<File
@@ -299,35 +291,7 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\error.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\event.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\generic_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\io_private.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\link.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\log.h"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\main.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\mq_io.h"
 				>
 			</File>
 			<File
@@ -339,43 +303,7 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\pipe_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\read.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\send.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\swap.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys.h"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys_com.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\tcp_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\token.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\trans.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\uds_io.h"
 				>
 			</File>
 		</Filter>

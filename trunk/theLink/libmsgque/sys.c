@@ -796,7 +796,6 @@ static MQ_STR sys_strndup (
 /*****************************************************************************/
 
 void SysCreate(void) {
-
   check_sqlite (sqlite3_initialize()) {
     MqPanicC(MQ_ERROR_PANIC, __func__, -1, "unable to use 'sqlite3_initialize'");
   }   
