@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\tclmsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,6 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\theLink\tclmsgque&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;TCLMSGQUE_EXPORTS;MQ_SHARED_IS_DLL;USE_TCL_STUBS"
 				UsePrecompiledHeader="0"

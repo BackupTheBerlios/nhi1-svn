@@ -41,7 +41,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;JAVAMSGQUE_EXPORTS"
 				UsePrecompiledHeader="0"
@@ -91,7 +92,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\javamsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\..\win\java.vsprops"
+			InheritedPropertySheets="..\..\win\java.vsprops;..\..\win\win.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -112,7 +113,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				EnableIntrinsicFunctions="true"
+				Optimization="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;JAVAMSGQUE_EXPORTS"
 				UsePrecompiledHeader="0"

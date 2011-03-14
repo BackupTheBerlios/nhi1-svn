@@ -381,6 +381,7 @@ int NS(ProcessEvent) (NS_ARGS);
 int NS(ErrorC) (NS_ARGS);
 int NS(ErrorSet) (NS_ARGS);
 int NS(ErrorSetCONTINUE) (NS_ARGS);
+int NS(ErrorSetEXIT) (NS_ARGS);
 int NS(ErrorIsEXIT) (NS_ARGS);
 int NS(ErrorGetText) (NS_ARGS);
 int NS(ErrorGetNum) (NS_ARGS);
@@ -549,6 +550,7 @@ int NS(MqS_Cmd) (
     { "ErrorC",			  NS(ErrorC)		      },
     { "ErrorSet",		  NS(ErrorSet)		      },
     { "ErrorSetCONTINUE",	  NS(ErrorSetCONTINUE)	      },
+    { "ErrorSetEXIT",	          NS(ErrorSetEXIT)	      },
     { "ErrorIsEXIT",		  NS(ErrorIsEXIT)	      },
     { "ErrorGetText",		  NS(ErrorGetText)	      },
     { "ErrorGetNum",		  NS(ErrorGetNum)	      },

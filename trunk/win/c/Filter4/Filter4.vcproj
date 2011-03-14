@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\c"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops"
 			CharacterSet="1"
 			>
 			<Tool

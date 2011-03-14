@@ -526,6 +526,7 @@ static enum MqErrorE SysServerSpawn (
 
   // start process
   if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
+  //if (unlikely ((pid = _spawnlp (_P_DETACH, name, buf, NULL)) == -1)) {
     //printC(strerror(errno))
     goto error;
   }

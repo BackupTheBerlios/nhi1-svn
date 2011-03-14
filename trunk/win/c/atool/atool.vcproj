@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\acmds"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,7 +41,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -61,7 +60,6 @@
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"

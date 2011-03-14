@@ -178,8 +178,8 @@ JNIEXPORT jobject JNICALL NF(Default) (
   JavaErrorCheckNULL(callback = (*env)->GetMethodID(env,cbClass,"<init>","(Ljavamsgque/MqS;)V"));
   JavaErrorCheckNULL(call = NS(FactorySetup)(env, cbClass, callback));
   str = JO2C_START(env,ident);
-  factory = MqFactoryDefault(MQ_ERROR_PRINT, str,
-	      NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
+  factory = MqFactoryDefault(MQ_ERROR_PRINT, str, 
+    NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
   JO2C_STOP(env,ident,str);
   if (factory == NULL) goto error;
   return (*env)->NewObject(env, NS(Class_MqFactoryS), NS(MID_MqFactoryS_INIT), (jlong) factory);

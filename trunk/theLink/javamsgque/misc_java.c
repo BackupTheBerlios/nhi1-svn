@@ -70,7 +70,7 @@ error:
   MqPanicC(context, __func__, -1, "unable to copy proc data");
 }
 
-void MQ_DECL 
+void MQ_DECL
 NS(ProcFree) (
   struct MqS const * const context, 
   MQ_PTR *dataP

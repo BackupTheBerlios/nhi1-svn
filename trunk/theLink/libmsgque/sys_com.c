@@ -315,8 +315,22 @@ SysSelect (
       return MQ_CONTINUE;   // timeout
     case SOCKET_ERROR:
       switch (sSysGetErrorNum) {
+        /*
+#ifdef MQ_IS_WIN32
+	case WIN32_WSA (ENOTSOCK):
+          M0
+          MqSysSleep(context,1);
+          return MQ_CONTINUE;
+        case WIN32_WSA (EFAULT):
+          M1
+          MqSysSleep(context,1);
+          return MQ_CONTINUE;
+#endif
+          */
 	case WIN32_WSA (EINTR):
           return MQ_CONTINUE;
+	//case WIN32_WSA (ENOTSOCK):
+        //case WIN32_WSA (EFAULT):
 	case WIN32_WSA (EBADF): {
 	  // check all sockets's to get the bad one
 	  MQ_SOCK i;
@@ -338,11 +352,12 @@ SysSelect (
 	    if (FD_ISSET(i,fds)) {
 	      num++;
 	      sock = i;
+              //printI(sock)
 	    }
 	  }
-	  // only one socket?
+          // only one socket?
 	  if (num == 1) {
-	    sockmq = pIoGetMsgqueFromSocket(context->link.io,sock);
+            sockmq = pIoGetMsgqueFromSocket(context->link.io,sock);
 	    if (sockmq == NULL) {
 	      return sSysMqErrorMsg (context, __func__, "select");
 	    } else if (sockmq == context) {

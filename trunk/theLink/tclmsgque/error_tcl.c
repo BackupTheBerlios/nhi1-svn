@@ -35,6 +35,13 @@ int NS(ErrorGetCode) (NS_ARGS)
   RETURN_TCL
 }
 
+int NS(ErrorSetEXIT) (NS_ARGS)
+{
+  CHECK_NOARGS
+  MqErrorSetEXIT(MQCTX);
+  RETURN_TCL
+}
+
 int NS(ErrorC) (NS_ARGS)
 {
   MQ_INT errnum;

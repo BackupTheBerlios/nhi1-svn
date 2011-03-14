@@ -47,8 +47,8 @@ lappend PATH [file nativename [file join [file dirname [info nameofexecutable]]]
 lappend PATH [file nativename [file normalize [file join $ROOT acmds]]]
 lappend PATH [file nativename [file normalize [file join $BUILD acmds]]]
 
-set T1 [file nativename [file normalize [file join $ROOT src .libs]]]
-set T2 [file nativename [file normalize [file join $BUILD src .libs]]]
+set T1 [file nativename [file normalize [file join $ROOT libmsgque .libs]]]
+set T2 [file nativename [file normalize [file join $BUILD libmsgque .libs]]]
 
 if {$tcl_platform(platform) eq "windows"} {
     lappend PATH $T1

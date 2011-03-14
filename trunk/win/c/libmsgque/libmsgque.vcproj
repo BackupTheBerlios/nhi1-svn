@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\libmsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,13 +41,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				AdditionalOptions="/Ob0"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
-				WarningLevel="3"
-				WarnAsError="false"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -60,7 +56,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -113,7 +108,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				EnableIntrinsicFunctions="true"
+				AdditionalOptions="/Ob0"
+				Optimization="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
 				WarningLevel="3"
 				DebugInformationFormat="3"

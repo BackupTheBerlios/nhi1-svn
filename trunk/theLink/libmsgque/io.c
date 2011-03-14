@@ -712,7 +712,6 @@ rescan:
 */
 
 	MqErrorCheck (MqSysServerSpawn (context, argV, name, idP));
-
 	// cleanup array's
 	sIoFreeArgvArray(&argV);
 	// cleanup socket of the child
@@ -922,5 +921,3 @@ pIoLog (
 #endif
 
 END_C_DECLS
-
-

@@ -31,7 +31,7 @@ proc LOGF {ctx} {
 }
 
 proc EXIT {ctx} {
-  $ctx ErrorSetEXIT
+  $ctx Exit
 }
 
 proc WRIT {ftr} {
