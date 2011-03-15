@@ -117,13 +117,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(TCL_DIR)\include&quot;;&quot;$(TOP_BUILD_DIR)\theLink\tclmsgque&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;TCLMSGQUE_EXPORTS;MQ_SHARED_IS_DLL;USE_TCL_STUBS"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

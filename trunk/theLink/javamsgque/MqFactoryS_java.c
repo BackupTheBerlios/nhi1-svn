@@ -37,8 +37,9 @@ static MQ_PTR NS(FactorySetup) (
   jmethodID method
 )
 {
-  struct FactoryCallS * call = MqSysCalloc(MQ_ERROR_PANIC, 1, sizeof(*call));
+  struct FactoryCallS *call = MqSysMalloc(MQ_ERROR_PANIC, sizeof(*call));
   JavaErrorCheckNULL (call->class = (*env)->NewGlobalRef(env, class));
+  //call->class = class;
   call->env = env;
   call->method = method;
   return call;
@@ -62,10 +63,11 @@ NS(FactoryFree) (
   MQ_PTR *dataP
 )
 {
-  //struct FactoryCallS * call = (struct FactoryCallS *) *dataP;
-  //JNIEnv *env = call->env;
+  struct FactoryCallS * call = (struct FactoryCallS *) *dataP;
+  JNIEnv *env = call->env;
   // this function will be called on !exit! but "java" is already gone -> no java cleanup
-  //(*env)->DeleteGlobalRef(env, call->class);
+  // update windows require this code
+  (*env)->DeleteGlobalRef(env, call->class);
   MqSysFree(*dataP);
 }
 
@@ -274,7 +276,7 @@ void FactoryInit(JNIEnv *env) {
   call = NS(FactorySetup)(env, NS(Class_MqS), NS(MID_MqS_INIT));
   if (call == NULL) goto error;
   factory = MqFactoryDefault(MQ_ERROR_PRINT, "javamsgque", 
-	      NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
+	NS(FactoryCreate), call, NS(FactoryFree), NS(FactoryCopy), NS(FactoryDelete), NULL, NULL, NULL);
   if (factory == NULL) goto error;
   return;
 error:

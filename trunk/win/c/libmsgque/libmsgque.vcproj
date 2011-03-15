@@ -109,12 +109,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Ob0"
-				Optimization="0"
-				EnableIntrinsicFunctions="false"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL"
-				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

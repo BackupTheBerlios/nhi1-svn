@@ -7,16 +7,20 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
+		Optimization="2"
+		EnableIntrinsicFunctions="true"
+		FavorSizeOrSpeed="1"
+		WholeProgramOptimization="true"
 		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;;&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
 		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS;_HAVE_SQLITE_CONFIG_H"
 		RuntimeLibrary="2"
+		WarnAsError="true"
 		CompileAs="1"
 	/>
 	<Tool
 		Name="VCLinkerTool"
 		AdditionalDependencies="ws2_32.lib"
 		Version="$(LIBMSGQUE_VERSION)"
-		CLRThreadAttribute="0"
 	/>
 	<UserMacro
 		Name="TOP_BUILD_DIR"

@@ -351,6 +351,7 @@ $J - T2
 $J - T3"
 
   test trans-X6-($I|$B|$S) {send error + valid data} \
+    -constraints    { unix } \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
     } \
