@@ -17,6 +17,17 @@
 \n
 \n
 
+\section V0_15 15 Feb 2011 - NHI1-0.15, PLMK-2.4 und libmsgque-5.4
+
+Update \b windows support
+
+\verbatim
+svn diff --summarize -r '{2011-02-05}:{2011-02-27}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
 \section V0_14 27 Feb 2011 - NHI1-0.14, PLMK-2.3 und libmsgque-5.3
 
 This release add \e persistent-transaction-support-part-2. The \RNS{Storage}

@@ -11,6 +11,11 @@
 #§
 
 
+15 Mar 2011: v NHI1-0.15, PLMK-2.4 und libmsgque-5.4
+
+ -> "Update windows support"
+
+
 27 Feb 2011: v NHI1-0.14, PLMK-2.3 und libmsgque-5.3
 
  -> "SqLite, a deeper integration including a 'Storage' API"

@@ -2,15 +2,10 @@
 
 <CENTER>
 
-\section nw  NEWS, from 28 Feb 2011
+\section nw  NEWS, from 15 Mar 2011
 
-Finish release \b 7 of \ref wp2 \n
-<TT>"SqLite, a deeper integration including a 'Storage' API"</TT> \n
-This release add \b persistent-transaction-support-part-2, including:\n
-a \RNS{Storage} API\n
-a \RNS{DumpObject} API\n
-and a new \RNS{Tutorial}.
-
+Finish release \b 8 of \ref wp2 \n
+update \b windows support
 
 \section intro Introduction
 
