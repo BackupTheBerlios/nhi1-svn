@@ -76,18 +76,19 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
   }
 
   public void Event() throws MqSException {
+    MqS ftr = ServiceGetFilter();
     MqDumpS it = itms.peek();
     if (it == null) {
       ErrorSetCONTINUE();
     } else {
       try {
-	MqS ftr = ServiceGetFilter();
 	ftr.LinkConnect();
 	ReadForward(ftr,it);
       } catch (Throwable ex) {
 	ErrorSet(ex);
 	if (ErrorIsEXIT()) {
 	  ErrorReset();
+	  ftr.LinkConnect();
 	  return;
 	} else {
 	  ErrorWrite();
@@ -118,6 +119,7 @@ class Filter4 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
     MqS.Init("java", "example.Filter4");
     MqFactoryS.Default("transFilter", Filter4.class);
     Filter4 srv = new Filter4(null);
+    //Filter4 srv = MqFactoryS.Add("transFilter", Filter4.class).New();
     try {
       srv.ConfigSetIgnoreExit(true);
       srv.LinkCreate(argv);

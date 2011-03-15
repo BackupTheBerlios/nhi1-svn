@@ -75,18 +75,19 @@ class Filter6 extends MqS implements IServerSetup, IServerCleanup, IEvent, IServ
   }
 
   public void Event() throws MqSException {
+    MqS ftr = ServiceGetFilter();
     if (StorageCount() == 0L) {
       ErrorSetCONTINUE();
     } else {
       long Id = 0L;
       try {
-	MqS ftr = ServiceGetFilter();
 	ftr.LinkConnect();
 	Id = StorageSelect();
 	ReadForward(ftr);
       } catch (Throwable ex) {
 	ErrorSet(ex);
 	if (ErrorIsEXIT()) {
+	  ftr.LinkConnect();
 	  ErrorReset();
 	  return;
 	} else {
