@@ -37,16 +37,16 @@ array set env [list   \
 ]
 
 set USE_TCL {yes}
-set USE_PERL {yes}
-set USE_PHP {yes}
+set USE_PERL {no}
+set USE_PHP {no}
 set USE_CSHARP {yes}
-set USE_GO {yes}
+set USE_GO {no}
 set USE_VB {yes}
-set USE_PYTHON {yes}
-set USE_RUBY {yes}
+set USE_PYTHON {no}
+set USE_RUBY {no}
 set USE_JAVA {yes}
 set USE_CXX {yes}
-set USE_PHP {yes}
-set USE_BRAIN {yes}
-set USE_GUARD {yes}
+set USE_PHP {no}
+set USE_BRAIN {no}
+set USE_GUARD {no}
 

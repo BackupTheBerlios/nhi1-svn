@@ -15,6 +15,13 @@
 
 #include "mqconfig.h"
 
+#if defined(_MSC_VER)
+# define MQ_CDECL __cdecl
+#else
+# define MQ_CDECL
+#endif
+
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                sqlite                                     */

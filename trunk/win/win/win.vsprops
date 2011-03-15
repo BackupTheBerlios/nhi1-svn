@@ -7,14 +7,12 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		Optimization="2"
-		EnableIntrinsicFunctions="true"
-		FavorSizeOrSpeed="1"
-		WholeProgramOptimization="true"
+		Optimization="0"
 		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;;&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
 		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS;_HAVE_SQLITE_CONFIG_H"
 		RuntimeLibrary="2"
 		WarnAsError="true"
+		DebugInformationFormat="0"
 		CompileAs="1"
 	/>
 	<Tool

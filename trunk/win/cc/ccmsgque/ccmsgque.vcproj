@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\ccmsgque\.libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops;.\ccmsgque.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops;.\ccmsgque.vsprops"
 			CharacterSet="1"
 			ManagedExtensions="0"
 			>
@@ -46,10 +46,6 @@
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL;MQ_COMPILE_AS_CC"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CallingConvention="2"
-				CompileAs="2"
 				DisableSpecificWarnings="4290"
 			/>
 			<Tool
@@ -117,12 +113,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CPPMSGQUE_EXPORTS;MQ_BUILD_LIBMSGQUE_DLL;MQ_COMPILE_AS_CC"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
 				CompileAs="2"
 				DisableSpecificWarnings="4290"
 			/>
@@ -320,18 +312,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\bufferL.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\cache.h"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\ccmsgque\ccmsgque.h"
 				>
 			</File>
@@ -340,35 +320,11 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\error.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\event.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\generic_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\io_private.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\theLink\libmsgque\link.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\log.h"
+				RelativePath="..\..\..\theLink\sqlite\config.h"
 				>
 			</File>
 			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\main.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\mq_io.h"
 				>
 			</File>
 			<File
@@ -380,51 +336,11 @@
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\pipe_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\read.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\send.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\slave.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\theLink\sqlite\sqlite3.h"
 				>
 			</File>
 			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\swap.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys.h"
-				>
-			</File>
-			<File
 				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\sys_com.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\tcp_io.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\token.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\trans.h"
-				>
-			</File>
-			<File
-				RelativePath="$(TOP_BUILD_DIR)\theLink\libmsgque\uds_io.h"
 				>
 			</File>
 		</Filter>

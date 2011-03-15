@@ -10,7 +10,6 @@
 		AdditionalIncludeDirectories="&quot;$(TOP_BUILD_DIR)\win&quot;;&quot;$(TOP_BUILD_DIR)\theLink\libmsgque&quot;;&quot;$(TOP_BUILD_DIR)\theLink\sqlite&quot;"
 		PreprocessorDefinitions="PIC;DLL_EXPORT;_CRT_SECURE_NO_WARNINGS;_HAVE_SQLITE_CONFIG_H"
 		RuntimeLibrary="3"
-		WarningLevel="1"
 		WarnAsError="true"
 		DebugInformationFormat="1"
 		CompileAs="1"

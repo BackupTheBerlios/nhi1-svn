@@ -21,7 +21,7 @@
 			OutputDirectory="$(TOP_BUILD_DIR)\theLink\example\cc"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\win\win.vsprops;..\..\win\wind.vsprops;..\ccmsgque\ccmsgque.vsprops"
+			InheritedPropertySheets="..\..\win\wind.vsprops;..\ccmsgque\ccmsgque.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,12 +41,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -113,12 +108,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
 				CompileAs="2"
 			/>
 			<Tool

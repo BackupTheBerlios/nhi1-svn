@@ -8,6 +8,7 @@
 		Name="VCCLCompilerTool"
 		AdditionalIncludeDirectories="$(TOP_BUILD_DIR)\theLink\ccmsgque"
 		CallingConvention="2"
+		CompileAs="2"
 		DisableSpecificWarnings="4290"
 	/>
 </VisualStudioPropertySheet>
