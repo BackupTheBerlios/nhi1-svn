@@ -15,7 +15,9 @@
 ## GO
 ##
   
+if USE_JAVA
 include $(GOROOT)/src/Make.inc
+endif
 
 SUFFIXES = .go .bin $(EXEEXT)
 

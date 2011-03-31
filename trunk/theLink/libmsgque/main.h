@@ -24,7 +24,7 @@
 
 
 #   include <stdlib.h>
-#if defined(_MSC_VER)
+#if defined(MQ_IS_WIN32)
 #   define  socklen_t int
 #else
 #   include <unistd.h>
@@ -856,14 +856,14 @@ MQ_SOCK* PipeGetServerSocket ( struct PipeS * const);
 #if defined(MQ_IS_POSIX)
 
 enum MqErrorE UdsCreate ( struct MqIoS * const, struct UdsS ** const);
-enum MqErrorE UdsDelete ( struct UdsS ** const) __attribute__((nonnull));
+              UdsDelete ( struct UdsS ** const) __attribute__((nonnull));
 enum MqErrorE UdsServer ( register struct UdsS * const);
 enum MqErrorE UdsConnect ( register struct UdsS * const);
 
 #else /* MQ_IS_WIN32 */
 
 #define UdsCreate(io,udsPtr) MQ_ERROR
-#define UdsDelete(udsP) MQ_ERROR
+#define UdsDelete(udsP)
 #define UdsServer(uds) MQ_ERROR
 #define UdsConnect(uds) MQ_ERROR
 

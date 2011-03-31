@@ -25,7 +25,6 @@ mkdir $PKG/lib
 mkdir $PKG/include
 
 for f in $(find .. -type f | egrep -v '(html|win)') ; do
-echo "f<$f>"
     [[ "$f" == *win* ]] && continue
     [[ "$f" == *example* ]] && continue
     [[ "$f" == *tests* ]] && continue

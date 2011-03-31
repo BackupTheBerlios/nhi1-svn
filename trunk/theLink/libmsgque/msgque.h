@@ -129,6 +129,7 @@
 #define unlikely(x)     __builtin_expect((x),0)
 #endif
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
@@ -138,7 +139,7 @@
 #endif
 #include <string.h>
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 #include <WinSock2.h>
 /// \brief helper to use the timeval
 #define mq_timeval timeval
@@ -4462,7 +4463,7 @@ static mq_inline int MqSlaveIsI (
 /// #MqS specific error codes/messages
 
 /// process or thread identifier
-typedef unsigned long MQ_IDNT;
+typedef uintptr_t MQ_IDNT;
 
 /// \brief \b calloc syscall
 /// \details additional info: <TT>man calloc</TT>

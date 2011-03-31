@@ -91,7 +91,7 @@ error:
   return MqErrorStack (context);
 }
 
-enum MqErrorE
+void
 UdsDelete (
   struct UdsS ** const udsP
 )

@@ -72,7 +72,7 @@ switch -exact $tcl_platform(platform) {
 	lappend PATH {C:\cygwin\bin}
 	lappend PATH {C:\cygwin\usr\bin}
 	lappend PATH {C:\cygwin\usr\X11R6\bin}
-	set KILL [list taskkill.exe /F /PID]
+	set KILL [list taskkill.exe /F /T /PID]
     }
     unix {
 	lappend PATH /bin
@@ -137,6 +137,8 @@ set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY
 
 if {$tcl_platform(os) eq "FreeBSD"} {
     set WAIT 1000
+} elseif {$tcl_platform(platform) eq "windows"} {
+    set WAIT 0
 } else {
     set WAIT 0
 }
@@ -416,7 +418,7 @@ proc getATool {arg} {
     }
 
     # main executable
-    lappend RET [file join $::linkbuilddir acmds atool] $arg
+    lappend RET [file join $::linkbuilddir acmds atool$::EXEEXT] $arg
 
     # postfix
     lappend RET {*}[getPostfix c]
@@ -475,7 +477,6 @@ proc getExample {srv args} {
     if {$env(TS_STARTUP_AS) ne "NO"} {
       lappend RET {*}$env(TS_STARTUP_AS)
     }
-
     return $RET
 }
 

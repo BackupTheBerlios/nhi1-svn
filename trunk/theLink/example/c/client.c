@@ -465,10 +465,11 @@ ClientMain (
       for (n=0; n<lnum; n++) {
 	msgqueA[n] = MqContextCreate(0, mqctx);
 	if (MqLinkCreate (msgqueA[n], &largvA[n]) == MQ_ERROR) {
+	  int m;
 	  MqContextDelete (&mqctx);
 	  mqctx = msgqueA[n];
-	  for (n=0; n < n-1; n++) {
-	    MqContextDelete (&msgqueA[n]);
+	  for (m=0; m < n-1; n++) {
+	    MqContextDelete (&msgqueA[m]);
 	  }
 	  goto error;
 	}

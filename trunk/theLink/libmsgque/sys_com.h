@@ -24,10 +24,10 @@
 # include <arpa/inet.h>
 #elif defined(MQ_IS_WIN32)
 //  we require WindowsXP or higher -> used for "getaddrinfo"
-# if !defined(_MSC_VER)
-#   define WINVER WindowsXP
-#   include <w32api.h>
-# endif
+//# if !defined(MQ_IS_WIN32)
+//#   define WINVER WindowsXP
+//#   include <w32api.h>
+//# endif
 # undef socklen_t
 # include <winsock2.h>
 # include <Ws2tcpip.h>

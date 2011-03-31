@@ -214,7 +214,7 @@ pSqlInsertSendTrans (
   check_sqlite (sqlite3_bind_blob  (hdl,5,buf->data,buf->cursize,SQLITE_TRANSIENT)) goto error;
   STEP_DONE(1);
   *transLId = -sqlite3_last_insert_rowid(sql_sys->db);
-  MqDLogV (context, 5, "create send-transaction <%lld>\n", *transLId);
+  MqDLogV (context, 5, "create send-transaction <" MQ_FORMAT_W ">\n", *transLId);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -262,7 +262,7 @@ pSqlDeleteSendTrans (
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt * hdl;
-  MqDLogV (context, 5, "delete send-transaction <%lld>\n", transLId);
+  MqDLogV (context, 5, "delete send-transaction <" MQ_FORMAT_W ">\n", transLId);
   check_NULL(sql_sys->db) {
     MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
@@ -316,7 +316,7 @@ pSqlInsertReadTrans (
   STEP_DONE(1);
   transLId = sqlite3_last_insert_rowid(sql_sys->db);
   if (transLIdP != NULL) *transLIdP = transLId;
-  MqDLogV (context, 5, "create read-transaction <%lld>\n", transLId);
+  MqDLogV (context, 5, "create read-transaction <" MQ_FORMAT_W ">\n", transLId);
   return MQ_OK;
 error:
   return MqErrorDbSql(context,sql_sys->db);
@@ -363,7 +363,7 @@ pSqlDeleteReadTrans (
 {
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt * hdl;
-  MqDLogV (context, 5, "delete read-transaction <%lld>\n", transLId);
+  MqDLogV (context, 5, "delete read-transaction <" MQ_FORMAT_W ">\n", transLId);
   check_NULL(sql_sys->db) {
     MqErrorCheck1 (sSqlAddDb (context, context->config.storage));
   }
@@ -490,7 +490,7 @@ MqStorageSelect (
   struct MqSqlS * const sql_sys = context->link.sql;
   register sqlite3_stmt *hdl;
   MQ_TRA transLId = *transLIdP;
-  MqDLogV (context, 5, "load read-transaction <%lld>\n", transLId);
+  MqDLogV (context, 5, "load read-transaction <" MQ_FORMAT_W ">\n", transLId);
   *transLIdP = 0LL;
   check_NULL(sql_sys->db) {
     MqErrorCheck1 (sSqlAddDb (context, context->config.storage));

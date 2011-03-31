@@ -46,7 +46,11 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqBufferLS * largv = MqBufferLCreateArgs(argc, argv);
   struct MqS *ctx=NULL, *c0=NULL, *c00=NULL, *c01=NULL, *c000=NULL, *c1=NULL, *c10=NULL, *c100=NULL, *c101=NULL;
+#ifdef MQ_IS_POSIX
   struct MqBufferLS *bs0 = MqBufferLCreateArgsV(NULL, "c0", "@", "../example/c/testserver", NULL);
+#else
+  struct MqBufferLS *bs0 = MqBufferLCreateArgsV(NULL, "c0", "@", "../example/c/testserver.exe", NULL);
+#endif
   const char *debug = getenv("TS_DEBUG");
   struct MqBufferLS *args;
 

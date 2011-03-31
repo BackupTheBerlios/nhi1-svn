@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-#if defined(_MSC_VER)
+#if defined(MQ_IS_WIN32)
 // need for "getpid"
 # include <process.h>
 #else
@@ -126,7 +126,7 @@ sLogVL (
     if (context->config.isSilent) return;
     t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
 #if defined(MQ_HAS_THREAD)
-    mq_snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) MqThreadSelf(), 
+    mq_snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), MqThreadSelfP(), 
 	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
 #else
     mq_snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(),

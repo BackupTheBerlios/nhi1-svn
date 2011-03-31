@@ -16,16 +16,16 @@
 #include <fcntl.h>
 
 #include <sys/stat.h>
-#if !defined(_MSC_VER)
+#if !defined(MQ_IS_WIN32)
 #   include <sys/time.h>
 #endif
 
-#if !defined(_MSC_VER)
+#if !defined(MQ_IS_WIN32)
 #  include <libgen.h>
 #endif
 
 #ifdef MQ_IS_WIN32
-# if !defined(_MSC_VER)
+# if !defined(MQ_IS_WIN32)
 //	we require WindowsXP or higher -> used for "getaddrinfo"
 #   define WINVER WindowsXP
 #   include <w32api.h>
@@ -45,9 +45,11 @@
 #if defined(MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD)
 #  define mqthread_ret_t void*
+#  define mqthread_ret_NULL NULL
 #  define mqthread_stdcall
 # elif defined(MQ_IS_WIN32)
 #  define mqthread_ret_t unsigned
+#  define mqthread_ret_NULL 0
 #  if defined(_MANAGED)
 //   MS switch "/clr" is active
 #    define mqthread_stdcall
@@ -173,9 +175,9 @@ enum MqErrorE SysUnlink (
 #endif
 }
 
-#if defined(_MSC_VER)
+#if defined(MQ_IS_WIN32)
 
-#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+#if defined(_MSC_EXTENSIONS)
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
 #else
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
@@ -219,7 +221,7 @@ static int gettimeofday(
   return 0;
 }
 
-#endif /* ! _MSC_VER */
+#endif /* ! MQ_IS_WIN32 */
 
 enum MqErrorE MqSysGetTimeOfDay (
   struct MqS * const context,
@@ -379,7 +381,8 @@ static mqthread_ret_t mqthread_stdcall sSysServerThreadInit (
 ) 
 {
   MqSysServerThreadMain((struct MqSysServerThreadMainS*)data);
-  return (mqthread_ret_t) NULL;
+  return mqthread_ret_NULL;
+
 }
 #endif
 
@@ -588,13 +591,12 @@ MQ_STR MqSysBasename (
   MQ_BOL includeExtension
 )
 {
-#if defined(_MSC_VER)
-  char drive[10];
-  char dir[512];
-  char * fname = (char *) MqSysMalloc(MQ_ERROR_PANIC, 138);
-  char ext[10];
-  if (_splitpath_s(in, drive, 10, dir, 512, fname, 128, ext, 10) != 0)
-    MqPanicV(MQ_ERROR_PANIC, __func__, 1, "unable to extract basename from '%s'", in);
+#if defined(MQ_IS_WIN32)
+  char drive[_MAX_DRIVE];
+  char dir[_MAX_DIR];
+  char * fname = (char *) MqSysMalloc(MQ_ERROR_PANIC, _MAX_FNAME);
+  char ext[_MAX_EXT];
+  _splitpath(in, drive, dir, fname, ext);
   if (includeExtension)
     return strcat(fname,ext);
   else

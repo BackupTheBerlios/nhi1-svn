@@ -29,6 +29,7 @@
 #if defined (MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD) /* unix thread */
 #  define MqThreadSelf() pthread_self()
+#  define MqThreadSelfP() pthread_self()
 #  define MqThreadGetTLS(k) pthread_getspecific(k)
 #  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
 #  define MqThreadSetTLSCheck(k,v) (unlikely (pthread_setspecific(k,v) != 0))
@@ -39,6 +40,15 @@
       MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
     }
 # else /* windows THREAD */
+static mq_inline MQ_PTR MqThreadSelfP(void) {
+  union tmp_u {
+    DWORD   w;
+    MQ_PTR  p;
+  } t;
+  t.p = NULL;
+  t.w = GetCurrentThreadId();
+  return t.p;
+}
 #  define MqThreadSelf() GetCurrentThreadId()
 #  define MqThreadGetTLS(k) TlsGetValue(k)
 #  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
@@ -69,7 +79,7 @@
 
 #if defined(MQ_HAS_THREAD)
 # define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
-	      (void*) MqThreadSelf(), #s);fflush(stderr);
+	      MqThreadSelfP(), #s);fflush(stderr);
 #else
 # define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
 #endif

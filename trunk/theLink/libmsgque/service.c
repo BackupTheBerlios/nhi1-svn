@@ -80,13 +80,19 @@ MqServiceCheckToken(
   return pTokenCheck(context->link.srvT,token);
 }
 
+union id_u {
+  MQ_PTR p;
+  MQ_SIZE s;
+};
+
 static enum MqErrorE 
 sServiceProxy (
   struct MqS * const context,
   MQ_PTR const data
 ) {
   struct MqS * ftrctx;
-  MqErrorCheck (MqServiceGetFilter (context, (MQ_SIZE) (long) data, &ftrctx));
+  union id_u t; t.p = data;
+  MqErrorCheck (MqServiceGetFilter (context, t.s, &ftrctx));
   MqErrorCheck (MqReadForward(context, ftrctx, NULL));
 error:
   return MqSendRETURN(context);
@@ -99,7 +105,8 @@ MqServiceProxy(
   MQ_SIZE const id
 )
 {
-  return MqServiceCreate (context, token, sServiceProxy, (void*)(long)id,  NULL);
+  union id_u t; t.s = id;
+  return MqServiceCreate (context, token, sServiceProxy, t.p,  NULL);
 }
 
 static enum MqErrorE 

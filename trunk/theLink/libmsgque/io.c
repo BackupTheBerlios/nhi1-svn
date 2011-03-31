@@ -307,7 +307,7 @@ sIoFillArgvC (
   if (io->config->timeout != timeout_DEFAULT) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--timeout");
     *arg = (char*) MqSysMalloc(MQ_ERROR_PANIC,20);
-    mq_snprintf((char*)*arg++,20,"%lli",io->config->timeout);
+    mq_snprintf((char*)*arg++,20,MQ_FORMAT_W,io->config->timeout);
   }
   if (storage != NULL && strcmp(storage,storage_DEFAULT)) {
     *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--storage");
@@ -798,7 +798,7 @@ pIoLogId (
   if (id.type == MQ_ID_UNUSED)
     strcpy(buf,"unknown");
   else
-    mq_snprintf(buf,size,"%lu",id.val);
+    mq_snprintf(buf,size,MQ_FORMAT_W,id.val);
   return buf;
 }
 

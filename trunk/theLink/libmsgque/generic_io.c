@@ -24,13 +24,13 @@ BEGIN_C_DECLS
 /*****************************************************************************/
 
 void GenericCreate (void) {
-#if defined(_MSC_VER)
+#if defined(MQ_IS_WIN32)
   SysWSAStartup (NULL);
 #endif
 }
 
 void GenericDelete (void) {
-#if defined(_MSC_VER)
+#if defined(MQ_IS_WIN32)
   SysWSACleanup (NULL);
 #endif
 }
