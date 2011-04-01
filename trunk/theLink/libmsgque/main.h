@@ -26,6 +26,8 @@
 #   include <stdlib.h>
 #if defined(MQ_IS_WIN32)
 #   define  socklen_t int
+#elif defined(__CYGWIN__)
+#   include <sys/socket.h>
 #else
 #   include <unistd.h>
 #endif
@@ -236,7 +238,11 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
 #  define MqThreadSetTLSCheck(k,v) (unlikely (pthread_setspecific(k,v) != 0))
 #  define MqThreadKeyType pthread_key_t
 #  define MqThreadType pthread_t
-#  define MqThreadKeyNULL PTHREAD_KEYS_MAX
+#  if defined(__CYGWIN__)
+#    define MqThreadKeyNULL NULL
+#  else
+#    define MqThreadKeyNULL PTHREAD_KEYS_MAX
+#  endif
 #  define MqThreadKeyCreate(key) if (pthread_key_create(&key, NULL) != 0) { \
       MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
     }
@@ -630,7 +636,7 @@ void pEventLog( struct MqS const * const , struct MqEventS *, MQ_CST const);
 struct MqIoS {
   struct MqS * context;             ///< link to the 'msgque' object
   union {
-#if defined(MQ_IS_POSIX)
+#if defined(MQ_HAVE_UDS)
     struct UdsS *   udsSP;          ///< UDS object pointer
 #endif
     struct TcpS *   tcpSP;          ///< TCP object pointer
@@ -853,21 +859,21 @@ MQ_SOCK* PipeGetServerSocket ( struct PipeS * const);
 
 #define UDS_SAVE_ERROR(uds) ((uds)?IO_SAVE_ERROR((uds)->io):NULL)
 
-#if defined(MQ_IS_POSIX)
+#if defined(MQ_HAVE_UDS)
 
 enum MqErrorE UdsCreate ( struct MqIoS * const, struct UdsS ** const);
-              UdsDelete ( struct UdsS ** const) __attribute__((nonnull));
+void          UdsDelete ( struct UdsS ** const) __attribute__((nonnull));
 enum MqErrorE UdsServer ( register struct UdsS * const);
 enum MqErrorE UdsConnect ( register struct UdsS * const);
 
-#else /* MQ_IS_WIN32 */
+#else
 
 #define UdsCreate(io,udsPtr) MQ_ERROR
 #define UdsDelete(udsP)
 #define UdsServer(uds) MQ_ERROR
 #define UdsConnect(uds) MQ_ERROR
 
-#endif /* MQ_IS_POSIX */
+#endif
 
 /*****************************************************************************/
 /*                                                                           */

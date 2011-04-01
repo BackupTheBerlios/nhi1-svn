@@ -15,14 +15,16 @@
 
 #if defined(_MSC_VER)
 // need for "getpid"
-#  include <process.h>
+# include <process.h>
+#elif defined(__CYGWIN__)
+# include <winbase.h>
 #endif
 
 #if !defined(mq_getpid)
 # define mq_getpid() 1
 #endif
 
-#if defined(MQ_HAS_THREAD) && defined(MQ_IS_POSIX)
+#if defined(HAVE_PTHREAD)
 # include <pthread.h>
 #endif
 
@@ -30,15 +32,6 @@
 # if defined(HAVE_PTHREAD) /* unix thread */
 #  define MqThreadSelf() pthread_self()
 #  define MqThreadSelfP() pthread_self()
-#  define MqThreadGetTLS(k) pthread_getspecific(k)
-#  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
-#  define MqThreadSetTLSCheck(k,v) (unlikely (pthread_setspecific(k,v) != 0))
-#  define MqThreadKeyType pthread_key_t
-#  define MqThreadType pthread_t
-#  define MqThreadKeyNULL PTHREAD_KEYS_MAX
-#  define MqThreadKeyCreate(key) if (pthread_key_create(&key, NULL) != 0) { \
-      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
-    }
 # else /* windows THREAD */
 static mq_inline MQ_PTR MqThreadSelfP(void) {
   union tmp_u {
@@ -50,24 +43,8 @@ static mq_inline MQ_PTR MqThreadSelfP(void) {
   return t.p;
 }
 #  define MqThreadSelf() GetCurrentThreadId()
-#  define MqThreadGetTLS(k) TlsGetValue(k)
-#  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
-#  define MqThreadSetTLSCheck(k,v) (unlikely (TlsSetValue(k,v) == 0))
-#  define MqThreadKeyType DWORD
-#  define MqThreadType DWORD
-#  define MqThreadKeyNULL TLS_OUT_OF_INDEXES
-#  define MqThreadKeyCreate(key) if ((key = TlsAlloc()) == TLS_OUT_OF_INDEXES) { \
-      MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'TlsAlloc'"); \
-    }
 # endif
 #else /* no THREAD */
-#  define MqThreadKeyCreate(k)
-#  define MqThreadGetTLS(k) k
-#  define MqThreadSetTLS(k,v) k=v
-#  define MqThreadSetTLSCheck(k,v) (unlikely ((k=v) == NULL))
-#  define MqThreadKeyNULL NULL
-#  define MqThreadKeyType void*
-#  define MqThreadType void*
 #  define MqThreadSelf() NULL
 #endif // MQ_HAS_THREAD
 

@@ -322,7 +322,7 @@ pLogHDR (
   t = (MQ_STR) hd->data;
   e = (MQ_STR) (hd->data + buf->cursize);
   for (;t<e;t++) {
-    if (!isprint (*t)) *t = (*t == 0 ? '+' : '?');
+    if (!isprint ((int)*t)) *t = (*t == 0 ? '+' : '?');
   }
 
   MqLogV (context, prefix, level, "HEADER <%s> ...\n", hd->data);
@@ -458,7 +458,7 @@ pLogAscii (
   register MQ_STR t = buf;
   register MQ_STR e = buf + size;
   for (;t < e; t++, g++) {
-    *t = (isprint (*g) ? *g : (*g == 0 ? '+' :'?'));
+    *t = (isprint ((int)*g) ? *g : (*g == 0 ? '+' :'?'));
   }
   *t = '\0';
 

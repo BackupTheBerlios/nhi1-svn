@@ -722,7 +722,7 @@ MqConfigSetIoUdsFile (
   if (unlikely(context->link.read != NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "already");
   }
-#if defined(MQ_IS_POSIX)
+#if defined(MQ_HAVE_UDS)
   context->config.io.com = MQ_IO_UDS;
   if (fileName != NULL) context->config.io.uds.file = MqBufferCreateC(context, fileName);
   return MQ_OK;

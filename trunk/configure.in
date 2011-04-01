@@ -156,18 +156,22 @@ TYPE_HUGE_VAL
 AX_CHECK_ALIGNED_ACCESS_REQUIRED
 
 AC_MSG_CHECKING([for windows build])
-if test "$build_os" = "cygwin" ; then
+if test "$host_os" = "mingw32" ; then
   AC_MSG_RESULT([yes])
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
   AC_SUBST([PATH_SEP], [\;])
+  AM_CONDITIONAL([WIN32], [true])
 else
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
+  if test "$host_os" != "cygwin" ; then
+    AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
+  fi
   AC_SUBST([FILE_SEP], [/])
   AC_SUBST([PATH_SEP], [:])
+  AM_CONDITIONAL([WIN32], [false])
 fi
-AM_CONDITIONAL([WIN32], [test "$build_os" = "cygwin"])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
 	theLink/docs/Makefile win/Makefile bin/Makefile 

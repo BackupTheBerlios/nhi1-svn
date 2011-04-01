@@ -129,7 +129,12 @@
 #define unlikely(x)     __builtin_expect((x),0)
 #endif
 
-#include <inttypes.h>
+#ifndef _MSC_VER
+# include <inttypes.h>
+#endif
+#ifdef __CYGWIN__
+# include <windef.h>
+#endif
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
@@ -139,10 +144,10 @@
 #endif
 #include <string.h>
 
-#if defined(_WIN32)
-#include <WinSock2.h>
+#if defined(_WIN32) && !defined(__CYGWIN__)
+# include <WinSock2.h>
 /// \brief helper to use the timeval
-#define mq_timeval timeval
+# define mq_timeval timeval
 
 /// \brief \helper to use timezone
 struct mq_timezone {
@@ -152,9 +157,9 @@ struct mq_timezone {
 
 #else
 /// \ingroup Mq_System_C_API
-#define mq_timeval timeval
+# define mq_timeval timeval
 /// \ingroup Mq_System_C_API
-#define mq_timezone timezone
+# define mq_timezone timezone
 struct mq_timeval;
 struct mq_timezone;
 #endif

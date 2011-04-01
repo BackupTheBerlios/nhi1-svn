@@ -17,7 +17,7 @@
 # if defined(HAVE_PTHREAD)
 #  include <pthread.h>
 typedef pthread_t mqthread_t;
-# elif defined(MQ_IS_WIN32)
+# else
 typedef unsigned long mqthread_t;
 # endif
 #endif // MQ_HAS_THREAD

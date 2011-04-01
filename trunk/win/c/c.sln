@@ -1,47 +1,47 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "atool", "atool\atool.vcproj", "{1E736CD0-3FE4-49BF-9175-D66542C77C30}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "atool", "atool\atool.vcxproj", "{1E736CD0-3FE4-49BF-9175-D66542C77C30}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter1", "Filter1\Filter1.vcproj", "{4A825EEC-6CEC-4386-92DC-A9514FD2EF51}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter1", "Filter1\Filter1.vcxproj", "{4A825EEC-6CEC-4386-92DC-A9514FD2EF51}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyClient", "MyClient\MyClient.vcproj", "{937359E9-8A56-4AAC-B56D-B3DB65C1DBF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyClient", "MyClient\MyClient.vcxproj", "{937359E9-8A56-4AAC-B56D-B3DB65C1DBF0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyServer", "MyServer\MyServer.vcproj", "{FCEAD83D-6288-4898-AC09-B8EDD8680117}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyServer", "MyServer\MyServer.vcxproj", "{FCEAD83D-6288-4898-AC09-B8EDD8680117}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcproj", "{868E49F6-4A2B-4150-9536-FBCD4A35B328}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{868E49F6-4A2B-4150-9536-FBCD4A35B328}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "javamsgque", "javamsgque\javamsgque.vcproj", "{EAC75F2D-442D-4495-969B-2E75DF18E2F8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "javamsgque", "javamsgque\javamsgque.vcxproj", "{EAC75F2D-442D-4495-969B-2E75DF18E2F8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmsgque", "libmsgque\libmsgque.vcproj", "{E57CD287-BBF0-4F0E-BC22-36390733266C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmsgque", "libmsgque\libmsgque.vcxproj", "{E57CD287-BBF0-4F0E-BC22-36390733266C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "manfilter", "manfilter\manfilter.vcproj", "{27AB9E86-087B-41B7-A224-C7C812AFC1A8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "manfilter", "manfilter\manfilter.vcxproj", "{27AB9E86-087B-41B7-A224-C7C812AFC1A8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mulclient", "mulclient\mulclient.vcproj", "{80363C33-B860-493F-BC07-3113461C6AF4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mulclient", "mulclient\mulclient.vcxproj", "{80363C33-B860-493F-BC07-3113461C6AF4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mulserver", "mulserver\mulserver.vcproj", "{D95B2C28-E273-43B7-AE6E-4333447F13FF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mulserver", "mulserver\mulserver.vcxproj", "{D95B2C28-E273-43B7-AE6E-4333447F13FF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pymsgque", "pymsgque\pymsgque.vcproj", "{D16C3BD1-A099-4263-8B24-82780FB890AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pymsgque", "pymsgque\pymsgque.vcxproj", "{D16C3BD1-A099-4263-8B24-82780FB890AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcproj", "{B42CBB83-517B-4300-A077-24D306E73EC8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcxproj", "{B42CBB83-517B-4300-A077-24D306E73EC8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tclmsgque", "tclmsgque\tclmsgque.vcproj", "{1E75B903-EFFB-4CF1-AEF7-DE0384FEAADA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tclmsgque", "tclmsgque\tclmsgque.vcxproj", "{1E75B903-EFFB-4CF1-AEF7-DE0384FEAADA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testclient", "testclient\testclient.vcproj", "{9D5F2B9A-D6C2-44C8-8BD4-035138E796AD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testclient", "testclient\testclient.vcxproj", "{9D5F2B9A-D6C2-44C8-8BD4-035138E796AD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testserver", "testserver\testserver.vcproj", "{8D876CE5-C4F9-4233-9738-09CA9C419F75}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testserver", "testserver\testserver.vcxproj", "{8D876CE5-C4F9-4233-9738-09CA9C419F75}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter2", "Filter2\Filter2.vcproj", "{3439F6CB-A9E0-425A-B75F-459299A925A4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter2", "Filter2\Filter2.vcxproj", "{3439F6CB-A9E0-425A-B75F-459299A925A4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter3", "Filter3\Filter3.vcproj", "{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter3", "Filter3\Filter3.vcxproj", "{B72A339B-EAC1-4312-BEA9-DB14ECB87D4B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aguard", "aguard\aguard.vcproj", "{312AB23D-8303-44C6-ADB9-661389BBA240}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aguard", "aguard\aguard.vcxproj", "{312AB23D-8303-44C6-ADB9-661389BBA240}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter4", "Filter4\Filter4.vcproj", "{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter4", "Filter4\Filter4.vcxproj", "{C9F8BA4B-33EB-4A85-9EA8-8DDF11FD1452}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter5", "Filter5\Filter5.vcproj", "{ABF4F568-F5C8-46A0-88AE-EDFD122807DE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter5", "Filter5\Filter5.vcxproj", "{ABF4F568-F5C8-46A0-88AE-EDFD122807DE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter6", "Filter6\Filter6.vcproj", "{806F6A04-8FDB-4A2B-B9FD-0B062ED6A5D3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filter6", "Filter6\Filter6.vcxproj", "{806F6A04-8FDB-4A2B-B9FD-0B062ED6A5D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -426,10 +426,13 @@ sMqCheckArg (
 	  } else if (!strncmp(argC, "-status-is-spawn", 16)) {
 	    context->statusIs = (enum MqStatusIsE) (context->statusIs | MQ_STATUS_IS_SPAWN);
 	  } else if (!strncmp(argC, "-threadData", 11)) {
-	    MQ_WID tmp;
+	    union {
+	      MQ_WID  w;
+	      MQ_PTR  p;
+	    } t;
 	    MqErrorCheck (MqBufferLDeleteItem (context, argv, idx, 1, MQ_YES));
-	    MqErrorCheck(MqBufferGetW(argv->data[idx], &tmp));
-	    context->threadData = (MQ_PTR)tmp;
+	    MqErrorCheck(MqBufferGetW(argv->data[idx], &t.w));
+	    context->threadData = t.p;
 	  } else {
 	    continue;
 	  }

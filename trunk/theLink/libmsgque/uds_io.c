@@ -15,7 +15,7 @@
 
 #define MQ_CONTEXT_S  uds->io->context
 
-#if defined(MQ_IS_POSIX)
+#if defined(MQ_HAVE_UDS)
 
 /*###########################################################################*/
 /*###                                                                     ###*/
@@ -97,12 +97,10 @@ UdsDelete (
 )
 {
   struct UdsS * const uds = *udsP;
-  if (unlikely(!uds)) return MQ_OK;   // nothing to do
+  if (unlikely(!uds)) return;   // nothing to do
 
   pGenericDelete (&uds->generic);
   MqSysFree (*udsP);
-
-  return MQ_OK;
 }
 
 /*****************************************************************************/

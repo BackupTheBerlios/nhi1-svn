@@ -413,7 +413,7 @@ pIoStartServer (
 #if defined(MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD)
     int thread_status = PTHREAD_CREATE_DETACHED;
-# elif defined(MQ_IS_WIN32)
+# else
     int thread_status = 0;
 # endif
 #endif
@@ -798,7 +798,7 @@ pIoLogId (
   if (id.type == MQ_ID_UNUSED)
     strcpy(buf,"unknown");
   else
-    mq_snprintf(buf,size,MQ_FORMAT_W,id.val);
+    mq_snprintf(buf,size,MQ_FORMAT_W,(MQ_WID)id.val);
   return buf;
 }
 

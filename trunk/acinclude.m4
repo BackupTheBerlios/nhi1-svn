@@ -402,7 +402,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
   AC_MSG_RESULT($enable_threads)
   if test "$enable_threads" = "yes"; then
     # we use native windows threads
-    if test "$build_os" != "cygwin" ; then
+    if test "$host_os" != "mingw32" ; then
       ACX_PTHREAD
       if test "$acx_pthread_ok" == "yes" ; then
 	LIBS="$PTHREAD_LIBS $LIBS"
@@ -411,7 +411,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 	#AX_TLS
       fi
     fi
-    if test "$build_os" == "cygwin" -o "$acx_pthread_ok" == "yes" ; then
+    if test "$host_os" == "mingw32" -o "$acx_pthread_ok" == "yes" ; then
       AC_DEFINE([MQ_HAS_THREAD], [], [does the user require thread support])
     fi
   fi
@@ -447,6 +447,9 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     #------------------------------------
     AC_ARG_VAR([JAVA], [path to the 'java' tool])
     AC_PATH_PROG([JAVA], [java]) 
+    if test "$build_os" == "cygwin"; then
+      JAVA=$(cygpath -m "$JAVA")
+    fi
     AC_ARG_VAR([JAVAC], [path to the 'javac' tool])
     AC_ARG_VAR([JAVAH], [path to the 'javah' tool])
     AC_PATH_PROG([JAVAH], [javah]) 
@@ -720,6 +723,9 @@ AC_DEFUN([SC_ENABLE_TCL], [
   if test x$enable_tcl = xyes; then
     AC_ARG_VAR([TCLSH], [tcl runtime])
     AC_PATH_PROGS( [TCLSH], [tclsh85 tclsh85g tclsh8.5 tclsh] ) 
+    if test "$build_os" == "cygwin"; then
+      TCLSH=$(cygpath -m "$TCLSH")
+    fi
     AC_SUBST([TCLBINDIR], [$(dirname $TCLSH)])
     #-----------------------------------
     AC_MSG_CHECKING(for location of tclConfig.sh script)

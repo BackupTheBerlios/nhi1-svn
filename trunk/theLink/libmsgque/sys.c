@@ -24,6 +24,11 @@
 #  include <libgen.h>
 #endif
 
+#if defined(MQ_IS_POSIX) && defined(__CYGWIN__)
+# include <process.h>
+# define _spawnlp spawnlp
+#endif
+
 #ifdef MQ_IS_WIN32
 # if !defined(MQ_IS_WIN32)
 //	we require WindowsXP or higher -> used for "getaddrinfo"
@@ -47,7 +52,7 @@
 #  define mqthread_ret_t void*
 #  define mqthread_ret_NULL NULL
 #  define mqthread_stdcall
-# elif defined(MQ_IS_WIN32)
+# else
 #  define mqthread_ret_t unsigned
 #  define mqthread_ret_NULL 0
 #  if defined(_MANAGED)
@@ -439,7 +444,7 @@ static enum MqErrorE SysServerThread (
     goto error;
   }
 
-#elif defined(MQ_IS_WIN32)
+#else
 
   if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadInit, argP, 0, NULL)) == 0)) {
     MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
@@ -450,7 +455,7 @@ static enum MqErrorE SysServerThread (
 #endif
 
   // save tid
-  (*idP).val = (mqthread_t)threadId;
+  (*idP).val = (MQ_IDNT)threadId;
   (*idP).type = MQ_ID_THREAD;
 
   return MQ_OK;
@@ -496,6 +501,16 @@ static enum MqErrorE SysServerSpawn (
   }
   goto ok;
 
+//  ./process.h:int spawnl(int mode, const char *path, const char *argv0, ...);
+//  ./process.h:int spawnle(int mode, const char *path, const char *argv0, ... /*, char * const *envp */);
+//  ./process.h:int spawnlp(int mode, const char *path, const char *argv0, ...);
+//  ./process.h:int spawnlpe(int mode, const char *path, const char *argv0, ... /*, char * const *envp */);
+//  ./process.h:int spawnv(int mode, const char *path, const char * const *argv);
+//  ./process.h:int spawnve(int mode, const char *path, const char * const *argv, const char * const *envp);
+//  ./process.h:int spawnvp(int mode, const char *path, const char * const *argv);
+//  ./process.h:int spawnvpe(int mode, const char *path, const char * const *argv, const char * const *envp);
+
+
 #elif (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
 //#if (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
 
@@ -517,7 +532,9 @@ static enum MqErrorE SysServerSpawn (
   }
   goto ok;
 
-#elif defined(MQ_IS_WIN32)
+#else
+
+
   {
   char buf[2048];
   char *nbuf=buf;
@@ -535,8 +552,6 @@ static enum MqErrorE SysServerSpawn (
   }
   goto ok;
   }
-#else
-# error unable to SysServerSpawn
 #endif
 
 ok:
@@ -667,7 +682,7 @@ static enum MqErrorE SysDaemonize (
   MQ_CST pidfile
 ) 
 {
-#if defined(MQ_IS_POSIX)
+#if defined(MQ_IS_POSIX) && !defined(__CYGWIN__)
   int fd, fpid;
   struct MqIdS id;
 

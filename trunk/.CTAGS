@@ -1,9 +1,2 @@
-ctags	$(find /usr/include -name "*.[ch]")
-
-test -d /usr/include/mingw && \
-  find /usr/include/mingw -name "*.h" | xargs -n 100 ctags -a --c-kinds=+p 
-
-test -d /usr/include/w32api && \
-  find /usr/include/w32api -name "*.h" | xargs -n 100 ctags -a --c-kinds=+p 
-
+ctags	$(find /usr/include -type f)
 ctags -a $PWD/theLink/sqlite/sqlite3.c
