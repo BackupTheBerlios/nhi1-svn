@@ -12,8 +12,14 @@
 
 if USE_PERL
 
+if WIN32
+MF = Makefile.PL.win
+else
+MF = Makefile.PL
+endif
+
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
-PERLDEPEND    =	Net-PerlMsgque/Makefile.PL Net-PerlMsgque/typemap Net-PerlMsgque/lib/Net/PerlMsgque.pm
+PERLDEPEND    =	Net-PerlMsgque/$(MF) Net-PerlMsgque/typemap Net-PerlMsgque/lib/Net/PerlMsgque.pm
 PERLCONFIG    =	  PREFIX="$(prefix)" \
 		  INC="-Wall -I. -I../$(top_builddir) -I../$(srcdir)/../libmsgque" \
 		  OBJECT="\$$(O_FILES) ../$(builddir)/../libmsgque/.libs/libtmp*.o ../$(builddir)/../sqlite/.libs/libtmp*.o"
@@ -26,7 +32,7 @@ PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN"
 
 $(PERLMAKEFILE): $(PERLDEPEND) Makefile.am
 	-test ! -d Net-PerlMsgque && cp -pr $(srcdir)/Net-PerlMsgque . && chmod -R u+w Net-PerlMsgque && touch Net-PerlMsgque/.distclean
-	cd Net-PerlMsgque && @PERL@ Makefile.PL $(PERLCONFIG)
+	cd Net-PerlMsgque && @PERL@ $(MF) $(PERLCONFIG)
 
 all-local: $(PERLMAKEFILE)
 	cd Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS)
@@ -56,6 +62,7 @@ EXTRA_DIST = \
 	Net-PerlMsgque/PerlMsgque.xs \
 	Net-PerlMsgque/lib/Net/PerlMsgque.pm \
 	Net-PerlMsgque/Makefile.PL \
+	Net-PerlMsgque/Makefile.PL.win \
 	Net-PerlMsgque/README \
 	Net-PerlMsgque/t/Net-PerlMsgque.t \
 	Net-PerlMsgque/Changes \

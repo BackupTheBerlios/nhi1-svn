@@ -9,7 +9,7 @@ WriteMakefile(
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Net/PerlMsgque.pm', # retrieve abstract from module
        AUTHOR         => 'Andreas Otto <aotto1968@users.sourceforge.net>') : ()),
-    LIBS              => ['../../libmsgque/.libs/libmsgque.lib'], # e.g., '-lm'
+    LIBS              => ['../../libmsgque/.libs/libmsgque.dll.a'], # e.g., '-lm'
     DEFINE            => '-DPIC -DDLL_EXPORT ', # e.g., '-DHAVE_SOMETHING'
     #LIBS              => [''], # e.g., '-lm'
     #DEFINE            => '-DMQ_IGNORE_EXTERN ', # e.g., '-DHAVE_SOMETHING'

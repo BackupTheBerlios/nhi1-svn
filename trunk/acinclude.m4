@@ -696,6 +696,9 @@ AC_DEFUN([SC_ENABLE_PERL], [
   if test x$enable_perl = xyes; then
     AC_ARG_VAR([PERL], [perl runtime])
     AC_PATH_PROGS([PERL], [perl]) 
+    if test "$build_os" == "cygwin"; then
+      PERL=$(cygpath -m "$PERL")
+    fi
   fi
   AC_SUBST([USE_PERL], $enable_perl)
   AM_CONDITIONAL([USE_PERL], [test x$enable_perl = xyes])

@@ -88,16 +88,16 @@ namespace ccmsgque {
 		    MQ_CST myfile, const int myline, MQ_CST mytxt);
       MqCException(const MqCException& e) : 
 	p_message (MqSysStrDup(MQ_ERROR_PANIC, e.p_message)), p_num (e.p_num), p_code (e.p_code) { }
-      virtual ~MqCException() throw() {
+      inline virtual ~MqCException() throw() {
 	MqSysFree (p_message);
       }
-      virtual MQ_CST what() const throw() {
+      inline virtual MQ_CST what() const throw() {
 	return p_message;
       }
-      virtual MQ_INT num() const throw() {
+      inline virtual MQ_INT num() const throw() {
 	return p_num;
       }
-      virtual enum MqErrorE code() const throw() {
+      inline virtual enum MqErrorE code() const throw() {
 	return p_code;
       }
   };
@@ -978,8 +978,8 @@ namespace ccmsgque {
   class MqFactoryCException : public exception
   {
     public:
-      MqFactoryCException() { }
-      virtual MQ_CST what() const throw() { return "MqFactoryC exception"; }
+      inline MqFactoryCException() { }
+      inline virtual MQ_CST what() const throw() { return "MqFactoryC exception"; }
   };
 
   template <typename T>

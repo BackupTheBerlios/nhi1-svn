@@ -33,6 +33,7 @@
 #  define MqThreadSelf() pthread_self()
 #  define MqThreadSelfP() pthread_self()
 # else /* windows THREAD */
+BEGIN_C_DECLS
 static mq_inline MQ_PTR MqThreadSelfP(void) {
   union tmp_u {
     DWORD   w;
@@ -42,6 +43,7 @@ static mq_inline MQ_PTR MqThreadSelfP(void) {
   t.w = GetCurrentThreadId();
   return t.p;
 }
+END_C_DECLS
 #  define MqThreadSelf() GetCurrentThreadId()
 # endif
 #else /* no THREAD */

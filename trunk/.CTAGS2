@@ -55,8 +55,8 @@ cp $D/tags .
 }
 
 [[ $(basename $PWD) == "tclmsgque" ]] && {
-    ctags -a $ADD /home/dev1usr/src/tcl8.5.6/generic/*.[ch]
-    ctags -a $ADD /home/dev1usr/src/tcl8.5.6/unix/*.[ch]
+    ctags -a $ADD /home/dev1usr/src/tcl8.*/generic/*.[ch]
+    ctags -a $ADD /home/dev1usr/src/tcl8.*/unix/*.[ch]
     ctags -a $ADD *.[ch] -I HD,NS
     exit 0
 }
