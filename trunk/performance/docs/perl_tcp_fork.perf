@@ -1,12 +1,12 @@
-> perl nothread/NHI1-0.14/theLink/example/perl/server.pl --tcp --host localhost --port 7794 --fork
-> nothread/NHI1-0.14/theLink/example/c/client --all --tcp --host localhost --port 7794
-C> (client:24764) [2011-02-28:18-37-03] [0-0-0-0x6e8fb8-main]: start: --------------------------------------
-C> (client:24764) [2011-02-28:18-37-03] [0-0-0-0x6e8fb8-statistics]:                      MqSendEND:   1.52e+05
-C> (client:24764) [2011-02-28:18-37-04] [0-0-0-0x6e8fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.09e+05
-C> (client:24764) [2011-02-28:18-37-05] [0-0-0-0x6e8fb8-statistics]:             MqSendEND_AND_WAIT:   3.39e+04
-C> (client:24764) [2011-02-28:18-37-08] [0-0-0-0x6e8fb8-statistics]:               MqSendPERSISTENT:   3.89e+00
-C> (client:24764) [2011-02-28:18-37-09] [0-0-0-0x6e8fb8-statistics]:                  parent create:   9.57e+02
-C> (client:24764) [2011-02-28:18-37-09] [0-0-0-0x6e8fb8-statistics]:                  parent delete:   1.53e+03
-C> (client:24764) [2011-02-28:18-37-09] [0-0-0-0x6e8fb8-statistics]:                   child create:   7.58e+03
-C> (client:24764) [2011-02-28:18-37-09] [0-0-0-0x6e8fb8-statistics]:                   child delete:   3.10e+04
-C> (client:24764) [2011-02-28:18-37-09] [0-0-0-0x6e8fb8-main]: end: ----------------------------------------
+> perl nothread/NHI1-0.15/theLink/example/perl/server.pl --tcp --host localhost --port 7794 --fork
+> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7794
+C> (client:6295) [2011-03-15:18-53-13] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
+C> (client:6295) [2011-03-15:18-53-13] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   1.37e+05
+C> (client:6295) [2011-03-15:18-53-14] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.05e+05
+C> (client:6295) [2011-03-15:18-53-15] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.41e+04
+C> (client:6295) [2011-03-15:18-53-19] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   2.85e+00
+C> (client:6295) [2011-03-15:18-53-20] [0-0-0-0x6e7fb8-statistics]:                  parent create:   9.94e+02
+C> (client:6295) [2011-03-15:18-53-20] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   1.39e+03
+C> (client:6295) [2011-03-15:18-53-20] [0-0-0-0x6e7fb8-statistics]:                   child create:   6.69e+03
+C> (client:6295) [2011-03-15:18-53-20] [0-0-0-0x6e7fb8-statistics]:                   child delete:   3.09e+04
+C> (client:6295) [2011-03-15:18-53-20] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------

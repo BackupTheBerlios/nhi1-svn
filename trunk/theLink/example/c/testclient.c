@@ -10,6 +10,7 @@
  *              please contact AUTHORS for additional information
  */
 
+#include "mqconfig.h"
 #include "msgque.h"
 #include "debug.h"
 #include <stdlib.h>

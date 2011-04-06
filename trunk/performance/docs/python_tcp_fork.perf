@@ -1,12 +1,12 @@
-> python nothread/NHI1-0.14/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
-> nothread/NHI1-0.14/theLink/example/c/client --all --tcp --host localhost --port 7788
-C> (client:21200) [2011-02-28:18-34-18] [0-0-0-0x6e8fb8-main]: start: --------------------------------------
-C> (client:21200) [2011-02-28:18-34-18] [0-0-0-0x6e8fb8-statistics]:                      MqSendEND:   1.79e+05
-C> (client:21200) [2011-02-28:18-34-18] [0-0-0-0x6e8fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.62e+04
-C> (client:21200) [2011-02-28:18-34-20] [0-0-0-0x6e8fb8-statistics]:             MqSendEND_AND_WAIT:   3.24e+04
-C> (client:21200) [2011-02-28:18-34-24] [0-0-0-0x6e8fb8-statistics]:               MqSendPERSISTENT:   3.08e+00
-C> (client:21200) [2011-02-28:18-34-24] [0-0-0-0x6e8fb8-statistics]:                  parent create:   1.01e+03
-C> (client:21200) [2011-02-28:18-34-24] [0-0-0-0x6e8fb8-statistics]:                  parent delete:   2.68e+02
-C> (client:21200) [2011-02-28:18-34-25] [0-0-0-0x6e8fb8-statistics]:                   child create:   7.01e+03
-C> (client:21200) [2011-02-28:18-34-25] [0-0-0-0x6e8fb8-statistics]:                   child delete:   2.99e+04
-C> (client:21200) [2011-02-28:18-34-25] [0-0-0-0x6e8fb8-main]: end: ----------------------------------------
+> python nothread/NHI1-0.15/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
+> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7788
+C> (client:2684) [2011-03-15:18-50-32] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
+C> (client:2684) [2011-03-15:18-50-32] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   2.13e+05
+C> (client:2684) [2011-03-15:18-50-33] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.99e+04
+C> (client:2684) [2011-03-15:18-50-35] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.23e+04
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   4.07e+00
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-statistics]:                  parent create:   1.02e+03
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   2.72e+02
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-statistics]:                   child create:   6.98e+03
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-statistics]:                   child delete:   3.13e+04
+C> (client:2684) [2011-03-15:18-50-38] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------

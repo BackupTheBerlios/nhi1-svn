@@ -1,12 +1,12 @@
-> tclsh nothread/NHI1-0.14/theLink/example/tcl/server.tcl --uds --file ./socket.uds --fork
-> nothread/NHI1-0.14/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:16672) [2011-02-28:18-32-26] [0-0-0-0x6e8d98-main]: start: --------------------------------------
-C> (client:16672) [2011-02-28:18-32-26] [0-0-0-0x6e8d98-statistics]:                      MqSendEND:   1.79e+05
-C> (client:16672) [2011-02-28:18-32-27] [0-0-0-0x6e8d98-statistics]:         MqSendEND_AND_CALLBACK:   1.09e+05
-C> (client:16672) [2011-02-28:18-32-28] [0-0-0-0x6e8d98-statistics]:             MqSendEND_AND_WAIT:   4.37e+04
-C> (client:16672) [2011-02-28:18-32-32] [0-0-0-0x6e8d98-statistics]:               MqSendPERSISTENT:   2.87e+00
-C> (client:16672) [2011-02-28:18-32-32] [0-0-0-0x6e8d98-statistics]:                  parent create:   1.06e+03
-C> (client:16672) [2011-02-28:18-32-32] [0-0-0-0x6e8d98-statistics]:                  parent delete:   3.92e+03
-C> (client:16672) [2011-02-28:18-32-33] [0-0-0-0x6e8d98-statistics]:                   child create:   2.82e+03
-C> (client:16672) [2011-02-28:18-32-33] [0-0-0-0x6e8d98-statistics]:                   child delete:   3.93e+04
-C> (client:16672) [2011-02-28:18-32-33] [0-0-0-0x6e8d98-main]: end: ----------------------------------------
+> tclsh nothread/NHI1-0.15/theLink/example/tcl/server.tcl --uds --file ./socket.uds --fork
+> nothread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:30537) [2011-03-15:18-48-38] [0-0-0-0x6e7d98-main]: start: --------------------------------------
+C> (client:30537) [2011-03-15:18-48-39] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   1.86e+05
+C> (client:30537) [2011-03-15:18-48-39] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   1.16e+05
+C> (client:30537) [2011-03-15:18-48-40] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.54e+04
+C> (client:30537) [2011-03-15:18-48-45] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.62e+00
+C> (client:30537) [2011-03-15:18-48-45] [0-0-0-0x6e7d98-statistics]:                  parent create:   1.05e+03
+C> (client:30537) [2011-03-15:18-48-45] [0-0-0-0x6e7d98-statistics]:                  parent delete:   3.74e+03
+C> (client:30537) [2011-03-15:18-48-46] [0-0-0-0x6e7d98-statistics]:                   child create:   2.73e+03
+C> (client:30537) [2011-03-15:18-48-46] [0-0-0-0x6e7d98-statistics]:                   child delete:   3.94e+04
+C> (client:30537) [2011-03-15:18-48-46] [0-0-0-0x6e7d98-main]: end: ----------------------------------------

@@ -1,11 +1,11 @@
-> thread/NHI1-0.14/theLink/example/c/client --all @ java example.Server
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-32-53] [0-0-0-0x6ecd98-main]: start: --------------------------------------
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-32-54] [0-0-0-0x6ecd98-statistics]:                      MqSendEND:   2.05e+05
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-32-54] [0-0-0-0x6ecd98-statistics]:         MqSendEND_AND_CALLBACK:   1.43e+05
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-32-55] [0-0-0-0x6ecd98-statistics]:             MqSendEND_AND_WAIT:   4.79e+04
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-00] [0-0-0-0x6ecd98-statistics]:               MqSendPERSISTENT:   2.64e+00
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-10] [0-0-0-0x6ecd98-statistics]:                  parent create:   1.00e+01
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-10] [0-0-0-0x6ecd98-statistics]:                  parent delete:   5.65e+02
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-10] [0-0-0-0x6ecd98-statistics]:                   child create:   4.91e+03
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-10] [0-0-0-0x6ecd98-statistics]:                   child delete:   3.65e+04
-C> (client:17063:0x7fe81c538700) [2011-02-28:18-33-10] [0-0-0-0x6ecd98-main]: end: ----------------------------------------
+> thread/NHI1-0.15/theLink/example/c/client --all @ java example.Server
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-04] [0-0-0-0x6ecd98-main]: start: --------------------------------------
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-05] [0-0-0-0x6ecd98-statistics]:                      MqSendEND:   2.08e+05
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-05] [0-0-0-0x6ecd98-statistics]:         MqSendEND_AND_CALLBACK:   1.42e+05
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-06] [0-0-0-0x6ecd98-statistics]:             MqSendEND_AND_WAIT:   4.91e+04
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-11] [0-0-0-0x6ecd98-statistics]:               MqSendPERSISTENT:   2.62e+00
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-22] [0-0-0-0x6ecd98-statistics]:                  parent create:   9.31e+00
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-22] [0-0-0-0x6ecd98-statistics]:                  parent delete:   5.10e+02
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-22] [0-0-0-0x6ecd98-statistics]:                   child create:   5.35e+03
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-22] [0-0-0-0x6ecd98-statistics]:                   child delete:   3.70e+04
+C> (client:30928:0x7fa40042c700) [2011-03-15:18-49-22] [0-0-0-0x6ecd98-main]: end: ----------------------------------------

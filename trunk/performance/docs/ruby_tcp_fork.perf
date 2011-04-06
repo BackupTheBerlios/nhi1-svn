@@ -1,12 +1,12 @@
-> ruby nothread/NHI1-0.14/theLink/example/ruby/server.rb --tcp --host localhost --port 7790 --fork
-> nothread/NHI1-0.14/theLink/example/c/client --all --tcp --host localhost --port 7790
-C> (client:21941) [2011-02-28:18-35-06] [0-0-0-0x6e8fb8-main]: start: --------------------------------------
-C> (client:21941) [2011-02-28:18-35-07] [0-0-0-0x6e8fb8-statistics]:                      MqSendEND:   1.88e+05
-C> (client:21941) [2011-02-28:18-35-07] [0-0-0-0x6e8fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.28e+05
-C> (client:21941) [2011-02-28:18-35-09] [0-0-0-0x6e8fb8-statistics]:             MqSendEND_AND_WAIT:   3.52e+04
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-statistics]:               MqSendPERSISTENT:   3.07e+00
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-statistics]:                  parent create:   1.01e+03
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-statistics]:                  parent delete:   1.54e+03
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-statistics]:                   child create:   6.60e+03
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-statistics]:                   child delete:   2.96e+04
-C> (client:21941) [2011-02-28:18-35-13] [0-0-0-0x6e8fb8-main]: end: ----------------------------------------
+> ruby nothread/NHI1-0.15/theLink/example/ruby/server.rb --tcp --host localhost --port 7790 --fork
+> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7790
+C> (client:3430) [2011-03-15:18-51-21] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
+C> (client:3430) [2011-03-15:18-51-21] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   2.03e+05
+C> (client:3430) [2011-03-15:18-51-22] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.34e+05
+C> (client:3430) [2011-03-15:18-51-23] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.59e+04
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   2.61e+00
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-statistics]:                  parent create:   1.05e+03
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   1.35e+03
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-statistics]:                   child create:   6.80e+03
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-statistics]:                   child delete:   2.96e+04
+C> (client:3430) [2011-03-15:18-51-28] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------

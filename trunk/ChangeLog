@@ -22,7 +22,7 @@
 Update \b windows support
 
 \verbatim
-svn diff --summarize -r '{2011-02-05}:{2011-02-27}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+svn diff --summarize -r '{2011-02-27}:{2011-03-15}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
 \endverbatim
 
 \n

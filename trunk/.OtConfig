@@ -1,8 +1,5 @@
 set -x
 
-export CC="ccache x86_64-w64-mingw32-gcc"
-export CXX="ccache x86_64-w64-mingw32-g++"
-
 rm -fr /tmp/libmsgque-install
 
 if [[ $ENVHOME == *nothread* ]] ; then
@@ -12,9 +9,15 @@ else
 fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
-		    --build=i686-pc-cygwin \
-		    --host=x86_64-w64-mingw32 \
 		    --enable-tcl \
+		    --enable-cxx \
+		    --enable-java \
+		    --enable-csharp \
+		    --enable-go \
+		    --enable-ruby \
+		    --enable-python \
+		    --enable-perl \
+		    --enable-php \
 \
 		    $ARGS $@
 
