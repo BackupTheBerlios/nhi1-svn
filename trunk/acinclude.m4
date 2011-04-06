@@ -574,10 +574,18 @@ AC_DEFUN([SC_ENABLE_VB], [
     if test x$enable_csharp = no ; then
       AC_MSG_ERROR([a VisualBasic build "--enable-vb requires a C+ build "--enable-csharp" too])
     fi
-    AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
-    AC_PATH_PROGS( [VBCOMP], [vbnc] )
-    if test ${VBCOMP+set} != set ; then
-      AC_MSG_ERROR([unable to find VisualBasic compiler 'vbnc'])
+    if test "$host_os" != "mingw32" ; then
+      AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
+      AC_PATH_PROGS( [VBCOMP], [vbnc] )
+      if test "x${VBCOMP}" = "x" ; then
+	AC_MSG_ERROR([unable to find VisualBasic compiler 'vbnc'])
+      fi
+    else
+      AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
+      AC_PATH_PROGS( [VBCOMP], [vbc] )
+      if test "x${VBCOMP}" = "x" ; then
+	AC_MSG_ERROR([unable to find VisualBasic compiler 'vbc'])
+      fi
     fi
   fi
   AC_SUBST([USE_VB], $enable_vb)

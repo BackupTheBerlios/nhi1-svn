@@ -22,68 +22,70 @@
 ## VisualBasic -> compile ONLY on windows
 ##
 
-if USE_VB
+SUFFIXES = *.exe *.cs *.dll
 
-manfilter.exe: manfilter.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+RULE_VB_EXE = $(VBCOMP) $(CSHARP_OPT) -nologo $(CSHARP_DEBUG) \
+		-reference:csmsgque.dll \
+		-out:$@ -target:exe `$(CYGPATH_W) "$<"`
 
-mulclient.exe: mulclient.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+csmsgque.dll: ../../csmsgque/csmsgque.dll
+	cp ../../csmsgque/csmsgque.dll .
 
-mulserver.exe: mulserver.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+manfilter.exe: $(srcdir)/manfilter.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-MyServer.exe: MyServer.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+mulclient.exe: $(srcdir)/mulclient.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-MyClient.exe: MyClient.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+mulserver.exe: $(srcdir)/mulserver.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-Filter1.exe: Filter1.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+MyServer.exe: $(srcdir)/MyServer.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-Filter2.exe: Filter2.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+MyClient.exe: $(srcdir)/MyClient.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-Filter3.exe: Filter3.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+Filter1.exe: $(srcdir)/Filter1.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-Filter4.exe: Filter4.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+Filter2.exe: $(srcdir)/Filter2.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-Filter5.exe: Filter5.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+Filter3.exe: $(srcdir)/Filter3.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-testclient.exe: testclient.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+Filter4.exe: $(srcdir)/Filter4.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-testserver.exe: testserver.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+Filter5.exe: $(srcdir)/Filter5.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-server.exe: server.vb ../../csmsgque/csmsgque.dll
-	@echo "WARNING: compile file '$@' on windows"
+testclient.exe: $(srcdir)/testclient.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-endif
+testserver.exe: $(srcdir)/testserver.vb csmsgque.dll
+	$(RULE_VB_EXE)
 
-BUILT_SOURCES = .vpath_hook manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
-		  MyClient.exe Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-		    testclient.exe testserver.exe server.exe
+server.exe: $(srcdir)/server.vb csmsgque.dll
+	$(RULE_VB_EXE)
+
+BUILT_SOURCES = .vpath_hook $(VPATH_FILES)
 
 ##
 ## ==========================================================================
 ## Main
 ##
 
-CLEANFILES = *.mdb
-EXTRA_DIST = $(srcdir)/*.vb $(srcdir)/*.exe
-MAINTAINERCLEANFILES = *.exe
-VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe \
-                  MyClient.exe Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-			testclient.exe testserver.exe server.exe
+MAINTAINERCLEANFILES = *.exe *.mdb
+EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
+VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
+                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
+		    Filter6.exe testclient.exe testserver.exe server.exe
 
 distclean-local:
 	$(VPATH_HOOK_CLEANUP)
 
-dist-hook:
+dist-hook: .vpath_hook
 	$(VPATH_HOOK_DIST)
 

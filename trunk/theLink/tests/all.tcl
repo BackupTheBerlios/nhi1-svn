@@ -11,7 +11,7 @@
 #§
 
 if {![llength $argv]} {
-  lappend argv --full-testing --only-num 3 --only-csharp
+  lappend argv --full-testing --only-vb
 }
 
 source [file join [file dirname [info script]] library.tcl]

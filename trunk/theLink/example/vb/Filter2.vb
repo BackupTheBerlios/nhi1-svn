@@ -18,8 +18,6 @@ Public Module example
   Private Class Filter2
     Inherits MqS
     
-    Private data As New List(Of List(Of String))
-
     ' constructor
     Public Sub New(ByVal tmpl As MqS)
       MyBase.New(tmpl)
