@@ -31,7 +31,7 @@ CSHARP_FILES = $(srcdir)/MqBufferS.cs $(srcdir)/MqDumpS.cs $(srcdir)/MqS.cs $(sr
 
 if USE_CSHARP
 csmsgque.dll: $(CSHARP_FILES) .vpath_hook
-	$(CSCOMP) -v -nologo $(CSHARP_DEBUG) -out:$@ -target:library $(CSHARP_FILES)
+	$(CSCOMP) $(CSHARP_OPT) -nologo -define:$(MQ_IS) $(CSHARP_DEBUG) -out:$@ -target:library `$(CYGPATH_W) $(CSHARP_FILES)`
 endif
 
 csharpdir = $(pkglibdir)

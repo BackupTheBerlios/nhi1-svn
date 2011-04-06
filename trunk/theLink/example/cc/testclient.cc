@@ -50,8 +50,13 @@ int MQ_CDECL main(int argc, MQ_CST argv[]) {
   try {
 
     // create the "LINK"
-    c0.LinkCreateV(argv[0], "--name", "c0", "--debug", getenv("TS_DEBUG"), "@", 
-                                "../example/cc/testserver", "--name", "s0", NULL);
+#ifdef _WIN32
+# define SRV  "../example/cc/testserver.exe"
+#else
+# define SRV  "../example/cc/testserver"
+#endif
+
+    c0.LinkCreateV(argv[0], "--name", "c0", "--debug", getenv("TS_DEBUG"), "@", SRV, "--name", "s0", NULL);
     c00.LinkCreateChildV(c0, argv[0], "--name", "c00", "--srvname", "s00", NULL);
     c01.LinkCreateChildV(c0, argv[0], "--name", "c01", "--srvname", "s01", NULL);
     c000.LinkCreateChildV(c00, argv[0], "--name", "c000", "--srvname", "s000", NULL);

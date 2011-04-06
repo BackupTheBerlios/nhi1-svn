@@ -32,7 +32,7 @@ namespace csmsgque {
 
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
-    private const string MSGQUE_DLL = "libmsgque";
+    private const string MSGQUE_DLL = MqS.MSGQUE_DLL;
 
     internal IntPtr hdl = IntPtr.Zero;
 

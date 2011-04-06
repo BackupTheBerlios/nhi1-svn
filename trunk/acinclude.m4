@@ -522,19 +522,29 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
     if test x$enable_threads = xno; then
       AC_MSG_ERROR([C[#] require thread support])
     fi
-    AC_PROG_AWK
     AC_ARG_VAR( [CSCOMP], [C# compiler])
     AC_ARG_VAR( [CLREXEC], [CLR runtime])
-    AC_PATH_PROGS( [CSCOMP], [gmcs] )
-    AC_PATH_PROGS( [CLREXEC], [mono] )
-    if test x$CSCOMP = x ; then
-      AC_MSG_ERROR([unable to find C[#] compiler 'gmcs'])
-    fi
-    if test x$CLREXEC = x ; then
-      AC_MSG_ERROR([unable to find CLR runtime 'mono'])
-    fi
-    if $CLREXEC -V | $AWK '/version/ {found=1;if ([$]5 < 2.4) exit(0);else exit(1);};END {if(found==0) exit(0);}' ; then
-      AC_MSG_ERROR([mono version have to be >= 2.4])
+    if test "$host_os" == "mingw32" ; then
+      AC_PATH_PROGS( [CSCOMP], [csc] )
+      CLREXEC=""
+      if test "x$enable_symbols" = "xno"; then
+	AC_SUBST([CSHARP_DEBUG], ['-optimize'])
+      fi
+      AC_SUBST([CSHARP_OPT], [])
+    else
+      AC_PROG_AWK
+      AC_PATH_PROGS( [CSCOMP], [gmcs] )
+      AC_PATH_PROGS( [CLREXEC], [mono] )
+      if test x$CSCOMP = x ; then
+	AC_MSG_ERROR([unable to find C[#] compiler 'gmcs'])
+      fi
+      if test x$CLREXEC = x ; then
+	AC_MSG_ERROR([unable to find CLR runtime 'mono'])
+      fi
+      if $CLREXEC -V | $AWK '/version/ {found=1;if ([$]5 < 2.4) exit(0);else exit(1);};END {if(found==0) exit(0);}' ; then
+	AC_MSG_ERROR([mono version have to be >= 2.4])
+      fi
+      AC_SUBST([CSHARP_OPT], [-v])
     fi
   fi
   AC_SUBST([USE_CSHARP], $enable_csharp)

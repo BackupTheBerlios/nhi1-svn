@@ -26,6 +26,9 @@ AC_CONFIG_HEADER([mqconfig.h])
 AC_SUBST([LIBMSGQUE_VERSION], ["5.4"])
 AC_DEFINE([LIBMSGQUE_VERSION], ["5.4"], [version of the 'libmsgque' package])
 
+# set library VERSION information also in:
+# > theLink/csmsgque/MqS.cs
+#
 #  Updating library version information
 #  ====================================
 #
@@ -161,6 +164,7 @@ if test "$host_os" = "mingw32" ; then
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
   AC_SUBST([PATH_SEP], [\;])
+  AC_SUBST([MQ_IS], [WIN32])
   AM_CONDITIONAL([WIN32], [true])
 else
   AC_MSG_RESULT([no])
@@ -170,6 +174,7 @@ else
   fi
   AC_SUBST([FILE_SEP], [/])
   AC_SUBST([PATH_SEP], [:])
+  AC_SUBST([MQ_IS], [POSIX])
   AM_CONDITIONAL([WIN32], [false])
 fi
 

@@ -24,48 +24,53 @@
 
 SUFFIXES = *.exe *.cs *.dll
 
-RULE_CS_EXE = $(CSCOMP) -v -nologo $(CSHARP_DEBUG) -reference:../../csmsgque/csmsgque.dll -out:$@ -target:exe "$<"
+RULE_CS_EXE = $(CSCOMP) $(CSHARP_OPT) -nologo $(CSHARP_DEBUG) \
+		-reference:csmsgque.dll \
+		-out:$@ -target:exe `$(CYGPATH_W) "$<"`
 
-manfilter.exe: $(srcdir)/manfilter.cs ../../csmsgque/csmsgque.dll 
+csmsgque.dll: ../../csmsgque/csmsgque.dll
+	cp ../../csmsgque/csmsgque.dll .
+
+manfilter.exe: $(srcdir)/manfilter.cs csmsgque.dll 
 	$(RULE_CS_EXE)
 
-mulclient.exe: $(srcdir)/mulclient.cs ../../csmsgque/csmsgque.dll
+mulclient.exe: $(srcdir)/mulclient.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-mulserver.exe: $(srcdir)/mulserver.cs ../../csmsgque/csmsgque.dll
+mulserver.exe: $(srcdir)/mulserver.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-MyServer.exe: $(srcdir)/MyServer.cs ../../csmsgque/csmsgque.dll
+MyServer.exe: $(srcdir)/MyServer.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-MyClient.exe: $(srcdir)/MyClient.cs ../../csmsgque/csmsgque.dll
+MyClient.exe: $(srcdir)/MyClient.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter1.exe: $(srcdir)/Filter1.cs ../../csmsgque/csmsgque.dll
+Filter1.exe: $(srcdir)/Filter1.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter2.exe: $(srcdir)/Filter2.cs ../../csmsgque/csmsgque.dll
+Filter2.exe: $(srcdir)/Filter2.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter3.exe: $(srcdir)/Filter3.cs ../../csmsgque/csmsgque.dll
+Filter3.exe: $(srcdir)/Filter3.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter4.exe: $(srcdir)/Filter4.cs ../../csmsgque/csmsgque.dll
+Filter4.exe: $(srcdir)/Filter4.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter5.exe: $(srcdir)/Filter5.cs ../../csmsgque/csmsgque.dll
+Filter5.exe: $(srcdir)/Filter5.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-Filter6.exe: $(srcdir)/Filter6.cs ../../csmsgque/csmsgque.dll
+Filter6.exe: $(srcdir)/Filter6.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-testclient.exe: $(srcdir)/testclient.cs ../../csmsgque/csmsgque.dll
+testclient.exe: $(srcdir)/testclient.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-testserver.exe: $(srcdir)/testserver.cs ../../csmsgque/csmsgque.dll
+testserver.exe: $(srcdir)/testserver.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-server.exe: $(srcdir)/server.cs ../../csmsgque/csmsgque.dll
+server.exe: $(srcdir)/server.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
 BUILT_SOURCES = .vpath_hook $(VPATH_FILES)

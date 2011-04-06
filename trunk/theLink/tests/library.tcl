@@ -68,10 +68,8 @@ lappend PATH [file nativename [file normalize .]]
 
 switch -exact $tcl_platform(platform) {
     windows { 
-	lappend PATH {C:\WINDOWS\system32}
 	lappend PATH {C:\cygwin\bin}
 	lappend PATH {C:\cygwin\usr\bin}
-	lappend PATH {C:\cygwin\usr\X11R6\bin}
 	set KILL [list taskkill.exe /F /T /PID]
     }
     unix {
@@ -93,7 +91,6 @@ set env(TCLLIBPATH) $TCLLIBPATH
 
 ## setup PYTHON path
 set PYTHONPATH [list]
-lappend PYTHONPATH [file nativename [file join $linkbuilddir tests]]
 lappend PYTHONPATH [file nativename [file join $linkbuilddir pymsgque]]
 lappend PYTHONPATH [file nativename [file join $linkbuilddir pymsgque .libs]]
 set env(PYTHONPATH) [join $PYTHONPATH $PATH_SEP]
@@ -101,7 +98,6 @@ set env(PYTHONPATH) [join $PYTHONPATH $PATH_SEP]
 
 ## setup RUBY path
 set RUBYLIB [list]
-lappend RUBYLIB [file nativename [file join $linkbuilddir tests]]
 lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque]]
 lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque .libs]]
 set env(RUBYLIB) [join $RUBYLIB $PATH_SEP]
@@ -110,17 +106,16 @@ set env(RUBYLIB) [join $RUBYLIB $PATH_SEP]
 ## setup JAVA classpath
 set CLASSPATH [list]
 lappend CLASSPATH [file nativename [file join $linkbuilddir javamsgque javamsgque.jar]]
-lappend CLASSPATH [file nativename [file join $linkbuilddir tests]]
 lappend CLASSPATH [file nativename [file join $linkbuilddir example java]]
 set env(CLASSPATH) [join $CLASSPATH $PATH_SEP]
 #Print env(CLASSPATH)
 
 ## setup C# search path
 set MONO_PATH [list]
-lappend MONO_PATH [file nativename [file join $linkbuilddir tests]]
 lappend MONO_PATH [file nativename [file join $linkbuilddir csmsgque]]
 lappend MONO_PATH [file nativename [file join $linkbuilddir example csharp]]
 set env(MONO_PATH) [join $MONO_PATH $PATH_SEP]
+set env(LIB) [join $MONO_PATH $PATH_SEP]
 #Print env(MONO_PATH)
 
 ## setup PERL search path
@@ -131,9 +126,10 @@ set LIBRARY_PATH [list]
 lappend LIBRARY_PATH [file nativename [file join $linkbuilddir libmsgque .libs]]
 lappend LIBRARY_PATH [file nativename [file join $linkbuilddir javamsgque .libs]]
 lappend LIBRARY_PATH [file nativename [file join $linkbuilddir tclmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir tests .libs]]
 lappend LIBRARY_PATH [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]
 set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY_PATH)"
+
+#puts $env(PATH)
 
 if {$tcl_platform(os) eq "FreeBSD"} {
     set WAIT 1000
@@ -322,8 +318,8 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    csharp  [list {*}$CLREXEC [file join $linksrcdir example csharp server.exe]]	\
-    vb	    [list {*}$CLREXEC [file join $linksrcdir example vb server.exe]]		\
+    csharp  [list {*}$CLREXEC [file join $linkbuilddir example csharp server.exe]]	\
+    vb	    [list {*}$CLREXEC [file join $linkbuilddir example vb server.exe]]		\
     python  [list {*}$PYTHON  [file join $linksrcdir example python server.py]]		\
     ruby    [list {*}$RUBY    [file join $linksrcdir example ruby server.rb]]		\
     java    [list {*}$JAVA    example.Server]						\
