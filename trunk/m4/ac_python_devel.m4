@@ -184,21 +184,22 @@ $ac_distutils_result])
 	if test -z "$PYTHON_LDFLAGS"; then
 		# (makes two attempts to ensure we've got a version number
 		# from the interpreter)
-		py_version=`$PYTHON -c "from distutils.sysconfig import *; \
-			print(''.join(get_config_vars('VERSION')),end='')"`
-		if test "$py_version" == "[None]"; then
-			if test -n "$PYTHON_VERSION"; then
-				py_version=$PYTHON_VERSION
-			else
-				py_version=`$PYTHON -c "import sys; \
-					print(sys.version[[:3]],end='')"`
-			fi
-		fi
+                py_version=`$PYTHON -c "from distutils.sysconfig import *; \
+                        print(''.join(get_config_vars('VERSION')),end='')"`
+                if test "$py_version" == "[None]"; then
+                        if test -n "$PYTHON_VERSION"; then
+                                py_version=$PYTHON_VERSION
+                        else
+                                py_version=`$PYTHON -c "import sys; \
+                                        print(sys.version[[:3]],end='')"`
+                        fi
+                fi
 		python_path=`$PYTHON -c "from distutils.sysconfig import *; \
 			print(os.path.join(get_python_lib(0,1), '..'), end='');"`
 		if test "$build_os" == "cygwin" ; then
 		    PYTHON_LDFLAGS="-L/cygdrive/c/WINDOWS/system32"
 		else
+		    py_version="$py_version"`$PYTHON -c "import sys; print(sys.abiflags,end='')"`
 		    PYTHON_LDFLAGS="-L$python_path"
 		fi
 		PYTHON_LDFLAGS="$PYTHON_LDFLAGS -lpython$py_version"
