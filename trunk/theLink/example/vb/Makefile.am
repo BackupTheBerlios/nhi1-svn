@@ -11,12 +11,6 @@
 #§
 
 
-#####################################################################################
-## VPATH setup
-
-.vpath_hook:
-	$(VPATH_HOOK)
-
 ##
 ## ==========================================================================
 ## VisualBasic -> compile ONLY on windows
@@ -70,22 +64,19 @@ testserver.exe: $(srcdir)/testserver.vb csmsgque.dll
 server.exe: $(srcdir)/server.vb csmsgque.dll
 	$(RULE_VB_EXE)
 
-BUILT_SOURCES = .vpath_hook $(VPATH_FILES)
+if WIN32
+BUILT_SOURCES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
+                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
+		    Filter6.exe testclient.exe testserver.exe server.exe
+else
+BUILT_SOURCES =
+endif
 
 ##
 ## ==========================================================================
 ## Main
 ##
 
-MAINTAINERCLEANFILES = *.exe *.mdb
-EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
-VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
-                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-		    Filter6.exe testclient.exe testserver.exe server.exe
-
-distclean-local:
-	$(VPATH_HOOK_CLEANUP)
-
-dist-hook: .vpath_hook
-	$(VPATH_HOOK_DIST)
+MAINTAINERCLEANFILES = *.exe *.mdb *.dll
+EXTRA_DIST = $(srcdir)/*.vb
 

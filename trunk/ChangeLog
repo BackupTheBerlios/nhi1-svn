@@ -17,6 +17,18 @@
 \n
 \n
 
+\section V0_16 08 Apr 2011 - NHI1-0.16, PLMK-2.4 und libmsgque-5.4
+
+this release change the build-environement on windows
+from Visual-X-Express to cygwin/mingw
+
+\verbatim
+svn diff --summarize -r '{2011-03-15}:{2011-05-8}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
 \section V0_15 15 Feb 2011 - NHI1-0.15, PLMK-2.4 und libmsgque-5.4
 
 Update \b windows support

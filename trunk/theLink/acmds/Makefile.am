@@ -10,38 +10,38 @@
 #§              please contact AUTHORS for additional information
 #§
 
-$(builddir)/docs:
+docs:
 	mkdir -p docs
 
-$(builddir)/docs/atool.help: $(builddir)/docs atool
+docs/atool.help: docs atool
 	./atool 2>docs/atool.help
 
-$(builddir)/docs/ajoin.help: $(builddir)/docs atool
+docs/ajoin.help: docs atool
 	./atool join --help 2>docs/ajoin.help
 
-$(builddir)/docs/acut.help: $(builddir)/docs atool
+docs/acut.help: docs atool
 	./atool cut --help 2>docs/acut.help
 
-$(builddir)/docs/asort.help: $(builddir)/docs atool
+docs/asort.help: docs atool
 	./atool sort --help 2>docs/asort.help
 
-$(builddir)/docs/asplit.help: $(builddir)/docs atool
+docs/asplit.help: docs atool
 	./atool split --help 2>docs/asplit.help
 
-$(builddir)/docs/aexec.help: $(builddir)/docs $(srcdir)/aexec
-	../tests/exec.env $(srcdir)/aexec --help 2>docs/aexec.help
+docs/aexec.help: docs $(srcdir)/aexec
+	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help 2>docs/aexec.help
 
-$(builddir)/docs/msgque.help: $(builddir)/docs $(srcdir)/aexec
-	../tests/exec.env $(srcdir)/aexec --help-msgque 2>docs/msgque.help
+docs/msgque.help: docs $(srcdir)/aexec
+	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help-msgque 2>docs/msgque.help
 
-$(builddir)/docs/tclmsgque.help: $(builddir)/docs $(srcdir)/aexec
-	../tests/exec.env $(srcdir)/aexec --help-tclmsgque 1>docs/tclmsgque.help
+docs/tclmsgque.help: docs $(srcdir)/aexec
+	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help-tclmsgque 1>docs/tclmsgque.help
 
 bin_PROGRAMS = atool
 EXTRA_DIST = aexec
 
-HTMLFILES = $(builddir)/docs/atool.help $(builddir)/docs/ajoin.help $(builddir)/docs/acut.help $(builddir)/docs/asort.help \
-	      $(builddir)/docs/asplit.help $(builddir)/docs/aexec.help $(builddir)/docs/msgque.help $(builddir)/docs/tclmsgque.help
+HTMLFILES = docs/atool.help docs/ajoin.help docs/acut.help docs/asort.help \
+	      docs/asplit.help docs/aexec.help docs/msgque.help docs/tclmsgque.help
 
 html: $(HTMLFILES)
 

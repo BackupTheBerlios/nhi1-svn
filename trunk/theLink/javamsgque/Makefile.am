@@ -75,12 +75,6 @@ mqs_DATA = javamsgque.jar
 
 pkglib_LTLIBRARIES = libjavamsgque.la
 BUILT_SOURCES = $(mqs_DATA) $(JAVAH_FILES)
-EXTRA_DIST = $(JAVA_FILES) $(JAVAH_EXTRA_FILES) $(BUILT_SOURCES)
+EXTRA_DIST = $(JAVA_FILES)
 CLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
-
-dist-hook: $(MQS_MAIN)
-	mkdir "$(distdir)/javamsgque"
-	chmod u+w "$(distdir)/javamsgque"
-	cp $(srcdir)/javamsgque/*.class "$(distdir)/javamsgque"
-	chmod u+w $(distdir)/javamsgque/*.class
 

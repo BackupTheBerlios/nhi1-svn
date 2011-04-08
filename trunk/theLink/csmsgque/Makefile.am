@@ -33,7 +33,7 @@ csharp_DATA = csmsgque.dll
 
 BUILT_SOURCES = csmsgque.dll
 
-EXTRA_DIST = $(CSHARP_FILES) $(BUILT_SOURCES)
+EXTRA_DIST = $(CSHARP_FILES)
 
 CLEANFILES = *.exe *.mdb *.dll
 

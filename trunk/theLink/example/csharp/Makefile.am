@@ -67,7 +67,9 @@ testserver.exe: $(srcdir)/testserver.cs csmsgque.dll
 server.exe: $(srcdir)/server.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-BUILT_SOURCES = $(VPATH_FILES)
+BUILT_SOURCES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
+                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
+		    Filter6.exe testclient.exe testserver.exe server.exe
 
 ##
 ## ==========================================================================
@@ -75,8 +77,5 @@ BUILT_SOURCES = $(VPATH_FILES)
 ##
 
 CLEANFILES = *.exe *.mdb *.dll
-EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
-VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
-                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-		    Filter6.exe testclient.exe testserver.exe server.exe
+EXTRA_DIST = $(srcdir)/*.cs
 

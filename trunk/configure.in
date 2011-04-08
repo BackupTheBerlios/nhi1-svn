@@ -11,7 +11,7 @@
 #§
 
 # set NHI1 VERSION information also in:
-AC_INIT([NHI1],[0.15],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_INIT([NHI1],[0.16],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([tar-ustar no-dist-gzip dist-bzip2])
 AC_CONFIG_HEADER([mqconfig.h])
@@ -174,7 +174,8 @@ else
   AM_CONDITIONAL([WIN32], [false])
 fi
 
-AC_CONFIG_FILES([Makefile theLink/Makefile theLink/tests/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
+AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
+      theLink/tests/Makefile theLink/tests/exec.env
 	theLink/docs/Makefile bin/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
