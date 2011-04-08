@@ -11,12 +11,6 @@
 #§
 
 
-#####################################################################################
-## VPATH setup
-
-.vpath_hook:
-	$(VPATH_HOOK)
-
 ##
 ## ==========================================================================
 ## C#
@@ -73,21 +67,16 @@ testserver.exe: $(srcdir)/testserver.cs csmsgque.dll
 server.exe: $(srcdir)/server.cs csmsgque.dll
 	$(RULE_CS_EXE)
 
-BUILT_SOURCES = .vpath_hook $(VPATH_FILES)
+BUILT_SOURCES = $(VPATH_FILES)
 
 ##
 ## ==========================================================================
 ## Main
 ##
 
-MAINTAINERCLEANFILES = *.exe *.mdb *.dll
+CLEANFILES = *.exe *.mdb *.dll
 EXTRA_DIST = $(srcdir)/*.cs $(BUILT_SOURCES)
 VPATH_FILES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
                   Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
 		    Filter6.exe testclient.exe testserver.exe server.exe
 
-distclean-local:
-	$(VPATH_HOOK_CLEANUP)
-
-dist-hook: .vpath_hook
-	$(VPATH_HOOK_DIST)
