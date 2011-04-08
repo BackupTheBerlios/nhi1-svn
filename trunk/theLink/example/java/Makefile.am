@@ -11,12 +11,6 @@
 #§
 
 
-#####################################################################################
-## VPATH setup
-
-.vpath_hook:
-	$(VPATH_HOOK)
-
 ##
 ## ==========================================================================
 ## Java
@@ -24,9 +18,8 @@
 
 RULE_JAVA_EXE = $(JAVAC) -classpath "../../javamsgque/javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked "$<"
 
+BUILT_SOURCES =
 SUFFIXES = .java .class
-VPATH_FILES = example
-BUILT_SOURCES = .vpath_hook
 
 BUILT_SOURCES += example/mulclient.class
 example/mulclient.class: $(srcdir)/mulclient.java ../../javamsgque/javamsgque.jar
@@ -89,14 +82,10 @@ example/Server.class: $(srcdir)/Server.java ../../javamsgque/javamsgque.jar
 ## Main
 ##
 
-MAINTAINERCLEANFILES = example/*.class
+CLEANFILES = example/*.class
 EXTRA_DIST = $(srcdir)/*.java
 
-distclean-local:
-	$(VPATH_HOOK_CLEANUP)
-
-dist-hook: .vpath_hook
-	$(VPATH_HOOK_DIST)
+dist-hook:
 	mkdir $(distdir)/example
 	chmod u+w $(distdir)/example
 	cp example/*.class $(distdir)/example

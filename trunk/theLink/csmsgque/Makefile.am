@@ -11,12 +11,6 @@
 #§
 
 
-#####################################################################################
-## VPATH setup
-
-.vpath_hook:
-	$(VPATH_HOOK)
-
 ##
 ## ==========================================================================
 ## C# setup
@@ -30,24 +24,16 @@ CSHARP_FILES = $(srcdir)/MqBufferS.cs $(srcdir)/MqDumpS.cs $(srcdir)/MqS.cs $(sr
 	    $(srcdir)/storage.cs
 
 if USE_CSHARP
-csmsgque.dll: $(CSHARP_FILES) .vpath_hook
+csmsgque.dll: $(CSHARP_FILES)
 	$(CSCOMP) $(CSHARP_OPT) -nologo -define:$(MQ_IS) $(CSHARP_DEBUG) -out:$@ -target:library `$(CYGPATH_W) $(CSHARP_FILES)`
 endif
 
 csharpdir = $(pkglibdir)
 csharp_DATA = csmsgque.dll
 
-BUILT_SOURCES = .vpath_hook csmsgque.dll
-
-VPATH_FILES = csmsgque.dll
+BUILT_SOURCES = csmsgque.dll
 
 EXTRA_DIST = $(CSHARP_FILES) $(BUILT_SOURCES)
 
-MAINTAINERCLEANFILES = $(VPATH_FILES)
-
-distclean-local:
-	$(VPATH_HOOK_CLEANUP)
-
-dist-hook:
-	$(VPATH_HOOK_DIST)
+CLEANFILES = *.exe *.mdb *.dll
 

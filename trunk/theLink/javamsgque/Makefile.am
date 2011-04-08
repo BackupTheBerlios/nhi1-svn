@@ -15,12 +15,6 @@ JAVAROOT = $(builddir)
 SUFFIXES = .c .h .class .java .jar
 
 #####################################################################################
-## VPATH setup
-
-.vpath_hook:
-	$(VPATH_HOOK)
-
-#####################################################################################
 ## public JNI
 
 AM_LIBTOOLFLAGS = --tag=disable-static
@@ -80,16 +74,11 @@ mqs_DATA = javamsgque.jar
 ## end
 
 pkglib_LTLIBRARIES = libjavamsgque.la
-BUILT_SOURCES = .vpath_hook $(mqs_DATA) $(JAVAH_FILES)
+BUILT_SOURCES = $(mqs_DATA) $(JAVAH_FILES)
 EXTRA_DIST = $(JAVA_FILES) $(JAVAH_EXTRA_FILES) $(BUILT_SOURCES)
-MAINTAINERCLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
-VPATH_FILES = $(JAVAH_FILES) $(JAVAH_EXTRA_FILES) javamsgque.jar
-
-distclean-local:
-	$(VPATH_HOOK_CLEANUP)
+CLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
 
 dist-hook: $(MQS_MAIN)
-	$(VPATH_HOOK_DIST)
 	mkdir "$(distdir)/javamsgque"
 	chmod u+w "$(distdir)/javamsgque"
 	cp $(srcdir)/javamsgque/*.class "$(distdir)/javamsgque"
