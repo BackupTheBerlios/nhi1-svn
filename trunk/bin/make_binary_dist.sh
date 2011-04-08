@@ -12,12 +12,12 @@
 #§
 
 
-test ! -f $(dirname $0)/../env.sh && {
-  echo "ERROR: you have to run the './configure' script first"
+test ! -f ./env.sh && {
+  echo "ERROR: no './env.sh' in the current diretcory. have you run the './configure' script ?"
   exit 1
 }
 set -x
-. $(dirname $0)/../env.sh
+. ./env.sh
 cd $abs_top_builddir
 
 make dist
@@ -31,7 +31,7 @@ tar -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2
 cd $PACKAGE-$PACKAGE_VERSION
 
 PKG=${PACKAGE}-${PACKAGE_VERSION}-${host}
-FINAL_PKG=$abs_top_builddir/binary-dist/$PKG.tar.bz2
+FINAL_PKG=$(dirname $0)/../binary-dist/$PKG.tar.bz2
 
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 

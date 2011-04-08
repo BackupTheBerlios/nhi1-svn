@@ -34,7 +34,7 @@ foreach F $LIST {
 }
 
 ## create link
-$FH(c0)	  LinkCreate		    "--name" "c0"   "--srvname" "s0" "--debug" $env(TS_DEBUG) "@" "tclsh" $server
+$FH(c0)	  LinkCreate		    "--name" "c0"   "--srvname" "s0" "--debug" $env(TS_DEBUG) "@" $env(TCLSH) $server
 $FH(c00)  LinkCreateChild $FH(c0)   "--name" "c00"  "--srvname" "s00"
 $FH(c01)  LinkCreateChild $FH(c0)   "--name" "c01"  "--srvname" "s01"
 $FH(c000) LinkCreateChild $FH(c00)  "--name" "c000" "--srvname" "s000"

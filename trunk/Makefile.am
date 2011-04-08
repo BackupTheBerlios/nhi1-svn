@@ -25,6 +25,7 @@ SUBDIRS += theGuard
 endif
 
 CTAGSFLAGS = --c-kinds=+p
+EXTRA_DIST = ./build_mingw/RunConfigure.sh README_windows
 
 install-data-local:
 	echo $$(pwd)

@@ -15,7 +15,7 @@
 ## GO
 ##
   
-if USE_JAVA
+if USE_GO
 include $(GOROOT)/src/Make.inc
 endif
 
