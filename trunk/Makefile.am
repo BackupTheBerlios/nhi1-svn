@@ -16,7 +16,7 @@ AUTOMAKE_OPTIONS = check-news
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = theLink win performance bin
+SUBDIRS = theLink performance bin
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
