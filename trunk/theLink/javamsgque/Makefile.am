@@ -75,6 +75,6 @@ mqs_DATA = javamsgque.jar
 
 pkglib_LTLIBRARIES = libjavamsgque.la
 BUILT_SOURCES = $(mqs_DATA) $(JAVAH_FILES)
-EXTRA_DIST = $(JAVA_FILES)
+EXTRA_DIST = $(JAVA_FILES) context_java.h
 CLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
 
