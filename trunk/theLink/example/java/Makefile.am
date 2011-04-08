@@ -84,10 +84,3 @@ example/Server.class: $(srcdir)/Server.java ../../javamsgque/javamsgque.jar
 
 CLEANFILES = example/*.class
 EXTRA_DIST = $(srcdir)/*.java
-
-dist-hook:
-	mkdir $(distdir)/example
-	chmod u+w $(distdir)/example
-	cp example/*.class $(distdir)/example
-	chmod u+w $(distdir)/example/*.class
-
