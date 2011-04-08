@@ -26,19 +26,22 @@ LDADD = -lm ../../libmsgque/libtmp.la
 
 client_SOURCES = client.c stat.c stat.h
 
-docs/server.help: server$(EXEEXT)
+./docs:
+	mkdir -p docs
+
+./docs/server.help: ./docs server$(EXEEXT)
 	./server$(EXEEXT) --help 2>docs/server.help
 
-docs/client.help: client$(EXEEXT)
+./docs/client.help: ./docs client$(EXEEXT)
 	./client$(EXEEXT) --help 2>docs/client.help
 
-docs/debug.out: client$(EXEEXT) server$(EXEEXT)
+./docs/debug.out: ./docs client$(EXEEXT) server$(EXEEXT)
 	./client$(EXEEXT) --num 1 --debug 9 @ ./server$(EXEEXT) 2>docs/debug.out
 
-docs/client.perf: client$(EXEEXT) server$(EXEEXT)
+./docs/client.perf: ./docs client$(EXEEXT) server$(EXEEXT)
 	./client$(EXEEXT) --all @ ./server$(EXEEXT) 2>docs/client.perf
 
-HTMLFILES = docs/server.help docs/client.help docs/debug.out docs/client.perf
+HTMLFILES = ./docs/server.help ./docs/client.help ./docs/debug.out ./docs/client.perf
 
 html: $(HTMLFILES)
 
