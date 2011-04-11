@@ -21,7 +21,7 @@ array set LABELUSE {
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
-    ./bin			{ LbMain .sh Label .sh }
+    ./bin			{ LbMain .sh Label .sh log .sh }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
     ./theLink/tests		{ README.tests .sh exec.env.in .sh }
 }
@@ -36,7 +36,7 @@ array set LABELIGNORE {
 
     ./theLink			{ Makefile Makefile.in }
     ./theLink/docs		{ * }
-    ./theLink/tests		{ Makefile Makefile.in tags *.sw* .vimrc .kdbgrc.* }
+    ./theLink/tests		{ Makefile Makefile.in tags *.sw* .vimrc .kdbgrc.* exec.env }
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
     ./theLink/sqlite		{ Makefile Makefile.in .deps .libs sqlite3.c sqlite3.h sqlite3ext.h tags libtmp* }
     ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }

@@ -2,10 +2,12 @@
 
 <CENTER>
 
-\section nw  NEWS, from 15 Mar 2011
+\section nw  NEWS, from 11 Apr 2011
 
-Finish release \b 8 of \ref wp2 \n
-update \b windows support
+Finish release \b 9 of \ref wp2 \n
+~ \i NEW identical \b UNIX and \b WINDOWS build-environment ~ \n
+~ replace <B>MS Visual *</B> with \b cygwin tool-chain and \b mingw cross-compiler ~ \n
+
 
 \section intro Introduction
 
