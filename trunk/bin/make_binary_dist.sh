@@ -16,17 +16,21 @@ test ! -f ./env.sh && {
   echo "ERROR: no './env.sh' in the current diretcory. have you run the './configure' script ?"
   exit 1
 }
-set -x
+#set -x
 . ./env.sh
 cd $abs_top_builddir
 
-make dist
+set -x
 
-rm -fr binary-build
+STEP=${STEP:-1}
+
+((STEP <= 1)) && make dist
+
+((STEP <= 2)) && rm -fr binary-build
 mkdir binary-build
 cd binary-build
 
-tar -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2
+((STEP <= 3)) && tar -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2
 
 cd $PACKAGE-$PACKAGE_VERSION
 
@@ -49,20 +53,43 @@ test "$USE_CXX"	    == "yes"  && ARGS="$ARGS --enable-cxx"
 test "$USE_BRAIN"   == "yes"  && ARGS="$ARGS --enable-brain"
 test "$USE_GUARD"   == "yes"  && ARGS="$ARGS --enable-guard"
 
-bash ./configure --prefix=/usr/local --enable-static --enable-threads $ARGS || exit 1
+if test "$ostype" == "cygwin"; then
 
-make || exit 1
+  # Java -------------------------------------------------------------------------------------------
+
+  export JAVA_HOME=/cygdrive/c/Programme/Java/jdk1.6.0_24/
+  export PATH="$JAVA_HOME/bin:$PATH"
+
+  # CSharp -----------------------------------------------------------------------------------------
+
+  CSDIR=/cygdrive/c/Windows/Microsoft.NET/Framework64
+  FrameworkDir=$(cygpath -w $CSDIR)
+  FrameworkVersion=v4.0.30319
+  PATH=$CSDIR/$FrameworkVersion:'/cygdrive/c/Program Files/Microsoft SDKs/Windows/v7.1/Bin/x64':$PATH
+
+  # Main -------------------------------------------------------------------------------------------
+
+  export CC="ccache x86_64-w64-mingw32-gcc"
+  export CXX="ccache x86_64-w64-mingw32-g++"
+
+  ARGS="--build=i686-pc-cygwin --host=x86_64-w64-mingw32 $ARGS"
+fi
+
+
+((STEP <= 4)) && ( bash ./configure --prefix=/usr/local --enable-static --enable-threads $ARGS || exit 1 )
+
+((STEP <= 5)) && ( make || exit 1 )
 
 echo "#########################################################"
 
 test -d /tmp/$PKG || mkdir /tmp/$PKG
 
-make DESTDIR=/tmp/$PKG/ install || exit 1
+((STEP <= 6)) && ( make DESTDIR=/tmp/$PKG/ install || exit 1 )
 
 test -f $FINAL_PKG && rm $FINAL_PKG
 
 (cd /tmp; tar --format=ustar -chf - "$PKG" | bzip2 -9 -c >"$FINAL_PKG")
 
-make DESTDIR=/tmp/$PKG/ uninstall
+((STEP <= 7)) && make DESTDIR=/tmp/$PKG/ uninstall
 
 test -d /tmp/$PKG && rm -fr /tmp/$PKG
