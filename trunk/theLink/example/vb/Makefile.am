@@ -55,6 +55,9 @@ Filter4.exe: $(srcdir)/Filter4.vb csmsgque.dll
 Filter5.exe: $(srcdir)/Filter5.vb csmsgque.dll
 	$(RULE_VB_EXE)
 
+Filter6.exe: $(srcdir)/Filter5.vb csmsgque.dll
+	$(RULE_VB_EXE)
+
 testclient.exe: $(srcdir)/testclient.vb csmsgque.dll
 	$(RULE_VB_EXE)
 

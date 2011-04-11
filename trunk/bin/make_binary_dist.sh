@@ -35,7 +35,7 @@ cd binary-build
 cd $PACKAGE-$PACKAGE_VERSION
 
 PKG=${PACKAGE}-${PACKAGE_VERSION}-${host}
-FINAL_PKG=$(dirname $0)/../binary-dist/$PKG.tar.bz2
+FINAL_PKG=$abs_top_srcdir/binary-dist/$PKG.tar.bz2
 
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
 
