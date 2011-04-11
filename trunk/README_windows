@@ -1,10 +1,27 @@
+#+
+#§  \file       README_windows
+#§  \brief      \$Id$
+#§  
+#§  (C) 2011 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
 
 
-Only the build using the "mingw" cross-compiler embedded into the "cygwin"
+Only a build using the "mingw" cross-compiler embedded into the "cygwin"
 tool-chain is supported.
 
 Only the Languages "C", "C++", "Java", "C#", "VB.Net" and "Tcl" are
 supported.
+
+Environment
+===========
+
+The windows binaries are created using a laptop with i5 core and
+Windows 7 as OS.
 
 
 Build

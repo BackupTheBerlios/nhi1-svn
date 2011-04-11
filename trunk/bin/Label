@@ -15,15 +15,15 @@ set LHOME [file normalize /home/dev1usr/Project/NHI1]
 
 array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
-				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh *.bak }
+				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh README_windows .sh }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
     ./theLink/msgqueforphp	{ php.ini.in .phpini }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
-    ./theLink/tests		{ README.tests .sh }
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
     ./bin			{ LbMain .sh Label .sh }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
+    ./theLink/tests		{ README.tests .sh exec.env.in .sh }
 }
 
 array set LABELIGNORE {
@@ -36,9 +36,7 @@ array set LABELIGNORE {
 
     ./theLink			{ Makefile Makefile.in }
     ./theLink/docs		{ * }
-    ./theLink/tests		{ Makefile Makefile.in server client *.o .deps tags *.sw* 
-				  .libs *.in *.stamp *.la *.lo docs example .C  *.mdb tmp.* 
-				  .vimrc .kdbgrc.* ccserver *.xml .vpath_hook *.dll .COPY_JAVA }
+    ./theLink/tests		{ Makefile Makefile.in tags *.sw* .vimrc .kdbgrc.* }
     ./theLink/acmds		{ Makefile Makefile.in *.o .deps .libs tags *.sw* astarter atool docs }
     ./theLink/sqlite		{ Makefile Makefile.in .deps .libs sqlite3.c sqlite3.h sqlite3ext.h tags libtmp* }
     ./theLink/example/csharp	{ *.mdb .vimrc Makefile.in Makefile tags .vpath_hook *.dll *.sw* }
@@ -105,7 +103,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
 				    discheck.out msgqueforphp *.bak mqconfig.h.in~ *.log .PUT_HTML
-				    .GREP_FOR_SOURCE_CODE .PHP.info
+				    .GREP_FOR_SOURCE_CODE .PHP.info build_test html
 				}
 }
 

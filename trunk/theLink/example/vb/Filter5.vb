@@ -1,4 +1,14 @@
 REM
+REM  \file       theLink/example/vb/Filter5.vb
+REM  \brief      \$Id$
+REM  
+REM  (C) 2011 - NHI - #1 - Project - Group
+REM  
+REM  \version    \$Rev$
+REM  \author     EMail: aotto1968 at users.berlios.de
+REM  \attention  this software has GPL permissions to copy
+REM              please contact AUTHORS for additional information
+REM
 
 Imports System
 Imports System.IO
