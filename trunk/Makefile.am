@@ -66,7 +66,7 @@ install-web:
 
 install-files:
 	for F in NHI1-$(VERSION)* binary-dist/NHI1-$(VERSION)* ; do \
-	  ftp -u ftp://ftp.berlios.de/incoming/$$(basename $$F) $$F; \
+	  ftp -u ftp://ftp.berlios.de/incoming/$$(basename $$F) $$F || true; \
 	done
 
 distclean-local:
