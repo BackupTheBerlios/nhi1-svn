@@ -1,0 +1,11 @@
+> nothread/NHI1-0.15/theLink/example/c/client --all @ perl nothread/NHI1-0.15/theLink/example/perl/server.pl
+C> (client:6168) [2011-03-15:18-52-42] [0-0-0-0x6e7d98-main]: start: --------------------------------------
+C> (client:6168) [2011-03-15:18-52-43] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   1.65e+05
+C> (client:6168) [2011-03-15:18-52-43] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   1.28e+05
+C> (client:6168) [2011-03-15:18-52-44] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.69e+04
+C> (client:6168) [2011-03-15:18-52-49] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.51e+00
+C> (client:6168) [2011-03-15:18-53-11] [0-0-0-0x6e7d98-statistics]:                  parent create:   4.64e+00
+C> (client:6168) [2011-03-15:18-53-11] [0-0-0-0x6e7d98-statistics]:                  parent delete:   2.02e+03
+C> (client:6168) [2011-03-15:18-53-11] [0-0-0-0x6e7d98-statistics]:                   child create:   8.21e+03
+C> (client:6168) [2011-03-15:18-53-11] [0-0-0-0x6e7d98-statistics]:                   child delete:   4.06e+04
+C> (client:6168) [2011-03-15:18-53-11] [0-0-0-0x6e7d98-main]: end: ----------------------------------------

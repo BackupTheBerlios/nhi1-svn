@@ -1,0 +1,11 @@
+> nothread/NHI1-0.15/theLink/example/c/client --all @ nothread/NHI1-0.15/theLink/example/c/server
+C> (client:28222) [2011-03-15:18-46-02] [0-0-0-0x6e7c78-main]: start: --------------------------------------
+C> (client:28222) [2011-03-15:18-46-02] [0-0-0-0x6e7c78-statistics]:                      MqSendEND:   3.84e+05
+C> (client:28222) [2011-03-15:18-46-02] [0-0-0-0x6e7c78-statistics]:         MqSendEND_AND_CALLBACK:   2.27e+05
+C> (client:28222) [2011-03-15:18-46-03] [0-0-0-0x6e7c78-statistics]:             MqSendEND_AND_WAIT:   5.68e+04
+C> (client:28222) [2011-03-15:18-46-06] [0-0-0-0x6e7c78-statistics]:               MqSendPERSISTENT:   3.79e+00
+C> (client:28222) [2011-03-15:18-46-06] [0-0-0-0x6e7c78-statistics]:                  parent create:   1.37e+03
+C> (client:28222) [2011-03-15:18-46-06] [0-0-0-0x6e7c78-statistics]:                  parent delete:   1.13e+04
+C> (client:28222) [2011-03-15:18-46-07] [0-0-0-0x6e7c78-statistics]:                   child create:   4.63e+03
+C> (client:28222) [2011-03-15:18-46-07] [0-0-0-0x6e7c78-statistics]:                   child delete:   3.99e+04
+C> (client:28222) [2011-03-15:18-46-07] [0-0-0-0x6e7c78-main]: end: ----------------------------------------

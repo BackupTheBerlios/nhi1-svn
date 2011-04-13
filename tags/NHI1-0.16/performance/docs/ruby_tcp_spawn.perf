@@ -1,0 +1,12 @@
+> ruby nothread/NHI1-0.15/theLink/example/ruby/server.rb --tcp --host localhost --port 7791 --spawn
+> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7791
+C> (client:3767) [2011-03-15:18-51-30] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
+C> (client:3767) [2011-03-15:18-51-30] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   2.20e+05
+C> (client:3767) [2011-03-15:18-51-31] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.33e+05
+C> (client:3767) [2011-03-15:18-51-32] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.60e+04
+C> (client:3767) [2011-03-15:18-51-36] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   2.91e+00
+C> (client:3767) [2011-03-15:18-51-38] [0-0-0-0x6e7fb8-statistics]:                  parent create:   7.26e+01
+C> (client:3767) [2011-03-15:18-51-38] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   1.83e+03
+C> (client:3767) [2011-03-15:18-51-38] [0-0-0-0x6e7fb8-statistics]:                   child create:   6.69e+03
+C> (client:3767) [2011-03-15:18-51-38] [0-0-0-0x6e7fb8-statistics]:                   child delete:   2.96e+04
+C> (client:3767) [2011-03-15:18-51-38] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------

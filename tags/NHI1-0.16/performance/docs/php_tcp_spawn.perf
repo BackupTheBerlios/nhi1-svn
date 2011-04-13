@@ -1,0 +1,12 @@
+> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.15/theLink/example/php/server.php --tcp --host localhost --port 7801 --spawn
+> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7801
+C> (client:9508) [2011-03-15:18-56-09] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
+C> (client:9508) [2011-03-15:18-56-09] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   1.63e+05
+C> (client:9508) [2011-03-15:18-56-10] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   8.88e+04
+C> (client:9508) [2011-03-15:18-56-11] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.14e+04
+C> (client:9508) [2011-03-15:18-56-15] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   3.45e+00
+C> (client:9508) [2011-03-15:18-56-16] [0-0-0-0x6e7fb8-statistics]:                  parent create:   1.44e+02
+C> (client:9508) [2011-03-15:18-56-16] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   2.94e+03
+C> (client:9508) [2011-03-15:18-56-16] [0-0-0-0x6e7fb8-statistics]:                   child create:   4.80e+03
+C> (client:9508) [2011-03-15:18-56-16] [0-0-0-0x6e7fb8-statistics]:                   child delete:   3.14e+04
+C> (client:9508) [2011-03-15:18-56-16] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------

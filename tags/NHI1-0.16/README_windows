@@ -1,0 +1,74 @@
+#+
+#§  \file       README_windows
+#§  \brief      \$Id$
+#§  
+#§  (C) 2011 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+Only a build using the "mingw" cross-compiler embedded into the "cygwin"
+tool-chain is supported.
+
+Only the Languages "C", "C++", "Java", "C#", "VB.Net" and "Tcl" are
+supported.
+
+Environment
+===========
+
+The windows binaries are created using a laptop with i5 core and
+Windows 7 as OS.
+
+
+Build
+=====
+
+cd ./build_mingw
+bash ./RunConfigure.sh
+
+
+Tcl
+===
+
+1. tcl8.5.9-src.tar.gz
+2. cd tcl8.5.9/win
+
+#!/usr/bin/env bash
+
+export CC="ccache x86_64-w64-mingw32-gcc"
+export CXX="ccache x86_64-w64-mingw32-g++"
+export AR=x86_64-w64-mingw32-ar
+export RANLIB=x86_64-w64-mingw32-ranlib
+export RC=x86_64-w64-mingw32-windres
+export STRIP=x86_64-w64-mingw32-strip
+export NM=x86_64-w64-mingw32-nm
+export OBJDUMP=x86_64-w64-mingw32-objdump
+export DLLTOOL=x86_64-w64-mingw32-dlltool
+
+./configure   \
+        --prefix=/my/install/path \
+        --enable-symbols \
+        --enable-threads \
+| tee build.log
+
+
+Java
+====
+
+export JAVA_HOME=/cygdrive/c/Programme/Java/jdk1.6.0_24/
+export PATH="$JAVA_HOME/bin:$PATH"
+
+
+C# / VB.Net
+===========
+
+CSDIR=/cygdrive/c/Windows/Microsoft.NET/Framework64
+FrameworkDir=$(cygpath -w $CSDIR)
+FrameworkVersion=v4.0.30319
+export PATH=$CSDIR/$FrameworkVersion:'/cygdrive/c/Program Files/Microsoft SDKs/Windows/v7.1/Bin/x64':$PATH
+
+

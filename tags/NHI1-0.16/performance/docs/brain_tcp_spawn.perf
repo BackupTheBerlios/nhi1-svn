@@ -1,0 +1,12 @@
+> nothread/NHI1-0.15/theBrain/abrain/abrain --tcp --host localhost --port 7804 --spawn
+> nothread/NHI1-0.15/theBrain/tests/client --all --tcp --host localhost --port 7804
+C> (client:9981) [2011-03-15:18-57-49] [0-0-0-0x6e6bb8-main]: start: --------------------------------------
+C> (client:9981) [2011-03-15:18-57-51] [0-0-0-0x6e6bb8-statistics]:              memory hash - PUT:      25.80
+C> (client:9981) [2011-03-15:18-57-52] [0-0-0-0x6e6bb8-statistics]:              memory hash - GET:      25.89
+C> (client:9981) [2011-03-15:18-57-53] [0-0-0-0x6e6bb8-statistics]:             memory btree - PUT:      29.19
+C> (client:9981) [2011-03-15:18-57-55] [0-0-0-0x6e6bb8-statistics]:             memory btree - GET:      29.55
+C> (client:9981) [2011-03-15:18-57-56] [0-0-0-0x6e6bb8-statistics]:                file hash - PUT:      27.09
+C> (client:9981) [2011-03-15:18-57-58] [0-0-0-0x6e6bb8-statistics]:                file hash - GET:      27.23
+C> (client:9981) [2011-03-15:18-58-04] [0-0-0-0x6e6bb8-statistics]:               file btree - PUT:     130.70
+C> (client:9981) [2011-03-15:18-58-12] [0-0-0-0x6e6bb8-statistics]:               file btree - GET:     161.19
+C> (client:9981) [2011-03-15:18-58-13] [0-0-0-0x6e6bb8-main]: end: ----------------------------------------

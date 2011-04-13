@@ -1,0 +1,12 @@
+> java example.Server --uds --file ./socket.uds --thread
+> thread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-49-53] [0-0-0-0x6ecd98-main]: start: --------------------------------------
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-49-53] [0-0-0-0x6ecd98-statistics]:                      MqSendEND:   2.17e+05
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-49-54] [0-0-0-0x6ecd98-statistics]:         MqSendEND_AND_CALLBACK:   1.44e+05
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-49-55] [0-0-0-0x6ecd98-statistics]:             MqSendEND_AND_WAIT:   4.96e+04
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-statistics]:               MqSendPERSISTENT:   2.37e+00
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-statistics]:                  parent create:   3.16e+03
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-statistics]:                  parent delete:   1.19e+04
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-statistics]:                   child create:   2.81e+03
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-statistics]:                   child delete:   3.63e+04
+C> (client:1107:0x7f0de218a700) [2011-03-15:18-50-00] [0-0-0-0x6ecd98-main]: end: ----------------------------------------

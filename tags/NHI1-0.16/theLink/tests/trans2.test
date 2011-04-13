@@ -1,0 +1,777 @@
+#+
+#§  \file       theLink/tests/trans2.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2011 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+if {$env(USE_REMOTE) || [testConstraint filter-test]} {
+  set env(BLOCK_LST) [list]
+}
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if {[Block 1]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+   set J [expr {$I-1}]
+
+ # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [filter -or COM_LST tcp uds] {
+
+    # server-type: server server.tcl
+    foreach S [filter -or SRV_LST spawn fork] {
+
+# tests ----------------------------
+
+test trans2-1-($I|$B|$C|$S) {send data with error} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp1.txt]
+      Setup $I $B $C $S --filter-server Filter6
+      Echo0 $FH_LAST LOGF SendC $TMP
+    } \
+    -body           {
+      Echo0 $FH_LAST DUM1 SendC HALLO
+      Echo0 $FH_LAST DUM2 SendC OTTO
+      WaitOnFileToken $TMP "<DUM2>"
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
+[Ss]> (server-0) \[*pTokenInvoke] token <DUM1> not found
+[Ss]> (fs) found in function "*MqReadForward" at file "read.c*"
+ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
+[Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
+
+test trans2-2-($I|$B|$C|$S) {send valid data} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp2.txt]
+      Setup $I $B $C $S --filter-server Filter6
+      Echo0 $FH_LAST LOGF SendC $TMP
+    } \
+    -body           {
+      Echo0 $FH_LAST PRNT SendC HALLO
+      WaitOnFileToken $TMP HALLO
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -result         "START
+$J - HALLO"
+
+test trans2-3-($I|$B|$C|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmp3.txt]
+      Setup $I $B $C $S --filter-server Filter6
+      Echo0 $FH_LAST LOGF SendC $TMP
+    } \
+    -body           {
+      Echo0 $FH_LAST DUM1 SendC ERR
+      Echo0 $FH_LAST PRNT SendC HALLO
+      WaitOnFileToken $TMP HALLO
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+ERROR: \[cC]> (fs) \\\[service-call-error] <Tok|DUM1> <Num|1>
+\[sS]> (server-0) \\\[*pTokenInvoke] token <DUM1> not found
+\[sS]> (fs) found in function \"*MqReadForward\" at file \"read.c*\"
+$J - HALLO"
+
+# cleanup ---------------------------
+#Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # BLOCK_1
+
+##  
+## -----------------------------------------------------------------------
+## additional tests
+##
+
+if {[Block 2]} {
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [getNum 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+    # server-type: server server.tcl
+    foreach S [filter -or SRV_LST spawn fork] {
+
+  test trans2-X1-($I|$B|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX1.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT2
+      Echo0 $CTX PRNT SendC TTT3
+      $CTX Delete
+
+      WaitOnFileToken $TMP TTT3
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+$J - TTT2
+$J - TTT3"
+
+test trans2-X2-($I|$B|$S) {send multiple error + valid data} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX2.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT3
+      Call  $CTX SendEND ERR4
+      $CTX Delete
+
+      WaitOnFileToken $TMP TTT3
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+$J - TTT2
+$J - TTT3"
+
+test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX3.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set CON3	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON3 --timeout $env(TS_TIMEOUT)]
+      set FT1	[list {*}[getFilter Filter6.$S] {*}$CON2 --timeout $env(TS_TIMEOUT) @ {*}$CON3]
+      set FT2	[list {*}[getFilter Filter6.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) @ {*}$CON2]
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FT1
+      Bg @stdout {*}$FT2
+      foreach {FIRST CTX} [Create $I $CON1] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT3
+      $CTX Delete
+
+      WaitOnFileToken $TMP TTT3
+    } \
+    -cleanup	    {
+      if {$I > 1} {$FIRST Delete}
+      Cleanup -force yes
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+$J - TTT2
+$J - TTT3"
+
+  test trans2-T0-($I|$B|$S) {send nothing} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpT0.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         ""
+
+  test trans2-T1a-($I|$B|$S) {send valid data + transaction} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpT1a.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+      Echo0 $CTX PRNT SendC TTT2
+
+      WaitOnFileToken $TMP TTT2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+T=local-1
+R=789
+T=local-2
+R=889
+$J - TTT2"
+
+  test trans2-T1b-($I|$B|$S) {send valid data + transaction} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpT1b.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      Echo0 $CTX PRNT SendC TTT1
+      Echo0 $CTX PRNT SendC TTT2
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP TTT2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+T=local-1
+R=789
+T=local-2
+R=889
+$J - TTT1
+$J - TTT2"
+
+  test trans2-T1c-($I|$B|$S) {send valid data + transaction + SETU} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpT1c.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      EchoT $CTX OTTO SETU {SendC local-1} {SendI 789}
+      EchoT $CTX OTTO GETU {SendC local-2} {}
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP 789
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+T=local-1
+R=
+T=local-2
+R=789"
+
+  test trans2-T2a-($I|$B|$S) {send + transaction server error} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpT2a.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON2]
+      set FTR	[list {*}[getFilter Filter6.$S] {*}$CON1 @ {*}$CON2]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FTR
+      foreach {FIRST CTX} [Create $I $CON1] break
+      $CTX ServiceCreate OTTO CB_OTTO
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      EchoT $CTX OTTO ECOI {SendC local-1} {SendD 1.1}
+      EchoT $CTX OTTO ECOI {SendC local-2} {SendI 889}
+      Echo0 $CTX PRNT SendC TTT2
+
+      $CTX ProcessEvent -wait ONCE
+      $CTX ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP TTT2
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      $FIRST Delete
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client) \[transaction-callback-error] <Token|OTTO>, <Num|1>
+[sS]> (server) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object
+[sS]> (server) found in function "*sReadA4" at file "read.c*"
+[cC]> (client) found in function "*pTokenDefaultTRT" at file "token.c*"
+[cC]> (client) found in function "*pServiceStart" at file "service.c*"
+[cC]> (client) found in function "*pEventStart" at file "event.c*"
+[cC]> (client) found in function "*MqProcessEvent" at file "service.c*"*}
+
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [getNum 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+    # server-type: server server.tcl
+    foreach S [filter -or SRV_LST spawn fork] {
+
+test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX4.txt]
+      set CON1	[FindFreeConnection $S]
+      set CON2	[FindFreeConnection $S]
+      set CON3	[FindFreeConnection $S]
+      set SRV	[list {*}[getServer $S] {*}$CON3 --timeout $env(TS_TIMEOUT)]
+      set FT1	[list {*}[getFilter Filter6.$S] {*}$CON1 --timeout $env(TS_TIMEOUT) --name FT1 @ {*}$CON2]
+      set FT2	[list {*}[getFilter Filter6.$S] {*}$CON2 --timeout $env(TS_TIMEOUT) --name FT2 @ {*}$CON3]
+    } \
+    -body           {
+      Bg @stdout {*}$SRV
+      Bg @stdout {*}$FT1
+      Bg @stdout {*}$FT2
+      foreach {FIRST LAST} [Create $I $CON1] break
+      Echo0 $LAST LOGF SendC $TMP
+      Echo0 $LAST PRNT SendC TTT1
+      WaitOnFileToken $TMP TTT1
+      Call  $LAST SendEND EXIT
+      $LAST Delete
+      WaitOnFileToken $TMP TTT1
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1"
+
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [getNum 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST pipe] {
+
+  test trans2-X5-($I|$B|$S) {send error + valid data} \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX5.txt]
+    } \
+    -body           {
+      foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      Echo0 $CTX PRNT SendC TTT2
+      Echo0 $CTX PRNT SendC TTT3
+      $CTX Delete
+
+      WaitOnFileToken $TMP TTT3
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+$J - TTT2
+$J - TTT3"
+
+  test trans2-X6-($I|$B|$S) {send error + valid data} \
+    -constraints    { unix } \
+    -setup	    {
+      set TMP	[MakeFile "START" tmpX6.txt]
+    } \
+    -body           {
+      foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
+      Echo0 $CTX LOGF SendC $TMP
+
+      Echo0 $CTX PRNT SendC TTT1
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT2
+      Call  $CTX SendEND ERR4
+      Echo0 $CTX PRNT SendC TTT3
+      $CTX Delete
+
+      WaitOnFileToken $TMP TTT3
+    } \
+    -cleanup	    {
+      Cleanup -force yes
+      if {$I > 1} {$FIRST Delete}
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         "START
+$J - TTT1
+$J - TTT2
+$J - TTT3"
+
+   }; # SRV_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # BLOCK_2
+
+
+if {[Block 3]} {
+
+# 1,2, ... tclmsgque (parent/child)
+foreach I [getNum 3] {
+  set J [expr {$I-1}]
+
+  # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+    # socket-type: pipe, uds or tcp
+     foreach C [filter COM_LST] {
+
+      # server-type: server server.tcl
+      foreach S [filter SRV_LST $C] {
+
+	SetConstraints $I $B $S
+
+# startup binary --------------------------
+
+  test trans2-TE0-($I|$B|$C|$S) {transaction database error} \
+    -constraints    {!thread} \
+    -setup	    {
+      Setup $I $B $C $S --server-arg {--storage ""}
+      set TMP	[MakeFile "START" tmpTE0.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOI {SendC local-1} {SendI 1}
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[transaction-callback-error] <Token|OTTO>, <Num|242>
+[sS]> (server-0) \[*sSqlAddDb] the value 'NULL' is invalid for object 'storageFile'
+[sS]> (server-0) found in function "*pSqlInsertReadTrans" at file "sql.c*"
+[cC]> (client-0) found in function "*pTokenDefaultTRT" at file "token.c*"
+[cC]> (client-0) found in function "*pServiceStart" at file "service.c*"
+[cC]> (client-0) found in function "*pEventStart" at file "event.c*"
+[cC]> (client-0) found in function "*MqProcessEvent" at file "service.c*"
+[cC]> (client-0) found in function "*MqSendEND_AND_WAIT" at file "send.c*"}
+
+  test trans2-TE1-($I|$B|$C|$S) {send OK} \
+    -constraints    {!thread} \
+    -setup	    {
+      set testdb [makeFile {} testdb.TE1]
+      set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
+      Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -match	    glob \
+    -result         {}
+
+  test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
+    -constraints    {!thread} \
+    -setup	    {
+      set testdb [makeFile {} testdb.TE2]
+      set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
+      Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
+      Call  $FH_LAST SendEND EXIT
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[SysRecv] application EXIT request*}
+
+  test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
+    -constraints    {!thread} \
+    -setup	    {
+      set testdb [makeFile {} testdb.TE3]
+      set joundb [makeFile {} ${testdb}-journal]
+      file delete -force $testdb $joundb
+      Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]
+      set TMP	[MakeFile "START" tmpTE1.txt]
+      proc CB_OTTO {ctx} {
+	global TMP
+	set FH [open $TMP a]
+	seek $FH 0 end
+	$ctx ReadT_START
+	puts $FH "T=[$ctx ReadAll]"
+	$ctx ReadT_END
+	puts $FH "R=[$ctx ReadAll]"
+	close $FH
+      }
+      $FH_LAST ServiceCreate OTTO CB_OTTO
+    } \
+    -body           {
+      EchoT $FH_LAST OTTO ECOC {SendC local-1} {SendC TT1}
+      CallWithCatch $FH_LAST SendEND_AND_WAIT EXIT
+      $FH_LAST LinkConnect
+      EchoT $FH_LAST OTTO ECOC {SendC local-2} {SendC TT2}
+      $FH_LAST ProcessEvent -wait ONCE
+      $FH_LAST ProcessEvent -wait ONCE
+
+      WaitOnFileToken $TMP TT2
+    } \
+    -cleanup	    {
+      Cleanup
+    } \
+    -result         {START
+T=local-1
+R=TT1
+T=local-2
+R=TT2}
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # BLOCK_3
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+

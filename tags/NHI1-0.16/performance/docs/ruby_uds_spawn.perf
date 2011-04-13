@@ -1,0 +1,12 @@
+> ruby nothread/NHI1-0.15/theLink/example/ruby/server.rb --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:4361) [2011-03-15:18-51-47] [0-0-0-0x6e7d98-main]: start: --------------------------------------
+C> (client:4361) [2011-03-15:18-51-47] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   2.52e+05
+C> (client:4361) [2011-03-15:18-51-48] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   1.47e+05
+C> (client:4361) [2011-03-15:18-51-49] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.90e+04
+C> (client:4361) [2011-03-15:18-51-52] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   3.62e+00
+C> (client:4361) [2011-03-15:18-51-54] [0-0-0-0x6e7d98-statistics]:                  parent create:   7.35e+01
+C> (client:4361) [2011-03-15:18-51-54] [0-0-0-0x6e7d98-statistics]:                  parent delete:   1.91e+03
+C> (client:4361) [2011-03-15:18-51-54] [0-0-0-0x6e7d98-statistics]:                   child create:   7.17e+03
+C> (client:4361) [2011-03-15:18-51-54] [0-0-0-0x6e7d98-statistics]:                   child delete:   3.91e+04
+C> (client:4361) [2011-03-15:18-51-54] [0-0-0-0x6e7d98-main]: end: ----------------------------------------

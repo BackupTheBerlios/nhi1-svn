@@ -1,0 +1,11 @@
+> nothread/NHI1-0.15/theLink/example/c/client --all @ python nothread/NHI1-0.15/theLink/example/python/server.py
+C> (client:2566) [2011-03-15:18-50-20] [0-0-0-0x6e7e48-main]: start: --------------------------------------
+C> (client:2566) [2011-03-15:18-50-20] [0-0-0-0x6e7e48-statistics]:                      MqSendEND:   2.24e+05
+C> (client:2566) [2011-03-15:18-50-21] [0-0-0-0x6e7e48-statistics]:         MqSendEND_AND_CALLBACK:   1.12e+05
+C> (client:2566) [2011-03-15:18-50-22] [0-0-0-0x6e7e48-statistics]:             MqSendEND_AND_WAIT:   4.35e+04
+C> (client:2566) [2011-03-15:18-50-27] [0-0-0-0x6e7e48-statistics]:               MqSendPERSISTENT:   2.42e+00
+C> (client:2566) [2011-03-15:18-50-30] [0-0-0-0x6e7e48-statistics]:                  parent create:   3.42e+01
+C> (client:2566) [2011-03-15:18-50-30] [0-0-0-0x6e7e48-statistics]:                  parent delete:   5.01e+02
+C> (client:2566) [2011-03-15:18-50-30] [0-0-0-0x6e7e48-statistics]:                   child create:   7.53e+03
+C> (client:2566) [2011-03-15:18-50-30] [0-0-0-0x6e7e48-statistics]:                   child delete:   4.08e+04
+C> (client:2566) [2011-03-15:18-50-30] [0-0-0-0x6e7e48-main]: end: ----------------------------------------

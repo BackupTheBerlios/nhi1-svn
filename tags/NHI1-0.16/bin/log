@@ -1,0 +1,36 @@
+#!/bin/bash
+#+
+#§  \file       bin/log
+#§  \brief      \$Id: LbMain 304 2010-11-13 09:57:59Z aotto1968 $
+#§  
+#§  (C) 2011 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev: 304 $
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+
+# call shell-command and put the output into a file
+
+
+CMD="$@"
+
+LOG=$1; shift
+case $LOG in
+  make|tclsh|java|mono|python|perl)	
+    for X ; do
+      [[ $X == -* ]] && continue
+      LOG=$X
+      break
+    done
+  ;;
+esac
+
+LOG=$(basename "$LOG")
+
+$CMD 2>&1 | tee $LOG.log
+
+echo -e "\n\n -> created: $LOG.log"
+

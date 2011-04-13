@@ -1,0 +1,386 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += VB
+EXAMPLE_PATH	    += $(SRCDIR)/example/vb
+
+ALIASES		    += "self=vbmsgque"
+ALIASES		    += "selftut=vbmsgquetut"
+ALIASES		    += "NS{1}=vb_\1"
+ALIASES		    += "lang=VB.NET"
+ALIASES		    += "fileextension=.vb"
+ALIASES		    += "exeextension=.exe"
+ALIASES		    += "executable=mono"
+ALIASES		    += "dirname=vb"
+ALIASES		    += "null=\e Nothing"
+ALIASES		    += "yes=\e true"
+ALIASES		    += "no=\e false"
+ALIASES		    += "package=Imports csmsgque"
+
+ALIASES		    += "FactoryReturn=\ref csmsgque::MqFactorySException"
+ALIASES		    += "FactoryDefault=MqFactoryS<T>::Default(\C ident) As MqFactoryS<T>"
+ALIASES		    += "FactoryDefault2=MqFactoryS<T>::Default() As MqFactoryS<T>"
+ENABLED_SECTIONS    += FactoryDefault2
+ALIASES		    += "FactoryDefaultIdent=MqFactoryS<T>::DefaultIdent() As \C"
+ALIASES		    += "FactoryAdd=MqFactoryS<T>::Add(\C ident) As MqFactoryS<T>"
+ALIASES		    += "FactoryAdd2=MqFactoryS<T>::Add() As MqFactoryS<T>"
+ENABLED_SECTIONS    += FactoryAdd2
+ALIASES		    += "FactoryGet=MqFactoryS<T>::Get(\C ident) As MqFactoryS<T> "
+ALIASES		    += "FactoryGet2=MqFactoryS<T>::Get(\C ident).factory As IntPtr"
+ENABLED_SECTIONS    += FactoryGet2
+ALIASES		    += "FactoryGetCalled=MqFactoryS<T>::GetCalled(\C ident) As MqFactoryS<T>"
+ALIASES		    += "FactoryGetCalled2=MqFactoryS<T>::GetCalled(\C ident).factory As IntPtr"
+ENABLED_SECTIONS    += FactoryGetCalled2
+
+ALIASES		    += "FactoryNew=factory.New() As MqS"
+ALIASES		    += "FactoryNew=factory.Copy(\C ident) As MqFactoryS<T>"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxSet(factory As IntPtr)"
+ALIASES		    += "FactoryCtxGet=ctx.FactoryCtxGet() As IntPtr"
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=ctx.MqFactoryStxIdentGet() As \C"
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+Private NotInheritable Class MyClass \n\
+  Inherits MqS \n\
+  Private mydata As Integer \n\
+  ... \n\
+End Class \n\
+Sub Main(ByVal args() As String) \n\
+  Dim ctx As MqFactoryS<MyClass>::Add().New() \n\
+  ... \n\
+End Sub \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=Dim ctx As New MqS(tmpl As MqS)"
+ENABLED_SECTIONS    += ContextCreate2
+ALIASES		    += "ContextCreate2=Dim ctx As New MqS()"
+ALIASES		    += "ContextCreateSection="
+ALIASES		    += "ContextDelete=deleted by Garbage Collection"
+ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
+ALIASES		    += "LogC=ctx.LogC(prefix As String, level As Integer, message As String)"
+
+ALIASES		    += "init_example=\
+\code \n\
+MqS.Init(\"myExecutable.exe\", \"myFirstArgument\"); \n\
+\endcode"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Init(ByVal ParamArray args As String())"
+
+ALIASES		    += "config_type_buffersize=Integer"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=Integer"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=Integer"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=String"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=String"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_storage=String"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
+ALIASES		    += "config_type_ident=String"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=Boolean"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=Boolean"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=Boolean"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_startAs=Integer"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c MqS.START.DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c MqS.START.FORK"
+ALIASES		    += "MQ_START_THREAD=\c MqS.START.THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c MqS.START.SPAWN"
+
+ALIASES		    += "config_type_tcp=String"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=String"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=Integer"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_daemon=NO"
+ALIASES		    += "config_set_daemon=NO"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_isServer=Boolean"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isSlave=Boolean"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_master=MqS"
+ALIASES		    += "config_set_master=\RNS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES             += "config_IServerSetup=IServerSetup.Call()"
+ALIASES		    += "config_IServerCleanup=IServerCleanup.Call()"
+ALIASES		    += "config_IFactory=IFactory.Call()"
+ALIASES             += "config_IBgError=IBgError.Call()"
+ALIASES             += "config_IEvent=IEvent.Call()"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+Private NotInheritable Class Server \n\
+  Inherits MqS \n\
+  Implements IFactory \n\
+  Public Function Factory() As csmsgque.MqS Implements csmsgque.IFactory.Call \n\
+    Return New Server() \n\
+  End Function \n\
+  ... \n\
+End Class \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(BqVal ParamArray args As String())"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent As MqS, ByVal ParamArray args As String())"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=ctx.LinkGetParent() As MqS"
+ALIASES		    += "LinkIsParent=ctx.LinkIsParent() As Boolean"
+ALIASES		    += "LinkGetCtxId=ctx.LinkGetCtxId() As Integer"
+ALIASES		    += "LinkIsConnected=ctx.LinkIsConnected() As Boolean"
+ALIASES		    += "LinkGetTargetIdent=ctx.LinkGetTargetIdent() As \C"
+ALIASES		    += "LinkConnect=ctx.LinkConnect() As \C"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(token As String)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token As String, [timeout As Integer])"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token As String, AddressOf callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendO=ctx.SendO(value As \O)"
+ALIASES		    += "SendY=ctx.SendY(value As \Y)"
+ALIASES		    += "SendS=ctx.SendS(value As \S)"
+ALIASES		    += "SendI=ctx.SendI(value As \I)"
+ALIASES		    += "SendW=ctx.SendW(value As \W)"
+ALIASES		    += "SendF=ctx.SendF(value As \F)"
+ALIASES		    += "SendD=ctx.SendD(value As \D)"
+ALIASES		    += "SendC=ctx.SendC(value As \C)"
+ALIASES		    += "SendB=ctx.SendB(value As \B)"
+ALIASES		    += "SendU=ctx.SendU(value As \TU)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendN(value As \B)"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END(token As \C)"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART() \n\
+ctx.SendT_START() \n\
+ctx.SendC(\"myEnvironment\") \n\
+ctx.SendT_END(\"ENV1\") \n\
+ctx.SendC(\"myData\") \n\
+ctx.SendEND_AND_WAIT(\"SRVC\")\n\
+\endcode"
+
+# READ DATE
+ALIASES		    += "read_example=\code \n\
+num = ctx.ReadI()\n\
+ctx.ReadL_START()\n\
+  balance = ctx.ReadD()\n\
+  owner = ctx.ReadC()\n\
+  signature = ctx.ReadB()\n\
+ctx.ReadL_END()\endcode"
+ALIASES		    += "ReadTYPE=ctx.ReadTYPE() As TYPE"
+ALIASES		    += "ReadO=ctx.ReadO() As \O"
+ALIASES		    += "ReadY=ctx.ReadY() As \Y"
+ALIASES		    += "ReadS=ctx.ReadS() As \S"
+ALIASES		    += "ReadI=ctx.ReadI() As \I"
+ALIASES		    += "ReadW=ctx.ReadW() As \W"
+ALIASES		    += "ReadF=ctx.ReadF() As \F"
+ALIASES		    += "ReadD=ctx.ReadD() As \D"
+ALIASES		    += "ReadC=ctx.ReadC() As \C"
+ALIASES		    += "ReadB=ctx.ReadB() As \B"
+ALIASES		    += "ReadU=ctx.ReadU() As \TU"
+ALIASES		    += "ReadN=ctx.ReadN() As \B"
+ALIASES		    += "ReadDUMP=ctx.ReadDUMP() As \TD"
+ALIASES		    += "ReadLOAD=ctx.ReadLOAD(dump As \TD)"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx As MqS)"
+ALIASES		    += "ReadForward=ctx.ReadForward(otherCtx As \TM, ?dump As \TD?)"
+ALIASES		    += "ReadGetNumItems=ctx.ReadGetNumItems() As Integer"
+ALIASES		    += "ReadItemExists=ctx.ReadItemExists() As Boolean"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer As MqBufferS?)"
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START(?buffer As MqBufferS?)"
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+Private Sub SRVR()\n\
+  ctx.ReadT_START()\n\
+  myEnvironment = ctx.ReadC()\n\
+  ctx.ReadT_END()\n\
+  theResult = ctx.ReadC()\n\
+End Sub\endcode"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+Public Sub ServerSetup() Implements csmsgque.IServerSetup.Call \n\
+  ServiceCreate (\"SRV1\", AddressOf srv2); \n\
+End Sub \n\
+\endcode"
+ALIASES		    += "ServiceInterface=Interface: IService"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token As String, AddressOf callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token As String, [id=0 As Integer])"
+ALIASES		    += "ServiceStorage=ctx.ServiceStorage(token As String)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(string token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout As Integer, \MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(\MQ_TIMEOUT_DEFAULT(|USER|MAX), \MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent(\MQ_WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent4=ctx.ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ENABLED_SECTIONS    += ProcessEvent4
+ALIASES		    += "MQ_WAIT_NO=\c MqS.WAIT.NO"
+ALIASES		    += "MQ_WAIT_ONCE=\c MqS.WAIT.ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=\c MqS.WAIT.FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=\c MqS.TIMEOUT.DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=\c MqS.TIMEOUT.USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=\c MqS.TIMEOUT.MAX"
+ALIASES		    += "ServiceGetToken=ctx.ServiceGetToken() As String"
+ALIASES		    += "ServiceGetFilter=ctx.ServiceGetFilter([id=0]) As MqS"
+ALIASES		    += "ServiceIsTransaction=ctx.ServiceIsTransaction() As Boolean"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id As Integer, ByVal ParamArray args As String())"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, \"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"); \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id As Integer, slave As MqS)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id As Integer)"
+ALIASES		    += "SlaveGet=ctx.SlaveGet(id As Integer) As MqS"
+ALIASES		    += "SlaveGetMaster=ctx.SlaveGetMaster() As MqS"
+ALIASES		    += "SlaveIs=ctx.SlaveIs() As \O"
+
+# STORAGE
+ALIASES		    += "StorageOpen=ctx.MqStorageOpen(storageFile As \C)"
+ALIASES		    += "StorageClose=ctx.StorageClose()"
+ALIASES		    += "StorageInsert=ctx.StorageInsert() As \W"
+ALIASES		    += "StorageSelect=ctx.StorageSelect(transLId As \W) As \W"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(transLId \W)"
+ALIASES		    += "StorageCount=ctx.StorageCount() As \W"
+
+# THE DUMP OBJECT
+
+ALIASES		    += "DumpSize=dump.Size() As \I"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+Dim buf As MqBufferS = ctx.ReadU() \n\
+If buf.Type == "C" \n\
+  Console.WriteLine(buf.C) \n\
+\endcode"
+ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+ALIASES		    += "BufferGetO=buffer.O As \O"
+ALIASES		    += "BufferGetY=buffer.Y As \Y"
+ALIASES		    += "BufferGetS=buffer.S As \S"
+ALIASES		    += "BufferGetI=buffer.I As \I"
+ALIASES		    += "BufferGetW=buffer.W As \W"
+ALIASES		    += "BufferGetF=buffer.F As \F"
+ALIASES		    += "BufferGetD=buffer.D As \D"
+ALIASES		    += "BufferGetC=buffer.C As \C"
+ALIASES		    += "BufferGetB=buffer.B As \B"
+ALIASES		    += "BufferGetType=buffer.Type As Char"
+ALIASES		    += "BufferDup=buffer.Dup() As \TU"
+ALIASES		    += "BufferDelete=buffer.Delete()"
+
+ALIASES		    += "Y=Byte"
+ALIASES		    += "O=Boolean"
+ALIASES		    += "S=Short"
+ALIASES		    += "I=Integer"
+ALIASES		    += "F=Float"
+ALIASES		    += "W=Long"
+ALIASES		    += "D=Double"
+ALIASES		    += "C=String"
+ALIASES		    += "B=Byte()"
+ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=\B"
+ALIASES		    += "TE=MqSException"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+Try \n\
+ i = ctx.ReadI() \n\
+Catch ex As Exception \n\
+ ctx.ErrorSet(ex) \n\
+ Console.WriteLine(ctx.ErrorGetText()) \n\
+ ctx.ErrorReset() \n\
+End Try \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>class MqSException</I>"
+ALIASES		    += "ErrorGetText=String ex.txt or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=Integer ex.num or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(prefix As String, errnum As Integer, message As String)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet(Exception ex)"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorSetEXIT=ctx.ErrorSetEXIT()"
+ALIASES		    += "ErrorIsEXIT=ctx.ErrorIsEXIT() As \O"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+Try \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\") \n\
+Catch e As Exception \n\
+  ctx.ErrorSet(e) \n\
+  If (ctx.ErrorIsEXIT()) Then \n\
+    ctx.ErrorReset() \n\
+  End If \n\
+End Try \n\
+\endcode"
+
+ALIASES		    += "tut_build=\b no UNIX build possible, mono tool \b vbnc is still in development"
+ALIASES		    += "tut_server=\skip Imports\n\until End Module"
+ALIASES		    += "tut_client=\skip Imports\n\until End Module"
+ALIASES		    += "tut_filter=\skip Imports\n\until End Module"
+
+

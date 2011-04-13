@@ -1,0 +1,265 @@
+#+
+#§  \file       theLink/tests/startup.test
+#§  \brief      \$Id$
+#§  
+#§  (C) 2002 - NHI - #1 - Project - Group
+#§  
+#§  \version    \$Rev$
+#§  \author     EMail: aotto1968 at users.berlios.de
+#§  \attention  this software has GPL permissions to copy
+#§              please contact AUTHORS for additional information
+#§
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if {[Block 1]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 2] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server.c server.tcl ...
+     foreach S [filter SRV_LST $C] {
+
+	SetConstraints $I $B $S
+
+	set OPT	[list]
+
+        lappend OPT {--silent}
+	lappend OPT {--debug 9 --silent}
+
+	if {[testConstraint local]} {
+	  switch -exact $C {
+	      uds {
+		  lappend OPT {--file FILE}
+		  lappend OPT {--file FILE --buffersize 1000}
+		  lappend OPT {--file FILE --timeout 20}
+		  lappend OPT {--file FILE --daemon PID}
+	      }
+	      tcp {
+		  lappend OPT {--port PORT --buffersize 1000}
+		  lappend OPT {--port PORT --timeout 20}
+		  lappend OPT [list --port PORT --host [info hostname]]
+		  lappend OPT [list --port PORT --myhost localhost]
+		  #lappend OPT [list --port PORT --myhost [info hostname]]
+		  lappend OPT {--port PORT --myport PORT}
+		  lappend OPT {--port PORT --daemon PID}
+	      }
+	  }
+	}
+
+     # jeweils für die Optionen
+      foreach D $OPT {
+
+	#if {[lsearch -exact $D "--myhost"] == -1} continue
+
+	## "--daemon" requires "fork" -> check if it is possible
+	if {[lsearch -exact $D "--daemon"] != -1} {
+	  if {$tcl_platform(platform) == "windows"} continue
+	  if {[string match "*java*"   $S]} continue
+	  if {[string match "*csharp*" $S]} continue
+	  if {[string match "*vb*" $S]} continue
+	  if {[string match "*tcl*" $S] && [info exists ::tcl_platform(threaded)]} continue
+	}
+
+##
+## -----------------------------------------------------------------------
+## STARTUP
+##
+	Setup $I $B $C $S {*}$D
+
+test startup-1.1-($I|$B|$C|$S|$D) {startup} \
+    -body           {Echo1 $FH_LAST ECOI ReadI SendI 12345} \
+    -result         12345
+
+test startup-1.2-($I|$B|$C|$S|$D) {handel} \
+    -body           {set FH_LAST} \
+    -match          glob \
+    -result         {<MqS-*>}
+
+	Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+##
+
+      }; # Options
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+SetConstraints all
+
+}
+
+##
+## -----------------------------------------------------------------------
+## special tests
+##
+
+proc Start {server args} {
+  set FH [tclmsgque MqS]
+  $FH {*}$args @ {*}[getServerOnly $server.pipe]
+  return $FH
+}
+
+
+set SILENT --silent
+
+foreach C pipe {
+
+  if {[Block 2]} {
+
+      foreach S [filter SRV_LST $C] {
+
+	set F1  [Start $S LinkCreate --$C]
+	set r1	{binary sOc SERVER pOc PARENT}
+
+	test startup-$C-3-($S) {handel} \
+	    -body   {EchoL $F1 MSQT} \
+	    -result $r1
+
+	set F11    [Start $S LinkCreateChild $F1 $SILENT]
+	set r11    {binary silent sOc SERVER pOc CHILD}
+
+	test startup-$C-6-($S) {handel} \
+	    -body   {EchoL $F11 MSQT} \
+	    -result $r11
+
+	test startup-$C-8-($S) {handel} \
+	    -body   {EchoL $F1 MSQT} \
+	    -result $r1
+
+	set F12	[Start $S LinkCreateChild $F1 --debug 2 $SILENT]
+	set r12	{debug 2 binary silent sOc SERVER pOc CHILD}
+
+	test startup-$C-9-($S) {CHILD --debug 1} \
+	    -body   {EchoL $F12 MSQT} \
+	    -result $r12
+
+	test startup-$C-11-($S) {PARENT with CHILD and CHILD --debug 1} \
+	    -body   {EchoL $F1 MSQT} \
+	    -result $r1
+
+	set F2	[Start $S LinkCreate --$C $SILENT --string]
+	set r2	{silent sOc SERVER pOc PARENT}
+
+	test startup-$C-12-($S) {PARENT with PARENT} \
+	    -body   {EchoL $F2 MSQT} \
+	    -result $r2
+
+	test startup-$C-13-($S) {PARENT with PARENT} \
+	    -body   {EchoL $F1 MSQT} \
+	    -result $r1
+
+	set F3  [Start $S LinkCreate --$C $SILENT --debug 5]
+	set r3	{debug 5 binary silent sOc SERVER pOc PARENT}
+
+	test startup-$C-14-($S) {3 x PARENT} \
+	    -body   {EchoL $F3 MSQT} \
+	    -result $r3
+
+	test startup-$C-15-($S) {3 x PARENT} \
+	    -body   {EchoL $F2 MSQT} \
+	    -result $r2
+
+	test startup-$C-16-($S) {3 x PARENT} \
+	    -body   {EchoL $F1 MSQT} \
+	    -result $r1
+
+	rename $F3 ""
+	rename $F2 ""
+	rename $F12 ""
+	rename $F11 ""
+	rename $F1 ""
+      }
+    }   
+  }
+
+  if {[Block 3]} {
+
+    test startup-$C-17 {wrong server} \
+	-setup	      {set FH0 [tclmsgque MqS] } \
+	-body	      {$FH0 LinkCreate --timeout 1 --name otto @ unknown_server_executable} \
+	-cleanup      {rename $FH0 ""} \
+	-returnCodes  error \
+	-match	      glob \
+	-result	      {C> (otto) \[*\] can not start server 'unknown_server_executable'*}
+
+    test startup-$C-19 {no subcommand} \
+	-body   {tclmsgque} \
+	-returnCodes error \
+	-result {wrong # args: should be "tclmsgque subcommand ..."}
+
+    test startup-$C-20 {wrong subcommand} \
+	-body   {tclmsgque xxx} \
+	-returnCodes error \
+	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, help, Init, FactoryAdd, FactoryGet, FactoryGetCalled, FactoryDefault, or FactoryDefaultIdent}
+
+    foreach S [filter SRV_LST pipe] {
+
+	test startup-21-($S) {good startup} \
+	    -body {set FH0 [Start $S LinkCreate --pipe]} \
+	    -cleanup {rename $FH0 ""} \
+	    -match glob \
+	    -result {<MqS-*>}
+
+	test startup-22-($S) {no subcommand} \
+	    -setup {set FH0 [Start $S LinkCreate --pipe]} \
+	    -cleanup {rename $FH0 ""} \
+	    -body {$FH0} \
+	    -returnCodes error \
+	    -match glob \
+	    -result {wrong # args: should be "<MqS-*> subcommand ..."}
+
+	test startup-23-($S) {wrong subcommand} \
+	    -setup {set FH0 [Start $S LinkCreate --pipe]} \
+	    -cleanup {rename $FH0 ""} \
+	    -body {$FH0 xxx} \
+	    -returnCodes error \
+	    -match glob \
+	    -result {bad subcommand "xxx": must be *}
+
+    }
+}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+
+
+
+
+
+
+
+
+
+

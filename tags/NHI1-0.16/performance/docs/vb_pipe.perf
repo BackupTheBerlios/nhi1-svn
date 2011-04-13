@@ -1,0 +1,10 @@
+> thread/NHI1-0.7/theLink/tests/client --all @ mono thread/NHI1-0.7/theLink/tests/vbserver.exe
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-main]: start: --------------------------------------
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-14] [0-0-0-0x6229a0-statistics]:                      MqSendEND:       4.24
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-15] [0-0-0-0x6229a0-statistics]:         MqSendEND_AND_CALLBACK:      11.75
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-18] [0-0-0-0x6229a0-statistics]:             MqSendEND_AND_WAIT:      17.02
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent create:   32636.88
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                  parent delete:    3201.55
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child create:     164.26
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-statistics]:                   child delete:      43.47
+C> (client:14652:0x7f8aa1a4f6f0) [2010-03-08:09-48-21] [0-0-0-0x6229a0-main]: end: ----------------------------------------

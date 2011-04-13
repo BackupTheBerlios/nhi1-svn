@@ -1,0 +1,1 @@
+find . -type f | egrep -v '(svn|tags|build|binary|man|html|win|exe|class|save|gz|Po|\.o|\.Plo|\.lo|\.so)'
