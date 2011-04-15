@@ -50,7 +50,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
 
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads --enable-guard
+#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads --enable-guard
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command

@@ -488,6 +488,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
   )
   AC_MSG_RESULT($enable_python)
   if test x$enable_python = xyes; then
+    PYTHON_VERSION=3
     m4_include([m4/ac_python_devel.m4])
     #------------------------------------
     AC_MSG_CHECKING(get python support);echo
