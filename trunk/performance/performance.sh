@@ -17,6 +17,8 @@ test ! -f ./env.sh && {
 }
 . ./env.sh
 
+PKG=$PACKAGE-$PACKAGE_VERSION
+
 typeset -i PORT=7777
 
 [[ $1 == "-vg" ]] && { VG="valgrind --trace-children=yes" ; shift ; } || VG=""
@@ -238,16 +240,19 @@ for SRV in $R; do
 
   case $SRV in
     *thread* | *java* | *csharp* | *vb* | *go* )	
+      DIR="thread"
       ENV="ENV=thread ./performance_thread.env ./local.env"
       export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
       export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"
     ;;
     total)	
+      DIR=""
       ENV=""
       export LINK_DIR=""
       export BRAIN_DIR=""
     ;;
     *)	
+      DIR="nothread"
       ENV="ENV=nothread ./performance_nothread.env ./local.env"
       export LINK_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theLink"
       export BRAIN_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theBrain"
@@ -256,58 +261,67 @@ for SRV in $R; do
 
   case $SRV in
     *brain*)	
+      EXEC=""
       SERVER="$BRAIN_DIR/abrain/abrain"
       CLIENT="$BRAIN_DIR/tests/client"
     ;;
     *python*)	
-      SERVER="python $LINK_DIR/example/python/server.py"	    
+      EXEC="PYTHON"
+      SERVER="$LINK_DIR/example/python/server.py"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *ruby*)	
-      SERVER="ruby $LINK_DIR/example/ruby/server.rb"
+      EXEC="RUBY"
+      SERVER="$LINK_DIR/example/ruby/server.rb"
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *csharp*)	
-      SERVER="mono $LINK_DIR/example/csharp/server.exe"	    
+      EXEC="MONO"
+      SERVER="$LINK_DIR/example/csharp/server.exe"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *vb*)	
-      SERVER="mono $LINK_DIR/example/vb/vbserver.exe"	    
+      EXEC="MONO"
+      SERVER="$LINK_DIR/example/vb/vbserver.exe"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     total)	
+      EXEC=""	    
       SERVER=""	    
       CLIENT=""
     ;;
     *java*)	
-      SERVER="java example.Server" 
+      EXEC="JAVA"
+      SERVER="example.Server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *perl*)	
-      SERVER="perl $LINK_DIR/example/perl/server.pl" 
+      EXEC="PERL"
+      SERVER="$LINK_DIR/example/perl/server.pl" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *php*)	
-      if [[ "$ENV" == "thread" ]] ; then
-	SERVER="php -c \"thread/lib/NHI1/php.ini\" $LINK_DIR/example/php/server.php" 
-      else
-	SERVER="php -c \"nothread/lib/NHI1/php.ini\" $LINK_DIR/example/php/server.php" 
-      fi
+      EXEC="PHP"
+      SERVER="$LINK_DIR/example/php/server.php" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *tcl*)	
-      SERVER="tclsh $LINK_DIR/example/tcl/server.tcl" 
+      EXEC="TCLSH"
+      SERVER="$LINK_DIR/example/tcl/server.tcl" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *go*)	
+      EXEC=""
       SERVER="$LINK_DIR/example/go/server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *cc*)	
+      EXEC=""
       SERVER="$LINK_DIR/example/cc/server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *c*)	
+      EXEC=""
       SERVER="$LINK_DIR/example/c/server"
       CLIENT="$LINK_DIR/example/c/client"
     ;;
@@ -318,8 +332,16 @@ for SRV in $R; do
   esac
 
   case $SRV in
+    total)	
+    ;;
+    *)	
+      EXEC=$(. $DIR/$PKG/env.sh;echo ${!EXEC})
+    ;;
+  esac
+
+  case $SRV in
     *pipe*)
-      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $SERVER"
+      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $EXEC${EXEC:+ }$SERVER"
 echo $ENV
       echo "> $CL" | tee docs/${SRV}.perf
       eval $ENV $CL 2>&1 | tee -a docs/${SRV}.perf
@@ -343,7 +365,7 @@ echo $ENV
     *fork*)	START=fork;;
   esac
 
-  SV="$VG${VG:+ }$SERVER $COM_ARGS --$START"
+  SV="$VG${VG:+ }$EXEC $SERVER $COM_ARGS --$START"
   CL="$VG${VG:+ }$CLIENT${NUM}--all $COM_ARGS"
   echo "> $SV" | tee docs/${SRV}.perf
   echo "> $CL" | tee -a docs/${SRV}.perf

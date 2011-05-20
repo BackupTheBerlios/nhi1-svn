@@ -38,16 +38,16 @@ set -x
 
       ../../performance_$BUILD.env ./configure --prefix=$OLDPWD $@ \
 	--enable-python --enable-cxx --enable-tcl --enable-perl \
-	  --enable-vb --enable-static --enable-brain --enable-ruby \
-	    --enable-php || exit 1
+	  --enable-static --enable-ruby --enable-php --enable-brain || exit 1
 
       ../../performance_$BUILD.env make || exit 1
 
       ../../performance_$BUILD.env make install || exit 1
-    )
-  )
+    ) || exit 1
+  ) || exit 1
 }
 
 ## main
 Build thread --enable-threads --enable-csharp --enable-java --enable-go
+#Build thread --enable-threads --enable-csharp --enable-java
 Build nothread 

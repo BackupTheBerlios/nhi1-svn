@@ -436,6 +436,7 @@ ClientMain (
 
     // cleanup
     StatDelete (&itemT);
+    MqSysSleep(mqctx,1);
     mq_unlink("testDb");
 
   } /* finish the MqSendTRANSACTION performance test */

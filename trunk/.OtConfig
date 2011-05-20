@@ -10,7 +10,6 @@ fi
 
 bash ./configure    --prefix=/tmp/libmsgque-install \
 		    --enable-tcl \
-		    --enable-ruby \
 		    --enable-python \
 \
 		    $ARGS $@
