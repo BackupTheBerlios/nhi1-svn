@@ -335,15 +335,19 @@ for SRV in $R; do
     total)	
     ;;
     *)	
-      EXEC=$(. $DIR/$PKG/env.sh;echo ${!EXEC})
+      EXEC2=$(. $DIR/$PKG/env.sh;echo ${!EXEC})
     ;;
   esac
 
   case $SRV in
     *pipe*)
-      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $EXEC${EXEC:+ }$SERVER"
+      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $EXEC2${EXEC:+ }$SERVER"
 echo $ENV
-      echo "> $CL" | tee docs/${SRV}.perf
+      if [[ $EXEC2 == "" ]] ; then
+	echo "> ${CL}" | tee docs/${SRV}.perf
+      else
+	echo "> ${CL/$EXEC2/${EXEC,,}}" | tee docs/${SRV}.perf
+      fi
       eval $ENV $CL 2>&1 | tee -a docs/${SRV}.perf
 
       continue
