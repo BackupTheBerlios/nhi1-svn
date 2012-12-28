@@ -51,9 +51,9 @@ export  G_FileName="${0##*/}"
 IFS=";";export  G_Args="${@:-}";unset IFS
 export  G_Shell=ksh
 #%%# ---------------------------------------------------------------------
-export  G_Date='$Date: 2000/02/10 14:02:16 $'
-export  G_Revision='$Revision: 1.1.1.1 $'
-export  G_Author='$Author: dev1usr $'
+export  G_Date='$Date$'
+export  G_Revision='$Revision$'
+export  G_Author='$Author$'
 export  G_Source='$Source: /Repository/SetupEnv.CVS/ProcTemplate,v $'
 #%%%# --------------------------------------------------------------------
 export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
@@ -91,8 +91,6 @@ fi
 
 rm -fr /tmp/libmsgque-install
   
-exit
-
 bash -norc $SOURCE_HOME/configure    \
 		    --prefix=/tmp/libmsgque-install \
 		    "${G_Argv[@]}"  \
