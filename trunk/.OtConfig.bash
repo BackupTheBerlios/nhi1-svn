@@ -56,8 +56,12 @@ export  G_Revision='$Revision: 1.1.1.1 $'
 export  G_Author='$Author: dev1usr $'
 export  G_Source='$Source: /Repository/SetupEnv.CVS/ProcTemplate,v $'
 #%%%# --------------------------------------------------------------------
-export  G_Description='configure the Build-Environment'
+export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
+the configure-parameters are available in detail below'
+#export  G_HelpProc="$SOURCE_HOME/configure --help"
 #%%%%# -------------------------------------------------------------------
+
+#set -x
 
 ##  Retrieve environment data
 eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
@@ -65,9 +69,7 @@ eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
   T:Thread:0:use threads:B
 '   )"
 
-
-echo "G_Argv=$G_Argv"
-
+set +x
 
 if (( $Perf )) ; then
   if (( $Thread )) ; then

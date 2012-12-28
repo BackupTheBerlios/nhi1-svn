@@ -70,8 +70,8 @@ Echo() 		{
 
 Eval() 		{ 
 	case $G_ShellType in
-		1|2)	echo "eval echo \"\\\"$1\\\"\"\;"	;;
-		3)		echo "eval puts \"\\\"$1\\\"\"\;"	;;
+		1|2)	echo "eval \"$1\"\;"	;;
+		3)		echo "eval \"$1\"\;"	;;
 	esac
 }
 Error() 	{ Print "$G_FileName ERROR: $1" 	; echo "exit ${2:-1};" ; exit ${2:-1} ; }
@@ -236,11 +236,6 @@ function value {
 	typeset T=$1;shift
 	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
 	(( $# >= 1 )) && set_defaults $I "$*"
-}
-function argv { 
-	[[ $1 != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	[[ $# != "2" ]] && Warning "[SYNTAX] - 'argv argument' was expected and not found in .ENV file."
-	G_Argv="$2"
 }
 function config { 
 	## are needed?
@@ -497,14 +492,22 @@ function print_usage {
 		let i+=1
 	done
 	Ret="\n  Global options:\n"
-		Ret="$Ret\n    -c    clean screen"
-		Ret="$Ret\n    -v    get the version information"
-		Ret="$Ret\n    -i(+) use (not) the interactive mode"
-		Ret="$Ret\n    -s(+) save (not) the configuration"
-		Ret="$Ret\n    -p(+) print (not) the configuration"
-		Ret="$Ret\n    -h(+) options (database) help"
+	Ret="$Ret\n    -c    clean screen"
+	Ret="$Ret\n    -v    get the version information"
+	Ret="$Ret\n    -i(+) use (not) the interactive mode"
+	Ret="$Ret\n    -s(+) save (not) the configuration"
+	Ret="$Ret\n    -p(+) print (not) the configuration"
+	Ret="$Ret\n    -h(+) options (database) help"
 	Ret="$Ret\n\n  File description:\n\n$G_Description"
-	Exit "$Ret\n"
+	if test -n "${G_HelpProc:-}" ; then
+		Print "$Ret
+
+================================================================"
+		Eval "$G_HelpProc 1>&2"
+		Exit ""
+	else
+		Exit "$Ret\n"
+	fi
 }
 
 function long_options {
@@ -585,8 +588,7 @@ function parse_fatheroptions {
 	## all remaining positional parameters are put out
 	SE_Args="${@:-}"
 	Shift $((num - $#))
-	G_Argv=${SE_Args:-$G_Argv}
-	print_variable G_Argv "$G_Argv"
+	(( $# != 0 )) && set_defaults ${SE_INV_argv} "${*:-}"
 	## Help needed
 	case $SE_HELP in
 		1)	print_usage		;;
@@ -713,7 +715,6 @@ function save_local {
 		echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
 		let i+=1
 	done
-	echo "argv = \"$G_Argv\"" >> $SE_LFile
 }
 function interactive {
   ## something to do
@@ -817,7 +818,6 @@ typeset -i		SE_INTERACTIV=0
 typeset -i		SE_SAVE=0
 typeset -i		SE_LOOP=0
 typeset -i		G_LOOP=${G_LOOP:-0}
-typeset			G_Argv=""
 typeset 		SE_Setup=""
 typeset -i		SE_Read_Environment_File=0
 typeset			SE_LFile="./.${G_FileName//./}.ENV"
@@ -851,7 +851,7 @@ do
 ##			print_array SE_CmdLine 						
 	case $c in
         C)  IFS=",$SE_TAB$SE_NL"
-			SE_CmdLine=($OPTARG)
+			SE_CmdLine=($OPTARG	argv:G_Argv::"commandline arguments")
 			IFS=$SE_IFS									;;
 		W)	SE_CmdLine=(:$OPTARG::)
 			export G_Shell=no
