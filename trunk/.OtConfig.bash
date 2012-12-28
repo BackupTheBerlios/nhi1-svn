@@ -58,7 +58,7 @@ export  G_Source='$URL$'
 #%%%# --------------------------------------------------------------------
 export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
 the configure-parameters are available in detail below'
-#export  G_HelpProc="$SOURCE_HOME/configure --help"
+export  G_HelpProc="$SOURCE_HOME/configure --help"
 #%%%%# -------------------------------------------------------------------
 
 #set -x
