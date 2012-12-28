@@ -1,0 +1,16 @@
+
+1. configure.in
+
+/home/dev1usr/Project/NHI1/theBrain/libbrain/myconf.c:240:19: fatal error: bzlib.h: No such file or directory
+compilation terminated.
+make[3]: *** [libtmp_la-myconf.lo] Fehler 1
+make[3]: *** Warte auf noch nicht beendete Prozesse...
+mv -f .deps/libtmp_la-md5.Tpo .deps/libtmp_la-md5.Plo
+make[3]: Leaving directory `/build/Main/theBrain/libbrain'
+make[2]: *** [all-recursive] Fehler 1
+make[2]: Leaving directory `/build/Main/theBrain'
+make[1]: *** [all-recursive] Fehler 1
+make[1]: Leaving directory `/build/Main'
+make: *** [all] Fehler 2
+
+

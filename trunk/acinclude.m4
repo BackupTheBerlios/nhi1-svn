@@ -755,7 +755,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
     AC_ARG_WITH(tclcfg_path,
 	[  --with-tclcfg-path=DIR  Directory tclConfig.sh is located in.],
 	[ tclcnf="${withval}" ],
-	[ tclcnf="$(dirname $TCLSH)/../lib /lib /usr/lib /usr/local/lib /usr/local/tcl/lib" ])
+	[ tclcnf="$(dirname $TCLSH)/../lib /lib /lib64 /lib32 /usr/lib /usr/local/lib /usr/local/tcl/lib" ])
 
     for prim in $tclcnf; do
       for try in ${prim} ${prim}/tcl8.* ; do

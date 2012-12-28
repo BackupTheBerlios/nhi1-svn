@@ -1,8 +1,11 @@
 set -x
 export PATH=$HOME/ext/$MACHTYPE/thread/bin:$PATH
-../configure    --prefix=$HOME/ext/$MACHTYPE/thread \
+$(dirname $(readlink $0))/../configure    --prefix=$HOME/ext/$MACHTYPE/thread \
                 --enable-symbols \
                 --enable-threads \
+		--enable-cxx \
+		--enable-tcl \
+		--enable-java \
                 $@
 
 #               --enable-static

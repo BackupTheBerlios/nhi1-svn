@@ -1,0 +1,75 @@
+#!/bin/bash
+ROOT=$(cd ${0%/*}/..;pwd)
+SKRIPT=$(cd ${0%/*};pwd)/${0##*/}
+BAK=$ROOT/.build
+BUI=$ROOT/build
+START=/etc/rc.d/rc5.d/S99rcBuild
+STOP=/etc/rc.d/rc5.d/K01rcBuild
+SF=$BUI/.syncFlag
+
+ToBak() {
+    test -f $DF && $RSYNC -a "$@" $BUI/ $BAK/
+}
+
+ToBui() {
+    $RSYNC -a "$@" $BAK/ $BUI/
+    touch $SF
+}
+
+CheckRoot() {
+  (( $UID != 0 )) && {
+    echo "ERROR: run this command as root"
+    exit 1
+  }
+}
+
+RSYNC='rsync'
+
+#set -x
+
+case $1 in
+  start)
+    echo starting... $0
+    CheckRoot
+    mount -t tmpfs -o size=1g tmpfs $BUI
+    $0 status
+  ;;
+  stop)
+    echo stopping... $0
+    CheckRoot
+    ToBak --delete
+    umount $BUI
+    $0 status
+  ;;
+  2bui)
+    ToBui
+  ;;
+  2bak)
+    ToBak
+  ;;
+  install)
+    CheckRoot
+    $0 remove
+    ln -s $SKRIPT $START
+    ln -s $SKRIPT $STOP
+    $0 status
+  ;;
+  uninstall)
+    T=/etc/rc.d/rc3.d/K01rcBuild
+    CheckRoot
+    test -L $START && rm $START
+    test -L $STOP  && rm $STOP
+    $0 status
+  ;;
+  status)
+    df $BUI
+    ls -al $START $STOP
+  ;;
+  *)
+    echo usage: $0 '(start|stop|2bui|2bak|install|uninstall|status)'
+    exit 4
+  ;;
+esac
+
+exit 0
+
