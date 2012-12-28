@@ -54,7 +54,7 @@ export  G_Shell=ksh
 export  G_Date='$Date$'
 export  G_Revision='$Revision$'
 export  G_Author='$Author$'
-export  G_Source='$Source: /Repository/SetupEnv.CVS/ProcTemplate,v $'
+export  G_Source='$URL$'
 #%%%# --------------------------------------------------------------------
 export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
 the configure-parameters are available in detail below'
