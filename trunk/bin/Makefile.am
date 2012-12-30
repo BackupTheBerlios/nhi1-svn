@@ -11,6 +11,7 @@
 #§
 
 EXTRA_DIST =  change.tcl FileLib.tcl Label make_binary_dist.sh pkgIndex.tcl StdLib.tcl \
-		dist2svn.bash GetFromInstall.bash LbMain random.tcl svn_ps_svn_ignore.tcl
+		dist2svn.bash GetFromInstall.bash LbMain random.tcl svn_ps_svn_ignore.tcl \
+		  SetupEnv rcBuild
  
 
