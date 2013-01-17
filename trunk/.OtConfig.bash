@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u
+
 ## =======================================================================
 ##
 ## Setup Environment 
@@ -9,8 +11,10 @@
 ## =======================================================================
 
 ## delete all environment variables to setup a "clean" build environment
-[[ "$CLEAN" != "yes" ]] && exec /usr/bin/env - \
+[[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
   CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
+
+#set -x
 
 ## some useful procs
 add2var() {
@@ -34,7 +38,7 @@ add2var() {
         i=0;
     done
   ## set the new global variable
-    eval export $var=\"\$add\:\${array[*]}\"
+    eval export $var=\"\$add\${array[*]:+:}\${array[*]:-}\"
     unset IFS
 }
 export -f add2var
@@ -52,7 +56,7 @@ export CC="ccache gcc"
 export CXX="ccache g++"
 export CTAGSFLAGS="--c-kinds=+p"
 
-SOURCE_HOME=$(dirname $(readlink $0))
+SOURCE_HOME=$(dirname $(readlink -f $0))
 
 export  G_FileName="${0##*/}"
 IFS=";";export  G_Args="${@:-}";unset IFS
@@ -73,13 +77,14 @@ export  G_HelpProc="$SOURCE_HOME/configure --help"
 ##  Retrieve environment data
 eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
   P:Perf:0:create maximum performance code:B
-  T:Thread:0:use threads:B
+  T:Thread:0:create threaded code:B
 '   )"
 
 if (( $Perf )) ; then
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/performance_thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_thread/lib
+    opt='--enable-threads'
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/performance_nothread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_nothread/lib
@@ -88,6 +93,7 @@ else
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/thread/lib
+    opt='--enable-threads'
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/nothread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/nothread/lib
@@ -98,7 +104,7 @@ rm -fr /tmp/libmsgque-install
 
 bash -norc $SOURCE_HOME/configure    \
 		    --prefix=/tmp/libmsgque-install \
-		    "${G_Argv[@]}"  \
+		    "${G_Argv[@]:-}" "${opt:-}" \
 
 #		    --enable-cxx \
 #		    --enable-java \
