@@ -527,6 +527,9 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
     AC_ARG_VAR( [CLREXEC], [CLR runtime])
     if test "$host_os" == "mingw32" ; then
       AC_PATH_PROGS( [CSCOMP], [csc] )
+      if test "x$CSCOMP" == "x"; then
+	AC_MSG_ERROR([unable to find useable CSCOMP])
+      fi
       CLREXEC=""
       if test "x$enable_symbols" = "xno"; then
 	AC_SUBST([CSHARP_DEBUG], ['-optimize'])
@@ -715,6 +718,9 @@ AC_DEFUN([SC_ENABLE_PERL], [
   if test x$enable_perl = xyes; then
     AC_ARG_VAR([PERL], [perl runtime])
     AC_PATH_PROGS([PERL], [perl]) 
+    if test "x$PERL" == "x"; then
+      AC_MSG_ERROR([unable to find useable PERL])
+    fi
     if test "$build_os" == "cygwin"; then
       PERL=$(cygpath -m "$PERL")
     fi
@@ -744,7 +750,10 @@ AC_DEFUN([SC_ENABLE_TCL], [
   AC_MSG_RESULT($enable_tcl)
   if test x$enable_tcl = xyes; then
     AC_ARG_VAR([TCLSH], [tcl runtime])
-    AC_PATH_PROGS( [TCLSH], [tclsh85 tclsh85g tclsh8.5 tclsh] ) 
+    AC_PATH_PROGS( [TCLSH], [tclsh86 tclsh86g tclsh8.6 tclsh85 tclsh85g tclsh8.5 tclsh] ) 
+    if test "x$TCLSH" == "x"; then
+      AC_MSG_ERROR([unable to find useable TCLSH])
+    fi
     if test "$build_os" == "cygwin"; then
       TCLSH=$(cygpath -m "$TCLSH")
     fi
@@ -755,7 +764,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
     AC_ARG_WITH(tclcfg_path,
 	[  --with-tclcfg-path=DIR  Directory tclConfig.sh is located in.],
 	[ tclcnf="${withval}" ],
-	[ tclcnf="$(dirname $TCLSH)/../lib /lib /lib64 /lib32 /usr/lib /usr/local/lib /usr/local/tcl/lib" ])
+	[ tclcnf="$TCLBINDIR/../lib $TCLBINDIR/../lib64 /lib /lib64 /lib32 /usr/lib /usr/local/lib /usr/local/tcl/lib" ])
 
     for prim in $tclcnf; do
       for try in ${prim} ${prim}/tcl8.* ; do

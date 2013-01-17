@@ -9,7 +9,8 @@
 ## =======================================================================
 
 ## delete all environment variables to setup a "clean" build environment
-[[ "$HOME" != "" ]] && exec /usr/bin/env - TERM=$TERM $0 "$@"
+[[ "$CLEAN" != "yes" ]] && exec /usr/bin/env - \
+  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
 
 ## some useful procs
 add2var() {
@@ -45,6 +46,12 @@ export -f add2var
 export PATH=/bin:/usr/bin
 export LD_LIBRARY_PATH=
 
+# I use ccache for compiling
+export CCACHE_DIR="/build/dev01/Cache"
+export CC="ccache gcc"
+export CXX="ccache g++"
+export CTAGSFLAGS="--c-kinds=+p"
+
 SOURCE_HOME=$(dirname $(readlink $0))
 
 export  G_FileName="${0##*/}"
@@ -69,19 +76,17 @@ eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
   T:Thread:0:use threads:B
 '   )"
 
-set +x
-
 if (( $Perf )) ; then
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/performance_thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_thread/lib
   else
-    add2var PATHxi	      $HOME/ext/$MACHTYPE/performance_nothread/bin
-    add2var LD_LIBRARY_PATHxi $HOME/ext/$MACHTYPE/performance_nothread/lib
+    add2var PATH	      $HOME/ext/$MACHTYPE/performance_nothread/bin
+    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_nothread/lib
   fi
 else
   if (( $Thread )) ; then
-    add2var PATHxi	      $HOME/ext/$MACHTYPE/thread/bin
+    add2var PATH	      $HOME/ext/$MACHTYPE/thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/thread/lib
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/nothread/bin
@@ -90,7 +95,7 @@ else
 fi
 
 rm -fr /tmp/libmsgque-install
-  
+
 bash -norc $SOURCE_HOME/configure    \
 		    --prefix=/tmp/libmsgque-install \
 		    "${G_Argv[@]}"  \
