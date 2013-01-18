@@ -23,10 +23,11 @@ CheckRoot() {
 }
 
 RSYNC='rsync'
+CMD="$1"; shift
 
 #set -x
 
-case $1 in
+case "$CMD" in
   start)
     echo starting... $0
     mkdir -p $BUI
@@ -42,7 +43,7 @@ case $1 in
     ToBui
   ;;
   2bak)
-    ToBak
+    ToBak "$@"
   ;;
   install)
     CheckRoot

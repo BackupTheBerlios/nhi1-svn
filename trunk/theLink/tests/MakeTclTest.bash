@@ -83,7 +83,7 @@ PREFIX=""
 POSTFIX="cat"
 
 (( $# == 0 )) && USAGE
-[[ $1 == "-h" ]] && USAGE
+[[ $1 == "-h" || $1 == "--help" ]] && USAGE
 [[ $1 == "-ur" ]] && {
   shift
   set -- "$@" --tcp --port 7777 --thread
@@ -133,54 +133,93 @@ POSTFIX="cat"
   shift
 }
 
-ID=$1; shift
-CMDDIR=$(cd $(dirname $ID);pwd)
-CMD=$(basename $ID)
+# rebuild command line, expand the path, find executable etc..
+#
+cmdline=()
+first=1
+id=$(basename $1)
+id=${id%.*}
+while (( $# )) ; do
+  if (( $first )) ; then
+    CMDDIR=$(cd $(dirname $1);pwd)
+    CMD=$(basename $1)
 
-# fix the CMD path
-[[ ! -e "$CMDDIR/$CMD" ]] && {
-  # look for CMD in the same directory but in the source tree
-  CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir}"
-  [[ ! -e  "$CMDDIR/$CMD" ]] && {
-    echo "unable to find the command: '$ID'"
-  }
-}
+    # fix the CMD path
+    [[ ! -e "$CMDDIR/$CMD" ]] && {
+      # look for CMD in the same directory but in the source tree
+      CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir}"
+      [[ ! -e  "$CMDDIR/$CMD" ]] && {
+	# look into the example directories
+	case "$CMD" in
+	  *.tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
+	  *.test)     CMDDIR="$abs_top_srcdir/theLink/test/";;
+	  *.java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
+	  *.py)	      CMDDIR="$abs_top_srcdir/theLink/example/python";;
+	  *.pl)	      CMDDIR="$abs_top_srcdir/theLink/example/perl";;
+	  *.rb)	      CMDDIR="$abs_top_srcdir/theLink/example/ruby";;
+	  *.php)      CMDDIR="$abs_top_srcdir/theLink/example/php";;
+	  *.exe|*.cs) CMDDIR="$abs_top_builddir/theLink/example/csharp";;
+	  *.vb)	      CMDDIR="$abs_top_builddir/theLink/example/vb";;
+	  *.go)	      CMDDIR="$abs_top_builddir/theLink/example/go";;
+	  *.cc)	      CMDDIR="$abs_top_builddir/theLink/example/cc";;
+	  *.c)	      CMDDIR="$abs_top_builddir/theLink/example/c";;
+	esac
+      }
+    }
+    CMD="$CMDDIR/$CMD"
 
-# find executable is CMD is a script-file
-case "$CMD" in
-  *.tcl|*.test)   EXE="$TCLSH";;
-  *.java)	  EXE="$JAVA"; CMD="${CMD%%.java}";;
-  *.py)		  EXE="$PYTHON";;
-  *.pl)		  EXE="$PERL";;
-  *.rb)		  EXE="$RUBY";;
-  *.php)	  EXE="$PHP";;
-  *.exe)	  EXE="$MONO";;
-  *.go)		  EXE="${CMD%\.*}$EXT"; CMD="";;
-  *.cc)		  EXE="${CMD%\.*}$EXT"; CMD="";;
-  *.c)		  EXE="${CMD%\.*}$EXT"; CMD="";;
-  *)		  EXE="";;
-esac
-#set -x 
+    # find executable is CMD is a script-file
+    case "$CMD" in
+      *.tcl|*.test)   EXE="$TCLSH";;
+      *.java)	      EXE="$JAVA"; CMD="${CMD%.*}";;
+      *.py)	      EXE="$PYTHON";;
+      *.pl)	      EXE="$PERL -I$abs_top_srcdir/theLink/example/perl";;
+      *.rb)	      EXE="$RUBY";;
+      *.php)	      EXE="$PHP";;
+      *.exe)	      EXE="$MONO";;
+      *.go)	      EXE=""; CMD="${CMD%.*}$EXT";;
+      *.cc)	      EXE=""; CMD="${CMD%.*}$EXT";;
+      *.c)	      EXE=""; CMD="${CMD%.*}$EXT";;
+      *)	      EXE="";;
+    esac
+
+    [[ ! -e  "$CMD" ]] && {
+      echo "unable to find the path for command: '$CMD'"
+      exit 1
+    }
+
+    test -n "$EXE" && cmdline+=($EXE)
+    cmdline+=("$CMD")
+    unset -v CMD CMDDIR EXE
+    first=0
+  elif [[ "$1" == "@" ]] ; then
+    first=1
+    cmdline+=($1)
+  else
+    cmdline+=($1)
+  fi
+  shift
+done
+
+echo "exec: ${cmdline[*]}"
+
+set "${cmdline[@]}"
+EXE=$1; shift
 
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
-    T="$CMD $@"
-    exec $PREFIX $EXE -a "$T"   2>&1 | $POSTFIX | tee /tmp/$CMD.log
+    exec $PREFIX $EXE -a "$*" 2>&1 | $POSTFIX | tee /tmp/$id.log
   else
-    exec $PREFIX $EXE "$CMDDIR/$CMD" "$@" 2>&1 | $POSTFIX | tee /tmp/$CMD.log
+    exec $PREFIX $EXE "$@" 2>&1 | $POSTFIX | tee /tmp/$id.log
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
-    T="$CMD $@"
-    set $EXE
-    EXE="$1"; shift
-    T="$@ $T"
-    exec $PREFIX $EXE -a "$T"
+    exec $PREFIX $EXE -a "$*}"
   else
     if [[ "$POSTFIX" == "cat" ]] ; then
-      exec $PREFIX $EXE "$CMDDIR/$CMD" "$@" 2>&1 | $POSTFIX
+      exec $PREFIX $EXE "$@" 2>&1 | $POSTFIX
     else
-      exec $PREFIX $EXE "$CMDDIR/$CMD" "$@"
+      exec $PREFIX $EXE "$@"
     fi
   fi
 fi

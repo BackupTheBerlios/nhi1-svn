@@ -12,8 +12,7 @@ export  G_Revision=${G_Revision:-'$Revision: 11578 $'}
 export  G_Author=${G_Author:-'$Author: mqm $'}
 export  G_Source=${G_Source:-'$URL: svn://mpsun07/home/otto/SetupEnv/SetupEnv.bash $'}
 #%%%# --------------------------------------------------------------------
-export  G_Description=${G_Description:-\
-'Provides values for various environment variables.
+export  G_Description=${G_Description:-"Provides values for various environment variables.
 
 Commandline String
 ==================
@@ -24,7 +23,7 @@ The String has the form :
 
 with
 
-  Option ........ Command-Line option in short "-" or long "--" format
+  Option ........ Command-Line option in short '-' or long '--' format
   Variable ...... Environment variable
   InitValue ..... Initial value for Env-Variable
   Description ... Description of Env-Variable
@@ -37,7 +36,7 @@ with
 All parameters after the last know argument are set into the variable 
 <G_Argv> und the positional argument of the calling shell are shifted
 until only the left over arguments are available.
-'}
+"}
 #%%%%# ------------------------------------------------------------------
 #
 #
@@ -957,6 +956,6 @@ print_var
 ## print the environment
 print_all_variables
 	
+exit 0
 # ----------------------------------------------------------------------
 # vim: shiftwidth=4 tabstop=4
-exit 0

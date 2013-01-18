@@ -21,8 +21,8 @@ endif
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
 PERLDEPEND    =	Net-PerlMsgque/$(MF) Net-PerlMsgque/typemap Net-PerlMsgque/lib/Net/PerlMsgque.pm
 PERLCONFIG    =	  PREFIX="$(prefix)" \
-		  INC="-Wall -I. -I../$(top_builddir) -I../$(srcdir)/../libmsgque" \
-		  OBJECT="\$$(O_FILES) ../$(builddir)/../libmsgque/.libs/libtmp*.o ../$(builddir)/../sqlite/.libs/libtmp*.o"
+		  INC="-Wall -I. -I$(abs_top_builddir) -I$(abs_srcdir)/../libmsgque" \
+		  OBJECT="\$$(O_FILES) $(abs_builddir)/../libmsgque/.libs/libtmp*.o $(abs_builddir)/../sqlite/.libs/libtmp*.o"
 
 if DEBUG
 PERLCONFIG    += OPTIMIZE=-g
@@ -31,17 +31,18 @@ endif
 PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN"
 
 $(PERLMAKEFILE): $(PERLDEPEND) Makefile.am
-	-test ! -d Net-PerlMsgque && cp -pr $(srcdir)/Net-PerlMsgque . && chmod -R u+w Net-PerlMsgque && touch Net-PerlMsgque/.distclean
-	cd Net-PerlMsgque && @PERL@ $(MF) $(PERLCONFIG)
+	-test ! -d $(builddir)/Net-PerlMsgque && cp -pr $(srcdir)/Net-PerlMsgque $(builddir)/Net-PerlMsgque \
+	   && chmod -R u+w $(builddir)/Net-PerlMsgque && touch $(builddir)/Net-PerlMsgque/.distclean
+	cd $(builddir)/Net-PerlMsgque && @PERL@ $(MF) $(PERLCONFIG)
 
 all-local: $(PERLMAKEFILE)
-	cd Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS)
+	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS)
 
 clean-local: $(PERLMAKEFILE)
-	cd Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) clean
+	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) clean
 
 install-exec-local:
-	cd Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
+	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 
 uninstall-local:
 	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/Net/PerlMsgque.pm
@@ -53,7 +54,7 @@ uninstall-local:
 	rm -f $(DESTDIR)$(prefix)/share/man/man3/Net::PerlMsgque.3
 
 distclean-local:
-	-test -f Net-PerlMsgque/.distclean && rm -fr Net-PerlMsgque
+	-test -f $(builddir)/Net-PerlMsgque/.distclean && rm -fr $(builddir)/Net-PerlMsgque
 
 endif
 

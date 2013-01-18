@@ -14,8 +14,6 @@ set -u
 [[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
   CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
 
-#set -x
-
 ## some useful procs
 add2var() {
     (($# != 2)) && {
@@ -72,8 +70,6 @@ the configure-parameters are available in detail below'
 export  G_HelpProc="$SOURCE_HOME/configure --help"
 #%%%%# -------------------------------------------------------------------
 
-#set -x
-
 ##  Retrieve environment data
 eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
   P:Perf:0:create maximum performance code:B
@@ -102,9 +98,11 @@ fi
 
 rm -fr /tmp/libmsgque-install
 
+echo "G_Argv=$G_Argv"
+
 bash -norc $SOURCE_HOME/configure    \
 		    --prefix=/tmp/libmsgque-install \
-		    "${G_Argv[@]:-}" "${opt:-}" \
+		    ${G_Argv:-} ${opt:-} \
 
 #		    --enable-cxx \
 #		    --enable-java \
