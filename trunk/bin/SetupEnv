@@ -41,18 +41,18 @@ until only the left over arguments are available.
 #
 #
 
-typeset -i Debug=0
+declare -i Debug=0
 Debug()		{ 
-	(( $Debug == 0 )) && return
-	printf "Debug: %30s => $(date)\n" "$1" 1>&2
+  (( ! $Debug )) && return
+  printf "Debug: %30s => $(date)\n" "$1" 1>&2
 }
 
 ## get the shell-type
 case $G_Shell in
-	csh|tcsh)		G_ShellType=1	;;
-	ksh|bash|sh)	G_ShellType=2   ;;
-	tclsh|wish)		G_ShellType=3   ;;
-	*)				G_ShellType=0	;;
+  csh|tcsh)	G_ShellType=1	;;
+  ksh|bash|sh)	G_ShellType=2   ;;
+  tclsh|wish)	G_ShellType=3   ;;
+  *)		G_ShellType=0	;;
 esac
 
 ##
@@ -61,87 +61,97 @@ Debug "Define Procedures" ######################################################
 
 ## Procedures
 Echo() 		{ 
-	case $G_ShellType in
-		1|2)	echo "echo -e '$1';"  ;;
-		3)		echo "puts '$1';"	  ;;
-	esac
+  case $G_ShellType in
+    1|2)  echo "echo -e '$1';"  ;;
+    3)	  echo "puts '$1';"	;;
+  esac
 }
 
 Eval() 		{ 
-	case $G_ShellType in
-		1|2)	echo "eval \"$1\"\;"	;;
-		3)		echo "eval \"$1\"\;"	;;
-	esac
+  case $G_ShellType in
+    1|2)  echo "eval \"$1\"\;"	;;
+    3)	  echo "eval \"$1\"\;"	;;
+  esac
 }
 Error() 	{ Print "$G_FileName ERROR: $1" 	; echo "exit ${2:-1};" ; exit ${2:-1} ; }
 Error2() 	{ Print "$G_FileName ERROR: $1" 	; echo "ERROR $1" ; exit ${2:-1} ; }
 Error3() 	{ Print "$G_FileName ERROR: $1" 	; exit ${2:-1} ; }
 Warning() 	{ Print "$G_FileName WARNING: $1" 	; export SE_SUCCESS ; SE_SUCCESS=1 ; }
-Exit() 		{ Print "$1" 						; echo "exit 0;" ; exit 0 ; }
-Weiter()	{ typeset Tmp="";read -p "\n\n   continue with keypress   " Tmp 1>&2 ;}
-Print()		{ echo -e "$@" 1>&2; }
+Exit() 		{ Print "$1" 				; echo "exit 0;" ; exit 0 ; }
+Weiter()	{ declare Tmp="";read -p "\n\n   continue with keypress   " Tmp 1>&2 ;}
+Print()		{ echo -e "$*" 1>&2; }
 
-XPrint()	{ for __I; do eval echo -en "\"$__I<\$$__I>\", " 1>&2; done; Print "" ; }
+#XPrint()	{ for __I; do eval echo -en "\"$__I<\$$__I>\", " 1>&2; done; Print "" ; }
 
 ##
 Debug "print functions" ##########################################################
 ##
 function Shift {
-	(( $# < 1 )) && return
-	typeset -i num=$1
-	case $G_ShellType in
-		1)	typeset -i i=0
-			while (( i < num )) ; do
-				echo shift
-			done
-		;;
-		2)	echo "shift $num"		;;
-		3)	let num-=1; echo "set \$argv [lreplace \$argv 0 $num]" 	;;
-	esac
+  (( $# < 1 )) && return
+  declare -i num=$1
+  case $G_ShellType in
+    1)	declare -i i=0
+	while (( i < num )) ; do
+	  echo "shift;"
+	done
+    ;;
+    2)	echo "shift $num;";;
+    3)	let num-=1; echo "set \$argv [lreplace \$argv 0 $num];";;
+  esac
 }
 ##
 function print_variable {
-	(( $# < 2 )) && return
-	typeset a=$1;shift
-	case $G_ShellType in
-		1)	echo "set $a = $@" 	;;
-		2)	echo "$a='$@'"		;;
-		3)	echo "set $a {$@}" 	;;
-	esac
+  (( $# < 2 )) && return
+  declare a=$1;shift
+  case $G_ShellType in
+    1)	echo "set $a = $*;" 	;;
+    2)	echo "$a='$*';"		;;
+    3)	echo "set $a {$*}:" 	;;
+  esac
 }
 ##
 function print_extern {
-	(( $# < 1 )) && return
-	case $G_ShellType in
-		1)	echo "setenv $1" 	;;
-		2)	echo "export $1"	;;
-		3)	echo "global $1" 	;;
-	esac
+  (( $# < 1 )) && return
+  case $G_ShellType in
+    1)	echo "setenv $1;" 	;;
+    2)	echo "export $1;"	;;
+    3)	echo "global $1;" 	;;
+  esac
 }
 function print_all_variables {
-	typeset -i i=0
-	while (( i < SE_NOptions ))
-	do
-		[[ -z ${SE_Defaults[$i]} ]] && { let i+=1; continue; }
-		print_variable "${SE_Variables[$i]}" "${SE_Defaults[$i]}"
-		let i+=1
-	done
-	(( SE_LOOP == 1 )) && {
-		print_extern "G_LOOP"
-		print_variable "G_LOOP" "$((G_LOOP+1))"
-	}
+  declare -i i=0
+  while (( i < SE_NOptions ))
+  do
+    [[ -z ${SE_Defaults[$i]} ]] && { let i+=1; continue; }
+    print_variable "${SE_Variables[$i]}" "${SE_Defaults[$i]}"
+    let i+=1
+  done
+  (( SE_LOOP == 1 )) && {
+    print_extern "G_LOOP"
+    print_variable "G_LOOP" "$((G_LOOP+1))"
+  }
 }
 function print_array {
-	eval typeset -i 	len=\${#$1[*]}
-		 typeset		val
-		 typeset -i     i=0
-	echo "S: print array -$1- <$len>" 1>&2
-	while (( i < len )) ; do
-		eval val=\${$1[$i]}
-		printf 	"%2i) <$val>\n" $i 1>&2
-		let i+=1
-	done
-	echo "E: print array -$1-" 1>&2
+  eval declare -i len=\${#$1[*]}
+  declare val
+  declare -i i=0
+  echo "S: print array -$1- <$len>" 1>&2
+  while (( i < len )) ; do
+    eval val=\${$1[$i]}
+    printf "%2i) <$val>\n" $i 1>&2
+    let i+=1
+  done
+  echo "E: print array -$1-" 1>&2
+}
+function print_a_array {
+  eval declare -a keys=\${!$1[@]}
+  declare val
+  echo "S: print array -$1- <hash>" 1>&2
+  for k in ${keys[@]}; do
+    eval val=\${$1[$k]}
+    printf "%10s) <$val>\n" $k 1>&2
+  done
+  echo "E: print array -$1-" 1>&2
 }
 
 ##
@@ -149,127 +159,127 @@ Debug "set functions" ##########################################################
 ##
 
 function set_option {
-	typeset -i I="$1"
-	typeset    V="$2"
-	typeset	   E="${SE_Options[$I]:-%no%}"
-	if (( ${#V} == 0 )) ; then
-		SE_Options[$I]="${SE_Variables[$I]}"
-		[[ $E == "%no%" ]] && let SE_NLOptions+=1
-	elif (( ${#V} > 1 )) ; then
-		SE_Options[$I]="$V"
-		[[ $E == "%no%" ]] && let SE_NLOptions+=1
-	else
-		SE_Options[$I]="$V"
-	fi
+  declare -i I="$1"
+  declare    V="$2"
+  declare    E="${SE_Options[$I]:-%no%}"
+  if (( ${#V} == 0 )) ; then
+    SE_Options[$I]="${SE_Variables[$I]}"
+    [[ $E == "%no%" ]] && let SE_NLOptions+=1
+  elif (( ${#V} > 1 )) ; then
+    SE_Options[$I]="$V"
+    [[ $E == "%no%" ]] && let SE_NLOptions+=1
+  else
+    SE_Options[$I]="$V"
+  fi
 }
 
 function set_defaults {
-	typeset I=$1
-	typeset D=$2
-	## special bei tables, _*_ wird expandiert
-	[[ "$D" == _*_ ]] && {
-		D="$(eval_command $D)"
-		[[ $? != 0 ]] && Error "[FKT] set_defaults"
-	}
-	## check the value
-	if [[ $D != "?" && -n ${SE_List[$I]} ]] ; then
-		typeset -i idx=0
-		typeset -a tmpl
-		IFS="|"
-		tmpl=(${SE_List[$I]})
-		unset IFS
-		if [[ $D == "%#:"* ]] ; then
-			idx=${D##%#:}
-			D=${tmpl[$idx]}
-		else
-			typeset -i idx=0
-			typeset -i max=${#tmpl[*]}
-			while ((idx < max)) ; do
-				[[ "$D" == "${tmpl[$idx]}" ]] && break
-				let idx+=1
-			done
-			(( idx >= max )) && {
-				Error "[FKT] set_defaults: '-${SE_Options[$I]} $D' is not part of index '${SE_List[$I]}'"
-			}
-		fi
-	fi
-	## save values
-	SE_Defaults[$I]="$D"
+  declare I=$1
+  declare D=$2
+  ## special bei tables, _*_ wird expandiert
+  [[ "$D" == _*_ ]] && {
+    D="$(eval_command $D)"
+    [[ $? != 0 ]] && Error "[FKT] set_defaults"
+  }
+  ## check the value
+  if [[ $D != "?" && -n ${SE_List[$I]} ]] ; then
+    declare -i idx=0
+    declare -a tmpl
+    IFS="|"
+    tmpl=(${SE_List[$I]})
+    unset IFS
+    if [[ $D == "%#:"* ]] ; then
+      idx=${D##%#:}
+      D=${tmpl[$idx]}
+    else
+      declare -i idx=0
+      declare -i max=${#tmpl[*]}
+      while ((idx < max)) ; do
+	[[ "$D" == "${tmpl[$idx]}" ]] && break
+	let idx+=1
+      done
+      (( idx >= max )) && {
+	Error "[FKT] set_defaults: '-${SE_Options[$I]} $D' is not part of index '${SE_List[$I]}'"
+      }
+    fi
+  fi
+  ## save values
+  SE_Defaults[$I]="$D"
 }
 
 function set_description {
-	typeset		I=$1
-	typeset		V=$2
-	typeset -i	len=${#V}
-	if ((${#SE_List[SE_NOptions]} > 0)) ; then
-		let len=len+${#SE_List[$SE_NOptions]}+4
-	fi
-	(( len > SE_NDescriptions )) && let SE_NDescriptions=len
-	SE_Descriptions[$I]=$V
+  declare	I=$1
+  declare	V=$2
+  declare -i	len=${#V}
+  if ((${#SE_List[SE_NOptions]} > 0)) ; then
+    let len=len+${#SE_List[$SE_NOptions]}+4
+  fi
+  (( len > SE_NDescriptions )) && let SE_NDescriptions=len
+  SE_Descriptions[$I]=$V
 }
 
 ##
 Debug "scan functions" ##########################################################
 ##
 function GetValue {
-	## are needed?
-	typeset V=$1;shift
-	eval typeset I=\${SE_IDX_$V:--1}
-	(( I == -1 )) && { Warning "[CONFIG] - unknown variable \"$V\"" ; return ; }
-	echo "${SE_Defaults[$I]}"
+  ## are needed?
+  declare V=$1;shift
+  declare I=${SE_IDX[$V]:--1}
+  (( I == -1 )) && { Warning "[CONFIG] - unknown variable \"$V\"" ; return ; }
+  echo "${SE_Defaults[$I]}"
 }
 function system {
-	typeset V=$1;shift
-	typeset T=$1;shift
-	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	eval $V=\"$@\"
-	SE_System=($V)
-	print_variable $V $@
+  declare V=$1;shift
+  declare T=$1;shift
+  [[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
+  eval $V=\"$@\"
+  SE_System=($V)
+  print_variable $V $@
 }
 function value { 
-	## are needed?
-	typeset V=$1;shift
-	eval typeset I=\${SE_IDX_$V:--1}
-	(( I == -1 )) && return
-	## make processing
-	typeset T=$1;shift
-	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	(( $# >= 1 )) && set_defaults $I "$*"
+  ## are needed?
+  declare V=$1;shift
+  declare I=${SE_IDX[$V]:--1}
+  (( I == -1 )) && return
+  ## make processing
+  declare T=$1;shift
+  [[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
+  (( $# >= 1 )) && set_defaults $I "$*"
 }
 function config { 
-	## are needed?
-	typeset V=$1;shift
-	eval typeset -i I=\${SE_IDX_$V:--1}
-	(( I == -1 )) && return
-	## make processing
-	typeset T=$1;shift
-	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	typeset O=$1;shift
-	typeset T=$1;shift
-	[[ $T != "-" ]] && Warning "[SYNTAX] - '-' was expected and not found in .ENV file."
-	set_option $I "$O"
-	set_description $I "$*"
+  ## are needed?
+  declare V=$1;shift
+  declare -i I=${SE_IDX[$V]:--1}
+  (( I == -1 )) && return
+  ## make processing
+  declare T=$1;shift
+  [[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
+  declare O=$1;shift
+  declare T=$1;shift
+  [[ $T != "-" ]] && Warning "[SYNTAX] - '-' was expected and not found in .ENV file."
+  set_option $I "$O"
+  set_description $I "$*"
 }
 function cmd { 
-	## are needed?
-	typeset V=$1;shift
-	## make processing
-	typeset T=$1;shift
-	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	SE_Cmd_Tokens[$SE_IDX_MAX_COMMANDS]="$V"
-	SE_Cmd_Values[$SE_IDX_MAX_COMMANDS]="$@"
-	export SE_IDX_$V=$SE_IDX_MAX_COMMANDS
-	let SE_IDX_MAX_COMMANDS+=1
+  ## are needed?
+  declare V=$1;shift
+  ## make processing
+  declare T=$1;shift
+  [[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
+  SE_Cmd_Tokens[$SE_IDX_MAX_COMMANDS]="$V"
+  SE_Cmd_Values[$SE_IDX_MAX_COMMANDS]="$@"
+  export SE_IDX[$V]=$SE_IDX_MAX_COMMANDS
+  let SE_IDX_MAX_COMMANDS+=1
 }
 function cmdtxt { 
-	## are needed?
-	typeset V=$1;shift
-	eval typeset -i I=\${SE_IDX_$V:--1}
-	(( I == -1 )) && return
-	## make processing
-	typeset T=$1;shift
-	[[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
-	SE_Cmd_Text[$I]="$@"
+  ## are needed?
+  declare V=$1;shift
+  declare -i I=${SE_IDX[$V]:--1}
+  (( I == -1 )) && return
+  ## make processing
+  declare T=$1;shift
+  [[ $T != "=" ]] && Warning "[SYNTAX] - '=' was expected and not found in .ENV file."
+  SE_Cmd_Text[$I]="$@"
 }
 
 ##
@@ -277,489 +287,485 @@ Debug "misc functions" #########################################################
 ##
 
 function query_make {
-	## Test on BUILDPATH
-	[[ ${BUILDPATH:-""} == "" ]] && Error2 "No BUILDPATH environment variable"
-	## Test on BUILDPATH
-	[[ -d $BUILDPATH ]] || Error2 "BUILDPATH is not a directory"
-	## Check for existence of Makefile if it is needed.
-	[[ -r $BUILDPATH/Makefile ]] || Error2 "[ENVIRONMENT] - Makefile not found. Please run imake."
-	## execute command
-	echo "$(cd $BUILDPATH;make -r $1 2>/dev/null)"
+  ## Test on BUILDPATH
+  [[ ${BUILDPATH:-""} == "" ]] && Error2 "No BUILDPATH environment variable"
+  ## Test on BUILDPATH
+  [[ -d $BUILDPATH ]] || Error2 "BUILDPATH is not a directory"
+  ## Check for existence of Makefile if it is needed.
+  [[ -r $BUILDPATH/Makefile ]] || Error2 "[ENVIRONMENT] - Makefile not found. Please run imake."
+  ## execute command
+  echo "$(cd $BUILDPATH;make -r $1 2>/dev/null)"
 }
 function eval_command {
-	## create index
-	eval typeset -i I=\${SE_IDX_$1:--1}
-	## check if command is available
-	(( I == -1 )) && { echo "$1"; return; }
-	## make eval
-	R="$(${SE_Cmd_Values[$I]})"
-	## test on error
-	[[ $? != 0 ]] && Error2 "[EXEC] - Error during proccess of Target <$1>"
-	## test on output
-	case $R in
-		Nothing)	echo	"$1"		;;
-		*)			echo	"$R"		;;
-	esac
+  ## create index
+  declare -i I=${SE_IDX[$1]:--1}
+  ## check if command is available
+  (( I == -1 )) && { echo "$1"; return; }
+  ## make eval
+  R="$(${SE_Cmd_Values[$I]})"
+  ## test on error
+  [[ $? != 0 ]] && Error2 "[EXEC] - Error during proccess of Target <$1>"
+  ## test on output
+  case $R in
+    Nothing)	echo	"$1"	;;
+    *)		echo	"$R"	;;
+  esac
 }
 function check_on_command {
-	typeset -i i=0
-	typeset D=""
-	while (( i < SE_NOptions ))
-	do
-		[[ ${SE_Defaults[$i]} == "ERROR" ]] &&
-			Error "[CHECK ON COMMAND] occurs during process of a command"
-		[[ ${SE_Defaults[$i]} == _*_ ]] && {
-			D="$(eval_command ${SE_Defaults[$i]})"
-			[[ $? != 0 ]] && Error "[FKT] check_on_command"
-			set_defaults $i "$D"
-		}
-		let i+=1
-	done
+  declare -i i=0
+  declare D=""
+  while (( i < SE_NOptions ))
+  do
+    [[ ${SE_Defaults[$i]} == "ERROR" ]] &&
+      Error "[CHECK ON COMMAND] occurs during process of a command"
+    [[ ${SE_Defaults[$i]} == _*_ ]] && {
+      D="$(eval_command ${SE_Defaults[$i]})"
+      [[ $? != 0 ]] && Error "[FKT] check_on_command"
+      set_defaults $i "$D"
+    }
+    let i+=1
+  done
 }
 
 function setup_ENV_file {
-	typeset	SE_Value=""
-	function cmd 	{ :;}
-	function system { :;}
-	function config { :;}
-	function value 	{ SE_Value="$SE_Value${SE_Value:+,}:$1::" ; }
-	[[ -f $1 ]]	&& . $1
-	echo "$SE_Value"
+  declare SE_Value=""
+  function cmd 	{ :;}
+  function system { :;}
+  function config { :;}
+  function value { SE_Value="$SE_Value${SE_Value:+,}:$1::" ; }
+  [[ -f $1 ]] && . $1
+  echo "$SE_Value"
 }
 
 function parse_cmdline {
 
-	## typeset
-	typeset		option
-	typeset		opt
-	typeset		var
-	typeset		def
-	typeset		dfi
+  ## declare
+  declare option
+  declare opt
+  declare var
+  declare def
+  declare dfi
 
-	## work
-	IFS=$SE_IFS2	
-	for option in ${SE_CmdLine[*]:-}
-	do
-		[[ $option != *$NIFS* ]] && continue
-	  ## delete all spaces at the begin and end
-		option=${option%%+([[:space:]])}
-		option=${option##+([[:space:]])}
-		IFS=$NIFS
-		set -- $option
-		opt=$1
-		var=$2
-		def=$3
-		dfi=${4:-"No text for <$var>"}
-		typ=${5:-}
-		#Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
-	## 1. name of the option
-		# POST
-	## 2. name of the variable
-		SE_Variables[$SE_NOptions]="$var"
-	 	export  SE_IDX_$var=$SE_NOptions
-		export	SE_INV_$opt=$SE_NOptions
-	## 3. the default
-		[[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
-			def=${!var:-$def}
-		}
-		if [[ -z "$def" ]] ; then
-			if (( $# > 5 )) ; then
-				def=$6
-			elif [[ $typ == *B* ]] ; then
-				def=1 
-			fi
-		fi
-	## 4. the description
-	    # POST
-	## 5. the type
-		SE_Type[$SE_NOptions]=$typ
-		[[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
-    ## 6. set the List values
-		IFS="|"
-		if (($# > 5)) ; then
-			shift 5
-			SE_List[$SE_NOptions]="$*"
-		elif [[ $typ == *B* ]] ; then
-			SE_List[$SE_NOptions]="1${IFS}0"
-		else
-			SE_List[$SE_NOptions]=""
-		fi
-	## POST operation
-		set_option		$SE_NOptions "$opt"
-		set_defaults	$SE_NOptions "$def"
-		set_description $SE_NOptions "$dfi"
-	## finish
-		let SE_NOptions+=1
-	done
-	IFS=$SE_IFS
+  ## work
+  IFS=$SE_IFS2	
+  for option in ${SE_CmdLine[*]:-}
+  do
+    [[ $option != *$NIFS* ]] && continue
+  ## delete all spaces at the begin and end
+    option=${option%%+([[:space:]])}
+    option=${option##+([[:space:]])}
+    IFS=$NIFS
+    set -- $option
+    opt=$1
+    var=$2
+    def=$3
+    dfi=${4:-"No text for <$var>"}
+    typ=${5:-}
+    #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
+  ## 1. name of the option
+    # POST
+  ## 2. name of the variable
+    SE_Variables[$SE_NOptions]="$var"
+    SE_IDX[$var]=$SE_NOptions
+    SE_INV[$opt]=$SE_NOptions
+  ## 3. the default
+    [[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
+      def=${!var:-$def}
+    }
+    if [[ -z "$def" ]] ; then
+      if (( $# > 5 )) ; then
+	def=$6
+      elif [[ $typ == *B* ]] ; then
+	def=1 
+      fi
+    fi
+  ## 4. the description
+    # POST
+  ## 5. the type
+    SE_Type[$SE_NOptions]=$typ
+    [[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
+  ## 6. set the List values
+    IFS="|"
+    if (($# > 5)) ; then
+      shift 5
+      SE_List[$SE_NOptions]="$*"
+    elif [[ $typ == *B* ]] ; then
+      SE_List[$SE_NOptions]="1${IFS}0"
+    else
+      SE_List[$SE_NOptions]=""
+    fi
+  ## POST operation
+    set_option	    $SE_NOptions "$opt"
+    set_defaults    $SE_NOptions "$def"
+    set_description $SE_NOptions "$dfi"
+  ## finish
+    let SE_NOptions+=1
+  done
+  IFS=$SE_IFS
 }
 
 function source { 
 ## Soll verhindern das eine Datei 2x eingelesen wird
-	[[ -f $1 ]] && {
-	## ermittelt den absoluten pfad einer datei
-		typeset Tmp=$(cd ${1%/*};pwd)/${1##*/}
-		[[ ":$SE_Lock:" == *:$Tmp:* ]] && return
-		. $1 ${1%/*} 
-		SE_Lock="$Tmp:$SE_Lock"
-	}
+  [[ -f $1 ]] && {
+  ## ermittelt den absoluten pfad einer datei
+    declare Tmp=$(cd ${1%/*};pwd)/${1##*/}
+    [[ ":$SE_Lock:" == *:$Tmp:* ]] && return
+    . $1 ${1%/*} 
+    SE_Lock="$Tmp:$SE_Lock"
+  }
 }
 function read_environment {
-	source	"~/.ENV"
-	source	"../../../.ENV"
-	source	"../../.ENV"
-	source	"../.ENV"
-	source	"./.ENV"
-	source	"${G_ENV:-}"
+  source "~/.ENV"
+  source "../../../.ENV"
+  source "../../.ENV"
+  source "../.ENV"
+  source "./.ENV"
+  source "${G_ENV:-}"
 }
 
 function print_commands {
-	(( SE_IDX_MAX_COMMANDS == 0 )) && return
-	typeset -i	 i=0
-	Print "\n  list of available commands:\n"
-	while (( i < SE_IDX_MAX_COMMANDS ))
-	do
-		if [[ ${SE_Cmd_Text[$i]:-} != "" ]] ; then
-			printf "    %10s : ${SE_Cmd_Text[$i]}\n" "${SE_Cmd_Tokens[$i]}" 1>&2
-		else
-			printf "    %10s : no decription available\n" "${SE_Cmd_Tokens[$i]}" 1>&2
-		fi
-		let i+=1
-	done
+  (( SE_IDX_MAX_COMMANDS == 0 )) && return
+  declare -i	 i=0
+  Print "\n  list of available commands:\n"
+  while (( i < SE_IDX_MAX_COMMANDS ))
+  do
+    if [[ ${SE_Cmd_Text[$i]:-} != "" ]] ; then
+      printf "    %10s : ${SE_Cmd_Text[$i]}\n" "${SE_Cmd_Tokens[$i]}" 1>&2
+    else
+      printf "    %10s : no decription available\n" "${SE_Cmd_Tokens[$i]}" 1>&2
+    fi
+    let i+=1
+  done
 }
 
 function print_database {
-	(( SE_NOptions == 0 )) && return
-	Print "\n  environment database parameter:\n"
-	typeset -i	 i=0
-	while (( i < SE_NOptions ))
-	do
-		if [[ -n ${SE_List[$i]} ]] ; then
-			printf "    %10s : %3s : ${SE_Descriptions[$i]} (${SE_List[$i]})\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
-		else
-			printf "    %10s : %3s : ${SE_Descriptions[$i]}\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
-		fi
-		let i+=1
-	done
-	Print "\n  type definition:\n\n    <B>  boolean variable\n    <E>  export  variable\n    <L>  list    variable" 
+  (( SE_NOptions == 0 )) && return
+  Print "\n  environment database parameter:\n"
+  declare -i	 i=0
+  while (( i < SE_NOptions ))
+  do
+    if [[ -n ${SE_List[$i]} ]] ; then
+      printf "    %10s : %3s : ${SE_Descriptions[$i]} (${SE_List[$i]})\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
+    else
+      printf "    %10s : %3s : ${SE_Descriptions[$i]}\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
+    fi
+    let i+=1
+  done
+  Print "\n  type definition:\n\n    <B>  boolean variable\n    <E>  export  variable\n    <L>  list    variable" 
 }
 
 function print_db_usage {
-	## work
-	Print "\nusage: $G_FileName"
-	print_commands
-	print_database
-	Exit "\n"
+  ## work
+  Print "\nusage: $G_FileName"
+  print_commands
+  print_database
+  Exit "\n"
 }
 
 function print_usage {
-	## typeset
-	typeset			Ret=""
-	typeset -i		i=0
-	typeset -i		max=$SE_NDescriptions+5
-	typeset -i		max2=$SE_NDescriptions+15
-	typeset -i		max3=$SE_NDescriptions
+  declare Ret=""
+  declare -i i=0
+  declare -i max=$SE_NDescriptions+5
+  declare -i max2=$SE_NDescriptions+15
+  declare -i max3=$SE_NDescriptions
 
-	typeset			space
-	typeset			space3
+  declare space
+  declare space3
 
-	## work
-	Print "\nusage: $G_FileName ?Options? $SE_Args"
-	(( SE_NOptions > SE_NLOptions )) && { Print "\n  Custom short options:\n" ; }
-	while (( i < SE_NOptions ))
-	do
-		(( ${#SE_Options[$i]} > 1 )) && { let i+=1 ; continue ; }
-		if [[ -n ${SE_List[$i]} ]] ; then
-			space="-${SE_Options[$i]}   ${SE_Descriptions[$i]} (${SE_List[$i]})"
-		else
-			space="-${SE_Options[$i]}   ${SE_Descriptions[$i]}"
-		fi
-		printf "    %-${max}s =  ${SE_Defaults[$i]:0:30}\n" "$space" 1>&2
-		let i+=1
-	done
-	(( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n" ; }
-	let i=0
-	while (( i < SE_NOptions ))
-	do
-		(( ${#SE_Options[$i]} < 2 )) && { let i+=1 ; continue ; }
-		if [[ -n ${SE_List[$i]} ]] ; then
-			space3="${SE_Descriptions[$i]} (${SE_List[$i]})"
-		else
-			space3="${SE_Descriptions[$i]}"
-		fi
-		printf "    %-${max2}s\n         %-${max3}s =  ${SE_Defaults[$i]:0:30}\n"  "--${SE_Options[$i]}" "$space3" 1>&2
-		let i+=1
-	done
-	Ret="\n  Global options:\n"
-	Ret="$Ret\n    -c    clean screen"
-	Ret="$Ret\n    -v    get the version information"
-	Ret="$Ret\n    -i(+) use (not) the interactive mode"
-	Ret="$Ret\n    -s(+) save (not) the configuration"
-	Ret="$Ret\n    -p(+) print (not) the configuration"
-	Ret="$Ret\n    -h(+) options (database) help"
-	Ret="$Ret\n\n  File description:\n\n$G_Description"
-	if test -n "${G_HelpProc:-}" ; then
-		Print "$Ret
+  ## work
+  Print "\nusage: $G_FileName ?Options? $SE_Args"
+  (( SE_NOptions > SE_NLOptions )) && { Print "\n  Custom short options:\n" ; }
+  while (( i < SE_NOptions ))
+  do
+    (( ${#SE_Options[$i]} > 1 )) && { let i+=1 ; continue ; }
+    if [[ -n ${SE_List[$i]} ]] ; then
+      space="-${SE_Options[$i]}   ${SE_Descriptions[$i]} (${SE_List[$i]})"
+    else
+      space="-${SE_Options[$i]}   ${SE_Descriptions[$i]}"
+    fi
+    printf "    %-${max}s =  ${SE_Defaults[$i]:0:30}\n" "$space" 1>&2
+    let i+=1
+  done
+  (( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n" ; }
+  let i=0
+  while (( i < SE_NOptions ))
+  do
+    (( ${#SE_Options[$i]} < 2 )) && { let i+=1 ; continue ; }
+    if [[ -n ${SE_List[$i]} ]] ; then
+      space3="${SE_Descriptions[$i]} (${SE_List[$i]})"
+    else
+      space3="${SE_Descriptions[$i]}"
+    fi
+    printf "    %-${max2}s\n         %-${max3}s =  ${SE_Defaults[$i]:0:30}\n"  "--${SE_Options[$i]}" "$space3" 1>&2
+    let i+=1
+  done
+  Ret="\n  Global options:\n"
+  Ret="$Ret\n    -c    clean screen"
+  Ret="$Ret\n    -v    get the version information"
+  Ret="$Ret\n    -i(+) use (not) the interactive mode"
+  Ret="$Ret\n    -s(+) save (not) the configuration"
+  Ret="$Ret\n    -p(+) print (not) the configuration"
+  Ret="$Ret\n    -h(+) options (database) help"
+  Ret="$Ret\n\n  File description:\n\n$G_Description"
+  if test -n "${G_HelpProc:-}" ; then
+    Print "$Ret
 
 ================================================================"
-		Eval "$G_HelpProc 1>&2"
-		Exit ""
-	else
-		Exit "$Ret\n"
-	fi
+    Eval "$G_HelpProc 1>&2"
+    Exit ""
+  else
+    Exit "$Ret\n"
+  fi
 }
 
 function long_options {
-	Print 	"+++ Bin in long_options <$1> - <$2> - <$3>"
+  Print "+++ Bin in long_options <$1> - <$2> - <$3>"
 }
 
 function parse_fatheroptions {
-	## global options
-	IFS=";";set -- $G_Args;IFS=$SE_IFS
-	(( $# == 0 )) && return
+  ## global options
+  IFS=";";set -- $G_Args;IFS=$SE_IFS
+  (( $# == 0 )) && return
 
-	typeset -i	i=0
-	typeset		o=""
-	typeset		SE_HELP=""
-	typeset	-i	num=$#
+  declare -i i=0
+  declare o=""
+  declare SE_HELP=""
+  declare -i num=$#
 
-  ## step through the options
-	while (( $# > 0 )) ; do
+## step through the options
+  while (( $# > 0 )) ; do
+    ## Setup default options
+      case $1 in
+	-i) shift; let SE_INTERACTIV=1; continue ;;
+	+i) shift; let SE_INTERACTIV=0; continue ;;
+	-c) shift; Print $clear	; continue ;;
+	-s) shift; let SE_SAVE=1; continue ;;
+	+s) shift; let SE_SAVE=0; continue ;;
+	-p) shift; let SE_PrintCfg=1; continue ;;
+	+p) shift; let SE_PrintCfg=0; continue ;;
+	-v) shift; Exit "$G_Date - $G_Revision"	; continue ;;
+	-h) shift; let SE_HELP=1; continue ;;
+	+h) shift; let SE_HELP=2; continue ;;
+      esac
+    ## Setup OptionString
+      o="${1##+([-+])}"
+      o="${o//-/_}"
+      if [[ "$o" != "$1" ]] ; then
+	i=${SE_INV[$o]:--1}
+      else
+	i=-1
+      fi
 
-	  ## Setup default options
-		case $1 in
-			-i) shift; let SE_INTERACTIV=1				; continue ;;
-			+i) shift; let SE_INTERACTIV=0				; continue ;;
-			-c) shift; Print $clear						; continue ;;
-			-s) shift; let SE_SAVE=1					; continue ;;
-			+s) shift; let SE_SAVE=0					; continue ;;
-			-p) shift; let SE_PrintCfg=1				; continue ;;
-			+p) shift; let SE_PrintCfg=0				; continue ;;
-			-v) shift; Exit "$G_Date - $G_Revision"		; continue ;;
-			-h) shift; let SE_HELP=1					; continue ;;
-			+h) shift; let SE_HELP=2					; continue ;;
-		esac
+      if (( i != -1 )) ; then
+	if (( ${#o} > 1 )) ; then
+	  if [[ ${SE_Type[$i]} == *B* ]] ; then
+	    [[ "$1" == "--$o" ]] && {
+	      set_defaults $i "%#:0"; shift 1; continue 2
+	    }
+	    [[ "$1" == "++$o" ]] && {
+	      set_defaults $i "%#:1"; shift 1; continue 2
+	    }
+	  else
+	    [[ "$1" == "--$o" ]] && {
+	      set_defaults $i "$2"; shift 2; continue 2
+	    }
+	  fi
+	else
+	  if [[ ${SE_Type[$i]} == *B* ]] ; then
+	    [[ "$1" == "-$o" ]] && {
+	      set_defaults $i "%#:0"; shift 1; continue 2
+	    }
+	    [[ "$1" == "+$o" ]] && {
+	      set_defaults $i "%#:1"; shift 1; continue 2
+	    }
+	  else
+	    [[ "$1" == "-$o" ]] && {
+	      set_defaults $i "$2"; shift 2; continue 2
+	    }
+	  fi
+	fi
+	Error "unknown option '$1'"
+      fi
 
-	  ## Setup OptionString
-		o="${1##+([-+])}"
-		o="${o//-/_}"
-		if [[ "$o" != "$1" ]] ; then
-			eval i=\${SE_INV_$o:--1}
-		else
-			i=-1
-		fi
+    ## nothing found just break the loop
+      break
+  done
 
-		if (( i != -1 )) ; then
-			if (( ${#o} > 1 )) ; then
-				if [[ ${SE_Type[$i]} == *B* ]] ; then
-					[[ "$1" == "--$o" ]] && {
-						set_defaults $i "%#:0"; shift 1; continue 2
-					}
-					[[ "$1" == "++$o" ]] && {
-						set_defaults $i "%#:1"; shift 1; continue 2
-					}
-				else
-					[[ "$1" == "--$o" ]] && {
-						set_defaults $i "$2"; shift 2; continue 2
-					}
-				fi
-			else
-				if [[ ${SE_Type[$i]} == *B* ]] ; then
-					[[ "$1" == "-$o" ]] && {
-						set_defaults $i "%#:0"; shift 1; continue 2
-					}
-					[[ "$1" == "+$o" ]] && {
-						set_defaults $i "%#:1"; shift 1; continue 2
-					}
-				else
-					[[ "$1" == "-$o" ]] && {
-						set_defaults $i "$2"; shift 2; continue 2
-					}
-				fi
-			fi
-			Error "unknown option '$1'"
-		fi
-
-	  ## nothing found just break the loop
-		break
-	done
-
-	## all remaining positional parameters are put out
-	SE_Args="${@:-}"
-	Shift $((num - $#))
-	(( $# != 0 )) && set_defaults ${SE_INV_argv} "${*:-}"
-	## Help needed
-	case $SE_HELP in
-		1)	print_usage		;;
-		2)	print_db_usage	;;
-	esac
+  ## all remaining positional parameters are put out
+  SE_Args="${@:-}"
+  #Shift $((num - $#))
+  (( $# != 0 )) && set_defaults ${SE_INV[argv]} "${*:-}"
+  ## Help needed
+  case $SE_HELP in
+    1)	print_usage;;
+    2)	print_db_usage;;
+  esac
 }
 
 function create_mask {
-  ## something to do
-	(( SE_NOptions == 0 )) && return
-  ## typeset
-	typeset -i	i=0
-	typeset		R=""
-	typeset		M=""
-  ## make output
-	while (( i < SE_NOptions ))
-	do
-		if [[ -n ${SE_List[$i]} ]] ; then
-			just="${SE_Descriptions[$i]} (${SE_List[$i]})"
-		else
-			just="${SE_Descriptions[$i]}"
-		fi
-		M=$(printf "%-${SE_NDescriptions}s =  ${SE_Defaults[$i]:0:30}" "$just")
-		R="$R$M$SE_NL"
-		let i+=1
-	done
-	echo "$R"
+## something to do
+  (( SE_NOptions == 0 )) && return
+## declare
+  declare -i i=0
+  declare R=""
+  declare M=""
+## make output
+  while (( i < SE_NOptions ))
+  do
+    if [[ -n ${SE_List[$i]} ]] ; then
+      just="${SE_Descriptions[$i]} (${SE_List[$i]})"
+    else
+      just="${SE_Descriptions[$i]}"
+    fi
+    M=$(printf "%-${SE_NDescriptions}s =  ${SE_Defaults[$i]:0:30}" "$just")
+    R="$R$M$SE_NL"
+    let i+=1
+  done
+  echo "$R"
 }
 
 function read_variable {
-	(( $1 < 0 || $1 >= SE_NOptions )) && return
-	typeset	tmp=""
-	typeset -a tmpl
-	if [[ ${SE_Type[$1]} == *B* ]] ; then
-		IFS="|"
-		tmpl=(${SE_List[$1]})
-		unset IFS
-		if [[ ${SE_Defaults[$1]} == "${tmpl[0]}" ]] ; then 
-			tmp=${tmpl[1]}
-		else
-			tmp=${tmpl[0]}
-		fi
-	elif [[ ${SE_Type[$1]} == *L* ]] ; then
-		IFS="|"
-		tmpl=(${SE_List[$1]})
-		unset IFS
-		typeset def=${SE_Defaults[$1]}
-		if [[ $def == "?" ]] ; then
-			tmp=${tmpl[0]}
-		else
-			typeset -i idx=0
-			typeset -i max=${#tmpl[*]}
-			typeset -i next
-			while ((idx < max)) ; do
-				if ((idx == max-1)) ; then
-					let next=0
-				else
-					let next=idx+1
-				fi
-				[[ "$def" == "${tmpl[$idx]}" ]] && {
-					tmp=${tmpl[$next]}
-					break
-				}
-				let idx=next
-			done
-		fi
+  (( $1 < 0 || $1 >= SE_NOptions )) && return
+  declare tmp=""
+  declare -a tmpl
+  if [[ ${SE_Type[$1]} == *B* ]] ; then
+    IFS="|"
+    tmpl=(${SE_List[$1]})
+    unset IFS
+    if [[ ${SE_Defaults[$1]} == "${tmpl[0]}" ]] ; then 
+      tmp=${tmpl[1]}
+    else
+      tmp=${tmpl[0]}
+    fi
+  elif [[ ${SE_Type[$1]} == *L* ]] ; then
+    IFS="|"
+    tmpl=(${SE_List[$1]})
+    unset IFS
+    declare def=${SE_Defaults[$1]}
+    if [[ $def == "?" ]] ; then
+      tmp=${tmpl[0]}
+    else
+      declare -i idx=0
+      declare -i max=${#tmpl[*]}
+      declare -i next
+      while ((idx < max)) ; do
+	if ((idx == max-1)) ; then
+	  let next=0
 	else
-		IFS=$SE_IFS3
-		Print "$SE_NL<${SE_Defaults[$1]}>\n\nnothing <> for preserving the value\nmarks <\"\"> for clean the value\n"
-		read -e -p '==> ' tmp
-		IFS=$SE_IFS
-		[[ $tmp == "" ]] && return
-		[[ $tmp == '""' ]] && tmp=""
+	  let next=idx+1
 	fi
-	set_defaults $1 "$tmp"
+	[[ "$def" == "${tmpl[$idx]}" ]] && {
+	  tmp=${tmpl[$next]}
+	  break
+	}
+	let idx=next
+      done
+    fi
+  else
+    IFS=$SE_IFS3
+    Print "$SE_NL<${SE_Defaults[$1]}>\n\nnothing <> for preserving the value\nmarks <\"\"> for clean the value\n"
+    read -e -p '==> ' tmp
+    IFS=$SE_IFS
+    [[ $tmp == "" ]] && return
+    [[ $tmp == '""' ]] && tmp=""
+  fi
+  set_defaults $1 "$tmp"
 }
 
 function print_configuration {
-  ## something to do
-	(( SE_PrintCfg == 0 || SE_NOptions == 0 )) && return
-  ## output
-	SE_XXX="================================"
-	Echo "\n  $G_FileName - Configuration\n$SE_XXX\n$(create_mask)\n$SE_XXX\n"
+## something to do
+  (( SE_PrintCfg == 0 || SE_NOptions == 0 )) && return
+## output
+  SE_XXX="================================"
+  Echo "\n  $G_FileName - Configuration\n$SE_XXX\n$(create_mask)\n$SE_XXX\n"
 }
 
 function print_var {
-  ## something to do
-	(( SE_PrintVar == 0 || SE_NOptions == 0 )) && return
-  ## output
-    ## typeset
-    typeset -i  i=0
-    typeset     R=""
-    typeset     T=""
-  ## work
-    while (( i < SE_NOptions ))
-    do
-		if [[ -z ${SE_Defaults[$i]} ]] ; then
-			if [[ " ${SE_System[*]:-} " == *" ${SE_Variables[$i]} "* ]] ; then
-				eval T=\$${SE_Variables[$i]}
-			else
-				T=""
-			fi
-		else
-			T=${SE_Defaults[$i]}
-		fi
-        R="$R${R:+ }$T"
-        let i+=1
-    done
-    echo "$R"
+## something to do
+  (( SE_PrintVar == 0 || SE_NOptions == 0 )) && return
+## output
+  ## declare
+  declare -i  i=0
+  declare     R=""
+  declare     T=""
+## work
+  while (( i < SE_NOptions ))
+  do
+    if [[ -z ${SE_Defaults[$i]} ]] ; then
+      if [[ " ${SE_System[*]:-} " == *" ${SE_Variables[$i]} "* ]] ; then
+	T=${!SE_Variables[$i]}
+      else
+	T=""
+      fi
+    else
+      T=${SE_Defaults[$i]}
+    fi
+    R="$R${R:+ }$T"
+    let i+=1
+  done
+  echo "$R"
 }
 
 function save_local {
-	## something to do
-	(( SE_NOptions == 0 )) && return
-	## files exists
-	[[ -f $SE_LFile && ! -h $SE_LFile && ! -w $SE_LFile ]] && \
-		Error3 "Can't write file <$SE_LFile>"
-	[[ -f $SE_LFile ]] && rm $SE_LFile
-	echo "# files created at: $(date)" > $SE_LFile
-	## typeset
-	typeset -i	i=0
-	while (( i < SE_NOptions ))
-	do
-		echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
-		let i+=1
-	done
+## something to do
+  (( SE_NOptions == 0 )) && return
+## files exists
+  [[ -f $SE_LFile && ! -h $SE_LFile && ! -w $SE_LFile ]] && \
+    Error3 "Can't write file <$SE_LFile>"
+  [[ -f $SE_LFile ]] && rm $SE_LFile
+  echo "# files created at: $(date)" > $SE_LFile
+## declare
+  declare -i i=0
+  while (( i < SE_NOptions ))
+  do
+    echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
+    let i+=1
+  done
 }
 function interactive {
-  ## something to do
-	(( SE_NOptions == 0 )) && return
-	typeset -i i
-  ## init
-	REPLY=1
-  ## make select
-	COLUMNS=1
-	while [[ -n $REPLY ]]
-	do
-		IFS=$SE_IFS3
-		Print $clear
-		Print "Please check the following items:"
-		Print "CTRL-H del char, CTRL-W del word,  CTRL-D for finish\n"
-		Print " c) continue\n q) quit\n p) print commands\n"
-		while true ; do
-			i=0
-	      ## print screen
-			for m in $(create_mask); do
-				printf "%2i) %s\n" $i "$m" 1>&2
-				let i+=1
-			done
-		  ## read the commands
-			Print "${SE_NL}Please select a number between [1] and [$SE_NOptions]${SE_NL}"
-			read -e -p "=> "
-		  ## check the 'read' value
-			case $REPLY in
-				[0-9])		read_variable $REPLY				;;
-				[1-9][0-9])	read_variable $REPLY				;;
-				c)			REPLY=""							;;
-				q)			Print $clear ; Exit "quitting ..." ;;
-				p)			print_commands ; Weiter				;;
-			esac
-			break
-		done
-		IFS=${SE_IFS}
-	done
-
-  ## make output
-	Print $clear
+## something to do
+  (( SE_NOptions == 0 )) && return
+  declare -i i
+## init
+  REPLY=1
+## make select
+  COLUMNS=1
+  while [[ -n $REPLY ]]
+  do
+    IFS=$SE_IFS3
+    Print $clear
+    Print "Please check the following items:"
+    Print "CTRL-H del char, CTRL-W del word,  CTRL-D for finish\n"
+    Print " c) continue\n q) quit\n p) print commands\n"
+    while true ; do
+      i=0
+    ## print screen
+      for m in $(create_mask); do
+	printf "%2i) %s\n" $i "$m" 1>&2
+	let i+=1
+      done
+    ## read the commands
+      Print "${SE_NL}Please select a number between [1] and [$SE_NOptions]${SE_NL}"
+      read -e -p "=> "
+    ## check the 'read' value
+      case $REPLY in
+	[0-9])	    read_variable $REPLY;;
+	[1-9][0-9]) read_variable $REPLY;;
+	c)	    REPLY="";;
+	q)	    Print $clear ; Exit "quitting ..." ;;
+	p)	    print_commands ; Weiter;;
+      esac
+      break
+    done
+    IFS=${SE_IFS}
+  done
+## make output
+  Print $clear
 }
 
 ##  Usage message
 function Usage {
-	cat <<EOF
+  cat <<EOF
 usage: $G_FileName ?Options?
 
   Custom options:
@@ -783,7 +789,7 @@ usage: $G_FileName ?Options?
 
 $G_Description
 EOF
-	exit 0
+  exit 0
 }
 
 
@@ -806,38 +812,41 @@ set -f
 shopt -s extglob
 
 ## 
-Debug "typeset" #####################################################################
+Debug "declare" #####################################################################
 ##
 
-typeset 		SE_Args
-typeset	-a		SE_CmdLine
+declare	    SE_Args
+declare	-a  SE_CmdLine
 
-typeset -i 		i=0
-typeset -i		SE_INTERACTIV=0
-typeset -i		SE_SAVE=0
-typeset -i		SE_LOOP=0
-typeset -i		G_LOOP=${G_LOOP:-0}
-typeset 		SE_Setup=""
-typeset -i		SE_Read_Environment_File=0
-typeset			SE_LFile="./.${G_FileName//./}.ENV"
-typeset -i		SE_SUCCESS=0
-typeset -i		SE_PrintCfg=0
-typeset -i		SE_PrintVar=0
-typeset -i		SE_IDX_MAX_COMMANDS=0
+declare -i  i=0
+declare -i  SE_INTERACTIV=0
+declare -i  SE_SAVE=0
+declare -i  SE_LOOP=0
+declare -i  G_LOOP=${G_LOOP:-0}
+declare	    SE_Setup=""
+declare -i  SE_Read_Environment_File=0
+declare	    SE_LFile="./.${G_FileName//./}.ENV"
+declare -i  SE_SUCCESS=0
+declare -i  SE_PrintCfg=0
+declare -i  SE_PrintVar=0
+declare -i  SE_IDX_MAX_COMMANDS=0
 
-typeset -i 		SE_NOptions=0
-typeset -i 		SE_NLOptions=0
-typeset -i 		SE_NDescriptions=0
-typeset -a		SE_Options[30]
-typeset -a		SE_Variables[30]
-typeset -a		SE_Defaults[30]			## Hält die Ergebnisse der Variablen
-typeset -a		SE_Descriptions[30]
-typeset -a		SE_System[30]			## System Variable
-typeset -a		SE_Type[30]
-typeset -a		SE_List[30]				## argument's for SE_Type=L
-typeset			SE_Lock=""				## Fkt <source>
+declare -i  SE_NOptions=0
+declare -i  SE_NLOptions=0
+declare -i  SE_NDescriptions=0
+declare -a  SE_Options[30]
+declare -a  SE_Variables[30]
+declare -a  SE_Defaults[30]			## Hält die Ergebnisse der Variablen
+declare -a  SE_Descriptions[30]
+declare -a  SE_System[30]			## System Variable
+declare -a  SE_Type[30]
+declare -a  SE_List[30]				## argument's for SE_Type=L
+declare	    SE_Lock=""				## Fkt <source>
 
-typeset clear="$(tput clear)"
+declare -Ax SE_IDX
+declare -Ax SE_INV
+
+declare clear="$(tput clear)"
 (( $Debug == 1 )) && clear=""
 
 ##
@@ -847,28 +856,28 @@ Debug "Reading Commandline" ####################################################
 ##  Scan options
 while getopts :W:C:E:F:PLS:Rvhl c
 do
-##			print_array SE_CmdLine 						
-	case $c in
-        C)  IFS=",$SE_TAB$SE_NL"
-			SE_CmdLine=($OPTARG	argv:G_Argv::"commandline arguments")
-			IFS=$SE_IFS									;;
-		W)	SE_CmdLine=(:$OPTARG::)
-			export G_Shell=no
-			let SE_PrintVar=1							;;
-		E)	G_ENV=$OPTARG								;;
-		F)	NIFS=$OPTARG								;;
-		P)	let SE_PrintCfg=1							;;
-		R)	let SE_Read_Environment_File=1				;;
-		L)	SE_Setup=".ENV.local"						;;									
-		S)	SE_Setup="$OPTARG"							;;									
-		l)  SE_LOOP=1									;;
-		v)	Exit "$G_Date - $G_Revision - $G_Author"	;;
-        h)  Usage								 		;;
-		?)	case ${!OPTIND} in
-				+*) G_Args="+$OPTARG${G_Args:+;}${G_Args-}"		;;
-				-*) G_Args="-$OPTARG${G_Args:+;}${G_Args-}"		;;
-			esac										;;
-	esac
+## print_array SE_CmdLine 						
+  case $c in
+    C)  IFS=",$SE_TAB$SE_NL"
+	SE_CmdLine=($OPTARG argv:G_Argv::"commandline arguments")
+	IFS=$SE_IFS;;
+    W)	SE_CmdLine=(:$OPTARG::)
+	export G_Shell=no
+	let SE_PrintVar=1;;
+    E)	G_ENV=$OPTARG;;
+    F)	NIFS=$OPTARG;;
+    P)	let SE_PrintCfg=1;;
+    R)	let SE_Read_Environment_File=1;;
+    L)	SE_Setup=".ENV.local";;									
+    S)	SE_Setup="$OPTARG";;									
+    l)  SE_LOOP=1;;
+    v)	Exit "$G_Date - $G_Revision - $G_Author";;
+    h)  Usage;;
+    ?)	case ${!OPTIND} in
+	  +*) G_Args="+$OPTARG${G_Args:+;}${G_Args-}";;
+	  -*) G_Args="-$OPTARG${G_Args:+;}${G_Args-}";;
+	esac;;
+  esac
 done
 
 ##
@@ -879,13 +888,13 @@ Debug "Setup local .ENV file" ##################################################
 ## Mit dem Inhalt der Datei SE_Setup wird
 ## KonfigZeile <-C> aufgebaut
 [[ -n "$SE_Setup" ]] && {
-	[[ "$SE_Setup" != /* ]] && SE_Setup=$PWD/$SE_Setup
-	IFS=","
-	[[ ! -f $SE_Setup ]] && Error "File <$SE_Setup> not found"
-	SE_CmdLine=($(setup_ENV_file "$SE_Setup"))
-	IFS=$SE_IFS
-	G_Args="-i;-s${G_Args:+;}${G_Args-}"
-	SE_LFile="$SE_Setup"
+  [[ "$SE_Setup" != /* ]] && SE_Setup=$PWD/$SE_Setup
+  IFS=","
+  [[ ! -f $SE_Setup ]] && Error "File <$SE_Setup> not found"
+  SE_CmdLine=($(setup_ENV_file "$SE_Setup"))
+  IFS=$SE_IFS
+  G_Args="-i;-s${G_Args:+;}${G_Args-}"
+  SE_LFile="$SE_Setup"
 }
 
 ##
@@ -942,9 +951,9 @@ check_on_command
 
 ## save .LOCAL
 if (( SE_SAVE == 1 )) ; then
-	save_local
+  save_local
 else
-	[[ $SE_PrintVar == 0 && -f "$SE_LFile" ]] && rm "$SE_LFile"
+  [[ $SE_PrintVar == 0 && -f "$SE_LFile" ]] && rm "$SE_LFile"
 fi
 
 ## message

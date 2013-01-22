@@ -17,8 +17,9 @@ noinst_PROGRAMS = mulclient$(EXEEXT) mulserver$(EXEEXT) manfilter$(EXEEXT) \
 
 #noinst_PROGRAMS = server$(EXEEXT) client$(EXEEXT)
 
-AM_CFLAGS = -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN 
-LDADD = -lm ../../libmsgque/libtmp.la
+AM_CFLAGS = -static -I$(srcdir)/../../libmsgque -DMQ_IGNORE_EXTERN
+AM_LDFLAGS = -static
+LDADD = -lm ../../libmsgque/libtmps.la
 
 #noinst_PROGRAMS = server$(EXEEXT) client$(EXEEXT) Filter6$(EXEEXT)
 

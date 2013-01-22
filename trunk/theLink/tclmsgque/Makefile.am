@@ -10,8 +10,6 @@
 #§              please contact AUTHORS for additional information
 #§
 
-AM_LIBTOOLFLAGS = --tag=disable-static
-
 pkglib_LTLIBRARIES = tclmsgque.la
 
 tclmsgque_la_SOURCES =	MqS_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_tcl.c \
@@ -20,14 +18,15 @@ tclmsgque_la_SOURCES =	MqS_tcl.c  misc_tcl.c  msgque_tcl.c read_tcl.c send_tcl.c
 			      MqDumpS_tcl.c
 
 # use this if you want to link again the dynmic libraray libmsgque...
-#tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS)
+#tclmsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS)
+#tclmsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined $(TCL_LIBADD)
 #tclmsgque_la_LIBADD = ../libmsgque.la
 
 # use this if you want to include the libmsgque files into the tclmsgque libraray
-tclmsgque_la_CFLAGS = -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN
+tclmsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque $(TCL_INCLUDE_SPEC) $(TCL_CFLAGS) $(AM_CFLAGS) -DMQ_IGNORE_EXTERN
+tclmsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined $(TCL_LIBADD)
 tclmsgque_la_LIBADD = ../libmsgque/libtmp.la
 
-tclmsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined $(TCL_LIBADD)
 
 tcldir = $(pkglibdir)
 tcl_DATA = .libs/pkgIndex.tcl

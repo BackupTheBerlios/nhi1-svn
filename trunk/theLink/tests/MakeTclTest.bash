@@ -15,7 +15,6 @@ set -u
 LANG="C"
 . ../../env.sh
 export LANG
-TEE=yes
 
 if [[ ${WINDIR:-} != "" ]] ; then
   PATH=$PATH:$LD_LIBRARY_PATH
@@ -26,7 +25,7 @@ else
   MONO=$CLREXEC
 fi
 
-USAGE() {
+Usage() {
   cat - <<-EOF
 usage $0 ?-ur? ?-vg|-gdb|-kdbg|-ddd|-lc|-sr|-sp|-st? args...
 
@@ -66,14 +65,25 @@ Available test scripts:
 
 $(cd $abs_top_srcdir/theLink/tests; ls -C *.test)
 
-Setup the test-environment, usually you dont specify the following optione:
+Setup the test-environment, usually you don't specify the following optione:
 
-   -ur:  use-remote
-   -st:  strace
-   -vg:  valgrind:
-   -sp:  valgrind: gen-suppressions
-   -lc:  valgrind: leak-chec
-   -sr:  valgrind: leak-chec + show-reachable
+  -ur:	  use-remote
+  -st:	  strace
+            > $PREFIX_st
+  -vg:	  valgrind:
+            > $PREFIX_vg
+  -sp:	  valgrind: gen-suppressions
+            > $PREFIX_sp
+  -lc:	  valgrind: leak-chec
+            > $PREFIX_lc
+  -sr:	  valgrind: leak-chec + show-reachable
+            > $PREFIX_sr
+  -gdb:	  use debugger 'gdb'
+            > $PREFIX_gdb
+  -ddd:	  use debugger 'ddd'
+            > $PREFIX_ddd
+  -kdbg:  use debugger 'kdbg'
+            > $PREFIX_kdbg
 
 EOF
   exit 1
@@ -81,68 +91,83 @@ EOF
 
 PREFIX=""
 POSTFIX="cat"
+TEE="yes"
 
-(( $# == 0 )) && USAGE
-[[ $1 == "-h" || $1 == "--help" ]] && USAGE
+PREFIX_vg="valgrind --trace-children=yes --num-callers=36 --quiet"
+PREFIX_gdb="gdb -d ../perlmsgque/Net*/ --tui --args"
+PREFIX_ddd="ddd --args"
+PREFIX_kdbg="/opt/kde3/bin/kdbg"
+PREFIX_lc="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet"
+PREFIX_sr="valgrind --trace-children=yes --leak-check=full --show-reachable=yes --num-callers=36 --quiet"
+PREFIX_st="strace"
+PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
+
+
+(( $# == 0 )) && Usage
 [[ $1 == "-ur" ]] && {
   shift
   set -- "$@" --tcp --port 7777 --thread
 }
-[[ $1 == "-vg" ]] && {
-  PREFIX="valgrind --trace-children=yes --num-callers=36 --quiet"
-  POSTFIX="grep -v DWARF2"
-  shift
-}
-[[ $1 == "-gdb" ]] && {
-  PREFIX="gdb -d ../perlmsgque/Net*/ --tui --args"
-  POSTFIX=""
-  TEE=no
-  shift
-}
-[[ $1 == "-ddd" ]] && {
-  PREFIX="ddd --args"
-  TEE=no
-  shift
-}
-[[ $1 == "-kdbg" ]] && {
-  PREFIX="/opt/kde3/bin/kdbg"
-  TEE=no
-  shift
-}
-[[ $1 == "-lc" ]] && {
-  PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet"
-  POSTFIX="grep -v DWARF2"
-  shift
-}
-[[ $1 == "-sr" ]] && {
-  PREFIX="valgrind --trace-children=yes --leak-check=full --show-reachable=yes --num-callers=36 --quiet"
-  POSTFIX="grep -v DWARF2"
-  shift
-}
-[[ $1 == "-st" ]] && {
-  PREFIX="strace"
-  shift
-}
-[[ $1 == "-sp" ]] && {
-  PREFIX="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
-  POSTFIX="grep -v DWARF2"
-  shift
-}
-[[ $1 == "-mdb" ]] && {
-  MONO=mdb
-  shift
-}
+case "$1" in
+  -vg) 
+    PREFIX=$PREFIX__vg
+    POSTFIX="grep -v DWARF2"
+    shift
+  ;;
+  -gdb) 
+    PREFIX=$PREFIX__gdb
+    POSTFIX=""
+    TEE="no"
+    shift
+  ;;
+  -ddd) 
+    PREFIX=$PREFIX__ddd
+    TEE="no"
+    shift
+  ;;
+  -kdbg) 
+    PREFIX=$PREFIX__kdbg
+    TEE="no"
+    shift
+  ;;
+  -lc) 
+    PREFIX=$PREFIX__lc
+    POSTFIX="grep -v DWARF2"
+    shift
+  ;;
+  -sr) 
+    PREFIX=$PREFIX__sr
+    POSTFIX="grep -v DWARF2"
+    shift
+  ;;
+  -st) 
+    PREFIX=$PREFIX__st
+    shift
+  ;;
+  -sp) 
+    PREFIX=$PREFIX__sp
+    POSTFIX="grep -v DWARF2"
+    shift
+  ;;
+  -mdb) 
+    MONO="mdb"
+    shift
+  ;;
+  -*)
+    Usage
+  ;;
+esac
 
 # rebuild command line, expand the path, find executable etc..
 #
 cmdline=()
 first=1
-id=$(basename $1)
+id=$(basename -- $1)
 id=${id%.*}
 while (( $# )) ; do
   if (( $first )) ; then
-    CMDDIR=$(cd $(dirname $1);pwd)
-    CMD=$(basename $1)
+    CMDDIR=$(cd $(dirname -- $1);pwd)
+    CMD=$(basename -- $1)
 
     # fix the CMD path
     [[ ! -e "$CMDDIR/$CMD" ]] && {

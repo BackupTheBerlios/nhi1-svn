@@ -58,7 +58,7 @@ SOURCE_HOME=$(dirname $(readlink -f $0))
 
 export  G_FileName="${0##*/}"
 IFS=";";export  G_Args="${@:-}";unset IFS
-export  G_Shell=ksh
+export  G_Shell=bash
 #%%# ---------------------------------------------------------------------
 export  G_Date='$Date$'
 export  G_Revision='$Revision$'
@@ -71,16 +71,29 @@ export  G_HelpProc="$SOURCE_HOME/configure --help"
 #%%%%# -------------------------------------------------------------------
 
 ##  Retrieve environment data
-eval "$($SOURCE_HOME/bin/SetupEnv -s -C '
-  P:Perf:0:create maximum performance code:B
-  T:Thread:0:create threaded code:B
-'   )"
+declare -A lang
+declare -a opt
+
+eval $($SOURCE_HOME/bin/SetupEnv -s -C "
+  perf:Perf:0:create maximum performance code:B
+  thread:Thread:0:create threaded code:B
+$(
+  for l in tcl perl python php cxx java csharp go ruby ; do
+    echo $l:lang[$l]:0:add \'$l\' language binding:B
+  done
+)
+"   )
+
+for l in ${!lang[@]} ; do
+  (( ${lang[$l]} )) && opt+=(--enable-$l)
+done
 
 if (( $Perf )) ; then
+  opt+=(--enable-static)
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/performance_thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_thread/lib
-    opt='--enable-threads'
+    opt+=(--enable-threads)
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/performance_nothread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_nothread/lib
@@ -89,20 +102,22 @@ else
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/thread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/thread/lib
-    opt='--enable-threads'
+    opt+=(--enable-threads)
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/nothread/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/nothread/lib
   fi
 fi
 
-rm -fr /tmp/libmsgque-install
+echo opt=${opt[*]}
 
-echo "G_Argv=$G_Argv"
+exit
+
+rm -fr /tmp/libmsgque-install
 
 bash -norc $SOURCE_HOME/configure    \
 		    --prefix=/tmp/libmsgque-install \
-		    ${G_Argv:-} ${opt:-} \
+		    ${G_Argv:-} "${opt[@]}" \
 
 #		    --enable-cxx \
 #		    --enable-java \

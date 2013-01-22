@@ -12,8 +12,11 @@
 
 # convinience library
 
-noinst_LTLIBRARIES = libtmp.la
+noinst_LTLIBRARIES = libtmp.la libtmps.la
 
 libtmp_la_SOURCES = config.h sqlite3.h sqlite3ext.h sqlite3.c
-
 libtmp_la_CFLAGS = -D_HAVE_SQLITE_CONFIG_H $(AM_CFLAGS)
+
+libtmps_la_SOURCES = config.h sqlite3.h sqlite3ext.h sqlite3.c
+libtmps_la_CFLAGS = -D_HAVE_SQLITE_CONFIG_H -static $(AM_CFLAGS)
+libtmps_la_LDFLAGS = -static

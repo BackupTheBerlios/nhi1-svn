@@ -591,7 +591,7 @@ MqSysFreeAddrInfo(
 
 enum MqErrorE
 SysGetAddrInfo(
-    struct MqS * const context,	///< [in] handle error
+    struct MqS * const context,		///< [in] handle error
     MQ_CST node,			///< [in] name of the host or \c NULL
     MQ_CST service,			///< [in] name of the port or \c NULL
     const struct addrinfo *hints,	///< [in] helper to restrict the amount of return values
