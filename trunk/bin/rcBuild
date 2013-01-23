@@ -41,7 +41,7 @@ rcBuild_backup=/backup
 
 #usage: rsync args
 ToBak() {
-  rsync -a "$@" $rcBuild_directory/ $rcBuild_backup/
+  rsync -a --delete --delete-excluded --filter '- */Main/**.[o|a|so]' "$@" $rcBuild_directory/ $rcBuild_backup/
 }
 
 #usage: rsync args

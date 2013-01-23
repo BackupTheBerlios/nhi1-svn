@@ -211,10 +211,11 @@ function set_description {
   declare	I=$1
   declare	V=$2
   declare -i	len=${#V}
+
   if ((${#SE_List[SE_NOptions]} > 0)) ; then
     let len=len+${#SE_List[$SE_NOptions]}+4
   fi
-  (( len > SE_NDescriptions )) && let SE_NDescriptions=len
+  (( len > SE_NDescriptions )) && SE_NDescriptions=len
   SE_Descriptions[$I]=$V
 }
 
@@ -337,7 +338,7 @@ function setup_ENV_file {
   echo "$SE_Value"
 }
 
-function parse_cmdline {
+function parse_configuration {
 
   ## declare
   declare option
@@ -348,9 +349,9 @@ function parse_cmdline {
 
   ## work
   IFS=$SE_IFS2	
-  for option in ${SE_CmdLine[*]:-}
+  for option in "${SE_CmdLine[@]:-}"
   do
-    [[ $option != *$NIFS* ]] && continue
+    [[ "$option" != *$NIFS* ]] && continue
   ## delete all spaces at the begin and end
     option=${option%%+([[:space:]])}
     option=${option##+([[:space:]])}
@@ -445,9 +446,9 @@ function print_database {
   while (( i < SE_NOptions ))
   do
     if [[ -n ${SE_List[$i]} ]] ; then
-      printf "    %10s : %3s : ${SE_Descriptions[$i]} (${SE_List[$i]})\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
+      printf "    %13s : %3s : ${SE_Descriptions[$i]} (${SE_List[$i]})\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
     else
-      printf "    %10s : %3s : ${SE_Descriptions[$i]}\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
+      printf "    %13s : %3s : ${SE_Descriptions[$i]}\n" "${SE_Variables[$i]}" "${SE_Type[$i]}" 1>&2
     fi
     let i+=1
   done
@@ -484,7 +485,7 @@ function print_usage {
       space="-${SE_Options[$i]}   ${SE_Descriptions[$i]}"
     fi
     printf "    %-${max}s =  ${SE_Defaults[$i]:0:30}\n" "$space" 1>&2
-    let i+=1
+    i+=1
   done
   (( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n" ; }
   let i=0
@@ -497,7 +498,7 @@ function print_usage {
       space3="${SE_Descriptions[$i]}"
     fi
     printf "    %-${max2}s\n         %-${max3}s =  ${SE_Defaults[$i]:0:30}\n"  "--${SE_Options[$i]}" "$space3" 1>&2
-    let i+=1
+    i+=1
   done
   Ret="\n  Global options:\n"
   Ret="$Ret\n    -c    clean screen"
@@ -522,16 +523,18 @@ function long_options {
   Print "+++ Bin in long_options <$1> - <$2> - <$3>"
 }
 
-function parse_fatheroptions {
-  ## global options
-  IFS=";";set -- $G_Args;IFS=$SE_IFS
-  (( $# == 0 )) && return
+function parse_commandline {
+## global options
+
+#set -xv
+
+  set -- "${SE_LArgs[@]}"
+  (( ! $# )) && return
 
   declare -i i=0
   declare o=""
   declare SE_HELP=""
-  declare -i num=$#
-
+  declare -i num=$[$#-$SE_Args_Correction]
 ## step through the options
   while (( $# > 0 )) ; do
     ## Setup default options
@@ -549,7 +552,7 @@ function parse_fatheroptions {
       esac
     ## Setup OptionString
       o="${1##+([-+])}"
-      o="${o//-/_}"
+      #o="${o//-/_}"
       if [[ "$o" != "$1" ]] ; then
 	i=${SE_INV[$o]:--1}
       else
@@ -593,7 +596,7 @@ function parse_fatheroptions {
 
   ## all remaining positional parameters are put out
   SE_Args="${@:-}"
-  #Shift $((num - $#))
+  Shift $((num - $#))
   (( $# != 0 )) && set_defaults ${SE_INV[argv]} "${*:-}"
   ## Help needed
   case $SE_HELP in
@@ -617,8 +620,8 @@ function create_mask {
     else
       just="${SE_Descriptions[$i]}"
     fi
-    M=$(printf "%-${SE_NDescriptions}s =  ${SE_Defaults[$i]:0:30}" "$just")
-    R="$R$M$SE_NL"
+    M=$(printf "%-${SE_NDescriptions}s = ${SE_Defaults[$i]:0:30}" "$just")
+    R+="$M$SE_NL"
     let i+=1
   done
   echo "$R"
@@ -677,7 +680,7 @@ function print_configuration {
   (( SE_PrintCfg == 0 || SE_NOptions == 0 )) && return
 ## output
   SE_XXX="================================"
-  Echo "\n  $G_FileName - Configuration\n$SE_XXX\n$(create_mask)\n$SE_XXX\n"
+  Echo "$SE_NL  $G_FileName - Configuration$SE_NL$SE_XXX$SE_NL$(create_mask)$SE_NL$SE_XXX$SE_NL"
 }
 
 function print_var {
@@ -718,10 +721,12 @@ function save_local {
   declare -i i=0
   while (( i < SE_NOptions ))
   do
-    echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
+    [[ "${SE_Variables[$i]}" != "G_Argv" ]] && \
+      echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
     let i+=1
   done
 }
+
 function interactive {
 ## something to do
   (( SE_NOptions == 0 )) && return
@@ -816,6 +821,8 @@ Debug "declare" ################################################################
 ##
 
 declare	    SE_Args
+declare	-a  SE_LArgs=()
+declare	-i  SE_Args_Correction=0
 declare	-a  SE_CmdLine
 
 declare -i  i=0
@@ -854,31 +861,41 @@ Debug "Reading Commandline" ####################################################
 ##
 
 ##  Scan options
-while getopts :W:C:E:F:PLS:Rvhl c
-do
+while (( $# )) ; do
 ## print_array SE_CmdLine 						
-  case $c in
-    C)  IFS=",$SE_TAB$SE_NL"
-	SE_CmdLine=($OPTARG argv:G_Argv::"commandline arguments")
-	IFS=$SE_IFS;;
-    W)	SE_CmdLine=(:$OPTARG::)
+  case $1 in
+    -C) IFS=",$SE_TAB$SE_NL"
+	SE_CmdLine=($2 argv:G_Argv::"commandline arguments")
+	IFS="$SE_IFS"
+	shift
+    ;;
+    -W)	SE_CmdLine=(:$2::)
 	export G_Shell=no
-	let SE_PrintVar=1;;
-    E)	G_ENV=$OPTARG;;
-    F)	NIFS=$OPTARG;;
-    P)	let SE_PrintCfg=1;;
-    R)	let SE_Read_Environment_File=1;;
-    L)	SE_Setup=".ENV.local";;									
-    S)	SE_Setup="$OPTARG";;									
-    l)  SE_LOOP=1;;
-    v)	Exit "$G_Date - $G_Revision - $G_Author";;
-    h)  Usage;;
-    ?)	case ${!OPTIND} in
-	  +*) G_Args="+$OPTARG${G_Args:+;}${G_Args-}";;
-	  -*) G_Args="-$OPTARG${G_Args:+;}${G_Args-}";;
-	esac;;
+	let SE_PrintVar=1
+	shift
+    ;;
+    -E)	G_ENV=$2; shift ;;
+    -F)	NIFS=$2; shift ;;
+    -P)	let SE_PrintCfg=1;;
+    -R)	let SE_Read_Environment_File=1;;
+    -L)	SE_Setup=".ENV.local";;									
+    -S)	SE_Setup="$2";shift;;									
+    -l) SE_LOOP=1;;
+    -v)	Exit "$G_Date - $G_Revision - $G_Author";;
+    -h) Usage;;
+    *)	SE_LArgs+=("$1")
+	SE_Args_Correction+=1
+    ;;
   esac
+  shift
 done
+
+IFS=';'
+SE_LArgs+=(${G_Args-})
+IFS="$SE_IFS"
+
+#print_array SE_CmdLine 						
+#Print G_Args=$G_Args SE_Args_Correction=$SE_Args_Correction
 
 ##
 Debug "Setup local .ENV file" ###########################################################
@@ -901,7 +918,7 @@ Debug "Setup local .ENV file" ##################################################
 Debug "Setup Environment" #######################################################################
 ##
 
-parse_cmdline
+parse_configuration
 
 #print_array SE_Options
 #print_array SE_Variables
@@ -926,7 +943,7 @@ Debug "Parse Command Line" #####################################################
 #print_array SE_Defaults
 #print_array SE_Descriptions
 
-parse_fatheroptions
+parse_commandline
 
 ##
 Debug "ErrorCheck" ###############################################################################

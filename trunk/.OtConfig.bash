@@ -67,22 +67,27 @@ export  G_Source='$URL$'
 #%%%# --------------------------------------------------------------------
 export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
 the configure-parameters are available in detail below'
-export  G_HelpProc="$SOURCE_HOME/configure --help"
+export  G_HelpProc=""
 #%%%%# -------------------------------------------------------------------
 
 ##  Retrieve environment data
 declare -A lang
 declare -a opt
 
-eval $($SOURCE_HOME/bin/SetupEnv -s -C "
-  perf:Perf:0:create maximum performance code:B
-  thread:Thread:0:create threaded code:B
+eval "$($SOURCE_HOME/bin/SetupEnv -s -C "
+  use-perf:Perf:0:use performance code:B
+  use-thread:Thread:0:use thread code:B
+  help-config:HelpConfig:0:get configure help:B
 $(
   for l in tcl perl python php cxx java csharp go ruby ; do
-    echo $l:lang[$l]:0:add \'$l\' language binding:B
+    echo lang-$l:lang[$l]:0:add $l language binding:B
   done
 )
-"   )
+"   )"
+
+(( $HelpConfig )) && {
+  exec $SOURCE_HOME/configure --help
+}
 
 for l in ${!lang[@]} ; do
   (( ${lang[$l]} )) && opt+=(--enable-$l)
@@ -108,10 +113,6 @@ else
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/nothread/lib
   fi
 fi
-
-echo opt=${opt[*]}
-
-exit
 
 rm -fr /tmp/libmsgque-install
 
