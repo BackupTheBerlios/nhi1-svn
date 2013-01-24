@@ -3,42 +3,74 @@ set -u
 #set -uxv
 
 #%# ----------------------------------------------------------------------
-export  G_FileName=${G_FileName:-${0##*/}\(\)}
-export  G_Args=${G_Args:-}
-export  G_Shell=${G_Shell:-}
+declare -x  G_FileName="${1##*/}"
+declare -x  G_Dirname="${1%/*}"; shift
+declare -xa G_Args=("${@:-}")
+declare -x  G_Shell=${G_Shell:-}
 #%%# ---------------------------------------------------------------------
-export  G_Date=${G_Date:-'$Date: 2007-01-24 12:14:05 +0100 (Wed, 24 Jan 2007) $'}
-export  G_Revision=${G_Revision:-'$Revision: 11578 $'}
-export  G_Author=${G_Author:-'$Author: mqm $'}
-export  G_Source=${G_Source:-'$URL: svn://mpsun07/home/otto/SetupEnv/SetupEnv.bash $'}
+declare -x  G_Date=${G_Date:-'$Date: 2007-01-24 12:14:05 +0100 (Wed, 24 Jan 2007) $'}
+declare -x  G_Revision=${G_Revision:-'$Revision: 11578 $'}
+declare -x  G_Author=${G_Author:-'$Author: mqm $'}
+declare -x  G_Source=${G_Source:-'$URL: svn://mpsun07/home/otto/SetupEnv/SetupEnv.bash $'}
 #%%%# --------------------------------------------------------------------
-export  G_Description=${G_Description:-"Provides values for various environment variables.
+declare -x  G_Description=${G_Description:-"environment retrieval and setup tool"}
 
-Commandline String
-==================
+function get_setup_usage() {
+  cat<<"EOF" 1>&2
+setup-usage: SetupEnv <<"EOF" ... EOF
 
-The String has the form :
+Scan and process environment variables provided as commandline arguments:
+  > SetupEnv "$0" "${@:-}"
+The configuration of the tool is read from stdin and the parsed commandline
+optionx is written to stdout.
+The configuration is parsed by bash and recignize the following token:
 
-  Option:Variable:InitValue:Description?:Type?:ListEntry1?:ListEntry2?:...
+Variables:
+  G_Shell......... the type of the calling shell (bash,csh,tcl,...)
+  G_Date.......... the date of the revision ($Date: ... $
+  G_Revision...... the revision number ($Revision: ... $)
+  G_Author........ the author ($Author: ... $)
+  G_Source........ the file source ($URL: ... $)
+  G_Description... the long description of the usage
+  G_HelpProc...... an external function to be called for additional help
 
-with
+Functions:
+  G_Option
+    lookup <environment-variable-name>
+      > used to look a single environment data-item from the file:
+      > global-data-file and/or local-data-file
+    global-data-file <filename>
+      > global environment-database used by all SetupEnv tools
+    local-data-file <filename>
+      > local environment-database used by this specific SetupEnv tool
+      > use argument 'default' to generate an default-local-database
+      > name
+    local-setup-file <filename>
+      > file used to source additional configuration data
+    print-config
+      > print configuration after setup
+    call-in-loop
+      > loop over the SetupEnv to run external tests
+  G_Arguments <string>
+    The String has the form :
+      > Option:Variable:InitValue:Description?:Type?:ListEntry1?:ListEntry2?:...
+    with
 
-  Option ........ Command-Line option in short '-' or long '--' format
-  Variable ...... Environment variable
-  InitValue ..... Initial value for Env-Variable
-  Description ... Description of Env-Variable
-  Type .......... Flag which descripts the variable
-    B) Boolean    -> A boolean variable
-    E) Extern     -> Should the Variable be exported
-    L) List       -> This is a 'List' with values following after
-  List .......... List entries, only use with Boolean or List
+      Option ........ Command-Line option in short '-' or long '--' format
+      Variable ...... Environment variable
+      InitValue ..... Initial value for Env-Variable
+      Description ... Description of Env-Variable
+      Type .......... Flag which descripts the variable
+	B) Boolean    -> A boolean variable, default '0' or '1'
+	E) Extern     -> Should the Variable be exported
+	L) List       -> This is a 'List' with values following after
+      List .......... List entries, only use with Type (B)oolean or (L)ist.
+                      As Type (B)oolean only 2 List-Arguments are supported
 
-All parameters after the last know argument are set into the variable 
-<G_Argv> und the positional argument of the calling shell are shifted
-until only the left over arguments are available.
-"}
-#%%%%# ------------------------------------------------------------------
-#
+EOF
+  exit 0
+}
+
 #
 
 declare -i Debug=0
@@ -47,14 +79,6 @@ Debug()		{
   printf "Debug: %30s => $(date)\n" "$1" 1>&2
 }
 
-## get the shell-type
-case $G_Shell in
-  csh|tcsh)	G_ShellType=1	;;
-  ksh|bash|sh)	G_ShellType=2   ;;
-  tclsh|wish)	G_ShellType=3   ;;
-  *)		G_ShellType=0	;;
-esac
-
 ##
 Debug "Define Procedures" ################################################################
 ##
@@ -62,8 +86,8 @@ Debug "Define Procedures" ######################################################
 ## Procedures
 Echo() 		{ 
   case $G_ShellType in
-    1|2)  echo "echo -e '$1';"  ;;
-    3)	  echo "puts '$1';"	;;
+    1|2)  echo "echo -e \"${1}\";"  ;;
+    3)	  echo "puts \"$1\";"	;;
   esac
 }
 
@@ -338,69 +362,71 @@ function setup_ENV_file {
   echo "$SE_Value"
 }
 
-function parse_configuration {
-
-  ## declare
+function G_Argument {
+  declare option="$1"
+## be sure to get the right 'format'
+  [[ "$option" != *$NIFS* ]] && continue
+## declare
   declare option
   declare opt
   declare var
   declare def
   declare dfi
-
-  ## work
-  IFS=$SE_IFS2	
-  for option in "${SE_CmdLine[@]:-}"
-  do
-    [[ "$option" != *$NIFS* ]] && continue
-  ## delete all spaces at the begin and end
-    option=${option%%+([[:space:]])}
-    option=${option##+([[:space:]])}
-    IFS=$NIFS
-    set -- $option
-    opt=$1
-    var=$2
-    def=$3
-    dfi=${4:-"No text for <$var>"}
-    typ=${5:-}
-    #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
-  ## 1. name of the option
-    # POST
-  ## 2. name of the variable
-    SE_Variables[$SE_NOptions]="$var"
-    SE_IDX[$var]=$SE_NOptions
-    SE_INV[$opt]=$SE_NOptions
-  ## 3. the default
-    [[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
-      def=${!var:-$def}
-    }
-    if [[ -z "$def" ]] ; then
-      if (( $# > 5 )) ; then
-	def=$6
-      elif [[ $typ == *B* ]] ; then
-	def=1 
-      fi
-    fi
-  ## 4. the description
-    # POST
-  ## 5. the type
-    SE_Type[$SE_NOptions]=$typ
-    [[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
-  ## 6. set the List values
-    IFS="|"
-    if (($# > 5)) ; then
-      shift 5
-      SE_List[$SE_NOptions]="$*"
+## delete all spaces at the begin and end
+  option=${option%%+([[:space:]])}
+  option=${option##+([[:space:]])}
+  IFS=$NIFS
+  set -- $option
+  opt=$1
+  var=$2
+  def=$3
+  dfi=${4:-"No text for <$var>"}
+  typ=${5:-}
+  #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
+## 1. name of the option
+  # POST
+## 2. name of the variable
+  SE_Variables[$SE_NOptions]="$var"
+  SE_IDX[$var]=$SE_NOptions
+  SE_INV[$opt]=$SE_NOptions
+## 3. the default
+  [[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
+    def=${!var:-$def}
+  }
+  if [[ -z "$def" ]] ; then
+    if (( $# > 5 )) ; then
+      def=$6
     elif [[ $typ == *B* ]] ; then
-      SE_List[$SE_NOptions]="1${IFS}0"
-    else
-      SE_List[$SE_NOptions]=""
+      def=1 
     fi
-  ## POST operation
-    set_option	    $SE_NOptions "$opt"
-    set_defaults    $SE_NOptions "$def"
-    set_description $SE_NOptions "$dfi"
-  ## finish
-    let SE_NOptions+=1
+  fi
+## 4. the description
+  # POST
+## 5. the type
+  SE_Type[$SE_NOptions]=$typ
+  [[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
+## 6. set the List values
+  IFS="|"
+  if (($# > 5)) ; then
+    shift 5
+    SE_List[$SE_NOptions]="$*"
+  elif [[ $typ == *B* ]] ; then
+    SE_List[$SE_NOptions]="1${IFS}0"
+  else
+    SE_List[$SE_NOptions]=""
+  fi
+## POST operation
+  set_option	  $SE_NOptions "$opt"
+  set_defaults    $SE_NOptions "$def"
+  set_description $SE_NOptions "$dfi"
+## finish
+  SE_NOptions+=1
+}
+
+function parse_configuration {
+  IFS=$SE_IFS2	
+  for option in "${SE_CmdLine[@]:-}" ; do
+    G_Argument "$option"
   done
   IFS=$SE_IFS
 }
@@ -415,16 +441,8 @@ function source {
     SE_Lock="$Tmp:$SE_Lock"
   }
 }
-function read_environment {
-  source "~/.ENV"
-  source "../../../.ENV"
-  source "../../.ENV"
-  source "../.ENV"
-  source "./.ENV"
-  source "${G_ENV:-}"
-}
 
-function print_commands {
+function command_usage {
   (( SE_IDX_MAX_COMMANDS == 0 )) && return
   declare -i	 i=0
   Print "\n  list of available commands:\n"
@@ -439,7 +457,7 @@ function print_commands {
   done
 }
 
-function print_database {
+function variable_usage {
   (( SE_NOptions == 0 )) && return
   Print "\n  environment database parameter:\n"
   declare -i	 i=0
@@ -455,15 +473,24 @@ function print_database {
   Print "\n  type definition:\n\n    <B>  boolean variable\n    <E>  export  variable\n    <L>  list    variable" 
 }
 
-function print_db_usage {
+function get_variable_usage {
   ## work
-  Print "\nusage: $G_FileName"
-  print_commands
-  print_database
+  Print "\nvariable-usage: $G_FileName"
+  command_usage
+  variable_usage
   Exit "\n"
 }
 
-function print_usage {
+function get_detail_user_usage {
+  if [[ -n "${G_HelpProc:-}" ]] ; then
+    Eval "$G_HelpProc 1>&2"
+    Exit ""
+  else
+    Error "the user-detail-usage is not installed"
+  fi
+}
+
+function get_user_usage {
   declare Ret=""
   declare -i i=0
   declare -i max=$SE_NDescriptions+5
@@ -501,40 +528,29 @@ function print_usage {
     i+=1
   done
   Ret="\n  Global options:\n"
-  Ret="$Ret\n    -c    clean screen"
-  Ret="$Ret\n    -v    get the version information"
-  Ret="$Ret\n    -i(+) use (not) the interactive mode"
-  Ret="$Ret\n    -s(+) save (not) the configuration"
-  Ret="$Ret\n    -p(+) print (not) the configuration"
-  Ret="$Ret\n    -h(+) options (database) help"
-  Ret="$Ret\n\n  File description:\n\n$G_Description"
-  if test -n "${G_HelpProc:-}" ; then
-    Print "$Ret
-
-================================================================"
-    Eval "$G_HelpProc 1>&2"
-    Exit ""
-  else
-    Exit "$Ret\n"
-  fi
-}
-
-function long_options {
-  Print "+++ Bin in long_options <$1> - <$2> - <$3>"
+  Ret+="\n    -c .............. clean screen"
+  Ret+="\n    -v .............. get the version information"
+  Ret+="\n    -i(+) ........... use (not) the interactive mode"
+  Ret+="\n    -s(+) ........... save (not) the configuration"
+  Ret+="\n    -p(+) ........... print (not) the configuration"
+  Ret+="\n    --help,-h ....... get user usage"
+  Ret+="\n    --help-data ..... get variable usage"
+  Ret+="\n    --help-setup .... get setup usage"
+  [[ -n "${G_HelpProc:-}" ]] && \
+    Ret+="\n    --help-detail ... get detail user usage"
+  Ret+="\n\n  File description:\n\n$G_Description\n"
+  Echo "$Ret"
 }
 
 function parse_commandline {
 ## global options
-
-#set -xv
-
-  set -- "${SE_LArgs[@]}"
+  set -- "${G_Args[@]}"
   (( ! $# )) && return
 
   declare -i i=0
   declare o=""
   declare SE_HELP=""
-  declare -i num=$[$#-$SE_Args_Correction]
+  declare -i num=$#
 ## step through the options
   while (( $# > 0 )) ; do
     ## Setup default options
@@ -547,12 +563,13 @@ function parse_commandline {
 	-p) shift; let SE_PrintCfg=1; continue ;;
 	+p) shift; let SE_PrintCfg=0; continue ;;
 	-v) shift; Exit "$G_Date - $G_Revision"	; continue ;;
-	-h) shift; let SE_HELP=1; continue ;;
-	+h) shift; let SE_HELP=2; continue ;;
+	-h|--help) shift; let SE_HELP=1; continue ;;
+	--help-data) shift; let SE_HELP=2; continue ;;
+	--help-setup) shift; let SE_HELP=3; continue ;;
+	--help-detail) shift; let SE_HELP=4; continue ;;
       esac
     ## Setup OptionString
       o="${1##+([-+])}"
-      #o="${o//-/_}"
       if [[ "$o" != "$1" ]] ; then
 	i=${SE_INV[$o]:--1}
       else
@@ -597,11 +614,12 @@ function parse_commandline {
   ## all remaining positional parameters are put out
   SE_Args="${@:-}"
   Shift $((num - $#))
-  (( $# != 0 )) && set_defaults ${SE_INV[argv]} "${*:-}"
   ## Help needed
   case $SE_HELP in
-    1)	print_usage;;
-    2)	print_db_usage;;
+    1)	get_user_usage;;
+    2)	get_variable_usage;;
+    3)	get_setup_usage;;
+    4)	get_detail_user_usage;;
   esac
 }
 
@@ -679,7 +697,7 @@ function print_configuration {
 ## something to do
   (( SE_PrintCfg == 0 || SE_NOptions == 0 )) && return
 ## output
-  SE_XXX="================================"
+  SE_XXX="==================================================="
   Echo "$SE_NL  $G_FileName - Configuration$SE_NL$SE_XXX$SE_NL$(create_mask)$SE_NL$SE_XXX$SE_NL"
 }
 
@@ -713,16 +731,15 @@ function save_local {
 ## something to do
   (( SE_NOptions == 0 )) && return
 ## files exists
-  [[ -f $SE_LFile && ! -h $SE_LFile && ! -w $SE_LFile ]] && \
-    Error3 "Can't write file <$SE_LFile>"
-  [[ -f $SE_LFile ]] && rm $SE_LFile
-  echo "# files created at: $(date)" > $SE_LFile
+  [[ -f $SE_LENV && ! -h $SE_LENV && ! -w $SE_LENV ]] && \
+    Error3 "Can't write file <$SE_LENV>"
+  [[ -f $SE_LENV ]] && rm $SE_LENV
+  echo "# files created at: $(date)" > $SE_LENV
 ## declare
   declare -i i=0
   while (( i < SE_NOptions ))
   do
-    [[ "${SE_Variables[$i]}" != "G_Argv" ]] && \
-      echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LFile
+    echo "value ${SE_Variables[$i]} = \"${SE_Defaults[$i]}\"" >> $SE_LENV
     let i+=1
   done
 }
@@ -768,35 +785,6 @@ function interactive {
   Print $clear
 }
 
-##  Usage message
-function Usage {
-  cat <<EOF
-usage: $G_FileName ?Options?
-
-  Custom options:
-
-    -C   Commandline String          [${SE_CmdLine[*]:-}]
-    -W   Write Variable              [${SE_CmdLine[*]:-}]
-    -E   Environment String          [${G_ENV:-}]
-    -F   Field separator             [${NIFS:-}]
-    -P   Print configuration         [$SE_PrintCfg]
-    -L   Setup .ENV.local file       [.ENV.local]
-    -S   Setup configuration file    [$SE_Setup]
-    -R   Read environment file       [$SE_Read_Environment_File]
-
-  Global options:
-
-    -v   get the version information
-    -l   use SetupEnv in a loop
-    -h   print this message
-
-  File description:
-
-$G_Description
-EOF
-  exit 0
-}
-
 
 ## 
 ## Main #####################################################################
@@ -821,8 +809,6 @@ Debug "declare" ################################################################
 ##
 
 declare	    SE_Args
-declare	-a  SE_LArgs=()
-declare	-i  SE_Args_Correction=0
 declare	-a  SE_CmdLine
 
 declare -i  i=0
@@ -830,9 +816,8 @@ declare -i  SE_INTERACTIV=0
 declare -i  SE_SAVE=0
 declare -i  SE_LOOP=0
 declare -i  G_LOOP=${G_LOOP:-0}
-declare	    SE_Setup=""
-declare -i  SE_Read_Environment_File=0
-declare	    SE_LFile="./.${G_FileName//./}.ENV"
+declare	    SE_Setup='.ENV.local'
+declare	    SE_LENV=''
 declare -i  SE_SUCCESS=0
 declare -i  SE_PrintCfg=0
 declare -i  SE_PrintVar=0
@@ -848,7 +833,7 @@ declare -a  SE_Descriptions[30]
 declare -a  SE_System[30]			## System Variable
 declare -a  SE_Type[30]
 declare -a  SE_List[30]				## argument's for SE_Type=L
-declare	    SE_Lock=""				## Fkt <source>
+declare	    SE_Lock=''				## Fkt <source>
 
 declare -Ax SE_IDX
 declare -Ax SE_INV
@@ -860,65 +845,70 @@ declare clear="$(tput clear)"
 Debug "Reading Commandline" ################################################################
 ##
 
-##  Scan options
-while (( $# )) ; do
-## print_array SE_CmdLine 						
-  case $1 in
-    -C) IFS=",$SE_TAB$SE_NL"
-	SE_CmdLine=($2 argv:G_Argv::"commandline arguments")
-	IFS="$SE_IFS"
-	shift
+function G_Option {
+  case "$1" in
+    lookup)
+      G_Argument "$NIFS$2$NIFS$NIFS"
+      SE_PrintVar=1
     ;;
-    -W)	SE_CmdLine=(:$2::)
-	export G_Shell=no
-	let SE_PrintVar=1
-	shift
+    global-data-file)
+      G_ENV="$2"
     ;;
-    -E)	G_ENV=$2; shift ;;
-    -F)	NIFS=$2; shift ;;
-    -P)	let SE_PrintCfg=1;;
-    -R)	let SE_Read_Environment_File=1;;
-    -L)	SE_Setup=".ENV.local";;									
-    -S)	SE_Setup="$2";shift;;									
-    -l) SE_LOOP=1;;
-    -v)	Exit "$G_Date - $G_Revision - $G_Author";;
-    -h) Usage;;
-    *)	SE_LArgs+=("$1")
-	SE_Args_Correction+=1
+    local-setup-file)
+      SE_Setup="$2"
+    ;;
+    local-data-file)
+      if [[ "$2" == "default" ]] ; then
+	SE_LENV="./.${G_FileName//./}.ENV"
+      else
+	SE_LENV="$2"
+      fi
+      SE_SAVE=1
+    ;;
+    print-config)
+      SE_PrintCfg=1
+    ;;
+    call-in-loop)
+      SE_LOOP=1
+    ;;
+    *)
+      get_setup_usage
     ;;
   esac
-  shift
-done
+}
 
-IFS=';'
-SE_LArgs+=(${G_Args-})
-IFS="$SE_IFS"
+. /dev/stdin
 
-#print_array SE_CmdLine 						
-#Print G_Args=$G_Args SE_Args_Correction=$SE_Args_Correction
+## get the shell-type
+case $G_Shell in
+  csh|tcsh)	G_ShellType=1	;;
+  ksh|bash|sh)	G_ShellType=2   ;;
+  tclsh|wish)	G_ShellType=3   ;;
+  *)		Error "unknown shell '$G_Shell' only 'csh,tcsh,ksh,bash,sh,tclsh,wish' is supported"
+esac
 
 ##
 Debug "Setup local .ENV file" ###########################################################
 ##
 
-## Absuluter pfad für SE_Setup
+## Absoluter Pfad für SE_Setup
 ## Mit dem Inhalt der Datei SE_Setup wird
 ## KonfigZeile <-C> aufgebaut
-[[ -n "$SE_Setup" ]] && {
-  [[ "$SE_Setup" != /* ]] && SE_Setup=$PWD/$SE_Setup
-  IFS=","
-  [[ ! -f $SE_Setup ]] && Error "File <$SE_Setup> not found"
-  SE_CmdLine=($(setup_ENV_file "$SE_Setup"))
-  IFS=$SE_IFS
-  G_Args="-i;-s${G_Args:+;}${G_Args-}"
-  SE_LFile="$SE_Setup"
-}
+#[[ -n "$SE_Setup" ]] && {
+#  [[ "$SE_Setup" != /* ]] && SE_Setup=$PWD/$SE_Setup
+#  IFS=","
+#  [[ ! -f $SE_Setup ]] && Error "File <$SE_Setup> not found"
+#  SE_CmdLine=($(setup_ENV_file "$SE_Setup"))
+#  IFS=$SE_IFS
+#  G_Args+=(-i -s)
+#  SE_LENV="$SE_Setup"
+#}
 
 ##
-Debug "Setup Environment" #######################################################################
+Debug "Setup Configuration" #######################################################################
 ##
 
-parse_configuration
+#parse_configuration
 
 #print_array SE_Options
 #print_array SE_Variables
@@ -931,8 +921,8 @@ parse_configuration
 Debug "Environment Variables" ####################################################################
 ##
 
-(( SE_Read_Environment_File == 1 )) && read_environment
-source  "$SE_LFile"
+source "${G_ENV:-}"
+source "${SE_LENV:-}"
 
 ##
 Debug "Parse Command Line" ##############################################################
@@ -970,7 +960,7 @@ check_on_command
 if (( SE_SAVE == 1 )) ; then
   save_local
 else
-  [[ $SE_PrintVar == 0 && -f "$SE_LFile" ]] && rm "$SE_LFile"
+  [[ $SE_PrintVar == 0 && -f "$SE_LENV" ]] && rm "$SE_LENV"
 fi
 
 ## message

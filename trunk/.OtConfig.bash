@@ -41,6 +41,10 @@ add2var() {
 }
 export -f add2var
 
+Usage() {
+  exec $SOURCE_HOME/configure --help
+}
+
 ##
 ## =======================================================================
 ##
@@ -56,38 +60,34 @@ export CTAGSFLAGS="--c-kinds=+p"
 
 SOURCE_HOME=$(dirname $(readlink -f $0))
 
-export  G_FileName="${0##*/}"
-IFS=";";export  G_Args="${@:-}";unset IFS
-export  G_Shell=bash
-#%%# ---------------------------------------------------------------------
-export  G_Date='$Date$'
-export  G_Revision='$Revision$'
-export  G_Author='$Author$'
-export  G_Source='$URL$'
-#%%%# --------------------------------------------------------------------
-export  G_Description='wrapper to setup the Build-Environment for the "configure" script.
-the configure-parameters are available in detail below'
-export  G_HelpProc=""
-#%%%%# -------------------------------------------------------------------
-
 ##  Retrieve environment data
 declare -A lang
 declare -a opt
 
-eval "$($SOURCE_HOME/bin/SetupEnv -s -C "
-  use-perf:Perf:0:use performance code:B
-  use-thread:Thread:0:use thread code:B
-  help-config:HelpConfig:0:get configure help:B
-$(
-  for l in tcl perl python php cxx java csharp go ruby ; do
-    echo lang-$l:lang[$l]:0:add $l language binding:B
-  done
-)
-"   )"
+eval "$($SOURCE_HOME/bin/SetupEnv $0 "${@:-}" <<-'EOF'
 
-(( $HelpConfig )) && {
-  exec $SOURCE_HOME/configure --help
-}
+G_Shell='bash'
+# ---------------------------------------------------------------------
+G_Date='$Date$'
+G_Revision='$Revision$'
+G_Author='$Author$'
+G_Source='$URL$'
+# --------------------------------------------------------------------
+G_Description='wrapper to setup the Build-Environment for the "configure" script.
+the configure-parameters are available in detail below'
+G_HelpProc='Usage'
+# -------------------------------------------------------------------
+G_Option local-data-file default
+G_Argument 'use-perf:Perf:0:use performance code:B'
+G_Argument 'use-thread:Thread:0:use thread code:B'
+for l in tcl perl python php cxx java csharp go ruby ; do
+  G_Argument "lang-$l:lang[$l]:0:add '$l' language binding:B"
+done
+
+EOF
+  )"
+
+exit
 
 for l in ${!lang[@]} ; do
   (( ${lang[$l]} )) && opt+=(--enable-$l)
