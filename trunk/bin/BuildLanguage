@@ -45,7 +45,7 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
 G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
 G_Argument 'clean:clean:0:cleanup first:B'
-for l in tcl perl ; do
+for l in tcl perl python ; do
   G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
 done
 for l in thread nothread performance-thread performance-nothread; do
@@ -55,8 +55,6 @@ done
 EOF
   )"
 
-declare -A buildDir=( [tcl]=./unix [perl]=. )
-
 mkdir -p "$ExtDir/$Arch" || Die "unable to create directory '$ExtDir/$Arch'"
 
 for l in ${!lang[@]} ; do
@@ -65,6 +63,11 @@ for l in ${!lang[@]} ; do
   case "$l" in
     perl)   buildScript=./Configure;;
     *)	    buildScript=./configure;;
+  esac
+
+  case "$l" in
+    tcl)    buildDir=./unix;;
+    *)	    buildDir=.;;
   esac
 
   for t in ${!use[@]} ; do
@@ -78,7 +81,16 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
 	  performance-nothread)	buildConf=(-DEBUGGING=none);;
 	esac
-	buildConf+=(-des -Dprefix="$ExtDir/$Arch")
+	buildConf+=(-des -Dprefix="$ExtDir/$Arch/$t")
+      ;;
+      python)
+	case "$t" in
+	  thread)		buildConf=(--with-pydebug --with-threads);;
+	  nothread)		buildConf=(--with-pydebug --without-threads);;
+	  performance-thread)	buildConf=(--with-threads);;
+	  performance-nothread) buildConf=(--without-threads);;
+	esac
+	buildConf+=(--prefix="$ExtDir/$Arch/$t" --disable-shared)
       ;;
       *)
 	case "$t" in
@@ -87,12 +99,12 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(--enable-threads);;
 	  performance-nothread) buildConf=();;
 	esac
-	buildConf+=(--prefix="$ExtDir/$Arch")
+	buildConf+=(--prefix="$ExtDir/$Arch/$t")
       ;;
     esac
 
     (
-      cd $l-latest/${buildDir[$l]}
+      cd "$l-latest/$buildDir"
       (( $clean )) && {
 	test -f Makefile && {
 	  make distclean || Die "unable to 'make distclean'"

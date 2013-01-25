@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -ue
 
 ## =======================================================================
 ##
@@ -64,7 +64,7 @@ SOURCE_HOME=$(dirname $(readlink -f $0))
 declare -A lang
 declare -a opt
 
-eval "$($SOURCE_HOME/bin/SetupEnv $0 "${@:-}" <<-'EOF'
+eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-'EOF'
 
 G_Shell='bash'
 # ---------------------------------------------------------------------
@@ -113,7 +113,7 @@ fi
 
 rm -fr /tmp/libmsgque-install
 
-bash -norc $SOURCE_HOME/configure    \
+bash -norc $SOURCE_HOME/../configure    \
 		    --prefix=/tmp/libmsgque-install \
 		    ${G_Argv:-} "${opt[@]}" \
 
