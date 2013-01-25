@@ -73,8 +73,7 @@ G_Revision='$Revision$'
 G_Author='$Author$'
 G_Source='$URL$'
 # --------------------------------------------------------------------
-G_Description='wrapper to setup the Build-Environment for the "configure" script.
-the configure-parameters are available in detail below'
+G_Description='wrapper to setup the build-environment for the "nhi1-configure" script.'
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
@@ -86,8 +85,6 @@ done
 
 EOF
   )"
-
-exit
 
 for l in ${!lang[@]} ; do
   (( ${lang[$l]} )) && opt+=(--enable-$l)

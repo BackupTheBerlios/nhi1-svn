@@ -64,7 +64,6 @@ Functions:
 	B) Boolean    -> A boolean variable, default '0' or '1'
 	E) Extern     -> Should the Variable be exported
 	L) List       -> This is a 'List' with values following after
-	A) Array      -> Values will be appended to the variable
       List .......... List entries, only use with Type (B)oolean or (L)ist.
                       As Type (B)oolean only 2 List-Arguments are supported
 
@@ -383,7 +382,6 @@ function G_Argument {
   def=$3
   dfi=${4:-"No text for <$var>"}
   typ=${5:-}
-  #[[ "$typ" == *A* ]] && var+=":$opt"
   #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
 ## 1. name of the option
   # POST
@@ -536,7 +534,7 @@ function get_user_usage {
     IFS=":"; set -- $t; unset IFS
     Print "\n    %-18s : %s" "$1" "$2"
   done
-  Print '\n\n'
+  Exit '\n'
 }
 
 function parse_commandline {

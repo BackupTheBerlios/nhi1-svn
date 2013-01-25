@@ -84,14 +84,75 @@ Setup the test-environment, usually you don't specify the following optione:
             > $PREFIX_ddd
   -kdbg:  use debugger 'kdbg'
             > $PREFIX_kdbg
+  -lookup:  lookup a single like:
+	    > MakeTclTest -lookup server.c
 
 EOF
   exit 1
 }
 
+#
+# lookup the token
+#
+lookup() {
+  declare -a ret=()
+  declare CMDDIR=$(cd $(dirname -- $1);pwd)
+  declare CMD=$(basename -- $1)
+
+  # fix the CMD path
+  [[ ! -e "$CMDDIR/$CMD" ]] && {
+    # look for CMD in the same directory but in the source tree
+    CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir}"
+    [[ ! -e  "$CMDDIR/$CMD" ]] && {
+      # look into the example directories
+      case "$CMD" in
+	*.tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
+	*.test)     CMDDIR="$abs_top_srcdir/theLink/test/";;
+	*.java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
+	*.py)	    CMDDIR="$abs_top_srcdir/theLink/example/python";;
+	*.pl)	    CMDDIR="$abs_top_srcdir/theLink/example/perl";;
+	*.rb)	    CMDDIR="$abs_top_srcdir/theLink/example/ruby";;
+	*.php)      CMDDIR="$abs_top_srcdir/theLink/example/php";;
+	*.exe|*.cs) CMDDIR="$abs_top_builddir/theLink/example/csharp";;
+	*.vb)	    CMDDIR="$abs_top_builddir/theLink/example/vb";;
+	*.go)	    CMDDIR="$abs_top_builddir/theLink/example/go";;
+	*.cc)	    CMDDIR="$abs_top_builddir/theLink/example/cc";;
+	*.c)	    CMDDIR="$abs_top_builddir/theLink/example/c";;
+      esac
+    }
+  }
+  CMD="$CMDDIR/$CMD"
+
+  # find executable is CMD is a script-file
+  case "$CMD" in
+    *.tcl|*.test)   EXE="$TCLSH";;
+    *.java)	    EXE="$JAVA"; CMD="${CMD%.*}";;
+    *.py)	    EXE="$PYTHON";;
+    *.pl)	    EXE="$PERL -I$abs_top_srcdir/theLink/example/perl";;
+    *.rb)	    EXE="$RUBY";;
+    *.php)	    EXE="$PHP";;
+    *.exe)	    EXE="$MONO";;
+    *.go)	    EXE=""; CMD="${CMD%.*}$EXT";;
+    *.cc)	    EXE=""; CMD="${CMD%.*}$EXT";;
+    *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;
+    *)		    EXE="";;
+  esac
+
+  [[ ! -e  "$CMD" ]] && {
+    echo "unable to find the path for command: '$CMD'"
+    exit 1
+  }
+
+  test -n "$EXE" && ret+=("$EXE")
+  ret+=("$CMD")
+  echo "${ret[@]}"
+}
+
 PREFIX=""
 POSTFIX="cat"
 TEE="yes"
+
+declare -i lookup=0
 
 PREFIX_vg="valgrind --trace-children=yes --num-callers=36 --quiet"
 PREFIX_gdb="gdb -d ../perlmsgque/Net*/ --tui --args"
@@ -153,6 +214,11 @@ case "$1" in
     MONO="mdb"
     shift
   ;;
+  -lookup) 
+    lookup "$2"
+    exit
+    shift
+  ;;
   -*)
     Usage
   ;;
@@ -166,62 +232,11 @@ id=$(basename -- $1)
 id=${id%.*}
 while (( $# )) ; do
   if (( $first )) ; then
-    CMDDIR=$(cd $(dirname -- $1);pwd)
-    CMD=$(basename -- $1)
-
-    # fix the CMD path
-    [[ ! -e "$CMDDIR/$CMD" ]] && {
-      # look for CMD in the same directory but in the source tree
-      CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir}"
-      [[ ! -e  "$CMDDIR/$CMD" ]] && {
-	# look into the example directories
-	case "$CMD" in
-	  *.tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
-	  *.test)     CMDDIR="$abs_top_srcdir/theLink/test/";;
-	  *.java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
-	  *.py)	      CMDDIR="$abs_top_srcdir/theLink/example/python";;
-	  *.pl)	      CMDDIR="$abs_top_srcdir/theLink/example/perl";;
-	  *.rb)	      CMDDIR="$abs_top_srcdir/theLink/example/ruby";;
-	  *.php)      CMDDIR="$abs_top_srcdir/theLink/example/php";;
-	  *.exe|*.cs) CMDDIR="$abs_top_builddir/theLink/example/csharp";;
-	  *.vb)	      CMDDIR="$abs_top_builddir/theLink/example/vb";;
-	  *.go)	      CMDDIR="$abs_top_builddir/theLink/example/go";;
-	  *.cc)	      CMDDIR="$abs_top_builddir/theLink/example/cc";;
-	  *.c)	      CMDDIR="$abs_top_builddir/theLink/example/c";;
-	esac
-      }
-    }
-    CMD="$CMDDIR/$CMD"
-
-    # find executable is CMD is a script-file
-    case "$CMD" in
-      *.tcl|*.test)   EXE="$TCLSH";;
-      *.java)	      EXE="$JAVA"; CMD="${CMD%.*}";;
-      *.py)	      EXE="$PYTHON";;
-      *.pl)	      EXE="$PERL -I$abs_top_srcdir/theLink/example/perl";;
-      *.rb)	      EXE="$RUBY";;
-      *.php)	      EXE="$PHP";;
-      *.exe)	      EXE="$MONO";;
-      *.go)	      EXE=""; CMD="${CMD%.*}$EXT";;
-      *.cc)	      EXE=""; CMD="${CMD%.*}$EXT";;
-      *.c)	      EXE=""; CMD="${CMD%.*}$EXT";;
-      *)	      EXE="";;
-    esac
-
-    [[ ! -e  "$CMD" ]] && {
-      echo "unable to find the path for command: '$CMD'"
-      exit 1
-    }
-
-    test -n "$EXE" && cmdline+=($EXE)
-    cmdline+=("$CMD")
-    unset -v CMD CMDDIR EXE
+    cmdline+=( $(lookup $1) )
     first=0
-  elif [[ "$1" == "@" ]] ; then
-    first=1
-    cmdline+=($1)
   else
     cmdline+=($1)
+    [[ "$1" == "@" ]] && first=1
   fi
   shift
 done
