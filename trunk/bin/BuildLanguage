@@ -1,0 +1,113 @@
+#!/bin/bash
+
+set -ue
+
+## =======================================================================
+##
+## Setup Environment 
+##
+##   performance ...
+##
+## =======================================================================
+
+## delete all environment variables to setup a "clean" build environment
+[[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
+  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
+
+declare -x PATH="/bin:/usr/bin"
+
+Die() {
+  echo "ERROR: $*"
+  exit 1
+}
+
+##
+## =======================================================================
+##
+
+SOURCE_HOME=$(dirname $(readlink -f $0))
+
+##  Retrieve environment data
+declare -A lang
+declare -A use
+
+eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-EOF
+
+G_Shell='bash'
+# ---------------------------------------------------------------------
+G_Date='\$Date: 2013-01-25 11:52:58 +0000 (Fri, 25 Jan 2013) \$'
+G_Revision='\$Revision: 593 \$'
+G_Author='\$Author: aotto1968 \$'
+G_Source='\$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/.OtConfig.bash \$'
+# --------------------------------------------------------------------
+G_Description='wrapper to setup the build-environment for the "nhi1-configure" script.'
+# -------------------------------------------------------------------
+G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
+G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
+G_Argument 'clean:clean:0:cleanup first:B'
+for l in tcl perl ; do
+  G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
+done
+for l in thread nothread performance-thread performance-nothread; do
+  G_Argument "use-\$l:use[\$l]:0:build the '\$l' options:B"
+done
+
+EOF
+  )"
+
+declare -A buildDir=( [tcl]=./unix [perl]=. )
+
+mkdir -p "$ExtDir/$Arch" || Die "unable to create directory '$ExtDir/$Arch'"
+
+for l in ${!lang[@]} ; do
+  (( ! ${lang[$l]} )) && continue
+
+  case "$l" in
+    perl)   buildScript=./Configure;;
+    *)	    buildScript=./configure;;
+  esac
+
+  for t in ${!use[@]} ; do
+    (( ! ${use[$t]} )) && continue
+
+    case "$l" in
+      perl)
+	case "$t" in
+	  thread)		buildConf=(-Dusethreads -DEBUGGING=-g);;
+	  nothread)		buildConf=(-DEBUGGING=-g);;
+	  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
+	  performance-nothread)	buildConf=(-DEBUGGING=none);;
+	esac
+	buildConf+=(-des -Dprefix="$ExtDir/$Arch")
+      ;;
+      *)
+	case "$t" in
+	  thread)		buildConf=(--enable-symbols --enable-threads);;
+	  nothread)		buildConf=(--enable-symbols);;
+	  performance-thread)	buildConf=(--enable-threads);;
+	  performance-nothread) buildConf=();;
+	esac
+	buildConf+=(--prefix="$ExtDir/$Arch")
+      ;;
+    esac
+
+    (
+      cd $l-latest/${buildDir[$l]}
+      (( $clean )) && {
+	test -f Makefile && {
+	  make distclean || Die "unable to 'make distclean'"
+	}
+      }
+      test ! -f Makefile && {
+	bash -norc "$buildScript" "${buildConf[@]}" || Die "unable to configure"
+      }
+      make -j 2 || Die "unable to build"
+      make install || Die "unable to install"
+    )
+
+  done
+done
+
+exit 0
+
+#vim: softtabstop=2 tabstop=8 shiftwidth=2
