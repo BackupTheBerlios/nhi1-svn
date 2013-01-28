@@ -15,16 +15,16 @@
 @SET_MAKE@
 
 #+
-#§  \file       theLink/example/php/Makefile.am
-#§  \brief      \$Id: Makefile.am 417 2011-01-13 18:57:58Z aotto1968 $
-#§  
-#§  (C) 2007 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 417 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/php/Makefile.am
+#:  \brief      \$Id: Makefile.am 417 2011-01-13 18:57:58Z aotto1968 $
+#:  
+#:  (C) 2007 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev: 417 $
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 VPATH = @srcdir@
 am__make_dryrun = \
   { \

@@ -1,14 +1,14 @@
 #+
-#§  \file       theLink/example/tcl/server.tcl
-#§  \brief      \$Id$
-#§  
-#§  (C) 2007 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/tcl/server.tcl
+#:  \brief      \$Id$
+#:  
+#:  (C) 2007 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 package require Tcl 8.5
 

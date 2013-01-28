@@ -1,14 +1,14 @@
 #+
-#§  \file       configure.in
-#§  \brief      \$Id$
-#§  
-#§  (C) 2007 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       configure.in
+#:  \brief      \$Id$
+#:  
+#:  (C) 2007 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 # set NHI1 VERSION information also in:
 AC_INIT([NHI1],[0.16],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
@@ -75,7 +75,7 @@ AM_PROG_CC_C_O
 
 GCC=yes
 #LDFLAGS="-no-undefined"
-AC_PROG_CXX
+SC_ENABLE_CXX
 AC_PROG_CC_C99
 AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
   AC_MSG_ERROR([require c99 mode to compile])
@@ -103,7 +103,7 @@ AC_MSG_CHECKING(programs);echo
 AC_C_BIGENDIAN
 SC_SET_VPATH_HOOK
 SC_ENABLE_SYMBOLS
-SC_ENABLE_CXX
+#SC_ENABLE_CXX
 SC_ENABLE_JAVA
 SC_ENABLE_PYTHON
 SC_ENABLE_CSHARP

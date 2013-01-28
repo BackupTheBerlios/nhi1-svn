@@ -1,17 +1,19 @@
 #+
-#§  \file       theLink/example/python/testclient.py
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/python/testclient.py
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
 import sys
 import os
 from pymsgque import *
+
 ## setup the clients
 server = os.path.join(os.path.dirname(sys.argv[0]), "testserver.py")
 ## create object
@@ -24,7 +26,7 @@ c10 = MqS()
 c100 = MqS()
 c101 = MqS()
 ## setup object link
-c0.LinkCreate(["c0",    "--srvname", "s0",  "--debug", os.environ.get("TS_DEBUG"), "@", "python", server])
+c0.LinkCreate(["c0",    "--srvname", "s0",  "--debug", os.environ.get("TS_DEBUG"), "@", os.environ.get("PYTHON"), server])
 c00.LinkCreateChild(c0,   ["c00",   "--name", "c00", "--srvname", "s00"])
 c01.LinkCreateChild(c0,	  ["c01",   "--name", "c01", "--srvname", "s01"])
 c000.LinkCreateChild(c00, ["c000",  "--name", "c000", "--srvname", "s000"])

@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
+#+
+#:  \file       bin/SetupEnv
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 set -u
 #set -uxv
 
@@ -8,8 +19,8 @@ declare -x  G_Dirname="${1%/*}"; shift
 declare -xa G_Args=("${@:-}")
 declare -x  G_Shell=${G_Shell:-}
 #%%# ---------------------------------------------------------------------
-declare -x  G_Date=${G_Date:-'$Date: 2007-01-24 12:14:05 +0100 (Wed, 24 Jan 2007) $'}
-declare -x  G_Revision=${G_Revision:-'$Revision: 11578 $'}
+declare -x  G_Date=${G_Date:-'$Date$'}
+declare -x  G_Revision=${G_Revision:-'$Revision$'}
 declare -x  G_Author=${G_Author:-'$Author: mqm $'}
 declare -x  G_Source=${G_Source:-'$URL: svn://mpsun07/home/otto/SetupEnv/SetupEnv.bash $'}
 #%%%# --------------------------------------------------------------------
@@ -27,8 +38,8 @@ The configuration is parsed by bash and recignize the following token:
 
 Variables:
   G_Shell......... the type of the calling shell (bash,csh,tcl,...)
-  G_Date.......... the date of the revision ($Date: ... $
-  G_Revision...... the revision number ($Revision: ... $)
+  G_Date.......... the date of the revision ($Date$
+  G_Revision...... the revision number ($Revision$)
   G_Author........ the author ($Author: ... $)
   G_Source........ the file source ($URL: ... $)
   G_Description... the long description of the usage
@@ -68,7 +79,7 @@ Functions:
                       As Type (B)oolean only 2 List-Arguments are supported
 
 EOF
-  exit 0
+  Exit ""
 }
 
 #
@@ -529,7 +540,8 @@ function get_user_usage {
 	    "-p(+):print (not) the configuration" \
 	    "--help,-h:get user usage" \
 	    "--help-environment:get environment database usage" \
-	    "--help-setup:get setup usage"
+	    "--help-setup:get setup usage" \
+	    "--help-detail:get detail help from wrapper tool"
   do
     IFS=":"; set -- $t; unset IFS
     Print "\n    %-18s : %s" "$1" "$2"

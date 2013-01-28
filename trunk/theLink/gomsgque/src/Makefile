@@ -1,14 +1,14 @@
 #+
-#§  \file       theLink/gomsgque/src/Makefile
-#§  \brief      \$Id: Makefile.in 316 2010-11-19 18:40:05Z aotto1968 $
-#§  
-#§  (C) 2010 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 316 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/gomsgque/src/Makefile
+#:  \brief      \$Id$
+#:  
+#:  (C) 2010 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 include ../MakeGoMsgque.inc
 include $(GOROOT)/src/Make.inc

@@ -1,15 +1,15 @@
 #!/bin/bash
 #+
-#§  \file       bin/log
-#§  \brief      \$Id: LbMain 304 2010-11-13 09:57:59Z aotto1968 $
-#§  
-#§  (C) 2011 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 304 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       bin/log
+#:  \brief      \$Id$
+#:  
+#:  (C) 2011 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 
 # call shell-command and put the output into a file

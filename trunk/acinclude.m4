@@ -616,12 +616,16 @@ AC_DEFUN([SC_ENABLE_CXX], [
   )
   AC_MSG_RESULT($enable_cxx)
   if test "x$enable_cxx" = "xyes"; then
-    dnl AC_PROG_CXX
-    if test "x$enable_symbols" = "xyes"; then
-      CXXFLAGS="-g $CXXFLAGS"
-    fi
-    if test "x$enable_threads" = "xyes"; then
-      CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+    AC_PROG_CXX
+    if test "x$ac_cv_cxx_compiler_gnu" = "xyes"; then
+      if test "x$enable_symbols" = "xyes"; then
+	CXXFLAGS="-g $CXXFLAGS"
+      fi
+      if test "x$enable_threads" = "xyes"; then
+	CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+      fi
+    else
+      AC_MSG_ERROR([unable to find a suitable c++ compiler])
     fi
   fi
   AC_SUBST([USE_CXX], $enable_cxx)

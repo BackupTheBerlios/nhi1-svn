@@ -1,14 +1,14 @@
 #+
-#§  \file       bin/LbMain
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       bin/LbMain
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 if {![info exists LLabel]} {
     puts stderr "ERROR do not use this proc directly, please use the Lb* procedures with defined Label as wrapper"
@@ -87,7 +87,7 @@ proc Type# {pre} {
     }
 
   ## 3. prepare HEADER
-    Header NH [lrange $H $I end] "#+" "#�" "#�"
+    Header NH [lrange $H $I end] "#+" "#:" "#:"
 
   ## 4. write # header
     foreach h $H nh $NH {

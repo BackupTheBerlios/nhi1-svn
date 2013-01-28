@@ -53,7 +53,7 @@ class testclient extends MqS {
     testclient c101 = new testclient();
     try {
       // create the Link
-      c0.LinkCreate("--name", "c0", "--debug", System.getenv("TS_DEBUG"), "@", "java", "example.testserver", "--name", "s0");
+      c0.LinkCreate("--name", "c0", "--debug", System.getenv("TS_DEBUG"), "@", System.getenv("JAVA"), "example.testserver", "--name", "s0");
       c00.LinkCreateChild(c0, "--name", "c00", "--srvname", "s00");
       c01.LinkCreateChild(c0, "--name", "c01", "--srvname", "s01");
       c000.LinkCreateChild(c00, "--name", "c000", "--srvname", "s000");

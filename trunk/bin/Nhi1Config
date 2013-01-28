@@ -1,4 +1,15 @@
 #!/bin/bash
+#+
+#:  \file       bin/Nhi1Config
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 set -ue
 
@@ -42,7 +53,17 @@ add2var() {
 export -f add2var
 
 Usage() {
-  exec $SOURCE_HOME/configure --help
+  exec $SOURCE_HOME/../configure --help
+}
+
+pathExtension() {
+  case "$1" in
+    thread)                 echo "test/";;
+    nothread)               echo "test/nothred/";;
+    performance-thread)     echo "";;
+    performance-nothread)   echo "nothread/";;
+    *)                      Die "unknown pathExtension '$1'";;
+  esac
 }
 
 ##
@@ -51,12 +72,6 @@ Usage() {
 
 export PATH=/bin:/usr/bin
 export LD_LIBRARY_PATH=
-
-# I use ccache for compiling
-export CCACHE_DIR="/build/dev01/Cache"
-export CC="ccache gcc"
-export CXX="ccache g++"
-export CTAGSFLAGS="--c-kinds=+p"
 
 SOURCE_HOME=$(dirname $(readlink -f $0))
 
@@ -70,8 +85,8 @@ G_Shell='bash'
 # ---------------------------------------------------------------------
 G_Date='$Date$'
 G_Revision='$Revision$'
-G_Author='$Author$'
-G_Source='$URL$'
+G_Author='$Author: aotto1968 $'
+G_Source='$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/bin/Nhi1Config $'
 # --------------------------------------------------------------------
 G_Description='wrapper to setup the build-environment for the "nhi1-configure" script.'
 G_HelpProc='Usage'
@@ -90,24 +105,30 @@ for l in ${!lang[@]} ; do
   (( ${lang[$l]} )) && opt+=(--enable-$l)
 done
 
+# I use ccache for compiling
+export CCACHE_DIR="/build/dev01/Cache"
+export CC="ccache gcc"
+(( ${lang[cxx]} )) && export CXX="ccache g++"
+export CTAGSFLAGS="--c-kinds=+p"
+
 if (( $Perf )) ; then
   opt+=(--enable-static)
   if (( $Thread )) ; then
-    add2var PATH	      $HOME/ext/$MACHTYPE/performance_thread/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_thread/lib
+    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension performance_thread)/bin
+    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension performance_thread)/lib
     opt+=(--enable-threads)
   else
-    add2var PATH	      $HOME/ext/$MACHTYPE/performance_nothread/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/performance_nothread/lib
+    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension performance_nothread)/bin
+    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension performance_nothread)/lib
   fi
 else
   if (( $Thread )) ; then
-    add2var PATH	      $HOME/ext/$MACHTYPE/thread/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/thread/lib
+    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension thread)/bin
+    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension thread)/lib
     opt+=(--enable-threads)
   else
-    add2var PATH	      $HOME/ext/$MACHTYPE/nothread/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/nothread/lib
+    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension nothread)/bin
+    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension nothread)/lib
   fi
 fi
 

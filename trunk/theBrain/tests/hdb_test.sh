@@ -1,14 +1,14 @@
 #+
-#§  \file       theBrain/tests/hdb_test.sh
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theBrain/tests/hdb_test.sh
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 rm -rf casket*
 ./tchtest write casket 50000 5000 5 5
 ./tchtest read casket

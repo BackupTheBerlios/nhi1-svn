@@ -1,15 +1,15 @@
 #!/usr/bin/env tclsh
 #+
-#§  \file       bin/svn_ps_svn_ignore.tcl
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       bin/svn_ps_svn_ignore.tcl
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 ## USAGE
 ## add all files from the directory tree starting with

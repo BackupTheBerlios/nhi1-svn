@@ -1,17 +1,17 @@
 #!/usr/bin/env tclsh
 #+
-#§  \file       bin/Label
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       bin/Label
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
-set LHOME [file normalize /home/dev1usr/Project/NHI1]
+set LHOME [file normalize [file join [file dirname $argv0] ..]]
 
 array set LABELUSE {
     .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
@@ -21,13 +21,14 @@ array set LABELUSE {
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
-    ./bin			{ LbMain .sh Label .sh log .sh }
+    ./bin			{ LbMain .sh Label .sh log .sh Nhi1Config .sh rcBuild .sh SetupEnv .sh 
+				  BuildLanguage .sh }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
     ./theLink/tests		{ README.tests .sh exec.env.in .sh }
 }
 
 array set LABELIGNORE {
-    ./bin			{ *.sw* Makefile Makefile.in }
+    ./bin			{ *.sw* Makefile Makefile.in tags }
     ./html			{ * }
     ./man			{ * }
     ./binary-build		{ * }
@@ -50,7 +51,7 @@ array set LABELIGNORE {
     ./theLink/example/tcl	{ *.sw* Makefile.in Makefile tags }
     ./theLink/example/python	{ *.sw* Makefile.in Makefile}
     ./theLink/example/ruby	{ *.sw* Makefile.in Makefile}
-    ./theLink/example/perl	{ *.sw* Makefile.in Makefile}
+    ./theLink/example/perl	{ *.sw* Makefile.in Makefile Switch.pm}
     ./theLink/example/php	{ *.sw* Makefile.in Makefile}
     ./theLink/example/go	{ *.sw* Makefile.in Makefile *.log MyClient MyServer Filter3 mulclient
 				  manfilter mulserver testserver testclient Filter1 Filter2 Filter4 Filter5

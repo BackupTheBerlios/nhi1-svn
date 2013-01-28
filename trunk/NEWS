@@ -1,14 +1,14 @@
 #+
-#§  \file       NEWS
-#§  \brief      \$Id$
-#§  
-#§  (C) 2007 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       NEWS
+#:  \brief      \$Id$
+#:  
+#:  (C) 2007 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 
 8 Apr 2011: v NHI1-0.16, PLMK-2.4 und libmsgque-5.4

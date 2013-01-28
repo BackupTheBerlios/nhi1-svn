@@ -72,7 +72,6 @@ PyObject* NS(LinkCreate)(
 )
 {
   PyObject *argsO = NULL;
-
   if (!PyArg_ParseTuple(args, "|O!:LinkCreate", &PyList_Type, &argsO)) {
     return NULL;
   } else {

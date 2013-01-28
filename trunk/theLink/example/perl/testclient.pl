@@ -1,14 +1,14 @@
 #+
-#§  \file       theLink/example/perl/testclient.pl
-#§  \brief      \$Id$
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev$
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/perl/testclient.pl
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 #use strict;
 use Net::PerlMsgque;
@@ -46,7 +46,7 @@ package main;
   }
   eval {
     ## setup object link
-    $c0->LinkCreate	    (      "--name", "c0",   "--srvname", "s0",  "--debug", $ENV{"TS_DEBUG"}, "@", "perl", $server);
+    $c0->LinkCreate	    (      "--name", "c0",   "--srvname", "s0",  "--debug", $ENV{"TS_DEBUG"}, "@", $ENV{"PERL"}, $server);
     $c00->LinkCreateChild   ($c0,  "--name", "c00",  "--srvname", "s00");
     $c01->LinkCreateChild   ($c0,  "--name", "c01",  "--srvname", "s01");
     $c000->LinkCreateChild  ($c00, "--name", "c000", "--srvname", "s000");

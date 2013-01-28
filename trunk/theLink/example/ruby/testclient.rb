@@ -1,14 +1,14 @@
 #+
-#§  \file       theLink/example/ruby/testclient.rb
-#§  \brief      \$Id: LbMain 26 2009-12-03 11:48:43Z aotto1968 $
-#§  
-#§  (C) 2010 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 26 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/ruby/testclient.rb
+#:  \brief      \$Id$
+#:  
+#:  (C) 2010 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 require "rubymsgque"
 ## setup the clients
 server = File.join(File.dirname($0), "testserver.rb")
@@ -23,7 +23,6 @@ c100 = MqS.new
 c101 = MqS.new
 ## setup object link
 c0.LinkCreate("c0",    "--srvname", "s0",  "--debug", ENV['TS_DEBUG'], "@", ENV['RUBY'], server)
-#c0.LinkCreate("c0",    "--srvname", "s0",  "--debug", ENV['TS_DEBUG'], "--tcp", "--port", "7777");
 c00.LinkCreateChild(c0,   "c00",   "--name", "c00", "--srvname", "s00")
 c01.LinkCreateChild(c0,	  "c01",   "--name", "c01", "--srvname", "s01")
 c000.LinkCreateChild(c00, "c000",  "--name", "c000", "--srvname", "s000")

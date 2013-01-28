@@ -1,14 +1,14 @@
 #+
-#§  \file       theLink/example/perl/Filter4.pl
-#§  \brief      \$Id: Filter4.pl 92 2009-12-21 11:58:07Z aotto1968 $
-#§  
-#§  (C) 2009 - NHI - #1 - Project - Group
-#§  
-#§  \version    \$Rev: 92 $
-#§  \author     EMail: aotto1968 at users.berlios.de
-#§  \attention  this software has GPL permissions to copy
-#§              please contact AUTHORS for additional information
-#§
+#:  \file       theLink/example/perl/Filter4.pl
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 use strict;
 use Net::PerlMsgque;
