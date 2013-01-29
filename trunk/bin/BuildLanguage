@@ -34,10 +34,10 @@ Die() {
 
 pathExtension() {
   case "$1" in
-    thread)		    echo "test/";;
-    nothread)		    echo "test/nothred/";;
-    performance-thread)	    echo "";;
-    performance-nothread)   echo "nothread/";;
+    thread)		    echo "test";;
+    nothread)		    echo "test/nothred";;
+    performance-thread)	    echo ".";;
+    performance-nothread)   echo "nothread";;
     *)			    Die "unknown pathExtension '$1'";;
   esac
 }
@@ -67,7 +67,7 @@ G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
 G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
 G_Argument 'clean:clean:0:cleanup first:B'
 G_Argument 'jobs:Jobs:2:number of parallel build jobs:'
-for l in tcl perl python ruby ; do
+for l in tcl perl python ruby php; do
   G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
 done
 for l in thread nothread performance-thread performance-nothread; do
@@ -95,6 +95,8 @@ for l in ${!lang[@]} ; do
   for t in ${!use[@]} ; do
     (( ! ${use[$t]} )) && continue
 
+    prefix="$ExtDir/$Arch/$(pathExtension $t)"
+
     case "$l" in
       perl)
 	case "$t" in
@@ -103,7 +105,7 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
 	  performance-nothread)	buildConf=(-DEBUGGING=none);;
 	esac
-	buildConf+=(-des -Dprefix="$ExtDir/$Arch/$(pathExtension $t)")
+	buildConf+=(-des -Dprefix="$prefix")
       ;;
       python)
 	case "$t" in
@@ -112,7 +114,16 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(--with-threads);;
 	  performance-nothread) buildConf=(--without-threads);;
 	esac
-	buildConf+=(--prefix="$ExtDir/$Arch/$(pathExtension $t)" --enable-shared)
+	buildConf+=(--prefix="$prefix" --enable-shared)
+      ;;
+      php)
+	case "$t" in
+	  thread)		buildConf=(--enable-debug --with-tsrm-pthreads);;
+	  nothread)		buildConf=(--enable-debug --without-tsrm-pthreads);;
+	  performance-thread)	buildConf=(--with-tsrm-pthreads);;
+	  performance-nothread) buildConf=(--without-tsrm-pthreads);;
+	esac
+	buildConf+=(--prefix="$prefix")
       ;;
       ruby)
 	case "$t" in
@@ -121,7 +132,7 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(--enable-pthread);;
 	  performance-nothread) buildConf=(--disable-pthread);;
 	esac
-	buildConf+=(--prefix="$ExtDir/$Arch/$(pathExtension $t)" --enable-shared)
+	buildConf+=(--prefix="$prefix" --enable-shared)
       ;;
       *)
 	case "$t" in
@@ -130,7 +141,7 @@ for l in ${!lang[@]} ; do
 	  performance-thread)	buildConf=(--enable-threads);;
 	  performance-nothread) buildConf=();;
 	esac
-	buildConf+=(--prefix="$ExtDir/$Arch/$(pathExtension $t)")
+	buildConf+=(--prefix="$prefix")
       ;;
     esac
 
@@ -142,7 +153,7 @@ for l in ${!lang[@]} ; do
 	}
       }
       test ! -f Makefile && {
-	bash -norc "$buildScript" "${buildConf[@]}" || Die "unable to configure"
+	bash -norc "$buildScript" "${buildConf[@]}" "$@" || Die "unable to configure"
       }
       make -j $Jobs || Die "unable to build"
       make install || Die "unable to install"

@@ -172,42 +172,42 @@ PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --qu
 }
 case "$1" in
   -vg) 
-    PREFIX=$PREFIX__vg
+    PREFIX=$PREFIX_vg
     POSTFIX="grep -v DWARF2"
     shift
   ;;
   -gdb) 
-    PREFIX=$PREFIX__gdb
+    PREFIX=$PREFIX_gdb
     POSTFIX=""
     TEE="no"
     shift
   ;;
   -ddd) 
-    PREFIX=$PREFIX__ddd
+    PREFIX=$PREFIX_ddd
     TEE="no"
     shift
   ;;
   -kdbg) 
-    PREFIX=$PREFIX__kdbg
+    PREFIX=$PREFIX_kdbg
     TEE="no"
     shift
   ;;
   -lc) 
-    PREFIX=$PREFIX__lc
+    PREFIX=$PREFIX_lc
     POSTFIX="grep -v DWARF2"
     shift
   ;;
   -sr) 
-    PREFIX=$PREFIX__sr
+    PREFIX=$PREFIX_sr
     POSTFIX="grep -v DWARF2"
     shift
   ;;
   -st) 
-    PREFIX=$PREFIX__st
+    PREFIX=$PREFIX_st
     shift
   ;;
   -sp) 
-    PREFIX=$PREFIX__sp
+    PREFIX=$PREFIX_sp
     POSTFIX="grep -v DWARF2"
     shift
   ;;

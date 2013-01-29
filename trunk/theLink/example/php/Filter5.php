@@ -79,6 +79,8 @@ class F3 extends MqS implements iServerSetup {
 
 // Main ******************************************************
 
+MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
+
 FactoryAdd('F1');
 FactoryAdd('F2');
 FactoryAdd('F3');

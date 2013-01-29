@@ -14,14 +14,14 @@ if USE_PHP
 
 PHPMAKEFILE  =	MsgqueForPhp/Makefile
 PHPCONFIGURE    =  --with-MsgqueForPhp=$(abs_builddir)/../libmsgque
-PHPCONFIGURE    +=  --with-MsgqueForPhpSrc=$(abs_srcdir)/../libmsgque
+PHPCONFIGURE    += --with-MsgqueForPhpSrc=$(abs_srcdir)/../libmsgque
 PHPCONFIGURE    += --with-php-config=$(PHPCONFIG)
 
 if DEBUG
 PHPCONFIGURE    += --enable-symbols
 endif
 
-#PHPCONFIGURE    += --srcdir=$(srcdir)
+#PHPCONFIGURE   += --srcdir=$(srcdir)
 PHPCONFIGURE    += --bindir=$(bindir)
 PHPCONFIGURE    += --sbindir=$(sbindir)
 PHPCONFIGURE    += --libexecdir=$(libexecdir)
@@ -43,18 +43,18 @@ PHPCONFIGURE    += --pdfdir=$(pdfdir)
 PHPCONFIGURE    += --psdir=$(psdir)
 
 
-MsgqueForPhp/configure: MsgqueForPhp/config.m4
+$(abs_builddir)/MsgqueForPhp/configure: 
 	-test ! -d MsgqueForPhp && cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp && touch MsgqueForPhp/.distclean
 	cd MsgqueForPhp && $(PHPIZE)
 
-$(PHPMAKEFILE): MsgqueForPhp/configure Makefile.am
+$(abs_builddir)/$(PHPMAKEFILE): $(abs_builddir)/MsgqueForPhp/configure Makefile.am
 	cd MsgqueForPhp && ./configure $(PHPCONFIGURE)
 
-all-local: $(PHPMAKEFILE)
-	cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS)
+all-local: $(abs_builddir)/$(PHPMAKEFILE)
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS)
 
-clean-local: $(PHPMAKEFILE)
-	cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) clean
+clean-local: $(abs_builddir)/$(PHPMAKEFILE)
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean
 
 #cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 install-exec-local:
@@ -62,10 +62,12 @@ install-exec-local:
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 uninstall-local:
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) uninstall
 	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
 	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 distclean-local:
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean
 	-test -f MsgqueForPhp/.distclean && rm -fr MsgqueForPhp
 
 endif
@@ -94,7 +96,4 @@ EXTRA_DIST = \
 	MsgqueForPhp/storage_php.c \
 	MsgqueForPhp/MqFactoryS_php.c \
 	MsgqueForPhp/slave_php.c
-
-
-
 

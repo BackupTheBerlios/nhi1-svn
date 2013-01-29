@@ -43,6 +43,7 @@ class Filter1 extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
+MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
 $srv = FactoryAdd('filter', 'Filter1')->New();
 try {
   $srv->LinkCreate($argv);

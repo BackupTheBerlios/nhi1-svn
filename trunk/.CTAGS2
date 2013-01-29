@@ -13,10 +13,11 @@
 
 D=${PWD%%/NHI1*}/NHI1
 DO="yes"
+BASE=$(basename $PWD)
 
-. $D/env.sh
+#. $D/env.sh
 
-set -x
+set -xu
 
 if [[ $HOSTTYPE == "FreeBSD" ]] ; then
   ADD=""
@@ -26,12 +27,13 @@ fi
 
 [[ ! -f $D/tags || $D/.CTAGS -nt $D/tags ]] && (
     cd $D
-    ./.CTAGS
+    ctags $(find /usr/include -type f)
+    ctags -a $PWD/theLink/sqlite/sqlite3.c
 )
 
 cp $D/tags .
 
-[[ $(basename $PWD) != "libmsgque" && $(basename $PWD) != "ccmsgque" ]] && {
+[[ $BASE != "libmsgque" && $BASE != "ccmsgque" ]] && {
   test -d $D/libmsgque && \
     ctags -a $ADD $D/libmsgque/*.[ch]
   test -d $D/theLink/libmsgque && \
@@ -39,55 +41,55 @@ cp $D/tags .
 }
 
 [[ $PWD == *theBrain* ]] && \
-  ctags -a $ADD /home/dev1usr/src/tokyocabinet-1.4.39-thread/*.[ch]
+  ctags -a $ADD $HOME/src/tokyocabinet-1.4.39-thread/*.[ch]
 
-[[ $(basename $PWD) = "c" ]] && {
+[[ $BASE = "c" ]] && {
     ctags -a $ADD *.[ch]
 }
 
-[[ $(basename $PWD) = "cc" ]] && {
+[[ $BASE = "cc" ]] && {
     ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
 }
 
-[[ $(basename $PWD) = "ccmsgque" ]] && {
+[[ $BASE = "ccmsgque" ]] && {
     ctags -a $ADD --language-force=C++ $(find /usr/include/c++/4.3/ -type f)
     ctags -a $ADD *.cc *.h
 }
 
-[[ $(basename $PWD) == "tclmsgque" ]] && {
-    ctags -a $ADD /home/dev1usr/src/tcl8.*/generic/*.[ch]
-    ctags -a $ADD /home/dev1usr/src/tcl8.*/unix/*.[ch]
+[[ $BASE == "tclmsgque" ]] && {
+    ctags -a $ADD $HOME/src/tcl-latest/generic/*.[ch]
+    ctags -a $ADD $HOME/src/tcl-latest/unix/*.[ch]
     ctags -a $ADD *.[ch] -I HD,NS
     exit 0
 }
 
-[[ $(basename $PWD) == "javamsgque" ]] && {
+[[ $BASE == "javamsgque" ]] && {
   find $JAVA_HOME/include -name "*.h" | \
     xargs ctags -a $ADD -I NS
   ctags -a $ADD *.java
 }
 
-[[ $(basename $PWD) == "csmsgque" ]] && {
+[[ $BASE == "csmsgque" ]] && {
   ctags -a $ADD *.cs
 }
 
-[[ $(basename $PWD) == "pymsgque" ]] && {
-  find $HOME/ext/$MACHTYPE/thread/include/python3.1 -name "*.h" | \
+[[ $BASE == "pymsgque" ]] && {
+  find $HOME/ext/$MACHTYPE/test/include/python3* -name "*.h" | \
     xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
-  find $HOME/src/Python-3.1.1 -name "*.c" | \
+  find $HOME/src/python-latest -name "*.c" | \
     xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
   #ctags -a $ADD *.py
 }
 
-[[ $(basename $PWD) == "msgqueforphp" || $(basename $PWD) == "MsgqueForPhp" ]] && {
-  find $HOME/src/php-5.3.3 -name "*.[ch]" | \
+[[ $BASE == "msgqueforphp" || $BASE == "MsgqueForPhp" ]] && {
+  find $HOME/src/php-latest -name "*.[ch]" | \
     xargs ctags -a $ADD
-  find $HOME/ext/x86_64-suse-linux/thread/include/php -name "*.[h]" | \
+  find $HOME/ext/$MACHTYPE/test/include/php -name "*.[h]" | \
     xargs ctags -f php.tags $ADD -I PHP_METHOD
 }
 
-[[ $(basename $PWD) == "rubymsgque" ]] && {
-  find $HOME/src/ruby-1.9.2-p0 -name "*.[ch]" | \
+[[ $BASE == "rubymsgque" ]] && {
+  find $HOME/src/ruby-latest -name "*.[ch]" | \
     xargs ctags -a $ADD
 }
 
@@ -99,13 +101,13 @@ cp $D/tags .
   DO=no
 }
 
-[[ $(basename $PWD) == "perlmsgque" || $(basename $PWD) == "Net-PerlMsgque" ]] && {
+[[ $BASE == "perlmsgque" || $BASE == "Net-PerlMsgque" ]] && {
   if [[ ${WINDIR+set} == set ]] ; then
     PERL_HOME=/cygdrive/c/Perl/
     PERL_API=$PERL_HOME
   else
-    PERL_HOME=$HOME/src/perl-5.10.1/
-    PERL_API=$HOME/ext/$MACHTYPE/thread/lib/perl5
+    PERL_HOME=$HOME/src/perl-latest/
+    PERL_API=$HOME/ext/$MACHTYPE/test/lib/perl5
   fi
   
   find $PERL_API -name "*.h" | \
@@ -116,15 +118,15 @@ cp $D/tags .
   DO="no"
 }
 
-[[ $(basename $PWD) == "tests" ]] && {
+[[ $BASE == "tests" ]] && {
   ctags -a $ADD ../../theLink/tests/*.tcl *.test
 }
 
-[[ $(basename $PWD) == "libbrain" ]] && {
+[[ $BASE == "libbrain" ]] && {
   ctags -a $ADD ../tokyocabinet/*.[ch]
 }
 
-[[ $(basename $PWD) == "atrans" ]] && {
+[[ $BASE == "atrans" ]] && {
   ctags -a $ADD *.cc
 }
 
@@ -139,5 +141,4 @@ fi
 ## add
 
 exit 0
-
 

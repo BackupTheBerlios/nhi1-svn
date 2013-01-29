@@ -186,7 +186,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
         while ($this->ReadItemExists()) {
           $args[] = ReadC();
         }
-        array_push(&$args, "--name", "wk-cl-" . $id, "@", "--name", "wk-sv-" . $id);
+        array_push($args, "--name", "wk-cl-" . $id, "@", "--name", "wk-sv-" . $id);
         $this->SlaveWorker($id, $args);
 	break;
       case "CREATE2":
@@ -735,6 +735,8 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
   }
 
 }
+
+MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
 
 $ctx = FactoryAdd('server', 'Server')->New();
 

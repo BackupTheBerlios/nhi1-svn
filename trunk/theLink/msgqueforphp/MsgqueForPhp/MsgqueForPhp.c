@@ -146,35 +146,38 @@ PHP_MSHUTDOWN_FUNCTION(MsgqueForPhp)
  */
 PHP_RINIT_FUNCTION(MsgqueForPhp)
 {
-  zval **_SERVER;
-  zval **SCRIPT_FILENAME;
+  zval **_SERVER = NULL;
+  zval **SCRIPT_FILENAME = NULL;
 
   // initialize libmsgque
   MqSetup();
   NS(MqFactoryS_Setup)	(TSRMLS_C);
 
   // Fetch $_SERVER from the global scope
-  zend_hash_find(&EG(symbol_table), ID(_SERVER)+1, (void**)&_SERVER);
+  if (SUCCESS == zend_hash_find(&EG(symbol_table), ID(_SERVER), (void**)&_SERVER)) {
 
-  // FETCH $_SERVER['SCRIPT_FILENAME']
-  if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID(SCRIPT_FILENAME)+1, (void **) &SCRIPT_FILENAME)) {
+    // FETCH $_SERVER['SCRIPT_FILENAME']
+    if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID(SCRIPT_FILENAME), (void **) &SCRIPT_FILENAME)) {
 
-    // fetch the script name
-    zval *a0 = cfg_get_entry(ID(cfg_file_path) + 1);
-    convert_to_string(a0);
+      // fetch the script name
+      zval *a0 = cfg_get_entry(ID(cfg_file_path) + 1);
+      convert_to_string(a0);
 
-    // init libmsgque global data, but only in not done before
-    if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
-      struct MqBufferLS * initB = MqInitCreate();
-      MqBufferLAppendC(initB, sapi_module.executable_location ? sapi_module.executable_location : "php");
-      MqBufferLAppendC(initB, "-c");
-      MqBufferLAppendC(initB, VAL2CST(a0));
-      MqBufferLAppendC(initB, VAL2CST(*SCRIPT_FILENAME));
+      // init libmsgque global data, but only in not done before
+      if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
+	struct MqBufferLS * initB = MqInitCreate();
+	MqBufferLAppendC(initB, sapi_module.executable_location ? sapi_module.executable_location : "php");
+	MqBufferLAppendC(initB, "-c");
+	MqBufferLAppendC(initB, VAL2CST(a0));
+	MqBufferLAppendC(initB, VAL2CST(*SCRIPT_FILENAME));
+      } else {
+	return FAILURE;
+      }
     } else {
       return FAILURE;
     }
   } else {
-    return FAILURE;
+    return SUCCESS;
   }
   return SUCCESS;
 }
