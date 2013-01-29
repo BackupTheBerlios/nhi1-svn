@@ -13,8 +13,8 @@
 require "rubymsgque"
 
 class Filter3 < MqS
-  def initialize(tmpl = nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetServerSetup(method(:ServerSetup))
   end
   def ServerSetup
@@ -25,6 +25,7 @@ class Filter3 < MqS
     ftr.ServiceProxy("+TRT")
   end
 end
+
 srv = FactoryAdd(Filter3).New()
 begin
   srv.LinkCreate($0,ARGV)
@@ -36,5 +37,4 @@ rescue Exception => ex
 ensure
   srv.Exit()
 end
-
 

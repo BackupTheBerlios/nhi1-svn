@@ -65,11 +65,13 @@ static VALUE new(int argc, VALUE *argv, VALUE class)
 
   if (argc < 0 || argc > 1) rb_raise(rb_eArgError, "usage: new(?MqS-Type-Arg?)");
 
-  if (argc == 1 && !NIL_P(argv[0]) ) {
-    CheckType(argv[0], cMqS, "usage: new(?MqS-Type-Arg?)");
-    tmpl = VAL2MqS(argv[0]);
-    //argc-=1;
-    //argv+=1;
+  if (argc == 1) {
+    if (!NIL_P(argv[0]) ) {
+      CheckType(argv[0], cMqS, "usage: new(?MqS-Type-Arg?)");
+      tmpl = VAL2MqS(argv[0]);
+    }
+    argc-=1;
+    argv+=1;
   }
 
   mqctx = (struct MqS *) MqContextCreate(sizeof (*mqctx), tmpl);
@@ -153,7 +155,7 @@ void NS(MqS_Init) (void) {
   cMqS = rb_define_class("MqS", rb_cObject);
 
   rb_define_singleton_method(cMqS, "new",  new,  -1);
-  rb_define_method(cMqS, "Init", Init, -1);
+  rb_define_method(cMqS, "Init",      Init, -1);
 
   rb_define_method(cMqS, "Exit",      Exit,	0);
   rb_define_method(cMqS, "Delete",    Delete,	0);
@@ -177,6 +179,7 @@ void NS(MqS_Init) (void) {
   rb_define_const(cMqS, "START_THREAD",	    INT2VAL(2));
   rb_define_const(cMqS, "START_SPAWN",	    INT2VAL(3));
 
+  // call MQ initialization
   NS(MqS_Sys_Init)();
   NS(MqS_Send_Init)();
   NS(MqS_Read_Init)();

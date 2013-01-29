@@ -15,8 +15,8 @@ require "rubymsgque"
 # F1 ********************************************************
 
 class F1 < MqS
-  def initialize(tmpl = nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetServerSetup(method(:ServerSetup))
   end
   def ServerSetup
@@ -41,8 +41,8 @@ end
 # F2 ********************************************************
 
 class F2 < MqS
-  def initialize(tmpl = nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetServerSetup(method(:ServerSetup))
   end
   def ServerSetup
@@ -67,8 +67,8 @@ end
 # F3 ********************************************************
 
 class F3 < MqS
-  def initialize(tmpl = nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetServerSetup(method(:ServerSetup))
   end
   def ServerSetup

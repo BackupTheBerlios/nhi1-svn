@@ -45,6 +45,7 @@ class Filter1 < MqS
     SendRETURN()
   end
 end
+
 srv = Filter1.new
 begin
   srv.LinkCreate($0,ARGV)

@@ -231,6 +231,7 @@ cmdline=()
 first=1
 id=$(basename -- $1)
 id=${id%.*}
+
 while (( $# )) ; do
   if (( $first )) ; then
     cmdline+=( $(lookup $1) )

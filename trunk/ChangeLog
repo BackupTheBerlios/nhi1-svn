@@ -17,6 +17,24 @@
 \n
 \n
 
+\section V0_17 ?? ??? 2013 - NHI1-0.17, PLMK-2.5 und libmsgque-5.5
+
+#1 fig bug in rubymsgque, now the toplevel class initialize method does not 
+need a template dummy argument anymore.
+
+\vaerbatim
+class MyServer < MqS
+  def initialize()
+    super()
+    ...
+  end
+  ...
+end
+\endverbatim
+
+\n
+\n
+
 \section V0_16 08 Apr 2011 - NHI1-0.16, PLMK-2.4 und libmsgque-5.4
 
 this release change the build-environement on windows

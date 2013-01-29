@@ -13,7 +13,7 @@
 require "rubymsgque"
 
 class MyServer < MqS
-  def initialize(tmpl = nil)
+  def initialize()
     super()
     ConfigSetServerSetup(method(:ServerSetup))
   end

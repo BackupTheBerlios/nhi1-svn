@@ -14,8 +14,8 @@ require "rubymsgque"
 
 class Filter4 < MqS
   attr_accessor :fh
-  def initialize(tmpl=nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetIgnoreExit(true)
     ConfigSetServerSetup(method(:ServerSetup))
     ConfigSetServerCleanup(method(:ServerCleanup))

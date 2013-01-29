@@ -13,8 +13,8 @@
 require "rubymsgque"
 
 class TestServer < MqS
-  def initialize(tmpl = nil)
-    super(tmpl)
+  def initialize()
+    super()
     ConfigSetServerSetup(method(:ServerConfig))
   end
   def GTCX

@@ -67,7 +67,7 @@ G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
 G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
 G_Argument 'clean:clean:0:cleanup first:B'
 G_Argument 'jobs:Jobs:2:number of parallel build jobs:'
-for l in tcl perl python ; do
+for l in tcl perl python ruby ; do
   G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
 done
 for l in thread nothread performance-thread performance-nothread; do
@@ -111,6 +111,15 @@ for l in ${!lang[@]} ; do
 	  nothread)		buildConf=(--without-threads);;
 	  performance-thread)	buildConf=(--with-threads);;
 	  performance-nothread) buildConf=(--without-threads);;
+	esac
+	buildConf+=(--prefix="$ExtDir/$Arch/$(pathExtension $t)" --enable-shared)
+      ;;
+      ruby)
+	case "$t" in
+	  thread)		buildConf=(--enable-pthread);;
+	  nothread)		buildConf=(--disable-pthread);;
+	  performance-thread)	buildConf=(--enable-pthread);;
+	  performance-nothread) buildConf=(--disable-pthread);;
 	esac
 	buildConf+=(--prefix="$ExtDir/$Arch/$(pathExtension $t)" --enable-shared)
       ;;

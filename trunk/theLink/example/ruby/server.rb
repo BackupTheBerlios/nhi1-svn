@@ -46,7 +46,7 @@ end
 
 class Server < MqS
   attr_reader :cl
-  def initialize(tmpl = nil)
+  def initialize()
     #$stderr.puts("initialize-1 -----------" + self.to_s)
     #$stderr.flush
     super()
