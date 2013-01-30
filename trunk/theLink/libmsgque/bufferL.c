@@ -388,7 +388,8 @@ MqBufferLAppendC (
   MQ_CST const val
 )
 {
-  MqBufferLAppend (bufL, MqBufferCreateC (MQ_ERROR_PANIC, val), -1);
+  MQ_BUF buf = MqBufferCreateC (MQ_ERROR_PANIC, val);
+  MqBufferLAppend (bufL, buf, -1);
 }
 
 void

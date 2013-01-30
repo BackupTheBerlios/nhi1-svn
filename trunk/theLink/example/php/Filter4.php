@@ -83,7 +83,6 @@ class Filter4 extends MqS implements iServerSetup, iServerCleanup, iEvent {
     $this->SendRETURN();
   }
 }
-MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
 FactoryDefault('transFilter', 'Filter4');
 $srv = new Filter4();
 try {

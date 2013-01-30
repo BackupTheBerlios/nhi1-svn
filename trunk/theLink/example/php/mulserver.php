@@ -21,7 +21,6 @@ class MulServer extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-
 $srv = FactoryAdd('mulserver', 'MulServer')->New();
 try {
   $srv->LinkCreate($argv);

@@ -227,9 +227,39 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
     RETURN_ERROR("Class constructor does not exist."); \
   }
 
+static void initCreate()
+{
+  struct MqBufferLS * initB = MqInitGet();
+  if (initB != NULL) return;
+
+  // Fetch $_SERVER from the global scope
+  zval **_SERVER = NULL;
+  if (SUCCESS == zend_hash_find(&EG(symbol_table), ID2(_SERVER), (void**)&_SERVER)) {
+
+    // FETCH $_SERVER['SCRIPT_FILENAME']
+    zval **SCRIPT_FILENAME = NULL;
+    if (SUCCESS == zend_hash_find(Z_ARRVAL_PP(_SERVER), ID2(PHP_SELF), (void **) &SCRIPT_FILENAME)) {
+
+      // fetch the script name
+      zval *a0 = cfg_get_entry(ID2(cfg_file_path));
+      convert_to_string(a0);
+
+      // init libmsgque global data, but only in not done before
+      if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
+	initB = MqInitCreate();
+	MqBufferLAppendC(initB, PG(php_binary));
+	MqBufferLAppendC(initB, "-c");
+	MqBufferLAppendC(initB, VAL2CST(a0));
+	MqBufferLAppendC(initB, VAL2CST(*SCRIPT_FILENAME));
+      }
+    }
+  }
+}
+
 PHP_FUNCTION(FactoryAdd)
 {
   FactorySetup(FactoryAdd);
+  initCreate();
   MqFactoryS2VAL(return_value,
     MqFactoryAdd(MQ_ERROR_PRINT, ident, 
       FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)
@@ -239,6 +269,7 @@ PHP_FUNCTION(FactoryAdd)
 PHP_FUNCTION(FactoryDefault)
 {
   FactorySetup(FactoryDefault);
+  initCreate();
   MqFactoryS2VAL(return_value,
     MqFactoryDefault(MQ_ERROR_PRINT, ident, 
       FactoryCreate, (MQ_PTR) ce, NULL, NULL, FactoryDelete, NULL, NULL, NULL)

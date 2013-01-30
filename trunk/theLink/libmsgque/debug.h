@@ -57,10 +57,10 @@ END_C_DECLS
 /*****************************************************************************/
 
 #if defined(MQ_HAS_THREAD)
-# define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, basename(__FILE__), __LINE__, mq_getpid(), \
+# define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      MqThreadSelfP(), #s);fflush(stderr);
 #else
-# define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, basename(__FILE__), __LINE__, mq_getpid(), #s);fflush(stderr);
+# define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
 #endif
 
 #define M0 MX(00000000000000000)
@@ -201,6 +201,7 @@ END_C_DECLS
 #define printU(var) MqBufferLog(MQ_CONTEXT_S, var, #var);
 #define printXU(ctx,var) MqBufferLog(ctx, var, #var);
 #define printUL(var) MqBufferLLog(MQ_CONTEXT_S, var, #var);
+#define printXUL(x,var) MqBufferLLog(x, var, #var);
 #define printXULS(x,var) MqBufferLLogS(x, var, __func__ , #var);
 #define printULS(var) printXULS(MQ_CONTEXT_S, var);
 

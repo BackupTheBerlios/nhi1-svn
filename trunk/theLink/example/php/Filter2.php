@@ -25,7 +25,6 @@ class Filter2 extends MqS implements iServerSetup {
     throw new Exception('my error');
   }
 }
-MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
 $srv = new Filter2();
 try {
   $srv->LinkCreate($argv);

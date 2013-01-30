@@ -21,7 +21,6 @@ class MyServer extends MqS implements iServerSetup {
     $this->SendRETURN();
   }
 }
-
 $srv = FactoryAdd('MyServer')->New();
 try {
   $srv->LinkCreate($argv);

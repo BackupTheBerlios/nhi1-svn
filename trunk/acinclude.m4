@@ -135,7 +135,6 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
     else
       CFLAGS="-O3 $CFLAGS"
-      CXXFLAGS="-O3 $CXXFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
     fi
     AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
@@ -616,15 +615,7 @@ AC_DEFUN([SC_ENABLE_CXX], [
   )
   AC_MSG_RESULT($enable_cxx)
   if test "x$enable_cxx" = "xyes"; then
-    AC_PROG_CXX
-    if test "x$ac_cv_cxx_compiler_gnu" = "xyes"; then
-      if test "x$enable_symbols" = "xyes"; then
-	CXXFLAGS="-g $CXXFLAGS"
-      fi
-      if test "x$enable_threads" = "xyes"; then
-	CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
-      fi
-    else
+    if test "x$ac_cv_cxx_compiler_gnu" != "xyes"; then
       AC_MSG_ERROR([unable to find a suitable c++ compiler])
     fi
   fi

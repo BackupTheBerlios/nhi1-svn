@@ -42,15 +42,20 @@ PHPCONFIGURE    += --dvidir=$(dvidir)
 PHPCONFIGURE    += --pdfdir=$(pdfdir)
 PHPCONFIGURE    += --psdir=$(psdir)
 
-
 $(abs_builddir)/MsgqueForPhp/configure: 
 	-test ! -d MsgqueForPhp && cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp && touch MsgqueForPhp/.distclean
 	cd MsgqueForPhp && $(PHPIZE)
 
+$(abs_builddir)/MsgqueForPhp/%.c: $(abs_srcdir)/MsgqueForPhp/%.c
+	cp $< $@
+
+$(abs_builddir)/MsgqueForPhp/%.h: $(abs_srcdir)/MsgqueForPhp/%.h
+	cp $< $@
+
 $(abs_builddir)/$(PHPMAKEFILE): $(abs_builddir)/MsgqueForPhp/configure Makefile.am
 	cd MsgqueForPhp && ./configure $(PHPCONFIGURE)
 
-all-local: $(abs_builddir)/$(PHPMAKEFILE)
+all-local: $(abs_builddir)/$(PHPMAKEFILE) $(wildcard $(abs_builddir)/MsgqueForPhp/*.[ch])
 	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS)
 
 clean-local: $(abs_builddir)/$(PHPMAKEFILE)

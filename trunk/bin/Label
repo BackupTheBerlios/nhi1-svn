@@ -22,7 +22,7 @@ array set LABELUSE {
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
     ./bin			{ LbMain .sh Label .sh log .sh Nhi1Config .sh rcBuild .sh SetupEnv .sh 
-				  BuildLanguage .sh }
+				  Nhi1BuildLanguage .sh Nhi1Test .sh }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
     ./theLink/tests		{ README.tests .sh exec.env.in .sh }
 }
@@ -64,7 +64,7 @@ array set LABELIGNORE {
     ./theLink/tclmsgque/tmp	{ pkgIndex.tcl }
     ./theLink/pymsgque		{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build }
     ./theLink/rubymsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs tags *.sw* .C build *.rb }
-    ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags}
+    ./theLink/perlmsgque	{ Net-PerlMsgque Makefile Makefile.in tags *.sw*}
     ./theLink/gomsgque		{ Makefile Makefile.in MakeGoMsgque.inc }
     ./theLink/gomsgque/src	{ client server testex *.6 *.log tags *cgo* _obj _go_* *.o test* .*.sw* }
     ./theLink/javamsgque	{ Makefile Makefile.in *.lo *.o *.la .deps .libs javamsgque tags *.sw*
@@ -104,7 +104,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
 				    discheck.out msgqueforphp *.bak mqconfig.h.in~ *.log .PUT_HTML
-				    .GREP_FOR_SOURCE_CODE .PHP.info build_test html
+				    .GREP_FOR_SOURCE_CODE .PHP.info build_test html .ToDo
 				}
 }
 

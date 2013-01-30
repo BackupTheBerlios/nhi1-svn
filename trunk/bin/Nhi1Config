@@ -125,10 +125,11 @@ else
   if (( $Thread )) ; then
     add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension thread)/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension thread)/lib
-    opt+=(--enable-threads)
+    opt+=(--enable-threads --enable-symbols)
   else
     add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension nothread)/bin
     add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension nothread)/lib
+    opt+=(--enable-symbols)
   fi
 fi
 

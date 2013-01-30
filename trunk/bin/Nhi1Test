@@ -1,5 +1,6 @@
+#!/bin/bash
 #+
-#:  \file       theLink/tests/MakeTclTest.bash
+#:  \file       bin/Nhi1Test
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group
@@ -12,9 +13,18 @@
 
 set -u
 
-LANG="C"
-. ../../env.sh
-export LANG
+export LANG="C"
+
+#find env.sh config filre
+T=$PWD
+while [[ ! -f "$T/env.sh" || "$T" = '/' ]] ; do T=$(dirname "$T"); done
+if [[ -f "$T/env.sh" ]] ; then
+  . "$T/env.sh"
+else
+  echo "unable to find the 'env.sh' configuration file"
+  echo "please build first and than use this toll in the build-tree"
+  exit 1
+fi
 
 if [[ ${WINDIR:-} != "" ]] ; then
   PATH=$PATH:$LD_LIBRARY_PATH

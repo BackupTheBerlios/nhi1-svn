@@ -20,7 +20,6 @@ class Filter3 extends MqS implements iServerSetup {
     $ftr->ServiceProxy("+TRT");
   }
 }
-MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
 $srv = FactoryAdd('Filter3')->New();
 try {
   $srv->LinkCreate($argv);

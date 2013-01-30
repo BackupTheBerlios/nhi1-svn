@@ -32,6 +32,9 @@ class MyServer < MqS
 end
 \endverbatim
 
+#2 fig bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
+or FactoryDefault
+
 \n
 \n
 

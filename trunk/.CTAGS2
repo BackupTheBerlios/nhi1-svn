@@ -76,20 +76,20 @@ cp $D/tags .
 [[ $BASE == "pymsgque" ]] && {
   find $HOME/ext/$MACHTYPE/test/include/python3* -name "*.h" | \
     xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
-  find $HOME/src/python-latest -name "*.c" | \
+  find -L $HOME/src/python-latest -name "*.c" | \
     xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
   #ctags -a $ADD *.py
 }
 
 [[ $BASE == "msgqueforphp" || $BASE == "MsgqueForPhp" ]] && {
-  find $HOME/src/php-latest -name "*.[ch]" | \
+  find -L $HOME/src/php-latest -name "*.[ch]" | \
     xargs ctags -a $ADD
   find $HOME/ext/$MACHTYPE/test/include/php -name "*.[h]" | \
     xargs ctags -f php.tags $ADD -I PHP_METHOD
 }
 
 [[ $BASE == "rubymsgque" ]] && {
-  find $HOME/src/ruby-latest -name "*.[ch]" | \
+  find -L $HOME/src/ruby-latest -name "*.[ch]" | \
     xargs ctags -a $ADD
 }
 
@@ -112,7 +112,7 @@ cp $D/tags .
   
   find $PERL_API -name "*.h" | \
     xargs ctags -a $ADD 
-  find $PERL_HOME -name "*.c" | \
+  find -L $PERL_HOME -name "*.c" | \
     xargs ctags -a $ADD
   ctags -a $ADD -I XS --language-force=C *.[ch] *.xs
   DO="no"

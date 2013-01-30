@@ -23,7 +23,7 @@ libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
     \
     ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
 
-libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN -I$(srcdir)/../sqlite $(AM_CFLAGS)
+libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN -I$(srcdir)/../sqlite
 libtmp_la_LDFLAGS = -no-undefined
 libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
@@ -44,7 +44,7 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
 
 
-libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../sqlite $(AM_CFLAGS)
+libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../sqlite
 libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libccmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 

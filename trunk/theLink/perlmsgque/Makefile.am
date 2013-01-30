@@ -36,13 +36,13 @@ $(PERLMAKEFILE): $(PERLDEPEND) Makefile.am
 	cd $(builddir)/Net-PerlMsgque && @PERL@ $(MF) $(PERLCONFIG)
 
 all-local: $(PERLMAKEFILE)
-	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS)
+	$(MAKE) -C $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS)
 
-clean-local: $(PERLMAKEFILE)
-	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) clean
+clean-local:
+	test -f $(PERLMAKEFILE) && $(MAKE) -C $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) clean || true
 
 install-exec-local:
-	cd $(builddir)/Net-PerlMsgque && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
+	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 
 uninstall-local:
 	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/Net/PerlMsgque.pm

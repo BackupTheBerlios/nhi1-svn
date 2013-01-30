@@ -354,7 +354,7 @@ enum MqErrorE pBufferGetA4( struct MqBufferS * const, union MqBufferAtomU * cons
 enum MqErrorE pBufferGetA8( struct MqBufferS * const, union MqBufferAtomU * const, enum MqTypeE const);
 MQ_TRA pBufU2TRA ( union MqBufferU buf);
 #define pBufferNewSize(buf, newSize) \
-	if (unlikely(newSize > buf->size)) _pBufferNewSize(buf, __func__, newSize)
+	if (unlikely(newSize > buf->size)) _pBufferNewSize(buf, __func__, newSize);
 #define pBufferAddSize(buf, addSize) \
 	{MQ_SIZE s=buf->cursize + addSize; pBufferNewSize(buf, s);}
 #define MqBufferCreateStatic(NAME,SIZE) \

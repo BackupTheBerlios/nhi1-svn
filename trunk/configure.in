@@ -74,18 +74,15 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_PROG_CC_C_O
 
 GCC=yes
-#LDFLAGS="-no-undefined"
-SC_ENABLE_CXX
+AC_PROG_CXX
 AC_PROG_CC_C99
 AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
   AC_MSG_ERROR([require c99 mode to compile])
 ])
-if test "$build_os" = "cygwin" ; then
-  CFLAGS="-Wall -Wcast-align"
-  CXXFLAGS="-Wall"
-else
-  CFLAGS="-Wall -Wcast-align -fvisibility=hidden"
-  CXXFLAGS="-Wall -fvisibility=hidden"
+
+CFLAGS="-Wall -Wcast-align $CFLAGS"
+if test "$build_os" != "cygwin" ; then
+  CFLAGS="-fvisibility=hidden $CFLAGS"
 fi
 SC_ENABLE_THREADS
 
@@ -103,7 +100,7 @@ AC_MSG_CHECKING(programs);echo
 AC_C_BIGENDIAN
 SC_SET_VPATH_HOOK
 SC_ENABLE_SYMBOLS
-#SC_ENABLE_CXX
+SC_ENABLE_CXX
 SC_ENABLE_JAVA
 SC_ENABLE_PYTHON
 SC_ENABLE_CSHARP

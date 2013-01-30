@@ -736,8 +736,6 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 
 }
 
-MqS::Init(PHP_BINARY, "-c", get_cfg_var('cfg_file_path'), __FILE__);
-
 $ctx = FactoryAdd('server', 'Server')->New();
 
 try {
