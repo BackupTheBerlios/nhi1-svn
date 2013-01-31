@@ -32,8 +32,20 @@ class MyServer < MqS
 end
 \endverbatim
 
-#2 fig bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
+#2 fix bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
 or FactoryDefault
+
+#3 fix bug in c# configuration - not handel version-numbers right
+
+#4 java install in opensuse lxc-container and fix bug doesn't complain about missing
+java executables.
+
+\verbatim
+zypper in jdk-7u11-linux-x64.rpm
+/usr/sbin/update-alternatives --install "/usr/bin/java"  "java"  "/usr/java/latest/bin/java" 20000
+/usr/sbin/update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/latest/bin/javac" 20000
+/usr/sbin/update-alternatives --install "/usr/bin/javah" "javah" "/usr/java/latest/bin/javah" 20000
+\endverbatim
 
 \n
 \n

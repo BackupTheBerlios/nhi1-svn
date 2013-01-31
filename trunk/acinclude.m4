@@ -461,6 +461,15 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     do
       JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
     done
+    if test "x$JAVA" == "x" ; then
+      AC_MSG_ERROR([JAVA executable not found])
+    fi
+    if test "x$JAVAC" == "x" ; then
+      AC_MSG_ERROR([JAVAC executable not found])
+    fi
+    if test "x$JAVAH" == "x" ; then
+      AC_MSG_ERROR([JAVAH executable not found])
+    fi
     AC_SUBST([JAVA_CPPFLAGS])
   fi
   AC_SUBST([USE_JAVA], $enable_java)
