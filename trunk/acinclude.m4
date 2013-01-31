@@ -544,7 +544,7 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
       if test x$CLREXEC = x ; then
 	AC_MSG_ERROR([unable to find CLR runtime 'mono'])
       fi
-      if $CLREXEC -V | $AWK '/version/ {found=1;if ([$]5 < 2.4) exit(0);else exit(1);};END {if(found==0) exit(0);}' ; then
+      if $CLREXEC -V | $AWK '/version/ {found=1;split([$]5,a,".");if (a[[1]] < 2 || (a[[1]] == 2 && a[[2]] < 4)) exit(0);else exit(1);};END {if(found==0) exit(0);}' ; then
 	AC_MSG_ERROR([mono version have to be >= 2.4])
       fi
       AC_SUBST([CSHARP_OPT], [-v])
@@ -645,6 +645,7 @@ AC_DEFUN([SC_ENABLE_PHP], [
   if test x$enable_php = xyes; then
     AC_ARG_VAR([PHP], [path to the 'php' tool])
     AC_PATH_PROG([PHP], [php]) 
+    PHP="$PHP -c $ac_pwd/theLink/msgqueforphp/php.ini"
     AC_ARG_VAR([PHPIZE], [path to the 'phpize' tool])
     AC_PATH_PROG([PHPIZE], [phpize]) 
     AC_ARG_VAR([PHPCONFIG], [path to the 'php-config' tool])

@@ -14,6 +14,11 @@ SHELL = /bin/bash
 
 AUTOMAKE_OPTIONS = check-news 
 
+PATH = $(path)
+LD_LIBRARY_PATH = $(ld_library_path)
+export PATH
+export LD_LIBRARY_PATH
+
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = theLink performance bin

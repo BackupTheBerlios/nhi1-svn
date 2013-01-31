@@ -58,8 +58,8 @@ $(abs_builddir)/$(PHPMAKEFILE): $(abs_builddir)/MsgqueForPhp/configure Makefile.
 all-local: $(abs_builddir)/$(PHPMAKEFILE) $(wildcard $(abs_builddir)/MsgqueForPhp/*.[ch])
 	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS)
 
-clean-local: $(abs_builddir)/$(PHPMAKEFILE)
-	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean
+clean-local:
+	-test -f $(PHPMAKEFILE) && $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean
 
 #cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 install-exec-local:
@@ -67,7 +67,7 @@ install-exec-local:
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 uninstall-local:
-	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) uninstall
+	-test -f $(PHPMAKEFILE) && $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) uninstall
 	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
 	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 

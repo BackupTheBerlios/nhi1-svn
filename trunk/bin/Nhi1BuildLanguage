@@ -73,6 +73,7 @@ done
 for l in thread nothread performance-thread performance-nothread; do
   G_Argument "use-\$l:use[\$l]:0:build the '\$l' options:B"
 done
+G_Argument "use-all:useAll:0:build the 'all' options:B"
 
 EOF
   )"
@@ -93,7 +94,7 @@ for l in ${!lang[@]} ; do
   esac
 
   for t in ${!use[@]} ; do
-    (( ! ${use[$t]} )) && continue
+    (( !useAll && !${use[$t]} )) && continue
 
     prefix="$ExtDir/$Arch/$(pathExtension $t)"
 
@@ -127,8 +128,8 @@ for l in ${!lang[@]} ; do
       ;;
       ruby)
 	case "$t" in
-	  thread)		buildConf=(--enable-pthread);;
-	  nothread)		buildConf=(--disable-pthread);;
+	  thread)		buildConf=(--enable-debug-env --enable-pthread);;
+	  nothread)		buildConf=(--enable-debug-env --disable-pthread);;
 	  performance-thread)	buildConf=(--enable-pthread);;
 	  performance-nothread) buildConf=(--disable-pthread);;
 	esac

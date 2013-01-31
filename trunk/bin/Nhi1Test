@@ -124,7 +124,7 @@ lookup() {
 	*.pl)	    CMDDIR="$abs_top_srcdir/theLink/example/perl";;
 	*.rb)	    CMDDIR="$abs_top_srcdir/theLink/example/ruby";;
 	*.php)      CMDDIR="$abs_top_srcdir/theLink/example/php";;
-	*.exe|*.cs) CMDDIR="$abs_top_builddir/theLink/example/csharp";;
+	*.cs|*.exe) CMDDIR="$abs_top_builddir/theLink/example/csharp";;
 	*.vb)	    CMDDIR="$abs_top_builddir/theLink/example/vb";;
 	*.go)	    CMDDIR="$abs_top_builddir/theLink/example/go";;
 	*.cc)	    CMDDIR="$abs_top_builddir/theLink/example/cc";;
@@ -142,7 +142,7 @@ lookup() {
     *.pl)	    EXE="$PERL -I$abs_top_srcdir/theLink/example/perl";;
     *.rb)	    EXE="$RUBY";;
     *.php)	    EXE="$PHP";;
-    *.exe)	    EXE="$MONO";;
+    *.cs|*.exe)	    EXE="$MONO"; CMD="${CMD%.*}.exe";;
     *.go)	    EXE=""; CMD="${CMD%.*}$EXT";;
     *.cc)	    EXE=""; CMD="${CMD%.*}$EXT";;
     *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;

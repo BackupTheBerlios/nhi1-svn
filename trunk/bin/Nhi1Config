@@ -58,10 +58,10 @@ Usage() {
 
 pathExtension() {
   case "$1" in
-    thread)                 echo "test/";;
-    nothread)               echo "test/nothred/";;
-    performance-thread)     echo "";;
-    performance-nothread)   echo "nothread/";;
+    thread)                 echo "test";;
+    nothread)               echo "test/nothred";;
+    performance-thread)     echo ".";;
+    performance-nothread)   echo "nothread";;
     *)                      Die "unknown pathExtension '$1'";;
   esac
 }
