@@ -162,11 +162,13 @@ $ac_mkmf_result])
     LIBS="$ac_save_LIBS"
     ac_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$ac_save_CPPFLAGS $RUBY_CPPFLAGS"
-    AC_TRY_COMPILE([
-        #include <ruby.h>
-    ],[
-        ruby_init();
-    ],[rubyexists=yes],[rubyexists=no])
+    AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM([[#include <ruby.h>]],
+	 [[ruby_init();]]
+      )],
+      [rubyexists=yes],
+      [rubyexists=no]
+    )
 
     AC_MSG_RESULT([$rubyexists])
 

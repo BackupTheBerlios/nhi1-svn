@@ -27,28 +27,28 @@ set -ue
 
 ## some useful procs
 add2var() {
-    (($# != 2)) && {
-        echo "usage: $0 VAR Add1:Add2:..."
-        echo "using arguments: $@"
-        return 1
-    }
-    IFS=:
-    local var=$1;
-    local add=$2;
-    typeset -i i
-    declare -a array
-  ## set array arguments
-    array=(${!var})
-  ## cleanup array
-    for a in $add ; do
-        for (( i=0 ; i<${#array[*]} ; i+=1 )) ; do
-            [ "$a" == "${array[$i]}" ] && unset array[$i]
-        done
-        i=0;
+  (($# != 2)) && {
+    echo "usage: $0 VAR Add1:Add2:..."
+    echo "using arguments: $@"
+    return 1
+  }
+  IFS=:
+  local var=$1;
+  local add=$2;
+  typeset -i i
+  declare -a array
+## set array arguments
+  array=(${!var})
+## cleanup array
+  for a in $add ; do
+    for (( i=0 ; i<${#array[*]} ; i+=1 )) ; do
+      [ "$a" == "${array[$i]}" ] && unset array[$i]
     done
-  ## set the new global variable
-    eval export $var=\"\$add\${array[*]:+:}\${array[*]:-}\"
-    unset IFS
+    i=0;
+  done
+## set the new global variable
+  eval export $var=\"\$add\${array[*]:+:}\${array[*]:-}\"
+  unset IFS
 }
 export -f add2var
 
@@ -132,6 +132,10 @@ else
     opt+=(--enable-symbols)
   fi
 fi
+
+(( ${lang[go]} )) && {
+  source /etc/profile.d/go.sh
+}
 
 rm -fr /tmp/libmsgque-install
 

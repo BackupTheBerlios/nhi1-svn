@@ -12,9 +12,7 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #include "gomsgque.h"
 import "C"
 
 import (
@@ -49,7 +47,7 @@ func decrFactoryRef(cb *FactoryF) {
     if count > 1 {
       lockFactory[cb]--
     } else {
-      lockFactory[cb] = 0,false
+      lockFactory[cb] = 0
     }
   }
 }
@@ -74,7 +72,7 @@ func cFactoryCall(tmpl *MqS, cb *FactoryF) (ret *MqS) {
 
 //export cFactoryDelete
 func cFactoryDelete(this *MqS, chnp *chan bool) {
-  ctxlock[this] = nil, false
+  ctxlock[this] = 0
   if chnp != nil {
     (*chnp) <- true
   }

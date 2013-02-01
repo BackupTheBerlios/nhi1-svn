@@ -63,8 +63,7 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 subdir = theLink/gomsgque
-DIST_COMMON = $(srcdir)/MakeGoMsgque.inc.in $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compare_version.m4 \
 	$(top_srcdir)/m4/ax_prog_ruby_version.m4 \
@@ -79,7 +78,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/mqconfig.h
-CONFIG_CLEAN_FILES = MakeGoMsgque.inc
+CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -92,7 +91,6 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
-AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -283,27 +281,16 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 #####################################################################################
-@USE_GO_TRUE@GOMAKEFILE = src/Makefile
-@USE_GO_TRUE@MAKEARGS = $(AM_MAKEFLAGS)
-EXTRA_DIST = \
-$(srcdir)/src/MqS.go \
-$(srcdir)/src/MqSException.go \
-$(srcdir)/src/MqBufferS.go \
-$(srcdir)/src/MqBinary.go \
-$(srcdir)/src/MqDumpS.go \
-$(srcdir)/src/send.go \
-$(srcdir)/src/read.go \
-$(srcdir)/src/link.go \
-$(srcdir)/src/config.go \
-$(srcdir)/src/service.go\
-$(srcdir)/src/slave.go\
-$(srcdir)/src/storage.go\
-$(srcdir)/src/MqFactoryS.go\
-$(srcdir)/src/gomsgque.h \
-$(srcdir)/src/gomsgque.c \
-$(srcdir)/src/Makefile \
-MakeGoMsgque.inc.in
+@USE_GO_TRUE@GOPATH = $(abs_builddir)
+@USE_GO_TRUE@GOBIN = $(abs_builddir)
+@USE_GO_TRUE@GO_FILES = src/gomsgque/MqS.go src/gomsgque/MqSException.go src/gomsgque/MqBufferS.go \
+@USE_GO_TRUE@	    src/gomsgque/MqBinary.go src/gomsgque/MqDumpS.go src/gomsgque/send.go \
+@USE_GO_TRUE@	    src/gomsgque/read.go src/gomsgque/link.go src/gomsgque/config.go \
+@USE_GO_TRUE@	    src/gomsgque/service.go src/gomsgque/slave.go src/gomsgque/storage.go \
+@USE_GO_TRUE@	    src/gomsgque/MqFactoryS.go
 
+@USE_GO_TRUE@C_FILES = src/gomsgque/gomsgque.h src/gomsgque/gomsgque.c
+EXTRA_DIST = $(GO_FILES) $(C_FILES)
 all: all-am
 
 .SUFFIXES:
@@ -337,8 +324,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-MakeGoMsgque.inc: $(top_builddir)/config.status $(srcdir)/MakeGoMsgque.inc.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -419,9 +404,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@USE_GO_FALSE@uninstall-local:
 @USE_GO_FALSE@distclean-local:
-@USE_GO_FALSE@install-exec-local:
 @USE_GO_FALSE@clean-local:
 clean: clean-am
 
@@ -449,7 +432,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-exec-local
+install-exec-am:
 
 install-html: install-html-am
 
@@ -487,7 +470,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-local
+uninstall-am:
 
 .MAKE: install-am install-strip
 
@@ -496,32 +479,32 @@ uninstall-am: uninstall-local
 	distclean-libtool distclean-local distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-local install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am uninstall-local
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
+@USE_GO_TRUE@export GOPATH
+@USE_GO_TRUE@export GOBIN
 
-@USE_GO_TRUE@setup:
-@USE_GO_TRUE@	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
+#####################################################################################
 
-@USE_GO_TRUE@all-local: setup
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS)
+@USE_GO_TRUE@$(abs_builddir)/src:
+@USE_GO_TRUE@	if test ! -d src ; then cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean; else true; fi
 
-@USE_GO_TRUE@clean-local: setup
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) clean
+@USE_GO_TRUE@$(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/%
+@USE_GO_TRUE@	cp $< $@
 
-@USE_GO_TRUE@install-exec-local:
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" goinstall
+@USE_GO_TRUE@all-local: $(abs_builddir)/src $(addprefix $(abs_builddir)/, $(GO_FILES))
+@USE_GO_TRUE@	go install gomsgque
 
-@USE_GO_TRUE@uninstall-local:
-@USE_GO_TRUE@	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" gouninstall
+@USE_GO_TRUE@clean-local: 
+@USE_GO_TRUE@	go clean gomsgque
 
 @USE_GO_TRUE@distclean-local:
-@USE_GO_TRUE@	-test -f src/.distclean && rm -fr src
+@USE_GO_TRUE@	if test -f src/.distclean ; then rm -fr src; else true; fi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

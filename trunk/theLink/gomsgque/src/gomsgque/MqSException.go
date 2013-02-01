@@ -12,16 +12,12 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #include "gomsgque.h"
 import "C"
 
 import (
   "fmt"
   "unsafe"
-  "os"
-  //"runtime"
 )
 
 type MqSException MqS
@@ -47,8 +43,8 @@ func (this *MqS)  iErrorMqToGoWithCheck(ex uint32) {
 func (this *MqS) ErrorSet(ex interface{}) {
   if ctx,ok := ex.(*MqSException); ok {
     C.MqErrorCopy((*_Ctype_struct_MqS)(this), (*_Ctype_struct_MqS)(ctx))
-  } else if err,ok := ex.(os.Error); ok {
-    m := C.CString(err.String())
+  } else if err,ok := ex.(error); ok {
+    m := C.CString(err.Error())
     C.MqErrorC((*_Ctype_struct_MqS)(this), C.sERROR, -1, m)
     C.free(unsafe.Pointer(m))
   } else if err,ok := ex.(fmt.Stringer); ok {

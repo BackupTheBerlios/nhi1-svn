@@ -12,9 +12,7 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #include "gomsgque.h"
 import "C"
 
 import (
@@ -230,7 +228,7 @@ func cServerSetup(this *MqS, cb *ServerSetup) {
 
 //export cServerSetupFree
 func cServerSetupFree(cb *ServerSetup) {
-  lockServerSetup[cb] = false, false
+  lockServerSetup[cb] = false
 }
 
 func (this *MqS) ConfigSetServerSetup(cb ServerSetup) {
@@ -259,7 +257,7 @@ func cServerCleanup(this *MqS, cb *ServerCleanup) {
 
 //export cServerCleanupFree
 func cServerCleanupFree(cb *ServerCleanup) {
-  lockServerCleanup[cb] = false, false
+  lockServerCleanup[cb] = false
 }
 
 func (this *MqS) ConfigSetServerCleanup(cb ServerCleanup) {
@@ -288,7 +286,7 @@ func cBgError(this *MqS, cb *BgError) {
 
 //export cBgErrorFree
 func cBgErrorFree(cb *BgError) {
-  lockBgError[cb] = false, false
+  lockBgError[cb] = false
 }
 
 func (this *MqS) ConfigSetBgError(cb BgError) {
@@ -317,7 +315,7 @@ func cEvent(this *MqS, cb *Event) {
 
 //export cEventFree
 func cEventFree(cb *Event) {
-  lockEvent[cb] = false, false
+  lockEvent[cb] = false
 }
 
 func (this *MqS) ConfigSetEvent(cb Event) {

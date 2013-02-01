@@ -36,7 +36,7 @@ libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/..
 libtmp_la_LDFLAGS = -shared -no-undefined
 libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
-html: libtmp.la
+html-local: libtmp.la
 
 # ordinaray library
 

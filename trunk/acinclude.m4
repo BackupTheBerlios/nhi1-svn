@@ -124,7 +124,7 @@ AC_DEFUN([SC_SET_VPATH_HOOK], [
 AC_DEFUN([SC_ENABLE_SYMBOLS], [
     AC_MSG_CHECKING([for build with symbols])
     AC_ARG_ENABLE(symbols,
-	AC_HELP_STRING([--enable-symbols], [build with debugging support]),
+	AS_HELP_STRING([--enable-symbols], [build with debugging support]),
 	enable_symbols=yes, enable_symbols=no
     )
     if test "x$enable_symbols" = "xyes"; then
@@ -148,8 +148,7 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
 #------------------------------------------------------------------------
 AC_DEFUN([ACX_PTHREAD], [
 AC_REQUIRE([AC_CANONICAL_HOST])
-AC_LANG_SAVE
-AC_LANG_C
+AC_LANG_PUSH([C])
 acx_pthread_ok=no
 
 # We used to check for pthread.h first, but this fails if pthread.h
@@ -262,11 +261,14 @@ for flag in $acx_pthread_flags; do
         # pthread_cleanup_push because it is one of the few pthread
         # functions on Solaris that doesn't have a non-functional libc stub.
         # We try pthread_create on general principles.
-        AC_TRY_LINK([#include <pthread.h>],
-                    [pthread_t th; pthread_join(th, 0);
-                     pthread_attr_init(0); pthread_cleanup_push(0, 0);
-                     pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
-                    [acx_pthread_ok=yes])
+	AC_LINK_IFELSE(
+	  [AC_LANG_PROGRAM([[#include <pthread.h>]],
+	    [[pthread_t th; pthread_join(th, 0);
+	      pthread_attr_init(0); pthread_cleanup_push(0, 0);
+	      pthread_create(0,0,0,0); pthread_cleanup_pop(0); ]]
+	  )],
+	  [acx_pthread_ok=yes]
+	)
 
         LIBS="$save_LIBS"
         CFLAGS="$save_CFLAGS"
@@ -292,8 +294,12 @@ if test "x$acx_pthread_ok" = xyes; then
         AC_MSG_CHECKING([for joinable pthread attribute])
         attr_name=unknown
         for attr in PTHREAD_CREATE_JOINABLE PTHREAD_CREATE_UNDETACHED; do
-            AC_TRY_LINK([#include <pthread.h>], [int attr=$attr; return attr;],
-                        [attr_name=$attr; break])
+	  AC_LINK_IFELSE(
+	    [AC_LANG_PROGRAM([[#include <pthread.h>]],
+	       [[int attr=$attr; return attr;]]
+	    )],
+	    [attr_name=$attr; break]
+	  )
         done
         AC_MSG_RESULT($attr_name)
         if test "$attr_name" != PTHREAD_CREATE_JOINABLE; then
@@ -338,7 +344,7 @@ else
         acx_pthread_ok=no
         $2
 fi
-AC_LANG_RESTORE
+AC_LANG_POP
 ])
 dnl ACX_PTHREAD
 
@@ -395,7 +401,7 @@ AC_DEFUN([AX_TLS], [
 AC_DEFUN([SC_ENABLE_THREADS], [
   AC_MSG_CHECKING([for build with thread])
   AC_ARG_ENABLE(threads,
-      AC_HELP_STRING([--enable-threads], [build with thread support]),
+      AS_HELP_STRING([--enable-threads], [build with thread support]),
       enable_threads=yes, enable_threads=no
   )
   AC_MSG_RESULT($enable_threads)
@@ -432,7 +438,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 AC_DEFUN([SC_ENABLE_JAVA], [
   AC_MSG_CHECKING([for build with java])
   AC_ARG_ENABLE(java,
-      AC_HELP_STRING([--enable-java], [build theLink with JAVA support]),
+      AS_HELP_STRING([--enable-java], [build theLink with JAVA support]),
       enable_java=yes, enable_java=no
   )
   AC_MSG_RESULT($enable_java)
@@ -491,7 +497,7 @@ AC_DEFUN([SC_ENABLE_JAVA], [
 AC_DEFUN([SC_ENABLE_PYTHON], [
   AC_MSG_CHECKING([for build with python])
   AC_ARG_ENABLE(python,
-      AC_HELP_STRING([--enable-python], [build theLink with PYTHON support]),
+      AS_HELP_STRING([--enable-python], [build theLink with PYTHON support]),
       enable_python=yes, enable_python=no
   )
   AC_MSG_RESULT($enable_python)
@@ -523,7 +529,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 AC_DEFUN([SC_ENABLE_CSHARP], [
   AC_MSG_CHECKING([for build with csharp])
   AC_ARG_ENABLE(csharp,
-      AC_HELP_STRING([--enable-csharp], [build theLink with C# support]),
+      AS_HELP_STRING([--enable-csharp], [build theLink with C# support]),
       enable_csharp=yes, enable_csharp=no
   )
   AC_MSG_RESULT($enable_csharp)
@@ -578,7 +584,7 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
 AC_DEFUN([SC_ENABLE_VB], [
   AC_MSG_CHECKING([for build with VB])
   AC_ARG_ENABLE(vb,
-      AC_HELP_STRING([--enable-vb], [build theLink with VB support]),
+      AS_HELP_STRING([--enable-vb], [build theLink with VB support]),
       enable_vb=yes, enable_vb=no
   )
   AC_MSG_RESULT($enable_vb)
@@ -619,7 +625,7 @@ AC_DEFUN([SC_ENABLE_VB], [
 AC_DEFUN([SC_ENABLE_CXX], [
   AC_MSG_CHECKING([for build with C++])
   AC_ARG_ENABLE(cxx,
-      AC_HELP_STRING([--enable-cxx], [build theLink with C++ support]),
+      AS_HELP_STRING([--enable-cxx], [build theLink with C++ support]),
       enable_cxx=yes, enable_cxx=no
   )
   AC_MSG_RESULT($enable_cxx)
@@ -647,7 +653,7 @@ AC_DEFUN([SC_ENABLE_CXX], [
 AC_DEFUN([SC_ENABLE_PHP], [
   AC_MSG_CHECKING([for build with PHP])
   AC_ARG_ENABLE(php,
-      AC_HELP_STRING([--enable-php], [build theLink with PHP support]),
+      AS_HELP_STRING([--enable-php], [build theLink with PHP support]),
       enable_php=yes, enable_php=no
   )
   AC_MSG_RESULT($enable_php)
@@ -685,7 +691,7 @@ AC_DEFUN([SC_ENABLE_GO], [
   AC_SUBST([USE_GO], [no])
   AC_MSG_CHECKING([for build with GO])
   AC_ARG_ENABLE(go,
-      AC_HELP_STRING([--enable-go], [build theLink with GO support]),
+      AS_HELP_STRING([--enable-go], [build theLink with GO support]),
       enable_go=yes, enable_go=no
   )
   AC_MSG_RESULT($enable_go)
@@ -716,7 +722,7 @@ AC_DEFUN([SC_ENABLE_GO], [
 AC_DEFUN([SC_ENABLE_PERL], [
   AC_MSG_CHECKING([for build with PERL])
   AC_ARG_ENABLE(perl,
-      AC_HELP_STRING([--enable-perl], [build theLink with PERL support]),
+      AS_HELP_STRING([--enable-perl], [build theLink with PERL support]),
       enable_perl=yes, enable_perl=no
   )
   AC_MSG_RESULT($enable_perl)
@@ -749,7 +755,7 @@ AC_DEFUN([SC_ENABLE_PERL], [
 AC_DEFUN([SC_ENABLE_TCL], [
   AC_MSG_CHECKING([for build with TCL])
   AC_ARG_ENABLE(tcl, 
-      AC_HELP_STRING([--enable-tcl], [build theLink with TCL support]),
+      AS_HELP_STRING([--enable-tcl], [build theLink with TCL support]),
       enable_tcl=yes, enable_tcl=no
   )
   AC_MSG_RESULT($enable_tcl)
@@ -830,7 +836,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 AC_DEFUN([SC_ENABLE_RUBY], [
   AC_MSG_CHECKING([for build with RUBY])
   AC_ARG_ENABLE(ruby, 
-      AC_HELP_STRING([--enable-ruby], [build theLink with RUBY support]),
+      AS_HELP_STRING([--enable-ruby], [build theLink with RUBY support]),
       enable_ruby=yes, enable_ruby=no
   )
   AC_MSG_RESULT($enable_ruby)
@@ -864,7 +870,7 @@ AC_DEFUN([SC_ENABLE_RUBY], [
 AC_DEFUN([SC_ENABLE_BRAIN], [
   AC_MSG_CHECKING([for build with theBrain (only on UNIX)])
   AC_ARG_ENABLE(brain,
-      AC_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]),
+      AS_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]),
       enable_brain=yes, enable_brain=no
   )
   AC_MSG_RESULT($enable_brain)
@@ -875,7 +881,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
     AC_C_BIGENDIAN(BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYBIGEND")
     # Fastest mode
     AC_ARG_ENABLE(fastest,
-      AC_HELP_STRING([--enable-fastest], [build theBrain for fastest run]))
+      AS_HELP_STRING([--enable-fastest], [build theBrain for fastest run]))
     if test "$enable_fastest" = "yes"
     then
       BRAIN_CFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
@@ -885,7 +891,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 
     # 64-bit offset mode
     AC_ARG_ENABLE(off64,
-      AC_HELP_STRING([--enable-off64], [build theBrain with 64-bit file offset on 32-bit system]))
+      AS_HELP_STRING([--enable-off64], [build theBrain with 64-bit file offset on 32-bit system]))
     if test "$enable_off64" = "yes"
     then
       BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_FILE_OFFSET_BITS=64"
@@ -893,7 +899,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 
     # Swapping byte-orders mode
     AC_ARG_ENABLE(swab,
-      AC_HELP_STRING([--enable-swab], [build theBrain for swapping byte-orders]))
+      AS_HELP_STRING([--enable-swab], [build theBrain for swapping byte-orders]))
     if test "$enable_swab" = "yes"
     then
       BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYSWAB"
@@ -901,14 +907,14 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 
     # Micro yield mode
     AC_ARG_ENABLE(uyield,
-      AC_HELP_STRING([--enable-uyield], [build theBrain for detecting race conditions]))
+      AS_HELP_STRING([--enable-uyield], [build theBrain for detecting race conditions]))
     if test "$enable_uyield" = "yes"
     then
       BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYMICROYIELD"
     fi
     # Disable the unified buffer cache assumption
     AC_ARG_ENABLE(ubc,
-      AC_HELP_STRING([--disable-ubc], [build theBrain without the unified buffer cache assumption]))
+      AS_HELP_STRING([--disable-ubc], [build theBrain without the unified buffer cache assumption]))
     if test "$enable_ubc" = "no"
     then
       BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOUBC"
@@ -974,7 +980,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 AC_DEFUN([SC_ENABLE_GUARD], [
   AC_MSG_CHECKING([for build with GUARD])
   AC_ARG_ENABLE(guard,
-      AC_HELP_STRING([--enable-guard], [build theLink with GUARD support]),
+      AS_HELP_STRING([--enable-guard], [build theLink with GUARD support]),
       enable_guard=yes, enable_guard=no
   )
   AC_MSG_RESULT($enable_guard)

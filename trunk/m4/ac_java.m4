@@ -124,9 +124,9 @@ EOF
                 if uudecode$EXEEXT Test.uue; then
                         :
                 else
-                        echo "configure: __oline__: uudecode had trouble decoding base 64 file 'Test.uue'" >&AC_FD_CC
-                        echo "configure: failed file was:" >&AC_FD_CC
-                        cat Test.uue >&AC_FD_CC
+                        echo "configure: __oline__: uudecode had trouble decoding base 64 file 'Test.uue'" >&AS_MESSAGE_LOG_FD
+                        echo "configure: failed file was:" >&AS_MESSAGE_LOG_FD
+                        cat Test.uue >&AS_MESSAGE_LOG_FD
                         ac_cv_prog_uudecode_base64=no
                 fi
         rm -f Test.uue
@@ -705,8 +705,8 @@ if AC_TRY_COMMAND($JAVAC $JAVACFLAGS $JAVA_TEST) >/dev/null 2>&1; then
   ac_cv_prog_javac_works=yes
 else
   AC_MSG_ERROR([The Java compiler $JAVAC failed (see config.log, check the CLASSPATH?)])
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat $JAVA_TEST >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat $JAVA_TEST >&AS_MESSAGE_LOG_FD
 fi
 rm -f $JAVA_TEST $CLASS_TEST
 ])
@@ -1005,9 +1005,9 @@ EOF
 if uudecode$EXEEXT Test.uue; then
         ac_cv_prog_uudecode_base64=yes
 else
-        echo "configure: __oline__: uudecode had trouble decoding base 64 file 'Test.uue'" >&AC_FD_CC
-        echo "configure: failed file was:" >&AC_FD_CC
-        cat Test.uue >&AC_FD_CC
+        echo "configure: __oline__: uudecode had trouble decoding base 64 file 'Test.uue'" >&AS_MESSAGE_LOG_FD
+        echo "configure: failed file was:" >&AS_MESSAGE_LOG_FD
+        cat Test.uue >&AS_MESSAGE_LOG_FD
         ac_cv_prog_uudecode_base64=no
 fi
 rm -f Test.uue])
@@ -1039,16 +1039,16 @@ if test x$ac_cv_prog_uudecode_base64 != xyes; then
         if AC_TRY_COMMAND($JAVAC $JAVACFLAGS $JAVA_TEST) && test -s $CLASS_TEST; then
                 :
         else
-          echo "configure: failed program was:" >&AC_FD_CC
-          cat $JAVA_TEST >&AC_FD_CC
+          echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+          cat $JAVA_TEST >&AS_MESSAGE_LOG_FD
           AC_MSG_ERROR(The Java compiler $JAVAC failed (see config.log, check the CLASSPATH?))
         fi
 fi
 if AC_TRY_COMMAND($JAVA $JAVAFLAGS $TEST) >/dev/null 2>&1; then
   ac_cv_prog_java_works=yes
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat $JAVA_TEST >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat $JAVA_TEST >&AS_MESSAGE_LOG_FD
   AC_MSG_ERROR(The Java VM $JAVA failed (see config.log, check the CLASSPATH?))
 fi
 rm -fr $JAVA_TEST $CLASS_TEST Test.uue
@@ -1104,8 +1104,8 @@ then
 dnl Don't remove the temporary files here, so they can be examined.
   ifelse([$3], , :, [$3])
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat Test.java >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat Test.java >&AS_MESSAGE_LOG_FD
 ifelse([$4], , , [  rm -fr Test*
   $4
 ])dnl
@@ -1160,8 +1160,8 @@ then
 dnl Don't remove the temporary files here, so they can be examined.
   ifelse([$3], , :, [$3])
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat Test.java >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat Test.java >&AS_MESSAGE_LOG_FD
 ifelse([$4], , , [  rm -fr Test*
   $4
 ])dnl

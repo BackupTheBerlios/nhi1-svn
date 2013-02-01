@@ -31,7 +31,7 @@ sServerSetup
   MQ_PTR const data
 )
 {
-  cServerSetup((int*)context, (GoInterface*)data);
+  cServerSetup(context, (GoInterface*)data);
   return MqErrorStack(context);
 }
 
@@ -62,7 +62,7 @@ sServerCleanup (
   MQ_PTR const data
 )
 {
-  cServerCleanup((int*)context, (GoInterface*)data);
+  cServerCleanup(context, (GoInterface*)data);
   return MqErrorStack(context);
 }
 
@@ -93,7 +93,7 @@ sBgError (
   MQ_PTR const data
 )
 {
-  cBgError((int*)context, (GoInterface*)data);
+  cBgError(context, (GoInterface*)data);
   return MqErrorStack(context);
 }
 
@@ -124,7 +124,7 @@ sEvent (
   MQ_PTR const data
 )
 {
-  cEvent((int*)context, (GoInterface*)data);
+  cEvent(context, (GoInterface*)data);
   return MqErrorStack(context);
 }
 
@@ -157,7 +157,7 @@ sFactoryCreate (
   struct MqS  ** contextP
 )
 {
-  struct MqS * mqctx = (struct MqS*)cFactoryCall((int*)tmpl, (void**)item->Create.data);
+  struct MqS * mqctx = (struct MqS*)cFactoryCall(tmpl, (void**)item->Create.data);
   if (mqctx == NULL) return MqErrorStack(tmpl);
 
   // copy setup data and initialize "setup" data
@@ -179,7 +179,7 @@ sFactoryDelete (
 {
   MQ_PTR chnp = context->threadData;
   MqContextDelete (&context);
-  cFactoryDelete((int*)context, chnp);
+  cFactoryDelete(context, chnp);
 }
 
 static void
@@ -239,7 +239,7 @@ sService (
   MQ_PTR const data
 )
 {
-  cService((int*)context, (GoInterface*)data);
+  cService(context, (GoInterface*)data);
   return MqErrorGetCode(context);
 }
 
@@ -271,7 +271,7 @@ sService2 (
   MQ_PTR const data
 )
 {
-  cService2((int*)context, (GoInterface*)data);
+  cService2(context, (GoInterface*)data);
   return MqErrorStack(context);
 }
 
@@ -385,7 +385,7 @@ static enum MqErrorE SysServerThread (
   MqConfigSetIgnoreFork (context, MQ_YES);
 
   // start thread as "go" routine
-  ret = CreateThread((int*)argP);
+  ret = CreateThread(argP);
 
   // save tid
   (*idP).val = (MQ_IDNT)ret;

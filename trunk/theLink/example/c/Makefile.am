@@ -44,5 +44,5 @@ client_SOURCES = client.c stat.c stat.h
 
 HTMLFILES = ./docs/server.help ./docs/client.help ./docs/debug.out ./docs/client.perf
 
-html: $(HTMLFILES)
+html-local: $(HTMLFILES)
 

@@ -12,7 +12,7 @@
 
 # set NHI1 VERSION information also in:
 AC_INIT([NHI1],[0.16],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([tar-ustar no-dist-gzip dist-bzip2])
 AC_CONFIG_HEADER([mqconfig.h])
 
@@ -72,6 +72,7 @@ AC_SUBST([VERSION_INFO], [21:0:0])
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_PROG_CC_C_O
+AM_PROG_AR
 
 GCC=yes
 AC_PROG_CXX
@@ -90,9 +91,11 @@ SC_ENABLE_THREADS
 AC_MSG_CHECKING(get libtool support);echo
 #------------------------------------
 AC_DISABLE_STATIC
-AC_LIBTOOL_WIN32_DLL
+#AC_REQUIRE(AC_CANONICAL_HOST)_LT_SET_OPTION([LT_INIT],[win32-dll])`
+#AC_DIAGNOSE([obsolete],[AC_LIBTOOL_WIN32_DLL: Remove this warning and the call to _LT_SET_OPTION when you put the 'win32-dll' option into LT_INIT's first parameter.])
 
-AC_PROG_LIBTOOL
+
+LT_INIT
 
 #------------------------------------
 AC_MSG_CHECKING(programs);echo
@@ -186,7 +189,7 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/gomsgque/Makefile theLink/gomsgque/MakeGoMsgque.inc theLink/example/go/Makefile 
+			    theLink/gomsgque/Makefile theLink/example/go/Makefile 
 			      theLink/example/vb/Makefile
 				performance/Makefile performance/env.sh
 				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile

@@ -186,7 +186,7 @@ case "$1" in
 	;;
     install)
 	echo -n "install rcBuild..."
-	if [[ -f "/etc/init.d/rcBuild" ]] ; then
+	if [[ -f "/etc/init.d/rcBuild" && /etc/init.d/rcBuild -nt $0 ]] ; then
 	  echo -n "allready done..."
 	else
 	  rm -f /etc/init.d/rcBuild && \
@@ -205,8 +205,14 @@ case "$1" in
 	fi
 	rc_status -v
 	;;
+    tobuild)
+	ToBui
+	;;
+    tobak)
+	ToBak
+	;;
     *)
-	echo "Usage: $0 {start|stop|status|restart|force-reload|reload|backup|install|uninstall}"
+	echo "Usage: $0 {start|stop|status|restart|force-reload|reload|backup|install|uninstall|tobuild|tobak}"
 	exit 1
 	;;
 esac

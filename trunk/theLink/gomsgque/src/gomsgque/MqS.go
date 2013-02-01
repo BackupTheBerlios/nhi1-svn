@@ -12,9 +12,9 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #cgo CFLAGS: -I /home/dev01/Project/NHI1/theLink/libmsgque -DPIC
+// #cgo LDFLAGS: -L/build/dev01/Main/thread/theLink/libmsgque/.libs -lmsgque
+// #include "gomsgque.h"
 import "C"
 
 import (
@@ -63,7 +63,7 @@ func (this *MqS) Init() {
 }
 
 func (this *MqS) Delete() {
-  ctxlock[this] = nil, false
+  ctxlock[this] = 0
   C.MqContextFree((*_Ctype_struct_MqS)(this))
 }
 
@@ -122,7 +122,7 @@ func CreateThread (data *_Ctype_struct_MqSysServerThreadMainS) *chan bool {
 //export WaitForThread
 func WaitForThread(chnp *chan bool) {
   <-(*chnp)
-  lockThread[chnp] = false, false
+  lockThread[chnp] = false
 }
 
 //export ProcessExit

@@ -43,7 +43,7 @@ EXTRA_DIST = aexec
 HTMLFILES = docs/atool.help docs/ajoin.help docs/acut.help docs/asort.help \
 	      docs/asplit.help docs/aexec.help docs/msgque.help docs/tclmsgque.help
 
-html: $(HTMLFILES)
+html-local: $(HTMLFILES)
 
 CLEANFILES =
 

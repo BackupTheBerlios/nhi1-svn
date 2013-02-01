@@ -28,7 +28,7 @@ _cgo_run: $(CGOFILES)
 	touch _cgo_run
 
 goinstall: install
-	-test ! -d "$(DESTDIR)$(pkglibdir)" && mkdir -p "$(DESTDIR)$(pkglibdir)"
+	if test ! -d "$(DESTDIR)$(pkglibdir)" ; then  mkdir -p "$(DESTDIR)$(pkglibdir)" ; else true; fi
 	cp _obj/$(TARG).a "$(DESTDIR)$(pkglibdir)"
 
 gouninstall:

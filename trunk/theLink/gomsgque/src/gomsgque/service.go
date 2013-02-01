@@ -12,9 +12,7 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #include "gomsgque.h"
 import "C"
 
 import (
@@ -43,7 +41,7 @@ func decrServiceRef(ifc *Service) {
     if count > 1 {
       lockService[ifc]--
     } else {
-      lockService[ifc] = 0,false
+      lockService[ifc] = 0
     }
   }
 }
@@ -89,7 +87,7 @@ func decrService2Ref(ifc *Service2) {
     if count > 1 {
       lockService2[ifc]--
     } else {
-      lockService2[ifc] = 0,false
+      lockService2[ifc] = 0
     }
   }
 }

@@ -12,9 +12,7 @@
 
 package gomsgque
 
-/*
-#include <gomsgque.h>
-*/
+// #include "gomsgque.h"
 import "C"
 
 import (

@@ -10,6 +10,10 @@
  *              please contact AUTHORS for additional information
  */
 
+#ifndef GOMSGQUE_H
+
+#define GOMSGQUE_H
+
 #include <stdlib.h>
 #include "msgque.h"
 #include "debug.h"
@@ -46,4 +50,6 @@ void gomsgque_SysServerThreadMain(struct MqSysServerThreadMainS *data, MQ_PTR ch
 struct MqFactoryS * gomsgque_FactoryAdd (MQ_CST const ident, MQ_PTR data);
 struct MqFactoryS * gomsgque_FactoryDefault (MQ_CST const ident, MQ_PTR data);
 struct MqS * gomsgque_FactoryNew (struct MqFactoryS * const item);
+
+#endif
 

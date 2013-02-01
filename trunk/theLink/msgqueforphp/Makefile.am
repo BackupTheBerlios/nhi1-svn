@@ -59,7 +59,7 @@ all-local: $(abs_builddir)/$(PHPMAKEFILE) $(wildcard $(abs_builddir)/MsgqueForPh
 	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS)
 
 clean-local:
-	-test -f $(PHPMAKEFILE) && $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean
+	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean ; else true; fi
 
 #cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 install-exec-local:
@@ -67,13 +67,13 @@ install-exec-local:
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 uninstall-local:
-	-test -f $(PHPMAKEFILE) && $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) uninstall
+	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) uninstall; else true; fi
 	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
 	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 distclean-local:
-	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean
-	-test -f MsgqueForPhp/.distclean && rm -fr MsgqueForPhp
+	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean; else true; fi
+	if test -f MsgqueForPhp/.distclean ; then rm -fr MsgqueForPhp; else true; fi
 
 endif
 

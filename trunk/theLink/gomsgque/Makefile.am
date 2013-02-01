@@ -15,45 +15,41 @@ if USE_GO
 #####################################################################################
 ## GO files
 
-GOMAKEFILE  =	src/Makefile
-MAKEARGS    =	$(AM_MAKEFLAGS)
+GOPATH = $(abs_builddir)
+export GOPATH
 
-setup:
-	-test ! -d src && cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean
+GOBIN = $(abs_builddir)
+export GOBIN
 
-all-local: setup
-	cd src && $(MAKE) $(MAKEARGS)
 
-clean-local: setup
-	cd src && $(MAKE) $(MAKEARGS) clean
+GO_FILES =  src/gomsgque/MqS.go src/gomsgque/MqSException.go src/gomsgque/MqBufferS.go \
+	    src/gomsgque/MqBinary.go src/gomsgque/MqDumpS.go src/gomsgque/send.go \
+	    src/gomsgque/read.go src/gomsgque/link.go src/gomsgque/config.go \
+	    src/gomsgque/service.go src/gomsgque/slave.go src/gomsgque/storage.go \
+	    src/gomsgque/MqFactoryS.go
 
-install-exec-local:
-	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" goinstall
+C_FILES =   src/gomsgque/gomsgque.h src/gomsgque/gomsgque.c
 
-uninstall-local:
-	cd src && $(MAKE) $(MAKEARGS) DESTDIR="$(DESTDIR)" pkglibdir="$(pkglibdir)" gouninstall
+#####################################################################################
+## GO files
+
+$(abs_builddir)/src:
+	if test ! -d src ; then cp -pr $(srcdir)/src . && chmod -R u+w src && touch src/.distclean; else true; fi
+
+$(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/%
+	cp $< $@
+
+all-local: $(abs_builddir)/src $(addprefix $(abs_builddir)/, $(GO_FILES))
+	go install gomsgque
+
+clean-local: 
+	go clean gomsgque
 
 distclean-local:
-	-test -f src/.distclean && rm -fr src
+	if test -f src/.distclean ; then rm -fr src; else true; fi
 
 endif
 
-EXTRA_DIST = \
-$(srcdir)/src/MqS.go \
-$(srcdir)/src/MqSException.go \
-$(srcdir)/src/MqBufferS.go \
-$(srcdir)/src/MqBinary.go \
-$(srcdir)/src/MqDumpS.go \
-$(srcdir)/src/send.go \
-$(srcdir)/src/read.go \
-$(srcdir)/src/link.go \
-$(srcdir)/src/config.go \
-$(srcdir)/src/service.go\
-$(srcdir)/src/slave.go\
-$(srcdir)/src/storage.go\
-$(srcdir)/src/MqFactoryS.go\
-$(srcdir)/src/gomsgque.h \
-$(srcdir)/src/gomsgque.c \
-$(srcdir)/src/Makefile \
-MakeGoMsgque.inc.in
+EXTRA_DIST = $(GO_FILES) $(C_FILES)
+
 
