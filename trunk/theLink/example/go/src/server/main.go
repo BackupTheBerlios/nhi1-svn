@@ -289,7 +289,7 @@ type USLP Server
   func (this *USLP) Call() {
     this.SendSTART()
     i := this.ReadI()
-    time.Sleep(int64(i) * 1000)
+    time.Sleep(time.Duration(i) * 1000)
     this.SendI(i)
     this.SendRETURN()
   }
@@ -298,7 +298,7 @@ type SLEP Server
   func (this *SLEP) Call() {
     this.SendSTART()
     i := this.ReadI()
-    time.Sleep(int64(i) * 1000000000)
+    time.Sleep(time.Duration(i) * 1000000000)
     this.SendI(i)
     this.SendRETURN()
   }

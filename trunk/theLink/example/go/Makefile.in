@@ -16,11 +16,11 @@
 
 #+
 #:  \file       theLink/example/go/Makefile.am
-#:  \brief      \$Id: Makefile.am 596 2013-01-28 15:00:31Z aotto1968 $
+#:  \brief      \$Id: Makefile.am 603 2013-02-01 15:45:00Z aotto1968 $
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 596 $
+#:  \version    \$Rev: 603 $
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
@@ -279,65 +279,24 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-
-#SUFFIXES = .go .bin $(EXEEXT)
-#
-#dummy:	all
-#
-#.go.bin:
-#	$(GC) -I $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
-#
-#.bin$(EXEEXT):
-#	$(LD) -L $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
-#
-#GOMSGQUE = $(abs_top_builddir)/theLink/gomsgque/src/_obj/gomsgque.a
-#
-### all executables depend on our new created "gomsgque.a" library
-#
-#BUILT_SOURCES = server$(EXEEXT)
-#server$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
-#MyClient$(EXEEXT): $(GOMSGQUE)
-#MyServer$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter3$(EXEEXT)
-#Filter3$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += mulclient$(EXEEXT)
-#mulclient$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += mulserver$(EXEEXT)
-#mulserver$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += manfilter$(EXEEXT)
-#manfilter$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += testserver$(EXEEXT)
-#testserver$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += testclient$(EXEEXT)
-#testclient$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter1$(EXEEXT)
-#Filter1$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter2$(EXEEXT)
-#Filter2$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter4$(EXEEXT)
-#Filter4$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter5$(EXEEXT)
-#Filter5$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter6$(EXEEXT)
-#Filter6$(EXEEXT): $(GOMSGQUE)
-CLEANFILES = $(BUILT_SOURCES)
-EXTRA_DIST = $(srcdir)/*.go
-all: all-am
+@USE_GO_TRUE@SUFFIXES = .go $(EXEEXT)
+@USE_GO_TRUE@GOPATH = $(abs_srcdir):$(abs_builddir)/../../gomsgque
+@USE_GO_TRUE@GOBIN = $(abs_builddir)
+@USE_GO_TRUE@GOMSGQUE = $(abs_builddir)/../../gomsgque/pkg/*/gomsgque.a
+@USE_GO_TRUE@GO_COMP = go install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
+@USE_GO_TRUE@BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) \
+@USE_GO_TRUE@	MyServer$(EXEEXT) mulclient$(EXEEXT) \
+@USE_GO_TRUE@	mulserver$(EXEEXT) manfilter$(EXEEXT) \
+@USE_GO_TRUE@	testserver$(EXEEXT) testclient$(EXEEXT) \
+@USE_GO_TRUE@	Filter1$(EXEEXT) Filter2$(EXEEXT) \
+@USE_GO_TRUE@	Filter3$(EXEEXT) Filter4$(EXEEXT) \
+@USE_GO_TRUE@	Filter5$(EXEEXT) Filter6$(EXEEXT)
+EXTRA_DIST = src/*/*.go
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
+.SUFFIXES: .go @EXEEXT@
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -414,10 +373,13 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
-all-am: Makefile
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
+@USE_GO_FALSE@all-local:
+all-am: Makefile all-local
 installdirs:
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -439,7 +401,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -448,9 +409,11 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+@USE_GO_FALSE@clean-local:
 clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
@@ -514,19 +477,55 @@ ps-am:
 
 uninstall-am:
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
+.PHONY: all all-am all-local check check-am clean clean-generic \
+	clean-libtool clean-local distclean distclean-generic \
+	distclean-libtool distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-am
 
+@USE_GO_TRUE@export GOPATH
+@USE_GO_TRUE@export GOBIN
+@USE_GO_TRUE@server$(EXEEXT): src/server/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@MyClient$(EXEEXT): src/MyClient/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@MyServer$(EXEEXT): src/MyServer/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@mulclient$(EXEEXT): src/mulclient/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@mulserver$(EXEEXT): src/mulserver/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@manfilter$(EXEEXT): src/manfilter/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@testserver$(EXEEXT): src/testserver/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@testclient$(EXEEXT): src/testclient/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter1$(EXEEXT): src/Filter1/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter2$(EXEEXT): src/Filter2/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter3$(EXEEXT): src/Filter3/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter4$(EXEEXT): src/Filter4/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter5$(EXEEXT): src/Filter5/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+@USE_GO_TRUE@Filter6$(EXEEXT): src/Filter6/main.go $(GOMSGQUE)
+@USE_GO_TRUE@	$(GO_COMP) $(basename $@)
+
+@USE_GO_TRUE@all-local: $(BUILT_SOURCES)
+
+@USE_GO_TRUE@clean-local: 
+@USE_GO_TRUE@	go clean $(GOSOURCES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

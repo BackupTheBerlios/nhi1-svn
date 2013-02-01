@@ -42,7 +42,7 @@ type LOGF Filter4
     if (ftr.LinkGetTargetIdent() == "transFilter") {
       this.ReadForward(ftr, nil)
     } else {
-      this.FH,_ = os.Open(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
+      this.FH,_ = os.OpenFile(this.ReadC(),os.O_WRONLY|os.O_APPEND,0666)
     }
     this.SendRETURN()
   }

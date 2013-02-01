@@ -17,59 +17,79 @@
   
 if USE_GO
 
-#SUFFIXES = .go .bin $(EXEEXT)
-#
-#dummy:	all
-#
-#.go.bin:
-#	$(GC) -I $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
-#
-#.bin$(EXEEXT):
-#	$(LD) -L $(abs_top_builddir)/theLink/gomsgque/src/_obj -o $@ $<
-#
-#GOMSGQUE = $(abs_top_builddir)/theLink/gomsgque/src/_obj/gomsgque.a
-#
-### all executables depend on our new created "gomsgque.a" library
-#
-#BUILT_SOURCES = server$(EXEEXT)
-#server$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += MyClient$(EXEEXT) MyServer$(EXEEXT)
-#MyClient$(EXEEXT): $(GOMSGQUE)
-#MyServer$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter3$(EXEEXT)
-#Filter3$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += mulclient$(EXEEXT)
-#mulclient$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += mulserver$(EXEEXT)
-#mulserver$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += manfilter$(EXEEXT)
-#manfilter$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += testserver$(EXEEXT)
-#testserver$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += testclient$(EXEEXT)
-#testclient$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter1$(EXEEXT)
-#Filter1$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter2$(EXEEXT)
-#Filter2$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter4$(EXEEXT)
-#Filter4$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter5$(EXEEXT)
-#Filter5$(EXEEXT): $(GOMSGQUE)
-#
-#BUILT_SOURCES += Filter6$(EXEEXT)
-#Filter6$(EXEEXT): $(GOMSGQUE)
+SUFFIXES = .go $(EXEEXT)
+
+GOPATH = $(abs_srcdir):$(abs_builddir)/../../gomsgque
+export GOPATH
+
+GOBIN = $(abs_builddir)
+export GOBIN
+
+GOMSGQUE = $(abs_builddir)/../../gomsgque/pkg/*/gomsgque.a
+
+GO_COMP = go install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
+
+BUILT_SOURCES = server$(EXEEXT)
+server$(EXEEXT): src/server/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += MyClient$(EXEEXT)
+MyClient$(EXEEXT): src/MyClient/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += MyServer$(EXEEXT)
+MyServer$(EXEEXT): src/MyServer/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += mulclient$(EXEEXT)
+mulclient$(EXEEXT): src/mulclient/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += mulserver$(EXEEXT)
+mulserver$(EXEEXT): src/mulserver/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += manfilter$(EXEEXT)
+manfilter$(EXEEXT): src/manfilter/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += testserver$(EXEEXT)
+testserver$(EXEEXT): src/testserver/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += testclient$(EXEEXT)
+testclient$(EXEEXT): src/testclient/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter1$(EXEEXT)
+Filter1$(EXEEXT): src/Filter1/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter2$(EXEEXT)
+Filter2$(EXEEXT): src/Filter2/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter3$(EXEEXT)
+Filter3$(EXEEXT): src/Filter3/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter4$(EXEEXT)
+Filter4$(EXEEXT): src/Filter4/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter5$(EXEEXT)
+Filter5$(EXEEXT): src/Filter5/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+BUILT_SOURCES += Filter6$(EXEEXT)
+Filter6$(EXEEXT): src/Filter6/main.go $(GOMSGQUE)
+	$(GO_COMP) $(basename $@)
+
+all-local: $(BUILT_SOURCES)
+
+clean-local: 
+	go clean $(GOSOURCES)
+
 
 endif
 
@@ -78,5 +98,4 @@ endif
 ## Main
 ##
 
-CLEANFILES = $(BUILT_SOURCES)
-EXTRA_DIST = $(srcdir)/*.go
+EXTRA_DIST = src/*/*.go
