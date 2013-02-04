@@ -16,11 +16,11 @@
 
 #+
 #:  \file       theLink/example/go/Makefile.am
-#:  \brief      \$Id: Makefile.am 603 2013-02-01 15:45:00Z aotto1968 $
+#:  \brief      \$Id: Makefile.am 605 2013-02-01 21:45:22Z aotto1968 $
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 603 $
+#:  \version    \$Rev: 605 $
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
@@ -127,7 +127,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_SEP = @FILE_SEP@
-GOROOT = @GOROOT@
+GO = @GO@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -279,11 +279,10 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@USE_GO_TRUE@SUFFIXES = .go $(EXEEXT)
 @USE_GO_TRUE@GOPATH = $(abs_srcdir):$(abs_builddir)/../../gomsgque
 @USE_GO_TRUE@GOBIN = $(abs_builddir)
 @USE_GO_TRUE@GOMSGQUE = $(abs_builddir)/../../gomsgque/pkg/*/gomsgque.a
-@USE_GO_TRUE@GO_COMP = go install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
+@USE_GO_TRUE@GO_COMP = $(GO) install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
 @USE_GO_TRUE@BUILT_SOURCES = server$(EXEEXT) MyClient$(EXEEXT) \
 @USE_GO_TRUE@	MyServer$(EXEEXT) mulclient$(EXEEXT) \
 @USE_GO_TRUE@	mulserver$(EXEEXT) manfilter$(EXEEXT) \
@@ -296,7 +295,6 @@ all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .go @EXEEXT@
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -375,8 +373,7 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-@USE_GO_FALSE@all-local:
-all-am: Makefile all-local
+all-am: Makefile
 installdirs:
 install: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) install-am
@@ -479,10 +476,10 @@ uninstall-am:
 
 .MAKE: all check install install-am install-strip
 
-.PHONY: all all-am all-local check check-am clean clean-generic \
-	clean-libtool clean-local distclean distclean-generic \
-	distclean-libtool distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	clean-local distclean distclean-generic distclean-libtool \
+	distdir dvi dvi-am html html-am info info-am install \
+	install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
@@ -522,10 +519,8 @@ uninstall-am:
 @USE_GO_TRUE@Filter6$(EXEEXT): src/Filter6/main.go $(GOMSGQUE)
 @USE_GO_TRUE@	$(GO_COMP) $(basename $@)
 
-@USE_GO_TRUE@all-local: $(BUILT_SOURCES)
-
 @USE_GO_TRUE@clean-local: 
-@USE_GO_TRUE@	go clean $(GOSOURCES)
+@USE_GO_TRUE@	rm -f $(BUILT_SOURCES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

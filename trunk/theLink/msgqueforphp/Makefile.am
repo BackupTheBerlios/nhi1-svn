@@ -43,13 +43,11 @@ PHPCONFIGURE    += --pdfdir=$(pdfdir)
 PHPCONFIGURE    += --psdir=$(psdir)
 
 $(abs_builddir)/MsgqueForPhp/configure: 
-	-test ! -d MsgqueForPhp && cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp && touch MsgqueForPhp/.distclean
+	if test ! -d MsgqueForPhp ; then cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp; else true; fi
 	cd MsgqueForPhp && $(PHPIZE)
 
-$(abs_builddir)/MsgqueForPhp/%.c: $(abs_srcdir)/MsgqueForPhp/%.c
-	cp $< $@
-
-$(abs_builddir)/MsgqueForPhp/%.h: $(abs_srcdir)/MsgqueForPhp/%.h
+$(abs_builddir)/MsgqueForPhp/%: $(abs_srcdir)/MsgqueForPhp/%
+	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
 	cp $< $@
 
 $(abs_builddir)/$(PHPMAKEFILE): $(abs_builddir)/MsgqueForPhp/configure Makefile.am
@@ -61,7 +59,6 @@ all-local: $(abs_builddir)/$(PHPMAKEFILE) $(wildcard $(abs_builddir)/MsgqueForPh
 clean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean ; else true; fi
 
-#cd MsgqueForPhp && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 install-exec-local:
 	cp MsgqueForPhp/modules/* "$(DESTDIR)/$(pkglibdir)"
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
@@ -73,7 +70,7 @@ uninstall-local:
 
 distclean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean; else true; fi
-	if test -f MsgqueForPhp/.distclean ; then rm -fr MsgqueForPhp; else true; fi
+	if test "$(abs_builddir)" != $(abs_srcdir)" ; then rm -fr MsgqueForPhp; else true; fi
 
 endif
 

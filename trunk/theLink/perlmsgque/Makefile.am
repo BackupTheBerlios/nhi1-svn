@@ -31,15 +31,14 @@ endif
 PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN"
 
 $(PERLMAKEFILE): $(PERLDEPEND) Makefile.am
-	-test ! -d $(builddir)/Net-PerlMsgque && cp -pr $(srcdir)/Net-PerlMsgque $(builddir)/Net-PerlMsgque \
-	   && chmod -R u+w $(builddir)/Net-PerlMsgque && touch $(builddir)/Net-PerlMsgque/.distclean
+	if test ! -d Net-PerlMsgque ; then cp -pr $(srcdir)/Net-PerlMsgque Net-PerlMsgque && chmod -R u+w Net-PerlMsgque; else true; fi
 	cd $(builddir)/Net-PerlMsgque && @PERL@ $(MF) $(PERLCONFIG)
 
 all-local: $(PERLMAKEFILE)
-	$(MAKE) -C $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS)
+	$(MAKE) -C Net-PerlMsgque $(AM_MAKEFLAGS)
 
 clean-local:
-	test -f $(PERLMAKEFILE) && $(MAKE) -C $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) clean || true
+	if test -f $(PERLMAKEFILE); then $(MAKE) -C Net-PerlMsgque $(AM_MAKEFLAGS) clean; else true; fi
 
 install-exec-local:
 	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
@@ -54,7 +53,7 @@ uninstall-local:
 	rm -f $(DESTDIR)$(prefix)/share/man/man3/Net::PerlMsgque.3
 
 distclean-local:
-	-test -f $(builddir)/Net-PerlMsgque/.distclean && rm -fr $(builddir)/Net-PerlMsgque
+	if test "$(abs_builddir)" != $(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
 
 endif
 

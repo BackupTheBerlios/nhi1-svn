@@ -17,8 +17,6 @@
   
 if USE_GO
 
-SUFFIXES = .go $(EXEEXT)
-
 GOPATH = $(abs_srcdir):$(abs_builddir)/../../gomsgque
 export GOPATH
 
@@ -27,7 +25,7 @@ export GOBIN
 
 GOMSGQUE = $(abs_builddir)/../../gomsgque/pkg/*/gomsgque.a
 
-GO_COMP = go install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
+GO_COMP = $(GO) install -x -ldflags "-r '$(abs_builddir)/../../libmsgque/.libs'"
 
 BUILT_SOURCES = server$(EXEEXT)
 server$(EXEEXT): src/server/main.go $(GOMSGQUE)
@@ -85,11 +83,8 @@ BUILT_SOURCES += Filter6$(EXEEXT)
 Filter6$(EXEEXT): src/Filter6/main.go $(GOMSGQUE)
 	$(GO_COMP) $(basename $@)
 
-all-local: $(BUILT_SOURCES)
-
 clean-local: 
-	go clean $(GOSOURCES)
-
+	rm -f $(BUILT_SOURCES)
 
 endif
 

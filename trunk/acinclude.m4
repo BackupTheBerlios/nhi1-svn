@@ -451,15 +451,15 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     AC_MSG_CHECKING(get java support);echo
     #------------------------------------
     AC_ARG_VAR([JAVA], [path to the 'java' tool])
-    AC_PATH_PROG([JAVA], [java]) 
+    AC_PATH_PROG([JAVA], [java], [AC_MSG_ERROR([tool not found])]) 
     if test "$build_os" == "cygwin"; then
       JAVA=$(cygpath -m "$JAVA")
     fi
     AC_ARG_VAR([JAVAC], [path to the 'javac' tool])
     AC_ARG_VAR([JAVAH], [path to the 'javah' tool])
-    AC_PATH_PROG([JAVAH], [javah]) 
+    AC_PATH_PROG([JAVAH], [javah], [AC_MSG_ERROR([tool not found])]) 
     AC_ARG_VAR([JAR], [path to the 'jar' tool])
-    AC_PATH_PROG([JAR], [jar]) 
+    AC_PATH_PROG([JAR], [jar], [AC_MSG_ERROR([tool not found])]) 
     AC_PROG_JAVAC
     AC_CHECK_CLASSPATH
     AC_JNI_INCLUDE_DIR
@@ -540,10 +540,7 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
     AC_ARG_VAR( [CSCOMP], [C# compiler])
     AC_ARG_VAR( [CLREXEC], [CLR runtime])
     if test "$host_os" == "mingw32" ; then
-      AC_PATH_PROGS( [CSCOMP], [csc] )
-      if test "x$CSCOMP" == "x"; then
-	AC_MSG_ERROR([unable to find useable CSCOMP])
-      fi
+      AC_PATH_PROGS( [CSCOMP], [csc], [AC_MSG_ERROR([tool not found])] )
       CLREXEC=""
       if test "x$enable_symbols" = "xno"; then
 	AC_SUBST([CSHARP_DEBUG], ['-optimize'])
@@ -551,8 +548,8 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
       AC_SUBST([CSHARP_OPT], [])
     else
       AC_PROG_AWK
-      AC_PATH_PROGS( [CSCOMP], [gmcs] )
-      AC_PATH_PROGS( [CLREXEC], [mono] )
+      AC_PATH_PROGS( [CSCOMP], [gmcs], [AC_MSG_ERROR([tool not found])] )
+      AC_PATH_PROGS( [CLREXEC], [mono], [AC_MSG_ERROR([tool not found])] )
       if test x$CSCOMP = x ; then
 	AC_MSG_ERROR([unable to find C[#] compiler 'gmcs'])
       fi
@@ -594,16 +591,10 @@ AC_DEFUN([SC_ENABLE_VB], [
     fi
     if test "$host_os" != "mingw32" ; then
       AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
-      AC_PATH_PROGS( [VBCOMP], [vbnc] )
-      if test "x${VBCOMP}" = "x" ; then
-	AC_MSG_ERROR([unable to find VisualBasic compiler 'vbnc'])
-      fi
+      AC_PATH_PROGS( [VBCOMP], [vbnc], [AC_MSG_ERROR([tool not found])] )
     else
       AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
-      AC_PATH_PROGS( [VBCOMP], [vbc] )
-      if test "x${VBCOMP}" = "x" ; then
-	AC_MSG_ERROR([unable to find VisualBasic compiler 'vbc'])
-      fi
+      AC_PATH_PROGS( [VBCOMP], [vbc], [AC_MSG_ERROR([tool not found])] )
     fi
   fi
   AC_SUBST([USE_VB], $enable_vb)
@@ -659,12 +650,12 @@ AC_DEFUN([SC_ENABLE_PHP], [
   AC_MSG_RESULT($enable_php)
   if test x$enable_php = xyes; then
     AC_ARG_VAR([PHP], [path to the 'php' tool])
-    AC_PATH_PROG([PHP], [php]) 
+    AC_PATH_PROG([PHP], [php], [AC_MSG_ERROR([tool not found])]) 
     PHP="$PHP -c $ac_pwd/theLink/msgqueforphp/php.ini"
     AC_ARG_VAR([PHPIZE], [path to the 'phpize' tool])
-    AC_PATH_PROG([PHPIZE], [phpize]) 
+    AC_PATH_PROG([PHPIZE], [phpize], [AC_MSG_ERROR([tool not found])]) 
     AC_ARG_VAR([PHPCONFIG], [path to the 'php-config' tool])
-    AC_PATH_PROG([PHPCONFIG], [php-config]) 
+    AC_PATH_PROG([PHPCONFIG], [php-config], [AC_MSG_ERROR([tool not found])]) 
   fi
   AC_SUBST([USE_PHP], $enable_php)
   AM_CONDITIONAL([USE_PHP], [test x$enable_php = xyes])
@@ -696,12 +687,8 @@ AC_DEFUN([SC_ENABLE_GO], [
   )
   AC_MSG_RESULT($enable_go)
   if test x$enable_go = xyes; then
-    AC_ARG_VAR([GOROOT], [directory of the 'go' installation])
-    if test x"$GOROOT" = x ; then
-      AC_MSG_ERROR([GOROOT is required to use GO])
-    else
-      AC_MSG_RESULT([checking for build with GOROOT... $GOROOT])
-    fi
+    AC_ARG_VAR([GO], [path to the 'go' tool])
+    AC_PATH_PROG([GO], [go], [AC_MSG_ERROR([tool not found])]) 
   fi
   AC_SUBST([USE_GO], $enable_go)
   AM_CONDITIONAL([USE_GO], [test x$enable_go = xyes])
@@ -728,10 +715,7 @@ AC_DEFUN([SC_ENABLE_PERL], [
   AC_MSG_RESULT($enable_perl)
   if test x$enable_perl = xyes; then
     AC_ARG_VAR([PERL], [perl runtime])
-    AC_PATH_PROGS([PERL], [perl]) 
-    if test "x$PERL" == "x"; then
-      AC_MSG_ERROR([unable to find useable PERL])
-    fi
+    AC_PATH_PROGS([PERL], [perl], [AC_MSG_ERROR([tool not found])]) 
     if test "$build_os" == "cygwin"; then
       PERL=$(cygpath -m "$PERL")
     fi
@@ -761,10 +745,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
   AC_MSG_RESULT($enable_tcl)
   if test x$enable_tcl = xyes; then
     AC_ARG_VAR([TCLSH], [tcl runtime])
-    AC_PATH_PROGS( [TCLSH], [tclsh86 tclsh86g tclsh8.6 tclsh85 tclsh85g tclsh8.5 tclsh] ) 
-    if test "x$TCLSH" == "x"; then
-      AC_MSG_ERROR([unable to find useable TCLSH])
-    fi
+    AC_PATH_PROGS( [TCLSH], [tclsh86 tclsh86g tclsh8.6 tclsh85 tclsh85g tclsh8.5 tclsh], [AC_MSG_ERROR([tool not found])] ) 
     if test "$build_os" == "cygwin"; then
       TCLSH=$(cygpath -m "$TCLSH")
     fi
