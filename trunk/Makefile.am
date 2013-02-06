@@ -36,7 +36,7 @@ install-data-local:
 	echo $$(pwd)
 	rm -fr $(DESTDIR)$(datarootdir)/html/theLink
 	mkdir -p $(DESTDIR)$(datarootdir)/html
-	cp -pr $(srcdir)/html/theLink $(DESTDIR)$(datarootdir)/html/theLink
+	cp -pr $(srcdir)/html/theLink $(DESTDIR)$(datarootdir)/html
 
 uninstall-local:
 	chmod -R u+rwx $(DESTDIR)$(datarootdir)/html/theLink
@@ -47,9 +47,8 @@ dist-hook:
 	cp -pr $(srcdir)/html $(distdir)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
-      --enable-python --enable-perl --enable-guard --enable-brain \
-	--enable-csharp --enable-java --enable-ruby --enable-php \
-	  --enable-go --enable-threads
+      --enable-python --enable-perl --enable-csharp --enable-java --enable-ruby \
+	  --enable-php --enable-go --enable-threads
 
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-python --enable-threads --enable-guard --enable-brain
 
@@ -63,7 +62,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
 
 install-web:
 	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
-	rsync -azv --delete html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
+	rsync -azv --delete $(srcdir)/html/* aotto1968@shell.berlios.de:/home/groups/nhi1/htdocs
 
 #install-web:
 #	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
@@ -74,6 +73,6 @@ install-files:
 	  ftp -u ftp://ftp.berlios.de/incoming/$$(basename $$F) $$F || true; \
 	done
 
-distclean-local:
-	-rm -rf html
+#distclean-local:
+#	rm -rf html
 

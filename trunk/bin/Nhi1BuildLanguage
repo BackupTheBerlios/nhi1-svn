@@ -23,7 +23,8 @@ set -ue
 
 ## delete all environment variables to setup a "clean" build environment
 [[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
-  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
+  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
+    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" "$0" "$@"
 
 declare -x PATH="/bin:/usr/bin"
 
@@ -54,7 +55,7 @@ declare -A use
 
 eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-EOF
 
-G_Shell='bash'
+G_Shell 'bash'
 # ---------------------------------------------------------------------
 G_Date='\$Date: 2013-01-25 11:52:58 +0000 (Fri, 25 Jan 2013) \$'
 G_Revision='\$Revision: 593 \$'
@@ -67,7 +68,7 @@ G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
 G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
 G_Argument 'clean:clean:0:cleanup first:B'
 G_Argument 'jobs:Jobs:2:number of parallel build jobs:'
-for l in tcl perl python ruby php; do
+for l in tcl perl python ruby php kyotocabinet; do
   G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
 done
 for l in thread nothread performance-thread performance-nothread; do
@@ -134,6 +135,15 @@ for l in ${!lang[@]} ; do
 	  performance-nothread) buildConf=(--disable-pthread);;
 	esac
 	buildConf+=(--prefix="$prefix" --enable-shared)
+      ;;
+      kyotocabinet)
+	case "$t" in
+	  thread)		buildConf=(--enable-debug --enable-devel);;
+	  nothread)		buildConf=(--enable-debug --enable-devel);;
+	  performance-thread)	buildConf=();;
+	  performance-nothread) buildConf=();;
+	esac
+	buildConf+=(--prefix="$prefix" --enable-shared --enable-static --enable-uyield --disable-zlib)
       ;;
       *)
 	case "$t" in

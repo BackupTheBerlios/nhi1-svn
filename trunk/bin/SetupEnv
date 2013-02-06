@@ -11,13 +11,13 @@
 #:              please contact AUTHORS for additional information
 #:
 set -u
-#set -uxv
+#set -ux
 
 #%# ----------------------------------------------------------------------
 declare -x  G_FileName="${1##*/}"
 declare -x  G_Dirname="${1%/*}"; shift
 declare -xa G_Args=("${@:-}")
-declare -x  G_Shell=${G_Shell:-}
+declare -x  G_ShellType=${G_ShellType:-}
 #%%# ---------------------------------------------------------------------
 declare -x  G_Date=${G_Date:-'$Date$'}
 declare -x  G_Revision=${G_Revision:-'$Revision$'}
@@ -37,7 +37,6 @@ optionx is written to stdout.
 The configuration is parsed by bash and recignize the following token:
 
 Variables:
-  G_Shell......... the type of the calling shell (bash,csh,tcl,...)
   G_Date.......... the date of the revision ($Date$
   G_Revision...... the revision number ($Revision$)
   G_Author........ the author ($Author: ... $)
@@ -46,6 +45,8 @@ Variables:
   G_HelpProc...... an external function to be called for additional help
 
 Functions:
+  G_Shell
+    the type of the calling shell (bash,csh,tcl,...)
   G_Option
     lookup <environment-variable-name>
       > used to look a single environment data-item from the file:
@@ -70,6 +71,8 @@ Functions:
       Option ........ Command-Line option in short '-' or long '--' format
       Variable ...... Environment variable
       InitValue ..... Initial value for Env-Variable
+	If the InitValue is '__environment__' than the 'Variable' is expanded 
+	as initial value and 'undef' ist used if 'Variable' is not set.
       Description ... Description of Env-Variable
       Type .......... Flag which descripts the variable
 	B) Boolean    -> A boolean variable, default '0' or '1'
@@ -81,8 +84,6 @@ Functions:
 EOF
   Exit ""
 }
-
-#
 
 declare -i Debug=0
 Debug()		{ 
@@ -121,20 +122,14 @@ Print()		{ printf "$@" 1>&2; }
 ##
 Debug "print functions" ##########################################################
 ##
-function Shift {
+function print_env {
   (( $# < 1 )) && return
-  declare -i num=$1
   case $G_ShellType in
-    1)	declare -i i=0
-	while (( i < num )) ; do
-	  echo "shift;"
-	done
-    ;;
-    2)	echo "shift $num;";;
-    3)	let num-=1; echo "set \$argv [lreplace \$argv 0 $num];";;
+    1)	echo "???"		    ;;
+    2)	echo "set -- $@;"	    ;;
+    3)	echo "set argv [list $@];"  ;;
   esac
 }
-##
 function print_variable {
   (( $# < 2 )) && return
   declare a=$1;shift
@@ -144,7 +139,6 @@ function print_variable {
     3)	echo "set $a {$*}:" 	;;
   esac
 }
-##
 function print_extern {
   (( $# < 1 )) && return
   case $G_ShellType in
@@ -428,7 +422,11 @@ function G_Argument {
   fi
 ## POST operation
   set_option	  $SE_NOptions "$opt"
-  set_defaults    $SE_NOptions "$def"
+  if [[ "$def" == "__environment__" ]] ; then
+    set_defaults $SE_NOptions ${!var:-undef}
+  else
+    set_defaults $SE_NOptions "$def"
+  fi
   set_description $SE_NOptions "$dfi"
 ## finish
   SE_NOptions+=1
@@ -506,7 +504,7 @@ function get_user_usage {
   declare space3
 
   ## work
-  Print "\nusage: $G_FileName ?Options? $SE_Args"
+  Print "\nusage: $G_FileName ?Options? ${SE_Args[*]:-}"
   (( SE_NOptions > SE_NLOptions )) && { Print "\n  Custom short options:\n" ; }
   while (( i < SE_NOptions ))
   do
@@ -575,6 +573,7 @@ function parse_commandline {
 	--help-setup) shift; let SE_HELP=3; continue ;;
 	--help-detail) shift; let SE_HELP=4; continue ;;
       esac
+
     ## Setup OptionString
       o="${1##+([-+])}"
       if [[ "$o" != "$1" ]] ; then
@@ -583,44 +582,41 @@ function parse_commandline {
 	i=-1
       fi
 
+    ## parse option-value
       if (( i != -1 )) ; then
 	if (( ${#o} > 1 )) ; then
 	  if [[ ${SE_Type[$i]} == *B* ]] ; then
-	    [[ "$1" == "--$o" ]] && {
-	      set_defaults $i "%#:0"; shift 1; continue 2
-	    }
-	    [[ "$1" == "++$o" ]] && {
-	      set_defaults $i "%#:1"; shift 1; continue 2
-	    }
+	    if [[ "$1" == "--$o" ]] ; then
+	      set_defaults $i "%#:0"; shift 1
+	    elif [[ "$1" == "++$o" ]] ; then
+	      set_defaults $i "%#:1"; shift 1
+	    fi
 	  else
-	    [[ "$1" == "--$o" ]] && {
-	      set_defaults $i "$2"; shift 2; continue 2
-	    }
+	    if [[ "$1" == "--$o" ]] ; then
+	      set_defaults $i "$2"; shift 2
+	    fi
 	  fi
 	else
 	  if [[ ${SE_Type[$i]} == *B* ]] ; then
-	    [[ "$1" == "-$o" ]] && {
-	      set_defaults $i "%#:0"; shift 1; continue 2
-	    }
-	    [[ "$1" == "+$o" ]] && {
-	      set_defaults $i "%#:1"; shift 1; continue 2
-	    }
+	    if [[ "$1" == "-$o" ]] ; then
+	      set_defaults $i "%#:0"; shift 1
+	    elif [[ "$1" == "+$o" ]] ; then
+	      set_defaults $i "%#:1"; shift 1
+	    fi
 	  else
-	    [[ "$1" == "-$o" ]] && {
-	      set_defaults $i "$2"; shift 2; continue 2
-	    }
+	    if [[ "$1" == "-$o" ]] ; then
+	      set_defaults $i "$2"; shift 2
+	    fi
 	  fi
 	fi
-	Error "unknown option '$1'"
+      else
+	SE_Args+=($1) ; shift 1
       fi
-
-    ## nothing found just break the loop
-      break
   done
 
   ## all remaining positional parameters are put out
-  SE_Args="${@:-}"
-  Shift $((num - $#))
+  print_env "${SE_Args[@]:-}"
+
   ## Help needed
   case $SE_HELP in
     1)	get_user_usage;;
@@ -810,7 +806,7 @@ shopt -s extglob
 Debug "declare" #####################################################################
 ##
 
-declare	    SE_Args
+declare	-a  SE_Args
 declare	-a  SE_CmdLine
 
 declare -i  i=0
@@ -879,15 +875,16 @@ function G_Option {
   esac
 }
 
-. /dev/stdin
+function G_Shell {
+  case $1 in
+    csh|tcsh)	  G_ShellType=1	  ;;
+    ksh|bash|sh)  G_ShellType=2   ;;
+    tclsh|wish)	  G_ShellType=3   ;;
+    *)		  Error "unknown shell '$1' only 'csh,tcsh,ksh,bash,sh,tclsh,wish' is supported"
+  esac
+}
 
-## get the shell-type
-case $G_Shell in
-  csh|tcsh)	G_ShellType=1	;;
-  ksh|bash|sh)	G_ShellType=2   ;;
-  tclsh|wish)	G_ShellType=3   ;;
-  *)		Error "unknown shell '$G_Shell' only 'csh,tcsh,ksh,bash,sh,tclsh,wish' is supported"
-esac
+. /dev/stdin
 
 ##
 Debug "Setup local .ENV file" ###########################################################

@@ -1,12 +1,12 @@
-> php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.15/theLink/example/php/server.php --uds --file ./socket.uds --fork
-> nothread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:9642) [2011-03-15:18-56-18] [0-0-0-0x6e7d98-main]: start: --------------------------------------
-C> (client:9642) [2011-03-15:18-56-18] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   1.69e+05
-C> (client:9642) [2011-03-15:18-56-19] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   9.60e+04
-C> (client:9642) [2011-03-15:18-56-20] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.08e+04
-C> (client:9642) [2011-03-15:18-56-24] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.89e+00
-C> (client:9642) [2011-03-15:18-56-24] [0-0-0-0x6e7d98-statistics]:                  parent create:   1.49e+03
-C> (client:9642) [2011-03-15:18-56-24] [0-0-0-0x6e7d98-statistics]:                  parent delete:   3.67e+03
-C> (client:9642) [2011-03-15:18-56-25] [0-0-0-0x6e7d98-statistics]:                   child create:   4.96e+03
-C> (client:9642) [2011-03-15:18-56-25] [0-0-0-0x6e7d98-statistics]:                   child delete:   3.98e+04
-C> (client:9642) [2011-03-15:18-56-25] [0-0-0-0x6e7d98-main]: end: ----------------------------------------
+> PHP nothread/NHI1-0.17/theLink/example/php/server.php --uds --file ./socket.uds --fork
+> nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:16172) [2013-02-06:16-13-58] [0-0-0-0x16cbd98-main]: start: --------------------------------------
+C> (client:16172) [2013-02-06:16-13-59] [0-0-0-0x16cbd98-statistics]:                      MqSendEND:   1.76e+05
+C> (client:16172) [2013-02-06:16-13-59] [0-0-0-0x16cbd98-statistics]:         MqSendEND_AND_CALLBACK:   9.11e+04
+C> (client:16172) [2013-02-06:16-14-00] [0-0-0-0x16cbd98-statistics]:             MqSendEND_AND_WAIT:   4.65e+04
+C> (client:16172) [2013-02-06:16-14-00] [0-0-0-0x16cbd98-statistics]:               MqSendPERSISTENT:   7.20e+03
+C> (client:16172) [2013-02-06:16-14-01] [0-0-0-0x16cbd98-statistics]:                  parent create:   1.44e+03
+C> (client:16172) [2013-02-06:16-14-01] [0-0-0-0x16cbd98-statistics]:                  parent delete:   3.38e+03
+C> (client:16172) [2013-02-06:16-14-02] [0-0-0-0x16cbd98-statistics]:                   child create:   5.24e+03
+C> (client:16172) [2013-02-06:16-14-02] [0-0-0-0x16cbd98-statistics]:                   child delete:   4.31e+04
+C> (client:16172) [2013-02-06:16-14-02] [0-0-0-0x16cbd98-main]: end: ----------------------------------------

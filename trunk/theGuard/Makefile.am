@@ -11,6 +11,7 @@
 #:
 
 SUBDIRS = aguard
+
 if USE_TCL
 SUBDIRS += tests
 endif

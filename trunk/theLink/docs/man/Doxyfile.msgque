@@ -17,7 +17,7 @@
 ENABLED_SECTIONS    += C-STYLE
 
 INPUT		    += $(SRCDIR)/libmsgque
-FILE_PATTERNS       += $(SRCDIR)/libmsgque/msgque.h
+FILE_PATTERNS       += msgque.h
 STRIP_FROM_PATH	    += $(SRCDIR)/libmsgque
 STRIP_FROM_INC_PATH += $(SRCDIR)/libmsgque
 SHOW_FILES	    = YES

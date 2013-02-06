@@ -1,11 +1,11 @@
-> nothread/NHI1-0.15/theLink/example/c/client --all @ tclsh nothread/NHI1-0.15/theLink/example/tcl/server.tcl
-C> (client:30025) [2011-03-15:18-47-57] [0-0-0-0x6e7d98-main]: start: --------------------------------------
-C> (client:30025) [2011-03-15:18-47-57] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   1.83e+05
-C> (client:30025) [2011-03-15:18-47-58] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   1.11e+05
-C> (client:30025) [2011-03-15:18-47-59] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.50e+04
-C> (client:30025) [2011-03-15:18-48-04] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.66e+00
-C> (client:30025) [2011-03-15:18-48-05] [0-0-0-0x6e7d98-statistics]:                  parent create:   9.77e+01
-C> (client:30025) [2011-03-15:18-48-05] [0-0-0-0x6e7d98-statistics]:                  parent delete:   4.68e+03
-C> (client:30025) [2011-03-15:18-48-05] [0-0-0-0x6e7d98-statistics]:                   child create:   3.79e+03
-C> (client:30025) [2011-03-15:18-48-05] [0-0-0-0x6e7d98-statistics]:                   child delete:   4.11e+04
-C> (client:30025) [2011-03-15:18-48-05] [0-0-0-0x6e7d98-main]: end: ----------------------------------------
+> nothread/NHI1-0.17/theLink/example/c/client --all @ TCLSH nothread/NHI1-0.17/theLink/example/tcl/server.tcl
+C> (client:6657) [2013-02-06:15-57-18] [0-0-0-0x8a8e48-main]: start: --------------------------------------
+C> (client:6657) [2013-02-06:15-57-18] [0-0-0-0x8a8e48-statistics]:                      MqSendEND:   2.15e+05
+C> (client:6657) [2013-02-06:15-57-18] [0-0-0-0x8a8e48-statistics]:         MqSendEND_AND_CALLBACK:   1.10e+05
+C> (client:6657) [2013-02-06:15-57-19] [0-0-0-0x8a8e48-statistics]:             MqSendEND_AND_WAIT:   4.98e+04
+C> (client:6657) [2013-02-06:15-57-19] [0-0-0-0x8a8e48-statistics]:               MqSendPERSISTENT:   7.12e+03
+C> (client:6657) [2013-02-06:15-57-21] [0-0-0-0x8a8e48-statistics]:                  parent create:   8.51e+01
+C> (client:6657) [2013-02-06:15-57-21] [0-0-0-0x8a8e48-statistics]:                  parent delete:   2.27e+03
+C> (client:6657) [2013-02-06:15-57-22] [0-0-0-0x8a8e48-statistics]:                   child create:   3.74e+03
+C> (client:6657) [2013-02-06:15-57-22] [0-0-0-0x8a8e48-statistics]:                   child delete:   4.28e+04
+C> (client:6657) [2013-02-06:15-57-22] [0-0-0-0x8a8e48-main]: end: ----------------------------------------

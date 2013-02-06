@@ -1,11 +1,11 @@
-> nothread/NHI1-0.15/theLink/example/c/client --all @ php -c "nothread/lib/NHI1/php.ini" nothread/NHI1-0.15/theLink/example/php/server.php
-C> (client:9258) [2011-03-15:18-55-51] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
-C> (client:9258) [2011-03-15:18-55-51] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   1.69e+05
-C> (client:9258) [2011-03-15:18-55-52] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.66e+04
-C> (client:9258) [2011-03-15:18-55-53] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   4.12e+04
-C> (client:9258) [2011-03-15:18-55-57] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   3.41e+00
-C> (client:9258) [2011-03-15:18-55-57] [0-0-0-0x6e7fb8-statistics]:                  parent create:   1.40e+02
-C> (client:9258) [2011-03-15:18-55-58] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   3.38e+03
-C> (client:9258) [2011-03-15:18-55-58] [0-0-0-0x6e7fb8-statistics]:                   child create:   5.01e+03
-C> (client:9258) [2011-03-15:18-55-58] [0-0-0-0x6e7fb8-statistics]:                   child delete:   4.05e+04
-C> (client:9258) [2011-03-15:18-55-58] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------
+> nothread/NHI1-0.17/theLink/example/c/client --all @ PHP nothread/NHI1-0.17/theLink/example/php/server.php
+C> (client:15825) [2013-02-06:16-13-39] [0-0-0-0xf380b8-main]: start: --------------------------------------
+C> (client:15825) [2013-02-06:16-13-40] [0-0-0-0xf380b8-statistics]:                      MqSendEND:   1.76e+05
+C> (client:15825) [2013-02-06:16-13-40] [0-0-0-0xf380b8-statistics]:         MqSendEND_AND_CALLBACK:   9.30e+04
+C> (client:15825) [2013-02-06:16-13-41] [0-0-0-0xf380b8-statistics]:             MqSendEND_AND_WAIT:   4.69e+04
+C> (client:15825) [2013-02-06:16-13-41] [0-0-0-0xf380b8-statistics]:               MqSendPERSISTENT:   6.80e+03
+C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                  parent create:   1.30e+02
+C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                  parent delete:   2.51e+03
+C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                   child create:   5.20e+03
+C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                   child delete:   4.36e+04
+C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-main]: end: ----------------------------------------

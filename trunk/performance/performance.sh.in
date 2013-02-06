@@ -11,27 +11,30 @@
 #:              please contact AUTHORS for additional information
 #:
 
-test ! -f ./env.sh && {
-  echo "ERROR: you have to run the '../configure' script first"
-  exit 1
-}
-. ./env.sh
+set -u
 
-PKG=$PACKAGE-$PACKAGE_VERSION
+#set -xv
 
 typeset -i PORT=7777
 
-[[ $1 == "-vg" ]] && { VG="valgrind --trace-children=yes" ; shift ; } || VG=""
-[[ $1 == "-x" ]] && set -x
-[[ $1 == "-v" ]] && set -v
-[[ $1 == "--help-tests" ]] && HT=yes || HT=no
-NUM=" --num 10 "
+VG=""
+HT="no"
+#NUM=" --num 10 "
 NUM=" "
+
+if (( $# > 0 )) ; then 
+  case "$1" in
+    -vg)  VG="valgrind --trace-children=yes" ; shift;;
+    -x)	  set -x; shift;;
+    -v)	  set -v; shift;;
+    --help-tests) HT=yes; shift;;
+  esac
+fi
 
 ## setup the TOTAL - LINK perf
 FSL=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
 FIL=" %-20s | %8s %8s %8s %8s %9s %8s %8s %8s\n"
-exec 3>docs/total_link.perf
+exec 3>'@abs_top_srcdir@/performance/docs/total_link.perf'
 DATE=$(date +"%Y-%m-%d %H:%M:%S")
 printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
 printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " PERSIS " " create  " " delete " " create " " delete " 1>&3
@@ -40,7 +43,7 @@ printf "$FSL" -------------------   --------   --------   --------   --------   
 ## setup the TOTAL - BRAIN perf
 FSB=" %-20s | %-8s %-8s\n"
 FIB=" %-20s | %8s %8s\n"
-exec 4>docs/total_brain.perf
+exec 4>'@abs_top_srcdir@/performance/docs/total_brain.perf'
 DATE=$(date +"%Y-%m-%d %H:%M:%S")
 printf "$FSB" "   Tests from:    " "        " "        " 1>&4
 printf "$FSB" "$DATE"              "  PUT   " "  GET   " 1>&4
@@ -48,6 +51,12 @@ printf "$FSB" -------------------   --------   --------  1>&4
 
 kill_parent=1
 sig_spec=-9
+
+function Die
+{
+  echor "ERROR: $*"
+  exit 1
+}
 
 function do_kill # <pid>...
 {
@@ -101,8 +110,8 @@ TotalLink() {
   IFS="
 "
   IDX=0
-  if test -f docs/$F.perf ; then
-    for V in $(awk -F ": " '/statistics/ {sub(/^  */, "", $3); print $3}' docs/$F.perf) ; do
+  if test -f '@abs_top_srcdir@/performance/docs/$F.perf' ; then
+    for V in $(awk -F ": " '/statistics/ {sub(/^  */, "", $3); print $3}' '@abs_top_srcdir@/performance/docs/$F.perf') ; do
       vals[$IDX]=$V
       let IDX++
     done
@@ -120,9 +129,9 @@ TotalBrain() {
   IFS="
 "
   IDX=0
-  if test -f docs/$F.perf ; then
+  if test -f '@abs_top_srcdir@/performance/docs/$F.perf' ; then
     FLAG=NO
-    for LINE in $(<docs/$F.perf) ; do
+    for LINE in $(<'@abs_top_srcdir@/performance/docs/$F.perf') ; do
       unset IFS
       [[ $LINE == *statistics* && $FLAG == "NO" ]] && {
 	set - ${LINE:68}
@@ -238,90 +247,89 @@ for SRV in $R; do
 
   echo $SRV
 
+  outfile="@abs_top_srcdir@/performance/docs/${SRV}.perf"
+
   case $SRV in
     *thread* | *java* | *csharp* | *vb* | *go* )	
       DIR="thread"
-      ENV="ENV=thread ./performance_thread.env ./local.env"
-      export LINK_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theLink"
-      export BRAIN_DIR="thread/$PACKAGE-$PACKAGE_VERSION/theBrain"
+      LINK_DIR="thread/@PACKAGE@-@PACKAGE_VERSION@/theLink"
+      BRAIN_DIR="thread/@PACKAGE@-@PACKAGE_VERSION@/theBrain"
     ;;
     total)	
       DIR=""
-      ENV=""
-      export LINK_DIR=""
-      export BRAIN_DIR=""
+      LINK_DIR=""
+      BRAIN_DIR=""
     ;;
     *)	
       DIR="nothread"
-      ENV="ENV=nothread ./performance_nothread.env ./local.env"
-      export LINK_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theLink"
-      export BRAIN_DIR="nothread/$PACKAGE-$PACKAGE_VERSION/theBrain"
+      LINK_DIR="nothread/@PACKAGE@-@PACKAGE_VERSION@/theLink"
+      BRAIN_DIR="nothread/@PACKAGE@-@PACKAGE_VERSION@/theBrain"
     ;;
   esac
 
   case $SRV in
     *brain*)	
-      EXEC=""
+      EXEC=''
       SERVER="$BRAIN_DIR/abrain/abrain"
       CLIENT="$BRAIN_DIR/tests/client"
     ;;
     *python*)	
-      EXEC="PYTHON"
+      EXEC='PYTHON'
       SERVER="$LINK_DIR/example/python/server.py"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *ruby*)	
-      EXEC="RUBY"
+      EXEC='RUBY'
       SERVER="$LINK_DIR/example/ruby/server.rb"
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *csharp*)	
-      EXEC="MONO"
+      EXEC='MONO'
       SERVER="$LINK_DIR/example/csharp/server.exe"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *vb*)	
-      EXEC="MONO"
+      EXEC='MONO'
       SERVER="$LINK_DIR/example/vb/vbserver.exe"	    
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     total)	
-      EXEC=""	    
+      EXEC=''	    
       SERVER=""	    
       CLIENT=""
     ;;
     *java*)	
-      EXEC="JAVA"
+      EXEC='JAVA'
       SERVER="example.Server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *perl*)	
-      EXEC="PERL"
+      EXEC='PERL'
       SERVER="$LINK_DIR/example/perl/server.pl" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *php*)	
-      EXEC="PHP"
+      EXEC='PHP'
       SERVER="$LINK_DIR/example/php/server.php" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *tcl*)	
-      EXEC="TCLSH"
+      EXEC='TCLSH'
       SERVER="$LINK_DIR/example/tcl/server.tcl" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *go*)	
-      EXEC=""
+      EXEC=''
       SERVER="$LINK_DIR/example/go/server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *cc*)	
-      EXEC=""
+      EXEC=''
       SERVER="$LINK_DIR/example/cc/server" 
       CLIENT="$LINK_DIR/example/c/client"
     ;;
     *c*)	
-      EXEC=""
+      EXEC=''
       SERVER="$LINK_DIR/example/c/server"
       CLIENT="$LINK_DIR/example/c/client"
     ;;
@@ -332,24 +340,10 @@ for SRV in $R; do
   esac
 
   case $SRV in
-    total)	
-    ;;
-    *)	
-      EXEC2=$(. $DIR/$PKG/env.sh;echo ${!EXEC})
-    ;;
-  esac
-
-  case $SRV in
     *pipe*)
-      CL="$VG${VG:+ }$CLIENT${NUM}--all @ $EXEC2${EXEC:+ }$SERVER"
-echo $ENV
-      if [[ $EXEC2 == "" ]] ; then
-	echo "> ${CL}" | tee docs/${SRV}.perf
-      else
-	echo "> ${CL/$EXEC2/${EXEC,,}}" | tee docs/${SRV}.perf
-      fi
-      eval $ENV $CL 2>&1 | tee -a docs/${SRV}.perf
-
+      CL="$VG$CLIENT${NUM}--all @ $EXEC${EXEC:+ }$SERVER"
+      echo "> ${CL}" | tee "$outfile"
+      @SHELL@ $LINK_DIR/tests/exec.env $CL 2>&1 | tee -a "$outfile"
       continue
     ;;
     *uds*)
@@ -369,14 +363,14 @@ echo $ENV
     *fork*)	START=fork;;
   esac
 
-  SV="$VG${VG:+ }$EXEC $SERVER $COM_ARGS --$START"
+  SV="$VG${VG:+ }$EXEC${EXEC:+ }$SERVER $COM_ARGS --$START"
   CL="$VG${VG:+ }$CLIENT${NUM}--all $COM_ARGS"
-  echo "> $SV" | tee docs/${SRV}.perf
-  echo "> $CL" | tee -a docs/${SRV}.perf
-  eval $ENV $SV 1>/dev/null 2>&1 &
+  echo "> $SV" | tee "$outfile"
+  echo "> $CL" | tee -a "$outfile"
+  @SHELL@ $LINK_DIR/tests/exec.env $SV 1>/dev/null 2>&1 &
   PID=$! 
   sleep 2
-  $CL 2>&1 | tee -a docs/${SRV}.perf
+  $CL 2>&1 | tee -a "$outfile"
   kill_children $PID
 
 done
@@ -394,4 +388,4 @@ for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
 done
 
 test -f socket.uds && rm socket.uds
-
+exit 0

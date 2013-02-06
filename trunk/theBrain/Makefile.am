@@ -10,7 +10,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
-SUBDIRS = libbrain abrain
+SUBDIRS = abrain
 
 if USE_CXX
 SUBDIRS += atrans

@@ -44,16 +44,10 @@ install-exec-local:
 	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
 
 uninstall-local:
-	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/Net/PerlMsgque.pm
-	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/auto/Net/PerlMsgque/PerlMsgque.so
-	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/auto/Net/PerlMsgque/PerlMsgque.bs
-	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/auto/Net/PerlMsgque/autosplit.ix
-	rm -f $(DESTDIR)$(prefix)/lib/*/site_perl/*/*/auto/Net/PerlMsgque/.packlist
-	rm -f $(DESTDIR)$(prefix)/lib/*/*/*/perllocal.pod
-	rm -f $(DESTDIR)$(prefix)/share/man/man3/Net::PerlMsgque.3
+	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" uninstall
 
 distclean-local:
-	if test "$(abs_builddir)" != $(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
+	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
 
 endif
 

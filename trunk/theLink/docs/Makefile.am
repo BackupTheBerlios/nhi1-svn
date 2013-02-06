@@ -13,7 +13,7 @@
 include list.mk
 
 DX_DEPEND =	\
-		doxygen.sh \
+		doxygen.sh.in \
 		$(top_srcdir)/theLink/libmsgque/*.c \
 		$(top_srcdir)/theLink/libmsgque/*.h \
 		$(top_srcdir)/theLink/javamsgque/*.c \

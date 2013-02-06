@@ -36,8 +36,6 @@ libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/..
 libtmp_la_LDFLAGS = -shared -no-undefined
 libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
-html-local: libtmp.la
-
 # ordinaray library
 
 lib_LTLIBRARIES = libmsgque.la
@@ -54,3 +52,4 @@ libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la
 
 include_HEADERS = msgque.h
 
+html-local: libtmp.la libtmps.la

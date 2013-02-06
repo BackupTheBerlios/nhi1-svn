@@ -1,11 +1,2 @@
-> nothread/NHI1-0.15/theBrain/tests/client --all @ nothread/NHI1-0.15/theBrain/abrain/abrain
-C> (client:9901) [2011-03-15:18-56-33] [0-0-0-0x6e6a18-main]: start: --------------------------------------
-C> (client:9901) [2011-03-15:18-56-34] [0-0-0-0x6e6a18-statistics]:              memory hash - PUT:      18.40
-C> (client:9901) [2011-03-15:18-56-34] [0-0-0-0x6e6a18-statistics]:              memory hash - GET:      18.53
-C> (client:9901) [2011-03-15:18-56-36] [0-0-0-0x6e6a18-statistics]:             memory btree - PUT:      21.50
-C> (client:9901) [2011-03-15:18-56-37] [0-0-0-0x6e6a18-statistics]:             memory btree - GET:      21.77
-C> (client:9901) [2011-03-15:18-56-38] [0-0-0-0x6e6a18-statistics]:                file hash - PUT:      19.54
-C> (client:9901) [2011-03-15:18-56-39] [0-0-0-0x6e6a18-statistics]:                file hash - GET:      19.83
-C> (client:9901) [2011-03-15:18-56-45] [0-0-0-0x6e6a18-statistics]:               file btree - PUT:     122.79
-C> (client:9901) [2011-03-15:18-56-53] [0-0-0-0x6e6a18-statistics]:               file btree - GET:     154.20
-C> (client:9901) [2011-03-15:18-56-53] [0-0-0-0x6e6a18-main]: end: ----------------------------------------
+> nothread/NHI1-0.17/theBrain/tests/client --all @ nothread/NHI1-0.17/theBrain/abrain/abrain
+nothread/NHI1-0.17/theLink/tests/exec.env: line 27: nothread/NHI1-0.17/theBrain/tests/client: No such file or directory

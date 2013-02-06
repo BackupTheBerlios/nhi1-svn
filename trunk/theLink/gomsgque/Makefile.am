@@ -39,7 +39,7 @@ all-local: $(addprefix $(abs_builddir)/, $(EXTRA_DIST))
 	$(GO) install gomsgque
 
 clean-local: 
-	$(GO) clean gomsgque
+	$(GO) clean
 	rm -fr pkg
 
 distclean-local:

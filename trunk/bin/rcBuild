@@ -46,7 +46,7 @@ rc_reset
 set -u
 
 # configuration data
-rcBuild_size=1g
+rcBuild_size=2g
 rcBuild_directory=/build
 rcBuild_backup=/backup
 

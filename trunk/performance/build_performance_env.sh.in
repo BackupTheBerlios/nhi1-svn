@@ -1,0 +1,46 @@
+#! /bin/bash
+#+
+#:  \file       performance/build_performance_env.sh
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+## create: $PACKAGE-$PACKAGE_VERSION.tar.bz2
+if test ! -f '@abs_top_builddir@/@PACKAGE@-@PACKAGE_VERSION@.tar.bz2' ; then
+  (cd '@abs_top_builddir@' ; make dist) || exit 1
+fi
+
+## config/build/install
+function Build # <thread|nothread> <config-arg>...
+{
+  (
+    BUILD=$1; shift
+    rm -fr $BUILD
+    mkdir $BUILD
+    cd $BUILD
+    tar -xjf '@abs_top_builddir@/@PACKAGE@-@PACKAGE_VERSION@.tar.bz2' || exit 1
+    (
+      cd @PACKAGE@-@PACKAGE_VERSION@
+
+      ./bin/Nhi1Config +i -p --use-perf $@ \
+	--lang-python --lang-cxx --lang-tcl --lang-perl \
+	  --lang-ruby --lang-php --prefix="@abs_builddir@/$BUILD" || exit 1
+
+      make || exit 1
+    ) || exit 1
+  ) || exit 1
+}
+
+## main
+if test "$1" = "thread" ; then
+  Build thread --use-threads --lang-csharp --lang-java --lang-go
+elif test "$1" = "nothread" ; then
+  Build nothread 
+fi
+

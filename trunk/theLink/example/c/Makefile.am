@@ -46,3 +46,5 @@ HTMLFILES = ./docs/server.help ./docs/client.help ./docs/debug.out ./docs/client
 
 html-local: $(HTMLFILES)
 
+CLEANFILES = $(HTMLFILES)
+

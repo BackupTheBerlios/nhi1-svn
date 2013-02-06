@@ -12,8 +12,6 @@
 
 package gomsgque
 
-// #cgo CFLAGS: -I /home/dev01/Project/NHI1/theLink/libmsgque -DPIC
-// #cgo LDFLAGS: -L/build/dev01/Main/thread/theLink/libmsgque/.libs -lmsgque
 // #include "gomsgque.h"
 import "C"
 
@@ -156,7 +154,4 @@ func (this *MqS) Dummy(i int32) *MqS {
   return (*MqS)(ret)
 }
 */
-
-
-
 

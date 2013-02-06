@@ -1,12 +1,12 @@
-> nothread/NHI1-0.15/theLink/example/cc/server --tcp --host localhost --port 7780 --fork
-> nothread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7780
-C> (client:29242) [2011-03-15:18-47-06] [0-0-0-0x6e7fb8-main]: start: --------------------------------------
-C> (client:29242) [2011-03-15:18-47-06] [0-0-0-0x6e7fb8-statistics]:                      MqSendEND:   3.85e+05
-C> (client:29242) [2011-03-15:18-47-06] [0-0-0-0x6e7fb8-statistics]:         MqSendEND_AND_CALLBACK:   2.36e+05
-C> (client:29242) [2011-03-15:18-47-08] [0-0-0-0x6e7fb8-statistics]:             MqSendEND_AND_WAIT:   3.97e+04
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-statistics]:               MqSendPERSISTENT:   2.47e+00
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-statistics]:                  parent create:   2.28e+03
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-statistics]:                  parent delete:   5.07e+03
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-statistics]:                   child create:   4.76e+03
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-statistics]:                   child delete:   3.06e+04
-C> (client:29242) [2011-03-15:18-47-13] [0-0-0-0x6e7fb8-main]: end: ----------------------------------------
+> nothread/NHI1-0.17/theLink/example/cc/server --tcp --host localhost --port 7780 --fork
+> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7780
+C> (client:5964) [2013-02-06:15-56-51] [0-0-0-0x7eafb8-main]: start: --------------------------------------
+C> (client:5964) [2013-02-06:15-56-51] [0-0-0-0x7eafb8-statistics]:                      MqSendEND:   4.22e+05
+C> (client:5964) [2013-02-06:15-56-51] [0-0-0-0x7eafb8-statistics]:         MqSendEND_AND_CALLBACK:   1.90e+05
+C> (client:5964) [2013-02-06:15-56-52] [0-0-0-0x7eafb8-statistics]:             MqSendEND_AND_WAIT:   3.66e+04
+C> (client:5964) [2013-02-06:15-56-53] [0-0-0-0x7eafb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:5964) [2013-02-06:15-56-54] [0-0-0-0x7eafb8-statistics]:                  parent create:   2.35e+03
+C> (client:5964) [2013-02-06:15-56-54] [0-0-0-0x7eafb8-statistics]:                  parent delete:   4.47e+03
+C> (client:5964) [2013-02-06:15-56-54] [0-0-0-0x7eafb8-statistics]:                   child create:   1.03e+04
+C> (client:5964) [2013-02-06:15-56-54] [0-0-0-0x7eafb8-statistics]:                   child delete:   2.68e+04
+C> (client:5964) [2013-02-06:15-56-54] [0-0-0-0x7eafb8-main]: end: ----------------------------------------

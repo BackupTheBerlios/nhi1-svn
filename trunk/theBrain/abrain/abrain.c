@@ -10,8 +10,7 @@
  *              please contact AUTHORS for additional information
  */
 
-#include <tcutil.h>
-#include <tcadb.h>
+#include <kclangc.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>

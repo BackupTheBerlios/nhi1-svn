@@ -104,6 +104,24 @@ AC_DEFUN([SC_SET_VPATH_HOOK], [
 ])
 
 #------------------------------------------------------------------------
+# SC_TOOL_ROOT --
+#
+#       add support for VPATH build
+#
+# Arguments:
+#       none
+#
+# Results:
+#       Add a new variable NHI1_TOOL_ROOT
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_TOOL_ROOT], [
+    AC_ARG_VAR([NHI1_TOOL_ROOT], [path to the toplevel tool directory (Nhi1BuildLanguage)])
+    AC_SUBST([NHI1_TOOL_ROOT])
+])
+
+#------------------------------------------------------------------------
 # SC_ENABLE_SYMBOLS --
 #
 #       Specify if debugging symbols should be used.
@@ -849,98 +867,24 @@ AC_DEFUN([SC_ENABLE_RUBY], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_BRAIN], [
-  AC_MSG_CHECKING([for build with theBrain (only on UNIX)])
+  AC_MSG_CHECKING([for build with theBrain])
   AC_ARG_ENABLE(brain,
       AS_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]),
       enable_brain=yes, enable_brain=no
   )
   AC_MSG_RESULT($enable_brain)
-  if test x$enable_brain = xyes; then
-    BRAIN_CPPFLAGS="-D_GNU_SOURCE=1 -D_REENTRANT -D__EXTENSIONS__"
-    BRAIN_CFLAGS="-pedantic -fsigned-char"
-    ## check endian
-    AC_C_BIGENDIAN(BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYBIGEND")
-    # Fastest mode
-    AC_ARG_ENABLE(fastest,
-      AS_HELP_STRING([--enable-fastest], [build theBrain for fastest run]))
-    if test "$enable_fastest" = "yes"
-    then
-      BRAIN_CFLAGS="-std=c99 -Wall -fPIC -pedantic -fsigned-char -O3"
-      BRAIN_CFLAGS="$BRAIN_CFLAGS -fomit-frame-pointer -fforce-addr -minline-all-stringops"
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYFASTEST"
-    fi
-
-    # 64-bit offset mode
-    AC_ARG_ENABLE(off64,
-      AS_HELP_STRING([--enable-off64], [build theBrain with 64-bit file offset on 32-bit system]))
-    if test "$enable_off64" = "yes"
-    then
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_FILE_OFFSET_BITS=64"
-    fi
-
-    # Swapping byte-orders mode
-    AC_ARG_ENABLE(swab,
-      AS_HELP_STRING([--enable-swab], [build theBrain for swapping byte-orders]))
-    if test "$enable_swab" = "yes"
-    then
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYSWAB"
-    fi
-
-    # Micro yield mode
-    AC_ARG_ENABLE(uyield,
-      AS_HELP_STRING([--enable-uyield], [build theBrain for detecting race conditions]))
-    if test "$enable_uyield" = "yes"
-    then
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYMICROYIELD"
-    fi
-    # Disable the unified buffer cache assumption
-    AC_ARG_ENABLE(ubc,
-      AS_HELP_STRING([--disable-ubc], [build theBrain without the unified buffer cache assumption]))
-    if test "$enable_ubc" = "no"
-    then
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOUBC"
-    fi
-    ## check for thread support
-    if test "$enable_threads" = "yes" ; then
-      AC_CHECK_LIB(rt, main,
-	[BRAIN_LIBADD="$BRAIN_LIBADD -lrt"], 
-	[AC_MSG_FAILURE([realtime library '-lrt' not found])]
-      )
+  if test "x$enable_brain" = "xbrain"; then
+    if pkg-config --exists kyotocabinet ; then
+      if pkg-config --atleast-version 1.2.76  kyotocabinet ; then
+	AC_SUBST(BRAIN_CFLAGS,[$(pkg-config --cflags kyotocabinet)])
+	AC_SUBST(BRAIN_LDADD,[$(pkg-config --libs kyotocabinet)])
+	AC_SUBST(BRAIN_LDADD_STATIC,[$(pkg-config --libs kyotocabinet)])
+      else
+	AC_MSG_FAILURE([unable to get minimal version 1.2.76])
+      fi
     else
-      BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOPTHREAD"
+      AC_MSG_FAILURE([unable to find the package 'kyotocabinet'])
     fi
-    ## -lm -lc
-    AC_CHECK_LIB(m, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -lm"],
-      [AC_MSG_FAILURE([library '-lm' not found])]
-    )
-    AC_CHECK_LIB(c, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -lc"],
-      [AC_MSG_FAILURE([library '-lc' not found])]
-    )
-    ## check for LZMA
-    AC_CHECK_LIB(lzma, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
-      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYEXLZMA"],
-    )
-    ## check for LZO
-    AC_CHECK_LIB(lzma, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -llzma"] 
-      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYEXLZO"],
-    )
-    ## check for bzip
-    AC_CHECK_LIB(z, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -lz"], 
-      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOBZIP"]
-    )
-    ##AC_CHECK_HEADER([zlib.h]
-    AC_CHECK_LIB(bz2, main,
-      [BRAIN_LIBADD="$BRAIN_LIBADD -lbz2"], 
-      [BRAIN_CPPFLAGS="$BRAIN_CPPFLAGS -D_MYNOZLIB"]
-    )
-    AC_SUBST([BRAIN_CPPFLAGS])
-    AC_SUBST([BRAIN_CFLAGS])
-    AC_SUBST([BRAIN_LIBADD])
   fi
   AC_SUBST([USE_BRAIN], $enable_brain)
   AM_CONDITIONAL([USE_BRAIN], [test x$enable_brain = xyes])

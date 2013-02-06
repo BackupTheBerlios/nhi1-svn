@@ -16,9 +16,9 @@
 
 INPUT		    +=	. $(SRCDIR)/../ChangeLog
 FILE_PATTERNS	    +=	*.doc
-EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(SRCDIR)/acmds/docs $(SRCDIR)/docs/main \
-			$(SRCDIR)/docs/man $(SRCDIR)/tests $(SRCDIR)/example/c/docs \
-			$(SRCDIR)/../performance/docs \
+EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(BUILDDIR)/acmds/docs $(SRCDIR)/docs/main \
+			$(SRCDIR)/docs/man $(SRCDIR)/tests $(BUILDDIR)/example/c/docs \
+			$(BUILDDIR)/../performance/docs \
 			$(SRCDIR)/example/c \
 			$(SRCDIR)/example/cc \
 			$(SRCDIR)/example/tcl \

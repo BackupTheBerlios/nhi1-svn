@@ -16,7 +16,7 @@
 
 
 INPUT			+= $(SRCDIR)/tclmsgque .
-FILE_PATTERNS		+= *.doc $(SRCDIR)/tclmsgque/*.[ch]
+FILE_PATTERNS		+= *.doc *.[ch]
 #EXAMPLE_PATH		= $(SRCDIR)/tests
 OPTIMIZE_OUTPUT_JAVA	= NO
 OPTIMIZE_OUTPUT_FOR_C	= YES

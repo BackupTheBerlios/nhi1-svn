@@ -10,7 +10,18 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST = build_performance_env.sh  performance.sh \
-	      performance_nothread.env performance_thread.env \
-		README
+EXTRA_DIST = build_performance_env.sh.in performance.sh.in README
+
+clean-local:
+	rm -fr thread
+	rm -fr nothread
+
+thread: build_performance_env.sh
+	$(SHELL) build_performance_env.sh thread
+
+nothread: build_performance_env.sh
+	$(SHELL) build_performance_env.sh nothread
+
+perf: performance.sh thread nothread
+	$(SHELL) performance.sh
 

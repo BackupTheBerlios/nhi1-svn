@@ -1,12 +1,12 @@
-> nothread/NHI1-0.15/theLink/example/c/server --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:28996) [2011-03-15:18-46-51] [0-0-0-0x6e7d98-main]: start: --------------------------------------
-C> (client:28996) [2011-03-15:18-46-51] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   3.93e+05
-C> (client:28996) [2011-03-15:18-46-51] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   2.31e+05
-C> (client:28996) [2011-03-15:18-46-52] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   5.64e+04
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.61e+00
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-statistics]:                  parent create:   1.37e+03
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-statistics]:                  parent delete:   1.05e+04
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-statistics]:                   child create:   4.56e+03
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-statistics]:                   child delete:   4.00e+04
-C> (client:28996) [2011-03-15:18-46-57] [0-0-0-0x6e7d98-main]: end: ----------------------------------------
+> nothread/NHI1-0.17/theLink/example/c/server --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:5739) [2013-02-06:15-56-44] [0-0-0-0x2034d98-main]: start: --------------------------------------
+C> (client:5739) [2013-02-06:15-56-44] [0-0-0-0x2034d98-statistics]:                      MqSendEND:   4.45e+05
+C> (client:5739) [2013-02-06:15-56-44] [0-0-0-0x2034d98-statistics]:         MqSendEND_AND_CALLBACK:   2.33e+05
+C> (client:5739) [2013-02-06:15-56-45] [0-0-0-0x2034d98-statistics]:             MqSendEND_AND_WAIT:   6.12e+04
+C> (client:5739) [2013-02-06:15-56-45] [0-0-0-0x2034d98-statistics]:               MqSendPERSISTENT:   7.82e+03
+C> (client:5739) [2013-02-06:15-56-46] [0-0-0-0x2034d98-statistics]:                  parent create:   1.24e+03
+C> (client:5739) [2013-02-06:15-56-46] [0-0-0-0x2034d98-statistics]:                  parent delete:   9.30e+03
+C> (client:5739) [2013-02-06:15-56-46] [0-0-0-0x2034d98-statistics]:                   child create:   1.25e+04
+C> (client:5739) [2013-02-06:15-56-46] [0-0-0-0x2034d98-statistics]:                   child delete:   4.32e+04
+C> (client:5739) [2013-02-06:15-56-46] [0-0-0-0x2034d98-main]: end: ----------------------------------------

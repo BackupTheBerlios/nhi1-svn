@@ -11,16 +11,17 @@
 #:
 
 # set NHI1 VERSION information also in:
-AC_INIT([NHI1],[0.16],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
+AC_INIT([NHI1],[0.17],[aotto1968@users.berlios.de],[NHI1],[http://developer.berlios.de/projects/nhi1/])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([gnu tar-ustar no-dist-gzip dist-bzip2 -Wno-portability])
+#missing AM_EXTRA_RECURSIVE_TARGETS([perf])
 AC_CONFIG_HEADER([mqconfig.h])
 
 # set libmsgque VERSION information also in:
 # > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
 # > theLink/csmsgque/MqS.cs
-AC_SUBST([LIBMSGQUE_VERSION], ["5.4"])
-AC_DEFINE([LIBMSGQUE_VERSION], ["5.4"], [version of the 'libmsgque' package])
+AC_SUBST([LIBMSGQUE_VERSION], ["5.5"])
+AC_DEFINE([LIBMSGQUE_VERSION], ["5.5"], [version of the 'libmsgque' package])
 
 # set library VERSION information also in:
 # > theLink/csmsgque/MqS.cs
@@ -67,7 +68,7 @@ AC_DEFINE([LIBMSGQUE_VERSION], ["5.4"], [version of the 'libmsgque' package])
 #  use the `-release' flag (*note Release numbers::), but be warned that
 #  every release of your package will not be binary compatible with any
 #  other release.
-AC_SUBST([VERSION_INFO], [21:0:0])
+AC_SUBST([VERSION_INFO], [22:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -77,14 +78,10 @@ AM_PROG_AR
 GCC=yes
 AC_PROG_CXX
 AC_PROG_CC_C99
-AS_IF(test "x$ac_cv_prog_cc_c99" = "xno", [
-  AC_MSG_ERROR([require c99 mode to compile])
-])
+if test "x$ac_cv_prog_cc_c99" = "xno"; then AC_MSG_ERROR([require c99 mode to compile]); fi
 
 CFLAGS="-Wall -Wcast-align $CFLAGS"
-if test "$build_os" != "cygwin" ; then
-  CFLAGS="-fvisibility=hidden $CFLAGS"
-fi
+if test "$build_os" != "cygwin"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
 SC_ENABLE_THREADS
 
 #------------------------------------
@@ -101,6 +98,7 @@ LT_INIT
 AC_MSG_CHECKING(programs);echo
 #------------------------------------
 AC_C_BIGENDIAN
+SC_TOOL_ROOT
 SC_SET_VPATH_HOOK
 SC_ENABLE_SYMBOLS
 SC_ENABLE_CXX
@@ -133,11 +131,11 @@ AC_CHECK_FUNCS([signal])
 AC_CHECK_HEADERS([signal.h])
 AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
 AC_CHECK_FUNCS([getline])
-if test "$build_os" = "cygwin" ; then
-  if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll ; then
+if test "$build_os" = "cygwin"; then
+  LIBS="$LIBS -lws2_32"
+  if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
   fi
-  LIBS="$LIBS -lws2_32"
 else
   AC_CHECK_HEADERS([sys/filio.h])
   AC_SEARCH_LIBS([bind], [socket nsl])
@@ -155,7 +153,7 @@ TYPE_HUGE_VAL
 AX_CHECK_ALIGNED_ACCESS_REQUIRED
 
 AC_MSG_CHECKING([for windows build])
-if test "$host_os" = "mingw32" ; then
+if test "$host_os" = "mingw32"; then
   AC_MSG_RESULT([yes])
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
@@ -165,7 +163,7 @@ if test "$host_os" = "mingw32" ; then
 else
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
-  if test "$host_os" != "cygwin" ; then
+  if test "$host_os" != "cygwin"; then
     AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
   fi
   AC_SUBST([FILE_SEP], [/])
@@ -179,7 +177,7 @@ AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
       theLink/tests/Makefile theLink/tests/exec.env
-	theLink/docs/Makefile bin/Makefile
+	theLink/docs/Makefile bin/Makefile theLink/docs/doxygen.sh
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
 	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl
@@ -189,13 +187,12 @@ AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
 			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/gomsgque/Makefile theLink/example/go/Makefile 
+			    theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
 			      theLink/example/vb/Makefile
-				performance/Makefile performance/env.sh
+				performance/Makefile performance/build_performance_env.sh performance/performance.sh
 				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
-				    theBrain/libbrain/Makefile theBrain/tests/Makefile
+				    theBrain/tests/Makefile
 				      theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
-
 
 AC_OUTPUT
 

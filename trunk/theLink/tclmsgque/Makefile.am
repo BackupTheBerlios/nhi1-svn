@@ -40,4 +40,4 @@ tcl_DATA = .libs/pkgIndex.tcl
 CLEANFILES = .libs/pkgIndex.tcl
 EXTRA_DIST = .MAKE_INDEX.tcl
 
-#html: ./libs/pkgIndex.tcl
+html-local: .libs/pkgIndex.tcl

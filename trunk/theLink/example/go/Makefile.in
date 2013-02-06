@@ -16,11 +16,11 @@
 
 #+
 #:  \file       theLink/example/go/Makefile.am
-#:  \brief      \$Id: Makefile.am 605 2013-02-01 21:45:22Z aotto1968 $
+#:  \brief      \$Id: Makefile.am 606 2013-02-04 12:48:36Z aotto1968 $
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 605 $
+#:  \version    \$Rev: 606 $
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
@@ -96,8 +96,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BRAIN_CFLAGS = @BRAIN_CFLAGS@
-BRAIN_CPPFLAGS = @BRAIN_CPPFLAGS@
-BRAIN_LIBADD = @BRAIN_LIBADD@
+BRAIN_LDADD = @BRAIN_LDADD@
+BRAIN_LDADD_STATIC = @BRAIN_LDADD_STATIC@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -153,6 +153,7 @@ MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 MQ_IS = @MQ_IS@
+NHI1_TOOL_ROOT = @NHI1_TOOL_ROOT@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -279,6 +280,25 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+EXTRA_DIST = \
+    src/mulserver/main.go \
+    src/Filter5/main.go \
+    src/Filter6/main.go \
+    src/test1/main.go \
+    src/manfilter/main.go \
+    src/testserver/main.go \
+    src/test2/main.go \
+    src/server/main.go \
+    src/MyServer/main.go \
+    src/Filter4/main.go \
+    src/Filter1/main.go \
+    src/Filter3/main.go \
+    src/testclient/main.go \
+    src/mulclient/main.go \
+    src/MyClient/main.go \
+    src/Filter2/main.go \
+    src/client/main.go
+
 @USE_GO_TRUE@GOPATH = $(abs_srcdir):$(abs_builddir)/../../gomsgque
 @USE_GO_TRUE@GOBIN = $(abs_builddir)
 @USE_GO_TRUE@GOMSGQUE = $(abs_builddir)/../../gomsgque/pkg/*/gomsgque.a
@@ -290,7 +310,6 @@ top_srcdir = @top_srcdir@
 @USE_GO_TRUE@	Filter1$(EXEEXT) Filter2$(EXEEXT) \
 @USE_GO_TRUE@	Filter3$(EXEEXT) Filter4$(EXEEXT) \
 @USE_GO_TRUE@	Filter5$(EXEEXT) Filter6$(EXEEXT)
-EXTRA_DIST = src/*/*.go
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 

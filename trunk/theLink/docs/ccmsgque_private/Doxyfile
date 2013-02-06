@@ -15,7 +15,7 @@
 #---------------------------------------------------------------------------
 
 INPUT			+= $(SRCDIR)/ccmsgque .
-FILE_PATTERNS		+= $(SRCDIR)/ccmsgque/cc*.cc $(SRCDIR)/ccmsgque/cc*.h *.doc
+FILE_PATTERNS		+= cc*.cc cc*.h *.doc
 PREDEFINED		+= MQ_PRIVATE
 OPTIMIZE_OUTPUT_JAVA	= NO
 OPTIMIZE_OUTPUT_FOR_C	= YES

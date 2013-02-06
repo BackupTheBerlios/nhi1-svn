@@ -29,13 +29,13 @@ docs/asplit.help: docs atool
 	./atool split --help 2>docs/asplit.help
 
 docs/aexec.help: docs $(srcdir)/aexec
-	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help 2>docs/aexec.help
+	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help 2>docs/aexec.help
 
 docs/msgque.help: docs $(srcdir)/aexec
-	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help-msgque 2>docs/msgque.help
+	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help-msgque 2>docs/msgque.help
 
 docs/tclmsgque.help: docs $(srcdir)/aexec
-	$(srcdir)/../tests/exec.env $(srcdir)/aexec --help-tclmsgque 1>docs/tclmsgque.help
+	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help-tclmsgque 1>docs/tclmsgque.help
 
 bin_PROGRAMS = atool
 EXTRA_DIST = aexec
@@ -45,7 +45,7 @@ HTMLFILES = docs/atool.help docs/ajoin.help docs/acut.help docs/asort.help \
 
 html-local: $(HTMLFILES)
 
-CLEANFILES =
+CLEANFILES = $(HTMLFILES)
 
 atool_SOURCES = atool.c ajoin.c acut.c asort.c asplit.c optionL.c optionL.h
 atool_LDADD = -lm ../libmsgque/libtmp.la

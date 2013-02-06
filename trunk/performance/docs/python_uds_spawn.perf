@@ -1,12 +1,12 @@
-> python nothread/NHI1-0.15/theLink/example/python/server.py --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.15/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:3079) [2011-03-15:18-51-01] [0-0-0-0x6e7d98-main]: start: --------------------------------------
-C> (client:3079) [2011-03-15:18-51-02] [0-0-0-0x6e7d98-statistics]:                      MqSendEND:   2.23e+05
-C> (client:3079) [2011-03-15:18-51-02] [0-0-0-0x6e7d98-statistics]:         MqSendEND_AND_CALLBACK:   1.11e+05
-C> (client:3079) [2011-03-15:18-51-03] [0-0-0-0x6e7d98-statistics]:             MqSendEND_AND_WAIT:   4.33e+04
-C> (client:3079) [2011-03-15:18-51-08] [0-0-0-0x6e7d98-statistics]:               MqSendPERSISTENT:   2.74e+00
-C> (client:3079) [2011-03-15:18-51-11] [0-0-0-0x6e7d98-statistics]:                  parent create:   3.42e+01
-C> (client:3079) [2011-03-15:18-51-11] [0-0-0-0x6e7d98-statistics]:                  parent delete:   4.88e+02
-C> (client:3079) [2011-03-15:18-51-11] [0-0-0-0x6e7d98-statistics]:                   child create:   7.55e+03
-C> (client:3079) [2011-03-15:18-51-11] [0-0-0-0x6e7d98-statistics]:                   child delete:   4.00e+04
-C> (client:3079) [2011-03-15:18-51-11] [0-0-0-0x6e7d98-main]: end: ----------------------------------------
+> PYTHON nothread/NHI1-0.17/theLink/example/python/server.py --uds --file ./socket.uds --spawn
+> nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
+C> (client:12008) [2013-02-06:16-02-29] [0-0-0-0x1b3fd98-main]: start: --------------------------------------
+C> (client:12008) [2013-02-06:16-02-29] [0-0-0-0x1b3fd98-statistics]:                      MqSendEND:   2.42e+05
+C> (client:12008) [2013-02-06:16-02-30] [0-0-0-0x1b3fd98-statistics]:         MqSendEND_AND_CALLBACK:   9.33e+04
+C> (client:12008) [2013-02-06:16-02-31] [0-0-0-0x1b3fd98-statistics]:             MqSendEND_AND_WAIT:   4.69e+04
+C> (client:12008) [2013-02-06:16-02-31] [0-0-0-0x1b3fd98-statistics]:               MqSendPERSISTENT:   7.15e+03
+C> (client:12008) [2013-02-06:16-02-36] [0-0-0-0x1b3fd98-statistics]:                  parent create:   2.31e+01
+C> (client:12008) [2013-02-06:16-02-36] [0-0-0-0x1b3fd98-statistics]:                  parent delete:   3.76e+02
+C> (client:12008) [2013-02-06:16-02-37] [0-0-0-0x1b3fd98-statistics]:                   child create:   7.34e+03
+C> (client:12008) [2013-02-06:16-02-37] [0-0-0-0x1b3fd98-statistics]:                   child delete:   4.31e+04
+C> (client:12008) [2013-02-06:16-02-37] [0-0-0-0x1b3fd98-main]: end: ----------------------------------------

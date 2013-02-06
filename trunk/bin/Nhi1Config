@@ -23,7 +23,10 @@ set -ue
 
 ## delete all environment variables to setup a "clean" build environment
 [[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
-  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" "$0" "$@"
+  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
+    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
+      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" \
+	NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
 
 ## some useful procs
 add2var() {
@@ -62,7 +65,10 @@ pathExtension() {
     nothread)               echo "test/nothred";;
     performance-thread)     echo ".";;
     performance-nothread)   echo "nothread";;
-    *)                      Die "unknown pathExtension '$1'";;
+    *)                      
+      echo "ERROR: unknown pathExtension '$1'"
+      exit 1
+    ;;
   esac
 }
 
@@ -77,11 +83,12 @@ SOURCE_HOME=$(dirname $(readlink -f $0))
 
 ##  Retrieve environment data
 declare -A lang
+declare -A enable
 declare -a opt
 
 eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-'EOF'
 
-G_Shell='bash'
+G_Shell 'bash'
 # ---------------------------------------------------------------------
 G_Date='$Date$'
 G_Revision='$Revision$'
@@ -92,8 +99,12 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
+G_Argument 'tool-root:NHI1_TOOL_ROOT:__environment__:root for the tools directory:E'
 G_Argument 'use-perf:Perf:0:use performance code:B'
-G_Argument 'use-thread:Thread:0:use thread code:B'
+G_Argument 'use-threads:Thread:0:use thread code:B'
+for l in brain guard ; do
+  G_Argument "enable-$l:enable[$l]:0:add '$l' feature support:B"
+done
 for l in tcl perl python php cxx java csharp go ruby ; do
   G_Argument "lang-$l:lang[$l]:0:add '$l' language binding:B"
 done
@@ -105,43 +116,43 @@ for l in ${!lang[@]} ; do
   (( ${lang[$l]} )) && opt+=(--enable-$l)
 done
 
+for l in ${!enable[@]} ; do
+  (( ${enable[$l]} )) && opt+=(--enable-$l)
+done
+
 # I use ccache for compiling
-export CCACHE_DIR="/build/dev01/Cache"
-export CC="ccache gcc"
 (( ${lang[cxx]} )) && export CXX="ccache g++"
 export CTAGSFLAGS="--c-kinds=+p"
 
 if (( $Perf )) ; then
   opt+=(--enable-static)
   if (( $Thread )) ; then
-    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension performance_thread)/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension performance_thread)/lib
+    T=$(pathExtension performance-thread)
     opt+=(--enable-threads)
   else
-    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension performance_nothread)/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension performance_nothread)/lib
+    T=$(pathExtension performance-nothread)
   fi
 else
   if (( $Thread )) ; then
-    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension thread)/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension thread)/lib
+    T=$(pathExtension thread)
     opt+=(--enable-threads --enable-symbols)
   else
-    add2var PATH	      $HOME/ext/$MACHTYPE/$(pathExtension nothread)/bin
-    add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$(pathExtension nothread)/lib
+    T=$(pathExtension nothread)
     opt+=(--enable-symbols)
   fi
 fi
 
-(( ${lang[go]} )) && {
+add2var PATH		  $HOME/ext/$MACHTYPE/$T/bin
+add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$T/lib
+add2var PKG_CONFIG_PATH   $HOME/ext/$MACHTYPE/$T/lib/pkgconfig
+
+[[ ${lang[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh
 }
 
 rm -fr /tmp/libmsgque-install
 
-bash -norc $SOURCE_HOME/../configure    \
-		    --prefix=/tmp/libmsgque-install \
-		    ${G_Argv:-} "${opt[@]}" \
+bash -norc $SOURCE_HOME/../configure --prefix=/tmp/libmsgque-install "${opt[@]}" "${@:-}"
 
 #		    --enable-cxx \
 #		    --enable-java \

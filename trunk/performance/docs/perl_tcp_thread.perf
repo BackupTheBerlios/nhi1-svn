@@ -1,12 +1,9 @@
-> perl thread/NHI1-0.15/theLink/example/perl/server.pl --tcp --host localhost --port 7795 --thread
-> thread/NHI1-0.15/theLink/example/c/client --all --tcp --host localhost --port 7795
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-24] [0-0-0-0x6ecff8-main]: start: --------------------------------------
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-24] [0-0-0-0x6ecff8-statistics]:                      MqSendEND:   1.12e+05
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-25] [0-0-0-0x6ecff8-statistics]:         MqSendEND_AND_CALLBACK:   8.48e+04
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-26] [0-0-0-0x6ecff8-statistics]:             MqSendEND_AND_WAIT:   3.18e+04
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-30] [0-0-0-0x6ecff8-statistics]:               MqSendPERSISTENT:   3.19e+00
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-31] [0-0-0-0x6ecff8-statistics]:                  parent create:   1.67e+02
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-31] [0-0-0-0x6ecff8-statistics]:                  parent delete:   3.49e+03
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-31] [0-0-0-0x6ecff8-statistics]:                   child create:   6.69e+03
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-31] [0-0-0-0x6ecff8-statistics]:                   child delete:   2.90e+04
-C> (client:6773:0x7f7bb5766700) [2011-03-15:18-53-31] [0-0-0-0x6ecff8-main]: end: ----------------------------------------
+> PERL thread/NHI1-0.17/theLink/example/perl/server.pl --tcp --host localhost --port 7795 --thread
+> thread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7795
+C> (client) [SysConnect] TIMEOUT after '90' sec
+C> (client) found in function "GenericConnect" at file "generic_io.c"
+C> (client) found in function "TcpConnect" at file "tcp_io.c"
+C> (client) found in function "pIoConnect" at file "io.c"
+C> (client) found in function "MqLinkConnect" at file "link.c"
+C> (client) found in function "MqLinkCreate" at file "link.c"
+C> (client) use '-h' or '--help' for usage
